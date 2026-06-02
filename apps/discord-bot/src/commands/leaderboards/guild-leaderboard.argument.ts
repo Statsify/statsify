@@ -12,10 +12,10 @@ import {
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
-import { Guild, LeaderboardScanner } from "@statsify/schemas";
+import { Guild, getLeaderboardFields } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
-const list = LeaderboardScanner.getLeaderboardFields(Guild).map(
+const list = getLeaderboardFields(Guild).map(
   ([key, { leaderboard }]) => ({
     value: key,
     name: removeFormatting(leaderboard.name),

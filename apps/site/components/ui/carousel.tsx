@@ -116,6 +116,8 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
         {cards.map((_, index) => (
           <button
             role="tab"
+            type="button"
+            aria-label={`Go to card ${index + 1}`}
             aria-selected={cardIndex === index}
             key={index}
             onClick={() => setPage([index, index > cardIndex ? 1 : -1])}

@@ -6,14 +6,15 @@
   "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
-    "test:types": "tsc --noEmit",
-    "lint": "eslint"
+    "typecheck": "tsgo --noEmit",
+    "lint": "oxlint",
+    "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
-    "@swc/helpers": "^0.5.12",
+    "@swc/helpers": "^0.5.23",
     "axios": "1.11.0",
-    "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz"
+    "skia-canvas": "3.0.8"
   }
 }

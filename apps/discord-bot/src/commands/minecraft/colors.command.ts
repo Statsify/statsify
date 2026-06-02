@@ -21,11 +21,11 @@ export class ColorsCommand {
           "embeds.colors.shadowHex"
         )}**\n`;
 
-        minecraftColors.forEach((color) => {
+        for (const color of minecraftColors) {
           desc += `${t(`emojis:colors.${[color.code.slice(1)]}`)} \`${color.code}\` • \`${
             color.hex
           }\` • \`${mcShadow(color.hex)}\`\n`;
-        });
+        }
 
         desc += "\n";
         desc += `${t("emojis:colors.k")} \`§k\` • ${t("embeds.colors.obfuscated")}\n`;

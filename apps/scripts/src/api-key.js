@@ -50,9 +50,9 @@ const getKeys = async () => {
 
   const pipeline = redis.pipeline();
 
-  keys.forEach((key) => {
+  for (const key of keys) {
     pipeline.hgetall(key);
-  });
+  }
 
   const keyValues = await pipeline.exec();
 
@@ -104,7 +104,7 @@ const keyManager = async () => {
 
   const availableMethods = ["create"];
 
-  if ((await getKeyNames()).length) availableMethods.push("delete", "edit", "list");
+  if ((await getKeyNames()).length > 0) availableMethods.push("delete", "edit", "list");
 
   const { method } = await inquirer.prompt([
     {
@@ -194,6 +194,7 @@ const deleteKey = async () => {
     let currentKey = activeKeys[key];
 
     if (currentKey.name === deletedKey) {
+      // oxlint-disable-next-line no-await-in-loop
       await redis.del(`key:${key}`);
       inquirerLogger(
         "Deleted Key!",
@@ -263,4 +264,4 @@ const editKey = async () => {
   await redis.hset(`key:${currentHash}`, field, Object.values(newValue)[0]);
 };
 
-keyManager();
+await keyManager();
