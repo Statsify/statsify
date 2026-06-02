@@ -44,10 +44,10 @@ export type DeepFlatten<T> = {
  */
 export const flatten = <T>(data: T, prefix = "", dest: APIData = {}): Flatten<T> => {
   if (isObject(data)) {
-    Object.keys(data ?? {}).forEach((key) => {
+    for (const key of Object.keys(data ?? {})) {
       const tmpPrefix = prefix.length > 0 ? `${prefix}.${key}` : prefix + key;
       flatten(data[key as keyof T], tmpPrefix, dest);
-    });
+    }
   } else {
     dest[prefix] = data;
   }

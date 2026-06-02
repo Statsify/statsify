@@ -6,15 +6,16 @@
   "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths --copy-files",
-    "test:types": "tsc --noEmit",
-    "lint": "eslint"
+    "typecheck": "tsgo --noEmit",
+    "lint": "oxlint",
+    "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
     "@nestjs/swagger": "^11.2.0",
     "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
+    "@swc/helpers": "^0.5.23",
     "@typegoose/typegoose": "^12.6.0",
     "class-validator": "^0.14.1",
     "luxon": "^3.5.0"
