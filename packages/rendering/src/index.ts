@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/* eslint-disable @typescript-eslint/no-namespace */
 export * from "./colors/index.js";
 export * from "./canvas.js";
 export * from "./font/index.js";

@@ -39,7 +39,6 @@ export class GuildService {
     type: GuildQuery,
     cache: CacheLevel
   ): Promise<Guild | null> {
-    // eslint-disable-next-line prefer-const
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
     if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
