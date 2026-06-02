@@ -7,14 +7,17 @@
  */
 
 import { type Constructor, type Flatten, unflatten } from "@statsify/util";
-import { MetadataScanner } from "./metadata-scanner.js";
+import { scanMetadata } from "./metadata-scanner.js";
 import { roundTo } from "@statsify/math";
 import type { FieldMetadata } from "./metadata.interface.js";
 
-export const deserialize = <T>(constructor: Constructor<T>, instance: Flatten<T>): T => {
-  const metadataEntries = MetadataScanner.scan(constructor) as [
+export const deserialize = <T>(
+  constructor: Constructor<T>,
+  instance: Flatten<T>,
+): T => {
+  const metadataEntries = scanMetadata(constructor) as [
     keyof Flatten<T>,
-    FieldMetadata
+    FieldMetadata,
   ][];
 
   const deserialized: Flatten<T> = {} as Flatten<T>;
@@ -35,7 +38,9 @@ export const deserialize = <T>(constructor: Constructor<T>, instance: Flatten<T>
 
     // If the value is numimercal round it to 2 digits of precision
     if (typeof deserialized[key] === "number")
-      deserialized[key] = roundTo(deserialized[key] as unknown as number) as any;
+      deserialized[key] = roundTo(
+        deserialized[key] as unknown as number,
+      ) as any;
   }
 
   // Unflatten the object to return the original type

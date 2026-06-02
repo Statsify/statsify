@@ -107,7 +107,8 @@ function CategoryOverview({ category, icon }: { category: Category; icon: Static
         <p className="font-bold text-mc-yellow">{FormattedCategories[category]} Bingo Cards</p>
       </div>
       <div className="flex flex-col justify-center items-center gap-1">
-        <p
+        <button 
+          type="button"
           className="text-mc-gray cursor-pointer w-fit"
           onClick={() => {
             setCategory(category);
@@ -117,8 +118,9 @@ function CategoryOverview({ category, icon }: { category: Category; icon: Static
           <span className="text-mc-green">Easy</span>:{" "}
           <span className={completetionColor(easyCompletion)}>{easyCompletion}</span>
           <span className="text-mc-gray">/16</span> completed
-        </p>
-        <p
+        </button>
+        <button
+          type="button"
           className="text-mc-gray cursor-pointer w-fit"
           onClick={() => {
             setCategory(category);
@@ -128,7 +130,7 @@ function CategoryOverview({ category, icon }: { category: Category; icon: Static
           <span className="text-mc-red">Hard</span>:{" "}
           <span className={completetionColor(hardCompletion)}>{hardCompletion}</span>
           <span className="text-mc-gray">/16</span> completed
-        </p>
+        </button>
       </div>
     </div>
   );

@@ -11,16 +11,12 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "downlevelIteration": true,
     "strictPropertyInitialization": false,
     "allowSyntheticDefaultImports": true,
+    "noImplicitReturns": true,
     "target": "esnext",
     "strict": true,
-    "types": [
-      "vitest/importMeta"
-    ]
+    "types": ["vitest/importMeta"]
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

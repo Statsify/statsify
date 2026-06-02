@@ -129,7 +129,7 @@ export class ThemeCommand {
   public message(context: CommandContext) {
     const message = convertColorCodes(
       context.option<string>("message")
-    ).replace(/§\^\d\^/g, "");
+    ).replaceAll(/§\^\d\^/g, "");
 
     const length = removeFormatting(message).length;
 

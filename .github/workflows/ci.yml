@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     branches:
-    - main
+      - main
   pull_request:
 
 permissions:
@@ -14,8 +14,9 @@ jobs:
     name: CI
     runs-on: ubuntu-latest
     env:
-        TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-        TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TELEMETRY_DISABLED: 1
     steps:
       - name: Checkout repository
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
@@ -23,10 +24,10 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
 
-      - name: Install node.js v22
+      - name: Install node.js v24
         uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
-          node-version: 22.6.0
+          node-version: 24.7.0
 
       - name: Install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
@@ -41,16 +42,16 @@ jobs:
             turbo-${{ github.job }}-${{ github.ref_name }}-
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: pnpm lint
+        run: pnpm lint:ci --affected
 
       - name: Typecheck
-        run: pnpm test:types
+        run: pnpm typecheck --affected
 
       - name: Build
-        run: pnpm build
+        run: pnpm build --affected
 
       - name: Test
         run: pnpm test:coverage
