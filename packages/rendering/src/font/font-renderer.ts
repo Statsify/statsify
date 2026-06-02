@@ -8,12 +8,13 @@
 
 import _positions from "../../positions.json" with { type: "json" };
 import _sizes from "../../sizes.json" with { type: "json" };
-import {
+import type {
   Canvas,
-  type CanvasRenderingContext2D,
-  type ImageData,
+  CanvasRenderingContext2D,
+  ImageData,
 } from "skia-canvas";
 import { type TextNode, type Token, tokens } from "./tokens.js";
+import { createCanvas } from "../canvas.js";
 import { join } from "node:path";
 import { loadImage } from "#hooks";
 import { readdir } from "node:fs/promises";
@@ -34,34 +35,42 @@ interface Sizes {
 
 export class FontRenderer {
   private images: Map<string, CanvasRenderingContext2D>;
+  private canvases: WeakMap<CanvasRenderingContext2D, Canvas>;
+  private scales: WeakMap<CanvasRenderingContext2D, number>;
 
   public constructor(private gradient: boolean) {
     this.images = new Map();
+    this.canvases = new WeakMap();
+    this.scales = new WeakMap();
   }
 
   public async loadImages(fontPath: string) {
     const files = await readdir(fontPath);
 
-    const pictures = files.filter((file) => file.endsWith(".png"));
-
-    for (const file of pictures) {
+    const pictures = await Promise.all(files.filter((file) => file.endsWith(".png")).map(async (file) => {
       const image = await loadImage(join(fontPath, file));
+      const id = file.replace("unicode_page_", "").replace(".png", "");
+      return [id, image] as const;
+    }));
 
-      const canvas = new Canvas(image.width, image.height);
+    for (const [id, image] of pictures) {
+      const canvas = createCanvas(image.width, image.height);
       const ctx = canvas.getContext("2d");
 
       ctx.imageSmoothingEnabled = false;
 
       ctx.drawImage(image, 0, 0);
 
-      this.images.set(
-        file.replace("unicode_page_", "").replace(".png", ""),
-        ctx
-      );
+      this.canvases.set(ctx, canvas);
+      this.scales.set(ctx, image.width / 256);
+
+      this.images.set(id, ctx);
     }
   }
 
   public measureText(nodes: TextNode[]): { width: number; height: number } {
+    if (nodes.length === 0) return { width: 0, height: 0 };
+
     let width = 0;
     let largestSize = nodes[0].size;
 
@@ -133,7 +142,7 @@ export class FontRenderer {
     const nodes: TextNode[] = [];
 
     for (const part of parts) {
-      if (!part.length) continue;
+      if (part.length === 0) continue;
 
       let token: Token | null = null;
       let matches: RegExpMatchArray | null = null;
@@ -158,9 +167,9 @@ export class FontRenderer {
 
       if (matches) text = text.slice(matches[0].length);
 
-      state = { ...state, ...effect };
+      Object.assign(state, effect);
 
-      if (!text.length) continue;
+      if (text.length === 0) continue;
 
       const node: TextNode = {
         ...state,
@@ -189,7 +198,18 @@ export class FontRenderer {
   }
 
   private getTextureScale(image: CanvasRenderingContext2D) {
-    return image.canvas.width / 256;
+    return this.scales.get(image) ?? image.canvas.width / 256;
+  }
+
+  private getImageData(
+    image: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) {
+    const ctx = this.canvases.get(image)?.getContext("2d") ?? image;
+    return ctx.getImageData(x, y, width, height);
   }
 
   private getCharacterIndexLocation(unicode: string, isAscii: boolean) {
@@ -247,7 +267,7 @@ export class FontRenderer {
     bold: boolean
   ) {
     // Minecraft has weird spacing for the space
-    let gap = size * (width + (char == " " ? -2 : 2) * scale);
+    let gap = size * (width + (char === " " ? -2 : 2) * scale);
 
     if (bold) {
       gap += scale * size;
@@ -306,7 +326,7 @@ export class FontRenderer {
       size,
     } = metadata;
 
-    const imageData = image.getImageData(charX, charY, width, height);
+    const imageData = this.getImageData(image, charX, charY, width, height);
 
     ctx.filter = this.gradient ? "brightness(15%)" : "brightness(25%)";
 

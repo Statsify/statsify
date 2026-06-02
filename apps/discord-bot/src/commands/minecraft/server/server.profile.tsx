@@ -49,7 +49,7 @@ export const ServerProfile = ({
       >
         <div height="100%" direction="column">
           <Multiline margin={2}>
-            {server.motd.raw.map((m) => m.replace(/\s{2,}/g, "")).join("\n")}
+            {server.motd.raw.map((m) => m.replaceAll(/\s{2,}/g, "")).join("\n")}
           </Multiline>
         </div>
       </box>

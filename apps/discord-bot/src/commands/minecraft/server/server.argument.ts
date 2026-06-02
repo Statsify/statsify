@@ -38,6 +38,8 @@ export class ServerArgument extends AbstractArgument {
         threshold: 0.3,
         ignoreLocation: true,
       });
+      
+      return undefined;
     });
   }
 

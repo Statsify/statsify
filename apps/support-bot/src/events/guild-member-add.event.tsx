@@ -70,7 +70,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
       await this.sendUnverifiedMessage(data);
 
     const [avatar, background] = await Promise.all([
-      this.getDiscordAvatar(data),
+      getDiscordAvatar(data),
       getBackground("minecraft", "overall"),
     ]);
 
@@ -92,27 +92,12 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
     await this.messageService.send(WELCOME_CHANNEL_ID, message);
   }
 
-  private getDiscordAvatar(member: APIGuildMember): Promise<Image> {
-    const avatar = member.user?.avatar ?? member.avatar;
-
-    if (avatar)
-      return loadImage(
-        `https://cdn.discordapp.com/avatars/${member.user!.id}/${avatar}.png?size=96`
-      );
-
-    return loadImage(
-      `https://cdn.discordapp.com/embed/avatars/${
-        Number(member.user!.discriminator) % 5
-      }.png?size=96`
-    );
-  }
-
   private async sendVerifiedMessage(member: APIGuildMember): Promise<IMessage> {
     await this.roleService.addRole(GUILD_ID, member.user!.id, MEMBER_ROLE);
     await this.apiService.updateUser(member.user!.id, { serverMember: true });
 
     const embed = new EmbedBuilder()
-      .description(`<@${member.user!.id}> ${this.randomJoinMessage()}`)
+      .description(`<@${member.user!.id}> ${randomJoinMessage()}`)
       .image("attachment://welcome.png")
       .color(STATUS_COLORS.info);
 
@@ -127,14 +112,27 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
     });
 
     const embed = new EmbedBuilder()
-      .description(`<@${member.user!.id}> ${this.randomJoinMessage()}`)
+      .description(`<@${member.user!.id}> ${randomJoinMessage()}`)
       .image("attachment://welcome.png")
       .color(STATUS_COLORS.info);
 
     return { embeds: [embed] };
   }
-
-  private randomJoinMessage() {
-    return JOIN_MESSAGES[Math.floor(Math.random() * JOIN_MESSAGES.length)];
-  }
 }
+
+function getDiscordAvatar(member: APIGuildMember): Promise<Image> {
+  const avatar = member.user?.avatar ?? member.avatar;
+
+  if (avatar)
+    return loadImage(
+      `https://cdn.discordapp.com/avatars/${member.user!.id}/${avatar}.png?size=96`
+    );
+
+  return loadImage(
+    `https://cdn.discordapp.com/embed/avatars/${
+      Number(member.user!.discriminator) % 5
+    }.png?size=96`
+  );
+}
+
+const randomJoinMessage = () => JOIN_MESSAGES[Math.floor(Math.random() * JOIN_MESSAGES.length)];

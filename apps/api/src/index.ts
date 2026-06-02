@@ -22,7 +22,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mkdir } from "node:fs/promises";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const directory = import.meta.dirname;
 
 const logger = new Logger("api");
 const handleError = logger.error.bind(logger);
@@ -91,7 +91,7 @@ const redoc = new DocumentBuilder()
 // Fastify template renderer for Redoc
 app.setViewEngine({
   engine: { handlebars },
-  templates: join(__dirname, "..", "views"),
+  templates: join(directory, "..", "views"),
 });
 
 const document = SwaggerModule.createDocument(app, redoc);

@@ -103,7 +103,7 @@ export abstract class AbstractCommandListener {
     data: any,
     name = command.name
   ): [command: CommandResolvable, data: any, name: string] {
-    if (!data.options || !data.options.length) return [command, data, name];
+    if (!data.options || data.options.length === 0) return [command, data, name];
 
     const firstOption = data.options[0];
 
@@ -137,7 +137,9 @@ export abstract class AbstractCommandListener {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     try {
-      preconditions.forEach((precondition) => precondition());
+      for (const precondition of preconditions) {
+        precondition();
+      }
 
       const response = await command.execute(context);
 
@@ -320,7 +322,6 @@ export abstract class AbstractCommandListener {
       this.logger.error(err);
     });
 
-    // @ts-ignore Discord supports sending a blank object as a response
     client.on("interaction", async (event) => {
       const interaction = new Interaction(this.rest, event.interaction, this.applicationId);
       const response = await this.onInteraction(interaction);

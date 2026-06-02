@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Canvas } from "skia-canvas";
-import { FontRenderer } from "@statsify/rendering";
+import { FontRenderer, createCanvas } from "@statsify/rendering";
 import { Logger } from "@statsify/logger";
 import { RestClient } from "tiny-discord";
 import { config, minecraftColors } from "@statsify/util";
@@ -75,19 +74,17 @@ const drawRank = async (formatted) => {
   const nodes = renderer.lex(formatted);
   const { width, height } = renderer.measureText(nodes);
 
-  const textCanvas = new Canvas(width, height);
+  const textCanvas = createCanvas(width, height);
   const textCtx = textCanvas.getContext("2d");
   renderer.fillText(textCtx, nodes, 0, 0);
 
   const imageCount = Math.ceil(width / SIZE);
-  const images = [];
-
-  for (let x = 0; x < imageCount; x++) {
-    const canvas = new Canvas(SIZE, SIZE);
+  const images = await Promise.all(Array.from({ length: imageCount }).map((_, x) => {
+    const canvas = createCanvas(SIZE, SIZE);
     const ctx = canvas.getContext("2d");
     ctx.drawImage(textCanvas, SIZE * x, 0, SIZE, SIZE, 0, 0, SIZE, SIZE);
-    images.push(await canvas.toDataURL("png"));
-  }
+    return canvas.toDataURL("png");
+  }));
 
   return images;
 };
@@ -117,7 +114,7 @@ const drawColorChanger = async (rank, prefixIndex) => {
     )),
   ];
 
-  Object.entries(sharedImages).forEach(([index, image]) => {
+  for (const [index, image] of Object.entries(sharedImages).entries()) {
     emojis.push({
       buffer: image,
       rank,
@@ -125,9 +122,9 @@ const drawColorChanger = async (rank, prefixIndex) => {
       index,
       name: `${prefixIndex}${index}`,
     });
-  });
+  }
 
-  coloredEmojis.forEach(async (images, index) => {
+  for (const [index, images] of coloredEmojis) {
     const color = minecraftColors[index];
 
     for (const [i, image] of images.entries()) {
@@ -141,7 +138,7 @@ const drawColorChanger = async (rank, prefixIndex) => {
         name: `${prefixIndex}${color.code[1]}${i}`,
       });
     }
-  });
+  }
 };
 
 /**
@@ -152,9 +149,9 @@ const drawColorChanger = async (rank, prefixIndex) => {
 const drawNonColorChanger = async (rank, prefixIndex) => {
   const images = await drawRank(rankMap[rank]());
 
-  images.forEach((image, index) => {
+  for (const [index, image] of images.entries()) {
     emojis.push({ buffer: image, rank, index, name: `${prefixIndex}${index}` });
-  });
+  }
 };
 
 // Create all the emojis
@@ -176,13 +173,16 @@ const json = {};
 
 const client = new RestClient({ token });
 
+// For ratelimiting purposes it is better to run these requests serially
 for (let i = 0; i < serverCount; i++) {
+  // oxlint-disable-next-line no-await-in-loop
   const guild = await client
     .post("/guilds", { name: `Statsify Ranks ${i + 1}` })
     .then((res) => res.body.json);
 
   const channel = guild.system_channel_id;
 
+  // oxlint-disable-next-line no-await-in-loop
   const invite = await client
     .post(`/channels/${channel}/invites`, { type: 1 })
     .then((res) => res.body.json);
@@ -195,6 +195,7 @@ for (let i = 0; i < serverCount; i++) {
 
     const emoji = emojis[index];
 
+    // oxlint-disable-next-line no-await-in-loop
     const emojiResolved = await client
       .post(`/guilds/${guild.id}/emojis`, {
         name: emoji.name,
@@ -218,12 +219,12 @@ for (let i = 0; i < serverCount; i++) {
   }
 }
 
-RANKS.filter((rank) => !COLOR_CHANGERS.includes(rank)).forEach((rank) => {
+for (const rank of RANKS.filter((rank) => !COLOR_CHANGERS.includes(rank))) {
   json[rank] = json[rank].join("");
-});
+}
 
-COLOR_CHANGERS.forEach((rank) => {
-  minecraftColors.forEach((color) => {
+for (const rank of COLOR_CHANGERS) {
+  for (const color of minecraftColors) {
     const body = {
       ...json[rank]["SHARED"],
       ...json[rank][color.id],
@@ -234,10 +235,10 @@ COLOR_CHANGERS.forEach((rank) => {
       .map((key) => body[key])
       .filter(Boolean)
       .join("");
-  });
+  }
 
-  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+  // oxlint-disable-next-line no-dynamic-delete
   delete json[rank];
-});
+}
 
 writeFileSync("../discord-bot/emojis.json", JSON.stringify(json, null, 2));

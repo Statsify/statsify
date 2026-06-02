@@ -9,15 +9,15 @@
     "url": "git+https://github.com/Statsify/statsify.git"
   },
   "scripts": {
-    "build": "turbo run build --filter=!site --parallel --cache-dir='.turbo'",
+    "build": "turbo run build --filter=!site --cache-dir='.turbo'",
     "build:watch": "turbo watch build --filter=!site",
-    "test:types": "turbo run test:types --cache-dir='.turbo'",
+    "typecheck": "turbo run typecheck --cache-dir='.turbo'",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "lint": "turbo run lint --parallel --cache-dir='.turbo'",
-    "pre-commit": "pnpm lint && pnpm test:types && pnpm test:coverage && git add .",
-    "commit": "pnpm pre-commit && git cz",
+    "lint": "turbo run lint --cache-dir='.turbo'",
+    "lint:ci": "turbo run lint:ci --cache-dir='.turbo'",
+    "fmt": "turbo run fmt --cache-dir='.turbo'",
     "api": "pnpm --filter api",
     "discord-bot": "pnpm --filter discord-bot",
     "support-bot": "pnpm --filter support-bot",
@@ -27,40 +27,22 @@
   },
   "packageManager": "pnpm@10.15.0",
   "devDependencies": {
-    "@commitlint/cli": "^19.6.1",
-    "@commitlint/config-conventional": "^19.6.0",
-    "@eslint/js": "^9.19.0",
     "@j4cobi/eslint-plugin-sort-imports": "^1.0.2",
-    "@napi-rs/cli": "^3.1.5",
+    "@napi-rs/cli": "^3.7.0",
     "@rollup/pluginutils": "^5.1.0",
-    "@stylistic/eslint-plugin": "^5.2.3",
-    "@swc/cli": "^0.7.8",
-    "@swc/core": "1.13.5",
-    "@types/eslint__js": "^9.14.0",
-    "@types/node": "^24.3.0",
-    "@vitest/coverage-v8": "^3.0.4",
-    "@vitest/ui": "^3.0.4",
-    "commitizen": "^4.3.1",
-    "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^9.19.0",
-    "eslint-plugin-license-header": "^0.8.0",
-    "eslint-plugin-unicorn": "^60.0.0",
-    "eslint-plugin-unused-imports": "^4.1.4",
+    "@swc/cli": "^0.8.1",
+    "@swc/core": "1.15.40",
+    "@types/node": "^25.9.1",
+    "@typescript/native-preview": "7.0.0-dev.20260601.1",
+    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/ui": "^4.1.8",
+    "eslint-plugin-license-header": "^0.9.0",
+    "oxfmt": "^0.53.0",
+    "oxlint": "^1.68.0",
     "pm2": "^6.0.8",
-    "turbo": "^2.4.0",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.22.0",
-    "unplugin": "^2.1.2",
-    "vitest": "^3.0.4"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
+    "turbo": "^2.9.16",
+    "typescript": "^6.0.3",
+    "unplugin": "^3.0.0",
+    "vitest": "^4.1.8"
   }
 }
