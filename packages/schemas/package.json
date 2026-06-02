@@ -7,7 +7,8 @@
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths --copy-files",
     "test:types": "tsc --noEmit",
-    "lint": "oxlint"
+    "lint": "oxlint",
+    "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
     "@nestjs/swagger": "^11.2.0",

@@ -16,7 +16,8 @@
   "scripts": {
     "build": "swc src --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",
-    "lint": "oxlint"
+    "lint": "oxlint",
+    "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
     "@sentry/node": "^7.118.0",

@@ -8,6 +8,7 @@
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",
     "lint": "oxlint",
+    "lint:ci": "oxlint --format=github",
     "fmt": "oxfmt"
   },
   "dependencies": {

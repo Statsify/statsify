@@ -16,6 +16,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "lint": "turbo run lint --cache-dir='.turbo'",
+    "lint:ci": "turbo run lint:ci --cache-dir='.turbo'",
     "fmt": "turbo run fmt --cache-dir='.turbo'",
     "api": "pnpm --filter api",
     "discord-bot": "pnpm --filter discord-bot",
