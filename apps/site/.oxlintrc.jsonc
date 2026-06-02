@@ -22,7 +22,6 @@
     "react/jsx-no-comment-textnodes": "error",
     "react/iframe-missing-sandbox": "error",
     "react/no-unknown-property": "error",
-    // "react/no-react-children": "error",
     "react/no-clone-element": "error",
     "react/button-has-type": "error",
     "react/no-object-type-as-default-prop": "error",
@@ -36,10 +35,6 @@
     "react/jsx-no-useless-fragment": "error",
     "react/no-unescaped-entities": "error",
     "react/rules-of-hooks": "error",
-    // "react-perf/jsx-no-new-object-as-prop": "error",
-    // "react-perf/jsx-no-new-function-as-prop": "error",
-    // "react-perf/jsx-no-new-array-as-prop": "error",
-    // "react-perf/jsx-no-jsx-as-prop": "error",
 
     // Jsx A11y
     "jsx-a11y/anchor-ambiguous-text": "error",
