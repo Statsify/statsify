@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsgo --noEmit",
     "lint": "oxlint",
     "lint:ci": "oxlint --format=github"
   },
