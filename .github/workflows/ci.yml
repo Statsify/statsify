@@ -45,7 +45,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: pnpm lint -- --format=github
+        run: pnpm lint:ci
 
       - name: Typecheck
         run: pnpm test:types
