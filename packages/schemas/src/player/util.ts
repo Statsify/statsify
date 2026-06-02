@@ -134,8 +134,9 @@ export function getDisplayName(
   rank: string,
   plusColor: ColorCode,
 ) {
-  const colorRank = RANK_MAP[rank](plusColor);
-  return `${colorRank}${colorRank === "§7" ? "" : " "}${username}`;
+  const rankFormatter = rank in RANK_MAP ? RANK_MAP[rank] : RANK_MAP.DEFAULT;
+  const coloredRank = rankFormatter(plusColor);
+  return `${coloredRank}${coloredRank === "§7" ? "" : " "}${username}`;
 }
 
 function replaceRank(rank: string) {
