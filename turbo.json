@@ -8,9 +8,9 @@
       "outputs": ["dist/**", ".next/**", "pkg/**"],
       "dependsOn": ["^build"]
     },
-    "test:types": {
+    "typecheck": {
       "outputs": [],
-      "dependsOn": ["^test:types"]
+      "dependsOn": ["^typecheck"]
     },
     "test": {
       "outputs": [],

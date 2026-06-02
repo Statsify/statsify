@@ -47,7 +47,7 @@ $ pnpm lint
 $ pnpm test
 
 # Type Testing
-$ pnpm test:types
+$ pnpm typecheck
 ```
 
 ## 💁 Contributing

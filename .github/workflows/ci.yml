@@ -48,7 +48,7 @@ jobs:
         run: pnpm lint:ci
 
       - name: Typecheck
-        run: pnpm test:types
+        run: pnpm typecheck
 
       - name: Build
         run: pnpm build

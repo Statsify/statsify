@@ -56,9 +56,9 @@
       "type": "shell",
       "command": "pnpm",
       "args": [
-        "test:types"
+        "typecheck"
       ],
-      "label": "test:types",
+      "label": "typecheck",
       "dependsOn": [
         "build"
       ]
