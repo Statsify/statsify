@@ -42,10 +42,10 @@ jobs:
             turbo-${{ github.job }}-${{ github.ref_name }}-
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: pnpm lint
+        run: pnpm lint -- --format=github
 
       - name: Typecheck
         run: pnpm test:types
