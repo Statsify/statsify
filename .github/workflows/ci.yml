@@ -54,4 +54,4 @@ jobs:
         run: pnpm build --affected
 
       - name: Test
-        run: pnpm test:coverage --affected
+        run: pnpm test:coverage
