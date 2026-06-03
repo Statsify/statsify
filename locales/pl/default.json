@@ -5,6 +5,7 @@
     "gtbhelper": "Bieżąca wskazówka",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Nazwa gildii lub nazwa członka gildii",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Typ wyszukiwania gildii do wykonania",
     "mojang-player": "Nazwa użytkownika Minecraft lub UUID",
     "number": "Liczba",

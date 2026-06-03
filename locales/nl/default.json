@@ -5,6 +5,7 @@
     "gtbhelper": "De huidige tip",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Een guild naam of guild lid",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Het type guild zoekopdracht om uit te voeren",
     "mojang-player": "Een Minecraft gebruikersnaam of UUID",
     "number": "Een getal",

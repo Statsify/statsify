@@ -5,6 +5,7 @@
     "gtbhelper": "Nykyinen vihje",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Guildin nimi tai guildin jäsen",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Suoritettavan guild-haun tyyppi",
     "mojang-player": "Minecraft-käyttäjätunnus tai UUID",
     "number": "Numero",

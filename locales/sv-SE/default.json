@@ -5,6 +5,7 @@
     "gtbhelper": "Den nuvarande ledtråden",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Ett guild namn eller en guild medlem",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Typen av guild sökning att utföra",
     "mojang-player": "Ett Minecraft användarnamn eller UUID",
     "number": "En siffra",

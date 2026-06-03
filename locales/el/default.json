@@ -5,6 +5,7 @@
     "gtbhelper": "Το τρέχον στοιχείο",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Ένα guild όνομα ή guild μέλος",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Ο τύπος αναζήτησης guild για εκτέλεση",
     "mojang-player": "Ένα όνομα χρήστη ή UUID του Minecraft",
     "number": "Ένας αριθμός",

@@ -7,12 +7,9 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString, MaxLength } from "class-validator";
+import { SuccessResponse } from "./success.response.js";
 
-export class PlayerSearchDto {
-  @IsOptional()
-  @IsString()
-  @MaxLength(16)
-  @ApiProperty({ required: false })
-  public query?: string;
+export class GetGuildSearchResponse extends SuccessResponse {
+  @ApiProperty({ type: [String] })
+  public guilds: string[];
 }

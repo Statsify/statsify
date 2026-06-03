@@ -5,6 +5,7 @@
     "gtbhelper": "La pista actual",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Un nombre de gremio o un miembro",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "El tipo de búsqueda de gremio a realizar",
     "mojang-player": "Nombre de usuario en Minecraft o UUID",
     "number": "Un número",

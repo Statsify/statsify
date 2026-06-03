@@ -5,6 +5,7 @@
     "gtbhelper": "Gợi ý hiện tại",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Một tên đoàn hoặc một thành viên đoàn",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Kiểu đoàn để thực hiện",
     "mojang-player": "Một tên Minecraft hoặc UUID",
     "number": "Một con số",

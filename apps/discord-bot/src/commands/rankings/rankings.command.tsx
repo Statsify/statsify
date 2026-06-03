@@ -53,6 +53,7 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
+import { PlayerLeaderboardGuildArgument } from "../leaderboards/player-leaderboard.argument.js";
 import { RankingsProfile } from "./rankings.profile.js";
 import { arrayGroup } from "@statsify/util";
 import { games } from "./games.js";
@@ -66,7 +67,7 @@ const choices = games.map((g) => [g.name, g.key] as Choice);
 choices.unshift(["All", "all"]);
 
 const options: Partial<SubCommandOptions> = {
-  args: [PlayerArgument],
+  args: [PlayerArgument, PlayerLeaderboardGuildArgument],
   tier: UserTier.IRON,
   preview: "rankings.png",
 };
@@ -313,6 +314,11 @@ export class RankingsCommand {
     const t = context.t();
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
+    const guild = context.option<string | null>("guild", null);
+
+    if (guild && (user?.tier ?? UserTier.NONE) < UserTier.DIAMOND) {
+      throw new ErrorMessage("errors.diamondOnly");
+    }
 
     const isGameNotAll = game !== "all";
 
@@ -320,7 +326,11 @@ export class RankingsCommand {
       fields.filter((f) => f.startsWith(`stats.${game}`)) :
       fields;
 
-    const rankings = await this.apiService.getPlayerRankings(filteredFields, player.uuid);
+    const rankings = await this.apiService.getPlayerRankings(
+      filteredFields,
+      player.uuid,
+      guild ?? undefined
+    );
 
     if (!rankings.length)
       throw new ErrorMessage(

@@ -6,43 +6,38 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Guild } from "@statsify/schemas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
-import { Player } from "@statsify/schemas";
 import { Redis } from "ioredis";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 const REDI_SEARCH_NOT_INSTALLED =
   "This error was most likely caused because RediSearch is not installed.";
-const PLAYER_AUTOCOMPLETE_KEY = "player:autocomplete";
-
-export interface RedisPlayer {
-  username: string;
-  uuid: string;
-}
+const GUILD_AUTOCOMPLETE_KEY = "guild:autocomplete";
 
 @Injectable()
-export class PlayerSearchService {
-  private logger = new Logger("PlayerSearchService");
+export class GuildSearchService {
+  private logger = new Logger("GuildSearchService");
 
   public constructor(
     @InjectRedis() private readonly redis: Redis,
-    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>
+    @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>
   ) {}
 
   public async get(query: string): Promise<string[]> {
     query = query.trim().toLowerCase();
 
-    if (!query) return this.getCachedPlayers();
+    if (!query) return this.getCachedGuilds();
 
     const searchOptions = query.length >= 3 ? ["FUZZY", "MAX", "25"] : ["MAX", "25"];
 
     const redisResults = await (
       this.redis.call(
         "FT.SUGGET",
-        PLAYER_AUTOCOMPLETE_KEY,
+        GUILD_AUTOCOMPLETE_KEY,
         query,
         ...searchOptions
       ) as Promise<string[]>
@@ -54,37 +49,31 @@ export class PlayerSearchService {
 
     if (redisResults.length) return redisResults;
 
-    return this.getCachedPlayers(query);
+    return this.getCachedGuilds(query);
   }
 
-  public async add(player: RedisPlayer) {
-    if (player.username.length < 3 || player.username.length > 16) return;
+  public async add(name: string) {
+    if (name.length < 3 || name.length > 32) return;
 
     await this.redis
-      .call("FT.SUGADD", PLAYER_AUTOCOMPLETE_KEY, player.username, "1", "INCR")
+      .call("FT.SUGADD", GUILD_AUTOCOMPLETE_KEY, name, "1", "INCR")
       .catch((e) => this.handleRedisError(e));
   }
 
-  public delete(name: string) {
-    return this.redis
-      .call("FT.SUGDEL", PLAYER_AUTOCOMPLETE_KEY, name)
-      .catch((e) => this.handleRedisError(e));
-  }
-
-  private async getCachedPlayers(query?: string) {
+  private async getCachedGuilds(query?: string) {
     const filter = query ?
-      { usernameToLower: { $regex: `^${this.escapeRegex(query)}` } } :
+      { nameToLower: { $regex: `^${this.escapeRegex(query)}` } } :
       {};
 
-    const players = await this.playerModel
+    const guilds = await this.guildModel
       .find(filter)
-      .select({ username: true, _id: false })
-      .sort({ "stats.general.networkExp": -1 })
+      .select({ name: true, _id: false })
+      .sort({ exp: -1 })
       .limit(25)
       .lean()
       .exec();
 
-    return players.map(({ username }) => username);
+    return guilds.map(({ name }) => name);
   }
 
   private escapeRegex(input: string) {

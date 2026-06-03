@@ -9,10 +9,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional, IsString, MaxLength } from "class-validator";
 
-export class PlayerSearchDto {
+export class GuildSearchDto {
   @IsOptional()
   @IsString()
-  @MaxLength(16)
+  @MaxLength(32)
   @ApiProperty({ required: false })
   public query?: string;
 }

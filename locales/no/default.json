@@ -5,6 +5,7 @@
     "gtbhelper": "Det gjeldende hintet",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Et guild-navn eller guild-medlem",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Typen guild-søk som skal utføres",
     "mojang-player": "Et Minecraft-brukernavn eller UUID",
     "number": "Et tall",

@@ -5,6 +5,7 @@
     "gtbhelper": "A dica atual",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "O nome de uma guild ou um membro da guild",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "A categoria de pesquisa da guild para realizar",
     "mojang-player": "Um nome de usuário ou UUID",
     "number": "Um número",

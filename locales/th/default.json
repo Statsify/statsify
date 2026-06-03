@@ -5,6 +5,7 @@
     "gtbhelper": "คำใบ้ปัจจุบัน",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "ชื่อกิลด์หรือสมาชิกกิลด์",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "ประเภทของการค้นหากิลด์ที่จะดำเนินการ",
     "mojang-player": "ชื่อผู้ใช้ Minecraft หรือ UUID",
     "number": "หมายเลข",

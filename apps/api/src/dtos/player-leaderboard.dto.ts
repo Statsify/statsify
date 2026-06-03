@@ -7,7 +7,7 @@
  */
 
 import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
+import { IsEnum, IsInt, IsOptional, IsString, MaxLength, Min, MinLength } from "class-validator";
 import { LeaderboardScanner, Player } from "@statsify/schemas";
 import { PlayerDto } from "./player.dto.js";
 import { Transform } from "class-transformer";
@@ -31,4 +31,12 @@ export class PlayerLeaderboardDto extends PartialType(PlayerDto) {
   @Min(1)
   @ApiProperty({ minimum: 1, type: () => Number, required: false })
   public position?: number;
+}
+
+export class GuildScopedPlayerLeaderboardDto extends PlayerLeaderboardDto {
+  @IsString()
+  @MinLength(3)
+  @MaxLength(32)
+  @ApiProperty()
+  public guild: string;
 }

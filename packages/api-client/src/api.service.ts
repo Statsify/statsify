@@ -18,6 +18,7 @@ import {
   GetCommandUsageResponse,
   GetGamecountsResponse,
   GetGuildResponse,
+  GetGuildSearchResponse,
   GetKeyResponse,
   GetPlayerResponse,
   GetPlayerSearchResponse,
@@ -26,6 +27,7 @@ import {
   GetStatusResponse,
   GetUserResponse,
   GetWatchdogResponse,
+  PostGuildScopedPlayerLeaderboardResponse,
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
   PutUserBadgeResponse,
@@ -41,6 +43,11 @@ interface ExtraData {
   responseType?: ResponseType;
 }
 
+interface AutocompleteCacheEntry {
+  expiresAt: number;
+  value: Promise<string[]>;
+}
+
 // TODO: Move dtos in api to @statsify/api-client
 interface UpdateUser {
   serverMember?: boolean;
@@ -50,9 +57,12 @@ interface UpdateUser {
 }
 
 const isProduction = await config("environment") === "prod";
+const AUTOCOMPLETE_CACHE_TTL = 15_000;
+const AUTOCOMPLETE_CACHE_LIMIT = 250;
 
 export class ApiService {
   private axios: AxiosInstance;
+  private autocompleteCache = new Map<string, AutocompleteCacheEntry>();
 
   public constructor(private apiRoute: string, private apiKey: string) {
     this.axios = Axios.create({
@@ -96,21 +106,58 @@ export class ApiService {
     });
   }
 
-  public getPlayerRankings(fields: string[], uuid: string) {
+  public getGuildScopedPlayerLeaderboard(
+    guild: string,
+    field: string,
+    input: string | number,
+    type: LeaderboardQuery
+  ): Promise<PostGuildScopedPlayerLeaderboardResponse | null> {
+    return this.request<PostGuildScopedPlayerLeaderboardResponse>(
+      "/player/leaderboards/guild",
+      {},
+      "POST",
+      {
+        body: {
+          guild,
+          field,
+          [type === LeaderboardQuery.INPUT ? "player" : type]: input,
+        },
+      }
+    );
+  }
+
+  public getPlayerRankings(fields: string[], uuid: string, guild?: string) {
     return this.request<PostLeaderboardRankingsResponse[]>(
       "/player/leaderboards/rankings",
       {},
       "POST",
-      { body: { fields, uuid } }
+      { body: { fields, guild, uuid } }
     );
   }
 
   public getPlayerAutocomplete(query: string) {
-    return this.requestKey<GetPlayerSearchResponse, "players">(
-      "/player/search",
-      "players",
-      { query }
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return this.getCachedAutocomplete("player", normalizedQuery, () =>
+      this.requestKey<GetPlayerSearchResponse, "players">(
+        "/player/search",
+        "players",
+        normalizedQuery ? { query: normalizedQuery } : {}
+      )
     );
+  }
+
+  public getGuildAutocomplete(query: string) {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    const request = () =>
+      this.requestKey<GetGuildSearchResponse, "guilds">(
+        "/guild/search",
+        "guilds",
+        normalizedQuery ? { query: normalizedQuery } : {}
+      );
+
+    return this.getCachedAutocomplete("guild", normalizedQuery, request);
   }
 
   public getGuild(tag: string, type: GuildQuery) {
@@ -265,6 +312,34 @@ export class ApiService {
 
   public incrementCommand(command: string) {
     return this.request("/commands", { command }, "PATCH");
+  }
+
+  private getCachedAutocomplete(
+    namespace: string,
+    query: string,
+    request: () => Promise<string[]>
+  ) {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    const key = `${namespace}:${normalizedQuery}`;
+    const cached = this.autocompleteCache.get(key);
+    const now = Date.now();
+
+    if (cached && cached.expiresAt > now) return cached.value;
+
+    const value = request().catch(() => []);
+
+    this.autocompleteCache.set(key, {
+      value,
+      expiresAt: now + AUTOCOMPLETE_CACHE_TTL,
+    });
+
+    if (this.autocompleteCache.size > AUTOCOMPLETE_CACHE_LIMIT) {
+      const oldestKey = this.autocompleteCache.keys().next().value;
+      if (oldestKey) this.autocompleteCache.delete(oldestKey);
+    }
+
+    return value;
   }
 
   private async requestKey<T, K extends keyof T>(

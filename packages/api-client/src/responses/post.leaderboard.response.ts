@@ -51,3 +51,5 @@ export class PostLeaderboardResponse {
   @ApiProperty()
   public name: string;
 }
+
+export class PostGuildScopedPlayerLeaderboardResponse extends PostLeaderboardResponse {}

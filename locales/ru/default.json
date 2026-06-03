@@ -5,6 +5,7 @@
     "gtbhelper": "Текущая подсказка",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Название гильдии или участника гильдии",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Тип поиска гильдии для выполнения",
     "mojang-player": "Имя пользователя Minecraft или UUID",
     "number": "Номер",

@@ -7,7 +7,7 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum } from "class-validator";
+import { IsEnum, IsOptional, IsString } from "class-validator";
 import { LeaderboardScanner, Player } from "@statsify/schemas";
 import { UuidDto } from "./uuid.dto.js";
 
@@ -17,4 +17,9 @@ export class PlayerRankingsDto extends UuidDto {
   @ApiProperty({ enum: fields, type: [String] })
   @IsEnum(fields, { each: true })
   public fields: string[];
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  public guild?: string;
 }

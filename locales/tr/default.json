@@ -5,6 +5,7 @@
     "gtbhelper": "Mevcut ipucu",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Guild ismi veya üyesi",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Gerçekleştirilecek guild arama tipi",
     "mojang-player": "Minecraft kullanıcı adı veya UUID'si",
     "number": "Bir sayı",

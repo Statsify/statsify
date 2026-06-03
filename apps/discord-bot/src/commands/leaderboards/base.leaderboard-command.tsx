@@ -33,7 +33,10 @@ import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
 
-type BaseLeaderboardProps = Omit<LeaderboardProfileProps, "fields" | "name" | "data">;
+type BaseLeaderboardProps = Omit<
+  LeaderboardProfileProps,
+  "background" | "fields" | "logo" | "name" | "data"
+>;
 
 interface LeaderboardParams {
   input: string | number;
@@ -50,7 +53,7 @@ type GetLeaderboardDataIcon = (id: string) => Promise<Image>;
 
 export interface CreateLeaderboardOptions {
   context: CommandContext;
-  background: Image;
+  background: Image | Promise<Image>;
   type: LeaderboardType;
   getLeaderboard: GetLeaderboard;
   field: string;
@@ -70,13 +73,11 @@ export class BaseLeaderboardCommand {
     const user = context.getUser();
     const t = context.t();
     const cache = new Map<number, IMessage>();
-
-    const logo = await getLogo(user);
+    const backgroundPromise = Promise.resolve(background);
+    const logoPromise = getLogo(user);
 
     const props: BaseLeaderboardProps = {
       t,
-      background,
-      logo,
       user,
       type,
     };
@@ -112,12 +113,14 @@ export class BaseLeaderboardCommand {
           field,
           params,
           props,
+          backgroundPromise,
+          logoPromise,
           getLeaderboardDataIcon
         );
 
         if (interaction.getUserId() === userId && !message.ephemeral) {
           up.disable(page === 0);
-          currentPage = page || currentPage;
+          currentPage = page ?? currentPage;
           const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
 
           context.reply({
@@ -224,6 +227,8 @@ export class BaseLeaderboardCommand {
       field,
       { input: currentPage, type: LeaderboardQuery.PAGE },
       props,
+      backgroundPromise,
+      logoPromise,
       getLeaderboardDataIcon
     );
 
@@ -241,7 +246,7 @@ export class BaseLeaderboardCommand {
       cache.clear();
     }, 300_000);
 
-    currentPage = page || currentPage;
+    currentPage = page ?? currentPage;
 
     return { ...message, components: [row] };
   }
@@ -254,6 +259,8 @@ export class BaseLeaderboardCommand {
     field: string,
     params: LeaderboardParams,
     props: BaseLeaderboardProps,
+    backgroundPromise: Promise<Image>,
+    logoPromise: Promise<Image>,
     getLeaderboardDataIcon?: GetLeaderboardDataIcon
   ): Promise<[message: IMessage, page: number | null]> {
     if (params.type === LeaderboardQuery.PAGE && cache.has(params.input as number)) {
@@ -268,10 +275,12 @@ export class BaseLeaderboardCommand {
       field,
       params,
       props,
+      backgroundPromise,
+      logoPromise,
       getLeaderboardDataIcon
     );
 
-    if (params.type === LeaderboardQuery.PAGE && page) cache.set(page, message);
+    if (params.type === LeaderboardQuery.PAGE && page !== null) cache.set(page, message);
 
     return [message, page];
   }
@@ -283,9 +292,15 @@ export class BaseLeaderboardCommand {
     field: string,
     params: LeaderboardParams,
     props: BaseLeaderboardProps,
+    backgroundPromise: Promise<Image>,
+    logoPromise: Promise<Image>,
     getLeaderboardDataIcon?: GetLeaderboardDataIcon
   ): Promise<[message: IMessage, page: number | null]> {
-    const leaderboard = await getLeaderboard(field, params.input, params.type);
+    const [background, logo, leaderboard] = await Promise.all([
+      backgroundPromise,
+      logoPromise,
+      getLeaderboard(field, params.input, params.type),
+    ]);
 
     if (!leaderboard) {
       const message = {
@@ -317,6 +332,8 @@ export class BaseLeaderboardCommand {
     const canvas = render(
       <LeaderboardProfile
         {...props}
+        background={background}
+        logo={logo}
         name={leaderboard.name}
         fields={leaderboard.fields}
         data={leaderboardData}

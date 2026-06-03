@@ -5,6 +5,7 @@
     "gtbhelper": "Sugestie actuală",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Numele Guild-ului sau membru al guild-ului",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Tipul de căutare de guild de efectuat",
     "mojang-player": "Numele jucătorului de Minecraft sau UUID",
     "number": "Un număr",

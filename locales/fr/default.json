@@ -5,6 +5,7 @@
     "gtbhelper": "L'indice actuel",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Un nom ou membre de guilde",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Le type de recherche de guilde à effectuer",
     "mojang-player": "Un nom d'utilisateur ou UUID Minecraft",
     "number": "Un nombre",

@@ -11,14 +11,22 @@ import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
+import {
+  AbstractArgument,
+  ApiService,
+  CommandContext,
+  LocalizationString,
+} from "@statsify/discord";
 import {
   ClassMetadata,
   LeaderboardScanner,
   METADATA_KEY,
   PlayerStats,
 } from "@statsify/schemas";
+import { Container } from "typedi";
 import { removeFormatting } from "@statsify/util";
+
+const apiClient = Container.get(ApiService);
 
 const entries = Object.entries(
   Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
@@ -70,3 +78,48 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
       .slice(0, 25);
   }
 }
+
+export class PlayerLeaderboardGuildArgument extends AbstractArgument {
+  public name = "guild";
+  public description: LocalizationString;
+  public type = ApplicationCommandOptionType.String;
+  public required = false;
+  public autocomplete = true;
+
+  public constructor() {
+    super();
+    this.description = (t) => t("arguments.guild-filter");
+  }
+
+  public async autocompleteHandler(
+    context: CommandContext
+  ): Promise<APIApplicationCommandOptionChoice[]> {
+    const query = context.option<string>(this.name, "").toLowerCase();
+
+    const searched = { name: query, value: query };
+
+    if (!query) {
+      const guilds = await apiClient.getGuildAutocomplete(query);
+
+      return guilds.map((guild) => ({ name: guild, value: guild }));
+    }
+
+    if (query.length > 32) return [searched];
+
+    const guilds = await apiClient.getGuildAutocomplete(query);
+
+    let results = guilds.map((guild) => ({ name: guild, value: guild }));
+
+    if (query && (!guilds.length || !guilds.some((guild) => guild.toLowerCase() === query))) {
+      results = results.slice(0, 24);
+      results.push(searched);
+    }
+
+    return results;
+  }
+}
+
+export const createPlayerLeaderboardArguments = (prefix: keyof PlayerStats) => [
+  new PlayerLeaderboardArgument(prefix),
+  new PlayerLeaderboardGuildArgument(),
+];

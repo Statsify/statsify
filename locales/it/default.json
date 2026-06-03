@@ -5,6 +5,7 @@
     "gtbhelper": "Suggerimento attuale",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Un nome di una gilda o un membro di una gilda",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Il tipo di ricerca di gilda da eseguire",
     "mojang-player": "Un nome utente di Minecraft o UUID",
     "number": "Numero",

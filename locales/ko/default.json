@@ -5,6 +5,7 @@
     "gtbhelper": "현재 주어진 힌트",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "길드 이름 또는 길드 구성원",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "검색하고자 하는 길드 유형",
     "mojang-player": "Minecraft 사용자 이름 또는 UUID",
     "number": "숫자",

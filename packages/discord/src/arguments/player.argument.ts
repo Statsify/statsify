@@ -31,9 +31,15 @@ export class PlayerArgument extends AbstractArgument {
   public async autocompleteHandler(
     context: CommandContext
   ): Promise<APIApplicationCommandOptionChoice[]> {
-    const query = context.option<string>(this.name).toLowerCase();
+    const query = context.option<string>(this.name, "").toLowerCase();
 
     const searched = { name: query, value: query };
+
+    if (!query) {
+      const players = await apiClient.getPlayerAutocomplete(query);
+
+      return players.map((p) => ({ name: p, value: p }));
+    }
 
     if (query.length > 16) return [searched];
 

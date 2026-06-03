@@ -10,6 +10,7 @@ export * from "./cache.dto.js";
 export * from "./cached-player.dto.js";
 export * from "./guild-leaderboard.dto.js";
 export * from "./guild-rankings.dto.js";
+export * from "./guild-search.dto.js";
 export * from "./guild.dto.js";
 export * from "./head.dto.js";
 export * from "./user.dto.js";

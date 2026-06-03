@@ -22,7 +22,7 @@ export class PlayerSearchController {
   @ApiOkResponse({ type: GetPlayerSearchResponse })
   @Auth({ weight: 0 })
   @Get()
-  public async getPlayers(@Query() { query }: PlayerSearchDto) {
+  public async getPlayers(@Query() { query = "" }: PlayerSearchDto) {
     const players = await this.playerSearchService.get(query);
 
     return {

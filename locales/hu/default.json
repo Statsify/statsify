@@ -5,6 +5,7 @@
     "gtbhelper": "A jelenlegi segítség",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Egy guild név vagy guild tag",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "A guild keresés típusa",
     "mojang-player": "Egy Minecraft felhasználónév vagy UUID",
     "number": "Egy szám",

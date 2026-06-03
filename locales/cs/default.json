@@ -5,6 +5,7 @@
     "gtbhelper": "Aktuální nápověda",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "Guild název nebo její člen",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "Způsob hledání",
     "mojang-player": "Minecraft jméno nebo UUID",
     "number": "Číslo",

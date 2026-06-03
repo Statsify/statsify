@@ -5,6 +5,7 @@
     "gtbhelper": "目前提示",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "一个公会名称或公会成员",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "要执行的公会的搜索类型",
     "mojang-player": "一个我的世界的用户名或UUID",
     "number": "一个数字",

@@ -17,11 +17,16 @@ import { Body, Controller, Post } from "@nestjs/common";
 import {
   ErrorResponse,
   LeaderboardQuery,
+  PostGuildScopedPlayerLeaderboardResponse,
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
+import {
+  GuildScopedPlayerLeaderboardDto,
+  PlayerLeaderboardDto,
+  PlayerRankingsDto,
+} from "#dtos";
 import { Player } from "@statsify/schemas";
-import { PlayerLeaderboardDto, PlayerRankingsDto } from "#dtos";
 import { PlayerLeaderboardService } from "./player-leaderboard.service.js";
 
 @Controller("/player/leaderboards")
@@ -56,12 +61,49 @@ export class PlayerLeaderboardsController {
     return this.playerLeaderboardService.getLeaderboard(Player, field, input, type);
   }
 
+  @Post("/guild")
+  @ApiOperation({ summary: "Get a Guild Scoped Player Leaderboard" })
+  @ApiOkResponse({ type: PostGuildScopedPlayerLeaderboardResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @Auth({ weight: 3 })
+  public getGuildScopedPlayerLeaderboard(
+    @Body() { field, page, player, position, guild }: GuildScopedPlayerLeaderboardDto
+  ) {
+    let input: number | string;
+    let type: LeaderboardQuery;
+
+    if (player) {
+      input = player;
+      type = LeaderboardQuery.INPUT;
+    } else if (position) {
+      input = position;
+      type = LeaderboardQuery.POSITION;
+    } else {
+      input = page;
+      type = LeaderboardQuery.PAGE;
+    }
+
+    return this.playerLeaderboardService.getGuildScopedLeaderboard(
+      guild,
+      field,
+      input,
+      type
+    );
+  }
+
   @Post("/rankings")
   @ApiOperation({ summary: "Get a Player Rankings" })
   @ApiOkResponse({ type: [PostLeaderboardRankingsResponse] })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 5 })
-  public async getPlayerRankings(@Body() { fields, uuid }: PlayerRankingsDto) {
+  public async getPlayerRankings(@Body() { fields, guild, uuid }: PlayerRankingsDto) {
+    if (guild)
+      return this.playerLeaderboardService.getGuildScopedLeaderboardRankings(
+        guild,
+        fields,
+        uuid
+      );
+
     return this.playerLeaderboardService.getLeaderboardRankings(Player, fields, uuid);
   }
 }

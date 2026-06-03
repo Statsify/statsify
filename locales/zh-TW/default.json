@@ -5,6 +5,7 @@
     "gtbhelper": "目前提示",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "一個公會名稱或公會成員",
+    "guild-filter": "A guild name or guild ID",
     "guild-type": "要搜尋的公會類型",
     "mojang-player": "一個當個創世神的使用者名稱或是UUID",
     "number": "一個數字",
