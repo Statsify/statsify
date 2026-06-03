@@ -58,4 +58,4 @@ jobs:
         run: pnpm build
 
       - name: Test
-        run: pnpm test:coverage
+        run: pnpm test:coverage --changed=$TURBO_SCM_BASE
