@@ -97,6 +97,7 @@ export class BowPVPBaseDuelsGameMode extends PVPBaseDuelsGameMode {
 export class BowBaseDuelsGameMode extends PVPBaseDuelsGameMode {
   @Field()
   public shotsFired: number;
+
   @Field()
   public shotsHit: number;
 
@@ -290,6 +291,7 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
 export class SingleBowPVPDuelsGameMode extends SinglePVPDuelsGameMode {
   @Field()
   public shotsFired: number;
+
   @Field()
   public shotsHit: number;
 
