@@ -55,7 +55,7 @@ jobs:
         run: pnpm typecheck --affected
 
       - name: Build
-        run: pnpm build --affected
+        run: pnpm build
 
       - name: Test
-        run: pnpm test:coverage --changed=$TURBO_SCM_BASE
+        run: pnpm test:coverage
