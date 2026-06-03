@@ -15,6 +15,8 @@ out
 *.tar.gz
 *.7z
 *.rar
+.DS_Store
+**/.DS_Store
 .swc
 .next
 .
