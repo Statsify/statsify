@@ -137,6 +137,13 @@ export abstract class AbstractCommandListener {
     const commandSpan = transaction?.startChild({
       op: "discord.command.execute",
       description: commandName,
+        data: {
+          "command.name": command.name,
+          "command.group": command.group,
+          "command.full_name": commandName,
+          "guild.id": context.getInteraction().getGuildId(),
+          "user.tier": context.getUser()?.tier ?? UserTier.NONE,
+        },
     });
 
     try {

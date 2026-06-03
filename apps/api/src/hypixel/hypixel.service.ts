@@ -145,6 +145,7 @@ export class HypixelService {
       op: "hypixel.fetch",
       description: `GET ${this.httpService.axiosRef.getUri({ url })}`,
       data: {
+        "hypixel.endpoint": url,
         "http.method": "GET",
         "http.route": url,
       },

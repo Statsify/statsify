@@ -33,8 +33,8 @@ function instrumentCanvasToBuffer() {
       op: "png.encode",
       description: "Encode canvas as PNG",
       data: {
-        width: this.width,
-        height: this.height,
+        "render.width": this.width,
+        "render.height": this.height,
       },
     });
 

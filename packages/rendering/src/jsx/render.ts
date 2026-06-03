@@ -131,7 +131,10 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
   return withSentrySpanSync({
     op: "render.generate",
     description: "Generate render canvas",
-    data: { width, height },
+    data: {
+      "render.width": width,
+      "render.height": height,
+    },
   }, () => {
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext("2d");

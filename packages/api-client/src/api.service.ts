@@ -47,6 +47,23 @@ interface ExtraData {
   responseType?: ResponseType;
 }
 
+function getCacheHit(data: unknown): boolean | undefined {
+  if (!data || typeof data !== "object") return undefined;
+
+  if ("cached" in data && typeof data.cached === "boolean") {
+    return data.cached;
+  }
+
+  for (const value of Object.values(data)) {
+    if (value && typeof value === "object" && "cached" in value) {
+      const cached = (value as { cached?: unknown }).cached;
+      if (typeof cached === "boolean") return cached;
+    }
+  }
+
+  return undefined;
+}
+
 // TODO: Move dtos in api to @statsify/api-client
 interface UpdateUser {
   serverMember?: boolean;
@@ -298,6 +315,7 @@ export class ApiService {
       op: "statsify.fetch",
       description: `${method} ${url}`,
       data: {
+        "cache.level": typeof params?.cache === "string" ? params.cache : undefined,
         "http.method": method,
         "http.route": url,
       },
@@ -312,6 +330,9 @@ export class ApiService {
       });
 
       span?.setHttpStatus(response.status);
+
+      const cacheHit = getCacheHit(response.data);
+      if (cacheHit !== undefined) span.setAttribute("cache.hit", cacheHit);
 
       return response;
     });

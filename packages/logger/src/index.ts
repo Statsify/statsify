@@ -16,6 +16,8 @@ const DEFAULT_LOG_LEVELS: LogLevel[] = ["log", "error", "warn", "debug", "verbos
 
 type SentryTagValue = boolean | number | string | null | undefined;
 
+type SentryLogLevel = Extract<LogLevel, "error" | "fatal" | "warn">;
+
 export interface SentrySpanOptions {
   op: string;
   description?: string;
@@ -98,6 +100,18 @@ export function setSentryMemoryUsage(span = getSentryTransaction()) {
   span.setData("memory.heap_used.bytes", heapUsed);
 }
 
+function stringifyMessage(message: unknown) {
+  if (message instanceof Error) return message.message;
+  if (typeof message === "string") return message;
+  if (typeof message !== "object" || message === null) return String(message);
+
+  try {
+    return JSON.stringify(message);
+  } catch {
+    return String(message);
+  }
+}
+
 /**
  * A logger implementing the NestJS LoggerService interface. However can be used anywhere.
  * Outputs: {icon} {context} {time} {message}
@@ -157,6 +171,9 @@ export class Logger implements LoggerService {
       ...optionalParameters,
     ]);
 
+    const sentryLog = this.getContextAndMessages([message, ...optionalParameters]);
+
+    Logger.captureSentryLog(sentryLog.messages, sentryLog.context, "error");
     Logger.printMessage(messages, context, "error", "stderr", "📉");
   }
 
@@ -172,6 +189,7 @@ export class Logger implements LoggerService {
       ...optionalParameters,
     ]);
 
+    Logger.captureSentryLog(messages, context, "warn");
     Logger.printMessage(messages, context, "warn");
   }
 
@@ -227,6 +245,9 @@ export class Logger implements LoggerService {
       ...optionalParameters,
     ]);
 
+    const sentryLog = this.getContextAndMessages([message, ...optionalParameters]);
+
+    Logger.captureSentryLog(sentryLog.messages, sentryLog.context, "fatal");
     Logger.printMessage(messages, context, "fatal", "stderr", "📉");
   }
 
@@ -298,6 +319,25 @@ export class Logger implements LoggerService {
       )} ${chalk.gray(`${timeStamp}${isProduction ? "" : "ms"}`)} ${output}\n`;
 
       process[writeStreamType].write(computedMessage);
+    }
+  }
+
+  private static captureSentryLog(
+    messages: unknown[],
+    context: string | undefined,
+    logLevel: SentryLogLevel
+  ) {
+    for (const message of messages) {
+      Sentry.logger[logLevel](stringifyMessage(message), {
+        "logger.context": context ?? "Default",
+        "logger.level": logLevel,
+        ...(message instanceof Error ?
+          {
+            "error.name": message.name,
+            "error.message": message.message,
+          } :
+          {}),
+      });
     }
   }
 }

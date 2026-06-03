@@ -70,6 +70,9 @@ export abstract class LeaderboardService {
     await withSentrySpan({
       op: "redis.write",
       description: `add ${constructor.name} leaderboards`,
+      data: {
+        "leaderboard.type": name,
+      },
     }, () => pipeline.exec());
   }
 
@@ -125,7 +128,8 @@ export abstract class LeaderboardService {
       field,
       top,
       bottom - 1,
-      sort
+      sort,
+      type
     );
 
     const additionalFieldMetadata = additionalFields.map((k) =>
@@ -218,6 +222,10 @@ export abstract class LeaderboardService {
     const responses = await withSentrySpan({
       op: "redis.get",
       description: `get ${constructor.name} rankings`,
+      data: {
+        "leaderboard.fields": fields,
+        "leaderboard.type": constructorName,
+      },
     }, () => pipeline.exec());
 
     if (!responses) throw new InternalServerErrorException();
@@ -267,14 +275,22 @@ export abstract class LeaderboardService {
     field: string,
     top: number,
     bottom: number,
-    sort = "DESC"
+    sort = "DESC",
+    queryType?: LeaderboardQuery
   ) {
     const name = constructor.name.toLowerCase();
-    field = `${name}.${field}`;
+    const leaderboardField = field;
+    field = `${name}.${leaderboardField}`;
 
     const scores = await withSentrySpan({
       op: "redis.get",
       description: `get ${constructor.name} leaderboards`,
+      data: {
+        "leaderboard.field": leaderboardField,
+        "leaderboard.query_type": queryType,
+        "leaderboard.sort": sort,
+        "leaderboard.type": name,
+      },
     }, () =>
       sort === "ASC" ?
         this.redis.zrange(field, top, bottom, "WITHSCORES") :

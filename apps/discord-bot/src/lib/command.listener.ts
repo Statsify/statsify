@@ -76,6 +76,12 @@ export class CommandListener extends AbstractCommandListener {
         "command.name": name,
         "command.group": group,
         "command.subcommand": subcommand,
+        "guild.id": interaction.getGuildId(),
+      },
+      tags: {
+        "command.name": name,
+        "command.group": group,
+        "command.subcommand": subcommand ?? "none",
       },
       tags: {
         "command.name": name,
