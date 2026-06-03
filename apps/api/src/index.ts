@@ -18,8 +18,7 @@ import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
 import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
 
 const directory = import.meta.dirname;
