@@ -10,13 +10,15 @@ import { Container } from "typedi";
 import { Logger } from "@statsify/logger";
 import { readdir } from "node:fs/promises";
 import { statSync } from "node:fs";
+import { join } from "node:path";
 import type { CommandResolvable } from "./command.resolvable.js";
 import { scanCommands } from "./command.builder.js";
+import { pathToFileURL } from "node:url";
 
 const logger = new Logger("CommandLoader");
 
 export async function loadCommands(dir: string) {
-  const files = await getCommandFiles(dir);
+  const files = await getCommandFileUrls(dir);
   const commands = await Promise.all(files.map(importCommand));
 
   return new Map<string, CommandResolvable>(
@@ -54,19 +56,19 @@ async function importCommand(file: string) {
     });
 }
 
-async function getCommandFiles(dir: string): Promise<string[]> {
+async function getCommandFileUrls(dir: string): Promise<string[]> {
   const toLoad: string[] = [];
 
   const files = await readdir(dir);
 
   await Promise.all(
     files.map(async (file) => {
-      const path = `${dir}/${file}`;
+      const path = join(dir, file);
 
       if (statSync(path).isDirectory()) {
-        toLoad.push(...(await getCommandFiles(path)));
+        toLoad.push(...(await getCommandFileUrls(path)));
       } else if (file.endsWith(".command.js")) {
-        toLoad.push(path);
+        toLoad.push(pathToFileURL(path).href);
       }
     }),
   );

@@ -9,6 +9,7 @@
 import { join } from "node:path";
 import { existsSync } from "node:fs";
 import type { DeepFlatten } from "./flatten.js";
+import { pathToFileURL } from "node:url";
 
 const directory = import.meta.dirname;
 
@@ -280,13 +281,15 @@ async function loadConfig(): Promise<{ default: Config }> {
     };
   }
 
-  if (existsSync(join(directory, "../../../config.json"))) {
-    return import(join(directory, "../../../config.json"));
-  } else if (existsSync(join(directory, "../../../config.js"))) {
-    return import(join(directory, "../../../config.js"));
+  for (const file of ["config.json", "config.js"]) { 
+    const path = join(directory, "../../../", file);
+
+    if (existsSync(path)) {
+      return import(pathToFileURL(path).href);
+    }
   }
-    throw new Error("No config file detected!");
   
+  throw new Error("No config file detected!");
 }
 
 let cfg: Config;
