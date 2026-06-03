@@ -85,6 +85,10 @@
     "no-prototype-builtins": "error",
     "no-useless-return": "error",
     "no-warning-comments": "warn",
+    "no-unused-vars": [
+      "error",
+      { "fix": { "imports": "safe-fix", "variables": "safe-fix" } },
+    ],
     "eqeqeq": "error",
     "class-methods-use-this": "warn",
     "symbol-description": "error",

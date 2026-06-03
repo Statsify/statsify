@@ -15,8 +15,7 @@ import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 import { Logger } from "@statsify/logger";
 import { VerifyCommand } from "#commands/verify.command";
 import { config } from "@statsify/util";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 
 const directory = import.meta.dirname;
 
