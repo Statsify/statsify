@@ -35,7 +35,6 @@ export const CopsAndCrimsProfile = ({
     [t("stats.headshotKills"), t(copsandcrims.overall.headshotKills), "§4"],
     [t("stats.grenadeKills"), t(copsandcrims.overall.grenadeKills), "§2"],
     [t("stats.shotsFired"), t(copsandcrims.overall.shotsFired), "§6"],
-    [t("stats.shotsPerKill"), t(copsandcrims.overall.shotsPerKill), "§b"],
   ];
 
   let table: JSX.Element;
