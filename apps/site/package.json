@@ -13,16 +13,16 @@
     "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.4",
     "@statsify/schemas": "workspace:^",
-    "@tanstack/react-query": "^5.90.12",
+    "@tanstack/react-query": "^5.101.0",
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.3.1",
-    "date-fns": "^4.1.0",
-    "motion": "^12.23.25",
-    "next": "^16.0.7",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "date-fns": "^4.4.0",
+    "motion": "^12.40.0",
+    "next": "^16.2.7",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "tailwind-merge": "^3.6.0",
-    "zod": "^4.1.5"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@statsify/api-client": "workspace:^",
@@ -30,7 +30,7 @@
     "@types/node": "^25.9.1",
     "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",
-    "mongoose": "^8.18.0",
+    "mongoose": "^8.24.0",
     "postcss": "^8.5.15",
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3"

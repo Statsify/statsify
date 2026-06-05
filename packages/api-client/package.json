@@ -11,14 +11,14 @@
     "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
-    "@nestjs/common": "^11.1.6",
-    "@nestjs/swagger": "^11.2.0",
-    "@sentry/node": "^7.118.0",
+    "@nestjs/common": "^11.1.24",
+    "@nestjs/swagger": "^11.4.4",
+    "@sentry/node": "^7.120.4",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
-    "axios": "^1.11.0"
+    "axios": "^1.17.0"
   },
   "imports": {
     "#exceptions": {

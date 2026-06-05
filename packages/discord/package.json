@@ -11,24 +11,24 @@
     "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
-    "@sentry/node": "^7.118.0",
+    "@sentry/node": "^7.120.4",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
-    "axios": "^1.11.0",
-    "discord-api-types": "^0.38.22",
+    "axios": "^1.17.0",
+    "discord-api-types": "^0.38.48",
     "i18next": "^21.10.0",
-    "i18next-fs-backend": "^2.3.2",
+    "i18next-fs-backend": "^2.6.6",
     "reflect-metadata": "^0.2.2",
     "skia-canvas": "3.0.8",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@types/i18next-fs-backend": "^1.1.5"
+    "@types/i18next-fs-backend": "^1.2.0"
   },
   "imports": {
     "#arguments": {
