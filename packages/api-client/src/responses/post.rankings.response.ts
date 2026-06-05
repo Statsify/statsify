@@ -19,5 +19,23 @@ export class PostLeaderboardRankingsResponse {
   public value: number | string;
 
   @ApiProperty()
+  public rawValue: number;
+
+  @ApiProperty()
   public rank: number;
+
+  @ApiProperty()
+  public count: number;
+
+  @ApiProperty()
+  public topPercent: number;
+
+  @ApiProperty()
+  public rarityScore: number;
+
+  @ApiProperty()
+  public flexScore: number;
+
+  @ApiProperty()
+  public balancedScore: number;
 }

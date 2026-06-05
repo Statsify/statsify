@@ -9,21 +9,16 @@
 import { LocalizeFunction } from "@statsify/discord";
 
 export const formatPosition = (t: LocalizeFunction, position: number): string => {
-  let color = "§f";
+  if (position === 1) return `§#ffd700§l#${t(position)}`;
+  if (position === 2) return `§#c0c0c0§l#${t(position)}`;
+  if (position === 3) return `§#cd7f32§l#${t(position)}`;
 
-  switch (position) {
-    case 1:
-      color = "§#ffd700";
-      break;
+  let color: string;
+  if (position <= 10) color = "§b";
+  else if (position <= 100) color = "§a";
+  else if (position <= 1000) color = "§9";
+  else if (position <= 10_000) color = "§7";
+  else color = "§8";
 
-    case 2:
-      color = "§#c0c0c0";
-      break;
-
-    case 3:
-      color = "§#cd7f32";
-      break;
-  }
-
-  return `${color}#§l${t(position)}`;
+  return `${color}#${t(position)}`;
 };
