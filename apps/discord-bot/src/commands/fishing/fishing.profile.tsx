@@ -108,7 +108,7 @@ const FishingOverview = ({
   const { fishing } = player.stats.general;
 
   return (
-    <Table.table>
+    <Table.table >
       <Table.ts title="§bLifetime Catches">
         <Table.tr>
           <Table.td title="Fish" value={t(fishing.fish)} color="§e" />
@@ -171,8 +171,6 @@ const FishingOverview = ({
             value={`${t(fishing.enchants.mythicalHook.level)} ${fishing.enchants.mythicalHook.enabled ? "On" : "Off"}`}
             color="§d"
           />
-        </Table.tr>
-        <Table.tr>
           <Table.td
             title="Collector"
             value={`${t(fishing.enchants.collector.level)} ${fishing.enchants.collector.enabled ? "On" : "Off"}`}
@@ -202,7 +200,7 @@ const FishingMythicals = ({
 
   return (
     <Table.table>
-      {arrayGroup(fishing.mythicals, 2).map((row) => (
+      {arrayGroup(fishing.mythicals, 3).map((row) => (
         <Table.tr>
           {row.map((mythical) => (
             <Table.ts title={`§d${mythical.name}`}>
@@ -238,7 +236,7 @@ const FishingSpecials = ({
   return (
     <FishingCollectionTable
       items={fishing.specialFish.slice(offset, offset + 24)}
-      columns={3}
+      columns={4}
     />
   );
 };
@@ -260,7 +258,7 @@ const FishingCollections = ({
       <Table.ts title="§bHook Trails">
         <FishingCollectionTable
           items={fishing.hookTrailCollection}
-          columns={2}
+          columns={4}
           compact
         />
       </Table.ts>
