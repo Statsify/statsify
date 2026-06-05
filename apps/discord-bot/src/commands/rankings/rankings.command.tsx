@@ -40,15 +40,17 @@ import {
   getLeaderboardFields,
 } from "@statsify/schemas";
 import {
+  ActionRowBuilder,
   ApiService,
   ButtonBuilder,
-  Choice,
-  ChoiceArgument,
   Command,
   CommandContext,
   ErrorMessage,
-  scrollingPagination,
+  Interaction,
+  Message,
   PlayerArgument,
+  SelectMenuBuilder,
+  SelectMenuOptionBuilder,
   SubCommand,
   type SubCommandOptions,
 } from "@statsify/discord";
@@ -164,38 +166,33 @@ function buildSummary(
   );
 }
 
-const choices = games.map((g) => [g.name, g.key] as Choice);
-choices.unshift(["All", "all"]);
-
-const sortChoices: Choice[] = [
-  ["Rank", "rank"],
-  ["Top %", "percentile"],
-  ["Rarity", "rarity"],
-  ["Flex", "flex"],
-  ["Balanced", "balanced"],
-  ["Value", "value"],
+const SORT_OPTIONS: Array<{ label: string; value: RankingsSortMode }> = [
+  { label: "Rank", value: "rank" },
+  { label: "Top %", value: "percentile" },
+  { label: "Rarity", value: "rarity" },
+  { label: "Flex", value: "flex" },
+  { label: "Balanced", value: "balanced" },
+  { label: "Value", value: "value" },
 ];
 
-const viewChoices: Choice[] = [
-  ["List", "list"],
-  ["Best Per Game", "best-per-game"],
-  ["Summary", "summary"],
+const VIEW_OPTIONS: Array<{ label: string; value: RankingsView }> = [
+  { label: "List", value: "list" },
+  { label: "Best Per Game", value: "best-per-game" },
+  { label: "Summary", value: "summary" },
 ];
 
-const minChoices: Choice[] = [
-  ["Top 10", "10"],
-  ["Top 100", "100"],
-  ["Top 1,000", "1000"],
-  ["Top 10,000", "10000"],
+const MIN_OPTIONS: Array<{ label: string; value: string; rank: number }> = [
+  { label: "No Filter", value: "0", rank: 0 },
+  { label: "Top 10", value: "10", rank: 10 },
+  { label: "Top 100", value: "100", rank: 100 },
+  { label: "Top 1,000", value: "1000", rank: 1000 },
+  { label: "Top 10,000", value: "10000", rank: 10_000 },
 ];
+
+const PAGINATION_TIMEOUT_MS = 300_000;
 
 const options: Partial<SubCommandOptions> = {
-  args: [
-    PlayerArgument,
-    new ChoiceArgument({ name: "sort", required: false, choices: sortChoices }),
-    new ChoiceArgument({ name: "view", required: false, choices: viewChoices }),
-    new ChoiceArgument({ name: "min", required: false, choices: minChoices }),
-  ],
+  args: [PlayerArgument],
   tier: UserTier.IRON,
   preview: "rankings.png",
 };
@@ -440,24 +437,18 @@ export class RankingsCommand {
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
-    const sortMode = (context.option<RankingsSortMode | undefined>("sort") ?? "rank") as RankingsSortMode;
-    const view = (context.option<RankingsView | undefined>("view") ?? "list") as RankingsView;
-    const minOption = context.option<string | undefined>("min");
-    const minRank = minOption ? Number(minOption) : undefined;
-
     const isGameNotAll = game !== "all";
 
     const filteredFields = isGameNotAll ?
       fields.filter((f) => f.startsWith(`stats.${game}`)) :
       fields;
 
-    const rawRankings = await this.apiService.getPlayerRankings(filteredFields, player.uuid);
+    const rawRankings = (await this.apiService.getPlayerRankings(
+      filteredFields,
+      player.uuid
+    )) as RankingsRow[];
 
-    const rankings = minRank !== undefined ?
-      rawRankings.filter((r) => r.rank <= minRank) :
-      rawRankings;
-
-    if (rankings.length === 0)
+    if (rawRankings.length === 0)
       throw new ErrorMessage(
         (t) => t("errors.noRankings.title"),
         (t) =>
@@ -473,34 +464,82 @@ export class RankingsCommand {
       getBackground(...mapBackground(modes, modes.getApiModes()[0])),
     ]);
 
-    const sortedRankings = sortRankings(rankings as RankingsRow[], sortMode);
-
     const formattedGame = isGameNotAll ?
       games.find((g) => g.key === game)?.formatted :
       undefined;
 
-    let listGroups: RankingsRow[][] = [];
-    let summaryGroups: SummaryRow[][] = [];
+    let sortMode: RankingsSortMode = "rank";
+    let view: RankingsView = "list";
+    let minRank = 0;
+    let pageIndex = 0;
 
-    if (view === "summary") {
-      const summaryRows = buildSummary(sortedRankings, sortMode);
-      summaryGroups = arrayGroup(summaryRows, 10);
-    } else if (view === "best-per-game") {
-      const best = pickBestPerGame(sortedRankings, sortMode);
-      listGroups = arrayGroup(best, 10);
-    } else {
-      listGroups = arrayGroup(sortedRankings, 10);
+    const sortMenu = new SelectMenuBuilder();
+    for (const opt of SORT_OPTIONS) {
+      sortMenu.option(new SelectMenuOptionBuilder().label(opt.label).value(opt.value));
+    }
+    sortMenu.activeOption(0);
+
+    const viewMenu = new SelectMenuBuilder();
+    for (const opt of VIEW_OPTIONS) {
+      viewMenu.option(new SelectMenuOptionBuilder().label(opt.label).value(opt.value));
+    }
+    viewMenu.activeOption(0);
+
+    const minMenu = new SelectMenuBuilder();
+    for (const opt of MIN_OPTIONS) {
+      minMenu.option(new SelectMenuOptionBuilder().label(opt.label).value(opt.value));
+    }
+    minMenu.activeOption(0);
+
+    const prevButton = new ButtonBuilder()
+      .emoji(t("emojis:up"))
+      .style(ButtonStyle.Success);
+    const nextButton = new ButtonBuilder()
+      .emoji(t("emojis:down"))
+      .style(ButtonStyle.Danger);
+
+    const renderCache = new Map<string, Buffer>();
+
+    function computePages() {
+      let rows: RankingsRow[] = rawRankings;
+      if (minRank > 0) rows = rows.filter((r) => r.rank <= minRank);
+
+      const sorted = sortRankings(rows, sortMode);
+
+      if (view === "summary") {
+        return {
+          pages: arrayGroup(buildSummary(sorted, sortMode), 10) as
+            (RankingsRow[] | SummaryRow[])[],
+        };
+      }
+      if (view === "best-per-game") {
+        return {
+          pages: arrayGroup(pickBestPerGame(sorted, sortMode), 10) as
+            (RankingsRow[] | SummaryRow[])[],
+        };
+      }
+      return {
+        pages: arrayGroup(sorted, 10) as (RankingsRow[] | SummaryRow[])[],
+      };
     }
 
-    const pageCount = view === "summary" ? summaryGroups.length : listGroups.length;
+    const buildMessage = async (): Promise<Message> => {
+      const { pages } = computePages();
+      const totalPages = pages.length;
 
-    return scrollingPagination(
-      context,
-      Array.from({ length: pageCount }, (_, i) => () =>
-        render(
+      if (totalPages === 0) pageIndex = 0;
+      else if (pageIndex >= totalPages) pageIndex = totalPages - 1;
+      else if (pageIndex < 0) pageIndex = 0;
+
+      const pageData = pages[pageIndex] ?? [];
+      const cacheKey = `${sortMode}|${view}|${minRank}|${pageIndex}`;
+
+      let pngBuffer = renderCache.get(cacheKey);
+      if (!pngBuffer) {
+        const canvas = render(
           <RankingsProfile
             background={background}
-            data={view === "summary" ? summaryGroups[i] : listGroups[i]}
+            data={pageData}
             view={view}
             sortMode={sortMode}
             logo={logo}
@@ -512,11 +551,111 @@ export class RankingsCommand {
             game={formattedGame}
           />,
           getTheme(user)
-        )
-      ),
-      new ButtonBuilder().emoji(t("emojis:up")).style(ButtonStyle.Success),
-      new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger),
-      true
+        );
+        pngBuffer = await canvas.toBuffer("png");
+        renderCache.set(cacheKey, pngBuffer);
+      }
+
+      prevButton.disable(totalPages <= 1);
+      nextButton.disable(totalPages <= 1);
+
+      return new Message({
+        files: [{ name: "image.png", data: pngBuffer, type: "image/png" }],
+        attachments: [],
+        components: [
+          new ActionRowBuilder([sortMenu]),
+          new ActionRowBuilder([viewMenu]),
+          new ActionRowBuilder([minMenu]),
+          new ActionRowBuilder([prevButton, nextButton]),
+        ],
+      });
+    };
+
+    const userId = context.getInteraction().getUserId();
+    const listener = context.getListener();
+
+    const handleInteraction = async (
+      interaction: Interaction,
+      mutate: () => void
+    ) => {
+      interaction.setLocale(t.locale);
+
+      if (interaction.getUserId() !== userId) {
+        const message = await buildMessage();
+        return interaction.sendFollowup({
+          ...message,
+          components: [],
+          ephemeral: true,
+        });
+      }
+
+      mutate();
+      const message = await buildMessage();
+      return context.reply(message);
+    };
+
+    listener.addHook(sortMenu.getCustomId(), (interaction) =>
+      handleInteraction(interaction, () => {
+        const selected = interaction.getData().values[0] as RankingsSortMode;
+        const idx = SORT_OPTIONS.findIndex((o) => o.value === selected);
+        if (idx >= 0 && SORT_OPTIONS[idx].value !== sortMode) {
+          sortMode = SORT_OPTIONS[idx].value;
+          sortMenu.activeOption(idx);
+          pageIndex = 0;
+        }
+      })
     );
+
+    listener.addHook(viewMenu.getCustomId(), (interaction) =>
+      handleInteraction(interaction, () => {
+        const selected = interaction.getData().values[0] as RankingsView;
+        const idx = VIEW_OPTIONS.findIndex((o) => o.value === selected);
+        if (idx >= 0 && VIEW_OPTIONS[idx].value !== view) {
+          view = VIEW_OPTIONS[idx].value;
+          viewMenu.activeOption(idx);
+          pageIndex = 0;
+        }
+      })
+    );
+
+    listener.addHook(minMenu.getCustomId(), (interaction) =>
+      handleInteraction(interaction, () => {
+        const selected = interaction.getData().values[0];
+        const idx = MIN_OPTIONS.findIndex((o) => o.value === selected);
+        if (idx >= 0 && MIN_OPTIONS[idx].rank !== minRank) {
+          minRank = MIN_OPTIONS[idx].rank;
+          minMenu.activeOption(idx);
+          pageIndex = 0;
+        }
+      })
+    );
+
+    listener.addHook(prevButton.getCustomId(), (interaction) =>
+      handleInteraction(interaction, () => {
+        const { pages } = computePages();
+        if (pages.length <= 1) return;
+        pageIndex = pageIndex === 0 ? pages.length - 1 : pageIndex - 1;
+      })
+    );
+
+    listener.addHook(nextButton.getCustomId(), (interaction) =>
+      handleInteraction(interaction, () => {
+        const { pages } = computePages();
+        if (pages.length <= 1) return;
+        pageIndex = pageIndex === pages.length - 1 ? 0 : pageIndex + 1;
+      })
+    );
+
+    setTimeout(() => {
+      listener.removeHook(sortMenu.getCustomId());
+      listener.removeHook(viewMenu.getCustomId());
+      listener.removeHook(minMenu.getCustomId());
+      listener.removeHook(prevButton.getCustomId());
+      listener.removeHook(nextButton.getCustomId());
+      renderCache.clear();
+      context.reply({ components: [] });
+    }, PAGINATION_TIMEOUT_MS);
+
+    return buildMessage();
   }
 }
