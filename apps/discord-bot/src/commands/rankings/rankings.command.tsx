@@ -43,7 +43,6 @@ import {
   ApiService,
   ButtonBuilder,
   Choice,
-  ChoiceArgument,
   Command,
   CommandContext,
   ErrorMessage,
@@ -54,13 +53,7 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
-import {
-  RankingsProfile,
-  type RankingsRow,
-  type RankingsSortMode,
-  type RankingsView,
-  type SummaryRow,
-} from "./rankings.profile.js";
+import { RankingsProfile } from "./rankings.profile.js";
 import { arrayGroup } from "@statsify/util";
 import { games } from "./games.js";
 import { getBackground, getLogo } from "@statsify/assets";
@@ -69,133 +62,11 @@ import { render } from "@statsify/rendering";
 
 const fields = getLeaderboardFields(Player).map(([key]) => key);
 
-function getScoreFor(row: RankingsRow, sortMode: RankingsSortMode): number {
-  switch (sortMode) {
-    case "rank":
-      return row.rank;
-    case "percentile":
-      return row.topPercent;
-    case "rarity":
-      return row.rarityScore;
-    case "flex":
-      return row.flexScore;
-    case "balanced":
-      return row.balancedScore;
-    case "value":
-      return row.rawValue;
-  }
-}
-
-function isAscendingSort(sortMode: RankingsSortMode): boolean {
-  return sortMode === "rank" || sortMode === "percentile";
-}
-
-function sortRankings(rows: RankingsRow[], sortMode: RankingsSortMode): RankingsRow[] {
-  const factor = isAscendingSort(sortMode) ? 1 : -1;
-  return [...rows].sort(
-    (a, b) => factor * (getScoreFor(a, sortMode) - getScoreFor(b, sortMode))
-  );
-}
-
-function pickBestPerGame(
-  rows: RankingsRow[],
-  sortMode: RankingsSortMode
-): RankingsRow[] {
-  const ascending = isAscendingSort(sortMode);
-  const byGame = new Map<string, RankingsRow>();
-
-  for (const row of rows) {
-    const gameKey = row.field.split(".")[1];
-    const current = byGame.get(gameKey);
-
-    if (!current) {
-      byGame.set(gameKey, row);
-      continue;
-    }
-
-    const better = ascending ?
-      getScoreFor(row, sortMode) < getScoreFor(current, sortMode) :
-      getScoreFor(row, sortMode) > getScoreFor(current, sortMode);
-
-    if (better) byGame.set(gameKey, row);
-  }
-
-  return sortRankings([...byGame.values()], sortMode);
-}
-
-function buildSummary(
-  rows: RankingsRow[],
-  sortMode: RankingsSortMode
-): SummaryRow[] {
-  // For rank-mode summary, raw rank average is misleading, so summarize by rarity instead.
-  const aggregateMode: RankingsSortMode = sortMode === "rank" ? "rarity" : sortMode;
-  const ascending = isAscendingSort(aggregateMode);
-  const groups = new Map<string, RankingsRow[]>();
-
-  for (const row of rows) {
-    const gameKey = row.field.split(".")[1];
-    if (!groups.has(gameKey)) groups.set(gameKey, []);
-    groups.get(gameKey)!.push(row);
-  }
-
-  const summary: SummaryRow[] = [];
-
-  for (const [gameKey, items] of groups) {
-    const sorted = sortRankings(items, aggregateMode);
-    const top = sorted.slice(0, 5);
-    const sum = top.reduce((acc, r) => acc + getScoreFor(r, aggregateMode), 0);
-    const avgScore = top.length > 0 ? sum / top.length : 0;
-    const bestRow = sorted[0];
-    const gameFormatted =
-      games.find((g) => g.key === gameKey)?.formatted ?? gameKey;
-
-    summary.push({
-      gameKey,
-      gameFormatted,
-      bestRank: bestRow.rank,
-      bestTopPercent: bestRow.topPercent,
-      avgScore,
-      topStat: bestRow.name,
-    });
-  }
-
-  return summary.sort(
-    (a, b) => (ascending ? 1 : -1) * (a.avgScore - b.avgScore)
-  );
-}
-
 const choices = games.map((g) => [g.name, g.key] as Choice);
 choices.unshift(["All", "all"]);
 
-const sortChoices: Choice[] = [
-  ["Rank", "rank"],
-  ["Top %", "percentile"],
-  ["Rarity", "rarity"],
-  ["Flex", "flex"],
-  ["Balanced", "balanced"],
-  ["Value", "value"],
-];
-
-const viewChoices: Choice[] = [
-  ["List", "list"],
-  ["Best Per Game", "best-per-game"],
-  ["Summary", "summary"],
-];
-
-const minChoices: Choice[] = [
-  ["Top 10", "10"],
-  ["Top 100", "100"],
-  ["Top 1,000", "1000"],
-  ["Top 10,000", "10000"],
-];
-
 const options: Partial<SubCommandOptions> = {
-  args: [
-    PlayerArgument,
-    new ChoiceArgument({ name: "sort", required: false, choices: sortChoices }),
-    new ChoiceArgument({ name: "view", required: false, choices: viewChoices }),
-    new ChoiceArgument({ name: "min", required: false, choices: minChoices }),
-  ],
+  args: [PlayerArgument],
   tier: UserTier.IRON,
   preview: "rankings.png",
 };
@@ -440,22 +311,13 @@ export class RankingsCommand {
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
-    const sortMode = (context.option<RankingsSortMode | undefined>("sort") ?? "rank") as RankingsSortMode;
-    const view = (context.option<RankingsView | undefined>("view") ?? "list") as RankingsView;
-    const minOption = context.option<string | undefined>("min");
-    const minRank = minOption ? Number(minOption) : undefined;
-
     const isGameNotAll = game !== "all";
 
     const filteredFields = isGameNotAll ?
       fields.filter((f) => f.startsWith(`stats.${game}`)) :
       fields;
 
-    const rawRankings = await this.apiService.getPlayerRankings(filteredFields, player.uuid);
-
-    const rankings = minRank !== undefined ?
-      rawRankings.filter((r) => r.rank <= minRank) :
-      rawRankings;
+    const rankings = await this.apiService.getPlayerRankings(filteredFields, player.uuid);
 
     if (rankings.length === 0)
       throw new ErrorMessage(
@@ -473,46 +335,33 @@ export class RankingsCommand {
       getBackground(...mapBackground(modes, modes.getApiModes()[0])),
     ]);
 
-    const sortedRankings = sortRankings(rankings as RankingsRow[], sortMode);
+    const groups = arrayGroup(
+      rankings.sort((a, b) => a.rank - b.rank),
+      10
+    );
 
     const formattedGame = isGameNotAll ?
       games.find((g) => g.key === game)?.formatted :
       undefined;
 
-    let listGroups: RankingsRow[][] = [];
-    let summaryGroups: SummaryRow[][] = [];
-
-    if (view === "summary") {
-      const summaryRows = buildSummary(sortedRankings, sortMode);
-      summaryGroups = arrayGroup(summaryRows, 10);
-    } else if (view === "best-per-game") {
-      const best = pickBestPerGame(sortedRankings, sortMode);
-      listGroups = arrayGroup(best, 10);
-    } else {
-      listGroups = arrayGroup(sortedRankings, 10);
-    }
-
-    const pageCount = view === "summary" ? summaryGroups.length : listGroups.length;
-
     return scrollingPagination(
       context,
-      Array.from({ length: pageCount }, (_, i) => () =>
-        render(
-          <RankingsProfile
-            background={background}
-            data={view === "summary" ? summaryGroups[i] : listGroups[i]}
-            view={view}
-            sortMode={sortMode}
-            logo={logo}
-            badge={badge}
-            player={player}
-            skin={skin}
-            t={t}
-            user={user}
-            game={formattedGame}
-          />,
-          getTheme(user)
-        )
+      groups.map(
+        (group) => () =>
+          render(
+            <RankingsProfile
+              background={background}
+              data={group}
+              logo={logo}
+              badge={badge}
+              player={player}
+              skin={skin}
+              t={t}
+              user={user}
+              game={formattedGame}
+            />,
+            getTheme(user)
+          )
       ),
       new ButtonBuilder().emoji(t("emojis:up")).style(ButtonStyle.Success),
       new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger),

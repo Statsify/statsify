@@ -219,8 +219,6 @@ export abstract class LeaderboardService {
       } else {
         pipeline.zrevrank(key, id);
       }
-
-      pipeline.zcard(key);
     }
 
     const responses = await pipeline.exec();
@@ -231,35 +229,18 @@ export abstract class LeaderboardService {
 
     const rankings = [];
 
-    for (let i = 0; i < responses.length; i += 3) {
-      const value = responses[i][1];
+    for (let i = 0; i < responses.length; i += 2) {
       const rank = responses[i + 1][1];
-      const count = responses[i + 2][1];
+      const value = responses[i][1];
 
       if (rank === undefined || rank === null || !value) continue;
 
-      const index = i / 3;
+      const index = i / 2;
       const metadata = leaderboardFields[index];
 
       if (Number(rank) > metadata.limit) continue;
 
       const numberValue = Number(value);
-      const rankNumber = Number(rank) + 1;
-      const countNumber = Number(count);
-
-      const topPercent = countNumber > 0 ? rankNumber / countNumber : 1;
-
-      const rarityScore = countNumber > 0 && rankNumber > 0 ?
-        Math.log10(countNumber / rankNumber) :
-        0;
-
-      const flexScore = countNumber > 0 && rankNumber > 0 ?
-        Math.log10(countNumber) * Math.log10(countNumber / rankNumber) :
-        0;
-
-      const balancedScore =
-        0.75 * rarityScore +
-        0.25 * Math.log10(Math.max(numberValue, 1));
 
       const formattedValue = metadata.formatter ?
         metadata.formatter(numberValue) :
@@ -267,15 +248,9 @@ export abstract class LeaderboardService {
 
       rankings.push({
         field: fields[index],
-        rank: rankNumber,
+        rank: Number(rank) + 1,
         value: formattedValue,
-        rawValue: numberValue,
         name: metadata.name,
-        count: countNumber,
-        topPercent,
-        rarityScore,
-        flexScore,
-        balancedScore,
       });
     }
 
