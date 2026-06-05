@@ -12,7 +12,7 @@ import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
-import { Player } from "@statsify/schemas";
+import { Player, User } from "@statsify/schemas";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -23,6 +23,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
     @Inject(forwardRef(() => PlayerService))
     private readonly playerService: Circular<PlayerService>,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
+    @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>,
     @InjectRedis() redis: Redis
   ) {
     super(redis);
@@ -56,6 +57,14 @@ export class PlayerLeaderboardService extends LeaderboardService {
 
     selector.displayName = true;
 
+    const verifiedUsers = await this.userModel
+      .find({ uuid: { $in: ids } })
+      .select({ uuid: 1 })
+      .lean()
+      .exec();
+
+    const verified = new Set(verifiedUsers.map((u) => u.uuid));
+
     return await Promise.all(
       ids.map(async (id) => {
         const player = await this.playerModel
@@ -68,6 +77,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
 
         const additionalStats = flatten(player) as LeaderboardAdditionalStats;
         additionalStats.name = additionalStats.displayName;
+        additionalStats.verified = verified.has(id);
 
         return additionalStats;
       })

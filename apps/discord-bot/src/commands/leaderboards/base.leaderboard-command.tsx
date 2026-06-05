@@ -71,12 +71,16 @@ export class BaseLeaderboardCommand {
     const t = context.t();
     const cache = new Map<number, IMessage>();
 
-    const logo = await getLogo(user);
+    const [logo, verifiedLogo] = await Promise.all([
+      getLogo(user),
+      type === "player" ? getLogo("verified", 20) : undefined,
+    ]);
 
     const props: BaseLeaderboardProps = {
       t,
       background,
       logo,
+      verifiedLogo,
       user,
       type,
     };

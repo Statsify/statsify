@@ -21,11 +21,13 @@ export interface LeaderboardData {
   icon?: Image;
   position: number;
   highlight?: boolean;
+  verified?: boolean;
 }
 
 export interface LeaderboardProfileProps {
   background: Image;
   logo: Image;
+  verifiedLogo?: Image;
   user: User | null;
   fields: string[];
   name: string;
@@ -37,6 +39,7 @@ export interface LeaderboardProfileProps {
 export const LeaderboardProfile = ({
   background,
   logo,
+  verifiedLogo,
   user,
   data,
   fields,
@@ -71,8 +74,18 @@ export const LeaderboardProfile = ({
               </box>
             )}
           </If>
-          <box width="remaining" direction="column" {...highlight}>
-            <text align="left">{d.name}</text>
+          <box width="remaining" direction="row" location="left" {...highlight}>
+            <If condition={type === "player" && d.verified ? verifiedLogo : undefined}>
+              {(verifiedLogo) => (
+                <img
+                  image={verifiedLogo}
+                  width={22}
+                  height={22}
+                  margin={{ left: 0, right: 0, top: 0, bottom: 0 }}
+                />
+              )}
+            </If>
+            <text>{d.name}</text>
           </box>
         </div>
         {d.fields.map((field) => {

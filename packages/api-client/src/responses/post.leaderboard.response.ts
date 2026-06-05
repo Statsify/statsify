@@ -33,6 +33,12 @@ export class LeaderboardItem {
     description: "Whether the player was the searched for player",
   })
   public highlight?: boolean;
+
+  @ApiProperty({
+    required: false,
+    description: "Whether the player is a verified Statsify user",
+  })
+  public verified?: boolean;
 }
 
 export class PostLeaderboardResponse {

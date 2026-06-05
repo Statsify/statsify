@@ -174,6 +174,7 @@ export abstract class LeaderboardService {
         name: stats.name,
         position: doc.index + 1,
         highlight: doc.index === highlight,
+        verified: stats.verified ?? false,
       };
     });
 
