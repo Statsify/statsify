@@ -8,7 +8,6 @@
 
 import {
   ApiModeFromGameModes,
-  Duels,
   DUELS_MODES,
   DuelsModes,
   GameModeWithSubModes,
