@@ -70,25 +70,28 @@ const setTimestamps = async (collectionName) => {
 
   const bulkOperations = [];
 
-  players.forEach((pm) => {
-    const nextReset = getNextResetTime(pm.resetMinute, collectionName);
-    const lastReset = getLastResetTime(pm.resetMinute, collectionName);
+  for (const player of players) {
+    const nextReset = getNextResetTime(player.resetMinute, collectionName);
+    const lastReset = getLastResetTime(player.resetMinute, collectionName);
 
     bulkOperations.push({
       updateOne: {
-        filter: { _id: pm._id },
+        // mongodb object id's have a leading underscore
+        // oxlint-disable-next-line no-underscore-dangle
+        filter: { _id: player._id },
         update: { $set: { nextReset, lastReset } },
       },
     });
-  });
+  }
 
-  if (!bulkOperations.length)
+  if (bulkOperations.length === 0)
     return console.log(`No players to update for ${collectionName}.`);
-  collection.bulkWrite(bulkOperations).then((res) => {
-    console.log(
-      `Updated ${res.modifiedCount}/${players.length} players for ${collectionName}.`
-    );
-  });
+  
+  const repsonse = await collection.bulkWrite(bulkOperations);
+  
+  console.log(
+    `Updated ${repsonse.modifiedCount}/${players.length} players for ${collectionName}.`
+  );
 };
 
 await setTimestamps("daily");

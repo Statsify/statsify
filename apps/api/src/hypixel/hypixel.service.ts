@@ -32,7 +32,7 @@ export class HypixelService {
   public shouldCache(expirey: number, cache: CacheLevel): boolean {
     return (
       cache !== CacheLevel.LIVE &&
-      (cache == CacheLevel.CACHE_ONLY || Date.now() < expirey)
+      (cache === CacheLevel.CACHE_ONLY || Date.now() < expirey)
     );
   }
 

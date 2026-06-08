@@ -1,0 +1,21 @@
+services:
+  redis:
+    image: docker.io/redis/redis-stack:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8001:8001"
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - "./data/redis:/data"
+    environment:
+      REDIS_ARGS: "--requirepass statsify"
+  mongodb:
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: statsify
+      MONGO_INITDB_ROOT_PASSWORD: statsify
+    volumes:
+      - "./data/mongodb:/data/db"

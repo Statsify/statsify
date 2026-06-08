@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 import { existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import type { DeepFlatten } from "./flatten.js";
+import { pathToFileURL } from "node:url";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const directory = import.meta.dirname;
 
 export interface Config {
   database: {
@@ -246,7 +246,12 @@ async function loadConfig(): Promise<{ default: Config }> {
         database: { mongoUri: "", redisUrl: "" },
         hypixelApi: { key: "", timeout: 5000 },
         api: { port: 3000, mediaRoot: "" },
-        discordBot: { publicKey: "", token: "", applicationId: "", testingGuild: "" },
+        discordBot: {
+          publicKey: "",
+          token: "",
+          applicationId: "",
+          testingGuild: "",
+        },
         supportBot: {
           createTicketChannel: "",
           ticketLogsChannel: "",
@@ -276,16 +281,18 @@ async function loadConfig(): Promise<{ default: Config }> {
     };
   }
 
-  if (existsSync(join(__dirname, "../../../config.json"))) {
-    return import(join(__dirname, "../../../config.json"));
-  } else if (existsSync(join(__dirname, "../../../config.js"))) {
-    return import(join(__dirname, "../../../config.js"));
-  } else {
-    throw new Error("No config file detected!");
+  for (const file of ["config.json", "config.js"]) { 
+    const path = join(directory, "../../../", file);
+
+    if (existsSync(path)) {
+      return import(pathToFileURL(path).href);
+    }
   }
+  
+  throw new Error("No config file detected!");
 }
 
-let cfg: Config | undefined = undefined;
+let cfg: Config;
 
 export interface ConfigOptions<T extends keyof FlatConfig> {
   required?: boolean;
@@ -294,12 +301,11 @@ export interface ConfigOptions<T extends keyof FlatConfig> {
 
 export const config = async <T extends keyof FlatConfig>(
   key: T,
-  { required = true, default: defaultValue }: ConfigOptions<T> = {}
+  { required = true, default: defaultValue }: ConfigOptions<T> = {},
 ): Promise<FlatConfig[T]> => {
   // Don't load the config while testing
   if (process.env.VITEST) return defaultValue as FlatConfig[T];
-  if (!cfg)
-    cfg = await loadConfig().then((c) => c.default);
+  if (!cfg) cfg = await loadConfig().then((c) => c.default);
 
   const value =
     (key as string).split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;
@@ -313,7 +319,7 @@ export const config = async <T extends keyof FlatConfig>(
       throw new Error(
         `Missing required environment variable: ${key as string} | Add ${
           key as string
-        } to your config`
+        } to your config`,
       );
   }
 
