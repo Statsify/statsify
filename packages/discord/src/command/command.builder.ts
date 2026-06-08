@@ -9,58 +9,62 @@
 import { ApplicationIntegrationType } from "discord-api-types/v9";
 import { CommandResolvable } from "./command.resolvable.js";
 import { InteractionContextType } from "discord-api-types/v10";
-import type { CommandMetadata, SubCommandMetadata } from "./command.interface.js";
+import type {
+  CommandMetadata,
+  SubCommandMetadata,
+} from "./command.interface.js";
 import type { Constructor } from "@statsify/util";
 
-export class CommandBuilder {
-  public static scan<T extends object>(target: T, constructor: Constructor<T>) {
-    const commandMetadata = Reflect.getMetadata(
-      "statsify:command",
-      constructor
-    ) as CommandMetadata;
+export function scanCommands<T extends object>(
+  target: T,
+  constructor: Constructor<T>,
+) {
+  const commandMetadata = Reflect.getMetadata(
+    "statsify:command",
+    constructor,
+  ) as CommandMetadata;
 
-    if (!commandMetadata) {
-      throw new Error(`Command metadata not found on ${constructor.name}`);
-    }
-
-    const commandResolvable = new CommandResolvable(commandMetadata, target);
-
-    const subcommandMetadata = Reflect.getMetadata(
-      "statsify:subcommand",
-      target
-    ) as Record<string, SubCommandMetadata>;
-
-    if (!subcommandMetadata) return commandResolvable;
-
-    const groups: Record<string, CommandResolvable> = {};
-
-    for (const subcommand of Object.values(subcommandMetadata)) {
-      const subcommandResolvable = new CommandResolvable(subcommand, target);
-
-      let addSubCommandTo: CommandResolvable = commandResolvable;
-
-      if (subcommand.group && subcommand.group in groups) {
-        addSubCommandTo = groups[subcommand.group];
-      } else if (subcommand.group) {
-        const options = {
-          name: subcommand.group,
-          methodName: "run",
-          description: "group",
-        };
-
-        addSubCommandTo = new CommandResolvable(options, target);
-        groups[options.name] = addSubCommandTo;
-      }
-
-      addSubCommandTo.addCommand(subcommandResolvable.asSubCommand());
-    }
-
-    for (const group of Object.values(groups)) {
-      commandResolvable.addCommand(group.asSubCommandGroup());
-    }
-
-    return commandResolvable;
+  if (!commandMetadata) {
+    throw new Error(`Command metadata not found on ${constructor.name}`);
   }
+
+  const commandResolvable = new CommandResolvable(commandMetadata, target);
+
+  const subcommandMetadata = Reflect.getMetadata(
+    "statsify:subcommand",
+    target,
+  ) as Record<string, SubCommandMetadata>;
+
+  if (!subcommandMetadata) return commandResolvable;
+
+  const groups: Record<string, CommandResolvable> = {};
+
+  for (const subcommand of Object.values(subcommandMetadata)) {
+    const subcommandResolvable = new CommandResolvable(subcommand, target);
+
+    let addSubCommandTo: CommandResolvable = commandResolvable;
+
+    if (subcommand.group && subcommand.group in groups) {
+      addSubCommandTo = groups[subcommand.group];
+    } else if (subcommand.group) {
+      const options = {
+        name: subcommand.group,
+        methodName: "run",
+        description: "group",
+      };
+
+      addSubCommandTo = new CommandResolvable(options, target);
+      groups[options.name] = addSubCommandTo;
+    }
+
+    addSubCommandTo.addCommand(subcommandResolvable.asSubCommand());
+  }
+
+  for (const group of Object.values(groups)) {
+    commandResolvable.addCommand(group.asSubCommandGroup());
+  }
+
+  return commandResolvable;
 }
 
 if (import.meta.vitest) {
@@ -68,14 +72,17 @@ if (import.meta.vitest) {
 
   const { Command } = await import("./command.decorator.js");
   const { SubCommand } = await import("./subcommand.decorator.js");
-  const { AbstractArgument } = await import("../arguments/abstract.argument.js");
+  const { AbstractArgument } =
+    await import("../arguments/abstract.argument.js");
 
-  const { ApplicationCommandOptionType, ApplicationCommandType } = await import(
-    "discord-api-types/v10"
-  );
+  const { ApplicationCommandOptionType, ApplicationCommandType } =
+    await import("discord-api-types/v10");
 
-  suite("CommandBuilder", () => {
-    const integration_types = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
+  suite("Command Builder", () => {
+    const integration_types = [
+      ApplicationIntegrationType.GuildInstall,
+      ApplicationIntegrationType.UserInstall,
+    ];
 
     const contexts = [
       InteractionContextType.Guild,
@@ -87,7 +94,7 @@ if (import.meta.vitest) {
       @Command({ description: "test" })
       class TestCommand {}
 
-      expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
+      expect(scanCommands(new TestCommand(), TestCommand).toJSON()).toEqual({
         name: "test",
         description: "test",
         description_localizations: {},
@@ -107,7 +114,7 @@ if (import.meta.vitest) {
         }
       }
 
-      expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
+      expect(scanCommands(new TestCommand(), TestCommand).toJSON()).toEqual({
         name: "test",
         description: "test",
         description_localizations: {},
@@ -147,7 +154,7 @@ if (import.meta.vitest) {
         }
       }
 
-      expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
+      expect(scanCommands(new TestCommand(), TestCommand).toJSON()).toEqual({
         name: "test",
         description: "test",
         type: ApplicationCommandType.ChatInput,
@@ -217,7 +224,7 @@ if (import.meta.vitest) {
       @Command({ description: "test", args: [Arg] })
       class TestCommand {}
 
-      expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
+      expect(scanCommands(new TestCommand(), TestCommand).toJSON()).toEqual({
         name: "test",
         description: "test",
         description_localizations: {},

@@ -18,7 +18,7 @@ import {
   EmbedBuilder,
   LocalizationString,
   Page,
-  PaginateService,
+  paginate,
 } from "@statsify/discord";
 import { FormattedGame, GameId, GamePlayers } from "@statsify/schemas";
 import { STATUS_COLORS } from "@statsify/logger";
@@ -98,10 +98,7 @@ class GameCountsModeArgument extends AbstractArgument {
   args: [GameCountsModeArgument],
 })
 export class GameCountsCommand {
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
     const t = context.t();
@@ -148,7 +145,7 @@ export class GameCountsCommand {
       ...subGameGenerators,
     ];
 
-    return this.paginateService.paginate(context, pages);
+    return paginate(context, pages);
   }
 
   private formatGameCount(name: string, count: string, emoji?: string) {

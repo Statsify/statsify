@@ -19,7 +19,7 @@ import {
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface BedWarsProfileProps extends BaseProfileProps {
-  mode: GameMode<BedWarsModes>;
+  mode: Exclude<GameMode<BedWarsModes>, { api: "challenges" }>;
 }
 
 export const BedWarsProfile = ({
@@ -44,12 +44,18 @@ export const BedWarsProfile = ({
     [t("stats.emeralds"), t(stats.itemsCollected.emerald), "§2"],
   ];
 
-  if (bedwars.slumber.wallet) sidebar.push(
-    [t("stats.slumberTickets"), `${t(bedwars.slumber.tickets)}§7/${t(bedwars.slumber.wallet)}`, "§b"],
-    [t("stats.totalSlumberTickets"), t(bedwars.slumber.totalTickets), "§d"]
-  );
+  if (bedwars.slumber.wallet)
+    sidebar.push(
+      [
+        t("stats.slumberTickets"),
+        `${t(bedwars.slumber.tickets)}§7/${t(bedwars.slumber.wallet)}`,
+        "§b",
+      ],
+      [t("stats.totalSlumberTickets"), t(bedwars.slumber.totalTickets), "§d"],
+    );
 
-  if (time === "LIVE" && stats.winstreak) sidebar.push([t("stats.winstreak"), t(stats.winstreak), "§a"]);
+  if (time === "LIVE" && stats.winstreak)
+    sidebar.push([t("stats.winstreak"), t(stats.winstreak), "§a"]);
 
   return (
     <Container background={background}>
@@ -65,7 +71,7 @@ export const BedWarsProfile = ({
           t,
           label: t("stats.progression.exp"),
           progression: bedwars.progression,
-          currentLevel: bedwars.levelFormatted,
+          currentLevel: bedwars.nextLevelFormatted,
           nextLevel: bedwars.nextLevelFormatted,
         })}`}
         time={time}
@@ -73,7 +79,11 @@ export const BedWarsProfile = ({
       <Table.table>
         <Table.tr>
           <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-          <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
+          <Table.td
+            title={t("stats.losses")}
+            value={t(stats.losses)}
+            color="§c"
+          />
           <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
         </Table.tr>
         <Table.tr>
@@ -90,8 +100,16 @@ export const BedWarsProfile = ({
           <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color="§6" />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+          <Table.td
+            title={t("stats.kills")}
+            value={t(stats.kills)}
+            color="§a"
+          />
+          <Table.td
+            title={t("stats.deaths")}
+            value={t(stats.deaths)}
+            color="§c"
+          />
           <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
         </Table.tr>
         <Table.tr>
@@ -100,7 +118,11 @@ export const BedWarsProfile = ({
             value={t(stats.bedsBroken)}
             color="§a"
           />
-          <Table.td title={t("stats.bedsLost")} value={t(stats.bedsLost)} color="§c" />
+          <Table.td
+            title={t("stats.bedsLost")}
+            value={t(stats.bedsLost)}
+            color="§c"
+          />
           <Table.td title={t("stats.bblr")} value={t(stats.bblr)} color="§6" />
         </Table.tr>
         <Historical.progression

@@ -33,9 +33,9 @@ export const ratio = (n1 = 0, n2 = 0, multiply = 1) => {
     return roundTo(result * multiply);
   } else if (n1 === 0 && n2 === 0) {
     return 0;
-  } else {
-    return roundTo(n1 * multiply) || 0;
   }
+    return roundTo(n1 * multiply) || 0;
+  
 };
 
 export const add = (...args: number[]): number =>
