@@ -229,17 +229,12 @@ export class FontRenderer {
 
     const startOffset = characterSize.start ?? 0;
     const width = characterSize.width;
-    const scaledWidth = width * scale;
-    const height = 16 * scale;
-
-    if (!Number.isFinite(scaledWidth) || scaledWidth <= 0) return null;
-    if (!Number.isFinite(height) || height <= 0) return null;
 
     return {
       x: (startOffset + x * 16) * scale,
       y: y * 16 * scale,
-      width: scaledWidth,
-      height,
+      width: width * scale,
+      height: 16 * scale,
       scale,
       isAscii,
       image,
