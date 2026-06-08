@@ -27,6 +27,10 @@ const GRADIENT_TOP_OVERLAY = "rgb(255 255 255 / 0.85)";
 const GRADIENT_BOTTOM_OVERLAY = "rgb(0 0 0 / 0.60)";
 
 type CharacterSizes = Record<string, { start?: number; width?: number }>;
+type FontImage = {
+  canvas: Canvas;
+  scale: number;
+};
 
 interface Sizes {
   ascii: CharacterSizes;
@@ -34,14 +38,10 @@ interface Sizes {
 }
 
 export class FontRenderer {
-  private images: Map<string, CanvasRenderingContext2D>;
-  private canvases: WeakMap<CanvasRenderingContext2D, Canvas>;
-  private scales: WeakMap<CanvasRenderingContext2D, number>;
+  private images: Map<string, FontImage>;
 
   public constructor(private gradient: boolean) {
     this.images = new Map();
-    this.canvases = new WeakMap();
-    this.scales = new WeakMap();
   }
 
   public async loadImages(fontPath: string) {
@@ -60,9 +60,6 @@ export class FontRenderer {
       ctx.imageSmoothingEnabled = false;
 
       ctx.drawImage(image, 0, 0);
-
-      this.canvases.set(ctx, canvas);
-      this.scales.set(ctx, image.width / 256);
 
       this.images.set(id, ctx);
     }
@@ -197,21 +194,6 @@ export class FontRenderer {
       this.images.get(`${unicode[0]}${unicode[1]}`);
   }
 
-  private getTextureScale(image: CanvasRenderingContext2D) {
-    return this.scales.get(image) ?? image.canvas.width / 256;
-  }
-
-  private getImageData(
-    image: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  ) {
-    const ctx = this.canvases.get(image)?.getContext("2d") ?? image;
-    return ctx.getImageData(x, y, width, height);
-  }
-
   private getCharacterIndexLocation(unicode: string, isAscii: boolean) {
     if (isAscii) {
       const y = positions.findIndex((row) => row.includes(unicode));
@@ -238,7 +220,7 @@ export class FontRenderer {
 
     const { x, y } = this.getCharacterIndexLocation(unicode, isAscii);
 
-    const scale = this.getTextureScale(image);
+    const scale = image.scale;
 
     const characterSize =
       sizes[isAscii ? "ascii" : "unicode"][unicode.toUpperCase()];
@@ -333,7 +315,9 @@ export class FontRenderer {
       size,
     } = metadata;
 
-    const imageData = this.getImageData(image, charX, charY, width, height);
+    const imageData = image.canvas
+      .getContext("2d")
+      .getImageData(charX, charY, width, height);
 
     ctx.filter = this.gradient ? "brightness(15%)" : "brightness(25%)";
 
