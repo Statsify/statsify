@@ -9,13 +9,11 @@
 import inquirer from "inquirer";
 import { ROOT, fetchWorkspaces, inquirerConfirmation, inquirerLogger } from "./utils.js";
 import { exec as _exec } from "node:child_process";
-import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join, resolve } from "node:path";
 import { promisify } from "node:util";
 import { rm } from "node:fs/promises";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const dirname = import.meta.dirname;
 
 /**
  *
@@ -25,7 +23,7 @@ const exec = (script) =>
   promisify(_exec)(script, {
     shell: true,
     stdio: "inherit",
-    cwd: resolve(__dirname, "../../../"),
+    cwd: resolve(dirname, "../../../"),
   });
 
 const workspaces = [
@@ -124,4 +122,4 @@ const purge = async () => {
   process.exit(0);
 };
 
-purge();
+await purge();

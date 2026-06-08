@@ -10,14 +10,15 @@ import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
   type ApiModeFromGameModes,
-  ApiSubModeForMode,
+  type ApiSubModeForMode,
   BEDWARS_MODES,
   BLITZSG_MODES,
   BUILD_BATTLE_MODES,
+  type BedWarsModes,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   GENERAL_MODES,
-  GameMode,
+  type GameMode,
   type GameModeWithSubModes,
   GameModes,
   MEGAWALLS_MODES,
@@ -44,7 +45,7 @@ import {
   CommandContext,
   EmbedBuilder,
   Page,
-  PaginateService,
+  paginate,
   PlayerArgument,
   SubCommand,
   SubPage,
@@ -88,10 +89,7 @@ import type { HistoricalTimeData } from "#components";
 
 @Command({ description: "session stats" })
 export class SessionCommand {
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({ description: (t) => t("commands.session-arcade"), args: [PlayerArgument] })
   public arcade(context: CommandContext) {
@@ -127,7 +125,8 @@ export class SessionCommand {
     return this.run({
       context,
       modes: BEDWARS_MODES,
-      getProfile: (base, mode) => <BedWarsProfile {...base} mode={mode} />,
+      getProfile: (base, mode) => <BedWarsProfile {...base} mode={mode as Exclude<GameMode<BedWarsModes>, { api:"challenges" }>} />,
+      filterModes: (_, modes) => modes.filter((mode) => mode.api !== "challenges")
     });
   }
 
@@ -478,6 +477,6 @@ export class SessionCommand {
       };
     });
 
-    return this.paginateService.paginate(context, pages);
+    return paginate(context, pages);
   }
 }
