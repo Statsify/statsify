@@ -8,16 +8,28 @@
 
 import * as Sentry from "@sentry/node";
 import { Logger } from "@statsify/logger";
+import {
+  type ServerClient,
+  createServer,
+  states,
+} from "minecraft-protocol";
 import { UserLogo, VerifyCode } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { connect } from "mongoose";
-import { createServer } from "minecraft-protocol";
+import { createRequire } from "node:module";
 import { generateCode } from "./generate-code.js";
 import { getLogoPath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
 import { readFileSync } from "node:fs";
 
 const logger = new Logger("verify-server");
+const require = createRequire(import.meta.url);
+const minecraftProtocolRequire = createRequire(require.resolve("minecraft-protocol"));
+const minecraftData = minecraftProtocolRequire("minecraft-data") as (
+  protocolVersion: number
+) => unknown;
+const supportedVersions = minecraftProtocolRequire("minecraft-protocol")
+  .supportedVersions as string[];
 
 const handleError = logger.error.bind(logger);
 
@@ -34,6 +46,26 @@ const codeCreatedMessage = (code: string, time: Date) => {
     { short: false }
   )}§r§7.`;
 };
+
+const unsupportedProtocolMessage = (protocolVersion: number) =>
+  `§9§lStatsify Verification Server\n\n§r§7Your Minecraft version is not supported yet.\n\n§r§7Please try again with §c§lMinecraft ${
+    supportedVersions.at(-1) ?? "a supported version"
+  }§r§7 or older.\n\n§r§8Protocol ${protocolVersion}`;
+
+const supportsFeature = (client: ServerClient, feature: string) => {
+  const supportFeature = (client as ServerClient & {
+    supportFeature?: (feature: string) => boolean;
+  }).supportFeature;
+
+  return supportFeature?.(feature) ?? false;
+};
+
+const clientDetails = (client: ServerClient) =>
+  `id=${client.id} username=${client.username ?? "unknown"} uuid=${
+    client.uuid ?? "unknown"
+  } version=${client.version} protocol=${client.protocolVersion} state=${client.state}`;
+
+const isSupportedProtocol = (protocolVersion: number) => Boolean(minecraftData(protocolVersion));
 
 const sentryDsn = await config("sentry.verifyServerDsn", { required: false });
 
@@ -74,23 +106,87 @@ const server = createServer({
 
 logger.log("Server Started");
 
-server.on("login", async (client) => {
+server.on("connection", (client) => {
+  logger.verbose(`Connection opened: ${clientDetails(client)}`);
+
+  client.prependOnceListener("set_protocol", (packet: {
+    nextState: number;
+    protocolVersion: number;
+  }) => {
+    if (packet.nextState !== 2 || isSupportedProtocol(packet.protocolVersion)) return;
+
+    logger.warn(
+      `Unsupported Minecraft protocol attempted login: ` +
+      `protocol=${packet.protocolVersion} ${clientDetails(client)}`
+    );
+
+    // minecraft-protocol ends unsupported handshakes before setting LOGIN state.
+    // Moving to LOGIN first lets the client receive a visible disconnect packet
+    // instead of continuing into mismatched configuration registry data.
+    client.state = states.LOGIN;
+    client.removeAllListeners("login_start");
+
+    const end = client.end.bind(client);
+
+    client.end = (reason?: string) => {
+      if (reason === `Protocol version ${packet.protocolVersion} is not supported`) {
+        return end(unsupportedProtocolMessage(packet.protocolVersion));
+      }
+
+      return end(reason);
+    };
+  });
+
+  client.on("state", (newState, oldState) => {
+    logger.verbose(`Connection state changed: ${clientDetails(client)} ${oldState} -> ${newState}`);
+  });
+
+  client.on("error", (error) => {
+    logger.error(`Connection error: ${clientDetails(client)}`);
+    logger.error(error);
+  });
+
+  client.on("end", (reason) => {
+    logger.verbose(`Connection ended: ${clientDetails(client)} reason=${reason ?? "unknown"}`);
+  });
+});
+
+server.on("playerJoin", async (client) => {
   try {
-    logger.verbose(`${client.username} [${client.uuid}] has joined`);
+    logger.verbose(
+      `${client.username} [${client.uuid}] has joined: ${clientDetails(client)} ` +
+      `hasConfigurationState=${supportsFeature(client, "hasConfigurationState")} ` +
+      `chatPacketsUseNbtComponents=${supportsFeature(client, "chatPacketsUseNbtComponents")}`
+    );
 
     const uuid = client.uuid.replaceAll("-", "");
 
     const previousVerifyCode = await verifyCodesModel.findOne({ uuid }).lean().exec();
 
-    if (previousVerifyCode)
-      return client.end(
-        codeCreatedMessage(previousVerifyCode.code, previousVerifyCode.expireAt)
+    if (previousVerifyCode) {
+      const message = codeCreatedMessage(
+        previousVerifyCode.code,
+        previousVerifyCode.expireAt
       );
+
+      logger.verbose(
+        `Disconnecting existing verification code client: ${clientDetails(client)} ` +
+        `messageLength=${message.length}`
+      );
+
+      return client.end(message);
+    }
 
     const code = await generateCode(verifyCodesModel);
     const verifyCode = await verifyCodesModel.create(new VerifyCode(uuid, code));
+    const message = codeCreatedMessage(verifyCode.code, verifyCode.expireAt);
 
-    client.end(codeCreatedMessage(verifyCode.code, verifyCode.expireAt));
+    logger.verbose(
+      `Disconnecting new verification code client: ${clientDetails(client)} ` +
+      `messageLength=${message.length}`
+    );
+
+    client.end(message);
     logger.verbose(`${client.username} has been assigned to the code ${verifyCode.code}`);
   } catch (error) {
     logger.error(error);
