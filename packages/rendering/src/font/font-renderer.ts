@@ -8,11 +8,7 @@
 
 import _positions from "../../positions.json" with { type: "json" };
 import _sizes from "../../sizes.json" with { type: "json" };
-import type {
-  Canvas,
-  CanvasRenderingContext2D,
-  ImageData,
-} from "skia-canvas";
+import type { Canvas, CanvasRenderingContext2D, ImageData } from "skia-canvas";
 import { type TextNode, type Token, tokens } from "./tokens.js";
 import { createCanvas } from "../canvas.js";
 import { join } from "node:path";
@@ -27,10 +23,6 @@ const GRADIENT_TOP_OVERLAY = "rgb(255 255 255 / 0.85)";
 const GRADIENT_BOTTOM_OVERLAY = "rgb(0 0 0 / 0.60)";
 
 type CharacterSizes = Record<string, { start?: number; width?: number }>;
-type FontImage = {
-  canvas: Canvas;
-  scale: number;
-};
 
 interface Sizes {
   ascii: CharacterSizes;
@@ -38,7 +30,7 @@ interface Sizes {
 }
 
 export class FontRenderer {
-  private images: Map<string, FontImage>;
+  private images: Map<string, Canvas>;
 
   public constructor(private gradient: boolean) {
     this.images = new Map();
@@ -47,11 +39,15 @@ export class FontRenderer {
   public async loadImages(fontPath: string) {
     const files = await readdir(fontPath);
 
-    const pictures = await Promise.all(files.filter((file) => file.endsWith(".png")).map(async (file) => {
-      const image = await loadImage(join(fontPath, file));
-      const id = file.replace("unicode_page_", "").replace(".png", "");
-      return [id, image] as const;
-    }));
+    const pictures = await Promise.all(
+      files
+        .filter((file) => file.endsWith(".png"))
+        .map(async (file) => {
+          const image = await loadImage(join(fontPath, file));
+          const id = file.replace("unicode_page_", "").replace(".png", "");
+          return [id, image] as const;
+        }),
+    );
 
     for (const [id, image] of pictures) {
       const canvas = createCanvas(image.width, image.height);
@@ -61,7 +57,7 @@ export class FontRenderer {
 
       ctx.drawImage(image, 0, 0);
 
-      this.images.set(id, ctx);
+      this.images.set(id, canvas);
     }
   }
 
@@ -188,6 +184,10 @@ export class FontRenderer {
     return unicode.toUpperCase() in sizes.ascii;
   }
 
+  private getTextureScale(canvas: Canvas) {
+    return canvas.width / 256;
+  }
+  
   private getCharacterImage(unicode: string, isAscii: boolean) {
     return isAscii ?
       this.images.get("ascii") :
@@ -220,7 +220,7 @@ export class FontRenderer {
 
     const { x, y } = this.getCharacterIndexLocation(unicode, isAscii);
 
-    const scale = image.scale;
+    const scale = this.getTextureScale(image);
 
     const characterSize =
       sizes[isAscii ? "ascii" : "unicode"][unicode.toUpperCase()];
@@ -315,7 +315,7 @@ export class FontRenderer {
       size,
     } = metadata;
 
-    const imageData = image.canvas
+    const imageData = image
       .getContext("2d")
       .getImageData(charX, charY, width, height);
 

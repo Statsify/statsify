@@ -7,17 +7,5 @@
  */
 
 import { config } from "../../vitest.shared.js";
-import { mergeConfig } from "vitest/config";
-import { resolve } from "node:path";
 
-export default mergeConfig(await config("./.swcrc"), {
-  resolve: {
-    alias: {
-      "#colors": resolve(import.meta.dirname, "src/colors/index.ts"),
-      "#font": resolve(import.meta.dirname, "src/font/index.ts"),
-      "#hooks": resolve(import.meta.dirname, "src/hooks/index.ts"),
-      "#intrinsics": resolve(import.meta.dirname, "src/intrinsics/index.ts"),
-      "#jsx": resolve(import.meta.dirname, "src/jsx/index.ts"),
-    },
-  },
-});
+export default await config("./.swcrc");
