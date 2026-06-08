@@ -241,7 +241,7 @@ export class BaseLeaderboardCommand {
       cache.clear();
     }, 300_000);
 
-    currentPage = page || currentPage;
+    currentPage = page ?? currentPage;
 
     return { ...message, components: [row] };
   }
@@ -271,7 +271,7 @@ export class BaseLeaderboardCommand {
       getLeaderboardDataIcon
     );
 
-    if (params.type === LeaderboardQuery.PAGE && page) cache.set(page, message);
+    if (params.type === LeaderboardQuery.PAGE && page !== null) cache.set(page, message);
 
     return [message, page];
   }

@@ -80,14 +80,14 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
     const dropdown = new SelectMenuBuilder();
 
-    modes.forEach(([key, title], index) =>
+    for (const [index, [key, title]] of modes.entries()) {
       dropdown.option(
         new SelectMenuOptionBuilder()
           .label(title)
           .value(`${key}`)
           .default(index === 0)
-      )
-    );
+      );
+    }
 
     const components = [new ActionRowBuilder().component(dropdown)];
 
@@ -146,7 +146,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       dropdown.getCustomId(),
       changePage((interaction) => {
         const value = interaction.getData().values[0] as GuildTopKey;
-        return { modeIndex: modes.findIndex((m) => m[0] == value) };
+        return { modeIndex: modes.findIndex((m) => m[0] === value) };
       })
     );
 

@@ -39,7 +39,7 @@ import {
   Command,
   CommandContext,
   Page,
-  PaginateService,
+  paginate,
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
@@ -59,10 +59,7 @@ const args = [PlayerArgument];
 
 @Command({ description: (t) => t("commands.ratios") })
 export class RatiosCommand {
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({ description: (t) => t("commands.ratios-arcade"), args })
   public arcade(context: CommandContext) {
@@ -244,11 +241,11 @@ export class RatiosCommand {
       },
     }));
 
-    return this.paginateService.paginate(context, pages);
+    return paginate(context, pages);
   }
 
   private getModeStats(game: PlayerStats[keyof PlayerStats], mode: GameModeWithSubModes<any>) {
-    if (mode.submodes.length !== 0) {
+    if (mode.submodes.length > 0) {
       const stats = game[mode.api as keyof typeof game];
       const submodeStats = stats[mode.submodes[0].api as keyof typeof stats];
       return mode.submodes[0].api === "overall" ? submodeStats || stats : submodeStats;
@@ -289,7 +286,7 @@ export class RatiosCommand {
         return numeratorType === Number && denominatorType === Number;
       });
 
-      if (!ratios.length) continue;
+      if (ratios.length === 0) continue;
 
       ratioModes.push([mode, ratios]);
     }

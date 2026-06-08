@@ -52,20 +52,22 @@ const commandSchema = z.object({
   type: z.optional(toEnum(1, 2, 3)),
 });
 
-Object.entries(commands.commands).forEach(([commandName, command]) => {
+for (const [commandName, command] of Object.entries(commands.commands)) {
   try {
     commandSchema.parse(command);
   } catch (e) {
     console.error(e);
     console.log(command);
-    e.errors.forEach((e) => {
-      console.error(e.message);
-      console.error(`${command.name}.${e.path.join(".")}`);
-    });
+
+    for (const error of e.errors) {
+      console.error(error.message);
+      console.error(`${command.name}.${error.path.join(".")}`);
+    }
+    
     console.error(`Command "${commandName}" is invalid.`);
     process.exit(1);
   }
-});
+}
 
 const commandChars = {};
 
