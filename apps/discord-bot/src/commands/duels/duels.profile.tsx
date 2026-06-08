@@ -53,6 +53,12 @@ export const DuelsProfile = <T extends ProfileTime>({
     sidebar.push([t("stats.shotsFired"), t(stats.overall.shotsFired), "§6"]);
   }
 
+  if ("shotsHit" in stats) {
+    sidebar.push([t("stats.shotsHit"), t(stats.shotsHit), "§c"]);
+  } else if ("overall" in stats && "shotsHit" in stats.overall) {
+    sidebar.push([t("stats.shotsHit"), t(stats.overall.shotsHit), "§c"]);
+  }
+
   if ("headshots" in stats)
     sidebar.push([t("stats.headshots"), t(stats.headshots), "§3"]);
 
