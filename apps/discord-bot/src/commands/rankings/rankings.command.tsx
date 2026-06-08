@@ -17,7 +17,6 @@ import {
   DUELS_MODES,
   GENERAL_MODES,
   GameModes,
-  LeaderboardScanner,
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
@@ -38,6 +37,7 @@ import {
   WALLS_MODES,
   WARLORDS_MODES,
   WOOLGAMES_MODES,
+  getLeaderboardFields,
 } from "@statsify/schemas";
 import {
   ApiService,
@@ -46,7 +46,7 @@ import {
   Command,
   CommandContext,
   ErrorMessage,
-  PaginateService,
+  scrollingPagination,
   PlayerArgument,
   SubCommand,
   type SubCommandOptions,
@@ -60,7 +60,7 @@ import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
-const fields = LeaderboardScanner.getLeaderboardFields(Player).map(([key]) => key);
+const fields = getLeaderboardFields(Player).map(([key]) => key);
 
 const choices = games.map((g) => [g.name, g.key] as Choice);
 choices.unshift(["All", "all"]);
@@ -77,10 +77,7 @@ const options: Partial<SubCommandOptions> = {
   preview: "rankings.png",
 })
 export class RankingsCommand {
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({
     ...options,
@@ -322,7 +319,7 @@ export class RankingsCommand {
 
     const rankings = await this.apiService.getPlayerRankings(filteredFields, player.uuid);
 
-    if (!rankings.length)
+    if (rankings.length === 0)
       throw new ErrorMessage(
         (t) => t("errors.noRankings.title"),
         (t) =>
@@ -347,7 +344,7 @@ export class RankingsCommand {
       games.find((g) => g.key === game)?.formatted :
       undefined;
 
-    return this.paginateService.scrollingPagination(
+    return scrollingPagination(
       context,
       groups.map(
         (group, page) => () =>

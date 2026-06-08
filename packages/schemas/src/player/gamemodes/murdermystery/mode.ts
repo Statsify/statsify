@@ -236,7 +236,7 @@ export class MurderMysteryKnife {
     this.kind = data.active_knife_skin?.replace("knife_skin_", "") ?? "none";
 
     if (this.kind === "random_cosmetic") {
-      let max: [string, number] | undefined = undefined;
+      let max;
 
       const knifes = Object.entries(
         data?.knifeSkinPrestiges?.xp ?? ({} as Record<string, number>)

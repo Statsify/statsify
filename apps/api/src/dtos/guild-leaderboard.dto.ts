@@ -7,7 +7,7 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { Guild, LeaderboardScanner } from "@statsify/schemas";
+import { Guild, getLeaderboardFields } from "@statsify/schemas";
 import {
   IsEnum,
   IsInt,
@@ -20,7 +20,7 @@ import {
 } from "class-validator";
 import { Transform } from "class-transformer";
 
-const fields = LeaderboardScanner.getLeaderboardFields(Guild).map(([key]) => key);
+const fields = getLeaderboardFields(Guild).map(([key]) => key);
 
 export class GuildLeaderboardDto {
   @IsEnum(fields)

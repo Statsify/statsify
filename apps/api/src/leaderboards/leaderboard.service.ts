@@ -11,7 +11,7 @@ import { Constructor, Flatten } from "@statsify/util";
 import { DateTime } from "luxon";
 import { InjectRedis } from "#redis";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schemas";
+import { type LeaderboardEnabledMetadata, getLeaderboardField, getLeaderboardFields } from "@statsify/schemas";
 import { LeaderboardQuery } from "@statsify/api-client";
 import { Redis } from "ioredis";
 
@@ -37,7 +37,7 @@ export abstract class LeaderboardService {
     idField: keyof T,
     remove = false
   ) {
-    const fields = LeaderboardScanner.getLeaderboardFields(constructor);
+    const fields = getLeaderboardFields(constructor);
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     const child = transaction?.startChild({
@@ -88,7 +88,7 @@ export abstract class LeaderboardService {
       sort,
       name,
       hidden,
-    } = LeaderboardScanner.getLeaderboardField(
+    } = getLeaderboardField(
       constructor,
       field
     ) as LeaderboardEnabledMetadata;
@@ -140,11 +140,11 @@ export abstract class LeaderboardService {
     );
 
     const additionalFieldMetadata = additionalFields.map((k) =>
-      LeaderboardScanner.getLeaderboardField(constructor, k, false)
+      getLeaderboardField(constructor, k, false)
     );
 
     const extraDisplayMetadata = extraDisplay ?
-      LeaderboardScanner.getLeaderboardField(constructor, extraDisplay, false) :
+      getLeaderboardField(constructor, extraDisplay, false) :
       undefined;
 
     const additionalStats = await this.getAdditionalStats(
@@ -218,8 +218,8 @@ export abstract class LeaderboardService {
 
     const leaderboardFields: LeaderboardEnabledMetadata[] = [];
 
-    fields.forEach((field) => {
-      const metadata = LeaderboardScanner.getLeaderboardField(constructor, field);
+    for (const field of fields) {
+      const metadata = getLeaderboardField(constructor, field);
       leaderboardFields.push(metadata);
 
       const key = `${constructorName}.${field}`;
@@ -231,7 +231,7 @@ export abstract class LeaderboardService {
       } else {
         pipeline.zrevrank(key, id);
       }
-    });
+    }
 
     const responses = await pipeline.exec();
 

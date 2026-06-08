@@ -1,10 +1,8 @@
 {
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": [
-    "source.fixAll.eslint"
-  ],
+  "editor.codeActionsOnSave": ["source.fixAll.oxc"],
   "typescript.tsdk": "node_modules/typescript/lib",
   "files.exclude": {
     // "**/dist/**": true,
@@ -13,28 +11,20 @@
     "**/.pnpm-store/**": true
   },
   "[js][ts][tsx]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[handlebars][json][jsonc][css][scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
-  "i18n-ally.localesPaths": [
-    "locales"
-  ],
+  "i18n-ally.localesPaths": ["locales"],
   "i18n-ally.sourceLanguage": "en-US",
   "i18n-ally.displayLanguage": "en-US",
-  "i18n-ally.ignoredLocales": [
-    "en"
-  ],
+  "i18n-ally.ignoredLocales": ["en"],
   "i18n-ally.keystyle": "nested",
   "todo-tree.tree.scanMode": "workspace only",
   "testing.automaticallyOpenPeekView": "never",
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer"
   },
-  "tailwindCSS.classAttributes": [
-    "className",
-    "containerClass",
-    "contentClass"
-  ]
+  "tailwindCSS.classAttributes": ["className", "containerClass", "contentClass"]
 }

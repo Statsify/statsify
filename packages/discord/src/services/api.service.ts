@@ -128,14 +128,21 @@ export class ApiService extends StatsifyApiService {
     let input: string;
     let playerType: PlayerTag;
 
-    if (!type) {
-      if (!tag || this.isDiscordId(tag)) type = GuildQuery.PLAYER;
-      else if (GUILD_ID_REGEX.test(tag)) type = GuildQuery.ID;
-      else if (tag.includes(" ") || tag.length > 16) type = GuildQuery.NAME;
-      else type = GuildQuery.NAME;
+    let resolvedType: GuildQuery;
+
+    if (type) {
+      resolvedType = type;
+    } else if (!tag || this.isDiscordId(tag)) {
+      resolvedType = GuildQuery.PLAYER;
+    } else if (GUILD_ID_REGEX.test(tag)) {
+      resolvedType = GuildQuery.ID;
+    } else if (tag.includes(" ") || tag.length > 16) {
+      resolvedType = GuildQuery.NAME;
+    } else {
+      resolvedType = GuildQuery.NAME;
     }
 
-    if (type === GuildQuery.PLAYER) {
+    if (resolvedType === GuildQuery.PLAYER) {
       const [formattedTag, type] = this.parseTag(tag);
       playerType = type;
       input = await this.resolveTag(formattedTag, type, user);
@@ -143,7 +150,7 @@ export class ApiService extends StatsifyApiService {
       input = tag;
     }
 
-    return super.getGuild(input, type).catch((err) => {
+    return super.getGuild(input, resolvedType).catch((err) => {
       if (!err.response || !err.response.data) throw this.unknownError();
 
       const error = err.response.data as GuildNotFoundException | PlayerNotFoundException;
@@ -226,9 +233,9 @@ export class ApiService extends StatsifyApiService {
   }
 
   public emojiDisplayName(t: LocalizeFunction, displayName: string, space = true) {
-    displayName = displayName.replaceAll("_", String.raw`\_`);
+    const escapedDisplayName = displayName.replaceAll("_", String.raw`\_`);
 
-    const [rank, name] = displayName.replace(/\[|\]/g, "").split(" ");
+    const [rank, name] = escapedDisplayName.replaceAll(/\[|\]/g, "").split(" ");
 
     // They don't have a rank
     if (!name) return removeFormatting(displayName);
@@ -260,7 +267,7 @@ export class ApiService extends StatsifyApiService {
     if (length >= 32 && length <= 36) return [tag.replaceAll("-", ""), "uuid"];
     if (length <= 16) return [tag, "username"];
 
-    if (this.isDiscordId(tag)) return [tag.replace(/<@|!|>/g, ""), "discordId"];
+    if (this.isDiscordId(tag)) return [tag.replaceAll(/<@|!|>/g, ""), "discordId"];
 
     throw new ErrorMessage("errors.invalidSearch");
   }

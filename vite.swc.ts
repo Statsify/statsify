@@ -25,6 +25,8 @@ const resolveFile = (resolved: string, index = false) => {
     const file = index ? join(resolved, `index${ext}`) : `${resolved}${ext}`;
     if (existsSync(file)) return file;
   }
+
+  return undefined;
 };
 
 export const resolveId = async (importee: string, importer?: string) => {
@@ -42,6 +44,8 @@ export const resolveId = async (importee: string, importer?: string) => {
 
     return resolved;
   }
+
+  return undefined;
 };
 
 export const swc = createUnplugin(({ minify, ...options }: SwcOptions = {}) => {

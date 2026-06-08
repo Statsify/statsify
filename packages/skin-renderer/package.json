@@ -19,7 +19,8 @@
     "build:napi:debug": "napi build --platform && mv index.js index.cjs",
     "build:wasm": "wasm-pack build --target web --release",
     "build:wasm:debug": "wasm-pack build --target web --dev",
-    "lint": "cargo fmt && cargo clippy --fix --allow-dirty"
+    "lint": "cargo fmt && cargo clippy --fix --allow-dirty",
+    "lint:ci": "cargo fmt && cargo clippy --fix --allow-dirty"
   },
   "napi": {
     "binaryName": "skin-renderer",
