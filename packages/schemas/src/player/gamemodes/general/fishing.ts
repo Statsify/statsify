@@ -21,16 +21,6 @@ export const FISHING_EVENTS: FishingEvent[] = [
 const FISHING_FIRST_YEAR = 2022;
 const isYearKey = (key: string) => /^\d{4}$/.test(key);
 
-const fieldOptions = {
-  leaderboard: { name: "Fishing" },
-  historical: { enabled: false },
-};
-
-const collectionFieldOptions = {
-  leaderboard: { enabled: false },
-  historical: { enabled: false },
-};
-
 const toNumber = (value: unknown) => (typeof value === "number" ? value : 0);
 const hasPackage = (packages: string[], id: string) => packages.includes(id);
 
@@ -606,13 +596,13 @@ export class FishingEnvironmentStats {
 }
 
 export class FishingEnchantment {
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public name: string;
 
   @Field()
   public level: number;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public enabled: boolean;
 
   public constructor(
@@ -702,13 +692,13 @@ export class FishingEnchantments {
 }
 
 export class FishingMythicalFish {
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public id: string;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public name: string;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public rarity: string;
 
   @Field()
@@ -720,7 +710,7 @@ export class FishingMythicalFish {
   @Field()
   public maxWeight: number;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public maxed: boolean;
 
   public constructor(
@@ -740,25 +730,25 @@ export class FishingMythicalFish {
 }
 
 export class FishingCollectionItem {
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public id: string;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public name: string;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public source: string;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public environment: string;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public requirement: string;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public unlocked: boolean;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public active: boolean;
 
   public constructor({
@@ -810,7 +800,7 @@ export class FishingSeasonalEvent {
 }
 
 export class FishingSeasonalYear {
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public year: string;
 
   @Field()
@@ -844,7 +834,7 @@ export class FishingSeasonalYear {
 }
 
 export class FishingSeasonal {
-  @Field({ type: () => [FishingSeasonalYear], ...collectionFieldOptions })
+  @Field({ type: () => [FishingSeasonalYear], leaderboard: { enabled: false }})
   public years: FishingSeasonalYear[];
 
   @Field()
@@ -887,10 +877,10 @@ export class FishingSeasonal {
 }
 
 export class FishingIndividualCatch {
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public id: string;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public name: string;
 
   @Field()
@@ -904,19 +894,19 @@ export class FishingIndividualCatch {
 }
 
 export class FishingIndividualCatches {
-  @Field({ type: () => [FishingIndividualCatch], ...collectionFieldOptions })
+  @Field({ type: () => [FishingIndividualCatch], leaderboard: { enabled: false }})
   public fish: FishingIndividualCatch[];
 
-  @Field({ type: () => [FishingIndividualCatch], ...collectionFieldOptions })
+  @Field({ type: () => [FishingIndividualCatch], leaderboard: { enabled: false }})
   public treasure: FishingIndividualCatch[];
 
-  @Field({ type: () => [FishingIndividualCatch], ...collectionFieldOptions })
+  @Field({ type: () => [FishingIndividualCatch], leaderboard: { enabled: false }})
   public junk: FishingIndividualCatch[];
 
-  @Field({ type: () => [FishingIndividualCatch], ...collectionFieldOptions })
+  @Field({ type: () => [FishingIndividualCatch], leaderboard: { enabled: false }})
   public plant: FishingIndividualCatch[];
 
-  @Field({ type: () => [FishingIndividualCatch], ...collectionFieldOptions })
+  @Field({ type: () => [FishingIndividualCatch], leaderboard: { enabled: false }})
   public creature: FishingIndividualCatch[];
 
   public constructor(data: APIData = {}) {
@@ -1000,16 +990,16 @@ export class Fishing {
   @Field()
   public ice: FishingEnvironmentStats;
 
-  @Field({ type: () => [FishingMythicalFish], ...collectionFieldOptions })
+  @Field({ type: () => [FishingMythicalFish], leaderboard: { enabled: false }})
   public mythicals: FishingMythicalFish[];
 
-  @Field({ type: () => [FishingCollectionItem], ...collectionFieldOptions })
+  @Field({ type: () => [FishingCollectionItem], leaderboard: { enabled: false }})
   public specialFish: FishingCollectionItem[];
 
-  @Field({ type: () => [FishingCollectionItem], ...collectionFieldOptions })
+  @Field({ type: () => [FishingCollectionItem], leaderboard: { enabled: false }})
   public fishingRods: FishingCollectionItem[];
 
-  @Field({ type: () => [FishingCollectionItem], ...collectionFieldOptions })
+  @Field({ type: () => [FishingCollectionItem], leaderboard: { enabled: false }})
   public hookTrailCollection: FishingCollectionItem[];
 
   @Field()
@@ -1024,10 +1014,10 @@ export class Fishing {
   @Field()
   public individual: FishingIndividualCatches;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public activeFishingRod: string;
 
-  @Field(collectionFieldOptions)
+  @Field({ leaderboard: { enabled: false }})
   public activeFishHookTrail: string;
 
   public constructor(
