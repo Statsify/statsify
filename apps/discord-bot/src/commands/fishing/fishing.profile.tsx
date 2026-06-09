@@ -15,18 +15,21 @@ import {
   Table,
 } from "#components";
 import {
+  FISHING_ENVIRONMENTS,
   FISHING_EVENTS,
   FISHING_HOOK_TRAILS,
   FISHING_INDIVIDUAL_ITEMS,
   FISHING_MYTHICAL_FISH,
   FISHING_RODS,
   FISHING_SPECIAL_FISH,
+  type FishingEnvironment,
   type FishingEnvironmentStats,
   type FishingEvent,
   type FishingIndividualCatch,
   type FishingSeasonalYear,
   FormattedGame,
 } from "@statsify/schemas";
+import { add } from "@statsify/math";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
@@ -47,6 +50,19 @@ export interface FishingPageData {
   label: string;
   seasonalYears?: FishingSeasonalYear[];
 }
+
+const FISHING_PAGE_TITLES: Record<FishingPage, string> = {
+  overview: "Stats",
+  mythicals: "Mythicals",
+  specialsOne: "Special Fish",
+  specialsTwo: "Special Fish",
+  collections: "Collections",
+  catchesOne: "Catches",
+  catchesTwo: "Catches",
+  environments: "Environments",
+  seasonal: "Seasonal",
+  yearly: "Yearly",
+};
 
 interface FishingProfileProps extends BaseProfileProps {
   page: FishingPage;
@@ -102,17 +118,6 @@ const FISHING_ENVIRONMENT_COLORS: Record<string, string> = {
   ice: "§b",
 };
 
-const FISHING_ENVIRONMENTS = ["water", "lava", "ice"] as const;
-
-const FISHING_ENVIRONMENT_NAMES: Record<
-  (typeof FISHING_ENVIRONMENTS)[number],
-  string
-> = {
-  water: "Water",
-  lava: "Lava",
-  ice: "Ice",
-};
-
 const prettifyFishingId = (id: string) =>
   id === "N/A" ?
     "N/A" :
@@ -142,7 +147,7 @@ const collectionItems = <
   data.map((item, index) => ({
     name: prettifyFishingId(item.id),
     source: item.source ?? "N/A",
-    environment: item.environment ? prettify(item.environment) : "N/A",
+    environment: item.environment ?? "N/A",
     requirement: item.requirement ?? "N/A",
     unlocked: items[index]?.unlocked ?? false,
     active: items[index]?.active ?? false,
@@ -512,24 +517,12 @@ const FishingCatchesTwo = ({
 };
 
 const sumEnvironmentStats = (environments: FishingEnvironmentStats[]) => ({
-  fish: environments.reduce((total, environment) => total + environment.fish, 0),
-  junk: environments.reduce((total, environment) => total + environment.junk, 0),
-  treasure: environments.reduce(
-    (total, environment) => total + environment.treasure,
-    0
-  ),
-  plant: environments.reduce(
-    (total, environment) => total + environment.plant,
-    0
-  ),
-  creature: environments.reduce(
-    (total, environment) => total + environment.creature,
-    0
-  ),
-  mythical: environments.reduce(
-    (total, environment) => total + environment.mythical,
-    0
-  ),
+  fish: add(...environments.map((environment) => environment.fish)),
+  junk: add(...environments.map((environment) => environment.junk)),
+  treasure: add(...environments.map((environment) => environment.treasure)),
+  plant: add(...environments.map((environment) => environment.plant)),
+  creature: add(...environments.map((environment) => environment.creature)),
+  mythical: add(...environments.map((environment) => environment.mythical)),
 });
 
 interface FishingSeasonalEventDetailsProps {
@@ -547,6 +540,7 @@ const FishingSeasonalEventDetails = ({
     title={`${FISHING_EVENT_COLORS[event]}${FISHING_EVENT_NAMES[event]} Environment Details`}
   >
     {FISHING_ENVIRONMENTS.map((environment) => {
+      const environmentName = prettify(environment);
       const stats = sumEnvironmentStats(
         seasonalYears.map((year) => year[event][environment])
       );
@@ -554,32 +548,32 @@ const FishingSeasonalEventDetails = ({
       return (
         <Table.tr>
           <Table.td
-            title={`${FISHING_ENVIRONMENT_NAMES[environment]} Fish`}
+            title={`${environmentName} Fish`}
             value={t(stats.fish)}
             color="§e"
           />
           <Table.td
-            title={`${FISHING_ENVIRONMENT_NAMES[environment]} Junk`}
+            title={`${environmentName} Junk`}
             value={t(stats.junk)}
             color="§c"
           />
           <Table.td
-            title={`${FISHING_ENVIRONMENT_NAMES[environment]} Treasure`}
+            title={`${environmentName} Treasure`}
             value={t(stats.treasure)}
             color="§a"
           />
           <Table.td
-            title={`${FISHING_ENVIRONMENT_NAMES[environment]} Plants`}
+            title={`${environmentName} Plants`}
             value={t(stats.plant)}
             color="§2"
           />
           <Table.td
-            title={`${FISHING_ENVIRONMENT_NAMES[environment]} Creatures`}
+            title={`${environmentName} Creatures`}
             value={t(stats.creature)}
             color="§b"
           />
           <Table.td
-            title={`${FISHING_ENVIRONMENT_NAMES[environment]} Mythicals`}
+            title={`${environmentName} Mythicals`}
             value={t(stats.mythical)}
             color="§6"
           />
@@ -590,42 +584,18 @@ const FishingSeasonalEventDetails = ({
 );
 
 const seasonalSummary = (year: FishingSeasonalYear) => {
-  const environments = FISHING_EVENTS.flatMap((event) => [
-    year[event].water,
-    year[event].lava,
-    year[event].ice,
-  ]);
-
+  const environments = FISHING_EVENTS.flatMap((event) =>
+    FISHING_ENVIRONMENTS.map((environment) => year[event][environment])
+  );
   const events = FISHING_EVENTS.map((event) => year[event]);
+  const getEnvironmentTotal = (environment: FishingEnvironment) =>
+    add(...events.map((event) => event[environment].total));
 
   return {
-    fish: environments.reduce(
-      (total, environment) => total + environment.fish,
-      0
-    ),
-    junk: environments.reduce(
-      (total, environment) => total + environment.junk,
-      0
-    ),
-    treasure: environments.reduce(
-      (total, environment) => total + environment.treasure,
-      0
-    ),
-    plant: environments.reduce(
-      (total, environment) => total + environment.plant,
-      0
-    ),
-    creature: environments.reduce(
-      (total, environment) => total + environment.creature,
-      0
-    ),
-    mythical: environments.reduce(
-      (total, environment) => total + environment.mythical,
-      0
-    ),
-    water: events.reduce((total, event) => total + event.water.total, 0),
-    lava: events.reduce((total, event) => total + event.lava.total, 0),
-    ice: events.reduce((total, event) => total + event.ice.total, 0),
+    ...sumEnvironmentStats(environments),
+    water: getEnvironmentTotal("water"),
+    lava: getEnvironmentTotal("lava"),
+    ice: getEnvironmentTotal("ice"),
     total: year.total,
   };
 };
@@ -640,27 +610,28 @@ const FishingEnvironments = ({
     <Table.table>
       <Table.ts title="§bEnvironment Details">
         {FISHING_ENVIRONMENTS.map((environment) => {
+          const environmentName = prettify(environment);
           const stats = fishing[environment];
 
           return (
             <Table.tr>
               <Table.td
-                title={`${FISHING_ENVIRONMENT_NAMES[environment]} Treasure`}
+                title={`${environmentName} Treasure`}
                 value={t(stats.treasure)}
                 color="§a"
               />
               <Table.td
-                title={`${FISHING_ENVIRONMENT_NAMES[environment]} Plants`}
+                title={`${environmentName} Plants`}
                 value={t(stats.plant)}
                 color="§2"
               />
               <Table.td
-                title={`${FISHING_ENVIRONMENT_NAMES[environment]} Creatures`}
+                title={`${environmentName} Creatures`}
                 value={t(stats.creature)}
                 color="§b"
               />
               <Table.td
-                title={`${FISHING_ENVIRONMENT_NAMES[environment]} Mythicals`}
+                title={`${environmentName} Mythicals`}
                 value={t(stats.mythical)}
                 color="§6"
               />
@@ -814,48 +785,7 @@ export const FishingProfile = ({
     ["Active Trail", prettifyFishingId(fishing.activeFishHookTrail), "§6"],
   ];
 
-  let title = `§l${FormattedGame.FISHING} §fSeasonal`;
-
-  switch (page) {
-    case "overview":
-      title = `§l${FormattedGame.FISHING} §fStats`;
-
-      break;
-
-    case "mythicals":
-      title = `§l${FormattedGame.FISHING} §fMythicals`;
-
-      break;
-
-    case "specialsOne":
-    case "specialsTwo":
-      title = `§l${FormattedGame.FISHING} §fSpecial Fish`;
-
-      break;
-
-    case "collections":
-      title = `§l${FormattedGame.FISHING} §fCollections`;
-
-      break;
-
-    case "catchesOne":
-    case "catchesTwo":
-      title = `§l${FormattedGame.FISHING} §fCatches`;
-
-      break;
-
-    case "environments":
-      title = `§l${FormattedGame.FISHING} §fEnvironments`;
-
-      break;
-
-    case "yearly":
-      title = `§l${FormattedGame.FISHING} §fYearly`;
-
-      break;
-
-  // No default
-  }
+  const title = `§l${FormattedGame.FISHING} §f${FISHING_PAGE_TITLES[page]}`;
 
   let content: JSX.Element;
 

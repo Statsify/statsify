@@ -7,9 +7,11 @@
  */
 
 import { Field } from "#metadata";
+import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
-type FishingEnvironment = "water" | "lava" | "ice";
+export const FISHING_ENVIRONMENTS = ["water", "lava", "ice"] as const;
+export type FishingEnvironment = (typeof FISHING_ENVIRONMENTS)[number];
 export type FishingEvent = "halloween" | "christmas" | "easter" | "summer";
 
 export const FISHING_EVENTS: FishingEvent[] = [
@@ -23,9 +25,15 @@ const isYearKey = (key: string) => /^\d{4}$/.test(key);
 
 const toNumber = (value: unknown) => (typeof value === "number" ? value : 0);
 const hasPackage = (packages: string[], id: string) => packages.includes(id);
-
-const sum = (...values: number[]) =>
-  values.reduce((total, value) => total + value, 0);
+const totalPermanentStat = (
+  permanent: APIData,
+  stat: "treasure" | "junk" | "plant" | "creature"
+) =>
+  add(
+    ...FISHING_ENVIRONMENTS.map((environment) =>
+      toNumber(permanent[environment]?.[stat])
+    )
+  );
 
 export interface FishingSpecialFishData {
   id: string;
@@ -515,7 +523,7 @@ export class FishingEnvironmentStats {
     this.plant = toNumber(data.plant);
     this.creature = toNumber(data.creature);
     this.mythical = toNumber(data.orb);
-    this.total = sum(
+    this.total = add(
       this.fish,
       this.junk,
       this.treasure,
@@ -662,7 +670,9 @@ export class FishingSeasonalEvent {
     this.water = new FishingEnvironmentStats(data.water);
     this.lava = new FishingEnvironmentStats(data.lava);
     this.ice = new FishingEnvironmentStats(data.ice);
-    this.total = sum(this.water.total, this.lava.total, this.ice.total);
+    this.total = add(
+      ...FISHING_ENVIRONMENTS.map((environment) => this[environment].total)
+    );
   }
 }
 
@@ -691,12 +701,7 @@ export class FishingSeasonalYear {
     this.christmas = new FishingSeasonalEvent(data.christmas);
     this.easter = new FishingSeasonalEvent(data.easter);
     this.summer = new FishingSeasonalEvent(data.summer);
-    this.total = sum(
-      this.halloween.total,
-      this.christmas.total,
-      this.easter.total,
-      this.summer.total
-    );
+    this.total = add(...FISHING_EVENTS.map((event) => this[event].total));
   }
 }
 
@@ -735,11 +740,11 @@ export class FishingSeasonal {
     this.years = yearKeys.map(
       (year) => new FishingSeasonalYear(year, data[year])
     );
-    this.halloween = sum(...this.years.map((year) => year.halloween.total));
-    this.christmas = sum(...this.years.map((year) => year.christmas.total));
-    this.easter = sum(...this.years.map((year) => year.easter.total));
-    this.summer = sum(...this.years.map((year) => year.summer.total));
-    this.total = sum(this.halloween, this.christmas, this.easter, this.summer);
+    this.halloween = add(...this.years.map((year) => year.halloween.total));
+    this.christmas = add(...this.years.map((year) => year.christmas.total));
+    this.easter = add(...this.years.map((year) => year.easter.total));
+    this.summer = add(...this.years.map((year) => year.summer.total));
+    this.total = add(this.halloween, this.christmas, this.easter, this.summer);
   }
 }
 
@@ -751,6 +756,14 @@ export class FishingIndividualCatch {
     this.catches = catches;
   }
 }
+
+const getIndividualCatches = (
+  category: FishingCatchCategory,
+  data: APIData = {}
+) =>
+  FISHING_INDIVIDUAL_ITEMS[category].map(
+    (item) => new FishingIndividualCatch(toNumber(data[category]?.[item.id]))
+  );
 
 export class FishingIndividualCatches {
   @Field({ type: () => [FishingIndividualCatch], leaderboard: { enabled: false } })
@@ -769,23 +782,11 @@ export class FishingIndividualCatches {
   public creature: FishingIndividualCatch[];
 
   public constructor(data: APIData = {}) {
-    this.fish = FISHING_INDIVIDUAL_FISH.map(
-      (item) => new FishingIndividualCatch(toNumber(data.fish?.[item.id]))
-    );
-    this.treasure = FISHING_INDIVIDUAL_TREASURE.map(
-      (item) =>
-        new FishingIndividualCatch(toNumber(data.treasure?.[item.id]))
-    );
-    this.junk = FISHING_INDIVIDUAL_JUNK.map(
-      (item) => new FishingIndividualCatch(toNumber(data.junk?.[item.id]))
-    );
-    this.plant = FISHING_INDIVIDUAL_PLANT.map(
-      (item) => new FishingIndividualCatch(toNumber(data.plant?.[item.id]))
-    );
-    this.creature = FISHING_INDIVIDUAL_CREATURE.map(
-      (item) =>
-        new FishingIndividualCatch(toNumber(data.creature?.[item.id]))
-    );
+    this.fish = getIndividualCatches("fish", data);
+    this.treasure = getIndividualCatches("treasure", data);
+    this.junk = getIndividualCatches("junk", data);
+    this.plant = getIndividualCatches("plant", data);
+    this.creature = getIndividualCatches("creature", data);
   }
 }
 
@@ -890,18 +891,18 @@ export class Fishing {
     this.lava = new FishingEnvironmentStats(permanent.lava);
     this.ice = new FishingEnvironmentStats(permanent.ice);
 
-    this.fish = sum(this.water.fish, this.lava.fish, this.ice.fish);
-    this.junk = sum(this.water.junk, this.lava.junk, this.ice.junk);
-    this.treasure = sum(
-      this.water.treasure,
-      this.lava.treasure,
-      this.ice.treasure
+    const environments = FISHING_ENVIRONMENTS.map(
+      (environment) => this[environment]
     );
-    this.plant = sum(this.water.plant, this.lava.plant, this.ice.plant);
-    this.creature = sum(
-      this.water.creature,
-      this.lava.creature,
-      this.ice.creature
+
+    this.fish = add(...environments.map((environment) => environment.fish));
+    this.junk = add(...environments.map((environment) => environment.junk));
+    this.treasure = add(
+      ...environments.map((environment) => environment.treasure)
+    );
+    this.plant = add(...environments.map((environment) => environment.plant));
+    this.creature = add(
+      ...environments.map((environment) => environment.creature)
     );
     this.mythical = FISHING_MYTHICAL_FISH.reduce(
       (total, mythical) => total + toNumber(fishing.orbs?.[mythical.id]),
@@ -921,7 +922,7 @@ export class Fishing {
         )
     );
 
-    this.totalCatches = sum(
+    this.totalCatches = add(
       this.fish,
       this.junk,
       this.treasure,
@@ -959,17 +960,19 @@ export class Fishing {
     const inauguralIceCatches = new FishingEnvironmentStats(
       fishing.stats?.["2022"]?.christmas?.ice
     ).total;
+    const hasOvergrownRequirements =
+      specialFish.poisonous_potato &&
+      specialFish.golden_apple &&
+      specialFish.burnt_plant;
+    const hasZoologistRequirements = toNumber(creatures.squid) > 0;
 
     return FISHING_RODS.map((rod) => {
       const unlocked =
         rod.id === "fishing_rod_3000" ||
         hasPackage(packages, rod.id) ||
         (rod.id === "fishing_rod_inaugural_ice" && inauguralIceCatches > 0) ||
-        (rod.id === "fishing_rod_overgrown" &&
-          specialFish.poisonous_potato &&
-          specialFish.golden_apple &&
-          specialFish.burnt_plant) ||
-          (rod.id === "fishing_rod_zoologist" && toNumber(creatures.squid) > 0);
+        (rod.id === "fishing_rod_overgrown" && hasOvergrownRequirements) ||
+        (rod.id === "fishing_rod_zoologist" && hasZoologistRequirements);
 
       return new FishingCollectionItem({
         unlocked,
@@ -983,43 +986,43 @@ export class Fishing {
     packages: string[],
     permanent: APIData
   ) {
-    const totalTreasure = sum(
-      toNumber(permanent.water?.treasure),
-      toNumber(permanent.lava?.treasure),
-      toNumber(permanent.ice?.treasure)
-    );
-    const totalJunk = sum(
-      toNumber(permanent.water?.junk),
-      toNumber(permanent.lava?.junk),
-      toNumber(permanent.ice?.junk)
-    );
-    const totalPlant = sum(
-      toNumber(permanent.water?.plant),
-      toNumber(permanent.lava?.plant),
-      toNumber(permanent.ice?.plant)
-    );
-    const totalCreature = sum(
-      toNumber(permanent.water?.creature),
-      toNumber(permanent.lava?.creature),
-      toNumber(permanent.ice?.creature)
-    );
+    const totalTreasure = totalPermanentStat(permanent, "treasure");
+    const totalJunk = totalPermanentStat(permanent, "junk");
+    const totalPlant = totalPermanentStat(permanent, "plant");
+    const totalCreature = totalPermanentStat(permanent, "creature");
 
     return FISHING_HOOK_TRAILS.map((trail) => {
-      const unlocked =
-        hasPackage(packages, trail.id) ||
-        (trail.id === "mainlobby_fishing_emerald" && this.mythical >= 500) ||
-        (trail.id === "mainlobby_fishing_sparkle" && this.special >= 20) ||
-        (trail.id === "mainlobby_fishing_treasure_sheen" &&
-          totalTreasure >= 5000) ||
-          (trail.id === "mainlobby_fishing_beloved_junk" && totalJunk >= 5000) ||
-          (trail.id === "mainlobby_fishing_archimedes_trail" &&
-            toNumber(fishing.orbs?.archimedes) >= 1) ||
-            (trail.id === "mainlobby_fishing_hades_hook" &&
-              toNumber(fishing.orbs?.hades) >= 5) ||
-              (trail.id === "mainlobby_fishing_organic_material" &&
-                totalPlant >= 1000) ||
-                (trail.id === "mainlobby_fishing_creature_catch" &&
-                  totalCreature >= 1000);
+      const unlockedByStats = (() => {
+        switch (trail.id) {
+          case "mainlobby_fishing_emerald":
+            return this.mythical >= 500;
+
+          case "mainlobby_fishing_sparkle":
+            return this.special >= 20;
+
+          case "mainlobby_fishing_treasure_sheen":
+            return totalTreasure >= 5000;
+
+          case "mainlobby_fishing_beloved_junk":
+            return totalJunk >= 5000;
+
+          case "mainlobby_fishing_archimedes_trail":
+            return toNumber(fishing.orbs?.archimedes) >= 1;
+
+          case "mainlobby_fishing_hades_hook":
+            return toNumber(fishing.orbs?.hades) >= 5;
+
+          case "mainlobby_fishing_organic_material":
+            return totalPlant >= 1000;
+
+          case "mainlobby_fishing_creature_catch":
+            return totalCreature >= 1000;
+
+          default:
+            return false;
+        }
+      })();
+      const unlocked = hasPackage(packages, trail.id) || unlockedByStats;
 
       return new FishingCollectionItem({
         unlocked,
