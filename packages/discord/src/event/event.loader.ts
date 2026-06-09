@@ -14,13 +14,16 @@ import { WebsocketShard } from "tiny-discord";
 import { readdir } from "node:fs/promises";
 import { statSync } from "node:fs";
 import { pathToFileURL } from "node:url";
+import { join } from "node:path";
 
 const logger = new Logger("EventLoader");
 
 export async function loadEvents(websocket: WebsocketShard, dir: string) {
   const files = await getEventFileUrls(dir);
   const events = await Promise.all(files.map(importEvent));
-  const eventsMap = new Map<GatewayDispatchEvents, AbstractEventListener<any>>(events.flat().map((event) => [event.event, event]));
+  const eventsMap = new Map<GatewayDispatchEvents, AbstractEventListener<any>>(
+    events.flat().map((event) => [event.event, event]),
+  );
 
   websocket.on("event", (event) => {
     const listener = eventsMap.get(event.t as GatewayDispatchEvents);
@@ -56,12 +59,12 @@ async function getEventFileUrls(dir: string): Promise<string[]> {
 
   await Promise.all(
     files.map(async (file) => {
-      const path = `${dir}/${file}`;
+      const path = join(dir, file);
 
       if (statSync(path).isDirectory()) {
         toLoad.push(...(await getEventFileUrls(path)));
       } else if (file.endsWith(".event.js")) {
-        toLoad.push(pathToFileURL(file).href);
+        toLoad.push(pathToFileURL(path).href);
       }
     }),
   );
