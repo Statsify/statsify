@@ -10,17 +10,16 @@ import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
 
 type FishingEnvironment = "water" | "lava" | "ice";
-type FishingEvent = "halloween" | "christmas" | "easter" | "summer";
-type FishingYear = "2022" | "2023" | "2024" | "2025" | "2026";
+export type FishingEvent = "halloween" | "christmas" | "easter" | "summer";
 
-const FISHING_YEARS: FishingYear[] = ["2022", "2023", "2024", "2025", "2026"];
-const FISHING_EVENTS: FishingEvent[] = [
+export const FISHING_EVENTS: FishingEvent[] = [
   "halloween",
   "christmas",
   "easter",
   "summer",
 ];
-const FISHING_ENVIRONMENTS: FishingEnvironment[] = ["water", "lava", "ice"];
+const FISHING_FIRST_YEAR = 2022;
+const isYearKey = (key: string) => /^\d{4}$/.test(key);
 
 const fieldOptions = {
   leaderboard: { name: "Fishing" },
@@ -75,25 +74,25 @@ export const FISHING_SPECIAL_FISH: FishingSpecialFishData[] = [
   },
   {
     id: "fish_monger_suit_helmet",
-    name: "Fish Monger Suit Helmet",
+    name: "Fish Monger Helmet",
     source: "Anytime",
     environment: "water",
   },
   {
     id: "fish_monger_suit_chestplate",
-    name: "Fish Monger Suit Chestplate",
+    name: "Fish Monger Chestplate",
     source: "Anytime",
     environment: "water",
   },
   {
     id: "fish_monger_suit_leggings",
-    name: "Fish Monger Suit Leggings",
+    name: "Fish Monger Leggings",
     source: "Anytime",
     environment: "water",
   },
   {
     id: "fish_monger_suit_boots",
-    name: "Fish Monger Suit Boots",
+    name: "Fish Monger Boots",
     source: "Anytime",
     environment: "water",
   },
@@ -445,26 +444,147 @@ export const FISHING_HOOK_TRAILS: FishingHookTrailData[] = [
   },
 ];
 
+export type FishingCatchCategory =
+  | "fish"
+  | "treasure"
+  | "junk"
+  | "plant"
+  | "creature";
+
+export interface FishingItemData {
+  id: string;
+  name: string;
+}
+
+export const FISHING_INDIVIDUAL_FISH: FishingItemData[] = [
+  { id: "salmon", name: "Salmon" },
+  { id: "clownfish", name: "Clownfish" },
+  { id: "cooked_salmon", name: "Cooked Salmon" },
+  { id: "charred_pufferfish", name: "Charred Pufferfish" },
+  { id: "cooked_cod", name: "Cooked Cod" },
+  { id: "pufferfish", name: "Pufferfish" },
+  { id: "cod", name: "Cod" },
+  { id: "trout", name: "Trout" },
+  { id: "pike", name: "Pike" },
+  { id: "perch", name: "Perch" },
+  { id: "kelp", name: "Kelp" },
+];
+
+export const FISHING_INDIVIDUAL_TREASURE: FishingItemData[] = [
+  { id: "eye_of_ender", name: "Eye of Ender" },
+  { id: "molten_gold", name: "Molten Gold" },
+  { id: "blaze_powder", name: "Blaze Powder" },
+  { id: "gold_sword", name: "Gold Sword" },
+  { id: "name_tag", name: "Name Tag" },
+  { id: "enchanted_book", name: "Enchanted Book" },
+  { id: "diamond", name: "Diamond" },
+  { id: "compass", name: "Compass" },
+  { id: "gold_pickaxe", name: "Gold Pickaxe" },
+  { id: "emerald", name: "Emerald" },
+  { id: "enchanted_fishing_rod", name: "Enchanted Fishing Rod" },
+  { id: "enchanted_bow", name: "Enchanted Bow" },
+  { id: "saddle", name: "Saddle" },
+  { id: "diamond_sword", name: "Diamond Sword" },
+  { id: "magma_cream", name: "Magma Cream" },
+  { id: "blaze_rod", name: "Blaze Rod" },
+  { id: "chainmail_chestplate", name: "Chainmail Chestplate" },
+  { id: "iron_sword", name: "Iron Sword" },
+  { id: "nautilus_shell", name: "Nautilus Shell" },
+];
+
+export const FISHING_INDIVIDUAL_JUNK: FishingItemData[] = [
+  { id: "charcoal", name: "Charcoal" },
+  { id: "soggy_paper", name: "Soggy Paper" },
+  { id: "ink_sac", name: "Ink Sac" },
+  { id: "broken_fishing_rod", name: "Broken Fishing Rod" },
+  { id: "water_bottle", name: "Water Bottle" },
+  { id: "bowl", name: "Bowl" },
+  { id: "rotten_flesh", name: "Rotten Flesh" },
+  { id: "string", name: "String" },
+  { id: "rabbit_hide", name: "Rabbit Hide" },
+  { id: "leather", name: "Leather" },
+  { id: "lily_pad", name: "Lily Pad" },
+  { id: "bone", name: "Bone" },
+  { id: "leather_boots", name: "Leather Boots" },
+  { id: "tripwire_hook", name: "Tripwire Hook" },
+  { id: "stick", name: "Stick" },
+  { id: "coal", name: "Coal" },
+  { id: "fermented_spider_eye", name: "Fermented Spider Eye" },
+  { id: "burned_flesh", name: "Burned Flesh" },
+  { id: "steak", name: "Steak" },
+  { id: "nether_brick", name: "Nether Brick" },
+  { id: "lava_bucket", name: "Lava Bucket" },
+  { id: "clump_of_leaves", name: "Clump of Leaves" },
+  { id: "frozen_flesh", name: "Frozen Flesh" },
+  { id: "snowball", name: "Snowball" },
+  { id: "ice_shard", name: "Ice Shard" },
+];
+
+export const FISHING_INDIVIDUAL_PLANT: FishingItemData[] = [
+  { id: "kelp", name: "Kelp" },
+  { id: "bamboo", name: "Bamboo" },
+  { id: "dried_kelp", name: "Dried Kelp" },
+  { id: "glow_berries", name: "Glow Berries" },
+  { id: "melon", name: "Melon" },
+  { id: "potato", name: "Potato" },
+  { id: "sweet_berries", name: "Sweet Berries" },
+  { id: "wheat", name: "Wheat" },
+  { id: "frozen_kelp", name: "Frozen Kelp" },
+  { id: "baked_potato", name: "Baked Potato" },
+  { id: "charred_berries", name: "Charred Berries" },
+  { id: "nether_wart", name: "Nether Wart" },
+  { id: "glistering_melon", name: "Glistering Melon" },
+  { id: "warped_roots", name: "Warped Roots" },
+];
+
+export const FISHING_INDIVIDUAL_CREATURE: FishingItemData[] = [
+  { id: "chicken", name: "Chicken" },
+  { id: "cow", name: "Cow" },
+  { id: "creeper", name: "Creeper" },
+  { id: "pig", name: "Pig" },
+  { id: "sheep", name: "Sheep" },
+  { id: "skeleton", name: "Skeleton" },
+  { id: "slime", name: "Slime" },
+  { id: "spider", name: "Spider" },
+  { id: "squid", name: "Squid" },
+  { id: "zombie", name: "Zombie" },
+  { id: "blaze", name: "Blaze" },
+  { id: "cave_spider", name: "Cave Spider" },
+  { id: "magma_cube", name: "Magma Cube" },
+  { id: "pig_zombie", name: "Pig Zombie" },
+];
+
+export const FISHING_INDIVIDUAL_ITEMS: Record<
+  FishingCatchCategory,
+  FishingItemData[]
+> = {
+  fish: FISHING_INDIVIDUAL_FISH,
+  treasure: FISHING_INDIVIDUAL_TREASURE,
+  junk: FISHING_INDIVIDUAL_JUNK,
+  plant: FISHING_INDIVIDUAL_PLANT,
+  creature: FISHING_INDIVIDUAL_CREATURE,
+};
+
 export class FishingEnvironmentStats {
-  @Field(fieldOptions)
+  @Field()
   public fish: number;
 
-  @Field(fieldOptions)
+  @Field()
   public junk: number;
 
-  @Field(fieldOptions)
+  @Field()
   public treasure: number;
 
-  @Field(fieldOptions)
+  @Field()
   public plant: number;
 
-  @Field(fieldOptions)
+  @Field()
   public creature: number;
 
-  @Field(fieldOptions)
+  @Field()
   public mythical: number;
 
-  @Field(fieldOptions)
+  @Field()
   public total: number;
 
   public constructor(data: APIData = {}) {
@@ -489,7 +609,7 @@ export class FishingEnchantment {
   @Field(collectionFieldOptions)
   public name: string;
 
-  @Field(fieldOptions)
+  @Field()
   public level: number;
 
   @Field(collectionFieldOptions)
@@ -591,13 +711,13 @@ export class FishingMythicalFish {
   @Field(collectionFieldOptions)
   public rarity: string;
 
-  @Field(fieldOptions)
+  @Field()
   public catches: number;
 
-  @Field(fieldOptions)
+  @Field()
   public percentage: number;
 
-  @Field(fieldOptions)
+  @Field()
   public maxWeight: number;
 
   @Field(collectionFieldOptions)
@@ -678,7 +798,7 @@ export class FishingSeasonalEvent {
   @Field()
   public ice: FishingEnvironmentStats;
 
-  @Field(fieldOptions)
+  @Field()
   public total: number;
 
   public constructor(data: APIData = {}) {
@@ -690,6 +810,9 @@ export class FishingSeasonalEvent {
 }
 
 export class FishingSeasonalYear {
+  @Field(collectionFieldOptions)
+  public year: string;
+
   @Field()
   public halloween: FishingSeasonalEvent;
 
@@ -702,10 +825,11 @@ export class FishingSeasonalYear {
   @Field()
   public summer: FishingSeasonalEvent;
 
-  @Field(fieldOptions)
+  @Field()
   public total: number;
 
-  public constructor(data: APIData = {}) {
+  public constructor(year: string = "", data: APIData = {}) {
+    this.year = year;
     this.halloween = new FishingSeasonalEvent(data.halloween);
     this.christmas = new FishingSeasonalEvent(data.christmas);
     this.easter = new FishingSeasonalEvent(data.easter);
@@ -720,50 +844,113 @@ export class FishingSeasonalYear {
 }
 
 export class FishingSeasonal {
-  @Field()
-  public year2022: FishingSeasonalYear;
+  @Field({ type: () => [FishingSeasonalYear], ...collectionFieldOptions })
+  public years: FishingSeasonalYear[];
 
   @Field()
-  public year2023: FishingSeasonalYear;
+  public halloween: number;
 
   @Field()
-  public year2024: FishingSeasonalYear;
+  public christmas: number;
 
   @Field()
-  public year2025: FishingSeasonalYear;
+  public easter: number;
 
   @Field()
-  public year2026: FishingSeasonalYear;
+  public summer: number;
 
-  @Field(collectionFieldOptions)
-  public hasData: boolean;
+  @Field()
+  public total: number;
 
   public constructor(data: APIData = {}) {
-    this.year2022 = new FishingSeasonalYear(data["2022"]);
-    this.year2023 = new FishingSeasonalYear(data["2023"]);
-    this.year2024 = new FishingSeasonalYear(data["2024"]);
-    this.year2025 = new FishingSeasonalYear(data["2025"]);
-    this.year2026 = new FishingSeasonalYear(data["2026"]);
-    this.hasData = FISHING_YEARS.some((year) =>
-      FISHING_EVENTS.some((event) =>
-        FISHING_ENVIRONMENTS.some(
-          (environment) =>
-            new FishingEnvironmentStats(data[year]?.[event]?.[environment])
-              .total > 0,
-        ),
-      ),
+    const dataYears = Object.keys(data).filter(isYearKey);
+    const currentYear = new Date().getUTCFullYear();
+    const lastYear = Math.max(
+      currentYear,
+      ...dataYears.map((year) => Number.parseInt(year, 10)),
+    );
+
+    const yearKeys: string[] = [];
+    for (let year = FISHING_FIRST_YEAR; year <= lastYear; year++) {
+      yearKeys.push(year.toString());
+    }
+
+    this.years = yearKeys.map(
+      (year) => new FishingSeasonalYear(year, data[year]),
+    );
+    this.halloween = sum(...this.years.map((year) => year.halloween.total));
+    this.christmas = sum(...this.years.map((year) => year.christmas.total));
+    this.easter = sum(...this.years.map((year) => year.easter.total));
+    this.summer = sum(...this.years.map((year) => year.summer.total));
+    this.total = sum(this.halloween, this.christmas, this.easter, this.summer);
+  }
+}
+
+export class FishingIndividualCatch {
+  @Field(collectionFieldOptions)
+  public id: string;
+
+  @Field(collectionFieldOptions)
+  public name: string;
+
+  @Field()
+  public catches: number;
+
+  public constructor(item: FishingItemData, catches: number) {
+    this.id = item.id;
+    this.name = item.name;
+    this.catches = catches;
+  }
+}
+
+export class FishingIndividualCatches {
+  @Field({ type: () => [FishingIndividualCatch], ...collectionFieldOptions })
+  public fish: FishingIndividualCatch[];
+
+  @Field({ type: () => [FishingIndividualCatch], ...collectionFieldOptions })
+  public treasure: FishingIndividualCatch[];
+
+  @Field({ type: () => [FishingIndividualCatch], ...collectionFieldOptions })
+  public junk: FishingIndividualCatch[];
+
+  @Field({ type: () => [FishingIndividualCatch], ...collectionFieldOptions })
+  public plant: FishingIndividualCatch[];
+
+  @Field({ type: () => [FishingIndividualCatch], ...collectionFieldOptions })
+  public creature: FishingIndividualCatch[];
+
+  public constructor(data: APIData = {}) {
+    this.fish = FISHING_INDIVIDUAL_FISH.map(
+      (item) =>
+        new FishingIndividualCatch(item, toNumber(data.fish?.[item.id])),
+    );
+    this.treasure = FISHING_INDIVIDUAL_TREASURE.map(
+      (item) =>
+        new FishingIndividualCatch(item, toNumber(data.treasure?.[item.id])),
+    );
+    this.junk = FISHING_INDIVIDUAL_JUNK.map(
+      (item) =>
+        new FishingIndividualCatch(item, toNumber(data.junk?.[item.id])),
+    );
+    this.plant = FISHING_INDIVIDUAL_PLANT.map(
+      (item) =>
+        new FishingIndividualCatch(item, toNumber(data.plant?.[item.id])),
+    );
+    this.creature = FISHING_INDIVIDUAL_CREATURE.map(
+      (item) =>
+        new FishingIndividualCatch(item, toNumber(data.creature?.[item.id])),
     );
   }
 }
 
 export class FishingFireproofing {
-  @Field(fieldOptions)
+  @Field()
   public scales: number;
 
-  @Field(fieldOptions)
+  @Field()
   public sealant: number;
 
-  @Field(fieldOptions)
+  @Field()
   public flame: number;
 
   public constructor(data: APIData = {}) {
@@ -773,44 +960,35 @@ export class FishingFireproofing {
   }
 }
 
-export class FishingIceProgression {
-  @Field(collectionFieldOptions)
-  public spokenToNereid: boolean;
-
-  public constructor(data: APIData = {}) {
-    this.spokenToNereid = data.spokenToNereid ?? false;
-  }
-}
-
 export class Fishing {
-  @Field(fieldOptions)
+  @Field()
   public totalCatches: number;
 
-  @Field(fieldOptions)
+  @Field()
   public fish: number;
 
-  @Field(fieldOptions)
+  @Field()
   public junk: number;
 
-  @Field(fieldOptions)
+  @Field()
   public treasure: number;
 
-  @Field(fieldOptions)
+  @Field()
   public plant: number;
 
-  @Field(fieldOptions)
+  @Field()
   public creature: number;
 
-  @Field(fieldOptions)
+  @Field()
   public mythical: number;
 
-  @Field(fieldOptions)
+  @Field()
   public special: number;
 
-  @Field(fieldOptions)
+  @Field()
   public rods: number;
 
-  @Field(fieldOptions)
+  @Field()
   public hookTrails: number;
 
   @Field()
@@ -844,37 +1022,13 @@ export class Fishing {
   public fireproofing: FishingFireproofing;
 
   @Field()
-  public iceProgression: FishingIceProgression;
+  public individual: FishingIndividualCatches;
 
   @Field(collectionFieldOptions)
   public activeFishingRod: string;
 
   @Field(collectionFieldOptions)
   public activeFishHookTrail: string;
-
-  @Field(collectionFieldOptions)
-  public fishCollectorShowCaught: boolean;
-
-  @Field(collectionFieldOptions)
-  public simplifiedIcons: boolean;
-
-  @Field(collectionFieldOptions)
-  public fishingRewardTracked: string;
-
-  @Field(collectionFieldOptions)
-  public leaderboardFishingType: string;
-
-  @Field(fieldOptions)
-  public luckiestOfTheSea: number;
-
-  @Field(fieldOptions)
-  public masterLure: number;
-
-  @Field(fieldOptions)
-  public trashiestDiver: number;
-
-  @Field(fieldOptions)
-  public summerGoneFishing: number;
 
   public constructor(
     mainLobby: APIData = {},
@@ -955,22 +1109,10 @@ export class Fishing {
       mainLobby,
       globalFishing,
     );
+
     this.fireproofing = new FishingFireproofing(fishing.fireproofing);
-    this.iceProgression = new FishingIceProgression(fishing.ice);
+    this.individual = new FishingIndividualCatches(permanent.individual);
 
-    this.fishCollectorShowCaught =
-      fishing.settings?.fishCollectorShowCaught ??
-      settings.fishCollectorShowCaught ??
-      false;
-    this.simplifiedIcons = fishing.settings?.simplifiedIcons ?? false;
-    this.fishingRewardTracked = mainLobby.fishing_reward_tracked ?? "N/A";
-    this.leaderboardFishingType =
-      mainLobby.leaderboardSettings?.fishingType ?? "N/A";
-
-    this.luckiestOfTheSea = toNumber(achievements.general_luckiest_of_the_sea);
-    this.masterLure = toNumber(achievements.general_master_lure);
-    this.trashiestDiver = toNumber(achievements.general_trashiest_diver);
-    this.summerGoneFishing = toNumber(achievements.summer_gone_fishing);
   }
 
   private static getFishingRods(fishing: APIData, packages: string[]) {
