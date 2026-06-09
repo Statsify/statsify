@@ -881,7 +881,6 @@ export class Fishing {
     mainLobby: APIData = {},
     _achievements: APIData = {},
     globalFishing: APIData = {},
-    _settings: APIData = {}
   ) {
     const fishing = mainLobby.fishing ?? {};
     const packages = mainLobby.packages ?? [];

@@ -84,8 +84,6 @@ export class General {
   public fishing: Fishing;
 
   public constructor(data: APIData, legacy: APIData) {
-    const mainLobby = data.stats?.MainLobby ?? {};
-
     this.achievementPoints = data.achievementPoints;
 
     this.karma = data.karma;
@@ -105,10 +103,9 @@ export class General {
     this.events = new Events(data.seasonal);
     this.bingo = new Bingo(data.seasonal);
     this.fishing = new Fishing(
-      mainLobby,
+      data.stats?.MainLobby ?? {},
       data.achievements ?? {},
-      data.fishing ?? {},
-      data.settings ?? {},
+      data.fishing ?? {}
     );
   }
 }
