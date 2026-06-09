@@ -213,7 +213,7 @@ export class BedWars {
     });
 
     this.levelFormatted = scheme({
-      level: Math.floor(this.level),
+      level: flooredLevel,
       star,
       brackets,
       bold: false,
@@ -221,12 +221,8 @@ export class BedWars {
       strikethrough: false,
     });
 
-    this.naturalLevelFormatted = getIntendedFormattedLevel(
-      Math.floor(this.level),
-    );
-    this.nextLevelFormatted = getIntendedFormattedLevel(
-      Math.floor(this.level) + 1,
-    );
+    this.naturalLevelFormatted = getIntendedFormattedLevel(flooredLevel);
+    this.nextLevelFormatted = getIntendedFormattedLevel(flooredLevel + 1);
 
     let exp = this.exp;
 
