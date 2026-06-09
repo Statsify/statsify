@@ -614,23 +614,23 @@ export class FishingEnchantments {
 
 export class FishingMythicalFish {
   @Field()
-  public catches: number;
+  public catches?: number;
 
   @Field()
-  public maxWeight: number;
+  public maxWeight?: number;
 
   public constructor(catches: number, weight: number) {
-    this.catches = catches;
-    this.maxWeight = weight;
+    if (catches > 0) this.catches = catches;
+    if (weight > 0) this.maxWeight = weight;
   }
 }
 
 export class FishingCollectionItem {
-  @Field({ leaderboard: { enabled: false } })
-  public unlocked: boolean;
+  @Field({ leaderboard: { enabled: false }, store: { default: false } })
+  public unlocked?: boolean;
 
-  @Field({ leaderboard: { enabled: false } })
-  public active: boolean;
+  @Field({ leaderboard: { enabled: false }, store: { default: false } })
+  public active?: boolean;
 
   public constructor({
     unlocked = false,
@@ -639,17 +639,17 @@ export class FishingCollectionItem {
     unlocked?: boolean;
     active?: boolean;
   }) {
-    this.unlocked = unlocked;
-    this.active = active;
+    if (unlocked) this.unlocked = true;
+    if (active) this.active = true;
   }
 }
 
 export class FishingUnlockableItem {
-  @Field({ leaderboard: { enabled: false } })
-  public unlocked: boolean;
+  @Field({ leaderboard: { enabled: false }, store: { default: false } })
+  public unlocked?: boolean;
 
   public constructor(unlocked = false) {
-    this.unlocked = unlocked;
+    if (unlocked) this.unlocked = true;
   }
 }
 
@@ -725,21 +725,13 @@ export class FishingSeasonal {
   public total: number;
 
   public constructor(data: APIData = {}) {
-    const dataYears = Object.keys(data).filter(isYearKey);
-    const currentYear = new Date().getUTCFullYear();
-    const lastYear = Math.max(
-      currentYear,
-      ...dataYears.map((year) => Number.parseInt(year, 10))
-    );
-
-    const yearKeys: string[] = [];
-    for (let year = FISHING_FIRST_YEAR; year <= lastYear; year++) {
-      yearKeys.push(year.toString());
-    }
+    const yearKeys = Object.keys(data)
+      .filter((key) => isYearKey(key) && Number.parseInt(key, 10) >= FISHING_FIRST_YEAR)
+      .sort((a, b) => Number.parseInt(a, 10) - Number.parseInt(b, 10));
 
     this.years = yearKeys.map(
       (year) => new FishingSeasonalYear(year, data[year])
-    );
+    ).filter((year) => year.total > 0);
     this.halloween = add(...this.years.map((year) => year.halloween.total));
     this.christmas = add(...this.years.map((year) => year.christmas.total));
     this.easter = add(...this.years.map((year) => year.easter.total));
@@ -750,10 +742,10 @@ export class FishingSeasonal {
 
 export class FishingIndividualCatch {
   @Field()
-  public catches: number;
+  public catches?: number;
 
   public constructor(catches: number) {
-    this.catches = catches;
+    if (catches > 0) this.catches = catches;
   }
 }
 
@@ -880,7 +872,7 @@ export class Fishing {
   public constructor(
     mainLobby: APIData = {},
     _achievements: APIData = {},
-    globalFishing: APIData = {},
+    globalFishing: APIData = {}
   ) {
     const fishing = mainLobby.fishing ?? {};
     const packages = mainLobby.packages ?? [];

@@ -87,7 +87,7 @@ interface FishingCollectionDisplayItem {
 }
 
 interface FishingCollectionState {
-  unlocked: boolean;
+  unlocked?: boolean;
   active?: boolean;
 }
 
@@ -341,10 +341,11 @@ const FishingMythicals = ({
         <Table.tr>
           {row.map((mythical, index) => {
             const data = FISHING_MYTHICAL_FISH[rowIndex * 3 + index];
+            const catches = mythical.catches ?? 0;
+            const maxWeight = mythical.maxWeight ?? 0;
             const percentage =
-              fishing.mythical > 0 ? mythical.catches / fishing.mythical : 0;
-            const maxed =
-              data.maxWeightCap > 0 && mythical.maxWeight >= data.maxWeightCap;
+              fishing.mythical > 0 ? catches / fishing.mythical : 0;
+            const maxed = data.maxWeightCap > 0 && maxWeight >= data.maxWeightCap;
 
             return (
               <Table.ts title={`§d${data.name}`}>
@@ -356,9 +357,9 @@ const FishingMythicals = ({
                   <Multiline>
                     {[
                       `§7Rarity: §b${data.rarity}`,
-                      `§7Catches: §6${t(mythical.catches)}`,
+                      `§7Catches: §6${t(catches)}`,
                       `§7Share: §6${formatPercent(percentage)}`,
-                      `§7Max Weight: §6${mythical.maxWeight ? `${t(mythical.maxWeight)}kg` : "N/A"}${maxed ? " §aMaxed" : ""}`,
+                      `§7Max Weight: §6${maxWeight ? `${t(maxWeight)}kg` : "N/A"}${maxed ? " §aMaxed" : ""}`,
                     ].join("\n")}
                   </Multiline>
                 </box>
