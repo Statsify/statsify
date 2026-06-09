@@ -14,25 +14,33 @@ import {
   SidebarItem,
   Table,
 } from "#components";
-import { FISHING_EVENTS, FormattedGame } from "@statsify/schemas";
-import { arrayGroup } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
-import type {
-  FishingCollectionItem,
-  FishingEvent,
-  FishingIndividualCatch,
-  FishingSeasonalYear,
+import {
+  FISHING_EVENTS,
+  FISHING_HOOK_TRAILS,
+  FISHING_INDIVIDUAL_ITEMS,
+  FISHING_MYTHICAL_FISH,
+  FISHING_RODS,
+  FISHING_SPECIAL_FISH,
+  type FishingEnvironmentStats,
+  type FishingEvent,
+  type FishingIndividualCatch,
+  type FishingSeasonalYear,
+  FormattedGame,
 } from "@statsify/schemas";
+import { arrayGroup, prettify } from "@statsify/util";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export type FishingPage =
-  | "overview"
-  | "mythicals"
-  | "specialsOne"
-  | "specialsTwo"
-  | "collections"
-  | "catchesOne"
-  | "catchesTwo"
-  | "seasonal";
+  | "overview" |
+  "mythicals" |
+  "specialsOne" |
+  "specialsTwo" |
+  "collections" |
+  "catchesOne" |
+  "catchesTwo" |
+  "environments" |
+  "seasonal" |
+  "yearly";
 
 export interface FishingPageData {
   id: FishingPage;
@@ -48,9 +56,28 @@ interface FishingProfileProps extends BaseProfileProps {
 }
 
 interface FishingCollectionTableProps {
-  items: FishingCollectionItem[];
+  items: FishingCollectionDisplayItem[];
   columns?: number;
   compact?: boolean;
+}
+
+interface FishingCollectionDisplayItem {
+  name: string;
+  source: string;
+  environment: string;
+  requirement: string;
+  unlocked: boolean;
+  active: boolean;
+}
+
+interface FishingCollectionState {
+  unlocked: boolean;
+  active?: boolean;
+}
+
+interface FishingCatchDisplayItem {
+  name: string;
+  catches: number;
 }
 
 const statusColor = (unlocked: boolean) => (unlocked ? "§a" : "§c");
@@ -75,22 +102,60 @@ const FISHING_ENVIRONMENT_COLORS: Record<string, string> = {
   ice: "§b",
 };
 
-const formatId = (id: string) =>
-  id === "N/A"
-    ? "N/A"
-    : id
+const FISHING_ENVIRONMENTS = ["water", "lava", "ice"] as const;
+
+const FISHING_ENVIRONMENT_NAMES: Record<
+  (typeof FISHING_ENVIRONMENTS)[number],
+  string
+> = {
+  water: "Water",
+  lava: "Lava",
+  ice: "Ice",
+};
+
+const prettifyFishingId = (id: string) =>
+  id === "N/A" ?
+    "N/A" :
+    prettify(
+      id
         .replace("mainlobby_fishing_", "")
         .replace("fishing_rod_", "")
-        .replaceAll("_", " ")
-        .replaceAll("-", " ")
-        .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
+        .replaceAll("-", "_")
+    );
 
 const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
 
 const formatFishingEnvironment = (environment: string) =>
-  `${FISHING_ENVIRONMENT_COLORS[environment.toLowerCase()] ?? "§7"}${formatId(environment)}`;
+  `${FISHING_ENVIRONMENT_COLORS[environment.toLowerCase()] ?? "§7"}${prettify(environment)}`;
+
+const collectionItems = <
+  T extends {
+    id: string;
+    source?: string;
+    environment?: string;
+    requirement?: string;
+  }
+>(
+  data: T[],
+  items: FishingCollectionState[]
+): FishingCollectionDisplayItem[] =>
+  data.map((item, index) => ({
+    name: prettifyFishingId(item.id),
+    source: item.source ?? "N/A",
+    environment: item.environment ? prettify(item.environment) : "N/A",
+    requirement: item.requirement ?? "N/A",
+    unlocked: items[index]?.unlocked ?? false,
+    active: items[index]?.active ?? false,
+  }));
+
+const catchItems = (
+  category: keyof typeof FISHING_INDIVIDUAL_ITEMS,
+  items: FishingIndividualCatch[]
+): FishingCatchDisplayItem[] =>
+  FISHING_INDIVIDUAL_ITEMS[category].map((item, index) => ({
+    name: prettifyFishingId(item.id),
+    catches: items[index]?.catches ?? 0,
+  }));
 
 const FishingCollectionTable = ({
   items,
@@ -114,15 +179,17 @@ const FishingCollectionTable = ({
             <text>
               {statusColor(item.unlocked)}
               {item.unlocked ? "Unlocked" : "Locked"}
-              {compact
-                ? ""
-                : ` §7- ${item.source !== "N/A" ? item.source : item.requirement}`}
+              {compact ?
+                "" :
+                ` §7- ${item.source === "N/A" ? item.requirement : item.source}`}
             </text>
-            {!compact && item.environment !== "N/A" ? (
-              <text>§7Found In: {formatFishingEnvironment(item.environment)}</text>
-            ) : (
-              <></>
-            )}
+            {!compact && item.environment !== "N/A" ?
+              (
+                <text>§7Found In: {formatFishingEnvironment(item.environment)}</text>
+              ) :
+              (
+                <></>
+              )}
           </box>
         ))}
       </Table.tr>
@@ -265,26 +332,34 @@ const FishingMythicals = ({
 
   return (
     <Table.table>
-      {arrayGroup(fishing.mythicals, 3).map((row) => (
+      {arrayGroup(fishing.mythicals, 3).map((row, rowIndex) => (
         <Table.tr>
-          {row.map((mythical) => (
-            <Table.ts title={`§d${mythical.name}`}>
-              <box
-                width="100%"
-                direction="column"
-                padding={{ left: 8, right: 8 }}
-              >
-                <Multiline>
-                  {[
-                    `§7Rarity: §b${mythical.rarity}`,
-                    `§7Catches: §6${t(mythical.catches)}`,
-                    `§7Share: §6${formatPercent(mythical.percentage)}`,
-                    `§7Max Weight: §6${mythical.maxWeight ? `${t(mythical.maxWeight)}kg` : "N/A"}${mythical.maxed ? " §aMaxed" : ""}`,
-                  ].join("\n")}
-                </Multiline>
-              </box>
-            </Table.ts>
-          ))}
+          {row.map((mythical, index) => {
+            const data = FISHING_MYTHICAL_FISH[rowIndex * 3 + index];
+            const percentage =
+              fishing.mythical > 0 ? mythical.catches / fishing.mythical : 0;
+            const maxed =
+              data.maxWeightCap > 0 && mythical.maxWeight >= data.maxWeightCap;
+
+            return (
+              <Table.ts title={`§d${data.name}`}>
+                <box
+                  width="100%"
+                  direction="column"
+                  padding={{ left: 8, right: 8 }}
+                >
+                  <Multiline>
+                    {[
+                      `§7Rarity: §b${data.rarity}`,
+                      `§7Catches: §6${t(mythical.catches)}`,
+                      `§7Share: §6${formatPercent(percentage)}`,
+                      `§7Max Weight: §6${mythical.maxWeight ? `${t(mythical.maxWeight)}kg` : "N/A"}${maxed ? " §aMaxed" : ""}`,
+                    ].join("\n")}
+                  </Multiline>
+                </box>
+              </Table.ts>
+            );
+          })}
         </Table.tr>
       ))}
     </Table.table>
@@ -300,7 +375,10 @@ const FishingSpecials = ({
 
   return (
     <FishingCollectionTable
-      items={fishing.specialFish.slice(offset, offset + 24)}
+      items={collectionItems(FISHING_SPECIAL_FISH, fishing.specialFish).slice(
+        offset,
+        offset + 24
+      )}
       columns={4}
     />
   );
@@ -315,14 +393,17 @@ const FishingCollections = ({
     <Table.table>
       <Table.ts title="§bFishing Rods">
         <FishingCollectionTable
-          items={fishing.fishingRods}
+          items={collectionItems(FISHING_RODS, fishing.fishingRods)}
           columns={2}
           compact={false}
         />
       </Table.ts>
       <Table.ts title="§bHook Trails">
         <FishingCollectionTable
-          items={fishing.hookTrailCollection}
+          items={collectionItems(
+            FISHING_HOOK_TRAILS,
+            fishing.hookTrailCollection
+          )}
           columns={4}
           compact
         />
@@ -333,7 +414,7 @@ const FishingCollections = ({
 
 interface CatchSectionProps {
   title: string;
-  items: FishingIndividualCatch[];
+  items: FishingCatchDisplayItem[];
   color: string;
   columns: number;
   total: number;
@@ -375,7 +456,7 @@ const FishingCatchesOne = ({
     <Table.table>
       <CatchSection
         title="§bFish"
-        items={individual.fish}
+        items={catchItems("fish", individual.fish)}
         color="§e"
         columns={3}
         total={fishing.fish}
@@ -383,7 +464,7 @@ const FishingCatchesOne = ({
       />
       <CatchSection
         title="§bPlants"
-        items={individual.plant}
+        items={catchItems("plant", individual.plant)}
         color="§2"
         columns={3}
         total={fishing.plant}
@@ -391,7 +472,7 @@ const FishingCatchesOne = ({
       />
       <CatchSection
         title="§bCreatures"
-        items={individual.creature}
+        items={catchItems("creature", individual.creature)}
         color="§b"
         columns={3}
         total={fishing.creature}
@@ -412,7 +493,7 @@ const FishingCatchesTwo = ({
     <Table.table>
       <CatchSection
         title="§bTreasure"
-        items={individual.treasure}
+        items={catchItems("treasure", individual.treasure)}
         color="§a"
         columns={3}
         total={fishing.treasure}
@@ -420,7 +501,7 @@ const FishingCatchesTwo = ({
       />
       <CatchSection
         title="§bJunk"
-        items={individual.junk}
+        items={catchItems("junk", individual.junk)}
         color="§c"
         columns={3}
         total={fishing.junk}
@@ -429,6 +510,84 @@ const FishingCatchesTwo = ({
     </Table.table>
   );
 };
+
+const sumEnvironmentStats = (environments: FishingEnvironmentStats[]) => ({
+  fish: environments.reduce((total, environment) => total + environment.fish, 0),
+  junk: environments.reduce((total, environment) => total + environment.junk, 0),
+  treasure: environments.reduce(
+    (total, environment) => total + environment.treasure,
+    0
+  ),
+  plant: environments.reduce(
+    (total, environment) => total + environment.plant,
+    0
+  ),
+  creature: environments.reduce(
+    (total, environment) => total + environment.creature,
+    0
+  ),
+  mythical: environments.reduce(
+    (total, environment) => total + environment.mythical,
+    0
+  ),
+});
+
+interface FishingSeasonalEventDetailsProps {
+  event: FishingEvent;
+  seasonalYears: FishingSeasonalYear[];
+  t: FishingProfileProps["t"];
+}
+
+const FishingSeasonalEventDetails = ({
+  event,
+  seasonalYears,
+  t,
+}: FishingSeasonalEventDetailsProps) => (
+  <Table.ts
+    title={`${FISHING_EVENT_COLORS[event]}${FISHING_EVENT_NAMES[event]} Environment Details`}
+  >
+    {FISHING_ENVIRONMENTS.map((environment) => {
+      const stats = sumEnvironmentStats(
+        seasonalYears.map((year) => year[event][environment])
+      );
+
+      return (
+        <Table.tr>
+          <Table.td
+            title={`${FISHING_ENVIRONMENT_NAMES[environment]} Fish`}
+            value={t(stats.fish)}
+            color="§e"
+          />
+          <Table.td
+            title={`${FISHING_ENVIRONMENT_NAMES[environment]} Junk`}
+            value={t(stats.junk)}
+            color="§c"
+          />
+          <Table.td
+            title={`${FISHING_ENVIRONMENT_NAMES[environment]} Treasure`}
+            value={t(stats.treasure)}
+            color="§a"
+          />
+          <Table.td
+            title={`${FISHING_ENVIRONMENT_NAMES[environment]} Plants`}
+            value={t(stats.plant)}
+            color="§2"
+          />
+          <Table.td
+            title={`${FISHING_ENVIRONMENT_NAMES[environment]} Creatures`}
+            value={t(stats.creature)}
+            color="§b"
+          />
+          <Table.td
+            title={`${FISHING_ENVIRONMENT_NAMES[environment]} Mythicals`}
+            value={t(stats.mythical)}
+            color="§6"
+          />
+        </Table.tr>
+      );
+    })}
+  </Table.ts>
+);
 
 const seasonalSummary = (year: FishingSeasonalYear) => {
   const environments = FISHING_EVENTS.flatMap((event) => [
@@ -442,25 +601,123 @@ const seasonalSummary = (year: FishingSeasonalYear) => {
   return {
     fish: environments.reduce(
       (total, environment) => total + environment.fish,
-      0,
+      0
     ),
     junk: environments.reduce(
       (total, environment) => total + environment.junk,
-      0,
+      0
     ),
     treasure: environments.reduce(
       (total, environment) => total + environment.treasure,
-      0,
+      0
+    ),
+    plant: environments.reduce(
+      (total, environment) => total + environment.plant,
+      0
+    ),
+    creature: environments.reduce(
+      (total, environment) => total + environment.creature,
+      0
     ),
     mythical: environments.reduce(
       (total, environment) => total + environment.mythical,
-      0,
+      0
     ),
     water: events.reduce((total, event) => total + event.water.total, 0),
     lava: events.reduce((total, event) => total + event.lava.total, 0),
     ice: events.reduce((total, event) => total + event.ice.total, 0),
     total: year.total,
   };
+};
+
+const FishingEnvironments = ({
+  t,
+  player,
+}: Pick<FishingProfileProps, "t" | "player">) => {
+  const { fishing } = player.stats.general;
+
+  return (
+    <Table.table>
+      <Table.ts title="§bEnvironment Details">
+        {FISHING_ENVIRONMENTS.map((environment) => {
+          const stats = fishing[environment];
+
+          return (
+            <Table.tr>
+              <Table.td
+                title={`${FISHING_ENVIRONMENT_NAMES[environment]} Treasure`}
+                value={t(stats.treasure)}
+                color="§a"
+              />
+              <Table.td
+                title={`${FISHING_ENVIRONMENT_NAMES[environment]} Plants`}
+                value={t(stats.plant)}
+                color="§2"
+              />
+              <Table.td
+                title={`${FISHING_ENVIRONMENT_NAMES[environment]} Creatures`}
+                value={t(stats.creature)}
+                color="§b"
+              />
+              <Table.td
+                title={`${FISHING_ENVIRONMENT_NAMES[environment]} Mythicals`}
+                value={t(stats.mythical)}
+                color="§6"
+              />
+            </Table.tr>
+          );
+        })}
+      </Table.ts>
+    </Table.table>
+  );
+};
+
+const FishingSeasonal = ({
+  t,
+  player,
+}: Pick<FishingProfileProps, "t" | "player">) => {
+  const { fishing } = player.stats.general;
+  const seasonalYears = fishing.seasonal.years.filter((year) => year.total > 0);
+  const seasonalEnvironments = seasonalYears.flatMap((year) =>
+    FISHING_EVENTS.flatMap((event) =>
+      FISHING_ENVIRONMENTS.map((environment) => year[event][environment])
+    )
+  );
+  const seasonal = sumEnvironmentStats(seasonalEnvironments);
+
+  return (
+    <Table.table>
+      <Table.ts title="§bSeasonal Catch Types">
+        <Table.tr>
+          <Table.td title="Fish" value={t(seasonal.fish)} color="§e" />
+          <Table.td title="Junk" value={t(seasonal.junk)} color="§c" />
+          <Table.td title="Treasure" value={t(seasonal.treasure)} color="§a" />
+          <Table.td title="Plants" value={t(seasonal.plant)} color="§2" />
+          <Table.td title="Creatures" value={t(seasonal.creature)} color="§b" />
+        </Table.tr>
+      </Table.ts>
+      <FishingSeasonalEventDetails
+        event="halloween"
+        seasonalYears={seasonalYears}
+        t={t}
+      />
+      <FishingSeasonalEventDetails
+        event="christmas"
+        seasonalYears={seasonalYears}
+        t={t}
+      />
+      <FishingSeasonalEventDetails
+        event="easter"
+        seasonalYears={seasonalYears}
+        t={t}
+      />
+      <FishingSeasonalEventDetails
+        event="summer"
+        seasonalYears={seasonalYears}
+        t={t}
+      />
+    </Table.table>
+  );
 };
 
 interface FishingSeasonalYearCardProps {
@@ -492,7 +749,7 @@ const FishingSeasonalYearCard = ({ year, t }: FishingSeasonalYearCardProps) => {
   );
 };
 
-const FishingSeasonal = ({
+const FishingYearly = ({
   t,
   player,
   seasonalYears,
@@ -553,22 +810,110 @@ export const FishingProfile = ({
     ["Special Fish", `${t(fishing.special)}/48`, "§d"],
     ["Rods", `${t(fishing.rods)}/8`, "§a"],
     ["Hook Trails", `${t(fishing.hookTrails)}/11`, "§6"],
-    ["Active Rod", formatId(fishing.activeFishingRod), "§a"],
-    ["Active Trail", formatId(fishing.activeFishHookTrail), "§6"],
+    ["Active Rod", prettifyFishingId(fishing.activeFishingRod), "§a"],
+    ["Active Trail", prettifyFishingId(fishing.activeFishHookTrail), "§6"],
   ];
 
-  const title =
-    page === "overview"
-      ? `§l${FormattedGame.FISHING} §fStats`
-      : page === "mythicals"
-        ? `§l${FormattedGame.FISHING} §fMythicals`
-        : page === "specialsOne" || page === "specialsTwo"
-          ? `§l${FormattedGame.FISHING} §fSpecial Fish`
-          : page === "collections"
-            ? `§l${FormattedGame.FISHING} §fCollections`
-            : page === "catchesOne" || page === "catchesTwo"
-              ? `§l${FormattedGame.FISHING} §fCatches`
-              : `§l${FormattedGame.FISHING} §fSeasonal`;
+  let title = `§l${FormattedGame.FISHING} §fSeasonal`;
+
+  switch (page) {
+    case "overview":
+      title = `§l${FormattedGame.FISHING} §fStats`;
+
+      break;
+
+    case "mythicals":
+      title = `§l${FormattedGame.FISHING} §fMythicals`;
+
+      break;
+
+    case "specialsOne":
+    case "specialsTwo":
+      title = `§l${FormattedGame.FISHING} §fSpecial Fish`;
+
+      break;
+
+    case "collections":
+      title = `§l${FormattedGame.FISHING} §fCollections`;
+
+      break;
+
+    case "catchesOne":
+    case "catchesTwo":
+      title = `§l${FormattedGame.FISHING} §fCatches`;
+
+      break;
+
+    case "environments":
+      title = `§l${FormattedGame.FISHING} §fEnvironments`;
+
+      break;
+
+    case "yearly":
+      title = `§l${FormattedGame.FISHING} §fYearly`;
+
+      break;
+
+  // No default
+  }
+
+  let content: JSX.Element;
+
+  switch (page) {
+    case "overview":
+      content = <FishingOverview t={t} player={player} />;
+
+      break;
+
+    case "mythicals":
+      content = <FishingMythicals t={t} player={player} />;
+
+      break;
+
+    case "specialsOne":
+    case "specialsTwo":
+      content = <FishingSpecials player={player} page={page} />;
+
+      break;
+
+    case "collections":
+      content = <FishingCollections player={player} />;
+
+      break;
+
+    case "catchesOne":
+      content = <FishingCatchesOne t={t} player={player} />;
+
+      break;
+
+    case "catchesTwo":
+      content = <FishingCatchesTwo t={t} player={player} />;
+
+      break;
+
+    case "environments":
+      content = <FishingEnvironments t={t} player={player} />;
+
+      break;
+
+    case "seasonal":
+      content = <FishingSeasonal t={t} player={player} />;
+
+      break;
+
+    case "yearly":
+      content = (
+        <FishingYearly
+          t={t}
+          player={player}
+          seasonalYears={seasonalYears}
+        />
+      );
+
+      break;
+
+  // No default
+  }
 
   return (
     <Container background={background}>
@@ -581,25 +926,7 @@ export const FishingProfile = ({
         description={`§7Page ${t(pageNumber + 1)} / ${t(pageCount)}`}
         time={time}
       />
-      {page === "overview" ? (
-        <FishingOverview t={t} player={player} />
-      ) : page === "mythicals" ? (
-        <FishingMythicals t={t} player={player} />
-      ) : page === "specialsOne" || page === "specialsTwo" ? (
-        <FishingSpecials player={player} page={page} />
-      ) : page === "collections" ? (
-        <FishingCollections player={player} />
-      ) : page === "catchesOne" ? (
-        <FishingCatchesOne t={t} player={player} />
-      ) : page === "catchesTwo" ? (
-        <FishingCatchesTwo t={t} player={player} />
-      ) : (
-        <FishingSeasonal
-          t={t}
-          player={player}
-          seasonalYears={seasonalYears}
-        />
-      )}
+      {content}
       <Footer logo={logo} user={user} />
     </Container>
   );
