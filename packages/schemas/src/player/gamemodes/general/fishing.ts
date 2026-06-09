@@ -904,9 +904,10 @@ export class Fishing {
     this.creature = add(
       ...environments.map((environment) => environment.creature)
     );
-    this.mythical = FISHING_MYTHICAL_FISH.reduce(
-      (total, mythical) => total + toNumber(fishing.orbs?.[mythical.id]),
-      0
+    this.mythical = add(
+      ...FISHING_MYTHICAL_FISH.map((mythical) =>
+        toNumber(fishing.orbs?.[mythical.id])
+      )
     );
 
     this.specialFish = FISHING_SPECIAL_FISH.map(

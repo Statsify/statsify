@@ -525,63 +525,19 @@ const sumEnvironmentStats = (environments: FishingEnvironmentStats[]) => ({
   mythical: add(...environments.map((environment) => environment.mythical)),
 });
 
-interface FishingSeasonalEventDetailsProps {
-  event: FishingEvent;
-  seasonalYears: FishingSeasonalYear[];
-  t: FishingProfileProps["t"];
-}
+const seasonalEventSummary = (
+  event: FishingEvent,
+  seasonalYears: FishingSeasonalYear[]
+) => {
+  const environments = seasonalYears.flatMap((year) =>
+    FISHING_ENVIRONMENTS.map((environment) => year[event][environment])
+  );
 
-const FishingSeasonalEventDetails = ({
-  event,
-  seasonalYears,
-  t,
-}: FishingSeasonalEventDetailsProps) => (
-  <Table.ts
-    title={`${FISHING_EVENT_COLORS[event]}${FISHING_EVENT_NAMES[event]} Environment Details`}
-  >
-    {FISHING_ENVIRONMENTS.map((environment) => {
-      const environmentName = prettify(environment);
-      const stats = sumEnvironmentStats(
-        seasonalYears.map((year) => year[event][environment])
-      );
-
-      return (
-        <Table.tr>
-          <Table.td
-            title={`${environmentName} Fish`}
-            value={t(stats.fish)}
-            color="§e"
-          />
-          <Table.td
-            title={`${environmentName} Junk`}
-            value={t(stats.junk)}
-            color="§c"
-          />
-          <Table.td
-            title={`${environmentName} Treasure`}
-            value={t(stats.treasure)}
-            color="§a"
-          />
-          <Table.td
-            title={`${environmentName} Plants`}
-            value={t(stats.plant)}
-            color="§2"
-          />
-          <Table.td
-            title={`${environmentName} Creatures`}
-            value={t(stats.creature)}
-            color="§b"
-          />
-          <Table.td
-            title={`${environmentName} Mythicals`}
-            value={t(stats.mythical)}
-            color="§6"
-          />
-        </Table.tr>
-      );
-    })}
-  </Table.ts>
-);
+  return {
+    ...sumEnvironmentStats(environments),
+    total: add(...seasonalYears.map((year) => year[event].total)),
+  };
+};
 
 const seasonalSummary = (year: FishingSeasonalYear) => {
   const environments = FISHING_EVENTS.flatMap((event) =>
@@ -655,38 +611,70 @@ const FishingSeasonal = ({
     )
   );
   const seasonal = sumEnvironmentStats(seasonalEnvironments);
+  const seasonalEventRows = arrayGroup(FISHING_EVENTS, 2).map((events) => (
+    <Table.tr>
+      {events.map((event) => {
+        const eventSeasonal = seasonalEventSummary(event, seasonalYears);
+        const color = FISHING_EVENT_COLORS[event];
+
+        return (
+          <Table.ts
+            title={`${color}${FISHING_EVENT_NAMES[event]} §7- §f${t(eventSeasonal.total)}`}
+          >
+            <Table.tr>
+              <Table.td title="Fish" value={t(eventSeasonal.fish)} color="§e" />
+              <Table.td title="Junk" value={t(eventSeasonal.junk)} color="§c" />
+              <Table.td
+                title="Treasure"
+                value={t(eventSeasonal.treasure)}
+                color="§a"
+              />
+            </Table.tr>
+            <Table.tr>
+              <Table.td
+                title="Plants"
+                value={t(eventSeasonal.plant)}
+                color="§2"
+              />
+              <Table.td
+                title="Creatures"
+                value={t(eventSeasonal.creature)}
+                color="§b"
+              />
+              <Table.td
+                title="Mythicals"
+                value={t(eventSeasonal.mythical)}
+                color="§6"
+              />
+            </Table.tr>
+          </Table.ts>
+        );
+      })}
+    </Table.tr>
+  ));
 
   return (
     <Table.table>
-      <Table.ts title="§bSeasonal Catch Types">
-        <Table.tr>
-          <Table.td title="Fish" value={t(seasonal.fish)} color="§e" />
-          <Table.td title="Junk" value={t(seasonal.junk)} color="§c" />
-          <Table.td title="Treasure" value={t(seasonal.treasure)} color="§a" />
-          <Table.td title="Plants" value={t(seasonal.plant)} color="§2" />
-          <Table.td title="Creatures" value={t(seasonal.creature)} color="§b" />
-        </Table.tr>
-      </Table.ts>
-      <FishingSeasonalEventDetails
-        event="halloween"
-        seasonalYears={seasonalYears}
-        t={t}
-      />
-      <FishingSeasonalEventDetails
-        event="christmas"
-        seasonalYears={seasonalYears}
-        t={t}
-      />
-      <FishingSeasonalEventDetails
-        event="easter"
-        seasonalYears={seasonalYears}
-        t={t}
-      />
-      <FishingSeasonalEventDetails
-        event="summer"
-        seasonalYears={seasonalYears}
-        t={t}
-      />
+      {[
+        <Table.ts title="§bSeasonal Catch Types">
+          <Table.tr>
+            <Table.td title="Fish" value={t(seasonal.fish)} color="§e" />
+            <Table.td title="Junk" value={t(seasonal.junk)} color="§c" />
+            <Table.td
+              title="Treasure"
+              value={t(seasonal.treasure)}
+              color="§a"
+            />
+            <Table.td title="Plants" value={t(seasonal.plant)} color="§2" />
+            <Table.td
+              title="Creatures"
+              value={t(seasonal.creature)}
+              color="§b"
+            />
+          </Table.tr>
+        </Table.ts>,
+        ...seasonalEventRows,
+      ]}
     </Table.table>
   );
 };
@@ -778,9 +766,9 @@ export const FishingProfile = ({
   const sidebar: SidebarItem[] = [
     ["Total Catches", t(fishing.totalCatches), "§b"],
     ["Mythicals", t(fishing.mythical), "§6"],
-    ["Special Fish", `${t(fishing.special)}/48`, "§d"],
-    ["Rods", `${t(fishing.rods)}/8`, "§a"],
-    ["Hook Trails", `${t(fishing.hookTrails)}/11`, "§6"],
+    ["Special Fish", `${t(fishing.special)}/${t(FISHING_SPECIAL_FISH.length)}`, "§d"],
+    ["Rods", `${t(fishing.rods)}/${t(FISHING_RODS.length)}`, "§a"],
+    ["Hook Trails", `${t(fishing.hookTrails)}/${t(FISHING_HOOK_TRAILS.length)}`, "§6"],
     ["Active Rod", prettifyFishingId(fishing.activeFishingRod), "§a"],
     ["Active Trail", prettifyFishingId(fishing.activeFishHookTrail), "§6"],
   ];
