@@ -35,7 +35,7 @@ const totalPermanentStat = (
     )
   );
 
-export interface FishingSpecialFishData {
+interface FishingSpecialFishData {
   id: string;
   source: string;
   environment: FishingEnvironment;
@@ -244,7 +244,7 @@ export const FISHING_SPECIAL_FISH: FishingSpecialFishData[] = [
   },
 ];
 
-export interface FishingMythicalData {
+interface FishingMythicalData {
   id: string;
   name: string;
   rarity: string;
@@ -282,7 +282,7 @@ export const FISHING_MYTHICAL_FISH: FishingMythicalData[] = [
   },
 ];
 
-export interface FishingRodData {
+interface FishingRodData {
   id: string;
   requirement: string;
 }
@@ -322,7 +322,7 @@ export const FISHING_RODS: FishingRodData[] = [
   },
 ];
 
-export interface FishingHookTrailData {
+interface FishingHookTrailData {
   id: string;
   requirement: string;
 }
@@ -374,18 +374,18 @@ export const FISHING_HOOK_TRAILS: FishingHookTrailData[] = [
   },
 ];
 
-export type FishingCatchCategory =
+type FishingCatchCategory =
   | "fish" |
   "treasure" |
   "junk" |
   "plant" |
   "creature";
 
-export interface FishingItemData {
+interface FishingItemData {
   id: string;
 }
 
-export const FISHING_INDIVIDUAL_FISH: FishingItemData[] = [
+const FISHING_INDIVIDUAL_FISH: FishingItemData[] = [
   { id: "salmon" },
   { id: "clownfish" },
   { id: "cooked_salmon" },
@@ -399,7 +399,7 @@ export const FISHING_INDIVIDUAL_FISH: FishingItemData[] = [
   { id: "kelp" },
 ];
 
-export const FISHING_INDIVIDUAL_TREASURE: FishingItemData[] = [
+const FISHING_INDIVIDUAL_TREASURE: FishingItemData[] = [
   { id: "eye_of_ender" },
   { id: "molten_gold" },
   { id: "blaze_powder" },
@@ -421,7 +421,7 @@ export const FISHING_INDIVIDUAL_TREASURE: FishingItemData[] = [
   { id: "nautilus_shell" },
 ];
 
-export const FISHING_INDIVIDUAL_JUNK: FishingItemData[] = [
+const FISHING_INDIVIDUAL_JUNK: FishingItemData[] = [
   { id: "charcoal" },
   { id: "soggy_paper" },
   { id: "ink_sac" },
@@ -449,7 +449,7 @@ export const FISHING_INDIVIDUAL_JUNK: FishingItemData[] = [
   { id: "ice_shard" },
 ];
 
-export const FISHING_INDIVIDUAL_PLANT: FishingItemData[] = [
+const FISHING_INDIVIDUAL_PLANT: FishingItemData[] = [
   { id: "kelp" },
   { id: "bamboo" },
   { id: "dried_kelp" },
@@ -466,7 +466,7 @@ export const FISHING_INDIVIDUAL_PLANT: FishingItemData[] = [
   { id: "warped_roots" },
 ];
 
-export const FISHING_INDIVIDUAL_CREATURE: FishingItemData[] = [
+const FISHING_INDIVIDUAL_CREATURE: FishingItemData[] = [
   { id: "chicken" },
   { id: "cow" },
   { id: "creeper" },
