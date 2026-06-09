@@ -71,7 +71,7 @@ export const BedWarsProfile = ({
           t,
           label: t("stats.progression.exp"),
           progression: bedwars.progression,
-          currentLevel: bedwars.levelFormatted,
+          currentLevel: bedwars.naturalLevelFormatted,
           nextLevel: bedwars.nextLevelFormatted,
         })}`}
         time={time}
