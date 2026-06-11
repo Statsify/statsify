@@ -1,6 +1,7 @@
 {
   "arguments": {
     "choice": "Choose an option",
+    "emoji": "A Discord emoji",
     "file": "Upload a file",
     "gtbhelper": "The current hint",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
