@@ -10,6 +10,8 @@ import { type APIData, formatTime } from "@statsify/util";
 import { Field } from "#metadata";
 import { ratio } from "@statsify/math";
 
+const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
+
 export class CaptureTheWool {
   @Field()
   public wins: number;
@@ -44,7 +46,7 @@ export class CaptureTheWool {
   @Field({
     leaderboard: {
       sort: "ASC",
-      formatter: formatTime,
+      formatter: formatTimeWithSeconds,
       additionalFields: ["this.wins"],
     },
     historical: { enabled: false },
@@ -54,7 +56,7 @@ export class CaptureTheWool {
   @Field({
     leaderboard: {
       sort: "ASC",
-      formatter: formatTime,
+      formatter: formatTimeWithSeconds,
       additionalFields: ["this.woolCaptured"],
     },
     historical: { enabled: false },
@@ -62,7 +64,7 @@ export class CaptureTheWool {
   public fastestWoolCapture: number;
 
   @Field({
-    leaderboard: { formatter: formatTime },
+    leaderboard: { formatter: formatTimeWithSeconds },
     historical: { enabled: false },
   })
   public longestGame: number;

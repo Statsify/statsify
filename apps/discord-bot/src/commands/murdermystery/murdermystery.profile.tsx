@@ -22,6 +22,8 @@ import {
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
+const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
+
 export interface MurderMysteryProfileProps extends BaseProfileProps {
   mode: GameMode<MurderMysteryModes>;
 }
@@ -199,7 +201,7 @@ export const MurderMysteryProfile = ({
                 title={t("stats.fastestMurdererWin")}
                 value={
                   stats.fastestMurdererWin ?
-                    formatTime(stats.fastestMurdererWin) :
+                    formatTimeWithSeconds(stats.fastestMurdererWin) :
                     "N/A"
                 }
                 color="§c"
@@ -208,7 +210,7 @@ export const MurderMysteryProfile = ({
                 title={t("stats.fastestDetectiveWin")}
                 value={
                   stats.fastestDetectiveWin ?
-                    formatTime(stats.fastestDetectiveWin) :
+                    formatTimeWithSeconds(stats.fastestDetectiveWin) :
                     "N/A"
                 }
                 color="§b"

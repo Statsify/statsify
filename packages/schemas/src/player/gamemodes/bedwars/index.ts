@@ -37,14 +37,63 @@ export const BEDWARS_MODES = new GameModes([
   { api: "threes", hypixel: "BEDWARS_FOUR_THREE" },
   { api: "fours", hypixel: "BEDWARS_FOUR_FOUR" },
   { api: "4v4", hypixel: "BEDWARS_TWO_FOUR" },
-  { api: "armed" },
+  {
+    api: "armed",
+    submodes: [
+      { api: "armed", formatted: "Overall" },
+      { api: "armedDoubles", formatted: "Doubles" },
+      { api: "armedFours", formatted: "Fours" },
+    ],
+  },
   { api: "castle", hypixel: "BEDWARS_CASTLE" },
-  { api: "lucky" },
-  { api: "rush" },
-  { api: "swap" },
-  { api: "ultimate" },
-  { api: "underworld" },
-  { api: "voidless" },
+  {
+    api: "lucky",
+    submodes: [
+      { api: "lucky", formatted: "Overall" },
+      { api: "luckyDoubles", formatted: "Doubles" },
+      { api: "luckyFours", formatted: "Fours" },
+    ],
+  },
+  {
+    api: "rush",
+    submodes: [
+      { api: "rush", formatted: "Overall" },
+      { api: "rushDoubles", formatted: "Doubles" },
+      { api: "rushFours", formatted: "Fours" },
+    ],
+  },
+  {
+    api: "swap",
+    submodes: [
+      { api: "swap", formatted: "Overall" },
+      { api: "swapDoubles", formatted: "Doubles" },
+      { api: "swapFours", formatted: "Fours" },
+    ],
+  },
+  {
+    api: "ultimate",
+    submodes: [
+      { api: "ultimate", formatted: "Overall" },
+      { api: "ultimateDoubles", formatted: "Doubles" },
+      { api: "ultimateFours", formatted: "Fours" },
+    ],
+  },
+  {
+    api: "underworld",
+    submodes: [
+      { api: "underworld", formatted: "Overall" },
+      { api: "underworldDoubles", formatted: "Doubles" },
+      { api: "underworldFours", formatted: "Fours" },
+    ],
+  },
+  {
+    api: "voidless",
+    submodes: [
+      { api: "voidless", formatted: "Overall" },
+      { api: "voidlessDoubles", formatted: "Doubles" },
+      { api: "voidlessFours", formatted: "Fours" },
+    ],
+  },
   { api: "oneBlock", hypixel: "BEDWARS_EIGHT_ONE_ONEBLOCK" },
   { api: "challenges" },
 
@@ -168,6 +217,48 @@ export class BedWars {
   public oneBlock: BedWarsMode;
 
   @Field()
+  public armedDoubles: BedWarsMode;
+
+  @Field()
+  public armedFours: BedWarsMode;
+
+  @Field()
+  public luckyDoubles: BedWarsMode;
+
+  @Field()
+  public luckyFours: BedWarsMode;
+
+  @Field()
+  public rushDoubles: BedWarsMode;
+
+  @Field()
+  public rushFours: BedWarsMode;
+
+  @Field()
+  public swapDoubles: BedWarsMode;
+
+  @Field()
+  public swapFours: BedWarsMode;
+
+  @Field()
+  public ultimateDoubles: BedWarsMode;
+
+  @Field()
+  public ultimateFours: BedWarsMode;
+
+  @Field()
+  public underworldDoubles: BedWarsMode;
+
+  @Field()
+  public underworldFours: BedWarsMode;
+
+  @Field()
+  public voidlessDoubles: BedWarsMode;
+
+  @Field()
+  public voidlessFours: BedWarsMode;
+
+  @Field()
   public challenges: BedWarsModeChallenges;
 
   @Field({ leaderboard: { fieldName: "" } })
@@ -249,6 +340,21 @@ export class BedWars {
     this.underworld = DreamsBedWarsMode.new(data, "underworld");
     this.voidless = DreamsBedWarsMode.new(data, "voidless");
     this.oneBlock = new BedWarsMode(data, "eight_one_oneblock");
+
+    this.armedDoubles = new BedWarsMode(data, "eight_two_armed");
+    this.armedFours = new BedWarsMode(data, "four_four_armed");
+    this.luckyDoubles = new BedWarsMode(data, "eight_two_lucky");
+    this.luckyFours = new BedWarsMode(data, "four_four_lucky");
+    this.rushDoubles = new BedWarsMode(data, "eight_two_rush");
+    this.rushFours = new BedWarsMode(data, "four_four_rush");
+    this.swapDoubles = new BedWarsMode(data, "eight_two_swap");
+    this.swapFours = new BedWarsMode(data, "four_four_swap");
+    this.ultimateDoubles = new BedWarsMode(data, "eight_two_ultimate");
+    this.ultimateFours = new BedWarsMode(data, "four_four_ultimate");
+    this.underworldDoubles = new BedWarsMode(data, "eight_two_underworld");
+    this.underworldFours = new BedWarsMode(data, "four_four_underworld");
+    this.voidlessDoubles = new BedWarsMode(data, "eight_two_voidless");
+    this.voidlessFours = new BedWarsMode(data, "four_four_voidless");
 
     this.core = deepSub(this.overall, this["4v4"]);
     BedWarsMode.applyRatios(this.core);

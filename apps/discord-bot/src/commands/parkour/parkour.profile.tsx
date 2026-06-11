@@ -12,6 +12,8 @@ import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { Image } from "skia-canvas";
 
+const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
+
 interface ParkourProfileProps extends BaseProfileProps {
   gameIcons: Record<GameId, Image>;
 }
@@ -29,7 +31,7 @@ export const ParkourProfile = ({
 
   const times: [GameId, any][] = Object.entries(parkour)
     .sort((a, b) => (a[1] || Number.MAX_VALUE) - (b[1] || Number.MAX_VALUE))
-    .map(([field, time]) => [field as GameId, time ? formatTime(time) : "N/A"]);
+    .map(([field, time]) => [field as GameId, time ? formatTimeWithSeconds(time) : "N/A"]);
 
   return (
     <Container background={background}>

@@ -12,6 +12,8 @@ import { type GamePrefix, createPrefixProgression, cycleColors, defaultPrefix, g
 import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
 
+const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
+
 const tntgamesRainbow = (text: string) => cycleColors(text, ["c", "6", "e", "a", "b", "d", "5"]);
 
 // Prefixes for TNT Run, PVP Run and Bow Spleef
@@ -95,7 +97,7 @@ export class PVPRun {
   @Field()
   public kdr: number;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTimeWithSeconds }, historical: { enabled: false } })
   public record: number;
 
   @Field()
@@ -149,7 +151,7 @@ export class TNTRun {
   @Field()
   public wlr: number;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTimeWithSeconds }, historical: { enabled: false } })
   public record: number;
 
   @Field()
@@ -413,4 +415,3 @@ export class Wizards {
     this.arcaneWizard = new WizardsClass(data, "arcane_wizard");
   }
 }
-
