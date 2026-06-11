@@ -37,7 +37,7 @@ export class PlayerLeaderboardsController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
   public getPlayerLeaderboard(
-    @Body() { field, page, player, position }: PlayerLeaderboardDto
+    @Body() { field, page, player, position, value }: PlayerLeaderboardDto
   ) {
     let input: number | string;
     let type: LeaderboardQuery;
@@ -48,6 +48,9 @@ export class PlayerLeaderboardsController {
     } else if (position) {
       input = position;
       type = LeaderboardQuery.POSITION;
+    } else if (typeof value === "number") {
+      input = value;
+      type = LeaderboardQuery.VALUE;
     } else {
       input = page;
       type = LeaderboardQuery.PAGE;
