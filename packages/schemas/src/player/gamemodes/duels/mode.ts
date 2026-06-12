@@ -154,7 +154,6 @@ export class BridgeDuels {
       this.doubles,
       this.threes,
       this.fours,
-      // Needed for accurate calculation of overall stats
       new BridgeDuelsMode(data, "bridge_2v2v2v2"),
       new BridgeDuelsMode(data, "bridge_3v3v3v3"),
       new BridgeDuelsMode(data, "capture_threes"),

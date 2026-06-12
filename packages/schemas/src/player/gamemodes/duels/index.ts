@@ -56,26 +56,14 @@ export const DUELS_MODES = new GameModes([
       { api: "fours" },
     ],
   },
-  { // Classic has submodes, but are displayed in 1 image
-    api: "classic",
-    hypixel: "DUELS_CLASSIC_DUEL",
-  },
+  { api: "classic", hypixel: "DUELS_CLASSIC_DUEL" },
   { api: "combo", hypixel: "DUELS_COMBO_DUEL" },
-  {
-    api: "megawalls",
-    formatted: "MegaWalls",
-  },
+  { api: "megawalls", formatted: "MegaWalls" },
   { api: "nodebuff", hypixel: "DUELS_POTION_DUEL", formatted: "NoDebuff" },
-  { // OP has submodes, but are displayed in 1 image
-    api: "op",
-    formatted: "OP",
-  },
+  { api: "op", formatted: "OP" },
   { api: "quake", hypixel: "DUELS_QUAKE_DUEL" },
   { api: "parkour", hypixel: "DUELS_PARKOUR_EIGHT" },
-  { // Skywars has submodes, but are displayed in 1 image
-    api: "skywars",
-    formatted: "SkyWars",
-  },
+  { api: "skywars", formatted: "SkyWars" },
   {
     api: "spleef",
     submodes: [
@@ -96,7 +84,7 @@ export const DUELS_MODES = new GameModes([
     ],
   },
   { hypixel: "DUELS_MW_DUEL", formatted: "MegaWalls Solo" },
-  { hypixel: "DUELS_MW_DOUBLES", formatted: "MegaWalls Doubles" }, // Needed for MW Overall
+  { hypixel: "DUELS_MW_DOUBLES", formatted: "MegaWalls Doubles" },
   { hypixel: "DUELS_UHC_DUEL", formatted: "UHC Solo" },
   { hypixel: "DUELS_UHC_DOUBLES", formatted: "UHC Doubles" },
   { hypixel: "DUELS_UHC_FOUR", formatted: "UHC Fours" },
@@ -109,9 +97,9 @@ export const DUELS_MODES = new GameModes([
   { hypixel: "DUELS_BRIDGE_DOUBLES", formatted: "Bridge Doubles" },
   { hypixel: "DUELS_BRIDGE_THREES", formatted: "Bridge Threes" },
   { hypixel: "DUELS_BRIDGE_FOUR", formatted: "Bridge Fours" },
-  { hypixel: "DUELS_BRIDGE_2V2V2V2", formatted: "Bridge 2v2v2v2" }, // Needed for Bridge Overall
-  { hypixel: "DUELS_BRIDGE_3V3V3V3", formatted: "Bridge 3v3v3v3" }, // Needed for Bridge Overall
-  { hypixel: "DUELS_CAPTURE_THREES", formatted: "Bridge CTF" }, // Needed for Bridge Overall
+  { hypixel: "DUELS_BRIDGE_2V2V2V2", formatted: "Bridge 2v2v2v2" },
+  { hypixel: "DUELS_BRIDGE_3V3V3V3", formatted: "Bridge 3v3v3v3" },
+  { hypixel: "DUELS_CAPTURE_THREES", formatted: "Bridge CTF" },
   { hypixel: "DUELS_BEDWARS_TWO_ONE", formatted: "BedWars Duel" },
   { hypixel: "DUELS_BEDWARS_TWO_ONE_RUSH", formatted: "Bed Rush" },
   { hypixel: "DUELS_SPLEEF_DUEL", formatted: "Spleef" },
