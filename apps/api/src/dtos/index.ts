@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+export * from "./active-users.dto.js";
 export * from "./cache.dto.js";
 export * from "./cached-player.dto.js";
 export * from "./guild-leaderboard.dto.js";
