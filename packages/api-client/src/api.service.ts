@@ -263,8 +263,8 @@ export class ApiService {
     ).catch(() => null);
   }
 
-  public incrementCommand(command: string) {
-    return this.request("/commands", { command }, "PATCH");
+  public incrementCommand(command: string, userId?: string) {
+    return this.request("/commands", { command, userId }, "PATCH");
   }
 
   private async requestKey<T, K extends keyof T>(

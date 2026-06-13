@@ -11,6 +11,7 @@ import { AuthModule } from "#auth";
 import { CommandsModule } from "#commands";
 import { GuildModule } from "#guild";
 import { HypixelResourcesModule } from "#hypixel-resources";
+import { MetricsModule } from "#metrics";
 import { Module } from "@nestjs/common";
 import { PlayerModule } from "#player";
 import { RedisModule } from "#redis";
@@ -45,6 +46,7 @@ const redisUrl = await config("database.redisUrl");
     AuthModule,
     UserModule,
     CommandsModule,
+    MetricsModule,
   ],
   controllers: [AppController],
 })

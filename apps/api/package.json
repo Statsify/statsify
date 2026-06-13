@@ -83,6 +83,10 @@
       "types": "./src/leaderboards/index.ts",
       "default": "./dist/leaderboards/index.js"
     },
+    "#metrics": {
+      "types": "./src/metrics/index.ts",
+      "default": "./dist/metrics/index.js"
+    },
     "#sentry": {
       "types": "./src/sentry/index.ts",
       "default": "./dist/sentry/index.js"

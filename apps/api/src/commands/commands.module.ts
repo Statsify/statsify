@@ -9,11 +9,12 @@
 import { Commands } from "@statsify/schemas";
 import { CommandsController } from "./commands.controller.js";
 import { CommandsService } from "./commands.service.js";
+import { MetricsModule } from "#metrics";
 import { Module } from "@nestjs/common";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
-  imports: [TypegooseModule.forFeature([Commands])],
+  imports: [TypegooseModule.forFeature([Commands]), MetricsModule],
   controllers: [CommandsController],
   providers: [CommandsService],
 })

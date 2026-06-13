@@ -95,7 +95,7 @@ export class CommandListener extends AbstractCommandListener {
       this.cooldownPrecondition.bind(this, parentCommand, user, id),
     ];
 
-    this.apiService.incrementCommand(commandName);
+    this.apiService.incrementCommand(commandName, id);
 
     return this.executeCommand({
       commandName,

@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ActivityService } from "#metrics";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Auth, AuthRole } from "#auth";
 import { CommandDto } from "#dtos";
@@ -15,7 +16,10 @@ import { Controller, Get, Patch, Query } from "@nestjs/common";
 @Controller("/commands")
 @ApiTags("Commands")
 export class CommandsController {
-  public constructor(private readonly commandService: CommandsService) {}
+  public constructor(
+    private readonly commandService: CommandsService,
+    private readonly activityService: ActivityService
+  ) {}
 
   @Get()
   @ApiOperation({ summary: "Get Command Usage" })
@@ -32,8 +36,10 @@ export class CommandsController {
   @Patch()
   @ApiOperation({ summary: "Increment Command Usage" })
   @Auth({ role: AuthRole.ADMIN })
-  public async patchCommandRun(@Query() { command }: CommandDto) {
+  public async patchCommandRun(@Query() { command, userId }: CommandDto) {
     await this.commandService.incrementCommandRun(command);
+
+    this.activityService.recordActive(userId);
 
     return { success: true };
   }
