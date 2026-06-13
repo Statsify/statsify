@@ -20,10 +20,18 @@ export class I18nLoaderService {
   private namespaces: string[] = [];
 
   public async init() {
-    this.languages = await readdir("../../locales");
-    this.namespaces = (await readdir(`../../locales/${DEFAULT_LANGUAGE}/`)).map((p) =>
-      p.replace(".json", "")
-    );
+    const languageEntries = await readdir("../../locales", { withFileTypes: true });
+    this.languages = languageEntries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
+
+    const namespaceEntries = await readdir(`../../locales/${DEFAULT_LANGUAGE}/`, {
+      withFileTypes: true,
+    });
+
+    this.namespaces = namespaceEntries
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+      .map((entry) => entry.name.replace(".json", ""));
 
     await i18next.use(Backend).init({
       backend: {
