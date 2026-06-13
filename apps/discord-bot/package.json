@@ -28,6 +28,7 @@
     "fuse.js": "^7.0.0",
     "luxon": "^3.5.0",
     "mongoose": "^8.5.2",
+    "posthog-node": "^5.37.0",
     "reflect-metadata": "^0.2.2",
     "skia-canvas": "3.0.8",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",

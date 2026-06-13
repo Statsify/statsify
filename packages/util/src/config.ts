@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { existsSync } from "node:fs";
 import type { DeepFlatten } from "./flatten.js";
@@ -230,6 +231,27 @@ export interface Config {
     tracesSampleRate?: number;
   };
 
+  posthog?: {
+    /**
+     * The PostHog project API key
+     */
+    apiKey?: string;
+    /**
+     * The PostHog ingestion host
+     * @example https://us.i.posthog.com
+     */
+    host: string;
+    /**
+     * Whether PostHog analytics capture is enabled
+     */
+    enabled?: boolean;
+    /**
+     * The fraction (0-1) of high-volume events to sample
+     * @example 0.25
+     */
+    sampleRate: number;
+  };
+
   /**
    * The current environment the bot is running in
    * @example dev
@@ -324,4 +346,22 @@ export const config = async <T extends keyof FlatConfig>(
   }
 
   return value;
+};
+
+/**
+ * Deterministically decides whether an entity should be sampled, using a
+ * stable hash so the same `distinctId` always produces the same result for
+ * a given `rate`. Used to keep analytics sampling consistent across apps.
+ *
+ * @param distinctId The id to hash, e.g. a PostHog distinct id
+ * @param rate The fraction (0-1) of ids that should be sampled in
+ */
+export const isSampled = (distinctId: string, rate: number): boolean => {
+  if (rate >= 1) return true;
+  if (rate <= 0) return false;
+
+  const hash = createHash("sha256").update(distinctId).digest();
+  const normalized = hash.readUInt32BE(0) / 2 ** 32;
+
+  return normalized < rate;
 };

@@ -31,6 +31,7 @@ import {
 } from "@statsify/api-client";
 
 import { PlayerService } from "./player.service.js";
+import { posthog } from "../posthog.js";
 
 @Controller("/player")
 @ApiTags("Player")
@@ -75,6 +76,16 @@ export class PlayerController {
   @Delete()
   public async deletePlayer(@Query() { player }: PlayerDto) {
     const deleted = await this.playerService.delete(player);
+
+    if (deleted) {
+      posthog?.capture({
+        distinctId: "admin",
+        event: "player deleted",
+        properties: {
+          player_tag: player,
+        },
+      });
+    }
 
     return {
       success: deleted,

@@ -22,6 +22,7 @@ import {
 } from "@statsify/api-client";
 import { PlayerDto, SessionDto, UserIdDto } from "#dtos";
 import { SessionService } from "./session.service.js";
+import { posthog } from "../posthog.js";
 
 @Controller("/session")
 @ApiTags("session")
@@ -51,6 +52,15 @@ export class SessionController {
     @Query() { player: tag }: PlayerDto
   ) {
     const player = await this.sessionService.getAndReset(tag);
+
+    posthog?.capture({
+      distinctId: player?.uuid ?? tag,
+      event: "session reset",
+      properties: {
+        player_tag: tag,
+      },
+    });
+
     return { success: !!player, player };
   }
 
@@ -63,6 +73,12 @@ export class SessionController {
     @Query() { id }: UserIdDto
   ) {
     await this.sessionService.delete(id);
+
+    posthog?.capture({
+      distinctId: id,
+      event: "session deleted",
+    });
+
     return { success: true };
   }
 }

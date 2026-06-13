@@ -17,6 +17,7 @@ import {
   Interaction,
 } from "@statsify/discord";
 import { Container } from "typedi";
+import { PosthogService } from "../posthog.js";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
@@ -32,6 +33,7 @@ const port = await config("discordBot.port", { required: false });
 export class CommandListener extends AbstractCommandListener {
   private cooldowns: Map<string, Map<string, number>>;
   private readonly apiService: ApiService;
+  private readonly posthogService: PosthogService;
   private static instance: CommandListener;
 
   private constructor(
@@ -48,6 +50,7 @@ export class CommandListener extends AbstractCommandListener {
     );
 
     this.apiService = Container.get(ApiService);
+    this.posthogService = Container.get(PosthogService);
     this.cooldowns = new Map();
   }
 
@@ -103,6 +106,23 @@ export class CommandListener extends AbstractCommandListener {
       context,
       preconditions,
       message: this.getTipResponse(commandName, user),
+      onComplete: (result) => {
+        this.posthogService.captureSampled({
+          distinctId: id,
+          event: "command executed",
+          properties: {
+            command: commandName,
+            locale,
+            tier: user?.tier ?? UserTier.NONE,
+            serverMember: user?.serverMember ?? false,
+            verified: !!user?.uuid,
+            guild_id: interaction.getGuildId() ?? null,
+            ok: result.ok,
+            error_kind: result.errorKind,
+            duration_ms: result.durationMs,
+          },
+        });
+      },
     });
   }
 

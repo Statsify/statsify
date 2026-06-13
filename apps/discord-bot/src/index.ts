@@ -13,6 +13,7 @@ import { Container } from "typedi";
 import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 import { Logger } from "@statsify/logger";
+import { PosthogService } from "./posthog.js";
 import { VerifyCommand } from "#commands/verify.command";
 import { config } from "@statsify/util";
 import { join } from "node:path";
@@ -21,9 +22,18 @@ const directory = import.meta.dirname;
 
 const logger = new Logger("discord-bot");
 const handleError = logger.error.bind(logger);
+const posthog = Container.get(PosthogService);
 
 process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
+process.on("SIGTERM", async () => {
+  await posthog.shutdown();
+  process.exit(0);
+});
+process.on("SIGINT", async () => {
+  await posthog.shutdown();
+  process.exit(0);
+});
 
 const sentryDsn = await config("sentry.discordBotDsn", { required: false });
 

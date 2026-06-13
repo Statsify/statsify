@@ -18,6 +18,8 @@ import {
 import { Guild } from "@statsify/schemas";
 import { GuildLeaderboardDto, GuildRankingDto } from "#dtos";
 import { GuildLeaderboardService } from "./guild-leaderboard.service.js";
+import { captureSampled } from "../../posthog.js";
+import { randomUUID } from "node:crypto";
 
 @Controller("/guild/leaderboards")
 export class GuildLeaderboardController {
@@ -44,6 +46,15 @@ export class GuildLeaderboardController {
       input = page;
       type = LeaderboardQuery.PAGE;
     }
+
+    captureSampled({
+      distinctId: randomUUID(),
+      event: "guild leaderboard viewed",
+      properties: {
+        field,
+        query_type: type,
+      },
+    });
 
     const leaderboard = await this.guildLeaderboardService.getLeaderboard(
       Guild,
