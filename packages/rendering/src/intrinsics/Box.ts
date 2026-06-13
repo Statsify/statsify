@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type CanvasRenderingContext2D } from "skia-canvas";
+import type { CanvasRenderingContext2D } from "skia-canvas";
 import type * as JSX from "#jsx";
 import type { DeferredGradient } from "#hooks";
 

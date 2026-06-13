@@ -39,10 +39,10 @@ export const GuildListProfile = ({
   // Hypixel does not always return all the ranks in `guild.ranks` so a special rank map is needed
   const rankMap: Record<string, string[]> = {};
 
-  guild.members.forEach((member) => {
+  for (const member of guild.members) {
     rankMap[member.rank] = rankMap[member.rank] ?? [];
     rankMap[member.rank].push(member.displayName ?? "ERROR");
-  });
+  }
 
   // A map of the all the ranks in the guild
   const guildRankMap = guild.ranks.reduce((acc, rank) => {

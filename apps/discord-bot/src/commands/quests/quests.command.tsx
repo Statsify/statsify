@@ -11,7 +11,7 @@ import {
   Command,
   CommandContext,
   Page,
-  PaginateService,
+  paginate,
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
@@ -26,10 +26,7 @@ import { render } from "@statsify/rendering";
 export class QuestsCommand {
   private readonly modes = QUEST_MODES;
 
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({
     description: (t) => t("commands.quests-overall"),
@@ -85,7 +82,7 @@ export class QuestsCommand {
     let modes = this.modes.getModes();
 
     // Currently only SkyWars has a monthly quest so it is useless to show other modes
-    if (time == QuestTime.Monthly) {
+    if (time === QuestTime.Monthly) {
       // Filter for objects with more than 1 field (the total field)
       modes = modes.filter((mode) => mode.api === "overall" || Object.entries(quests.monthly[mode.api]).length > 1);
     }
@@ -115,6 +112,6 @@ export class QuestsCommand {
         },
       }));
 
-    return this.paginateService.paginate(context, pages);
+    return paginate(context, pages);
   }
 }

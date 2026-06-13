@@ -16,14 +16,14 @@ export const List = ({ width = "100%", items }: ListProps) => {
   const remainingColumns: number[] = [];
 
   for (const [i, item] of items.entries()) {
-    (item as unknown as JSX.Element[]).forEach((child, index) => {
+    for (const [index, child] of (item as unknown as JSX.Element[]).entries()) {
       if (i === 0 && child.x.size === "remaining") remainingColumns.push(index);
 
       child.x.size = "100%";
 
       if (columns[index]) columns[index].push(child);
       else columns[index] = [child];
-    });
+    }
   }
 
   return (

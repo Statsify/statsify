@@ -6,14 +6,28 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from "./mode.js";
+import {
+  BedWarsMode,
+  BedWarsModeChallenges,
+  DreamsBedWarsMode,
+} from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { Slumber } from "./slumber.js";
 import { deepSub } from "@statsify/math";
-import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
-import type { APIData } from "@statsify/util";
+import {
+  BRACKET_MAP,
+  getExpReq,
+  getIntendedFormattedLevel,
+  getLevel,
+  getPrestigeCosmetic,
+  PRESTIGE_SCHEMES,
+  PRESTIGE_STARS,
+  SCHEME_MAP,
+  STAR_MAP,
+} from "./util.js";
+import { findScore, type APIData } from "@statsify/util";
 
 export const BEDWARS_MODES = new GameModes([
   { api: "overall" },
@@ -32,6 +46,7 @@ export const BEDWARS_MODES = new GameModes([
   { api: "underworld" },
   { api: "voidless" },
   { api: "oneBlock", hypixel: "BEDWARS_EIGHT_ONE_ONEBLOCK" },
+  { api: "challenges" },
 
   { hypixel: "BEDWARS_EIGHT_TWO_ARMED", formatted: "Armed Doubles" },
   { hypixel: "BEDWARS_FOUR_FOUR_ARMED", formatted: "Armed Fours" },
@@ -56,11 +71,21 @@ export class BedWars {
   @Field({ historical: { enabled: false } })
   public tokens: number;
 
+  @Field()
+  public selectedScheme: string;
+
+  @Field()
+  public selectedStar: string;
+
+  @Field()
+  public selectedBrackets: string;
+
   @Field({
     leaderboard: {
       fieldName: "Level",
       hidden: true,
-      formatter: (exp: number) => getFormattedLevel(Math.floor(getLevel(exp))),
+      formatter: (exp: number) =>
+        getIntendedFormattedLevel(Math.floor(getLevel(exp))),
       additionalFields: [
         "this.overall.wins",
         "this.overall.finalKills",
@@ -82,13 +107,16 @@ export class BedWars {
   })
   public level: number;
 
-  @Field()
+  @Field({ store: { default: getIntendedFormattedLevel(0) } })
   public levelFormatted: string;
 
   @Field()
   public progression: Progression;
 
-  @Field()
+  @Field({ store: { default: getIntendedFormattedLevel(0) } })
+  public naturalLevelFormatted: string;
+
+  @Field({ store: { default: getIntendedFormattedLevel(1) } })
   public nextLevelFormatted: string;
 
   @Field()
@@ -140,7 +168,7 @@ export class BedWars {
   public oneBlock: BedWarsMode;
 
   @Field()
-  public challenges: ChallengesBedWars;
+  public challenges: BedWarsModeChallenges;
 
   @Field({ leaderboard: { fieldName: "" } })
   public slumber: Slumber;
@@ -148,10 +176,53 @@ export class BedWars {
   public constructor(data: APIData = {}) {
     this.tokens = data.coins;
 
+    this.selectedScheme = data.active_prestige_scheme;
+    this.selectedStar = data.active_star;
+    this.selectedBrackets = data.active_prestige_bracket;
+
     this.exp = data.Experience || 0;
     this.level = getLevel(this.exp);
-    this.levelFormatted = getFormattedLevel(Math.floor(this.level));
-    this.nextLevelFormatted = getFormattedLevel(Math.floor(this.level) + 1);
+
+    const flooredLevel = Math.floor(this.level);
+
+    const scheme = getPrestigeCosmetic({
+      packages: data.packages,
+      favorites: data.favorites,
+      cosmetic: this.selectedScheme,
+      getDefault: () => findScore(PRESTIGE_SCHEMES, flooredLevel).scheme,
+      map: SCHEME_MAP,
+      prefix: "prestige_scheme",
+    });
+
+    const star = getPrestigeCosmetic({
+      packages: data.packages,
+      favorites: data.favorites,
+      cosmetic: this.selectedStar,
+      getDefault: () => findScore(PRESTIGE_STARS, flooredLevel).star,
+      map: STAR_MAP,
+      prefix: "star",
+    });
+
+    const brackets = getPrestigeCosmetic({
+      packages: data.packages,
+      favorites: data.favorites,
+      cosmetic: this.selectedBrackets,
+      getDefault: () => "none",
+      map: BRACKET_MAP,
+      prefix: "prestige_bracket",
+    });
+
+    this.levelFormatted = scheme({
+      level: flooredLevel,
+      star,
+      brackets,
+      bold: false,
+      underline: false,
+      strikethrough: false,
+    });
+
+    this.naturalLevelFormatted = getIntendedFormattedLevel(flooredLevel);
+    this.nextLevelFormatted = getIntendedFormattedLevel(flooredLevel + 1);
 
     let exp = this.exp;
 
@@ -184,7 +255,7 @@ export class BedWars {
 
     this.core.winstreak = this.overall.winstreak;
 
-    this.challenges = new ChallengesBedWars(data);
+    this.challenges = new BedWarsModeChallenges(data);
     this.slumber = new Slumber(data.slumber);
   }
 }

@@ -6,7 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiModeFromGameModes, DUELS_MODES, DuelsModes, GameModeWithSubModes } from "@statsify/schemas";
+import {
+  ApiModeFromGameModes,
+  DUELS_MODES,
+  DuelsModes,
+  GameModeWithSubModes,
+} from "@statsify/schemas";
 import {
   BaseHypixelCommand,
   BaseProfileProps,
@@ -26,19 +31,36 @@ interface PreProfileData {
   modeIcons: DuelsModeIcons;
 }
 
+let modeIcons: DuelsModeIcons | undefined;
+
+const getModeIcons = async (): Promise<DuelsModeIcons> => {
+  if (modeIcons) return modeIcons;
+
+  const paths = await readdir(getAssetPath("duels"));
+  const modIconEntries = await Promise.all(
+    paths.map(async (mode) => [
+      mode.replace(".png", ""),
+      await loadImage(getAssetPath(`duels/${mode}`)),
+    ]),
+  );
+
+  const icons = Object.fromEntries(modIconEntries);
+  modeIcons = icons;
+
+  return icons;
+};
+
 @Command({ description: (t) => t("commands.duels") })
-export class DuelsCommand extends BaseHypixelCommand<DuelsModes, PreProfileData> {
+export class DuelsCommand extends BaseHypixelCommand<
+  DuelsModes,
+  PreProfileData
+> {
   public constructor() {
     super(DUELS_MODES);
   }
 
   public async getPreProfileData(): Promise<PreProfileData> {
-    const modeIconPaths = await readdir(getAssetPath("duels"));
-    const modeIcons = await Promise.all(
-      modeIconPaths.map(async (mode) => [mode.replace(".png", ""), await loadImage(getAssetPath(`duels/${mode}`))])
-    );
-
-    return { modeIcons: Object.fromEntries(modeIcons) };
+    return { modeIcons: await getModeIcons() };
   }
 
   public getModeEmojis(modes: GameModeWithSubModes<DuelsModes>[]): ModeEmoji[] {
@@ -47,12 +69,14 @@ export class DuelsCommand extends BaseHypixelCommand<DuelsModes, PreProfileData>
 
   public getProfile(
     base: BaseProfileProps,
-    { mode, data }: ProfileData<DuelsModes, PreProfileData>
+    { mode, data }: ProfileData<DuelsModes, PreProfileData>,
   ): JSX.Element {
     return <DuelsProfile {...base} mode={mode} modeIcons={data.modeIcons} />;
   }
 }
 
-export function getDuelsModeEmojis(modes: GameModeWithSubModes<DuelsModes>[]): ModeEmoji[] {
+export function getDuelsModeEmojis(
+  modes: GameModeWithSubModes<DuelsModes>[],
+): ModeEmoji[] {
   return modes.map((m) => (t) => t(`emojis:duels.${m.api}`));
 }
