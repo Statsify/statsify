@@ -613,7 +613,6 @@ export class FishingEnchantments {
 }
 
 export class FishingMythicalFish {
-  @Field()
   public catches?: number;
 
   @Field()
@@ -741,7 +740,6 @@ export class FishingSeasonal {
 }
 
 export class FishingIndividualCatch {
-  @Field()
   public catches?: number;
 
   public constructor(catches: number) {
