@@ -281,14 +281,35 @@ export class RatiosCommand {
   private getModeStats(game: PlayerStats[keyof PlayerStats], ratioMode: RatioMode<any>) {
     const { mode, submode } = ratioMode;
 
+    let stats: any;
+
     if (submode) {
       const modeStats = game[mode.api as keyof typeof game];
       const submodeStats = modeStats?.[submode.api as keyof typeof modeStats];
-      return submode.api === "overall" ? submodeStats || modeStats : submodeStats;
+      stats = submode.api === "overall" ? submodeStats || modeStats : submodeStats;
+    } else {
+      const modeStats = game[mode.api as keyof typeof game];
+      stats = mode.api === "overall" ? modeStats || game : modeStats;
     }
 
-    const stats = game[mode.api as keyof typeof game];
-    return mode.api === "overall" ? stats || game : stats;
+    // Some modes (e.g. Duels Classic, OP, SkyWars) only display a single
+    // image and don't expose their ratio fields directly, instead nesting
+    // them under an `overall` field combining their submodes
+    if (stats && this.getRatios(stats.constructor).length === 0 && stats.overall)
+      return stats.overall;
+
+    return stats;
+  }
+
+  private getRatios(modeClass?: Constructor<any>): Ratio[] {
+    if (!modeClass) return [];
+
+    return LEADERBOARD_RATIOS.filter(([numerator, denominator]) => {
+      const numeratorType = Reflect.getMetadata("design:type", modeClass.prototype, numerator);
+      const denominatorType = Reflect.getMetadata("design:type", modeClass.prototype, denominator);
+
+      return numeratorType === Number && denominatorType === Number;
+    });
   }
 
   private getRatiosPerMode<T extends GamesWithBackgrounds>(
@@ -307,22 +328,7 @@ export class RatiosCommand {
         const modeClass = this.getModeClass(ratioMode, gameClass);
         if (!modeClass) continue;
 
-        const ratios = LEADERBOARD_RATIOS.filter(([numerator, denominator]) => {
-          const numeratorType = Reflect.getMetadata(
-            "design:type",
-            modeClass.prototype,
-            numerator
-          );
-
-          const denominatorType = Reflect.getMetadata(
-            "design:type",
-            modeClass.prototype,
-            denominator
-          );
-
-          return numeratorType === Number && denominatorType === Number;
-        });
-
+        const ratios = this.getRatios(modeClass);
         if (ratios.length === 0) continue;
 
         ratioModes.push({ ratioMode, ratios });
@@ -337,10 +343,25 @@ export class RatiosCommand {
     const apiType = Reflect.getMetadata("design:type", gameClass.prototype, mode.api);
     const modeType = mode.api === "overall" ? apiType || gameClass : apiType;
 
-    if (!submode) return modeType;
+    const resolved = (() => {
+      if (!submode) return modeType;
+      if (!modeType) return undefined;
 
-    const submodeType = Reflect.getMetadata("design:type", modeType.prototype, submode.api);
-    return submode.api === "overall" ? submodeType || modeType : submodeType;
+      const submodeType = Reflect.getMetadata("design:type", modeType.prototype, submode.api);
+      return submode.api === "overall" ? submodeType || modeType : submodeType;
+    })();
+
+    if (!resolved) return resolved;
+
+    // Some modes (e.g. Duels Classic, OP, SkyWars) don't expose their ratio
+    // fields directly, instead nesting them under an `overall` field
+    // combining their submodes
+    if (this.getRatios(resolved).length === 0) {
+      const overallType = Reflect.getMetadata("design:type", resolved.prototype, "overall");
+      return overallType ?? resolved;
+    }
+
+    return resolved;
   }
 
   private getRatioModes<T extends GamesWithBackgrounds>(mode: GameModeWithSubModes<T>): RatioMode<T>[] {
