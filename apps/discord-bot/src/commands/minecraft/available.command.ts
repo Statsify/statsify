@@ -13,7 +13,7 @@ import {
   EmbedBuilder,
   MojangPlayerArgument,
 } from "@statsify/discord";
-import { minecraftHeadUrl } from "#lib/minecraft-head";
+import { minecraftHeadAttachment } from "#lib/minecraft-head";
 
 @Command({
   description: (t) => t("commands.available"),
@@ -50,6 +50,8 @@ export class AvailableCommand {
       .catch(() => undefined);
 
     if (uuid) {
+      const head = await minecraftHeadAttachment(this.apiService, uuid);
+
       base
         .field((t) => t("minecraft.uuid"), `\`${uuid}\``)
         .field(
@@ -61,17 +63,19 @@ export class AvailableCommand {
           (t) => `\`${t("minecraft.unavailable")}\``
         )
         .color(0xf7_c4_6c)
-        .thumbnail(minecraftHeadUrl(uuid));
-    } else {
-      base
-        .field("NameMC", `[\`Here\`](https://namemc.com/profile/${name})`)
-        .field(
-          (t) => t("stats.status"),
-          (t) => `\`${t("minecraft.available")}*\``
-        )
-        .footer((t) => `*${t("embeds.available.blocked")}`)
-        .color(0x00_a2_8a);
+        .thumbnail(`attachment://${head.name}`);
+
+      return { embeds: [base], files: [head] };
     }
+
+    base
+      .field("NameMC", `[\`Here\`](https://namemc.com/profile/${name})`)
+      .field(
+        (t) => t("stats.status"),
+        (t) => `\`${t("minecraft.available")}*\``
+      )
+      .footer((t) => `*${t("embeds.available.blocked")}`)
+      .color(0x00_a2_8a);
 
     return { embeds: [base] };
   }
