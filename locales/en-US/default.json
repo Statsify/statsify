@@ -141,6 +141,7 @@
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
     "links": "Statsify Socials",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
+    "metrics": "View Statsify active user metrics",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",

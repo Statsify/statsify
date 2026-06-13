@@ -15,6 +15,7 @@ import {
 } from "./constants.js";
 import {
   DeletePlayerResponse,
+  GetActiveMetricsResponse,
   GetCommandUsageResponse,
   GetGamecountsResponse,
   GetGuildResponse,
@@ -261,6 +262,10 @@ export class ApiService {
       "usage",
       {}
     ).catch(() => null);
+  }
+
+  public getActiveMetrics() {
+    return this.request<GetActiveMetricsResponse>("/metrics/active", {}).catch(() => null);
   }
 
   public incrementCommand(command: string, userId?: string) {

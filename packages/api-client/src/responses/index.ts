@@ -8,6 +8,7 @@
 
 export * from "./delete.player.response.js";
 export * from "./error.response.js";
+export * from "./get.active-metrics.response.js";
 export * from "./get.gamecounts.response.js";
 export * from "./get.guild.response.js";
 export * from "./get.session.response.js";
