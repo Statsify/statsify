@@ -16,7 +16,7 @@
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
-    "@typegoose/typegoose": "^12.6.0",
+    "@typegoose/typegoose": "^13.3.0",
     "class-validator": "^0.14.1",
     "luxon": "^3.5.0"
   },

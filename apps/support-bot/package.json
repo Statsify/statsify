@@ -21,7 +21,7 @@
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
-    "@typegoose/typegoose": "^12.6.0",
+    "@typegoose/typegoose": "^13.3.0",
     "axios": "1.11.0",
     "discord-api-types": "^0.38.22",
     "luxon": "^3.5.0",
