@@ -25,6 +25,10 @@ import { createCanvas, loadImage, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 
+const BADGE_IMAGE_TYPE_PREFIX = "image/";
+const CUSTOM_EMOJI_REGEX = /^<a?:\w+:(\d+)>$/;
+const TWEMOJI_BASE_URL = "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72";
+
 @Command({ description: (t) => t("commands.badge") })
 export class BadgeCommand {
   public constructor(private readonly apiService: ApiService) {}
@@ -39,16 +43,23 @@ export class BadgeCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.badge-set"),
+    description: (t) => t("commands.badge-image"),
     tier: UserTier.GOLD,
     preview: "badge.png",
-    args: [
-      new FileArgument("badge"),
-      new TextArgument("emoji", (t) => t("arguments.emoji"), false),
-    ],
+    args: [new FileArgument("badge", true)],
   })
-  public set(context: CommandContext) {
-    return this.run(context, "set");
+  public image(context: CommandContext) {
+    return this.run(context, "image");
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.badge-emoji"),
+    tier: UserTier.GOLD,
+    preview: "badge.png",
+    args: [new TextArgument("emoji", (t) => t("arguments.emoji"))],
+  })
+  public emoji(context: CommandContext) {
+    return this.run(context, "emoji");
   }
 
   @SubCommand({
@@ -62,7 +73,7 @@ export class BadgeCommand {
 
   private async run(
     context: CommandContext,
-    mode: "view" | "set" | "reset"
+    mode: "view" | "image" | "emoji" | "reset"
   ): Promise<IMessage> {
     const userId = context.getInteraction().getUserId();
     const file = context.option<APIAttachment | null>("badge");
@@ -86,14 +97,20 @@ export class BadgeCommand {
         };
       }
 
-      case "set": {
-        if (!file && !emoji)
-          throw new ErrorMessage(
-            (t) => t("errors.unknown.title"),
-            (t) => t("errors.unknown.description")
-          );
+      case "image": {
+        const canvas = await this.getBadgeCanvas(file as APIAttachment);
 
-        const canvas = file ? await this.getBadgeCanvas(file) : await this.getEmojiCanvas(emoji as string);
+        await this.apiService.updateUserBadge(userId, await canvas.toBuffer("png"));
+        const profile = await this.getProfile(t, user, canvas);
+
+        return {
+          content: t("config.badge.set") as string,
+          files: [{ name: "badge.png", data: profile, type: "image/png" }],
+        };
+      }
+
+      case "emoji": {
+        const canvas = await this.getEmojiCanvas(emoji as string);
 
         await this.apiService.updateUserBadge(userId, await canvas.toBuffer("png"));
         const profile = await this.getProfile(t, user, canvas);
@@ -123,13 +140,13 @@ export class BadgeCommand {
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
-    if (!["image/png", "image/jpeg", "image/gif"].includes(file.content_type ?? ""))
+    if (!file.content_type?.startsWith(BADGE_IMAGE_TYPE_PREFIX))
       throw new ErrorMessage(
         (t) => t("errors.unsupportedFileType.title"),
         (t) => t("errors.unsupportedFileType.description")
       );
 
-    const badge = await loadImage(file.url);
+    const badge = await this.loadBadgeImage(file.url);
 
     const ratio = Math.min(canvas.width / badge.width, canvas.height / badge.height);
     const scaled = badge.width > 32 || badge.height > 32;
@@ -157,20 +174,77 @@ export class BadgeCommand {
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
-    const customEmoji = input.trim().match(/^<a?:\w+:(\d+)>$/);
+    const emoji = input.trim();
+    const customEmoji = emoji.match(CUSTOM_EMOJI_REGEX);
 
     if (customEmoji) {
-      const badge = await loadImage(`https://cdn.discordapp.com/emojis/${customEmoji[1]}.png?size=32&quality=lossless`);
+      const badge = await this.loadEmojiImage(
+        `https://cdn.discordapp.com/emojis/${customEmoji[1]}.png?size=32&quality=lossless`
+      );
+
       ctx.drawImage(badge, 0, 0, badge.width, badge.height, 0, 0, 32, 32);
       return canvas;
     }
 
-    ctx.font = "28px Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(input.trim(), 16, 17);
+    const badge = await this.loadTwemojiImage(emoji);
+
+    ctx.drawImage(badge, 0, 0, badge.width, badge.height, 0, 0, 32, 32);
 
     return canvas;
+  }
+
+  private async loadBadgeImage(url: string) {
+    try {
+      return await loadImage(url);
+    } catch {
+      throw new ErrorMessage(
+        (t) => t("errors.unsupportedFileType.title"),
+        (t) => t("errors.unsupportedFileType.description")
+      );
+    }
+  }
+
+  private async loadEmojiImage(url: string) {
+    try {
+      return await loadImage(url);
+    } catch {
+      throw new ErrorMessage(
+        (t) => t("errors.invalidBadgeEmoji.title"),
+        (t) => t("errors.invalidBadgeEmoji.description")
+      );
+    }
+  }
+
+  private async loadTwemojiImage(input: string) {
+    const codepoints = this.toTwemojiCodepoints(input);
+    const urls = [...new Set(codepoints)].map((codepoint) => `${TWEMOJI_BASE_URL}/${codepoint}.png`);
+
+    return Promise.any(urls.map((url) => loadImage(url))).catch(() => {
+      throw new ErrorMessage(
+        (t) => t("errors.invalidBadgeEmoji.title"),
+        (t) => t("errors.invalidBadgeEmoji.description")
+      );
+    });
+  }
+
+  private toTwemojiCodepoints(input: string) {
+    const codepoints = [...input]
+      .map((char) => char.codePointAt(0)?.toString(16))
+      .filter((codepoint): codepoint is string => !!codepoint);
+
+    const emojiPresentationCodepoints = codepoints.filter((codepoint) => !["200d", "fe0f"].includes(codepoint));
+
+    if (emojiPresentationCodepoints.length === 0) {
+      throw new ErrorMessage(
+        (t) => t("errors.invalidBadgeEmoji.title"),
+        (t) => t("errors.invalidBadgeEmoji.description")
+      );
+    }
+
+    return [
+      codepoints.join("-"),
+      codepoints.filter((codepoint) => codepoint !== "fe0f").join("-"),
+    ];
   }
 
   private async getProfile(t: LocalizeFunction, user: User, badge?: Image | Canvas) {
