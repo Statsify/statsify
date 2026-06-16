@@ -52,9 +52,22 @@ export class PosthogService {
   }
 
   /**
+   * Captures an event at 100% without person processing. Use for high-frequency
+   * events where you need accurate distinct_id counts (DAU/WAU/MAU) but want
+   * to avoid person-profile cost.
+   */
+  public captureNoProfile({ distinctId, event, properties }: CaptureOptions) {
+    this.client?.capture({
+      distinctId,
+      event,
+      properties: { ...properties, $process_person_profile: false },
+    });
+  }
+
+  /**
    * Captures a high-volume event, deterministically sampled at
    * `posthog.sampleRate` and captured without person processing to keep
-   * cost down.
+   * cost down. Use when exact counts are not required.
    */
   public captureSampled({ distinctId, event, properties }: CaptureOptions) {
     if (!this.client) return;
