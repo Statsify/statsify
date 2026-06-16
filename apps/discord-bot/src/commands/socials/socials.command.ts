@@ -15,7 +15,7 @@ import {
   PlayerArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
-import { minecraftHeadUrl } from "#lib/minecraft-head";
+import { minecraftHeadAttachment } from "#lib/minecraft-head";
 
 @Command({ description: (t) => t("commands.socials"), args: [PlayerArgument] })
 export class SocialsCommand {
@@ -29,10 +29,12 @@ export class SocialsCommand {
       user
     );
 
+    const head = await minecraftHeadAttachment(this.apiService, uuid);
+
     const embed = new EmbedBuilder()
       .title((t) => this.apiService.emojiDisplayName(t, displayName))
       .author("Player Socials")
-      .thumbnail(minecraftHeadUrl(uuid))
+      .thumbnail(`attachment://${head.name}`)
       .color(STATUS_COLORS.info)
       .field(
         (t) => `${t("emojis:socials.embed.discord")} Discord`,
@@ -63,7 +65,7 @@ export class SocialsCommand {
         this.formatSocial(socials.youtube)
       );
 
-    return { embeds: [embed] };
+    return { embeds: [embed], files: [head] };
   }
 
   private formatSocial(social?: string, link = true) {
