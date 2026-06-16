@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ApiService, type InteractionAttachment } from "@statsify/discord";
+import type { ApiService, InteractionAttachment } from "@statsify/discord";
 import { createCanvas } from "@statsify/rendering";
 
 export async function minecraftHeadAttachment(
   apiService: ApiService,
   uuid: string,
-  size = 160
+  size = 160,
 ): Promise<InteractionAttachment> {
   const head = await apiService.getPlayerHead(uuid, size);
 
@@ -21,7 +21,7 @@ export async function minecraftHeadAttachment(
   ctx.drawImage(head, 0, 0, size, size);
 
   return {
-    name: uuid,
+    name: `${uuid}.png`,
     data: await canvas.toBuffer("png"),
     type: "image/png",
   };
