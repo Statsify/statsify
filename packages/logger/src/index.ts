@@ -17,6 +17,13 @@ const DEFAULT_LOG_LEVELS: LogLevel[] = ["log", "error", "warn", "debug", "verbos
 type SentryTagValue = boolean | number | string | null | undefined;
 
 type SentryLogLevel = Extract<LogLevel, "error" | "fatal" | "warn">;
+type SentrySpanAttributeValue =
+  | boolean
+  | number
+  | string
+  | Array<boolean | null | undefined>
+  | Array<number | null | undefined>
+  | Array<string | null | undefined>;
 
 export interface SentrySpanOptions {
   op: string;
@@ -46,49 +53,75 @@ const ColorByLogLevel: Record<LogLevel, number> = {
 const isProduction = await config("environment") === "prod";
 
 export function getSentryTransaction() {
-  return Sentry.getCurrentHub().getScope()?.getTransaction();
+  const activeSpan = Sentry.getActiveSpan();
+  return activeSpan ? Sentry.getRootSpan(activeSpan) : undefined;
 }
 
-export function startSentrySpan({
-  op,
-  description,
-  data,
-  tags,
-}: SentrySpanOptions) {
-  const span = getSentryTransaction()?.startChild({ op, description, data });
+function getSentrySpanAttribute(value: unknown): SentrySpanAttributeValue | undefined {
+  if (value === null || value === undefined) return undefined;
+  if (typeof value === "boolean" || typeof value === "number" || typeof value === "string")
+    return value;
 
-  for (const [key, value] of Object.entries(tags ?? {})) {
-    if (value === null || value === undefined) continue;
-    span?.setTag(key, String(value));
+  if (Array.isArray(value)) {
+    return value.map((entry) => entry === null || entry === undefined ? entry : String(entry));
   }
 
-  return span;
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return String(value);
+  }
+}
+
+function getSentrySpanAttributes({ data, tags }: SentrySpanOptions) {
+  const attributes: Record<string, SentrySpanAttributeValue | undefined> = {};
+
+  for (const [key, value] of Object.entries(data ?? {})) {
+    attributes[key] = getSentrySpanAttribute(value);
+  }
+
+  for (const [key, value] of Object.entries(tags ?? {})) {
+    attributes[key] = getSentrySpanAttribute(value);
+  }
+
+  return attributes;
+}
+
+function getSentrySpanOptions(options: SentrySpanOptions) {
+  return {
+    name: options.description ?? options.op,
+    op: options.op,
+    attributes: getSentrySpanAttributes(options),
+  };
+}
+
+export function startSentrySpan(options: SentrySpanOptions) {
+  const parentSpan = getSentryTransaction();
+
+  if (!parentSpan) return undefined;
+
+  return Sentry.startInactiveSpan({
+    ...getSentrySpanOptions(options),
+    parentSpan,
+  });
 }
 
 export async function withSentrySpan<T>(
   options: SentrySpanOptions,
   callback: (span?: Sentry.Span) => Promise<T>
 ): Promise<T> {
-  const span = startSentrySpan(options);
+  if (!getSentryTransaction()) return callback(undefined);
 
-  try {
-    return await callback(span);
-  } finally {
-    span?.finish();
-  }
+  return Sentry.startSpan(getSentrySpanOptions(options), callback);
 }
 
 export function withSentrySpanSync<T>(
   options: SentrySpanOptions,
   callback: (span?: Sentry.Span) => T
 ): T {
-  const span = startSentrySpan(options);
+  if (!getSentryTransaction()) return callback(undefined);
 
-  try {
-    return callback(span);
-  } finally {
-    span?.finish();
-  }
+  return Sentry.startSpan(getSentrySpanOptions(options), callback);
 }
 
 export function setSentryMemoryUsage(span = getSentryTransaction()) {
@@ -96,8 +129,8 @@ export function setSentryMemoryUsage(span = getSentryTransaction()) {
 
   const { rss, heapUsed } = process.memoryUsage();
 
-  span.setData("memory.rss.bytes", rss);
-  span.setData("memory.heap_used.bytes", heapUsed);
+  span.setAttribute("memory.rss.bytes", rss);
+  span.setAttribute("memory.heap_used.bytes", heapUsed);
 }
 
 function stringifyMessage(message: unknown) {
@@ -159,8 +192,7 @@ export class Logger implements LoggerService {
     let normalizedMessage = message;
 
     if (message instanceof Error) {
-      const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-      transaction?.setStatus("internal_error");
+      getSentryTransaction()?.setStatus({ code: 2, message: "internal_error" });
 
       Sentry.captureException(message);
       normalizedMessage = message.stack;
@@ -233,8 +265,7 @@ export class Logger implements LoggerService {
     let normalizedMessage = message;
 
     if (message instanceof Error) {
-      const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-      transaction?.setStatus("internal_error");
+      getSentryTransaction()?.setStatus({ code: 2, message: "internal_error" });
 
       Sentry.captureException(message);
       normalizedMessage = message.stack;
@@ -327,6 +358,8 @@ export class Logger implements LoggerService {
     context: string | undefined,
     logLevel: SentryLogLevel
   ) {
+    if (!isProduction) return;
+
     for (const message of messages) {
       Sentry.logger[logLevel](stringifyMessage(message), {
         "logger.context": context ?? "Default",

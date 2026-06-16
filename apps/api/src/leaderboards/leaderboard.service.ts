@@ -38,13 +38,6 @@ export abstract class LeaderboardService {
     remove = false
   ) {
     const fields = getLeaderboardFields(constructor);
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "redis",
-      description: `add ${constructor.name} leaderboards`,
-    });
-
     const pipeline = this.redis.pipeline();
     const name = constructor.name.toLowerCase();
 

@@ -20,7 +20,7 @@ import {
   Logger,
   getSentryTransaction,
   setSentryMemoryUsage,
-  withSentrySpan,
+  startSentrySpan,
 } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
@@ -42,6 +42,7 @@ export interface ExecuteCommandOptions {
   commandName: string;
   command: CommandResolvable;
   context: CommandContext;
+  observabilityGroup?: string;
   preconditions?: CommandPrecondition[];
   message?: IMessage | Message;
 }
@@ -130,20 +131,21 @@ export abstract class AbstractCommandListener {
     commandName,
     command,
     context,
+    observabilityGroup,
     preconditions = [],
     message,
   }: ExecuteCommandOptions) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-    const commandSpan = transaction?.startChild({
+    const transaction = getSentryTransaction();
+    const commandSpan = startSentrySpan({
       op: "discord.command.execute",
       description: commandName,
-        data: {
-          "command.name": command.name,
-          "command.group": command.group,
-          "command.full_name": commandName,
-          "guild.id": context.getInteraction().getGuildId(),
-          "user.tier": context.getUser()?.tier ?? UserTier.NONE,
-        },
+      data: {
+        "command.name": command.name,
+        "command.group": observabilityGroup ?? command.group ?? "unknown",
+        "command.full_name": commandName,
+        "guild.id": context.getInteraction().getGuildId(),
+        "user.tier": context.getUser()?.tier ?? UserTier.NONE,
+      },
     });
 
     try {
@@ -152,11 +154,11 @@ export abstract class AbstractCommandListener {
       }
 
       const response = await command.execute(context);
-      commandSpan?.finish();
+      commandSpan?.end();
 
       if (typeof response !== "object") {
         setSentryMemoryUsage(transaction);
-        transaction?.finish();
+        transaction?.end();
         return;
       }
 
@@ -166,19 +168,23 @@ export abstract class AbstractCommandListener {
       });
 
       setSentryMemoryUsage(transaction);
-      transaction?.finish();
+      transaction?.end();
     } catch (err) {
       if (err instanceof Message) {
-        await context.reply(err);
-        setSentryMemoryUsage(transaction);
-        transaction?.finish();
+        try {
+          await context.reply(err);
+        } finally {
+          setSentryMemoryUsage(transaction);
+          transaction?.end();
+        }
+
         return;
       }
 
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
       setSentryMemoryUsage(transaction);
-      transaction?.finish();
+      transaction?.end();
     }
   }
 

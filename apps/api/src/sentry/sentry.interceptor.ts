@@ -36,34 +36,39 @@ export class SentryInterceptor implements NestInterceptor {
       headers: req.headers,
     });
 
-    let transaction: ReturnType<Sentry.Hub["startTransaction"]> | undefined;
+    let transaction: Sentry.Span | undefined;
 
     if (!url.pathname.includes("/skin")) {
-      transaction = Sentry.startTransaction({
+      transaction = Sentry.startInactiveSpan({
         op: "request",
         name: `${req.method} ${url.pathname}`,
+        forceTransaction: true,
       });
-
-      Sentry.configureScope((scope) => scope.setSpan(transaction));
     }
 
-    return next.handle().pipe(
+    const response$ = next.handle().pipe(
       catchError((err) => {
         const isHttpException = err instanceof HttpException;
         const isInternalError = err instanceof InternalServerErrorException;
 
         if (isHttpException && !isInternalError) {
-          transaction?.finish();
+          transaction?.end();
           throw err;
         }
 
         Sentry.captureException(err);
-        transaction?.setHttpStatus(500);
-        transaction?.finish();
+        if (transaction) Sentry.setHttpStatus(transaction, 500);
+        transaction?.end();
 
         throw err;
       }),
-      tap(() => transaction?.finish())
+      tap(() => transaction?.end())
     );
+
+    return transaction ?
+      new Observable((subscriber) =>
+        Sentry.withActiveSpan(transaction, () => response$.subscribe(subscriber))
+      ) :
+      response$;
   }
 }

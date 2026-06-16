@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import { CacheLevel } from "@statsify/api-client";
 import {
   GameCounts,
@@ -153,10 +154,10 @@ export class HypixelService {
 
     return this.httpService.get(url, { params }).pipe(
       tap((res) => {
-        span?.setHttpStatus(res.status);
-        span?.setData("hypixel.ratelimit.limit", res.headers["ratelimit-limit"]);
-        span?.setData("hypixel.ratelimit.remaining", res.headers["ratelimit-remaining"]);
-        span?.setData("hypixel.ratelimit.reset", res.headers["ratelimit-reset"]);
+        if (span) Sentry.setHttpStatus(span, res.status);
+        span?.setAttribute("hypixel.ratelimit.limit", res.headers["ratelimit-limit"]);
+        span?.setAttribute("hypixel.ratelimit.remaining", res.headers["ratelimit-remaining"]);
+        span?.setAttribute("hypixel.ratelimit.reset", res.headers["ratelimit-reset"]);
       }),
       map((res) => res.data),
       catchError((err) => throwError(
@@ -165,7 +166,7 @@ export class HypixelService {
             cause: err,
           })
       )),
-      finalize(() => span?.finish())
+      finalize(() => span?.end())
     );
   }
 }

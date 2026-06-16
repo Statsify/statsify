@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Axios, {
+import * as Sentry from "@sentry/node";
+import axios, {
   AxiosInstance,
   AxiosRequestHeaders,
   AxiosResponse,
@@ -329,10 +330,10 @@ export class ApiService {
         responseType,
       });
 
-      span?.setHttpStatus(response.status);
+      if (span) Sentry.setHttpStatus(span, response.status);
 
       const cacheHit = getCacheHit(response.data);
-      if (cacheHit !== undefined) span.setAttribute("cache.hit", cacheHit);
+      if (cacheHit !== undefined) span?.setAttribute("cache.hit", cacheHit);
 
       return response;
     });

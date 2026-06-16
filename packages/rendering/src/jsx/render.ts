@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import type { Canvas, CanvasRenderingContext2D } from "skia-canvas";
 import { Container } from "typedi";
 import { FontRenderer } from "#font";

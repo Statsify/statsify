@@ -52,11 +52,11 @@ function instrumentQueryExec() {
     });
 
     try {
-      return exec.apply(this, args).finally(() => span?.finish()) as ReturnType<
+      return exec.apply(this, args).finally(() => span?.end()) as ReturnType<
         typeof exec
       >;
     } catch (error) {
-      span?.finish();
+      span?.end();
       throw error;
     }
   };
@@ -69,7 +69,8 @@ function instrumentAggregateExec() {
     this: InstrumentedAggregate,
     ...args: Parameters<typeof exec>
   ): ReturnType<typeof exec> {
-    const collection = this._model?.collection?.name ?? "unknown";
+    const model = this["_model"];
+    const collection = model?.collection?.name ?? "unknown";
     const span = startSentrySpan({
       op: "mongo.query",
       description: `${collection}.aggregate`,
@@ -77,16 +78,16 @@ function instrumentAggregateExec() {
         "db.collection": collection,
         "db.operation": "aggregate",
         "db.system": "mongodb",
-        "mongoose.model": this._model?.modelName ?? "unknown",
+        "mongoose.model": model?.modelName ?? "unknown",
       },
     });
 
     try {
-      return exec.apply(this, args).finally(() => span?.finish()) as ReturnType<
+      return exec.apply(this, args).finally(() => span?.end()) as ReturnType<
         typeof exec
       >;
     } catch (error) {
-      span?.finish();
+      span?.end();
       throw error;
     }
   };

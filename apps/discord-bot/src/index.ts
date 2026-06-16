@@ -15,8 +15,7 @@ import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 import { Logger } from "@statsify/logger";
 import { VerifyCommand } from "#commands/verify.command";
 import { config } from "@statsify/util";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
 
 const directory = import.meta.dirname;
@@ -38,7 +37,7 @@ if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
     integrations: [
-      new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true }),
+      Sentry.httpIntegration({ spans: false, breadcrumbs: true }),
       nodeProfilingIntegration(),
     ],
     normalizeDepth: 3,

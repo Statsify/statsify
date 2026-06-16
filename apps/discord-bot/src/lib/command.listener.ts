@@ -66,69 +66,61 @@ export class CommandListener extends AbstractCommandListener {
     );
 
     const [name, ...subcommandParts] = commandName.split(" ");
-    const group = parentCommand.group ?? command.group ?? "unknown";
+    const group = parentCommand.group ?? "unknown";
     const subcommand = subcommandParts.join(" ") || undefined;
 
-    const transaction = Sentry.startTransaction({
+    const transaction = Sentry.startInactiveSpan({
       name: commandName,
       op: "command.total",
-      data: {
+      forceTransaction: true,
+      attributes: {
         "command.name": name,
         "command.group": group,
         "command.subcommand": subcommand,
         "guild.id": interaction.getGuildId(),
       },
-      tags: {
-        "command.name": name,
-        "command.group": group,
-        "command.subcommand": subcommand ?? "none",
-      },
-      tags: {
-        "command.name": name,
-        "command.group": group,
-        "command.subcommand": subcommand ?? "none",
-      },
     });
 
-    Sentry.configureScope((scope) => scope.setSpan(transaction));
+    return Sentry.withActiveSpan(transaction, async () => {
+      Sentry.setContext("command", {
+        command: commandName,
+        group,
+        name,
+        subcommand: subcommand ?? null,
+        options: data.options,
+        guild: interaction.getGuildId() ?? null,
+      });
 
-    Sentry.setContext("command", {
-      command: commandName,
-      group,
-      name,
-      subcommand: subcommand ?? null,
-      options: data.options,
-      guild: interaction.getGuildId() ?? null,
-    });
+      const user = await this.apiService.getUser(id);
 
-    const user = await this.apiService.getUser(id);
+      Sentry.setUser({
+        id,
+        username: `${username}#${discriminator}`,
+        locale,
+        uuid: user?.uuid ?? null,
+        tier: user?.tier ?? UserTier.NONE,
+        serverMember: user?.serverMember ?? false,
+        theme: user?.theme ?? null,
+      });
 
-    Sentry.setUser({
-      id,
-      username: `${username}#${discriminator}`,
-      locale,
-      uuid: user?.uuid ?? null,
-      tier: user?.tier ?? UserTier.NONE,
-      serverMember: user?.serverMember ?? false,
-      theme: user?.theme ?? null,
-    });
+      const context = new CommandContext(this, interaction, data);
+      context.setUser(user);
 
-    const context = new CommandContext(this, interaction, data);
-    context.setUser(user);
+      const preconditions = [
+        this.tierPrecondition.bind(this, command, user),
+        this.cooldownPrecondition.bind(this, parentCommand, user, id),
+      ];
 
-    const preconditions = [
-      this.tierPrecondition.bind(this, command, user),
-      this.cooldownPrecondition.bind(this, parentCommand, user, id),
-    ];
+      this.apiService.incrementCommand(commandName);
 
-    this.apiService.incrementCommand(commandName);
-
-    return this.executeCommand({
-      commandName,
-      command,
-      context,
-      preconditions,
-      message: this.getTipResponse(commandName, user),
+      return this.executeCommand({
+        commandName,
+        command,
+        context,
+        observabilityGroup: group,
+        preconditions,
+        message: this.getTipResponse(commandName, user),
+      });
     });
   }
 

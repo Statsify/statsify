@@ -43,21 +43,21 @@ function instrumentCanvasToBuffer() {
     try {
       result = toBuffer.apply(this, args) as ReturnType<CanvasToBuffer>;
     } catch (error) {
-      span?.finish();
+      span?.end();
       throw error;
     }
 
     if (!result || typeof (result as Promise<Buffer>).then !== "function") {
-      span?.finish();
+      span?.end();
       return result;
     }
 
     return (result as Promise<Buffer>)
       .then((buffer) => {
-        span?.setData("png.bytes", buffer.byteLength);
+        span?.setAttribute("png.bytes", buffer.byteLength);
         return buffer;
       })
-      .finally(() => span?.finish()) as ReturnType<CanvasToBuffer>;
+      .finally(() => span?.end()) as ReturnType<CanvasToBuffer>;
   };
 }
 
