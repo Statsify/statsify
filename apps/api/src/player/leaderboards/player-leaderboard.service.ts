@@ -48,7 +48,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
   protected async getAdditionalStats(
     ids: string[],
     fields: string[]
-  ): Promise<LeaderboardAdditionalStats[]> {
+  ): Promise<(LeaderboardAdditionalStats | null)[]> {
     const selector = fields.reduce((acc, key) => {
       acc[key] = true;
       return acc;
@@ -71,7 +71,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
       const player = playersById.get(id);
 
       if (!player) {
-        return { name: "Unknown" } as LeaderboardAdditionalStats;
+        return null;
       }
 
       const additionalStats = flatten(player) as LeaderboardAdditionalStats;

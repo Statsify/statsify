@@ -49,7 +49,7 @@ export class GuildLeaderboardService extends LeaderboardService {
   protected async getAdditionalStats(
     ids: string[],
     fields: string[]
-  ): Promise<LeaderboardAdditionalStats[]> {
+  ): Promise<(LeaderboardAdditionalStats | null)[]> {
     const selector = fields.reduce((acc, key) => {
       acc[key] = true;
       return acc;
@@ -72,7 +72,7 @@ export class GuildLeaderboardService extends LeaderboardService {
       const guild = guildsById.get(id);
 
       if (!guild) {
-        return { name: "Unknown" } as LeaderboardAdditionalStats;
+        return null;
       }
 
       const additionalStats = flatten(guild) as LeaderboardAdditionalStats;
