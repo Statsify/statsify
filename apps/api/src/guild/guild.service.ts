@@ -205,7 +205,10 @@ export class GuildService {
         .exec();
     }
 
-    return await this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec();
+    await Promise.all([
+      this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec(),
+      this.guildLeaderboardService.addLeaderboards(Guild, serialize(Guild, flatten(cachedGuild)), "id", true),
+    ]);
   }
 
   private async getMemberName(member: GuildMember, cachedMember?: GuildMember) {

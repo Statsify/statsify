@@ -135,16 +135,21 @@ export abstract class LeaderboardService {
       getLeaderboardField(constructor, extraDisplay, false) :
       undefined;
 
-    const additionalStats = await this.getAdditionalStats(
-      leaderboard.map(({ id }) => id),
-      [
-        ...additionalFields.filter((k) => k !== field),
-        ...(extraDisplay ? [extraDisplay] : []),
-      ]
-    );
+    const additionalStats = leaderboard.length ?
+      await this.getAdditionalStats(
+        leaderboard.map(({ id }) => id),
+        [
+          ...additionalFields.filter((k) => k !== field),
+          ...(extraDisplay ? [extraDisplay] : []),
+        ]
+      ) :
+      [];
 
-    const data = leaderboard.map((doc, index) => {
-      const stats = additionalStats[index];
+    const pairs = leaderboard
+      .map((doc, index) => ({ doc, stats: additionalStats[index] }))
+      .filter((pair): pair is { doc: typeof pair.doc; stats: LeaderboardAdditionalStats } => pair.stats !== null);
+
+    const data = pairs.map(({ doc, stats }) => {
 
       if (extraDisplay) {
         const extraDisplayValue = stats[extraDisplay] ?? extraDisplayMetadata?.default;
@@ -265,7 +270,7 @@ export abstract class LeaderboardService {
   protected abstract getAdditionalStats(
     ids: string[],
     fields: string[]
-  ): Promise<LeaderboardAdditionalStats[]>;
+  ): Promise<(LeaderboardAdditionalStats | null)[]>;
 
   private async getLeaderboardFromRedis<T>(
     constructor: Constructor<T>,
