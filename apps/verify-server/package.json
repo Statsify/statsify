@@ -7,8 +7,9 @@
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
-    "test:types": "tsc --noEmit",
-    "lint": "eslint"
+    "typecheck": "tsgo --noEmit",
+    "lint": "oxlint",
+    "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
     "@sentry/node": "^7.118.0",
@@ -16,9 +17,9 @@
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
+    "@swc/helpers": "^0.5.23",
     "@typegoose/typegoose": "^12.6.0",
-    "minecraft-protocol": "^1.61.0",
+    "minecraft-protocol": "1.61.0",
     "mongoose": "^8.5.2"
   }
 }

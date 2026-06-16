@@ -73,7 +73,9 @@ export class EmbedBuilder {
   }
 
   public fields(...fields: Field[]): this {
-    fields.forEach((field) => this.field(...field));
+    for (const field of fields) {
+      this.field(...field);
+    }
 
     return this;
   }

@@ -16,13 +16,13 @@ import {
   GameQuests,
   GenericQuestInstance,
   METADATA_KEY,
-  MetadataScanner,
   OverallQuests,
   QuestModes,
   QuestTime,
   User,
   UserPalette,
   WeeklyQuests,
+  scanMetadata,
 } from "@statsify/schemas";
 import {
   Container,
@@ -49,7 +49,7 @@ function getQuestMetadata<T>(constructor: Constructor<T>) {
 
   const metadata = entries.map(([key, data]) => [
     key,
-    Object.fromEntries(MetadataScanner.scan(data.type.type)),
+    Object.fromEntries(scanMetadata(data.type.type)),
   ]);
 
   return Object.fromEntries(metadata);
@@ -91,7 +91,7 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
 
   const entries: GameEntry[] = questEntries
     // Require more than just a total field
-    .filter(([_, q]) => Object.keys(q).length > 1)
+    .filter(([, q]) => Object.keys(q).length > 1)
     .map(([k, v]) => [k, v, Object.keys(v).length - 1] as const)
     .sort((a, b) => ratio(b[1]?.total ?? 0, b[2]) - ratio(a[1]?.total ?? 0, a[2]))
     .map(([k, v, total]) => {
