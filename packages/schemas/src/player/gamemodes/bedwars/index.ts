@@ -40,58 +40,58 @@ export const BEDWARS_MODES = new GameModes([
   {
     api: "armed",
     submodes: [
-      { api: "armed", formatted: "Overall" },
-      { api: "armedDoubles", formatted: "Doubles" },
-      { api: "armedFours", formatted: "Fours" },
+      { api: "overall" },
+      { api: "doubles" },
+      { api: "fours" },
     ],
   },
   { api: "castle", hypixel: "BEDWARS_CASTLE" },
   {
     api: "lucky",
     submodes: [
-      { api: "lucky", formatted: "Overall" },
-      { api: "luckyDoubles", formatted: "Doubles" },
-      { api: "luckyFours", formatted: "Fours" },
+      { api: "overall" },
+      { api: "doubles" },
+      { api: "fours" },
     ],
   },
   {
     api: "rush",
     submodes: [
-      { api: "rush", formatted: "Overall" },
-      { api: "rushDoubles", formatted: "Doubles" },
-      { api: "rushFours", formatted: "Fours" },
+      { api: "overall" },
+      { api: "doubles" },
+      { api: "fours" },
     ],
   },
   {
     api: "swap",
     submodes: [
-      { api: "swap", formatted: "Overall" },
-      { api: "swapDoubles", formatted: "Doubles" },
-      { api: "swapFours", formatted: "Fours" },
+      { api: "overall" },
+      { api: "doubles" },
+      { api: "fours" },
     ],
   },
   {
     api: "ultimate",
     submodes: [
-      { api: "ultimate", formatted: "Overall" },
-      { api: "ultimateDoubles", formatted: "Doubles" },
-      { api: "ultimateFours", formatted: "Fours" },
+      { api: "overall" },
+      { api: "doubles" },
+      { api: "fours" },
     ],
   },
   {
     api: "underworld",
     submodes: [
-      { api: "underworld", formatted: "Overall" },
-      { api: "underworldDoubles", formatted: "Doubles" },
-      { api: "underworldFours", formatted: "Fours" },
+      { api: "overall" },
+      { api: "doubles" },
+      { api: "fours" },
     ],
   },
   {
     api: "voidless",
     submodes: [
-      { api: "voidless", formatted: "Overall" },
-      { api: "voidlessDoubles", formatted: "Doubles" },
-      { api: "voidlessFours", formatted: "Fours" },
+      { api: "overall" },
+      { api: "doubles" },
+      { api: "fours" },
     ],
   },
   { api: "oneBlock", hypixel: "BEDWARS_EIGHT_ONE_ONEBLOCK" },
@@ -190,73 +190,31 @@ export class BedWars {
   public "4v4": BedWarsMode;
 
   @Field()
-  public armed: BedWarsMode;
+  public armed: DreamsBedWarsMode;
 
   @Field()
   public castle: BedWarsMode;
 
   @Field()
-  public lucky: BedWarsMode;
+  public lucky: DreamsBedWarsMode;
 
   @Field()
-  public rush: BedWarsMode;
+  public rush: DreamsBedWarsMode;
 
   @Field()
-  public swap: BedWarsMode;
+  public swap: DreamsBedWarsMode;
 
   @Field()
-  public ultimate: BedWarsMode;
+  public ultimate: DreamsBedWarsMode;
 
   @Field()
-  public underworld: BedWarsMode;
+  public underworld: DreamsBedWarsMode;
 
   @Field()
-  public voidless: BedWarsMode;
+  public voidless: DreamsBedWarsMode;
 
   @Field()
   public oneBlock: BedWarsMode;
-
-  @Field()
-  public armedDoubles: BedWarsMode;
-
-  @Field()
-  public armedFours: BedWarsMode;
-
-  @Field()
-  public luckyDoubles: BedWarsMode;
-
-  @Field()
-  public luckyFours: BedWarsMode;
-
-  @Field()
-  public rushDoubles: BedWarsMode;
-
-  @Field()
-  public rushFours: BedWarsMode;
-
-  @Field()
-  public swapDoubles: BedWarsMode;
-
-  @Field()
-  public swapFours: BedWarsMode;
-
-  @Field()
-  public ultimateDoubles: BedWarsMode;
-
-  @Field()
-  public ultimateFours: BedWarsMode;
-
-  @Field()
-  public underworldDoubles: BedWarsMode;
-
-  @Field()
-  public underworldFours: BedWarsMode;
-
-  @Field()
-  public voidlessDoubles: BedWarsMode;
-
-  @Field()
-  public voidlessFours: BedWarsMode;
 
   @Field()
   public challenges: BedWarsModeChallenges;
@@ -332,29 +290,14 @@ export class BedWars {
 
     this.castle = new BedWarsMode(data, "castle");
 
-    this.armed = DreamsBedWarsMode.new(data, "armed");
-    this.lucky = DreamsBedWarsMode.new(data, "lucky");
-    this.rush = DreamsBedWarsMode.new(data, "rush");
-    this.swap = DreamsBedWarsMode.new(data, "swap");
-    this.ultimate = DreamsBedWarsMode.new(data, "ultimate");
-    this.underworld = DreamsBedWarsMode.new(data, "underworld");
-    this.voidless = DreamsBedWarsMode.new(data, "voidless");
+    this.armed = new DreamsBedWarsMode(data, "armed");
+    this.lucky = new DreamsBedWarsMode(data, "lucky");
+    this.rush = new DreamsBedWarsMode(data, "rush");
+    this.swap = new DreamsBedWarsMode(data, "swap");
+    this.ultimate = new DreamsBedWarsMode(data, "ultimate");
+    this.underworld = new DreamsBedWarsMode(data, "underworld");
+    this.voidless = new DreamsBedWarsMode(data, "voidless");
     this.oneBlock = new BedWarsMode(data, "eight_one_oneblock");
-
-    this.armedDoubles = new BedWarsMode(data, "eight_two_armed");
-    this.armedFours = new BedWarsMode(data, "four_four_armed");
-    this.luckyDoubles = new BedWarsMode(data, "eight_two_lucky");
-    this.luckyFours = new BedWarsMode(data, "four_four_lucky");
-    this.rushDoubles = new BedWarsMode(data, "eight_two_rush");
-    this.rushFours = new BedWarsMode(data, "four_four_rush");
-    this.swapDoubles = new BedWarsMode(data, "eight_two_swap");
-    this.swapFours = new BedWarsMode(data, "four_four_swap");
-    this.ultimateDoubles = new BedWarsMode(data, "eight_two_ultimate");
-    this.ultimateFours = new BedWarsMode(data, "four_four_ultimate");
-    this.underworldDoubles = new BedWarsMode(data, "eight_two_underworld");
-    this.underworldFours = new BedWarsMode(data, "four_four_underworld");
-    this.voidlessDoubles = new BedWarsMode(data, "eight_two_voidless");
-    this.voidlessFours = new BedWarsMode(data, "four_four_voidless");
 
     this.core = deepSub(this.overall, this["4v4"]);
     BedWarsMode.applyRatios(this.core);

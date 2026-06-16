@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatRaceTime, formatTime } from "@statsify/util";
+import { type APIData, formatRaceTime, formatTime, formatTimeWithSeconds } from "@statsify/util";
 import {
   EasterSimulator,
   GrinchSimulator,
@@ -15,8 +15,6 @@ import {
 } from "./seasonal-mode.js";
 import { Field } from "#metadata";
 import { add, deepAdd, deepSub, ratio, sub } from "@statsify/math";
-
-const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
 
 export class BlockingDead {
   @Field()

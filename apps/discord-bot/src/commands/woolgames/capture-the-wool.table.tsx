@@ -7,12 +7,10 @@
  */
 
 import { Historical, If, Table } from "#components";
-import { formatTime } from "@statsify/util";
+import { formatTimeWithSeconds } from "@statsify/util";
 import type { CaptureTheWool } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { ProfileTime } from "#commands/base.hypixel-command";
-
-const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
 
 interface CaptureTheWoolTableProps {
   captureTheWool: CaptureTheWool;

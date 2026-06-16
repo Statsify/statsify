@@ -8,11 +8,9 @@
 
 import { type ArcadeModes, type Dropper, DropperMaps, type SubModeForMode, scanMetadata } from "@statsify/schemas";
 import { Historical, If, Table } from "#components";
-import { arrayGroup, formatRaceTime, formatTime } from "@statsify/util";
+import { arrayGroup, formatRaceTime, formatTimeWithSeconds } from "@statsify/util";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { ProfileTime } from "#commands/base.hypixel-command";
-
-const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
 
 interface DropperTableProps {
   stats: Dropper;

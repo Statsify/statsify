@@ -6,13 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
+import { type APIData, formatTimeWithSeconds } from "@statsify/util";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { TitleRequirement, getTitleAndProgression } from "./util.js";
 import { add, deepAdd, ratio } from "@statsify/math";
-
-const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
 
 export class BaseDuelsGameMode {
   @Field()

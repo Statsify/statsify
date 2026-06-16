@@ -19,10 +19,8 @@ import {
   type GameMode,
   MurderMysteryModes,
 } from "@statsify/schemas";
-import { formatTime } from "@statsify/util";
+import { formatTimeWithSeconds } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
-
-const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
 
 export interface MurderMysteryProfileProps extends BaseProfileProps {
   mode: GameMode<MurderMysteryModes>;

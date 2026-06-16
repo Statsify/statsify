@@ -6,12 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime, prettify } from "@statsify/util";
+import { type APIData, formatTimeWithSeconds, prettify } from "@statsify/util";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
-
-const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
 
 export class BaseMurderMysteryMode {
   @Field()

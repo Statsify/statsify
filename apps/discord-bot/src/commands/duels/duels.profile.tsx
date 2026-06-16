@@ -15,11 +15,9 @@ import {
 } from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
 import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
-import { formatTime, prettify } from "@statsify/util";
+import { formatTimeWithSeconds, prettify } from "@statsify/util";
 import type { BaseProfileProps, ProfileTime } from "#commands/base.hypixel-command";
 import type { DuelsModeIcons } from "./duels.command.js";
-
-const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
 
 export type DuelsProfileProps<T extends ProfileTime> = Omit<BaseProfileProps, "time"> & {
   mode: GameMode<DuelsModes>;

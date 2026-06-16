@@ -104,16 +104,24 @@ export class BedWarsMode {
   }
 }
 
-export class DreamsBedWarsMode extends BedWarsMode {
-  public static new(data: APIData, mode: string) {
-    const stats = deepAdd(
-      new BedWarsMode(data, `eight_two_${mode}`),
-      new BedWarsMode(data, `four_four_${mode}`),
-    );
+export class DreamsBedWarsMode {
+  @Field()
+  public overall: BedWarsMode;
 
-    BedWarsMode.applyRatios(stats);
-    stats.winstreak = 0;
-    return stats;
+  @Field()
+  public doubles: BedWarsMode;
+
+  @Field()
+  public fours: BedWarsMode;
+
+  public constructor(data: APIData, mode: string) {
+    this.doubles = new BedWarsMode(data, `eight_two_${mode}`);
+    this.fours = new BedWarsMode(data, `four_four_${mode}`);
+
+    this.overall = deepAdd(this.doubles, this.fours);
+
+    BedWarsMode.applyRatios(this.overall);
+    this.overall.winstreak = 0;
   }
 }
 

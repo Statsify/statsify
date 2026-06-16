@@ -34,11 +34,10 @@ export const BedWarsProfile = ({
   time,
 }: BedWarsProfileProps) => {
   const { bedwars } = player.stats;
-  const modeKey = mode.submode?.api ?? mode.api;
   const formattedMode = mode.submode?.api === mode.api || !mode.submode ?
     mode.formatted :
     `${mode.formatted} ${mode.submode.formatted}`;
-  const stats = bedwars[modeKey];
+  const stats = mode.submode ? bedwars[mode.api][mode.submode.api] : bedwars[mode.api];
 
   const sidebar: SidebarItem[] = [
     [t("stats.tokens"), t(bedwars.tokens), "§2"],

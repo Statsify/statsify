@@ -6,11 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
+import { type APIData, formatTimeWithSeconds } from "@statsify/util";
 import { Field } from "#metadata";
 import { ratio } from "@statsify/math";
-
-const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
 
 export class CaptureTheWool {
   @Field()

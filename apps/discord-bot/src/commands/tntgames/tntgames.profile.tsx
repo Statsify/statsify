@@ -8,10 +8,8 @@
 
 import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
 import { FormattedGame, type GameMode, type TNTGamesModes } from "@statsify/schemas";
-import { formatTime, prettify } from "@statsify/util";
+import { formatTime, formatTimeWithSeconds, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
-
-const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
 
 export interface TNTGamesProfileProps extends BaseProfileProps {
   mode: GameMode<TNTGamesModes>;

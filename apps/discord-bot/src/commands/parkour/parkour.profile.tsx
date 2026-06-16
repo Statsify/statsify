@@ -8,11 +8,9 @@
 
 import { Container, Footer, GameList, Header } from "#components";
 import { FormattedGame, GameId } from "@statsify/schemas";
-import { formatTime } from "@statsify/util";
+import { formatTimeWithSeconds } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { Image } from "skia-canvas";
-
-const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
 
 interface ParkourProfileProps extends BaseProfileProps {
   gameIcons: Record<GameId, Image>;
