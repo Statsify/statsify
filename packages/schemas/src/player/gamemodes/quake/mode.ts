@@ -32,8 +32,8 @@ export class QuakeMode {
   @Field()
   public shotsFired: number;
 
-  @Field({ leaderboard: { fieldName: "Blocks Travelled", name: "Blocks Travelled" } })
-  public blocksTravelled: number;
+  @Field()
+  public blocksTraveled: number;
 
   @Field({ leaderboard: { fieldName: "2017+ Kills", name: "2017+ Kills" } })
   public postUpdateKills: number;
@@ -56,7 +56,7 @@ export class QuakeMode {
     this.headshots = data[`headshots${mode}`];
     this.killstreaks = data[`killstreaks${mode}`];
     this.shotsFired = data[`shots_fired${mode}`];
-    this.blocksTravelled = data[`distance_travelled${mode}`];
+    this.blocksTraveled = data[`distance_travelled${mode}`];
     this.postUpdateKills = data[`kills_since_update_feb_2017${mode}`];
     QuakeMode.applyRatios(this);
   }
