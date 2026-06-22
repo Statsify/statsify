@@ -148,7 +148,7 @@ export const SCHEME_MAP = {
   opal_prime: createUniformScheme("§7", "§9", "§1"),
   amethyst_prime: createUniformScheme("§7", "§5", "§8"),
   mirror: createCycleScheme("§8", "§7", "§f", "§f", "§7", "§7"),
-  light: createCycleScheme("§7", "§7", "§e", "§e", "§6", "§6", "§6"),
+  light: createCycleScheme("§f", "§f", "§e", "§e", "§6", "§6", "§6"),
   dawn: createCycleScheme("§6", "§6", "§f", "§f", "§b", "§3", "§3"),
   dusk: createCycleScheme("§5", "§5", "§d", "§d", "§6", "§e", "§e"),
   air: createCycleScheme("§b", "§b", "§f", "§f", "§7", "§7", "§8", "§8"),
