@@ -42,6 +42,7 @@ if (sentryDsn) {
     dsn: sentryDsn,
     integrations: [Sentry.mongoIntegration()],
     normalizeDepth: 3,
+    enableLogs: true,
     tracesSampleRate: await config("sentry.tracesSampleRate"),
     environment: await config("environment"),
   });

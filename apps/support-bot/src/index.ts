@@ -46,6 +46,7 @@ if (sentryDsn) {
     dsn: sentryDsn,
     integrations: [Sentry.httpIntegration({ spans: false, breadcrumbs: true })],
     normalizeDepth: 3,
+    enableLogs: true,
     tracesSampleRate: await config("sentry.tracesSampleRate"),
     environment: await config("environment"),
   });

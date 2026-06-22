@@ -5,7 +5,7 @@ packages:
 
 onlyBuiltDependencies:
   - '@nestjs/core'
-  - '@sentry-internal/node-cpu-profiler'
+  - '@sentry/node-cpu-profiler'
   - '@scarf/scarf'
   - '@swc/core'
   - esbuild

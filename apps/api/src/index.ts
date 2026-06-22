@@ -46,6 +46,7 @@ if (sentryDsn) {
       nodeProfilingIntegration(),
     ],
     normalizeDepth: 3,
+    enableLogs: true,
     tracesSampleRate: sentryTracesSampleRate,
     profilesSampleRate: sentryProfilesSampleRate,
     environment: await config("environment"),
