@@ -25,7 +25,7 @@
     "scripts": "pnpm --filter scripts",
     "verify-server": "pnpm --filter verify-server"
   },
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@11.9.0",
   "devDependencies": {
     "@j4cobi/eslint-plugin-sort-imports": "^1.0.2",
     "@napi-rs/cli": "^3.7.0",

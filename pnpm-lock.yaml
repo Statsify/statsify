@@ -5429,7 +5429,7 @@ packages:
     engines: {node: '>=12'}
 
   tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d:
-    resolution: {tarball: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d}
     version: 0.0.1
 
   tinybench@2.9.0:
