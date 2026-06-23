@@ -7,66 +7,15 @@
  */
 
 import { Canvas } from "skia-canvas";
-import { startSentrySpan } from "@statsify/logger";
 
-type CanvasOptions = ConstructorParameters<typeof Canvas>[2] & { gpu?: boolean };
-type CanvasToBuffer = typeof Canvas.prototype.toBuffer;
-
-let canvasToBufferInstrumented = false;
-
-function instrumentCanvasToBuffer() {
-  if (canvasToBufferInstrumented) return;
-  canvasToBufferInstrumented = true;
-
-  const toBuffer = Canvas.prototype.toBuffer;
-
-  Canvas.prototype.toBuffer = function instrumentedToBuffer(
-    this: Canvas,
-    ...args: Parameters<CanvasToBuffer>
-  ): ReturnType<CanvasToBuffer> {
-    const format = args[0];
-    const isPng = format === undefined || format === "png";
-
-    if (!isPng) return toBuffer.apply(this, args) as ReturnType<CanvasToBuffer>;
-
-    const span = startSentrySpan({
-      op: "png.encode",
-      description: "Encode canvas as PNG",
-      data: {
-        "render.width": this.width,
-        "render.height": this.height,
-      },
-    });
-
-    let result: ReturnType<CanvasToBuffer>;
-
-    try {
-      result = toBuffer.apply(this, args) as ReturnType<CanvasToBuffer>;
-    } catch (error) {
-      span?.end();
-      throw error;
-    }
-
-    if (!result || typeof (result as Promise<Buffer>).then !== "function") {
-      span?.end();
-      return result;
-    }
-
-    return (result as Promise<Buffer>)
-      .then((buffer) => {
-        span?.setAttribute("png.bytes", buffer.byteLength);
-        return buffer;
-      })
-      .finally(() => span?.end()) as ReturnType<CanvasToBuffer>;
-  };
-}
-
-instrumentCanvasToBuffer();
+type CanvasOptions = ConstructorParameters<typeof Canvas>[2] & {
+  gpu?: boolean;
+};
 
 export function createCanvas(
   width?: number,
   height?: number,
-  options: CanvasOptions = {}
+  options: CanvasOptions = {},
 ): Canvas {
   return new Canvas(width, height, { gpu: false, ...options });
 }

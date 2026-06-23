@@ -15,7 +15,7 @@ import {
   InternalServerErrorException,
   NestInterceptor,
 } from "@nestjs/common";
-import { Observable, catchError, tap } from "rxjs";
+import { Observable, catchError, finalize } from "rxjs";
 import { URL } from "node:url";
 import type { FastifyRequest } from "fastify";
 
@@ -23,7 +23,7 @@ import type { FastifyRequest } from "fastify";
 export class SentryInterceptor implements NestInterceptor {
   public intercept(
     context: ExecutionContext,
-    next: CallHandler<any>
+    next: CallHandler<any>,
   ): Observable<any> | Promise<Observable<any>> {
     const req = context.switchToHttp().getRequest<FastifyRequest>();
 
@@ -43,32 +43,36 @@ export class SentryInterceptor implements NestInterceptor {
         op: "request",
         name: `${req.method} ${url.pathname}`,
         forceTransaction: true,
+        attributes: {
+          "http.method": req.method,
+          "http.route": url.pathname,
+        },
       });
     }
 
-    const response$ = next.handle().pipe(
-      catchError((err) => {
-        const isHttpException = err instanceof HttpException;
-        const isInternalError = err instanceof InternalServerErrorException;
+    return new Observable((subscriber) =>
+      Sentry.withActiveSpan(transaction ?? null, () =>
+        next
+          .handle()
+          .pipe(
+            catchError((err) => {
+              const isHttpException = err instanceof HttpException;
+              const isInternalError =
+                err instanceof InternalServerErrorException;
 
-        if (isHttpException && !isInternalError) {
-          transaction?.end();
-          throw err;
-        }
+              if (isHttpException && !isInternalError) {
+                throw err;
+              }
 
-        Sentry.captureException(err);
-        if (transaction) Sentry.setHttpStatus(transaction, 500);
-        transaction?.end();
+              Sentry.captureException(err);
+              if (transaction) Sentry.setHttpStatus(transaction, 500);
 
-        throw err;
-      }),
-      tap(() => transaction?.end())
+              throw err;
+            }),
+            finalize(() => transaction?.end()),
+          )
+          .subscribe(subscriber),
+      ),
     );
-
-    return transaction ?
-      new Observable((subscriber) =>
-        Sentry.withActiveSpan(transaction, () => response$.subscribe(subscriber))
-      ) :
-      response$;
   }
 }

@@ -7,4 +7,3 @@
  */
 
 export * from "./sentry.interceptor.js";
-export * from "./mongoose.js";

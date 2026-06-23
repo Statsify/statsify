@@ -11,10 +11,13 @@ import handlebars from "handlebars";
 import packageJson from "../package.json" with { type: "json" };
 import { AppModule } from "./app.module.js";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from "@nestjs/platform-fastify";
 import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
-import { SentryInterceptor, instrumentMongooseQueries } from "./sentry/index.js";
+import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
 import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
@@ -32,9 +35,9 @@ process.on("unhandledRejection", handleError);
 
 const sentryDsn = await config("sentry.apiDsn", { required: false });
 const sentryTracesSampleRate =
-  await config("sentry.tracesSampleRate", { required: false }) ?? 0;
+  (await config("sentry.tracesSampleRate", { required: false })) ?? 0;
 const sentryProfilesSampleRate =
-  await config("sentry.profilesSampleRate", { required: false }) ??
+  (await config("sentry.profilesSampleRate", { required: false })) ??
   sentryTracesSampleRate;
 
 if (sentryDsn) {
@@ -53,8 +56,6 @@ if (sentryDsn) {
   });
 }
 
-instrumentMongooseQueries();
-
 const mediaRoot = await config("api.mediaRoot");
 
 await mkdir(join(mediaRoot, "badges"), { recursive: true });
@@ -71,12 +72,16 @@ const adapter = new FastifyAdapter({ bodyLimit: 5e6 });
 adapter
   .getInstance()
   .addContentTypeParser("image/png", { parseAs: "buffer" }, (_, body, done) =>
-    done(null, body)
+    done(null, body),
   );
 
-const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
-  logger: new Logger(),
-});
+const app = await NestFactory.create<NestFastifyApplication>(
+  AppModule,
+  adapter,
+  {
+    logger: new Logger(),
+  },
+);
 
 // Validation using `class-validator` and `class-transformer`
 app.useGlobalPipes(new ValidationPipe({ transform: true }));
@@ -89,7 +94,7 @@ const redoc = new DocumentBuilder()
   .setTitle("Statsify API")
   .setVersion(packageJson.version)
   .setDescription(
-    "# Introduction\nThis is the official Statsify API documentation. [Website](https://statsify.net/) - [GitHub](https://github.com/Statsify/statsify)\n# Authentication\n\n<!-- ReDoc-Inject: <security-definitions> -->"
+    "# Introduction\nThis is the official Statsify API documentation. [Website](https://statsify.net/) - [GitHub](https://github.com/Statsify/statsify)\n# Authentication\n\n<!-- ReDoc-Inject: <security-definitions> -->",
   )
   .addSecurity("ApiKey", {
     type: "apiKey",
