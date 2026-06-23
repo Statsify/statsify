@@ -23,6 +23,8 @@ import {
 import { Player } from "@statsify/schemas";
 import { PlayerLeaderboardDto, PlayerRankingsDto } from "#dtos";
 import { PlayerLeaderboardService } from "./player-leaderboard.service.js";
+import { captureSampled } from "../../posthog.js";
+import { randomUUID } from "node:crypto";
 
 @Controller("/player/leaderboards")
 @ApiTags("Player Leaderboards")
@@ -52,6 +54,15 @@ export class PlayerLeaderboardsController {
       input = page;
       type = LeaderboardQuery.PAGE;
     }
+
+    captureSampled({
+      distinctId: randomUUID(),
+      event: "player leaderboard viewed",
+      properties: {
+        field,
+        query_type: type,
+      },
+    });
 
     return this.playerLeaderboardService.getLeaderboard(Player, field, input, type);
   }

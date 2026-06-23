@@ -34,12 +34,19 @@ export type InteractionHook = (
 
 export type CommandPrecondition = () => void;
 
+export interface CommandExecutionResult {
+  ok: boolean;
+  errorKind: "none" | "handled" | "exception";
+  durationMs: number;
+}
+
 export interface ExecuteCommandOptions {
   commandName: string;
   command: CommandResolvable;
   context: CommandContext;
   preconditions?: CommandPrecondition[];
   message?: IMessage | Message;
+  onComplete?: (result: CommandExecutionResult) => void;
 }
 
 export abstract class AbstractCommandListener {
@@ -128,8 +135,10 @@ export abstract class AbstractCommandListener {
     context,
     preconditions = [],
     message,
+    onComplete,
   }: ExecuteCommandOptions) {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+    const start = Date.now();
 
     try {
       for (const precondition of preconditions) {
@@ -138,22 +147,32 @@ export abstract class AbstractCommandListener {
 
       const response = await command.execute(context);
 
-      if (typeof response !== "object") return;
+      if (typeof response !== "object") {
+        onComplete?.({ ok: true, errorKind: "none", durationMs: Date.now() - start });
+        return;
+      }
+
       transaction?.finish();
 
       context.reply({
         ...message,
         ...response,
       });
+
+      onComplete?.({ ok: true, errorKind: "none", durationMs: Date.now() - start });
     } catch (err) {
       if (err instanceof Message) {
         transaction?.finish();
-        return context.reply(err);
+        context.reply(err);
+        onComplete?.({ ok: false, errorKind: "handled", durationMs: Date.now() - start });
+        return;
       }
 
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
       transaction?.finish();
+
+      onComplete?.({ ok: false, errorKind: "exception", durationMs: Date.now() - start });
     }
   }
 

@@ -20,6 +20,7 @@ import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
 import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
+import { posthog } from "./posthog.js";
 
 const directory = import.meta.dirname;
 
@@ -28,6 +29,14 @@ const handleError = logger.error.bind(logger);
 
 process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
+process.on("SIGTERM", async () => {
+  await posthog?.shutdown();
+  process.exit(0);
+});
+process.on("SIGINT", async () => {
+  await posthog?.shutdown();
+  process.exit(0);
+});
 
 const sentryDsn = await config("sentry.apiDsn", { required: false });
 

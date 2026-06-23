@@ -69,5 +69,11 @@ export default {
     supportBotDsn: "",
     tracesSampleRate: 1,
   },
+  posthog: {
+    apiKey: "",
+    host: "https://us.i.posthog.com",
+    enabled: false,
+    sampleRate: 0.25,
+  },
   environment: "dev",
 };

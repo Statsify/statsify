@@ -10,6 +10,7 @@ import { IMessage } from "@statsify/discord";
 import { User } from "@statsify/schemas";
 
 export interface Tip {
+  name: string;
   message: IMessage;
 
   /**
@@ -25,25 +26,30 @@ export interface Tip {
 
 export const tips: Tip[] = [
   {
+    name: "discord",
     message: { content: (t) => t("tips.discord") },
     uneligible: (user) => Boolean(user?.serverMember),
     disabled: ["help", "invite", "links"],
   },
   {
+    name: "verify",
     message: { content: (t) => t("tips.verify") },
     uneligible: (user) => Boolean(user?.uuid),
     disabled: ["verify"],
   },
-  { message: { content: (t) => t("tips.premium") } },
+  { name: "premium", message: { content: (t) => t("tips.premium") } },
   {
+    name: "rankings",
     message: { content: (t) => t("tips.rankings") },
     disabled: ["rankings", "positions"],
   },
   {
+    name: "sessions",
     message: { content: (t) => t("tips.sessions") },
     disabled: ["session", "daily", "weekly", "monthly", "yesterday", "lastday", "lastweek", "lastmonth", "reset"],
   },
   {
+    name: "invite",
     message: { content: (t) => t("tips.invite") },
     disabled: ["help", "invite", "links"],
   },

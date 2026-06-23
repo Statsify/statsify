@@ -15,6 +15,7 @@ import { createServer } from "minecraft-protocol";
 import { generateCode } from "./generate-code.js";
 import { getLogoPath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
+import { posthog } from "./posthog.js";
 import { readFileSync } from "node:fs";
 
 const logger = new Logger("verify-server");
@@ -23,6 +24,14 @@ const handleError = logger.error.bind(logger);
 
 process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
+process.on("SIGTERM", async () => {
+  await posthog?.shutdown();
+  process.exit(0);
+});
+process.on("SIGINT", async () => {
+  await posthog?.shutdown();
+  process.exit(0);
+});
 
 const codeCreatedMessage = (code: string, time: Date) => {
   // Add on the expirey time to the time provided by mongo
@@ -89,6 +98,15 @@ server.on("login", async (client) => {
 
     const code = await generateCode(verifyCodesModel);
     const verifyCode = await verifyCodesModel.create(new VerifyCode(uuid, code));
+
+    posthog?.capture({
+      distinctId: uuid,
+      event: "verification code requested",
+      properties: {
+        minecraft_username: client.username,
+        minecraft_uuid: uuid,
+      },
+    });
 
     client.end(codeCreatedMessage(verifyCode.code, verifyCode.expireAt));
     logger.verbose(`${client.username} has been assigned to the code ${verifyCode.code}`);

@@ -25,6 +25,7 @@ import {
   InteractionResponseType,
   TextInputStyle,
 } from "discord-api-types/v10";
+import { PosthogService } from "../posthog.js";
 import { STATUS_COLORS } from "@statsify/logger";
 import { config } from "@statsify/util";
 
@@ -57,7 +58,8 @@ const VERIFY_BUTTON = new ButtonBuilder()
 export class VerifyCommand {
   public constructor(
     private readonly apiService: ApiService,
-    private readonly memberService: MemberService
+    private readonly memberService: MemberService,
+    private readonly posthogService: PosthogService
   ) {}
 
   public async run(): Promise<IMessage> {
@@ -108,6 +110,23 @@ export class VerifyCommand {
         .catch(() => null);
 
       const player = await this.apiService.getPlayer(user.uuid as string);
+
+      this.posthogService.identify({
+        distinctId: userId,
+        properties: {
+          $set: { minecraft_uuid: user.uuid, minecraft_username: player.username },
+          $set_once: { verified_at: new Date().toISOString() },
+        },
+      });
+
+      this.posthogService.capture({
+        distinctId: userId,
+        event: "user verified",
+        properties: {
+          minecraft_uuid: user.uuid,
+          minecraft_username: player.username,
+        },
+      });
 
       const displayName = this.apiService.emojiDisplayName(t, player.displayName);
 

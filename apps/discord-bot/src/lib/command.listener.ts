@@ -13,16 +13,16 @@ import {
   CommandContext,
   CommandResolvable,
   ErrorMessage,
-  IMessage,
   Interaction,
 } from "@statsify/discord";
 import { Container } from "typedi";
+import { PosthogService } from "../posthog.js";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { getAssetPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
-import { tips } from "../tips.js";
+import { Tip, tips } from "../tips.js";
 import type { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 
 const isDevelopment = await config("environment") === "dev";
@@ -32,6 +32,7 @@ const port = await config("discordBot.port", { required: false });
 export class CommandListener extends AbstractCommandListener {
   private cooldowns: Map<string, Map<string, number>>;
   private readonly apiService: ApiService;
+  private readonly posthogService: PosthogService;
   private static instance: CommandListener;
 
   private constructor(
@@ -48,6 +49,7 @@ export class CommandListener extends AbstractCommandListener {
     );
 
     this.apiService = Container.get(ApiService);
+    this.posthogService = Container.get(PosthogService);
     this.cooldowns = new Map();
   }
 
@@ -90,19 +92,82 @@ export class CommandListener extends AbstractCommandListener {
     const context = new CommandContext(this, interaction, data);
     context.setUser(user);
 
+    const guildId = interaction.getGuildId() ?? null;
+
     const preconditions = [
-      this.tierPrecondition.bind(this, command, user),
-      this.cooldownPrecondition.bind(this, parentCommand, user, id),
+      () => {
+        try {
+          this.tierPrecondition(command, user);
+        } catch (err) {
+          this.posthogService.captureNoProfile({
+            distinctId: id,
+            event: "tier gate hit",
+            properties: {
+              command: commandName,
+              required_tier: command.tier,
+              user_tier: user?.tier ?? UserTier.NONE,
+              guild_id: guildId,
+            },
+          });
+          throw err;
+        }
+      },
+      () => {
+        try {
+          this.cooldownPrecondition(parentCommand, user, id);
+        } catch (err) {
+          this.posthogService.captureNoProfile({
+            distinctId: id,
+            event: "cooldown hit",
+            properties: {
+              command: commandName,
+              guild_id: guildId,
+            },
+          });
+          throw err;
+        }
+      },
     ];
 
     this.apiService.incrementCommand(commandName);
+
+    const tip = this.getTipResponse(commandName, user);
+
+    if (tip) {
+      this.posthogService.captureNoProfile({
+        distinctId: id,
+        event: "tip shown",
+        properties: {
+          tip: tip.name,
+          command: commandName,
+          guild_id: guildId,
+        },
+      });
+    }
 
     return this.executeCommand({
       commandName,
       command,
       context,
       preconditions,
-      message: this.getTipResponse(commandName, user),
+      message: tip?.message,
+      onComplete: (result) => {
+        this.posthogService.captureNoProfile({
+          distinctId: id,
+          event: "command executed",
+          properties: {
+            command: commandName,
+            locale,
+            tier: user?.tier ?? UserTier.NONE,
+            serverMember: user?.serverMember ?? false,
+            verified: !!user?.uuid,
+            guild_id: guildId,
+            ok: result.ok,
+            error_kind: result.errorKind,
+            duration_ms: result.durationMs,
+          },
+        });
+      },
     });
   }
 
@@ -158,7 +223,7 @@ export class CommandListener extends AbstractCommandListener {
     );
   }
 
-  private getTipResponse(commandName: string, user: User | null): IMessage | undefined {
+  private getTipResponse(commandName: string, user: User | null): Tip | undefined {
     const TIP_CHANCE = 0.2;
 
     if (User.isIron(user) || Math.random() > TIP_CHANCE) return undefined;
@@ -169,8 +234,7 @@ export class CommandListener extends AbstractCommandListener {
 
     if (useableTips.length === 0) return undefined;
 
-    const tip = useableTips[Math.floor(Math.random() * useableTips.length)];
-    return tip.message;
+    return useableTips[Math.floor(Math.random() * useableTips.length)];
   }
 
   public static create(

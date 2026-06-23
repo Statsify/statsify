@@ -15,6 +15,7 @@ import {
   IMessage,
   MemberService,
 } from "@statsify/discord";
+import { PosthogService } from "../posthog.js";
 import { STATUS_COLORS } from "@statsify/logger";
 import { config } from "@statsify/util";
 
@@ -25,7 +26,8 @@ const SUPPORT_BOT_MEMBER_ROLE_ID = await config("supportBot.memberRole");
 export class UnverifyCommand {
   public constructor(
     private readonly apiService: ApiService,
-    private readonly memberService: MemberService
+    private readonly memberService: MemberService,
+    private readonly posthogService: PosthogService
   ) {}
 
   public async run(context: CommandContext): Promise<IMessage> {
@@ -35,6 +37,14 @@ export class UnverifyCommand {
     if (!user?.uuid) throw new ErrorMessage("verification.notVerified");
 
     await this.apiService.unverifyUser(userId);
+
+    this.posthogService.capture({
+      distinctId: userId,
+      event: "user unverified",
+      properties: {
+        minecraft_uuid: user.uuid,
+      },
+    });
 
     await this.memberService
       .removeRole(SUPPORT_BOT_GUILD_ID, userId, SUPPORT_BOT_MEMBER_ROLE_ID)
