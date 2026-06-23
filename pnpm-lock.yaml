@@ -70,7 +70,7 @@ importers:
         version: 11.1.1
       '@m8a/nestjs-typegoose':
         specifier: ^12.0.0
-        version: 12.0.1(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@12.19.0(mongoose@8.18.0(socks@2.8.7)))(mongoose@8.18.0(socks@2.8.7))
+        version: 12.0.1(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@13.3.0(mongoose@8.18.0(socks@2.8.7)))(mongoose@8.18.0(socks@2.8.7))
       '@nestjs/axios':
         specifier: ^4.0.1
         version: 4.0.1(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(axios@1.11.0)(rxjs@7.8.2)
@@ -114,8 +114,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
       '@typegoose/typegoose':
-        specifier: ^12.6.0
-        version: 12.19.0(mongoose@8.18.0(socks@2.8.7))
+        specifier: ^13.3.0
+        version: 13.3.0(mongoose@8.18.0(socks@2.8.7))
       class-transformer:
         specifier: 0.5.1
         version: 0.5.1
@@ -190,8 +190,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
       '@typegoose/typegoose':
-        specifier: ^12.6.0
-        version: 12.19.0(mongoose@8.18.0(socks@2.8.7))
+        specifier: ^13.3.0
+        version: 13.3.0(mongoose@8.18.0(socks@2.8.7))
       axios:
         specifier: 1.11.0
         version: 1.11.0
@@ -376,8 +376,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
       '@typegoose/typegoose':
-        specifier: ^12.6.0
-        version: 12.19.0(mongoose@8.18.0(socks@2.8.7))
+        specifier: ^13.3.0
+        version: 13.3.0(mongoose@8.18.0(socks@2.8.7))
       axios:
         specifier: 1.11.0
         version: 1.11.0
@@ -431,8 +431,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
       '@typegoose/typegoose':
-        specifier: ^12.6.0
-        version: 12.19.0(mongoose@8.18.0(socks@2.8.7))
+        specifier: ^13.3.0
+        version: 13.3.0(mongoose@8.18.0(socks@2.8.7))
       minecraft-protocol:
         specifier: 1.61.0
         version: 1.61.0
@@ -613,8 +613,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
       '@typegoose/typegoose':
-        specifier: ^12.6.0
-        version: 12.19.0(mongoose@8.18.0(socks@2.8.7))
+        specifier: ^13.3.0
+        version: 13.3.0(mongoose@8.18.0(socks@2.8.7))
       class-validator:
         specifier: ^0.14.1
         version: 0.14.2
@@ -2936,11 +2936,11 @@ packages:
   '@tybys/wasm-util@0.10.2':
     resolution: {integrity: sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==}
 
-  '@typegoose/typegoose@12.19.0':
-    resolution: {integrity: sha512-rsHMd3M6Rj6YYw6ecZU6YtXjiBzCqO3zJtgrrVCau1bEp6na8sbMcqRy8kNbTRyA2QCBAGEvM7nXTM8hdxeEiQ==}
-    engines: {node: '>=16.20.1'}
+  '@typegoose/typegoose@13.3.0':
+    resolution: {integrity: sha512-q0QWIV7sn4SqE1Fm/Ed8DWBKWh/nFUq5VywFT/Q/mkmcfJ2IL8HghMBzwhz9JdBiFUBRcZfjNgwgpXR/V3Shng==}
+    engines: {node: '>=20.19.0'}
     peerDependencies:
-      mongoose: ~8.18.0
+      mongoose: ~9.6.0
 
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
@@ -5200,11 +5200,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  semver@7.7.3:
-    resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.8.1:
     resolution: {integrity: sha512-rkVq3IXh+4FDGch+KwzX3aV9W3kO54GyEgpvBzSyctDA6Xtd7RJQV1xmXbeQp5v7+VzLOfVqiutSE6GICgPFvg==}
     engines: {node: '>=10'}
@@ -6418,11 +6413,11 @@ snapshots:
 
   '@lukeed/ms@2.0.2': {}
 
-  '@m8a/nestjs-typegoose@12.0.1(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@12.19.0(mongoose@8.18.0(socks@2.8.7)))(mongoose@8.18.0(socks@2.8.7))':
+  '@m8a/nestjs-typegoose@12.0.1(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@13.3.0(mongoose@8.18.0(socks@2.8.7)))(mongoose@8.18.0(socks@2.8.7))':
     dependencies:
       '@nestjs/common': 11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.6(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@typegoose/typegoose': 12.19.0(mongoose@8.18.0(socks@2.8.7))
+      '@typegoose/typegoose': 13.3.0(mongoose@8.18.0(socks@2.8.7))
       is-class: 0.0.9
       mongoose: 8.18.0(socks@2.8.7)
 
@@ -7661,13 +7656,13 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@typegoose/typegoose@12.19.0(mongoose@8.18.0(socks@2.8.7))':
+  '@typegoose/typegoose@13.3.0(mongoose@8.18.0(socks@2.8.7))':
     dependencies:
       lodash: 4.17.21
       loglevel: 1.9.2
       mongoose: 8.18.0(socks@2.8.7)
       reflect-metadata: 0.2.2
-      semver: 7.7.2
+      semver: 7.8.1
       tslib: 2.8.1
 
   '@types/chai@5.2.3':
@@ -7766,7 +7761,7 @@ snapshots:
       fast-glob: 3.3.3
       is-glob: 4.0.3
       minimatch: 9.0.5
-      semver: 7.7.2
+      semver: 7.8.1
       ts-api-utils: 2.1.0(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -10019,9 +10014,6 @@ snapshots:
 
   semver@7.7.2: {}
 
-  semver@7.7.3:
-    optional: true
-
   semver@7.8.1: {}
 
   set-cookie-parser@2.7.1: {}
@@ -10032,7 +10024,7 @@ snapshots:
     dependencies:
       '@img/colour': 1.0.0
       detect-libc: 2.1.2
-      semver: 7.7.3
+      semver: 7.8.1
     optionalDependencies:
       '@img/sharp-darwin-arm64': 0.34.5
       '@img/sharp-darwin-x64': 0.34.5
