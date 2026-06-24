@@ -45,6 +45,7 @@
     "delete-player": "Delete a player from Statsify",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
+    "fishing": "$t(commands.hypixel-command, { \"name\": \"Fishing\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
     "game-counts": "View Hypixel current game counts",
