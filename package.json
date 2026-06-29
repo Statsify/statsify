@@ -39,7 +39,7 @@
     "eslint-plugin-license-header": "^0.9.0",
     "oxfmt": "^0.53.0",
     "oxlint": "^1.68.0",
-    "pm2": "^6.0.8",
+    "pm2": "^7.0.3",
     "turbo": "^2.9.16",
     "typescript": "^6.0.3",
     "unplugin": "^3.0.0",
