@@ -427,6 +427,10 @@
       "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
       "title": "Invalid Position"
     },
+    "leaderboardInvalidValue": {
+      "description": "The leaderboard value you entered is invalid. Enter a positive number. Suffixes like k, m, b, and t are supported.",
+      "title": "Invalid Value"
+    },
     "leaderboardNotFound": {
       "description": "We can't find the `leaderboard` you are looking for!",
       "title": "Leaderboard Not Found"
@@ -525,6 +529,7 @@
   },
   "leaderboard": {
     "guildInput": {
+      "button": "Guild Name",
       "label": "Search by a Guild",
       "placeholder": "Enter a guild's name, eg: Quote"
     },
@@ -532,12 +537,19 @@
       "title": "Leaderboard Search"
     },
     "playerInput": {
+      "button": "Username",
       "label": "Search by a Player",
       "placeholder": "Enter a player's name, eg: j4cobi"
     },
     "positionInput": {
+      "button": "Position",
       "label": "Search by a Position",
       "placeholder": "Enter a position, eg: 5000"
+    },
+    "valueInput": {
+      "button": "Value",
+      "label": "Search by a Value",
+      "placeholder": "Enter a value, eg: 5k, 15m, 50b"
     }
   },
   "minecraft": {
