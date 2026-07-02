@@ -12,7 +12,7 @@
     "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
-    "@sentry/node": "^7.118.0",
+    "@sentry/node": "^10.63.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/discord": "workspace:^",
