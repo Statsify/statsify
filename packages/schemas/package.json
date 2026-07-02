@@ -11,17 +11,17 @@
     "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
-    "@nestjs/swagger": "^11.2.0",
+    "@nestjs/swagger": "^11.4.5",
     "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
-    "@typegoose/typegoose": "^12.6.0",
-    "class-validator": "^0.14.1",
-    "luxon": "^3.5.0"
+    "@typegoose/typegoose": "^12.21.1",
+    "class-validator": "^0.15.1",
+    "luxon": "^3.7.2"
   },
   "devDependencies": {
-    "@types/luxon": "^3.4.2"
+    "@types/luxon": "^3.7.2"
   },
   "imports": {
     "#metadata": {

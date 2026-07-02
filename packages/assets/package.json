@@ -14,7 +14,7 @@
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@swc/helpers": "^0.5.23",
-    "axios": "1.11.0",
+    "axios": "1.18.1",
     "skia-canvas": "3.0.8"
   }
 }
