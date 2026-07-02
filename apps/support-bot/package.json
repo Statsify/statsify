@@ -12,7 +12,7 @@
     "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
-    "@sentry/node": "^7.118.0",
+    "@sentry/node": "^7.120.4",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/discord": "workspace:^",
@@ -21,19 +21,19 @@
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
-    "@typegoose/typegoose": "^12.6.0",
-    "axios": "1.11.0",
-    "discord-api-types": "^0.38.22",
-    "luxon": "^3.5.0",
-    "mongoose": "^8.5.2",
+    "@typegoose/typegoose": "^12.21.1",
+    "axios": "1.18.1",
+    "discord-api-types": "^0.38.49",
+    "luxon": "^3.7.2",
+    "mongoose": "^8.24.1",
     "reflect-metadata": "^0.2.2",
     "skia-canvas": "3.0.8",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
-    "toad-scheduler": "^3.0.1",
+    "toad-scheduler": "^3.1.0",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@types/luxon": "^3.4.2"
+    "@types/luxon": "^3.7.2"
   },
   "imports": {
     "#services": {
