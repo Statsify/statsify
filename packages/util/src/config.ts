@@ -228,6 +228,11 @@ export interface Config {
      * The percentage of transactions to send to Sentry
      */
     tracesSampleRate?: number;
+
+    /**
+     * The percentage of sampled transactions to profile with Sentry
+     */
+    profilesSampleRate?: number;
   };
 
   /**

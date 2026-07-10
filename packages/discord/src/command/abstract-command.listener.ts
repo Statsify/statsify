@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import {
   type APIUser,
   ApplicationCommandOptionType,
@@ -17,7 +16,12 @@ import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
 import { type IMessage, Message } from "#messages";
 import { Interaction, type InteractionAttachment } from "#interaction";
-import { Logger } from "@statsify/logger";
+import {
+  Logger,
+  getSentryTransaction,
+  setSentryMemoryUsage,
+  startSentrySpan,
+} from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
@@ -38,6 +42,7 @@ export interface ExecuteCommandOptions {
   commandName: string;
   command: CommandResolvable;
   context: CommandContext;
+  observabilityGroup?: string;
   preconditions?: CommandPrecondition[];
   message?: IMessage | Message;
 }
@@ -126,10 +131,22 @@ export abstract class AbstractCommandListener {
     commandName,
     command,
     context,
+    observabilityGroup,
     preconditions = [],
     message,
   }: ExecuteCommandOptions) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+    const transaction = getSentryTransaction();
+    const commandSpan = startSentrySpan({
+      op: "discord.command.execute",
+      description: commandName,
+      data: {
+        "command.name": command.name,
+        "command.group": observabilityGroup ?? command.group ?? "unknown",
+        "command.full_name": commandName,
+        "guild.id": context.getInteraction().getGuildId(),
+        "user.tier": context.getUser()?.tier ?? UserTier.NONE,
+      },
+    });
 
     try {
       for (const precondition of preconditions) {
@@ -137,23 +154,37 @@ export abstract class AbstractCommandListener {
       }
 
       const response = await command.execute(context);
+      commandSpan?.end();
 
-      if (typeof response !== "object") return;
-      transaction?.finish();
+      if (typeof response !== "object") {
+        setSentryMemoryUsage(transaction);
+        transaction?.end();
+        return;
+      }
 
-      context.reply({
+      await context.reply({
         ...message,
         ...response,
       });
+
+      setSentryMemoryUsage(transaction);
+      transaction?.end();
     } catch (err) {
       if (err instanceof Message) {
-        transaction?.finish();
-        return context.reply(err);
+        try {
+          await context.reply(err);
+        } finally {
+          setSentryMemoryUsage(transaction);
+          transaction?.end();
+        }
+
+        return;
       }
 
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
-      transaction?.finish();
+      setSentryMemoryUsage(transaction);
+      transaction?.end();
     }
   }
 

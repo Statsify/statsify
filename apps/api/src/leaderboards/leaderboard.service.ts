@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import { Constructor, Flatten } from "@statsify/util";
 import { DateTime } from "luxon";
 import { InjectRedis } from "#redis";
@@ -14,6 +13,7 @@ import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { type LeaderboardEnabledMetadata, getLeaderboardField, getLeaderboardFields } from "@statsify/schemas";
 import { LeaderboardQuery } from "@statsify/api-client";
 import { Redis } from "ioredis";
+import { withSentrySpan } from "@statsify/logger";
 
 const DAYS_IN_WEEK = {
   monday: 0,
@@ -38,13 +38,6 @@ export abstract class LeaderboardService {
     remove = false
   ) {
     const fields = getLeaderboardFields(constructor);
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "redis",
-      description: `add ${constructor.name} leaderboards`,
-    });
-
     const pipeline = this.redis.pipeline();
     const name = constructor.name.toLowerCase();
 
@@ -67,9 +60,13 @@ export abstract class LeaderboardService {
       }
     }
 
-    await pipeline.exec();
-
-    child?.finish();
+    await withSentrySpan({
+      op: "redis.write",
+      description: `add ${constructor.name} leaderboards`,
+      data: {
+        "leaderboard.type": name,
+      },
+    }, () => pipeline.exec());
   }
 
   public async getLeaderboard<T>(
@@ -124,7 +121,8 @@ export abstract class LeaderboardService {
       field,
       top,
       bottom - 1,
-      sort
+      sort,
+      type
     );
 
     const additionalFieldMetadata = additionalFields.map((k) =>
@@ -194,13 +192,6 @@ export abstract class LeaderboardService {
     fields: string[],
     id: string
   ) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "redis",
-      description: `get ${constructor.name} rankings`,
-    });
-
     const pipeline = this.redis.pipeline();
     const constructorName = constructor.name.toLowerCase();
 
@@ -221,9 +212,14 @@ export abstract class LeaderboardService {
       }
     }
 
-    const responses = await pipeline.exec();
-
-    child?.finish();
+    const responses = await withSentrySpan({
+      op: "redis.get",
+      description: `get ${constructor.name} rankings`,
+      data: {
+        "leaderboard.fields": fields,
+        "leaderboard.type": constructorName,
+      },
+    }, () => pipeline.exec());
 
     if (!responses) throw new InternalServerErrorException();
 
@@ -272,23 +268,27 @@ export abstract class LeaderboardService {
     field: string,
     top: number,
     bottom: number,
-    sort = "DESC"
+    sort = "DESC",
+    queryType?: LeaderboardQuery
   ) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "redis",
-      description: `get ${constructor.name} leaderboards`,
-    });
-
     const name = constructor.name.toLowerCase();
-    field = `${name}.${field}`;
+    const leaderboardField = field;
+    field = `${name}.${leaderboardField}`;
 
-    const scores = await (sort === "ASC" ?
-      this.redis.zrange(field, top, bottom, "WITHSCORES") :
-      this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
-
-    child?.finish();
+    const scores = await withSentrySpan({
+      op: "redis.get",
+      description: `get ${constructor.name} leaderboards`,
+      data: {
+        "leaderboard.field": leaderboardField,
+        "leaderboard.query_type": queryType,
+        "leaderboard.sort": sort,
+        "leaderboard.type": name,
+      },
+    }, () =>
+      sort === "ASC" ?
+        this.redis.zrange(field, top, bottom, "WITHSCORES") :
+        this.redis.zrevrange(field, top, bottom, "WITHSCORES")
+    );
 
     const response: { id: string; score: number; index: number }[] = [];
 

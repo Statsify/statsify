@@ -57,7 +57,7 @@ import { render } from "@statsify/rendering";
 
 const args = [PlayerArgument];
 
-@Command({ description: (t) => t("commands.ratios") })
+@Command({ description: (t) => t("commands.ratios"), group: "hypixel" })
 export class RatiosCommand {
   public constructor(private readonly apiService: ApiService) {}
 

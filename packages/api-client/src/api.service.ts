@@ -7,7 +7,13 @@
  */
 
 import * as Sentry from "@sentry/node";
-import axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
+import axios, {
+  AxiosInstance,
+  AxiosRequestHeaders,
+  AxiosResponse,
+  Method,
+  ResponseType,
+} from "axios";
 import {
   CacheLevel,
   GuildQuery,
@@ -34,11 +40,29 @@ import {
 import { User, UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { loadImage } from "@statsify/rendering";
+import { withSentrySpan } from "@statsify/logger";
 
 interface ExtraData {
   headers?: AxiosRequestHeaders;
   body?: Record<string, any> | Buffer | string;
   responseType?: ResponseType;
+}
+
+function getCacheHit(data: unknown): boolean | undefined {
+  if (!data || typeof data !== "object") return undefined;
+
+  if ("cached" in data && typeof data.cached === "boolean") {
+    return data.cached;
+  }
+
+  for (const value of Object.values(data)) {
+    if (value && typeof value === "object" && "cached" in value) {
+      const cached = (value as { cached?: unknown }).cached;
+      if (typeof cached === "boolean") return cached;
+    }
+  }
+
+  return undefined;
 }
 
 // TODO: Move dtos in api to @statsify/api-client
@@ -288,24 +312,31 @@ export class ApiService {
     method: Method = "GET",
     { body, headers, responseType }: ExtraData = {}
   ): Promise<T> {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "http.client",
+    const res = await withSentrySpan({
+      op: "statsify.fetch",
       description: `${method} ${url}`,
-    });
+      data: {
+        "cache.level": typeof params?.cache === "string" ? params.cache : undefined,
+        "http.method": method,
+        "http.route": url,
+      },
+    }, async (span) => {
+      const response: AxiosResponse<any> = await this.axios.request({
+        url,
+        method,
+        params,
+        headers,
+        data: body,
+        responseType,
+      });
 
-    const res = await this.axios.request({
-      url,
-      method,
-      params,
-      headers,
-      data: body,
-      responseType,
-    });
+      if (span) Sentry.setHttpStatus(span, response.status);
 
-    child?.setHttpStatus(res.status);
-    child?.finish();
+      const cacheHit = getCacheHit(response.data);
+      if (cacheHit !== undefined) span?.setAttribute("cache.hit", cacheHit);
+
+      return response;
+    });
 
     const data = res.data;
 

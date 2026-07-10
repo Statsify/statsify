@@ -33,6 +33,7 @@ export class CommandResolvable {
 
   public args: AbstractArgument[];
   public cooldown: number;
+  public group?: string;
   public tier: UserTier;
   public preview?: string;
 
@@ -49,6 +50,7 @@ export class CommandResolvable {
       methodName,
       tier = UserTier.NONE,
       preview,
+      group,
       cooldown = 10,
     }: CommandMetadata,
     target: any
@@ -72,6 +74,7 @@ export class CommandResolvable {
 
     this.type = ApplicationCommandType.ChatInput;
     this.cooldown = cooldown;
+    this.group = group;
 
     const argsResolved = (args ?? [])?.map((a) =>
       a instanceof AbstractArgument ? a : new a()

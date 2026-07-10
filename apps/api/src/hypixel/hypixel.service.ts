@@ -18,8 +18,8 @@ import {
 } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { Logger } from "@statsify/logger";
-import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
+import { Logger, startSentrySpan } from "@statsify/logger";
+import { Observable, catchError, finalize, lastValueFrom, map, of, tap, throwError } from "rxjs";
 import type { APIData } from "@statsify/util";
 
 @Injectable()
@@ -142,27 +142,31 @@ export class HypixelService {
   }
 
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "http.client",
+    const span = startSentrySpan({
+      op: "hypixel.fetch",
       description: `GET ${this.httpService.axiosRef.getUri({ url })}`,
+      data: {
+        "hypixel.endpoint": url,
+        "http.method": "GET",
+        "http.route": url,
+      },
     });
 
     return this.httpService.get(url, { params }).pipe(
       tap((res) => {
-        child?.setHttpStatus(res.status);
-        child?.finish();
+        if (span) Sentry.setHttpStatus(span, res.status);
+        span?.setAttribute("hypixel.ratelimit.limit", res.headers["ratelimit-limit"]);
+        span?.setAttribute("hypixel.ratelimit.remaining", res.headers["ratelimit-remaining"]);
+        span?.setAttribute("hypixel.ratelimit.reset", res.headers["ratelimit-reset"]);
       }),
       map((res) => res.data),
-      catchError((err) =>
-        throwError(
-          () =>
-            new Error(`Fetching ${url} failed with reason: ${err.message}`, {
-              cause: err,
-            })
-        )
-      )
+      catchError((err) => throwError(
+        () =>
+          new Error(`Fetching ${url} failed with reason: ${err.message}`, {
+            cause: err,
+          })
+      )),
+      finalize(() => span?.end())
     );
   }
 }

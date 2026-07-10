@@ -14,6 +14,7 @@ import {
 } from "discord-api-types/v10";
 import { type IMessage, Message, getLocalizeFunction } from "#messages";
 import { parseDiscordResponse } from "#util/parse-discord-error";
+import { withSentrySpan } from "@statsify/logger";
 import type {
   InteractionServer,
   RestClient,
@@ -154,7 +155,31 @@ export class Interaction {
   }
 
   private async request(options: RestClient.RequestOptions) {
-    const response = await this.rest.request(options);
-    return parseDiscordResponse(response);
+    const route = this.getRouteName(options.path);
+
+    return withSentrySpan({
+      op: "discord.reply",
+      description: `${options.method.toUpperCase()} ${route}`,
+      data: {
+        "http.method": options.method.toUpperCase(),
+        "http.route": route,
+      },
+    }, async () => {
+      const response = await this.rest.request(options);
+      return parseDiscordResponse(response);
+    });
+  }
+
+  private getRouteName(path: string) {
+    return path
+      .replace(
+        /^\/interactions\/[^/]+\/[^/]+\/callback$/,
+        "/interactions/:interactionId/:interactionToken/callback"
+      )
+      .replace(
+        /^\/webhooks\/[^/]+\/[^/]+/,
+        "/webhooks/:applicationId/:interactionToken"
+      )
+      .replace(/\/messages\/[^/]+$/, "/messages/:messageId");
   }
 }

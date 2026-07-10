@@ -68,6 +68,7 @@ export default {
     verifyServerDsn: "",
     supportBotDsn: "",
     tracesSampleRate: 1,
+    profilesSampleRate: 1,
   },
   environment: "dev",
 };

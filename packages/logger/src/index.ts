@@ -14,6 +14,24 @@ import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/comm
 
 const DEFAULT_LOG_LEVELS: LogLevel[] = ["log", "error", "warn", "debug", "verbose", "fatal"];
 
+type SentryTagValue = boolean | number | string | null | undefined;
+
+type SentryLogLevel = Extract<LogLevel, "error" | "fatal" | "warn">;
+type SentrySpanAttributeValue =
+  | boolean
+  | number
+  | string
+  | Array<boolean | null | undefined>
+  | Array<number | null | undefined>
+  | Array<string | null | undefined>;
+
+export interface SentrySpanOptions {
+  op: string;
+  description?: string;
+  data?: Record<string, unknown>;
+  tags?: Record<string, SentryTagValue>;
+}
+
 export const STATUS_COLORS = {
   debug: 0xC700E7,
   warn: 0xFAB627,
@@ -33,6 +51,99 @@ const ColorByLogLevel: Record<LogLevel, number> = {
 };
 
 const isProduction = await config("environment") === "prod";
+
+export function getSentryTransaction() {
+  const activeSpan = Sentry.getActiveSpan();
+  return activeSpan ? Sentry.getRootSpan(activeSpan) : undefined;
+}
+
+function getSentrySpanAttribute(value: unknown): SentrySpanAttributeValue | undefined {
+  if (value === null || value === undefined) return undefined;
+  if (typeof value === "boolean" || typeof value === "number" || typeof value === "string")
+    return value;
+
+  if (Array.isArray(value)) {
+    return value.map((entry) => entry === null || entry === undefined ? entry : String(entry));
+  }
+
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return String(value);
+  }
+}
+
+function getSentrySpanAttributes({ data, tags }: SentrySpanOptions) {
+  const attributes: Record<string, SentrySpanAttributeValue | undefined> = {};
+
+  for (const [key, value] of Object.entries(data ?? {})) {
+    attributes[key] = getSentrySpanAttribute(value);
+  }
+
+  for (const [key, value] of Object.entries(tags ?? {})) {
+    attributes[key] = getSentrySpanAttribute(value);
+  }
+
+  return attributes;
+}
+
+function getSentrySpanOptions(options: SentrySpanOptions) {
+  return {
+    name: options.description ?? options.op,
+    op: options.op,
+    attributes: getSentrySpanAttributes(options),
+  };
+}
+
+export function startSentrySpan(options: SentrySpanOptions) {
+  const parentSpan = getSentryTransaction();
+
+  if (!parentSpan) return undefined;
+
+  return Sentry.startInactiveSpan({
+    ...getSentrySpanOptions(options),
+    parentSpan,
+  });
+}
+
+export async function withSentrySpan<T>(
+  options: SentrySpanOptions,
+  callback: (span?: Sentry.Span) => Promise<T>
+): Promise<T> {
+  if (!getSentryTransaction()) return callback(undefined);
+
+  return Sentry.startSpan(getSentrySpanOptions(options), callback);
+}
+
+export function withSentrySpanSync<T>(
+  options: SentrySpanOptions,
+  callback: (span?: Sentry.Span) => T
+): T {
+  if (!getSentryTransaction()) return callback(undefined);
+
+  return Sentry.startSpan(getSentrySpanOptions(options), callback);
+}
+
+export function setSentryMemoryUsage(span = getSentryTransaction()) {
+  if (!span) return;
+
+  const { rss, heapUsed } = process.memoryUsage();
+
+  span.setAttribute("memory.rss.bytes", rss);
+  span.setAttribute("memory.heap_used.bytes", heapUsed);
+}
+
+function stringifyMessage(message: unknown) {
+  if (message instanceof Error) return message.message;
+  if (typeof message === "string") return message;
+  if (typeof message !== "object" || message === null) return String(message);
+
+  try {
+    return JSON.stringify(message);
+  } catch {
+    return String(message);
+  }
+}
 
 /**
  * A logger implementing the NestJS LoggerService interface. However can be used anywhere.
@@ -81,8 +192,7 @@ export class Logger implements LoggerService {
     let normalizedMessage = message;
 
     if (message instanceof Error) {
-      const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-      transaction?.setStatus("internal_error");
+      getSentryTransaction()?.setStatus({ code: 2, message: "internal_error" });
 
       Sentry.captureException(message);
       normalizedMessage = message.stack;
@@ -93,6 +203,9 @@ export class Logger implements LoggerService {
       ...optionalParameters,
     ]);
 
+    const sentryLog = this.getContextAndMessages([message, ...optionalParameters]);
+
+    Logger.captureSentryLog(sentryLog.messages, sentryLog.context, "error");
     Logger.printMessage(messages, context, "error", "stderr", "📉");
   }
 
@@ -108,6 +221,7 @@ export class Logger implements LoggerService {
       ...optionalParameters,
     ]);
 
+    Logger.captureSentryLog(messages, context, "warn");
     Logger.printMessage(messages, context, "warn");
   }
 
@@ -151,8 +265,7 @@ export class Logger implements LoggerService {
     let normalizedMessage = message;
 
     if (message instanceof Error) {
-      const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-      transaction?.setStatus("internal_error");
+      getSentryTransaction()?.setStatus({ code: 2, message: "internal_error" });
 
       Sentry.captureException(message);
       normalizedMessage = message.stack;
@@ -163,6 +276,9 @@ export class Logger implements LoggerService {
       ...optionalParameters,
     ]);
 
+    const sentryLog = this.getContextAndMessages([message, ...optionalParameters]);
+
+    Logger.captureSentryLog(sentryLog.messages, sentryLog.context, "fatal");
     Logger.printMessage(messages, context, "fatal", "stderr", "📉");
   }
 
@@ -234,6 +350,27 @@ export class Logger implements LoggerService {
       )} ${chalk.gray(`${timeStamp}${isProduction ? "" : "ms"}`)} ${output}\n`;
 
       process[writeStreamType].write(computedMessage);
+    }
+  }
+
+  private static captureSentryLog(
+    messages: unknown[],
+    context: string | undefined,
+    logLevel: SentryLogLevel
+  ) {
+    if (!isProduction) return;
+
+    for (const message of messages) {
+      Sentry.logger[logLevel](stringifyMessage(message), {
+        "logger.context": context ?? "Default",
+        "logger.level": logLevel,
+        ...(message instanceof Error ?
+          {
+            "error.name": message.name,
+            "error.message": message.message,
+          } :
+          {}),
+      });
     }
   }
 }

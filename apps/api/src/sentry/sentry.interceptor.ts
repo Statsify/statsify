@@ -15,7 +15,7 @@ import {
   InternalServerErrorException,
   NestInterceptor,
 } from "@nestjs/common";
-import { Observable, catchError, tap } from "rxjs";
+import { Observable, catchError, finalize } from "rxjs";
 import { URL } from "node:url";
 import type { FastifyRequest } from "fastify";
 
@@ -23,7 +23,7 @@ import type { FastifyRequest } from "fastify";
 export class SentryInterceptor implements NestInterceptor {
   public intercept(
     context: ExecutionContext,
-    next: CallHandler<any>
+    next: CallHandler<any>,
   ): Observable<any> | Promise<Observable<any>> {
     const req = context.switchToHttp().getRequest<FastifyRequest>();
 
@@ -36,34 +36,43 @@ export class SentryInterceptor implements NestInterceptor {
       headers: req.headers,
     });
 
-    let transaction: ReturnType<Sentry.Hub["startTransaction"]> | undefined;
+    let transaction: Sentry.Span | undefined;
 
     if (!url.pathname.includes("/skin")) {
-      transaction = Sentry.startTransaction({
+      transaction = Sentry.startInactiveSpan({
         op: "request",
         name: `${req.method} ${url.pathname}`,
+        forceTransaction: true,
+        attributes: {
+          "http.method": req.method,
+          "http.route": url.pathname,
+        },
       });
-
-      Sentry.configureScope((scope) => scope.setSpan(transaction));
     }
 
-    return next.handle().pipe(
-      catchError((err) => {
-        const isHttpException = err instanceof HttpException;
-        const isInternalError = err instanceof InternalServerErrorException;
+    return new Observable((subscriber) =>
+      Sentry.withActiveSpan(transaction ?? null, () =>
+        next
+          .handle()
+          .pipe(
+            catchError((err) => {
+              const isHttpException = err instanceof HttpException;
+              const isInternalError =
+                err instanceof InternalServerErrorException;
 
-        if (isHttpException && !isInternalError) {
-          transaction?.finish();
-          throw err;
-        }
+              if (isHttpException && !isInternalError) {
+                throw err;
+              }
 
-        Sentry.captureException(err);
-        transaction?.setHttpStatus(500);
-        transaction?.finish();
+              Sentry.captureException(err);
+              if (transaction) Sentry.setHttpStatus(transaction, 500);
 
-        throw err;
-      }),
-      tap(() => transaction?.finish())
+              throw err;
+            }),
+            finalize(() => transaction?.end()),
+          )
+          .subscribe(subscriber),
+      ),
     );
   }
 }

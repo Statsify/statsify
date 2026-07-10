@@ -16,6 +16,7 @@ import { Logger } from "@statsify/logger";
 import { VerifyCommand } from "#commands/verify.command";
 import { config } from "@statsify/util";
 import { join } from "node:path";
+import { nodeProfilingIntegration } from "@sentry/profiling-node";
 
 const directory = import.meta.dirname;
 
@@ -26,13 +27,23 @@ process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
 
 const sentryDsn = await config("sentry.discordBotDsn", { required: false });
+const sentryTracesSampleRate =
+  await config("sentry.tracesSampleRate", { required: false }) ?? 0;
+const sentryProfilesSampleRate =
+  await config("sentry.profilesSampleRate", { required: false }) ??
+  sentryTracesSampleRate;
 
 if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
-    integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
+    integrations: [
+      Sentry.httpIntegration({ spans: false, breadcrumbs: true }),
+      nodeProfilingIntegration(),
+    ],
     normalizeDepth: 3,
-    tracesSampleRate: await config("sentry.tracesSampleRate"),
+    enableLogs: true,
+    tracesSampleRate: sentryTracesSampleRate,
+    profilesSampleRate: sentryProfilesSampleRate,
     environment: await config("environment"),
   });
 }
