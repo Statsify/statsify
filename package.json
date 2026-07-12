@@ -41,7 +41,7 @@
     "oxlint": "^1.68.0",
     "pm2": "^6.0.8",
     "turbo": "^2.9.16",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "unplugin": "^3.0.0",
     "vitest": "^4.1.8"
   }
