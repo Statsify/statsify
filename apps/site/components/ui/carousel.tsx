@@ -95,9 +95,9 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
                   const swipeThreshold = 50;
 
                   if (offset > swipeThreshold) {
-                    paginate(1);
-                  } else if (offset < -swipeThreshold) {
                     paginate(-1);
+                  } else if (offset < -swipeThreshold) {
+                    paginate(1);
                   }
                 }}
                 className={cn("w-fit absolute top-1/2 -translate-y-1/2 left-0 right-0 mx-auto select-none", className)}
