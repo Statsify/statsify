@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatRaceTime, formatTime } from "@statsify/util";
+import { type APIData, formatRaceTime, formatTime, formatTimeWithSeconds } from "@statsify/util";
 import {
   EasterSimulator,
   GrinchSimulator,
@@ -733,7 +733,7 @@ export class Dropper {
   @Field()
   public flawlessGames: number;
 
-  @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatTimeWithSeconds, sort: "ASC" } })
   public bestTime: number;
 
   @Field({ leaderboard: { name: "Maps:" } })
@@ -863,6 +863,9 @@ export class GalaxyWars {
   @Field()
   public rebelKills: number;
 
+  @Field()
+  public shotsFired: number;
+
   public constructor(data: APIData) {
     this.wins = data.sw_game_wins;
     this.kills = data.sw_kills;
@@ -870,6 +873,7 @@ export class GalaxyWars {
     this.kdr = ratio(this.kills, this.deaths);
     this.empireKills = data.sw_empire_kills;
     this.rebelKills = data.sw_rebel_kills;
+    this.shotsFired = data.sw_shots_fired;
   }
 }
 
@@ -1370,18 +1374,21 @@ export class ZombiesMapDifficulty {
   @Field({
     leaderboard: {
       sort: "ASC",
-      formatter: formatTime,
+      formatter: formatTimeWithSeconds,
       additionalFields: ["this.wins"],
     },
     historical: { enabled: false },
   })
   public fastestWin: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { additionalFields: ["this.deaths", "this.kdr"] } })
   public kills: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { additionalFields: ["this.kills", "this.kdr"] } })
   public deaths: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.kills", "this.deaths"] } })
+  public kdr: number;
 
   @Field({ leaderboard: { enabled: false } })
   public bestRound: number;
@@ -1399,6 +1406,7 @@ export class ZombiesMapDifficulty {
     this.fastestWin = (data[`fastest_time_30_zombies${mode}`] ?? 0) * 1000;
     this.kills = data[`zombie_kills_zombies${mode}`];
     this.deaths = data[`deaths_zombies${mode}`];
+    this.kdr = ratio(this.kills, this.deaths);
     this.bestRound = data[`best_round_zombies${mode}`];
     this.doorsOpened = data[`doors_opened_zombies${mode}`];
     this.totalRounds = data[`total_rounds_survived_zombies${mode}`];

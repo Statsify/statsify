@@ -33,6 +33,7 @@ export const PitProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("stats.gold"), t(pit.gold), "§6"],
+    [t("stats.totalExp"), t(pit.exp), "§b"],
     [t("stats.contracts"), t(pit.contractsCompleted), "§a"],
     [t("stats.renown"), t(pit.renown), "§e"],
     [t("stats.lifetimeRenown"), t(pit.lifetimeRenown), "§b"],
@@ -54,6 +55,13 @@ export const PitProfile = ({
           currentLevel: pit.levelFormatted,
           nextLevel: pit.nextLevelFormatted,
           showLevel: true,
+        })}\n${formatProgression({
+          t,
+          label: t("stats.progression.gold"),
+          progression: pit.goldProgression,
+          currentLevel: pit.levelFormatted,
+          nextLevel: pit.nextLevelFormatted,
+          showLevel: false,
         })}`}
         sidebar={sidebar}
         badge={badge}

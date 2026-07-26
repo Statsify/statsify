@@ -111,6 +111,16 @@ export const GeneralProfile = ({
             value={t(challenges.total)}
             color="§a"
           />
+          <Table.td
+            title={t("stats.totalWins")}
+            value={t(general.totalWins)}
+            color="§e"
+          />
+          <Table.td
+            title={t("stats.totalKills")}
+            value={t(general.totalKills)}
+            color="§e"
+          />
         </Table.tr>
         <Table.tr>
           <Table.td title={t("stats.karma")} value={t(general.karma)} color="§d" />

@@ -576,6 +576,7 @@
     "blocksBroken": "Blocks Broken",
     "blocksPlaced": "Blocks Placed",
     "blocksRan": "Blocks Ran",
+    "blocksTraveled": "Blocks Traveled",
     "bombsDefused": "Bombs Defused",
     "bombsPlanted": "Bombs Planted",
     "bounty": "Bounty",
@@ -629,6 +630,7 @@
     "goldEarned": "Gold Earned",
     "goldPickedUp": "Gold Picked Up",
     "goldRate": "Gold Rate",
+    "goldRequirement": "Gold Requirement",
     "goldSpent": "Gold Spent",
     "goldTrophies": "Gold Trophies",
     "grandPrixTokens": "GP Tokens",
@@ -732,6 +734,7 @@
     "progression": {
       "exp": "EXP Progress",
       "gexp": "GEXP Progress",
+      "gold": "Gold Progress",
       "goldTrophy": "Gold Trophy Progress",
       "kill": "Kill Progress",
       "score": "Score Progress",
@@ -769,7 +772,9 @@
     "title": "Title",
     "tokens": "Tokens",
     "total": "Total",
+    "totalKills": "Total Kills",
     "totalSlumberTickets": "Total Slumber Tickets",
+    "totalWins": "Total Wins",
     "totalTrophies": "Total Trophies",
     "trail": "Trail",
     "transfusion": "Transfusion",
@@ -817,7 +822,8 @@
     "airTime": "Air Time",
     "potionsSplashed": "Potions Splashed",
     "powerOrbs": "Power Orbs",
-    "grenadeKills": "Grenade Kills"
+    "grenadeKills": "Grenade Kills",
+    "headshotAccuracy": "Headshot Accuracy"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
