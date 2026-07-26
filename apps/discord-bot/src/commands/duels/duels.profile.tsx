@@ -131,7 +131,7 @@ export const DuelsProfile = <T extends ProfileTime>({
             duels[mode.api].titleFormatted
           }\n${formatProgression({
             t,
-            label: t("stats.progression.win"),
+            label: t(mode.api === "arena" ? "stats.progression.kill" : "stats.progression.win"),
             progression: duels[mode.api].progression,
             currentLevel: duels[mode.api].titleLevelFormatted,
             nextLevel: duels[mode.api].nextTitleLevelFormatted,
