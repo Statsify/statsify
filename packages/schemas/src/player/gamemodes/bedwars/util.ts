@@ -152,7 +152,7 @@ export const SCHEME_MAP = {
   dawn: createCycleScheme("§6", "§6", "§f", "§f", "§b", "§3", "§3"),
   dusk: createCycleScheme("§5", "§5", "§d", "§d", "§6", "§e", "§e"),
   air: createCycleScheme("§b", "§b", "§f", "§f", "§7", "§7", "§8", "§8"),
-  wind: createCycleScheme("§7", "§7", "§a", "§a", "§2", "§2", "§2", "§2"),
+  wind: createCycleScheme("§f", "§f", "§a", "§a", "§2", "§2", "§2", "§2"),
   nebula: createCycleScheme("§4", "§4", "§c", "§c", "§d", "§d", "§5", "§5"),
   thunder: createCycleScheme("§e", "§e", "§f", "§f", "§8", "§8", "§8"),
   earth: createCycleScheme("§a", "§a", "§2", "§2", "§6", "§6", "§e", "§e"),
