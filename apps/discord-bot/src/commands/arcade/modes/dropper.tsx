@@ -8,7 +8,7 @@
 
 import { type ArcadeModes, type Dropper, DropperMaps, type SubModeForMode, scanMetadata } from "@statsify/schemas";
 import { Historical, If, Table } from "#components";
-import { arrayGroup, formatRaceTime, formatTime } from "@statsify/util";
+import { arrayGroup, formatRaceTime, formatTimeWithSeconds } from "@statsify/util";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { ProfileTime } from "#commands/base.hypixel-command";
 
@@ -34,7 +34,7 @@ export const DropperTable = ({ stats, submode, t, time }: DropperTableProps) => 
       <If condition={stats.bestTime > 0}>
         <Table.tr>
           <Historical.exclude time={time}>
-            <Table.td title={t("stats.bestTime")} value={formatTime(stats.bestTime)} color="§d" />
+            <Table.td title={t("stats.bestTime")} value={formatTimeWithSeconds(stats.bestTime)} color="§d" />
           </Historical.exclude>
           <Table.td title={t("stats.flawlessGames")} value={t(stats.flawlessGames)} color="§5" />
         </Table.tr>

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
+import { type APIData, formatTime, formatTimeWithSeconds } from "@statsify/util";
 import { Field } from "#metadata";
 import { type GamePrefix, createPrefixProgression, cycleColors, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { Progression } from "#progression";
@@ -95,7 +95,7 @@ export class PVPRun {
   @Field()
   public kdr: number;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTimeWithSeconds }, historical: { enabled: false } })
   public record: number;
 
   @Field()
@@ -149,7 +149,7 @@ export class TNTRun {
   @Field()
   public wlr: number;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTimeWithSeconds }, historical: { enabled: false } })
   public record: number;
 
   @Field()
@@ -413,4 +413,3 @@ export class Wizards {
     this.arcaneWizard = new WizardsClass(data, "arcane_wizard");
   }
 }
-

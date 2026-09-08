@@ -21,12 +21,13 @@ interface ZombiesMapColumnProps {
 
 const ZombiesMapColumn = ({ title, stats, t, time }: ZombiesMapColumnProps) => {
   const mapStat = stats.wins >= 1 ?
-    [t("stats.fastestWin"), stats.fastestWin ? formatTime(stats.fastestWin) : "N/A"] :
+    [t("stats.fastestWin"), stats.fastestWin ? formatTime(stats.fastestWin, { entries: 3 }) : "N/A"] :
     [t("stats.bestRound"), t(stats.bestRound)];
 
   return (
     <Table.ts title={title}>
       <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" size="small" />
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§e" size="small" />
       <Historical.exclude time={time}>
         <Table.td title={mapStat[0]} value={mapStat[1]} color="§e" size="small" />
       </Historical.exclude>
@@ -50,6 +51,8 @@ export const ZombiesTable = ({ stats, t, time }: ZombiesTableProps) => {
           <Table.td title={t("stats.wins")} value={t(overall.wins)} color="§a" />
           <Table.td title={t("stats.kills")} value={t(overall.kills)} color="§e" />
           <Table.td title={t("stats.deaths")} value={t(overall.deaths)} color="§c" />
+          <Table.td title={t("stats.kdr")} value={t(overall.kdr)} color="§6" />
+          <Table.td title={t("stats.totalRounds")} value={t(overall.totalRounds)} color="§d" />
         </Table.tr>
       </Table.ts>
       <Table.tr>
@@ -89,7 +92,7 @@ export const ZombiesMapDifficultyTable = ({ stats, t, time }: ZombiesMapDifficul
     </Table.tr>
     <Historical.exclude time={time}>
       <Table.tr>
-        <Table.td title={t("stats.fastestWin")} value={stats.fastestWin ? formatTime(stats.fastestWin) : "N/A"} color="§b" size="small" />
+        <Table.td title={t("stats.fastestWin")} value={stats.fastestWin ? formatTime(stats.fastestWin, { entries: 3 }) : "N/A"} color="§b" size="small" />
         <Table.td title={t("stats.totalRounds")} value={t(stats.totalRounds)} color="§d" size="small" />
       </Table.tr>
     </Historical.exclude>

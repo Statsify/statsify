@@ -29,6 +29,16 @@ const PRESTIGE_XP_REQUIREMENTS = [
   11_787_293_080,
 ];
 
+const PRESTIGE_GOLD_REQUIREMENTS = [
+  10_000, 20_000, 20_000, 20_000, 30_000, 35_000, 40_000, 45_000, 50_000,
+  60_000, 70_000, 80_000, 90_000, 100_000, 125_000, 150_000, 175_000, 200_000,
+  250_000, 300_000, 350_000, 400_000, 500_000, 600_000, 700_000, 800_000,
+  900_000, 1_000_000, 1_000_000, 1_000_000, 1_000_000, 1_000_000, 1_000_000,
+  1_000_000, 1_000_000, 2_000_000, 2_000_000, 2_000_000, 2_000_000, 2_000_000,
+  2_000_000, 2_000_000, 2_000_000, 2_000_000, 2_000_000, 2_000_000, 2_000_000,
+  2_000_000, 2_000_000, 2_000_000, -1,
+];
+
 const PRESTIGE_COLORS = [
   "7",
   "9",
@@ -81,6 +91,9 @@ export const getPrestige = (xp: number) => {
 
 export const getPrestigeReq = (prestige: number) =>
   prestige > -1 ? PRESTIGE_XP_REQUIREMENTS[prestige] : 0;
+
+export const getPrestigeGoldReq = (prestige: number) =>
+  prestige > -1 ? PRESTIGE_GOLD_REQUIREMENTS[prestige] : 0;
 
 export const getLevel = (pres: number, xp: number) => {
   let level = 120;

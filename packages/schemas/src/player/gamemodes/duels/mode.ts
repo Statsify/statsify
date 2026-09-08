@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
+import { type APIData, formatTimeWithSeconds } from "@statsify/util";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { TitleRequirement, getTitleAndProgression } from "./util.js";
@@ -649,7 +649,7 @@ export class ParkourDuels extends SingleDuelsGameMode {
   @Field()
   public checkpoints: number;
 
-  @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatTimeWithSeconds, sort: "ASC" } })
   public bestTime: number;
 
   public constructor(data: APIData) {

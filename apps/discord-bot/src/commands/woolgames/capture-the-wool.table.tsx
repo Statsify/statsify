@@ -7,7 +7,7 @@
  */
 
 import { Historical, If, Table } from "#components";
-import { formatTime } from "@statsify/util";
+import { formatTimeWithSeconds } from "@statsify/util";
 import type { CaptureTheWool } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { ProfileTime } from "#commands/base.hypixel-command";
@@ -54,21 +54,21 @@ export const CaptureTheWoolTable = ({ captureTheWool, t, time }: CaptureTheWoolT
           <If condition={captureTheWool.fastestWin > 0}>
             <Table.td
               title={t("stats.fastestWin")}
-              value={formatTime(captureTheWool.fastestWin)}
+              value={formatTimeWithSeconds(captureTheWool.fastestWin)}
               color="§e"
             />
           </If>
           <If condition={captureTheWool.fastestWoolCapture > 0}>
             <Table.td
               title={t("stats.fastestWoolCapture")}
-              value={formatTime(captureTheWool.fastestWoolCapture)}
+              value={formatTimeWithSeconds(captureTheWool.fastestWoolCapture)}
               color="§6"
             />
           </If>
           <If condition={captureTheWool.longestGame > 0}>
             <Table.td
               title={t("stats.longestGame")}
-              value={formatTime(captureTheWool.longestGame)}
+              value={formatTimeWithSeconds(captureTheWool.longestGame)}
               color="§d"
             />
           </If>
