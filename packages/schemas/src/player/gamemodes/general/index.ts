@@ -8,6 +8,7 @@
 
 import { Bingo } from "./bingo.js";
 import { Events } from "./events.js";
+import { Fishing } from "./fishing.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { getNetworkLevel } from "./util.js";
@@ -79,6 +80,9 @@ export class General {
   @Field()
   public bingo: Bingo;
 
+  @Field()
+  public fishing: Fishing;
+
   public constructor(data: APIData, legacy: APIData) {
     this.achievementPoints = data.achievementPoints;
 
@@ -98,8 +102,14 @@ export class General {
 
     this.events = new Events(data.seasonal);
     this.bingo = new Bingo(data.seasonal);
+    this.fishing = new Fishing(
+      data.stats?.MainLobby ?? {},
+      data.achievements ?? {},
+      data.fishing ?? {}
+    );
   }
 }
 
 export * from "./events.js";
 export * from "./bingo.js";
+export * from "./fishing.js";
