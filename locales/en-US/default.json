@@ -1,6 +1,7 @@
 {
   "arguments": {
     "choice": "Choose an option",
+    "emoji": "A Discord emoji",
     "file": "Upload a file",
     "gtbhelper": "The current hint",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
@@ -22,6 +23,8 @@
     "arenabrawl": "$t(commands.hypixel-command, { \"name\": \"Arena Brawl\" })",
     "available": "Check the availability of a Minecraft username",
     "badge": "Change your badge for every profile",
+    "badge-emoji": "Use an emoji as your profile badge",
+    "badge-image": "Upload a new profile badge",
     "badge-reset": "Reset your profile badge",
     "badge-set": "Upload a new profile badge",
     "badge-view": "View your current profile badge",
@@ -373,6 +376,10 @@
     "higherTierRequiredForIcon": {
       "description": "You need to purchase a higher premium tier to unlock this icon!",
       "title": "Higher Tier Required"
+    },
+    "invalidBadgeEmoji": {
+      "description": "The emoji you provided could not be loaded!",
+      "title": "Invalid Emoji"
     },
     "invalidGuild": {
       "description_id": "A guild with the id of `{{tag}}` could not be found!",
