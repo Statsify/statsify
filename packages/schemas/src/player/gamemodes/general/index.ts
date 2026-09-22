@@ -21,6 +21,12 @@ export class General {
   public achievementPoints: number;
 
   @Field()
+  public totalWins: number;
+
+  @Field()
+  public totalKills: number;
+
+  @Field()
   public giftsSent: number;
 
   @Field()

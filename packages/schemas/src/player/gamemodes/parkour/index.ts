@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
+import { type APIData, formatTimeWithSeconds } from "@statsify/util";
 import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { Field } from "#metadata";
 
@@ -14,7 +14,7 @@ export const PARKOUR_MODES = new GameModes([{ api: "overall" }] as const);
 
 export type ParkourModes = ExtractGameModes<typeof PARKOUR_MODES>;
 
-const fieldOptions = { sort: "ASC", formatter: formatTime, fieldName: "Time" };
+const fieldOptions = { sort: "ASC", formatter: formatTimeWithSeconds, fieldName: "Time" };
 const historical = { enabled: false };
 
 export class Parkour {
