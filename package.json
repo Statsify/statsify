@@ -25,23 +25,23 @@
     "scripts": "pnpm --filter scripts",
     "verify-server": "pnpm --filter verify-server"
   },
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.34.5",
   "devDependencies": {
     "@j4cobi/eslint-plugin-sort-imports": "^1.0.2",
-    "@napi-rs/cli": "^3.7.0",
-    "@rollup/pluginutils": "^5.1.0",
+    "@napi-rs/cli": "^3.10.5",
+    "@rollup/pluginutils": "^5.4.0",
     "@swc/cli": "^0.8.1",
-    "@swc/core": "1.15.40",
-    "@types/node": "^25.9.1",
-    "@vitest/coverage-v8": "^5.0.1",
-    "@vitest/ui": "^5.0.1",
+    "@swc/core": "1.16.2",
+    "@types/node": "^25.9.8",
+    "@vitest/coverage-v8": "^5.0.2",
+    "@vitest/ui": "^5.0.2",
     "eslint-plugin-license-header": "^0.9.0",
-    "oxfmt": "^0.53.0",
-    "oxlint": "^1.68.0",
-    "pm2": "^6.0.8",
-    "turbo": "^2.9.16",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
+    "pm2": "^6.0.14",
+    "turbo": "^2.11.4",
     "typescript": "^7.0.2",
-    "unplugin": "^3.0.0",
-    "vitest": "^5.0.1"
+    "unplugin": "^3.4.0",
+    "vitest": "^5.0.2"
   }
 }
