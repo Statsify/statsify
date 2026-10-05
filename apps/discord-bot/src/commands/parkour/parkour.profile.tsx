@@ -29,7 +29,7 @@ export const ParkourProfile = ({
 
   const times: [GameId, any][] = Object.entries(parkour)
     .sort((a, b) => (a[1] || Number.MAX_VALUE) - (b[1] || Number.MAX_VALUE))
-    .map(([field, time]) => [field as GameId, time ? formatTime(time) : "N/A"]);
+    .map(([field, time]) => [field as GameId, time !== null ? formatTime(time) : "N/A"]);
 
   return (
     <Container background={background}>
