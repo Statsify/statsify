@@ -16,6 +16,9 @@ interface ParkourProfileProps extends BaseProfileProps {
   gameIcons: Record<GameId, Image>;
 }
 
+const hasTime = (t: unknown): t is number =>
+  typeof t === "number" && !Number.isNaN(t);
+
 export const ParkourProfile = ({
   skin,
   player,
@@ -28,9 +31,16 @@ export const ParkourProfile = ({
   const { parkour } = player.stats;
 
   const times: [GameId, any][] = Object.entries(parkour)
-    .sort((a, b) => (a[1] || Number.MAX_VALUE) - (b[1] || Number.MAX_VALUE))
-    .map(([field, time]) => [field as GameId, time !== null ? formatTime(time) : "N/A"]);
-
+    .sort(
+      (a, b) =>
+        (hasTime(a[1]) ? a[1] : Number.MAX_VALUE) -
+        (hasTime(b[1]) ? b[1] : Number.MAX_VALUE),
+    )
+    .map(([field, time]) => [
+      field as GameId,
+      hasTime(time) ? formatTime(time) : "N/A",
+    ]);
+  
   return (
     <Container background={background}>
       <Header
