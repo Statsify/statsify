@@ -14,6 +14,7 @@
  * 1. Links `config.json` / `config.js` from the main checkout
  * 2. Checks out each asset submodule at the commit this branch pins, as a git
  *    worktree of the main checkout's submodule repo (no network, no re-clone)
+ *    and moves existing clean, detached checkouts to the pinned commit
  * 3. Links the ignored minecraft texture pack from the main checkout
  * 4. Installs dependencies (this also blurs the public backgrounds)
  * 5. Restores the blurred private backgrounds from a cache, or generates them
@@ -131,11 +132,77 @@ function submodulePaths() {
 }
 
 /**
+ * Checks that a submodule repo has a commit, fetching it when it is missing.
+ * @param {string[]} repo git arguments that select the submodule repo
+ * @param {string} sha
+ * @returns {boolean} whether the commit is available
+ */
+function hasCommit(repo, sha) {
+  const exists = () => {
+    try {
+      git([...repo, "cat-file", "-e", `${sha}^{commit}`]);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  if (exists()) return true;
+
+  try {
+    run("git", [...repo, "fetch", "origin"]);
+  } catch {
+    return false;
+  }
+
+  return exists();
+}
+
+/**
+ * Moves an existing submodule checkout to the commit this branch pins, unless it is
+ * on a branch or has local changes.
+ * @param {string} path
+ * @param {string} sha
+ */
+function updateSubmodule(path, sha) {
+  const target = join(ROOT, path);
+  const head = git(["rev-parse", "HEAD"], target);
+  if (head === sha) return;
+
+  let onBranch = true;
+
+  try {
+    git(["symbolic-ref", "-q", "HEAD"], target);
+  } catch {
+    onBranch = false;
+  }
+
+  if (onBranch || git(["status", "--porcelain"], target) !== "") {
+    log(
+      "Submodule",
+      `${path} is at ${head.slice(0, 8)} but this branch pins ${sha.slice(0, 8)}, leaving it because it is on a branch or has local changes`,
+    );
+    return;
+  }
+
+  if (!hasCommit(["-C", target], sha)) {
+    log("Submodule", `could not fetch ${path} at ${sha.slice(0, 8)}`);
+    return;
+  }
+
+  git(["checkout", "--detach", sha], target);
+  log("Submodule", `updated ${path} to ${sha.slice(0, 8)}`);
+}
+
+/**
  * @param {string} path
  */
 function setupSubmodule(path) {
   const target = join(ROOT, path);
-  if (existsSync(join(target, ".git"))) return;
+  const sha = git(["ls-tree", "HEAD", path]).split(/\s+/)[2];
+  if (!sha) return;
+
+  if (existsSync(join(target, ".git"))) return updateSubmodule(path, sha);
 
   const moduleDir = join(COMMON_DIR, "modules", path);
 
@@ -149,12 +216,9 @@ function setupSubmodule(path) {
     return;
   }
 
-  const sha = git(["ls-tree", "HEAD", path]).split(/\s+/)[2];
-
-  try {
-    git(["--git-dir", moduleDir, "cat-file", "-e", `${sha}^{commit}`]);
-  } catch {
-    run("git", ["--git-dir", moduleDir, "fetch", "origin"]);
+  if (!hasCommit(["--git-dir", moduleDir], sha)) {
+    log("Submodule", `could not fetch ${path}, continuing without it`);
+    return;
   }
 
   // Worktrees that were deleted without `git worktree remove` leave stale entries behind
