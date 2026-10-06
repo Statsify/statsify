@@ -40,7 +40,7 @@ export const ParkourProfile = ({
       field as GameId,
       hasTime(time) ? formatTime(time) : "N/A",
     ]);
-  
+
   return (
     <Container background={background}>
       <Header
