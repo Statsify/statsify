@@ -9,8 +9,8 @@
     "url": "git+https://github.com/Statsify/statsify.git"
   },
   "scripts": {
-    "build": "pnpm scripts purge --dist && turbo run build --filter=!site",
-    "build:watch": "pnpm scripts purge --dist && turbo watch build --filter=!site",
+    "build": "turbo run build --filter=!site",
+    "build:watch": "turbo watch build --filter=!site",
     "typecheck": "turbo run typecheck",
     "test": "vitest",
     "test:ui": "vitest --ui",

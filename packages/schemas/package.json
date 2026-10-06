@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths --delete-dir-on-start --copy-files",
+    "clean": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\"",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "lint:ci": "oxlint --format=github"
