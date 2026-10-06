@@ -36,9 +36,12 @@ import {
 import { dirname, join, relative, resolve } from "node:path";
 import { execFileSync } from "node:child_process";
 
-const ROOT = git(
-  ["rev-parse", "--show-toplevel"],
-  resolve(import.meta.dirname, "../../.."),
+// git prints forward slashes on Windows, resolve normalizes them to match COMMON_DIR
+const ROOT = resolve(
+  git(
+    ["rev-parse", "--show-toplevel"],
+    resolve(import.meta.dirname, "../../.."),
+  ),
 );
 const COMMON_DIR = resolve(ROOT, git(["rev-parse", "--git-common-dir"], ROOT));
 const MAIN_ROOT = dirname(COMMON_DIR);
