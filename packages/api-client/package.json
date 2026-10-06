@@ -5,7 +5,7 @@
   "types": "src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths --delete-dir-on-start",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "lint:ci": "oxlint --format=github"
