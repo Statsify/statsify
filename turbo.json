@@ -24,15 +24,17 @@
       "dependsOn": ["build", "^test:coverage"]
     },
     "lint": {
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxlintrc.jsonc"],
       "outputs": [],
       "dependsOn": []
     },
     "lint:ci": {
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxlintrc.jsonc"],
       "outputs": [],
       "dependsOn": []
     },
     "fmt": {
-      "outputs": [],
+      "cache": false,
       "dependsOn": []
     }
   }
