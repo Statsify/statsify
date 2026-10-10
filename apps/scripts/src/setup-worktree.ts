@@ -502,7 +502,16 @@ linkTexturePack();
 
 run("pnpm", ["install", "--frozen-lockfile"]);
 
-blurPrivateBackgrounds();
+// The backgrounds are only needed when an app renders, so a failed blur must not
+// stop the build that every package import depends on
+try {
+  blurPrivateBackgrounds();
+} catch {
+  log(
+    "Backgrounds",
+    "could not blur the private backgrounds, continuing without them. Rerun setup to retry",
+  );
+}
 
 if (!process.argv.includes("--skip-build")) run("pnpm", ["build"]);
 
