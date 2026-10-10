@@ -65,6 +65,7 @@ const BLUR_CACHE_DIR = join(
 const STALE_TEMP_MS = 60 * 60 * 1000;
 
 const TEXTURE_PACK = "assets/public/minecraft-textures/default";
+const PUBLIC_ASSETS = "assets/public";
 const PRIVATE_ASSETS = "assets/private";
 
 function git(args: string[], cwd = ROOT): string {
@@ -233,13 +234,30 @@ function setupSubmodule(path: string) {
   }
 
   if (existsSync(target) && readdirSync(target).length === 0) rmdirSync(target);
-  git(["--git-dir", moduleDir, "worktree", "add", "--detach", target, sha]);
+
+  try {
+    git(["--git-dir", moduleDir, "worktree", "add", "--detach", target, sha]);
+  } catch {
+    log(
+      "Submodule",
+      `could not check out ${path}, continuing without it. If ${path} has leftover files, delete it and rerun setup`,
+    );
+    return;
+  }
 
   log("Submodule", `checked out ${path} at ${sha.slice(0, 8)}`);
 }
 
 function linkTexturePack() {
-  if (IS_LINKED_WORKTREE && linkFromMain(TEXTURE_PACK))
+  // Linking into a public assets folder that isn't checked out would create it and
+  // block checking out the submodule there on the next run
+  const publicAssets = join(ROOT, PUBLIC_ASSETS, ".git");
+
+  if (
+    IS_LINKED_WORKTREE &&
+    existsSync(publicAssets) &&
+    linkFromMain(TEXTURE_PACK)
+  )
     log("Textures", `linked ${TEXTURE_PACK}`);
 
   if (!existsSync(join(ROOT, TEXTURE_PACK)))
