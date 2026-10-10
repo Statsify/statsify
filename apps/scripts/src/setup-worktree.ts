@@ -89,7 +89,7 @@ function log(title: string, message: string) {
 }
 
 /**
- * Symlinks a file or directory from the main checkout, copying files when symlinks are not permitted.
+ * Symlinks a file or directory from the main checkout, copying it when symlinks are not permitted.
  * @param path path relative to the repo root
  */
 function linkFromMain(path: string): boolean {
@@ -101,7 +101,13 @@ function linkFromMain(path: string): boolean {
   mkdirSync(dirname(target), { recursive: true });
 
   try {
-    symlinkSync(source, target, "junction");
+    // Windows junctions only work for directories, and need no extra permissions.
+    // A file symlink needs Developer Mode or admin rights, so it falls back to a copy
+    symlinkSync(
+      source,
+      target,
+      statSync(source).isDirectory() ? "junction" : "file",
+    );
   } catch {
     cpSync(source, target, { recursive: true });
   }
