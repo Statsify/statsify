@@ -247,9 +247,20 @@ function linkTexturePack() {
 }
 
 /**
+ * @param backgrounds file names of the tracked backgrounds
+ * @returns whether `output` has a blurred file for every background
+ */
+function isComplete(output: string, backgrounds: string[]): boolean {
+  if (!existsSync(output)) return false;
+
+  const blurred = new Set(readdirSync(output));
+  return backgrounds.every((background) => blurred.has(background));
+}
+
+/**
  * Copies a cache entry to `output` and checks that every background made it, since
  * another setup can evict the entry while it is being copied.
- * @param backgrounds file names in the backgrounds folder
+ * @param backgrounds file names of the tracked backgrounds
  * @returns whether the restore is complete
  */
 export function restoreBlurCache(
@@ -268,8 +279,7 @@ export function restoreBlurCache(
     return false;
   }
 
-  const restored = new Set(readdirSync(output));
-  return backgrounds.every((background) => restored.has(background));
+  return isComplete(output, backgrounds);
 }
 
 /**
@@ -346,22 +356,35 @@ function blurPrivateBackgrounds() {
 
   const cached = key && join(BLUR_CACHE_DIR, key);
 
-  if (cached && existsSync(cached)) {
-    // blur.mjs writes one output per file in the backgrounds folder, with the same name
-    const backgrounds = readdirSync(join(assets, "backgrounds"));
+  // blur.mjs writes one output per background, with the same name. Only tracked
+  // backgrounds are part of the key, so ignored files like .DS_Store don't count
+  const backgrounds = key
+    ? git(["ls-tree", "--name-only", "HEAD:backgrounds"], assets).split("\n")
+    : [];
 
+  if (cached && existsSync(cached)) {
     if (restoreBlurCache(cached, output, backgrounds)) {
       log("Backgrounds", `restored from cache ${relative(MAIN_ROOT, cached)}`);
       return;
     }
 
-    log("Backgrounds", "cache entry was evicted while restoring");
+    // Either evicted while it was being copied, or stored incomplete. Delete it, or an
+    // incomplete entry could never be replaced
+    log("Backgrounds", "cache entry is incomplete, replacing it");
+    rmSync(cached, { recursive: true, force: true });
   }
 
   log("Backgrounds", "blurring private backgrounds, this takes a while");
   run("pnpm", ["blur"], assets);
 
-  if (key && storeBlurCache(BLUR_CACHE_DIR, key, output))
+  if (!key) return;
+
+  if (!isComplete(output, backgrounds)) {
+    log("Backgrounds", "blur output is incomplete, not caching it");
+    return;
+  }
+
+  if (storeBlurCache(BLUR_CACHE_DIR, key, output))
     log("Backgrounds", "cached for future checkouts");
 }
 
