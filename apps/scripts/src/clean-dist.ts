@@ -38,9 +38,11 @@ function hasSource(file: string): boolean {
   // Files that swc copies as is with --copy-files
   if (base === file) return existsSync(join(SRC, file));
 
-  return SOURCE_EXTENSIONS.some(
-    (extension) =>
-      !base.endsWith(".d") && existsSync(join(SRC, `${base}${extension}`)),
+  // swc doesn't compile declaration files, so a .d.js output is always an orphan
+  if (base.endsWith(".d")) return false;
+
+  return SOURCE_EXTENSIONS.some((extension) =>
+    existsSync(join(SRC, `${base}${extension}`)),
   );
 }
 
