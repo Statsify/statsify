@@ -49,7 +49,7 @@ You are working in the Statsify monorepo. Make conservative, repo-native cleanup
 
 ## Setup
 
-T3 runs `node apps/scripts/src/setup-worktree.ts` when it creates a worktree (see `t3.json`). It links `config.js`/`config.json` and the texture pack from the main checkout, checks out `assets/public` and `assets/private` at the commits the branch pins, installs dependencies, restores the blurred backgrounds from a shared cache, and builds.
+T3 runs `node apps/scripts/src/setup-worktree.ts` when it creates a worktree (see `t3.json`). It links `config.js` and the texture pack from the main checkout, checks out `assets/public` and `assets/private` at the commits the branch pins, installs dependencies, restores the blurred backgrounds from a shared cache, and builds.
 
 - turbo (2.9+) shares its build cache across worktrees on its own, so builds in a new worktree are mostly cache hits.
 - If a worktree looks broken (missing deps, assets, config, or `dist`), rerun `node apps/scripts/src/setup-worktree.ts`. It is safe to rerun and to run in many worktrees at once.
@@ -85,7 +85,7 @@ T3 runs `node apps/scripts/src/setup-worktree.ts` when it creates a worktree (se
 
 Done by the maintainer in the main checkout. Agents in worktrees must not do these steps.
 
-Need: `config.js` or `config.json` at the repo root, following `config.schema.js`. The loader checks `config.json` first.
+Need: `config.js` at the repo root, following `config.schema.js`. Use `config.js`, not `config.json`: the loader tries `config.json` first but node rejects importing it, so a `config.json` breaks every app.
 
 - Required: `database.mongoUri` and `database.redisUrl`, `hypixelApi.key`, `api.port` and `api.mediaRoot`, `discordBot.token`, `discordBot.applicationId` and `discordBot.publicKey`, `apiClient.key` and `apiClient.route` (the bot calls your local API), `supportBot.guild` and `supportBot.memberRole` (the bot's verify commands read them at startup), and `environment`.
 - Optional: `hypixelApi.timeout` (defaults to 5000), `discordBot.testingGuild` (lets commands register instantly), `discordBot.port`, `api.ignoreAuth`, and Sentry. With a Sentry DSN set, `sentry.tracesSampleRate` is required too.

@@ -13,7 +13,7 @@
  * Only uses node builtins because it runs before `pnpm install`. Node runs it as
  * TypeScript by stripping the types, so it only uses erasable syntax.
  *
- * 1. Links `config.json` / `config.js` from the main checkout
+ * 1. Links `config.js` from the main checkout
  * 2. Checks out each asset submodule at the commit this branch pins, as a git
  *    worktree of the main checkout's submodule repo (no re-clone), and moves
  *    existing clean, detached checkouts to the pinned commit
@@ -118,16 +118,16 @@ function linkFromMain(path: string): boolean {
   return true;
 }
 
+/**
+ * Only config.js is linked. The loader tries config.json first, but loads it with a
+ * plain import(), which node rejects for JSON files.
+ */
 function linkConfig() {
   if (!IS_LINKED_WORKTREE) return;
 
-  const linked = ["config.json", "config.js"].filter(linkFromMain);
-
-  if (linked.length > 0)
-    log("Config", `linked ${linked.join(", ")} from ${MAIN_ROOT}`);
-  else if (
-    !["config.json", "config.js"].some((file) => existsSync(join(ROOT, file)))
-  )
+  if (linkFromMain("config.js"))
+    log("Config", `linked config.js from ${MAIN_ROOT}`);
+  else if (!existsSync(join(ROOT, "config.js")))
     log("Config", "missing, copy config.schema.js to config.js and fill it in");
 }
 
