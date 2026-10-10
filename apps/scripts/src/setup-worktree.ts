@@ -66,6 +66,10 @@ const BLUR_CACHE_DIR = join(
 
 const STALE_TEMP_MS = 60 * 60 * 1000;
 
+// Setup runs unattended (T3 makes the agent wait for it), so a git credential prompt
+// would hang forever. Make git fail instead; saved credentials still work
+const FETCH_ENV = { GIT_TERMINAL_PROMPT: "0" };
+
 const TEXTURE_PACK = "assets/public/minecraft-textures/default";
 const PUBLIC_ASSETS = "assets/public";
 // Packages blur.mjs uses to decode, blur, and encode the backgrounds
@@ -80,9 +84,15 @@ function git(args: string[], cwd = ROOT): string {
   }).trim();
 }
 
-function run(command: string, args: string[], cwd = ROOT) {
+function run(
+  command: string,
+  args: string[],
+  cwd = ROOT,
+  env: Record<string, string> = {},
+) {
   execFileSync(command, args, {
     cwd,
+    env: { ...process.env, ...env },
     stdio: "inherit",
     shell: process.platform === "win32",
   });
@@ -181,7 +191,7 @@ function hasCommit(repo: string[], sha: string): boolean {
   // so check whether the other fetch brought the commit in and retry once
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      run("git", [...repo, "fetch", "origin"]);
+      run("git", [...repo, "fetch", "origin"], ROOT, FETCH_ENV);
     } catch {
       // Checked below
     }
@@ -192,7 +202,7 @@ function hasCommit(repo: string[], sha: string): boolean {
   // A commit no remote branch reaches anymore (e.g. from a deleted, squash-merged
   // branch) only arrives when fetched directly, like `git submodule update` does
   try {
-    run("git", [...repo, "fetch", "origin", sha]);
+    run("git", [...repo, "fetch", "origin", sha], ROOT, FETCH_ENV);
   } catch {
     // Checked below
   }
