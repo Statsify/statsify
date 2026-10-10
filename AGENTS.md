@@ -66,7 +66,7 @@ T3 runs `node apps/scripts/src/setup-worktree.ts` when it creates a worktree (se
 ## Do not (in worktrees)
 
 - Start the API, Discord bot, support bot, verify server, or site. Every worktree shares one `config.js`, so they would share the Discord token, the Hypixel key, and ports, and the bot would re-post slash commands to the testing guild.
-- Call the Hypixel API, or run anything in `apps/scripts` except `setup-worktree`.
+- Call the Hypixel API, or run scripts in `apps/scripts` directly, other than `setup-worktree`. Builds run `clean-dist` on their own; that is fine.
 - Run `docker compose`.
 - Edit `config.js` or anything under `assets/`.
 - Edit locales other than `locales/en-US`.
