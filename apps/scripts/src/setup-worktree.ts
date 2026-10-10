@@ -13,7 +13,8 @@
  * Only uses node builtins because it runs before `pnpm install`. Node runs it as
  * TypeScript by stripping the types, so it only uses erasable syntax.
  *
- * 1. Links `config.js` from the main checkout
+ * 1. Links `config.js`, and `AGENTS.md` and `CLAUDE.md` if present, from the main
+ *    checkout
  * 2. Checks out each asset submodule at the commit this branch pins, as a git
  *    worktree of the main checkout's submodule repo (no re-clone), and moves
  *    existing clean, detached checkouts to the pinned commit. In a worktree, a
@@ -149,6 +150,18 @@ function linkConfig() {
     log("Config", `linked config.js from ${MAIN_ROOT}`);
   else if (!existsSync(join(ROOT, "config.js")))
     log("Config", "missing, copy config.schema.js to config.js and fill it in");
+}
+
+/**
+ * Agent instruction files aren't committed, so a new worktree only gets them when the
+ * main checkout has them locally
+ */
+function linkAgentInstructions() {
+  if (!IS_LINKED_WORKTREE) return;
+
+  for (const file of ["AGENTS.md", "CLAUDE.md"]) {
+    if (linkFromMain(file)) log("Agents", `linked ${file} from ${MAIN_ROOT}`);
+  }
 }
 
 interface Submodule {
@@ -540,6 +553,7 @@ log(
 );
 
 linkConfig();
+linkAgentInstructions();
 for (const submodule of submodules()) setupSubmodule(submodule);
 linkTexturePack();
 
