@@ -230,7 +230,18 @@ function setupSubmodule({ name, path }: Submodule) {
   const sha = git(["ls-tree", "HEAD", path]).split(/\s+/)[2];
   if (!sha) return;
 
-  if (existsSync(join(target, ".git"))) return updateSubmodule(path, sha);
+  if (existsSync(join(target, ".git"))) {
+    try {
+      updateSubmodule(path, sha);
+    } catch {
+      log(
+        "Submodule",
+        `could not update ${path}, continuing with it as is. If it is broken in a worktree, delete ${path} and rerun setup`,
+      );
+    }
+
+    return;
+  }
 
   const moduleDir = join(COMMON_DIR, "modules", name);
 
@@ -343,11 +354,19 @@ function storeBlurCache(
 ): boolean {
   const entry = join(cacheDir, key);
   const temp = `${entry}.tmp-${process.pid}`;
+  let previous: string[];
 
-  mkdirSync(cacheDir, { recursive: true });
-  cpSync(output, temp, { recursive: true, mode: constants.COPYFILE_FICLONE });
-
-  const previous = readdirSync(cacheDir);
+  // The cache is optional, so failing to write it (a full disk, an unwritable .git)
+  // must not stop setup
+  try {
+    mkdirSync(cacheDir, { recursive: true });
+    cpSync(output, temp, { recursive: true, mode: constants.COPYFILE_FICLONE });
+    previous = readdirSync(cacheDir);
+  } catch {
+    log("Backgrounds", "could not write the blur cache, continuing without it");
+    rmSync(temp, { recursive: true, force: true });
+    return false;
+  }
 
   try {
     renameSync(temp, entry);
