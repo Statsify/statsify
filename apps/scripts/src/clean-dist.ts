@@ -26,22 +26,29 @@ import { join } from "node:path";
 const DIST = "dist";
 const SRC = "src";
 
-// swc compiles each of these to a .js file with the same base name
-const SOURCE_EXTENSIONS = [".ts", ".tsx", ".mts", ".cts", ".js", ".jsx"];
+// The source extensions swc compiles to each output extension, with the same base name.
+// .cjs isn't compiled, so --copy-files copies it as is
+const SOURCE_EXTENSIONS: Record<string, string[]> = {
+  ".js": [".ts", ".tsx", ".js", ".jsx", ".mjs", ".es6", ".es"],
+  ".mjs": [".mts"],
+  ".cjs": [".cts", ".cjs"],
+};
 
 /**
  * @param file path relative to dist
  */
 function hasSource(file: string): boolean {
-  const base = file.replace(/\.js(\.map)?$/, "");
+  const match = /^(.+?)(\.[cm]?js)(\.map)?$/.exec(file);
 
   // Files that swc copies as is with --copy-files
-  if (base === file) return existsSync(join(SRC, file));
+  if (!match) return existsSync(join(SRC, file));
+
+  const [, base, outputExtension] = match;
 
   // swc doesn't compile declaration files, so a .d.js output is always an orphan
   if (base.endsWith(".d")) return false;
 
-  return SOURCE_EXTENSIONS.some((extension) =>
+  return SOURCE_EXTENSIONS[outputExtension].some((extension) =>
     existsSync(join(SRC, `${base}${extension}`)),
   );
 }
