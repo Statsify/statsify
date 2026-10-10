@@ -16,7 +16,8 @@
  * 1. Links `config.js` from the main checkout
  * 2. Checks out each asset submodule at the commit this branch pins, as a git
  *    worktree of the main checkout's submodule repo (no re-clone), and moves
- *    existing clean, detached checkouts to the pinned commit
+ *    existing clean, detached checkouts to the pinned commit. In a worktree, a
+ *    submodule the main checkout hasn't set up is skipped instead of cloned
  * 3. Links the ignored minecraft texture pack from the main checkout
  * 4. Installs dependencies (this also blurs the public backgrounds)
  * 5. Restores the blurred private backgrounds from a cache shared by all
@@ -243,15 +244,25 @@ function setupSubmodule({ name, path }: Submodule) {
     return;
   }
 
-  const moduleDir = join(COMMON_DIR, "modules", name);
-
-  if (!IS_LINKED_WORKTREE || !existsSync(moduleDir)) {
+  if (!IS_LINKED_WORKTREE) {
     try {
       run("git", ["submodule", "update", "--init", path]);
     } catch {
       log("Submodule", `could not clone ${path}, continuing without it`);
     }
 
+    return;
+  }
+
+  // Cloning here would put a full copy in this worktree's own git dir, so every
+  // worktree would clone it again, and a private repo can hang on a credential prompt
+  const moduleDir = join(COMMON_DIR, "modules", name);
+
+  if (!existsSync(moduleDir)) {
+    log(
+      "Submodule",
+      `${path} isn't set up in the main checkout, continuing without it. Run \`git submodule update --init ${path}\` there to share it with worktrees`,
+    );
     return;
   }
 
