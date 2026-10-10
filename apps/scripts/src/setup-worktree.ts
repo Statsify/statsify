@@ -189,7 +189,15 @@ function hasCommit(repo: string[], sha: string): boolean {
     if (exists()) return true;
   }
 
-  return false;
+  // A commit no remote branch reaches anymore (e.g. from a deleted, squash-merged
+  // branch) only arrives when fetched directly, like `git submodule update` does
+  try {
+    run("git", [...repo, "fetch", "origin", sha]);
+  } catch {
+    // Checked below
+  }
+
+  return exists();
 }
 
 /**
