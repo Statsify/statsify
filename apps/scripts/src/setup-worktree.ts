@@ -128,16 +128,32 @@ function linkConfig() {
     log("Config", "missing, copy config.schema.js to config.js and fill it in");
 }
 
-function submodulePaths(): string[] {
+interface Submodule {
+  /** git stores the submodule's repo under .git/modules/<name> */
+  name: string;
+  path: string;
+}
+
+function submodules(): Submodule[] {
   let output: string;
 
   try {
-    output = git(["config", "--file", ".gitmodules", "--get-regexp", "path"]);
+    output = git([
+      "config",
+      "--file",
+      ".gitmodules",
+      "--get-regexp",
+      String.raw`^submodule\..*\.path$`,
+    ]);
   } catch {
     return [];
   }
 
-  return output.split("\n").map((line) => line.split(" ")[1]);
+  // Lines look like `submodule.<name>.path <path>`, and names can contain dots
+  return output.split("\n").map((line) => {
+    const [key, path] = line.split(" ");
+    return { name: key.slice("submodule.".length, -".path".length), path };
+  });
 }
 
 /**
@@ -206,14 +222,14 @@ function updateSubmodule(path: string, sha: string) {
   log("Submodule", `updated ${path} to ${sha.slice(0, 8)}`);
 }
 
-function setupSubmodule(path: string) {
+function setupSubmodule({ name, path }: Submodule) {
   const target = join(ROOT, path);
   const sha = git(["ls-tree", "HEAD", path]).split(/\s+/)[2];
   if (!sha) return;
 
   if (existsSync(join(target, ".git"))) return updateSubmodule(path, sha);
 
-  const moduleDir = join(COMMON_DIR, "modules", path);
+  const moduleDir = join(COMMON_DIR, "modules", name);
 
   if (!IS_LINKED_WORKTREE || !existsSync(moduleDir)) {
     try {
@@ -420,7 +436,7 @@ if (import.meta.main) {
   );
 
   linkConfig();
-  for (const path of submodulePaths()) setupSubmodule(path);
+  for (const submodule of submodules()) setupSubmodule(submodule);
   linkTexturePack();
 
   run("pnpm", ["install", "--frozen-lockfile"]);
