@@ -1,9 +1,10 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDependencies": ["pnpm-lock.yaml", "tsconfig.base.json", ".swcrc"],
+  "globalDependencies": ["pnpm-lock.yaml"],
   "ui": "tui",
   "tasks": {
     "build": {
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.swcrc"],
       "env": ["API_URL", "API_KEY"],
       "outputs": ["dist/**", ".next/**", "pkg/**"],
       "dependsOn": ["clean", "^build"]
@@ -12,24 +13,35 @@
       "cache": false
     },
     "typecheck": {
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/tsconfig.base.json"],
       "outputs": [],
       "dependsOn": ["^typecheck"]
     },
     "test": {
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.swcrc"],
       "outputs": [],
       "dependsOn": ["build", "^test"]
     },
     "test:coverage": {
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.swcrc"],
       "outputs": ["coverage"],
       "dependsOn": ["build", "^test:coverage"]
     },
     "lint": {
-      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxlintrc.jsonc"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/.oxlintrc.jsonc",
+        "$TURBO_ROOT$/tsconfig.base.json"
+      ],
       "outputs": [],
       "dependsOn": []
     },
     "lint:ci": {
-      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxlintrc.jsonc"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/.oxlintrc.jsonc",
+        "$TURBO_ROOT$/tsconfig.base.json"
+      ],
       "outputs": [],
       "dependsOn": []
     },
