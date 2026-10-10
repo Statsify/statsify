@@ -303,7 +303,7 @@ function isComplete(output: string, backgrounds: string[]): boolean {
  * @param backgrounds file names of the tracked backgrounds
  * @returns whether the restore is complete
  */
-export function restoreBlurCache(
+function restoreBlurCache(
   entry: string,
   output: string,
   backgrounds: string[],
@@ -333,7 +333,7 @@ export function restoreBlurCache(
  * Temporary folders older than an hour are left over from crashed setups and evicted too.
  * @returns whether this call stored the entry
  */
-export function storeBlurCache(
+function storeBlurCache(
   cacheDir: string,
   key: string,
   output: string,
@@ -428,22 +428,19 @@ function blurPrivateBackgrounds() {
     log("Backgrounds", "cached for future checkouts");
 }
 
-// The cache functions are exported for testing, so only run setup when executed directly
-if (import.meta.main) {
-  log(
-    "Setup",
-    `${ROOT}${IS_LINKED_WORKTREE ? ` (worktree of ${MAIN_ROOT})` : ""}`,
-  );
+log(
+  "Setup",
+  `${ROOT}${IS_LINKED_WORKTREE ? ` (worktree of ${MAIN_ROOT})` : ""}`,
+);
 
-  linkConfig();
-  for (const submodule of submodules()) setupSubmodule(submodule);
-  linkTexturePack();
+linkConfig();
+for (const submodule of submodules()) setupSubmodule(submodule);
+linkTexturePack();
 
-  run("pnpm", ["install", "--frozen-lockfile"]);
+run("pnpm", ["install", "--frozen-lockfile"]);
 
-  blurPrivateBackgrounds();
+blurPrivateBackgrounds();
 
-  if (!process.argv.includes("--skip-build")) run("pnpm", ["build"]);
+if (!process.argv.includes("--skip-build")) run("pnpm", ["build"]);
 
-  log("Setup", "done");
-}
+log("Setup", "done");
