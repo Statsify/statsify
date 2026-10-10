@@ -8,7 +8,7 @@
 
 /**
  * Prepares a checkout (the main clone or a linked git worktree) for development.
- * T3 Code runs it when it creates a worktree (see t3.json).
+ * Run it in each new worktree, e.g. as a T3 Code script that runs on worktree creation.
  *
  * Only uses node builtins because it runs before `pnpm install`. Node runs it as
  * TypeScript by stripping the types, so it only uses erasable syntax.
