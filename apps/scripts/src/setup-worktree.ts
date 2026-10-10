@@ -36,6 +36,7 @@ import {
   cpSync,
   existsSync,
   mkdirSync,
+  readFileSync,
   readdirSync,
   renameSync,
   rmSync,
@@ -66,6 +67,8 @@ const STALE_TEMP_MS = 60 * 60 * 1000;
 
 const TEXTURE_PACK = "assets/public/minecraft-textures/default";
 const PUBLIC_ASSETS = "assets/public";
+// Packages blur.mjs uses to decode, blur, and encode the backgrounds
+const BLUR_DEPENDENCIES = ["skia-canvas", "stackblur-canvas"];
 const PRIVATE_ASSETS = "assets/private";
 
 function git(args: string[], cwd = ROOT): string {
@@ -378,8 +381,26 @@ function storeBlurCache(
 }
 
 /**
- * The blur output only depends on the backgrounds and the blur script, so it is cached
- * by their git object ids. Uncommitted changes to either always regenerate.
+ * @returns `<name>@<version>` of a package installed in `dir`, or undefined when it
+ * isn't installed
+ */
+function installedVersion(dir: string, name: string): string | undefined {
+  try {
+    const manifest = JSON.parse(
+      readFileSync(join(dir, "node_modules", name, "package.json"), "utf8"),
+    ) as { version: string };
+
+    return `${name}@${manifest.version}`;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * The blur output only depends on the backgrounds, the blur script, and the installed
+ * versions of the packages that decode, blur, and encode the images. It is cached by
+ * the git object ids of the first two and those versions. Uncommitted changes to the
+ * backgrounds or blur script always regenerate.
  */
 function blurPrivateBackgrounds() {
   const assets = join(ROOT, PRIVATE_ASSETS);
@@ -390,9 +411,18 @@ function blurPrivateBackgrounds() {
     git(["status", "--porcelain", "--", "backgrounds", "blur.mjs"], assets) !==
     "";
 
-  const key = dirty
-    ? undefined
-    : `${git(["rev-parse", "HEAD:backgrounds"], assets)}-${git(["rev-parse", "HEAD:blur.mjs"], assets)}`;
+  const versions = BLUR_DEPENDENCIES.map((name) =>
+    installedVersion(assets, name),
+  );
+
+  const key =
+    dirty || versions.includes(undefined)
+      ? undefined
+      : [
+          git(["rev-parse", "HEAD:backgrounds"], assets),
+          git(["rev-parse", "HEAD:blur.mjs"], assets),
+          ...versions,
+        ].join("-");
 
   const cached = key && join(BLUR_CACHE_DIR, key);
 
