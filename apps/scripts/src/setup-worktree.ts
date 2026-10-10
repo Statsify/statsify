@@ -468,9 +468,12 @@ function blurPrivateBackgrounds() {
   const cached = key && join(BLUR_CACHE_DIR, key);
 
   // blur.mjs writes one output per background, with the same name. Only tracked
-  // backgrounds are part of the key, so ignored files like .DS_Store don't count
+  // backgrounds are part of the key, so ignored files like .DS_Store don't count.
+  // -z keeps git from quoting names with special characters, like café.png
   const backgrounds = key
-    ? git(["ls-tree", "--name-only", "HEAD:backgrounds"], assets).split("\n")
+    ? git(["ls-tree", "-z", "--name-only", "HEAD:backgrounds"], assets)
+        .split("\0")
+        .filter(Boolean)
     : [];
 
   if (cached && existsSync(cached)) {
