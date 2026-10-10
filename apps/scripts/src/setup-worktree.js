@@ -39,6 +39,7 @@ import {
   renameSync,
   rmSync,
   rmdirSync,
+  statSync,
   symlinkSync,
 } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
@@ -59,6 +60,8 @@ const BLUR_CACHE_DIR = join(
   "statsify-cache",
   "blurred-backgrounds",
 );
+
+const STALE_TEMP_MS = 60 * 60 * 1000;
 
 const TEXTURE_PACK = "assets/public/minecraft-textures/default";
 const PRIVATE_ASSETS = "assets/private";
@@ -297,6 +300,7 @@ export function restoreBlurCache(entry, output, backgrounds) {
  * Only entries listed before the rename are evicted. Two setups can't evict each other,
  * since each would have to list the cache after the other's rename, so the most recently
  * stored entry always survives. A setup that finds its key already stored evicts nothing.
+ * Temporary folders older than an hour are left over from crashed setups and evicted too.
  * @param {string} cacheDir
  * @param {string} key
  * @param {string} output
@@ -320,13 +324,22 @@ export function storeBlurCache(cacheDir, key, output) {
   }
 
   for (const name of previous) {
-    // Temporary folders belong to setups that are still copying
-    if (name === key || name.includes(".tmp-")) continue;
+    if (name === key) continue;
+
+    const path = join(cacheDir, name);
 
     try {
-      rmSync(join(cacheDir, name), { recursive: true, force: true });
+      // A fresh temporary folder belongs to a setup that is still copying. Copying
+      // keeps updating its mtime, so an old one was left behind by a crashed setup
+      if (
+        name.includes(".tmp-") &&
+        Date.now() - statSync(path).mtimeMs < STALE_TEMP_MS
+      )
+        continue;
+
+      rmSync(path, { recursive: true, force: true });
     } catch {
-      // Another setup is evicting it too
+      // Another setup is evicting it too, or it was this setup's temporary folder
     }
   }
 
