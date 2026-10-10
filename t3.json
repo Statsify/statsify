@@ -1,0 +1,19 @@
+{
+  "$schema": "https://t3.codes/schema/t3.json",
+  "defaultThreadEnvMode": "worktree",
+  "worktreeSubmodules": "none",
+  "scripts": [
+    {
+      "name": "Setup worktree",
+      "command": "node apps/scripts/src/setup-worktree.js",
+      "icon": "configure",
+      "runOnWorktreeCreate": true,
+      "async": false
+    },
+    {
+      "name": "Verify",
+      "command": "pnpm build && pnpm typecheck && pnpm lint && pnpm test --run",
+      "icon": "test"
+    }
+  ]
+}
