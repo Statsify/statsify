@@ -56,7 +56,13 @@ const ROOT = resolve(
   ),
 );
 const COMMON_DIR = resolve(ROOT, git(["rev-parse", "--git-common-dir"], ROOT));
-const MAIN_ROOT = dirname(COMMON_DIR);
+// The first entry is the main checkout. Unlike dirname(COMMON_DIR), this also holds
+// when its git dir isn't <main>/.git (e.g. cloned with --separate-git-dir)
+const MAIN_ROOT = resolve(
+  git(["worktree", "list", "--porcelain"], ROOT)
+    .split("\n")[0]
+    .slice("worktree ".length),
+);
 const IS_LINKED_WORKTREE = MAIN_ROOT !== ROOT;
 const BLUR_CACHE_DIR = join(
   COMMON_DIR,
@@ -67,8 +73,9 @@ const BLUR_CACHE_DIR = join(
 const STALE_TEMP_MS = 60 * 60 * 1000;
 
 // Setup runs unattended (T3 makes the agent wait for it), so a git credential prompt
-// would hang forever. Make git fail instead; saved credentials still work
-const FETCH_ENV = { GIT_TERMINAL_PROMPT: "0" };
+// would hang forever. Make git (and Git Credential Manager's GUI) fail instead; saved
+// credentials still work
+const FETCH_ENV = { GIT_TERMINAL_PROMPT: "0", GCM_INTERACTIVE: "never" };
 
 const TEXTURE_PACK = "assets/public/minecraft-textures/default";
 const PUBLIC_ASSETS = "assets/public";
@@ -94,7 +101,9 @@ function run(
     cwd,
     env: { ...process.env, ...env },
     stdio: "inherit",
-    shell: process.platform === "win32",
+    // pnpm is a .cmd shim on Windows, which needs a shell. Other commands (git) must not
+    // go through one, since cmd.exe would split path arguments that contain spaces
+    shell: process.platform === "win32" && command === "pnpm",
   });
 }
 
@@ -156,6 +165,7 @@ function submodules(): Submodule[] {
       "config",
       "--file",
       ".gitmodules",
+      "--null",
       "--get-regexp",
       String.raw`^submodule\..*\.path$`,
     ]);
@@ -163,11 +173,17 @@ function submodules(): Submodule[] {
     return [];
   }
 
-  // Lines look like `submodule.<name>.path <path>`, and names can contain dots
-  return output.split("\n").map((line) => {
-    const [key, path] = line.split(" ");
-    return { name: key.slice("submodule.".length, -".path".length), path };
-  });
+  // With --null, entries look like `submodule.<name>.path\n<path>\0`, so names (which
+  // can contain dots) and paths can contain spaces
+  return output
+    .split("\0")
+    .filter(Boolean)
+    .map((entry) => {
+      const newline = entry.indexOf("\n");
+      const key = entry.slice(0, newline);
+      const path = entry.slice(newline + 1);
+      return { name: key.slice("submodule.".length, -".path".length), path };
+    });
 }
 
 /**
@@ -492,10 +508,16 @@ function blurPrivateBackgrounds() {
       return;
     }
 
-    // Either evicted while it was being copied, or stored incomplete. Delete it, or an
-    // incomplete entry could never be replaced
-    log("Backgrounds", "cache entry is incomplete, replacing it");
-    rmSync(cached, { recursive: true, force: true });
+    // Either evicted while it was being copied, stored incomplete, or the copy itself
+    // failed (e.g. a full disk). Only delete an entry that is itself incomplete, or an
+    // incomplete entry could never be replaced, but a local copy failure must not evict
+    // a good entry other setups are restoring from
+    if (isComplete(cached, backgrounds)) {
+      log("Backgrounds", "could not restore from cache");
+    } else {
+      log("Backgrounds", "cache entry is incomplete, replacing it");
+      rmSync(cached, { recursive: true, force: true });
+    }
   }
 
   log("Backgrounds", "blurring private backgrounds, this takes a while");
