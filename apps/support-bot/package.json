@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src --out-dir dist --strip-leading-paths",
-    "clean": "node ../../apps/scripts/src/clean-dist.js",
+    "clean": "node ../../apps/scripts/src/clean-dist.ts",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "lint:ci": "oxlint --format=github"

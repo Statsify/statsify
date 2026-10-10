@@ -17,7 +17,7 @@
  * Only orphans are removed, so `dist` is never empty while `pnpm build:watch` rebuilds
  * and running apps keep their files.
  *
- * Usage: node ../../apps/scripts/src/clean-dist.js
+ * Usage: node ../../apps/scripts/src/clean-dist.ts
  */
 
 import { existsSync, readdirSync, rmSync, rmdirSync } from "node:fs";
@@ -30,10 +30,9 @@ const SRC = "src";
 const SOURCE_EXTENSIONS = [".ts", ".tsx", ".mts", ".cts", ".js", ".jsx"];
 
 /**
- * @param {string} file path relative to dist
- * @returns {boolean}
+ * @param file path relative to dist
  */
-function hasSource(file) {
+function hasSource(file: string): boolean {
   const base = file.replace(/\.js(\.map)?$/, "");
 
   // Files that swc copies as is with --copy-files
@@ -46,10 +45,10 @@ function hasSource(file) {
 }
 
 /**
- * @param {string} dir path relative to dist
- * @returns {number} the number of orphaned files removed
+ * @param dir path relative to dist
+ * @returns the number of orphaned files removed
  */
-function prune(dir) {
+function prune(dir: string): number {
   let removed = 0;
 
   for (const entry of readdirSync(join(DIST, dir), { withFileTypes: true })) {
