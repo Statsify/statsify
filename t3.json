@@ -12,7 +12,7 @@
     },
     {
       "name": "Verify",
-      "command": "pnpm build && pnpm typecheck && pnpm lint && pnpm test --run",
+      "command": "pnpm build && pnpm typecheck --affected && pnpm lint --affected && pnpm test --run",
       "icon": "test"
     }
   ]
