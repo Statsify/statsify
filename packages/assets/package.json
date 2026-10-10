@@ -5,8 +5,8 @@
   "types": "src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths --delete-dir-on-start",
-    "clean": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\"",
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
+    "clean": "node ../../apps/scripts/src/clean-dist.js",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "lint:ci": "oxlint --format=github"
