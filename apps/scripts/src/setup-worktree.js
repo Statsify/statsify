@@ -8,19 +8,26 @@
 
 /**
  * Prepares a checkout (the main clone or a linked git worktree) for development.
+ * T3 Code runs it when it creates a worktree (see t3.json).
  *
  * Only uses node builtins because it runs before `pnpm install`.
  *
  * 1. Links `config.json` / `config.js` from the main checkout
  * 2. Checks out each asset submodule at the commit this branch pins, as a git
- *    worktree of the main checkout's submodule repo (no network, no re-clone)
- *    and moves existing clean, detached checkouts to the pinned commit
+ *    worktree of the main checkout's submodule repo (no re-clone), and moves
+ *    existing clean, detached checkouts to the pinned commit
  * 3. Links the ignored minecraft texture pack from the main checkout
  * 4. Installs dependencies (this also blurs the public backgrounds)
- * 5. Restores the blurred private backgrounds from a cache, or generates them
- * 6. Builds the monorepo
+ * 5. Restores the blurred private backgrounds from a cache shared by all
+ *    checkouts, or generates and caches them
+ * 6. Builds the monorepo. turbo stores the cache of every linked worktree in the
+ *    main checkout's .turbo/cache, so this is mostly cache hits
  *
- * Usage: pnpm scripts setup-worktree [--skip-build]
+ * Safe to run in many new worktrees at once: cache entries are written to a
+ * temporary folder and renamed into place, restores are checked against the
+ * backgrounds in git, and fetches that lose a lock race are retried.
+ *
+ * Usage: node apps/scripts/src/setup-worktree.js [--skip-build]
  */
 
 import {
@@ -29,6 +36,7 @@ import {
   existsSync,
   mkdirSync,
   readdirSync,
+  renameSync,
   rmSync,
   rmdirSync,
   symlinkSync,
@@ -46,7 +54,11 @@ const ROOT = resolve(
 const COMMON_DIR = resolve(ROOT, git(["rev-parse", "--git-common-dir"], ROOT));
 const MAIN_ROOT = dirname(COMMON_DIR);
 const IS_LINKED_WORKTREE = MAIN_ROOT !== ROOT;
-const CACHE_DIR = join(COMMON_DIR, "statsify-cache");
+const BLUR_CACHE_DIR = join(
+  COMMON_DIR,
+  "statsify-cache",
+  "blurred-backgrounds",
+);
 
 const TEXTURE_PACK = "assets/public/minecraft-textures/default";
 const PRIVATE_ASSETS = "assets/private";
@@ -152,13 +164,19 @@ function hasCommit(repo, sha) {
 
   if (exists()) return true;
 
-  try {
-    run("git", [...repo, "fetch", "origin"]);
-  } catch {
-    return false;
+  // Concurrent setups fetching the same submodule repo can fail to lock refs,
+  // so check whether the other fetch brought the commit in and retry once
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      run("git", [...repo, "fetch", "origin"]);
+    } catch {
+      // Checked below
+    }
+
+    if (exists()) return true;
   }
 
-  return exists();
+  return false;
 }
 
 /**
@@ -224,8 +242,14 @@ function setupSubmodule(path) {
     return;
   }
 
-  // Worktrees that were deleted without `git worktree remove` leave stale entries behind
-  git(["--git-dir", moduleDir, "worktree", "prune"]);
+  // Worktrees that were deleted without `git worktree remove` leave stale entries
+  // behind. git locks worktrees while it adds them, so this can't remove one that a
+  // concurrent setup is still creating
+  try {
+    git(["--git-dir", moduleDir, "worktree", "prune"]);
+  } catch {
+    // Only housekeeping
+  }
 
   if (existsSync(target) && readdirSync(target).length === 0) rmdirSync(target);
   git(["--git-dir", moduleDir, "worktree", "add", "--detach", target, sha]);
@@ -239,6 +263,74 @@ function linkTexturePack() {
 
   if (!existsSync(join(ROOT, TEXTURE_PACK)))
     log("Textures", `missing, add a 1.8.9 texture pack to ${TEXTURE_PACK}`);
+}
+
+/**
+ * Copies a cache entry to `output` and checks that every background made it, since
+ * another setup can evict the entry while it is being copied.
+ * @param {string} entry
+ * @param {string} output
+ * @param {string[]} backgrounds file names in the backgrounds folder
+ * @returns {boolean} whether the restore is complete
+ */
+export function restoreBlurCache(entry, output, backgrounds) {
+  try {
+    rmSync(output, { recursive: true, force: true });
+    // Copy on write where the filesystem supports it, so restoring costs no extra disk space
+    cpSync(entry, output, {
+      recursive: true,
+      mode: constants.COPYFILE_FICLONE,
+    });
+  } catch {
+    return false;
+  }
+
+  const restored = new Set(readdirSync(output));
+  return backgrounds.every((background) => restored.has(background));
+}
+
+/**
+ * Stores `output` as the cache entry for `key` and evicts the entries that were there
+ * before it. The entry is copied to a temporary folder and renamed into place, so
+ * concurrent setups never see a partial entry.
+ *
+ * Only entries listed before the rename are evicted. Two setups can't evict each other,
+ * since each would have to list the cache after the other's rename, so the most recently
+ * stored entry always survives. A setup that finds its key already stored evicts nothing.
+ * @param {string} cacheDir
+ * @param {string} key
+ * @param {string} output
+ * @returns {boolean} whether this call stored the entry
+ */
+export function storeBlurCache(cacheDir, key, output) {
+  const entry = join(cacheDir, key);
+  const temp = `${entry}.tmp-${process.pid}`;
+
+  mkdirSync(cacheDir, { recursive: true });
+  cpSync(output, temp, { recursive: true, mode: constants.COPYFILE_FICLONE });
+
+  const previous = readdirSync(cacheDir);
+
+  try {
+    renameSync(temp, entry);
+  } catch {
+    // Another setup already stored this key
+    rmSync(temp, { recursive: true, force: true });
+    return false;
+  }
+
+  for (const name of previous) {
+    // Temporary folders belong to setups that are still copying
+    if (name === key || name.includes(".tmp-")) continue;
+
+    try {
+      rmSync(join(cacheDir, name), { recursive: true, force: true });
+    } catch {
+      // Another setup is evicting it too
+    }
+  }
+
+  return true;
 }
 
 /**
@@ -258,45 +350,43 @@ function blurPrivateBackgrounds() {
     ? undefined
     : `${git(["rev-parse", "HEAD:backgrounds"], assets)}-${git(["rev-parse", "HEAD:blur.mjs"], assets)}`;
 
-  const cached = key && join(CACHE_DIR, "blurred-backgrounds", key);
+  const cached = key && join(BLUR_CACHE_DIR, key);
 
   if (cached && existsSync(cached)) {
-    rmSync(output, { recursive: true, force: true });
-    // Copy on write where the filesystem supports it, so restoring costs no extra disk space
-    cpSync(cached, output, {
-      recursive: true,
-      mode: constants.COPYFILE_FICLONE,
-    });
-    log("Backgrounds", `restored from cache ${relative(MAIN_ROOT, cached)}`);
-    return;
+    // blur.mjs writes one output per file in the backgrounds folder, with the same name
+    const backgrounds = readdirSync(join(assets, "backgrounds"));
+
+    if (restoreBlurCache(cached, output, backgrounds)) {
+      log("Backgrounds", `restored from cache ${relative(MAIN_ROOT, cached)}`);
+      return;
+    }
+
+    log("Backgrounds", "cache entry was evicted while restoring");
   }
 
   log("Backgrounds", "blurring private backgrounds, this takes a while");
   run("pnpm", ["blur"], assets);
 
-  if (!cached) return;
-
-  rmSync(join(CACHE_DIR, "blurred-backgrounds"), {
-    recursive: true,
-    force: true,
-  });
-  cpSync(output, cached, { recursive: true, mode: constants.COPYFILE_FICLONE });
-  log("Backgrounds", "cached for future checkouts");
+  if (key && storeBlurCache(BLUR_CACHE_DIR, key, output))
+    log("Backgrounds", "cached for future checkouts");
 }
 
-log(
-  "Setup",
-  `${ROOT}${IS_LINKED_WORKTREE ? ` (worktree of ${MAIN_ROOT})` : ""}`,
-);
+// The cache functions are exported for testing, so only run setup when executed directly
+if (import.meta.main) {
+  log(
+    "Setup",
+    `${ROOT}${IS_LINKED_WORKTREE ? ` (worktree of ${MAIN_ROOT})` : ""}`,
+  );
 
-linkConfig();
-for (const path of submodulePaths()) setupSubmodule(path);
-linkTexturePack();
+  linkConfig();
+  for (const path of submodulePaths()) setupSubmodule(path);
+  linkTexturePack();
 
-run("pnpm", ["install", "--frozen-lockfile"]);
+  run("pnpm", ["install", "--frozen-lockfile"]);
 
-blurPrivateBackgrounds();
+  blurPrivateBackgrounds();
 
-if (!process.argv.includes("--skip-build")) run("pnpm", ["build"]);
+  if (!process.argv.includes("--skip-build")) run("pnpm", ["build"]);
 
-log("Setup", "done");
+  log("Setup", "done");
+}
