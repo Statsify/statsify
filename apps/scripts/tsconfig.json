@@ -1,4 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src"]
+  "compilerOptions": {
+    // node runs the .ts scripts by stripping types, which only works for erasable syntax
+    "erasableSyntaxOnly": true,
+    "types": ["node"]
+  },
+  // The .js scripts aren't type checked (checkJs is off), and including them pulls in
+  // the workspace packages they import, which use non-erasable syntax like enums
+  "include": ["src/**/*.ts"]
 }
