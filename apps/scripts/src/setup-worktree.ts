@@ -10,7 +10,8 @@
  * Prepares a checkout (the main clone or a linked git worktree) for development.
  * T3 Code runs it when it creates a worktree (see t3.json).
  *
- * Only uses node builtins because it runs before `pnpm install`.
+ * Only uses node builtins because it runs before `pnpm install`. Node runs it as
+ * TypeScript by stripping the types, so it only uses erasable syntax.
  *
  * 1. Links `config.json` / `config.js` from the main checkout
  * 2. Checks out each asset submodule at the commit this branch pins, as a git
@@ -27,7 +28,7 @@
  * temporary folder and renamed into place, restores are checked against the
  * backgrounds in git, and fetches that lose a lock race are retried.
  *
- * Usage: node apps/scripts/src/setup-worktree.js [--skip-build]
+ * Usage: node apps/scripts/src/setup-worktree.ts [--skip-build]
  */
 
 import {
@@ -66,12 +67,7 @@ const STALE_TEMP_MS = 60 * 60 * 1000;
 const TEXTURE_PACK = "assets/public/minecraft-textures/default";
 const PRIVATE_ASSETS = "assets/private";
 
-/**
- * @param {string[]} args
- * @param {string} cwd
- * @returns {string}
- */
-function git(args, cwd = ROOT) {
+function git(args: string[], cwd = ROOT): string {
   return execFileSync("git", args, {
     cwd,
     encoding: "utf8",
@@ -79,12 +75,7 @@ function git(args, cwd = ROOT) {
   }).trim();
 }
 
-/**
- * @param {string} command
- * @param {string[]} args
- * @param {string} cwd
- */
-function run(command, args, cwd = ROOT) {
+function run(command: string, args: string[], cwd = ROOT) {
   execFileSync(command, args, {
     cwd,
     stdio: "inherit",
@@ -92,19 +83,15 @@ function run(command, args, cwd = ROOT) {
   });
 }
 
-/**
- * @param {string} title
- * @param {string} message
- */
-function log(title, message) {
+function log(title: string, message: string) {
   console.log(`\n! ${title} ${message}`);
 }
 
 /**
  * Symlinks a file or directory from the main checkout, copying files when symlinks are not permitted.
- * @param {string} path path relative to the repo root
+ * @param path path relative to the repo root
  */
-function linkFromMain(path) {
+function linkFromMain(path: string): boolean {
   const source = join(MAIN_ROOT, path);
   const target = join(ROOT, path);
 
@@ -134,11 +121,8 @@ function linkConfig() {
     log("Config", "missing, copy config.schema.js to config.js and fill it in");
 }
 
-/**
- * @returns {string[]}
- */
-function submodulePaths() {
-  let output;
+function submodulePaths(): string[] {
+  let output: string;
 
   try {
     output = git(["config", "--file", ".gitmodules", "--get-regexp", "path"]);
@@ -151,11 +135,10 @@ function submodulePaths() {
 
 /**
  * Checks that a submodule repo has a commit, fetching it when it is missing.
- * @param {string[]} repo git arguments that select the submodule repo
- * @param {string} sha
- * @returns {boolean} whether the commit is available
+ * @param repo git arguments that select the submodule repo
+ * @returns whether the commit is available
  */
-function hasCommit(repo, sha) {
+function hasCommit(repo: string[], sha: string): boolean {
   const exists = () => {
     try {
       git([...repo, "cat-file", "-e", `${sha}^{commit}`]);
@@ -185,10 +168,8 @@ function hasCommit(repo, sha) {
 /**
  * Moves an existing submodule checkout to the commit this branch pins, unless it is
  * on a branch or has local changes.
- * @param {string} path
- * @param {string} sha
  */
-function updateSubmodule(path, sha) {
+function updateSubmodule(path: string, sha: string) {
   const target = join(ROOT, path);
   const head = git(["rev-parse", "HEAD"], target);
   if (head === sha) return;
@@ -218,10 +199,7 @@ function updateSubmodule(path, sha) {
   log("Submodule", `updated ${path} to ${sha.slice(0, 8)}`);
 }
 
-/**
- * @param {string} path
- */
-function setupSubmodule(path) {
+function setupSubmodule(path: string) {
   const target = join(ROOT, path);
   const sha = git(["ls-tree", "HEAD", path]).split(/\s+/)[2];
   if (!sha) return;
@@ -271,12 +249,14 @@ function linkTexturePack() {
 /**
  * Copies a cache entry to `output` and checks that every background made it, since
  * another setup can evict the entry while it is being copied.
- * @param {string} entry
- * @param {string} output
- * @param {string[]} backgrounds file names in the backgrounds folder
- * @returns {boolean} whether the restore is complete
+ * @param backgrounds file names in the backgrounds folder
+ * @returns whether the restore is complete
  */
-export function restoreBlurCache(entry, output, backgrounds) {
+export function restoreBlurCache(
+  entry: string,
+  output: string,
+  backgrounds: string[],
+): boolean {
   try {
     rmSync(output, { recursive: true, force: true });
     // Copy on write where the filesystem supports it, so restoring costs no extra disk space
@@ -301,12 +281,13 @@ export function restoreBlurCache(entry, output, backgrounds) {
  * since each would have to list the cache after the other's rename, so the most recently
  * stored entry always survives. A setup that finds its key already stored evicts nothing.
  * Temporary folders older than an hour are left over from crashed setups and evicted too.
- * @param {string} cacheDir
- * @param {string} key
- * @param {string} output
- * @returns {boolean} whether this call stored the entry
+ * @returns whether this call stored the entry
  */
-export function storeBlurCache(cacheDir, key, output) {
+export function storeBlurCache(
+  cacheDir: string,
+  key: string,
+  output: string,
+): boolean {
   const entry = join(cacheDir, key);
   const temp = `${entry}.tmp-${process.pid}`;
 

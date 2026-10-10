@@ -5,7 +5,7 @@
   "scripts": [
     {
       "name": "Setup worktree",
-      "command": "node apps/scripts/src/setup-worktree.js",
+      "command": "node apps/scripts/src/setup-worktree.ts",
       "icon": "configure",
       "runOnWorktreeCreate": true,
       "async": false

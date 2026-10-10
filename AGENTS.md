@@ -49,10 +49,10 @@ You are working in the Statsify monorepo. Make conservative, repo-native cleanup
 
 ## Setup
 
-T3 runs `node apps/scripts/src/setup-worktree.js` when it creates a worktree (see `t3.json`). It links `config.js`/`config.json` and the texture pack from the main checkout, checks out `assets/public` and `assets/private` at the commits the branch pins, installs dependencies, restores the blurred backgrounds from a shared cache, and builds.
+T3 runs `node apps/scripts/src/setup-worktree.ts` when it creates a worktree (see `t3.json`). It links `config.js`/`config.json` and the texture pack from the main checkout, checks out `assets/public` and `assets/private` at the commits the branch pins, installs dependencies, restores the blurred backgrounds from a shared cache, and builds.
 
 - turbo (2.9+) shares its build cache across worktrees on its own, so builds in a new worktree are mostly cache hits.
-- If a worktree looks broken (missing deps, assets, config, or `dist`), rerun `node apps/scripts/src/setup-worktree.js`. It is safe to rerun and to run in many worktrees at once.
+- If a worktree looks broken (missing deps, assets, config, or `dist`), rerun `node apps/scripts/src/setup-worktree.ts`. It is safe to rerun and to run in many worktrees at once.
 - T3 passes `--force` when an agent removes or settles a thread's worktree, so worktrees with submodules are removed. T3's background storage cleanup does not, so it skips them; remove those manually with `git worktree remove --force <path>`.
 
 ## Verifying changes

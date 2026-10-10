@@ -10,7 +10,7 @@
     "delete-sessions": "node src/delete-sessions.js",
     "limit-redis": "node src/limit-redis.js",
     "purge": "node src/purge.js",
-    "setup-worktree": "node src/setup-worktree.js",
+    "setup-worktree": "node src/setup-worktree.ts",
     "rank-emojis": "node src/rank-emojis.js",
     "timestamp": "node --no-warnings src/timestamp.js",
     "validate-commands": "node --no-warnings src/validate-commands.js"
