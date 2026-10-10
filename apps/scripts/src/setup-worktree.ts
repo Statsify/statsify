@@ -228,7 +228,10 @@ function updateSubmodule(path: string, sha: string) {
 
 function setupSubmodule({ name, path }: Submodule) {
   const target = join(ROOT, path);
-  const sha = git(["ls-tree", "HEAD", path]).split(/\s+/)[2];
+  // Read the pinned commit from the index like `git submodule update` does, so a
+  // staged but uncommitted submodule bump isn't undone. Lines look like
+  // `160000 <sha> 0\t<path>`
+  const sha = git(["ls-files", "--stage", "--", path]).split(/\s+/)[1];
   if (!sha) return;
 
   if (existsSync(join(target, ".git"))) {
