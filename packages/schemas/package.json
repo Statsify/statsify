@@ -11,7 +11,7 @@
     "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
-    "@nestjs/swagger": "^11.2.0",
+    "@nestjs/swagger": "^12.0.2",
     "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
