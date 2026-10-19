@@ -15,6 +15,9 @@ export interface TNTGamesProfileProps extends BaseProfileProps {
   mode: GameMode<TNTGamesModes>;
 }
 
+// Hypixel omits a record until the player has one, and the schema stores that as 0
+const formatRecord = (record: number) => (record ? formatTime(record) : "N/A");
+
 export const TNTGamesProfile = ({
   player,
   background,
@@ -47,7 +50,7 @@ export const TNTGamesProfile = ({
                 [
                   [t("stats.wins"), t(tntgames.tntRun.wins)],
                   [t("stats.wlr"), t(tntgames.tntRun.wlr)],
-                  [t("stats.bestTime"), formatTime(tntgames.tntRun.record)],
+                  [t("stats.bestTime"), formatRecord(tntgames.tntRun.record)],
                 ] :
                 [
                   [t("stats.wins"), t(tntgames.tntRun.wins)],
@@ -104,7 +107,7 @@ export const TNTGamesProfile = ({
             <Table.td title={t("stats.potionsSplashed")} value={t(tntgames.tntRun.potionsSplashed)} color="§5" />
             <Table.td title={t("stats.blocksRan")} value={t(tntgames.tntRun.blocksRan)} color="§b" />
             <Historical.exclude time={time}>
-              <Table.td title={t("stats.bestTime")} value={formatTime(tntgames.tntRun.record)} color="§e" />
+              <Table.td title={t("stats.bestTime")} value={formatRecord(tntgames.tntRun.record)} color="§e" />
             </Historical.exclude>
           </Table.tr>
         </>
@@ -124,7 +127,7 @@ export const TNTGamesProfile = ({
           <Historical.exclude time={time}>
             <Table.tr>
               <Table.td title={t("stats.wins")} value={t(tntgames.pvpRun.wins)} color="§a" />
-              <Table.td title={t("stats.bestTime")} value={formatTime(tntgames.pvpRun.record)} color="§e" />
+              <Table.td title={t("stats.bestTime")} value={formatRecord(tntgames.pvpRun.record)} color="§e" />
             </Table.tr>
           </Historical.exclude>
         </>
