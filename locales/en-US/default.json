@@ -375,8 +375,8 @@
       "title": "Higher Tier Required"
     },
     "hypixelUnavailable": {
-      "description": "Hypixel isn't responding right now, try again in a bit.",
-      "title": "Hypixel Unavailable"
+      "description": "The Hypixel API is having trouble right now. Please try again in a few minutes!",
+      "title": "Hypixel API Unavailable"
     },
     "invalidGuild": {
       "description_id": "A guild with the id of `{{tag}}` could not be found!",
