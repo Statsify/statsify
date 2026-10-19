@@ -144,9 +144,6 @@ export class BadgeCommand {
     }
   }
 
-  /**
-   * Shows the user how their profiles would look with a badge, and only saves it once they apply it.
-   */
   private async preview(
     context: CommandContext,
     user: User,

@@ -265,7 +265,8 @@
   },
   "confirm": {
     "cancel": "Cancel",
-    "cancelled": "$t(emojis:cross) Cancelled. Nothing was changed."
+    "cancelled": "$t(emojis:cross) Cancelled. Nothing was changed.",
+    "expired": "$t(emojis:cross) Timed out. Nothing was changed."
   },
   "cooldown": {
     "description": "Please wait `{{time}}` before reusing `{{command}}`.\n\nLearn how to reduce cooldowns [here](https://statsify.net/premium)",

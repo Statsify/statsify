@@ -54,7 +54,7 @@ export function confirmAction(
 
   const timeout = setTimeout(() => {
     close();
-    context.reply({ components: [] });
+    context.reply({ content: (t) => t("confirm.expired"), components: [] });
   }, 300_000);
 
   function close() {

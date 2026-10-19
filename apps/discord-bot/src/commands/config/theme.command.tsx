@@ -228,9 +228,6 @@ export class ThemeCommand {
     );
   }
 
-  /**
-   * Shows the user how their profiles would look with a change, and only saves it once they apply it.
-   */
   private async preview(
     context: CommandContext,
     mode: "theme" | "footer",
@@ -268,13 +265,16 @@ export class ThemeCommand {
       getBackground("hypixel", "overall"),
     ]);
 
+    // Without a custom badge the API serves the saved footer logo, so draw the previewed one instead
+    const logoIsBadge = user.tier && !(user.hasBadge && User.isGold(user));
+
     const canvas = render(
       <DemoProfile
         background={background}
         logo={logo}
         player={player}
         skin={skin}
-        badge={badge}
+        badge={logoIsBadge ? logo : badge}
         user={user}
         message={
           mode === "theme" ?
