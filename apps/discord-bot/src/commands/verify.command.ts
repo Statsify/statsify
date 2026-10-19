@@ -80,7 +80,6 @@ export class VerifyCommand {
       const data = interaction.getData();
       const code = data.components[0].components[0].value as string;
 
-      // Codes are exactly four digits, parseInt would read "123x" as 123
       if (!/^\d{4}$/.test(code)) {
         const error = this.invalidCodeError();
 
