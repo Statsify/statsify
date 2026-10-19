@@ -102,7 +102,7 @@ export class CommandListener extends AbstractCommandListener {
       command,
       context,
       preconditions,
-      message: this.getTipResponse(parentCommand.name, user),
+      message: this.getTipResponse(commandName, user),
     });
   }
 
