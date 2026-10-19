@@ -283,7 +283,7 @@ function setupSubmodule({ name, path }: Submodule) {
 
   if (!IS_LINKED_WORKTREE) {
     try {
-      run("git", ["submodule", "update", "--init", path]);
+      run("git", ["submodule", "update", "--init", path], ROOT, FETCH_ENV);
     } catch {
       log("Submodule", `could not clone ${path}, continuing without it`);
     }
