@@ -6,18 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import commands from "discord-bot/commands.json" assert { type: "json" };
-import z from "zod";
+import commands from "discord-bot/commands.json" with { type: "json" };
+import { z } from "zod";
 
 function toEnum(...args) {
   return z.union(args.map((arg) => z.literal(arg)));
 }
 
 const name = z.string().min(3).max(32);
-const name_localizations = z.optional(z.record(name));
+const name_localizations = z.optional(z.record(z.string(), name));
 
 const description = z.string().min(1).max(100);
-const description_localizations = z.optional(z.record(description));
+const description_localizations = z.optional(z.record(z.string(), description));
 
 const choicesSchema = z.object({
   // this is intentional since choice names can go up to 100 characters
@@ -52,27 +52,28 @@ const commandSchema = z.object({
   type: z.optional(toEnum(1, 2, 3)),
 });
 
-for (const [commandName, command] of Object.entries(commands.commands)) {
-  try {
-    commandSchema.parse(command);
-  } catch (e) {
-    console.error(e);
-    console.log(command);
+let hasInvalidCommand = false;
 
-    for (const error of e.errors) {
-      console.error(error.message);
-      console.error(`${command.name}.${error.path.join(".")}`);
-    }
-    
-    console.error(`Command "${commandName}" is invalid.`);
-    process.exit(1);
+for (const [commandName, command] of Object.entries(commands.commands)) {
+  const result = commandSchema.safeParse(command);
+  if (result.success) continue;
+
+  for (const issue of result.error.issues) {
+    console.error(issue.message);
+    console.error(`${command.name}.${issue.path.join(".")}`);
   }
+
+  console.error(`Command "${commandName}" is invalid.`);
+  hasInvalidCommand = true;
 }
+
+// Report every invalid command before failing
+if (hasInvalidCommand) process.exit(1);
 
 const commandChars = {};
 
-const findLongestLocalizationLength = (localizations) =>
-  Math.max(...Object.values(localizations).map((l) => l.length));
+const findLongestLocalizationLength = (localizations = {}) =>
+  Math.max(0, ...Object.values(localizations).map((l) => l.length));
 
 const findOptionsLength = (options = []) =>
   options
@@ -81,7 +82,7 @@ const findOptionsLength = (options = []) =>
         option.name.length +
         findLongestLocalizationLength(option.description_localizations) +
         (
-          option?.choices?.map((choice) => choice.value.length + choice.name.length) ?? []
+          option?.choices?.map((choice) => `${choice.value}`.length + choice.name.length) ?? []
         ).reduce((a, b) => a + b, 0)
     )
     .reduce((a, b) => a + b, 0);
