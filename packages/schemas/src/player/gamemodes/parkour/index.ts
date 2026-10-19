@@ -130,7 +130,6 @@ export class Parkour {
   public WOOLGAMES: number;
 
   public constructor(data: APIData) {
-    // Finds the fastest completion in one pass, without sorting the player's data in place
     const getTime = (key: string): number =>
       data[key]?.reduce?.(
         (best: number | undefined, completion: APIData) => {
