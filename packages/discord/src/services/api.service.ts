@@ -7,7 +7,7 @@
  */
 
 import { AxiosError } from "axios";
-import { ButtonBuilder, LocalizeFunction } from "#messages";
+import { ButtonBuilder, type IMessage, LocalizeFunction } from "#messages";
 import { ButtonStyle } from "discord-api-types/v10";
 import {
   CacheLevel,
@@ -343,6 +343,23 @@ export class ApiService extends StatsifyApiService {
       (t) => t("errors.hypixelRateLimited.title"),
       (t) => t("errors.hypixelRateLimited.description", { time })
     );
+  }
+
+  /**
+   * A note for replies built from data the API served from cache because Hypixel failed
+   * @param cacheTimeMs The cache time behind expiresAt, to say how old the data is. Session players leave it out, their expiresAt is a difference
+   */
+  public hypixelBusyNotice(
+    { hypixelUnavailable, expiresAt }: { hypixelUnavailable?: boolean; expiresAt: number },
+    cacheTimeMs?: number
+  ): IMessage | undefined {
+    if (!hypixelUnavailable) return;
+    if (!cacheTimeMs) return { content: (t) => t("hypixelBusy.noAge") };
+
+    const age = Math.max(Date.now() - (expiresAt - cacheTimeMs), 1000);
+    const time = formatTime(age, { short: false, entries: 1 });
+
+    return { content: (t) => t("hypixelBusy.age", { time }) };
   }
 
   private isDiscordId(tag: string) {
