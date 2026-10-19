@@ -76,7 +76,6 @@ export class VerifyCommand {
     }));
 
     listener.addHook(VERIFY_MODAL.getCustomId(), async (interaction) => {
-      // Use the saved language like commands do, instead of the language of the Discord client
       const savedUser = await this.apiService.getUser(interaction.getUserId());
       if (savedUser?.locale) interaction.setLocale(savedUser.locale);
 
