@@ -78,10 +78,12 @@ export const render: Render<Box.BoxRenderProps> = (
     ctx.stroke();
   }
 
-  if (!shadowDistance) return;
+  // HD shadows are 0.3 lighter. The canvas ignores an alpha below 0, which would draw them fully opaque
+  const shadowAlpha = Math.min(Math.max(shadowOpacity - 0.3, 0), 1);
+  if (!shadowDistance || shadowAlpha === 0) return;
   shadowDistance /= 2;
 
-  ctx.globalAlpha = shadowOpacity - 0.3;
+  ctx.globalAlpha = shadowAlpha;
   ctx.fillStyle = fill;
 
   ctx.fillRect(
