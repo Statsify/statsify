@@ -70,9 +70,10 @@ const coverage = () => deleteFromWorkspaces("coverage");
 const swc = () => deleteFromWorkspaces(".swc");
 
 const all = async () => {
+  // Delete caches first, so the rebuild below can't restore dist from them
+  await Promise.all([turboRepo(), coverage(), swc()]);
   await nodeModules();
   await dist();
-  await Promise.all([turboRepo(), coverage(), swc()]);
 };
 
 const purge = async () => {
