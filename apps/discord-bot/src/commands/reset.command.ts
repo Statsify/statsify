@@ -15,28 +15,73 @@ import {
   IMessage,
   SubCommand,
 } from "@statsify/discord";
+import { ButtonStyle } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
+import { confirmAction } from "#lib/confirm-action";
+
+interface SessionChange {
+  /** Locale key of the warning shown before the change */
+  warning: string;
+  /** Locale key of the button that makes the change */
+  button: string;
+  /** Makes the change for the user's player uuid once they confirm */
+  onConfirm: (uuid: string) => Promise<IMessage>;
+}
+
+/**
+ * Asks the user to confirm before their session is reset or deleted. A session is one snapshot of
+ * the player's stats in every game, so the warning says so, along with when the session started.
+ *
+ * Not an async function: the command loader treats exports without a writable prototype as commands.
+ */
+export function confirmSessionChange(
+  context: CommandContext,
+  apiService: ApiService,
+  { warning, button, onConfirm }: SessionChange
+): Promise<IMessage> {
+  const uuid = context.getUser()?.uuid;
+  if (!uuid) throw new ErrorMessage("verification.requiredVerification");
+
+  // Without a user uuid this only reads an existing session and never starts one
+  return apiService
+    .getPlayerSession(uuid)
+    .then((session) => session?.sessionReset, () => undefined)
+    .then((started) => {
+      const embed = new EmbedBuilder()
+        .color(STATUS_COLORS.warn)
+        .description((t) =>
+          started ?
+            `${t(warning)}\n\n${t("historical.sessionStarted", { time: started })}` :
+            t(warning)
+        );
+
+      return confirmAction(context, {
+        prompt: { embeds: [embed], ephemeral: true },
+        confirmLabel: (t) => t(button),
+        confirmStyle: ButtonStyle.Danger,
+        onConfirm: () => onConfirm(uuid),
+      });
+    });
+}
 
 @Command({ description: "Reset" })
 export class ResetCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({ description: (t) => t("commands.reset-session") })
-  public async session(context: CommandContext): Promise<IMessage> {
-    const user = context.getUser();
-    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
+  public session(context: CommandContext): Promise<IMessage> {
+    return confirmSessionChange(context, this.apiService, {
+      warning: "historical.resetSessionWarning",
+      button: "historical.resetSessionButton",
+      onConfirm: async (uuid) => {
+        await this.apiService.resetPlayerSession(uuid);
 
-    await this.apiService.resetPlayerSession(
-      user.uuid!
-    );
+        const embed = new EmbedBuilder()
+          .color(STATUS_COLORS.success)
+          .description((t) => t("historical.setSessionReset"));
 
-    const embed = new EmbedBuilder()
-      .color(STATUS_COLORS.success)
-      .description((t) => t("historical.setSessionReset"));
-
-    return {
-      embeds: [embed],
-      ephemeral: true,
-    };
+        return { embeds: [embed] };
+      },
+    });
   }
 }
