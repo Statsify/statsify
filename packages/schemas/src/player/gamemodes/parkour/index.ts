@@ -130,8 +130,15 @@ export class Parkour {
   public WOOLGAMES: number;
 
   public constructor(data: APIData) {
+    // Finds the fastest completion in one pass, without sorting the player's data in place
     const getTime = (key: string): number =>
-      data[key]?.sort?.((a: any, b: any) => a.timeTook - b.timeTook)[0]?.timeTook;
+      data[key]?.reduce?.(
+        (best: number | undefined, completion: APIData) => {
+          const time = completion?.timeTook;
+          return Number.isFinite(time) && (best === undefined || time < best) ? time : best;
+        },
+        undefined
+      );
 
     this.ARCADE = getTime("ArcadeGames2");
     this.BEDWARS = getTime("BedwarsSpring2023");
@@ -153,4 +160,36 @@ export class Parkour {
     this.WARLORDS = getTime("Warlords");
     this.WOOLGAMES = getTime("WoolGames");
   }
+}
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("Parkour", () => {
+    it("picks the fastest time without reordering the completions", () => {
+      const completions = [
+        { timeStart: 1, timeTook: 300 },
+        { timeStart: 2, timeTook: 100 },
+        { timeStart: 3, timeTook: 200 },
+      ];
+
+      expect(new Parkour({ Duels: completions }).DUELS).toBe(100);
+      expect(completions.map((completion) => completion.timeStart)).toEqual([1, 2, 3]);
+    });
+
+    it("keeps a time of 0", () => {
+      expect(new Parkour({ Duels: [{ timeTook: 50 }, { timeTook: 0 }] }).DUELS).toBe(0);
+    });
+
+    it("skips completions without a time", () => {
+      expect(new Parkour({ Duels: [{ timeStart: 1 }, { timeTook: 50 }] }).DUELS).toBe(50);
+    });
+
+    it("leaves lobbies without completions unset", () => {
+      const parkour = new Parkour({ Duels: [] });
+
+      expect(parkour.DUELS).toBeUndefined();
+      expect(parkour.ARCADE).toBeUndefined();
+    });
+  });
 }
