@@ -43,7 +43,9 @@ export class SessionService {
   ) {}
 
   public async getAndReset(tag: string) {
-    const player = await this.playerService.get(tag, CacheLevel.LIVE);
+    const { player, hypixelError } = await this.playerService.getWithFallback(tag, CacheLevel.LIVE);
+    // A cached baseline would count games played before the reset in the new session
+    if (hypixelError) throw hypixelError;
     if (!player) throw new PlayerNotFoundException();
     return this.resetPlayer(player);
   }
@@ -67,7 +69,7 @@ export class SessionService {
   public async get(
     tag: string,
     userUuid?: string
-  ): Promise<Player | null> {
+  ): Promise<{ player: Player; hypixelUnavailable: boolean }> {
     const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, {
       uuid: true,
       displayName: true,
@@ -84,13 +86,18 @@ export class SessionService {
 
     if (!oldPlayer && userUuid !== player.uuid) throw new SessionNotFoundException(player.uuid, player.displayName);
 
-    const newPlayer = await this.playerService.get(player.uuid, CacheLevel.LIVE);
+    const { player: newPlayer, hypixelError } = await this.playerService.getWithFallback(
+      player.uuid,
+      CacheLevel.LIVE
+    );
 
     if (!newPlayer) throw new PlayerNotFoundException();
 
     if (oldPlayer) {
       oldPlayer = deserialize(Player, flatten(oldPlayer));
     } else {
+      // Same as getAndReset, a new session needs a live baseline
+      if (hypixelError) throw hypixelError;
       oldPlayer = await this.resetPlayer(newPlayer);
       isNew = true;
     }
@@ -100,7 +107,7 @@ export class SessionService {
     merged.sessionReset = oldPlayer.sessionReset;
     merged.isNew = isNew;
 
-    return merged;
+    return { player: merged, hypixelUnavailable: Boolean(hypixelError) };
   }
 
   public async delete(discordId: string) {
