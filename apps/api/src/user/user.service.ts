@@ -87,7 +87,7 @@ export class UserService {
 
     if (!user) throw new NotFoundException("user");
 
-    await rm(getBadgePath(user.id));
+    await rm(getBadgePath(user.id), { force: true });
   }
 
   public async verifyUser(
