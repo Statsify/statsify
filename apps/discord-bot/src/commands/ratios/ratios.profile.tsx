@@ -9,7 +9,7 @@
 import { Container, Footer, Header, List, Table } from "#components";
 import { FormattedGame, type GameMode } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
-import { ratio } from "@statsify/math";
+import { unroundedRatio } from "@statsify/math";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 interface RatioProps {
@@ -27,7 +27,7 @@ const Milestone = ({
   denominatorValue,
   t,
 }: RatioProps) => {
-  const ratioValue = ratio(numeratorValue, denominatorValue);
+  const ratioValue = unroundedRatio(numeratorValue, denominatorValue);
   const newRatio = Math.floor(ratioValue) + 1;
   let needed = newRatio * denominatorValue - numeratorValue;
   needed = needed <= 0 ? 1 : needed;
@@ -57,7 +57,7 @@ const Estimation = ({
   denominatorValue,
   t,
 }: RatioProps) => {
-  const ratioValue = ratio(numeratorValue, denominatorValue);
+  const ratioValue = unroundedRatio(numeratorValue, denominatorValue);
   const targetRatio = Math.floor(ratioValue) + 1;
 
   const newNumerator = Math.ceil(

@@ -24,19 +24,25 @@ export const roundTo = (n: number, precision = 2) => {
  * @param n1 The numerator of the fraction
  * @param n2 The denominator of the fraction
  * @param multiply Whether to multiply the numerator and denominator, useful for percents, such as `bowAccuracy`
- * @returns The value of the fraction * the `multiply` value rounded to 2 decimal places
+ * @returns The value of the fraction * the `multiply` value without rounding, for use in further calculations
  */
-export const ratio = (n1 = 0, n2 = 0, multiply = 1) => {
+export const unroundedRatio = (n1 = 0, n2 = 0, multiply = 1) => {
   const result = n1 / n2;
 
-  if (Number.isFinite(result)) {
-    return roundTo(result * multiply);
-  } else if (n1 === 0 && n2 === 0) {
-    return 0;
-  }
-    return roundTo(n1 * multiply) || 0;
-  
+  if (Number.isFinite(result)) return result * multiply;
+
+  return n1 * multiply || 0;
 };
+
+/**
+ *
+ * @param n1 The numerator of the fraction
+ * @param n2 The denominator of the fraction
+ * @param multiply Whether to multiply the numerator and denominator, useful for percents, such as `bowAccuracy`
+ * @returns The value of the fraction * the `multiply` value rounded to 2 decimal places
+ */
+export const ratio = (n1 = 0, n2 = 0, multiply = 1) =>
+  roundTo(unroundedRatio(n1, n2, multiply));
 
 export const add = (...args: number[]): number =>
   args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
@@ -108,6 +114,25 @@ if (import.meta.vitest) {
       expect(ratio(1)).toBe(1);
       expect(ratio(1, 0)).toBe(1);
       expect(ratio(Number.NaN, 1)).toBe(0);
+      expect(ratio(999, 1000)).toBe(1);
+      expect(ratio(1, 3, 100)).toBe(33.33);
+    });
+
+    it("should calculate unrounded ratios", () => {
+      expect(unroundedRatio(1, 2)).toBe(0.5);
+      expect(unroundedRatio(1, 3)).toBe(1 / 3);
+      expect(unroundedRatio(1)).toBe(1);
+      expect(unroundedRatio(1, 0)).toBe(1);
+      expect(unroundedRatio(0, 0)).toBe(0);
+      expect(unroundedRatio(Number.NaN, 1)).toBe(0);
+      expect(unroundedRatio(1, 4, 100)).toBe(25);
+    });
+
+    it("should keep a ratio just under a whole number below it", () => {
+      expect(unroundedRatio(999, 1000)).toBe(0.999);
+      expect(Math.floor(unroundedRatio(999, 1000))).toBe(0);
+      expect(Math.floor(unroundedRatio(1999, 1000))).toBe(1);
+      expect(Math.floor(unroundedRatio(1000, 1000))).toBe(1);
     });
   });
 
