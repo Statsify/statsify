@@ -67,7 +67,6 @@ for (const [commandName, command] of Object.entries(commands.commands)) {
   hasInvalidCommand = true;
 }
 
-// Report every invalid command before failing
 if (hasInvalidCommand) process.exit(1);
 
 const commandChars = {};
