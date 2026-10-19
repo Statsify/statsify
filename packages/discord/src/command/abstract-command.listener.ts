@@ -155,7 +155,6 @@ export abstract class AbstractCommandListener {
       this.logger.error(err);
       transaction?.finish();
 
-      // Replace the deferred "thinking..." response so the user isn't left waiting
       return context.reply(new ErrorMessage("errors.unknown"));
     }
   }
