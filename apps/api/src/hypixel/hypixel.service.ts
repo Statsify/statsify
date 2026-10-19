@@ -51,6 +51,10 @@ export class HypixelService {
     );
   }
 
+  /**
+   * Resolves to null only when Hypixel says there is no guild.
+   * Failed requests reject, so callers don't mistake an outage for a missing guild.
+   */
   public getGuild(tag: string, type: "name" | "id" | "player") {
     return lastValueFrom(
       this.request<APIData>("/guild", { [type]: tag }).pipe(
@@ -60,7 +64,7 @@ export class HypixelService {
         }),
         catchError((err) => {
           this.logger.error(err);
-          return of(null);
+          return throwError(() => err);
         })
       )
     );
