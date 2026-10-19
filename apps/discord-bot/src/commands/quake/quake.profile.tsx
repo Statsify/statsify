@@ -39,7 +39,7 @@ export const QuakeProfile = ({
     [t("stats.coins"), t(quake.coins), "§6"],
     [t("stats.tokens"), t(quake.tokens), "§e"],
     [t("stats.godlikes"), t(quake.godlikes), "§3"],
-    [t("stats.trigger"), `${t(quake.trigger)}s`, "§b"],
+    [t("stats.trigger"), `${quake.trigger.toLocaleString(t.locale)}s`, "§b"],
     [t("stats.highestKillstreak"), t(quake.highestKillstreak), "§4"],
   ];
 
