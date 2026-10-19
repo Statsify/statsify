@@ -13,9 +13,13 @@ import {
   ProfileData,
 } from "#commands/base.hypixel-command";
 import { BlitzSGProfile } from "./blitzsg.profile.js";
-import { Command } from "@statsify/discord";
+import { Command, CommandContext, PlayerArgument } from "@statsify/discord";
+import { KitArgument, filterKits } from "#commands/kit.argument";
 
-@Command({ description: (t) => t("commands.blitzsg") })
+@Command({
+  description: (t) => t("commands.blitzsg"),
+  args: [PlayerArgument, new KitArgument(BLITZSG_MODES)],
+})
 export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
   public constructor() {
     super(BLITZSG_MODES);
@@ -23,9 +27,10 @@ export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
 
   public filterModes(
     player: Player,
-    modes: GameModeWithSubModes<BlitzSGModes>[]
+    modes: GameModeWithSubModes<BlitzSGModes>[],
+    context?: CommandContext
   ): GameModeWithSubModes<BlitzSGModes>[] {
-    return filterBlitzKits(player, modes);
+    return filterBlitzKits(player, modes, context?.option<string | null>("kit"));
   }
 
   public getProfile(
@@ -38,14 +43,14 @@ export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
 
 export function filterBlitzKits(
   player: Player,
-  modes: GameModeWithSubModes<BlitzSGModes>[]
+  modes: GameModeWithSubModes<BlitzSGModes>[],
+  kit?: string | null
 ): GameModeWithSubModes<BlitzSGModes>[] {
   const { blitzsg } = player.stats;
-  const [overall, ...kits] = modes;
 
-  const filteredKits = [...kits]
-    .sort((a, b) => (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp)
-    .slice(0, 24);
-
-  return [overall, ...filteredKits];
+  return filterKits(
+    modes,
+    (a, b) => (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp,
+    kit
+  );
 }
