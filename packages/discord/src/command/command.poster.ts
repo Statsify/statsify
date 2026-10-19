@@ -64,15 +64,21 @@ export class CommandPoster {
       commandsToPost
     );
 
+    let cmds: APIApplicationCommand[];
+
     try {
-      const cmds = parseDiscordResponse<APIApplicationCommand[]>(response);
-      this.logger.log(`Successfully posted ${commandsToPost.length} commands`);
-      return cmds;
+      cmds = parseDiscordResponse<APIApplicationCommand[]>(response);
     } catch (err) {
       this.logger.error("Failed to post commands");
       this.logger.error(err);
       return null;
     }
+
+    // Only cache the commands once Discord accepts them, so a failed post is retried
+    await this.writeCache(commands, guildId);
+
+    this.logger.log(`Successfully posted ${commandsToPost.length} commands`);
+    return cmds;
   }
 
   private async postSingle(
@@ -91,14 +97,6 @@ export class CommandPoster {
   private async shouldPost(commands: Map<string, CommandResolvable>, guildId?: string) {
     const file = await readFile("./commands.json", "utf8").catch(() => null);
 
-    await writeFile(
-      "./commands.json",
-      JSON.stringify({
-        guildId,
-        commands: Object.fromEntries(commands),
-      })
-    );
-
     if (!file) return true;
 
     const parsed = JSON.parse(file);
@@ -111,6 +109,16 @@ export class CommandPoster {
     }
 
     return false;
+  }
+
+  private writeCache(commands: Map<string, CommandResolvable>, guildId?: string) {
+    return writeFile(
+      "./commands.json",
+      JSON.stringify({
+        guildId,
+        commands: Object.fromEntries(commands),
+      })
+    );
   }
 
   private getGuildRoute(guildId?: string) {
