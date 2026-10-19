@@ -33,6 +33,8 @@ export function MinecraftText({ children, className }: { children: string | stri
 
   let bold = false;
   let italic = false;
+  let underline = false;
+  let strikethrough = false;
   let color = "text-mc-white";
 
   const elements = parts.map((part, index) => {
@@ -50,9 +52,21 @@ export function MinecraftText({ children, className }: { children: string | stri
         text = part.slice(1);
         break;
 
+      case "n":
+        underline = true;
+        text = part.slice(1);
+        break;
+
+      case "m":
+        strikethrough = true;
+        text = part.slice(1);
+        break;
+
       case "r":
         bold = false;
         italic = false;
+        underline = false;
+        strikethrough = false;
         color = "text-mc-white";
         text = part.slice(1);
         break;
@@ -70,8 +84,15 @@ export function MinecraftText({ children, className }: { children: string | stri
 
     if (text.length === 0) return undefined;
 
-    return <span key={index} className={`${bold ? "font-bold" : ""} ${italic ? "italic" : "not-italic"} ${color} ${className ?? ""}`}>{text}</span>;
+    return <span key={index} className={`${bold ? "font-bold" : ""} ${italic ? "italic" : "not-italic"} ${textDecoration(underline, strikethrough)} ${color} ${className ?? ""}`}>{text}</span>;
   }).filter((element) => element !== undefined);
 
   return <span>{elements}</span>;
+}
+
+function textDecoration(underline: boolean, strikethrough: boolean) {
+  if (underline && strikethrough) return "[text-decoration-line:underline_line-through]";
+  if (underline) return "underline";
+  if (strikethrough) return "line-through";
+  return "";
 }
