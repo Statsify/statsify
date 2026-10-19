@@ -13,19 +13,6 @@
  * Only uses node builtins because it runs before `pnpm install`. Node runs it as
  * TypeScript by stripping the types, so it only uses erasable syntax.
  *
- * 1. Links `config.js`, and `AGENTS.md` and `CLAUDE.md` if present, from the main
- *    checkout
- * 2. Checks out each asset submodule at the commit this branch pins, as a git
- *    worktree of the main checkout's submodule repo (no re-clone), and moves
- *    existing clean, detached checkouts to the pinned commit. In a worktree, a
- *    submodule the main checkout hasn't set up is skipped instead of cloned
- * 3. Links the ignored minecraft texture pack from the main checkout
- * 4. Installs dependencies (this also blurs the public backgrounds)
- * 5. Restores the blurred private backgrounds from a cache shared by all
- *    checkouts, or generates and caches them
- * 6. Builds the monorepo. turbo stores the cache of every linked worktree in the
- *    main checkout's .turbo/cache, so this is mostly cache hits
- *
  * Safe to run in many new worktrees at once: cache entries are written to a
  * temporary folder and renamed into place, restores are checked against the
  * backgrounds in git, and fetches that lose a lock race are retried.
@@ -557,6 +544,7 @@ linkAgentInstructions();
 for (const submodule of submodules()) setupSubmodule(submodule);
 linkTexturePack();
 
+// Also blurs the public backgrounds, through their postinstall
 run("pnpm", ["install", "--frozen-lockfile"]);
 
 // The backgrounds are only needed when an app renders, so a failed blur must not
