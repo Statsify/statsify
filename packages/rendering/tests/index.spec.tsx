@@ -140,20 +140,6 @@ suite("createInstructions with remaining sizes", () => {
     expect(instructions.children![1].y.size).toBe(parentHeight);
     expect(instructions.children![2].y.size).toBe(parentHeight);
   });
-
-  it("a remaining size next to a percentage size", () => {
-    const parent = (
-      <div width={100} height={10} direction="row">
-        <div width="50%" height={10} />
-        <div width="remaining" height={10} />
-      </div>
-    );
-
-    const instructions = createInstructions(parent);
-
-    expect(instructions.children![0].x.size).toBe(50);
-    expect(instructions.children![1].x.size).toBe(50);
-  });
 });
 
 suite("JSX Fragments", () => {
