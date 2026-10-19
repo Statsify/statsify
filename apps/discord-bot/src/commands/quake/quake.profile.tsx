@@ -81,7 +81,7 @@ export const QuakeProfile = ({
           <Table.td title={t("stats.headshots")} value={t(stats.headshots)} color="§c" />
           <Table.td
             title={t("stats.shotAccuracy")}
-            value={`${stats.quakeShotAccuracy}%`}
+            value={`${t(stats.quakeShotAccuracy)}%`}
             color="§6"
           />
         </Table.tr>
