@@ -161,11 +161,13 @@ export class Pit {
 
     this.trueLevel = prestige * 120 + level;
 
+    const prestigeReq = getPrestigeReq(prestige);
     const lastPrestigeReq = getPrestigeReq(prestige - 1);
 
+    // XP past the final requirement would push the progress bar over 100%
     this.progression = new Progression(
-      this.exp - lastPrestigeReq,
-      Math.min(getPrestigeReq(prestige) - lastPrestigeReq, 11_787_293_080)
+      Math.min(this.exp, prestigeReq) - lastPrestigeReq,
+      Math.min(prestigeReq - lastPrestigeReq, 11_787_293_080)
     );
 
     this.levelFormatted = getLevelFormatted(level, prestige);
@@ -202,4 +204,19 @@ export class Pit {
     this.blocksPlaced = data.blocks_placed;
     this.vampireHealing = data.vampire_healed_hp;
   }
+}
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("Pit", () => {
+    it("keeps level and progression at the max prestige for xp past the final requirement", () => {
+      const pit = new Pit({ xp: 20_000_000_000 }, {});
+
+      expect(pit.trueLevel).toBe(50 * 120 + 120);
+      expect(pit.levelFormatted).toBe(getLevelFormatted(120, 50));
+      expect(pit.nextLevelFormatted).toBe(getLevelFormatted(120, 50));
+      expect(pit.progression.percent).toBe(1);
+    });
+  });
 }
