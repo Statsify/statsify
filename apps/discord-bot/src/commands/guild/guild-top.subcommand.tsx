@@ -145,8 +145,10 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     listener.addHook(
       dropdown.getCustomId(),
       changePage((interaction) => {
-        const value = interaction.getData().values[0] as GuildTopKey;
-        return { modeIndex: modes.findIndex((m) => m[0] === value) };
+        // Option values are strings, while the past-day keys are numbers
+        const value = interaction.getData().values[0];
+        const index = modes.findIndex(([key]) => `${key}` === value);
+        return index === -1 ? {} : { modeIndex: index };
       })
     );
 
