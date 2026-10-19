@@ -7,7 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { CacheLevel } from "@statsify/api-client";
+import { CacheLevel, HypixelUnavailableException } from "@statsify/api-client";
 import {
   GameCounts,
   Guild,
@@ -22,10 +22,19 @@ import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
 import type { APIData } from "@statsify/util";
 
+// Used when a rate limited response doesn't say when the limit resets
+const DEFAULT_RATE_LIMIT_SECONDS = 60;
+
+const parseHeader = (value: unknown) => {
+  const parsed = Number.parseInt(String(value), 10);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+
 @Injectable()
 export class HypixelService {
   private readonly logger = new Logger("HypixelService");
   private resources = new Map<string, APIData>();
+  private rateLimitedUntil = 0;
 
   public constructor(private readonly httpService: HttpService) {}
 
@@ -43,18 +52,11 @@ export class HypixelService {
           if (data.player) return new Player(data.player);
           return null;
         }),
-        catchError((err) => {
-          this.logger.error(err);
-          return of(null);
-        })
+        catchError((err) => this.handleFailure(err, null))
       )
     );
   }
 
-  /**
-   * Resolves to null when Hypixel says there is no guild or rejects the input.
-   * Other failures reject, so callers don't mistake an outage for a missing guild.
-   */
   public getGuild(tag: string, type: "name" | "id" | "player") {
     return lastValueFrom(
       this.request<APIData>("/guild", { [type]: tag }).pipe(
@@ -62,14 +64,7 @@ export class HypixelService {
           if (data.guild) return new Guild(data.guild);
           return null;
         }),
-        catchError((err) => {
-          this.logger.error(err);
-
-          const status = err.cause?.response?.status;
-          if (status === 400 || status === 422) return of(null);
-
-          return throwError(() => err);
-        })
+        catchError((err) => this.handleFailure(err, null))
       )
     );
   }
@@ -81,10 +76,7 @@ export class HypixelService {
           if (data.games) return data.games.map((game: APIData) => new RecentGame(game));
           return [];
         }),
-        catchError((err) => {
-          this.logger.error(err);
-          return of([]);
-        })
+        catchError((err) => this.handleFailure(err, []))
       )
     );
   }
@@ -96,10 +88,7 @@ export class HypixelService {
           if (data.session) return new Status(data.session);
           return null;
         }),
-        catchError((err) => {
-          this.logger.error(err);
-          return of(null);
-        })
+        catchError((err) => this.handleFailure(err, null))
       )
     );
   }
@@ -109,7 +98,7 @@ export class HypixelService {
       this.request<APIData>("/watchdogstats").pipe(
         map((data) => new Watchdog(data)),
         catchError((err) => {
-          this.logger.error(err);
+          if (!(err instanceof HypixelUnavailableException)) this.logger.error(err);
           return of(null);
         })
       )
@@ -124,7 +113,7 @@ export class HypixelService {
           return null;
         }),
         catchError((err) => {
-          this.logger.error(err);
+          if (!(err instanceof HypixelUnavailableException)) this.logger.error(err);
           return of(null);
         })
       )
@@ -149,7 +138,48 @@ export class HypixelService {
     return this.resources.get(resource);
   }
 
+  /**
+   * Hypixel rejecting the input means there is nothing to find. Any other failure rejects
+   * with a HypixelUnavailableException, so callers don't mistake an outage for missing data.
+   */
+  private handleFailure<T>(err: any, notFound: T): Observable<T> {
+    if (err instanceof HypixelUnavailableException) return throwError(() => err);
+
+    this.logger.error(err);
+
+    const status = err.cause?.response?.status;
+    if (status === 400 || status === 422) return of(notFound);
+
+    return throwError(() => new HypixelUnavailableException());
+  }
+
+  private startRateLimit(headers: Record<string, unknown>) {
+    const seconds =
+      parseHeader(headers["ratelimit-reset"]) ??
+      parseHeader(headers["retry-after"]) ??
+      DEFAULT_RATE_LIMIT_SECONDS;
+
+    const wasRateLimited = Date.now() < this.rateLimitedUntil;
+    this.rateLimitedUntil = Math.max(this.rateLimitedUntil, Date.now() + seconds * 1000);
+
+    if (!wasRateLimited) {
+      this.logger.warn(`Hypixel is rate limiting requests for the next ${seconds} seconds`);
+    }
+  }
+
+  private rateLimitError() {
+    const seconds = Math.ceil((this.rateLimitedUntil - Date.now()) / 1000);
+    return new HypixelUnavailableException(Math.max(1, seconds));
+  }
+
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
+    // Resources don't need an API key, so the key's rate limit doesn't apply to them
+    const isKeyed = !url.startsWith("/resources/");
+
+    if (isKeyed && Date.now() < this.rateLimitedUntil) {
+      return throwError(() => this.rateLimitError());
+    }
+
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     const child = transaction?.startChild({
@@ -161,16 +191,25 @@ export class HypixelService {
       tap((res) => {
         child?.setHttpStatus(res.status);
         child?.finish();
+
+        if (isKeyed && parseHeader(res.headers["ratelimit-remaining"]) === 0) {
+          this.startRateLimit(res.headers);
+        }
       }),
       map((res) => res.data),
-      catchError((err) =>
-        throwError(
+      catchError((err) => {
+        if (isKeyed && (err.response?.status === 429 || err.response?.data?.throttle)) {
+          this.startRateLimit(err.response.headers);
+          return throwError(() => this.rateLimitError());
+        }
+
+        return throwError(
           () =>
             new Error(`Fetching ${url} failed with reason: ${err.message}`, {
               cause: err,
             })
-        )
-      )
+        );
+      })
     );
   }
 }
