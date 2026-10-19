@@ -20,6 +20,8 @@ export const BountyHuntersTable = ({ stats, t }: BountyHuntersTableProps) => (
     <Table.tr>
       <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
       <Table.td title={t("stats.bountyKills")} value={t(stats.bountyKills)} color="§e" />
+      <Table.td title={t("stats.bowKills")} value={t(stats.bowKills)} color="§b" />
+      <Table.td title={t("stats.swordKills")} value={t(stats.swordKills)} color="§d" />
     </Table.tr>
     <Table.tr>
       <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
