@@ -28,7 +28,7 @@ function formatNumber(value: number, language?: string) {
   return Intl.NumberFormat(language, formatOptions).format(value as number);
 }
 
-// Taken from @statsify/util. Truncates instead of rounding, so 1,999,999 is 1.99M like in the bot
+// Taken from @statsify/util
 function abbreviationNumber(num: number, decimals = 2): [num: number, suffix: string] {
   const abbreviation = ["", "K", "M", "B", "T"];
   const base = Math.floor(num === 0 ? 0 : Math.log(num) / Math.log(1000));
