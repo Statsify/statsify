@@ -37,6 +37,12 @@ export interface CommandOptions {
    * @example badge.png
    */
   preview?: string;
+
+  /**
+   * Whether only the user who ran the command can see its reply. Discord decides this when the command is deferred, so returning `ephemeral: true` from the command isn't enough on its own.
+   * @default false
+   */
+  ephemeral?: boolean;
 }
 
 export interface SubCommandOptions extends Omit<CommandOptions, "cooldown"> {

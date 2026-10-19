@@ -12,6 +12,7 @@ import {
   ApplicationCommandOptionType,
   GatewayDispatchEvents,
   InteractionResponseType,
+  MessageFlags,
 } from "discord-api-types/v10";
 import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
@@ -120,6 +121,15 @@ export abstract class AbstractCommandListener {
     }
 
     return [command, data, name];
+  }
+
+  private isEphemeralCommand(interaction: Interaction) {
+    const data = interaction.getData();
+    const parentCommand = this.commands.get(data.name);
+    if (!parentCommand) return false;
+
+    const [command] = this.getCommandAndData(parentCommand, data);
+    return command.ephemeral;
   }
 
   protected async executeCommand({
@@ -271,7 +281,12 @@ export abstract class AbstractCommandListener {
   private async onInteraction(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
     if (interaction.isCommandInteraction()) {
       this.onCommand(interaction);
-      return { type: InteractionResponseType.DeferredChannelMessageWithSource };
+
+      // Discord decides who can see the reply from this first response, so a later edit can't make it ephemeral
+      return {
+        type: InteractionResponseType.DeferredChannelMessageWithSource,
+        data: this.isEphemeralCommand(interaction) ? { flags: MessageFlags.Ephemeral } : undefined,
+      };
     }
 
     if (interaction.isAutocompleteInteraction()) return this.onAutocomplete(interaction);
@@ -320,4 +335,78 @@ export abstract class AbstractCommandListener {
   }
 
   protected abstract onCommand(interaction: Interaction): Promise<void> | void;
+}
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  const { Command } = await import("./command.decorator.js");
+  const { SubCommand } = await import("./subcommand.decorator.js");
+  const { scanCommands } = await import("./command.builder.js");
+  const { InteractionType } = await import("discord-api-types/v10");
+
+  @Command({ description: "test" })
+  class TestCommand {
+    @SubCommand({ description: "test" })
+    public visible() {
+      //
+    }
+
+    @SubCommand({ description: "test", ephemeral: true })
+    public hidden() {
+      //
+    }
+  }
+
+  class TestListener extends AbstractCommandListener {
+    public constructor(client: WebsocketShard, rest: RestClient, commands: Map<string, CommandResolvable>) {
+      super(client, rest, commands, "application");
+    }
+
+    protected onCommand() {
+      //
+    }
+  }
+
+  /** Runs a /test subcommand through the listener and returns the response it defers with */
+  const defer = async (subcommand: string) => {
+    const handlers: ((event: unknown) => Promise<void>)[] = [];
+    const client = { on: (event: string, handler: (typeof handlers)[number]) => event === "event" && handlers.push(handler) };
+
+    const requests: RestClient.RequestOptions[] = [];
+    const rest = {
+      request: async (options: RestClient.RequestOptions) => {
+        requests.push(options);
+        return { status: 204, headers: {}, body: {} };
+      },
+    };
+
+    const command = scanCommands(new TestCommand(), TestCommand);
+    new TestListener(client as unknown as WebsocketShard, rest as unknown as RestClient, new Map([[command.name, command]]));
+
+    await handlers[0]({
+      t: GatewayDispatchEvents.InteractionCreate,
+      d: {
+        id: "1",
+        token: "token",
+        type: InteractionType.ApplicationCommand,
+        data: { name: "test", options: [{ type: ApplicationCommandOptionType.Subcommand, name: subcommand }] },
+      },
+    });
+
+    return requests[0]?.body;
+  };
+
+  suite("Command Listener", () => {
+    it("should defer publicly by default", async () => {
+      expect(await defer("visible")).toEqual({ type: InteractionResponseType.DeferredChannelMessageWithSource });
+    });
+
+    it("should defer ephemeral commands as ephemeral", async () => {
+      expect(await defer("hidden")).toEqual({
+        type: InteractionResponseType.DeferredChannelMessageWithSource,
+        data: { flags: MessageFlags.Ephemeral },
+      });
+    });
+  });
 }

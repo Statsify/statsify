@@ -35,6 +35,7 @@ export class CommandResolvable {
   public cooldown: number;
   public tier: UserTier;
   public preview?: string;
+  public ephemeral: boolean;
 
   private target: any;
   private methodName: string;
@@ -50,6 +51,7 @@ export class CommandResolvable {
       tier = UserTier.NONE,
       preview,
       cooldown = 10,
+      ephemeral = false,
     }: CommandMetadata,
     target: any
   ) {
@@ -84,6 +86,7 @@ export class CommandResolvable {
     this.methodName = methodName;
     this.tier = tier;
     this.preview = preview;
+    this.ephemeral = ephemeral;
   }
 
   public execute(context: CommandContext) {
