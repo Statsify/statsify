@@ -26,7 +26,7 @@ import {
   GuildTopProfileProps,
 } from "./guild-top.profile.js";
 import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.subcommand.js";
-import { GuildQuery } from "@statsify/api-client";
+import { GUILD_CACHE_TIME_MS, GuildQuery } from "@statsify/api-client";
 import { Theme, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -169,7 +169,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       theme
     );
 
-    return message;
+    return { ...message, ...this.apiService.hypixelBusyNotice(guild, GUILD_CACHE_TIME_MS) };
   }
 
   protected getGuild(context: CommandContext) {
