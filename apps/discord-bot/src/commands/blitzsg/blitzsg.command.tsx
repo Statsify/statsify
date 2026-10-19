@@ -28,9 +28,9 @@ export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
   public filterModes(
     player: Player,
     modes: GameModeWithSubModes<BlitzSGModes>[],
-    context?: CommandContext
+    context: CommandContext
   ): GameModeWithSubModes<BlitzSGModes>[] {
-    return filterBlitzKits(player, modes, context?.option<string | null>("kit"));
+    return filterBlitzKits(player, modes, context.option<string | null>("kit"));
   }
 
   public getProfile(

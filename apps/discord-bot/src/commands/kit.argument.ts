@@ -58,10 +58,6 @@ export class KitArgument<T extends Mode[]> extends AbstractArgument {
   }
 }
 
-/**
- * Keeps Overall and the most active kits that fit in the page select menu.
- * A chosen kit always makes the cut and becomes the first page, followed by Overall.
- */
 export function filterKits<T extends Mode[]>(
   modes: GameModeWithSubModes<T>[],
   compareActivity: (a: GameModeWithSubModes<T>, b: GameModeWithSubModes<T>) => number,

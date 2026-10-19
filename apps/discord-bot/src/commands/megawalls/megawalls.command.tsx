@@ -28,9 +28,9 @@ export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
   public filterModes(
     player: Player,
     modes: GameModeWithSubModes<MegaWallsModes>[],
-    context?: CommandContext
+    context: CommandContext
   ): GameModeWithSubModes<MegaWallsModes>[] {
-    return filterMegaWallsKits(player, modes, context?.option<string | null>("kit"));
+    return filterMegaWallsKits(player, modes, context.option<string | null>("kit"));
   }
 
   public getProfile(
