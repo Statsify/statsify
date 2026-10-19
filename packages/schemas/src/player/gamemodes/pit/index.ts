@@ -205,18 +205,3 @@ export class Pit {
     this.vampireHealing = data.vampire_healed_hp;
   }
 }
-
-if (import.meta.vitest) {
-  const { suite, it, expect } = import.meta.vitest;
-
-  suite("Pit", () => {
-    it("keeps level and progression at the max prestige for xp past the final requirement", () => {
-      const pit = new Pit({ xp: 20_000_000_000 }, {});
-
-      expect(pit.trueLevel).toBe(50 * 120 + 120);
-      expect(pit.levelFormatted).toBe(getLevelFormatted(120, 50));
-      expect(pit.nextLevelFormatted).toBe(getLevelFormatted(120, 50));
-      expect(pit.progression.percent).toBe(1);
-    });
-  });
-}

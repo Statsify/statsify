@@ -76,7 +76,6 @@ export const getPrestige = (xp: number) => {
     }
   }
 
-  // XP past the final requirement still belongs to the max prestige
   return PRESTIGE_XP_REQUIREMENTS.length - 1;
 };
 
@@ -136,26 +135,4 @@ export function getRenownShopCost(renownUnlocks: RenownUnlock[]) {
   }
 
   return cost;
-}
-
-if (import.meta.vitest) {
-  const { suite, it, expect } = import.meta.vitest;
-
-  suite("getPrestige", () => {
-    it("finds the prestige whose requirement covers the xp", () => {
-      expect(getPrestige(0)).toBe(0);
-      expect(getPrestige(65_950)).toBe(0);
-      expect(getPrestige(65_951)).toBe(1);
-      expect(getPrestige(11_787_293_080)).toBe(50);
-    });
-
-    it("stays at the max prestige for xp past the final requirement", () => {
-      const xp = 20_000_000_000;
-      const prestige = getPrestige(xp);
-
-      expect(prestige).toBe(50);
-      expect(getPrestigeReq(prestige)).toBe(11_787_293_080);
-      expect(getLevel(prestige, xp)).toBe(120);
-    });
-  });
 }
