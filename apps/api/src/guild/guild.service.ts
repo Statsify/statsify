@@ -8,6 +8,7 @@
 
 import {
   CacheLevel,
+  GUILD_CACHE_TIME_MS,
   GuildNotFoundException,
   GuildQuery,
   PlayerNotFoundException,
@@ -158,7 +159,7 @@ export class GuildService {
     }
 
     // Cache guilds responses for 10 minutes
-    guild.expiresAt = Date.now() + 600_000;
+    guild.expiresAt = Date.now() + GUILD_CACHE_TIME_MS;
 
     const flatGuild = flatten(guild);
     const serializedGuild = serialize(Guild, flatGuild);
