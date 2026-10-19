@@ -356,8 +356,14 @@ interface GuildMiscPageProps {
   t: LocalizeFunction;
 }
 
+// Guilds below the first tier have no tier, and guilds past the last tier have no max
+const formatGuildAchievementTitle = (name: string, tier: string) =>
+  tier ? `${name} ${tier}` : name;
+
 const formatGuildAchievement = (achievement: Progression, t: LocalizeFunction) =>
-  `${t(achievement.current)}§7/${t(achievement.max!)}`;
+  achievement.max ?
+    `${t(achievement.current)}§7/${t(achievement.max)}` :
+    t(achievement.current);
 
 const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
   const { achievements } = guild;
@@ -369,24 +375,24 @@ const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
         <Table.table>
           <Table.tr>
             <Table.td
-              title={`Prestige ${achievements.prestigeTier}`}
+              title={formatGuildAchievementTitle("Prestige", achievements.prestigeTier)}
               value={formatGuildAchievement(achievements.prestigeProgression, t)}
               color="§e"
             />
             <Table.td
-              title={`Experience Kings ${achievements.experienceKingsTier}`}
+              title={formatGuildAchievementTitle("Experience Kings", achievements.experienceKingsTier)}
               value={formatGuildAchievement(achievements.experienceKingsProgression, t)}
               color="§e"
             />
           </Table.tr>
           <Table.tr>
             <Table.td
-              title={`Winners ${achievements.winnersTier}`}
+              title={formatGuildAchievementTitle("Winners", achievements.winnersTier)}
               value={formatGuildAchievement(achievements.winnersProgression, t)}
               color="§e"
             />
             <Table.td
-              title={`Family ${achievements.familyTier}`}
+              title={formatGuildAchievementTitle("Family", achievements.familyTier)}
               value={formatGuildAchievement(achievements.familyProgression, t)}
               color="§e"
             />

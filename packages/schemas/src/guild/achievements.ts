@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, findScore } from "@statsify/util";
+import { type APIData, findScoreIndex } from "@statsify/util";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 
@@ -49,6 +49,19 @@ const FAMILY_REQUIREMENTS = [
 ];
 
 /**
+ * The tier reached and the progress toward the next one. Below the first requirement the
+ * tier is empty, and once every tier is reached there's no next target, so no max
+ */
+const getAchievementProgress = (tiers: { req: number; tier: string }[], score: number) => {
+  const index = findScoreIndex(tiers, score);
+
+  return {
+    tier: tiers[index]?.tier ?? "",
+    progression: new Progression(score, tiers[index + 1]?.req),
+  };
+};
+
+/**
  * Better names for the guild achievements
  */
 export class GuildAchievements {
@@ -77,33 +90,24 @@ export class GuildAchievements {
   public prestigeTier: string;
 
   public constructor(level: number, data: APIData = {}) {
-    const familyScore = data.ONLINE_PLAYERS ?? 0;
-    const winnersScore = data.WINNERS ?? 0;
-    const expierienceKingsScore = data.EXPERIENCE_KINGS ?? 0;
-    const prestigeScore = level;
+    const family = getAchievementProgress(FAMILY_REQUIREMENTS, data.ONLINE_PLAYERS ?? 0);
+    this.familyProgression = family.progression;
+    this.familyTier = family.tier;
 
-    const familyLevel = findScore(FAMILY_REQUIREMENTS, familyScore);
-    this.familyProgression = new Progression(familyScore, familyLevel?.req);
-    this.familyTier = familyLevel?.tier;
+    const winners = getAchievementProgress(WINNERS_REQUIREMENTS, data.WINNERS ?? 0);
+    this.winnersProgression = winners.progression;
+    this.winnersTier = winners.tier;
 
-    const winnersLevel = findScore(WINNERS_REQUIREMENTS, winnersScore);
-    this.winnersProgression = new Progression(winnersScore, winnersLevel?.req);
-    this.winnersTier = winnersLevel?.tier;
-
-    const experienceKingsLevel = findScore(
+    const experienceKings = getAchievementProgress(
       EXPERIENCE_KINGS_REQUIREMENTS,
-      expierienceKingsScore
+      data.EXPERIENCE_KINGS ?? 0
     );
 
-    this.experienceKingsProgression = new Progression(
-      expierienceKingsScore,
-      experienceKingsLevel?.req
-    );
+    this.experienceKingsProgression = experienceKings.progression;
+    this.experienceKingsTier = experienceKings.tier;
 
-    this.experienceKingsTier = experienceKingsLevel?.tier;
-
-    const prestigeLevel = findScore(PRESTIGE_REQUIREMENTS, prestigeScore);
-    this.prestigeProgression = new Progression(prestigeScore, prestigeLevel?.req);
-    this.prestigeTier = prestigeLevel?.tier;
+    const prestige = getAchievementProgress(PRESTIGE_REQUIREMENTS, level);
+    this.prestigeProgression = prestige.progression;
+    this.prestigeTier = prestige.tier;
   }
 }
