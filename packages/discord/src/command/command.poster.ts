@@ -68,6 +68,8 @@ export class CommandPoster {
 
     try {
       cmds = parseDiscordResponse<APIApplicationCommand[]>(response);
+      // Non-JSON errors, like a 502 page, parse to null instead of throwing
+      if (!cmds) throw new Error(`Discord responded with ${response.status}`);
     } catch (err) {
       this.logger.error("Failed to post commands");
       this.logger.error(err);
@@ -75,7 +77,13 @@ export class CommandPoster {
     }
 
     // Only cache the commands once Discord accepts them, so a failed post is retried
-    await this.writeCache(commands, guildId);
+    await writeFile(
+      "./commands.json",
+      JSON.stringify({
+        guildId,
+        commands: Object.fromEntries(commands),
+      })
+    );
 
     this.logger.log(`Successfully posted ${commandsToPost.length} commands`);
     return cmds;
@@ -109,16 +117,6 @@ export class CommandPoster {
     }
 
     return false;
-  }
-
-  private writeCache(commands: Map<string, CommandResolvable>, guildId?: string) {
-    return writeFile(
-      "./commands.json",
-      JSON.stringify({
-        guildId,
-        commands: Object.fromEntries(commands),
-      })
-    );
   }
 
   private getGuildRoute(guildId?: string) {
