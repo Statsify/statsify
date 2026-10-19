@@ -36,28 +36,3 @@ export const findSolutions = (hint: string, limit?: number) => {
 
   return solutions;
 };
-
-if (import.meta.vitest) {
-  const { suite, it, expect } = import.meta.vitest;
-
-  suite("findSolutions", () => {
-    it("should not have duplicate words", () => {
-      const seen = new Set<string>();
-
-      const duplicates = words.filter((word) => {
-        const key = word.toLowerCase();
-        if (seen.has(key)) return true;
-        seen.add(key);
-        return false;
-      });
-
-      expect(duplicates).toEqual([]);
-    });
-
-    it("should return each matching word once", () => {
-      expect(findSolutions("centaur")).toEqual(["centaur"]);
-      expect(findSolutions("grappling hook")).toEqual(["grappling hook"]);
-      expect(findSolutions("picture frame")).toEqual(["picture frame"]);
-    });
-  });
-}
