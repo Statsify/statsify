@@ -85,7 +85,7 @@ export default async function Home() {
             style={{ imageRendering: "pixelated" }}
           />
           <p className="text-center text-mc-3 text-mc-white font-bold">
-            <AnimatedNumber value={100_000} />
+            <AnimatedNumber value={110_000} />+
           </p>
           <p className="text-center text-mc-2 text-mc-white">Servers</p>
         </Box>
@@ -99,7 +99,7 @@ export default async function Home() {
             style={{ imageRendering: "pixelated" }}
             className="mb-3"
           />
-          <p className="text-center text-mc-3 text-mc-white font-bold"><AnimatedNumber value={50_000_000} /></p>
+          <p className="text-center text-mc-3 text-mc-white font-bold"><AnimatedNumber value={70_000_000} />+</p>
           <p className="text-center text-mc-2 text-mc-white">Commands Ran</p>
         </Box>
       </div>
