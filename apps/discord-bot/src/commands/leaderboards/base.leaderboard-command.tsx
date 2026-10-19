@@ -194,9 +194,10 @@ export class BaseLeaderboardCommand {
 
     listener.addHook(positionModal.getCustomId(), async (interaction) => {
       const data = interaction.getData();
-      const positionInput = data.components[0].components[0].value;
+      const positionInput = data.components[0].components[0].value.trim();
 
-      const position = Number.parseInt(positionInput, 10);
+      // Only accept whole numbers, parseInt would read "12abc" as 12 and "1.5" as 1
+      const position = /^\d+$/.test(positionInput) ? Number(positionInput) : Number.NaN;
 
       if (user?.locale) interaction.setLocale(user.locale);
 
