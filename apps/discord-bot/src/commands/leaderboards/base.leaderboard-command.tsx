@@ -196,7 +196,6 @@ export class BaseLeaderboardCommand {
       const data = interaction.getData();
       const positionInput = data.components[0].components[0].value.trim();
 
-      // Only accept whole numbers, parseInt would read "12abc" as 12 and "1.5" as 1
       const position = /^\d+$/.test(positionInput) ? Number(positionInput) : Number.NaN;
 
       if (user?.locale) interaction.setLocale(user.locale);
