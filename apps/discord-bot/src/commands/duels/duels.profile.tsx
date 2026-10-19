@@ -25,7 +25,6 @@ export type DuelsProfileProps<T extends ProfileTime> = Omit<BaseProfileProps, "t
   modeIcons: T extends "LIVE" ? DuelsModeIcons : undefined;
 };
 
-/** The stats of the page being shown: the selected submode, or the whole mode when it has none */
 const getModeStats = (duels: Duels, mode: GameMode<DuelsModes>) => {
   switch (mode.api) {
     case "bedwars":
