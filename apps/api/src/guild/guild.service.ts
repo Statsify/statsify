@@ -56,9 +56,7 @@ export class GuildService {
         type.toLowerCase() as Lowercase<GuildQuery>
       );
     } catch {
-      // The Hypixel request failed (timeout, rate limit, outage), so serve the cached
-      // guild even if it has expired. Only a successful response without a guild may
-      // delete or unset cached data.
+      // Serve the cache even if expired; an outage shouldn't clear or hide a guild
       if (cachedGuild) {
         return {
           ...deserialize(Guild, flatten(cachedGuild)),
