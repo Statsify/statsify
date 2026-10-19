@@ -83,7 +83,11 @@ export const SkyWarsProfile = ({
             value={formatTime(stats.playtime)}
             color="§c"
           />
-          <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color="§6" />
+          <Table.td
+            title={mode.api === "mini" ? t("stats.kit") : t("stats.mostWonModeKit")}
+            value={prettify(stats.kit)}
+            color="§6"
+          />
         </Table.tr>
         <Historical.progression
           time={time}
