@@ -112,11 +112,15 @@ export class PlayerService {
   }
 
   public async getStatus(tag: string) {
+    // `get` reads expiresAt, guildId, and username to decide whether and how to refresh
     const player = await this.get(tag, CacheLevel.CACHE, {
       uuid: true,
       displayName: true,
       prefixName: true,
       status: true,
+      expiresAt: true,
+      guildId: true,
+      username: true,
     });
 
     if (!player) throw new NotFoundException("player");
