@@ -33,12 +33,13 @@ import {
 } from "#responses";
 import { User, UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
-import { loadImage } from "@statsify/rendering";
+import { IMAGE_DOWNLOAD_TIMEOUT, loadImage } from "@statsify/rendering";
 
 interface ExtraData {
   headers?: AxiosRequestHeaders;
   body?: Record<string, any> | Buffer | string;
   responseType?: ResponseType;
+  timeout?: number;
 }
 
 // TODO: Move dtos in api to @statsify/api-client
@@ -286,7 +287,7 @@ export class ApiService {
     url: string,
     params: Record<string, unknown> | undefined,
     method: Method = "GET",
-    { body, headers, responseType }: ExtraData = {}
+    { body, headers, responseType, timeout }: ExtraData = {}
   ): Promise<T> {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
@@ -302,6 +303,7 @@ export class ApiService {
       headers,
       data: body,
       responseType,
+      timeout,
     });
 
     child?.setHttpStatus(res.status);
@@ -314,10 +316,13 @@ export class ApiService {
     return data;
   }
 
+  // Through the client like every other request, so the key goes in a header instead of the URL
   private async requestImage(url: string, params?: Record<string, unknown>) {
-    const uri = this.axios.getUri({ url, params: { key: this.apiKey, ...params } });
-    const image = await loadImage(uri);
+    const data = await this.request<ArrayBuffer>(url, params, "GET", {
+      responseType: "arraybuffer",
+      timeout: IMAGE_DOWNLOAD_TIMEOUT,
+    });
 
-    return image;
+    return loadImage(Buffer.from(data));
   }
 }
