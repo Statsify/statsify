@@ -8,12 +8,13 @@
 
 "use client";
 
+import { DISPLAY_LOCALE } from "~/localize";
 import { motion, useSpring, useTransform } from "motion/react";
 import { useEffect } from "react";
 
 export function AnimatedNumber({ value }: { value: number }) {
   const fractionDigits = Number.isInteger(value) ? 0 : 2;
-  const numberFormat = Intl.NumberFormat("en-US", {
+  const numberFormat = Intl.NumberFormat(DISPLAY_LOCALE, {
     maximumFractionDigits: fractionDigits,
     minimumFractionDigits: fractionDigits,
   });
