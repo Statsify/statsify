@@ -8,7 +8,7 @@
 
 import { z } from "zod";
 
-// A Minecraft UUID, with or without dashes. The API's skin routes only accept UUIDs, not usernames
+// The API's skin routes only accept UUIDs, not usernames
 export const SkinUuid = z
   .string()
   .regex(/^[\da-f]{8}-?[\da-f]{4}-?[\da-f]{4}-?[\da-f]{4}-?[\da-f]{12}$/i);
