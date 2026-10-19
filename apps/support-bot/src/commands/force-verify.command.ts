@@ -38,12 +38,12 @@ export class ForceVerifyCommand {
 
     const user = await this.apiService.verifyUser(player.uuid, userId);
 
+    if (!user) throw new ErrorMessage("errors.unknown");
+
     await this.memberService
       .addRole(await config("supportBot.guild"), userId, await config("supportBot.memberRole"))
       .then(() => this.apiService.updateUser(userId, { serverMember: true }))
       .catch(() => null);
-
-    if (!user) throw new ErrorMessage("errors.unknown");
 
     const embed = new EmbedBuilder()
       .color(STATUS_COLORS.success)
