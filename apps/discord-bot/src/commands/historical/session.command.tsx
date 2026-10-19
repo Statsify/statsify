@@ -464,6 +464,9 @@ export class SessionCommand {
           const buffer = await canvas.toBuffer("png");
 
           return {
+            content: player.isNew ?
+              t("historical.newSession", { displayName: this.apiService.emojiDisplayName(t, player.displayName) }) :
+              undefined,
             files: [{ name: "session.png", data: buffer, type: "image/png" }],
             attachments: [],
           };
