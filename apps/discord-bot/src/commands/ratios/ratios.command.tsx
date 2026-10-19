@@ -51,7 +51,7 @@ import {
   mapBackground,
 } from "#constants";
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
-import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
+import { filterMegaWallsKits } from "#commands/megawalls/megawalls.command";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
