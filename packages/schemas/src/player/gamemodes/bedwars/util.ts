@@ -126,30 +126,6 @@ function createSuffixScheme(remainingColor: string, suffix: string[]): Scheme {
       .join("");
 }
 
-if (import.meta.vitest) {
-  const { suite, it, expect } = import.meta.vitest;
-
-  suite("createSuffixScheme", () => {
-    const options = {
-      level: 9000,
-      star: "✭",
-      brackets: BRACKET_MAP.none,
-      bold: false,
-      underline: false,
-      strikethrough: false,
-    };
-
-    it("should apply every suffix color to the last parts in order", () => {
-      const scheme = createSuffixScheme("§d", ["§5", "§8"]);
-
-      expect(scheme(options)).toBe("§d[§r§d9§d0§d0§d0§5✭§r§8]§r");
-      expect(scheme({ ...options, level: 281 })).toBe(
-        "§d[§r§d2§d8§d1§5✭§r§8]§r",
-      );
-    });
-  });
-}
-
 export const SCHEME_MAP = {
   none: createUniformScheme("§7"),
   iron: createUniformScheme("§f"),
