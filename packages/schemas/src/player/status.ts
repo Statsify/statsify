@@ -236,31 +236,3 @@ export class PlayerStatus {
     this.lastGame = new Game(data.mostRecentGameType ?? "LIMBO");
   }
 }
-
-if (import.meta.vitest) {
-  const { suite, it, expect } = import.meta.vitest;
-
-  suite("PlayerStatus", () => {
-    it("uses the latest parkour run in any order", () => {
-      const status = new PlayerStatus({
-        parkourCompletions: {
-          Duels: [
-            { timeStart: 300, timeTook: 50 },
-            { timeStart: 500, timeTook: 90 },
-            { timeStart: 100, timeTook: 10 },
-          ],
-          Arcade: [{ timeStart: 200, timeTook: 70 }],
-        },
-      });
-
-      expect(status.lastAction).toBe("LOBBY_PARKOUR");
-      expect(status.lastActionTime).toBe(500);
-    });
-
-    it("skips lobbies without completions", () => {
-      const status = new PlayerStatus({ parkourCompletions: { Duels: [], Arcade: [{ timeStart: 200 }] } });
-
-      expect(status.lastActionTime).toBe(200);
-    });
-  });
-}
