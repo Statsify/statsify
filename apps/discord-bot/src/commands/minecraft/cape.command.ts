@@ -36,7 +36,6 @@ function getCapeFront(cape: Image): CapeFront | undefined {
 
   const front = { x: scale, y: scale, width: 10 * scale, height: 16 * scale };
 
-  // A texture too small to hold the front has no cape to show
   if (front.x + front.width > cape.width || front.y + front.height > cape.height) return;
 
   return front;
