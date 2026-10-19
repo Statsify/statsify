@@ -68,7 +68,7 @@ export const PaintballProfile = ({
           />
           <Table.td
             title={t("stats.shotAccuracy")}
-            value={`${paintball.shotAccuracy}%`}
+            value={`${t(paintball.shotAccuracy)}%`}
             color="§6"
           />
         </Table.tr>
