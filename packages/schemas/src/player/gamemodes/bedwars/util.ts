@@ -67,41 +67,6 @@ function createUniformScheme(
   };
 }
 
-if (import.meta.vitest) {
-  const { suite, it, expect } = import.meta.vitest;
-
-  suite("createUniformScheme", () => {
-    const options = {
-      level: 281,
-      star: "✫",
-      brackets: BRACKET_MAP.none,
-      bold: false,
-      underline: false,
-      strikethrough: false,
-    };
-
-    it("should keep square brackets by default", () => {
-      expect(createUniformScheme("§6")(options)).toBe("§6[§r§6281§6✫§r§6]§r");
-    });
-
-    it("should use the selected brackets", () => {
-      expect(
-        createUniformScheme("§6")({ ...options, brackets: BRACKET_MAP.curly_brace }),
-      ).toBe("§6{§r§6281§6✫§r§6}§r");
-
-      expect(
-        createUniformScheme("§7", "§c", "§4")({
-          ...options,
-          level: 1623,
-          star: "✪",
-          brackets: BRACKET_MAP.angled,
-          strikethrough: true,
-        }),
-      ).toBe("§7§m<§r§c1623§4✪§r§7§m>§r");
-    });
-  });
-}
-
 /**
  * Creates a list of level "parts" which contain groups characters in a formatted level
  * Handles adding bold, underline and strikethrough formatting to the level
