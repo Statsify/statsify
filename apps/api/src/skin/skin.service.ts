@@ -14,7 +14,7 @@ import { PlayerNotFoundException } from "@statsify/api-client";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
-import { getMinecraftTexturePath } from "@statsify/assets";
+import { getDefaultSkin } from "@statsify/assets";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
@@ -26,9 +26,7 @@ export class SkinService {
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
-    const { skin } = await this.getSkin(uuid)
-      .then((skin) => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false))
-      .catch(() => this.resolveSkin(undefined, false));
+    const { skin } = await this.getSkinImage(uuid);
 
     const canvas = createCanvas(size, size);
     const ctx = canvas.getContext("2d");
@@ -44,11 +42,10 @@ export class SkinService {
   }
 
   public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {
-    const skin = await this.getSkin(uuid);
-    const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
+    const { skin, slim } = await this.getSkinImage(uuid);
     // This field is set by loadImage from `@statsify/rendering`
-    const { _data: buffer } = image as unknown as { _data: Buffer };
-    return renderSkin(buffer, skin.slim ?? false, extruded);
+    const { _data: buffer } = skin as unknown as { _data: Buffer };
+    return renderSkin(buffer, slim, extruded);
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -81,23 +78,20 @@ export class SkinService {
     return skin;
   }
 
-  private async resolveSkin(
-    skinUrl?: string,
-    slim?: boolean
-  ): Promise<{ skin: Image; slim: boolean }> {
-    if (!skinUrl) {
-      return this.resolveSkin(
-        getMinecraftTexturePath("textures/entity/steve.png"),
-        false
-      );
+  /**
+   * The player's skin, or the default skin Minecraft gives their UUID when Mojang has none for
+   * them or the skin can't be loaded
+   */
+  private async getSkinImage(uuid: string): Promise<{ skin: Image; slim: boolean }> {
+    const skin = await this.getSkin(uuid).catch(() => undefined);
+
+    if (skin?.skinUrl) {
+      const image = await loadImage(skin.skinUrl).catch(() => undefined);
+      if (image) return { skin: image, slim: skin.slim ?? false };
     }
 
-    const skin = await loadImage(skinUrl);
-
-    return {
-      skin,
-      slim: slim ?? false,
-    };
+    const { texture, slim } = getDefaultSkin(uuid);
+    return { skin: await loadImage(texture), slim };
   }
 
   private getUuid(username: string): Promise<string> {

@@ -34,6 +34,26 @@ export const getMinecraftTexturePath = (texturePath: string, pack = "default") =
   return join(getAssetPath(`minecraft-textures/${effectivePack}/assets/minecraft/`), texturePath);
 };
 
+/**
+ * The default skin Minecraft gave a UUID before 1.19.3: Alex when the UUID's Java hashCode is
+ * odd, which comes down to the lowest bits of four of its hex digits, and Steve otherwise
+ */
+export const getDefaultSkin = (uuid: string) => {
+  const hex = uuid.replaceAll("-", "");
+
+  const alex =
+    /^[\da-f]{32}$/i.test(hex) &&
+    [7, 15, 23, 31].map((index) => Number.parseInt(hex[index], 16)).reduce((a, b) => a ^ b) % 2 === 1;
+
+  const name = alex ? "alex" : "steve";
+
+  return {
+    slim: alex,
+    texture: getAssetPath(`skins/${name}.png`),
+    render: getAssetPath(`skins/${name}-render.png`),
+  };
+};
+
 export const getAllGameIcons = async () => {
   const gameIconPaths = readdirSync(getAssetPath("games"));
 
