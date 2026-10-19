@@ -37,7 +37,7 @@
       "name": "Support Bot",
       "runtimeExecutable": "pnpm",
       "cwd": "${workspaceFolder}",
-      "runtimeArgs": ["discord-bot", "start"],
+      "runtimeArgs": ["support-bot", "start"],
       "outputCapture": "std"
     },
     {
