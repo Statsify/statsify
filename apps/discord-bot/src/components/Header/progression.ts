@@ -11,9 +11,18 @@ import type { Progression } from "@statsify/schemas";
 
 export type ProgressFunction = (pecentage: number) => string;
 
+/**
+ * The number of filled segments out of `max`. Percentages outside 0 to 1 are clamped,
+ * and values that aren't finite (NaN, Infinity) give an empty bar.
+ */
+const filledSegments = (max: number, percentage: number) => {
+  if (!Number.isFinite(percentage)) return 0;
+  return Math.ceil(max * Math.min(Math.max(percentage, 0), 1));
+};
+
 const xpBar: ProgressFunction = (percentage) => {
   const max = 10;
-  const count = Math.ceil(max * percentage);
+  const count = filledSegments(max, percentage);
 
   return `§r§8[§b${"■".repeat(count)}§7${"■".repeat(max - count)}§8]`;
 };
@@ -22,7 +31,7 @@ export const lineXpBar =
   (color: string): ProgressFunction =>
     (percentage: number) => {
       const max = 40;
-      const count = Math.ceil(max * percentage);
+      const count = filledSegments(max, percentage);
       return `§8[${color}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]§r`;
     };
 
