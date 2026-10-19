@@ -16,7 +16,7 @@ import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/sc
 import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
 import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Injectable } from "@nestjs/common";
+import { Injectable, ServiceUnavailableException } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { PlayerService } from "#player";
 import { flatten } from "@statsify/util";
@@ -48,10 +48,26 @@ export class GuildService {
       };
     }
 
-    const guild = await this.hypixelService.getGuild(
-      tag,
-      type.toLowerCase() as Lowercase<GuildQuery>
-    );
+    let guild: Guild | null;
+
+    try {
+      guild = await this.hypixelService.getGuild(
+        tag,
+        type.toLowerCase() as Lowercase<GuildQuery>
+      );
+    } catch {
+      // The Hypixel request failed (timeout, rate limit, outage), so serve the cached
+      // guild even if it has expired. Only a successful response without a guild may
+      // delete or unset cached data.
+      if (cachedGuild) {
+        return {
+          ...deserialize(Guild, flatten(cachedGuild)),
+          cached: true,
+        };
+      }
+
+      throw new ServiceUnavailableException();
+    }
 
     if (!guild) {
       await this.handleGuildNotFound(cachedGuild, tag, type);
