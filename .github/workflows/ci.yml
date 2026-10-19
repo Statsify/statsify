@@ -5,9 +5,9 @@ on:
       - main
   pull_request:
 
+# No step writes to the repository or to checks
 permissions:
-  checks: write
-  contents: write
+  contents: read
 
 # A new push to a pull request cancels the run for the old commit. Each run on main gets its
 # own group, so every commit there still gets a result and none waits behind another
@@ -19,6 +19,7 @@ jobs:
   ci:
     name: CI
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
@@ -30,6 +31,8 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
+          # Don't leave the token in .git/config while dependency install scripts run
+          persist-credentials: false
 
       - name: Setup pnpm
         uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
@@ -75,6 +78,12 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      # Cargo.lock is committed so every machine builds the renderer from the same crates. The
+      # build only changes it when Cargo.toml changed without a lockfile update
+      - name: Check Cargo.lock
+        if: steps.rust.outputs.needed == 'true'
+        run: git diff --exit-code Cargo.lock
 
       - name: Test
         run: pnpm test:coverage --changed=$TURBO_SCM_BASE

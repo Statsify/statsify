@@ -1,6 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDependencies": ["pnpm.lock", "tsconfig.json", ".swcrc"],
+  "globalDependencies": ["pnpm.lock", "tsconfig.json", ".swcrc", "Cargo.lock"],
   "ui": "tui",
   "tasks": {
     "build": {
