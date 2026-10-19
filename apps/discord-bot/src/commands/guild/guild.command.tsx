@@ -52,7 +52,7 @@ export class GuildCommand extends GuildTopSubCommand {
       getBackground("hypixel", "overall"),
     ]);
 
-    const ranking = guildRanking[0]?.rank ?? 0;
+    const ranking = guildRanking[0]?.rank;
 
     const props: Omit<GuildProfileProps, "page"> = {
       guild,
