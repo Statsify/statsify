@@ -14,12 +14,14 @@ import {
   ErrorMessage,
   FileArgument,
   IMessage,
+  LocalizationString,
   LocalizeFunction,
   SubCommand,
 } from "@statsify/discord";
 import { type Canvas, Image } from "skia-canvas";
 import { DemoProfile } from "./demo.profile.js";
 import { User, UserTier } from "@statsify/schemas";
+import { confirmAction } from "#lib/confirm-action";
 import { createCanvas, loadImage, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -118,27 +120,53 @@ export class BadgeCommand {
           height
         );
 
-        await this.apiService.updateUserBadge(userId, await canvas.toBuffer("png"));
-        const profile = await this.getProfile(t, user, canvas);
+        const buffer = await canvas.toBuffer("png");
 
-        return {
-          content: t("config.badge.set") as string,
-          files: [{ name: "badge.png", data: profile, type: "image/png" }],
-        };
+        return this.preview(
+          context,
+          user,
+          canvas,
+          () => this.apiService.updateUserBadge(userId, buffer),
+          (t) => t("config.badge.set")
+        );
       }
 
       case "reset": {
-        await this.apiService.deleteUserBadge(userId);
-        const badge = await this.apiService.getUserBadge(userId);
-
-        const profile = await this.getProfile(t, user, badge);
-
-        return {
-          content: t("config.badge.reset") as string,
-          files: [{ name: "badge.png", data: profile, type: "image/png" }],
-        };
+        // Badges need a premium tier, so without a custom badge the API serves the footer logo
+        return this.preview(
+          context,
+          user,
+          await getLogo(user),
+          () => this.apiService.deleteUserBadge(userId),
+          (t) => t("config.badge.reset")
+        );
       }
     }
+  }
+
+  /**
+   * Shows the user how their profiles would look with a badge, and only saves it once they apply it.
+   */
+  private async preview(
+    context: CommandContext,
+    user: User,
+    badge: Image | Canvas,
+    apply: () => Promise<unknown>,
+    applied: LocalizationString
+  ): Promise<IMessage> {
+    const profile = await this.getProfile(context.t(), user, badge);
+
+    return confirmAction(context, {
+      prompt: {
+        content: (t) => t("config.preview"),
+        files: [{ name: "badge.png", data: profile, type: "image/png" }],
+      },
+      confirmLabel: (t) => t("config.apply"),
+      onConfirm: async () => {
+        await apply();
+        return { content: applied };
+      },
+    });
   }
 
   private async getProfile(t: LocalizeFunction, user: User, badge?: Image | Canvas) {

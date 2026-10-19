@@ -13,6 +13,7 @@ import {
   CommandContext,
   ErrorMessage,
   IMessage,
+  LocalizationString,
   LocalizeFunction,
   SubCommand,
   TextArgument,
@@ -29,6 +30,7 @@ import {
   UserTheme,
   UserTier,
 } from "@statsify/schemas";
+import { confirmAction } from "#lib/confirm-action";
 import { convertColorCodes } from "#lib/convert-color-codes";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -181,26 +183,24 @@ export class ThemeCommand {
     description: (t) => t("commands.theme-footer-reset"),
     group: "footer",
   })
-  public async reset(context: CommandContext) {
+  public reset(context: CommandContext) {
     const user = context.getUser();
-    const t = context.t();
 
     if (!user?.uuid)
       throw new ErrorMessage("verification.requiredVerification");
 
-    user.footer = {
+    const footer = {
       icon: User.tierToLogo(user.tier ?? UserTier.NONE),
       message: null,
     };
 
-    await this.apiService.updateUser(user.id, { footer: user.footer });
-
-    const profile = await this.getProfile(t, "footer", user);
-
-    return {
-      content: t("config.footer.reset"),
-      files: [{ name: "footer.png", data: profile, type: "image/png" }],
-    };
+    return this.preview(
+      context,
+      "footer",
+      { ...user, footer },
+      () => this.apiService.updateUser(user.id, { footer }),
+      (t) => t("config.footer.reset")
+    );
   }
 
   private async updateField<
@@ -214,21 +214,43 @@ export class ThemeCommand {
     value: T[K]
   ): Promise<IMessage> {
     const user = context.getUser();
-    const t = context.t();
 
     if (!user?.uuid)
       throw new ErrorMessage("verification.requiredVerification");
 
-    user[mode] = { ...user[mode], [field]: value };
-    await this.apiService.updateUser(user.id, { [mode]: user[mode] });
+    return this.preview(
+      context,
+      mode,
+      { ...user, [mode]: { ...user[mode], [field]: value } },
+      // Only save the changed field, so applying an older preview can't undo a newer change
+      () => this.apiService.updateUser(user.id, { [mode]: { [field]: value } }),
+      (t) => (mode === "theme" ? t("config.theme.set") : t("config.footer.set"))
+    );
+  }
 
-    const profile = await this.getProfile(t, mode, user);
+  /**
+   * Shows the user how their profiles would look with a change, and only saves it once they apply it.
+   */
+  private async preview(
+    context: CommandContext,
+    mode: "theme" | "footer",
+    preview: User,
+    apply: () => Promise<unknown>,
+    applied: LocalizationString
+  ): Promise<IMessage> {
+    const profile = await this.getProfile(context.t(), mode, preview);
 
-    return {
-      content:
-        mode === "theme" ? t("config.theme.set") : t("config.footer.set"),
-      files: [{ name: `${mode}.png`, data: profile, type: "image/png" }],
-    };
+    return confirmAction(context, {
+      prompt: {
+        content: (t) => t("config.preview"),
+        files: [{ name: `${mode}.png`, data: profile, type: "image/png" }],
+      },
+      confirmLabel: (t) => t("config.apply"),
+      onConfirm: async () => {
+        await apply();
+        return { content: applied };
+      },
+    });
   }
 
   private async getProfile(

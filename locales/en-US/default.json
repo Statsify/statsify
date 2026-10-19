@@ -241,6 +241,7 @@
     "reset-session": "Reset your session stats"
   },
   "config": {
+    "apply": "Apply",
     "badge": {
       "profile": "This is how your badge will look on your profiles",
       "reset": "$t(emojis:config.reset) Successfully reset your badge.",
@@ -255,11 +256,16 @@
     "language": {
       "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
     },
+    "preview": "$t(emojis:config.view) This is a preview, so nothing has changed yet. Click **$t(config.apply)** to save it.",
     "theme": {
       "profile": "This is how your theme will look on your profiles",
       "set": "$t(emojis:config.success) Successfully updated your theme.",
       "view": "$t(emojis:config.view) Your current theme:"
     }
+  },
+  "confirm": {
+    "cancel": "Cancel",
+    "cancelled": "$t(emojis:cross) Cancelled. Nothing was changed."
   },
   "cooldown": {
     "description": "Please wait `{{time}}` before reusing `{{command}}`.\n\nLearn how to reduce cooldowns [here](https://statsify.net/premium)",
@@ -467,6 +473,10 @@
     "noStatus": {
       "description": "**{{displayName}}**'s Hypixel status could not be found!",
       "title": "Status Not Found"
+    },
+    "notCommandOwner": {
+      "description": "Only the person who ran this command can use these buttons.",
+      "title": "Not Your Command"
     },
     "playerLeaderboardNotFound": {
       "description": "We couldn't find the `player` you were looking for!",
