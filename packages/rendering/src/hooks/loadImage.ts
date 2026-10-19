@@ -11,9 +11,8 @@ import { Image } from "skia-canvas";
 import { readFile } from "node:fs/promises";
 
 /**
- * How long a remote image (skins, heads, badges, capes) can go without sending data before
- * the download fails, so one slow image can't hang a whole command. A skin can need a Mojang
- * lookup, a texture download, and a render on the API first, which is why this isn't shorter.
+ * Idle timeout for remote images. A skin can need a Mojang lookup and a render on the API
+ * before any data arrives, which is why this isn't shorter.
  */
 const IMAGE_DOWNLOAD_TIMEOUT = 5_000;
 
