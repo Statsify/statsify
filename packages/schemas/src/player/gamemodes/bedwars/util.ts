@@ -58,13 +58,48 @@ function createUniformScheme(
   digitColor = bracketColor,
   starColor = digitColor,
 ): Scheme {
-  return ({ level, bold, underline, strikethrough, star }) => {
+  return ({ level, bold, underline, strikethrough, star, brackets }) => {
     const boldFormat = bold ? "§l" : "";
     const underlineFormat = underline ? "§n" : "";
     const strikethroughFormat = strikethrough ? "§m" : "";
 
-    return `${bracketColor}${underlineFormat}${strikethroughFormat}[§r${boldFormat}${digitColor}${underlineFormat}${level}${starColor}${underlineFormat}${star}§r${bracketColor}${underlineFormat}${strikethroughFormat}]§r`;
+    return `${bracketColor}${underlineFormat}${strikethroughFormat}${brackets[0]}§r${boldFormat}${digitColor}${underlineFormat}${level}${starColor}${underlineFormat}${star}§r${bracketColor}${underlineFormat}${strikethroughFormat}${brackets[1]}§r`;
   };
+}
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("createUniformScheme", () => {
+    const options = {
+      level: 281,
+      star: "✫",
+      brackets: BRACKET_MAP.none,
+      bold: false,
+      underline: false,
+      strikethrough: false,
+    };
+
+    it("should keep square brackets by default", () => {
+      expect(createUniformScheme("§6")(options)).toBe("§6[§r§6281§6✫§r§6]§r");
+    });
+
+    it("should use the selected brackets", () => {
+      expect(
+        createUniformScheme("§6")({ ...options, brackets: BRACKET_MAP.curly_brace }),
+      ).toBe("§6{§r§6281§6✫§r§6}§r");
+
+      expect(
+        createUniformScheme("§7", "§c", "§4")({
+          ...options,
+          level: 1623,
+          star: "✪",
+          brackets: BRACKET_MAP.angled,
+          strikethrough: true,
+        }),
+      ).toBe("§7§m<§r§c1623§4✪§r§7§m>§r");
+    });
+  });
 }
 
 /**
