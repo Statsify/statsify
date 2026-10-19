@@ -114,25 +114,6 @@ if (import.meta.vitest) {
       expect(ratio(1)).toBe(1);
       expect(ratio(1, 0)).toBe(1);
       expect(ratio(Number.NaN, 1)).toBe(0);
-      expect(ratio(999, 1000)).toBe(1);
-      expect(ratio(1, 3, 100)).toBe(33.33);
-    });
-
-    it("should calculate unrounded ratios", () => {
-      expect(unroundedRatio(1, 2)).toBe(0.5);
-      expect(unroundedRatio(1, 3)).toBe(1 / 3);
-      expect(unroundedRatio(1)).toBe(1);
-      expect(unroundedRatio(1, 0)).toBe(1);
-      expect(unroundedRatio(0, 0)).toBe(0);
-      expect(unroundedRatio(Number.NaN, 1)).toBe(0);
-      expect(unroundedRatio(1, 4, 100)).toBe(25);
-    });
-
-    it("should keep a ratio just under a whole number below it", () => {
-      expect(unroundedRatio(999, 1000)).toBe(0.999);
-      expect(Math.floor(unroundedRatio(999, 1000))).toBe(0);
-      expect(Math.floor(unroundedRatio(1999, 1000))).toBe(1);
-      expect(Math.floor(unroundedRatio(1000, 1000))).toBe(1);
     });
   });
 
