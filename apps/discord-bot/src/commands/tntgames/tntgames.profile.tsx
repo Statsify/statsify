@@ -15,7 +15,6 @@ export interface TNTGamesProfileProps extends BaseProfileProps {
   mode: GameMode<TNTGamesModes>;
 }
 
-// Hypixel omits a record until the player has one, and the schema stores that as 0
 const formatRecord = (record: number) => (record ? formatTime(record) : "N/A");
 
 export const TNTGamesProfile = ({
