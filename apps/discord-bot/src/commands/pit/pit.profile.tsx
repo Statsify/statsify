@@ -16,7 +16,7 @@ import {
   formatProgression,
 } from "#components";
 import { FormattedGame } from "@statsify/schemas";
-import { formatTime } from "@statsify/util";
+import { formatTime, romanNumeral } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export const PitProfile = ({
@@ -80,6 +80,34 @@ export const PitProfile = ({
           />
           <Table.td title={t("stats.assists")} value={t(pit.assists)} color="§e" />
         </Table.tr>
+        <Table.ts title={`§d${t("stats.mysticsEnchanted")}`}>
+          <Table.tr>
+            <Table.td
+              title={t("stats.tier", { tier: romanNumeral(1) })}
+              value={t(pit.tier1MysticsEnchanted)}
+              color="§a"
+              size="small"
+            />
+            <Table.td
+              title={t("stats.tier", { tier: romanNumeral(2) })}
+              value={t(pit.tier2MysticsEnchanted)}
+              color="§e"
+              size="small"
+            />
+            <Table.td
+              title={t("stats.tier", { tier: romanNumeral(3) })}
+              value={t(pit.tier3MysticsEnchanted)}
+              color="§c"
+              size="small"
+            />
+            <Table.td
+              title={t("stats.total")}
+              value={t(pit.totalMysticsEnchanted)}
+              color="§6"
+              size="small"
+            />
+          </Table.tr>
+        </Table.ts>
       </Table.table>
       <Historical.progression
         time={time}

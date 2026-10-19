@@ -766,6 +766,7 @@
     "tags": "Tags",
     "tauntsUsed": "Taunts Used",
     "thrownKnifeKills": "Thrown Knife Kills",
+    "tier": "Tier {{tier}}",
     "title": "Title",
     "tokens": "Tokens",
     "total": "Total",
