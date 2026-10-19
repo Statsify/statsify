@@ -24,14 +24,10 @@ interface SessionChange {
   warning: string;
   /** Locale key of the button that makes the change */
   button: string;
-  /** Makes the change for the user's player uuid once they confirm */
   onConfirm: (uuid: string) => Promise<IMessage>;
 }
 
 /**
- * Asks the user to confirm before their session is reset or deleted. A session is one snapshot of
- * the player's stats in every game, so the warning says so, along with when the session started.
- *
  * Not an async function: the command loader treats exports without a writable prototype as commands.
  */
 export function confirmSessionChange(
