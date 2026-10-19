@@ -8,7 +8,7 @@
 
 import axios, { AxiosInstance } from "axios";
 import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
-import { type Server, type ServerMappingsServer, getServerBackground, getServerMappings } from "./server.util.js";
+import { type Server, type ServerMappingsServer, getServerBackground, getServerMappings, isServerAddress } from "./server.util.js";
 import { ServerArgument } from "./server.argument.js";
 import { ServerProfile } from "./server.profile.js";
 import { getTheme } from "#themes";
@@ -26,6 +26,7 @@ export class ServerCommand {
   public constructor() {
     this.axios = axios.create({
       baseURL: "https://api.mcsrvstat.us/2/",
+      allowAbsoluteUrls: false,
     });
 
     getServerMappings().then((mappings) => {
@@ -69,8 +70,11 @@ export class ServerCommand {
         s.addresses.find((address) => tag.endsWith(address))
     );
 
+    const address = mappedServer?.primaryAddress ?? tag;
+    if (!isServerAddress(address)) throw new ErrorMessage("errors.invalidServer");
+
     const server = await this.axios
-      .get<Server>(mappedServer?.primaryAddress ?? tag)
+      .get<Server>(encodeURIComponent(address))
       .then((res) => res.data)
       .catch(() => null);
 
