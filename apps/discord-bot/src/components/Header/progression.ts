@@ -11,10 +11,6 @@ import type { Progression } from "@statsify/schemas";
 
 export type ProgressFunction = (pecentage: number) => string;
 
-/**
- * The number of filled segments out of `max`. Percentages outside 0 to 1 are clamped,
- * and values that aren't finite (NaN, Infinity) give an empty bar.
- */
 const filledSegments = (max: number, percentage: number) => {
   if (!Number.isFinite(percentage)) return 0;
   return Math.ceil(max * Math.min(Math.max(percentage, 0), 1));
