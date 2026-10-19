@@ -7,12 +7,16 @@
  */
 
 import type { NextRequest } from "next/server";
+import { SkinUuid } from "~/app/api/skin/uuid";
 import { env } from "~/app/env";
 
 export async function GET(
   request: NextRequest
 ) {
   const searchParams = request.nextUrl.searchParams;
-  const uuid = searchParams.get("uuid");
+  const query = SkinUuid.safeParse(searchParams.get("uuid"));
+  if (!query.success) return new Response("Invalid uuid", { status: 400 });
+
+  const uuid = query.data;
   return fetch(`${env.API_URL}/skin?uuid=${uuid}`, { headers: { "X-API-KEY": env.API_KEY } });
 }
