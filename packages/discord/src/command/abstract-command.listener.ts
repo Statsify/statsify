@@ -144,6 +144,9 @@ export abstract class AbstractCommandListener {
       context.reply({
         ...message,
         ...response,
+        // The reply's own content wins, and the extra message's (a tip) fills in when it has none.
+        // Paged replies are Message instances, which set every unused field to undefined
+        content: response?.content ?? message?.content,
       });
     } catch (err) {
       if (err instanceof Message) {
