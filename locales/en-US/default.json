@@ -374,6 +374,14 @@
       "description": "You need to purchase a higher premium tier to unlock this icon!",
       "title": "Higher Tier Required"
     },
+    "hypixelRateLimited": {
+      "description": "Hypixel is rate limiting Statsify right now. Try again in about {{time}}.",
+      "title": "Hypixel Rate Limit"
+    },
+    "hypixelUnavailable": {
+      "description": "Hypixel isn't responding right now, try again in a bit.",
+      "title": "Hypixel Unavailable"
+    },
     "invalidGuild": {
       "description_id": "A guild with the id of `{{tag}}` could not be found!",
       "description_name": "A guild by the name of `{{tag}}` could not be found!",
