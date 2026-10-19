@@ -25,7 +25,7 @@ import {
   forwardRef,
 } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Player, Status, deserialize, serialize } from "@statsify/schemas";
+import { Player, deserialize, serialize } from "@statsify/schemas";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
 import {
   PlayerSearchService,
@@ -153,16 +153,8 @@ export class PlayerService {
 
     if (!player) throw new NotFoundException("player");
 
-    let hypixelUnavailable = Boolean(hypixelError);
-
     const [status, games] = await Promise.all([
-      this.hypixelService.getStatus(player.uuid).catch(() => {
-        hypixelUnavailable = true;
-
-        // Hypixel's live status isn't stored, so fall back to the login info on the player
-        const { online, lastGame } = player.status;
-        return new Status({ online, gameType: online ? lastGame.code : undefined });
-      }),
+      this.hypixelService.getStatus(player.uuid),
       // Recent games are optional on the status image, so a failure just leaves them out
       this.hypixelService.getRecentGames(player.uuid).catch(() => []),
     ]);
@@ -175,7 +167,7 @@ export class PlayerService {
     status.actions = player.status;
     status.recentGames = games;
 
-    return { status, hypixelUnavailable };
+    return { status, hypixelUnavailable: Boolean(hypixelError) };
   }
 
   /**
