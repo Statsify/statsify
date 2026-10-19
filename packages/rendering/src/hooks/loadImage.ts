@@ -10,6 +10,13 @@ import axios from "axios";
 import { Image } from "skia-canvas";
 import { readFile } from "node:fs/promises";
 
+/**
+ * How long a remote image (skins, heads, badges, capes) can go without sending data before
+ * the download fails, so one slow image can't hang a whole command. A skin can need a Mojang
+ * lookup, a texture download, and a render on the API first, which is why this isn't shorter.
+ */
+const IMAGE_DOWNLOAD_TIMEOUT = 5_000;
+
 const bufferToImage = (buffer: Buffer): Image => {
   const image = new Image();
   // skia-canvas doesn't support Buffers in its typings
@@ -25,7 +32,7 @@ export const loadImage = async (url: string | Buffer): Promise<Image> => {
 
   if (url.startsWith("http")) {
     const data = await axios
-      .get(url, { responseType: "arraybuffer" })
+      .get(url, { responseType: "arraybuffer", timeout: IMAGE_DOWNLOAD_TIMEOUT })
       .then((res) => res.data);
 
     const buffer = Buffer.from(data);
