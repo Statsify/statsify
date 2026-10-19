@@ -337,7 +337,7 @@ export class SessionCommand {
     });
   }
 
-  @SubCommand({ description: (t) => t("commands.session-delete") })
+  @SubCommand({ description: (t) => t("commands.session-delete"), ephemeral: true })
   public async delete(context: CommandContext) {
     const userId = context.getInteraction().getUserId();
     await this.apiService.deletePlayerSession(userId);
