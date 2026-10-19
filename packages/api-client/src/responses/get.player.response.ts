@@ -13,4 +13,10 @@ import { SuccessResponse } from "./success.response.js";
 export class GetPlayerResponse extends SuccessResponse {
   @ApiProperty()
   public player: Player;
+
+  @ApiProperty({
+    required: false,
+    description: "True when Hypixel failed or rate limited Statsify, so cached data was returned instead",
+  })
+  public hypixelUnavailable?: boolean;
 }
