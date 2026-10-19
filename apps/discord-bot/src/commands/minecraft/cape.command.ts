@@ -18,6 +18,30 @@ import { Image, loadImage } from "skia-canvas";
 import { createCanvas } from "@statsify/rendering";
 import type { Skin } from "@statsify/schemas";
 
+interface CapeFront {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/**
+ * Cape textures use the vanilla 64x32 layout, where the front is the 10x16 area at (1, 1).
+ * Like OptiFine, other sizes (its 46x22 capes and HD capes) are read as that layout scaled
+ * up by the smallest power of two that fits the texture.
+ */
+function getCapeFront(cape: Image): CapeFront | undefined {
+  let scale = 1;
+  while (64 * scale < cape.width || 32 * scale < cape.height) scale *= 2;
+
+  const front = { x: scale, y: scale, width: 10 * scale, height: 16 * scale };
+
+  // A texture too small to hold the front has no cape to show
+  if (front.x + front.width > cape.width || front.y + front.height > cape.height) return;
+
+  return front;
+}
+
 @Command({ description: (t) => t("commands.cape"), args: [MojangPlayerArgument] })
 export class CapeCommand {
   public constructor(private readonly apiService: ApiService) {}
@@ -35,12 +59,12 @@ export class CapeCommand {
       this.getMojangCape(player),
     ]);
 
-    const pages = capes
-      .filter((c) => !!c.image)
-      .map((c) => ({
-        label: c.label,
-        generator: () => this.renderCape(c.image as Image),
-      }));
+    const pages = capes.flatMap(({ label, image }) => {
+      const front = image && getCapeFront(image);
+      if (!image || !front) return [];
+
+      return [{ label, generator: () => this.renderCape(image, front) }];
+    });
 
     if (pages.length === 0)
       return new ErrorMessage(
@@ -68,60 +92,22 @@ export class CapeCommand {
     return { label: "Mojang", image };
   }
 
-  private renderCape(cape: Image) {
-    const canvas = createCanvas(636, 1024);
+  private renderCape(cape: Image, front: CapeFront) {
+    // The front is always 10 by 16, so it fills this canvas at every texture scale
+    const canvas = createCanvas(640, 1024);
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
-    let height: number;
-    let width: number;
-    let start: number;
-
-    switch (cape.width) {
-      case 92:
-        height = 32;
-        width = 20;
-        start = 2;
-        break;
-
-      case 184:
-        height = 64;
-        width = 40;
-        start = 4;
-        break;
-
-      case 1024:
-        height = 256;
-        width = 160;
-        start = 16;
-        break;
-
-      case 2048:
-        height = 512;
-        width = 318;
-        start = 12;
-        break;
-
-      default:
-      case 46:
-        height = 16;
-        width = 10;
-        start = 1;
-        break;
-    }
-
-    const ratio = Math.round(Math.min(canvas.width / width, canvas.height / height));
-
     ctx.drawImage(
       cape,
-      start,
-      start,
-      cape.width,
-      cape.height,
+      front.x,
+      front.y,
+      front.width,
+      front.height,
       0,
       0,
-      cape.width * ratio,
-      cape.height * ratio
+      canvas.width,
+      canvas.height
     );
 
     return canvas;
