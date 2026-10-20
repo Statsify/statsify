@@ -8,6 +8,8 @@
 
 import { FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
 import { type GameSummary, type PlayerPage, levelMultiplier } from "@statsify/contract";
+import { PLAYER_COOLDOWN_MS } from "./cooldown.js";
+import { gamePageOf } from "./game-page.js";
 
 /** The guild fields the page reads, deserialized: its name and tag plus each member's quest and GEXP rows. */
 export interface PlayerGuild {
@@ -17,9 +19,6 @@ export interface PlayerGuild {
   tagFormatted?: string;
   members: { uuid: string; questParticipation: number; daily: number; weekly: number }[];
 }
-
-/** `PlayerService.get` refreshes a player from Hypixel at most once per this cooldown. */
-export const PLAYER_COOLDOWN_MS = 120_000;
 
 type Value = (stats: PlayerStats) => number | string | undefined;
 
@@ -257,7 +256,7 @@ function summarize(stats: PlayerStats, summary: Summary): GameSummary | undefine
   const played = rows.some((row) => typeof row.value === "number" && row.value > 0);
   if (!played) return undefined;
 
-  return { id: summary.id, name: FormattedGame[summary.id], level: summary.level?.(stats), rows };
+  return { id: summary.id, name: FormattedGame[summary.id], level: summary.level?.(stats), rows, page: gamePageOf(summary.id) };
 }
 
 /** The `player.page` view model from a deserialized player and their guild. */

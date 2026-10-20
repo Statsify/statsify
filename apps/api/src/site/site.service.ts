@@ -33,6 +33,8 @@ import { HypixelUnavailableError } from "#hypixel";
 import { Injectable, InternalServerErrorException, type OnApplicationBootstrap } from "@nestjs/common";
 import type {
   BingoPlayer,
+  GameInput,
+  GamePage,
   GuildPreview,
   HomePreviews,
   LeaderboardGroup,
@@ -46,7 +48,9 @@ import type {
   ResultCard,
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
-import { PLAYER_COOLDOWN_MS, type PlayerGuild, buildPlayerPage } from "./player-page.js";
+import { PLAYER_COOLDOWN_MS } from "./cooldown.js";
+import { type PlayerGuild, buildPlayerPage } from "./player-page.js";
+import { buildGamePage, findGamePage, pageModes } from "./game-page.js";
 import { PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
 import { config, flatten, removeFormatting } from "@statsify/util";
@@ -372,6 +376,21 @@ export class SiteService implements OnApplicationBootstrap {
       updatedAt: player.expiresAt - PLAYER_COOLDOWN_MS,
       expiresAt: player.expiresAt,
     };
+  }
+
+  /** One mode of a game's page; an unknown game or mode is NOT_FOUND, like an unknown player. */
+  public async game(input: GameInput): Promise<GamePage> {
+    const layout = findGamePage(input.game);
+    if (!layout) throw notFound("Game not found");
+
+    const modes = pageModes(layout);
+    const mode = input.mode ?? modes[0];
+    if (!modes.includes(mode)) throw notFound("Mode not found");
+
+    const player = await this.loadPlayer(normalizeUuid(input.uuid));
+    if (!player) throw notFound();
+
+    return buildGamePage(player, layout, mode);
   }
 
   /** The home page's previews, each loaded on its own so one missing player hides one section. */

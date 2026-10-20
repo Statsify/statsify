@@ -56,6 +56,8 @@ export const GameSummarySchema = z.object({
   /** Minecraft-formatted level or prefix string, when the game has one. */
   level: z.string().optional(),
   rows: z.array(StatRowSchema).max(4),
+  /** The game page's URL segment (`/player/<name>/<page>`), when the site has a page for the game. */
+  page: z.string().optional(),
 });
 
 export const PlayerPageSchema = z.object({
@@ -181,6 +183,56 @@ export const BingoPlayerSchema = z.object({
 
 const ProgressionSchema = z.object({ current: z.number(), max: z.number().optional(), percent: z.number() });
 
+/** One stat on a game page, as the bot's card shows it. */
+export const StatCellSchema = z.object({
+  /** The catalog's key for the stat within its group, e.g. `wins` or `itemsCollected.iron`. */
+  key: z.string(),
+  /** A `stats.*` key in `locales/<lng>/default.json`: the bot's word for the stat, abbreviation included. */
+  label: z.string(),
+  /** Numbers are formatted by the site; strings come formatted by the schema (levels, times). */
+  value: z.union([z.number(), z.string()]),
+  /** The number the value is out of (`12/25`), for a stat with a cap. */
+  of: z.number().optional(),
+  /** The bot's colour code for the stat, e.g. `§a`. */
+  colour: z.string(),
+  /** The stat's leaderboard, as the `/leaderboards/<field>` segment, or null when it has none. */
+  leaderboard: z.string().nullable(),
+});
+
+export const GamePageSchema = z.object({
+  ...PlayerName,
+  game: z.object({
+    /** The `PlayerStats` key and URL segment, e.g. `bedwars`. */
+    key: z.string(),
+    /** The `GameId`, e.g. `BEDWARS`. */
+    id: z.string(),
+    /** The Minecraft-formatted game name. */
+    name: z.string(),
+  }),
+  /** The modes the page offers, in order; the first is the default and has no `?mode=`. */
+  modes: z.array(z.object({ key: z.string(), name: z.string() })),
+  /** The mode shown. */
+  mode: z.string(),
+  /**
+   * The game's level, the level the bar starts at and the next one, when the game has levels, with the leaderboard
+   * that ranks it (as on `StatCellSchema`).
+   */
+  level: z
+    .object({
+      current: z.string(),
+      natural: z.string(),
+      next: z.string(),
+      progression: ProgressionSchema,
+      leaderboard: z.string().nullable(),
+    })
+    .nullable(),
+  /** Stats for the whole game, the same in every mode. */
+  overview: z.array(StatCellSchema),
+  /** The mode's stats in groups: `title` is a `game.sections.*` key in `site.json`, or null for the headline table. */
+  sections: z.array(z.object({ title: z.string().nullable(), cells: z.array(StatCellSchema) })),
+  ...Freshness,
+});
+
 // The home page's preview panels show fixed sample players, a guild and a leaderboard. Each view
 // model carries only the fields its panel reads, so the HTML never ships a whole player document.
 const PreviewPlayer = { uuid: z.string(), prefixName: z.string() };
@@ -291,6 +343,13 @@ export const HomePreviewsSchema = z.object({
 
 const ResolveInputSchema = z.union([z.object({ name: UsernameSchema }), z.object({ uuid: UuidSchema })]);
 const PlayerInputSchema = z.object({ uuid: UuidSchema });
+const GameInputSchema = z.object({
+  uuid: UuidSchema,
+  /** A `PlayerStats` key the site has a page for, e.g. `bedwars`. */
+  game: z.string().min(1).max(32),
+  /** An api mode of that game; the first mode when left out. */
+  mode: z.string().min(1).max(32).optional(),
+});
 const RefreshInputSchema = z.object({ uuid: UuidSchema, clientIp: ClientIpSchema });
 const LookupInputSchema = z.object({
   /** A username, or the UUID of a player URL that isn't stored. */
@@ -354,6 +413,10 @@ export const contract = {
       .route({ method: "GET", path: "/player/bingo", summary: "The player's Bingo boards" })
       .input(PlayerInputSchema)
       .output(BingoPlayerSchema),
+    game: errors
+      .route({ method: "GET", path: "/player/game", summary: "One game's page for a player, in one mode" })
+      .input(GameInputSchema)
+      .output(GamePageSchema),
   },
   search: {
     suggest: oc
@@ -397,8 +460,11 @@ export type LeaderboardPage = z.infer<typeof LeaderboardPageSchema>;
 /** Validated (server-side) inputs. */
 export type ResolveInput = z.infer<typeof ResolveInputSchema>;
 export type LeaderboardPageInput = z.infer<typeof LeaderboardPageInputSchema>;
+export type GameInput = z.infer<typeof GameInputSchema>;
 
 export type BingoPlayer = z.infer<typeof BingoPlayerSchema>;
+export type GamePage = z.infer<typeof GamePageSchema>;
+export type StatCell = z.infer<typeof StatCellSchema>;
 export type HomePreviews = z.infer<typeof HomePreviewsSchema>;
 export type PreviewIdentity = z.infer<typeof PreviewIdentitySchema>;
 export type BedWarsPreview = z.infer<typeof BedWarsPreviewSchema>;

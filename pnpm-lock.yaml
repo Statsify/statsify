@@ -256,6 +256,9 @@ importers:
       '@statsify/assets':
         specifier: workspace:^
         version: link:../../packages/assets
+      '@statsify/catalog':
+        specifier: workspace:^
+        version: link:../../packages/catalog
       '@statsify/contract':
         specifier: workspace:^
         version: link:../../packages/contract
