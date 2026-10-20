@@ -12,7 +12,7 @@ import {
   BaseProfileProps,
   ProfileData,
 } from "#commands/base.hypixel-command";
-import { BedWarsProfile } from "./bedwars.profile.js";
+import { BedWarsProfile } from "@statsify/profiles";
 import { Command } from "@statsify/discord";
 import { BedWarsChallengesProfile } from "./bedwars-challenges.profile.js";
 

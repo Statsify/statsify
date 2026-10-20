@@ -6,9 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+export * from "./backgrounds.js";
 export * from "./components/index.js";
 export * from "./fonts.js";
 export * from "./localize.js";
+export * from "./profiles/bedwars.profile.js";
 export * from "./profiles/general.profile.js";
 export * from "./profiles/signature.profile.js";
 export * from "./themes/index.js";

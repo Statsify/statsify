@@ -15,8 +15,8 @@ import {
   SidebarItem,
   Table,
   formatProgression,
-} from "#components";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+} from "../components/index.js";
+import type { BaseProfileProps } from "../types.js";
 
 export interface BedWarsProfileProps extends BaseProfileProps {
   mode: Exclude<GameMode<BedWarsModes>, { api: "challenges" }>;
