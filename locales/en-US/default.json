@@ -472,10 +472,6 @@
       "description": "We couldn't find the `player` you were looking for!",
       "title": "Invalid Player"
     },
-    "playerLeftGuild": {
-      "description": "**{{displayName}}** is no longer in **{{guild}}**!",
-      "title": "Invalid Guild"
-    },
     "playerNotInGuild": {
       "description": "**{{displayName}}** is not in a guild!",
       "title": "Invalid Guild"
