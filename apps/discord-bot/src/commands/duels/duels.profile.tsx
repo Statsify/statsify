@@ -63,19 +63,16 @@ export const DuelsProfile = <T extends ProfileTime>({
     [t("stats.pingRange"), `${t(duels.pingRange)}ms`, "§a"],
   ];
 
-  // Hypixel only counts blocks placed in some modes, so leave the row out where the shown mode has none
   const modeStats = getModeStats(duels, mode);
 
+  // Hypixel only counts blocks placed in some modes
   if ("blocksPlaced" in modeStats && modeStats.blocksPlaced)
     sidebar.push([t("stats.blocksPlaced"), t(modeStats.blocksPlaced), "§9"]);
 
-  const stats = duels[mode.api];
+  if ("shotsFired" in modeStats)
+    sidebar.push([t("stats.shotsFired"), t(modeStats.shotsFired), "§6"]);
 
-  if ("shotsFired" in stats) {
-    sidebar.push([t("stats.shotsFired"), t(stats.shotsFired), "§6"]);
-  } else if ("overall" in stats && "shotsFired" in stats.overall) {
-    sidebar.push([t("stats.shotsFired"), t(stats.overall.shotsFired), "§6"]);
-  }
+  const stats = duels[mode.api];
 
   if ("headshots" in stats)
     sidebar.push([t("stats.headshots"), t(stats.headshots), "§3"]);
