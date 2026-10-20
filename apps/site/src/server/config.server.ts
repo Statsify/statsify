@@ -22,6 +22,11 @@ export interface SiteConfig {
    * (Open Graph, oEmbed) are built from it and never from `Host` or forwarded headers. Required outside `dev`.
    */
   publicUrl: string;
+  /**
+   * `site.indexable` (default true). False for a staging deploy: every response carries `X-Robots-Tag: noindex`, the
+   * sitemaps 404 and robots.txt lists no sitemap. Crawling stays open so crawlers see the header.
+   */
+  indexable: boolean;
   /** `site.apiKey`: the site's own Statsify API key, never the bot's. */
   apiKey: string;
   /** `sentry.siteDsn` */
@@ -44,6 +49,7 @@ interface RawConfig {
   site?: {
     apiKey?: string;
     publicUrl?: string;
+    indexable?: boolean;
     turnstile?: { siteKey?: string; secretKey?: string };
     renderWorkers?: unknown;
   };
@@ -55,6 +61,7 @@ const TEST_CONFIG: SiteConfig = {
   apiRoute: "http://localhost:3000",
   redisUrl: "redis://localhost:6379",
   publicUrl: "http://localhost:7828",
+  indexable: true,
   apiKey: "",
   turnstileSiteKey: "",
   turnstileSecretKey: "",
@@ -85,6 +92,7 @@ async function load(): Promise<SiteConfig> {
     apiRoute: raw.apiClient?.route || "http://localhost:3000",
     redisUrl: raw.database?.redisUrl || "redis://localhost:6379",
     publicUrl: publicUrlOf(raw),
+    indexable: raw.site?.indexable ?? true,
     apiKey: raw.site?.apiKey ?? "",
     turnstileSiteKey: raw.site?.turnstile?.siteKey ?? "",
     turnstileSecretKey: raw.site?.turnstile?.secretKey ?? "",

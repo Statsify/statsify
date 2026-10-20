@@ -48,6 +48,17 @@ const redirects = createMiddleware({ type: "request" }).server(({ request, next 
   });
 });
 
+/**
+ * `site.indexable` off (a staging deploy): every response the app sends carries `X-Robots-Tag: noindex`. Static
+ * files skip this middleware, so the proxy in front adds the header for them.
+ */
+const robotsTag = createMiddleware({ type: "request" }).server(async ({ next }) => {
+  const { indexable } = await siteConfig();
+  const result = await next();
+  if (!indexable) result.response.headers.set("X-Robots-Tag", "noindex");
+  return result;
+});
+
 const publicOrigin = createServerOnlyFn(async () => new URL((await siteConfig()).publicUrl).origin);
 
 /**
@@ -118,7 +129,8 @@ export const startInstance = createStart(() => {
   const sentry = sentryMiddleware();
 
   return {
-    requestMiddleware: [sentryInit, ...sentry.request, responseHeaders, redirects, csrf, unfurlImages],
+    // robotsTag sits outside responseHeaders, which hands it a response with mutable headers.
+    requestMiddleware: [sentryInit, ...sentry.request, robotsTag, responseHeaders, redirects, csrf, unfurlImages],
     functionMiddleware: sentry.function,
   };
 });

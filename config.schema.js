@@ -65,6 +65,7 @@ export default {
   site: {
     apiKey: "",
     publicUrl: "https://statsify.net",
+    indexable: true,
     hypixelBudget: 15,
     turnstile: {
       siteKey: "",

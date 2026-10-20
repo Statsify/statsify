@@ -17,6 +17,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OembedRouteImport } from './routes/oembed'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as SitemapChar123nameChar125DotxmlRouteImport } from './routes/sitemap-{$name}[.]xml'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as Char123LocaleChar125RouteImport } from './routes/{-$locale}'
 import { Route as CardChar123uuidChar125DotpngRouteImport } from './routes/card/{$uuid}[.]png'
 import { Route as OgChar123uuidChar125DotpngRouteImport } from './routes/og/{$uuid}[.]png'
@@ -40,6 +42,17 @@ const OembedRoute = OembedRouteImport.update({
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapChar123nameChar125DotxmlRoute =
+  SitemapChar123nameChar125DotxmlRouteImport.update({
+    id: '/sitemap-{$name}.xml',
+    path: '/sitemap-{$name}.xml',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Char123LocaleChar125Route = Char123LocaleChar125RouteImport.update({
@@ -126,6 +139,8 @@ const Char123LocaleChar125PlayerNameBingoRoute =
 export interface FileRoutesByFullPath {
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
   '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
   '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
@@ -144,6 +159,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
   '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
   '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
@@ -162,6 +179,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
   '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
   '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
@@ -182,6 +201,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/oembed'
     | '/robots.txt'
+    | '/sitemap-{$name}.xml'
+    | '/sitemap.xml'
     | '/{-$locale}'
     | '/card/{$uuid}.png'
     | '/og/{$uuid}.png'
@@ -200,6 +221,8 @@ export interface FileRouteTypes {
   to:
     | '/oembed'
     | '/robots.txt'
+    | '/sitemap-{$name}.xml'
+    | '/sitemap.xml'
     | '/card/{$uuid}.png'
     | '/og/{$uuid}.png'
     | '/sig/{$uuid}.png'
@@ -217,6 +240,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/oembed'
     | '/robots.txt'
+    | '/sitemap-{$name}.xml'
+    | '/sitemap.xml'
     | '/{-$locale}'
     | '/card/{$uuid}.png'
     | '/og/{$uuid}.png'
@@ -236,6 +261,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   OembedRoute: typeof OembedRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
+  SitemapChar123nameChar125DotxmlRoute: typeof SitemapChar123nameChar125DotxmlRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char123LocaleChar125Route: typeof Char123LocaleChar125RouteWithChildren
   CardChar123uuidChar125DotpngRoute: typeof CardChar123uuidChar125DotpngRoute
   OgChar123uuidChar125DotpngRoute: typeof OgChar123uuidChar125DotpngRoute
@@ -259,6 +286,20 @@ declare module '@tanstack/react-router' {
       path: '/robots.txt'
       fullPath: '/robots.txt'
       preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-{$name}.xml': {
+      id: '/sitemap-{$name}.xml'
+      path: '/sitemap-{$name}.xml'
+      fullPath: '/sitemap-{$name}.xml'
+      preLoaderRoute: typeof SitemapChar123nameChar125DotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/{-$locale}': {
@@ -392,6 +433,8 @@ const Char123LocaleChar125RouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   OembedRoute: OembedRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
+  SitemapChar123nameChar125DotxmlRoute: SitemapChar123nameChar125DotxmlRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   Char123LocaleChar125Route: Char123LocaleChar125RouteWithChildren,
   CardChar123uuidChar125DotpngRoute: CardChar123uuidChar125DotpngRoute,
   OgChar123uuidChar125DotpngRoute: OgChar123uuidChar125DotpngRoute,

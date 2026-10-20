@@ -216,6 +216,10 @@ export interface Config {
      */
     publicUrl?: string;
     /**
+     * Whether search engines may index the site; false for a staging deploy, where every response carries X-Robots-Tag: noindex, the sitemaps 404 and robots.txt lists no sitemap. Defaults to true
+     */
+    indexable?: boolean;
+    /**
      * How many site-initiated Hypixel calls (refresh and lookup) are allowed per 5 minutes across all visitors
      * @example 15
      */
