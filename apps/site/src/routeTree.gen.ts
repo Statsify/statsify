@@ -24,6 +24,8 @@ import { Route as Char123LocaleChar125BingoRouteImport } from './routes/{-$local
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as ApiSkinHeadRouteImport } from './routes/api/skin/head'
 import { Route as ApiSkinRenderRouteImport } from './routes/api/skin/render'
+import { Route as Char123LocaleChar125LeaderboardsIndexRouteImport } from './routes/{-$locale}/leaderboards/index'
+import { Route as Char123LocaleChar125LeaderboardsFieldRouteImport } from './routes/{-$locale}/leaderboards/$field'
 import { Route as Char123LocaleChar125PlayerIndexRouteImport } from './routes/{-$locale}/player/index'
 import { Route as Char123LocaleChar125PlayerNameIndexRouteImport } from './routes/{-$locale}/player/$name/index'
 import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name/bingo'
@@ -76,6 +78,18 @@ const ApiSkinRenderRoute = ApiSkinRenderRouteImport.update({
   path: '/api/skin/render',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char123LocaleChar125LeaderboardsIndexRoute =
+  Char123LocaleChar125LeaderboardsIndexRouteImport.update({
+    id: '/leaderboards/',
+    path: '/leaderboards/',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125LeaderboardsFieldRoute =
+  Char123LocaleChar125LeaderboardsFieldRouteImport.update({
+    id: '/leaderboards/$field',
+    path: '/leaderboards/$field',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
 const Char123LocaleChar125PlayerIndexRoute =
   Char123LocaleChar125PlayerIndexRouteImport.update({
     id: '/player/',
@@ -105,6 +119,8 @@ export interface FileRoutesByFullPath {
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
+  '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
@@ -118,6 +134,8 @@ export interface FileRoutesByTo {
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
+  '/{-$locale}/leaderboards': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameIndexRoute
@@ -133,6 +151,8 @@ export interface FileRoutesById {
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
+  '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
@@ -149,6 +169,8 @@ export interface FileRouteTypes {
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/{-$locale}/leaderboards/$field'
+    | '/{-$locale}/leaderboards/'
     | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/bingo'
     | '/{-$locale}/player/$name/'
@@ -162,6 +184,8 @@ export interface FileRouteTypes {
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/{-$locale}/leaderboards/$field'
+    | '/{-$locale}/leaderboards'
     | '/{-$locale}/player'
     | '/{-$locale}/player/$name/bingo'
     | '/{-$locale}/player/$name'
@@ -176,6 +200,8 @@ export interface FileRouteTypes {
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/{-$locale}/leaderboards/$field'
+    | '/{-$locale}/leaderboards/'
     | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/bingo'
     | '/{-$locale}/player/$name/'
@@ -256,6 +282,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSkinRenderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/{-$locale}/leaderboards/': {
+      id: '/{-$locale}/leaderboards/'
+      path: '/leaderboards'
+      fullPath: '/{-$locale}/leaderboards/'
+      preLoaderRoute: typeof Char123LocaleChar125LeaderboardsIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/leaderboards/$field': {
+      id: '/{-$locale}/leaderboards/$field'
+      path: '/leaderboards/$field'
+      fullPath: '/{-$locale}/leaderboards/$field'
+      preLoaderRoute: typeof Char123LocaleChar125LeaderboardsFieldRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
     '/{-$locale}/player/': {
       id: '/{-$locale}/player/'
       path: '/player'
@@ -283,6 +323,8 @@ declare module '@tanstack/react-router' {
 interface Char123LocaleChar125RouteChildren {
   Char123LocaleChar125BingoRoute: typeof Char123LocaleChar125BingoRoute
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
+  Char123LocaleChar125LeaderboardsFieldRoute: typeof Char123LocaleChar125LeaderboardsFieldRoute
+  Char123LocaleChar125LeaderboardsIndexRoute: typeof Char123LocaleChar125LeaderboardsIndexRoute
   Char123LocaleChar125PlayerIndexRoute: typeof Char123LocaleChar125PlayerIndexRoute
   Char123LocaleChar125PlayerNameBingoRoute: typeof Char123LocaleChar125PlayerNameBingoRoute
   Char123LocaleChar125PlayerNameIndexRoute: typeof Char123LocaleChar125PlayerNameIndexRoute
@@ -291,6 +333,10 @@ interface Char123LocaleChar125RouteChildren {
 const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
   Char123LocaleChar125BingoRoute: Char123LocaleChar125BingoRoute,
   Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
+  Char123LocaleChar125LeaderboardsFieldRoute:
+    Char123LocaleChar125LeaderboardsFieldRoute,
+  Char123LocaleChar125LeaderboardsIndexRoute:
+    Char123LocaleChar125LeaderboardsIndexRoute,
   Char123LocaleChar125PlayerIndexRoute: Char123LocaleChar125PlayerIndexRoute,
   Char123LocaleChar125PlayerNameBingoRoute:
     Char123LocaleChar125PlayerNameBingoRoute,

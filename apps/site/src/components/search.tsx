@@ -68,12 +68,17 @@ export function Search({
   disabled,
   target = "player",
   compact = false,
+  placeholder,
+  onSelect,
 }: {
   className?: string;
   defaultValue?: string;
   disabled?: boolean;
   target?: SearchTarget;
   compact?: boolean;
+  placeholder?: string;
+  /** Handles a submitted or picked name instead of navigating to `target`. */
+  onSelect?: (name: string) => unknown;
 }) {
   const { t } = useTranslation();
   const size = SIZES[compact ? "compact" : "regular"];
@@ -83,7 +88,8 @@ export function Search({
   const suggestions = usePlayerSuggestions(query, focused);
   const [selected, setSelected] = useState<number | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
-  const go = useSearchNavigation(target);
+  const navigateTo = useSearchNavigation(target);
+  const go = onSelect ?? navigateTo;
   const listId = useId();
   const optionId = (index: number) => `${listId}-${index}`;
   const count = suggestions.data?.length ?? 0;
@@ -130,7 +136,7 @@ export function Search({
         <SearchIcon className={cn("text-white drop-shadow-mc-2", size.icon)} />
         <input
           name="search"
-          placeholder={t("search.placeholder")}
+          placeholder={placeholder ?? t("search.placeholder")}
           className={cn("placeholder-mc-darkgray text-white outline-none h-full w-full selection:bg-white/50", size.text)}
           value={input}
           onChange={(event) => {
@@ -197,6 +203,7 @@ export function Search({
               selected={selected === index}
               target={target}
               compact={compact}
+              onSelect={onSelect}
             />
           </div>
         ))}
@@ -211,18 +218,29 @@ function SearchPlayer({
   selected = false,
   target,
   compact,
+  onSelect,
 }: {
   id: string;
   player: string;
   selected?: boolean;
   target: SearchTarget;
   compact: boolean;
+  onSelect?: (name: string) => unknown;
 }) {
   const className =
     "relative flex items-center gap-4 w-full p-2 hover:bg-white/20 active:bg-white/10 aria-selected:bg-white/20 aria-selected:before:content-[''] aria-selected:before:absolute aria-selected:before:bg-blueify-500 aria-selected:before:h-full aria-selected:before:w-0.5 aria-selected:before:left-0";
   const text = cn("text-white selection:bg-white/50", compact ? "text-mc-1" : "text-mc-2");
 
-  // Suggestions always open the page they name; only the submitted text goes to the result cards.
+  // With a handler the suggestion is handed over like a submitted name (the leaderboard `around` box).
+  if (onSelect) {
+    return (
+      <button id={id} type="button" role="option" onClick={() => void onSelect(player)} aria-selected={selected} className={className}>
+        <p className={text}>{player}</p>
+      </button>
+    );
+  }
+
+  // Otherwise suggestions open the page they name; only the submitted text goes to the result cards.
   if (target === "bingo") {
     return (
       <Link id={id} role="option" to="/{-$locale}/player/$name/bingo" params={{ name: player }} aria-selected={selected} className={className}>

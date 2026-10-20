@@ -55,6 +55,21 @@
       "error": "Something went wrong. Try again in a moment."
     }
   },
+  "leaderboards": {
+    "title": "Leaderboards",
+    "filter": "Filter leaderboards",
+    "noMatches": "No leaderboards match \"{{query}}\"",
+    "position": "Pos",
+    "player": "Player",
+    "page": "Page {{page}} of {{pages}}",
+    "previous": "Previous",
+    "next": "Next",
+    "find": "Find a player on this leaderboard",
+    "unknown": "We haven't seen {{name}} yet.",
+    "unranked": "{{name}} isn't on this leaderboard yet.",
+    "moved": "{{name}}'s rank changed while the page loaded, so they're not on it. Try again to find them.",
+    "empty": "Nobody here yet."
+  },
   "notFound": {
     "title": "OOPS!",
     "description": "Looks like the page you're trying to reach does not exist"

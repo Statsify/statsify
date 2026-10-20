@@ -11,7 +11,7 @@ import { Footer } from "~/components/ui/footer";
 import { Header } from "~/components/header";
 import { I18nextProvider } from "react-i18next";
 import { NotFound } from "~/components/not-found";
-import { Outlet, createFileRoute, notFound, redirect, useRouter } from "@tanstack/react-router";
+import { type AnyRouteMatch, Outlet, createFileRoute, notFound, redirect, useRouter } from "@tanstack/react-router";
 import { createI18n } from "~/i18n/i18n";
 import { getLocaleData } from "~/i18n/locale-data";
 import { canonicalLink, oembedLink, socialMeta } from "~/lib/social-meta";
@@ -47,10 +47,14 @@ export const Route = createFileRoute("/{-$locale}")({
     const description = createI18n(DEFAULT_LOCALE, loaderData.resources).t("meta.description");
     // An index route's pathname ends in a slash its URL doesn't have. The route's own segments come in its own
     // casing (`/Leaderboards` is `/leaderboards`), and a player's name in the stored one, since other casings redirect.
-    const path = (matches.at(-1)?.pathname ?? "/").replace(/(.)\/$/, "$1");
+    const leaf: AnyRouteMatch | undefined = matches.at(-1);
+    const path = (leaf?.pathname ?? "/").replace(/(.)\/$/, "$1");
+    // A board's page past the first is its own `?page=` (counted from 1), however the URL picked it.
+    const board = leaf?.routeId === "/{-$locale}/leaderboards/$field" ? (leaf.loaderData as { page?: { page: number } } | undefined)?.page : undefined;
+    const canonical = board && board.page > 0 ? `${path}?page=${board.page + 1}` : path;
     return {
       meta: [{ name: "description", content: description }, ...socialMeta({ origin: loaderData.origin, path, description, image: "/images/og-home.png" })],
-      links: [oembedLink(loaderData.origin, path), canonicalLink(loaderData.origin, path)],
+      links: [oembedLink(loaderData.origin, path), canonicalLink(loaderData.origin, canonical)],
     };
   },
   notFoundComponent: NotFound,

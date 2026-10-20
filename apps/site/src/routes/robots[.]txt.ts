@@ -8,10 +8,14 @@
 
 import { createFileRoute } from "@tanstack/react-router";
 
-// No sitemap: 2.45M player pages.
+// No sitemap: 2.45M player pages. Paged and "around" leaderboard variants carry noindex too.
 const ROBOTS = `User-agent: *
 Disallow: /api/
 Disallow: /_serverFn/
+Disallow: /*?page=
+Disallow: /*?*&page=
+Disallow: /*?around=
+Disallow: /*?*&around=
 `;
 
 export const Route = createFileRoute("/robots.txt")({
