@@ -13,8 +13,8 @@ import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
-import { createCanvas, loadImage } from "@statsify/rendering";
-import { getDefaultSkin } from "@statsify/assets";
+import { getDefaultSkin, renderHead } from "@statsify/assets";
+import { loadImage } from "@statsify/rendering";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
@@ -27,18 +27,7 @@ export class SkinService {
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
     const { skin } = await this.getSkinImage(uuid);
-
-    const canvas = createCanvas(size, size);
-    const ctx = canvas.getContext("2d");
-    ctx.imageSmoothingEnabled = false;
-
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, size, size);
-
-    ctx.drawImage(skin, 8, 8, 8, 8, 0, 0, size, size);
-    ctx.drawImage(skin, 40, 8, 8, 8, 0, 0, size, size);
-
-    return canvas.toBuffer("png");
+    return renderHead(skin, size);
   }
 
   public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {

@@ -25,7 +25,7 @@ import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
-import { getDefaultSkin } from "@statsify/assets";
+import { getDefaultSkin, renderHead } from "@statsify/assets";
 import { loadImage } from "skia-canvas";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
@@ -214,6 +214,14 @@ export class ApiService extends StatsifyApiService {
    */
   public override getPlayerSkin(uuid: string, user: User | null) {
     return super.getPlayerSkin(uuid, user).catch(() => loadImage(getDefaultSkin(uuid).render));
+  }
+
+  /** Like getPlayerSkin, draws the default skin's head when the API's head is slow or fails */
+  public override getPlayerHead(uuid: string, size = 160) {
+    return super.getPlayerHead(uuid, size).catch(async () => {
+      const skin = await loadImage(getDefaultSkin(uuid).texture);
+      return loadImage(await renderHead(skin, size));
+    });
   }
 
   /**
