@@ -5,6 +5,16 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./minecraft-colors": {
+      "types": "./src/minecraft-colors.ts",
+      "default": "./dist/minecraft-colors.js"
+    }
+  },
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "typecheck": "tsc --noEmit",

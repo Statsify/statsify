@@ -780,6 +780,18 @@ importers:
 
   packages/skin-renderer: {}
 
+  packages/tokens:
+    dependencies:
+      '@statsify/rendering':
+        specifier: workspace:^
+        version: link:../rendering
+      '@statsify/util':
+        specifier: workspace:^
+        version: link:../util
+      '@swc/helpers':
+        specifier: ^0.5.23
+        version: 0.5.23
+
   packages/util:
     dependencies:
       '@swc/helpers':

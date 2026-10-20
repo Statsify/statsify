@@ -6,6 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+/** A box's colour and shadow opacity unless it sets its own: the card panel, which the site's tokens read too. */
+export const DEFAULT_COLOR = "rgba(0, 10, 5, 0.5)";
+export const SHADOW_OPACITY = 0.84;
+
 export type RGB = [number, number, number];
 
 export type RGBA = [number, number, number, number];
