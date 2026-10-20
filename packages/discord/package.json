@@ -1,6 +1,7 @@
 {
   "name": "@statsify/discord",
   "version": "0.0.0",
+  "license": "AGPL-3.0-or-later",
   "types": "src/index.ts",
   "main": "dist/index.js",
   "type": "module",

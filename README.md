@@ -90,3 +90,7 @@ $ pnpm typecheck
 [`redis cloud`]: https://redis.com/try-free/
 [`redisearch`]: https://redis.io/docs/stack/search/quick_start/
 [`wasm pack`]: https://rustwasm.github.io/wasm-pack/
+
+## License
+
+Statsify is licensed under the GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later). See [LICENSE](LICENSE).
