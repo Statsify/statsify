@@ -92,7 +92,10 @@ const SANS = [
   "sans-serif",
 ];
 
-/** Type: Minecraft for the wordmark, headings and stat values; Mona Sans for everything else. */
+/**
+ * Type: Minecraft for everything a card could show (titles, labels, values, names, nav, buttons, tabs, inputs and
+ * one-line messages); Mona Sans for reading text (paragraphs, help text, long tooltips, legal).
+ */
 export const type = {
   families: {
     // A glyph the pixel font lacks (Cyrillic, Greek, CJK, Thai and most of Latin Extended) comes from the sans stack.
@@ -105,6 +108,4 @@ export const type = {
   minecraftSizes: [16, 24, 32, 48, 64, 112],
   /** Mona Sans weights: 500 on glass, 600 for emphasis, nothing lighter. */
   weights: { regular: 500, emphasis: 600 },
-  /** Mona Sans widths in %: 100 on desktop, 90 for phone labels that would wrap. */
-  widths: { normal: 100, narrow: 90 },
 } as const;
