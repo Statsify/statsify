@@ -43,12 +43,14 @@
   "player": {
     "multiplier": "Level Multiplier",
     "highestStreak": "Highest Streak",
+    "noGames": "No game stats yet.",
     "na": "N/A",
     "updated": "Updated {{time}}",
     "refresh": "Update stats",
     "refreshing": "Refreshing…",
-    "refreshIn": "Refresh in {{seconds}}s",
+    "refreshIn": "Update in {{time}}",
     "refreshLimited": "Too many updates right now, try again shortly.",
+    "refreshFailed": "Couldn't update. Try again in a minute.",
     "signature": {
       "title": "Get signature",
       "description": "Paste one of these into your Hypixel Forums signature, or anywhere else that shows images. The image carries the stats from the last refresh on this page, with the time they were fetched printed on it.",
@@ -58,6 +60,7 @@
       "markdown": "Markdown",
       "html": "HTML",
       "card": "Full card URL (808×540, too tall for a forum signature)",
+      "more": "More Formats",
       "copy": "Copy",
       "copied": "Copied!"
     },
@@ -68,7 +71,7 @@
       "lookingUp": "Looking up…",
       "unknown": "Hypixel doesn't know a player called {{name}} either.",
       "verify": "Please complete the verification first.",
-      "limited": "Too many lookups right now, try again in {{seconds}}s.",
+      "limited": "Too many lookups right now, try again in {{time}}.",
       "unavailable": "Hypixel didn't answer. Try again in a minute.",
       "error": "Something went wrong. Try again in a moment."
     }
