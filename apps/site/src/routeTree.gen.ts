@@ -22,6 +22,8 @@ import { Route as Char123LocaleChar125BingoRouteImport } from './routes/{-$local
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as ApiSkinHeadRouteImport } from './routes/api/skin/head'
 import { Route as ApiSkinRenderRouteImport } from './routes/api/skin/render'
+import { Route as Char123LocaleChar125PlayerIndexRouteImport } from './routes/{-$locale}/player/index'
+import { Route as Char123LocaleChar125PlayerNameIndexRouteImport } from './routes/{-$locale}/player/$name/index'
 import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name/bingo'
 
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -61,6 +63,18 @@ const ApiSkinRenderRoute = ApiSkinRenderRouteImport.update({
   path: '/api/skin/render',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char123LocaleChar125PlayerIndexRoute =
+  Char123LocaleChar125PlayerIndexRouteImport.update({
+    id: '/player/',
+    path: '/player/',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125PlayerNameIndexRoute =
+  Char123LocaleChar125PlayerNameIndexRouteImport.update({
+    id: '/player/$name/',
+    path: '/player/$name/',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
 const Char123LocaleChar125PlayerNameBingoRoute =
   Char123LocaleChar125PlayerNameBingoRouteImport.update({
     id: '/player/$name/bingo',
@@ -76,7 +90,9 @@ export interface FileRoutesByFullPath {
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
+  '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
@@ -85,7 +101,9 @@ export interface FileRoutesByTo {
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/{-$locale}/player': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
+  '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -96,7 +114,9 @@ export interface FileRoutesById {
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
+  '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -108,7 +128,9 @@ export interface FileRouteTypes {
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/bingo'
+    | '/{-$locale}/player/$name/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/robots.txt'
@@ -117,7 +139,9 @@ export interface FileRouteTypes {
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/{-$locale}/player'
     | '/{-$locale}/player/$name/bingo'
+    | '/{-$locale}/player/$name'
   id:
     | '__root__'
     | '/robots.txt'
@@ -127,7 +151,9 @@ export interface FileRouteTypes {
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/bingo'
+    | '/{-$locale}/player/$name/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -189,6 +215,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSkinRenderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/{-$locale}/player/': {
+      id: '/{-$locale}/player/'
+      path: '/player'
+      fullPath: '/{-$locale}/player/'
+      preLoaderRoute: typeof Char123LocaleChar125PlayerIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/player/$name/': {
+      id: '/{-$locale}/player/$name/'
+      path: '/player/$name'
+      fullPath: '/{-$locale}/player/$name/'
+      preLoaderRoute: typeof Char123LocaleChar125PlayerNameIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
     '/{-$locale}/player/$name/bingo': {
       id: '/{-$locale}/player/$name/bingo'
       path: '/player/$name/bingo'
@@ -202,14 +242,19 @@ declare module '@tanstack/react-router' {
 interface Char123LocaleChar125RouteChildren {
   Char123LocaleChar125BingoRoute: typeof Char123LocaleChar125BingoRoute
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
+  Char123LocaleChar125PlayerIndexRoute: typeof Char123LocaleChar125PlayerIndexRoute
   Char123LocaleChar125PlayerNameBingoRoute: typeof Char123LocaleChar125PlayerNameBingoRoute
+  Char123LocaleChar125PlayerNameIndexRoute: typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 
 const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
   Char123LocaleChar125BingoRoute: Char123LocaleChar125BingoRoute,
   Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
+  Char123LocaleChar125PlayerIndexRoute: Char123LocaleChar125PlayerIndexRoute,
   Char123LocaleChar125PlayerNameBingoRoute:
     Char123LocaleChar125PlayerNameBingoRoute,
+  Char123LocaleChar125PlayerNameIndexRoute:
+    Char123LocaleChar125PlayerNameIndexRoute,
 }
 
 const Char123LocaleChar125RouteWithChildren =

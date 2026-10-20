@@ -11,9 +11,10 @@ import { MinecraftText } from "./minecraft-text";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import type { Progression as ProgressionSchema } from "@statsify/schemas";
 
-const minigameXpBar = (percentage: number) => {
+export const minigameXpBar = (percentage: number) => {
   const max = 10;
-  const count = Math.ceil(max * percentage);
+  // Within the bar: a percent past 1 or below 0 (a level past its max) would repeat a negative count and throw.
+  const count = Math.min(max, Math.max(0, Math.ceil(max * percentage) || 0));
   return `§8[§b${"■".repeat(count)}§7${"■".repeat(max - count)}§8]`;
 };
 

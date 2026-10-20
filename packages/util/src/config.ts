@@ -215,6 +215,16 @@ export interface Config {
      * @example 15
      */
     hypixelBudget?: number;
+    turnstile?: {
+      /**
+       * The Cloudflare Turnstile site key rendered on the player-not-found page
+       */
+      siteKey?: string;
+      /**
+       * The Cloudflare Turnstile secret used to verify lookup tokens
+       */
+      secretKey?: string;
+    };
   };
 
   sentry?: {

@@ -65,6 +65,10 @@ export default {
   site: {
     apiKey: "",
     hypixelBudget: 15,
+    turnstile: {
+      siteKey: "",
+      secretKey: "",
+    },
   },
   sentry: {
     discordBotDsn: "",

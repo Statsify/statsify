@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { UUID_PATTERN } from "~/lib/uuid";
 import { siteConfig } from "./config.server";
-
-const UUID = /^[\da-f]{32}$|^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i;
 
 /**
  * Proxies a skin image from the Statsify API with the site's key. Only the UUID is forwarded, with the route's own
@@ -20,7 +19,7 @@ export async function proxySkin(
   fixed: Record<string, string> = {}
 ): Promise<Response> {
   const uuid = search.get("uuid");
-  if (!uuid || !UUID.test(uuid)) return new Response("uuid is required", { status: 400 });
+  if (!uuid || !UUID_PATTERN.test(uuid)) return new Response("uuid is required", { status: 400 });
 
   const { apiRoute, apiKey } = await siteConfig();
   if (!apiKey) return new Response("site.apiKey is not configured", { status: 503 });
