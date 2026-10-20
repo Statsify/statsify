@@ -10,7 +10,6 @@ import { ChallengesSkyWars, SkyWarsMini, SkyWarsMode } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
-import { add } from "@statsify/math";
 import { getFormattedLevel, getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
 import type { APIData } from "@statsify/util";
 
@@ -145,33 +144,23 @@ export class SkyWars {
 
     this.progression = getLevelProgress(this.exp, this.level);
 
-    const normalKit = parseKit(
+    const soloKit = parseKit(
       data.activeKit_SOLO_random ? "random" : data.activeKit_SOLO
     );
-    const insaneKit = parseKit(
+    const teamsKit = parseKit(
       data.activeKit_TEAMS_random ? "random" : data.activeKit_TEAMS
     );
-
-    const soloInsaneWins = data.wins_solo_insane;
-    const soloNormalWins = data.wins_solo_normal;
-    const doublesInsaneWins = data.wins_team_insane;
-    const doublesNormalWins = data.wins_team_normal;
-
-    const chooseKit = (insane = 0, normal = 0) =>
-      insane > normal ? insaneKit : normalKit;
 
     this.overall = new SkyWarsMode(data, "");
 
     this.solo = new SkyWarsMode(data, "solo");
-    this.solo.kit = chooseKit(soloInsaneWins, soloNormalWins);
+    this.solo.kit = soloKit;
 
     this.doubles = new SkyWarsMode(data, "team");
-    this.doubles.kit = chooseKit(doublesInsaneWins, doublesNormalWins);
+    this.doubles.kit = teamsKit;
 
-    this.overall.kit = chooseKit(
-      add(soloInsaneWins, doublesInsaneWins),
-      add(soloNormalWins, doublesNormalWins)
-    );
+    this.overall.kit =
+      (this.doubles.wins ?? 0) > (this.solo.wins ?? 0) ? teamsKit : soloKit;
 
     this.mini = new SkyWarsMini(data);
     this.mini.kit = parseKit(data.activeKit_MINI);
