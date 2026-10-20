@@ -36,7 +36,7 @@ export function LeaderboardIndex({ groups }: { groups: LeaderboardGroup[] }) {
   const { t } = useTranslation();
   const { locale } = localeRoute.useRouteContext();
 
-  // Over 2,000 pills: plain anchors keep the index light, where a router Link each would preload on hover.
+  // Over 2,000 links: plain anchors keep the index light, where a router Link each would preload on hover.
   const prefix = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
   const href = (field: string) => `${prefix}/leaderboards/${encodeURIComponent(field)}`;
   const [filter, setFilter] = useState("");
@@ -56,29 +56,33 @@ export function LeaderboardIndex({ groups }: { groups: LeaderboardGroup[] }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <label className="flex h-12 items-center gap-3 self-center w-full max-w-200 bg-gradient-to-r from-white/20 to-white/40 px-4 outline-white/0 outline-4 -outline-offset-4 backdrop-blur-sm transition-all duration-150 focus-within:outline-white/50">
-        <SearchIcon className="size-6 shrink-0" />
+      {/* The same square, solid input as the player search. */}
+      <label className="flex h-11 w-full max-w-200 items-center gap-3 self-center bg-blackify-800 px-3 -outline-offset-2 focus-within:outline-2 focus-within:outline-white/60">
+        <SearchIcon className="size-5 shrink-0 text-mc-gray" />
         <input
           type="search"
           value={filter}
           onChange={(event) => setFilter(event.target.value)}
           placeholder={t("leaderboards.filter")}
           aria-label={t("leaderboards.filter")}
-          className="h-full w-full bg-transparent text-mc-1 text-white outline-none placeholder-mc-darkgray selection:bg-white/50"
+          className="h-full w-full min-w-0 bg-transparent text-mc-1.5 text-white outline-none placeholder:text-mc-gray selection:bg-white/50"
         />
       </label>
       {visible.length === 0 && (
-        <p className="text-20 font-medium text-mc-gray text-center">{t("leaderboards.noMatches", { query: filter.trim() })}</p>
+        <p className="font-sans text-20 font-medium text-mc-gray text-center">{t("leaderboards.noMatches", { query: filter.trim() })}</p>
       )}
       {visible.map((group) => (
-        <Box key={group.name}>
-          <details open={filtering}>
-            <summary className="inline-flex cursor-pointer items-center gap-3 text-mc-1.5 font-bold">
+        <Box key={group.name} className="content:py-2">
+          {/* One panel per game: a 44 px summary, then plain 44 px rows, one column on phones and up to four on
+              desktop. */}
+          <details open={filtering} className="group">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center gap-3 text-mc-1.5 font-bold select-none [&::-webkit-details-marker]:hidden">
               {group.game && hasGameIcon(group.game) && <GameIcon game={group.game} />}
-              {group.name}
+              <span className="grow">{group.name}</span>
+              <span className="text-mc-gray group-open:rotate-90">{">"}</span>
             </summary>
             {/* One class on the list instead of one per link: there are thousands of them. */}
-            <ul className="flex flex-wrap gap-2 pt-3 [&_a]:block [&_a]:bg-white/10 [&_a]:px-3 [&_a]:py-1.5 [&_a]:text-16 [&_a:hover]:bg-white/20">
+            <ul className="grid grid-cols-1 pt-2 pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:font-sans [&_a]:text-16 [&_a]:font-medium [&_a:hover]:bg-white/10 [&_a:hover]:underline">
               {group.leaderboards.map(({ field, name }) => (
                 <li key={field}>
                   <a href={href(field)}>{name}</a>

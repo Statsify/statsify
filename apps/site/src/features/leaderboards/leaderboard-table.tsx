@@ -14,22 +14,25 @@ import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Search } from "~/components/search";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
+import { formatPosition } from "@statsify/profiles/format-position";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { useTranslation } from "react-i18next";
 import type { AroundMiss } from "./leaderboard-data";
 import type { CSSProperties } from "react";
 import type { LeaderboardPage } from "@statsify/contract";
 
-// Column headers and the phone-size value labels are Mona Sans; positions, names and values stay Minecraft.
-const HEADER = "hidden md:block px-2 pb-2 text-center font-sans text-20 font-semibold text-mc-gray";
-const CELL = "flex items-center px-2 py-1.5 min-h-12";
+// One 48 px row per player at every width, with the column labels once in a Minecraft 16 §7 header.
+// Phones show the leaderboard's own value; the extra columns join from `md` up.
+const HEADER = "flex items-end px-2 pb-2 text-mc-1 text-mc-gray";
+const CELL = "flex h-12 items-center px-2";
+const EXTRA = "hidden md:flex";
 const STRIPE = "bg-black/15";
-const HIGHLIGHT = "bg-mc-gold/20";
+// The bot's highlighted row is a white 0.35 panel (`leaderboard.profile.tsx`).
+const HIGHLIGHT = "bg-white/35";
 
 /**
- * The 25 rows of one page: position, head, name and the leaderboard's value columns. On phones the
- * values drop under the name with their labels; from `md` up they are columns. Each position cell
- * carries the row's UUID as its id, so `#<uuid>` links land on the row.
+ * The 25 rows of one page: position, head, name and the leaderboard's value columns. Each position cell carries the
+ * row's UUID as its id, so `#<uuid>` links land on the row.
  */
 export function LeaderboardTable({ page }: { page: LeaderboardPage }) {
   const { t } = useTranslation();
@@ -42,7 +45,7 @@ export function LeaderboardTable({ page }: { page: LeaderboardPage }) {
   }, [page]);
 
   if (page.rows.length === 0) {
-    return <p className="text-20 font-medium text-mc-gray text-center">{t("leaderboards.empty")}</p>;
+    return <p className="font-sans text-20 font-medium text-mc-gray text-center">{t("leaderboards.empty")}</p>;
   }
 
   const format = (value: string | number) => (typeof value === "number" ? n(value) : value);
@@ -50,13 +53,13 @@ export function LeaderboardTable({ page }: { page: LeaderboardPage }) {
   return (
     <Box>
       <div
-        className="grid grid-cols-[max-content_max-content_minmax(0,1fr)] md:grid-cols-[max-content_max-content_minmax(0,1fr)_repeat(var(--columns),max-content)]"
+        className="grid grid-cols-[max-content_max-content_minmax(0,1fr)_max-content] md:grid-cols-[max-content_max-content_minmax(0,1fr)_repeat(var(--columns),max-content)]"
         style={{ "--columns": page.fields.length } as CSSProperties}
       >
-        <div className={HEADER}>{t("leaderboards.position")}</div>
-        <div className={cn(HEADER, "col-span-2 text-start")}>{t("leaderboards.player")}</div>
-        {page.fields.map((field) => (
-          <div key={field} className={HEADER}>
+        <div className={cn(HEADER, "justify-end")}>{t("leaderboards.position")}</div>
+        <div className={cn(HEADER, "col-span-2")}>{t("leaderboards.player")}</div>
+        {page.fields.map((field, column) => (
+          <div key={field} className={cn(HEADER, "justify-end", column > 0 && EXTRA)}>
             {field}
           </div>
         ))}
@@ -65,31 +68,27 @@ export function LeaderboardTable({ page }: { page: LeaderboardPage }) {
 
           return (
             <Fragment key={row.uuid}>
-              <div
-                id={row.uuid}
-                ref={row.highlight ? highlightRef : undefined}
-                className={cn(CELL, tone, "justify-end text-mc-1 md:text-mc-1.5 text-mc-gray")}
-              >
-                #{n(row.position)}
+              <div id={row.uuid} ref={row.highlight ? highlightRef : undefined} className={cn(CELL, tone, "justify-end")}>
+                <MinecraftText className="text-mc-1.5 md:text-mc-2">{formatPosition(row.position, n)}</MinecraftText>
               </div>
               <div className={cn(CELL, tone, "justify-center")}>
                 <SkinHead uuid={row.uuid} size={24} />
               </div>
               <div className={cn(CELL, tone, "min-w-0")}>
                 {/* `MinecraftText` puts its class on every segment, so the truncation lives on the link. */}
-                <Link to="/{-$locale}/player/$name" params={{ name: row.uuid }} className="block min-w-0 truncate hover:underline">
-                  <MinecraftText className={cn("text-mc-1 md:text-mc-1.5", row.highlight && "font-bold")}>
-                    {row.name}
-                  </MinecraftText>
+                <Link
+                  to="/{-$locale}/player/$name"
+                  params={{ name: row.username }}
+                  className="flex min-h-11 min-w-0 items-center hover:underline"
+                >
+                  <span className="min-w-0 truncate">
+                    <MinecraftText className="text-mc-1.5 md:text-mc-2">{row.name}</MinecraftText>
+                  </span>
                 </Link>
               </div>
               {row.values.map((value, column) => (
-                <div
-                  key={page.fields[column]}
-                  className={cn(CELL, tone, "col-span-full justify-between gap-4 pl-14 md:col-span-1 md:justify-center md:pl-2")}
-                >
-                  <span className="font-sans text-16 font-medium text-mc-gray md:hidden">{page.fields[column]}</span>
-                  <span className="text-mc-1 md:text-mc-1.5">{format(value)}</span>
+                <div key={page.fields[column]} className={cn(CELL, tone, "justify-end text-mc-1.5 md:text-mc-2", column > 0 && EXTRA)}>
+                  {format(value)}
                 </div>
               ))}
             </Fragment>
@@ -106,7 +105,7 @@ export function PageNav({ field, page, pages }: { field: string; page: number; p
   const n = useNumberFormat();
 
   const pageLink = (target: number, label: string, disabled: boolean) => (
-    <Button asChild className={cn("w-40", disabled && "opacity-50")}>
+    <Button asChild size="small" className="min-w-32 sm:min-w-40">
       <Link
         to="/{-$locale}/leaderboards/$field"
         params={{ field }}
@@ -122,9 +121,10 @@ export function PageNav({ field, page, pages }: { field: string; page: number; p
   );
 
   return (
-    <nav className="flex items-center justify-between gap-4" aria-label={t("leaderboards.title")}>
+    // Phones put the page count above the two buttons, so nothing wraps or overflows.
+    <nav className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2" aria-label={t("leaderboards.title")}>
       {pageLink(page - 1, t("leaderboards.previous"), page <= 0)}
-      <p className="text-20 font-medium text-center">{t("leaderboards.page", { page: n(page + 1), pages: n(Math.max(pages, 1)) })}</p>
+      <p className="order-first basis-full font-sans text-16 font-medium whitespace-nowrap text-center sm:order-none sm:basis-auto sm:text-20">{t("leaderboards.page", { page: n(page + 1), pages: n(Math.max(pages, 1)) })}</p>
       {pageLink(page + 1, t("leaderboards.next"), page + 1 >= pages)}
     </nav>
   );
@@ -136,7 +136,7 @@ export function FindPlayer({ field, miss }: { field: string; miss?: AroundMiss }
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex w-full max-w-200 flex-col gap-2 self-center">
       <Search
         compact
         className="w-full"

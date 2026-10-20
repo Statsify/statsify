@@ -9,6 +9,10 @@
       "types": "./src/index.ts",
       "default": "./dist/index.js"
     },
+    "./format-position": {
+      "types": "./src/format-position.ts",
+      "default": "./dist/format-position.js"
+    },
     "./localize": {
       "types": "./src/localize.ts",
       "default": "./dist/localize.js"

@@ -9,7 +9,7 @@
 import { Container, Footer, If, List } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { User } from "@statsify/schemas";
-import { formatPosition } from "#lib/format-position";
+import { formatPosition } from "@statsify/profiles/format-position";
 import { prettify } from "@statsify/util";
 import type { Image } from "skia-canvas";
 
@@ -61,7 +61,7 @@ export const LeaderboardProfile = ({
     return (
       <>
         <box width="100%" {...highlight}>
-          <text>{formatPosition(t, d.position)}</text>
+          <text>{formatPosition(d.position, t)}</text>
         </box>
         <div width="remaining">
           <If condition={d.icon}>
