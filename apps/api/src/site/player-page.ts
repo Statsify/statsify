@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
+import { FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
 import { type GameSummary, type PlayerPage, levelMultiplier } from "@statsify/contract";
 
 /** The guild fields the page reads, deserialized: its name and tag plus each member's quest and GEXP rows. */
@@ -246,19 +246,25 @@ const GAME_SUMMARIES: Summary[] = [
   },
 ];
 
-function summarize(stats: PlayerStats, summary: Summary): GameSummary {
+/** A game panel, or `undefined` for a game the player has never played, which the page leaves out. */
+function summarize(stats: PlayerStats, summary: Summary): GameSummary | undefined {
   const rows = summary.rows.flatMap(([key, read, suffix]) => {
     const value = read(stats);
     return value === undefined ? [] : [{ key, value, ...(suffix && { suffix }) }];
   });
 
-  return { id: summary.id, level: summary.level?.(stats), rows };
+  // Ratios and formatted levels follow from the counts, so all-zero counts mean there is nothing to show.
+  const played = rows.some((row) => typeof row.value === "number" && row.value > 0);
+  if (!played) return undefined;
+
+  return { id: summary.id, name: FormattedGame[summary.id], level: summary.level?.(stats), rows };
 }
 
 /** The `player.page` view model from a deserialized player and their guild. */
 export function buildPlayerPage(player: Player, guild: PlayerGuild | null): PlayerPage {
   const { general, quests, challenges } = player.stats;
   const { status, socials } = player;
+  const lastGame = status.lastGame?.id;
 
   const level = general.networkLevel;
   const levelStart = getNetworkExp(Math.floor(level));
@@ -309,7 +315,7 @@ export function buildPlayerPage(player: Player, guild: PlayerGuild | null): Play
       firstLogin: status.firstLogin,
       lastLogin: status.lastLogin,
       lastLogout: status.lastLogout,
-      lastGame: status.lastGame?.id ?? null,
+      lastGame: lastGame ? { id: lastGame, name: FormattedGame[lastGame] } : null,
     },
     socials: {
       discord: socials.discord,
@@ -320,7 +326,7 @@ export function buildPlayerPage(player: Player, guild: PlayerGuild | null): Play
       twitter: socials.twitter,
       youtube: socials.youtube,
     },
-    games: GAME_SUMMARIES.map((summary) => summarize(player.stats, summary)),
+    games: GAME_SUMMARIES.flatMap((summary) => summarize(player.stats, summary) ?? []),
     updatedAt: player.expiresAt - PLAYER_COOLDOWN_MS,
     expiresAt: player.expiresAt,
   };

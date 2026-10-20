@@ -49,6 +49,8 @@ export const StatRowSchema = z.object({
 export const GameSummarySchema = z.object({
   /** The `GameId`, e.g. `BEDWARS`. */
   id: z.string(),
+  /** The Minecraft-formatted game name, e.g. `§cBed§fWars§f`. */
+  name: z.string(),
   /** Minecraft-formatted level or prefix string, when the game has one. */
   level: z.string().optional(),
   rows: z.array(StatRowSchema).max(4),
@@ -94,8 +96,8 @@ export const PlayerPageSchema = z.object({
     firstLogin: z.number(),
     lastLogin: z.number(),
     lastLogout: z.number(),
-    /** The `GameId` of the last game, when known. */
-    lastGame: z.string().nullable(),
+    /** The last game played, when known: its `GameId` and Minecraft-formatted name. */
+    lastGame: z.object({ id: z.string(), name: z.string() }).nullable(),
   }),
   socials: z
     .object({
