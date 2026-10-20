@@ -28,17 +28,20 @@ export const CopsAndCrimsProfile = ({
 }: CopsAndCrimsProfileProps) => {
   const { copsandcrims } = player.stats;
 
-  // Hypixel doesn't split these counts by mode, so mode pages label them as overall
-  const isOverall = mode.api === "overall";
-
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(copsandcrims.coins), "§6"],
     [t("stats.score"), t(copsandcrims.score), "§a"],
-    [t(isOverall ? "stats.knifeKills" : "stats.overallKnifeKills"), t(copsandcrims.overall.knifeKills), "§7"],
-    [t(isOverall ? "stats.headshotKills" : "stats.overallHeadshotKills"), t(copsandcrims.overall.headshotKills), "§4"],
-    [t(isOverall ? "stats.grenadeKills" : "stats.overallGrenadeKills"), t(copsandcrims.overall.grenadeKills), "§2"],
-    [t(isOverall ? "stats.shotsFired" : "stats.overallShotsFired"), t(copsandcrims.overall.shotsFired), "§6"],
   ];
+
+  // Hypixel doesn't split these counts by mode, so only the Overall page shows them
+  if (mode.api === "overall") {
+    sidebar.push(
+      [t("stats.knifeKills"), t(copsandcrims.overall.knifeKills), "§7"],
+      [t("stats.headshotKills"), t(copsandcrims.overall.headshotKills), "§4"],
+      [t("stats.grenadeKills"), t(copsandcrims.overall.grenadeKills), "§2"],
+      [t("stats.shotsFired"), t(copsandcrims.overall.shotsFired), "§6"]
+    );
+  }
 
   let table: JSX.Element;
 
