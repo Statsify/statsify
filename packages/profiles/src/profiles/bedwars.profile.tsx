@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { BEDWARS, gameStats, modeStats } from "@statsify/catalog";
 import { BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   Container,
@@ -36,12 +37,20 @@ export const BedWarsProfile = ({
   const { bedwars } = player.stats;
   const stats = bedwars[mode.api];
 
+  // Every stat's colour comes from the catalog the site shares, so the card and the site draw each stat alike.
+  const colours = new Map([...gameStats(BEDWARS), ...modeStats(BEDWARS, mode.api)].map(({ key, colour }) => [key, colour]));
+  const colour = (key: string) => {
+    const code = colours.get(key);
+    if (typeof code !== "string") throw new Error(`The catalog has no single colour for bedwars ${key}`);
+    return code;
+  };
+
   const sidebar: SidebarItem[] = [
-    [t("stats.tokens"), t(bedwars.tokens), "§2"],
-    [t("stats.iron"), t(stats.itemsCollected.iron), "§7"],
-    [t("stats.gold"), t(stats.itemsCollected.gold), "§6"],
-    [t("stats.diamonds"), t(stats.itemsCollected.diamond), "§b"],
-    [t("stats.emeralds"), t(stats.itemsCollected.emerald), "§2"],
+    [t("stats.tokens"), t(bedwars.tokens), colour("tokens")],
+    [t("stats.iron"), t(stats.itemsCollected.iron), colour("itemsCollected.iron")],
+    [t("stats.gold"), t(stats.itemsCollected.gold), colour("itemsCollected.gold")],
+    [t("stats.diamonds"), t(stats.itemsCollected.diamond), colour("itemsCollected.diamond")],
+    [t("stats.emeralds"), t(stats.itemsCollected.emerald), colour("itemsCollected.emerald")],
   ];
 
   if (bedwars.slumber.wallet)
@@ -49,13 +58,13 @@ export const BedWarsProfile = ({
       [
         t("stats.slumberTickets"),
         `${t(bedwars.slumber.tickets)}§7/${t(bedwars.slumber.wallet)}`,
-        "§b",
+        colour("slumber.tickets"),
       ],
-      [t("stats.totalSlumberTickets"), t(bedwars.slumber.totalTickets), "§d"],
+      [t("stats.totalSlumberTickets"), t(bedwars.slumber.totalTickets), colour("slumber.totalTickets")],
     );
 
   if (time === "LIVE" && stats.winstreak)
-    sidebar.push([t("stats.winstreak"), t(stats.winstreak), "§a"]);
+    sidebar.push([t("stats.winstreak"), t(stats.winstreak), colour("winstreak")]);
 
   return (
     <Container background={background}>
@@ -78,52 +87,52 @@ export const BedWarsProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+          <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
           <Table.td
             title={t("stats.losses")}
             value={t(stats.losses)}
-            color="§c"
+            color={colour("losses")}
           />
-          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
+          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={colour("wlr")} />
         </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.finalKills")}
             value={t(stats.finalKills)}
-            color="§a"
+            color={colour("finalKills")}
           />
           <Table.td
             title={t("stats.finalDeaths")}
             value={t(stats.finalDeaths)}
-            color="§c"
+            color={colour("finalDeaths")}
           />
-          <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color="§6" />
+          <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color={colour("fkdr")} />
         </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.kills")}
             value={t(stats.kills)}
-            color="§a"
+            color={colour("kills")}
           />
           <Table.td
             title={t("stats.deaths")}
             value={t(stats.deaths)}
-            color="§c"
+            color={colour("deaths")}
           />
-          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
         </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.bedsBroken")}
             value={t(stats.bedsBroken)}
-            color="§a"
+            color={colour("bedsBroken")}
           />
           <Table.td
             title={t("stats.bedsLost")}
             value={t(stats.bedsLost)}
-            color="§c"
+            color={colour("bedsLost")}
           />
-          <Table.td title={t("stats.bblr")} value={t(stats.bblr)} color="§6" />
+          <Table.td title={t("stats.bblr")} value={t(stats.bblr)} color={colour("bblr")} />
         </Table.tr>
         <Historical.progression
           time={time}
@@ -139,3 +148,4 @@ export const BedWarsProfile = ({
     </Container>
   );
 };
+

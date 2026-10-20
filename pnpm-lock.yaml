@@ -755,6 +755,15 @@ importers:
         specifier: 4.0.0
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
 
+  packages/catalog:
+    dependencies:
+      '@statsify/schemas':
+        specifier: workspace:^
+        version: link:../schemas
+      '@swc/helpers':
+        specifier: ^0.5.23
+        version: 0.5.23
+
   packages/contract:
     dependencies:
       '@orpc/contract':
@@ -864,6 +873,9 @@ importers:
       '@statsify/assets':
         specifier: workspace:^
         version: link:../assets
+      '@statsify/catalog':
+        specifier: workspace:^
+        version: link:../catalog
       '@statsify/math':
         specifier: workspace:^
         version: link:../math
