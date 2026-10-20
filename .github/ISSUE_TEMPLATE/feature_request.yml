@@ -25,6 +25,7 @@ body:
         - "@statsify/discord"
         - "@statsify/logger"
         - "@statsify/math"
+        - "@statsify/profiles"
         - "@statsify/rendering"
         - "@statsify/schemas"
         - "@statsify/skin-renderer"

@@ -37,6 +37,9 @@
 "@statsify/math":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/math"
 
+"@statsify/profiles":
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/profiles"
+
 "@statsify/schemas":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/schemas"
 

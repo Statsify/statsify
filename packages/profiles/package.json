@@ -1,0 +1,35 @@
+{
+  "name": "@statsify/profiles",
+  "version": "0.0.0",
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "swc src --out-dir dist --strip-leading-paths",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint",
+    "lint:ci": "oxlint --format=github"
+  },
+  "dependencies": {
+    "@statsify/api-client": "workspace:^",
+    "@statsify/assets": "workspace:^",
+    "@statsify/math": "workspace:^",
+    "@statsify/rendering": "workspace:^",
+    "@statsify/schemas": "workspace:^",
+    "@statsify/util": "workspace:^",
+    "@swc/helpers": "^0.5.23",
+    "i18next": "^21.10.0",
+    "luxon": "^3.5.0",
+    "skia-canvas": "4.0.0",
+    "typedi": "^0.10.0"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.4.2"
+  }
+}

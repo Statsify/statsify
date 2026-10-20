@@ -9,7 +9,7 @@
 import Backend from "i18next-fs-backend";
 import i18next from "i18next";
 import { Service } from "typedi";
-import { abbreviationNumber } from "@statsify/util";
+import { formatNumber } from "@statsify/util";
 import { readdir } from "node:fs/promises";
 
 const DEFAULT_LANGUAGE = "en-US";
@@ -54,38 +54,7 @@ export class I18nLoaderService {
   }
 }
 
-const numberFormats = new Map<string, Intl.NumberFormat>();
-
-function getNumberFormat(lng: string | undefined, digits: number) {
-  const key = `${lng}|${digits}`;
-  let numberFormat = numberFormats.get(key);
-
-  if (!numberFormat) {
-    numberFormat = Intl.NumberFormat(lng, {
-      maximumFractionDigits: digits,
-      minimumFractionDigits: digits,
-    });
-
-    numberFormats.set(key, numberFormat);
-  }
-
-  return numberFormat;
-}
-
 function format(value: any, format?: string | undefined, lng?: string): string {
-  switch (format) {
-    case "number": {
-      const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
-      const numberFormat = getNumberFormat(lng, hasDecimals ? 2 : 0);
-
-      if ((value as number) >= 1_000_000) {
-        const [number, suffix] = abbreviationNumber(value);
-        return `${numberFormat.format(number)}${suffix}`;
-      }
-
-      return numberFormat.format(value as number);
-    }
-  }
-
+  if (format === "number") return formatNumber(value, lng);
   return value;
 }
