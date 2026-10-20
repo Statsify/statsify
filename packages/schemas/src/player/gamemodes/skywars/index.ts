@@ -10,6 +10,7 @@ import { ChallengesSkyWars, SkyWarsMini, SkyWarsMode } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
+import { add } from "@statsify/math";
 import { getFormattedLevel, getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
 import type { APIData } from "@statsify/util";
 
@@ -114,6 +115,12 @@ export class SkyWars {
   @Field()
   public emblem: string;
 
+  @Field({ store: { default: "default" } })
+  public normalKit: string;
+
+  @Field({ store: { default: "default" } })
+  public insaneKit: string;
+
   public constructor(data: APIData, ap: APIData) {
     this.exp = data.skywars_experience ?? 0;
     this.coins = data.coins;
@@ -144,23 +151,35 @@ export class SkyWars {
 
     this.progression = getLevelProgress(this.exp, this.level);
 
-    const soloKit = parseKit(
+    // Hypixel calls the Normal kits solo kits and the Insane kits team kits, so these are the
+    // kits picked for Normal and for Insane games, each used in both Solo and Doubles
+    this.normalKit = parseKit(
       data.activeKit_SOLO_random ? "random" : data.activeKit_SOLO
     );
-    const teamsKit = parseKit(
+    this.insaneKit = parseKit(
       data.activeKit_TEAMS_random ? "random" : data.activeKit_TEAMS
     );
+
+    const soloInsaneWins = data.wins_solo_insane;
+    const soloNormalWins = data.wins_solo_normal;
+    const doublesInsaneWins = data.wins_team_insane;
+    const doublesNormalWins = data.wins_team_normal;
+
+    const chooseKit = (insane = 0, normal = 0) =>
+      insane > normal ? this.insaneKit : this.normalKit;
 
     this.overall = new SkyWarsMode(data, "");
 
     this.solo = new SkyWarsMode(data, "solo");
-    this.solo.kit = soloKit;
+    this.solo.kit = chooseKit(soloInsaneWins, soloNormalWins);
 
     this.doubles = new SkyWarsMode(data, "team");
-    this.doubles.kit = teamsKit;
+    this.doubles.kit = chooseKit(doublesInsaneWins, doublesNormalWins);
 
-    this.overall.kit =
-      (this.doubles.wins ?? 0) > (this.solo.wins ?? 0) ? teamsKit : soloKit;
+    this.overall.kit = chooseKit(
+      add(soloInsaneWins, doublesInsaneWins),
+      add(soloNormalWins, doublesNormalWins)
+    );
 
     this.mini = new SkyWarsMini(data);
     this.mini.kit = parseKit(data.activeKit_MINI);

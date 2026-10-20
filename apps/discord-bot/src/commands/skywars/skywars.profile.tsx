@@ -46,6 +46,13 @@ export const SkyWarsProfile = ({
     [t("stats.potionsBrewed"), t(skywars.potionsBrewed), "§d"],
   ];
 
+  const kits: [title: string, kit: string][] = mode.api === "mini" ?
+    [[t("stats.kit"), stats.kit]] :
+    [
+      [t("stats.normalKit"), skywars.normalKit],
+      [t("stats.insaneKit"), skywars.insaneKit],
+    ];
+
   return (
     <Container background={background}>
       <Header
@@ -83,7 +90,11 @@ export const SkyWarsProfile = ({
             value={formatTime(stats.playtime)}
             color="§c"
           />
-          <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color="§6" />
+        </Table.tr>
+        <Table.tr>
+          {kits.map(([title, kit]) => (
+            <Table.td title={title} value={prettify(kit)} color="§6" />
+          ))}
         </Table.tr>
         <Historical.progression
           time={time}
