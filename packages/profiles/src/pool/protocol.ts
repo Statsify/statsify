@@ -8,8 +8,9 @@
 
 /**
  * The image sizes the site serves. `og` is the unfurl: the general card at its own size with the guild row, as the
- * bot sends it, rather than framed. `sig` is a forum signature (the Hypixel Forums cut signatures off at 200 px tall)
- * and `card` the general card at its native size. The variant is part of every request and cache key.
+ * bot sends it, rather than framed (a game's card has its own, `GAME_CARD_SIZES`). `sig` is a forum signature (the
+ * Hypixel Forums cut signatures off at 200 px tall) and `card` the general card at its native size. The variant is
+ * part of every request and cache key.
  */
 export const IMAGE_VARIANTS = {
   og: { width: 808, height: 540 },
@@ -19,9 +20,34 @@ export const IMAGE_VARIANTS = {
 
 export type ImageVariant = keyof typeof IMAGE_VARIANTS;
 
+/**
+ * The games whose bot card the pool draws for a site page's unfurl, by their `PlayerStats` key. A game joins once its
+ * card lives in this package; the rest unfurl with the general card.
+ */
+export const GAME_CARDS = ["bedwars"] as const;
+
+export type GameCard = (typeof GAME_CARDS)[number];
+
+export const isGameCard = (game: string): game is GameCard => (GAME_CARDS as readonly string[]).includes(game);
+
+/**
+ * A game card's unfurl size. The card's own size depends on what it shows (BedWars is 847 to 870 px wide with the
+ * numbers, and 25 px taller with a winstreak row), so this is the largest seen: a smaller card gets more of its
+ * background around it, and a larger one shrinks to fit.
+ */
+export const GAME_CARD_SIZES: Record<GameCard, { width: number; height: number }> = {
+  bedwars: { width: 870, height: 623 },
+};
+
+/** The bot's general card, or a game's card in one of its api modes. */
+export type CardChoice = { card: "general" } | { card: GameCard; mode: string };
+
+/** The size of the image a card renders to in `variant`, which the page's `og:image:width` and `height` repeat. */
+export const imageSize = (choice: CardChoice, variant: ImageVariant) =>
+  variant === "og" && choice.card !== "general" ? GAME_CARD_SIZES[choice.card] : IMAGE_VARIANTS[variant];
+
 /** One card render, posted from the site to a worker. Documents are the API's JSON (`player.full`). */
-export interface RenderRequest {
-  card: "general";
+export type RenderRequest = CardChoice & {
   variant: ImageVariant;
   player: Record<string, unknown>;
   guild: Record<string, unknown> | null;
@@ -29,11 +55,9 @@ export interface RenderRequest {
   updatedAt: number;
   /** The full-body skin render as PNG bytes; the worker never talks to the API. */
   skin: Uint8Array;
-}
+};
 
-export interface WorkerRequest extends RenderRequest {
-  id: number;
-}
+export type WorkerRequest = RenderRequest & { id: number };
 
 export type WorkerMessage =
   | { type: "ready" }

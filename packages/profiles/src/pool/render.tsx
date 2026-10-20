@@ -6,35 +6,72 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { BEDWARS_MODES, type GameMode, type GameModes, type Guild, type Player } from "@statsify/schemas";
+import type { BaseProfileProps } from "../types.js";
+import { BedWarsProfile } from "../profiles/bedwars.profile.js";
 import { Canvas, type CanvasRenderingContext2D, type Image, loadImage } from "skia-canvas";
+import { type GameCard, type RenderRequest, imageSize } from "./protocol.js";
+import { type GamesWithBackgrounds, mapBackground } from "../backgrounds.js";
 import { GeneralProfile } from "../profiles/general.profile.js";
-import { IMAGE_VARIANTS, type RenderRequest } from "./protocol.js";
 import { SignatureProfile, UpdatedStamp } from "../profiles/signature.profile.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getLocalizeFunction } from "./localize.js";
 import { getTheme } from "../themes/index.js";
 import { render } from "@statsify/rendering";
-import type { Guild, Player } from "@statsify/schemas";
 
 /** How far the `card` variant's stamp sits from the bottom-right corner, inside the card's footer. */
 const STAMP_INSET = 18;
 
 /**
+ * A game's card as its bot command draws it: the game's mode registry and its `getProfile`, given the props every
+ * card takes and the mode.
+ */
+interface CardSpec<T extends GamesWithBackgrounds> {
+  modes: GameModes<T>;
+  draw: (base: BaseProfileProps, extra: { mode: GameMode<T> }) => JSX.Element;
+}
+
+/** Types an entry by its own registry, then drops it so the table holds every game's. */
+const card = <T extends GamesWithBackgrounds>(spec: CardSpec<T>) => spec as unknown as CardSpec<GamesWithBackgrounds>;
+
+/** The cards `GAME_CARDS` names. */
+const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds>> = {
+  bedwars: card({
+    modes: BEDWARS_MODES,
+    draw: (base, { mode }) => {
+      if (mode.api === "challenges") throw new Error("BedWars' challenges have a card of their own");
+      return <BedWarsProfile {...base} mode={mode} />;
+    },
+  }),
+};
+
+/** The mode a request names as the bot's command hands it to the card, and the background the command draws it on. */
+function cardMode(modes: GameModes<GamesWithBackgrounds>, api: string) {
+  const mode = modes.getModes().find((candidate) => candidate.api === api);
+  if (!mode) throw new Error(`There is no ${api} mode`);
+
+  return { mode: { ...mode, submode: undefined } as unknown as GameMode<GamesWithBackgrounds>, background: mapBackground(modes, mode.api) };
+}
+
+/**
  * Renders a player image for a site visitor (no premium user, so default theme and logo): the signature
- * laid out at its canvas size, or the bot's general card, on the variant's canvas. The result is drawn centred at
- * 1:1, which keeps the bitmap font sharp, over the same background; only an image that outgrew the canvas (a long
- * name, the guild row) shrinks to fit. `og` draws the card on the canvas's own background, so around a card smaller
- * than the canvas the background carries on rather than showing the card's edge. `card` gets the "Updated" stamp
- * in its footer's corner.
+ * laid out at its canvas size, or one of the bot's cards (the general card, or a game's in one mode), on the canvas
+ * `imageSize` gives. The result is drawn centred at 1:1, which keeps the bitmap font sharp, over the same
+ * background; only an image that outgrew the canvas (a long name, the guild row) shrinks to fit. `og` draws the card
+ * on the canvas's own background, so around a card smaller than the canvas the background carries on rather than
+ * showing the card's edge. `card` gets the "Updated" stamp in its footer's corner.
  */
 export async function renderCard(request: RenderRequest): Promise<Uint8Array<ArrayBuffer>> {
-  const { width, height } = IMAGE_VARIANTS[request.variant];
+  const { width, height } = imageSize(request, request.variant);
+  const uuid = String(request.player.uuid);
+  const game =
+    request.card === "general" ? undefined : { spec: CARDS[request.card], ...cardMode(CARDS[request.card].modes, request.mode) };
 
   const [t, background, logo, skin] = await Promise.all([
     getLocalizeFunction(),
-    // The bot's `/general` backgrounds (`mapBackground(GENERAL_MODES, "overall")`), one per player: the UUID picks it, so a
-    // re-render for the same `updatedAt` gives the same bytes.
-    getBackground("hypixel", "overall", String(request.player.uuid)),
+    // The backgrounds the bot draws the card on (`/general`'s are `mapBackground(GENERAL_MODES, "overall")`), one per
+    // player: the UUID picks it, so a re-render for the same `updatedAt` gives the same bytes.
+    game ? getBackground(...game.background, uuid) : getBackground("hypixel", "overall", uuid),
     getLogo(null),
     loadImage(Buffer.from(request.skin)),
   ]);
@@ -60,18 +97,23 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
             t={t}
           />
         ) :
-        (
-          <GeneralProfile
-            background={cardBackground as Image}
-            logo={logo}
-            skin={skin}
-            player={player}
-            guild={guild}
-            user={null}
-            t={t}
-            time="LIVE"
-          />
-        ),
+        game ?
+          game.spec.draw(
+            { background: cardBackground as Image, logo, skin, player, user: null, t, time: "LIVE" },
+            { mode: game.mode }
+          ) :
+          (
+            <GeneralProfile
+              background={cardBackground as Image}
+              logo={logo}
+              skin={skin}
+              player={player}
+              guild={guild}
+              user={null}
+              t={t}
+              time="LIVE"
+            />
+          ),
       theme
     );
 

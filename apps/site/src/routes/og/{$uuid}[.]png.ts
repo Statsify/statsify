@@ -6,14 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { UNFURL_POLICY, playerImageResponse } from "~/server/images.server";
+import { UNFURL_POLICY, gameImageOf, playerImageResponse } from "~/server/images.server";
+import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
 
-/** The Discord unfurl image: the bot's general card for a player, by UUID. Never calls Hypixel. */
+/**
+ * The Discord unfurl image: the bot's general card for a player, by UUID, or with `?game=` (and `?mode=`) the card of
+ * that game page. Never calls Hypixel.
+ */
 export const Route = createFileRoute("/og/{$uuid}.png")({
   server: {
     handlers: {
-      GET: ({ params, request }) => playerImageResponse(request, params.uuid, "og", UNFURL_POLICY),
+      GET: ({ params, request }) => {
+        const game = gameImageOf(new URL(request.url).searchParams);
+        if (game === null) return new Response(null, { status: 404, headers: cacheHeaders("max-age=300") });
+        return playerImageResponse(request, params.uuid, "og", UNFURL_POLICY, game);
+      },
     },
   },
 });

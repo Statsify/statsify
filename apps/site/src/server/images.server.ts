@@ -6,12 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ImageVariant, PoolBusyError, RenderPool } from "@statsify/profiles/pool";
+import {
+  type CardChoice,
+  type ImageVariant,
+  PoolBusyError,
+  RenderPool,
+  isGameCard,
+} from "@statsify/profiles/pool";
+import { ORPCError } from "@orpc/client";
 import { cacheHeaders } from "~/lib/cache";
 import { compactUuid } from "~/lib/uuid";
 import { createRequire } from "node:module";
 import { join } from "node:path";
 import { proxySkin } from "./skin.server";
+import { randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { redis } from "./redis.server";
 import { repoRoot } from "./repo-root.server";
@@ -21,6 +29,31 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { onShutdown, shuttingDown } from "./shutdown.server";
 import { siteConfig } from "./config.server";
 import type { Redis } from "ioredis";
+
+/** A game page's unfurl: the game's `PlayerStats` key and its `?mode=`, `null` for the page's first mode. */
+export interface GameImage {
+  game: string;
+  mode: string | null;
+}
+
+/** What a game or mode in an image URL can look like (`bedwars`, `4v4`, `oneBlock`); the API decides the rest. */
+const GAME_PARAM = /^[\dA-Za-z]{1,32}$/;
+
+/** `/og`'s `?game=` and `?mode=`: `undefined` for the general card, `null` for a value that can't name a page. */
+export function gameImageOf(search: URLSearchParams): GameImage | null | undefined {
+  const game = search.get("game");
+  const mode = search.get("mode");
+  if (game === null) return mode === null ? undefined : null;
+  return GAME_PARAM.test(game) && (mode === null || GAME_PARAM.test(mode)) ? { game, mode } : null;
+}
+
+/** The game or mode an image URL names has no page on the site. */
+class GameImageNotFoundError extends Error {
+  public constructor() {
+    super("No game page for this image");
+    this.name = "GameImageNotFoundError";
+  }
+}
 
 /**
  * What an untracked player gets per variant, under `public/images`: the site's own Open Graph image for
@@ -37,9 +70,18 @@ const PLACEHOLDERS: Record<ImageVariant, string> = {
  * for an hour anyway.
  */
 const CACHE_TTL_SECONDS = 120;
-/** The first request for a missing image renders it under this lock; the others wait for its PNG. */
-const LOCK_TTL_MS = 15_000;
+/** How long the pool lets a render wait for a worker, and then run. */
+const RENDER_QUEUE_TIMEOUT_MS = 6000;
+const RENDER_TIMEOUT_MS = 8000;
+/**
+ * The first request for a missing image renders it under this lock; the others wait for its PNG. It outlasts the
+ * owner's slowest path: 5 s to load the player and skin (the skin may come from Mojang), the queue, the render and 1 s
+ * for the cache write. An owner slower than that only costs a second render.
+ */
+const LOCK_TTL_MS = 5000 + RENDER_QUEUE_TIMEOUT_MS + RENDER_TIMEOUT_MS + 1000;
 const LOCK_POLL_MS = 100;
+/** Frees the lock only while it holds the owner's token, so an owner that outlived its lock can't free the next one's. */
+const RELEASE_LOCK = `if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) end return 0`;
 /**
  * Image misses still loading plus renders waiting for a worker, before the pool answers busy: about a second of
  * backlog at the cold render rate, so a forum thread's signatures or a Discord unfurl's burst render whole.
@@ -96,6 +138,8 @@ let pool: Promise<RenderPool> | undefined;
 let loading = 0;
 const placeholders = new Map<ImageVariant, Promise<Uint8Array<ArrayBuffer>>>();
 
+const NOT_FOUND_HEADERS = cacheHeaders("max-age=300");
+
 /** The `ETag` of a player image: its `updatedAt`, which only the player page's refresh action changes. */
 const etagOf = (updatedAt: number) => `"${updatedAt}"`;
 
@@ -107,21 +151,24 @@ const matchesEtag = (ifNoneMatch: string, etag: string) =>
  * The handler behind `/og`, `/sig` and `/card`: reads the UUID in any spelling (dashed or not, any case),
  * renders through `renderPlayerImage` and turns its outcomes into responses under the route's `policy`. Every
  * spelling gets the image itself, not a redirect, because some forum image proxies don't follow redirects; the
- * pages always link the undashed form. Never calls Hypixel.
+ * pages always link the undashed form. `game` asks for a game page's card instead of the general one. Never calls
+ * Hypixel.
  */
 export async function playerImageResponse(
   request: Request,
   uuidParam: string,
   variant: ImageVariant,
-  policy: ImagePolicy
+  policy: ImagePolicy,
+  game?: GameImage
 ): Promise<Response> {
   const uuid = compactUuid(uuidParam);
-  if (!uuid) return new Response(null, { status: 404, headers: cacheHeaders("max-age=300") });
+  if (!uuid) return new Response(null, { status: 404, headers: NOT_FOUND_HEADERS });
 
   try {
     const image = await renderPlayerImage({
       uuid,
       variant,
+      game,
       ifNoneMatch: request.headers.get("If-None-Match"),
     });
 
@@ -139,6 +186,7 @@ export async function playerImageResponse(
     }
 
     if (error instanceof SkinUnavailableError) return new Response(null, { status: 502, headers: NO_STORE });
+    if (error instanceof GameImageNotFoundError) return new Response(null, { status: 404, headers: NOT_FOUND_HEADERS });
 
     throw error;
   }
@@ -152,10 +200,12 @@ export async function playerImageResponse(
 async function renderPlayerImage({
   uuid,
   variant,
+  game,
   ifNoneMatch,
 }: {
   uuid: string;
   variant: ImageVariant;
+  game?: GameImage;
   ifNoneMatch: string | null;
 }): Promise<PlayerImage> {
   const identity = await resolvePlayer(uuid);
@@ -164,26 +214,30 @@ async function renderPlayerImage({
   const { updatedAt } = identity;
   if (ifNoneMatch && matchesEtag(ifNoneMatch, etagOf(updatedAt))) return { kind: "unchanged", updatedAt };
 
-  const key = `site:image:${variant}:${identity.uuid}:${updatedAt}`;
+  const card = game ? `${game.game}:${game.mode ?? ""}:` : "";
+  const key = `site:image:${variant}:${card}${identity.uuid}:${updatedAt}`;
   const lock = `${key}:lock`;
   const client = await redis();
 
   const cached = await client.getBuffer(key);
   if (cached) return { kind: "card", png: new Uint8Array(cached), updatedAt };
 
-  const locked = (await client.set(lock, "1", "PX", LOCK_TTL_MS, "NX")) === "OK";
+  const token = randomUUID();
+  const takeLock = async () => (await client.set(lock, token, "PX", LOCK_TTL_MS, "NX")) === "OK";
 
-  if (!locked) {
+  if (!(await takeLock())) {
     const waited = await waitForImage(client, key, lock);
     if (waited) return { kind: "card", png: new Uint8Array(waited), updatedAt };
+    // The owner failed or ran out of time: render as the next owner, or answer busy rather than render unlocked.
+    if (!(await takeLock())) throw new PoolBusyError();
   }
 
   try {
-    const rendered = await renderCard(identity.uuid, variant, updatedAt);
+    const rendered = await renderCard(identity.uuid, variant, updatedAt, game);
     await client.set(key, Buffer.from(rendered), "EX", CACHE_TTL_SECONDS);
     return { kind: "card", png: rendered, updatedAt };
   } finally {
-    if (locked) await client.del(lock);
+    await client.eval(RELEASE_LOCK, 1, lock, token);
   }
 }
 
@@ -236,6 +290,8 @@ function renderPool(): Promise<RenderPool> {
       worker: createRequire(import.meta.url).resolve("@statsify/profiles/worker"),
       size: renderWorkers,
       queueLimit: RENDER_QUEUE_LIMIT,
+      queueTimeoutMs: RENDER_QUEUE_TIMEOUT_MS,
+      timeoutMs: RENDER_TIMEOUT_MS,
     });
     onShutdown(() => created.close());
     return created;
@@ -254,24 +310,56 @@ async function waitForImage(
   if (Date.now() >= deadline) return null;
   await sleep(LOCK_POLL_MS);
 
+  // The lock first: the owner writes the PNG before freeing it, so a free lock with no PNG means none is coming.
+  const held = await client.exists(lock);
   const image = await client.getBuffer(key);
   if (image) return image;
 
-  return (await client.exists(lock)) ? waitForImage(client, key, lock, deadline) : null;
+  return held ? waitForImage(client, key, lock, deadline) : null;
 }
 
-/** The bot's general card for a stored player, as PNG bytes. Throws `PoolBusyError` when the queue is full. */
-async function renderCard(uuid: string, variant: ImageVariant, updatedAt: number): Promise<Uint8Array<ArrayBuffer>> {
+/**
+ * The game page's card: the API checks the game and mode (the page's own rules, so an unfurl exists exactly when the
+ * page does), and a game whose card the pool can't draw yet gets the general one.
+ */
+async function gameCard(uuid: string, { game, mode }: GameImage): Promise<CardChoice> {
+  const page = await rpcServerClient.player.game({ uuid, game, mode: mode ?? undefined }).catch((error: unknown) => {
+    if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) {
+      throw new GameImageNotFoundError();
+    }
+
+    throw error;
+  });
+
+  return isGameCard(page.game.key) ? { card: page.game.key, mode: page.mode } : { card: "general" };
+}
+
+/** One of the bot's cards for a stored player, as PNG bytes. Throws `PoolBusyError` when the queue is full. */
+async function renderCard(
+  uuid: string,
+  variant: ImageVariant,
+  updatedAt: number,
+  game?: GameImage
+): Promise<Uint8Array<ArrayBuffer>> {
   // A miss reads the player and renders the skin (asking Mojang for it, if it's old) before it can queue, so a queue
   // with no room left, counting the misses still loading, answers busy first.
   const renders = await renderPool();
   if (renders.pending + loading >= RENDER_QUEUE_LIMIT) throw new PoolBusyError();
 
   loading++;
-  const [full, skin] = await Promise.all([rpcServerClient.player.full({ uuid }), fetchSkin(uuid)]).finally(() => loading--);
+  // The game check, the player and the skin are independent, so they load together.
+  const loads = [
+    game ? gameCard(uuid, game) : { card: "general" as const },
+    rpcServerClient.player.full({ uuid }),
+    fetchSkin(uuid),
+  ] as const;
+  // A failed load keeps the slot until the others settle, since they still run.
+  await Promise.allSettled(loads);
+  loading--;
+  const [card, full, skin] = await Promise.all(loads);
 
   return renders.render({
-    card: "general",
+    ...card,
     variant,
     player: full.player,
     guild: full.guild,

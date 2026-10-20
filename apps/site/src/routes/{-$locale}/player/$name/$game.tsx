@@ -7,7 +7,7 @@
  */
 
 import { GameView } from "~/features/game/game-page";
-import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
+import { imageSize, isGameCard } from "@statsify/profiles/protocol";
 import { NotFound } from "~/components/not-found";
 import { ORPCError } from "@orpc/client";
 import { PlayerNotFound } from "~/features/player/player-not-found";
@@ -94,13 +94,15 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       gameName: plainText(page.game.name),
       modeName: mode?.name ?? page.mode,
       updatedAt: page.updatedAt,
+      // The unfurl's size: the game's card when the pool draws one for this mode, as `/og` picks it, else the general.
+      unfurl: imageSize(isGameCard(page.game.key) ? { card: page.game.key, mode: page.mode } : { card: "general" }, "og"),
     };
   },
   staleTime: 60_000,
   head: ({ loaderData, matches }) => {
     if (!loaderData) return { meta: [{ title: "Not Found | Statsify" }], links: [SANS_PRELOAD] };
 
-    const { username, uuid, updatedAt, game, mode, gameName, modeName } = loaderData;
+    const { username, uuid, updatedAt, game, mode, gameName, modeName, unfurl } = loaderData;
     const title = `${possessive(username)} ${gameName} Stats${mode ? ` (${modeName})` : ""} | Statsify`;
     const description = `View ${possessive(username)} Hypixel ${gameName}${mode ? ` ${modeName}` : ""} stats on Statsify.`;
     const origin = localeData(matches)?.origin;
@@ -113,7 +115,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       meta: [
         { title },
         { name: "description", content: description },
-        ...(origin ? socialMeta({ origin, path, title, description, image, imageSize: IMAGE_VARIANTS.og, type: "profile" }) : []),
+        ...(origin ? socialMeta({ origin, path, title, description, image, imageSize: unfurl, type: "profile" }) : []),
       ],
       links: [{ rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
     };
