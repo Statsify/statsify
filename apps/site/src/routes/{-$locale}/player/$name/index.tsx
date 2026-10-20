@@ -75,7 +75,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
           }) :
           []),
       ],
-      links: [SANS_PRELOAD, { rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
+      links: [{ rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),

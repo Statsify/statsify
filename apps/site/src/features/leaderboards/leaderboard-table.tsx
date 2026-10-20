@@ -45,7 +45,7 @@ export function LeaderboardTable({ page }: { page: LeaderboardPage }) {
   }, [page]);
 
   if (page.rows.length === 0) {
-    return <p className="font-sans text-20 font-medium text-mc-gray text-center">{t("leaderboards.empty")}</p>;
+    return <p className="text-mc-1.5 text-mc-gray text-center">{t("leaderboards.empty")}</p>;
   }
 
   const format = (value: string | number) => (typeof value === "number" ? n(value) : value);
@@ -124,7 +124,7 @@ export function PageNav({ field, page, pages }: { field: string; page: number; p
     // Phones put the page count above the two buttons, so nothing wraps or overflows.
     <nav className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2" aria-label={t("leaderboards.title")}>
       {pageLink(page - 1, t("leaderboards.previous"), page <= 0)}
-      <p className="order-first basis-full font-sans text-16 font-medium whitespace-nowrap text-center sm:order-none sm:basis-auto sm:text-20">{t("leaderboards.page", { page: n(page + 1), pages: n(Math.max(pages, 1)) })}</p>
+      <p className="order-first basis-full text-mc-1 whitespace-nowrap text-center sm:order-none sm:basis-auto sm:text-mc-1.5">{t("leaderboards.page", { page: n(page + 1), pages: n(Math.max(pages, 1)) })}</p>
       {pageLink(page + 1, t("leaderboards.next"), page + 1 >= pages)}
     </nav>
   );
@@ -143,7 +143,7 @@ export function FindPlayer({ field, miss }: { field: string; miss?: AroundMiss }
         placeholder={t("leaderboards.find")}
         onSelect={(name) => navigate({ to: "/{-$locale}/leaderboards/$field", params: { field }, search: { around: name } })}
       />
-      {miss && <p className="text-16 font-medium text-mc-yellow text-center">{t(`leaderboards.${miss.kind}`, { name: miss.name })}</p>}
+      {miss && <p className="text-mc-1 text-mc-yellow text-center">{t(`leaderboards.${miss.kind}`, { name: miss.name })}</p>}
     </div>
   );
 }

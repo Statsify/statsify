@@ -295,7 +295,7 @@ function LoginPanel({ status, className }: { status: PlayerPage["status"]; class
 function GameGrid({ games }: { games: GameSummary[] }) {
   const { t } = useTranslation();
 
-  if (games.length === 0) return <p className="font-sans text-16 font-medium text-mc-white text-center">{t("player.noGames")}</p>;
+  if (games.length === 0) return <p className="text-mc-1.5 text-mc-gray text-center">{t("player.noGames")}</p>;
 
   // Two 32 px cells side by side need about 300 px, so columns are added only when every panel keeps that width.
   return (

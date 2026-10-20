@@ -133,7 +133,7 @@ function LookupButton({ name }: { name: string }) {
           {state.status === "pending" ? t("player.notFound.lookingUp") : t("player.notFound.lookup")}
         </button>
       </Button>
-      <output className="block font-sans text-16 font-medium text-mc-red empty:hidden">{message}</output>
+      <output className="block text-mc-1 text-mc-red text-center empty:hidden">{message}</output>
     </div>
   );
 }

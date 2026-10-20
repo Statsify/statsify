@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ActionResult } from "./player-actions";
 
-const META = "font-sans text-16 font-medium text-mc-gray";
+const META = "text-mc-1 text-mc-gray";
 
 type RefreshState =
   | { status: "idle" }
@@ -117,7 +117,7 @@ export function RefreshBar({
           </button>
         </Button>
       </div>
-      <output className="block font-sans text-16 font-medium text-mc-red empty:hidden">{message}</output>
+      <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>
     </div>
   );
 }

@@ -16,8 +16,9 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { PlayerPage } from "@statsify/contract";
 
-const LABEL = "font-sans text-16 font-medium text-mc-white";
-const META = "font-sans text-16 font-medium text-mc-gray";
+const LABEL = "text-mc-1 text-mc-white";
+/** The help text is reading text, so it is Mona Sans. */
+const HELP = "text-mc-1 text-mc-gray";
 /** How long a copy button reads "Copied!". */
 const COPIED_MS = 2000;
 
@@ -54,7 +55,7 @@ export function SignaturePanel({ page }: { page: PlayerPage }) {
       title={<h2 className="text-mc-1.5">{t("player.signature.title")}</h2>}
       className="content:flex content:flex-col content:gap-4"
     >
-      <p className={META}>{t("player.signature.description")}</p>
+      <p className={HELP}>{t("player.signature.description")}</p>
       <img
         src={`/sig/${uuid}.png`}
         alt={alt}
@@ -104,7 +105,7 @@ function Snippet({ label, text }: { label: string; text: string }) {
           value={text}
           aria-label={label}
           onFocus={(event) => event.currentTarget.select()}
-          className="h-11 min-w-0 grow bg-blackify-800 px-3 font-mono text-16 text-mc-white outline-none -outline-offset-2 focus:outline-2 focus:outline-white/60"
+          className="h-11 min-w-0 grow bg-blackify-800 px-3 text-mc-1 text-mc-white outline-none -outline-offset-2 focus:outline-2 focus:outline-white/60"
         />
         <Button asChild size="small" className="sm:min-w-32">
           <button type="button" onClick={copy}>

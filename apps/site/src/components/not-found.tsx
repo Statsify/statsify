@@ -21,7 +21,7 @@ export function NotFound() {
       <LogoError className="size-40 sm:size-64" />
       <div className="flex flex-col items-center gap-4">
         <h1 className="text-mc-3 sm:text-mc-4 font-bold text-mc-red">{t("notFound.title", "OOPS!")}</h1>
-        <p className="font-sans text-16 sm:text-20 font-medium text-mc-gray">
+        <p className="text-mc-1 sm:text-mc-1.5 text-mc-gray text-center">
           {t("notFound.description", "Looks like the page you're trying to reach does not exist")}
         </p>
         <Button asChild variant="primary" className="mt-2 min-w-48">

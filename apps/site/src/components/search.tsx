@@ -134,7 +134,8 @@ export function Search({
         <input
           name="search"
           placeholder={placeholder ?? t("search.placeholder")}
-          className={cn("placeholder:text-mc-gray text-white outline-none h-full w-full min-w-0 selection:bg-white/50", size.text)}
+          // A placeholder too long for a phone ends in an ellipsis rather than mid-letter.
+          className={cn("placeholder:text-mc-gray text-white outline-none h-full w-full min-w-0 text-ellipsis selection:bg-white/50", size.text)}
           value={input}
           onChange={(event) => {
             setQuery(event.target.value);

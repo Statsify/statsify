@@ -65,11 +65,11 @@ export function LeaderboardIndex({ groups }: { groups: LeaderboardGroup[] }) {
           onChange={(event) => setFilter(event.target.value)}
           placeholder={t("leaderboards.filter")}
           aria-label={t("leaderboards.filter")}
-          className="h-full w-full min-w-0 bg-transparent text-mc-1.5 text-white outline-none placeholder:text-mc-gray selection:bg-white/50"
+          className="h-full w-full min-w-0 bg-transparent text-mc-1.5 text-white text-ellipsis outline-none placeholder:text-mc-gray selection:bg-white/50"
         />
       </label>
       {visible.length === 0 && (
-        <p className="font-sans text-20 font-medium text-mc-gray text-center">{t("leaderboards.noMatches", { query: filter.trim() })}</p>
+        <p className="text-mc-1.5 text-mc-gray text-center">{t("leaderboards.noMatches", { query: filter.trim() })}</p>
       )}
       {visible.map((group) => (
         <Box key={group.name} className="content:py-2">
@@ -82,7 +82,7 @@ export function LeaderboardIndex({ groups }: { groups: LeaderboardGroup[] }) {
               <span className="text-mc-gray group-open:rotate-90">{">"}</span>
             </summary>
             {/* One class on the list instead of one per link: there are thousands of them. */}
-            <ul className="grid grid-cols-1 pt-2 pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:font-sans [&_a]:text-16 [&_a]:font-medium [&_a:hover]:bg-white/10 [&_a:hover]:underline">
+            <ul className="grid grid-cols-1 pt-2 pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:text-mc-1 [&_a:hover]:bg-white/10 [&_a:hover]:underline">
               {group.leaderboards.map(({ field, name }) => (
                 <li key={field}>
                   <a href={href(field)}>{name}</a>

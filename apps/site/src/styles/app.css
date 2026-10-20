@@ -142,11 +142,6 @@
   text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
 }
 
-/* Mona Sans at 90% width for phone labels that would otherwise wrap. */
-@utility font-narrow {
-  font-stretch: 90%;
-}
-
 @utility grid-areas-stack {
   grid-template-areas: "stack";
 }

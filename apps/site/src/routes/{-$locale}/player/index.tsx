@@ -9,7 +9,6 @@
 import { Background } from "~/components/ui/background";
 import { ResultCards } from "~/features/player/result-card";
 import { Search } from "~/components/search";
-import { SANS_PRELOAD } from "~/lib/fonts";
 import { UUID_PATTERN } from "~/lib/uuid";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute, redirect } from "@tanstack/react-router";
@@ -50,7 +49,6 @@ export const Route = createFileRoute("/{-$locale}/player/")({
       { title: "Search | Statsify" },
       { name: "description", content: "Search players to view their Hypixel stats." },
     ],
-    links: [SANS_PRELOAD],
   }),
   headers: ({ loaderData }) =>
     cacheHeaders(loaderData?.q ? "max-age=60, stale-while-revalidate=600" : "max-age=600, stale-while-revalidate=86400"),

@@ -20,7 +20,7 @@ export function ResultCards({ cards, query }: { cards: ResultCard[]; query: stri
   const { t } = useTranslation();
 
   if (cards.length === 0) {
-    return <p className="font-sans text-20 font-medium text-mc-gray text-center">{t("search.noResults", { query })}</p>;
+    return <p className="text-mc-1.5 text-mc-gray text-center">{t("search.noResults", { query })}</p>;
   }
 
   return (

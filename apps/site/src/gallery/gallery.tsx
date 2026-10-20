@@ -218,6 +218,8 @@ function TypeSection() {
             Minecraft {px} <span className="font-bold">Bold {px}</span>
           </p>
         ))}
+        {/* Glyphs the pixel font lacks come from the sans stack. */}
+        <p className="text-mc-1">Fallback: Łódź, Ğ, Привет, Ελλάδα, ไทย, 你好</p>
       </div>
       <div className="flex flex-col gap-2">
         {SANS_SIZES.map((size) => (
@@ -363,6 +365,14 @@ function StatSection() {
           <StatCell label="Bronze Trophies" value="9" color="text-[#cd7f32]" />
         </dl>
       </Box>
+      <Demo label="Narrow cells: a two-line title, values on one line">
+        <Box className="w-56">
+          <dl className="grid grid-cols-2 gap-x-2 gap-y-4">
+            <StatCell label="Average Member GEXP" value="128,402" color="text-mc-dark-green" />
+            <StatCell label="Wins" value="2,904" color="text-mc-green" />
+          </dl>
+        </Box>
+      </Demo>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Demo label="Inline rows">
           <Box>

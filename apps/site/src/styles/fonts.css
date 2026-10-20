@@ -1,4 +1,4 @@
-/* Minecraft: wordmark, headings, nametags and stat values, at pixel-grid sizes only. */
+/* Minecraft: everything a card could show (titles, labels, values, nav, buttons, inputs), at pixel-grid sizes only. */
 @font-face {
   font-family: "Minecraft";
   src: url("/fonts/Minecraft.ttf") format("truetype");
@@ -32,7 +32,7 @@
 }
 
 /*
- * Mona Sans v2.0.27 (OFL): labels, nav, body and table text. Instanced outside the repo to the axes the
+ * Mona Sans v2.0.27 (OFL): reading text (paragraphs, help text). Instanced outside the repo to the axes the
  * site uses (wght 500-600, wdth 90-100, opsz pinned at 16) and split like Google Fonts' slices:
  *   fonttools varLib.instancer MonaSansVF.woff2 wght=500:600 wdth=90:100 opsz=16 -o inst.ttf
  *   pyftsubset inst.ttf --unicodes=<range> --layout-features='*' --flavor=woff2
