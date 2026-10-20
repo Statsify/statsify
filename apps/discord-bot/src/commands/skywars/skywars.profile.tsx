@@ -11,6 +11,7 @@ import {
   Footer,
   Header,
   Historical,
+  If,
   SidebarItem,
   Table,
   formatProgression,
@@ -46,12 +47,9 @@ export const SkyWarsProfile = ({
     [t("stats.potionsBrewed"), t(skywars.potionsBrewed), "§d"],
   ];
 
-  const kits: [title: string, kit: string][] = mode.api === "mini" ?
-    [[t("stats.kit"), stats.kit]] :
-    [
-      [t("stats.normalKit"), skywars.normalKit],
-      [t("stats.insaneKit"), skywars.insaneKit],
-    ];
+  // Solo and Doubles share the player's Normal and Insane kit picks, so their pages show both.
+  // Overall shows the kit for whichever of Normal or Insane they've won more in
+  const showBothKits = mode.api === "solo" || mode.api === "doubles";
 
   return (
     <Container background={background}>
@@ -90,12 +88,16 @@ export const SkyWarsProfile = ({
             value={formatTime(stats.playtime)}
             color="§c"
           />
+          <If condition={!showBothKits}>
+            <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color="§6" />
+          </If>
         </Table.tr>
-        <Table.tr>
-          {kits.map(([title, kit]) => (
-            <Table.td title={title} value={prettify(kit)} color="§6" />
-          ))}
-        </Table.tr>
+        <If condition={showBothKits}>
+          <Table.tr>
+            <Table.td title={t("stats.normalKit")} value={prettify(skywars.normalKit)} color="§6" />
+            <Table.td title={t("stats.insaneKit")} value={prettify(skywars.insaneKit)} color="§6" />
+          </Table.tr>
+        </If>
         <Historical.progression
           time={time}
           progression={skywars.progression}
