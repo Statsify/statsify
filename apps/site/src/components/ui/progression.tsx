@@ -8,8 +8,7 @@
 
 import { Box } from "./box";
 import { MinecraftText } from "./minecraft-text";
-import { formatNumber } from "~/i18n/format";
-import { useTranslation } from "react-i18next";
+import { useNumberFormat } from "~/i18n/use-number-format";
 import type { Progression as ProgressionSchema } from "@statsify/schemas";
 
 const minigameXpBar = (percentage: number) => {
@@ -37,12 +36,13 @@ export function Progression({
   xpBar?: (percentage: number) => string;
   className?: string;
 }) {
-  const { i18n } = useTranslation();
+  const n = useNumberFormat();
 
+  // The previews are no-wrap grids; these lines may wrap when a phone is too narrow.
   return (
-    <Box className={`text-mc-gray ${className}`}>
+    <Box className={`text-mc-gray content:whitespace-normal ${className}`}>
       <p>{label}: <MinecraftText>{currentLevel}</MinecraftText></p>
-      <p>{metric} Progress: <span className="text-mc-aqua">{formatNumber(progression.current, i18n.language)}</span>/<span className="text-mc-green">{formatNumber(progression.max ?? 0, i18n.language)}</span></p>
+      <p>{metric} Progress: <span className="text-mc-aqua">{n(progression.current)}</span>/<span className="text-mc-green">{n(progression.max ?? 0)}</span></p>
       <p>
         <MinecraftText>{naturalLevel} {xpBar(progression.percent)} {nextLevel}</MinecraftText>
       </p>

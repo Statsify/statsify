@@ -1,8 +1,7 @@
 {
   "home": {
     "copied": "Copied to Clipboard!",
-    "title": "Statsify",
-    "description": "Hypixel stats, leaderboards and sessions for every minigame."
+    "stats": "Stats"
   },
   "nav": {
     "label": "Main",
