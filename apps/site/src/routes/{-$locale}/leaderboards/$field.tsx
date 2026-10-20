@@ -8,7 +8,6 @@
 
 import { Background } from "~/components/ui/background";
 import { FindPlayer, LeaderboardTable, PageNav } from "~/features/leaderboards/leaderboard-table";
-import { LeaderboardSkeleton } from "~/features/leaderboards/leaderboard-skeleton";
 import { NotFound } from "~/components/not-found";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
@@ -56,7 +55,6 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
   headers: () => cacheHeaders("max-age=60, stale-while-revalidate=600"),
   // Its own boundary, so an unknown field 404s inside the layout rather than replacing it.
   notFoundComponent: NotFound,
-  pendingComponent: LeaderboardSkeleton,
   component: LeaderboardPage,
 });
 

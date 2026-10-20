@@ -7,7 +7,6 @@
  */
 
 import { Box } from "~/components/ui/box";
-import { CATEGORY_ICONS, FormattedCategories } from "./board-search";
 import { type Category, type Difficulty, type Reward, type Task, boards } from "./boards";
 import { Divider } from "~/components/ui/divider";
 import { MinecraftText } from "~/components/ui/minecraft-text";
@@ -15,10 +14,17 @@ import { SkinHead } from "~/components/ui/skin";
 import { Tab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
 import { getRouteApi } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import type { BingoPlayer } from "@statsify/contract";
 import type { ComponentProps } from "react";
 
 type TaskInfo = Pick<Task, "game" | "name" | "description" | "progress">;
+
+const CATEGORY_ICONS: Record<Category, string> = {
+  casual: "/icons/slime-ball.png",
+  pvp: "/icons/ender-eye.png",
+  classic: "/icons/snowball.png",
+};
 
 const route = getRouteApi("/{-$locale}/player/$name/bingo");
 
@@ -36,6 +42,7 @@ function useBoardState() {
 }
 
 export function Bingo({ player }: { player: BingoPlayer }) {
+  const { t } = useTranslation();
   const { category, difficulty, select } = useBoardState();
 
   return (
@@ -53,17 +60,17 @@ export function Bingo({ player }: { player: BingoPlayer }) {
         <Divider variant="black" />
         <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4 **:text-mc-1.5 **:lg:text-mc-2">
           <Tabs tab={category} onTabChange={(category) => select({ category })}>
-            <Tab tab="casual">Casual</Tab>
-            <Tab tab="pvp">PvP</Tab>
-            <Tab tab="classic">Classic</Tab>
+            <Tab tab="casual">{t("bingo.categories.casual")}</Tab>
+            <Tab tab="pvp">{t("bingo.categories.pvp")}</Tab>
+            <Tab tab="classic">{t("bingo.categories.classic")}</Tab>
           </Tabs>
           <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
           <Tabs tab={difficulty} onTabChange={(difficulty) => select({ difficulty })}>
             <Tab tab="easy" className="text-mc-green/50 aria-pressed:text-mc-green">
-              Easy
+              {t("bingo.easy")}
             </Tab>
             <Tab tab="hard" className="text-mc-red/50 aria-pressed:text-mc-red">
-              Hard
+              {t("bingo.hard")}
             </Tab>
           </Tabs>
         </div>
@@ -82,6 +89,7 @@ function completetionColor(completion: number) {
 }
 
 function CategoryOverview({ player, category }: { player: BingoPlayer; category: Category }) {
+  const { t } = useTranslation();
   const { select } = useBoardState();
 
   const easyBingo = player.bingo.easy[category];
@@ -101,7 +109,7 @@ function CategoryOverview({ player, category }: { player: BingoPlayer; category:
           style={{ imageRendering: "pixelated" }}
           className="w-6 h-6 lg:w-8 lg:h-8"
         />
-        <p className="font-bold text-mc-yellow">{FormattedCategories[category]} Bingo Cards</p>
+        <p className="font-bold text-mc-yellow">{t("bingo.cards", { category: t(`bingo.categories.${category}`) })}</p>
       </div>
       <div className="flex flex-col justify-center items-center">
         <button
@@ -109,18 +117,18 @@ function CategoryOverview({ player, category }: { player: BingoPlayer; category:
           className="min-h-11 text-mc-gray cursor-pointer w-fit"
           onClick={() => select({ category, difficulty: "easy" })}
         >
-          <span className="text-mc-green">Easy</span>:{" "}
+          <span className="text-mc-green">{t("bingo.easy")}</span>:{" "}
           <span className={completetionColor(easyCompletion)}>{easyCompletion}</span>
-          <span className="text-mc-gray">/16</span> completed
+          <span className="text-mc-gray">/16</span> {t("bingo.completed")}
         </button>
         <button
           type="button"
           className="min-h-11 text-mc-gray cursor-pointer w-fit"
           onClick={() => select({ category, difficulty: "hard" })}
         >
-          <span className="text-mc-red">Hard</span>:{" "}
+          <span className="text-mc-red">{t("bingo.hard")}</span>:{" "}
           <span className={completetionColor(hardCompletion)}>{hardCompletion}</span>
-          <span className="text-mc-gray">/16</span> completed
+          <span className="text-mc-gray">/16</span> {t("bingo.completed")}
         </button>
       </div>
     </div>
@@ -216,6 +224,8 @@ function RewardCard({
   ComponentProps<typeof Box>,
   "variant"
 >) {
+  const { t } = useTranslation();
+
   return (
     <Box
       {...props}
@@ -223,7 +233,7 @@ function RewardCard({
       variant={completed ? "pink" : "default"}
     >
       <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
-        {reward.name} Reward
+        {t("bingo.reward", { name: reward.name })}
       </p>
       {typeof reward.description === "string" ?
         (
@@ -241,6 +251,8 @@ function RewardCard({
 }
 
 function TaskCard({ task, finished, complete }: { task: TaskInfo; finished: number; complete: boolean }) {
+  const { t } = useTranslation();
+
   return (
     <Box
       className="grow min-w-0 content:flex content:flex-col content:justify-between content:gap-2 content:text-center"
@@ -249,12 +261,12 @@ function TaskCard({ task, finished, complete }: { task: TaskInfo; finished: numb
       <div className="flex flex-col gap-2">
         <div className={complete ? "first:text-mc-green" : "first:text-mc-red"}>
           <p className="font-bold text-center">{task.name}</p>
-          <p className="text-mc-gray text-center">{task.game} Task</p>
+          <p className="text-mc-gray text-center">{t("bingo.task", { game: task.game })}</p>
         </div>
         <p>{task.description}</p>
       </div>
       <p className="text-mc-gray">
-        Progress:{" "}
+        {t("bingo.progress")}{" "}
         <span className={complete ? "text-mc-green" : (finished > 0 ? "text-mc-yellow" : "text-mc-red")}>{finished}</span>
         <span className={complete ? "text-mc-green" : "text-mc-gray"}>/</span>
         <span className={complete ? "text-mc-green" : "text-mc-gray"}>{task.progress}</span>

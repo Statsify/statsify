@@ -9,9 +9,12 @@
 import { Background } from "~/components/ui/background";
 import { Divider } from "~/components/ui/divider";
 import { Search } from "~/components/search";
+import { useTranslation } from "react-i18next";
 import type { ReactNode } from "react";
 
-export function BingoHeading({ subtitle }: { subtitle: string }) {
+export function BingoHeading() {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col gap-2 items-center mb-4 lg:mb-8">
       <h1 className="text-mc-yellow text-mc-4 lg:text-mc-7 font-bold">
@@ -24,7 +27,7 @@ export function BingoHeading({ subtitle }: { subtitle: string }) {
         <span className="text-[#FFB60C]">f</span>
         <span className="text-[#FFAA00]">y</span>
       </h1>
-      <h2 className="text-center text-mc-gold text-mc-2 lg:text-mc-3">{subtitle}</h2>
+      <h2 className="text-center text-mc-gold text-mc-2 lg:text-mc-3">{t("bingo.subtitle")}</h2>
     </div>
   );
 }
@@ -43,7 +46,7 @@ export function BingoLayout({ name, children }: { name: string; children: ReactN
         />
         <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
         <div className="w-full max-w-[1800px] mx-auto flex justify-center items-center flex-col gap-4 px-4 pt-8 md:px-8">
-          <BingoHeading subtitle="13th Anniversary Bingo" />
+          <BingoHeading />
           <div className="w-full lg:w-[80%] flex items-stretch flex-col gap-4">
             <Search key={name} defaultValue={name} target="bingo" />
             <Divider variant="black" className="my-2" />

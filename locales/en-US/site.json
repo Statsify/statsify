@@ -23,7 +23,8 @@
     "leaderboards": "Leaderboards",
     "bingo": "Bingo",
     "external": "Statsify elsewhere",
-    "newTab": "(opens in a new tab)"
+    "newTab": "(opens in a new tab)",
+    "loading": "Loading"
   },
   "footer": {
     "copyright": "© {{year}} Statsify. All Rights Reserved.",
@@ -107,6 +108,19 @@
     "goTo": "Go to Card {{n}}"
   },
   "bingo": {
+    "subtitle": "13th Anniversary Bingo",
+    "categories": {
+      "casual": "Casual",
+      "pvp": "PvP",
+      "classic": "Classic"
+    },
+    "cards": "{{category}} Bingo Cards",
+    "easy": "Easy",
+    "hard": "Hard",
+    "completed": "completed",
+    "reward": "{{name}} Reward",
+    "task": "{{game}} Task",
+    "progress": "Progress:",
     "notFound": {
       "title": "Player Not Found",
       "description": "We haven't seen {{name}} yet. Check the spelling, or look them up on Hypixel.",

@@ -9,6 +9,7 @@
 import { DEFAULT_LOCALE, type Locale, isSupportedLocale } from "~/i18n/locales";
 import { Footer } from "~/components/ui/footer";
 import { Header } from "~/components/header";
+import { NavigationProgress } from "~/components/navigation-progress";
 import { I18nextProvider } from "react-i18next";
 import { type LocaleData, getLocaleData } from "~/i18n/locale-data";
 import { NotFound } from "~/components/not-found";
@@ -104,6 +105,7 @@ function LocaleShell({ locale, data, children }: { locale: Locale; data: LocaleD
 
   return (
     <I18nextProvider i18n={i18n}>
+      <NavigationProgress />
       <Header />
       {children}
       <Footer />

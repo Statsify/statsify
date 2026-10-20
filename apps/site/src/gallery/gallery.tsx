@@ -30,6 +30,7 @@ import { Nametag } from "~/components/ui/nametag";
 import { NotFound } from "~/components/not-found";
 import { Patreon } from "~/components/icons/patreon";
 import { PopoverTooltip } from "~/components/ui/tooltip";
+import { ProgressBar } from "~/components/navigation-progress";
 import { Progression } from "~/components/ui/progression";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type ReactNode, useEffect, useRef, useState } from "react";
@@ -62,6 +63,7 @@ const SECTIONS = [
   ["home", "Home pieces"],
   ["media", "Skins, icons and backgrounds"],
   ["errors", "Errors"],
+  ["navigation", "Navigation"],
 ] as const;
 
 type SectionId = (typeof SECTIONS)[number][0];
@@ -134,6 +136,7 @@ export function Gallery() {
         <HomeSection />
         <MediaSection />
         <ErrorSection />
+        <NavigationSection />
       </div>
     </div>
   );
@@ -648,6 +651,18 @@ function ErrorSection() {
       <Demo label="Error, with Try again">
         <div className="flex flex-col">
           <ErrorPage error={new Error("The gallery's error")} reset={() => {}} />
+        </div>
+      </Demo>
+    </Section>
+  );
+}
+
+function NavigationSection() {
+  return (
+    <Section id="navigation">
+      <Demo label="Progress bar, after a navigation has taken 300 ms (the page stays until the next one is ready)">
+        <div className="relative h-11 bg-black/50">
+          <ProgressBar label="Loading" className="absolute" />
         </div>
       </Demo>
     </Section>

@@ -110,13 +110,14 @@
     }
   }
 
-  @keyframes gradient-loading-slide {
-    0% {
+  /* A third-wide segment from just off the left edge to just off the right. */
+  @keyframes progress-slide {
+    from {
       transform: translateX(-100%);
     }
 
-    100% {
-      transform: translateX(50%);
+    to {
+      transform: translateX(300%);
     }
   }
 
@@ -130,7 +131,7 @@
   --animate-slide-out-left-and-fade: slide-out-left-and-fade 150ms ease-out;
   --animate-slide-out-right-and-fade: slide-out-right-and-fade 150ms ease-out;
 
-  --animate-gradient-loading-slide: 6000ms cubic-bezier(0.5, 0, 0.3, 1) infinite normal both running gradient-loading-slide;
+  --animate-progress-slide: progress-slide 1200ms ease-in-out infinite;
 }
 
 /* Minecraft text: 16px × N with an N px hard shadow. Use only N ∈ {1, 1.5, 2, 3, 4, 7}: 16, 24, 32, 48, 64 and 112 px,

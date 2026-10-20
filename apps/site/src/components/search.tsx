@@ -15,7 +15,7 @@ import { cn } from "~/lib/util";
 import { orpc } from "~/lib/orpc";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useOutisdeClick } from "~/hooks/use-outside-click";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -35,7 +35,8 @@ const SIZES = {
 function usePlayerSuggestions(input: string, focused: boolean) {
   const debouncedInput = useDebounce(input, SEARCH_DEBOUNCE_MS);
 
-  // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch alone
+  // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch alone. While the next query loads,
+  // the last suggestions stay up, so the sheet never empties between keystrokes.
   return useQuery(
     orpc.search.suggest.queryOptions({
       input: { query: debouncedInput },
@@ -43,6 +44,7 @@ function usePlayerSuggestions(input: string, focused: boolean) {
       enabled: focused && debouncedInput.trim().length <= 16,
       retry: false,
       gcTime: SEARCH_CACHE_TIME_MS,
+      placeholderData: keepPreviousData,
     })
   );
 }
@@ -178,16 +180,9 @@ export function Search({
         id={listId}
         role="listbox"
         aria-label={t("search.label")}
-        hidden={!focused || (!suggestions.isPending && count === 0)}
+        hidden={!focused || count === 0}
         className={cn("absolute z-100 w-full overflow-auto bg-blackify-800 shadow-[4px_4px_0_rgb(0_0_0_/_0.5)]", size.sheet)}
       >
-        {focused && suggestions.isPending && (
-          <>
-            <SearchPlayerSkeleton compact={compact} />
-            <SearchPlayerSkeleton compact={compact} />
-            <SearchPlayerSkeleton compact={compact} />
-          </>
-        )}
         {suggestions.data?.map((suggestion, index) => (
           <SearchPlayer
             key={suggestion}
@@ -248,13 +243,5 @@ function SearchPlayer({
     <Link id={id} role="option" to="/{-$locale}/player/$name" params={{ name: player }} aria-selected={selected} className={className}>
       <p className={text}>{player}</p>
     </Link>
-  );
-}
-
-function SearchPlayerSkeleton({ compact }: { compact: boolean }) {
-  return (
-    <div className={cn("relative flex items-center gap-4 w-full", compact ? "p-3" : "p-4")}>
-      <div className={cn("bg-gray-200/40 animate-pulse w-1/3 selection:bg-white/50", compact ? "h-[14px]" : "h-[19px]")} />
-    </div>
   );
 }

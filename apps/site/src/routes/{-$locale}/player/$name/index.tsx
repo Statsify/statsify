@@ -8,12 +8,11 @@
 
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { PlayerNotFound } from "~/features/player/player-not-found";
-import { PlayerSkeleton } from "~/features/player/player-skeleton";
 import { PlayerView } from "~/features/player/player-page";
 import { cacheHeaders } from "~/lib/cache";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { cacheNotFoundResponse } from "~/lib/response";
-import { createFileRoute, notFound, redirect, useParams } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { playerPageQuery, resolvePlayer } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -80,7 +79,6 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
   },
   headers: () => cacheHeaders(EDGE_CACHE),
   notFoundComponent: PlayerNotFound,
-  pendingComponent: PlayerPending,
   component: PlayerPage,
 });
 
@@ -89,9 +87,4 @@ function PlayerPage() {
   const { data: page } = useSuspenseQuery(playerPageQuery(uuid));
 
   return <PlayerView page={page} />;
-}
-
-function PlayerPending() {
-  const { name = "" } = useParams({ strict: false });
-  return <PlayerSkeleton name={name} />;
 }
