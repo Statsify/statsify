@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { formatNumber } from "@statsify/util";
 import type { LocalizeFunction } from "./types.js";
 import type { TFunction } from "i18next";
 
@@ -20,3 +21,7 @@ export function createLocalizeFunction(fixedT: TFunction, locale: string): Local
 
   return t as LocalizeFunction;
 }
+
+/** i18next's interpolation format: `{{value, number}}` in the bot's number format. */
+export const formatInterpolation = (value: unknown, format?: string, lng?: string) =>
+  format === "number" ? formatNumber(value as number, lng) : String(value);

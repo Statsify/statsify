@@ -17,8 +17,11 @@ import { SANS_PRELOAD } from "~/lib/fonts";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
+import { localeData, socialMeta } from "~/lib/social-meta";
 import { refreshBingo } from "~/features/player/player-actions";
 import { useState } from "react";
+import { DEFAULT_LOCALE } from "~/i18n/locales";
+import { createI18n } from "~/i18n/i18n";
 import type { BingoPlayer } from "@statsify/contract";
 
 const EDGE_TTL_SECONDS = 300;
@@ -38,16 +41,27 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
     return player;
   },
   staleTime: EDGE_TTL_SECONDS * 1000,
-  head: ({ loaderData }) =>
-    loaderData ?
-      {
-        meta: [
-          { title: `${possessive(loaderData.username)} Bingo Stats | Statsify` },
-          { name: "description", content: `View ${possessive(loaderData.username)} Hypixel 13th Anniversary Bingo Tasks.` },
-        ],
-        links: [SANS_PRELOAD, { rel: "icon", href: `/api/skin/head?uuid=${loaderData.uuid}&size=32` }],
-      } :
-      { meta: [{ title: "Player Not Found | Statsify" }], links: [SANS_PRELOAD] },
+  head: ({ loaderData, matches }) => {
+    const locale = localeData(matches);
+    // In English, from the server's `site.json`.
+    const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
+    if (!loaderData) return { meta: [{ title: words.t("meta.notFound.player") }], links: [SANS_PRELOAD] };
+
+    const { username, uuid } = loaderData;
+    const name = possessive(username);
+    const title = words.t("meta.bingo.playerTitle", { name });
+    const description = words.t("meta.bingo.playerDescription", { name });
+    const origin = locale?.origin;
+
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        ...(origin ? socialMeta({ origin, path: `/player/${username}/bingo`, title, description, image: "/images/og-bingo.png" }) : []),
+      ],
+      links: [SANS_PRELOAD, { rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
+    };
+  },
   headers: () => cacheHeaders(`max-age=${EDGE_TTL_SECONDS}, stale-while-revalidate=3600`),
   notFoundComponent: PlayerNotFound,
   pendingComponent: BingoPending,

@@ -469,6 +469,9 @@ importers:
       '@statsify/contract':
         specifier: workspace:^
         version: link:../../packages/contract
+      '@statsify/profiles':
+        specifier: workspace:^
+        version: link:../../packages/profiles
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../../packages/schemas
@@ -493,6 +496,9 @@ importers:
       i18next:
         specifier: 26.5.3
         version: 26.5.3(typescript@7.0.2)
+      ioredis:
+        specifier: 5.7.0
+        version: 5.7.0(supports-color@7.2.0)
       motion:
         specifier: ^12.23.25
         version: 12.43.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)

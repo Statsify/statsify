@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { PlayerNotFound } from "~/features/player/player-not-found";
 import { PlayerSkeleton } from "~/features/player/player-skeleton";
 import { PlayerView } from "~/features/player/player-page";
@@ -13,6 +14,7 @@ import { cacheHeaders } from "~/lib/cache";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createFileRoute, notFound, redirect, useParams } from "@tanstack/react-router";
+import { localeData, socialMeta } from "~/lib/social-meta";
 import { playerPageQuery, resolvePlayer } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -42,21 +44,40 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
       });
     }
 
-    await context.queryClient.ensureQueryData(playerPageQuery(identity.uuid));
+    const page = await context.queryClient.ensureQueryData(playerPageQuery(identity.uuid));
 
-    return identity;
+    return { ...identity, updatedAt: page.updatedAt };
   },
   staleTime: 60_000,
-  head: ({ loaderData }) =>
-    loaderData ?
-      {
-        meta: [
-          { title: `${possessive(loaderData.username)} Hypixel Stats | Statsify` },
-          { name: "description", content: `View ${possessive(loaderData.username)} Hypixel stats on Statsify.` },
-        ],
-        links: [SANS_PRELOAD, { rel: "icon", href: `/api/skin/head?uuid=${loaderData.uuid}&size=32` }],
-      } :
-      { meta: [{ title: "Player Not Found | Statsify" }], links: [SANS_PRELOAD] },
+  head: ({ loaderData, matches }) => {
+    if (!loaderData) return { meta: [{ title: "Player Not Found | Statsify" }], links: [SANS_PRELOAD] };
+
+    const { username, uuid, updatedAt } = loaderData;
+    const title = `${possessive(username)} Hypixel Stats | Statsify`;
+    const description = `View ${possessive(username)} Hypixel stats on Statsify.`;
+    const origin = localeData(matches)?.origin;
+
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        // The Discord unfurl: the bot's general card at its UUID URL; `?v=` changes when the player is
+        // refreshed, so Discord fetches the new render.
+        ...(origin ?
+          socialMeta({
+            origin,
+            path: `/player/${username}`,
+            title,
+            description,
+            image: `/og/${uuid}.png?v=${updatedAt}`,
+            imageSize: IMAGE_VARIANTS.og,
+            type: "profile",
+          }) :
+          []),
+      ],
+      links: [SANS_PRELOAD, { rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
+    };
+  },
   headers: () => cacheHeaders(EDGE_CACHE),
   notFoundComponent: PlayerNotFound,
   pendingComponent: PlayerPending,

@@ -8,7 +8,20 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./localize": {
+      "types": "./src/localize.ts",
+      "default": "./dist/localize.js"
+    },
+    "./pool": {
+      "types": "./src/pool/index.ts",
+      "default": "./dist/pool/index.js"
+    },
+    "./protocol": {
+      "types": "./src/pool/protocol.ts",
+      "default": "./dist/pool/protocol.js"
+    },
+    "./worker": "./dist/pool/worker.js"
   },
   "scripts": {
     "build": "swc src --out-dir dist --strip-leading-paths",

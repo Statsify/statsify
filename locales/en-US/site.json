@@ -3,6 +3,16 @@
     "copied": "Copied to Clipboard!",
     "stats": "Stats"
   },
+  "meta": {
+    "description": "Statsify is the largest Hypixel Discord bot for viewing your Hypixel Network stats, leaderboards, sessions, and more.",
+    "notFound": {
+      "player": "Player Not Found | Statsify"
+    },
+    "bingo": {
+      "playerTitle": "{{name}} Bingo Stats | Statsify",
+      "playerDescription": "View {{name}} Hypixel 13th Anniversary Bingo tasks."
+    }
+  },
   "nav": {
     "label": "Main",
     "premium": "Premium",

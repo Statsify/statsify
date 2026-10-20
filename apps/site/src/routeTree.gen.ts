@@ -15,8 +15,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OembedRouteImport } from './routes/oembed'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as Char123LocaleChar125RouteImport } from './routes/{-$locale}'
+import { Route as OgChar123uuidChar125DotpngRouteImport } from './routes/og/{$uuid}[.]png'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
 import { Route as Char123LocaleChar125BingoRouteImport } from './routes/{-$locale}/bingo'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
@@ -26,6 +28,11 @@ import { Route as Char123LocaleChar125PlayerIndexRouteImport } from './routes/{-
 import { Route as Char123LocaleChar125PlayerNameIndexRouteImport } from './routes/{-$locale}/player/$name/index'
 import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name/bingo'
 
+const OembedRoute = OembedRouteImport.update({
+  id: '/oembed',
+  path: '/oembed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
@@ -36,6 +43,12 @@ const Char123LocaleChar125Route = Char123LocaleChar125RouteImport.update({
   path: '/{-$locale}',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OgChar123uuidChar125DotpngRoute =
+  OgChar123uuidChar125DotpngRouteImport.update({
+    id: '/og/{$uuid}.png',
+    path: '/og/{$uuid}.png',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const Char123LocaleChar125IndexRoute =
   Char123LocaleChar125IndexRouteImport.update({
     id: '/',
@@ -83,8 +96,10 @@ const Char123LocaleChar125PlayerNameBingoRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
+  '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -95,7 +110,9 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 export interface FileRoutesByTo {
+  '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}': typeof Char123LocaleChar125IndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -107,8 +124,10 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
+  '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -121,8 +140,10 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/oembed'
     | '/robots.txt'
     | '/{-$locale}'
+    | '/og/{$uuid}.png'
     | '/{-$locale}/bingo'
     | '/{-$locale}/'
     | '/api/rpc/$'
@@ -133,7 +154,9 @@ export interface FileRouteTypes {
     | '/{-$locale}/player/$name/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/oembed'
     | '/robots.txt'
+    | '/og/{$uuid}.png'
     | '/{-$locale}/bingo'
     | '/{-$locale}'
     | '/api/rpc/$'
@@ -144,8 +167,10 @@ export interface FileRouteTypes {
     | '/{-$locale}/player/$name'
   id:
     | '__root__'
+    | '/oembed'
     | '/robots.txt'
     | '/{-$locale}'
+    | '/og/{$uuid}.png'
     | '/{-$locale}/bingo'
     | '/{-$locale}/'
     | '/api/rpc/$'
@@ -157,8 +182,10 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  OembedRoute: typeof OembedRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   Char123LocaleChar125Route: typeof Char123LocaleChar125RouteWithChildren
+  OgChar123uuidChar125DotpngRoute: typeof OgChar123uuidChar125DotpngRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
   ApiSkinHeadRoute: typeof ApiSkinHeadRoute
   ApiSkinRenderRoute: typeof ApiSkinRenderRoute
@@ -166,6 +193,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/oembed': {
+      id: '/oembed'
+      path: '/oembed'
+      fullPath: '/oembed'
+      preLoaderRoute: typeof OembedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/robots.txt': {
       id: '/robots.txt'
       path: '/robots.txt'
@@ -178,6 +212,13 @@ declare module '@tanstack/react-router' {
       path: '/{-$locale}'
       fullPath: '/{-$locale}'
       preLoaderRoute: typeof Char123LocaleChar125RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/og/{$uuid}.png': {
+      id: '/og/{$uuid}.png'
+      path: '/og/{$uuid}.png'
+      fullPath: '/og/{$uuid}.png'
+      preLoaderRoute: typeof OgChar123uuidChar125DotpngRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/{-$locale}/': {
@@ -261,8 +302,10 @@ const Char123LocaleChar125RouteWithChildren =
   Char123LocaleChar125Route._addFileChildren(Char123LocaleChar125RouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  OembedRoute: OembedRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   Char123LocaleChar125Route: Char123LocaleChar125RouteWithChildren,
+  OgChar123uuidChar125DotpngRoute: OgChar123uuidChar125DotpngRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
   ApiSkinHeadRoute: ApiSkinHeadRoute,
   ApiSkinRenderRoute: ApiSkinRenderRoute,

@@ -9,7 +9,7 @@
 import Backend from "i18next-fs-backend";
 import i18next from "i18next";
 import { Service } from "typedi";
-import { formatNumber } from "@statsify/util";
+import { formatInterpolation } from "@statsify/profiles/localize";
 import { readdir } from "node:fs/promises";
 
 const DEFAULT_LANGUAGE = "en-US";
@@ -47,14 +47,9 @@ export class I18nLoaderService {
       initImmediate: false,
       defaultNS: "default",
       interpolation: {
-        format,
+        format: formatInterpolation,
         escapeValue: false,
       },
     });
   }
-}
-
-function format(value: any, format?: string | undefined, lng?: string): string {
-  if (format === "number") return formatNumber(value, lng);
-  return value;
 }

@@ -211,6 +211,11 @@ export interface Config {
      */
     apiKey?: string;
     /**
+     * The origin the site is served from, used for the absolute URLs in Open Graph tags and oEmbed
+     * @example https://statsify.net
+     */
+    publicUrl?: string;
+    /**
      * How many site-initiated Hypixel calls (refresh and lookup) are allowed per 5 minutes across all visitors
      * @example 15
      */
@@ -225,6 +230,11 @@ export interface Config {
        */
       secretKey?: string;
     };
+    /**
+     * Threads in the site's unfurl render pool, 1 to 3. Defaults to 2; the site won't start with any other value
+     * @example 2
+     */
+    renderWorkers?: number;
   };
 
   sentry?: {

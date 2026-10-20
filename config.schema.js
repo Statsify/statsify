@@ -64,11 +64,13 @@ export default {
   },
   site: {
     apiKey: "",
+    publicUrl: "https://statsify.net",
     hypixelBudget: 15,
     turnstile: {
       siteKey: "",
       secretKey: "",
     },
+    renderWorkers: 2,
   },
   sentry: {
     discordBotDsn: "",

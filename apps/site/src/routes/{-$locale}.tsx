@@ -14,6 +14,7 @@ import { NotFound } from "~/components/not-found";
 import { Outlet, createFileRoute, notFound, redirect, useRouter } from "@tanstack/react-router";
 import { createI18n } from "~/i18n/i18n";
 import { getLocaleData } from "~/i18n/locale-data";
+import { canonicalLink, oembedLink, socialMeta } from "~/lib/social-meta";
 import { startClientSentry } from "~/lib/sentry";
 import { useEffect, useMemo } from "react";
 
@@ -38,6 +39,20 @@ export const Route = createFileRoute("/{-$locale}")({
   },
   loader: ({ context }) => getLocaleData({ data: { locale: context.locale } }),
   staleTime: Infinity,
+  // Site-wide Open Graph defaults; pages with their own image (player, Bingo) override them. Only this route adds the
+  // canonical link, so a page never has two.
+  head: ({ loaderData, matches }) => {
+    if (!loaderData) return {};
+    // In English like every page's head, from the server's `site.json`.
+    const description = createI18n(DEFAULT_LOCALE, loaderData.resources).t("meta.description");
+    // An index route's pathname ends in a slash its URL doesn't have. The route's own segments come in its own
+    // casing (`/Leaderboards` is `/leaderboards`), and a player's name in the stored one, since other casings redirect.
+    const path = (matches.at(-1)?.pathname ?? "/").replace(/(.)\/$/, "$1");
+    return {
+      meta: [{ name: "description", content: description }, ...socialMeta({ origin: loaderData.origin, path, description, image: "/images/og-home.png" })],
+      links: [oembedLink(loaderData.origin, path), canonicalLink(loaderData.origin, path)],
+    };
+  },
   notFoundComponent: NotFound,
   component: LocaleLayout,
 });

@@ -27,7 +27,8 @@ const LICENSE_HEADER = [
   "// @ts-nocheck",
 ];
 
-// Files in `public/` are not hashed, so they get a day at the edge and in browsers.
+// Files in `public/` are not hashed, so they get a day at the edge and in browsers. (`/og/` is the
+// dynamic unfurl image route, so the static Open Graph images live under `/images/`.)
 // Vite's hashed assets under `/assets/` are already served as immutable by Nitro.
 const STATIC_ASSETS = { headers: { "cache-control": "public, max-age=86400" } };
 
@@ -52,12 +53,16 @@ export default defineConfig({
     }),
     viteReact(),
     nitro({
+      // Checks the config at startup, and closes the render pool, Redis and Sentry on shutdown, so SIGINT and SIGTERM end
+      // the process.
+      plugins: ["./src/server/config.plugin.ts", "./src/server/shutdown.plugin.ts"],
       routeRules: {
         "/fonts/**": STATIC_ASSETS,
         "/backgrounds/**": STATIC_ASSETS,
         "/games/**": STATIC_ASSETS,
         "/icons/**": STATIC_ASSETS,
         "/logos/**": STATIC_ASSETS,
+        "/images/**": STATIC_ASSETS,
       },
       rolldownConfig: {
         onLog(level, log, handler) {

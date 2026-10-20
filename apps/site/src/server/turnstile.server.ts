@@ -14,9 +14,12 @@ const VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
  * Checks a Turnstile token with Cloudflare. The check fails closed: without
  * `site.turnstile.secretKey` in `config.js` no lookup goes through, except in development
  * (`environment: "dev"`), where no widget is rendered. The per-address and global budgets still apply.
+ *
+ * A token is only good on the site it was solved on: the hostname Cloudflare reports has to be `site.publicUrl`'s.
+ * Development skips that, since Cloudflare's test keys report `localhost` wherever they run.
  */
 export async function verifyTurnstile(token: string | undefined, clientIp: string): Promise<boolean> {
-  const { turnstileSecretKey, environment } = await siteConfig();
+  const { turnstileSecretKey, environment, publicUrl } = await siteConfig();
 
   if (!turnstileSecretKey) {
     if (environment === "dev") return true;
@@ -34,6 +37,7 @@ export async function verifyTurnstile(token: string | undefined, clientIp: strin
   if (!response) return false;
   if (!response.ok) return false;
 
-  const result = (await response.json()) as { success?: boolean };
-  return result.success === true;
+  const result = (await response.json()) as { success?: boolean; hostname?: string };
+  if (result.success !== true) return false;
+  return environment === "dev" || result.hostname === new URL(publicUrl).hostname;
 }

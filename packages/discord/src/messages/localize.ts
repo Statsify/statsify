@@ -7,7 +7,10 @@
  */
 
 import i18next, { TFunctionResult } from "i18next";
-import { type LocalizeFunction, createLocalizeFunction } from "@statsify/profiles";
+// The `localize` entry has no side effects: the package index registers font renderers when it's imported,
+// which would race the support bot's own (it imports this through `#lib` before its services).
+import { createLocalizeFunction } from "@statsify/profiles/localize";
+import type { LocalizeFunction } from "@statsify/profiles";
 
 export type { LocalizeFunction };
 
