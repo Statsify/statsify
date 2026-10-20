@@ -11,11 +11,11 @@ import type { Guild, Player } from "@statsify/schemas";
 import type { Json } from "~/lib/json";
 import type { PostLeaderboardResponse } from "@statsify/api-client";
 
-/**
- * `CacheLevel.CACHE_ONLY`: the API answers from Mongo, but it still asks Hypixel for a player it has never
- * seen, with no site budget. The home page only asks for its fixed preview players.
- */
-const CACHE_ONLY = "CACHE_ONLY";
+class ApiError extends Error {
+  public constructor(public readonly status: number, path: string) {
+    super(`Statsify API ${path} responded with ${status}`);
+  }
+}
 
 async function api<T>(path: string, init: { method?: string; body?: string } = {}): Promise<T> {
   const { apiRoute, apiKey } = await siteConfig();
@@ -25,19 +25,24 @@ async function api<T>(path: string, init: { method?: string; body?: string } = {
     headers: { "x-api-key": apiKey, "content-type": "application/json" },
   });
 
-  if (!response.ok) throw new Error(`Statsify API ${path} responded with ${response.status}`);
+  if (!response.ok) throw new ApiError(response.status, path);
 
   return response.json() as Promise<T>;
 }
 
-export async function getPlayer(uuid: string): Promise<Json<Player>> {
-  const { player } = await api<{ player?: Json<Player> }>(`/player?player=${uuid}&cache=${CACHE_ONLY}`);
-  if (!player) throw new Error(`Player ${uuid} not found`);
-  return player;
+/** `CACHE_ONLY` still asks Hypixel for a player the API hasn't stored; `undefined` when Hypixel has none either. */
+export async function getPlayer(tag: string): Promise<Json<Player> | undefined> {
+  try {
+    const { player } = await api<{ player?: Json<Player> }>(`/player?player=${encodeURIComponent(tag)}&cache=CACHE_ONLY`);
+    return player;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return undefined;
+    throw error;
+  }
 }
 
 export async function getGuild(memberUuid: string): Promise<Json<Guild>> {
-  const { guild } = await api<{ guild?: Json<Guild> }>(`/guild?guild=${memberUuid}&type=PLAYER&cache=${CACHE_ONLY}`);
+  const { guild } = await api<{ guild?: Json<Guild> }>(`/guild?guild=${memberUuid}&type=PLAYER&cache=CACHE_ONLY`);
   if (!guild) throw new Error(`Guild of ${memberUuid} not found`);
   return guild;
 }
@@ -47,4 +52,10 @@ export function getLeaderboard(field: string): Promise<PostLeaderboardResponse> 
     method: "POST",
     body: JSON.stringify({ field, page: 0 }),
   });
+}
+
+/** Username autocomplete from the API's RediSearch index; never touches Hypixel. */
+export async function searchPlayers(query: string): Promise<string[]> {
+  const { players } = await api<{ players?: string[] }>(`/player/search?query=${encodeURIComponent(query)}`);
+  return players ?? [];
 }

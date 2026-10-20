@@ -24,15 +24,17 @@ const sentryInit = createMiddleware({ type: "request" }).server(async ({ next })
   return next();
 });
 
-/** `/discord`, `/premium` and the other vanity links. */
+/** `/discord`, `/premium` and the other vanity links, and the old `/players/*` URLs. */
 const redirects = createMiddleware({ type: "request" }).server(({ request, next }) => {
-  const target = redirectFor(new URL(request.url).pathname);
+  const url = new URL(request.url);
+  const target = redirectFor(url.pathname);
   if (!target) return next();
 
   return new Response(null, {
     status: 301,
     headers: {
-      Location: target,
+      // Site paths keep the query string (`?category=`), external links do not.
+      Location: target.startsWith("/") ? `${target}${url.search}` : target,
       "Cache-Control": "public, max-age=3600",
       "CDN-Cache-Control": "max-age=86400",
     },

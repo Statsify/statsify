@@ -18,6 +18,7 @@ import { InteractiveLogo } from "./interactive-logo";
 import { LeaderboardSection } from "./sections/leaderboard-section";
 import { PlayerSection } from "./sections/player-section";
 import { SessionSection } from "./sections/session-section";
+import { Link } from "@tanstack/react-router";
 import { Wordmark } from "~/components/icons/logo";
 import type { HomeData } from "./home-data";
 
@@ -95,7 +96,7 @@ export function Home({ players, sessionPlayer, guild, leaderboard }: HomeData) {
   );
 }
 
-// `/invite` is answered by the server with a 301 and `/bingo` isn't a route yet, so both are plain anchors.
+// `/invite` is answered by the server with a 301, so it is a plain anchor rather than a router link.
 function DiscordInvite({ className = "" }: { className?: string }) {
   return (
     <Button className={`content:bg-discord-500 ${className}`} asChild>
@@ -110,10 +111,10 @@ function DiscordInvite({ className = "" }: { className?: string }) {
 function BingoInvite() {
   return (
     <Button className="content:bg-green-500" asChild>
-      <a href="/bingo">
+      <Link to="/{-$locale}/bingo">
         <Board className="drop-shadow-mc-1" />
         <p className="text-nowrap">Bingo Tracker</p>
-      </a>
+      </Link>
     </Button>
   );
 }

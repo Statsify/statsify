@@ -18,14 +18,20 @@ import {
 import { createServerFn } from "@tanstack/react-start";
 import { getGuild, getLeaderboard, getPlayer } from "~/server/api.server";
 
+async function previewPlayer(uuid: string) {
+  const player = await getPlayer(uuid);
+  if (!player) throw new Error(`Preview player ${uuid} is not in the database`);
+  return player;
+}
+
 /** The fixed preview players, guild and leaderboard the home page sections render. */
 export const getHomeData = createServerFn({ method: "GET" }).handler(async () => {
   const [bedwars, skywars, duels, arcade, session, guild, leaderboard] = await Promise.all([
-    getPlayer(BEDWARS_PREVIEW),
-    getPlayer(SKYWARS_PREVIEW),
-    getPlayer(DUELS_PREVIEW),
-    getPlayer(ARCADE_PREVIEW),
-    getPlayer(SESSION_PREVIEW),
+    previewPlayer(BEDWARS_PREVIEW),
+    previewPlayer(SKYWARS_PREVIEW),
+    previewPlayer(DUELS_PREVIEW),
+    previewPlayer(ARCADE_PREVIEW),
+    previewPlayer(SESSION_PREVIEW),
     getGuild(GUILD_MEMBER_PREVIEW),
     getLeaderboard(LEADERBOARD_PREVIEW),
   ]);
