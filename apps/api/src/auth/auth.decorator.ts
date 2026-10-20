@@ -21,12 +21,19 @@ export interface AuthDecoratorOptions {
    * @description The required roles for the request
    */
   role?: AuthRole;
+
+  /**
+   * @description Requests made with the website's key (`AuthRole.SITE`) skip the weighted limit on this route. The
+   * site's edge rate limit and its Hypixel budget bound them instead; every other route still limits that key.
+   */
+  siteUnlimited?: boolean;
 }
 
-export function Auth({ weight = 1, role = AuthRole.MEMBER }: AuthDecoratorOptions = {}) {
+export function Auth({ weight = 1, role = AuthRole.MEMBER, siteUnlimited = false }: AuthDecoratorOptions = {}) {
   return applyDecorators(
     SetMetadata("auth-weight", weight),
     SetMetadata("auth-role", role),
+    SetMetadata("auth-site-unlimited", siteUnlimited),
     UseGuards(AuthGuard),
     ApiSecurity("ApiKey")
   );

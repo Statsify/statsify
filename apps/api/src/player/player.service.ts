@@ -46,11 +46,14 @@ export class PlayerService {
    * @param tag UUID or username
    * @param cacheLevel What type of data to return (cached/live)
    * @param selector (optional) A mongo selector to select specific fields
+   * @param options.throwOnHypixelError (optional) For a player that isn't stored, reject with
+   * `HypixelUnavailableError` when Hypixel doesn't answer, instead of returning `null` as for an unknown player
    */
   public async get(
     tag: string,
     cacheLevel: CacheLevel,
-    selector?: Record<string, boolean>
+    selector?: Record<string, boolean>,
+    { throwOnHypixelError = false }: { throwOnHypixelError?: boolean } = {}
   ): Promise<Player | null> {
     // ensure we have all the necessary data to replace the player document if we don't do a cache only request
     if (selector && Object.keys(selector).length > 0) {
@@ -70,9 +73,10 @@ export class PlayerService {
       return deserialize(Player, mongoPlayer);
     }
 
-    const player = await this.hypixelService.getPlayer(
-      mongoPlayer?.uuid ?? tag
-    );
+    // A stored player still falls back to Mongo below, so only an unknown one needs the error.
+    const player = await this.hypixelService.getPlayer(mongoPlayer?.uuid ?? tag, {
+      throwOnError: throwOnHypixelError && !mongoPlayer,
+    });
 
     if (player) {
       player.expiresAt = Date.now() + 120_000;

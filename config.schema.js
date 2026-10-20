@@ -64,6 +64,7 @@ export default {
   },
   site: {
     apiKey: "",
+    hypixelBudget: 15,
   },
   sentry: {
     discordBotDsn: "",

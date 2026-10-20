@@ -205,6 +205,18 @@ export interface Config {
     botToken?: string;
   };
 
+  site?: {
+    /**
+     * The Statsify API key the site uses, separate from the bot's key
+     */
+    apiKey?: string;
+    /**
+     * How many site-initiated Hypixel calls (refresh and lookup) are allowed per 5 minutes across all visitors
+     * @example 15
+     */
+    hypixelBudget?: number;
+  };
+
   sentry?: {
     /**
      * The Sentry Dsn used by the Discord Bot
@@ -223,6 +235,10 @@ export interface Config {
      * The Sentry Dsn used by the Support Bot
      */
     supportBotDsn?: string;
+    /**
+     * The Sentry Dsn used by the site
+     */
+    siteDsn?: string;
 
     /**
      * The percentage of transactions to send to Sentry
