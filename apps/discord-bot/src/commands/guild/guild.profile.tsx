@@ -148,7 +148,7 @@ const GuildOverallPage = ({
     locale: t.locale,
   });
   const preferredGames = guild.preferredGames.map((g) => gameIcons[g]);
-  const formattedRanking = ranking ? `§7#§f${t(ranking)}` : "§7N/A";
+  const formattedRanking = ranking ? ` §8[§7#§f${t(ranking)}§8]` : "";
 
   return (
     <>
@@ -166,7 +166,7 @@ const GuildOverallPage = ({
             )}§8/§f125`}
             </text>
             <text {...text}>
-              {`§2${t("stats.guild.gexp")}:§f ${t(guild.exp)} §8[${formattedRanking}§8]`}
+              {`§2${t("stats.guild.gexp")}:§f ${t(guild.exp)}${formattedRanking}`}
             </text>
             <text {...text}>{`§e${t("stats.guild.level")}:§f ${t(guild.level)}`}</text>
           </box>
