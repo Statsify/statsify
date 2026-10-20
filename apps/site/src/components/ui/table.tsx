@@ -23,8 +23,8 @@ export function TableData({
     <Box
       className={`content:p-4 content:flex content:flex-col content:justify-center content:items-center content:gap-2 ${color}`}
     >
-      <p className="text-mc-1.25 lg:text-mc-2 mx-3">{title}</p>
-      <p className="text-mc-2.5 lg:text-mc-4 mx-5">{value}</p>
+      <p className="grow content-center text-center text-mc-1.5 lg:text-mc-2 mx-3">{title}</p>
+      <p className="text-mc-2 lg:text-mc-4 mx-5">{value}</p>
     </Box>
   );
 }
@@ -42,8 +42,8 @@ export function MotionValueTableData({
     <Box
       className={`content:p-4 content:flex content:flex-col content:justify-center content:items-center content:gap-2 ${color}`}
     >
-      <p className="text-mc-1.25 lg:text-mc-2 mx-1 lg:mx-3">{title}</p>
-      <motion.p className="text-mc-2.5 lg:text-mc-4 mx-2 lg:mx-5">
+      <p className="grow content-center text-center text-mc-1.5 lg:text-mc-2 mx-1 lg:mx-3">{title}</p>
+      <motion.p className="text-mc-2 lg:text-mc-4 mx-2 lg:mx-5">
         {value}
       </motion.p>
     </Box>

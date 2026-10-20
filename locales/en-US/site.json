@@ -101,6 +101,11 @@
     "tryAgain": "Try Again",
     "home": "Home"
   },
+  "carousel": {
+    "previous": "Previous Card",
+    "next": "Next Card",
+    "goTo": "Go to Card {{n}}"
+  },
   "bingo": {
     "notFound": {
       "title": "Player Not Found",

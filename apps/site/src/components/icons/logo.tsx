@@ -61,9 +61,9 @@ export function Logo({ className }: { className?: string }) {
 }
 
 // Text
-export function Wordmark({ className }: { className?: string }) {
+export function Wordmark({ className, as: Tag = "p" }: { className?: string; as?: "p" | "h1" }) {
   return (
-    <p className={cn("text-mc-4 font-bold", className)}>
+    <Tag className={cn("text-mc-4 font-bold", className)}>
       <span className="text-blueify-100">S</span>
       <span className="text-blueify-200">t</span>
       <span className="text-blueify-300">a</span>
@@ -72,7 +72,7 @@ export function Wordmark({ className }: { className?: string }) {
       <span className="text-blueify-600">i</span>
       <span className="text-blueify-700">f</span>
       <span className="text-blueify-800">y</span>
-    </p>
+    </Tag>
   );
 }
 

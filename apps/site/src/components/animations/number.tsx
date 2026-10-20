@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { motion, useSpring, useTransform } from "motion/react";
+import { motion, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { useEffect } from "react";
 
 export function AnimatedNumber({ value }: { value: number }) {
@@ -18,10 +18,13 @@ export function AnimatedNumber({ value }: { value: number }) {
 
   const spring = useSpring(value, { mass: 0.8, stiffness: 75, damping: 15 });
   const displayText = useTransform(spring, numberFormat.format.bind(numberFormat));
+  const reduceMotion = useReducedMotion();
 
+  // With reduced motion the number jumps straight to its value.
   useEffect(() => {
-    spring.set(value);
-  }, [spring, value]);
+    if (reduceMotion) spring.jump(value);
+    else spring.set(value);
+  }, [spring, value, reduceMotion]);
 
   return <motion.span>{displayText}</motion.span>;
 }
