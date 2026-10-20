@@ -24,7 +24,7 @@ export function BingoHeading({ subtitle }: { subtitle: string }) {
         <span className="text-[#FFB60C]">f</span>
         <span className="text-[#FFAA00]">y</span>
       </h1>
-      <h2 className="text-mc-gold text-mc-2 lg:text-mc-3">{subtitle}</h2>
+      <h2 className="text-center text-mc-gold text-mc-2 lg:text-mc-3">{subtitle}</h2>
     </div>
   );
 }
@@ -37,13 +37,14 @@ export function BingoLayout({ name, children }: { name: string; children: ReactN
         <Background
           background="bingo"
           priority
+          viewport
           className="h-full aspect-auto"
           mask="linear-gradient(rgb(255 255 255) 50%, rgb(0 0 0 / 0) calc(100% - 32px))"
         />
         <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
-        <div className="w-[95%] max-w-[1800px] mx-auto flex justify-center items-center flex-col gap-4 pt-8">
+        <div className="w-full max-w-[1800px] mx-auto flex justify-center items-center flex-col gap-4 px-4 pt-8 md:px-8">
           <BingoHeading subtitle="13th Anniversary Bingo" />
-          <div className="w-[80%] flex items-stretch flex-col gap-4">
+          <div className="w-full lg:w-[80%] flex items-stretch flex-col gap-4">
             <Search key={name} defaultValue={name} target="bingo" />
             <Divider variant="black" className="my-2" />
           </div>

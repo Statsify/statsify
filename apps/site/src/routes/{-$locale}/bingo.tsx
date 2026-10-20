@@ -29,13 +29,14 @@ function BingoSearchPage() {
       <Background
         background="bingo"
         priority
+        viewport
         className="h-full"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
       <div className="w-full h-full flex justify-center items-center flex-col gap-8 py-12">
         <BingoHeading subtitle="13th Anniversary Bingo" />
-        <div className="w-[80%]">
+        <div className="w-full px-4 md:px-8 lg:w-[80%]">
           <Search target="bingo" />
         </div>
       </div>
