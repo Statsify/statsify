@@ -9,8 +9,8 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
-import { getPlayerSuggestions } from "./bingo-data";
 import { motion } from "motion/react";
+import { orpc } from "~/lib/orpc";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useOutisdeClick } from "~/hooks/use-outside-click";
 import { useQuery } from "@tanstack/react-query";
@@ -24,13 +24,15 @@ const SEARCH_CACHE_TIME_MS = 5 * 60 * 1000;
 function usePlayerSuggestions(input: string, focused: boolean) {
   const debouncedInput = useDebounce(input, SEARCH_DEBOUNCE_MS);
 
-  const query = useQuery({
-    queryKey: ["players:autocomplete", debouncedInput],
-    queryFn: () => getPlayerSuggestions({ data: { query: debouncedInput } }),
-    enabled: focused,
-    retry: false,
-    gcTime: SEARCH_CACHE_TIME_MS,
-  });
+  // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch alone
+  const query = useQuery(
+    orpc.search.suggest.queryOptions({
+      input: { query: debouncedInput },
+      enabled: focused,
+      retry: false,
+      gcTime: SEARCH_CACHE_TIME_MS,
+    })
+  );
 
   return query;
 }

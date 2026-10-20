@@ -15,11 +15,8 @@ import { SkinHead } from "~/components/ui/skin";
 import { Tab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
 import { getRouteApi } from "@tanstack/react-router";
-import type { BingoPlayer } from "./bingo-data";
+import type { BingoPlayer } from "@statsify/contract";
 import type { ComponentProps } from "react";
-
-/** One category's task counters, indexed by the board data's `field`. */
-type BingoStats = Record<string, number>;
 
 type TaskInfo = Pick<Task, "game" | "name" | "description" | "progress">;
 
@@ -87,8 +84,8 @@ function completetionColor(completion: number) {
 function CategoryOverview({ player, category }: { player: BingoPlayer; category: Category }) {
   const { select } = useBoardState();
 
-  const easyBingo: BingoStats = player.bingo.easy[category];
-  const hardBingo: BingoStats = player.bingo.hard[category];
+  const easyBingo = player.bingo.easy[category];
+  const hardBingo = player.bingo.hard[category];
 
   const easyCompletion = boards.easy[category].tasks.filter((task) => easyBingo[task.field] >= task.progress).length;
   const hardCompletion = boards.hard[category].tasks.filter((task) => hardBingo[task.field] >= task.progress).length;
@@ -140,7 +137,7 @@ function BingoBoard({
   difficulty: Difficulty;
 }) {
   const board = boards[difficulty][category];
-  const bingo: BingoStats = player.bingo[difficulty][category];
+  const bingo = player.bingo[difficulty][category];
 
   const isLineComplete = (transformation: (index: number, line: number) => number) => (line: number) => {
     for (let i = 0; i < 4; i++) {

@@ -252,9 +252,13 @@ export const GuildPreviewSchema = z.object({
   daily: Count,
   weekly: Count,
   monthly: Count,
-  /** `GameCode`s; the site shows the ones it has icons for. */
-  preferredGames: z.array(z.string()),
-  members: z.array(GuildPreviewMemberSchema),
+  /** Each game's `GameId` and name; the site shows the ones it has icons for, the name as the icon's alt text. */
+  preferredGames: z.array(z.object({ id: z.string(), name: z.string() })),
+  memberCount: z.number(),
+  /** The six members with the most GEXP today, most first: the slide shows them, not the whole roster. */
+  topDaily: z.array(GuildPreviewMemberSchema),
+  /** The guild master's Minecraft-formatted name, or null when no member on record has the rank or a name. */
+  master: z.string().nullable(),
   /** The member the "Guild Member" slide features, when they are still in the guild. */
   member: GuildPreviewMemberSchema.nullable(),
 });

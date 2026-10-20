@@ -27,5 +27,11 @@
     "description": "Try again in a moment.",
     "tryAgain": "Try Again",
     "home": "Home"
+  },
+  "bingo": {
+    "notFound": {
+      "title": "Player Not Found",
+      "description": "We haven't seen {{name}} yet. Check the spelling."
+    }
   }
 }

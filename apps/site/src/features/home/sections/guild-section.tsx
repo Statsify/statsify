@@ -11,8 +11,7 @@ import { Box } from "~/components/ui/box";
 import { Carousel } from "~/components/ui/carousel";
 import { Command } from "~/components/ui/command";
 import { Fragment } from "react";
-import { GUILD_MEMBER_PREVIEW } from "../preview-constants";
-import { GameIcon } from "~/components/ui/game-icon";
+import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Progression } from "~/components/ui/progression";
 import { Skin } from "~/components/ui/skin";
@@ -20,13 +19,12 @@ import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
 import { useTranslation } from "react-i18next";
 import { useNumberFormat } from "~/i18n/use-number-format";
-import type { Guild } from "@statsify/schemas";
-import type { Json } from "~/lib/json";
+import type { GuildPreview, GuildPreviewMember } from "@statsify/contract";
 
 /** Fixed timestamps, so server and browser print the same day whatever the visitor's time zone. */
 const DATE = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "2-digit", day: "2-digit", year: "numeric" });
 
-export function GuildSection({ guild }: { guild: Json<Guild> }) {
+export function GuildSection({ guild }: { guild: GuildPreview }) {
   return (
     <BaseSection
       background="guilds"
@@ -37,7 +35,7 @@ export function GuildSection({ guild }: { guild: Json<Guild> }) {
           <GuildOverall guild={guild} />
           <GuildLevelling guild={guild} />
           <GuildTop guild={guild} />
-          <GuildMember guild={guild} />
+          {guild.member && <GuildMember guild={guild} member={guild.member} />}
         </Carousel>
       </div>
       <div className="block md:hidden">
@@ -64,7 +62,7 @@ export function GuildSection({ guild }: { guild: Json<Guild> }) {
   );
 }
 
-function GuildOverall({ guild, className }: { guild: Json<Guild>; className?: string }) {
+function GuildOverall({ guild, className }: { guild: GuildPreview; className?: string }) {
   const n = useNumberFormat();
 
   return (
@@ -81,11 +79,13 @@ function GuildOverall({ guild, className }: { guild: Json<Guild>; className?: st
         <p className="text-mc-2 text-mc-gray text-center">Guild Description</p>
       </Box>
       <Box className="row-start-3 leading-[24px]">
-        <p className="text-mc-aqua flex gap-2">
-          <span className="hidden lg:block">Guild Master: </span>
-          <span className="block lg:hidden">GM: </span>
-          <MinecraftText>{guild.members.find((member) => /^guild\s*master$/i.test(member.rank))?.displayName ?? ""}</MinecraftText>
-        </p>
+        {guild.master && (
+          <p className="text-mc-aqua flex gap-2">
+            <span className="hidden lg:block">Guild Master: </span>
+            <span className="block lg:hidden">GM: </span>
+            <MinecraftText>{guild.master}</MinecraftText>
+          </p>
+        )}
         <p className="text-mc-dark-aqua">
           Created On:{" "}
           <span className="text-mc-gray">
@@ -94,7 +94,7 @@ function GuildOverall({ guild, className }: { guild: Json<Guild>; className?: st
         </p>
         <p className="text-mc-blue">
           Guild Members:{" "}
-          <span className="text-mc-white">{guild.members.length}</span>
+          <span className="text-mc-white">{guild.memberCount}</span>
           <span className="text-mc-dark-gray">/</span>
           <span className="text-mc-white">125</span>
         </p>
@@ -113,19 +113,17 @@ function GuildOverall({ guild, className }: { guild: Json<Guild>; className?: st
       </Box>
       <Box className="col-span-2 text-center">
         <div className="flex gap-2 items-center justify-center flex-wrap max-w-80 lg:max-w-none">
-          {guild.preferredGames.map((game) => (
-            <GameIcon key={game} game={game} />
-          ))}
+          {guild.preferredGames.map(({ id, name }) => hasGameIcon(id) && <GameIcon key={id} game={id} alt={name} />)}
         </div>
       </Box>
     </div>
   );
 }
 
-function GuildLevelling({ guild }: { guild: Json<Guild> }) {
+function GuildLevelling({ guild }: { guild: GuildPreview }) {
   const n = useNumberFormat();
   const { t } = useTranslation();
-  const color = guild.tagColor.code;
+  const color = guild.tagColor;
 
   return (
     <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
@@ -172,12 +170,8 @@ function GuildLevelling({ guild }: { guild: Json<Guild> }) {
   );
 }
 
-function GuildTop({ guild }: { guild: Json<Guild> }) {
+function GuildTop({ guild }: { guild: GuildPreview }) {
   const n = useNumberFormat();
-  const members = guild.members
-    .toSorted((a, b) => b.daily - a.daily)
-    .slice(0, 6);
-
   return (
     <div className="relative grid grid-cols-content-3 xl:grid-cols-content-6 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
       <Box className="col-span-full text-center">
@@ -188,7 +182,7 @@ function GuildTop({ guild }: { guild: Json<Guild> }) {
       <Box className="col-span-full text-center text-mc-dark-green font-bold">
         GEXP for Today
       </Box>
-      {members.map((member, index) => (
+      {guild.topDaily.map((member, index) => (
         <Fragment key={member.uuid}>
           <Box
             className="font-bold content:flex content:items-center"
@@ -200,7 +194,7 @@ function GuildTop({ guild }: { guild: Json<Guild> }) {
             className="grow content:flex content:items-center"
             borderRadius={{ left: 0, right: 0 }}
           >
-            <MinecraftText className="truncate">{member.displayName ?? ""}</MinecraftText>
+            <MinecraftText className="truncate">{member.displayName}</MinecraftText>
           </Box>
           <Box
             className="content:flex content:items-center"
@@ -214,21 +208,16 @@ function GuildTop({ guild }: { guild: Json<Guild> }) {
   );
 }
 
-function GuildMember({ guild }: { guild: Json<Guild> }) {
+function GuildMember({ guild, member }: { guild: GuildPreview; member: GuildPreviewMember }) {
   const n = useNumberFormat();
   const { t } = useTranslation();
-  const member = guild.members.find(
-    (member) => member.uuid === GUILD_MEMBER_PREVIEW
-  );
-  if (!member)
-    throw new Error(`Could not find Guild Member: ${GUILD_MEMBER_PREVIEW}`);
 
   return (
     <div className="relative grid grid-cols-content-1 lg:grid-cols-content-2 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
       <Skin uuid={member.uuid} className="row-span-3 hidden lg:block" />
       <Box className="content:flex content:justify-center content:items-center content:gap-4">
         <MinecraftText className="text-mc-3 md:text-mc-4">
-          {member.displayName ?? ""}
+          {member.displayName}
         </MinecraftText>
         <p className="hidden lg:block text-mc-3">
           <MinecraftText>{guild.tagFormatted}</MinecraftText>

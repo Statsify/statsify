@@ -14,7 +14,8 @@ import type {
   PreviewIdentity,
   SkyWarsPreview,
 } from "@statsify/contract";
-import type { Guild, Player, Progression } from "@statsify/schemas";
+import { FormattedGame, type GameId, type Guild, GuildMember, type Player, type Progression } from "@statsify/schemas";
+import { removeFormatting } from "@statsify/util";
 
 /** The fixed sample players, guild member and leaderboard the home page previews. */
 export const HOME_PREVIEWS = {
@@ -155,8 +156,11 @@ export function guildPreview(guild: Guild, memberUuid: string): GuildPreview {
     daily: guild.daily,
     weekly: guild.weekly,
     monthly: guild.monthly,
-    preferredGames: guild.preferredGames,
-    members,
+    // The schema types them as `GameCode`s, but they hold the ids `FormattedGame` is keyed by.
+    preferredGames: guild.preferredGames.map((game) => ({ id: game, name: removeFormatting(FormattedGame[game as GameId]) })),
+    memberCount: members.length,
+    topDaily: members.toSorted((a, b) => b.daily - a.daily).slice(0, 6),
+    master: guild.members.find((member) => GuildMember.isGuildMaster(member))?.displayName || null,
     member: members.find((member) => member.uuid === memberUuid) ?? null,
   };
 }

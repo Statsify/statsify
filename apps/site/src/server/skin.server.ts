@@ -29,13 +29,18 @@ export async function proxySkin(
   url.searchParams.set("uuid", uuid);
   for (const [key, value] of Object.entries(fixed)) url.searchParams.set(key, value);
 
-  const upstream = await fetch(url, { headers: { "x-api-key": apiKey } });
+  const upstream = await fetch(url, { headers: { "x-api-key": apiKey } }).catch(() => null);
+
+  // The API refusing (429), failing (5xx) or not answering is a 503 with `Retry-After`, so it's never cached and
+  // browsers back off.
+  if (!upstream || upstream.status === 429 || upstream.status >= 500) {
+    await upstream?.body?.cancel();
+    return new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "Retry-After": "30" } });
+  }
 
   if (!upstream.ok) {
-    return new Response(null, {
-      status: upstream.status === 404 ? 404 : 502,
-      headers: { "Cache-Control": "no-store" },
-    });
+    await upstream.body?.cancel();
+    return new Response(null, { status: upstream.status === 404 ? 404 : 502, headers: { "Cache-Control": "no-store" } });
   }
 
   return new Response(upstream.body, {

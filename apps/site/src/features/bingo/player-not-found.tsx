@@ -11,8 +11,10 @@ import { Error } from "~/components/ui/error";
 import { Search } from "./search";
 import { Skin } from "~/components/ui/skin";
 import { useParams } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 
 export function PlayerNotFound() {
+  const { t } = useTranslation();
   const { name = "" } = useParams({ strict: false });
 
   return (
@@ -25,9 +27,9 @@ export function PlayerNotFound() {
           <span className="text-mc-dark-red">]</span> {name}
         </Box>
         <Skin uuid="76a56ac7fcf649fca0531cb5c77cd9ae" className="h-64" />
-        <h1 className="text-mc-4 lg:text-mc-7 text-mc-red font-bold">Player Not Found</h1>
+        <h1 className="text-mc-4 lg:text-mc-7 text-mc-red font-bold">{t("bingo.notFound.title")}</h1>
         <p className="text-20 lg:text-24 font-medium text-mc-gray text-center">
-          This player does not exist. Make sure you spelled the name correctly
+          {t("bingo.notFound.description", { name })}
         </p>
       </div>
     </Error>

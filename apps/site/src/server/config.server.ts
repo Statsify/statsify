@@ -54,6 +54,8 @@ async function load(): Promise<SiteConfig> {
   if (process.env.VITEST) return TEST_CONFIG;
 
   const raw = await readRawConfig();
+  // Every page reads the API with this key, so without it a production site would answer every page with an error.
+  if (!raw.site?.apiKey && raw.environment !== "dev") throw new Error("[site] site.apiKey must be set outside dev");
 
   return {
     apiRoute: raw.apiClient?.route || "http://localhost:3000",

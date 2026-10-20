@@ -14,7 +14,7 @@ import { PlayerNotFound } from "~/features/bingo/player-not-found";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
-import { getBingoPlayer } from "~/features/bingo/bingo-data";
+import { loadBingoPlayer } from "~/features/bingo/bingo-data";
 
 const EDGE_TTL_SECONDS = 300;
 
@@ -23,7 +23,7 @@ const possessive = (username: string) => `${username}'${username.endsWith("s") ?
 export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
   validateSearch: BoardSearchSchema,
   loader: async ({ params }) => {
-    const player = await getBingoPlayer({ data: { name: params.name } });
+    const player = await loadBingoPlayer(params.name);
     if (!player) throw notFound();
     return player;
   },
