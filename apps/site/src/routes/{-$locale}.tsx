@@ -10,20 +10,20 @@ import { DEFAULT_LOCALE, type Locale, isSupportedLocale } from "~/i18n/locales";
 import { Footer } from "~/components/ui/footer";
 import { Header } from "~/components/header";
 import { I18nextProvider } from "react-i18next";
+import { type LocaleData, getLocaleData } from "~/i18n/locale-data";
 import { NotFound } from "~/components/not-found";
-import { type AnyRouteMatch, Outlet, createFileRoute, notFound, redirect, useRouter } from "@tanstack/react-router";
+import { type AnyRouteMatch, type NotFoundRouteProps, Outlet, createFileRoute, isNotFound, notFound, redirect, useRouter } from "@tanstack/react-router";
+import { type ReactNode, useEffect, useMemo } from "react";
 import { createI18n } from "~/i18n/i18n";
-import { getLocaleData } from "~/i18n/locale-data";
 import { canonicalLink, oembedLink, socialMeta } from "~/lib/social-meta";
 import { startClientSentry } from "~/lib/sentry";
-import { useEffect, useMemo } from "react";
 
 /**
  * Every page lives under the optional locale prefix. English is served unprefixed, so
  * `/en-US/...` redirects to the bare path; unknown prefixes are 404s.
  */
 export const Route = createFileRoute("/{-$locale}")({
-  beforeLoad: ({ params, location }): { locale: Locale } => {
+  beforeLoad: async ({ params, location }): Promise<{ locale: Locale }> => {
     const { locale } = params;
 
     if (locale === undefined) return { locale: DEFAULT_LOCALE };
@@ -33,7 +33,8 @@ export const Route = createFileRoute("/{-$locale}")({
       throw redirect({ href: `${pathname}${location.searchStr}${location.hash ? `#${location.hash}` : ""}`, statusCode: 301 });
     }
 
-    if (!isSupportedLocale(locale)) throw notFound();
+    // The loader won't run, so the 404 brings the English layout's data along (see `LocaleNotFound`).
+    if (!isSupportedLocale(locale)) throw notFound({ data: await getLocaleData({ data: { locale: DEFAULT_LOCALE } }) });
 
     return { locale };
   },
@@ -41,8 +42,14 @@ export const Route = createFileRoute("/{-$locale}")({
   staleTime: Infinity,
   // Site-wide Open Graph defaults; pages with their own image (player, Bingo) override them. Only this route adds the
   // canonical link, so a page never has two.
-  head: ({ loaderData, matches }) => {
-    if (!loaderData) return {};
+  head: ({ loaderData, matches, match }) => {
+    if (!loaderData) {
+      // An unknown prefix's 404, which carries the English layout's data (see `LocaleNotFound`).
+      const data = isNotFound(match.error) ? (match.error.data as LocaleData | undefined) : undefined;
+      if (!data) return {};
+      const words = createI18n(DEFAULT_LOCALE, data.resources);
+      return { meta: [{ title: words.t("meta.notFound.page") }, { name: "description", content: words.t("notFound.description") }] };
+    }
     // In English like every page's head, from the server's `site.json`.
     const description = createI18n(DEFAULT_LOCALE, loaderData.resources).t("meta.description");
     // An index route's pathname ends in a slash its URL doesn't have. The route's own segments come in its own
@@ -57,13 +64,38 @@ export const Route = createFileRoute("/{-$locale}")({
       links: [oembedLink(loaderData.origin, path), canonicalLink(loaderData.origin, canonical)],
     };
   },
-  notFoundComponent: NotFound,
+  notFoundComponent: LocaleNotFound,
   component: LocaleLayout,
 });
 
 function LocaleLayout() {
   const { locale } = Route.useRouteContext();
-  const { resources, sentry } = Route.useLoaderData();
+  const data = Route.useLoaderData();
+
+  return (
+    <LocaleShell locale={locale} data={data}>
+      <Outlet />
+    </LocaleShell>
+  );
+}
+
+/**
+ * A 404 thrown by this route (an unknown locale prefix) replaces the layout, so it draws the layout itself from the
+ * data the 404 carries. Unmatched paths under a known locale render inside the layout's outlet with no data, and the
+ * child routes that throw `notFound()` have their own `notFoundComponent`, so both keep the header and footer.
+ */
+function LocaleNotFound({ data }: NotFoundRouteProps) {
+  if (!data || typeof data !== "object" || !("resources" in data)) return <NotFound />;
+
+  return (
+    <LocaleShell locale={DEFAULT_LOCALE} data={data as LocaleData}>
+      <NotFound />
+    </LocaleShell>
+  );
+}
+
+function LocaleShell({ locale, data, children }: { locale: Locale; data: LocaleData; children: ReactNode }) {
+  const { resources, sentry } = data;
   const router = useRouter();
 
   const i18n = useMemo(() => createI18n(locale, resources), [locale, resources]);
@@ -73,7 +105,7 @@ function LocaleLayout() {
   return (
     <I18nextProvider i18n={i18n}>
       <Header />
-      <Outlet />
+      {children}
       <Footer />
     </I18nextProvider>
   );

@@ -63,7 +63,7 @@ export function Logo({ className }: { className?: string }) {
 // Text
 export function Wordmark({ className }: { className?: string }) {
   return (
-    <p className={cn("text-mc-5 font-bold", className)}>
+    <p className={cn("text-mc-4 font-bold", className)}>
       <span className="text-blueify-100">S</span>
       <span className="text-blueify-200">t</span>
       <span className="text-blueify-300">a</span>
@@ -80,7 +80,7 @@ export function Wordmark({ className }: { className?: string }) {
 export function Brand({ className }: { className?: string }) {
   return (
     <div className={cn("flex items-center gap-4", className)}>
-      <Logo className="size-18" />
+      <Logo className="size-16" />
       <Wordmark />
     </div>
   );

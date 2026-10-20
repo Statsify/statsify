@@ -12,7 +12,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
-import { motion } from "motion/react";
 import { orpc } from "~/lib/orpc";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useOutisdeClick } from "~/hooks/use-outside-click";
@@ -21,15 +20,16 @@ import { useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const SEARCH_DEBOUNCE_MS = 300;
-const SEARCH_MAX_HEIGHT = 300;
 const SEARCH_CACHE_TIME_MS = 5 * 60 * 1000;
 
 /** Where a submitted name goes: the player page, its Bingo boards, or the `/player?q=` result cards. */
 export type SearchTarget = "player" | "bingo" | "results";
 
+// Rows are at least 44 px tall, an easy tap target; `item` must match `itemHeight` for the keyboard scrolling. The
+// sheet is 300 px tall from `sm`, and a row shorter on phones, so the on-screen keyboard doesn't cover its last name.
 const SIZES = {
-  regular: { itemHeight: 51, bar: "h-16 px-4 gap-4", icon: "size-8", text: "text-mc-2" },
-  compact: { itemHeight: 44, bar: "h-10 px-3 gap-3", icon: "size-5", text: "text-mc-1" },
+  regular: { itemHeight: 56, item: "h-14 px-4", bar: "h-16 px-4 gap-4", icon: "size-8", text: "text-mc-2", sheet: "max-h-61 sm:max-h-75" },
+  compact: { itemHeight: 44, item: "h-11 px-3", bar: "h-11 px-3 gap-3", icon: "size-5", text: "text-mc-1.5", sheet: "max-h-64 sm:max-h-75" },
 } as const;
 
 function usePlayerSuggestions(input: string, focused: boolean) {
@@ -103,8 +103,9 @@ export function Search({
     setSelected(selected);
     if (suggestions.data) setInput(suggestions.data[selected]);
 
-    const maxScroll = (suggestions.data?.length ?? 0) * size.itemHeight - SEARCH_MAX_HEIGHT;
-    const halfVisible = Math.floor(SEARCH_MAX_HEIGHT / 2);
+    const visible = containerRef.current?.clientHeight ?? 0;
+    const maxScroll = (suggestions.data?.length ?? 0) * size.itemHeight - visible;
+    const halfVisible = Math.floor(visible / 2);
     let scrollTop = selected * size.itemHeight - halfVisible + size.itemHeight / 2;
     scrollTop = Math.max(0, Math.min(scrollTop, maxScroll));
 
@@ -127,17 +128,13 @@ export function Search({
         void go(query);
       }}
     >
-      <div
-        className={cn(
-          "flex items-center bg-gradient-to-r from-white/20 to-white/40 outline-white/0 outline-4 transition-all duration-150 focus-within:outline-white/50 -outline-offset-4 backdrop-blur-sm",
-          size.bar
-        )}
-      >
-        <SearchIcon className={cn("text-white drop-shadow-mc-2", size.icon)} />
+      {/* A square, solid input; the focus outline sits inside its edge. */}
+      <div className={cn("flex items-center bg-blackify-800 -outline-offset-2 focus-within:outline-2 focus-within:outline-white/60", size.bar)}>
+        <SearchIcon className={cn("shrink-0 text-mc-gray", size.icon)} />
         <input
           name="search"
           placeholder={placeholder ?? t("search.placeholder")}
-          className={cn("placeholder-mc-darkgray text-white outline-none h-full w-full selection:bg-white/50", size.text)}
+          className={cn("placeholder:text-mc-gray text-white outline-none h-full w-full min-w-0 selection:bg-white/50", size.text)}
           value={input}
           onChange={(event) => {
             setQuery(event.target.value);
@@ -175,18 +172,13 @@ export function Search({
           aria-label={t("search.label")}
         />
       </div>
-      <motion.div
+      <div
         ref={containerRef}
         id={listId}
         role="listbox"
         aria-label={t("search.label")}
-        className="w-full overflow-auto absolute bg-white/25 backdrop-blur-2xl z-100"
-        animate={{
-          height: +focused * Math.min(
-            SEARCH_MAX_HEIGHT,
-            suggestions.isPending ? 3 * size.itemHeight : (suggestions.data?.length ?? 0) * size.itemHeight
-          ),
-        }}
+        hidden={!focused || (!suggestions.isPending && count === 0)}
+        className={cn("absolute z-100 w-full overflow-auto bg-blackify-800 shadow-[4px_4px_0_rgb(0_0_0_/_0.5)]", size.sheet)}
       >
         {focused && suggestions.isPending && (
           <>
@@ -196,18 +188,17 @@ export function Search({
           </>
         )}
         {suggestions.data?.map((suggestion, index) => (
-          <div key={suggestion} className={cn("w-full flex flex-col items-center", compact ? "p-1" : "p-2")}>
-            <SearchPlayer
-              id={optionId(index)}
-              player={suggestion}
-              selected={selected === index}
-              target={target}
-              compact={compact}
-              onSelect={onSelect}
-            />
-          </div>
+          <SearchPlayer
+            key={suggestion}
+            id={optionId(index)}
+            player={suggestion}
+            selected={selected === index}
+            target={target}
+            compact={compact}
+            onSelect={onSelect}
+          />
         ))}
-      </motion.div>
+      </div>
     </form>
   );
 }
@@ -227,9 +218,12 @@ function SearchPlayer({
   compact: boolean;
   onSelect?: (name: string) => unknown;
 }) {
-  const className =
-    "relative flex items-center gap-4 w-full p-2 hover:bg-white/20 active:bg-white/10 aria-selected:bg-white/20 aria-selected:before:content-[''] aria-selected:before:absolute aria-selected:before:bg-blueify-500 aria-selected:before:h-full aria-selected:before:w-0.5 aria-selected:before:left-0";
-  const text = cn("text-white selection:bg-white/50", compact ? "text-mc-1" : "text-mc-2");
+  const size = SIZES[compact ? "compact" : "regular"];
+  const className = cn(
+    "relative flex items-center gap-4 w-full hover:bg-white/10 active:bg-white/5 aria-selected:bg-white/10 aria-selected:before:content-[''] aria-selected:before:absolute aria-selected:before:bg-blueify-500 aria-selected:before:h-full aria-selected:before:w-1 aria-selected:before:left-0",
+    size.item
+  );
+  const text = cn("text-white selection:bg-white/50", size.text);
 
   // With a handler the suggestion is handed over like a submitted name (the leaderboard `around` box).
   if (onSelect) {

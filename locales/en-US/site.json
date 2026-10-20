@@ -6,7 +6,8 @@
   "meta": {
     "description": "Statsify is the largest Hypixel Discord bot for viewing your Hypixel Network stats, leaderboards, sessions, and more.",
     "notFound": {
-      "player": "Player Not Found | Statsify"
+      "player": "Player Not Found | Statsify",
+      "page": "Not Found | Statsify"
     },
     "bingo": {
       "playerTitle": "{{name}} Bingo Stats | Statsify",
@@ -17,7 +18,12 @@
     "label": "Main",
     "premium": "Premium",
     "discord": "Discord",
-    "bot": "Bot"
+    "bot": "Bot",
+    "players": "Players",
+    "leaderboards": "Leaderboards",
+    "bingo": "Bingo",
+    "external": "Statsify elsewhere",
+    "newTab": "(opens in a new tab)"
   },
   "footer": {
     "copyright": "© {{year}} Statsify. All Rights Reserved.",
@@ -87,7 +93,7 @@
     "description": "Looks like the page you're trying to reach does not exist"
   },
   "error": {
-    "title": "Something went wrong",
+    "title": "Something Went Wrong",
     "description": "Try again in a moment.",
     "tryAgain": "Try Again",
     "home": "Home"
