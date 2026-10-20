@@ -77,25 +77,27 @@ export const panel = {
   outline: 4,
 } as const;
 
+const SANS = [
+  // Mona Sans, instanced and subset for the site; renamed because "Mona" is an OFL Reserved Font Name.
+  "\"Statsify Sans\"",
+  "\"Noto Sans\"",
+  "\"Noto Sans Thai\"",
+  "system-ui",
+  "\"Hiragino Sans\"",
+  "\"PingFang SC\"",
+  "\"PingFang TC\"",
+  "\"Microsoft YaHei\"",
+  "\"Apple SD Gothic Neo\"",
+  "\"Malgun Gothic\"",
+  "sans-serif",
+];
+
 /** Type: Minecraft for the wordmark, headings and stat values; Mona Sans for everything else. */
 export const type = {
   families: {
-    // Monospace until the TTF arrives: closer to the pixel font's width than the browser's serif.
-    minecraft: "\"Minecraft\", ui-monospace, monospace",
-    sans: [
-      // Mona Sans, instanced and subset for the site; renamed because "Mona" is an OFL Reserved Font Name.
-      "\"Statsify Sans\"",
-      "\"Noto Sans\"",
-      "\"Noto Sans Thai\"",
-      "system-ui",
-      "\"Hiragino Sans\"",
-      "\"PingFang SC\"",
-      "\"PingFang TC\"",
-      "\"Microsoft YaHei\"",
-      "\"Apple SD Gothic Neo\"",
-      "\"Malgun Gothic\"",
-      "sans-serif",
-    ].join(", "),
+    // A glyph the pixel font lacks (Cyrillic, Greek, CJK, Thai and most of Latin Extended) comes from the sans stack.
+    minecraft: ["\"Minecraft\"", ...SANS].join(", "),
+    sans: SANS.join(", "),
   },
   /** The shared size scale in px; 112 is the hero wordmark only. */
   scale: [16, 20, 24, 32, 48, 64, 112],
