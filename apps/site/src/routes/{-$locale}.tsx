@@ -57,12 +57,16 @@ export const Route = createFileRoute("/{-$locale}")({
     // casing (`/Leaderboards` is `/leaderboards`), and a player's name in the stored one, since other casings redirect.
     const leaf: AnyRouteMatch | undefined = matches.at(-1);
     const path = (leaf?.pathname ?? "/").replace(/(.)\/$/, "$1");
-    // A board's page past the first is its own `?page=` (counted from 1), however the URL picked it.
+    // A game page is also its mode: its loader's deps, which the URL names only past the first.
+    // Every other page is its path alone.
+    const deps: Record<string, string | undefined> = leaf?.routeId === "/{-$locale}/player/$name/$game" ? leaf.loaderDeps : {};
+    const query = new URLSearchParams(Object.entries(deps).filter((entry): entry is [string, string] => entry[1] !== undefined));
+    // But a board's page past the first is its own `?page=` (counted from 1), however the URL picked it.
     const board = leaf?.routeId === "/{-$locale}/leaderboards/$field" ? (leaf.loaderData as { page?: { page: number } } | undefined)?.page : undefined;
-    const canonical = board && board.page > 0 ? `${path}?page=${board.page + 1}` : path;
+    if (board && board.page > 0) query.set("page", String(board.page + 1));
     return {
       meta: [{ name: "description", content: description }, ...socialMeta({ origin: loaderData.origin, path, description, image: "/images/og-home.png" })],
-      links: [oembedLink(loaderData.origin, path), canonicalLink(loaderData.origin, canonical)],
+      links: [oembedLink(loaderData.origin, path), canonicalLink(loaderData.origin, query.size > 0 ? `${path}?${query}` : path)],
     };
   },
   notFoundComponent: LocaleNotFound,

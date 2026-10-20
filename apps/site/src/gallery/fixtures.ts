@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { LeaderboardPage, PlayerPage, ResultCard } from "@statsify/contract";
+import type { GamePage, LeaderboardPage, PlayerPage, ResultCard, StatCell } from "@statsify/contract";
 
 // The local run's two fixture players, so skins and the signature image resolve against a seeded API.
 export const ANRIE_UUID = "3abe2f6bd45a4e2282d4f9014569db25";
@@ -102,3 +102,87 @@ export const LEADERBOARD_PAGE: LeaderboardPage = {
 };
 
 export const PROGRESSION = { current: 2_120, max: 5_000, percent: 0.424 };
+
+/** A BedWars cell as `player.game` serves it: the bot's label and colour, and its leaderboard at the overall mode. */
+const bedwars = (key: string, value: number, colour: string, label = `stats.${key.slice(key.lastIndexOf(".") + 1)}`): StatCell => ({
+  key,
+  label,
+  value,
+  colour,
+  leaderboard: `stats.bedwars.overall.${key}`,
+});
+
+const BEDWARS_MODES = [
+  ["overall", "Overall"],
+  ["core", "Core"],
+  ["solo", "Solo"],
+  ["doubles", "Doubles"],
+  ["threes", "Threes"],
+  ["fours", "Fours"],
+  ["4v4", "4v4"],
+  ["armed", "Armed"],
+  ["castle", "Castle"],
+  ["lucky", "Lucky"],
+  ["rush", "Rush"],
+  ["swap", "Swap"],
+  ["ultimate", "Ultimate"],
+  ["underworld", "Underworld"],
+  ["voidless", "Voidless"],
+  ["oneBlock", "One Block"],
+] as const;
+
+/** anrie's BedWars level. */
+export const GAME_LEVEL: NonNullable<GamePage["level"]> = {
+  current: "§6[281✫]",
+  natural: "§6[281✫]",
+  next: "§6[282✫]",
+  progression: PROGRESSION,
+  leaderboard: "stats.bedwars.exp",
+};
+
+/** anrie's BedWars page in the overall mode, with a slumber wallet. */
+export const GAME_PAGE: GamePage = {
+  uuid: ANRIE_UUID,
+  username: "anrie",
+  displayName: "§b[MVP§c+§b] anrie",
+  game: { key: "bedwars", id: "BEDWARS", name: "§cBed§fWars§f" },
+  modes: BEDWARS_MODES.map(([key, name]) => ({ key, name })),
+  mode: "overall",
+  level: GAME_LEVEL,
+  overview: [
+    { ...bedwars("tokens", 1_234_567, "§2"), leaderboard: "stats.bedwars.tokens" },
+    { ...bedwars("slumber.tickets", 12, "§b", "stats.slumberTickets"), of: 25, leaderboard: "stats.bedwars.slumber.tickets" },
+    { ...bedwars("slumber.totalTickets", 340, "§d", "stats.totalSlumberTickets"), leaderboard: "stats.bedwars.slumber.totalTickets" },
+  ],
+  sections: [
+    {
+      title: null,
+      cells: [
+        bedwars("wins", 3_325, "§a"),
+        bedwars("losses", 1_207, "§c"),
+        bedwars("wlr", 2.75, "§6"),
+        bedwars("finalKills", 6_980, "§a"),
+        bedwars("finalDeaths", 1_520, "§c"),
+        bedwars("fkdr", 4.59, "§6"),
+        bedwars("kills", 12_345, "§a"),
+        bedwars("deaths", 9_876, "§c"),
+        bedwars("kdr", 1.25, "§6"),
+        bedwars("bedsBroken", 2_945, "§a"),
+        bedwars("bedsLost", 1_100, "§c"),
+        bedwars("bblr", 2.68, "§6"),
+      ],
+    },
+    {
+      title: "game.sections.resources",
+      cells: [
+        bedwars("itemsCollected.iron", 1_523_422, "§7", "stats.iron"),
+        bedwars("itemsCollected.gold", 412_233, "§6", "stats.gold"),
+        bedwars("itemsCollected.diamond", 33_112, "§b", "stats.diamonds"),
+        bedwars("itemsCollected.emerald", 8_201, "§2", "stats.emeralds"),
+      ],
+    },
+    { title: "game.sections.games", cells: [bedwars("gamesPlayed", 4_532, "§e"), bedwars("winstreak", 12, "§a")] },
+  ],
+  updatedAt: NOW - 17 * 60_000,
+  expiresAt: NOW - 15 * 60_000,
+};

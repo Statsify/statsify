@@ -9,7 +9,8 @@
 import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
 import { Discord } from "~/components/icons/discord";
-import { InlineStat, StatCell } from "~/components/ui/stat";
+import { InlineStat, STAT_LINK, StatCell } from "~/components/ui/stat";
+import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { RefreshBar } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
@@ -111,7 +112,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
           <OverviewPanel overview={page.overview} className="lg:col-start-1 lg:row-start-2" />
           <LoginPanel status={page.status} className="lg:col-start-2 lg:row-start-2" />
         </div>
-        <GameGrid games={page.games} />
+        <GameGrid games={page.games} username={page.username} />
         <SignaturePanel page={page} />
       </div>
     </div>
@@ -292,7 +293,7 @@ function LoginPanel({ status, className }: { status: PlayerPage["status"]; class
   );
 }
 
-function GameGrid({ games }: { games: GameSummary[] }) {
+function GameGrid({ games, username }: { games: GameSummary[]; username: string }) {
   const { t } = useTranslation();
 
   if (games.length === 0) return <p className="text-mc-1.5 text-mc-gray text-center">{t("player.noGames")}</p>;
@@ -302,21 +303,31 @@ function GameGrid({ games }: { games: GameSummary[] }) {
     <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {games.map((game) => (
         <li key={game.id}>
-          <GamePanel game={game} />
+          <GamePanel game={game} username={username} />
         </li>
       ))}
     </ul>
   );
 }
 
-function GamePanel({ game }: { game: GameSummary }) {
+/** A game's headline numbers; a game with its own page links to it from the whole panel. */
+function GamePanel({ game, username }: { game: GameSummary; username: string }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
+  const title = <MinecraftText className="text-mc-1.5">{`§l${game.name}${game.level ? `§r ${game.level}` : ""}`}</MinecraftText>;
 
   return (
     <Box
       className="h-full"
-      title={<MinecraftText className="text-mc-1.5">{`§l${game.name}${game.level ? `§r ${game.level}` : ""}`}</MinecraftText>}
+      title={game.page ?
+        (
+          <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: game.page }} className={STAT_LINK}>
+            {title}
+            {/* Text, not an icon, so the title bar keeps the height of every other panel's. */}
+            <span aria-hidden className="text-mc-1.5 text-mc-gray"> »</span>
+          </Link>
+        ) :
+        title}
     >
       <dl className="grid grid-cols-2 gap-x-2 gap-y-4">
         {game.rows.map((row) => (

@@ -10,6 +10,13 @@ import { cn } from "~/lib/util";
 import type { ReactNode } from "react";
 
 /**
+ * For a link that makes a whole stat (or panel) clickable: it stretches over its nearest `relative` ancestor, which
+ * lightens on hover and shows the keyboard focus. The text keeps its colour and gets no underline.
+ */
+export const STAT_LINK =
+  "outline-none after:absolute after:-inset-1 hover:after:bg-white/10 focus-visible:after:outline-2 focus-visible:after:outline-white/60";
+
+/**
  * A card table cell (`Table.td`): a Minecraft 16 title over a Minecraft 32 value, both in the stat's colour and centred
  * (the number is the hero). A long title wraps to two lines; the value keeps to the bottom of the cell, so the values
  * in a row line up whatever their titles do. Renders a `<div>` holding a `<dt>` and a `<dd>`, so a list of cells goes

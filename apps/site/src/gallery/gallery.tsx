@@ -6,7 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ANRIE_UUID, LEADERBOARD_PAGE, OJAKEY_UUID, PLAYER_PAGE, PROGRESSION, RESULT_CARDS, SUGGESTIONS } from "./fixtures";
+import {
+  ANRIE_UUID,
+  GAME_LEVEL,
+  GAME_PAGE,
+  LEADERBOARD_PAGE,
+  OJAKEY_UUID,
+  PLAYER_PAGE,
+  PROGRESSION,
+  RESULT_CARDS,
+  SUGGESTIONS,
+} from "./fixtures";
 import { Background } from "~/components/ui/background";
 import { Board } from "~/components/icons/board";
 import { Box } from "~/components/ui/box";
@@ -21,6 +31,7 @@ import { Divider } from "~/components/ui/divider";
 import { ErrorPage } from "~/components/error-page";
 import { FindPlayer, LeaderboardTable, PageNav } from "~/features/leaderboards/leaderboard-table";
 import { GAME_ICONS, GameIcon, hasGameIcon } from "~/components/ui/game-icon";
+import { GameHeader, LevelPanel, ModeSwitcher, StatPanel } from "~/features/game/game-page";
 import { GitHub } from "~/components/icons/github";
 import { InlineStat, StatCell } from "~/components/ui/stat";
 import { LogoError } from "~/components/icons/logo-error";
@@ -55,6 +66,7 @@ const SECTIONS = [
   ["panels", "Panels"],
   ["buttons", "Buttons"],
   ["stats", "Stat cells"],
+  ["games", "Game pages"],
   ["search", "Search"],
   ["refresh", "Update stats"],
   ["results", "Result cards"],
@@ -126,6 +138,7 @@ export function Gallery() {
         <PanelSection />
         <ButtonSection />
         <StatSection />
+        <GameSection />
         <SearchSection />
         <RefreshSection />
         <ResultSection />
@@ -401,6 +414,51 @@ function StatSection() {
               <InlineStat label="Guild" value="The Longest Guild Name Anyone Made" color="text-mc-dark-green" />
             </dl>
           </Box>
+        </Demo>
+      </div>
+    </Section>
+  );
+}
+
+const [HEADLINE, RESOURCES] = GAME_PAGE.sections;
+const [TOKENS] = GAME_PAGE.overview;
+const LEVEL = { ...GAME_LEVEL, current: "§d[3,000✫]", progression: { current: 0, percent: 1 } };
+
+function GameSection() {
+  const { username } = GAME_PAGE;
+
+  return (
+    <Section id="games">
+      <Demo label="Nametag and title, level, and the game's own stats (slumber tickets out of the wallet's size)">
+        <div className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
+          <GameHeader page={GAME_PAGE} modeName="Overall" className="lg:row-span-2" />
+          <LevelPanel level={GAME_LEVEL} username={username} />
+          <StatPanel cells={GAME_PAGE.overview} username={username} />
+        </div>
+      </Demo>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Demo label="Level with no next level: no bar, MAXED">
+          <LevelPanel level={LEVEL} username={username} />
+        </Demo>
+        <Demo label="No wallet: tokens only">
+          <StatPanel cells={[TOKENS]} username={username} />
+        </Demo>
+      </div>
+      <Demo label="Modes: links from md up, a select on phones (the first mode)">
+        <ModeSwitcher username={username} game="bedwars" modes={GAME_PAGE.modes} mode="overall" />
+      </Demo>
+      <Demo label="Modes: another mode, the first hovered" force="hover">
+        <ModeSwitcher username={username} game="bedwars" modes={GAME_PAGE.modes} mode="solo" />
+      </Demo>
+      <Demo label="Headline table: every stat opens its leaderboard at the player (the first hovered)" force="hover">
+        <StatPanel cells={HEADLINE.cells} columns="grid-cols-3" username={username} />
+      </Demo>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Demo label="A titled section, the first stat focused" force="focus-visible">
+          <StatPanel title={RESOURCES.title} cells={RESOURCES.cells} username={username} />
+        </Demo>
+        <Demo label="A stat without a leaderboard: no link">
+          <StatPanel cells={[{ ...TOKENS, leaderboard: null }]} username={username} />
         </Demo>
       </div>
     </Section>

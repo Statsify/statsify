@@ -32,6 +32,7 @@ import { Route as Char123LocaleChar125LeaderboardsIndexRouteImport } from './rou
 import { Route as Char123LocaleChar125LeaderboardsFieldRouteImport } from './routes/{-$locale}/leaderboards/$field'
 import { Route as Char123LocaleChar125PlayerIndexRouteImport } from './routes/{-$locale}/player/index'
 import { Route as Char123LocaleChar125PlayerNameIndexRouteImport } from './routes/{-$locale}/player/$name/index'
+import { Route as Char123LocaleChar125PlayerNameGameRouteImport } from './routes/{-$locale}/player/$name/$game'
 import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name/bingo'
 
 const OembedRoute = OembedRouteImport.update({
@@ -129,6 +130,12 @@ const Char123LocaleChar125PlayerNameIndexRoute =
     path: '/player/$name/',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
+const Char123LocaleChar125PlayerNameGameRoute =
+  Char123LocaleChar125PlayerNameGameRouteImport.update({
+    id: '/player/$name/$game',
+    path: '/player/$name/$game',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
 const Char123LocaleChar125PlayerNameBingoRoute =
   Char123LocaleChar125PlayerNameBingoRouteImport.update({
     id: '/player/$name/bingo',
@@ -153,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
+  '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
@@ -172,6 +180,7 @@ export interface FileRoutesByTo {
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/leaderboards': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player': typeof Char123LocaleChar125PlayerIndexRoute
+  '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
@@ -193,6 +202,7 @@ export interface FileRoutesById {
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
+  '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
@@ -215,6 +225,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/leaderboards/'
     | '/{-$locale}/player/'
+    | '/{-$locale}/player/$name/$game'
     | '/{-$locale}/player/$name/bingo'
     | '/{-$locale}/player/$name/'
   fileRoutesByTo: FileRoutesByTo
@@ -234,6 +245,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/leaderboards'
     | '/{-$locale}/player'
+    | '/{-$locale}/player/$name/$game'
     | '/{-$locale}/player/$name/bingo'
     | '/{-$locale}/player/$name'
   id:
@@ -254,6 +266,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/leaderboards/'
     | '/{-$locale}/player/'
+    | '/{-$locale}/player/$name/$game'
     | '/{-$locale}/player/$name/bingo'
     | '/{-$locale}/player/$name/'
   fileRoutesById: FileRoutesById
@@ -393,6 +406,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125PlayerNameIndexRouteImport
       parentRoute: typeof Char123LocaleChar125Route
     }
+    '/{-$locale}/player/$name/$game': {
+      id: '/{-$locale}/player/$name/$game'
+      path: '/player/$name/$game'
+      fullPath: '/{-$locale}/player/$name/$game'
+      preLoaderRoute: typeof Char123LocaleChar125PlayerNameGameRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
     '/{-$locale}/player/$name/bingo': {
       id: '/{-$locale}/player/$name/bingo'
       path: '/player/$name/bingo'
@@ -409,6 +429,7 @@ interface Char123LocaleChar125RouteChildren {
   Char123LocaleChar125LeaderboardsFieldRoute: typeof Char123LocaleChar125LeaderboardsFieldRoute
   Char123LocaleChar125LeaderboardsIndexRoute: typeof Char123LocaleChar125LeaderboardsIndexRoute
   Char123LocaleChar125PlayerIndexRoute: typeof Char123LocaleChar125PlayerIndexRoute
+  Char123LocaleChar125PlayerNameGameRoute: typeof Char123LocaleChar125PlayerNameGameRoute
   Char123LocaleChar125PlayerNameBingoRoute: typeof Char123LocaleChar125PlayerNameBingoRoute
   Char123LocaleChar125PlayerNameIndexRoute: typeof Char123LocaleChar125PlayerNameIndexRoute
 }
@@ -421,6 +442,8 @@ const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
   Char123LocaleChar125LeaderboardsIndexRoute:
     Char123LocaleChar125LeaderboardsIndexRoute,
   Char123LocaleChar125PlayerIndexRoute: Char123LocaleChar125PlayerIndexRoute,
+  Char123LocaleChar125PlayerNameGameRoute:
+    Char123LocaleChar125PlayerNameGameRoute,
   Char123LocaleChar125PlayerNameBingoRoute:
     Char123LocaleChar125PlayerNameBingoRoute,
   Char123LocaleChar125PlayerNameIndexRoute:
