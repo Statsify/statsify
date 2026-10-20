@@ -43,6 +43,18 @@
     "refreshing": "Refreshing…",
     "refreshIn": "Refresh in {{seconds}}s",
     "refreshLimited": "Too many updates right now, try again shortly.",
+    "signature": {
+      "title": "Get signature",
+      "description": "Paste one of these into your Hypixel Forums signature, or anywhere else that shows images. The image carries the stats from the last refresh on this page, with the time they were fetched printed on it.",
+      "alt": "{{name}}'s Hypixel stats on Statsify",
+      "url": "Image URL",
+      "bbcode": "BBCode (Hypixel Forums)",
+      "markdown": "Markdown",
+      "html": "HTML",
+      "card": "Full card URL (808×540, too tall for a forum signature)",
+      "copy": "Copy",
+      "copied": "Copied!"
+    },
     "notFound": {
       "title": "Player Not Found",
       "description": "We haven't seen {{name}} yet. Check the spelling, or ask Hypixel to look them up.",

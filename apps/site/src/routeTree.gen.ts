@@ -18,7 +18,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as OembedRouteImport } from './routes/oembed'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as Char123LocaleChar125RouteImport } from './routes/{-$locale}'
+import { Route as CardChar123uuidChar125DotpngRouteImport } from './routes/card/{$uuid}[.]png'
 import { Route as OgChar123uuidChar125DotpngRouteImport } from './routes/og/{$uuid}[.]png'
+import { Route as SigChar123uuidChar125DotpngRouteImport } from './routes/sig/{$uuid}[.]png'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
 import { Route as Char123LocaleChar125BingoRouteImport } from './routes/{-$locale}/bingo'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
@@ -45,10 +47,22 @@ const Char123LocaleChar125Route = Char123LocaleChar125RouteImport.update({
   path: '/{-$locale}',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CardChar123uuidChar125DotpngRoute =
+  CardChar123uuidChar125DotpngRouteImport.update({
+    id: '/card/{$uuid}.png',
+    path: '/card/{$uuid}.png',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const OgChar123uuidChar125DotpngRoute =
   OgChar123uuidChar125DotpngRouteImport.update({
     id: '/og/{$uuid}.png',
     path: '/og/{$uuid}.png',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SigChar123uuidChar125DotpngRoute =
+  SigChar123uuidChar125DotpngRouteImport.update({
+    id: '/sig/{$uuid}.png',
+    path: '/sig/{$uuid}.png',
     getParentRoute: () => rootRouteImport,
   } as any)
 const Char123LocaleChar125IndexRoute =
@@ -113,7 +127,9 @@ export interface FileRoutesByFullPath {
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
+  '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
   '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
+  '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -128,7 +144,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
   '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
+  '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}': typeof Char123LocaleChar125IndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -145,7 +163,9 @@ export interface FileRoutesById {
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
+  '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
   '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
+  '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -163,7 +183,9 @@ export interface FileRouteTypes {
     | '/oembed'
     | '/robots.txt'
     | '/{-$locale}'
+    | '/card/{$uuid}.png'
     | '/og/{$uuid}.png'
+    | '/sig/{$uuid}.png'
     | '/{-$locale}/bingo'
     | '/{-$locale}/'
     | '/api/rpc/$'
@@ -178,7 +200,9 @@ export interface FileRouteTypes {
   to:
     | '/oembed'
     | '/robots.txt'
+    | '/card/{$uuid}.png'
     | '/og/{$uuid}.png'
+    | '/sig/{$uuid}.png'
     | '/{-$locale}/bingo'
     | '/{-$locale}'
     | '/api/rpc/$'
@@ -194,7 +218,9 @@ export interface FileRouteTypes {
     | '/oembed'
     | '/robots.txt'
     | '/{-$locale}'
+    | '/card/{$uuid}.png'
     | '/og/{$uuid}.png'
+    | '/sig/{$uuid}.png'
     | '/{-$locale}/bingo'
     | '/{-$locale}/'
     | '/api/rpc/$'
@@ -211,7 +237,9 @@ export interface RootRouteChildren {
   OembedRoute: typeof OembedRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   Char123LocaleChar125Route: typeof Char123LocaleChar125RouteWithChildren
+  CardChar123uuidChar125DotpngRoute: typeof CardChar123uuidChar125DotpngRoute
   OgChar123uuidChar125DotpngRoute: typeof OgChar123uuidChar125DotpngRoute
+  SigChar123uuidChar125DotpngRoute: typeof SigChar123uuidChar125DotpngRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
   ApiSkinHeadRoute: typeof ApiSkinHeadRoute
   ApiSkinRenderRoute: typeof ApiSkinRenderRoute
@@ -240,11 +268,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/card/{$uuid}.png': {
+      id: '/card/{$uuid}.png'
+      path: '/card/{$uuid}.png'
+      fullPath: '/card/{$uuid}.png'
+      preLoaderRoute: typeof CardChar123uuidChar125DotpngRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/og/{$uuid}.png': {
       id: '/og/{$uuid}.png'
       path: '/og/{$uuid}.png'
       fullPath: '/og/{$uuid}.png'
       preLoaderRoute: typeof OgChar123uuidChar125DotpngRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sig/{$uuid}.png': {
+      id: '/sig/{$uuid}.png'
+      path: '/sig/{$uuid}.png'
+      fullPath: '/sig/{$uuid}.png'
+      preLoaderRoute: typeof SigChar123uuidChar125DotpngRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/{-$locale}/': {
@@ -351,7 +393,9 @@ const rootRouteChildren: RootRouteChildren = {
   OembedRoute: OembedRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   Char123LocaleChar125Route: Char123LocaleChar125RouteWithChildren,
+  CardChar123uuidChar125DotpngRoute: CardChar123uuidChar125DotpngRoute,
   OgChar123uuidChar125DotpngRoute: OgChar123uuidChar125DotpngRoute,
+  SigChar123uuidChar125DotpngRoute: SigChar123uuidChar125DotpngRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
   ApiSkinHeadRoute: ApiSkinHeadRoute,
   ApiSkinRenderRoute: ApiSkinRenderRoute,
