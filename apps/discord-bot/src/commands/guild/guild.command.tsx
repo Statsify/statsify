@@ -123,23 +123,7 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
-    const guild = await this.apiService.getGuild(
-      player.guildId || player.uuid,
-      player.guildId ? GuildQuery.ID : GuildQuery.PLAYER
-    );
-
-    // The player's cached guild id can point to a guild they've since left
-    const member = guild.members.find((m) => m.uuid === player.uuid);
-
-    if (!member)
-      throw new ErrorMessage(
-        (t) => t("errors.playerLeftGuild.title"),
-        (t) =>
-          t("errors.playerLeftGuild.description", {
-            displayName: this.apiService.emojiDisplayName(t, player.displayName),
-            guild: guild.name,
-          })
-      );
+    const guild = await this.apiService.getGuild(player.uuid, GuildQuery.PLAYER);
 
     const [skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayerSkin(player.uuid, user),
@@ -154,7 +138,6 @@ export class GuildCommand extends GuildTopSubCommand {
         skin={skin}
         player={player}
         guild={guild}
-        member={member}
         background={background}
         t={t}
         badge={badge}
