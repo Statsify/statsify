@@ -279,6 +279,7 @@ if (import.meta.vitest) {
     variant: "og",
     player,
     guild: null,
+    updatedAt: 0,
     skin,
   });
 

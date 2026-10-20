@@ -21,8 +21,15 @@ import { onShutdown, shuttingDown } from "./shutdown.server";
 import { siteConfig } from "./config.server";
 import type { Redis } from "ioredis";
 
-/** What an untracked player gets per variant: the site's own Open Graph image, under `public/images`. */
-const PLACEHOLDERS: Record<ImageVariant, string> = { og: "og-home.png" };
+/**
+ * What an untracked player gets per variant, under `public/images`: the site's own Open Graph image for
+ * the unfurl, and a "player not found" card in each signature size.
+ */
+const PLACEHOLDERS: Record<ImageVariant, string> = {
+  og: "og-home.png",
+  sig: "sig-placeholder.png",
+  card: "card-placeholder.png",
+};
 
 /**
  * Rendered PNGs stay in Redis only briefly (about 300 KB each, in the leaderboard Redis); Cloudflare holds them
@@ -81,7 +88,7 @@ export async function renderPlayerImage({ uuid, variant }: { uuid: string; varia
   }
 
   try {
-    const png = await renderCard(identity.uuid, variant);
+    const png = await renderCard(identity.uuid, variant, identity.updatedAt);
     await client.set(key, Buffer.from(png), "EX", CACHE_TTL_SECONDS);
     return { kind: "card", png };
   } finally {
@@ -164,7 +171,7 @@ async function waitForImage(
 }
 
 /** The bot's general card for a stored player, as PNG bytes. Throws `PoolBusyError` when the queue is full. */
-async function renderCard(uuid: string, variant: ImageVariant): Promise<Uint8Array<ArrayBuffer>> {
+async function renderCard(uuid: string, variant: ImageVariant, updatedAt: number): Promise<Uint8Array<ArrayBuffer>> {
   // A miss reads the player and renders the skin (asking Mojang for it, if it's old) before it can queue, so a queue
   // with no room left, counting the misses still loading, answers busy first.
   const renders = await renderPool();
@@ -178,6 +185,7 @@ async function renderCard(uuid: string, variant: ImageVariant): Promise<Uint8Arr
     variant,
     player: full.player,
     guild: full.guild,
+    updatedAt,
     skin,
   });
 }
