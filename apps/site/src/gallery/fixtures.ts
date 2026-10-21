@@ -131,6 +131,43 @@ const BEDWARS_MODES = [
   ["oneBlock", "One Block"],
 ] as const;
 
+/** The player's game pages for the nav, Arcade never played. */
+const GAME_NAV: GamePage["games"] = [
+  { key: "arcade", id: "ARCADE", name: "§cA§6r§ec§aa§bd§de§f", played: false },
+  { key: "bedwars", id: "BEDWARS", name: "§cBed§fWars§f", played: true },
+  { key: "blitzsg", id: "BLITZSG", name: "§2Blitz§6SG§f", played: true },
+  { key: "duels", id: "DUELS", name: "§bDuels§f", played: true },
+  { key: "challenges", id: null, name: "§aChallenges", played: true },
+];
+
+/** Every game with a page, as the nav will list them once all are built: past 10, the Games button at every width. */
+export const GAME_NAV_ALL: GamePage["games"] = [
+  { key: "arcade", id: "ARCADE", name: "§cA§6r§ec§aa§bd§de§f", played: false },
+  { key: "arenabrawl", id: "ARENA_BRAWL", name: "§3Arena §6Brawl§f", played: true },
+  { key: "bedwars", id: "BEDWARS", name: "§cBed§fWars§f", played: true },
+  { key: "blitzsg", id: "BLITZSG", name: "§2Blitz§6SG§f", played: true },
+  { key: "buildbattle", id: "BUILD_BATTLE", name: "§dBuild Battle§f", played: true },
+  { key: "copsandcrims", id: "COPS_AND_CRIMS", name: "§6Cops §fand §aCrims§f", played: false },
+  { key: "duels", id: "DUELS", name: "§bDuels§f", played: true },
+  { key: "megawalls", id: "MEGAWALLS", name: "§7MegaWalls§f", played: true },
+  { key: "murdermystery", id: "MURDER_MYSTERY", name: "§4Murder Mystery§f", played: true },
+  { key: "paintball", id: "PAINTBALL", name: "§bPaint§fball§f", played: false },
+  { key: "pit", id: "PIT", name: "§eThe §aPit§f", played: true },
+  { key: "parkour", id: "PARKOUR", name: "§fParkour§f", played: true },
+  { key: "quake", id: "QUAKE", name: "§5Quake§f", played: true },
+  { key: "skywars", id: "SKYWARS", name: "§bSky§eWars§f", played: true },
+  { key: "smashheroes", id: "SMASH_HEROES", name: "§dSmash §eHeroes§f", played: true },
+  { key: "speeduhc", id: "SPEED_UHC", name: "§bSpeed§6UHC§f", played: true },
+  { key: "tntgames", id: "TNT_GAMES", name: "§cT§fN§cT Games§f", played: true },
+  { key: "turbokartracers", id: "TURBO_KART_RACERS", name: "§aTurbo Kart Racers§f", played: false },
+  { key: "uhc", id: "UHC", name: "§6UHC§f", played: true },
+  { key: "vampirez", id: "VAMPIREZ", name: "§4VampireZ§f", played: true },
+  { key: "walls", id: "WALLS", name: "§eWalls§f", played: false },
+  { key: "warlords", id: "WARLORDS", name: "§cWar§elords§f", played: true },
+  { key: "woolgames", id: "WOOLGAMES", name: "§cWool§9Games§f", played: true },
+  { key: "challenges", id: null, name: "§aChallenges", played: true },
+];
+
 /** anrie's BedWars level. */
 export const GAME_LEVEL: NonNullable<GamePage["level"]> = {
   label: "stats.level",
@@ -192,6 +229,7 @@ export const GAME_PAGE: GamePage = {
     },
     { title: "game.sections.games", rows: [[bedwars("gamesPlayed", 4_532, "§e"), bedwars("winstreak", 12, "§a")]] },
   ],
+  games: GAME_NAV,
   updatedAt: NOW - 17 * 60_000,
   expiresAt: NOW - 15 * 60_000,
 };

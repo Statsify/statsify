@@ -102,6 +102,8 @@
     "submode": "Submode",
     "submodes": "Submodes",
     "selected": "{{name}} (selected)",
+    "games": "Games",
+    "unplayed": "(not played)",
     "filter": "Filter by name",
     "hint": "Select any stat to see its leaderboard around {{name}}.",
     "leaderboard": "({{stat}} leaderboard)",

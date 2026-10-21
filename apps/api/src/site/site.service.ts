@@ -49,7 +49,7 @@ import type {
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
 import { PLAYER_COOLDOWN_MS } from "./cooldown.js";
-import { type PlayerGuild, buildPlayerPage } from "./player-page.js";
+import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
 import { buildGamePage, findGamePage, pageModes, pageSubmodes } from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
@@ -394,7 +394,7 @@ export class SiteService implements OnApplicationBootstrap {
     const player = await this.loadPlayer(normalizeUuid(input.uuid));
     if (!player) throw notFound();
 
-    return buildGamePage(player, layout, mode, input.submode);
+    return { ...buildGamePage(player, layout, mode, input.submode), games: gameNav(player.stats) };
   }
 
   /** The home page's previews, each loaded on its own so one missing player hides one section. */

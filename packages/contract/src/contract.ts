@@ -305,6 +305,11 @@ export const GamePageSchema = z.object({
   overview: z.array(StatCellSchema),
   /** The mode's stats in groups; the first is the headline table. */
   sections: z.array(StatSectionSchema),
+  /**
+   * The site's game pages for the player, in the game registry's order (a page that isn't a game's last), for the
+   * nav between them. `played` is false for a game the player has never played.
+   */
+  games: z.array(z.object({ key: z.string(), id: z.string().nullable(), name: z.string(), played: z.boolean() })),
   ...Freshness,
 });
 

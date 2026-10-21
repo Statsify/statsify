@@ -53,4 +53,5 @@ export const CHALLENGES_PAGE: GameLayout = {
   name: "§aChallenges",
   overview: ["total"],
   page: (mode) => (mode === "overall" ? OVERALL : game(mode as GameId)),
+  played: ({ challenges }) => challenges.total > 0,
 };

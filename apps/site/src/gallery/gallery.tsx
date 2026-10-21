@@ -9,6 +9,7 @@
 import {
   ANRIE_UUID,
   GAME_LEVEL,
+  GAME_NAV_ALL,
   GAME_PAGE,
   LEADERBOARD_PAGE,
   LIST_SECTION,
@@ -36,7 +37,7 @@ import { Divider } from "~/components/ui/divider";
 import { ErrorPage } from "~/components/error-page";
 import { FindPlayer, LeaderboardTable, PageNav } from "~/features/leaderboards/leaderboard-table";
 import { GAME_ICONS, GameIcon, hasGameIcon } from "~/components/ui/game-icon";
-import { GameHeader, LevelPanel, ModeSwitcher, StatPanel } from "~/features/game/game-page";
+import { GameHeader, GameNav, LevelPanel, ModeSwitcher, StatPanel } from "~/features/game/game-page";
 import { GitHub } from "~/components/icons/github";
 import { InlineStat, StatCell } from "~/components/ui/stat";
 import { LogoError } from "~/components/icons/logo-error";
@@ -454,6 +455,26 @@ function GameSection() {
           <StatPanel section={{ title: null, rows: [[TOKENS]] }} username={username} />
         </Demo>
       </div>
+      <Demo label="Games: the player's game pages in the registry's order, links from md up, a Games button on phones, one never played dimmed">
+        <div className="relative">
+          <GameNav page={GAME_PAGE} />
+        </div>
+      </Demo>
+      <Demo label="The Games button open on phones: a grid of the pages, the current one marked">
+        {/* The open grid lies over what follows, so the demo keeps room for it. */}
+        <div className="max-md:min-h-56">
+          <div className="relative">
+            <GameNav page={GAME_PAGE} open />
+          </div>
+        </div>
+      </Demo>
+      <Demo label="24 pages, open: past 10, the Games button at every width">
+        <div className="min-h-[41rem] sm:min-h-[29rem] lg:min-h-[23rem] xl:min-h-[20rem]">
+          <div className="relative">
+            <GameNav page={{ ...GAME_PAGE, games: GAME_NAV_ALL }} open />
+          </div>
+        </div>
+      </Demo>
       <Demo label="16 modes: past 10, a select at every width, Fours marked as the mode played most">
         <ModeSwitcher page={GAME_PAGE} />
       </Demo>

@@ -183,6 +183,8 @@ export interface GameLayout {
   page: (mode: string, submode: string | undefined) => PageSpec;
   /** Marks the mode the player has played most in the switcher. */
   mostPlayed?: MostPlayedSpec;
+  /** Whether the player has played the game, for a page that isn't a game's; a game's comes from its overview panel. */
+  played?: (stats: PlayerStats) => boolean;
   /**
    * Stats with a leaderboard the pages leave out, by path below the game, each with why: the site shows every other one
    * (a test checks), and leaves a stat off while its stored value is wrong.
@@ -362,8 +364,15 @@ function level(player: Player, game: Game, spec: LevelSpec): NonNullable<GamePag
   };
 }
 
-/** The `player.game` view model: one page of one game, from a deserialized player. */
-export function buildGamePage(player: Player, layout: GameLayout, mode: string, submode?: string): GamePage {
+/** A page's name: its own, or its game's. */
+export function pageName(layout: GameLayout): string {
+  if (layout.name) return layout.name;
+  if (!layout.game.id) throw new Error(`${layout.game.key} has neither a name nor a game id`);
+  return FormattedGame[layout.game.id];
+}
+
+/** The `player.game` view model, but for the nav to the player's other games: one page of one game. */
+export function buildGamePage(player: Player, layout: GameLayout, mode: string, submode?: string): Omit<GamePage, "games"> {
   const { game } = layout;
   const modes = pageModes(layout);
   const modeSpec = modes.find(({ key }) => key === mode);
@@ -384,7 +393,7 @@ export function buildGamePage(player: Player, layout: GameLayout, mode: string, 
     uuid: player.uuid,
     username: player.username,
     displayName: player.displayName,
-    game: { key: game.key, id: game.id, name: layout.name ?? (game.id ? FormattedGame[game.id] : game.key) },
+    game: { key: game.key, id: game.id, name: pageName(layout) },
     heading: {
       word: "game.stats",
       // A game with one mode leaves it out of the title, as its card does.

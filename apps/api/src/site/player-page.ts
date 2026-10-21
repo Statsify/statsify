@@ -7,11 +7,11 @@
  */
 
 import { FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
-import { type GameSummary, type PlayerPage, levelMultiplier } from "@statsify/contract";
+import { type GamePage, type GameSummary, type PlayerPage, levelMultiplier } from "@statsify/contract";
 import { formatTime } from "@statsify/util";
 import { PLAYER_COOLDOWN_MS } from "./cooldown.js";
 import { winstreaksHidden } from "./game-pages/duels.js";
-import { gamePageOf } from "./game-pages/index.js";
+import { GAME_PAGES, gamePageOf, pageName } from "./game-pages/index.js";
 
 /** The guild fields the page reads, deserialized: its name and tag plus each member's quest and GEXP rows. */
 export interface PlayerGuild {
@@ -281,6 +281,17 @@ function summarize(stats: PlayerStats, summary: Summary): GameSummary | undefine
   if (!played) return undefined;
 
   return { id: summary.id, name: FormattedGame[summary.id], level: summary.level?.(stats), rows, page: gamePageOf(summary.id) };
+}
+
+/** The site's game pages for the nav between them, each marked when the player has never played the game. */
+export function gameNav(stats: PlayerStats): GamePage["games"] {
+  return GAME_PAGES.map((layout) => {
+    const { key, id } = layout.game;
+    if (layout.played) return { key, id, name: pageName(layout), played: layout.played(stats) };
+    const summary = GAME_SUMMARIES.find((entry) => entry.id === id);
+    if (!summary) throw new Error(`${key} has no player-page panel`);
+    return { key, id, name: pageName(layout), played: summarize(stats, summary) !== undefined };
+  });
 }
 
 /** The `player.page` view model from a deserialized player and their guild. */
