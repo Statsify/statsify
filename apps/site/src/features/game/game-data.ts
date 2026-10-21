@@ -14,10 +14,16 @@ export type { GamePage };
 /** How long a loaded game page stays fresh in the query cache; matches the page's edge TTL. */
 const PAGE_STALE_MS = 60_000;
 
-/** One mode of a player's page for a game; `mode` is left out for the game's first mode, as in the URL. */
-export const gamePageQuery = (uuid: string, game: string, mode?: string) =>
-  orpc.player.game.queryOptions({ input: { uuid, game, mode }, staleTime: PAGE_STALE_MS });
+/**
+ * One page of a player's game: a mode, or a mode's submode. Each is left out when it is the first, as in the URL.
+ */
+export const gamePageQuery = (uuid: string, game: string, mode?: string, submode?: string) =>
+  orpc.player.game.queryOptions({ input: { uuid, game, mode, submode }, staleTime: PAGE_STALE_MS });
 
 /** The `?mode=` of a page: none for the game's first mode. */
 export const modeSearch = (page: Pick<GamePage, "modes">, mode: string): string | undefined =>
   mode === page.modes[0]?.key ? undefined : mode;
+
+/** The `&submode=` of a page: none for a mode's first submode, or a mode without any. */
+export const submodeSearch = (page: Pick<GamePage, "submodes">, submode: string | null): string | undefined =>
+  submode === null || submode === page.submodes[0]?.key ? undefined : submode;

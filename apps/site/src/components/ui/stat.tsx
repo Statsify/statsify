@@ -7,7 +7,7 @@
  */
 
 import { cn } from "~/lib/util";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 /**
  * For a link that makes a whole stat (or panel) clickable: it stretches over its nearest `relative` ancestor, which
@@ -26,15 +26,18 @@ export function StatCell({
   label,
   value,
   color = "text-mc-white",
+  style,
   className,
 }: {
-  label: string;
+  label: ReactNode;
   value: ReactNode;
   color?: string;
+  /** For a colour with no theme class (a card's `§#rrggbb`). */
+  style?: CSSProperties;
   className?: string;
 }) {
   return (
-    <div className={cn("flex min-w-0 flex-col items-center justify-end gap-1 text-center", color, className)}>
+    <div className={cn("flex min-w-0 flex-col items-center justify-end gap-1 text-center", color, className)} style={style}>
       <dt className="line-clamp-2 max-w-full text-mc-1 text-balance wrap-break-word">{label}</dt>
       <dd className="max-w-full text-mc-2">{value}</dd>
     </div>
@@ -46,17 +49,19 @@ export function InlineStat({
   label,
   value,
   color = "text-mc-white",
+  style,
   className,
 }: {
   label: string;
   value: ReactNode;
   color?: string;
+  style?: CSSProperties;
   className?: string;
 }) {
   return (
     <div className={cn("flex min-w-0 items-baseline gap-1 text-mc-1", className)}>
       <dt className="shrink-0 text-mc-gray after:content-[':']">{label}</dt>
-      <dd className={cn("min-w-0 truncate", color)}>{value}</dd>
+      <dd className={cn("min-w-0 truncate", color)} style={style}>{value}</dd>
     </div>
   );
 }

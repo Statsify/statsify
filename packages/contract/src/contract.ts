@@ -185,18 +185,45 @@ const ProgressionSchema = z.object({ current: z.number(), max: z.number().option
 
 /** One stat on a game page, as the bot's card shows it. */
 export const StatCellSchema = z.object({
-  /** The catalog's key for the stat within its group, e.g. `wins` or `itemsCollected.iron`. */
+  /** The stat's path below the game, unique on the page, e.g. `solo.wins` or `tokens`. */
   key: z.string(),
-  /** A `stats.*` key in `locales/<lng>/default.json`: the bot's word for the stat, abbreviation included. */
+  /**
+   * A `stats.*` key: the bot's word for the stat, abbreviation included, in `locales/<lng>/default.json`, or the
+   * site's own in `site.json` for a stat the bot doesn't show.
+   */
   label: z.string(),
-  /** Numbers are formatted by the site; strings come formatted by the schema (levels, times). */
+  /** The card's own title where it doesn't translate one (a map's or a challenge's name), Minecraft-formatted. */
+  name: z.string().optional(),
+  /** Values for the label's placeholders, e.g. `{ game: "Arcade" }` for "{{game}} Total". */
+  params: z.record(z.string(), z.string()).optional(),
+  /** Numbers are formatted by the site; strings come formatted (levels, times, a kit's name). */
   value: z.union([z.number(), z.string()]),
+  /** Printed after a number, as on the card, e.g. `ms`. */
+  suffix: z.string().optional(),
   /** The number the value is out of (`12/25`), for a stat with a cap. */
   of: z.number().optional(),
-  /** The bot's colour code for the stat, e.g. `§a`. */
+  /** The bot's colour code for the stat, e.g. `§a` or `§#a7673f`. */
   colour: z.string(),
   /** The stat's leaderboard, as the `/leaderboards/<field>` segment, or null when it has none. */
   leaderboard: z.string().nullable(),
+  /** A `GameId` whose icon goes before the name, as on the card's game lists. */
+  icon: z.string().optional(),
+  /** A selection the card shows (a kit, a trail): a `Label: value` line rather than a cell, never a link. */
+  inline: z.boolean().optional(),
+});
+
+/** A group of stats on a game page, in the card's rows. */
+export const StatSectionSchema = z.object({
+  /** A `game.sections.*` key in `site.json` or the card's `stats.*` heading, or null for the headline table. */
+  title: z.string().nullable(),
+  /** The card's own Minecraft-formatted heading where it doesn't translate one, e.g. `§6Solo`. */
+  name: z.string().optional(),
+  /** The card's rows of cells. */
+  rows: z.array(z.array(StatCellSchema)),
+  /** Name and value lines in columns (maps, disasters, challenges) rather than table cells. */
+  list: z.boolean().optional(),
+  /** A long list that starts folded behind its heading and count; every cell is in the page either way. */
+  collapsed: z.boolean().optional(),
 });
 
 export const GamePageSchema = z.object({
@@ -204,32 +231,50 @@ export const GamePageSchema = z.object({
   game: z.object({
     /** The `PlayerStats` key and URL segment, e.g. `bedwars`. */
     key: z.string(),
-    /** The `GameId`, e.g. `BEDWARS`. */
-    id: z.string(),
-    /** The Minecraft-formatted game name. */
+    /** The `GameId`, e.g. `BEDWARS`, or null for a page that isn't a game's (Challenges). */
+    id: z.string().nullable(),
+    /** The Minecraft-formatted name. */
     name: z.string(),
   }),
-  /** The modes the page offers, in order; the first is the default and has no `?mode=`. */
-  modes: z.array(z.object({ key: z.string(), name: z.string() })),
+  /**
+   * The card's title after the name: a `site.json` word (`game.stats`), or null where the card has none, and the
+   * mode as the card names it (`Bridge Doubles`, Minecraft-formatted), or null on a game with one mode.
+   */
+  heading: z.object({ word: z.string().nullable(), mode: z.string().nullable() }),
+  /** The modes the page offers, in order; the first is the default and has no `?mode=`. `selected` marks the player's kit. */
+  modes: z.array(z.object({ key: z.string(), name: z.string(), selected: z.boolean().optional() })),
   /** The mode shown. */
   mode: z.string(),
   /**
-   * The game's level, the level the bar starts at and the next one, when the game has levels, with the leaderboard
-   * that ranks it (as on `StatCellSchema`).
+   * The mode's submodes, where they split its games (Duels' Bridge); the first is the default and has no `&submode=`.
+   * `selected` marks the player's class where the submodes are classes (TNT's Wizards), as on a mode.
+   */
+  submodes: z.array(z.object({ key: z.string(), name: z.string(), selected: z.boolean().optional() })),
+  /** The submode shown, or null for a mode without submodes. */
+  submode: z.string().nullable(),
+  /**
+   * The level, the level the bar starts at and the next one, when the page shows one, with the leaderboard that ranks
+   * it (as on `StatCellSchema`). `label` is what the card calls it (`stats.level`, `stats.prefix`, `stats.title`)
+   * and `progress` what the bar counts (`stats.progression.exp`, `.kill`, `.win`). `progression.max` is absent at the
+   * last level, which shows `maxedWord` in place of the bar: MAXED by default, or PRESTIGED where reaching it
+   * prestiges (Murder Mystery's knife).
    */
   level: z
     .object({
+      label: z.string(),
       current: z.string(),
       natural: z.string(),
       next: z.string(),
       progression: ProgressionSchema,
+      progress: z.string(),
+      maxedWord: z.enum(["maxed", "prestiged"]).optional(),
       leaderboard: z.string().nullable(),
     })
     .nullable(),
-  /** Stats for the whole game, the same in every mode. */
+  /** Stats for the whole game, the same in every mode, and the card's selections (kit, class). */
   overview: z.array(StatCellSchema),
-  /** The mode's stats in groups: `title` is a `game.sections.*` key in `site.json`, or null for the headline table. */
-  sections: z.array(z.object({ title: z.string().nullable(), cells: z.array(StatCellSchema) })),
+  /** The mode's stats in groups; the first is the headline table. */
+  sections: z.array(StatSectionSchema),
   ...Freshness,
 });
 
@@ -349,6 +394,8 @@ const GameInputSchema = z.object({
   game: z.string().min(1).max(32),
   /** An api mode of that game; the first mode when left out. */
   mode: z.string().min(1).max(32).optional(),
+  /** A submode of that mode, for a mode with submodes; the first when left out. */
+  submode: z.string().min(1).max(32).optional(),
 });
 const RefreshInputSchema = z.object({ uuid: UuidSchema, clientIp: ClientIpSchema });
 const LookupInputSchema = z.object({
@@ -464,6 +511,7 @@ export type GameInput = z.infer<typeof GameInputSchema>;
 
 export type BingoPlayer = z.infer<typeof BingoPlayerSchema>;
 export type GamePage = z.infer<typeof GamePageSchema>;
+export type StatSection = z.infer<typeof StatSectionSchema>;
 export type StatCell = z.infer<typeof StatCellSchema>;
 export type HomePreviews = z.infer<typeof HomePreviewsSchema>;
 export type PreviewIdentity = z.infer<typeof PreviewIdentitySchema>;

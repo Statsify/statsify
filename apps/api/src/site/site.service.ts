@@ -50,7 +50,7 @@ import type {
 import { ORPCError } from "@orpc/nest";
 import { PLAYER_COOLDOWN_MS } from "./cooldown.js";
 import { type PlayerGuild, buildPlayerPage } from "./player-page.js";
-import { buildGamePage, findGamePage, pageModes } from "./game-page.js";
+import { buildGamePage, findGamePage, pageModes, pageSubmodes } from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
 import { config, flatten, removeFormatting } from "@statsify/util";
@@ -378,19 +378,23 @@ export class SiteService implements OnApplicationBootstrap {
     };
   }
 
-  /** One mode of a game's page; an unknown game or mode is NOT_FOUND, like an unknown player. */
+  /** One mode (or submode) of a game's page; an unknown game, mode or submode is NOT_FOUND, like an unknown player. */
   public async game(input: GameInput): Promise<GamePage> {
     const layout = findGamePage(input.game);
     if (!layout) throw notFound("Game not found");
 
-    const modes = pageModes(layout);
+    const modes = pageModes(layout).map(({ key }) => key);
     const mode = input.mode ?? modes[0];
     if (!modes.includes(mode)) throw notFound("Mode not found");
+
+    // A mode without submodes has no second page to ask for.
+    const submodes = pageSubmodes(layout, mode) ?? [];
+    if (input.submode !== undefined && !submodes.includes(input.submode)) throw notFound("Mode not found");
 
     const player = await this.loadPlayer(normalizeUuid(input.uuid));
     if (!player) throw notFound();
 
-    return buildGamePage(player, layout, mode);
+    return buildGamePage(player, layout, mode, input.submode);
   }
 
   /** The home page's previews, each loaded on its own so one missing player hides one section. */

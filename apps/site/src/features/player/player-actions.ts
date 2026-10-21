@@ -81,13 +81,14 @@ export const refreshBingo = createServerFn({ method: "POST" })
     }
   });
 
-/** Refreshes a known player like `refreshPlayer`, then hands back the mode of the game page they're on. */
+/** Refreshes a known player like `refreshPlayer`, then hands back the page of the game they're on. */
 export const refreshGame = createServerFn({ method: "POST" })
   .validator(
     z.object({
       uuid: z.string().regex(UUID_PATTERN),
       game: z.string().min(1).max(32),
       mode: z.string().min(1).max(32).optional(),
+      submode: z.string().min(1).max(32).optional(),
     })
   )
   .handler(async ({ data }): Promise<ActionResult<GamePage>> => {
@@ -95,8 +96,8 @@ export const refreshGame = createServerFn({ method: "POST" })
 
     try {
       await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: clientIp() }, { signal });
-      const { uuid, game, mode } = data;
-      return { ok: true, data: await rpcServerClient.player.game({ uuid, game, mode }, { signal }) };
+      const { uuid, game, mode, submode } = data;
+      return { ok: true, data: await rpcServerClient.player.game({ uuid, game, mode, submode }, { signal }) };
     } catch (error) {
       return failure(error, signal);
     }

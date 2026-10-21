@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { GamePage, LeaderboardPage, PlayerPage, ResultCard, StatCell } from "@statsify/contract";
+import type { GamePage, LeaderboardPage, PlayerPage, ResultCard, StatCell, StatSection } from "@statsify/contract";
 
 // The local run's two fixture players, so skins and the signature image resolve against a seeded API.
 export const ANRIE_UUID = "3abe2f6bd45a4e2282d4f9014569db25";
@@ -105,7 +105,7 @@ export const PROGRESSION = { current: 2_120, max: 5_000, percent: 0.424 };
 
 /** A BedWars cell as `player.game` serves it: the bot's label and colour, and its leaderboard at the overall mode. */
 const bedwars = (key: string, value: number, colour: string, label = `stats.${key.slice(key.lastIndexOf(".") + 1)}`): StatCell => ({
-  key,
+  key: `overall.${key}`,
   label,
   value,
   colour,
@@ -133,10 +133,12 @@ const BEDWARS_MODES = [
 
 /** anrie's BedWars level. */
 export const GAME_LEVEL: NonNullable<GamePage["level"]> = {
+  label: "stats.level",
   current: "§6[281✫]",
   natural: "§6[281✫]",
   next: "§6[282✫]",
   progression: PROGRESSION,
+  progress: "stats.progression.exp",
   leaderboard: "stats.bedwars.exp",
 };
 
@@ -146,43 +148,107 @@ export const GAME_PAGE: GamePage = {
   username: "anrie",
   displayName: "§b[MVP§c+§b] anrie",
   game: { key: "bedwars", id: "BEDWARS", name: "§cBed§fWars§f" },
+  heading: { word: "game.stats", mode: "Overall" },
   modes: BEDWARS_MODES.map(([key, name]) => ({ key, name })),
   mode: "overall",
+  submodes: [],
+  submode: null,
   level: GAME_LEVEL,
   overview: [
-    { ...bedwars("tokens", 1_234_567, "§2"), leaderboard: "stats.bedwars.tokens" },
-    { ...bedwars("slumber.tickets", 12, "§b", "stats.slumberTickets"), of: 25, leaderboard: "stats.bedwars.slumber.tickets" },
-    { ...bedwars("slumber.totalTickets", 340, "§d", "stats.totalSlumberTickets"), leaderboard: "stats.bedwars.slumber.totalTickets" },
+    { ...bedwars("tokens", 1_234_567, "§2"), key: "tokens", leaderboard: "stats.bedwars.tokens" },
+    { ...bedwars("slumber.tickets", 12, "§b", "stats.slumberTickets"), key: "slumber.tickets", of: 25, leaderboard: "stats.bedwars.slumber.tickets" },
+    {
+      ...bedwars("slumber.totalTickets", 340, "§d", "stats.totalSlumberTickets"),
+      key: "slumber.totalTickets",
+      leaderboard: "stats.bedwars.slumber.totalTickets",
+    },
   ],
   sections: [
     {
       title: null,
-      cells: [
-        bedwars("wins", 3_325, "§a"),
-        bedwars("losses", 1_207, "§c"),
-        bedwars("wlr", 2.75, "§6"),
-        bedwars("finalKills", 6_980, "§a"),
-        bedwars("finalDeaths", 1_520, "§c"),
-        bedwars("fkdr", 4.59, "§6"),
-        bedwars("kills", 12_345, "§a"),
-        bedwars("deaths", 9_876, "§c"),
-        bedwars("kdr", 1.25, "§6"),
-        bedwars("bedsBroken", 2_945, "§a"),
-        bedwars("bedsLost", 1_100, "§c"),
-        bedwars("bblr", 2.68, "§6"),
+      rows: [
+        [bedwars("wins", 3_325, "§a"), bedwars("losses", 1_207, "§c"), bedwars("wlr", 2.75, "§6")],
+        [bedwars("finalKills", 6_980, "§a"), bedwars("finalDeaths", 1_520, "§c"), bedwars("fkdr", 4.59, "§6")],
+        [bedwars("kills", 12_345, "§a"), bedwars("deaths", 9_876, "§c"), bedwars("kdr", 1.25, "§6")],
+        [bedwars("bedsBroken", 2_945, "§a"), bedwars("bedsLost", 1_100, "§c"), bedwars("bblr", 2.68, "§6")],
       ],
     },
     {
       title: "game.sections.resources",
-      cells: [
-        bedwars("itemsCollected.iron", 1_523_422, "§7", "stats.iron"),
-        bedwars("itemsCollected.gold", 412_233, "§6", "stats.gold"),
-        bedwars("itemsCollected.diamond", 33_112, "§b", "stats.diamonds"),
-        bedwars("itemsCollected.emerald", 8_201, "§2", "stats.emeralds"),
+      rows: [
+        [
+          bedwars("itemsCollected.iron", 1_523_422, "§7", "stats.iron"),
+          bedwars("itemsCollected.gold", 412_233, "§6", "stats.gold"),
+          bedwars("itemsCollected.diamond", 33_112, "§b", "stats.diamonds"),
+          bedwars("itemsCollected.emerald", 8_201, "§2", "stats.emeralds"),
+        ],
       ],
     },
-    { title: "game.sections.games", cells: [bedwars("gamesPlayed", 4_532, "§e"), bedwars("winstreak", 12, "§a")] },
+    { title: "game.sections.games", rows: [[bedwars("gamesPlayed", 4_532, "§e"), bedwars("winstreak", 12, "§a")]] },
   ],
   updatedAt: NOW - 17 * 60_000,
   expiresAt: NOW - 15 * 60_000,
+};
+
+/** A Duels-like page: a mode with submodes, a title for a level and a kit the player has selected. */
+export const SUBMODE_PAGE: GamePage = {
+  ...GAME_PAGE,
+  game: { key: "duels", id: "DUELS", name: "§bDuels§f" },
+  heading: { word: "game.stats", mode: "Bridge Doubles" },
+  modes: [
+    { key: "overall", name: "Overall" },
+    { key: "bridge", name: "Bridge" },
+    { key: "classic", name: "Classic", selected: true },
+  ],
+  mode: "bridge",
+  submodes: [
+    { key: "overall", name: "Overall" },
+    { key: "solo", name: "Solo" },
+    { key: "doubles", name: "Doubles" },
+  ],
+  submode: "doubles",
+};
+
+/** BlitzSG's 45 modes: too many for tabs, so a select at every width. */
+export const MANY_MODES: GamePage["modes"] = Array.from({ length: 45 }, (_, index) => ({
+  key: index === 0 ? "overall" : `kit${index}`,
+  name: index === 0 ? "Overall" : `Kit ${index}`,
+  ...(index === 7 && { selected: true }),
+}));
+
+const listCell = (key: string, name: string, value: number | string, leaderboard = true): StatCell => ({
+  key,
+  label: "stats.bestTime",
+  name,
+  value,
+  colour: "§f",
+  leaderboard: leaderboard ? `stats.arcade.dropper.maps.${key}.bestTime` : null,
+});
+
+/** A list, as Dropper's best times: the card's names in their own colours, a time never set as N/A with no link. */
+export const LIST_SECTION: StatSection = {
+  title: "game.sections.bestTimes",
+  list: true,
+  rows: [
+    [
+      listCell("atlantis", "§cAtlantis", "41.205s"),
+      listCell("bbq", "§cBBQ", "38.771s"),
+      listCell("floatingIslands", "§eFloating Islands", "1m, 2s"),
+      listCell("time", "§eTime", "§7N/A", false),
+      listCell("well", "§aWell", "22.006s"),
+      listCell("ufo", "§aUFO", "§7N/A", false),
+    ],
+  ],
+};
+
+/** Selections the card shows (a kit) and a stat in a hex colour the theme has no class for. */
+export const SELECTION_SECTION: StatSection = {
+  title: null,
+  rows: [
+    [
+      { key: "miniWalls.witherKills", label: "stats.witherKills", value: 42, colour: "§#417286", leaderboard: "stats.arcade.miniWalls.witherKills" },
+      { key: "miniWalls.witherDamage", label: "stats.witherDamage", value: 12_840, colour: "§#0668af", leaderboard: null },
+    ],
+    [{ key: "miniWalls.kit", label: "stats.kit", value: "Soldier", colour: "§b", leaderboard: null, inline: true }],
+  ],
 };

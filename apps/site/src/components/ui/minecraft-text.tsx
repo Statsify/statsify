@@ -31,6 +31,15 @@ const COLOR_CLASSES: Record<string, string> = {
 /** The text class for a `§` colour code (`§a` → `text-mc-green`); white for anything else. */
 export const colourClass = (code: string): string => COLOR_CLASSES[code.replace(/^§/, "")] ?? "text-mc-white";
 
+/**
+ * How to colour text with a card's colour code: the theme class for `§0`–`§f`, or an inline colour for the `§#rrggbb`
+ * codes some cards draw.
+ */
+export const colourOf = (code: string): { className?: string; style?: CSSProperties } => {
+  const hex = /^§(#[\dA-Fa-f]{6})$/.exec(code)?.[1];
+  return hex ? { style: { color: hex } } : { className: colourClass(code) };
+};
+
 /** The class of the first colour in a formatted string, for a title that takes its value's colour. */
 export const leadingColourClass = (text: string): string => colourClass(/§([\da-f])/.exec(text)?.[1] ?? "");
 

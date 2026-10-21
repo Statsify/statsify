@@ -9,7 +9,7 @@
 import { FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
 import { type GameSummary, type PlayerPage, levelMultiplier } from "@statsify/contract";
 import { PLAYER_COOLDOWN_MS } from "./cooldown.js";
-import { gamePageOf } from "./game-page.js";
+import { gamePageOf } from "./game-pages/index.js";
 
 /** The guild fields the page reads, deserialized: its name and tag plus each member's quest and GEXP rows. */
 export interface PlayerGuild {

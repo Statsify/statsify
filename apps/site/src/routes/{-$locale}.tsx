@@ -57,7 +57,7 @@ export const Route = createFileRoute("/{-$locale}")({
     // casing (`/Leaderboards` is `/leaderboards`), and a player's name in the stored one, since other casings redirect.
     const leaf: AnyRouteMatch | undefined = matches.at(-1);
     const path = (leaf?.pathname ?? "/").replace(/(.)\/$/, "$1");
-    // A game page is also its mode: its loader's deps, which the URL names only past the first.
+    // A game page is also its mode and submode: its loader's deps, which the URL names only past the first.
     // Every other page is its path alone.
     const deps: Record<string, string | undefined> = leaf?.routeId === "/{-$locale}/player/$name/$game" ? leaf.loaderDeps : {};
     const query = new URLSearchParams(Object.entries(deps).filter((entry): entry is [string, string] => entry[1] !== undefined));

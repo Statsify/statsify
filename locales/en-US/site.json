@@ -96,13 +96,19 @@
     "stats": "Stats",
     "mode": "Mode",
     "modes": "Modes",
+    "submode": "Submode",
+    "submodes": "Submodes",
+    "selected": "{{name}} (selected)",
     "hint": "Select any stat to see its leaderboard around {{name}}.",
     "leaderboard": "({{stat}} leaderboard)",
     "maxed": "MAXED",
     "levelBar": "{{current}} to {{next}}",
+    "prestiged": "PRESTIGED",
+    "go": "Go",
     "sections": {
       "resources": "Resources Collected",
-      "games": "Games"
+      "games": "Games",
+      "bestTimes": "Best Times"
     }
   },
   "notFound": {
