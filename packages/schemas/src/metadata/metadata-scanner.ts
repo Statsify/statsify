@@ -343,5 +343,17 @@ if (import.meta.vitest) {
         resetEvery: undefined,
       });
     });
+
+    it("should return each key once for Player and Guild", async () => {
+      // getLeaderboardField keeps these in a Map, which would keep the last entry for a repeated key
+      const { Player } = await import("../player/index.js");
+      const { Guild } = await import("../guild/index.js");
+
+      for (const constructor of [Player, Guild]) {
+        const keys = scanMetadata(constructor).map(([key]) => key);
+        expect(keys.length).toBeGreaterThan(0);
+        expect(keys.filter((key, index) => keys.indexOf(key) !== index)).toEqual([]);
+      }
+    });
   });
 }
