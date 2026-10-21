@@ -7,17 +7,25 @@
  */
 
 import { type Game, catalogPaths, gameStats, modeStats, numberFields, playerFields } from "../catalog.js";
+import { ARCADE } from "./arcade.js";
 import { BEDWARS } from "./bedwars.js";
 import { DUELS } from "./duels.js";
 
+export { ARCADE, DROPPER_DIFFICULTIES } from "./arcade.js";
 export { BEDWARS } from "./bedwars.js";
 export { DUELS } from "./duels.js";
 
 /** Every game in the catalog, by its `PlayerStats` key. */
-export const GAMES: Record<string, Game> = { bedwars: BEDWARS, duels: DUELS };
+export const GAMES: Record<string, Game> = { arcade: ARCADE, bedwars: BEDWARS, duels: DUELS };
 
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
+
+  /**
+   * Numbers the schema stores that the catalog leaves out on purpose. Zombies has no overall fastest win (each map has
+   * its own); #1012 drops the field from the schema.
+   */
+  const LEFT_OUT = new Set(["stats.arcade.zombies.overall.fastestWin"]);
 
   describe("the catalog", () => {
     for (const game of Object.values(GAMES)) {
@@ -34,6 +42,7 @@ if (import.meta.vitest) {
             // A deeper shape's stats are its own (`bridge.overall` below `bridge`), and a title's progression is the level's.
             const deeper = game.shapes.flatMap((shape) => shape.modes).filter((other) => other.startsWith(`${at}.`));
             const stored = numberFields(prefix)
+              .filter((path) => !LEFT_OUT.has(path))
               .filter((path) => !deeper.some((other) => path.startsWith(`stats.${game.key}.${other}.`)))
               .filter((path) => !path.startsWith(`${prefix}progression.`))
               .map((path) => path.slice(prefix.length));
@@ -62,7 +71,7 @@ if (import.meta.vitest) {
       it(`has an entry for every ${game.key} stat with a leaderboard`, () => {
         const described = new Set(catalogPaths(game));
         const ranked = numberFields(`stats.${game.key}.`).filter((path) => playerFields().get(path)?.leaderboard.enabled);
-        expect(ranked.filter((path) => !described.has(path))).toEqual([]);
+        expect(ranked.filter((path) => !described.has(path) && !LEFT_OUT.has(path))).toEqual([]);
       });
     }
   });

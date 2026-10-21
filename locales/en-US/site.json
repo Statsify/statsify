@@ -94,6 +94,7 @@
   },
   "game": {
     "stats": "Stats",
+    "wins": "Wins",
     "challenges": "Challenges",
     "mode": "Mode",
     "modes": "Modes",
@@ -111,8 +112,15 @@
       "games": "Games",
       "more": "More Stats",
       "titles": "Titles",
-      "bestTimes": "Best Times"
+      "bestTimes": "Best Times",
+      "bestScores": "Best Scores",
+      "completions": "Completions",
+      "weapons": "Weapons"
     }
+  },
+  "stats": {
+    "doorsOpened": "Doors Opened",
+    "swordKills": "Sword Kills"
   },
   "notFound": {
     "title": "OOPS!",

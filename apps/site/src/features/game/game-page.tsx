@@ -69,8 +69,8 @@ const sectionColumns = (rows: Stat[][]) =>
 const PHONE_TABS = 4;
 const DESKTOP_TABS = 10;
 
-/** The card's side-by-side boxes, in as many equal columns from `lg` up. */
-const BOX_COLUMNS = ["", "", "lg:grid-cols-2", "lg:grid-cols-3", "lg:grid-cols-4"];
+/** The card's side-by-side boxes, in as many equal columns from `lg` up; four go two by two, as the card draws them. */
+const BOX_COLUMNS = ["", "", "lg:grid-cols-2", "lg:grid-cols-3", "lg:grid-cols-2"];
 
 /**
  * A player's page for one game, in the order of the bot's card: nametag and title, level and progress, the stats for
@@ -89,6 +89,27 @@ export function GameView({ page }: { page: GamePage }) {
   // The first other table is the headline; the rest go beside it.
   const headline = page.sections.find(({ box, list }) => !box && !list);
   const tables = page.sections.filter((section) => section !== headline && !section.box && !section.list);
+
+  const boxPanels = boxes.length > 0 && (
+    <div key="boxes" className={cn("grid grid-cols-1 gap-2", BOX_COLUMNS[Math.min(boxes.length, BOX_COLUMNS.length - 1)])}>
+      {boxes.map((section, index) => (
+        <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
+      ))}
+    </div>
+  );
+
+  const headlinePanels = headline && (
+    <div key="headline" className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
+      <StatPanel section={headline} username={page.username} headline className={cn(tables.length === 0 && "lg:col-span-2")} />
+      {tables.length > 0 && (
+        <div className="flex flex-col gap-2">
+          {tables.map((section, index) => (
+            <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
 
   // Everything cached for this player predates the refresh: it reloads the next time it's shown.
   const refresh = async () => {
@@ -135,25 +156,7 @@ export function GameView({ page }: { page: GamePage }) {
         {page.modes.length > 1 && <ModeSwitcher page={page} />}
         {page.submodes.length > 1 && <ModeSwitcher page={page} submodes />}
         <p className="text-mc-1 text-mc-gray">{t("game.hint", { name: page.username })}</p>
-        {boxes.length > 0 && (
-          <div className={cn("grid grid-cols-1 gap-2", BOX_COLUMNS[Math.min(boxes.length, BOX_COLUMNS.length - 1)])}>
-            {boxes.map((section, index) => (
-              <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
-            ))}
-          </div>
-        )}
-        {headline && (
-          <div className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
-            <StatPanel section={headline} username={page.username} headline className={cn(tables.length === 0 && "lg:col-span-2")} />
-            {tables.length > 0 && (
-              <div className="flex flex-col gap-2">
-                {tables.map((section, index) => (
-                  <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        {page.sections[0]?.box ? [boxPanels, headlinePanels] : [headlinePanels, boxPanels]}
         {lists.map((section, index) => (
           <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
         ))}
@@ -247,8 +250,14 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
 function SectionTitle({ section }: { section: StatSection }) {
   const { t } = useTranslation();
   if (section.name) return <MinecraftText>{section.name}</MinecraftText>;
-  return section.title === null ? null : t(section.title, { ns: LABEL_NAMESPACES });
+  if (section.title === null) return null;
+  const { className, style } = colourOf(section.colour ?? "§f");
+  return <span className={className} style={style}>{t(section.title, { ns: LABEL_NAMESPACES })}</span>;
 }
+
+/** A heading over one of a panel's rows, between rules. */
+const ROW_HEADING =
+  "flex items-center gap-3 text-mc-1 text-mc-gray before:h-0.5 before:grow before:bg-white/10 after:h-0.5 after:grow after:bg-white/10";
 
 /**
  * A panel of stats in the card's rows, under the section's heading when it has one. A list (maps, challenges) is
@@ -273,11 +282,25 @@ export function StatPanel({
 
   if (section.list) {
     const cells = section.rows.flat();
-    const list = (
+    const lines = (cells: Stat[]) => (
       <dl className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {cells.map((cell) => <ListStat key={cell.key} cell={cell} username={username} plain={section.plain} />)}
       </dl>
     );
+    const { rowNames } = section;
+    // Under the card's own headings (Dropper's difficulties), a row at a time.
+    const list = rowNames ?
+      (
+        <div className="flex flex-col gap-4">
+          {section.rows.map((row, index) => (
+            <div key={index} className="flex flex-col gap-2">
+              <h3 className={ROW_HEADING}><MinecraftText>{rowNames[index]}</MinecraftText></h3>
+              {lines(row)}
+            </div>
+          ))}
+        </div>
+      ) :
+      lines(cells);
 
     if (!section.collapsed) return <Box className={className} title={heading}>{list}</Box>;
 

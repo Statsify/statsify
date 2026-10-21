@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ARCADE_PAGE } from "./arcade.js";
 import { BEDWARS_PAGE } from "./bedwars.js";
 import { DUELS_PAGE } from "./duels.js";
 import { type GameLayout, pageModes } from "./layout.js";
@@ -15,7 +16,7 @@ export { buildGamePage, pageModes } from "./layout.js";
 export type { GameLayout } from "./layout.js";
 
 /** The pages the site has, each at `/player/<name>/<its game's PlayerStats key>`. */
-export const GAME_PAGES: GameLayout[] = [BEDWARS_PAGE, DUELS_PAGE];
+export const GAME_PAGES: GameLayout[] = [ARCADE_PAGE, BEDWARS_PAGE, DUELS_PAGE];
 
 export const findGamePage = (segment: string): GameLayout | undefined =>
   GAME_PAGES.find((layout) => layout.game.key === segment);

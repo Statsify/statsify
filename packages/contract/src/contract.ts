@@ -218,8 +218,12 @@ export const StatSectionSchema = z.object({
   title: z.string().nullable(),
   /** The card's own Minecraft-formatted heading where it doesn't translate one, e.g. `§6Solo`. */
   name: z.string().optional(),
+  /** The card's colour for a translated heading, e.g. `§b` for Power-Up Activations; white otherwise. */
+  colour: z.string().optional(),
   /** The card's rows of cells. */
   rows: z.array(z.array(StatCellSchema)),
+  /** The card's own Minecraft-formatted heading over each row of a list, by index: Dropper's `§cHard` over its maps. */
+  rowNames: z.array(z.string()).optional(),
   /** One of the card's boxes drawn side by side (Overall, Solo, Doubles), shown in equal columns with the others. */
   box: z.boolean().optional(),
   /** Name and value lines in columns (maps, disasters, challenges) rather than table cells. */

@@ -489,6 +489,9 @@ function GameSection() {
         <Demo label="The card's own heading, in its colours">
           <StatPanel section={{ ...RESOURCES, name: "§6Solo" }} username={username} />
         </Demo>
+        <Demo label="A translated heading in the card's colour">
+          <StatPanel section={{ ...RESOURCES, colour: "§b" }} username={username} />
+        </Demo>
       </div>
       <Demo label="A list: the card's names, a time never set as N/A with no link">
         <StatPanel section={LIST_SECTION} username={username} />

@@ -31,8 +31,8 @@ export type CellSpec =
     icon?: string;
     /** A selection (kit, trail): a `Label: value` line. */
     inline?: boolean;
-    /** Shows the cell only when this allows it (a winstreak that isn't 0). */
-    when?: (cell: StatCell, stats: PlayerStats) => boolean;
+    /** Shows the cell only when this allows it (a winstreak that isn't 0), given the stored object the stat is in. */
+    when?: (cell: StatCell, stats: PlayerStats, parent: Record<string, unknown>) => boolean;
     /** Whether the player hides the stat from Hypixel's API (winstreaks): the cell says so and doesn't link. */
     hidden?: (stats: PlayerStats) => boolean;
   };
@@ -43,7 +43,11 @@ export interface SectionSpec {
   title?: string;
   /** The card's own heading where it doesn't translate one (`§6Solo`). */
   name?: string;
+  /** The card's colour for the translated `title`. */
+  colour?: ColourCode;
   rows?: CellSpec[][];
+  /** The card's own heading over each of a list's `rows`, by index (Dropper's §cHard, §eMedium and §aEasy). */
+  rowNames?: string[];
   /** Cells to order (`sort`) and group into rows (`ranks`); one row if neither is set. */
   cells?: CellSpec[];
   /** By value: most first, or least first with unset values last (fastest times). Ties keep the given order. */
@@ -193,7 +197,7 @@ function cells(player: Player, game: Game, place: string, specs: CellSpec[]) {
     const spec = specOf(entry);
     const stat = statAt(game, spec.at ?? place, spec.key);
     const built = cell(player, stat, spec);
-    return spec.when && !spec.when(built, player.stats) ? [] : [{ stat, cell: built }];
+    return spec.when && !spec.when(built, player.stats, parentOf(player, stat.path)) ? [] : [{ stat, cell: built }];
   });
 }
 
@@ -222,10 +226,16 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
     rows = (spec.rows ?? []).map((row) => cells(player, game, place, row).map(({ cell }) => cell));
   }
 
+  // A row whose cells all fell to their `when`s goes, and its heading with it.
+  const kept = rows.flatMap((row, index) => (row.length > 0 ? [index] : []));
+  const names = spec.rows && spec.rowNames;
+
   return {
     title: spec.title ?? null,
     ...(spec.name && { name: spec.name }),
-    rows: rows.filter((row) => row.length > 0),
+    ...(spec.colour && { colour: spec.colour }),
+    rows: kept.map((index) => rows[index]),
+    ...(names && { rowNames: kept.map((index) => names[index]) }),
     ...(spec.box && { box: true }),
     ...(spec.list && { list: true }),
     ...(spec.plain && { plain: true }),
