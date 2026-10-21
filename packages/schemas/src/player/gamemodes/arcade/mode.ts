@@ -1436,9 +1436,40 @@ export class ZombiesMap {
   }
 }
 
+// Zombies across every map. There's no fastest win here: Hypixel's fastest_time_30_zombies isn't
+// the fastest of the maps' wins, and each map's overall already has its own
+export class ZombiesOverall {
+  @Field({ historical: { enabled: false } })
+  public wins: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public kills: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public deaths: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public bestRound: number;
+
+  @Field()
+  public doorsOpened: number;
+
+  @Field()
+  public totalRounds: number;
+
+  public constructor(data: APIData) {
+    this.wins = data.wins_zombies;
+    this.kills = data.zombie_kills_zombies;
+    this.deaths = data.deaths_zombies;
+    this.bestRound = data.best_round_zombies;
+    this.doorsOpened = data.doors_opened_zombies;
+    this.totalRounds = data.total_rounds_survived_zombies;
+  }
+}
+
 export class Zombies {
   @Field()
-  public overall: ZombiesMapDifficulty;
+  public overall: ZombiesOverall;
 
   @Field()
   public deadEnd: ZombiesMap;
@@ -1453,7 +1484,7 @@ export class Zombies {
   public prison: ZombiesMap;
 
   public constructor(data: APIData) {
-    this.overall = new ZombiesMapDifficulty(data);
+    this.overall = new ZombiesOverall(data);
     this.deadEnd = new ZombiesMap(data, "deadend");
     this.badBlood = new ZombiesMap(data, "badblood");
 
