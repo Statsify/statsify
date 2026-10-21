@@ -7,7 +7,6 @@
   ],
   "labels": ["dependencies"],
   "schedule": ["before 12pm on Sunday"],
-  "cloneSubmodules": true,
   "npm": {
     "rangeStrategy": "bump",
     "packageRules": [
