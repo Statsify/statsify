@@ -49,6 +49,10 @@ export const render: JSX.Render<ImageRenderProps> = (
   { image, crop },
   { x, y, width, height }
 ) => {
+  // An image that couldn't be decoded has no size. skia-canvas used to draw
+  // nothing for it; since v4 drawing it throws and would fail the whole card.
+  if (!image.width || !image.height) return;
+
   if (!crop || crop === "none") {
     crop = [0, 0, image.width, image.height];
   } else if (crop === "height-crop") {
