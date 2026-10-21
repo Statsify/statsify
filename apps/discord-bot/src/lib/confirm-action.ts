@@ -22,18 +22,12 @@ import { Logger } from "@statsify/logger";
 const logger = new Logger("ConfirmAction");
 
 export interface ConfirmActionOptions {
-  /** The message to confirm, such as a warning or a preview. The buttons are added to it. */
   prompt: IMessage;
   confirmLabel: LocalizationString;
   confirmStyle?: ButtonStyle;
-  /** Runs only after the user who ran the command confirms. Returns the message that replaces the prompt. */
   onConfirm: () => Promise<IMessage>;
 }
 
-/**
- * Adds confirm and cancel buttons to a prompt. Only the user who ran the command can press them,
- * and they stop working after the first press or after 5 minutes.
- */
 export function confirmAction(
   context: CommandContext,
   { prompt, confirmLabel, confirmStyle = ButtonStyle.Success, onConfirm }: ConfirmActionOptions
