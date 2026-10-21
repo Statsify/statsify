@@ -28,7 +28,11 @@ export const GAME_CARDS = ["bedwars"] as const;
 
 export type GameCard = (typeof GAME_CARDS)[number];
 
-export const isGameCard = (game: string): game is GameCard => (GAME_CARDS as readonly string[]).includes(game);
+/** Modes the bot draws on a card of their own, outside this package, so they unfurl with the general card too. */
+const OWN_CARDS: Partial<Record<GameCard, string[]>> = { bedwars: ["challenges"] };
+
+export const isGameCard = (game: string, mode: string): game is GameCard =>
+  (GAME_CARDS as readonly string[]).includes(game) && !OWN_CARDS[game as GameCard]?.includes(mode);
 
 /**
  * A game card's unfurl size. The card's own size depends on what it shows (BedWars is 847 to 870 px wide with the

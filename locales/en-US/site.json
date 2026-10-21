@@ -94,6 +94,7 @@
   },
   "game": {
     "stats": "Stats",
+    "challenges": "Challenges",
     "mode": "Mode",
     "modes": "Modes",
     "submode": "Submode",

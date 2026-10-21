@@ -105,7 +105,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       modeName: titled.heading.mode ? plainText(titled.heading.mode) : undefined,
       updatedAt: page.updatedAt,
       // The unfurl's size: the game's card when the pool draws one for this mode, as `/og` picks it, else the general.
-      unfurl: imageSize(isGameCard(page.game.key) ? { card: page.game.key, mode: page.mode } : { card: "general" }, "og"),
+      unfurl: imageSize(isGameCard(page.game.key, page.mode) ? { card: page.game.key, mode: page.mode } : { card: "general" }, "og"),
     };
   },
   staleTime: 60_000,

@@ -29,6 +29,7 @@ export const pageSubmodes = (layout: GameLayout, mode: string): string[] | undef
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
   const { Player } = await import("@statsify/schemas");
+  const { catalogPaths, playerFields } = await import("@statsify/catalog");
   const { GamePageSchema } = await import("@statsify/contract");
   const { readFile } = await import("node:fs/promises");
   const { buildGamePage, levelProgression, pagesOf, shownPaths } = await import("./layout.js");
@@ -76,6 +77,21 @@ if (import.meta.vitest) {
           expect(() => GamePageSchema.parse({ ...page, games: [] }), mode).not.toThrow();
           expect(missingWords(page), `${mode} ${submode ?? ""}`).toEqual([]);
         }
+      });
+
+      // Every stat with a leaderboard is on a page, or left off with a reason (and then really left off). Hidden boards
+      // are reached through the level, and a field without a board only where the card shows it.
+      it(`${layout.game.key}: shows every stat with a leaderboard, except those it omits`, () => {
+        const shown = shownPaths(layout);
+        const omitted = Object.keys(layout.omit ?? {}).map((path) => `stats.${layout.game.key}.${path}`);
+        const paths = catalogPaths(layout.game);
+        const ranked = paths.filter((path) => {
+          const { leaderboard } = playerFields().get(path)!;
+          return leaderboard.enabled && !leaderboard.hidden;
+        });
+
+        expect(ranked.filter((path) => !shown.has(path) && !omitted.includes(path))).toEqual([]);
+        expect(omitted.filter((path) => shown.has(path) || !paths.includes(path))).toEqual([]);
       });
     }
   });

@@ -331,7 +331,7 @@ async function gameCard(uuid: string, { game, mode }: GameImage): Promise<CardCh
     throw error;
   });
 
-  return isGameCard(page.game.key) ? { card: page.game.key, mode: page.mode } : { card: "general" };
+  return isGameCard(page.game.key, page.mode) ? { card: page.game.key, mode: page.mode } : { card: "general" };
 }
 
 /** One of the bot's cards for a stored player, as PNG bytes. Throws `PoolBusyError` when the queue is full. */
