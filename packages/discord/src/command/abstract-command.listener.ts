@@ -141,13 +141,11 @@ export abstract class AbstractCommandListener {
       if (typeof response !== "object") return;
       transaction?.finish();
 
-      // Tips only go on public replies that worked
       const tip = response instanceof ErrorMessage || response?.ephemeral ? undefined : message;
 
       context.reply({
         ...tip,
         ...response,
-        // Message instances (like paged replies) carry content: undefined, which would overwrite the tip
         content: response?.content ?? tip?.content,
       });
     } catch (err) {
