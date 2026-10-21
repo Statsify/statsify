@@ -16,6 +16,9 @@ export class Skin {
   @Field()
   public username: string;
 
+  @Field({ mongo: { index: true, lowercase: true } })
+  public usernameToLower: string;
+
   @Field()
   public skinUrl: string;
 
@@ -31,6 +34,7 @@ export class Skin {
   public constructor(data: APIData) {
     this.uuid = data.id;
     this.username = data.name;
+    this.usernameToLower = this.username?.toLowerCase();
 
     const property = data.properties.find((prop: any) => prop.name === "textures");
     const { textures } = JSON.parse(Buffer.from(property.value, "base64").toString());

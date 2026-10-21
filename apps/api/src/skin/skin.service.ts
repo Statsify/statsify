@@ -59,6 +59,8 @@ export class SkinService {
       .findOne()
       .where(isUsername ? "usernameToLower" : "uuid")
       .equals(tag)
+      // A name can be on more than one skin after a rename, so take the most recently refreshed
+      .sort({ expiresAt: -1 })
       .lean()
       .exec();
 
@@ -69,7 +71,8 @@ export class SkinService {
     const uuid = isUsername ? await this.getUuid(tag) : tag;
 
     const skin = await this.requestSkin(uuid).catch((error) => {
-      if (cachedSkin) return cachedSkin;
+      // A skin found by name may belong to whoever had the name before
+      if (cachedSkin?.uuid === uuid) return cachedSkin;
       throw error;
     });
 
