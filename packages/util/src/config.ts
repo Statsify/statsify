@@ -309,7 +309,6 @@ export const config = async <T extends keyof FlatConfig>(
 
   const value = (key as string).split(".").reduce((a: any, b) => a?.[b], cfg);
 
-  // 0 and false are real values, so only treat missing or empty values as unset
   const isValueDefined = value !== undefined && value !== null && value !== "";
 
   if (!isValueDefined) {
