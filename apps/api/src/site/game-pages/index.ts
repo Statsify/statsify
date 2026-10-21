@@ -55,9 +55,9 @@ if (import.meta.vitest) {
     const cells = [...page.overview, ...page.sections.flatMap(({ rows }) => rows.flat())];
     const words = [
       page.heading.word,
-      ...page.sections.map(({ title }) => title),
+      ...page.sections.flatMap(({ title, rowTitles }) => [title, ...(rowTitles ?? [])]),
       // A cell with the card's own name never shows its label.
-      ...cells.map(({ label, name }) => (name === undefined ? label : null)),
+      ...cells.flatMap(({ label, short, name }) => [name === undefined ? label : null, short]),
     ].filter((key): key is string => typeof key === "string");
     const level = page.level ? [page.level.label, page.level.progress] : [];
     return [...words.filter((key) => !bot.has(key) && !site.has(key)), ...level.filter((key) => !bot.has(key))];
@@ -69,6 +69,21 @@ if (import.meta.vitest) {
       expect(levelProgression({ current: 5, max: 0, percent: 0 })).toEqual({ current: 5, percent: 1 });
       expect(levelProgression({ current: 5, percent: 0.5 })).toEqual({ current: 5, percent: 1 });
       expect(levelProgression({ current: Number.NaN, max: 10, percent: Number.NaN })).toEqual({ current: 0, max: 10, percent: 0 });
+    });
+
+    it("marks no mode when nothing was played, the first of a tie, and a mode by where it's stored", () => {
+      const player = new Player({ uuid: "0", displayname: "test" });
+      const marked = () => buildGamePage(player, DUELS_PAGE, "overall").modes.find(({ mostPlayed }) => mostPlayed);
+      expect(marked()).toBeUndefined();
+      player.stats.duels.sumo.wins = 3;
+      player.stats.duels.bow.losses = 3;
+      expect(marked()).toMatchObject({ key: "bow", mostPlayed: "winsLosses" });
+      // Bridge is weighed at `bridge.overall`, and Spleef, which has no Overall, by its two submodes added up.
+      player.stats.duels.bridge.overall.wins = 4;
+      expect(marked()?.key).toBe("bridge");
+      player.stats.duels.spleef.spleef.wins = 3;
+      player.stats.duels.spleef.bowSpleef.losses = 2;
+      expect(marked()?.key).toBe("spleef");
     });
 
     for (const layout of GAME_PAGES) {

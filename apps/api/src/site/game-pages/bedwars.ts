@@ -38,16 +38,19 @@ export const BEDWARS_PAGE: GameLayout = {
     read: ({ bedwars }) => formattedLevel(bedwars),
   },
   overview: ["tokens", { key: "slumber.tickets", when: hasWallet }, { key: "slumber.totalTickets", when: hasWallet }],
+  // Core adds up Solo, Doubles, Threes and Fours, so it never counts as the mode played most.
+  mostPlayed: { skip: ["core"] },
   page: (mode) => mode === "challenges" ? CHALLENGES : ({
     sections: [
-      // The card's table: rows of a count, its opposite and their ratio.
+      // The card's table: rows of a count, its opposite and their ratio, the kills rows under Final and Normal.
       {
         rows: [
           ["wins", "losses", "wlr"],
-          ["finalKills", "finalDeaths", "fkdr"],
+          [{ key: "finalKills", short: "stats.kills" }, { key: "finalDeaths", short: "stats.deaths" }, "fkdr"],
           ["kills", "deaths", "kdr"],
           ["bedsBroken", "bedsLost", "bblr"],
         ],
+        rowTitles: [null, "game.table.final", "game.table.normal", null],
       },
       {
         title: "game.sections.resources",

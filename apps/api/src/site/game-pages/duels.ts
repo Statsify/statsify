@@ -115,6 +115,15 @@ export const DUELS_PAGE: GameLayout = {
   }),
   overview: ["tokens", "pingRange", { key: "blocksPlaced", at: "overall" }],
   page,
+  // A mode with submodes is weighed at its Overall (Bridge at `bridge.overall`), or by its submodes added up where it has
+  // none (Spleef's two).
+  mostPlayed: {
+    place: (mode) => {
+      if (shapeAt(DUELS, `${mode}.overall`)) return `${mode}.overall`;
+      const submodes = submodesOf(mode).map(({ key }) => `${mode}.${key}`);
+      return submodes.length > 0 ? submodes : mode;
+    },
+  },
   omit: {
     "uhc.gapplesEaten": "Its sum reads uhc_meetu_golden_apples_eaten, probably a typo for uhc_meetup_, so it may miss UHC Deathmatch's.",
     ...Object.fromEntries(

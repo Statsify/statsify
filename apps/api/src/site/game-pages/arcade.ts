@@ -254,4 +254,10 @@ export const ARCADE_PAGE: GameLayout = {
     if (mode === "zombies") return zombies(submode ?? "overall");
     return PAGES[mode];
   },
+  // By wins, which most of its games store, where Overall's list reads them; Seasonal's four games added up, since its
+  // own total is `totalWins`.
+  mostPlayed: {
+    by: "wins",
+    place: (mode) => (mode === "seasonal" ? SEASONAL.map(([place]) => place) : MODE_WINS.find(([key]) => key === mode)?.[1] ?? mode),
+  },
 };

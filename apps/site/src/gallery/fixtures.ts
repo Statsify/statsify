@@ -149,7 +149,8 @@ export const GAME_PAGE: GamePage = {
   displayName: "§b[MVP§c+§b] anrie",
   game: { key: "bedwars", id: "BEDWARS", name: "§cBed§fWars§f" },
   heading: { word: "game.stats", mode: "Overall" },
-  modes: BEDWARS_MODES.map(([key, name]) => ({ key, name })),
+  // Fours played most, by games played.
+  modes: BEDWARS_MODES.map(([key, name]) => ({ key, name, ...(key === "fours" && { mostPlayed: "gamesPlayed" as const }) })),
   mode: "overall",
   submodes: [],
   submode: null,
@@ -168,10 +169,15 @@ export const GAME_PAGE: GamePage = {
       title: null,
       rows: [
         [bedwars("wins", 3_325, "§a"), bedwars("losses", 1_207, "§c"), bedwars("wlr", 2.75, "§6")],
-        [bedwars("finalKills", 6_980, "§a"), bedwars("finalDeaths", 1_520, "§c"), bedwars("fkdr", 4.59, "§6")],
+        [
+          { ...bedwars("finalKills", 6_980, "§a"), short: "stats.kills" },
+          { ...bedwars("finalDeaths", 1_520, "§c"), short: "stats.deaths" },
+          bedwars("fkdr", 4.59, "§6"),
+        ],
         [bedwars("kills", 12_345, "§a"), bedwars("deaths", 9_876, "§c"), bedwars("kdr", 1.25, "§6")],
         [bedwars("bedsBroken", 2_945, "§a"), bedwars("bedsLost", 1_100, "§c"), bedwars("bblr", 2.68, "§6")],
       ],
+      rowTitles: [null, "game.table.final", "game.table.normal", null],
     },
     {
       title: "game.sections.resources",

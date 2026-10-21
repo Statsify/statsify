@@ -119,6 +119,25 @@
       "completions": "Completions",
       "kit": "Kit",
       "weapons": "Weapons"
+    },
+    "table": {
+      "normal": "Normal",
+      "final": "Final"
+    },
+    "mostPlayed": {
+      "option": "{{name}} (most played)",
+      "optionSelected": "{{name}} (selected, most played)",
+      "mark": "(most played)",
+      "line": "Most played",
+      "gamesPlayed": "Most played, by games played",
+      "winsLosses": "Most played, by wins and losses"
+    },
+    "mostWins": {
+      "option": "{{name}} (most wins)",
+      "optionSelected": "{{name}} (selected, most wins)",
+      "mark": "(most wins)",
+      "line": "Most wins",
+      "wins": "Most wins"
     }
   },
   "filter": {

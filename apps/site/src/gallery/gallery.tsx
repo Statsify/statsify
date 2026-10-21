@@ -454,10 +454,10 @@ function GameSection() {
           <StatPanel section={{ title: null, rows: [[TOKENS]] }} username={username} />
         </Demo>
       </div>
-      <Demo label="16 modes: past 10, a select at every width">
+      <Demo label="16 modes: past 10, a select at every width, Fours marked as the mode played most">
         <ModeSwitcher page={GAME_PAGE} />
       </Demo>
-      <Demo label="7 modes: a select on phones, links from md up">
+      <Demo label="7 modes: a select on phones, links from md up, Fours marked by a gold square">
         <ModeSwitcher page={SEVEN_MODES} />
       </Demo>
       <Demo label="7 modes: another mode, the first hovered" force="hover">
@@ -473,7 +473,7 @@ function GameSection() {
       <Demo label="45 modes: a select at every width, the player's kit marked">
         <ModeSwitcher page={{ ...GAME_PAGE, modes: MANY_MODES }} />
       </Demo>
-      <Demo label="Headline table: every stat opens its leaderboard at the player (the first hovered)" force="hover">
+      <Demo label="Headline table: Final and Normal over the kills rows, every stat opens its leaderboard at the player (the first hovered)" force="hover">
         <StatPanel section={HEADLINE} username={username} headline />
       </Demo>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

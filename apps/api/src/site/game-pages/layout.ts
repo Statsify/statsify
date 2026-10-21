@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ColourCode, type Game, type Stat, modeName, statAt } from "@statsify/catalog";
+import { type ColourCode, type Game, type Stat, modeName, shapeKeys, statAt } from "@statsify/catalog";
 import { FormattedGame, type Player, type PlayerStats } from "@statsify/schemas";
 import { PLAYER_COOLDOWN_MS } from "../cooldown.js";
 import { arrayGroup } from "@statsify/util";
@@ -25,6 +25,8 @@ export type CellSpec =
     colour?: ColourCode;
     /** The page's heading for the stat, in place of the catalog's label or name. */
     label?: string;
+    /** A shorter heading under the row's title, where the title says the rest (`stats.kills` under Final). */
+    short?: string;
     name?: string | ((stats: PlayerStats) => string);
     params?: Record<string, string>;
     /** A `GameId` whose icon goes before the name. */
@@ -46,6 +48,8 @@ export interface SectionSpec {
   /** The card's colour for the translated `title`. */
   colour?: ColourCode;
   rows?: CellSpec[][];
+  /** A `site.json` heading over each of `rows`, by index, or null for none (BedWars' Final and Normal). */
+  rowTitles?: (string | null)[];
   /** The card's own heading over each of a list's `rows`, by index (Dropper's §cHard, §eMedium and §aEasy). */
   rowNames?: string[];
   /** Cells to order (`sort`) and group into rows (`ranks`); one row if neither is set. */
@@ -128,12 +132,35 @@ export interface PageSpec {
   sections: SectionSpec[];
 }
 
+/**
+ * Which modes the switcher weighs for the one the player has played most. Overall and the other modes that add up
+ * others never count, nor does a mode that stores none of games played, wins and losses, or wins.
+ */
+export interface MostPlayedSpec {
+  /** Modes besides Overall that add up others (BedWars' Core). */
+  skip?: string[];
+  /** The modes that compete, where only some of the rest do; every mode not skipped by default. */
+  among?: string[];
+  /**
+   * Where a mode stores its stats, when not at the mode itself (Duels' Bridge at `bridge.overall`), or the places it adds
+   * up (Duels' Spleef, at `spleef.spleef` and `spleef.bowSpleef`).
+   */
+  place?: (mode: string) => string | string[];
+  /**
+   * The count to weigh by, where the usual order would pick one that only a few modes store (Arcade counts wins, since
+   * only three of its games count games played).
+   */
+  by?: Counted;
+}
+
 /** A mode the site offers, and the second switcher it gets when its submodes split its games. */
 export interface ModeSpec {
   key: string;
   submodes?: { key: string; name: string }[];
   /** The submode of the class the player has selected, where the submodes are classes (TNT's Wizards). */
   selected?: (stats: PlayerStats) => string | undefined;
+  /** Marks the submode the player has played most, weighed as a game's modes are, each at `<mode>.<submode>` by default. */
+  mostPlayed?: MostPlayedSpec;
 }
 
 /**
@@ -154,6 +181,8 @@ export interface GameLayout {
   /** Game-wide stats and selections, game stats unless `at` says otherwise. */
   overview: CellSpec[];
   page: (mode: string, submode: string | undefined) => PageSpec;
+  /** Marks the mode the player has played most in the switcher. */
+  mostPlayed?: MostPlayedSpec;
   /**
    * Stats with a leaderboard the pages leave out, by path below the game, each with why: the site shows every other one
    * (a test checks), and leaves a stat off while its stored value is wrong.
@@ -196,6 +225,7 @@ function cell(player: Player, stat: Stat, spec: Spec): StatCell {
   return {
     key: stat.path.slice(stat.path.indexOf(".", "stats.".length) + 1),
     label: spec.label ?? stat.label,
+    ...(spec.short && { short: spec.short }),
     ...(name !== undefined && { name }),
     ...(spec.params && { params: spec.params }),
     value: hidden ? "§7Hidden" : value,
@@ -248,6 +278,7 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
 
   // A row whose cells all fell to their `when`s goes, and its heading with it.
   const kept = rows.flatMap((row, index) => (row.length > 0 ? [index] : []));
+  const titles = spec.rows && spec.rowTitles;
   const names = spec.rows && spec.rowNames;
 
   return {
@@ -255,6 +286,7 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
     ...(spec.name && { name: spec.name }),
     ...(spec.colour && { colour: spec.colour }),
     rows: kept.map((index) => rows[index]),
+    ...(titles && { rowTitles: kept.map((index) => titles[index] ?? null) }),
     ...(names && { rowNames: kept.map((index) => names[index]) }),
     ...(spec.box && { box: true }),
     ...(spec.list && { list: true }),
@@ -262,6 +294,43 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
     ...(spec.collapsed && { collapsed: true }),
     ...(spec.search && { search: true }),
   };
+}
+
+type Counted = NonNullable<GamePage["modes"][number]["mostPlayed"]>;
+
+/** What each way of counting adds up, in the order a game's modes are weighed by. */
+const COUNTS: [by: Counted, keys: string[]][] = [
+  ["gamesPlayed", ["gamesPlayed"]],
+  ["winsLosses", ["wins", "losses"]],
+  ["wins", ["wins"]],
+];
+
+/**
+ * The mode (or a mode's submode) the player has played most, counted the first way any competing one stores (games
+ * played, else wins and losses, else wins alone) unless the game names one, so each is weighed by the same count and
+ * one that doesn't store it counts 0. A tie goes to the first, and nothing played marks nothing.
+ */
+function mostPlayed(player: Player, game: Game, modes: { key: string }[], spec: MostPlayedSpec) {
+  const skip = ["overall", ...(spec.skip ?? [])];
+  const competing = modes.map(({ key }) => key).filter((mode) => !skip.includes(mode) && (spec.among?.includes(mode) ?? true));
+  const places = (mode: string) => [spec.place?.(mode) ?? mode].flat();
+  const stores = (place: string, keys: string[]) => keys.every((key) => shapeKeys(game, place).includes(key));
+  const count = COUNTS.find(([by, keys]) =>
+    spec.by ? by === spec.by : competing.some((mode) => places(mode).some((place) => stores(place, keys))));
+  if (!count) return;
+
+  const [by, keys] = count;
+  let most: { mode: string; played: number } | undefined;
+
+  for (const mode of competing) {
+    let played = 0;
+    for (const place of places(mode).filter((place) => stores(place, keys))) {
+      for (const key of keys) played += numberOf(player, statAt(game, place, key));
+    }
+    if (played > (most?.played ?? 0)) most = { mode, played };
+  }
+
+  return most && { mode: most.mode, by };
 }
 
 type Progression = NonNullable<GamePage["level"]>["progression"];
@@ -308,6 +377,8 @@ export function buildGamePage(player: Player, layout: GameLayout, mode: string, 
   const selected = layout.selected?.(player.stats);
   const selectedSub = modeSpec.selected?.(player.stats);
   const levelSpec = page.level === undefined ? layout.level : page.level;
+  const most = layout.mostPlayed && mostPlayed(player, game, modes, layout.mostPlayed);
+  const subMost = modeSpec.mostPlayed && mostPlayed(player, game, submodes, { place: (key) => `${mode}.${key}`, ...modeSpec.mostPlayed });
 
   return {
     uuid: player.uuid,
@@ -320,9 +391,18 @@ export function buildGamePage(player: Player, layout: GameLayout, mode: string, 
       mode: modes.length > 1 ? `${name(mode)}${sub ? ` ${submodes.find(({ key }) => key === sub)?.name}` : ""}` : null,
       ...page.heading,
     },
-    modes: modes.map(({ key }) => ({ key, name: name(key), ...(key === selected && { selected: true }) })),
+    modes: modes.map(({ key }) => ({
+      key,
+      name: name(key),
+      ...(key === selected && { selected: true }),
+      ...(key === most?.mode && { mostPlayed: most.by }),
+    })),
     mode,
-    submodes: submodes.map((submode) => ({ ...submode, ...(submode.key === selectedSub && { selected: true }) })),
+    submodes: submodes.map((submode) => ({
+      ...submode,
+      ...(submode.key === selectedSub && { selected: true }),
+      ...(submode.key === subMost?.mode && { mostPlayed: subMost.by }),
+    })),
     submode: sub ?? null,
     level: levelSpec ? level(player, game, levelSpec) : null,
     overview: cells(player, game, "", page.overview ?? layout.overview).map(({ cell }) => cell),

@@ -13,7 +13,7 @@ import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode, useId, useState } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { InlineStat, STAT_LINK, StatCell } from "~/components/ui/stat";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { MinecraftText, colourOf, leadingColourClass } from "~/components/ui/minecraft-text";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
@@ -356,8 +356,8 @@ export function StatPanel({
   return (
     <Box className={className} title={heading}>
       <div className="flex flex-col gap-4">
-        {section.rows.map((row, index) =>
-          row.every((cell) => cell.inline) ?
+        {section.rows.map((row, index) => {
+          const cells = row.every((cell) => cell.inline) ?
             (
               <dl key={index} className="flex flex-col gap-2">
                 {row.map((cell) => <SelectionStat key={cell.key} cell={cell} />)}
@@ -367,7 +367,20 @@ export function StatPanel({
               <dl key={index} className={cn("grid gap-x-2 gap-y-4", columnsOf(sectionColumns(section.rows), headline))}>
                 {row.map((cell) => <GameStat key={cell.key} cell={cell} username={username} />)}
               </dl>
-            ))}
+            );
+          const title = section.rowTitles?.[index];
+
+          // A row under a heading (Final, Normal) whose cells drop the word it says; rules either side show it spans the
+          // row, not the middle cell.
+          return title ?
+            (
+              <div key={index} className="flex flex-col gap-2">
+                <h3 className={ROW_HEADING}>{t(title)}</h3>
+                {cells}
+              </div>
+            ) :
+            cells;
+        })}
       </div>
     </Box>
   );
@@ -410,13 +423,15 @@ function useStatValue(cell: Stat): ReactNode {
  * §7 like the card, at the label's size so the pair fits a phone's cell.
  */
 function GameStat({ cell, username }: { cell: Stat; username: string }) {
+  const { t } = useTranslation();
   const label = useStatLabel(cell);
   const value = useStatValue(cell);
   const { className, style } = colourOf(cell.colour);
 
   return (
     <StatCell
-      label={label.node}
+      // The short label shows under the row's heading; the link keeps the whole name.
+      label={cell.short ? t(cell.short, { ns: LABEL_NAMESPACES }) : label.node}
       value={cell.leaderboard ? <LeaderboardLink field={cell.leaderboard} username={username} stat={label.text}>{value}</LeaderboardLink> : value}
       color={className}
       style={style}
@@ -478,16 +493,23 @@ export function LeaderboardLink({
   );
 }
 
+/** The mark's words in `site.json`: "most played", or "most wins" where the game counts wins alone. */
+const markWords = (counted: NonNullable<GamePage["modes"][number]["mostPlayed"]>) =>
+  counted === "wins" ? "game.mostWins" : "game.mostPlayed";
+
 /**
  * The mode switcher, or the submode one: tabs, as joined segments on phones and links from `md` up, or a native select,
  * by how many there are (`PHONE_TABS`, `DESKTOP_TABS`). Both keep the scroll position, and every target is 44 px tall.
- * The player's kit is marked.
+ * The player's kit or class is marked, and so is the mode they've played most: in a select's options by its words, on a tab by a
+ * gold square, with the words for screen readers and what counted on hover, and a line under the tabs saying what the
+ * square means. The words say "most wins" where the game counts wins alone.
  */
 export function ModeSwitcher({ page, submodes = false }: { page: GamePage; submodes?: boolean }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const router = useRouter();
   const id = useId();
-  const options: { key: string; name: string; selected?: boolean }[] = submodes ? page.submodes : page.modes;
+  const options: GamePage["modes"] = submodes ? page.submodes : page.modes;
   const current = submodes ? page.submode : page.mode;
   const mode = modeSearch(page, page.mode);
   // A new mode starts on its first submode.
@@ -496,6 +518,26 @@ export function ModeSwitcher({ page, submodes = false }: { page: GamePage; submo
   const name = (option: (typeof options)[number]) => (option.selected ? t("game.selected", { name: option.name }) : option.name);
   const phoneTabs = options.length <= PHONE_TABS;
   const desktopTabs = options.length <= DESKTOP_TABS;
+  const marked = options.find((option) => option.mostPlayed)?.mostPlayed;
+  // One select stays mounted, so a pick keeps its focus: it shows the pick while that page loads, then whatever page is
+  // current (the pick's, or one Back went to).
+  const [pick, setPick] = useState(current);
+  const [shown, setShown] = useState(current);
+  if (shown !== current) {
+    setShown(current);
+    setPick(current);
+  }
+  const to = (key: string) => ({
+    to: "/{-$locale}/player/$name/$game" as const,
+    params: { name: page.username, game: page.game.key },
+    search: search(key),
+  });
+  // The picker stays open a moment, so the likely picks load meanwhile: the mode played most, and the first.
+  const preload = () => {
+    for (const option of new Set([options.find((option) => option.mostPlayed), options[0]])) {
+      if (option && option.key !== current) void router.preloadRoute(to(option.key));
+    }
+  };
 
   return (
     <nav aria-label={t(submodes ? "game.submodes" : "game.modes")}>
@@ -506,23 +548,24 @@ export function ModeSwitcher({ page, submodes = false }: { page: GamePage; submo
           {submodes && mode !== undefined && <input type="hidden" name="mode" value={mode} />}
           <label htmlFor={id} className="shrink-0 text-mc-1 text-mc-gray">{t(submodes ? "game.submode" : "game.mode")}</label>
           <div className="relative min-w-0 grow md:max-w-sm">
-            {/* Uncontrolled, so the new choice shows while its page loads; a new page remounts it. */}
             <select
-              key={current}
               id={id}
               name={submodes ? "submode" : "mode"}
-              defaultValue={current ?? undefined}
-              onChange={(event) =>
-                void navigate({
-                  to: "/{-$locale}/player/$name/$game",
-                  params: { name: page.username, game: page.game.key },
-                  search: search(event.target.value),
-                  resetScroll: false,
-                })}
+              value={pick ?? undefined}
+              onFocus={preload}
+              onPointerDown={preload}
+              onChange={(event) => {
+                setPick(event.target.value);
+                void navigate({ ...to(event.target.value), resetScroll: false });
+              }}
               className="h-11 w-full min-w-0 appearance-none truncate bg-blackify-800 ps-3 pe-10 text-mc-1.5 text-white -outline-offset-2 focus-visible:outline-2 focus-visible:outline-white/60"
             >
               {options.map((option) => (
-                <option key={option.key} value={option.key}>{name(option)}</option>
+                <option key={option.key} value={option.key}>
+                  {option.mostPlayed ?
+                    t(`${markWords(option.mostPlayed)}.${option.selected ? "optionSelected" : "option"}`, { name: option.name }) :
+                    name(option)}
+                </option>
               ))}
             </select>
             <Chevron className="pointer-events-none absolute end-2 top-1/2 size-6 -translate-y-1/2 rotate-90 text-mc-gray" />
@@ -548,21 +591,30 @@ export function ModeSwitcher({ page, submodes = false }: { page: GamePage; submo
           {options.map((option) => (
             <li key={option.key} className="min-w-0">
               <Link
-                to="/{-$locale}/player/$name/$game"
-                params={{ name: page.username, game: page.game.key }}
-                search={search(option.key)}
+                {...to(option.key)}
                 resetScroll={false}
                 activeOptions={{ exact: true, includeSearch: true }}
+                title={option.mostPlayed && t(`${markWords(option.mostPlayed)}.${option.mostPlayed}`)}
                 // A column, so the box grows and segments in one row are the same height when a name wraps.
                 className="group flex h-full flex-col outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60"
               >
                 <Box className="grow text-mc-white/60 group-hover:text-mc-white group-aria-[current=page]:font-bold group-aria-[current=page]:text-mc-white content:flex content:min-h-11 content:items-center content:justify-center content:gap-2 content:px-2 content:py-1 content:text-center content:text-mc-1 content:text-balance md:content:justify-start md:content:px-3 md:content:py-0 md:content:text-start">
+                  {option.mostPlayed && <span aria-hidden className="size-2 shrink-0 bg-mc-gold forced-color-adjust-none" />}
                   <span className="min-w-0 wrap-break-word">{name(option)}</span>
+                  {option.mostPlayed && <span className="sr-only"> {t(`${markWords(option.mostPlayed)}.mark`)}</span>}
                 </Box>
               </Link>
             </li>
           ))}
         </ul>
+      )}
+      {/* What the gold square means, wherever the tabs show it; a select's option says it in words. Each marked tab
+          has the words for screen readers. */}
+      {marked && desktopTabs && (
+        <p aria-hidden className={cn("mt-2 flex items-center gap-2 text-mc-1 text-mc-gray", !phoneTabs && "hidden md:flex")}>
+          <span className="size-2 shrink-0 bg-mc-gold forced-color-adjust-none" />
+          {t(`${markWords(marked)}.line`)}
+        </p>
       )}
     </nav>
   );

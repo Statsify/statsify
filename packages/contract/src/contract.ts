@@ -192,6 +192,11 @@ export const StatCellSchema = z.object({
    * site's own in `site.json` for a stat the bot doesn't show.
    */
   label: z.string(),
+  /**
+   * A shorter `stats.*` label shown under its row's heading, where the heading says the rest (Kills under Final);
+   * `label` stays the whole name, for the leaderboard link.
+   */
+  short: z.string().optional(),
   /** The card's own title where it doesn't translate one (a map's or a challenge's name), Minecraft-formatted. */
   name: z.string().optional(),
   /** Values for the label's placeholders, e.g. `{ game: "Arcade" }` for "{{game}} Total". */
@@ -222,6 +227,8 @@ export const StatSectionSchema = z.object({
   colour: z.string().optional(),
   /** The card's rows of cells. */
   rows: z.array(z.array(StatCellSchema)),
+  /** A `site.json` heading over each row, by index, or null for none: BedWars' Final and Normal over its kills rows. */
+  rowTitles: z.array(z.string().nullable()).optional(),
   /** The card's own Minecraft-formatted heading over each row of a list, by index: Dropper's `§cHard` over its maps. */
   rowNames: z.array(z.string()).optional(),
   /** One of the card's boxes drawn side by side (Overall, Solo, Doubles), shown in equal columns with the others. */
@@ -234,6 +241,19 @@ export const StatSectionSchema = z.object({
   collapsed: z.boolean().optional(),
   /** A long list the page's filter box searches by name; one box serves every such list on the page. */
   search: z.boolean().optional(),
+});
+
+/**
+ * A mode or submode a switcher offers. `selected` marks the player's kit or class. `mostPlayed` marks the one the player
+ * has played most, saying what counted: games played, else wins and losses, else wins alone, the first of those the
+ * competing ones store (`wins` reads "most wins" on the page). Those that add up others (Overall, BedWars' Core) never
+ * count, a tie goes to the first, and none is marked when nothing was played.
+ */
+const ModeOptionSchema = z.object({
+  key: z.string(),
+  name: z.string(),
+  selected: z.boolean().optional(),
+  mostPlayed: z.enum(["gamesPlayed", "winsLosses", "wins"]).optional(),
 });
 
 export const GamePageSchema = z.object({
@@ -251,15 +271,15 @@ export const GamePageSchema = z.object({
    * mode as the card names it (`Bridge Doubles`, Minecraft-formatted), or null on a game with one mode.
    */
   heading: z.object({ word: z.string().nullable(), mode: z.string().nullable() }),
-  /** The modes the page offers, in order; the first is the default and has no `?mode=`. `selected` marks the player's kit. */
-  modes: z.array(z.object({ key: z.string(), name: z.string(), selected: z.boolean().optional() })),
+  /** The modes the page offers, in order; the first is the default and has no `?mode=`. */
+  modes: z.array(ModeOptionSchema),
   /** The mode shown. */
   mode: z.string(),
   /**
    * The mode's submodes, where they split its games (Duels' Bridge); the first is the default and has no `&submode=`.
-   * `selected` marks the player's class where the submodes are classes (TNT's Wizards), as on a mode.
+   * Marked as modes are, among the submodes, where they're classes (TNT's Wizards).
    */
-  submodes: z.array(z.object({ key: z.string(), name: z.string(), selected: z.boolean().optional() })),
+  submodes: z.array(ModeOptionSchema),
   /** The submode shown, or null for a mode without submodes. */
   submode: z.string().nullable(),
   /**

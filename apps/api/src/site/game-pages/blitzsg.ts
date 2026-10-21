@@ -46,5 +46,6 @@ export const BLITZSG_PAGE: GameLayout = {
     read: ({ blitzsg }) => prefixLevel(blitzsg),
   },
   overview: ["coins", { key: "kit", inline: true }],
+  mostPlayed: {},
   page: (mode) => (mode === "overall" ? OVERALL : kit(mode)),
 };
