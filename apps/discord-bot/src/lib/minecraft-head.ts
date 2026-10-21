@@ -7,7 +7,7 @@
  */
 
 import type { ApiService, InteractionAttachment } from "@statsify/discord";
-import { createCanvas } from "@statsify/rendering";
+import { createCanvas, toPng } from "@statsify/rendering";
 
 export async function minecraftHeadAttachment(
   apiService: ApiService,
@@ -22,7 +22,7 @@ export async function minecraftHeadAttachment(
 
   return {
     name: `${uuid}.png`,
-    data: await canvas.toBuffer("png"),
+    data: await toPng(canvas),
     type: "image/png",
   };
 }

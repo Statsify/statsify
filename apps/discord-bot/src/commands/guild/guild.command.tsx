@@ -25,7 +25,7 @@ import { GuildQuery } from "@statsify/api-client";
 import { GuildTopSubCommand } from "./guild-top.subcommand.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
-import { render } from "@statsify/rendering";
+import { render, toPng } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.guild") })
 export class GuildCommand extends GuildTopSubCommand {
@@ -109,7 +109,7 @@ export class GuildCommand extends GuildTopSubCommand {
     };
 
     const canvas = render(<GuildListProfile {...props} />, getTheme(user));
-    const buffer = await canvas.toBuffer("png");
+    const buffer = await toPng(canvas);
 
     return {
       files: [{ name: "guild-list.png", data: buffer, type: "image/png" }],
@@ -149,7 +149,7 @@ export class GuildCommand extends GuildTopSubCommand {
       getTheme(user)
     );
 
-    const buffer = await canvas.toBuffer("png");
+    const buffer = await toPng(canvas);
 
     return {
       files: [{ name: "guild-member.png", data: buffer, type: "image/png" }],

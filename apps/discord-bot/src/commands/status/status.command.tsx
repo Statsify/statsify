@@ -17,7 +17,7 @@ import { StatusProfile } from "./status.profile.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { mapGameIdToBackground } from "#constants";
-import { render } from "@statsify/rendering";
+import { render, toPng } from "@statsify/rendering";
 
 @Command({
   description: (t) => t("commands.status"),
@@ -55,7 +55,7 @@ export class StatusCommand {
       getTheme(user)
     );
 
-    const buffer = await canvas.toBuffer("png");
+    const buffer = await toPng(canvas);
 
     return {
       files: [{ name: "status.png", data: buffer, type: "image/png" }],

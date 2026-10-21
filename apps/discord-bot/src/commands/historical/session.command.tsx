@@ -83,7 +83,7 @@ import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "../arcade/arcade.co
 import { getBackground, getLogo } from "@statsify/assets";
 import { getDuelsModeEmojis } from "../duels/duels.command.js";
 import { getTheme } from "#themes";
-import { render } from "@statsify/rendering";
+import { render, toPng } from "@statsify/rendering";
 import type { BaseProfileProps, ModeEmoji } from "#commands/base.hypixel-command";
 import type { HistoricalTimeData } from "#components";
 
@@ -423,7 +423,7 @@ export class SessionCommand {
           );
 
           const canvas = render(profile, getTheme(user));
-          const buffer = await canvas.toBuffer("png");
+          const buffer = await toPng(canvas);
 
           return {
             content,
@@ -461,7 +461,7 @@ export class SessionCommand {
           );
 
           const canvas = render(profile, getTheme(user));
-          const buffer = await canvas.toBuffer("png");
+          const buffer = await toPng(canvas);
 
           return {
             files: [{ name: "session.png", data: buffer, type: "image/png" }],

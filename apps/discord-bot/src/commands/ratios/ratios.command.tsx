@@ -53,7 +53,7 @@ import {
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
-import { render } from "@statsify/rendering";
+import { render, toPng } from "@statsify/rendering";
 
 const args = [PlayerArgument];
 
@@ -232,7 +232,7 @@ export class RatiosCommand {
         };
 
         const canvas = render(<RatiosProfile {...props} />, getTheme(user));
-        const buffer = await canvas.toBuffer("png");
+        const buffer = await toPng(canvas);
 
         return {
           files: [{ name: "ratios.png", data: buffer, type: "image/png" }],

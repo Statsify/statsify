@@ -15,7 +15,7 @@ import {
   MojangPlayerArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
-import { createCanvas } from "@statsify/rendering";
+import { createCanvas, toPng } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.skin"), args: [MojangPlayerArgument] })
 export class SkinCommand {
@@ -38,7 +38,7 @@ export class SkinCommand {
       .color(STATUS_COLORS.info)
       .image("attachment://skin.png");
 
-    const buffer = await canvas.toBuffer("png");
+    const buffer = await toPng(canvas);
 
     return {
       embeds: [embed],
