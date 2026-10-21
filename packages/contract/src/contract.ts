@@ -232,6 +232,8 @@ export const StatSectionSchema = z.object({
   plain: z.boolean().optional(),
   /** A long list that starts folded behind its heading and count; every cell is in the page either way. */
   collapsed: z.boolean().optional(),
+  /** A long list the page's filter box searches by name; one box serves every such list on the page. */
+  search: z.boolean().optional(),
 });
 
 export const GamePageSchema = z.object({

@@ -9,11 +9,12 @@
 import { Background, backgroundFor } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
 import { Chevron } from "~/components/icons/chevron";
+import { FilterBox, wordMatcher } from "~/components/filter-box";
+import { Fragment, type ReactNode, useId, useState } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { InlineStat, STAT_LINK, StatCell } from "~/components/ui/stat";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { MinecraftText, colourOf, leadingColourClass } from "~/components/ui/minecraft-text";
-import { type ReactNode, useId } from "react";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
@@ -61,6 +62,8 @@ const columnsOf = (count: number, headline: boolean) =>
 const sectionColumns = (rows: Stat[][]) =>
   Math.max(0, ...rows.filter((row) => !row.every((cell) => cell.inline)).map((row) => row.length));
 
+const cellsOf = (sections: StatSection[]) => sections.flatMap(({ rows }) => rows.flat());
+
 /**
  * The mode switcher goes by how many modes there are, not the screen's width, so the server's render and the hydrated
  * page agree. Up to `PHONE_TABS` it's tabs at every width; past that, a select below `md`. Up to `DESKTOP_TABS` it's
@@ -77,11 +80,13 @@ const BOX_COLUMNS = ["", "", "lg:grid-cols-2", "lg:grid-cols-3", "lg:grid-cols-2
  * the whole game, then one mode's stats under the mode switcher (and the submode's, where a mode has them). Every stat
  * opens its leaderboard at the player. Phones stack the panels; from `lg` up the nametag sits beside the level, the
  * card's boxes sit side by side, and the headline table beside the mode's other tables. Lists (maps, challenges) take
- * the full width below.
+ * the full width below, and one filter box above the first long one searches them all.
  */
 export function GameView({ page }: { page: GamePage }) {
   const { t } = useTranslation();
+  const n = useNumberFormat();
   const queryClient = useQueryClient();
+  const [filter, setFilter] = useState("");
   const mode = modeSearch(page, page.mode);
   const submode = submodeSearch(page, page.submode);
   const boxes = page.sections.filter(({ box }) => box);
@@ -89,6 +94,11 @@ export function GameView({ page }: { page: GamePage }) {
   // The first other table is the headline; the rest go beside it.
   const headline = page.sections.find(({ box, list }) => !box && !list);
   const tables = page.sections.filter((section) => section !== headline && !section.box && !section.list);
+  const searched = lists.filter(({ search }) => search);
+  const searchedCells = cellsOf(searched);
+  const labelText = useLabelText();
+  const matches = wordMatcher(filter);
+  const shown = searchedCells.filter((cell) => matches(labelText(cell))).length;
 
   const boxPanels = boxes.length > 0 && (
     <div key="boxes" className={cn("grid grid-cols-1 gap-2", BOX_COLUMNS[Math.min(boxes.length, BOX_COLUMNS.length - 1)])}>
@@ -158,7 +168,17 @@ export function GameView({ page }: { page: GamePage }) {
         <p className="text-mc-1 text-mc-gray">{t("game.hint", { name: page.username })}</p>
         {page.sections[0]?.box ? [boxPanels, headlinePanels] : [headlinePanels, boxPanels]}
         {lists.map((section, index) => (
-          <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
+          <Fragment key={section.title ?? section.name ?? index}>
+            {section === searched[0] && (
+              <FilterBox
+                value={filter}
+                onChange={setFilter}
+                label={t("game.filter")}
+                count={t("filter.count", { shown: n(shown), total: n(searchedCells.length) })}
+              />
+            )}
+            <StatPanel section={section} username={page.username} filter={section.search ? filter : undefined} />
+          </Fragment>
         ))}
       </div>
     </div>
@@ -261,43 +281,56 @@ const ROW_HEADING =
 
 /**
  * A panel of stats in the card's rows, under the section's heading when it has one. A list (maps, challenges) is
- * name and value lines in columns instead, and a long one starts folded behind its heading and count.
+ * name and value lines in columns instead, and a long one starts folded behind its heading and count. A list the
+ * page's filter searches keeps the lines whose name matches, and opens while it filters.
  */
 export function StatPanel({
   section,
   username,
   headline = false,
+  filter,
   className,
 }: {
   section: StatSection;
   username: string;
   /** The page's first table, whose rows of three keep three columns on a phone, as on the card. */
   headline?: boolean;
+  /** The page's filter, for a list it searches. */
+  filter?: string;
   className?: string;
 }) {
+  const { t } = useTranslation();
   const n = useNumberFormat();
+  const labelText = useLabelText();
   const heading = section.title === null && !section.name ?
     undefined :
     <h2 className="text-mc-1.5 font-bold"><SectionTitle section={section} /></h2>;
 
   if (section.list) {
-    const cells = section.rows.flat();
+    const all = section.rows.flat();
+    const filtering = filter !== undefined && filter.trim() !== "";
+    const matches = wordMatcher(filter ?? "");
+    const shown = (cells: Stat[]) => (filtering ? cells.filter((cell) => matches(labelText(cell))) : cells);
+    const cells = shown(all);
     const lines = (cells: Stat[]) => (
       <dl className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {cells.map((cell) => <ListStat key={cell.key} cell={cell} username={username} plain={section.plain} />)}
       </dl>
     );
     const { rowNames } = section;
-    // Under the card's own headings (Dropper's difficulties), a row at a time.
+    // Under the card's own headings (Dropper's difficulties), a row at a time; one the filter empties goes with its heading.
     const list = rowNames ?
       (
         <div className="flex flex-col gap-4">
-          {section.rows.map((row, index) => (
-            <div key={index} className="flex flex-col gap-2">
-              <h3 className={ROW_HEADING}><MinecraftText>{rowNames[index]}</MinecraftText></h3>
-              {lines(row)}
-            </div>
-          ))}
+          {section.rows.map((row, index) => {
+            const kept = shown(row);
+            return kept.length > 0 && (
+              <div key={index} className="flex flex-col gap-2">
+                <h3 className={ROW_HEADING}><MinecraftText>{rowNames[index]}</MinecraftText></h3>
+                {lines(kept)}
+              </div>
+            );
+          })}
         </div>
       ) :
       lines(cells);
@@ -306,11 +339,13 @@ export function StatPanel({
 
     return (
       <Box className={className}>
-        <details className="group">
+        <details open={filtering} className="group">
           <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 outline-none focus-visible:outline-2 focus-visible:outline-white/60 [&::-webkit-details-marker]:hidden">
             <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
             <h2 className="text-mc-1.5 font-bold"><SectionTitle section={section} /></h2>
-            <span className="text-mc-1.5 text-mc-gray">({n(cells.length)})</span>
+            <span className="text-mc-1.5 text-mc-gray">
+              ({filtering ? t("filter.count", { shown: n(cells.length), total: n(all.length) }) : n(all.length)})
+            </span>
           </summary>
           <div className="pt-3">{list}</div>
         </details>
@@ -340,17 +375,17 @@ export function StatPanel({
 
 /** A stat's heading: the card's own name for it (in its colours, else the stat's), or the bot's word for it. */
 function useStatLabel(cell: Stat): { text: string; node: ReactNode } {
-  const { t } = useTranslation();
-
-  if (cell.name !== undefined) {
-    return { text: plainName(cell.name), node: <MinecraftText>{`${cell.colour}${cell.name}`}</MinecraftText> };
-  }
-
-  const text = t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params });
-  return { text, node: text };
+  const text = useLabelText()(cell);
+  return { text, node: cell.name === undefined ? text : <MinecraftText>{`${cell.colour}${cell.name}`}</MinecraftText> };
 }
 
 const plainName = (name: string) => name.replaceAll(/§#[\dA-Fa-f]{6}|§./g, "");
+
+/** A stat's heading as plain text, for its link and the filter: the card's own name, or the label's words. */
+function useLabelText(): (cell: Stat) => string {
+  const { t } = useTranslation();
+  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainName(cell.name));
+}
 
 /** A stat's value as the card prints it: a number in the locale's format (with its cap or unit), or the API's text. */
 function useStatValue(cell: Stat): ReactNode {

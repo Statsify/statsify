@@ -102,6 +102,7 @@
     "submode": "Submode",
     "submodes": "Submodes",
     "selected": "{{name}} (selected)",
+    "filter": "Filter by name",
     "hint": "Select any stat to see its leaderboard around {{name}}.",
     "leaderboard": "({{stat}} leaderboard)",
     "maxed": "MAXED",
@@ -119,6 +120,9 @@
       "kit": "Kit",
       "weapons": "Weapons"
     }
+  },
+  "filter": {
+    "count": "{{shown}} of {{total}}"
   },
   "stats": {
     "doorsOpened": "Doors Opened",

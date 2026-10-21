@@ -62,6 +62,8 @@ export interface SectionSpec {
   plain?: boolean;
   /** Folded behind its heading and count until opened. */
   collapsed?: boolean;
+  /** Searched by the page's filter box, for a list too long to scan. */
+  search?: boolean;
 }
 
 /** The level header: the stat its leaderboard ranks, what the card calls the level and its bar, and the level. */
@@ -258,6 +260,7 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
     ...(spec.list && { list: true }),
     ...(spec.plain && { plain: true }),
     ...(spec.collapsed && { collapsed: true }),
+    ...(spec.search && { search: true }),
   };
 }
 

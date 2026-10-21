@@ -176,8 +176,8 @@ const PAGES: Record<string, PageSpec> = {
           [{ key: "bestTime", when: timed }, { key: "flawlessGames", when: timed }],
         ],
       },
-      { title: "game.sections.bestTimes", ...DROPPER_LIST("bestTime"), list: true, collapsed: true },
-      { title: "game.sections.completions", ...DROPPER_LIST("completions"), list: true, collapsed: true },
+      { title: "game.sections.bestTimes", ...DROPPER_LIST("bestTime"), list: true, collapsed: true, search: true },
+      { title: "game.sections.completions", ...DROPPER_LIST("completions"), list: true, collapsed: true, search: true },
     ],
   },
   enderSpleef: {
