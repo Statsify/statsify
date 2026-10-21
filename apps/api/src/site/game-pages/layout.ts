@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ColourCode, type Game, type Stat, statAt } from "@statsify/catalog";
+import { type ColourCode, type Game, type Stat, modeName, statAt } from "@statsify/catalog";
 import { FormattedGame, type Player, type PlayerStats } from "@statsify/schemas";
 import { PLAYER_COOLDOWN_MS } from "../cooldown.js";
 import { arrayGroup } from "@statsify/util";
@@ -94,6 +94,22 @@ export const formattedLevel = (stored: {
   progression: { ...stored.progression },
 });
 
+/**
+ * A prefix earned by a count (BlitzSG's kills, Walls' wins): the prefix with the player's own count as the level, and
+ * the bar from the prefix they have reached to the next.
+ */
+export const prefixLevel = (stored: {
+  naturalPrefix: string;
+  currentPrefix: string;
+  nextPrefix: string;
+  progression: Progression;
+}): ReturnType<LevelSpec["read"]> => ({
+  current: stored.naturalPrefix,
+  natural: stored.currentPrefix,
+  next: stored.nextPrefix,
+  progression: { ...stored.progression },
+});
+
 /** One page: a mode, or a mode's submode. */
 export interface PageSpec {
   /**
@@ -130,6 +146,8 @@ export interface GameLayout {
   modes?: ModeSpec[];
   /** The mode of the kit or class the player has selected, when Hypixel sends one. */
   selected?: (stats: PlayerStats) => string | undefined;
+  /** The site's name for a mode whose registry name, shared with the bot, runs Hypixel's words together. */
+  modeNames?: Record<string, string>;
   level?: LevelSpec;
   /** Game-wide stats and selections, game stats unless `at` says otherwise. */
   overview: CellSpec[];
@@ -279,8 +297,7 @@ export function buildGamePage(player: Player, layout: GameLayout, mode: string, 
   const modeSpec = modes.find(({ key }) => key === mode);
   if (!modeSpec) throw new Error(`${game.key} has no ${mode} page`);
 
-  const registry = game.modes.getModes();
-  const name = (key: string) => registry.find(({ api }) => api === key)?.formatted ?? key;
+  const name = (key: string) => layout.modeNames?.[key] ?? modeName(game, key);
   const submodes = modeSpec.submodes ?? [];
   const sub = submodes.length > 0 ? submode ?? submodes[0].key : undefined;
   const page = layout.page(mode, sub);
