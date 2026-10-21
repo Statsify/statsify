@@ -13,6 +13,7 @@ import { InjectRedis } from "#redis";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { type LeaderboardEnabledMetadata, getLeaderboardField, getLeaderboardFields } from "@statsify/schemas";
 import { LeaderboardQuery } from "@statsify/api-client";
+import { Logger } from "@statsify/logger";
 import { Redis } from "ioredis";
 
 const DAYS_IN_WEEK = {
@@ -29,6 +30,8 @@ export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
 @Injectable()
 export abstract class LeaderboardService {
+  private readonly logger = new Logger("LeaderboardService");
+
   public constructor(@InjectRedis() protected readonly redis: Redis) {}
 
   public async addLeaderboards<T>(
@@ -135,17 +138,31 @@ export abstract class LeaderboardService {
       getLeaderboardField(constructor, extraDisplay, false) :
       undefined;
 
-    const additionalStats = await this.getAdditionalStats(
-      leaderboard.map(({ id }) => id),
-      [
-        ...additionalFields.filter((k) => k !== field),
-        ...(extraDisplay ? [extraDisplay] : []),
-      ]
-    );
+    const additionalStats = leaderboard.length > 0 ?
+      await this.getAdditionalStats(
+        leaderboard.map(({ id }) => id),
+        [
+          ...additionalFields.filter((k) => k !== field),
+          ...(extraDisplay ? [extraDisplay] : []),
+        ]
+      ) :
+      [];
 
-    const data = leaderboard.map((doc, index) => {
+    // Rows whose document is missing from Mongo are left out; the rest keep their Redis position
+    const rows = leaderboard.flatMap((doc, index) => {
       const stats = additionalStats[index];
+      return stats ? [{ doc, stats }] : [];
+    });
 
+    const missing = leaderboard.length - rows.length;
+
+    if (missing) {
+      this.logger.warn(
+        `${missing} of ${leaderboard.length} rows on ${constructor.name} ${field} page ${top / PAGE_SIZE} have no document`
+      );
+    }
+
+    const data = rows.map(({ doc, stats }) => {
       if (extraDisplay) {
         const extraDisplayValue = stats[extraDisplay] ?? extraDisplayMetadata?.default;
         // Only add the extra display if it exists
@@ -265,7 +282,7 @@ export abstract class LeaderboardService {
   protected abstract getAdditionalStats(
     ids: string[],
     fields: string[]
-  ): Promise<LeaderboardAdditionalStats[]>;
+  ): Promise<(LeaderboardAdditionalStats | null)[]>;
 
   private async getLeaderboardFromRedis<T>(
     constructor: Constructor<T>,
