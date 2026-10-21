@@ -9,7 +9,6 @@
 import { modelOptions as ModelOptions } from "@typegoose/typegoose";
 import { Player } from "@statsify/schemas";
 
-// Player turns the version key off, and sessions would inherit that; they keep it so their
-// documents don't change
-@ModelOptions({ schemaOptions: { collection: "session", versionKey: "__v" } })
+// Inherits Player's schema options, so sessions have no version key either
+@ModelOptions({ schemaOptions: { collection: "session" } })
 export class Session extends Player {}
