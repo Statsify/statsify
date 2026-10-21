@@ -169,12 +169,12 @@ export class PlayerService {
 
     const promises = [
       // Mongoose gets the nested document: with thousands of dotted keys, its change
-      // tracking makes the replace O(n²)
-      this.playerModel
-        .replaceOne({ uuid: player.uuid }, unflatten(serializedPlayer), {
-          upsert: true,
-        })
-        .exec(),
+      // tracking makes the build O(n²)
+      this.playerModel.collection.updateOne(
+        { uuid: player.uuid },
+        playerSave(this.playerModel, unflatten(serializedPlayer)),
+        { upsert: true }
+      ),
       this.playerLeaderboardService.addLeaderboards(
         Player,
         flatPlayer,
@@ -210,4 +210,103 @@ export class PlayerService {
 
     return flatten(mongoPlayer);
   }
+}
+
+/**
+ * The update that saves a player: the document replaceOne would store, with the guildId that's
+ * stored when the write lands. Only guild refreshes write guildId, so one that lands during a save
+ * is kept instead of being overwritten with the guildId read before it
+ */
+export function playerSave(model: PlayerModel, player: object) {
+  // Query.replaceOne builds its replacement this way and sends its toBSON(), which Mongoose's
+  // types leave out
+  const document = (
+    new model(player, null, true) as unknown as { toBSON(): Record<string, unknown> }
+  ).toBSON();
+
+  delete document.guildId;
+
+  // $literal keeps strings that start with "$" from being read as field paths. __v: 0 is
+  // hard-coded because Mongoose's replaceOne adds it to every replacement, so every stored player
+  // has it, and leaving it out would change every saved document
+  return [
+    {
+      $replaceWith: {
+        $mergeObjects: [{ $literal: document }, { guildId: "$guildId" }, { __v: 0 }],
+      },
+    },
+  ];
+}
+
+if (import.meta.vitest) {
+  const { it, expect } = import.meta.vitest;
+  const { Severity, getModelForClass, setGlobalOptions } = await import("@typegoose/typegoose");
+  const { mongo } = await import("mongoose");
+
+  it("builds the document replaceOne would, without the guildId", () => {
+    // index.ts sets these before any model is built
+    setGlobalOptions({ options: { allowMixed: Severity.ALLOW }, schemaOptions: { _id: false } });
+
+    // Out of schema order, with a number as a string, a field Player doesn't have and a "$" string
+    const player = {
+      stats: { bedwars: { overall: { wlr: 2.5, wins: "5" } } },
+      guildId: "6a1b2c3d4e5f607182930042",
+      socials: { discord: "$guildId" },
+      notAField: true,
+      expiresAt: 1_760_000_000_000,
+      displayName: "§a[VIP] Steve",
+      uuid: "0123456789abcdef0123456789abcdef",
+    };
+
+    // Through the driver's BSON and back, printed as canonical extended JSON: the key order and
+    // the types that get stored
+    const { BSON } = mongo;
+    const update = playerSave(getModelForClass(Player), player);
+    const sent = BSON.deserialize(BSON.serialize({ update }), { promoteValues: false });
+
+    expect(BSON.EJSON.stringify(sent, undefined, 2, { relaxed: false })).toMatchInlineSnapshot(`
+      "{
+        "update": [
+          {
+            "$replaceWith": {
+              "$mergeObjects": [
+                {
+                  "$literal": {
+                    "uuid": "0123456789abcdef0123456789abcdef",
+                    "displayName": "§a[VIP] Steve",
+                    "socials": {
+                      "discord": "$guildId"
+                    },
+                    "stats": {
+                      "bedwars": {
+                        "overall": {
+                          "wins": {
+                            "$numberInt": "5"
+                          },
+                          "wlr": {
+                            "$numberDouble": "2.5"
+                          }
+                        }
+                      }
+                    },
+                    "expiresAt": {
+                      "$numberDouble": "1760000000000.0"
+                    }
+                  }
+                },
+                {
+                  "guildId": "$guildId"
+                },
+                {
+                  "__v": {
+                    "$numberInt": "0"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }"
+    `);
+  });
 }
