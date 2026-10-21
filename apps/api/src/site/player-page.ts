@@ -9,6 +9,7 @@
 import { FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
 import { type GameSummary, type PlayerPage, levelMultiplier } from "@statsify/contract";
 import { PLAYER_COOLDOWN_MS } from "./cooldown.js";
+import { winstreaksHidden } from "./game-pages/duels.js";
 import { gamePageOf } from "./game-pages/index.js";
 
 /** The guild fields the page reads, deserialized: its name and tag plus each member's quest and GEXP rows. */
@@ -60,7 +61,7 @@ const GAME_SUMMARIES: Summary[] = [
       ["wins", (s) => s.duels.overall.wins],
       ["kills", (s) => s.duels.overall.kills],
       ["wlr", (s) => s.duels.overall.wlr],
-      ["bestWinstreak", (s) => s.duels.overall.bestWinstreak],
+      ["bestWinstreak", (s) => (winstreaksHidden(s) ? "§7Hidden" : s.duels.overall.bestWinstreak)],
     ],
   },
   {

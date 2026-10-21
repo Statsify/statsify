@@ -220,8 +220,12 @@ export const StatSectionSchema = z.object({
   name: z.string().optional(),
   /** The card's rows of cells. */
   rows: z.array(z.array(StatCellSchema)),
+  /** One of the card's boxes drawn side by side (Overall, Solo, Doubles), shown in equal columns with the others. */
+  box: z.boolean().optional(),
   /** Name and value lines in columns (maps, disasters, challenges) rather than table cells. */
   list: z.boolean().optional(),
+  /** A list whose names keep the card's own formatting (titles) rather than all being bold. */
+  plain: z.boolean().optional(),
   /** A long list that starts folded behind its heading and count; every cell is in the page either way. */
   collapsed: z.boolean().optional(),
 });

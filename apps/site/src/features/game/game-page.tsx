@@ -69,20 +69,26 @@ const sectionColumns = (rows: Stat[][]) =>
 const PHONE_TABS = 4;
 const DESKTOP_TABS = 10;
 
+/** The card's side-by-side boxes, in as many equal columns from `lg` up. */
+const BOX_COLUMNS = ["", "", "lg:grid-cols-2", "lg:grid-cols-3", "lg:grid-cols-4"];
+
 /**
  * A player's page for one game, in the order of the bot's card: nametag and title, level and progress, the stats for
  * the whole game, then one mode's stats under the mode switcher (and the submode's, where a mode has them). Every stat
- * opens its leaderboard at the player. Phones stack the panels; from `lg` up the nametag sits beside the level, and
- * the headline table beside the mode's other tables. Lists (maps, challenges) take the full width below.
+ * opens its leaderboard at the player. Phones stack the panels; from `lg` up the nametag sits beside the level, the
+ * card's boxes sit side by side, and the headline table beside the mode's other tables. Lists (maps, challenges) take
+ * the full width below.
  */
 export function GameView({ page }: { page: GamePage }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const mode = modeSearch(page, page.mode);
   const submode = submodeSearch(page, page.submode);
-  const [headline, ...rest] = page.sections;
-  const tables = rest.filter(({ list }) => !list);
-  const lists = rest.filter(({ list }) => list);
+  const boxes = page.sections.filter(({ box }) => box);
+  const lists = page.sections.filter(({ box, list }) => !box && list);
+  // The first other table is the headline; the rest go beside it.
+  const headline = page.sections.find(({ box, list }) => !box && !list);
+  const tables = page.sections.filter((section) => section !== headline && !section.box && !section.list);
 
   // Everything cached for this player predates the refresh: it reloads the next time it's shown.
   const refresh = async () => {
@@ -129,7 +135,14 @@ export function GameView({ page }: { page: GamePage }) {
         {page.modes.length > 1 && <ModeSwitcher page={page} />}
         {page.submodes.length > 1 && <ModeSwitcher page={page} submodes />}
         <p className="text-mc-1 text-mc-gray">{t("game.hint", { name: page.username })}</p>
-        {headline && !headline.list && (
+        {boxes.length > 0 && (
+          <div className={cn("grid grid-cols-1 gap-2", BOX_COLUMNS[Math.min(boxes.length, BOX_COLUMNS.length - 1)])}>
+            {boxes.map((section, index) => (
+              <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
+            ))}
+          </div>
+        )}
+        {headline && (
           <div className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
             <StatPanel section={headline} username={page.username} headline className={cn(tables.length === 0 && "lg:col-span-2")} />
             {tables.length > 0 && (
@@ -141,7 +154,7 @@ export function GameView({ page }: { page: GamePage }) {
             )}
           </div>
         )}
-        {[...(headline?.list ? [headline, ...tables] : []), ...lists].map((section, index) => (
+        {lists.map((section, index) => (
           <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
         ))}
       </div>
@@ -262,7 +275,7 @@ export function StatPanel({
     const cells = section.rows.flat();
     const list = (
       <dl className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {cells.map((cell) => <ListStat key={cell.key} cell={cell} username={username} />)}
+        {cells.map((cell) => <ListStat key={cell.key} cell={cell} username={username} plain={section.plain} />)}
       </dl>
     );
 
@@ -354,8 +367,11 @@ function GameStat({ cell, username }: { cell: Stat; username: string }) {
   );
 }
 
-/** A name and its value on one line, as the card's lists draw them: the name bold on the left, the value on the right. */
-function ListStat({ cell, username }: { cell: Stat; username: string }) {
+/**
+ * A name and its value on one line, as the card's lists draw them: the name on the left, bold unless the list keeps the
+ * card's own formatting, and the value on the right.
+ */
+function ListStat({ cell, username, plain = false }: { cell: Stat; username: string; plain?: boolean }) {
   const label = useStatLabel(cell);
   const value = useStatValue(cell);
   const { className, style } = colourOf(cell.colour);
@@ -363,7 +379,7 @@ function ListStat({ cell, username }: { cell: Stat; username: string }) {
   return (
     <div className={cn("relative flex min-h-11 min-w-0 items-center gap-2 py-1 text-mc-1", className)} style={style}>
       {cell.icon && hasGameIcon(cell.icon) && <span aria-hidden className="size-8 shrink-0"><GameIcon game={cell.icon} /></span>}
-      <dt className="min-w-0 grow truncate font-bold">{label.node}</dt>
+      <dt className={cn("min-w-0 grow truncate", !plain && "font-bold")}>{label.node}</dt>
       <dd className="shrink-0">
         {cell.leaderboard ? <LeaderboardLink field={cell.leaderboard} username={username} stat={label.text}>{value}</LeaderboardLink> : value}
       </dd>

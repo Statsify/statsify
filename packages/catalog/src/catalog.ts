@@ -15,6 +15,7 @@ import {
   type PlayerStats,
   scanMetadata,
 } from "@statsify/schemas";
+import { prettify } from "@statsify/util";
 
 type HexDigit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "a" | "b" | "c" | "d" | "e" | "f";
 
@@ -47,6 +48,9 @@ export interface StatEntry {
   /** Printed after the number, as on the card (`ms`). */
   suffix?: string;
 }
+
+/** The entry for a selection the card shows by name (a kit, a trail): Hypixel's id, prettified. */
+export const selection = (colour: ColourCode): StatEntry => ({ colour, format: (value) => prettify(String(value)) });
 
 /** Stats stored with the same fields at one or more places below the game. */
 export interface Shape {

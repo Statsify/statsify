@@ -8,11 +8,13 @@
 
 import { type Game, catalogPaths, gameStats, modeStats, numberFields, playerFields } from "../catalog.js";
 import { BEDWARS } from "./bedwars.js";
+import { DUELS } from "./duels.js";
 
 export { BEDWARS } from "./bedwars.js";
+export { DUELS } from "./duels.js";
 
 /** Every game in the catalog, by its `PlayerStats` key. */
-export const GAMES: Record<string, Game> = { bedwars: BEDWARS };
+export const GAMES: Record<string, Game> = { bedwars: BEDWARS, duels: DUELS };
 
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
@@ -29,13 +31,16 @@ if (import.meta.vitest) {
         for (const { modes, stats } of game.shapes) {
           for (const at of modes) {
             const prefix = `stats.${game.key}.${at}.`;
-            // A deeper shape's stats are its own (`bridge.overall` below `bridge`).
+            // A deeper shape's stats are its own (`bridge.overall` below `bridge`), and a title's progression is the level's.
             const deeper = game.shapes.flatMap((shape) => shape.modes).filter((other) => other.startsWith(`${at}.`));
             const stored = numberFields(prefix)
               .filter((path) => !deeper.some((other) => path.startsWith(`stats.${game.key}.${other}.`)))
+              .filter((path) => !path.startsWith(`${prefix}progression.`))
               .map((path) => path.slice(prefix.length));
+            // An entry for a string is a selection the card shows (a kit), not a stat.
+            const numbers = Object.keys(stats).filter((key) => playerFields().get(`${prefix}${key}`)?.type.type !== String);
 
-            expect(Object.keys(stats).toSorted(), `${game.key}.${at}`).toEqual(stored.toSorted());
+            expect(numbers.toSorted(), `${game.key}.${at}`).toEqual(stored.toSorted());
           }
         }
       });

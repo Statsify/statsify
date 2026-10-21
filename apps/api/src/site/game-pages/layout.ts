@@ -50,8 +50,12 @@ export interface SectionSpec {
   sort?: "desc" | "asc";
   /** Rows of `size` cells, the n-th in the n-th colour (the last colour repeats), as the card colours by rank. */
   ranks?: { size: number; colours?: ColourCode[] };
+  /** One of the card's boxes drawn side by side, as Classic Duels draws Overall, Solo and Doubles. */
+  box?: boolean;
   /** Name and value lines rather than table cells. */
   list?: boolean;
+  /** List names in the card's own formatting rather than bold (Duels titles). */
+  plain?: boolean;
   /** Folded behind its heading and count until opened. */
   collapsed?: boolean;
 }
@@ -222,7 +226,9 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
     title: spec.title ?? null,
     ...(spec.name && { name: spec.name }),
     rows: rows.filter((row) => row.length > 0),
+    ...(spec.box && { box: true }),
     ...(spec.list && { list: true }),
+    ...(spec.plain && { plain: true }),
     ...(spec.collapsed && { collapsed: true }),
   };
 }

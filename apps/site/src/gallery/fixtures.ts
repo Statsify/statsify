@@ -241,6 +241,20 @@ export const LIST_SECTION: StatSection = {
   ],
 };
 
+/** Duels titles: the card's own formatting, bold only where a title is. */
+export const TITLE_LIST: StatSection = {
+  title: "game.sections.titles",
+  list: true,
+  plain: true,
+  rows: [
+    [
+      { key: "sumo.wins", label: "stats.wins", name: "§4§lSumo Legend", value: 2206, colour: "§f", leaderboard: "stats.duels.sumo.wins" },
+      { key: "bridge.overall.wins", label: "stats.wins", name: "§3Bridge Diamond IV", value: 816, colour: "§f", leaderboard: "stats.duels.bridge.overall.wins" },
+      { key: "bow.wins", label: "stats.wins", name: "§7Bow Rookie II", value: 30, colour: "§f", leaderboard: "stats.duels.bow.wins" },
+    ],
+  ],
+};
+
 /** Selections the card shows (a kit) and a stat in a hex colour the theme has no class for. */
 export const SELECTION_SECTION: StatSection = {
   title: null,

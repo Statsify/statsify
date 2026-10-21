@@ -20,6 +20,7 @@ import {
   SELECTION_SECTION,
   SUBMODE_PAGE,
   SUGGESTIONS,
+  TITLE_LIST,
 } from "./fixtures";
 import { Background } from "~/components/ui/background";
 import { Board } from "~/components/icons/board";
@@ -494,6 +495,9 @@ function GameSection() {
       </Demo>
       <Demo label="A long list, folded behind its heading and count">
         <StatPanel section={{ ...LIST_SECTION, collapsed: true }} username={username} />
+      </Demo>
+      <Demo label="A list in the card's own formatting, bold only where the card is (titles)">
+        <StatPanel section={TITLE_LIST} username={username} />
       </Demo>
     </Section>
   );

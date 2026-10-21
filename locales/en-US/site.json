@@ -109,6 +109,8 @@
     "sections": {
       "resources": "Resources Collected",
       "games": "Games",
+      "more": "More Stats",
+      "titles": "Titles",
       "bestTimes": "Best Times"
     }
   },
