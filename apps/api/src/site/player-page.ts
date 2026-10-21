@@ -8,6 +8,7 @@
 
 import { FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
 import { type GameSummary, type PlayerPage, levelMultiplier } from "@statsify/contract";
+import { formatTime } from "@statsify/util";
 import { PLAYER_COOLDOWN_MS } from "./cooldown.js";
 import { winstreaksHidden } from "./game-pages/duels.js";
 import { gamePageOf } from "./game-pages/index.js";
@@ -27,12 +28,20 @@ interface Summary {
   id: GameId;
   /** Minecraft-formatted level or prefix for the panel title. */
   level?: (stats: PlayerStats) => string | undefined;
-  /** Up to four `[stats.* locale key, value]` rows. */
+  /** Four `[stats.* locale key, value]` rows, so the panel's two columns come out even. */
   rows: [key: string, value: Value, suffix?: string][];
 }
 
+/** A duration as the panel's text (it formats only numbers), in aqua; nothing for one never set. */
+const time = (ms: number | undefined) => (ms ? `§b${formatTime(ms)}` : undefined);
+
+/** The player's best time on each lobby course they have finished. */
+const courseTimes = ({ parkour }: PlayerStats) =>
+  Object.values(parkour).filter((ms): ms is number => typeof ms === "number" && ms > 0);
+
 /**
- * What each game panel shows: four headline numbers from the overall mode, picked by hand.
+ * What each game panel shows: four headline numbers from the overall mode, picked by hand. A game without overall
+ * kills (Arcade, TNT Games) fills the rest from one or two of its modes.
  */
 const GAME_SUMMARIES: Summary[] = [
   {
@@ -69,6 +78,8 @@ const GAME_SUMMARIES: Summary[] = [
     rows: [
       ["wins", (s) => s.arcade.wins],
       ["coins", (s) => s.arcade.coins],
+      ["coinConversions", (s) => s.arcade.coinConversions],
+      ["zombiesWins", (s) => s.arcade.zombies.overall.wins],
     ],
   },
   {
@@ -184,6 +195,17 @@ const GAME_SUMMARIES: Summary[] = [
     rows: [
       ["wins", (s) => s.tntgames.wins],
       ["coins", (s) => s.tntgames.coins],
+      ["tntRunWins", (s) => s.tntgames.tntRun.wins],
+      ["wizardsKills", (s) => s.tntgames.wizards.kills],
+    ],
+  },
+  {
+    id: "PARKOUR",
+    rows: [
+      ["coursesCompleted", (s) => courseTimes(s).length],
+      ["bestTime", (s) => time(courseTimes(s).toSorted((a, b) => a - b)[0])],
+      ["mainLobby", (s) => time(s.parkour.MAIN_LOBBY)],
+      ["combinedTime", (s) => time(courseTimes(s).reduce((sum, ms) => sum + ms, 0))],
     ],
   },
   {
@@ -242,6 +264,7 @@ const GAME_SUMMARIES: Summary[] = [
       // Out of 100, as the card prints it.
       ["layers", (s) => `§a${s.woolgames.layers}§8/§a100`],
       ["wool", (s) => s.woolgames.coins],
+      ["playtime", (s) => time(s.woolgames.playtime)],
     ],
   },
 ];

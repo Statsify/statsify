@@ -40,7 +40,7 @@ export const PlayerIdentitySchema = z.object({
 
 /** One label/value row of a game panel. */
 export const StatRowSchema = z.object({
-  /** A `stats.*` key in `locales/<lng>/default.json`. */
+  /** A `stats.*` key in `locales/<lng>/default.json`, or in `site.json` for a stat the bot doesn't label. */
   key: z.string(),
   /** Numbers are formatted by the site; strings are Minecraft-formatted text (levels, prefixes). */
   value: z.union([z.number(), z.string()]),

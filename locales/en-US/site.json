@@ -122,7 +122,13 @@
   },
   "stats": {
     "doorsOpened": "Doors Opened",
-    "swordKills": "Sword Kills"
+    "swordKills": "Sword Kills",
+    "zombiesWins": "Zombies Wins",
+    "tntRunWins": "TNT Run Wins",
+    "wizardsKills": "Wizards Kills",
+    "coursesCompleted": "Courses Completed",
+    "mainLobby": "Main Lobby",
+    "combinedTime": "Combined Time"
   },
   "notFound": {
     "title": "OOPS!",

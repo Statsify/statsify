@@ -62,7 +62,12 @@ const ROW_COLORS: Record<string, string> = {
   score: GOLD,
   shotAccuracy: GOLD,
   coins: GOLD,
+  coinConversions: GOLD,
   gold: GOLD,
+  zombiesWins: GREEN,
+  tntRunWins: GREEN,
+  wizardsKills: GREEN,
+  coursesCompleted: GREEN,
   bestWinstreak: "text-mc-yellow",
   goldTrophies: "text-[#ffd700]",
   silverTrophies: "text-[#c0c0c0]",
@@ -347,7 +352,7 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
         {game.rows.map((row) => (
           <StatCell
             key={row.key}
-            label={t(`default:stats.${row.key}`)}
+            label={t(`stats.${row.key}`, { ns: ["default", "site"] })}
             value={typeof row.value === "number" ?
               <>{n(row.value)}{row.suffix}</> :
               <MinecraftText>{row.value}</MinecraftText>}
