@@ -31,9 +31,11 @@ interface Sizes {
 
 export class FontRenderer {
   private images: Map<string, Canvas>;
+  private glyphs: Map<string, ImageData>;
 
   public constructor(private gradient: boolean) {
     this.images = new Map();
+    this.glyphs = new Map();
   }
 
   public async loadImages(fontPath: string) {
@@ -48,6 +50,8 @@ export class FontRenderer {
           return [id, image] as const;
         }),
     );
+
+    this.glyphs.clear();
 
     for (const [id, image] of pictures) {
       const canvas = createCanvas(image.width, image.height);
@@ -310,9 +314,15 @@ export class FontRenderer {
       size,
     } = metadata;
 
-    const imageData = image
-      .getContext("2d")
-      .getImageData(charX, charY, width, height);
+    // getImageData rasterises the whole atlas, so read each glyph once
+    let imageData = this.glyphs.get(char);
+
+    if (!imageData) {
+      imageData = image
+        .getContext("2d")
+        .getImageData(charX, charY, width, height);
+      this.glyphs.set(char, imageData);
+    }
 
     ctx.filter = this.gradient ? "brightness(15%)" : "brightness(25%)";
 
