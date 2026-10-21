@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BEDWARS, gameStats, modeStats } from "@statsify/catalog";
+import { BEDWARS, cardColours } from "@statsify/catalog";
 import { BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   Container,
@@ -38,12 +38,7 @@ export const BedWarsProfile = ({
   const stats = bedwars[mode.api];
 
   // Every stat's colour comes from the catalog the site shares, so the card and the site draw each stat alike.
-  const colours = new Map([...gameStats(BEDWARS), ...modeStats(BEDWARS, mode.api)].map(({ key, colour }) => [key, colour]));
-  const colour = (key: string) => {
-    const code = colours.get(key);
-    if (typeof code !== "string") throw new Error(`The catalog has no single colour for bedwars ${key}`);
-    return code;
-  };
+  const colour = cardColours(BEDWARS, mode.api);
 
   const sidebar: SidebarItem[] = [
     [t("stats.tokens"), t(bedwars.tokens), colour("tokens")],

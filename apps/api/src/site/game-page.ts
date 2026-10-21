@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BEDWARS, type Game, type Stat, gameStats, modeStats, statModes } from "@statsify/catalog";
+import { BEDWARS, type Game, type Stat, gameStats, modeStats } from "@statsify/catalog";
 import { FormattedGame, type GameId, type Player, type PlayerStats } from "@statsify/schemas";
 import { PLAYER_COOLDOWN_MS } from "./cooldown.js";
 import type { GamePage, StatCell } from "@statsify/contract";
@@ -22,6 +22,8 @@ const keyOf = (entry: SectionKey) => (typeof entry === "string" ? entry : entry.
  */
 export interface GameLayout {
   game: Game;
+  /** The api modes the page offers, in the registry's order; the first is its default. */
+  modes: readonly string[];
   /** The level header, for a game with levels: the catalog key of the stat its leaderboard ranks, and the level. */
   level?: { key: string; read: (stats: PlayerStats) => Omit<NonNullable<GamePage["level"]>, "leaderboard"> };
   /** Game-wide stats by catalog key, each shown when `when` allows. */
@@ -35,6 +37,8 @@ const hasWallet = ({ bedwars }: PlayerStats) => bedwars.slumber.wallet > 0;
 
 const BEDWARS_PAGE: GameLayout = {
   game: BEDWARS,
+  // Every mode stored as a mode's stats; the challenges are stored per challenge.
+  modes: BEDWARS.shapes[0].modes,
   level: {
     key: "exp",
     read: ({ bedwars }) => ({
@@ -70,7 +74,7 @@ export const findGamePage = (segment: string): GameLayout | undefined =>
 export const gamePageOf = (id: GameId): string | undefined => GAME_PAGES.find((layout) => layout.game.id === id)?.game.key;
 
 /** The modes a game page offers; the first is its default. */
-export const pageModes = (layout: GameLayout): string[] => statModes(layout.game).map(({ api }) => api);
+export const pageModes = (layout: GameLayout): string[] => [...layout.modes];
 
 const read = (player: Player, path: string): unknown =>
   path.split(".").reduce<unknown>((value, key) => (value as Record<string, unknown> | undefined)?.[key], player);
@@ -83,9 +87,9 @@ function cell(player: Player, stat: Stat): StatCell {
   return {
     key: stat.key,
     label: stat.label,
-    value: stat.format ? stat.format(value) : Number(value ?? 0),
+    value: stat.format ? stat.format(value, {}) : Number(value ?? 0),
     ...(stat.of && { of: Number(read(player, stat.of) ?? 0) }),
-    colour: stat.colour,
+    colour: typeof stat.colour === "string" ? stat.colour : stat.colour(value, {}),
     leaderboard: leaderboardOf(stat),
   };
 }
@@ -106,8 +110,8 @@ export function buildGamePage(player: Player, layout: GameLayout, mode: string):
     uuid: player.uuid,
     username: player.username,
     displayName: player.displayName,
-    game: { key: game.key, id: game.id, name: FormattedGame[game.id] },
-    modes: statModes(game).map(({ api, formatted }) => ({ key: api, name: formatted })),
+    game: { key: game.key, id: game.id!, name: FormattedGame[game.id!] },
+    modes: game.modes.getModes().filter(({ api }) => layout.modes.includes(api)).map(({ api, formatted }) => ({ key: api, name: formatted })),
     mode,
     level: layout.level ?
       { ...layout.level.read(player.stats), leaderboard: leaderboardOf(find(overview, layout.level.key)) } :

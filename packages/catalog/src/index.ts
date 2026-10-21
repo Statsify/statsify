@@ -7,4 +7,4 @@
  */
 
 export * from "./catalog.js";
-export * from "./games.js";
+export * from "./games/index.js";

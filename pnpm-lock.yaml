@@ -763,6 +763,9 @@ importers:
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../schemas
+      '@statsify/util':
+        specifier: workspace:^
+        version: link:../util
       '@swc/helpers':
         specifier: ^0.5.23
         version: 0.5.23
