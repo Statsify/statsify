@@ -109,7 +109,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
             className="mb-2 lg:col-span-2 lg:row-start-3 lg:mt-2 lg:mb-0"
           />
           <NetworkLevelPanel level={page.level} className="lg:col-start-2 lg:row-start-1" />
-          <OverviewPanel overview={page.overview} className="lg:col-start-1 lg:row-start-2" />
+          <OverviewPanel overview={page.overview} username={page.username} className="lg:col-start-1 lg:row-start-2" />
           <LoginPanel status={page.status} className="lg:col-start-2 lg:row-start-2" />
         </div>
         <GameGrid games={page.games} username={page.username} />
@@ -222,16 +222,17 @@ function NetworkLevelPanel({ level, className }: { level: PlayerPage["level"]; c
   );
 }
 
-function OverviewPanel({ overview, className }: { overview: PlayerPage["overview"]; className?: string }) {
+function OverviewPanel({ overview, username, className }: { overview: PlayerPage["overview"]; username: string; className?: string }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
 
-  // The general card's cells and colours: points §6, quests and challenges §a, karma and streaks §d, gifts §5.
-  const cells: [label: string, value: number, color: string][] = [
+  // The general card's cells and colours: points §6, quests and challenges §a, karma and streaks §d, gifts §5. A cell
+  // with a page of its own links to it.
+  const cells: [label: string, value: number, color: string, page?: string][] = [
     [t("default:stats.achievementPoints"), overview.achievementPoints, "text-mc-gold"],
     [t("default:stats.karma"), overview.karma, "text-mc-pink"],
     [t("default:stats.quests"), overview.quests, "text-mc-green"],
-    [t("default:stats.challenges"), overview.challenges, "text-mc-green"],
+    [t("default:stats.challenges"), overview.challenges, "text-mc-green", "challenges"],
     [t("default:stats.rewardStreak"), overview.currentRewardStreak, "text-mc-pink"],
     [t("player.highestStreak"), overview.highestRewardStreak, "text-mc-pink"],
     [t("default:stats.giftsSent"), overview.giftsSent, "text-mc-dark-purple"],
@@ -252,8 +253,21 @@ function OverviewPanel({ overview, className }: { overview: PlayerPage["overview
   return (
     <Box className={cn("content:h-full", className)}>
       <dl className="grid h-full grid-cols-2 content-center gap-x-2 gap-y-4 sm:grid-cols-4 max-sm:[&>:last-child:nth-child(odd)]:col-span-2">
-        {cells.map(([label, value, color]) => (
-          <StatCell key={label} label={label} value={n(value)} color={color} />
+        {cells.map(([label, value, color, page]) => (
+          <StatCell
+            key={label}
+            label={label}
+            value={page ?
+              (
+                <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: page }} className={STAT_LINK}>
+                  {n(value)}
+                  <span className="sr-only"> {t("player.page", { name: label })}</span>
+                </Link>
+              ) :
+              n(value)}
+            color={color}
+            className={page && "relative"}
+          />
         ))}
       </dl>
     </Box>

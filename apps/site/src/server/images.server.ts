@@ -36,8 +36,8 @@ export interface GameImage {
   mode: string | null;
 }
 
-/** What a game or mode in an image URL can look like (`bedwars`, `4v4`, `oneBlock`); the API decides the rest. */
-const GAME_PARAM = /^[\dA-Za-z]{1,32}$/;
+/** What a game or mode in an image URL can look like (`bedwars`, `4v4`, `oneBlock`, `ARENA_BRAWL`); the API decides the rest. */
+const GAME_PARAM = /^\w{1,32}$/;
 
 /** `/og`'s `?game=` and `?mode=`: `undefined` for the general card, `null` for a value that can't name a page. */
 export function gameImageOf(search: URLSearchParams): GameImage | null | undefined {

@@ -10,15 +10,23 @@ import { type Game, catalogPaths, gameStats, modeStats, numberFields, playerFiel
 import { ARCADE } from "./arcade.js";
 import { BEDWARS } from "./bedwars.js";
 import { BLITZSG } from "./blitzsg.js";
+import { CHALLENGES } from "./challenges.js";
 import { DUELS } from "./duels.js";
 
 export { ARCADE, DROPPER_DIFFICULTIES } from "./arcade.js";
 export { BEDWARS } from "./bedwars.js";
 export { BLITZSG } from "./blitzsg.js";
+export { CHALLENGES } from "./challenges.js";
 export { DUELS } from "./duels.js";
 
 /** Every game in the catalog, by its `PlayerStats` key. */
-export const GAMES: Record<string, Game> = { arcade: ARCADE, bedwars: BEDWARS, blitzsg: BLITZSG, duels: DUELS };
+export const GAMES: Record<string, Game> = {
+  arcade: ARCADE,
+  bedwars: BEDWARS,
+  blitzsg: BLITZSG,
+  challenges: CHALLENGES,
+  duels: DUELS,
+};
 
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;

@@ -9,6 +9,7 @@
 import { ARCADE_PAGE } from "./arcade.js";
 import { BEDWARS_PAGE } from "./bedwars.js";
 import { BLITZSG_PAGE } from "./blitzsg.js";
+import { CHALLENGES_PAGE } from "./challenges.js";
 import { DUELS_PAGE } from "./duels.js";
 import { type GameLayout, pageModes } from "./layout.js";
 import type { GameId } from "@statsify/schemas";
@@ -17,7 +18,7 @@ export { buildGamePage, pageModes } from "./layout.js";
 export type { GameLayout } from "./layout.js";
 
 /** The pages the site has, each at `/player/<name>/<its game's PlayerStats key>`. */
-export const GAME_PAGES: GameLayout[] = [ARCADE_PAGE, BEDWARS_PAGE, BLITZSG_PAGE, DUELS_PAGE];
+export const GAME_PAGES: GameLayout[] = [ARCADE_PAGE, BEDWARS_PAGE, BLITZSG_PAGE, CHALLENGES_PAGE, DUELS_PAGE];
 
 export const findGamePage = (segment: string): GameLayout | undefined =>
   GAME_PAGES.find((layout) => layout.game.key === segment);

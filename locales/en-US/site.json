@@ -42,6 +42,7 @@
     "noResults": "No players match \"{{query}}\""
   },
   "player": {
+    "page": "({{name}} page)",
     "multiplier": "Level Multiplier",
     "highestStreak": "Highest Streak",
     "noGames": "No game stats yet.",
