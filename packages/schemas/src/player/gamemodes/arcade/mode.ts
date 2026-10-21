@@ -1436,8 +1436,6 @@ export class ZombiesMap {
   }
 }
 
-// Zombies across every map. There's no fastest win here: Hypixel's fastest_time_30_zombies isn't
-// the fastest of the maps' wins, and each map's overall already has its own
 export class ZombiesOverall {
   @Field({ historical: { enabled: false } })
   public wins: number;
