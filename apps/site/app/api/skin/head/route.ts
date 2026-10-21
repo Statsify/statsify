@@ -13,7 +13,6 @@ import { z } from "zod";
 
 const HeadQuery = z.object({
   uuid: SkinUuid,
-  // The same range the API's /skin/head accepts
   size: z.coerce.number().int().min(8).max(800).default(160),
 });
 
