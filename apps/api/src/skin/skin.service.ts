@@ -18,8 +18,17 @@ import { getMinecraftTexturePath } from "@statsify/assets";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
+/** How long a cached skin is used before it's refreshed. Players rarely change skins. */
+const REFRESH_AFTER = 1000 * 60 * 60 * 24;
+
+/** After a failed refresh (Mojang down or rate limiting), the cached skin is kept and the refresh tried again later. */
+const RETRY_AFTER = 1000 * 60 * 60;
+
 @Injectable()
 export class SkinService {
+  /** Refreshes in flight, so many requests for one stale skin make a single Mojang call. */
+  private readonly refreshing = new Map<string, Promise<unknown>>();
+
   public constructor(
     private readonly httpService: HttpService,
     @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
@@ -64,23 +73,36 @@ export class SkinService {
       .lean()
       .exec();
 
-    if (cachedSkin && Date.now() < cachedSkin.expiresAt) {
+    // A cached skin is served at once, even when it's due a refresh; the refresh happens in the background.
+    if (cachedSkin) {
+      if (Date.now() >= cachedSkin.expiresAt) this.refresh(cachedSkin);
       return cachedSkin;
     }
 
     const uuid = isUsername ? await this.getUuid(tag) : tag;
+    const skin = await this.requestSkin(uuid);
 
-    const skin = await this.requestSkin(uuid).catch((error) => {
-      // A skin found by name may belong to whoever had the name before
-      if (cachedSkin?.uuid === uuid) return cachedSkin;
-      throw error;
-    });
+    return this.save(skin, REFRESH_AFTER);
+  }
 
-    // Cache for 3 hours
-    skin.expiresAt = Date.now() + (1000 * 60 * 60 * 3);
+  private refresh(cachedSkin: Skin) {
+    const { uuid } = cachedSkin;
+    if (this.refreshing.has(uuid)) return;
 
-    await this.skinModel.replaceOne({ uuid }, skin, { upsert: true }).lean().exec();
+    const refresh = this.requestSkin(uuid)
+      .then((skin) => this.save(skin, REFRESH_AFTER))
+      // Only the refresh time changes: writing back the copy read earlier would undo anything saved since
+      .catch(() => this.skinModel.updateOne({ uuid }, { expiresAt: Date.now() + RETRY_AFTER }).exec())
+      // The database failed too; the next request tries again.
+      .catch(() => undefined)
+      .finally(() => this.refreshing.delete(uuid));
 
+    this.refreshing.set(uuid, refresh);
+  }
+
+  private async save(skin: Skin, refreshAfter: number): Promise<Skin> {
+    skin.expiresAt = Date.now() + refreshAfter;
+    await this.skinModel.replaceOne({ uuid: skin.uuid }, skin, { upsert: true }).lean().exec();
     return skin;
   }
 
