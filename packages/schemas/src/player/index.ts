@@ -20,7 +20,7 @@ import {
 } from "./util.js";
 import type { APIData } from "@statsify/util";
 
-@ModelOptions({ options: { allowMixed: Severity.ALLOW } })
+@ModelOptions({ options: { allowMixed: Severity.ALLOW }, schemaOptions: { versionKey: false } })
 export class Player {
   @Field({ mongo: { unique: true, index: true }, store: { required: true } })
   public uuid: string;

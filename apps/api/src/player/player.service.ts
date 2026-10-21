@@ -226,13 +226,12 @@ export function playerSave(model: PlayerModel, player: object) {
 
   delete document.guildId;
 
-  // $literal keeps strings that start with "$" from being read as field paths. __v: 0 is
-  // hard-coded because Mongoose's replaceOne adds it to every replacement, so every stored player
-  // has it, and leaving it out would change every saved document
+  // $literal keeps strings that start with "$" from being read as field paths. There's no __v to
+  // add: Player's schema turns the version key off, and nothing reads it
   return [
     {
       $replaceWith: {
-        $mergeObjects: [{ $literal: document }, { guildId: "$guildId" }, { __v: 0 }],
+        $mergeObjects: [{ $literal: document }, { guildId: "$guildId" }],
       },
     },
   ];
@@ -296,11 +295,6 @@ if (import.meta.vitest) {
                 },
                 {
                   "guildId": "$guildId"
-                },
-                {
-                  "__v": {
-                    "$numberInt": "0"
-                  }
                 }
               ]
             }
