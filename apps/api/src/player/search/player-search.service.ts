@@ -14,8 +14,7 @@ import { Redis } from "ioredis";
 const REDI_SEARCH_NOT_INSTALLED =
   "This error was most likely caused because RediSearch is not installed.";
 
-// A fuzzy search on one or two characters walks most of the dictionary, so those results are
-// cached in memory for a minute. The API runs as a single process
+// A fuzzy search on one or two characters walks most of the dictionary, so cache those
 const SHORT_QUERY_LENGTH = 2;
 const SHORT_QUERY_TTL = 60_000;
 
@@ -40,8 +39,6 @@ export class PlayerSearchService {
     const players = this.search(query);
     this.shortQueries.set(query, players);
     setTimeout(() => this.shortQueries.delete(query), SHORT_QUERY_TTL);
-
-    // Don't keep a failed search
     players.catch(() => this.shortQueries.delete(query));
 
     return players;
