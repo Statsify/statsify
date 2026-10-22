@@ -8,7 +8,6 @@
 
 import { ButtonStyle } from "discord-api-types/v10";
 import { Canvas } from "skia-canvas";
-import { toPng } from "@statsify/rendering";
 
 import {
   ActionRowBuilder,
@@ -279,7 +278,7 @@ async function contentToMessage(
       files: [
         {
           name: "image.png",
-          data: await toPng(content),
+          data: await content.toBuffer("png"),
           type: "image/png",
         },
       ],

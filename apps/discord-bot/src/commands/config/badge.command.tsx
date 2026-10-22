@@ -20,7 +20,7 @@ import {
 import { type Canvas, Image } from "skia-canvas";
 import { DemoProfile } from "./demo.profile.js";
 import { User, UserTier } from "@statsify/schemas";
-import { createCanvas, loadImage, render, toPng } from "@statsify/rendering";
+import { createCanvas, loadImage, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 
@@ -118,7 +118,7 @@ export class BadgeCommand {
           height
         );
 
-        await this.apiService.updateUserBadge(userId, await toPng(canvas));
+        await this.apiService.updateUserBadge(userId, await canvas.toBuffer("png"));
         const profile = await this.getProfile(t, user, canvas);
 
         return {
@@ -164,6 +164,6 @@ export class BadgeCommand {
       getTheme(user)
     );
 
-    return toPng(canvas);
+    return canvas.toBuffer("png");
   }
 }

@@ -30,7 +30,7 @@ import {
 import { User } from "@statsify/schemas";
 import { getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
-import { render, toPng } from "@statsify/rendering";
+import { render } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
 
 type BaseLeaderboardProps = Omit<LeaderboardProfileProps, "fields" | "name" | "data">;
@@ -324,7 +324,7 @@ export class BaseLeaderboardCommand {
       getTheme(user)
     );
 
-    const buffer = await toPng(canvas);
+    const buffer = await canvas.toBuffer("png");
 
     const message = {
       files: [{ name: "leaderboard.png", data: buffer, type: "image/png" }],

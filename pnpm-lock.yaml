@@ -514,9 +514,6 @@ importers:
       '@statsify/logger':
         specifier: workspace:^
         version: link:../logger
-      '@statsify/rendering':
-        specifier: workspace:^
-        version: link:../rendering
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../schemas

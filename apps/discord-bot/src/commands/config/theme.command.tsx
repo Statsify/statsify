@@ -33,7 +33,7 @@ import { convertColorCodes } from "#lib/convert-color-codes";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { removeFormatting } from "@statsify/util";
-import { render, toPng } from "@statsify/rendering";
+import { render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.theme") })
 export class ThemeCommand {
@@ -263,6 +263,6 @@ export class ThemeCommand {
       getTheme(user)
     );
 
-    return toPng(canvas);
+    return canvas.toBuffer("png");
   }
 }

@@ -25,7 +25,7 @@ import { Service } from "typedi";
 import { WelcomeProfile } from "#lib";
 import { config } from "@statsify/util";
 import { getBackground } from "@statsify/assets";
-import { loadImage, render, toPng } from "@statsify/rendering";
+import { loadImage, render } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
 
 const JOIN_MESSAGES = [
@@ -85,7 +85,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
       />
     );
 
-    const buffer = await toPng(canvas);
+    const buffer = await canvas.toBuffer("png");
 
     message.files = [{ name: "welcome.png", data: buffer, type: "image/png" }];
 

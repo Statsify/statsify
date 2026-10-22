@@ -15,12 +15,7 @@ import {
   TextArgument,
 } from "@statsify/discord";
 import { Container } from "typedi";
-import {
-  FontRenderer,
-  StyleLocation,
-  render,
-  toPng,
-} from "@statsify/rendering";
+import { FontRenderer, StyleLocation, render } from "@statsify/rendering";
 import { Multiline } from "#components";
 import { convertColorCodes } from "#lib/convert-color-codes";
 import { getTheme } from "#themes";
@@ -64,7 +59,7 @@ export class TextCommand {
       theme
     );
 
-    const buffer = await toPng(canvas);
+    const buffer = await canvas.toBuffer("png");
 
     return {
       files: [{ data: buffer, name: "text.png", type: "image/png" }],

@@ -13,7 +13,7 @@ import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
-import { createCanvas, loadImage, toPng } from "@statsify/rendering";
+import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -44,7 +44,7 @@ export class SkinService {
       ctx.drawImage(skin, 40, 8, 8, 8, 0, 0, size, size);
     }
 
-    return toPng(canvas);
+    return canvas.toBuffer("png");
   }
 
   public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {

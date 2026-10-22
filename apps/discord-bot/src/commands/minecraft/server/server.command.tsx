@@ -13,7 +13,7 @@ import { ServerArgument } from "./server.argument.js";
 import { ServerProfile } from "./server.profile.js";
 import { getTheme } from "#themes";
 import { loadImage } from "skia-canvas";
-import { render, toPng } from "@statsify/rendering";
+import { render } from "@statsify/rendering";
 
 @Command({
   description: (t) => t("commands.server"),
@@ -55,7 +55,7 @@ export class ServerCommand {
       getTheme(user)
     );
 
-    const buffer = await toPng(canvas);
+    const buffer = await canvas.toBuffer("png");
 
     return { files: [{ name: "server.png", data: buffer, type: "image/png" }] };
   }
