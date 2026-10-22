@@ -230,13 +230,7 @@ export class GuildService {
       .exec()
       .catch(() => []);
 
-    // Missing fields default to "", the same as deserialize
-    return new Map(
-      players.map(({ uuid, username = "", displayName = "", guildId = "" }) => [
-        uuid,
-        { username, displayName, guildId },
-      ])
-    );
+    return new Map(players.map((player) => [player.uuid, player]));
   }
 
   private async getMemberName(
