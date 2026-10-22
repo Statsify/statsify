@@ -94,12 +94,11 @@ export class PlayerController {
   @Auth({ weight: 2 })
   @Get("/status")
   public async getStatus(@Query() { player: tag }: PlayerDto) {
-    const { status, hypixelUnavailable } = await this.playerService.getStatus(tag);
+    const status = await this.playerService.getStatus(tag);
 
     return {
       success: !!status,
       status,
-      hypixelUnavailable,
     };
   }
 }
