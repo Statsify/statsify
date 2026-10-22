@@ -51,8 +51,6 @@ export class FontRenderer {
         }),
     );
 
-    this.glyphs.clear();
-
     for (const [id, image] of pictures) {
       const canvas = createCanvas(image.width, image.height);
       const ctx = canvas.getContext("2d");
