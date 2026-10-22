@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BEDWARS_MODES, type GameMode, type GameModes, type Guild, type Player, SPEED_UHC_MODES, UHC_MODES } from "@statsify/schemas";
+import { BEDWARS_MODES, type GameMode, type GameModes, type Guild, type Player, SPEED_UHC_MODES, UHC_MODES, WALLS_MODES } from "@statsify/schemas";
 import type { BaseProfileProps } from "../types.js";
 import { BedWarsProfile } from "../profiles/bedwars.profile.js";
 import { Canvas, type CanvasRenderingContext2D, type Image, loadImage } from "skia-canvas";
@@ -16,6 +16,7 @@ import { GeneralProfile } from "../profiles/general.profile.js";
 import { SignatureProfile, UpdatedStamp } from "../profiles/signature.profile.js";
 import { SpeedUHCProfile } from "../profiles/speeduhc.profile.js";
 import { UHCProfile } from "../profiles/uhc.profile.js";
+import { WallsProfile } from "../profiles/walls.profile.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getLocalizeFunction } from "./localize.js";
 import { getTheme } from "../themes/index.js";
@@ -47,6 +48,7 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds>> = {
   }),
   uhc: card({ modes: UHC_MODES, draw: (base, { mode }) => <UHCProfile {...base} mode={mode} /> }),
   speeduhc: card({ modes: SPEED_UHC_MODES, draw: (base, { mode }) => <SpeedUHCProfile {...base} mode={mode} /> }),
+  walls: card({ modes: WALLS_MODES, draw: (base) => <WallsProfile {...base} /> }),
 };
 
 /** The mode a request names as the bot's command hands it to the card, and the background the command draws it on. */
