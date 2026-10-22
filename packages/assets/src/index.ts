@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Canvas, type Image, loadImage } from "skia-canvas";
+import { type Image, loadImage } from "skia-canvas";
 import { User, UserLogo } from "@statsify/schemas";
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -51,23 +51,6 @@ export const getDefaultSkin = (uuid: string) => {
     texture: getAssetPath(`skins/${name}.png`),
     render: getAssetPath(`skins/${name}-render.png`),
   };
-};
-
-/** The front of a player's head as a PNG: the face from a skin texture with the hat layer on top */
-export const renderHead = (skin: Image, size: number) => {
-  const canvas = new Canvas(size, size);
-  canvas.gpu = false;
-
-  const ctx = canvas.getContext("2d");
-  ctx.imageSmoothingEnabled = false;
-
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, size, size);
-
-  ctx.drawImage(skin, 8, 8, 8, 8, 0, 0, size, size);
-  ctx.drawImage(skin, 40, 8, 8, 8, 0, 0, size, size);
-
-  return canvas.toBuffer("png");
 };
 
 export const getAllGameIcons = async () => {
