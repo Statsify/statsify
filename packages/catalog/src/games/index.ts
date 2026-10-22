@@ -16,6 +16,7 @@ import { DUELS } from "./duels.js";
 import { PAINTBALL } from "./paintball.js";
 import { PARKOUR } from "./parkour.js";
 import { PIT } from "./pit.js";
+import { QUAKE } from "./quake.js";
 import { TURBO_KART_RACERS } from "./turbokartracers.js";
 import { UHC } from "./uhc.js";
 import { WALLS } from "./walls.js";
@@ -29,6 +30,7 @@ export { DUELS } from "./duels.js";
 export { PAINTBALL } from "./paintball.js";
 export { PARKOUR } from "./parkour.js";
 export { PIT } from "./pit.js";
+export { QUAKE } from "./quake.js";
 export { TURBO_KART_RACERS } from "./turbokartracers.js";
 export { UHC } from "./uhc.js";
 export { WALLS } from "./walls.js";
@@ -44,6 +46,7 @@ export const GAMES: Record<string, Game> = {
   paintball: PAINTBALL,
   parkour: PARKOUR,
   pit: PIT,
+  quake: QUAKE,
   turbokartracers: TURBO_KART_RACERS,
   uhc: UHC,
   walls: WALLS,

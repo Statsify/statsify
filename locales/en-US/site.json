@@ -159,7 +159,8 @@
     "joins": "Joins",
     "ragePotatoesEaten": "Rage Potatoes Eaten",
     "goldIngotsGathered": "Gold Ingots Gathered",
-    "vampireHealing": "Vampire Healing"
+    "vampireHealing": "Vampire Healing",
+    "postUpdateKills": "2017+ Kills"
   },
   "notFound": {
     "title": "OOPS!",

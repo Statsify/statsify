@@ -15,6 +15,7 @@ import { DUELS_PAGE } from "./duels.js";
 import { PAINTBALL_PAGE } from "./paintball.js";
 import { PARKOUR_PAGE } from "./parkour.js";
 import { PIT_PAGE } from "./pit.js";
+import { QUAKE_PAGE } from "./quake.js";
 import { TURBO_KART_RACERS_PAGE } from "./turbokartracers.js";
 import { UHC_PAGE } from "./uhc.js";
 import { WALLS_PAGE } from "./walls.js";
@@ -42,6 +43,7 @@ export const GAME_PAGES: GameLayout[] = [
   PAINTBALL_PAGE,
   PARKOUR_PAGE,
   PIT_PAGE,
+  QUAKE_PAGE,
   TURBO_KART_RACERS_PAGE,
   UHC_PAGE,
   WALLS_PAGE,
