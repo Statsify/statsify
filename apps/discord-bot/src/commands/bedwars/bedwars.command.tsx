@@ -12,9 +12,8 @@ import {
   BaseProfileProps,
   ProfileData,
 } from "#commands/base.hypixel-command";
-import { BedWarsProfile } from "@statsify/profiles";
+import { BedWarsChallengesProfile, BedWarsProfile } from "@statsify/profiles";
 import { Command } from "@statsify/discord";
-import { BedWarsChallengesProfile } from "./bedwars-challenges.profile.js";
 
 @Command({ description: (t) => t("commands.bedwars") })
 export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {

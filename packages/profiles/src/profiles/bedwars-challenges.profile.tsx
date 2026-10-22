@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { BEDWARS, cardColours } from "@statsify/catalog";
+import { Container, Footer, Header, SidebarItem, Table } from "../components/index.js";
 import {
   BedWarsModeChallenges,
   type FieldMetadata,
@@ -14,7 +15,7 @@ import {
   getLeaderboardFields,
 } from "@statsify/schemas";
 import { arrayGroup, prettify } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { BaseProfileProps } from "../types.js";
 
 const challengeFields = getLeaderboardFields(BedWarsModeChallenges).filter(
   ([field]) => field !== "totalChallenges" && field !== "uniqueChallenges",
@@ -24,6 +25,8 @@ const challengeFields = getLeaderboardFields(BedWarsModeChallenges).filter(
 ][];
 
 const rows = arrayGroup(challengeFields, 3);
+
+const colour = cardColours(BEDWARS, "challenges");
 
 export const BedWarsChallengesProfile = ({
   skin,
@@ -38,8 +41,8 @@ export const BedWarsChallengesProfile = ({
   const { challenges } = player.stats.bedwars;
 
   const sidebar: SidebarItem[] = [
-    ["Total Completions", t(challenges.totalChallenges as number), "§6"],
-    ["Unique Completions", t(challenges.uniqueChallenges as number), "§e"],
+    ["Total Completions", t(challenges.totalChallenges as number), colour("totalChallenges")],
+    ["Unique Completions", t(challenges.uniqueChallenges as number), colour("uniqueChallenges")],
   ];
 
   return (
@@ -64,12 +67,12 @@ export const BedWarsChallengesProfile = ({
                   padding={{ left: 8, right: 8, top: 4, bottom: 4 }}
                 >
                   <text>
-                    §l{completions > 0 ? "§a" : "§c"}
+                    §l{colour(field, completions)}
                     {metadata.leaderboard.fieldName ?? prettify(field)}
                   </text>
                   <div width="remaining" margin={{ left: 4, right: 4 }} />
                   <text>
-                    {completions > 0 ? "§a" : "§c"}
+                    {colour(field, completions)}
                     {t(completions)}
                   </text>
                 </box>

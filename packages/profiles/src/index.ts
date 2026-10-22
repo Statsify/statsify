@@ -12,6 +12,7 @@ export * from "./fonts.js";
 export * from "./localize.js";
 export * from "./profiles/arcade/arcade.profile.js";
 export * from "./profiles/arenabrawl.profile.js";
+export * from "./profiles/bedwars-challenges.profile.js";
 export * from "./profiles/bedwars.profile.js";
 export * from "./profiles/blitzsg.profile.js";
 export * from "./profiles/buildbattle.profile.js";

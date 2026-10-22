@@ -28,16 +28,12 @@ export const GAME_CARDS = ["bedwars", "uhc", "speeduhc", "walls", "vampirez", "p
 
 export type GameCard = (typeof GAME_CARDS)[number];
 
-/** Modes the bot draws on a card of their own, outside this package, so they unfurl with the general card too. */
-const OWN_CARDS: Partial<Record<GameCard, string[]>> = { bedwars: ["challenges"] };
-
 /**
- * Whether the pool draws a page's own card: a game in `GAME_CARDS`, in a mode not drawn elsewhere, and not a game's
- * all-time Quests (`period` is Quests', all time when absent), which the card fails on as the bot's `/quests overall` does.
+ * Whether the pool draws a page's own card: a game in `GAME_CARDS`, but not a game's all-time Quests (`period` is
+ * Quests', all time when absent), which the card fails on as the bot's `/quests overall` does.
  */
 export const isGameCard = (game: string, mode: string, period?: string): game is GameCard =>
   (GAME_CARDS as readonly string[]).includes(game) &&
-  !OWN_CARDS[game as GameCard]?.includes(mode) &&
   !(game === "quests" && mode !== "overall" && (period ?? "overall") === "overall");
 
 /**
@@ -73,6 +69,11 @@ export const GAME_CARD_SIZES: Record<GameCard, { width: number; height: number }
   challenges: { width: 971, height: 691 },
 };
 
+/** Modes the bot draws on a card of their own, at that card's size: BedWars' challenges. */
+const MODE_CARD_SIZES: Partial<Record<GameCard, Record<string, { width: number; height: number }>>> = {
+  bedwars: { challenges: { width: 1033, height: 790 } },
+};
+
 /**
  * The bot's general card, or a game's card in one of its api modes, and in one of the mode's submodes where the site
  * has the bot's (a mode the bot splits and the site doesn't shows its first, as the bot opens it), and for Quests in
@@ -84,7 +85,9 @@ export type CardChoice =
 
 /** The size of the image a card renders to in `variant`, which the page's `og:image:width` and `height` repeat. */
 export const imageSize = (choice: CardChoice, variant: ImageVariant) =>
-  variant === "og" && choice.card !== "general" ? GAME_CARD_SIZES[choice.card] : IMAGE_VARIANTS[variant];
+  variant === "og" && choice.card !== "general" ?
+    (MODE_CARD_SIZES[choice.card]?.[choice.mode] ?? GAME_CARD_SIZES[choice.card]) :
+    IMAGE_VARIANTS[variant];
 
 /** One card render, posted from the site to a worker. Documents are the API's JSON (`player.full`). */
 export type RenderRequest = CardChoice & {

@@ -53,6 +53,7 @@ import {
 import { ArenaBrawlProfile } from "../profiles/arenabrawl.profile.js";
 import { QUEST_TIMES } from "@statsify/catalog";
 import type { BaseProfileProps } from "../types.js";
+import { BedWarsChallengesProfile } from "../profiles/bedwars-challenges.profile.js";
 import { BedWarsProfile } from "../profiles/bedwars.profile.js";
 import { BuildBattleProfile } from "../profiles/buildbattle.profile.js";
 import { Canvas, type CanvasRenderingContext2D, type Image, loadImage } from "skia-canvas";
@@ -109,10 +110,8 @@ const getQuestLogos = once(() => Promise.all([getLogo("cross", 28), getLogo("ver
 const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
   bedwars: card({
     modes: BEDWARS_MODES,
-    draw: (base, { mode }) => {
-      if (mode.api === "challenges") throw new Error("BedWars' challenges have a card of their own");
-      return <BedWarsProfile {...base} mode={mode} />;
-    },
+    draw: (base, { mode }) =>
+      mode.api === "challenges" ? <BedWarsChallengesProfile {...base} /> : <BedWarsProfile {...base} mode={mode} />,
   }),
   uhc: card({ modes: UHC_MODES, draw: (base, { mode }) => <UHCProfile {...base} mode={mode} /> }),
   speeduhc: card({ modes: SPEED_UHC_MODES, draw: (base, { mode }) => <SpeedUHCProfile {...base} mode={mode} /> }),
