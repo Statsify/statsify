@@ -60,9 +60,6 @@ export class WoolWarsOverall extends WoolWarsClass {
   public declare wins: number;
 
   @Field()
-  public declare gamesPlayed: number;
-
-  @Field()
   public losses: number;
 
   @Field()
