@@ -10,6 +10,7 @@ export * from "./backgrounds.js";
 export * from "./components/index.js";
 export * from "./fonts.js";
 export * from "./localize.js";
+export * from "./profiles/arenabrawl.profile.js";
 export * from "./profiles/bedwars.profile.js";
 export * from "./profiles/buildbattle.profile.js";
 export * from "./profiles/general.profile.js";

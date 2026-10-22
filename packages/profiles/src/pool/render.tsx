@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BEDWARS_MODES, BUILD_BATTLE_MODES, type GameMode, type GameModes, type Guild, PAINTBALL_MODES, type Player, QUAKE_MODES, SPEED_UHC_MODES, TURBO_KART_RACERS_MODES, UHC_MODES, VAMPIREZ_MODES, WALLS_MODES } from "@statsify/schemas";
+import { ARENA_BRAWL_MODES, BEDWARS_MODES, BUILD_BATTLE_MODES, type GameMode, type GameModes, type Guild, PAINTBALL_MODES, type Player, QUAKE_MODES, SPEED_UHC_MODES, TURBO_KART_RACERS_MODES, UHC_MODES, VAMPIREZ_MODES, WALLS_MODES } from "@statsify/schemas";
+import { ArenaBrawlProfile } from "../profiles/arenabrawl.profile.js";
 import type { BaseProfileProps } from "../types.js";
 import { BedWarsProfile } from "../profiles/bedwars.profile.js";
 import { BuildBattleProfile } from "../profiles/buildbattle.profile.js";
@@ -59,6 +60,7 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds>> = {
   quake: card({ modes: QUAKE_MODES, draw: (base, { mode }) => <QuakeProfile {...base} mode={mode} /> }),
   turbokartracers: card({ modes: TURBO_KART_RACERS_MODES, draw: (base) => <TurboKartRacersProfile {...base} /> }),
   buildbattle: card({ modes: BUILD_BATTLE_MODES, draw: (base) => <BuildBattleProfile {...base} /> }),
+  arenabrawl: card({ modes: ARENA_BRAWL_MODES, draw: (base, { mode }) => <ArenaBrawlProfile {...base} mode={mode} /> }),
 };
 
 /** The mode a request names as the bot's command hands it to the card, and the background the command draws it on. */

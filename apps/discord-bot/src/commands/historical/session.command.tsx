@@ -52,8 +52,8 @@ import {
   SubPage,
 } from "@statsify/discord";
 import { ArcadeProfile } from "../arcade/arcade.profile.js";
-import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile.js";
 import {
+  ArenaBrawlProfile,
   BedWarsProfile,
   BuildBattleProfile,
   PaintballProfile,

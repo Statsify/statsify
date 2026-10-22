@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ARENA_BRAWL, cardColours } from "@statsify/catalog";
 import { ArenaBrawlModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   Container,
@@ -15,9 +16,9 @@ import {
   SidebarItem,
   Table,
   formatProgression,
-} from "#components";
+} from "../components/index.js";
 import { prettify } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { BaseProfileProps } from "../types.js";
 
 export interface ArenaBrawlProfileProps extends BaseProfileProps {
   mode: GameMode<ArenaBrawlModes>;
@@ -36,17 +37,18 @@ export const ArenaBrawlProfile = ({
 }: ArenaBrawlProfileProps) => {
   const { arenabrawl } = player.stats;
   const stats = arenabrawl[mode.api];
+  const colour = cardColours(ARENA_BRAWL, mode.api);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(arenabrawl.coins), "§6"],
-    [t("stats.tokens"), t(arenabrawl.tokens), "§e"],
-    [t("stats.magicalKeys"), t(arenabrawl.keys), "§b"],
-    [t("stats.magicalChests"), t(arenabrawl.magicalChests), "§5"],
-    [t("stats.rune"), prettify(arenabrawl.rune), "§9"],
+    [t("stats.coins"), t(arenabrawl.coins), colour("coins")],
+    [t("stats.tokens"), t(arenabrawl.tokens), colour("tokens")],
+    [t("stats.magicalKeys"), t(arenabrawl.keys), colour("keys")],
+    [t("stats.magicalChests"), t(arenabrawl.magicalChests), colour("magicalChests")],
+    [t("stats.rune"), prettify(arenabrawl.rune), colour("rune")],
   ];
 
   if (time === "LIVE" && "winstreak" in stats && stats["winstreak"] > 0)
-    sidebar.push([t("stats.winstreak"), t(stats.winstreak), "§a"]);
+    sidebar.push([t("stats.winstreak"), t(stats.winstreak), colour("winstreak")]);
 
   return (
     <Container background={background}>
@@ -69,14 +71,14 @@ export const ArenaBrawlProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-          <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
-          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
+          <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
+          <Table.td title={t("stats.losses")} value={t(stats.losses)} color={colour("losses")} />
+          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={colour("wlr")} />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
-          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+          <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
+          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
+          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
         </Table.tr>
         <Historical.exclude time={time}>
           <Table.ts title="§6Skills">
@@ -84,13 +86,13 @@ export const ArenaBrawlProfile = ({
               <Table.td
                 title={t("stats.offensive")}
                 value={prettify(arenabrawl.offensive)}
-                color="§c"
+                color={colour("offensive")}
                 size="small"
               />
               <Table.td
                 title={t("stats.utility")}
                 value={prettify(arenabrawl.utility)}
-                color="§e"
+                color={colour("utility")}
                 size="small"
               />
             </Table.tr>
@@ -98,13 +100,13 @@ export const ArenaBrawlProfile = ({
               <Table.td
                 title={t("stats.support")}
                 value={prettify(arenabrawl.support)}
-                color="§a"
+                color={colour("support")}
                 size="small"
               />
               <Table.td
                 title={t("stats.ultimate")}
                 value={prettify(arenabrawl.ultimate)}
-                color="§6"
+                color={colour("ultimate")}
                 size="small"
               />
             </Table.tr>
