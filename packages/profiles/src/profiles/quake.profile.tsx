@@ -13,9 +13,10 @@ import {
   SidebarItem,
   Table,
   formatProgression,
-} from "#components";
+} from "../components/index.js";
 import { FormattedGame, type GameMode, QuakeModes } from "@statsify/schemas";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { QUAKE, cardColours } from "@statsify/catalog";
+import type { BaseProfileProps } from "../types.js";
 
 export interface QuakeProfileProps extends BaseProfileProps {
   mode: GameMode<QuakeModes>;
@@ -34,13 +35,14 @@ export const QuakeProfile = ({
 }: QuakeProfileProps) => {
   const { quake } = player.stats;
   const stats = quake[mode.api];
+  const colour = cardColours(QUAKE, mode.api);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(quake.coins), "§6"],
-    [t("stats.tokens"), t(quake.tokens), "§e"],
-    [t("stats.godlikes"), t(quake.godlikes), "§3"],
-    [t("stats.trigger"), `${t(quake.trigger)}s`, "§b"],
-    [t("stats.highestKillstreak"), t(quake.highestKillstreak), "§4"],
+    [t("stats.coins"), t(quake.coins), colour("coins")],
+    [t("stats.tokens"), t(quake.tokens), colour("tokens")],
+    [t("stats.godlikes"), t(quake.godlikes), colour("godlikes")],
+    [t("stats.trigger"), `${t(quake.trigger)}s`, colour("trigger")],
+    [t("stats.highestKillstreak"), t(quake.highestKillstreak), colour("highestKillstreak")],
   ];
 
   return (
@@ -64,31 +66,31 @@ export const QuakeProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-          <Table.td title={t("stats.kwr")} value={t(stats.kwr)} color="§c" />
+          <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
+          <Table.td title={t("stats.kwr")} value={t(stats.kwr)} color={colour("kwr")} />
           <Table.td
             title={t("stats.killstreaks")}
             value={t(stats.killstreaks)}
-            color="§6"
+            color={colour("killstreaks")}
           />
         </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.shotsFired")}
             value={t(stats.shotsFired)}
-            color="§a"
+            color={colour("shotsFired")}
           />
-          <Table.td title={t("stats.headshots")} value={t(stats.headshots)} color="§c" />
+          <Table.td title={t("stats.headshots")} value={t(stats.headshots)} color={colour("headshots")} />
           <Table.td
             title={t("stats.shotAccuracy")}
             value={`${t(stats.quakeShotAccuracy)}%`}
-            color="§6"
+            color={colour("quakeShotAccuracy")}
           />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
-          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+          <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
+          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
+          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />
