@@ -158,7 +158,6 @@ export class GuildService {
       guild.scaledMonthly += scaled;
     }
 
-    // Cache guilds responses for 10 minutes
     guild.expiresAt = Date.now() + GUILD_CACHE_TIME_MS;
 
     const flatGuild = flatten(guild);

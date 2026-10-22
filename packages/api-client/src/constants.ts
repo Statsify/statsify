@@ -34,7 +34,6 @@ export enum CacheLevel {
   LIVE = "LIVE"
 }
 
-/** How long after a Hypixel fetch a cached player or guild expires (its expiresAt) */
 export const PLAYER_CACHE_TIME_MS = 120_000;
 export const GUILD_CACHE_TIME_MS = 600_000;
 
