@@ -21,7 +21,7 @@ import { GuildListProfile, GuildListProfileProps } from "./guild-list.profile.js
 import { GuildMember } from "@statsify/schemas";
 import { GuildMemberProfile } from "./guild-member.profile.js";
 import { GuildProfile, GuildProfileProps } from "./guild.profile.js";
-import { GuildQuery } from "@statsify/api-client";
+import { GUILD_CACHE_TIME_MS, GuildQuery } from "@statsify/api-client";
 import { GuildTopSubCommand } from "./guild-top.subcommand.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -66,7 +66,7 @@ export class GuildCommand extends GuildTopSubCommand {
       gameIcons,
     };
 
-    return paginate(context, [
+    const message = await paginate(context, [
       {
         label: "Overall",
         generator: () =>
@@ -86,6 +86,8 @@ export class GuildCommand extends GuildTopSubCommand {
         generator: () => render(<GuildProfile {...props} page="misc" />, getTheme(user)),
       },
     ]);
+
+    return { ...message, ...this.apiService.hypixelBusyNotice(guild, GUILD_CACHE_TIME_MS) };
   }
 
   @SubCommand({ description: (t) => t("commands.guild-list"), args: GuildArgument })
@@ -112,6 +114,7 @@ export class GuildCommand extends GuildTopSubCommand {
     const buffer = await canvas.toBuffer("png");
 
     return {
+      ...this.apiService.hypixelBusyNotice(guild, GUILD_CACHE_TIME_MS),
       files: [{ name: "guild-list.png", data: buffer, type: "image/png" }],
     };
   }
@@ -152,6 +155,7 @@ export class GuildCommand extends GuildTopSubCommand {
     const buffer = await canvas.toBuffer("png");
 
     return {
+      ...this.apiService.hypixelBusyNotice(guild, GUILD_CACHE_TIME_MS),
       files: [{ name: "guild-member.png", data: buffer, type: "image/png" }],
     };
   }

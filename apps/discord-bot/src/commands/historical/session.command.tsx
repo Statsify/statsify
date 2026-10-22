@@ -380,6 +380,8 @@ export class SessionCommand {
       this.apiService.getUserBadge(player.uuid),
     ]);
 
+    const notice = this.apiService.hypixelBusyNotice(player);
+
     const allModes = modes.getModes();
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
     const modeEmojis = getModeEmojis ? getModeEmojis(displayedModes) : [];
@@ -399,7 +401,7 @@ export class SessionCommand {
 
           if (player.isNew) {
             content = t("historical.newSession", { displayName });
-          } else if (Math.random() < 0.1) {
+          } else if (!notice && Math.random() < 0.1) {
             content = t("tips.resetSession");
           }
 
@@ -477,6 +479,7 @@ export class SessionCommand {
       };
     });
 
-    return paginate(context, pages);
+    const message = await paginate(context, pages);
+    return { ...message, ...notice };
   }
 }

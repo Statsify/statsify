@@ -50,6 +50,7 @@ import {
   MODES_TO_FORMATTED,
   mapBackground,
 } from "#constants";
+import { PLAYER_CACHE_TIME_MS } from "@statsify/api-client";
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -241,7 +242,8 @@ export class RatiosCommand {
       },
     }));
 
-    return paginate(context, pages);
+    const message = await paginate(context, pages);
+    return { ...message, ...this.apiService.hypixelBusyNotice(player, PLAYER_CACHE_TIME_MS) };
   }
 
   private getModeStats(game: PlayerStats[keyof PlayerStats], mode: GameModeWithSubModes<any>) {

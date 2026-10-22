@@ -14,7 +14,8 @@ import {
 } from "@statsify/util";
 import {
   CacheLevel,
-  HypixelUnavailableException,
+  type HypixelUnavailableException,
+  PLAYER_CACHE_TIME_MS,
   StatusNotFoundException,
 } from "@statsify/api-client";
 import { HypixelService } from "#hypixel";
@@ -98,7 +99,7 @@ export class PlayerService {
     }
 
     if (player) {
-      player.expiresAt = Date.now() + 120_000;
+      player.expiresAt = Date.now() + PLAYER_CACHE_TIME_MS;
       player.sessionReset = mongoPlayer?.sessionReset;
       player.guildId = mongoPlayer?.guildId;
 
@@ -129,7 +130,7 @@ export class PlayerService {
       await this.playerSearchService.delete(mongoPlayer.username);
 
     player.guildId = mongoPlayer?.guildId;
-    player.expiresAt = Date.now() + 120_000;
+    player.expiresAt = Date.now() + PLAYER_CACHE_TIME_MS;
 
     return this.saveOne(player, false);
   }

@@ -20,6 +20,7 @@ import {
 import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalTimeData } from "#components";
+import { PLAYER_CACHE_TIME_MS } from "@statsify/api-client";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { noop } from "@statsify/util";
@@ -157,7 +158,8 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
       return { ...pageInput, subPages };
     });
 
-    return paginate(context, pages);
+    const message = await paginate(context, pages);
+    return { ...message, ...this.apiService.hypixelBusyNotice(player, PLAYER_CACHE_TIME_MS) };
   }
 
   public abstract getProfile(
