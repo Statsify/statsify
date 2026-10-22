@@ -59,8 +59,10 @@ export class CapeCommand {
     ]);
 
     const pages = capes.flatMap(({ label, image }) => {
-      const front = image && getCapeFront(image);
-      if (!image || !front) return [];
+      if (!image) return [];
+
+      const front = getCapeFront(image);
+      if (!front) return [];
 
       return [{ label, generator: () => this.renderCape(image, front) }];
     });
