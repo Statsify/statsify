@@ -375,12 +375,12 @@
       "title": "Higher Tier Required"
     },
     "hypixelRateLimited": {
-      "description": "Hypixel is rate limiting Statsify right now. Try again in about {{time}}.",
-      "title": "Hypixel Rate Limit"
+      "description": "Statsify has reached its Hypixel API limit. Please try again in about {{time}}!",
+      "title": "$t(errors.hypixelUnavailable.title)"
     },
     "hypixelUnavailable": {
-      "description": "Hypixel isn't responding right now, try again in a bit.",
-      "title": "Hypixel Unavailable"
+      "description": "The Hypixel API is having trouble right now. Please try again in a few minutes!",
+      "title": "Hypixel API Unavailable"
     },
     "invalidGuild": {
       "description_id": "A guild with the id of `{{tag}}` could not be found!",

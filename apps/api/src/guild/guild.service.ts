@@ -43,10 +43,7 @@ export class GuildService {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
     if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
-      return {
-        guild: { ...deserialize(Guild, flatten(cachedGuild)), cached: true },
-        hypixelUnavailable: false,
-      };
+      return this.fromCache(cachedGuild, false);
     }
 
     let guild: Guild | null;
@@ -58,13 +55,7 @@ export class GuildService {
       );
     } catch (error) {
       // Serve the cache even if expired; an outage shouldn't clear or hide a guild
-      if (cachedGuild) {
-        return {
-          guild: { ...deserialize(Guild, flatten(cachedGuild)), cached: true },
-          hypixelUnavailable: true,
-        };
-      }
-
+      if (cachedGuild) return this.fromCache(cachedGuild, true);
       throw error;
     }
 
@@ -163,6 +154,13 @@ export class GuildService {
     await this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, "id");
 
     return { guild: deserialize(Guild, flatGuild), hypixelUnavailable: false };
+  }
+
+  private fromCache(cachedGuild: Guild, hypixelUnavailable: boolean) {
+    return {
+      guild: { ...deserialize(Guild, flatten(cachedGuild)), cached: true },
+      hypixelUnavailable,
+    };
   }
 
   private async getCachedGuild(

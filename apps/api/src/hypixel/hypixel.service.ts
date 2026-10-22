@@ -22,7 +22,6 @@ import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
 import type { APIData } from "@statsify/util";
 
-// Used when a rate limited response doesn't say when the limit resets
 const DEFAULT_RATE_LIMIT_SECONDS = 60;
 
 const parseHeader = (value: unknown) => {
@@ -138,15 +137,12 @@ export class HypixelService {
     return this.resources.get(resource);
   }
 
-  /**
-   * Hypixel rejecting the input means there is nothing to find. Any other failure rejects
-   * with a HypixelUnavailableException, so callers don't mistake an outage for missing data.
-   */
   private handleFailure<T>(err: any, notFound: T): Observable<T> {
     if (err instanceof HypixelUnavailableException) return throwError(() => err);
 
     this.logger.error(err);
 
+    // Hypixel rejecting the input means there is nothing to find
     const status = err.cause?.response?.status;
     if (status === 400 || status === 422) return of(notFound);
 
