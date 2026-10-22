@@ -49,10 +49,7 @@ export class GuildService {
       type !== GuildQuery.PLAYER || cachedGuild?.members.some((member) => member.uuid === tag);
 
     if (cachedGuild && listsPlayer && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
-      return {
-        guild: { ...deserialize(Guild, flatten(cachedGuild)), cached: true },
-        hypixelUnavailable: false,
-      };
+      return this.fromCache(cachedGuild, false);
     }
 
     // Most players have no guild, so that answer is cached as long as a guild is
@@ -74,13 +71,7 @@ export class GuildService {
       );
     } catch (error) {
       // Serve the cache even if expired; an outage shouldn't clear or hide a guild
-      if (cachedGuild && listsPlayer) {
-        return {
-          guild: { ...deserialize(Guild, flatten(cachedGuild)), cached: true },
-          hypixelUnavailable: true,
-        };
-      }
-
+      if (cachedGuild && listsPlayer) return this.fromCache(cachedGuild, true);
       throw error;
     }
 
@@ -180,6 +171,13 @@ export class GuildService {
     await this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, "id");
 
     return { guild: deserialize(Guild, flatGuild), hypixelUnavailable: false };
+  }
+
+  private fromCache(cachedGuild: Guild, hypixelUnavailable: boolean) {
+    return {
+      guild: { ...deserialize(Guild, flatten(cachedGuild)), cached: true },
+      hypixelUnavailable,
+    };
   }
 
   private async getCachedGuild(
