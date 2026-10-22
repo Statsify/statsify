@@ -41,7 +41,7 @@ if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
 
   suite("getLevel", () => {
-    it("should divide the remaining exp by the current level's requirement", () => {
+    it("should calculate fractional levels", () => {
       expect(getLevel(750)).toBe(1.25);
       expect(getLevel(5250)).toBe(3.5);
       expect(getLevel(487_250)).toBe(100.5);
