@@ -247,11 +247,7 @@ export class RatiosCommand {
   private getModeStats(game: PlayerStats[keyof PlayerStats], mode: GameModeWithSubModes<any>) {
     if (mode.submodes.length > 0) {
       const modeStats = game[mode.api as keyof typeof game];
-      const stats = modeStats[mode.submodes[0].api as keyof typeof game];
-      if (mode.submodes[0].api === "overall") return stats || game;
-
-      // Submodes that are only pages (e.g. duels overall's stats and titles) aren't fields
-      return stats ?? modeStats;
+      return modeStats[mode.submodes[0].api as keyof typeof game] ?? modeStats;
     }
 
     const stats = game[mode.api as keyof typeof game];
