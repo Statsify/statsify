@@ -39,7 +39,7 @@ export interface CommandOptions {
   preview?: string;
 
   /**
-   * Whether only the user who ran the command can see its reply. Discord decides this when the command is deferred, so returning `ephemeral: true` from the command isn't enough on its own.
+   * Whether only the user who ran the command can see its reply.
    * @default false
    */
   ephemeral?: boolean;
