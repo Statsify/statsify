@@ -49,7 +49,7 @@ export class GuildLeaderboardService extends LeaderboardService {
   protected async getAdditionalStats(
     ids: string[],
     fields: string[]
-  ): Promise<(LeaderboardAdditionalStats | null)[]> {
+  ): Promise<Map<string, LeaderboardAdditionalStats>> {
     const selector = fields.reduce((acc, key) => {
       acc[key] = true;
       return acc;
@@ -64,19 +64,13 @@ export class GuildLeaderboardService extends LeaderboardService {
       .lean()
       .exec();
 
-    const guildsById = new Map(guilds.map((guild) => [guild.id, guild]));
+    return new Map(
+      guilds.map((guild) => {
+        const additionalStats = flatten(guild) as LeaderboardAdditionalStats;
+        additionalStats.name = additionalStats.nameFormatted;
 
-    return ids.map((id) => {
-      const guild = guildsById.get(id);
-
-      if (!guild) {
-        return null;
-      }
-
-      const additionalStats = flatten(guild) as LeaderboardAdditionalStats;
-      additionalStats.name = additionalStats.nameFormatted;
-
-      return additionalStats;
-    });
+        return [guild.id, additionalStats];
+      })
+    );
   }
 }

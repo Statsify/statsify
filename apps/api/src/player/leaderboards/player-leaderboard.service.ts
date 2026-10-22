@@ -48,7 +48,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
   protected async getAdditionalStats(
     ids: string[],
     fields: string[]
-  ): Promise<(LeaderboardAdditionalStats | null)[]> {
+  ): Promise<Map<string, LeaderboardAdditionalStats>> {
     const selector = fields.reduce((acc, key) => {
       acc[key] = true;
       return acc;
@@ -63,19 +63,13 @@ export class PlayerLeaderboardService extends LeaderboardService {
       .lean()
       .exec();
 
-    const playersById = new Map(players.map((player) => [player.uuid, player]));
+    return new Map(
+      players.map((player) => {
+        const additionalStats = flatten(player) as LeaderboardAdditionalStats;
+        additionalStats.name = additionalStats.displayName;
 
-    return ids.map((id) => {
-      const player = playersById.get(id);
-
-      if (!player) {
-        return null;
-      }
-
-      const additionalStats = flatten(player) as LeaderboardAdditionalStats;
-      additionalStats.name = additionalStats.displayName;
-
-      return additionalStats;
-    });
+        return [player.uuid, additionalStats];
+      })
+    );
   }
 }

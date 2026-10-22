@@ -146,23 +146,12 @@ export abstract class LeaderboardService {
           ...(extraDisplay ? [extraDisplay] : []),
         ]
       ) :
-      [];
+      new Map<string, LeaderboardAdditionalStats>();
 
-    // Rows whose document is missing from Mongo are left out; the rest keep their Redis position
-    const rows = leaderboard.flatMap((doc, index) => {
-      const stats = additionalStats[index];
-      return stats ? [{ doc, stats }] : [];
-    });
+    const data = leaderboard.flatMap((doc) => {
+      const stats = additionalStats.get(doc.id);
+      if (!stats) return [];
 
-    const missing = leaderboard.length - rows.length;
-
-    if (missing) {
-      this.logger.warn(
-        `${missing} of ${leaderboard.length} rows on ${constructor.name} ${field} page ${top / PAGE_SIZE} have no document`
-      );
-    }
-
-    const data = rows.map(({ doc, stats }) => {
       if (extraDisplay) {
         const extraDisplayValue = stats[extraDisplay] ?? extraDisplayMetadata?.default;
         // Only add the extra display if it exists
@@ -185,14 +174,22 @@ export abstract class LeaderboardService {
       if (!hidden) fields.push(field);
       fields.push(...additionalValues);
 
-      return {
+      return [{
         id: doc.id,
         fields,
         name: stats.name,
         position: doc.index + 1,
         highlight: doc.index === highlight,
-      };
+      }];
     });
+
+    const missing = leaderboard.length - data.length;
+
+    if (missing) {
+      this.logger.warn(
+        `${missing} of ${leaderboard.length} rows on ${constructor.name} ${field} page ${top / PAGE_SIZE} have no document`
+      );
+    }
 
     const fields = [];
     if (!hidden) fields.push(fieldName);
@@ -282,7 +279,7 @@ export abstract class LeaderboardService {
   protected abstract getAdditionalStats(
     ids: string[],
     fields: string[]
-  ): Promise<(LeaderboardAdditionalStats | null)[]>;
+  ): Promise<Map<string, LeaderboardAdditionalStats>>;
 
   private async getLeaderboardFromRedis<T>(
     constructor: Constructor<T>,
