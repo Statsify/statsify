@@ -56,6 +56,7 @@ import {
   ArenaBrawlProfile,
   BedWarsProfile,
   BuildBattleProfile,
+  MurderMysteryProfile,
   PaintballProfile,
   PitProfile,
   QuakeProfile,
@@ -74,7 +75,6 @@ import { type GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
 import { HistoricalTimes } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
-import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile.js";
 import { STATUS_COLORS } from "@statsify/logger";
 import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
 import { TNTGamesProfile } from "../tntgames/tntgames.profile.js";

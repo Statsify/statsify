@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { MurderMysteryProfile } from "../profiles/murdermystery.profile.js";
 import { SkyWarsProfile } from "../profiles/skywars.profile.js";
 import {
   ARENA_BRAWL_MODES,
@@ -14,6 +15,7 @@ import {
   type GameMode,
   type GameModes,
   type Guild,
+  MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
   PARKOUR_MODES,
   PIT_MODES,
@@ -99,6 +101,7 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
     draw: (base, { data }) => <ParkourProfile {...base} gameIcons={data.gameIcons} />,
   }),
   skywars: card({ modes: SKYWARS_MODES, draw: (base, { mode }) => <SkyWarsProfile {...base} mode={mode} /> }),
+  murdermystery: card({ modes: MURDER_MYSTERY_MODES, draw: (base, { mode }) => <MurderMysteryProfile {...base} mode={mode} /> }),
 };
 
 /** The mode a request names as the bot's command hands it to the card, and the background the command draws it on. */
