@@ -52,7 +52,9 @@ const limit = async () => {
     await limitLeaderboardPipeline.exec();
 
     logger.log(`Limited ${leaderboards.length} ${name} leaderboards`);
-    logger.log(`There are ${memberCount.toLocaleString()} possible members in the ${name} leaderboards`);
+    logger.log(
+      `There are ${memberCount.toLocaleString()} possible members in the ${name} leaderboards`
+    );
   }
 };
 
