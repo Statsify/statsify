@@ -6,10 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ARCADE, cardColours } from "@statsify/catalog";
 import { EnderSpleef } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
-import { Table } from "#components";
+import { LocalizeFunction } from "../../../types.js";
+import { Table } from "../../../components/index.js";
 import { prettify } from "@statsify/util";
+
+const colour = cardColours(ARCADE, "enderSpleef");
 
 interface EnderSpleefTableProps {
   stats: EnderSpleef;
@@ -19,22 +22,22 @@ interface EnderSpleefTableProps {
 export const EnderSpleefTable = ({ stats, t }: EnderSpleefTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
       <Table.td
         title={t("stats.blocksBroken")}
         value={t(stats.blocksBroken)}
-        color="§c"
+        color={colour("blocksBroken")}
       />
-      <Table.td title={t("stats.trail")} value={prettify(stats.trail)} color="§6" />
+      <Table.td title={t("stats.trail")} value={prettify(stats.trail)} color={colour("trail")} />
     </Table.tr>
     <Table.ts title={`§b${t("stats.powerupActivations")}`}>
       <Table.tr>
-        <Table.td title={t("stats.bigShot")} value={t(stats.bigShot)} color="§a" />
-        <Table.td title={t("stats.tripleShot")} value={t(stats.tripleShot)} color="§c" />
+        <Table.td title={t("stats.bigShot")} value={t(stats.bigShot)} color={colour("bigShot")} />
+        <Table.td title={t("stats.tripleShot")} value={t(stats.tripleShot)} color={colour("tripleShot")} />
         <Table.td
           title={t("stats.total")}
           value={t(stats.powerupActivations)}
-          color="§6"
+          color={colour("powerupActivations")}
         />
       </Table.tr>
     </Table.ts>

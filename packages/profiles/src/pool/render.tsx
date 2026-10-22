@@ -6,10 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ArcadeProfile } from "../profiles/arcade/arcade.profile.js";
 import { CopsAndCrimsProfile } from "../profiles/copsandcrims.profile.js";
 import { MurderMysteryProfile } from "../profiles/murdermystery.profile.js";
 import { SkyWarsProfile } from "../profiles/skywars.profile.js";
 import {
+  ARCADE_MODES,
   ARENA_BRAWL_MODES,
   BEDWARS_MODES,
   BUILD_BATTLE_MODES,
@@ -105,14 +107,28 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
   skywars: card({ modes: SKYWARS_MODES, draw: (base, { mode }) => <SkyWarsProfile {...base} mode={mode} /> }),
   murdermystery: card({ modes: MURDER_MYSTERY_MODES, draw: (base, { mode }) => <MurderMysteryProfile {...base} mode={mode} /> }),
   copsandcrims: card({ modes: COPS_AND_CRIMS_MODES, draw: (base, { mode }) => <CopsAndCrimsProfile {...base} mode={mode} /> }),
+  arcade: card({ modes: ARCADE_MODES, draw: (base, { mode }) => <ArcadeProfile {...base} mode={mode} /> }),
 };
 
-/** The mode a request names as the bot's command hands it to the card, and the background the command draws it on. */
-function cardMode(modes: GameModes<GamesWithBackgrounds>, api: string) {
+/**
+ * The mode a request names as the bot's command hands it to the card, and the background the command draws it on. A
+ * mode with submodes shows the one named, else its first, as the bot opens it.
+ */
+function cardMode(modes: GameModes<GamesWithBackgrounds>, api: string, submode?: string) {
   const mode = modes.getModes().find((candidate) => candidate.api === api);
   if (!mode) throw new Error(`There is no ${api} mode`);
 
-  return { mode: { ...mode, submode: undefined } as unknown as GameMode<GamesWithBackgrounds>, background: mapBackground(modes, mode.api) };
+  if (mode.submodes.length === 0) {
+    return { mode: { ...mode, submode: undefined } as unknown as GameMode<GamesWithBackgrounds>, background: mapBackground(modes, mode.api) };
+  }
+
+  const sub = submode === undefined ? mode.submodes[0] : mode.submodes.find((candidate) => candidate.api === submode);
+  if (!sub) throw new Error(`There is no ${api} ${submode} submode`);
+
+  return {
+    mode: { api: mode.api, formatted: mode.formatted, hypixel: mode.hypixel, submode: sub } as GameMode<GamesWithBackgrounds>,
+    background: mapBackground(modes, mode.api, sub.api),
+  };
 }
 
 /**
@@ -127,7 +143,7 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
   const { width, height } = imageSize(request, request.variant);
   const uuid = String(request.player.uuid);
   const game =
-    request.card === "general" ? undefined : { spec: CARDS[request.card], ...cardMode(CARDS[request.card].modes, request.mode) };
+    request.card === "general" ? undefined : { spec: CARDS[request.card], ...cardMode(CARDS[request.card].modes, request.mode, request.submode) };
 
   const [t, background, logo, skin, data] = await Promise.all([
     getLocalizeFunction(),

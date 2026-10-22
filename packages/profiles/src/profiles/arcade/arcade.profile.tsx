@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ARCADE, cardColours } from "@statsify/catalog";
 import { ArcadeModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   BlockingDeadTable,
@@ -31,8 +32,8 @@ import {
   ZombiesMapTable,
   ZombiesTable,
 } from "./modes/index.js";
-import { Container, Footer, Header, SidebarItem } from "#components";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { Container, Footer, Header, SidebarItem } from "../../components/index.js";
+import type { BaseProfileProps } from "../../types.js";
 
 export interface ArcadeProfileProps extends BaseProfileProps {
   mode: GameMode<ArcadeModes>;
@@ -50,11 +51,12 @@ export const ArcadeProfile = ({
   time,
 }: ArcadeProfileProps) => {
   const { arcade } = player.stats;
+  const colour = cardColours(ARCADE);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(arcade.coins), "§6"],
-    [t("stats.coinConversions"), t(arcade.coinConversions), "§e"],
-    [t("stats.arcadeWins"), t(arcade.wins), "§b"],
+    [t("stats.coins"), t(arcade.coins), colour("coins")],
+    [t("stats.coinConversions"), t(arcade.coinConversions), colour("coinConversions")],
+    [t("stats.arcadeWins"), t(arcade.wins), colour("wins")],
   ];
 
   const { api, submode } = mode;
@@ -74,7 +76,7 @@ export const ArcadeProfile = ({
       break;
 
     case "disasters":
-      sidebar.push([t("stats.powerups"), t(arcade.disasters.powerups), "§5"]);
+      sidebar.push([t("stats.powerups"), t(arcade.disasters.powerups), colour("disasters.powerups")]);
       table = (
         <DisastersTable stats={arcade[api]} t={t} submode={mode.submode} />
       );

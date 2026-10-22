@@ -7,8 +7,8 @@
  */
 
 import { Arcade } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
-import { Table } from "#components";
+import { LocalizeFunction } from "../../../types.js";
+import { Table } from "../../../components/index.js";
 import { arrayGroup } from "@statsify/util";
 
 interface OverallArcadeTableProps {

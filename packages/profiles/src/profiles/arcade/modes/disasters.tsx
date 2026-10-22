@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ARCADE, cardColours } from "@statsify/catalog";
 import {
   ArcadeModes,
   DisasterSurvivals,
@@ -13,9 +14,11 @@ import {
   DisastersDeaths,
   SubModeForMode,
 } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
-import { Table } from "#components";
+import { LocalizeFunction } from "../../../types.js";
+import { Table } from "../../../components/index.js";
 import { arrayGroup, formatTime } from "@statsify/util";
+
+const colour = cardColours(ARCADE, "disasters");
 
 interface DisastersTableProps {
   stats: Disasters;
@@ -32,28 +35,29 @@ export const DisastersTable = ({ stats, t, submode }: DisastersTableProps) => {
   return (
     <Table.table>
       <Table.tr>
-        <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+        <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
         <Table.td
           title={t("stats.losses")}
           value={t(stats.losses)}
-          color="§c"
+          color={colour("losses")}
         />
-        <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
+        <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={colour("wlr")} />
       </Table.tr>
       <Table.tr>
         <Table.td
           title={t("stats.gamesPlayed")}
           value={t(stats.gamesPlayed)}
-          color="§e"
+          color={colour("gamesPlayed")}
         />
         <Table.td
           title={t("stats.playtime")}
           value={formatTime(stats.playtime)}
-          color="§b"
+          color={colour("playtime")}
         />
         <Table.td
           title={t("stats.survivals")}
           value={t(stats.survivals.overall)}
+          // The catalog keeps the survivals table's white for this stat; the summary draws it in its own colour.
           color="§d"
         />
       </Table.tr>
@@ -103,7 +107,7 @@ const DisastersSurvivalsTable = ({
 
   const rows = arrayGroup(
     entries
-      .map(([key, label]) => ({ label, survivals: stats.survivals[key] }))
+      .map(([key, label]) => ({ key, label, survivals: stats.survivals[key] }))
       .toSorted((a, b) => b.survivals - a.survivals),
     2
   );
@@ -112,12 +116,12 @@ const DisastersSurvivalsTable = ({
     <>
       {rows.map((row) => (
         <Table.tr>
-          {row.map(({ label, survivals }) => (
+          {row.map(({ key, label, survivals }) => (
             <Table.td
               title={label}
               value={t(survivals)}
               size="inline"
-              color="§f"
+              color={colour(`survivals.${key}`)}
             />
           ))}
         </Table.tr>
@@ -164,7 +168,7 @@ const DisastersDeathsTable = ({
 
   const rows = arrayGroup(
     entries
-      .map(([key, label]) => ({ label, deaths: stats.deaths[key] }))
+      .map(([key, label]) => ({ key, label, deaths: stats.deaths[key] }))
       .toSorted((a, b) => b.deaths - a.deaths),
     2
   );
@@ -173,12 +177,12 @@ const DisastersDeathsTable = ({
     <>
       {rows.map((row) => (
         <Table.tr>
-          {row.map(({ label, deaths }) => (
+          {row.map(({ key, label, deaths }) => (
             <Table.td
               title={label}
               value={t(deaths)}
               size="inline"
-              color="§f"
+              color={colour(`deaths.${key}`)}
             />
           ))}
         </Table.tr>

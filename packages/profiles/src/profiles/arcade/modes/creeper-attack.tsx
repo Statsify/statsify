@@ -6,9 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ARCADE, cardColours } from "@statsify/catalog";
 import { CreeperAttack } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
-import { Table } from "#components";
+import { LocalizeFunction } from "../../../types.js";
+import { Table } from "../../../components/index.js";
+
+const colour = cardColours(ARCADE, "creeperAttack");
 
 interface CreeperAttackTableProps {
   stats: CreeperAttack;
@@ -18,7 +21,7 @@ interface CreeperAttackTableProps {
 export const CreeperAttackTable = ({ stats, t }: CreeperAttackTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.maxWave")} value={t(stats.maxWave)} color="§a" />
+      <Table.td title={t("stats.maxWave")} value={t(stats.maxWave)} color={colour("maxWave")} />
     </Table.tr>
   </Table.table>
 );

@@ -24,7 +24,7 @@ export type ImageVariant = keyof typeof IMAGE_VARIANTS;
  * The games whose bot card the pool draws for a site page's unfurl, by their `PlayerStats` key. A game joins once its
  * card lives in this package; the rest unfurl with the general card.
  */
-export const GAME_CARDS = ["bedwars", "uhc", "speeduhc", "walls", "vampirez", "paintball", "quake", "turbokartracers", "buildbattle", "arenabrawl", "pit", "parkour", "skywars", "murdermystery", "copsandcrims"] as const;
+export const GAME_CARDS = ["bedwars", "uhc", "speeduhc", "walls", "vampirez", "paintball", "quake", "turbokartracers", "buildbattle", "arenabrawl", "pit", "parkour", "skywars", "murdermystery", "copsandcrims", "arcade"] as const;
 
 export type GameCard = (typeof GAME_CARDS)[number];
 
@@ -55,10 +55,14 @@ export const GAME_CARD_SIZES: Record<GameCard, { width: number; height: number }
   skywars: { width: 784, height: 505 },
   murdermystery: { width: 1103, height: 596 },
   copsandcrims: { width: 845, height: 505 },
+  arcade: { width: 1064, height: 698 },
 };
 
-/** The bot's general card, or a game's card in one of its api modes. */
-export type CardChoice = { card: "general" } | { card: GameCard; mode: string };
+/**
+ * The bot's general card, or a game's card in one of its api modes, and in one of the mode's submodes where the site
+ * has the bot's (a mode the bot splits and the site doesn't shows its first, as the bot opens it).
+ */
+export type CardChoice = { card: "general" } | { card: GameCard; mode: string; submode?: string };
 
 /** The size of the image a card renders to in `variant`, which the page's `og:image:width` and `height` repeat. */
 export const imageSize = (choice: CardChoice, variant: ImageVariant) =>

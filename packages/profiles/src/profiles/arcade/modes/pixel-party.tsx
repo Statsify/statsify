@@ -6,9 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LocalizeFunction } from "@statsify/discord";
+import { ARCADE, cardColours } from "@statsify/catalog";
+import { LocalizeFunction } from "../../../types.js";
 import { PixelParty } from "@statsify/schemas";
-import { Table } from "#components";
+import { Table } from "../../../components/index.js";
+
+const colour = cardColours(ARCADE, "pixelParty");
 
 interface PixelPartyTableProps {
   stats: PixelParty;
@@ -19,25 +22,25 @@ export const PixelPartyTable = ({ stats, t }: PixelPartyTableProps) => (
   <Table.table>
     <Table.ts title="§6Overall">
       <Table.tr>
-        <Table.td title={t("stats.wins")} value={t(stats.overall.wins)} color="§a" />
-        <Table.td title={t("stats.losses")} value={t(stats.overall.losses)} color="§c" />
-        <Table.td title={t("stats.wlr")} value={t(stats.overall.wlr)} color="§6" />
+        <Table.td title={t("stats.wins")} value={t(stats.overall.wins)} color={colour("overall.wins")} />
+        <Table.td title={t("stats.losses")} value={t(stats.overall.losses)} color={colour("overall.losses")} />
+        <Table.td title={t("stats.wlr")} value={t(stats.overall.wlr)} color={colour("overall.wlr")} />
       </Table.tr>
       <Table.tr>
         <Table.td
           title={t("stats.gamesPlayed")}
           value={t(stats.overall.gamesPlayed)}
-          color="§b"
+          color={colour("overall.gamesPlayed")}
         />
         <Table.td
           title={t("stats.roundsCompleted")}
           value={t(stats.roundsCompleted)}
-          color="§e"
+          color={colour("roundsCompleted")}
         />
         <Table.td
           title={t("stats.powerupsCollected")}
           value={t(stats.powerupsCollected)}
-          color="§d"
+          color={colour("powerupsCollected")}
         />
       </Table.tr>
     </Table.ts>
@@ -47,13 +50,13 @@ export const PixelPartyTable = ({ stats, t }: PixelPartyTableProps) => (
           <Table.td
             title={t("stats.wins")}
             value={t(stats.normal.wins)}
-            color="§a"
+            color={colour("normal.wins")}
             size="small"
           />
           <Table.td
             title={t("stats.losses")}
             value={t(stats.normal.losses)}
-            color="§c"
+            color={colour("normal.losses")}
             size="small"
           />
         </Table.tr>
@@ -63,13 +66,13 @@ export const PixelPartyTable = ({ stats, t }: PixelPartyTableProps) => (
           <Table.td
             title={t("stats.wins")}
             value={t(stats.hyper.wins)}
-            color="§a"
+            color={colour("hyper.wins")}
             size="small"
           />
           <Table.td
             title={t("stats.losses")}
             value={t(stats.hyper.losses)}
-            color="§c"
+            color={colour("hyper.losses")}
             size="small"
           />
         </Table.tr>

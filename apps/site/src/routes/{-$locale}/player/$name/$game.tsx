@@ -132,8 +132,9 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const query = new URLSearchParams({ ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }) });
     const path = `/player/${username}/${game}${query.size > 0 ? `?${query}` : ""}`;
 
-    // The unfurl: the bot's card for this game and mode (`/og` falls back to the general card for a game without one).
-    const image = `/og/${uuid}.png?${new URLSearchParams({ game, ...(mode && { mode }), v: String(updatedAt) })}`;
+    // The unfurl: the bot's card for this game, mode and submode (`/og` falls back to the general card for a game without one).
+    const unfurlQuery = new URLSearchParams({ game, ...(mode && { mode }), ...(submode && { submode }), v: String(updatedAt) });
+    const image = `/og/${uuid}.png?${unfurlQuery}`;
 
     return {
       meta: [

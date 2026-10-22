@@ -6,9 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ARCADE, cardColours } from "@statsify/catalog";
 import { HideAndSeek } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
-import { Table } from "#components";
+import { LocalizeFunction } from "../../../types.js";
+import { Table } from "../../../components/index.js";
+
+const colour = cardColours(ARCADE, "hideAndSeek");
 
 interface HideAndSeekTableProps {
   stats: HideAndSeek;
@@ -22,16 +25,16 @@ export const HideAndSeekTable = ({ stats, t }: HideAndSeekTableProps) => {
     <Table.table>
       <Table.ts title="§6Overall">
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(overall.wins)} color="§a" />
+          <Table.td title={t("stats.wins")} value={t(overall.wins)} color={colour("overall.wins")} />
           <Table.td
             title={t("stats.hiderWins")}
             value={t(overall.hiderWins)}
-            color="§e"
+            color={colour("overall.hiderWins")}
           />
           <Table.td
             title={t("stats.seekerWins")}
             value={t(overall.seekerWins)}
-            color="§b"
+            color={colour("overall.seekerWins")}
           />
         </Table.tr>
       </Table.ts>
@@ -40,29 +43,29 @@ export const HideAndSeekTable = ({ stats, t }: HideAndSeekTableProps) => {
           <Table.td
             title={t("stats.wins")}
             value={t(partyPooper.wins)}
-            color="§a"
+            color={colour("partyPooper.wins")}
           />
           <Table.td
             title={t("stats.hiderWins")}
             value={t(partyPooper.hiderWins)}
-            color="§e"
+            color={colour("partyPooper.hiderWins")}
           />
           <Table.td
             title={t("stats.seekerWins")}
             value={t(partyPooper.seekerWins)}
-            color="§b"
+            color={colour("partyPooper.seekerWins")}
           />
         </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.objectives")}
             value={t(objectivesCompleted)}
-            color="§a"
+            color={colour("objectivesCompleted")}
           />
           <Table.td
             title={t("stats.kills")}
             value={t(kills)}
-            color="§b"
+            color={colour("kills")}
           />
         </Table.tr>
       </Table.ts>
@@ -71,17 +74,17 @@ export const HideAndSeekTable = ({ stats, t }: HideAndSeekTableProps) => {
           <Table.td
             title={t("stats.wins")}
             value={t(propHunt.wins)}
-            color="§a"
+            color={colour("propHunt.wins")}
           />
           <Table.td
             title={t("stats.hiderWins")}
             value={t(propHunt.hiderWins)}
-            color="§e"
+            color={colour("propHunt.hiderWins")}
           />
           <Table.td
             title={t("stats.seekerWins")}
             value={t(propHunt.seekerWins)}
-            color="§b"
+            color={colour("propHunt.seekerWins")}
           />
         </Table.tr>
       </Table.ts>
