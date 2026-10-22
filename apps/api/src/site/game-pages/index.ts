@@ -12,6 +12,7 @@ import { BEDWARS_PAGE } from "./bedwars.js";
 import { BLITZSG_PAGE } from "./blitzsg.js";
 import { BUILD_BATTLE_PAGE } from "./buildbattle.js";
 import { CHALLENGES_PAGE } from "./challenges.js";
+import { COPS_AND_CRIMS_PAGE } from "./copsandcrims.js";
 import { DUELS_PAGE } from "./duels.js";
 import { PAINTBALL_PAGE } from "./paintball.js";
 import { PARKOUR_PAGE } from "./parkour.js";
@@ -43,6 +44,7 @@ export const GAME_PAGES: GameLayout[] = [
   BLITZSG_PAGE,
   BUILD_BATTLE_PAGE,
   CHALLENGES_PAGE,
+  COPS_AND_CRIMS_PAGE,
   DUELS_PAGE,
   PAINTBALL_PAGE,
   PARKOUR_PAGE,

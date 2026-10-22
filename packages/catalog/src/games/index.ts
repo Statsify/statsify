@@ -13,6 +13,7 @@ import { BEDWARS } from "./bedwars.js";
 import { BLITZSG } from "./blitzsg.js";
 import { BUILD_BATTLE } from "./buildbattle.js";
 import { CHALLENGES } from "./challenges.js";
+import { COPS_AND_CRIMS } from "./copsandcrims.js";
 import { DUELS } from "./duels.js";
 import { PAINTBALL } from "./paintball.js";
 import { PARKOUR } from "./parkour.js";
@@ -30,6 +31,7 @@ export { BEDWARS } from "./bedwars.js";
 export { BLITZSG } from "./blitzsg.js";
 export { BUILD_BATTLE } from "./buildbattle.js";
 export { CHALLENGES } from "./challenges.js";
+export { COPS_AND_CRIMS } from "./copsandcrims.js";
 export { DUELS } from "./duels.js";
 export { PAINTBALL } from "./paintball.js";
 export { PARKOUR } from "./parkour.js";
@@ -49,6 +51,7 @@ export const GAMES: Record<string, Game> = {
   blitzsg: BLITZSG,
   buildbattle: BUILD_BATTLE,
   challenges: CHALLENGES,
+  copsandcrims: COPS_AND_CRIMS,
   duels: DUELS,
   paintball: PAINTBALL,
   parkour: PARKOUR,
