@@ -38,7 +38,6 @@ export class SkinService {
     ctx.fillRect(0, 0, size, size);
 
     // A texture that couldn't be decoded has no size, and drawing it throws
-    // since skia-canvas v4; leave the black square, as before
     if (skin.width) {
       ctx.drawImage(skin, 8, 8, 8, 8, 0, 0, size, size);
       ctx.drawImage(skin, 40, 8, 8, 8, 0, 0, size, size);
