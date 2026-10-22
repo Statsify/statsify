@@ -167,12 +167,29 @@ export class PlayerService {
     const flatPlayer = flatten(player);
     const serializedPlayer = serialize<Player>(Player, flatPlayer);
 
+    // Mongoose doesn't cast update pipelines, so cast here. Nested, since
+    // thousands of dotted keys make its change tracking O(n²)
+    const document = new this.playerModel(
+      unflatten(serializedPlayer),
+      null,
+      true
+    ).toObject();
+
+    // Only guild refreshes write guildId, so keep the stored one in case a
+    // refresh landed after this player was read
+    delete document.guildId;
+
     const promises = [
-      // Mongoose gets the nested document: with thousands of dotted keys, its change
-      // tracking makes the build O(n²)
       this.playerModel.collection.updateOne(
         { uuid: player.uuid },
-        playerSave(this.playerModel, unflatten(serializedPlayer)),
+        [
+          {
+            // $literal keeps "$" strings from being read as field paths
+            $replaceWith: {
+              $mergeObjects: [{ $literal: document }, { guildId: "$guildId" }],
+            },
+          },
+        ],
         { upsert: true }
       ),
       this.playerLeaderboardService.addLeaderboards(
@@ -210,29 +227,4 @@ export class PlayerService {
 
     return flatten(mongoPlayer);
   }
-}
-
-/**
- * The update that saves a player: the document replaceOne would store, with the guildId that's
- * stored when the write lands. Only guild refreshes write guildId, so one that lands during a save
- * is kept instead of being overwritten with the guildId read before it
- */
-export function playerSave(model: PlayerModel, player: object) {
-  // Query.replaceOne builds its replacement this way and sends its toBSON(), which Mongoose's
-  // types leave out
-  const document = (
-    new model(player, null, true) as unknown as { toBSON(): Record<string, unknown> }
-  ).toBSON();
-
-  delete document.guildId;
-
-  // $literal keeps strings that start with "$" from being read as field paths. There's no __v to
-  // add: Player's schema turns the version key off, and nothing reads it
-  return [
-    {
-      $replaceWith: {
-        $mergeObjects: [{ $literal: document }, { guildId: "$guildId" }],
-      },
-    },
-  ];
 }
