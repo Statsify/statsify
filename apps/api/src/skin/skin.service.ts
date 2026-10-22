@@ -18,15 +18,11 @@ import { getMinecraftTexturePath } from "@statsify/assets";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
-/** How long a cached skin is used before it's refreshed. Players rarely change skins. */
 const REFRESH_AFTER = 1000 * 60 * 60 * 24;
-
-/** After a failed refresh (Mojang down or rate limiting), the cached skin is kept and the refresh tried again later. */
 const RETRY_AFTER = 1000 * 60 * 60;
 
 @Injectable()
 export class SkinService {
-  /** Refreshes in flight, so many requests for one stale skin make a single Mojang call. */
   private readonly refreshing = new Set<string>();
 
   public constructor(
@@ -73,7 +69,6 @@ export class SkinService {
       .lean()
       .exec();
 
-    // A cached skin is served at once, even when it's due a refresh; the refresh happens in the background.
     if (cachedSkin) {
       if (Date.now() >= cachedSkin.expiresAt) this.refresh(cachedSkin.uuid);
       return cachedSkin;
@@ -92,7 +87,7 @@ export class SkinService {
     this.requestSkin(uuid)
       .then((skin) => this.save(skin))
       .catch(() => this.skinModel.updateOne({ uuid }, { expiresAt: Date.now() + RETRY_AFTER }).exec())
-      // The database failed too; the next request tries again.
+      // The database failed too, so the next request tries again
       .catch(() => undefined)
       .finally(() => this.refreshing.delete(uuid));
   }
