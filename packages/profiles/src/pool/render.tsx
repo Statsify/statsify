@@ -8,6 +8,7 @@
 
 import { ArcadeProfile } from "../profiles/arcade/arcade.profile.js";
 import { CopsAndCrimsProfile } from "../profiles/copsandcrims.profile.js";
+import { MegaWallsProfile } from "../profiles/megawalls.profile.js";
 import { MurderMysteryProfile } from "../profiles/murdermystery.profile.js";
 import { SkyWarsProfile } from "../profiles/skywars.profile.js";
 import { TNTGamesProfile } from "../profiles/tntgames.profile.js";
@@ -22,6 +23,7 @@ import {
   type GameMode,
   type GameModes,
   type Guild,
+  MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
   PARKOUR_MODES,
@@ -117,6 +119,7 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
   tntgames: card({ modes: TNT_GAMES_MODES, draw: (base, { mode }) => <TNTGamesProfile {...base} mode={mode} /> }),
   warlords: card({ modes: WARLORDS_MODES, draw: (base, { mode }) => <WarlordsProfile {...base} mode={mode} /> }),
   woolgames: card({ modes: WOOLGAMES_MODES, draw: (base, { mode }) => <WoolGamesProfile {...base} mode={mode} /> }),
+  megawalls: card({ modes: MEGAWALLS_MODES, draw: (base, { mode }) => <MegaWallsProfile {...base} mode={mode} /> }),
 };
 
 /**

@@ -57,6 +57,7 @@ import {
   BedWarsProfile,
   BuildBattleProfile,
   CopsAndCrimsProfile,
+  MegaWallsProfile,
   MurderMysteryProfile,
   PaintballProfile,
   PitProfile,
@@ -77,7 +78,6 @@ import { DuelsProfile } from "../duels/duels.profile.js";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
 import { HistoricalTimes } from "@statsify/api-client";
-import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
 import { STATUS_COLORS } from "@statsify/logger";
 import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
 import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";
