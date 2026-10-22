@@ -19,6 +19,7 @@ import { PIT } from "./pit.js";
 import { QUAKE } from "./quake.js";
 import { TURBO_KART_RACERS } from "./turbokartracers.js";
 import { UHC } from "./uhc.js";
+import { VAMPIREZ } from "./vampirez.js";
 import { WALLS } from "./walls.js";
 
 export { ARCADE, DROPPER_DIFFICULTIES } from "./arcade.js";
@@ -33,6 +34,7 @@ export { PIT } from "./pit.js";
 export { QUAKE } from "./quake.js";
 export { TURBO_KART_RACERS } from "./turbokartracers.js";
 export { UHC } from "./uhc.js";
+export { VAMPIREZ } from "./vampirez.js";
 export { WALLS } from "./walls.js";
 
 /** Every game in the catalog, by its `PlayerStats` key. */
@@ -49,6 +51,7 @@ export const GAMES: Record<string, Game> = {
   quake: QUAKE,
   turbokartracers: TURBO_KART_RACERS,
   uhc: UHC,
+  vampirez: VAMPIREZ,
   walls: WALLS,
 };
 
