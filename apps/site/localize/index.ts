@@ -29,12 +29,8 @@ function formatNumber(value: number, language?: string) {
 }
 
 // Taken from @statsify/util
-function abbreviationNumber(num: number, decimals = 2): [num: number, suffix: string] {
+function abbreviationNumber(num: number): [num: number, suffix: string] {
   const abbreviation = ["", "K", "M", "B", "T"];
   const base = Math.floor(num === 0 ? 0 : Math.log(num) / Math.log(1000));
-  const shiftDecimal = 10 ** decimals;
-  return [
-    +(Math.floor((num / Math.pow(1000, base)) * shiftDecimal) / shiftDecimal).toFixed(decimals),
-    abbreviation[base],
-  ];
+  return [Math.floor((num / Math.pow(1000, base)) * 100) / 100, abbreviation[base]];
 }
