@@ -96,6 +96,7 @@
   "game": {
     "stats": "Stats",
     "wins": "Wins",
+    "times": "Times",
     "challenges": "Challenges",
     "mode": "Mode",
     "modes": "Modes",

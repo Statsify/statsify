@@ -14,6 +14,7 @@ import { BUILD_BATTLE } from "./buildbattle.js";
 import { CHALLENGES } from "./challenges.js";
 import { DUELS } from "./duels.js";
 import { PAINTBALL } from "./paintball.js";
+import { PARKOUR } from "./parkour.js";
 import { PIT } from "./pit.js";
 import { TURBO_KART_RACERS } from "./turbokartracers.js";
 import { WALLS } from "./walls.js";
@@ -25,6 +26,7 @@ export { BUILD_BATTLE } from "./buildbattle.js";
 export { CHALLENGES } from "./challenges.js";
 export { DUELS } from "./duels.js";
 export { PAINTBALL } from "./paintball.js";
+export { PARKOUR } from "./parkour.js";
 export { PIT } from "./pit.js";
 export { TURBO_KART_RACERS } from "./turbokartracers.js";
 export { WALLS } from "./walls.js";
@@ -38,6 +40,7 @@ export const GAMES: Record<string, Game> = {
   challenges: CHALLENGES,
   duels: DUELS,
   paintball: PAINTBALL,
+  parkour: PARKOUR,
   pit: PIT,
   turbokartracers: TURBO_KART_RACERS,
   walls: WALLS,
