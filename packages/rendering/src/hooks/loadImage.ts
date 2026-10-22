@@ -14,7 +14,7 @@ import { readFile } from "node:fs/promises";
  * Idle timeout for remote images. A skin can need a Mojang lookup and a render on the API
  * before any data arrives, which is why this isn't shorter.
  */
-const IMAGE_DOWNLOAD_TIMEOUT = 5_000;
+export const IMAGE_DOWNLOAD_TIMEOUT = 5_000;
 
 const bufferToImage = (buffer: Buffer): Image => {
   const image = new Image();
