@@ -92,10 +92,10 @@ export const getLeaderboardMetadata = (
       name,
     };
   } else {
-    // Fields with historical stats keep a tenth of the default limit. The limiter used to trim
-    // their leaderboards to a tenth, so that is the size they hold
+    // Fields with historical stats have always been trimmed to a tenth of the default
     const defaultLimit =
-      getDefaultLeaderboardLimit(propertyKey) / (historicalOptions?.enabled === false ? 1 : 10);
+      getDefaultLeaderboardLimit(propertyKey) /
+      (historicalOptions?.enabled === false ? 1 : 10);
 
     leaderboard = {
       enabled: true,
