@@ -64,6 +64,7 @@ import {
   PitProfile,
   QuakeProfile,
   SkyWarsProfile,
+  SmashHeroesProfile,
   SpeedUHCProfile,
   TNTGamesProfile,
   TurboKartRacersProfile,
@@ -79,7 +80,6 @@ import { type GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
 import { HistoricalTimes } from "@statsify/api-client";
 import { STATUS_COLORS } from "@statsify/logger";
-import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
 import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "../arcade/arcade.command.js";
