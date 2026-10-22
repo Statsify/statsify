@@ -8,12 +8,15 @@
 
 import axios, { AxiosInstance } from "axios";
 import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
-import { type Server, type ServerMappingsServer, getServerBackground, getServerMappings, isServerAddress } from "./server.util.js";
+import { type Server, type ServerMappingsServer, getServerBackground, getServerMappings } from "./server.util.js";
 import { ServerArgument } from "./server.argument.js";
 import { ServerProfile } from "./server.profile.js";
 import { getTheme } from "#themes";
 import { loadImage } from "skia-canvas";
 import { render } from "@statsify/rendering";
+
+// Hostname or IPv4 with an optional port, so lookups stay on the status API
+const SERVER_ADDRESS_REGEX = /^[\w-]{1,63}(?:\.[\w-]{1,63})*(?::\d{1,5})?$/;
 
 @Command({
   description: (t) => t("commands.server"),
@@ -26,7 +29,6 @@ export class ServerCommand {
   public constructor() {
     this.axios = axios.create({
       baseURL: "https://api.mcsrvstat.us/2/",
-      allowAbsoluteUrls: false,
     });
 
     getServerMappings().then((mappings) => {
@@ -71,10 +73,10 @@ export class ServerCommand {
     );
 
     const address = mappedServer?.primaryAddress ?? tag;
-    if (!isServerAddress(address)) throw new ErrorMessage("errors.invalidServer");
+    if (!SERVER_ADDRESS_REGEX.test(address)) throw new ErrorMessage("errors.invalidServer");
 
     const server = await this.axios
-      .get<Server>(encodeURIComponent(address))
+      .get<Server>(address)
       .then((res) => res.data)
       .catch(() => null);
 

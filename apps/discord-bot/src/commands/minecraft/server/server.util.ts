@@ -53,23 +53,6 @@ export interface ServerMappingsServer {
 
 const SERVER_MAPPINGS_CDN_URL = "https://servermappings.lunarclientcdn.com";
 
-const SERVER_ADDRESS_REGEX = /^[\w-]{1,63}(?:\.[\w-]{1,63})*(?::\d{1,5})?$/;
-
-/**
- * Checks that an address is a hostname or IPv4 address with an optional port,
- * so it can't point a status lookup at a different URL or path
- */
-export function isServerAddress(address: string) {
-  const [hostname, port = "25565"] = address.split(":");
-
-  return (
-    SERVER_ADDRESS_REGEX.test(address) &&
-    hostname.length <= 253 &&
-    Number(port) >= 1 &&
-    Number(port) <= 65_535
-  );
-}
-
 export async function getServerMappings() {
   const servers = await axios
     .get<ServerMappingsServer[]>(`${SERVER_MAPPINGS_CDN_URL}/servers.json`)
