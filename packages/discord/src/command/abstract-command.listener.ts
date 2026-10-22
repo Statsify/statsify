@@ -123,15 +123,6 @@ export abstract class AbstractCommandListener {
     return [command, data, name];
   }
 
-  private isEphemeralCommand(interaction: Interaction) {
-    const data = interaction.getData();
-    const parentCommand = this.commands.get(data.name);
-    if (!parentCommand) return false;
-
-    const [command] = this.getCommandAndData(parentCommand, data);
-    return command.ephemeral;
-  }
-
   protected async executeCommand({
     commandName,
     command,
@@ -280,12 +271,17 @@ export abstract class AbstractCommandListener {
 
   private async onInteraction(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
     if (interaction.isCommandInteraction()) {
-      this.onCommand(interaction);
+      const parentData = interaction.getData();
+      const parentCommand = this.commands.get(parentData.name);
+      if (!parentCommand) return { type: InteractionResponseType.DeferredChannelMessageWithSource };
+
+      const [command, data, commandName] = this.getCommandAndData(parentCommand, parentData);
+      this.onCommand(interaction, command, data, commandName, parentCommand);
 
       // Discord decides who can see the reply from this first response, so a later edit can't make it ephemeral
       return {
         type: InteractionResponseType.DeferredChannelMessageWithSource,
-        data: this.isEphemeralCommand(interaction) ? { flags: MessageFlags.Ephemeral } : undefined,
+        data: command.ephemeral ? { flags: MessageFlags.Ephemeral } : undefined,
       };
     }
 
@@ -334,5 +330,11 @@ export abstract class AbstractCommandListener {
     });
   }
 
-  protected abstract onCommand(interaction: Interaction): Promise<void> | void;
+  protected abstract onCommand(
+    interaction: Interaction,
+    command: CommandResolvable,
+    data: any,
+    commandName: string,
+    parentCommand: CommandResolvable
+  ): Promise<void> | void;
 }
