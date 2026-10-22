@@ -7,6 +7,7 @@
  */
 
 import { ArcadeProfile } from "../profiles/arcade/arcade.profile.js";
+import { BlitzSGProfile } from "../profiles/blitzsg.profile.js";
 import { CopsAndCrimsProfile } from "../profiles/copsandcrims.profile.js";
 import { MegaWallsProfile } from "../profiles/megawalls.profile.js";
 import { MurderMysteryProfile } from "../profiles/murdermystery.profile.js";
@@ -18,6 +19,7 @@ import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
   BEDWARS_MODES,
+  BLITZSG_MODES,
   BUILD_BATTLE_MODES,
   COPS_AND_CRIMS_MODES,
   type GameMode,
@@ -120,6 +122,7 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
   warlords: card({ modes: WARLORDS_MODES, draw: (base, { mode }) => <WarlordsProfile {...base} mode={mode} /> }),
   woolgames: card({ modes: WOOLGAMES_MODES, draw: (base, { mode }) => <WoolGamesProfile {...base} mode={mode} /> }),
   megawalls: card({ modes: MEGAWALLS_MODES, draw: (base, { mode }) => <MegaWallsProfile {...base} mode={mode} /> }),
+  blitzsg: card({ modes: BLITZSG_MODES, draw: (base, { mode }) => <BlitzSGProfile {...base} mode={mode} /> }),
 };
 
 /**

@@ -55,6 +55,7 @@ import {
   ArcadeProfile,
   ArenaBrawlProfile,
   BedWarsProfile,
+  BlitzSGProfile,
   BuildBattleProfile,
   CopsAndCrimsProfile,
   MegaWallsProfile,
@@ -72,7 +73,6 @@ import {
   WarlordsProfile,
   WoolGamesProfile,
 } from "@statsify/profiles";
-import { BlitzSGProfile } from "../blitzsg/blitzsg.profile.js";
 import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile.js";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
