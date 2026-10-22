@@ -151,8 +151,7 @@ export class SkyWars {
 
     this.progression = getLevelProgress(this.exp, this.level);
 
-    // Hypixel calls the Normal kits solo kits and the Insane kits team kits, so these are the
-    // kits picked for Normal and for Insane games, each used in both Solo and Doubles
+    // Hypixel stores the Normal kit as the solo kit and the Insane kit as the teams kit
     this.normalKit = parseKit(
       data.activeKit_SOLO_random ? "random" : data.activeKit_SOLO
     );
