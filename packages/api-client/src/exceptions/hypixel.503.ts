@@ -32,7 +32,5 @@ export class HypixelUnavailableException extends ServiceUnavailableException {
       message: "hypixel",
       retryAfter,
     });
-
-    this.retryAfter = retryAfter;
   }
 }
