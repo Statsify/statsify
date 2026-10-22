@@ -67,7 +67,9 @@ export class ServerCommand {
     const mappedServer = this.mappings.find(
       (s) =>
         s.name.toLowerCase() === tag ||
-        s.addresses.some((address) => hostname === address || hostname.endsWith(`.${address}`))
+        s.addresses.some(
+          (address) => hostname === address || hostname.endsWith(`.${address}`)
+        )
     );
 
     const server = await this.axios
