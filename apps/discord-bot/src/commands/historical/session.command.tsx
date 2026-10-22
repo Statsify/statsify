@@ -58,6 +58,7 @@ import {
   PaintballProfile,
   QuakeProfile,
   SpeedUHCProfile,
+  TurboKartRacersProfile,
   UHCProfile,
   VampireZProfile,
   WallsProfile,
@@ -77,7 +78,6 @@ import { STATUS_COLORS } from "@statsify/logger";
 import { SkyWarsProfile } from "../skywars/skywars.profile.js";
 import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
 import { TNTGamesProfile } from "../tntgames/tntgames.profile.js";
-import { TurboKartRacersProfile } from "../turbokartracers/turbokartracers.profile.js";
 import { WarlordsProfile } from "../warlords/warlords.profile.js";
 import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
 import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";

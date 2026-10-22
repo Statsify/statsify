@@ -16,6 +16,7 @@ export * from "./profiles/paintball.profile.js";
 export * from "./profiles/quake.profile.js";
 export * from "./profiles/signature.profile.js";
 export * from "./profiles/speeduhc.profile.js";
+export * from "./profiles/turbokartracers.profile.js";
 export * from "./profiles/uhc.profile.js";
 export * from "./profiles/vampirez.profile.js";
 export * from "./profiles/walls.profile.js";

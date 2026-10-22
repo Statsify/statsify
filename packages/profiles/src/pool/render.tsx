@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BEDWARS_MODES, type GameMode, type GameModes, type Guild, PAINTBALL_MODES, type Player, QUAKE_MODES, SPEED_UHC_MODES, UHC_MODES, VAMPIREZ_MODES, WALLS_MODES } from "@statsify/schemas";
+import { BEDWARS_MODES, type GameMode, type GameModes, type Guild, PAINTBALL_MODES, type Player, QUAKE_MODES, SPEED_UHC_MODES, TURBO_KART_RACERS_MODES, UHC_MODES, VAMPIREZ_MODES, WALLS_MODES } from "@statsify/schemas";
 import type { BaseProfileProps } from "../types.js";
 import { BedWarsProfile } from "../profiles/bedwars.profile.js";
 import { Canvas, type CanvasRenderingContext2D, type Image, loadImage } from "skia-canvas";
@@ -17,6 +17,7 @@ import { PaintballProfile } from "../profiles/paintball.profile.js";
 import { QuakeProfile } from "../profiles/quake.profile.js";
 import { SignatureProfile, UpdatedStamp } from "../profiles/signature.profile.js";
 import { SpeedUHCProfile } from "../profiles/speeduhc.profile.js";
+import { TurboKartRacersProfile } from "../profiles/turbokartracers.profile.js";
 import { UHCProfile } from "../profiles/uhc.profile.js";
 import { VampireZProfile } from "../profiles/vampirez.profile.js";
 import { WallsProfile } from "../profiles/walls.profile.js";
@@ -55,6 +56,7 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds>> = {
   vampirez: card({ modes: VAMPIREZ_MODES, draw: (base, { mode }) => <VampireZProfile {...base} mode={mode} /> }),
   paintball: card({ modes: PAINTBALL_MODES, draw: (base) => <PaintballProfile {...base} /> }),
   quake: card({ modes: QUAKE_MODES, draw: (base, { mode }) => <QuakeProfile {...base} mode={mode} /> }),
+  turbokartracers: card({ modes: TURBO_KART_RACERS_MODES, draw: (base) => <TurboKartRacersProfile {...base} /> }),
 };
 
 /** The mode a request names as the bot's command hands it to the card, and the background the command draws it on. */
