@@ -16,6 +16,7 @@ import { CHALLENGES } from "./challenges.js";
 import { COPS_AND_CRIMS } from "./copsandcrims.js";
 import { DUELS } from "./duels.js";
 import { MEGAWALLS } from "./megawalls.js";
+import { MURDER_MYSTERY } from "./murdermystery.js";
 import { PAINTBALL } from "./paintball.js";
 import { PARKOUR } from "./parkour.js";
 import { PIT } from "./pit.js";
@@ -38,6 +39,7 @@ export { CHALLENGES } from "./challenges.js";
 export { COPS_AND_CRIMS } from "./copsandcrims.js";
 export { DUELS } from "./duels.js";
 export { MEGAWALLS } from "./megawalls.js";
+export { MURDER_MYSTERY } from "./murdermystery.js";
 export { PAINTBALL } from "./paintball.js";
 export { PARKOUR } from "./parkour.js";
 export { PIT } from "./pit.js";
@@ -62,6 +64,7 @@ export const GAMES: Record<string, Game> = {
   copsandcrims: COPS_AND_CRIMS,
   duels: DUELS,
   megawalls: MEGAWALLS,
+  murdermystery: MURDER_MYSTERY,
   paintball: PAINTBALL,
   parkour: PARKOUR,
   pit: PIT,

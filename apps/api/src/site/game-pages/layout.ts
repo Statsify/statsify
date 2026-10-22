@@ -81,7 +81,12 @@ export interface LevelSpec {
   progress?: string;
   /** The word at the last level: MAXED by default, PRESTIGED where reaching it prestiges (Murder Mystery's knife). */
   maxedWord?: "maxed" | "prestiged";
-  read: (stats: PlayerStats) => Omit<NonNullable<GamePage["level"]>, "leaderboard" | "label" | "progress" | "maxedWord">;
+  /** The card's colours for the progress, where they aren't the panel's (Murder Mystery's knife). */
+  colours?: { current: ColourCode; slash: ColourCode; max: ColourCode; maxed: ColourCode };
+  read: (stats: PlayerStats) => Omit<
+    NonNullable<GamePage["level"]>,
+    "leaderboard" | "label" | "progress" | "maxedWord" | "colours"
+  >;
 }
 
 /**
@@ -369,6 +374,7 @@ function level(player: Player, game: Game, spec: LevelSpec): NonNullable<GamePag
     progression: levelProgression(progression),
     progress: spec.progress ?? "stats.progression.exp",
     ...(spec.maxedWord && { maxedWord: spec.maxedWord }),
+    ...(spec.colours && { colours: spec.colours }),
     leaderboard: stat.leaderboard ? stat.path : null,
   };
 }

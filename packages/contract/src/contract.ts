@@ -298,6 +298,11 @@ export const GamePageSchema = z.object({
       progression: ProgressionSchema,
       progress: z.string(),
       maxedWord: z.enum(["maxed", "prestiged"]).optional(),
+      /**
+       * The card's colours for the progress where they aren't the panel's own (Murder Mystery's knife): the count, the
+       * slash and the max, and the maxed word, which stays bold.
+       */
+      colours: z.object({ current: z.string(), slash: z.string(), max: z.string(), maxed: z.string() }).optional(),
       leaderboard: z.string().nullable(),
     })
     .nullable(),

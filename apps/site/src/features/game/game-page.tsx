@@ -15,7 +15,7 @@ import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { InlineStat, STAT_LINK, StatCell } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
-import { MinecraftText, colourOf, leadingColourClass } from "~/components/ui/minecraft-text";
+import { MinecraftText, colourClass, colourOf, leadingColourClass } from "~/components/ui/minecraft-text";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
@@ -232,6 +232,7 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
   const { t } = useTranslation();
   const n = useNumberFormat();
   const { current, max, percent } = level.progression;
+  const { colours } = level;
   const label = t(`default:${level.label}`);
   const value = <MinecraftText>{level.current}</MinecraftText>;
 
@@ -261,10 +262,12 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
         <InlineStat
           label={t(`default:${level.progress}`)}
           value={max === undefined ?
-            <span className="font-bold text-mc-aqua">{t(`game.${level.maxedWord ?? "maxed"}`)}</span> :
+            <span className={cn("font-bold", colourClass(colours?.maxed ?? "§b"))}>{t(`game.${level.maxedWord ?? "maxed"}`)}</span> :
             (
               <>
-                <span className="text-mc-aqua">{n(current)}</span>/<span className="text-mc-green">{n(max)}</span>
+                <span className={colourClass(colours?.current ?? "§b")}>{n(current)}</span>
+                {colours ? <span className={colourClass(colours.slash)}>/</span> : "/"}
+                <span className={colourClass(colours?.max ?? "§a")}>{n(max)}</span>
               </>
             )}
         />
