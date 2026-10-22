@@ -8,10 +8,6 @@
 
 import { ValidateBy } from "class-validator";
 
-// Replaces @IsEnum(fields, { each: true }), which rebuilt the list of every field for each value and,
-// since it reads an array's indexes as enum keys, listed no values in its message. This checks a Set,
-// requires an array (a lone string passed validation and was ranked letter by letter) and names the
-// values that aren't fields, quoted so an empty string or a stray space still shows
 export const IsLeaderboardField = (fields: string[]) => {
   const fieldSet = new Set(fields);
 
@@ -23,11 +19,12 @@ export const IsLeaderboardField = (fields: string[]) => {
         const value: unknown = args?.value;
         if (!Array.isArray(value)) return `${args?.property} must be an array of leaderboard fields`;
 
-        const unknown = new Set(
+        // Quoted so an empty string or a stray space still shows
+        const invalid = new Set(
           value.filter((field) => !fieldSet.has(field)).map((field) => JSON.stringify(field))
         );
 
-        return `unknown leaderboard field${unknown.size === 1 ? "" : "s"}: ${[...unknown].join(", ")}`;
+        return `unknown leaderboard field${invalid.size === 1 ? "" : "s"}: ${[...invalid].join(", ")}`;
       },
     },
   });
