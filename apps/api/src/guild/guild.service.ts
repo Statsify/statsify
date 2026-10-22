@@ -75,7 +75,6 @@ export class GuildService {
     const guildExpHistory: Record<string, number> = {};
     const requireGuildId: string[] = [];
 
-    // Look up every expired name in one query instead of one per member
     const memberNames = await this.getMemberNames(
       guild.members
         .filter((member) => !isNameCached(memberMap[member.uuid]))
