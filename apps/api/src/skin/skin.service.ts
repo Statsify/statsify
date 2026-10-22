@@ -27,7 +27,7 @@ const RETRY_AFTER = 1000 * 60 * 60;
 @Injectable()
 export class SkinService {
   /** Refreshes in flight, so many requests for one stale skin make a single Mojang call. */
-  private readonly refreshing = new Map<string, Promise<unknown>>();
+  private readonly refreshing = new Set<string>();
 
   public constructor(
     private readonly httpService: HttpService,
@@ -75,7 +75,7 @@ export class SkinService {
 
     // A cached skin is served at once, even when it's due a refresh; the refresh happens in the background.
     if (cachedSkin) {
-      if (Date.now() >= cachedSkin.expiresAt) this.refresh(cachedSkin);
+      if (Date.now() >= cachedSkin.expiresAt) this.refresh(cachedSkin.uuid);
       return cachedSkin;
     }
 
@@ -85,19 +85,16 @@ export class SkinService {
     return this.save(skin, REFRESH_AFTER);
   }
 
-  private refresh(cachedSkin: Skin) {
-    const { uuid } = cachedSkin;
+  private refresh(uuid: string) {
     if (this.refreshing.has(uuid)) return;
+    this.refreshing.add(uuid);
 
-    const refresh = this.requestSkin(uuid)
+    this.requestSkin(uuid)
       .then((skin) => this.save(skin, REFRESH_AFTER))
-      // Only the refresh time changes: writing back the copy read earlier would undo anything saved since
       .catch(() => this.skinModel.updateOne({ uuid }, { expiresAt: Date.now() + RETRY_AFTER }).exec())
       // The database failed too; the next request tries again.
       .catch(() => undefined)
       .finally(() => this.refreshing.delete(uuid));
-
-    this.refreshing.set(uuid, refresh);
   }
 
   private async save(skin: Skin, refreshAfter: number): Promise<Skin> {
