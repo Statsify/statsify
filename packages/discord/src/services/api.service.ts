@@ -25,6 +25,8 @@ import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
+import { loadImage, renderHead } from "@statsify/rendering";
+import { getDefaultSkin } from "@statsify/assets";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
@@ -203,6 +205,17 @@ export class ApiService extends StatsifyApiService {
     return super.getGuildLeaderboard(field, input, type).catch((err: AxiosError) => {
       if ((err.response?.data as GuildNotFoundException).statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
+    });
+  }
+
+  public override getPlayerSkin(uuid: string, user: User | null) {
+    return super.getPlayerSkin(uuid, user).catch(() => loadImage(getDefaultSkin(uuid).render));
+  }
+
+  public override getPlayerHead(uuid: string, size = 160) {
+    return super.getPlayerHead(uuid, size).catch(async () => {
+      const skin = await loadImage(getDefaultSkin(uuid).texture);
+      return loadImage(await renderHead(skin, size));
     });
   }
 
