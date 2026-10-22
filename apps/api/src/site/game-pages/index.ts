@@ -14,6 +14,7 @@ import { BUILD_BATTLE_PAGE } from "./buildbattle.js";
 import { CHALLENGES_PAGE } from "./challenges.js";
 import { COPS_AND_CRIMS_PAGE } from "./copsandcrims.js";
 import { DUELS_PAGE } from "./duels.js";
+import { MEGAWALLS_PAGE } from "./megawalls.js";
 import { PAINTBALL_PAGE } from "./paintball.js";
 import { PARKOUR_PAGE } from "./parkour.js";
 import { PIT_PAGE } from "./pit.js";
@@ -48,6 +49,7 @@ export const GAME_PAGES: GameLayout[] = [
   CHALLENGES_PAGE,
   COPS_AND_CRIMS_PAGE,
   DUELS_PAGE,
+  MEGAWALLS_PAGE,
   PAINTBALL_PAGE,
   PARKOUR_PAGE,
   PIT_PAGE,
