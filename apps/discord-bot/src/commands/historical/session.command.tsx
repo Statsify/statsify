@@ -56,6 +56,7 @@ import {
   ArenaBrawlProfile,
   BedWarsProfile,
   BuildBattleProfile,
+  CopsAndCrimsProfile,
   MurderMysteryProfile,
   PaintballProfile,
   PitProfile,
@@ -68,7 +69,6 @@ import {
   WallsProfile,
 } from "@statsify/profiles";
 import { BlitzSGProfile } from "../blitzsg/blitzsg.profile.js";
-import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
 import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile.js";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";

@@ -13,6 +13,7 @@ export * from "./localize.js";
 export * from "./profiles/arenabrawl.profile.js";
 export * from "./profiles/bedwars.profile.js";
 export * from "./profiles/buildbattle.profile.js";
+export * from "./profiles/copsandcrims.profile.js";
 export * from "./profiles/general.profile.js";
 export * from "./profiles/murdermystery.profile.js";
 export * from "./profiles/paintball.profile.js";

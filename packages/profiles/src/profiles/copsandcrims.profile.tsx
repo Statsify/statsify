@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
+import { COPS_AND_CRIMS, cardColours } from "@statsify/catalog";
+import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "../components/index.js";
 import { CopsAndCrimsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { formatRecordTime } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { BaseProfileProps } from "../types.js";
 
 export interface CopsAndCrimsProfileProps extends BaseProfileProps {
   mode: GameMode<CopsAndCrimsModes>;
@@ -27,14 +28,17 @@ export const CopsAndCrimsProfile = ({
   time,
 }: CopsAndCrimsProfileProps) => {
   const { copsandcrims } = player.stats;
+  const colour = cardColours(COPS_AND_CRIMS, mode.api);
+  // The sidebar shows Overall's counts on every mode.
+  const overallColour = cardColours(COPS_AND_CRIMS, "overall");
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(copsandcrims.coins), "§6"],
-    [t("stats.score"), t(copsandcrims.score), "§a"],
-    [t("stats.knifeKills"), t(copsandcrims.overall.knifeKills), "§7"],
-    [t("stats.headshotKills"), t(copsandcrims.overall.headshotKills), "§4"],
-    [t("stats.grenadeKills"), t(copsandcrims.overall.grenadeKills), "§2"],
-    [t("stats.shotsFired"), t(copsandcrims.overall.shotsFired), "§6"],
+    [t("stats.coins"), t(copsandcrims.coins), colour("coins")],
+    [t("stats.score"), t(copsandcrims.score), colour("score")],
+    [t("stats.knifeKills"), t(copsandcrims.overall.knifeKills), overallColour("knifeKills")],
+    [t("stats.headshotKills"), t(copsandcrims.overall.headshotKills), overallColour("headshotKills")],
+    [t("stats.grenadeKills"), t(copsandcrims.overall.grenadeKills), overallColour("grenadeKills")],
+    [t("stats.shotsFired"), t(copsandcrims.overall.shotsFired), overallColour("shotsFired")],
   ];
 
   let table: JSX.Element;
@@ -46,29 +50,29 @@ export const CopsAndCrimsProfile = ({
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+            <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
             <Table.td
               title={t("stats.roundWins")}
               value={t(stats.roundWins)}
-              color="§b"
+              color={colour("roundWins")}
             />
           </Table.tr>
           <Table.tr>
-            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
-            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
-            <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
+            <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
+            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
+            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
+            <Table.td title={t("stats.assists")} value={t(stats.assists)} color={colour("assists")} />
           </Table.tr>
           <Table.tr>
             <Table.td
               title={t("stats.bombsDefused")}
               value={t(stats.bombsDefused)}
-              color="§a"
+              color={colour("bombsDefused")}
             />
             <Table.td
               title={t("stats.bombsPlanted")}
               value={t(stats.bombsPlanted)}
-              color="§c"
+              color={colour("bombsPlanted")}
             />
           </Table.tr>
         </Table.table>
@@ -83,13 +87,13 @@ export const CopsAndCrimsProfile = ({
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-            <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
+            <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
+            <Table.td title={t("stats.assists")} value={t(stats.assists)} color={colour("assists")} />
           </Table.tr>
           <Table.tr>
-            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
-            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+            <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
+            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
+            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
           </Table.tr>
         </Table.table>
       );
@@ -102,20 +106,20 @@ export const CopsAndCrimsProfile = ({
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+            <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
             <Historical.exclude time={time}>
               <Table.td
                 title={t("stats.bestTime")}
                 value={formatRecordTime(stats.fastestWin)}
-                color="§b"
+                color={colour("fastestWin")}
               />
             </Historical.exclude>
           </Table.tr>
           <Table.tr>
-            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
-            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
-            <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
+            <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
+            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
+            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
+            <Table.td title={t("stats.assists")} value={t(stats.assists)} color={colour("assists")} />
           </Table.tr>
         </Table.table>
       );
