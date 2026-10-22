@@ -23,6 +23,7 @@ import { QUAKE_PAGE } from "./quake.js";
 import { SKYWARS_PAGE } from "./skywars.js";
 import { SMASH_HEROES_PAGE } from "./smashheroes.js";
 import { SPEED_UHC_PAGE } from "./speeduhc.js";
+import { TNT_GAMES_PAGE } from "./tntgames.js";
 import { TURBO_KART_RACERS_PAGE } from "./turbokartracers.js";
 import { UHC_PAGE } from "./uhc.js";
 import { VAMPIREZ_PAGE } from "./vampirez.js";
@@ -60,6 +61,7 @@ export const GAME_PAGES: GameLayout[] = [
   SKYWARS_PAGE,
   SMASH_HEROES_PAGE,
   SPEED_UHC_PAGE,
+  TNT_GAMES_PAGE,
   TURBO_KART_RACERS_PAGE,
   UHC_PAGE,
   VAMPIREZ_PAGE,

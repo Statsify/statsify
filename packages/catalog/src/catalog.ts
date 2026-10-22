@@ -154,6 +154,13 @@ export function modeName(game: Game, mode: string): string {
   return found.formatted;
 }
 
+/** A mode's submodes after Overall (Wizards' classes); throws where the registry has no such mode. */
+export function classesOf(modes: Game["modes"], mode: string): string[] {
+  const found = modes.getModes().find(({ api }) => api === mode);
+  if (!found) throw new Error(`The registry has no ${mode} mode`);
+  return found.submodes.map(({ api }) => api).filter((submode) => submode !== "overall");
+}
+
 /** The game's own stats, stored once rather than per mode. */
 export function gameStats(game: Game): Stat[] {
   return Object.entries(game.game).map(([key, entry]) => resolve(key, `stats.${game.key}`, entry));

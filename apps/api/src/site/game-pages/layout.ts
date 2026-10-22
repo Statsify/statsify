@@ -124,10 +124,11 @@ export const prefixLevel = (stored: {
 /**
  * The mode of the kit or class a player has selected, as the schema stores it: the mode's key in another case or with
  * underscores (`wild_specialist`, `Zombie`), or its name with spaces (`Void Crawler`). None where no mode matches.
+ * `among` names the submodes to look in instead, where a mode's submodes are its classes (TNT's Wizards).
  */
-export const selectedMode = (game: Game, stored: string): string | undefined => {
+export const selectedMode = (game: Game, stored: string, among: readonly string[] = game.modes.getApiModes()): string | undefined => {
   const squashed = stored.toLowerCase().replaceAll(/[^a-z]/g, "");
-  return game.modes.getApiModes().find((mode) => mode.toLowerCase() === squashed);
+  return among.find((mode) => mode.toLowerCase() === squashed);
 };
 
 /** One page: a mode, or a mode's submode. */

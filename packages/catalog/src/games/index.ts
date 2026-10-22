@@ -24,6 +24,7 @@ import { QUAKE } from "./quake.js";
 import { SKYWARS } from "./skywars.js";
 import { SMASH_HEROES } from "./smashheroes.js";
 import { SPEED_UHC } from "./speeduhc.js";
+import { TNT_GAMES } from "./tntgames.js";
 import { TURBO_KART_RACERS } from "./turbokartracers.js";
 import { UHC } from "./uhc.js";
 import { VAMPIREZ } from "./vampirez.js";
@@ -47,6 +48,7 @@ export { QUAKE } from "./quake.js";
 export { SKYWARS, SKYWARS_CHALLENGES } from "./skywars.js";
 export { SMASH_HEROES } from "./smashheroes.js";
 export { SPEED_UHC, SPEED_UHC_MASTERIES } from "./speeduhc.js";
+export { TNT_GAMES, TNT_WIZARDS_CLASSES } from "./tntgames.js";
 export { TURBO_KART_RACERS } from "./turbokartracers.js";
 export { UHC } from "./uhc.js";
 export { VAMPIREZ } from "./vampirez.js";
@@ -72,6 +74,7 @@ export const GAMES: Record<string, Game> = {
   skywars: SKYWARS,
   smashheroes: SMASH_HEROES,
   speeduhc: SPEED_UHC,
+  tntgames: TNT_GAMES,
   turbokartracers: TURBO_KART_RACERS,
   uhc: UHC,
   vampirez: VAMPIREZ,
