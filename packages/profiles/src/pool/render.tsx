@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARENA_BRAWL_MODES, BEDWARS_MODES, BUILD_BATTLE_MODES, type GameMode, type GameModes, type Guild, PAINTBALL_MODES, type Player, QUAKE_MODES, SPEED_UHC_MODES, TURBO_KART_RACERS_MODES, UHC_MODES, VAMPIREZ_MODES, WALLS_MODES } from "@statsify/schemas";
+import { ARENA_BRAWL_MODES, BEDWARS_MODES, BUILD_BATTLE_MODES, type GameMode, type GameModes, type Guild, PAINTBALL_MODES, PIT_MODES, type Player, QUAKE_MODES, SPEED_UHC_MODES, TURBO_KART_RACERS_MODES, UHC_MODES, VAMPIREZ_MODES, WALLS_MODES } from "@statsify/schemas";
 import { ArenaBrawlProfile } from "../profiles/arenabrawl.profile.js";
 import type { BaseProfileProps } from "../types.js";
 import { BedWarsProfile } from "../profiles/bedwars.profile.js";
@@ -16,6 +16,7 @@ import { type GameCard, type RenderRequest, imageSize } from "./protocol.js";
 import { type GamesWithBackgrounds, mapBackground } from "../backgrounds.js";
 import { GeneralProfile } from "../profiles/general.profile.js";
 import { PaintballProfile } from "../profiles/paintball.profile.js";
+import { PitProfile } from "../profiles/pit.profile.js";
 import { QuakeProfile } from "../profiles/quake.profile.js";
 import { SignatureProfile, UpdatedStamp } from "../profiles/signature.profile.js";
 import { SpeedUHCProfile } from "../profiles/speeduhc.profile.js";
@@ -61,6 +62,7 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds>> = {
   turbokartracers: card({ modes: TURBO_KART_RACERS_MODES, draw: (base) => <TurboKartRacersProfile {...base} /> }),
   buildbattle: card({ modes: BUILD_BATTLE_MODES, draw: (base) => <BuildBattleProfile {...base} /> }),
   arenabrawl: card({ modes: ARENA_BRAWL_MODES, draw: (base, { mode }) => <ArenaBrawlProfile {...base} mode={mode} /> }),
+  pit: card({ modes: PIT_MODES, draw: (base) => <PitProfile {...base} /> }),
 };
 
 /** The mode a request names as the bot's command hands it to the card, and the background the command draws it on. */

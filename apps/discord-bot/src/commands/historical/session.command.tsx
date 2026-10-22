@@ -57,6 +57,7 @@ import {
   BedWarsProfile,
   BuildBattleProfile,
   PaintballProfile,
+  PitProfile,
   QuakeProfile,
   SpeedUHCProfile,
   TurboKartRacersProfile,
@@ -73,7 +74,6 @@ import { HistoricalGeneralProfile } from "../general/historical-general.profile.
 import { HistoricalTimes } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
 import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile.js";
-import { PitProfile } from "../pit/pit.profile.js";
 import { STATUS_COLORS } from "@statsify/logger";
 import { SkyWarsProfile } from "../skywars/skywars.profile.js";
 import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
