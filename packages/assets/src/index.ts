@@ -42,7 +42,6 @@ export const getDefaultSkin = (uuid: string) => {
   const hex = uuid.replaceAll("-", "");
 
   const alex =
-    /^[\da-f]{32}$/i.test(hex) &&
     [7, 15, 23, 31].map((index) => Number.parseInt(hex[index], 16)).reduce((a, b) => a ^ b) % 2 === 1;
 
   const name = alex ? "alex" : "steve";
