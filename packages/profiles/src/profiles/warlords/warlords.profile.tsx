@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, formatProgression } from "#components";
+import { Container, Footer, Header, type SidebarItem, formatProgression } from "../../components/index.js";
 import { FormattedGame, type GameMode, WarlordsMage, WarlordsModes, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "@statsify/schemas";
+import { WARLORDS, cardColours } from "@statsify/catalog";
 import { WarlordsCaptureTheFlagTable, WarlordsClassTable, WarlordsDeathmatchTable, WarlordsDominationTable, WarlordsOverallTable } from "./tables/index.js";
 import { prettify } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { BaseProfileProps } from "../../types.js";
 
 export interface WarlordsProfileProps extends BaseProfileProps {
   mode: GameMode<WarlordsModes>;
@@ -28,21 +29,22 @@ export const WarlordsProfile = ({
   time,
 }: WarlordsProfileProps) => {
   const { warlords } = player.stats;
+  const colour = cardColours(WARLORDS);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(warlords.coins), "§6"],
+    [t("stats.coins"), t(warlords.coins), colour("coins")],
   ];
 
   if (mode.api !== "overall" && mode.api !== "captureTheFlag" && mode.api !== "domination" && mode.api !== "teamDeathmatch") {
     sidebar.push(
-      [t("stats.spec"), prettify(warlords[mode.api].specification), "§a"],
-      [t("stats.level"), t(warlords[mode.api].level), "§a"]
+      [t("stats.spec"), prettify(warlords[mode.api].specification), colour(`${mode.api}.specification`)],
+      [t("stats.level"), t(warlords[mode.api].level), colour(`${mode.api}.level`)]
     );
   } else {
-    sidebar.push([t("stats.class"), prettify(warlords.class), "§e"]);
+    sidebar.push([t("stats.class"), prettify(warlords.class), colour("class")]);
     const clazz = warlords.class as "mage" | "warrior" | "paladin" | "shaman";
     // Verify that the cast is correct and the class is a valid class
-    if (clazz in warlords && typeof warlords[clazz] === "object") sidebar.push([t("stats.spec"), prettify(warlords[clazz].specification), "§a"]);
+    if (clazz in warlords && typeof warlords[clazz] === "object") sidebar.push([t("stats.spec"), prettify(warlords[clazz].specification), colour(`${clazz}.specification`)]);
   }
 
   let table: JSX.Element;
@@ -65,19 +67,19 @@ export const WarlordsProfile = ({
       break;
 
     case "mage":
-      table = <WarlordsClassTable stats={warlords.mage} constructor={WarlordsMage} color="§b" t={t} />;
+      table = <WarlordsClassTable stats={warlords.mage} place="mage" constructor={WarlordsMage} color="§b" t={t} />;
       break;
 
     case "warrior":
-      table = <WarlordsClassTable stats={warlords.warrior} constructor={WarlordsWarrior} color="§7" t={t} />;
+      table = <WarlordsClassTable stats={warlords.warrior} place="warrior" constructor={WarlordsWarrior} color="§7" t={t} />;
       break;
 
     case "paladin":
-      table = <WarlordsClassTable stats={warlords.paladin} constructor={WarlordsPaladin} color="§e" t={t} />;
+      table = <WarlordsClassTable stats={warlords.paladin} place="paladin" constructor={WarlordsPaladin} color="§e" t={t} />;
       break;
 
     case "shaman":
-      table = <WarlordsClassTable stats={warlords.shaman} constructor={WarlordsShaman} color="§2" t={t} />;
+      table = <WarlordsClassTable stats={warlords.shaman} place="shaman" constructor={WarlordsShaman} color="§2" t={t} />;
       break;
   }
 
