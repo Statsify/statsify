@@ -20,6 +20,7 @@ import { PARKOUR } from "./parkour.js";
 import { PIT } from "./pit.js";
 import { QUAKE } from "./quake.js";
 import { SKYWARS } from "./skywars.js";
+import { SMASH_HEROES } from "./smashheroes.js";
 import { SPEED_UHC } from "./speeduhc.js";
 import { TURBO_KART_RACERS } from "./turbokartracers.js";
 import { UHC } from "./uhc.js";
@@ -39,6 +40,7 @@ export { PARKOUR } from "./parkour.js";
 export { PIT } from "./pit.js";
 export { QUAKE } from "./quake.js";
 export { SKYWARS, SKYWARS_CHALLENGES } from "./skywars.js";
+export { SMASH_HEROES } from "./smashheroes.js";
 export { SPEED_UHC, SPEED_UHC_MASTERIES } from "./speeduhc.js";
 export { TURBO_KART_RACERS } from "./turbokartracers.js";
 export { UHC } from "./uhc.js";
@@ -60,6 +62,7 @@ export const GAMES: Record<string, Game> = {
   pit: PIT,
   quake: QUAKE,
   skywars: SKYWARS,
+  smashheroes: SMASH_HEROES,
   speeduhc: SPEED_UHC,
   turbokartracers: TURBO_KART_RACERS,
   uhc: UHC,
