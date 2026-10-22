@@ -19,6 +19,7 @@ import { PARKOUR_PAGE } from "./parkour.js";
 import { PIT_PAGE } from "./pit.js";
 import { QUAKE_PAGE } from "./quake.js";
 import { SKYWARS_PAGE } from "./skywars.js";
+import { SPEED_UHC_PAGE } from "./speeduhc.js";
 import { TURBO_KART_RACERS_PAGE } from "./turbokartracers.js";
 import { UHC_PAGE } from "./uhc.js";
 import { VAMPIREZ_PAGE } from "./vampirez.js";
@@ -51,6 +52,7 @@ export const GAME_PAGES: GameLayout[] = [
   PIT_PAGE,
   QUAKE_PAGE,
   SKYWARS_PAGE,
+  SPEED_UHC_PAGE,
   TURBO_KART_RACERS_PAGE,
   UHC_PAGE,
   VAMPIREZ_PAGE,

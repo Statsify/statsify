@@ -116,6 +116,15 @@ export const prefixLevel = (stored: {
   progression: { ...stored.progression },
 });
 
+/**
+ * The mode of the kit or class a player has selected, as the schema stores it: the mode's key in another case or with
+ * underscores (`wild_specialist`, `Zombie`), or its name with spaces (`Void Crawler`). None where no mode matches.
+ */
+export const selectedMode = (game: Game, stored: string): string | undefined => {
+  const squashed = stored.toLowerCase().replaceAll(/[^a-z]/g, "");
+  return game.modes.getApiModes().find((mode) => mode.toLowerCase() === squashed);
+};
+
 /** One page: a mode, or a mode's submode. */
 export interface PageSpec {
   /**
