@@ -25,8 +25,8 @@ import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
-import { getDefaultSkin, renderHead } from "@statsify/assets";
-import { loadImage } from "skia-canvas";
+import { loadImage, renderHead } from "@statsify/rendering";
+import { getDefaultSkin } from "@statsify/assets";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Canvas } from "skia-canvas";
+import { Canvas, type Image } from "skia-canvas";
 
 type CanvasOptions = ConstructorParameters<typeof Canvas>[2] & { gpu?: boolean };
 
@@ -16,4 +16,19 @@ export function createCanvas(
   options: CanvasOptions = {}
 ): Canvas {
   return new Canvas(width, height, { gpu: false, ...options });
+}
+
+/** The front of a player's head as a PNG: the face from a skin texture with the hat layer on top */
+export function renderHead(skin: Image, size: number) {
+  const canvas = createCanvas(size, size);
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, size, size);
+
+  ctx.drawImage(skin, 8, 8, 8, 8, 0, 0, size, size);
+  ctx.drawImage(skin, 40, 8, 8, 8, 0, 0, size, size);
+
+  return canvas.toBuffer("png");
 }

@@ -647,6 +647,9 @@ importers:
       '@statsify/logger':
         specifier: workspace:^
         version: link:../logger
+      '@statsify/rendering':
+        specifier: workspace:^
+        version: link:../rendering
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../schemas
@@ -775,6 +778,8 @@ importers:
         version: 3.7.6
 
   packages/skin-renderer: {}
+
+  packages/skin-renderer/pkg: {}
 
   packages/util:
     dependencies:
