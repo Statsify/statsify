@@ -153,7 +153,12 @@
     "wizardsKills": "Wizards Kills",
     "coursesCompleted": "Courses Completed",
     "mainLobby": "Main Lobby",
-    "combinedTime": "Combined Time"
+    "combinedTime": "Combined Time",
+    "tier": "Tier {{tier}}",
+    "joins": "Joins",
+    "ragePotatoesEaten": "Rage Potatoes Eaten",
+    "goldIngotsGathered": "Gold Ingots Gathered",
+    "vampireHealing": "Vampire Healing"
   },
   "notFound": {
     "title": "OOPS!",
