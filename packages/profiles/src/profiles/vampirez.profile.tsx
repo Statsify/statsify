@@ -13,9 +13,10 @@ import {
   SidebarItem,
   Table,
   formatProgression,
-} from "#components";
+} from "../components/index.js";
 import { FormattedGame, type GameMode, VampireZModes } from "@statsify/schemas";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { VAMPIREZ, cardColours } from "@statsify/catalog";
+import type { BaseProfileProps } from "../types.js";
 
 export interface VampireZProfileProps extends BaseProfileProps {
   mode: GameMode<VampireZModes>;
@@ -34,16 +35,17 @@ export const VampireZProfile = ({
 }: VampireZProfileProps) => {
   const { vampirez } = player.stats;
   const { api } = mode;
+  const colour = cardColours(VAMPIREZ, mode.api);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(vampirez.coins), "§6"],
-    [t("stats.tokens"), t(vampirez.tokens), "§e"],
-    [t("stats.overallWins"), t(vampirez.overallWins), "§a"],
-    [t("stats.zombieKills"), t(vampirez.zombieKills), "§2"],
+    [t("stats.coins"), t(vampirez.coins), colour("coins")],
+    [t("stats.tokens"), t(vampirez.tokens), colour("tokens")],
+    [t("stats.overallWins"), t(vampirez.overallWins), colour("overallWins")],
+    [t("stats.zombieKills"), t(vampirez.zombieKills), colour("zombieKills")],
   ];
 
   if (time === "LIVE")
-    sidebar.push([t("stats.mostVampireKills"), t(vampirez.mostVampireKills), "§c"]);
+    sidebar.push([t("stats.mostVampireKills"), t(vampirez.mostVampireKills), colour("mostVampireKills")]);
 
   return (
     <Container background={background}>
@@ -68,20 +70,20 @@ export const VampireZProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(vampirez[api].wins)} color="§e" />
+          <Table.td title={t("stats.wins")} value={t(vampirez[api].wins)} color={colour("wins")} />
           <Table.td
             title={
               api === "human" ? t("stats.vampires-killed") : t("stats.humans-killed")
             }
             value={t(vampirez[api].kills)}
-            color="§a"
+            color={colour("kills")}
           />
           <Table.td
             title={t("stats.deaths")}
             value={t(vampirez[api].deaths)}
-            color="§c"
+            color={colour("deaths")}
           />
-          <Table.td title={t("stats.kdr")} value={t(vampirez[api].kdr)} color="§6" />
+          <Table.td title={t("stats.kdr")} value={t(vampirez[api].kdr)} color={colour("kdr")} />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />

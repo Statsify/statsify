@@ -53,7 +53,13 @@ import {
 } from "@statsify/discord";
 import { ArcadeProfile } from "../arcade/arcade.profile.js";
 import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile.js";
-import { BedWarsProfile, SpeedUHCProfile, UHCProfile, WallsProfile } from "@statsify/profiles";
+import {
+  BedWarsProfile,
+  SpeedUHCProfile,
+  UHCProfile,
+  VampireZProfile,
+  WallsProfile,
+} from "@statsify/profiles";
 import { BlitzSGProfile } from "../blitzsg/blitzsg.profile.js";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
@@ -72,7 +78,6 @@ import { SkyWarsProfile } from "../skywars/skywars.profile.js";
 import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
 import { TNTGamesProfile } from "../tntgames/tntgames.profile.js";
 import { TurboKartRacersProfile } from "../turbokartracers/turbokartracers.profile.js";
-import { VampireZProfile } from "../vampirez/vampirez.profile.js";
 import { WarlordsProfile } from "../warlords/warlords.profile.js";
 import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
 import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";
