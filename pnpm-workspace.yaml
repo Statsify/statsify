@@ -1,6 +1,7 @@
 packages:
   - apps/**
   - packages/**
+  - "!packages/skin-renderer/pkg"
   - assets/**
 
 onlyBuiltDependencies:
