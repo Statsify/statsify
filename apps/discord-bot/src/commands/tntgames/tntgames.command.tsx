@@ -9,7 +9,7 @@
 import { BaseHypixelCommand, type BaseProfileProps, type ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { type TNTGamesModes, TNT_GAMES_MODES } from "@statsify/schemas";
-import { TNTGamesProfile } from "./tntgames.profile.js";
+import { TNTGamesProfile } from "@statsify/profiles";
 
 @Command({ description: (t) => t("commands.tntgames") })
 export class TNTGamesCommand extends BaseHypixelCommand<TNTGamesModes> {

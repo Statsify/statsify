@@ -63,6 +63,7 @@ import {
   QuakeProfile,
   SkyWarsProfile,
   SpeedUHCProfile,
+  TNTGamesProfile,
   TurboKartRacersProfile,
   UHCProfile,
   VampireZProfile,
@@ -77,7 +78,6 @@ import { HistoricalTimes } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
 import { STATUS_COLORS } from "@statsify/logger";
 import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
-import { TNTGamesProfile } from "../tntgames/tntgames.profile.js";
 import { WarlordsProfile } from "../warlords/warlords.profile.js";
 import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
 import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";

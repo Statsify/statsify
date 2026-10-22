@@ -24,7 +24,7 @@ export type ImageVariant = keyof typeof IMAGE_VARIANTS;
  * The games whose bot card the pool draws for a site page's unfurl, by their `PlayerStats` key. A game joins once its
  * card lives in this package; the rest unfurl with the general card.
  */
-export const GAME_CARDS = ["bedwars", "uhc", "speeduhc", "walls", "vampirez", "paintball", "quake", "turbokartracers", "buildbattle", "arenabrawl", "pit", "parkour", "skywars", "murdermystery", "copsandcrims", "arcade"] as const;
+export const GAME_CARDS = ["bedwars", "uhc", "speeduhc", "walls", "vampirez", "paintball", "quake", "turbokartracers", "buildbattle", "arenabrawl", "pit", "parkour", "skywars", "murdermystery", "copsandcrims", "arcade", "tntgames"] as const;
 
 export type GameCard = (typeof GAME_CARDS)[number];
 
@@ -56,6 +56,7 @@ export const GAME_CARD_SIZES: Record<GameCard, { width: number; height: number }
   murdermystery: { width: 1103, height: 596 },
   copsandcrims: { width: 845, height: 505 },
   arcade: { width: 1064, height: 698 },
+  tntgames: { width: 872, height: 414 },
 };
 
 /**

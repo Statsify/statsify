@@ -24,6 +24,7 @@ export * from "./profiles/quake.profile.js";
 export * from "./profiles/signature.profile.js";
 export * from "./profiles/skywars.profile.js";
 export * from "./profiles/speeduhc.profile.js";
+export * from "./profiles/tntgames.profile.js";
 export * from "./profiles/turbokartracers.profile.js";
 export * from "./profiles/uhc.profile.js";
 export * from "./profiles/vampirez.profile.js";

@@ -10,6 +10,7 @@ import { ArcadeProfile } from "../profiles/arcade/arcade.profile.js";
 import { CopsAndCrimsProfile } from "../profiles/copsandcrims.profile.js";
 import { MurderMysteryProfile } from "../profiles/murdermystery.profile.js";
 import { SkyWarsProfile } from "../profiles/skywars.profile.js";
+import { TNTGamesProfile } from "../profiles/tntgames.profile.js";
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
@@ -27,6 +28,7 @@ import {
   QUAKE_MODES,
   SKYWARS_MODES,
   SPEED_UHC_MODES,
+  TNT_GAMES_MODES,
   TURBO_KART_RACERS_MODES,
   UHC_MODES,
   VAMPIREZ_MODES,
@@ -108,6 +110,7 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
   murdermystery: card({ modes: MURDER_MYSTERY_MODES, draw: (base, { mode }) => <MurderMysteryProfile {...base} mode={mode} /> }),
   copsandcrims: card({ modes: COPS_AND_CRIMS_MODES, draw: (base, { mode }) => <CopsAndCrimsProfile {...base} mode={mode} /> }),
   arcade: card({ modes: ARCADE_MODES, draw: (base, { mode }) => <ArcadeProfile {...base} mode={mode} /> }),
+  tntgames: card({ modes: TNT_GAMES_MODES, draw: (base, { mode }) => <TNTGamesProfile {...base} mode={mode} /> }),
 };
 
 /**
