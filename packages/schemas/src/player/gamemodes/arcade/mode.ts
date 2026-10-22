@@ -1392,8 +1392,8 @@ export class ZombiesMapDifficulty {
   @Field()
   public totalRounds: number;
 
-  public constructor(data: APIData, map?: string, difficulty?: string) {
-    const mode = map ? `_${map}${difficulty ? `_${difficulty}` : ""}` : "";
+  public constructor(data: APIData, map: string, difficulty?: string) {
+    const mode = `_${map}${difficulty ? `_${difficulty}` : ""}`;
 
     this.wins = data[`wins_zombies${mode}`];
     this.fastestWin = (data[`fastest_time_30_zombies${mode}`] ?? 0) * 1000;
@@ -1418,7 +1418,7 @@ export class ZombiesMap {
   @Field()
   public overall: ZombiesMapDifficulty;
 
-  public constructor(data: APIData, map?: string) {
+  public constructor(data: APIData, map: string) {
     this.normal = new ZombiesMapDifficulty(data, map, "normal");
     this.hard = new ZombiesMapDifficulty(data, map, "hard");
     this.rip = new ZombiesMapDifficulty(data, map, "rip");
