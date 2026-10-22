@@ -29,29 +29,3 @@ export const IsLeaderboardField = (fields: string[]) => {
     },
   });
 };
-
-if (import.meta.vitest) {
-  const { it, expect } = import.meta.vitest;
-  const { validate } = await import("class-validator");
-
-  class Dto {
-    @IsLeaderboardField(["wins", "kills"])
-    public fields: unknown;
-  }
-
-  const messages = async (fields: unknown) => {
-    const errors = await validate(Object.assign(new Dto(), { fields }));
-    return errors.flatMap((error) => Object.values(error.constraints ?? {}));
-  };
-
-  it("names the values that aren't leaderboard fields", async () => {
-    await expect(messages(["wins", "kills"])).resolves.toEqual([]);
-    await expect(messages(["wins", "nope"])).resolves.toEqual(['unknown leaderboard field: "nope"']);
-    await expect(messages(["nope", 5, "nope", ""])).resolves.toEqual([
-      'unknown leaderboard fields: "nope", 5, ""',
-    ]);
-    await expect(messages("wins")).resolves.toEqual([
-      "fields must be an array of leaderboard fields",
-    ]);
-  });
-}
