@@ -8,6 +8,7 @@
 
 import { ArcadeProfile } from "../profiles/arcade/arcade.profile.js";
 import { BlitzSGProfile } from "../profiles/blitzsg.profile.js";
+import { ChallengesProfile } from "../profiles/challenges.profile.js";
 import { CopsAndCrimsProfile } from "../profiles/copsandcrims.profile.js";
 import { DuelsProfile } from "../profiles/duels/duels.profile.js";
 import { MegaWallsProfile } from "../profiles/megawalls.profile.js";
@@ -24,6 +25,7 @@ import {
   BEDWARS_MODES,
   BLITZSG_MODES,
   BUILD_BATTLE_MODES,
+  CHALLENGE_MODES,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   type GameMode,
@@ -152,6 +154,11 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
         window={window}
       />
     ),
+  }),
+  challenges: card({
+    modes: CHALLENGE_MODES,
+    data: async () => ({ gameIcons: await getGameIcons() }),
+    draw: (base, { mode, data }) => <ChallengesProfile {...base} mode={mode} gameIcons={data.gameIcons} />,
   }),
 };
 

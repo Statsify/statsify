@@ -37,12 +37,14 @@ import {
   WoolGamesChallenges,
   scanMetadata,
 } from "@statsify/schemas";
-import { Container, Footer, GameList, Header, SidebarItem, Table } from "#components";
+import { CHALLENGES, cardColours } from "@statsify/catalog";
+import { Container, Footer, GameList, Header, SidebarItem, Table } from "../components/index.js";
 
 import { arrayGroup, prettify } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { BaseProfileProps, LocalizeFunction } from "../types.js";
 import type { Image } from "skia-canvas";
-import type { LocalizeFunction } from "@statsify/discord";
+
+const colour = cardColours(CHALLENGES);
 
 export interface ChallengeProfileProps extends BaseProfileProps {
   mode: GameMode<ChallengeModes>;
@@ -115,6 +117,7 @@ const GameTable = ({ gameChallenges, mode, t }: GameTableProps) => {
     GROUP_SIZE
   );
 
+  // By row, most completions first: a rank's colour, not a challenge's.
   const colors = ["§a", "§e", "§6", "§c", "§4"];
 
   return (
@@ -163,13 +166,13 @@ export const ChallengesProfile = ({
       break;
   }
 
-  const sidebar: SidebarItem[] = [[t("stats.total"), t(challenges.total), "§b"]];
+  const sidebar: SidebarItem[] = [[t("stats.total"), t(challenges.total), colour("total")]];
 
   if (api !== "overall") {
     sidebar.push([
       t("stats.game-total", { game: formatted }),
       t(challenges[api].total),
-      "§a",
+      colour(`${api}.total`),
     ]);
   }
 
