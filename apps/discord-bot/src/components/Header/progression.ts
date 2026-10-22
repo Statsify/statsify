@@ -11,10 +11,8 @@ import type { Progression } from "@statsify/schemas";
 
 export type ProgressFunction = (pecentage: number) => string;
 
-const filledSegments = (max: number, percentage: number) => {
-  if (!Number.isFinite(percentage)) return 0;
-  return Math.ceil(max * Math.min(Math.max(percentage, 0), 1));
-};
+const filledSegments = (max: number, percentage: number) =>
+  Math.ceil(max * Math.min(Math.max(percentage, 0), 1));
 
 const xpBar: ProgressFunction = (percentage) => {
   const max = 10;
