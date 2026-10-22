@@ -16,7 +16,7 @@ import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/sc
 import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
 import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Injectable, ServiceUnavailableException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { PlayerService } from "#player";
 import { flatten } from "@statsify/util";
@@ -38,14 +38,11 @@ export class GuildService {
     inputtedTag: string,
     type: GuildQuery,
     cache: CacheLevel
-  ): Promise<Guild | null> {
+  ): Promise<{ guild: Guild; hypixelUnavailable: boolean }> {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
     if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
-      return {
-        ...deserialize(Guild, flatten(cachedGuild)),
-        cached: true,
-      };
+      return this.fromCache(cachedGuild, false);
     }
 
     let guild: Guild | null;
@@ -55,16 +52,10 @@ export class GuildService {
         tag,
         type.toLowerCase() as Lowercase<GuildQuery>
       );
-    } catch {
+    } catch (error) {
       // Serve the cache even if expired; an outage shouldn't clear or hide a guild
-      if (cachedGuild) {
-        return {
-          ...deserialize(Guild, flatten(cachedGuild)),
-          cached: true,
-        };
-      }
-
-      throw new ServiceUnavailableException();
+      if (cachedGuild) return this.fromCache(cachedGuild, true);
+      throw error;
     }
 
     if (!guild) {
@@ -161,7 +152,14 @@ export class GuildService {
 
     await this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, "id");
 
-    return deserialize(Guild, flatGuild);
+    return { guild: deserialize(Guild, flatGuild), hypixelUnavailable: false };
+  }
+
+  private fromCache(cachedGuild: Guild, hypixelUnavailable: boolean) {
+    return {
+      guild: { ...deserialize(Guild, flatten(cachedGuild)), cached: true },
+      hypixelUnavailable,
+    };
   }
 
   private async getCachedGuild(
