@@ -196,11 +196,11 @@ export class BaseLeaderboardCommand {
       const data = interaction.getData();
       const positionInput = data.components[0].components[0].value.trim();
 
-      const position = /^\d+$/.test(positionInput) ? Number(positionInput) : Number.NaN;
+      const position = Number(positionInput);
 
       if (user?.locale) interaction.setLocale(user.locale);
 
-      if (Number.isNaN(position) || position < 1) {
+      if (!/^\d+$/.test(positionInput) || position < 1) {
         const error = new ErrorMessage("errors.leaderboardInvalidPosition");
 
         return interaction.sendFollowup({
