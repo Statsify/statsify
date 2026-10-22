@@ -223,9 +223,6 @@ importers:
 
   apps/scripts:
     dependencies:
-      '@statsify/api-client':
-        specifier: workspace:^
-        version: link:../../packages/api-client
       '@statsify/assets':
         specifier: workspace:^
         version: link:../../packages/assets
