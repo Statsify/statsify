@@ -47,8 +47,7 @@ export const SkyWarsProfile = ({
     [t("stats.potionsBrewed"), t(skywars.potionsBrewed), "§d"],
   ];
 
-  // Solo and Doubles share the player's Normal and Insane kit picks, so their pages show both.
-  // Overall shows the kit for whichever of Normal or Insane they've won more in
+  // Solo and Doubles both use the player's Normal and Insane kits, so their pages show both
   const showBothKits = mode.api === "solo" || mode.api === "doubles";
 
   return (
@@ -94,8 +93,16 @@ export const SkyWarsProfile = ({
         </Table.tr>
         <If condition={showBothKits}>
           <Table.tr>
-            <Table.td title={t("stats.normalKit")} value={prettify(skywars.normalKit)} color="§6" />
-            <Table.td title={t("stats.insaneKit")} value={prettify(skywars.insaneKit)} color="§6" />
+            <Table.td
+              title={t("stats.normalKit")}
+              value={prettify(skywars.normalKit)}
+              color="§6"
+            />
+            <Table.td
+              title={t("stats.insaneKit")}
+              value={prettify(skywars.insaneKit)}
+              color="§6"
+            />
           </Table.tr>
         </If>
         <Historical.progression
