@@ -316,13 +316,12 @@ export class ApiService {
     return data;
   }
 
-  // Through the client like every other request, so the key goes in a header instead of the URL
   private async requestImage(url: string, params?: Record<string, unknown>) {
-    const data = await this.request<ArrayBuffer>(url, params, "GET", {
+    const buffer = await this.request<Buffer>(url, params, "GET", {
       responseType: "arraybuffer",
       timeout: IMAGE_DOWNLOAD_TIMEOUT,
     });
 
-    return loadImage(Buffer.from(data));
+    return loadImage(buffer);
   }
 }
