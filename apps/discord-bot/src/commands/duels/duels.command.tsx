@@ -7,7 +7,6 @@
  */
 
 import {
-  ApiModeFromGameModes,
   DUELS_MODES,
   DuelsModes,
   GameModeWithSubModes,
@@ -19,13 +18,10 @@ import {
   ProfileData,
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
-import { DuelsProfile } from "./duels.profile.js";
+import { DuelsProfile, type DuelsModeIcons } from "@statsify/profiles";
 import { getAssetPath } from "@statsify/assets";
 import { loadImage } from "@statsify/rendering";
 import { readdir } from "node:fs/promises";
-import type { Image } from "skia-canvas";
-
-export type DuelsModeIcons = Record<ApiModeFromGameModes<DuelsModes>, Image>;
 
 interface PreProfileData {
   modeIcons: DuelsModeIcons;

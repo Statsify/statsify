@@ -13,11 +13,14 @@ import {
   SingleDuelsGameModeTable,
   TitlesTable,
 } from "./tables/index.js";
-import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
+import { Container, Footer, Header, SidebarItem, formatProgression } from "../../components/index.js";
+import { DUELS, cardColours } from "@statsify/catalog";
 import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { formatRecordTime, prettify } from "@statsify/util";
-import type { BaseProfileProps, ProfileTime } from "#commands/base.hypixel-command";
-import type { DuelsModeIcons } from "./duels.command.js";
+import type { BaseProfileProps, ProfileTime } from "../../types.js";
+import type { DuelsModeIcons } from "./tables/index.js";
+
+export type { DuelsModeIcons } from "./tables/index.js";
 
 export type DuelsProfileProps<T extends ProfileTime> = Omit<BaseProfileProps, "time"> & {
   mode: GameMode<DuelsModes>;
@@ -38,32 +41,33 @@ export const DuelsProfile = <T extends ProfileTime>({
   modeIcons,
 }: DuelsProfileProps<T>) => {
   const { duels } = player.stats;
+  const colour = cardColours(DUELS);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.tokens"), t(duels.tokens), "§2"],
-    [t("stats.pingRange"), `${t(duels.pingRange)}ms`, "§a"],
-    [t("stats.blocksPlaced"), t(duels.overall.blocksPlaced), "§9"],
+    [t("stats.tokens"), t(duels.tokens), colour("tokens")],
+    [t("stats.pingRange"), `${t(duels.pingRange)}ms`, colour("pingRange")],
+    [t("stats.blocksPlaced"), t(duels.overall.blocksPlaced), colour("overall.blocksPlaced")],
   ];
 
   const stats = duels[mode.api];
 
   if ("shotsFired" in stats) {
-    sidebar.push([t("stats.shotsFired"), t(stats.shotsFired), "§6"]);
+    sidebar.push([t("stats.shotsFired"), t(stats.shotsFired), colour(`${mode.api}.shotsFired`)]);
   } else if ("overall" in stats && "shotsFired" in stats.overall) {
-    sidebar.push([t("stats.shotsFired"), t(stats.overall.shotsFired), "§6"]);
+    sidebar.push([t("stats.shotsFired"), t(stats.overall.shotsFired), colour(`${mode.api}.overall.shotsFired`)]);
   }
 
   if ("headshots" in stats)
-    sidebar.push([t("stats.headshots"), t(stats.headshots), "§3"]);
+    sidebar.push([t("stats.headshots"), t(stats.headshots), colour(`${mode.api}.headshots`)]);
 
   if ("kit" in stats)
-    sidebar.push([t("stats.kit"), prettify(stats.kit), "§e"]);
+    sidebar.push([t("stats.kit"), prettify(stats.kit), colour(`${mode.api}.kit`)]);
 
   if (mode.api === "parkour") {
     if (time === "LIVE")
-      sidebar.push([t("stats.bestTime"), formatRecordTime(duels.parkour.bestTime), "§d"]);
+      sidebar.push([t("stats.bestTime"), formatRecordTime(duels.parkour.bestTime), colour("parkour.bestTime")]);
 
-    sidebar.push([t("stats.checkpoints"), t(duels.parkour.checkpoints), "§5"]);
+    sidebar.push([t("stats.checkpoints"), t(duels.parkour.checkpoints), colour("parkour.checkpoints")]);
   }
 
   const isTitles = time === "LIVE" && mode.api === "overall" && mode.submode.api === "titles";
@@ -72,38 +76,38 @@ export const DuelsProfile = <T extends ProfileTime>({
 
   switch (mode.api) {
     case "bridge":
-      table = <BridgeDuelsTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
+      table = <BridgeDuelsTable stats={duels[mode.api][mode.submode.api]} place={`${mode.api}.${mode.submode.api}`} t={t} time={time} />;
       break;
 
     case "uhc":
-      table = <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
+      table = <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} place={`${mode.api}.${mode.submode.api}`} t={t} time={time} />;
       break;
 
     case "bedwars":
-      sidebar.push([t("stats.itemsPurchased"), t(duels.bedwars.overall.itemsPurchased), "§d"]);
-      table = mode.submode.api === "overall" ? <BedWarsDuelsTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} /> : <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
+      sidebar.push([t("stats.itemsPurchased"), t(duels.bedwars.overall.itemsPurchased), colour("bedwars.overall.itemsPurchased")]);
+      table = mode.submode.api === "overall" ? <BedWarsDuelsTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} /> : <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} place={`${mode.api}.${mode.submode.api}`} t={t} time={time} />;
       break;
 
     case "skywars":
     case "op":
     case "classic":
-      table = <MultiDuelsGameModeTable stats={duels[mode.api]} t={t} time={time} />;
+      table = <MultiDuelsGameModeTable stats={duels[mode.api]} place={mode.api} t={t} time={time} />;
       break;
 
     case "spleef":
-      if (mode.submode.api === "spleef") sidebar.push([t("stats.blocksBroken"), t(duels.spleef.spleef.blocksBroken), "§b"]);
-      table = <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
+      if (mode.submode.api === "spleef") sidebar.push([t("stats.blocksBroken"), t(duels.spleef.spleef.blocksBroken), colour("spleef.spleef.blocksBroken")]);
+      table = <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} place={`${mode.api}.${mode.submode.api}`} t={t} time={time} />;
       break;
 
     case "overall":
       // ensures the profile is not a historical one so modeIcons is defined
       table = isTitles ?
         <TitlesTable duels={duels} t={t} modeIcons={modeIcons!} /> :
-        <SingleDuelsGameModeTable stats={duels[mode.api]} t={t} time={time} />;
+        <SingleDuelsGameModeTable stats={duels[mode.api]} place={mode.api} t={t} time={time} />;
       break;
 
     default:
-      table = <SingleDuelsGameModeTable stats={duels[mode.api]} t={t} time={time} />;
+      table = <SingleDuelsGameModeTable stats={duels[mode.api]} place={mode.api} t={t} time={time} />;
       break;
   }
 

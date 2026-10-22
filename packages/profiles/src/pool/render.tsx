@@ -9,6 +9,7 @@
 import { ArcadeProfile } from "../profiles/arcade/arcade.profile.js";
 import { BlitzSGProfile } from "../profiles/blitzsg.profile.js";
 import { CopsAndCrimsProfile } from "../profiles/copsandcrims.profile.js";
+import { DuelsProfile } from "../profiles/duels/duels.profile.js";
 import { MegaWallsProfile } from "../profiles/megawalls.profile.js";
 import { MurderMysteryProfile } from "../profiles/murdermystery.profile.js";
 import { SkyWarsProfile } from "../profiles/skywars.profile.js";
@@ -23,6 +24,7 @@ import {
   BLITZSG_MODES,
   BUILD_BATTLE_MODES,
   COPS_AND_CRIMS_MODES,
+  DUELS_MODES,
   type GameMode,
   type GameModes,
   type Guild,
@@ -126,6 +128,8 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
   megawalls: card({ modes: MEGAWALLS_MODES, draw: (base, { mode }) => <MegaWallsProfile {...base} mode={mode} /> }),
   blitzsg: card({ modes: BLITZSG_MODES, draw: (base, { mode }) => <BlitzSGProfile {...base} mode={mode} /> }),
   smashheroes: card({ modes: SMASH_HEROES_MODES, draw: (base, { mode }) => <SmashHeroesProfile {...base} mode={mode} /> }),
+  // The pool draws Overall's Stats, never its Titles, so it needs no mode icons (as `/session duels`).
+  duels: card({ modes: DUELS_MODES, draw: (base, { mode }) => <DuelsProfile {...base} mode={mode} modeIcons={undefined} /> }),
 };
 
 /**

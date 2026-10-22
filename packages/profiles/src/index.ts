@@ -16,6 +16,7 @@ export * from "./profiles/bedwars.profile.js";
 export * from "./profiles/blitzsg.profile.js";
 export * from "./profiles/buildbattle.profile.js";
 export * from "./profiles/copsandcrims.profile.js";
+export * from "./profiles/duels/duels.profile.js";
 export * from "./profiles/general.profile.js";
 export * from "./profiles/megawalls.profile.js";
 export * from "./profiles/murdermystery.profile.js";

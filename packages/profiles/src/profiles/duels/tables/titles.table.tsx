@@ -7,10 +7,11 @@
  */
 
 import { arrayGroup } from "@statsify/util";
-import type { Duels } from "@statsify/schemas";
-import type { DuelsModeIcons } from "../duels.command.js";
+import type { ApiModeFromGameModes, Duels, DuelsModes } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
-import type { LocalizeFunction } from "@statsify/discord";
+import type { LocalizeFunction } from "../../../types.js";
+
+export type DuelsModeIcons = Record<ApiModeFromGameModes<DuelsModes>, Image>;
 
 interface TitlesTableProps {
   duels: Duels;

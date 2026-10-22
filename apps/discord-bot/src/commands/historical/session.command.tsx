@@ -58,6 +58,7 @@ import {
   BlitzSGProfile,
   BuildBattleProfile,
   CopsAndCrimsProfile,
+  DuelsProfile,
   MegaWallsProfile,
   MurderMysteryProfile,
   PaintballProfile,
@@ -75,7 +76,6 @@ import {
   WoolGamesProfile,
 } from "@statsify/profiles";
 import { DateTime } from "luxon";
-import { DuelsProfile } from "../duels/duels.profile.js";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
 import { HistoricalTimes } from "@statsify/api-client";
