@@ -27,30 +27,22 @@ export interface RedisPlayer {
 @Injectable()
 export class PlayerSearchService {
   private logger = new Logger("PlayerSearchService");
-  private readonly shortQueries = new Map<string, { expiresAt: number; players: Promise<string[]> }>();
+  private readonly shortQueries = new Map<string, Promise<string[]>>();
 
   public constructor(@InjectRedis() private readonly redis: Redis) {}
 
   public get(query: string): Promise<string[]> {
     if (query.length > SHORT_QUERY_LENGTH) return this.search(query);
 
-    const now = Date.now();
     const cached = this.shortQueries.get(query);
-    if (cached && now < cached.expiresAt) return cached.players;
-
-    // Entries are in insertion order with the same TTL, so the expired ones are at the front
-    for (const [cachedKey, { expiresAt }] of this.shortQueries) {
-      if (now < expiresAt) break;
-      this.shortQueries.delete(cachedKey);
-    }
+    if (cached) return cached;
 
     const players = this.search(query);
-    this.shortQueries.set(query, { expiresAt: now + SHORT_QUERY_TTL, players });
+    this.shortQueries.set(query, players);
+    setTimeout(() => this.shortQueries.delete(query), SHORT_QUERY_TTL);
 
     // Don't keep a failed search
-    players.catch(() => {
-      if (this.shortQueries.get(query)?.players === players) this.shortQueries.delete(query);
-    });
+    players.catch(() => this.shortQueries.delete(query));
 
     return players;
   }
