@@ -48,9 +48,6 @@ export class TicketMenuCommand {
       components: [new ActionRowBuilder().component(button)],
     });
 
-    return {
-      content: "Ticket Message Sent",
-      ephemeral: true,
-    };
+    return { content: "Ticket Message Sent" };
   }
 }

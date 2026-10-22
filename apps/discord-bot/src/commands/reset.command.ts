@@ -34,9 +34,6 @@ export class ResetCommand {
       .color(STATUS_COLORS.success)
       .description((t) => t("historical.setSessionReset"));
 
-    return {
-      embeds: [embed],
-      ephemeral: true,
-    };
+    return { embeds: [embed] };
   }
 }
