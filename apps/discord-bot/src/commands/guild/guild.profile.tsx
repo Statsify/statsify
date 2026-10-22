@@ -356,7 +356,6 @@ interface GuildMiscPageProps {
   t: LocalizeFunction;
 }
 
-// Guilds below the first tier have no tier, and guilds past the last tier have no max
 const formatGuildAchievementTitle = (name: string, tier: string) =>
   tier ? `${name} ${tier}` : name;
 
