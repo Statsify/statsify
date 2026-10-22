@@ -132,10 +132,8 @@ export class Parkour {
   public constructor(data: APIData) {
     const getTime = (key: string): number =>
       data[key]?.reduce?.(
-        (best: number | undefined, completion: APIData) => {
-          const time = completion?.timeTook;
-          return Number.isFinite(time) && (best === undefined || time < best) ? time : best;
-        },
+        (best: number | undefined, { timeTook }: APIData) =>
+          best === undefined || timeTook < best ? timeTook : best,
         undefined
       );
 
