@@ -109,8 +109,9 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       gameName: plainText(page.game.name),
       modeName: titled.heading.mode ? plainText(titled.heading.mode) : undefined,
       updatedAt: page.updatedAt,
-      // The unfurl's size: the game's card when the pool draws one for this mode, as `/og` picks it, else the general.
-      unfurl: imageSize(isGameCard(page.game.key, page.mode) ? { card: page.game.key, mode: page.mode } : { card: "general" }, "og"),
+      // The unfurl's size: the game's card when the pool draws one for this mode (and period), as `/og` picks it, else the
+      // general.
+      unfurl: imageSize(isGameCard(page.game.key, page.mode, page.period) ? { card: page.game.key, mode: page.mode } : { card: "general" }, "og"),
     };
   },
   staleTime: 60_000,
@@ -132,8 +133,9 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const query = new URLSearchParams({ ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }) });
     const path = `/player/${username}/${game}${query.size > 0 ? `?${query}` : ""}`;
 
-    // The unfurl: the bot's card for this game, mode and submode (`/og` falls back to the general card for a game without one).
-    const unfurlQuery = new URLSearchParams({ game, ...(mode && { mode }), ...(submode && { submode }), v: String(updatedAt) });
+    // The unfurl: the bot's card for this game, mode, submode and period (`/og` falls back to the general card for a game
+    // without one).
+    const unfurlQuery = new URLSearchParams({ game, ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }), v: String(updatedAt) });
     const image = `/og/${uuid}.png?${unfurlQuery}`;
 
     return {

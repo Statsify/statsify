@@ -12,6 +12,7 @@ import { CopsAndCrimsProfile } from "../profiles/copsandcrims.profile.js";
 import { DuelsProfile } from "../profiles/duels/duels.profile.js";
 import { MegaWallsProfile } from "../profiles/megawalls.profile.js";
 import { MurderMysteryProfile } from "../profiles/murdermystery.profile.js";
+import { QuestsProfile } from "../profiles/quests.profile.js";
 import { SkyWarsProfile } from "../profiles/skywars.profile.js";
 import { SmashHeroesProfile } from "../profiles/smashheroes.profile.js";
 import { TNTGamesProfile } from "../profiles/tntgames.profile.js";
@@ -35,6 +36,7 @@ import {
   PIT_MODES,
   type Player,
   QUAKE_MODES,
+  QUEST_MODES,
   SKYWARS_MODES,
   SMASH_HEROES_MODES,
   SPEED_UHC_MODES,
@@ -47,6 +49,7 @@ import {
   WOOLGAMES_MODES,
 } from "@statsify/schemas";
 import { ArenaBrawlProfile } from "../profiles/arenabrawl.profile.js";
+import { QUEST_TIMES } from "@statsify/catalog";
 import type { BaseProfileProps } from "../types.js";
 import { BedWarsProfile } from "../profiles/bedwars.profile.js";
 import { BuildBattleProfile } from "../profiles/buildbattle.profile.js";
@@ -74,12 +77,16 @@ const STAMP_INSET = 18;
 
 /**
  * A game's card as its bot command draws it: the game's mode registry, what the command loads before it draws (its
- * `getPreProfileData`), and its `getProfile`, given the props every card takes, the mode and that data.
+ * `getPreProfileData`), and its `getProfile`, given the props every card takes, the mode, that data and, for Quests,
+ * the period and its dates.
  */
 interface CardSpec<T extends GamesWithBackgrounds, D> {
   modes: GameModes<T>;
   data?: () => Promise<D>;
-  draw: (base: BaseProfileProps, extra: { mode: GameMode<T>; data: D }) => JSX.Element;
+  draw: (
+    base: BaseProfileProps,
+    extra: { mode: GameMode<T>; data: D; period?: string; window?: { start: number; end: number } }
+  ) => JSX.Element;
 }
 
 /** Types an entry by its own registry and data, then drops them so the table holds every game's. */
@@ -93,6 +100,8 @@ const once = <T,>(load: () => Promise<T>) => {
 };
 
 const getGameIcons = once(getAllGameIcons);
+
+const getQuestLogos = once(() => Promise.all([getLogo("cross", 28), getLogo("verified", 28)]));
 
 /** The cards `GAME_CARDS` names. */
 const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
@@ -130,6 +139,20 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
   smashheroes: card({ modes: SMASH_HEROES_MODES, draw: (base, { mode }) => <SmashHeroesProfile {...base} mode={mode} /> }),
   // The pool draws Overall's Stats, never its Titles, so it needs no mode icons (as `/session duels`).
   duels: card({ modes: DUELS_MODES, draw: (base, { mode }) => <DuelsProfile {...base} mode={mode} modeIcons={undefined} /> }),
+  quests: card({
+    modes: QUEST_MODES,
+    data: async () => ({ gameIcons: await getGameIcons(), logos: await getQuestLogos() }),
+    draw: (base, { mode, data, period = "overall", window }) => (
+      <QuestsProfile
+        {...base}
+        mode={mode}
+        time={QUEST_TIMES[period]}
+        gameIcons={data.gameIcons}
+        logos={data.logos}
+        window={window}
+      />
+    ),
+  }),
 };
 
 /**
@@ -165,7 +188,14 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
   const { width, height } = imageSize(request, request.variant);
   const uuid = String(request.player.uuid);
   const game =
-    request.card === "general" ? undefined : { spec: CARDS[request.card], ...cardMode(CARDS[request.card].modes, request.mode, request.submode) };
+    request.card === "general" ?
+      undefined :
+      {
+        spec: CARDS[request.card],
+        ...cardMode(CARDS[request.card].modes, request.mode, request.submode),
+        period: request.period,
+        window: request.window,
+      };
 
   const [t, background, logo, skin, data] = await Promise.all([
     getLocalizeFunction(),
@@ -201,7 +231,7 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
         game ?
           game.spec.draw(
             { background: cardBackground as Image, logo, skin, player, user: null, t, time: "LIVE" },
-            { mode: game.mode, data }
+            { mode: game.mode, data, period: game.period, window: game.window }
           ) :
           (
             <GeneralProfile

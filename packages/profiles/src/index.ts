@@ -24,6 +24,7 @@ export * from "./profiles/paintball.profile.js";
 export * from "./profiles/parkour.profile.js";
 export * from "./profiles/pit.profile.js";
 export * from "./profiles/quake.profile.js";
+export * from "./profiles/quests.profile.js";
 export * from "./profiles/signature.profile.js";
 export * from "./profiles/skywars.profile.js";
 export * from "./profiles/smashheroes.profile.js";

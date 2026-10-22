@@ -31,29 +31,31 @@ import { siteConfig } from "./config.server";
 import type { Redis } from "ioredis";
 
 /**
- * A game page's unfurl: the game's `PlayerStats` key, its `?mode=` and `?submode=`, `null` for the page's first mode
- * and the mode's first submode.
+ * A game page's unfurl: the game's `PlayerStats` key, its `?mode=`, `?submode=` and `?period=`, `null` for the page's
+ * first mode, the mode's first submode and the first period.
  */
 export interface GameImage {
   game: string;
   mode: string | null;
   submode: string | null;
+  period: string | null;
 }
 
 /** What a game or mode in an image URL can look like (`bedwars`, `4v4`, `oneBlock`, `ARENA_BRAWL`); the API decides the rest. */
 const GAME_PARAM = /^\w{1,32}$/;
 
 /**
- * `/og`'s `?game=`, `?mode=` and `?submode=`: `undefined` for the general card, `null` for a value that can't name a
- * page.
+ * `/og`'s `?game=`, `?mode=`, `?submode=` and `?period=`: `undefined` for the general card, `null` for a value that
+ * can't name a page.
  */
 export function gameImageOf(search: URLSearchParams): GameImage | null | undefined {
   const game = search.get("game");
   const mode = search.get("mode");
   const submode = search.get("submode");
-  if (game === null) return mode === null && submode === null ? undefined : null;
+  const period = search.get("period");
+  if (game === null) return mode === null && submode === null && period === null ? undefined : null;
   const named = (value: string | null) => value === null || GAME_PARAM.test(value);
-  return GAME_PARAM.test(game) && named(mode) && named(submode) ? { game, mode, submode } : null;
+  return GAME_PARAM.test(game) && named(mode) && named(submode) && named(period) ? { game, mode, submode, period } : null;
 }
 
 /** The game or mode an image URL names has no page on the site. */
@@ -223,8 +225,11 @@ async function renderPlayerImage({
   const { updatedAt } = identity;
   if (ifNoneMatch && matchesEtag(ifNoneMatch, etagOf(updatedAt))) return { kind: "unchanged", updatedAt };
 
-  // A submode joins its mode as the catalog writes a place (`zombies.deadEnd`), so a page without one keeps its key.
-  const card = game ? `${game.game}:${game.mode ?? ""}${game.submode === null ? "" : `.${game.submode}`}:` : "";
+  // A submode joins its mode as the catalog writes a place (`zombies.deadEnd`) and a period follows an `@`
+  // (`SKYWARS@weekly`), so a page without either keeps its key.
+  const card = game ?
+    `${game.game}:${game.mode ?? ""}${game.submode === null ? "" : `.${game.submode}`}${game.period === null ? "" : `@${game.period}`}:` :
+    "";
   const key = `site:image:${variant}:${card}${identity.uuid}:${updatedAt}`;
   const lock = `${key}:lock`;
   const client = await redis();
@@ -332,8 +337,8 @@ async function waitForImage(
  * The game page's card: the API checks the game and mode (the page's own rules, so an unfurl exists exactly when the
  * page does), and a game whose card the pool can't draw yet gets the general one.
  */
-async function gameCard(uuid: string, { game, mode, submode }: GameImage): Promise<CardChoice> {
-  const page = await rpcServerClient.player.game({ uuid, game, mode: mode ?? undefined, submode: submode ?? undefined }).catch((error: unknown) => {
+async function gameCard(uuid: string, { game, mode, submode, period }: GameImage): Promise<CardChoice> {
+  const page = await rpcServerClient.player.game({ uuid, game, mode: mode ?? undefined, submode: submode ?? undefined, period: period ?? undefined }).catch((error: unknown) => {
     if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) {
       throw new GameImageNotFoundError();
     }
@@ -341,8 +346,15 @@ async function gameCard(uuid: string, { game, mode, submode }: GameImage): Promi
     throw error;
   });
 
-  if (!isGameCard(page.game.key, page.mode)) return { card: "general" };
-  return { card: page.game.key, mode: page.mode, ...(page.submode !== null && { submode: page.submode }) };
+  if (!isGameCard(page.game.key, page.mode, page.period)) return { card: "general" };
+
+  return {
+    card: page.game.key,
+    mode: page.mode,
+    ...(page.submode !== null && { submode: page.submode }),
+    ...(page.period !== undefined && { period: page.period }),
+    ...(page.window && { window: page.window }),
+  };
 }
 
 /** One of the bot's cards for a stored player, as PNG bytes. Throws `PoolBusyError` when the queue is full. */

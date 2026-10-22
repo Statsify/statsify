@@ -33,15 +33,15 @@ import {
   Header,
   type HistoricalTimeData,
   SidebarItem,
-} from "#components";
+} from "../components/index.js";
 import { DateTime } from "luxon";
 import { HistoricalTimes } from "@statsify/api-client";
-import { Palette, getColorPalette } from "#themes";
+import { Palette, getColorPalette } from "../themes/index.js";
+import { QUESTS, cardColours } from "@statsify/catalog";
 import { ratio } from "@statsify/math";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { BaseProfileProps, LocalizeFunction } from "../types.js";
 import type { Constructor } from "@statsify/util";
 import type { Image } from "skia-canvas";
-import type { LocalizeFunction } from "@statsify/discord";
 
 function getQuestMetadata<T>(constructor: Constructor<T>) {
   const entries = Object.entries(
@@ -63,15 +63,24 @@ const questMetadata: Record<QuestTime, ReturnType<typeof getQuestMetadata>> = {
   [QuestTime.Overall]: getQuestMetadata(OverallQuests),
 };
 
+const colour = cardColours(QUESTS);
+
 export interface QuestProfileProps extends Omit<BaseProfileProps, "time"> {
   mode: GameMode<QuestModes>;
   gameIcons: Record<GameId, Image>;
   logos: [cross: Image, check: Image];
   time: QuestTime;
+  /**
+   * The dates the period's counts cover (ms), where they aren't the running period's: the site's unfurl, whose counts
+   * are from the last fetch. The bot leaves it out.
+   */
+  window?: { start: number; end: number };
 }
 
 interface NormalTableProps {
   quests: GenericQuestInstance;
+  /** The period the quests are counted over, as the stats store it (`daily`). */
+  period: string;
   t: LocalizeFunction;
   gameIcons: Record<GameId, Image>;
   time: QuestTime;
@@ -80,7 +89,7 @@ interface NormalTableProps {
 
 const GRADIENT_OFFSET = 0.66;
 
-const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTableProps) => {
+const NormalTable = ({ quests, period, t, gameIcons, colorPalette, time }: NormalTableProps) => {
   const questEntries = Object.entries(quests);
 
   if (time === QuestTime.Overall) {
@@ -101,25 +110,22 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
     .map(([k, v, total]) => {
       const completed = v.total;
 
-      let textColor: string;
+      const textColor = colour(`${period}.${k}.total`, completed);
       let boxColor: DeferredGradient;
 
       if (completed === total) {
-        textColor = "§a";
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
           [1, "hsla(120, 100%, 30%, 0.5)"]
         );
       } else if (completed >= 1) {
-        textColor = "§6";
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
           [1, "hsla(40, 100%, 30%, 0.5)"]
         );
       } else {
-        textColor = "§c";
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
@@ -139,13 +145,15 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
 
 interface GameTableProps {
   quests: GameQuests;
+  /** The period the quests are counted over, as the stats store it (`daily`). */
+  period: string;
   t: LocalizeFunction;
   time: QuestTime;
   game: keyof typeof FormattedGame;
   logos: [cross: Image, check: Image];
 }
 
-const GameTable = ({ quests, t, game, time, logos: [cross, check] }: GameTableProps) => {
+const GameTable = ({ quests, period, t, game, time, logos: [cross, check] }: GameTableProps) => {
   const isOverall = time === QuestTime.Overall;
 
   const entries = Object.entries(quests)
@@ -157,7 +165,7 @@ const GameTable = ({ quests, t, game, time, logos: [cross, check] }: GameTablePr
       return (
         <box width="100%">
           <text align="left">
-            {completions > 0 ? "§a" : "§c"}§l{name}
+            {colour(`${period}.${game}.${quest}`, completions)}§l{name}
           </text>
           <div width="remaining" />
           {isOverall ?
@@ -186,6 +194,7 @@ export const QuestsProfile = ({
   gameIcons,
   time,
   logos,
+  window,
 }: QuestProfileProps) => {
   const { quests } = player.stats;
 
@@ -226,6 +235,7 @@ export const QuestsProfile = ({
       table = (
         <NormalTable
           quests={quests[period]}
+          period={period}
           time={time}
           t={t}
           gameIcons={gameIcons}
@@ -238,6 +248,7 @@ export const QuestsProfile = ({
       table = (
         <GameTable
           quests={quests[period][api]}
+          period={period}
           game={api}
           time={time}
           logos={logos}
@@ -247,12 +258,13 @@ export const QuestsProfile = ({
       break;
   }
 
-  const sidebar: SidebarItem[] = [[t("stats.total"), t(quests.total), "§b"]];
+  const sidebar: SidebarItem[] = [[t("stats.total"), t(quests.total), colour("total")]];
 
   if (api !== "overall") {
     sidebar.push([
       t("stats.game-total", { game: formatted }),
       t(quests[period][api].total),
+      // The catalog colours a period's total by how many are done, as the Overall list does; the sidebar draws it green.
       "§a",
     ]);
   }
@@ -273,6 +285,12 @@ export const QuestsProfile = ({
     (historicalTime as HistoricalTimeData).endTime = (
       historicalTime as HistoricalTimeData
     ).startTime!.plus({ days: 6 });
+  }
+
+  // In New York time, where the periods reset.
+  if (window && historicalTime !== "LIVE") {
+    historicalTime.startTime = DateTime.fromMillis(window.start, { zone: "America/New_York" });
+    historicalTime.endTime = DateTime.fromMillis(window.end, { zone: "America/New_York" });
   }
 
   return (

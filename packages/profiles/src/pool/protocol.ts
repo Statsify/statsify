@@ -24,15 +24,21 @@ export type ImageVariant = keyof typeof IMAGE_VARIANTS;
  * The games whose bot card the pool draws for a site page's unfurl, by their `PlayerStats` key. A game joins once its
  * card lives in this package; the rest unfurl with the general card.
  */
-export const GAME_CARDS = ["bedwars", "uhc", "speeduhc", "walls", "vampirez", "paintball", "quake", "turbokartracers", "buildbattle", "arenabrawl", "pit", "parkour", "skywars", "murdermystery", "copsandcrims", "arcade", "tntgames", "warlords", "woolgames", "megawalls", "blitzsg", "smashheroes", "duels"] as const;
+export const GAME_CARDS = ["bedwars", "uhc", "speeduhc", "walls", "vampirez", "paintball", "quake", "turbokartracers", "buildbattle", "arenabrawl", "pit", "parkour", "skywars", "murdermystery", "copsandcrims", "arcade", "tntgames", "warlords", "woolgames", "megawalls", "blitzsg", "smashheroes", "duels", "quests"] as const;
 
 export type GameCard = (typeof GAME_CARDS)[number];
 
 /** Modes the bot draws on a card of their own, outside this package, so they unfurl with the general card too. */
 const OWN_CARDS: Partial<Record<GameCard, string[]>> = { bedwars: ["challenges"] };
 
-export const isGameCard = (game: string, mode: string): game is GameCard =>
-  (GAME_CARDS as readonly string[]).includes(game) && !OWN_CARDS[game as GameCard]?.includes(mode);
+/**
+ * Whether the pool draws a page's own card: a game in `GAME_CARDS`, in a mode not drawn elsewhere, and not a game's
+ * all-time Quests (`period` is Quests', all time when absent), which the card fails on as the bot's `/quests overall` does.
+ */
+export const isGameCard = (game: string, mode: string, period?: string): game is GameCard =>
+  (GAME_CARDS as readonly string[]).includes(game) &&
+  !OWN_CARDS[game as GameCard]?.includes(mode) &&
+  !(game === "quests" && mode !== "overall" && (period ?? "overall") === "overall");
 
 /**
  * A game card's unfurl size. The card's own size depends on what it shows (BedWars is 847 to 870 px wide with the
@@ -63,13 +69,17 @@ export const GAME_CARD_SIZES: Record<GameCard, { width: number; height: number }
   blitzsg: { width: 709, height: 513 },
   smashheroes: { width: 845, height: 328 },
   duels: { width: 1126, height: 687 },
+  quests: { width: 722, height: 732 },
 };
 
 /**
  * The bot's general card, or a game's card in one of its api modes, and in one of the mode's submodes where the site
- * has the bot's (a mode the bot splits and the site doesn't shows its first, as the bot opens it).
+ * has the bot's (a mode the bot splits and the site doesn't shows its first, as the bot opens it), and for Quests in
+ * the page's period (all time when absent), over the dates the page gives its counts (`window`, ms).
  */
-export type CardChoice = { card: "general" } | { card: GameCard; mode: string; submode?: string };
+export type CardChoice =
+  | { card: "general" }
+  | { card: GameCard; mode: string; submode?: string; period?: string; window?: { start: number; end: number } };
 
 /** The size of the image a card renders to in `variant`, which the page's `og:image:width` and `height` repeat. */
 export const imageSize = (choice: CardChoice, variant: ImageVariant) =>

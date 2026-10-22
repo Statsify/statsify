@@ -11,8 +11,8 @@ import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
 
 /**
- * The Discord unfurl image: the bot's general card for a player, by UUID, or with `?game=` (and `?mode=` and `?submode=`)
- * the card of that game page. Never calls Hypixel.
+ * The Discord unfurl image: the bot's general card for a player, by UUID, or with `?game=` (and `?mode=`, `?submode=` and
+ * `?period=`) the card of that game page. Never calls Hypixel.
  */
 export const Route = createFileRoute("/og/{$uuid}.png")({
   server: {
