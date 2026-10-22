@@ -82,7 +82,7 @@ export class SkinService {
     const uuid = isUsername ? await this.getUuid(tag) : tag;
     const skin = await this.requestSkin(uuid);
 
-    return this.save(skin, REFRESH_AFTER);
+    return this.save(skin);
   }
 
   private refresh(uuid: string) {
@@ -90,15 +90,15 @@ export class SkinService {
     this.refreshing.add(uuid);
 
     this.requestSkin(uuid)
-      .then((skin) => this.save(skin, REFRESH_AFTER))
+      .then((skin) => this.save(skin))
       .catch(() => this.skinModel.updateOne({ uuid }, { expiresAt: Date.now() + RETRY_AFTER }).exec())
       // The database failed too; the next request tries again.
       .catch(() => undefined)
       .finally(() => this.refreshing.delete(uuid));
   }
 
-  private async save(skin: Skin, refreshAfter: number): Promise<Skin> {
-    skin.expiresAt = Date.now() + refreshAfter;
+  private async save(skin: Skin): Promise<Skin> {
+    skin.expiresAt = Date.now() + REFRESH_AFTER;
     await this.skinModel.replaceOne({ uuid: skin.uuid }, skin, { upsert: true }).lean().exec();
     return skin;
   }
