@@ -8,6 +8,7 @@
 
 import { type Game, catalogPaths, gameStats, modeStats, numberFields, playerFields } from "../catalog.js";
 import { ARCADE } from "./arcade.js";
+import { ARENA_BRAWL } from "./arenabrawl.js";
 import { BEDWARS } from "./bedwars.js";
 import { BLITZSG } from "./blitzsg.js";
 import { BUILD_BATTLE } from "./buildbattle.js";
@@ -23,6 +24,7 @@ import { VAMPIREZ } from "./vampirez.js";
 import { WALLS } from "./walls.js";
 
 export { ARCADE, DROPPER_DIFFICULTIES } from "./arcade.js";
+export { ARENA_BRAWL } from "./arenabrawl.js";
 export { BEDWARS } from "./bedwars.js";
 export { BLITZSG } from "./blitzsg.js";
 export { BUILD_BATTLE } from "./buildbattle.js";
@@ -40,6 +42,7 @@ export { WALLS } from "./walls.js";
 /** Every game in the catalog, by its `PlayerStats` key. */
 export const GAMES: Record<string, Game> = {
   arcade: ARCADE,
+  arenabrawl: ARENA_BRAWL,
   bedwars: BEDWARS,
   blitzsg: BLITZSG,
   buildbattle: BUILD_BATTLE,

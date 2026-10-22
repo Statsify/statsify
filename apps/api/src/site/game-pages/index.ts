@@ -7,6 +7,7 @@
  */
 
 import { ARCADE_PAGE } from "./arcade.js";
+import { ARENA_BRAWL_PAGE } from "./arenabrawl.js";
 import { BEDWARS_PAGE } from "./bedwars.js";
 import { BLITZSG_PAGE } from "./blitzsg.js";
 import { BUILD_BATTLE_PAGE } from "./buildbattle.js";
@@ -36,6 +37,7 @@ const registryIndex = ({ game }: GameLayout) => (game.id ? REGISTRY.indexOf(game
  */
 export const GAME_PAGES: GameLayout[] = [
   ARCADE_PAGE,
+  ARENA_BRAWL_PAGE,
   BEDWARS_PAGE,
   BLITZSG_PAGE,
   BUILD_BATTLE_PAGE,
