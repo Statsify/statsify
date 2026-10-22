@@ -27,14 +27,14 @@ export class PlayerSearchService {
 
   public async get(query: string): Promise<string[]> {
     try {
-      return await (this.redis.call(
+      return (await this.redis.call(
         "FT.SUGGET",
         "player:autocomplete",
         query,
         "FUZZY",
         "MAX",
         "25"
-      ) as Promise<string[]>);
+      )) as string[];
     } catch (e) {
       this.logger.error(e);
       this.logger.error(REDI_SEARCH_NOT_INSTALLED);
