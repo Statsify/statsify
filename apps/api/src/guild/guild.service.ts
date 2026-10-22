@@ -226,8 +226,7 @@ export class GuildService {
       .find({ uuid: { $in: uuids } })
       .select({ uuid: true, username: true, displayName: true, guildId: true })
       .lean()
-      .exec()
-      .catch(() => []);
+      .exec();
 
     return new Map(players.map((player) => [player.uuid, player]));
   }
