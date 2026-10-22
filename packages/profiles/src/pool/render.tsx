@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { SkyWarsProfile } from "../profiles/skywars.profile.js";
 import {
   ARENA_BRAWL_MODES,
   BEDWARS_MODES,
@@ -18,6 +19,7 @@ import {
   PIT_MODES,
   type Player,
   QUAKE_MODES,
+  SKYWARS_MODES,
   SPEED_UHC_MODES,
   TURBO_KART_RACERS_MODES,
   UHC_MODES,
@@ -96,6 +98,7 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
     data: async () => ({ gameIcons: await getGameIcons() }),
     draw: (base, { data }) => <ParkourProfile {...base} gameIcons={data.gameIcons} />,
   }),
+  skywars: card({ modes: SKYWARS_MODES, draw: (base, { mode }) => <SkyWarsProfile {...base} mode={mode} /> }),
 };
 
 /** The mode a request names as the bot's command hands it to the card, and the background the command draws it on. */
