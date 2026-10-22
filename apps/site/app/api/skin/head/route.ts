@@ -20,12 +20,7 @@ export async function GET(
   request: NextRequest
 ) {
   const searchParams = request.nextUrl.searchParams;
-
-  const query = HeadQuery.safeParse({
-    uuid: searchParams.get("uuid"),
-    size: searchParams.get("size") ?? undefined,
-  });
-
+  const query = HeadQuery.safeParse(Object.fromEntries(searchParams));
   if (!query.success) return new Response("Invalid uuid or size", { status: 400 });
 
   const { uuid, size } = query.data;
