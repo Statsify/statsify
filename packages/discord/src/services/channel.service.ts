@@ -50,11 +50,9 @@ export class ChannelService {
     parseDiscordResponse(response);
   }
 
-  /**
-   * Returns up to `limit` of the newest messages in a channel, newest first. Discord caps `limit` at 100
-   */
-  public async getMessages(channelId: string, limit = 100): Promise<APIMessage[]> {
-    const response = await this.rest.get(`/channels/${channelId}/messages?limit=${limit}`);
+  public async getMessages(channelId: string): Promise<APIMessage[]> {
+    // 100 is the most messages Discord returns in one request
+    const response = await this.rest.get(`/channels/${channelId}/messages?limit=100`);
     return parseDiscordResponse(response);
   }
 
