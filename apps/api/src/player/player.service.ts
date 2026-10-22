@@ -153,7 +153,7 @@ export class PlayerService {
   }
 
   public async getStatus(tag: string) {
-    const { player, hypixelError } = await this.getWithFallback(tag, CacheLevel.CACHE, {
+    const player = await this.get(tag, CacheLevel.CACHE, {
       uuid: true,
       displayName: true,
       prefixName: true,
@@ -176,7 +176,7 @@ export class PlayerService {
     status.actions = player.status;
     status.recentGames = games;
 
-    return { status, hypixelUnavailable: Boolean(hypixelError) };
+    return status;
   }
 
   /**
