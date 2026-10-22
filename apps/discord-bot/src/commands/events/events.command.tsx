@@ -15,6 +15,7 @@ import {
 } from "@statsify/discord";
 import { EVENT_TYPES, GENERAL_MODES } from "@statsify/schemas";
 import { EventsProfile } from "./events.profile.js";
+import { PLAYER_CACHE_TIME_MS } from "@statsify/api-client";
 import { arrayGroup } from "@statsify/util";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -37,7 +38,7 @@ export class EventsCommand {
       this.apiService.getUserBadge(player.uuid),
     ]);
 
-    return scrollingPagination(
+    const message = await scrollingPagination(
       context,
       arrayGroup(EVENT_TYPES, 4).map((events) => async () => {
         const background = await getBackground(
@@ -59,5 +60,7 @@ export class EventsCommand {
         );
       })
     );
+
+    return { ...message, ...this.apiService.hypixelBusyNotice(player, PLAYER_CACHE_TIME_MS) };
   }
 }
