@@ -13,6 +13,7 @@ import { CHALLENGES_PAGE } from "./challenges.js";
 import { DUELS_PAGE } from "./duels.js";
 import { PAINTBALL_PAGE } from "./paintball.js";
 import { PIT_PAGE } from "./pit.js";
+import { TURBO_KART_RACERS_PAGE } from "./turbokartracers.js";
 import { type GameId, GameIdMapping } from "@statsify/schemas";
 import { type GameLayout, pageModes } from "./layout.js";
 
@@ -35,6 +36,7 @@ export const GAME_PAGES: GameLayout[] = [
   DUELS_PAGE,
   PAINTBALL_PAGE,
   PIT_PAGE,
+  TURBO_KART_RACERS_PAGE,
 ].toSorted((a, b) => registryIndex(a) - registryIndex(b));
 
 export const findGamePage = (segment: string): GameLayout | undefined =>

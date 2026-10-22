@@ -14,6 +14,7 @@ import { CHALLENGES } from "./challenges.js";
 import { DUELS } from "./duels.js";
 import { PAINTBALL } from "./paintball.js";
 import { PIT } from "./pit.js";
+import { TURBO_KART_RACERS } from "./turbokartracers.js";
 
 export { ARCADE, DROPPER_DIFFICULTIES } from "./arcade.js";
 export { BEDWARS } from "./bedwars.js";
@@ -22,6 +23,7 @@ export { CHALLENGES } from "./challenges.js";
 export { DUELS } from "./duels.js";
 export { PAINTBALL } from "./paintball.js";
 export { PIT } from "./pit.js";
+export { TURBO_KART_RACERS } from "./turbokartracers.js";
 
 /** Every game in the catalog, by its `PlayerStats` key. */
 export const GAMES: Record<string, Game> = {
@@ -32,6 +34,7 @@ export const GAMES: Record<string, Game> = {
   duels: DUELS,
   paintball: PAINTBALL,
   pit: PIT,
+  turbokartracers: TURBO_KART_RACERS,
 };
 
 if (import.meta.vitest) {
