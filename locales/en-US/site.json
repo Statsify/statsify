@@ -121,7 +121,8 @@
       "bestScores": "Best Scores",
       "completions": "Completions",
       "kit": "Kit",
-      "weapons": "Weapons"
+      "weapons": "Weapons",
+      "challenges": "Challenges"
     },
     "table": {
       "normal": "Normal",
@@ -160,7 +161,16 @@
     "ragePotatoesEaten": "Rage Potatoes Eaten",
     "goldIngotsGathered": "Gold Ingots Gathered",
     "vampireHealing": "Vampire Healing",
-    "postUpdateKills": "2017+ Kills"
+    "postUpdateKills": "2017+ Kills",
+    "totalWins": "Total Wins",
+    "archerWins": "Archer Wins",
+    "halfHealthWins": "Half Health Wins",
+    "noBlockWins": "No Block Wins",
+    "noChestWins": "No Chest Wins",
+    "paperWins": "Paper Wins",
+    "rookieWins": "Rookie Wins",
+    "uhcWins": "UHC Wins",
+    "ultimateWarriorWins": "Ultimate Warrior Wins"
   },
   "notFound": {
     "title": "OOPS!",

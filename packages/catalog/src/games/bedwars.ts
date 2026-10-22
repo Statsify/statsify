@@ -7,7 +7,7 @@
  */
 
 import { BEDWARS_MODES, BedWarsModeChallenges, type BedWarsModes, scanMetadata } from "@statsify/schemas";
-import type { Game, StatEntry } from "../catalog.js";
+import { type Game, type StatEntry, doneColour } from "../catalog.js";
 import { prettify } from "@statsify/util";
 
 /**
@@ -22,7 +22,7 @@ const CHALLENGES: Record<string, StatEntry> = {
       .filter(([key]) => key !== "totalChallenges" && key !== "uniqueChallenges")
       .map(([key, { leaderboard }]): [string, StatEntry] => [
         key,
-        { colour: (completions) => (Number(completions) > 0 ? "§a" : "§c"), name: leaderboard.fieldName ?? prettify(key) },
+        { colour: doneColour, name: leaderboard.fieldName ?? prettify(key) },
       ])
   ),
 };
