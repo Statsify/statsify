@@ -8,7 +8,9 @@
 
 import { Background, backgroundFor } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
+import { Check } from "~/components/icons/check";
 import { Chevron } from "~/components/icons/chevron";
+import { Cross } from "~/components/icons/cross";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
@@ -19,7 +21,7 @@ import { MinecraftText, colourClass, colourOf, leadingColourClass } from "~/comp
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
-import { gamePageQuery, modeSearch, submodeSearch } from "./game-data";
+import { gamePageQuery, modeSearch, periodSearch, submodeSearch } from "./game-data";
 import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { refreshGame } from "~/features/player/player-actions";
@@ -90,6 +92,7 @@ export function GameView({ page }: { page: GamePage }) {
   const [filter, setFilter] = useState("");
   const mode = modeSearch(page, page.mode);
   const submode = submodeSearch(page, page.submode);
+  const period = periodSearch(page, page.period);
   const boxes = page.sections.filter(({ box }) => box);
   const lists = page.sections.filter(({ box, list }) => !box && list);
   // The first other table is the headline; the rest go beside it.
@@ -124,11 +127,11 @@ export function GameView({ page }: { page: GamePage }) {
 
   // Everything cached for this player predates the refresh: it reloads the next time it's shown.
   const refresh = async () => {
-    const result = await refreshGame({ data: { uuid: page.uuid, game: page.game.key, mode, submode } });
+    const result = await refreshGame({ data: { uuid: page.uuid, game: page.game.key, mode, submode, period } });
 
     if (result.ok) {
       await queryClient.invalidateQueries({ queryKey: orpc.player.key({ input: { uuid: page.uuid } }), refetchType: "none" });
-      queryClient.setQueryData(gamePageQuery(page.uuid, page.game.key, mode, submode).queryKey, result.data);
+      queryClient.setQueryData(gamePageQuery(page.uuid, page.game.key, mode, submode, period).queryKey, result.data);
     }
 
     return result;
@@ -171,7 +174,9 @@ export function GameView({ page }: { page: GamePage }) {
           {page.games.length > 1 && <GameNav page={page} className="shrink-0" />}
           {page.modes.length > 1 && <ModeSwitcher page={page} />}
         </div>
-        {page.submodes.length > 1 && <ModeSwitcher page={page} submodes />}
+        {page.submodes.length > 1 && <ModeSwitcher page={page} kind="submode" />}
+        {(page.periods?.length ?? 0) > 1 && <ModeSwitcher page={page} kind="period" />}
+        {page.window && <PeriodDates {...page.window} />}
         <p className="text-mc-1 text-mc-gray">{t("game.hint", { name: page.username })}</p>
         {page.sections[0]?.box ? [boxPanels, headlinePanels] : [headlinePanels, boxPanels]}
         {lists.map((section, index) => (
@@ -324,7 +329,7 @@ export function StatPanel({
     const cells = shown(all);
     const lines = (cells: Stat[]) => (
       <dl className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {cells.map((cell) => <ListStat key={cell.key} cell={cell} username={username} plain={section.plain} />)}
+        {cells.map((cell) => <ListStat key={cell.key} cell={cell} username={username} plain={section.plain} ticks={section.ticks} />)}
       </dl>
     );
     const { rowNames } = section;
@@ -453,11 +458,12 @@ function GameStat({ cell, username }: { cell: Stat; username: string }) {
 
 /**
  * A name and its value on one line, as the card's lists draw them: the name on the left, bold unless the list keeps the
- * card's own formatting, and the value on the right.
+ * card's own formatting, and the value on the right, or a tick or a cross in a list of things done or not.
  */
-function ListStat({ cell, username, plain = false }: { cell: Stat; username: string; plain?: boolean }) {
+function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat; username: string; plain?: boolean; ticks?: boolean }) {
   const label = useStatLabel(cell);
-  const value = useStatValue(cell);
+  const count = useStatValue(cell);
+  const value = ticks ? <Tick done={Number(cell.value) > 0} /> : count;
   const { className, style } = colourOf(cell.colour);
 
   return (
@@ -468,6 +474,19 @@ function ListStat({ cell, username, plain = false }: { cell: Stat; username: str
         {cell.leaderboard ? <LeaderboardLink field={cell.leaderboard} username={username} stat={label.text}>{value}</LeaderboardLink> : value}
       </dd>
     </div>
+  );
+}
+
+/** The card's tick or cross, in the stat's colour, with its words for screen readers. */
+function Tick({ done }: { done: boolean }) {
+  const { t } = useTranslation();
+  const Icon = done ? Check : Cross;
+
+  return (
+    <>
+      <Icon className="block size-6" />
+      <span className="sr-only">{t(done ? "game.done" : "game.notDone")}</span>
+    </>
   );
 }
 
@@ -483,24 +502,37 @@ function SelectionStat({ cell }: { cell: Stat }) {
 const markWords = (counted: NonNullable<GamePage["modes"][number]["mostPlayed"]>) =>
   counted === "wins" ? "game.mostWins" : "game.mostPlayed";
 
+/** Each switcher's words in `site.json`: its nav's label and its select's. */
+const SWITCHER_WORDS = {
+  mode: { nav: "game.modes", select: "game.mode" },
+  submode: { nav: "game.submodes", select: "game.submode" },
+  period: { nav: "game.periods", select: "game.period" },
+} as const;
+
 /**
- * The mode switcher, or the submode one: tabs, as joined segments on phones and links from `md` up, or a native select,
- * by how many there are (`PHONE_TABS`, `DESKTOP_TABS`). Both keep the scroll position, and every target is 44 px tall.
- * The player's kit or class is marked, and so is the mode they've played most: in a select's options by its words, on a tab by a
+ * The mode switcher, or the submode or period one: tabs, as joined segments on phones and links from `md` up, or a
+ * native select, by how many there are (`PHONE_TABS`, `DESKTOP_TABS`). Both keep the scroll position, and every target
+ * is 44 px tall. The player's kit or class is marked, and so is the mode they've played most: in a select's options by its words, on a tab by a
  * gold square, with the words for screen readers and what counted on hover, and a line under the tabs saying what the
  * square means. The words say "most wins" where the game counts wins alone.
  */
-export function ModeSwitcher({ page, submodes = false }: { page: GamePage; submodes?: boolean }) {
+export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: keyof typeof SWITCHER_WORDS }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const router = useRouter();
   const id = useId();
-  const options: GamePage["modes"] = submodes ? page.submodes : page.modes;
-  const current = submodes ? page.submode : page.mode;
+  const periods = (page.periods ?? []).map((key) => ({ key, name: t(`game.periodNames.${key}`) }));
+  const options: GamePage["modes"] = { mode: page.modes, submode: page.submodes, period: periods }[kind];
+  const current = { mode: page.mode, submode: page.submode, period: page.period ?? null }[kind];
   const mode = modeSearch(page, page.mode);
-  // A new mode starts on its first submode.
-  const search = (key: string) =>
-    submodes ? { mode, submode: submodeSearch(page, key) } : { mode: modeSearch(page, key), submode: undefined };
+  const submode = submodeSearch(page, page.submode);
+  const period = periodSearch(page, page.period);
+  // A new mode starts on its first submode, in the period shown.
+  const search = (key: string) => ({
+    mode: kind === "mode" ? modeSearch(page, key) : mode,
+    submode: kind === "submode" ? submodeSearch(page, key) : kind === "mode" ? undefined : submode,
+    period: kind === "period" ? periodSearch(page, key) : period,
+  });
   const name = (option: (typeof options)[number]) => (option.selected ? t("game.selected", { name: option.name }) : option.name);
   const phoneTabs = options.length <= PHONE_TABS;
   const desktopTabs = options.length <= DESKTOP_TABS;
@@ -527,20 +559,22 @@ export function ModeSwitcher({ page, submodes = false }: { page: GamePage; submo
 
   return (
     <nav
-      aria-label={t(submodes ? "game.submodes" : "game.modes")}
+      aria-label={t(SWITCHER_WORDS[kind].nav)}
       // Beside the Games button: a select takes what the button leaves, and so do a phone's tabs.
-      className={submodes ? undefined : cn(phoneTabs ? "min-w-0 grow basis-0" : "min-w-0 grow basis-48", desktopTabs && "md:basis-full")}
+      className={kind === "mode" ? cn(phoneTabs ? "min-w-0 grow basis-0" : "min-w-0 grow basis-48", desktopTabs && "md:basis-full") : undefined}
     >
       {!phoneTabs && (
-        // A form, so the select works without the page's scripts: its button, shown only then, sends the pick as
-        // `?mode=` (a submode's with its mode), which the route reads. With them, a pick navigates in place.
+        // A form, so the select works without the page's scripts: its button, shown only then, sends the pick with the
+        // rest of the page's search it keeps (a submode's mode, the period), which the route reads. With them, a pick
+        // navigates in place.
         <form method="get" className={cn("flex items-center gap-3", desktopTabs && "md:hidden")}>
-          {submodes && mode !== undefined && <input type="hidden" name="mode" value={mode} />}
-          <label htmlFor={id} className="shrink-0 text-mc-1 text-mc-gray">{t(submodes ? "game.submode" : "game.mode")}</label>
+          {Object.entries(search(current ?? "")).map(([key, value]) =>
+            key !== kind && value !== undefined && <input key={key} type="hidden" name={key} value={value} />)}
+          <label htmlFor={id} className="shrink-0 text-mc-1 text-mc-gray">{t(SWITCHER_WORDS[kind].select)}</label>
           <div className="relative min-w-0 grow md:max-w-sm">
             <select
               id={id}
-              name={submodes ? "submode" : "mode"}
+              name={kind}
               value={pick ?? undefined}
               onFocus={preload}
               onPointerDown={preload}
@@ -608,6 +642,16 @@ export function ModeSwitcher({ page, submodes = false }: { page: GamePage; submo
       )}
     </nav>
   );
+}
+
+/**
+ * The dates a period's counts cover, as the card's header prints them (`MM/dd/yyyy ➡ MM/dd/yyyy`): from the period's
+ * start to the fetch, in New York time, where the periods reset, on both server and browser so the HTML hydrates.
+ */
+function PeriodDates({ start, end }: NonNullable<GamePage["window"]>) {
+  const { t, i18n } = useTranslation();
+  const format = new Intl.DateTimeFormat(i18n.language, { month: "2-digit", day: "2-digit", year: "numeric", timeZone: "America/New_York" });
+  return <p className="text-mc-1 text-mc-gray">{t("game.window", { start: format.format(start), end: format.format(end) })}</p>;
 }
 
 /** From `md` up, the game nav lists up to this many pages as links; past it, the Games button, as on phones. */

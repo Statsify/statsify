@@ -8,7 +8,7 @@
 
 import { type ColourCode, type Game, type Stat, modeName, shapeKeys, statAt } from "@statsify/catalog";
 import { FormattedGame, type Player, type PlayerStats } from "@statsify/schemas";
-import { PLAYER_COOLDOWN_MS } from "../cooldown.js";
+import { freshness } from "../cooldown.js";
 import { arrayGroup } from "@statsify/util";
 import type { GamePage, StatCell, StatSection } from "@statsify/contract";
 
@@ -39,6 +39,22 @@ export type CellSpec =
     hidden?: (stats: PlayerStats) => boolean;
   };
 
+/**
+ * A value the page works out from stored ones where the schema stores none (Quests' Monthly Total, every game's monthly
+ * quests added up). It has no leaderboard, as there's no field to rank.
+ */
+export interface ComputedSpec {
+  key: string;
+  label: string;
+  colour: ColourCode;
+  compute: (stats: PlayerStats) => number;
+}
+
+/** An overview cell: a stat, or a value worked out from stats. */
+export type OverviewSpec = CellSpec | ComputedSpec;
+
+const isComputed = (spec: OverviewSpec): spec is ComputedSpec => typeof spec !== "string" && "compute" in spec;
+
 /** A group of stats: the card's rows, or cells ordered and grouped as the card does. */
 export interface SectionSpec {
   /** A `game.sections.*` key or the card's `stats.*` heading; none for the headline table. */
@@ -54,8 +70,11 @@ export interface SectionSpec {
   rowNames?: string[];
   /** Cells to order (`sort`) and group into rows (`ranks`); one row if neither is set. */
   cells?: CellSpec[];
-  /** By value: most first, or least first with unset values last (fastest times). Ties keep the given order. */
-  sort?: "desc" | "asc";
+  /**
+   * By value: most first, or least first with unset values last (fastest times), or by the share of its cap, best first
+   * (a period's quests done out of the game's). Ties keep the given order.
+   */
+  sort?: "desc" | "asc" | "share";
   /** Rows of `size` cells, the n-th in the n-th colour (the last colour repeats), as the card colours by rank. */
   ranks?: { size: number; colours?: ColourCode[] };
   /** One of the card's boxes drawn side by side, as Classic Duels draws Overall, Solo and Doubles. */
@@ -68,6 +87,8 @@ export interface SectionSpec {
   collapsed?: boolean;
   /** Searched by the page's filter box, for a list too long to scan. */
   search?: boolean;
+  /** Values as a tick or a cross, for whether each was done (a period's quests). */
+  ticks?: boolean;
 }
 
 /** The level header: the stat its leaderboard ranks, what the card calls the level and its bar, and the level. */
@@ -143,7 +164,7 @@ export interface PageSpec {
   /** The page's own level header, or null for none; the game's otherwise. */
   level?: LevelSpec | null;
   /** The page's own overview; the game's otherwise. */
-  overview?: CellSpec[];
+  overview?: OverviewSpec[];
   sections: SectionSpec[];
 }
 
@@ -194,8 +215,15 @@ export interface GameLayout {
   modeNames?: Record<string, string>;
   level?: LevelSpec;
   /** Game-wide stats and selections, game stats unless `at` says otherwise. */
-  overview: CellSpec[];
-  page: (mode: string, submode: string | undefined) => PageSpec;
+  overview: OverviewSpec[];
+  /**
+   * The periods a mode's page covers, where the stats are counted over periods (Quests' all time, daily, weekly and
+   * monthly); the first is the default. None by default.
+   */
+  periods?: (mode: string) => readonly string[];
+  /** When a period's counts began, for counts taken at `at` (ms), for the page's dates; none for all time. */
+  periodStart?: (period: string, at: number) => number | undefined;
+  page: (mode: string, submode: string | undefined, period: string | undefined) => PageSpec;
   /** Marks the mode the player has played most in the switcher. */
   mostPlayed?: MostPlayedSpec;
   /** Whether the player has played the game, for a page that isn't a game's; a game's comes from its overview panel. */
@@ -283,6 +311,10 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
       const key = (entry: (typeof resolved)[number]) => numberOf(player, entry.stat) || Infinity;
       resolved = resolved.toSorted((a, b) => key(a) - key(b));
     }
+    if (spec.sort === "share") {
+      const share = ({ stat, cell }: (typeof resolved)[number]) => (cell.of ? numberOf(player, stat) / cell.of : 0);
+      resolved = resolved.toSorted((a, b) => share(b) - share(a));
+    }
 
     const flat = resolved.map(({ cell }) => cell);
     const { ranks } = spec;
@@ -313,7 +345,16 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
     ...(spec.plain && { plain: true }),
     ...(spec.collapsed && { collapsed: true }),
     ...(spec.search && { search: true }),
+    ...(spec.ticks && { ticks: true }),
   };
+}
+
+/** The overview's cells: its stats, and the values it works out (with no leaderboard). */
+function overview(player: Player, game: Game, specs: OverviewSpec[]): StatCell[] {
+  return specs.flatMap((spec) =>
+    isComputed(spec) ?
+      [{ key: spec.key, label: spec.label, value: finite(spec.compute(player.stats)), colour: spec.colour, leaderboard: null }] :
+      cells(player, game, "", [spec]).map(({ cell }) => cell));
 }
 
 type Counted = NonNullable<GamePage["modes"][number]["mostPlayed"]>;
@@ -390,8 +431,17 @@ export function pageName(layout: GameLayout): string {
   return FormattedGame[layout.game.id];
 }
 
-/** The `player.game` view model, but for the nav to the player's other games: one page of one game. */
-export function buildGamePage(player: Player, layout: GameLayout, mode: string, submode?: string): Omit<GamePage, "games"> {
+/**
+ * The `player.game` view model, but for the nav to the player's other games: one page of one game, in one of its
+ * mode's periods where it has them (the first by default).
+ */
+export function buildGamePage(
+  player: Player,
+  layout: GameLayout,
+  mode: string,
+  submode?: string,
+  period?: string
+): Omit<GamePage, "games"> {
   const { game } = layout;
   const modes = pageModes(layout);
   const modeSpec = modes.find(({ key }) => key === mode);
@@ -400,7 +450,12 @@ export function buildGamePage(player: Player, layout: GameLayout, mode: string, 
   const name = (key: string) => layout.modeNames?.[key] ?? modeName(game, key);
   const submodes = modeSpec.submodes ?? [];
   const sub = submodes.length > 0 ? submode ?? submodes[0].key : undefined;
-  const page = layout.page(mode, sub);
+  const periods = layout.periods?.(mode) ?? [];
+  const shownPeriod = periods.length > 0 ? period ?? periods[0] : undefined;
+  if (shownPeriod !== undefined && !periods.includes(shownPeriod)) throw new Error(`${game.key} has no ${mode} ${shownPeriod} page`);
+  const page = layout.page(mode, sub, shownPeriod);
+  const { updatedAt } = freshness(player);
+  const start = shownPeriod === undefined ? undefined : layout.periodStart?.(shownPeriod, updatedAt);
   const place = page.place ?? (sub ? `${mode}.${sub}` : mode);
   const selected = layout.selected?.(player.stats);
   const selectedSub = modeSpec.selected?.(player.stats);
@@ -432,36 +487,42 @@ export function buildGamePage(player: Player, layout: GameLayout, mode: string, 
       ...(submode.key === subMost?.mode && { mostPlayed: subMost.by }),
     })),
     submode: sub ?? null,
+    ...(shownPeriod !== undefined && { periods: [...periods], period: shownPeriod }),
+    ...(start !== undefined && { window: { start, end: updatedAt } }),
     level: levelSpec ? level(player, game, levelSpec) : null,
-    overview: cells(player, game, "", page.overview ?? layout.overview).map(({ cell }) => cell),
+    overview: overview(player, game, page.overview ?? layout.overview),
     sections: page.sections
       .map((spec) => section(player, game, place, spec))
       .filter(({ rows }) => rows.length > 0),
-    updatedAt: player.expiresAt - PLAYER_COOLDOWN_MS,
+    updatedAt,
     expiresAt: player.expiresAt,
   };
 }
 
-/** Every page of a layout: each mode, and each of its submodes. */
-export function pagesOf(layout: GameLayout): { mode: string; submode?: string }[] {
-  return pageModes(layout).flatMap(({ key: mode, submodes }) =>
-    submodes?.length ? submodes.map(({ key: submode }) => ({ mode, submode })) : [{ mode }]
-  );
+/** Every page of a layout: each mode, each of its submodes, and each of its periods. */
+export function pagesOf(layout: GameLayout): { mode: string; submode?: string; period?: string }[] {
+  return pageModes(layout).flatMap(({ key: mode, submodes }) => {
+    const pages = submodes?.length ? submodes.map(({ key: submode }) => ({ mode, submode })) : [{ mode }];
+    const periods = layout.periods?.(mode) ?? [];
+    return periods.length > 0 ? pages.flatMap((page) => periods.map((period) => ({ ...page, period }))) : pages;
+  });
 }
 
 /** Every stat a layout can show, by path, whatever its `when`s decide: for the tests. Throws for a key not in the catalog. */
 export function shownPaths(layout: GameLayout): Set<string> {
   const { game } = layout;
   const shown = new Set<string>();
-  const add = (place: string, specs: CellSpec[]) => {
+  const add = (place: string, specs: OverviewSpec[]) => {
     for (const entry of specs) {
+      // A worked-out value has no field.
+      if (isComputed(entry)) continue;
       const spec = specOf(entry);
       shown.add(statAt(game, spec.at ?? place, spec.key).path);
     }
   };
 
-  for (const { mode, submode } of pagesOf(layout)) {
-    const page = layout.page(mode, submode);
+  for (const { mode, submode, period } of pagesOf(layout)) {
+    const page = layout.page(mode, submode, period);
     const level = page.level === undefined ? layout.level : page.level;
     if (level) shown.add(statAt(game, level.at ?? "", level.key).path);
     add("", page.overview ?? layout.overview);

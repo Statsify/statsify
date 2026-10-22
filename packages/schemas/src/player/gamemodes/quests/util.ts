@@ -245,11 +245,11 @@ export function createQuestsInstance<
   return QuestInstance as unknown as IQuestInstance<Time, GamesWithQuests>;
 }
 
-export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) => {
-  if (!quest?.completions) return 0;
-  if (time === QuestTime.Overall) return quest.completions.length;
+/** When a period's counts begin at `at` (ms): New York's day, its week from Friday, or its month. None for all time. */
+export const questPeriodStart = (time: QuestTime, at = Date.now()): number | undefined => {
+  if (time === QuestTime.Overall) return undefined;
 
-  let t: DateTime = DateTime.now().setZone("America/New_York");
+  let t: DateTime = DateTime.fromMillis(at, { zone: "America/New_York" });
 
   switch (time) {
     case QuestTime.Daily:
@@ -258,7 +258,7 @@ export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) =
 
     case QuestTime.Weekly:
       t = t.startOf("week");
-      t = t.plus({ days: 4 }).toMillis() < Date.now() ?
+      t = t.plus({ days: 4 }).toMillis() < at ?
         t.plus({ days: 4 }) :
         t.minus({ days: 3 });
       break;
@@ -268,7 +268,14 @@ export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) =
       break;
   }
 
-  const millis = t.toMillis();
+  return t.toMillis();
+};
+
+export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) => {
+  if (!quest?.completions) return 0;
+
+  const millis = questPeriodStart(time);
+  if (millis === undefined) return quest.completions.length;
 
   return quest.completions.filter((ms) => ms.time >= millis).length;
 };

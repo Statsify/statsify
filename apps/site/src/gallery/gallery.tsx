@@ -488,7 +488,7 @@ function GameSection() {
         <div className="flex flex-col gap-4">
           <GameHeader page={SUBMODE_PAGE} />
           <ModeSwitcher page={SUBMODE_PAGE} />
-          <ModeSwitcher page={SUBMODE_PAGE} submodes />
+          <ModeSwitcher page={SUBMODE_PAGE} kind="submode" />
         </div>
       </Demo>
       <Demo label="45 modes: a select at every width, the player's kit marked">

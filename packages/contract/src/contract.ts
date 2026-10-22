@@ -99,7 +99,7 @@ export const PlayerPageSchema = z.object({
     current: Count,
     max: Count,
     percent: z.number().min(0).max(1),
-    /** Coin multiplier derived from the level (see `levelMultiplier`). */
+    /** Coin multiplier derived from the level (see the API's `LEVEL_MULTIPLIERS`). */
     multiplier: z.number(),
   }),
   status: z.object({
@@ -253,6 +253,8 @@ export const StatSectionSchema = z.object({
   collapsed: z.boolean().optional(),
   /** A long list the page's filter box searches by name; one box serves every such list on the page. */
   search: z.boolean().optional(),
+  /** Values shown as a tick above 0 and a cross at 0, for whether each was done (a period's quests). */
+  ticks: z.boolean().optional(),
 });
 
 /**
@@ -294,6 +296,18 @@ export const GamePageSchema = z.object({
   submodes: z.array(ModeOptionSchema),
   /** The submode shown, or null for a mode without submodes. */
   submode: z.string().nullable(),
+  /**
+   * The periods the mode's stats are counted over, where they are (Quests: `overall`, all time, then `daily`, `weekly`
+   * and, on a mode with monthly quests, `monthly`); the first is the default and has no `&period=`. Absent elsewhere.
+   */
+  periods: z.array(z.string()).optional(),
+  /** The period shown, on a page with periods. */
+  period: z.string().optional(),
+  /**
+   * The dates the shown period's counts cover, on a page with a period other than all time: from the period's start to
+   * when the API last fetched the player (ms), as the card's header prints them.
+   */
+  window: z.object({ start: z.number(), end: z.number() }).optional(),
   /**
    * The level, the level the bar starts at and the next one, when the page shows one, with the leaderboard that ranks
    * it (as on `StatCellSchema`). `label` is what the card calls it (`stats.level`, `stats.prefix`, `stats.title`)
@@ -448,6 +462,11 @@ const GameInputSchema = z.object({
   mode: z.string().min(1).max(32).optional(),
   /** A submode of that mode, for a mode with submodes; the first when left out. */
   submode: z.string().min(1).max(32).optional(),
+  /**
+   * A period of that mode, for a page with periods (Quests' `daily`); the first when left out. One the page has on
+   * another mode but not this one (Monthly on a game without monthly quests) gets the mode's first.
+   */
+  period: z.string().min(1).max(32).optional(),
 });
 const RefreshInputSchema = z.object({ uuid: UuidSchema, clientIp: ClientIpSchema });
 const LookupInputSchema = z.object({

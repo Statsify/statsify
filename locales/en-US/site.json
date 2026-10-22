@@ -102,6 +102,17 @@
     "modes": "Modes",
     "submode": "Submode",
     "submodes": "Submodes",
+    "period": "Period",
+    "periods": "Periods",
+    "periodNames": {
+      "overall": "All Time",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    },
+    "window": "{{start}} ➡ {{end}}",
+    "done": "(done)",
+    "notDone": "(not done)",
     "selected": "{{name}} (selected)",
     "games": "Games",
     "unplayed": "(not played)",
@@ -179,7 +190,10 @@
     "ultimateWarriorWins": "Ultimate Warrior Wins",
     "explosiveKills": "Explosive Kills",
     "voidKills": "Void Kills",
-    "meleeKills": "Melee Kills"
+    "meleeKills": "Melee Kills",
+    "dailyTotal": "Daily Total",
+    "weeklyTotal": "Weekly Total",
+    "monthlyTotal": "Monthly Total"
   },
   "notFound": {
     "title": "OOPS!",

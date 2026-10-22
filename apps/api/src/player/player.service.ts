@@ -31,6 +31,9 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 
+/** `PlayerService.get` refreshes a player from Hypixel at most once per this cooldown. */
+export const PLAYER_COOLDOWN_MS = 120_000;
+
 @Injectable()
 export class PlayerService {
   public constructor(
@@ -79,7 +82,7 @@ export class PlayerService {
     });
 
     if (player) {
-      player.expiresAt = Date.now() + 120_000;
+      player.expiresAt = Date.now() + PLAYER_COOLDOWN_MS;
       player.sessionReset = mongoPlayer?.sessionReset;
       player.guildId = mongoPlayer?.guildId;
 
@@ -110,7 +113,7 @@ export class PlayerService {
       await this.playerSearchService.delete(mongoPlayer.username);
 
     player.guildId = mongoPlayer?.guildId;
-    player.expiresAt = Date.now() + 120_000;
+    player.expiresAt = Date.now() + PLAYER_COOLDOWN_MS;
 
     return this.saveOne(player, false);
   }

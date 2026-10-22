@@ -89,6 +89,7 @@ export const refreshGame = createServerFn({ method: "POST" })
       game: z.string().min(1).max(32),
       mode: z.string().min(1).max(32).optional(),
       submode: z.string().min(1).max(32).optional(),
+      period: z.string().min(1).max(32).optional(),
     })
   )
   .handler(async ({ data }): Promise<ActionResult<GamePage>> => {
@@ -96,8 +97,8 @@ export const refreshGame = createServerFn({ method: "POST" })
 
     try {
       await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: clientIp() }, { signal });
-      const { uuid, game, mode, submode } = data;
-      return { ok: true, data: await rpcServerClient.player.game({ uuid, game, mode, submode }, { signal }) };
+      const { uuid, game, mode, submode, period } = data;
+      return { ok: true, data: await rpcServerClient.player.game({ uuid, game, mode, submode, period }, { signal }) };
     } catch (error) {
       return failure(error, signal);
     }

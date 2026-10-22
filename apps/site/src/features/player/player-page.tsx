@@ -203,12 +203,12 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
   const { t } = useTranslation();
   const n = useNumberFormat();
 
-  // The general card's cells and colours: points §6, quests and challenges §a, karma and streaks §d, gifts §5.
-  // Challenges links to its page, the rest but Quests to their leaderboards (`stats.general.<board>`).
+  // The general card's cells and colours: points §6, quests and challenges §a, karma and streaks §d, gifts §5. Quests
+  // and Challenges link to their pages, the rest to their leaderboards (`stats.general.<board>`).
   const cells: [label: string, value: number, color: string, link?: { page: string } | { board: string }][] = [
     [t("default:stats.achievementPoints"), overview.achievementPoints, "text-mc-gold", { board: "achievementPoints" }],
     [t("default:stats.karma"), overview.karma, "text-mc-pink", { board: "karma" }],
-    [t("default:stats.quests"), overview.quests, "text-mc-green"],
+    [t("default:stats.quests"), overview.quests, "text-mc-green", { page: "quests" }],
     [t("default:stats.challenges"), overview.challenges, "text-mc-green", { page: "challenges" }],
     [t("default:stats.rewardStreak"), overview.currentRewardStreak, "text-mc-pink", { board: "currentRewardStreak" }],
     [t("player.highestStreak"), overview.highestRewardStreak, "text-mc-pink", { board: "highestRewardStreak" }],

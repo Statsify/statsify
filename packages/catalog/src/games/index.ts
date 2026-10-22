@@ -21,6 +21,7 @@ import { PAINTBALL } from "./paintball.js";
 import { PARKOUR } from "./parkour.js";
 import { PIT } from "./pit.js";
 import { QUAKE } from "./quake.js";
+import { QUESTS } from "./quests.js";
 import { SKYWARS } from "./skywars.js";
 import { SMASH_HEROES } from "./smashheroes.js";
 import { SPEED_UHC } from "./speeduhc.js";
@@ -46,6 +47,7 @@ export { PAINTBALL } from "./paintball.js";
 export { PARKOUR } from "./parkour.js";
 export { PIT } from "./pit.js";
 export { QUAKE } from "./quake.js";
+export { QUEST_PERIODS, QUEST_TIMES, QUESTS, type QuestPeriod } from "./quests.js";
 export { SKYWARS, SKYWARS_CHALLENGES } from "./skywars.js";
 export { SMASH_HEROES } from "./smashheroes.js";
 export { SPEED_UHC, SPEED_UHC_MASTERIES } from "./speeduhc.js";
@@ -73,6 +75,7 @@ export const GAMES: Record<string, Game> = {
   parkour: PARKOUR,
   pit: PIT,
   quake: QUAKE,
+  quests: QUESTS,
   skywars: SKYWARS,
   smashheroes: SMASH_HEROES,
   speeduhc: SPEED_UHC,

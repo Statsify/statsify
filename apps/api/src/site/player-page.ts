@@ -8,12 +8,36 @@
 
 import { type ColourCode, GAMES, type Game, cardColours, statAt } from "@statsify/catalog";
 import { FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
-import { type GamePage, type GameSummary, type PlayerPage, type StatRow, levelMultiplier } from "@statsify/contract";
-import { formatTime } from "@statsify/util";
-import { PLAYER_COOLDOWN_MS } from "./cooldown.js";
+import type { GamePage, GameSummary, PlayerPage, StatRow } from "@statsify/contract";
+import { findScore, formatTime } from "@statsify/util";
+import { freshness } from "./cooldown.js";
 import { winstreaksHidden } from "./game-pages/duels.js";
 import { GAME_PAGES, gamePageOf, pageName } from "./game-pages/index.js";
 import { read } from "./game-pages/layout.js";
+
+/**
+ * Hypixel's network-level coin multiplier from each first level, ascending.
+ *
+ * Source: the Hypixel wiki's "Coin Multipliers" table (Level → Coin Multiplier) as captured on
+ * 2026-10-19. It ends at level 250 and lists levels only, so this is the level multiplier; whether
+ * a rank raises it is not covered.
+ */
+const LEVEL_MULTIPLIERS = [
+  { req: 0, multiplier: 1 },
+  { req: 5, multiplier: 1.5 },
+  { req: 10, multiplier: 2 },
+  { req: 15, multiplier: 2.5 },
+  { req: 20, multiplier: 3 },
+  { req: 25, multiplier: 3.5 },
+  { req: 30, multiplier: 4 },
+  { req: 40, multiplier: 4.5 },
+  { req: 50, multiplier: 5 },
+  { req: 100, multiplier: 5.5 },
+  { req: 125, multiplier: 6 },
+  { req: 150, multiplier: 6.5 },
+  { req: 200, multiplier: 7 },
+  { req: 250, multiplier: 8 },
+];
 
 /** The guild fields the page reads, deserialized: its name and tag plus each member's quest and GEXP rows. */
 export interface PlayerGuild {
@@ -321,7 +345,7 @@ export function buildPlayerPage(player: Player, guild: PlayerGuild | null): Play
       current,
       max,
       percent: max > 0 ? Math.min(1, current / max) : 1,
-      multiplier: levelMultiplier(Math.floor(level)),
+      multiplier: findScore(LEVEL_MULTIPLIERS, Math.floor(level)).multiplier,
     },
     status: {
       online: status.online,
@@ -341,7 +365,6 @@ export function buildPlayerPage(player: Player, guild: PlayerGuild | null): Play
       youtube: socials.youtube,
     },
     games: GAME_SUMMARIES.flatMap((summary) => summarize(player.stats, summary) ?? []),
-    updatedAt: player.expiresAt - PLAYER_COOLDOWN_MS,
-    expiresAt: player.expiresAt,
+    ...freshness(player),
   };
 }

@@ -20,6 +20,7 @@ import { PAINTBALL_PAGE } from "./paintball.js";
 import { PARKOUR_PAGE } from "./parkour.js";
 import { PIT_PAGE } from "./pit.js";
 import { QUAKE_PAGE } from "./quake.js";
+import { QUESTS_PAGE } from "./quests.js";
 import { SKYWARS_PAGE } from "./skywars.js";
 import { SMASH_HEROES_PAGE } from "./smashheroes.js";
 import { SPEED_UHC_PAGE } from "./speeduhc.js";
@@ -59,6 +60,7 @@ export const GAME_PAGES: GameLayout[] = [
   PARKOUR_PAGE,
   PIT_PAGE,
   QUAKE_PAGE,
+  QUESTS_PAGE,
   SKYWARS_PAGE,
   SMASH_HEROES_PAGE,
   SPEED_UHC_PAGE,
@@ -80,6 +82,11 @@ export const gamePageOf = (id: GameId): string | undefined => GAME_PAGES.find((l
 /** The submodes a page's mode offers, or none; the first is the default. */
 export const pageSubmodes = (layout: GameLayout, mode: string): string[] | undefined =>
   pageModes(layout).find(({ key }) => key === mode)?.submodes?.map(({ key }) => key);
+
+/** Every period any of a page's modes covers, or none for a page without periods. */
+export const pagePeriods = (layout: GameLayout): string[] => [
+  ...new Set(pageModes(layout).flatMap(({ key }) => layout.periods?.(key) ?? [])),
+];
 
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
@@ -141,11 +148,11 @@ if (import.meta.vitest) {
       it(`${layout.game.key}: every page builds from the catalog, for a player who never played`, () => {
         const player = new Player({ uuid: "0", displayname: "test" });
         expect(() => shownPaths(layout)).not.toThrow();
-        for (const { mode, submode } of pagesOf(layout)) {
-          const page = buildGamePage(player, layout, mode, submode);
+        for (const { mode, submode, period } of pagesOf(layout)) {
+          const page = buildGamePage(player, layout, mode, submode, period);
           // The API checks its output against the contract, so a page the contract rejects would be an error page.
           expect(() => GamePageSchema.parse({ ...page, games: [] }), mode).not.toThrow();
-          expect(missingWords(page), `${mode} ${submode ?? ""}`).toEqual([]);
+          expect(missingWords(page), `${mode} ${submode ?? ""} ${period ?? ""}`).toEqual([]);
         }
       });
 

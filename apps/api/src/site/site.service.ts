@@ -48,9 +48,9 @@ import type {
   ResultCard,
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
-import { PLAYER_COOLDOWN_MS } from "./cooldown.js";
+import { freshness } from "./cooldown.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
-import { buildGamePage, findGamePage, pageModes, pageSubmodes } from "./game-pages/index.js";
+import { buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
 import { config, flatten, removeFormatting } from "@statsify/util";
@@ -105,6 +105,8 @@ const CARD_FIELDS = {
 const missKey = (nameLower: string) => `site:miss:${nameLower}`;
 const ipKey = (clientIp: string) => `site:ip:${rateLimitAddress(clientIp)}`;
 const normalizeUuid = (uuid: string) => uuid.replaceAll("-", "").toLowerCase();
+// A game page's mode, submode or period in any case, as the game segment is (`?mode=SOLO`); the site redirects to the key.
+const pageKey = <K extends string>(keys: readonly K[], key: string) => keys.find((known) => known.toLowerCase() === key.toLowerCase());
 
 /**
  * The per-visitor bucket: an IPv4 address, or the /64 of an IPv6 one, since a single connection usually gets a
@@ -306,7 +308,7 @@ export class SiteService implements OnApplicationBootstrap {
 
     await this.redis.del(missKey(key));
 
-    return { uuid: player.uuid, username: player.username, updatedAt: player.expiresAt - PLAYER_COOLDOWN_MS };
+    return { uuid: player.uuid, username: player.username, updatedAt: freshness(player).updatedAt };
   }
 
   public async suggest(query: string): Promise<string[]> {
@@ -373,8 +375,7 @@ export class SiteService implements OnApplicationBootstrap {
         easy: { casual: { ...easy.casual }, pvp: { ...easy.pvp }, classic: { ...easy.classic } },
         hard: { casual: { ...hard.casual }, pvp: { ...hard.pvp }, classic: { ...hard.classic } },
       },
-      updatedAt: player.expiresAt - PLAYER_COOLDOWN_MS,
-      expiresAt: player.expiresAt,
+      ...freshness(player),
     };
   }
 
@@ -384,17 +385,24 @@ export class SiteService implements OnApplicationBootstrap {
     if (!layout) throw notFound("Game not found");
 
     const modes = pageModes(layout).map(({ key }) => key);
-    const mode = input.mode ?? modes[0];
-    if (!modes.includes(mode)) throw notFound("Mode not found");
+    const mode = input.mode === undefined ? modes[0] : pageKey(modes, input.mode);
+    if (mode === undefined) throw notFound("Mode not found");
 
     // A mode without submodes has no second page to ask for.
     const submodes = pageSubmodes(layout, mode) ?? [];
-    if (input.submode !== undefined && !submodes.includes(input.submode)) throw notFound("Mode not found");
+    const submode = input.submode === undefined ? undefined : pageKey(submodes, input.submode);
+    if (input.submode !== undefined && submode === undefined) throw notFound("Mode not found");
+
+    // A period the page has on another mode only (Monthly) gets this mode's first; one it never has is unknown.
+    const periods = layout.periods?.(mode) ?? [];
+    const asked = input.period === undefined ? undefined : pageKey(pagePeriods(layout), input.period);
+    if (input.period !== undefined && asked === undefined) throw notFound("Period not found");
+    const period = asked !== undefined && periods.includes(asked) ? asked : undefined;
 
     const player = await this.loadPlayer(normalizeUuid(input.uuid));
     if (!player) throw notFound();
 
-    return { ...buildGamePage(player, layout, mode, input.submode), games: gameNav(player.stats) };
+    return { ...buildGamePage(player, layout, mode, submode, period), games: gameNav(player.stats) };
   }
 
   /** The home page's previews, each loaded on its own so one missing player hides one section. */
@@ -551,7 +559,7 @@ export class SiteService implements OnApplicationBootstrap {
       .lean()
       .exec();
 
-    return player && { uuid: player.uuid, username: player.username, updatedAt: player.expiresAt - PLAYER_COOLDOWN_MS };
+    return player && { uuid: player.uuid, username: player.username, updatedAt: freshness(player).updatedAt };
   }
 
   /** The stored document, flattened for `deserialize` like `PlayerService` does, so defaults and ratios are filled in. */

@@ -6,5 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/** `PlayerService.get` refreshes a player from Hypixel at most once per this cooldown. */
-export const PLAYER_COOLDOWN_MS = 120_000;
+import { PLAYER_COOLDOWN_MS } from "#player";
+import type { Player } from "@statsify/schemas";
+
+/** When a stored player was last fetched from Hypixel, and when a refresh may fetch it again. */
+export const freshness = ({ expiresAt }: Pick<Player, "expiresAt">) => ({ updatedAt: expiresAt - PLAYER_COOLDOWN_MS, expiresAt });

@@ -15,10 +15,11 @@ export type { GamePage };
 const PAGE_STALE_MS = 60_000;
 
 /**
- * One page of a player's game: a mode, or a mode's submode. Each is left out when it is the first, as in the URL.
+ * One page of a player's game: a mode, or a mode's submode, in one of its periods. Each is left out when it is the
+ * first, as in the URL.
  */
-export const gamePageQuery = (uuid: string, game: string, mode?: string, submode?: string) =>
-  orpc.player.game.queryOptions({ input: { uuid, game, mode, submode }, staleTime: PAGE_STALE_MS });
+export const gamePageQuery = (uuid: string, game: string, mode?: string, submode?: string, period?: string) =>
+  orpc.player.game.queryOptions({ input: { uuid, game, mode, submode, period }, staleTime: PAGE_STALE_MS });
 
 /** The `?mode=` of a page: none for the game's first mode. */
 export const modeSearch = (page: Pick<GamePage, "modes">, mode: string): string | undefined =>
@@ -27,3 +28,7 @@ export const modeSearch = (page: Pick<GamePage, "modes">, mode: string): string 
 /** The `&submode=` of a page: none for a mode's first submode, or a mode without any. */
 export const submodeSearch = (page: Pick<GamePage, "submodes">, submode: string | null): string | undefined =>
   submode === null || submode === page.submodes[0]?.key ? undefined : submode;
+
+/** The `&period=` of a page: none for its first period (all time), or a page without periods. */
+export const periodSearch = (page: Pick<GamePage, "periods">, period: string | undefined): string | undefined =>
+  period === undefined || period === page.periods?.[0] ? undefined : period;
