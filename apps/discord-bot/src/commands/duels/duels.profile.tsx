@@ -72,6 +72,9 @@ export const DuelsProfile = <T extends ProfileTime>({
   if ("shotsFired" in modeStats)
     sidebar.push([t("stats.shotsFired"), t(modeStats.shotsFired), "§6"]);
 
+  if ("itemsPurchased" in modeStats)
+    sidebar.push([t("stats.itemsPurchased"), t(modeStats.itemsPurchased), "§d"]);
+
   const stats = duels[mode.api];
 
   if ("headshots" in stats)
@@ -101,7 +104,6 @@ export const DuelsProfile = <T extends ProfileTime>({
       break;
 
     case "bedwars":
-      if (mode.submode.api === "overall") sidebar.push([t("stats.itemsPurchased"), t(duels.bedwars.overall.itemsPurchased), "§d"]);
       table = mode.submode.api === "overall" ? <BedWarsDuelsTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} /> : <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
       break;
 
