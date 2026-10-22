@@ -16,6 +16,7 @@ import { PAINTBALL_PAGE } from "./paintball.js";
 import { PARKOUR_PAGE } from "./parkour.js";
 import { PIT_PAGE } from "./pit.js";
 import { TURBO_KART_RACERS_PAGE } from "./turbokartracers.js";
+import { UHC_PAGE } from "./uhc.js";
 import { WALLS_PAGE } from "./walls.js";
 import { type GameId, GameIdMapping } from "@statsify/schemas";
 import { type GameLayout, pageModes } from "./layout.js";
@@ -42,6 +43,7 @@ export const GAME_PAGES: GameLayout[] = [
   PARKOUR_PAGE,
   PIT_PAGE,
   TURBO_KART_RACERS_PAGE,
+  UHC_PAGE,
   WALLS_PAGE,
 ].toSorted((a, b) => registryIndex(a) - registryIndex(b));
 

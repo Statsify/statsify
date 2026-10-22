@@ -17,6 +17,7 @@ import { PAINTBALL } from "./paintball.js";
 import { PARKOUR } from "./parkour.js";
 import { PIT } from "./pit.js";
 import { TURBO_KART_RACERS } from "./turbokartracers.js";
+import { UHC } from "./uhc.js";
 import { WALLS } from "./walls.js";
 
 export { ARCADE, DROPPER_DIFFICULTIES } from "./arcade.js";
@@ -29,6 +30,7 @@ export { PAINTBALL } from "./paintball.js";
 export { PARKOUR } from "./parkour.js";
 export { PIT } from "./pit.js";
 export { TURBO_KART_RACERS } from "./turbokartracers.js";
+export { UHC } from "./uhc.js";
 export { WALLS } from "./walls.js";
 
 /** Every game in the catalog, by its `PlayerStats` key. */
@@ -43,6 +45,7 @@ export const GAMES: Record<string, Game> = {
   parkour: PARKOUR,
   pit: PIT,
   turbokartracers: TURBO_KART_RACERS,
+  uhc: UHC,
   walls: WALLS,
 };
 
