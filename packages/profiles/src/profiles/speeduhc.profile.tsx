@@ -14,10 +14,11 @@ import {
   SidebarItem,
   Table,
   formatProgression,
-} from "#components";
+} from "../components/index.js";
 import { FormattedGame, type GameMode, SpeedUHCMode, SpeedUHCModes } from "@statsify/schemas";
+import { SPEED_UHC, cardColours } from "@statsify/catalog";
 import { prettify } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { BaseProfileProps } from "../types.js";
 
 export interface SpeedUHCProfileProps extends BaseProfileProps {
   mode: GameMode<SpeedUHCModes>;
@@ -36,12 +37,13 @@ export const SpeedUHCProfile = ({
 }: SpeedUHCProfileProps) => {
   const { speeduhc } = player.stats;
   const stats = speeduhc[mode.api];
+  const colour = cardColours(SPEED_UHC, mode.api);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(speeduhc.coins), "§6"],
-    [t("stats.score"), t(speeduhc.score), "§b"],
-    [t("stats.title"), speeduhc.title, "§e"],
-    [t("stats.mastery"), prettify(speeduhc.activeMastery), "§a"],
+    [t("stats.coins"), t(speeduhc.coins), colour("coins")],
+    [t("stats.score"), t(speeduhc.score), colour("score")],
+    [t("stats.title"), speeduhc.title, colour("title")],
+    [t("stats.mastery"), prettify(speeduhc.activeMastery), colour("activeMastery")],
   ];
 
   return (
@@ -66,20 +68,22 @@ export const SpeedUHCProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-          <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
-          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
+          <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
+          <Table.td title={t("stats.losses")} value={t(stats.losses)} color={colour("losses")} />
+          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={colour("wlr")} />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
-          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+          <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
+          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
+          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
           <If condition={Boolean("assists" in stats)}>
-            <Table.td
-              title={t("stats.assists")}
-              value={t((stats as SpeedUHCMode).assists ?? 0)}
-              color="§e"
-            />
+            {() => (
+              <Table.td
+                title={t("stats.assists")}
+                value={t((stats as SpeedUHCMode).assists ?? 0)}
+                color={colour("assists")}
+              />
+            )}
           </If>
         </Table.tr>
       </Table.table>
