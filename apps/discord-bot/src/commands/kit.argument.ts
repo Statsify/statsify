@@ -14,8 +14,8 @@ import {
 import { AbstractArgument, CommandContext, ErrorMessage, LocalizationString } from "@statsify/discord";
 import type { GameModeWithSubModes, GameModes, Mode } from "@statsify/schemas";
 
-// Discord select menus allow at most 25 options
-const MAX_PAGES = 25;
+// Discord select menus and autocomplete both allow at most 25 options
+const MAX_OPTIONS = 25;
 
 export class KitArgument<T extends Mode[]> extends AbstractArgument {
   public name = "kit";
@@ -49,12 +49,12 @@ export class KitArgument<T extends Mode[]> extends AbstractArgument {
   ): APIApplicationCommandOptionChoice[] {
     const query = context.option<string>(this.name, "");
 
-    if (!query) return this.kits.slice(0, MAX_PAGES);
+    if (!query) return this.kits.slice(0, MAX_OPTIONS);
 
     return this.fuse
       .search(query)
       .map((result) => result.item)
-      .slice(0, MAX_PAGES);
+      .slice(0, MAX_OPTIONS);
   }
 }
 
@@ -66,12 +66,12 @@ export function filterKits<T extends Mode[]>(
   const [overall, ...kits] = modes;
   kits.sort(compareActivity);
 
-  if (!kit) return [overall, ...kits.slice(0, MAX_PAGES - 1)];
+  if (!kit) return [overall, ...kits.slice(0, MAX_OPTIONS - 1)];
 
   const selected = kits.find((mode) => mode.api === kit.toLowerCase());
   if (!selected) throw new ErrorMessage("errors.invalidKit");
 
   const others = kits.filter((mode) => mode !== selected);
 
-  return [selected, overall, ...others.slice(0, MAX_PAGES - 2)];
+  return [selected, overall, ...others.slice(0, MAX_OPTIONS - 2)];
 }
