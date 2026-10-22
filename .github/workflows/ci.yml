@@ -5,12 +5,9 @@ on:
       - main
   pull_request:
 
-# No step writes to the repository or to checks
 permissions:
   contents: read
 
-# A new push to a pull request cancels the run for the old commit. Each run on main gets its
-# own group, so every commit there still gets a result and none waits behind another
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
@@ -31,7 +28,6 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
-          # Don't leave the token in .git/config while dependency install scripts run
           persist-credentials: false
 
       - name: Setup pnpm
@@ -42,47 +38,28 @@ jobs:
         with:
           node-version: 24.7.0
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
-      # The skin renderer's Rust builds take about 4 minutes from scratch, and turbo's cache
-      # usually skips them. Ask turbo first, using the same commands as the steps below, and
-      # only set up Rust when one of its tasks will run
-      - name: Check for Rust work
-        id: rust
-        run: |
-          if pnpm --silent build --dry=json > "$RUNNER_TEMP/build.json" &&
-            pnpm --silent exec turbo run lint:ci typecheck --affected --dry=json > "$RUNNER_TEMP/check.json"; then
-            needed=$(jq -s '[.[].tasks[] | select(.package == "@statsify/skin-renderer" and .cache.status != "HIT")] | length > 0' "$RUNNER_TEMP/build.json" "$RUNNER_TEMP/check.json")
-          else
-            needed=true
-          fi
-          echo "needed=$needed" >> "$GITHUB_OUTPUT"
-
-      # Caches compiled crates and the wasm-bindgen and wasm-opt binaries wasm-pack downloads
       - name: Rust cache
-        if: steps.rust.outputs.needed == 'true'
         uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with:
           cache-directories: ~/.cache/.wasm-pack
           save-if: ${{ github.ref == 'refs/heads/main' }}
 
-      - name: Install wasm-pack
-        if: steps.rust.outputs.needed == 'true'
-        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      # One turbo run so lint and typecheck share a task graph and run side by side. Build
-      # stays a separate step after them, so neither check can read a half-written dist folder
-      - name: Lint and typecheck
-        run: pnpm exec turbo run lint:ci typecheck --affected --continue=dependencies-successful
+      - name: Lint
+        run: pnpm lint:ci --affected
+
+      - name: Typecheck
+        run: pnpm typecheck --affected
 
       - name: Build
         run: pnpm build
 
-      # Cargo.lock is committed so every machine builds the renderer from the same crates. The
-      # build only changes it when Cargo.toml changed without a lockfile update
       - name: Check Cargo.lock
-        if: steps.rust.outputs.needed == 'true'
         run: git diff --exit-code Cargo.lock
 
       - name: Test
