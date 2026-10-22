@@ -32,6 +32,12 @@ export class WoolWarsClass {
   @Field({ leaderboard: { additionalFields: ["this.blocksBroken"] } })
   public woolPlaced: number;
 
+  @Field()
+  public wins: number;
+
+  @Field()
+  public gamesPlayed: number;
+
   public constructor(data: APIData = {}) {
     this.kills = data.kills;
     this.deaths = data.deaths;
@@ -41,15 +47,20 @@ export class WoolWarsClass {
     this.powerups = data.powerups_gotten;
     this.blocksBroken = data.blocks_broken;
     this.woolPlaced = data.wool_placed;
+
+    this.wins = data.wins;
+    this.gamesPlayed = data.games_played;
   }
 }
 
 export class WoolWarsOverall extends WoolWarsClass {
+  // Redecorated so Overall gets its own metadata: the scanner adds losses and wlr to
+  // wins' leaderboard additionalFields, which would otherwise leak onto every class
   @Field()
-  public wins: number;
+  public declare wins: number;
 
   @Field()
-  public gamesPlayed: number;
+  public declare gamesPlayed: number;
 
   @Field()
   public losses: number;
@@ -60,8 +71,6 @@ export class WoolWarsOverall extends WoolWarsClass {
   public constructor(data: APIData = {}) {
     super(data);
 
-    this.gamesPlayed = data.games_played;
-    this.wins = data.wins;
     this.losses = sub(this.gamesPlayed, this.wins);
     this.wlr = ratio(this.wins, this.losses);
   }
