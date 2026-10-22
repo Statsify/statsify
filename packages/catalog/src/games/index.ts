@@ -27,6 +27,7 @@ import { TURBO_KART_RACERS } from "./turbokartracers.js";
 import { UHC } from "./uhc.js";
 import { VAMPIREZ } from "./vampirez.js";
 import { WALLS } from "./walls.js";
+import { WARLORDS } from "./warlords.js";
 
 export { ARCADE, DROPPER_DIFFICULTIES } from "./arcade.js";
 export { ARENA_BRAWL } from "./arenabrawl.js";
@@ -48,6 +49,7 @@ export { TURBO_KART_RACERS } from "./turbokartracers.js";
 export { UHC } from "./uhc.js";
 export { VAMPIREZ } from "./vampirez.js";
 export { WALLS } from "./walls.js";
+export { WARLORDS, WARLORDS_CLASSES, WARLORDS_SPECS } from "./warlords.js";
 
 /** Every game in the catalog, by its `PlayerStats` key. */
 export const GAMES: Record<string, Game> = {
@@ -71,6 +73,7 @@ export const GAMES: Record<string, Game> = {
   uhc: UHC,
   vampirez: VAMPIREZ,
   walls: WALLS,
+  warlords: WARLORDS,
 };
 
 if (import.meta.vitest) {

@@ -26,6 +26,7 @@ import { TURBO_KART_RACERS_PAGE } from "./turbokartracers.js";
 import { UHC_PAGE } from "./uhc.js";
 import { VAMPIREZ_PAGE } from "./vampirez.js";
 import { WALLS_PAGE } from "./walls.js";
+import { WARLORDS_PAGE } from "./warlords.js";
 import { type GameId, GameIdMapping } from "@statsify/schemas";
 import { type GameLayout, pageModes } from "./layout.js";
 
@@ -61,6 +62,7 @@ export const GAME_PAGES: GameLayout[] = [
   UHC_PAGE,
   VAMPIREZ_PAGE,
   WALLS_PAGE,
+  WARLORDS_PAGE,
 ].toSorted((a, b) => registryIndex(a) - registryIndex(b));
 
 export const findGamePage = (segment: string): GameLayout | undefined =>
