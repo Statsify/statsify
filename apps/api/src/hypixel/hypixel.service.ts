@@ -129,13 +129,10 @@ export class HypixelService {
     return this.resources.get(resource);
   }
 
-  /**
-   * Hypixel rejecting the input means there is nothing to find. Any other failure rejects
-   * with a HypixelUnavailableException, so callers don't mistake an outage for missing data.
-   */
   private handleFailure<T>(err: any, notFound: T): Observable<T> {
     this.logger.error(err);
 
+    // Hypixel rejecting the input means there is nothing to find
     const status = err.cause?.response?.status;
     if (status === 400 || status === 422) return of(notFound);
 
