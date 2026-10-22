@@ -11,6 +11,7 @@ import { BEDWARS_PAGE } from "./bedwars.js";
 import { BLITZSG_PAGE } from "./blitzsg.js";
 import { CHALLENGES_PAGE } from "./challenges.js";
 import { DUELS_PAGE } from "./duels.js";
+import { PAINTBALL_PAGE } from "./paintball.js";
 import { type GameId, GameIdMapping } from "@statsify/schemas";
 import { type GameLayout, pageModes } from "./layout.js";
 
@@ -25,9 +26,14 @@ const registryIndex = ({ game }: GameLayout) => (game.id ? REGISTRY.indexOf(game
  * The pages the site has, each at `/player/<name>/<its game's PlayerStats key>`, in the registry's order (the game
  * nav's).
  */
-export const GAME_PAGES: GameLayout[] = [ARCADE_PAGE, BEDWARS_PAGE, BLITZSG_PAGE, CHALLENGES_PAGE, DUELS_PAGE].toSorted(
-  (a, b) => registryIndex(a) - registryIndex(b)
-);
+export const GAME_PAGES: GameLayout[] = [
+  ARCADE_PAGE,
+  BEDWARS_PAGE,
+  BLITZSG_PAGE,
+  CHALLENGES_PAGE,
+  DUELS_PAGE,
+  PAINTBALL_PAGE,
+].toSorted((a, b) => registryIndex(a) - registryIndex(b));
 
 export const findGamePage = (segment: string): GameLayout | undefined =>
   GAME_PAGES.find((layout) => layout.game.key === segment);
