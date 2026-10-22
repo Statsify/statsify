@@ -13,7 +13,6 @@ import {
   CommandContext,
   ErrorMessage,
   IMessage,
-  LocalizationString,
   LocalizeFunction,
   SubCommand,
   TextArgument,
@@ -30,10 +29,10 @@ import {
   UserTheme,
   UserTier,
 } from "@statsify/schemas";
-import { confirmAction } from "#lib/confirm-action";
 import { convertColorCodes } from "#lib/convert-color-codes";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
+import { previewChange } from "./preview-change.js";
 import { removeFormatting } from "@statsify/util";
 import { render } from "@statsify/rendering";
 
@@ -183,7 +182,7 @@ export class ThemeCommand {
     description: (t) => t("commands.theme-footer-reset"),
     group: "footer",
   })
-  public reset(context: CommandContext) {
+  public async reset(context: CommandContext) {
     const user = context.getUser();
 
     if (!user?.uuid)
@@ -194,10 +193,12 @@ export class ThemeCommand {
       message: null,
     };
 
-    return this.preview(
+    const profile = await this.getProfile(context.t(), "footer", { ...user, footer });
+
+    return previewChange(
       context,
-      "footer",
-      { ...user, footer },
+      "footer.png",
+      profile,
       () => this.apiService.updateUser(user.id, { footer }),
       (t) => t("config.footer.reset")
     );
@@ -218,36 +219,19 @@ export class ThemeCommand {
     if (!user?.uuid)
       throw new ErrorMessage("verification.requiredVerification");
 
-    return this.preview(
+    const profile = await this.getProfile(context.t(), mode, {
+      ...user,
+      [mode]: { ...user[mode], [field]: value },
+    });
+
+    return previewChange(
       context,
-      mode,
-      { ...user, [mode]: { ...user[mode], [field]: value } },
+      `${mode}.png`,
+      profile,
       // Only save the changed field, so applying an older preview can't undo a newer change
       () => this.apiService.updateUser(user.id, { [mode]: { [field]: value } }),
       (t) => (mode === "theme" ? t("config.theme.set") : t("config.footer.set"))
     );
-  }
-
-  private async preview(
-    context: CommandContext,
-    mode: "theme" | "footer",
-    preview: User,
-    apply: () => Promise<unknown>,
-    applied: LocalizationString
-  ): Promise<IMessage> {
-    const profile = await this.getProfile(context.t(), mode, preview);
-
-    return confirmAction(context, {
-      prompt: {
-        content: (t) => t("config.preview"),
-        files: [{ name: `${mode}.png`, data: profile, type: "image/png" }],
-      },
-      confirmLabel: (t) => t("config.apply"),
-      onConfirm: async () => {
-        await apply();
-        return { content: applied };
-      },
-    });
   }
 
   private async getProfile(

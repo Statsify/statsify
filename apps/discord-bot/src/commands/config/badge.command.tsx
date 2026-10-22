@@ -14,17 +14,16 @@ import {
   ErrorMessage,
   FileArgument,
   IMessage,
-  LocalizationString,
   LocalizeFunction,
   SubCommand,
 } from "@statsify/discord";
 import { type Canvas, Image } from "skia-canvas";
 import { DemoProfile } from "./demo.profile.js";
 import { User, UserTier } from "@statsify/schemas";
-import { confirmAction } from "#lib/confirm-action";
 import { createCanvas, loadImage, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
+import { previewChange } from "./preview-change.js";
 
 @Command({ description: (t) => t("commands.badge") })
 export class BadgeCommand {
@@ -121,11 +120,12 @@ export class BadgeCommand {
         );
 
         const buffer = await canvas.toBuffer("png");
+        const profile = await this.getProfile(t, user, canvas);
 
-        return this.preview(
+        return previewChange(
           context,
-          user,
-          canvas,
+          "badge.png",
+          profile,
           () => this.apiService.updateUserBadge(userId, buffer),
           (t) => t("config.badge.set")
         );
@@ -133,37 +133,17 @@ export class BadgeCommand {
 
       case "reset": {
         // Badges need a premium tier, so without a custom badge the API serves the footer logo
-        return this.preview(
+        const profile = await this.getProfile(t, user, await getLogo(user));
+
+        return previewChange(
           context,
-          user,
-          await getLogo(user),
+          "badge.png",
+          profile,
           () => this.apiService.deleteUserBadge(userId),
           (t) => t("config.badge.reset")
         );
       }
     }
-  }
-
-  private async preview(
-    context: CommandContext,
-    user: User,
-    badge: Image | Canvas,
-    apply: () => Promise<unknown>,
-    applied: LocalizationString
-  ): Promise<IMessage> {
-    const profile = await this.getProfile(context.t(), user, badge);
-
-    return confirmAction(context, {
-      prompt: {
-        content: (t) => t("config.preview"),
-        files: [{ name: "badge.png", data: profile, type: "image/png" }],
-      },
-      confirmLabel: (t) => t("config.apply"),
-      onConfirm: async () => {
-        await apply();
-        return { content: applied };
-      },
-    });
   }
 
   private async getProfile(t: LocalizeFunction, user: User, badge?: Image | Canvas) {
