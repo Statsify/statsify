@@ -146,8 +146,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       dropdown.getCustomId(),
       changePage((interaction) => {
         const value = interaction.getData().values[0];
-        const index = modes.findIndex(([key]) => `${key}` === value);
-        return index === -1 ? {} : { modeIndex: index };
+        return { modeIndex: modes.findIndex(([key]) => `${key}` === value) };
       })
     );
 
