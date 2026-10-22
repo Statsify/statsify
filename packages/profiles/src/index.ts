@@ -12,6 +12,7 @@ export * from "./fonts.js";
 export * from "./localize.js";
 export * from "./profiles/bedwars.profile.js";
 export * from "./profiles/general.profile.js";
+export * from "./profiles/paintball.profile.js";
 export * from "./profiles/signature.profile.js";
 export * from "./profiles/speeduhc.profile.js";
 export * from "./profiles/uhc.profile.js";
