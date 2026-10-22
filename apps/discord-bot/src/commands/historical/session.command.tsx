@@ -69,6 +69,7 @@ import {
   VampireZProfile,
   WallsProfile,
   WarlordsProfile,
+  WoolGamesProfile,
 } from "@statsify/profiles";
 import { BlitzSGProfile } from "../blitzsg/blitzsg.profile.js";
 import { DateTime } from "luxon";
@@ -79,7 +80,6 @@ import { HistoricalTimes } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
 import { STATUS_COLORS } from "@statsify/logger";
 import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
-import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
 import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "../arcade/arcade.command.js";

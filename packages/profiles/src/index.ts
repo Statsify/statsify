@@ -30,5 +30,6 @@ export * from "./profiles/uhc.profile.js";
 export * from "./profiles/vampirez.profile.js";
 export * from "./profiles/walls.profile.js";
 export * from "./profiles/warlords/warlords.profile.js";
+export * from "./profiles/woolgames/woolgames.profile.js";
 export * from "./themes/index.js";
 export * from "./types.js";

@@ -12,6 +12,7 @@ import { MurderMysteryProfile } from "../profiles/murdermystery.profile.js";
 import { SkyWarsProfile } from "../profiles/skywars.profile.js";
 import { TNTGamesProfile } from "../profiles/tntgames.profile.js";
 import { WarlordsProfile } from "../profiles/warlords/warlords.profile.js";
+import { WoolGamesProfile } from "../profiles/woolgames/woolgames.profile.js";
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
@@ -35,6 +36,7 @@ import {
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
+  WOOLGAMES_MODES,
 } from "@statsify/schemas";
 import { ArenaBrawlProfile } from "../profiles/arenabrawl.profile.js";
 import type { BaseProfileProps } from "../types.js";
@@ -114,6 +116,7 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
   arcade: card({ modes: ARCADE_MODES, draw: (base, { mode }) => <ArcadeProfile {...base} mode={mode} /> }),
   tntgames: card({ modes: TNT_GAMES_MODES, draw: (base, { mode }) => <TNTGamesProfile {...base} mode={mode} /> }),
   warlords: card({ modes: WARLORDS_MODES, draw: (base, { mode }) => <WarlordsProfile {...base} mode={mode} /> }),
+  woolgames: card({ modes: WOOLGAMES_MODES, draw: (base, { mode }) => <WoolGamesProfile {...base} mode={mode} /> }),
 };
 
 /**

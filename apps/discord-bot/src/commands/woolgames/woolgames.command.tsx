@@ -13,7 +13,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { WOOLGAMES_MODES, WoolGamesModes } from "@statsify/schemas";
-import { WoolGamesProfile } from "./woolgames.profile.js";
+import { WoolGamesProfile } from "@statsify/profiles";
 
 @Command({ description: (t) => t("commands.woolgames") })
 export class WoolGamesCommand extends BaseHypixelCommand<WoolGamesModes> {
