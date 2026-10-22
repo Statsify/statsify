@@ -12,7 +12,7 @@ import {
   CommandContext,
   EmbedBuilder,
   ErrorMessage,
-  IMessage,
+  type IMessage,
   SubCommand,
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
