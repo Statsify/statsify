@@ -52,22 +52,22 @@ const commandSchema = z.object({
   type: z.optional(toEnum(1, 2, 3)),
 });
 
-let hasInvalidCommand = false;
-
 for (const [commandName, command] of Object.entries(commands.commands)) {
-  const result = commandSchema.safeParse(command);
-  if (result.success) continue;
+  try {
+    commandSchema.parse(command);
+  } catch (e) {
+    console.error(e);
+    console.log(command);
 
-  for (const issue of result.error.issues) {
-    console.error(issue.message);
-    console.error(`${command.name}.${issue.path.join(".")}`);
+    for (const error of e.issues) {
+      console.error(error.message);
+      console.error(`${command.name}.${error.path.join(".")}`);
+    }
+
+    console.error(`Command "${commandName}" is invalid.`);
+    process.exit(1);
   }
-
-  console.error(`Command "${commandName}" is invalid.`);
-  hasInvalidCommand = true;
 }
-
-if (hasInvalidCommand) process.exit(1);
 
 const commandChars = {};
 
