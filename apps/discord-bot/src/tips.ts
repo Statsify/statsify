@@ -13,9 +13,7 @@ export interface Tip {
   message: IMessage;
 
   /**
-   * A list of commands that this tip cannot be used on. A root name such as
-   * "session" covers the command and all of its subcommands, while a full path
-   * such as "reset session" covers only that subcommand.
+   * A list of commands that this tip cannot be used on, including all of their subcommands
    */
   disabled?: string[];
 

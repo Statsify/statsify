@@ -164,12 +164,10 @@ export class CommandListener extends AbstractCommandListener {
     if (User.isIron(user) || Math.random() > TIP_CHANCE) return undefined;
 
     // commandName is the full path, e.g. "session bedwars"
-    const rootName = commandName.split(" ")[0];
+    const [rootName] = commandName.split(" ");
 
     const useableTips = tips.filter(
-      (t) =>
-        !t.disabled?.some((name) => name === rootName || name === commandName) &&
-        !t.uneligible?.(user)
+      (t) => !t.disabled?.includes(rootName) && !t.uneligible?.(user)
     );
 
     if (useableTips.length === 0) return undefined;
