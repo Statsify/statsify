@@ -779,8 +779,6 @@ importers:
 
   packages/skin-renderer: {}
 
-  packages/skin-renderer/pkg: {}
-
   packages/util:
     dependencies:
       '@swc/helpers':
