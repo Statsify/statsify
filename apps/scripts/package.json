@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "lint": "oxlint",
+    "typecheck": "tsc --noEmit",
     "lint:ci": "oxlint --format=github",
     "api-key": "node src/api-key.js",
     "delete-sessions": "node src/delete-sessions.js",
