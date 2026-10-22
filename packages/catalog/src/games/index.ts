@@ -10,6 +10,7 @@ import { type Game, catalogPaths, gameStats, modeStats, numberFields, playerFiel
 import { ARCADE } from "./arcade.js";
 import { BEDWARS } from "./bedwars.js";
 import { BLITZSG } from "./blitzsg.js";
+import { BUILD_BATTLE } from "./buildbattle.js";
 import { CHALLENGES } from "./challenges.js";
 import { DUELS } from "./duels.js";
 import { PAINTBALL } from "./paintball.js";
@@ -20,6 +21,7 @@ import { WALLS } from "./walls.js";
 export { ARCADE, DROPPER_DIFFICULTIES } from "./arcade.js";
 export { BEDWARS } from "./bedwars.js";
 export { BLITZSG } from "./blitzsg.js";
+export { BUILD_BATTLE } from "./buildbattle.js";
 export { CHALLENGES } from "./challenges.js";
 export { DUELS } from "./duels.js";
 export { PAINTBALL } from "./paintball.js";
@@ -32,6 +34,7 @@ export const GAMES: Record<string, Game> = {
   arcade: ARCADE,
   bedwars: BEDWARS,
   blitzsg: BLITZSG,
+  buildbattle: BUILD_BATTLE,
   challenges: CHALLENGES,
   duels: DUELS,
   paintball: PAINTBALL,

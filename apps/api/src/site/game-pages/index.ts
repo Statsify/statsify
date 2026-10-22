@@ -9,6 +9,7 @@
 import { ARCADE_PAGE } from "./arcade.js";
 import { BEDWARS_PAGE } from "./bedwars.js";
 import { BLITZSG_PAGE } from "./blitzsg.js";
+import { BUILD_BATTLE_PAGE } from "./buildbattle.js";
 import { CHALLENGES_PAGE } from "./challenges.js";
 import { DUELS_PAGE } from "./duels.js";
 import { PAINTBALL_PAGE } from "./paintball.js";
@@ -33,6 +34,7 @@ export const GAME_PAGES: GameLayout[] = [
   ARCADE_PAGE,
   BEDWARS_PAGE,
   BLITZSG_PAGE,
+  BUILD_BATTLE_PAGE,
   CHALLENGES_PAGE,
   DUELS_PAGE,
   PAINTBALL_PAGE,
