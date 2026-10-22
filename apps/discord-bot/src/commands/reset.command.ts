@@ -41,7 +41,7 @@ export function confirmSessionChange(
   // Without a user uuid this only reads an existing session and never starts one
   return apiService
     .getPlayerSession(uuid)
-    .then((session) => session?.sessionReset, () => undefined)
+    .then(({ sessionReset }) => sessionReset, () => undefined)
     .then((started) => {
       const embed = new EmbedBuilder()
         .color(STATUS_COLORS.warn)
