@@ -194,7 +194,7 @@ export class HypixelService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        if (isKeyed && (err.response?.status === 429 || err.response?.data?.throttle)) {
+        if (isKeyed && err.response?.status === 429) {
           this.startRateLimit(err.response.headers);
           return throwError(() => this.rateLimitError());
         }
