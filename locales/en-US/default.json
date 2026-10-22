@@ -531,7 +531,6 @@
     "resetSessionButton": "Reset Session",
     "deleteSessionWarning": "Are you sure you want to delete your session? Your session tracks **every game** from the same starting point, so deleting it removes your session stats for all of them, not just one. This cannot be undone.",
     "deleteSessionButton": "Delete Session",
-    "sessionStarted": "$t(emojis:clock) Your current session started <t:{{time}}:f> (<t:{{time}}:R>).",
     "disabledWarning": {
       "title": "Historical Commands are no Longer Available",
       "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."

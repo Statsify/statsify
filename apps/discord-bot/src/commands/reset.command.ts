@@ -32,32 +32,21 @@ interface SessionChange {
  */
 export function confirmSessionChange(
   context: CommandContext,
-  apiService: ApiService,
   { warning, button, onConfirm }: SessionChange
-): Promise<IMessage> {
+): IMessage {
   const uuid = context.getUser()?.uuid;
   if (!uuid) throw new ErrorMessage("verification.requiredVerification");
 
-  // Without a user uuid this only reads an existing session and never starts one
-  return apiService
-    .getPlayerSession(uuid)
-    .then(({ sessionReset }) => sessionReset, () => undefined)
-    .then((started) => {
-      const embed = new EmbedBuilder()
-        .color(STATUS_COLORS.warn)
-        .description((t) =>
-          started ?
-            `${t(warning)}\n\n${t("historical.sessionStarted", { time: started })}` :
-            t(warning)
-        );
+  const embed = new EmbedBuilder()
+    .color(STATUS_COLORS.warn)
+    .description((t) => t(warning));
 
-      return confirmAction(context, {
-        prompt: { embeds: [embed], ephemeral: true },
-        confirmLabel: (t) => t(button),
-        confirmStyle: ButtonStyle.Danger,
-        onConfirm: () => onConfirm(uuid),
-      });
-    });
+  return confirmAction(context, {
+    prompt: { embeds: [embed], ephemeral: true },
+    confirmLabel: (t) => t(button),
+    confirmStyle: ButtonStyle.Danger,
+    onConfirm: () => onConfirm(uuid),
+  });
 }
 
 @Command({ description: "Reset" })
@@ -65,8 +54,8 @@ export class ResetCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({ description: (t) => t("commands.reset-session") })
-  public session(context: CommandContext): Promise<IMessage> {
-    return confirmSessionChange(context, this.apiService, {
+  public session(context: CommandContext): IMessage {
+    return confirmSessionChange(context, {
       warning: "historical.resetSessionWarning",
       button: "historical.resetSessionButton",
       onConfirm: async (uuid) => {
