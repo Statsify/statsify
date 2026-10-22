@@ -102,7 +102,6 @@ export class GuildAchievements {
       EXPERIENCE_KINGS_REQUIREMENTS,
       data.EXPERIENCE_KINGS ?? 0
     );
-
     this.experienceKingsProgression = experienceKings.progression;
     this.experienceKingsTier = experienceKings.tier;
 
