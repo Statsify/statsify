@@ -6,7 +6,24 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARENA_BRAWL_MODES, BEDWARS_MODES, BUILD_BATTLE_MODES, type GameMode, type GameModes, type Guild, PAINTBALL_MODES, PIT_MODES, type Player, QUAKE_MODES, SPEED_UHC_MODES, TURBO_KART_RACERS_MODES, UHC_MODES, VAMPIREZ_MODES, WALLS_MODES } from "@statsify/schemas";
+import {
+  ARENA_BRAWL_MODES,
+  BEDWARS_MODES,
+  BUILD_BATTLE_MODES,
+  type GameMode,
+  type GameModes,
+  type Guild,
+  PAINTBALL_MODES,
+  PARKOUR_MODES,
+  PIT_MODES,
+  type Player,
+  QUAKE_MODES,
+  SPEED_UHC_MODES,
+  TURBO_KART_RACERS_MODES,
+  UHC_MODES,
+  VAMPIREZ_MODES,
+  WALLS_MODES,
+} from "@statsify/schemas";
 import { ArenaBrawlProfile } from "../profiles/arenabrawl.profile.js";
 import type { BaseProfileProps } from "../types.js";
 import { BedWarsProfile } from "../profiles/bedwars.profile.js";
@@ -16,6 +33,7 @@ import { type GameCard, type RenderRequest, imageSize } from "./protocol.js";
 import { type GamesWithBackgrounds, mapBackground } from "../backgrounds.js";
 import { GeneralProfile } from "../profiles/general.profile.js";
 import { PaintballProfile } from "../profiles/paintball.profile.js";
+import { ParkourProfile } from "../profiles/parkour.profile.js";
 import { PitProfile } from "../profiles/pit.profile.js";
 import { QuakeProfile } from "../profiles/quake.profile.js";
 import { SignatureProfile, UpdatedStamp } from "../profiles/signature.profile.js";
@@ -24,7 +42,7 @@ import { TurboKartRacersProfile } from "../profiles/turbokartracers.profile.js";
 import { UHCProfile } from "../profiles/uhc.profile.js";
 import { VampireZProfile } from "../profiles/vampirez.profile.js";
 import { WallsProfile } from "../profiles/walls.profile.js";
-import { getBackground, getLogo } from "@statsify/assets";
+import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getLocalizeFunction } from "./localize.js";
 import { getTheme } from "../themes/index.js";
 import { render } from "@statsify/rendering";
@@ -33,19 +51,29 @@ import { render } from "@statsify/rendering";
 const STAMP_INSET = 18;
 
 /**
- * A game's card as its bot command draws it: the game's mode registry and its `getProfile`, given the props every
- * card takes and the mode.
+ * A game's card as its bot command draws it: the game's mode registry, what the command loads before it draws (its
+ * `getPreProfileData`), and its `getProfile`, given the props every card takes, the mode and that data.
  */
-interface CardSpec<T extends GamesWithBackgrounds> {
+interface CardSpec<T extends GamesWithBackgrounds, D> {
   modes: GameModes<T>;
-  draw: (base: BaseProfileProps, extra: { mode: GameMode<T> }) => JSX.Element;
+  data?: () => Promise<D>;
+  draw: (base: BaseProfileProps, extra: { mode: GameMode<T>; data: D }) => JSX.Element;
 }
 
-/** Types an entry by its own registry, then drops it so the table holds every game's. */
-const card = <T extends GamesWithBackgrounds>(spec: CardSpec<T>) => spec as unknown as CardSpec<GamesWithBackgrounds>;
+/** Types an entry by its own registry and data, then drops them so the table holds every game's. */
+const card = <T extends GamesWithBackgrounds, D = undefined>(spec: CardSpec<T, D>) =>
+  spec as unknown as CardSpec<GamesWithBackgrounds, unknown>;
+
+/** Loads on the first call and keeps it for the worker's life, for what every render draws the same. */
+const once = <T,>(load: () => Promise<T>) => {
+  let loaded: Promise<T> | undefined;
+  return () => (loaded ??= load());
+};
+
+const getGameIcons = once(getAllGameIcons);
 
 /** The cards `GAME_CARDS` names. */
-const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds>> = {
+const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
   bedwars: card({
     modes: BEDWARS_MODES,
     draw: (base, { mode }) => {
@@ -63,6 +91,11 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds>> = {
   buildbattle: card({ modes: BUILD_BATTLE_MODES, draw: (base) => <BuildBattleProfile {...base} /> }),
   arenabrawl: card({ modes: ARENA_BRAWL_MODES, draw: (base, { mode }) => <ArenaBrawlProfile {...base} mode={mode} /> }),
   pit: card({ modes: PIT_MODES, draw: (base) => <PitProfile {...base} /> }),
+  parkour: card({
+    modes: PARKOUR_MODES,
+    data: async () => ({ gameIcons: await getGameIcons() }),
+    draw: (base, { data }) => <ParkourProfile {...base} gameIcons={data.gameIcons} />,
+  }),
 };
 
 /** The mode a request names as the bot's command hands it to the card, and the background the command draws it on. */
@@ -87,13 +120,14 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
   const game =
     request.card === "general" ? undefined : { spec: CARDS[request.card], ...cardMode(CARDS[request.card].modes, request.mode) };
 
-  const [t, background, logo, skin] = await Promise.all([
+  const [t, background, logo, skin, data] = await Promise.all([
     getLocalizeFunction(),
     // The backgrounds the bot draws the card on (`/general`'s are `mapBackground(GENERAL_MODES, "overall")`), one per
     // player: the UUID picks it, so a re-render for the same `updatedAt` gives the same bytes.
     game ? getBackground(...game.background, uuid) : getBackground("hypixel", "overall", uuid),
     getLogo(null),
     loadImage(Buffer.from(request.skin)),
+    game?.spec.data?.(),
   ]);
 
   const player = request.player as unknown as Player;
@@ -120,7 +154,7 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
         game ?
           game.spec.draw(
             { background: cardBackground as Image, logo, skin, player, user: null, t, time: "LIVE" },
-            { mode: game.mode }
+            { mode: game.mode, data }
           ) :
           (
             <GeneralProfile

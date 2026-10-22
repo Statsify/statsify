@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, GameList, Header } from "#components";
+import { Container, Footer, GameList, Header } from "../components/index.js";
 import { FormattedGame, GameId } from "@statsify/schemas";
 import { formatRecordTime } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { BaseProfileProps } from "../types.js";
 import type { Image } from "skia-canvas";
 
 interface ParkourProfileProps extends BaseProfileProps {

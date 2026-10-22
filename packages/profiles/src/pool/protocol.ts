@@ -24,7 +24,7 @@ export type ImageVariant = keyof typeof IMAGE_VARIANTS;
  * The games whose bot card the pool draws for a site page's unfurl, by their `PlayerStats` key. A game joins once its
  * card lives in this package; the rest unfurl with the general card.
  */
-export const GAME_CARDS = ["bedwars", "uhc", "speeduhc", "walls", "vampirez", "paintball", "quake", "turbokartracers", "buildbattle", "arenabrawl", "pit"] as const;
+export const GAME_CARDS = ["bedwars", "uhc", "speeduhc", "walls", "vampirez", "paintball", "quake", "turbokartracers", "buildbattle", "arenabrawl", "pit", "parkour"] as const;
 
 export type GameCard = (typeof GAME_CARDS)[number];
 
@@ -51,6 +51,7 @@ export const GAME_CARD_SIZES: Record<GameCard, { width: number; height: number }
   buildbattle: { width: 837, height: 540 },
   arenabrawl: { width: 779, height: 605 },
   pit: { width: 808, height: 414 },
+  parkour: { width: 792, height: 641 },
 };
 
 /** The bot's general card, or a game's card in one of its api modes. */
