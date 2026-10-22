@@ -55,6 +55,7 @@ import { ArcadeProfile } from "../arcade/arcade.profile.js";
 import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile.js";
 import {
   BedWarsProfile,
+  BuildBattleProfile,
   PaintballProfile,
   QuakeProfile,
   SpeedUHCProfile,
@@ -64,7 +65,6 @@ import {
   WallsProfile,
 } from "@statsify/profiles";
 import { BlitzSGProfile } from "../blitzsg/blitzsg.profile.js";
-import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
 import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile.js";

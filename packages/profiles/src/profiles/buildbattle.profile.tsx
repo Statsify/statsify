@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { BUILD_BATTLE, cardColours } from "@statsify/catalog";
 import {
   Container,
   Footer,
@@ -13,21 +14,21 @@ import {
   SidebarItem,
   Table,
   formatProgression,
-} from "#components";
+} from "../components/index.js";
 import { FormattedGame } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { BaseProfileProps, LocalizeFunction } from "../types.js";
 
 interface BuildBattleModeTableProps {
   title: string;
   stats: { wins: number };
+  color: string;
   t: LocalizeFunction;
 }
 
-const BuildBattleModeTable = ({ title, stats, t }: BuildBattleModeTableProps) => (
+const BuildBattleModeTable = ({ title, stats, color, t }: BuildBattleModeTableProps) => (
   <Table.table width="remaining">
     <Table.ts title={`§e${title}`}>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color} />
     </Table.ts>
   </Table.table>
 );
@@ -43,14 +44,19 @@ export const BuildBattleProfile = ({
   time,
 }: BaseProfileProps) => {
   const { buildbattle } = player.stats;
+  const colour = cardColours(BUILD_BATTLE);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(buildbattle.coins), "§6"],
-    [t("stats.score"), t(buildbattle.score), "§a"],
-    [t("stats.votes"), t(buildbattle.votes), "§c"],
-    [t("stats.superVotes"), t(buildbattle.superVotes), "§b"],
-    [t("stats.correctGuesses"), t(buildbattle.correctGuesses), "§9"],
-    [t("stats.perfectBuilds"), t(buildbattle.speedBuilders.perfectBuilds), "§e"],
+    [t("stats.coins"), t(buildbattle.coins), colour("coins")],
+    [t("stats.score"), t(buildbattle.score), colour("score")],
+    [t("stats.votes"), t(buildbattle.votes), colour("votes")],
+    [t("stats.superVotes"), t(buildbattle.superVotes), colour("superVotes")],
+    [t("stats.correctGuesses"), t(buildbattle.correctGuesses), colour("correctGuesses")],
+    [
+      t("stats.perfectBuilds"),
+      t(buildbattle.speedBuilders.perfectBuilds),
+      colour("speedBuilders.perfectBuilds"),
+    ],
   ];
 
   return (
@@ -75,18 +81,34 @@ export const BuildBattleProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <BuildBattleModeTable title="Overall" stats={buildbattle.overall} t={t} />
-          <BuildBattleModeTable title="Pro" stats={buildbattle.pro} t={t} />
+          <BuildBattleModeTable
+            title="Overall"
+            stats={buildbattle.overall}
+            color={colour("overall.wins")}
+            t={t}
+          />
+          <BuildBattleModeTable title="Pro" stats={buildbattle.pro} color={colour("pro.wins")} t={t} />
           <BuildBattleModeTable
             title="Speed Builders"
             stats={{ wins: buildbattle.speedBuilders.wins }}
+            color={colour("speedBuilders.wins")}
             t={t}
           />
         </Table.tr>
         <Table.tr>
-          <BuildBattleModeTable title="Solo" stats={buildbattle.solo} t={t} />
-          <BuildBattleModeTable title="Teams" stats={buildbattle.teams} t={t} />
-          <BuildBattleModeTable title="GTB" stats={buildbattle.guessTheBuild} t={t} />
+          <BuildBattleModeTable title="Solo" stats={buildbattle.solo} color={colour("solo.wins")} t={t} />
+          <BuildBattleModeTable
+            title="Teams"
+            stats={buildbattle.teams}
+            color={colour("teams.wins")}
+            t={t}
+          />
+          <BuildBattleModeTable
+            title="GTB"
+            stats={buildbattle.guessTheBuild}
+            color={colour("guessTheBuild.wins")}
+            t={t}
+          />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />
