@@ -13,7 +13,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { UHCModes, UHC_MODES } from "@statsify/schemas";
-import { UHCProfile } from "./uhc.profile.js";
+import { UHCProfile } from "@statsify/profiles";
 
 @Command({ description: (t) => t("commands.uhc") })
 export class UHCCommand extends BaseHypixelCommand<UHCModes> {
