@@ -342,7 +342,7 @@ export class SessionCommand {
   public delete(context: CommandContext) {
     const userId = context.getInteraction().getUserId();
 
-    return confirmSessionChange(context, this.apiService, {
+    return confirmSessionChange(context, {
       warning: "historical.deleteSessionWarning",
       button: "historical.deleteSessionButton",
       onConfirm: async () => {
