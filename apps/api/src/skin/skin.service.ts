@@ -67,10 +67,6 @@ export class SkinService {
     return skin;
   }
 
-  /**
-   * The player's skin, or the default skin Minecraft gives their UUID when Mojang has none for
-   * them or the skin can't be loaded
-   */
   private async getSkinImage(uuid: string): Promise<{ skin: Image; slim: boolean }> {
     const skin = await this.getSkin(uuid).catch(() => undefined);
 

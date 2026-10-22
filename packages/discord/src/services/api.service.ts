@@ -208,15 +208,10 @@ export class ApiService extends StatsifyApiService {
     });
   }
 
-  /**
-   * Draws the player's default skin instead when the render is slow or fails, so the command
-   * still replies
-   */
   public override getPlayerSkin(uuid: string, user: User | null) {
     return super.getPlayerSkin(uuid, user).catch(() => loadImage(getDefaultSkin(uuid).render));
   }
 
-  /** Like getPlayerSkin, draws the default skin's head when the API's head is slow or fails */
   public override getPlayerHead(uuid: string, size = 160) {
     return super.getPlayerHead(uuid, size).catch(async () => {
       const skin = await loadImage(getDefaultSkin(uuid).texture);
