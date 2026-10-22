@@ -241,16 +241,16 @@ export class ThemeCommand {
   ) {
     if (!user?.uuid) throw new ErrorMessage("errors.unknown");
 
+    // Without a custom badge the API serves the saved footer logo, so draw the previewed one instead
+    const logoIsBadge = user.tier && !(user.hasBadge && User.isGold(user));
+
     const [player, skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayer(user.uuid),
       this.apiService.getPlayerSkin(user.uuid, user),
-      this.apiService.getUserBadge(user.uuid),
+      logoIsBadge ? undefined : this.apiService.getUserBadge(user.uuid),
       getLogo(user),
       getBackground("hypixel", "overall"),
     ]);
-
-    // Without a custom badge the API serves the saved footer logo, so draw the previewed one instead
-    const logoIsBadge = user.tier && !(user.hasBadge && User.isGold(user));
 
     const canvas = render(
       <DemoProfile
