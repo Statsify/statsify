@@ -13,8 +13,8 @@ import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
-import { getDefaultSkin, renderHead } from "@statsify/assets";
-import { loadImage } from "@statsify/rendering";
+import { loadImage, renderHead } from "@statsify/rendering";
+import { getDefaultSkin } from "@statsify/assets";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
