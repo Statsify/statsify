@@ -39,8 +39,11 @@ export interface StatEntry {
    * from the schema where the card takes it from there. Shown in place of `label`.
    */
   name?: string;
-  /** Another field this one is shown out of, by its key in the same group (`slumber.tickets` of `slumber.wallet`). */
-  of?: string;
+  /**
+   * What this one is shown out of: another field, by its key in the same group (`slumber.tickets` of `slumber.wallet`),
+   * or a fixed cap (Wool Games' Layers out of 100).
+   */
+  of?: string | number;
   /** How the card prints the value where the field's leaderboard formatter doesn't (a kit's name, a level numeral). */
   format?: ReadValue<string>;
   /** What the card prints for a 0 that means "never set", such as a best time ("N/A"). Such a 0 isn't on the leaderboard. */
@@ -87,8 +90,8 @@ export interface Stat {
   label: string;
   name?: string;
   colour: StatEntry["colour"];
-  /** The field it is shown out of (`12/25`), when it has one. */
-  of?: string;
+  /** The field it is shown out of (`12/25`) by path, or its fixed cap, when it has one. */
+  of?: string | number;
   /** The field's leaderboard, when it has one. */
   leaderboard: { name: string; fieldName: string; sort: "ASC" | "DESC"; hidden: boolean } | null;
   /** The entry's format, else the schema's leaderboard formatter (levels, times); plain numbers have none. */
@@ -121,8 +124,8 @@ function field(path: string): FieldMetadata {
 function resolve(key: string, base: string, entry: StatEntry): Stat {
   const path = `${base}.${key}`;
   const { leaderboard } = field(path);
-  const of = entry.of === undefined ? undefined : `${base}.${entry.of}`;
-  if (of) field(of);
+  const of = typeof entry.of === "string" ? `${base}.${entry.of}` : entry.of;
+  if (typeof of === "string") field(of);
   const formatter = leaderboard.formatter as ((value: unknown) => string) | undefined;
 
   return {

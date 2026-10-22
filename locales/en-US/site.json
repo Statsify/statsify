@@ -122,7 +122,13 @@
       "completions": "Completions",
       "kit": "Kit",
       "weapons": "Weapons",
-      "challenges": "Challenges"
+      "challenges": "Challenges",
+      "gameplay": "Gameplay",
+      "sheep": "Sheep",
+      "kills": "Kills",
+      "gold": "Gold",
+      "againstWoolHolder": "Against Wool Holder",
+      "asWoolHolder": "As Wool Holder"
     },
     "table": {
       "normal": "Normal",
@@ -170,7 +176,10 @@
     "paperWins": "Paper Wins",
     "rookieWins": "Rookie Wins",
     "uhcWins": "UHC Wins",
-    "ultimateWarriorWins": "Ultimate Warrior Wins"
+    "ultimateWarriorWins": "Ultimate Warrior Wins",
+    "explosiveKills": "Explosive Kills",
+    "voidKills": "Void Kills",
+    "meleeKills": "Melee Kills"
   },
   "notFound": {
     "title": "OOPS!",

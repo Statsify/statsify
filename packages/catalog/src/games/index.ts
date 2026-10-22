@@ -30,6 +30,7 @@ import { UHC } from "./uhc.js";
 import { VAMPIREZ } from "./vampirez.js";
 import { WALLS } from "./walls.js";
 import { WARLORDS } from "./warlords.js";
+import { WOOL_GAMES } from "./woolgames.js";
 
 export { ARCADE, DROPPER_DIFFICULTIES } from "./arcade.js";
 export { ARENA_BRAWL } from "./arenabrawl.js";
@@ -54,6 +55,7 @@ export { UHC } from "./uhc.js";
 export { VAMPIREZ } from "./vampirez.js";
 export { WALLS } from "./walls.js";
 export { WARLORDS, WARLORDS_CLASSES, WARLORDS_SPECS } from "./warlords.js";
+export { WOOL_GAMES, WOOL_WARS_CLASSES } from "./woolgames.js";
 
 /** Every game in the catalog, by its `PlayerStats` key. */
 export const GAMES: Record<string, Game> = {
@@ -80,6 +82,7 @@ export const GAMES: Record<string, Game> = {
   vampirez: VAMPIREZ,
   walls: WALLS,
   warlords: WARLORDS,
+  woolgames: WOOL_GAMES,
 };
 
 if (import.meta.vitest) {
@@ -123,7 +126,7 @@ if (import.meta.vitest) {
       it(`has an entry for every number ${game.key} stores for the whole game`, () => {
         const prefix = `stats.${game.key}.`;
         const places = game.shapes.flatMap(({ modes }) => modes);
-        const caps = new Set(Object.values(game.game).flatMap(({ of }) => of ?? []));
+        const caps = new Set(Object.values(game.game).flatMap(({ of }) => (typeof of === "string" ? [of] : [])));
         const stored = numberFields(prefix)
           .map((path) => path.slice(prefix.length))
           .filter((key) => !places.some((place) => key.startsWith(`${place}.`)))

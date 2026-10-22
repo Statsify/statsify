@@ -247,7 +247,7 @@ function cell(player: Player, stat: Stat, spec: Spec): StatCell {
     ...(spec.params && { params: spec.params }),
     value: hidden ? "§7Hidden" : value,
     ...(stat.suffix && !hidden && { suffix: stat.suffix }),
-    ...(stat.of && { of: finite(Number(read(player, stat.of) ?? 0)) }),
+    ...(stat.of !== undefined && { of: typeof stat.of === "number" ? stat.of : finite(Number(read(player, stat.of) ?? 0)) }),
     colour,
     leaderboard: stat.leaderboard && !unset && !hidden && !spec.inline ? stat.path : null,
     ...(spec.icon && { icon: spec.icon }),

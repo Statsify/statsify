@@ -29,6 +29,7 @@ import { UHC_PAGE } from "./uhc.js";
 import { VAMPIREZ_PAGE } from "./vampirez.js";
 import { WALLS_PAGE } from "./walls.js";
 import { WARLORDS_PAGE } from "./warlords.js";
+import { WOOL_GAMES_PAGE } from "./woolgames.js";
 import { type GameId, GameIdMapping } from "@statsify/schemas";
 import { type GameLayout, pageModes } from "./layout.js";
 
@@ -67,6 +68,7 @@ export const GAME_PAGES: GameLayout[] = [
   VAMPIREZ_PAGE,
   WALLS_PAGE,
   WARLORDS_PAGE,
+  WOOL_GAMES_PAGE,
 ].toSorted((a, b) => registryIndex(a) - registryIndex(b));
 
 export const findGamePage = (segment: string): GameLayout | undefined =>
