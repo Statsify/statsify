@@ -9,6 +9,5 @@
 import { modelOptions as ModelOptions } from "@typegoose/typegoose";
 import { Player } from "@statsify/schemas";
 
-// Inherits Player's schema options, so sessions have no version key either
 @ModelOptions({ schemaOptions: { collection: "session" } })
 export class Session extends Player {}
