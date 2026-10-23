@@ -9,6 +9,7 @@
 import { Brand } from "~/components/icons/logo";
 import { Discord } from "~/components/icons/discord";
 import { Divider } from "./divider";
+import { EmailLink } from "./email-link";
 import { GitHub } from "~/components/icons/github";
 import { Link } from "@tanstack/react-router";
 import { Patreon } from "~/components/icons/patreon";
@@ -62,7 +63,7 @@ export function Footer() {
             <Link to="/{-$locale}/about" className={LINK}>{t("footer.about")}</Link>
             <Link to="/{-$locale}/privacy" className={LINK}>{t("footer.privacy")}</Link>
             <Link to="/{-$locale}/terms" className={LINK}>{t("footer.terms")}</Link>
-            <a href={`mailto:${email}`} className={LINK}>{email}</a>
+            <EmailLink email={email} className={LINK} />
           </div>
         </div>
       </div>

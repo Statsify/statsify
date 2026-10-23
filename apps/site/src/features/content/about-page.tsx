@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Article, CHIP, Callout, KeyTable, Paragraph, Section, Subheading, TextLink, TextPage } from "./text-page";
+import { Article, CHIP, Callout, KeyTable, Paragraph, Section, Subheading, TextEmail, TextLink, TextPage } from "./text-page";
 import { Link } from "@tanstack/react-router";
 import { PointerText } from "~/components/ui/hint";
 import { Trans, useTranslation } from "react-i18next";
@@ -17,7 +17,7 @@ export function AboutPage() {
   const { t } = useTranslation();
   const links = { chip: <SampleChip />, glossary: <TextLink to="/{-$locale}/glossary" /> };
   const email = t("footer.email");
-  const mail = <TextLink href={`mailto:${email}`}>{email}</TextLink>;
+  const mail = <TextEmail email={email} />;
 
   return (
     <TextPage title={t("about.title")}>

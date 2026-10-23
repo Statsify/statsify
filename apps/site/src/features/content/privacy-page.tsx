@@ -8,13 +8,13 @@
 
 /* eslint-disable react/no-unescaped-entities -- English reading text, with its apostrophes and quotes as written */
 
-import { KeyTable, LegalPage, type LegalSection, List, Paragraph, Subheading, TextLink } from "./text-page";
+import { KeyTable, LegalPage, type LegalSection, List, Paragraph, Subheading, TextEmail, TextLink } from "./text-page";
 
 /** When the policy last changed. */
 const UPDATED = "2026-10-22";
 
 const EMAIL = "contact@statsify.net";
-const mail = <TextLink href={`mailto:${EMAIL}`}>{EMAIL}</TextLink>;
+const mail = <TextEmail email={EMAIL} />;
 const discord = <TextLink href="/discord">Statsify Discord</TextLink>;
 
 // One policy for the bot and the site.

@@ -9,6 +9,7 @@
 import { Background, type BackgroundName } from "~/components/ui/background";
 import { Chevron } from "~/components/icons/chevron";
 import { Box } from "~/components/ui/box";
+import { EmailLink } from "~/components/ui/email-link";
 import { Link, type LinkProps } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
 import { cn } from "~/lib/util";
@@ -281,7 +282,10 @@ export function Strong({ children }: { children?: ReactNode }) {
 
 const TEXT_LINK = "font-semibold text-white underline decoration-2 underline-offset-3 hover:text-mc-aqua";
 
-/** A link in reading text: to a page of the site, or anywhere by `href` (mail, vanity links the server redirects). */
+/** An email address in reading text, styled as a link: a click copies it. */
+export const TextEmail = ({ email }: { email: string }) => <EmailLink email={email} className={TEXT_LINK} />;
+
+/** A link in reading text: to a page of the site, or anywhere by `href` (vanity links the server redirects). */
 export function TextLink({ children, href, ...link }: { children?: ReactNode } & ({ href: string } | (LinkProps & { href?: never }))) {
   if (href !== undefined) {
     return (
