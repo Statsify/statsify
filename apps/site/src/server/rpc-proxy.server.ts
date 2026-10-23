@@ -25,6 +25,7 @@ const RPC_PROCEDURES = new Map<string, { ttl: number; params: readonly string[] 
   ["leaderboard/game", { ttl: 3600, params: ["key"] }],
   ["leaderboard/page", { ttl: 60, params: ["field", "page", "size", "around"] }],
   ["home/previews", { ttl: 600, params: [] }],
+  ["content/prestiges", { ttl: 3600, params: [] }],
 ]);
 
 /** How long a browser should wait after the API refused or failed; never cached. */

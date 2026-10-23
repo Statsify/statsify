@@ -35,6 +35,7 @@ import type {
   BingoPlayer,
   GameInput,
   GamePage,
+  Glossary,
   GuildPreview,
   HomePreviews,
   LeaderboardGame,
@@ -46,11 +47,13 @@ import type {
   PlayerFull,
   PlayerIdentity,
   PlayerPage,
+  PrestigeSheet,
   ResolveInput,
   ResultCard,
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
+import { buildGlossary, buildPrestigeSheet } from "./content.js";
 import { catalogLabel, leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
 import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
@@ -215,6 +218,8 @@ export class SiteService implements OnApplicationBootstrap {
   private homeBuild?: Promise<HomePreviews>;
   private homeExpiresAt = 0;
   private leaderboardGroups?: LeaderboardGroup[];
+  private glossarySheet?: Glossary;
+  private prestigeSheet?: PrestigeSheet;
 
   public constructor(
     private readonly playerService: PlayerService,
@@ -452,6 +457,18 @@ export class SiteService implements OnApplicationBootstrap {
   public leaderboardList(): LeaderboardGroup[] {
     this.leaderboardGroups ??= buildLeaderboardGroups();
     return this.leaderboardGroups;
+  }
+
+  /** The glossary's stats; static metadata, like the leaderboard list it takes its game names from. */
+  public glossary(): Glossary {
+    this.glossarySheet ??= buildGlossary(this.leaderboardList());
+    return this.glossarySheet;
+  }
+
+  /** The BedWars prestige sheet; code, so built once. */
+  public prestiges(): PrestigeSheet {
+    this.prestigeSheet ??= buildPrestigeSheet();
+    return this.prestigeSheet;
   }
 
   public leaderboardGame({ key }: LeaderboardGameInput): LeaderboardGame {

@@ -239,7 +239,7 @@ export function NeverPlayed({ name, game }: { name: string; game: string }) {
 /** The filter box matched nothing, so the lists below it are empty. */
 export function NoStatMatches({ query }: { query: string }) {
   const { t } = useTranslation();
-  return <p className="text-mc-1 text-mc-yellow">{t("game.noMatches", { query: query.trim() })}</p>;
+  return <p className="text-mc-1.5 text-mc-gray text-center">{t("game.noMatches", { query: query.trim() })}</p>;
 }
 
 /** The game-wide cells in one row, then the card's selections (kit, class) as `Label: value` lines. */

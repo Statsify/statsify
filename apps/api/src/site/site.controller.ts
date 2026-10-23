@@ -107,4 +107,16 @@ export class SiteController {
   public homePreviews() {
     return implement(contract.home.previews).handler(() => this.siteService.homePreviews());
   }
+
+  @Auth(SITE_ONLY)
+  @Implement(contract.content.glossary)
+  public glossary() {
+    return implement(contract.content.glossary).handler(() => this.siteService.glossary());
+  }
+
+  @Auth(SITE_ONLY)
+  @Implement(contract.content.prestiges)
+  public prestiges() {
+    return implement(contract.content.prestiges).handler(() => this.siteService.prestiges());
+  }
 }

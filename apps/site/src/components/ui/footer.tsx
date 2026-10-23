@@ -59,8 +59,9 @@ export function Footer() {
             <p>{t("footer.operator")}</p>
           </div>
           <div className="flex flex-wrap justify-center gap-x-4">
-            <a href="/privacy" className={LINK}>{t("footer.privacy")}</a>
-            <a href="/terms" className={LINK}>{t("footer.terms")}</a>
+            <Link to="/{-$locale}/about" className={LINK}>{t("footer.about")}</Link>
+            <Link to="/{-$locale}/privacy" className={LINK}>{t("footer.privacy")}</Link>
+            <Link to="/{-$locale}/terms" className={LINK}>{t("footer.terms")}</Link>
             <a href={`mailto:${email}`} className={LINK}>{email}</a>
           </div>
         </div>

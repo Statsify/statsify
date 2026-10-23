@@ -501,6 +501,64 @@ export const HomePreviewsSchema = z.object({
   leaderboard: LeaderboardPageSchema.nullable(),
 });
 
+/** A game that shows a glossary entry's stat, and how many of its leaderboards rank it. */
+const GlossaryGameSchema = z.object({
+  /** The `PlayerStats` key, e.g. `bedwars`, named in the glossary's `games`. */
+  key: z.string(),
+  boards: z.number(),
+});
+
+/** One stat explained: what the glossary needs beyond its words, which are in the locale files. */
+const GlossaryEntrySchema = z.object({
+  /** The `glossary.*` locale key of its explanation (and full name, for an abbreviation), e.g. `fkdr`. */
+  key: z.string(),
+  /** The `stats.*` (or the site's) label key it's shown under, e.g. `stats.fkdr`. */
+  label: z.string(),
+  /** Values for the label's placeholders, e.g. `{ tier: "I–III" }` for "Tier {{tier}}". */
+  params: z.record(z.string(), z.string()).optional(),
+  /** Its colour on the cards, or null where the colour depends on the value. */
+  colour: z.string().nullable(),
+  /** The games that show it: BedWars, SkyWars and Duels first, then by leaderboards. */
+  games: z.array(GlossaryGameSchema),
+  /** Its leaderboard's field when exactly one ranks it. */
+  board: z.string().nullable(),
+  /** For a ratio: the label keys it divides, and what the result is multiplied by (100 for a percentage). */
+  formula: z.object({ numerator: z.string(), denominator: z.string(), multiplier: z.number() }).nullable(),
+});
+
+export const GlossarySchema = z.object({
+  /** Every game's name by its `PlayerStats` key. */
+  games: z.record(z.string(), z.string()),
+  groups: z.array(
+    z.object({
+      /** `ratios`, `shared` (stats two or more games show) or the `PlayerStats` key of the one game that shows them. */
+      key: z.string(),
+      entries: z.array(GlossaryEntrySchema),
+    })
+  ),
+});
+
+/** Every BedWars prestige the game draws, with the stars and brackets Hypixel sells. */
+export const PrestigeSheetSchema = z.object({
+  prestiges: z.array(
+    z.object({
+      /** The prestige's first level: 0, 100 and so on. */
+      level: z.number(),
+      name: z.string(),
+      /** That level as the game draws it, Minecraft-formatted. */
+      formatted: z.string(),
+      /** The star its levels show. */
+      star: z.string(),
+      /** The EXP it takes to reach it from level 0. */
+      exp: z.number(),
+    })
+  ),
+  /** The EXP each of a prestige's first levels takes; every level after the last one listed takes as much as it. */
+  levelExp: z.array(z.number()),
+  stars: z.array(z.object({ key: z.string(), name: z.string(), glyph: z.string() })),
+  brackets: z.array(z.object({ key: z.string(), name: z.string(), open: z.string(), close: z.string() })),
+});
+
 const ResolveInputSchema = z.union([z.object({ name: UsernameSchema }), z.object({ uuid: UuidSchema })]);
 const PlayerInputSchema = z.object({ uuid: UuidSchema });
 const GameInputSchema = z.object({
@@ -618,6 +676,14 @@ export const contract = {
       .route({ method: "GET", path: "/home/previews", summary: "The sample players, guild and leaderboard on the home page" })
       .output(HomePreviewsSchema),
   },
+  content: {
+    glossary: oc
+      .route({ method: "GET", path: "/content/glossary", summary: "Every stat the site shows under a label, grouped for the glossary" })
+      .output(GlossarySchema),
+    prestiges: oc
+      .route({ method: "GET", path: "/content/prestiges", summary: "Every BedWars prestige, star and bracket" })
+      .output(PrestigeSheetSchema),
+  },
 };
 
 export type SiteContract = typeof contract;
@@ -646,6 +712,9 @@ export type GamePage = z.infer<typeof GamePageSchema>;
 export type StatSection = z.infer<typeof StatSectionSchema>;
 export type StatCell = z.infer<typeof StatCellSchema>;
 export type HomePreviews = z.infer<typeof HomePreviewsSchema>;
+export type Glossary = z.infer<typeof GlossarySchema>;
+export type GlossaryEntry = z.infer<typeof GlossaryEntrySchema>;
+export type PrestigeSheet = z.infer<typeof PrestigeSheetSchema>;
 export type PreviewIdentity = z.infer<typeof PreviewIdentitySchema>;
 export type BedWarsPreview = z.infer<typeof BedWarsPreviewSchema>;
 export type SkyWarsPreview = z.infer<typeof SkyWarsPreviewSchema>;

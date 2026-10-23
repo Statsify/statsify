@@ -32,6 +32,7 @@
     "mojang": "Not an official Minecraft service. Not approved by or associated with Mojang or Microsoft.",
     "operator": "Run by statsify.net.",
     "email": "contact@statsify.net",
+    "about": "About",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service"
   },
@@ -179,6 +180,10 @@
     "count": "{{shown}} of {{total}}"
   },
   "stats": {
+    "prestige": "Prestige",
+    "name": "Name",
+    "gapplesEaten": "Golden Apples Eaten",
+    "coinsPickedUp": "Coins Picked Up",
     "doorsOpened": "Doors Opened",
     "swordKills": "Sword Kills",
     "zombiesWins": "Zombies Wins",
@@ -245,5 +250,60 @@
       "description": "We haven't seen {{name}} yet. Check the spelling, or look them up on Hypixel.",
       "lookup": "Look Up {{name}}"
     }
+  },
+  "content": {
+    "contents": "On This Page",
+    "updated": "Updated {{date}}"
+  },
+  "about": {
+    "title": "About Statsify",
+    "what": "What Statsify Is",
+    "whatText": "Statsify shows Hypixel stats as images in Discord and as pages on this site. Look up a player, then open any game for every stat it tracks.",
+    "linksText": "Every stat with a leaderboard links to it: a player's <chip/> opens the FKDR leaderboard at their rank. What each stat means is in the <glossary>Stat Glossary</glossary>.",
+    "operator": "Who Runs Statsify",
+    "operatorText": "Statsify is run by statsify.net.",
+    "notOfficial": "Not Official",
+    "contact": "Contact",
+    "contactText": "Help is on Discord. Everything else goes by email, so there's a written record.",
+    "topic": "Topic",
+    "where": "Where",
+    "help": "Help and Bugs",
+    "helpWhere": "<discord>Statsify Discord</discord>",
+    "privacy": "Privacy",
+    "legal": "Legal and Business",
+    "security": "Security",
+    "stats": "Where Stats Come From",
+    "statsText": "Stats come from Hypixel's public API. A player's page shows their stats from the last time anyone looked them up, and <strong>Refresh</strong> fetches new ones.",
+    "note": "Note",
+    "leaderboardsNote": "Leaderboards only include players someone has looked up on Statsify, so a rank is among those players, not everyone on Hypixel.",
+    "names": "Names and Skins",
+    "namesText": "Names and skins come from Mojang, and change when the player changes them.",
+    "source": "Open Source",
+    "sourceText": "The bot and this site are open source under the GNU AGPL v3 or later. The code is <github>on GitHub</github>."
+  },
+  "glossary": {
+    "title": "Stat Glossary",
+    "meta": "{{stats}} stats",
+    "intro": "What each stat on Statsify means, how the ratios are worked out, and which games show it. The labels are the ones on the bot's cards.",
+    "levels": "BedWars levels and their colors are on the <prestiges>BedWars Prestiges</prestiges> page.",
+    "filter": "Filter stats",
+    "noMatches": "No stats match \"{{query}}\". Try fewer letters, or clear the box.",
+    "ratios": "Ratios",
+    "shared": "Across Games",
+    "usedIn": "Used in {{games}}",
+    "usedInMore": "Used in {{games}} and {{more}} more",
+    "board": "Leaderboard",
+    "boards": "{{boards}} Leaderboards"
+  },
+  "prestiges": {
+    "title": "BedWars Prestiges",
+    "meta": "{{prestiges}} prestiges",
+    "intro": "Every BedWars prestige up to {{top}} stars, in the colors its level shows in game. A prestige is 100 levels and takes {{exp}} EXP.",
+    "levels": "The first levels of each prestige are quicker ({{first}} EXP); every level after them takes {{steady}}.",
+    "note": "Note",
+    "noteText": "Hypixel sells other prestige colors, stars and brackets, so a player's level can look different from its prestige here.",
+    "exp": "{{exp}} EXP",
+    "stars": "Stars",
+    "brackets": "Brackets"
   }
 }

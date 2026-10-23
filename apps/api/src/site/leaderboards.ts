@@ -13,7 +13,7 @@ import type { LeaderboardColumn, LeaderboardGame, LeaderboardGroup } from "@stat
 let catalog: Map<string, Stat> | undefined;
 
 /** Every stat the catalog describes, by its path. */
-function catalogStats(): Map<string, Stat> {
+export function catalogStats(): Map<string, Stat> {
   catalog ??= new Map(
     Object.values(GAMES)
       .flatMap((game) => [
