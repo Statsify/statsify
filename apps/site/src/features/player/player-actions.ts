@@ -32,6 +32,12 @@ export type ActionResult<T> =
  */
 const ACTION_TIMEOUT_MS = 10_000;
 
+/**
+ * The browser's own limit on a refresh or lookup, past the server's: a connection that hangs (a phone between networks,
+ * a stalled proxy) ends in "Hypixel didn't answer" with the button back, not a spinner for good.
+ */
+export const BROWSER_TIMEOUT_MS = 12_000;
+
 /** The visitor's address: nginx passes Cloudflare's `CF-Connecting-IP` through. */
 function clientIp(): string {
   return getRequest().headers.get("cf-connecting-ip") ?? getRequestIP() ?? "unknown";

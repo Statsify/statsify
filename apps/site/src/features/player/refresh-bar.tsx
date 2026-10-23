@@ -10,8 +10,8 @@ import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/util";
 import { formatCountdown } from "~/i18n/format";
 import { type ReactNode, useEffect, useState } from "react";
+import { type ActionResult, BROWSER_TIMEOUT_MS } from "./player-actions";
 import { useTranslation } from "react-i18next";
-import type { ActionResult } from "./player-actions";
 
 const META = "text-mc-1 text-mc-gray";
 
@@ -52,7 +52,8 @@ function relativeTime(then: number, now: number, locale: string): string {
 
 /**
  * "Updated N minutes ago" and the refresh button, disabled with a countdown until `expiresAt`.
- * `refresh` runs the page's refresh action and applies its data itself; the bar shows the outcome.
+ * `refresh` runs the page's refresh action with the bar's deadline and applies its data itself; the bar shows the
+ * outcome.
  */
 export function RefreshBar({
   updatedAt,
@@ -64,7 +65,7 @@ export function RefreshBar({
 }: {
   updatedAt: number;
   expiresAt: number;
-  refresh: () => Promise<ActionResult<unknown>>;
+  refresh: (deadline: AbortSignal) => Promise<ActionResult<unknown>>;
   /** One row on phones too, the time beside a smaller button: a game page, whose tables should start near the top. */
   row?: boolean;
   /**
@@ -85,13 +86,15 @@ export function RefreshBar({
   async function run() {
     setState({ status: "pending" });
 
+    const deadline = AbortSignal.timeout(BROWSER_TIMEOUT_MS);
     let result: ActionResult<unknown>;
 
     try {
-      result = await refresh();
+      result = await refresh(deadline);
     } catch {
-      // A 500, a Cloudflare 429 or a dropped connection: say so and let the visitor try again.
-      setState({ status: "error" });
+      // A 500, a Cloudflare 429 or a dropped connection: say so and let the visitor try again. A hung one reads as
+      // Hypixel not answering, as when the server's own deadline runs out.
+      setState({ status: deadline.aborted ? "unavailable" : "error" });
       return;
     }
 

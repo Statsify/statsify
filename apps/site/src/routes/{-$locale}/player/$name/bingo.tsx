@@ -76,8 +76,8 @@ function BingoPage() {
 function BingoBoards({ initial }: { initial: BingoPlayer }) {
   const [player, setPlayer] = useState(initial);
 
-  const refresh = async () => {
-    const result = await refreshBingo({ data: { uuid: player.uuid } });
+  const refresh = async (deadline: AbortSignal) => {
+    const result = await refreshBingo({ data: { uuid: player.uuid }, signal: deadline });
     if (result.ok) setPlayer(result.data);
     return result;
   };

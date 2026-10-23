@@ -142,8 +142,8 @@ export function GameView({ page }: { page: GamePage }) {
   );
 
   // Everything cached for this player predates the refresh: it reloads the next time it's shown.
-  const refresh = async () => {
-    const result = await refreshGame({ data: { uuid: page.uuid, game: page.game.key, mode, submode, period } });
+  const refresh = async (deadline: AbortSignal) => {
+    const result = await refreshGame({ data: { uuid: page.uuid, game: page.game.key, mode, submode, period }, signal: deadline });
 
     if (result.ok) {
       await queryClient.invalidateQueries({ queryKey: orpc.player.key({ input: { uuid: page.uuid } }), refetchType: "none" });

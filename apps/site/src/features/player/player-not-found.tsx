@@ -13,7 +13,7 @@ import { Skin } from "~/components/ui/skin";
 import { Turnstile } from "~/components/turnstile";
 import { formatCountdown } from "~/i18n/format";
 import { getRouteApi, useNavigate, useParams } from "@tanstack/react-router";
-import { type ActionResult, lookupPlayer } from "./player-actions";
+import { type ActionResult, BROWSER_TIMEOUT_MS, lookupPlayer } from "./player-actions";
 import { useEffect, useState } from "react";
 import { rememberPlayer } from "./resolve";
 import { useQueryClient } from "@tanstack/react-query";
@@ -26,9 +26,9 @@ const localeRoute = getRouteApi("/{-$locale}");
 const PLACEHOLDER_UUID = "76a56ac7fcf649fca0531cb5c77cd9ae";
 
 /** Looks a name up on Hypixel. The gallery passes its own outcomes, as it does for `RefreshBar`'s refresh. */
-type Lookup = (name: string, token: string | undefined) => Promise<ActionResult<PlayerIdentity>>;
+type Lookup = (name: string, token: string | undefined, deadline: AbortSignal) => Promise<ActionResult<PlayerIdentity>>;
 
-const lookupOnHypixel: Lookup = (name, token) => lookupPlayer({ data: { name, token } });
+const lookupOnHypixel: Lookup = (name, token, deadline) => lookupPlayer({ data: { name, token }, signal: deadline });
 
 /** The player-not-found page for the route's name. */
 export function PlayerNotFound() {
@@ -120,15 +120,16 @@ export function LookupButton({
   async function run() {
     setState({ status: "pending" });
 
-    const result = await lookup(name, token).catch(() => undefined);
+    const deadline = AbortSignal.timeout(BROWSER_TIMEOUT_MS);
+    const result = await lookup(name, token, deadline).catch(() => undefined);
 
     // Turnstile tokens are single-use: a fresh widget for the next attempt.
     setToken(undefined);
     setWidgetKey((key) => key + 1);
 
-    // A 500, a Cloudflare 429 or a dropped connection.
+    // A 500, a Cloudflare 429 or a dropped connection; a hung one reads as Hypixel not answering.
     if (!result) {
-      setState({ status: "error" });
+      setState({ status: deadline.aborted ? "unavailable" : "error" });
       return;
     }
 
