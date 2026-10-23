@@ -60,10 +60,16 @@ async function sitemap(name: SitemapName, origin: string): Promise<string> {
   );
 }
 
-/** The first page of every leaderboard; the paged and `around` variants are `noindex` and stay out. */
+/**
+ * Each game's index, then the first page of each of its leaderboards; the paged, `around` and `?mode=` variants are
+ * `noindex` and stay out.
+ */
 async function leaderboardPaths(): Promise<string[]> {
   const groups = await rpcServerClient.leaderboard.list();
-  return groups.flatMap((group) => group.leaderboards.map(({ field }) => `/leaderboards/${field}`));
+  return groups.flatMap((group) => [
+    `/leaderboards/${group.key}`,
+    ...group.leaderboards.map(({ field }) => `/leaderboards/${field}`),
+  ]);
 }
 
 const xmlDocument = (root: string, entries: readonly string[]) =>
