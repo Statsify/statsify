@@ -7,12 +7,15 @@
  */
 
 import {
+  type FieldMetadata,
   type LeaderboardEnabledMetadata,
   type LeaderboardMetadata,
   scanMetadata,
 } from "#metadata";
 import { parseAdditionalFields } from "./parse-fields.js";
 import type { Constructor } from "@statsify/util";
+
+const fieldMaps = new Map<Constructor, Map<string, FieldMetadata>>();
 
 export function getLeaderboardFields<T>(constructor: Constructor<T>) {
   const metadata = scanMetadata(constructor);
@@ -37,13 +40,18 @@ export function getLeaderboardField<T>(
   key: string,
   leaderboardMustBeEnabled = true,
 ): LeaderboardMetadata {
-  const metadata = scanMetadata(constructor);
+  let fields = fieldMaps.get(constructor);
 
-  const field = metadata.find(([k]) => k === key);
+  if (!fields) {
+    fields = new Map(scanMetadata(constructor));
+    fieldMaps.set(constructor, fields);
+  }
+
+  const field = fields.get(key);
 
   if (!field) throw new Error(`${key} is not a field for ${constructor.name}`);
 
-  const [, { store, leaderboard }] = field;
+  const { store, leaderboard } = field;
 
   if (!leaderboard.enabled && leaderboardMustBeEnabled)
     throw new Error(
