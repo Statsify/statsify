@@ -51,7 +51,7 @@ import type {
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
-import { leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
+import { catalogLabel, leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
 import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
@@ -189,7 +189,13 @@ function buildLeaderboardGroups(): LeaderboardGroup[] {
       groups.set(statsKey, group);
     }
 
-    group.leaderboards.push({ field, name: removeFormatting(leaderboard.name) });
+    const label = catalogLabel(field);
+    group.leaderboards.push({
+      field,
+      name: removeFormatting(leaderboard.name),
+      ...(label && { label }),
+      ...(leaderboard.enabled && leaderboard.aliases.length > 0 && { aliases: leaderboard.aliases }),
+    });
   }
 
   return [...groups.values()];

@@ -35,6 +35,9 @@ export function leaderboardColumn(field: string, name: string): LeaderboardColum
   return { field, name, label: stat?.label ?? null, colour: typeof stat?.colour === "string" ? stat.colour : null };
 }
 
+/** The `stats.*` locale key the bot's cards label a stat with, where the catalog describes it. */
+export const catalogLabel = (field: string): string | undefined => catalogStats().get(field)?.label;
+
 /**
  * A name past a leading prefix and the " - " or space after it, the prefix matched ignoring case and spaces ("WoolWars"
  * is the mode "Wool Wars"), or the whole name where it doesn't start with the prefix or is nothing more.

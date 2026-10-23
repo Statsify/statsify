@@ -152,13 +152,21 @@ export const ResultCardSchema = z.object({
 
 const LeaderboardLinkSchema = z.object({ field: z.string(), name: z.string() });
 
+/** A leaderboard in the full list, with what the site's filter matches besides its name. */
+const LeaderboardListEntrySchema = LeaderboardLinkSchema.extend({
+  /** The catalog's `stats.*` locale key for the board's stat, where the catalog has the stat. */
+  label: z.string().optional(),
+  /** The schema's aliases for the board, where it has any. */
+  aliases: z.array(z.string()).optional(),
+});
+
 export const LeaderboardGroupSchema = z.object({
   /** The `PlayerStats` key the group's leaderboards are under, which is also its index's `/leaderboards/<key>`. */
   key: z.string(),
   /** The `GameId` for the icon, or `null` for groups without a game (quests, challenges). */
   game: z.string().nullable(),
   name: z.string(),
-  leaderboards: z.array(LeaderboardLinkSchema),
+  leaderboards: z.array(LeaderboardListEntrySchema),
 });
 
 /** One game's leaderboards by mode, for its `/leaderboards/<key>` index. Names are short, without the game and mode. */

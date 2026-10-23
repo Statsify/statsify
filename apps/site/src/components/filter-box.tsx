@@ -28,6 +28,8 @@ export function FilterBox({
   label,
   count,
   className,
+  name,
+  onIntent,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -35,6 +37,10 @@ export function FilterBox({
   /** "3 of 44", shown while the box filters. */
   count?: string;
   className?: string;
+  /** The input's name, where the box sits in a form that works without scripts. */
+  name?: string;
+  /** Called on the first sign the box is about to be used (pressed or focused), to start loading what it filters. */
+  onIntent?: () => void;
 }) {
   return (
     <label
@@ -48,6 +54,9 @@ export function FilterBox({
         type="search"
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        onPointerDown={onIntent}
+        onFocus={onIntent}
+        name={name}
         placeholder={label}
         aria-label={label}
         className="h-full w-full min-w-0 bg-transparent text-mc-1.5 text-white text-ellipsis outline-none placeholder:text-mc-gray selection:bg-white/50"

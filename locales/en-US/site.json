@@ -82,6 +82,8 @@
     "title": "Leaderboards",
     "filter": "Filter leaderboards",
     "noMatches": "No leaderboards match \"{{query}}\"",
+    "loading": "Loading…",
+    "listFailed": "Couldn't load the list. Click the box to try again.",
     "position": "Pos",
     "player": "Player",
     "page": "Page {{page}} of {{pages}}",
