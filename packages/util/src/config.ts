@@ -307,11 +307,10 @@ export const config = async <T extends keyof FlatConfig>(
   if (process.env.VITEST) return defaultValue as FlatConfig[T];
   if (!cfg) cfg = await loadConfig().then((c) => c.default);
 
-  const value = (key as string).split(".").reduce((a: any, b) => a?.[b], cfg);
+  const raw = (key as string).split(".").reduce((a: any, b) => a?.[b], cfg);
+  const value = raw === "" || raw === null ? undefined : raw;
 
-  const isValueDefined = value !== undefined && value !== null && value !== "";
-
-  if (!isValueDefined) {
+  if (value === undefined) {
     if (defaultValue !== undefined) return defaultValue;
 
     if (required)
