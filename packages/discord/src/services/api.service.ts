@@ -190,7 +190,8 @@ export class ApiService extends StatsifyApiService {
     type: LeaderboardQuery
   ) {
     return super.getPlayerLeaderboard(field, input, type).catch((err: AxiosError) => {
-      if ((err.response?.data as PlayerNotFoundException | undefined)?.statusCode === 404) return null;
+      if (!err.response || !err.response.data) throw this.unknownError();
+      if ((err.response.data as PlayerNotFoundException).statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
     });
   }
@@ -201,7 +202,8 @@ export class ApiService extends StatsifyApiService {
     type: LeaderboardQuery
   ) {
     return super.getGuildLeaderboard(field, input, type).catch((err: AxiosError) => {
-      if ((err.response?.data as GuildNotFoundException | undefined)?.statusCode === 404) return null;
+      if (!err.response || !err.response.data) throw this.unknownError();
+      if ((err.response.data as GuildNotFoundException).statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
     });
   }
