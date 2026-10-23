@@ -50,17 +50,17 @@ const ODD_LAST = "max-sm:[&>:last-child:nth-child(odd)]:col-span-2";
 const COLUMNS = [
   "grid-cols-1",
   "grid-cols-1",
-  "grid-cols-2",
-  `grid-cols-2 sm:grid-cols-3 ${ODD_LAST}`,
-  `grid-cols-2 sm:grid-cols-4 ${ODD_LAST}`,
-  `grid-cols-2 sm:grid-cols-5 ${ODD_LAST}`,
+  "grid-cols-snap-2",
+  `grid-cols-snap-2 sm:grid-cols-snap-3 ${ODD_LAST}`,
+  `grid-cols-snap-2 sm:grid-cols-snap-4 ${ODD_LAST}`,
+  `grid-cols-snap-2 sm:grid-cols-snap-5 ${ODD_LAST}`,
 ];
 
 const MOST_COLUMNS = COLUMNS.length - 1;
 
 const columnsOf = (count: number, headline: boolean) =>
   headline && count === 3 ?
-    "grid-cols-3" :
+    "grid-cols-snap-3" :
     COLUMNS[count <= MOST_COLUMNS ? count : Math.ceil(count / Math.ceil(count / MOST_COLUMNS))];
 
 /**
@@ -81,7 +81,7 @@ const PHONE_TABS = 4;
 const DESKTOP_TABS = 10;
 
 /** The card's side-by-side boxes, in as many equal columns from `lg` up; four go two by two, as the card draws them. */
-const BOX_COLUMNS = ["", "", "lg:grid-cols-2", "lg:grid-cols-3", "lg:grid-cols-2"];
+const BOX_COLUMNS = ["", "", "lg:grid-cols-snap-2", "lg:grid-cols-snap-3", "lg:grid-cols-snap-2"];
 
 /**
  * A player's page for one game, in the order of the bot's card: nametag and title, level and progress, the stats for
@@ -124,7 +124,7 @@ export function GameView({ page }: { page: GamePage }) {
   );
 
   const headlinePanels = headline && (
-    <div key="headline" className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
+    <div key="headline" className="grid grid-cols-1 gap-2 lg:grid-cols-[minmax(0,1fr)_round(down,40%,8px)]">
       <StatPanel section={headline} username={page.username} headline className={cn(tables.length === 0 && "lg:col-span-2")} />
       {tables.length > 0 && (
         <div className="flex flex-col gap-2">

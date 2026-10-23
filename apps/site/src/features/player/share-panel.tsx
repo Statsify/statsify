@@ -20,10 +20,36 @@ const COPIED_MS = 2000;
 
 const localeRoute = getRouteApi("/{-$locale}");
 
-/** A link-styled button in the nametag that opens and closes a panel under the page's header. */
-export function PanelToggle({ open, controls, onToggle, children }: { open: boolean; controls: string; onToggle: () => void; children: ReactNode }) {
+/**
+ * A link-styled button in the nametag that opens and closes a panel under the page's header, at `size` (the player
+ * page's match the socials beside them).
+ */
+export function PanelToggle({
+  open,
+  controls,
+  onToggle,
+  size = "text-mc-1",
+  onIntent,
+  children,
+}: {
+  open: boolean;
+  controls: string;
+  onToggle: () => void;
+  size?: string;
+  /** When a pointer or the keyboard reaches it, to start loading what it opens. */
+  onIntent?: () => void;
+  children: ReactNode;
+}) {
   return (
-    <button type="button" aria-expanded={open} aria-controls={controls} onClick={onToggle} className="flex min-h-11 items-center text-mc-1 text-mc-yellow hover:underline">
+    <button
+      type="button"
+      aria-expanded={open}
+      aria-controls={controls}
+      onClick={onToggle}
+      onPointerEnter={onIntent}
+      onFocus={onIntent}
+      className={`flex min-h-11 items-center ${size} text-mc-yellow hover:underline`}
+    >
       {children}
     </button>
   );

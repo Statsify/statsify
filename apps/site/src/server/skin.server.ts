@@ -14,7 +14,7 @@ import { siteConfig } from "./config.server";
  * fixed parameters.
  */
 export async function proxySkin(
-  path: "/skin" | "/skin/head",
+  path: "/skin" | "/skin/head" | "/skin/texture",
   search: URLSearchParams,
   fixed: Record<string, string> = {}
 ): Promise<Response> {
@@ -44,11 +44,14 @@ export async function proxySkin(
     return new Response(null, { status: upstream.status === 404 ? 404 : 502, headers: { "Cache-Control": "no-store" } });
   }
 
+  const model = upstream.headers.get("X-Skin-Model");
   return new Response(upstream.body, {
     status: 200,
     headers: {
       "Content-Type": upstream.headers.get("content-type") ?? "image/png",
       "Cache-Control": "public, max-age=3600",
+      // The texture's arm width, which the skin viewer reads.
+      ...(model && { "X-Skin-Model": model }),
     },
   });
 }

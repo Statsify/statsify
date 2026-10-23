@@ -45,10 +45,23 @@ export class SkinService {
 
   public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {
     const skin = await this.getSkin(uuid);
-    const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
+    return renderSkin(await this.textureBuffer(skin), skin.slim ?? false, extruded);
+  }
+
+  /**
+   * The skin's texture as uploaded (Steve's for a player without one), for the site's skin viewer to draw, and whether
+   * its arms are slim, as the bot's render draws them.
+   */
+  public async getTexture(uuid: string): Promise<{ texture: Buffer; slim: boolean }> {
+    const skin = await this.getSkin(uuid);
+    return { texture: await this.textureBuffer(skin), slim: skin.slim ?? false };
+  }
+
+  private async textureBuffer({ skinUrl, slim }: Skin): Promise<Buffer> {
+    const { skin } = await this.resolveSkin(skinUrl, slim);
     // This field is set by loadImage from `@statsify/rendering`
-    const { _data: buffer } = image as unknown as { _data: Buffer };
-    return renderSkin(buffer, skin.slim ?? false, extruded);
+    const { _data: buffer } = skin as unknown as { _data: Buffer };
+    return buffer;
   }
 
   public async getSkin(tag: string): Promise<Skin> {

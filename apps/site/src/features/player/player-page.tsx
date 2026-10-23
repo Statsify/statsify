@@ -15,7 +15,7 @@ import { Hidden, InlineStat, LeaderboardLink, STAT_LINK, StatCell, StatNumber, l
 import { Link } from "@tanstack/react-router";
 import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
-import { PanelToggle, SharePanel } from "./share-panel";
+import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
 import { RefreshBar } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust } from "~/components/ui/skin";
@@ -28,10 +28,14 @@ import { playerPageQuery } from "./resolve";
 import { refreshPlayer } from "./player-actions";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
-import { useId, useRef, useState } from "react";
+import { Suspense, lazy, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ComponentType, ReactNode, Ref } from "react";
 import type { GameSummary, PlayerPage } from "@statsify/contract";
+
+// Its own chunk, fetched when a pointer or the keyboard reaches the Skin button, or else when the panel opens.
+const loadSkinPanel = () => import("./skin-viewer");
+const SkinPanel = lazy(() => loadSkinPanel().then(({ SkinPanel }) => ({ default: SkinPanel })));
 
 type Socials = PlayerPage["socials"];
 type SocialKey = keyof Socials;
@@ -44,15 +48,17 @@ const SOCIAL_ICONS: Partial<Record<SocialKey, ComponentType<{ className?: string
 
 /**
  * The player page in the general card's order: nametag, then Network Level and the overview cells, then
- * logins, then one panel per game. Phones stack them with the refresh row under the nametag; from `lg` up identity
- * and level sit side by side.
+ * logins, then one panel per game. Phones stack them with the refresh row under the nametag. From `md` the logins join
+ * the nametag and the level and overview share a row; from `xl` nametag, level and overview are one row.
  */
 export function PlayerView({ page }: { page: PlayerPage }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const nametag = useRef<HTMLDivElement>(null);
   const shareId = useId();
+  const skinId = useId();
   const [sharing, setSharing] = useState(false);
+  const [skin, setSkin] = useState(false);
 
   // The refreshed page replaces the cached query, so every panel re-renders with the new numbers. The player's game
   // pages predate the refresh: they reload the next time they're shown.
@@ -79,26 +85,38 @@ export function PlayerView({ page }: { page: PlayerPage }) {
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
-        <div className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-[auto_1fr] xl:grid-cols-[fit-content(50%)_auto_1fr]">
           <NametagPanel
             ref={nametag}
             page={page}
             actions={(
-              <PanelToggle open={sharing} controls={shareId} onToggle={() => setSharing(!sharing)}>
-                {t("player.share.open")}
-              </PanelToggle>
+              <>
+                <PanelToggle open={sharing} controls={shareId} onToggle={() => setSharing(!sharing)} size="text-mc-1.5">
+                  {t("player.share.open")}
+                </PanelToggle>
+                <PanelToggle
+                  open={skin}
+                  controls={skinId}
+                  onToggle={() => setSkin(!skin)}
+                  size="text-mc-1.5"
+                  // A chunk that fails here fails again when the panel opens, which shows the error.
+                  onIntent={() => loadSkinPanel().catch(() => undefined)}
+                >
+                  {t("player.skin.open")}
+                </PanelToggle>
+              </>
             )}
-            className="lg:col-start-1 lg:row-start-1"
+            className="md:col-span-full md:row-start-1 xl:col-span-1"
           />
           <RefreshBar
             updatedAt={page.updatedAt}
             expiresAt={page.expiresAt}
             refresh={refresh}
-            className="mb-2 lg:col-span-2 lg:row-start-3 lg:mt-2 lg:mb-0"
+            className="mb-2 md:col-span-full md:row-start-3 md:mt-2 md:mb-0 xl:row-start-2"
           />
-          <NetworkLevelPanel level={page.level} username={page.username} className="lg:col-start-2 lg:row-start-1" />
-          <OverviewPanel overview={page.overview} username={page.username} className="lg:col-start-1 lg:row-start-2" />
-          <LoginPanel status={page.status} className="lg:col-start-2 lg:row-start-2" />
+          <NetworkLevelPanel level={page.level} username={page.username} className="md:col-start-1 md:row-start-2 xl:col-start-2 xl:row-start-1" />
+          <OverviewPanel overview={page.overview} username={page.username} className="md:col-start-2 md:row-start-2 xl:col-start-3 xl:row-start-1" />
+          <LoginPanel status={page.status} className="md:hidden" />
         </div>
         {sharing && (
           <SharePanel
@@ -109,10 +127,27 @@ export function PlayerView({ page }: { page: PlayerPage }) {
             uuid={page.uuid}
           />
         )}
+        {skin && (
+          <Suspense fallback={<SkinPanelFrame id={skinId} />}>
+            <SkinPanel id={skinId} uuid={page.uuid} name={page.username} />
+          </Suspense>
+        )}
         <GameGrid games={page.games} username={page.username} />
         <SignaturePanel page={page} />
       </div>
     </div>
+  );
+}
+
+/** The skin panel while its chunk loads: its title over the model's room, brought into view as the panel would be. */
+function SkinPanelFrame({ id }: { id: string }) {
+  const { t } = useTranslation();
+  useRevealOnOpen(id);
+
+  return (
+    <Box id={id} title={<h2 className="text-mc-1.5">{t("player.skin.title")}</h2>} className="content:flex content:flex-col content:gap-4">
+      <div className="h-80 w-64 self-center" />
+    </Box>
   );
 }
 
@@ -131,8 +166,15 @@ function NametagPanel({
   const { t } = useTranslation();
 
   return (
-    <Box ref={ref} className={cn("content:flex content:h-full content:items-center content:gap-4", className)}>
-      <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28" />
+    <Box
+      ref={ref}
+      className={cn(
+        "content:flex content:h-full content:items-center content:gap-4",
+        "md:content:grid md:content:grid-cols-[auto_minmax(0,1fr)_auto] xl:content:grid-cols-[auto_minmax(0,1fr)] xl:content:content-center xl:content:gap-y-3",
+        className
+      )}
+    >
+      <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28 xl:row-span-2" />
       <div className="flex min-w-0 grow flex-col gap-3">
         {/* Rank, name and guild tag as on the card; a long name wraps onto a second line rather than widening the page. */}
         <h1 className="wrap-break-word text-mc-2">
@@ -152,6 +194,7 @@ function NametagPanel({
           {actions}
         </div>
       </div>
+      <LoginList status={page.status} className="hidden md:flex xl:col-start-2" />
     </Box>
   );
 }
@@ -275,7 +318,14 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
 
   return (
     <Box className={cn("content:h-full", className)}>
-      <dl className="grid h-full grid-cols-2 content-center gap-x-2 gap-y-4 sm:grid-cols-4 max-sm:[&>:last-child:nth-child(odd)]:col-span-2">
+      {/* Two wide beside the level from `xl`, unless the guild row's three cells need the four columns. Columns never
+          get narrower than their values, so the row takes its room from the nametag rather than run values together. */}
+      <dl
+        className={cn(
+          "grid h-full grid-cols-snap-2 content-center gap-x-2 gap-y-4 sm:grid-cols-snap-4 max-sm:[&>:last-child:nth-child(odd)]:col-span-2",
+          !overview.guildMember && "xl:grid-cols-snap-2"
+        )}
+      >
         {cells.map(([label, value, color, link]) => (
           <StatCell
             key={label}
@@ -304,6 +354,15 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
 }
 
 function LoginPanel({ status, className }: { status: PlayerPage["status"]; className?: string }) {
+  return (
+    <Box className={cn("content:flex content:h-full content:flex-col content:justify-center", className)}>
+      <LoginList status={status} />
+    </Box>
+  );
+}
+
+/** Status and logins as the card's header lists them: in the nametag from `md`, in their own panel on phones. */
+function LoginList({ status, className }: { status: PlayerPage["status"]; className?: string }) {
   const { t, i18n } = useTranslation();
 
   // The card's `LL/dd/yy, hh:mm a`, in UTC on both server and browser so the HTML hydrates without a mismatch.
@@ -318,21 +377,19 @@ function LoginPanel({ status, className }: { status: PlayerPage["status"]; class
   const date = (ms: number) => (ms > 0 ? `${format.format(ms)} UTC` : t("player.na"));
 
   return (
-    <Box className={cn("content:flex content:h-full content:flex-col content:justify-center", className)}>
-      <dl className="flex flex-col gap-2">
-        <InlineStat
-          label={t("default:stats.status")}
-          value={status.online ? t("default:stats.online") : t("default:stats.offline")}
-          color={status.online ? "text-mc-green" : "text-mc-red"}
-        />
-        <InlineStat label={t("default:stats.firstLogin")} value={date(status.firstLogin)} color="text-mc-dark-aqua" />
-        <InlineStat label={t("default:stats.lastLogin")} value={date(status.lastLogin)} color="text-mc-dark-aqua" />
-        <InlineStat
-          label={t("default:stats.lastGame")}
-          value={status.lastGame ? <MinecraftText>{status.lastGame.name}</MinecraftText> : t("player.na")}
-        />
-      </dl>
-    </Box>
+    <dl className={cn("flex flex-col gap-2", className)}>
+      <InlineStat
+        label={t("default:stats.status")}
+        value={status.online ? t("default:stats.online") : t("default:stats.offline")}
+        color={status.online ? "text-mc-green" : "text-mc-red"}
+      />
+      <InlineStat label={t("default:stats.firstLogin")} value={date(status.firstLogin)} color="text-mc-dark-aqua" />
+      <InlineStat label={t("default:stats.lastLogin")} value={date(status.lastLogin)} color="text-mc-dark-aqua" />
+      <InlineStat
+        label={t("default:stats.lastGame")}
+        value={status.lastGame ? <MinecraftText>{status.lastGame.name}</MinecraftText> : t("player.na")}
+      />
+    </dl>
   );
 }
 
@@ -343,7 +400,7 @@ export function GameGrid({ games, username }: { games: GameSummary[]; username: 
 
   // Two 32 px cells side by side need about 300 px, so columns are added only when every panel keeps that width.
   return (
-    <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <ul className="grid grid-cols-1 gap-2 md:grid-cols-snap-2 lg:grid-cols-snap-3 xl:grid-cols-snap-4">
       {games.map((game) => (
         <li key={game.id}>
           <GamePanel game={game} username={username} />
@@ -382,7 +439,7 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
         </h2>
       )}
     >
-      <dl className="grid grid-cols-2 gap-x-2 gap-y-4">
+      <dl className="grid grid-cols-snap-2 gap-x-2 gap-y-4">
         {game.rows.map((row) => {
           const label = t(`stats.${row.key}`, { ns: ["default", "site"] });
           const full = statName(`stats.${row.key}`);

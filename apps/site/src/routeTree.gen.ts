@@ -33,6 +33,7 @@ import { Route as Char123LocaleChar125TermsRouteImport } from './routes/{-$local
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as ApiSkinHeadRouteImport } from './routes/api/skin/head'
 import { Route as ApiSkinRenderRouteImport } from './routes/api/skin/render'
+import { Route as ApiSkinTextureRouteImport } from './routes/api/skin/texture'
 import { Route as Char123LocaleChar125LeaderboardsIndexRouteImport } from './routes/{-$locale}/leaderboards/index'
 import { Route as Char123LocaleChar125LeaderboardsFieldRouteImport } from './routes/{-$locale}/leaderboards/$field'
 import { Route as Char123LocaleChar125PlayerIndexRouteImport } from './routes/{-$locale}/player/index'
@@ -142,6 +143,11 @@ const ApiSkinRenderRoute = ApiSkinRenderRouteImport.update({
   path: '/api/skin/render',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSkinTextureRoute = ApiSkinTextureRouteImport.update({
+  id: '/api/skin/texture',
+  path: '/api/skin/texture',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Char123LocaleChar125LeaderboardsIndexRoute =
   Char123LocaleChar125LeaderboardsIndexRouteImport.update({
     id: '/leaderboards/',
@@ -204,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/api/skin/texture': typeof ApiSkinTextureRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
   '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
@@ -230,6 +237,7 @@ export interface FileRoutesByTo {
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/api/skin/texture': typeof ApiSkinTextureRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
   '/{-$locale}/leaderboards': typeof Char123LocaleChar125LeaderboardsIndexRoute
@@ -258,6 +266,7 @@ export interface FileRoutesById {
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/api/skin/texture': typeof ApiSkinTextureRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
   '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
@@ -287,6 +296,7 @@ export interface FileRouteTypes {
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/api/skin/texture'
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/prestiges/bedwars'
     | '/{-$locale}/leaderboards/'
@@ -313,6 +323,7 @@ export interface FileRouteTypes {
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/api/skin/texture'
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/prestiges/bedwars'
     | '/{-$locale}/leaderboards'
@@ -340,6 +351,7 @@ export interface FileRouteTypes {
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/api/skin/texture'
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/prestiges/bedwars'
     | '/{-$locale}/leaderboards/'
@@ -362,6 +374,7 @@ export interface RootRouteChildren {
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
   ApiSkinHeadRoute: typeof ApiSkinHeadRoute
   ApiSkinRenderRoute: typeof ApiSkinRenderRoute
+  ApiSkinTextureRoute: typeof ApiSkinTextureRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -492,6 +505,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSkinRenderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/skin/texture': {
+      id: '/api/skin/texture'
+      path: '/api/skin/texture'
+      fullPath: '/api/skin/texture'
+      preLoaderRoute: typeof ApiSkinTextureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/{-$locale}/leaderboards/': {
       id: '/{-$locale}/leaderboards/'
       path: '/leaderboards'
@@ -599,6 +619,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiRpcSplatRoute: ApiRpcSplatRoute,
   ApiSkinHeadRoute: ApiSkinHeadRoute,
   ApiSkinRenderRoute: ApiSkinRenderRoute,
+  ApiSkinTextureRoute: ApiSkinTextureRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
