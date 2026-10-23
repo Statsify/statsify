@@ -24,6 +24,7 @@ import {
   TITLE_LIST,
 } from "./fixtures";
 import { Background } from "~/components/ui/background";
+import { BingoPlayerNotFound } from "~/features/bingo/player-not-found";
 import { Board } from "~/components/icons/board";
 import { Box } from "~/components/ui/box";
 import { Brand, Logo, Wordmark } from "~/components/icons/logo";
@@ -35,13 +36,17 @@ import { Command } from "~/components/ui/command";
 import { Discord } from "~/components/icons/discord";
 import { Divider } from "~/components/ui/divider";
 import { ErrorPage } from "~/components/error-page";
+import { FilterBox } from "~/components/filter-box";
 import { FindPlayer, PageNav } from "~/features/leaderboards/leaderboard-table";
 import { GAME_ICONS, GameIcon, hasGameIcon } from "~/components/ui/game-icon";
-import { GameHeader, GameNav, LevelPanel, ModeSwitcher, StatPanel } from "~/features/game/game-page";
+import { GameGrid } from "~/features/player/player-page";
+import { GameHeader, GameNav, LevelPanel, ModeSwitcher, NeverPlayed, NoStatMatches, StatPanel } from "~/features/game/game-page";
 import { GitHub } from "~/components/icons/github";
 import { InlineStat, StatCell } from "~/components/ui/stat";
 import { LeaderboardCards } from "~/features/leaderboards/leaderboard-cards";
+import { ListFailed, NoMatches } from "~/features/leaderboards/leaderboard-index";
 import { LogoError } from "~/components/icons/logo-error";
+import { LookupButton, PlayerNotFoundView } from "~/features/player/player-not-found";
 import { Menu } from "~/components/icons/menu";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Nametag } from "~/components/ui/nametag";
@@ -65,7 +70,9 @@ import { Twitter } from "~/components/icons/twitter";
 import { YouTube } from "~/components/icons/youtube";
 import { colors } from "@statsify/tokens";
 import { orpc } from "~/lib/orpc";
+import { useTranslation } from "react-i18next";
 import type { ActionResult } from "~/features/player/player-actions";
+import type { PlayerIdentity } from "@statsify/contract";
 
 const SECTIONS = [
   ["type", "Type"],
@@ -82,6 +89,8 @@ const SECTIONS = [
   ["home", "Home pieces"],
   ["media", "Skins, icons and backgrounds"],
   ["errors", "Errors"],
+  ["lookups", "Unknown players and lookups"],
+  ["empty", "Empty states"],
   ["navigation", "Navigation"],
 ] as const;
 
@@ -156,6 +165,8 @@ export function Gallery() {
         <HomeSection />
         <MediaSection />
         <ErrorSection />
+        <LookupSection />
+        <EmptySection />
         <NavigationSection />
       </div>
     </div>
@@ -572,6 +583,7 @@ const minutes = (count: number) => count * 60_000;
 // The refresh action's outcomes, without the API.
 const ok = async (): Promise<ActionResult<unknown>> => ({ ok: true, data: null });
 const limited = async (): Promise<ActionResult<unknown>> => ({ ok: false, code: "TOO_MANY_REQUESTS", retryAfter: 125 });
+const unavailable = async (): Promise<ActionResult<never>> => ({ ok: false, code: "UNAVAILABLE" });
 const failing = async (): Promise<ActionResult<unknown>> => {
   throw new Error("The gallery's refresh always fails");
 };
@@ -600,7 +612,12 @@ function RefreshSection() {
             <RefreshBar updatedAt={now - minutes(17)} expiresAt={now - minutes(15)} refresh={limited} />
           </AfterClick>
         </Demo>
-        <Demo label="Failed">
+        <Demo label="Hypixel didn't answer, or nothing answered within 10 s: the page keeps its stats">
+          <AfterClick>
+            <RefreshBar updatedAt={now - minutes(17)} expiresAt={now - minutes(15)} refresh={unavailable} />
+          </AfterClick>
+        </Demo>
+        <Demo label="Failed (a 500 or a dropped connection)">
           <AfterClick>
             <RefreshBar updatedAt={now - minutes(17)} expiresAt={now - minutes(15)} refresh={failing} />
           </AfterClick>
@@ -767,16 +784,90 @@ function MediaSection() {
 function ErrorSection() {
   return (
     <Section id="errors">
-      <Demo label="Not found">
+      <Demo label="Not found: a page, game, mode or leaderboard that doesn't exist">
         <div className="flex flex-col">
           <NotFound />
         </div>
       </Demo>
-      <Demo label="Error, with Try again">
+      <Demo label="Error, with Try again: the API is down, or a page fails to load">
         <div className="flex flex-col">
           <ErrorPage error={new Error("The gallery's error")} reset={() => {}} />
         </div>
       </Demo>
+    </Section>
+  );
+}
+
+// The lookup's outcomes, without the API or Turnstile.
+const lookupResult = (result: ActionResult<PlayerIdentity>) => async () => result;
+const LOOKUPS = [
+  ["Looking up", () => new Promise<ActionResult<PlayerIdentity>>(() => {})],
+  ["Hypixel doesn't know the name", lookupResult({ ok: false, code: "NOT_FOUND" })],
+  ["Hypixel didn't answer, or nothing answered within 10 s", unavailable],
+  ["Over the Hypixel budget, with the wait", lookupResult({ ok: false, code: "TOO_MANY_REQUESTS", retryAfter: 125 })],
+  ["The verification didn't go through", lookupResult({ ok: false, code: "VERIFICATION" })],
+  [
+    "Failed (a 500 or a dropped connection)",
+    async (): Promise<ActionResult<PlayerIdentity>> => {
+      throw new Error("The gallery's lookup always fails");
+    },
+  ],
+] as const;
+
+function LookupSection() {
+  return (
+    <Section id="lookups">
+      <Demo label="An unknown player, with the lookup (no Turnstile widget in the gallery)">
+        <div className="flex flex-col">
+          <PlayerNotFoundView name="zzznotaplayer" turnstileSiteKey="" lookup={LOOKUPS[0][1]} />
+        </div>
+      </Demo>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {LOOKUPS.map(([label, lookup]) => (
+          <Demo key={label} label={label}>
+            <AfterClick>
+              <LookupButton name="zzznotaplayer" turnstileSiteKey="" lookup={lookup} />
+            </AfterClick>
+          </Demo>
+        ))}
+      </div>
+      <Demo label="Bingo: an unknown player, sent to their player page to look them up">
+        <div className="flex flex-col">
+          <BingoPlayerNotFound name="zzznotaplayer" />
+        </div>
+      </Demo>
+    </Section>
+  );
+}
+
+function EmptySection() {
+  const { t } = useTranslation();
+
+  return (
+    <Section id="empty">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <Demo label="A player with no game stats">
+          <GameGrid games={[]} username="ZeroStats" />
+        </Demo>
+        <Demo label="A game the player has never played (also Quests with none done)">
+          <NeverPlayed name="ZeroStats" game="BedWars" />
+        </Demo>
+        <Demo label="A game page's filter that matches nothing">
+          <div className="flex flex-col gap-4">
+            <FilterBox value="zzz" onChange={() => {}} label={t("game.filter")} count={t("filter.count", { shown: "0", total: "12" })} />
+            <NoStatMatches query="zzz" />
+          </div>
+        </Demo>
+        <Demo label="Leaderboards: a filter that matches nothing">
+          <NoMatches query="zzzz" />
+        </Demo>
+        <Demo label="Leaderboards: the list for the filter didn't load">
+          <div className="flex flex-col gap-4">
+            <FilterBox value="bw" onChange={() => {}} label={t("leaderboards.filter")} />
+            <ListFailed />
+          </div>
+        </Demo>
+      </div>
     </Section>
   );
 }

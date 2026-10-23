@@ -14,10 +14,15 @@ import { Skin } from "~/components/ui/skin";
 import { Link, useParams } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
-/** Bingo reads stored players only, so an unknown name is sent to its player page, which can look it up on Hypixel. */
+/** Bingo's player-not-found page for the route's name. */
 export function PlayerNotFound() {
-  const { t } = useTranslation();
   const { name = "" } = useParams({ strict: false });
+  return <BingoPlayerNotFound name={name} />;
+}
+
+/** Bingo reads stored players only, so an unknown name is sent to its player page, which can look it up on Hypixel. */
+export function BingoPlayerNotFound({ name }: { name: string }) {
+  const { t } = useTranslation();
 
   return (
     // The same layout as the player page's not-found, plus a Bingo search: the header has none on Bingo pages.

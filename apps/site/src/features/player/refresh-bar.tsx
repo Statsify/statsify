@@ -109,7 +109,7 @@ export function RefreshBar({
   let message: string | undefined;
   if (state.status === "limited" && remaining) message = t("player.refreshLimited");
   else if (state.status === "unavailable") message = t("player.refreshFailed");
-  else if (state.status === "error") message = t("error.description");
+  else if (state.status === "error") message = t("player.refreshError");
 
   // Phones: the time over a full-width button, unless `row`; wider screens: one row.
   return (

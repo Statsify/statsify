@@ -15,13 +15,14 @@ import { PlayerNotFound } from "~/features/player/player-not-found";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
-import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { createI18n } from "~/i18n/i18n";
 import { gamePageQuery, modeSearch, periodSearch, submodeSearch } from "~/features/game/game-data";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
 import { resolvePlayer } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 /** As the player page: fresh for a minute, stale for ten, and served stale for a day if the API is down. */
@@ -148,9 +149,16 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),
-  notFoundComponent: ({ data }) => ((data as Missing | undefined)?.player === false ? <NotFound /> : <PlayerNotFound />),
+  notFoundComponent: ({ data }) => ((data as Missing | undefined)?.player === false ? <GameNotFound /> : <PlayerNotFound />),
   component: GamePage,
 });
+
+/** A game or mode the player has no page for, with the way back to their profile (the name is canonical by now). */
+function GameNotFound() {
+  const { t } = useTranslation();
+  const { name } = Route.useParams();
+  return <NotFound back={<Link to="/{-$locale}/player/$name" params={{ name }}>{t("notFound.backProfile", { name })}</Link>} />;
+}
 
 function GamePage() {
   const { uuid, game } = Route.useLoaderData();

@@ -39,13 +39,14 @@
     "label": "Search players",
     "placeholder": "Search a player",
     "heading": "Search Your Hypixel Stats",
-    "noResults": "No players match \"{{query}}\""
+    "noResults": "No players match \"{{query}}\". Check the spelling, or look them up on Hypixel.",
+    "lookup": "Look Up {{name}}"
   },
   "player": {
     "page": "({{name}} page)",
     "multiplier": "Level Multiplier",
     "highestStreak": "Highest Streak",
-    "noGames": "No game stats yet.",
+    "noGames": "{{name}} has no game stats yet. Press Update stats after they've played a game.",
     "na": "N/A",
     "updated": "Updated {{time}}",
     "refresh": "Update stats",
@@ -53,6 +54,7 @@
     "refreshIn": "Update in {{time}}",
     "refreshLimited": "Too many updates right now, try again shortly.",
     "refreshFailed": "Couldn't update. Try again in a minute.",
+    "refreshError": "Couldn't refresh. Try again in a moment.",
     "signature": {
       "title": "Get signature",
       "description": "Paste one of these into your Hypixel Forums signature, or anywhere else that shows images. The image carries the stats from the last refresh on this page, with the time they were fetched printed on it.",
@@ -71,17 +73,18 @@
       "description": "We haven't seen {{name}} yet. Check the spelling, or ask Hypixel to look them up.",
       "lookup": "Look Up on Hypixel",
       "lookingUp": "Looking up…",
-      "unknown": "Hypixel doesn't know a player called {{name}} either.",
-      "verify": "Please complete the verification first.",
+      "unknown": "Hypixel doesn't know a player called {{name}} either. Check the spelling, or they may never have joined Hypixel.",
+      "verify": "The verification didn't go through. Complete it, then try again.",
+      "verifyFailed": "The verification didn't load. Allow challenges.cloudflare.com, then reload the page.",
       "limited": "Too many lookups right now, try again in {{time}}.",
       "unavailable": "Hypixel didn't answer. Try again in a minute.",
-      "error": "Something went wrong. Try again in a moment."
+      "error": "The lookup didn't go through. Try again in a moment."
     }
   },
   "leaderboards": {
     "title": "Leaderboards",
     "filter": "Filter leaderboards",
-    "noMatches": "No leaderboards match \"{{query}}\"",
+    "noMatches": "No leaderboards match \"{{query}}\". Try fewer words, or a game or stat name.",
     "loading": "Loading…",
     "listFailed": "Couldn't load the list. Click the box to try again.",
     "position": "Pos",
@@ -90,10 +93,10 @@
     "previous": "Previous",
     "next": "Next",
     "find": "Find a player on this leaderboard",
-    "unknown": "We haven't seen {{name}} yet.",
-    "unranked": "{{name}} isn't on this leaderboard yet.",
+    "unknown": "We haven't seen {{name}} yet. Check the spelling, or open their player page to look them up.",
+    "unranked": "{{name}} isn't on this leaderboard yet: it only ranks values above 0. Refresh their player page after they've played.",
     "moved": "{{name}}'s rank changed while the page loaded, so they're not on it. Try again to find them.",
-    "empty": "Nobody here yet.",
+    "empty": "Nobody's on this leaderboard yet. Players join it once someone looks them up on Statsify.",
     "aboutHighest": "Ranks players looked up on Statsify with a non-zero value, highest first. Values are from each player's last lookup.",
     "aboutLowest": "Ranks players looked up on Statsify with a non-zero value, lowest first. Values are from each player's last lookup.",
     "gameTitle": "{{game}} Leaderboards",
@@ -123,7 +126,9 @@
     "selected": "{{name}} (selected)",
     "games": "Games",
     "unplayed": "(not played)",
+    "neverPlayed": "{{name}} has no {{game}} stats yet, so everything here is 0. Pick another game, or press Refresh after they've played.",
     "filter": "Filter by name",
+    "noMatches": "No stats match \"{{query}}\". Try fewer letters, or clear the box.",
     "hint": "Select any stat to see its leaderboard around {{name}}.",
     "discord": "Use in Discord:",
     "addApp": "Add to your apps",
@@ -206,11 +211,13 @@
   },
   "notFound": {
     "title": "OOPS!",
-    "description": "Looks like the page you're trying to reach does not exist"
+    "description": "This page doesn't exist. Check the address, or go back home.",
+    "backProfile": "Back to {{name}}",
+    "backBoards": "Back to Leaderboards"
   },
   "error": {
     "title": "Something Went Wrong",
-    "description": "Try again in a moment.",
+    "description": "Statsify couldn't load this page. Try again in a moment.",
     "tryAgain": "Try Again",
     "home": "Home"
   },

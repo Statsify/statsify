@@ -87,9 +87,15 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
   headers: ({ loaderData }) =>
     cacheHeaders(loaderData?.kind === "game" ? "max-age=3600, stale-while-revalidate=86400" : "max-age=60, stale-while-revalidate=600"),
   // Its own boundary, so an unknown field 404s inside the layout rather than replacing it.
-  notFoundComponent: NotFound,
+  notFoundComponent: BoardNotFound,
   component: LeaderboardRoute,
 });
+
+/** A field that's no board, with the way back to the list of them. */
+function BoardNotFound() {
+  const { t } = useTranslation();
+  return <NotFound back={<Link to="/{-$locale}/leaderboards">{t("notFound.backBoards")}</Link>} />;
+}
 
 function LeaderboardRoute() {
   const data = Route.useLoaderData();

@@ -7,6 +7,7 @@
  */
 
 import { Box } from "~/components/ui/box";
+import { Button } from "~/components/ui/button";
 import { InlineStat } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
@@ -20,7 +21,17 @@ export function ResultCards({ cards, query }: { cards: ResultCard[]; query: stri
   const { t } = useTranslation();
 
   if (cards.length === 0) {
-    return <p className="text-mc-1.5 text-mc-gray text-center">{t("search.noResults", { query })}</p>;
+    return (
+      <div className="flex flex-col items-center gap-4">
+        <p className="text-mc-1.5 text-mc-gray text-center">{t("search.noResults", { query })}</p>
+        {/* The player page looks an unknown name up on Hypixel. */}
+        <Button asChild variant="primary" className="min-w-48">
+          <Link to="/{-$locale}/player/$name" params={{ name: query }}>
+            {t("search.lookup", { name: query })}
+          </Link>
+        </Button>
+      </div>
+    );
   }
 
   return (

@@ -178,6 +178,9 @@ export function GameView({ page }: { page: GamePage }) {
         {page.submodes.length > 1 && <ModeSwitcher page={page} kind="submode" />}
         {(page.periods?.length ?? 0) > 1 && <ModeSwitcher page={page} kind="period" />}
         {page.window && <PeriodDates {...page.window} />}
+        {page.games.find(({ key }) => key === page.game.key)?.played === false && (
+          <NeverPlayed name={page.username} game={plainText(page.game.name)} />
+        )}
         <p className="text-mc-1 text-mc-gray">
           {t("game.hint", { name: page.username })}{" "}
           {/* The game's index of leaderboards, opened and scrolled to this mode's. */}
@@ -210,6 +213,7 @@ export function GameView({ page }: { page: GamePage }) {
                 count={t("filter.count", { shown: n(shown), total: n(searchedCells.length) })}
               />
             )}
+            {section === searched[0] && shown === 0 && <NoStatMatches query={filter} />}
             <StatPanel section={section} username={page.username} filter={section.search ? filter : undefined} />
           </Fragment>
         ))}
@@ -224,6 +228,18 @@ export function GameView({ page }: { page: GamePage }) {
  */
 function botCommand({ game, period, username }: GamePage) {
   return `/${game.key}${period === undefined ? "" : ` ${period}`} player:${username}`;
+}
+
+/** A game the player has never played: its page is all zeros, so it says so rather than look like real stats. */
+export function NeverPlayed({ name, game }: { name: string; game: string }) {
+  const { t } = useTranslation();
+  return <p className="text-mc-1 text-mc-yellow">{t("game.neverPlayed", { name, game })}</p>;
+}
+
+/** The filter box matched nothing, so the lists below it are empty. */
+export function NoStatMatches({ query }: { query: string }) {
+  const { t } = useTranslation();
+  return <p className="text-mc-1 text-mc-yellow">{t("game.noMatches", { query: query.trim() })}</p>;
 }
 
 /** The game-wide cells in one row, then the card's selections (kit, class) as `Label: value` lines. */

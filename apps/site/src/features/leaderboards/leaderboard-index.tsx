@@ -60,12 +60,12 @@ function IndexPanel({ group, open, icons, children }: { group: Omit<GroupSummary
 }
 
 /** The filter's list didn't load; pressing the box again tries again. */
-function ListFailed() {
+export function ListFailed() {
   const { t } = useTranslation();
   return <p className="text-mc-1 text-mc-yellow text-center">{t("leaderboards.listFailed")}</p>;
 }
 
-function NoMatches({ query }: { query: string }) {
+export function NoMatches({ query }: { query: string }) {
   const { t } = useTranslation();
   return <p className="text-mc-1.5 text-mc-gray text-center">{t("leaderboards.noMatches", { query: query.trim() })}</p>;
 }

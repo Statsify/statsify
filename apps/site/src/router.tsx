@@ -29,7 +29,7 @@ export function getRouter() {
     routeTree,
     context: { queryClient },
     defaultPreload: "intent",
-    defaultNotFoundComponent: NotFound,
+    defaultNotFoundComponent: () => <NotFound />,
     defaultErrorComponent: ErrorPage,
     // The browser's caught errors; on the server the error page reports a failed loader itself.
     defaultOnCatch: reportRouteError,
