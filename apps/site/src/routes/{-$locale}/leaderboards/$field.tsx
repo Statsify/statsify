@@ -7,7 +7,8 @@
  */
 
 import { Background } from "~/components/ui/background";
-import { FindPlayer, LeaderboardTable, PageNav } from "~/features/leaderboards/leaderboard-table";
+import { FindPlayer, PageNav } from "~/features/leaderboards/leaderboard-table";
+import { LeaderboardCards } from "~/features/leaderboards/leaderboard-cards";
 import { NotFound } from "~/components/not-found";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
@@ -74,7 +75,7 @@ function LeaderboardPage() {
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{page.name}</h1>
         <FindPlayer field={field} miss={miss} />
-        <LeaderboardTable page={page} />
+        <LeaderboardCards page={page} />
         <PageNav field={field} page={page.page} pages={page.pages} />
       </div>
     </div>

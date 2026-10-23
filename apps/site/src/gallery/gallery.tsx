@@ -35,11 +35,12 @@ import { Command } from "~/components/ui/command";
 import { Discord } from "~/components/icons/discord";
 import { Divider } from "~/components/ui/divider";
 import { ErrorPage } from "~/components/error-page";
-import { FindPlayer, LeaderboardTable, PageNav } from "~/features/leaderboards/leaderboard-table";
+import { FindPlayer, PageNav } from "~/features/leaderboards/leaderboard-table";
 import { GAME_ICONS, GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { GameHeader, GameNav, LevelPanel, ModeSwitcher, StatPanel } from "~/features/game/game-page";
 import { GitHub } from "~/components/icons/github";
 import { InlineStat, StatCell } from "~/components/ui/stat";
+import { LeaderboardCards } from "~/features/leaderboards/leaderboard-cards";
 import { LogoError } from "~/components/icons/logo-error";
 import { Menu } from "~/components/icons/menu";
 import { MinecraftText } from "~/components/ui/minecraft-text";
@@ -118,7 +119,7 @@ function useFixtureSearchClient() {
  * are forced by the visual regression harness through `data-gallery-force`; everything else renders as is.
  */
 export function Gallery() {
-  // `LeaderboardTable` scrolls its highlighted row into view on mount; the gallery opens at the top (or the hash).
+  // `LeaderboardCards` scrolls its highlighted row into view on mount; the gallery opens at the top (or the hash).
   useEffect(() => {
     if (!globalThis.location.hash) globalThis.scrollTo(0, 0);
   }, []);
@@ -626,10 +627,10 @@ function LeaderboardSection() {
   return (
     <Section id="leaderboards">
       <Demo label="Rows: the top three, a highlighted row, a long name and nine digits">
-        <LeaderboardTable page={LEADERBOARD_PAGE} />
+        <LeaderboardCards page={LEADERBOARD_PAGE} />
       </Demo>
       <Demo label="Empty">
-        <LeaderboardTable page={{ ...LEADERBOARD_PAGE, rows: [] }} />
+        <LeaderboardCards page={{ ...LEADERBOARD_PAGE, rows: [] }} />
       </Demo>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Demo label="Page nav, first page">
