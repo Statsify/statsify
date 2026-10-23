@@ -7,6 +7,7 @@
  */
 
 import { compactUuid } from "~/lib/uuid";
+import { UsernameSchema } from "@statsify/contract";
 import { siteConfig } from "./config.server";
 
 /**
@@ -23,12 +24,23 @@ export async function proxySkin(
     return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
   }
 
+  return proxy(path, { uuid, ...fixed });
+}
+
+/** A search suggestion's head, by the suggested name: only the skin the API has stored, never Mojang's. */
+export async function proxyStoredHead(search: URLSearchParams): Promise<Response> {
+  const name = UsernameSchema.safeParse(search.get("name"));
+  if (!name.success) return new Response("name is required", { status: 400 });
+
+  return proxy("/skin/head/stored", { player: name.data });
+}
+
+async function proxy(path: string, params: Record<string, string>): Promise<Response> {
   const { apiRoute, apiKey } = await siteConfig();
   if (!apiKey) return new Response("site.apiKey is not configured", { status: 503 });
 
   const url = new URL(path, apiRoute);
-  url.searchParams.set("uuid", uuid);
-  for (const [key, value] of Object.entries(fixed)) url.searchParams.set(key, value);
+  for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
 
   const upstream = await fetch(url, { headers: { "x-api-key": apiKey } }).catch(() => null);
 
