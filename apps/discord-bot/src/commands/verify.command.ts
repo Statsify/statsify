@@ -78,10 +78,9 @@ export class VerifyCommand {
     listener.addHook(VERIFY_MODAL.getCustomId(), async (interaction) => {
       const t = interaction.t();
       const data = interaction.getData();
-      const input = data.components[0].components[0].value as string;
-      const code = Number.parseInt(input);
+      const code = data.components[0].components[0].value as string;
 
-      if (Number.isNaN(code)) {
+      if (!/^\d{4}$/.test(code)) {
         const error = this.invalidCodeError();
 
         return interaction.sendFollowup({
@@ -91,7 +90,7 @@ export class VerifyCommand {
       }
 
       const userId = interaction.getUserId();
-      const user = await this.apiService.verifyUser(`${code}`, userId);
+      const user = await this.apiService.verifyUser(code, userId);
 
       if (!user) {
         const error = this.invalidCodeError();
