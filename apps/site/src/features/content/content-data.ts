@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DEFAULT_LOCALE, isSupportedLocale } from "~/i18n/locales";
-import { createServerFn } from "@tanstack/react-start";
-import { readGlossary } from "~/i18n/i18n.server";
+import { DEFAULT_LOCALE, type Locale, isSupportedLocale } from "~/i18n/locales";
+import { type GlossaryWords, readGlossary } from "~/i18n/i18n.server";
+import { type QueryClient, queryOptions } from "@tanstack/react-query";
+import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
 import { rpc } from "~/lib/orpc";
 import { z } from "zod";
 import type { GlossaryEntry } from "@statsify/contract";
@@ -36,6 +37,34 @@ export interface GlossaryGroup {
   game: string | null;
   items: GlossaryItem[];
 }
+
+/**
+ * Every stat's glossary words in the page's locale, for the line under a leaderboard's title and a stat cell's info:
+ * the full name where a label shortens one, and what the stat is. The browser fetches them once a deploy, by the hash
+ * the locale data carries (`/glossary-<hash>.json`), and keeps them for the visit.
+ */
+export const glossaryWordsQuery = (hash: string) =>
+  queryOptions({
+    queryKey: ["glossary-words", hash],
+    queryFn: async (): Promise<GlossaryWords> => {
+      const response = await fetch(`/glossary-${hash}.json`);
+      if (!response.ok) throw new Error(`/glossary-${hash}.json answered ${response.status}`);
+      return (await response.json()) as GlossaryWords;
+    },
+    staleTime: Infinity,
+  });
+
+interface WordsInput {
+  queryClient: QueryClient;
+  locale: Locale;
+  /** The layout's `glossaryHash`. */
+  hash: string;
+}
+
+/** The glossary words for a loader: read from the locale files on the server, the cached file in the browser. */
+export const loadGlossaryWords = createIsomorphicFn()
+  .server(({ locale }: WordsInput) => readGlossary(locale))
+  .client(({ queryClient, hash }: WordsInput) => queryClient.ensureQueryData(glossaryWordsQuery(hash)));
 
 /**
  * The glossary in a locale: the API's entries with their words, cut to what the page shows (the first games' names, not

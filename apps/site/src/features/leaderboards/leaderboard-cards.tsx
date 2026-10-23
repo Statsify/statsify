@@ -14,6 +14,9 @@ import { ColumnLabel, HEADER, HIGHLIGHT, PLAYER, PlayerLink, Position, STRIPE, V
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
+import { rememberPlayer } from "~/features/player/resolve";
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { CSSProperties } from "react";
 import type { LeaderboardPage } from "@statsify/contract";
@@ -36,6 +39,12 @@ export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
   const { t } = useTranslation();
 
   const highlightRef = useHighlightScroll<HTMLDivElement>(page);
+  const queryClient = useQueryClient();
+
+  // The rows' players, so opening one is a single request.
+  useEffect(() => {
+    for (const row of page.rows) rememberPlayer(queryClient, row);
+  }, [page, queryClient]);
 
   if (page.rows.length === 0) {
     return <p className="text-mc-1.5 text-mc-gray text-center">{t("leaderboards.empty")}</p>;

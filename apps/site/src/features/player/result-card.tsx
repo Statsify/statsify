@@ -13,7 +13,10 @@ import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinBust } from "~/components/ui/skin";
 import { Spoken } from "~/components/ui/hint";
+import { rememberPlayer } from "./resolve";
+import { useEffect } from "react";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { ResultCard } from "@statsify/contract";
 
@@ -49,6 +52,9 @@ export function ResultCards({ cards, query }: { cards: ResultCard[]; query: stri
 /** One player's card, linking to their page. */
 export function ResultCardView({ card }: { card: ResultCard }) {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  // The card's player, so opening it is a single request.
+  useEffect(() => rememberPlayer(queryClient, card), [card, queryClient]);
   const n = useNumberFormat();
   const exact = useExactNumber();
   // The card is a link, so a shortened number's exact one is for screen readers.

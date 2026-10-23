@@ -14,7 +14,7 @@ import { SANS_PRELOAD } from "~/lib/fonts";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { localeData, socialMeta } from "~/lib/social-meta";
-import { playerPageQuery, resolvePlayer } from "~/features/player/resolve";
+import { ensurePlayer, playerPageQuery } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 /** Fresh for a minute, stale for ten, and served stale for a day if the API is down. */
@@ -24,7 +24,7 @@ const possessive = (username: string) => `${username}'${username.endsWith("s") ?
 
 export const Route = createFileRoute("/{-$locale}/player/$name/")({
   loader: async ({ params, context }) => {
-    const identity = await resolvePlayer(params.name);
+    const identity = await ensurePlayer(context.queryClient, params.name);
 
     if (!identity) {
       // Five minutes at the edge. A lookup that finds the player navigates in the browser, so it never sees this page.

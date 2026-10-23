@@ -54,7 +54,7 @@ import type {
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
 import { buildGlossary, buildPrestigeSheet } from "./content.js";
-import { catalogLabel, leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
+import { catalogGlossary, catalogLabel, leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
 import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
@@ -553,6 +553,7 @@ export class SiteService implements OnApplicationBootstrap {
     return {
       field: input.field,
       name: removeFormatting(metadata.name),
+      glossary: catalogGlossary(input.field),
       columns,
       sort: metadata.sort,
       page,

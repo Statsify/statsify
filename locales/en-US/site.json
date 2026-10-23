@@ -132,7 +132,8 @@
     "aboutLowest": "Ranks players looked up on Statsify with a non-zero value, lowest first. Values are from each player's last lookup.",
     "gameTitle": "{{game}} Leaderboards",
     "gameWide": "General",
-    "all": "All Leaderboards"
+    "all": "All Leaderboards",
+    "glossary": "In the glossary"
   },
   "game": {
     "stats": "Stats",
@@ -164,6 +165,7 @@
     "discord": "Use in Discord:",
     "addApp": "Add to your apps",
     "leaderboard": "({{stat}} leaderboard)",
+    "about": "What is {{stat}}?",
     "maxed": "MAXED",
     "levelBar": "{{current}} to {{next}}",
     "prestiged": "PRESTIGED",

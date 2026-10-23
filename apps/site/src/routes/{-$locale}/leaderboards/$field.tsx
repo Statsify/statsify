@@ -6,17 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background, backgroundFor } from "~/components/ui/background";
+import { Background, backgroundFor, preloadBackground } from "~/components/ui/background";
 import { FindPlayer, PageNav } from "~/features/leaderboards/leaderboard-table";
 import { LeaderboardCards } from "~/features/leaderboards/leaderboard-cards";
 import { LeaderboardIndex } from "~/features/leaderboards/leaderboard-index";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { NotFound } from "~/components/not-found";
 import { cacheHeaders } from "~/lib/cache";
+import { loadGlossaryWords } from "~/features/content/content-data";
 import { isGameKey, loadLeaderboardGame, loadLeaderboardPage, type LeaderboardView } from "~/features/leaderboards/leaderboard-data";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import type { LeaderboardGame } from "@statsify/contract";
+import type { GlossaryWords } from "~/i18n/i18n.server";
+import type { QueryClient } from "@tanstack/react-query";
 
 /**
  * A page from `?page=`, counted from 1 as the page shows it (a number or a string, depending on how it was typed);
@@ -47,7 +50,26 @@ const SearchSchema = z.object({
   mode: z.unknown().transform(modeKey).optional(),
 });
 
-type RouteData = ({ kind: "board" } & LeaderboardView) | { kind: "game"; game: LeaderboardGame };
+/** What the board's stat is, from the glossary, with the key of its entry there. */
+interface Explanation {
+  key: string;
+  text: string;
+}
+
+type RouteData = ({ kind: "board"; explanation?: Explanation } & LeaderboardView) | { kind: "game"; game: LeaderboardGame };
+
+/** The board, with its stat's words: asked for beside it, not after it, since the browser fetches every stat's at once. */
+async function loadBoard(
+  queryClient: QueryClient,
+  field: string,
+  deps: { page: number; around?: string },
+  words: Promise<GlossaryWords>
+): Promise<RouteData> {
+  const [view, glossary] = await Promise.all([loadLeaderboardPage(queryClient, field, deps), words]);
+  const key = view.page.glossary;
+  const text = key ? glossary[key]?.text : undefined;
+  return { kind: "board", ...view, ...(key && text && { explanation: { key, text } }) };
+}
 
 /**
  * A leaderboard, or with a key that has no dot (`/leaderboards/bedwars`) the game's index of leaderboards by mode. The
@@ -57,10 +79,16 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
   validateSearch: SearchSchema,
   // The API counts pages from 0. The mode only opens a group, so it isn't a dependency.
   loaderDeps: ({ search }) => ({ page: (search.page ?? 1) - 1, around: search.around }),
-  loader: async ({ params, deps }): Promise<RouteData> =>
-    isGameKey(params.field) ?
-      { kind: "game", game: await loadLeaderboardGame(params.field) } :
-      { kind: "board", ...(await loadLeaderboardPage(params.field, deps)) },
+  loader: async ({ params, deps, context, parentMatchPromise }): Promise<RouteData> => {
+    if (isGameKey(params.field)) {
+      preloadBackground(backgroundFor(params.field));
+      return { kind: "game", game: await loadLeaderboardGame(params.field) };
+    }
+    // The locale's words, by the hash in the layout's data.
+    const words = parentMatchPromise.then(({ loaderData }) =>
+      loadGlossaryWords({ queryClient: context.queryClient, locale: context.locale, hash: loaderData?.glossaryHash ?? "" }));
+    return loadBoard(context.queryClient, params.field, deps, words);
+  },
   staleTime: 60_000,
   head: ({ loaderData, match }) => {
     if (!loaderData) return { meta: [{ title: "Leaderboard Not Found | Statsify" }] };
@@ -137,7 +165,7 @@ function GameIndexPage({ game }: { game: LeaderboardGame }) {
   );
 }
 
-function LeaderboardPage({ view: { page, miss } }: { view: LeaderboardView }) {
+function LeaderboardPage({ view: { page, miss, explanation } }: { view: LeaderboardView & { explanation?: Explanation } }) {
   const { t } = useTranslation();
   const { field } = Route.useParams();
 
@@ -164,6 +192,19 @@ function LeaderboardPage({ view: { page, miss } }: { view: LeaderboardView }) {
             >
               {t("leaderboards.gameTitle", { game: page.index.name })}
             </Link>
+          )}
+          {/* What the stat is: a line that wraps reads from the start, not centred. */}
+          {explanation && (
+            <p className="max-w-200 text-mc-1 text-mc-gray lg:text-mc-1.5">
+              {explanation.text}{" "}
+              <Link
+                to="/{-$locale}/glossary"
+                hash={explanation.key}
+                className="relative text-mc-yellow underline underline-offset-2 after:absolute after:-inset-x-2 after:-inset-y-4 after:min-h-11 after:min-w-11"
+              >
+                {t("leaderboards.glossary")}
+              </Link>
+            </p>
           )}
           {/* Who is ranked, in what order and as of when. */}
           <p className="max-w-200 text-center text-mc-1 text-mc-gray">

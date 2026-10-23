@@ -22,6 +22,16 @@ export const backgroundFor = (name: string): BackgroundName =>
 
 const src = (background: BackgroundName) => `/backgrounds/${background}.webp`;
 
+/**
+ * Starts fetching a page's background from its route's loader, beside the page's data, so a game page doesn't sit on
+ * plain #111 while its image loads after the content. Only in the browser; the server's HTML asks for it early anyway.
+ */
+export function preloadBackground(background: BackgroundName) {
+  if (typeof Image === "undefined") return;
+  const image = new Image();
+  image.src = src(background);
+}
+
 export function Background({
   background,
   className,

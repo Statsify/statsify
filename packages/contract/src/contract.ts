@@ -208,6 +208,8 @@ export const LeaderboardColumnSchema = z.object({
 export const LeaderboardPageSchema = z.object({
   field: z.string(),
   name: z.string(),
+  /** The `glossary.*` locale key that explains the board's stat, or null where the glossary has none. */
+  glossary: z.string().nullable(),
   /** The value columns, matching `rows[].values`. */
   columns: z.array(LeaderboardColumnSchema),
   /** `DESC` ranks the highest value first, `ASC` the lowest (best times). */
@@ -276,6 +278,11 @@ export const StatCellSchema = z.object({
   icon: z.string().optional(),
   /** A selection the card shows (a kit, a trail): a `Label: value` line rather than a cell, never a link. */
   inline: z.boolean().optional(),
+  /**
+   * The `glossary.*` key that explains the stat, where it isn't the label's own: the catalog's entry for a stat that
+   * means something else in this game (Quests' Total).
+   */
+  glossary: z.string().optional(),
 });
 
 /** A group of stats on a game page, in the card's rows. */

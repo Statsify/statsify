@@ -29,8 +29,8 @@ const possessive = (username: string) => `${username}'${username.endsWith("s") ?
 
 export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
   validateSearch: BoardSearchSchema,
-  loader: async ({ params }) => {
-    const player = await loadBingoPlayer(params.name);
+  loader: async ({ params, context }) => {
+    const player = await loadBingoPlayer(context.queryClient, params.name);
 
     if (!player) {
       cacheNotFoundResponse("max-age=300");

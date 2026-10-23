@@ -12,10 +12,11 @@ import { cacheNotFoundResponse } from "~/lib/response";
 import { createServerFn } from "@tanstack/react-start";
 import { leaderboardList } from "~/server/leaderboard-list.server";
 import { notFound, redirect } from "@tanstack/react-router";
-import { resolvePlayer } from "~/features/player/resolve";
+import { ensurePlayer } from "~/features/player/resolve";
 import { rpc } from "~/lib/orpc";
 import { z } from "zod";
 import type { LeaderboardGame, LeaderboardPage } from "@statsify/contract";
+import type { QueryClient } from "@tanstack/react-query";
 
 const PAGE_SIZE = 25;
 
@@ -93,7 +94,11 @@ export interface LeaderboardView {
  * and asks the API for the page they are on; an unknown or unranked player falls back to the
  * requested page with a notice. An unknown leaderboard is a 404.
  */
-export async function loadLeaderboardPage(field: string, { page, around }: { page: number; around?: string }): Promise<LeaderboardView> {
+export async function loadLeaderboardPage(
+  queryClient: QueryClient,
+  field: string,
+  { page, around }: { page: number; around?: string }
+): Promise<LeaderboardView> {
   if (!around) {
     const shown = await requirePage({ field, page });
     // Past the last page goes to the last page, cached for a minute only, since the board can grow.
@@ -108,7 +113,7 @@ export async function loadLeaderboardPage(field: string, { page, around }: { pag
     return { page: shown, noindex: page > 0 };
   }
 
-  const identity = await resolvePlayer(around);
+  const identity = await ensurePlayer(queryClient, around);
   if (!identity) return { page: await requirePage({ field, page }), miss: { kind: "unknown", name: around }, noindex: true };
 
   const anchored = await fetchPage({ field, around: identity.uuid });

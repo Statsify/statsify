@@ -13,6 +13,9 @@ import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useTranslation } from "react-i18next";
 import type { CSSProperties, ReactNode } from "react";
 
+/** A label's `glossary.*` key: the part after its last dot (`stats.fkdr` is `fkdr`). */
+export const glossaryKey = (label: string) => label.slice(label.lastIndexOf(".") + 1);
+
 /**
  * A stat label's full name where the label shortens one (FKDR, Final Kill/Death Ratio): the glossary's `name` for the
  * label's key in `default.json`, which every page loads.
@@ -21,7 +24,7 @@ export function useStatName(): (label: string) => string | undefined {
   const { t, i18n } = useTranslation();
 
   return (label) => {
-    const key = `default:glossary.${label.slice(label.lastIndexOf(".") + 1)}.name`;
+    const key = `default:glossary.${glossaryKey(label)}.name`;
     return i18n.exists(key) ? t(key) : undefined;
   };
 }
@@ -56,12 +59,15 @@ export function Hidden() {
 export function StatCell({
   label,
   value,
+  info,
   color = "text-mc-white",
   style,
   className,
 }: {
   label: ReactNode;
   value: ReactNode;
+  /** A control over the cell's corner (a `relative` cell), after the value. */
+  info?: ReactNode;
   color?: string;
   /** For a colour with no theme class (a card's `§#rrggbb`). */
   style?: CSSProperties;
@@ -70,7 +76,11 @@ export function StatCell({
   return (
     <div className={cn("flex min-w-0 flex-col items-center justify-end gap-1 text-center", color, className)} style={style}>
       <dt className="line-clamp-2 max-w-full text-mc-1 text-balance wrap-break-word">{label}</dt>
-      <dd className="max-w-full text-mc-2">{value}</dd>
+      {/* The control goes in the `<dd>`, as a `<dl>` holds only terms and details; it still sits over the cell's corner. */}
+      <dd className="max-w-full text-mc-2">
+        {value}
+        {info}
+      </dd>
     </div>
   );
 }

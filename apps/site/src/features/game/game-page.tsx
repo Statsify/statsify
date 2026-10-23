@@ -16,7 +16,7 @@ import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode, type Ref, useEffect, useId, useRef, useState } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hint, Spoken } from "~/components/ui/hint";
-import { Hidden, InlineStat, LeaderboardLink, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
+import { Hidden, InlineStat, LeaderboardLink, StatCell, StatNumber, glossaryKey, linkHint, useStatName } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
 import { MinecraftText, colourClass, colourOf, leadingColourClass, plainText } from "~/components/ui/minecraft-text";
@@ -24,6 +24,7 @@ import { MiniHeader } from "~/features/player/mini-header";
 import { PanelToggle, SharePanel } from "~/features/player/share-panel";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
+import { StatInfo } from "./stat-info";
 import { cn } from "~/lib/util";
 import { gamePageQuery, modeSearch, periodSearch, submodeSearch } from "./game-data";
 import { imageSize, isGameCard } from "@statsify/profiles/protocol";
@@ -566,10 +567,13 @@ function GameStat({ cell, username }: { cell: Stat; username: string }) {
   const { className, style } = colourOf(cell.colour);
   // The short label shows under the row's heading; the link keeps the whole name.
   const shown = cell.short ? t(cell.short, { ns: LABEL_NAMESPACES }) : label.node;
+  // Explained in place: an abbreviation, and a stat that means something else in this game.
+  const glossary = cell.glossary ?? (label.full === undefined ? undefined : glossaryKey(cell.label));
 
   return (
     <StatCell
       label={cell.leaderboard ? <Spoken full={label.full}>{shown}</Spoken> : <Hint full={label.full}>{shown}</Hint>}
+      info={glossary && <StatInfo glossary={glossary} label={label.text} />}
       value={cell.leaderboard ?
         (
           <LeaderboardLink

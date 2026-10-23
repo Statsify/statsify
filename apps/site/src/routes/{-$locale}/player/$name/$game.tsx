@@ -7,6 +7,7 @@
  */
 
 import { DEFAULT_LOCALE } from "~/i18n/locales";
+import { backgroundFor, preloadBackground } from "~/components/ui/background";
 import { GameView, headingText } from "~/features/game/game-page";
 import { imageSize, isGameCard } from "@statsify/profiles/protocol";
 import { NotFound } from "~/components/not-found";
@@ -20,7 +21,7 @@ import { createI18n } from "~/i18n/i18n";
 import { gamePageQuery, modeSearch, periodSearch, submodeSearch } from "~/features/game/game-data";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
-import { resolvePlayer } from "~/features/player/resolve";
+import { ensurePlayer } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -46,7 +47,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
   validateSearch: SearchSchema,
   loaderDeps: ({ search }) => ({ mode: search.mode, submode: search.submode, period: search.period }),
   loader: async ({ params, deps, context }) => {
-    const identity = await resolvePlayer(params.name);
+    const identity = await ensurePlayer(context.queryClient, params.name);
 
     if (!identity) {
       cacheNotFoundResponse("max-age=300");
@@ -66,6 +67,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       });
     }
 
+    preloadBackground(backgroundFor(game));
     const page = await context.queryClient.ensureQueryData(gamePageQuery(identity.uuid, game, deps.mode, deps.submode, deps.period)).catch((error) => {
       // A game without a page, a mode or submode it doesn't have, or a name too long to be either.
       if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) return null;

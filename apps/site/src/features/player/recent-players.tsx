@@ -9,7 +9,7 @@
 import { ResultCardView } from "./result-card";
 import { type RecentPlayer, clearPlayers, updatePlayer, useRecentPlayers } from "./recent";
 import { orpc } from "~/lib/orpc";
-import { resolvePlayer } from "./resolve";
+import { resolveQuery } from "./resolve";
 import { useEffect, useId } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -60,12 +60,7 @@ export function RecentPlayers({ onClear }: { onClear: () => void }) {
 function RecentCard({ player: { uuid, name } }: { player: RecentPlayer }) {
   const cards = useQuery(orpc.search.cards.queryOptions({ input: { names: [name] }, staleTime: STALE_MS }));
   const card = cards.data?.find((card) => card.uuid === uuid);
-  const resolved = useQuery({
-    queryKey: ["recent-player", uuid],
-    queryFn: () => resolvePlayer(uuid),
-    staleTime: STALE_MS,
-    enabled: cards.isSuccess && !card,
-  });
+  const resolved = useQuery({ ...resolveQuery(uuid), enabled: cards.isSuccess && !card });
 
   // A new name or a gone player rewrites the list once, and the next render finds nothing left to change.
   useEffect(() => {

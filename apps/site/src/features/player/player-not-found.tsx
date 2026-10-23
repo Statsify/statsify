@@ -15,6 +15,8 @@ import { formatCountdown } from "~/i18n/format";
 import { getRouteApi, useNavigate, useParams } from "@tanstack/react-router";
 import { type ActionResult, lookupPlayer } from "./player-actions";
 import { useEffect, useState } from "react";
+import { rememberPlayer } from "./resolve";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { PlayerIdentity } from "@statsify/contract";
 
@@ -84,6 +86,7 @@ export function LookupButton({
   const turnstileSiteKey = siteKey ?? configured;
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [token, setToken] = useState<string>();
   const [widgetKey, setWidgetKey] = useState(0);
   const [widgetFailed, setWidgetFailed] = useState(false);
@@ -130,6 +133,8 @@ export function LookupButton({
     }
 
     if (result.ok) {
+      // The page it opens would otherwise find the "not found" it remembers for the name.
+      rememberPlayer(queryClient, result.data);
       // The page that was asked for (a game page keeps its game and mode) under the name Hypixel gave.
       await navigate({ to: ".", params: (previous) => ({ ...previous, name: result.data.username }), search: true });
       return;

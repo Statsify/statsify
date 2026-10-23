@@ -87,6 +87,7 @@ const rows = [
 export const LEADERBOARD_PAGE: LeaderboardPage = {
   field: "stats.bedwars.overall.wins",
   name: "BedWars Overall Wins",
+  glossary: "wins",
   columns: [
     { field: "stats.bedwars.overall.wins", name: "Wins", label: "stats.wins", colour: "§a" },
     { field: "stats.bedwars.overall.fkdr", name: "FKDR", label: "stats.fkdr", colour: "§6" },

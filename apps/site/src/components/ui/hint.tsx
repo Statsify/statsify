@@ -6,58 +6,90 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type FocusEvent, type PointerEvent, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { type ComponentProps, type FocusEvent, type PointerEvent, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { cn } from "~/lib/util";
 import { createPortal } from "react-dom";
 
 /** The tooltip's distance from what it explains and from the window's edges. */
 const GAP = 8;
 
 /**
- * The tooltip: the full text in white Minecraft 16 on the opaque panel colour with the panels' hard shadow, centred over
- * the element (under it when the window's top is too close) and kept inside the window. Screen readers skip it, since
- * the element carries the full text for them.
+ * A box on the opaque panel colour with the panels' hard shadow, centred over `anchor` (under it when the window's top
+ * leaves no room for it) and kept inside the window, in a portal so no panel's clipped corners cut it off.
  */
-function Tooltip({ text, anchor }: { text: string; anchor: DOMRect }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const [left, setLeft] = useState<number>();
-  const above = anchor.top > 6 * GAP;
+export function Floating({ anchor, className, style, ref: outer, ...props }: { anchor: DOMRect } & ComponentProps<"div">) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [place, setPlace] = useState<{ left: number; above: boolean }>();
 
   useLayoutEffect(() => {
-    const width = ref.current?.offsetWidth ?? 0;
+    const { offsetWidth: width = 0, offsetHeight: height = 0 } = ref.current ?? {};
     const room = document.documentElement.clientWidth - width - GAP;
-    setLeft(Math.max(GAP, Math.min(anchor.left + anchor.width / 2 - width / 2, room)));
+    setPlace({
+      left: Math.max(GAP, Math.min(anchor.left + anchor.width / 2 - width / 2, room)),
+      above: anchor.top - height - GAP >= GAP,
+    });
   }, [anchor]);
+  const above = place?.above ?? true;
 
   return createPortal(
-    <span
-      ref={ref}
-      aria-hidden
-      className="pointer-events-none fixed z-100 bg-blackify-800 px-2 py-1 text-mc-1 whitespace-nowrap text-mc-white shadow-[4px_4px_0_rgb(0_0_0/0.84)]"
+    <div
+      {...props}
+      ref={(element) => {
+        ref.current = element;
+        if (typeof outer === "function") outer(element);
+        else if (outer) outer.current = element;
+      }}
+      className={cn("fixed z-100 bg-blackify-800 shadow-[4px_4px_0_rgb(0_0_0/0.84)]", className)}
       style={{
-        left,
+        ...style,
+        left: place?.left,
         top: above ? anchor.top - GAP : anchor.bottom + GAP,
         translate: above ? "0 -100%" : undefined,
-        visibility: left === undefined ? "hidden" : undefined,
+        visibility: place ? undefined : "hidden",
       }}
-    >
-      {text}
-    </span>,
+    />,
     document.body
   );
 }
 
 /**
- * Shows `text` over an element (or the box `anchor` picks for it) while a mouse is on it or it has the keyboard's focus,
- * and on `toggle`. Spread `props` on the element and render `tooltip` beside it. It closes when the page scrolls under
- * it, on Escape, and on a tap elsewhere. Without `text` it does nothing.
+ * The tooltip: the full text in white Minecraft 16, floating over the element. Screen readers skip it, since the
+ * element carries the full text for them.
+ */
+function Tooltip({ text, anchor, ...props }: { text: string; anchor: DOMRect } & Pick<ComponentProps<"div">, "onPointerEnter" | "onPointerLeave">) {
+  return (
+    <Floating anchor={anchor} aria-hidden {...props} className="px-2 py-1 text-mc-1 whitespace-nowrap text-mc-white">
+      {text}
+    </Floating>
+  );
+}
+
+/** How long a tooltip stays after the mouse leaves its element: long enough to cross the gap onto the tooltip. */
+const LEAVE_MS = 150;
+
+/**
+ * Shows `text` over an element (or the box `anchor` picks for it) while a mouse is on it or on the tooltip, or it has
+ * the keyboard's focus, and on `toggle`. Spread `props` on the element and render `tooltip` beside it. It closes when
+ * the page scrolls under it, on Escape, and on a tap elsewhere. Without `text` it does nothing.
  */
 export function useHint(text: string | undefined, anchor: (element: HTMLElement) => Element = (element) => element) {
   const [shown, setShown] = useState<{ element: Element; anchor: DOMRect } | null>(null);
+  const leaving = useRef<ReturnType<typeof setTimeout>>(undefined);
   const show = (target: HTMLElement) => {
+    clearTimeout(leaving.current);
     const element = anchor(target);
     setShown({ element, anchor: element.getBoundingClientRect() });
   };
-  const hide = () => setShown(null);
+  const hide = () => {
+    clearTimeout(leaving.current);
+    setShown(null);
+  };
+  const leave = () => {
+    clearTimeout(leaving.current);
+    leaving.current = setTimeout(() => setShown(null), LEAVE_MS);
+  };
+
+  useEffect(() => () => clearTimeout(leaving.current), []);
 
   useEffect(() => {
     if (!shown) return;
@@ -87,11 +119,13 @@ export function useHint(text: string | undefined, anchor: (element: HTMLElement)
       {} :
       {
         onPointerEnter: (event: PointerEvent<HTMLElement>) => event.pointerType === "mouse" && show(event.currentTarget),
-        onPointerLeave: (event: PointerEvent<HTMLElement>) => event.pointerType === "mouse" && hide(),
+        onPointerLeave: (event: PointerEvent<HTMLElement>) => event.pointerType === "mouse" && leave(),
         onFocus: (event: FocusEvent<HTMLElement>) => event.currentTarget.matches(":focus-visible") && show(event.currentTarget),
         onBlur: hide,
       },
-    tooltip: text !== undefined && shown && <Tooltip text={text} anchor={shown.anchor} />,
+    tooltip: text !== undefined && shown && (
+      <Tooltip text={text} anchor={shown.anchor} onPointerEnter={() => clearTimeout(leaving.current)} onPointerLeave={leave} />
+    ),
     toggle: (element: HTMLElement) => (shown ? hide() : show(element)),
   };
 }

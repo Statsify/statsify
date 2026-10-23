@@ -15,6 +15,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as GlossaryChar123hashChar125DotjsonRouteImport } from './routes/glossary-{$hash}[.]json'
 import { Route as LeaderboardsChar123hashChar125DotjsonRouteImport } from './routes/leaderboards-{$hash}[.]json'
 import { Route as OembedRouteImport } from './routes/oembed'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
@@ -42,6 +43,12 @@ import { Route as Char123LocaleChar125PlayerNameIndexRouteImport } from './route
 import { Route as Char123LocaleChar125PlayerNameGameRouteImport } from './routes/{-$locale}/player/$name/$game'
 import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name/bingo'
 
+const GlossaryChar123hashChar125DotjsonRoute =
+  GlossaryChar123hashChar125DotjsonRouteImport.update({
+    id: '/glossary-{$hash}.json',
+    path: '/glossary-{$hash}.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LeaderboardsChar123hashChar125DotjsonRoute =
   LeaderboardsChar123hashChar125DotjsonRouteImport.update({
     id: '/leaderboards-{$hash}.json',
@@ -192,6 +199,7 @@ const Char123LocaleChar125PlayerNameBingoRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/glossary-{$hash}.json': typeof GlossaryChar123hashChar125DotjsonRoute
   '/leaderboards-{$hash}.json': typeof LeaderboardsChar123hashChar125DotjsonRoute
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -220,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 export interface FileRoutesByTo {
+  '/glossary-{$hash}.json': typeof GlossaryChar123hashChar125DotjsonRoute
   '/leaderboards-{$hash}.json': typeof LeaderboardsChar123hashChar125DotjsonRoute
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -248,6 +257,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/glossary-{$hash}.json': typeof GlossaryChar123hashChar125DotjsonRoute
   '/leaderboards-{$hash}.json': typeof LeaderboardsChar123hashChar125DotjsonRoute
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -278,6 +288,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/glossary-{$hash}.json'
     | '/leaderboards-{$hash}.json'
     | '/oembed'
     | '/robots.txt'
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/player/$name/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/glossary-{$hash}.json'
     | '/leaderboards-{$hash}.json'
     | '/oembed'
     | '/robots.txt'
@@ -333,6 +345,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/player/$name'
   id:
     | '__root__'
+    | '/glossary-{$hash}.json'
     | '/leaderboards-{$hash}.json'
     | '/oembed'
     | '/robots.txt'
@@ -362,6 +375,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  GlossaryChar123hashChar125DotjsonRoute: typeof GlossaryChar123hashChar125DotjsonRoute
   LeaderboardsChar123hashChar125DotjsonRoute: typeof LeaderboardsChar123hashChar125DotjsonRoute
   OembedRoute: typeof OembedRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
@@ -379,6 +393,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/glossary-{$hash}.json': {
+      id: '/glossary-{$hash}.json'
+      path: '/glossary-{$hash}.json'
+      fullPath: '/glossary-{$hash}.json'
+      preLoaderRoute: typeof GlossaryChar123hashChar125DotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/leaderboards-{$hash}.json': {
       id: '/leaderboards-{$hash}.json'
       path: '/leaderboards-{$hash}.json'
@@ -606,6 +627,8 @@ const Char123LocaleChar125RouteWithChildren =
   Char123LocaleChar125Route._addFileChildren(Char123LocaleChar125RouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  GlossaryChar123hashChar125DotjsonRoute:
+    GlossaryChar123hashChar125DotjsonRoute,
   LeaderboardsChar123hashChar125DotjsonRoute:
     LeaderboardsChar123hashChar125DotjsonRoute,
   OembedRoute: OembedRoute,
