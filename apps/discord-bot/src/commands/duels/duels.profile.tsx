@@ -14,7 +14,7 @@ import {
   TitlesTable,
 } from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
-import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
+import { type Duels, DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { formatTime, prettify } from "@statsify/util";
 import type { BaseProfileProps, ProfileTime } from "#commands/base.hypixel-command";
 import type { DuelsModeIcons } from "./duels.command.js";
@@ -23,6 +23,25 @@ export type DuelsProfileProps<T extends ProfileTime> = Omit<BaseProfileProps, "t
   mode: GameMode<DuelsModes>;
   time: T;
   modeIcons: T extends "LIVE" ? DuelsModeIcons : undefined;
+};
+
+const getModeStats = (duels: Duels, mode: GameMode<DuelsModes>) => {
+  switch (mode.api) {
+    case "bedwars":
+      return duels.bedwars[mode.submode.api];
+    case "bridge":
+      return duels.bridge[mode.submode.api];
+    case "spleef":
+      return duels.spleef[mode.submode.api];
+    case "uhc":
+      return duels.uhc[mode.submode.api];
+    case "classic":
+    case "op":
+    case "skywars":
+      return duels[mode.api].overall;
+    default:
+      return duels[mode.api];
+  }
 };
 
 export const DuelsProfile = <T extends ProfileTime>({
@@ -42,16 +61,21 @@ export const DuelsProfile = <T extends ProfileTime>({
   const sidebar: SidebarItem[] = [
     [t("stats.tokens"), t(duels.tokens), "§2"],
     [t("stats.pingRange"), `${t(duels.pingRange)}ms`, "§a"],
-    [t("stats.blocksPlaced"), t(duels.overall.blocksPlaced), "§9"],
   ];
 
-  const stats = duels[mode.api];
+  const modeStats = getModeStats(duels, mode);
 
-  if ("shotsFired" in stats) {
-    sidebar.push([t("stats.shotsFired"), t(stats.shotsFired), "§6"]);
-  } else if ("overall" in stats && "shotsFired" in stats.overall) {
-    sidebar.push([t("stats.shotsFired"), t(stats.overall.shotsFired), "§6"]);
-  }
+  // Hypixel only counts blocks placed in some modes
+  if ("blocksPlaced" in modeStats && modeStats.blocksPlaced)
+    sidebar.push([t("stats.blocksPlaced"), t(modeStats.blocksPlaced), "§9"]);
+
+  if ("shotsFired" in modeStats)
+    sidebar.push([t("stats.shotsFired"), t(modeStats.shotsFired), "§6"]);
+
+  if ("itemsPurchased" in modeStats)
+    sidebar.push([t("stats.itemsPurchased"), t(modeStats.itemsPurchased), "§d"]);
+
+  const stats = duels[mode.api];
 
   if ("headshots" in stats)
     sidebar.push([t("stats.headshots"), t(stats.headshots), "§3"]);
@@ -80,7 +104,6 @@ export const DuelsProfile = <T extends ProfileTime>({
       break;
 
     case "bedwars":
-      sidebar.push([t("stats.itemsPurchased"), t(duels.bedwars.overall.itemsPurchased), "§d"]);
       table = mode.submode.api === "overall" ? <BedWarsDuelsTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} /> : <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
       break;
 
