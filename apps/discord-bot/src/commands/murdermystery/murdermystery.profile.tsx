@@ -320,11 +320,11 @@ export const MurderMysteryProfile = ({
     `§7${t("stats.knife")}: §a${murdermystery.knife.name}`,
   ];
 
-  if (murdermystery.knife.progression.percent >= 1)
+  if (murdermystery.knife.progression.percent >= 1 || !murdermystery.knife.progression.max)
     description.push(`§7${t("stats.progression.exp")}: §l§dPRESTIGED`);
   else
     description.push(
-      `§7${t("stats.progression.exp")}: ${knifePrestigeProgressBar(murdermystery.knife.progression.percent)} §e${murdermystery.knife.progression.current}§7/§d${murdermystery.knife.progression.max}`
+      `§7${t("stats.progression.exp")}: ${knifePrestigeProgressBar(murdermystery.knife.progression.percent)} §e${t(murdermystery.knife.progression.current)}§7/§d${t(murdermystery.knife.progression.max)}`
     );
 
   return (
