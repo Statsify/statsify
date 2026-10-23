@@ -15,6 +15,7 @@ import {
   Challenges,
   CopsAndCrims,
   Duels,
+  Fishing,
   General,
   MegaWalls,
   MurderMystery,
@@ -90,6 +91,9 @@ export class PlayerStats {
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.GENERAL} -` } })
   public general: General;
+
+  @Field({ leaderboard: { fieldName: `${FormattedGame.FISHING} -` } })
+  public fishing: Fishing;
 
   @Field({ leaderboard: { fieldName: FormattedGame.MEGAWALLS } })
   public megawalls: MegaWalls;
@@ -225,21 +229,22 @@ export class PlayerStats {
     this.buildbattle = new BuildBattle(stats.BuildBattle ?? {}, achievements);
     this.challenges = new Challenges(
       data?.challenges?.all_time ?? {},
-      achievements
+      achievements,
     );
     this.copsandcrims = new CopsAndCrims(stats.MCGO ?? {});
     this.duels = new Duels(stats.Duels ?? {});
     this.general = new General(data, legacy);
+    this.fishing = this.general.fishing;
     this.megawalls = new MegaWalls(stats.Walls3 ?? {});
     this.murdermystery = new MurderMystery(
       stats.MurderMystery ?? {},
-      achievements
+      achievements,
     );
     this.paintball = new Paintball(stats.Paintball ?? {}, legacy);
     this.parkour = new Parkour(data.parkourCompletions ?? {});
     this.pit = new Pit(
       stats.Pit?.profile ?? {},
-      stats.Pit?.pit_stats_ptl ?? {}
+      stats.Pit?.pit_stats_ptl ?? {},
     );
     this.quake = new Quake(stats.Quake ?? {}, achievements, legacy);
     this.quests = new Quests(data.quests ?? {});
