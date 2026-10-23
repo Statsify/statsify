@@ -6,46 +6,32 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Article, CHIP, Callout, KeyTable, Paragraph, Section, Strong, Subheading, TextLink, TextPage } from "./text-page";
+import { Article, CHIP, Callout, KeyTable, Paragraph, Section, Subheading, TextLink, TextPage } from "./text-page";
 import { Link } from "@tanstack/react-router";
+import { PointerText } from "~/components/ui/hint";
 import { Trans, useTranslation } from "react-i18next";
 import { useNumberFormat } from "~/i18n/use-number-format";
 
-/** Who runs Statsify, how to reach them, and where its stats come from. */
+/** What Statsify is, how to reach us, and where its stats come from. */
 export function AboutPage() {
   const { t } = useTranslation();
+  const links = { chip: <SampleChip />, glossary: <TextLink to="/{-$locale}/glossary" /> };
   const email = t("footer.email");
   const mail = <TextLink href={`mailto:${email}`}>{email}</TextLink>;
 
-  const contents = [
-    { id: "what", label: t("about.what") },
-    { id: "operator", label: t("about.operator") },
-    { id: "contact", label: t("about.contact") },
-    { id: "stats", label: t("about.stats") },
-    { id: "source", label: t("about.source") },
-  ];
-
   return (
-    <TextPage title={t("about.title")} contents={contents}>
-      <Article>
+    <TextPage title={t("about.title")}>
+      <Article short>
         <Section id="what" title={t("about.what")}>
           <Paragraph>{t("about.whatText")}</Paragraph>
           <Paragraph>
-            <Trans
-              i18nKey="about.linksText"
-              components={{ chip: <SampleChip />, glossary: <TextLink to="/{-$locale}/glossary" /> }}
+            <PointerText
+              mouse={<Trans i18nKey="about.linksText" components={links} />}
+              touch={<Trans i18nKey="about.linksTextTouch" components={links} />}
             />
           </Paragraph>
         </Section>
-        <Section id="operator" title={t("about.operator")}>
-          <Paragraph>{t("about.operatorText")}</Paragraph>
-          <Callout label={t("about.notOfficial")} tone="legal">
-            <p>{t("footer.mojang")}</p>
-            <p>{t("footer.affiliation")}</p>
-          </Callout>
-        </Section>
         <Section id="contact" title={t("about.contact")}>
-          <Paragraph>{t("about.contactText")}</Paragraph>
           <KeyTable
             head={[t("about.topic"), t("about.where")]}
             rows={[
@@ -57,9 +43,7 @@ export function AboutPage() {
           />
         </Section>
         <Section id="stats" title={t("about.stats")}>
-          <Paragraph>
-            <Trans i18nKey="about.statsText" components={{ strong: <Strong /> }} />
-          </Paragraph>
+          <Paragraph>{t("about.statsText")}</Paragraph>
           <Callout label={t("about.note")}>
             <p>{t("about.leaderboardsNote")}</p>
           </Callout>

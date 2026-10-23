@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Article, Callout, Paragraph, TextPage } from "./text-page";
+import { Article, Paragraph, TextPage } from "./text-page";
 import { Box } from "~/components/ui/box";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { useNumberFormat } from "~/i18n/use-number-format";
@@ -23,13 +23,13 @@ const SAMPLE_LEVEL = 100;
 type Prestige = PrestigeSheet["prestiges"][number];
 
 /**
- * Every BedWars prestige in the colours its level shows in game, a panel per thousand stars, then the stars and brackets
- * Hypixel sells. Drawn from the same scheme map as the cards, so a change to it shows here.
+ * Every BedWars prestige in the colours its level shows in game, a panel per thousand stars, then the game's other stars
+ * and brackets. Drawn from the same scheme map as the cards, so a change to it shows here.
  */
 export function PrestigePage({ sheet }: { sheet: PrestigeSheet }) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const n = useNumberFormat();
-  const { prestiges, levelExp, stars, brackets } = sheet;
+  const { prestiges, stars, brackets } = sheet;
   const top = prestiges[prestiges.length - 1].level;
 
   // Not `Map.groupBy`, which Safari has only since 17.4.
@@ -46,7 +46,6 @@ export function PrestigePage({ sheet }: { sheet: PrestigeSheet }) {
     group,
   }));
 
-  const first = new Intl.ListFormat(i18n.language, { type: "conjunction" }).format(levelExp.slice(0, -1).map(n));
   const contents = [
     ...sections.map(({ id, heading, group }) => ({ id, label: heading, count: group.length })),
     { id: "stars", label: t("prestiges.stars") },
@@ -60,14 +59,8 @@ export function PrestigePage({ sheet }: { sheet: PrestigeSheet }) {
       contents={contents}
       background="bedwars"
     >
-      <Article>
-        <div className="flex flex-col gap-4">
-          <Paragraph>{t("prestiges.intro", { top: n(top), exp: n(prestiges[1].exp) })}</Paragraph>
-          <Paragraph>{t("prestiges.levels", { first, steady: n(levelExp[levelExp.length - 1]) })}</Paragraph>
-          <Callout label={t("prestiges.note")}>
-            <p>{t("prestiges.noteText")}</p>
-          </Callout>
-        </div>
+      <Article short>
+        <Paragraph>{t("prestiges.intro", { top: n(top), exp: n(prestiges[1].exp) })}</Paragraph>
       </Article>
       {sections.map(({ id, heading, group }) => (
         <Panel key={id} id={id} heading={heading} count={group.length}>

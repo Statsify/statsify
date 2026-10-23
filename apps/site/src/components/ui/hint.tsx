@@ -131,6 +131,19 @@ export function useHint(text: string | undefined, anchor: (element: HTMLElement)
 }
 
 /**
+ * Text that says "Tap" on a touch screen and "Click" with a mouse. Both are in the HTML, so the server's render and the
+ * browser's agree; the pointer media query shows one.
+ */
+export function PointerText({ mouse, touch }: { mouse: ReactNode; touch: ReactNode }) {
+  return (
+    <>
+      <span className="pointer-coarse:hidden">{mouse}</span>
+      <span className="hidden pointer-coarse:inline">{touch}</span>
+    </>
+  );
+}
+
+/**
  * Shortened text with its full form for screen readers in its place. For text under a link, which owns the tap: the link
  * shows the full form with `useHint`. Without `full` it's the text.
  */

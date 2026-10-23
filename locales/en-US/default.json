@@ -525,10 +525,10 @@
     },
     "bblr": {
       "name": "Beds Broken/Lost Ratio",
-      "text": "Beds broken divided by beds lost, rounded to two decimal places. With no beds lost, it equals the beds broken."
+      "text": "Beds broken ÷ beds lost."
     },
     "bedsBroken": {
-      "text": "Enemy beds the player broke. A team without its bed can't respawn."
+      "text": "Enemy beds the player broke."
     },
     "bedsLost": {
       "text": "Times the player's own bed was broken."
@@ -537,10 +537,10 @@
       "text": "The furthest round reached in one Zombies game."
     },
     "bestTime": {
-      "text": "The player's best time: the fastest finish where the aim is speed (Dropper, Parkour Duels, Gun Game), or the longest survival where the aim is to last (TNT Run, PVP Run)."
+      "text": "The fastest finish, or the longest survival."
     },
     "bestWinstreak": {
-      "text": "The longest run of wins in a row Hypixel has recorded."
+      "text": "The most wins in a row."
     },
     "bigShot": {
       "text": "Big Shot power-ups used in Ender Spleef."
@@ -552,7 +552,7 @@
       "text": "Blocks the player placed."
     },
     "blocksRan": {
-      "text": "Blocks run over in TNT Run, each one falling away behind the player."
+      "text": "Blocks run over in TNT Run."
     },
     "bombsDefused": {
       "text": "Bombs defused in Defusal."
@@ -561,7 +561,7 @@
       "text": "Bombs planted in Defusal."
     },
     "bounty": {
-      "text": "The bounty on the player now: the gold whoever kills them next earns."
+      "text": "Gold paid to whoever kills the player next."
     },
     "bountyKills": {
       "text": "Kills on the player's target in Bounty Hunters."
@@ -573,7 +573,7 @@
       "text": "Item boxes driven through."
     },
     "bronzeTrophies": {
-      "text": "Races finished in third place, each worth a bronze trophy."
+      "text": "Races finished in third place."
     },
     "candyFound": {
       "text": "Candy found in Halloween Simulator."
@@ -582,7 +582,7 @@
       "text": "Points captured in Domination."
     },
     "challengesTotal": {
-      "text": "Challenges completed: every game's added up, or one game's."
+      "text": "Challenges completed."
     },
     "checkpoints": {
       "text": "Checkpoints reached in Parkour Duels."
@@ -594,7 +594,7 @@
       "text": "The player's coin conversion level in the Arcade."
     },
     "coins": {
-      "text": "The game's own currency, earned by playing and spent in its shop."
+      "text": "The game's currency."
     },
     "coinsPickedUp": {
       "text": "Coins picked up on the track."
@@ -624,7 +624,7 @@
       "text": "Diamonds collected from generators."
     },
     "doorsOpened": {
-      "text": "Doors opened in Zombies, which unlock more of the map."
+      "text": "Doors opened in Zombies."
     },
     "draws": {
       "text": "Capture the Wool games that ended in a draw."
@@ -643,7 +643,7 @@
     },
     "exp": {
       "name": "Experience",
-      "text": "Experience points. A game's level, or a kit's, is worked out from them."
+      "text": "Experience points."
     },
     "explosiveKills": {
       "text": "Kills with explosive sheep."
@@ -661,7 +661,7 @@
       "text": "The quickest game won as the murderer."
     },
     "fastestWin": {
-      "text": "The quickest win: the shortest game the player won."
+      "text": "The shortest game the player won."
     },
     "fastestWoolCapture": {
       "text": "The quickest wool capture in one game."
@@ -670,14 +670,14 @@
       "text": "Final kills the player helped with without landing the final hit."
     },
     "finalDeaths": {
-      "text": "Deaths the player can't come back from, which knock them out of the game."
+      "text": "Deaths the player can't come back from."
     },
     "finalKills": {
-      "text": "Kills the other player can't come back from: in BedWars once their bed is gone, in Mega Walls once their wither is dead."
+      "text": "Kills the other player can't come back from."
     },
     "fkdr": {
       "name": "Final Kill/Death Ratio",
-      "text": "Final kills divided by final deaths, rounded to two decimal places. With no final deaths, it equals the final kills."
+      "text": "Final kills ÷ final deaths."
     },
     "flagCaptures": {
       "text": "Enemy flags captured in Capture the Flag."
@@ -698,7 +698,7 @@
       "text": "Dropper games finished."
     },
     "gamesPlayed": {
-      "text": "Games played, as Hypixel counts them. Not every mode records it."
+      "text": "Games played."
     },
     "gapplesEaten": {
       "text": "Golden apples eaten."
@@ -728,13 +728,13 @@
       "text": "Gold picked up from the map."
     },
     "goldRate": {
-      "text": "Gold trophies as a percentage of races, rounded to two decimal places."
+      "text": "Gold trophies as a percentage of races."
     },
     "goldSpent": {
       "text": "Gold spent in Capture the Wool's shop."
     },
     "goldTrophies": {
-      "text": "Races won, each worth a gold trophy."
+      "text": "Races won."
     },
     "grandPrixTokens": {
       "name": "Grand Prix Tokens",
@@ -768,7 +768,7 @@
       "text": "Health healed, the player's own and their teammates'."
     },
     "heroKills": {
-      "text": "Times the player was the hero: the innocent who killed the murderer."
+      "text": "Times the player killed the murderer as an innocent."
     },
     "heroWins": {
       "text": "Games won as the hero."
@@ -802,7 +802,7 @@
     },
     "kdr": {
       "name": "Kill/Death Ratio",
-      "text": "Kills divided by deaths, rounded to two decimal places. With no deaths, it equals the kills."
+      "text": "Kills ÷ deaths."
     },
     "kicks": {
       "text": "Times the player kicked the ball in Football."
@@ -823,7 +823,7 @@
       "text": "Kills made as a survivor in Infection."
     },
     "killstreaks": {
-      "text": "Killstreaks reached: runs of kills without dying that the game rewards."
+      "text": "Runs of kills without dying that the game rewards."
     },
     "kit": {
       "text": "The kit the player has selected."
@@ -833,7 +833,7 @@
     },
     "kwr": {
       "name": "Kill/Win Ratio",
-      "text": "Kills divided by wins: how many kills a player gets for each win, rounded to two decimal places."
+      "text": "Kills ÷ wins."
     },
     "lapsCompleted": {
       "text": "Laps finished."
@@ -845,7 +845,7 @@
       "text": "Layers the player has unlocked, out of 100."
     },
     "level": {
-      "text": "A level: a kit's in Blitz SG, a class's in Warlords, and the player's own in Smash Heroes."
+      "text": "The player's level, or a kit's or class's."
     },
     "levelsGained": {
       "text": "Levels gained across every prestige."
@@ -857,7 +857,7 @@
       "text": "The longest Capture the Wool game played."
     },
     "losses": {
-      "text": "Games lost. Not every mode records losses, so some have no WLR."
+      "text": "Games lost. Some modes don't record losses, so they have no WLR."
     },
     "magicWool": {
       "text": "Hits with magic wool."
@@ -893,7 +893,7 @@
       "text": "Games won as the murderer."
     },
     "mysticsEnchanted": {
-      "text": "Mystic items enchanted at the Mystic Well, every tier added up."
+      "text": "Mystic items enchanted at the Mystic Well."
     },
     "mythic-favor": {
       "text": "Mythic Favor the player has, which unlocks mythic classes."
@@ -926,7 +926,7 @@
       "text": "Builds copied perfectly in Speed Builders."
     },
     "pingRange": {
-      "text": "The highest ping the player accepts from an opponent, set in Duels' settings."
+      "text": "The highest ping the player accepts from an opponent."
     },
     "pitGold": {
       "text": "The gold the player has now, The Pit's currency."
@@ -935,13 +935,13 @@
       "text": "Time spent in games."
     },
     "points": {
-      "text": "Points the game awards, as it counts them."
+      "text": "Points the game awards."
     },
     "poopCollected": {
       "text": "Poop collected in Farm Hunt."
     },
     "postUpdateKills": {
-      "text": "Kills since Quake's update in February 2017. Shot accuracy uses these."
+      "text": "Kills since Quake's February 2017 update."
     },
     "potionsBrewed": {
       "text": "Potions counted by SkyWars' Tonic Taker achievement."
@@ -956,7 +956,7 @@
       "text": "Power orbs picked up in Wizards."
     },
     "powerupActivations": {
-      "text": "Power-ups used in Ender Spleef, every kind added up."
+      "text": "Power-ups used in Ender Spleef."
     },
     "powerups": {
       "text": "Power-ups picked up."
@@ -974,7 +974,7 @@
       "text": "Damage prevented, the player's own and their teammates'."
     },
     "questsTotal": {
-      "text": "Quests completed: every game's added up, or one game's."
+      "text": "Quests completed."
     },
     "ragePotatoesEaten": {
       "text": "Rage potatoes eaten."
@@ -998,7 +998,7 @@
       "text": "The rune the player has selected."
     },
     "score": {
-      "text": "Points the game awards. In Build Battle, UHC and Speed UHC, score sets the player's title; in Warlords it's points scored in Domination."
+      "text": "Points the game awards. In Build Battle, UHC and Speed UHC it sets the player's title."
     },
     "seekerWins": {
       "text": "Hide and Seek games won as a seeker."
@@ -1010,13 +1010,13 @@
       "text": "Sheep thrown."
     },
     "shotAccuracy": {
-      "text": "Kills as a percentage of shots fired, rounded to two decimal places. Quake counts only kills since its February 2017 update."
+      "text": "Kills as a percentage of shots fired. Quake counts only kills since its February 2017 update."
     },
     "shotsFired": {
-      "text": "Shots fired: arrows, bullets or paintballs, as the game counts them."
+      "text": "Shots fired."
     },
     "silverTrophies": {
-      "text": "Races finished in second place, each worth a silver trophy."
+      "text": "Races finished in second place."
     },
     "slumberTickets": {
       "text": "Slumber Tickets the player has now, spent at the Slumber Hotel."
@@ -1032,7 +1032,7 @@
       "text": "Stars earned in Party Games."
     },
     "suicides": {
-      "text": "Deaths the player caused themselves, such as falling into the void."
+      "text": "Deaths the player caused themselves."
     },
     "superVotes": {
       "text": "Super votes the player has, which pick a round's theme."
@@ -1062,16 +1062,16 @@
       "text": "The player's title, which their score sets."
     },
     "tokens": {
-      "text": "The game's currency, earned by playing and spent in its shop."
+      "text": "The game's currency."
     },
     "totalRounds": {
-      "text": "Rounds survived in Zombies, every game added up."
+      "text": "Rounds survived in Zombies."
     },
     "totalSlumberTickets": {
       "text": "Slumber Tickets earned in total."
     },
     "totalTrophies": {
-      "text": "Trophies of every kind added up."
+      "text": "Trophies of every kind."
     },
     "totalWins": {
       "text": "Wins added up across everything listed with it."
@@ -1086,13 +1086,13 @@
       "text": "Kills with traps."
     },
     "trigger": {
-      "text": "How long the railgun takes to reload between shots, in seconds, set by the Trigger upgrade."
+      "text": "Seconds the railgun takes to reload between shots."
     },
     "tripleShot": {
       "text": "Triple Shot power-ups used in Ender Spleef."
     },
     "trophyRate": {
-      "text": "Trophies of any kind as a percentage of races, rounded to two decimal places."
+      "text": "Trophies of any kind as a percentage of races."
     },
     "uhcWins": {
       "text": "SkyWars games won with the UHC challenge on."
@@ -1131,10 +1131,10 @@
       "text": "Weekly quests completed."
     },
     "wins": {
-      "text": "Games won. In team modes, a win counts for everyone on the winning team."
+      "text": "Games won."
     },
     "winstreak": {
-      "text": "Wins in a row, as of the player's last update. Players can stop Hypixel from sharing it."
+      "text": "Wins in a row. Shows Hidden when the player has turned it off."
     },
     "witherDamage": {
       "text": "Damage dealt to enemy withers."
@@ -1144,7 +1144,7 @@
     },
     "wlr": {
       "name": "Win/Loss Ratio",
-      "text": "Wins divided by losses, rounded to two decimal places. With no losses, it equals the wins."
+      "text": "Wins ÷ losses."
     },
     "wool": {
       "text": "Wool, the Wool Games currency."

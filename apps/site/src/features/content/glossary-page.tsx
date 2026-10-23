@@ -19,6 +19,8 @@ import type { GlossaryGroup, GlossaryItem } from "./content-data";
 /** A label's words: the bot's in `default.json`, or the site's for a stat the bot doesn't show. */
 const LABEL_NAMESPACES = ["default", "site"];
 
+const TEXT = "max-w-[33em] font-sans text-16 leading-[1.6] font-medium text-mc-gray lg:text-20";
+
 /**
  * What every stat the site shows means, grouped as the ratios, the stats several games share, then each game's own. Each
  * entry's id is its `glossary.*` key, so `/glossary#fkdr` lands on FKDR.
@@ -72,6 +74,7 @@ export function GlossaryPage({ groups }: { groups: GlossaryGroup[] }) {
             </h2>
           }
         >
+          {group.key === "ratios" && <p className={`${TEXT} pt-2 pb-6`}>{t("glossary.ratiosNote")}</p>}
           {group.items.map((item) => (
             <Entry key={item.key} item={item} label={label(item)} own={group.game !== null} />
           ))}
@@ -96,7 +99,7 @@ function Entry({ item, label, own }: { item: GlossaryItem; label: string; own: b
         </h3>
         {item.name && <span className="text-mc-1 text-white lg:text-mc-1.5">{item.name}</span>}
       </div>
-      <p className="mt-2 max-w-[68ch] font-sans text-16 leading-[1.6] font-medium text-mc-gray lg:text-20">{item.text}</p>
+      <p className={`${TEXT} mt-2`}>{item.text}</p>
       {item.formula && <Formula formula={item.formula} label={label} colour={colour} />}
       <div className="mt-3 flex flex-wrap items-center gap-x-4 text-mc-1 text-mc-gray empty:hidden lg:text-mc-1.5">
         {!own && (

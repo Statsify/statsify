@@ -122,14 +122,12 @@ const PRESTIGE_LEVELS = 100;
 
 /**
  * Every BedWars prestige the game colours, from the schemas' scheme map (the cards' level colours), each at its first
- * level with the star it shows and the EXP it takes; and the stars and brackets Hypixel sells.
+ * level with the star it shows and the EXP it takes; and the game's other stars and brackets.
  */
 export function buildPrestigeSheet(): PrestigeSheet {
   const levelExp = Array.from({ length: PRESTIGE_LEVELS }, (_, level) => getBedWarsExpReq(level));
   // The API doesn't depend on `@statsify/math`, so no `add` here.
   const prestigeExp = levelExp.reduce((sum, exp) => sum + exp, 0);
-  // The first levels, up to the first that takes as much as every level after it.
-  const steady = levelExp.indexOf(levelExp.at(-1)!);
 
   return {
     prestiges: PRESTIGE_SCHEMES.map(({ req, scheme }) => ({
@@ -139,7 +137,6 @@ export function buildPrestigeSheet(): PrestigeSheet {
       star: STAR_MAP[findScore(PRESTIGE_STARS, req).star],
       exp: (req / PRESTIGE_LEVELS) * prestigeExp,
     })),
-    levelExp: levelExp.slice(0, steady + 1),
     stars: Object.entries(STAR_MAP).map(([key, glyph]) => ({ key, name: prettify(key), glyph })),
     brackets: Object.entries(BRACKET_MAP).map(([key, [open, close]]) => ({ key, name: prettify(key), open, close })),
   };

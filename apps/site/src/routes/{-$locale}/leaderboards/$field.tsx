@@ -243,10 +243,6 @@ function LeaderboardPage({ view: { page, miss, explanation } }: { view: Leaderbo
               </Link>
             </p>
           )}
-          {/* Who is ranked, in what order and as of when. */}
-          <p className="max-w-200 text-center text-mc-1 text-mc-gray">
-            {t(page.sort === "ASC" ? "leaderboards.aboutLowest" : "leaderboards.aboutHighest")}
-          </p>
         </div>
         <FindPlayer field={field} miss={miss} />
         <LeaderboardCards page={page} />

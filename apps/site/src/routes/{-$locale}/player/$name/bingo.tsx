@@ -10,7 +10,7 @@ import { Bingo } from "~/features/bingo/bingo";
 import { validateBoardSearch } from "~/features/bingo/board-search";
 import { loadBingoPlayer } from "~/features/bingo/bingo-data";
 import { BingoLayout } from "~/features/bingo/bingo-layout";
-import { PlayerNotFound } from "~/features/bingo/player-not-found";
+import { BingoPlayerNotFound } from "~/features/bingo/player-not-found";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { playerTabIcon } from "~/lib/tab-icon";
@@ -77,7 +77,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
     };
   },
   headers: () => cacheHeaders(`max-age=${EDGE_TTL_SECONDS}, stale-while-revalidate=3600`),
-  notFoundComponent: PlayerNotFound,
+  notFoundComponent: () => <BingoPlayerNotFound />,
   component: BingoPage,
 });
 

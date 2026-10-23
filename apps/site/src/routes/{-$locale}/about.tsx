@@ -14,12 +14,7 @@ import { createFileRoute } from "@tanstack/react-router";
 /** `/contact` redirects to this page's `#contact`. */
 export const Route = createFileRoute("/{-$locale}/about")({
   head: ({ matches }) =>
-    textPageHead({
-      title: "About Statsify",
-      description: "Who runs Statsify, how to reach us, and where its stats come from.",
-      path: "/about",
-      matches,
-    }),
+    textPageHead({ meta: "about", path: "/about", matches }),
   headers: () => cacheHeaders(TEXT_PAGE_CACHE),
   component: AboutPage,
 });

@@ -15,7 +15,7 @@ import { Search } from "~/components/search";
 import { formatPosition } from "@statsify/profiles/format-position";
 import { StatNumber, useStatName } from "~/components/ui/stat";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import type { AroundMiss } from "./leaderboard-data";
 import type { ReactNode } from "react";
 import type { LeaderboardColumn, LeaderboardPage } from "@statsify/contract";
@@ -164,7 +164,19 @@ export function FindPlayer({ field, miss }: { field: string; miss?: AroundMiss }
         placeholder={t("leaderboards.find")}
         onSelect={(name) => navigate({ to: "/{-$locale}/leaderboards/$field", params: { field }, search: { around: name } })}
       />
-      {miss && <p className="text-mc-1 text-mc-yellow text-center">{t(`leaderboards.${miss.kind}`, { name: miss.name })}</p>}
+      {miss && (
+        <p className="text-mc-1 text-mc-yellow text-center">
+          {miss.kind === "unknown" ? (
+            <Trans
+              i18nKey="leaderboards.unknown"
+              values={{ name: miss.name }}
+              components={{ profile: <Link to="/{-$locale}/player/$name" params={{ name: miss.name }} className="underline" /> }}
+            />
+          ) : (
+            t(miss.kind === "moved" ? "leaderboards.moved" : "leaderboards.unranked", { name: miss.name })
+          )}
+        </p>
+      )}
     </div>
   );
 }

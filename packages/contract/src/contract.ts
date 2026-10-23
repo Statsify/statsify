@@ -545,7 +545,7 @@ export const GlossarySchema = z.object({
   ),
 });
 
-/** Every BedWars prestige the game draws, with the stars and brackets Hypixel sells. */
+/** Every BedWars prestige the game draws, with the game's other stars and brackets. */
 export const PrestigeSheetSchema = z.object({
   prestiges: z.array(
     z.object({
@@ -560,8 +560,6 @@ export const PrestigeSheetSchema = z.object({
       exp: z.number(),
     })
   ),
-  /** The EXP each of a prestige's first levels takes; every level after the last one listed takes as much as it. */
-  levelExp: z.array(z.number()),
   stars: z.array(z.object({ key: z.string(), name: z.string(), glyph: z.string() })),
   brackets: z.array(z.object({ key: z.string(), name: z.string(), open: z.string(), close: z.string() })),
 });

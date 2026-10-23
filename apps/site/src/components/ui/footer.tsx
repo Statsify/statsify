@@ -56,7 +56,7 @@ export function Footer() {
             <p suppressHydrationWarning>{t("footer.copyright", { year })}</p>
             <p>{t("footer.affiliation")}</p>
             <p>{t("footer.mojang")}</p>
-            <p>{t("footer.operator")}</p>
+            <p>{t("footer.mojangApproval")}</p>
           </div>
           <div className="flex flex-wrap justify-center gap-x-4">
             <Link to="/{-$locale}/about" className={LINK}>{t("footer.about")}</Link>

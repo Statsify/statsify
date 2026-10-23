@@ -16,7 +16,7 @@ import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode, type Ref, useEffect, useId, useRef, useState } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { GameNav } from "./game-nav";
-import { Hint, Spoken } from "~/components/ui/hint";
+import { Hint, PointerText, Spoken } from "~/components/ui/hint";
 import { Hidden, InlineStat, LeaderboardLink, StatCell, StatNumber, glossaryKey, linkHint, useStatName } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { MinecraftText, colourClass, colourOf, leadingColourClass, plainText } from "~/components/ui/minecraft-text";
@@ -221,7 +221,7 @@ export function GameView({ page }: { page: GamePage }) {
           <NeverPlayed name={page.username} game={plainText(page.game.name)} />
         )}
         <p className="text-mc-1 text-mc-gray">
-          {t("game.hint", { name: page.username })}{" "}
+          <PointerText mouse={t("game.hint", { name: page.username })} touch={t("game.hintTouch", { name: page.username })} />{" "}
           {/* The game's index of leaderboards, opened and scrolled to this mode's. */}
           <Link
             to="/{-$locale}/leaderboards/$field"
