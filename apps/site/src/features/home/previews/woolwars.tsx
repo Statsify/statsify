@@ -14,6 +14,7 @@ import { Skin } from "~/components/ui/skin";
 import { useTranslation } from "react-i18next";
 import { cn } from "~/lib/util";
 import { formatDate, subDays } from "date-fns";
+import { useNumberFormat } from "~/i18n/use-number-format";
 import { usePlayer } from "~/components/player-context";
 import type { PreviewIdentity } from "@statsify/contract";
 
@@ -24,25 +25,19 @@ export function WoolWarsPreview({ className, daysBack }: { className?: string; d
 
   const oldDate = useTransform(daysBack, (daysBack) => formatDate(subDays(today, daysBack), "MM/dd/yyyy"));
 
-  const intFormatter = Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0,
-  });
+  // The bot's number format; the counts pass through fractions on their way, so they're rounded first.
+  const n = useNumberFormat();
+  const count = (value: number) => n(Math.round(value));
 
-  const decimalFormatter = Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2,
-  });
-
-  const daysBackFormatted = useTransform(daysBack, intFormatter.format.bind(intFormatter));
+  const daysBackFormatted = useTransform(daysBack, count);
 
   const wins = useTransform(daysBack, [0, 3, 7], [0, 44, 132], { ease: easeIn });
   const losses = useTransform(daysBack, [0, 3, 7], [0, 21, 42], { ease: easeOut });
   const wlr = useTransform(() => wins.get() / (losses.get() || 1));
 
-  const winsFormatted = useTransform(wins, intFormatter.format.bind(intFormatter));
-  const lossesFormatted = useTransform(losses, intFormatter.format.bind(intFormatter));
-  const wlrFormatted = useTransform(wlr, decimalFormatter.format.bind(decimalFormatter));
+  const winsFormatted = useTransform(wins, count);
+  const lossesFormatted = useTransform(losses, count);
+  const wlrFormatted = useTransform(wlr, n);
 
   return (
     <div className={cn("grid grid-cols-3 gap-2 sm:whitespace-nowrap", className)}>

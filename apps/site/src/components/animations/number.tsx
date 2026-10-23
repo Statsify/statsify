@@ -8,16 +8,14 @@
 
 import { motion, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { useEffect } from "react";
+import { useNumberFormat } from "~/i18n/use-number-format";
 
-export function AnimatedNumber({ value }: { value: number }) {
-  const fractionDigits = Number.isInteger(value) ? 0 : 2;
-  const numberFormat = Intl.NumberFormat("en-US", {
-    maximumFractionDigits: fractionDigits,
-    minimumFractionDigits: fractionDigits,
-  });
-
+/** `trim` drops a shortened count's zero decimals: "70M", not "70.00M". */
+export function AnimatedNumber({ value, trim = false }: { value: number; trim?: boolean }) {
+  const n = useNumberFormat(trim);
   const spring = useSpring(value, { mass: 0.8, stiffness: 75, damping: 15 });
-  const displayText = useTransform(spring, numberFormat.format.bind(numberFormat));
+  // The bot's format; on its way to a whole number the spring passes through fractions, which would show decimals.
+  const displayText = useTransform(spring, (current) => n(Number.isInteger(value) ? Math.round(current) : current));
   const reduceMotion = useReducedMotion();
 
   // With reduced motion the number jumps straight to its value.
