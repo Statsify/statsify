@@ -15,7 +15,8 @@ import { Cross } from "~/components/icons/cross";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
-import { Hidden, InlineStat, LeaderboardLink, StatCell } from "~/components/ui/stat";
+import { Hint, Spoken } from "~/components/ui/hint";
+import { Hidden, InlineStat, LeaderboardLink, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
 import { MinecraftText, colourClass, colourOf, leadingColourClass, plainText } from "~/components/ui/minecraft-text";
@@ -26,7 +27,7 @@ import { gamePageQuery, modeSearch, periodSearch, submodeSearch } from "./game-d
 import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { refreshGame } from "~/features/player/player-actions";
-import { useNumberFormat } from "~/i18n/use-number-format";
+import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { GamePage, StatCell as Stat, StatSection } from "@statsify/contract";
@@ -280,10 +281,11 @@ export function GameHeader({ page, className }: { page: GamePage; className?: st
  */
 export function LevelPanel({ level, username, className }: { level: Level; username: string; className?: string }) {
   const { t } = useTranslation();
-  const n = useNumberFormat();
+  const statName = useStatName();
   const { current, max, percent } = level.progression;
   const { colours } = level;
   const label = t(`default:${level.label}`);
+  const full = statName(level.label);
   const value = <MinecraftText>{level.current}</MinecraftText>;
 
   // Every line centred, a wrapped one too (a long title, its bar and the next one on a phone).
@@ -292,8 +294,10 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
       {/* Within the panel: a long level (The Pit past its last prestige) breaks rather than widening the page. */}
       <dl className="max-w-full">
         <StatCell
-          label={label}
-          value={level.leaderboard ? <LeaderboardLink field={level.leaderboard} username={username} stat={label}>{value}</LeaderboardLink> : value}
+          label={level.leaderboard ? <Spoken full={full}>{label}</Spoken> : <Hint full={full}>{label}</Hint>}
+          value={level.leaderboard ?
+            <LeaderboardLink field={level.leaderboard} username={username} stat={full ?? label} hint={full}>{value}</LeaderboardLink> :
+            value}
           color={leadingColourClass(level.current)}
           className="relative wrap-break-word"
         />
@@ -310,14 +314,14 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
       )}
       <dl>
         <InlineStat
-          label={t(`default:${level.progress}`)}
+          label={<Hint full={statName(level.progress)}>{t(`default:${level.progress}`)}</Hint>}
           value={max === undefined ?
             <span className={cn("font-bold", colourClass(colours?.maxed ?? "§b"))}>{t(`game.${level.maxedWord ?? "maxed"}`)}</span> :
             (
               <>
-                <span className={colourClass(colours?.current ?? "§b")}>{n(current)}</span>
+                <span className={colourClass(colours?.current ?? "§b")}><StatNumber value={current} /></span>
                 {colours ? <span className={colourClass(colours.slash)}>/</span> : "/"}
-                <span className={colourClass(colours?.max ?? "§a")}>{n(max)}</span>
+                <span className={colourClass(colours?.max ?? "§a")}><StatNumber value={max} /></span>
               </>
             )}
         />
@@ -446,10 +450,15 @@ export function StatPanel({
   );
 }
 
-/** A stat's heading: the card's own name for it (in its colours, else the stat's), or the bot's word for it. */
-function useStatLabel(cell: Stat): { text: string; node: ReactNode } {
+/**
+ * A stat's heading: the card's own name for it (in its colours, else the stat's), or the bot's word for it, with the
+ * full name where that word shortens one (FKDR).
+ */
+function useStatLabel(cell: Stat): { text: string; node: ReactNode; full?: string } {
   const text = useLabelText()(cell);
-  return { text, node: cell.name === undefined ? text : <MinecraftText>{`${cell.colour}${cell.name}`}</MinecraftText> };
+  const full = useStatName()(cell.label);
+  if (cell.name !== undefined) return { text, node: <MinecraftText>{`${cell.colour}${cell.name}`}</MinecraftText> };
+  return { text, node: text, full };
 }
 
 const plainName = (name: string) => name.replaceAll(/§#[\dA-Fa-f]{6}|§./g, "");
@@ -460,13 +469,20 @@ function useLabelText(): (cell: Stat) => string {
   return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainName(cell.name));
 }
 
-/** A stat's value as the card prints it: a number in the locale's format (with its cap or unit), or the API's text. */
-function useStatValue(cell: Stat): ReactNode {
+/**
+ * A stat's value as the card prints it: a number in the locale's format (with its cap or unit), or the API's text. A
+ * number the format shortens carries the exact one, as a `Hint`, or under a link only for screen readers, since the
+ * link shows it.
+ */
+function useStatValue(cell: Stat, linked = false): ReactNode {
   const n = useNumberFormat(cell.trim);
+  const exact = useExactNumber();
+  const Short = linked ? Spoken : Hint;
+  const number = (value: number) => <Short full={exact(value)}>{n(value)}</Short>;
   if (cell.hidden) return <Hidden />;
   // Text the API formatted takes the stat's colour, unless it brings its own (a level, a §7 N/A).
   const value = typeof cell.value === "number" ?
-    `${n(cell.value)}${cell.suffix ?? ""}` :
+    <>{number(cell.value)}{cell.suffix ?? ""}</> :
     <MinecraftText>{`${cell.colour}${cell.value}`}</MinecraftText>;
 
   if (cell.of === undefined) return value;
@@ -474,7 +490,7 @@ function useStatValue(cell: Stat): ReactNode {
   return (
     <>
       {value}
-      <span className="text-mc-1 text-mc-gray">/{n(cell.of)}</span>
+      <span className="text-mc-1 text-mc-gray">/{number(cell.of)}</span>
     </>
   );
 }
@@ -485,15 +501,28 @@ function useStatValue(cell: Stat): ReactNode {
  */
 function GameStat({ cell, username }: { cell: Stat; username: string }) {
   const { t } = useTranslation();
+  const exact = useExactNumber();
   const label = useStatLabel(cell);
-  const value = useStatValue(cell);
+  const value = useStatValue(cell, cell.leaderboard !== undefined);
   const { className, style } = colourOf(cell.colour);
+  // The short label shows under the row's heading; the link keeps the whole name.
+  const shown = cell.short ? t(cell.short, { ns: LABEL_NAMESPACES }) : label.node;
 
   return (
     <StatCell
-      // The short label shows under the row's heading; the link keeps the whole name.
-      label={cell.short ? t(cell.short, { ns: LABEL_NAMESPACES }) : label.node}
-      value={cell.leaderboard ? <LeaderboardLink field={cell.leaderboard} username={username} stat={label.text}>{value}</LeaderboardLink> : value}
+      label={cell.leaderboard ? <Spoken full={label.full}>{shown}</Spoken> : <Hint full={label.full}>{shown}</Hint>}
+      value={cell.leaderboard ?
+        (
+          <LeaderboardLink
+            field={cell.leaderboard}
+            username={username}
+            stat={label.full ?? label.text}
+            hint={linkHint(label.full, typeof cell.value === "number" ? exact(cell.value) : undefined)}
+          >
+            {value}
+          </LeaderboardLink>
+        ) :
+        value}
       color={className}
       style={style}
       className="relative"
@@ -506,17 +535,31 @@ function GameStat({ cell, username }: { cell: Stat; username: string }) {
  * card's own formatting, and the value on the right, or a tick or a cross in a list of things done or not.
  */
 function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat; username: string; plain?: boolean; ticks?: boolean }) {
+  const exact = useExactNumber();
   const label = useStatLabel(cell);
-  const count = useStatValue(cell);
+  const count = useStatValue(cell, cell.leaderboard !== undefined);
   const value = ticks ? <Tick done={Number(cell.value) > 0} /> : count;
   const { className, style } = colourOf(cell.colour);
 
   return (
     <div className={cn("relative flex min-h-11 min-w-0 items-center gap-2 py-1 text-mc-1", className)} style={style}>
       {cell.icon && hasGameIcon(cell.icon) && <span aria-hidden className="size-8 shrink-0"><GameIcon game={cell.icon} /></span>}
-      <dt className={cn("min-w-0 grow truncate", !plain && "font-bold")}>{label.node}</dt>
+      <dt className={cn("min-w-0 grow truncate", !plain && "font-bold")}>
+        {cell.leaderboard ? <Spoken full={label.full}>{label.node}</Spoken> : <Hint full={label.full}>{label.node}</Hint>}
+      </dt>
       <dd className="shrink-0">
-        {cell.leaderboard ? <LeaderboardLink field={cell.leaderboard} username={username} stat={label.text}>{value}</LeaderboardLink> : value}
+        {cell.leaderboard ?
+          (
+            <LeaderboardLink
+              field={cell.leaderboard}
+              username={username}
+              stat={label.full ?? label.text}
+              hint={linkHint(label.full, !ticks && typeof cell.value === "number" ? exact(cell.value) : undefined)}
+            >
+              {value}
+            </LeaderboardLink>
+          ) :
+          value}
       </dd>
     </div>
   );
@@ -540,7 +583,7 @@ function SelectionStat({ cell }: { cell: Stat }) {
   const label = useStatLabel(cell);
   const value = useStatValue(cell);
   const { className, style } = colourOf(cell.colour);
-  return <InlineStat label={label.text} value={value} color={className} style={style} />;
+  return <InlineStat label={<Hint full={label.full}>{label.text}</Hint>} value={value} color={className} style={style} />;
 }
 
 /** The mark's words in `site.json`: "most played", or "most wins" where the game counts wins alone. */

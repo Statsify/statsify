@@ -12,7 +12,8 @@ import { InlineStat } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinBust } from "~/components/ui/skin";
-import { useNumberFormat } from "~/i18n/use-number-format";
+import { Spoken } from "~/components/ui/hint";
+import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useTranslation } from "react-i18next";
 import type { ResultCard } from "@statsify/contract";
 
@@ -48,6 +49,9 @@ export function ResultCards({ cards, query }: { cards: ResultCard[]; query: stri
 function ResultCardView({ card }: { card: ResultCard }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
+  const exact = useExactNumber();
+  // The card is a link, so a shortened number's exact one is for screen readers.
+  const number = (value: number) => <Spoken full={exact(value)}>{n(value)}</Spoken>;
 
   return (
     <Link to="/{-$locale}/player/$name" params={{ name: card.username }} className="group block">
@@ -65,9 +69,9 @@ function ResultCardView({ card }: { card: ResultCard }) {
             )}
           </p>
           <dl className="flex flex-col gap-1">
-            <InlineStat label={t("default:stats.achievementPoints")} value={n(card.achievementPoints)} color="text-mc-gold" />
-            <InlineStat label={t("default:stats.quests")} value={n(card.quests)} color="text-mc-green" />
-            <InlineStat label={t("default:stats.karma")} value={n(card.karma)} color="text-mc-pink" />
+            <InlineStat label={t("default:stats.achievementPoints")} value={number(card.achievementPoints)} color="text-mc-gold" />
+            <InlineStat label={t("default:stats.quests")} value={number(card.quests)} color="text-mc-green" />
+            <InlineStat label={t("default:stats.karma")} value={number(card.karma)} color="text-mc-pink" />
           </dl>
         </div>
       </Box>

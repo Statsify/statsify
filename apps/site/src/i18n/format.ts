@@ -43,6 +43,12 @@ export function formatNumber(value: number, locale?: string, trim = false): stri
   return format.format(value);
 }
 
+/** The exact number where `formatNumber` shortens it (a million and up), else nothing: `1234567` → "1,234,567". */
+export function exactNumber(value: number, locale?: string): string | undefined {
+  if (value < 1_000_000) return undefined;
+  return numberFormat(locale, 2).format(value);
+}
+
 /** A countdown as `m:ss`, or `h:mm:ss` from an hour up. */
 export function formatCountdown(seconds: number): string {
   const total = Math.max(0, Math.ceil(seconds));
@@ -65,6 +71,14 @@ if (import.meta.vitest) {
       expect(formatNumber(1234, "de")).toBe("1.234");
       expect(formatNumber(1.3, "en-US", true)).toBe("1.3");
       expect(formatNumber(0.85, "en-US", true)).toBe("0.85");
+    });
+  });
+
+  describe("exactNumber", () => {
+    it("spells out exactly the numbers formatNumber shortens", () => {
+      expect(exactNumber(999_999, "en-US")).toBeUndefined();
+      expect(exactNumber(1_000_000, "en-US")).toBe("1,000,000");
+      expect(exactNumber(1_234_567.891, "en-US")).toBe("1,234,567.89");
     });
   });
 

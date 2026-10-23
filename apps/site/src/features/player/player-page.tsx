@@ -9,7 +9,8 @@
 import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
 import { Discord } from "~/components/icons/discord";
-import { Hidden, InlineStat, LeaderboardLink, STAT_LINK, StatCell } from "~/components/ui/stat";
+import { Hint, Spoken } from "~/components/ui/hint";
+import { Hidden, InlineStat, LeaderboardLink, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
 import { RefreshBar } from "./refresh-bar";
@@ -22,7 +23,7 @@ import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { playerPageQuery } from "./resolve";
 import { refreshPlayer } from "./player-actions";
-import { useNumberFormat } from "~/i18n/use-number-format";
+import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { ComponentType } from "react";
@@ -167,6 +168,7 @@ function SocialLinks({ socials }: { socials: Socials }) {
 function NetworkLevelPanel({ level, username, className }: { level: PlayerPage["level"]; username: string; className?: string }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
+  const statName = useStatName();
   const current = Math.floor(level.level);
 
   return (
@@ -186,10 +188,11 @@ function NetworkLevelPanel({ level, username, className }: { level: PlayerPage["
       <MinecraftText className="text-mc-1.5">{`§6${current} ${minigameXpBar(level.percent)} §6${current + 1}`}</MinecraftText>
       <dl className="flex flex-wrap justify-center gap-x-6 gap-y-1">
         <InlineStat
-          label={t("default:stats.exp")}
+          label={<Hint full={statName("stats.exp")}>{t("default:stats.exp")}</Hint>}
           value={(
             <>
-              <span className="text-mc-aqua">{n(level.current)}</span>/<span className="text-mc-green">{n(level.max)}</span>
+              <span className="text-mc-aqua"><StatNumber value={level.current} /></span>/
+              <span className="text-mc-green"><StatNumber value={level.max} /></span>
             </>
           )}
         />
@@ -202,6 +205,7 @@ function NetworkLevelPanel({ level, username, className }: { level: PlayerPage["
 function OverviewPanel({ overview, username, className }: { overview: PlayerPage["overview"]; username: string; className?: string }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
+  const exact = useExactNumber();
 
   // The general card's cells and colours: points §6, quests and challenges §a, karma and streaks §d, gifts §5. Quests
   // and Challenges link to their pages, the rest to their leaderboards (`stats.general.<board>`).
@@ -237,17 +241,17 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
             value={link && "page" in link ?
               (
                 <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: link.page }} className={STAT_LINK}>
-                  {n(value)}
+                  <Spoken full={exact(value)}>{n(value)}</Spoken>
                   <span className="sr-only"> {t("player.page", { name: label })}</span>
                 </Link>
               ) :
               link ?
                 (
-                  <LeaderboardLink field={`stats.general.${link.board}`} username={username} stat={label}>
-                    {n(value)}
+                  <LeaderboardLink field={`stats.general.${link.board}`} username={username} stat={label} hint={exact(value)}>
+                    <Spoken full={exact(value)}>{n(value)}</Spoken>
                   </LeaderboardLink>
                 ) :
-                n(value)}
+                <StatNumber value={value} />}
             color={color}
             className={link && "relative"}
           />
@@ -309,11 +313,14 @@ export function GameGrid({ games, username }: { games: GameSummary[]; username: 
 
 /**
  * A game's headline numbers, each linking to its leaderboard at the player's row, and the rest of the panel to the
- * game's page where it has one.
+ * game's page where it has one. A linked number shows its label's full name and exact number on hover and keyboard
+ * focus, as on the game page; a tap elsewhere follows the panel's link, so there they're for screen readers only.
  */
 function GamePanel({ game, username }: { game: GameSummary; username: string }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
+  const exact = useExactNumber();
+  const statName = useStatName();
   const title = <MinecraftText className="text-mc-1.5">{`§l${game.name}${game.level ? `§r ${game.level}` : ""}`}</MinecraftText>;
 
   return (
@@ -332,21 +339,23 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
       <dl className="grid grid-cols-2 gap-x-2 gap-y-4">
         {game.rows.map((row) => {
           const label = t(`stats.${row.key}`, { ns: ["default", "site"] });
+          const full = statName(`stats.${row.key}`);
+          const exactValue = typeof row.value === "number" ? exact(row.value) : undefined;
           // Text the API formatted takes the stat's colour, unless it brings its own (Layers' 74/100).
           const value = row.hidden ?
             <Hidden /> :
             typeof row.value === "number" ?
-              <>{n(row.value)}{row.suffix}</> :
+              <><Spoken full={exactValue}>{n(row.value)}</Spoken>{row.suffix}</> :
               <MinecraftText>{`${row.colour}${row.value}`}</MinecraftText>;
           const { className, style } = colourOf(row.colour);
 
           return (
             <StatCell
               key={row.key}
-              label={row.name === undefined ? label : <MinecraftText>{`${row.colour}${row.name}`}</MinecraftText>}
+              label={row.name === undefined ? <Spoken full={full}>{label}</Spoken> : <MinecraftText>{`${row.colour}${row.name}`}</MinecraftText>}
               value={row.leaderboard ?
                 (
-                  <LeaderboardLink field={row.leaderboard} username={username} stat={label}>
+                  <LeaderboardLink field={row.leaderboard} username={username} stat={full ?? label} hint={linkHint(full, exactValue)}>
                     {value}
                   </LeaderboardLink>
                 ) :

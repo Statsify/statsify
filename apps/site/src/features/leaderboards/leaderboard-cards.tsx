@@ -7,12 +7,10 @@
  */
 
 import { Box } from "~/components/ui/box";
-import { ColumnLabel, HEADER, HIGHLIGHT, PLAYER, PlayerLink, STRIPE, VALUES, useHighlightScroll } from "./leaderboard-table";
+import { ColumnLabel, HEADER, HIGHLIGHT, PLAYER, PlayerLink, Position, STRIPE, VALUES, Value, useHighlightScroll } from "./leaderboard-table";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
-import { formatPosition } from "@statsify/profiles/format-position";
-import { useNumberFormat } from "~/i18n/use-number-format";
 import { useTranslation } from "react-i18next";
 import type { CSSProperties } from "react";
 import type { LeaderboardPage } from "@statsify/contract";
@@ -33,15 +31,12 @@ const CELL = "md:flex md:h-12 md:items-center md:px-2";
  */
 export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
   const { t } = useTranslation();
-  const n = useNumberFormat();
 
   const highlightRef = useHighlightScroll<HTMLDivElement>(page);
 
   if (page.rows.length === 0) {
     return <p className="text-mc-1.5 text-mc-gray text-center">{t("leaderboards.empty")}</p>;
   }
-
-  const format = (value: string | number) => (typeof value === "number" ? n(value) : value);
 
   return (
     <Box>
@@ -81,7 +76,7 @@ export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
                       ref={row.highlight ? highlightRef : undefined}
                       className={cn(CELL, "inline scroll-mt-10 md:justify-end")}
                     >
-                      <MinecraftText className="text-mc-1 md:text-mc-2">{formatPosition(row.position, n)}</MinecraftText>
+                      <Position position={row.position} className="text-mc-1 md:text-mc-2" />
                     </div>{" "}
                     <div className={cn(CELL, "hidden md:justify-center")}>
                       <SkinHead uuid={row.uuid} size={24} />
@@ -111,7 +106,7 @@ export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
                       <span className="self-end text-mc-gray md:hidden">
                         <ColumnLabel column={page.columns[column]} />
                       </span>
-                      <span>{format(value)}</span>
+                      <span><Value value={value} /></span>
                     </div>
                   ))}
                 </div>

@@ -8,10 +8,13 @@
 
 import { Button } from "~/components/ui/button";
 import { useEffect, useRef } from "react";
+import { Hint } from "~/components/ui/hint";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { colourOf } from "~/components/ui/minecraft-text";
+import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
 import { Search } from "~/components/search";
-import { useNumberFormat } from "~/i18n/use-number-format";
+import { formatPosition } from "@statsify/profiles/format-position";
+import { StatNumber, useStatName } from "~/components/ui/stat";
+import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useTranslation } from "react-i18next";
 import type { AroundMiss } from "./leaderboard-data";
 import type { ReactNode } from "react";
@@ -86,10 +89,35 @@ export function useColumnLabel(): (column: LeaderboardColumn) => string {
   };
 }
 
-/** A column's label in the colour the bot's cards give its stat, where that doesn't depend on the value. */
+/**
+ * A column's label in the colour the bot's cards give its stat, where that doesn't depend on the value, with the full
+ * name where the label shortens one (FKDR).
+ */
 export function ColumnLabel({ column }: { column: LeaderboardColumn }) {
   const text = useColumnLabel()(column);
-  return column.colour ? <span {...colourOf(column.colour)}>{text}</span> : text;
+  const statName = useStatName();
+  return (
+    <Hint full={column.label ? statName(column.label) : undefined}>
+      {column.colour ? <span {...colourOf(column.colour)}>{text}</span> : text}
+    </Hint>
+  );
+}
+
+/** A value as the bot prints it: a number in its format (`StatNumber`), or the API's text (a time). */
+export function Value({ value }: { value: string | number }) {
+  return typeof value === "number" ? <StatNumber value={value} /> : value;
+}
+
+/** A row's position as the bot prints it, with the exact one where the number format shortens it (#1.00M). */
+export function Position({ position, className }: { position: number; className: string }) {
+  const n = useNumberFormat();
+  const exact = useExactNumber()(position);
+
+  return (
+    <Hint full={exact && `#${exact}`}>
+      <MinecraftText className={className}>{formatPosition(position, n)}</MinecraftText>
+    </Hint>
+  );
 }
 
 /** Previous and next page links around the page count; the links drop `around`. */
