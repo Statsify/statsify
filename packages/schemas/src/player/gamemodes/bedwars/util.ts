@@ -58,12 +58,12 @@ function createUniformScheme(
   digitColor = bracketColor,
   starColor = digitColor,
 ): Scheme {
-  return ({ level, bold, underline, strikethrough, star }) => {
+  return ({ level, bold, underline, strikethrough, star, brackets }) => {
     const boldFormat = bold ? "§l" : "";
     const underlineFormat = underline ? "§n" : "";
     const strikethroughFormat = strikethrough ? "§m" : "";
 
-    return `${bracketColor}${underlineFormat}${strikethroughFormat}[§r${boldFormat}${digitColor}${underlineFormat}${level}${starColor}${underlineFormat}${star}§r${bracketColor}${underlineFormat}${strikethroughFormat}]§r`;
+    return `${bracketColor}${underlineFormat}${strikethroughFormat}${brackets[0]}§r${boldFormat}${digitColor}${underlineFormat}${level}${starColor}${underlineFormat}${star}§r${bracketColor}${underlineFormat}${strikethroughFormat}${brackets[1]}§r`;
   };
 }
 
