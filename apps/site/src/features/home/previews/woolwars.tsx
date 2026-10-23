@@ -11,19 +11,24 @@ import { MotionValue, easeIn, easeOut, motion, useTransform } from "motion/react
 import { MotionValueTableData } from "~/components/ui/table";
 import { Nametag } from "~/components/ui/nametag";
 import { Skin } from "~/components/ui/skin";
+import { useHydrated } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { cn } from "~/lib/util";
-import { formatDate, subDays } from "date-fns";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { usePlayer } from "~/components/player-context";
 import type { PreviewIdentity } from "@statsify/contract";
 
+/** The date `days` before `today` as MM/dd/yyyy, by hand: a date library would cost the home page 6 KB for this. */
+function daysBefore(today: Date, days: number) {
+  const date = new Date(today);
+  date.setDate(date.getDate() - days);
+  return `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${date.getFullYear()}`;
+}
+
 export function WoolWarsPreview({ className, daysBack }: { className?: string; daysBack: MotionValue<number> }) {
   const player = usePlayer<PreviewIdentity>();
-  const today = new Date();
+  const hydrated = useHydrated();
   const { t } = useTranslation();
-
-  const oldDate = useTransform(daysBack, (daysBack) => formatDate(subDays(today, daysBack), "MM/dd/yyyy"));
 
   // The bot's number format; the counts pass through fractions on their way, so they're rounded first.
   const n = useNumberFormat();
@@ -45,8 +50,8 @@ export function WoolWarsPreview({ className, daysBack }: { className?: string; d
         <Skin uuid={player.uuid} className="hidden lg:block lg:col-span-1 lg:row-span-3" />
         <Nametag prefixName={player.prefixName} className="col-span-2 col-start-1 lg:col-start-2" />
         <Box className="col-span-2 content:text-mc-1.5 content:lg:text-mc-2">
-          {/* "Today" differs between the cached HTML and the visitor's clock; the animation rewrites it anyway. */}
-          Started <motion.span suppressHydrationWarning>{oldDate}</motion.span> (<motion.span>{daysBackFormatted}</motion.span> days ago)
+          {/* Hydration keeps the cached HTML's "today", so the span remounts once the visitor's clock can be read. */}
+          Started <span key={hydrated ? "visitor" : "cached"} suppressHydrationWarning>{daysBefore(new Date(), 7)}</span> (<motion.span>{daysBackFormatted}</motion.span> days ago)
         </Box>
         <Box className="font-bold content:flex content:items-center content:justify-center content:text-mc-1.5 content:lg:text-mc-2">
           Session

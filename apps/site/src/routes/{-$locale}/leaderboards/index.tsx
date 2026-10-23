@@ -12,7 +12,6 @@ import { MAX_QUERY_LENGTH, getLeaderboardIndex, listForClient } from "~/features
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { z } from "zod";
 
 /** The list is schema metadata: an hour fresh, a day stale. */
 const EDGE_TTL_SECONDS = 3600;
@@ -21,10 +20,11 @@ const EDGE_TTL_SECONDS = 3600;
 const queryText = (raw: unknown) =>
   (typeof raw === "string" || typeof raw === "number" ? String(raw).trim().slice(0, MAX_QUERY_LENGTH) : "") || undefined;
 
-const SearchSchema = z.object({ q: z.unknown().transform(queryText).optional() });
+/** A plain function, not a zod schema: every page's first load carries the routes' search parsing. */
+const validateSearch = (search: Record<string, unknown>): { q?: string } => ({ q: queryText(search.q) });
 
 export const Route = createFileRoute("/{-$locale}/leaderboards/")({
-  validateSearch: SearchSchema,
+  validateSearch,
   loaderDeps: ({ search }) => ({ q: search.q }),
   // The page's data is the groups and the list's hash; the links are in the server's HTML.
   loader: async ({ deps }) => {

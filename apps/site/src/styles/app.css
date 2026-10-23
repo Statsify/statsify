@@ -132,6 +132,19 @@
   --animate-slide-out-right-and-fade: slide-out-right-and-fade 150ms ease-out;
 
   --animate-progress-slide: progress-slide 1200ms ease-in-out infinite;
+
+  /* The page's old background over its new one, as `Background` crossfades. */
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
+  --animate-fade-out: fade-out 400ms ease-out forwards;
 }
 
 /* Minecraft text: 16px × N with an N px hard shadow. Use only N ∈ {1, 1.5, 2, 3, 4, 7}: 16, 24, 32, 48, 64 and 112 px,

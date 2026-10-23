@@ -18,25 +18,22 @@ import { searchPageMeta } from "~/lib/social-meta";
 import { rpc } from "~/lib/orpc";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { z } from "zod";
 import type { ResultCard } from "@statsify/contract";
 
 /**
  * `?q=` shows result cards for the names the autocomplete suggests. The router parses `?q=123` to a
  * number and anyone can type a long query, so anything is accepted and cut down to a 16-character name, except a
- * pasted UUID, which opens that player's page.
+ * pasted UUID, which opens that player's page. A plain function, not a zod schema: every page's first load carries the
+ * routes' search parsing.
  */
-const SearchSchema = z.object({
-  q: z
-    .unknown()
-    .transform((q) => {
-      const query = typeof q === "string" || typeof q === "number" ? String(q).trim() : "";
-      return (UUID_PATTERN.test(query) ? query : query.slice(0, 16)) || undefined;
-    }),
-});
+const validateSearch = (search: Record<string, unknown>): { q?: string } => {
+  const q = search.q;
+  const query = typeof q === "string" || typeof q === "number" ? String(q).trim() : "";
+  return { q: (UUID_PATTERN.test(query) ? query : query.slice(0, 16)) || undefined };
+};
 
 export const Route = createFileRoute("/{-$locale}/player/")({
-  validateSearch: SearchSchema,
+  validateSearch,
   loaderDeps: ({ search }) => ({ q: search.q }),
   loader: async ({ deps }): Promise<{ q: string | undefined; cards: ResultCard[] }> => {
     if (!deps.q) return { q: undefined, cards: [] };

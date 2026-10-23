@@ -7,7 +7,7 @@
  */
 
 import { AboutPage } from "~/features/content/about-page";
-import { TEXT_PAGE_CACHE, textPageHead } from "~/features/content/text-page";
+import { TEXT_PAGE_CACHE, textPageHead } from "~/features/content/text-page-head";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
 

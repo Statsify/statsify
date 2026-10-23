@@ -16,7 +16,6 @@ import { cacheHeaders } from "~/lib/cache";
 import { loadGlossaryWords } from "~/features/content/content-data";
 import { isGameKey, loadLeaderboardGame, loadLeaderboardPage, type LeaderboardView } from "~/features/leaderboards/leaderboard-data";
 import { useTranslation } from "react-i18next";
-import { z } from "zod";
 import type { LeaderboardGame } from "@statsify/contract";
 import type { GlossaryWords } from "~/i18n/i18n.server";
 import type { QueryClient } from "@tanstack/react-query";
@@ -42,12 +41,14 @@ const modeKey = (raw: unknown) => (typeof raw === "string" && raw.length <= 32 ?
 
 /**
  * `?page=` is left out of URLs for the first page; `?around=<name or UUID>` anchors on a player. `?mode=` is a game
- * index's.
+ * index's. A plain function, not a zod schema: every page's first load carries the routes' search parsing.
  */
-const SearchSchema = z.object({
-  page: z.unknown().transform(pageNumber).optional(),
-  around: z.unknown().transform(aroundName).optional(),
-  mode: z.unknown().transform(modeKey).optional(),
+const validateSearch = (
+  search: Record<string, unknown>
+): { page?: number; around?: string; mode?: string } => ({
+  page: pageNumber(search.page),
+  around: aroundName(search.around),
+  mode: modeKey(search.mode),
 });
 
 /** What the board's stat is, from the glossary, with the key of its entry there. */
@@ -76,7 +77,7 @@ async function loadBoard(
  * index is schema metadata, cached as long as `/leaderboards`.
  */
 export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
-  validateSearch: SearchSchema,
+  validateSearch,
   // The API counts pages from 0. The mode only opens a group, so it isn't a dependency.
   loaderDeps: ({ search }) => ({ page: (search.page ?? 1) - 1, around: search.around }),
   loader: async ({ params, deps, context, parentMatchPromise }): Promise<RouteData> => {

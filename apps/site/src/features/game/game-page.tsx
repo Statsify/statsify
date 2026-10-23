@@ -26,7 +26,7 @@ import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
 import { StatInfo } from "./stat-info";
 import { cn } from "~/lib/util";
-import { gamePageQuery, modeSearch, periodSearch, submodeSearch } from "./game-data";
+import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "./game-data";
 import { imageSize, isGameCard } from "@statsify/profiles/protocol";
 import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
@@ -286,13 +286,6 @@ function overviewSection(cells: Stat[]): StatSection {
   const inline = cells.filter((cell) => cell.inline);
   const table = cells.filter((cell) => !cell.inline);
   return { title: null, rows: [table, inline].filter((row) => row.length > 0) };
-}
-
-/** The card's title: the game, the word after it ("Stats") and the mode as the card names it. */
-export function headingText(page: Pick<GamePage, "game" | "heading">, word: (key: string) => string): string {
-  const { name } = page.game;
-  const { word: key, mode } = page.heading;
-  return `§l${name}${key ? ` §f${word(key)}` : ""}${mode ? ` §r(${mode}§r)` : ""}`;
 }
 
 /** The nametag, linking back to the player page, over the card's title. */

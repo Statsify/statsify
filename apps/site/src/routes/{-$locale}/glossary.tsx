@@ -7,7 +7,7 @@
  */
 
 import { GlossaryPage } from "~/features/content/glossary-page";
-import { TEXT_PAGE_CACHE, textPageHead } from "~/features/content/text-page";
+import { TEXT_PAGE_CACHE, textPageHead } from "~/features/content/text-page-head";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
 import { getGlossary } from "~/features/content/content-data";
@@ -17,13 +17,7 @@ export const Route = createFileRoute("/{-$locale}/glossary")({
   loader: ({ context }) => getGlossary({ data: { locale: context.locale } }),
   staleTime: Infinity,
   head: ({ matches }) =>
-    textPageHead({
-      title: "Stat Glossary",
-      description:
-        "What every stat on Statsify means, from FKDR to winstreaks.",
-      path: "/glossary",
-      matches,
-    }),
+    textPageHead({ meta: "glossary", path: "/glossary", matches }),
   headers: () => cacheHeaders(TEXT_PAGE_CACHE),
   component: GlossaryRoute,
 });

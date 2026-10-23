@@ -11,42 +11,8 @@ import { Chevron } from "~/components/icons/chevron";
 import { Box } from "~/components/ui/box";
 import { Link, type LinkProps } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
-import { SANS_PRELOAD } from "~/lib/fonts";
 import { cn } from "~/lib/util";
-import { localeData, socialMeta } from "~/lib/social-meta";
 import { useTranslation } from "react-i18next";
-
-/** The edge cache of a page that changes only with a deploy: an hour fresh, a day stale. */
-export const TEXT_PAGE_CACHE = "max-age=3600, stale-while-revalidate=86400";
-
-/**
- * A text page's `head()`: its title and description, the unfurl tags with the site's card image, and the reading font,
- * which is in the first screen.
- */
-export function textPageHead({
-  title,
-  description,
-  path,
-  matches,
-}: {
-  title: string;
-  description: string;
-  /** The page's path without a locale, for `og:url`. */
-  path: string;
-  matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>;
-}) {
-  const origin = localeData(matches)?.origin;
-  const fullTitle = `${title} | Statsify`;
-
-  return {
-    meta: [
-      { title: fullTitle },
-      { name: "description", content: description },
-      ...(origin ? socialMeta({ origin, path, title: fullTitle, description, image: "/images/og-home.png" }) : []),
-    ],
-    links: [SANS_PRELOAD],
-  };
-}
 
 /** One line of a page's contents: a section's id, its heading and, for a list, how many it holds. */
 export interface ContentsItem {

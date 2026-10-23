@@ -7,7 +7,7 @@
  */
 
 import { PrestigePage } from "~/features/content/prestige-page";
-import { TEXT_PAGE_CACHE, textPageHead } from "~/features/content/text-page";
+import { TEXT_PAGE_CACHE, textPageHead } from "~/features/content/text-page-head";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
 import { getPrestiges } from "~/features/content/content-data";
@@ -20,12 +20,7 @@ export const Route = createFileRoute("/{-$locale}/prestiges/bedwars")({
   loader: () => getPrestiges(),
   staleTime: Infinity,
   head: ({ matches }) =>
-    textPageHead({
-      title: "BedWars Prestiges and Colors",
-      description: "Every BedWars prestige from 0 to 10,000 stars, with its colors, its star and the EXP it takes.",
-      path: "/prestiges/bedwars",
-      matches,
-    }),
+    textPageHead({ meta: "prestiges", path: "/prestiges/bedwars", matches }),
   headers: () => cacheHeaders(TEXT_PAGE_CACHE),
   component: PrestigesRoute,
 });

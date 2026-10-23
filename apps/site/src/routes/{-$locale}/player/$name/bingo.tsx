@@ -7,7 +7,7 @@
  */
 
 import { Bingo } from "~/features/bingo/bingo";
-import { BoardSearchSchema } from "~/features/bingo/board-search";
+import { validateBoardSearch } from "~/features/bingo/board-search";
 import { loadBingoPlayer } from "~/features/bingo/bingo-data";
 import { BingoLayout } from "~/features/bingo/bingo-layout";
 import { PlayerNotFound } from "~/features/bingo/player-not-found";
@@ -28,7 +28,7 @@ const EDGE_TTL_SECONDS = 300;
 const possessive = (username: string) => `${username}'${username.endsWith("s") ? "" : "s"}`;
 
 export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
-  validateSearch: BoardSearchSchema,
+  validateSearch: validateBoardSearch,
   loader: async ({ params, context }) => {
     const player = await loadBingoPlayer(context.queryClient, params.name);
 
