@@ -48,28 +48,27 @@ export class PlayerLeaderboardService extends LeaderboardService {
   protected async getAdditionalStats(
     ids: string[],
     fields: string[]
-  ): Promise<LeaderboardAdditionalStats[]> {
+  ): Promise<Map<string, LeaderboardAdditionalStats>> {
     const selector = fields.reduce((acc, key) => {
       acc[key] = true;
       return acc;
     }, {} as Record<string, boolean>);
 
     selector.displayName = true;
+    selector.uuid = true;
 
-    return await Promise.all(
-      ids.map(async (id) => {
-        const player = await this.playerModel
-          .findOne()
-          .where("uuid")
-          .equals(id)
-          .select(selector)
-          .lean()
-          .exec();
+    const players = await this.playerModel
+      .find({ uuid: { $in: ids } })
+      .select(selector)
+      .lean()
+      .exec();
 
+    return new Map(
+      players.map((player) => {
         const additionalStats = flatten(player) as LeaderboardAdditionalStats;
         additionalStats.name = additionalStats.displayName;
 
-        return additionalStats;
+        return [player.uuid, additionalStats];
       })
     );
   }
