@@ -246,9 +246,8 @@ export class RatiosCommand {
 
   private getModeStats(game: PlayerStats[keyof PlayerStats], mode: GameModeWithSubModes<any>) {
     if (mode.submodes.length > 0) {
-      let stats = game[mode.api as keyof typeof game];
-      stats = stats[mode.submodes[0].api as keyof typeof game];
-      return mode.submodes[0].api === "overall" ? stats || game : stats;
+      const modeStats = game[mode.api as keyof typeof game];
+      return modeStats[mode.submodes[0].api as keyof typeof game] ?? modeStats;
     }
 
     const stats = game[mode.api as keyof typeof game];
@@ -302,6 +301,6 @@ export class RatiosCommand {
 
     const submode = mode.submodes[0].api;
     const submodeType = Reflect.getMetadata("design:type", modeType.prototype, submode);
-    return submode === "overall" ? submodeType || modeType : submodeType;
+    return submodeType ?? modeType;
   }
 }
