@@ -7,20 +7,16 @@
  */
 
 import { Box } from "~/components/ui/box";
-import { Button } from "~/components/ui/button";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
+import { LABEL, Snippet } from "./share-panel";
 import { cn } from "~/lib/util";
 import { compactUuid } from "~/lib/uuid";
 import { getRouteApi } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { PlayerPage } from "@statsify/contract";
 
-const LABEL = "text-mc-1 text-mc-white";
 /** The help text is reading text, so it is Mona Sans. */
 const HELP = "text-mc-1 text-mc-gray";
-/** How long a copy button reads "Copied!". */
-const COPIED_MS = 2000;
 
 const localeRoute = getRouteApi("/{-$locale}");
 
@@ -80,39 +76,5 @@ export function SignaturePanel({ page }: { page: PlayerPage }) {
         </dl>
       </details>
     </Box>
-  );
-}
-
-function Snippet({ label, text }: { label: string; text: string }) {
-  const { t } = useTranslation();
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    if (!copied) return;
-    const id = setTimeout(() => setCopied(false), COPIED_MS);
-    return () => clearTimeout(id);
-  }, [copied]);
-
-  // Without clipboard access (plain HTTP, old browsers) the field stays selectable, so nothing is reported.
-  const copy = () => navigator.clipboard.writeText(text).then(() => setCopied(true), () => undefined);
-
-  return (
-    <div className="flex flex-col gap-1">
-      <dt className={LABEL}>{label}</dt>
-      <dd className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <input
-          readOnly
-          value={text}
-          aria-label={label}
-          onFocus={(event) => event.currentTarget.select()}
-          className="h-11 min-w-0 grow bg-blackify-800 px-3 text-mc-1 text-mc-white focus:focus-ring-inset"
-        />
-        <Button asChild size="small" className="sm:min-w-32">
-          <button type="button" onClick={copy}>
-            {copied ? t("player.signature.copied") : t("player.signature.copy")}
-          </button>
-        </Button>
-      </dd>
-    </div>
   );
 }

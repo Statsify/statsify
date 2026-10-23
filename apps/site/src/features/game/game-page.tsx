@@ -21,10 +21,12 @@ import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
 import { MinecraftText, colourClass, colourOf, leadingColourClass, plainText } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "~/features/player/mini-header";
+import { PanelToggle, SharePanel } from "~/features/player/share-panel";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
 import { gamePageQuery, modeSearch, periodSearch, submodeSearch } from "./game-data";
+import { imageSize, isGameCard } from "@statsify/profiles/protocol";
 import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { refreshGame } from "~/features/player/player-actions";
@@ -84,8 +86,8 @@ const BOX_COLUMNS = ["", "", "lg:grid-cols-2", "lg:grid-cols-3", "lg:grid-cols-2
 /**
  * A player's page for one game, in the order of the bot's card: nametag and title, level and progress, the stats for
  * the whole game, then one mode's stats under the mode switcher (and the submode's, where a mode has them). Every stat
- * opens its leaderboard at the player. Phones stack the panels; from `lg` up the nametag sits beside the level, the
- * card's boxes sit side by side, and the headline table beside the mode's other tables. Lists (maps, challenges) take
+ * opens its leaderboard at the player. Phones stack the panels; from `md` up the nametag sits beside the level, and
+ * from `lg` up the card's boxes sit side by side, and the headline table beside the mode's other tables. Lists (maps, challenges) take
  * the full width below, and one filter box above the first long one searches them all.
  */
 export function GameView({ page }: { page: GamePage }) {
@@ -93,10 +95,15 @@ export function GameView({ page }: { page: GamePage }) {
   const n = useNumberFormat();
   const queryClient = useQueryClient();
   const nametag = useRef<HTMLDivElement>(null);
+  const shareId = useId();
+  const [sharing, setSharing] = useState(false);
   const [filter, setFilter] = useState("");
   const mode = modeSearch(page, page.mode);
   const submode = submodeSearch(page, page.submode);
   const period = periodSearch(page, page.period);
+  // The card the page unfurls with, as its route's head picks it.
+  const card = new URLSearchParams({ game: page.game.key, ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }), v: String(page.updatedAt) });
+  const cardSize = imageSize(isGameCard(page.game.key, page.mode, page.period) ? { card: page.game.key, mode: page.mode } : { card: "general" }, "og");
   const boxes = page.sections.filter(({ box }) => box);
   const lists = page.sections.filter(({ box, list }) => !box && list);
   // The first other table is the headline; the rest go beside it.
@@ -141,27 +148,41 @@ export function GameView({ page }: { page: GamePage }) {
     return result;
   };
 
+  const shareToggle = (
+    <PanelToggle open={sharing} controls={shareId} onToggle={() => setSharing(!sharing)}>
+      {t("player.share.open")}
+    </PanelToggle>
+  );
+
   return (
     <div className="relative grow">
       <Background
         background={backgroundFor(page.game.key)}
         priority
+        viewport
         className="h-full"
         mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)"
       />
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} game={`${page.game.name}${page.heading.mode ? ` §r(${page.heading.mode}§r)` : ""}`} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
-        <div className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
-          {/* With neither a level nor an overview beside it (Parkour), the nametag takes the whole row. */}
-          <GameHeader ref={nametag} page={page} className={page.level || page.overview.length > 0 ? "lg:row-span-2" : "lg:col-span-2"} />
+        {/* From `md` the nametag is as wide as its content (up to half the row) and the level sits beside it, the
+            overview under both; from `lg` the overview goes under the level. An overview with no level sits beside the
+            nametag at its own height, and a nametag with neither (Parkour) is as wide as its content. */}
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-[fit-content(50%)_minmax(0,1fr)]">
+          <GameHeader
+            ref={nametag}
+            page={page}
+            actions={shareToggle}
+            refresh={<RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} beside={shareToggle} />}
+            className={cn(page.level && page.overview.length > 0 && "lg:row-span-2", !page.level && page.overview.length === 0 && "md:col-span-2 md:w-fit")}
+          />
           {page.level && <LevelPanel level={page.level} username={page.username} />}
           {page.overview.length > 0 && (
             <StatPanel
               section={overviewSection(page.overview)}
               username={page.username}
-              // With no level beside the nametag, the overview takes the nametag's height, its row in the middle.
-              className={cn(!page.level && "lg:row-span-2 content:flex content:flex-col content:justify-center")}
+              className={page.level ? "md:col-span-2 lg:col-span-1" : "md:self-center"}
             />
           )}
           <RefreshBar
@@ -169,9 +190,17 @@ export function GameView({ page }: { page: GamePage }) {
             expiresAt={page.expiresAt}
             refresh={refresh}
             row
-            className="mb-2 lg:col-span-2 lg:mt-2 lg:mb-0"
+            className="max-md:hidden md:col-span-2 md:mt-2"
           />
         </div>
+        {sharing && (
+          <SharePanel
+            id={shareId}
+            name={page.username}
+            card={{ src: `/og/${page.uuid}.png?${card}`, ...cardSize }}
+            file={`${[page.username, page.game.key, mode, submode, period].filter(Boolean).join("-")}.png`}
+          />
+        )}
         {/* The Games button and the mode select share a row (on phones, so the tables start nearer the top); the open
             Games grid lies over the page below it. On phones the tabs share it too; from `md` links and tabs take rows
             of their own. */}
@@ -261,19 +290,39 @@ export function headingText(page: Pick<GamePage, "game" | "heading">, word: (key
 }
 
 /** The nametag, linking back to the player page, over the card's title. */
-export function GameHeader({ page, className, ref }: { page: GamePage; className?: string; ref?: Ref<HTMLDivElement> }) {
+export function GameHeader({
+  page,
+  actions,
+  refresh,
+  className,
+  ref,
+}: {
+  page: GamePage;
+  /** Buttons under the title that open panels under the header. */
+  actions?: ReactNode;
+  /** The refresh bar, in place of `actions` on phones (it carries them), so the tables start higher. */
+  refresh?: ReactNode;
+  className?: string;
+  ref?: Ref<HTMLDivElement>;
+}) {
   const { t } = useTranslation();
 
   return (
     <Box ref={ref} className={cn("content:flex content:h-full content:items-center content:gap-4", className)}>
       <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28" />
-      <h1 className="flex min-w-0 grow flex-col gap-2">
-        {/* A long rank and name wraps onto a second line beside a phone's bust rather than being cut off. */}
-        <Link to="/{-$locale}/player/$name" params={{ name: page.username }} className="wrap-break-word text-mc-2 hover:underline">
-          <MinecraftText>{page.displayName}</MinecraftText>
-        </Link>
-        <MinecraftText className="text-mc-1.5">{headingText(page, (key) => t(key))}</MinecraftText>
-      </h1>
+      <div className="flex min-w-0 grow flex-col">
+        <h1 className="flex flex-col gap-2">
+          {/* A long rank and name wraps onto a second line beside a phone's bust rather than being cut off. */}
+          <Link to="/{-$locale}/player/$name" params={{ name: page.username }} className="wrap-break-word text-mc-2 hover:underline">
+            <MinecraftText>{page.displayName}</MinecraftText>
+          </Link>
+          {/* Read as text, the two lines would otherwise run together ("anrieBedWars Stats"). */}
+          <span className="sr-only"> · </span>
+          <MinecraftText className="text-mc-1.5">{headingText(page, (key) => t(key))}</MinecraftText>
+        </h1>
+        {actions && <div className={cn("flex flex-wrap gap-x-4", refresh !== undefined && "max-md:hidden")}>{actions}</div>}
+        {refresh !== undefined && <div className="mt-2 md:hidden">{refresh}</div>}
+      </div>
     </Box>
   );
 }

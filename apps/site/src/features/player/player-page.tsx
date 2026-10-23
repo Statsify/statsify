@@ -10,10 +10,12 @@ import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
 import { Discord } from "~/components/icons/discord";
 import { Hint, Spoken } from "~/components/ui/hint";
+import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { Hidden, InlineStat, LeaderboardLink, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
+import { PanelToggle, SharePanel } from "./share-panel";
 import { RefreshBar } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust } from "~/components/ui/skin";
@@ -26,9 +28,9 @@ import { playerPageQuery } from "./resolve";
 import { refreshPlayer } from "./player-actions";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRef } from "react";
+import { useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { ComponentType, Ref } from "react";
+import type { ComponentType, ReactNode, Ref } from "react";
 import type { GameSummary, PlayerPage } from "@statsify/contract";
 
 type Socials = PlayerPage["socials"];
@@ -46,8 +48,11 @@ const SOCIAL_ICONS: Partial<Record<SocialKey, ComponentType<{ className?: string
  * and level sit side by side.
  */
 export function PlayerView({ page }: { page: PlayerPage }) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const nametag = useRef<HTMLDivElement>(null);
+  const shareId = useId();
+  const [sharing, setSharing] = useState(false);
 
   // The refreshed page replaces the cached query, so every panel re-renders with the new numbers. The player's game
   // pages predate the refresh: they reload the next time they're shown.
@@ -67,6 +72,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
       <Background
         background="general"
         priority
+        viewport
         className="h-full"
         mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)"
       />
@@ -74,7 +80,16 @@ export function PlayerView({ page }: { page: PlayerPage }) {
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
-          <NametagPanel ref={nametag} page={page} className="lg:col-start-1 lg:row-start-1" />
+          <NametagPanel
+            ref={nametag}
+            page={page}
+            actions={(
+              <PanelToggle open={sharing} controls={shareId} onToggle={() => setSharing(!sharing)}>
+                {t("player.share.open")}
+              </PanelToggle>
+            )}
+            className="lg:col-start-1 lg:row-start-1"
+          />
           <RefreshBar
             updatedAt={page.updatedAt}
             expiresAt={page.expiresAt}
@@ -85,6 +100,15 @@ export function PlayerView({ page }: { page: PlayerPage }) {
           <OverviewPanel overview={page.overview} username={page.username} className="lg:col-start-1 lg:row-start-2" />
           <LoginPanel status={page.status} className="lg:col-start-2 lg:row-start-2" />
         </div>
+        {sharing && (
+          <SharePanel
+            id={shareId}
+            name={page.username}
+            card={{ src: `/og/${page.uuid}.png?v=${page.updatedAt}`, ...IMAGE_VARIANTS.og }}
+            file={`${page.username}.png`}
+            uuid={page.uuid}
+          />
+        )}
         <GameGrid games={page.games} username={page.username} />
         <SignaturePanel page={page} />
       </div>
@@ -92,7 +116,18 @@ export function PlayerView({ page }: { page: PlayerPage }) {
   );
 }
 
-function NametagPanel({ page, className, ref }: { page: PlayerPage; className?: string; ref?: Ref<HTMLDivElement> }) {
+function NametagPanel({
+  page,
+  actions,
+  className,
+  ref,
+}: {
+  page: PlayerPage;
+  /** Buttons after the socials that open panels under the header. */
+  actions: ReactNode;
+  className?: string;
+  ref?: Ref<HTMLDivElement>;
+}) {
   const { t } = useTranslation();
 
   return (
@@ -112,7 +147,10 @@ function NametagPanel({ page, className, ref }: { page: PlayerPage; className?: 
         <dl className="flex flex-col gap-1">
           {page.guild && <InlineStat label={t("default:stats.guild.guild")} value={page.guild.name} color="text-mc-dark-green" />}
         </dl>
-        <SocialLinks socials={page.socials} />
+        <div className="flex flex-wrap items-center gap-x-4">
+          <SocialLinks socials={page.socials} />
+          {actions}
+        </div>
       </div>
     </Box>
   );

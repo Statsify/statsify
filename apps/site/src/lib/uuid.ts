@@ -17,6 +17,9 @@ export function compactUuid(value: string): string | null {
   return UUID_PATTERN.test(value) ? value.replaceAll("-", "").toLowerCase() : null;
 }
 
+/** An undashed UUID with its four dashes, as Mojang prints it. */
+export const dashedUuid = (compact: string): string => compact.replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
+
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
 

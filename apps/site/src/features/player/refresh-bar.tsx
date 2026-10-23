@@ -9,7 +9,7 @@
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/util";
 import { formatCountdown } from "~/i18n/format";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ActionResult } from "./player-actions";
 
@@ -59,6 +59,7 @@ export function RefreshBar({
   expiresAt,
   refresh,
   row = false,
+  beside,
   className,
 }: {
   updatedAt: number;
@@ -66,6 +67,11 @@ export function RefreshBar({
   refresh: () => Promise<ActionResult<unknown>>;
   /** One row on phones too, the time beside a smaller button: a game page, whose tables should start near the top. */
   row?: boolean;
+  /**
+   * Controls that share the button's row, under the time: a game page's nametag on phones puts the bar there, with
+   * its Share toggle, so the tables start higher.
+   */
+  beside?: ReactNode;
   className?: string;
 }) {
   const { t, i18n } = useTranslation();
@@ -111,26 +117,38 @@ export function RefreshBar({
   else if (state.status === "unavailable") message = t("player.refreshFailed");
   else if (state.status === "error") message = t("player.refreshError");
 
-  // Phones: the time over a full-width button, unless `row`; wider screens: one row.
+  // A minimum width, so the countdown's changing digits don't move the button; beside other controls it's at the end
+  // of the row, where they don't move either.
+  // `aria-disabled`, not `disabled`, so the button keeps focus while it refreshes and counts down.
+  const button = (
+    <Button
+      asChild
+      variant="primary"
+      size="small"
+      className={cn("w-full sm:w-auto sm:min-w-48", row && "w-auto min-w-36 shrink-0", beside !== undefined && "w-auto shrink-0 sm:min-w-0")}
+    >
+      <button type="button" aria-disabled={disabled} onClick={() => {
+          if (!disabled) void run();
+        }}
+      >
+        {label}
+      </button>
+    </Button>
+  );
+
+  // Phones: the time over a full-width button, unless `row`; wider screens: one row. Beside other controls, the time
+  // over them and the button.
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       <div
         className={cn(
-          "flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4",
+          "flex flex-col gap-2",
+          beside === undefined && "sm:flex-row sm:items-center sm:justify-between sm:gap-4",
           row && "flex-row items-center justify-between gap-4"
         )}
       >
         <p className={cn(META, "min-w-0")}>{now === undefined ? " " : t("player.updated", { time: relativeTime(updatedAt, now, i18n.language) })}</p>
-        {/* A minimum width, so the countdown's changing digits don't move the button. */}
-        {/* `aria-disabled`, not `disabled`, so the button keeps focus while it refreshes and counts down. */}
-        <Button asChild variant="primary" size="small" className={cn("w-full sm:w-auto sm:min-w-48", row && "w-auto min-w-36 shrink-0")}>
-          <button type="button" aria-disabled={disabled} onClick={() => {
-              if (!disabled) void run();
-            }}
-          >
-            {label}
-          </button>
-        </Button>
+        {beside === undefined ? button : <div className="flex items-center justify-between gap-3">{beside}{button}</div>}
       </div>
       <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>
       <output className="sr-only">

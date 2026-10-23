@@ -57,6 +57,14 @@
     "refreshLimited": "Too many updates right now, try again shortly.",
     "refreshFailed": "Couldn't update. Try again in a minute.",
     "refreshError": "Couldn't refresh. Try again in a moment.",
+    "share": {
+      "open": "Share",
+      "title": "Share",
+      "link": "Link",
+      "uuid": "UUID",
+      "uuidCompact": "UUID Without Dashes",
+      "save": "Save Card"
+    },
     "signature": {
       "title": "Get signature",
       "description": "Paste one of these into your Hypixel Forums signature, or anywhere else that shows images. The image carries the stats from the last refresh on this page, with the time they were fetched printed on it.",
