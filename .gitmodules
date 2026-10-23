@@ -1,6 +1,6 @@
 [submodule "assets/public"]
 	path = assets/public
-	url = git@github.com/statsify/public-assets.git
+	url = git@github.com:statsify/public-assets.git
 [submodule "assets/private"]
 	path = assets/private
-	url = git@github.com/statsify/assets.git
+	url = git@github.com:statsify/assets.git
