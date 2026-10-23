@@ -10,8 +10,6 @@
  * Removes files from dist whose source in src no longer exists. It runs as each package's
  * turbo clean task, before both builds and cache restores, which add files to dist but
  * never delete any. Only orphans are removed, so dist stays usable during build:watch.
- *
- * Usage: node ../../apps/scripts/src/clean-dist.ts
  */
 
 import { existsSync, readdirSync, rmSync, rmdirSync } from "node:fs";
@@ -22,17 +20,14 @@ const SRC = "src";
 
 // swc keeps each file's path and only changes its extension, so a dist file has a source
 // when a src file has the same path once .map and both extensions are removed
-const stem = (path: string) => path.replace(/\.map$/, "").replace(/\.[^./\\]+$/, "");
+const stem = (path) => path.replace(/\.map$/, "").replace(/\.[^./\\]+$/, "");
 
-function entries(dir: string) {
-  return readdirSync(dir, { recursive: true, withFileTypes: true });
-}
+const entries = (dir) => readdirSync(dir, { recursive: true, withFileTypes: true });
 
-function files(dir: string) {
-  return entries(dir)
+const files = (dir) =>
+  entries(dir)
     .filter((entry) => entry.isFile())
     .map((entry) => relative(dir, join(entry.parentPath, entry.name)));
-}
 
 if (existsSync(DIST)) {
   const sources = new Set(files(SRC).map(stem));
