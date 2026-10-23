@@ -76,6 +76,9 @@ export class VerifyCommand {
     }));
 
     listener.addHook(VERIFY_MODAL.getCustomId(), async (interaction) => {
+      const savedUser = await this.apiService.getUser(interaction.getUserId());
+      if (savedUser?.locale) interaction.setLocale(savedUser.locale);
+
       const t = interaction.t();
       const data = interaction.getData();
       const input = data.components[0].components[0].value as string;
