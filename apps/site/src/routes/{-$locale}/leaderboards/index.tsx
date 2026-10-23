@@ -46,7 +46,7 @@ function LeaderboardsPage() {
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
       <div className="w-container flex flex-col gap-6 px-4 py-12 text-mc-white md:px-8">
         <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{t("leaderboards.title")}</h1>
-        <LeaderboardIndex groups={groups} />
+        <LeaderboardIndex groups={groups} gameIndexes />
       </div>
     </div>
   );

@@ -11,9 +11,24 @@ import { cacheNotFoundResponse } from "~/lib/response";
 import { notFound, redirect } from "@tanstack/react-router";
 import { resolvePlayer } from "~/features/player/resolve";
 import { rpc } from "~/lib/orpc";
-import type { LeaderboardPage } from "@statsify/contract";
+import type { LeaderboardGame, LeaderboardPage } from "@statsify/contract";
 
 const PAGE_SIZE = 25;
+
+/** `/leaderboards/<key>` is a game's index rather than a leaderboard: every leaderboard's field has a dot. */
+export const isGameKey = (field: string): boolean => !field.includes(".");
+
+/** A game's index of leaderboards; an unknown game is a 404, cached like an unknown leaderboard. */
+export async function loadLeaderboardGame(key: string): Promise<LeaderboardGame> {
+  try {
+    if (key.length <= 32) return await rpc.leaderboard.game({ key });
+  } catch (error) {
+    if (!(error instanceof ORPCError && error.code === "NOT_FOUND")) throw error;
+  }
+
+  cacheNotFoundResponse("max-age=300");
+  throw notFound();
+}
 
 interface PageQuery {
   field: string;

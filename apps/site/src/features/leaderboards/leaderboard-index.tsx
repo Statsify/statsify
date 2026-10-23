@@ -29,13 +29,26 @@ export function withoutGroupPrefix(groups: LeaderboardGroup[]): LeaderboardGroup
   }));
 }
 
-const boardCount = (groups: LeaderboardGroup[]) => groups.reduce((sum, group) => sum + group.leaderboards.length, 0);
+/** One panel of an index: a game's leaderboards on `/leaderboards`, or a mode's on a game's index. */
+export type IndexGroup = Pick<LeaderboardGroup, "key" | "game" | "name" | "leaderboards">;
+
+const boardCount = (groups: IndexGroup[]) => groups.reduce((sum, group) => sum + group.leaderboards.length, 0);
 
 /**
- * Every leaderboard grouped by game, each group a closed `<details>` so the 2,700 links cost no layout until
- * opened. The filter matches every word of the query against "<game> <leaderboard>" and opens what's left.
+ * Leaderboards in groups (every leaderboard by game, or one game's by mode), each group a closed `<details>` so the
+ * 2,700 links cost no layout until opened, except the `open` one. Each group's id is its key, so `#<key>` lands on it.
+ * With `gameIndexes`, each game's panel starts with a link to its own index. The filter matches every word of the query
+ * against "<group> <leaderboard>" and opens what's left.
  */
-export function LeaderboardIndex({ groups }: { groups: LeaderboardGroup[] }) {
+export function LeaderboardIndex({
+  groups,
+  open,
+  gameIndexes = false,
+}: {
+  groups: IndexGroup[];
+  open?: string;
+  gameIndexes?: boolean;
+}) {
   const { t } = useTranslation();
   const n = useNumberFormat();
   const { locale } = localeRoute.useRouteContext();
@@ -66,10 +79,10 @@ export function LeaderboardIndex({ groups }: { groups: LeaderboardGroup[] }) {
         <p className="text-mc-1.5 text-mc-gray text-center">{t("leaderboards.noMatches", { query: filter.trim() })}</p>
       )}
       {visible.map((group) => (
-        <Box key={group.name} className="content:py-2">
-          {/* One panel per game: a 44 px summary, then plain 44 px rows, one column on phones and up to four on
+        <Box key={group.key} className="content:py-2">
+          {/* One panel per group: a 44 px summary, then plain 44 px rows, one column on phones and up to four on
               desktop. */}
-          <details open={filtering} className="group">
+          <details open={filtering || group.key === open} id={group.key || undefined} className="group scroll-mt-4">
             <summary className="flex min-h-11 cursor-pointer list-none items-center gap-3 text-mc-1.5 font-bold select-none [&::-webkit-details-marker]:hidden">
               {group.game && hasGameIcon(group.game) && <GameIcon game={group.game} />}
               <span className="grow">{group.name}</span>
@@ -77,6 +90,14 @@ export function LeaderboardIndex({ groups }: { groups: LeaderboardGroup[] }) {
             </summary>
             {/* One class on the list instead of one per link: there are thousands of them. */}
             <ul {...delegation} className="grid grid-cols-1 pt-2 pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:text-mc-1 [&_a:hover]:bg-white/10 [&_a:hover]:underline">
+              {gameIndexes && !filtering && (
+                <li className="col-span-full">
+                  {/* The game's index is `/leaderboards/<key>`, the same route as a leaderboard's. */}
+                  <a href={href(group.key)} data-field={group.key} className="text-mc-yellow">
+                    {t("leaderboards.gameTitle", { game: group.name })}
+                  </a>
+                </li>
+              )}
               {group.leaderboards.map(({ field, name }) => (
                 <li key={field}>
                   <a href={href(field)} data-field={field}>{name}</a>

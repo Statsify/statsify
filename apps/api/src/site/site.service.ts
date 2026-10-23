@@ -37,6 +37,8 @@ import type {
   GamePage,
   GuildPreview,
   HomePreviews,
+  LeaderboardGame,
+  LeaderboardGameInput,
   LeaderboardGroup,
   LeaderboardPage,
   LeaderboardPageInput,
@@ -49,7 +51,7 @@ import type {
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
-import { leaderboardColumn } from "./leaderboards.js";
+import { leaderboardColumn, leaderboardGame } from "./leaderboards.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
 import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
@@ -183,7 +185,7 @@ function buildLeaderboardGroups(): LeaderboardGroup[] {
     let group = groups.get(statsKey);
 
     if (!group) {
-      group = { ...(LEADERBOARD_GROUPS[statsKey] ?? { game: null, name: statsKey }), leaderboards: [] };
+      group = { key: statsKey, ...(LEADERBOARD_GROUPS[statsKey] ?? { game: null, name: statsKey }), leaderboards: [] };
       groups.set(statsKey, group);
     }
 
@@ -444,6 +446,12 @@ export class SiteService implements OnApplicationBootstrap {
   public leaderboardList(): LeaderboardGroup[] {
     this.leaderboardGroups ??= buildLeaderboardGroups();
     return this.leaderboardGroups;
+  }
+
+  public leaderboardGame({ key }: LeaderboardGameInput): LeaderboardGame {
+    const group = this.leaderboardList().find((group) => group.key === key);
+    if (!group) throw notFound("Leaderboard not found");
+    return leaderboardGame(group);
   }
 
   public async leaderboardPage(input: LeaderboardPageInput): Promise<LeaderboardPage> {

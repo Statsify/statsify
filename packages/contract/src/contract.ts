@@ -150,11 +150,28 @@ export const ResultCardSchema = z.object({
   karma: Count,
 });
 
+const LeaderboardLinkSchema = z.object({ field: z.string(), name: z.string() });
+
 export const LeaderboardGroupSchema = z.object({
+  /** The `PlayerStats` key the group's leaderboards are under, which is also its index's `/leaderboards/<key>`. */
+  key: z.string(),
   /** The `GameId` for the icon, or `null` for groups without a game (quests, challenges). */
   game: z.string().nullable(),
   name: z.string(),
-  leaderboards: z.array(z.object({ field: z.string(), name: z.string() })),
+  leaderboards: z.array(LeaderboardLinkSchema),
+});
+
+/** One game's leaderboards by mode, for its `/leaderboards/<key>` index. Names are short, without the game and mode. */
+export const LeaderboardGameSchema = LeaderboardGroupSchema.omit({ leaderboards: true }).extend({
+  modes: z.array(
+    z.object({
+      /** The mode's api key, or `""` for the game's own leaderboards. */
+      key: z.string(),
+      /** The mode's name, or `null` for the game's own leaderboards. */
+      name: z.string().nullable(),
+      leaderboards: z.array(LeaderboardLinkSchema),
+    })
+  ),
 });
 
 export const LeaderboardRowSchema = z.object({
@@ -505,6 +522,11 @@ const LeaderboardPageInputSchema = z.object({
   around: UuidSchema.optional(),
 });
 
+const LeaderboardGameInputSchema = z.object({
+  /** A `PlayerStats` key with leaderboards, e.g. `bedwars`. */
+  key: z.string().min(1).max(32),
+});
+
 const errors = oc.errors({
   NOT_FOUND: { message: "Player not found" },
   /** `lookup` only: Hypixel didn't answer, so nothing is known about the name yet. */
@@ -567,6 +589,10 @@ export const contract = {
     list: oc
       .route({ method: "GET", path: "/leaderboard/list", summary: "Every player leaderboard, grouped by game" })
       .output(z.array(LeaderboardGroupSchema)),
+    game: errors
+      .route({ method: "GET", path: "/leaderboard/game", summary: "One game's player leaderboards, grouped by mode" })
+      .input(LeaderboardGameInputSchema)
+      .output(LeaderboardGameSchema),
     page: errors
       .route({ method: "GET", path: "/leaderboard/page", summary: "One page of a player leaderboard" })
       .input(LeaderboardPageInputSchema)
@@ -589,6 +615,7 @@ export type GameSummary = z.infer<typeof GameSummarySchema>;
 export type StatRow = z.infer<typeof StatRowSchema>;
 export type ResultCard = z.infer<typeof ResultCardSchema>;
 export type LeaderboardGroup = z.infer<typeof LeaderboardGroupSchema>;
+export type LeaderboardGame = z.infer<typeof LeaderboardGameSchema>;
 export type LeaderboardRow = z.infer<typeof LeaderboardRowSchema>;
 export type LeaderboardColumn = z.infer<typeof LeaderboardColumnSchema>;
 export type LeaderboardPage = z.infer<typeof LeaderboardPageSchema>;
@@ -596,6 +623,7 @@ export type LeaderboardPage = z.infer<typeof LeaderboardPageSchema>;
 /** Validated (server-side) inputs. */
 export type ResolveInput = z.infer<typeof ResolveInputSchema>;
 export type LeaderboardPageInput = z.infer<typeof LeaderboardPageInputSchema>;
+export type LeaderboardGameInput = z.infer<typeof LeaderboardGameInputSchema>;
 export type GameInput = z.infer<typeof GameInputSchema>;
 
 export type BingoPlayer = z.infer<typeof BingoPlayerSchema>;

@@ -91,6 +91,12 @@ export class SiteController {
   }
 
   @Auth(SITE_ONLY)
+  @Implement(contract.leaderboard.game)
+  public leaderboardGame() {
+    return implement(contract.leaderboard.game).handler(({ input }) => this.siteService.leaderboardGame(input));
+  }
+
+  @Auth(SITE_ONLY)
   @Implement(contract.leaderboard.page)
   public leaderboardPage() {
     return implement(contract.leaderboard.page).handler(({ input }) => this.siteService.leaderboardPage(input));

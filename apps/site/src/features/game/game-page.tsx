@@ -18,7 +18,7 @@ import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hidden, InlineStat, LeaderboardLink, StatCell } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
-import { MinecraftText, colourClass, colourOf, leadingColourClass } from "~/components/ui/minecraft-text";
+import { MinecraftText, colourClass, colourOf, leadingColourClass, plainText } from "~/components/ui/minecraft-text";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
@@ -178,7 +178,19 @@ export function GameView({ page }: { page: GamePage }) {
         {page.submodes.length > 1 && <ModeSwitcher page={page} kind="submode" />}
         {(page.periods?.length ?? 0) > 1 && <ModeSwitcher page={page} kind="period" />}
         {page.window && <PeriodDates {...page.window} />}
-        <p className="text-mc-1 text-mc-gray">{t("game.hint", { name: page.username })}</p>
+        <p className="text-mc-1 text-mc-gray">
+          {t("game.hint", { name: page.username })}{" "}
+          {/* The game's index of leaderboards, opened and scrolled to this mode's. */}
+          <Link
+            to="/{-$locale}/leaderboards/$field"
+            params={{ field: page.game.key }}
+            search={{ mode: page.mode }}
+            hash={page.mode}
+            className="text-mc-yellow underline underline-offset-2"
+          >
+            {t("leaderboards.gameTitle", { game: plainText(page.game.name) })}
+          </Link>
+        </p>
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-mc-1 text-mc-gray">
           {t("game.discord")}
           <Command command={botCommand(page)} />

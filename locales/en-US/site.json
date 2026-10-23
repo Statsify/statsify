@@ -91,7 +91,10 @@
     "unknown": "We haven't seen {{name}} yet.",
     "unranked": "{{name}} isn't on this leaderboard yet.",
     "moved": "{{name}}'s rank changed while the page loaded, so they're not on it. Try again to find them.",
-    "empty": "Nobody here yet."
+    "empty": "Nobody here yet.",
+    "gameTitle": "{{game}} Leaderboards",
+    "gameWide": "General",
+    "all": "All Leaderboards"
   },
   "game": {
     "stats": "Stats",
