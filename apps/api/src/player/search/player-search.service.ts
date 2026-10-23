@@ -14,6 +14,10 @@ import { Redis } from "ioredis";
 const REDI_SEARCH_NOT_INSTALLED =
   "This error was most likely caused because RediSearch is not installed.";
 
+// A fuzzy search on one or two characters walks most of the dictionary, so cache those
+const SHORT_QUERY_LENGTH = 2;
+const SHORT_QUERY_TTL = 60_000;
+
 export interface RedisPlayer {
   username: string;
   uuid: string;
@@ -22,10 +26,25 @@ export interface RedisPlayer {
 @Injectable()
 export class PlayerSearchService {
   private logger = new Logger("PlayerSearchService");
+  private readonly shortQueries = new Map<string, Promise<string[]>>();
 
   public constructor(@InjectRedis() private readonly redis: Redis) {}
 
   public get(query: string): Promise<string[]> {
+    if (query.length > SHORT_QUERY_LENGTH) return this.search(query);
+
+    const cached = this.shortQueries.get(query);
+    if (cached) return cached;
+
+    const players = this.search(query);
+    this.shortQueries.set(query, players);
+    setTimeout(() => this.shortQueries.delete(query), SHORT_QUERY_TTL);
+    players.catch(() => this.shortQueries.delete(query));
+
+    return players;
+  }
+
+  private search(query: string): Promise<string[]> {
     try {
       return this.redis.call(
         "FT.SUGGET",
