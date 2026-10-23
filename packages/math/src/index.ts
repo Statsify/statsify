@@ -24,19 +24,25 @@ export const roundTo = (n: number, precision = 2) => {
  * @param n1 The numerator of the fraction
  * @param n2 The denominator of the fraction
  * @param multiply Whether to multiply the numerator and denominator, useful for percents, such as `bowAccuracy`
- * @returns The value of the fraction * the `multiply` value rounded to 2 decimal places
+ * @returns The value of the fraction * the `multiply` value without rounding, for use in further calculations
  */
-export const ratio = (n1 = 0, n2 = 0, multiply = 1) => {
+export const unroundedRatio = (n1 = 0, n2 = 0, multiply = 1) => {
   const result = n1 / n2;
 
-  if (Number.isFinite(result)) {
-    return roundTo(result * multiply);
-  } else if (n1 === 0 && n2 === 0) {
-    return 0;
-  }
-    return roundTo(n1 * multiply) || 0;
-  
+  if (Number.isFinite(result)) return result * multiply;
+
+  return n1 * multiply || 0;
 };
+
+/**
+ *
+ * @param n1 The numerator of the fraction
+ * @param n2 The denominator of the fraction
+ * @param multiply Whether to multiply the numerator and denominator, useful for percents, such as `bowAccuracy`
+ * @returns The value of the fraction * the `multiply` value rounded to 2 decimal places
+ */
+export const ratio = (n1 = 0, n2 = 0, multiply = 1) =>
+  roundTo(unroundedRatio(n1, n2, multiply));
 
 export const add = (...args: number[]): number =>
   args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
