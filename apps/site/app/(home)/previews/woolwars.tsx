@@ -9,6 +9,7 @@
 "use client";
 
 import { Box } from "~/components/ui/box";
+import { DISPLAY_LOCALE } from "~/localize";
 import { MotionValue, easeIn, easeOut, motion, useTransform } from "motion/react";
 import { MotionValueTableData } from "~/components/ui/table";
 import { Nametag } from "~/components/ui/nametag";
@@ -23,12 +24,12 @@ export function WoolWarsPreview({ className, daysBack }: { className?: string; d
 
   const oldDate = useTransform(daysBack, (daysBack) => formatDate(subDays(today, daysBack), "MM/dd/yyyy"));
 
-  const intFormatter = Intl.NumberFormat("en-US", {
+  const intFormatter = Intl.NumberFormat(DISPLAY_LOCALE, {
     maximumFractionDigits: 0,
     minimumFractionDigits: 0,
   });
 
-  const decimalFormatter = Intl.NumberFormat("en-US", {
+  const decimalFormatter = Intl.NumberFormat(DISPLAY_LOCALE, {
     maximumFractionDigits: 2,
     minimumFractionDigits: 2,
   });

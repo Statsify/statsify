@@ -6,12 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+// Server and browser output must match, so numbers never use the runtime's default locale
+export const DISPLAY_LOCALE = "en-US";
+
 export function t(number: number): string {
   return formatNumber(number);
 }
 
 // Taken from @statsify/discord - i18n-loader.service.ts
-function formatNumber(value: number, language?: string) {
+function formatNumber(value: number, language = DISPLAY_LOCALE) {
   const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
   const digits = hasDecimals ? 2 : 0;
 
