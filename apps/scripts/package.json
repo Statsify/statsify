@@ -15,7 +15,6 @@
     "validate-commands": "node --no-warnings src/validate-commands.js"
   },
   "dependencies": {
-    "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/rendering": "workspace:^",

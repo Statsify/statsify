@@ -10,7 +10,7 @@ import { type APIData, formatTime } from "@statsify/util";
 import { Field } from "#metadata";
 import { add, ratio } from "@statsify/math";
 
-const limit = 10_000;
+const limit = 1_000;
 
 export class MegaWallsKit {
   @Field({ leaderboard: { limit } })
@@ -47,7 +47,7 @@ export class MegaWallsKit {
   public assists: number;
 
   @Field({
-    leaderboard: { limit, formatter: formatTime },
+    leaderboard: { limit: 10_000, formatter: formatTime },
     historical: { enabled: false },
   })
   public playtime: number;
