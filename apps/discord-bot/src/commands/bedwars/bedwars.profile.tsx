@@ -6,16 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
+  Badge,
+  BarChart,
   Container,
   Footer,
+  Graph,
   Header,
   Historical,
   SidebarItem,
+  StatDelta,
   Table,
   formatProgression,
 } from "#components";
+import { BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface BedWarsProfileProps extends BaseProfileProps {
@@ -35,6 +39,22 @@ export const BedWarsProfile = ({
 }: BedWarsProfileProps) => {
   const { bedwars } = player.stats;
   const stats = bedwars[mode.api];
+  const modeWins = [
+    { label: "Solo", value: bedwars.solo.wins || 0, color: "#4e79a7" },
+    { label: "Doubles", value: bedwars.doubles.wins || 0, color: "#76b7b2" },
+    { label: "3s", value: bedwars.threes.wins || 0, color: "#f28e2b" },
+    { label: "4s", value: bedwars.fours.wins || 0, color: "#e15759" },
+    { label: "4v4", value: bedwars["4v4"].wins || 0, color: "#9ca3af" },
+  ];
+  const ratioPoints = [
+    { label: t("stats.wlr"), value: stats.wlr || 0 },
+    { label: t("stats.fkdr"), value: stats.fkdr || 0 },
+    { label: t("stats.kdr"), value: stats.kdr || 0 },
+    { label: t("stats.bblr"), value: stats.bblr || 0 },
+  ];
+  const ratioAverage =
+    ratioPoints.reduce((total, point) => total + point.value, 0) / ratioPoints.length;
+  const fkdrDelta = (stats.fkdr || 0) - (bedwars.overall.fkdr || 0);
 
   const sidebar: SidebarItem[] = [
     [t("stats.tokens"), t(bedwars.tokens), "§2"],
@@ -135,6 +155,32 @@ export const BedWarsProfile = ({
           exp={bedwars.exp}
         />
       </Table.table>
+      <div width="100%">
+        <box width="1/2" direction="column" location="left">
+          <div width="100%">
+            <text>§lMode Wins</text>
+            <div width="remaining" />
+            <Badge>§bVisual</Badge>
+          </div>
+          <BarChart items={modeWins} />
+        </box>
+        <box width="1/2" direction="column" location="left">
+          <div width="100%">
+            <text>§lRatio Profile</text>
+            <div width="remaining" />
+            <StatDelta value={fkdrDelta} />
+          </div>
+          <Graph
+            points={ratioPoints}
+            height={112}
+            min={0}
+            max={Math.max(1, ...ratioPoints.map((point) => point.value))}
+            referenceValue={ratioAverage}
+            color="#9ca3af"
+            fillColor="rgba(156, 163, 175, 0.12)"
+          />
+        </box>
+      </div>
       <Footer logo={logo} user={user} />
     </Container>
   );
