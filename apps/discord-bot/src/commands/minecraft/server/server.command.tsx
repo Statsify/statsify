@@ -62,11 +62,14 @@ export class ServerCommand {
 
   private async getServer(tag: string) {
     tag = tag.toLowerCase();
+    const [hostname] = tag.split(":");
 
     const mappedServer = this.mappings.find(
       (s) =>
         s.name.toLowerCase() === tag ||
-        s.addresses.find((address) => tag.endsWith(address))
+        s.addresses.some(
+          (address) => hostname === address || hostname.endsWith(`.${address}`)
+        )
     );
 
     const server = await this.axios
