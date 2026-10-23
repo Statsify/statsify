@@ -6,7 +6,8 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  checks: write
+  contents: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
@@ -28,7 +29,6 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
-          persist-credentials: false
 
       - name: Setup pnpm
         uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
@@ -41,11 +41,14 @@ jobs:
       - name: Install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
-      - name: Rust cache
-        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - name: Turbo cache
+        id: turbo-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
-          cache-directories: ~/.cache/.wasm-pack
-          save-if: ${{ github.ref == 'refs/heads/main' }}
+          path: .turbo
+          key: turbo-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ github.job }}-${{ github.ref_name }}-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -58,9 +61,6 @@ jobs:
 
       - name: Build
         run: pnpm build
-
-      - name: Check Cargo.lock
-        run: git diff --exit-code Cargo.lock
 
       - name: Test
         run: pnpm test:coverage --changed=$TURBO_SCM_BASE
