@@ -26,10 +26,7 @@ export class Event {
     this.exp = data.levelling?.experience ?? 0;
     this.level = Math.min(MAX_LEVEL, Math.floor(this.exp / expRequirement) + 1);
 
-    this.progression = new Progression(
-      this.exp % expRequirement,
-      this.level >= MAX_LEVEL ? 0 : expRequirement
-    );
+    this.progression = new Progression(this.exp % expRequirement, this.level >= MAX_LEVEL ? 0 : expRequirement);
   }
 }
 
@@ -41,6 +38,9 @@ export type EventType = {
 export type EventPeriod = "summer" | "halloween" | "christmas" | "easter";
 
 export const EVENT_TYPES: EventType[] = [
+  { period: "halloween", year: 2026, key: "halloween2026" },
+  { period: "summer", year: 2026, key: "summer2026" },
+  { period: "easter", year: 2026, key: "easter2026" },
   { period: "christmas", year: 2025, key: "christmas2025" },
   { period: "halloween", year: 2025, key: "halloween2025" },
   { period: "summer", year: 2025, key: "summer2025" },
@@ -104,6 +104,15 @@ export class Events {
   @Field({ leaderboard: { name: "Christmas 2025" } })
   public christmas2025: Event;
 
+  @Field({ leaderboard: { name: "Easter 2026" } })
+  public easter2026: Event;
+
+  @Field({ leaderboard: { name: "Summer 2026" } })
+  public summer2026: Event;
+
+  @Field({ leaderboard: { name: "Halloween 2026" } })
+  public halloween2026: Event;
+
   @Field()
   public silver: number;
 
@@ -123,6 +132,9 @@ export class Events {
     this.summer2025 = new Event(25_000, data.summer?.["2025"]);
     this.halloween2025 = new Event(10_000, data.halloween?.["2025"]);
     this.christmas2025 = new Event(10_000, data.christmas?.["2025"]);
+    this.easter2026 = new Event(10_000, data.easter?.["2026"]);
+    this.summer2026 = new Event(25_000, data.summer?.["2026"]);
+    this.halloween2026 = new Event(10_000, data.halloween?.["2026"]);
 
     this.silver = data.silver;
   }
