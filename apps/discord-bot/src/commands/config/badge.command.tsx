@@ -23,6 +23,7 @@ import { User, UserTier } from "@statsify/schemas";
 import { createCanvas, loadImage, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
+import { previewChange } from "./preview-change.js";
 
 @Command({ description: (t) => t("commands.badge") })
 export class BadgeCommand {
@@ -118,25 +119,29 @@ export class BadgeCommand {
           height
         );
 
-        await this.apiService.updateUserBadge(userId, await canvas.toBuffer("png"));
+        const buffer = await canvas.toBuffer("png");
         const profile = await this.getProfile(t, user, canvas);
 
-        return {
-          content: t("config.badge.set") as string,
-          files: [{ name: "badge.png", data: profile, type: "image/png" }],
-        };
+        return previewChange(
+          context,
+          "badge.png",
+          profile,
+          () => this.apiService.updateUserBadge(userId, buffer),
+          (t) => t("config.badge.set")
+        );
       }
 
       case "reset": {
-        await this.apiService.deleteUserBadge(userId);
-        const badge = await this.apiService.getUserBadge(userId);
+        // Badges need a premium tier, so without a custom badge the API serves the footer logo
+        const profile = await this.getProfile(t, user, await getLogo(user));
 
-        const profile = await this.getProfile(t, user, badge);
-
-        return {
-          content: t("config.badge.reset") as string,
-          files: [{ name: "badge.png", data: profile, type: "image/png" }],
-        };
+        return previewChange(
+          context,
+          "badge.png",
+          profile,
+          () => this.apiService.deleteUserBadge(userId),
+          (t) => t("config.badge.reset")
+        );
       }
     }
   }

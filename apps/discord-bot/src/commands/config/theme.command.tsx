@@ -32,6 +32,7 @@ import {
 import { convertColorCodes } from "#lib/convert-color-codes";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
+import { previewChange } from "./preview-change.js";
 import { removeFormatting } from "@statsify/util";
 import { render } from "@statsify/rendering";
 
@@ -183,24 +184,24 @@ export class ThemeCommand {
   })
   public async reset(context: CommandContext) {
     const user = context.getUser();
-    const t = context.t();
 
     if (!user?.uuid)
       throw new ErrorMessage("verification.requiredVerification");
 
-    user.footer = {
+    const footer = {
       icon: User.tierToLogo(user.tier ?? UserTier.NONE),
       message: null,
     };
 
-    await this.apiService.updateUser(user.id, { footer: user.footer });
+    const profile = await this.getProfile(context.t(), "footer", { ...user, footer });
 
-    const profile = await this.getProfile(t, "footer", user);
-
-    return {
-      content: t("config.footer.reset"),
-      files: [{ name: "footer.png", data: profile, type: "image/png" }],
-    };
+    return previewChange(
+      context,
+      "footer.png",
+      profile,
+      () => this.apiService.updateUser(user.id, { footer }),
+      (t) => t("config.footer.reset")
+    );
   }
 
   private async updateField<
@@ -214,21 +215,23 @@ export class ThemeCommand {
     value: T[K]
   ): Promise<IMessage> {
     const user = context.getUser();
-    const t = context.t();
 
     if (!user?.uuid)
       throw new ErrorMessage("verification.requiredVerification");
 
-    user[mode] = { ...user[mode], [field]: value };
-    await this.apiService.updateUser(user.id, { [mode]: user[mode] });
+    const profile = await this.getProfile(context.t(), mode, {
+      ...user,
+      [mode]: { ...user[mode], [field]: value },
+    });
 
-    const profile = await this.getProfile(t, mode, user);
-
-    return {
-      content:
-        mode === "theme" ? t("config.theme.set") : t("config.footer.set"),
-      files: [{ name: `${mode}.png`, data: profile, type: "image/png" }],
-    };
+    return previewChange(
+      context,
+      `${mode}.png`,
+      profile,
+      // Only save the changed field, so applying an older preview can't undo a newer change
+      () => this.apiService.updateUser(user.id, { [mode]: { [field]: value } }),
+      (t) => (mode === "theme" ? t("config.theme.set") : t("config.footer.set"))
+    );
   }
 
   private async getProfile(
@@ -238,10 +241,13 @@ export class ThemeCommand {
   ) {
     if (!user?.uuid) throw new ErrorMessage("errors.unknown");
 
+    // Without a custom badge the API serves the saved footer logo, so draw the previewed one instead
+    const logoIsBadge = user.tier && !(user.hasBadge && User.isGold(user));
+
     const [player, skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayer(user.uuid),
       this.apiService.getPlayerSkin(user.uuid, user),
-      this.apiService.getUserBadge(user.uuid),
+      logoIsBadge ? undefined : this.apiService.getUserBadge(user.uuid),
       getLogo(user),
       getBackground("hypixel", "overall"),
     ]);
@@ -252,7 +258,7 @@ export class ThemeCommand {
         logo={logo}
         player={player}
         skin={skin}
-        badge={badge}
+        badge={logoIsBadge ? logo : badge}
         user={user}
         message={
           mode === "theme" ?
