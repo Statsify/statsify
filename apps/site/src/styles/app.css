@@ -312,3 +312,17 @@
     font-variant-numeric: tabular-nums;
   }
 }
+
+/* Reduced motion: nothing on the site slides, fades or turns; every animation and transition jumps to its end. What
+   carries meaning in motion has its own still form (the progress bar's full bar, the home page's final numbers), and
+   Motion's own animations check the setting where they run. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
