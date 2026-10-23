@@ -46,7 +46,8 @@ export function ResultCards({ cards, query }: { cards: ResultCard[]; query: stri
   );
 }
 
-function ResultCardView({ card }: { card: ResultCard }) {
+/** One player's card, linking to their page. */
+export function ResultCardView({ card }: { card: ResultCard }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
   const exact = useExactNumber();

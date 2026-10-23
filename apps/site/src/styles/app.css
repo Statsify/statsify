@@ -215,6 +215,32 @@
   margin-inline: auto;
 }
 
+/*
+ * The space `/player`'s recently viewed section takes, from `--recent` (how many players: set on the root before first
+ * paint, then on the section by React): the heading row, then the result cards, one a row on phones, two from md and
+ * three from xl, 124 px tall below sm and 156 from it, 8 px apart. None for none. So the footer stays put when the cards
+ * arrive.
+ */
+@utility recent-hold {
+  --recent-rows: var(--recent, 0);
+  --recent-card: 124px;
+  min-height: calc(min(var(--recent, 0), 1) * (52px + var(--recent-rows) * var(--recent-card) + (var(--recent-rows) - 1) * 8px));
+  /* With nothing held, it also takes back the gap the page's column (gap-8) puts before it, so a first visit is as before. */
+  margin-top: calc((min(var(--recent, 0), 1) - 1) * 32px);
+
+  @variant sm {
+    --recent-card: 156px;
+  }
+
+  @variant md {
+    --recent-rows: round(up, var(--recent, 0) / 2, 1);
+  }
+
+  @variant xl {
+    --recent-rows: round(up, var(--recent, 0) / 3, 1);
+  }
+}
+
 @custom-variant content {
   &>[data-slot="content"] {
     @slot;

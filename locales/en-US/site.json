@@ -11,7 +11,13 @@
     },
     "bingo": {
       "playerTitle": "{{name}} Bingo Stats | Statsify",
-      "playerDescription": "View {{name}} Hypixel 13th Anniversary Bingo tasks."
+      "playerDescription": "View {{name}} Hypixel 13th Anniversary Bingo tasks.",
+      "title": "Bingo | Statsify",
+      "description": "View a player's Hypixel 13th Anniversary Bingo tasks."
+    },
+    "search": {
+      "title": "Search | Statsify",
+      "description": "Search players to view their Hypixel stats."
     }
   },
   "nav": {
@@ -42,7 +48,11 @@
     "placeholder": "Search a player",
     "heading": "Search Your Hypixel Stats",
     "noResults": "No players match \"{{query}}\". Check the spelling, or look them up on Hypixel.",
-    "lookup": "Look Up {{name}}"
+    "lookup": "Look Up {{name}}",
+    "recent": {
+      "title": "Recently Viewed",
+      "clear": "Clear"
+    }
   },
   "player": {
     "page": "({{name}} page)",

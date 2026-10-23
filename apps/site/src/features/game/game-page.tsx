@@ -30,6 +30,7 @@ import { imageSize, isGameCard } from "@statsify/profiles/protocol";
 import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { refreshGame } from "~/features/player/player-actions";
+import { addRecentPlayer } from "~/features/player/recent";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -98,6 +99,9 @@ export function GameView({ page }: { page: GamePage }) {
   const shareId = useId();
   const [sharing, setSharing] = useState(false);
   const [filter, setFilter] = useState("");
+
+  useEffect(() => addRecentPlayer({ uuid: page.uuid, name: page.username }), [page.uuid, page.username]);
+
   const mode = modeSearch(page, page.mode);
   const submode = submodeSearch(page, page.submode);
   const period = periodSearch(page, page.period);

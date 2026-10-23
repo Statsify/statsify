@@ -41,7 +41,8 @@ function RootDocument({ children }: { children: ReactNode }) {
   const lang = useRouterState({ select: (state) => localeFromPath(state.location.pathname) });
 
   return (
-    <html lang={lang}>
+    // `/player`'s head script sets `--recent` on the root before React hydrates it.
+    <html lang={lang} suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>

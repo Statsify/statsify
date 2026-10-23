@@ -7,12 +7,16 @@
  */
 
 import { Background } from "~/components/ui/background";
+import { HOLD_SCRIPT } from "~/features/player/recent";
+import { RecentPlayers } from "~/features/player/recent-players";
 import { ResultCards } from "~/features/player/result-card";
 import { Search } from "~/components/search";
 import { UUID_PATTERN } from "~/lib/uuid";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { searchPageMeta } from "~/lib/social-meta";
 import { rpc } from "~/lib/orpc";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import type { ResultCard } from "@statsify/contract";
@@ -44,11 +48,9 @@ export const Route = createFileRoute("/{-$locale}/player/")({
     return { q: deps.q, cards };
   },
   staleTime: 60_000,
-  head: () => ({
-    meta: [
-      { title: "Search | Statsify" },
-      { name: "description", content: "Search players to view their Hypixel stats." },
-    ],
+  head: ({ loaderData, matches }) => ({
+    meta: searchPageMeta(matches, { key: "search", path: "/player", image: "/images/og-home.png", noindex: Boolean(loaderData?.q) }),
+    scripts: loaderData?.q ? [] : [{ children: HOLD_SCRIPT }],
   }),
   headers: ({ loaderData }) =>
     cacheHeaders(loaderData?.q ? "max-age=60, stale-while-revalidate=600" : "max-age=600, stale-while-revalidate=86400"),
@@ -58,6 +60,7 @@ export const Route = createFileRoute("/{-$locale}/player/")({
 function PlayerSearchPage() {
   const { q, cards } = Route.useLoaderData();
   const { t } = useTranslation();
+  const search = useRef<HTMLDivElement>(null);
 
   return (
     <div className="relative grow">
@@ -71,8 +74,10 @@ function PlayerSearchPage() {
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
       <div className="w-container flex flex-col items-center gap-8 px-4 py-12 text-mc-white md:px-8">
         <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{t("search.heading")}</h1>
-        <Search key={q ?? ""} defaultValue={q ?? ""} target="results" className="w-full max-w-200" shortcut />
-        {q && <ResultCards cards={cards} query={q} />}
+        <div ref={search} className="w-full max-w-200">
+          <Search key={q ?? ""} defaultValue={q ?? ""} target="results" shortcut />
+        </div>
+        {q ? <ResultCards cards={cards} query={q} /> : <RecentPlayers onClear={() => search.current?.querySelector("input")?.focus()} />}
       </div>
     </div>
   );
