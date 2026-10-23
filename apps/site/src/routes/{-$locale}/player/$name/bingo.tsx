@@ -46,7 +46,10 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
     const locale = localeData(matches);
     // In English, from the server's `site.json`.
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
-    if (!loaderData) return { meta: [{ title: words.t("meta.notFound.player") }], links: [SANS_PRELOAD] };
+    if (!loaderData) {
+      const title = words.t("meta.notFound.player");
+      return { meta: [{ title }, { property: "og:title", content: title }, { name: "twitter:title", content: title }], links: [SANS_PRELOAD] };
+    }
 
     const { username } = loaderData;
     const name = possessive(username);

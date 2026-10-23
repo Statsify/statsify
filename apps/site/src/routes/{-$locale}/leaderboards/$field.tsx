@@ -13,8 +13,13 @@ import { LeaderboardIndex } from "~/features/leaderboards/leaderboard-index";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { NotFound } from "~/components/not-found";
 import { cacheHeaders } from "~/lib/cache";
+import { DEFAULT_LOCALE } from "~/i18n/locales";
+import { createI18n } from "~/i18n/i18n";
+import { formatNumber } from "~/i18n/format";
 import { loadGlossaryWords } from "~/features/content/content-data";
 import { isGameKey, loadLeaderboardGame, loadLeaderboardPage, type LeaderboardView } from "~/features/leaderboards/leaderboard-data";
+import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
+import { plainText } from "~/components/ui/minecraft-text";
 import { useTranslation } from "react-i18next";
 import type { LeaderboardGame } from "@statsify/contract";
 import type { GlossaryWords } from "~/i18n/i18n.server";
@@ -91,25 +96,56 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
     return loadBoard(context.queryClient, params.field, deps, words);
   },
   staleTime: 60_000,
-  head: ({ loaderData, match }) => {
-    if (!loaderData) return { meta: [{ title: "Leaderboard Not Found | Statsify" }] };
+  head: ({ loaderData, match, matches }) => {
+    const locale = localeData(matches);
+    // Titles and descriptions in English, from the server's `site.json`.
+    const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
+    if (!loaderData) {
+      const title = words.t("meta.notFound.leaderboard");
+      return { meta: [{ title }, { property: "og:title", content: title }, { name: "twitter:title", content: title }] };
+    }
+
+    const origin = locale?.origin;
+    const unfurl = (path: string, title: string, description: string) =>
+      origin ? socialMeta({ origin, path, title, description, image: "/images/og-home.png" }) : [];
 
     if (loaderData.kind === "game") {
       const { name } = loaderData.game;
+      const title = words.t("meta.leaderboard.gameTitle", { game: name });
+      const description = words.t("meta.leaderboard.gameDescription", { game: name });
+
       return {
         meta: [
-          { title: `${name} Leaderboards | Statsify` },
-          { name: "description", content: `Every ${name} leaderboard on Statsify, by mode.` },
+          { title },
+          { name: "description", content: description },
           ...(match.search.mode ? [{ name: "robots", content: "noindex" }] : []),
+          ...unfurl(`/leaderboards/${match.params.field}`, title, description),
         ],
       };
     }
 
+    const { page } = loaderData;
+    const title = words.t("meta.leaderboard.title", { name: page.name });
+    const fallback = words.t("meta.leaderboard.description", { name: page.name });
+    // A link preview shows the rows the link opens on: the player it's around, else the page's first three. A board
+    // that hides its own stat (BedWars Level) shows it in the name, and its first column is another stat.
+    const highlighted = page.rows.filter((row) => row.highlight);
+    const ownValue = page.columns[0]?.field === page.field;
+    const parts = (highlighted.length > 0 ? highlighted : page.rows.slice(0, 3)).map(
+      (row) => `#${formatNumber(row.position, DEFAULT_LOCALE)} ${plainText(row.name)}${ownValue ? ` ${valueText(row.values[0])}` : ""}`
+    );
+    const rows = statsDescription(parts);
+    const lead = words.t("meta.leaderboard.lead", { name: page.name });
+    const description = statsDescription(parts, { lead, max: SEARCH_DESCRIPTION_MAX }) || fallback;
+    const { page: number, around } = match.search;
+    const query = new URLSearchParams({ ...(number && { page: String(number) }), ...(around && { around }) });
+
     return {
       meta: [
-        { title: `${loaderData.page.name} Leaderboard | Statsify` },
-        { name: "description", content: `The top Hypixel players by ${loaderData.page.name} on Statsify.` },
+        { title },
+        { name: "description", content: description },
         ...(loaderData.noindex ? [{ name: "robots", content: "noindex" }] : []),
+        ...unfurl(`/leaderboards/${page.field}${query.size > 0 ? `?${query}` : ""}`, title, rows || fallback),
       ],
     };
   },

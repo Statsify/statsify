@@ -18,8 +18,9 @@ import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { createI18n } from "~/i18n/i18n";
+import { formatNumber } from "~/i18n/format";
 import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "~/features/game/game-data";
-import { localeData, socialMeta } from "~/lib/social-meta";
+import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { ensurePlayer } from "~/features/player/resolve";
@@ -103,6 +104,10 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const period = periodSearch(page, page.period);
     // The card's title in plain text, without the mode on the game's first page.
     const titled = mode || submode ? page : { ...page, heading: { ...page.heading, mode: null } };
+    // For the unfurl's text: the level and the first numbers of the headline table, or of the game-wide row on a page
+    // that has none (a list of maps, a period's quests).
+    const table = page.sections.find((section) => section.title === null && !section.list && !section.ticks);
+    const cells = (table?.rows.flat() ?? page.overview).filter((cell) => !cell.inline).slice(0, 6);
 
     return {
       ...identity,
@@ -117,24 +122,35 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       // The unfurl's size: the game's card when the pool draws one for this mode (and period), as `/og` picks it, else the
       // general.
       unfurl: imageSize(isGameCard(page.game.key, page.mode, page.period) ? { card: page.game.key, mode: page.mode } : { card: "general" }, "og"),
+      headline: {
+        level: page.level && { label: page.level.label, value: page.level.current },
+        cells: cells.map(({ label, name, params, value, hidden, suffix, of }) => ({ label, name, params, value, hidden, suffix, of })),
+      },
     };
   },
   staleTime: 60_000,
   staticData: { tabIcon: playerTabIcon },
   head: ({ loaderData, matches }) => {
     if (!loaderData) {
-      return { meta: [{ title: createI18n(DEFAULT_LOCALE, localeData(matches)?.resources ?? {}).t("meta.notFound.page") }], links: [SANS_PRELOAD] };
+      const title = createI18n(DEFAULT_LOCALE, localeData(matches)?.resources ?? {}).t("meta.notFound.page");
+      return { meta: [{ title }, { property: "og:title", content: title }, { name: "twitter:title", content: title }], links: [SANS_PRELOAD] };
     }
 
-    const { username, uuid, updatedAt, game, mode, submode, period, heading, gameName, modeName, unfurl } = loaderData;
+    const { username, uuid, updatedAt, game, mode, submode, period, heading, gameName, modeName, unfurl, headline } = loaderData;
     const locale = localeData(matches);
     // The card's title in plain text, its words (`game.stats`) in English like the rest, from the server's `site.json`.
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
     const card = plainText(headingText(heading, (key) => words.t(key))).replaceAll(/\s+/g, " ").trim();
     // The card names no period (the switcher does), so the title does: "Daily Quests (SkyWars)".
     const when = period ? `${words.t(`game.periodNames.${period}`)} ` : "";
-    const title = `${possessive(username)} ${when}${card} | Statsify`;
-    const description = `View ${possessive(username)} Hypixel ${gameName}${modeName ? ` ${modeName}` : ""} stats on Statsify.`;
+    const name = possessive(username);
+    const gameTitle = words.t("meta.game.title", { name, page: `${when}${card}` });
+    // The game's own level or prefix first, as its card formats it: "[223✫] anrie's BedWars Stats". Not a title (Duels'
+    // "Bridge Legend III"), which reads as part of the name.
+    const level = headline.level?.label === "stats.title" ? undefined : headline.level?.value;
+    const title = level ? words.t("meta.levelFirst", { level: plainText(level), title: gameTitle }) : gameTitle;
+    const gameAndMode = `${gameName}${modeName ? ` ${modeName}` : ""}`;
+    const fallback = words.t("meta.game.description", { name, game: gameAndMode });
     const origin = locale?.origin;
     const query = new URLSearchParams({ ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }) });
     const path = `/player/${username}/${game}${query.size > 0 ? `?${query}` : ""}`;
@@ -144,11 +160,27 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const unfurlQuery = new URLSearchParams({ game, ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }), v: String(updatedAt) });
     const image = `/og/${uuid}.png?${unfurlQuery}`;
 
+    // A link preview without the card still shows the numbers: the stats' labels as the page shows them, in English.
+    const label = (key: string, params?: Record<string, string>) => words.t(key, { ns: ["default", "site"], ...params });
+    const parts = [
+      ...(headline.level ? [statText(label(headline.level.label), headline.level.value)] : []),
+      ...headline.cells.map((cell) =>
+        statText(
+          cell.name === undefined ? label(cell.label, cell.params) : plainText(cell.name),
+          cell.hidden ? words.t("default:stats.hidden") : cell.value,
+          `${cell.suffix ?? ""}${cell.of === undefined ? "" : `/${formatNumber(cell.of, DEFAULT_LOCALE)}`}`
+        )
+      ),
+    ];
+    const stats = statsDescription(parts);
+    const lead = words.t("meta.game.lead", { name, game: gameAndMode });
+    const description = statsDescription(parts, { lead, max: SEARCH_DESCRIPTION_MAX }) || fallback;
+
     return {
       meta: [
         { title },
         { name: "description", content: description },
-        ...(origin ? socialMeta({ origin, path, title, description, image, imageSize: unfurl, type: "profile" }) : []),
+        ...(origin ? socialMeta({ origin, path, title, description: stats || fallback, image, imageSize: unfurl, type: "profile" }) : []),
       ],
     };
   },

@@ -7,7 +7,8 @@
     "description": "Statsify is the largest Hypixel Discord bot for viewing your Hypixel Network stats, leaderboards, sessions, and more.",
     "notFound": {
       "player": "Player Not Found | Statsify",
-      "page": "Not Found | Statsify"
+      "page": "Not Found | Statsify",
+      "leaderboard": "Leaderboard Not Found | Statsify"
     },
     "bingo": {
       "playerTitle": "{{name}} Bingo Stats | Statsify",
@@ -26,6 +27,27 @@
     "prestiges": {
       "title": "BedWars Prestiges and Colors | Statsify",
       "description": "Every BedWars prestige from 0 to 10,000 stars, with its colors, its star and the EXP it takes."
+    },
+    "levelFirst": "{{level}} {{title}}",
+    "player": {
+      "title": "{{name}} Hypixel Stats | Statsify",
+      "lead": "{{name}} Hypixel stats:"
+    },
+    "game": {
+      "title": "{{name}} {{page}} | Statsify",
+      "lead": "{{name}} {{game}} stats:",
+      "description": "View {{name}} Hypixel {{game}} stats on Statsify."
+    },
+    "leaderboard": {
+      "gameTitle": "{{game}} Leaderboards | Statsify",
+      "gameDescription": "{{game}} leaderboards on Statsify, by mode.",
+      "title": "{{name}} Leaderboard | Statsify",
+      "lead": "{{name}} leaderboard:",
+      "description": "The top Hypixel players by {{name}} on Statsify."
+    },
+    "leaderboards": {
+      "title": "Leaderboards | Statsify",
+      "description": "Browse more than 2,000 Hypixel leaderboards on Statsify."
     }
   },
   "nav": {

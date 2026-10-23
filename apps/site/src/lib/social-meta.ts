@@ -8,10 +8,44 @@
 
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { createI18n } from "~/i18n/i18n";
+import { formatNumber } from "~/i18n/format";
+import { plainText } from "~/components/ui/minecraft-text";
 import type { AnyRouteMatch } from "@tanstack/react-router";
 import type { LocaleData } from "~/i18n/locale-data";
 
 export const SITE_NAME = "Statsify";
+
+/** The size of the site's own unfurl images, `/images/og-*.png`. */
+const STATIC_IMAGE_SIZE = { width: 1200, height: 630 };
+
+/** Where Twitter's cards stop a description. */
+const DESCRIPTION_MAX = 200;
+
+/** About where search results cut a page's plain description. */
+export const SEARCH_DESCRIPTION_MAX = 155;
+
+/** A value in a preview: a number in the bot's format, or the API's formatted text without its codes. */
+export const valueText = (value: number | string) =>
+  typeof value === "number" ? formatNumber(value, DEFAULT_LOCALE) : plainText(value);
+
+/** A stat in a description, "Wins 2,304". */
+export const statText = (label: string, value: number | string, suffix = "") => `${label} ${valueText(value)}${suffix}`;
+
+/**
+ * A description of stats for previews that show text without the image: `lead` ("anrie's BedWars stats:") and the parts
+ * joined with " · ", as many whole parts as fit in `max`, so it never ends mid-number. Empty when not one part fits.
+ */
+export function statsDescription(parts: string[], { lead, max = DESCRIPTION_MAX }: { lead?: string; max?: number } = {}): string {
+  let text = "";
+
+  for (const part of parts) {
+    const next = text ? `${text} · ${part}` : part;
+    if ((lead ? `${lead} ${next}` : next).length > max) break;
+    text = next;
+  }
+
+  return lead && text ? `${lead} ${text}` : text;
+}
 
 export interface SocialMetaOptions {
   /** `https://statsify.net`; Open Graph URLs must be absolute. */
@@ -36,7 +70,7 @@ export function socialMeta({
   title = SITE_NAME,
   description,
   image,
-  imageSize,
+  imageSize = image.startsWith("/images/og-") ? STATIC_IMAGE_SIZE : undefined,
   type = "website",
 }: SocialMetaOptions): Meta {
   const url = new URL(path, origin).href;

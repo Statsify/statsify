@@ -11,6 +11,9 @@ import { Background } from "~/components/ui/background";
 import { MAX_QUERY_LENGTH, getLeaderboardIndex, listForClient } from "~/features/leaderboards/leaderboard-data";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
+import { DEFAULT_LOCALE } from "~/i18n/locales";
+import { createI18n } from "~/i18n/i18n";
+import { localeData, socialMeta } from "~/lib/social-meta";
 import { useTranslation } from "react-i18next";
 
 /** The list is schema metadata: an hour fresh, a day stale. */
@@ -32,13 +35,23 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/")({
     return { data, list: await listForClient(data.hash) };
   },
   staleTime: EDGE_TTL_SECONDS * 1000,
-  head: ({ match }) => ({
-    meta: [
-      { title: "Leaderboards | Statsify" },
-      { name: "description", content: "Browse more than 2,000 Hypixel leaderboards on Statsify." },
-      ...(match.search.q ? [{ name: "robots", content: "noindex" }] : []),
-    ],
-  }),
+  head: ({ match, matches }) => {
+    const locale = localeData(matches);
+    // In English, from the server's `site.json`.
+    const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
+    const title = words.t("meta.leaderboards.title");
+    const description = words.t("meta.leaderboards.description");
+    const origin = locale?.origin;
+
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        ...(match.search.q ? [{ name: "robots", content: "noindex" }] : []),
+        ...(origin ? socialMeta({ origin, path: "/leaderboards", title, description, image: "/images/og-home.png" }) : []),
+      ],
+    };
+  },
   headers: () => cacheHeaders(`max-age=${EDGE_TTL_SECONDS}, stale-while-revalidate=86400`),
   component: LeaderboardsPage,
 });
