@@ -1392,8 +1392,8 @@ export class ZombiesMapDifficulty {
   @Field()
   public totalRounds: number;
 
-  public constructor(data: APIData, map?: string, difficulty?: string) {
-    const mode = map ? `_${map}${difficulty ? `_${difficulty}` : ""}` : "";
+  public constructor(data: APIData, map: string, difficulty?: string) {
+    const mode = `_${map}${difficulty ? `_${difficulty}` : ""}`;
 
     this.wins = data[`wins_zombies${mode}`];
     this.fastestWin = (data[`fastest_time_30_zombies${mode}`] ?? 0) * 1000;
@@ -1418,7 +1418,7 @@ export class ZombiesMap {
   @Field()
   public overall: ZombiesMapDifficulty;
 
-  public constructor(data: APIData, map?: string) {
+  public constructor(data: APIData, map: string) {
     this.normal = new ZombiesMapDifficulty(data, map, "normal");
     this.hard = new ZombiesMapDifficulty(data, map, "hard");
     this.rip = new ZombiesMapDifficulty(data, map, "rip");
@@ -1436,9 +1436,38 @@ export class ZombiesMap {
   }
 }
 
+export class ZombiesOverall {
+  @Field({ historical: { enabled: false } })
+  public wins: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public kills: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public deaths: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public bestRound: number;
+
+  @Field()
+  public doorsOpened: number;
+
+  @Field()
+  public totalRounds: number;
+
+  public constructor(data: APIData) {
+    this.wins = data.wins_zombies;
+    this.kills = data.zombie_kills_zombies;
+    this.deaths = data.deaths_zombies;
+    this.bestRound = data.best_round_zombies;
+    this.doorsOpened = data.doors_opened_zombies;
+    this.totalRounds = data.total_rounds_survived_zombies;
+  }
+}
+
 export class Zombies {
   @Field()
-  public overall: ZombiesMapDifficulty;
+  public overall: ZombiesOverall;
 
   @Field()
   public deadEnd: ZombiesMap;
@@ -1453,7 +1482,7 @@ export class Zombies {
   public prison: ZombiesMap;
 
   public constructor(data: APIData) {
-    this.overall = new ZombiesMapDifficulty(data);
+    this.overall = new ZombiesOverall(data);
     this.deadEnd = new ZombiesMap(data, "deadend");
     this.badBlood = new ZombiesMap(data, "badblood");
 
