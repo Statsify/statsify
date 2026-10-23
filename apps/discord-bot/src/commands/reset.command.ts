@@ -12,31 +12,61 @@ import {
   CommandContext,
   EmbedBuilder,
   ErrorMessage,
-  IMessage,
+  type IMessage,
   SubCommand,
 } from "@statsify/discord";
+import { ButtonStyle } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
+import { confirmAction } from "#lib/confirm-action";
+
+interface SessionChange {
+  /** Locale key of the warning shown before the change */
+  warning: string;
+  /** Locale key of the button that makes the change */
+  button: string;
+  onConfirm: (uuid: string) => Promise<IMessage>;
+}
+
+/**
+ * Not an async function: the command loader treats exports without a writable prototype as commands.
+ */
+export function confirmSessionChange(
+  context: CommandContext,
+  { warning, button, onConfirm }: SessionChange
+): IMessage {
+  const uuid = context.getUser()?.uuid;
+  if (!uuid) throw new ErrorMessage("verification.requiredVerification");
+
+  const embed = new EmbedBuilder()
+    .color(STATUS_COLORS.warn)
+    .description((t) => t(warning));
+
+  return confirmAction(context, {
+    prompt: { embeds: [embed], ephemeral: true },
+    confirmLabel: (t) => t(button),
+    confirmStyle: ButtonStyle.Danger,
+    onConfirm: () => onConfirm(uuid),
+  });
+}
 
 @Command({ description: "Reset" })
 export class ResetCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({ description: (t) => t("commands.reset-session") })
-  public async session(context: CommandContext): Promise<IMessage> {
-    const user = context.getUser();
-    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
+  public session(context: CommandContext): IMessage {
+    return confirmSessionChange(context, {
+      warning: "historical.resetSessionWarning",
+      button: "historical.resetSessionButton",
+      onConfirm: async (uuid) => {
+        await this.apiService.resetPlayerSession(uuid);
 
-    await this.apiService.resetPlayerSession(
-      user.uuid!
-    );
+        const embed = new EmbedBuilder()
+          .color(STATUS_COLORS.success)
+          .description((t) => t("historical.setSessionReset"));
 
-    const embed = new EmbedBuilder()
-      .color(STATUS_COLORS.success)
-      .description((t) => t("historical.setSessionReset"));
-
-    return {
-      embeds: [embed],
-      ephemeral: true,
-    };
+        return { embeds: [embed] };
+      },
+    });
   }
 }

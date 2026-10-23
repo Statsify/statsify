@@ -77,6 +77,7 @@ import { VampireZProfile } from "../vampirez/vampirez.profile.js";
 import { WallsProfile } from "../walls/walls.profile.js";
 import { WarlordsProfile } from "../warlords/warlords.profile.js";
 import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
+import { confirmSessionChange } from "#commands/reset.command";
 import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "../arcade/arcade.command.js";
@@ -338,15 +339,22 @@ export class SessionCommand {
   }
 
   @SubCommand({ description: (t) => t("commands.session-delete") })
-  public async delete(context: CommandContext) {
+  public delete(context: CommandContext) {
     const userId = context.getInteraction().getUserId();
-    await this.apiService.deletePlayerSession(userId);
 
-    const embed = new EmbedBuilder()
-      .color(STATUS_COLORS.success)
-      .description((t) => t("historical.deleteSession"));
+    return confirmSessionChange(context, {
+      warning: "historical.deleteSessionWarning",
+      button: "historical.deleteSessionButton",
+      onConfirm: async () => {
+        await this.apiService.deletePlayerSession(userId);
 
-    return { embeds: [embed] };
+        const embed = new EmbedBuilder()
+          .color(STATUS_COLORS.success)
+          .description((t) => t("historical.deleteSession"));
+
+        return { embeds: [embed] };
+      },
+    });
   }
 
   protected async run<T extends GamesWithBackgrounds>({
