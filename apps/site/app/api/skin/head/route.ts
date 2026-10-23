@@ -13,9 +13,11 @@ export async function GET(
   request: NextRequest
 ) {
   const searchParams = request.nextUrl.searchParams;
-  const uuid = searchParams.get("uuid");
-  const size = searchParams.get("size") ?? 160;
-  return fetch(`${env.API_URL}/skin/head?uuid=${uuid}&size=${size}`, {
+  const query = new URLSearchParams({
+    uuid: searchParams.get("uuid") ?? "",
+    size: searchParams.get("size") ?? "160",
+  });
+  return fetch(`${env.API_URL}/skin/head?${query}`, {
     headers: { "X-API-KEY": env.API_KEY },
   });
 }
