@@ -202,6 +202,8 @@ export const LeaderboardPageSchema = z.object({
   name: z.string(),
   /** The value columns, matching `rows[].values`. */
   columns: z.array(LeaderboardColumnSchema),
+  /** `DESC` ranks the highest value first, `ASC` the lowest (best times). */
+  sort: z.enum(["ASC", "DESC"]),
   page: z.number(),
   pages: z.number(),
   rows: z.array(LeaderboardRowSchema),

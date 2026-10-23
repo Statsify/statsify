@@ -530,6 +530,7 @@ export class SiteService implements OnApplicationBootstrap {
       field: input.field,
       name: removeFormatting(metadata.name),
       columns,
+      sort: metadata.sort,
       page,
       pages: Math.ceil(Math.min(total, metadata.limit) / size),
       rows,

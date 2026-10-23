@@ -132,6 +132,7 @@ function GameIndexPage({ game }: { game: LeaderboardGame }) {
 }
 
 function LeaderboardPage({ view: { page, miss } }: { view: LeaderboardView }) {
+  const { t } = useTranslation();
   const { field } = Route.useParams();
 
   return (
@@ -144,7 +145,13 @@ function LeaderboardPage({ view: { page, miss } }: { view: LeaderboardView }) {
       />
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
-        <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{page.name}</h1>
+        <div className="flex flex-col items-center gap-2">
+          <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{page.name}</h1>
+          {/* Who is ranked, in what order and as of when. */}
+          <p className="max-w-200 text-center text-mc-1 text-mc-gray">
+            {t(page.sort === "ASC" ? "leaderboards.aboutLowest" : "leaderboards.aboutHighest")}
+          </p>
+        </div>
         <FindPlayer field={field} miss={miss} />
         <LeaderboardCards page={page} />
         <PageNav field={field} page={page.page} pages={page.pages} />

@@ -92,6 +92,8 @@
     "unranked": "{{name}} isn't on this leaderboard yet.",
     "moved": "{{name}}'s rank changed while the page loaded, so they're not on it. Try again to find them.",
     "empty": "Nobody here yet.",
+    "aboutHighest": "Ranks players looked up on Statsify with a non-zero value, highest first. Values are from each player's last lookup.",
+    "aboutLowest": "Ranks players looked up on Statsify with a non-zero value, lowest first. Values are from each player's last lookup.",
     "gameTitle": "{{game}} Leaderboards",
     "gameWide": "General",
     "all": "All Leaderboards"
