@@ -275,7 +275,7 @@ const SCHEME_MAP = {
   gemstone: createMultiDigitColorScheme(["§4", "§c", "§f", "§f", "§c", "§4"]),
   dark_magic: createMultiDigitColorScheme(["§4", "§4", "§5", "§5", "§c", "§c"]),
   reflections: createMultiDigitColorScheme(["§1", "§0", "§0", "§d", "§d", "§5"]),
-  brewery: createUniformScheme("§5", "§c", "§d"),
+  brewery: createUniformScheme("§5", "§c", "§d$"),
   leo: createMultiDigitColorScheme(["§e", "§e", "§e", "§6", "§4", "§4"]),
   zebra: createMultiDigitColorScheme(["§7", "§8", "§7", "§8", "§f", "§8"]),
   emit: createMultiDigitColorScheme(["§5", "§d", "§f", "§f", "§d", "§5"]),
@@ -310,7 +310,7 @@ function createUniformScheme(bracketColor: string, digitColor = bracketColor, em
     const underlineFormat = underline ? "§n" : "";
     const strikethroughFormat = strikethrough ? "§m" : "";
 
-    return `${bracketColor}${underlineFormat}${strikethroughFormat}[§r${boldFormat}${digitColor}${underlineFormat}${level}${emblemColor}${underlineFormat}${emblem}§r${bracketColor}${underlineFormat}${strikethroughFormat}]§r`;
+    return `${bracketColor}${underlineFormat}${strikethroughFormat}[§r${boldFormat}${digitColor}${underlineFormat}${underlineFormat}${level}${emblemColor}${underlineFormat}${emblem}§r${bracketColor}${underlineFormat}${strikethroughFormat}]§r`;
   };
 }
 

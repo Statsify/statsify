@@ -25,21 +25,21 @@ export class PlayerSearchService {
 
   public constructor(@InjectRedis() private readonly redis: Redis) {}
 
-  public async get(query: string): Promise<string[]> {
+  public get(query: string): Promise<string[]> {
     try {
-      return (await this.redis.call(
+      return this.redis.call(
         "FT.SUGGET",
         "player:autocomplete",
         query,
         "FUZZY",
         "MAX",
         "25"
-      )) as string[];
+      ) as Promise<string[]>;
     } catch (e) {
       this.logger.error(e);
       this.logger.error(REDI_SEARCH_NOT_INSTALLED);
 
-      return [];
+      return Promise.resolve([]);
     }
   }
 

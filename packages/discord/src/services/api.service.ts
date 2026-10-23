@@ -156,7 +156,7 @@ export class ApiService extends StatsifyApiService {
       const error = err.response.data as GuildNotFoundException | PlayerNotFoundException;
 
       if (error.message === "guild") {
-        if (resolvedType === GuildQuery.PLAYER) {
+        if (type === GuildQuery.PLAYER) {
           const displayName = (error as GuildNotFoundException).displayName;
 
           throw new ErrorMessage(
@@ -172,7 +172,7 @@ export class ApiService extends StatsifyApiService {
           (t) => t("errors.invalidGuild.title"),
           (t) =>
             t("errors.invalidGuild.description", {
-              context: resolvedType.toLowerCase(),
+              context: type?.toLowerCase(),
               tag: input,
             })
         );

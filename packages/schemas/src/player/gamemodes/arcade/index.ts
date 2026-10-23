@@ -85,7 +85,7 @@ export const ARCADE_MODES = new GameModes([
     hypixel: "HIDE_AND_SEEK_PARTY_POOPER",
     formatted: "Hide and Seek Party Pooper",
   },
-  { hypixel: "HIDE_AND_SEEK_PROP_HUNT", formatted: "Hide and Seek Prop Hunt" },
+  { hypixel: "HIDE_AND_SEEK_PROP_HUNT", formatted: " Hide and Seek Prop Hunt" },
 ] as const);
 
 export type ArcadeModes = ExtractGameModes<typeof ARCADE_MODES>;
