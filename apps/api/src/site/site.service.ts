@@ -49,6 +49,7 @@ import type {
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
+import { leaderboardColumn } from "./leaderboards.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
 import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
@@ -512,14 +513,15 @@ export class SiteService implements OnApplicationBootstrap {
       return { uuid, username, position: top + index + 1, name, highlight: top + index === highlight, values };
     });
 
-    const fields: string[] = [];
-    if (!metadata.hidden) fields.push(metadata.fieldName ?? "");
-    fields.push(...additionalMetadata.map((fieldMetadata) => fieldMetadata.fieldName ?? ""));
+    const columns = [
+      ...(metadata.hidden ? [] : [leaderboardColumn(input.field, metadata.fieldName ?? "")]),
+      ...additionalFields.map((field, i) => leaderboardColumn(field, additionalMetadata[i].fieldName ?? "")),
+    ];
 
     return {
       field: input.field,
       name: removeFormatting(metadata.name),
-      fields,
+      columns,
       page,
       pages: Math.ceil(Math.min(total, metadata.limit) / size),
       rows,

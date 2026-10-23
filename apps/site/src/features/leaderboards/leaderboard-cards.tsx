@@ -7,7 +7,7 @@
  */
 
 import { Box } from "~/components/ui/box";
-import { HEADER, HIGHLIGHT, PLAYER, PlayerLink, STRIPE, VALUES, useHighlightScroll } from "./leaderboard-table";
+import { ColumnLabel, HEADER, HIGHLIGHT, PLAYER, PlayerLink, STRIPE, VALUES, useHighlightScroll } from "./leaderboard-table";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
@@ -48,15 +48,15 @@ export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
       <section aria-label={page.name}>
         <div
           className="flex flex-col md:grid md:grid-cols-[max-content_max-content_minmax(0,1fr)_repeat(var(--columns),max-content)]"
-          style={{ "--columns": page.fields.length } as CSSProperties}
+          style={{ "--columns": page.columns.length } as CSSProperties}
         >
           <div className={cn(PLAYER, "top-0 z-20 bg-blackify-800 max-md:hidden")}>
             <div className={cn(HEADER, "justify-end")}>{t("leaderboards.position")}</div>
             <div className={cn(HEADER, "col-span-2")}>{t("leaderboards.player")}</div>
           </div>
-          {page.fields.map((field) => (
-            <div key={field} className={cn(HEADER, "sticky top-0 z-10 justify-end max-md:hidden")}>
-              {field}
+          {page.columns.map((column) => (
+            <div key={column.field} className={cn(HEADER, "sticky top-0 z-10 justify-end max-md:hidden")}>
+              <ColumnLabel column={column} />
             </div>
           ))}
           {page.rows.map((row, index) => {
@@ -102,13 +102,15 @@ export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
                 <div className={cn(VALUES, tone, "max-md:contents")}>
                   {row.values.map((value, column) => (
                     <div
-                      key={page.fields[column]}
+                      key={page.columns[column].field}
                       className={cn(
                         CELL,
                         "max-md:row-span-2 max-md:grid max-md:min-w-0 max-md:grid-rows-subgrid max-md:[overflow-wrap:anywhere] md:justify-end md:text-mc-2"
                       )}
                     >
-                      <span className="self-end text-mc-gray md:hidden">{page.fields[column]}</span>
+                      <span className="self-end text-mc-gray md:hidden">
+                        <ColumnLabel column={page.columns[column]} />
+                      </span>
                       <span>{format(value)}</span>
                     </div>
                   ))}

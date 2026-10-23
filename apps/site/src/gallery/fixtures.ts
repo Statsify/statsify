@@ -87,7 +87,10 @@ const rows = [
 export const LEADERBOARD_PAGE: LeaderboardPage = {
   field: "stats.bedwars.overall.wins",
   name: "BedWars Overall Wins",
-  fields: ["Wins", "FKDR"],
+  columns: [
+    { field: "stats.bedwars.overall.wins", name: "Wins", label: "stats.wins", colour: "§a" },
+    { field: "stats.bedwars.overall.fkdr", name: "FKDR", label: "stats.fkdr", colour: "§6" },
+  ],
   page: 0,
   pages: 40_000,
   rows: rows.map(([uuid, name, wins, fkdr], index) => ({

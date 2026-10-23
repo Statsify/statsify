@@ -9,12 +9,13 @@
 import { Button } from "~/components/ui/button";
 import { useEffect, useRef } from "react";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { colourOf } from "~/components/ui/minecraft-text";
 import { Search } from "~/components/search";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { useTranslation } from "react-i18next";
 import type { AroundMiss } from "./leaderboard-data";
 import type { ReactNode } from "react";
-import type { LeaderboardPage } from "@statsify/contract";
+import type { LeaderboardColumn, LeaderboardPage } from "@statsify/contract";
 
 // The table's rows from `md` up (`LeaderboardCards`): one 48 px row per player, with the column labels once in a
 // Minecraft 16 §7 header. A row's position, head and name share one element across their three columns, and its
@@ -68,6 +69,27 @@ export function useHighlightScroll<T extends HTMLElement>(page: LeaderboardPage)
   }, [page, router]);
 
   return ref;
+}
+
+const LABEL_NAMESPACES = ["default", "site"];
+
+/**
+ * A column's label: the catalog's word for the stat, or the leaderboard's own name for the column where the catalog has
+ * none or its word needs a value (The Pit's "Tier {{tier}}").
+ */
+export function useColumnLabel(): (column: LeaderboardColumn) => string {
+  const { t } = useTranslation();
+
+  return (column) => {
+    const label = column.label ? t(column.label, { ns: LABEL_NAMESPACES, defaultValue: column.name }) : column.name;
+    return label.includes("{{") ? column.name : label;
+  };
+}
+
+/** A column's label in the colour the bot's cards give its stat, where that doesn't depend on the value. */
+export function ColumnLabel({ column }: { column: LeaderboardColumn }) {
+  const text = useColumnLabel()(column);
+  return column.colour ? <span {...colourOf(column.colour)}>{text}</span> : text;
 }
 
 /** Previous and next page links around the page count; the links drop `around`. */

@@ -168,11 +168,23 @@ export const LeaderboardRowSchema = z.object({
   values: z.array(z.union([z.string(), z.number()])),
 });
 
+/** A leaderboard's value column: its own stat, or one of the extra stats the bot's leaderboard shows beside it. */
+export const LeaderboardColumnSchema = z.object({
+  /** The stat's path in the player document. */
+  field: z.string(),
+  /** The leaderboard's own name for the column, shown where `label` is null. */
+  name: z.string(),
+  /** The catalog's `stats.*` locale key for the stat (the bot's card's word for it), or null where the catalog has none. */
+  label: z.string().nullable(),
+  /** The colour the bot's card draws the stat in, or null where it depends on the value. */
+  colour: z.string().nullable(),
+});
+
 export const LeaderboardPageSchema = z.object({
   field: z.string(),
   name: z.string(),
-  /** Column headers, matching `rows[].values`. */
-  fields: z.array(z.string()),
+  /** The value columns, matching `rows[].values`. */
+  columns: z.array(LeaderboardColumnSchema),
   page: z.number(),
   pages: z.number(),
   rows: z.array(LeaderboardRowSchema),
@@ -578,6 +590,7 @@ export type StatRow = z.infer<typeof StatRowSchema>;
 export type ResultCard = z.infer<typeof ResultCardSchema>;
 export type LeaderboardGroup = z.infer<typeof LeaderboardGroupSchema>;
 export type LeaderboardRow = z.infer<typeof LeaderboardRowSchema>;
+export type LeaderboardColumn = z.infer<typeof LeaderboardColumnSchema>;
 export type LeaderboardPage = z.infer<typeof LeaderboardPageSchema>;
 
 /** Validated (server-side) inputs. */
