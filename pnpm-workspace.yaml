@@ -2,12 +2,11 @@ packages:
   - apps/**
   - packages/**
   - assets/**
-
-onlyBuiltDependencies:
-  - '@nestjs/core'
-  - '@scarf/scarf'
-  - '@swc/core'
-  - esbuild
-  - sharp
-  - skia-canvas
-  - unrs-resolver
+allowBuilds:
+  '@nestjs/core': true
+  '@scarf/scarf': true
+  '@swc/core': true
+  esbuild: true
+  sharp: true
+  skia-canvas: true
+  unrs-resolver: true
