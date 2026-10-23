@@ -161,11 +161,13 @@ export class Pit {
 
     this.trueLevel = prestige * 120 + level;
 
+    const prestigeReq = getPrestigeReq(prestige);
     const lastPrestigeReq = getPrestigeReq(prestige - 1);
 
+    // XP past the final requirement would push the progress bar over 100%
     this.progression = new Progression(
-      this.exp - lastPrestigeReq,
-      Math.min(getPrestigeReq(prestige) - lastPrestigeReq, 11_787_293_080)
+      Math.min(this.exp, prestigeReq) - lastPrestigeReq,
+      Math.min(prestigeReq - lastPrestigeReq, 11_787_293_080)
     );
 
     this.levelFormatted = getLevelFormatted(level, prestige);
