@@ -134,9 +134,11 @@ export class CommandResolvable {
       return false;
     }
 
-    if (this.options?.length && other.options?.length) {
-      if (this.options.length !== other.options.length) return false;
+    if ((this.options?.length ?? 0) !== (other.options?.length ?? 0)) {
+      return false;
+    }
 
+    if (this.options?.length && other.options?.length) {
       for (let i = 0; i < this.options.length; i++)
         if (!this.options[i].equals(other.options[i])) return false;
     }
