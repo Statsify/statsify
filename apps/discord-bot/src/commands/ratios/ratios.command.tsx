@@ -51,6 +51,7 @@ import {
   mapBackground,
 } from "#constants";
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
+import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
@@ -109,7 +110,7 @@ export class RatiosCommand {
 
   @SubCommand({ description: (t) => t("commands.ratios-megawalls"), args })
   public megawalls(context: CommandContext) {
-    return this.run(context, MEGAWALLS_MODES);
+    return this.run(context, MEGAWALLS_MODES, filterMegaWallsKits);
   }
 
   @SubCommand({ description: (t) => t("commands.ratios-murdermystery"), args })
