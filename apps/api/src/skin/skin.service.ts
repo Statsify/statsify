@@ -37,11 +37,8 @@ export class SkinService {
     ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, size, size);
 
-    // A texture that couldn't be decoded has no size, and drawing it throws
-    if (skin.width) {
-      ctx.drawImage(skin, 8, 8, 8, 8, 0, 0, size, size);
-      ctx.drawImage(skin, 40, 8, 8, 8, 0, 0, size, size);
-    }
+    ctx.drawImage(skin, 8, 8, 8, 8, 0, 0, size, size);
+    ctx.drawImage(skin, 40, 8, 8, 8, 0, 0, size, size);
 
     return canvas.toBuffer("png");
   }
