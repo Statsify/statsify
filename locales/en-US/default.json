@@ -504,6 +504,664 @@
       "title": "Unsupported File Type"
     }
   },
+  "glossary": {
+    "adrenaline": {
+      "text": "The player's level in Paintball's Adrenaline perk."
+    },
+    "airTime": {
+      "text": "Time spent in the air while capturing in Wizards."
+    },
+    "alphaWins": {
+      "text": "Infection games won as the alpha, the first infected."
+    },
+    "arcadeWins": {
+      "text": "Wins across every Arcade game."
+    },
+    "archerWins": {
+      "text": "SkyWars games won with the Archer challenge on."
+    },
+    "assists": {
+      "text": "Kills the player helped with without landing the final hit."
+    },
+    "bblr": {
+      "name": "Beds Broken/Lost Ratio",
+      "text": "Beds broken divided by beds lost, rounded to two decimal places. With no beds lost, it equals the beds broken."
+    },
+    "bedsBroken": {
+      "text": "Enemy beds the player broke. A team without its bed can't respawn."
+    },
+    "bedsLost": {
+      "text": "Times the player's own bed was broken."
+    },
+    "bestRound": {
+      "text": "The furthest round reached in one Zombies game."
+    },
+    "bestTime": {
+      "text": "The player's best time: the fastest finish where the aim is speed (Dropper, Parkour Duels, Gun Game), or the longest survival where the aim is to last (TNT Run, PVP Run)."
+    },
+    "bestWinstreak": {
+      "text": "The longest run of wins in a row Hypixel has recorded."
+    },
+    "bigShot": {
+      "text": "Big Shot power-ups used in Ender Spleef."
+    },
+    "blocksBroken": {
+      "text": "Blocks the player broke."
+    },
+    "blocksPlaced": {
+      "text": "Blocks the player placed."
+    },
+    "blocksRan": {
+      "text": "Blocks run over in TNT Run, each one falling away behind the player."
+    },
+    "bombsDefused": {
+      "text": "Bombs defused in Defusal."
+    },
+    "bombsPlanted": {
+      "text": "Bombs planted in Defusal."
+    },
+    "bounty": {
+      "text": "The bounty on the player now: the gold whoever kills them next earns."
+    },
+    "bountyKills": {
+      "text": "Kills on the player's target in Bounty Hunters."
+    },
+    "bowKills": {
+      "text": "Kills with a bow."
+    },
+    "boxesPickedUp": {
+      "text": "Item boxes driven through."
+    },
+    "bronzeTrophies": {
+      "text": "Races finished in third place, each worth a bronze trophy."
+    },
+    "candyFound": {
+      "text": "Candy found in Halloween Simulator."
+    },
+    "capturePoints": {
+      "text": "Points captured in Domination."
+    },
+    "challengesTotal": {
+      "text": "Challenges completed: every game's added up, or one game's."
+    },
+    "checkpoints": {
+      "text": "Checkpoints reached in Parkour Duels."
+    },
+    "class": {
+      "text": "The class or hero the player has selected."
+    },
+    "coinConversions": {
+      "text": "The player's coin conversion level in the Arcade."
+    },
+    "coins": {
+      "text": "The game's own currency, earned by playing and spent in its shop."
+    },
+    "coinsPickedUp": {
+      "text": "Coins picked up on the track."
+    },
+    "contracts": {
+      "text": "Contracts completed."
+    },
+    "correctGuesses": {
+      "text": "Correct guesses in Guess the Build."
+    },
+    "dailyTotal": {
+      "text": "Daily quests completed."
+    },
+    "damage": {
+      "text": "Damage dealt."
+    },
+    "deaths": {
+      "text": "Times the player died."
+    },
+    "defendPoints": {
+      "text": "Points defended in Domination."
+    },
+    "detectiveWins": {
+      "text": "Games won as the detective."
+    },
+    "diamonds": {
+      "text": "Diamonds collected from generators."
+    },
+    "doorsOpened": {
+      "text": "Doors opened in Zombies, which unlock more of the map."
+    },
+    "draws": {
+      "text": "Capture the Wool games that ended in a draw."
+    },
+    "eggsFound": {
+      "text": "Eggs found in Easter Simulator."
+    },
+    "emeralds": {
+      "text": "Emeralds collected from generators."
+    },
+    "empireKills": {
+      "text": "Kills on the defending side in Galaxy Wars."
+    },
+    "endurance": {
+      "text": "The player's level in Paintball's Endurance perk."
+    },
+    "exp": {
+      "name": "Experience",
+      "text": "Experience points. A game's level, or a kit's, is worked out from them."
+    },
+    "explosiveKills": {
+      "text": "Kills with explosive sheep."
+    },
+    "extraUltimates": {
+      "text": "Ultimate items crafted past the usual limit."
+    },
+    "fails": {
+      "text": "Times the player failed a Dropper map."
+    },
+    "fastestDetectiveWin": {
+      "text": "The quickest game won as the detective."
+    },
+    "fastestMurdererWin": {
+      "text": "The quickest game won as the murderer."
+    },
+    "fastestWin": {
+      "text": "The quickest win: the shortest game the player won."
+    },
+    "fastestWoolCapture": {
+      "text": "The quickest wool capture in one game."
+    },
+    "finalAssists": {
+      "text": "Final kills the player helped with without landing the final hit."
+    },
+    "finalDeaths": {
+      "text": "Deaths the player can't come back from, which knock them out of the game."
+    },
+    "finalKills": {
+      "text": "Kills the other player can't come back from: in BedWars once their bed is gone, in Mega Walls once their wither is dead."
+    },
+    "fkdr": {
+      "name": "Final Kill/Death Ratio",
+      "text": "Final kills divided by final deaths, rounded to two decimal places. With no final deaths, it equals the final kills."
+    },
+    "flagCaptures": {
+      "text": "Enemy flags captured in Capture the Flag."
+    },
+    "flagReturns": {
+      "text": "The team's own flag brought back in Capture the Flag."
+    },
+    "flawlessGames": {
+      "text": "Dropper games finished without failing a map."
+    },
+    "forcefieldTime": {
+      "text": "Time spent with a forcefield on."
+    },
+    "fortune": {
+      "text": "The player's level in Paintball's Fortune perk."
+    },
+    "gamesFinished": {
+      "text": "Dropper games finished."
+    },
+    "gamesPlayed": {
+      "text": "Games played, as Hypixel counts them. Not every mode records it."
+    },
+    "gapplesEaten": {
+      "text": "Golden apples eaten."
+    },
+    "giftsFound": {
+      "text": "Gifts found in Grinch Simulator."
+    },
+    "goals": {
+      "text": "Goals scored."
+    },
+    "godfather": {
+      "text": "The player's level in Paintball's Godfather perk."
+    },
+    "godlikes": {
+      "text": "Times the player reached the Godlike killstreak."
+    },
+    "gold": {
+      "text": "Gold ingots collected from generators."
+    },
+    "goldEarned": {
+      "text": "Gold earned in total."
+    },
+    "goldIngotsGathered": {
+      "text": "Gold ingots picked up."
+    },
+    "goldPickedUp": {
+      "text": "Gold picked up from the map."
+    },
+    "goldRate": {
+      "text": "Gold trophies as a percentage of races, rounded to two decimal places."
+    },
+    "goldSpent": {
+      "text": "Gold spent in Capture the Wool's shop."
+    },
+    "goldTrophies": {
+      "text": "Races won, each worth a gold trophy."
+    },
+    "grandPrixTokens": {
+      "name": "Grand Prix Tokens",
+      "text": "Tokens earned in Grand Prix races."
+    },
+    "grenadeKills": {
+      "text": "Kills with a grenade."
+    },
+    "halfHealthWins": {
+      "text": "SkyWars games won with the Half Health challenge on."
+    },
+    "hat": {
+      "text": "The hat the player has selected."
+    },
+    "heads": {
+      "text": "Player heads collected from kills."
+    },
+    "headsEaten": {
+      "text": "Player heads eaten to heal."
+    },
+    "headshotKills": {
+      "text": "Kills with a shot to the head."
+    },
+    "headshots": {
+      "text": "Shots that hit an opponent's head."
+    },
+    "headstart": {
+      "text": "The player's level in Paintball's Headstart perk."
+    },
+    "healing": {
+      "text": "Health healed, the player's own and their teammates'."
+    },
+    "heroKills": {
+      "text": "Times the player was the hero: the innocent who killed the murderer."
+    },
+    "heroWins": {
+      "text": "Games won as the hero."
+    },
+    "hiderWins": {
+      "text": "Hide and Seek games won as a hider."
+    },
+    "highestKillstreak": {
+      "text": "The most kills in a row without dying."
+    },
+    "highestScoreFinals": {
+      "text": "The best score in Hole in the Wall's finals."
+    },
+    "highestScoreQualifications": {
+      "text": "The best score in Hole in the Wall's qualifiers."
+    },
+    "highestStreak": {
+      "text": "The most kills in a row without dying."
+    },
+    "humans-killed": {
+      "text": "Humans killed while playing as a vampire."
+    },
+    "iron": {
+      "text": "Iron ingots collected from generators."
+    },
+    "itemsPurchased": {
+      "text": "Items bought from the shop."
+    },
+    "joins": {
+      "text": "Times the player joined The Pit."
+    },
+    "kdr": {
+      "name": "Kill/Death Ratio",
+      "text": "Kills divided by deaths, rounded to two decimal places. With no deaths, it equals the kills."
+    },
+    "kicks": {
+      "text": "Times the player kicked the ball in Football."
+    },
+    "kills": {
+      "text": "Players killed."
+    },
+    "killsAsAlpha": {
+      "text": "Kills made as the alpha in Infection."
+    },
+    "killsAsInfected": {
+      "text": "Kills made while infected."
+    },
+    "killsAsMurderer": {
+      "text": "Kills made as the murderer."
+    },
+    "killsAsSurvivor": {
+      "text": "Kills made as a survivor in Infection."
+    },
+    "killstreaks": {
+      "text": "Killstreaks reached: runs of kills without dying that the game rewards."
+    },
+    "kit": {
+      "text": "The kit the player has selected."
+    },
+    "knifeKills": {
+      "text": "Kills with a knife."
+    },
+    "kwr": {
+      "name": "Kill/Win Ratio",
+      "text": "Kills divided by wins: how many kills a player gets for each win, rounded to two decimal places."
+    },
+    "lapsCompleted": {
+      "text": "Laps finished."
+    },
+    "lastAliveGames": {
+      "text": "Infection games where the player was the last survivor."
+    },
+    "layers": {
+      "text": "Layers the player has unlocked, out of 100."
+    },
+    "level": {
+      "text": "A level: a kit's in Blitz SG, a class's in Warlords, and the player's own in Smash Heroes."
+    },
+    "levelsGained": {
+      "text": "Levels gained across every prestige."
+    },
+    "lifetimeRenown": {
+      "text": "Renown earned in total."
+    },
+    "longestGame": {
+      "text": "The longest Capture the Wool game played."
+    },
+    "losses": {
+      "text": "Games lost. Not every mode records losses, so some have no WLR."
+    },
+    "magicWool": {
+      "text": "Hits with magic wool."
+    },
+    "magicalChests": {
+      "text": "Magical chests opened."
+    },
+    "magicalKeys": {
+      "text": "Magical keys the player has, which open magical chests."
+    },
+    "mapsCompleted": {
+      "text": "Dropper maps completed."
+    },
+    "mastery": {
+      "text": "The mastery the player has selected."
+    },
+    "maxPoints": {
+      "text": "The best score in one game of Hypixel Says or Santa Says."
+    },
+    "maxWave": {
+      "text": "The furthest wave reached in Creeper Attack."
+    },
+    "meleeKills": {
+      "text": "Kills in melee."
+    },
+    "mostVampireKills": {
+      "text": "The most vampires killed in one game."
+    },
+    "mounts": {
+      "text": "Times the player mounted a dragon in Dragon Wars."
+    },
+    "murdererWins": {
+      "text": "Games won as the murderer."
+    },
+    "mysticsEnchanted": {
+      "text": "Mystic items enchanted at the Mystic Well, every tier added up."
+    },
+    "mythic-favor": {
+      "text": "Mythic Favor the player has, which unlocks mythic classes."
+    },
+    "name": {
+      "text": "The name of the knife skin the player has equipped."
+    },
+    "noBlockWins": {
+      "text": "SkyWars games won with the No Block challenge on."
+    },
+    "noChestWins": {
+      "text": "SkyWars games won with the No Chest challenge on."
+    },
+    "objectives": {
+      "text": "Objectives completed in Hide and Seek."
+    },
+    "offensive": {
+      "text": "The offensive skill the player has selected."
+    },
+    "opals": {
+      "text": "Opals the player has, a SkyWars currency."
+    },
+    "overallWins": {
+      "text": "Wins across every mode of the game."
+    },
+    "paperWins": {
+      "text": "SkyWars games won with the Paper challenge on."
+    },
+    "perfectBuilds": {
+      "text": "Builds copied perfectly in Speed Builders."
+    },
+    "pingRange": {
+      "text": "The highest ping the player accepts from an opponent, set in Duels' settings."
+    },
+    "pitGold": {
+      "text": "The gold the player has now, The Pit's currency."
+    },
+    "playtime": {
+      "text": "Time spent in games."
+    },
+    "points": {
+      "text": "Points the game awards, as it counts them."
+    },
+    "poopCollected": {
+      "text": "Poop collected in Farm Hunt."
+    },
+    "postUpdateKills": {
+      "text": "Kills since Quake's update in February 2017. Shot accuracy uses these."
+    },
+    "potionsBrewed": {
+      "text": "Potions counted by SkyWars' Tonic Taker achievement."
+    },
+    "potionsSplashed": {
+      "text": "Potions splashed in TNT Run."
+    },
+    "powerKicks": {
+      "text": "Power kicks in Football."
+    },
+    "powerOrbs": {
+      "text": "Power orbs picked up in Wizards."
+    },
+    "powerupActivations": {
+      "text": "Power-ups used in Ender Spleef, every kind added up."
+    },
+    "powerups": {
+      "text": "Power-ups picked up."
+    },
+    "powerupsCollected": {
+      "text": "Power-ups collected in Pixel Party."
+    },
+    "prefix": {
+      "text": "The chat prefix the player has selected."
+    },
+    "prestige": {
+      "text": "Times the player has prestiged the kit, starting it over from level I."
+    },
+    "prevent": {
+      "text": "Damage prevented, the player's own and their teammates'."
+    },
+    "questsTotal": {
+      "text": "Quests completed: every game's added up, or one game's."
+    },
+    "ragePotatoesEaten": {
+      "text": "Rage potatoes eaten."
+    },
+    "rebelKills": {
+      "text": "Kills on the attacking side in Galaxy Wars."
+    },
+    "renown": {
+      "text": "Renown the player has now, spent in the Renown shop."
+    },
+    "rookieWins": {
+      "text": "SkyWars games won with the Rookie challenge on."
+    },
+    "roundWins": {
+      "text": "Rounds won."
+    },
+    "roundsCompleted": {
+      "text": "Rounds survived in Pixel Party."
+    },
+    "rune": {
+      "text": "The rune the player has selected."
+    },
+    "score": {
+      "text": "Points the game awards. In Build Battle, UHC and Speed UHC, score sets the player's title; in Warlords it's points scored in Domination."
+    },
+    "seekerWins": {
+      "text": "Hide and Seek games won as a seeker."
+    },
+    "sheepKilled": {
+      "text": "Sheep killed."
+    },
+    "sheepThrown": {
+      "text": "Sheep thrown."
+    },
+    "shotAccuracy": {
+      "text": "Kills as a percentage of shots fired, rounded to two decimal places. Quake counts only kills since its February 2017 update."
+    },
+    "shotsFired": {
+      "text": "Shots fired: arrows, bullets or paintballs, as the game counts them."
+    },
+    "silverTrophies": {
+      "text": "Races finished in second place, each worth a silver trophy."
+    },
+    "slumberTickets": {
+      "text": "Slumber Tickets the player has now, spent at the Slumber Hotel."
+    },
+    "souls": {
+      "text": "Souls the player has, spent at the Soul Well."
+    },
+    "spec": {
+      "name": "Specialization",
+      "text": "The specialization the player has selected for the class."
+    },
+    "starsEarned": {
+      "text": "Stars earned in Party Games."
+    },
+    "suicides": {
+      "text": "Deaths the player caused themselves, such as falling into the void."
+    },
+    "superVotes": {
+      "text": "Super votes the player has, which pick a round's theme."
+    },
+    "superluck": {
+      "text": "The player's level in Paintball's Superluck perk."
+    },
+    "support": {
+      "text": "The support skill the player has selected."
+    },
+    "swordKills": {
+      "text": "Kills with a sword."
+    },
+    "tags": {
+      "text": "Times the player passed the TNT on in TNT Tag."
+    },
+    "tauntsUsed": {
+      "text": "Taunts used in Farm Hunt."
+    },
+    "thrownKnifeKills": {
+      "text": "Kills with a thrown knife."
+    },
+    "tier": {
+      "text": "Mystic items enchanted to that tier at the Mystic Well."
+    },
+    "title": {
+      "text": "The player's title, which their score sets."
+    },
+    "tokens": {
+      "text": "The game's currency, earned by playing and spent in its shop."
+    },
+    "totalRounds": {
+      "text": "Rounds survived in Zombies, every game added up."
+    },
+    "totalSlumberTickets": {
+      "text": "Slumber Tickets earned in total."
+    },
+    "totalTrophies": {
+      "text": "Trophies of every kind added up."
+    },
+    "totalWins": {
+      "text": "Wins added up across everything listed with it."
+    },
+    "trail": {
+      "text": "The trail the player has selected."
+    },
+    "transfusion": {
+      "text": "The player's level in Paintball's Transfusion perk."
+    },
+    "trapKills": {
+      "text": "Kills with traps."
+    },
+    "trigger": {
+      "text": "How long the railgun takes to reload between shots, in seconds, set by the Trigger upgrade."
+    },
+    "tripleShot": {
+      "text": "Triple Shot power-ups used in Ender Spleef."
+    },
+    "trophyRate": {
+      "text": "Trophies of any kind as a percentage of races, rounded to two decimal places."
+    },
+    "uhcWins": {
+      "text": "SkyWars games won with the UHC challenge on."
+    },
+    "ultimate": {
+      "text": "The ultimate skill the player has selected."
+    },
+    "ultimateWarriorWins": {
+      "text": "SkyWars games won with the Ultimate Warrior challenge on."
+    },
+    "ultimatesCrafted": {
+      "text": "Ultimate items crafted."
+    },
+    "utility": {
+      "text": "The utility skill the player has selected."
+    },
+    "vampireHealing": {
+      "text": "Health regained from vampire effects."
+    },
+    "vampires-killed": {
+      "text": "Vampires killed while playing as a human."
+    },
+    "voidKills": {
+      "text": "Kills by knocking players into the void."
+    },
+    "votes": {
+      "text": "Votes the player has cast on other players' builds."
+    },
+    "wallsFaced": {
+      "text": "Walls faced in Hole in the Wall."
+    },
+    "warlordsTotal": {
+      "text": "Damage, damage prevented and healing added up."
+    },
+    "weeklyTotal": {
+      "text": "Weekly quests completed."
+    },
+    "wins": {
+      "text": "Games won. In team modes, a win counts for everyone on the winning team."
+    },
+    "winstreak": {
+      "text": "Wins in a row, as of the player's last update. Players can stop Hypixel from sharing it."
+    },
+    "witherDamage": {
+      "text": "Damage dealt to enemy withers."
+    },
+    "witherKills": {
+      "text": "Enemy withers the player finished off."
+    },
+    "wlr": {
+      "name": "Win/Loss Ratio",
+      "text": "Wins divided by losses, rounded to two decimal places. With no losses, it equals the wins."
+    },
+    "wool": {
+      "text": "Wool, the Wool Games currency."
+    },
+    "woolCaptured": {
+      "text": "Wool brought back to the team's base in Capture the Wool."
+    },
+    "woolPickedUp": {
+      "text": "Enemy wool picked up in Capture the Wool."
+    },
+    "woolPlaced": {
+      "text": "Wool placed."
+    },
+    "zombieKills": {
+      "text": "Zombies killed."
+    }
+  },
   "historical": {
     "aboutResetting": "Click the reset button below to reset your historical stats every day **at this time**.\n\n**WARNING**: This will delete all of your historical stats and **cannot be undone**. \nIf you want to be able to reset at a specific time check out $t(socials.premium).",
     "aboutResettingPremium": "Click the reset button below to reset your historical stats. \n\n**WARNING:** This will delete all of your historical stats and **cannot be undone**.",

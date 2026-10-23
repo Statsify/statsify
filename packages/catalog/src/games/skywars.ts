@@ -19,7 +19,7 @@ export const SKYWARS: Game<SkyWarsModes> = {
   modes: SKYWARS_MODES,
   game: {
     // The level's leaderboard ranks EXP, as BedWars' does.
-    exp: { colour: "§b" },
+    exp: { colour: "§b", glossary: "level" },
     coins: { colour: "§6" },
     tokens: { colour: "§2" },
     souls: { colour: "§b" },

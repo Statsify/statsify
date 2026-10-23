@@ -144,5 +144,18 @@ if (import.meta.vitest) {
         expect(ranked.filter((path) => !described.has(path) && !LEFT_OUT.has(path))).toEqual([]);
       });
     }
+
+    // A stat shown under a label fails here until the glossary explains it, so the glossary can't fall behind. A stat
+    // shown under its card's name (a map, a challenge) is a name, not a stat to explain.
+    it("explains every stat it shows under a label", async () => {
+      const { readFile } = await import("node:fs/promises");
+      const english = JSON.parse(await readFile(new URL("../../../../locales/en-US/default.json", import.meta.url), "utf8"));
+      const unexplained = Object.values(GAMES)
+        .flatMap((game) => [...gameStats(game), ...game.shapes.flatMap(({ modes }) => modes.flatMap((at) => modeStats(game, at)))])
+        .filter((stat) => stat.name === undefined && !english.glossary?.[stat.glossary]?.text)
+        .map(({ path, glossary }) => `${path}: glossary.${glossary}`);
+
+      expect(unexplained).toEqual([]);
+    });
   });
 }
