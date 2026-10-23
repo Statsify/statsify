@@ -22,6 +22,9 @@ import { formatDate } from "date-fns";
 import { t } from "~/localize";
 import type { Guild } from "@statsify/schemas";
 
+// Matches GuildMember.isGuildMaster, since the site only imports types from @statsify/schemas
+const isGuildMaster = (member: Guild["members"][number]) => /^guild\s*master$/i.test(member.rank);
+
 export function GuildSection({ guild }: { guild: Guild }) {
   return (
     <BaseSection
@@ -78,7 +81,7 @@ function GuildOverall({ guild, className }: { guild: Guild; className?: string }
         <p className="text-mc-aqua flex gap-2">
           <span className="hidden lg:block">Guild Master: </span>
           <span className="block lg:hidden">GM: </span>
-          <MinecraftText>{guild.members[1].displayName ?? ""}</MinecraftText>
+          <MinecraftText>{guild.members.find(isGuildMaster)?.displayName ?? ""}</MinecraftText>
         </p>
         <p className="text-mc-dark-aqua">
           Created On:{" "}
