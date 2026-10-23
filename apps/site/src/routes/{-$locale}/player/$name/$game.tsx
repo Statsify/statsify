@@ -21,6 +21,7 @@ import { createI18n } from "~/i18n/i18n";
 import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "~/features/game/game-data";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
+import { playerTabIcon } from "~/lib/tab-icon";
 import { ensurePlayer } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -119,6 +120,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     };
   },
   staleTime: 60_000,
+  staticData: { tabIcon: playerTabIcon },
   head: ({ loaderData, matches }) => {
     if (!loaderData) {
       return { meta: [{ title: createI18n(DEFAULT_LOCALE, localeData(matches)?.resources ?? {}).t("meta.notFound.page") }], links: [SANS_PRELOAD] };
@@ -148,7 +150,6 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
         { name: "description", content: description },
         ...(origin ? socialMeta({ origin, path, title, description, image, imageSize: unfurl, type: "profile" }) : []),
       ],
-      links: [{ rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),

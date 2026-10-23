@@ -66,6 +66,8 @@ export default defineConfig({
         "/icons/**": STATIC_ASSETS,
         "/logos/**": STATIC_ASSETS,
         "/images/**": STATIC_ASSETS,
+        "/favicon.ico": STATIC_ASSETS,
+        "/apple-touch-icon.png": STATIC_ASSETS,
       },
       rolldownConfig: {
         onLog(level, log, handler) {

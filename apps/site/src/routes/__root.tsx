@@ -9,13 +9,15 @@
 import appCss from "~/styles/app.css?url";
 import { FONT_HOLD } from "~/lib/fonts";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext, useRouterState } from "@tanstack/react-router";
+import { LOGO_ICON } from "~/lib/tab-icon";
 import { colors } from "@statsify/tokens";
 import { localeFromPath } from "~/i18n/locales";
 import type { ReactNode } from "react";
 import type { RouterContext } from "~/router";
+import type { StaticDataRouteOption } from "@tanstack/react-router";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-  head: () => ({
+  head: ({ matches }) => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -25,7 +27,9 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/logos/logo_64.png" },
+      tabIcon(matches),
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
       // Mona Sans is preloaded only by the routes that use it (`~/lib/fonts`); every page has Minecraft headings.
       { rel: "preload", href: "/fonts/Minecraft.ttf", as: "font", type: "font/ttf", crossOrigin: "anonymous" },
       { rel: "preload", href: "/fonts/Minecraft Bold.ttf", as: "font", type: "font/ttf", crossOrigin: "anonymous" },
@@ -36,6 +40,17 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   shellComponent: RootDocument,
   component: Outlet,
 });
+
+/**
+ * The page's one tab icon: the deepest route's `tabIcon`, else the logo. Only the root adds an icon link, so a page
+ * never has two, and a new icon replaces the old one's link rather than joining it: browsers disagree on which of two
+ * icons they show, and read the icons when a link is added, not when one is removed, so an icon link left behind kept
+ * the last player's head in the tab.
+ */
+function tabIcon(matches: { staticData: StaticDataRouteOption; loaderData?: unknown }[]) {
+  const href = matches.map((match) => match.staticData.tabIcon?.(match.loaderData)).findLast(Boolean);
+  return href ? { rel: "icon", href } : LOGO_ICON;
+}
 
 function RootDocument({ children }: { children: ReactNode }) {
   const lang = useRouterState({ select: (state) => localeFromPath(state.location.pathname) });

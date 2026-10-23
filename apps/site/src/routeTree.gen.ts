@@ -17,6 +17,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as GlossaryChar123hashChar125DotjsonRouteImport } from './routes/glossary-{$hash}[.]json'
 import { Route as LeaderboardsChar123hashChar125DotjsonRouteImport } from './routes/leaderboards-{$hash}[.]json'
+import { Route as ManifestDotwebmanifestRouteImport } from './routes/manifest[.]webmanifest'
 import { Route as OembedRouteImport } from './routes/oembed'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapChar123nameChar125DotxmlRouteImport } from './routes/sitemap-{$name}[.]xml'
@@ -55,6 +56,11 @@ const LeaderboardsChar123hashChar125DotjsonRoute =
     path: '/leaderboards-{$hash}.json',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManifestDotwebmanifestRoute = ManifestDotwebmanifestRouteImport.update({
+  id: '/manifest.webmanifest',
+  path: '/manifest.webmanifest',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OembedRoute = OembedRouteImport.update({
   id: '/oembed',
   path: '/oembed',
@@ -201,6 +207,7 @@ const Char123LocaleChar125PlayerNameBingoRoute =
 export interface FileRoutesByFullPath {
   '/glossary-{$hash}.json': typeof GlossaryChar123hashChar125DotjsonRoute
   '/leaderboards-{$hash}.json': typeof LeaderboardsChar123hashChar125DotjsonRoute
+  '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
@@ -230,6 +237,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/glossary-{$hash}.json': typeof GlossaryChar123hashChar125DotjsonRoute
   '/leaderboards-{$hash}.json': typeof LeaderboardsChar123hashChar125DotjsonRoute
+  '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
@@ -259,6 +267,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/glossary-{$hash}.json': typeof GlossaryChar123hashChar125DotjsonRoute
   '/leaderboards-{$hash}.json': typeof LeaderboardsChar123hashChar125DotjsonRoute
+  '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
@@ -290,6 +299,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/glossary-{$hash}.json'
     | '/leaderboards-{$hash}.json'
+    | '/manifest.webmanifest'
     | '/oembed'
     | '/robots.txt'
     | '/sitemap-{$name}.xml'
@@ -319,6 +329,7 @@ export interface FileRouteTypes {
   to:
     | '/glossary-{$hash}.json'
     | '/leaderboards-{$hash}.json'
+    | '/manifest.webmanifest'
     | '/oembed'
     | '/robots.txt'
     | '/sitemap-{$name}.xml'
@@ -347,6 +358,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/glossary-{$hash}.json'
     | '/leaderboards-{$hash}.json'
+    | '/manifest.webmanifest'
     | '/oembed'
     | '/robots.txt'
     | '/sitemap-{$name}.xml'
@@ -377,6 +389,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   GlossaryChar123hashChar125DotjsonRoute: typeof GlossaryChar123hashChar125DotjsonRoute
   LeaderboardsChar123hashChar125DotjsonRoute: typeof LeaderboardsChar123hashChar125DotjsonRoute
+  ManifestDotwebmanifestRoute: typeof ManifestDotwebmanifestRoute
   OembedRoute: typeof OembedRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapChar123nameChar125DotxmlRoute: typeof SitemapChar123nameChar125DotxmlRoute
@@ -405,6 +418,13 @@ declare module '@tanstack/react-router' {
       path: '/leaderboards-{$hash}.json'
       fullPath: '/leaderboards-{$hash}.json'
       preLoaderRoute: typeof LeaderboardsChar123hashChar125DotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manifest.webmanifest': {
+      id: '/manifest.webmanifest'
+      path: '/manifest.webmanifest'
+      fullPath: '/manifest.webmanifest'
+      preLoaderRoute: typeof ManifestDotwebmanifestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/oembed': {
@@ -631,6 +651,7 @@ const rootRouteChildren: RootRouteChildren = {
     GlossaryChar123hashChar125DotjsonRoute,
   LeaderboardsChar123hashChar125DotjsonRoute:
     LeaderboardsChar123hashChar125DotjsonRoute,
+  ManifestDotwebmanifestRoute: ManifestDotwebmanifestRoute,
   OembedRoute: OembedRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapChar123nameChar125DotxmlRoute: SitemapChar123nameChar125DotxmlRoute,
