@@ -143,7 +143,7 @@ export function PageNav({ field, page, pages }: { field: string; page: number; p
 
   return (
     // Phones put the page count above the two buttons, so nothing wraps or overflows.
-    <nav className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2" aria-label={t("leaderboards.title")}>
+    <nav className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2" aria-label={t("leaderboards.pages")}>
       {pageLink(page - 1, t("leaderboards.previous"), page <= 0)}
       <p className="order-first basis-full text-mc-1 whitespace-nowrap text-center sm:order-none sm:basis-auto sm:text-mc-1.5">{t("leaderboards.page", { page: n(page + 1), pages: n(Math.max(pages, 1)) })}</p>
       {pageLink(page + 1, t("leaderboards.next"), page + 1 >= pages)}

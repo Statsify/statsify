@@ -24,7 +24,8 @@
     "bingo": "Bingo",
     "external": "Statsify elsewhere",
     "newTab": "(opens in a new tab)",
-    "loading": "Loading"
+    "loading": "Loading",
+    "skip": "Skip to Content"
   },
   "footer": {
     "copyright": "© {{year}} Statsify. All Rights Reserved.",
@@ -91,6 +92,7 @@
     "position": "Pos",
     "player": "Player",
     "page": "Page {{page}} of {{pages}}",
+    "pages": "Pages",
     "previous": "Previous",
     "next": "Next",
     "find": "Find a player on this leaderboard",

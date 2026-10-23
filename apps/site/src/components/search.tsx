@@ -107,6 +107,8 @@ export function Search({
 }) {
   const { t } = useTranslation();
   const size = SIZES[compact ? "compact" : "regular"];
+  // A box with its own placeholder (a leaderboard's "find a player") is named by it, apart from the site's search.
+  const label = placeholder ?? t("search.label");
   const inputRef = useRef<HTMLInputElement>(null);
   const [input, setInput] = useState(defaultValue);
   const [query, setQuery] = useState(defaultValue);
@@ -212,14 +214,14 @@ export function Search({
           enterKeyHint="search"
           disabled={disabled}
           onFocus={() => setFocused(true)}
-          aria-label={t("search.label")}
+          aria-label={label}
         />
       </div>
       <div
         ref={containerRef}
         id={listId}
         role="listbox"
-        aria-label={t("search.label")}
+        aria-label={label}
         hidden={!focused || count === 0}
         className={cn("absolute z-100 w-full overflow-auto bg-blackify-800 shadow-[4px_4px_0_rgb(0_0_0_/_0.5)]", size.sheet)}
       >

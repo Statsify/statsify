@@ -6,6 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+/* eslint-disable jsx-a11y/prefer-tag-over-role -- the leaderboard is a CSS grid with rows of `display: contents` from
+   `md` up, which `<table>` elements can't be without losing their table semantics in some browsers. */
+
 import { Box } from "~/components/ui/box";
 import { ColumnLabel, HEADER, HIGHLIGHT, PLAYER, PlayerLink, Position, STRIPE, VALUES, Value, useHighlightScroll } from "./leaderboard-table";
 import { MinecraftText } from "~/components/ui/minecraft-text";
@@ -41,19 +44,26 @@ export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
   return (
     <Box>
       <section aria-label={page.name}>
+        {/* A table to screen readers: each card holds its row's cells, and the halves and the line that lay them out
+            are layout only (`role="none"`). The head is decoration, so a row's cells line up with the header's:
+            position, player, values. Below `md` the header row is hidden and each value carries its label. */}
         <div
+          role="table"
+          aria-label={page.name}
           className="flex flex-col md:grid md:grid-cols-[max-content_max-content_minmax(0,1fr)_repeat(var(--columns),max-content)]"
           style={{ "--columns": page.columns.length } as CSSProperties}
         >
-          <div className={cn(PLAYER, "top-0 z-20 bg-blackify-800 max-md:hidden")}>
-            <div className={cn(HEADER, "justify-end")}>{t("leaderboards.position")}</div>
-            <div className={cn(HEADER, "col-span-2")}>{t("leaderboards.player")}</div>
-          </div>
-          {page.columns.map((column) => (
-            <div key={column.field} className={cn(HEADER, "sticky top-0 z-10 justify-end max-md:hidden")}>
-              <ColumnLabel column={column} />
+          <div role="row" className="contents">
+            <div role="none" className={cn(PLAYER, "top-0 z-20 bg-blackify-800 max-md:hidden")}>
+              <div role="columnheader" className={cn(HEADER, "justify-end")}>{t("leaderboards.position")}</div>
+              <div role="columnheader" className={cn(HEADER, "col-span-2")}>{t("leaderboards.player")}</div>
             </div>
-          ))}
+            {page.columns.map((column) => (
+              <div key={column.field} role="columnheader" className={cn(HEADER, "sticky top-0 z-10 justify-end max-md:hidden")}>
+                <ColumnLabel column={column} />
+              </div>
+            ))}
+          </div>
           {page.rows.map((row, index) => {
             const tone = row.highlight ? HIGHLIGHT : index % 2 === 1 ? STRIPE : "";
 
@@ -63,44 +73,49 @@ export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
               // drawn from a fallback font doesn't make its card taller.
               <div
                 key={row.uuid}
+                role="row"
+                aria-current={row.highlight || undefined}
                 className={cn(
                   "relative grid grid-cols-[repeat(var(--columns),minmax(0,1fr))] gap-x-2 p-2 max-md:text-mc-1 max-md:leading-[0.625] md:contents",
                   tone
                 )}
               >
-                <div className={cn(PLAYER, tone, "z-10 max-md:contents")}>
+                <div role="none" className={cn(PLAYER, tone, "z-10 max-md:contents")}>
                   {/* One line that wraps below `md`; from `md` up its cells are the player half's three columns. */}
-                  <div className="col-span-full mb-1 max-md:[overflow-wrap:anywhere] md:contents">
+                  <div role="none" className="col-span-full mb-1 max-md:[overflow-wrap:anywhere] md:contents">
                     <div
                       id={row.uuid}
                       ref={row.highlight ? highlightRef : undefined}
+                      role="cell"
                       className={cn(CELL, "inline scroll-mt-10 md:justify-end")}
                     >
-                      <Position position={row.position} className="text-mc-1 md:text-mc-2" />
+                      <Position position={row.position} className="text-mc-1 md:text-mc-1.5 lg:text-mc-2" />
                     </div>{" "}
-                    <div className={cn(CELL, "hidden md:justify-center")}>
+                    <div role="none" className={cn(CELL, "hidden md:justify-center")}>
                       <SkinHead uuid={row.uuid} size={24} />
                     </div>
-                    <div className={cn(CELL, "inline md:col-start-3 md:min-w-0 md:contain-inline-size")}>
+                    <div role="rowheader" className={cn(CELL, "inline md:col-start-3 md:min-w-0 md:contain-inline-size")}>
+                      {/* Below `md` the link's `::after` covers the card, so the whole card opens the player. */}
                       <PlayerLink
                         page={page}
                         name={row.username}
                         className="hover:underline after:absolute after:inset-0 active:after:bg-white/10 md:flex md:min-h-11 md:min-w-0 md:items-center md:after:hidden md:active:bg-white/10"
                       >
                         <span className="md:min-w-0 md:truncate">
-                          <MinecraftText className="text-mc-1 md:text-mc-2">{row.name}</MinecraftText>
+                          <MinecraftText className="text-mc-1 md:text-mc-1.5 lg:text-mc-2">{row.name}</MinecraftText>
                         </span>
                       </PlayerLink>
                     </div>
                   </div>
                 </div>
-                <div className={cn(VALUES, tone, "max-md:contents")}>
+                <div role="none" className={cn(VALUES, tone, "max-md:contents")}>
                   {row.values.map((value, column) => (
                     <div
                       key={page.columns[column].field}
+                      role="cell"
                       className={cn(
                         CELL,
-                        "max-md:row-span-2 max-md:grid max-md:min-w-0 max-md:grid-rows-subgrid max-md:[overflow-wrap:anywhere] md:justify-end md:text-mc-2"
+                        "max-md:row-span-2 max-md:grid max-md:min-w-0 max-md:grid-rows-subgrid max-md:[overflow-wrap:anywhere] md:justify-end md:text-mc-1.5 lg:text-mc-2"
                       )}
                     >
                       <span className="self-end text-mc-gray md:hidden">

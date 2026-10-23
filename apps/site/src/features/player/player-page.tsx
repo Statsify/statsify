@@ -96,7 +96,7 @@ function NametagPanel({ page, className }: { page: PlayerPage; className?: strin
       <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28" />
       <div className="flex min-w-0 grow flex-col gap-3">
         {/* Rank, name and guild tag as on the card; a long name wraps onto a second line rather than widening the page. */}
-        <p className="wrap-break-word text-mc-2">
+        <h1 className="wrap-break-word text-mc-2">
           <MinecraftText>{page.displayName}</MinecraftText>
           {page.guild?.tagFormatted && (
             <>
@@ -104,7 +104,7 @@ function NametagPanel({ page, className }: { page: PlayerPage; className?: strin
               <MinecraftText>{page.guild.tagFormatted}</MinecraftText>
             </>
           )}
-        </p>
+        </h1>
         <dl className="flex flex-col gap-1">
           {page.guild && <InlineStat label={t("default:stats.guild.guild")} value={page.guild.name} color="text-mc-dark-green" />}
         </dl>
@@ -326,15 +326,19 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
   return (
     <Box
       className="h-full"
-      title={game.page ?
-        (
-          <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: game.page }} className={STAT_LINK}>
-            {title}
-            {/* Text, not an icon, so the title bar keeps the height of every other panel's. */}
-            <span aria-hidden className="text-mc-1.5 text-mc-gray"> »</span>
-          </Link>
-        ) :
-        title}
+      title={(
+        <h2>
+          {game.page ?
+            (
+              <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: game.page }} className={STAT_LINK}>
+                {title}
+                {/* Text, not an icon, so the title bar keeps the height of every other panel's. */}
+                <span aria-hidden className="text-mc-1.5 text-mc-gray"> »</span>
+              </Link>
+            ) :
+            title}
+        </h2>
+      )}
     >
       <dl className="grid grid-cols-2 gap-x-2 gap-y-4">
         {game.rows.map((row) => {

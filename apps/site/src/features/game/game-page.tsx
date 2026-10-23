@@ -417,6 +417,9 @@ export function StatPanel({
     );
   }
 
+  // A row's heading sits under the panel's, or takes its level where the panel has none (the headline table).
+  const RowHeading = heading ? "h3" : "h2";
+
   return (
     <Box className={className} title={heading}>
       <div className="flex flex-col gap-4">
@@ -439,7 +442,7 @@ export function StatPanel({
           return title ?
             (
               <div key={index} className="flex flex-col gap-2">
-                <h3 className={ROW_HEADING}>{t(title)}</h3>
+                <RowHeading className={ROW_HEADING}>{t(title)}</RowHeading>
                 {cells}
               </div>
             ) :
