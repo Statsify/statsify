@@ -90,7 +90,7 @@ export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
                       <PlayerLink
                         page={page}
                         name={row.username}
-                        className="hover:underline after:absolute after:inset-0 md:flex md:min-h-11 md:min-w-0 md:items-center md:after:hidden"
+                        className="hover:underline after:absolute after:inset-0 active:after:bg-white/10 md:flex md:min-h-11 md:min-w-0 md:items-center md:after:hidden md:active:bg-white/10"
                       >
                         <span className="md:min-w-0 md:truncate">
                           <MinecraftText className="text-mc-1 md:text-mc-2">{row.name}</MinecraftText>

@@ -400,7 +400,7 @@ export function StatPanel({
     return (
       <Box className={className}>
         <details open={filtering} className="group">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 outline-none focus-visible:outline-2 focus-visible:outline-white/60 [&::-webkit-details-marker]:hidden">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 [&::-webkit-details-marker]:hidden">
             <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
             <h2 className="text-mc-1.5 font-bold"><SectionTitle section={section} /></h2>
             <span className="text-mc-1.5 text-mc-gray">
@@ -627,7 +627,7 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
                 setPick(event.target.value);
                 void navigate({ ...to(event.target.value), resetScroll: false });
               }}
-              className="h-11 w-full min-w-0 appearance-none truncate bg-blackify-800 ps-3 pe-10 text-mc-1.5 text-white -outline-offset-2 focus-visible:outline-2 focus-visible:outline-white/60"
+              className="h-11 w-full min-w-0 appearance-none truncate bg-blackify-800 ps-3 pe-10 text-mc-1.5 text-white focus-visible:focus-ring-inset"
             >
               {options.map((option) => (
                 <option key={option.key} value={option.key}>
@@ -642,7 +642,7 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
           <noscript>
             <button
               type="submit"
-              className="h-11 shrink-0 bg-blackify-800 px-3 text-mc-1.5 text-white -outline-offset-2 hover:bg-blackify-700 focus-visible:outline-2 focus-visible:outline-white/60"
+              className="h-11 shrink-0 bg-blackify-800 px-3 text-mc-1.5 text-white hover:bg-blackify-700 focus-visible:focus-ring-inset"
             >
               {t("game.go")}
             </button>
@@ -665,7 +665,7 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
                 activeOptions={{ exact: true, includeSearch: true }}
                 title={option.mostPlayed && t(`${markWords(option.mostPlayed)}.${option.mostPlayed}`)}
                 // A column, so the box grows and segments in one row are the same height when a name wraps.
-                className="group flex h-full flex-col outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60"
+                className="group flex h-full flex-col"
               >
                 <Box className="grow text-mc-white/60 group-hover:text-mc-white group-aria-[current=page]:font-bold group-aria-[current=page]:text-mc-white content:flex content:min-h-11 content:items-center content:justify-center content:gap-2 content:px-2 content:py-1 content:text-center content:text-mc-1 content:text-balance md:content:justify-start md:content:px-3 md:content:py-0 md:content:text-start">
                   {option.mostPlayed && <span aria-hidden className="size-2 shrink-0 bg-mc-gold forced-color-adjust-none" />}
@@ -766,7 +766,7 @@ export function GameNav({ page, open, className }: { page: GamePage; open?: bool
   return (
     <nav aria-label={t("game.games")} className={cn(links && "md:basis-full", className)}>
       <details ref={details} open={open} className={cn("group/games w-fit", links && "md:hidden")}>
-        <summary className="flex h-11 cursor-pointer list-none items-center gap-2 bg-blackify-800 ps-3 pe-2 text-mc-1.5 text-white -outline-offset-2 select-none focus-visible:outline-2 focus-visible:outline-white/60 [&::-webkit-details-marker]:hidden">
+        <summary className="flex h-11 cursor-pointer list-none items-center gap-2 bg-blackify-800 ps-3 pe-2 text-mc-1.5 text-white select-none focus-visible:focus-ring-inset [&::-webkit-details-marker]:hidden">
           {/* A square on phones, so it fits beside the mode tabs. */}
           <span className="max-md:sr-only">{t("game.games")}</span>
           <Menu className="size-6 text-mc-gray md:hidden" />
@@ -783,7 +783,7 @@ export function GameNav({ page, open, className }: { page: GamePage; open?: bool
                   aria-current={current(game)}
                   onClick={close}
                   className={cn(
-                    "flex min-h-11 items-center gap-2 px-2 text-mc-1 outline-none hover:bg-white/10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white/60 aria-[current=page]:bg-white/15 aria-[current=page]:font-bold",
+                    "flex min-h-11 items-center gap-2 px-2 text-mc-1 hover:bg-white/10 focus-visible:focus-ring-inset aria-[current=page]:bg-white/15 aria-[current=page]:font-bold",
                     !game.played && "opacity-50"
                   )}
                 >
@@ -802,7 +802,7 @@ export function GameNav({ page, open, className }: { page: GamePage; open?: bool
                 to="/{-$locale}/player/$name/$game"
                 params={{ name: page.username, game: game.key }}
                 aria-current={current(game)}
-                className="group block outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60"
+                className="group block"
               >
                 <Box
                   className={cn(

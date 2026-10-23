@@ -6,11 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation, useMatch } from "@tanstack/react-router";
 import { Logo, Wordmark } from "~/components/icons/logo";
 import { Search } from "~/components/search";
+import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
+import { flushSync } from "react-dom";
 import { isSupportedLocale } from "~/i18n/locales";
+import { useCallback, useState } from "react";
+import { useOutisdeClick } from "~/hooks/use-outside-click";
 import { useTranslation } from "react-i18next";
 
 const PAGES = [
@@ -44,6 +48,25 @@ export function Header() {
   const { t } = useTranslation();
   const pathname = useLocation({ select: (location) => location.pathname });
   const showSearch = !OWN_SEARCH.test(pathWithoutLocale(pathname));
+  // On a game page a picked name opens the same game, mode and period, to compare; the profile is a tap away from there.
+  const gameTarget = useMatch({
+    from: "/{-$locale}/player/$name/$game",
+    shouldThrow: false,
+    select: (match) => ({ game: match.params.game, search: match.search }),
+  });
+  // On a game page's phone layout the search is a button in the logo row, so the stats start higher; it opens the box
+  // in the search's row, focused, until a tap elsewhere or the next page.
+  const compact = gameTarget !== undefined;
+  const [searchedOn, setSearchedOn] = useState<string>();
+  const searching = searchedOn === pathname;
+  const hide = useCallback(() => setSearchedOn(undefined), []);
+  const searchRow = useOutisdeClick<HTMLDivElement>(hide);
+
+  const openSearch = () => {
+    // Shown and focused in the tap itself, so a phone opens its keyboard.
+    flushSync(() => setSearchedOn(pathname));
+    searchRow.current?.querySelector("input")?.focus();
+  };
 
   return (
     <header className="text-mc-white flex justify-center px-4 py-4 md:px-8">
@@ -66,7 +89,15 @@ export function Header() {
         </nav>
         {showSearch && (
           // Below lg the search has the last row to itself.
-          <Search compact className="order-last basis-full lg:order-none lg:max-w-96 lg:min-w-0 lg:flex-1" />
+          <div
+            ref={searchRow}
+            className={cn(
+              "order-last basis-full lg:order-none lg:max-w-96 lg:min-w-0 lg:flex-1",
+              compact && !searching && "max-md:hidden"
+            )}
+          >
+            <Search compact shortcut target={gameTarget} />
+          </div>
         )}
         <nav aria-label={t("nav.external")} className="ms-auto">
           <ul className="flex items-center gap-4 text-mc-1.5 sm:gap-6">
@@ -80,6 +111,17 @@ export function Header() {
             ))}
           </ul>
         </nav>
+        {showSearch && compact && (
+          <button
+            type="button"
+            aria-label={t("search.label")}
+            aria-expanded={searching}
+            onClick={openSearch}
+            className="flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden"
+          >
+            <SearchIcon className="size-5" />
+          </button>
+        )}
       </div>
     </header>
   );

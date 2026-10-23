@@ -37,7 +37,7 @@ function BingoSearchPage() {
       <div className="w-full h-full flex justify-center items-center flex-col gap-8 py-12">
         <BingoHeading />
         <div className="w-full px-4 md:px-8 lg:w-[80%]">
-          <Search target="bingo" />
+          <Search target="bingo" shortcut />
         </div>
       </div>
     </div>

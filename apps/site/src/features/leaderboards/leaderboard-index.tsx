@@ -24,7 +24,7 @@ const localeRoute = getRouteApi("/{-$locale}");
 
 // One class on each list instead of one per link: there are thousands of them.
 const LIST =
-  "grid grid-cols-1 pt-2 pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:text-mc-1 [&_a:hover]:bg-white/10 [&_a:hover]:underline";
+  "grid grid-cols-1 pt-2 pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:text-mc-1.5 [&_a:hover]:bg-white/10 [&_a:hover]:underline [&_a:active]:bg-white/10";
 
 const boardHref = (prefix: string, field: string) => `${prefix}/leaderboards/${encodeURIComponent(field)}`;
 
@@ -94,17 +94,19 @@ export function LeaderboardIndex({ groups, open }: { groups: ListGroup[]; open?:
         className="max-w-200 self-center"
       />
       {filtering && visible.length === 0 && <NoMatches query={filter} />}
-      {visible.map((group) => (
-        <IndexPanel key={group.key} group={group} open={filtering || group.key === open}>
-          <ul {...delegation} className={LIST}>
-            {group.leaderboards.map(({ field, name }) => (
-              <li key={field}>
-                <a href={boardHref(prefix, field)} data-field={field}>{name}</a>
-              </li>
-            ))}
-          </ul>
-        </IndexPanel>
-      ))}
+      <div className="flex flex-col gap-2">
+        {visible.map((group) => (
+          <IndexPanel key={group.key} group={group} open={filtering || group.key === open}>
+            <ul {...delegation} className={LIST}>
+              {group.leaderboards.map(({ field, name }) => (
+                <li key={field}>
+                  <a href={boardHref(prefix, field)} data-field={field}>{name}</a>
+                </li>
+              ))}
+            </ul>
+          </IndexPanel>
+        ))}
+      </div>
     </div>
   );
 }
@@ -183,7 +185,7 @@ export function AllLeaderboards({ data, list: loaded, query = "" }: { data: Inde
         <noscript>
           <button
             type="submit"
-            className="h-11 shrink-0 bg-blackify-800 px-3 text-mc-1.5 text-white -outline-offset-2 hover:bg-blackify-700 focus-visible:outline-2 focus-visible:outline-white/60"
+            className="h-11 shrink-0 bg-blackify-800 px-3 text-mc-1.5 text-white hover:bg-blackify-700 focus-visible:focus-ring-inset"
           >
             {t("game.go")}
           </button>
@@ -191,22 +193,24 @@ export function AllLeaderboards({ data, list: loaded, query = "" }: { data: Inde
       </form>
       {failed && <ListFailed />}
       {filtering && shown.length === 0 && <NoMatches query={rendered} />}
-      {shown.map(({ group, html }) => (
-        <IndexPanel key={group.key} group={group} open={filtering} icons>
-          <div {...delegation}>
-            {!filtering && (
-              <a
-                href={boardHref(prefix, group.key)}
-                data-field={group.key}
-                className="flex min-h-11 items-center px-3 pt-2 text-mc-1 text-mc-yellow hover:bg-white/10 hover:underline"
-              >
-                {t("leaderboards.gameTitle", { game: group.name })}
-              </a>
-            )}
-            <BoardLinks id={`boards-${group.key}`} html={html} />
-          </div>
-        </IndexPanel>
-      ))}
+      <div className="flex flex-col gap-2">
+        {shown.map(({ group, html }) => (
+          <IndexPanel key={group.key} group={group} open={filtering} icons>
+            <div {...delegation}>
+              {!filtering && (
+                <a
+                  href={boardHref(prefix, group.key)}
+                  data-field={group.key}
+                  className="flex min-h-11 items-center px-3 pt-2 text-mc-1.5 text-mc-yellow hover:bg-white/10 hover:underline active:bg-white/10"
+                >
+                  {t("leaderboards.gameTitle", { game: group.name })}
+                </a>
+              )}
+              <BoardLinks id={`boards-${group.key}`} html={html} />
+            </div>
+          </IndexPanel>
+        ))}
+      </div>
     </div>
   );
 }

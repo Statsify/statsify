@@ -105,7 +105,7 @@ function Snippet({ label, text }: { label: string; text: string }) {
           value={text}
           aria-label={label}
           onFocus={(event) => event.currentTarget.select()}
-          className="h-11 min-w-0 grow bg-blackify-800 px-3 text-mc-1 text-mc-white outline-none -outline-offset-2 focus:outline-2 focus:outline-white/60"
+          className="h-11 min-w-0 grow bg-blackify-800 px-3 text-mc-1 text-mc-white focus:focus-ring-inset"
         />
         <Button asChild size="small" className="sm:min-w-32">
           <button type="button" onClick={copy}>

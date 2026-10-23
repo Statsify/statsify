@@ -48,7 +48,7 @@ export function BingoLayout({ name, children }: { name: string; children: ReactN
         <div className="w-full max-w-[1800px] mx-auto flex justify-center items-center flex-col gap-4 px-4 pt-8 md:px-8">
           <BingoHeading />
           <div className="w-full lg:w-[80%] flex items-stretch flex-col gap-4">
-            <Search key={name} defaultValue={name} target="bingo" />
+            <Search key={name} defaultValue={name} target="bingo" shortcut />
             <Divider variant="black" className="my-2" />
           </div>
           {children}

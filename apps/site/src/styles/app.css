@@ -143,6 +143,31 @@
   text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
 }
 
+/* The keyboard focus, drawn like the panels: a white ring on the pixel grid 2 px out from the control, with a hard
+   2 px shadow under it and a dark gap between, so it shows on light buttons as well as dark panels. Every control gets
+   it by default (`@layer base` below); this is for a part that shows another element's focus. */
+@utility focus-ring {
+  outline: 2px solid var(--color-mc-white);
+  outline-offset: 2px;
+  box-shadow: 2px 2px 0 4px rgb(0 0 0 / 0.84);
+}
+
+/* Inside the edge and with no shadow, like a focused Minecraft text field: for inputs, selects and bars that sit flush
+   against what's next to them. */
+@utility focus-ring-inset {
+  outline: 2px solid var(--color-mc-white);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+/* For a control whose ring another element draws (a field's bar, a stretched link's cell, a button's wrapper). */
+@utility focus-ring-none {
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
 @utility grid-areas-stack {
   grid-template-areas: "stack";
 }
@@ -275,6 +300,11 @@
 @layer base {
   button {
     cursor: pointer;
+  }
+
+  /* `focus-ring`, for every control that doesn't draw its own. */
+  :focus-visible {
+    @apply focus-ring;
   }
 
   /* Mona Sans numbers line up in tables; stat values are Minecraft anyway. */

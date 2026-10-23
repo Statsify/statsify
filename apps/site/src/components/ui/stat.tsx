@@ -12,11 +12,12 @@ import { useTranslation } from "react-i18next";
 import type { CSSProperties, ReactNode } from "react";
 
 /**
- * For a link that makes a whole stat (or panel) clickable: it stretches over its nearest `relative` ancestor, which
- * lightens on hover and shows the keyboard focus. The text keeps its colour and gets no underline.
+ * For a link that makes a whole stat (or panel) clickable: it stretches over its nearest `relative` ancestor, and 6 px
+ * past its top and bottom so a stat cell is a 44 px target, which lightens on hover and while pressed and shows the
+ * keyboard focus. The text keeps its colour and gets no underline.
  */
 export const STAT_LINK =
-  "outline-none after:absolute after:-inset-1 hover:after:bg-white/10 focus-visible:after:outline-2 focus-visible:after:outline-white/60";
+  "focus-ring-none after:absolute after:-inset-x-1 after:-inset-y-1.5 hover:after:bg-white/10 active:after:bg-white/10 focus-visible:after:focus-ring";
 
 /** A stat the player hides in Hypixel's API settings. */
 export function Hidden() {

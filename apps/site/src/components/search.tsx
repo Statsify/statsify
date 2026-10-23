@@ -16,14 +16,22 @@ import { orpc } from "~/lib/orpc";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useOutisdeClick } from "~/hooks/use-outside-click";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const SEARCH_DEBOUNCE_MS = 300;
 const SEARCH_CACHE_TIME_MS = 5 * 60 * 1000;
 
-/** Where a submitted name goes: the player page, its Bingo boards, or the `/player?q=` result cards. */
-export type SearchTarget = "player" | "bingo" | "results";
+/**
+ * Where a submitted name goes: the player page, its Bingo boards, the `/player?q=` result cards, or a game page with
+ * its mode, submode and period (the header's search on a game page, to compare the same page).
+ */
+export type SearchTarget = "player" | "bingo" | "results" | GameTarget;
+
+interface GameTarget {
+  game: string;
+  search: { mode?: string; submode?: string; period?: string };
+}
 
 // Rows are at least 44 px tall, an easy tap target; `item` must match `itemHeight` for the keyboard scrolling. The
 // sheet is 300 px tall from `sm`, and a row shorter on phones, so the on-screen keyboard doesn't cover its last name.
@@ -53,6 +61,10 @@ function useSearchNavigation(target: SearchTarget) {
   const navigate = useNavigate();
 
   return (name: string) => {
+    if (typeof target === "object") {
+      return navigate({ to: "/{-$locale}/player/$name/$game", params: { name, game: target.game }, search: target.search });
+    }
+
     switch (target) {
       case "bingo":
         return navigate({ to: "/{-$locale}/player/$name/bingo", params: { name } });
@@ -64,12 +76,21 @@ function useSearchNavigation(target: SearchTarget) {
   };
 }
 
+/** A key pressed into a field or an editable element, or with a modifier held, is someone typing, not a shortcut. */
+const typing = (event: KeyboardEvent) =>
+  event.isComposing ||
+  event.ctrlKey ||
+  event.metaKey ||
+  event.altKey ||
+  (event.target instanceof HTMLElement && (event.target.isContentEditable || event.target.matches("input, textarea, select")));
+
 export function Search({
   className,
   defaultValue = "",
   disabled,
   target = "player",
   compact = false,
+  shortcut = false,
   placeholder,
   onSelect,
 }: {
@@ -78,12 +99,15 @@ export function Search({
   disabled?: boolean;
   target?: SearchTarget;
   compact?: boolean;
+  /** "/" focuses this box: the page's one player search (the header's, or the page's own where the header has none). */
+  shortcut?: boolean;
   placeholder?: string;
   /** Handles a submitted or picked name instead of navigating to `target`. */
   onSelect?: (name: string) => unknown;
 }) {
   const { t } = useTranslation();
   const size = SIZES[compact ? "compact" : "regular"];
+  const inputRef = useRef<HTMLInputElement>(null);
   const [input, setInput] = useState(defaultValue);
   const [query, setQuery] = useState(defaultValue);
   const [focused, setFocused] = useState(false);
@@ -100,6 +124,20 @@ export function Search({
     setFocused(false);
     setSelected(undefined);
   });
+
+  useEffect(() => {
+    if (!shortcut) return;
+
+    const focus = (event: KeyboardEvent) => {
+      if (event.key !== "/" || event.defaultPrevented || typing(event)) return;
+      event.preventDefault();
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    };
+
+    document.addEventListener("keydown", focus);
+    return () => document.removeEventListener("keydown", focus);
+  }, [shortcut]);
 
   function onSelectionChange(selected: number) {
     setSelected(selected);
@@ -130,14 +168,16 @@ export function Search({
         void go(query);
       }}
     >
-      {/* A square, solid input; the focus outline sits inside its edge. */}
-      <div className={cn("flex items-center bg-blackify-800 -outline-offset-2 focus-within:outline-2 focus-within:outline-white/60", size.bar)}>
+      {/* A square, solid input; the focus ring sits inside its edge. */}
+      <div className={cn("flex items-center bg-blackify-800 focus-within:focus-ring-inset", size.bar)}>
         <SearchIcon className={cn("shrink-0 text-mc-gray", size.icon)} />
         <input
+          ref={inputRef}
           name="search"
+          aria-keyshortcuts={shortcut ? "/" : undefined}
           placeholder={placeholder ?? t("search.placeholder")}
           // A placeholder too long for a phone ends in an ellipsis rather than mid-letter.
-          className={cn("placeholder:text-mc-gray text-white outline-none h-full w-full min-w-0 text-ellipsis selection:bg-white/50", size.text)}
+          className={cn("placeholder:text-mc-gray text-white focus-ring-none h-full w-full min-w-0 text-ellipsis selection:bg-white/50", size.text)}
           value={input}
           onChange={(event) => {
             setQuery(event.target.value);
@@ -231,6 +271,22 @@ function SearchPlayer({
   }
 
   // Otherwise suggestions open the page they name; only the submitted text goes to the result cards.
+  if (typeof target === "object") {
+    return (
+      <Link
+        id={id}
+        role="option"
+        to="/{-$locale}/player/$name/$game"
+        params={{ name: player, game: target.game }}
+        search={target.search}
+        aria-selected={selected}
+        className={className}
+      >
+        <p className={text}>{player}</p>
+      </Link>
+    );
+  }
+
   if (target === "bingo") {
     return (
       <Link id={id} role="option" to="/{-$locale}/player/$name/bingo" params={{ name: player }} aria-selected={selected} className={className}>

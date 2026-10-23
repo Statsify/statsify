@@ -45,7 +45,7 @@ export function FilterBox({
   return (
     <label
       className={cn(
-        "flex h-11 w-full items-center gap-3 bg-blackify-800 px-3 -outline-offset-2 focus-within:outline-2 focus-within:outline-white/60",
+        "flex h-11 w-full items-center gap-3 bg-blackify-800 px-3 focus-within:focus-ring-inset",
         className
       )}
     >
@@ -59,7 +59,7 @@ export function FilterBox({
         name={name}
         placeholder={label}
         aria-label={label}
-        className="h-full w-full min-w-0 bg-transparent text-mc-1.5 text-white text-ellipsis outline-none placeholder:text-mc-gray selection:bg-white/50"
+        className="h-full w-full min-w-0 bg-transparent text-mc-1.5 text-white text-ellipsis focus-ring-none placeholder:text-mc-gray selection:bg-white/50"
       />
       <span aria-live="polite" className="shrink-0 text-mc-1 text-mc-gray">{value.trim() ? count : undefined}</span>
     </label>
