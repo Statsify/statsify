@@ -6,7 +6,10 @@
     "build": {
       "env": ["API_URL", "API_KEY"],
       "outputs": ["dist/**", ".next/**", "pkg/**"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["clean", "^build"]
+    },
+    "clean": {
+      "cache": false
     },
     "typecheck": {
       "outputs": [],
