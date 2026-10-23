@@ -106,7 +106,7 @@ export const CopsAndCrimsProfile = ({
             <Historical.exclude time={time}>
               <Table.td
                 title={t("stats.bestTime")}
-                value={formatTime(stats.fastestWin)}
+                value={stats.fastestWin ? formatTime(stats.fastestWin) : "N/A"}
                 color="§b"
               />
             </Historical.exclude>
