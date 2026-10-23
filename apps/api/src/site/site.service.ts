@@ -558,6 +558,7 @@ export class SiteService implements OnApplicationBootstrap {
     return {
       field: input.field,
       formatted: metadata.name,
+      game: LEADERBOARD_GROUPS[input.field.split(".")[1]]?.game ?? null,
       glossary: catalogGlossary(input.field),
       columns,
       sort: metadata.sort,

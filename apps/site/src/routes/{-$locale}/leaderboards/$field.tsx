@@ -17,6 +17,7 @@ import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { createI18n } from "~/i18n/i18n";
 import { formatNumber } from "~/i18n/format";
 import { loadGlossaryWords } from "~/features/content/content-data";
+import { hasGameIcon } from "~/components/ui/game-icon";
 import { isGameKey, loadLeaderboardGame, loadLeaderboardPage, type LeaderboardView } from "~/features/leaderboards/leaderboard-data";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
 import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
@@ -55,6 +56,13 @@ const validateSearch = (
   around: aroundName(search.around),
   mode: modeKey(search.mode),
 });
+
+/** The game's icon as the tab icon, where the site has one. */
+const gameTabIcon = (loaderData: unknown) => {
+  const data = loaderData as RouteData | undefined;
+  const game = data?.kind === "game" ? data.game.game : data?.page.game;
+  return game && hasGameIcon(game) ? `/games/${game}.png` : undefined;
+};
 
 /** What the board's stat is, from the glossary, with the key of its entry there. */
 interface Explanation {
@@ -96,6 +104,7 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
     return loadBoard(context.queryClient, params.field, deps, words);
   },
   staleTime: 60_000,
+  staticData: { tabIcon: gameTabIcon },
   head: ({ loaderData, match, matches }) => {
     const locale = localeData(matches);
     // Titles and descriptions in English, from the server's `site.json`.

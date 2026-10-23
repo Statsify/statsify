@@ -210,6 +210,8 @@ export const LeaderboardPageSchema = z.object({
   field: z.string(),
   /** The name as the bot's leaderboard titles it, its game in the game's colours, Minecraft-formatted. */
   formatted: z.string(),
+  /** The board's `GameId`, for the icon, or `null` for a board without a game (quests, challenges). */
+  game: z.string().nullable(),
   /** The `glossary.*` locale key that explains the board's stat, or null where the glossary has none. */
   glossary: z.string().nullable(),
   /** The value columns, matching `rows[].values`. */
