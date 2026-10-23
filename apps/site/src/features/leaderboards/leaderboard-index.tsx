@@ -12,6 +12,7 @@ import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { FilterBox } from "~/components/filter-box";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { type GroupSummary, type ListGroup, boardLinksHtml, fetchLeaderboardList, filterGroups } from "./leaderboard-list";
+import { MinecraftText } from "~/components/ui/minecraft-text";
 import { type MouseEvent, type ReactNode, type SyntheticEvent, useMemo, useRef, useState } from "react";
 import { builtLeaderboardList } from "~/server/leaderboard-list.server";
 import { createIsomorphicFn } from "@tanstack/react-start";
@@ -50,7 +51,9 @@ function IndexPanel({ group, open, icons, children }: { group: Omit<GroupSummary
               {group.game && hasGameIcon(group.game) && <GameIcon game={group.game} />}
             </span>
           )}
-          <span className="grow">{group.name}</span>
+          <span className="grow">
+            <MinecraftText>{group.formatted}</MinecraftText>
+          </span>
           <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
         </summary>
         {children}

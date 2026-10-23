@@ -35,7 +35,7 @@ export interface IndexData {
 }
 
 const summaries = (groups: ListGroup[]): GroupSummary[] =>
-  groups.map(({ key, game, name, leaderboards }) => ({ key, game, name, count: leaderboards.length }));
+  groups.map(({ key, game, name, formatted, leaderboards }) => ({ key, game, name, formatted, count: leaderboards.length }));
 
 export const getLeaderboardIndex = createServerFn({ method: "GET" })
   .validator(z.object({ q: z.string().max(MAX_QUERY_LENGTH).optional() }))

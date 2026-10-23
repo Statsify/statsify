@@ -9,7 +9,7 @@
 import { Box } from "~/components/ui/box";
 import { Fragment } from "react";
 import { Link } from "@tanstack/react-router";
-import { MinecraftText } from "~/components/ui/minecraft-text";
+import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
 import { useColumnLabel } from "~/features/leaderboards/leaderboard-table";
@@ -44,7 +44,7 @@ export function LeaderboardPreview({
       <div className="col-span-full">
         <Box>
           <Link to="/{-$locale}/leaderboards/$field" params={{ field: leaderboard.field }} className="hover:underline">
-            <MinecraftText className="font-bold text-mc-3 md:text-mc-4">{leaderboard.name}</MinecraftText>
+            <MinecraftText className="font-bold text-mc-3 md:text-mc-4">{plainText(leaderboard.formatted)}</MinecraftText>
           </Link>
         </Box>
       </div>

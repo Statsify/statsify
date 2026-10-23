@@ -77,9 +77,11 @@ export function leaderboardGame({ leaderboards, ...group }: LeaderboardGroup): L
     modes.set(api, { key: api, name: removeFormatting(modeName(game, api)), leaderboards: [] });
   }
 
+  const groupName = removeFormatting(group.formatted);
+
   for (const { field, name } of leaderboards) {
     const mode = modes.get(modeKey(field, (key) => modes.has(key)))!;
-    const short = withoutPrefix(withoutPrefix(withoutPrefix(name, group.name), mode.name ?? ""), group.name);
+    const short = withoutPrefix(withoutPrefix(withoutPrefix(name, groupName), mode.name ?? ""), groupName);
     mode.leaderboards.push({ field, name: short });
   }
 

@@ -145,16 +145,21 @@ const tooManyRequests = (retryAfter: number) =>
     data: { retryAfter },
   });
 
-const gameGroup = (game: GameId) => ({ game, name: removeFormatting(FormattedGame[game]) });
+type GroupNames = Pick<LeaderboardGroup, "game" | "formatted">;
+
+const gameGroup = (game: GameId): GroupNames => ({ game, formatted: FormattedGame[game] });
+
+/** A group that isn't a game's, so it has no colours. */
+const otherGroup = (name: string): GroupNames => ({ game: null, formatted: name });
 
 /** `PlayerStats` keys → the leaderboard group they belong to. */
-const LEADERBOARD_GROUPS: Record<string, { game: GameId | null; name: string }> = {
+const LEADERBOARD_GROUPS: Record<string, GroupNames> = {
   arcade: gameGroup("ARCADE"),
   arenabrawl: gameGroup("ARENA_BRAWL"),
   bedwars: gameGroup("BEDWARS"),
   blitzsg: gameGroup("BLITZSG"),
   buildbattle: gameGroup("BUILD_BATTLE"),
-  challenges: { game: null, name: "Challenges" },
+  challenges: otherGroup("Challenges"),
   copsandcrims: gameGroup("COPS_AND_CRIMS"),
   duels: gameGroup("DUELS"),
   general: gameGroup("GENERAL"),
@@ -164,7 +169,7 @@ const LEADERBOARD_GROUPS: Record<string, { game: GameId | null; name: string }> 
   parkour: gameGroup("PARKOUR"),
   pit: gameGroup("PIT"),
   quake: gameGroup("QUAKE"),
-  quests: { game: null, name: "Quests" },
+  quests: otherGroup("Quests"),
   skywars: gameGroup("SKYWARS"),
   smashheroes: gameGroup("SMASH_HEROES"),
   speeduhc: gameGroup("SPEED_UHC"),
@@ -188,7 +193,7 @@ function buildLeaderboardGroups(): LeaderboardGroup[] {
     let group = groups.get(statsKey);
 
     if (!group) {
-      group = { key: statsKey, ...(LEADERBOARD_GROUPS[statsKey] ?? { game: null, name: statsKey }), leaderboards: [] };
+      group = { key: statsKey, ...(LEADERBOARD_GROUPS[statsKey] ?? otherGroup(statsKey)), leaderboards: [] };
       groups.set(statsKey, group);
     }
 
@@ -552,7 +557,7 @@ export class SiteService implements OnApplicationBootstrap {
 
     return {
       field: input.field,
-      name: removeFormatting(metadata.name),
+      formatted: metadata.name,
       glossary: catalogGlossary(input.field),
       columns,
       sort: metadata.sort,
@@ -560,7 +565,7 @@ export class SiteService implements OnApplicationBootstrap {
       pages: Math.ceil(Math.min(total, metadata.limit) / size),
       rows,
       gamePage: boardGamePage(input.field),
-      index: index && { ...index, name: this.leaderboardList().find(({ key }) => key === index.key)!.name },
+      index: index && { ...index, name: removeFormatting(this.leaderboardList().find(({ key }) => key === index.key)!.formatted) },
     };
   }
 

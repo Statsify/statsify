@@ -165,7 +165,8 @@ export const LeaderboardGroupSchema = z.object({
   key: z.string(),
   /** The `GameId` for the icon, or `null` for groups without a game (quests, challenges). */
   game: z.string().nullable(),
-  name: z.string(),
+  /** The name in the game's colours, Minecraft-formatted (`§cBed§fWars§f`), as the bot draws it. */
+  formatted: z.string(),
   leaderboards: z.array(LeaderboardListEntrySchema),
 });
 
@@ -207,7 +208,8 @@ export const LeaderboardColumnSchema = z.object({
 
 export const LeaderboardPageSchema = z.object({
   field: z.string(),
-  name: z.string(),
+  /** The name as the bot's leaderboard titles it, its game in the game's colours, Minecraft-formatted. */
+  formatted: z.string(),
   /** The `glossary.*` locale key that explains the board's stat, or null where the glossary has none. */
   glossary: z.string().nullable(),
   /** The value columns, matching `rows[].values`. */

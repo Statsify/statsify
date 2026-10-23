@@ -11,7 +11,7 @@
 
 import { Box } from "~/components/ui/box";
 import { ColumnLabel, HEADER, HIGHLIGHT, PLAYER, PlayerLink, Position, STRIPE, VALUES, Value, useHighlightScroll } from "./leaderboard-table";
-import { MinecraftText } from "~/components/ui/minecraft-text";
+import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
 import { rememberPlayer } from "~/features/player/resolve";
@@ -52,13 +52,13 @@ export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
 
   return (
     <Box>
-      <section aria-label={page.name}>
+      <section aria-label={plainText(page.formatted)}>
         {/* A table to screen readers: each card holds its row's cells, and the halves and the line that lay them out
             are layout only (`role="none"`). The head is decoration, so a row's cells line up with the header's:
             position, player, values. Below `md` the header row is hidden and each value carries its label. */}
         <div
           role="table"
-          aria-label={page.name}
+          aria-label={plainText(page.formatted)}
           className="flex flex-col md:grid md:grid-cols-[max-content_max-content_minmax(0,1fr)_repeat(var(--columns),max-content)]"
           style={{ "--columns": page.columns.length } as CSSProperties}
         >

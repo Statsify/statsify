@@ -19,7 +19,7 @@ import { formatNumber } from "~/i18n/format";
 import { loadGlossaryWords } from "~/features/content/content-data";
 import { isGameKey, loadLeaderboardGame, loadLeaderboardPage, type LeaderboardView } from "~/features/leaderboards/leaderboard-data";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
-import { plainText } from "~/components/ui/minecraft-text";
+import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
 import { useTranslation } from "react-i18next";
 import type { LeaderboardGame } from "@statsify/contract";
 import type { GlossaryWords } from "~/i18n/i18n.server";
@@ -110,7 +110,7 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
       origin ? socialMeta({ origin, path, title, description, image: "/images/og-home.png" }) : [];
 
     if (loaderData.kind === "game") {
-      const { name } = loaderData.game;
+      const name = plainText(loaderData.game.formatted);
       const title = words.t("meta.leaderboard.gameTitle", { game: name });
       const description = words.t("meta.leaderboard.gameDescription", { game: name });
 
@@ -125,8 +125,9 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
     }
 
     const { page } = loaderData;
-    const title = words.t("meta.leaderboard.title", { name: page.name });
-    const fallback = words.t("meta.leaderboard.description", { name: page.name });
+    const name = plainText(page.formatted);
+    const title = words.t("meta.leaderboard.title", { name });
+    const fallback = words.t("meta.leaderboard.description", { name });
     // A link preview shows the rows the link opens on: the player it's around, else the page's first three. A board
     // that hides its own stat (BedWars Level) shows it in the name, and its first column is another stat.
     const highlighted = page.rows.filter((row) => row.highlight);
@@ -135,7 +136,7 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
       (row) => `#${formatNumber(row.position, DEFAULT_LOCALE)} ${plainText(row.name)}${ownValue ? ` ${valueText(row.values[0])}` : ""}`
     );
     const rows = statsDescription(parts);
-    const lead = words.t("meta.leaderboard.lead", { name: page.name });
+    const lead = words.t("meta.leaderboard.lead", { name });
     const description = statsDescription(parts, { lead, max: SEARCH_DESCRIPTION_MAX }) || fallback;
     const { page: number, around } = match.search;
     const query = new URLSearchParams({ ...(number && { page: String(number) }), ...(around && { around }) });
@@ -171,12 +172,10 @@ function LeaderboardRoute() {
 function GameIndexPage({ game }: { game: LeaderboardGame }) {
   const { t } = useTranslation();
   const { mode } = Route.useSearch();
-  const groups = game.modes.map(({ key, name, leaderboards }) => ({
-    key,
-    game: null,
-    name: name ?? t("leaderboards.gameWide"),
-    leaderboards,
-  }));
+  const groups = game.modes.map(({ key, name, leaderboards }) => {
+    const heading = name ?? t("leaderboards.gameWide");
+    return { key, game: null, name: heading, formatted: heading, leaderboards };
+  });
   const open = groups.find(({ key }) => key === mode)?.key ?? groups[0]?.key;
 
   return (
@@ -191,7 +190,9 @@ function GameIndexPage({ game }: { game: LeaderboardGame }) {
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
       <div className="w-container flex flex-col gap-6 px-4 py-12 text-mc-white md:px-8">
         <div className="flex flex-col items-center gap-2">
-          <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{t("leaderboards.gameTitle", { game: game.name })}</h1>
+          <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">
+            <MinecraftText>{t("leaderboards.gameTitle", { game: game.formatted })}</MinecraftText>
+          </h1>
           <Link to="/{-$locale}/leaderboards" className="inline-flex min-h-11 items-center text-mc-1.5 text-mc-yellow underline underline-offset-2">
             {t("leaderboards.all")}
           </Link>
@@ -217,7 +218,9 @@ function LeaderboardPage({ view: { page, miss, explanation } }: { view: Leaderbo
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className="flex flex-col items-center gap-2">
-          <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{page.name}</h1>
+          <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">
+            <MinecraftText>{page.formatted}</MinecraftText>
+          </h1>
           {/* The game's index, opened and scrolled to the board's mode. */}
           {page.index && (
             <Link

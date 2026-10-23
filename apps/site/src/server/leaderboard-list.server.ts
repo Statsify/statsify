@@ -10,6 +10,7 @@ import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { type ListGroup, withoutGroupPrefix } from "~/features/leaderboards/leaderboard-list";
 import { cacheHeaders } from "~/lib/cache";
 import { createHash } from "node:crypto";
+import { plainText } from "~/components/ui/minecraft-text";
 import { readNamespace } from "~/i18n/i18n.server";
 import { rpcServerClient } from "./rpc.server";
 
@@ -64,10 +65,12 @@ async function build(): Promise<BuiltList> {
     return typeof text === "string" && !text.includes("{{") ? text : undefined;
   };
 
-  const list = withoutGroupPrefix(groups).map(({ key, game, name, leaderboards }) => ({
+  const named = groups.map((group) => ({ ...group, name: plainText(group.formatted) }));
+  const list = withoutGroupPrefix(named).map(({ key, game, name, formatted, leaderboards }) => ({
     key,
     game,
     name,
+    formatted,
     leaderboards: leaderboards.map(({ field, name: board, label, aliases }) => {
       const extra = [label && word(label), ...(aliases ?? [])].filter(
         (term): term is string => Boolean(term) && !board.toLowerCase().includes(term!.toLowerCase())

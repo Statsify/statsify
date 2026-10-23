@@ -16,7 +16,7 @@ import {
   getIntendedFormattedLevel,
 } from "@statsify/schemas";
 import { catalogStats } from "./leaderboards.js";
-import { findScore, prettify } from "@statsify/util";
+import { findScore, prettify, removeFormatting } from "@statsify/util";
 import type { Glossary, GlossaryEntry, LeaderboardGroup, PrestigeSheet } from "@statsify/contract";
 import type { Stat } from "@statsify/catalog";
 
@@ -39,7 +39,7 @@ const RATIO_ORDER = [...RATIOS.keys()];
  */
 export function buildGlossary(groups: LeaderboardGroup[]): Glossary {
   const shown = [...catalogStats().values()].filter((stat) => stat.name === undefined);
-  const names = new Map(groups.map(({ key, name }) => [key, name]));
+  const names = new Map(groups.map(({ key, formatted }) => [key, removeFormatting(formatted)]));
   const games = Object.fromEntries(
     [...new Set(shown.map(gameOf))].map((game) => [game, names.get(game) ?? prettify(game)])
   );
