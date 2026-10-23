@@ -130,6 +130,20 @@ export class BaseLeaderboardCommand {
         }
       };
 
+    const [message, page] = await this.getLeaderboardMessage(
+      user,
+      cache,
+      type,
+      getLeaderboard,
+      field,
+      { input: currentPage, type: LeaderboardQuery.PAGE },
+      props,
+      getLeaderboardDataIcon
+    );
+
+    // Register the button hooks only when there's a leaderboard to page through
+    if (message.ephemeral) return message;
+
     const listener = CommandListener.getInstance();
 
     listener.addHook(
@@ -215,19 +229,6 @@ export class BaseLeaderboardCommand {
     });
 
     const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
-
-    const [message, page] = await this.getLeaderboardMessage(
-      user,
-      cache,
-      type,
-      getLeaderboard,
-      field,
-      { input: currentPage, type: LeaderboardQuery.PAGE },
-      props,
-      getLeaderboardDataIcon
-    );
-
-    if (message.ephemeral) return message;
 
     setTimeout(() => {
       listener.removeHook(up.getCustomId());
