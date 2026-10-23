@@ -13,13 +13,14 @@ import { Chevron } from "~/components/icons/chevron";
 import { Command } from "~/components/ui/command";
 import { Cross } from "~/components/icons/cross";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
-import { Fragment, type ReactNode, useEffect, useId, useRef, useState } from "react";
+import { Fragment, type ReactNode, type Ref, useEffect, useId, useRef, useState } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { Hidden, InlineStat, LeaderboardLink, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
 import { MinecraftText, colourClass, colourOf, leadingColourClass, plainText } from "~/components/ui/minecraft-text";
+import { MiniHeader } from "~/features/player/mini-header";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
@@ -91,6 +92,7 @@ export function GameView({ page }: { page: GamePage }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
   const queryClient = useQueryClient();
+  const nametag = useRef<HTMLDivElement>(null);
   const [filter, setFilter] = useState("");
   const mode = modeSearch(page, page.mode);
   const submode = submodeSearch(page, page.submode);
@@ -148,10 +150,11 @@ export function GameView({ page }: { page: GamePage }) {
         mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)"
       />
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} game={`${page.game.name}${page.heading.mode ? ` §r(${page.heading.mode}§r)` : ""}`} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
           {/* With neither a level nor an overview beside it (Parkour), the nametag takes the whole row. */}
-          <GameHeader page={page} className={page.level || page.overview.length > 0 ? "lg:row-span-2" : "lg:col-span-2"} />
+          <GameHeader ref={nametag} page={page} className={page.level || page.overview.length > 0 ? "lg:row-span-2" : "lg:col-span-2"} />
           {page.level && <LevelPanel level={page.level} username={page.username} />}
           {page.overview.length > 0 && (
             <StatPanel
@@ -258,11 +261,11 @@ export function headingText(page: Pick<GamePage, "game" | "heading">, word: (key
 }
 
 /** The nametag, linking back to the player page, over the card's title. */
-export function GameHeader({ page, className }: { page: GamePage; className?: string }) {
+export function GameHeader({ page, className, ref }: { page: GamePage; className?: string; ref?: Ref<HTMLDivElement> }) {
   const { t } = useTranslation();
 
   return (
-    <Box className={cn("content:flex content:h-full content:items-center content:gap-4", className)}>
+    <Box ref={ref} className={cn("content:flex content:h-full content:items-center content:gap-4", className)}>
       <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28" />
       <h1 className="flex min-w-0 grow flex-col gap-2">
         {/* A long rank and name wraps onto a second line beside a phone's bust rather than being cut off. */}

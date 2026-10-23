@@ -13,6 +13,7 @@ import { Hint, Spoken } from "~/components/ui/hint";
 import { Hidden, InlineStat, LeaderboardLink, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
+import { MiniHeader } from "./mini-header";
 import { RefreshBar } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust } from "~/components/ui/skin";
@@ -25,8 +26,9 @@ import { playerPageQuery } from "./resolve";
 import { refreshPlayer } from "./player-actions";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import type { ComponentType } from "react";
+import type { ComponentType, Ref } from "react";
 import type { GameSummary, PlayerPage } from "@statsify/contract";
 
 type Socials = PlayerPage["socials"];
@@ -45,6 +47,7 @@ const SOCIAL_ICONS: Partial<Record<SocialKey, ComponentType<{ className?: string
  */
 export function PlayerView({ page }: { page: PlayerPage }) {
   const queryClient = useQueryClient();
+  const nametag = useRef<HTMLDivElement>(null);
 
   // The refreshed page replaces the cached query, so every panel re-renders with the new numbers. The player's game
   // pages predate the refresh: they reload the next time they're shown.
@@ -68,9 +71,10 @@ export function PlayerView({ page }: { page: PlayerPage }) {
         mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)"
       />
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
-          <NametagPanel page={page} className="lg:col-start-1 lg:row-start-1" />
+          <NametagPanel ref={nametag} page={page} className="lg:col-start-1 lg:row-start-1" />
           <RefreshBar
             updatedAt={page.updatedAt}
             expiresAt={page.expiresAt}
@@ -88,11 +92,11 @@ export function PlayerView({ page }: { page: PlayerPage }) {
   );
 }
 
-function NametagPanel({ page, className }: { page: PlayerPage; className?: string }) {
+function NametagPanel({ page, className, ref }: { page: PlayerPage; className?: string; ref?: Ref<HTMLDivElement> }) {
   const { t } = useTranslation();
 
   return (
-    <Box className={cn("content:flex content:h-full content:items-center content:gap-4", className)}>
+    <Box ref={ref} className={cn("content:flex content:h-full content:items-center content:gap-4", className)}>
       <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28" />
       <div className="flex min-w-0 grow flex-col gap-3">
         {/* Rank, name and guild tag as on the card; a long name wraps onto a second line rather than widening the page. */}
