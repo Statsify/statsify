@@ -11,6 +11,7 @@ import {
   type Circular,
   type Flatten,
   flatten,
+  unflatten,
 } from "@statsify/util";
 import { CacheLevel, StatusNotFoundException } from "@statsify/api-client";
 import { HypixelService } from "#hypixel";
@@ -167,8 +168,12 @@ export class PlayerService {
     const serializedPlayer = serialize<Player>(Player, flatPlayer);
 
     const promises = [
+      // Mongoose gets the nested document: with thousands of dotted keys, its change
+      // tracking makes the replace O(n²)
       this.playerModel
-        .replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true })
+        .replaceOne({ uuid: player.uuid }, unflatten(serializedPlayer), {
+          upsert: true,
+        })
         .exec(),
       this.playerLeaderboardService.addLeaderboards(
         Player,

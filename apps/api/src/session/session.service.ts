@@ -11,7 +11,7 @@ import {
   PlayerNotFoundException,
   SessionNotFoundException,
 } from "@statsify/api-client";
-import { type Circular, flatten } from "@statsify/util";
+import { type Circular, flatten, unflatten } from "@statsify/util";
 import { DateTime } from "luxon";
 import {
   Inject,
@@ -59,7 +59,7 @@ export class SessionService {
 
     doc.sessionReset = Math.round(DateTime.now().toMillis() / 1000);
 
-    await this.sessionModel.replaceOne({ uuid: doc.uuid }, doc, { upsert: true }).lean().exec();
+    await this.sessionModel.replaceOne({ uuid: doc.uuid }, unflatten(doc), { upsert: true }).lean().exec();
 
     return deserialize(Player, flatPlayer);
   }
