@@ -37,7 +37,7 @@ export const Route = createFileRoute("/{-$locale}/player/")({
   loaderDeps: ({ search }) => ({ q: search.q }),
   loader: async ({ deps }): Promise<{ q: string | undefined; cards: ResultCard[] }> => {
     if (!deps.q) return { q: undefined, cards: [] };
-    if (UUID_PATTERN.test(deps.q)) throw redirect({ to: "/{-$locale}/player/$name", params: { name: deps.q } });
+    if (UUID_PATTERN.test(deps.q)) throw redirect({ to: "/{-$locale}/player/$name", params: { name: deps.q }, statusCode: 301 });
 
     const names = await rpc.search.suggest({ query: deps.q });
     const cards = names.length > 0 ? await rpc.search.cards({ names }) : [];

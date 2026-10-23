@@ -16,7 +16,7 @@ import { SANS_PRELOAD } from "~/lib/fonts";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { refreshBingo } from "~/features/player/player-actions";
 import { useState } from "react";
@@ -36,6 +36,17 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
     if (!player) {
       cacheNotFoundResponse("max-age=300");
       throw notFound();
+    }
+
+    // Like the player page: UUIDs, old names and other casings land on the current name, kept for an hour.
+    if (player.username !== params.name) {
+      throw redirect({
+        to: "/{-$locale}/player/$name/bingo",
+        params: { name: player.username },
+        search: true,
+        statusCode: 301,
+        headers: { "Cache-Control": "public, max-age=3600", "CDN-Cache-Control": "max-age=3600" },
+      });
     }
 
     return player;
