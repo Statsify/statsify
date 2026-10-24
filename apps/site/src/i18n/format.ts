@@ -58,6 +58,30 @@ export function formatCountdown(seconds: number): string {
   return hours > 0 ? `${hours}:${String(minutes).padStart(2, "0")}:${rest}` : `${minutes}:${rest}`;
 }
 
+/**
+ * How long ago `then` was, in the locale's words ("3 hours ago", "last month", "11 years ago"; "3h ago" with `style`
+ * narrow). Days up to 25, months up to 10, then years, so it never says "12 months ago".
+ */
+export function relativeTime(
+  then: number,
+  now: number,
+  locale?: string,
+  { style = "long" }: { style?: Intl.RelativeTimeFormatStyle } = {}
+): string {
+  const format = new Intl.RelativeTimeFormat(locale, { numeric: "auto", style });
+  // A visitor's clock behind the server's would put `then` ahead of `now` ("in 8 seconds").
+  const seconds = Math.round(Math.min(0, then - now) / 1000);
+  const magnitude = Math.abs(seconds);
+  const days = seconds / 86_400;
+
+  if (magnitude < 60) return format.format(seconds, "second");
+  if (magnitude < 3600) return format.format(Math.round(seconds / 60), "minute");
+  if (magnitude < 86_400) return format.format(Math.round(seconds / 3600), "hour");
+  if (magnitude < 26 * 86_400) return format.format(Math.round(days), "day");
+  if (magnitude < 320 * 86_400) return format.format(Math.round(days / 30.4375), "month");
+  return format.format(Math.round(days / 365.25), "year");
+}
+
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
 
@@ -88,6 +112,16 @@ if (import.meta.vitest) {
       expect(formatCountdown(59.2)).toBe("1:00");
       expect(formatCountdown(3599)).toBe("59:59");
       expect(formatCountdown(21_536)).toBe("5:58:56");
+    });
+  });
+
+  describe("relativeTime", () => {
+    it("rounds to the largest unit, up to years", () => {
+      const now = Date.UTC(2026, 9, 24);
+      expect(relativeTime(now - 3 * 3_600_000, now, "en-US")).toBe("3 hours ago");
+      expect(relativeTime(now - 25 * 86_400_000, now, "en-US")).toBe("25 days ago");
+      expect(relativeTime(now - 364 * 86_400_000, now, "en-US")).toBe("last year");
+      expect(relativeTime(Date.UTC(2015, 10, 6), now, "en-US")).toBe("11 years ago");
     });
   });
 }

@@ -149,7 +149,16 @@ export function Spoken({ full, children }: { full?: string; children: ReactNode 
  * Text the page shortens (an abbreviation, a number past a million) with its full form: screen readers read the full
  * form, and it shows in a tooltip on hover, on keyboard focus and on tap. Without `full` it's the text.
  */
-export function Hint({ full, children }: { full?: string; children: ReactNode }) {
+export function Hint({
+  full,
+  spoken = full,
+  children,
+}: {
+  full?: string;
+  /** What screen readers read in the text's place when it isn't `full`: a date keeps itself and adds how long ago. */
+  spoken?: string;
+  children: ReactNode;
+}) {
   const { props, tooltip, toggle } = useHint(full);
   // A mouse already showed it on hover, so its click mustn't toggle it off again.
   const pointer = useRef<string>(undefined);
@@ -170,7 +179,7 @@ export function Hint({ full, children }: { full?: string; children: ReactNode })
           pointer.current = undefined;
         }}
       >
-        <Spoken full={full}>{children}</Spoken>
+        <Spoken full={spoken}>{children}</Spoken>
       </button>
       {tooltip}
     </>

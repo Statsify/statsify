@@ -16,7 +16,7 @@ import { Link } from "@tanstack/react-router";
 import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
-import { RefreshBar } from "./refresh-bar";
+import { RefreshBar, useNow } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust } from "~/components/ui/skin";
 import { Twitter } from "~/components/icons/twitter";
@@ -26,6 +26,7 @@ import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { playerPageQuery } from "./resolve";
 import { refreshPlayer } from "./player-actions";
+import { relativeTime } from "~/i18n/format";
 import { addRecentPlayer } from "./recent";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
@@ -366,18 +367,7 @@ function LoginPanel({ status, className }: { status: PlayerPage["status"]; class
 
 /** Status and logins as the card's header lists them: in the nametag from `md`, in their own panel on phones. */
 function LoginList({ status, className }: { status: PlayerPage["status"]; className?: string }) {
-  const { t, i18n } = useTranslation();
-
-  // The card's `LL/dd/yy, hh:mm a`, in UTC on both server and browser so the HTML hydrates without a mismatch.
-  const format = new Intl.DateTimeFormat(i18n.language, {
-    month: "2-digit",
-    day: "2-digit",
-    year: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "UTC",
-  });
-  const date = (ms: number) => (ms > 0 ? `${format.format(ms)} UTC` : t("player.na"));
+  const { t } = useTranslation();
 
   return (
     <dl className={cn("flex flex-col gap-2", className)}>
@@ -386,14 +376,41 @@ function LoginList({ status, className }: { status: PlayerPage["status"]; classN
         value={status.online ? t("default:stats.online") : t("default:stats.offline")}
         color={status.online ? "text-mc-green" : "text-mc-red"}
       />
-      <InlineStat label={t("default:stats.firstLogin")} value={date(status.firstLogin)} color="text-mc-dark-aqua" />
-      <InlineStat label={t("default:stats.lastLogin")} value={date(status.lastLogin)} color="text-mc-dark-aqua" />
+      <InlineStat label={t("default:stats.firstLogin")} value={<LoginDate ms={status.firstLogin} />} color="text-mc-dark-aqua" />
+      <InlineStat label={t("default:stats.lastLogin")} value={<LoginDate ms={status.lastLogin} />} color="text-mc-dark-aqua" />
+      <InlineStat label={t("default:stats.logoutTime")} value={<LoginDate ms={status.lastLogout} />} color="text-mc-dark-aqua" />
       <InlineStat
         label={t("default:stats.lastGame")}
         value={status.lastGame ? <MinecraftText>{status.lastGame.name}</MinecraftText> : t("player.na")}
       />
     </dl>
   );
+}
+
+const twoDigits = (value: number) => String(value).padStart(2, "0");
+
+/**
+ * The card's `LL/dd/yy, hh:mm a` in UTC, from the date's parts rather than `Intl`: ICU versions differ in the space
+ * before AM/PM, so the server's text and the browser's could differ and break hydration.
+ */
+function loginText(ms: number): string {
+  const date = new Date(ms);
+  const hours = date.getUTCHours();
+  const day = `${twoDigits(date.getUTCMonth() + 1)}/${twoDigits(date.getUTCDate())}/${twoDigits(date.getUTCFullYear() % 100)}`;
+  return `${day}, ${twoDigits(hours % 12 || 12)}:${twoDigits(date.getUTCMinutes())} ${hours < 12 ? "AM" : "PM"}`;
+}
+
+/** A login date as the card prints it. Once the page has mounted, how long ago it was shows on hover, focus or tap. */
+function LoginDate({ ms }: { ms: number }) {
+  const { t, i18n } = useTranslation();
+  const now = useNow();
+  if (ms <= 0) return t("player.na");
+
+  const text = `${loginText(ms)} UTC`;
+  // `now` is undefined until mount, so the server's HTML and the first render carry no clock value.
+  const ago = now === undefined ? undefined : relativeTime(ms, now, i18n.language);
+
+  return <Hint full={ago} spoken={ago && `${text}, ${ago}`}>{text}</Hint>;
 }
 
 export function GameGrid({ games, username }: { games: GameSummary[]; username: string }) {

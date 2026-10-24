@@ -8,7 +8,7 @@
 
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/util";
-import { formatCountdown } from "~/i18n/format";
+import { formatCountdown, relativeTime } from "~/i18n/format";
 import { type ReactNode, useEffect, useState } from "react";
 import { type ActionResult, BROWSER_TIMEOUT_MS } from "./player-actions";
 import { useTranslation } from "react-i18next";
@@ -26,7 +26,7 @@ type RefreshState =
   | { status: "error" };
 
 /** Ticks once a second after mount; `undefined` during SSR so the HTML never carries a clock value. */
-function useNow(): number | undefined {
+export function useNow(): number | undefined {
   const [now, setNow] = useState<number>();
 
   useEffect(() => {
@@ -37,17 +37,6 @@ function useNow(): number | undefined {
   }, []);
 
   return now;
-}
-
-function relativeTime(then: number, now: number, locale: string): string {
-  const format = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
-  const seconds = Math.round((then - now) / 1000);
-  const magnitude = Math.abs(seconds);
-
-  if (magnitude < 60) return format.format(seconds, "second");
-  if (magnitude < 3600) return format.format(Math.round(seconds / 60), "minute");
-  if (magnitude < 86_400) return format.format(Math.round(seconds / 3600), "hour");
-  return format.format(Math.round(seconds / 86_400), "day");
 }
 
 /**
