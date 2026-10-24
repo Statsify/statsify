@@ -18,7 +18,7 @@ import { z } from "zod";
 import type { LeaderboardGame, LeaderboardPage } from "@statsify/contract";
 import type { QueryClient } from "@tanstack/react-query";
 
-const PAGE_SIZE = 25;
+export const PAGE_SIZE = 25;
 
 /** The longest `?q=` on `/leaderboards`; anything past it is cut. */
 export const MAX_QUERY_LENGTH = 64;
@@ -90,15 +90,21 @@ export interface LeaderboardView {
 }
 
 /**
- * The page to render for `/leaderboards/$field?page=&around=`. `around=<name>` resolves the player
+ * The page to render for `/leaderboards/$field?page=&around=&position=`. `around=<name>` resolves the player
  * and asks the API for the page they are on; an unknown or unranked player falls back to the
- * requested page with a notice. An unknown leaderboard is a 404.
+ * requested page with a notice. `position=<n>` is the page holding that position, its row marked as a player's is. An
+ * unknown leaderboard is a 404.
  */
 export async function loadLeaderboardPage(
   queryClient: QueryClient,
   field: string,
-  { page, around }: { page: number; around?: string }
+  { page, around, position }: { page: number; around?: string; position?: number }
 ): Promise<LeaderboardView> {
+  if (!around && position) {
+    const held = await requirePage({ field, page: Math.floor((position - 1) / PAGE_SIZE) });
+    return { page: { ...held, rows: held.rows.map((row) => ({ ...row, highlight: row.position === position })) }, noindex: true };
+  }
+
   if (!around) {
     const shown = await requirePage({ field, page });
     // Past the last page goes to the last page, cached for a minute only, since the board can grow.

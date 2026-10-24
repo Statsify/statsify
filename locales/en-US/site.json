@@ -160,6 +160,8 @@
     "previous": "Previous",
     "next": "Next",
     "find": "Find a player on this leaderboard...",
+    "jump": "Go to #",
+    "jumpPosition": "Go to position",
     "unknown": "We haven't seen {{name}} yet. Check the spelling, or <profile>open their profile</profile> to look them up.",
     "unranked": "{{name}} isn't on this leaderboard. They might not rank high enough to be listed.",
     "moved": "{{name}}'s rank changed while the page loaded, so they're not on it. Try again to find them.",

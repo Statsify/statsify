@@ -658,12 +658,12 @@ function LeaderboardSection() {
           <PageNav field={LEADERBOARD_PAGE.field} page={LEADERBOARD_PAGE.pages - 1} pages={LEADERBOARD_PAGE.pages} />
         </Demo>
         <Demo label="Find a player">
-          <FindPlayer field={LEADERBOARD_PAGE.field} />
+          <FindPlayer field={LEADERBOARD_PAGE.field} pages={LEADERBOARD_PAGE.pages} />
         </Demo>
         <Demo label="Find a player: unknown and unranked">
           <div className="flex flex-col gap-4">
-            <FindPlayer field={LEADERBOARD_PAGE.field} miss={{ kind: "unknown", name: "zzznotaplayer" }} />
-            <FindPlayer field={LEADERBOARD_PAGE.field} miss={{ kind: "unranked", name: "oJakey" }} />
+            <FindPlayer field={LEADERBOARD_PAGE.field} pages={LEADERBOARD_PAGE.pages} miss={{ kind: "unknown", name: "zzznotaplayer" }} />
+            <FindPlayer field={LEADERBOARD_PAGE.field} pages={LEADERBOARD_PAGE.pages} miss={{ kind: "unranked", name: "oJakey" }} />
           </div>
         </Demo>
       </div>

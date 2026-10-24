@@ -42,18 +42,26 @@ const pageNumber = (raw: unknown) => {
 const aroundName = (raw: unknown) =>
   (typeof raw === "string" || typeof raw === "number" ? String(raw).trim().slice(0, 36) : "") || undefined;
 
+/** `?position=`, a position to open the board at; anything but a whole number from 1 is left out. */
+const positionNumber = (raw: unknown) => {
+  const position = Number(raw);
+  return Number.isInteger(position) && position > 0 ? position : undefined;
+};
+
 /** `?mode=`, the mode a game's index opens at; a mode the game has no leaderboards under opens the first group. */
 const modeKey = (raw: unknown) => (typeof raw === "string" && raw.length <= 32 ? raw : undefined);
 
 /**
- * `?page=` is left out of URLs for the first page; `?around=<name or UUID>` anchors on a player. `?mode=` is a game
- * index's. A plain function, not a zod schema: every page's first load carries the routes' search parsing.
+ * `?page=` is left out of URLs for the first page; `?around=<name or UUID>` anchors on a player, and `?position=<n>` on
+ * a position. `?mode=` is a game index's. A plain function, not a zod schema: every page's first load carries the
+ * routes' search parsing.
  */
 const validateSearch = (
   search: Record<string, unknown>
-): { page?: number; around?: string; mode?: string } => ({
+): { page?: number; around?: string; position?: number; mode?: string } => ({
   page: pageNumber(search.page),
   around: aroundName(search.around),
+  position: positionNumber(search.position),
   mode: modeKey(search.mode),
 });
 
@@ -76,7 +84,7 @@ type RouteData = ({ kind: "board"; explanation?: Explanation } & LeaderboardView
 async function loadBoard(
   queryClient: QueryClient,
   field: string,
-  deps: { page: number; around?: string },
+  deps: { page: number; around?: string; position?: number },
   words: Promise<GlossaryWords>
 ): Promise<RouteData> {
   const [view, glossary] = await Promise.all([loadLeaderboardPage(queryClient, field, deps), words]);
@@ -92,7 +100,7 @@ async function loadBoard(
 export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
   validateSearch,
   // The API counts pages from 0. The mode only opens a group, so it isn't a dependency.
-  loaderDeps: ({ search }) => ({ page: (search.page ?? 1) - 1, around: search.around }),
+  loaderDeps: ({ search }) => ({ page: (search.page ?? 1) - 1, around: search.around, position: search.position }),
   loader: async ({ params, deps, context, parentMatchPromise }): Promise<RouteData> => {
     if (isGameKey(params.field)) {
       preloadBackground(backgroundFor(params.field));
@@ -147,8 +155,12 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
     const rows = statsDescription(parts);
     const lead = words.t("meta.leaderboard.lead", { name });
     const description = statsDescription(parts, { lead, max: SEARCH_DESCRIPTION_MAX }) || fallback;
-    const { page: number, around } = match.search;
-    const query = new URLSearchParams({ ...(number && { page: String(number) }), ...(around && { around }) });
+    const { page: number, around, position } = match.search;
+    const query = new URLSearchParams({
+      ...(number && { page: String(number) }),
+      ...(around && { around }),
+      ...(position && { position: String(position) }),
+    });
 
     return {
       meta: [
@@ -256,7 +268,7 @@ function LeaderboardPage({ view: { page, miss, explanation } }: { view: Leaderbo
             </p>
           )}
         </div>
-        <FindPlayer field={field} miss={miss} />
+        <FindPlayer field={field} pages={page.pages} miss={miss} />
         <LeaderboardCards page={page} />
         <PageNav field={field} page={page.page} pages={page.pages} />
       </div>

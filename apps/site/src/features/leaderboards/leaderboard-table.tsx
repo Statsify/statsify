@@ -7,7 +7,7 @@
  */
 
 import { Button } from "~/components/ui/button";
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 import { Hint } from "~/components/ui/hint";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
@@ -16,7 +16,7 @@ import { formatPosition } from "@statsify/profiles/format-position";
 import { StatNumber, useStatName } from "~/components/ui/stat";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { Trans, useTranslation } from "react-i18next";
-import type { AroundMiss } from "./leaderboard-data";
+import { type AroundMiss, PAGE_SIZE } from "./leaderboard-data";
 import type { ReactNode } from "react";
 import type { LeaderboardColumn, LeaderboardPage } from "@statsify/contract";
 
@@ -151,19 +151,25 @@ export function PageNav({ field, page, pages }: { field: string; page: number; p
   );
 }
 
-/** The `around=<name>` entry: the shared search box, submitting into this leaderboard's query string. */
-export function FindPlayer({ field, miss }: { field: string; miss?: AroundMiss }) {
+/**
+ * The `around=<name>` entry, the shared search box submitting into this leaderboard's query string, and beside it (below
+ * on phones) the `position=<n>` one.
+ */
+export function FindPlayer({ field, pages, miss }: { field: string; pages: number; miss?: AroundMiss }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
     <div className="flex w-full max-w-200 flex-col gap-2 self-center">
-      <Search
-        compact
-        className="w-full"
-        placeholder={t("leaderboards.find")}
-        onSelect={(name) => navigate({ to: "/{-$locale}/leaderboards/$field", params: { field }, search: { around: name } })}
-      />
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Search
+          compact
+          className="w-full"
+          placeholder={t("leaderboards.find")}
+          onSelect={(name) => navigate({ to: "/{-$locale}/leaderboards/$field", params: { field }, search: { around: name } })}
+        />
+        <JumpTo field={field} pages={pages} />
+      </div>
       {miss && (
         <p className="text-mc-1 text-mc-yellow text-center">
           {miss.kind === "unknown" ? (
@@ -178,5 +184,46 @@ export function FindPlayer({ field, miss }: { field: string; miss?: AroundMiss }
         </p>
       )}
     </div>
+  );
+}
+
+/**
+ * Opens the page holding a position, with its row marked: rank 5,000 in one step rather than 200 Nexts. A plain GET
+ * form (`?position=`), so it works without scripts; with them it navigates in place.
+ */
+function JumpTo({ field, pages }: { field: string; pages: number }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const id = useId();
+
+  return (
+    <form
+      method="get"
+      onSubmit={(event) => {
+        event.preventDefault();
+        const position = Number(new FormData(event.currentTarget).get("position"));
+        void navigate({ to: "/{-$locale}/leaderboards/$field", params: { field }, search: { position } });
+      }}
+      className="flex shrink-0 items-center gap-2 self-center"
+    >
+      <label htmlFor={id} className="text-mc-1 text-mc-gray">{t("leaderboards.jump")}</label>
+      <input
+        id={id}
+        aria-label={t("leaderboards.jumpPosition")}
+        name="position"
+        type="number"
+        inputMode="numeric"
+        required
+        min={1}
+        max={Math.max(pages, 1) * PAGE_SIZE}
+        className="h-11 w-28 appearance-none bg-blackify-800 px-3 text-mc-1.5 text-white placeholder:text-mc-gray focus-ring-none focus-visible:focus-ring-inset [&::-webkit-inner-spin-button]:appearance-none"
+      />
+      <button
+        type="submit"
+        className="h-11 shrink-0 bg-blackify-800 px-3 text-mc-1.5 text-white hover:bg-blackify-700 active:bg-blackify-700 focus-visible:focus-ring-inset"
+      >
+        {t("game.go")}
+      </button>
+    </form>
   );
 }
