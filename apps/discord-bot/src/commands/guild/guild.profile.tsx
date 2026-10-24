@@ -69,7 +69,7 @@ export interface GuildProfileProps {
   logo: Image;
   user: User | null;
   t: LocalizeFunction;
-  ranking: number;
+  ranking?: number;
   page: "overall" | "gexp" | "expPerGame" | "misc";
 }
 
@@ -132,7 +132,7 @@ interface GuildOverallPageProps {
   skin: Image;
   gameIcons: Record<string, Image>;
   t: LocalizeFunction;
-  ranking: number;
+  ranking?: number;
 }
 
 const GuildOverallPage = ({
@@ -148,6 +148,7 @@ const GuildOverallPage = ({
     locale: t.locale,
   });
   const preferredGames = guild.preferredGames.map((g) => gameIcons[g]);
+  const formattedRanking = ranking ? ` §8[§7#§f${t(ranking)}§8]` : "";
 
   return (
     <>
@@ -164,9 +165,8 @@ const GuildOverallPage = ({
               guild.members.length
             )}§8/§f125`}
             </text>
-            <text {...text}>{`§2${t("stats.guild.gexp")}:§f ${t(guild.exp)} §8[§7#§f${t(
-              ranking
-            )}§8]`}
+            <text {...text}>
+              {`§2${t("stats.guild.gexp")}:§f ${t(guild.exp)}${formattedRanking}`}
             </text>
             <text {...text}>{`§e${t("stats.guild.level")}:§f ${t(guild.level)}`}</text>
           </box>
