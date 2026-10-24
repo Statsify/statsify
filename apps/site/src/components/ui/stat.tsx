@@ -6,7 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Link } from "@tanstack/react-router";
 import { cn } from "~/lib/util";
+import { useTranslation } from "react-i18next";
 import type { CSSProperties, ReactNode } from "react";
 
 /**
@@ -15,6 +17,12 @@ import type { CSSProperties, ReactNode } from "react";
  */
 export const STAT_LINK =
   "outline-none after:absolute after:-inset-1 hover:after:bg-white/10 focus-visible:after:outline-2 focus-visible:after:outline-white/60";
+
+/** A stat the player hides in Hypixel's API settings. */
+export function Hidden() {
+  const { t } = useTranslation();
+  return <span className="text-mc-gray">{t("default:stats.hidden")}</span>;
+}
 
 /**
  * A card table cell (`Table.td`): a Minecraft 16 title over a Minecraft 32 value, both in the stat's colour and centred
@@ -63,5 +71,30 @@ export function InlineStat({
       <dt className="shrink-0 text-mc-gray after:content-[':']">{label}</dt>
       <dd className={cn("min-w-0 truncate", color)} style={style}>{value}</dd>
     </div>
+  );
+}
+
+/**
+ * The stat's leaderboard, opened at the player's row. The link covers the whole (`relative`) stat cell; its name says
+ * where it goes.
+ */
+export function LeaderboardLink({
+  field,
+  username,
+  stat,
+  children,
+}: {
+  field: string;
+  username: string;
+  stat: string;
+  children: ReactNode;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <Link to="/{-$locale}/leaderboards/$field" params={{ field }} search={{ around: username }} className={STAT_LINK}>
+      {children}
+      <span className="sr-only"> {t("game.leaderboard", { stat })}</span>
+    </Link>
   );
 }

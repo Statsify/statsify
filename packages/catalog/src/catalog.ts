@@ -50,6 +50,8 @@ export interface StatEntry {
   unset?: string;
   /** Printed after the number, as on the card (`ms`). */
   suffix?: string;
+  /** Printed with only the decimals it has, as the card prints a number it doesn't format (`1.3`, not `1.30`). */
+  trim?: boolean;
 }
 
 /** The entry for a selection the card shows by name (a kit, a trail): Hypixel's id, prettified. */
@@ -98,6 +100,7 @@ export interface Stat {
   format?: ReadValue<string>;
   unset?: string;
   suffix?: string;
+  trim?: boolean;
 }
 
 let fields: Map<string, FieldMetadata> | undefined;
@@ -141,6 +144,7 @@ function resolve(key: string, base: string, entry: StatEntry): Stat {
     format: entry.format ?? (formatter && ((value) => formatter(value))),
     unset: entry.unset,
     suffix: entry.suffix,
+    trim: entry.trim,
   };
 }
 

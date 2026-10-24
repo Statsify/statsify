@@ -212,8 +212,9 @@ export function pageModes(layout: GameLayout): ModeSpec[] {
   return layout.modes ?? layout.game.modes.getApiModes().map((key) => ({ key }));
 }
 
-const read = (player: Player, path: string): unknown =>
-  path.split(".").reduce<unknown>((value, key) => (value as Record<string, unknown> | undefined)?.[key], player);
+/** A value in a document by its dotted path (`stats.bedwars.overall.wins` in the player). */
+export const read = (document: object, path: string): unknown =>
+  path.split(".").reduce<unknown>((value, key) => (value as Record<string, unknown> | undefined)?.[key], document);
 
 const parentOf = (player: Player, path: string) => (read(player, path.slice(0, path.lastIndexOf("."))) ?? {}) as Record<string, unknown>;
 
@@ -245,8 +246,10 @@ function cell(player: Player, stat: Stat, spec: Spec): StatCell {
     ...(spec.short && { short: spec.short }),
     ...(name !== undefined && { name }),
     ...(spec.params && { params: spec.params }),
-    value: hidden ? "§7Hidden" : value,
+    value,
+    ...(hidden && { hidden }),
     ...(stat.suffix && !hidden && { suffix: stat.suffix }),
+    ...(stat.trim && { trim: true }),
     ...(stat.of !== undefined && { of: typeof stat.of === "number" ? stat.of : finite(Number(read(player, stat.of) ?? 0)) }),
     colour,
     leaderboard: stat.leaderboard && !unset && !hidden && !spec.inline ? stat.path : null,

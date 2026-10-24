@@ -6,12 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ColourCode, GAMES, type Game, cardColours, statAt } from "@statsify/catalog";
 import { FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
-import { type GamePage, type GameSummary, type PlayerPage, levelMultiplier } from "@statsify/contract";
+import { type GamePage, type GameSummary, type PlayerPage, type StatRow, levelMultiplier } from "@statsify/contract";
 import { formatTime } from "@statsify/util";
 import { PLAYER_COOLDOWN_MS } from "./cooldown.js";
 import { winstreaksHidden } from "./game-pages/duels.js";
 import { GAME_PAGES, gamePageOf, pageName } from "./game-pages/index.js";
+import { read } from "./game-pages/layout.js";
 
 /** The guild fields the page reads, deserialized: its name and tag plus each member's quest and GEXP rows. */
 export interface PlayerGuild {
@@ -24,16 +26,46 @@ export interface PlayerGuild {
 
 type Value = (stats: PlayerStats) => number | string | undefined;
 
+/**
+ * A panel row: a catalog stat by its key, stored below the summary's `at` unless the row says where (`""` for a game
+ * stat), in the catalog's colour and unit and linked to its leaderboard, under `stats.<label>` (its key by default).
+ * `value` is the panel's own text for it (a time, Layers out of 100), nothing leaving the row out; `hidden` says when
+ * the player hides it from Hypixel's API (winstreaks), which the row then says instead of linking. `name` is a
+ * formatted title shown in place of the label, and `colour` replaces the catalog's (Parkour's Main Lobby).
+ */
+type RowSpec =
+  | string
+  | {
+    key: string;
+    at?: string;
+    label?: string;
+    name?: string;
+    colour?: ColourCode;
+    value?: Value;
+    hidden?: (stats: PlayerStats) => boolean;
+  };
+
+/** A row the panel works out from other stats, in its own colour, with no leaderboard. */
+interface ComputedRow {
+  label: string;
+  colour: ColourCode;
+  compute: Value;
+}
+
+const isComputed = (row: RowSpec | ComputedRow): row is ComputedRow => typeof row !== "string" && "compute" in row;
+
 interface Summary {
   id: GameId;
   /** Minecraft-formatted level or prefix for the panel title. */
   level?: (stats: PlayerStats) => string | undefined;
-  /** Four `[stats.* locale key, value]` rows, so the panel's two columns come out even. */
-  rows: [key: string, value: Value, suffix?: string][];
+  /** Where the rows' stats are stored below the game: a mode (`overall`), or the game itself by default. */
+  at?: string;
+  /** Four rows, so the panel's two columns come out even. */
+  rows: (RowSpec | ComputedRow)[];
 }
 
-/** A duration as the panel's text (it formats only numbers), in aqua; nothing for one never set. */
-const time = (ms: number | undefined) => (ms ? `§b${formatTime(ms)}` : undefined);
+/** A duration as the panel's text (it formats only numbers); nothing for one never set. */
+const time = (ms: number | undefined) => (ms ? formatTime(ms) : undefined);
 
 /** The player's best time on each lobby course they have finished. */
 const courseTimes = ({ parkour }: PlayerStats) =>
@@ -47,234 +79,182 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "BEDWARS",
     level: (s) => s.bedwars.levelFormatted,
-    rows: [
-      ["wins", (s) => s.bedwars.overall.wins],
-      ["finalKills", (s) => s.bedwars.overall.finalKills],
-      ["fkdr", (s) => s.bedwars.overall.fkdr],
-      ["bedsBroken", (s) => s.bedwars.overall.bedsBroken],
-    ],
+    at: "overall",
+    rows: ["wins", "finalKills", "fkdr", "bedsBroken"],
   },
   {
     id: "SKYWARS",
     level: (s) => s.skywars.levelFormatted,
-    rows: [
-      ["wins", (s) => s.skywars.overall.wins],
-      ["kills", (s) => s.skywars.overall.kills],
-      ["kdr", (s) => s.skywars.overall.kdr],
-      ["wlr", (s) => s.skywars.overall.wlr],
-    ],
+    at: "overall",
+    rows: ["wins", "kills", "kdr", "wlr"],
   },
   {
     id: "DUELS",
-    rows: [
-      ["wins", (s) => s.duels.overall.wins],
-      ["kills", (s) => s.duels.overall.kills],
-      ["wlr", (s) => s.duels.overall.wlr],
-      ["bestWinstreak", (s) => (winstreaksHidden(s) ? "§7Hidden" : s.duels.overall.bestWinstreak)],
-    ],
+    at: "overall",
+    rows: ["wins", "kills", "wlr", { key: "bestWinstreak", hidden: winstreaksHidden }],
   },
   {
     id: "ARCADE",
-    rows: [
-      ["wins", (s) => s.arcade.wins],
-      ["coins", (s) => s.arcade.coins],
-      ["coinConversions", (s) => s.arcade.coinConversions],
-      ["zombiesWins", (s) => s.arcade.zombies.overall.wins],
-    ],
+    rows: ["wins", "coins", "coinConversions", { key: "wins", at: "zombies.overall", label: "zombiesWins" }],
   },
   {
     id: "ARENA_BRAWL",
     level: (s) => s.arenabrawl.naturalPrefix,
-    rows: [
-      ["wins", (s) => s.arenabrawl.overall.wins],
-      ["kills", (s) => s.arenabrawl.overall.kills],
-      ["kdr", (s) => s.arenabrawl.overall.kdr],
-      ["wlr", (s) => s.arenabrawl.overall.wlr],
-    ],
+    at: "overall",
+    rows: ["wins", "kills", "kdr", "wlr"],
   },
   {
     id: "BLITZSG",
     level: (s) => s.blitzsg.naturalPrefix,
-    rows: [
-      ["wins", (s) => s.blitzsg.overall.wins],
-      ["kills", (s) => s.blitzsg.overall.kills],
-      ["kdr", (s) => s.blitzsg.overall.kdr],
-      ["coins", (s) => s.blitzsg.coins],
-    ],
+    at: "overall",
+    rows: ["wins", "kills", "kdr", { key: "coins", at: "" }],
   },
   {
     id: "BUILD_BATTLE",
     level: (s) => s.buildbattle.titleFormatted,
-    rows: [
-      ["wins", (s) => s.buildbattle.overall.wins],
-      ["score", (s) => s.buildbattle.score],
-      ["correctGuesses", (s) => s.buildbattle.correctGuesses],
-      ["votes", (s) => s.buildbattle.votes],
-    ],
+    rows: [{ key: "overall.wins", label: "wins" }, "score", "correctGuesses", "votes"],
   },
   {
     id: "COPS_AND_CRIMS",
     level: (s) => s.copsandcrims.levelFormatted,
-    rows: [
-      ["wins", (s) => s.copsandcrims.overall.wins],
-      ["kills", (s) => s.copsandcrims.overall.kills],
-      ["kdr", (s) => s.copsandcrims.overall.kdr],
-      ["headshotKills", (s) => s.copsandcrims.overall.headshotKills],
-    ],
+    at: "overall",
+    rows: ["wins", "kills", "kdr", "headshotKills"],
   },
   {
     id: "MEGAWALLS",
-    rows: [
-      ["wins", (s) => s.megawalls.overall.wins],
-      ["finalKills", (s) => s.megawalls.overall.finalKills],
-      ["fkdr", (s) => s.megawalls.overall.fkdr],
-      ["witherKills", (s) => s.megawalls.overall.witherKills],
-    ],
+    at: "overall",
+    rows: ["wins", "finalKills", "fkdr", "witherKills"],
   },
   {
     id: "MURDER_MYSTERY",
-    rows: [
-      ["wins", (s) => s.murdermystery.overall.wins],
-      ["kills", (s) => s.murdermystery.overall.kills],
-      ["murdererWins", (s) => s.murdermystery.overall.murdererWins],
-      ["detectiveWins", (s) => s.murdermystery.overall.detectiveWins],
-    ],
+    at: "overall",
+    rows: ["wins", "kills", "murdererWins", "detectiveWins"],
   },
   {
     id: "PAINTBALL",
     level: (s) => s.paintball.naturalPrefix,
-    rows: [
-      ["wins", (s) => s.paintball.wins],
-      ["kills", (s) => s.paintball.kills],
-      ["kdr", (s) => s.paintball.kdr],
-      ["shotAccuracy", (s) => s.paintball.shotAccuracy, "%"],
-    ],
+    rows: ["wins", "kills", "kdr", "shotAccuracy"],
   },
   {
     id: "PIT",
     level: (s) => s.pit.levelFormatted,
+    rows: ["kills", "deaths", "kdr", "gold"],
+  },
+  {
+    id: "PARKOUR",
+    // Best Time pink, as Duels Parkour's and Arcade's best times; Main Lobby under its game's name, in its first colour.
     rows: [
-      ["kills", (s) => s.pit.kills],
-      ["deaths", (s) => s.pit.deaths],
-      ["kdr", (s) => s.pit.kdr],
-      ["gold", (s) => s.pit.gold],
+      { label: "coursesCompleted", colour: "§a", compute: (s) => courseTimes(s).length },
+      { label: "bestTime", colour: "§d", compute: (s) => time(courseTimes(s).toSorted((a, b) => a - b)[0]) },
+      { key: "MAIN_LOBBY", label: "mainLobby", name: FormattedGame.MAIN_LOBBY, colour: "§3", value: (s) => time(s.parkour.MAIN_LOBBY) },
+      { label: "combinedTime", colour: "§e", compute: (s) => time(courseTimes(s).reduce((sum, ms) => sum + ms, 0)) },
     ],
   },
   {
     id: "QUAKE",
     level: (s) => s.quake.naturalPrefix,
-    rows: [
-      ["wins", (s) => s.quake.overall.wins],
-      ["kills", (s) => s.quake.overall.kills],
-      ["kdr", (s) => s.quake.overall.kdr],
-      ["headshots", (s) => s.quake.overall.headshots],
-    ],
+    at: "overall",
+    rows: ["wins", "kills", "kdr", "headshots"],
   },
   {
     id: "SMASH_HEROES",
     level: (s) => s.smashheroes.levelFormatted,
-    rows: [
-      ["wins", (s) => s.smashheroes.overall.wins],
-      ["kills", (s) => s.smashheroes.overall.kills],
-      ["kdr", (s) => s.smashheroes.overall.kdr],
-      ["wlr", (s) => s.smashheroes.overall.wlr],
-    ],
+    at: "overall",
+    rows: ["wins", "kills", "kdr", "wlr"],
   },
   {
     id: "SPEED_UHC",
     level: (s) => s.speeduhc.levelFormatted,
-    rows: [
-      ["wins", (s) => s.speeduhc.overall.wins],
-      ["kills", (s) => s.speeduhc.overall.kills],
-      ["kdr", (s) => s.speeduhc.overall.kdr],
-      ["wlr", (s) => s.speeduhc.overall.wlr],
-    ],
+    at: "overall",
+    rows: ["wins", "kills", "kdr", "wlr"],
   },
   {
     id: "TNT_GAMES",
     rows: [
-      ["wins", (s) => s.tntgames.wins],
-      ["coins", (s) => s.tntgames.coins],
-      ["tntRunWins", (s) => s.tntgames.tntRun.wins],
-      ["wizardsKills", (s) => s.tntgames.wizards.kills],
-    ],
-  },
-  {
-    id: "PARKOUR",
-    rows: [
-      ["coursesCompleted", (s) => courseTimes(s).length],
-      ["bestTime", (s) => time(courseTimes(s).toSorted((a, b) => a - b)[0])],
-      ["mainLobby", (s) => time(s.parkour.MAIN_LOBBY)],
-      ["combinedTime", (s) => time(courseTimes(s).reduce((sum, ms) => sum + ms, 0))],
+      "wins",
+      "coins",
+      { key: "wins", at: "tntRun", label: "tntRunWins" },
+      { key: "kills", at: "wizards", label: "wizardsKills" },
     ],
   },
   {
     id: "TURBO_KART_RACERS",
     rows: [
-      ["goldTrophies", (s) => s.turbokartracers.gold],
-      ["silverTrophies", (s) => s.turbokartracers.silver],
-      ["bronzeTrophies", (s) => s.turbokartracers.bronze],
-      ["lapsCompleted", (s) => s.turbokartracers.lapsCompleted],
+      { key: "gold", label: "goldTrophies" },
+      { key: "silver", label: "silverTrophies" },
+      { key: "bronze", label: "bronzeTrophies" },
+      "lapsCompleted",
     ],
   },
   {
     id: "UHC",
     level: (s) => s.uhc.levelFormatted,
-    rows: [
-      ["wins", (s) => s.uhc.overall.wins],
-      ["kills", (s) => s.uhc.overall.kills],
-      ["kdr", (s) => s.uhc.overall.kdr],
-      ["headsEaten", (s) => s.uhc.overall.headsEaten],
-    ],
+    at: "overall",
+    rows: ["wins", "kills", "kdr", "headsEaten"],
   },
   {
     id: "VAMPIREZ",
-    rows: [
-      ["overallWins", (s) => s.vampirez.overallWins],
-      ["zombieKills", (s) => s.vampirez.zombieKills],
-      ["mostVampireKills", (s) => s.vampirez.mostVampireKills],
-      ["coins", (s) => s.vampirez.coins],
-    ],
+    rows: ["overallWins", "zombieKills", "mostVampireKills", "coins"],
   },
   {
     id: "WALLS",
     level: (s) => s.walls.naturalPrefix,
-    rows: [
-      ["wins", (s) => s.walls.wins],
-      ["kills", (s) => s.walls.kills],
-      ["kdr", (s) => s.walls.kdr],
-      ["wlr", (s) => s.walls.wlr],
-    ],
+    rows: ["wins", "kills", "kdr", "wlr"],
   },
   {
     id: "WARLORDS",
     level: (s) => s.warlords.titleFormatted,
-    rows: [
-      ["wins", (s) => s.warlords.wins],
-      ["kills", (s) => s.warlords.kills],
-      ["kdr", (s) => s.warlords.kdr],
-      ["wlr", (s) => s.warlords.wlr],
-    ],
+    rows: ["wins", "kills", "kdr", "wlr"],
   },
   {
     id: "WOOLGAMES",
     level: (s) => s.woolgames.levelFormatted,
     rows: [
-      ["wins", (s) => s.woolgames.wins],
+      "wins",
       // Out of 100, as the card prints it.
-      ["layers", (s) => `§a${s.woolgames.layers}§8/§a100`],
-      ["wool", (s) => s.woolgames.coins],
-      ["playtime", (s) => time(s.woolgames.playtime)],
+      { key: "layers", value: (s) => `§a${s.woolgames.layers}§8/§a100` },
+      { key: "coins", label: "wool" },
+      { key: "playtime", value: (s) => time(s.woolgames.playtime) },
     ],
   },
 ];
 
+/** A game's entry in the catalog, which every game with a panel has. */
+function catalogGame(id: GameId): Game {
+  const game = Object.values(GAMES).find((entry) => entry.id === id);
+  if (!game) throw new Error(`The catalog has no ${id}`);
+  return game;
+}
+
+/** A panel row, or nothing for one the panel leaves out (a time never set). */
+function panelRow(stats: PlayerStats, game: Game, at: string, row: RowSpec | ComputedRow): StatRow | undefined {
+  if (isComputed(row)) {
+    const value = row.compute(stats);
+    return value === undefined ? undefined : { key: row.label, value, colour: row.colour, leaderboard: null };
+  }
+
+  const spec: Exclude<RowSpec, string> = typeof row === "string" ? { key: row } : row;
+  const place = spec.at ?? at;
+  const stat = statAt(game, place, spec.key);
+  const hidden = spec.hidden?.(stats) ?? false;
+  const value = spec.value ? spec.value(stats) : Number(read({ stats }, stat.path));
+  if (value === undefined) return undefined;
+
+  return {
+    key: spec.label ?? spec.key,
+    ...(spec.name && { name: spec.name }),
+    value,
+    ...(hidden && { hidden }),
+    ...(stat.suffix && !hidden && { suffix: stat.suffix }),
+    colour: spec.colour ?? cardColours(game, ...(place ? [place] : []))(spec.key),
+    leaderboard: stat.leaderboard && !hidden ? stat.path : null,
+  };
+}
+
 /** A game panel, or `undefined` for a game the player has never played, which the page leaves out. */
 function summarize(stats: PlayerStats, summary: Summary): GameSummary | undefined {
-  const rows = summary.rows.flatMap(([key, read, suffix]) => {
-    const value = read(stats);
-    return value === undefined ? [] : [{ key, value, ...(suffix && { suffix }) }];
-  });
+  const game = catalogGame(summary.id);
+  const rows = summary.rows.flatMap((row) => panelRow(stats, game, summary.at ?? "", row) ?? []);
 
   // Ratios and formatted levels follow from the counts, so all-zero counts mean there is nothing to show.
   const played = rows.some((row) => typeof row.value === "number" && row.value > 0);

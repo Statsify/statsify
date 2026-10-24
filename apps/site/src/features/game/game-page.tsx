@@ -12,7 +12,7 @@ import { Chevron } from "~/components/icons/chevron";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
-import { InlineStat, STAT_LINK, StatCell } from "~/components/ui/stat";
+import { Hidden, InlineStat, LeaderboardLink, StatCell } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
 import { MinecraftText, colourClass, colourOf, leadingColourClass } from "~/components/ui/minecraft-text";
@@ -412,7 +412,8 @@ function useLabelText(): (cell: Stat) => string {
 
 /** A stat's value as the card prints it: a number in the locale's format (with its cap or unit), or the API's text. */
 function useStatValue(cell: Stat): ReactNode {
-  const n = useNumberFormat();
+  const n = useNumberFormat(cell.trim);
+  if (cell.hidden) return <Hidden />;
   // Text the API formatted takes the stat's colour, unless it brings its own (a level, a §7 N/A).
   const value = typeof cell.value === "number" ?
     `${n(cell.value)}${cell.suffix ?? ""}` :
@@ -476,31 +477,6 @@ function SelectionStat({ cell }: { cell: Stat }) {
   const value = useStatValue(cell);
   const { className, style } = colourOf(cell.colour);
   return <InlineStat label={label.text} value={value} color={className} style={style} />;
-}
-
-/**
- * The stat's leaderboard, opened at the player's row. The link covers the whole (`relative`) stat cell; its name says
- * where it goes.
- */
-export function LeaderboardLink({
-  field,
-  username,
-  stat,
-  children,
-}: {
-  field: string;
-  username: string;
-  stat: string;
-  children: ReactNode;
-}) {
-  const { t } = useTranslation();
-
-  return (
-    <Link to="/{-$locale}/leaderboards/$field" params={{ field }} search={{ around: username }} className={STAT_LINK}>
-      {children}
-      <span className="sr-only"> {t("game.leaderboard", { stat })}</span>
-    </Link>
-  );
 }
 
 /** The mark's words in `site.json`: "most played", or "most wins" where the game counts wins alone. */

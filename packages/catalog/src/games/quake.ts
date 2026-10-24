@@ -19,7 +19,7 @@ export const QUAKE: Game<QuakeModes> = {
     tokens: { colour: "§e" },
     godlikes: { colour: "§3" },
     // Seconds, stored as 1.3, which the card prints as 1.3s; the stat has no leaderboard.
-    trigger: { colour: "§b", suffix: "s" },
+    trigger: { colour: "§b", suffix: "s", trim: true },
     highestKillstreak: { colour: "§4" },
   },
   shapes: [

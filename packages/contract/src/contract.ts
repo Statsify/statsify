@@ -42,10 +42,18 @@ export const PlayerIdentitySchema = z.object({
 export const StatRowSchema = z.object({
   /** A `stats.*` key in `locales/<lng>/default.json`, or in `site.json` for a stat the bot doesn't label. */
   key: z.string(),
+  /** A Minecraft-formatted title shown in place of the label's words (a lobby's game name); `key` still names it. */
+  name: z.string().optional(),
   /** Numbers are formatted by the site; strings are Minecraft-formatted text (levels, prefixes). */
   value: z.union([z.number(), z.string()]),
+  /** The player hides the stat from Hypixel's API (winstreaks), so the site says Hidden in place of the value. */
+  hidden: z.boolean().optional(),
   /** Printed after a number, as on the card, e.g. `%`. */
   suffix: z.string().optional(),
+  /** The bot's colour code for the stat, e.g. `§a` or `§#ffd700`. */
+  colour: z.string(),
+  /** The stat's leaderboard, as the `/leaderboards/<field>` segment, or null when it has none. */
+  leaderboard: z.string().nullable(),
 });
 
 export const GameSummarySchema = z.object({
@@ -203,8 +211,12 @@ export const StatCellSchema = z.object({
   params: z.record(z.string(), z.string()).optional(),
   /** Numbers are formatted by the site; strings come formatted (levels, times, a kit's name). */
   value: z.union([z.number(), z.string()]),
+  /** The player hides the stat from Hypixel's API (winstreaks), so the site says Hidden in place of the value. */
+  hidden: z.boolean().optional(),
   /** Printed after a number, as on the card, e.g. `ms`. */
   suffix: z.string().optional(),
+  /** A number printed with only the decimals it has, as the card prints it (`1.3`, not `1.30`). */
+  trim: z.boolean().optional(),
   /** The number the value is out of (`12/25`), for a stat with a cap. */
   of: z.number().optional(),
   /** The bot's colour code for the stat, e.g. `§a` or `§#a7673f`. */
