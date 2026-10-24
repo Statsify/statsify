@@ -122,10 +122,22 @@ export function Search({
   const optionId = (index: number) => `${listId}-${index}`;
   const count = suggestions.data?.length ?? 0;
 
-  const ref = useOutisdeClick<HTMLFormElement>(() => {
+  const close = () => {
     setFocused(false);
     setSelected(undefined);
-  });
+  };
+  // A pick or a submitted name is done with the box: the sheet closes, the text clears and the keyboard goes (focus moves
+  // on to the page that opens). The result cards' box keeps a submitted name, since the cards below are for it.
+  const done = (keep = false) => {
+    close();
+    if (!keep) {
+      setInput("");
+      setQuery("");
+    }
+    inputRef.current?.blur();
+  };
+
+  const ref = useOutisdeClick<HTMLFormElement>(close);
 
   useEffect(() => {
     if (!shortcut) return;
@@ -158,6 +170,7 @@ export function Search({
   }
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- onBlur only closes the sheet when focus leaves the whole search
     <form
       ref={ref}
       className={cn("relative", className)}
@@ -167,7 +180,13 @@ export function Search({
         // Only spaces is nothing to search for.
         const query = String(formData.get("search") ?? "").trim();
         if (!query) return;
+        done(target === "results" && !onSelect);
         void go(query);
+      }}
+      // Tabbing out closes the sheet, so it never lies over the element with focus. Focus going nowhere (a click on
+      // the page) is the outside click's to judge.
+      onBlur={(event) => {
+        if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) close();
       }}
     >
       {/* A square, solid input; the focus ring sits inside its edge. */}
@@ -184,11 +203,12 @@ export function Search({
           onChange={(event) => {
             setQuery(event.target.value);
             setInput(event.target.value);
+            setFocused(true);
           }}
           // Enter submits the form natively; the arrows move through the suggestions when there are any.
           onKeyDown={(event) => {
             if (event.key === "Escape") {
-              setSelected(undefined);
+              close();
               return;
             }
 
@@ -234,6 +254,7 @@ export function Search({
             target={target}
             compact={compact}
             onSelect={onSelect}
+            onPick={() => done()}
           />
         ))}
       </div>
@@ -248,6 +269,7 @@ function SearchPlayer({
   target,
   compact,
   onSelect,
+  onPick,
 }: {
   id: string;
   player: string;
@@ -255,6 +277,8 @@ function SearchPlayer({
   target: SearchTarget;
   compact: boolean;
   onSelect?: (name: string) => unknown;
+  /** Closes the sheet once the row is picked. */
+  onPick: () => void;
 }) {
   const size = SIZES[compact ? "compact" : "regular"];
   const className = cn(
@@ -263,10 +287,22 @@ function SearchPlayer({
   );
   const text = cn("text-white selection:bg-white/50", size.text);
 
+  // Rows are reached with the arrow keys (`aria-activedescendant`), so Tab leaves the box rather than walking them.
   // With a handler the suggestion is handed over like a submitted name (the leaderboard `around` box).
   if (onSelect) {
     return (
-      <button id={id} type="button" role="option" onClick={() => void onSelect(player)} aria-selected={selected} className={className}>
+      <button
+        id={id}
+        type="button"
+        role="option"
+        tabIndex={-1}
+        onClick={() => {
+          onPick();
+          void onSelect(player);
+        }}
+        aria-selected={selected}
+        className={className}
+      >
         <p className={text}>{player}</p>
       </button>
     );
@@ -278,9 +314,11 @@ function SearchPlayer({
       <Link
         id={id}
         role="option"
+        tabIndex={-1}
         to="/{-$locale}/player/$name/$game"
         params={{ name: player, game: target.game }}
         search={target.search}
+        onClick={onPick}
         aria-selected={selected}
         className={className}
       >
@@ -291,14 +329,32 @@ function SearchPlayer({
 
   if (target === "bingo") {
     return (
-      <Link id={id} role="option" to="/{-$locale}/player/$name/bingo" params={{ name: player }} aria-selected={selected} className={className}>
+      <Link
+        id={id}
+        role="option"
+        tabIndex={-1}
+        to="/{-$locale}/player/$name/bingo"
+        params={{ name: player }}
+        onClick={onPick}
+        aria-selected={selected}
+        className={className}
+      >
         <p className={text}>{player}</p>
       </Link>
     );
   }
 
   return (
-    <Link id={id} role="option" to="/{-$locale}/player/$name" params={{ name: player }} aria-selected={selected} className={className}>
+    <Link
+      id={id}
+      role="option"
+      tabIndex={-1}
+      to="/{-$locale}/player/$name"
+      params={{ name: player }}
+      onClick={onPick}
+      aria-selected={selected}
+      className={className}
+    >
       <p className={text}>{player}</p>
     </Link>
   );
