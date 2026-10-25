@@ -106,7 +106,7 @@ export const RankingsProfile = ({
         skin={skin}
         time="LIVE"
         title={`§l§bLeaderboard Positions §r(§l${formattedGame}§r)`}
-        description={`§7Page ${t(page + 1)} / ${t(pageCount)}`}
+        description={`§7${t("stats.page", { page: page + 1, pageCount })}`}
         badge={badge}
       />
       <List items={[<>{titles}</>, ...items]} />

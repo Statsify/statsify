@@ -722,6 +722,7 @@
     "online": "Online",
     "opals": "Opals",
     "overallWins": "Overall Wins",
+    "page": "Page {{page}} / {{pageCount}}",
     "perfectBuilds": "Perfect Builds",
     "pingRange": "Ping Range",
     "playtime": "Playtime",
