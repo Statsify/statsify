@@ -7,7 +7,7 @@
  */
 
 import { type ColourCode, type Game, type Stat, modeName, shapeKeys, statAt } from "@statsify/catalog";
-import { FormattedGame, type Player, type PlayerStats } from "@statsify/schemas";
+import { FormattedGame, type GameId, type Player, type PlayerStats } from "@statsify/schemas";
 import { freshness } from "../cooldown.js";
 import { arrayGroup } from "@statsify/util";
 import type { GamePage, StatCell, StatSection } from "@statsify/contract";
@@ -151,6 +151,24 @@ export const selectedMode = (game: Game, stored: string, among: readonly string[
   const squashed = stored.toLowerCase().replaceAll(/[^a-z]/g, "");
   return among.find((mode) => mode.toLowerCase() === squashed);
 };
+
+/** The games of a page with a mode per game (Quests, Challenges): its modes after Overall. */
+export const gamesOf = (game: Game): GameId[] => game.modes.getApiModes().filter((mode) => mode !== "overall") as GameId[];
+
+/** Overall on a page with a mode per game: each game's total (at `at`) under its name and icon, as a sorted list. */
+export const rankingPage = (
+  games: GameId[],
+  { at, sort, colour }: { at: (game: GameId) => string; sort: "desc" | "share"; colour?: ColourCode }
+): PageSpec => ({
+  heading: { word: null },
+  sections: [
+    {
+      cells: games.map((game) => ({ key: "total", at: at(game), name: FormattedGame[game], icon: game, ...(colour && { colour }) })),
+      sort,
+      list: true,
+    },
+  ],
+});
 
 /** One page: a mode, or a mode's submode. */
 export interface PageSpec {

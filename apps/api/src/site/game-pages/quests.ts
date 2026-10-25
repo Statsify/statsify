@@ -8,9 +8,9 @@
 
 import { FormattedGame, type GameId, type PlayerStats, Quests, questPeriodStart } from "@statsify/schemas";
 import { QUESTS, QUEST_PERIODS, QUEST_TIMES, type QuestPeriod, modeName, modeStats, shapeKeys } from "@statsify/catalog";
-import { type CellSpec, type GameLayout, type OverviewSpec, type PageSpec, read } from "./layout.js";
+import { type CellSpec, type GameLayout, type OverviewSpec, type PageSpec, gamesOf, rankingPage, read } from "./layout.js";
 
-const GAMES = QUESTS.modes.getApiModes().filter((mode) => mode !== "overall") as GameId[];
+const GAMES = gamesOf(QUESTS);
 
 /** How many quests a game has in a period: its stats there, less their total. */
 const count = (period: QuestPeriod, game: GameId) => shapeKeys(QUESTS, `${period}.${game}`).filter((key) => key !== "total").length;
@@ -40,15 +40,12 @@ const OVERVIEW: OverviewSpec[] = [
  */
 function overall(period: QuestPeriod): PageSpec {
   const allTime = period === "overall";
-  const cells: CellSpec[] = GAMES.filter((game) => allTime || count(period, game) > 0).map((game) => ({
-    key: "total",
-    at: `${period}.${game}`,
-    name: FormattedGame[game],
-    icon: game,
-    ...(allTime && { colour: "§f" as const }),
-  }));
 
-  return { heading: { word: null, mode: "Overall" }, sections: [{ cells, sort: allTime ? "desc" : "share", list: true }] };
+  return rankingPage(GAMES.filter((game) => allTime || count(period, game) > 0), {
+    at: (game) => `${period}.${game}`,
+    sort: allTime ? "desc" : "share",
+    ...(allTime && { colour: "§f" as const }),
+  });
 }
 
 /**

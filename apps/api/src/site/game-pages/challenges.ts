@@ -8,22 +8,13 @@
 
 import { CHALLENGES, modeName, shapeKeys } from "@statsify/catalog";
 import { FormattedGame, type GameId } from "@statsify/schemas";
-import type { GameLayout, PageSpec } from "./layout.js";
+import { type GameLayout, type PageSpec, rankingPage } from "./layout.js";
 
 /** The games in the schema's field order, which the card keeps on a tie (the registry's puts Duels first). */
 const GAMES = CHALLENGES.shapes.flatMap(({ modes }) => modes) as GameId[];
 
 /** Overall: every game's total under its name and icon, highest first, the values in the card's default white. */
-const OVERALL: PageSpec = {
-  heading: { word: null },
-  sections: [
-    {
-      cells: GAMES.map((game) => ({ key: "total", at: game, name: FormattedGame[game], icon: game, colour: "§f" as const })),
-      sort: "desc",
-      list: true,
-    },
-  ],
-};
+const OVERALL = rankingPage(GAMES, { at: (game) => game, sort: "desc", colour: "§f" });
 
 /**
  * A game: its challenges, most completed first, in rows that grow with the count as the card's do (four for a short
