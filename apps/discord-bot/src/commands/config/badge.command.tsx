@@ -76,7 +76,13 @@ export class BadgeCommand {
       throw new ErrorMessage("errors.unknown");
     });
 
-    return this.setBadge(context, this.fitBadge(image));
+    const badge = this.fitBadge(image);
+    const { data } = badge.getContext("2d").getImageData(0, 0, badge.width, badge.height);
+
+    // A file cut off before its pixel data still loads, but draws nothing
+    if (data.every((value) => value === 0)) throw new ErrorMessage("errors.unknown");
+
+    return this.setBadge(context, badge);
   }
 
   @SubCommand({
