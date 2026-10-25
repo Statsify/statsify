@@ -7,6 +7,7 @@
  */
 
 import appCss from "~/styles/app.css?url";
+import { FONT_HOLD } from "~/lib/fonts";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext, useRouterState } from "@tanstack/react-router";
 import { colors } from "@statsify/tokens";
 import { localeFromPath } from "~/i18n/locales";
@@ -29,6 +30,8 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       { rel: "preload", href: "/fonts/Minecraft.ttf", as: "font", type: "font/ttf", crossOrigin: "anonymous" },
       { rel: "preload", href: "/fonts/Minecraft Bold.ttf", as: "font", type: "font/ttf", crossOrigin: "anonymous" },
     ],
+    styles: [{ children: FONT_HOLD.style }],
+    scripts: [{ children: FONT_HOLD.script }],
   }),
   shellComponent: RootDocument,
   component: Outlet,
