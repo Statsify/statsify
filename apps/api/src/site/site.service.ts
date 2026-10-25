@@ -561,7 +561,6 @@ export class SiteService implements OnApplicationBootstrap {
       game: LEADERBOARD_GROUPS[input.field.split(".")[1]]?.game ?? null,
       glossary: catalogGlossary(input.field),
       columns,
-      sort: metadata.sort,
       page,
       pages: Math.ceil(Math.min(total, metadata.limit) / size),
       rows,
