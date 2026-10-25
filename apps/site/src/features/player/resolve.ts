@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ORPCError } from "@orpc/client";
 import { UUID_PATTERN } from "~/lib/uuid";
-import { orpc, rpc } from "~/lib/orpc";
+import { orNull, orpc, rpc } from "~/lib/orpc";
 import { type QueryClient, queryOptions } from "@tanstack/react-query";
 import type { PlayerIdentity } from "@statsify/contract";
 
@@ -17,13 +16,8 @@ const PAGE_STALE_MS = 60_000;
 
 /** Resolves a URL name or UUID to the stored identity, or `null` when the API has never seen it. */
 export async function resolvePlayer(name: string): Promise<PlayerIdentity | null> {
-  try {
-    return await rpc.player.resolve(UUID_PATTERN.test(name) ? { uuid: name } : { name });
-  } catch (error) {
-    // A name the contract rejects (over 16 characters, say) can't be a player either.
-    if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) return null;
-    throw error;
-  }
+  // A name the contract rejects (over 16 characters, say) can't be a player either.
+  return orNull(rpc.player.resolve(UUID_PATTERN.test(name) ? { uuid: name } : { name }), ["NOT_FOUND", "BAD_REQUEST"]);
 }
 
 export const playerPageQuery = (uuid: string) => orpc.player.page.queryOptions({ input: { uuid }, staleTime: PAGE_STALE_MS });

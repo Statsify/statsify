@@ -11,9 +11,9 @@ import { backgroundFor, preloadBackground } from "~/components/ui/background";
 import { GameView } from "~/features/game/game-page";
 import { imageSize, pageCard } from "@statsify/profiles/protocol";
 import { NotFound } from "~/components/not-found";
-import { ORPCError } from "@orpc/client";
 import { PlayerNotFound } from "~/features/player/player-not-found";
-import { SANS_PRELOAD } from "~/lib/fonts";
+import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/player-route";
+import { orNull } from "~/lib/orpc";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
@@ -27,12 +27,6 @@ import { playerTabIcon } from "~/lib/tab-icon";
 import { ensurePlayer } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-
-/** As the player page: fresh for a minute, stale for ten, and served stale for a day if the API is down. */
-const EDGE_CACHE = "max-age=60, stale-while-revalidate=600, stale-if-error=86400";
-const REDIRECT_HEADERS = { "Cache-Control": "public, max-age=3600", "CDN-Cache-Control": "max-age=3600" };
-
-const possessive = (username: string) => `${username}'${username.endsWith("s") ? "" : "s"}`;
 
 /** A search parameter as typed (the router reads `?mode=4v4` as a string and `?mode=123` as a number); the API checks it. */
 const param = (raw: unknown) => (typeof raw === "string" || typeof raw === "number" ? String(raw).slice(0, 32) || undefined : undefined);
@@ -80,11 +74,8 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
 
     preloadBackground(backgroundFor(game));
     const load = (key: string) =>
-      context.queryClient.ensureQueryData(gamePageQuery(identity.uuid, key, deps.mode, deps.submode, deps.period)).catch((error) => {
-        // A game without a page, a mode or submode it doesn't have, or a name too long to be either.
-        if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) return null;
-        throw error;
-      });
+      // A game without a page, a mode or submode it doesn't have, or a name too long to be either.
+      orNull(context.queryClient.ensureQueryData(gamePageQuery(identity.uuid, key, deps.mode, deps.submode, deps.period)), ["NOT_FOUND", "BAD_REQUEST"]);
     const page = await load(game);
 
     if (!page) {
@@ -159,10 +150,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
   staleTime: 60_000,
   staticData: { tabIcon: playerTabIcon },
   head: ({ loaderData, matches }) => {
-    if (!loaderData) {
-      const title = createI18n(DEFAULT_LOCALE, localeData(matches)?.resources ?? {}).t("meta.notFound.page");
-      return { meta: [{ title }, { property: "og:title", content: title }, { name: "twitter:title", content: title }], links: [SANS_PRELOAD] };
-    }
+    if (!loaderData) return notFoundHead(createI18n(DEFAULT_LOCALE, localeData(matches)?.resources ?? {}).t("meta.notFound.page"));
 
     const { username, uuid, updatedAt, game, mode, submode, period, heading, gameName, modeName, unfurl, headline } = loaderData;
     const locale = localeData(matches);

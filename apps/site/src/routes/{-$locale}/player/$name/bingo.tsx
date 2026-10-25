@@ -13,6 +13,7 @@ import { BingoLayout } from "~/features/bingo/bingo-layout";
 import { BingoPlayerNotFound } from "~/features/bingo/player-not-found";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SANS_PRELOAD } from "~/lib/fonts";
+import { REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/player-route";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
@@ -25,8 +26,6 @@ import { createI18n } from "~/i18n/i18n";
 import type { BingoPlayer } from "@statsify/contract";
 
 const EDGE_TTL_SECONDS = 300;
-
-const possessive = (username: string) => `${username}'${username.endsWith("s") ? "" : "s"}`;
 
 export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
   validateSearch: validateBoardSearch,
@@ -47,7 +46,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
         // A search's history state goes along, as on the player page.
         state: true,
         statusCode: 301,
-        headers: { "Cache-Control": "public, max-age=3600", "CDN-Cache-Control": "max-age=3600" },
+        headers: REDIRECT_HEADERS,
       });
     }
 
@@ -59,10 +58,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
     const locale = localeData(matches);
     // In English, from the server's `site.json`.
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
-    if (!loaderData) {
-      const title = words.t("meta.notFound.player");
-      return { meta: [{ title }, { property: "og:title", content: title }, { name: "twitter:title", content: title }], links: [SANS_PRELOAD] };
-    }
+    if (!loaderData) return { ...notFoundHead(words.t("meta.notFound.player")), links: [SANS_PRELOAD] };
 
     const { username } = loaderData;
     const name = possessive(username);

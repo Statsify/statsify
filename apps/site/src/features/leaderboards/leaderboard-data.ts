@@ -7,13 +7,12 @@
  */
 
 import { type GroupSummary, type ListGroup, fetchLeaderboardList, filterGroups } from "./leaderboard-list";
-import { ORPCError } from "@orpc/client";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createServerFn } from "@tanstack/react-start";
 import { leaderboardList } from "~/server/leaderboard-list.server";
 import { notFound, redirect } from "@tanstack/react-router";
 import { ensurePlayer } from "~/features/player/resolve";
-import { rpc } from "~/lib/orpc";
+import { orNull, rpc } from "~/lib/orpc";
 import { z } from "zod";
 import type { LeaderboardGame, LeaderboardPage } from "@statsify/contract";
 import type { QueryClient } from "@tanstack/react-query";
@@ -57,11 +56,8 @@ export const isGameKey = (field: string): boolean => !field.includes(".");
 
 /** A game's index of leaderboards; an unknown game is a 404, cached like an unknown leaderboard. */
 export async function loadLeaderboardGame(key: string): Promise<LeaderboardGame> {
-  try {
-    if (key.length <= 32) return await rpc.leaderboard.game({ key });
-  } catch (error) {
-    if (!(error instanceof ORPCError && error.code === "NOT_FOUND")) throw error;
-  }
+  const game = key.length <= 32 ? await orNull(rpc.leaderboard.game({ key })) : null;
+  if (game) return game;
 
   cacheNotFoundResponse();
   throw notFound();
@@ -148,10 +144,5 @@ async function requirePage(input: PageQuery): Promise<LeaderboardPage> {
  * refuses (`BAD_REQUEST`, past 2^53) is no such page either, rather than an error page.
  */
 async function fetchPage(input: PageQuery): Promise<LeaderboardPage | null> {
-  try {
-    return await rpc.leaderboard.page({ ...input, size: PAGE_SIZE });
-  } catch (error) {
-    if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) return null;
-    throw error;
-  }
+  return orNull(rpc.leaderboard.page({ ...input, size: PAGE_SIZE }), ["NOT_FOUND", "BAD_REQUEST"]);
 }

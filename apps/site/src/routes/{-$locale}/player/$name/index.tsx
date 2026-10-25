@@ -11,7 +11,7 @@ import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { PlayerNotFound } from "~/features/player/player-not-found";
 import { PlayerView } from "~/features/player/player-page";
 import { cacheHeaders } from "~/lib/cache";
-import { SANS_PRELOAD } from "~/lib/fonts";
+import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/player-route";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
@@ -20,11 +20,6 @@ import { SEARCH_DESCRIPTION_MAX, breadcrumbs, localeData, socialMeta, statText, 
 import { plainText } from "~/components/ui/minecraft-text";
 import { ensurePlayer, playerPageQuery } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
-
-/** Fresh for a minute, stale for ten, and served stale for a day if the API is down. */
-const EDGE_CACHE = "max-age=60, stale-while-revalidate=600, stale-if-error=86400";
-
-const possessive = (username: string) => `${username}'${username.endsWith("s") ? "" : "s"}`;
 
 export const Route = createFileRoute("/{-$locale}/player/$name/")({
   loader: async ({ params, context }) => {
@@ -45,7 +40,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
         // A search's history state goes along, so a typed name in another casing still updates as a bot command would.
         state: true,
         statusCode: 301,
-        headers: { "Cache-Control": "public, max-age=3600", "CDN-Cache-Control": "max-age=3600" },
+        headers: REDIRECT_HEADERS,
       });
     }
 
@@ -64,10 +59,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
     const locale = localeData(matches);
     // The title, the description and a link preview's numbers, in English, from the server's `site.json`.
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
-    if (!loaderData) {
-      const title = words.t("meta.notFound.player");
-      return { meta: [{ title }, { property: "og:title", content: title }, { name: "twitter:title", content: title }], links: [SANS_PRELOAD] };
-    }
+    if (!loaderData) return notFoundHead(words.t("meta.notFound.player"));
 
     const { username, uuid, updatedAt, headline } = loaderData;
     const origin = locale?.origin;

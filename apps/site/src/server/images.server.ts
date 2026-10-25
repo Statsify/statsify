@@ -13,9 +13,9 @@ import {
   RenderPool,
   pageCard,
 } from "@statsify/profiles/pool";
-import { ORPCError } from "@orpc/client";
 import { NOT_FOUND_EDGE, NO_STORE, cacheHeaders } from "~/lib/cache";
 import { compactUuid } from "~/lib/uuid";
+import { orNull } from "~/lib/orpc";
 import { createRequire } from "node:module";
 import { join } from "node:path";
 import { proxySkin } from "./skin.server";
@@ -336,13 +336,11 @@ async function waitForImage(
  * page does), and a page the bot has no card for (a game's all-time Quests) gets the general one.
  */
 async function gameCard(uuid: string, { game, mode, submode, period }: GameImage): Promise<CardChoice> {
-  const page = await rpcServerClient.player.game({ uuid, game, mode: mode ?? undefined, submode: submode ?? undefined, period: period ?? undefined }).catch((error: unknown) => {
-    if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) {
-      throw new GameImageNotFoundError();
-    }
-
-    throw error;
-  });
+  const page = await orNull(
+    rpcServerClient.player.game({ uuid, game, mode: mode ?? undefined, submode: submode ?? undefined, period: period ?? undefined }),
+    ["NOT_FOUND", "BAD_REQUEST"]
+  );
+  if (!page) throw new GameImageNotFoundError();
 
   return pageCard(page);
 }

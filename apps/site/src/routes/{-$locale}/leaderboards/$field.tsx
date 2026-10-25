@@ -19,7 +19,7 @@ import { formatNumber } from "~/i18n/format";
 import { loadGlossaryWords } from "~/features/content/content-data";
 import { hasGameIcon } from "~/components/ui/game-icon";
 import { isGameKey, loadLeaderboardGame, loadLeaderboardPage, type LeaderboardView } from "~/features/leaderboards/leaderboard-data";
-import { type Crumb, SEARCH_DESCRIPTION_MAX, breadcrumbs, localeData, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
+import { type Crumb, SEARCH_DESCRIPTION_MAX, breadcrumbs, localeData, notFoundMeta, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
 import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
 import { useTranslation } from "react-i18next";
 import type { LeaderboardGame } from "@statsify/contract";
@@ -117,10 +117,7 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
     const locale = localeData(matches);
     // Titles and descriptions in English, from the server's `site.json`.
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
-    if (!loaderData) {
-      const title = words.t("meta.notFound.leaderboard");
-      return { meta: [{ title }, { property: "og:title", content: title }, { name: "twitter:title", content: title }] };
-    }
+    if (!loaderData) return { meta: notFoundMeta(words.t("meta.notFound.leaderboard")) };
 
     const origin = locale?.origin;
     // The trail goes through the list of every board, then `trail`.

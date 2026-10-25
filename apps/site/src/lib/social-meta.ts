@@ -96,6 +96,13 @@ export function socialMeta({
   ];
 }
 
+/** The tags of a page that isn't there: its title, and its link preview titled as its tab is. */
+export const notFoundMeta = (title: string): Meta => [
+  { title },
+  { property: "og:title", content: title },
+  { name: "twitter:title", content: title },
+];
+
 /** oEmbed discovery, which gives Discord the "Statsify" provider line above the title. */
 export function oembedLink(origin: string, path: string) {
   const url = new URL(path, origin).href;
