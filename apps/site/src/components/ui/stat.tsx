@@ -51,6 +51,23 @@ export function Hidden() {
 }
 
 /**
+ * For `large`: a Minecraft 24 pixel is 1.5 px, so text at 24 and 48 can end on a half pixel, and whatever is centred on
+ * it or follows it lands on one, blurred on 1× screens. Where `calc-size()` works, its boxes round their width up to an
+ * even number of pixels with the text at the start, so centring them lands on whole pixels (as `grid-cols-snap-*` does
+ * for the cells).
+ */
+export const SNAP_LARGE = "lg:w-[calc-size(fit-content,round(up,size,2px))] lg:text-start";
+
+/**
+ * For `large`, a title's words each in a `SNAP_LARGE` box, so it stays centred: a line is then even boxes and 6 px
+ * spaces, an even width, and centring it in its even box lands on a whole pixel, wrapped or not.
+ */
+const snapWords = (label: ReactNode) =>
+  typeof label === "string" ?
+    label.split(" ").flatMap((word, index) => [index > 0 && " ", <span key={index} className={cn("lg:inline-block", SNAP_LARGE)}>{word}</span>]) :
+    label;
+
+/**
  * A card table cell (`Table.td`): a Minecraft 16 title over a Minecraft 32 value, both in the stat's colour and centred
  * (the number is the hero). A long title wraps to two lines; the value keeps to the bottom of the cell, so the values
  * in a row line up whatever their titles do. Renders a `<div>` holding a `<dt>` and a `<dd>`, so a list of cells goes
@@ -62,6 +79,7 @@ export function StatCell({
   info,
   color = "text-mc-white",
   style,
+  large = false,
   className,
 }: {
   label: ReactNode;
@@ -71,13 +89,17 @@ export function StatCell({
   color?: string;
   /** For a colour with no theme class (a card's `§#rrggbb`). */
   style?: CSSProperties;
+  /** From `lg`, one size up: a Minecraft 24 title over a Minecraft 48 value (the profile's identity block). */
+  large?: boolean;
   className?: string;
 }) {
   return (
     <div className={cn("flex min-w-0 flex-col items-center justify-end gap-1 text-center", color, className)} style={style}>
-      <dt className="line-clamp-2 max-w-full text-mc-1 text-balance wrap-break-word">{label}</dt>
+      <dt className={cn("line-clamp-2 max-w-full text-mc-1 text-balance wrap-break-word", large && "lg:w-[calc-size(fit-content,round(up,size,2px))] lg:text-mc-1.5")}>
+        {large ? snapWords(label) : label}
+      </dt>
       {/* The control goes in the `<dd>`, as a `<dl>` holds only terms and details; it still sits over the cell's corner. */}
-      <dd className="max-w-full text-mc-2">
+      <dd className={cn("max-w-full text-mc-2", large && cn("lg:text-mc-3", SNAP_LARGE))}>
         {value}
         {info}
       </dd>
@@ -91,19 +113,25 @@ export function InlineStat({
   value,
   color = "text-mc-white",
   style,
+  large = false,
   className,
 }: {
   label: ReactNode;
   value: ReactNode;
   color?: string;
   style?: CSSProperties;
+  /** From `lg`, Minecraft 24 (the profile's identity block). */
+  large?: boolean;
   className?: string;
 }) {
+  // The row is an even box (`SNAP_LARGE`), and its label and value whole pixels, so the value starts on one too.
+  const snap = large && "lg:w-[calc-size(fit-content,round(up,size,1px))]";
+
   return (
-    <div className={cn("flex min-w-0 items-baseline gap-1 text-mc-1", className)}>
-      <dt className="shrink-0 text-mc-gray after:content-[':']">{label}</dt>
+    <div className={cn("flex min-w-0 items-baseline gap-1 text-mc-1", large && cn("lg:max-w-full lg:text-mc-1.5", SNAP_LARGE), className)}>
+      <dt className={cn("shrink-0 text-mc-gray after:content-[':']", snap)}>{label}</dt>
       {/* Room inside the clip for a Hint's focus ring and its hard shadow (6 px). */}
-      <dd className={cn("-m-1.5 min-w-0 truncate p-1.5", color)} style={style}>{value}</dd>
+      <dd className={cn("-m-1.5 min-w-0 truncate p-1.5", snap, color)} style={style}>{value}</dd>
     </div>
   );
 }

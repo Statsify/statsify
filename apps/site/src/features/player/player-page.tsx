@@ -11,7 +11,7 @@ import { Box } from "~/components/ui/box";
 import { Discord } from "~/components/icons/discord";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
-import { Hidden, InlineStat, LeaderboardLink, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
+import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
@@ -191,7 +191,7 @@ function NametagPanel({
           )}
         </h1>
         <dl className="flex flex-col gap-1">
-          {page.guild && <InlineStat label={t("default:stats.guild.guild")} value={page.guild.name} color="text-mc-dark-green" />}
+          {page.guild && <InlineStat label={t("default:stats.guild.guild")} value={page.guild.name} color="text-mc-dark-green" large />}
         </dl>
         <div className="flex flex-wrap items-center gap-x-4">
           <SocialLinks socials={page.socials} />
@@ -259,6 +259,7 @@ function NetworkLevelPanel({ level, username, className }: { level: PlayerPage["
   const n = useNumberFormat();
   const statName = useStatName();
   const current = Math.floor(level.level);
+  const bar = <MinecraftText className="text-mc-1.5">{`§6${current} ${minigameXpBar(level.percent)} §6${current + 1}`}</MinecraftText>;
 
   return (
     <Box className={cn("content:flex content:h-full content:flex-col content:items-center content:justify-center content:gap-3", className)}>
@@ -271,10 +272,11 @@ function NetworkLevelPanel({ level, username, className }: { level: PlayerPage["
             </LeaderboardLink>
           )}
           color="text-mc-gold"
+          large
           className="relative"
         />
       </dl>
-      <MinecraftText className="text-mc-1.5">{`§6${current} ${minigameXpBar(level.percent)} §6${current + 1}`}</MinecraftText>
+      <span className={SNAP_LARGE}>{bar}</span>
       <dl className="flex flex-wrap justify-center gap-x-6 gap-y-1">
         <InlineStat
           label={<Hint full={statName("stats.exp")}>{t("default:stats.exp")}</Hint>}
@@ -284,8 +286,9 @@ function NetworkLevelPanel({ level, username, className }: { level: PlayerPage["
               <span className="text-mc-green"><StatNumber value={level.max} /></span>
             </>
           )}
+          large
         />
-        <InlineStat label={t("player.multiplier")} value={`x${n(level.multiplier)}`} color="text-mc-gold" />
+        <InlineStat label={t("player.multiplier")} value={`x${n(level.multiplier)}`} color="text-mc-gold" large />
       </dl>
     </Box>
   );
@@ -349,6 +352,7 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
                 ) :
                 <StatNumber value={value} />}
             color={color}
+            large
             className={link && "relative"}
           />
         ))}
@@ -377,17 +381,18 @@ function LoginList({ page: { uuid, status, games, username, updatedAt, expiresAt
   return (
     <dl className={cn("flex flex-col gap-2", className)}>
       {status.statusHidden ?
-        <InlineStat label={t("default:stats.status")} value={<HiddenStatus />} color="text-mc-gray" /> :
+        <InlineStat label={t("default:stats.status")} value={<HiddenStatus />} color="text-mc-gray" large /> :
         (
           <InlineStat
             label={t("default:stats.status")}
             value={status.online ? <OnlineStatus uuid={uuid} updatedAt={updatedAt} expiresAt={expiresAt} /> : t("default:stats.offline")}
             color={status.online ? "text-mc-green" : "text-mc-red"}
+            large
           />
         )}
-      <InlineStat label={t("default:stats.firstLogin")} value={<LoginDate ms={status.firstLogin} />} color="text-mc-dark-aqua" />
-      <InlineStat label={t("default:stats.lastLogin")} value={<LoginDate ms={status.lastLogin} />} color="text-mc-dark-aqua" />
-      <InlineStat label={t("default:stats.logoutTime")} value={<LoginDate ms={status.lastLogout} />} color="text-mc-dark-aqua" />
+      <InlineStat label={t("default:stats.firstLogin")} value={<LoginDate ms={status.firstLogin} />} color="text-mc-dark-aqua" large />
+      <InlineStat label={t("default:stats.lastLogin")} value={<LoginDate ms={status.lastLogin} />} color="text-mc-dark-aqua" large />
+      <InlineStat label={t("default:stats.logoutTime")} value={<LoginDate ms={status.lastLogout} />} color="text-mc-dark-aqua" large />
       <InlineStat
         label={t("default:stats.lastGame")}
         value={lastGame && lastGamePage ?
@@ -397,6 +402,7 @@ function LoginList({ page: { uuid, status, games, username, updatedAt, expiresAt
             </Link>
           ) :
           (lastGame ?? t("player.na"))}
+        large
       />
     </dl>
   );
