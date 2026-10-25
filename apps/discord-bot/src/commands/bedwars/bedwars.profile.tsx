@@ -34,9 +34,6 @@ export const BedWarsProfile = ({
   time,
 }: BedWarsProfileProps) => {
   const { bedwars } = player.stats;
-  const formattedMode = mode.submode?.api === mode.api || !mode.submode ?
-    mode.formatted :
-    `${mode.formatted} ${mode.submode.formatted}`;
   const stats = mode.submode ? bedwars[mode.api][mode.submode.api] : bedwars[mode.api];
 
   const sidebar: SidebarItem[] = [
@@ -67,7 +64,7 @@ export const BedWarsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.BEDWARS} §fStats §r(${formattedMode})`}
+        title={`§l${FormattedGame.BEDWARS} §fStats §r(${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""})`}
         description={`§7${t("stats.level")}: ${
           bedwars.levelFormatted
         }\n${formatProgression({
