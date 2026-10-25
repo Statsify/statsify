@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { NO_STORE, RETRY_AFTER_SECONDS } from "~/lib/cache";
+import { fetchApi, unavailable } from "./rpc.server";
+import { NO_STORE } from "~/lib/cache";
 import { compactUuid } from "~/lib/uuid";
 import { UsernameSchema } from "@statsify/contract";
 import { siteConfig } from "./config.server";
@@ -43,14 +44,8 @@ async function proxy(path: string, params: Record<string, string>): Promise<Resp
   const url = new URL(path, apiRoute);
   for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
 
-  const upstream = await fetch(url, { headers: { "x-api-key": apiKey } }).catch(() => null);
-
-  // The API refusing (429), failing (5xx) or not answering is a 503 with `Retry-After`, so it's never cached and
-  // browsers back off.
-  if (!upstream || upstream.status === 429 || upstream.status >= 500) {
-    await upstream?.body?.cancel();
-    return new Response(null, { status: 503, headers: { ...NO_STORE, "Retry-After": String(RETRY_AFTER_SECONDS) } });
-  }
+  const upstream = await fetchApi(url);
+  if (!upstream) return unavailable();
 
   if (!upstream.ok) {
     await upstream.body?.cancel();

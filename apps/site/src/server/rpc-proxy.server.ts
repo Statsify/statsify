@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { NOT_FOUND_EDGE, NO_STORE, RETRY_AFTER_SECONDS, cacheHeaders } from "~/lib/cache";
-import { rpcHeaders, rpcUrl } from "./rpc.server";
+import { NOT_FOUND_EDGE, NO_STORE, cacheHeaders } from "~/lib/cache";
+import { fetchApi, rpcUrl, unavailable } from "./rpc.server";
 
 /**
  * Each GET procedure the browser may call through `/api/rpc/<procedure>`: its edge TTL in seconds and
@@ -72,16 +72,8 @@ export async function proxyRpc(procedure: string, search: string): Promise<Respo
   const query = upstreamSearch(search, entry.params);
   if (query === null) return json(400, { code: "BAD_REQUEST", message: "Unknown query parameter" });
 
-  const upstream = await fetch(`${await rpcUrl()}/${procedure}${query}`, { headers: await rpcHeaders() }).catch(() => null);
-
-  if (!upstream || upstream.status === 429 || upstream.status >= 500) {
-    await upstream?.body?.cancel();
-    return json(
-      503,
-      { code: "SERVICE_UNAVAILABLE", message: "Statsify is busy, try again shortly" },
-      { "Retry-After": String(RETRY_AFTER_SECONDS) }
-    );
-  }
+  const upstream = await fetchApi(`${await rpcUrl()}/${procedure}${query}`);
+  if (!upstream) return unavailable({ status: 503, code: "SERVICE_UNAVAILABLE", message: "Statsify is busy, try again shortly" });
 
   const byName = procedure === "player/resolve" && new URLSearchParams(query).has("name");
   const headers = new Headers(proxyCacheHeaders(upstream.status, entry.ttl, byName));
