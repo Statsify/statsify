@@ -120,7 +120,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
           />
           <NetworkLevelPanel level={page.level} username={page.username} className="md:col-start-1 md:row-start-2 xl:col-start-2 xl:row-start-1" />
           <OverviewPanel overview={page.overview} username={page.username} className="md:col-start-2 md:row-start-2 xl:col-start-3 xl:row-start-1" />
-          <LoginPanel status={page.status} className="md:hidden" />
+          <LoginPanel page={page} className="md:hidden" />
         </div>
         {sharing && (
           <SharePanel
@@ -198,7 +198,7 @@ function NametagPanel({
           {actions}
         </div>
       </div>
-      <LoginList status={page.status} className="hidden md:flex xl:col-start-2" />
+      <LoginList page={page} className="hidden md:flex xl:col-start-2" />
     </Box>
   );
 }
@@ -357,17 +357,22 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
   );
 }
 
-function LoginPanel({ status, className }: { status: PlayerPage["status"]; className?: string }) {
+function LoginPanel({ page, className }: { page: PlayerPage; className?: string }) {
   return (
     <Box className={cn("content:flex content:h-full content:flex-col content:justify-center", className)}>
-      <LoginList status={status} />
+      <LoginList page={page} />
     </Box>
   );
 }
 
-/** Status and logins as the card's header lists them: in the nametag from `md`, in their own panel on phones. */
-function LoginList({ status, className }: { status: PlayerPage["status"]; className?: string }) {
+/**
+ * Status and logins as the card's header lists them: in the nametag from `md`, in their own panel on phones. The last
+ * game links to its page where the player has one for it.
+ */
+function LoginList({ page: { status, games, username }, className }: { page: PlayerPage; className?: string }) {
   const { t } = useTranslation();
+  const lastGame = status.lastGame && <MinecraftText>{status.lastGame.name}</MinecraftText>;
+  const lastGamePage = games.find((game) => game.id === status.lastGame?.id)?.page;
 
   return (
     <dl className={cn("flex flex-col gap-2", className)}>
@@ -381,7 +386,13 @@ function LoginList({ status, className }: { status: PlayerPage["status"]; classN
       <InlineStat label={t("default:stats.logoutTime")} value={<LoginDate ms={status.lastLogout} />} color="text-mc-dark-aqua" />
       <InlineStat
         label={t("default:stats.lastGame")}
-        value={status.lastGame ? <MinecraftText>{status.lastGame.name}</MinecraftText> : t("player.na")}
+        value={lastGame && lastGamePage ?
+          (
+            <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: lastGamePage }} className="hover:underline">
+              {lastGame}
+            </Link>
+          ) :
+          (lastGame ?? t("player.na"))}
       />
     </dl>
   );
