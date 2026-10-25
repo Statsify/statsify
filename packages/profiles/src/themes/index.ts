@@ -13,8 +13,6 @@ import { getBoxRenderer } from "./boxes/index.js";
 import { getColorPalette } from "./palette.js";
 import { getFontRenderer } from "./renderer.js";
 
-export * from "./palette.js";
-
 export const getTheme = (user: User | null): Theme | undefined => {
   if (!user) return undefined;
   if (!User.isGold(user)) return undefined;

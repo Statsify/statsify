@@ -7,7 +7,7 @@
  */
 
 import { Arcade } from "@statsify/schemas";
-import { LocalizeFunction } from "../../../types.js";
+import type { LocalizeFunction } from "../../../types.js";
 import { Table } from "../../../components/index.js";
 import { arrayGroup } from "@statsify/util";
 

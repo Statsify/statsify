@@ -8,7 +8,7 @@
 
 import { ARCADE, cardColours } from "@statsify/catalog";
 import { EnderSpleef } from "@statsify/schemas";
-import { LocalizeFunction } from "../../../types.js";
+import type { LocalizeFunction } from "../../../types.js";
 import { Table } from "../../../components/index.js";
 import { prettify } from "@statsify/util";
 

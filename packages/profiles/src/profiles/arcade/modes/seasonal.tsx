@@ -7,7 +7,7 @@
  */
 
 import { ARCADE, cardColours } from "@statsify/catalog";
-import { LocalizeFunction } from "../../../types.js";
+import type { LocalizeFunction } from "../../../types.js";
 import { Seasonal } from "@statsify/schemas";
 import { Table } from "../../../components/index.js";
 

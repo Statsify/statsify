@@ -36,7 +36,7 @@ import {
 } from "../components/index.js";
 import { DateTime } from "luxon";
 import { HistoricalTimes } from "@statsify/api-client";
-import { Palette, getColorPalette } from "../themes/index.js";
+import { type Palette, getColorPalette } from "../themes/palette.js";
 import { QUESTS, cardColours } from "@statsify/catalog";
 import { ratio } from "@statsify/math";
 import type { BaseProfileProps, LocalizeFunction } from "../types.js";
