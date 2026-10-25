@@ -4,15 +4,7 @@
 
 @theme {
   --drop-shadow-mc-1: 1px 1px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-2: 2px 2px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-3: 3px 3px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-4: 4px 4px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-5: 5px 5px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-6: 6px 6px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-7: 7px 7px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-8: 8px 8px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-9: 9px 9px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-10: 10px 10px color-mix(in srgb, currentColor 25%, #000 75%);
 
   @keyframes slide-in-up-and-fade {
     from {
@@ -200,10 +192,6 @@
   );
 }
 
-@utility grid-cols-fluid-* {
-  grid-template-columns: repeat(--value(integer), minmax(min-content, 1fr));
-}
-
 @utility grid-cols-content-* {
   grid-template-columns: repeat(--value(integer),
       minmax(min-content, max-content));
@@ -212,14 +200,6 @@
 @utility grid-cols-balanced {
   grid-template-columns: minmax(min-content, max-content) 1fr minmax(min-content,
       max-content);
-}
-
-@utility mask-feather-* {
-  mask: linear-gradient(90deg,
-      rgb(0 0 0 / 0) 0%,
-      rgb(0 0 0 / 1) --value(integer) %,
-      rgb(0 0 0 / 1) calc(100% - --value(integer) %),
-      rgb(0 0 0 / 0) 100%);
 }
 
 @utility w-container {

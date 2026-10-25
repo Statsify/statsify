@@ -135,7 +135,7 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
   return (
     <Component
       className={cn(
-        "box relative text-mc-white me-1 mb-1 content:p-4 content:text-mc-2 content:h-full content:animate-loading-gradient",
+        "box relative text-mc-white me-1 mb-1 content:p-4 content:text-mc-2 content:h-full",
         className
       )}
       data-square-corner={borderRadius.bottomRight === 0 || undefined}

@@ -275,17 +275,15 @@ export function List({ children }: { children: ReactNode }) {
   );
 }
 
-// `children` is optional on the inline pieces so translated text can place them (`<Trans components={…}>`).
-export function Strong({ children }: { children?: ReactNode }) {
-  return <strong className="font-semibold text-white">{children}</strong>;
-}
-
 const TEXT_LINK = "font-semibold text-white underline decoration-2 underline-offset-3 hover:text-mc-aqua";
 
 /** An email address in reading text, styled as a link: a click copies it. */
 export const TextEmail = ({ email }: { email: string }) => <EmailLink email={email} className={TEXT_LINK} />;
 
-/** A link in reading text: to a page of the site, or anywhere by `href` (vanity links the server redirects). */
+/**
+ * A link in reading text: to a page of the site, or anywhere by `href` (vanity links the server redirects). `children`
+ * is optional so translated text can place it (`<Trans components={…}>`).
+ */
 export function TextLink({ children, href, ...link }: { children?: ReactNode } & ({ href: string } | (LinkProps & { href?: never }))) {
   if (href !== undefined) {
     return (

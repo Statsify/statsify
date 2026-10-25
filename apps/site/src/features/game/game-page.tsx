@@ -330,7 +330,7 @@ export function GameHeader({
  * The card's description: the level (linked to the leaderboard of what it ranks), the bar from this level to the
  * next, and the progress, under the card's own words for the level and for what the bar counts.
  */
-export function LevelPanel({ level, username, className }: { level: Level; username: string; className?: string }) {
+export function LevelPanel({ level, username }: { level: Level; username: string }) {
   const { t } = useTranslation();
   const statName = useStatName();
   const { current, max, percent } = level.progression;
@@ -341,7 +341,7 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
 
   // Every line centred, a wrapped one too (a long title, its bar and the next one on a phone).
   return (
-    <Box className={cn("content:flex content:h-full content:flex-col content:items-center content:justify-center content:gap-3 content:text-center", className)}>
+    <Box className="content:flex content:h-full content:flex-col content:items-center content:justify-center content:gap-3 content:text-center">
       {/* Within the panel: a long level (The Pit past its last prestige) breaks rather than widening the page. */}
       <dl className="max-w-full">
         <StatCell
