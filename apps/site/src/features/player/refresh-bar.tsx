@@ -7,8 +7,9 @@
  */
 
 import { Button } from "~/components/ui/button";
+import { Hint } from "~/components/ui/hint";
 import { cn } from "~/lib/util";
-import { formatCountdown, relativeTime } from "~/i18n/format";
+import { formatCountdown, fullDate, relativeTime } from "~/i18n/format";
 import { type ReactNode, useEffect, useState } from "react";
 import { type ActionResult, BROWSER_TIMEOUT_MS } from "./player-actions";
 import { useTranslation } from "react-i18next";
@@ -139,7 +140,7 @@ export function RefreshBar({
           row && "flex-row items-center justify-between gap-4"
         )}
       >
-        <p className={cn(META, "min-w-0")}>{now === undefined ? " " : t("player.updated", { time: relativeTime(updatedAt, now, i18n.language) })}</p>
+        <p className={cn(META, "min-w-0")}>{now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}</p>
         {beside === undefined ? button : <div className="flex items-center justify-between gap-3">{beside}{button}</div>}
       </div>
       <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>
@@ -149,4 +150,19 @@ export function RefreshBar({
       </output>
     </div>
   );
+}
+
+/** The save's full date in the browser's own zone, short on phones. Only after mount: the server knows neither. */
+export const savedDate = (updatedAt: number, locale: string) => fullDate(updatedAt, locale, matchMedia("(width < 48rem)").matches);
+
+/**
+ * "Updated 17 minutes ago", with the save's full date on hover, focus or tap. Rendered only after mount, so the server's
+ * HTML carries neither clock nor zone.
+ */
+function UpdatedAt({ updatedAt, now }: { updatedAt: number; now: number }) {
+  const { t, i18n } = useTranslation();
+  const text = t("player.updated", { time: relativeTime(updatedAt, now, i18n.language) });
+  const date = savedDate(updatedAt, i18n.language);
+
+  return <Hint full={date} spoken={`${text}, ${date}`}>{text}</Hint>;
 }

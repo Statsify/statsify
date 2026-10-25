@@ -49,6 +49,23 @@ export function exactNumber(value: number, locale?: string): string | undefined 
   return numberFormat(locale, 2).format(value);
 }
 
+/**
+ * A moment to the minute in the zone `Intl` runs in, the browser's own after mount: "Saturday, October 24, 2026 at 8:30
+ * PM EDT", or with `short` "Sat, Oct 24, 2026, 8:30 PM EDT". Its own fields, since `dateStyle` can't take `timeZoneName`.
+ */
+export function fullDate(ms: number, locale?: string, short = false): string {
+  const name = short ? "short" : "long";
+  return new Intl.DateTimeFormat(locale, {
+    weekday: name,
+    month: name,
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  }).format(ms);
+}
+
 /** A countdown as `m:ss`, or `h:mm:ss` from an hour up. */
 export function formatCountdown(seconds: number): string {
   const total = Math.max(0, Math.ceil(seconds));
