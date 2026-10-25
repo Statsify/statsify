@@ -9,7 +9,7 @@
 import { Worker, type WorkerOptions } from "node:worker_threads";
 import type { RenderRequest, WorkerMessage, WorkerRequest } from "./protocol.js";
 
-export { IMAGE_VARIANTS, isGameCard } from "./protocol.js";
+export { IMAGE_VARIANTS, isGameCard, pageCard } from "./protocol.js";
 export type { CardChoice, ImageVariant, RenderRequest } from "./protocol.js";
 
 /** No worker took the job in time, or the queue is full; answer 503 with `Retry-After`. */

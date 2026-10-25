@@ -80,6 +80,24 @@ export type CardChoice =
   | { card: "general" }
   | { card: GameCard; mode: string; submode?: string; period?: string; window?: { start: number; end: number } };
 
+/** The card a game page unfurls with: its game's, in its mode, submode and period, or the general one. */
+export const pageCard = (page: {
+  game: { key: string };
+  mode: string;
+  submode: string | null;
+  period?: string;
+  window?: { start: number; end: number };
+}): CardChoice =>
+  isGameCard(page.game.key, page.mode, page.period) ?
+    {
+      card: page.game.key,
+      mode: page.mode,
+      ...(page.submode !== null && { submode: page.submode }),
+      ...(page.period !== undefined && { period: page.period }),
+      ...(page.window && { window: page.window }),
+    } :
+    { card: "general" };
+
 /** The size of the image a card renders to in `variant`, which the page's `og:image:width` and `height` repeat. */
 export const imageSize = (choice: CardChoice, variant: ImageVariant) =>
   variant === "og" && choice.card !== "general" ?

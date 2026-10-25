@@ -9,7 +9,7 @@
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { backgroundFor, preloadBackground } from "~/components/ui/background";
 import { GameView } from "~/features/game/game-page";
-import { imageSize, isGameCard } from "@statsify/profiles/protocol";
+import { imageSize, pageCard } from "@statsify/profiles/protocol";
 import { NotFound } from "~/components/not-found";
 import { ORPCError } from "@orpc/client";
 import { PlayerNotFound } from "~/features/player/player-not-found";
@@ -149,7 +149,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       updatedAt: page.updatedAt,
       // The unfurl's size: the game's card when the pool draws one for this mode (and period), as `/og` picks it, else the
       // general.
-      unfurl: imageSize(isGameCard(page.game.key, page.mode, page.period) ? { card: page.game.key, mode: page.mode } : { card: "general" }, "og"),
+      unfurl: imageSize(pageCard(page), "og"),
       headline: {
         level: page.level && { label: page.level.label, value: page.level.current },
         cells: cells.map(({ label, name, params, value, hidden, suffix, of }) => ({ label, name, params, value, hidden, suffix, of })),

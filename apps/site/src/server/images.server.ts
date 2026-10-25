@@ -11,7 +11,7 @@ import {
   type ImageVariant,
   PoolBusyError,
   RenderPool,
-  isGameCard,
+  pageCard,
 } from "@statsify/profiles/pool";
 import { ORPCError } from "@orpc/client";
 import { cacheHeaders } from "~/lib/cache";
@@ -346,15 +346,7 @@ async function gameCard(uuid: string, { game, mode, submode, period }: GameImage
     throw error;
   });
 
-  if (!isGameCard(page.game.key, page.mode, page.period)) return { card: "general" };
-
-  return {
-    card: page.game.key,
-    mode: page.mode,
-    ...(page.submode !== null && { submode: page.submode }),
-    ...(page.period !== undefined && { period: page.period }),
-    ...(page.window && { window: page.window }),
-  };
+  return pageCard(page);
 }
 
 /** One of the bot's cards for a stored player, as PNG bytes. Throws `PoolBusyError` when the queue is full. */

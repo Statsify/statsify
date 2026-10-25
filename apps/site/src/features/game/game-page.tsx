@@ -27,7 +27,7 @@ import { SkinBust } from "~/components/ui/skin";
 import { StatInfo } from "./stat-info";
 import { cn } from "~/lib/util";
 import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "./game-data";
-import { imageSize, isGameCard } from "@statsify/profiles/protocol";
+import { imageSize, pageCard } from "@statsify/profiles/protocol";
 import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { refreshGame } from "~/features/player/player-actions";
@@ -108,7 +108,7 @@ export function GameView({ page }: { page: GamePage }) {
   const period = periodSearch(page, page.period);
   // The card the page unfurls with, as its route's head picks it.
   const card = new URLSearchParams({ game: page.game.key, ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }), v: String(page.updatedAt) });
-  const cardSize = imageSize(isGameCard(page.game.key, page.mode, page.period) ? { card: page.game.key, mode: page.mode } : { card: "general" }, "og");
+  const cardSize = imageSize(pageCard(page), "og");
   const boxes = page.sections.filter(({ box }) => box);
   const lists = page.sections.filter(({ box, list }) => !box && list);
   // The first other table is the headline; the rest go beside it.
