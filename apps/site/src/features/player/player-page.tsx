@@ -9,6 +9,7 @@
 import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
 import { Discord } from "~/components/icons/discord";
+import { GameNav } from "~/features/game/game-nav";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
@@ -61,6 +62,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
   const skinId = useId();
   const [sharing, setSharing] = useState(false);
   const [skin, setSkin] = useState(false);
+  const navGames = page.games.flatMap(({ page: key, id, name }) => (key ? [{ key, id, name, played: true }] : []));
 
   useEffect(() => addRecentPlayer({ uuid: page.uuid, name: page.username }), [page.uuid, page.username]);
 
@@ -136,6 +138,13 @@ export function PlayerView({ page }: { page: PlayerPage }) {
           <Suspense fallback={<SkinPanelFrame id={skinId} />}>
             <SkinPanel id={skinId} uuid={page.uuid} name={page.username} />
           </Suspense>
+        )}
+        {/* On phones a Games button heads the games' panels, so a game page is a tap away rather than a long scroll;
+            its grid lies over the panels. From `md` the panels are near enough. */}
+        {page.games.length > 0 && (
+          <div className="relative md:hidden">
+            <GameNav games={navGames} username={page.username} wide />
+          </div>
         )}
         <GameGrid games={page.games} username={page.username} />
         <SignaturePanel page={page} />

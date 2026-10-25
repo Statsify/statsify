@@ -40,7 +40,8 @@ import { FilterBox } from "~/components/filter-box";
 import { FindPlayer, PageNav } from "~/features/leaderboards/leaderboard-table";
 import { GAME_ICONS, GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { GameGrid } from "~/features/player/player-page";
-import { GameHeader, GameNav, LevelPanel, ModeSwitcher, NeverPlayed, NoStatMatches, StatPanel } from "~/features/game/game-page";
+import { GameHeader, LevelPanel, ModeSwitcher, NeverPlayed, NoStatMatches, StatPanel } from "~/features/game/game-page";
+import { GameNav } from "~/features/game/game-nav";
 import { GitHub } from "~/components/icons/github";
 import { InlineStat, StatCell } from "~/components/ui/stat";
 import { LeaderboardCards } from "~/features/leaderboards/leaderboard-cards";
@@ -469,21 +470,21 @@ function GameSection() {
       </div>
       <Demo label="Games: the player's game pages in the registry's order, links from md up, a Games button on phones, one never played dimmed">
         <div className="relative">
-          <GameNav page={GAME_PAGE} />
+          <GameNav games={GAME_PAGE.games} username={username} current={GAME_PAGE.game.key} />
         </div>
       </Demo>
       <Demo label="The Games button open on phones: a grid of the pages, the current one marked">
         {/* The open grid lies over what follows, so the demo keeps room for it. */}
         <div className="max-md:min-h-56">
           <div className="relative">
-            <GameNav page={GAME_PAGE} open />
+            <GameNav games={GAME_PAGE.games} username={username} current={GAME_PAGE.game.key} open />
           </div>
         </div>
       </Demo>
       <Demo label="24 pages, open: past 10, the Games button at every width">
         <div className="min-h-[41rem] sm:min-h-[29rem] lg:min-h-[23rem] xl:min-h-[20rem]">
           <div className="relative">
-            <GameNav page={{ ...GAME_PAGE, games: GAME_NAV_ALL }} open />
+            <GameNav games={GAME_NAV_ALL} username={username} current={GAME_PAGE.game.key} open />
           </div>
         </div>
       </Demo>
