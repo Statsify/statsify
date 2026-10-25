@@ -6,13 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  type CardChoice,
-  type ImageVariant,
-  PoolBusyError,
-  RenderPool,
-  pageCard,
-} from "@statsify/profiles/pool";
+import { type CardChoice, type ImageVariant, pageCard } from "@statsify/profiles/protocol";
+import { PoolBusyError, RenderPool } from "@statsify/profiles/pool";
 import { NOT_FOUND_EDGE, NO_STORE, cacheHeaders } from "~/lib/cache";
 import { compactUuid } from "~/lib/uuid";
 import { orNull } from "~/lib/orpc";

@@ -64,8 +64,8 @@ export const GameSummarySchema = z.object({
   /** Minecraft-formatted level or prefix string, when the game has one. */
   level: z.string().optional(),
   rows: z.array(StatRowSchema).max(4),
-  /** The game page's URL segment (`/player/<name>/<page>`), when the site has a page for the game. */
-  page: z.string().optional(),
+  /** The game page's URL segment (`/player/<name>/<page>`); every game with a panel has a page. */
+  page: z.string(),
 });
 
 export const PlayerPageSchema = z.object({

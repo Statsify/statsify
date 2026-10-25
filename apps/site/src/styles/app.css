@@ -140,8 +140,8 @@
 }
 
 /* Minecraft text: 16px × N with an N px hard shadow. Use only N ∈ {1, 1.5, 2, 3, 4, 7}: 16, 24, 32, 48, 64 and 112 px,
-   the sizes in `type.minecraftSizes` (@statsify/tokens). 24 lands on half pixels at DPR 1 and 3, so it is for headings
-   and inline values only. */
+   the sizes on the Minecraft pixel grid. 24 lands on half pixels at DPR 1 and 3, so it is for headings and inline
+   values only. */
 @utility text-mc-* {
   font-family: var(--font-minecraft);
   font-size: calc(16px * --value(number));

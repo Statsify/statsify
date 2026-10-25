@@ -76,8 +76,12 @@ export const GAME_PAGES: GameLayout[] = [
 export const findGamePage = (segment: string): GameLayout | undefined =>
   GAME_PAGES.find((layout) => layout.game.key === segment);
 
-/** The URL segment of a game's page, when the site has one. */
-export const gamePageOf = (id: GameId): string | undefined => GAME_PAGES.find((layout) => layout.game.id === id)?.game.key;
+/** The URL segment of a game's page, for a game with a panel on the player page; each has a page. */
+export const gamePageOf = (id: GameId): string => {
+  const page = GAME_PAGES.find((layout) => layout.game.id === id)?.game.key;
+  if (!page) throw new Error(`${id} has no game page`);
+  return page;
+};
 
 /** The submodes a page's mode offers, or none; the first is the default. */
 export const pageSubmodes = (layout: GameLayout, mode: string): string[] | undefined =>

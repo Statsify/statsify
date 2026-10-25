@@ -63,7 +63,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
   const skinId = useId();
   const [sharing, setSharing] = useState(false);
   const [skin, setSkin] = useState(false);
-  const navGames = page.games.flatMap(({ page: key, id, name }) => (key ? [{ key, id, name, played: true }] : []));
+  const navGames = page.games.map(({ page: key, id, name }) => ({ key, id, name, played: true }));
 
   useEffect(() => addRecentPlayer({ uuid: page.uuid, name: page.username }), [page.uuid, page.username]);
 
@@ -503,15 +503,11 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
       className="h-full"
       title={(
         <h2>
-          {game.page ?
-            (
-              <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: game.page }} className={STAT_LINK}>
-                {title}
-                {/* Text, not an icon, so the title bar keeps the height of every other panel's. */}
-                <span aria-hidden className="text-mc-1.5 text-mc-gray"> »</span>
-              </Link>
-            ) :
-            title}
+          <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: game.page }} className={STAT_LINK}>
+            {title}
+            {/* Text, not an icon, so the title bar keeps the height of every other panel's. */}
+            <span aria-hidden className="text-mc-1.5 text-mc-gray"> »</span>
+          </Link>
         </h2>
       )}
     >

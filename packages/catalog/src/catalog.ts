@@ -104,7 +104,7 @@ export interface Stat {
   /** The field it is shown out of (`12/25`) by path, or its fixed cap, when it has one. */
   of?: string | number;
   /** The field's leaderboard, when it has one. */
-  leaderboard: { name: string; fieldName: string; sort: "ASC" | "DESC"; hidden: boolean } | null;
+  leaderboard: { hidden: boolean } | null;
   /** The entry's format, else the schema's leaderboard formatter (levels, times); plain numbers have none. */
   format?: ReadValue<string>;
   unset?: string;
@@ -155,9 +155,7 @@ function resolve(key: string, base: string, entry: StatEntry): Stat {
     name: entry.name,
     colour: entry.colour,
     of,
-    leaderboard: leaderboard.enabled ?
-      { name: leaderboard.name, fieldName: leaderboard.fieldName ?? "", sort: leaderboard.sort, hidden: leaderboard.hidden ?? false } :
-      null,
+    leaderboard: leaderboard.enabled ? { hidden: leaderboard.hidden ?? false } : null,
     format: entry.format ?? (formatter && ((value) => formatter(value))),
     unset: entry.unset,
     suffix: entry.suffix,

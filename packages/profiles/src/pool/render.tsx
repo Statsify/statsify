@@ -73,7 +73,6 @@ import { VampireZProfile } from "../profiles/vampirez.profile.js";
 import { WallsProfile } from "../profiles/walls.profile.js";
 import { getAllGameIcons, getBackgroundPath, getLogo } from "@statsify/assets";
 import { getLocalizeFunction } from "./localize.js";
-import { getTheme } from "../themes/index.js";
 import { render } from "@statsify/rendering";
 
 /** How far the `card` variant's stamp sits from the bottom-right corner, inside the card's footer. */
@@ -258,7 +257,6 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
 
   const player = request.player as unknown as Player;
   const guild = (request.guild as unknown as Guild | null) ?? undefined;
-  const theme = getTheme(null);
 
   // A card's `Background` draws a canvas as it draws an image; the profiles' props only name the image type.
   const draw = (cardBackground: Image | Canvas) =>
@@ -293,8 +291,7 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
               t={t}
               time="LIVE"
             />
-          ),
-      theme
+          )
     );
 
   const canvas = new Canvas(width, height);
@@ -324,7 +321,7 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
   ctx.drawImage(image, Math.round((width - imageWidth) / 2), Math.round((height - imageHeight) / 2), imageWidth, imageHeight);
 
   if (request.variant === "card") {
-    const stamp = render(<UpdatedStamp updatedAt={request.updatedAt} t={t} />, theme);
+    const stamp = render(<UpdatedStamp updatedAt={request.updatedAt} t={t} />);
     ctx.drawImage(stamp, width - stamp.width - STAMP_INSET, height - stamp.height - STAMP_INSET);
   }
 
