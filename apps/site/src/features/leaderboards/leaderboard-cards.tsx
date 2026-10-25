@@ -7,8 +7,7 @@
  */
 
 import { Box } from "~/components/ui/box";
-import { HEADER, HIGHLIGHT, PLAYER, STRIPE, VALUES, useHighlightScroll } from "./leaderboard-table";
-import { Link } from "@tanstack/react-router";
+import { HEADER, HIGHLIGHT, PLAYER, PlayerLink, STRIPE, VALUES, useHighlightScroll } from "./leaderboard-table";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
@@ -88,15 +87,15 @@ export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
                       <SkinHead uuid={row.uuid} size={24} />
                     </div>
                     <div className={cn(CELL, "inline md:col-start-3 md:min-w-0 md:contain-inline-size")}>
-                      <Link
-                        to="/{-$locale}/player/$name"
-                        params={{ name: row.username }}
+                      <PlayerLink
+                        page={page}
+                        name={row.username}
                         className="hover:underline after:absolute after:inset-0 md:flex md:min-h-11 md:min-w-0 md:items-center md:after:hidden"
                       >
                         <span className="md:min-w-0 md:truncate">
                           <MinecraftText className="text-mc-1 md:text-mc-2">{row.name}</MinecraftText>
                         </span>
-                      </Link>
+                      </PlayerLink>
                     </div>
                   </div>
                 </div>

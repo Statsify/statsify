@@ -50,7 +50,7 @@ import type {
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
-import { buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
+import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
 import { config, flatten, removeFormatting } from "@statsify/util";
@@ -523,6 +523,7 @@ export class SiteService implements OnApplicationBootstrap {
       page,
       pages: Math.ceil(Math.min(total, metadata.limit) / size),
       rows,
+      gamePage: boardGamePage(input.field),
     };
   }
 

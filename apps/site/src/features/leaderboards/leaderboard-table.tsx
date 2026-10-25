@@ -13,6 +13,7 @@ import { Search } from "~/components/search";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { useTranslation } from "react-i18next";
 import type { AroundMiss } from "./leaderboard-data";
+import type { ReactNode } from "react";
 import type { LeaderboardPage } from "@statsify/contract";
 
 // The table's rows from `md` up (`LeaderboardCards`): one 48 px row per player, with the column labels once in a
@@ -26,6 +27,23 @@ export const STRIPE = "bg-linear-to-r from-black/15 to-black/15";
 // The bot's highlighted row is a white 0.35 panel (`leaderboard.profile.tsx`). Forced colours drop backgrounds, so
 // there it's a border.
 export const HIGHLIGHT = "bg-linear-to-r from-white/35 to-white/35 forced-colors:border-y-2 forced-colors:border-[color:Highlight]";
+
+/** A row's name: a link to the player's page for the board's game and mode where there is one, else to the profile. */
+export function PlayerLink({ page, name, className, children }: { page: LeaderboardPage; name: string; className?: string; children: ReactNode }) {
+  const target = page.gamePage;
+  if (!target) return <Link to="/{-$locale}/player/$name" params={{ name }} className={className}>{children}</Link>;
+
+  return (
+    <Link
+      to="/{-$locale}/player/$name/$game"
+      params={{ name, game: target.game }}
+      search={{ mode: target.mode, submode: target.submode }}
+      className={className}
+    >
+      {children}
+    </Link>
+  );
+}
 
 /**
  * A ref for the highlighted (`around`) row, which is brought into view, centred, when the page lands. After a client

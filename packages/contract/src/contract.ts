@@ -176,6 +176,11 @@ export const LeaderboardPageSchema = z.object({
   page: z.number(),
   pages: z.number(),
   rows: z.array(LeaderboardRowSchema),
+  /**
+   * The player's page the rows open: the board's game, at its mode and submode where the page has them. Absent where
+   * the game has no page, so the rows open the profile.
+   */
+  gamePage: z.object({ game: z.string(), mode: z.string().optional(), submode: z.string().optional() }).optional(),
 });
 
 /** One category's task counters, keyed by the board data's `field`. */
