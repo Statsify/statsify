@@ -46,7 +46,7 @@ export class ForceUnverifyCommand {
       );
 
     await this.memberService
-      .addRole(await config("supportBot.guild"), user.id, await config("supportBot.memberRole"))
+      .removeRole(await config("supportBot.guild"), user.id, await config("supportBot.memberRole"))
       .then(() => this.apiService.updateUser(user.id, { serverMember: false }))
       .catch(() => null);
 

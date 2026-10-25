@@ -52,14 +52,17 @@ export const WoolGamesProfile = ({
   let table;
 
   switch (mode.api) {
-    case "woolwars":
+    case "woolwars": {
+      const stats = woolgames.woolwars[mode.submode.api];
+
       table = <WoolWarsTable woolwars={woolgames[mode.api]} submode={mode.submode} t={t} />;
       sidebar.push(
-        [t("stats.woolPlaced"), t(woolgames.woolwars.overall.woolPlaced), "§e"],
-        [t("stats.blocksBroken"), t(woolgames.woolwars.overall.blocksBroken), "§c"],
-        [t("stats.powerups"), t(woolgames.woolwars.overall.powerups), "§b"]
+        [t("stats.woolPlaced"), t(stats.woolPlaced), "§e"],
+        [t("stats.blocksBroken"), t(stats.blocksBroken), "§c"],
+        [t("stats.powerups"), t(stats.powerups), "§b"]
       );
       break;
+    }
 
     case "captureTheWool":
       table = <CaptureTheWoolTable captureTheWool={woolgames[mode.api]} t={t} time={time} />;
