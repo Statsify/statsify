@@ -49,7 +49,8 @@ export function withoutGroupPrefix<G extends { name: string; leaderboards: { nam
 
 /**
  * Words people shorten, each also matching the words it stands for: a game ("bw", BedWars) or a stat ("fk", final
- * kills). Kept here because no leaderboard sets the schema's aliases yet.
+ * kills). Kept here because no leaderboard sets the schema's aliases yet. The game URLs read the same table
+ * (`gameKeysFor`).
  */
 const ABBREVIATIONS: Record<string, string[]> = {
   ab: ["arena brawl"],
@@ -72,11 +73,17 @@ const ABBREVIATIONS: Record<string, string[]> = {
   suhc: ["speeduhc"],
   sw: ["skywars"],
   tkr: ["turbo kart racers"],
+  tnt: ["tnt games"],
   vz: ["vampirez"],
+  woolwars: ["woolgames"],
   ws: ["winstreak"],
-  ww: ["wool wars", "woolwars"],
+  ww: ["wool wars", "woolwars", "woolgames"],
   xp: ["exp"],
 };
+
+/** What a short name might be a game page's key for, as typed in a URL: "bw" is `bedwars`, "mm" `murdermystery`. */
+export const gameKeysFor = (segment: string): string[] =>
+  Object.hasOwn(ABBREVIATIONS, segment) ? [...new Set(ABBREVIATIONS[segment].map((full) => full.replaceAll(" ", "")))] : [];
 
 /**
  * Every word of the query must appear in the text, as typed or, for an abbreviation, as the words it stands for:

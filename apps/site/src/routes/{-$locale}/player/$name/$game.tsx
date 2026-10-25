@@ -19,6 +19,7 @@ import { cacheNotFoundResponse } from "~/lib/response";
 import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { createI18n } from "~/i18n/i18n";
 import { formatNumber } from "~/i18n/format";
+import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
 import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "~/features/game/game-data";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
@@ -70,14 +71,37 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       });
     }
 
+    // The bot's General is the player page itself.
+    if (game === "general") {
+      throw redirect({ to: "/{-$locale}/player/$name", params: { name: identity.username }, state: true, statusCode: 301, headers: REDIRECT_HEADERS });
+    }
+
     preloadBackground(backgroundFor(game));
-    const page = await context.queryClient.ensureQueryData(gamePageQuery(identity.uuid, game, deps.mode, deps.submode, deps.period)).catch((error) => {
-      // A game without a page, a mode or submode it doesn't have, or a name too long to be either.
-      if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) return null;
-      throw error;
-    });
+    const load = (key: string) =>
+      context.queryClient.ensureQueryData(gamePageQuery(identity.uuid, key, deps.mode, deps.submode, deps.period)).catch((error) => {
+        // A game without a page, a mode or submode it doesn't have, or a name too long to be either.
+        if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) return null;
+        throw error;
+      });
+    const page = await load(game);
 
     if (!page) {
+      // The short names the bot's users type (`/player/anrie/bw`) land on the game they stand for, where it has a page.
+      // The site has no list of game keys, so only a name that 404s is tried as one.
+      const keys = gameKeysFor(game);
+      const pages = await Promise.all(keys.map(load));
+      const key = keys.find((_, index) => pages[index]);
+
+      if (key) {
+        throw redirect({
+          to: "/{-$locale}/player/$name/$game",
+          params: { name: identity.username, game: key },
+          search: { mode: deps.mode, submode: deps.submode, period: deps.period },
+          statusCode: 301,
+          headers: REDIRECT_HEADERS,
+        });
+      }
+
       cacheNotFoundResponse("max-age=300");
       throw notFound({ data: { player: false } satisfies Missing });
     }
