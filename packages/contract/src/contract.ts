@@ -212,6 +212,11 @@ export const LeaderboardPageSchema = z.object({
    * the game has no page, so the rows open the profile.
    */
   gamePage: z.object({ game: z.string(), mode: z.string().optional(), submode: z.string().optional() }).optional(),
+  /**
+   * The game's index of leaderboards that lists the board (`/leaderboards/<key>`), with the game's name and the mode it's
+   * under there ("" for the game's own). Absent for a board outside a game.
+   */
+  index: z.object({ key: z.string(), name: z.string(), mode: z.string() }).optional(),
 });
 
 /** One category's task counters, keyed by the board data's `field`. */

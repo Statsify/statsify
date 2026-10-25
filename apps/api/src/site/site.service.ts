@@ -51,7 +51,7 @@ import type {
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
-import { leaderboardColumn, leaderboardGame } from "./leaderboards.js";
+import { leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
 import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
@@ -525,6 +525,7 @@ export class SiteService implements OnApplicationBootstrap {
       ...(metadata.hidden ? [] : [leaderboardColumn(input.field, metadata.fieldName ?? "")]),
       ...additionalFields.map((field, i) => leaderboardColumn(field, additionalMetadata[i].fieldName ?? "")),
     ];
+    const index = leaderboardIndex(input.field);
 
     return {
       field: input.field,
@@ -535,6 +536,7 @@ export class SiteService implements OnApplicationBootstrap {
       pages: Math.ceil(Math.min(total, metadata.limit) / size),
       rows,
       gamePage: boardGamePage(input.field),
+      index: index && { ...index, name: this.leaderboardList().find(({ key }) => key === index.key)!.name },
     };
   }
 

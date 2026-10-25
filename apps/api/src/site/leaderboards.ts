@@ -69,14 +69,27 @@ export function leaderboardGame({ leaderboards, ...group }: LeaderboardGroup): L
   }
 
   for (const { field, name } of leaderboards) {
-    const [first, second] = field.split(".").slice(2, -1);
-    const key = first === "overall" && second && modes.has(second) ? second : first;
-    const mode = (key && modes.get(key)) || modes.get("")!;
+    const mode = modes.get(modeKey(field, (key) => modes.has(key)))!;
     const short = withoutPrefix(withoutPrefix(withoutPrefix(name, group.name), mode.name ?? ""), group.name);
     mode.leaderboards.push({ field, name: short });
   }
 
   return { ...group, modes: [...modes.values()].filter((mode) => mode.leaderboards.length > 0) };
+}
+
+/** The key of the mode `field` is listed under in its game's index, as `leaderboardGame` places it; "" is the game's own. */
+function modeKey(field: string, isMode: (key: string) => boolean): string {
+  const [first, second] = field.split(".").slice(2, -1);
+  const key = first === "overall" && second && isMode(second) ? second : first;
+  return key && isMode(key) ? key : "";
+}
+
+/** Where a board is listed: its game's index (`/leaderboards/<key>`) and the mode it's under there. */
+export function leaderboardIndex(field: string): { key: string; mode: string } | undefined {
+  const [root, key] = field.split(".");
+  if (root !== "stats" || !key) return;
+  const modes = new Set(GAMES[key]?.modes.getModes().map(({ api }) => api));
+  return { key, mode: modeKey(field, (mode) => modes.has(mode)) };
 }
 
 if (import.meta.vitest) {

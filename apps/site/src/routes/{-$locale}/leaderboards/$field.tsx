@@ -147,6 +147,18 @@ function LeaderboardPage({ view: { page, miss } }: { view: LeaderboardView }) {
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{page.name}</h1>
+          {/* The game's index, opened and scrolled to the board's mode. */}
+          {page.index && (
+            <Link
+              to="/{-$locale}/leaderboards/$field"
+              params={{ field: page.index.key }}
+              search={{ mode: page.index.mode || undefined }}
+              hash={page.index.mode || undefined}
+              className="inline-flex min-h-11 items-center text-mc-1.5 text-mc-yellow underline underline-offset-2"
+            >
+              {t("leaderboards.gameTitle", { game: page.index.name })}
+            </Link>
+          )}
           {/* Who is ranked, in what order and as of when. */}
           <p className="max-w-200 text-center text-mc-1 text-mc-gray">
             {t(page.sort === "ASC" ? "leaderboards.aboutLowest" : "leaderboards.aboutHighest")}
