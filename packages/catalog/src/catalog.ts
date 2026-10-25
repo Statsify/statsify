@@ -7,9 +7,11 @@
  */
 
 import {
+  type ClassMetadata,
   type FieldMetadata,
   type GameId,
   type GameModes,
+  METADATA_KEY,
   type Mode,
   Player,
   type PlayerStats,
@@ -123,6 +125,12 @@ export const numberFields = (prefix: string): string[] =>
   [...playerFields()]
     .filter(([path, { type }]) => path.startsWith(prefix) && type.type === Number && !type.array)
     .map(([path]) => path);
+
+/** The schema classes in a class's fields (each game's quests, a game's classes), by field name, in the class's order. */
+export const childClasses = (parent: { prototype: object }): [string, Parameters<typeof scanMetadata>[0]][] =>
+  Object.entries(Reflect.getMetadata(METADATA_KEY, parent.prototype) as ClassMetadata)
+    .filter(([, { type }]) => !type.primitive && !type.array)
+    .map(([key, { type }]) => [key, type.type as Parameters<typeof scanMetadata>[0]]);
 
 /** A field of the player document by path. */
 function field(path: string): FieldMetadata {
