@@ -96,7 +96,7 @@ export function Header() {
               compact && !searching && "max-md:hidden"
             )}
           >
-            <Search compact shortcut target={gameTarget} />
+            <Search compact shortcut recent target={gameTarget} />
           </div>
         )}
         <nav aria-label={t("nav.external")} className="ms-auto">

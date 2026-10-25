@@ -164,6 +164,7 @@ export function FindPlayer({ field, pages, miss }: { field: string; pages: numbe
       <div className="flex flex-col gap-2 sm:flex-row">
         <Search
           compact
+          recent
           className="w-full"
           placeholder={t("leaderboards.find")}
           onSelect={(name) => navigate({ to: "/{-$locale}/leaderboards/$field", params: { field }, search: { around: name } })}

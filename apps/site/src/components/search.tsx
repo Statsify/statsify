@@ -15,6 +15,7 @@ import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
 import { orpc } from "~/lib/orpc";
 import { useDebounce } from "~/hooks/use-debounce";
+import { useRecentPlayers } from "~/features/player/recent";
 import { useOutisdeClick } from "~/hooks/use-outside-click";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useEffect, useId, useRef, useState } from "react";
@@ -63,8 +64,10 @@ const SIZES = {
   },
 } as const;
 
-function usePlayerSuggestions(input: string, focused: boolean) {
+/** `skipEmpty`: an empty box asks for nothing (the API suggests nothing for it), as one that lists recent players. */
+function usePlayerSuggestions(input: string, focused: boolean, skipEmpty: boolean) {
   const debouncedInput = useDebounce(input, SEARCH_DEBOUNCE_MS);
+  const length = debouncedInput.trim().length;
 
   // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch alone. While the next query loads,
   // the last suggestions stay up, so the sheet never empties between keystrokes.
@@ -72,7 +75,7 @@ function usePlayerSuggestions(input: string, focused: boolean) {
     orpc.search.suggest.queryOptions({
       input: { query: debouncedInput },
       // A pasted UUID is longer than any name, and the API refuses it.
-      enabled: focused && debouncedInput.trim().length <= 16,
+      enabled: focused && length <= 16 && !(skipEmpty && length === 0),
       retry: false,
       gcTime: SEARCH_CACHE_TIME_MS,
       placeholderData: keepPreviousData,
@@ -114,6 +117,7 @@ export function Search({
   target = "player",
   compact = false,
   shortcut = false,
+  recent = false,
   placeholder,
   onSelect,
 }: {
@@ -124,6 +128,8 @@ export function Search({
   compact?: boolean;
   /** "/" focuses this box: the page's one player search (the header's, or the page's own where the header has none). */
   shortcut?: boolean;
+  /** Until something is typed, the sheet lists the players this device viewed last (`/player` shows them as cards). */
+  recent?: boolean;
   placeholder?: string;
   /** Handles a submitted or picked name instead of navigating to `target`. */
   onSelect?: (name: string) => unknown;
@@ -136,14 +142,17 @@ export function Search({
   const [input, setInput] = useState(defaultValue);
   const [query, setQuery] = useState(defaultValue);
   const [focused, setFocused] = useState(false);
-  const suggestions = usePlayerSuggestions(query, focused);
+  const suggestions = usePlayerSuggestions(query, focused, recent);
+  const recentPlayers = useRecentPlayers();
+  // `query` is the typed text; the arrows put a row's name in the box without leaving the recent players.
+  const names = recent && query.trim() === "" ? recentPlayers?.map((player) => player.name) : suggestions.data;
   const [selected, setSelected] = useState<number | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigateTo = useSearchNavigation(target);
   const go = onSelect ?? navigateTo;
   const listId = useId();
   const optionId = (index: number) => `${listId}-${index}`;
-  const count = suggestions.data?.length ?? 0;
+  const count = names?.length ?? 0;
   const open = focused && count > 0;
   // Heads load for the rows in view, not all 25: each one is a request, and the edge allows a visitor 60 in 10 seconds.
   const [firstRow, setFirstRow] = useState(0);
@@ -186,10 +195,10 @@ export function Search({
 
   function onSelectionChange(selected: number) {
     setSelected(selected);
-    if (suggestions.data) setInput(suggestions.data[selected]);
+    if (names) setInput(names[selected]);
 
     const visible = containerRef.current?.clientHeight ?? 0;
-    const maxScroll = (suggestions.data?.length ?? 0) * size.itemHeight - visible;
+    const maxScroll = count * size.itemHeight - visible;
     const halfVisible = Math.floor(visible / 2);
     let scrollTop = selected * size.itemHeight - halfVisible + size.itemHeight / 2;
     scrollTop = Math.max(0, Math.min(scrollTop, maxScroll));
@@ -277,11 +286,11 @@ export function Search({
         onScroll={(event) => setFirstRow(Math.floor(event.currentTarget.scrollTop / size.itemHeight))}
         className={cn("absolute z-100 w-full overflow-auto bg-blackify-800 shadow-[4px_4px_0_rgb(0_0_0_/_0.5)]", size.sheet)}
       >
-        {suggestions.data?.map((suggestion, index) => (
+        {names?.map((name, index) => (
           <SearchPlayer
-            key={suggestion}
+            key={name}
             id={optionId(index)}
-            player={suggestion}
+            player={name}
             head={index >= firstRow && index < firstRow + size.rows}
             selected={selected === index}
             target={target}
