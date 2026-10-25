@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background } from "~/components/ui/background";
+import { PageBackground } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
 import { Discord } from "~/components/icons/discord";
 import { GameNav } from "~/features/game/game-nav";
@@ -81,14 +81,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
 
   return (
     <div className="relative grow">
-      <Background
-        background="general"
-        priority
-        viewport
-        className="h-full"
-        mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)"
-      />
-      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className="grid grid-cols-1 gap-2 md:grid-cols-[auto_1fr] xl:grid-cols-[fit-content(50%)_auto_1fr]">

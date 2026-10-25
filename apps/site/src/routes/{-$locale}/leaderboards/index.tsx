@@ -7,7 +7,7 @@
  */
 
 import { AllLeaderboards } from "~/features/leaderboards/leaderboard-index";
-import { Background } from "~/components/ui/background";
+import { PageBackground } from "~/components/ui/background";
 import { MAX_QUERY_LENGTH, getLeaderboardIndex, listForClient } from "~/features/leaderboards/leaderboard-data";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
@@ -68,14 +68,7 @@ function LeaderboardsPage() {
 
   return (
     <div className="relative grow">
-      <Background
-        background="general"
-        priority
-        viewport
-        className="h-full"
-        mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
-      />
-      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)" />
       <div className="w-container flex flex-col gap-6 px-4 py-12 text-mc-white md:px-8">
         <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{t("leaderboards.title")}</h1>
         {/* A new `?q=` (back and forward) starts the filter over from it. */}

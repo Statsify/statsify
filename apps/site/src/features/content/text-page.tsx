@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background, type BackgroundName } from "~/components/ui/background";
+import { type BackgroundName, PageBackground } from "~/components/ui/background";
 import { Chevron } from "~/components/icons/chevron";
 import { Box } from "~/components/ui/box";
 import { EmailLink } from "~/components/ui/email-link";
@@ -48,14 +48,7 @@ export function TextPage({
 
   return (
     <div className="relative grow">
-      <Background
-        background={background}
-        priority
-        viewport
-        className="h-full"
-        mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
-      />
-      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <PageBackground background={background} viewport mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)" />
       <div className="w-container px-4 pt-8 pb-12 text-mc-white md:px-8 md:pt-12 md:pb-16">
         <div
           className={cn(

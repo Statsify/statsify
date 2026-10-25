@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background } from "~/components/ui/background";
+import { PageBackground } from "~/components/ui/background";
 import { HOLD_SCRIPT } from "~/features/player/recent";
 import { RecentPlayers } from "~/features/player/recent-players";
 import { ResultCards } from "~/features/player/result-card";
@@ -61,14 +61,7 @@ function PlayerSearchPage() {
 
   return (
     <div className="relative grow">
-      <Background
-        background="general"
-        priority
-        viewport
-        className="h-full"
-        mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
-      />
-      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)" />
       <div className="w-container flex flex-col items-center gap-8 px-4 py-12 text-mc-white md:px-8">
         <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{t("search.heading")}</h1>
         <div ref={search} className="w-full max-w-200">

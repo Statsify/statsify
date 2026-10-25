@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background } from "~/components/ui/background";
+import { PageBackground } from "~/components/ui/background";
 import { Divider } from "~/components/ui/divider";
 import { Search } from "~/components/search";
 import { useTranslation } from "react-i18next";
@@ -37,14 +37,12 @@ export function BingoLayout({ name, children }: { name: string; children: ReactN
   return (
     <div className="grow">
       <div className="relative h-full mb-8">
-        <Background
+        <PageBackground
           background="bingo"
-          priority
           viewport
           className="h-full aspect-auto"
           mask="linear-gradient(rgb(255 255 255) 50%, rgb(0 0 0 / 0) calc(100% - 32px))"
         />
-        <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
         <div className="w-full max-w-[1800px] mx-auto flex justify-center items-center flex-col gap-4 px-4 pt-8 md:px-8">
           <BingoHeading />
           <div className="w-full lg:w-[80%] flex items-stretch flex-col gap-4">

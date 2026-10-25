@@ -7,7 +7,7 @@
  */
 
 import { cn } from "~/lib/util";
-import { useState } from "react";
+import { type ComponentProps, useState } from "react";
 
 // The nine public backgrounds in `public/backgrounds/`; the private blurred set never ships. They are
 // pre-blurred WebP (about 18 KB each), so no backdrop filter runs on top of them.
@@ -80,5 +80,15 @@ export function Background({
         />
       )}
     </div>
+  );
+}
+
+/** A page's own background, fetched early, under the overlay that darkens it behind the page's text. */
+export function PageBackground({ className = "h-full", ...props }: Omit<ComponentProps<typeof Background>, "priority">) {
+  return (
+    <>
+      <Background {...props} priority className={className} />
+      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+    </>
   );
 }

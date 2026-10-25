@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background, backgroundFor, preloadBackground } from "~/components/ui/background";
+import { PageBackground, backgroundFor, preloadBackground } from "~/components/ui/background";
 import { FindPlayer, PageNav } from "~/features/leaderboards/leaderboard-table";
 import { LeaderboardBoxes } from "~/features/leaderboards/leaderboard-boxes";
 import { LeaderboardIndex } from "~/features/leaderboards/leaderboard-index";
@@ -206,14 +206,7 @@ function GameIndexPage({ game }: { game: LeaderboardGame }) {
 
   return (
     <div className="relative grow">
-      <Background
-        background={backgroundFor(game.key)}
-        priority
-        viewport
-        className="h-full"
-        mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
-      />
-      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <PageBackground background={backgroundFor(game.key)} viewport mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)" />
       <div className="w-container flex flex-col gap-6 px-4 py-12 text-mc-white md:px-8">
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">
@@ -235,13 +228,7 @@ function LeaderboardPage({ view: { page, miss, explanation } }: { view: Leaderbo
 
   return (
     <div className="relative grow">
-      <Background
-        background="general"
-        priority
-        className="h-full"
-        mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)"
-      />
-      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">
