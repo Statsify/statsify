@@ -58,12 +58,12 @@ function createUniformScheme(
   digitColor = bracketColor,
   starColor = digitColor,
 ): Scheme {
-  return ({ level, bold, underline, strikethrough, star }) => {
+  return ({ level, bold, underline, strikethrough, star, brackets }) => {
     const boldFormat = bold ? "§l" : "";
     const underlineFormat = underline ? "§n" : "";
     const strikethroughFormat = strikethrough ? "§m" : "";
 
-    return `${bracketColor}${underlineFormat}${strikethroughFormat}[§r${boldFormat}${digitColor}${underlineFormat}${level}${starColor}${underlineFormat}${star}§r${bracketColor}${underlineFormat}${strikethroughFormat}]§r`;
+    return `${bracketColor}${underlineFormat}${strikethroughFormat}${brackets[0]}§r${boldFormat}${digitColor}${underlineFormat}${level}${starColor}${underlineFormat}${star}§r${bracketColor}${underlineFormat}${strikethroughFormat}${brackets[1]}§r`;
   };
 }
 
@@ -148,11 +148,11 @@ export const SCHEME_MAP = {
   opal_prime: createUniformScheme("§7", "§9", "§1"),
   amethyst_prime: createUniformScheme("§7", "§5", "§8"),
   mirror: createCycleScheme("§8", "§7", "§f", "§f", "§7", "§7"),
-  light: createCycleScheme("§7", "§7", "§e", "§e", "§6", "§6", "§6"),
+  light: createCycleScheme("§f", "§f", "§e", "§e", "§6", "§6", "§6"),
   dawn: createCycleScheme("§6", "§6", "§f", "§f", "§b", "§3", "§3"),
   dusk: createCycleScheme("§5", "§5", "§d", "§d", "§6", "§e", "§e"),
   air: createCycleScheme("§b", "§b", "§f", "§f", "§7", "§7", "§8", "§8"),
-  wind: createCycleScheme("§7", "§7", "§a", "§a", "§2", "§2", "§2", "§2"),
+  wind: createCycleScheme("§f", "§f", "§a", "§a", "§2", "§2", "§2", "§2"),
   nebula: createCycleScheme("§4", "§4", "§c", "§c", "§d", "§d", "§5", "§5"),
   thunder: createCycleScheme("§e", "§e", "§f", "§f", "§8", "§8", "§8"),
   earth: createCycleScheme("§a", "§a", "§2", "§2", "§6", "§6", "§e", "§e"),
@@ -173,10 +173,10 @@ export const SCHEME_MAP = {
   obsidian: createCycleScheme("§0", "§5", "§8", "§8", "§5", "§5"),
   spring: createCycleScheme("§2", "§2", "§a", "§e", "§6", "§5", "§d"),
   ice: createCycleScheme("§f", "§f", "§b", "§b", "§3", "§3", "§3"),
-  summer: createCycleScheme("§3", "§b", "§e", "§6", "§6", "§d", "§5"),
+  summer: createCycleScheme("§3", "§b", "§e", "§e", "§6", "§d", "§5"),
   spinel: createCycleScheme("§f", "§4", "§c", "§c", "§9", "§1", "§9"),
-  autumn: createCycleScheme("§5", "§5", "§c", "§6", "§6", "§b", "§3"),
-  mystic: createCycleScheme("§2", "§a", "§f", "§f", "§f", "§a"),
+  autumn: createCycleScheme("§5", "§5", "§c", "§6", "§e", "§b", "§3"),
+  mystic: createCycleScheme("§2", "§a", "§f", "§f", "§a", "§a"),
   eternal: createCycleScheme("§4", "§4", "§5", "§9", "§9", "§1", "§0"),
   burnout: createCycleScheme("§4", "§c", "§c", "§6", "§e", "§f", "§4"),
   cooldown: createCycleScheme("§1", "§9", "§3", "§b", "§f", "§e", "§1"),

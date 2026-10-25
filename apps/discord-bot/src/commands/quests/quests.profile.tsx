@@ -16,6 +16,7 @@ import {
   GameQuests,
   GenericQuestInstance,
   METADATA_KEY,
+  MonthlyQuests,
   OverallQuests,
   QuestModes,
   QuestTime,
@@ -55,9 +56,12 @@ function getQuestMetadata<T>(constructor: Constructor<T>) {
   return Object.fromEntries(metadata);
 }
 
-const questMetadata = [DailyQuests, WeeklyQuests, OverallQuests].map((constructor) =>
-  getQuestMetadata(constructor as Constructor<GenericQuestInstance>)
-);
+const questMetadata: Record<QuestTime, ReturnType<typeof getQuestMetadata>> = {
+  [QuestTime.Daily]: getQuestMetadata(DailyQuests),
+  [QuestTime.Weekly]: getQuestMetadata(WeeklyQuests),
+  [QuestTime.Monthly]: getQuestMetadata(MonthlyQuests),
+  [QuestTime.Overall]: getQuestMetadata(OverallQuests),
+};
 
 export interface QuestProfileProps extends Omit<BaseProfileProps, "time"> {
   mode: GameMode<QuestModes>;

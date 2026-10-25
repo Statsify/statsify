@@ -281,14 +281,14 @@ async function loadConfig(): Promise<{ default: Config }> {
     };
   }
 
-  for (const file of ["config.json", "config.js"]) { 
+  for (const file of ["config.json", "config.js"]) {
     const path = join(directory, "../../../", file);
 
     if (existsSync(path)) {
       return import(pathToFileURL(path).href);
     }
   }
-  
+
   throw new Error("No config file detected!");
 }
 
@@ -307,13 +307,11 @@ export const config = async <T extends keyof FlatConfig>(
   if (process.env.VITEST) return defaultValue as FlatConfig[T];
   if (!cfg) cfg = await loadConfig().then((c) => c.default);
 
-  const value =
-    (key as string).split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;
+  const raw = (key as string).split(".").reduce((a: any, b) => a?.[b], cfg);
+  const value = raw === "" || raw === null ? undefined : raw;
 
-  const isValueDefined = value !== undefined && value !== "";
-
-  if (!isValueDefined) {
-    if (defaultValue) return defaultValue;
+  if (value === undefined) {
+    if (defaultValue !== undefined) return defaultValue;
 
     if (required)
       throw new Error(

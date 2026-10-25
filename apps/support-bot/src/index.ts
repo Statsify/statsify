@@ -80,8 +80,7 @@ const websocket = new WebsocketShard({
   intents:
     GatewayIntentBits.Guilds |
     GatewayIntentBits.GuildMessages |
-    GatewayIntentBits.GuildMembers |
-    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMembers,
 });
 
 await loadEvents(websocket, join(directory, "./events"));

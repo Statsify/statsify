@@ -238,7 +238,7 @@ export class ApiService extends StatsifyApiService {
     const [rank, name] = escapedDisplayName.replaceAll(/\[|\]/g, "").split(" ");
 
     // They don't have a rank
-    if (!name) return removeFormatting(displayName);
+    if (!name) return removeFormatting(escapedDisplayName);
 
     const unformattedRank = removeFormatting(rank);
 

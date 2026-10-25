@@ -202,7 +202,7 @@ export class TicketService {
     listener.removeHook(this.copyUsernameButtonId(ticket.channel));
 
     // A list of people who talked in the ticket
-    const participants: Set<string> = new Set(`<@${ticket.owner}>`);
+    const participants: Set<string> = new Set([`<@${ticket.owner}>`]);
 
     const logs: string[] = [];
 

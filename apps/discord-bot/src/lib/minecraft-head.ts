@@ -6,9 +6,23 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { randomUUID } from "node:crypto";
+import type { ApiService, InteractionAttachment } from "@statsify/discord";
+import { createCanvas } from "@statsify/rendering";
 
-export function minecraftHeadUrl(uuid: string) {
-  const dashlessUuid = uuid.replaceAll("-", "");
-  return `https://crafatar.com/avatars/${dashlessUuid}?size=160&default=MHF_Steve&overlay&id=${randomUUID()}`;
+export async function minecraftHeadAttachment(
+  apiService: ApiService,
+  uuid: string,
+  size = 160,
+): Promise<InteractionAttachment> {
+  const head = await apiService.getPlayerHead(uuid, size);
+
+  const canvas = createCanvas(size, size);
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(head, 0, 0, size, size);
+
+  return {
+    name: `${uuid}.png`,
+    data: await canvas.toBuffer("png"),
+    type: "image/png",
+  };
 }
