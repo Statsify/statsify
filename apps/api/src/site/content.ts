@@ -38,7 +38,7 @@ const RATIO_ORDER = [...RATIOS.keys()];
  * to explain. Built from the catalog and the leaderboard list's game names; the words are in the locale files.
  */
 export function buildGlossary(groups: LeaderboardGroup[]): Glossary {
-  const shown = [...catalogStats().values()].filter((stat) => stat.name === undefined);
+  const shown = [...catalogStats().values()].filter((stat): stat is Stat & { glossary: string } => stat.glossary !== undefined);
   const names = new Map(groups.map(({ key, formatted }) => [key, removeFormatting(formatted)]));
   const games = Object.fromEntries(
     [...new Set(shown.map(gameOf))].map((game) => [game, names.get(game) ?? prettify(game)])

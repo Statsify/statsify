@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { GAMES, type Stat, gameStats, modeName, modeStats } from "@statsify/catalog";
+import { GAMES, type Stat, allStats, modeName } from "@statsify/catalog";
 import { removeFormatting } from "@statsify/util";
 import type { LeaderboardColumn, LeaderboardGame, LeaderboardGroup } from "@statsify/contract";
 
@@ -16,10 +16,7 @@ let catalog: Map<string, Stat> | undefined;
 export function catalogStats(): Map<string, Stat> {
   catalog ??= new Map(
     Object.values(GAMES)
-      .flatMap((game) => [
-        ...gameStats(game),
-        ...game.shapes.flatMap(({ modes }) => modes.flatMap((at) => modeStats(game, at))),
-      ])
+      .flatMap((game) => allStats(game))
       .map((stat) => [stat.path, stat])
   );
 
@@ -39,10 +36,7 @@ export function leaderboardColumn(field: string, name: string): LeaderboardColum
 export const catalogLabel = (field: string): string | undefined => catalogStats().get(field)?.label;
 
 /** The `glossary.*` key that explains a stat, where the glossary has it: not one shown under its card's name. */
-export function catalogGlossary(field: string): string | null {
-  const stat = catalogStats().get(field);
-  return stat && stat.name === undefined ? stat.glossary : null;
-}
+export const catalogGlossary = (field: string): string | null => catalogStats().get(field)?.glossary ?? null;
 
 /**
  * A name past a leading prefix and the " - " or space after it, the prefix matched ignoring case and spaces ("WoolWars"

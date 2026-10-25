@@ -301,8 +301,11 @@ function cell(player: Player, stat: Stat, spec: Spec): StatCell {
     leaderboard: stat.leaderboard && !unset && !hidden && !spec.inline ? stat.path : null,
     ...(spec.icon && { icon: spec.icon }),
     ...(spec.inline && { inline: true }),
-    // The catalog's own entry for what the stat means in this game; a card's name isn't a stat to explain.
-    ...(name === undefined && stat.glossary !== stat.label.slice(stat.label.lastIndexOf(".") + 1) && { glossary: stat.glossary }),
+    // The catalog's own entry for what the stat means in this game, where it isn't the label's; the site derives that
+    // one. A card's name, the stat's or the page's, isn't a stat to explain.
+    ...(name === undefined && stat.glossary !== undefined && stat.glossary !== stat.label.slice(stat.label.lastIndexOf(".") + 1) && {
+      glossary: stat.glossary,
+    }),
   };
 }
 

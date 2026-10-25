@@ -97,8 +97,8 @@ export interface Stat {
   /** The field in the player document, `stats.bedwars.solo.wins`, which is also its leaderboard's key. */
   path: string;
   label: string;
-  /** The key of the `glossary.*` entry that explains it. */
-  glossary: string;
+  /** The key of the `glossary.*` entry that explains it; none for a stat shown under its card's name, a name to read. */
+  glossary?: string;
   name?: string;
   colour: StatEntry["colour"];
   /** The field it is shown out of (`12/25`) by path, or its fixed cap, when it has one. */
@@ -151,7 +151,7 @@ function resolve(key: string, base: string, entry: StatEntry): Stat {
     key,
     path,
     label,
-    glossary: entry.glossary ?? label.slice(label.lastIndexOf(".") + 1),
+    ...(entry.name === undefined && { glossary: entry.glossary ?? label.slice(label.lastIndexOf(".") + 1) }),
     name: entry.name,
     colour: entry.colour,
     of,
@@ -243,10 +243,12 @@ export function cardColours(
   };
 }
 
-/** The catalog paths of a game's stats, game stats first: everything the catalog describes. */
+/** Every stat of a game, its own first, then each shape's at each place that stores it: everything the catalog describes. */
+export function allStats(game: Game): Stat[] {
+  return [...gameStats(game), ...game.shapes.flatMap(({ modes }) => modes.flatMap((at) => modeStats(game, at)))];
+}
+
+/** The catalog paths of a game's stats, game stats first. */
 export function catalogPaths(game: Game): string[] {
-  return [
-    ...gameStats(game).map(({ path }) => path),
-    ...game.shapes.flatMap(({ modes }) => modes.flatMap((at) => modeStats(game, at).map(({ path }) => path))),
-  ];
+  return allStats(game).map(({ path }) => path);
 }
