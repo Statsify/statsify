@@ -7,7 +7,7 @@
  */
 
 /**
- * Number formatting identical to the bot's (`@statsify/discord` i18n-loader.service.ts), kept
+ * The bot's number format (`formatNumber` in `@statsify/util` util.ts) plus a `trim` option, kept
  * here because `@statsify/util` pulls `config.ts` and `node:fs` into the browser bundle.
  */
 
