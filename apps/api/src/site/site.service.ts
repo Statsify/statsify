@@ -270,7 +270,7 @@ export class SiteService implements OnApplicationBootstrap {
     return { player: { ...player }, guild };
   }
 
-  public async refresh(uuid: string, clientIp: string): Promise<PlayerPage> {
+  public async refresh(uuid: string, clientIp: string, auto = false): Promise<PlayerPage> {
     const tag = normalizeUuid(uuid);
     const cached = await this.loadPlayer(tag);
     if (!cached) throw notFound();
@@ -278,7 +278,7 @@ export class SiteService implements OnApplicationBootstrap {
     // Inside the API's own cooldown `CACHE` would not call Hypixel anyway, so it costs no budget.
     if (Date.now() < cached.expiresAt) return this.toPage(cached);
 
-    await this.consumeBudget(clientIp);
+    await this.consumeBudget(clientIp, auto);
     const player = await this.playerService.get(tag, CacheLevel.CACHE);
 
     // When Hypixel doesn't answer, `PlayerService` hands back the stored player, still past its cooldown: say the
@@ -663,16 +663,18 @@ export class SiteService implements OnApplicationBootstrap {
 
   /**
    * Per-address, then global budget. A rejected call never eats into the global budget. With
-   * `site.hypixelBudget: 0` every call is rejected here, before `PlayerService` runs.
+   * `site.hypixelBudget: 0` every call is rejected here, before `PlayerService` runs. An automatic update (`auto`)
+   * stops at two-thirds of the budget, so a third stays for clicks and for names the site has never stored.
    */
-  private async consumeBudget(clientIp: string): Promise<void> {
+  private async consumeBudget(clientIp: string, auto = false): Promise<void> {
     const [attempts, ipTtl] = await this.hit(ipKey(clientIp), IP_WINDOW_SECONDS);
     if (attempts > IP_LIMIT) throw tooManyRequests(ipTtl);
 
     const budget = (await this.hypixelBudget) ?? DEFAULT_HYPIXEL_BUDGET;
+    const limit = auto ? Math.floor((budget * 2) / 3) : budget;
     const [calls, budgetTtl] = await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS);
 
-    if (calls > budget) {
+    if (calls > limit) {
       await this.redis.decr(BUDGET_KEY);
       throw tooManyRequests(budgetTtl);
     }
@@ -690,7 +692,29 @@ export class SiteService implements OnApplicationBootstrap {
 }
 
 if (import.meta.vitest) {
-  const { it, expect } = import.meta.vitest;
+  const { it, expect, vi } = import.meta.vitest;
+
+  it("refuses an automatic update once two-thirds of the budget is used, and lets a click through", async () => {
+    // A stored player past their cooldown, 10 of the default 15 calls already spent, and Hypixel not answering.
+    const query = { where: () => query, equals: () => query, lean: () => query, exec: async () => ({ uuid: "a", expiresAt: 0 }) };
+    const counts: Record<string, number> = { [BUDGET_KEY]: 11 };
+    const redis = {
+      decr: vi.fn(),
+      multi: vi.fn(() => ({
+        set: (key: string) => ({ incr: () => ({ ttl: () => ({ exec: async () => [[null, "OK"], [null, counts[key] ?? 1], [null, 60]] }) }) }),
+      })),
+    };
+    const playerService = { get: vi.fn(async () => null) };
+    const stubs = [playerService, undefined, { findOne: () => query }, undefined, redis];
+    const service = new SiteService(...(stubs as unknown as ConstructorParameters<typeof SiteService>));
+
+    await expect(service.refresh("a", "203.0.113.7", true)).rejects.toMatchObject({ code: "TOO_MANY_REQUESTS" });
+    expect(redis.decr).toHaveBeenCalledWith(BUDGET_KEY);
+    expect(playerService.get).not.toHaveBeenCalled();
+
+    await expect(service.refresh("a", "203.0.113.7")).rejects.toMatchObject({ code: "SERVICE_UNAVAILABLE" });
+    expect(playerService.get).toHaveBeenCalledOnce();
+  });
 
   it("buckets IPv6 visitors by /64", () => {
     expect(rateLimitAddress("203.0.113.7")).toBe("203.0.113.7");

@@ -76,8 +76,8 @@ function BingoPage() {
 function BingoBoards({ initial }: { initial: BingoPlayer }) {
   const [player, setPlayer] = useState(initial);
 
-  const refresh = async (deadline: AbortSignal) => {
-    const result = await refreshBingo({ data: { uuid: player.uuid }, signal: deadline });
+  const refresh = async (deadline: AbortSignal, auto: boolean) => {
+    const result = await refreshBingo({ data: { uuid: player.uuid, auto }, signal: deadline });
     if (result.ok) setPlayer(result.data);
     return result;
   };
@@ -85,7 +85,7 @@ function BingoBoards({ initial }: { initial: BingoPlayer }) {
   return (
     <BingoLayout name={player.username}>
       <div className="w-full lg:w-[80%]">
-        <RefreshBar updatedAt={player.updatedAt} expiresAt={player.expiresAt} refresh={refresh} />
+        <RefreshBar updatedAt={player.updatedAt} expiresAt={player.expiresAt} refresh={refresh} auto />
       </div>
       <Bingo player={player} />
     </BingoLayout>

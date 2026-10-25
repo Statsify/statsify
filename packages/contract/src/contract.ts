@@ -582,7 +582,12 @@ const GameInputSchema = z.object({
    */
   period: z.string().min(1).max(32).optional(),
 });
-const RefreshInputSchema = z.object({ uuid: UuidSchema, clientIp: ClientIpSchema });
+const RefreshInputSchema = z.object({
+  uuid: UuidSchema,
+  clientIp: ClientIpSchema,
+  /** A page updating a stale profile by itself once it opened, which stops at two-thirds of the global budget. */
+  auto: z.boolean().optional(),
+});
 const LookupInputSchema = z.object({
   /** A username, or the UUID of a player URL that isn't stored. */
   name: z.union([UsernameSchema, UuidSchema]),

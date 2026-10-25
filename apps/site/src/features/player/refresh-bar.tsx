@@ -10,18 +10,30 @@ import { Button } from "~/components/ui/button";
 import { Hint } from "~/components/ui/hint";
 import { cn } from "~/lib/util";
 import { formatCountdown, fullDate, relativeTime } from "~/i18n/format";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useEffectEvent, useRef, useState } from "react";
 import { type ActionResult, BROWSER_TIMEOUT_MS } from "./player-actions";
+import { useRouterState } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 const META = "text-mc-1 text-mc-gray";
 
+/** How old a save is before its page updates it by itself once it opens. */
+const AUTO_UPDATE_AGE_MS = 15 * 60_000;
+
+/** Crawlers that run scripts would spend the Hypixel budget just by loading pages, so they never update by themselves. */
+const BOT_AGENT = /bot|crawl|spider|slurp|headless|lighthouse|preview/i;
+
+/** The page views (history entries) whose bar has decided on its automatic update, so it never runs twice. */
+const autoViews = new Set<string>();
+
 type RefreshState =
   | { status: "idle" }
-  | { status: "pending" }
+  /** `auto`: the bar's own update once the page opened, which screen readers don't hear start. */
+  | { status: "pending"; auto: boolean }
   /** The last refresh worked: said once to screen readers, otherwise the same as idle. */
   | { status: "done" }
-  | { status: "limited"; until: number }
+  /** `auto`: an automatic update was refused, which counts down without the message. */
+  | { status: "limited"; until: number; auto: boolean }
   /** Hypixel didn't answer in time; the page still shows the stored stats. */
   | { status: "unavailable" }
   | { status: "error" };
@@ -49,13 +61,19 @@ export function RefreshBar({
   updatedAt,
   expiresAt,
   refresh,
+  auto = false,
   row = false,
   beside,
   className,
 }: {
   updatedAt: number;
   expiresAt: number;
-  refresh: (deadline: AbortSignal) => Promise<ActionResult<unknown>>;
+  refresh: (deadline: AbortSignal, auto: boolean) => Promise<ActionResult<unknown>>;
+  /**
+   * Once the page opens, update a save older than 15 minutes by itself, once per page view. It fails quietly: a
+   * refusal counts down without the message, and anything else leaves the button as it was.
+   */
+  auto?: boolean;
   /** One row on phones too, the time beside a smaller button: a game page, whose tables should start near the top. */
   row?: boolean;
   /**
@@ -68,23 +86,27 @@ export function RefreshBar({
   const { t, i18n } = useTranslation();
   const now = useNow();
   const [state, setState] = useState<RefreshState>({ status: "idle" });
+  const bar = useRef<HTMLDivElement>(null);
+  // The location once its page has rendered: during a navigation `location` is already the next page's.
+  // eslint-disable-next-line no-underscore-dangle -- the history entry's key, under TanStack's name
+  const view = useRouterState({ select: ({ resolvedLocation }) => resolvedLocation?.state.__TSR_key });
 
   const lockedUntil = state.status === "limited" ? state.until : expiresAt;
   const remaining = now === undefined ? undefined : Math.max(0, Math.ceil((lockedUntil - now) / 1000));
   const disabled = state.status === "pending" || remaining === undefined || remaining > 0;
 
-  async function run() {
-    setState({ status: "pending" });
+  async function run(auto = false) {
+    setState({ status: "pending", auto });
 
     const deadline = AbortSignal.timeout(BROWSER_TIMEOUT_MS);
     let result: ActionResult<unknown>;
 
     try {
-      result = await refresh(deadline);
+      result = await refresh(deadline, auto);
     } catch {
       // A 500, a Cloudflare 429 or a dropped connection: say so and let the visitor try again. A hung one reads as
       // Hypixel not answering, as when the server's own deadline runs out.
-      setState({ status: deadline.aborted ? "unavailable" : "error" });
+      setState(auto ? { status: "idle" } : { status: deadline.aborted ? "unavailable" : "error" });
       return;
     }
 
@@ -94,19 +116,34 @@ export function RefreshBar({
     }
 
     if (result.code === "TOO_MANY_REQUESTS") {
-      setState({ status: "limited", until: Date.now() + result.retryAfter * 1000 });
+      setState({ status: "limited", until: Date.now() + result.retryAfter * 1000, auto });
       return;
     }
 
-    setState({ status: result.code === "UNAVAILABLE" ? "unavailable" : "error" });
+    setState(auto ? { status: "idle" } : { status: result.code === "UNAVAILABLE" ? "unavailable" : "error" });
   }
+
+  const autoUpdate = useEffectEvent(() => {
+    const now = Date.now();
+    if (state.status === "pending" || now < lockedUntil || now - updatedAt < AUTO_UPDATE_AGE_MS) return;
+    if (navigator.webdriver || BOT_AGENT.test(navigator.userAgent)) return;
+    void run(true);
+  });
+
+  // After mount only, so never on the server. A game page draws a bar for each layout, and the one on screen decides
+  // (no boxes means hidden; not `checkVisibility`, which Safari has only since 17.4).
+  useEffect(() => {
+    if (!auto || !view || autoViews.has(view) || !bar.current?.getClientRects().length) return;
+    autoViews.add(view);
+    autoUpdate();
+  }, [auto, view]);
 
   let label = t("player.refresh");
   if (state.status === "pending") label = t("player.refreshing");
   else if (remaining) label = t("player.refreshIn", { time: formatCountdown(remaining) });
 
   let message: string | undefined;
-  if (state.status === "limited" && remaining) message = t("player.refreshLimited");
+  if (state.status === "limited" && !state.auto && remaining) message = t("player.refreshLimited");
   else if (state.status === "unavailable") message = t("player.refreshFailed");
   else if (state.status === "error") message = t("player.refreshError");
 
@@ -132,7 +169,7 @@ export function RefreshBar({
   // Phones: the time over a full-width button, unless `row`; wider screens: one row. Beside other controls, the time
   // over them and the button.
   return (
-    <div className={cn("flex flex-col gap-2", className)}>
+    <div ref={bar} className={cn("flex flex-col gap-2", className)}>
       <div
         className={cn(
           "flex flex-col gap-2",
@@ -145,7 +182,7 @@ export function RefreshBar({
       </div>
       <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>
       <output className="sr-only">
-        {state.status === "pending" && t("player.refreshing")}
+        {state.status === "pending" && !state.auto && t("player.refreshing")}
         {state.status === "done" && t("player.updated", { time: relativeTime(updatedAt, updatedAt, i18n.language) })}
       </output>
     </div>

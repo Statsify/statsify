@@ -76,8 +76,9 @@ const SECTIONS: LegalSection[] = [
         <Subheading>Your IP Address</Subheading>
         <Paragraph>
           Statsify uses your IP address to limit how often you can update or look up players, so no one can use up its share of
-          Hypixel's API. The count is kept for 5 minutes, then deleted. When you look up a player Statsify hasn't seen, your IP
-          address also goes to Cloudflare Turnstile, which checks that you're a person.
+          Hypixel's API. Opening a profile can update it from Hypixel, which counts toward the same limit. The count is kept
+          for 5 minutes, then deleted. When you look up a player Statsify hasn't seen, your IP address also goes to Cloudflare
+          Turnstile, which checks that you're a person.
         </Paragraph>
         <Subheading>Logs</Subheading>
         <Paragraph>

@@ -60,7 +60,7 @@ export class SiteController {
   @Implement(contract.player.refresh)
   public refreshPlayer() {
     return implement(contract.player.refresh).handler(({ input }) =>
-      this.siteService.refresh(input.uuid, input.clientIp)
+      this.siteService.refresh(input.uuid, input.clientIp, input.auto)
     );
   }
 

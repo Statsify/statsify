@@ -142,8 +142,8 @@ export function GameView({ page }: { page: GamePage }) {
   );
 
   // Everything cached for this player predates the refresh: it reloads the next time it's shown.
-  const refresh = async (deadline: AbortSignal) => {
-    const result = await refreshGame({ data: { uuid: page.uuid, game: page.game.key, mode, submode, period }, signal: deadline });
+  const refresh = async (deadline: AbortSignal, auto: boolean) => {
+    const result = await refreshGame({ data: { uuid: page.uuid, game: page.game.key, mode, submode, period, auto }, signal: deadline });
 
     if (result.ok) {
       await queryClient.invalidateQueries({ queryKey: orpc.player.key({ input: { uuid: page.uuid } }), refetchType: "none" });
@@ -179,7 +179,7 @@ export function GameView({ page }: { page: GamePage }) {
             ref={nametag}
             page={page}
             actions={shareToggle}
-            refresh={<RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} beside={shareToggle} />}
+            refresh={<RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto beside={shareToggle} />}
             className={cn(page.level && page.overview.length > 0 && "lg:row-span-2", !page.level && page.overview.length === 0 && "md:col-span-2 md:w-fit")}
           />
           {page.level && <LevelPanel level={page.level} username={page.username} />}
@@ -194,6 +194,7 @@ export function GameView({ page }: { page: GamePage }) {
             updatedAt={page.updatedAt}
             expiresAt={page.expiresAt}
             refresh={refresh}
+            auto
             row
             className="max-md:hidden md:col-span-2 md:mt-2"
           />

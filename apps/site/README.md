@@ -37,7 +37,7 @@ The component gallery is at `/dev/gallery` on the dev server: every shared compo
 | `site.indexable` | site | Default true. False for a staging deploy: every response says `X-Robots-Tag: noindex`, the sitemaps 404 and robots.txt lists no sitemap. |
 | `site.turnstile.siteKey`, `site.turnstile.secretKey` | site | Cloudflare Turnstile for the lookup button. Without a secret, lookups are refused outside `environment: "dev"`. |
 | `site.renderWorkers` | site | Threads in the unfurl image render pool, 1 to 3. Default 2. |
-| `site.hypixelBudget` | API | Hypixel calls the site's refresh and lookup may make per 5 minutes, across all visitors. 0 switches them off. |
+| `site.hypixelBudget` | API | Hypixel calls the site's refresh and lookup may make per 5 minutes, across all visitors. 0 switches them off. A stale profile's update once it opens uses at most two-thirds of it. |
 | `sentry.siteDsn`, `sentry.tracesSampleRate` | site | Optional error reporting. |
 | `environment` | site | Only `"dev"` relaxes anything (Turnstile, above). A missing value counts as production. |
 
