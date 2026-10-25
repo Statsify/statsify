@@ -64,6 +64,9 @@ $ pnpm typecheck
 - [`Discord`]
 - [`Donate`]
 
+## 🙏 Credits
+- Emoji badges use [Pixel Perfect Twemoji](https://github.com/AmberWat/PixelTwemojiMC-18) by Amber, based on [Twemoji](https://github.com/twitter/twemoji) by Twitter, Inc and other contributors, both licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+
 ## Showcase
 <div align="center">
 
