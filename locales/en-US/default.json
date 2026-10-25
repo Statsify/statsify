@@ -26,7 +26,6 @@
     "badge-emoji": "Use an emoji as your profile badge",
     "badge-image": "Upload a new profile badge",
     "badge-reset": "Reset your profile badge",
-    "badge-set": "Upload a new profile badge",
     "badge-view": "View your current profile badge",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
     "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",

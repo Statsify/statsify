@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import axios from "axios";
 import { APIAttachment } from "discord-api-types/v10";
 import {
   ApiService,
@@ -25,12 +26,29 @@ import { createCanvas, loadImage, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 
-const BADGE_IMAGE_TYPE_PREFIX = "image/";
+const BADGE_IMAGE_TYPES = ["image/png", "image/jpeg", "image/gif", "image/webp"];
 const CUSTOM_EMOJI_REGEX = /^<a?:\w+:(\d+)>$/;
-const TWEMOJI_BASE_URL = "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72";
+
+const PIXEL_EMOJI_URL = "https://cdn.jsdelivr.net/gh/AmberWat/PixelTwemojiMC-18@v8.0/assets";
+const PIXEL_EMOJI_SIZE = 18;
+
+// The same emoji arrives with or without U+FE0F depending on the keyboard, so lookups ignore it
+const withoutVariationSelector = (emoji: string) => emoji.replaceAll("\uFE0F", "");
+
+interface PixelEmoji {
+  atlas: Image;
+  x: number;
+  y: number;
+}
+
+interface MinecraftFont {
+  providers: { file: string; chars: string[] }[];
+}
 
 @Command({ description: (t) => t("commands.badge") })
 export class BadgeCommand {
+  private pixelEmojis?: Map<string, PixelEmoji>;
+
   public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({
@@ -48,8 +66,17 @@ export class BadgeCommand {
     preview: "badge.png",
     args: [new FileArgument("badge", true)],
   })
-  public image(context: CommandContext) {
-    return this.run(context, "image");
+  public async image(context: CommandContext) {
+    const file = context.option<APIAttachment>("badge");
+
+    if (!BADGE_IMAGE_TYPES.includes(file.content_type ?? ""))
+      throw new ErrorMessage("errors.unsupportedFileType");
+
+    const image = await loadImage(file.url).catch(() => {
+      throw new ErrorMessage("errors.unknown");
+    });
+
+    return this.setBadge(context, this.fitBadge(image));
   }
 
   @SubCommand({
@@ -58,8 +85,15 @@ export class BadgeCommand {
     preview: "badge.png",
     args: [new TextArgument("emoji", (t) => t("arguments.emoji"))],
   })
-  public emoji(context: CommandContext) {
-    return this.run(context, "emoji");
+  public async emoji(context: CommandContext) {
+    const emoji = context.option<string>("emoji").trim();
+    const customEmoji = emoji.match(CUSTOM_EMOJI_REGEX);
+
+    const badge = customEmoji ?
+      await this.getCustomEmojiBadge(customEmoji[1]) :
+      await this.getPixelEmojiBadge(emoji);
+
+    return this.setBadge(context, badge);
   }
 
   @SubCommand({
@@ -71,13 +105,8 @@ export class BadgeCommand {
     return this.run(context, "reset");
   }
 
-  private async run(
-    context: CommandContext,
-    mode: "view" | "image" | "emoji" | "reset"
-  ): Promise<IMessage> {
+  private async run(context: CommandContext, mode: "view" | "reset"): Promise<IMessage> {
     const userId = context.getInteraction().getUserId();
-    const file = context.option<APIAttachment | null>("badge");
-    const emoji = context.option<string | null>("emoji");
     const user = context.getUser();
     const t = context.t();
 
@@ -97,30 +126,6 @@ export class BadgeCommand {
         };
       }
 
-      case "image": {
-        const canvas = await this.getBadgeCanvas(file as APIAttachment);
-
-        await this.apiService.updateUserBadge(userId, await canvas.toBuffer("png"));
-        const profile = await this.getProfile(t, user, canvas);
-
-        return {
-          content: t("config.badge.set") as string,
-          files: [{ name: "badge.png", data: profile, type: "image/png" }],
-        };
-      }
-
-      case "emoji": {
-        const canvas = await this.getEmojiCanvas(emoji as string);
-
-        await this.apiService.updateUserBadge(userId, await canvas.toBuffer("png"));
-        const profile = await this.getProfile(t, user, canvas);
-
-        return {
-          content: t("config.badge.set") as string,
-          files: [{ name: "badge.png", data: profile, type: "image/png" }],
-        };
-      }
-
       case "reset": {
         await this.apiService.deleteUserBadge(userId);
         const badge = await this.apiService.getUserBadge(userId);
@@ -135,31 +140,111 @@ export class BadgeCommand {
     }
   }
 
-  private async getBadgeCanvas(file: APIAttachment) {
+  private async setBadge(context: CommandContext, badge: Canvas): Promise<IMessage> {
+    const userId = context.getInteraction().getUserId();
+    const user = context.getUser();
+    const t = context.t();
+
+    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
+
+    await this.apiService.updateUserBadge(userId, await badge.toBuffer("png"));
+    const profile = await this.getProfile(t, user, badge);
+
+    return {
+      content: t("config.badge.set") as string,
+      files: [{ name: "badge.png", data: profile, type: "image/png" }],
+    };
+  }
+
+  private async getCustomEmojiBadge(id: string) {
+    const image = await loadImage(`https://cdn.discordapp.com/emojis/${id}.png?size=32`).catch(() => {
+      throw new ErrorMessage("errors.invalidBadgeEmoji");
+    });
+
+    return this.fitBadge(image);
+  }
+
+  private async getPixelEmojiBadge(input: string) {
+    this.pixelEmojis ??= await this.loadPixelEmojis();
+    const emoji = this.pixelEmojis.get(withoutVariationSelector(input));
+
+    if (!emoji) throw new ErrorMessage("errors.invalidBadgeEmoji");
+
+    // At 2x the pixel art stays sharp and is as tall as Minecraft draws it beside the name
+    const canvas = createCanvas(PIXEL_EMOJI_SIZE * 2, PIXEL_EMOJI_SIZE * 2);
+    const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+
+    ctx.drawImage(
+      emoji.atlas,
+      emoji.x,
+      emoji.y,
+      PIXEL_EMOJI_SIZE,
+      PIXEL_EMOJI_SIZE,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    return canvas;
+  }
+
+  private async loadPixelEmojis() {
+    const [font, remappings, emojiAtlas, flagAtlas] = await Promise.all([
+      axios.get<MinecraftFont>(`${PIXEL_EMOJI_URL}/minecraft/font/default.json`),
+      axios.get<Record<string, string>>(`${PIXEL_EMOJI_URL}/emoji_remappings/lang/en_us.json`),
+      loadImage(`${PIXEL_EMOJI_URL}/twemoji/textures/font/emoji.png`),
+      loadImage(`${PIXEL_EMOJI_URL}/twemoji/textures/font/flags.png`),
+    ]).catch(() => {
+      throw new ErrorMessage("errors.unknown");
+    });
+
+    const atlases = new Map([
+      ["twemoji:font/emoji.png", emojiAtlas],
+      ["twemoji:font/flags.png", flagAtlas],
+    ]);
+
+    const emojis = new Map<string, PixelEmoji>();
+
+    for (const { file, chars } of font.data.providers) {
+      const atlas = atlases.get(file);
+      if (!atlas) continue;
+
+      for (const [y, row] of chars.entries()) {
+        for (const [x, char] of [...row].entries()) {
+          emojis.set(char, { atlas, x: x * PIXEL_EMOJI_SIZE, y: y * PIXEL_EMOJI_SIZE });
+        }
+      }
+    }
+
+    // The pack draws multi-character emoji (skin tones, flags, keycaps, ZWJ sequences) from
+    // single characters it remaps them to
+    for (const [sequence, char] of Object.entries(remappings.data)) {
+      const emoji = emojis.get(char);
+      if (emoji) emojis.set(withoutVariationSelector(sequence), emoji);
+    }
+
+    return emojis;
+  }
+
+  private fitBadge(image: Image) {
     const canvas = createCanvas(32, 32);
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
-    if (!file.content_type?.startsWith(BADGE_IMAGE_TYPE_PREFIX))
-      throw new ErrorMessage(
-        (t) => t("errors.unsupportedFileType.title"),
-        (t) => t("errors.unsupportedFileType.description")
-      );
+    const ratio = Math.min(canvas.width / image.width, canvas.height / image.height);
+    const scaled = image.width > 32 || image.height > 32;
 
-    const badge = await this.loadBadgeImage(file.url);
-
-    const ratio = Math.min(canvas.width / badge.width, canvas.height / badge.height);
-    const scaled = badge.width > 32 || badge.height > 32;
-
-    const width = scaled ? badge.width * ratio : badge.width;
-    const height = scaled ? badge.height * ratio : badge.height;
+    const width = scaled ? image.width * ratio : image.width;
+    const height = scaled ? image.height * ratio : image.height;
 
     ctx.drawImage(
-      badge,
+      image,
       0,
       0,
-      badge.width,
-      badge.height,
+      image.width,
+      image.height,
       (canvas.width - width) / 2,
       (canvas.height - height) / 2,
       width,
@@ -167,84 +252,6 @@ export class BadgeCommand {
     );
 
     return canvas;
-  }
-
-  private async getEmojiCanvas(input: string) {
-    const canvas = createCanvas(32, 32);
-    const ctx = canvas.getContext("2d");
-    ctx.imageSmoothingEnabled = false;
-
-    const emoji = input.trim();
-    const customEmoji = emoji.match(CUSTOM_EMOJI_REGEX);
-
-    if (customEmoji) {
-      const badge = await this.loadEmojiImage(
-        `https://cdn.discordapp.com/emojis/${customEmoji[1]}.png?size=32&quality=lossless`
-      );
-
-      ctx.drawImage(badge, 0, 0, badge.width, badge.height, 0, 0, 32, 32);
-      return canvas;
-    }
-
-    const badge = await this.loadTwemojiImage(emoji);
-
-    ctx.drawImage(badge, 0, 0, badge.width, badge.height, 0, 0, 32, 32);
-
-    return canvas;
-  }
-
-  private async loadBadgeImage(url: string) {
-    try {
-      return await loadImage(url);
-    } catch {
-      throw new ErrorMessage(
-        (t) => t("errors.unsupportedFileType.title"),
-        (t) => t("errors.unsupportedFileType.description")
-      );
-    }
-  }
-
-  private async loadEmojiImage(url: string) {
-    try {
-      return await loadImage(url);
-    } catch {
-      throw new ErrorMessage(
-        (t) => t("errors.invalidBadgeEmoji.title"),
-        (t) => t("errors.invalidBadgeEmoji.description")
-      );
-    }
-  }
-
-  private async loadTwemojiImage(input: string) {
-    const codepoints = this.toTwemojiCodepoints(input);
-    const urls = [...new Set(codepoints)].map((codepoint) => `${TWEMOJI_BASE_URL}/${codepoint}.png`);
-
-    return Promise.any(urls.map((url) => loadImage(url))).catch(() => {
-      throw new ErrorMessage(
-        (t) => t("errors.invalidBadgeEmoji.title"),
-        (t) => t("errors.invalidBadgeEmoji.description")
-      );
-    });
-  }
-
-  private toTwemojiCodepoints(input: string) {
-    const codepoints = [...input]
-      .map((char) => char.codePointAt(0)?.toString(16))
-      .filter((codepoint): codepoint is string => !!codepoint);
-
-    const emojiPresentationCodepoints = codepoints.filter((codepoint) => !["200d", "fe0f"].includes(codepoint));
-
-    if (emojiPresentationCodepoints.length === 0) {
-      throw new ErrorMessage(
-        (t) => t("errors.invalidBadgeEmoji.title"),
-        (t) => t("errors.invalidBadgeEmoji.description")
-      );
-    }
-
-    return [
-      codepoints.join("-"),
-      codepoints.filter((codepoint) => codepoint !== "fe0f").join("-"),
-    ];
   }
 
   private async getProfile(t: LocalizeFunction, user: User, badge?: Image | Canvas) {
