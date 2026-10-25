@@ -11,6 +11,7 @@ import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import {
+  FINAL_PRESTIGE_XP,
   RenownUnlock,
   getBounty,
   getLevel,
@@ -167,7 +168,7 @@ export class Pit {
     // XP past the final requirement would push the progress bar over 100%
     this.progression = new Progression(
       Math.min(this.exp, prestigeReq) - lastPrestigeReq,
-      Math.min(prestigeReq - lastPrestigeReq, 11_787_293_080)
+      Math.min(prestigeReq - lastPrestigeReq, FINAL_PRESTIGE_XP)
     );
 
     this.levelFormatted = getLevelFormatted(level, prestige);
