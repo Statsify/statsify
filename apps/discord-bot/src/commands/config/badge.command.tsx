@@ -105,7 +105,10 @@ export class BadgeCommand {
     return this.run(context, "reset");
   }
 
-  private async run(context: CommandContext, mode: "view" | "reset"): Promise<IMessage> {
+  private async run(
+    context: CommandContext,
+    mode: "view" | "reset"
+  ): Promise<IMessage> {
     const userId = context.getInteraction().getUserId();
     const user = context.getUser();
     const t = context.t();
