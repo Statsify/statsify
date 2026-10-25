@@ -16,7 +16,7 @@ import { Link } from "@tanstack/react-router";
 import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
-import { RefreshBar, useNow } from "./refresh-bar";
+import { RefreshBar, savedDate, useNow } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust } from "~/components/ui/skin";
 import { Twitter } from "~/components/icons/twitter";
@@ -369,18 +369,22 @@ function LoginPanel({ page, className }: { page: PlayerPage; className?: string 
  * Status and logins as the card's header lists them: in the nametag from `md`, in their own panel on phones. The last
  * game links to its page where the player has one for it.
  */
-function LoginList({ page: { status, games, username }, className }: { page: PlayerPage; className?: string }) {
+function LoginList({ page: { uuid, status, games, username, updatedAt, expiresAt }, className }: { page: PlayerPage; className?: string }) {
   const { t } = useTranslation();
   const lastGame = status.lastGame && <MinecraftText>{status.lastGame.name}</MinecraftText>;
   const lastGamePage = games.find((game) => game.id === status.lastGame?.id)?.page;
 
   return (
     <dl className={cn("flex flex-col gap-2", className)}>
-      <InlineStat
-        label={t("default:stats.status")}
-        value={status.online ? t("default:stats.online") : t("default:stats.offline")}
-        color={status.online ? "text-mc-green" : "text-mc-red"}
-      />
+      {status.statusHidden ?
+        <InlineStat label={t("default:stats.status")} value={<HiddenStatus />} color="text-mc-gray" /> :
+        (
+          <InlineStat
+            label={t("default:stats.status")}
+            value={status.online ? <OnlineStatus uuid={uuid} updatedAt={updatedAt} expiresAt={expiresAt} /> : t("default:stats.offline")}
+            color={status.online ? "text-mc-green" : "text-mc-red"}
+          />
+        )}
       <InlineStat label={t("default:stats.firstLogin")} value={<LoginDate ms={status.firstLogin} />} color="text-mc-dark-aqua" />
       <InlineStat label={t("default:stats.lastLogin")} value={<LoginDate ms={status.lastLogin} />} color="text-mc-dark-aqua" />
       <InlineStat label={t("default:stats.logoutTime")} value={<LoginDate ms={status.lastLogout} />} color="text-mc-dark-aqua" />
@@ -396,6 +400,37 @@ function LoginList({ page: { status, games, username }, className }: { page: Pla
       />
     </dl>
   );
+}
+
+/**
+ * "Online" while the save is fresh (until Refresh unlocks); after that, how long ago the save saw them online, with its
+ * full date on hover, focus or tap. Until mount the clock is when the server fetched the page, which the browser gets
+ * with the page's data, so a cached page hydrates to the server's text; the browser's own clock takes over after.
+ */
+function OnlineStatus({ uuid, updatedAt, expiresAt }: { uuid: string; updatedAt: number; expiresAt: number }) {
+  const { t, i18n } = useTranslation();
+  const queryClient = useQueryClient();
+  const now = useNow();
+  const clock = now ?? queryClient.getQueryState(playerPageQuery(uuid).queryKey)?.dataUpdatedAt ?? updatedAt;
+  const online = t("default:stats.online");
+  const ago = clock < expiresAt ? undefined : relativeTime(updatedAt, clock, i18n.language, { style: "narrow" });
+  const date = now === undefined || ago === undefined ? undefined : savedDate(updatedAt, i18n.language);
+
+  return (
+    <Hint full={date} spoken={date && `${online} · ${ago}, ${date}`}>
+      {online}
+      {ago && <span className="text-mc-gray"> · {ago}</span>}
+    </Hint>
+  );
+}
+
+/** Hidden, where the player hides their online status in Hypixel's API settings, which the hint says. */
+function HiddenStatus() {
+  const { t } = useTranslation();
+  const hidden = t("default:stats.hidden");
+  const hint = t("player.statusHidden");
+
+  return <Hint full={hint} spoken={`${hidden}. ${hint}`}>{hidden}</Hint>;
 }
 
 const twoDigits = (value: number) => String(value).padStart(2, "0");
