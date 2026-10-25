@@ -9,24 +9,9 @@
 import type { HistoricalTimeData } from "./components/Historical/Header.js";
 import type { Image } from "skia-canvas";
 import type { Player, User } from "@statsify/schemas";
-import type { StringMap, TFunctionKeys, TOptions } from "i18next";
+import type { LocalizeFunction } from "./localize.js";
 
-interface ILocalizeFunction {
-  <TKeys extends TFunctionKeys = string>(key: TKeys | TKeys[]): string;
-  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
-    key: TKeys | TKeys[],
-    options?: TOptions<TInterpolationMap> & { returnDetails?: true; returnObjects?: true } | string
-  ): string;
-  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
-    key: TKeys | TKeys[],
-    defaultValue?: string,
-    options?: TOptions<TInterpolationMap> | string
-  ): string;
-  (key: number): string;
-}
-
-/** The bot's translator: an i18next `t` that also formats bare numbers, tagged with its locale. */
-export type LocalizeFunction = ILocalizeFunction & { locale: string };
+export type { LocalizeFunction };
 
 export type ProfileTime = "LIVE" | HistoricalTimeData;
 
