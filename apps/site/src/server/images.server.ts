@@ -335,7 +335,7 @@ async function waitForImage(
 
 /**
  * The game page's card: the API checks the game and mode (the page's own rules, so an unfurl exists exactly when the
- * page does), and a game whose card the pool can't draw yet gets the general one.
+ * page does), and a page the bot has no card for (a game's all-time Quests) gets the general one.
  */
 async function gameCard(uuid: string, { game, mode, submode, period }: GameImage): Promise<CardChoice> {
   const page = await rpcServerClient.player.game({ uuid, game, mode: mode ?? undefined, submode: submode ?? undefined, period: period ?? undefined }).catch((error: unknown) => {

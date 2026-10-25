@@ -616,7 +616,7 @@ const LeaderboardGameInputSchema = z.object({
 
 const errors = oc.errors({
   NOT_FOUND: { message: "Player not found" },
-  /** `lookup` only: Hypixel didn't answer, so nothing is known about the name yet. */
+  /** `lookup` and `refresh`: Hypixel didn't answer, so nothing new is known about the player yet. */
   SERVICE_UNAVAILABLE: { message: "Hypixel didn't answer, try again shortly" },
   TOO_MANY_REQUESTS: {
     message: "Too many Hypixel lookups right now, try again shortly",

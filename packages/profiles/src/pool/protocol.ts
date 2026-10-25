@@ -20,10 +20,7 @@ export const IMAGE_VARIANTS = {
 
 export type ImageVariant = keyof typeof IMAGE_VARIANTS;
 
-/**
- * The games whose bot card the pool draws for a site page's unfurl, by their `PlayerStats` key. A game joins once its
- * card lives in this package; the rest unfurl with the general card.
- */
+/** The games whose bot card the pool draws for a site page's unfurl, by their `PlayerStats` key. */
 export const GAME_CARDS = ["bedwars", "uhc", "speeduhc", "walls", "vampirez", "paintball", "quake", "turbokartracers", "buildbattle", "arenabrawl", "pit", "parkour", "skywars", "murdermystery", "copsandcrims", "arcade", "tntgames", "warlords", "woolgames", "megawalls", "blitzsg", "smashheroes", "duels", "quests", "challenges"] as const;
 
 export type GameCard = (typeof GAME_CARDS)[number];
