@@ -37,63 +37,14 @@ export const BEDWARS_MODES = new GameModes([
   { api: "threes", hypixel: "BEDWARS_FOUR_THREE" },
   { api: "fours", hypixel: "BEDWARS_FOUR_FOUR" },
   { api: "4v4", hypixel: "BEDWARS_TWO_FOUR" },
-  {
-    api: "armed",
-    submodes: [
-      { api: "overall" },
-      { api: "doubles" },
-      { api: "fours" },
-    ],
-  },
+  { api: "armed", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
   { api: "castle", hypixel: "BEDWARS_CASTLE" },
-  {
-    api: "lucky",
-    submodes: [
-      { api: "overall" },
-      { api: "doubles" },
-      { api: "fours" },
-    ],
-  },
-  {
-    api: "rush",
-    submodes: [
-      { api: "overall" },
-      { api: "doubles" },
-      { api: "fours" },
-    ],
-  },
-  {
-    api: "swap",
-    submodes: [
-      { api: "overall" },
-      { api: "doubles" },
-      { api: "fours" },
-    ],
-  },
-  {
-    api: "ultimate",
-    submodes: [
-      { api: "overall" },
-      { api: "doubles" },
-      { api: "fours" },
-    ],
-  },
-  {
-    api: "underworld",
-    submodes: [
-      { api: "overall" },
-      { api: "doubles" },
-      { api: "fours" },
-    ],
-  },
-  {
-    api: "voidless",
-    submodes: [
-      { api: "overall" },
-      { api: "doubles" },
-      { api: "fours" },
-    ],
-  },
+  { api: "lucky", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
+  { api: "rush", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
+  { api: "swap", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
+  { api: "ultimate", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
+  { api: "underworld", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
+  { api: "voidless", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
   { api: "oneBlock", hypixel: "BEDWARS_EIGHT_ONE_ONEBLOCK" },
   { api: "challenges" },
 
