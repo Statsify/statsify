@@ -14,6 +14,7 @@ import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinBust } from "~/components/ui/skin";
 import { Spoken } from "~/components/ui/hint";
 import { rememberPlayer } from "./resolve";
+import { searchState } from "~/components/search";
 import { useEffect } from "react";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
@@ -61,7 +62,7 @@ export function ResultCardView({ card }: { card: ResultCard }) {
   const number = (value: number) => <Spoken full={exact(value)}>{n(value)}</Spoken>;
 
   return (
-    <Link to="/{-$locale}/player/$name" params={{ name: card.username }} className="group block">
+    <Link to="/{-$locale}/player/$name" params={{ name: card.username }} state={searchState} className="group block">
       <Box className="transition group-hover:brightness-110 content:flex content:items-center content:gap-4 content:p-3">
         <SkinBust uuid={card.uuid} className="h-24 w-16 shrink-0 sm:h-32 sm:w-20" />
         <div className="flex min-w-0 grow flex-col gap-2">

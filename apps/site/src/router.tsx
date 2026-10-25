@@ -50,4 +50,9 @@ declare module "@tanstack/react-router" {
     /** The URL of the route's tab icon (a player's head, a game's icon) from its loader's data; nothing for the logo. */
     tabIcon?: (loaderData: unknown) => string | undefined;
   }
+
+  interface HistoryState {
+    /** When the site's search opened the page (`Date.now()`), so its player updates as a bot command would. */
+    searchedAt?: number;
+  }
 }

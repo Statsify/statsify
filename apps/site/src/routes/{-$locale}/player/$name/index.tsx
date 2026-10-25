@@ -42,6 +42,8 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
       throw redirect({
         to: "/{-$locale}/player/$name",
         params: { name: identity.username },
+        // A search's history state goes along, so a typed name in another casing still updates as a bot command would.
+        state: true,
         statusCode: 301,
         headers: { "Cache-Control": "public, max-age=3600", "CDN-Cache-Control": "max-age=3600" },
       });

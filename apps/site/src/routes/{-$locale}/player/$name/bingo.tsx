@@ -44,6 +44,8 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
         to: "/{-$locale}/player/$name/bingo",
         params: { name: player.username },
         search: true,
+        // A search's history state goes along, as on the player page.
+        state: true,
         statusCode: 301,
         headers: { "Cache-Control": "public, max-age=3600", "CDN-Cache-Control": "max-age=3600" },
       });

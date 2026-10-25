@@ -66,6 +66,8 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
         to: "/{-$locale}/player/$name/$game",
         params: { name: identity.username, game },
         search: { mode: deps.mode, submode: deps.submode, period: deps.period },
+        // A search's history state goes along, as on the player page; so do the redirects below.
+        state: true,
         statusCode: 301,
         headers: REDIRECT_HEADERS,
       });
@@ -97,6 +99,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
           to: "/{-$locale}/player/$name/$game",
           params: { name: identity.username, game: key },
           search: { mode: deps.mode, submode: deps.submode, period: deps.period },
+          state: true,
           statusCode: 301,
           headers: REDIRECT_HEADERS,
         });
@@ -118,6 +121,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
         to: "/{-$locale}/player/$name/$game",
         params: { name: identity.username, game },
         search: { mode: modeSearch(page, page.mode), submode: submodeSearch(page, page.submode), period: periodSearch(page, page.period) },
+        state: true,
         statusCode: 301,
         headers: REDIRECT_HEADERS,
       });

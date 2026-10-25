@@ -83,21 +83,27 @@ function usePlayerSuggestions(input: string, focused: boolean, skipEmpty: boolea
   );
 }
 
+/**
+ * The history state of a page the search opens: its player updates as for a bot command (`RefreshBar`). Not in the
+ * URL, so a shared link doesn't.
+ */
+export const searchState = () => ({ searchedAt: Date.now() });
+
 function useSearchNavigation(target: SearchTarget) {
   const navigate = useNavigate();
 
   return (name: string) => {
     if (typeof target === "object") {
-      return navigate({ to: "/{-$locale}/player/$name/$game", params: { name, game: target.game }, search: target.search });
+      return navigate({ to: "/{-$locale}/player/$name/$game", params: { name, game: target.game }, search: target.search, state: searchState });
     }
 
     switch (target) {
       case "bingo":
-        return navigate({ to: "/{-$locale}/player/$name/bingo", params: { name } });
+        return navigate({ to: "/{-$locale}/player/$name/bingo", params: { name }, state: searchState });
       case "results":
-        return navigate({ to: "/{-$locale}/player", search: { q: name } });
+        return navigate({ to: "/{-$locale}/player", search: { q: name }, state: searchState });
       case "player":
-        return navigate({ to: "/{-$locale}/player/$name", params: { name } });
+        return navigate({ to: "/{-$locale}/player/$name", params: { name }, state: searchState });
     }
   };
 }
@@ -368,6 +374,7 @@ function SearchPlayer({
         to="/{-$locale}/player/$name/$game"
         params={{ name: player, game: target.game }}
         search={target.search}
+        state={searchState}
         onClick={onPick}
         aria-selected={selected}
         className={className}
@@ -385,6 +392,7 @@ function SearchPlayer({
         tabIndex={-1}
         to="/{-$locale}/player/$name/bingo"
         params={{ name: player }}
+        state={searchState}
         onClick={onPick}
         aria-selected={selected}
         className={className}
@@ -401,6 +409,7 @@ function SearchPlayer({
       tabIndex={-1}
       to="/{-$locale}/player/$name"
       params={{ name: player }}
+      state={searchState}
       onClick={onPick}
       aria-selected={selected}
       className={className}
