@@ -34,7 +34,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
     const player = await loadBingoPlayer(context.queryClient, params.name);
 
     if (!player) {
-      cacheNotFoundResponse("max-age=300");
+      cacheNotFoundResponse();
       throw notFound();
     }
 

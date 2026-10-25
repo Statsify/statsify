@@ -14,7 +14,7 @@ import {
   pageCard,
 } from "@statsify/profiles/pool";
 import { ORPCError } from "@orpc/client";
-import { cacheHeaders } from "~/lib/cache";
+import { NOT_FOUND_EDGE, NO_STORE, cacheHeaders } from "~/lib/cache";
 import { compactUuid } from "~/lib/uuid";
 import { createRequire } from "node:module";
 import { join } from "node:path";
@@ -99,8 +99,6 @@ const RELEASE_LOCK = `if redis.call("get", KEYS[1]) == ARGV[1] then return redis
  */
 const RENDER_QUEUE_LIMIT = 48;
 
-const NO_STORE = { "Cache-Control": "no-store" };
-
 /** How an image route caches. */
 export interface ImagePolicy {
   /** Headers on a rendered image. */
@@ -149,7 +147,7 @@ let pool: Promise<RenderPool> | undefined;
 let loading = 0;
 const placeholders = new Map<ImageVariant, Promise<Uint8Array<ArrayBuffer>>>();
 
-const NOT_FOUND_HEADERS = cacheHeaders("max-age=300");
+const NOT_FOUND_HEADERS = cacheHeaders(NOT_FOUND_EDGE);
 
 /** The `ETag` of a player image: its `updatedAt`, which only the player page's refresh action changes. */
 const etagOf = (updatedAt: number) => `"${updatedAt}"`;

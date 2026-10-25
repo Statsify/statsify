@@ -63,7 +63,7 @@ export async function loadLeaderboardGame(key: string): Promise<LeaderboardGame>
     if (!(error instanceof ORPCError && error.code === "NOT_FOUND")) throw error;
   }
 
-  cacheNotFoundResponse("max-age=300");
+  cacheNotFoundResponse();
   throw notFound();
 }
 
@@ -137,7 +137,7 @@ async function requirePage(input: PageQuery): Promise<LeaderboardPage> {
   const page = await fetchPage(input);
   if (!page) {
     // Unknown leaderboards are cached like unknown players.
-    cacheNotFoundResponse("max-age=300");
+    cacheNotFoundResponse();
     throw notFound();
   }
   return page;

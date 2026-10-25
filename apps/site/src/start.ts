@@ -13,6 +13,7 @@ import {
   createServerOnlyFn,
   createStart,
 } from "@tanstack/react-start";
+import { NO_STORE_EDGE, RETRY_AFTER_SECONDS } from "~/lib/cache";
 import { captureServerError, ensureServerSentry } from "~/server/sentry.server";
 import { redirectFor } from "~/lib/redirects";
 import { sentryGlobalFunctionMiddleware, sentryGlobalRequestMiddleware } from "@sentry/tanstackstart-react";
@@ -65,9 +66,6 @@ const SECURITY_HEADERS = {
   "Content-Security-Policy": "frame-ancestors 'none'",
 };
 
-/** How long a visitor should wait after a server route failed. */
-const RETRY_AFTER_SECONDS = 30;
-
 /**
  * Errors never reach the edge cache: a 5xx or 429 replaces the route's `CDN-Cache-Control` with
  * `no-store`, so a deploy blip or an exhausted API key isn't pinned at Cloudflare. A server route that throws (an
@@ -91,8 +89,7 @@ const responseHeaders = createMiddleware({ type: "request" }).server(async ({ ne
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) response.headers.set(name, value);
 
   if (response.status >= 500 || response.status === 429 || handlerType === "serverFn") {
-    response.headers.set("Cache-Control", "no-store");
-    response.headers.set("CDN-Cache-Control", "no-store");
+    for (const [name, value] of Object.entries(NO_STORE_EDGE)) response.headers.set(name, value);
   }
 
   return result ? { ...result, response } : response;

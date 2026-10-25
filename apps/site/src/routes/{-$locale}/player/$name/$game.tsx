@@ -54,7 +54,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const identity = await ensurePlayer(context.queryClient, params.name);
 
     if (!identity) {
-      cacheNotFoundResponse("max-age=300");
+      cacheNotFoundResponse();
       throw notFound({ data: { player: true } satisfies Missing });
     }
 
@@ -105,7 +105,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
         });
       }
 
-      cacheNotFoundResponse("max-age=300");
+      cacheNotFoundResponse();
       throw notFound({ data: { player: false } satisfies Missing });
     }
 

@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { NO_STORE, RETRY_AFTER_SECONDS } from "~/lib/cache";
 import { compactUuid } from "~/lib/uuid";
 import { UsernameSchema } from "@statsify/contract";
 import { siteConfig } from "./config.server";
@@ -21,7 +22,7 @@ export async function proxySkin(
 ): Promise<Response> {
   const uuid = search.get("uuid");
   if (!uuid || !isPageQuery(uuid, search, fixed)) {
-    return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
+    return new Response(null, { status: 404, headers: NO_STORE });
   }
 
   return proxy(path, { uuid, ...fixed });
@@ -48,12 +49,12 @@ async function proxy(path: string, params: Record<string, string>): Promise<Resp
   // browsers back off.
   if (!upstream || upstream.status === 429 || upstream.status >= 500) {
     await upstream?.body?.cancel();
-    return new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "Retry-After": "30" } });
+    return new Response(null, { status: 503, headers: { ...NO_STORE, "Retry-After": String(RETRY_AFTER_SECONDS) } });
   }
 
   if (!upstream.ok) {
     await upstream.body?.cancel();
-    return new Response(null, { status: upstream.status === 404 ? 404 : 502, headers: { "Cache-Control": "no-store" } });
+    return new Response(null, { status: upstream.status === 404 ? 404 : 502, headers: NO_STORE });
   }
 
   const model = upstream.headers.get("X-Skin-Model");

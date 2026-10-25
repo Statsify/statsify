@@ -32,7 +32,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
 
     if (!identity) {
       // Five minutes at the edge. A lookup that finds the player navigates in the browser, so it never sees this page.
-      cacheNotFoundResponse("max-age=300");
+      cacheNotFoundResponse();
       throw notFound();
     }
 
