@@ -9,16 +9,16 @@
 /* eslint-disable react/no-unescaped-entities -- English reading text, with its apostrophes and quotes as written */
 
 import { KeyTable, LegalPage, type LegalSection, List, Paragraph, Subheading, TextEmail, TextLink } from "./text-page";
+import { useTranslation } from "react-i18next";
+import type { ReactNode } from "react";
 
 /** When the policy last changed. */
 const UPDATED = "2026-10-22";
 
-const EMAIL = "contact@statsify.net";
-const mail = <TextEmail email={EMAIL} />;
 const discord = <TextLink href="/discord">Statsify Discord</TextLink>;
 
 // One policy for the bot and the site.
-const SECTIONS: LegalSection[] = [
+const sections = (mail: ReactNode): LegalSection[] => [
   {
     id: "who",
     title: "Who's Responsible",
@@ -196,6 +196,8 @@ const SECTIONS: LegalSection[] = [
 ];
 
 export function PrivacyPage() {
+  const { t } = useTranslation();
+
   return (
     <LegalPage
       title="Privacy Policy"
@@ -207,7 +209,7 @@ export function PrivacyPage() {
           <TextLink to="/{-$locale}/terms">Terms of Service</TextLink>.
         </Paragraph>
       }
-      sections={SECTIONS}
+      sections={sections(<TextEmail email={t("footer.email")} />)}
     />
   );
 }

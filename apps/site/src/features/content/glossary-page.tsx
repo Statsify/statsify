@@ -13,11 +13,9 @@ import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Trans, useTranslation } from "react-i18next";
 import { type ReactNode, useState } from "react";
+import { LABEL_NAMESPACES } from "~/i18n/i18n";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import type { GlossaryGroup, GlossaryItem } from "./content-data";
-
-/** A label's words: the bot's in `default.json`, or the site's for a stat the bot doesn't show. */
-const LABEL_NAMESPACES = ["default", "site"];
 
 const TEXT = "max-w-[33em] font-sans text-16 leading-[1.6] font-medium text-mc-gray lg:text-20";
 

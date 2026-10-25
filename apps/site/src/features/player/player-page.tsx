@@ -33,6 +33,7 @@ import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { Suspense, lazy, useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { LABEL_NAMESPACES } from "~/i18n/i18n";
 import type { ComponentType, ReactNode, Ref } from "react";
 import type { GameSummary, PlayerPage } from "@statsify/contract";
 
@@ -516,7 +517,7 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
     >
       <dl className="grid grid-cols-snap-2 gap-x-2 gap-y-4">
         {game.rows.map((row) => {
-          const label = t(`stats.${row.key}`, { ns: ["default", "site"] });
+          const label = t(`stats.${row.key}`, { ns: LABEL_NAMESPACES });
           const full = statName(`stats.${row.key}`);
           const exactValue = typeof row.value === "number" ? exact(row.value) : undefined;
           // Text the API formatted takes the stat's colour, unless it brings its own (Layers' 74/100).

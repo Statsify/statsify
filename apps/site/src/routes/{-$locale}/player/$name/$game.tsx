@@ -17,7 +17,7 @@ import { orNull } from "~/lib/orpc";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
-import { createI18n } from "~/i18n/i18n";
+import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { formatNumber } from "~/i18n/format";
 import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
 import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "~/features/game/game-data";
@@ -177,7 +177,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const image = `/og/${uuid}.png?${unfurlQuery}`;
 
     // A link preview without the card still shows the numbers: the stats' labels as the page shows them, in English.
-    const label = (key: string, params?: Record<string, string>) => words.t(key, { ns: ["default", "site"], ...params });
+    const label = (key: string, params?: Record<string, string>) => words.t(key, { ns: LABEL_NAMESPACES, ...params });
     const parts = [
       ...(headline.level ? [statText(label(headline.level.label), headline.level.value)] : []),
       ...headline.cells.map((cell) =>

@@ -32,15 +32,13 @@ import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { refreshGame } from "~/features/player/player-actions";
 import { addRecentPlayer } from "~/features/player/recent";
+import { LABEL_NAMESPACES } from "~/i18n/i18n";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { GamePage, StatCell as Stat, StatSection } from "@statsify/contract";
 
 type Level = NonNullable<GamePage["level"]>;
-
-/** A stat's label: the bot's word in `default.json`, or the site's own for a stat the bot doesn't show. */
-const LABEL_NAMESPACES = ["default", "site"];
 
 /** On a phone an odd last cell spans its row, centred, rather than sitting alone in the first column. */
 const ODD_LAST = "max-sm:[&>:last-child:nth-child(odd)]:col-span-2";

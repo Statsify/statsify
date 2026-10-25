@@ -15,7 +15,7 @@ import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/pl
 import { cacheNotFoundResponse } from "~/lib/response";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
-import { createI18n } from "~/i18n/i18n";
+import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { SEARCH_DESCRIPTION_MAX, breadcrumbs, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
 import { ensurePlayer, playerPageQuery } from "~/features/player/resolve";
@@ -67,7 +67,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
     const name = possessive(username);
     // The network level has no formatted form (the card prints a plain number), so it takes a game level's brackets.
     const title = words.t("meta.levelFirst", { level: `[${Math.floor(headline.level)}]`, title: words.t("meta.player.title", { name }) });
-    const label = (key: string) => words.t(`stats.${key}`, { ns: ["default", "site"] });
+    const label = (key: string) => words.t(`stats.${key}`, { ns: LABEL_NAMESPACES });
     const parts = [
       statText(label("networkLevel"), headline.level),
       ...headline.games.map(({ name, level, rows }) => {

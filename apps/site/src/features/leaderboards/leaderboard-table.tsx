@@ -16,6 +16,7 @@ import { formatPosition } from "@statsify/profiles/format-position";
 import { StatNumber, useStatName } from "~/components/ui/stat";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { Trans, useTranslation } from "react-i18next";
+import { LABEL_NAMESPACES } from "~/i18n/i18n";
 import { type AroundMiss, PAGE_SIZE } from "./leaderboard-data";
 import type { ReactNode } from "react";
 import type { LeaderboardColumn, LeaderboardPage } from "@statsify/contract";
@@ -61,8 +62,6 @@ export function useHighlightScroll<T extends HTMLElement>(page: LeaderboardPage)
 
   return ref;
 }
-
-const LABEL_NAMESPACES = ["default", "site"];
 
 /**
  * A column's label: the catalog's word for the stat, or the leaderboard's own name for the column where the catalog has
