@@ -84,7 +84,7 @@ export const QUESTS_PAGE: GameLayout = {
   overview: OVERVIEW,
   periods: (mode) => (MONTHLY.has(mode) ? QUEST_PERIODS : QUEST_PERIODS.filter((period) => period !== "monthly")),
   periodStart,
-  page: (mode, _submode, period = "overall") =>
+  page: (mode, _submode, period) =>
     mode === "overall" ? overall(period as QuestPeriod) : game(mode as GameId, period as QuestPeriod),
   played: ({ quests }) => quests.total > 0,
 };

@@ -251,7 +251,7 @@ export const ARCADE_PAGE: GameLayout = {
   overview: ["coins", "coinConversions", "wins"],
   page: (mode, submode) => {
     if (mode === "overall") return OVERALL;
-    if (mode === "zombies") return zombies(submode ?? "overall");
+    if (mode === "zombies") return zombies(submode!);
     return PAGES[mode];
   },
   // By wins, which most of its games store, where Overall's list reads them; Seasonal's four games added up, since its

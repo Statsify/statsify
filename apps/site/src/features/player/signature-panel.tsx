@@ -32,7 +32,7 @@ export function SignaturePanel({ page }: { page: PlayerPage }) {
   const { origin } = localeRoute.useLoaderData();
 
   // The undashed UUID, so every snippet names the same URL (and one edge cache entry).
-  const uuid = compactUuid(page.uuid) ?? page.uuid;
+  const uuid = compactUuid(page.uuid)!;
   const image = `${origin}/sig/${uuid}.png`;
   const profile = `${origin}/player/${page.username}`;
   const alt = t("player.signature.alt", { name: page.username });

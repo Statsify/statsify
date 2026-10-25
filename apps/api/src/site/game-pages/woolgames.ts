@@ -81,7 +81,7 @@ export const WOOL_GAMES_PAGE: GameLayout = {
   // its Overall.
   mostPlayed: { by: "winsLosses", place: (mode) => (mode === "woolwars" ? "woolwars.overall" : mode) },
   page: (mode, submode) => {
-    if (mode === "woolwars") return woolWars(submode ?? "overall");
+    if (mode === "woolwars") return woolWars(submode!);
     return mode === "sheepwars" ? SHEEP_WARS : CAPTURE_THE_WOOL;
   },
 };
