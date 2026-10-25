@@ -174,7 +174,7 @@ export class SkyWars {
     );
 
     this.mini = new SkyWarsMini(data);
-    this.mini.kit = parseKit(data.activeKit_SOLO);
+    this.mini.kit = parseKit(data.activeKit_MINI);
 
     this.challenges = new ChallengesSkyWars(data);
   }

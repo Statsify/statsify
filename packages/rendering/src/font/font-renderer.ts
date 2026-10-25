@@ -129,7 +129,7 @@ export class FontRenderer {
 
     if (!text) return [{ ...defaultState, text: "" }];
 
-    let state = defaultState;
+    let state = Object.assign({}, defaultState);
     const parts = (text.startsWith("§") ? text : `§f${text}`).split("§");
 
     const nodes: TextNode[] = [];
@@ -160,7 +160,7 @@ export class FontRenderer {
 
       if (matches) text = text.slice(matches[0].length);
 
-      Object.assign(state, effect);
+      state = Object.assign({}, state, effect);
 
       if (text.length === 0) continue;
 

@@ -397,7 +397,6 @@ export class UHCDuels {
       data.uhc_duel_golden_apples_eaten,
       data.uhc_doubles_golden_apples_eaten,
       data.uhc_four_golden_apples_eaten,
-      data.uhc_meetu_golden_apples_eaten,
     );
 
     const {

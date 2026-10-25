@@ -14,7 +14,7 @@ import {
   MojangPlayerArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
-import { minecraftHeadUrl } from "#lib/minecraft-head";
+import { minecraftHeadAttachment } from "#lib/minecraft-head";
 
 @Command({ description: (t) => t("commands.uuid"), args: [new MojangPlayerArgument()] })
 export class UUIDCommand {
@@ -30,13 +30,15 @@ export class UUIDCommand {
 
     const dashedUuid = `${uuid.slice(0, 8)}-${uuid.slice(8, 12)}-${uuid.slice(12, 16)}-${uuid.slice(16, 20)}-${uuid.slice(20)}`;
 
+    const head = await minecraftHeadAttachment(this.apiService, uuid);
+
     const embed = new EmbedBuilder()
       .field((t) => t("minecraft.username"), `\`${username}\``)
       .field((t) => t("minecraft.uuid"), `\`${dashedUuid}\``)
       .field((t) => t("minecraft.trimmedUUID"), `\`${uuid}\``)
       .color(STATUS_COLORS.info)
-      .thumbnail(minecraftHeadUrl(uuid));
+      .thumbnail(`attachment://${head.name}`);
 
-    return { embeds: [embed] };
+    return { embeds: [embed], files: [head] };
   }
 }
