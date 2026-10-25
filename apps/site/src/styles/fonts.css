@@ -1,6 +1,10 @@
-/* Minecraft: everything a card could show (titles, labels, values, nav, buttons, inputs), at pixel-grid sizes only. */
+/* Minecraft: everything a card could show (titles, labels, values, nav, buttons, inputs), at pixel-grid sizes only.
+   The font's descent is empty, so every Minecraft face moves 0.05em of it above the baseline: the letters and their
+   shadow sit in the middle of the line, which stays as tall, and the whole-pixel rounding keeps them sharp. */
 @font-face {
   font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
   src: url("/fonts/Minecraft.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
@@ -9,6 +13,8 @@
 
 @font-face {
   font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
   src: url("/fonts/Minecraft Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
@@ -17,6 +23,8 @@
 
 @font-face {
   font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
   src: url("/fonts/Minecraft Italic.ttf") format("truetype");
   font-weight: 400;
   font-style: italic;
@@ -25,10 +33,350 @@
 
 @font-face {
   font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
   src: url("/fonts/Minecraft Bold Italic.ttf") format("truetype");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
+}
+
+/*
+ * GNU Unifont 15.0.06 (OFL): the characters Minecraft.ttf lacks (the newer emblems and title symbols, Latin
+ * Extended, Cyrillic, Greek, Thai, and the CJK and Hangul the locales use), drawn on its grid the way it draws the
+ * Unifont glyphs it has: a Unifont pixel is 64 units (half a letter pixel), the box is the ink plus one letter pixel,
+ * and bold and italic are the game's (a copy half a letter pixel to the right; rows sheared by a quarter pixel).
+ * Built outside the repo with fontTools; no slice overlaps Minecraft.ttf, and each downloads only when a page uses
+ * a character in its range. The CJK, Hangul and Latin Extended slices claim whole blocks, less the characters
+ * Minecraft.ttf or the symbols slice draws, which keeps this file small; a character a slice lacks falls through to
+ * the sans fonts.
+ */
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/Unifont-symbols.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+00A0, U+0294-0296, U+035C, U+0489, U+10DA, U+12DE, U+2013-2014, U+2019, U+2022, U+202F, U+203F,
+    U+2212, U+22C6, U+235F, U+2501, U+251B, U+2533, U+253B, U+25E1, U+2601, U+2605-2606, U+263C, U+2657, U+265D-265E,
+    U+266A-266B, U+2694, U+26B0, U+2726, U+272D, U+2733-2734, U+2737, U+273A, U+273C, U+2741, U+2748, U+275A, U+2763,
+    U+2766, U+279C, U+27A1, U+30C4, U+30D8, U+5F61;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBold-symbols.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+00A0, U+0294-0296, U+035C, U+0489, U+10DA, U+12DE, U+2013-2014, U+2019, U+2022, U+202F, U+203F,
+    U+2212, U+22C6, U+235F, U+2501, U+251B, U+2533, U+253B, U+25E1, U+2601, U+2605-2606, U+263C, U+2657, U+265D-265E,
+    U+266A-266B, U+2694, U+26B0, U+2726, U+272D, U+2733-2734, U+2737, U+273A, U+273C, U+2741, U+2748, U+275A, U+2763,
+    U+2766, U+279C, U+27A1, U+30C4, U+30D8, U+5F61;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontItalic-symbols.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+00A0, U+0294-0296, U+035C, U+0489, U+10DA, U+12DE, U+2013-2014, U+2019, U+2022, U+202F, U+203F,
+    U+2212, U+22C6, U+235F, U+2501, U+251B, U+2533, U+253B, U+25E1, U+2601, U+2605-2606, U+263C, U+2657, U+265D-265E,
+    U+266A-266B, U+2694, U+26B0, U+2726, U+272D, U+2733-2734, U+2737, U+273A, U+273C, U+2741, U+2748, U+275A, U+2763,
+    U+2766, U+279C, U+27A1, U+30C4, U+30D8, U+5F61;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBoldItalic-symbols.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+00A0, U+0294-0296, U+035C, U+0489, U+10DA, U+12DE, U+2013-2014, U+2019, U+2022, U+202F, U+203F,
+    U+2212, U+22C6, U+235F, U+2501, U+251B, U+2533, U+253B, U+25E1, U+2601, U+2605-2606, U+263C, U+2657, U+265D-265E,
+    U+266A-266B, U+2694, U+26B0, U+2726, U+272D, U+2733-2734, U+2737, U+273A, U+273C, U+2741, U+2748, U+275A, U+2763,
+    U+2766, U+279C, U+27A1, U+30C4, U+30D8, U+5F61;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/Unifont-latin-ext.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+00A2, U+00A4-00A6, U+00A8, U+00AD, U+00AF, U+00B3-00B6, U+00B8-00B9, U+00BE, U+00C3, U+00CC,
+    U+00CE-00D0, U+00D2, U+00D9, U+00DB, U+00DD-00DE, U+00F0, U+00FD-00FE, U+0100-024F, U+1E00-1EFF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBold-latin-ext.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+00A2, U+00A4-00A6, U+00A8, U+00AD, U+00AF, U+00B3-00B6, U+00B8-00B9, U+00BE, U+00C3, U+00CC,
+    U+00CE-00D0, U+00D2, U+00D9, U+00DB, U+00DD-00DE, U+00F0, U+00FD-00FE, U+0100-024F, U+1E00-1EFF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontItalic-latin-ext.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+00A2, U+00A4-00A6, U+00A8, U+00AD, U+00AF, U+00B3-00B6, U+00B8-00B9, U+00BE, U+00C3, U+00CC,
+    U+00CE-00D0, U+00D2, U+00D9, U+00DB, U+00DD-00DE, U+00F0, U+00FD-00FE, U+0100-024F, U+1E00-1EFF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBoldItalic-latin-ext.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+00A2, U+00A4-00A6, U+00A8, U+00AD, U+00AF, U+00B3-00B6, U+00B8-00B9, U+00BE, U+00C3, U+00CC,
+    U+00CE-00D0, U+00D2, U+00D9, U+00DB, U+00DD-00DE, U+00F0, U+00FD-00FE, U+0100-024F, U+1E00-1EFF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/Unifont-cyrillic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0400-045F, U+0490-0491, U+2116;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBold-cyrillic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0400-045F, U+0490-0491, U+2116;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontItalic-cyrillic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0400-045F, U+0490-0491, U+2116;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBoldItalic-cyrillic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0400-045F, U+0490-0491, U+2116;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/Unifont-greek.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-0392, U+0394-0397, U+0399-03A1, U+03A4-03A5,
+    U+03A7-03A8, U+03AA-03B0, U+03B3, U+03B5-03BB, U+03BD-03BF, U+03C1-03C2, U+03C5-03FF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBold-greek.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-0392, U+0394-0397, U+0399-03A1, U+03A4-03A5,
+    U+03A7-03A8, U+03AA-03B0, U+03B3, U+03B5-03BB, U+03BD-03BF, U+03C1-03C2, U+03C5-03FF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontItalic-greek.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-0392, U+0394-0397, U+0399-03A1, U+03A4-03A5,
+    U+03A7-03A8, U+03AA-03B0, U+03B3, U+03B5-03BB, U+03BD-03BF, U+03C1-03C2, U+03C5-03FF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBoldItalic-greek.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-0392, U+0394-0397, U+0399-03A1, U+03A4-03A5,
+    U+03A7-03A8, U+03AA-03B0, U+03B3, U+03B5-03BB, U+03BD-03BF, U+03C1-03C2, U+03C5-03FF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/Unifont-thai.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0E01-0E3A, U+0E3F-0E5B;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBold-thai.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0E01-0E3A, U+0E3F-0E5B;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontItalic-thai.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0E01-0E3A, U+0E3F-0E5B;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBoldItalic-thai.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0E01-0E3A, U+0E3F-0E5B;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/Unifont-cjk.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+3000-3063, U+3065-30C3, U+30C5-30D7, U+30D9-30FF, U+4E00-5F60, U+5F62-9FFF, U+FF00-FFEF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBold-cjk.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+3000-3063, U+3065-30C3, U+30C5-30D7, U+30D9-30FF, U+4E00-5F60, U+5F62-9FFF, U+FF00-FFEF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontItalic-cjk.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+3000-3063, U+3065-30C3, U+30C5-30D7, U+30D9-30FF, U+4E00-5F60, U+5F62-9FFF, U+FF00-FFEF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBoldItalic-cjk.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+3000-3063, U+3065-30C3, U+30C5-30D7, U+30D9-30FF, U+4E00-5F60, U+5F62-9FFF, U+FF00-FFEF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/Unifont-hangul.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+AC00-D7AF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBold-hangul.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+AC00-D7AF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontItalic-hangul.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+AC00-D7AF;
+}
+
+@font-face {
+  font-family: "Minecraft";
+  ascent-override: 54.45%;
+  descent-override: 5.3%;
+  src: url("/fonts/UnifontBoldItalic-hangul.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+AC00-D7AF;
 }
 
 /*

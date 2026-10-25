@@ -221,7 +221,7 @@ function TypeSection() {
             Minecraft {px} <span className="font-bold">Bold {px}</span>
           </p>
         ))}
-        {/* Glyphs the pixel font lacks come from the sans stack. */}
+        {/* Glyphs the pixel font lacks come from its Unifont slices, and anything they lack from the sans stack. */}
         <p className="text-mc-1">Fallback: Łódź, Ğ, Привет, Ελλάδα, ไทย, 你好</p>
       </div>
       <div className="flex flex-col gap-2">

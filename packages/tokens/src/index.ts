@@ -98,7 +98,7 @@ const SANS = [
  */
 export const type = {
   families: {
-    // A glyph the pixel font lacks (Cyrillic, Greek, CJK, Thai and most of Latin Extended) comes from the sans stack.
+    // A glyph neither the pixel font nor its Unifont slices have comes from the sans stack.
     minecraft: ["\"Minecraft\"", ...SANS].join(", "),
     sans: SANS.join(", "),
   },
