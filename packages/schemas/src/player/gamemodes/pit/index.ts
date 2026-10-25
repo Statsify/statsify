@@ -68,6 +68,9 @@ export class Pit {
   @Field()
   public progression: Progression;
 
+  @Field()
+  public goldProgression: Progression;
+
   @Field({
     leaderboard: { additionalFields: ["this.goldEarned"] },
     historical: { enabled: false },
@@ -79,15 +82,6 @@ export class Pit {
     historical: { additionalFields: [] },
   })
   public goldEarned: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public prestigeGold: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public goldRequirement: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public goldProgression: Progression;
 
   @Field({ historical: { enabled: false } })
   public renown: number;
@@ -114,41 +108,26 @@ export class Pit {
   public assists: number;
 
   @Field({
-    leaderboard: {
-      name: "Tier I Mystics Enchanted",
-      fieldName: "Mystics Enchanted",
-    },
+    leaderboard: { name: "Tier I Mystics Enchanted", fieldName: "Mystics Enchanted" },
   })
   public tier1MysticsEnchanted: number;
 
   @Field({
-    leaderboard: {
-      name: "Tier II Mystics Enchanted",
-      fieldName: "Mystics Enchanted",
-    },
+    leaderboard: { name: "Tier II Mystics Enchanted", fieldName: "Mystics Enchanted" },
   })
   public tier2MysticsEnchanted: number;
 
   @Field({
-    leaderboard: {
-      name: "Tier III Mystics Enchanted",
-      fieldName: "Mystics Enchanted",
-    },
+    leaderboard: { name: "Tier III Mystics Enchanted", fieldName: "Mystics Enchanted" },
   })
   public tier3MysticsEnchanted: number;
 
   @Field({
-    leaderboard: {
-      name: "Total Mystics Enchanted",
-      fieldName: "Mystics Enchanted",
-    },
+    leaderboard: { name: "Total Mystics Enchanted", fieldName: "Mystics Enchanted" },
   })
   public totalMysticsEnchanted: number;
 
-  @Field({
-    leaderboard: { formatter: formatTime },
-    historical: { enabled: false },
-  })
+  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
   public playtime: number;
 
   @Field({ historical: { enabled: false } })
@@ -176,14 +155,8 @@ export class Pit {
 
     const darkPantsCreated = data.dark_pants_crated ?? 0;
     const renownUnlocks = (profile.renown_unlocks ?? []) as RenownUnlock[];
-    const renownShopCost = getRenownShopCost(
-      renownUnlocks.filter((unlock) => unlock.key !== "unlock_golden_pickaxe"),
-    );
-    this.lifetimeRenown = add(
-      renownShopCost,
-      this.renown,
-      2 * darkPantsCreated,
-    );
+    const renownShopCost = getRenownShopCost(renownUnlocks.filter((unlock) => unlock.key !== "unlock_golden_pickaxe"));
+    this.lifetimeRenown = add(renownShopCost, this.renown, 2 * darkPantsCreated);
 
     this.bounty = getBounty(profile.bounties);
 
@@ -193,25 +166,19 @@ export class Pit {
     this.trueLevel = prestige * 120 + level;
 
     const lastPrestigeReq = getPrestigeReq(prestige - 1);
-    const prestigeGoldReq = getPrestigeGoldReq(prestige);
-
-    this.prestigeGold = profile[`cash_during_prestige_${prestige}`] ?? 0;
-    this.goldRequirement = prestigeGoldReq;
 
     this.progression = new Progression(
       this.exp - lastPrestigeReq,
-      Math.min(getPrestigeReq(prestige) - lastPrestigeReq, 11_787_293_080),
-    );
-    this.goldProgression = new Progression(
-      this.prestigeGold,
-      Math.max(prestigeGoldReq, 0),
+      Math.min(getPrestigeReq(prestige) - lastPrestigeReq, 11_787_293_080)
     );
 
     this.levelFormatted = getLevelFormatted(level, prestige);
     this.nextLevelFormatted =
-      prestige === 50
-        ? getLevelFormatted(120, prestige)
-        : getLevelFormatted(1, prestige + 1);
+      prestige === 50 ?
+        getLevelFormatted(120, prestige) :
+        getLevelFormatted(1, prestige + 1);
+
+    this.goldProgression = new Progression(profile[`cash_during_prestige_${prestige}`], getPrestigeGoldReq(prestige));
 
     this.contractsCompleted = data.contracts_completed;
 
@@ -228,7 +195,7 @@ export class Pit {
     this.totalMysticsEnchanted = add(
       this.tier1MysticsEnchanted,
       this.tier2MysticsEnchanted,
-      this.tier3MysticsEnchanted,
+      this.tier3MysticsEnchanted
     );
 
     this.goldEarned = data.cash_earned;
