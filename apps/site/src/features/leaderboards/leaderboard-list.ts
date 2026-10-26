@@ -109,7 +109,7 @@ const escapeHtml = (text: string) => text.replaceAll(/[&<>"']/g, (char) => HTML_
 /** A group's links as list items, for a `<ul>` whose markup the server renders and hydration keeps as it is. */
 export const boardLinksHtml = (boards: ListBoard[], href: (field: string) => string): string =>
   boards
-    .map(({ field, name }) => `<li><a href="${escapeHtml(href(field))}" data-field="${escapeHtml(field)}">${escapeHtml(name)}</a></li>`)
+    .map(({ field, name }) => `<li><a href="${escapeHtml(href(field))}">${escapeHtml(name)}</a></li>`)
     .join("");
 
 const fetched = new Map<string, Promise<ListGroup[]>>();

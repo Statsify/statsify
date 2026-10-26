@@ -100,7 +100,7 @@ export function LeaderboardIndex({ groups, open }: { groups: ListGroup[]; open?:
             <ul {...delegation} className={LIST}>
               {group.leaderboards.map(({ field, name }) => (
                 <li key={field}>
-                  <a href={boardHref(prefix, field)} data-field={field}>{name}</a>
+                  <a href={boardHref(prefix, field)}>{name}</a>
                 </li>
               ))}
             </ul>
@@ -200,7 +200,6 @@ export function AllLeaderboards({ data, list: loaded, query = "" }: { data: Inde
               {!filtering && (
                 <a
                   href={boardHref(prefix, group.key)}
-                  data-field={group.key}
                   className="flex min-h-11 items-center px-3 pt-2 text-mc-1.5 text-mc-yellow hover:bg-white/10 hover:underline active:bg-white/10"
                 >
                   {t("leaderboards.gameTitle", { game: group.name })}
@@ -233,17 +232,18 @@ function BoardLinks({ id, html }: { id: string; html?: string }) {
 const PRELOAD_DELAY_MS = 50;
 
 /**
- * What a router Link does, for a list of plain `<a data-field>` leaderboard links: hovering, focusing or touching one
- * preloads its leaderboard, and a plain left click (or Enter) navigates in the app, so the index stays on screen until
- * the leaderboard's data is ready. Modified clicks fall through to the browser (new tab, new window).
+ * What a router Link does, for a list of plain leaderboard links: hovering, focusing or touching one preloads its
+ * leaderboard, and a plain left click (or Enter) navigates in the app, so the index stays on screen until the
+ * leaderboard's data is ready. Modified clicks fall through to the browser (new tab, new window). The field is the
+ * link's last path segment, so the thousands of links carry no attribute for it.
  */
 function useLinkDelegation(locale: string | undefined) {
   const router = useRouter();
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const options = (event: SyntheticEvent) => {
-    const anchor = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[data-field]") : null;
-    const field = anchor?.dataset.field;
+    const anchor = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[href]") : null;
+    const field = anchor && decodeURIComponent(anchor.pathname.slice(anchor.pathname.lastIndexOf("/") + 1));
     return field ? ({ to: "/{-$locale}/leaderboards/$field", params: { locale, field } } as const) : undefined;
   };
 
