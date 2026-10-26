@@ -176,8 +176,8 @@ const PAGES: Record<string, PageSpec> = {
           [{ key: "bestTime", when: timed }, { key: "flawlessGames", when: timed }],
         ],
       },
-      { title: "game.sections.bestTimes", ...DROPPER_LIST("bestTime"), list: true, collapsed: true, search: true },
-      { title: "game.sections.completions", ...DROPPER_LIST("completions"), list: true, collapsed: true, search: true },
+      { title: "game.sections.bestTimes", ...DROPPER_LIST("bestTime"), list: true, collapsed: true, search: true, pairs: true },
+      { title: "game.sections.completions", ...DROPPER_LIST("completions"), list: true, collapsed: true, search: true, pairs: true },
     ],
   },
   enderSpleef: {
@@ -222,8 +222,8 @@ const PAGES: Record<string, PageSpec> = {
     sections: [
       { rows: [["wins", "roundsWon", "starsEarned"]] },
       { title: "game.sections.bestTimes", cells: PARTY_ROUNDS("BestTime"), list: true },
-      { title: "game.sections.bestScores", cells: PARTY_ROUNDS("BestScore"), list: true },
-      { title: "stats.roundWins", cells: PARTY_ROUNDS("Wins"), list: true, collapsed: true },
+      { title: "game.sections.bestScores", cells: PARTY_ROUNDS("BestScore"), list: true, pairs: true },
+      { title: "stats.roundWins", cells: PARTY_ROUNDS("Wins"), list: true, collapsed: true, pairs: true },
     ],
   },
   pixelPainters: { sections: [{ rows: [["wins"]] }] },

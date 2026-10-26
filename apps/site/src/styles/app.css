@@ -75,14 +75,15 @@
   grid-area: stack;
 }
 
-/* N equal columns an even number of pixels wide, for pixel-font cells with an 8 px column gap (`gap-2`, `gap-x-2`):
-   a plain `1fr` split starts every column after the first on a fraction of a pixel, which blurs the font on 1×
-   screens, and an even width centres a Minecraft 32 value (always an even number of pixels wide) on a whole pixel.
-   The pixels left over go after the last column. A column is never narrower than its content. */
+/* N equal columns an even number of pixels wide, for pixel-font cells with an 8 px column gap (`gap-2`, `gap-x-2`),
+   or the gap `--snap-gap` sets (a grid of boxes, `BOX_GAP`): a plain `1fr` split starts every column after the first
+   on a fraction of a pixel, which blurs the font on 1× screens, and an even width centres a Minecraft 32 value (always
+   an even number of pixels wide) on a whole pixel. The pixels left over go after the last column. A column is never
+   narrower than its content. */
 @utility grid-cols-snap-* {
   grid-template-columns: repeat(
     --value(integer),
-    minmax(min-content, round(down, calc((100% - (--value(integer) - 1) * 8px) / --value(integer)), 2px))
+    minmax(min-content, round(down, calc((100% - (--value(integer) - 1) * var(--snap-gap, 8px)) / --value(integer)), 2px))
   );
 }
 

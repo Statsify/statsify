@@ -311,6 +311,8 @@ export const StatSectionSchema = z.object({
   collapsed: z.boolean().optional(),
   /** A long list the page's filter box searches by name; one box serves every such list on the page. */
   search: z.boolean().optional(),
+  /** A list whose lines fit two across on a phone (Dropper's maps); the others take a line each there. */
+  pairs: z.boolean().optional(),
   /** Values shown as a tick above 0 and a cross at 0, for whether each was done (a period's quests). */
   ticks: z.boolean().optional(),
 });

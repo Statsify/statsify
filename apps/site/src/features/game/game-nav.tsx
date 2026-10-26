@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box } from "~/components/ui/box";
+import { Box, CELL } from "~/components/ui/box";
 import { Chevron } from "~/components/icons/chevron";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Link } from "@tanstack/react-router";
@@ -145,7 +145,8 @@ export function GameNav({
               >
                 <Box
                   className={cn(
-                    "group-hover:brightness-125 content:flex content:min-h-11 content:items-center content:gap-2 content:px-3 content:py-0 content:text-mc-1 group-aria-[current=page]:font-bold",
+                    CELL,
+                    "group-hover:brightness-125 content:justify-start content:gap-2 content:py-0 content:text-mc-1 group-aria-[current=page]:font-bold",
                     !game.played && "opacity-50"
                   )}
                 >

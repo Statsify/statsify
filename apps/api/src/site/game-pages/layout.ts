@@ -88,6 +88,8 @@ export interface SectionSpec {
   collapsed?: boolean;
   /** Searched by the page's filter box, for a list too long to scan. */
   search?: boolean;
+  /** Two lines across on a phone, for a list whose every line fits half its width at the widest values. */
+  pairs?: boolean;
   /** Values as a tick or a cross, for whether each was done (a period's quests). */
   ticks?: boolean;
 }
@@ -369,6 +371,7 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
     ...(spec.plain && { plain: true }),
     ...(spec.collapsed && { collapsed: true }),
     ...(spec.search && { search: true }),
+    ...(spec.pairs && { pairs: true }),
     ...(spec.ticks && { ticks: true }),
   };
 }

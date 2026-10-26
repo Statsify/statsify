@@ -54,7 +54,8 @@ export function StatInfo({ glossary, label }: { glossary: string; label: string 
         aria-controls={id}
         aria-label={t("game.about", { stat: label })}
         onClick={(event) => setAnchor(anchor ? null : (event.currentTarget.closest(".relative") ?? event.currentTarget).getBoundingClientRect())}
-        className="absolute -top-2 -end-2 z-10 flex size-11 items-start justify-end p-1 text-mc-1 text-mc-gray hover:text-mc-white"
+        // In the stat box's top corner, with its ring inside, as the box clips anything past its edge.
+        className="absolute -top-2 -end-1 z-10 flex size-11 items-start justify-end p-1 text-mc-1 text-mc-gray hover:text-mc-white focus-visible:focus-ring-inset"
       >
         ?
       </button>

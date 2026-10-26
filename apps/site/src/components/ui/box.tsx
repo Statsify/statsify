@@ -83,6 +83,22 @@ const boxVariants = {
   },
 };
 
+/**
+ * A box drawn as one of the bot's cells (a leaderboard cell, a stat, a heading): its content centred, at least a tap
+ * target tall. The Box sets its content's size, so the text and whatever wraps it carry their own; a wrapper at the
+ * Box's size would sit the text on its baseline, low. Grids of them keep the bot's 4 px gap (`BOX_GAP`).
+ */
+export const CELL = "content:flex content:min-h-11 content:items-center content:justify-center content:px-3 content:py-1";
+
+/** The bot's gap between boxes, for a grid of them; a `grid-cols-snap-*` grid sizes its columns by it. */
+export const BOX_GAP = "gap-1 [--snap-gap:4px]";
+
+/**
+ * For a Box that is itself the link, button or summary: its keyboard ring inside the box's edge, on the content, which
+ * paints last. A ring outside the edge would sit under the box's own shadow on the right and at the foot.
+ */
+export const BOX_RING = "focus-ring-none focus-visible:content:focus-ring-inset";
+
 type BoxOnlyProps = {
   borderRadius?: BoxBorderRadius;
   shadow?: number;

@@ -9,7 +9,7 @@
 /* eslint-disable jsx-a11y/prefer-tag-over-role -- the leaderboard is a CSS grid with rows of `display: contents`, which
    `<table>` elements can't be without losing their table semantics in some browsers. */
 
-import { Box } from "~/components/ui/box";
+import { BOX_GAP, Box, CELL } from "~/components/ui/box";
 import { ColumnLabel, PlayerLink, Position, Value, useHighlightScroll } from "./leaderboard-table";
 import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
@@ -21,9 +21,6 @@ import { useTranslation } from "react-i18next";
 import type { CSSProperties } from "react";
 import type { LeaderboardPage } from "@statsify/contract";
 
-// A cell: the card Box with its text centred, at least a tap target tall. The Box sets its content's size, so the text
-// and whatever wraps it carry their own; a wrapper at the Box's size would sit the text on its baseline, low.
-const CELL = "content:flex content:min-h-11 content:items-center content:justify-center content:px-3 content:py-1";
 const TEXT = "text-mc-1.5 lg:text-mc-2";
 
 // Forced colours drop the boxes' fills, so there the highlighted row is outlined.
@@ -68,7 +65,7 @@ function BoxTable({ page }: { page: LeaderboardPage }) {
     <div
       role="table"
       aria-label={plainText(page.formatted)}
-      className="grid grid-cols-[max-content_max-content_minmax(0,1fr)_repeat(var(--columns),max-content)] gap-1 max-md:hidden"
+      className={cn("grid grid-cols-[max-content_max-content_minmax(0,1fr)_repeat(var(--columns),max-content)] max-md:hidden", BOX_GAP)}
       style={{ "--columns": page.columns.length } as CSSProperties}
     >
       <div role="row" className="contents">
@@ -145,7 +142,8 @@ export function PhoneRows({ page }: { page: LeaderboardPage }) {
             role="row"
             aria-current={row.highlight || undefined}
             className={cn(
-              "grid scroll-mt-10 gap-1",
+              "grid scroll-mt-10",
+              BOX_GAP,
               single ? "grid-cols-[minmax(0,1fr)_auto]" : page.columns.length === 3 ? "grid-cols-3" : "grid-cols-2"
             )}
           >

@@ -7,7 +7,7 @@
  */
 
 import { PageBackground, backgroundFor } from "~/components/ui/background";
-import { Box } from "~/components/ui/box";
+import { BOX_GAP, BOX_RING, Box, CELL } from "~/components/ui/box";
 import { Check } from "~/components/icons/check";
 import { Chevron } from "~/components/icons/chevron";
 import { Command } from "~/components/ui/command";
@@ -40,8 +40,8 @@ import type { GamePage, StatCell as Stat, StatSection } from "@statsify/contract
 
 type Level = NonNullable<GamePage["level"]>;
 
-/** On a phone an odd last cell spans its row, centred, rather than sitting alone in the first column. */
-const ODD_LAST = "max-sm:[&>:last-child:nth-child(odd)]:col-span-2";
+/** On a phone an odd row's last cell spans its row, centred, rather than sitting alone in the first column. */
+const ODD_LAST = "max-sm:col-span-2";
 
 /**
  * A table's columns by its widest row: up to two on phones (three in the headline, as on the card), and from `sm` up to
@@ -51,17 +51,19 @@ const COLUMNS = [
   "grid-cols-1",
   "grid-cols-1",
   "grid-cols-snap-2",
-  `grid-cols-snap-2 sm:grid-cols-snap-3 ${ODD_LAST}`,
-  `grid-cols-snap-2 sm:grid-cols-snap-4 ${ODD_LAST}`,
-  `grid-cols-snap-2 sm:grid-cols-snap-5 ${ODD_LAST}`,
+  "grid-cols-snap-2 sm:grid-cols-snap-3",
+  "grid-cols-snap-2 sm:grid-cols-snap-4",
+  "grid-cols-snap-2 sm:grid-cols-snap-5",
 ];
 
 const MOST_COLUMNS = COLUMNS.length - 1;
 
-const columnsOf = (count: number, headline: boolean) =>
-  headline && count === 3 ?
-    "grid-cols-snap-3" :
-    COLUMNS[count <= MOST_COLUMNS ? count : Math.ceil(count / Math.ceil(count / MOST_COLUMNS))];
+/** The table's columns, and whether a phone pairs up the cells of a wider row (so an odd row's last spans, `ODD_LAST`). */
+const columnsOf = (count: number, headline: boolean) => {
+  if (headline && count === 3) return { columns: "grid-cols-snap-3", pairs: false };
+  const index = count <= MOST_COLUMNS ? count : Math.ceil(count / Math.ceil(count / MOST_COLUMNS));
+  return { columns: COLUMNS[index], pairs: index >= 3 };
+};
 
 /**
  * Every row of a section takes the columns of its widest, so the cells line up down the table and a short row leaves
@@ -119,7 +121,7 @@ export function GameView({ page }: { page: GamePage }) {
   const shown = searchedCells.filter((cell) => matches(labelText(cell))).length;
 
   const boxPanels = boxes.length > 0 && (
-    <div key="boxes" className={cn("grid grid-cols-1 gap-2", BOX_COLUMNS[Math.min(boxes.length, BOX_COLUMNS.length - 1)])}>
+    <div key="boxes" className={cn("grid grid-cols-1", BOX_GAP, BOX_COLUMNS[Math.min(boxes.length, BOX_COLUMNS.length - 1)])}>
       {boxes.map((section, index) => (
         <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
       ))}
@@ -127,10 +129,10 @@ export function GameView({ page }: { page: GamePage }) {
   );
 
   const headlinePanels = headline && (
-    <div key="headline" className="grid grid-cols-1 gap-2 lg:grid-cols-[minmax(0,1fr)_round(down,40%,8px)]">
+    <div key="headline" className={cn("grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_round(down,40%,8px)]", BOX_GAP)}>
       <StatPanel section={headline} username={page.username} headline className={cn(tables.length === 0 && "lg:col-span-2")} />
       {tables.length > 0 && (
-        <div className="flex flex-col gap-2">
+        <div className={cn("flex flex-col", BOX_GAP)}>
           {tables.map((section, index) => (
             <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
           ))}
@@ -165,7 +167,7 @@ export function GameView({ page }: { page: GamePage }) {
         {/* From `md` the nametag is as wide as its content (up to half the row) and the level sits beside it, the
             overview under both; from `lg` the overview goes under the level. An overview with no level sits beside the
             nametag at its own height, and a nametag with neither (Parkour) is as wide as its content. */}
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-[fit-content(50%)_minmax(0,1fr)]">
+        <div className={cn("grid grid-cols-1 md:grid-cols-[fit-content(50%)_minmax(0,1fr)]", BOX_GAP)}>
           <GameHeader
             ref={nametag}
             page={page}
@@ -381,14 +383,23 @@ function SectionTitle({ section }: { section: StatSection }) {
   return <span className={className} style={style}>{t(section.title, { ns: LABEL_NAMESPACES })}</span>;
 }
 
-/** A heading over one of a panel's rows, between rules. */
-const ROW_HEADING =
-  "flex items-center gap-3 text-mc-1 text-mc-gray before:h-0.5 before:grow before:bg-white/10 after:h-0.5 after:grow after:bg-white/10";
+/** A heading's box across its panel or row, slimmer than a stat's, as the card's are. */
+const HEADING_BOX = cn(CELL, "col-span-full content:min-h-0 content:py-1.5");
+
+/** A heading over one of a panel's rows, at the section heading's size in a taller box, as the card draws it. */
+const ROW_HEADING_BOX = cn(HEADING_BOX, "content:py-3");
 
 /**
- * A panel of stats in the card's rows, under the section's heading when it has one. A list (maps, challenges) is
- * name and value lines in columns instead, and a long one starts folded behind its heading and count. A list the
- * page's filter searches keeps the lines whose name matches, and opens while it filters.
+ * A stat's box: the value at its foot, so the values in a row line up whatever their labels do, and narrow sides, so a
+ * phone's three across still fit a long value.
+ */
+const STAT_BOX = cn(CELL, "content:items-stretch content:px-1 content:py-2");
+
+/**
+ * A panel of stats as the card draws it: the section's heading in a box across it when it has one, then the card's
+ * rows, every stat its own box with the card's gaps between them. A list (maps, challenges) is name and value lines in
+ * columns of boxes instead, and a long one starts folded behind its heading and count. A list the page's filter
+ * searches keeps the lines whose name matches, and opens while it filters.
  */
 export function StatPanel({
   section,
@@ -418,80 +429,104 @@ export function StatPanel({
     const matches = wordMatcher(filter ?? "");
     const shown = (cells: Stat[]) => (filtering ? cells.filter((cell) => matches(labelText(cell))) : cells);
     const cells = shown(all);
+    // Each line its own box, holding a `<dl>` of that line: a `<dl>` can't hold the box's own wrappers. A list whose
+    // lines pair up on a phone takes narrower sides there, which "Floating Islands 10.008s" needs at 375.
     const lines = (cells: Stat[]) => (
-      <dl className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {cells.map((cell) => <ListStat key={cell.key} cell={cell} username={username} plain={section.plain} ticks={section.ticks} />)}
-      </dl>
+      <div className={cn("grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4", section.pairs ? "grid-cols-2" : "grid-cols-1", BOX_GAP)}>
+        {cells.map((cell) => (
+          <Box key={cell.key} className={cn(CELL, "content:py-1.5", section.pairs && "max-sm:content:px-2")}>
+            <dl className="min-w-0 grow">
+              <ListStat cell={cell} username={username} plain={section.plain} ticks={section.ticks} />
+            </dl>
+          </Box>
+        ))}
+      </div>
     );
     const { rowNames } = section;
     // Under the card's own headings (Dropper's difficulties), a row at a time; one the filter empties goes with its heading.
     const list = rowNames ?
       (
-        <div className="flex flex-col gap-4">
+        <div className={cn("flex flex-col", BOX_GAP)}>
           {section.rows.map((row, index) => {
             const kept = shown(row);
             return kept.length > 0 && (
-              <div key={index} className="flex flex-col gap-2">
-                <h3 className={ROW_HEADING}><MinecraftText>{rowNames[index]}</MinecraftText></h3>
+              <Fragment key={index}>
+                <Box className={ROW_HEADING_BOX}><h3 className="text-mc-2"><MinecraftText>{rowNames[index]}</MinecraftText></h3></Box>
                 {lines(kept)}
-              </div>
+              </Fragment>
             );
           })}
         </div>
       ) :
       lines(cells);
 
-    if (!section.collapsed) return <Box className={className} title={heading}>{list}</Box>;
+    if (!section.collapsed) {
+      return (
+        <div className={cn("flex flex-col", BOX_GAP, className)}>
+          {heading && <Box className={HEADING_BOX}>{heading}</Box>}
+          {list}
+        </div>
+      );
+    }
 
     return (
-      <Box className={className}>
-        <details open={filtering} className="group">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 [&::-webkit-details-marker]:hidden">
-            <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
-            <h2 className="text-mc-1.5 font-bold"><SectionTitle section={section} /></h2>
-            <span className="text-mc-1.5 text-mc-gray">
-              ({filtering ? t("filter.count", { shown: n(cells.length), total: n(all.length) }) : n(all.length)})
-            </span>
-          </summary>
-          <div className="pt-3">{list}</div>
-        </details>
-      </Box>
+      <details open={filtering} className={cn("group", className)}>
+        <Box
+          as="summary"
+          className={cn(CELL, BOX_RING, "cursor-pointer list-none content:justify-start content:gap-2 [&::-webkit-details-marker]:hidden")}
+        >
+          <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
+          <h2 className="text-mc-1.5 font-bold"><SectionTitle section={section} /></h2>
+          <span className="text-mc-1.5 text-mc-gray">
+            ({filtering ? t("filter.count", { shown: n(cells.length), total: n(all.length) }) : n(all.length)})
+          </span>
+        </Box>
+        <div className="pt-1">{list}</div>
+      </details>
     );
   }
 
   // A row's heading sits under the panel's, or takes its level where the panel has none (the headline table).
   const RowHeading = heading ? "h3" : "h2";
 
-  return (
-    <Box className={className} title={heading}>
-      <div className="flex flex-col gap-4">
-        {section.rows.map((row, index) => {
-          const cells = row.every((cell) => cell.inline) ?
-            (
-              <dl key={index} className="flex flex-col gap-2">
-                {row.map((cell) => <SelectionStat key={cell.key} cell={cell} />)}
-              </dl>
-            ) :
-            (
-              <dl key={index} className={cn("grid gap-x-2 gap-y-4", columnsOf(sectionColumns(section.rows), headline))}>
-                {row.map((cell) => <GameStat key={cell.key} cell={cell} username={username} />)}
-              </dl>
-            );
-          const title = section.rowTitles?.[index];
+  const { columns, pairs } = columnsOf(sectionColumns(section.rows), headline);
 
-          // A row under a heading (Final, Normal) whose cells drop the word it says; rules either side show it spans the
-          // row, not the middle cell.
-          return title ?
-            (
-              <div key={index} className="flex flex-col gap-2">
-                <RowHeading className={ROW_HEADING}>{t(title)}</RowHeading>
-                {cells}
-              </div>
-            ) :
-            cells;
-        })}
-      </div>
-    </Box>
+  // One grid for the whole panel, so the headings' boxes end where the cells' columns do; each row starts a new line.
+  return (
+    <div className={cn("grid", BOX_GAP, columns, className)}>
+      {heading && <Box className={HEADING_BOX}>{heading}</Box>}
+      {section.rows.map((row, index) => {
+        const title = section.rowTitles?.[index];
+
+        return (
+          <Fragment key={index}>
+            {/* A row under a heading (Final, Normal) whose cells drop the word it says. */}
+            {title && <Box className={ROW_HEADING_BOX}><RowHeading className="text-mc-2">{t(title)}</RowHeading></Box>}
+            {row.every((cell) => cell.inline) ?
+              // The card's selections (kit, class) are lines in one box, as on its sidebar.
+              (
+                <Box className={cn(CELL, "col-span-full content:justify-start content:py-2")}>
+                  <dl className="flex flex-col gap-2">
+                    {row.map((cell) => <SelectionStat key={cell.key} cell={cell} />)}
+                  </dl>
+                </Box>
+              ) :
+              row.map((cell, column) => (
+                <Box
+                  key={cell.key}
+                  className={cn(
+                    STAT_BOX,
+                    column === 0 && "col-start-1",
+                    pairs && row.length % 2 === 1 && column === row.length - 1 && ODD_LAST
+                  )}
+                >
+                  <dl className="flex min-w-0 grow flex-col"><GameStat cell={cell} username={username} /></dl>
+                </Box>
+              ))}
+          </Fragment>
+        );
+      })}
+    </div>
   );
 }
 
@@ -573,7 +608,7 @@ function GameStat({ cell, username }: { cell: Stat; username: string }) {
         value}
       color={className}
       style={style}
-      className="relative"
+      className="relative grow"
     />
   );
 }
@@ -590,10 +625,14 @@ function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat
   const { className, style } = colourOf(cell.colour);
 
   return (
-    <div className={cn("relative flex min-h-11 min-w-0 items-center gap-2 py-1 text-mc-1", className)} style={style}>
-      {cell.icon && hasGameIcon(cell.icon) && <span aria-hidden className="size-8 shrink-0"><GameIcon game={cell.icon} /></span>}
-      <dt className={cn("min-w-0 grow truncate", !plain && "font-bold")}>
-        {cell.leaderboard ? <Spoken full={label.full}>{label.node}</Spoken> : <Hint full={label.full}>{label.node}</Hint>}
+    // 32 px tall in its box's 6 px sides, so the link's area (6 px past it) and its ring end at the box's edge.
+    <div className={cn("relative flex min-h-8 min-w-0 items-center gap-2 text-mc-1", className)} style={style}>
+      {/* The icon inside the term, since a <dl>'s rows hold only terms and values. */}
+      <dt className={cn("flex min-w-0 grow items-center gap-2", !plain && "font-bold")}>
+        {cell.icon && hasGameIcon(cell.icon) && <span aria-hidden className="size-8 shrink-0"><GameIcon game={cell.icon} /></span>}
+        <span className="min-w-0 truncate">
+          {cell.leaderboard ? <Spoken full={label.full}>{label.node}</Spoken> : <Hint full={label.full}>{label.node}</Hint>}
+        </span>
       </dt>
       <dd className="shrink-0">
         {cell.leaderboard ?
