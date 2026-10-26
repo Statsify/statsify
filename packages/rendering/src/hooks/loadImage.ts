@@ -11,7 +11,6 @@ import { Image } from "skia-canvas";
 import { readFile } from "node:fs/promises";
 
 const bufferToImage = (buffer: Buffer): Image => {
-  // The constructor throws on data it can't decode, while setting src only fails silently
   const image = new Image(buffer);
   Object.defineProperty(image, "_data", { value: buffer });
 
