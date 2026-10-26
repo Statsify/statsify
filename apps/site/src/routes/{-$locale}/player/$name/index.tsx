@@ -16,7 +16,7 @@ import { cacheNotFoundResponse } from "~/lib/response";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { createI18n } from "~/i18n/i18n";
-import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
+import { SEARCH_DESCRIPTION_MAX, breadcrumbs, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
 import { ensurePlayer, playerPageQuery } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -69,6 +69,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
 
     const { username, uuid, updatedAt, headline } = loaderData;
     const origin = locale?.origin;
+    const path = `/player/${username}`;
     const name = possessive(username);
     // The network level has no formatted form (the card prints a plain number), so it takes a game level's brackets.
     const title = words.t("meta.levelFirst", { level: `[${Math.floor(headline.level)}]`, title: words.t("meta.player.title", { name }) });
@@ -90,15 +91,18 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
         // The Discord unfurl: the bot's general card at its UUID URL; `?v=` changes when the player is
         // refreshed, so Discord fetches the new render.
         ...(origin ?
-          socialMeta({
-            origin,
-            path: `/player/${username}`,
-            title,
-            description: stats,
-            image: `/og/${uuid}.png?v=${updatedAt}`,
-            imageSize: IMAGE_VARIANTS.og,
-            type: "profile",
-          }) :
+          [
+            ...socialMeta({
+              origin,
+              path,
+              title,
+              description: stats,
+              image: `/og/${uuid}.png?v=${updatedAt}`,
+              imageSize: IMAGE_VARIANTS.og,
+              type: "profile",
+            }),
+            breadcrumbs(origin, [{ name: username, path }]),
+          ] :
           []),
       ],
     };

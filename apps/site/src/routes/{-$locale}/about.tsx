@@ -14,7 +14,7 @@ import { createFileRoute } from "@tanstack/react-router";
 /** `/contact` redirects to this page's `#contact`. */
 export const Route = createFileRoute("/{-$locale}/about")({
   head: ({ matches }) =>
-    textPageHead({ meta: "about", path: "/about", matches }),
+    textPageHead({ meta: "about", crumb: "footer.about", path: "/about", matches }),
   headers: () => cacheHeaders(TEXT_PAGE_CACHE),
   component: AboutPage,
 });

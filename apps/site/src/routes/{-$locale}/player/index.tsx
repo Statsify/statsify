@@ -46,7 +46,7 @@ export const Route = createFileRoute("/{-$locale}/player/")({
   },
   staleTime: 60_000,
   head: ({ loaderData, matches }) => ({
-    meta: searchPageMeta(matches, { key: "search", path: "/player", image: "/images/og-home.png", noindex: Boolean(loaderData?.q) }),
+    meta: searchPageMeta(matches, { key: "search", nav: "players", path: "/player", image: "/images/og-home.png", noindex: Boolean(loaderData?.q) }),
     scripts: loaderData?.q ? [] : [{ children: HOLD_SCRIPT }],
   }),
   headers: ({ loaderData }) =>

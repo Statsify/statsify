@@ -13,7 +13,7 @@ import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { createI18n } from "~/i18n/i18n";
-import { localeData, socialMeta } from "~/lib/social-meta";
+import { breadcrumbs, localeData, socialMeta } from "~/lib/social-meta";
 import { useTranslation } from "react-i18next";
 
 /** The list is schema metadata: an hour fresh, a day stale. */
@@ -48,7 +48,12 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/")({
         { title },
         { name: "description", content: description },
         ...(match.search.q ? [{ name: "robots", content: "noindex" }] : []),
-        ...(origin ? socialMeta({ origin, path: "/leaderboards", title, description, image: "/images/og-home.png" }) : []),
+        ...(origin ?
+          [
+            ...socialMeta({ origin, path: "/leaderboards", title, description, image: "/images/og-home.png" }),
+            breadcrumbs(origin, [{ name: words.t("leaderboards.title"), path: "/leaderboards" }]),
+          ] :
+          []),
       ],
     };
   },

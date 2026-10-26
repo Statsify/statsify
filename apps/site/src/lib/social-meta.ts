@@ -112,16 +112,46 @@ export function canonicalLink(origin: string, path: string) {
   return { rel: "canonical", href: new URL(path, origin).href };
 }
 
+/** A page in a trail: its own name and its path, as its `og:url` has it. */
+export interface Crumb {
+  name: string;
+  path: string;
+}
+
+/**
+ * The trail search results show over a page's title ("Statsify › anrie › BedWars"), as a `BreadcrumbList`: the
+ * home page, then `trail`, which ends with the page itself.
+ */
+export function breadcrumbs(origin: string, trail: Crumb[]): Meta[number] {
+  // The router writes this entry as an escaped `<script type="application/ld+json">`, but the type of `head()`'s meta
+  // has only `<meta>`'s attributes.
+  return {
+    "script:ld+json": {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [{ name: SITE_NAME, path: "/" }, ...trail].map(({ name, path }, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name,
+        item: new URL(path, origin).href,
+      })),
+    },
+  } as Meta[number];
+}
+
 /** The locale layout's loader data from a `head()` context's `matches`, once the layout has loaded. */
 export function localeData(matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>): LocaleData | undefined {
   const match = matches.find((candidate) => candidate.routeId === "/{-$locale}");
   return match?.loaderData as LocaleData | undefined;
 }
 
-/** A search page's tags (`/bingo`, `/player`): `meta.<key>`'s title and description, then its preview's. */
+/**
+ * A search page's tags (`/bingo`, `/player`): `meta.<key>`'s title and description, then its preview's, and its trail
+ * under its name in the header (`nav.<nav>`).
+ */
 export function searchPageMeta(
   matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>,
-  { key, path, image, noindex = false }: { key: string; path: string; image: string; noindex?: boolean }
+  { key, nav, path, image, noindex = false }: { key: string; nav: string; path: string; image: string; noindex?: boolean }
 ) {
   const locale = localeData(matches);
   // In English, from the server's `site.json`.
@@ -134,6 +164,8 @@ export function searchPageMeta(
     { title },
     { name: "description", content: description },
     ...(noindex ? [{ name: "robots", content: "noindex" }] : []),
-    ...(origin ? socialMeta({ origin, path, title, description, image }) : []),
+    ...(origin ?
+      [...socialMeta({ origin, path, title, description, image }), breadcrumbs(origin, [{ name: words.t(`nav.${nav}`), path }])] :
+      []),
   ];
 }

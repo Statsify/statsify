@@ -14,7 +14,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { searchPageMeta } from "~/lib/social-meta";
 
 export const Route = createFileRoute("/{-$locale}/bingo")({
-  head: ({ matches }) => ({ meta: searchPageMeta(matches, { key: "bingo", path: "/bingo", image: "/images/og-bingo.png" }) }),
+  head: ({ matches }) => ({ meta: searchPageMeta(matches, { key: "bingo", nav: "bingo", path: "/bingo", image: "/images/og-bingo.png" }) }),
   headers: () => cacheHeaders("max-age=600, stale-while-revalidate=86400"),
   component: BingoSearchPage,
 });

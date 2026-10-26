@@ -19,7 +19,7 @@ import { formatNumber } from "~/i18n/format";
 import { loadGlossaryWords } from "~/features/content/content-data";
 import { hasGameIcon } from "~/components/ui/game-icon";
 import { isGameKey, loadLeaderboardGame, loadLeaderboardPage, type LeaderboardView } from "~/features/leaderboards/leaderboard-data";
-import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
+import { type Crumb, SEARCH_DESCRIPTION_MAX, breadcrumbs, localeData, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
 import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
 import { useTranslation } from "react-i18next";
 import type { LeaderboardGame } from "@statsify/contract";
@@ -123,20 +123,23 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
     }
 
     const origin = locale?.origin;
-    const unfurl = (path: string, title: string, description: string) =>
-      origin ? socialMeta({ origin, path, title, description, image: "/images/og-home.png" }) : [];
+    // The trail goes through the list of every board, then `trail`.
+    const boards: Crumb = { name: words.t("leaderboards.title"), path: "/leaderboards" };
+    const unfurl = (path: string, title: string, description: string, trail: Crumb[]) =>
+      origin ? [...socialMeta({ origin, path, title, description, image: "/images/og-home.png" }), breadcrumbs(origin, [boards, ...trail])] : [];
 
     if (loaderData.kind === "game") {
       const name = plainText(loaderData.game.formatted);
       const title = words.t("meta.leaderboard.gameTitle", { game: name });
       const description = words.t("meta.leaderboard.gameDescription", { game: name });
+      const path = `/leaderboards/${match.params.field}`;
 
       return {
         meta: [
           { title },
           { name: "description", content: description },
           ...(match.search.mode ? [{ name: "robots", content: "noindex" }] : []),
-          ...unfurl(`/leaderboards/${match.params.field}`, title, description),
+          ...unfurl(path, title, description, [{ name, path }]),
         ],
       };
     }
@@ -161,13 +164,18 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
       ...(around && { around }),
       ...(position && { position: String(position) }),
     });
+    const path = `/leaderboards/${page.field}${query.size > 0 ? `?${query}` : ""}`;
+    // Under its game's crumb, the board without the game's name it starts with, or its dash after it (Arcade - Coins).
+    const game = page.index?.name;
+    const index = page.index ? [{ name: page.index.name, path: `/leaderboards/${page.index.key}` }] : [];
+    const board = game && name.startsWith(`${game} `) ? name.slice(game.length).replace(/^ (?:- )?/, "") : name;
 
     return {
       meta: [
         { title },
         { name: "description", content: description },
         ...(loaderData.noindex ? [{ name: "robots", content: "noindex" }] : []),
-        ...unfurl(`/leaderboards/${page.field}${query.size > 0 ? `?${query}` : ""}`, title, rows || fallback),
+        ...unfurl(path, title, rows || fallback, [...index, { name: board, path }]),
       ],
     };
   },
