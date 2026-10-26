@@ -67,7 +67,10 @@ export class BadgeCommand {
     args: [new FileArgument("badge", true)],
   })
   public async image(context: CommandContext) {
+    const user = context.getUser();
     const file = context.option<APIAttachment>("badge");
+
+    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
 
     if (!BADGE_IMAGE_TYPES.includes(file.content_type ?? ""))
       throw new ErrorMessage("errors.unsupportedFileType");
@@ -82,7 +85,7 @@ export class BadgeCommand {
     // A file cut off before its pixel data still loads, but draws nothing
     if (data.every((value) => value === 0)) throw new ErrorMessage("errors.unknown");
 
-    return this.setBadge(context, badge);
+    return this.setBadge(context, user, badge);
   }
 
   @SubCommand({
@@ -92,14 +95,18 @@ export class BadgeCommand {
     args: [new TextArgument("emoji", (t) => t("arguments.emoji"))],
   })
   public async emoji(context: CommandContext) {
+    const user = context.getUser();
     const emoji = context.option<string>("emoji").trim();
+
+    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
+
     const customEmoji = emoji.match(CUSTOM_EMOJI_REGEX);
 
     const badge = customEmoji ?
       await this.getCustomEmojiBadge(customEmoji[1]) :
       await this.getPixelEmojiBadge(emoji);
 
-    return this.setBadge(context, badge);
+    return this.setBadge(context, user, badge);
   }
 
   @SubCommand({
@@ -149,12 +156,9 @@ export class BadgeCommand {
     }
   }
 
-  private async setBadge(context: CommandContext, badge: Canvas): Promise<IMessage> {
+  private async setBadge(context: CommandContext, user: User, badge: Canvas): Promise<IMessage> {
     const userId = context.getInteraction().getUserId();
-    const user = context.getUser();
     const t = context.t();
-
-    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
 
     await this.apiService.updateUserBadge(userId, await badge.toBuffer("png"));
     const profile = await this.getProfile(t, user, badge);
