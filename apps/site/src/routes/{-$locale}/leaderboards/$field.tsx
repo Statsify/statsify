@@ -8,7 +8,7 @@
 
 import { Background, backgroundFor, preloadBackground } from "~/components/ui/background";
 import { FindPlayer, PageNav } from "~/features/leaderboards/leaderboard-table";
-import { LeaderboardCards } from "~/features/leaderboards/leaderboard-cards";
+import { LeaderboardBoxes } from "~/features/leaderboards/leaderboard-boxes";
 import { LeaderboardIndex } from "~/features/leaderboards/leaderboard-index";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { NotFound } from "~/components/not-found";
@@ -277,7 +277,7 @@ function LeaderboardPage({ view: { page, miss, explanation } }: { view: Leaderbo
           )}
         </div>
         <FindPlayer field={field} pages={page.pages} miss={miss} />
-        <LeaderboardCards page={page} />
+        <LeaderboardBoxes page={page} />
         <PageNav field={field} page={page.page} pages={page.pages} />
       </div>
     </div>

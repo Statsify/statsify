@@ -20,18 +20,6 @@ import { type AroundMiss, PAGE_SIZE } from "./leaderboard-data";
 import type { ReactNode } from "react";
 import type { LeaderboardColumn, LeaderboardPage } from "@statsify/contract";
 
-// The table's rows from `md` up (`LeaderboardCards`): one 48 px row per player, with the column labels once in a
-// Minecraft 16 §7 header. A row's position, head and name share one element across their three columns, and its
-// values another; a row's stripe or highlight is on both.
-export const HEADER = "flex h-10 items-center border-b-2 border-black/30 bg-blackify-800 px-2 text-mc-1 text-mc-gray md:text-mc-1.5";
-export const PLAYER = "sticky col-span-3 grid grid-cols-subgrid";
-export const VALUES = "col-span-(--columns) grid grid-cols-subgrid";
-// Layers (gradients) over the panel.
-export const STRIPE = "bg-linear-to-r from-black/15 to-black/15";
-// The bot's highlighted row is a white 0.35 panel (`leaderboard.profile.tsx`). Forced colours drop backgrounds, so
-// there it's a border.
-export const HIGHLIGHT = "bg-linear-to-r from-white/35 to-white/35 forced-colors:border-y-2 forced-colors:border-[color:Highlight]";
-
 /** A row's name: a link to the player's page for the board's game and mode where there is one, else to the profile. */
 export function PlayerLink({ page, name, className, children }: { page: LeaderboardPage; name: string; className?: string; children: ReactNode }) {
   const target = page.gamePage;

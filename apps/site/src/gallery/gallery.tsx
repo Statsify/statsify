@@ -44,7 +44,7 @@ import { GameHeader, LevelPanel, ModeSwitcher, NeverPlayed, NoStatMatches, StatP
 import { GameNav } from "~/features/game/game-nav";
 import { GitHub } from "~/components/icons/github";
 import { InlineStat, StatCell } from "~/components/ui/stat";
-import { LeaderboardCards } from "~/features/leaderboards/leaderboard-cards";
+import { LeaderboardBoxes } from "~/features/leaderboards/leaderboard-boxes";
 import { ListFailed, NoMatches } from "~/features/leaderboards/leaderboard-index";
 import { LogoError } from "~/components/icons/logo-error";
 import { LookupButton, PlayerNotFoundView } from "~/features/player/player-not-found";
@@ -129,7 +129,7 @@ function useFixtureSearchClient() {
  * are forced by the visual regression harness through `data-gallery-force`; everything else renders as is.
  */
 export function Gallery() {
-  // `LeaderboardCards` scrolls its highlighted row into view on mount; the gallery opens at the top (or the hash).
+  // `LeaderboardBoxes` scrolls its highlighted row into view on mount; the gallery opens at the top (or the hash).
   useEffect(() => {
     if (!globalThis.location.hash) globalThis.scrollTo(0, 0);
   }, []);
@@ -645,10 +645,10 @@ function LeaderboardSection() {
   return (
     <Section id="leaderboards">
       <Demo label="Rows: the top three, a highlighted row, a long name and nine digits">
-        <LeaderboardCards page={LEADERBOARD_PAGE} />
+        <LeaderboardBoxes page={LEADERBOARD_PAGE} />
       </Demo>
       <Demo label="Empty">
-        <LeaderboardCards page={{ ...LEADERBOARD_PAGE, rows: [] }} />
+        <LeaderboardBoxes page={{ ...LEADERBOARD_PAGE, rows: [] }} />
       </Demo>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Demo label="Page nav, first page">
