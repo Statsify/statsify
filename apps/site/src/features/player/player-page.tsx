@@ -7,7 +7,7 @@
  */
 
 import { PageBackground } from "~/components/ui/background";
-import { Box } from "~/components/ui/box";
+import { BOX_GAP, Box, CELL, HEADING_BOX, StatBox } from "~/components/ui/box";
 import { Discord } from "~/components/icons/discord";
 import { GameNav } from "~/features/game/game-nav";
 import { Hint, Spoken } from "~/components/ui/hint";
@@ -51,9 +51,9 @@ const SOCIAL_ICONS: Partial<Record<SocialKey, ComponentType<{ className?: string
 };
 
 /**
- * The player page in the general card's order: nametag, then Network Level and the overview cells, then
- * logins, then one panel per game. Phones stack them with the refresh row under the nametag. From `md` the logins join
- * the nametag and the level and overview share a row; from `xl` nametag, level and overview are one row.
+ * The player page in the general card's order: nametag and logins, then Network Level and the overview cells, then
+ * one panel per game. Phones stack them with the refresh row under the nametag. From `md` the level and overview share
+ * a row; from `xl` nametag, level and overview are one row.
  */
 export function PlayerView({ page }: { page: PlayerPage }) {
   const { t } = useTranslation();
@@ -85,7 +85,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
       <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-[auto_1fr] xl:grid-cols-[fit-content(50%)_auto_1fr]">
+        <div className={cn("grid grid-cols-1 md:grid-cols-[auto_1fr] xl:grid-cols-[fit-content(50%)_auto_1fr]", BOX_GAP)}>
           <NametagPanel
             ref={nametag}
             page={page}
@@ -113,11 +113,13 @@ export function PlayerView({ page }: { page: PlayerPage }) {
             expiresAt={page.expiresAt}
             refresh={refresh}
             auto
-            className="mb-2 md:col-span-full md:row-start-3 md:mt-2 md:mb-0 xl:row-start-2"
+            className="mb-2 md:col-span-full md:row-start-3 md:mt-2 md:mb-0 xl:row-start-3"
           />
+          {/* From `xl` the nametag shares its row with the level and overview, too narrow for the facts' values, so they
+              get a row of their own; below that `NametagPanel` draws them. */}
+          <PlayerFacts page={page} className="hidden xl:col-span-full xl:row-start-2 xl:grid xl:grid-cols-3" />
           <NetworkLevelPanel level={page.level} username={page.username} className="md:col-start-1 md:row-start-2 xl:col-start-2 xl:row-start-1" />
           <OverviewPanel overview={page.overview} username={page.username} className="md:col-start-2 md:row-start-2 xl:col-start-3 xl:row-start-1" />
-          <LoginPanel page={page} className="md:hidden" />
         </div>
         {sharing && (
           <SharePanel
@@ -171,21 +173,17 @@ function NametagPanel({
   className?: string;
   ref?: Ref<HTMLDivElement>;
 }) {
-  const { t } = useTranslation();
-
+  // The card's header split into its boxes: the skin down the side, the name with the socials and buttons beside it,
+  // and under that a box per fact. On phones the facts take the whole width under the skin and name; from `xl`, a row
+  // of their own under the panels (`PlayerView`).
   return (
-    <Box
-      ref={ref}
-      className={cn(
-        "content:flex content:h-full content:items-center content:gap-4",
-        "md:content:grid md:content:grid-cols-[auto_minmax(0,1fr)_auto] xl:content:grid-cols-[auto_minmax(0,1fr)] xl:content:content-center xl:content:gap-y-3",
-        className
-      )}
-    >
-      <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28 xl:row-span-2" />
-      <div className="flex min-w-0 grow flex-col gap-3">
+    <div ref={ref} className={cn("grid grid-cols-[auto_minmax(0,1fr)]", BOX_GAP, className)}>
+      <Box className="md:row-span-2 content:flex content:items-center content:justify-center content:p-3">
+        <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28" />
+      </Box>
+      <Box className="content:flex content:flex-col content:items-center content:justify-center content:gap-2 content:p-3 content:text-center">
         {/* Rank, name and guild tag as on the card; a long name wraps onto a second line rather than widening the page. */}
-        <h1 className="wrap-break-word text-mc-2">
+        <h1 className="max-w-full wrap-break-word text-mc-2">
           <MinecraftText>{page.displayName}</MinecraftText>
           {page.guild?.tagFormatted && (
             <>
@@ -194,16 +192,13 @@ function NametagPanel({
             </>
           )}
         </h1>
-        <dl className="flex flex-col gap-1">
-          {page.guild && <InlineStat label={t("default:stats.guild.guild")} value={page.guild.name} color="text-mc-dark-green" large />}
-        </dl>
-        <div className="flex flex-wrap items-center gap-x-4">
+        <div className="flex max-w-full flex-wrap items-center justify-center gap-x-4">
           <SocialLinks socials={page.socials} />
           {actions}
         </div>
-      </div>
-      <LoginList page={page} className="hidden md:flex xl:col-start-2" />
-    </Box>
+      </Box>
+      <PlayerFacts page={page} className="col-span-full md:col-span-1 md:col-start-2 xl:hidden" />
+    </div>
   );
 }
 
@@ -229,7 +224,7 @@ function SocialLinks({ socials }: { socials: Socials }) {
 
   // An icon (or the network's name) and the handle, never the raw URL; links are 44 px tall.
   return (
-    <ul className="flex min-w-0 max-w-full flex-wrap gap-x-4">
+    <ul className="flex min-w-0 max-w-full flex-wrap justify-center gap-x-4">
       {entries.map(([key, value]) => {
         const Icon = SOCIAL_ICONS[key];
         const href = socialHref(value);
@@ -327,19 +322,21 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
     );
   }
 
+  // Every cell its own box, as the card draws them. Two wide beside the level from `xl`, unless the guild row's three
+  // cells need the four columns. Columns never get narrower than their values, so the row takes its room from the
+  // nametag rather than run values together.
   return (
-    <Box className={cn("content:h-full", className)}>
-      {/* Two wide beside the level from `xl`, unless the guild row's three cells need the four columns. Columns never
-          get narrower than their values, so the row takes its room from the nametag rather than run values together. */}
-      <dl
-        className={cn(
-          "grid h-full grid-cols-snap-2 content-center gap-x-2 gap-y-4 sm:grid-cols-snap-4 max-sm:[&>:last-child:nth-child(odd)]:col-span-2",
-          !overview.guildMember && "xl:grid-cols-snap-2"
-        )}
-      >
-        {cells.map(([label, value, color, link]) => (
+    <div
+      className={cn(
+        "grid grid-cols-snap-2 sm:grid-cols-snap-4 max-sm:[&>:last-child:nth-child(odd)]:col-span-2",
+        BOX_GAP,
+        !overview.guildMember && "xl:grid-cols-snap-2",
+        className
+      )}
+    >
+      {cells.map(([label, value, color, link]) => (
+        <StatBox key={label}>
           <StatCell
-            key={label}
             label={label}
             value={link && "page" in link ?
               (
@@ -357,58 +354,81 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
                 <StatNumber value={value} />}
             color={color}
             large
-            className={link && "relative"}
+            className={cn("grow", link && "relative")}
           />
-        ))}
-      </dl>
-    </Box>
-  );
-}
-
-function LoginPanel({ page, className }: { page: PlayerPage; className?: string }) {
-  return (
-    <Box className={cn("content:flex content:h-full content:flex-col content:justify-center", className)}>
-      <LoginList page={page} />
-    </Box>
+        </StatBox>
+      ))}
+    </div>
   );
 }
 
 /**
- * Status and logins as the card's header lists them: in the nametag from `md`, in their own panel on phones. The last
- * game links to its page where the player has one for it.
+ * The guild, status and logins the card's header lists, each in its own box, two across from `sm`; a player with no
+ * guild has five, so the last takes the row. The last game links to its page where the player has one for it.
  */
-function LoginList({ page: { uuid, status, games, username, updatedAt, expiresAt }, className }: { page: PlayerPage; className?: string }) {
+function PlayerFacts({
+  page: { uuid, guild, status, games, username, updatedAt, expiresAt },
+  className,
+}: {
+  page: PlayerPage;
+  className?: string;
+}) {
   const { t } = useTranslation();
   const lastGame = status.lastGame && <MinecraftText>{status.lastGame.name}</MinecraftText>;
   const lastGamePage = games.find((game) => game.id === status.lastGame?.id)?.page;
 
   return (
-    <dl className={cn("flex flex-col gap-2", className)}>
-      {status.statusHidden ?
-        <InlineStat label={t("default:stats.status")} value={<HiddenStatus />} color="text-mc-gray" large /> :
-        (
-          <InlineStat
-            label={t("default:stats.status")}
-            value={status.online ? <OnlineStatus uuid={uuid} updatedAt={updatedAt} expiresAt={expiresAt} /> : t("default:stats.offline")}
-            color={status.online ? "text-mc-green" : "text-mc-red"}
-            large
-          />
-        )}
-      <InlineStat label={t("default:stats.firstLogin")} value={<LoginDate ms={status.firstLogin} />} color="text-mc-dark-aqua" large />
-      <InlineStat label={t("default:stats.lastLogin")} value={<LoginDate ms={status.lastLogin} />} color="text-mc-dark-aqua" large />
-      <InlineStat label={t("default:stats.logoutTime")} value={<LoginDate ms={status.lastLogout} />} color="text-mc-dark-aqua" large />
-      <InlineStat
-        label={t("default:stats.lastGame")}
-        value={lastGame && lastGamePage ?
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 sm:[&>:last-child:nth-child(odd)]:col-span-2", BOX_GAP, className)}>
+      {guild && (
+        <Fact>
+          <InlineStat label={t("default:stats.guild.guild")} value={guild.name} color="text-mc-dark-green" large />
+        </Fact>
+      )}
+      <Fact>
+        {status.statusHidden ?
+          <InlineStat label={t("default:stats.status")} value={<HiddenStatus />} color="text-mc-gray" large /> :
           (
-            <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: lastGamePage }} className="hover:underline">
-              {lastGame}
-            </Link>
-          ) :
-          (lastGame ?? t("player.na"))}
-        large
-      />
-    </dl>
+            <InlineStat
+              label={t("default:stats.status")}
+              value={status.online ? <OnlineStatus uuid={uuid} updatedAt={updatedAt} expiresAt={expiresAt} /> : t("default:stats.offline")}
+              color={status.online ? "text-mc-green" : "text-mc-red"}
+              large
+            />
+          )}
+      </Fact>
+      <Fact>
+        <InlineStat label={t("default:stats.firstLogin")} value={<LoginDate ms={status.firstLogin} />} color="text-mc-dark-aqua" large />
+      </Fact>
+      <Fact>
+        <InlineStat label={t("default:stats.lastLogin")} value={<LoginDate ms={status.lastLogin} />} color="text-mc-dark-aqua" large />
+      </Fact>
+      <Fact>
+        <InlineStat label={t("default:stats.logoutTime")} value={<LoginDate ms={status.lastLogout} />} color="text-mc-dark-aqua" large />
+      </Fact>
+      <Fact>
+        <InlineStat
+          label={t("default:stats.lastGame")}
+          value={lastGame && lastGamePage ?
+            (
+              // Over the whole box: the box, not the value's clip, holds its ::after.
+              <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: lastGamePage }} className={cn(STAT_LINK, "after:inset-0")}>
+                {lastGame}
+              </Link>
+            ) :
+            (lastGame ?? t("player.na"))}
+          large
+        />
+      </Fact>
+    </div>
+  );
+}
+
+/** A fact in its own box: the `<dl>` sits inside, since a `<dl>` can't hold the Box's wrappers. */
+function Fact({ children }: { children: ReactNode }) {
+  return (
+    <Box className={CELL}>
+      <dl className="min-w-0">{children}</dl>
+    </Box>
   );
 }
 
@@ -476,7 +496,7 @@ export function GameGrid({ games, username }: { games: GameSummary[]; username: 
 
   // Two 32 px cells side by side need about 300 px, so columns are added only when every panel keeps that width.
   return (
-    <ul className="grid grid-cols-1 gap-2 md:grid-cols-snap-2 lg:grid-cols-snap-3 xl:grid-cols-snap-4">
+    <ul className={cn("grid grid-cols-1 md:grid-cols-snap-2 lg:grid-cols-snap-3 xl:grid-cols-snap-4", BOX_GAP)}>
       {games.map((game) => (
         <li key={game.id}>
           <GamePanel game={game} username={username} />
@@ -487,9 +507,9 @@ export function GameGrid({ games, username }: { games: GameSummary[]; username: 
 }
 
 /**
- * A game's headline numbers, each linking to its leaderboard at the player's row, and the rest of the panel to the
- * game's page where it has one. A linked number shows its label's full name and exact number on hover and keyboard
- * focus, as on the game page; a tap elsewhere follows the panel's link, so there they're for screen readers only.
+ * A game's title in a box linking to the game's page, over its headline numbers, each its own box linking to its
+ * leaderboard at the player's row. A linked number shows its label's full name and exact number on hover and keyboard
+ * focus, as on the game page; an unlinked one shows them on a tap too.
  */
 function GamePanel({ game, username }: { game: GameSummary; username: string }) {
   const { t } = useTranslation();
@@ -499,35 +519,36 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
   const title = <MinecraftText className="text-mc-1.5">{`§l${game.name}${game.level ? `§r ${game.level}` : ""}`}</MinecraftText>;
 
   return (
-    <Box
-      className="h-full"
-      title={(
+    <div className={cn("grid grid-cols-snap-2 content-start", BOX_GAP)}>
+      <Box className={HEADING_BOX}>
         <h2>
-          <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: game.page }} className={STAT_LINK}>
+          {/* The whole box is the link, its ring on the box's edge: the box clips anything past it. */}
+          <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: game.page }} className={cn(STAT_LINK, "after:inset-0")}>
             {title}
-            {/* Text, not an icon, so the title bar keeps the height of every other panel's. */}
+            {/* Text, not an icon, so the title's box keeps the height of every other panel's. */}
             <span aria-hidden className="text-mc-1.5 text-mc-gray"> »</span>
           </Link>
         </h2>
-      )}
-    >
-      <dl className="grid grid-cols-snap-2 gap-x-2 gap-y-4">
-        {game.rows.map((row) => {
-          const label = t(`stats.${row.key}`, { ns: LABEL_NAMESPACES });
-          const full = statName(`stats.${row.key}`);
-          const exactValue = typeof row.value === "number" ? exact(row.value) : undefined;
-          // Text the API formatted takes the stat's colour, unless it brings its own (Layers' 74/100).
-          const value = row.hidden ?
-            <Hidden /> :
-            typeof row.value === "number" ?
-              <><Spoken full={exactValue}>{n(row.value)}</Spoken>{row.suffix}</> :
-              <MinecraftText>{`${row.colour}${row.value}`}</MinecraftText>;
-          const { className, style } = colourOf(row.colour);
+      </Box>
+      {game.rows.map((row, index) => {
+        const label = t(`stats.${row.key}`, { ns: LABEL_NAMESPACES });
+        const full = statName(`stats.${row.key}`);
+        const exactValue = typeof row.value === "number" ? exact(row.value) : undefined;
+        // Under a link the link owns the tap and shows the full form; elsewhere the text does.
+        const Short = row.leaderboard ? Spoken : Hint;
+        // Text the API formatted takes the stat's colour, unless it brings its own (Layers' 74/100).
+        const value = row.hidden ?
+          <Hidden /> :
+          typeof row.value === "number" ?
+            <><Short full={exactValue}>{n(row.value)}</Short>{row.suffix}</> :
+            <MinecraftText>{`${row.colour}${row.value}`}</MinecraftText>;
+        const { className, style } = colourOf(row.colour);
 
-          return (
+        // An odd last box spans the row, centred, rather than leaving a hole beside it.
+        return (
+          <StatBox key={row.key} className={cn(index === game.rows.length - 1 && index % 2 === 0 && "col-span-2")}>
             <StatCell
-              key={row.key}
-              label={row.name === undefined ? <Spoken full={full}>{label}</Spoken> : <MinecraftText>{`${row.colour}${row.name}`}</MinecraftText>}
+              label={row.name === undefined ? <Short full={full}>{label}</Short> : <MinecraftText>{`${row.colour}${row.name}`}</MinecraftText>}
               value={row.leaderboard ?
                 (
                   <LeaderboardLink field={row.leaderboard} username={username} stat={full ?? label} hint={linkHint(full, exactValue)}>
@@ -537,11 +558,11 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
                 value}
               color={className}
               style={style}
-              className={row.leaderboard ? "relative" : undefined}
+              className={cn("grow", row.leaderboard && "relative")}
             />
-          );
-        })}
-      </dl>
-    </Box>
+          </StatBox>
+        );
+      })}
+    </div>
   );
 }

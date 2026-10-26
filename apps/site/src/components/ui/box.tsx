@@ -99,6 +99,24 @@ export const BOX_GAP = "gap-1 [--snap-gap:4px]";
  */
 export const BOX_RING = "focus-ring-none focus-visible:content:focus-ring-inset";
 
+/** A heading's box across its panel or row, slimmer than a stat's, as the card's are. */
+export const HEADING_BOX = cn(CELL, "col-span-full content:min-h-0 content:py-1.5");
+
+/**
+ * A stat's box: the value at its foot, so the values in a row line up whatever their labels do, and narrow sides, so a
+ * phone's three across still fit a long value.
+ */
+export const STAT_BOX = cn(CELL, "content:items-stretch content:px-1 content:py-2");
+
+/** A stat in its own box, as the card draws each one: the `<dl>` sits inside, since a `<dl>` can't hold the Box's wrappers. */
+export function StatBox({ className, children }: { className?: string; children: ReactNode }) {
+  return (
+    <Box className={cn(STAT_BOX, className)}>
+      <dl className="flex min-w-0 grow flex-col">{children}</dl>
+    </Box>
+  );
+}
+
 type BoxOnlyProps = {
   borderRadius?: BoxBorderRadius;
   shadow?: number;

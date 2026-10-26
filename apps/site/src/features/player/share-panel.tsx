@@ -47,7 +47,9 @@ export function PanelToggle({
       onClick={onToggle}
       onPointerEnter={onIntent}
       onFocus={onIntent}
-      className={`flex min-h-11 items-center ${size} text-mc-yellow hover:underline`}
+      // The tap area reaches 10 px under the button: on a game page's phone header, the tap area of the Updated hint
+      // 8 px above it takes the button's top 9 px.
+      className={`relative flex min-h-11 min-w-11 items-center justify-center ${size} text-mc-yellow hover:underline after:absolute after:inset-x-0 after:top-0 after:-bottom-2.5`}
     >
       {children}
     </button>

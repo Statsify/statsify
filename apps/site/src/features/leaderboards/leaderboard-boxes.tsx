@@ -9,7 +9,7 @@
 /* eslint-disable jsx-a11y/prefer-tag-over-role -- the leaderboard is a CSS grid with rows of `display: contents`, which
    `<table>` elements can't be without losing their table semantics in some browsers. */
 
-import { BOX_GAP, Box, CELL } from "~/components/ui/box";
+import { BOX_GAP, Box, CELL, STAT_BOX } from "~/components/ui/box";
 import { ColumnLabel, PlayerLink, Position, Value, useHighlightScroll } from "./leaderboard-table";
 import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
@@ -168,8 +168,7 @@ export function PhoneRows({ page }: { page: LeaderboardPage }) {
                 key={page.columns[column].field}
                 role="cell"
                 variant={variant}
-                // The value at the foot, so a row's values line up when one label wraps.
-                className={cn(CELL, "content:flex-col content:items-stretch content:justify-end content:px-1 content:py-2 content:text-center", tone)}
+                className={cn(STAT_BOX, "content:flex-col content:justify-end content:gap-1 content:text-center", tone)}
               >
                 <span className="text-mc-gray"><ColumnLabel column={page.columns[column]} /></span>
                 <span><Value value={value} /></span>

@@ -131,8 +131,9 @@ export function InlineStat({
   return (
     <div className={cn("flex min-w-0 items-baseline gap-1 text-mc-1", large && cn("lg:max-w-full lg:text-mc-1.5", SNAP_LARGE), className)}>
       <dt className={cn("shrink-0 text-mc-gray after:content-[':']", snap)}>{label}</dt>
-      {/* Room inside the clip for a Hint's focus ring and its hard shadow (6 px). */}
-      <dd className={cn("-m-1.5 min-w-0 truncate p-1.5", snap, color)} style={style}>{value}</dd>
+      {/* Room inside the clip for a Hint's focus ring, its hard shadow and its 44 px tap area: 10 px past a short value
+          and 18 px over and under a 10 px line. */}
+      <dd className={cn("-mx-2.5 -my-4.5 min-w-0 truncate px-2.5 py-4.5", snap, color)} style={style}>{value}</dd>
     </div>
   );
 }

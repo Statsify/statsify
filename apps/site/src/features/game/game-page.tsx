@@ -7,7 +7,7 @@
  */
 
 import { PageBackground, backgroundFor } from "~/components/ui/background";
-import { BOX_GAP, BOX_RING, Box, CELL } from "~/components/ui/box";
+import { BOX_GAP, BOX_RING, Box, CELL, HEADING_BOX, StatBox } from "~/components/ui/box";
 import { Check } from "~/components/icons/check";
 import { Chevron } from "~/components/icons/chevron";
 import { Command } from "~/components/ui/command";
@@ -383,17 +383,8 @@ function SectionTitle({ section }: { section: StatSection }) {
   return <span className={className} style={style}>{t(section.title, { ns: LABEL_NAMESPACES })}</span>;
 }
 
-/** A heading's box across its panel or row, slimmer than a stat's, as the card's are. */
-const HEADING_BOX = cn(CELL, "col-span-full content:min-h-0 content:py-1.5");
-
 /** A heading over one of a panel's rows, at the section heading's size in a taller box, as the card draws it. */
 const ROW_HEADING_BOX = cn(HEADING_BOX, "content:py-3");
-
-/**
- * A stat's box: the value at its foot, so the values in a row line up whatever their labels do, and narrow sides, so a
- * phone's three across still fit a long value.
- */
-const STAT_BOX = cn(CELL, "content:items-stretch content:px-1 content:py-2");
 
 /**
  * A panel of stats as the card draws it: the section's heading in a box across it when it has one, then the card's
@@ -512,16 +503,15 @@ export function StatPanel({
                 </Box>
               ) :
               row.map((cell, column) => (
-                <Box
+                <StatBox
                   key={cell.key}
                   className={cn(
-                    STAT_BOX,
                     column === 0 && "col-start-1",
                     pairs && row.length % 2 === 1 && column === row.length - 1 && ODD_LAST
                   )}
                 >
-                  <dl className="flex min-w-0 grow flex-col"><GameStat cell={cell} username={username} /></dl>
-                </Box>
+                  <GameStat cell={cell} username={username} />
+                </StatBox>
               ))}
           </Fragment>
         );

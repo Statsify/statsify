@@ -193,8 +193,9 @@ export function Hint({
       <button
         type="button"
         // Browsers drop a button's text shadow; the Minecraft text keeps its own. The tap area reaches past the text, so
-        // a finger can hit a 10 px abbreviation.
-        className="relative cursor-help [text-shadow:inherit] after:absolute after:-inset-x-2 after:-inset-y-4"
+        // a finger can hit a 10 px abbreviation, and is at least 44 px either way. It reaches 18 px over a 10 px line and
+        // 17 under: a box clips 16 or 17 px from its line, so 44 px of it stay inside either way.
+        className="relative cursor-help [text-shadow:inherit] after:absolute after:-inset-x-2 after:-top-4.5 after:-bottom-4.25 after:min-h-11 after:min-w-11"
         {...props}
         onPointerDown={(event) => (pointer.current = event.pointerType)}
         onClick={(event) => {
