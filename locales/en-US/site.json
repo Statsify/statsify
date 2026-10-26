@@ -74,7 +74,8 @@
       "link": "Link",
       "uuid": "UUID",
       "uuidCompact": "UUID Without Dashes",
-      "save": "Save Card"
+      "save": "Save Card",
+      "send": "Share Card"
     },
     "skin": {
       "open": "Skin",

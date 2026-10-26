@@ -65,8 +65,9 @@ export function useRevealOnOpen(id: string) {
 }
 
 /**
- * Share and save: the page's own link and its card (the image Discord unfurls) to copy and download, and on the player
- * page the UUID, dashed and undashed. Rendered only while open, so the card loads only then.
+ * Share and save: the page's own link and its card (the image Discord unfurls) to copy and download, or on phones to
+ * send through the share sheet, and on the player page the UUID, dashed and undashed. Rendered only while open, so the
+ * card loads only then.
  */
 export function SharePanel({
   id,
@@ -88,11 +89,18 @@ export function SharePanel({
   useRevealOnOpen(id);
   // The page as it's open, mode and all.
   const href = useLocation({ select: (location) => location.href });
+  const link = `${origin}${href}`;
+  const shareable = useShareableCard(card.src, file);
+
+  // Closing the share sheet rejects too, so a rejection isn't reported.
+  const share = (cardFile: File) => {
+    navigator.share({ files: [cardFile], url: link }).catch(() => undefined);
+  };
 
   return (
     <Box id={id} title={<h2 className="text-mc-1.5">{t("player.share.title")}</h2>} className="content:flex content:flex-col content:gap-4">
       <dl className="flex flex-col gap-3">
-        <Snippet label={t("player.share.link")} text={`${origin}${href}`} />
+        <Snippet label={t("player.share.link")} text={link} />
         {uuid && (
           <>
             <Snippet label={t("player.share.uuid")} text={dashedUuid(uuid)} />
@@ -113,8 +121,42 @@ export function SharePanel({
           {t("player.share.save")}
         </a>
       </Button>
+      {shareable && (
+        <Button asChild className="self-center sm:min-w-48">
+          <button type="button" onClick={() => share(shareable)}>
+            {t("player.share.send")}
+          </button>
+        </Button>
+      )}
     </Box>
   );
+}
+
+/**
+ * The card as a file for the OS share sheet, on touch screens whose browser can share files (phones and tablets, not
+ * desktops). Fetched when the panel opens, since a share sheet opened after a fetch in the click would lose the tap's
+ * user activation in Safari. `null` elsewhere, until it loads, and if it fails.
+ */
+function useShareableCard(src: string, file: string) {
+  const [shareable, setShareable] = useState<File | null>(null);
+
+  useEffect(() => {
+    if (!navigator.canShare || !matchMedia("(pointer: coarse)").matches) return;
+    let current = true;
+    const load = async () => {
+      const response = await fetch(src);
+      if (!response.ok) return;
+      const blob = await response.blob();
+      const cardFile = new File([blob], file, { type: blob.type });
+      if (current && navigator.canShare({ files: [cardFile] })) setShareable(cardFile);
+    };
+    load().catch(() => undefined);
+    return () => {
+      current = false;
+    };
+  }, [src, file]);
+
+  return shareable;
 }
 
 /**
