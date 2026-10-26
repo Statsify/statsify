@@ -64,7 +64,7 @@ export interface StatEntry {
 /** The entry for a selection the card shows by name (a kit, a trail): Hypixel's id, prettified. */
 export const selection = (colour: ColourCode): StatEntry => ({ colour, format: (value) => prettify(String(value)) });
 
-/** A challenge's colour on the bot's challenges cards: green once done, red before. */
+/** Green once done, red before: a challenge on the bot's challenges cards, a quest on its Quests card. */
 export const doneColour: ReadValue<ColourCode> = (value) => (Number(value) > 0 ? "§a" : "§c");
 
 /** Stats stored with the same fields at one or more places below the game. */
