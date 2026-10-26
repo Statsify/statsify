@@ -4,7 +4,7 @@ statsify.net: a [TanStack Start](https://tanstack.com/start) app served by Nitro
 
 ```sh
 pnpm site dev        # http://localhost:7828
-pnpm site build      # .output/, then scripts/check-public-output.ts
+pnpm site build      # .output/ (with .br and .gz copies of its text files), then scripts/check-public-output.ts
 pnpm site start      # node .output/server/index.mjs on PORT (7828) and HOST (127.0.0.1)
 ```
 
