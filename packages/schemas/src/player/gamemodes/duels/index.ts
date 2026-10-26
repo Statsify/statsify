@@ -23,6 +23,7 @@ import {
 } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
+import { collectLayouts, slotSlots } from "#layouts";
 import type { APIData } from "@statsify/util";
 
 export const DUELS_MODES = new GameModes([
@@ -201,6 +202,10 @@ export class Duels {
   @Field()
   public icon: string;
 
+  /** Kit layouts by mode, class or kit (layout_uhc_duel_layout is uhc), see #layouts */
+  @Field()
+  public layouts: string;
+
   public constructor(data: APIData) {
     this.overall = new SingleBowPVPDuelsGameMode(data, "", "", "overall");
     this.overall.winstreak = data?.currentStreak ?? this.overall.winstreak;
@@ -232,6 +237,8 @@ export class Duels {
 
     this.icon = data.active_prefix_icon;
     this.scheme = data.active_prefix_scheme;
+
+    this.layouts = collectLayouts(data, /^layout_(.+?)(?:_duel)?(?:_layout)?$/, slotSlots);
   }
 }
 

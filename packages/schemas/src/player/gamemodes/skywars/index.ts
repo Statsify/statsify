@@ -9,6 +9,7 @@
 import { ChallengesSkyWars, SkyWarsMini, SkyWarsMode } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
+import { collectLayouts, itemSlots } from "#layouts";
 import { Progression } from "#progression";
 import { add } from "@statsify/math";
 import { getFormattedLevel, getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
@@ -115,6 +116,10 @@ export class SkyWars {
   @Field()
   public emblem: string;
 
+  /** Kit layouts (kit_basic_solo_frog_inventory is basic_solo_frog), see #layouts */
+  @Field()
+  public layouts: string;
+
   public constructor(data: APIData, ap: APIData) {
     this.exp = data.skywars_experience ?? 0;
     this.coins = data.coins;
@@ -134,6 +139,7 @@ export class SkyWars {
     const isStrikethrough = data.levelFormattedWithBrackets?.includes("§m") ?? false;
 
     this.emblem = data.active_emblem;
+    this.layouts = collectLayouts(data, /^kit_(.+)_inventory$/, itemSlots);
     this.levelFormatted = getFormattedLevel(
       this.level,
       data.active_scheme,

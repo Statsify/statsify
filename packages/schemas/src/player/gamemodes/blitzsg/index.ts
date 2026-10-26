@@ -10,6 +10,7 @@ import { BlitzSGKit } from "./kit.js";
 import { BlitzSGMode, BlitzSGOverall } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
+import { collectLayouts, legacyToken, slotSlots } from "#layouts";
 import {
   GamePrefix,
   createPrefixProgression,
@@ -92,6 +93,10 @@ export class BlitzSG {
 
   @Field({ store: { default: "none" } })
   public kit: string;
+
+  /** Kit layouts by Hypixel's kit name (Hype TrainInventory is Hype Train), see #layouts */
+  @Field()
+  public layouts: string;
 
   @Field()
   public overall: BlitzSGOverall;
@@ -249,6 +254,7 @@ export class BlitzSG {
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.kit = data.defaultkit || "none";
+    this.layouts = collectLayouts(data, /^(.+)Inventory$/, (layout) => slotSlots(layout, legacyToken));
 
     this.overall = new BlitzSGOverall(data);
 
