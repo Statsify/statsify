@@ -118,6 +118,8 @@
     "unplayed": "(not played)",
     "filter": "Filter by name",
     "hint": "Select any stat to see its leaderboard around {{name}}.",
+    "discord": "Use in Discord:",
+    "addApp": "Add to your apps",
     "leaderboard": "({{stat}} leaderboard)",
     "maxed": "MAXED",
     "levelBar": "{{current}} to {{next}}",

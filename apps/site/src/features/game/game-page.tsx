@@ -10,6 +10,7 @@ import { Background, backgroundFor } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
 import { Check } from "~/components/icons/check";
 import { Chevron } from "~/components/icons/chevron";
+import { Command } from "~/components/ui/command";
 import { Cross } from "~/components/icons/cross";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode, useEffect, useId, useRef, useState } from "react";
@@ -178,6 +179,14 @@ export function GameView({ page }: { page: GamePage }) {
         {(page.periods?.length ?? 0) > 1 && <ModeSwitcher page={page} kind="period" />}
         {page.window && <PeriodDates {...page.window} />}
         <p className="text-mc-1 text-mc-gray">{t("game.hint", { name: page.username })}</p>
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-mc-1 text-mc-gray">
+          {t("game.discord")}
+          <Command command={botCommand(page)} />
+          <a href="/invite-user" target="_blank" rel="noreferrer" className="text-mc-yellow underline underline-offset-2">
+            {t("game.addApp")}
+            <span className="sr-only"> {t("nav.newTab")}</span>
+          </a>
+        </p>
         {page.sections[0]?.box ? [boxPanels, headlinePanels] : [headlinePanels, boxPanels]}
         {lists.map((section, index) => (
           <Fragment key={section.title ?? section.name ?? index}>
@@ -195,6 +204,14 @@ export function GameView({ page }: { page: GamePage }) {
       </div>
     </div>
   );
+}
+
+/**
+ * The bot's command for the page's game and player, `/bedwars player:anrie`. Only Quests' pages have periods, and its
+ * command takes the period as a subcommand: `/quests daily player:anrie`.
+ */
+function botCommand({ game, period, username }: GamePage) {
+  return `/${game.key}${period === undefined ? "" : ` ${period}`} player:${username}`;
 }
 
 /** The game-wide cells in one row, then the card's selections (kit, class) as `Label: value` lines. */
