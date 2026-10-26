@@ -7,8 +7,9 @@
  */
 
 /**
- * For the `head()` links of pages with Mona Sans reading text in the first screen (the player-not-found explanation);
- * everything else on the inner pages is Minecraft, and Mona Sans further down loads when it is laid out.
+ * For the `head()` links of pages with Mona Sans reading text in the first screen (Bingo's player-not-found
+ * explanation, the text pages); everything else on the inner pages is Minecraft, and Mona Sans further down loads when
+ * it is laid out.
  */
 export const SANS_PRELOAD = {
   rel: "preload",

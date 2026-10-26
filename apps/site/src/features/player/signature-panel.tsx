@@ -15,7 +15,6 @@ import { getRouteApi } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import type { PlayerPage } from "@statsify/contract";
 
-/** The help text is reading text, so it is Mona Sans. */
 const HELP = "text-mc-1 text-mc-gray";
 
 const localeRoute = getRouteApi("/{-$locale}");
