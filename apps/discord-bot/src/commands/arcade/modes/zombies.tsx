@@ -29,7 +29,7 @@ const ZombiesMapColumn = ({ title, stats, t, time }: ZombiesMapColumnProps) => {
       <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" size="small" />
       <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§e" size="small" />
       <Historical.exclude time={time}>
-        <Table.td title={mapStat[0]} value={mapStat[1]} color="§e" size="small" />
+        <Table.td title={mapStat[0]} value={mapStat[1]} color="§b" size="small" />
       </Historical.exclude>
     </Table.ts>
   );
