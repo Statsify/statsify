@@ -177,7 +177,7 @@ const GuildOverallPage = ({
               <box {...box}>
                 {wordGroup(description, 10).map((m) => (
                   <text {...text}>
-                    {m.replace(LINK_REGEX, (match) => `§b§u${match}§r`)}
+                    {m.replaceAll(LINK_REGEX, (match) => `§b§u${match}§r`)}
                   </text>
                 ))}
               </box>
