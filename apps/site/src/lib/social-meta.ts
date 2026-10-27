@@ -59,6 +59,8 @@ export interface SocialMetaOptions {
   /** The image's size in pixels, for `og:image:width` and `og:image:height`. */
   imageSize?: { width: number; height: number };
   type?: "website" | "profile";
+  /** The page's name in its search-result trail, and the pages above it (`breadcrumbs`). */
+  trail?: { above?: Crumb[]; name: string };
 }
 
 type Meta = NonNullable<AnyRouteMatch["meta"]>;
@@ -72,6 +74,7 @@ export function socialMeta({
   image,
   imageSize = image.startsWith("/images/og-") ? STATIC_IMAGE_SIZE : undefined,
   type = "website",
+  trail,
 }: SocialMetaOptions): Meta {
   const url = new URL(path, origin).href;
   const imageUrl = new URL(image, origin).href;
@@ -93,6 +96,7 @@ export function socialMeta({
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
     { name: "twitter:image", content: imageUrl },
+    ...(trail ? [breadcrumbs(origin, [...(trail.above ?? []), { name: trail.name, path }])] : []),
   ];
 }
 
@@ -129,7 +133,7 @@ export interface Crumb {
  * The trail search results show over a page's title ("Statsify › anrie › BedWars"), as a `BreadcrumbList`: the
  * home page, then `trail`, which ends with the page itself.
  */
-export function breadcrumbs(origin: string, trail: Crumb[]): Meta[number] {
+function breadcrumbs(origin: string, trail: Crumb[]): Meta[number] {
   // The router writes this entry as an escaped `<script type="application/ld+json">`, but the type of `head()`'s meta
   // has only `<meta>`'s attributes.
   return {
@@ -171,8 +175,6 @@ export function searchPageMeta(
     { title },
     { name: "description", content: description },
     ...(noindex ? [{ name: "robots", content: "noindex" }] : []),
-    ...(origin ?
-      [...socialMeta({ origin, path, title, description, image }), breadcrumbs(origin, [{ name: words.t(`nav.${nav}`), path }])] :
-      []),
+    ...(origin ? socialMeta({ origin, path, title, description, image, trail: { name: words.t(`nav.${nav}`) } }) : []),
   ];
 }

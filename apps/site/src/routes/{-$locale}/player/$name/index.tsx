@@ -16,7 +16,7 @@ import { cacheNotFoundResponse } from "~/lib/response";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
-import { SEARCH_DESCRIPTION_MAX, breadcrumbs, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
+import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
 import { ensurePlayer, playerPageQuery } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -85,18 +85,16 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
         // The Discord unfurl: the bot's general card at its UUID URL; `?v=` changes when the player is
         // refreshed, so Discord fetches the new render.
         ...(origin ?
-          [
-            ...socialMeta({
-              origin,
-              path,
-              title,
-              description: stats,
-              image: `/og/${uuid}.png?v=${updatedAt}`,
-              imageSize: IMAGE_VARIANTS.og,
-              type: "profile",
-            }),
-            breadcrumbs(origin, [{ name: username, path }]),
-          ] :
+          socialMeta({
+            origin,
+            path,
+            title,
+            description: stats,
+            image: `/og/${uuid}.png?v=${updatedAt}`,
+            imageSize: IMAGE_VARIANTS.og,
+            type: "profile",
+            trail: { name: username },
+          }) :
           []),
       ],
     };

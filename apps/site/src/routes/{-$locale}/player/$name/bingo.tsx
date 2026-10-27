@@ -18,7 +18,7 @@ import { playerTabIcon } from "~/lib/tab-icon";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
-import { breadcrumbs, localeData, socialMeta } from "~/lib/social-meta";
+import { localeData, socialMeta } from "~/lib/social-meta";
 import { refreshBingo } from "~/features/player/player-actions";
 import { useState } from "react";
 import { DEFAULT_LOCALE } from "~/i18n/locales";
@@ -72,10 +72,14 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
         { title },
         { name: "description", content: description },
         ...(origin ?
-          [
-            ...socialMeta({ origin, path: `${profile}/bingo`, title, description, image: "/images/og-bingo.png" }),
-            breadcrumbs(origin, [{ name: username, path: profile }, { name: words.t("nav.bingo"), path: `${profile}/bingo` }]),
-          ] :
+          socialMeta({
+            origin,
+            path: `${profile}/bingo`,
+            title,
+            description,
+            image: "/images/og-bingo.png",
+            trail: { above: [{ name: username, path: profile }], name: words.t("nav.bingo") },
+          }) :
           []),
       ],
     };

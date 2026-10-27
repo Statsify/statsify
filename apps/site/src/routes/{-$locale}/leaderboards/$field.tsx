@@ -19,7 +19,7 @@ import { formatNumber } from "~/i18n/format";
 import { loadGlossaryWords } from "~/features/content/content-data";
 import { hasGameIcon } from "~/components/ui/game-icon";
 import { isGameKey, loadLeaderboardGame, loadLeaderboardPage, type LeaderboardView } from "~/features/leaderboards/leaderboard-data";
-import { type Crumb, SEARCH_DESCRIPTION_MAX, breadcrumbs, localeData, notFoundMeta, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
+import { type Crumb, SEARCH_DESCRIPTION_MAX, localeData, notFoundMeta, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
 import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
 import { useTranslation } from "react-i18next";
 import type { LeaderboardGame } from "@statsify/contract";
@@ -120,10 +120,10 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
     if (!loaderData) return { meta: notFoundMeta(words.t("meta.notFound.leaderboard")) };
 
     const origin = locale?.origin;
-    // The trail goes through the list of every board, then `trail`.
+    // The trail goes through the list of every board, then the crumbs `above` the page.
     const boards: Crumb = { name: words.t("leaderboards.title"), path: "/leaderboards" };
-    const unfurl = (path: string, title: string, description: string, trail: Crumb[]) =>
-      origin ? [...socialMeta({ origin, path, title, description, image: "/images/og-home.png" }), breadcrumbs(origin, [boards, ...trail])] : [];
+    const unfurl = (path: string, title: string, description: string, name: string, above: Crumb[] = []) =>
+      origin ? socialMeta({ origin, path, title, description, image: "/images/og-home.png", trail: { above: [boards, ...above], name } }) : [];
 
     if (loaderData.kind === "game") {
       const name = plainText(loaderData.game.formatted);
@@ -136,7 +136,7 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
           { title },
           { name: "description", content: description },
           ...(match.search.mode ? [{ name: "robots", content: "noindex" }] : []),
-          ...unfurl(path, title, description, [{ name, path }]),
+          ...unfurl(path, title, description, name),
         ],
       };
     }
@@ -172,7 +172,7 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
         { title },
         { name: "description", content: description },
         ...(loaderData.noindex ? [{ name: "robots", content: "noindex" }] : []),
-        ...unfurl(path, title, rows || fallback, [...index, { name: board, path }]),
+        ...unfurl(path, title, rows || fallback, board, index),
       ],
     };
   },

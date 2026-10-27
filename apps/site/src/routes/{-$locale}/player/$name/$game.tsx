@@ -21,7 +21,7 @@ import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { formatNumber } from "~/i18n/format";
 import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
 import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "~/features/game/game-data";
-import { SEARCH_DESCRIPTION_MAX, breadcrumbs, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
+import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { ensurePlayer } from "~/features/player/resolve";
@@ -197,11 +197,17 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
         { title },
         { name: "description", content: description },
         ...(origin ?
-          [
-            ...socialMeta({ origin, path, title, description: stats || fallback, image, imageSize: unfurl, type: "profile" }),
+          socialMeta({
+            origin,
+            path,
+            title,
+            description: stats || fallback,
+            image,
+            imageSize: unfurl,
+            type: "profile",
             // The game alone, whatever the mode or period.
-            breadcrumbs(origin, [{ name: username, path: `/player/${username}` }, { name: gameName, path }]),
-          ] :
+            trail: { above: [{ name: username, path: `/player/${username}` }], name: gameName },
+          }) :
           []),
       ],
     };

@@ -9,7 +9,7 @@
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { createI18n } from "~/i18n/i18n";
-import { breadcrumbs, localeData, socialMeta } from "~/lib/social-meta";
+import { localeData, socialMeta } from "~/lib/social-meta";
 
 // Apart from the text pages' layout: their routes' `head()` uses these, and every page's first load carries what
 // `head()` imports.
@@ -54,9 +54,7 @@ export function textPageHead({
     meta: [
       { title },
       { name: "description", content: description },
-      ...(origin ?
-        [...socialMeta({ origin, path, title, description, image: "/images/og-home.png" }), breadcrumbs(origin, [{ name: heading, path }])] :
-        []),
+      ...(origin ? socialMeta({ origin, path, title, description, image: "/images/og-home.png", trail: { name: heading } }) : []),
     ],
     links: [SANS_PRELOAD],
   };
