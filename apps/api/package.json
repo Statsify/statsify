@@ -12,8 +12,8 @@
     "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
-    "@fastify/static": "^8.3.0",
-    "@fastify/view": "^11.1.1",
+    "@fastify/static": "^10.1.8",
+    "@fastify/view": "^12.0.1",
     "@m8a/nestjs-typegoose": "^12.0.1",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.2.8",
@@ -36,7 +36,7 @@
     "handlebars": "^4.7.10",
     "ioredis": "5.11.1",
     "luxon": "^3.7.2",
-    "mongoose": "^8.24.7",
+    "mongoose": "~8.21.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "skia-canvas": "4.0.0",

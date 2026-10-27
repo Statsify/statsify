@@ -38,7 +38,7 @@ const fields = entries.reduce((acc, [prefix, value]) => {
     ([key, { leaderboard }]) => ({ value: key, name: removeFormatting(leaderboard.name) })
   );
 
-  const fuse = new Fuse(list, FUSE_OPTIONS);
+  const fuse = new Fuse<APIApplicationCommandOptionChoice>(list, FUSE_OPTIONS);
   acc[prefix as keyof PlayerStats] = [fuse, list];
 
   return acc;

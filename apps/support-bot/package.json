@@ -25,7 +25,7 @@
     "axios": "1.21.0",
     "discord-api-types": "^0.38.57",
     "luxon": "^3.7.2",
-    "mongoose": "^8.24.7",
+    "mongoose": "~8.21.1",
     "reflect-metadata": "^0.2.2",
     "skia-canvas": "4.0.0",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
