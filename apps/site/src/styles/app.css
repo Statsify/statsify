@@ -103,6 +103,49 @@
   margin-inline: auto;
 }
 
+/* A list item drawn as a card Box with CSS alone, for lists too long for the `Box` component (the leaderboard index's
+   thousands of links, set as HTML), in the card's shape (`box-shape`) and colours (tokens.css): its link takes the
+   fill and the bevel, the item the shadow (`::before`, the parts outside the box, as `Box` clips it) and the overlay (`::after`,
+   blended with everything behind it, as `Box`'s is). The bevel clips the link's own ring, so the ring goes inside. */
+@utility box-item {
+  position: relative;
+  margin: 0 4px 4px 0;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  @apply box-shape;
+
+  &::before {
+    translate: 4px 4px;
+    background: var(--panel-shadow);
+    clip-path: var(--box-shadow-path);
+  }
+
+  &::after,
+  & > a {
+    clip-path: var(--box-path);
+  }
+
+  &::after {
+    background: var(--panel-overlay);
+    mix-blend-mode: overlay;
+  }
+
+  & > a {
+    background: var(--panel-background);
+  }
+
+  & > a:focus-visible {
+    @apply focus-ring-inset;
+  }
+}
+
 /*
  * The space `/player`'s recently viewed section takes, from `--recent` (how many players: set on the root before first
  * paint, then on the section by React): the heading row, then the result cards, one a row on phones, two from md and
@@ -135,7 +178,7 @@
   }
 }
 
-/* The card's shape, for the `box` utility: each corner's bevel and the shadow's offset come from
+/* The card's shape, for the `box` and `box-item` utilities: each corner's bevel and the shadow's offset come from
    `--box-tl`, `--box-tr`, `--box-bl`, `--box-br` and `--box-s` (the card's 4 px unless a Box sets them), giving the
    panel's outline (`--box-path`) and the shadow's (`--box-shadow-path`): shaded in the bottom-right notch and along the
    right and the foot, for a layer moved out by the offset. */
