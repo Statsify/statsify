@@ -8,7 +8,7 @@
 
 import { type BackgroundName, PageBackground } from "~/components/ui/background";
 import { Chevron } from "~/components/icons/chevron";
-import { Box } from "~/components/ui/box";
+import { BOX_GAP, Box, HEADING_BOX } from "~/components/ui/box";
 import { EmailLink } from "~/components/ui/email-link";
 import { Link, type LinkProps } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
@@ -195,14 +195,13 @@ export function LegalPage({
       contents={sections.map(({ id, title }) => ({ id, label: <span lang="en">{title}</span> }))}
     >
       <Article lang="en">
-        {/* The sections after it keep their space above, as each section does after the one before. */}
         <div className="flex flex-col gap-4">{intro}</div>
-        {sections.map(({ id, title, body }) => (
-          <Section key={id} id={id} title={title}>
-            {body}
-          </Section>
-        ))}
       </Article>
+      {sections.map(({ id, title, body }) => (
+        <Section key={id} id={id} title={title} lang="en">
+          {body}
+        </Section>
+      ))}
     </TextPage>
   );
 }
@@ -239,14 +238,33 @@ export function Article({
   );
 }
 
-/** A section of an article: a heading the contents link to, then its paragraphs. */
-export function Section({ id, title, children }: { id: string; title: ReactNode; children: ReactNode }) {
+/**
+ * A section of a text page: the heading the contents link to in a box of its own, then its paragraphs in an `Article`
+ * under it, 4 px apart, as the bot's cards draw a title box over its panel. `short` and `lang` are as for `Article`.
+ */
+export function Section({
+  id,
+  title,
+  short,
+  lang,
+  children,
+}: {
+  id: string;
+  title: ReactNode;
+  short?: boolean;
+  lang?: string;
+  children: ReactNode;
+}) {
   return (
-    <section className="flex flex-col gap-4 not-first:mt-10 lg:not-first:mt-14">
-      <h2 id={id} className="-mb-2 scroll-mt-6 text-mc-1.5 lg:text-mc-2 font-bold text-white">
-        {title}
-      </h2>
-      {children}
+    <section lang={lang} className={cn("flex flex-col", BOX_GAP)}>
+      <Box className={HEADING_BOX}>
+        <h2 id={id} className="scroll-mt-6 text-mc-1.5 lg:text-mc-2 font-bold text-white">
+          {title}
+        </h2>
+      </Box>
+      <Article short={short}>
+        <div className="flex flex-col gap-4">{children}</div>
+      </Article>
     </section>
   );
 }
