@@ -7,14 +7,14 @@
  */
 
 import { PAGE_STALE_MS } from "~/lib/player-route";
-import { UUID_PATTERN } from "~/lib/uuid";
+import { UUID_PATTERN, isPlayerTag } from "~/lib/uuid";
 import { orNull, orpc, rpc } from "~/lib/orpc";
 import { type QueryClient, queryOptions } from "@tanstack/react-query";
 import type { PlayerIdentity } from "@statsify/contract";
 
 /** Resolves a URL name or UUID to the stored identity, or `null` when the API has never seen it. */
 export async function resolvePlayer(name: string): Promise<PlayerIdentity | null> {
-  // A name the contract rejects (over 16 characters, say) can't be a player either.
+  if (!isPlayerTag(name)) return null;
   return orNull(rpc.player.resolve(UUID_PATTERN.test(name) ? { uuid: name } : { name }), ["NOT_FOUND", "BAD_REQUEST"]);
 }
 

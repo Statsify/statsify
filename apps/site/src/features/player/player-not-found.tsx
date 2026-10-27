@@ -8,10 +8,11 @@
 
 import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
-import { Error } from "~/components/ui/error";
+import { Error, ErrorText } from "~/components/ui/error";
 import { Skin } from "~/components/ui/skin";
 import { Turnstile } from "~/components/turnstile";
 import { formatCountdown } from "~/i18n/format";
+import { isPlayerTag } from "~/lib/uuid";
 import { getRouteApi, useNavigate, useParams } from "@tanstack/react-router";
 import { type ActionResult, BROWSER_TIMEOUT_MS, lookupPlayer } from "./player-actions";
 import { type ReactNode, useEffect, useState } from "react";
@@ -50,6 +51,8 @@ export function PlayerNotFoundView({
   children,
 }: { name: string; lookup?: Lookup; turnstileSiteKey?: string; search?: ReactNode; children?: ReactNode }) {
   const { t } = useTranslation();
+  // A name no account can have has nothing to look up.
+  const valid = isPlayerTag(name);
 
   return (
     <Error className={search ? "flex-col-reverse md:flex-col" : undefined}>
@@ -63,9 +66,12 @@ export function PlayerNotFoundView({
             <span className="text-mc-dark-red">]</span> {name}
           </Box>
         </div>
-        <h1 className="text-mc-3 lg:text-mc-4 text-mc-red font-bold">{t("player.notFound.title")}</h1>
-        <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray text-center">{t("player.notFound.description", { name })}</p>
-        {name && (children ?? <LookupButton name={name} lookup={lookup} turnstileSiteKey={turnstileSiteKey} />)}
+        <ErrorText heading={<h1 className="text-mc-3 lg:text-mc-4 text-mc-red font-bold">{t("player.notFound.title")}</h1>}>
+          <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray text-center">
+            {t(valid ? "player.notFound.description" : "player.notFound.invalid", { name })}
+          </p>
+        </ErrorText>
+        {valid && (children ?? <LookupButton name={name} lookup={lookup} turnstileSiteKey={turnstileSiteKey} />)}
       </div>
     </Error>
   );

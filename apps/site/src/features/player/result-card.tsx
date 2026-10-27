@@ -14,6 +14,7 @@ import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinBust } from "~/components/ui/skin";
 import { Spoken } from "~/components/ui/hint";
 import { cn } from "~/lib/util";
+import { isPlayerTag } from "~/lib/uuid";
 import { rememberPlayer } from "./resolve";
 import { searchState } from "~/components/search";
 import { useEffect } from "react";
@@ -25,6 +26,10 @@ import type { ResultCard } from "@statsify/contract";
 /** The `/player?q=` result grid: one column on phones, two from tablets up. */
 export function ResultCards({ cards, query }: { cards: ResultCard[]; query: string }) {
   const { t } = useTranslation();
+
+  if (cards.length === 0 && !isPlayerTag(query)) {
+    return <p className="text-mc-1.5 text-mc-gray text-center">{t("player.notFound.invalid", { name: query })}</p>;
+  }
 
   if (cards.length === 0) {
     return (

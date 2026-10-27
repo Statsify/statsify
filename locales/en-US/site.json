@@ -137,6 +137,7 @@
     "notFound": {
       "title": "Player Not Found",
       "description": "We haven't seen {{name}} yet. Check the spelling, or ask Hypixel to look them up.",
+      "invalid": "\"{{name}}\" isn't a valid Minecraft name.",
       "lookup": "Look Up on Hypixel",
       "lookingUp": "Looking up...",
       "unknown": "Hypixel doesn't know a player called {{name}} either. Check the spelling, or they may never have joined Hypixel.",

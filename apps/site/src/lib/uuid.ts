@@ -10,6 +10,12 @@
 export const UUID_PATTERN = /^[\da-f]{32}$|^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i;
 
 /**
+ * A name or UUID that could be a player's. A name is letters, digits and underscores, at most 16 of them (some of the
+ * oldest are shorter than today's 3).
+ */
+export const isPlayerTag = (value: string): boolean => /^\w{1,16}$/.test(value) || UUID_PATTERN.test(value);
+
+/**
  * The UUID the way the API stores it, undashed and lower case, or `null` for anything that isn't one.
  * The image routes read every spelling through this, so they serve one image under one cache key.
  */
