@@ -117,6 +117,10 @@ export class PlayerService {
       displayName: true,
       prefixName: true,
       status: true,
+      // Read by the cache check and the refresh
+      expiresAt: true,
+      guildId: true,
+      username: true,
     });
 
     if (!player) throw new NotFoundException("player");
