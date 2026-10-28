@@ -34,4 +34,8 @@ jobs:
         run: cp /home/config.js ./config.js
 
       - name: Restart PM2
-        run: npx pm2 restart pm2.config.cjs
+        run: |
+          # pm2 restart keeps the running daemon on its old version, so update it when pm2 changes
+          daemon=$(node -e 'const pm2 = require("pm2"); pm2.connect(() => pm2.getVersion((_, version) => { console.log(version); process.exit(0); }))')
+          [ "$daemon" = "$(node -p 'require("pm2/package.json").version')" ] || npx pm2 update
+          npx pm2 restart pm2.config.cjs
