@@ -34,8 +34,20 @@ export const getLevel = (exp = 0): number => {
     remainingExp -= expForNextLevel;
   }
 
-  return level + remainingExp / getExpReq(level + 1);
+  return level + remainingExp / getExpReq(level);
 };
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("getLevel", () => {
+    it("should calculate fractional levels", () => {
+      expect(getLevel(750)).toBe(1.25);
+      expect(getLevel(5250)).toBe(3.5);
+      expect(getLevel(487_250)).toBe(100.5);
+    });
+  });
+}
 
 type Brackets = [left: string, right: string];
 
