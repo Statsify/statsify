@@ -643,6 +643,8 @@ importers:
 
   packages/skin-renderer: {}
 
+  packages/skin-renderer/pkg: {}
+
   packages/util:
     dependencies:
       '@swc/helpers':
@@ -4623,6 +4625,9 @@ packages:
   lodash.reduce@4.6.0:
     resolution: {integrity: sha512-6raRe2vxCYBhpBu+B+TtNGUzah+hQjVdu3E17wfusjyrXBka2nBS8OH/gjVZ5PvHOhWmIZTYri09Z6n/QfnNMw==}
 
+  lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+
   lodash@4.18.1:
     resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
 
@@ -8264,7 +8269,7 @@ snapshots:
 
   async@2.6.4:
     dependencies:
-      lodash: 4.18.1
+      lodash: 4.17.21
 
   async@3.2.6: {}
 
@@ -9381,6 +9386,8 @@ snapshots:
   lodash.once@4.1.1: {}
 
   lodash.reduce@4.6.0: {}
+
+  lodash@4.17.21: {}
 
   lodash@4.18.1: {}
 
