@@ -269,4 +269,3 @@ const SCHEME_MAP: Record<string, Scheme> = {
   variety_values: gradientColorScheme(["§b", "§f", "§f", "§f", "§b"]),
   og_fade: gradientColorScheme(["§6", "§e", "§f", "§7", "§8"]),
 };
-
