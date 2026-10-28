@@ -11,7 +11,7 @@ import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Nametag } from "~/components/ui/nametag";
 import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
-import { Skin } from "~/components/ui/skin";
+import { Skin, SkinHead } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
 import { useNumberFormat } from "~/i18n/use-number-format";
@@ -72,7 +72,7 @@ export function ArcadePreview({ className }: { className?: string }) {
           className="xl:row-start-1 xl:row-end-4 hidden xl:block"
         />
         <Link to="/{-$locale}/player/$name" params={{ name: arcade.uuid }} className="row-start-1 xl:col-start-2 hover:underline">
-          <Nametag prefixName={arcade.prefixName} />
+          <Nametag prefixName={arcade.prefixName} head={<SkinHead uuid={arcade.uuid} className="shrink-0 lg:size-10 xl:hidden" />} />
         </Link>
         <Box className="row-start-3 xl:row-start-2 xl:row-span-2 xl:col-start-2">
           <Link to="/{-$locale}/player/$name/$game" params={{ name: arcade.uuid, game: "arcade" }} className="hover:underline">
