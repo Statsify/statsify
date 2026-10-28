@@ -61,6 +61,7 @@ jobs:
         run: pnpm test:coverage --changed=$TURBO_SCM_BASE
 
       - name: Check lockfile keeps the asset packages
+        if: ${{ !cancelled() }}
         run: |
           for package in assets/public assets/private; do
             grep -q "^  $package:" pnpm-lock.yaml || {
