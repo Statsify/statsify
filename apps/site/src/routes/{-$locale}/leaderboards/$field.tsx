@@ -7,9 +7,8 @@
  */
 
 import { PageBackground, backgroundFor, preloadBackground } from "~/components/ui/background";
-import { FindPlayer, PageNav } from "~/features/leaderboards/leaderboard-table";
-import { LeaderboardBoxes } from "~/features/leaderboards/leaderboard-boxes";
 import { LeaderboardIndex } from "~/features/leaderboards/leaderboard-index";
+import { LeaderboardStream } from "~/features/leaderboards/leaderboard-stream";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { NotFound } from "~/components/not-found";
 import { cacheHeaders } from "~/lib/cache";
@@ -18,7 +17,7 @@ import { createI18n } from "~/i18n/i18n";
 import { formatNumber } from "~/i18n/format";
 import { loadGlossaryWords } from "~/features/content/content-data";
 import { hasGameIcon } from "~/components/ui/game-icon";
-import { isGameKey, loadLeaderboardGame, loadLeaderboardPage, type LeaderboardView } from "~/features/leaderboards/leaderboard-data";
+import { type EntryState, isGameKey, loadLeaderboardGame, loadLeaderboardPage, streamView, type LeaderboardView } from "~/features/leaderboards/leaderboard-data";
 import { type Crumb, SEARCH_DESCRIPTION_MAX, localeData, notFoundMeta, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
 import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
 import { useTranslation } from "react-i18next";
@@ -80,14 +79,19 @@ interface Explanation {
 
 type RouteData = ({ kind: "board"; explanation?: Explanation } & LeaderboardView) | { kind: "game"; game: LeaderboardGame };
 
-/** The board, with its stat's words: asked for beside it, not after it, since the browser fetches every stat's at once. */
+/**
+ * The board, with its stat's words: asked for beside it, not after it, since the browser fetches every stat's at once.
+ * A page the visit's stream already loaded comes from there.
+ */
 async function loadBoard(
   queryClient: QueryClient,
   field: string,
   deps: { page: number; around?: string; position?: number },
-  words: Promise<GlossaryWords>
+  words: Promise<GlossaryWords>,
+  state: EntryState
 ): Promise<RouteData> {
-  const [view, glossary] = await Promise.all([loadLeaderboardPage(queryClient, field, deps), words]);
+  const loaded = streamView(queryClient, field, state, deps);
+  const [view, glossary] = await Promise.all([loaded ?? loadLeaderboardPage(queryClient, field, deps), words]);
   const key = view.page.glossary;
   const text = key ? glossary[key]?.text : undefined;
   return { kind: "board", ...view, ...(key && text && { explanation: { key, text } }) };
@@ -101,7 +105,7 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
   validateSearch,
   // The API counts pages from 0. The mode only opens a group, so it isn't a dependency.
   loaderDeps: ({ search }) => ({ page: (search.page ?? 1) - 1, around: search.around, position: search.position }),
-  loader: async ({ params, deps, context, parentMatchPromise }): Promise<RouteData> => {
+  loader: async ({ params, deps, context, location, parentMatchPromise }): Promise<RouteData> => {
     if (isGameKey(params.field)) {
       preloadBackground(backgroundFor(params.field));
       return { kind: "game", game: await loadLeaderboardGame(params.field) };
@@ -109,7 +113,7 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
     // The locale's words, by the hash in the layout's data.
     const words = parentMatchPromise.then(({ loaderData }) =>
       loadGlossaryWords({ queryClient: context.queryClient, locale: context.locale, hash: loaderData?.glossaryHash ?? "" }));
-    return loadBoard(context.queryClient, params.field, deps, words);
+    return loadBoard(context.queryClient, params.field, deps, words, location.state);
   },
   staleTime: 60_000,
   staticData: { tabIcon: gameTabIcon },
@@ -222,9 +226,9 @@ function GameIndexPage({ game }: { game: LeaderboardGame }) {
   );
 }
 
-function LeaderboardPage({ view: { page, miss, explanation } }: { view: LeaderboardView & { explanation?: Explanation } }) {
+function LeaderboardPage({ view }: { view: LeaderboardView & { explanation?: Explanation } }) {
   const { t } = useTranslation();
-  const { field } = Route.useParams();
+  const { page, explanation } = view;
 
   return (
     <div className="relative grow">
@@ -260,9 +264,7 @@ function LeaderboardPage({ view: { page, miss, explanation } }: { view: Leaderbo
             </p>
           )}
         </div>
-        <FindPlayer field={field} pages={page.pages} miss={miss} />
-        <LeaderboardBoxes page={page} />
-        <PageNav field={field} page={page.page} pages={page.pages} />
+        <LeaderboardStream view={view} />
       </div>
     </div>
   );

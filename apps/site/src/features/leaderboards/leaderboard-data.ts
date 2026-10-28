@@ -16,7 +16,8 @@ import { ensurePlayer } from "~/features/player/resolve";
 import { orNull, rpc } from "~/lib/orpc";
 import { z } from "zod";
 import type { LeaderboardGame, LeaderboardPage } from "@statsify/contract";
-import type { QueryClient } from "@tanstack/react-query";
+import type { InfiniteData, QueryClient } from "@tanstack/react-query";
+import type { HistoryState } from "@tanstack/react-router";
 
 export const PAGE_SIZE = 25;
 
@@ -93,6 +94,65 @@ export interface LeaderboardView {
   noindex: boolean;
 }
 
+export interface StreamState {
+  key: string;
+  field: string;
+  around?: string;
+  position?: number;
+}
+
+/** A page of a stream: its rows less the players a page loaded before it already shows. */
+export interface StreamChunk {
+  page: LeaderboardPage;
+  /** How many rows the API sent: none ends the board, while a page of repeats doesn't. */
+  sent: number;
+  miss?: AroundMiss;
+  /** The page the visit opened. */
+  seed?: boolean;
+}
+
+export const streamKey = (field: string, key: string) => ["leaderboard-stream", field, key] as const;
+
+/** A history entry's state as the router reads it: the site's own, and the entry's key. */
+export type EntryState = HistoryState & { __TSR_key?: string };
+
+/**
+ * The stream of the visit a history entry is. An entry without one hasn't left the page it opened, so its URL is that
+ * page's and its own key names the stream.
+ */
+export const streamOf = (
+  state: EntryState,
+  field: string,
+  { around, position }: { around?: string; position?: number }
+): StreamState =>
+  state.leaderboardStream?.field === field
+    ? state.leaderboardStream
+    // eslint-disable-next-line no-underscore-dangle -- the history entry's key, under TanStack's name
+    : { key: state.__TSR_key ?? "", field, around, position };
+
+/** A page as the stream asks for it: no `around`, and the input in one order, so the edge caches one copy. */
+export const fetchStreamPage = (field: string, page: number, signal?: AbortSignal) =>
+  rpc.leaderboard.page({ field, page, size: PAGE_SIZE }, { signal });
+
+/**
+ * The page the URL names, from the visit's stream when it already holds it: following the stream by URL costs no
+ * request.
+ */
+export function streamView(
+  queryClient: QueryClient,
+  field: string,
+  state: EntryState,
+  { page, around, position }: { page: number; around?: string; position?: number }
+): LeaderboardView | undefined {
+  const stream = streamOf(state, field, { around, position });
+  const selector = around !== undefined || position !== undefined;
+  if (selector && (around !== stream.around || position !== stream.position)) return;
+
+  const chunks = queryClient.getQueryData<InfiniteData<StreamChunk, number>>(streamKey(field, stream.key))?.pages;
+  const chunk = chunks?.find((chunk) => (selector ? chunk.seed : chunk.page.page === page));
+  return chunk && { page: chunk.page, miss: chunk.miss, noindex: chunk.page.page > 0 || selector };
+}
+
 /**
  * The page to render for `/leaderboards/$field?page=&around=&position=`. `around=<name>` resolves the player
  * and asks the API for the page they are on; an unknown or unranked player falls back to the
@@ -105,26 +165,14 @@ export async function loadLeaderboardPage(
   { page, around, position }: { page: number; around?: string; position?: number }
 ): Promise<LeaderboardView> {
   if (!around && position) {
-    const held = await requirePage({ field, page: Math.floor((position - 1) / PAGE_SIZE) });
+    const held = await requireShownPage(field, Math.floor((position - 1) / PAGE_SIZE));
     return { page: { ...held, rows: held.rows.map((row) => ({ ...row, highlight: row.position === position })) }, noindex: true };
   }
 
-  if (!around) {
-    const shown = await requirePage({ field, page });
-    // Past the last page goes to the last page, cached for a minute only, since the board can grow.
-    if (shown.rows.length === 0 && shown.pages > 0 && page >= shown.pages) {
-      throw redirect({
-        to: ".",
-        search: (prev) => ({ ...prev, page: shown.pages > 1 ? shown.pages : undefined }),
-        statusCode: 301,
-        headers: { "Cache-Control": "public, max-age=60", "CDN-Cache-Control": "max-age=60" },
-      });
-    }
-    return { page: shown, noindex: page > 0 };
-  }
+  if (!around) return { page: await requireShownPage(field, page), noindex: page > 0 };
 
   const identity = await ensurePlayer(queryClient, around);
-  if (!identity) return { page: await requirePage({ field, page }), miss: { kind: "unknown", name: around }, noindex: true };
+  if (!identity) return { page: await requireShownPage(field, page), miss: { kind: "unknown", name: around }, noindex: true };
 
   const anchored = await fetchPage({ field, around: identity.uuid });
   if (anchored) {
@@ -134,7 +182,24 @@ export async function loadLeaderboardPage(
     return { page: { ...anchored, rows }, ...(moved && { miss: { kind: "moved", name: identity.username } }), noindex: true };
   }
 
-  return { page: await requirePage({ field, page }), miss: { kind: "unranked", name: identity.username }, noindex: true };
+  return { page: await requireShownPage(field, page), miss: { kind: "unranked", name: identity.username }, noindex: true };
+}
+
+/**
+ * The page, but past the last page goes to the last page, cached for a minute only, since the board can grow. The
+ * redirect drops `around` and `position`, which led past the end too.
+ */
+async function requireShownPage(field: string, page: number): Promise<LeaderboardPage> {
+  const shown = await requirePage({ field, page });
+  if (shown.rows.length === 0 && shown.pages > 0 && page >= shown.pages) {
+    throw redirect({
+      to: ".",
+      search: (prev) => ({ ...prev, page: shown.pages > 1 ? shown.pages : undefined, around: undefined, position: undefined }),
+      statusCode: 301,
+      headers: { "Cache-Control": "public, max-age=60", "CDN-Cache-Control": "max-age=60" },
+    });
+  }
+  return shown;
 }
 
 async function requirePage(input: PageQuery): Promise<LeaderboardPage> {

@@ -7,9 +7,9 @@
  */
 
 import { Button } from "~/components/ui/button";
-import { useEffect, useId, useRef } from "react";
+import { useId } from "react";
 import { Hint } from "~/components/ui/hint";
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
 import { Search } from "~/components/search";
 import { formatPosition } from "@statsify/profiles/format-position";
@@ -36,31 +36,6 @@ export function PlayerLink({ page, name, className, children }: { page: Leaderbo
       {children}
     </Link>
   );
-}
-
-/**
- * A ref for the highlighted (`around`) row, which is brought into view, centred, when the page lands. After a client
- * navigation the router scrolls the window to the top once the new page is on screen, so the row is centred again
- * then; a page Back or Forward put back where it was left stays there.
- */
-export function useHighlightScroll<T extends HTMLElement>(page: LeaderboardPage) {
-  const ref = useRef<T>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    const row = ref.current;
-    if (!row) return;
-
-    const scroll = () => row.scrollIntoView({ block: "center", inline: "nearest" });
-    scroll();
-    const unsubscribe = router.subscribe("onRendered", () => {
-      unsubscribe();
-      if (scrollY === 0) scroll();
-    });
-    return unsubscribe;
-  }, [page, router]);
-
-  return ref;
 }
 
 /**
@@ -107,8 +82,11 @@ export function Position({ position, className }: { position: number; className:
   );
 }
 
-/** Previous and next page links around the page count; the links drop `around`. */
-export function PageNav({ field, page, pages }: { field: string; page: number; pages: number }) {
+/**
+ * Previous and next page links around the page count; the links drop `around`. Under a stream of pages, `page` is its
+ * first and `last` its last, and the links go past them.
+ */
+export function PageNav({ field, page, last = page, pages }: { field: string; page: number; last?: number; pages: number }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
 
@@ -132,8 +110,12 @@ export function PageNav({ field, page, pages }: { field: string; page: number; p
     // Phones put the page count above the two buttons, so nothing wraps or overflows.
     <nav className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2" aria-label={t("leaderboards.pages")}>
       {pageLink(page - 1, t("leaderboards.previous"), page <= 0)}
-      <p className="order-first basis-full text-mc-1 whitespace-nowrap text-center sm:order-none sm:basis-auto sm:text-mc-1.5">{t("leaderboards.page", { page: n(page + 1), pages: n(Math.max(pages, 1)) })}</p>
-      {pageLink(page + 1, t("leaderboards.next"), page + 1 >= pages)}
+      <p className="order-first basis-full text-mc-1 whitespace-nowrap text-center sm:order-none sm:basis-auto sm:text-mc-1.5">
+        {last > page
+          ? t("leaderboards.pageRange", { first: n(page + 1), last: n(last + 1), pages: n(pages) })
+          : t("leaderboards.page", { page: n(page + 1), pages: n(Math.max(pages, 1)) })}
+      </p>
+      {pageLink(last + 1, t("leaderboards.next"), last + 1 >= pages)}
     </nav>
   );
 }

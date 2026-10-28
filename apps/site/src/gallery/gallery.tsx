@@ -130,11 +130,6 @@ function useFixtureSearchClient() {
  * are forced by the visual regression harness through `data-gallery-force`; everything else renders as is.
  */
 export function Gallery() {
-  // `LeaderboardBoxes` scrolls its highlighted row into view on mount; the gallery opens at the top (or the hash).
-  useEffect(() => {
-    if (!globalThis.location.hash) globalThis.scrollTo(0, 0);
-  }, []);
-
   return (
     <div className="grow">
       <div className="w-container flex flex-col gap-12 px-4 py-6 text-mc-white md:px-8">
