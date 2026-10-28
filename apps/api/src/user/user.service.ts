@@ -66,9 +66,7 @@ export class UserService {
     if (!user) throw new NotFoundException("user");
 
     await this.userModel
-      .updateOne({ hasBadge: true })
-      .where("id")
-      .equals(user.id)
+      .updateOne({ id: user.id }, { hasBadge: true })
       .lean()
       .exec();
 
@@ -110,7 +108,7 @@ export class UserService {
       .findOneAndUpdate(
         { id },
         { id, uuid, verifiedAt: Date.now() },
-        { upsert: true, new: true }
+        { upsert: true, returnDocument: "after" }
       )
       .lean()
       .exec();
@@ -125,7 +123,7 @@ export class UserService {
       .findOneAndUpdate(
         { [type]: tag },
         { $unset: { uuid: "" }, unverifiedAt: Date.now() },
-        { new: true },
+        { returnDocument: "after" },
       )
       .lean()
       .exec();

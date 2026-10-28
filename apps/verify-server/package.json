@@ -18,8 +18,8 @@
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
-    "@typegoose/typegoose": "^12.21.1",
+    "@typegoose/typegoose": "^13.5.0",
     "minecraft-protocol": "1.68.0",
-    "mongoose": "~8.21.1"
+    "mongoose": "~9.9.5"
   }
 }
