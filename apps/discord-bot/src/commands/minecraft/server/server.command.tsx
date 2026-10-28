@@ -15,6 +15,9 @@ import { getTheme } from "#themes";
 import { loadImage } from "skia-canvas";
 import { render } from "@statsify/rendering";
 
+// Hostname or IPv4 with an optional port, so lookups stay on the status API
+const SERVER_ADDRESS_REGEX = /^[\w-]{1,63}(?:\.[\w-]{1,63})*(?::\d{1,5})?$/;
+
 @Command({
   description: (t) => t("commands.server"),
   args: [ServerArgument],
@@ -69,8 +72,11 @@ export class ServerCommand {
         s.addresses.find((address) => tag.endsWith(address))
     );
 
+    const address = mappedServer?.primaryAddress ?? tag;
+    if (!SERVER_ADDRESS_REGEX.test(address)) throw new ErrorMessage("errors.invalidServer");
+
     const server = await this.axios
-      .get<Server>(mappedServer?.primaryAddress ?? tag)
+      .get<Server>(address)
       .then((res) => res.data)
       .catch(() => null);
 
