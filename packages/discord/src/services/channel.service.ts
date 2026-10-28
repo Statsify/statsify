@@ -51,7 +51,8 @@ export class ChannelService {
   }
 
   public async getMessages(channelId: string): Promise<APIMessage[]> {
-    const response = await this.rest.get(`/channels/${channelId}/messages`);
+    // 100 is the most messages Discord returns in one request
+    const response = await this.rest.get(`/channels/${channelId}/messages?limit=100`);
     return parseDiscordResponse(response);
   }
 

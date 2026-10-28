@@ -194,7 +194,8 @@ export class TicketService {
 
     if (!ticket) return false;
 
-    const messages = await this.channelService.getMessages(ticket.channel);
+    // Discord returns the newest messages first, so reverse them to log the ticket in order
+    const messages = (await this.channelService.getMessages(ticket.channel)).toReversed();
     await this.channelService.delete(ticket.channel);
 
     const listener = CommandListener.getInstance();
