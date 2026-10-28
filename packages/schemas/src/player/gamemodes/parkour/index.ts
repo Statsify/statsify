@@ -131,7 +131,11 @@ export class Parkour {
 
   public constructor(data: APIData) {
     const getTime = (key: string): number =>
-      data[key]?.sort?.((a: any, b: any) => a.timeTook - b.timeTook)[0]?.timeTook;
+      data[key]?.reduce?.(
+        (best: number | undefined, { timeTook }: APIData) =>
+          best === undefined || timeTook < best ? timeTook : best,
+        undefined
+      );
 
     this.ARCADE = getTime("ArcadeGames2");
     this.BEDWARS = getTime("BedwarsSpring2023");
