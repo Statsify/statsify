@@ -60,12 +60,12 @@ jobs:
       - name: Test
         run: pnpm test:coverage --changed=$TURBO_SCM_BASE
 
-      - name: Check lockfile keeps the asset packages
+      - name: Check asset packages in lockfile
         if: ${{ !cancelled() }}
         run: |
           for package in assets/public assets/private; do
             grep -q "^  $package:" pnpm-lock.yaml || {
-              echo "::error file=pnpm-lock.yaml::pnpm-lock.yaml lost $package, so pnpm install --frozen-lockfile fails wherever the submodules are checked out. Rerun pnpm install with the submodules checked out."
+              echo "::error file=pnpm-lock.yaml::Missing $package. Run pnpm install with the submodules checked out."
               exit 1
             }
           done
