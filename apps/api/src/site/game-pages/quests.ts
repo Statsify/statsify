@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { FormattedGame, type GameId, type PlayerStats, Quests, questPeriodStart } from "@statsify/schemas";
+import { type GameId, type PlayerStats, Quests, questPeriodStart } from "@statsify/schemas";
 import { QUESTS, QUEST_PERIODS, QUEST_TIMES, type QuestPeriod, modeName, modeStats, shapeKeys } from "@statsify/catalog";
 import { type CellSpec, type GameLayout, type OverviewSpec, type PageSpec, gamesOf, rankingPage, read } from "./layout.js";
+import { gameName, siteName } from "../names.js";
 
 const GAMES = gamesOf(QUESTS);
 
@@ -60,8 +61,8 @@ function game(id: GameId, period: QuestPeriod): PageSpec {
 
   return {
     place,
-    heading: { word: null, mode: `§l${FormattedGame[id]}` },
-    overview: [...OVERVIEW, { key: "total", at: place, label: "stats.game-total", params: { game: modeName(QUESTS, id) }, colour: "§a" }],
+    heading: { word: null, mode: `§l${gameName(id)}` },
+    overview: [...OVERVIEW, { key: "total", at: place, label: "stats.game-total", params: { game: siteName(modeName(QUESTS, id)) }, colour: "§a" }],
     sections: [
       {
         cells: quests.map(({ key, name }): CellSpec =>

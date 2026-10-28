@@ -7,6 +7,7 @@
  */
 
 import { GAMES, type Stat, allStats, modeName } from "@statsify/catalog";
+import { siteName } from "./names.js";
 import { removeFormatting } from "@statsify/util";
 import type { LeaderboardColumn, LeaderboardGame, LeaderboardGroup } from "@statsify/contract";
 
@@ -29,7 +30,7 @@ export function catalogStats(): Map<string, Stat> {
  */
 export function leaderboardColumn(field: string, name: string): LeaderboardColumn {
   const stat = catalogStats().get(field);
-  return { field, name, label: stat?.label ?? null, colour: typeof stat?.colour === "string" ? stat.colour : null };
+  return { field, name: siteName(name), label: stat?.label ?? null, colour: typeof stat?.colour === "string" ? stat.colour : null };
 }
 
 /** The `stats.*` locale key the bot's cards label a stat with, where the catalog describes it. */
@@ -68,7 +69,7 @@ export function leaderboardGame({ leaderboards, ...group }: LeaderboardGroup): L
   const modes = new Map<string, LeaderboardGame["modes"][number]>([["", { key: "", name: null, leaderboards: [] }]]);
 
   for (const { api } of game?.modes.getModes() ?? []) {
-    modes.set(api, { key: api, name: removeFormatting(modeName(game, api)), leaderboards: [] });
+    modes.set(api, { key: api, name: removeFormatting(siteName(modeName(game, api))), leaderboards: [] });
   }
 
   const groupName = removeFormatting(group.formatted);

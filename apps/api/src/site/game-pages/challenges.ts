@@ -7,8 +7,9 @@
  */
 
 import { CHALLENGES, modeName, shapeKeys } from "@statsify/catalog";
-import { FormattedGame, type GameId } from "@statsify/schemas";
 import { type GameLayout, type PageSpec, rankingPage } from "./layout.js";
+import { gameName, siteName } from "../names.js";
+import type { GameId } from "@statsify/schemas";
 
 /** The games in the schema's field order, which the card keeps on a tie (the registry's puts Duels first). */
 const GAMES = CHALLENGES.shapes.flatMap(({ modes }) => modes) as GameId[];
@@ -26,8 +27,8 @@ function game(id: GameId): PageSpec {
   const size = keys.length < 5 ? 4 : (keys.length - 1) ** 0.5;
 
   return {
-    heading: { word: null, mode: `§l${FormattedGame[id]}` },
-    overview: ["total", { key: "total", at: id, label: "stats.game-total", params: { game: modeName(CHALLENGES, id) } }],
+    heading: { word: null, mode: `§l${gameName(id)}` },
+    overview: ["total", { key: "total", at: id, label: "stats.game-total", params: { game: siteName(modeName(CHALLENGES, id)) } }],
     sections: [
       {
         cells: keys.filter((key) => key !== "total"),

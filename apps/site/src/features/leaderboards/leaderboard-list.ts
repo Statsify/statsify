@@ -52,14 +52,15 @@ export function withoutGroupPrefix<G extends { name: string; leaderboards: { nam
 
 /**
  * Words people shorten, each also matching the words it stands for: a game ("bw", BedWars) or a stat ("fk", final
- * kills). Kept here because no leaderboard sets the schema's aliases yet. The game URLs read the same table
- * (`gameKeysFor`).
+ * kills). The bot's joined spellings ("megawalls") stand for the site's spaced names. Kept here because no leaderboard
+ * sets the schema's aliases yet. The game URLs read the same table (`gameKeysFor`).
  */
 const ABBREVIATIONS: Record<string, string[]> = {
   ab: ["arena brawl"],
   bb: ["build battle", "beds broken"],
   bl: ["beds lost"],
-  bsg: ["blitzsg"],
+  blitzsg: ["blitz sg"],
+  bsg: ["blitz sg"],
   bw: ["bedwars"],
   cac: ["cops and crims"],
   cvc: ["cops and crims"],
@@ -69,18 +70,22 @@ const ABBREVIATIONS: Record<string, string[]> = {
   hns: ["hide and seek"],
   ks: ["killstreak"],
   lvl: ["level"],
+  megawalls: ["mega walls"],
   mm: ["murder mystery"],
-  mw: ["megawalls"],
+  mw: ["mega walls"],
   pb: ["paintball"],
   sh: ["smash heroes"],
-  suhc: ["speeduhc"],
+  sheepwars: ["sheep wars"],
+  speeduhc: ["speed uhc"],
+  suhc: ["speed uhc"],
   sw: ["skywars"],
   tkr: ["turbo kart racers"],
   tnt: ["tnt games"],
   vz: ["vampirez"],
-  woolwars: ["woolgames"],
+  woolgames: ["wool games"],
+  woolwars: ["wool wars", "wool games"],
   ws: ["winstreak"],
-  ww: ["wool wars", "woolwars", "woolgames"],
+  ww: ["wool wars", "wool games"],
   xp: ["exp"],
 };
 

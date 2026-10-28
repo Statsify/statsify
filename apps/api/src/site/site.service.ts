@@ -9,7 +9,6 @@
 import * as Sentry from "@sentry/node";
 import { CacheLevel } from "@statsify/api-client";
 import {
-  FormattedGame,
   type GameId,
   Guild,
   type LeaderboardEnabledMetadata,
@@ -53,6 +52,7 @@ import type {
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
+import { gameName, siteName } from "./names.js";
 import { buildGlossary, buildPrestigeSheet } from "./content.js";
 import { catalogGlossary, catalogLabel, leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
@@ -147,7 +147,7 @@ const tooManyRequests = (retryAfter: number) =>
 
 type GroupNames = Pick<LeaderboardGroup, "game" | "formatted">;
 
-const gameGroup = (game: GameId): GroupNames => ({ game, formatted: FormattedGame[game] });
+const gameGroup = (game: GameId): GroupNames => ({ game, formatted: gameName(game) });
 
 /** A group that isn't a game's, so it has no colours. */
 const otherGroup = (name: string): GroupNames => ({ game: null, formatted: name });
@@ -200,7 +200,7 @@ function buildLeaderboardGroups(): LeaderboardGroup[] {
     const label = catalogLabel(field);
     group.leaderboards.push({
       field,
-      name: removeFormatting(leaderboard.name),
+      name: removeFormatting(siteName(leaderboard.name)),
       ...(label && { label }),
       ...(leaderboard.enabled && leaderboard.aliases.length > 0 && { aliases: leaderboard.aliases }),
     });
@@ -557,7 +557,7 @@ export class SiteService implements OnApplicationBootstrap {
 
     return {
       field: input.field,
-      formatted: metadata.name,
+      formatted: siteName(metadata.name),
       game: LEADERBOARD_GROUPS[input.field.split(".")[1]]?.game ?? null,
       glossary: catalogGlossary(input.field),
       columns,

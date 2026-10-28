@@ -7,9 +7,10 @@
  */
 
 import { type ColourCode, type Game, type Stat, modeName, shapeKeys, statAt } from "@statsify/catalog";
-import { FormattedGame, type GameId, type Player, type PlayerStats } from "@statsify/schemas";
 import { freshness } from "../cooldown.js";
+import { gameName, siteName } from "../names.js";
 import { arrayGroup } from "@statsify/util";
+import type { GameId, Player, PlayerStats } from "@statsify/schemas";
 import type { GamePage, StatCell, StatSection } from "@statsify/contract";
 
 /**
@@ -163,7 +164,7 @@ export const rankingPage = (
   heading: { word: null },
   sections: [
     {
-      cells: games.map((game) => ({ key: "total", at: at(game), name: FormattedGame[game], icon: game, ...(colour && { colour }) })),
+      cells: games.map((game) => ({ key: "total", at: at(game), name: gameName(game), icon: game, ...(colour && { colour }) })),
       sort,
       list: true,
     },
@@ -290,7 +291,7 @@ function cell(player: Player, stat: Stat, spec: Spec): StatCell {
     key: stat.path.slice(stat.path.indexOf(".", "stats.".length) + 1),
     label: spec.label ?? stat.label,
     ...(spec.short && { short: spec.short }),
-    ...(name !== undefined && { name }),
+    ...(name !== undefined && { name: siteName(name) }),
     ...(spec.params && { params: spec.params }),
     value,
     ...(hidden && { hidden }),
@@ -451,7 +452,7 @@ function level(player: Player, game: Game, spec: LevelSpec): NonNullable<GamePag
 export function pageName(layout: GameLayout): string {
   if (layout.name) return layout.name;
   if (!layout.game.id) throw new Error(`${layout.game.key} has neither a name nor a game id`);
-  return FormattedGame[layout.game.id];
+  return gameName(layout.game.id);
 }
 
 /**
@@ -470,7 +471,7 @@ export function buildGamePage(
   const modeSpec = modes.find(({ key }) => key === mode);
   if (!modeSpec) throw new Error(`${game.key} has no ${mode} page`);
 
-  const name = (key: string) => layout.modeNames?.[key] ?? modeName(game, key);
+  const name = (key: string) => layout.modeNames?.[key] ?? siteName(modeName(game, key));
   const submodes = modeSpec.submodes ?? [];
   const sub = submodes.length > 0 ? submode ?? submodes[0].key : undefined;
   const periods = layout.periods?.(mode) ?? [];
