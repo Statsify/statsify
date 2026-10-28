@@ -50,16 +50,22 @@ jobs:
             turbo-${{ github.job }}-${{ github.ref_name }}-
 
       - name: Install dependencies
+        id: install
         run: pnpm install --frozen-lockfile
 
+      # Run every check after install even when one fails, so a run reports all failures at once
       - name: Lint
         run: pnpm lint:ci --affected
 
       - name: Typecheck
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: pnpm typecheck --affected
 
       - name: Build
+        id: build
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: pnpm build
 
       - name: Test
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: pnpm test:coverage --changed=$TURBO_SCM_BASE
