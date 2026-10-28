@@ -79,9 +79,7 @@ export class UserService {
     const [tag, type] = parseTag(idOrUuid);
 
     const user = await this.userModel
-      .findOneAndUpdate({ hasBadge: false })
-      .where(type)
-      .equals(tag)
+      .findOneAndUpdate({ [type]: tag }, { hasBadge: false })
       .lean()
       .exec();
 
