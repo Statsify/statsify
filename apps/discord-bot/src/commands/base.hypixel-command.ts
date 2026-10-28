@@ -49,7 +49,7 @@ export type ModeEmoji = LocalizationString | false | undefined;
 
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   getPreProfileData?(player: Player): K | Promise<K>;
-  filterModes?(player: Player, modes: GameModeWithSubModes<T>[]): GameModeWithSubModes<T>[];
+  filterModes?(player: Player, modes: GameModeWithSubModes<T>[], context: CommandContext): GameModeWithSubModes<T>[];
   filterSubmodes?(player: Player, mode: GameModeWithSubModes<T>): GameModeWithSubModes<T>["submodes"];
   getModeEmojis?(modes: GameModeWithSubModes<T>[]): ModeEmoji[];
   getSubModeEmojis?<M extends ApiModeFromGameModes<T>>(mode: M, submodes: SubModeForMode<T, M>[]): ModeEmoji[];
@@ -81,7 +81,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     const data: K = (await this.getPreProfileData?.(player)) ?? noop();
 
     const allModes = this.modes.getModes();
-    const filteredModes = this.filterModes?.(player, allModes) ?? allModes;
+    const filteredModes = this.filterModes?.(player, allModes, context) ?? allModes;
     const emojis = this.getModeEmojis?.(filteredModes) ?? [];
 
     const pages: Page[] = filteredModes.map((mode, index) => {

@@ -11,11 +11,15 @@ import {
   BaseProfileProps,
   ProfileData,
 } from "#commands/base.hypixel-command";
-import { Command } from "@statsify/discord";
+import { Command, CommandContext, PlayerArgument } from "@statsify/discord";
 import { GameModeWithSubModes, MEGAWALLS_MODES, MegaWallsModes, Player } from "@statsify/schemas";
+import { KitArgument, filterKits } from "#commands/kit.argument";
 import { MegaWallsProfile } from "./megawalls.profile.js";
 
-@Command({ description: (t) => t("commands.megawalls") })
+@Command({
+  description: (t) => t("commands.megawalls"),
+  args: [PlayerArgument, new KitArgument(MEGAWALLS_MODES)],
+})
 export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
   public constructor() {
     super(MEGAWALLS_MODES);
@@ -23,9 +27,10 @@ export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
 
   public filterModes(
     player: Player,
-    modes: GameModeWithSubModes<MegaWallsModes>[]
+    modes: GameModeWithSubModes<MegaWallsModes>[],
+    context: CommandContext
   ): GameModeWithSubModes<MegaWallsModes>[] {
-    return filterMegaWallsKits(player, modes);
+    return filterMegaWallsKits(player, modes, context.option<string | null>("kit"));
   }
 
   public getProfile(
@@ -38,14 +43,14 @@ export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
 
 export function filterMegaWallsKits(
   player: Player,
-  modes: GameModeWithSubModes<MegaWallsModes>[]
+  modes: GameModeWithSubModes<MegaWallsModes>[],
+  kit?: string | null
 ): GameModeWithSubModes<MegaWallsModes>[] {
   const { megawalls } = player.stats;
-  const [overall, ...kits] = modes;
 
-  const filteredKits = [...kits]
-    .sort((a, b) => megawalls[b.api].points - megawalls[a.api].points)
-    .slice(0, 24);
-
-  return [overall, ...filteredKits];
+  return filterKits(
+    modes,
+    (a, b) => megawalls[b.api].points - megawalls[a.api].points,
+    kit
+  );
 }

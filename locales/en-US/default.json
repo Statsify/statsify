@@ -6,6 +6,7 @@
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "A guild name or guild member",
     "guild-type": "The type of guild search to perform",
+    "kit": "A kit to show first",
     "mojang-player": "A Minecraft username or UUID",
     "number": "A number",
     "player": "$t(arguments.mojang-player)",
@@ -380,6 +381,10 @@
       "description_name": "A guild by the name of `{{tag}}` could not be found!",
       "description_player": "A guild with the player `{{tag}}` could not be found!",
       "title": "Invalid Guild"
+    },
+    "invalidKit": {
+      "description": "That kit doesn't exist. Pick one from the suggestions instead.",
+      "title": "Invalid Kit"
     },
     "invalidPlayer": {
       "description_username": "A player by the username of `{{tag}}` could not be found!",
