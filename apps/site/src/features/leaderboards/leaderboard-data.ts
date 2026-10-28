@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type GroupSummary, type ListGroup, fetchLeaderboardList, filterGroups } from "./leaderboard-list";
+import { type GroupSummary, type ListGroup, fetchLeaderboardList, filterGroups, gameKeysFor } from "./leaderboard-list";
+import { REDIRECT_HEADERS } from "~/lib/player-route";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createServerFn } from "@tanstack/react-start";
 import { leaderboardList } from "~/server/leaderboard-list.server";
@@ -58,6 +59,13 @@ export const isGameKey = (field: string): boolean => !field.includes(".");
 export async function loadLeaderboardGame(key: string): Promise<LeaderboardGame> {
   const game = key.length <= 32 ? await orNull(rpc.leaderboard.game({ key })) : null;
   if (game) return game;
+
+  // Another case, or a short name the player URLs take too (`bw`, `tnt`), lands on the game's own key.
+  const lower = key.toLowerCase();
+  const aliases = [...new Set([lower, ...gameKeysFor(lower)])].filter((alias) => alias !== key && alias.length <= 32);
+  const found = await Promise.all(aliases.map((alias) => orNull(rpc.leaderboard.game({ key: alias }))));
+  const alias = aliases.find((_, index) => found[index]);
+  if (alias) throw redirect({ to: "/{-$locale}/leaderboards/$field", params: { field: alias }, search: true, statusCode: 301, headers: REDIRECT_HEADERS });
 
   cacheNotFoundResponse();
   throw notFound();
