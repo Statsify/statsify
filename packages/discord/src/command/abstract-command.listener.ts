@@ -12,6 +12,7 @@ import {
   ApplicationCommandOptionType,
   GatewayDispatchEvents,
   InteractionResponseType,
+  MessageFlags,
 } from "discord-api-types/v10";
 import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
@@ -141,7 +142,8 @@ export abstract class AbstractCommandListener {
       if (typeof response !== "object") return;
       transaction?.finish();
 
-      const tip = response instanceof ErrorMessage || response?.ephemeral ? undefined : message;
+      const isPrivate = command.ephemeral || response?.ephemeral;
+      const tip = response instanceof ErrorMessage || isPrivate ? undefined : message;
 
       await context.reply({
         ...tip,
@@ -275,12 +277,21 @@ export abstract class AbstractCommandListener {
 
   private async onInteraction(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
     if (interaction.isCommandInteraction()) {
-      this.onCommand(interaction).catch((err) => {
+      const parentData = interaction.getData();
+      const parentCommand = this.commands.get(parentData.name);
+      if (!parentCommand) return { type: InteractionResponseType.DeferredChannelMessageWithSource };
+
+      const [command, data, commandName] = this.getCommandAndData(parentCommand, parentData);
+      this.onCommand(interaction, command, data, commandName, parentCommand).catch((err) => {
         this.logger.error("An error occurred when handling a command interaction");
         this.logger.error(err);
       });
 
-      return { type: InteractionResponseType.DeferredChannelMessageWithSource };
+      // Discord decides who can see the reply from this first response, so a later edit can't make it ephemeral
+      return {
+        type: InteractionResponseType.DeferredChannelMessageWithSource,
+        data: command.ephemeral ? { flags: MessageFlags.Ephemeral } : undefined,
+      };
     }
 
     if (interaction.isAutocompleteInteraction()) return this.onAutocomplete(interaction);
@@ -328,5 +339,11 @@ export abstract class AbstractCommandListener {
     });
   }
 
-  protected abstract onCommand(interaction: Interaction): Promise<void>;
+  protected abstract onCommand(
+    interaction: Interaction,
+    command: CommandResolvable,
+    data: any,
+    commandName: string,
+    parentCommand: CommandResolvable
+  ): Promise<void>;
 }
