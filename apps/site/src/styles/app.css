@@ -284,6 +284,17 @@
   }
 }
 
+/* Skins and heads fade in as they load (`SKIN_FADE_SCRIPT`); without scripts nothing marks them, so they just show. */
+@media (scripting: enabled) {
+  img[data-skin] {
+    transition: opacity 150ms ease-out;
+  }
+
+  img[data-skin]:not([data-loaded]) {
+    opacity: 0;
+  }
+}
+
 /* Reduced motion: nothing on the site slides, fades or turns; every animation and transition jumps to its end. What
    carries meaning in motion has its own still form (the progress bar's full bar, the home page's final numbers), and
    Motion's own animations check the setting where they run. */
