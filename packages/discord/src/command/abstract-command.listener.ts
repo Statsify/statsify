@@ -142,7 +142,8 @@ export abstract class AbstractCommandListener {
       if (typeof response !== "object") return;
       transaction?.finish();
 
-      const tip = response instanceof ErrorMessage || response?.ephemeral ? undefined : message;
+      const isPrivate = command.ephemeral || response?.ephemeral;
+      const tip = response instanceof ErrorMessage || isPrivate ? undefined : message;
 
       await context.reply({
         ...tip,
