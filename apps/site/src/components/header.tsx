@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Link, useLocation, useMatch } from "@tanstack/react-router";
+import { Link, useMatch, useRouterState } from "@tanstack/react-router";
 import { Logo, Wordmark } from "~/components/icons/logo";
 import { Search } from "~/components/search";
 import { SearchIcon } from "~/components/icons/search";
@@ -46,7 +46,8 @@ function pathWithoutLocale(pathname: string) {
 
 export function Header() {
   const { t } = useTranslation();
-  const pathname = useLocation({ select: (location) => location.pathname });
+  // The page on screen, not the one loading, so the header's search and the page's own never show at once.
+  const pathname = useRouterState({ select: ({ resolvedLocation, location }) => (resolvedLocation ?? location).pathname });
   const showSearch = !OWN_SEARCH.test(pathWithoutLocale(pathname));
   // On a game page a picked name opens the same game, mode and period, to compare; the profile is a tap away from there.
   const gameTarget = useMatch({
