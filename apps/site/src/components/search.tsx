@@ -13,6 +13,7 @@ import { Link, useHydrated, useNavigate, useRouterState } from "@tanstack/react-
 import { SearchIcon } from "~/components/icons/search";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
+import { colourClass, nameColour } from "~/components/ui/minecraft-text";
 import { orpc } from "~/lib/orpc";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useRecentPlayers } from "~/features/player/recent";
@@ -95,13 +96,16 @@ const SIZES = {
   },
 } as const;
 
+/** A row of the sheet: a suggested or recent name, in the colour the player's rank gives it where known. */
+type SearchedPlayer = { name: string; colour?: string };
+
 /** `skipEmpty`: an empty box asks for nothing (the API suggests nothing for it), as one that lists recent players. */
 function usePlayerSuggestions(input: string, focused: boolean, skipEmpty: boolean) {
   const debouncedInput = useDebounce(input, SEARCH_DEBOUNCE_MS);
   const length = debouncedInput.trim().length;
 
-  // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch alone. While the next query loads,
-  // the last suggestions stay up, so the sheet never empties between keystrokes.
+  // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch, with one lookup for the rank colours.
+  // While the next query loads, the last suggestions stay up, so the sheet never empties between keystrokes.
   return useQuery(
     orpc.search.suggest.queryOptions({
       input: { query: debouncedInput },
@@ -195,7 +199,10 @@ export function Search({
   const suggestions = usePlayerSuggestions(query, focused, recent);
   const recentPlayers = useRecentPlayers();
   // `query` is the typed text; the arrows put a row's name in the box without leaving the recent players.
-  const names = recent && query.trim() === "" ? recentPlayers?.map((player) => player.name) : suggestions.data;
+  const players: SearchedPlayer[] | undefined =
+    recent && query.trim() === "" ?
+      (recentPlayers ?? undefined) :
+      suggestions.data?.map(({ name, displayName }) => ({ name, colour: displayName === null ? undefined : nameColour(displayName) }));
   const [selected, setSelected] = useState<number | undefined>(undefined);
   // Typing on a keyboard completes the name in place from the first suggestion that starts with it, the rest selected,
   // so Enter opens it and typing on replaces it; none when a suggestion is the name typed. Only while typing at the end:
@@ -203,15 +210,15 @@ export function Search({
   const [completing, setCompleting] = useState(false);
   const typed = query.toLowerCase();
   const match =
-    completing && query.trim() && !suggestions.data?.some((name) => name.toLowerCase() === typed) ?
-      suggestions.data?.find((name) => name.toLowerCase().startsWith(typed)) :
+    completing && query.trim() && !suggestions.data?.some(({ name }) => name.toLowerCase() === typed) ?
+      suggestions.data?.find(({ name }) => name.toLowerCase().startsWith(typed))?.name :
       undefined;
   const completion = match === undefined ? undefined : query + match.slice(query.length);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigateTo = useSearchNavigation(target);
   const go = onSelect ?? navigateTo;
   const optionId = (index: number) => `${listId}-${index}`;
-  const count = names?.length ?? 0;
+  const count = players?.length ?? 0;
   const open = focused && count > 0;
   // Heads load for the rows in view, not all 25: each one is a request, and the edge allows a visitor 60 in 10 seconds.
   const [firstRow, setFirstRow] = useState(0);
@@ -292,7 +299,7 @@ export function Search({
   function onSelectionChange(selected: number) {
     setSelected(selected);
     setCompleting(false);
-    if (names) setInput(names[selected]);
+    if (players) setInput(players[selected].name);
 
     const visible = containerRef.current?.clientHeight ?? 0;
     const maxScroll = count * size.itemHeight - visible;
@@ -405,11 +412,11 @@ export function Search({
         onScroll={(event) => setFirstRow(Math.floor(event.currentTarget.scrollTop / size.itemHeight))}
         className={cn("absolute z-100 w-full overflow-auto bg-blackify-800 shadow-[4px_4px_0_rgb(0_0_0_/_0.5)]", size.sheet)}
       >
-        {names?.map((name, index) => (
+        {players?.map((player, index) => (
           <SearchPlayer
-            key={name}
+            key={player.name}
             id={optionId(index)}
-            player={name}
+            player={player}
             head={index >= firstRow && index < firstRow + size.rows}
             selected={selected === index}
             target={target}
@@ -437,7 +444,7 @@ function SearchPlayer({
   onPick,
 }: {
   id: string;
-  player: string;
+  player: SearchedPlayer;
   /** Whether the row is in view, so its head loads; its slot keeps the name in place either way. */
   head: boolean;
   selected?: boolean;
@@ -454,8 +461,8 @@ function SearchPlayer({
   );
   const content = (
     <>
-      <span className={cn("shrink-0", size.headSlot)}>{head && <SkinHead name={player} size={size.head} />}</span>
-      <p className={cn("text-white selection:bg-white/50", size.text)}>{player}</p>
+      <span className={cn("shrink-0", size.headSlot)}>{head && <SkinHead name={player.name} size={size.head} />}</span>
+      <p className={cn(player.colour ? colourClass(player.colour) : "text-white", "selection:bg-white/50", size.text)}>{player.name}</p>
     </>
   );
 
@@ -470,7 +477,7 @@ function SearchPlayer({
         tabIndex={-1}
         onClick={() => {
           onPick();
-          void onSelect(player);
+          void onSelect(player.name);
         }}
         aria-selected={selected}
         className={className}
@@ -488,7 +495,7 @@ function SearchPlayer({
         role="option"
         tabIndex={-1}
         to="/{-$locale}/player/$name/$game"
-        params={{ name: player, game: target.game }}
+        params={{ name: player.name, game: target.game }}
         search={target.search}
         state={searchState}
         onClick={onPick}
@@ -507,7 +514,7 @@ function SearchPlayer({
         role="option"
         tabIndex={-1}
         to="/{-$locale}/player/$name/bingo"
-        params={{ name: player }}
+        params={{ name: player.name }}
         state={searchState}
         onClick={onPick}
         aria-selected={selected}
@@ -524,7 +531,7 @@ function SearchPlayer({
       role="option"
       tabIndex={-1}
       to="/{-$locale}/player/$name"
-      params={{ name: player }}
+      params={{ name: player.name }}
       state={searchState}
       onClick={onPick}
       aria-selected={selected}

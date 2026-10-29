@@ -17,10 +17,14 @@ const VIEWER_KEY = "statsify:viewer";
 /** How many recent players the list keeps. */
 const RECENT_LIMIT = 8;
 
-/** A player by UUID, with the name they had when last seen, so a rename or a reused name can be caught. */
+/**
+ * A player by UUID, with the name they had when last seen, so a rename or a reused name can be caught, and the colour
+ * their rank gave it then (`nameColour`).
+ */
 export interface RecentPlayer {
   uuid: string;
   name: string;
+  colour?: string;
 }
 
 const NONE: RecentPlayer[] = [];
@@ -78,7 +82,7 @@ export const addRecentPlayer = (player: RecentPlayer) =>
 
 /** A player's new name, or `null` to drop a player who no longer exists. */
 export const updatePlayer = (uuid: string, name: string | null) =>
-  write(read().flatMap((player) => (player.uuid !== uuid ? [player] : name === null ? [] : [{ uuid, name }])));
+  write(read().flatMap((player) => (player.uuid !== uuid ? [player] : name === null ? [] : [{ ...player, name }])));
 
 export const clearPlayers = () => write(NONE);
 
