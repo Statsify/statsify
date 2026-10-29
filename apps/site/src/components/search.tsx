@@ -36,11 +36,24 @@ function saveDraft(draft: string | undefined) {
 
 const savedDraft = () => history.state?.searchDraft as string | undefined;
 
-/** Before React hydrates: `__searchDraft(form)` puts a reloaded entry's draft in the box as its HTML is parsed. */
-export const SEARCH_SCRIPT = `window.__searchDraft = (form) => {
-  const draft = history.state?.searchDraft;
-  if (draft !== undefined) form.querySelector("input").value = draft;
-};`;
+/**
+ * Before React hydrates: `__searchDraft(form)` puts a reloaded entry's draft in the box as its HTML is parsed, and on
+ * a touch screen the first tap moves the box to the top, over the keyboard, with room for its suggestions.
+ */
+export const SEARCH_SCRIPT = `{
+  window.__searchDraft = (form) => {
+    const draft = history.state?.searchDraft;
+    if (draft !== undefined) form.querySelector("input").value = draft;
+  };
+  // Again once the keyboard is up: a short page can only scroll that far with it open.
+  document.addEventListener("focusin", ({ target }) => {
+    if (!target.matches("[data-draft]") || !matchMedia("(pointer: coarse)").matches) return;
+    const toTop = () => target.form.scrollIntoView({ block: "start" });
+    requestAnimationFrame(toTop);
+    visualViewport?.addEventListener("resize", toTop, { once: true });
+    target.addEventListener("focusout", () => visualViewport?.removeEventListener("resize", toTop), { once: true });
+  });
+}`;
 
 /**
  * Where a submitted name goes: the player page, its Bingo boards, the `/player?q=` result cards, or a game page with
