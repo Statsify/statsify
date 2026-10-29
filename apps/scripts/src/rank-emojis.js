@@ -114,7 +114,7 @@ const drawColorChanger = async (rank, prefixIndex) => {
     )),
   ];
 
-  for (const [index, image] of Object.entries(sharedImages).entries()) {
+  for (const [index, image] of Object.entries(sharedImages)) {
     emojis.push({
       buffer: image,
       rank,
@@ -124,7 +124,7 @@ const drawColorChanger = async (rank, prefixIndex) => {
     });
   }
 
-  for (const [index, images] of coloredEmojis) {
+  for (const [index, images] of coloredEmojis.entries()) {
     const color = minecraftColors[index];
 
     for (const [i, image] of images.entries()) {
