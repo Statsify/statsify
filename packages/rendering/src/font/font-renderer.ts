@@ -38,18 +38,16 @@ interface GlyphRun {
 const getGlyphRuns = ({ data, width, height }: ImageData) => {
   const runs: GlyphRun[] = [];
 
+  const isOpaque = (x: number, y: number) => data[(y * width + x) * 4 + 3] !== 0;
+
   for (let y = 0; y < height; y++) {
-    let start = -1;
+    for (let x = 0; x < width; x++) {
+      if (!isOpaque(x, y)) continue;
 
-    for (let x = 0; x <= width; x++) {
-      const opaque = x < width && data[(y * width + x) * 4 + 3] !== 0;
+      const start = x;
+      while (x < width && isOpaque(x, y)) x++;
 
-      if (opaque && start === -1) {
-        start = x;
-      } else if (!opaque && start !== -1) {
-        runs.push({ x: start, y, length: x - start });
-        start = -1;
-      }
+      runs.push({ x: start, y, length: x - start });
     }
   }
 
@@ -343,7 +341,9 @@ export class FontRenderer {
     let runs = this.glyphs.get(char);
 
     if (!runs) {
-      runs = getGlyphRuns(image.getContext("2d").getImageData(charX, charY, width, height));
+      runs = getGlyphRuns(
+        image.getContext("2d").getImageData(charX, charY, width, height)
+      );
       this.glyphs.set(char, runs);
     }
 
