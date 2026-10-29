@@ -22,10 +22,18 @@ import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
 import type { APIData } from "@statsify/util";
 
+const DEFAULT_RATE_LIMIT_SECONDS = 60;
+
+const parseHeader = (value: unknown) => {
+  const parsed = Number.parseInt(String(value), 10);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+
 @Injectable()
 export class HypixelService {
   private readonly logger = new Logger("HypixelService");
   private resources = new Map<string, APIData>();
+  private rateLimitedUntil = 0;
 
   public constructor(private readonly httpService: HttpService) {}
 
@@ -89,7 +97,7 @@ export class HypixelService {
       this.request<APIData>("/watchdogstats").pipe(
         map((data) => new Watchdog(data)),
         catchError((err) => {
-          this.logger.error(err);
+          if (!(err instanceof HypixelUnavailableException)) this.logger.error(err);
           return of(null);
         })
       )
@@ -104,7 +112,7 @@ export class HypixelService {
           return null;
         }),
         catchError((err) => {
-          this.logger.error(err);
+          if (!(err instanceof HypixelUnavailableException)) this.logger.error(err);
           return of(null);
         })
       )
@@ -130,6 +138,8 @@ export class HypixelService {
   }
 
   private handleFailure<T>(err: any, notFound: T): Observable<T> {
+    if (err instanceof HypixelUnavailableException) return throwError(() => err);
+
     this.logger.error(err);
 
     // Hypixel rejecting the input means there is nothing to find
@@ -139,7 +149,33 @@ export class HypixelService {
     return throwError(() => new HypixelUnavailableException());
   }
 
+  private startRateLimit(headers: Record<string, unknown>) {
+    const seconds =
+      parseHeader(headers["ratelimit-reset"]) ??
+      parseHeader(headers["retry-after"]) ??
+      DEFAULT_RATE_LIMIT_SECONDS;
+
+    const wasRateLimited = Date.now() < this.rateLimitedUntil;
+    this.rateLimitedUntil = Math.max(this.rateLimitedUntil, Date.now() + seconds * 1000);
+
+    if (!wasRateLimited) {
+      this.logger.warn(`Hypixel is rate limiting requests for the next ${seconds} seconds`);
+    }
+  }
+
+  private rateLimitError() {
+    const seconds = Math.ceil((this.rateLimitedUntil - Date.now()) / 1000);
+    return new HypixelUnavailableException(Math.max(1, seconds));
+  }
+
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
+    // Resources don't need an API key, so the key's rate limit doesn't apply to them
+    const isKeyed = !url.startsWith("/resources/");
+
+    if (isKeyed && Date.now() < this.rateLimitedUntil) {
+      return throwError(() => this.rateLimitError());
+    }
+
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     const child = transaction?.startChild({
@@ -151,16 +187,25 @@ export class HypixelService {
       tap((res) => {
         child?.setHttpStatus(res.status);
         child?.finish();
+
+        if (isKeyed && parseHeader(res.headers["ratelimit-remaining"]) === 0) {
+          this.startRateLimit(res.headers);
+        }
       }),
       map((res) => res.data),
-      catchError((err) =>
-        throwError(
+      catchError((err) => {
+        if (isKeyed && err.response?.status === 429) {
+          this.startRateLimit(err.response.headers);
+          return throwError(() => this.rateLimitError());
+        }
+
+        return throwError(
           () =>
             new Error(`Fetching ${url} failed with reason: ${err.message}`, {
               cause: err,
             })
-        )
-      )
+        );
+      })
     );
   }
 }
