@@ -18,7 +18,7 @@ import { useDebounce } from "~/hooks/use-debounce";
 import { useRecentPlayers } from "~/features/player/recent";
 import { useOutsideClick } from "~/hooks/use-outside-click";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useEffect, useEffectEvent, useId, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useId, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const SEARCH_DEBOUNCE_MS = 300;
@@ -197,6 +197,16 @@ export function Search({
   // `query` is the typed text; the arrows put a row's name in the box without leaving the recent players.
   const names = recent && query.trim() === "" ? recentPlayers?.map((player) => player.name) : suggestions.data;
   const [selected, setSelected] = useState<number | undefined>(undefined);
+  // Typing on a keyboard completes the name in place from the first suggestion that starts with it, the rest selected,
+  // so Enter opens it and typing on replaces it; none when a suggestion is the name typed. Only while typing at the end:
+  // a deletion or a paste stops it, and moving the caret takes it.
+  const [completing, setCompleting] = useState(false);
+  const typed = query.toLowerCase();
+  const match =
+    completing && query.trim() && !suggestions.data?.some((name) => name.toLowerCase() === typed) ?
+      suggestions.data?.find((name) => name.toLowerCase().startsWith(typed)) :
+      undefined;
+  const completion = match === undefined ? undefined : query + match.slice(query.length);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigateTo = useSearchNavigation(target);
   const go = onSelect ?? navigateTo;
@@ -236,9 +246,18 @@ export function Search({
     if (!open) setFirstRow(0);
   }, [open]);
 
+  useLayoutEffect(() => {
+    if (completion) inputRef.current?.setSelectionRange(query.length, completion.length);
+  }, [completion, query]);
+
   const close = () => {
     setFocused(false);
     setSelected(undefined);
+    setCompleting(false);
+  };
+  const save = (value: string) => {
+    clearTimeout(draftTimer.current);
+    if (drafts) draftTimer.current = setTimeout(() => saveDraft(value), DRAFT_DEBOUNCE_MS);
   };
   // A pick or a submitted name is done with the box: the sheet closes, the text clears and the keyboard goes (focus moves
   // on to the page that opens). The result cards' box keeps a submitted name, since the cards below are for it.
@@ -272,6 +291,7 @@ export function Search({
 
   function onSelectionChange(selected: number) {
     setSelected(selected);
+    setCompleting(false);
     if (names) setInput(names[selected]);
 
     const visible = containerRef.current?.clientHeight ?? 0;
@@ -297,6 +317,8 @@ export function Search({
         // Only spaces is nothing to search for.
         const query = String(formData.get("search") ?? "").trim();
         if (!query) return;
+        // A taken completion stays in the result cards' box.
+        setInput(query);
         done(target === "results" && !onSelect);
         void go(query);
       }}
@@ -320,14 +342,24 @@ export function Search({
           placeholder={placeholder ?? t("search.placeholder")}
           // A placeholder too long for a phone ends in an ellipsis rather than mid-letter.
           className={cn("placeholder:text-mc-gray text-white focus-ring-none h-full w-full min-w-0 text-ellipsis selection:bg-white/50", size.text)}
-          value={input}
+          value={completion ?? input}
           onChange={(event) => {
-            const { value } = event.target;
+            const { value, selectionEnd } = event.target;
             setQuery(value);
             setInput(value);
             setFocused(true);
-            clearTimeout(draftTimer.current);
-            if (drafts) draftTimer.current = setTimeout(() => saveDraft(value), DRAFT_DEBOUNCE_MS);
+            setCompleting(
+              (event.nativeEvent as InputEvent).inputType === "insertText" && selectionEnd === value.length && matchMedia("(pointer: fine)").matches
+            );
+            save(value);
+          }}
+          onSelect={(event) => {
+            const { selectionStart, selectionEnd } = event.currentTarget;
+            if (!completion || (selectionStart === query.length && selectionEnd === completion.length)) return;
+            setInput(completion);
+            setQuery(completion);
+            setCompleting(false);
+            save(completion);
           }}
           // Enter submits the form natively; the arrows move through the suggestions when there are any.
           onKeyDown={(event) => {
@@ -347,7 +379,7 @@ export function Search({
             }
           }}
           role="combobox"
-          aria-autocomplete="list"
+          aria-autocomplete="both"
           aria-expanded={open}
           aria-controls={listId}
           aria-activedescendant={selected === undefined ? undefined : optionId(selected)}
@@ -358,6 +390,9 @@ export function Search({
           enterKeyHint="search"
           disabled={disabled}
           onFocus={() => setFocused(true)}
+          // Leaving the box drops the completion, also when focus goes where the form's blur can't see (Safari's Tab
+          // skips links, so it can leave the page).
+          onBlur={() => setCompleting(false)}
           aria-label={label}
         />
       </div>
