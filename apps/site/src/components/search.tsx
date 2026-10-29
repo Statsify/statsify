@@ -9,7 +9,7 @@
 /* eslint-disable jsx-a11y/no-redundant-roles, jsx-a11y/prefer-tag-over-role -- the APG combobox: the input needs
    role="combobox", and the suggestions are a styled listbox of links, which <datalist> can't be. */
 
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useHydrated, useNavigate, useRouterState } from "@tanstack/react-router";
 import { SearchIcon } from "~/components/icons/search";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
@@ -18,11 +18,29 @@ import { useDebounce } from "~/hooks/use-debounce";
 import { useRecentPlayers } from "~/features/player/recent";
 import { useOutsideClick } from "~/hooks/use-outside-click";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const SEARCH_DEBOUNCE_MS = 300;
 const SEARCH_CACHE_TIME_MS = 5 * 60 * 1000;
+/** Safari ignores `replaceState` past 100 calls in 30 seconds, so a draft is saved once typing pauses. */
+const DRAFT_DEBOUNCE_MS = 500;
+
+/**
+ * The search's text in the tab's history entry, for a reload, Back and Forward, with no history entry per keystroke.
+ * Past TanStack's patched `replaceState`, which would run a navigation.
+ */
+function saveDraft(draft: string | undefined) {
+  History.prototype.replaceState.call(history, { ...history.state, searchDraft: draft }, "");
+}
+
+const savedDraft = () => history.state?.searchDraft as string | undefined;
+
+/** Before React hydrates: `__searchDraft(form)` puts a reloaded entry's draft in the box as its HTML is parsed. */
+export const SEARCH_SCRIPT = `window.__searchDraft = (form) => {
+  const draft = history.state?.searchDraft;
+  if (draft !== undefined) form.querySelector("input").value = draft;
+};`;
 
 /**
  * Where a submitted name goes: the player page, its Bingo boards, the `/player?q=` result cards, or a game page with
@@ -118,7 +136,7 @@ const typing = (event: KeyboardEvent) =>
 
 export function Search({
   className,
-  defaultValue = "",
+  defaultValue,
   disabled,
   target = "player",
   compact = false,
@@ -128,6 +146,7 @@ export function Search({
   onSelect,
 }: {
   className?: string;
+  /** The page's own text for the box (`?q=`, a board's player), which it shows again on another page without a draft. */
   defaultValue?: string;
   disabled?: boolean;
   target?: SearchTarget;
@@ -145,9 +164,21 @@ export function Search({
   // A box with its own placeholder (a leaderboard's "find a player") is named by it, apart from the site's search.
   const label = placeholder ?? t("search.label");
   const inputRef = useRef<HTMLInputElement>(null);
-  const [input, setInput] = useState(defaultValue);
-  const [query, setQuery] = useState(defaultValue);
-  const [focused, setFocused] = useState(false);
+  const listId = useId();
+  const inputId = `${listId}-input`;
+  // The site's player search keeps a draft; a box with its own handler (a leaderboard's) doesn't.
+  const drafts = !onSelect;
+  const hydrated = useHydrated();
+  // While hydrating, the box as it is: text typed before React took over, or a reloaded draft (`SEARCH_SCRIPT`).
+  const [initial] = useState(() => {
+    if (typeof document === "undefined") return { value: defaultValue ?? "", focused: false };
+    const element = hydrated ? null : document.querySelector<HTMLInputElement>(`#${CSS.escape(inputId)}`);
+    if (element) return { value: element.value, focused: element === document.activeElement };
+    return { value: (drafts ? savedDraft() : undefined) ?? defaultValue ?? "", focused: false };
+  });
+  const [input, setInput] = useState(initial.value);
+  const [query, setQuery] = useState(initial.value);
+  const [focused, setFocused] = useState(initial.focused);
   const suggestions = usePlayerSuggestions(query, focused, recent);
   const recentPlayers = useRecentPlayers();
   // `query` is the typed text; the arrows put a row's name in the box without leaving the recent players.
@@ -156,12 +187,36 @@ export function Search({
   const containerRef = useRef<HTMLDivElement>(null);
   const navigateTo = useSearchNavigation(target);
   const go = onSelect ?? navigateTo;
-  const listId = useId();
   const optionId = (index: number) => `${listId}-${index}`;
   const count = names?.length ?? 0;
   const open = focused && count > 0;
   // Heads load for the rows in view, not all 25: each one is a request, and the edge allows a visitor 60 in 10 seconds.
   const [firstRow, setFirstRow] = useState(0);
+
+  // Another history entry brings its draft, or else the page's text; the header's box keeps its text from page to page.
+  // The entry once its page has rendered, so `defaultValue` is that page's.
+  // eslint-disable-next-line no-underscore-dangle -- the history entry's key, under TanStack's name
+  const entry = useRouterState({ select: ({ resolvedLocation }) => resolvedLocation?.state.__TSR_key });
+  const shownEntry = useRef(entry);
+  const restore = useEffectEvent(() => {
+    const saved = savedDraft() ?? defaultValue;
+    if (shownEntry.current === entry) {
+      // Text typed before hydration, while the router had no entry to save it in yet.
+      if (input !== (saved ?? "")) saveDraft(input);
+      return;
+    }
+    shownEntry.current = entry;
+    if (saved === undefined) return;
+    setInput(saved);
+    setQuery(saved);
+  });
+
+  useEffect(() => {
+    if (drafts) restore();
+  }, [drafts, entry]);
+
+  const draftTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(draftTimer.current), []);
 
   // A hidden sheet loses its scroll position without a scroll event.
   useEffect(() => {
@@ -176,6 +231,9 @@ export function Search({
   // on to the page that opens). The result cards' box keeps a submitted name, since the cards below are for it.
   const done = (keep = false) => {
     close();
+    // Back to this page shows its own text again (the cards' name, a board's player), not what was typed over it.
+    clearTimeout(draftTimer.current);
+    if (drafts) saveDraft(undefined);
     if (!keep) {
       setInput("");
       setQuery("");
@@ -240,16 +298,23 @@ export function Search({
         <SearchIcon className={cn("shrink-0 text-mc-gray", size.icon)} />
         <input
           ref={inputRef}
+          id={inputId}
           name="search"
+          data-draft={drafts || undefined}
+          // A draft or early typing the server's HTML doesn't have (`initial`).
+          suppressHydrationWarning
           aria-keyshortcuts={shortcut ? "/" : undefined}
           placeholder={placeholder ?? t("search.placeholder")}
           // A placeholder too long for a phone ends in an ellipsis rather than mid-letter.
           className={cn("placeholder:text-mc-gray text-white focus-ring-none h-full w-full min-w-0 text-ellipsis selection:bg-white/50", size.text)}
           value={input}
           onChange={(event) => {
-            setQuery(event.target.value);
-            setInput(event.target.value);
+            const { value } = event.target;
+            setQuery(value);
+            setInput(value);
             setFocused(true);
+            clearTimeout(draftTimer.current);
+            if (drafts) draftTimer.current = setTimeout(() => saveDraft(value), DRAFT_DEBOUNCE_MS);
           }}
           // Enter submits the form natively; the arrows move through the suggestions when there are any.
           onKeyDown={(event) => {
@@ -306,6 +371,9 @@ export function Search({
           />
         ))}
       </div>
+      {drafts && !hydrated && (
+        <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: "__searchDraft(document.currentScript.parentElement)" }} />
+      )}
     </form>
   );
 }

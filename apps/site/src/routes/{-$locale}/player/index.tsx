@@ -65,7 +65,7 @@ function PlayerSearchPage() {
       <div className="w-container flex flex-col items-center gap-8 px-4 py-12 text-mc-white md:px-8">
         <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{t("search.heading")}</h1>
         <div ref={search} className="w-full max-w-200">
-          <Search key={q ?? ""} defaultValue={q ?? ""} target="results" shortcut />
+          <Search defaultValue={q ?? ""} target="results" shortcut />
         </div>
         {q ? <ResultCards cards={cards} query={q} /> : <RecentPlayers onClear={() => search.current?.querySelector("input")?.focus()} />}
       </div>
