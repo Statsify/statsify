@@ -53,8 +53,9 @@ function hasOwnSearch(pathname: string) {
 
 export function Header() {
   const { t } = useTranslation();
-  // The page on screen, not the one loading, so the header's search and the page's own never show at once.
-  const pathname = useRouterState({ select: ({ resolvedLocation, location }) => (resolvedLocation ?? location).pathname });
+  // The page on screen, not the one loading, so the header's search and the page's own never show at once. The matches
+  // change once a page renders, or once a player's page puts up its shell.
+  const pathname = useRouterState({ select: ({ matches, location }) => matches.at(-1)?.pathname ?? location.pathname });
   const showSearch = !hasOwnSearch(pathname);
   const bingoBoard = BINGO_BOARD.test(withoutLocale(pathname));
   // On a game page a picked name opens the same game, mode and period, to compare; the profile is a tap away from there.

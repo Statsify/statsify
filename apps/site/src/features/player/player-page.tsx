@@ -20,7 +20,7 @@ import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
 import { RefreshBar, savedDate, useNow } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
-import { SkinBust } from "~/components/ui/skin";
+import { SkinBust, SkinHead } from "~/components/ui/skin";
 import { Twitter } from "~/components/icons/twitter";
 import { YouTube } from "~/components/icons/youtube";
 import { cn } from "~/lib/util";
@@ -35,6 +35,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Suspense, lazy, useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LABEL_NAMESPACES } from "~/i18n/i18n";
+import { UUID_PATTERN } from "~/lib/uuid";
 import type { ComponentType, ReactNode, Ref } from "react";
 import type { GameSummary, PlayerPage } from "@statsify/contract";
 
@@ -145,6 +146,33 @@ export function PlayerView({ page }: { page: PlayerPage }) {
         )}
         <GameGrid games={page.games} username={page.username} />
         <SignaturePanel page={page} />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * A player's page while its data loads, past `DELAY_MS`: the name the link had and the head a search showed for it,
+ * where the nametag goes, so picking a player answers at once. A UUID in the URL has no name or head to show yet.
+ */
+export function PlayerShell({ name }: { name: string }) {
+  const { t } = useTranslation();
+  const known = !UUID_PATTERN.test(name);
+
+  return (
+    <div className="relative grow" aria-busy>
+      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
+      <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
+        <div className={cn("grid grid-cols-[auto_minmax(0,1fr)] md:w-fit md:min-w-sm", BOX_GAP)}>
+          <Box className="content:flex content:items-center content:justify-center content:p-3">
+            <div className="flex h-24 w-16 items-center justify-center sm:h-40 sm:w-28">
+              {known && <SkinHead name={name} size={64} className="drop-shadow-mc-4 text-mc-black" />}
+            </div>
+          </Box>
+          <Box className="content:flex content:items-center content:justify-center content:p-3 content:text-center">
+            <h1 className="max-w-full wrap-break-word text-mc-2 text-mc-gray">{known ? name : t("nav.loading")}</h1>
+          </Box>
+        </div>
       </div>
     </div>
   );
