@@ -61,7 +61,7 @@ export class GuildService {
       );
     } catch {
       // Serve the cache even if expired; an outage shouldn't clear or hide a guild
-      if (cachedGuild) {
+      if (cachedGuild && listsPlayer) {
         return {
           ...deserialize(Guild, flatten(cachedGuild)),
           cached: true,
