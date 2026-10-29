@@ -69,16 +69,20 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
 
   public async run(context: CommandContext) {
     const user = context.getUser();
+    const tag = context.option<string>("player");
 
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    // A self-lookup already knows the uuid, so its skin and badge don't wait for the player.
+    // The catch stops an unhandled rejection when the player lookup throws first.
+    const selfSkinAndBadge = !tag && user?.uuid ? this.getSkinAndBadge(user.uuid, user) : undefined;
+    selfSkinAndBadge?.catch(noop);
 
-    const [logo, skin, badge] = await Promise.all([
+    const player = await this.apiService.getPlayer(tag, user);
+
+    const [logo, [skin, badge], data = noop<K>()] = await Promise.all([
       getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid, user),
-      this.apiService.getUserBadge(player.uuid),
+      selfSkinAndBadge ?? this.getSkinAndBadge(player.uuid, user),
+      this.getPreProfileData?.(player),
     ]);
-
-    const data: K = (await this.getPreProfileData?.(player)) ?? noop();
 
     const allModes = this.modes.getModes();
     const filteredModes = this.filterModes?.(player, allModes) ?? allModes;
@@ -158,6 +162,10 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     });
 
     return paginate(context, pages);
+  }
+
+  private getSkinAndBadge(uuid: string, user: User | null) {
+    return Promise.all([this.apiService.getPlayerSkin(uuid, user), this.apiService.getUserBadge(uuid)]);
   }
 
   public abstract getProfile(
