@@ -143,7 +143,7 @@ export abstract class AbstractCommandListener {
 
       const tip = response instanceof ErrorMessage || response?.ephemeral ? undefined : message;
 
-      context.reply({
+      await context.reply({
         ...tip,
         ...response,
         content: response?.content ?? tip?.content,
@@ -157,6 +157,8 @@ export abstract class AbstractCommandListener {
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
       transaction?.finish();
+
+      return context.reply(new ErrorMessage("errors.unknown"));
     }
   }
 
@@ -273,7 +275,11 @@ export abstract class AbstractCommandListener {
 
   private async onInteraction(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
     if (interaction.isCommandInteraction()) {
-      this.onCommand(interaction);
+      this.onCommand(interaction).catch((err) => {
+        this.logger.error("An error occurred when handling a command interaction");
+        this.logger.error(err);
+      });
+
       return { type: InteractionResponseType.DeferredChannelMessageWithSource };
     }
 
@@ -322,5 +328,5 @@ export abstract class AbstractCommandListener {
     });
   }
 
-  protected abstract onCommand(interaction: Interaction): Promise<void> | void;
+  protected abstract onCommand(interaction: Interaction): Promise<void>;
 }
