@@ -67,9 +67,11 @@ export class MessageCreateEventListener extends AbstractEventListener<GatewayDis
       return;
     }
 
-    await this.memberService
-      .changeNickname(GUILD_ID, userId, player.username)
-      .catch(() => null);
+    if (data.member.nick !== player.username) {
+      await this.memberService
+        .changeNickname(GUILD_ID, userId, player.username)
+        .catch(() => null);
+    }
 
     this.cache.add(userId);
   }
