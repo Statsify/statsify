@@ -337,7 +337,7 @@ export class FontRenderer {
       size,
     } = metadata;
 
-    // getImageData rasterises the whole atlas, so read each glyph once
+    // Characters repeat across a card, so read and scan each glyph's pixels once
     let runs = this.glyphs.get(char);
 
     if (!runs) {
