@@ -28,7 +28,7 @@ import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { playerPageQuery } from "./resolve";
 import { refreshPlayer } from "./player-actions";
-import { relativeTime } from "~/i18n/format";
+import { relativeTime, shortDate } from "~/i18n/format";
 import { addRecentPlayer } from "./recent";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
@@ -480,17 +480,29 @@ function loginText(ms: number): string {
   return `${day}, ${twoDigits(hours % 12 || 12)}:${twoDigits(date.getUTCMinutes())} ${hours < 12 ? "AM" : "PM"}`;
 }
 
-/** A login date as the card prints it. Once the page has mounted, how long ago it was shows on hover, focus or tap. */
+/**
+ * A login date in the visitor's zone. Once the page has mounted, how long ago it was and the card's UTC show on hover,
+ * focus or tap. The HTML has UTC, as the server can't know the zone; `ClockScript` puts the browser's in its place
+ * before first paint.
+ */
 function LoginDate({ ms }: { ms: number }) {
   const { t, i18n } = useTranslation();
   const now = useNow();
   if (ms <= 0) return t("player.na");
 
-  const text = `${loginText(ms)} UTC`;
+  const utc = `${loginText(ms)} UTC`;
   // `now` is undefined while hydrating, so the server's HTML and the first render carry no clock value.
+  const text = now === undefined ? utc : shortDate(ms, i18n.language);
   const ago = now === undefined ? undefined : relativeTime(ms, now, i18n.language);
 
-  return <Hint full={ago} spoken={ago && `${text}, ${ago}`}>{text}</Hint>;
+  return (
+    <>
+      <Hint full={ago && `${ago} · ${utc}`} spoken={ago && `${text}, ${ago}`}>
+        <time dateTime={new Date(ms).toISOString()} suppressHydrationWarning>{text}</time>
+      </Hint>
+      <ClockScript args={{ at: ms, locale: i18n.language }} />
+    </>
+  );
 }
 
 export function GameGrid({ games, username }: { games: GameSummary[]; username: string }) {

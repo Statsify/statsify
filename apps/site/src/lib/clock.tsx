@@ -6,16 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { formatCountdown, relativeTime } from "~/i18n/format";
+import { formatCountdown, relativeTime, shortDate } from "~/i18n/format";
 import { useHydrated } from "@tanstack/react-router";
 
 /** Stands in for a template's `{{time}}`, so the clock script can put the browser's time there. */
 export const TIME_SLOT = "\u0000";
 
-/** A refresh bar's "Updated …" and button, or an online status's " · 5m ago" (the element is its gray span). */
+/**
+ * A refresh bar's "Updated …" and button, an online status's " · 5m ago" (the element is its gray span), or a login
+ * date in the browser's zone (its `<time>`).
+ */
 type ClockArgs =
   | { updatedAt: number; lockedUntil: number; locale: string; updated: string; refresh: string; refreshIn: string }
-  | { updatedAt: number; expiresAt: number; locale: string };
+  | { updatedAt: number; expiresAt: number; locale: string }
+  | { at: number; locale: string };
 
 /**
  * Before first paint, `__clock(element, args)` writes the time text cached HTML can't know from the browser's clock.
@@ -25,6 +29,12 @@ export const CLOCK_SCRIPT = `window.__clock = (element, args) => {
   const now = Date.now();
   const relativeTime = ${relativeTime};
   const formatCountdown = ${formatCountdown};
+  const shortDate = ${shortDate};
+
+  if ("at" in args) {
+    element.textContent = shortDate(args.at, args.locale);
+    return;
+  }
 
   if (!("lockedUntil" in args)) {
     element.textContent = now < args.expiresAt ? "" : " · " + relativeTime(args.updatedAt, now, args.locale, { style: "narrow" });
