@@ -7,12 +7,13 @@
  */
 
 import { Button } from "~/components/ui/button";
+import { ClockScript, TIME_SLOT } from "~/lib/clock";
 import { Hint } from "~/components/ui/hint";
 import { cn } from "~/lib/util";
 import { formatCountdown, fullDate, relativeTime } from "~/i18n/format";
 import { type ReactNode, useEffect, useEffectEvent, useRef, useState } from "react";
 import { type ActionResult, BROWSER_TIMEOUT_MS } from "./player-actions";
-import { useRouterState } from "@tanstack/react-router";
+import { useHydrated, useRouterState } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 const META = "text-mc-1 text-mc-gray";
@@ -38,9 +39,13 @@ type RefreshState =
   | { status: "unavailable" }
   | { status: "error" };
 
-/** Ticks once a second after mount; `undefined` during SSR so the HTML never carries a clock value. */
+/**
+ * Ticks once a second. `undefined` on the server and while the page hydrates, so the first render matches the HTML,
+ * whose time text `ClockScript` writes; a component mounted after that (a client navigation) starts on the clock.
+ */
 export function useNow(): number | undefined {
-  const [now, setNow] = useState<number>();
+  const hydrated = useHydrated();
+  const [now, setNow] = useState(() => (hydrated ? Date.now() : undefined));
 
   useEffect(() => {
     const tick = () => setNow(Date.now());
@@ -162,7 +167,12 @@ export function RefreshBar({
       size="small"
       className={cn("w-full sm:w-auto sm:min-w-48", row && "w-auto min-w-36 shrink-0", beside !== undefined && "w-auto shrink-0 sm:min-w-0")}
     >
-      <button type="button" aria-disabled={disabled} onClick={() => {
+      <button
+        type="button"
+        data-clock="refresh"
+        aria-disabled={disabled}
+        suppressHydrationWarning
+        onClick={() => {
           if (!disabled) void run();
         }}
       >
@@ -174,23 +184,37 @@ export function RefreshBar({
   // Phones: the time over a full-width button, unless `row`; wider screens: one row. Beside other controls, the time
   // over them and the button.
   return (
-    <div ref={bar} className={cn("flex flex-col gap-2", className)}>
-      <div
-        className={cn(
-          "flex flex-col gap-2",
-          beside === undefined && "sm:flex-row sm:items-center sm:justify-between sm:gap-4",
-          row && "flex-row items-center justify-between gap-4"
-        )}
-      >
-        <p className={cn(META, "min-w-0")}>{now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}</p>
-        {beside === undefined ? button : <div className="flex items-center justify-between gap-3">{beside}{button}</div>}
+    <>
+      <div ref={bar} className={cn("flex flex-col gap-2", className)}>
+        <div
+          className={cn(
+            "flex flex-col gap-2",
+            beside === undefined && "sm:flex-row sm:items-center sm:justify-between sm:gap-4",
+            row && "flex-row items-center justify-between gap-4"
+          )}
+        >
+          <p data-clock="updated" className={cn(META, "min-w-0")} suppressHydrationWarning>
+            {now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}
+          </p>
+          {beside === undefined ? button : <div className="flex items-center justify-between gap-3">{beside}{button}</div>}
+        </div>
+        <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>
+        <output className="sr-only">
+          {state.status === "pending" && !state.auto && t("player.refreshing")}
+          {state.status === "done" && t("player.updated", { time: relativeTime(updatedAt, updatedAt, i18n.language) })}
+        </output>
       </div>
-      <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>
-      <output className="sr-only">
-        {state.status === "pending" && !state.auto && t("player.refreshing")}
-        {state.status === "done" && t("player.updated", { time: relativeTime(updatedAt, updatedAt, i18n.language) })}
-      </output>
-    </div>
+      <ClockScript
+        args={{
+          updatedAt,
+          lockedUntil,
+          locale: i18n.language,
+          updated: t("player.updated", { time: TIME_SLOT }),
+          refresh: t("player.refresh"),
+          refreshIn: t("player.refreshIn", { time: TIME_SLOT }),
+        }}
+      />
+    </>
   );
 }
 
@@ -198,8 +222,8 @@ export function RefreshBar({
 export const savedDate = (updatedAt: number, locale: string) => fullDate(updatedAt, locale, matchMedia("(width < 48rem)").matches);
 
 /**
- * "Updated 17 minutes ago", with the save's full date on hover, focus or tap. Rendered only after mount, so the server's
- * HTML carries neither clock nor zone.
+ * "Updated 17 minutes ago", with the save's full date on hover, focus or tap. Not while hydrating, so the server's HTML
+ * carries neither clock nor zone; `ClockScript` writes the text until then.
  */
 function UpdatedAt({ updatedAt, now }: { updatedAt: number; now: number }) {
   const { t, i18n } = useTranslation();

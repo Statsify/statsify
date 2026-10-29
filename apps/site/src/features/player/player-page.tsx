@@ -8,6 +8,7 @@
 
 import { PageBackground } from "~/components/ui/background";
 import { BOX_GAP, Box, CELL, HEADING_BOX, StatBox } from "~/components/ui/box";
+import { ClockScript } from "~/lib/clock";
 import { Discord } from "~/components/icons/discord";
 import { GameNav } from "~/features/game/game-nav";
 import { Hint, Spoken } from "~/components/ui/hint";
@@ -434,8 +435,8 @@ function Fact({ children }: { children: ReactNode }) {
 
 /**
  * "Online" while the save is fresh (until Refresh unlocks); after that, how long ago the save saw them online, with its
- * full date on hover, focus or tap. Until mount the clock is when the server fetched the page, which the browser gets
- * with the page's data, so a cached page hydrates to the server's text; the browser's own clock takes over after.
+ * full date on hover, focus or tap. The HTML has the server's clock (when it fetched the page); `ClockScript` puts
+ * the browser's in its place before first paint, so a cached page shows the right time from the start.
  */
 function OnlineStatus({ uuid, updatedAt, expiresAt }: { uuid: string; updatedAt: number; expiresAt: number }) {
   const { t, i18n } = useTranslation();
@@ -447,10 +448,13 @@ function OnlineStatus({ uuid, updatedAt, expiresAt }: { uuid: string; updatedAt:
   const date = now === undefined || ago === undefined ? undefined : savedDate(updatedAt, i18n.language);
 
   return (
-    <Hint full={date} spoken={date && `${online} · ${ago}, ${date}`}>
-      {online}
-      {ago && <span className="text-mc-gray"> · {ago}</span>}
-    </Hint>
+    <>
+      <Hint full={date} spoken={date && `${online} · ${ago}, ${date}`}>
+        {online}
+        <span className="text-mc-gray" suppressHydrationWarning>{ago ? ` · ${ago}` : ""}</span>
+      </Hint>
+      <ClockScript args={{ updatedAt, expiresAt, locale: i18n.language }} />
+    </>
   );
 }
 
@@ -483,7 +487,7 @@ function LoginDate({ ms }: { ms: number }) {
   if (ms <= 0) return t("player.na");
 
   const text = `${loginText(ms)} UTC`;
-  // `now` is undefined until mount, so the server's HTML and the first render carry no clock value.
+  // `now` is undefined while hydrating, so the server's HTML and the first render carry no clock value.
   const ago = now === undefined ? undefined : relativeTime(ms, now, i18n.language);
 
   return <Hint full={ago} spoken={ago && `${text}, ${ago}`}>{text}</Hint>;
