@@ -1,0 +1,68 @@
+name: statsify
+
+x-app: &app
+  restart: unless-stopped
+  network_mode: host
+  init: true
+  environment:
+    FORCE_COLOR: 3
+    NODE_OPTIONS: --unhandled-rejections=warn
+  volumes:
+    - /home/config.js:/app/config.js:ro
+  logging: &logging
+    options:
+      max-size: 10m
+      max-file: "3"
+
+services:
+  api:
+    <<: *app
+    image: ghcr.io/statsify/statsify:api-${TAG:?}
+    volumes:
+      - /home/config.js:/app/config.js:ro
+      # Set api.mediaRoot in the config to this path
+      - media:/app/media
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  discord-bot:
+    <<: *app
+    image: ghcr.io/statsify/statsify:discord-bot-${TAG:?}
+
+  support-bot:
+    <<: *app
+    image: ghcr.io/statsify/statsify:support-bot-${TAG:?}
+
+  verify-server:
+    <<: *app
+    image: ghcr.io/statsify/statsify:verify-server-${TAG:?}
+
+  leaderboard-limiting:
+    <<: *app
+    image: ghcr.io/statsify/statsify:scripts-${TAG:?}
+    command: node src/limit-redis.js
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    image: redis:8.10.3
+    restart: unless-stopped
+    network_mode: host
+    command: redis-server --bind 127.0.0.1 -::1 --save 1800 1
+    # Redis writes its snapshot when it stops, which takes about a minute
+    stop_grace_period: 3m
+    # Loading the snapshot takes a while, and ping answers LOADING until it's done
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+      interval: 10s
+      retries: 3
+      start_period: 5m
+    volumes:
+      - redis:/data
+    logging: *logging
+
+volumes:
+  media:
+  redis:
