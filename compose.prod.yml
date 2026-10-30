@@ -52,7 +52,8 @@ services:
     image: redis:8.10.3
     restart: unless-stopped
     network_mode: host
-    command: redis-server --bind 127.0.0.1 -::1 --save 1800 1
+    # Past the cap, writes fail instead of Redis evicting whole leaderboards
+    command: redis-server --bind 127.0.0.1 -::1 --save 1800 1 --maxmemory 14gb --maxmemory-policy noeviction
     # Redis writes its snapshot when it stops, which takes about a minute
     stop_grace_period: 3m
     # Loading the snapshot takes a while, and ping answers LOADING until it's done
