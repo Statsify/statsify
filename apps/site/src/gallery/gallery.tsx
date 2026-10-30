@@ -53,7 +53,6 @@ import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Nametag } from "~/components/ui/nametag";
 import { NotFound } from "~/components/not-found";
 import { Patreon } from "~/components/icons/patreon";
-import { PopoverTooltip } from "~/components/ui/tooltip";
 import { ProgressBar } from "~/components/navigation-progress";
 import { Progression } from "~/components/ui/progression";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -698,13 +697,6 @@ function HomeSection() {
           <p className="text-mc-1.5">
             Run <Command command="/bedwars" /> in any server.
           </p>
-        </Demo>
-        <Demo label="Tooltip, open">
-          <div className="pt-12">
-            <PopoverTooltip content="Copied to Clipboard!" open asChild>
-              <button type="button" className="text-mc-1.5 underline">/session</button>
-            </PopoverTooltip>
-          </div>
         </Demo>
         <Demo label="Tabs" className="sm:col-span-2">
           <Tabs defaultTab="casual">
