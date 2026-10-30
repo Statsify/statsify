@@ -190,6 +190,21 @@ export interface PriceMap {
   entries: Record<string, PriceEntry>;
 }
 
+export interface BazaarProduct {
+  id: string;
+  instantBuy?: number;
+  instantSell?: number;
+  buyPrice: number;
+  sellPrice: number;
+  buyMovingWeek: number;
+  sellMovingWeek: number;
+}
+
+export interface Bazaar {
+  lastUpdated: number;
+  products: Record<string, BazaarProduct>;
+}
+
 export interface MissingAccessory {
   id: string;
   name: string;
