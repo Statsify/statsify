@@ -100,6 +100,14 @@ export class BaseLeaderboardCommand {
       .emoji(t("emojis:search.value"))
       .style(ButtonStyle.Primary);
 
+    const row = new ActionRowBuilder([
+      up,
+      down,
+      searchDocument,
+      searchPosition,
+      searchValue,
+    ]);
+
     let currentPage = 0;
 
     const changePage =
@@ -122,13 +130,6 @@ export class BaseLeaderboardCommand {
         if (interaction.getUserId() === userId && !message.ephemeral) {
           up.disable(page === 0);
           currentPage = page || currentPage;
-          const row = new ActionRowBuilder([
-            up,
-            down,
-            searchDocument,
-            searchPosition,
-            searchValue,
-          ]);
 
           context.reply({
             ...message,
@@ -267,14 +268,6 @@ export class BaseLeaderboardCommand {
         interaction
       );
     });
-
-    const row = new ActionRowBuilder([
-      up,
-      down,
-      searchDocument,
-      searchPosition,
-      searchValue,
-    ]);
 
     const [message, page] = await this.getLeaderboardMessage(
       user,
