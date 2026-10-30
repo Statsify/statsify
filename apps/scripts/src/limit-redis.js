@@ -6,11 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import Redis from "ioredis";
 import { CurrentHistoricalType } from "@statsify/api-client";
 import { Guild, scanMetadata, Player } from "@statsify/schemas";
 import { Logger } from "@statsify/logger";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
+import { config } from "@statsify/util";
+
+const sentryDsn = await config("sentry.scriptsDsn", { required: false });
+
+if (sentryDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
+    environment: await config("environment"),
+  });
+}
 
 const logger = new Logger("Redis Limiter");
 const redis = new Redis(process.env.REDIS_URL);
@@ -82,6 +93,10 @@ const limit = async () => {
   ]);
 };
 
-const task = new Task("leaderboard limiting", limit);
+const task = new Task("leaderboard limiting", () =>
+  Sentry.withMonitor("leaderboard-limiting", limit, {
+    schedule: { type: "interval", value: 10, unit: "minute" },
+  })
+);
 const job = new SimpleIntervalJob({ minutes: 10, runImmediately: true }, task);
 job.start();
