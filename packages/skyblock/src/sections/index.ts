@@ -8,8 +8,10 @@
 
 import { getAccessories } from "./accessories.js";
 import { getApiSettings } from "../api-settings.js";
+import { gameModeOf } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
 import { getHotm } from "./hotm.js";
+import { getSkyBlockLevel } from "./level.js";
 import { getPets } from "./pets.js";
 import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
@@ -32,19 +34,29 @@ interface Section<K extends keyof MemberView> {
   compute(input: SectionInput): Promise<MemberView[K]>;
 }
 
-export type SectionKey = "accessories" | "dungeons" | "hotm" | "pets" | "skills" | "slayers";
+/** Ironman, stranded and bingo profiles can't use the Auction House or the Bazaar. */
+const hasMarket = (profile: RawProfile) => gameModeOf(profile) === "normal";
+
+export type SectionKey = "accessories" | "dungeons" | "hotm" | "level" | "pets" | "skills" | "slayers";
 
 /** The caller fetches each section's needs before compute(). */
 export const SECTIONS: { [K in SectionKey]: Section<K> } = {
   accessories: {
     needs: ["prices", "items"],
-    compute: async ({ member, items, prices }) => {
+    compute: async ({ profile, member, items, prices }) => {
       if (!items || !prices) throw new TypeError("accessories needs prices and items");
-      return getAccessories(member, items, prices);
+      return getAccessories(member, items, prices, hasMarket(profile));
     },
   },
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
   hotm: { needs: [], compute: async ({ member }) => getHotm(member) },
+  level: {
+    needs: ["prices", "items"],
+    compute: async ({ profile, member, items, prices }) => {
+      if (!items || !prices) throw new TypeError("level needs prices and items");
+      return getSkyBlockLevel(member, items, prices, hasMarket(profile));
+    },
+  },
   pets: { needs: ["items"], compute: async ({ member, items }) => getPets(member, items) },
   skills: { needs: [], compute: async ({ profile, member }) => getSkills(profile, member) },
   slayers: { needs: [], compute: async ({ member }) => getSlayers(member) },

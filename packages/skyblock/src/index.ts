@@ -20,6 +20,7 @@ export { SECTIONS, toMemberView, type SectionInput, type SectionKey, type Sectio
 export { getAccessories } from "./sections/accessories.js";
 export { getDungeons } from "./sections/dungeons.js";
 export { getHotm } from "./sections/hotm.js";
+export { getSkyBlockLevel } from "./sections/level.js";
 export { getPets } from "./sections/pets.js";
 export { getSkills } from "./sections/skills.js";
 export { getSlayers } from "./sections/slayers.js";

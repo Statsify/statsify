@@ -70,6 +70,7 @@ export interface MemberView {
   dungeons?: DungeonsSection;
   slayers?: SlayersSection;
   networth?: NetworthSection;
+  level?: SkyBlockLevelSection;
 }
 
 export interface ApiSettings {
@@ -258,6 +259,22 @@ export interface NetworthItem {
   soulbound: boolean;
   cosmetic: boolean;
   texture?: ItemTexture;
+}
+
+export interface SkyBlockLevelSection {
+  level: Level;
+  pricesAsOf: number;
+  market: boolean;
+  sources: {
+    kind: "accessory" | "pet";
+    id: string; // an accessory id, a pet price key, or a pet type without a market
+    name: string;
+    xp: number;
+    outsideBag: boolean;
+    cost?: ItemCost;
+    coinsPerXp?: number;
+    texture: ItemTexture;
+  }[];
 }
 
 export interface ItemView {

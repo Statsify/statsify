@@ -13,7 +13,7 @@ import { getLevel } from "#leveling";
 import { prettify } from "@statsify/util";
 import type { RawMember, RawPet } from "#raw";
 
-const PET_RARITIES = RARITIES.slice(0, 6);
+export const PET_RARITIES = RARITIES.slice(0, 6);
 const rank = (rarity: Rarity) => RARITIES.indexOf(rarity);
 
 export const petName = (type: string) => PETS.id_to_display_name[type] ?? prettify(type);
@@ -26,11 +26,13 @@ export function boostedRarity(pet: RawPet) {
   return pet.heldItem === "PET_ITEM_TIER_BOOST" && rank(base) < rank(highest) ? PET_RARITIES[rank(base) + 1] : base;
 }
 
+export const petMaxLevel = (type: string) => PETS.custom_pet_leveling[type]?.max_level ?? 100;
+
 /** 99 levels from the rarity's offset, plus custom pets' extra levels (Golden Dragon to 200). */
 export function getPetLevel(pet: RawPet, rarity = boostedRarity(pet)): Level {
   const custom = PETS.custom_pet_leveling[pet.type] ?? {};
   const offset = custom.rarity_offset?.[rarity] ?? PETS.pet_rarity_offset[rarity];
-  const maxLevel = custom.max_level ?? 100;
+  const maxLevel = petMaxLevel(pet.type);
   const table = [...PETS.pet_levels.slice(offset, offset + 99), ...(custom.pet_levels ?? [])];
   const level = getLevel(pet.exp, table, maxLevel - 1);
   return { ...level, level: level.level + 1, maxLevel };
