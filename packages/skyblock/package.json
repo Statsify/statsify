@@ -42,6 +42,9 @@
       "types": "./src/nbt.ts",
       "default": "./dist/nbt.js"
     },
-    "#fixtures": "./fixtures/load.ts"
+    "#textures": {
+      "types": "./src/textures.ts",
+      "default": "./dist/textures.js"
+    }
   }
 }
