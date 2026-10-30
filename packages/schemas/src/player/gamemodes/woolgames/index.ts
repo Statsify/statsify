@@ -50,6 +50,7 @@ export class WoolGames {
       fieldName: "Level",
       hidden: true,
       formatter: (exp: number) => getFormattedLevel(Math.floor(getLevel(exp))),
+      searchBy: getLevel,
       additionalFields: ["this.wins", "this.playtime"],
     },
     historical: {

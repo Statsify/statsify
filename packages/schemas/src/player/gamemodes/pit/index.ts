@@ -39,6 +39,7 @@ export class Pit {
         const level = getLevel(prestige, exp);
         return getLevelFormatted(level, prestige);
       },
+      searchBy: getPrestige,
     },
     historical: {
       hidden: false,
