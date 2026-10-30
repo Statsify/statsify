@@ -33,6 +33,9 @@ export function getLevel(xp: number, table: readonly number[], maxLevel: number,
   return { level, maxLevel, xp, xpCurrent, xpForNext, progress: xpForNext === undefined ? 1 : xpCurrent / xpForNext };
 }
 
+/** The level plus its progress toward the next, as averages take it; a capped level adds nothing. */
+export const fractionalLevel = ({ level, progress, xpForNext }: Level) => level + (xpForNext === undefined ? 0 : progress);
+
 /** Cumulative thresholds (slayer_xp's layout) as per-level costs. */
 export const toLevelCosts = (thresholds: readonly number[]) =>
   thresholds.map((threshold, i) => threshold - (thresholds[i - 1] ?? 0));
@@ -49,5 +52,7 @@ if (import.meta.vitest) {
     expect(getLevel(10_000, table, 2)).toMatchObject({ level: 2, maxLevel: 2 });
     expect(getLevel(10_000, table, 2, true)).toMatchObject({ level: 51, maxLevel: 2, xpCurrent: 25, xpForNext: 200 });
     expect(toLevelCosts([5, 15, 200])).toEqual([5, 10, 185]);
+    expect(fractionalLevel(getLevel(274, table, 3))).toBe(2.495);
+    expect(fractionalLevel(getLevel(10_000, table, 3))).toBe(3);
   });
 }
