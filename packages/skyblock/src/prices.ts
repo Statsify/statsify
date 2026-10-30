@@ -71,13 +71,15 @@ export function describeKey(key: string, items: ItemsResource): Omit<PriceView, 
     return { id: key, name: `${prettify(enchantment)} ${romanNumeral(Number(level))}`, texture };
   }
 
-  const pet = PET_KEY.exec(key);
-  const rarity = RARITIES.find((tier) => tier === pet?.[2]);
-  if (!pet || !rarity || key.includes("_SKINNED_")) return;
+  const pet = parsePetKey(key);
+  return pet && { id: key, name: pet.name, rarity: pet.rarity, texture: petTexture(pet.type, pet.rarity) };
+}
 
-  const [, level, , type] = pet;
-  const name = `[Lvl ${level}] ${prettify(rarity)} ${petName(type)}`;
-  return { id: key, name, rarity, texture: petTexture(type, rarity) };
+export function parsePetKey(key: string) {
+  const [, level, tier, type] = PET_KEY.exec(key) ?? [];
+  const rarity = RARITIES.find((candidate) => candidate === tier);
+  if (!rarity || key.includes("_SKINNED_")) return;
+  return { type, rarity, level: Number(level), name: `[Lvl ${level}] ${prettify(rarity)} ${petName(type)}` };
 }
 
 /** undefined when search can't name the key or no source prices it. */

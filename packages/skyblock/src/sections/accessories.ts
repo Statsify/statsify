@@ -62,15 +62,18 @@ function storedAccessories(member: RawMember, items: ItemsResource) {
   });
 }
 
+type StepOrder = (a: MissingAccessory, b: MissingAccessory) => number;
+
 /**
  * null when the inventory API is off. Only the best of each upgrade chain counts, one of each duplicate and one party
- * hat, and a consumed Rift Prism counts as one in the bag.
+ * hat, and a consumed Rift Prism counts as one in the bag. Each chain's missing step is the first in `order`.
  */
 export function getAccessories(
   member: RawMember,
   items: ItemsResource,
   prices: PriceMap,
-  market = true
+  market: boolean,
+  order: (accessoryPower: number, highest: number | undefined) => StepOrder = () => byCoinsPerAccessoryPower
 ): AccessoriesSection | null {
   const bag = member.inventory?.bag_contents?.talisman_bag;
   if (!bag) return null;
@@ -102,9 +105,12 @@ export function getAccessories(
   }
 
   const storage = member.accessory_bag_storage;
+  const accessoryPower = add(...active.map(power), prism.length * powerOf("RIFT_PRISM", undefined, 0));
+  const stepOrder = order(accessoryPower, storage?.highest_magical_power);
+  const stored = storedAccessories(member, items);
 
   return {
-    accessoryPower: add(...active.map(power), prism.length * powerOf("RIFT_PRISM", undefined, 0)),
+    accessoryPower,
     highestAccessoryPower: storage?.highest_magical_power,
     selectedPower: storage?.selected_power,
     tuning: storage?.tuning?.slot_0 ?? {},
@@ -112,7 +118,7 @@ export function getAccessories(
     market,
     active,
     inactive,
-    missing: getMissing(owned, storedAccessories(member, items), active, contacts, items, market ? prices : undefined),
+    missing: getMissing(owned, stored, active, contacts, items, stepOrder, market ? prices : undefined),
   };
 }
 
@@ -125,9 +131,14 @@ export const cheapestFirst =
     gain(b) - gain(a) ||
     a.name.localeCompare(b.name);
 
+const byCoinsPerAccessoryPower = cheapestFirst<MissingAccessory>(
+  (step) => step.coinsPerAccessoryPower,
+  (step) => step.accessoryPower
+);
+
 /**
  * Every tier above the bag's best in a chain is a step, worth its accessory power over that tier. Each chain (and the party
- * hats) keeps its best step. One the player keeps outside the bag is free, and nothing below it is offered.
+ * hats) keeps its first step in `order`. One the player keeps outside the bag is free, and nothing below it is offered.
  */
 function getMissing(
   owned: ReadonlySet<string>,
@@ -135,6 +146,7 @@ function getMissing(
   active: ItemView[],
   contacts: number,
   items: ItemsResource,
+  order: StepOrder,
   prices?: PriceMap
 ) {
   const outside = new Map<string, ItemView>();
@@ -174,7 +186,7 @@ function getMissing(
         },
       ];
     })
-    .toSorted(cheapestFirst<MissingAccessory>((step) => step.coinsPerAccessoryPower, (step) => step.accessoryPower));
+    .toSorted(order);
 
   // A tier lists every tier above it as an upgrade, so the first step of each chain in that order is its best.
   const best: MissingAccessory[] = [];
