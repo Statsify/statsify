@@ -13,7 +13,7 @@ import hotmLayout from "./generated/hotmlayout.json" with { type: "json" };
 import leveling from "./generated/leveling.json" with { type: "json" };
 import petTextures from "./generated/pet-textures.json" with { type: "json" };
 import pets from "./generated/pets.json" with { type: "json" };
-import type { Rarity } from "./types.js";
+import type { Rarity } from "#types";
 
 export const LEVELING = leveling as {
   catacombs: number[];

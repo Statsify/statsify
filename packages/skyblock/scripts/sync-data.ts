@@ -14,6 +14,7 @@ import { join } from "node:path";
 import { RARITIES } from "#types";
 import { removeFormatting } from "@statsify/util";
 import { tmpdir } from "node:os";
+import { toLevelCosts } from "#leveling";
 
 const REPO = "NotEnoughUpdates/NotEnoughUpdates-REPO";
 const HYPIXEL_SKILLS = "https://api.hypixel.net/v2/resources/skyblock/skills";
@@ -73,8 +74,7 @@ try {
     skills: Record<string, HypixelSkill>;
     version: string;
   };
-  const xpTable = (skill: string) =>
-    skills[skill].levels.map(({ totalExpRequired }, i, levels) => totalExpRequired - (levels[i - 1]?.totalExpRequired ?? 0));
+  const xpTable = (skill: string) => toLevelCosts(skills[skill].levels.map(({ totalExpRequired }) => totalExpRequired));
 
   const leveling = await readJson<Record<string, unknown>>("constants/leveling.json");
   const slayerXp = leveling.slayer_xp as Record<string, number[]>;
