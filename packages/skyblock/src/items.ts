@@ -64,6 +64,7 @@ const tierOf = (tier = "COMMON") => (tier === "SUPREME" ? "DIVINE" : RARITIES.fi
 export function parseItemsResource(raw: { lastUpdated: number; items: RawResourceItem[] }): ItemsResource {
   return {
     lastUpdated: raw.lastUpdated,
+    raw: raw.items,
     items: Object.fromEntries(
       raw.items.map(({ id, name, material, durability, tier, category, color, skin, origin, rift_transferrable, npc_sell_price }) => [
         id,
