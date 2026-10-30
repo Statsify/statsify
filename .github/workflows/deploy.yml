@@ -9,29 +9,48 @@ permissions:
   checks: write
   contents: write
 
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
 jobs:
+  images:
+    name: Images
+    uses: ./.github/workflows/images.yml
+    permissions:
+      contents: read
+      packages: write
+    secrets: inherit
+
   deploy:
     name: Deploy
+    needs: images
     runs-on: core
     environment: production
+    permissions:
+      contents: read
+      packages: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          token: ${{ secrets.REPO_PAT }}
-          submodules: recursive
+          sparse-checkout: compose.prod.yml
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Log in to GHCR
+        run: echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Code
-        run: pnpm scripts purge --dist && pnpm build --force
+      - name: Start containers
+        run: docker compose -f compose.prod.yml up -d --pull always --remove-orphans --wait --wait-timeout 300
+        env:
+          TAG: ${{ github.sha }}
 
-      - name: Prepare Assets
-        run: cd assets/private && pnpm blur && cd ../../
+      - name: Remove old images
+        run: docker image prune -af --filter "label=org.opencontainers.image.source=https://github.com/Statsify/statsify" --filter "until=336h"
 
-      - name: Move Config
-        run: cp /home/config.js ./config.js
-
-      - name: Restart PM2
-        run: npx pm2 restart pm2.config.cjs
+      - name: Log out of GHCR
+        if: always()
+        run: docker logout ghcr.io
