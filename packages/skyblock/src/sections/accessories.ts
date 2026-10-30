@@ -8,10 +8,18 @@
 
 import { ACCESSORY_UPGRADES, IGNORED_ACCESSORIES } from "#data";
 import { add } from "@statsify/math";
+import { costOf } from "#prices";
 import { decodeInventory } from "#nbt";
 import { resourceTexture } from "#textures";
 import { toItemView } from "#items";
-import type { AccessoriesSection, ItemView, ItemsResource, MissingAccessory, PriceMap, Rarity } from "#types";
+import type {
+  AccessoriesSection,
+  ItemView,
+  ItemsResource,
+  MissingAccessory,
+  PriceMap,
+  Rarity,
+} from "#types";
 import type { RawMember } from "#raw";
 
 const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
@@ -61,7 +69,8 @@ function storedAccessories(member: RawMember, items: ItemsResource) {
 export function getAccessories(
   member: RawMember,
   items: ItemsResource,
-  prices: PriceMap
+  prices: PriceMap,
+  market = true
 ): AccessoriesSection | null {
   const bag = member.inventory?.bag_contents?.talisman_bag;
   if (!bag) return null;
@@ -100,19 +109,33 @@ export function getAccessories(
     selectedPower: storage?.selected_power,
     tuning: storage?.tuning?.slot_0 ?? {},
     pricesAsOf: prices.asOf,
+    market,
     active,
     inactive,
-    missing: getMissing(owned, storedAccessories(member, items), active, contacts, items, prices),
+    missing: getMissing(owned, storedAccessories(member, items), active, contacts, items, market ? prices : undefined),
   };
 }
 
+/** Outside the bag first, since it costs nothing, then coins per point gained; unpriced ones sort last, by points. */
+export const cheapestFirst =
+  <T extends { outsideBag: boolean; name: string }>(coinsPer: (step: T) => number | undefined, gain: (step: T) => number) =>
+  (a: T, b: T) =>
+    Number(b.outsideBag) - Number(a.outsideBag) ||
+    (coinsPer(a) ?? Infinity) - (coinsPer(b) ?? Infinity) ||
+    gain(b) - gain(a) ||
+    a.name.localeCompare(b.name);
+
+/**
+ * Every tier above the bag's best in a chain is a step, worth its accessory power over that tier. Each chain (and the party
+ * hats) keeps its best step. One the player keeps outside the bag is free, and nothing below it is offered.
+ */
 function getMissing(
   owned: ReadonlySet<string>,
   stored: ItemView[],
   active: ItemView[],
   contacts: number,
   items: ItemsResource,
-  prices: PriceMap
+  prices?: PriceMap
 ) {
   const outside = new Map<string, ItemView>();
   for (const view of stored) {
@@ -120,39 +143,23 @@ function getMissing(
     if (!kept || powerOf(view.id, view.rarity, contacts) > powerOf(kept.id, kept.rarity, contacts)) outside.set(view.id, view);
   }
 
-  const open = new Map(
-    Object.entries(items.items).filter(
-      ([id, item]) =>
-        item.tier !== undefined &&
-        isCandidate(id, item) &&
-        !owned.has(id) &&
-        !upgradesOf(id).some((by) => owned.has(by) || outside.has(by))
-    )
-  );
-
-  const power = (id: string) => powerOf(id, outside.get(id)?.rarity ?? open.get(id)?.tier, contacts);
-
-  // Of the open ids in one chain, its top tier, and any kept outside the bag; of party hats, the one with the most AP,
-  // then the first id.
-  const beats = (by: string, id: string) =>
-    !outside.has(id) && open.has(by) && (!isMutual(id, by) || power(by) > power(id) || (power(by) === power(id) && by < id));
-
-  return [...open]
-    .filter(([id]) => !upgradesOf(id).some((by) => beats(by, id)))
+  const steps = Object.entries(items.items)
     .flatMap(([id, item]): MissingAccessory[] => {
-      const texture = resourceTexture(item);
-      if (!texture || !item.tier) return [];
+      if (!item.tier || !isCandidate(id, item) || owned.has(id)) return [];
+      if (upgradesOf(id).some((by) => owned.has(by) || outside.has(by))) return [];
 
       const replaces = active
         .filter((view) => upgradesOf(view.id).includes(id))
         .map((view) => ({ id: view.id, power: powerOf(view.id, view.rarity, contacts) }))
         .toSorted((a, b) => b.power - a.power)[0];
 
-      // A recombobulated lower tier can be worth as much as the next one up.
-      const gain = power(id) - (replaces?.power ?? 0);
-      if (gain <= 0) return [];
-
       const view = outside.get(id);
+      // A recombobulated lower tier can be worth as much as the next one up.
+      const gain = powerOf(id, view?.rarity ?? item.tier, contacts) - (replaces?.power ?? 0);
+      const texture = resourceTexture(item);
+      if (gain <= 0 || !texture) return [];
+
+      const cost = view ? undefined : costOf(prices?.entries[id]);
       return [
         {
           id,
@@ -160,14 +167,20 @@ function getMissing(
           rarity: view?.rarity ?? item.tier,
           accessoryPower: gain,
           outsideBag: view !== undefined,
-          price: view ? undefined : prices.entries[id],
+          cost,
+          coinsPerAccessoryPower: cost && cost.coins / gain,
           replaces: replaces?.id,
           texture,
         },
       ];
     })
-    // Outside the bag first, since those cost nothing
-    .toSorted(
-      (a, b) => Number(b.outsideBag) - Number(a.outsideBag) || b.accessoryPower - a.accessoryPower || a.name.localeCompare(b.name)
-    );
+    .toSorted(cheapestFirst<MissingAccessory>((step) => step.coinsPerAccessoryPower, (step) => step.accessoryPower));
+
+  // A tier lists every tier above it as an upgrade, so the first step of each chain in that order is its best.
+  const best: MissingAccessory[] = [];
+  for (const step of steps) {
+    if (!best.some(({ id }) => upgradesOf(id).includes(step.id) || upgradesOf(step.id).includes(id))) best.push(step);
+  }
+
+  return best;
 }
