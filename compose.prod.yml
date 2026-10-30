@@ -7,6 +7,8 @@ x-app: &app
   environment:
     FORCE_COLOR: 3
     NODE_OPTIONS: --unhandled-rejections=warn
+    # Sentry reads this to tag errors with the deploy they came from
+    SENTRY_RELEASE: ${TAG:?}
   volumes:
     - /home/config.js:/app/config.js:ro
   logging: &logging
