@@ -19,9 +19,12 @@ const MAX_LEVEL = LEVELING.leveling_caps.catacombs;
 function floorsOf(type: RawDungeonType | undefined, first: number): DungeonFloor[] {
   return Array.from({ length: 8 - first }, (_, i) => {
     const key = String(first + i);
+    const completions = type?.tier_completions?.[key] ?? 0;
     return {
       floor: first + i,
-      completions: type?.tier_completions?.[key] ?? 0,
+      // Master Mode often has no times_played, though every completion was a run
+      played: Math.max(type?.times_played?.[key] ?? 0, completions),
+      completions,
       bestScore: type?.best_score?.[key],
       fastest: type?.fastest_time?.[key],
       fastestS: type?.fastest_time_s?.[key],
@@ -30,7 +33,7 @@ function floorsOf(type: RawDungeonType | undefined, first: number): DungeonFloor
   });
 }
 
-/** Catacombs keeps levelling past 50 (200M XP a level, from NEU's table); classes stop at 50. Floor 0 is the Entrance. */
+/** Catacombs and classes keep levelling past 50. Floor 0 is the Entrance. */
 export function getDungeons(member: RawMember): DungeonsSection {
   const dungeons = member.dungeons;
   const types = dungeons?.dungeon_types;
@@ -38,7 +41,7 @@ export function getDungeons(member: RawMember): DungeonsSection {
   const classes = Object.fromEntries(
     DUNGEON_CLASSES.map((name) => [
       name,
-      getLevel(dungeons?.player_classes?.[name]?.experience ?? 0, LEVELING.catacombs, MAX_LEVEL),
+      getLevel(dungeons?.player_classes?.[name]?.experience ?? 0, LEVELING.catacombs, MAX_LEVEL, true),
     ])
   );
 
@@ -49,5 +52,9 @@ export function getDungeons(member: RawMember): DungeonsSection {
     selectedClass: dungeons?.selected_dungeon_class,
     secrets: dungeons?.secrets ?? 0,
     floors: { normal: floorsOf(types?.catacombs, 0), master: floorsOf(types?.master_catacombs, 1) },
+    highestFloor: {
+      normal: types?.catacombs?.highest_tier_completed,
+      master: types?.master_catacombs?.highest_tier_completed,
+    },
   };
 }
