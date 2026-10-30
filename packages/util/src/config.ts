@@ -225,6 +225,11 @@ export interface Config {
     supportBotDsn?: string;
 
     /**
+     * The Sentry Dsn used by the leaderboard limiter's cron monitor
+     */
+    scriptsDsn?: string;
+
+    /**
      * The percentage of transactions to send to Sentry
      */
     tracesSampleRate?: number;
