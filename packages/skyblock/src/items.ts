@@ -48,19 +48,34 @@ interface RawResourceItem {
   id: string;
   name: string;
   material: string;
+  durability?: number;
   tier?: string;
   category?: string;
   color?: string;
   skin?: { value: string };
+  origin?: string;
+  rift_transferrable?: boolean;
 }
+
+// The resource leaves COMMON out and still calls DIVINE by its old name. UNOBTAINABLE isn't a rarity.
+const tierOf = (tier = "COMMON") => (tier === "SUPREME" ? "DIVINE" : RARITIES.find((rarity) => rarity === tier));
 
 export function parseItemsResource(raw: { lastUpdated: number; items: RawResourceItem[] }): ItemsResource {
   return {
     lastUpdated: raw.lastUpdated,
     items: Object.fromEntries(
-      raw.items.map(({ id, name, material, tier, category, color, skin }) => [
+      raw.items.map(({ id, name, material, durability, tier, category, color, skin, origin, rift_transferrable }) => [
         id,
-        { name, material, tier: tier as Rarity | undefined, category, color, skin: skin && skinHash(skin.value) },
+        {
+          name,
+          material,
+          durability,
+          tier: tierOf(tier),
+          category,
+          color,
+          skin: skin && skinHash(skin.value),
+          riftOnly: origin === "RIFT" && !rift_transferrable ? true : undefined,
+        },
       ])
     ),
   };

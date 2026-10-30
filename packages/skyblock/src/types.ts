@@ -185,8 +185,9 @@ export interface MissingAccessory {
   id: string;
   name: string;
   rarity: Rarity;
-  accessoryPower: number;
-  price?: PriceEntry;
+  accessoryPower: number; // over the tier in the bag it replaces
+  outsideBag: boolean; // owned, in the inventory, ender chest, a backpack or the vault
+  price?: PriceEntry; // none for one outside the bag
   replaces?: string;
   texture: ItemTexture;
 }
@@ -248,6 +249,15 @@ export interface ItemsResource {
   lastUpdated: number;
   items: Record<
     string,
-    { name: string; tier?: Rarity; material: string; skin?: string; color?: string; category?: string }
+    {
+      name: string;
+      tier?: Rarity;
+      material: string;
+      durability?: number;
+      skin?: string;
+      color?: string;
+      category?: string;
+      riftOnly?: boolean;
+    }
   >;
 }

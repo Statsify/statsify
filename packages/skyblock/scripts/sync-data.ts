@@ -13,6 +13,7 @@ import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { RARITIES } from "#types";
 import { removeFormatting } from "@statsify/util";
+import { skinHash } from "#textures";
 import { tmpdir } from "node:os";
 import { toLevelCosts } from "#leveling";
 
@@ -56,9 +57,7 @@ const write = (file: string, data: unknown) =>
 /** The texture hash in an item's SkullOwner, from its SNBT. */
 const skullHash = (nbt: string) => {
   const value = /Value:"([\w+/=]+)"/.exec(nbt)?.[1];
-  if (!value) return undefined;
-  const url: string | undefined = JSON.parse(Buffer.from(value, "base64").toString("utf8")).textures?.SKIN?.url;
-  return url?.split("/").at(-1);
+  return value && skinHash(value);
 };
 
 try {
