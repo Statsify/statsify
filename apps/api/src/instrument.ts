@@ -16,6 +16,8 @@ if (sentryDsn) {
     dsn: sentryDsn,
     // Redis spans every command, so a player save would get one span per leaderboard
     integrations: (integrations) => integrations.filter((integration) => integration.name !== "Redis"),
+    // Sentry 11 collects all of these by default
+    dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
     normalizeDepth: 3,
     tracesSampleRate: await config("sentry.tracesSampleRate"),
     environment: await config("environment"),

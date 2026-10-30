@@ -33,7 +33,6 @@ export class SentryInterceptor implements NestInterceptor {
       url: url.pathname,
       method: req.method,
       params: req.params as Record<string, unknown>,
-      headers: req.headers,
     });
 
     return next.handle().pipe(
