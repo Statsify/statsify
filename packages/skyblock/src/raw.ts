@@ -119,3 +119,30 @@ export interface RawMuseumMember {
 export interface RawMuseum {
   members?: Record<string, RawMuseumMember>;
 }
+
+/** One /v2/skyblock/auctions entry, with only the fields the price builder reads. `bin` isn't in docs.json. */
+export interface RawAuction {
+  uuid: string;
+  starting_bid: number;
+  item_bytes: string | RawNbt; // a string in practice; docs.json says an object
+  bin?: boolean;
+}
+
+export interface RawAuctionsPage {
+  totalPages: number;
+  lastUpdated: number;
+  auctions: RawAuction[];
+}
+
+/** /v2/skyblock/bazaar */
+export interface RawBazaar {
+  lastUpdated: number;
+  products: Record<
+    string,
+    {
+      sell_summary: { pricePerUnit: number }[];
+      buy_summary: { pricePerUnit: number }[];
+      quick_status: { sellPrice: number; sellMovingWeek: number; buyPrice: number; buyMovingWeek: number };
+    }
+  >;
+}
