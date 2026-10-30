@@ -1,0 +1,130 @@
+diff --git a/constants/itemsMap.js b/constants/itemsMap.js
+index 1d4b5996690cdc7de0d9396ef129a6d71658042e..a642cf6c9d86c1e967fb966371cf5421ecc84235 100644
+--- a/constants/itemsMap.js
++++ b/constants/itemsMap.js
+@@ -11,12 +11,6 @@ function setItems(items) {
+     for (const item of items) {
+         itemsMap.set(item.id, item);
+     }
+-
+-    // Save items to a file
+-    if (lastSave + 1000 * 60 * 60 * 12 > Date.now()) return; // Save every 12 hours
+-    const filePath = path.join(__dirname, '..', '.itemsBackup.json');
+-    fs.writeFileSync(filePath, JSON.stringify(Array.from(itemsMap.entries())));
+-    lastSave = Date.now();
+ }
+ 
+ function loadItems() {
+@@ -29,7 +23,6 @@ function loadItems() {
+     }
+ }
+ 
+-loadItems();
+ 
+ function getHypixelItemInformationFromId(id) {
+     return itemsMap.get(id);
+diff --git a/helper/prices.js b/helper/prices.js
+index 39946617a674a186d5a691c2918adaffa2c3ddbb..ca0d77f0795c51be615a791d5d4cc865f28dec3b 100644
+--- a/helper/prices.js
++++ b/helper/prices.js
+@@ -1,42 +1,13 @@
+ const { PricesError } = require('./errors');
+-const axios = require('axios');
+ 
+-let cachedPrices;
+-let isLoadingPrices = null;
+ /**
+  * Returns the prices used in the networth calculation, optimally this can be cached and used when calling `getNetworth`
+  * @param {boolean} [cache=true] - (Optional) By default true (5 minute cache), if set to false it will always make a request to get the latest prices from github
+  * @param {number} [retries=3] - (Optional) By default 3 retries. If set to a negative value, throws error.
+  * @returns {object} - An object containing the prices for the items in the game from the SkyHelper Prices list
+  */
+-async function getPrices(cache = true, cacheTime = 1000 * 60 * 5, retries = 3) {
+-    if (retries <= 0) throw new PricesError('Failed to retrieve prices');
+-
+-    if (cachedPrices?.lastCache > Date.now() - cacheTime && cache) return cachedPrices.prices;
+-
+-    if (isLoadingPrices) return isLoadingPrices;
+-
+-    isLoadingPrices = (async () => {
+-        try {
+-            const response = await axios.get('https://raw.githubusercontent.com/SkyHelperBot/Prices/main/pricesV2.json');
+-
+-            cachedPrices = { prices: response.data, lastCache: Date.now() };
+-            return response.data;
+-        } catch (e) {
+-            if (retries <= 0) {
+-                throw new PricesError(`Failed to retrieve prices with status code ${e?.response?.status || 'Unknown'}`);
+-            } else {
+-                console.warn(
+-                    `[SKYHELPER-NETWORTH] Failed to retrieve prices with status code ${e?.response?.status || 'Unknown'}. Retrying (${retries} attempt(s) left)...`,
+-                );
+-                return getPrices(cache, cacheTime, retries - 1);
+-            }
+-        } finally {
+-            isLoadingPrices = null;
+-        }
+-    })();
+-
+-    return isLoadingPrices;
++async function getPrices() {
++    throw new PricesError('Prices are passed in; nothing fetches them');
+ }
+ 
+ module.exports = { getPrices };
+diff --git a/index.d.ts b/index.d.ts
+index 58930719c3bb7324896225515c342180d65bed21..04d5ce72a81ae408a5fe22b399425570a6a65aeb 100644
+--- a/index.d.ts
++++ b/index.d.ts
+@@ -129,3 +129,5 @@ export declare class ItemNetworthCalculator {
+ export declare function getPrices(cache?: boolean, cacheTime?: number, retries?: number): Promise<Record<string, number>>;
+ 
+ export declare function parseItems(profileData: object, museumData: object): Promise<object>;
++
++export declare function setItems(items: object[]): void;
+diff --git a/index.js b/index.js
+index 1def0ee10029d506143f9fda5410e1ff346236f4..04dfead1cb437215a6265a0bf3b3a70bd7006e06 100644
+--- a/index.js
++++ b/index.js
+@@ -4,6 +4,7 @@ const ProfileNetworthCalculator = require('./calculators/ProfileNetworthCalculat
+ const ItemNetworthCalculator = require('./calculators/ItemNetworthCalculator');
+ const { getPrices } = require('./helper/prices');
+ const { parseItems } = require('./helper/parseItems');
++const { setItems } = require('./constants/itemsMap');
+ 
+ module.exports = {
+     ItemNetworthCalculator,
+@@ -12,4 +13,5 @@ module.exports = {
+     UpdateManager,
+     getPrices,
+     parseItems,
++    setItems,
+ };
+diff --git a/managers/NetworthManager.js b/managers/NetworthManager.js
+index 753116167088acfe7028af928eb98fac32690609..2dea16a7f9464cf74c2df179399882e221008070 100644
+--- a/managers/NetworthManager.js
++++ b/managers/NetworthManager.js
+@@ -44,10 +44,7 @@ class NetworthManager {
+         this.#stackItems = stackItems || true;
+         this.#includeItemData = includeItemData || false;
+ 
+-        this.itemsPromise = this.updateItems(this.#itemsRetries);
+-        this.#itemsIntervalInstance = setInterval(() => {
+-            this.updateItems(this.#itemsRetries);
+-        }, this.#itemsInterval);
++        this.itemsPromise = Promise.resolve();
+     }
+ 
+     /**
+diff --git a/managers/UpdateManager.js b/managers/UpdateManager.js
+index 5c1e44c7670aa6f22868402e1db77273d24f96fa..42abde62c726a93bcd2b0cf93cd9d6bc93f02557 100644
+--- a/managers/UpdateManager.js
++++ b/managers/UpdateManager.js
+@@ -15,7 +15,6 @@ class UpdateManager {
+         UpdateManager.instance = this;
+         this.checkForUpdate = this.checkForUpdate.bind(this);
+         this.#interval = 1000 * 60 * 10; // 10 minutes
+-        this.#intervalInstance = setInterval(this.checkForUpdate, this.#interval);
+     }
+ 
+     /**

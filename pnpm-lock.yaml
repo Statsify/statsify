@@ -162,6 +162,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  skyhelper-networth@2.11.1: 2253d70cab34b0a5f5d369d4e7a64dda4a5eb51900278e37fd94df6c2183dfb7
+
 importers:
 
   .:
@@ -794,6 +797,9 @@ importers:
       prismarine-nbt:
         specifier: 2.8.0
         version: 2.8.0
+      skyhelper-networth:
+        specifier: 2.11.1
+        version: 2.11.1(patch_hash=2253d70cab34b0a5f5d369d4e7a64dda4a5eb51900278e37fd94df6c2183dfb7)(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
 
   packages/util:
     dependencies:
@@ -5344,6 +5350,9 @@ packages:
   skia-canvas@4.0.0:
     resolution: {integrity: sha512-Y4K2xKy1nxj6fhT/ZTHQ+KJnSqV/oOXqbgjML8ie2Jj8eJ3satsiz9y/L8OWYclpNhEAvBSOIurdZ9hDs6fsGA==}
     engines: {node: '>=18'}
+
+  skyhelper-networth@2.11.1:
+    resolution: {integrity: sha512-wDVwu6UD9KcozNRxElX/F40L2nAgguc7rre/KduMKo0ppYK8WX/NJ+mN3kfaIwd4vfhzdhWwbxkhPUd1wB+HGw==}
 
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
@@ -10035,6 +10044,14 @@ snapshots:
     transitivePeerDependencies:
       - debug
       - kerberos
+      - supports-color
+
+  skyhelper-networth@2.11.1(patch_hash=2253d70cab34b0a5f5d369d4e7a64dda4a5eb51900278e37fd94df6c2183dfb7)(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0):
+    dependencies:
+      axios: 1.21.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+      prismarine-nbt: 2.8.0
+    transitivePeerDependencies:
+      - debug
       - supports-color
 
   slash@3.0.0: {}
