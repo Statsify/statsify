@@ -67,6 +67,7 @@ export default {
     apiDsn: "",
     verifyServerDsn: "",
     supportBotDsn: "",
+    scriptsDsn: "",
     tracesSampleRate: 1,
   },
   environment: "dev",

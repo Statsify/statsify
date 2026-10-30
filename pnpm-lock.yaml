@@ -223,6 +223,9 @@ importers:
 
   apps/scripts:
     dependencies:
+      '@sentry/node':
+        specifier: ^11.8.0
+        version: 11.8.0(rollup@4.61.0)
       '@statsify/api-client':
         specifier: workspace:^
         version: link:../../packages/api-client
