@@ -20,6 +20,7 @@
 * Apps should be runnable
 * Apps should be in the apps folder and should simply be called by the app name
 * Apps should have a pnpm workspace script in the root `package.json`
+* Apps that run in production should be added to `APPS` in `.github/workflows/images.yml` and get a service in `compose.prod.yml`
 * Apps can use import paths to simplify imports in the project
 
 ## Running
