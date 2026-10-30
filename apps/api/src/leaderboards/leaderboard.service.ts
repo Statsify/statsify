@@ -27,7 +27,6 @@ const DAYS_IN_WEEK = {
 
 export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
-// Leaderboards leave out 0, NaN and anything that isn't a number
 const isScore = (value: unknown): value is number =>
   typeof value === "number" && value !== 0 && !Number.isNaN(value);
 
