@@ -126,6 +126,7 @@ export interface SlayersSection {
 
 export interface DungeonFloor {
   floor: number;
+  played: number;
   completions: number;
   bestScore?: number;
   fastest?: number;
@@ -140,6 +141,7 @@ export interface DungeonsSection {
   selectedClass?: string;
   secrets: number;
   floors: Record<"normal" | "master", DungeonFloor[]>;
+  highestFloor: Partial<Record<"normal" | "master", number>>;
 }
 
 export const POWDERS = ["mithril", "gemstone", "glacite"] as const;
