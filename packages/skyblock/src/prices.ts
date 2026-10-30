@@ -6,7 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { RARITIES, type Bazaar, type ItemsResource, type PriceMap, type PriceView } from "#types";
+import {
+  RARITIES,
+  type Bazaar,
+  type ItemCost,
+  type ItemsResource,
+  type PriceEntry,
+  type PriceMap,
+  type PriceView,
+} from "#types";
 import { petName, petTexture } from "./sections/pets.js";
 import { prettify, removeFormatting, romanNumeral } from "@statsify/util";
 import { resourceTexture } from "#textures";
@@ -82,4 +90,11 @@ export function toPriceView(id: string, map: PriceMap, bazaar: Bazaar, items: It
   if (!described || !(product || lowestBin || npc)) return;
 
   return { ...described, bazaar: product, lowestBin, npc, asOf: map.asOf };
+}
+
+/** An NPC sell price is what an NPC pays for an item, so one priced only by that has no cost. */
+export function costOf(entry?: PriceEntry): ItemCost | undefined {
+  if (entry?.source === "bin") return { coins: entry.coins, source: "bin" };
+  if (entry?.source === "bazaar" && entry.buy > 0) return { coins: entry.buy, source: "bazaar" };
+  return undefined;
 }

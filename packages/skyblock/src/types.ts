@@ -205,13 +205,19 @@ export interface Bazaar {
   products: Record<string, BazaarProduct>;
 }
 
+export interface ItemCost {
+  coins: number;
+  source: "bin" | "bazaar";
+}
+
 export interface MissingAccessory {
   id: string;
   name: string;
   rarity: Rarity;
   accessoryPower: number; // over the tier in the bag it replaces
-  outsideBag: boolean; // owned, in the inventory, ender chest, a backpack or the vault
-  price?: PriceEntry; // none for one outside the bag
+  outsideBag: boolean;
+  cost?: ItemCost;
+  coinsPerAccessoryPower?: number;
   replaces?: string;
   texture: ItemTexture;
 }
@@ -222,9 +228,10 @@ export interface AccessoriesSection {
   selectedPower?: string;
   tuning: Record<string, number>;
   pricesAsOf: number;
+  market: boolean;
   active: ItemView[];
   inactive: ItemView[]; // duplicates and tiers an upgrade in the bag replaces
-  missing: MissingAccessory[]; // outside the bag first, then the most AP
+  missing: MissingAccessory[];
 }
 
 export interface NetworthSection {
