@@ -285,3 +285,15 @@ export interface ItemsResource {
     }
   >;
 }
+
+/** texture is missing for a material the 1.8 table doesn't map yet. */
+export interface PriceView {
+  id: string;
+  name: string;
+  rarity?: Rarity;
+  texture?: ItemTexture;
+  bazaar?: BazaarProduct;
+  lowestBin?: { coins: number; listings: number };
+  npc?: number;
+  asOf: number;
+}
