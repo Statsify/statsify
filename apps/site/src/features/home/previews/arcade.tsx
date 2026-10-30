@@ -13,19 +13,11 @@ import { Nametag } from "~/components/ui/nametag";
 import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
 import { Skin, SkinHead } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
+import { arrayGroup } from "@statsify/util/util";
 import { cn } from "~/lib/util";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { usePlayer } from "~/components/player-context";
 import type { ArcadePreview } from "@statsify/contract";
-
-export function arrayGroup<T extends unknown[] | string>(
-  arr: T,
-  groupSize: number
-): T[] {
-  return Array.from({ length: Math.ceil(arr.length / groupSize) }, (_, i) =>
-    arr.slice(i * groupSize, (i + 1) * groupSize)
-  ) as T[];
-}
 
 export function ArcadePreview({ className }: { className?: string }) {
   const arcade = usePlayer<ArcadePreview>();

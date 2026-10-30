@@ -481,6 +481,9 @@ importers:
       '@statsify/tokens':
         specifier: workspace:^
         version: link:../../packages/tokens
+      '@statsify/util':
+        specifier: workspace:^
+        version: link:../../packages/util
       '@tanstack/react-query':
         specifier: 5.104.5
         version: 5.104.5(@types/react@19.2.16)(react@19.2.1)
