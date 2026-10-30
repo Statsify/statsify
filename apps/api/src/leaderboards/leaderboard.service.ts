@@ -27,6 +27,10 @@ const DAYS_IN_WEEK = {
 
 export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
+// Leaderboards leave out 0, NaN and anything that isn't a number
+const isScore = (value: unknown): value is number =>
+  typeof value === "number" && value !== 0 && !Number.isNaN(value);
+
 @Injectable()
 export abstract class LeaderboardService {
   public constructor(@InjectRedis() protected readonly redis: Redis) {}
@@ -35,7 +39,8 @@ export abstract class LeaderboardService {
     constructor: Constructor<T>,
     instance: Flatten<T>,
     idField: keyof T,
-    remove = false
+    remove = false,
+    previous?: Flatten<T> | null
   ) {
     const fields = getLeaderboardFields(constructor);
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
@@ -54,7 +59,10 @@ export abstract class LeaderboardService {
       const value = instance[field] as unknown as number;
       const key = `${name}.${String(field)}`;
 
-      if (remove || value === 0 || Number.isNaN(value) || typeof value !== "number") {
+      if (remove || !isScore(value)) {
+        // Redis only has a score for the player if their stored document did
+        if (previous && !isScore(previous[field] ?? metadata.store.default)) continue;
+
         pipeline.zrem(key, id);
         continue;
       }
