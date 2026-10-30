@@ -1,0 +1,6 @@
+out
+node_modules
+minecraft-textures
+.yarn/install-state.gz
+.yarn/build-state.yml
+.DS_Store

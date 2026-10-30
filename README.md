@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/Statsify/public-assets/main/logos/logo_52.png" alt="Statsify" />
+<img src="https://raw.githubusercontent.com/Statsify/statsify/main/assets/public/logos/logo_52.png" alt="Statsify" />
 
 # Statsify
 A Hypixel and Minecraft focused Discord Bot
@@ -20,13 +20,13 @@ A Hypixel and Minecraft focused Discord Bot
 
 
 ### 🖼️ Assets
-* Currently we supply public assets for development as a [git submodule](https://github.com/Statsify/public-assets)
+* Public assets for development are included in `assets/public`
 * In addition, you must provide a 1.8.9 texture pack in the `assets/public/minecraft-textures/default`
 
 ### 🚀 Running
 * The codebase is split into apps and packages
 * Set up a `config.js` file in the root of the project following the `config.schema.js` file (copy paste it over and fill it in)
-* Pull the git submodules (`git submodule update --init`)
+* Pull the private assets submodule (`git submodule update --init assets/private`)
 * Set up the assets by running `cd assets/public && pnpm`
 * Use `pnpm build` to build all packages and apps,
 * Use `pnpm build:watch` to watch files and build them while you code
