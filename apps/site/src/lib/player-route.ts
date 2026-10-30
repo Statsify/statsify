@@ -11,6 +11,9 @@ import { notFoundMeta } from "./social-meta";
 /** A player's pages: fresh for a minute, stale for ten, and served stale for a day if the API is down. */
 export const EDGE_CACHE = "max-age=60, stale-while-revalidate=600, stale-if-error=86400";
 
+/** How long a loaded player or game page stays fresh in the query cache: the edge's `max-age`. */
+export const PAGE_STALE_MS = 60_000;
+
 /** A redirect to a player's current name. Names change hands, so it's kept for an hour rather than forever. */
 export const REDIRECT_HEADERS = { "Cache-Control": "public, max-age=3600", "CDN-Cache-Control": "max-age=3600" };
 

@@ -20,7 +20,7 @@ export type BoxBorderRadius =
 
 const DEFAULT_BORDER_RADIUS = panel.bevel;
 
-export function toBorderRadius(borderRadius: BoxBorderRadius): {
+function toBorderRadius(borderRadius: BoxBorderRadius): {
   topLeft: number;
   topRight: number;
   bottomLeft: number;
