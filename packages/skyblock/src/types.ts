@@ -47,7 +47,9 @@ export interface ProfileSummary {
   selected: boolean;
   members: { uuid: string; removed: boolean }[];
   level: number;
+  levelColor: string; // the § code of the level's bracket
   xp: number;
+  newProfile: boolean; // brand new, so missing data is empty rather than hidden by an API setting
   purse: number;
   bank?: number;
   personalBank?: number;
