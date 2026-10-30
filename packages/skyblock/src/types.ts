@@ -87,14 +87,39 @@ export interface Level {
   progress: number;
 }
 
+export interface SkillLevel extends Level {
+  unverified: boolean; // the level rests on a cap the API can't confirm (foraging past 53)
+}
+
+export const SKILLS = [
+  "farming",
+  "mining",
+  "combat",
+  "foraging",
+  "fishing",
+  "enchanting",
+  "alchemy",
+  "taming",
+  "carpentry",
+  "hunting",
+  "runecrafting",
+  "social",
+] as const;
+
+export type Skill = (typeof SKILLS)[number];
+
 export interface SkillsSection {
   average: number;
-  skills: Record<string, Level>;
+  skills: Record<Skill, SkillLevel>;
 }
+
+export const SLAYER_BOSSES = ["zombie", "spider", "wolf", "enderman", "blaze", "vampire"] as const;
+
+export type SlayerBoss = (typeof SLAYER_BOSSES)[number];
 
 export interface SlayersSection {
   xp: number;
-  bosses: Record<string, { level: Level; kills: number[] }>; // kills[tier - 1]
+  bosses: Record<SlayerBoss, { level: Level; kills: number[] }>; // kills[tier - 1]
 }
 
 export interface DungeonFloor {
