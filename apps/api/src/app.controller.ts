@@ -20,9 +20,6 @@ export class AppController {
     @InjectRedis() private readonly redis: Redis
   ) {}
 
-  /**
-   * For uptime monitors: 503 while Mongo or Redis is disconnected
-   */
   @Get("healthz")
   @ApiExcludeEndpoint()
   public healthz() {
