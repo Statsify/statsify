@@ -14,5 +14,6 @@ export { getLevel } from "./leveling.js";
 export { parseItemsResource, toItemView } from "./items.js";
 export { textureOf } from "./textures.js";
 export { getDungeons } from "./sections/dungeons.js";
+export { getPets } from "./sections/pets.js";
 export { getSkills } from "./sections/skills.js";
 export { getSlayers } from "./sections/slayers.js";
