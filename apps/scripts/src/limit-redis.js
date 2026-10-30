@@ -93,7 +93,6 @@ const limit = async () => {
   ]);
 };
 
-// Sentry alerts when a run fails or doesn't happen
 const task = new Task("leaderboard limiting", () =>
   Sentry.withMonitor("leaderboard-limiting", limit, {
     schedule: { type: "interval", value: 10, unit: "minute" },
