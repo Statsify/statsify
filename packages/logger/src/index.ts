@@ -32,6 +32,15 @@ const ColorByLogLevel: Record<LogLevel, number> = {
   fatal: STATUS_COLORS.fatal,
 };
 
+const SentryLogByLogLevel: Record<LogLevel, typeof Sentry.logger.info> = {
+  debug: Sentry.logger.debug,
+  warn: Sentry.logger.warn,
+  error: Sentry.logger.error,
+  verbose: Sentry.logger.trace,
+  log: Sentry.logger.info,
+  fatal: Sentry.logger.fatal,
+};
+
 const isProduction = await config("environment") === "prod";
 
 /**
@@ -81,8 +90,8 @@ export class Logger implements LoggerService {
     let normalizedMessage = message;
 
     if (message instanceof Error) {
-      const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-      transaction?.setStatus("internal_error");
+      const span = Sentry.getActiveSpan();
+      if (span) Sentry.getRootSpan(span).setStatus({ code: 2, message: "internal_error" });
 
       Sentry.captureException(message);
       normalizedMessage = message.stack;
@@ -151,8 +160,8 @@ export class Logger implements LoggerService {
     let normalizedMessage = message;
 
     if (message instanceof Error) {
-      const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-      transaction?.setStatus("internal_error");
+      const span = Sentry.getActiveSpan();
+      if (span) Sentry.getRootSpan(span).setStatus({ code: 2, message: "internal_error" });
 
       Sentry.captureException(message);
       normalizedMessage = message.stack;
@@ -234,6 +243,7 @@ export class Logger implements LoggerService {
       )} ${chalk.gray(`${timeStamp}${isProduction ? "" : "ms"}`)} ${output}\n`;
 
       process[writeStreamType].write(computedMessage);
+      SentryLogByLogLevel[logLevel](String(output), { context });
     }
   }
 }

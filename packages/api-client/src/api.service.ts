@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
   CacheLevel,
@@ -288,13 +287,6 @@ export class ApiService {
     method: Method = "GET",
     { body, headers, responseType }: ExtraData = {}
   ): Promise<T> {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "http.client",
-      description: `${method} ${url}`,
-    });
-
     const res = await this.axios.request({
       url,
       method,
@@ -303,9 +295,6 @@ export class ApiService {
       data: body,
       responseType,
     });
-
-    child?.setHttpStatus(res.status);
-    child?.finish();
 
     const data = res.data;
 
