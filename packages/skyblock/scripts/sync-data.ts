@@ -106,10 +106,7 @@ try {
   await write(
     "hotmlayout.json",
     Object.fromEntries(
-      Object.entries(hotm.hotm.perks).map(([id, { name, x, y, maxLevel, powder }]) => [
-        id,
-        { name, x, y, maxLevel, powder },
-      ])
+      Object.entries(hotm.hotm.perks).map(([id, { name, x, y, maxLevel }]) => [id, { name, x, y, maxLevel }])
     )
   );
 

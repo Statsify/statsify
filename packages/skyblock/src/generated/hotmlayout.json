@@ -2,322 +2,276 @@
   "anomalous_desire": {
     "maxLevel": 1,
     "name": "Tunnel Vision",
-    "powder": "GEMSTONE",
     "x": 0,
     "y": 4
   },
   "blockhead": {
     "maxLevel": 20,
     "name": "Blockhead",
-    "powder": "GEMSTONE",
     "x": 1,
     "y": 4
   },
   "core_of_the_mountain": {
     "maxLevel": 10,
     "name": "Core of the Mountain",
-    "powder": "(if (lt level 4) MITHRIL (if (lt level 8) GEMSTONE GLACITE))",
     "x": 3,
     "y": 5
   },
   "crystalline": {
     "maxLevel": 50,
     "name": "Crystalline",
-    "powder": "GLACITE",
     "x": 1,
     "y": 0
   },
   "daily_grind": {
     "maxLevel": 1,
     "name": "Daily Grind",
-    "powder": "GLACITE",
     "x": 1,
     "y": 5
   },
   "daily_powder": {
     "maxLevel": 1,
     "name": "Daily Powder",
-    "powder": "GEMSTONE",
     "x": 5,
     "y": 5
   },
   "dead_mans_chest": {
     "maxLevel": 50,
     "name": "Dead Man's Chest",
-    "powder": "GLACITE",
     "x": 4,
     "y": 0
   },
   "eager_adventurer": {
     "maxLevel": 100,
     "name": "Eager Adventurer",
-    "powder": "GLACITE",
     "x": 5,
     "y": 1
   },
   "efficient_miner": {
     "maxLevel": 100,
     "name": "Efficient Miner",
-    "powder": "MITHRIL",
     "x": 3,
     "y": 7
   },
   "fortunate_mineman": {
     "maxLevel": 50,
     "name": "Fortunate Mineman",
-    "powder": "GEMSTONE",
     "x": 5,
     "y": 3
   },
   "front_loaded": {
     "maxLevel": 1,
     "name": "Front Loaded",
-    "powder": "GEMSTONE",
     "x": 6,
     "y": 6
   },
   "gem_lover": {
     "maxLevel": 20,
     "name": "Gem Lover",
-    "powder": "GEMSTONE",
     "x": 4,
     "y": 6
   },
   "gemstone_infusion": {
     "maxLevel": 1,
     "name": "Gemstone Infusion",
-    "powder": "GLACITE",
     "x": 0,
     "y": 0
   },
   "gifts_from_the_departed": {
     "maxLevel": 100,
     "name": "Gifts from the Departed",
-    "powder": "GLACITE",
     "x": 2,
     "y": 0
   },
   "great_explorer": {
     "maxLevel": 20,
     "name": "Great Explorer",
-    "powder": "GEMSTONE",
     "x": 5,
     "y": 4
   },
   "keep_it_cool": {
     "maxLevel": 50,
     "name": "Keep It Cool",
-    "powder": "GEMSTONE",
     "x": 3,
     "y": 4
   },
   "lonesome_miner": {
     "maxLevel": 45,
     "name": "Lonesome Miner",
-    "powder": "GEMSTONE",
     "x": 4,
     "y": 4
   },
   "luck_of_the_cave": {
     "maxLevel": 45,
     "name": "Luck of the Cave",
-    "powder": "MITHRIL",
     "x": 1,
     "y": 7
   },
   "maniac_miner": {
     "maxLevel": 1,
     "name": "Maniac Miner",
-    "powder": "GEMSTONE",
     "x": 6,
     "y": 4
   },
   "metal_head": {
     "maxLevel": 20,
     "name": "Metal Head",
-    "powder": "GLACITE",
     "x": 1,
     "y": 1
   },
   "miners_blessing": {
     "maxLevel": 1,
     "name": "Miner's Blessing",
-    "powder": "GLACITE",
     "x": 0,
     "y": 2
   },
   "mineshaft_mayhem": {
     "maxLevel": 1,
     "name": "Mineshaft Mayhem",
-    "powder": "GLACITE",
     "x": 6,
     "y": 2
   },
   "mining_fortune": {
     "maxLevel": 50,
     "name": "Mining Fortune",
-    "powder": "MITHRIL",
     "x": 3,
     "y": 8
   },
   "mining_master": {
     "maxLevel": 10,
     "name": "Mining Master",
-    "powder": "GLACITE",
     "x": 3,
     "y": 0
   },
   "mining_speed": {
     "maxLevel": 50,
     "name": "Mining Speed",
-    "powder": "MITHRIL",
     "x": 3,
     "y": 9
   },
   "mining_speed_boost": {
     "maxLevel": 1,
     "name": "Mining Speed Boost",
-    "powder": "MITHRIL",
     "x": 1,
     "y": 8
   },
   "mole": {
     "maxLevel": 200,
     "name": "Mole",
-    "powder": "GEMSTONE",
     "x": 3,
     "y": 6
   },
   "no_stone_unturned": {
     "maxLevel": 50,
     "name": "No Stone Unturned",
-    "powder": "GLACITE",
     "x": 1,
     "y": 2
   },
   "old_school": {
     "maxLevel": 20,
     "name": "Old-School",
-    "powder": "GEMSTONE",
     "x": 1,
     "y": 6
   },
   "pickobulus": {
     "maxLevel": 1,
     "name": "Pickobulus",
-    "powder": "MITHRIL",
     "x": 5,
     "y": 8
   },
   "powder_buff": {
     "maxLevel": 50,
     "name": "Powder Buff",
-    "powder": "GEMSTONE",
     "x": 3,
     "y": 3
   },
   "precision_mining": {
     "maxLevel": 1,
     "name": "Precision Mining",
-    "powder": "MITHRIL",
     "x": 2,
     "y": 8
   },
   "professional": {
     "maxLevel": 140,
     "name": "Professional",
-    "powder": "GEMSTONE",
     "x": 2,
     "y": 6
   },
   "quick_forge": {
     "maxLevel": 20,
     "name": "Quick Forge",
-    "powder": "MITHRIL",
     "x": 5,
     "y": 7
   },
   "rags_to_riches": {
     "maxLevel": 50,
     "name": "Rags to Riches",
-    "powder": "GLACITE",
     "x": 3,
     "y": 1
   },
   "seasoned_mineman": {
     "maxLevel": 100,
     "name": "Seasoned Mineman",
-    "powder": "GEMSTONE",
     "x": 5,
     "y": 6
   },
   "sheer_force": {
     "maxLevel": 1,
     "name": "Sheer Force",
-    "powder": "GLACITE",
     "x": 6,
     "y": 0
   },
   "sky_mall": {
     "maxLevel": 1,
     "name": "Sky Mall",
-    "powder": "MITHRIL",
     "x": 0,
     "y": 6
   },
   "speedy_mineman": {
     "maxLevel": 50,
     "name": "Speedy Mineman",
-    "powder": "GEMSTONE",
     "x": 1,
     "y": 3
   },
   "steady_hand": {
     "maxLevel": 100,
     "name": "Steady Hand",
-    "powder": "GLACITE",
     "x": 3,
     "y": 2
   },
   "strong_arm": {
     "maxLevel": 100,
     "name": "Strong Arm",
-    "powder": "GLACITE",
     "x": 2,
     "y": 2
   },
   "subterranean_fisher": {
     "maxLevel": 40,
     "name": "Subterranean Fisher",
-    "powder": "GEMSTONE",
     "x": 2,
     "y": 4
   },
   "surveyor": {
     "maxLevel": 20,
     "name": "Surveyor",
-    "powder": "GLACITE",
     "x": 5,
     "y": 2
   },
   "titanium_insanium": {
     "maxLevel": 50,
     "name": "Titanium Insanium",
-    "powder": "MITHRIL",
     "x": 4,
     "y": 8
   },
   "vanguard_seeker": {
     "maxLevel": 50,
     "name": "Vanguard Seeker",
-    "powder": "GLACITE",
     "x": 5,
     "y": 0
   },
   "warm_heart": {
     "maxLevel": 50,
     "name": "Warm Heart",
-    "powder": "GLACITE",
     "x": 4,
     "y": 2
   }

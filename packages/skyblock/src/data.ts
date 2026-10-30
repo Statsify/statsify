@@ -50,5 +50,5 @@ export const IGNORED_ACCESSORIES: ReadonlySet<string> = new Set(accessories.igno
 
 export const HOTM_LAYOUT = hotmLayout as Record<
   string,
-  { name: string; x: number; y: number; maxLevel: number; powder: "MITHRIL" | "GEMSTONE" | "GLACITE" }
+  { name: string; x: number; y: number; maxLevel: number }
 >;
