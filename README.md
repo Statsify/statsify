@@ -53,6 +53,10 @@ $ pnpm typecheck
 $ docker build --build-arg APP={app name} .
 ```
 
+## 🚢 Deploying
+* Pushing a `v*` tag builds an image for each production app and runs them on the server with `compose.prod.yml`
+* New apps also need the steps under Apps in [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md)
+
 ## 💁 Contributing
 * Follow the guidelines in [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md)
 * If you are unsure of anything join our [`Discord`] and then message, `@jacobkoshy`
