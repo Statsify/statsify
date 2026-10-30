@@ -8,22 +8,15 @@
 
 import { ApiExcludeEndpoint } from "@nestjs/swagger";
 import { type Connection, ConnectionStates } from "mongoose";
-import {
-  Controller,
-  Get,
-  Header,
-  Inject,
-  Render,
-  ServiceUnavailableException,
-} from "@nestjs/common";
+import { Controller, Get, Header, Render, ServiceUnavailableException } from "@nestjs/common";
+import { InjectConnection } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Redis } from "ioredis";
-import { getConnectionToken } from "@m8a/nestjs-typegoose";
 
 @Controller("/")
 export class AppController {
   public constructor(
-    @Inject(getConnectionToken()) private readonly connection: Connection,
+    @InjectConnection() private readonly connection: Connection,
     @InjectRedis() private readonly redis: Redis
   ) {}
 
