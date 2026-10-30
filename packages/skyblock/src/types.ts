@@ -69,6 +69,7 @@ export interface MemberView {
   hotm?: HotmSection;
   dungeons?: DungeonsSection;
   slayers?: SlayersSection;
+  networth?: NetworthSection;
 }
 
 export interface ApiSettings {
@@ -226,6 +227,32 @@ export interface AccessoriesSection {
   missing: MissingAccessory[]; // outside the bag first, then the most AP
 }
 
+export interface NetworthSection {
+  total: number;
+  unsoulbound: number;
+  purse: number;
+  bank: number;
+  personalBank: number;
+  coins: number;
+  nonCosmetic: { total: number; unsoulbound: number }; // cosmetic items and modifiers left out
+  noInventory: boolean;
+  museumIncluded: boolean;
+  pricesAsOf: number;
+  categories: Record<string, { total: number; unsoulbound: number; top: NetworthItem[] }>;
+  unpriced: { key: string; name: string; count: number }[];
+  unpricedCount: number;
+}
+
+export interface NetworthItem {
+  id: string;
+  name: string;
+  count: number;
+  price: number;
+  soulbound: boolean;
+  cosmetic: boolean;
+  texture?: ItemTexture;
+}
+
 export interface ItemView {
   id: string; // vanilla items: "minecraft:<id>:<damage>"
   uuid?: string;
@@ -270,6 +297,7 @@ export interface RawItem {
 export interface ItemsResource {
   // API-internal, never sent to clients
   lastUpdated: number;
+  raw: object[]; // as Hypixel sent it, for the networth library
   items: Record<
     string,
     {
