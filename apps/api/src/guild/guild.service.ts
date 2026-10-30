@@ -16,9 +16,11 @@ import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/sc
 import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
 import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
+import { InjectRedis } from "#redis";
 import { Injectable, ServiceUnavailableException } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { PlayerService } from "#player";
+import { Redis } from "ioredis";
 import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
@@ -31,7 +33,8 @@ export class GuildService {
     private readonly playerService: PlayerService,
     private readonly guildLeaderboardService: GuildLeaderboardService,
     @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>,
-    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>
+    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
+    @InjectRedis() private readonly redis: Redis
   ) {}
 
   public async get(
@@ -50,6 +53,16 @@ export class GuildService {
         ...deserialize(Guild, flatten(cachedGuild)),
         cached: true,
       };
+    }
+
+    // Most players have no guild, so that answer is cached as long as a guild is
+    if (
+      type === GuildQuery.PLAYER &&
+      !cachedGuild &&
+      cache !== CacheLevel.LIVE &&
+      await this.redis.exists(`guildless:${tag}`)
+    ) {
+      throw new GuildNotFoundException(displayName);
     }
 
     let guild: Guild | null;
@@ -72,6 +85,7 @@ export class GuildService {
     }
 
     if (!guild) {
+      if (type === GuildQuery.PLAYER) await this.redis.set(`guildless:${tag}`, 1, "PX", 600_000);
       await this.handleGuildNotFound(cachedGuild, tag, type);
       throw new GuildNotFoundException(displayName);
     }
