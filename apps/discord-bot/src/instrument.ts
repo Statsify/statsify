@@ -16,7 +16,7 @@ if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
     integrations: [nodeProfilingIntegration()],
-    // Only profile while a command is traced
+    // Only sampled traces get profiled, so tracesSampleRate still sets the volume
     profileLifecycle: "trace",
     profileSessionSampleRate: 1,
     // Sentry 11 collects all of these by default
