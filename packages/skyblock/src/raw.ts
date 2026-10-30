@@ -81,12 +81,12 @@ export interface RawMember {
     selected_ability?: Record<string, string>;
     selected_skill_tree_slot?: Record<string, number>;
   };
-  mining_core?: Record<string, unknown> & {
+  mining_core?: {
     experience?: number;
     nodes?: Record<string, number | boolean>;
-    tokens?: number;
     tokens_spent?: number;
     selected_pickaxe_ability?: string;
+    [powder: `powder_${string}`]: number | undefined;
   };
   accessory_bag_storage?: {
     tuning?: Record<string, unknown> & { slot_0?: Record<string, number> };

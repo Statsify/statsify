@@ -15,6 +15,7 @@ export { parseItemsResource, toItemView } from "./items.js";
 export { resourceTexture, textureOf } from "./textures.js";
 export { getAccessories } from "./sections/accessories.js";
 export { getDungeons } from "./sections/dungeons.js";
+export { getHotm } from "./sections/hotm.js";
 export { getPets } from "./sections/pets.js";
 export { getSkills } from "./sections/skills.js";
 export { getSlayers } from "./sections/slayers.js";
