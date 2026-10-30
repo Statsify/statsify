@@ -429,7 +429,7 @@
       "title": "Invalid Position"
     },
     "leaderboardInvalidValue": {
-      "description": "The leaderboard value you entered is invalid. Enter a number like `10k`, a level like `500` or a time like `1:23.45`.",
+      "description": "The leaderboard value you entered is invalid. Enter a number like `10k`, a level like `500` or a time like `1:23.45` or `5d 3h`.",
       "title": "Invalid Value"
     },
     "leaderboardNotFound": {
@@ -550,7 +550,7 @@
     },
     "valueInput": {
       "label": "Search by a Value",
-      "placeholder": "Enter a value, eg: 10k, 500 or 1:23.45"
+      "placeholder": "Enter a value, eg: 10k, 500, 1:23.45 or 5d 3h"
     }
   },
   "minecraft": {
