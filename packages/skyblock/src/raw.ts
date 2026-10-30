@@ -29,7 +29,9 @@ export interface RawPet {
 
 export interface RawDungeonType {
   experience?: number;
+  times_played?: Record<string, number>;
   tier_completions?: Record<string, number>;
+  highest_tier_completed?: number;
   best_score?: Record<string, number>;
   fastest_time?: Record<string, number>;
   fastest_time_s?: Record<string, number>;
