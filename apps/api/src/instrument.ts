@@ -20,7 +20,7 @@ if (sentryDsn) {
       ...integrations.filter((integration) => integration.name !== "Redis"),
       nodeProfilingIntegration(),
     ],
-    // Only profile while a request is traced
+    // Only sampled traces get profiled, so tracesSampleRate still sets the volume
     profileLifecycle: "trace",
     profileSessionSampleRate: 1,
     // Sentry 11 collects all of these by default
