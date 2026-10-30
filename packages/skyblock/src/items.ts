@@ -55,6 +55,7 @@ interface RawResourceItem {
   skin?: { value: string };
   origin?: string;
   rift_transferrable?: boolean;
+  npc_sell_price?: number;
 }
 
 // The resource leaves COMMON out and still calls DIVINE by its old name. UNOBTAINABLE isn't a rarity.
@@ -64,7 +65,7 @@ export function parseItemsResource(raw: { lastUpdated: number; items: RawResourc
   return {
     lastUpdated: raw.lastUpdated,
     items: Object.fromEntries(
-      raw.items.map(({ id, name, material, durability, tier, category, color, skin, origin, rift_transferrable }) => [
+      raw.items.map(({ id, name, material, durability, tier, category, color, skin, origin, rift_transferrable, npc_sell_price }) => [
         id,
         {
           name,
@@ -75,6 +76,7 @@ export function parseItemsResource(raw: { lastUpdated: number; items: RawResourc
           color,
           skin: skin && skinHash(skin.value),
           riftOnly: origin === "RIFT" && !rift_transferrable ? true : undefined,
+          npcPrice: npc_sell_price,
         },
       ])
     ),

@@ -179,7 +179,7 @@ export interface PetView {
 /** One price per unit; listings is the BIN count behind it. */
 export interface PriceEntry {
   coins: number;
-  source: "bazaar" | "bin";
+  source: "bazaar" | "bin" | "npc";
   listings?: number;
 }
 
@@ -282,6 +282,7 @@ export interface ItemsResource {
       color?: string;
       category?: string;
       riftOnly?: boolean;
+      npcPrice?: number;
     }
   >;
 }
