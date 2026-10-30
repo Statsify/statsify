@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
+import * as Sentry from "@sentry/nestjs";
 import {
   CallHandler,
   ExecutionContext,
@@ -15,7 +15,7 @@ import {
   InternalServerErrorException,
   NestInterceptor,
 } from "@nestjs/common";
-import { Observable, catchError, tap } from "rxjs";
+import { Observable, catchError } from "rxjs";
 import { URL } from "node:url";
 import type { FastifyRequest } from "fastify";
 
@@ -36,34 +36,17 @@ export class SentryInterceptor implements NestInterceptor {
       headers: req.headers,
     });
 
-    let transaction: ReturnType<Sentry.Hub["startTransaction"]> | undefined;
-
-    if (!url.pathname.includes("/skin")) {
-      transaction = Sentry.startTransaction({
-        op: "request",
-        name: `${req.method} ${url.pathname}`,
-      });
-
-      Sentry.configureScope((scope) => scope.setSpan(transaction));
-    }
-
     return next.handle().pipe(
       catchError((err) => {
         const isHttpException = err instanceof HttpException;
         const isInternalError = err instanceof InternalServerErrorException;
 
-        if (isHttpException && !isInternalError) {
-          transaction?.finish();
-          throw err;
-        }
+        if (isHttpException && !isInternalError) throw err;
 
         Sentry.captureException(err);
-        transaction?.setHttpStatus(500);
-        transaction?.finish();
 
         throw err;
-      }),
-      tap(() => transaction?.finish())
+      })
     );
   }
 }

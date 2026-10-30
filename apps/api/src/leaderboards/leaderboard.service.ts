@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
+import * as Sentry from "@sentry/nestjs";
 import { Constructor, Flatten } from "@statsify/util";
 import { DateTime } from "luxon";
 import { InjectRedis } from "#redis";
@@ -38,13 +38,6 @@ export abstract class LeaderboardService {
     remove = false
   ) {
     const fields = getLeaderboardFields(constructor);
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "redis",
-      description: `add ${constructor.name} leaderboards`,
-    });
-
     const pipeline = this.redis.pipeline();
     const name = constructor.name.toLowerCase();
 
@@ -67,9 +60,10 @@ export abstract class LeaderboardService {
       }
     }
 
-    await pipeline.exec();
-
-    child?.finish();
+    await Sentry.startSpan(
+      { op: "redis", name: `add ${constructor.name} leaderboards` },
+      () => pipeline.exec()
+    );
   }
 
   public async getLeaderboard<T>(
@@ -194,13 +188,6 @@ export abstract class LeaderboardService {
     fields: string[],
     id: string
   ) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "redis",
-      description: `get ${constructor.name} rankings`,
-    });
-
     const pipeline = this.redis.pipeline();
     const constructorName = constructor.name.toLowerCase();
 
@@ -221,9 +208,10 @@ export abstract class LeaderboardService {
       }
     }
 
-    const responses = await pipeline.exec();
-
-    child?.finish();
+    const responses = await Sentry.startSpan(
+      { op: "redis", name: `get ${constructor.name} rankings` },
+      () => pipeline.exec()
+    );
 
     if (!responses) throw new InternalServerErrorException();
 
@@ -274,21 +262,15 @@ export abstract class LeaderboardService {
     bottom: number,
     sort = "DESC"
   ) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "redis",
-      description: `get ${constructor.name} leaderboards`,
-    });
-
     const name = constructor.name.toLowerCase();
     field = `${name}.${field}`;
 
-    const scores = await (sort === "ASC" ?
-      this.redis.zrange(field, top, bottom, "WITHSCORES") :
-      this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
-
-    child?.finish();
+    const scores = await Sentry.startSpan(
+      { op: "redis", name: `get ${constructor.name} leaderboards` },
+      () => sort === "ASC" ?
+        this.redis.zrange(field, top, bottom, "WITHSCORES") :
+        this.redis.zrevrange(field, top, bottom, "WITHSCORES")
+    );
 
     const response: { id: string; score: number; index: number }[] = [];
 
