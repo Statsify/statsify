@@ -8,7 +8,7 @@
 
 import { decodeInventory } from "#nbt";
 import { getPetLevel } from "./sections/pets.js";
-import type { Bazaar, PriceEntry, PriceMap, RawItem } from "#types";
+import type { Bazaar, ItemsResource, PriceEntry, PriceMap, RawItem } from "#types";
 import type { RawAuction, RawAuctionsPage, RawPet } from "#raw";
 
 // The networth library looks prices up by exact key, so each function below turns an item into one of its key formats.
@@ -206,6 +206,7 @@ const binPrice = ({ lowest, second }: Bins) => (second !== undefined && lowest <
 export async function buildPriceMap(
   pages: AsyncIterable<RawAuctionsPage>,
   bazaar: Bazaar,
+  items: ItemsResource,
   seen: SeenIndex = new Map()
 ): Promise<{ map: PriceMap; seen: SeenIndex }> {
   const next: SeenIndex = new Map();
@@ -232,6 +233,11 @@ export async function buildPriceMap(
   // quick_status.sellPrice averages the top orders, so one order can't move it.
   for (const product of Object.values(bazaar.products)) {
     if (product.sellPrice > 0) entries[product.id] = { coins: product.sellPrice, source: "bazaar" };
+  }
+
+  // Many NPC-sold items (arrows, starter tools, low talismans) are never listed as BIN, and the NPC always pays this.
+  for (const [id, { npcPrice }] of Object.entries(items.items)) {
+    if (npcPrice && !entries[id]) entries[id] = { coins: npcPrice, source: "npc" };
   }
 
   return { map: { asOf: auctionsUpdated, auctionsUpdated, bazaarUpdated: bazaar.lastUpdated, entries }, seen: next };
@@ -342,8 +348,17 @@ if (import.meta.vitest) {
     },
   };
 
-  test("buildPriceMap keeps the lowest BIN per unit behind the outlier guard, and the bazaar wins", async () => {
-    const { map, seen } = await buildPriceMap(Readable.from(pages), bazaar);
+  const items: ItemsResource = {
+    lastUpdated: 1,
+    items: {
+      ARROW: { name: "Arrow", material: "ARROW", npcPrice: 2 },
+      ENCHANTED_DIAMOND: { name: "Enchanted Diamond", material: "DIAMOND", npcPrice: 1280 },
+      HYPERION: { name: "Hyperion", material: "IRON_SWORD", npcPrice: 100 },
+    },
+  };
+
+  test("buildPriceMap keeps the lowest BIN per unit behind the outlier guard, the bazaar wins, and NPC prices fill in", async () => {
+    const { map, seen } = await buildPriceMap(Readable.from(pages), bazaar, items);
 
     expect(map).toMatchObject({ asOf: 1000, auctionsUpdated: 1000, bazaarUpdated: 990 });
     expect(map.entries).toEqual({
@@ -353,13 +368,14 @@ if (import.meta.vitest) {
       KAT_BOUQUET: { coins: 100_000, source: "bin", listings: 1 },
       GOBLIN_CHESTPLATE: { coins: 2_000_000, source: "bin", listings: 1 },
       ENCHANTED_DIAMOND: { coins: 1700, source: "bazaar" },
+      ARROW: { coins: 2, source: "npc" },
     });
     expect([...seen.values()].filter((listing) => listing === null)).toHaveLength(1);
     expect(seen.size).toBe(9);
 
     // A second pull reuses what it saw: this blob no longer decodes, so the key can only come from `seen`.
     const again = { ...pages[0], auctions: [{ ...pages[0].auctions[1], item_bytes: "not nbt" }] };
-    const second = await buildPriceMap(Readable.from([again]), bazaar, seen);
+    const second = await buildPriceMap(Readable.from([again]), bazaar, items, seen);
     expect(second.map.entries.HYPERION).toEqual({ coins: 900_000_000, source: "bin", listings: 1 });
     expect(second.seen.size).toBe(1);
   });
