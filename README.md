@@ -47,6 +47,9 @@ $ pnpm test
 
 # Type Testing
 $ pnpm typecheck
+
+# Building an app's Docker image (needs the private assets)
+$ docker build --build-arg APP={app name} .
 ```
 
 ## 💁 Contributing
