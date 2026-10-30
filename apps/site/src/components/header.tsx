@@ -14,7 +14,7 @@ import { cn } from "~/lib/util";
 import { flushSync } from "react-dom";
 import { isSupportedLocale } from "~/i18n/locales";
 import { useCallback, useState } from "react";
-import { useOutisdeClick } from "~/hooks/use-outside-click";
+import { useOutsideClick } from "~/hooks/use-outside-click";
 import { useTranslation } from "react-i18next";
 
 const PAGES = [
@@ -60,7 +60,7 @@ export function Header() {
   const [searchedOn, setSearchedOn] = useState<string>();
   const searching = searchedOn === pathname;
   const hide = useCallback(() => setSearchedOn(undefined), []);
-  const searchRow = useOutisdeClick<HTMLDivElement>(hide);
+  const searchRow = useOutsideClick<HTMLDivElement>(hide);
 
   const openSearch = () => {
     // Shown and focused in the tap itself, so a phone opens its keyboard.

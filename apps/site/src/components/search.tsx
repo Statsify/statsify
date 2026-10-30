@@ -16,7 +16,7 @@ import { cn } from "~/lib/util";
 import { orpc } from "~/lib/orpc";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useRecentPlayers } from "~/features/player/recent";
-import { useOutisdeClick } from "~/hooks/use-outside-click";
+import { useOutsideClick } from "~/hooks/use-outside-click";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -183,7 +183,7 @@ export function Search({
     inputRef.current?.blur();
   };
 
-  const ref = useOutisdeClick<HTMLFormElement>(close);
+  const ref = useOutsideClick<HTMLFormElement>(close);
 
   useEffect(() => {
     if (!shortcut) return;
