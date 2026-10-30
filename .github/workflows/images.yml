@@ -1,0 +1,51 @@
+name: Images
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  images:
+    name: Images
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      IMAGE: ghcr.io/statsify/statsify
+      APPS: api discord-bot support-bot verify-server scripts
+    steps:
+      # The five builds take about 13 GB, and the runner only promises 14 GB free
+      - name: Free disk space
+        run: sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          token: ${{ secrets.REPO_PAT }}
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Log in to GHCR
+        run: echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # The images include the private assets, and a package this workflow created would take the
+      # repository's public visibility, so the package must already exist and refuse anonymous pulls
+      - name: Check the package is private
+        run: |
+          docker manifest inspect "$IMAGE:api-latest" > /dev/null
+          status=$(curl -s -o /dev/null -w '%{http_code}' "https://ghcr.io/token?scope=repository:${IMAGE#ghcr.io/}:pull")
+          if [ "$status" != 403 ]; then
+            echo "$IMAGE allows anonymous pulls or couldn't be checked ($status)" >&2
+            exit 1
+          fi
+
+      - name: Build and push
+        run: |
+          for app in $APPS; do
+            docker build --build-arg APP="$app" --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from "$IMAGE:$app-latest" \
+              -t "$IMAGE:$app-$GITHUB_SHA" -t "$IMAGE:$app-latest" .
+          done
+          docker push --all-tags "$IMAGE"
