@@ -194,7 +194,7 @@ export class PlayerService {
     return flatPlayer;
   }
 
-  private async findMongoDocument(
+  public async findMongoDocument(
     tag: string,
     selector: Record<string, boolean> = {}
   ): Promise<Flatten<Player> | null> {

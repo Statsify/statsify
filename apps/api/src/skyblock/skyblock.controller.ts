@@ -1,0 +1,106 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiServiceUnavailableResponse,
+  ApiTags,
+} from "@nestjs/swagger";
+import { Auth, AuthRole } from "#auth";
+import { CachedPlayerDto, SkyBlockItemsDto, SkyBlockPriceDto, SkyBlockProfileDto } from "#dtos";
+import { Controller, Get, Query } from "@nestjs/common";
+import {
+  ErrorResponse,
+  GetSkyBlockItemsResponse,
+  GetSkyBlockPriceResponse,
+  GetSkyBlockProfileResponse,
+  GetSkyBlockProfilesResponse,
+  SkyBlockNotFoundException,
+  SkyBlockUnavailableException,
+} from "@statsify/api-client";
+import { SkyBlockPricesService } from "./skyblock-prices.service.js";
+import { SkyBlockService } from "./skyblock.service.js";
+
+@Controller("/skyblock")
+@ApiTags("SkyBlock")
+export class SkyBlockController {
+  public constructor(
+    private readonly skyblockService: SkyBlockService,
+    private readonly pricesService: SkyBlockPricesService
+  ) {}
+
+  @ApiOperation({
+    summary: "Get a Player's SkyBlock Profiles",
+    description: "When Hypixel can't be asked, the stored copy is returned with stale set and its fetchedAt.",
+  })
+  @ApiOkResponse({ type: GetSkyBlockProfilesResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: SkyBlockNotFoundException, description: "player or skyblock" })
+  @ApiServiceUnavailableResponse({ type: SkyBlockUnavailableException })
+  @Auth({ role: AuthRole.WORKER, weight: 2 })
+  @Get("/profiles")
+  public async getProfiles(@Query() { player, cache }: CachedPlayerDto) {
+    const profiles = await this.skyblockService.getProfiles(player, cache);
+
+    return {
+      success: true,
+      profiles,
+    };
+  }
+
+  @ApiOperation({
+    summary: "Get a SkyBlock Profile",
+    description: "The requested sections of the player's member, computed from the stored copy of their profiles.",
+  })
+  @ApiOkResponse({ type: GetSkyBlockProfileResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: SkyBlockNotFoundException, description: "player, skyblock or profile" })
+  @ApiServiceUnavailableResponse({ type: SkyBlockUnavailableException })
+  @Auth({ role: AuthRole.WORKER, weight: 3 })
+  @Get("/profile")
+  public async getProfile(@Query() { player, profile: name, sections, cache }: SkyBlockProfileDto) {
+    const profile = await this.skyblockService.getProfile(player, sections, cache, name);
+
+    return {
+      success: true,
+      profile,
+    };
+  }
+
+  @ApiOperation({ summary: "Get What a SkyBlock Item is Worth" })
+  @ApiOkResponse({ type: GetSkyBlockPriceResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: SkyBlockNotFoundException, description: "item or price" })
+  @ApiServiceUnavailableResponse({ type: SkyBlockUnavailableException, description: "market" })
+  @Auth({ role: AuthRole.WORKER, weight: 1 })
+  @Get("/price")
+  public async getPrice(@Query() { item }: SkyBlockPriceDto) {
+    const price = await this.pricesService.getPrice(item);
+
+    return {
+      success: true,
+      price,
+    };
+  }
+
+  @ApiOperation({ summary: "Get a Fuzzy Searched List of Priced SkyBlock Items" })
+  @ApiOkResponse({ type: GetSkyBlockItemsResponse })
+  @Auth({ role: AuthRole.WORKER, weight: 0 })
+  @Get("/items")
+  public async getItems(@Query() { query }: SkyBlockItemsDto) {
+    const items = await this.pricesService.searchItems(query);
+
+    return {
+      success: true,
+      items,
+    };
+  }
+}
