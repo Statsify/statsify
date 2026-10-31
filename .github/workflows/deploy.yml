@@ -28,7 +28,7 @@ jobs:
         run: pnpm scripts purge --dist && pnpm build --force
 
       - name: Prepare Assets
-        run: cd assets/private && pnpm blur && cd ../../
+        run: pnpm scripts blur-backgrounds
 
       - name: Move Config
         run: cp /home/config.js ./config.js
