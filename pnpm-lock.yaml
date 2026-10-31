@@ -262,6 +262,9 @@ importers:
       '@statsify/skin-renderer':
         specifier: workspace:^
         version: link:../../packages/skin-renderer
+      '@statsify/skyblock':
+        specifier: workspace:^
+        version: link:../../packages/skyblock
       '@statsify/util':
         specifier: workspace:^
         version: link:../../packages/util
