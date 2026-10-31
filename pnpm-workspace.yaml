@@ -2,6 +2,7 @@ packages:
   - apps/**
   - packages/**
   - assets/**
+  - '!packages/skin-renderer/pkg'
 
 onlyBuiltDependencies:
   - '@nestjs/core'
