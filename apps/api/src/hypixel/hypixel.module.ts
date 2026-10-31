@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Agent } from "node:https";
 import { HttpModule } from "@nestjs/axios";
 import { HypixelService } from "./hypixel.service.js";
 import { Module } from "@nestjs/common";
@@ -19,6 +20,8 @@ import { config } from "@statsify/util";
         "API-Key": await config("hypixelApi.key"),
         "accept-encoding": "*",
       },
+      // Node's default agent closes idle sockets after 5 s, shorter than the usual gap between requests
+      httpsAgent: new Agent({ keepAlive: true, timeout: 30_000 }),
       timeout: await config("hypixelApi.timeout", { default: 5000 }),
     }),
   ],
