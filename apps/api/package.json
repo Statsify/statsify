@@ -27,6 +27,7 @@
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/skin-renderer": "workspace:^",
+    "@statsify/skyblock": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "@typegoose/typegoose": "^12.6.0",
