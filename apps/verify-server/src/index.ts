@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import { Logger } from "@statsify/logger";
 import { UserLogo, VerifyCode } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
@@ -34,18 +33,6 @@ const codeCreatedMessage = (code: string, time: Date) => {
     { short: false }
   )}§r§7.`;
 };
-
-const sentryDsn = await config("sentry.verifyServerDsn", { required: false });
-
-if (sentryDsn) {
-  Sentry.init({
-    dsn: sentryDsn,
-    integrations: [new Sentry.Integrations.Mongo({ useMongoose: true })],
-    normalizeDepth: 3,
-    tracesSampleRate: await config("sentry.tracesSampleRate"),
-    environment: await config("environment"),
-  });
-}
 
 await connect(await config("database.mongoUri"));
 

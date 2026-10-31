@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import { CommandListener } from "#lib/command.listener";
 import { CommandPoster, I18nLoaderService, loadCommands } from "@statsify/discord";
 import { Container } from "typedi";
@@ -24,18 +23,6 @@ const handleError = logger.error.bind(logger);
 
 process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
-
-const sentryDsn = await config("sentry.discordBotDsn", { required: false });
-
-if (sentryDsn) {
-  Sentry.init({
-    dsn: sentryDsn,
-    integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
-    normalizeDepth: 3,
-    tracesSampleRate: await config("sentry.tracesSampleRate"),
-    environment: await config("environment"),
-  });
-}
 
 await Promise.all(
   [I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init())

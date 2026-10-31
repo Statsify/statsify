@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import handlebars from "handlebars";
 import packageJson from "../package.json" with { type: "json" };
 import { AppModule } from "./app.module.js";
@@ -28,21 +27,6 @@ const handleError = logger.error.bind(logger);
 
 process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
-
-const sentryDsn = await config("sentry.apiDsn", { required: false });
-
-if (sentryDsn) {
-  Sentry.init({
-    dsn: sentryDsn,
-    integrations: [
-      new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true }),
-      new Sentry.Integrations.Mongo({ useMongoose: true }),
-    ],
-    normalizeDepth: 3,
-    tracesSampleRate: await config("sentry.tracesSampleRate"),
-    environment: await config("environment"),
-  });
-}
 
 const mediaRoot = await config("api.mediaRoot");
 
