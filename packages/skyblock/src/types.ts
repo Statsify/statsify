@@ -177,11 +177,10 @@ export interface PetView {
 }
 
 /** One price per unit; listings is the BIN count behind it. */
-export interface PriceEntry {
-  coins: number;
-  source: "bazaar" | "bin" | "npc";
-  listings?: number;
-}
+export type PriceEntry =
+  | { coins: number; source: "bin"; listings: number }
+  | { coins: number; source: "bazaar"; buy: number } // coins is the sell price, buy what buying one costs
+  | { coins: number; source: "npc" };
 
 export interface PriceMap {
   asOf: number;
