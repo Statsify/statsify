@@ -18,8 +18,13 @@ import { getMinecraftTexturePath } from "@statsify/assets";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
+const REFRESH_AFTER = 1000 * 60 * 60 * 24;
+const RETRY_AFTER = 1000 * 60 * 60;
+
 @Injectable()
 export class SkinService {
+  private readonly refreshing = new Set<string>();
+
   public constructor(
     private readonly httpService: HttpService,
     @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
@@ -64,23 +69,32 @@ export class SkinService {
       .lean()
       .exec();
 
-    if (cachedSkin && Date.now() < cachedSkin.expiresAt) {
+    if (cachedSkin) {
+      if (Date.now() >= cachedSkin.expiresAt) this.refresh(cachedSkin.uuid);
       return cachedSkin;
     }
 
     const uuid = isUsername ? await this.getUuid(tag) : tag;
+    const skin = await this.requestSkin(uuid);
 
-    const skin = await this.requestSkin(uuid).catch((error) => {
-      // A skin found by name may belong to whoever had the name before
-      if (cachedSkin?.uuid === uuid) return cachedSkin;
-      throw error;
-    });
+    return this.save(skin);
+  }
 
-    // Cache for 3 hours
-    skin.expiresAt = Date.now() + (1000 * 60 * 60 * 3);
+  private refresh(uuid: string) {
+    if (this.refreshing.has(uuid)) return;
+    this.refreshing.add(uuid);
 
-    await this.skinModel.replaceOne({ uuid }, skin, { upsert: true }).lean().exec();
+    this.requestSkin(uuid)
+      .then((skin) => this.save(skin))
+      .catch(() => this.skinModel.updateOne({ uuid }, { expiresAt: Date.now() + RETRY_AFTER }).exec())
+      // The database failed too, so the next request tries again
+      .catch(() => undefined)
+      .finally(() => this.refreshing.delete(uuid));
+  }
 
+  private async save(skin: Skin): Promise<Skin> {
+    skin.expiresAt = Date.now() + REFRESH_AFTER;
+    await this.skinModel.replaceOne({ uuid: skin.uuid }, skin, { upsert: true }).lean().exec();
     return skin;
   }
 
