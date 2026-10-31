@@ -1,0 +1,10 @@
+{
+  "name": "public-assets",
+  "scripts": {
+    "postinstall": "node ./blur.mjs"
+  },
+  "dependencies": {
+    "skia-canvas": "4.0.0",
+    "stackblur-canvas": "2.7.0"
+  }
+}
