@@ -92,6 +92,10 @@
       "types": "./src/skin/index.ts",
       "default": "./dist/skin/index.js"
     },
+    "#skyblock": {
+      "types": "./src/skyblock/index.ts",
+      "default": "./dist/skyblock/index.js"
+    },
     "#user": {
       "types": "./src/user/index.ts",
       "default": "./dist/user/index.js"
