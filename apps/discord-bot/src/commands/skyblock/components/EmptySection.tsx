@@ -6,16 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Empty } from "./Empty.js";
 import type { ApiSettings } from "@statsify/skyblock";
 import type { LocalizeFunction } from "@statsify/discord";
 
 export interface EmptySectionProps {
   setting: keyof ApiSettings;
+  newProfile: boolean;
+  empty: string;
   t: LocalizeFunction;
 }
 
-export const EmptySection = ({ setting, t }: EmptySectionProps) => (
-  <box width="100%">
-    <text>{`§c${t("skyblock.apiOffCard", { setting: t(`skyblock.apiSettings.${setting}`) })}`}</text>
-  </box>
-);
+export const EmptySection = ({ setting, newProfile, empty, t }: EmptySectionProps) =>
+  newProfile ?
+    <Empty text={empty} /> :
+    (
+      <box width="100%">
+        <text>{`§c${t("skyblock.apiOffCard", { setting: t(`skyblock.apiSettings.${setting}`) })}`}</text>
+      </box>
+    );

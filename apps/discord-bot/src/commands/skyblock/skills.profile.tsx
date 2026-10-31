@@ -59,7 +59,7 @@ export const SkyBlockSkillsProfile = ({
             ))}
           </Table.table>
         ) :
-        <EmptySection setting="skills" t={t} />}
+        <EmptySection setting="skills" newProfile={profile.newProfile} empty={t("skyblock.noSkills")} t={t} />}
       <Footer logo={logo} user={user} />
     </Container>
   );

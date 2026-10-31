@@ -20,14 +20,14 @@ export const SkyBlockSummaryProfile = ({
   t,
 }: SkyBlockProfileProps) => {
   const { skills, dungeons, slayers, accessories, networth } = profile.member;
-  const apiOff = t("skyblock.apiOff");
+
+  const missing = (color: string) => (profile.newProfile ? { value: t(0), color } : { value: t("skyblock.apiOff"), color: "§c" });
+  const bank = profile.bank === undefined ? missing("§6") : { value: t(Math.floor(profile.bank)), color: "§6" };
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.level"), t(profile.level), profile.levelColor],
     [t("skyblock.purse"), t(Math.floor(profile.purse)), "§6"],
-    profile.bank === undefined ?
-      [t("skyblock.bank"), apiOff, "§c"] :
-      [t("skyblock.bank"), t(Math.floor(profile.bank)), "§6"],
+    [t("skyblock.bank"), bank.value, bank.color],
   ];
 
   if (profile.personalBank !== undefined)
@@ -46,7 +46,10 @@ export const SkyBlockSummaryProfile = ({
           />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("skyblock.skillAverage")} value={skills ? t(skills.average) : apiOff} color={skills ? "§a" : "§c"} />
+          <Table.td
+            title={t("skyblock.skillAverage")}
+            {...(skills ? { value: t(skills.average), color: "§a" } : missing("§a"))}
+          />
           <Table.td title={t("skyblock.catacombs")} value={t(dungeons!.catacombs.level)} color="§c" />
           <Table.td title={t("skyblock.classAverage")} value={t(dungeons!.classAverage)} color="§2" />
         </Table.tr>
@@ -54,8 +57,7 @@ export const SkyBlockSummaryProfile = ({
           <Table.td title={t("skyblock.slayerXp")} value={t(slayers!.xp)} color="§5" />
           <Table.td
             title={t("skyblock.accessoryPower")}
-            value={accessories ? t(accessories.accessoryPower) : apiOff}
-            color={accessories ? "§d" : "§c"}
+            {...(accessories ? { value: t(accessories.accessoryPower), color: "§d" } : missing("§d"))}
           />
           <Table.td title={t("skyblock.fairySouls")} value={t(profile.fairySouls)} color="§d" />
         </Table.tr>

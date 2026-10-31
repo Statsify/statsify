@@ -35,7 +35,7 @@ export const SkyBlockAccessoriesProfile = ({
     return (
       <Container background={background}>
         <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
-        <EmptySection setting="inventory" t={t} />
+        <EmptySection setting="inventory" newProfile={profile.newProfile} empty={t("skyblock.noAccessories")} t={t} />
         <Footer logo={logo} user={user} />
       </Container>
     );
