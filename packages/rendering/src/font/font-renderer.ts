@@ -29,11 +29,38 @@ interface Sizes {
   unicode: CharacterSizes;
 }
 
+interface GlyphRun {
+  x: number;
+  y: number;
+  length: number;
+}
+
+const getGlyphRuns = ({ data, width, height }: ImageData) => {
+  const runs: GlyphRun[] = [];
+
+  const isOpaque = (x: number, y: number) => data[(y * width + x) * 4 + 3] !== 0;
+
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (!isOpaque(x, y)) continue;
+
+      const start = x;
+      while (x < width && isOpaque(x, y)) x++;
+
+      runs.push({ x: start, y, length: x - start });
+    }
+  }
+
+  return runs;
+};
+
 export class FontRenderer {
   private images: Map<string, Canvas>;
+  private glyphs: Map<string, GlyphRun[]>;
 
   public constructor(private gradient: boolean) {
     this.images = new Map();
+    this.glyphs = new Map();
   }
 
   public async loadImages(fontPath: string) {
@@ -310,15 +337,21 @@ export class FontRenderer {
       size,
     } = metadata;
 
-    const imageData = image
-      .getContext("2d")
-      .getImageData(charX, charY, width, height);
+    // Characters repeat across a card, so read and scan each glyph's pixels once
+    let runs = this.glyphs.get(char);
+
+    if (!runs) {
+      runs = getGlyphRuns(
+        image.getContext("2d").getImageData(charX, charY, width, height)
+      );
+      this.glyphs.set(char, runs);
+    }
 
     ctx.filter = this.gradient ? "brightness(15%)" : "brightness(25%)";
 
     this.fillFormattedCharacter(
       ctx,
-      imageData,
+      runs,
       x,
       y,
       width,
@@ -337,7 +370,7 @@ export class FontRenderer {
 
     this.fillFormattedCharacter(
       ctx,
-      imageData,
+      runs,
       x,
       y,
       width,
@@ -357,7 +390,7 @@ export class FontRenderer {
 
   private fillFormattedCharacter(
     ctx: CanvasRenderingContext2D,
-    imageData: ImageData,
+    runs: GlyphRun[],
     x: number,
     y: number,
     width: number,
@@ -385,10 +418,9 @@ export class FontRenderer {
 
     this.fillPlainCharacter(
       ctx,
-      imageData,
+      runs,
       characterX,
       characterY,
-      width,
       scale,
       size,
       color,
@@ -402,10 +434,9 @@ export class FontRenderer {
     if (bold) {
       this.fillPlainCharacter(
         ctx,
-        imageData,
+        runs,
         characterX + scale * size,
         characterY,
-        width,
         scale,
         size,
         color,
@@ -417,10 +448,9 @@ export class FontRenderer {
       if (isAscii)
         this.fillPlainCharacter(
           ctx,
-          imageData,
+          runs,
           characterX + boldOffset,
           characterY,
-          width,
           scale,
           size,
           color,
@@ -444,45 +474,33 @@ export class FontRenderer {
 
   private fillPlainCharacter(
     ctx: CanvasRenderingContext2D,
-    imageData: ImageData,
+    runs: GlyphRun[],
     x: number,
     y: number,
-    width: number,
     scale: number,
     size: number,
     color: Fill,
     italic: boolean
   ) {
-    function createLetterPath(filter?: (x: number, y: number) => boolean) {
+    function createLetterPath(filter?: (y: number) => boolean) {
       ctx.beginPath();
 
-      for (let i = 0; i < imageData.data.length; i += 4) {
-        if (imageData.data[i + 3] === 0) continue;
-
-        const canvasX = (i / 4) % width;
-        const canvasY = Math.floor(i / 4 / width);
-
-        if (filter && !filter(canvasX, canvasY)) continue;
+      for (const run of runs) {
+        if (filter && !filter(run.y)) continue;
 
         let offset = 0;
 
         if (italic) {
-          if (canvasY < 2 * scale) offset = 2;
-          else if (canvasY < 6 * scale) offset = 1;
-          else if (canvasY < 10 * scale) offset = 0;
-          else if (canvasY < 14 * scale) offset = -1;
-          else if (canvasY < 16 * scale) offset = -2;
+          if (run.y < 2 * scale) offset = 2;
+          else if (run.y < 6 * scale) offset = 1;
+          else if (run.y < 10 * scale) offset = 0;
+          else if (run.y < 14 * scale) offset = -1;
+          else if (run.y < 16 * scale) offset = -2;
 
           offset *= scale * size;
         }
 
-        const charX = x + offset + canvasX * size;
-        const charY = y + canvasY * size;
-
-        ctx.moveTo(charX, charY);
-        ctx.lineTo(charX + size, charY);
-        ctx.lineTo(charX + size, charY + size);
-        ctx.lineTo(charX, charY + size);
+        ctx.rect(x + offset + run.x * size, y + run.y * size, run.length * size, size);
       }
 
       ctx.closePath();
@@ -496,11 +514,11 @@ export class FontRenderer {
 
     ctx.globalCompositeOperation = "soft-light";
 
-    createLetterPath((_, y) => y < 4 * scale);
+    createLetterPath((y) => y < 4 * scale);
     ctx.fillStyle = GRADIENT_TOP_OVERLAY;
     ctx.fill();
 
-    createLetterPath((_, y) => y > 10 * scale);
+    createLetterPath((y) => y > 10 * scale);
     ctx.fillStyle = GRADIENT_BOTTOM_OVERLAY;
     ctx.fill();
 
