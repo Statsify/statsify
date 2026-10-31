@@ -26,8 +26,10 @@ import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
 import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
 import { SkyBlockAccessoriesProfile, accessoryIcons } from "./accessories.profile.js";
 import { SkyBlockDungeonsProfile } from "./dungeons.profile.js";
+import { SkyBlockHotmProfile } from "./hotm.profile.js";
 import { SkyBlockLevelProfile, levelIcons } from "./level.profile.js";
 import { SkyBlockNetworthProfile, networthIcons } from "./networth.profile.js";
+import { SkyBlockPetsProfile, petIcons } from "./pets.profile.js";
 import { SkyBlockSkillsProfile } from "./skills.profile.js";
 import { SkyBlockSlayersProfile } from "./slayers.profile.js";
 import { SkyBlockSummaryProfile } from "./summary.profile.js";
@@ -115,6 +117,17 @@ export const SKYBLOCK_CARDS = {
     settings: ["skills"],
     profile: SkyBlockSkillsProfile,
   },
+  pets: {
+    sections: ["pets"],
+    settings: [],
+    icons: petIcons,
+    profile: SkyBlockPetsProfile,
+  },
+  hotm: {
+    sections: ["hotm"],
+    settings: [],
+    profile: SkyBlockHotmProfile,
+  },
   slayers: {
     sections: ["slayers"],
     settings: [],
@@ -188,6 +201,16 @@ export class SkyBlockCommand {
   @SubCommand({ description: (t) => t("commands.skyblock-skills"), args: [PlayerArgument] })
   public skills(context: CommandContext) {
     return this.run(context, "skills");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-pets"), args: [PlayerArgument] })
+  public pets(context: CommandContext) {
+    return this.run(context, "pets");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-hotm"), args: [PlayerArgument] })
+  public hotm(context: CommandContext) {
+    return this.run(context, "hotm");
   }
 
   @SubCommand({ description: (t) => t("commands.skyblock-slayers"), args: [PlayerArgument] })
