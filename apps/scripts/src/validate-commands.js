@@ -7,7 +7,7 @@
  */
 
 import commands from "discord-bot/commands.json" assert { type: "json" };
-import z from "zod";
+import { z } from "zod";
 
 function toEnum(...args) {
   return z.union(args.map((arg) => z.literal(arg)));
@@ -63,7 +63,7 @@ for (const [commandName, command] of Object.entries(commands.commands)) {
       console.error(error.message);
       console.error(`${command.name}.${error.path.join(".")}`);
     }
-    
+
     console.error(`Command "${commandName}" is invalid.`);
     process.exit(1);
   }

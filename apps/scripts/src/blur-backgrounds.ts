@@ -38,6 +38,7 @@ if (cluster.isPrimary) {
 
   console.log(`Cluster ${clusterId} started for backgrounds ${start}-${end}`);
 
+  /* oxlint-disable no-await-in-loop */
   for (let i = start; i < end; i++) {
     const path = backgroundPaths[i];
     if (!path) break;
