@@ -349,3 +349,10 @@ export interface PriceView {
   npc?: number;
   asOf: number;
 }
+
+/** An item search result: an items-resource id, an enchanted book or a pet price key. */
+export interface ItemMatch {
+  id: string;
+  name: string;
+  rarity?: Rarity;
+}
