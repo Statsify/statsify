@@ -791,6 +791,9 @@ importers:
 
   packages/skyblock:
     dependencies:
+      '@statsify/assets':
+        specifier: workspace:^
+        version: link:../assets
       '@statsify/math':
         specifier: workspace:^
         version: link:../math
@@ -803,6 +806,9 @@ importers:
       prismarine-nbt:
         specifier: 2.8.0
         version: 2.8.0
+      skia-canvas:
+        specifier: 4.0.0
+        version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
       skyhelper-networth:
         specifier: 2.11.1
         version: 2.11.1(patch_hash=2253d70cab34b0a5f5d369d4e7a64dda4a5eb51900278e37fd94df6c2183dfb7)(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
