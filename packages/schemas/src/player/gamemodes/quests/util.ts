@@ -245,30 +245,34 @@ export function createQuestsInstance<
   return QuestInstance as unknown as IQuestInstance<Time, GamesWithQuests>;
 }
 
+type QuestResets = Record<Exclude<QuestTime, QuestTime.Overall>, number> & { expiresAt: number };
+
+let questResets: QuestResets | undefined;
+
+// Every reset falls on a New York midnight, so the cutoffs only change once a day
+const getQuestResets = (): QuestResets => {
+  if (questResets && Date.now() < questResets.expiresAt) return questResets;
+
+  const now = DateTime.now().setZone("America/New_York");
+  const day = now.startOf("day");
+  const week = now.startOf("week");
+  const friday = week.plus({ days: 4 });
+
+  questResets = {
+    [QuestTime.Daily]: day.toMillis(),
+    [QuestTime.Weekly]: (friday <= now ? friday : week.minus({ days: 3 })).toMillis(),
+    [QuestTime.Monthly]: now.startOf("month").toMillis(),
+    expiresAt: day.plus({ days: 1 }).toMillis(),
+  };
+
+  return questResets;
+};
+
 export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) => {
   if (!quest?.completions) return 0;
   if (time === QuestTime.Overall) return quest.completions.length;
 
-  let t: DateTime = DateTime.now().setZone("America/New_York");
-
-  switch (time) {
-    case QuestTime.Daily:
-      t = t.startOf("day");
-      break;
-
-    case QuestTime.Weekly:
-      t = t.startOf("week");
-      t = t.plus({ days: 4 }).toMillis() < Date.now() ?
-        t.plus({ days: 4 }) :
-        t.minus({ days: 3 });
-      break;
-
-    case QuestTime.Monthly:
-      t = t.startOf("month");
-      break;
-  }
-
-  const millis = t.toMillis();
+  const millis = getQuestResets()[time];
 
   return quest.completions.filter((ms) => ms.time >= millis).length;
 };
