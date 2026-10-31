@@ -615,6 +615,9 @@ importers:
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../schemas
+      '@statsify/skyblock':
+        specifier: workspace:^
+        version: link:../skyblock
       '@statsify/util':
         specifier: workspace:^
         version: link:../util
