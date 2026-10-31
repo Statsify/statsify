@@ -33,6 +33,7 @@ export const PitProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("stats.gold"), t(pit.gold), "§6"],
+    [t("stats.goldEarned"), t(pit.goldEarned), "§6"],
     [t("stats.contracts"), t(pit.contractsCompleted), "§a"],
     [t("stats.renown"), t(pit.renown), "§e"],
     [t("stats.lifetimeRenown"), t(pit.lifetimeRenown), "§b"],
