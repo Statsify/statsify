@@ -74,7 +74,7 @@ export const swc = createUnplugin(({ minify, ...options }: SwcOptions = {}) => {
     vite: {
       config() {
         return {
-          esbuild: false,
+          oxc: false,
         };
       },
     },
