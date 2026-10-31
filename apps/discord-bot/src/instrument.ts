@@ -8,12 +8,17 @@
 
 import * as Sentry from "@sentry/node";
 import { config } from "@statsify/util";
+import { nodeProfilingIntegration } from "@sentry/profiling-node";
 
 const sentryDsn = await config("sentry.discordBotDsn", { required: false });
 
 if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
+    integrations: [nodeProfilingIntegration()],
+    // Only sampled traces get profiled, so tracesSampleRate still sets the volume
+    profileLifecycle: "trace",
+    profileSessionSampleRate: 1,
     // Sentry 11 collects all of these by default
     dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
     normalizeDepth: 3,
