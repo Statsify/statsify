@@ -10,5 +10,6 @@ export * from "./api.service.js";
 export * from "./constants.js";
 export * from "./exceptions/index.js";
 export * from "./responses/index.js";
+export type { SkyBlockSection } from "@statsify/skyblock";
 
 export const GUILD_ID_REGEX = /^(?=[\da-f]{24}$)(\d+[a-f]|[a-f]+\d)/i;
