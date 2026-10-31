@@ -10,7 +10,7 @@ import * as Sentry from "@sentry/node";
 import { Constructor, Flatten } from "@statsify/util";
 import { DateTime } from "luxon";
 import { InjectRedis } from "#redis";
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { type LeaderboardEnabledMetadata, getLeaderboardField, getLeaderboardFields } from "@statsify/schemas";
 import { LeaderboardQuery } from "@statsify/api-client";
 import { Redis } from "ioredis";
@@ -106,14 +106,26 @@ export abstract class LeaderboardService {
       case LeaderboardQuery.INPUT: {
         const ranking = await this.searchLeaderboardInput(input as string, field);
         highlight = ranking - 1;
-        top = highlight - (highlight % 10);
+        top = highlight - (highlight % PAGE_SIZE);
         bottom = top + PAGE_SIZE;
         break;
       }
       case LeaderboardQuery.POSITION: {
         const position = (input as number) - 1;
         highlight = position;
-        top = position - (position % 10);
+        top = position - (position % PAGE_SIZE);
+        bottom = top + PAGE_SIZE;
+        break;
+      }
+      case LeaderboardQuery.VALUE: {
+        const position = await this.searchLeaderboardValue(
+          constructor,
+          field,
+          input as number,
+          sort
+        );
+        highlight = position;
+        top = position - (position % PAGE_SIZE);
         bottom = top + PAGE_SIZE;
         break;
       }
@@ -300,6 +312,27 @@ export abstract class LeaderboardService {
     }
 
     return response;
+  }
+
+  private async searchLeaderboardValue<T>(
+    constructor: Constructor<T>,
+    field: string,
+    value: number,
+    sort = "DESC"
+  ) {
+    const key = `${constructor.name.toLowerCase()}.${field}`;
+
+    const [position, size] = await Promise.all([
+      sort === "ASC" ?
+        this.redis.zcount(key, "-inf", `(${value}`) :
+        this.redis.zcount(key, `(${value}`, "+inf"),
+      this.redis.zcard(key),
+    ]);
+
+    // Leaderboards are trimmed to their limit, so a value past the end has no known position
+    if (position >= size) throw new NotFoundException("value");
+
+    return position;
   }
 
   private getLeaderboardExpiryTime(leaderboard: LeaderboardEnabledMetadata): number {

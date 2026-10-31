@@ -312,7 +312,7 @@
         "title": "Sessions"
       },
       "leaderboards": {
-        "description": "Statsify offers thousands of leaderboards through the `/leaderboard` command. Run `/leaderboard`, then pick the gamemode, and pick a leaderboard to view. You can hit the search button to search for a specific player or position. You can also hit the up and down buttons to view more pages.",
+        "description": "Statsify offers thousands of leaderboards through the `/leaderboard` command. Run `/leaderboard`, then pick the gamemode, and pick a leaderboard to view. You can hit the search buttons to search for a specific player, position or value. You can also hit the up and down buttons to view more pages.",
         "title": "Leaderboards"
       },
       "minecraft": {
@@ -428,9 +428,17 @@
       "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
       "title": "Invalid Position"
     },
+    "leaderboardInvalidValue": {
+      "description": "The leaderboard value you entered is invalid. Enter a number like `10k`, a level like `500` or a time like `1:23.45` or `5d 3h`.",
+      "title": "Invalid Value"
+    },
     "leaderboardNotFound": {
       "description": "We can't find the `leaderboard` you are looking for!",
       "title": "Leaderboard Not Found"
+    },
+    "leaderboardValueNotFound": {
+      "description": "The leaderboard doesn't go down as far as the value you entered!",
+      "title": "No Leaderboard Data At This Value"
     },
     "missingMentionVerification": {
       "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account.",
@@ -539,6 +547,10 @@
     "positionInput": {
       "label": "Search by a Position",
       "placeholder": "Enter a position, eg: 5000"
+    },
+    "valueInput": {
+      "label": "Search by a Value",
+      "placeholder": "Enter a value, eg: 10k, 500, 1:23.45 or 5d 3h"
     }
   },
   "minecraft": {

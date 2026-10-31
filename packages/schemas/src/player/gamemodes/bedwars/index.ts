@@ -86,6 +86,7 @@ export class BedWars {
       hidden: true,
       formatter: (exp: number) =>
         getIntendedFormattedLevel(Math.floor(getLevel(exp))),
+      searchBy: getLevel,
       additionalFields: [
         "this.overall.wins",
         "this.overall.finalKills",

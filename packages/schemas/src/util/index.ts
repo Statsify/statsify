@@ -7,4 +7,5 @@
  */
 
 export * from "./leaderboard-scanner.js";
+export * from "./parse-leaderboard-value.js";
 export * from "./create-historical-player.js";

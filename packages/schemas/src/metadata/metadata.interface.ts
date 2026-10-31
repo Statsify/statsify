@@ -109,6 +109,11 @@ export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
    * How many members to show in the leaderboard.
    */
   limit: number;
+
+  /**
+   * Turns a score into what users search the leaderboard by, like the level on an exp leaderboard. It must never go down as the score goes up.
+   */
+  searchBy?: (score: number) => number;
 }
 
 export type LeaderboardMetadata =

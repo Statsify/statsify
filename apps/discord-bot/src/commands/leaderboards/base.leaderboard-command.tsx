@@ -27,7 +27,7 @@ import {
   LeaderboardQuery,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
-import { User } from "@statsify/schemas";
+import { Guild, Player, User, parseLeaderboardValue } from "@statsify/schemas";
 import { getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
@@ -96,6 +96,18 @@ export class BaseLeaderboardCommand {
       .emoji(t("emojis:search.position"))
       .style(ButtonStyle.Primary);
 
+    const searchValue = new ButtonBuilder()
+      .emoji(t("emojis:search.value"))
+      .style(ButtonStyle.Primary);
+
+    const row = new ActionRowBuilder([
+      up,
+      down,
+      searchDocument,
+      searchPosition,
+      searchValue,
+    ]);
+
     let currentPage = 0;
 
     const changePage =
@@ -118,7 +130,6 @@ export class BaseLeaderboardCommand {
         if (interaction.getUserId() === userId && !message.ephemeral) {
           up.disable(page === 0);
           currentPage = page || currentPage;
-          const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
 
           context.reply({
             ...message,
@@ -174,6 +185,19 @@ export class BaseLeaderboardCommand {
         )
       );
 
+    const valueModal = new ModalBuilder()
+      .title((t) => t("leaderboard.modal.title"))
+      .component(
+        new ActionRowBuilder().component(
+          new TextInputBuilder()
+            .label((t) => t("leaderboard.valueInput.label"))
+            .placeholder((t) => t("leaderboard.valueInput.placeholder"))
+            .minLength(1)
+            .maxLength(16)
+            .required(true)
+        )
+      );
+
     listener.addHook(searchDocument.getCustomId(), () => ({
       type: InteractionResponseType.Modal,
       data: documentModal.build(t),
@@ -182,6 +206,11 @@ export class BaseLeaderboardCommand {
     listener.addHook(searchPosition.getCustomId(), () => ({
       type: InteractionResponseType.Modal,
       data: positionModal.build(t),
+    }));
+
+    listener.addHook(searchValue.getCustomId(), () => ({
+      type: InteractionResponseType.Modal,
+      data: valueModal.build(t),
     }));
 
     listener.addHook(documentModal.getCustomId(), async (interaction) => {
@@ -214,7 +243,31 @@ export class BaseLeaderboardCommand {
       );
     });
 
-    const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
+    listener.addHook(valueModal.getCustomId(), async (interaction) => {
+      const data = interaction.getData();
+      const valueInput = data.components[0].components[0].value;
+
+      const value = parseLeaderboardValue(
+        type === "player" ? Player : Guild,
+        field,
+        valueInput
+      );
+
+      if (user?.locale) interaction.setLocale(user.locale);
+
+      if (Number.isNaN(value)) {
+        const error = new ErrorMessage("errors.leaderboardInvalidValue");
+
+        return interaction.sendFollowup({
+          ...error,
+          ephemeral: true,
+        });
+      }
+
+      changePage(() => ({ input: value, type: LeaderboardQuery.VALUE }))(
+        interaction
+      );
+    });
 
     const [message, page] = await this.getLeaderboardMessage(
       user,
@@ -234,8 +287,10 @@ export class BaseLeaderboardCommand {
       listener.removeHook(down.getCustomId());
       listener.removeHook(searchDocument.getCustomId());
       listener.removeHook(searchPosition.getCustomId());
+      listener.removeHook(searchValue.getCustomId());
       listener.removeHook(documentModal.getCustomId());
       listener.removeHook(positionModal.getCustomId());
+      listener.removeHook(valueModal.getCustomId());
 
       context.reply({ embeds: [], components: [] });
       cache.clear();
@@ -289,7 +344,11 @@ export class BaseLeaderboardCommand {
 
     if (!leaderboard) {
       const message = {
-        ...new ErrorMessage(`errors.${type}LeaderboardNotFound`),
+        ...new ErrorMessage(
+          params.type === LeaderboardQuery.VALUE ?
+            "errors.leaderboardValueNotFound" :
+            `errors.${type}LeaderboardNotFound`
+        ),
         ephemeral: true,
       };
 
