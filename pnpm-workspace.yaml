@@ -2,7 +2,6 @@ packages:
   - apps/**
   - packages/**
   - assets/**
-  # wasm-pack's build output has its own package.json
   - '!packages/skin-renderer/pkg'
 
 onlyBuiltDependencies:
