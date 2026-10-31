@@ -1,0 +1,16 @@
+**/.git
+**/node_modules
+**/dist
+**/.turbo
+**/.next
+**/*.node
+**/*.tsbuildinfo
+**/.env
+**/commands.json
+/config.js
+/config.json
+/coverage
+/data
+/target
+assets/private/out
+packages/skin-renderer/pkg
