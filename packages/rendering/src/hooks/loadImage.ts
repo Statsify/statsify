@@ -10,6 +10,12 @@ import axios from "axios";
 import { Image } from "skia-canvas";
 import { readFile } from "node:fs/promises";
 
+/**
+ * Idle timeout for remote images. A skin can need a Mojang lookup and a render on the API
+ * before any data arrives, which is why this isn't shorter.
+ */
+const IMAGE_DOWNLOAD_TIMEOUT = 5_000;
+
 const bufferToImage = (buffer: Buffer): Image => {
   const image = new Image(buffer);
   Object.defineProperty(image, "_data", { value: buffer });
@@ -22,7 +28,7 @@ export const loadImage = async (url: string | Buffer): Promise<Image> => {
 
   if (url.startsWith("http")) {
     const data = await axios
-      .get(url, { responseType: "arraybuffer" })
+      .get(url, { responseType: "arraybuffer", timeout: IMAGE_DOWNLOAD_TIMEOUT })
       .then((res) => res.data);
 
     const buffer = Buffer.from(data);
