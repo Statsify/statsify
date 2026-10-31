@@ -221,8 +221,8 @@ importers:
         specifier: ^11.1.1
         version: 11.1.1
       '@m8a/nestjs-typegoose':
-        specifier: ^12.0.0
-        version: 12.0.1(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0)))(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
+        specifier: ^13.0.0
+        version: 13.0.0(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0)))(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
       '@nestjs/axios':
         specifier: ^4.0.1
         version: 4.0.1(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(axios@1.21.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0))(rxjs@7.8.2)
@@ -1361,14 +1361,14 @@ packages:
     resolution: {integrity: sha512-9I2Zn6+NJLfaGoz9jN3lpwDgAYvfGeNYdbAIjJOqzs4Tpc+VU3Jqq4IofSUBKajiDS8k9fZIg18/z13mpk1bsA==}
     engines: {node: '>=8'}
 
-  '@m8a/nestjs-typegoose@12.0.1':
-    resolution: {integrity: sha512-l8F0IbcGFBSN5xacgYPFfjZlvXzGF/HH4IC+H1GQU81gcr0etW2xP8dqKSuOWoF5H2njaOoNMyhAvt6oqpSL3Q==}
-    engines: {node: '>=18'}
+  '@m8a/nestjs-typegoose@13.0.0':
+    resolution: {integrity: sha512-YCHkCapO4L6ssTPh2jynUzcHLpyg10kb1pzQK7xJ9CwlyzYykcfkLC008ccgOemS2DSZUi4EKr7CDzw8QtpDEA==}
+    engines: {node: '>=20.19.0'}
     peerDependencies:
       '@nestjs/common': ^10.0.0 || ^11.0.0
       '@nestjs/core': ^10.0.0 || ^11.0.0
-      '@typegoose/typegoose': ^12.0.0
-      mongoose: ^8.0.1
+      '@typegoose/typegoose': ^13.0.0
+      mongoose: ^9.0.0
 
   '@microsoft/tsdoc@0.16.0':
     resolution: {integrity: sha512-xgAyonlVVS+q7Vc7qLW0UrJU7rSFcETRWsqdXZtjzRU8dF+6CkozTK4V4y1LwOX7j8r/vHphjDeMeGI4tNGeGA==}
@@ -6443,7 +6443,7 @@ snapshots:
 
   '@lukeed/ms@2.0.2': {}
 
-  '@m8a/nestjs-typegoose@12.0.1(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0)))(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))':
+  '@m8a/nestjs-typegoose@13.0.0(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0)))(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))':
     dependencies:
       '@nestjs/common': 11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0)
       '@nestjs/core': 11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2)
