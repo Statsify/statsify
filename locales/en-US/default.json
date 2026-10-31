@@ -374,6 +374,10 @@
       "description": "You need to purchase a higher premium tier to unlock this icon!",
       "title": "Higher Tier Required"
     },
+    "hypixelRateLimited": {
+      "description": "Statsify has reached its Hypixel API limit. Please try again in about {{time}}!",
+      "title": "$t(errors.hypixelUnavailable.title)"
+    },
     "hypixelUnavailable": {
       "description": "The Hypixel API is having trouble right now. Please try again in a few minutes!",
       "title": "Hypixel API Unavailable"
