@@ -79,7 +79,7 @@ export const swc = createUnplugin(({ minify, ...options }: SwcOptions = {}) => {
       },
     },
     rollup: {
-      async renderChunk(code, chunk) {
+      async renderChunk(code: string, chunk: { fileName: string }) {
         if (minify) {
           const result = await transform(code, {
             sourceMaps: true,
