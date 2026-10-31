@@ -11,16 +11,16 @@ import { deepAdd, ratio } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export class BedWarsModeItemsCollected {
-  @Field({ leaderboard: { limit: 100_000 } })
+  @Field({ leaderboard: { limit: 10_000 } })
   public iron: number;
 
-  @Field({ leaderboard: { limit: 100_000 } })
+  @Field({ leaderboard: { limit: 10_000 } })
   public gold: number;
 
-  @Field({ leaderboard: { limit: 100_000 } })
+  @Field({ leaderboard: { limit: 10_000 } })
   public diamond: number;
 
-  @Field({ leaderboard: { limit: 100_000 } })
+  @Field({ leaderboard: { limit: 10_000 } })
   public emerald: number;
 
   public constructor(data: APIData, mode: string) {

@@ -92,6 +92,11 @@ export const getLeaderboardMetadata = (
       name,
     };
   } else {
+    // Fields with historical stats have always been trimmed to a tenth of the default
+    const defaultLimit =
+      getDefaultLeaderboardLimit(propertyKey) /
+      (historicalOptions?.enabled === false ? 1 : 10);
+
     leaderboard = {
       enabled: true,
       sort: leaderboardOptions?.sort || "DESC",
@@ -102,8 +107,7 @@ export const getLeaderboardMetadata = (
       additionalFields: leaderboardOptions?.additionalFields || [],
       extraDisplay: leaderboardOptions?.extraDisplay,
       formatter: leaderboardOptions?.formatter,
-      limit:
-        leaderboardOptions?.limit ?? getDefaultLeaderboardLimit(propertyKey),
+      limit: leaderboardOptions?.limit ?? defaultLimit,
       resetEvery: leaderboardOptions?.resetEvery,
     };
   }
