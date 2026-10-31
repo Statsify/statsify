@@ -230,9 +230,9 @@ export async function buildPriceMap(
   const entries: Record<string, PriceEntry> = {};
   for (const [key, bin] of bins) entries[key] = { coins: binPrice(bin), source: "bin", listings: bin.listings };
 
-  // quick_status.sellPrice averages the top orders, so one order can't move it.
+  // quick_status averages the top orders, so one order can't move it.
   for (const product of Object.values(bazaar.products)) {
-    if (product.sellPrice > 0) entries[product.id] = { coins: product.sellPrice, source: "bazaar" };
+    if (product.sellPrice > 0) entries[product.id] = { coins: product.sellPrice, source: "bazaar", buy: product.buyPrice };
   }
 
   // Many NPC-sold items (arrows, starter tools, low talismans) are never listed as BIN, and the NPC always pays this.
@@ -287,7 +287,7 @@ if (import.meta.vitest) {
       asOf: 1,
       auctionsUpdated: 1,
       bazaarUpdated: 1,
-      entries: Object.fromEntries(Object.entries(entries).map(([key, coins]) => [key, { coins, source: "bin" }])),
+      entries: Object.fromEntries(Object.entries(entries).map(([key, coins]) => [key, { coins, source: "bin", listings: 2 }])),
     };
     const keys = (item: Parameters<typeof rawItem>[0]) => lookupKeys(rawItem(item), map);
 
@@ -367,7 +367,7 @@ if (import.meta.vitest) {
       ASPECT_OF_THE_END: { coins: 100_000, source: "bin", listings: 2 },
       KAT_BOUQUET: { coins: 100_000, source: "bin", listings: 1 },
       GOBLIN_CHESTPLATE: { coins: 2_000_000, source: "bin", listings: 1 },
-      ENCHANTED_DIAMOND: { coins: 1700, source: "bazaar" },
+      ENCHANTED_DIAMOND: { coins: 1700, source: "bazaar", buy: 2000 },
       ARROW: { coins: 2, source: "npc" },
     });
     expect([...seen.values()].filter((listing) => listing === null)).toHaveLength(1);
