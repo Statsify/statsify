@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime, prettify } from "@statsify/util";
+import { type APIData, formatTimeWithSeconds, prettify } from "@statsify/util";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
@@ -98,13 +98,13 @@ export class OverallMurderMysteryMode extends StandardMurderMysteryMode {
 
 export class ClassicMurderMysteryMode extends StandardMurderMysteryMode {
   @Field({
-    leaderboard: { sort: "ASC", formatter: formatTime },
+    leaderboard: { sort: "ASC", formatter: formatTimeWithSeconds },
     historical: { enabled: false },
   })
   public fastestDetectiveWin: number;
 
   @Field({
-    leaderboard: { sort: "ASC", formatter: formatTime },
+    leaderboard: { sort: "ASC", formatter: formatTimeWithSeconds },
     historical: { enabled: false },
   })
   public fastestMurdererWin: number;

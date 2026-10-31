@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type APIData, formatTime } from "@statsify/util";
 import { BowSpleef, PVPRun, TNTRun, TNTTag, Wizards } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import type { APIData } from "@statsify/util";
 
 export const TNT_GAMES_MODES = new GameModes([
   { api: "overall" },
@@ -45,6 +45,9 @@ export class TNTGames {
   @Field()
   public wins: number;
 
+  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  public playtime: number;
+
   @Field({
     leaderboard: { fieldName: "TNT Run", extraDisplay: "this.tntRun.naturalPrefix" },
   })
@@ -65,6 +68,7 @@ export class TNTGames {
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
     this.wins = data.wins;
+    this.playtime = (ap.tntgames_tnt_triathlon ?? 0) * 60_000;
 
     this.tntRun = new TNTRun(data, ap);
     this.pvpRun = new PVPRun(data);

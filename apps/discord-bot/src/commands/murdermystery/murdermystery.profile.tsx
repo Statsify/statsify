@@ -19,7 +19,7 @@ import {
   type GameMode,
   MurderMysteryModes,
 } from "@statsify/schemas";
-import { formatRecordTime } from "@statsify/util";
+import { formatRecordTime, formatTimeWithSeconds } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface MurderMysteryProfileProps extends BaseProfileProps {
@@ -197,12 +197,12 @@ export const MurderMysteryProfile = ({
             <Table.tr>
               <Table.td
                 title={t("stats.fastestMurdererWin")}
-                value={formatRecordTime(stats.fastestMurdererWin)}
+                value={formatRecordTime(stats.fastestMurdererWin, formatTimeWithSeconds)}
                 color="§c"
               />
               <Table.td
                 title={t("stats.fastestDetectiveWin")}
-                value={formatRecordTime(stats.fastestDetectiveWin)}
+                value={formatRecordTime(stats.fastestDetectiveWin, formatTimeWithSeconds)}
                 color="§b"
               />
             </Table.tr>

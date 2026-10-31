@@ -177,14 +177,17 @@ export const formatTime = (
     .join(", ");
 };
 
+export const formatTimeWithSeconds = (time: number) =>
+  formatTime(time, { entries: 3 });
+
 export const relativeTime = (time: number) =>
   `${formatTime(Date.now() - time)} ago`;
 
 export const formatRaceTime = (timeMs: number) =>
   `${(timeMs / 1000).toFixed(3)}s`;
 
-export const formatRecordTime = (timeMs: number) =>
-  timeMs ? formatTime(timeMs) : "N/A";
+export const formatRecordTime = (timeMs: number, format = formatTime) =>
+  timeMs ? format(timeMs) : "N/A";
 
 export const abbreviationNumber = (
   num: number,
