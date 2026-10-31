@@ -222,7 +222,7 @@ importers:
         version: 11.1.1
       '@m8a/nestjs-typegoose':
         specifier: ^12.0.0
-        version: 12.0.1(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0)))(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
+        version: 12.0.1(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@13.5.0(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0)))(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
       '@nestjs/axios':
         specifier: ^4.0.1
         version: 4.0.1(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(axios@1.21.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0))(rxjs@7.8.2)
@@ -266,8 +266,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
       '@typegoose/typegoose':
-        specifier: ^12.6.0
-        version: 12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
+        specifier: ^13.5.0
+        version: 13.5.0(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
       class-transformer:
         specifier: 0.5.1
         version: 0.5.1
@@ -342,8 +342,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
       '@typegoose/typegoose':
-        specifier: ^12.6.0
-        version: 12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
+        specifier: ^13.5.0
+        version: 13.5.0(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
       axios:
         specifier: 1.11.0
         version: 1.11.0(debug@4.4.3(supports-color@7.2.0))
@@ -528,8 +528,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
       '@typegoose/typegoose':
-        specifier: ^12.6.0
-        version: 12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
+        specifier: ^13.5.0
+        version: 13.5.0(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
       axios:
         specifier: 1.11.0
         version: 1.11.0(debug@4.4.3(supports-color@7.2.0))
@@ -583,8 +583,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
       '@typegoose/typegoose':
-        specifier: ^12.6.0
-        version: 12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
+        specifier: ^13.5.0
+        version: 13.5.0(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
       minecraft-protocol:
         specifier: 1.61.0
         version: 1.61.0(supports-color@7.2.0)
@@ -765,8 +765,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
       '@typegoose/typegoose':
-        specifier: ^12.6.0
-        version: 12.21.1(mongoose@8.21.1(socks@2.8.10)(supports-color@7.2.0))
+        specifier: ^13.5.0
+        version: 13.5.0(mongoose@9.9.5(socks@2.8.10))
       class-validator:
         specifier: ^0.14.1
         version: 0.14.4
@@ -2723,6 +2723,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@standard-schema/spec@1.1.0':
+    resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
+
   '@swc/cli@0.8.2':
     resolution: {integrity: sha512-4RAfbHx1oz/9zFutxIjm7famgfQeQ6s3Tc5rIWxXfB+QlA5y5rHKFi8NDCZ5iqZuZkMZTzMAHoWRRlioLO5i7Q==}
     engines: {node: '>= 20.19.0'}
@@ -2977,11 +2980,11 @@ packages:
   '@tybys/wasm-util@0.10.4':
     resolution: {integrity: sha512-W3c4gRigFS0T/Ma4qIYF3GDAc5AQdHb1yL5znJT1Zv1YaD9Kitx656wBjvr19qbiosmZT8lWDM5BEMynUqX65A==}
 
-  '@typegoose/typegoose@12.21.1':
-    resolution: {integrity: sha512-lmFeUlki8ygtW7MsqxJbIBm1bsTKPvj5avHGz7ka1WZ0ZG0vhRwUoui2UvOnYZVtxjfk9ee/JXMKtaIjOh7Rmw==}
-    engines: {node: '>=16.20.1'}
+  '@typegoose/typegoose@13.5.0':
+    resolution: {integrity: sha512-RnOq5DK3u/X2JrenVRttxu/UDTH3cruHT+oNuZXHBYjNRe3x7ftGM27vD0R+xFFlBzRYLpEH8NLPmaM4C2cPZQ==}
+    engines: {node: '>=20.19.0'}
     peerDependencies:
-      mongoose: ~8.21.0
+      mongoose: ~9.9.5
 
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
@@ -3047,6 +3050,9 @@ packages:
 
   '@types/whatwg-url@11.0.5':
     resolution: {integrity: sha512-coYR071JRaHa+xoEvvYqvnIHaVqaYrLPbsufM9BF63HkwI5Lgmy2QR8Q5K/lYDYo5AK82wOvSOS0UsLTpTG7uQ==}
+
+  '@types/whatwg-url@13.0.0':
+    resolution: {integrity: sha512-N8WXpbE6Wgri7KUSvrmQcqrMllKZ9uxkYWMt+mCSGwNc0Hsw9VQTW7ApqI4XNrx6/SaM2QQJCzMPDEXE058s+Q==}
 
   '@types/wrap-ansi@3.0.0':
     resolution: {integrity: sha512-ltIpx+kM7g/MLRZfkbL7EsCEjfzCcScLpkg37eXEtx5kmrAKBkTJwd1GIAjDSL8wTpM6Hzn5YO4pSb91BEwu1g==}
@@ -3506,6 +3512,10 @@ packages:
   bson@6.10.4:
     resolution: {integrity: sha512-WIsKqkSC0ABoBJuT1LEX+2HEvNmNKKgnTAyd0fL8qzK4SH2i9NXg+t08YtdZp/V9IZ33cxe3iV4yM0qg8lMQng==}
     engines: {node: '>=16.20.1'}
+
+  bson@7.3.3:
+    resolution: {integrity: sha512-oz3LwE3qGEhTCSyhzQRLY3Bj1NLOsjFMf6tcmY5J8M+3R7EVcmoBfSHWvjUK3yXCLDUsGpIuB3aQL4nDZ1EV/g==}
+    engines: {node: '>=20.19.0'}
 
   buffer-equal-constant-time@1.0.1:
     resolution: {integrity: sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA==}
@@ -4360,6 +4370,10 @@ packages:
     resolution: {integrity: sha512-C3iHfuGUXK2u8/ipq9LfjFfXFxAZMQJJq7vLS45r3D9Y2xQ/m4S8zaR4zMLFWh9AsNPXmcFfUDhTEO8UIC/V6Q==}
     engines: {node: '>=12.0.0'}
 
+  kareem@3.3.0:
+    resolution: {integrity: sha512-kpSuLD3/7RenBnjnJdOHXCKC8dTd1JzeOiJhN0necWWci6cC+qX+VuwPnMVgb+a4+KNJSfgqahpnfWaeDXCimw==}
+    engines: {node: '>=18.0.0'}
+
   keyv@5.6.0:
     resolution: {integrity: sha512-CYDD3SOtsHtyXeEORYRx2qBtpDJFjRTGXUtmNEMGyzYOKj1TE3tycdlho7kA1Ufx9OYWZzg52QFBGALTirzDSw==}
 
@@ -4692,6 +4706,10 @@ packages:
   mongodb-connection-string-url@3.0.2:
     resolution: {integrity: sha512-rMO7CGo/9BFwyZABcKAWL8UJwH/Kc2x0g72uhDWzG48URRax5TCIcJ7Rc3RZqffZzO/Gwff/jyKwCU9TN8gehA==}
 
+  mongodb-connection-string-url@7.0.2:
+    resolution: {integrity: sha512-ZoS07RoFqpKYQwAk59qmrx8+jJHNHU30UjlU96QktiGn1ltvDr+vCznLX5DiUBLEpMAHatHNWV1nM/74ul66kA==}
+    engines: {node: '>=20.19.0'}
+
   mongodb@6.20.0:
     resolution: {integrity: sha512-Tl6MEIU3K4Rq3TSHd+sZQqRBoGlFsOgNrH5ltAcFBV62Re3Fd+FcaVf8uSEQFOJ51SDowDVttBTONMfoYWrWlQ==}
     engines: {node: '>=16.20.1'}
@@ -4719,13 +4737,40 @@ packages:
       socks:
         optional: true
 
-  mongoose@8.21.1:
-    resolution: {integrity: sha512-1LhrVeHwiyAGxwSaYSq2uf32izQD+qoM2c8wq63W8MIsJBxKQDBnMkhJct55m0qqCsm2Maq8aPpIIfOHSYAqxg==}
-    engines: {node: '>=16.20.1'}
+  mongodb@7.5.0:
+    resolution: {integrity: sha512-5FnrEDLnvp6ycUOGLNLLU33BfCx2qmp2mJjGPDwKLruYsVzXVSK5fsGpoDXvsXJwBfBsD7ebMRdawbDxC2814g==}
+    engines: {node: '>=20.19.0'}
+    peerDependencies:
+      '@aws-sdk/credential-providers': ^3.806.0
+      '@mongodb-js/zstd': ^7.0.0
+      gcp-metadata: ^7.0.1
+      kerberos: ^7.0.0
+      mongodb-client-encryption: ^7.2.0
+      snappy: ^7.3.2
+      socks: ^2.8.6
+    peerDependenciesMeta:
+      '@aws-sdk/credential-providers':
+        optional: true
+      '@mongodb-js/zstd':
+        optional: true
+      gcp-metadata:
+        optional: true
+      kerberos:
+        optional: true
+      mongodb-client-encryption:
+        optional: true
+      snappy:
+        optional: true
+      socks:
+        optional: true
 
   mongoose@8.24.7:
     resolution: {integrity: sha512-+hrEOLpLGPgOt7S/UrcBAKZ4gvB6+5qf16jspWH5xQ8WtQu9lRTzcqy04ZNQrlIox4Pl6Nh2RzlNDPSOFw9rng==}
     engines: {node: '>=16.20.1'}
+
+  mongoose@9.9.5:
+    resolution: {integrity: sha512-t/kUoeDjlHmav7yCaq//YKU3wiIgUPaTj4GrluiTHUw4jQ77/CXtdMDSor4f1u3SKLhIK6NgCF+AzzUqU02Aag==}
+    engines: {node: '>=20.19.0'}
 
   moo@0.5.3:
     resolution: {integrity: sha512-m2fmM2dDm7GZQsY7KK2cme8agi+AAljILjQnof7p1ZMDe6dQ4bdnSMx0cPppudoeNv5hEFQirN6u+O4fDE0IWA==}
@@ -4754,13 +4799,13 @@ packages:
     resolution: {integrity: sha512-ikJRQTk8hw5DEoFVxHG1Gn9T/xcjtdnOKIU1JTmGjZZlg9LST2mBLmcX3/ICIbgJydT2GOc15RnNy5mHmzfSew==}
     engines: {node: '>=4.0.0'}
 
-  mquery@5.0.0:
-    resolution: {integrity: sha512-iQMncpmEK8R8ncT8HJGsGc9Dsp8xcgYMVSbs5jgnm1lFHTZqMJTUWTDx1LBO8+mK3tPNZWFLBghQEIOULSTHZg==}
-    engines: {node: '>=14.0.0'}
-
   mquery@5.0.1:
     resolution: {integrity: sha512-C99lWV0TFI34pS008jBsi3JrE2xZPnTgUw5yApQR71nRP0hxLy8D5m1Lbbk83c8AQWJwdJ0329HzFtZ1MRTUIw==}
     engines: {node: '>=14.0.0'}
+
+  mquery@6.0.0:
+    resolution: {integrity: sha512-b2KQNsmgtkscfeDgkYMcWGn9vZI9YoXh802VDEwE6qc50zxBFQ0Oo8ROkawbPAsXCY1/Z1yp0MagqsZStPWJjw==}
+    engines: {node: '>=20.19.0'}
 
   mrmime@2.0.1:
     resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
@@ -6443,11 +6488,11 @@ snapshots:
 
   '@lukeed/ms@2.0.2': {}
 
-  '@m8a/nestjs-typegoose@12.0.1(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0)))(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))':
+  '@m8a/nestjs-typegoose@12.0.1(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@13.5.0(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0)))(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))':
     dependencies:
       '@nestjs/common': 11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0)
       '@nestjs/core': 11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@typegoose/typegoose': 12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
+      '@typegoose/typegoose': 13.5.0(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
       is-class: 0.0.9
       mongoose: 8.24.7(socks@2.8.10)(supports-color@7.2.0)
 
@@ -7430,6 +7475,8 @@ snapshots:
   '@skia-canvas/win32-x64@4.0.0':
     optional: true
 
+  '@standard-schema/spec@1.1.0': {}
+
   '@swc/cli@0.8.2(@swc/core@1.15.40(@swc/helpers@0.5.23))(supports-color@7.2.0)':
     dependencies:
       '@swc/core': 1.15.40(@swc/helpers@0.5.23)
@@ -7625,20 +7672,20 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@typegoose/typegoose@12.21.1(mongoose@8.21.1(socks@2.8.10)(supports-color@7.2.0))':
-    dependencies:
-      lodash: 4.18.1
-      loglevel: 1.9.2
-      mongoose: 8.21.1(socks@2.8.10)(supports-color@7.2.0)
-      reflect-metadata: 0.2.2
-      semver: 7.8.5
-      tslib: 2.8.1
-
-  '@typegoose/typegoose@12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))':
+  '@typegoose/typegoose@13.5.0(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))':
     dependencies:
       lodash: 4.18.1
       loglevel: 1.9.2
       mongoose: 8.24.7(socks@2.8.10)(supports-color@7.2.0)
+      reflect-metadata: 0.2.2
+      semver: 7.8.5
+      tslib: 2.8.1
+
+  '@typegoose/typegoose@13.5.0(mongoose@9.9.5(socks@2.8.10))':
+    dependencies:
+      lodash: 4.18.1
+      loglevel: 1.9.2
+      mongoose: 9.9.5(socks@2.8.10)
       reflect-metadata: 0.2.2
       semver: 7.8.5
       tslib: 2.8.1
@@ -7710,6 +7757,10 @@ snapshots:
   '@types/webidl-conversions@7.0.3': {}
 
   '@types/whatwg-url@11.0.5':
+    dependencies:
+      '@types/webidl-conversions': 7.0.3
+
+  '@types/whatwg-url@13.0.0':
     dependencies:
       '@types/webidl-conversions': 7.0.3
 
@@ -8108,6 +8159,8 @@ snapshots:
       fill-range: 7.1.1
 
   bson@6.10.4: {}
+
+  bson@7.3.3: {}
 
   buffer-equal-constant-time@1.0.1: {}
 
@@ -9004,6 +9057,8 @@ snapshots:
 
   kareem@2.6.3: {}
 
+  kareem@3.3.0: {}
+
   keyv@5.6.0:
     dependencies:
       '@keyv/serialize': 1.1.1
@@ -9276,6 +9331,11 @@ snapshots:
       '@types/whatwg-url': 11.0.5
       whatwg-url: 14.2.0
 
+  mongodb-connection-string-url@7.0.2:
+    dependencies:
+      '@types/whatwg-url': 13.0.0
+      whatwg-url: 14.2.0
+
   mongodb@6.20.0(socks@2.8.10):
     dependencies:
       '@mongodb-js/saslprep': 1.6.1
@@ -9284,24 +9344,13 @@ snapshots:
     optionalDependencies:
       socks: 2.8.10
 
-  mongoose@8.21.1(socks@2.8.10)(supports-color@7.2.0):
+  mongodb@7.5.0(socks@2.8.10):
     dependencies:
-      bson: 6.10.4
-      kareem: 2.6.3
-      mongodb: 6.20.0(socks@2.8.10)
-      mpath: 0.9.0
-      mquery: 5.0.0(supports-color@7.2.0)
-      ms: 2.1.3
-      sift: 17.1.3
-    transitivePeerDependencies:
-      - '@aws-sdk/credential-providers'
-      - '@mongodb-js/zstd'
-      - gcp-metadata
-      - kerberos
-      - mongodb-client-encryption
-      - snappy
-      - socks
-      - supports-color
+      '@mongodb-js/saslprep': 1.6.1
+      bson: 7.3.3
+      mongodb-connection-string-url: 7.0.2
+    optionalDependencies:
+      socks: 2.8.10
 
   mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0):
     dependencies:
@@ -9322,6 +9371,24 @@ snapshots:
       - socks
       - supports-color
 
+  mongoose@9.9.5(socks@2.8.10):
+    dependencies:
+      '@standard-schema/spec': 1.1.0
+      kareem: 3.3.0
+      mongodb: 7.5.0(socks@2.8.10)
+      mpath: 0.9.0
+      mquery: 6.0.0
+      ms: 2.1.3
+      sift: 17.1.3
+    transitivePeerDependencies:
+      - '@aws-sdk/credential-providers'
+      - '@mongodb-js/zstd'
+      - gcp-metadata
+      - kerberos
+      - mongodb-client-encryption
+      - snappy
+      - socks
+
   moo@0.5.3: {}
 
   motion-dom@12.43.0:
@@ -9340,17 +9407,13 @@ snapshots:
 
   mpath@0.9.0: {}
 
-  mquery@5.0.0(supports-color@7.2.0):
-    dependencies:
-      debug: 4.4.3(supports-color@7.2.0)
-    transitivePeerDependencies:
-      - supports-color
-
   mquery@5.0.1(supports-color@7.2.0):
     dependencies:
       debug: 4.4.3(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
+
+  mquery@6.0.0: {}
 
   mrmime@2.0.1: {}
 
