@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "lint:ci": "oxlint --format=github",
     "api-key": "node src/api-key.js",
@@ -12,7 +13,8 @@
     "purge": "node src/purge.js",
     "rank-emojis": "node src/rank-emojis.js",
     "timestamp": "node --no-warnings src/timestamp.js",
-    "validate-commands": "node --no-warnings src/validate-commands.js"
+    "validate-commands": "node --no-warnings src/validate-commands.js",
+    "blur-backgrounds": "node src/blur-backgrounds.ts"
   },
   "dependencies": {
     "@statsify/api-client": "workspace:^",

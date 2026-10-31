@@ -42,7 +42,7 @@ const fields = entries.reduce((acc, [prefix, value]) => {
   acc[prefix as keyof PlayerStats] = [fuse, list];
 
   return acc;
-}, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);
+}, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice<string>>, APIApplicationCommandOptionChoice[]]>);
 
 export class PlayerLeaderboardArgument extends AbstractArgument {
   public name = "leaderboard";
