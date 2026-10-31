@@ -29,8 +29,10 @@ COPY locales locales
 
 FROM base AS assets
 COPY . .
-RUN pnpm install --frozen-lockfile --filter assets \
-  && cd assets/private && pnpm blur && rm -rf backgrounds node_modules
+# blur-backgrounds runs from apps/scripts and imports the built @statsify/assets
+RUN pnpm install --frozen-lockfile \
+  && pnpm turbo run build --filter=@statsify/assets \
+  && pnpm scripts blur-backgrounds && rm -rf assets/private/backgrounds
 
 FROM ubuntu:24.04
 LABEL org.opencontainers.image.source=https://github.com/Statsify/statsify
