@@ -1,14 +1,12 @@
 services:
   redis:
-    image: docker.io/redis/redis-stack:latest
+    image: redis:8
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8001:8001"
       - "127.0.0.1:6379:6379"
     volumes:
       - "./data/redis:/data"
-    environment:
-      REDIS_ARGS: "--requirepass statsify"
+    command: redis-server --requirepass statsify
   mongodb:
     image: mongo:latest
     restart: unless-stopped
