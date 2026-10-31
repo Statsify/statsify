@@ -11,10 +11,12 @@ import {
   type ItemMatch,
   type ItemsResource,
   type PriceMap,
+  type PriceView,
   type RawBazaar,
   describeKey,
   parseBazaar,
   parseItemsResource,
+  toPriceView,
 } from "@statsify/skyblock";
 import { HttpService } from "@nestjs/axios";
 import { InjectRedis } from "#redis";
@@ -22,6 +24,7 @@ import { Injectable, type OnModuleDestroy } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Redis } from "ioredis";
 import { SKYBLOCK_TIMEOUT } from "#hypixel";
+import { SkyBlockNotFoundException, SkyBlockUnavailableException } from "@statsify/api-client";
 import { Singleflight } from "./singleflight.js";
 import { Worker } from "node:worker_threads";
 import { arrayGroup, config } from "@statsify/util";
@@ -94,6 +97,16 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     if (!raw) return;
     if (raw.lastUpdated !== this.items?.lastUpdated) this.items = parseItemsResource(raw);
     return this.items;
+  }
+
+  public async getPrice(id: string): Promise<PriceView> {
+    const [map, bazaar, items] = await Promise.all([this.getPriceMap(), this.getBazaar(), this.getItems()]);
+    if (!map || !bazaar || !items) throw new SkyBlockUnavailableException("market");
+
+    const price = toPriceView(id, map, bazaar, items);
+    if (price) return price;
+    const described = describeKey(id, items);
+    throw new SkyBlockNotFoundException(described ? "price" : "item", described?.name);
   }
 
   public async searchItems(query: string): Promise<ItemMatch[]> {
