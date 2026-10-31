@@ -141,9 +141,12 @@ export abstract class AbstractCommandListener {
       if (typeof response !== "object") return;
       transaction?.finish();
 
+      const tip = response instanceof ErrorMessage || response?.ephemeral ? undefined : message;
+
       context.reply({
-        ...message,
+        ...tip,
         ...response,
+        content: response?.content ?? tip?.content,
       });
     } catch (err) {
       if (err instanceof Message) {
