@@ -11,6 +11,7 @@
 import accessories from "./generated/accessories.json" with { type: "json" };
 import essenceShops from "./generated/essenceshops.json" with { type: "json" };
 import hotmLayout from "./generated/hotmlayout.json" with { type: "json" };
+import kuudraKeys from "./generated/kuudra-keys.json" with { type: "json" };
 import leveling from "./generated/leveling.json" with { type: "json" };
 import petTextures from "./generated/pet-textures.json" with { type: "json" };
 import pets from "./generated/pets.json" with { type: "json" };
@@ -67,3 +68,6 @@ export const ESSENCE_SHOPS = essenceShops as Record<string, Record<string, numbe
  * scale. Powers learned without a stone aren't here.
  */
 export const POWERS = powers as Record<string, { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }>;
+
+/** Each Kuudra tier's key head, by the API's tier names (none is the basic tier). */
+export const KUUDRA_KEYS = kuudraKeys as Record<string, string>;

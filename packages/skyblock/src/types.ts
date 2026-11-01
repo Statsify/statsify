@@ -72,6 +72,7 @@ export interface MemberView {
   slayers?: SlayersSection;
   networth?: NetworthSection;
   level?: SkyBlockLevelSection;
+  crimson?: CrimsonSection | null;
 }
 
 export interface ApiSettings {
@@ -178,6 +179,26 @@ export interface HotmSection {
   crystals: { found: number; placed: number }; // over every gem
   nucleusRuns: number;
   glacite: { corpses: number; fossils: number; mineshafts: number }; // corpses looted, fossils donated
+}
+
+export interface CrimsonSection {
+  faction?: Faction;
+  reputation: Record<Faction, number>;
+  kuudra: KuudraTier[];
+  dojo: { test: string; points: number }[]; // each test's best
+  dojoPoints: number;
+  minibosses: { boss: string; kills: number }[];
+}
+
+export type Faction = "mages" | "barbarians";
+
+// The API's names: "none" is the basic tier
+export const KUUDRA_TIERS = ["none", "hot", "burning", "fiery", "infernal"] as const;
+
+export interface KuudraTier {
+  tier: string;
+  completions: number;
+  texture: ItemTexture; // its key
 }
 
 export interface PetsSection {
