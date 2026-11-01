@@ -112,7 +112,7 @@ export class GameCountsCommand {
       .map(([id, game]) => this.createGameCountsPage(id, game));
 
     if (this.isGameCountGameId(selectedGame)) {
-      return this.paginateService.paginate(context, [
+      return paginate(context, [
         this.createGameCountsPage(selectedGame, gamecounts[selectedGame], true),
       ]);
     }
