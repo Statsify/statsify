@@ -80,7 +80,7 @@ export const TitlesTable = ({ duels, t, modeIcons }: TitlesTableProps) => {
       <div width="100%" direction="column">
         {rows.map((row) => (
           <div width="100%">
-            {[...row].reverse().map((game) => (
+            {row.map((game) => (
               <div width={`1/${row.length}`}>
                 <ModeTitle
                   icon={modeIcons[game.mode]}
