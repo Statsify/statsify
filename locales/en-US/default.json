@@ -2,6 +2,7 @@
   "arguments": {
     "choice": "Choose an option",
     "file": "Upload a file",
+    "game": "Choose a game",
     "gtbhelper": "The current hint",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "A guild name or guild member",

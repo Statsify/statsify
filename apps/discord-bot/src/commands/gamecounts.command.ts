@@ -49,7 +49,7 @@ class GameCountsModeArgument extends AbstractArgument {
 
   public constructor() {
     super();
-    this.description = (t) => t("stats.mode");
+    this.description = (t) => t("arguments.game");
   }
 
   public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
