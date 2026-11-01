@@ -20,47 +20,20 @@ import {
   Page,
   paginate,
 } from "@statsify/discord";
-import { FormattedGame, GameId, GamePlayers } from "@statsify/schemas";
+import {
+  ClassMetadata,
+  FormattedGame,
+  GameCounts,
+  GamePlayers,
+  METADATA_KEY,
+} from "@statsify/schemas";
 import { STATUS_COLORS } from "@statsify/logger";
 import { mapGame } from "#constants";
 import { removeFormatting } from "@statsify/util";
 
-const GAMECOUNT_GAME_IDS = [
-  "ARCADE",
-  "ARENA_BRAWL",
-  "BEDWARS",
-  "BLITZSG",
-  "BUILD_BATTLE",
-  "COPS_AND_CRIMS",
-  "DUELS",
-  "HOUSING",
-  "IDLE",
-  "LIMBO",
-  "MAIN_LOBBY",
-  "MEGAWALLS",
-  "MURDER_MYSTERY",
-  "PAINTBALL",
-  "PIT",
-  "PROTOTYPE",
-  "QUAKE",
-  "QUEUE",
-  "REPLAY",
-  "SKYBLOCK",
-  "SKYWARS",
-  "SMASH_HEROES",
-  "SMP",
-  "SPEED_UHC",
-  "TNT_GAMES",
-  "TOURNAMENT_LOBBY",
-  "TURBO_KART_RACERS",
-  "UHC",
-  "VAMPIREZ",
-  "WALLS",
-  "WARLORDS",
-  "WOOLGAMES",
-] as const satisfies readonly GameId[];
-
-type GameCountGameId = (typeof GAMECOUNT_GAME_IDS)[number];
+const GAMECOUNT_GAME_IDS = Object.keys(
+  Reflect.getMetadata(METADATA_KEY, GameCounts.prototype) as ClassMetadata
+) as (keyof GameCounts)[];
 
 const GAMECOUNT_GAME_CHOICES = GAMECOUNT_GAME_IDS.map((id) => ({
   name: removeFormatting(FormattedGame[id]),
@@ -105,17 +78,21 @@ export class GameCountsCommand {
     const gamecounts = await this.apiService.getGamecounts();
     const selectedGame = context.option<string | undefined>("mode", undefined);
 
-    const gamecountEntries = Object.entries(gamecounts) as [GameCountGameId, GamePlayers][];
+    if (this.isGameCountGameId(selectedGame)) {
+      return {
+        embeds: [this.createGameCountsEmbed(selectedGame, gamecounts[selectedGame], true)],
+      };
+    }
+
+    const gamecountEntries = Object.entries(gamecounts) as [keyof GameCounts, GamePlayers][];
 
     const subGameGenerators = gamecountEntries
-      .filter(([, g]) => this.hasSubGames(g))
-      .map(([id, game]) => this.createGameCountsPage(id, game));
-
-    if (this.isGameCountGameId(selectedGame)) {
-      return paginate(context, [
-        this.createGameCountsPage(selectedGame, gamecounts[selectedGame], true),
-      ]);
-    }
+      .filter(([, g]) => g.modes && Object.keys(g.modes).length > 1)
+      .map(([id, game]) => ({
+        label: removeFormatting(FormattedGame[id]),
+        emoji: t(`emojis:games.${id}`),
+        generator: () => this.createGameCountsEmbed(id, game),
+      }));
 
     const total = gamecountEntries.reduce((acc, [, v]) => acc + (v.players ?? 0), 0);
 
@@ -152,45 +129,32 @@ export class GameCountsCommand {
     return `\`•\` ${emoji ? `${emoji} ` : ""}**${name}**: \`${count || 0}\``;
   }
 
-  private createGameCountsPage(
-    id: GameId,
+  private createGameCountsEmbed(
+    id: keyof GameCounts,
     { players, modes }: GamePlayers,
     showTitleEmoji = false
-  ): Page {
+  ) {
     const name = removeFormatting(FormattedGame[id]);
     const list = Object.entries(modes ?? {}).sort((a, b) => Number(b[1]) - Number(a[1]));
 
-    const embed = new EmbedBuilder()
+    return new EmbedBuilder()
       .title((t) => {
         const emoji = showTitleEmoji ? `${t(`emojis:games.${id}`)} ` : "";
         return `${emoji}${name} ${t("players")}`;
       })
       .color(STATUS_COLORS.info)
-      .description(
-        (t) => {
-          const modeCounts = list
-            .map(([mode, players]) => this.formatGameCount(mapGame(id, mode), t(players)))
-            .join("\n");
+      .description((t) => {
+        const modeCounts = list
+          .map(([mode, players]) => this.formatGameCount(mapGame(id, mode), t(players)))
+          .join("\n");
 
-          return [
-            this.formatGameCount(t("stats.total"), t(players)),
-            modeCounts,
-          ].filter(Boolean).join("\n\n");
-        }
-      );
-
-    return {
-      label: name,
-      emoji: (t) => t(`emojis:games.${id}`),
-      generator: () => embed,
-    };
+        return [this.formatGameCount(t("stats.total"), t(players)), modeCounts]
+          .filter(Boolean)
+          .join("\n\n");
+      });
   }
 
-  private hasSubGames({ modes }: GamePlayers) {
-    return modes && Object.keys(modes).length > 1;
-  }
-
-  private isGameCountGameId(id?: string): id is GameCountGameId {
-    return GAMECOUNT_GAME_IDS.includes(id as GameCountGameId);
+  private isGameCountGameId(id?: string): id is keyof GameCounts {
+    return GAMECOUNT_GAME_IDS.includes(id as keyof GameCounts);
   }
 }
