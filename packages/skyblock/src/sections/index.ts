@@ -8,6 +8,7 @@
 
 import { getAccessories } from "./accessories.js";
 import { getApiSettings } from "../api-settings.js";
+import { getChocolate } from "./chocolate.js";
 import { getCrimson } from "./crimson.js";
 import { gameModeOf } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
@@ -26,6 +27,7 @@ export type SectionNeed = "museum" | "prices" | "items";
 /** Every section a lookup can ask for: SECTIONS' and networth, which ./networth computes. */
 export const SKYBLOCK_SECTIONS = [
   "accessories",
+  "chocolate",
   "crimson",
   "dungeons",
   "fishing",
@@ -59,6 +61,7 @@ const hasMarket = (profile: RawProfile) => gameModeOf(profile) === "normal";
 
 export type SectionKey =
   | "accessories"
+  | "chocolate"
   | "crimson"
   | "dungeons"
   | "fishing"
@@ -78,6 +81,7 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
       return getAccessories(member, items, prices, hasMarket(profile));
     },
   },
+  chocolate: { needs: [], compute: async ({ member }) => getChocolate(member) },
   crimson: { needs: [], compute: async ({ member }) => getCrimson(member) },
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
   fishing: { needs: [], compute: async ({ member }) => getFishing(member) },

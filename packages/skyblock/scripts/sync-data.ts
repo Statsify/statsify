@@ -369,6 +369,9 @@ try {
     )
   );
 
+  const { hoppity } = await readJson<{ hoppity: { rarities: Record<string, { rabbits: string[] }> } }>("constants/hoppity.json");
+  await write("hoppity.json", Object.fromEntries(Object.entries(hoppity.rarities).map(([rarity, { rabbits }]) => [rarity, rabbits])));
+
   // Every sea creature, by the bestiary's fishing pages: its name and the kill ids (one per level it spawns at)
   const bestiary = await readJson<{ fishing: Record<string, { mobs?: { name: string; mobs: string[] }[] }> }>(
     "constants/bestiary.json"
