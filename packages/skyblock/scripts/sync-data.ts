@@ -342,6 +342,7 @@ try {
   );
   await write("leveling.json", {
     catacombs: leveling.catacombs,
+    HOTF: leveling.HOTF,
     HOTM: leveling.HOTM,
     leveling_caps: leveling.leveling_caps,
     leveling_xp: xpTable("COMBAT"),
@@ -369,10 +370,17 @@ try {
     )
   );
 
+  const hotf = await readJson<{ hotf: { perks: Record<string, { name: string; x: number; y: number; maxLevel: number }> } }>(
+    "constants/hotflayout.json"
+  );
+  await write(
+    "hotflayout.json",
+    Object.fromEntries(Object.entries(hotf.hotf.perks).map(([id, { name, x, y, maxLevel }]) => [id, { name, x, y, maxLevel }]))
+  );
+
   const { hoppity } = await readJson<{ hoppity: { rarities: Record<string, { rabbits: string[] }> } }>("constants/hoppity.json");
   await write("hoppity.json", Object.fromEntries(Object.entries(hoppity.rarities).map(([rarity, { rabbits }]) => [rarity, rabbits])));
 
-  // Every sea creature, by the bestiary's fishing pages: its name and the kill ids (one per level it spawns at)
   const bestiary = await readJson<{ fishing: Record<string, { mobs?: { name: string; mobs: string[] }[] }> }>(
     "constants/bestiary.json"
   );
