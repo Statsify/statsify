@@ -28,7 +28,6 @@
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
     "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
-    "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Nézd meg valaki Minecraft és Optifine köpenyjeit",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
@@ -37,13 +36,13 @@
     "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
     "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
     "quests-weekly": "$t(commands.quests-command, { \"name\": \"Weekly\" })",
+    "quests-monthly": "$t(commands.quests-command, { \"name\": \"Monthly\" })",
     "close": "Close the current support ticket",
     "colors": "Minecraft színkódok listája",
     "commands": "View Statsify command usage",
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
-    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -87,10 +86,10 @@
     "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
     "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
-    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "Nézd meg a {{name}} munkamenet statisztikáid",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-delete": "Munkamenet statisztikák törlése",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -191,6 +190,7 @@
     "ratios-megawalls": "$t(commands.ratios-command, { \"name\": \"MegaWalls\" })",
     "ratios-murdermystery": "$t(commands.ratios-command, { \"name\": \"Murder Mystery\" })",
     "ratios-paintball": "$t(commands.ratios-command, { \"name\": \"Paintball\" })",
+    "ratios-pit": "$t(commands.ratios-command, { \"name\": \"Pit\" })",
     "ratios-quake": "$t(commands.ratios-command, { \"name\": \"Quake\" })",
     "ratios-skywars": "$t(commands.ratios-command, { \"name\": \"SkyWars\" })",
     "ratios-smashheroes": "$t(commands.ratios-command, { \"name\": \"Smash Heroes\" })",
@@ -200,7 +200,6 @@
     "ratios-walls": "$t(commands.ratios-command, { \"name\": \"Walls\" })",
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolgames": "$t(commands.ratios-command, { \"name\": \"WoolGames\" })",
-    "recentgames": "Nézd meg valaki játékelőzményét a Hypixelen",
     "server": "Nézd meg egy Minecraft szerver státuszát",
     "skin": "Nézd meg valaki Minecraft skinjét",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -239,8 +238,8 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "Munkamenet statisztikák nullázása",
+    "reset-session": "Munkamenet statisztikáid nullázása"
   },
   "config": {
     "badge": {
@@ -309,8 +308,8 @@
         "title": "Játékok"
       },
       "session": {
-        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
-        "title": "Sessions"
+        "description": "A Statsify lehetőséget ad statisztikáid megtekintésére ha használtad a `/session` parancsot. A `/reset session` paranccsal nullázhatod a munkamenet statisztikáid és indithatsz egy újat.",
+        "title": "Munkamenetek"
       },
       "leaderboards": {
         "description": "A Statsify számtalan toplistát nyújt a `/leaderboard` parancsával. Futtasd a `/leaderboard` parancsot, válassz egy játékmódot és egy toplistát amit megszeretnél tekinteni. A keresés gombbal kereshetsz egy adott játékosra vagy pozícióra is. A fel és le gombokkal pedig a különböző oldalakat tekintheted meg.",
@@ -389,8 +388,8 @@
       "title": "Ismeretlen Játékos"
     },
     "invalidSession": {
-      "title": "Invalid Session",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+      "title": "Érvénytelen Munkamenet",
+      "description": "**{{displayName}}** nem rendelkezik aktív munkamenettel. Lehetősége van csinálni egyet, ha használja a `/session` parancsot és ellenőrzött a fiókja."
     },
     "invalidResetTime": {
       "description": "Az általad megadott idő formátuma nem megfelelő: `{{time}}`. Kérjük használd a következő formátumot: `h:mm a` pl:`12:00 PM` vagy `1:00 AM`.",
@@ -438,7 +437,7 @@
       "title": "Hiányzó Igazolás"
     },
     "missingPlayerVerification": {
-      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** fiókja nincs **ellenőrizve**. A `/verify` parancs használatával tudja ezt megtenni.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -517,11 +516,12 @@
     "reset": "$t(emojis:clock) **Visszaállítás** <t:{{time}}:R>",
     "resetButton": "Kattints a Visszaállításhoz",
     "setResetTime": "Visszaállíási idő beállítva erre: <t:{{time}}:t>.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats.",
+    "newSession": "**{{displayName}}** munkamenet statisztikái most először lettek megtekintve Statsify-on.",
+    "setSessionReset": "Sikeresen visszaállítottad a munkamenet statisztikáid.",
+    "deleteSession": "Sikeresen törölted a munkamenet statisztikáid.",
     "disabledWarning": {
-      "title": "Historical Commands are no Longer Available",
-      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+      "title": "Múltbéli Parancsok már többé Nem Elérhetőek",
+      "description": "A Hypixel új [API Feltételei] (https://developer.hypixel.net/policies/) már nem engedélyezi a \"játékosadatok folyamatos lekérdezését\", tehát a Statsity nem tudja a játékosok napi statisztikáit követni.\n\nEhelyett használhatod a `/session` parancsot, hogy elindíts egy munkamenetet. Amint elindítasz egy munkamenetet, a bot követni fogja a statisztikáid addig, még nem használod a parancsot újra. Munkamenet statisztikáid nullázásához használd a `/reset session` parancsot."
     }
   },
   "leaderboard": {
@@ -557,10 +557,16 @@
     "premium": "[Premium](<https://statsify.net/premium>)",
     "website": "[Website](https://statsify.net/)"
   },
+  "deprecated": {
+    "merged-dropdown": "$t(emojis:icons.warning) A(z) {{oldCommandName}} parancs össze lett vonva a {{newCommandName}} paranccsal. Kérlek, futtasd a {{newCommand}} parancsot, és válaszd ki a {{mode}} módot a legördülő menüből.",
+    "merged-direct": "$t(emojis:icons.warning) A(z) {{oldCommandName}} parancsot eltávolították, helyette a {{newCommandName}} parancsot használd. Kérlek, futtasd a {{newCommand}} parancsot.",
+    "command-description": "Ezt a parancsot eltávolították helyette használd a {{newCommandName}} parancsot."
+  },
   "stats": {
     "achievementPoints": "Teljesítmény Pontok",
     "adrenaline": "Adrenalin",
     "assists": "Asszisztok",
+    "alphaWins": "Alfa Győzelmek",
     "bblr": "BBLR",
     "bedsBroken": "Ágy Törések",
     "bedsLost": "Elvesztett Ágyak",
@@ -580,6 +586,7 @@
     "bronzeTrophies": "Bronz Trófeák",
     "candyFound": "Megtalált Cukorkák",
     "challenges": "Kihívások",
+    "checkpoints": "Checkpoints",
     "class": "Kaszt",
     "coins": "Érmék",
     "contracts": "Szerződések",
@@ -592,17 +599,18 @@
     "eggsFound": "Talált Tojások",
     "emeralds": "Smaragd",
     "empireKills": "Védekező Ölések",
+    "emblem": "Embléma",
     "ended": "Véget ért",
     "endurance": "Kitartás",
     "event-level": "Event Szint",
-    "event-exp": "Event EXP",
+    "event-exp": "Event XP",
     "exp": "EXP",
     "expGained": "Szerzett EXP",
     "extraUltimates": "Extra Ultimatek",
     "fastestDetectiveWin": "Leggyorsabb Győzelem Detektívként",
     "fastestMurdererWin": "Leggyorsabb Győzelem Gyilkosként",
     "fastestWin": "Leggyorsabb Győzelem",
-    "fastestWoolCapture": "Fastest Wool Capture",
+    "fastestWoolCapture": "Leggyorsabb Gyapjú Elfoglalás",
     "finalAssists": "Végső Asszisztálások",
     "finalDeaths": "Végső Halálok",
     "finalKills": "Végső Ölések",
@@ -619,10 +627,10 @@
     "godfather": "Nagypapa",
     "godlikes": "Godlikes",
     "gold": "Arany",
-    "goldEarned": "Gold Earned",
+    "goldEarned": "Szerezett Aranyak",
     "goldPickedUp": "Felvett Arany",
     "goldRate": "Arany Arány",
-    "goldSpent": "Gold Spent",
+    "goldSpent": "Elköltött Aranyak",
     "goldTrophies": "Arany Trófeák",
     "grandPrixTokens": "GP Tokenek",
     "guild": {
@@ -652,6 +660,7 @@
     "headshots": "Headshotok",
     "headstart": "Előny",
     "healing": "Regenerálódva",
+    "heroKills": "Hős Ölések",
     "heroWins": "Győzelmek Hősként",
     "hidden": "Rejtett",
     "hiderWins": "Győzelmek Bújóként",
@@ -663,6 +672,7 @@
     "humans-killed": "Megölt Túlélők",
     "infectedWins": "Győzelmek Fertőzöttként",
     "iron": "Vas",
+    "itemsPurchased": "Items Purchased",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Rúgások",
@@ -670,8 +680,11 @@
     "killsAsInfected": "Ölések Fertőzöttként",
     "killsAsMurderer": "Ölések Gyilkosként",
     "killsAsSurvivor": "Ölések Túlélőként",
+    "killsAsAlpha": "Ölések Alphaként",
     "killstreaks": "Killstreakek",
     "kit": "Jelenlegi Kit",
+    "knife": "Kés",
+    "knifeKills": "Kés Ölések",
     "kwr": "KWR",
     "lapsCompleted": "Körök",
     "lastAction": "Utolsó Tevékenység",
@@ -682,9 +695,10 @@
     "layers": "Rétegek",
     "level": "Szint",
     "levelsGained": "Szerzett Szintek",
+    "lifetimeRenown": "Eddigi összes Renown",
     "loginTime": "Csatlakozás",
     "logoutTime": "Lecsatlakozás",
-    "longestGame": "Longest Game",
+    "longestGame": "Leghosszabb Játék",
     "lootChests": "Loot Chestek",
     "losses": "Vereségek",
     "magicalChests": "Misztikus Ládák",
@@ -706,6 +720,7 @@
     "online": "Online",
     "opals": "Opálok",
     "overallWins": "Összes Győzelem",
+    "perfectBuilds": "Tökéletes Építmények",
     "pingRange": "Ping Hatáskör",
     "playtime": "Játékidő",
     "points": "Pontok",
@@ -727,7 +742,7 @@
     "ranksGifted": "Ajándékozott Rangok",
     "rebelKills": "Támadó Ölések",
     "renown": "Renown",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "Jutalomsorozat",
     "roundWins": "Nyert Körök",
     "rune": "Rúna",
     "score": "Pontszám",
@@ -736,7 +751,7 @@
     "shotsFired": "Lövések",
     "silver": "Ezüst",
     "silverTrophies": "Ezüst Trófeák",
-    "slumberTickets": "Slumber Tickets",
+    "slumberTickets": "Slumber Jegyek",
     "soloWins": "Solo Győzelmek",
     "souls": "Lelkek",
     "coinConversions": "Pénzváltások",
@@ -747,6 +762,7 @@
     "superVotes": "Szuper Szavazatok",
     "superluck": "Szuper Szerencse",
     "support": "Támasz",
+    "survivals": "Survivals",
     "survivorWins": "Győzelmek Túlélőként",
     "tags": "Tagek",
     "tauntsUsed": "Elhasznált Tauntok",
@@ -754,7 +770,7 @@
     "title": "Cím",
     "tokens": "Tokenek",
     "total": "Összesen",
-    "totalSlumberTickets": "Total Slumber Tickets",
+    "totalSlumberTickets": "Összes Slumber Jegy",
     "totalTrophies": "Összes Trófea",
     "trail": "Nyom",
     "transfusion": "Transzfúzió",
@@ -775,21 +791,34 @@
     "witherKills": "Wither Ölések",
     "wlr": "WLR",
     "wool": "Gyapjú",
-    "woolCaptured": "Wool Captured",
-    "woolPickedUp": "Wool Picked Up",
+    "woolCaptured": "Elfoglalt Gyapjú",
+    "woolPickedUp": "Felvett Gyapjú",
     "woolPlaced": "Letett Gyapjúk",
     "zombieKills": "Zombi Ölések",
     "potionsBrewed": "Főzött Bájitalok",
-    "positions": "Positions",
+    "positions": "Pozíciók",
     "powerupsCollected": "Begyűjtött Power-Upok",
     "roundsCompleted": "Túlélt Körök",
+    "totalRounds": "Összes kör",
     "totalExp": "Összes XP",
-    "gamesFinished": "Games Finished",
-    "flawlessGames": "Flawless Games",
-    "fails": "Fails",
-    "mapsCompleted": "Maps Completed",
-    "arcadeWins": "Arcade Wins",
-    "draws": "Draws"
+    "gamesFinished": "Befejezett Játékok",
+    "flawlessGames": "Hibátlan Játékok",
+    "fails": "Hibázások",
+    "mapsCompleted": "Teljesített Pályák",
+    "arcadeWins": "Arcade Győzelmek",
+    "spec": "Spec",
+    "capturePoints": "Elfoglalási Pontok",
+    "defendPoints": "Védési Pontok",
+    "draws": "Döntetlenek",
+    "sheepThrown": "Eldobott Bárányok",
+    "sheepKilled": "Megölt Bárányok",
+    "magicWool": "Varázsgyapjú",
+    "flagCaptures": "Zászló Elfoglalások",
+    "flagReturns": "Zászló Visszaszerzések",
+    "airTime": "Levegőben töltött idő",
+    "potionsSplashed": "Felhasznált bájitalok",
+    "powerOrbs": "Erő gömbök",
+    "grenadeKills": "Gránát Ölések"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Csatlakozz a **$t(socials.discord)** és szerezz **-20% várakozási időt** $t(emojis:heart)",
@@ -797,8 +826,8 @@
     "premium": "$t(emojis:logos.gold) **[Statsify Prémium](<https://statsify.net/premium>)** új funkciókat nyújt a felhasználóknak, mint például egyéni profil ikonok. Az összes előnyről találhatsz egy listát **[itt](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Nézd meg a toplistás pozícióidat **[Statsify Premium]**-al (<https://statsify.net/premium>) a `/rankings` használatával",
     "verify": "$t(emojis:check) Használd a `/verify` parancsot, hogy a későbbiekben ne kelljen beírni a játékosneved és **10%-al kevesebb várakozási időd** legyen",
-    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
-    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
+    "resetSession": "$t(emojis:reset) A munkamenet statisztikáid visszaállíthatod a `/reset session` paranccsal.",
+    "sessions": "$t(emojis:reset) Kövesd a statisztikáid fejlődését a Munkamenetek segítségével és a `/session` paranccsal."
   },
   "unknown": "Ismeretlen",
   "verification": {
@@ -808,21 +837,21 @@
     },
     "invalidCode": {
       "title": "Helytelen Igazolási Kód",
-      "description": "Check your verification code or try again by following these steps: ",
-      "button": "Watch Tutorial"
+      "description": "Nézd meg az ellenőrző kódod vagy kövesd az alábbi lépéseket: ",
+      "button": "Útmutató megtekintése"
     },
     "instructions": {
-      "title": "Link your Minecraft Account to Statsify",
+      "title": "Csatold a Minecraft Fiókod a Statsify-hoz",
       "steps": {
-        "one": "Open **Minecraft** (`1.7.10` - `1.19.4`) and go to the server list",
-        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
-        "three": "Head back to **Discord** and click the button below, then type in your code"
+        "one": "Nyisd meg a **Minecraft**-ot (`1.7.10` - `1.19.4`) és menj a szerverek listájához",
+        "two": "Csatlakozz a **`verify.statsify.net`**-re és másold ki a megjelenő kódot",
+        "three": "Térj vissza a **Discord**-hoz és kattints az alábbi gombra, majd írd be a kódodat"
       },
       "modal": {
-        "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "title": "Írd be az Ellenőrző kódod",
+        "input": "Ellenőrző kód"
       },
-      "button": "Enter Verification Code"
+      "button": "Írd be az Ellenőrző kódot"
     },
     "notVerified": {
       "description": "Igazolásod törléséhez, már igazolva kell lenned!",
