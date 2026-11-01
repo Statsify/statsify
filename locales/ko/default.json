@@ -28,27 +28,26 @@
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
     "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
-    "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
-    "cape": "다른 분의 Minecraft 및 Optifine 망토를 봐요",
+    "cape": "다른 사람의 Minecraft 및 Optifine 망토를 봐요",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
     "quests-command": "{{name}}의 퀘스트 전적을 봐요",
     "quests": "$t(commands.hypixel-command, { \"name\": \"Questing\" })",
     "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
     "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
     "quests-weekly": "$t(commands.quests-command, { \"name\": \"Weekly\" })",
+    "quests-monthly": "$t(commands.quests-command, { \"name\": \"월간\" })",
     "close": "This is a test to see if hidden translations get uploaded, hopefully, they do Not!",
     "colors": "Minecraft 색상 코드 목록을 확인해요",
     "commands": "View Statsify command usage",
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
-    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "game-counts": "현재 Hypixel의 게임 수와 접속자 수를 봐요",
+    "game-counts": "Hypixel의 현재 게임 수를 봐요",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "주어진 힌트로 가능한 Guess The Build의 정답 목록을 생성해요",
     "guild": "View your guild's stats",
@@ -56,7 +55,7 @@
     "guild-list": "길드의 구성원 목록을 봐요",
     "guild-member": "길드 구성원의 전적을 봐요",
     "guild-overall": "길드 전적의 요약본을 봐요",
-    "guild-top": "길드 경험치에 기여한 분을 봐요",
+    "guild-top": "길드 경험치에 기여한 사람을 봐요",
     "help": "Statsify가 내 서버에서 무엇을 하는지 확인해요",
     "historical-arcade": "$t(commands.historical-command, { \"name\": \"Arcade\" })",
     "historical-arenabrawl": "$t(commands.historical-command, { \"name\": \"Arena Brawl\" })",
@@ -87,10 +86,10 @@
     "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
     "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
-    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "{{name}}의 세션 전적을 봐요",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-delete": "세션 전적을 삭제해요",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -109,7 +108,7 @@
     "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
     "session-woolgames": "$t(commands.session-command, { \"name\": \"WoolGames\" })",
     "hypixel-command": "{{name}}의 전적을 봐요",
-    "invite": "Statsify 초대 방법을 확인해요",
+    "invite": "Statsify를 초대해요",
     "language": "봇이 사용하는 언어를 변경해요",
     "last-day": "$t(commands.yesterday)",
     "last-month": "View your stats from last month's in various games",
@@ -141,7 +140,7 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
-    "links": "Statsify의 소셜 미디어를 확인해요",
+    "links": "Statsify의 소셜 미디어를 봐요",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
@@ -151,14 +150,14 @@
     "pit": "$t(commands.hypixel-command, { \"name\": \"Pit\" })",
     "player-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Player\" })",
     "quake": "$t(commands.hypixel-command, { \"name\": \"Quake\" })",
-    "rankings": "나의 순위표 순위를 확인해요",
+    "rankings": "순위표 순위를 봐요",
     "rankings-all": "$t(commands.rankings)",
     "rankings-arcade": "$t(commands.rankings-command, { \"name\": \"Arcade\" })",
     "rankings-arenabrawl": "$t(commands.rankings-command, { \"name\": \"Arena Brawl\" })",
     "rankings-bedwars": "$t(commands.rankings-command, { \"name\": \"BedWars\" })",
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
-    "rankings-command": "{{name}}의 나의 순위표 순위를 확인해요",
+    "rankings-command": "{{name}}의 순위표 순위를 봐요",
     "rankings-challenges": "$t(commands.rankings-command, { \"name\": \"Challenges\" })",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
@@ -185,12 +184,13 @@
     "ratios-arenabrawl": "$t(commands.ratios-command, { \"name\": \"Arena Brawl\" })",
     "ratios-bedwars": "$t(commands.ratios-command, { \"name\": \"BedWars\" })",
     "ratios-blitzsg": "$t(commands.ratios-command, { \"name\": \"BlitzSG\" })",
-    "ratios-command": "{{name}}의 진척도와 예상 수치를 봐요",
+    "ratios-command": "{{name}}의 진행도와 예상 수치를 봐요",
     "ratios-copsandcrims": "$t(commands.ratios-command, { \"name\": \"Cops and Crims\" })",
     "ratios-duels": "$t(commands.ratios-command, { \"name\": \"Duels\" })",
     "ratios-megawalls": "$t(commands.ratios-command, { \"name\": \"MegaWalls\" })",
     "ratios-murdermystery": "$t(commands.ratios-command, { \"name\": \"Murder Mystery\" })",
     "ratios-paintball": "$t(commands.ratios-command, { \"name\": \"Paintball\" })",
+    "ratios-pit": "$t(commands.ratios-command, { \"name\": \"Pit\" })",
     "ratios-quake": "$t(commands.ratios-command, { \"name\": \"Quake\" })",
     "ratios-skywars": "$t(commands.ratios-command, { \"name\": \"SkyWars\" })",
     "ratios-smashheroes": "$t(commands.ratios-command, { \"name\": \"Smash Heroes\" })",
@@ -200,22 +200,21 @@
     "ratios-walls": "$t(commands.ratios-command, { \"name\": \"Walls\" })",
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolgames": "$t(commands.ratios-command, { \"name\": \"WoolGames\" })",
-    "recentgames": "다른 분이 Hypixel에서 최근 플레이한 게임을 봐요",
     "server": "Minecraft 서버 상태를 봐요",
-    "skin": "다른 분의 Minecraft 스킨을 봐요",
+    "skin": "다른 사람의 Minecraft 스킨을 봐요",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
     "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"SkyWars Challenges\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
-    "socials": "Hypixel에 연동된 다른 분의 소셜 미디어 계정을 봐요",
+    "socials": "Hypixel에 연결한 다른 사람의 소셜 미디어 계정을 봐요",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
-    "status": "다른 분의 Hypixel 상태를 봐요",
+    "status": "다른 사람의 Hypixel 상태를 봐요",
     "tags": "Manage support tags",
     "tags-create": "Create a support tag",
     "tags-delete": "Delete a support tag",
     "tags-rename": "Rename a support tag",
     "text": "Minecraft 문자를 생성해요",
     "theme": "Change your theme for every profile",
-    "theme-boxes": "프로필 창의 외관을 변경해요",
+    "theme-boxes": "프로필 상자의 외관을 변경해요",
     "theme-font": "프로필의 글꼴을 변경해요",
     "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "프로필 하단 아이콘을 변경해요",
@@ -228,11 +227,11 @@
     "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
-    "unverify": "Discord와 Minecraft 계정 연동을 해제해요",
+    "unverify": "Discord와 Minecraft 계정의 연결을 해제해요",
     "user": "View someone's Statsify user info",
-    "uuid": "다른 분의 Minecraft UUID를 확인해요",
+    "uuid": "다른 사람의 Minecraft UUID를 확인해요",
     "vampirez": "$t(commands.hypixel-command, { \"name\": \"VampireZ\" })",
-    "verify": "Discord와 Minecraft 계정을 연동해요",
+    "verify": "Discord와 Minecraft 계정을 연결해요",
     "walls": "$t(commands.hypixel-command, { \"name\": \"Walls\" })",
     "warlords": "$t(commands.hypixel-command, { \"name\": \"Warlords\" })",
     "watchdog": "Hypixel Watchdog이 한 차단 횟수를 봐요",
@@ -251,8 +250,8 @@
     },
     "footer": {
       "profile": "내 프로필 하단은 이렇게 보일 거예요",
-      "reset": "$t(emojis:config.reset) 내 프로필 하단을 초기화했어요.",
-      "set": "$t(emojis:config.success) 내 프로필 하단을 갱신했어요."
+      "reset": "$t(emojis:config.reset) 프로필 하단을 초기화했어요.",
+      "set": "$t(emojis:config.success) 프로필 하단을 갱신했어요."
     },
     "language": {
       "description": "$t(emojis:config.success) 언어를 `{{locale}}`으(로) 갱신했어요."
@@ -260,16 +259,16 @@
     "theme": {
       "profile": "내 프로필에 테마가 이렇게 보일 거예요",
       "set": "$t(emojis:config.success) 테마를 갱신했어요.",
-      "view": "$t(emojis:config.view) 나의 현재 테마:"
+      "view": "$t(emojis:config.view) 현재 테마:"
     }
   },
   "cooldown": {
-    "description": "`{{command}}` 명령어를 이용하려면 `{{time}}`을(를) 기다리세요.\n\n대기 시간 감소 방법을 [여기](https://statsify.net/premium)서 확인하세요.",
+    "description": "`{{command}}` 명령어를 다시 사용하려면 `{{time}}`을(를) 기다리세요.\n\n대기 시간 감소 방법을 [여기](https://statsify.net/premium)에서 확인해 보세요.",
     "title": "활성 대기 시간"
   },
   "embeds": {
     "available": {
-      "blocked": "Mojang이 이 사용자 이름을 임시적 또는 영구적으로 차단하지 않은 경우",
+      "blocked": "Mojang이 이 사용자 이름을 일시적 또는 영구적으로 차단하지 않은 경우",
       "invalidCharacters": "잘못된 문자",
       "tooLong": "너무 긺"
     },
@@ -313,7 +312,7 @@
         "title": "세션"
       },
       "leaderboards": {
-        "description": "Statsify는 `/leaderboard` 명령어로 수많은 순위표를 제공해요. `/leaderboard` 명령어를 실행한 후, 게임모드와 볼 순위표를 선택하세요. 검색 버튼을 눌러 특정 플레이어나 순위를 확인하세요. 위나 아래 버튼을 클릭해 더 많은 페이지를 볼 수도 있어요.",
+        "description": "Statsify는 `/leaderboard` 명령어로 수많은 순위표를 제공해요. `/leaderboard` 명령어를 실행한 후, 게임 모드와 볼 순위표를 선택하세요. 검색 버튼을 눌러 특정 플레이어나 순위를 검색하세요. 위나 아래 버튼을 눌러서 더 많은 페이지를 볼 수도 있어요.",
         "title": "순위표"
       },
       "minecraft": {
@@ -323,7 +322,7 @@
       "title": "Statsify 도움말"
     },
     "invite": {
-      "description": "아래 링크로 내 Discord 서버에 Statsify를 초대하세요.",
+      "description": "Discord 서버에 Statsify를 초대하려면 아래 링크를 눌러주세요.",
       "title": "Statsify 링크"
     },
     "ping": {
@@ -401,7 +400,7 @@
       "title": "잘못된 초기화 시간대"
     },
     "invalidSearch": {
-      "description": "찾으시는 걸 정확히 알아내지 못했어요.\n사용자 이름이나 UUID이나 Discord 멘션을 입력하세요.",
+      "description": "찾으시는 걸 정확히 알아내지 못했어요!\n사용자 이름이나 UUID나 Discord 멘션을 입력하세요.",
       "title": "잘못된 검색"
     },
     "invalidServer": {
@@ -434,7 +433,7 @@
       "title": "순위표를 찾지 못함"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}>님은 **인증되지 않았어요**. 멘션 하려면, 그분이 `/verify` 명령어로 계정을 인증해야 해요.",
+      "description": "<@{{tag}}>님은 **인증되지 않았어요**. 멘션하려면, `/verify` 명령어로 계정을 인증해야 해요.",
       "title": "인증 필요"
     },
     "missingPlayerVerification": {
@@ -442,7 +441,7 @@
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
-      "description": "내 사용자 이름을 적지 않고 명령어를 실행하려면, 인증하셔야 해요. `/verify` 명령어를 사용해 인증 후 다시 시도하세요.",
+      "description": "사용자 이름을 입력하지 않고 명령어를 실행하려면, 인증하셔야 해요. 인증하려면 `/verify` 명령어를 실행하고 인증을 완료하고 나서 다시 시도해 주세요.",
       "title": "인증 필요"
     },
     "netheriteOnly": {
@@ -480,7 +479,7 @@
     },
     "premiumRequired": {
       "description": "사용 가능한 기능을 [여기](https://statsify.net/premium)서 확인하세요.",
-      "preview": "사용 가능한 기능을 [여기](https://statsify.net/premium)서 확인하세요.\n다음은 이 명령어가 무엇을 하거나/변경하는지에 관한 간략한 미리 보기예요.",
+      "preview": "사용 가능한 기능을 [여기](https://statsify.net/premium)서 확인하세요.\n아래는 이 명령어가 무엇을 하거나/변경하는지에 관한 간략한 미리 보기예요.",
       "title": "이 명령어를 실행하려면 Statsify {{tier}}이(가) 필요함"
     },
     "staffOnly": {
@@ -497,7 +496,7 @@
       "title": "Ticket Already Exists"
     },
     "unknown": {
-      "description": "무언가 잘못됐어요. 나중에 다시 시도하세요. 문제가 지속되는 경우, [Discord](<https://statsify.net/discord>)에 제보해 주세요.",
+      "description": "무언가 잘못됐어요. 나중에 다시 시도해 주세요. 문제가 지속되는 경우, [Discord](<https://statsify.net/discord>)에 제보하세요.",
       "title": "알 수 없는 오류 발생"
     },
     "unsupportedFileType": {
@@ -515,10 +514,11 @@
     },
     "new": "Statsify에서 **{{displayName}}**님의 기간 전적을 처음으로 확인했어요. 이제 매일 이 시간에 갱신돼요.",
     "reset": "$t(emojis:clock) <t:{{time}}:R> **초기화**",
-    "resetButton": "클릭해서 초기화",
+    "resetButton": "눌러서 초기화",
     "setResetTime": "초기화 시간을 <t:{{time}}:t>로 설정했어요.",
     "newSession": "Statsify에서 **{{displayName}}**님의 세션 전적을 처음으로 확인했어요.",
     "setSessionReset": "세션 전적을 초기화했어요.",
+    "deleteSession": "세션 전적을 삭제했어요.",
     "disabledWarning": {
       "title": "기간 전적을 더 이상 사용할 수 없음",
       "description": "Hypixel의 새 [API 약관](https://developer.hypixel.net/policies/)이 \"플레이어 데이터의 연속적인 동기화\"를 허용하지 않게 되었습니다.\n따라서, Statsify가 플레이어 전적을 더 이상 추적할 수 없게 됩니다.\n\n대신, `/session` 명령어로 세션을 시작해 보세요. 세션을 시작하면, 봇이 다음 번에 명령어를 실행하기 전까지 전적을 추적할 거예요. 세션 전적을 초기화하려면 `/reset session` 명령어를 실행하세요. "
@@ -527,18 +527,18 @@
   "leaderboard": {
     "guildInput": {
       "label": "길드로 검색",
-      "placeholder": "길드의 이름을 입력하세요. 예시: Quote"
+      "placeholder": "길드의 이름을 입력하세요. 예: Quote"
     },
     "modal": {
       "title": "순위표 검색"
     },
     "playerInput": {
       "label": "플레이어로 검색",
-      "placeholder": "플레이어의 이름을 입력하세요. 예시: Mecrea"
+      "placeholder": "플레이어의 이름을 입력하세요. 예: Mecrea"
     },
     "positionInput": {
       "label": "순위로 검색",
-      "placeholder": "순위를 입력하세요. 예시: 5000"
+      "placeholder": "순위를 입력하세요. 예: 5000"
     }
   },
   "minecraft": {
@@ -557,10 +557,16 @@
     "premium": "[Premium](<https://statsify.net/premium>)",
     "website": "[Website](https://statsify.net/)"
   },
+  "deprecated": {
+    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} 명령어가 {{newCommandName}} 명령어로 병합됐어요. {{newCommand}} 명령어를 실행하고 드롭다운에서 {{mode}} 모드를 선택해 주세요.",
+    "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} 명령어가 {{newCommandName}} 명령어로 대체됐어요. {{newCommand}} 명령어를 대신 실행해 주세요.",
+    "command-description": "이 명령어는 {{newCommandName}} 명령어로 대체됐어요."
+  },
   "stats": {
     "achievementPoints": "도전과제 점수",
     "adrenaline": "Adrenaline",
     "assists": "어시스트",
+    "alphaWins": "숙주로 승리",
     "bblr": "BBLR",
     "bedsBroken": "파괴한 침대",
     "bedsLost": "파괴된 침대",
@@ -580,6 +586,7 @@
     "bronzeTrophies": "동 트로피",
     "candyFound": "발견한 사탕",
     "challenges": "완료한 챌린지",
+    "checkpoints": "Checkpoints",
     "class": "클래스",
     "coins": "코인",
     "contracts": "계약",
@@ -592,6 +599,7 @@
     "eggsFound": "발견한 달걀",
     "emeralds": "에메랄드",
     "empireKills": "수비자 킬",
+    "emblem": "엠블럼",
     "ended": "종료",
     "endurance": "Endurance",
     "event-level": "이벤트 레벨",
@@ -620,7 +628,7 @@
     "godlikes": "Godlikes",
     "gold": "골드",
     "goldEarned": "획득한 골드",
-    "goldPickedUp": "수집한 금괴",
+    "goldPickedUp": "Gold Picked Up",
     "goldRate": "금 트로피 비율",
     "goldSpent": "사용한 골드",
     "goldTrophies": "금 트로피",
@@ -652,6 +660,7 @@
     "headshots": "헤드샷",
     "headstart": "Headstart",
     "healing": "치유량",
+    "heroKills": "영웅 킬",
     "heroWins": "영웅으로 승리",
     "hidden": "숨겨짐",
     "hiderWins": "하이더로 승리",
@@ -663,6 +672,7 @@
     "humans-killed": "인간 킬",
     "infectedWins": "감염자로 승리",
     "iron": "철",
+    "itemsPurchased": "구매한 아이템",
     "karma": "카르마",
     "kdr": "KDR",
     "kicks": "킥",
@@ -670,8 +680,11 @@
     "killsAsInfected": "감염자로 한 킬",
     "killsAsMurderer": "살인자로 한 킬",
     "killsAsSurvivor": "생존자로 한 킬",
+    "killsAsAlpha": "숙주로 한 킬",
     "killstreaks": "연속킬",
     "kit": "현재 키트",
+    "knife": "칼",
+    "knifeKills": "칼로 한 킬",
     "kwr": "KWR",
     "lapsCompleted": "완주한 바퀴",
     "lastAction": "최근 행동",
@@ -682,6 +695,7 @@
     "layers": "레이어",
     "level": "레벨",
     "levelsGained": "획득한 레벨",
+    "lifetimeRenown": "Lifetime Renown",
     "loginTime": "로그인 시간",
     "logoutTime": "로그아웃 시간",
     "longestGame": "가장 긴 게임",
@@ -706,6 +720,7 @@
     "online": "온라인",
     "opals": "오팔",
     "overallWins": "총 승리",
+    "perfectBuilds": "완벽한 건축물",
     "pingRange": "핑 범위",
     "playtime": "플레이 시간",
     "points": "포인트",
@@ -736,7 +751,7 @@
     "shotsFired": "발사 횟수",
     "silver": "은",
     "silverTrophies": "은 트로피",
-    "slumberTickets": "졸음 티켓",
+    "slumberTickets": "슬럼버 티켓",
     "soloWins": "솔로 승리",
     "souls": "영혼",
     "coinConversions": "전환된 코인",
@@ -747,6 +762,7 @@
     "superVotes": "특별한 투표",
     "superluck": "Superluck",
     "support": "지원",
+    "survivals": "생존",
     "survivorWins": "생존자로 승리",
     "tags": "술래 횟수",
     "tauntsUsed": "사용한 도발",
@@ -754,7 +770,7 @@
     "title": "칭호",
     "tokens": "토큰",
     "total": "총합",
-    "totalSlumberTickets": "총 졸음 티켓",
+    "totalSlumberTickets": "총 슬럼버 티켓",
     "totalTrophies": "총 트로피",
     "trail": "흔적",
     "transfusion": "Transfusion",
@@ -783,27 +799,40 @@
     "positions": "위치",
     "powerupsCollected": "수집한 파워업",
     "roundsCompleted": "완료한 라운드",
+    "totalRounds": "총 라운드",
     "totalExp": "총 경험치",
     "gamesFinished": "완료한 게임",
     "flawlessGames": "완벽한 게임",
     "fails": "실패",
     "mapsCompleted": "완료한 맵",
     "arcadeWins": "아케이드 승리",
-    "draws": "무승부"
+    "spec": "Spec",
+    "capturePoints": "점령 점수",
+    "defendPoints": "수비 점수",
+    "draws": "무승부",
+    "sheepThrown": "던진 양",
+    "sheepKilled": "양 킬",
+    "magicWool": "마법 양털",
+    "flagCaptures": "점령한 깃발",
+    "flagReturns": "반환한 깃발",
+    "airTime": "공중 시간",
+    "potionsSplashed": "투척한 포션",
+    "powerOrbs": "파워 구슬",
+    "grenadeKills": "수류탄으로 한 킬"
   },
   "tips": {
-    "discord": "$t(emojis:socials.discord) **$t(socials.discord)**에 참여해 **대기 시간 20% 감소**를 받아보세요 $t(emojis:heart)",
-    "invite": "$t(emojis:socials.discord) **[여기](<https://statsify.net/invite>)**를 클릭해 Statsify를 서버에 초대하세요!",
-    "premium": "$t(emojis:logos.gold) **[Statsify 프리미엄](<https://statsify.net/premium>)**은 개인적인 프로필 배지와 같은 추가 기능을 제공해요. [여기서](<https://statsify.net/premium>) 모든 혜택을 찾아보세요!",
+    "discord": "$t(emojis:socials.discord) 저희의 **$t(socials.discord)**에 참가하고 **대기 시간 20% 감소**를 얻어보세요 $t(emojis:heart)",
+    "invite": "$t(emojis:socials.discord) **[여기](<https://statsify.net/invite>)**를 눌러 Statsify를 서버에 초대하세요!",
+    "premium": "$t(emojis:logos.gold) **[Statsify 프리미엄](<https://statsify.net/premium>)**은 개인 프로필 배지와 같은 추가 기능을 제공해요. [여기](<https://statsify.net/premium>)에서 모든 혜택을 찾아보세요!",
     "rankings": "$t(emojis:logos.iron) **[Statsify 프리미엄](<https://statsify.net/premium>)**으로 `/rankings` 명령어를 사용해 순위표 순위를 확인하세요",
-    "verify": "$t(emojis:check) `/verify` 명령어로 사용자 이름 없이 명령어를 실행하고 **대기 시간 10% 감소**를 받아보세요",
-    "resetSession": "$t(emojis:reset) `/reset session` 명령어로 기간 전적을 **초기화**할 수 있어요.",
+    "verify": "$t(emojis:check) `/verify` 명령어로 사용자 이름 없이 명령어를 실행하고 **대기 시간 10% 감소**를 얻어보세요",
+    "resetSession": "$t(emojis:reset) `/reset session` 명령어로 세션 전적을 **초기화**할 수 있어요.",
     "sessions": "$t(emojis:reset) 세션(`/session`)으로 전적 진행도를 추적해 보세요."
   },
   "unknown": "알 수 없음",
   "verification": {
     "alreadyVerified": {
-      "description": "Minecraft 계정과 이미 연동했어요. `/unverify` 명령어를 실행해 Minecraft 계정의 연동을 해제하세요.",
+      "description": "이미 Minecraft 계정과 연결했어요. Minecraft 계정 연결을 해제하려면 `/unverify` 명령어를 실행하세요.",
       "title": "이미 인증됨"
     },
     "invalidCode": {
@@ -812,10 +841,10 @@
       "button": "튜토리얼 보기"
     },
     "instructions": {
-      "title": "Statsify에 내 Minecraft 계정을 연동하세요",
+      "title": "Statsify에 Minecraft 계정을 연결하세요",
       "steps": {
         "one": "**Minecraft**(`1.7.10` - `1.19.4`)를 열고 서버 목록으로 이동하세요",
-        "two": "**`verify.statsify.net`**로 연결하고 표시된 코드를 복사하세요",
+        "two": "**`verify.statsify.net`**로 접속하고 표시된 코드를 복사하세요",
         "three": "**Discord**로 다시 와서 아래 버튼을 누르세요. 그리고, 코드를 입력하세요"
       },
       "modal": {
@@ -825,14 +854,14 @@
       "button": "인증 코드 입력"
     },
     "notVerified": {
-      "description": "인증을 해제하기 전에 먼저 인증을 진행해야 해요!",
+      "description": "인증을 먼저 해야 인증을 해제할 수 있어요!",
       "title": "인증되지 않음"
     },
     "requiredVerification": {
-      "description": "이 명령어를 사용하려면 인증해야 해요. `/verify` 명령어로 계정을 인증하세요.",
+      "description": "이 명령어를 사용하려면 인증해야 해요. 계정을 인증하려면 `/verify` 명령어를 실행하세요.",
       "title": "인증 필요"
     },
     "successfulUnverification": "계정과의 인증을 해제했어요!",
-    "successfulVerification": "**{{displayName}}**으(로) 인증됐어요"
+    "successfulVerification": "**{{displayName}}**으(로) 인증했어요"
   }
 }
