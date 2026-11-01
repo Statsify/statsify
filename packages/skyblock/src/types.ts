@@ -87,7 +87,7 @@ export interface Level {
   level: number;
   maxLevel: number;
   xp: number;
-  xpCurrent: number;
+  xpCurrent: number; // into the next level; at the max, everything past it
   xpForNext?: number;
   progress: number;
 }
