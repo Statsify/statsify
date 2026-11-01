@@ -13,7 +13,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { type PowerStat, RARITIES } from "#types";
+import { KUUDRA_TIERS, type PowerStat, RARITIES } from "#types";
 import { prettify, removeFormatting } from "@statsify/util";
 import { skinHash } from "#textures";
 import { tmpdir } from "node:os";
@@ -389,6 +389,7 @@ try {
   const petNames: Record<string, string> = {};
   const skinTextures: Record<string, string> = {};
   const powers: Record<string, { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }> = {};
+  const kuudraKeys: Record<string, string> = {};
   const files = (await readdir(join(dir, "items"))).filter((file) => file.endsWith(".json"));
   const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
 
@@ -403,6 +404,11 @@ try {
       const name = removeFormatting(item.displayname).replace(/^\[Lvl [^\]]+\] /, "");
       if (name !== prettify(pet[1])) petNames[pet[1]] ??= name;
     }
+
+    // Kuudra's keys, KUUDRA_TIER_KEY for the basic tier the API calls "none" and KUUDRA_<TIER>_TIER_KEY for the rest
+    const kuudraKey = /^KUUDRA_(?:(\w+)_)?TIER_KEY$/.exec(item.internalname);
+    const keyHash = kuudraKey && skullHash(item.nbttag);
+    if (kuudraKey && keyHash) kuudraKeys[kuudraKey[1]?.toLowerCase() ?? "none"] = keyHash;
 
     const skin = item.internalname.startsWith("PET_SKIN_") && skullHash(item.nbttag);
     if (skin) skinTextures[item.internalname.slice("PET_SKIN_".length)] = skin;
@@ -437,6 +443,9 @@ try {
 
   await write("pet-textures.json", { pets: petTextures, skins: skinTextures });
   await write("powers.json", powers);
+  const keyless = KUUDRA_TIERS.filter((tier) => !kuudraKeys[tier]);
+  if (keyless.length > 0) throw new Error(`no Kuudra key head for ${keyless.join(", ")}`);
+  await write("kuudra-keys.json", kuudraKeys);
 
   const pets = await readJson<Record<string, unknown>>("constants/pets.json");
   const offsets = pets.pet_rarity_offset as Record<string, number>;
