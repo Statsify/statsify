@@ -169,11 +169,15 @@ export type Powder = (typeof POWDERS)[number];
 
 export interface HotmSection {
   level: Level;
+  coreLevel: number; // Core of the Mountain's
   loadout: { selected: number; total: number };
   tokens: { spent: number; total: number };
   ability?: string;
   powder: Record<Powder, { available: number; spent: number }>;
   nodes: { id: string; name: string; level: number; maxLevel: number; x: number; y: number; enabled: boolean }[];
+  crystals: { found: number; placed: number }; // over every gem
+  nucleusRuns: number;
+  glacite: { corpses: number; fossils: number; mineshafts: number }; // corpses looted, fossils donated
 }
 
 export interface PetsSection {
