@@ -22,6 +22,7 @@ import {
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import {
   Player,
+  PlayerLayouts,
   User,
   createHistoricalPlayer,
   deserialize,
@@ -54,7 +55,8 @@ export class SessionService {
    * @returns The flattened player data
    */
   public async resetPlayer(player: Player) {
-    const flatPlayer = flatten(player);
+    // Sessions only compare stats, so empty layouts keep the inventories out of them
+    const flatPlayer = flatten({ ...player, layouts: new PlayerLayouts({}) });
     const doc = serialize(Player, flatPlayer);
 
     doc.sessionReset = Math.round(DateTime.now().toMillis() / 1000);

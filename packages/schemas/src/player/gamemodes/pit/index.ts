@@ -12,7 +12,6 @@ import { Field } from "#metadata";
 import { Progression } from "#progression";
 import {
   RenownUnlock,
-  encodeNbt,
   getBounty,
   getLevel,
   getLevelFormatted,
@@ -145,12 +144,6 @@ export class Pit {
   @Field()
   public vampireHealing: number;
 
-  @Field()
-  public inventory: string;
-
-  @Field()
-  public armor: string;
-
   public constructor(profile: APIData, data: APIData) {
     this.exp = profile.xp ?? 0;
     this.gold = profile.cash;
@@ -208,8 +201,5 @@ export class Pit {
     this.goldIngotsGathered = data.ingots_picked_up;
     this.blocksPlaced = data.blocks_placed;
     this.vampireHealing = data.vampire_healed_hp;
-
-    this.inventory = encodeNbt(profile.inv_contents);
-    this.armor = encodeNbt(profile.inv_armor);
   }
 }

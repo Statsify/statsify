@@ -13,7 +13,6 @@ import {
 } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { LIST_LAYOUT, encodeLayouts } from "#layouts";
 import { Progression } from "#progression";
 import { Slumber } from "./slumber.js";
 import { deepSub } from "@statsify/math";
@@ -80,9 +79,6 @@ export class BedWars {
 
   @Field()
   public selectedBrackets: string;
-
-  @Field()
-  public layouts: string;
 
   @Field({
     leaderboard: {
@@ -183,11 +179,6 @@ export class BedWars {
     this.selectedScheme = data.active_prestige_scheme;
     this.selectedStar = data.active_star;
     this.selectedBrackets = data.active_prestige_bracket;
-
-    this.layouts = encodeLayouts([
-      ["quickBuy", LIST_LAYOUT.slots(data.favourites_2 ?? "")],
-      ["hotbar", LIST_LAYOUT.slots(data.favorite_slots ?? "")],
-    ]);
 
     this.exp = data.Experience || 0;
     this.level = getLevel(this.exp);

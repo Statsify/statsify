@@ -51,10 +51,6 @@
     "#prefixes": {
       "types": "./src/player/gamemodes/prefixes.ts",
       "default": "./dist/player/gamemodes/prefixes.js"
-    },
-    "#layouts": {
-      "types": "./src/player/gamemodes/layouts.ts",
-      "default": "./dist/player/gamemodes/layouts.js"
     }
   }
 }

@@ -9,6 +9,7 @@
 import { Color } from "#color";
 import { Field } from "#metadata";
 import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
+import { PlayerLayouts } from "./layouts.js";
 import { PlayerSocials } from "./socials.js";
 import { PlayerStats } from "./stats.js";
 import { PlayerStatus } from "./status.js";
@@ -63,6 +64,9 @@ export class Player {
   @Field()
   public status: PlayerStatus;
 
+  @Field()
+  public layouts: PlayerLayouts;
+
   @Field({
     leaderboard: { enabled: false },
     docs: { description: "The time the player's cache expires" },
@@ -102,6 +106,7 @@ export class Player {
     this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});
     this.stats = new PlayerStats(data);
     this.status = new PlayerStatus(data);
+    this.layouts = new PlayerLayouts(data?.stats ?? {});
 
     // These will all be filled in by a service
     this.expiresAt = 0;
@@ -109,6 +114,15 @@ export class Player {
 }
 
 export * from "./gamemodes/index.js";
+export {
+  ITEM_LAYOUT,
+  LEGACY_LAYOUT,
+  LIST_LAYOUT,
+  type LayoutShape,
+  PlayerLayouts,
+  SLOT_LAYOUT,
+  decodeLayouts,
+} from "./layouts.js";
 export * from "./socials.js";
 export * from "./stats.js";
 export * from "./status.js";

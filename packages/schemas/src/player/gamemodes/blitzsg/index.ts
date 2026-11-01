@@ -10,7 +10,6 @@ import { BlitzSGKit } from "./kit.js";
 import { BlitzSGMode, BlitzSGOverall } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { LEGACY_LAYOUT, collectLayouts } from "#layouts";
 import {
   GamePrefix,
   createPrefixProgression,
@@ -93,9 +92,6 @@ export class BlitzSG {
 
   @Field({ store: { default: "none" } })
   public kit: string;
-
-  @Field()
-  public layouts: string;
 
   @Field()
   public overall: BlitzSGOverall;
@@ -253,7 +249,6 @@ export class BlitzSG {
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.kit = data.defaultkit || "none";
-    this.layouts = collectLayouts(data, /^(.+)Inventory$/, LEGACY_LAYOUT);
 
     this.overall = new BlitzSGOverall(data);
 

@@ -8,7 +8,6 @@
 
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { LEGACY_LAYOUT, collectLayouts } from "#layouts";
 import { MegaWallsKit, MegaWallsOverall } from "./kit.js";
 import type { APIData } from "@statsify/util";
 
@@ -54,9 +53,6 @@ export class MegaWalls {
 
   @Field({ store: { default: "none" } })
   public class: string;
-
-  @Field()
-  public layouts: string;
 
   @Field()
   public overall: MegaWallsOverall;
@@ -146,7 +142,6 @@ export class MegaWalls {
     this.coins = data.coins;
     this.mythicFavor = data.mythic_favor;
     this.class = data.chosen_class ?? "none";
-    this.layouts = collectLayouts(data, /^(.+)Inventory$/, LEGACY_LAYOUT);
 
     this.angel = new MegaWallsKit(data, "angel");
     this.arcanist = new MegaWallsKit(data, "arcanist");

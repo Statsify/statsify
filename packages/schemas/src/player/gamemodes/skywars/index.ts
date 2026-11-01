@@ -9,7 +9,6 @@
 import { ChallengesSkyWars, SkyWarsMini, SkyWarsMode } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { ITEM_LAYOUT, collectLayouts } from "#layouts";
 import { Progression } from "#progression";
 import { add } from "@statsify/math";
 import { getFormattedLevel, getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
@@ -116,9 +115,6 @@ export class SkyWars {
   @Field()
   public emblem: string;
 
-  @Field()
-  public layouts: string;
-
   public constructor(data: APIData, ap: APIData) {
     this.exp = data.skywars_experience ?? 0;
     this.coins = data.coins;
@@ -146,8 +142,6 @@ export class SkyWars {
       isUnderline,
       isStrikethrough
     );
-
-    this.layouts = collectLayouts(data, /^kit_(.+)_inventory$/, ITEM_LAYOUT);
 
     this.progression = getLevelProgress(this.exp, this.level);
 

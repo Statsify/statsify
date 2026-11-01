@@ -7,6 +7,7 @@
  */
 
 import type { APIData } from "@statsify/util";
+import { Field } from "#metadata";
 
 // A game's layouts are one string, `name=slot0,slot1,,slot3;name=…`, a few KB for every kit. A run
 // of four or more empty slots is `*N`, and a SkyWars slot can hold several tokens joined by `+`
@@ -98,7 +99,7 @@ function packSlots(slots: Slots) {
   return packed.join(",");
 }
 
-export function encodeLayouts(layouts: [name: string, slots: Slots][]) {
+function encodeLayouts(layouts: [name: string, slots: Slots][]) {
   return layouts
     .map(([name, slots]) => [name, packSlots(slots)])
     .filter(([, slots]) => slots)
@@ -106,7 +107,7 @@ export function encodeLayouts(layouts: [name: string, slots: Slots][]) {
     .join(";");
 }
 
-export function collectLayouts<T>(data: APIData, key: RegExp, shape: LayoutShape<T>) {
+function collectLayouts<T>(data: APIData, key: RegExp, shape: LayoutShape<T>) {
   return encodeLayouts(
     Object.entries(data).flatMap(([name, layout]): [string, Slots][] => {
       const match = key.exec(name);
@@ -128,6 +129,48 @@ export function decodeLayouts<T>(layouts: string | undefined, shape: LayoutShape
       return [name, shape.layout(slots)];
     }),
   );
+}
+
+// Pit inventories arrive as `{ type: 0, data: [signed bytes] }` of gzipped NBT
+const encodeNbt = (nbt?: { data: number[] }) => (nbt ? Buffer.from(nbt.data).toString("base64") : "");
+
+/** Each game's inventory layouts, which only the inventory images read */
+export class PlayerLayouts {
+  @Field()
+  public bedwars: string;
+
+  @Field()
+  public duels: string;
+
+  @Field()
+  public skywars: string;
+
+  @Field()
+  public blitzsg: string;
+
+  @Field()
+  public megawalls: string;
+
+  @Field()
+  public pitInventory: string;
+
+  @Field()
+  public pitArmor: string;
+
+  public constructor(stats: APIData) {
+    this.bedwars = encodeLayouts([
+      ["quickBuy", LIST_LAYOUT.slots(stats.Bedwars?.favourites_2 ?? "")],
+      ["hotbar", LIST_LAYOUT.slots(stats.Bedwars?.favorite_slots ?? "")],
+    ]);
+
+    this.duels = collectLayouts(stats.Duels ?? {}, /^layout_(.+)$/, SLOT_LAYOUT);
+    this.skywars = collectLayouts(stats.SkyWars ?? {}, /^kit_(.+)_inventory$/, ITEM_LAYOUT);
+    this.blitzsg = collectLayouts(stats.HungerGames ?? {}, /^(.+)Inventory$/, LEGACY_LAYOUT);
+    this.megawalls = collectLayouts(stats.Walls3 ?? {}, /^(.+)Inventory$/, LEGACY_LAYOUT);
+
+    this.pitInventory = encodeNbt(stats.Pit?.profile?.inv_contents);
+    this.pitArmor = encodeNbt(stats.Pit?.profile?.inv_armor);
+  }
 }
 
 if (import.meta.vitest) {
