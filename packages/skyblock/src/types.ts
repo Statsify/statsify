@@ -75,6 +75,7 @@ export interface MemberView {
   crimson?: CrimsonSection | null;
   fishing?: FishingSection | null;
   jacob?: JacobSection | null;
+  chocolate?: ChocolateSection | null;
 }
 
 export interface ApiSettings {
@@ -242,6 +243,17 @@ export interface JacobCrop {
   texture?: ItemTexture;
   bracket?: JacobBracket; // the best one reached
   personalBest?: number;
+}
+
+export interface ChocolateSection {
+  level: number; // the factory's, raised by prestige
+  chocolate: number;
+  total: number; // all-time
+  sincePrestige: number;
+  nextPrestige?: number; // the chocolate since the last prestige the next needs; none after VI, the last
+  rabbits: { rarity: Rarity; found: number; total: number }[];
+  employees: { employee: string; level: number }[];
+  timeTower: number;
 }
 
 export interface PetsSection {

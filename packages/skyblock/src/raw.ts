@@ -86,6 +86,17 @@ export interface RawMember {
     personal_bests?: Record<string, number>;
     contests?: Record<string, unknown>; // "<year>:<month>_<day>:<crop>" → the entry
   };
+  events?: {
+    easter?: {
+      chocolate?: number;
+      total_chocolate?: number;
+      chocolate_since_prestige?: number;
+      chocolate_level?: number;
+      rabbits?: Record<string, unknown>; // rabbit → times found, plus collected_eggs
+      employees?: Record<string, number>;
+      time_tower?: { level?: number };
+    };
+  };
   pets_data?: { pets?: RawPet[]; pet_care?: { pet_types_sacrificed?: string[] } };
   dungeons?: {
     dungeon_types?: { catacombs?: RawDungeonType; master_catacombs?: RawDungeonType };
