@@ -27,6 +27,7 @@ import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
 import { SkyBlockAccessoriesProfile, accessoryIcons } from "./accessories.profile.js";
 import { SkyBlockCrimsonProfile, crimsonIcons } from "./crimson.profile.js";
 import { SkyBlockDungeonsProfile, SkyBlockEssenceProfile } from "./dungeons.profile.js";
+import { SkyBlockFishingProfile } from "./fishing.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
 import { SkyBlockLevelProfile, levelIcons } from "./level.profile.js";
 import { SkyBlockNetworthProfile, networthIcons } from "./networth.profile.js";
@@ -177,6 +178,14 @@ export const SKYBLOCK_CARDS = {
     icons: crimsonIcons,
     profile: SkyBlockCrimsonProfile,
   },
+  fishing: {
+    sections: ["fishing"],
+    settings: [],
+    profile: [
+      { label: (t) => t("skyblock.trophyFish"), profile: (props) => <SkyBlockFishingProfile {...props} page="trophyFish" /> },
+      { label: (t) => t("skyblock.seaCreatures"), profile: (props) => <SkyBlockFishingProfile {...props} page="seaCreatures" /> },
+    ],
+  },
 } satisfies Record<string, SkyBlockCard>;
 
 type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
@@ -260,6 +269,11 @@ export class SkyBlockCommand {
   @SubCommand({ description: (t) => t("commands.skyblock-crimson"), args: [PlayerArgument] })
   public crimson(context: CommandContext) {
     return this.run(context, "crimson");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-fishing"), args: [PlayerArgument] })
+  public fishing(context: CommandContext) {
+    return this.run(context, "fishing");
   }
 
   @SubCommand({ description: (t) => t("commands.skyblock-price"), args: [new ItemArgument()] })

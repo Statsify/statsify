@@ -9,7 +9,7 @@
 import { type ItemIcons, ItemSlot } from "./ItemSlot.js";
 import { Table } from "#components";
 import { arrayGroup, formatTime } from "@statsify/util";
-import type { ItemTexture, Rarity } from "@statsify/skyblock";
+import type { ItemTexture, Rarity, TrophyTier } from "@statsify/skyblock";
 import type { LocalizeFunction } from "@statsify/discord";
 
 export const RARITY_COLORS: Record<Rarity, string> = {
@@ -24,6 +24,13 @@ export const RARITY_COLORS: Record<Rarity, string> = {
   VERY_SPECIAL: "§c",
   ULTIMATE: "§4",
   ADMIN: "§4",
+};
+
+export const MEDAL_COLORS: Record<TrophyTier, string> = {
+  bronze: "§c",
+  silver: "§f",
+  gold: "§6",
+  diamond: "§b",
 };
 
 export const pricesAsOf = (t: LocalizeFunction, asOf: number) =>
