@@ -6,6 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+export * from "./adapters/bedwars.js";
+export * from "./adapters/duels.js";
+export * from "./adapters/hypixel.js";
+export * from "./adapters/kits.js";
+export * from "./adapters/tnt-games.js";
 export { type CanvasBackend, setCanvasBackend } from "./core/canvas.js";
 export * from "./core/icon-cache.js";
 export * from "./core/inventory.js";

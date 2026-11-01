@@ -11,15 +11,13 @@
 //   pnpm --filter @statsify/inventory generate <path to 26.3.jar or pack zip>
 
 import { readFile, writeFile } from "node:fs/promises";
+import { fetchJson } from "./minecraft-data.ts";
 import { unzipSync } from "fflate";
 
-const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
-
-const fetchJson = async <T>(path: string): Promise<T> => {
-  const response = await fetch(`${MINECRAFT_DATA}/${path}`);
-  if (!response.ok) throw new Error(`${path}: ${response.status}`);
-  return response.json() as Promise<T>;
-};
+// Bukkit's 1.8 Material enum (from a Spigot 1.8 source mirror), since SkyWars' kit layouts name
+// items by it, like GOLD_CHESTPLATE or MONSTER_EGG
+const BUKKIT_MATERIALS =
+  "https://raw.githubusercontent.com/Attano/Spigot-1.8/9db48bc15e203179554b8d992ca6b0a528c8d300/org/bukkit/Material.java";
 
 // minecraft-data's 1.13 names that 26.3 renamed (stone_slab still exists but names another block,
 // so the pack check can't catch it). null drops eggs for entity types that never had one
@@ -101,6 +99,7 @@ const output = {
   items: {} as Record<string, string>,
   durability: {} as Record<string, number>,
   effects: {} as Record<string, string>,
+  materials: {} as Record<string, number>,
 };
 
 const SPAWN_EGG = 383;
@@ -161,6 +160,16 @@ for (const effect of effects) {
   else missing.push(`effect ${effect.id} ${name}`);
 }
 
+const materials = await fetch(BUKKIT_MATERIALS);
+if (!materials.ok) throw new Error(`Material.java: ${materials.status}`);
+
+// Entries look like GOLD_CHESTPLATE(315, 1, 112). Only ids the item table has are kept
+const drawn = new Set([POTION, ...Object.keys(output.items).map((key) => Number(key.split(":")[0]))]);
+
+for (const [, name, id] of (await materials.text()).matchAll(/^\s+([A-Z0-9_]+)\((\d+)/gm)) {
+  if (drawn.has(Number(id))) output.materials[name] = Number(id);
+}
+
 if (missing.length > 0) {
   throw new Error(`Not in ${path}, add them to RENAMES:\n${missing.join("\n")}`);
 }
@@ -171,5 +180,5 @@ await writeFile(
 );
 
 console.log(
-  `${Object.keys(output.items).length} items, ${Object.keys(output.durability).length} with durability, ${Object.keys(output.effects).length} effects`,
+  `${Object.keys(output.items).length} items, ${Object.keys(output.durability).length} with durability, ${Object.keys(output.effects).length} effects, ${Object.keys(output.materials).length} Bukkit materials`,
 );

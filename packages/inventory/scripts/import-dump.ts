@@ -1,0 +1,360 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+// Builds data/duels-modes.json and data/tnt-games.json from StatsifyDump exports (the
+// ChatTriggers module) that opened Duels' and TNT Games' layout editors, so each kit item has the
+// count, name and tooltip the game gives it. Each dump session writes its own exports, so pass the
+// last export of every session needed:
+//   pnpm --filter @statsify/inventory build
+//   node scripts/import-dump.ts <dump.json> [<dump.json> …]
+
+import { ARMOR, type ItemStack, type Kit, type KitItem, kitKey, legacyItem, skinUrl } from "@statsify/inventory";
+import { readFile, writeFile } from "node:fs/promises";
+import data from "../data/minecraft-data.json" with { type: "json" };
+import { fetchJson } from "./minecraft-data.ts";
+
+// Each single-kit editor's mode, as its layout_<mode>_layout key names it, and its tokens
+// without copy numbers (wood_1 is wood) by the slot the editor shows the default layout in
+const SINGLE_KIT_EDITORS = {
+  "UHC Duel": {
+    mode: "uhc_duel",
+    tokens: {
+      diamond_sword: 0,
+      fishing_rod: 1,
+      bow: 2,
+      diamond_axe: 3,
+      golden_apple: 4,
+      golden_head: 5,
+      lava_bucket: 6,
+      water_bucket: 7,
+      wood: 8,
+      arrow: 9,
+    },
+  },
+  "Bridge Duel": {
+    mode: "bridge_duel",
+    tokens: { iron_sword: 0, diamond_pickaxe: 1, bow: 2, stained_clay: 3, golden_apple: 5, arrow: 7, glyph_menu: 9 },
+  },
+  "NoDebuff Duel": {
+    mode: "potion_duel",
+    tokens: { diamond_sword: 0, ender_pearl: 1, cooked_beef: 2, heal_potion: 3, fire_resistance_potion: 7, speed_potion: 8 },
+  },
+  "Combo Duel": { mode: "combo_duel", tokens: { diamond_sword: 0, golden_apple: 1, potion: 2, ender_pearl: 4 } },
+  "OP Duel": {
+    mode: "op_duel",
+    tokens: {
+      diamond_sword: 0,
+      fishing_rod: 1,
+      bow: 2,
+      flint_and_steel: 3,
+      golden_apple: 4,
+      speed_potion: 5,
+      speed_potion2: 6,
+      regen_potion: 7,
+      regen_potion2: 8,
+      arrow: 9,
+    },
+  },
+  "Classic Duel": { mode: "classic_duel", tokens: { iron_sword: 0, fishing_rod: 1, bow: 2, arrow: 9 } },
+  "Classic Doubles": { mode: "classic_doubles", tokens: { iron_sword: 0, fishing_rod: 1, bow: 2, arrow: 9 } },
+  "Bow Duel": { mode: "bow_duel", tokens: { bow: 0, ender_pearl: 1, arrow: 9 } },
+  "Bed Rush Duel": {
+    mode: "bedwars_two_one_duels_rush",
+    tokens: { sword: 0, wool: 1, shears: 2, wood_pickaxe: 3, wood_axe: 4 },
+  },
+  "Quakecraft Duel": { mode: "quake_duel", tokens: { railgun: 0, layout_compass: 1 } },
+} as const;
+
+// TNT Games' editors, by the key each layout is stored under in TNTGames, and their tokens
+const TNT_GAMES_EDITORS = {
+  "TNT Run": { mode: "tntrun", tokens: { double_jump: 0, speed_potion: 1, slowness_potion: 2 } },
+  "PVP Run": { mode: "pvprun", tokens: { iron_sword: 0, double_jump: 1, slowness_potion: 2, speed_potion: 3 } },
+  "Bow Spleef": { mode: "spleef", tokens: { bow: 0, double_jump: 1, arrow_volley: 2, arrow: 3 } },
+  Wizards: { mode: "wizards", tokens: { attack_wand: 0, defense_wand: 1, class_selector: 8 } },
+  "TNT Tag": { mode: "tnttag", tokens: { tnt: 0, locate_compass: 1 } },
+} as const;
+
+// Editors with a layout per kit, whose kit is the one the picker shows as selected afterwards
+const KIT_EDITORS = {
+  "Layout Editor - Blitz Duel": "blitz_duel",
+  "Layout Editor - Mega Walls Duel": "mw_duel",
+  "Layout Editor - SkyWars Duel": "sw_duel",
+} as const;
+
+// SkyWars Duel has a Mini and an Insane kit picker, with some kits in both (Scout, Healer). The
+// Mini page is the one with Champion, a kit only Mini has
+const SKYWARS_MINI_KIT = "Champion";
+
+const ARMOR_PIECE = /(Leather|Chainmail|Iron|Gold|Diamond) (Helmet|Chestplate|Leggings|Boots)$/;
+
+interface DumpItem {
+  id: string;
+  damage: number;
+  count: number;
+  name: string;
+  lore: string[];
+  nbt: string;
+  seen: string[];
+}
+
+interface Screen {
+  title: string;
+  size: number;
+  capturedAt: string;
+  slots: { slot: number; item: DumpItem | null }[];
+}
+
+type Tokens = Record<string, ItemStack>;
+
+const paths = process.argv.slice(2);
+if (paths.length === 0) throw new Error("Pass the paths to StatsifyDump exports");
+
+const dumps = await Promise.all(
+  paths.map(async (path) => JSON.parse(await readFile(path, "utf8")) as { items: DumpItem[]; screens?: Screen[] }),
+);
+const items = dumps.flatMap((dump) => dump.items);
+const screens = dumps.flatMap((dump) => dump.screens ?? []).toSorted((a, b) => a.capturedAt.localeCompare(b.capturedAt));
+
+const legacyIds = new Map((await fetchJson<{ id: number; name: string }[]>("1.8/items.json")).map(({ id, name }) => [name, id]));
+const materials = new Map(Object.entries(data.materials).map(([name, id]) => [id, name.toLowerCase()]));
+
+const plain = (text: string) => text.replaceAll(/§./g, "");
+
+// The editor's chest: the main rows in 0 to 26, the hotbar in 36 to 44
+const storedSlot = (slot: number) => (slot >= 36 && slot <= 44 ? slot - 36 : slot <= 26 ? slot + 9 : undefined);
+
+/** A single-kit editor's items by stored slot, from its first screen (the default) or, in older dumps, where each was seen */
+function editor(title: string) {
+  const screen = screens.find((shown) => plain(shown.title) === `Layout Editor - ${title}`);
+  if (screen) {
+    return screen.slots.flatMap(({ slot, item }) => {
+      const stored = storedSlot(slot);
+      // Wizards fills the main rows with blank panes, since its kit only fits the hotbar
+      return item && stored !== undefined && plain(item.name).trim() !== "" ? [{ slot: stored, item }] : [];
+    });
+  }
+
+  return items.flatMap((item) =>
+    item.seen.flatMap((seen) => {
+      const match = /^Layout Editor - (.+) #(\d+) of 90$/.exec(seen);
+      const slot = match?.[1] === title ? storedSlot(Number(match[2])) : undefined;
+      return slot === undefined ? [] : [{ slot, item }];
+    }),
+  );
+}
+
+function legacyId({ id }: DumpItem) {
+  const numeric = legacyIds.get(id.replace("minecraft:", ""));
+  if (numeric === undefined) throw new Error(`No 1.8 id for ${id}`);
+  return numeric;
+}
+
+function kitItem(dumped: DumpItem, numeric = legacyId(dumped)): ItemStack {
+  const { id, damage, count, name, lore, nbt } = dumped;
+  const item = legacyItem(numeric, damage);
+  if (!item) throw new Error(`No 26.3 item for ${id}:${damage}`);
+
+  return {
+    ...item,
+    count: count > 1 ? count : undefined,
+    // Only a custom name: the rest take the pack's name, as other items do
+    name: /display:\{[^}]*Name:"/.test(nbt) ? name : undefined,
+    tooltip: lore.length > 0 ? lore : undefined,
+    enchanted: nbt.includes("ench:[") || undefined,
+    skin: nbt
+      .matchAll(/"(eyJ[\w+/=]+)"/g)
+      .map(([, texture]) => skinUrl(texture))
+      .find(Boolean),
+  };
+}
+
+const sameItemKey = ({ material, item }: KitItem) => JSON.stringify({ material, item });
+
+const output = {
+  modes: {} as Record<string, Tokens>,
+  // Each single-kit mode's default layout, as Hypixel would store it
+  defaults: {} as Record<string, Record<string, string>>,
+  // Each kit's editor items in their default slots, and the armour its picker lists
+  kits: {} as Record<string, Record<string, Kit>>,
+};
+
+const missing: string[] = [];
+const unnamed = new Set<string>();
+
+/** A single-kit editor's item for each token, and its default layout as Hypixel would store it */
+function singleKit(title: string, tokens: Readonly<Record<string, number>>) {
+  const shown = editor(title);
+
+  if (shown.length === 0) {
+    missing.push(title);
+    return undefined;
+  }
+
+  const kit: Tokens = Object.fromEntries(
+    Object.entries(tokens).map(([token, slot]) => {
+      const entry = shown.find((shownItem) => shownItem.slot === slot);
+      if (!entry) throw new Error(`${title} shows nothing in slot ${slot} for ${token}`);
+      return [token, kitItem(entry.item)];
+    }),
+  );
+  // Reversed so the first token with an item wins
+  const tokenOf = new Map(Object.entries(kit).toReversed().map(([token, item]) => [JSON.stringify(item), token]));
+
+  // Only a player who never saved a layout sees the default, so dump with an account that hasn't
+  // saved this mode. A slot the token list skips holds a copy (UHC's second lava bucket)
+  const layout: Record<string, string> = {};
+  for (const { slot, item } of shown) {
+    const token = Object.entries(tokens).find(([, at]) => at === slot)?.[0] ?? tokenOf.get(JSON.stringify(kitItem(item)));
+    if (!token) throw new Error(`${title} shows an item in slot ${slot} that no token has`);
+    if (layout[slot] && layout[slot] !== token) throw new Error(`${title} shows two items in slot ${slot}`);
+    layout[slot] = token;
+  }
+
+  return { kit, layout };
+}
+
+for (const [title, { mode, tokens }] of Object.entries(SINGLE_KIT_EDITORS)) {
+  const found = singleKit(title, tokens);
+  if (!found) continue;
+  output.modes[mode] = found.kit;
+  output.defaults[mode] = found.layout;
+}
+
+const tntGames: Record<string, { name: string; tokens: Tokens; default: Record<string, string> }> = {};
+
+for (const [name, { mode, tokens }] of Object.entries(TNT_GAMES_EDITORS)) {
+  const found = singleKit(name, tokens);
+  if (found) tntGames[mode] = { name, tokens: found.kit, default: found.layout };
+}
+
+const pickerEntries = (screen: Screen) =>
+  screen.slots.flatMap(({ slot, item }) => (item && slot < screen.size - 36 ? [item] : []));
+
+/** The kit a picker shows as selected, and its lore */
+function selected(screen: Screen) {
+  for (const item of pickerEntries(screen)) {
+    const name = /^Currently Selected - (.+)$/.exec(plain(item.name))?.[1];
+    if (name) return { name, lore: item.lore };
+  }
+
+  return undefined;
+}
+
+/** The armour a picker's item list names, in its armour slots */
+function pickerArmor(lore: string[]) {
+  const lines = lore.map(plain);
+  const armor: Record<number, ItemStack> = {};
+
+  for (const [index, line] of lines.entries()) {
+    // Blitz lists " ▪ Iron Helmet" with enchantments indented under it; SkyWars drops the bullet
+    if (/^\s{2,}/.test(line)) continue;
+    const match = ARMOR_PIECE.exec(line.replace(/^ ▪ /, "").replace(/ x\d+$/, ""));
+    if (!match) continue;
+    const material = match[1] === "Gold" ? "golden" : match[1].toLowerCase();
+    const piece = match[2].toLowerCase() as keyof typeof ARMOR;
+    const enchanted = /^\s{2,}[∙▪]/.test(lines[index + 1] ?? "") || undefined;
+    armor[ARMOR[piece]] = { id: `minecraft:${material}_${piece}`, enchanted };
+  }
+
+  return Object.keys(armor).length > 0 ? armor : undefined;
+}
+
+// SkyWars kit pages, each kit's lore with whether its page is Mini's
+const skyWarsPages = screens
+  .filter((screen) => /Choose Your Kit/.test(screen.title))
+  .map((screen) => {
+    const entries = pickerEntries(screen).filter((item) => item.lore.some((line) => /Click to select/.test(plain(line))));
+    return { mini: entries.some((item) => plain(item.name).startsWith(SKYWARS_MINI_KIT)), entries };
+  });
+
+// A kit's item list: its lore up to the first blank line, which the selected kit's copy lacks
+function itemList(lore: string[]) {
+  const end = lore.findIndex((line) => plain(line) === "");
+  return JSON.stringify(end === -1 ? lore : lore.slice(0, end));
+}
+
+function skyWarsGroup(name: string, lore: string[]) {
+  const page = skyWarsPages.find(({ entries }) =>
+    entries.some((item) => plain(item.name).replace(/ - .+$/, "") === name && itemList(item.lore) === itemList(lore)),
+  );
+  if (!page) throw new Error(`No SkyWars kit page lists ${name}`);
+  return page.mini ? "Mini" : "Insane";
+}
+
+for (const [title, mode] of Object.entries(KIT_EDITORS)) {
+  const kits: Record<string, Kit> = {};
+
+  for (const [index, screen] of screens.entries()) {
+    if (plain(screen.title) !== title) continue;
+    const kit = screens.slice(index + 1).map(selected).find(Boolean);
+    // Only a picker after the editor names its kit, so a dump's last editor can't be placed
+    if (!kit) {
+      unnamed.add(title);
+      continue;
+    }
+
+    const group = mode === "sw_duel" ? skyWarsGroup(kit.name, kit.lore) : undefined;
+    const key = group ? `${group.toLowerCase()}_${kitKey(kit.name)}` : kitKey(kit.name);
+    // The first screen is the default; later ones may show items the player moved
+    if (kits[key]) continue;
+
+    const shown = screen.slots
+      .flatMap(({ slot, item }) => {
+        const stored = storedSlot(slot);
+        return item && stored !== undefined ? [{ slot: stored, item }] : [];
+      })
+      .toSorted((a, b) => a.slot - b.slot);
+
+    kits[key] = {
+      name: group ? `${group} ${kit.name}` : kit.name,
+      items: shown.map(({ slot, item }) => {
+        const numeric = legacyId(item);
+        const material = materials.get(numeric);
+        if (!material) throw new Error(`No Bukkit material for ${item.id}`);
+        return { slot, material, item: kitItem(item, numeric) };
+      }),
+      armor: pickerArmor(kit.lore),
+    };
+  }
+
+  if (Object.keys(kits).length === 0) {
+    missing.push(title);
+    continue;
+  }
+
+  // An item most kits show, like SkyWars' iron sword, is shared: its token has no kit prefix
+  const counts = new Map<string, number>();
+  for (const { items: kitItems } of Object.values(kits)) {
+    for (const key of new Set(kitItems.map(sameItemKey))) counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+
+  const half = Object.keys(kits).length / 2;
+  for (const kit of Object.values(kits)) {
+    kit.items = kit.items.map((entry) => {
+      const { slot, material, item } = entry;
+      return { slot, material, shared: counts.get(sameItemKey(entry))! > half || undefined, item };
+    });
+  }
+
+  output.kits[mode] = kits;
+}
+
+if (Object.keys(output.modes).length > 0 || Object.keys(output.kits).length > 0) {
+  await writeFile(new URL("../data/duels-modes.json", import.meta.url), `${JSON.stringify(output, null, 2)}\n`);
+}
+if (Object.keys(tntGames).length > 0) {
+  await writeFile(new URL("../data/tnt-games.json", import.meta.url), `${JSON.stringify(tntGames, null, 2)}\n`);
+}
+
+console.log(
+  `${Object.keys(output.modes).length} Duels modes, ${Object.keys(tntGames).length} TNT Games modes; kits: ${Object.entries(output.kits)
+    .map(([mode, kits]) => `${mode} ${Object.keys(kits).length}`)
+    .join(", ")}` +
+    (missing.length > 0 ? `; not in these dumps: ${missing.join(", ")}` : "") +
+    (unnamed.size > 0 ? `; skipped the last screens of ${[...unnamed].join(", ")}, which no picker follows` : ""),
+);

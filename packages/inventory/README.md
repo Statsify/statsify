@@ -68,3 +68,38 @@ import { skiaCanvas } from "@statsify/inventory/node";
 setCanvasBackend(skiaCanvas);
 ```
 
+## Adapters
+
+- `fromHypixelNBT(data)`: Hypixel's gzipped NBT, like the Pit's `inv_contents`, as items.
+  `playerInventoryOrder` puts a player inventory's hotbar last, as the game shows it.
+- `fromBedwarsQuickBuy(favourites)`: the 9 × 6 BedWars shop open on Quick Buy, with each
+  item's count, cost and description. `src/adapters/bedwars-shop.ts` holds the shop as
+  Hypixel's own NBT has it.
+- `fromBedwarsHotbar(favoriteSlots)`: a BedWars hotbar from `favorite_slots`, as the Hotbar
+  Manager shows it. Without one, the default hotbar.
+- `fromDuelsKit(layout, key)`: a Duels `layout_*` kit. The key (`layout_uhc_duel_layout`,
+  `layout_mw_duel_herobrine`, `layout_sw_duel_kit_mini_solo_scout`) picks the mode's kit in
+  `data/duels-modes.json`, so items get the count, name and tooltip the game gives them, and
+  Blitz and SkyWars kits get the armour their picker lists. Armour tokens in older layouts go
+  to the armour slots, since the game equips armour. A token no dumped kit has is drawn from the
+  Bukkit material it ends in (`hype_train_minecart_7`). Without a layout, it's the game's default
+  layout: the single-kit modes in `DUELS_DEFAULT_KEYS` and every kit in `DUELS_KITS`.
+- `fromTntGamesLayout(layout, key)`: a TNT Games layout by its `TNTGames` key (`tntrun`,
+  `pvprun`, `spleef`, `wizards`, `tnttag`, all in `TNT_GAMES_LAYOUTS`), with the editors' items
+  from `data/tnt-games.json`. Without a layout, the game's default one.
+- `fromLegacyKit(layout)`: a kit of 1.8 `"id,damage"` values by slot, as Mega Walls'
+  `<class>Inventory`, Blitz's `<Kit>Inventory` and classic Walls' `InventoryLayout` send it.
+- `fromSkyWarsKit(layout)`: a SkyWars `kit_…_inventory`, which names items by their Bukkit
+  material (`legacyMaterial(name, damage)`) and lists enchantment ids on enchanted ones.
+
+`data/duels-modes.json` and `data/tnt-games.json` come from the game: open the layout editors
+with the StatsifyDump ChatTriggers module running, then `pnpm build` and
+`node scripts/import-dump.ts <dump.json> …`
+with the last export of each dump session. Open each kit's editor from its picker before moving
+anything: the picker shown next names the kit, and only an unsaved kit shows the default.
+An item's `tooltip` holds the lines under its name as the game drew them, enchantments and
+attributes included.
+
+Kits come back as 40 slots: the hotbar, the three main rows, then boots to helmet in 36 to 39.
+`ARMOR_SLOTS` lists the armour slots helmet first, as the inventory screen shows them.
+
