@@ -184,6 +184,7 @@ export interface PetsSection {
   score: number;
   active?: PetView;
   pets: PetView[];
+  totalXp: number; // every pet's XP ever gained
 }
 
 export interface PetView {
@@ -193,6 +194,7 @@ export interface PetView {
   rarity: Rarity;
   level: Level;
   heldItem?: string;
+  heldItemTexture?: ItemTexture;
   skin?: string;
   candyUsed: number;
   active: boolean;

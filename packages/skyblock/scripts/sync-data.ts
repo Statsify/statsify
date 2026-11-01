@@ -14,7 +14,7 @@ import { existsSync } from "node:fs";
 import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { RARITIES } from "#types";
-import { removeFormatting } from "@statsify/util";
+import { prettify, removeFormatting } from "@statsify/util";
 import { skinHash } from "#textures";
 import { tmpdir } from "node:os";
 import { toLevelCosts } from "#leveling";
@@ -341,7 +341,9 @@ try {
 
   const leveling = await readJson<Record<string, unknown>>("constants/leveling.json");
   const slayerXp = leveling.slayer_xp as Record<string, number[]>;
-  const { sblevel_colours } = await readJson<{ sblevel_colours: Record<string, string> }>("constants/sblevels.json");
+  const sblevels = await readJson<{ sblevel_colours: Record<string, string>; core_task: Record<string, unknown> }>(
+    "constants/sblevels.json"
+  );
   await write("leveling.json", {
     catacombs: leveling.catacombs,
     HOTM: leveling.HOTM,
@@ -349,24 +351,13 @@ try {
     leveling_xp: xpTable("COMBAT"),
     max_levels: Object.fromEntries(Object.entries(skills).map(([id, { maxLevel }]) => [id.toLowerCase(), maxLevel])),
     runecrafting_xp: xpTable("RUNECRAFTING"),
-    sblevel_colours,
+    sblevel_colours: sblevels.sblevel_colours,
     // NEU copies Revenant's 15 XP for Tarantula level 2; the game asks 25.
     slayer_xp: { ...slayerXp, spider: slayerXp.spider.with(1, 25) },
     slayer_to_highest_tier: leveling.slayer_to_highest_tier,
     social: xpTable("SOCIAL"),
   });
 
-  const pets = await readJson<Record<string, unknown>>("constants/pets.json");
-  const offsets = pets.pet_rarity_offset as Record<string, number>;
-  await write("pets.json", {
-    custom_pet_leveling: pets.custom_pet_leveling,
-    id_to_display_name: pets.id_to_display_name,
-    pet_levels: pets.pet_levels,
-    // NEU levels SPECIAL pets on Epic's table; the game uses Legendary's.
-    pet_rarity_offset: { ...offsets, SPECIAL: offsets.LEGENDARY },
-  });
-
-  const sblevels = await readJson<{ core_task: Record<string, unknown> }>("constants/sblevels.json");
   await write("sblevels.json", {
     core_task: {
       accessory_bag_xp: sblevels.core_task.accessory_bag_xp,
@@ -402,6 +393,7 @@ try {
   const accessoryRanks = new Map<string, number>();
   const apiIds = new Map<string, string>();
   const petTextures: Record<string, Record<string, string>> = {};
+  const petNames: Record<string, string> = {};
   const skinTextures: Record<string, string> = {};
   const files = (await readdir(join(dir, "items"))).filter((file) => file.endsWith(".json"));
   const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
@@ -412,6 +404,11 @@ try {
     const pet = item.nbttag.includes("petInfo") ? /^(.+);(\d)$/.exec(item.internalname) : null;
     const hash = pet && skullHash(item.nbttag);
     if (pet && hash) (petTextures[pet[1]] ??= {})[RARITIES[Number(pet[2])]] = hash;
+    // "§7[Lvl {LVL}] §6Bee"; only the names prettify gets wrong (FRACTURED_MONTEZUMA_SOUL is Montezuma)
+    if (pet) {
+      const name = removeFormatting(item.displayname).replace(/^\[Lvl [^\]]+\] /, "");
+      if (name !== prettify(pet[1])) petNames[pet[1]] ??= name;
+    }
 
     const skin = item.internalname.startsWith("PET_SKIN_") && skullHash(item.nbttag);
     if (skin) skinTextures[item.internalname.slice("PET_SKIN_".length)] = skin;
@@ -426,6 +423,16 @@ try {
   }
 
   await write("pet-textures.json", { pets: petTextures, skins: skinTextures });
+
+  const pets = await readJson<Record<string, unknown>>("constants/pets.json");
+  const offsets = pets.pet_rarity_offset as Record<string, number>;
+  await write("pets.json", {
+    custom_pet_leveling: pets.custom_pet_leveling,
+    id_to_display_name: { ...petNames, ...(pets.id_to_display_name as Record<string, string>) },
+    pet_levels: pets.pet_levels,
+    // NEU levels SPECIAL pets on Epic's table; the game uses Legendary's.
+    pet_rarity_offset: { ...offsets, SPECIAL: offsets.LEGENDARY },
+  });
 
   const api = (id: string) => apiIds.get(id) ?? id;
   const upgrades = new Map<string, Set<string>>();
