@@ -31,7 +31,6 @@ export class PlayerSearchService {
         "FT.SUGGET",
         "player:autocomplete",
         query,
-        // A fuzzy match on one or two characters walks most of the dictionary
         ...(query.length > 2 ? ["FUZZY"] : []),
         "MAX",
         "25"
