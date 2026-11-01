@@ -42,17 +42,19 @@ const GAMECOUNT_GAME_CHOICES = GAMECOUNT_GAME_IDS.map((id) => ({
 
 class GameCountsModeArgument extends AbstractArgument {
   public name = "mode";
+  public description: LocalizationString;
   public type = ApplicationCommandOptionType.String;
   public required = false;
   public autocomplete = true;
-  public description: LocalizationString;
 
   public constructor() {
     super();
     this.description = (t) => t("arguments.game");
   }
 
-  public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
+  public autocompleteHandler(
+    context: CommandContext
+  ): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
 
     if (!currentValue) return GAMECOUNT_GAME_CHOICES.slice(0, 25);
