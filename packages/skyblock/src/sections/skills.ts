@@ -20,6 +20,14 @@ const xpOf = (member: RawMember, skill: string) => member.player_data?.experienc
 const tableOf = (skill: string) =>
   skill === "runecrafting" ? LEVELING.runecrafting_xp : skill === "social" ? LEVELING.social : LEVELING.leveling_xp;
 
+// 50, the log unlocks, then two levels each from Agatha's and Miria's shops (unverified). Hypixel's highest foraging
+// level achievement fits it on every saved player: 57 with all three log unlocks, 54 with two and no Miria Power.
+const foragingCap = (member: RawMember) => {
+  const perks = member.player_data?.perks ?? {};
+  const shops = 2 * Number((perks.agatha_power ?? 0) >= 4) + 2 * Number((perks.miria_power ?? 0) >= 4);
+  return Math.min(50 + (member.player_data?.experience?.SKILL_FORAGING_extra_level_cap ?? 0) + shops, 57);
+};
+
 // SKILL_FORAGING_extra_level_cap looks like it counts the three log collection unlocks and not the shop's, so a level
 // past 53 can't be confirmed from the API.
 const FORAGING_VERIFIED = 53;
@@ -30,7 +38,7 @@ function capOf(skill: string, member: RawMember) {
   const max = LEVELING.max_levels[skill];
   if (skill === "farming") return Math.min(cap + (member.jacobs_contest?.perks?.farming_level_cap ?? 0), max);
   if (skill === "taming") return Math.min(cap + (member.pets_data?.pet_care?.pet_types_sacrificed?.length ?? 0), max);
-  if (skill === "foraging") return Math.min(54 + (member.player_data?.experience?.SKILL_FORAGING_extra_level_cap ?? 0), max);
+  if (skill === "foraging") return Math.min(foragingCap(member), max);
   return cap;
 }
 
@@ -64,10 +72,11 @@ if (import.meta.vitest) {
           SKILL_FARMING: 1e12,
           SKILL_TAMING: 1e12,
           SKILL_FORAGING: 1e12,
-          SKILL_FORAGING_extra_level_cap: 6,
+          SKILL_FORAGING_extra_level_cap: 3,
           SKILL_RUNECRAFTING: 7340,
           SKILL_SOCIAL: 100,
         },
+        perks: { agatha_power: 4 },
       },
       jacobs_contest: { perks: { farming_level_cap: 10 } },
       pets_data: { pet_care: { pet_types_sacrificed: ["A", "B", "C"] } },
@@ -82,7 +91,7 @@ if (import.meta.vitest) {
 
     expect(skills?.farming).toMatchObject({ level: 60, maxLevel: 60 });
     expect(skills?.taming).toMatchObject({ level: 53, maxLevel: 53, unverified: false });
-    expect(skills?.foraging).toMatchObject({ level: 57, maxLevel: 57, unverified: true });
+    expect(skills?.foraging).toMatchObject({ level: 55, maxLevel: 55, unverified: true });
     expect(skills?.runecrafting.level).toBe(14);
     expect(skills?.social).toMatchObject({ level: 2, xp: 150 });
 
