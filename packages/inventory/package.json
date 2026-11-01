@@ -1,0 +1,38 @@
+{
+  "name": "@statsify/inventory",
+  "version": "0.0.0",
+  "type": "module",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./src/node.ts",
+      "default": "./dist/node.js"
+    }
+  },
+  "scripts": {
+    "build": "swc src --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint",
+    "lint:ci": "oxlint --format=github",
+    "generate": "node scripts/generate-minecraft-data.ts"
+  },
+  "dependencies": {
+    "@swc/helpers": "^0.5.23",
+    "fflate": "^0.8.3"
+  },
+  "devDependencies": {
+    "skia-canvas": "4.0.0"
+  },
+  "peerDependencies": {
+    "skia-canvas": "4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "skia-canvas": {
+      "optional": true
+    }
+  }
+}

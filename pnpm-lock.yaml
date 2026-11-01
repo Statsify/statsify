@@ -689,6 +689,19 @@ importers:
         specifier: ^1.1.5
         version: 1.1.5
 
+  packages/inventory:
+    dependencies:
+      '@swc/helpers':
+        specifier: ^0.5.23
+        version: 0.5.23
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
+    devDependencies:
+      skia-canvas:
+        specifier: 4.0.0
+        version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+
   packages/logger:
     dependencies:
       '@sentry/node':
