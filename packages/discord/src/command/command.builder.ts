@@ -251,15 +251,15 @@ if (import.meta.vitest) {
         public type = ApplicationCommandOptionType.String;
       }
 
-      @Command({ description: "test" })
-      class BaseCommand {}
+      @Command({ name: "test", description: "test" })
+      class OldCommand {}
 
-      @Command({ description: "test", args: [Arg] })
-      class CommandWithArgs {}
+      @Command({ name: "test", description: "test", args: [Arg] })
+      class NewCommand {}
 
       expect(
-        scanCommands(new BaseCommand(), BaseCommand).equals(
-          scanCommands(new CommandWithArgs(), CommandWithArgs)
+        scanCommands(new NewCommand(), NewCommand).equals(
+          scanCommands(new OldCommand(), OldCommand)
         )
       ).toBe(false);
     });
