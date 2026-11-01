@@ -145,6 +145,9 @@ export const PlayerFullSchema = z.object({
 /** A suggested name, with the player's display name where the API has them, for the colour their rank gives the name. */
 export const SuggestionSchema = z.object({ name: z.string(), displayName: z.string().nullable() });
 
+/** A suggested guild: its name, and the name with its tag in the tag's colour, as the guild page's title shows it. */
+export const GuildSuggestionSchema = z.object({ name: z.string(), nameFormatted: z.string() });
+
 export const ResultCardSchema = z.object({
   ...PlayerName,
   rank: z.string(),
@@ -651,6 +654,7 @@ const LookupInputSchema = z.object({
 const GuildInputSchema = z.object({ name: z.string().trim().min(1).max(32) });
 const GuildLookupInputSchema = GuildInputSchema.extend({ clientIp: ClientIpSchema });
 const SuggestInputSchema = z.object({ query: z.string().trim().max(16) });
+const GuildSuggestInputSchema = z.object({ query: z.string().trim().max(32) });
 const CardsInputSchema = z.object({ names: z.array(UsernameSchema).min(1).max(25) });
 
 /** Query-string numbers arrive as strings. */
@@ -740,6 +744,10 @@ export const contract = {
       .route({ method: "GET", path: "/search/suggest", summary: "Username autocomplete" })
       .input(SuggestInputSchema)
       .output(z.array(SuggestionSchema).max(25)),
+    guilds: oc
+      .route({ method: "GET", path: "/search/guilds", summary: "Guild name autocomplete" })
+      .input(GuildSuggestInputSchema)
+      .output(z.array(GuildSuggestionSchema).max(25)),
     cards: oc
       .route({ method: "GET", path: "/search/cards", summary: "Result cards for a list of usernames" })
       .input(CardsInputSchema)
@@ -782,6 +790,7 @@ export type PlayerFull = z.infer<typeof PlayerFullSchema>;
 export type GameSummary = z.infer<typeof GameSummarySchema>;
 export type StatRow = z.infer<typeof StatRowSchema>;
 export type Suggestion = z.infer<typeof SuggestionSchema>;
+export type GuildSuggestion = z.infer<typeof GuildSuggestionSchema>;
 export type ResultCard = z.infer<typeof ResultCardSchema>;
 export type LeaderboardGroup = z.infer<typeof LeaderboardGroupSchema>;
 export type LeaderboardGame = z.infer<typeof LeaderboardGameSchema>;

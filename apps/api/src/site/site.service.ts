@@ -38,6 +38,7 @@ import type {
   Glossary,
   GuildPage,
   GuildPreview,
+  GuildSuggestion,
   HomePreviews,
   LeaderboardGame,
   LeaderboardGameInput,
@@ -343,6 +344,23 @@ export class SiteService implements OnApplicationBootstrap {
 
     const displayNames = new Map(players.map((player) => [player.usernameToLower, player.displayName]));
     return names.map((name) => ({ name, displayName: displayNames.get(name.toLowerCase()) ?? null }));
+  }
+
+  /**
+   * Stored guilds whose name starts with the query, alphabetically. A range on the `nameToLower` index rather than a
+   * regex, so nothing typed needs escaping and the scan stops at the 25th.
+   */
+  public async suggestGuilds(query: string): Promise<GuildSuggestion[]> {
+    if (!query) return [];
+    const prefix = query.toLowerCase();
+
+    return this.guildModel
+      .find({ nameToLower: { $gte: prefix, $lt: `${prefix}\uffff` } })
+      .sort({ nameToLower: 1 })
+      .limit(25)
+      .select({ _id: false, name: true, nameFormatted: true })
+      .lean()
+      .exec();
   }
 
   public async cards(names: string[]): Promise<ResultCard[]> {

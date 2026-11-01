@@ -182,7 +182,6 @@
     "unlisted": "{{count}} not listed: Statsify hasn't seen them yet.",
     "search": {
       "heading": "Search Hypixel Guilds",
-      "label": "Search guilds",
       "placeholder": "Search a guild..."
     },
     "notFound": {

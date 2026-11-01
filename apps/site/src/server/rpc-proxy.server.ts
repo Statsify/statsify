@@ -23,6 +23,7 @@ const RPC_PROCEDURES = new Map<string, { ttl: number; params: readonly string[] 
   ["player/session/game", { ttl: 60, params: ["uuid", "game", "mode", "submode"] }],
   ["guild/page", { ttl: 60, params: ["name"] }],
   ["search/suggest", { ttl: 30, params: ["query"] }],
+  ["search/guilds", { ttl: 30, params: ["query"] }],
   ["search/cards", { ttl: 60, params: ["names"] }],
   ["leaderboard/list", { ttl: 3600, params: [] }],
   ["leaderboard/game", { ttl: 3600, params: ["key"] }],

@@ -103,6 +103,12 @@ export class SiteController {
   }
 
   @Auth(SITE_ONLY)
+  @Implement(contract.search.guilds)
+  public suggestGuilds() {
+    return implement(contract.search.guilds).handler(({ input }) => this.siteService.suggestGuilds(input.query));
+  }
+
+  @Auth(SITE_ONLY)
   @Implement(contract.search.cards)
   public cards() {
     return implement(contract.search.cards).handler(({ input }) => this.siteService.cards(input.names));
