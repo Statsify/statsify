@@ -107,10 +107,7 @@ function BingoBoards({ initial }: { initial: BingoPlayer }) {
 
   return (
     <BingoLayout name={player.username}>
-      <div className="w-full lg:w-[80%]">
-        <RefreshBar updatedAt={player.updatedAt} expiresAt={player.expiresAt} refresh={refresh} auto />
-      </div>
-      <Bingo player={player} />
+      <Bingo player={player} refresh={<RefreshBar updatedAt={player.updatedAt} expiresAt={player.expiresAt} refresh={refresh} auto />} />
     </BingoLayout>
   );
 }

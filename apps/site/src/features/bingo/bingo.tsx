@@ -41,7 +41,8 @@ function useBoardState() {
   return { category, difficulty, select };
 }
 
-export function Bingo({ player }: { player: BingoPlayer }) {
+/** A player's boards; `refresh` (the refresh bar) goes in the nametag, under the name. */
+export function Bingo({ player, refresh }: { player: BingoPlayer; refresh?: ReactNode }) {
   const { t } = useTranslation();
   const { category, difficulty, select } = useBoardState();
 
@@ -50,9 +51,12 @@ export function Bingo({ player }: { player: BingoPlayer }) {
       <div className="w-full lg:w-[80%] flex items-stretch flex-col gap-4">
         {/* The nametag over each category's heading and counts, every one its own box, as the bot's cards draw them. */}
         <div className={cn("flex flex-col", BOX_GAP)}>
-          <Box className="content:text-center content:text-mc-3 content:flex content:items-center content:justify-center content:gap-4">
-            <SkinHead uuid={player.uuid} className="drop-shadow-mc-4 text-mc-black " />
-            <MinecraftText>{player.displayName}</MinecraftText>
+          <Box className="content:flex content:flex-col content:items-center content:gap-1">
+            <div className="flex items-center justify-center gap-4 text-center text-mc-3">
+              <SkinHead uuid={player.uuid} className="drop-shadow-mc-4 text-mc-black " />
+              <MinecraftText>{player.displayName}</MinecraftText>
+            </div>
+            {refresh !== undefined && <div className="flex flex-wrap items-center justify-center gap-x-4">{refresh}</div>}
           </Box>
           <div className={cn("grid grid-cols-1 lg:grid-cols-3", BOX_GAP)}>
             <CategoryOverview player={player} category="casual" />

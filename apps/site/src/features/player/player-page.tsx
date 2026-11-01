@@ -119,16 +119,10 @@ export function PlayerView({ page }: { page: PlayerPage }) {
                 >
                   {t("player.skin.open")}
                 </PanelToggle>
+                <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto />
               </>
             )}
             className="md:col-span-full md:row-start-1 xl:col-span-1"
-          />
-          <RefreshBar
-            updatedAt={page.updatedAt}
-            expiresAt={page.expiresAt}
-            refresh={refresh}
-            auto
-            className="mb-2 md:col-span-full md:row-start-3 md:mt-2 md:mb-0 xl:row-start-3"
           />
           {/* From `xl` the nametag shares its row with the level and overview, too narrow for the facts' values, so they
               get a row of their own, three across, the last row filled; below that `NametagPanel` draws them. */}
