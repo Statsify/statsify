@@ -71,8 +71,6 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     const user = context.getUser();
     const tag = context.option<string>("player");
 
-    // A self-lookup already knows the uuid, so its skin and badge don't wait for the player.
-    // The catch stops an unhandled rejection when the player lookup throws first.
     const selfSkinAndBadge = !tag && user?.uuid ? this.getSkinAndBadge(user.uuid, user) : undefined;
     selfSkinAndBadge?.catch(noop);
 
