@@ -124,6 +124,15 @@
     "refreshLimited": "Too many updates right now, try again shortly.",
     "refreshFailed": "Couldn't update. Try again in a minute.",
     "refreshError": "Something went wrong. Try again in a moment.",
+    "socials": {
+      "discord": "Discord",
+      "forums": "Hypixel Forums",
+      "instagram": "Instagram",
+      "tiktok": "TikTok",
+      "twitch": "Twitch",
+      "twitter": "Twitter",
+      "youtube": "YouTube"
+    },
     "share": {
       "open": "Share",
       "title": "Share",

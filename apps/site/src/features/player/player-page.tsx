@@ -10,9 +10,11 @@ import { PageBackground } from "~/components/ui/background";
 import { BOX_GAP, Box, CELL, HEADING_BOX, StatBox } from "~/components/ui/box";
 import { ClockScript } from "~/lib/clock";
 import { Discord } from "~/components/icons/discord";
+import { Forums } from "~/components/icons/forums";
 import { GameNav } from "~/features/game/game-nav";
 import { gameLink } from "~/features/game/game-data";
 import { Hint, Spoken } from "~/components/ui/hint";
+import { Instagram } from "~/components/icons/instagram";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
@@ -23,6 +25,8 @@ import { LoginDate } from "./login-date";
 import { RefreshBar, savedDate, useNow } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust, SkinHead } from "~/components/ui/skin";
+import { TikTok } from "~/components/icons/tiktok";
+import { Twitch } from "~/components/icons/twitch";
 import { Twitter } from "~/components/icons/twitter";
 import { YouTube } from "~/components/icons/youtube";
 import { cn } from "~/lib/util";
@@ -48,8 +52,12 @@ const SkinPanel = lazy(() => loadSkinPanel().then(({ SkinPanel }) => ({ default:
 type Socials = PlayerPage["socials"];
 type SocialKey = keyof Socials;
 
-const SOCIAL_ICONS: Partial<Record<SocialKey, ComponentType<{ className?: string }>>> = {
+const SOCIAL_ICONS: Record<SocialKey, ComponentType<{ className?: string }>> = {
   discord: Discord,
+  forums: Forums,
+  instagram: Instagram,
+  tiktok: TikTok,
+  twitch: Twitch,
   twitter: Twitter,
   youtube: YouTube,
 };
@@ -252,13 +260,14 @@ function socialHref(value: string): string | undefined {
 }
 
 function SocialLinks({ socials }: { socials: Socials }) {
+  const { t } = useTranslation();
   const entries = (Object.entries(socials) as [SocialKey, string | undefined][]).filter(
     (entry): entry is [SocialKey, string] => !!entry[1]
   );
 
   if (entries.length === 0) return null;
 
-  // An icon (or the network's name) and the handle, never the raw URL; links are 44 px tall.
+  // The network's icon and the handle, never the raw URL; links are 44 px tall. The icon's name is for screen readers.
   return (
     <ul className="flex min-w-0 max-w-full flex-wrap justify-center gap-x-4">
       {entries.map(([key, value]) => {
@@ -266,7 +275,8 @@ function SocialLinks({ socials }: { socials: Socials }) {
         const href = socialHref(value);
         const content = (
           <>
-            {Icon ? <Icon className="size-5 shrink-0" /> : <span className="text-mc-1 text-mc-gray capitalize">{key}</span>}
+            <Icon className="size-5 shrink-0" />
+            <span className="sr-only">{t(`player.socials.${key}`)}</span>
             <span className="max-w-40 truncate">{socialHandle(value)}</span>
           </>
         );
