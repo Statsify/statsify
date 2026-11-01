@@ -25,6 +25,7 @@ import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
 import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
 import { SkyBlockAccessoriesProfile, accessoryIcons } from "./accessories.profile.js";
+import { SkyBlockCrimsonProfile, crimsonIcons } from "./crimson.profile.js";
 import { SkyBlockDungeonsProfile, SkyBlockEssenceProfile } from "./dungeons.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
 import { SkyBlockLevelProfile, levelIcons } from "./level.profile.js";
@@ -170,6 +171,12 @@ export const SKYBLOCK_CARDS = {
     icons: levelIcons,
     profile: SkyBlockLevelProfile,
   },
+  crimson: {
+    sections: ["crimson"],
+    settings: [],
+    icons: crimsonIcons,
+    profile: SkyBlockCrimsonProfile,
+  },
 } satisfies Record<string, SkyBlockCard>;
 
 type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
@@ -248,6 +255,11 @@ export class SkyBlockCommand {
   @SubCommand({ description: (t) => t("commands.skyblock-level"), args: [PlayerArgument] })
   public level(context: CommandContext) {
     return this.run(context, "level");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-crimson"), args: [PlayerArgument] })
+  public crimson(context: CommandContext) {
+    return this.run(context, "crimson");
   }
 
   @SubCommand({ description: (t) => t("commands.skyblock-price"), args: [new ItemArgument()] })
