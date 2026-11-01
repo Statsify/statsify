@@ -220,7 +220,9 @@ function NametagPanel({
           {page.guild?.tagFormatted && (
             <>
               {" "}
-              <MinecraftText>{page.guild.tagFormatted}</MinecraftText>
+              <Link to="/{-$locale}/guild/$name" params={{ name: page.guild.name }} className="hover:underline">
+                <MinecraftText>{page.guild.tagFormatted}</MinecraftText>
+              </Link>
             </>
           )}
         </h1>
@@ -413,7 +415,16 @@ function PlayerFacts({
     <div className={cn("grid grid-cols-1 sm:grid-cols-2 sm:[&>:last-child:nth-child(odd)]:col-span-2", BOX_GAP, className)}>
       {guild && (
         <Fact>
-          <InlineStat label={t("default:stats.guild.guild")} value={guild.name} color="text-mc-dark-green" large />
+          <InlineStat
+            label={t("default:stats.guild.guild")}
+            value={(
+              <Link to="/{-$locale}/guild/$name" params={{ name: guild.name }} className={cn(STAT_LINK, "after:inset-0")}>
+                {guild.name}
+              </Link>
+            )}
+            color="text-mc-dark-green"
+            large
+          />
         </Fact>
       )}
       <Fact>

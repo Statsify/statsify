@@ -8,6 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import { Guild, Player } from "@statsify/schemas";
+import { GuildModule } from "#guild";
 import { Module } from "@nestjs/common";
 import { ORPCError, ORPCModule, onError } from "@orpc/nest";
 import { PlayerModule } from "#player";
@@ -17,6 +18,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
   imports: [
+    GuildModule,
     PlayerModule,
     TypegooseModule.forFeature([Player, Guild]),
     // oRPC answers errors itself, so the global `SentryInterceptor` never sees them. Contract errors

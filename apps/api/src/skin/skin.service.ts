@@ -66,14 +66,21 @@ export class SkinService {
     return drawHead(skin, size);
   }
 
-  /** A stored player's skin face, by name. Never asks Mojang, so search suggestions don't spend its rate limit. */
-  public async getStoredHead(name: string): Promise<Buffer> {
+  /**
+   * A skin face from the skin stored for a player, by a stored player's name or by UUID (Steve or Alex if none is
+   * stored). Never asks Mojang, so lists of heads (search suggestions, a guild's members) don't spend its rate limit.
+   */
+  public async getStoredHead(tag: string): Promise<Buffer> {
+    const uuid = tag.length > 16 ? tag.replaceAll("-", "").toLowerCase() : await this.storedUuid(tag);
+    const stored = await this.skinModel.findOne({ uuid }).select({ skinUrl: true }).lean().exec();
+    const { skin } = await resolveSkin(uuid, stored?.skinUrl);
+    return drawHead(skin, 8);
+  }
+
+  private async storedUuid(name: string): Promise<string> {
     const player = await this.playerModel.findOne({ usernameToLower: name.toLowerCase() }).select({ uuid: true }).lean().exec();
     if (!player) throw new PlayerNotFoundException();
-
-    const stored = await this.skinModel.findOne({ uuid: player.uuid }).select({ skinUrl: true }).lean().exec();
-    const { skin } = await resolveSkin(player.uuid, stored?.skinUrl);
-    return drawHead(skin, 8);
+    return player.uuid;
   }
 
   public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {

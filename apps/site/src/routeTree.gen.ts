@@ -36,6 +36,8 @@ import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as ApiSkinHeadRouteImport } from './routes/api/skin/head'
 import { Route as ApiSkinRenderRouteImport } from './routes/api/skin/render'
 import { Route as ApiSkinTextureRouteImport } from './routes/api/skin/texture'
+import { Route as Char123LocaleChar125GuildIndexRouteImport } from './routes/{-$locale}/guild/index'
+import { Route as Char123LocaleChar125GuildNameRouteImport } from './routes/{-$locale}/guild/$name'
 import { Route as Char123LocaleChar125LeaderboardsIndexRouteImport } from './routes/{-$locale}/leaderboards/index'
 import { Route as Char123LocaleChar125LeaderboardsFieldRouteImport } from './routes/{-$locale}/leaderboards/$field'
 import { Route as Char123LocaleChar125PlayerIndexRouteImport } from './routes/{-$locale}/player/index'
@@ -161,6 +163,18 @@ const ApiSkinTextureRoute = ApiSkinTextureRouteImport.update({
   path: '/api/skin/texture',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char123LocaleChar125GuildIndexRoute =
+  Char123LocaleChar125GuildIndexRouteImport.update({
+    id: '/guild/',
+    path: '/guild/',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125GuildNameRoute =
+  Char123LocaleChar125GuildNameRouteImport.update({
+    id: '/guild/$name',
+    path: '/guild/$name',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
 const Char123LocaleChar125LeaderboardsIndexRoute =
   Char123LocaleChar125LeaderboardsIndexRouteImport.update({
     id: '/leaderboards/',
@@ -226,8 +240,10 @@ export interface FileRoutesByFullPath {
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
   '/api/skin/texture': typeof ApiSkinTextureRoute
+  '/{-$locale}/guild/$name': typeof Char123LocaleChar125GuildNameRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
+  '/{-$locale}/guild/': typeof Char123LocaleChar125GuildIndexRoute
   '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
@@ -255,8 +271,10 @@ export interface FileRoutesByTo {
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
   '/api/skin/texture': typeof ApiSkinTextureRoute
+  '/{-$locale}/guild/$name': typeof Char123LocaleChar125GuildNameRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
+  '/{-$locale}/guild': typeof Char123LocaleChar125GuildIndexRoute
   '/{-$locale}/leaderboards': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
@@ -286,8 +304,10 @@ export interface FileRoutesById {
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
   '/api/skin/texture': typeof ApiSkinTextureRoute
+  '/{-$locale}/guild/$name': typeof Char123LocaleChar125GuildNameRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
+  '/{-$locale}/guild/': typeof Char123LocaleChar125GuildIndexRoute
   '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
@@ -318,8 +338,10 @@ export interface FileRouteTypes {
     | '/api/skin/head'
     | '/api/skin/render'
     | '/api/skin/texture'
+    | '/{-$locale}/guild/$name'
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/prestiges/bedwars'
+    | '/{-$locale}/guild/'
     | '/{-$locale}/leaderboards/'
     | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/$game'
@@ -347,8 +369,10 @@ export interface FileRouteTypes {
     | '/api/skin/head'
     | '/api/skin/render'
     | '/api/skin/texture'
+    | '/{-$locale}/guild/$name'
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/prestiges/bedwars'
+    | '/{-$locale}/guild'
     | '/{-$locale}/leaderboards'
     | '/{-$locale}/player'
     | '/{-$locale}/player/$name/$game'
@@ -377,8 +401,10 @@ export interface FileRouteTypes {
     | '/api/skin/head'
     | '/api/skin/render'
     | '/api/skin/texture'
+    | '/{-$locale}/guild/$name'
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/prestiges/bedwars'
+    | '/{-$locale}/guild/'
     | '/{-$locale}/leaderboards/'
     | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/$game'
@@ -553,6 +579,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSkinTextureRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/{-$locale}/guild/': {
+      id: '/{-$locale}/guild/'
+      path: '/guild'
+      fullPath: '/{-$locale}/guild/'
+      preLoaderRoute: typeof Char123LocaleChar125GuildIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/guild/$name': {
+      id: '/{-$locale}/guild/$name'
+      path: '/guild/$name'
+      fullPath: '/{-$locale}/guild/$name'
+      preLoaderRoute: typeof Char123LocaleChar125GuildNameRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
     '/{-$locale}/leaderboards/': {
       id: '/{-$locale}/leaderboards/'
       path: '/leaderboards'
@@ -612,8 +652,10 @@ interface Char123LocaleChar125RouteChildren {
   Char123LocaleChar125PrivacyRoute: typeof Char123LocaleChar125PrivacyRoute
   Char123LocaleChar125TermsRoute: typeof Char123LocaleChar125TermsRoute
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
+  Char123LocaleChar125GuildNameRoute: typeof Char123LocaleChar125GuildNameRoute
   Char123LocaleChar125LeaderboardsFieldRoute: typeof Char123LocaleChar125LeaderboardsFieldRoute
   Char123LocaleChar125PrestigesBedwarsRoute: typeof Char123LocaleChar125PrestigesBedwarsRoute
+  Char123LocaleChar125GuildIndexRoute: typeof Char123LocaleChar125GuildIndexRoute
   Char123LocaleChar125LeaderboardsIndexRoute: typeof Char123LocaleChar125LeaderboardsIndexRoute
   Char123LocaleChar125PlayerIndexRoute: typeof Char123LocaleChar125PlayerIndexRoute
   Char123LocaleChar125PlayerNameGameRoute: typeof Char123LocaleChar125PlayerNameGameRoute
@@ -628,10 +670,12 @@ const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
   Char123LocaleChar125PrivacyRoute: Char123LocaleChar125PrivacyRoute,
   Char123LocaleChar125TermsRoute: Char123LocaleChar125TermsRoute,
   Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
+  Char123LocaleChar125GuildNameRoute: Char123LocaleChar125GuildNameRoute,
   Char123LocaleChar125LeaderboardsFieldRoute:
     Char123LocaleChar125LeaderboardsFieldRoute,
   Char123LocaleChar125PrestigesBedwarsRoute:
     Char123LocaleChar125PrestigesBedwarsRoute,
+  Char123LocaleChar125GuildIndexRoute: Char123LocaleChar125GuildIndexRoute,
   Char123LocaleChar125LeaderboardsIndexRoute:
     Char123LocaleChar125LeaderboardsIndexRoute,
   Char123LocaleChar125PlayerIndexRoute: Char123LocaleChar125PlayerIndexRoute,

@@ -8,7 +8,8 @@
     "notFound": {
       "player": "Player Not Found | Statsify",
       "page": "Not Found | Statsify",
-      "leaderboard": "Leaderboard Not Found | Statsify"
+      "leaderboard": "Leaderboard Not Found | Statsify",
+      "guild": "Guild Not Found | Statsify"
     },
     "bingo": {
       "playerTitle": "{{name}} Bingo Stats | Statsify",
@@ -19,6 +20,10 @@
     "search": {
       "title": "Search | Statsify",
       "description": "Search players to view their Hypixel stats."
+    },
+    "guilds": {
+      "title": "Guild Search | Statsify",
+      "description": "Search a Hypixel guild to view its level, GEXP and members."
     },
     "glossary": {
       "title": "Stat Glossary | Statsify",
@@ -37,6 +42,10 @@
       "title": "{{name}} {{page}} | Statsify",
       "lead": "{{name}} {{game}} stats:",
       "description": "View {{name}} Hypixel {{game}} stats on Statsify."
+    },
+    "guild": {
+      "title": "{{name}} Guild Stats | Statsify",
+      "lead": "{{name}} guild stats:"
     },
     "leaderboard": {
       "gameTitle": "{{game}} Leaderboards | Statsify",
@@ -62,6 +71,7 @@
     "players": "Players",
     "leaderboards": "Leaderboards",
     "bingo": "Bingo",
+    "guilds": "Guilds",
     "external": "Statsify elsewhere",
     "newTab": "(opens in a new tab)",
     "loading": "Loading",
@@ -146,6 +156,28 @@
       "limited": "Too many lookups right now, try again in {{time}}.",
       "unavailable": "Hypixel didn't respond. Try again in a minute.",
       "error": "The lookup didn't go through. Try again in a moment."
+    }
+  },
+  "guild": {
+    "info": "Guild Info",
+    "description": "Guild Description",
+    "preferredGames": "Preferred Games",
+    "exp": "Guild Experience",
+    "history": "GEXP History",
+    "byGame": "GEXP by Game",
+    "members": "Members",
+    "member": "Member",
+    "memberCount": "{{count}}/125",
+    "unlisted": "{{count}} not listed: Statsify hasn't seen them yet.",
+    "search": {
+      "heading": "Search Hypixel Guilds",
+      "label": "Search guilds",
+      "placeholder": "Search a guild..."
+    },
+    "notFound": {
+      "title": "Guild Not Found",
+      "description": "We haven't seen a guild called {{name}} yet. Check the spelling, or ask Hypixel to look it up.",
+      "unknown": "Hypixel doesn't know a guild called {{name}} either. Check the spelling."
     }
   },
   "leaderboards": {

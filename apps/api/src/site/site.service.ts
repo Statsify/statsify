@@ -7,7 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { CacheLevel } from "@statsify/api-client";
+import { CacheLevel, GuildNotFoundException, GuildQuery } from "@statsify/api-client";
 import {
   Guild,
   type LeaderboardEnabledMetadata,
@@ -24,6 +24,7 @@ import {
   previewIdentity,
   skywarsPreview,
 } from "./home-previews.js";
+import { GuildService } from "#guild";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { HypixelUnavailableError } from "#hypixel";
@@ -33,6 +34,7 @@ import type {
   GameInput,
   GamePage,
   Glossary,
+  GuildPage,
   GuildPreview,
   HomePreviews,
   LeaderboardGame,
@@ -50,6 +52,7 @@ import type {
   Suggestion,
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
+import { buildGuildPage } from "./guild-page.js";
 import { freshness } from "./cooldown.js";
 import { siteName } from "./names.js";
 import { buildGlossary, buildPrestigeSheet } from "./content.js";
@@ -145,8 +148,8 @@ const tooManyRequests = (retryAfter: number) =>
   });
 
 /**
- * Strict cache-only reads for the site. Nothing here calls Hypixel except `refresh` and
- * `lookup`, which first pass the per-address and global budgets kept in Redis.
+ * Strict cache-only reads for the site. Nothing here calls Hypixel except `refresh`, `lookup`
+ * and `lookupGuild`, which first pass the per-address and global budgets kept in Redis.
  */
 @Injectable()
 export class SiteService implements OnApplicationBootstrap {
@@ -164,6 +167,7 @@ export class SiteService implements OnApplicationBootstrap {
   public constructor(
     private readonly playerService: PlayerService,
     private readonly playerSearchService: PlayerSearchService,
+    private readonly guildService: GuildService,
     @InjectModel(Player) private readonly playerModel: PlayerModel,
     @InjectModel(Guild) private readonly guildModel: GuildModel,
     @InjectRedis() private readonly redis: Redis
@@ -263,6 +267,35 @@ export class SiteService implements OnApplicationBootstrap {
     await this.redis.del(missKey(key));
 
     return { uuid: player.uuid, username: player.username, updatedAt: freshness(player).updatedAt };
+  }
+
+  /**
+   * A guild the API hasn't stored, from Hypixel by name, within the same budgets as `lookup`: one call, with members
+   * named from stored players only. Unlike `lookup` it keeps no miss.
+   */
+  public async lookupGuild(name: string, clientIp: string): Promise<{ name: string }> {
+    const known: Pick<Guild, "name"> | null = await this.guildModel
+      .findOne()
+      .where("nameToLower")
+      .equals(name.toLowerCase())
+      .select({ _id: false, name: true })
+      .lean()
+      .exec();
+
+    if (known) return known;
+
+    await this.consumeBudget(clientIp);
+
+    const lookup = this.guildService.get(name, GuildQuery.NAME, CacheLevel.CACHE, { namesFromHypixel: false, throwOnHypixelError: true });
+
+    const guild = await lookup.catch((error: unknown) => {
+      if (error instanceof GuildNotFoundException) return null;
+      if (error instanceof HypixelUnavailableError) throw hypixelUnavailable();
+      throw error;
+    });
+
+    if (!guild) throw notFound("Guild not found");
+    return { name: guild.name };
   }
 
   public async suggest(query: string): Promise<Suggestion[]> {
@@ -367,6 +400,13 @@ export class SiteService implements OnApplicationBootstrap {
     if (!player) throw notFound();
 
     return { ...buildGamePage(player, layout, mode, submode, period), games: gameNav(player.stats) };
+  }
+
+  /** A stored guild by its name in any case. One the API has never fetched is NOT_FOUND, for `lookupGuild` to fetch. */
+  public async guild(name: string): Promise<GuildPage> {
+    const document: Guild | null = await this.guildModel.findOne().where("nameToLower").equals(name.toLowerCase()).lean().exec();
+    if (!document) throw notFound("Guild not found");
+    return buildGuildPage(deserialize(Guild, flatten(document)));
   }
 
   /** The home page's previews, each loaded on its own so one missing player hides one section. */
@@ -655,7 +695,7 @@ if (import.meta.vitest) {
       })),
     };
     const playerService = { get: vi.fn(async () => null) };
-    const stubs = [playerService, undefined, { findOne: () => query }, undefined, redis];
+    const stubs = [playerService, undefined, undefined, { findOne: () => query }, undefined, redis];
     const service = new SiteService(...(stubs as unknown as ConstructorParameters<typeof SiteService>));
 
     await expect(service.refresh("a", "203.0.113.7", true)).rejects.toMatchObject({ code: "TOO_MANY_REQUESTS" });

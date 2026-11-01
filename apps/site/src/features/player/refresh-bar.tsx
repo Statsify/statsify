@@ -225,7 +225,7 @@ export const savedDate = (updatedAt: number, locale: string) => fullDate(updated
  * "Updated 17 minutes ago", with the save's full date on hover, focus or tap. Not while hydrating, so the server's HTML
  * carries neither clock nor zone; `ClockScript` writes the text until then.
  */
-function UpdatedAt({ updatedAt, now }: { updatedAt: number; now: number }) {
+export function UpdatedAt({ updatedAt, now }: { updatedAt: number; now: number }) {
   const { t, i18n } = useTranslation();
   const text = t("player.updated", { time: relativeTime(updatedAt, now, i18n.language) });
   const date = savedDate(updatedAt, i18n.language);

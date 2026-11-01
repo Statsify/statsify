@@ -18,6 +18,13 @@ export const minigameXpBar = (percentage: number) => {
   return `§8[§b${"■".repeat(count)}§7${"■".repeat(max - count)}§8]`;
 };
 
+/** A guild's level bar in its tag's colour (`§6`), as the bot's guild card draws it. */
+export const guildXpBar = (colour: string) => (percentage: number) => {
+  const max = 40;
+  const count = Math.ceil(max * percentage);
+  return `§8[${colour}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]`;
+};
+
 export function Progression({
   label,
   metric,

@@ -13,13 +13,13 @@ import { Implement, implement } from "@orpc/nest";
 import { SiteService } from "./site.service.js";
 import { contract } from "@statsify/contract";
 
-/** Every procedure; `refresh` and `lookup` weigh 2. */
+/** Every procedure; `refresh` and the lookups weigh 2. */
 const SITE_ONLY = { role: AuthRole.SITE, siteUnlimited: true };
 
 /**
  * The site's oRPC procedures under `/rpc`. They need a key with `AuthRole.SITE` or above, so a developer
  * key can't spend the site's Hypixel budget, and the site's key is never rate limited here. Reads answer from Mongo
- * and Redis; `refresh` and `lookup` are the only Hypixel paths.
+ * and Redis; `refresh` and the lookups are the only Hypixel paths.
  */
 @Controller("/rpc")
 @ApiExcludeController()
@@ -70,6 +70,18 @@ export class SiteController {
     return implement(contract.player.lookup).handler(({ input }) =>
       this.siteService.lookup(input.name, input.clientIp)
     );
+  }
+
+  @Auth(SITE_ONLY)
+  @Implement(contract.guild.page)
+  public guildPage() {
+    return implement(contract.guild.page).handler(({ input }) => this.siteService.guild(input.name));
+  }
+
+  @Auth({ ...SITE_ONLY, weight: 2 })
+  @Implement(contract.guild.lookup)
+  public lookupGuild() {
+    return implement(contract.guild.lookup).handler(({ input }) => this.siteService.lookupGuild(input.name, input.clientIp));
   }
 
   @Auth(SITE_ONLY)
