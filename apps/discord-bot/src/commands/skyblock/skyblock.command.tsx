@@ -97,7 +97,13 @@ export interface SkyBlockCard {
   /** Never the museum: its response also leaves out a member who donated nothing, so networth notes it instead. */
   settings: Exclude<keyof ApiSettings, "museum">[];
   icons?: (member: MemberView) => ItemTexture[];
-  profile: SkyBlockProfile | { label: LocalizationString; profile: SkyBlockProfile }[];
+  profile: SkyBlockProfile | SkyBlockSubPage[];
+}
+
+interface SkyBlockSubPage {
+  label: LocalizationString;
+  profile: SkyBlockProfile;
+  icons?: SkyBlockCard["icons"]; // in place of the card's
 }
 
 export const SKYBLOCK_CARDS = {
@@ -145,8 +151,18 @@ export const SKYBLOCK_CARDS = {
   accessories: {
     sections: ["accessories"],
     settings: ["inventory"],
-    icons: accessoryIcons,
-    profile: SkyBlockAccessoriesProfile,
+    profile: [
+      {
+        label: (t) => t("skyblock.accessories"),
+        profile: (props) => <SkyBlockAccessoriesProfile {...props} page="missing" />,
+        icons: accessoryIcons("missing"),
+      },
+      {
+        label: (t) => t("skyblock.inactive"),
+        profile: (props) => <SkyBlockAccessoriesProfile {...props} page="inactive" />,
+        icons: accessoryIcons("inactive"),
+      },
+    ],
   },
   level: {
     sections: ["level"],
@@ -282,9 +298,9 @@ export class SkyBlockCommand {
       getView(summaries[0].id),
     ]);
 
-    const generator = (id: string, Profile: SkyBlockProfile) => async (t: LocalizeFunction) => {
+    const generator = (id: string, Profile: SkyBlockProfile, iconsOf = card.icons) => async (t: LocalizeFunction) => {
       const view = await getView(id);
-      const icons = await loadItemIcons(card.icons?.(view.member) ?? []);
+      const icons = await loadItemIcons(iconsOf?.(view.member) ?? []);
       const title = skyBlockTitle(t, view, name);
 
       const canvas = render(
@@ -314,7 +330,7 @@ export class SkyBlockCommand {
       const page = { label: cuteName, emoji: GAME_MODES[gameMode].emoji };
 
       if (Array.isArray(card.profile)) {
-        const subPages = card.profile.map(({ label, profile }) => ({ label, generator: generator(id, profile) }));
+        const subPages = card.profile.map(({ label, profile, icons }) => ({ label, generator: generator(id, profile, icons) }));
         return { ...page, subPages };
       }
 
