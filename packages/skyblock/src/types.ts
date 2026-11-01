@@ -282,7 +282,7 @@ export interface ItemView {
   id: string; // vanilla items: "minecraft:<id>:<damage>"
   uuid?: string;
   name: string;
-  lore: string[]; // § codes kept
+  lore: string[]; // § codes kept, as 1.8 draws them (normalizeItemText)
   rarity?: Rarity;
   count: number;
   glint: boolean;
