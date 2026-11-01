@@ -7,31 +7,27 @@
  */
 
 import { RARITIES, type ItemView, type ItemsResource, type Rarity, type RawItem } from "#types";
+import { normalizeItemText } from "./lore.js";
 import { removeFormatting } from "@statsify/util";
 import { skinHash, textureOf } from "#textures";
 
-// Longest first, so "VERY SPECIAL" wins over "SPECIAL" and "UNCOMMON" over "COMMON". Shiny items say "SHINY MYTHIC …".
-const RARITY_LINE = new RegExp(
-  `^(?:a )?(?:SHINY )?(${RARITIES.map((rarity) => rarity.replace("_", " "))
-    .toSorted((a, b) => b.length - a.length)
-    .join("|")})\\b`
-);
+// LEGENJERRY is how Jerry's cosmetics name Legendary (the wiki's Rarity page)
+const RARITY_LINE = new RegExp(`^(?:SHINY )?(${[...RARITIES.map((rarity) => rarity.replace("_", " ")), "LEGENJERRY"].join("|")})\\b`);
 
-/** Recombobulated items wrap the last lore line in obfuscated "a"s: "§d§l§ka§r §d§lMYTHIC ACCESSORY §d§l§ka". */
 function rarityOf(lore: readonly string[]): Rarity | undefined {
-  const rarity = RARITY_LINE.exec(removeFormatting(lore.at(-1) ?? "").trim())?.[1];
+  const rarity = RARITY_LINE.exec(removeFormatting(lore.at(-1) ?? "").trim())?.[1].replace("LEGENJERRY", "LEGENDARY");
   return rarity?.replace(" ", "_") as Rarity | undefined;
 }
 
 export function toItemView(item: RawItem): ItemView {
   const attributes = item.tag?.ExtraAttributes ?? {};
   const id = attributes.id ?? `minecraft:${item.id}:${item.Damage}`;
-  const lore = item.tag?.display?.Lore ?? [];
+  const lore = (item.tag?.display?.Lore ?? []).map(normalizeItemText);
 
   return {
     id,
     uuid: attributes.uuid,
-    name: item.tag?.display?.Name ?? id,
+    name: normalizeItemText(item.tag?.display?.Name ?? id),
     lore,
     rarity: rarityOf(lore),
     count: item.Count,
@@ -89,9 +85,9 @@ if (import.meta.vitest) {
 
   test("rarityOf reads the last lore line", () => {
     expect(rarityOf(["§7Stuff", "§6§lLEGENDARY DUNGEON BOOTS"])).toBe("LEGENDARY");
-    expect(rarityOf(["§d§l§ka§r §d§lMYTHIC ACCESSORY §d§l§ka"])).toBe("MYTHIC");
+    expect(rarityOf(["§d§l§r §d§lMYTHIC ACCESSORY §r§d§l"])).toBe("MYTHIC");
     expect(rarityOf(["§c§lVERY SPECIAL HATCESSORY"])).toBe("VERY_SPECIAL");
-    expect(rarityOf(["§d§l§ka§r §d§lSHINY MYTHIC DUNGEON SWORD §d§l§ka"])).toBe("MYTHIC");
+    expect(rarityOf(["§d§l§r §d§lSHINY MYTHIC DUNGEON SWORD §r§d§l"])).toBe("MYTHIC");
     expect(rarityOf(["§a§lUNCOMMON"])).toBe("UNCOMMON");
     expect(rarityOf(["§7A rare find"])).toBeUndefined();
     expect(rarityOf([])).toBeUndefined();
