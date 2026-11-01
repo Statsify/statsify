@@ -258,8 +258,8 @@ if (import.meta.vitest) {
       class CommandWithArgs {}
 
       expect(
-        CommandBuilder.scan(new BaseCommand(), BaseCommand).equals(
-          CommandBuilder.scan(new CommandWithArgs(), CommandWithArgs)
+        scanCommands(new BaseCommand(), BaseCommand).equals(
+          scanCommands(new CommandWithArgs(), CommandWithArgs)
         )
       ).toBe(false);
     });
