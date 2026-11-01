@@ -11,6 +11,7 @@ import { RARITIES, type ItemTexture, type ItemsResource, type Level, type PetVie
 import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
 import { prettify } from "@statsify/util";
+import { resourceTexture } from "#textures";
 import type { RawMember, RawPet } from "#raw";
 
 export const PET_RARITIES = RARITIES.slice(0, 6);
@@ -50,6 +51,7 @@ export function petTexture(type: string, rarity: Rarity, skin?: string | null, i
 
 function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
   const rarity = boostedRarity(pet);
+  const heldResource = pet.heldItem ? items?.items[pet.heldItem] : undefined;
 
   return {
     uuid: pet.uuid ?? undefined,
@@ -58,6 +60,7 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
     rarity,
     level: getPetLevel(pet, rarity),
     heldItem: pet.heldItem ?? undefined,
+    heldItemTexture: heldResource && resourceTexture(heldResource),
     skin: pet.skin ?? undefined,
     candyUsed: pet.candyUsed ?? 0,
     active: pet.active,
@@ -72,10 +75,14 @@ export const petScorePoints = (tier: string) => PET_RARITIES.indexOf(tier as Rar
  * Pet score: one pet per type counts, the one with the best rarity from the API's tier (which leaves out Tier Boost),
  * then the highest level. It scores Common 1 … Mythic 6, plus 1 if it's at max level. Special and Very Special pets
  * never count. Pets are sorted active first, then by rarity and XP.
+ *
+ * Montezuma lives in the Rift's dead_cats, where its active flag means summoned in the Rift. It's listed but doesn't
+ * score: counting it would put members above their highest_pet_score.
  */
 export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
   const raw = member.pets_data?.pets ?? [];
-  const views = raw.map((pet) => toPetView(pet, items));
+  const montezuma = member.rift?.dead_cats?.montezuma;
+  const views = [...raw, ...(montezuma ? [{ ...montezuma, active: false }] : [])].map((pet) => toPetView(pet, items));
 
   const best = new Map<string, { points: number; level: PetView["level"] }>();
   for (const [i, pet] of raw.entries()) {
@@ -96,6 +103,7 @@ export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
     score: add(...Array.from(best.values(), ({ points, level }) => points + Number(level.level === level.maxLevel))),
     active: pets.find((pet) => pet.active),
     pets,
+    totalXp: member.player_stats?.pets?.total_exp_gained ?? 0,
   };
 }
 
