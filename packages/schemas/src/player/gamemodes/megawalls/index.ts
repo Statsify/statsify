@@ -8,7 +8,7 @@
 
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { collectLayouts, legacyToken, slotSlots } from "#layouts";
+import { LEGACY_LAYOUT, collectLayouts } from "#layouts";
 import { MegaWallsKit, MegaWallsOverall } from "./kit.js";
 import type { APIData } from "@statsify/util";
 
@@ -147,7 +147,7 @@ export class MegaWalls {
     this.coins = data.coins;
     this.mythicFavor = data.mythic_favor;
     this.class = data.chosen_class ?? "none";
-    this.layouts = collectLayouts(data, /^(.+)Inventory$/, (layout) => slotSlots(layout, legacyToken));
+    this.layouts = collectLayouts(data, /^(.+)Inventory$/, LEGACY_LAYOUT);
 
     this.angel = new MegaWallsKit(data, "angel");
     this.arcanist = new MegaWallsKit(data, "arcanist");

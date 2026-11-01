@@ -9,15 +9,72 @@
 import type { APIData } from "@statsify/util";
 
 /**
- * A game's inventory layouts are stored as one string, `name=slot0,slot1,,slot3;name=…`, so
- * a player with every kit arranged adds a few KB rather than an array element per slot.
- * Slots hold Hypixel's own item tokens and an empty slot is an empty string. A run of four or
- * more empty slots is written `*N` (`a,*26,b` puts b in slot 27), since kits often leave the
- * inventory empty between the hotbar and the armour, and trailing empty slots are left off.
- * A SkyWars slot can hold several tokens joined by `+`, one for each item a kit level could
- * put there.
+ * A game's inventory layouts are stored as one string, `name=slot0,slot1,,slot3;name=…`, so a
+ * player with every kit arranged adds a few KB rather than an array element per slot. Slots hold
+ * Hypixel's own item tokens, a run of four or more empty slots is `*N` and trailing empty slots
+ * are left off. A SkyWars slot can hold several tokens joined by `+`.
  */
-export type Slots = (string | undefined)[];
+type Slots = (string | undefined)[];
+
+/** How a game sends its layouts, as slot tokens and back */
+export interface LayoutShape<T> {
+  slots(layout: T): Slots;
+  layout(slots: string[]): T;
+}
+
+/** Comma-separated lists with "null" for an empty slot, like BedWars' quick buy */
+export const LIST_LAYOUT: LayoutShape<string> = {
+  slots: (list) => list.split(",").map((slot) => (slot === "null" ? undefined : slot)),
+  layout: (slots) => slots.map((slot) => slot || "null").join(","),
+};
+
+/** `{ slot: token }`, as Duels sends layouts */
+export const SLOT_LAYOUT: LayoutShape<Record<string, string>> = {
+  slots(layout) {
+    const slots: Slots = [];
+    for (const [slot, token] of Object.entries(layout)) slots[Number(slot)] = token;
+    return slots;
+  },
+  layout: (slots) => Object.fromEntries(slots.flatMap((token, slot) => (token ? [[slot, token]] : []))),
+};
+
+/** `{ slot: "id,damage" }`, as Blitz and Mega Walls send layouts, stored as `id:damage` without a damage of 0 */
+export const LEGACY_LAYOUT: LayoutShape<Record<string, string>> = {
+  slots: (layout) => SLOT_LAYOUT.slots(layout).map((token) => token?.replace(/,0$/, "").replace(",", ":")),
+  layout: (slots) => SLOT_LAYOUT.layout(slots.map((token) => token && (token.includes(":") ? token.replace(":", ",") : `${token},0`))),
+};
+
+/**
+ * `{ "ITEM:damage:enchantments": slot | slot[] }`, as SkyWars sends kit layouts, stored without a
+ * damage of 0 and with the enchantment ids joined by `/`, since commas separate slots
+ */
+export const ITEM_LAYOUT: LayoutShape<Record<string, string | number[]>> = {
+  slots(layout) {
+    const slots: Slots = [];
+
+    for (const [item, value] of Object.entries(layout)) {
+      const token = item.replace(/^([^:]+):0$/, "$1").replaceAll(",", "/");
+
+      for (const slot of [value].flat().map(Number)) {
+        slots[slot] = slots[slot] ? `${slots[slot]}+${token}` : token;
+      }
+    }
+
+    return slots;
+  },
+  layout(slots) {
+    const layout: Record<string, number[]> = {};
+
+    for (const [slot, tokens] of slots.entries()) {
+      for (const token of tokens ? tokens.split("+") : []) {
+        const item = (token.includes(":") ? token : `${token}:0`).replaceAll("/", ",");
+        (layout[item] ??= []).push(slot);
+      }
+    }
+
+    return layout;
+  },
+};
 
 const MIN_SKIP = 4;
 
@@ -50,84 +107,58 @@ export function encodeLayouts(layouts: [name: string, slots: Slots][]) {
     .join(";");
 }
 
-export function parseLayouts(layouts: string) {
-  return new Map(
-    layouts ?
-      layouts.split(";").map((layout) => {
-        const [name, slots] = layout.split("=");
-
-        return [
-          name,
-          slots
-            .split(",")
-            .flatMap((slot) =>
-              slot.startsWith("*") ? Array.from({ length: Number(slot.slice(1)) }, () => "") : [slot],
-            ),
-        ];
-      }) :
-      [],
-  );
-}
-
 /** Every layout in `data` whose key matches `key`, named by the key's first capture */
-export function collectLayouts(data: APIData, key: RegExp, slots: (layout: APIData) => Slots) {
-  return encodeLayouts(
+export const collectLayouts = <T>(data: APIData, key: RegExp, shape: LayoutShape<T>) =>
+  encodeLayouts(
     Object.entries(data).flatMap(([name, layout]): [string, Slots][] => {
       const match = key.exec(name);
-      return match && typeof layout === "object" ? [[match[1], slots(layout)]] : [];
+      return match && typeof layout === "object" ? [[match[1], shape.slots(layout)]] : [];
+    }),
+  );
+
+/** Stored layouts by name, each back in the shape Hypixel sends it */
+export function decodeLayouts<T>(layouts: string | undefined, shape: LayoutShape<T>) {
+  return new Map(
+    (layouts ? layouts.split(";") : []).map((layout) => {
+      const [name, packed] = layout.split("=");
+
+      const slots = packed
+        .split(",")
+        .flatMap((slot) => (slot.startsWith("*") ? Array.from({ length: Number(slot.slice(1)) }, () => "") : [slot]));
+
+      return [name, shape.layout(slots)];
     }),
   );
 }
 
-/** Comma-separated lists with "null" for an empty slot, like BedWars' quick buy */
-export const listSlots = (list?: string): Slots =>
-  list?.split(",").map((slot) => (slot === "null" ? undefined : slot)) ?? [];
-
-/** `{ slot: token }`, as Duels, Blitz and Mega Walls send layouts */
-export function slotSlots(layout: APIData, token = (value: string) => value) {
-  const slots: Slots = [];
-
-  for (const [slot, value] of Object.entries(layout)) {
-    slots[Number(slot)] = token(String(value));
-  }
-
-  return slots;
-}
-
-/** `{ "ITEM:damage": slot | slot[] }`, as SkyWars sends kit layouts */
-export function itemSlots(layout: APIData) {
-  const slots: Slots = [];
-
-  for (const [item, value] of Object.entries(layout)) {
-    const token = item.replace(/:0$/, "");
-
-    for (const slot of [value].flat().map(Number)) {
-      slots[slot] = slots[slot] ? `${slots[slot]}+${token}` : token;
-    }
-  }
-
-  return slots;
-}
-
-/** Blitz and Mega Walls' `id,damage` tokens as `id:damage`, with a damage of 0 left off */
-export const legacyToken = (token: string) => token.replace(/,0$/, "").replace(",", ":");
-
 if (import.meta.vitest) {
   const { it, expect } = import.meta.vitest;
 
-  it("packs layouts into one string and reads them back", () => {
-    const layouts = encodeLayouts([
-      ["quickBuy", listSlots("wool,null,tnt,null")],
-      ["Scout", slotSlots({ 6: "345,0", 1: "373,16394", 0: "267,0" }, legacyToken)],
-      ["basic_solo_frog", itemSlots({ "IRON_BOOTS:0": "2", "DIAMOND_BOOTS:0": [2], "POTION:2": "0" })],
-      ["unused", listSlots("null,null")],
+  it("stores layouts as one string and reads them back as Hypixel sends them", () => {
+    const quickBuy = "wool,null,tnt,null";
+    const kit = { 0: "267,0", 1: "373,16394", 6: "345,0" };
+    const skywars = { "POTION:2": "0", "IRON_BOOTS:0": [2], "IRON_PICKAXE:0:32,34": [2], "DIAMOND_BOOTS:0:0": [3] };
+
+    const stored = [
+      encodeLayouts([["quickBuy", LIST_LAYOUT.slots(quickBuy)], ["unused", LIST_LAYOUT.slots("null,null")]]),
+      encodeLayouts([["Scout", LEGACY_LAYOUT.slots(kit)]]),
+      encodeLayouts([["basic_solo_frog", ITEM_LAYOUT.slots(skywars)]]),
+    ];
+
+    expect(stored).toEqual([
+      "quickBuy=wool,,tnt",
+      "Scout=267,373:16394,*4,345",
+      "basic_solo_frog=POTION:2,,IRON_BOOTS+IRON_PICKAXE:0:32/34,DIAMOND_BOOTS:0:0",
     ]);
 
-    expect(layouts).toBe(
-      "quickBuy=wool,,tnt;Scout=267,373:16394,*4,345;basic_solo_frog=POTION:2,,IRON_BOOTS+DIAMOND_BOOTS",
-    );
-    expect(parseLayouts(layouts).get("Scout")).toEqual(["267", "373:16394", "", "", "", "", "345"]);
-    expect(parseLayouts(layouts).get("basic_solo_frog")).toEqual(["POTION:2", "", "IRON_BOOTS+DIAMOND_BOOTS"]);
-    expect(parseLayouts("").size).toBe(0);
+    expect(decodeLayouts(stored[0], LIST_LAYOUT).get("quickBuy")).toBe("wool,null,tnt");
+    expect(decodeLayouts(stored[1], LEGACY_LAYOUT).get("Scout")).toEqual(kit);
+    expect(decodeLayouts(stored[2], ITEM_LAYOUT).get("basic_solo_frog")).toEqual({
+      "POTION:2": [0],
+      "IRON_BOOTS:0": [2],
+      "IRON_PICKAXE:0:32,34": [2],
+      "DIAMOND_BOOTS:0:0": [3],
+    });
+    expect(decodeLayouts("", SLOT_LAYOUT).size).toBe(0);
   });
 }

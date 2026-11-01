@@ -13,7 +13,7 @@ import {
 } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { encodeLayouts, listSlots } from "#layouts";
+import { LIST_LAYOUT, encodeLayouts } from "#layouts";
 import { Progression } from "#progression";
 import { Slumber } from "./slumber.js";
 import { deepSub } from "@statsify/math";
@@ -186,8 +186,8 @@ export class BedWars {
     this.selectedBrackets = data.active_prestige_bracket;
 
     this.layouts = encodeLayouts([
-      ["quickBuy", listSlots(data.favourites_2)],
-      ["hotbar", listSlots(data.favorite_slots)],
+      ["quickBuy", LIST_LAYOUT.slots(data.favourites_2 ?? "")],
+      ["hotbar", LIST_LAYOUT.slots(data.favorite_slots ?? "")],
     ]);
 
     this.exp = data.Experience || 0;

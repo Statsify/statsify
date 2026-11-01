@@ -9,7 +9,7 @@
 import { ChallengesSkyWars, SkyWarsMini, SkyWarsMode } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { collectLayouts, itemSlots } from "#layouts";
+import { ITEM_LAYOUT, collectLayouts } from "#layouts";
 import { Progression } from "#progression";
 import { add } from "@statsify/math";
 import { getFormattedLevel, getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
@@ -139,7 +139,7 @@ export class SkyWars {
     const isStrikethrough = data.levelFormattedWithBrackets?.includes("§m") ?? false;
 
     this.emblem = data.active_emblem;
-    this.layouts = collectLayouts(data, /^kit_(.+)_inventory$/, itemSlots);
+    this.layouts = collectLayouts(data, /^kit_(.+)_inventory$/, ITEM_LAYOUT);
     this.levelFormatted = getFormattedLevel(
       this.level,
       data.active_scheme,
