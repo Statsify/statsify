@@ -24,7 +24,7 @@ export const roundTo = (n: number, precision = 2) => {
  * @param n1 The numerator of the fraction
  * @param n2 The denominator of the fraction
  * @param multiply Whether to multiply the numerator and denominator, useful for percents, such as `bowAccuracy`
- * @returns The value of the fraction * the `multiply` value without rounding, for use in further calculations
+ * @returns The value of the fraction * the `multiply` value without rounding
  */
 export const unroundedRatio = (n1 = 0, n2 = 0, multiply = 1) => {
   const result = n1 / n2;
