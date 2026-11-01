@@ -133,8 +133,7 @@ export interface DungeonFloor {
   floor: number;
   played: number;
   completions: number;
-  bestScore?: number;
-  grade?: DungeonGrade; // the best score's
+  best?: { score: number; grade: DungeonGrade };
   fastest?: number;
   fastestS?: number;
   fastestSPlus?: number;
@@ -146,13 +145,13 @@ export type DungeonClass = (typeof DUNGEON_CLASSES)[number];
 
 export interface DungeonsSection {
   catacombs: Level;
-  classes: Record<string, Level>;
+  classes: Record<DungeonClass, Level>;
   classAverage: number;
   selectedClass?: string;
   secrets: number;
   floors: Record<"normal" | "master", DungeonFloor[]>;
   highestFloor: Partial<Record<"normal" | "master", number>>;
-  mostDamage: Record<"normal" | "master", Record<string, number>>; // by class, 0 for one never played
+  mostDamage: Record<"normal" | "master", Record<DungeonClass, number>>; // 0 for a class never played
   watcherKills: number;
   essence: Essence[];
 }

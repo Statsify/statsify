@@ -23,14 +23,13 @@ function floorsOf(type: RawDungeonType | undefined, first: number): DungeonFloor
   return Array.from({ length: 8 - first }, (_, i) => {
     const key = String(first + i);
     const completions = type?.tier_completions?.[key] ?? 0;
-    const bestScore = type?.best_score?.[key];
+    const score = type?.best_score?.[key];
     return {
       floor: first + i,
       // Master Mode often has no times_played, though every completion was a run
       played: Math.max(type?.times_played?.[key] ?? 0, completions),
       completions,
-      bestScore,
-      grade: bestScore === undefined ? undefined : dungeonGrade(bestScore),
+      best: score === undefined ? undefined : { score, grade: dungeonGrade(score) },
       fastest: type?.fastest_time?.[key],
       fastestS: type?.fastest_time_s?.[key],
       fastestSPlus: type?.fastest_time_s_plus?.[key],
@@ -41,7 +40,7 @@ function floorsOf(type: RawDungeonType | undefined, first: number): DungeonFloor
 const mostDamage = (type: RawDungeonType | undefined) =>
   Object.fromEntries(
     DUNGEON_CLASSES.map((name) => [name, Math.max(0, ...Object.values(type?.[`most_damage_${name}`] ?? {}))])
-  );
+  ) as DungeonsSection["mostDamage"]["normal"];
 
 // catacombs' counts include Master Mode runs, and master_catacombs never has any. The API's own "total" is often
 // below the floors' sum, so it's left out.
@@ -58,7 +57,7 @@ export function getDungeons(member: RawMember): DungeonsSection {
       name,
       getLevel(dungeons?.player_classes?.[name]?.experience ?? 0, LEVELING.catacombs, MAX_LEVEL, true),
     ])
-  );
+  ) as DungeonsSection["classes"];
 
   return {
     catacombs: getLevel(types?.catacombs?.experience ?? 0, LEVELING.catacombs, MAX_LEVEL, true),
