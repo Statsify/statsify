@@ -16,6 +16,7 @@ import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { createI18n } from "~/i18n/i18n";
 import { formatNumber } from "~/i18n/format";
 import { loadGlossaryWords } from "~/features/content/content-data";
+import { READING_SIZE } from "~/features/content/text-page";
 import { hasGameIcon } from "~/components/ui/game-icon";
 import { type EntryState, isGameKey, loadLeaderboardGame, loadLeaderboardPage, streamView, type LeaderboardView } from "~/features/leaderboards/leaderboard-data";
 import { type Crumb, SEARCH_DESCRIPTION_MAX, localeData, notFoundMeta, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
@@ -252,7 +253,7 @@ function LeaderboardPage({ view }: { view: LeaderboardView & { explanation?: Exp
           )}
           {/* What the stat is: a line that wraps reads from the start, not centred. */}
           {explanation && (
-            <p className="max-w-200 text-mc-1 text-mc-gray lg:text-mc-1.5">
+            <p className={`max-w-200 text-mc-gray ${READING_SIZE}`}>
               {explanation.text}{" "}
               <Link
                 to="/{-$locale}/glossary"

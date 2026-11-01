@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Article, CHIP, Paragraph, READING_LEADING, TextLink, TextPage } from "./text-page";
+import { Article, CHIP, Paragraph, READING_LEADING, READING_SIZE, TextLink, TextPage } from "./text-page";
 import { BOX_GAP, Box, HEADING_BOX } from "~/components/ui/box";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Link } from "@tanstack/react-router";
@@ -18,7 +18,7 @@ import { cn } from "~/lib/util";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import type { GlossaryGroup, GlossaryItem } from "./content-data";
 
-const TEXT = cn("max-w-[68ch] text-mc-1 text-mc-gray lg:text-mc-1.5", READING_LEADING);
+const TEXT = cn("max-w-[68ch] text-mc-gray", READING_SIZE, READING_LEADING);
 
 /**
  * What every stat the site shows means, grouped as the ratios, the stats several games share, then each game's own. Each
@@ -100,11 +100,11 @@ function Entry({ item, label, own }: { item: GlossaryItem; label: string; own: b
         <h3 className="text-mc-1.5 lg:text-mc-2">
           <MinecraftText>{`${colour}${label}`}</MinecraftText>
         </h3>
-        {item.name && <span className="text-mc-1 text-white lg:text-mc-1.5">{item.name}</span>}
+        {item.name && <span className={cn("text-white", READING_SIZE)}>{item.name}</span>}
       </div>
       <p className={`${TEXT} mt-2`}>{item.text}</p>
       {item.formula && <Formula formula={item.formula} label={label} colour={colour} />}
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 text-mc-1 text-mc-gray empty:hidden lg:text-mc-1.5">
+      <div className={cn("mt-3 flex flex-wrap items-center gap-x-4 text-mc-gray empty:hidden", READING_SIZE)}>
         {!own && (
           <span className="inline-flex min-h-11 items-center">
             {item.more > 0 ? t("glossary.usedInMore", { games, more: n(item.more) }) : t("glossary.usedIn", { games })}
@@ -146,7 +146,7 @@ function Formula({ formula, label, colour }: { formula: NonNullable<GlossaryItem
   const part = (key: string) => t(key, { ns: LABEL_NAMESPACES });
 
   return (
-    <p className="mt-3 flex flex-wrap items-center gap-x-1 gap-y-2 text-mc-1 lg:text-mc-1.5">
+    <p className={cn("mt-3 flex flex-wrap items-center gap-x-1 gap-y-2", READING_SIZE)}>
       <span className={`${CHIP} text-mc-green`}>{part(formula.numerator)}</span>
       <span className="px-0.5 text-mc-gray">÷</span>
       <span className={`${CHIP} text-mc-red`}>{part(formula.denominator)}</span>

@@ -11,9 +11,9 @@ import { extendTailwindMerge, validators } from "tailwind-merge";
 export const cn = extendTailwindMerge({
   extend: {
     classGroups: {
-      // `text-mc-2` sets the Minecraft font and size, so a later `text-mc-1.5` or `text-16` must win.
+      // `text-mc-2` sets the Minecraft font and size, so a later `text-mc-1.5`, `text-mc-snap-1.25` or `text-16` must win.
       // Without the plain `text-<n>` entry, tailwind-merge reads `text-16` as a colour and drops it next to `text-mc-gray`.
-      "font-size": [{ "text-mc": [validators.isNumber] }, { text: [validators.isNumber] }],
+      "font-size": [{ "text-mc": [validators.isNumber] }, { "text-mc-snap": [validators.isNumber] }, { text: [validators.isNumber] }],
     },
   },
 });

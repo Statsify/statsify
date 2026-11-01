@@ -8,7 +8,7 @@
 
 import appCss from "~/styles/app.css?url";
 import { CLOCK_SCRIPT } from "~/lib/clock";
-import { FONT_HOLD } from "~/lib/fonts";
+import { FONT_HOLD, PIXEL_RATIO_SCRIPT } from "~/lib/fonts";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext, useRouterState } from "@tanstack/react-router";
 import { LOGO_ICON } from "~/lib/tab-icon";
 import { SEARCH_SCRIPT } from "~/components/search";
@@ -37,7 +37,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       { rel: "preload", href: "/fonts/Minecraft Bold.ttf", as: "font", type: "font/ttf", crossOrigin: "anonymous" },
     ],
     styles: [{ children: FONT_HOLD.style }],
-    scripts: [{ children: FONT_HOLD.script }, { children: CLOCK_SCRIPT }, { children: SEARCH_SCRIPT }, { children: SKIN_FADE_SCRIPT }],
+    scripts: [{ children: FONT_HOLD.script }, { children: PIXEL_RATIO_SCRIPT }, { children: CLOCK_SCRIPT }, { children: SEARCH_SCRIPT }, { children: SKIN_FADE_SCRIPT }],
   }),
   shellComponent: RootDocument,
   component: Outlet,
@@ -58,7 +58,7 @@ function RootDocument({ children }: { children: ReactNode }) {
   const lang = useRouterState({ select: (state) => localeFromPath(state.location.pathname) });
 
   return (
-    // `/player`'s head script sets `--recent` on the root before React hydrates it.
+    // Head scripts set `--dpr`, and on `/player` `--recent`, on the root before React hydrates it.
     <html lang={lang} suppressHydrationWarning>
       <head>
         <HeadContent />

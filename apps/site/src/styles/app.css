@@ -55,6 +55,20 @@
   text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
 }
 
+/* Minecraft text as near 16px × N as the screen allows while staying sharp: a font pixel takes a whole number of
+   screen pixels near N × the screen's pixel ratio (`--dpr`, set before first paint). An even number where that's within
+   a quarter of the size, as the symbols (stars, emblems) are drawn in half pixels. `text-mc-snap-1.25` is the 20
+   between 16 and 24: 21.3 px on a 3× phone, 18.3 to 24.4 on Android ones, 16 on 2× and 1× screens. */
+@utility text-mc-snap-* {
+  --mc-x: calc(--value(number) * var(--dpr, 1));
+  --mc-even: calc(2 * round(nearest, var(--mc-x) / 2, 1));
+  --mc-fits: round(down, clamp(0, 1 + 1000 * (var(--mc-x) / 4 - max(var(--mc-even) - var(--mc-x), var(--mc-x) - var(--mc-even))), 1), 1);
+  --mc-px: calc(1px * (var(--mc-fits) * var(--mc-even) + (1 - var(--mc-fits)) * round(nearest, var(--mc-x), 1)) / var(--dpr, 1));
+  font-family: var(--font-minecraft);
+  font-size: calc(16 * var(--mc-px));
+  text-shadow: var(--mc-px) var(--mc-px) color-mix(in srgb, currentColor 25%, #000 75%);
+}
+
 /* The keyboard focus, drawn like the panels: a white ring on the pixel grid 2 px out from the control, with a hard
    2 px shadow under it and a dark gap between, so it shows on light buttons as well as dark panels. Every control gets
    it by default (`@layer base` below); this is for a part that shows another element's focus. */

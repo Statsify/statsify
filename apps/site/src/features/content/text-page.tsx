@@ -209,14 +209,17 @@ export function LegalPage({
 /** Room between the lines of a paragraph: the font's own spacing is the game's chat, too tight to read a page of. */
 export const READING_LEADING = "leading-[0.875]";
 
+/** Reading text's size: 20 that stays sharp on phones (`text-mc-snap-1.25`), 24 from `lg`. */
+export const READING_SIZE = "text-mc-snap-1.25 lg:text-mc-1.5";
+
 /**
- * A panel of reading text: Minecraft at 16, 24 from `lg`, lines kept to 68 characters. `lang` marks text that stays in
+ * A panel of reading text: Minecraft at `READING_SIZE`, lines kept to 68 characters. `lang` marks text that stays in
  * one language whatever the page's locale (the legal pages are English only).
  */
 export function Article({ children, lang, className }: { children: ReactNode; lang?: string; className?: string }) {
   return (
     <Box className={cn("content:p-4 lg:content:px-10 lg:content:pt-8 lg:content:pb-10", className)}>
-      <div lang={lang} className={cn("text-mc-1 text-mc-gray lg:text-mc-1.5 [--measure:68ch]", READING_LEADING)}>
+      <div lang={lang} className={cn(READING_SIZE, "text-mc-gray [--measure:68ch]", READING_LEADING)}>
         {children}
       </div>
     </Box>
@@ -243,7 +246,7 @@ export function Section({ id, title, lang, children }: { id: string; title: Reac
 }
 
 export function Subheading({ children }: { children: ReactNode }) {
-  return <h3 className="mt-4 -mb-2 text-mc-1 lg:text-mc-1.5 font-bold text-white">{children}</h3>;
+  return <h3 className={cn("mt-4 -mb-2 font-bold text-white", READING_SIZE)}>{children}</h3>;
 }
 
 export function Paragraph({ children }: { children: ReactNode }) {

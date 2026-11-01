@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CHIP, Callout, KeyTable, Paragraph, Section, Subheading, TextEmail, TextLink, TextPage } from "./text-page";
+import { CHIP, Callout, KeyTable, Paragraph, READING_SIZE, Section, Subheading, TextEmail, TextLink, TextPage } from "./text-page";
 import { Link } from "@tanstack/react-router";
 import { PointerText } from "~/components/ui/hint";
 import { Trans, useTranslation } from "react-i18next";
@@ -67,7 +67,7 @@ function SampleChip() {
     <Link
       to="/{-$locale}/leaderboards/$field"
       params={{ field: "stats.bedwars.overall.fkdr" }}
-      className={`${CHIP} mx-0.5 align-baseline text-mc-1 lg:text-mc-1.5 hover:bg-white/15`}
+      className={`${CHIP} mx-0.5 align-baseline ${READING_SIZE} hover:bg-white/15`}
     >
       <span className="text-mc-gray">{t("stats.fkdr", { ns: "default" })}:</span>
       <span className="text-mc-gold">{n(3.42)}</span>

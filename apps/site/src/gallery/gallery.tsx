@@ -103,6 +103,7 @@ const CAPTION = "text-mc-1 text-mc-gray";
 
 const MINECRAFT_SIZES = [
   ["text-mc-1", "16"],
+  ["text-mc-snap-1.25", "20"],
   ["text-mc-1.5", "24"],
   ["text-mc-2", "32"],
   ["text-mc-3", "48"],
