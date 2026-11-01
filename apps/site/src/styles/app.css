@@ -31,6 +31,16 @@
   }
 
   --animate-fade-out: fade-out 400ms ease-out forwards;
+
+  /* A tooltip opening (`Hint`): in quickly from 2 px lower. `transform`, since its place is set with `translate`. */
+  @keyframes tooltip-in {
+    from {
+      opacity: 0;
+      transform: translateY(2px);
+    }
+  }
+
+  --animate-tooltip-in: tooltip-in 120ms ease-out;
 }
 
 /* Minecraft text: 16px × N with an N px hard shadow. Use only N ∈ {1, 1.5, 2, 3, 4, 7}: 16, 24, 32, 48, 64 and 112 px,
