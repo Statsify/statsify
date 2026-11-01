@@ -23,7 +23,7 @@ interface TitleMode {
   score: number;
 }
 
-// Without the player's prefix scheme and icon, each title shows its division's own colour
+// Without the player's prefix scheme and icon, each title shows its division's own color
 const baseTitle = ({ mode, score }: TitleMode) =>
   getTitleAndProgression({ score, data: {}, ...DUELS_TITLES[mode] }).titleFormatted;
 
