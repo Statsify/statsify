@@ -145,7 +145,6 @@ export class Pit {
   @Field()
   public vampireHealing: number;
 
-  /** Hypixel's gzipped NBT in base64, as it arrives */
   @Field()
   public inventory: string;
 

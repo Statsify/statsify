@@ -81,7 +81,6 @@ export class BedWars {
   @Field()
   public selectedBrackets: string;
 
-  /** The quick buy and hotbar manager, see #layouts */
   @Field()
   public layouts: string;
 

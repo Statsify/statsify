@@ -202,7 +202,6 @@ export class Duels {
   @Field()
   public icon: string;
 
-  /** Kit layouts by their key without layout_ (uhc_duel_layout, mw_duel_herobrine), see #layouts */
   @Field()
   public layouts: string;
 

@@ -55,7 +55,6 @@ export class MegaWalls {
   @Field({ store: { default: "none" } })
   public class: string;
 
-  /** Class layouts (skeletonInventory is skeleton), see #layouts */
   @Field()
   public layouts: string;
 

@@ -8,12 +8,8 @@
 
 import type { APIData } from "@statsify/util";
 
-/**
- * A game's inventory layouts are stored as one string, `name=slot0,slot1,,slot3;name=…`, so a
- * player with every kit arranged adds a few KB rather than an array element per slot. Slots hold
- * Hypixel's own item tokens, a run of four or more empty slots is `*N` and trailing empty slots
- * are left off. A SkyWars slot can hold several tokens joined by `+`.
- */
+// A game's layouts are one string, `name=slot0,slot1,,slot3;name=…`, a few KB for every kit. A run
+// of four or more empty slots is `*N`, and a SkyWars slot can hold several tokens joined by `+`
 type Slots = (string | undefined)[];
 
 /** How a game sends its layouts, as slot tokens and back */
@@ -41,7 +37,10 @@ export const SLOT_LAYOUT: LayoutShape<Record<string, string>> = {
 /** `{ slot: "id,damage" }`, as Blitz and Mega Walls send layouts, stored as `id:damage` without a damage of 0 */
 export const LEGACY_LAYOUT: LayoutShape<Record<string, string>> = {
   slots: (layout) => SLOT_LAYOUT.slots(layout).map((token) => token?.replace(/,0$/, "").replace(",", ":")),
-  layout: (slots) => SLOT_LAYOUT.layout(slots.map((token) => token && (token.includes(":") ? token.replace(":", ",") : `${token},0`))),
+  layout(slots) {
+    const legacy = slots.map((token) => token && (token.includes(":") ? token.replace(":", ",") : `${token},0`));
+    return SLOT_LAYOUT.layout(legacy);
+  },
 };
 
 /**
@@ -107,14 +106,14 @@ export function encodeLayouts(layouts: [name: string, slots: Slots][]) {
     .join(";");
 }
 
-/** Every layout in `data` whose key matches `key`, named by the key's first capture */
-export const collectLayouts = <T>(data: APIData, key: RegExp, shape: LayoutShape<T>) =>
-  encodeLayouts(
+export function collectLayouts<T>(data: APIData, key: RegExp, shape: LayoutShape<T>) {
+  return encodeLayouts(
     Object.entries(data).flatMap(([name, layout]): [string, Slots][] => {
       const match = key.exec(name);
-      return match && typeof layout === "object" ? [[match[1], shape.slots(layout)]] : [];
+      return match ? [[match[1], shape.slots(layout)]] : [];
     }),
   );
+}
 
 /** Stored layouts by name, each back in the shape Hypixel sends it */
 export function decodeLayouts<T>(layouts: string | undefined, shape: LayoutShape<T>) {

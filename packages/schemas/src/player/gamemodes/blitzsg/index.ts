@@ -94,7 +94,6 @@ export class BlitzSG {
   @Field({ store: { default: "none" } })
   public kit: string;
 
-  /** Kit layouts by Hypixel's kit name (Hype TrainInventory is Hype Train), see #layouts */
   @Field()
   public layouts: string;
 

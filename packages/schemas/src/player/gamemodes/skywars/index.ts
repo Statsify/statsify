@@ -116,7 +116,6 @@ export class SkyWars {
   @Field()
   public emblem: string;
 
-  /** Kit layouts (kit_basic_solo_frog_inventory is basic_solo_frog), see #layouts */
   @Field()
   public layouts: string;
 
@@ -139,7 +138,6 @@ export class SkyWars {
     const isStrikethrough = data.levelFormattedWithBrackets?.includes("§m") ?? false;
 
     this.emblem = data.active_emblem;
-    this.layouts = collectLayouts(data, /^kit_(.+)_inventory$/, ITEM_LAYOUT);
     this.levelFormatted = getFormattedLevel(
       this.level,
       data.active_scheme,
@@ -148,6 +146,8 @@ export class SkyWars {
       isUnderline,
       isStrikethrough
     );
+
+    this.layouts = collectLayouts(data, /^kit_(.+)_inventory$/, ITEM_LAYOUT);
 
     this.progression = getLevelProgress(this.exp, this.level);
 

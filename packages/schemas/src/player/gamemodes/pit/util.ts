@@ -138,5 +138,4 @@ export function getRenownShopCost(renownUnlocks: RenownUnlock[]) {
 }
 
 /** Pit inventories arrive as `{ type: 0, data: [signed bytes] }` of gzipped NBT */
-export const encodeNbt = (nbt?: { data?: number[] }) =>
-  nbt?.data ? btoa(String.fromCodePoint(...nbt.data.map((byte) => byte & 0xff))) : "";
+export const encodeNbt = (nbt?: { data: number[] }) => (nbt ? Buffer.from(nbt.data).toString("base64") : "");
