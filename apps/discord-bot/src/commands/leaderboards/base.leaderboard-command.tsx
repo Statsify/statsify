@@ -141,7 +141,6 @@ export class BaseLeaderboardCommand {
       getLeaderboardDataIcon
     );
 
-    // Register the button hooks only when there's a leaderboard to page through
     if (message.ephemeral) return message;
 
     const listener = CommandListener.getInstance();
