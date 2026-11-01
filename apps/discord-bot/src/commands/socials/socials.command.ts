@@ -78,8 +78,8 @@ export class SocialsCommand {
 }
 
 /**
- * Hypixel stores social links as the player typed them, with or without a scheme.
- * Returns the link as an http(s) URL that can't break out of a Markdown link.
+ * A player can input a social link without a scheme. 
+ * So this returns the link with http(s) and makes sure the link can't escape markdown
  */
 function parseSocialLink(social: string) {
   const value = social.trim();
