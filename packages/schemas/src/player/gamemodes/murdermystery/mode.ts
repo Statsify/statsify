@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime, prettify, parseTime } from "@statsify/util";
+import { type APIData, formatTime, parseTime, prettify } from "@statsify/util";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
