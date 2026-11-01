@@ -320,7 +320,7 @@ export const MurderMysteryProfile = ({
     `§7${t("stats.knife")}: §a${murdermystery.knife.name}`,
   ];
 
-  if (murdermystery.knife.progression.percent >= 1 || !murdermystery.knife.progression.max)
+  if (murdermystery.knife.progression.percent >= 1 || murdermystery.knife.progression.max === undefined)
     description.push(`§7${t("stats.progression.exp")}: §l§dPRESTIGED`);
   else
     description.push(
