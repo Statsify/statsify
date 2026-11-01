@@ -56,8 +56,13 @@ export interface RawMember {
   leveling?: { experience?: number; highest_pet_score?: number };
   currencies?: { coin_purse?: number; essence?: Record<string, { current?: number }> };
   fairy_soul?: { total_collected?: number };
-  player_stats?: { pets?: { total_exp_gained?: number } };
+  player_stats?: {
+    pets?: { total_exp_gained?: number };
+    items_fished?: Record<string, number>;
+    sea_creature_kills?: number;
+  };
   bestiary?: { kills?: Record<string, number> };
+  trophy_fish?: Record<string, unknown>; // <fish> and <fish>_<tier> counts, plus total_caught, rewards…
   player_data?: { experience?: Record<string, number>; perks?: Record<string, number> };
   collection?: Record<string, number>;
   inventory?: {

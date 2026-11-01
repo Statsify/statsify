@@ -11,6 +11,7 @@ import { getApiSettings } from "../api-settings.js";
 import { getCrimson } from "./crimson.js";
 import { gameModeOf } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
+import { getFishing } from "./fishing.js";
 import { getHotm } from "./hotm.js";
 import { getSkyBlockLevel } from "./level.js";
 import { getPets } from "./pets.js";
@@ -26,6 +27,7 @@ export const SKYBLOCK_SECTIONS = [
   "accessories",
   "crimson",
   "dungeons",
+  "fishing",
   "hotm",
   "level",
   "networth",
@@ -57,6 +59,7 @@ export type SectionKey =
   | "accessories"
   | "crimson"
   | "dungeons"
+  | "fishing"
   | "hotm"
   | "level"
   | "pets"
@@ -74,6 +77,7 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
   },
   crimson: { needs: [], compute: async ({ member }) => getCrimson(member) },
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
+  fishing: { needs: [], compute: async ({ member }) => getFishing(member) },
   hotm: { needs: [], compute: async ({ member }) => getHotm(member) },
   level: {
     needs: ["prices", "items"],
