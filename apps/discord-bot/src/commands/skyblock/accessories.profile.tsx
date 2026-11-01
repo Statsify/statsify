@@ -9,14 +9,49 @@
 import { Container, Footer, Header, type SidebarItem } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
 import { ItemGrid, RARITY_COLORS, pricesAsOf } from "./components/ItemGrid.js";
-import { prettify } from "@statsify/util";
-import type { MemberView } from "@statsify/skyblock";
+import { arrayGroup, prettify } from "@statsify/util";
+import type { LocalizeFunction } from "@statsify/discord";
+import type { InactiveAccessory, MemberView, PowerStat } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const MISSING_SHOWN = 12;
+const INACTIVE_SHOWN = 12;
+const MAX_POWER_STATS_PER_LINE = 5; // more is wider than the card
 
-export const accessoryIcons = ({ accessories }: MemberView) =>
-  accessories?.missing.slice(0, MISSING_SHOWN).map(({ texture }) => texture) ?? [];
+const topMissing = ({ accessories }: MemberView) => accessories?.missing.slice(0, MISSING_SHOWN) ?? [];
+// One row per accessory, so a stack of duplicates doesn't fill the page
+function topInactive({ accessories }: MemberView) {
+  const rows = new Map<string, InactiveAccessory & { count: number }>();
+  for (const view of accessories?.inactive ?? []) {
+    const row = rows.get(view.id);
+    if (row) row.count++;
+    else rows.set(view.id, { ...view, count: 1 });
+  }
+  return [...rows.values()].slice(0, INACTIVE_SHOWN);
+}
+
+export interface SkyBlockAccessoriesProfileProps extends SkyBlockProfileProps {
+  page: "missing" | "inactive";
+}
+
+export const accessoryIcons = (page: SkyBlockAccessoriesProfileProps["page"]) => (member: MemberView) =>
+  (page === "missing" ? topMissing(member) : topInactive(member)).map(({ texture }) => texture);
+
+const PowerStats = ({ power, stats, t }: { power: string; stats: PowerStat[]; t: LocalizeFunction }) => {
+  const lineCount = Math.ceil(stats.length / MAX_POWER_STATS_PER_LINE);
+  const lines = arrayGroup(
+    stats.map(({ name, color, value }) => `${color}${value < 0 ? "" : "+"}${t(value)} ${name}`),
+    Math.ceil(stats.length / lineCount)
+  );
+
+  return (
+    <box width="100%" direction="column">
+      {lines.map((line, index) => (
+        <text>{`${index === 0 ? `§7${t("skyblock.powerStats", { power: prettify(power) })}: ` : ""}${line.join(" ")}`}</text>
+      ))}
+    </box>
+  );
+};
 
 export const SkyBlockAccessoriesProfile = ({
   profile,
@@ -28,7 +63,8 @@ export const SkyBlockAccessoriesProfile = ({
   user,
   t,
   icons,
-}: SkyBlockProfileProps) => {
+  page,
+}: SkyBlockAccessoriesProfileProps) => {
   const { accessories } = profile.member;
 
   if (!accessories) {
@@ -46,11 +82,33 @@ export const SkyBlockAccessoriesProfile = ({
     [t("skyblock.selectedPower"), accessories.selectedPower ? prettify(accessories.selectedPower) : t("skyblock.none"), "§e"],
     [t("skyblock.accessories"), t(accessories.active.length), "§a"],
     [t("skyblock.missing"), t(accessories.missing.length), "§c"],
+    [t("skyblock.enrichments"), t(accessories.enrichments), "§b"],
+    [t("skyblock.tuningPoints"), t(accessories.tuningPoints), "§6"],
   ];
 
-  const missing = accessories.missing
-    .slice(0, MISSING_SHOWN)
-    .map(({ name, rarity, accessoryPower, outsideBag, cost, coinsPerAccessoryPower, texture }) => {
+  if (page === "inactive") {
+    const inactive = topInactive(profile.member).map((view) => {
+      const reason = view.reason === "duplicate" ? t("skyblock.duplicate") : t("skyblock.replacedBy", { name: view.replacedBy.name });
+      return { texture: view.texture, name: view.name, value: `§7${reason}${view.count > 1 ? ` §8×${t(view.count)}` : ""}` };
+    });
+
+    return (
+      <Container background={background}>
+        <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+        {inactive.length > 0 ?
+          <ItemGrid items={inactive} icons={icons} columns={1} /> :
+          (
+            <box width="100%">
+              <text>{`§a${t("skyblock.noInactiveAccessories")}`}</text>
+            </box>
+          )}
+        <Footer logo={logo} user={user} />
+      </Container>
+    );
+  }
+
+  const missing = topMissing(profile.member).map(
+    ({ name, rarity, accessoryPower, outsideBag, cost, coinsPerAccessoryPower, texture }) => {
       const ap = t(accessoryPower);
       const price =
         cost && coinsPerAccessoryPower !== undefined ?
@@ -62,7 +120,8 @@ export const SkyBlockAccessoriesProfile = ({
       else if (!accessories.market) value = `§d${t("skyblock.apGain", { ap })}`;
 
       return { texture, name: `${RARITY_COLORS[rarity]}${name}`, value };
-    });
+    }
+  );
 
   const footnote = accessories.market ?
     pricesAsOf(t, accessories.pricesAsOf) :
@@ -71,6 +130,9 @@ export const SkyBlockAccessoriesProfile = ({
   return (
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+      {accessories.selectedPower && accessories.powerStats ?
+        <PowerStats power={accessories.selectedPower} stats={accessories.powerStats} t={t} /> :
+        <></>}
       {missing.length > 0 ?
         (
           <>
