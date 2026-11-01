@@ -78,7 +78,6 @@ export const render: Render<Box.BoxRenderProps> = (
     ctx.stroke();
   }
 
-  // The canvas ignores a negative alpha and keeps the last one, which would draw an opaque shadow
   const shadowAlpha = shadowOpacity - 0.3;
   if (!shadowDistance || shadowAlpha <= 0) return;
   shadowDistance /= 2;
