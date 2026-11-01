@@ -258,7 +258,7 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
     title: string,
     mode: string,
     titleRequirement: TitleRequirement,
-    titleScore?: number
+    titleScore?: number,
   ) {
     super(data, mode);
 
@@ -268,7 +268,7 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
       nextTitleLevelFormatted,
       progression,
     } = getTitleAndProgression({
-      score: this.wins,
+      score: titleScore ?? this.wins,
       mode: title,
       data,
       titleRequirement,
