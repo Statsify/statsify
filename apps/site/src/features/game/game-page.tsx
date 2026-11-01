@@ -129,7 +129,7 @@ export function GameView({ page }: { page: GamePage }) {
 
   return (
     <div className="relative grow">
-      <PageBackground background={backgroundFor(page.game.key)} viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background={backgroundFor(page.game.key)} />
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} game={`${page.game.name}${page.heading.mode ? ` §r(${page.heading.mode}§r)` : ""}`} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         {/* From `md` the nametag is as wide as its content (up to half the row) and the level sits beside it, the

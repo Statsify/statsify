@@ -39,7 +39,7 @@ export function GuildView({ guild }: { guild: GuildPage }) {
 
   return (
     <div className="relative grow">
-      <PageBackground background="guilds" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background="guilds" />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className={cn("grid grid-cols-1 lg:grid-cols-2", BOX_GAP)}>
           <Box as="h1" className={cn(HEADING_BOX, "content:text-mc-3 md:content:text-mc-4")}>

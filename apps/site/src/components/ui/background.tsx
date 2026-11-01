@@ -7,7 +7,7 @@
  */
 
 import { cn } from "~/lib/util";
-import { type ComponentProps, useState } from "react";
+import { useState } from "react";
 
 // The nine public backgrounds in `public/backgrounds/`; the private blurred set never ships. They are
 // pre-blurred WebP (about 10 KB each), so no backdrop filter runs on top of them: a 2.4 px Gaussian on the 480 px image
@@ -45,8 +45,9 @@ export function Background({
   /** The page's first background: fetched early. Every other one waits until it nears the viewport. */
   priority?: boolean;
   /**
-   * Size the image to the viewport instead of the content, for pages whose content changes height in place (Bingo's
-   * tabs, the leaderboard filter, search results). A content-sized image would rescale and shift with every change.
+   * Fixed behind the page at the screen's largest height, instead of sized to the content: a long page keeps it all the
+   * way down, a page whose content changes height in place (Bingo's tabs, the leaderboard filter) doesn't rescale it,
+   * and neither does a phone's toolbar collapsing.
    */
   viewport?: boolean;
 }) {
@@ -55,12 +56,10 @@ export function Background({
   const [shown, setShown] = useState<{ background: BackgroundName; old?: BackgroundName }>({ background });
   if (shown.background !== background) setShown({ background, old: shown.background });
 
-  const image = viewport
-    ? "absolute inset-x-0 top-0 h-svh w-full object-cover object-top"
-    : "absolute inset-0 size-full object-cover object-top";
+  const image = "absolute inset-0 size-full object-cover object-top";
 
   return (
-    <div className={cn("absolute w-full pointer-events-none -z-50", viewport && "overflow-hidden", className)}>
+    <div className={cn(viewport ? "fixed inset-x-0 top-0 h-lvh" : "absolute w-full", "pointer-events-none -z-50", className)}>
       <img
         src={src(background)}
         alt=""
@@ -84,12 +83,15 @@ export function Background({
   );
 }
 
-/** A page's own background, fetched early, under the overlay that darkens it behind the page's text. */
-export function PageBackground({ className = "h-full", ...props }: Omit<ComponentProps<typeof Background>, "priority">) {
+/**
+ * A page's own background, fetched early and fixed behind the whole page, under the overlay that darkens it behind the
+ * page's text. The header and footer are opaque, so it shows only between them.
+ */
+export function PageBackground({ background }: { background: BackgroundName }) {
   return (
     <>
-      <Background {...props} priority className={className} />
-      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <Background background={background} priority viewport />
+      <div className="fixed inset-x-0 top-0 h-lvh bg-[rgb(17_17_17_/0.7)] -z-10" />
     </>
   );
 }

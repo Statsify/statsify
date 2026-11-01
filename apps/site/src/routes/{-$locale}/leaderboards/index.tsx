@@ -72,7 +72,7 @@ function LeaderboardsPage() {
 
   return (
     <div className="relative grow">
-      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background="general" />
       <div className="w-container flex flex-col gap-6 px-4 py-12 text-mc-white md:px-8">
         <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{t("leaderboards.title")}</h1>
         {/* A new `?q=` (back and forward) starts the filter over from it. */}

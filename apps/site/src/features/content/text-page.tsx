@@ -48,7 +48,7 @@ export function TextPage({
 
   return (
     <div className="relative grow">
-      <PageBackground background={background} viewport mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background={background} />
       <div className="w-container px-4 pt-8 pb-12 text-mc-white md:px-8 md:pt-12 md:pb-16">
         <div
           className={cn(

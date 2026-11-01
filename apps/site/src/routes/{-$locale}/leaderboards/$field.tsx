@@ -210,7 +210,7 @@ function GameIndexPage({ game }: { game: LeaderboardGame }) {
 
   return (
     <div className="relative grow">
-      <PageBackground background={backgroundFor(game.key)} viewport mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background={backgroundFor(game.key)} />
       <div className="w-container flex flex-col gap-6 px-4 py-12 text-mc-white md:px-8">
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">
@@ -232,7 +232,7 @@ function LeaderboardPage({ view }: { view: LeaderboardView & { explanation?: Exp
 
   return (
     <div className="relative grow">
-      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background="general" />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">

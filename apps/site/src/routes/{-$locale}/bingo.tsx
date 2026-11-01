@@ -22,7 +22,7 @@ export const Route = createFileRoute("/{-$locale}/bingo")({
 function BingoSearchPage() {
   return (
     <div className="relative grow">
-      <PageBackground background="bingo" viewport mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background="bingo" />
       <div className="w-full h-full flex justify-center items-center flex-col gap-8 py-12">
         <BingoHeading />
         <div className="w-full px-4 md:px-8 lg:w-[80%]">

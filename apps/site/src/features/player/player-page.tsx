@@ -97,7 +97,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
 
   return (
     <div className="relative grow">
-      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background="general" />
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className={cn("grid grid-cols-1 md:grid-cols-[auto_1fr] xl:grid-cols-[fit-content(50%)_auto_1fr]", BOX_GAP)}>
@@ -174,7 +174,7 @@ export function PlayerShell({ name }: { name: string }) {
 
   return (
     <div className="relative grow" aria-busy>
-      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background="general" />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className={cn("grid grid-cols-[auto_minmax(0,1fr)] md:w-fit md:min-w-sm", BOX_GAP)}>
           <Box className="content:flex content:items-center content:justify-center content:p-3">

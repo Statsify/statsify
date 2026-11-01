@@ -80,7 +80,7 @@ export function Header() {
   };
 
   return (
-    <header className="text-mc-white flex justify-center px-4 py-4 md:px-8">
+    <header className="text-mc-white flex justify-center bg-blackify-950 px-4 py-4 md:px-8">
       <div className="w-container flex flex-wrap items-center gap-x-4 gap-y-2 lg:gap-x-8">
         <Link to="/{-$locale}" aria-label="Statsify" className="flex min-h-11 min-w-11 items-center gap-3">
           <Logo className="size-8 shrink-0" />
