@@ -29,6 +29,7 @@ import { SkyBlockChocolateProfile } from "./chocolate.profile.js";
 import { SkyBlockCrimsonProfile, crimsonIcons } from "./crimson.profile.js";
 import { SkyBlockDungeonsProfile, SkyBlockEssenceProfile } from "./dungeons.profile.js";
 import { SkyBlockFishingProfile } from "./fishing.profile.js";
+import { SkyBlockHotfProfile } from "./hotf.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
 import { SkyBlockJacobProfile, jacobIcons } from "./jacob.profile.js";
 import { SkyBlockLevelProfile, levelIcons } from "./level.profile.js";
@@ -199,6 +200,11 @@ export const SKYBLOCK_CARDS = {
     settings: [],
     profile: SkyBlockChocolateProfile,
   },
+  hotf: {
+    sections: ["hotf"],
+    settings: [],
+    profile: SkyBlockHotfProfile,
+  },
 } satisfies Record<string, SkyBlockCard>;
 
 type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
@@ -297,6 +303,11 @@ export class SkyBlockCommand {
   @SubCommand({ description: (t) => t("commands.skyblock-chocolate"), args: [PlayerArgument] })
   public chocolate(context: CommandContext) {
     return this.run(context, "chocolate");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-hotf"), args: [PlayerArgument] })
+  public hotf(context: CommandContext) {
+    return this.run(context, "hotf");
   }
 
   @SubCommand({ description: (t) => t("commands.skyblock-price"), args: [new ItemArgument()] })
