@@ -34,6 +34,6 @@
     "zod": "^4.1.5"
   },
   "devDependencies": {
-    "@types/inquirer": "^9.0.7"
+    "@types/inquirer": "^10.0.0"
   }
 }
