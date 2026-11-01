@@ -206,32 +206,17 @@ export function LegalPage({
   );
 }
 
+/** Room between the lines of a paragraph: the font's own spacing is the game's chat, too tight to read a page of. */
+export const READING_LEADING = "leading-[0.875]";
+
 /**
- * A panel of reading text: Mona Sans at 16, 20 from `lg`, lines kept to 68 characters. `short` sets one-sentence
- * paragraphs (about, prestiges) in Minecraft instead, at 16, 24 from `lg`. `lang` marks text that stays in one
- * language whatever the page's locale (the legal pages are English only).
+ * A panel of reading text: Minecraft at 16, 24 from `lg`, lines kept to 68 characters. `lang` marks text that stays in
+ * one language whatever the page's locale (the legal pages are English only).
  */
-export function Article({
-  children,
-  lang,
-  short = false,
-  className,
-}: {
-  children: ReactNode;
-  lang?: string;
-  short?: boolean;
-  className?: string;
-}) {
+export function Article({ children, lang, className }: { children: ReactNode; lang?: string; className?: string }) {
   return (
     <Box className={cn("content:p-4 lg:content:px-10 lg:content:pt-8 lg:content:pb-10", className)}>
-      <div
-        lang={lang}
-        // Lines of about 68 characters: 68ch in Minecraft, 33em in Mona Sans, whose letters are narrower than its zero
-        // (68ch let its lines run to 90).
-        className={short ?
-          "text-mc-1 text-mc-gray lg:text-mc-1.5 [--measure:68ch]" :
-          "font-sans text-16 leading-[1.6] font-medium text-mc-gray lg:text-20 [--measure:33em]"}
-      >
+      <div lang={lang} className={cn("text-mc-1 text-mc-gray lg:text-mc-1.5 [--measure:68ch]", READING_LEADING)}>
         {children}
       </div>
     </Box>
@@ -240,21 +225,9 @@ export function Article({
 
 /**
  * A section of a text page: the heading the contents link to in a box of its own, then its paragraphs in an `Article`
- * under it, 4 px apart, as the bot's cards draw a title box over its panel. `short` and `lang` are as for `Article`.
+ * under it, 4 px apart, as the bot's cards draw a title box over its panel. `lang` is as for `Article`.
  */
-export function Section({
-  id,
-  title,
-  short,
-  lang,
-  children,
-}: {
-  id: string;
-  title: ReactNode;
-  short?: boolean;
-  lang?: string;
-  children: ReactNode;
-}) {
+export function Section({ id, title, lang, children }: { id: string; title: ReactNode; lang?: string; children: ReactNode }) {
   return (
     <section lang={lang} className={cn("flex flex-col", BOX_GAP)}>
       <Box className={HEADING_BOX}>
@@ -262,7 +235,7 @@ export function Section({
           {title}
         </h2>
       </Box>
-      <Article short={short}>
+      <Article>
         <div className="flex flex-col gap-4">{children}</div>
       </Article>
     </section>
@@ -277,10 +250,10 @@ export function Paragraph({ children }: { children: ReactNode }) {
   return <p className="max-w-(--measure)">{children}</p>;
 }
 
-/** A list with the site's square bullets. */
+/** A list with the site's square bullets, each centred on its first line's lowercase letters (7/16 em down). */
 export function List({ children }: { children: ReactNode }) {
   return (
-    <ul className="flex max-w-(--measure) flex-col gap-2 [&>li]:relative [&>li]:pl-6 [&>li]:before:absolute [&>li]:before:top-[0.7em] [&>li]:before:left-1 [&>li]:before:size-1.5 [&>li]:before:bg-mc-dark-gray">
+    <ul className="flex max-w-(--measure) flex-col gap-2 [&>li]:relative [&>li]:pl-6 [&>li]:before:absolute [&>li]:before:top-[calc(0.4375em-3px)] [&>li]:before:left-1 [&>li]:before:size-1.5 [&>li]:before:bg-mc-dark-gray">
       {children}
     </ul>
   );

@@ -33,7 +33,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       tabIcon(matches),
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      // Mona Sans is preloaded only by the routes that use it (`~/lib/fonts`); every page has Minecraft headings.
       { rel: "preload", href: "/fonts/Minecraft.ttf", as: "font", type: "font/ttf", crossOrigin: "anonymous" },
       { rel: "preload", href: "/fonts/Minecraft Bold.ttf", as: "font", type: "font/ttf", crossOrigin: "anonymous" },
     ],
@@ -64,7 +63,7 @@ function RootDocument({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="antialiased leading-[normal] min-h-screen flex flex-col bg-blackify-950 font-medium">
+      <body className="antialiased leading-[normal] min-h-screen flex flex-col bg-blackify-950">
         {children}
         <Scripts />
       </body>

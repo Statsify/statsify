@@ -7,6 +7,7 @@
  */
 
 import { BOX_GAP, Box, HEADING_BOX } from "~/components/ui/box";
+import { Chevron } from "~/components/icons/chevron";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hint } from "~/components/ui/hint";
 import { Link } from "@tanstack/react-router";
@@ -201,11 +202,11 @@ function MemberTable({ members, total }: { members: GuildMemberRow[]; total: num
                   >
                     <button
                       type="button"
-                      className={cn("min-h-11 cursor-pointer hover:text-mc-white focus-visible:focus-ring-inset", sort.key === key && "text-mc-yellow")}
+                      className={cn("inline-flex min-h-11 cursor-pointer items-center hover:text-mc-white focus-visible:focus-ring-inset", sort.key === key && "text-mc-yellow")}
                       onClick={() => setSort({ key, reversed: sort.key === key && !sort.reversed })}
                     >
                       {label}
-                      {sort.key === key && <span aria-hidden> {highestFirst === sort.reversed ? "↑" : "↓"}</span>}
+                      {sort.key === key && <Chevron className={cn("size-6", highestFirst === sort.reversed ? "-rotate-90" : "rotate-90")} />}
                     </button>
                   </th>
                 ))}

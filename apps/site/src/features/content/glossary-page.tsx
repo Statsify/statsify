@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Article, CHIP, Paragraph, TextLink, TextPage } from "./text-page";
+import { Article, CHIP, Paragraph, READING_LEADING, TextLink, TextPage } from "./text-page";
 import { BOX_GAP, Box, HEADING_BOX } from "~/components/ui/box";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Link } from "@tanstack/react-router";
@@ -18,7 +18,7 @@ import { cn } from "~/lib/util";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import type { GlossaryGroup, GlossaryItem } from "./content-data";
 
-const TEXT = "max-w-[33em] font-sans text-16 leading-[1.6] font-medium text-mc-gray lg:text-20";
+const TEXT = cn("max-w-[68ch] text-mc-1 text-mc-gray lg:text-mc-1.5", READING_LEADING);
 
 /**
  * What every stat the site shows means, grouped as the ratios, the stats several games share, then each game's own. Each

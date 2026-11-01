@@ -93,10 +93,7 @@ const SANS = [
   "sans-serif",
 ];
 
-/**
- * Type: Minecraft for everything a card could show (titles, labels, values, names, nav, buttons, tabs, inputs and
- * one-line messages); Mona Sans for reading text (paragraphs, help text, long tooltips, legal).
- */
+/** Type: Minecraft for all text; the sans stack only draws what the pixel font and its Unifont slices lack. */
 export const type = {
   families: {
     // A glyph neither the pixel font nor its Unifont slices have comes from the sans stack.

@@ -380,13 +380,13 @@
 }
 
 /*
- * Mona Sans v2.0.27 (OFL): reading text (paragraphs, help text). Instanced outside the repo to the axes the
- * site uses (wght 500-600, wdth 90-100, opsz pinned at 16) and split like Google Fonts' slices:
+ * Mona Sans v2.0.27 (OFL): the fallback for what the Minecraft faces lack (`--font-minecraft`). Instanced outside the
+ * repo to the axes it used for reading text (wght 500-600, wdth 90-100, opsz pinned at 16) and split like Google
+ * Fonts' slices:
  *   fonttools varLib.instancer MonaSansVF.woff2 wght=500:600 wdth=90:100 opsz=16 -o inst.ttf
  *   pyftsubset inst.ttf --unicodes=<range> --layout-features='*' --flavor=woff2
  * "Mona" is a Reserved Font Name and these files are a Modified Version, so they are named Statsify Sans
- * (internal names too); the copyright and OFL-MonaSans.txt stay. Latin is preloaded by the routes that use
- * it; Latin Extended downloads only when a glyph needs it.
+ * (internal names too); the copyright and OFL-MonaSans.txt stay. Each slice downloads only when a glyph needs it.
  */
 @font-face {
   font-family: "Statsify Sans";

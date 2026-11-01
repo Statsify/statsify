@@ -109,8 +109,6 @@ const MINECRAFT_SIZES = [
   ["text-mc-4", "64"],
 ] as const;
 
-const SANS_SIZES = ["text-16", "text-20", "text-24"] as const;
-
 /** The § codes, in the order `colors.minecraft` lists their colours. */
 const CODES = "0123456789abcdef";
 const SWATCHES = Object.values(colors.minecraft).map((hex, index) => [CODES[index], hex] as const);
@@ -252,14 +250,6 @@ function TypeSection() {
         ))}
         {/* Glyphs the pixel font lacks come from its Unifont slices, and anything they lack from the sans stack. */}
         <p className="text-mc-1">Fallback: Łódź, Ğ, Привет, Ελλάδα, ไทย, 你好</p>
-      </div>
-      <div className="flex flex-col gap-2">
-        {SANS_SIZES.map((size) => (
-          <p key={size} className={`font-sans ${size} font-medium`}>
-            Mona Sans {size.slice(5)} medium <span className="font-semibold">semibold</span>{" "}
-            <span className="tabular-nums">0123456789</span>
-          </p>
-        ))}
       </div>
     </Section>
   );

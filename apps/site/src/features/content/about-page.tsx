@@ -21,7 +21,7 @@ export function AboutPage() {
 
   return (
     <TextPage title={t("about.title")}>
-      <Section id="what" title={t("about.what")} short>
+      <Section id="what" title={t("about.what")}>
         <Paragraph>{t("about.whatText")}</Paragraph>
         <Paragraph>
           <PointerText
@@ -30,7 +30,7 @@ export function AboutPage() {
           />
         </Paragraph>
       </Section>
-      <Section id="contact" title={t("about.contact")} short>
+      <Section id="contact" title={t("about.contact")}>
         <KeyTable
           head={[t("about.topic"), t("about.where")]}
           rows={[
@@ -41,7 +41,7 @@ export function AboutPage() {
           ]}
         />
       </Section>
-      <Section id="stats" title={t("about.stats")} short>
+      <Section id="stats" title={t("about.stats")}>
         <Paragraph>{t("about.statsText")}</Paragraph>
         <Callout label={t("about.note")}>
           <p>{t("about.leaderboardsNote")}</p>
@@ -49,7 +49,7 @@ export function AboutPage() {
         <Subheading>{t("about.names")}</Subheading>
         <Paragraph>{t("about.namesText")}</Paragraph>
       </Section>
-      <Section id="source" title={t("about.source")} short>
+      <Section id="source" title={t("about.source")}>
         <Paragraph>
           <Trans i18nKey="about.sourceText" components={{ github: <TextLink href="/github" /> }} />
         </Paragraph>
