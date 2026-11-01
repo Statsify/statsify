@@ -668,7 +668,8 @@
     "weeklySells": "Sold This Week",
     "xp": "SkyBlock XP",
     "xpGain": "+{{xp}} XP",
-    "xpOnceInBag": "+{{xp}} XP once it's in your bag"
+    "xpOnceInBag": "+{{xp}} XP once it's in your bag",
+    "xpPastMax": "+{{xp}} XP past max"
   },
   "socials": {
     "discord": "[Discord](<https://discord.com/invite/5VgxMQY>)",
