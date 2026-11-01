@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { createInstructions } from "../src/index.js";
+import { FontRenderer, createInstructions } from "../src/index.js";
 import { expect, it, suite } from "vitest";
 
 suite("createInstructions with no relative sizes", () => {
@@ -154,5 +154,17 @@ suite("JSX Fragments", () => {
     );
 
     expect(instructions.children?.length).toBe(2);
+  });
+});
+
+suite("FontRenderer", () => {
+  it("resets formatting without inheriting mutated parser state", () => {
+    const renderer = new FontRenderer(false);
+    const nodes = renderer.lex("§l[100]§r Player");
+
+    expect(nodes).toEqual([
+      expect.objectContaining({ text: "[100]", bold: true }),
+      expect.objectContaining({ text: " Player", bold: false }),
+    ]);
   });
 });

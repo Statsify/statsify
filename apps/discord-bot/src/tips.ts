@@ -13,7 +13,7 @@ export interface Tip {
   message: IMessage;
 
   /**
-   * A list of commands that this tip cannot be used on
+   * A list of commands that this tip cannot be used on, including all of their subcommands
    */
   disabled?: string[];
 

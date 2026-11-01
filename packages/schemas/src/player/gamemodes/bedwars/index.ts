@@ -213,20 +213,16 @@ export class BedWars {
     });
 
     this.levelFormatted = scheme({
-      level: Math.floor(this.level),
+      level: flooredLevel,
       star,
       brackets,
-      bold: false,
-      underline: false,
-      strikethrough: false,
+      bold: data.dreamfest?.toggle_bold_numbers ?? false,
+      underline: data.dreamfest?.toggle_underlined_prestige ?? false,
+      strikethrough: data.dreamfest?.toggle_strikethrough_brackets ?? false,
     });
 
-    this.naturalLevelFormatted = getIntendedFormattedLevel(
-      Math.floor(this.level),
-    );
-    this.nextLevelFormatted = getIntendedFormattedLevel(
-      Math.floor(this.level) + 1,
-    );
+    this.naturalLevelFormatted = getIntendedFormattedLevel(flooredLevel);
+    this.nextLevelFormatted = getIntendedFormattedLevel(flooredLevel + 1);
 
     let exp = this.exp;
 

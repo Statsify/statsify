@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
-    "typecheck": "tsgo --noEmit",
+    "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "lint:ci": "oxlint --format=github"
   },
@@ -19,7 +19,7 @@
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "@typegoose/typegoose": "^12.6.0",
-    "minecraft-protocol": "^1.61.0",
+    "minecraft-protocol": "1.61.0",
     "mongoose": "^8.5.2"
   }
 }
