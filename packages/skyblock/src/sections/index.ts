@@ -13,6 +13,7 @@ import { gameModeOf } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
 import { getFishing } from "./fishing.js";
 import { getHotm } from "./hotm.js";
+import { getJacob } from "./jacob.js";
 import { getSkyBlockLevel } from "./level.js";
 import { getPets } from "./pets.js";
 import { getSkills } from "./skills.js";
@@ -29,6 +30,7 @@ export const SKYBLOCK_SECTIONS = [
   "dungeons",
   "fishing",
   "hotm",
+  "jacob",
   "level",
   "networth",
   "pets",
@@ -61,6 +63,7 @@ export type SectionKey =
   | "dungeons"
   | "fishing"
   | "hotm"
+  | "jacob"
   | "level"
   | "pets"
   | "skills"
@@ -79,6 +82,7 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
   fishing: { needs: [], compute: async ({ member }) => getFishing(member) },
   hotm: { needs: [], compute: async ({ member }) => getHotm(member) },
+  jacob: { needs: ["items"], compute: async ({ member, items }) => getJacob(member, items) },
   level: {
     needs: ["prices", "items"],
     compute: async ({ profile, member, items, prices }) => {

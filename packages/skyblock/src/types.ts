@@ -74,6 +74,7 @@ export interface MemberView {
   level?: SkyBlockLevelSection;
   crimson?: CrimsonSection | null;
   fishing?: FishingSection | null;
+  jacob?: JacobSection | null;
 }
 
 export interface ApiSettings {
@@ -218,6 +219,29 @@ export interface TrophyFish {
   id: string;
   name: string;
   tiers: Record<TrophyTier, number>;
+}
+
+export const JACOB_BRACKETS = ["bronze", "silver", "gold", "platinum", "diamond"] as const;
+
+export type JacobBracket = (typeof JACOB_BRACKETS)[number];
+
+export const JACOB_MEDALS = ["gold", "silver", "bronze"] as const;
+
+export type JacobMedal = (typeof JACOB_MEDALS)[number];
+
+export interface JacobSection {
+  medals: Record<JacobMedal, number>; // unspent
+  contests: number; // entered
+  crops: JacobCrop[];
+  perks: { doubleDrops: number; farmingLevelCap: number };
+}
+
+export interface JacobCrop {
+  id: string; // the item id the API uses: WHEAT, INK_SACK:3…
+  name: string;
+  texture?: ItemTexture;
+  bracket?: JacobBracket; // the best one reached
+  personalBest?: number;
 }
 
 export interface PetsSection {

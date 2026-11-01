@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { JacobMedal } from "#types";
+
 // The parts of Hypixel's /v2/skyblock responses this package reads. Everything is optional, since Hypixel leaves out
 // whatever a player never touched or an API setting hides.
 
@@ -77,7 +79,13 @@ export interface RawMember {
     bag_contents?: Partial<Record<"talisman_bag" | "potion_bag" | "fishing_bag" | "quiver" | "sacks_bag", RawNbt>>;
     sacks_counts?: Record<string, number>;
   };
-  jacobs_contest?: { perks?: { farming_level_cap?: number } };
+  jacobs_contest?: {
+    perks?: { farming_level_cap?: number; double_drops?: number };
+    medals_inv?: Partial<Record<JacobMedal, number>>;
+    unique_brackets?: Record<string, string[]>; // bracket → the crops it was reached on
+    personal_bests?: Record<string, number>;
+    contests?: Record<string, unknown>; // "<year>:<month>_<day>:<crop>" → the entry
+  };
   pets_data?: { pets?: RawPet[]; pet_care?: { pet_types_sacrificed?: string[] } };
   dungeons?: {
     dungeon_types?: { catacombs?: RawDungeonType; master_catacombs?: RawDungeonType };
