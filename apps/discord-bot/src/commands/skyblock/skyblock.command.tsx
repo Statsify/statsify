@@ -25,7 +25,7 @@ import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
 import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
 import { SkyBlockAccessoriesProfile, accessoryIcons } from "./accessories.profile.js";
-import { SkyBlockDungeonsProfile } from "./dungeons.profile.js";
+import { SkyBlockDungeonsProfile, SkyBlockEssenceProfile } from "./dungeons.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
 import { SkyBlockLevelProfile, levelIcons } from "./level.profile.js";
 import { SkyBlockNetworthProfile, networthIcons } from "./networth.profile.js";
@@ -139,6 +139,7 @@ export const SKYBLOCK_CARDS = {
     profile: [
       { label: (t) => t("skyblock.catacombs"), profile: (props) => <SkyBlockDungeonsProfile {...props} mode="normal" /> },
       { label: (t) => t("skyblock.masterMode"), profile: (props) => <SkyBlockDungeonsProfile {...props} mode="master" /> },
+      { label: (t) => t("skyblock.essence"), profile: SkyBlockEssenceProfile },
     ],
   },
   accessories: {

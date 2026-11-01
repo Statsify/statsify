@@ -10,14 +10,25 @@ import { Container, Footer, Header, type SidebarItem, Table } from "#components"
 import { Empty } from "./components/Empty.js";
 import { LevelBar } from "./components/LevelBar.js";
 import { arrayGroup, formatTime, prettify } from "@statsify/util";
+import { gridRows } from "./components/ItemGrid.js";
+import { DUNGEON_CLASSES, type DungeonClass, type DungeonGrade } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-const CLASSES = {
+const CLASS_COLORS: Record<DungeonClass, string> = {
   healer: "§d",
   mage: "§b",
   berserk: "§c",
   archer: "§6",
   tank: "§7",
+};
+
+const GRADE_COLORS: Record<DungeonGrade, string> = {
+  "S+": "§6",
+  "S": "§e",
+  "A": "§5",
+  "B": "§a",
+  "C": "§9",
+  "D": "§c",
 };
 
 export interface SkyBlockDungeonsProfileProps extends SkyBlockProfileProps {
@@ -49,19 +60,27 @@ export const SkyBlockDungeonsProfile = ({
     [t("skyblock.highestFloor"), highest === undefined ? none : floorName(highest), "§c"],
   ];
 
-  const classes = Object.entries(CLASSES).map(([name, color]) => (
-    <LevelBar title={prettify(name)} level={dungeons.classes[name]} color={color} t={t} />
-  ));
+  // The count covers both modes, so only the Catacombs page shows it
+  if (mode === "normal") sidebar.push([t("skyblock.watcherKills"), t(dungeons.watcherKills), "§4"]);
+
+  const classes = DUNGEON_CLASSES.map((name) => {
+    const color = CLASS_COLORS[name];
+    const damage = dungeons.mostDamage[mode][name];
+    const note = damage > 0 ? `§7${t("skyblock.mostDamage")}: ${color}${t(Math.floor(damage))}` : undefined;
+    return <LevelBar title={prettify(name)} level={dungeons.classes[name]} color={color} t={t} note={note} />;
+  });
 
   const time = (ms?: number) => (ms === undefined ? none : formatTime(ms));
 
   const floors = dungeons.floors[mode]
     .filter(({ played }) => played > 0)
-    .map(({ floor, completions, bestScore, fastest, fastestS, fastestSPlus }) => (
+    .map(({ floor, completions, best, fastest, fastestS, fastestSPlus }) => (
       <box direction="column" location="center" width="100%">
         <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`§l§c${floorName(floor)}`}</text>
         <text margin={{ top: 0, bottom: 2 }}>{`§7${t("skyblock.completions")}: §a${t(completions)}`}</text>
-        <text margin={{ top: 0, bottom: 2 }}>{`§7${t("skyblock.bestScore")}: §e${bestScore === undefined ? none : t(bestScore)}`}</text>
+        <text margin={{ top: 0, bottom: 2 }}>
+          {`§7${t("skyblock.bestScore")}: §e${best ? `${t(best.score)} ${GRADE_COLORS[best.grade]}${best.grade}` : none}`}
+        </text>
         <text margin={{ top: 0, bottom: 2 }}>{`§7${t("skyblock.fastest")}: §6${time(fastest)}`}</text>
         <text margin={{ top: 0, bottom: 2 }}>{`§7${t("skyblock.fastestS")}: §6${time(fastestS)}`}</text>
         <text margin={{ top: 0, bottom: 8 }}>{`§7${t("skyblock.fastestSPlus")}: §6${time(fastestSPlus)}`}</text>
@@ -86,6 +105,35 @@ export const SkyBlockDungeonsProfile = ({
             ]),
         ]}
       </Table.table>
+      <Footer logo={logo} user={user} />
+    </Container>
+  );
+};
+
+export const SkyBlockEssenceProfile = ({
+  profile,
+  title,
+  skin,
+  badge,
+  background,
+  logo,
+  user,
+  t,
+}: SkyBlockProfileProps) => {
+  const cells = profile.member.dungeons!.essence.map(({ type, amount, perks, maxPerks }) => (
+    <box direction="column" location="center" width="100%">
+      <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`§d${prettify(type)}`}</text>
+      {amount === undefined ? <></> : <text margin={{ top: 0, bottom: 4, left: 10, right: 10 }}>{`§^3^§f${t(amount)}`}</text>}
+      <text margin={{ top: 0, bottom: 8, left: 10, right: 10 }}>
+        {`§7${t("skyblock.perksBought", { bought: t(perks), total: t(maxPerks) })}`}
+      </text>
+    </box>
+  ));
+
+  return (
+    <Container background={background}>
+      <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
+      <Table.table>{gridRows(cells, 4)}</Table.table>
       <Footer logo={logo} user={user} />
     </Container>
   );
