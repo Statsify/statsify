@@ -17,6 +17,8 @@ import petTextures from "./generated/pet-textures.json" with { type: "json" };
 import pets from "./generated/pets.json" with { type: "json" };
 import powers from "./generated/powers.json" with { type: "json" };
 import sblevels from "./generated/sblevels.json" with { type: "json" };
+import seaCreatures from "./generated/sea-creatures.json" with { type: "json" };
+import trophyFish from "./generated/trophyfish.json" with { type: "json" };
 import type { PowerStat, Rarity } from "#types";
 
 export const LEVELING = leveling as {
@@ -71,3 +73,9 @@ export const POWERS = powers as Record<string, { accessoryPower: number; stats: 
 
 /** Each Kuudra tier's key head, by the API's tier names (none is the basic tier). */
 export const KUUDRA_KEYS = kuudraKeys as Record<string, string>;
+
+/** Trophy fish id, as the API spells it but uppercased → name. */
+export const TROPHY_FISH = trophyFish as Record<string, string>;
+
+/** Every sea creature, with its bestiary kill ids (one per level it spawns at). */
+export const SEA_CREATURES = seaCreatures as { name: string; ids: string[] }[];

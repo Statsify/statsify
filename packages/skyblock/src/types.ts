@@ -73,6 +73,7 @@ export interface MemberView {
   networth?: NetworthSection;
   level?: SkyBlockLevelSection;
   crimson?: CrimsonSection | null;
+  fishing?: FishingSection | null;
 }
 
 export interface ApiSettings {
@@ -199,6 +200,24 @@ export interface KuudraTier {
   tier: string;
   completions: number;
   texture: ItemTexture; // its key
+}
+
+export interface FishingSection {
+  trophyFish: TrophyFish[];
+  trophyFishCaught: number;
+  itemsFished: Record<"total" | "normal" | "treasure" | "largeTreasure" | "outstanding", number>;
+  seaCreatureKills: number;
+  seaCreatures: { name: string; kills: number }[]; // bestiary kills, the most killed first, none at 0
+}
+
+export const TROPHY_TIERS = ["bronze", "silver", "gold", "diamond"] as const;
+
+export type TrophyTier = (typeof TROPHY_TIERS)[number];
+
+export interface TrophyFish {
+  id: string;
+  name: string;
+  tiers: Record<TrophyTier, number>;
 }
 
 export interface PetsSection {
