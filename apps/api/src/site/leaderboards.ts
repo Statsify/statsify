@@ -73,6 +73,8 @@ export function leaderboardGame({ leaderboards, ...group }: LeaderboardGroup): L
     modes.set(api, { key: api, name: removeFormatting(siteName(modeName(game, api))), leaderboards: [] });
   }
 
+  for (const { api, name } of DATED_GROUPS[group.key] ?? []) modes.set(api, { key: api, name, leaderboards: [] });
+
   const groupName = removeFormatting(group.formatted);
 
   for (const { field, name } of leaderboards) {
@@ -81,8 +83,18 @@ export function leaderboardGame({ leaderboards, ...group }: LeaderboardGroup): L
     mode.leaderboards.push({ field, name: short });
   }
 
+  for (const { api } of DATED_GROUPS[group.key] ?? []) modes.get(api)!.leaderboards.reverse();
+
   return { ...group, modes: [...modes.values()].filter((mode) => mode.leaderboards.length > 0) };
 }
+
+/**
+ * Groups a game's index lists beyond its mode registry, each of dated boards: General's seasonal events
+ * (`stats.general.events.*`). They're listed newest first, as the schema adds each event after the last.
+ */
+const DATED_GROUPS: Record<string, { api: string; name: string }[]> = {
+  general: [{ api: "events", name: "Events" }],
+};
 
 /** The key of the mode `field` is listed under in its game's index, as `leaderboardGame` places it; "" is the game's own. */
 function modeKey(field: string, isMode: (key: string) => boolean): string {
@@ -95,7 +107,7 @@ function modeKey(field: string, isMode: (key: string) => boolean): string {
 export function leaderboardIndex(field: string): { key: string; mode: string } | undefined {
   const [root, key] = field.split(".");
   if (root !== "stats" || !key) return;
-  const modes = new Set(GAMES[key]?.modes.getModes().map(({ api }) => api));
+  const modes = new Set([...(GAMES[key]?.modes.getModes() ?? []), ...(DATED_GROUPS[key] ?? [])].map(({ api }) => api));
   return { key, mode: modeKey(field, (mode) => modes.has(mode)) };
 }
 
