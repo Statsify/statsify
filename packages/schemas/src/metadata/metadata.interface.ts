@@ -111,6 +111,11 @@ export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
   limit: number;
 
   /**
+   * Reads a value searched on the leaderboard back into a score, the reverse of the formatter. For example if the field is a time, it will read `1:23.45` as milliseconds
+   */
+  parser?: (input: string) => number;
+
+  /**
    * Turns a score into what users search the leaderboard by, like the level on an exp leaderboard. It must never go down as the score goes up.
    */
   searchBy?: (score: number) => number;

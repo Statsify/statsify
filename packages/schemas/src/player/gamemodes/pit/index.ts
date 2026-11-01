@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
+import { type APIData, formatTime, parseTime } from "@statsify/util";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
@@ -124,7 +124,7 @@ export class Pit {
   })
   public totalMysticsEnchanted: number;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTime, parser: parseTime }, historical: { enabled: false } })
   public playtime: number;
 
   @Field({ historical: { enabled: false } })

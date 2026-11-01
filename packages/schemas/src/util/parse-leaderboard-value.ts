@@ -6,21 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type Constructor, formatRaceTime, formatTime } from "@statsify/util";
+import type { Constructor } from "@statsify/util";
 import { getLeaderboardField } from "./leaderboard-scanner.js";
 
 const SUFFIXES: Record<string, number> = { k: 1e3, m: 1e6, b: 1e9 };
-
-// formatTime's units in milliseconds, so a time can be searched the way the leaderboard shows it
-const TIME_UNITS: Record<string, number> = {
-  y: 31_104_000_000,
-  mo: 2_592_000_000,
-  d: 86_400_000,
-  h: 3_600_000,
-  m: 60_000,
-  s: 1000,
-  ms: 1,
-};
 
 // Binary search for the lowest score that reaches the value, which needs searchBy to never go down
 function getLowestScore(searchBy: (score: number) => number, value: number) {
@@ -48,28 +37,10 @@ export function parseLeaderboardValue(
   key: string,
   input: string,
 ) {
-  const { formatter, searchBy } = getLeaderboardField(constructor, key);
+  const { parser, searchBy } = getLeaderboardField(constructor, key);
   const search = input.replaceAll(",", "").trim().toLowerCase();
 
-  // Times are searched in seconds, like 1:23.45 or 83.45, or in units, like 5d 3h, but stored in milliseconds
-  if (formatter === formatTime || formatter === formatRaceTime) {
-    const units = [...search.matchAll(/(\d*\.?\d+)\s*(mo|ms|[ydhms])/g)];
-
-    if (units.length > 0) {
-      const time = units.reduce(
-        (total, [, number, unit]) => total + Number(number) * TIME_UNITS[unit],
-        0
-      );
-
-      return Math.round(time);
-    }
-
-    const seconds = search
-      .split(":")
-      .reduce((total, part) => total * 60 + Number(part), 0);
-
-    return Math.round(seconds * 1000);
-  }
+  if (parser) return parser(search);
 
   const match = /^(\d*\.?\d+)([kmb])?/.exec(search);
   if (!match) return Number.NaN;
