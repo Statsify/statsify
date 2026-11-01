@@ -11,6 +11,7 @@
 import accessories from "./generated/accessories.json" with { type: "json" };
 import essenceShops from "./generated/essenceshops.json" with { type: "json" };
 import hoppity from "./generated/hoppity.json" with { type: "json" };
+import hotfLayout from "./generated/hotflayout.json" with { type: "json" };
 import hotmLayout from "./generated/hotmlayout.json" with { type: "json" };
 import kuudraKeys from "./generated/kuudra-keys.json" with { type: "json" };
 import leveling from "./generated/leveling.json" with { type: "json" };
@@ -20,10 +21,11 @@ import powers from "./generated/powers.json" with { type: "json" };
 import sblevels from "./generated/sblevels.json" with { type: "json" };
 import seaCreatures from "./generated/sea-creatures.json" with { type: "json" };
 import trophyFish from "./generated/trophyfish.json" with { type: "json" };
-import type { PowerStat, Rarity } from "#types";
+import type { PowerStat, Rarity, TreeLayout } from "#types";
 
 export const LEVELING = leveling as {
   catacombs: number[];
+  HOTF: number[];
   HOTM: number[];
   leveling_caps: Record<string, number>;
   leveling_xp: number[];
@@ -58,10 +60,7 @@ export const ACCESSORY_UPGRADES = accessories.upgrades as Record<string, string[
 
 export const IGNORED_ACCESSORIES: ReadonlySet<string> = new Set(accessories.ignored);
 
-export const HOTM_LAYOUT = hotmLayout as Record<
-  string,
-  { name: string; x: number; y: number; maxLevel: number }
->;
+export const HOTM_LAYOUT = hotmLayout as TreeLayout;
 
 /** Essence type (WITHER, CRIMSON…) → its shop's perks → each perk's max level. */
 export const ESSENCE_SHOPS = essenceShops as Record<string, Record<string, number>>;
@@ -71,6 +70,8 @@ export const ESSENCE_SHOPS = essenceShops as Record<string, Record<string, numbe
  * scale. Powers learned without a stone aren't here.
  */
 export const POWERS = powers as Record<string, { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }>;
+
+export const HOTF_LAYOUT = hotfLayout as TreeLayout;
 
 /** Hoppity's rabbits by rarity, common to divine. */
 export const RABBITS = hoppity as Record<string, string[]>;
