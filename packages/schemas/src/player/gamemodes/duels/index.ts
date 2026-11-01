@@ -202,29 +202,29 @@ export class Duels {
   public icon: string;
 
   public constructor(data: APIData) {
-    this.overall = new SingleBowPVPDuelsGameMode(data, "", "", "overall");
+    this.overall = new SingleBowPVPDuelsGameMode(data, "overall", "");
     this.overall.winstreak = data?.currentStreak ?? this.overall.winstreak;
     this.arena = new ArenaDuels(data);
 
     this.blitzsg = new BlitzSGDuels(data);
-    this.bow = new SingleBowPVPDuelsGameMode(data, "Bow", "bow_duel", "default");
-    this.boxing = new SinglePVPDuelsGameMode(data, "Boxing", "boxing_duel", "half");
+    this.bow = new SingleBowPVPDuelsGameMode(data, "bow", "bow_duel");
+    this.boxing = new SinglePVPDuelsGameMode(data, "boxing", "boxing_duel");
     this.bedwars = new BedwarsDuels(data);
 
     this.bridge = new BridgeDuels(data);
-    this.classic = new MultiPVPDuelsGameMode(data, "Classic", "classic", "classic", "default");
-    this.combo = new SinglePVPDuelsGameMode(data, "Combo", "combo_duel", "default");
+    this.classic = new MultiPVPDuelsGameMode(data, "classic", "classic", "classic");
+    this.combo = new SinglePVPDuelsGameMode(data, "combo", "combo_duel");
 
     this.megawalls = new MegaWallsDuels(data);
 
-    this.nodebuff = new SinglePVPDuelsGameMode(data, "NoDebuff", "potion_duel", "half");
-    this.op = new MultiPVPDuelsGameMode(data, "OP", "op", "op", "default");
+    this.nodebuff = new SinglePVPDuelsGameMode(data, "nodebuff", "potion_duel");
+    this.op = new MultiPVPDuelsGameMode(data, "op", "op", "op");
 
     this.parkour = new ParkourDuels(data);
     this.quake = new QuakeDuels(data);
     this.skywars = new SkyWarsDuels(data);
     this.spleef = new SpleefDuels(data);
-    this.sumo = new SinglePVPDuelsGameMode(data, "Sumo", "sumo_duel", "default");
+    this.sumo = new SinglePVPDuelsGameMode(data, "sumo", "sumo_duel");
     this.uhc = new UHCDuels(data);
 
     this.pingRange = data?.pingPreference ?? 300;
@@ -236,4 +236,4 @@ export class Duels {
 }
 
 export * from "./mode.js";
-export * from "./util.js";
+export { DUELS_TITLES, type DuelsTitle, getTitleAndProgression } from "./util.js";
