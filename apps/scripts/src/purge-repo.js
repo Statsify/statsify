@@ -50,7 +50,7 @@ const nodeModules = async () => {
 
   if (!(await inquirerConfirmation("Recreate node_modules"))) return;
 
-  await exec("pnpm");
+  await exec("pnpm install");
 
   inquirerLogger("Recreater", "node_modules installed");
 };
