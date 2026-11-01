@@ -292,8 +292,6 @@ export abstract class AbstractCommandListener {
       const response = await this.onInteraction(interaction);
       await interaction.reply(response);
 
-      // The reply went through the callback endpoint, so Discord's request only needs closing.
-      // tiny-discord's own REST mode answers it with a 204 the same way.
       event.response.statusCode = 204;
       event.response.end();
     });
