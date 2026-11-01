@@ -13,7 +13,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { RARITIES } from "#types";
+import { type PowerStat, RARITIES } from "#types";
 import { prettify, removeFormatting } from "@statsify/util";
 import { skinHash } from "#textures";
 import { tmpdir } from "node:os";
@@ -391,6 +391,7 @@ try {
   const petTextures: Record<string, Record<string, string>> = {};
   const petNames: Record<string, string> = {};
   const skinTextures: Record<string, string> = {};
+  const powers: Record<string, { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }> = {};
   const files = (await readdir(join(dir, "items"))).filter((file) => file.endsWith(".json"));
   const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
 
@@ -409,6 +410,25 @@ try {
     const skin = item.internalname.startsWith("PET_SKIN_") && skullHash(item.nbttag);
     if (skin) skinTextures[item.internalname.slice("PET_SKIN_".length)] = skin;
 
+    // A power stone lists its Power's stats, some negative, at a set Accessory Power: "§7At §6250 Accessory Power§7:",
+    // then lines like "§c+80.99<glyph> Strength". Most then list a "Unique Power Bonus:", which doesn't scale.
+    const lore = item.lore ?? [];
+    const unlocks = /unlock the (.+?) power\./.exec(lore.map(removeFormatting).join(" "))?.[1];
+    const statsAt = lore.findIndex((line) => /^At \d+ Accessory Power:$/.test(removeFormatting(line)));
+    const bonusAt = lore.findIndex((line) => removeFormatting(line) === "Unique Power Bonus:");
+    const statsFrom = (at: number) =>
+      lore.slice(at + 1, lore.indexOf("", at)).map((line) => {
+        const [, color, value, name] = /^(§.)([+-][\d.]+)\S* (.+)$/.exec(line)!;
+        return { name, color, value: Number(value) };
+      });
+    if (unlocks && statsAt !== -1) {
+      powers[unlocks.toLowerCase().replaceAll(" ", "_")] = {
+        accessoryPower: Number(/\d+/.exec(removeFormatting(lore[statsAt]))![0]),
+        stats: statsFrom(statsAt),
+        bonus: bonusAt === -1 ? [] : statsFrom(bonusAt),
+      };
+    }
+
     // "§6§lLEGENDARY ACCESSORY", "§9§lRARE DUNGEON ACCESSORY", "§5§lEPIC HATCESSORY"
     const kind = /^(.+?)(?: DUNGEON)? (?:ACCESSORY|HATCESSORY)$/.exec(removeFormatting(item.lore?.at(-1) ?? "").trim());
     if (!kind) continue;
@@ -419,6 +439,7 @@ try {
   }
 
   await write("pet-textures.json", { pets: petTextures, skins: skinTextures });
+  await write("powers.json", powers);
 
   const pets = await readJson<Record<string, unknown>>("constants/pets.json");
   const offsets = pets.pet_rarity_offset as Record<string, number>;

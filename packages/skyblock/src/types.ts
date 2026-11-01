@@ -250,13 +250,26 @@ export interface AccessoriesSection {
   accessoryPower: number;
   highestAccessoryPower?: number;
   selectedPower?: string;
+  powerStats?: PowerStat[]; // at this Accessory Power, plus the stone's Unique Power Bonus; only for stone Powers
   tuning: Record<string, number>;
+  tuningPoints: number; // spent
+  enrichments: number; // on active accessories
   pricesAsOf: number;
   market: boolean;
   active: ItemView[];
-  inactive: ItemView[]; // duplicates and tiers an upgrade in the bag replaces
+  inactive: InactiveAccessory[];
   missing: MissingAccessory[];
 }
+
+export interface PowerStat {
+  name: string; // Strength, Crit Damage…
+  color: string; // its § code
+  value: number;
+}
+
+/** A duplicate, or a lower tier or variant that another accessory in the bag replaces. */
+export type InactiveAccessory = ItemView &
+  ({ reason: "duplicate" } | { reason: "replaced"; replacedBy: { id: string; name: string } });
 
 export interface NetworthSection {
   total: number;
@@ -313,6 +326,7 @@ export interface ItemView {
   stars?: number;
   recombobulated: boolean;
   enchantments?: Record<string, number>;
+  enrichment?: string; // an accessory's, as its stat id
 }
 
 export type ItemTexture =
@@ -334,6 +348,7 @@ export interface RawItem {
       dungeon_item_level?: number;
       rarity_upgrades?: number;
       enchantments?: Record<string, number>;
+      talisman_enrichment?: string;
       [key: string]: unknown;
     };
     SkullOwner?: { Properties?: { textures?: { Value: string }[] } };
