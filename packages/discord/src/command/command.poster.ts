@@ -76,7 +76,6 @@ export class CommandPoster {
       return null;
     }
 
-    // Only cache the commands once Discord accepts them, so a failed post is retried
     await writeFile(
       "./commands.json",
       JSON.stringify({
