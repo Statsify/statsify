@@ -34,7 +34,7 @@ export const getLevel = (exp = 0): number => {
     remainingExp -= expForNextLevel;
   }
 
-  return level + remainingExp / getExpReq(level + 1);
+  return level + remainingExp / getExpReq(level);
 };
 
 type Brackets = [left: string, right: string];
