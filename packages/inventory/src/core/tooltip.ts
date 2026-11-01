@@ -56,7 +56,7 @@ const BORDER_TOP = "rgba(80, 0, 255, 0.314)";
 const BORDER_BOTTOM = "rgba(40, 0, 127, 0.314)";
 
 /** How far the tooltip box reaches past its text on each side, in GUI pixels */
-const TOOLTIP_PADDING = 4;
+export const TOOLTIP_PADDING = 4;
 
 /** Draws a tooltip the way 1.8's drawHoveringText does */
 export function drawTooltip(text: TextRenderer, lines: TextComponent[], scale: number, tick: number) {
