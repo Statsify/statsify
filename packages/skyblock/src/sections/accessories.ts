@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ACCESSORY_UPGRADES, IGNORED_ACCESSORIES } from "#data";
+import { ACCESSORY_UPGRADES, IGNORED_ACCESSORIES, POWERS } from "#data";
 import { add } from "@statsify/math";
 import { costOf } from "#prices";
 import { decodeInventory } from "#nbt";
@@ -14,6 +14,7 @@ import { resourceTexture } from "#textures";
 import { toItemView } from "#items";
 import type {
   AccessoriesSection,
+  InactiveAccessory,
   ItemView,
   ItemsResource,
   MissingAccessory,
@@ -34,6 +35,21 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
 };
 
 const upgradesOf = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
+
+// How a Power's stats scale with Accessory Power, per the wiki
+const powerScale = (accessoryPower: number) => 29.97 * Math.log(0.0019 * accessoryPower + 1) ** 1.2;
+
+function stonePowerStats({ accessoryPower: listedAt, stats, bonus }: (typeof POWERS)[string], accessoryPower: number) {
+  const scaled = stats.map((stat) => ({ ...stat, value: (stat.value * powerScale(accessoryPower)) / powerScale(listedAt) }));
+
+  for (const extra of bonus) {
+    const stat = scaled.find(({ name }) => name === extra.name);
+    if (stat) stat.value = add(stat.value, extra.value);
+    else scaled.push({ ...extra });
+  }
+
+  return scaled;
+}
 
 /** Variants that replace each other (party hats) list each other; a higher tier doesn't list its lower one. */
 const isMutual = (a: string, b: string) => upgradesOf(b).includes(a);
@@ -89,15 +105,18 @@ export function getAccessories(
   const owned = new Set([...prism, ...views.map(({ id }) => id)]);
   const counted = new Set(prism);
   const active: ItemView[] = [];
-  const inactive: ItemView[] = [];
+  const inactive: InactiveAccessory[] = [];
 
   for (const view of views) {
-    const replaced =
-      counted.has(view.id) ||
-      upgradesOf(view.id).some((id) => counted.has(id) || (owned.has(id) && !isMutual(view.id, id)));
+    const upgrades = upgradesOf(view.id);
+    const replacedBy =
+      upgrades.find((id) => counted.has(id)) ?? upgrades.find((id) => owned.has(id) && !isMutual(view.id, id));
 
-    if (replaced) {
-      inactive.push(view);
+    if (counted.has(view.id)) {
+      inactive.push({ ...view, reason: "duplicate" });
+    } else if (replacedBy) {
+      const by = items.items[replacedBy];
+      if (by) inactive.push({ ...view, reason: "replaced", replacedBy: { id: replacedBy, name: by.name } });
     } else {
       active.push(view);
       counted.add(view.id);
@@ -105,7 +124,9 @@ export function getAccessories(
   }
 
   const storage = member.accessory_bag_storage;
+  const tuning = storage?.tuning?.slot_0 ?? {};
   const accessoryPower = add(...active.map(power), prism.length * powerOf("RIFT_PRISM", undefined, 0));
+  const stone = storage?.selected_power ? POWERS[storage.selected_power] : undefined;
   const stepOrder = order(accessoryPower, storage?.highest_magical_power);
   const stored = storedAccessories(member, items);
 
@@ -113,7 +134,10 @@ export function getAccessories(
     accessoryPower,
     highestAccessoryPower: storage?.highest_magical_power,
     selectedPower: storage?.selected_power,
-    tuning: storage?.tuning?.slot_0 ?? {},
+    powerStats: stone && stonePowerStats(stone, accessoryPower),
+    tuning,
+    tuningPoints: add(...Object.values(tuning)),
+    enrichments: active.filter((view) => view.enrichment).length,
     pricesAsOf: prices.asOf,
     market,
     active,

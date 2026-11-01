@@ -37,6 +37,7 @@ export function toItemView(item: RawItem): ItemView {
     stars: attributes.upgrade_level ?? attributes.dungeon_item_level,
     recombobulated: Boolean(attributes.rarity_upgrades),
     enchantments: attributes.enchantments,
+    enrichment: attributes.talisman_enrichment,
   };
 }
 
