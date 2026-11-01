@@ -68,7 +68,7 @@ export class CommandPoster {
 
     try {
       cmds = parseDiscordResponse<APIApplicationCommand[]>(response);
-      // Non-JSON errors, like a 502 page, parse to null instead of throwing
+      // A response could return a non-JSON error, like a 502 page
       if (!cmds) throw new Error(`Discord responded with ${response.status}`);
     } catch (err) {
       this.logger.error("Failed to post commands");
