@@ -45,6 +45,8 @@ import { Route as Char123LocaleChar125PrestigesBedwarsRouteImport } from './rout
 import { Route as Char123LocaleChar125PlayerNameIndexRouteImport } from './routes/{-$locale}/player/$name/index'
 import { Route as Char123LocaleChar125PlayerNameGameRouteImport } from './routes/{-$locale}/player/$name/$game'
 import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name/bingo'
+import { Route as Char123LocaleChar125PlayerNameSessionIndexRouteImport } from './routes/{-$locale}/player/$name/session/index'
+import { Route as Char123LocaleChar125PlayerNameSessionGameRouteImport } from './routes/{-$locale}/player/$name/session/$game'
 
 const GlossaryChar123hashChar125DotjsonRoute =
   GlossaryChar123hashChar125DotjsonRouteImport.update({
@@ -217,6 +219,18 @@ const Char123LocaleChar125PlayerNameBingoRoute =
     path: '/player/$name/bingo',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
+const Char123LocaleChar125PlayerNameSessionIndexRoute =
+  Char123LocaleChar125PlayerNameSessionIndexRouteImport.update({
+    id: '/player/$name/session/',
+    path: '/player/$name/session/',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125PlayerNameSessionGameRoute =
+  Char123LocaleChar125PlayerNameSessionGameRouteImport.update({
+    id: '/player/$name/session/$game',
+    path: '/player/$name/session/$game',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/glossary-{$hash}.json': typeof GlossaryChar123hashChar125DotjsonRoute
@@ -249,6 +263,8 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
+  '/{-$locale}/player/$name/session/$game': typeof Char123LocaleChar125PlayerNameSessionGameRoute
+  '/{-$locale}/player/$name/session/': typeof Char123LocaleChar125PlayerNameSessionIndexRoute
 }
 export interface FileRoutesByTo {
   '/glossary-{$hash}.json': typeof GlossaryChar123hashChar125DotjsonRoute
@@ -280,6 +296,8 @@ export interface FileRoutesByTo {
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameIndexRoute
+  '/{-$locale}/player/$name/session/$game': typeof Char123LocaleChar125PlayerNameSessionGameRoute
+  '/{-$locale}/player/$name/session': typeof Char123LocaleChar125PlayerNameSessionIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -313,6 +331,8 @@ export interface FileRoutesById {
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
+  '/{-$locale}/player/$name/session/$game': typeof Char123LocaleChar125PlayerNameSessionGameRoute
+  '/{-$locale}/player/$name/session/': typeof Char123LocaleChar125PlayerNameSessionIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -347,6 +367,8 @@ export interface FileRouteTypes {
     | '/{-$locale}/player/$name/$game'
     | '/{-$locale}/player/$name/bingo'
     | '/{-$locale}/player/$name/'
+    | '/{-$locale}/player/$name/session/$game'
+    | '/{-$locale}/player/$name/session/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/glossary-{$hash}.json'
@@ -378,6 +400,8 @@ export interface FileRouteTypes {
     | '/{-$locale}/player/$name/$game'
     | '/{-$locale}/player/$name/bingo'
     | '/{-$locale}/player/$name'
+    | '/{-$locale}/player/$name/session/$game'
+    | '/{-$locale}/player/$name/session'
   id:
     | '__root__'
     | '/glossary-{$hash}.json'
@@ -410,6 +434,8 @@ export interface FileRouteTypes {
     | '/{-$locale}/player/$name/$game'
     | '/{-$locale}/player/$name/bingo'
     | '/{-$locale}/player/$name/'
+    | '/{-$locale}/player/$name/session/$game'
+    | '/{-$locale}/player/$name/session/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -642,6 +668,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125PlayerNameBingoRouteImport
       parentRoute: typeof Char123LocaleChar125Route
     }
+    '/{-$locale}/player/$name/session/': {
+      id: '/{-$locale}/player/$name/session/'
+      path: '/player/$name/session'
+      fullPath: '/{-$locale}/player/$name/session/'
+      preLoaderRoute: typeof Char123LocaleChar125PlayerNameSessionIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/player/$name/session/$game': {
+      id: '/{-$locale}/player/$name/session/$game'
+      path: '/player/$name/session/$game'
+      fullPath: '/{-$locale}/player/$name/session/$game'
+      preLoaderRoute: typeof Char123LocaleChar125PlayerNameSessionGameRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
   }
 }
 
@@ -661,6 +701,8 @@ interface Char123LocaleChar125RouteChildren {
   Char123LocaleChar125PlayerNameGameRoute: typeof Char123LocaleChar125PlayerNameGameRoute
   Char123LocaleChar125PlayerNameBingoRoute: typeof Char123LocaleChar125PlayerNameBingoRoute
   Char123LocaleChar125PlayerNameIndexRoute: typeof Char123LocaleChar125PlayerNameIndexRoute
+  Char123LocaleChar125PlayerNameSessionGameRoute: typeof Char123LocaleChar125PlayerNameSessionGameRoute
+  Char123LocaleChar125PlayerNameSessionIndexRoute: typeof Char123LocaleChar125PlayerNameSessionIndexRoute
 }
 
 const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
@@ -685,6 +727,10 @@ const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
     Char123LocaleChar125PlayerNameBingoRoute,
   Char123LocaleChar125PlayerNameIndexRoute:
     Char123LocaleChar125PlayerNameIndexRoute,
+  Char123LocaleChar125PlayerNameSessionGameRoute:
+    Char123LocaleChar125PlayerNameSessionGameRoute,
+  Char123LocaleChar125PlayerNameSessionIndexRoute:
+    Char123LocaleChar125PlayerNameSessionIndexRoute,
 }
 
 const Char123LocaleChar125RouteWithChildren =

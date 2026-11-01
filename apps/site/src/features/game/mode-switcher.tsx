@@ -71,7 +71,7 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
     setPick(current);
   }
   const to = (key: string) => ({
-    to: "/{-$locale}/player/$name/$game" as const,
+    to: page.session ? "/{-$locale}/player/$name/session/$game" as const : "/{-$locale}/player/$name/$game" as const,
     params: { name: page.username, game: page.game.key },
     search: search(key),
   });

@@ -51,6 +51,18 @@ export class SiteController {
   }
 
   @Auth(SITE_ONLY)
+  @Implement(contract.player.session)
+  public playerSession() {
+    return implement(contract.player.session).handler(({ input }) => this.siteService.session(input.uuid));
+  }
+
+  @Auth(SITE_ONLY)
+  @Implement(contract.player.sessionGame)
+  public playerSessionGame() {
+    return implement(contract.player.sessionGame).handler(({ input }) => this.siteService.sessionGame(input));
+  }
+
+  @Auth(SITE_ONLY)
   @Implement(contract.player.full)
   public playerDocument() {
     return implement(contract.player.full).handler(({ input }) => this.siteService.full(input.uuid));

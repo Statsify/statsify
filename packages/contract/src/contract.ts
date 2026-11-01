@@ -123,6 +123,8 @@ export const PlayerPageSchema = z.object({
     })
     .partial(),
   games: z.array(GameSummarySchema),
+  /** When the session the player last started with the bot's `/session` began (ms), or null when they never started one. */
+  session: z.object({ start: z.number() }).nullable(),
   ...Freshness,
 });
 
@@ -404,6 +406,23 @@ export const GamePageSchema = z.object({
    * nav between them. `played` is false for a game the player has never played.
    */
   games: z.array(z.object({ key: z.string(), id: z.string().nullable(), name: z.string(), played: z.boolean() })),
+  /**
+   * On a session's page, when the session started (ms): the numbers are then what the player gained since, the nav's
+   * `played` says what they played in it, and no stat links to a leaderboard, which ranks the totals.
+   */
+  session: z.object({ start: z.number() }).optional(),
+  ...Freshness,
+});
+
+/** A player's session: the games they played since they last reset it with the bot's `/session`, as player page panels. */
+export const SessionPageSchema = z.object({
+  ...PlayerName,
+  /** When the session started (ms). */
+  start: z.number(),
+  /** The bot's General session card: levels, achievement points, event EXP, quests, challenges and karma gained. */
+  overview: StatSectionSchema,
+  /** The player page's panels for the games played in the session, with the session's numbers and no leaderboards. */
+  games: z.array(GameSummarySchema),
   ...Freshness,
 });
 
@@ -615,6 +634,8 @@ const GameInputSchema = z.object({
    */
   period: z.string().min(1).max(32).optional(),
 });
+/** A session's page has no periods: its numbers are gains since the session started. */
+const SessionGameInputSchema = GameInputSchema.omit({ period: true });
 const RefreshInputSchema = z.object({
   uuid: UuidSchema,
   clientIp: ClientIpSchema,
@@ -695,6 +716,14 @@ export const contract = {
       .route({ method: "GET", path: "/player/game", summary: "One game's page for a player, in one mode" })
       .input(GameInputSchema)
       .output(GamePageSchema),
+    session: errors
+      .route({ method: "GET", path: "/player/session", summary: "The games a player's session covers" })
+      .input(PlayerInputSchema)
+      .output(SessionPageSchema),
+    sessionGame: errors
+      .route({ method: "GET", path: "/player/session/game", summary: "One game's page for a player's session, in one mode" })
+      .input(SessionGameInputSchema)
+      .output(GamePageSchema),
   },
   guild: {
     page: errors
@@ -765,9 +794,11 @@ export type ResolveInput = z.infer<typeof ResolveInputSchema>;
 export type LeaderboardPageInput = z.infer<typeof LeaderboardPageInputSchema>;
 export type LeaderboardGameInput = z.infer<typeof LeaderboardGameInputSchema>;
 export type GameInput = z.infer<typeof GameInputSchema>;
+export type SessionGameInput = z.infer<typeof SessionGameInputSchema>;
 
 export type BingoPlayer = z.infer<typeof BingoPlayerSchema>;
 export type GamePage = z.infer<typeof GamePageSchema>;
+export type SessionPage = z.infer<typeof SessionPageSchema>;
 export type StatSection = z.infer<typeof StatSectionSchema>;
 export type StatCell = z.infer<typeof StatCellSchema>;
 export type HomePreviews = z.infer<typeof HomePreviewsSchema>;

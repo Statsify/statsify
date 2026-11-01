@@ -9,7 +9,8 @@
       "player": "Player Not Found | Statsify",
       "page": "Not Found | Statsify",
       "leaderboard": "Leaderboard Not Found | Statsify",
-      "guild": "Guild Not Found | Statsify"
+      "guild": "Guild Not Found | Statsify",
+      "session": "No Session | Statsify"
     },
     "bingo": {
       "playerTitle": "{{name}} Bingo Stats | Statsify",
@@ -46,6 +47,11 @@
     "guild": {
       "title": "{{name}} Guild Stats | Statsify",
       "lead": "{{name}} guild stats:"
+    },
+    "session": {
+      "title": "{{name}} Session Stats | Statsify",
+      "description": "View {{name}} Hypixel session stats on Statsify.",
+      "gameDescription": "View {{name}} Hypixel {{game}} session stats on Statsify."
     },
     "leaderboard": {
       "gameTitle": "{{game}} Leaderboards | Statsify",
@@ -180,6 +186,17 @@
       "unknown": "Hypixel doesn't know a guild called {{name}} either. Check the spelling."
     }
   },
+  "session": {
+    "title": "Session",
+    "started": "Session started",
+    "noGames": "{{name}} hasn't played a game this session yet.",
+    "unplayed": "{{name}} hasn't played {{game}} this session.",
+    "back": "Back to the session",
+    "notFound": {
+      "title": "No Session",
+      "description": "{{name}} hasn't started a session. Linked players start one with /session in Discord."
+    }
+  },
   "leaderboards": {
     "title": "Leaderboards",
     "filter": "Filter leaderboards...",
@@ -224,6 +241,7 @@
   },
   "game": {
     "stats": "Stats",
+    "session": "Session",
     "wins": "Wins",
     "times": "Times",
     "challenges": "Challenges",

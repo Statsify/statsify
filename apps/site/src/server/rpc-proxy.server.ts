@@ -19,6 +19,8 @@ const RPC_PROCEDURES = new Map<string, { ttl: number; params: readonly string[] 
   ["player/page", { ttl: 60, params: ["uuid"] }],
   ["player/bingo", { ttl: 300, params: ["uuid"] }],
   ["player/game", { ttl: 60, params: ["uuid", "game", "mode", "submode", "period"] }],
+  ["player/session", { ttl: 60, params: ["uuid"] }],
+  ["player/session/game", { ttl: 60, params: ["uuid", "game", "mode", "submode"] }],
   ["guild/page", { ttl: 60, params: ["name"] }],
   ["search/suggest", { ttl: 30, params: ["query"] }],
   ["search/cards", { ttl: 60, params: ["names"] }],
