@@ -76,6 +76,7 @@ export interface MemberView {
   fishing?: FishingSection | null;
   jacob?: JacobSection | null;
   chocolate?: ChocolateSection | null;
+  hotf?: HotfSection | null;
 }
 
 export interface ApiSettings {
@@ -178,10 +179,37 @@ export interface HotmSection {
   tokens: { spent: number; total: number };
   ability?: string;
   powder: Record<Powder, { available: number; spent: number }>;
-  nodes: { id: string; name: string; level: number; maxLevel: number; x: number; y: number; enabled: boolean }[];
+  nodes: TreeNode[];
   crystals: { found: number; placed: number }; // over every gem
   nucleusRuns: number;
   glacite: { corpses: number; fossils: number; mineshafts: number }; // corpses looted, fossils donated
+}
+
+/** A perk in the Heart of the Mountain's or the Forest's tree, at its spot in the menu. */
+export interface TreeNode {
+  id: string;
+  name: string;
+  level: number;
+  maxLevel: number;
+  x: number;
+  y: number;
+  enabled: boolean;
+}
+
+export type TreeLayout = Record<string, { name: string; x: number; y: number; maxLevel: number }>;
+
+export const WHISPERS = ["forest", "desert"] as const;
+
+export type Whisper = (typeof WHISPERS)[number];
+
+export interface HotfSection {
+  level: Level;
+  centerLevel: number; // Center of the Forest's
+  loadout: { selected: number; total: number };
+  tokensSpent: number;
+  ability?: string;
+  whispers: Record<Whisper, { total: number; spent: number }>; // total earned; spent by this loadout
+  nodes: TreeNode[];
 }
 
 export interface CrimsonSection {

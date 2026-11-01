@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { JacobMedal } from "#types";
+import type { Faction, JacobMedal, Whisper } from "#types";
 
 // The parts of Hypixel's /v2/skyblock responses this package reads. Everything is optional, since Hypixel leaves out
 // whatever a player never touched or an API setting hides.
@@ -97,6 +97,10 @@ export interface RawMember {
       time_tower?: { level?: number };
     };
   };
+  foraging_core?: {
+    // A loadout's spending is under its slot number
+    whispers?: Partial<Record<Whisper, Record<string, number | { spent?: number; spent_non_refundable?: number } | undefined>>>;
+  };
   pets_data?: { pets?: RawPet[]; pet_care?: { pet_types_sacrificed?: string[] } };
   dungeons?: {
     dungeon_types?: { catacombs?: RawDungeonType; master_catacombs?: RawDungeonType };
@@ -129,7 +133,7 @@ export interface RawMember {
   rift?: { access?: { consumed_prism?: boolean }; dead_cats?: { montezuma?: RawPet } };
   nether_island_player_data?: {
     abiphone?: { active_contacts?: string[] };
-    selected_faction?: "mages" | "barbarians";
+    selected_faction?: Faction;
     mages_reputation?: number;
     barbarians_reputation?: number;
     kuudra_completed_tiers?: Record<string, number>; // <tier> completions, highest_wave_<tier>

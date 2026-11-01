@@ -7,10 +7,17 @@
  */
 
 import { HOTM_LAYOUT, LEVELING } from "#data";
-import { type HotmSection, POWDERS } from "#types";
+import { type HotmSection, POWDERS, type TreeLayout, type TreeNode } from "#types";
 import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
 import type { RawMember } from "#raw";
+
+/** A tree's perks at their menu spots, levelled from the member's nodes. */
+export const treeNodes = (layout: TreeLayout, nodes: Record<string, number | boolean>): TreeNode[] =>
+  Object.entries(layout).map(([id, { name, x, y, maxLevel }]) => {
+    const level = Number(nodes[id] ?? 0);
+    return { id, name, level, maxLevel, x, y, enabled: level > 0 && nodes[`toggle_${id}`] !== false };
+  });
 
 // Tokens of the Mountain per HOTM tier, and the total Core of the Mountain gives by its level (1 at level 1, 5 and 7,
 // 2 at 10). The API only stores the spent ones.
@@ -56,10 +63,7 @@ export function getHotm(member: RawMember): HotmSection {
         },
       ])
     ) as HotmSection["powder"],
-    nodes: Object.entries(HOTM_LAYOUT).map(([id, { name, x, y, maxLevel }]) => {
-      const nodeLevel = Number(nodes[id] ?? 0);
-      return { id, name, level: nodeLevel, maxLevel, x, y, enabled: nodeLevel > 0 && nodes[`toggle_${id}`] !== false };
-    }),
+    nodes: treeNodes(HOTM_LAYOUT, nodes),
     crystals: {
       found: add(...crystals.map((crystal) => crystal.total_found ?? 0)),
       placed: add(...crystals.map((crystal) => crystal.total_placed ?? 0)),
