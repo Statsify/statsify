@@ -91,8 +91,10 @@ export interface RawMember {
     nodes?: Record<string, number | boolean>;
     tokens_spent?: number;
     selected_pickaxe_ability?: string;
+    crystals?: Record<string, { total_found?: number; total_placed?: number }>;
     [powder: `powder_${string}`]: number | undefined;
   };
+  glacite_player_data?: { corpses_looted?: Record<string, number>; fossils_donated?: string[]; mineshafts_entered?: number };
   accessory_bag_storage?: {
     tuning?: Record<string, unknown> & { slot_0?: Record<string, number> };
     selected_power?: string;
