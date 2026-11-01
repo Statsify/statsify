@@ -207,6 +207,7 @@
     "skyblock-crimson": "View your Crimson Isle faction, Kuudra runs, Dojo points and miniboss kills",
     "skyblock-dungeons": "View your Catacombs and class levels and floor completions",
     "skyblock-fishing": "View your trophy fish, items fished and sea creature kills",
+    "skyblock-hotf": "View your Heart of the Forest level, tokens, whispers and perk tree",
     "skyblock-hotm": "View your Heart of the Mountain level, tokens and powder",
     "skyblock-jacob": "View your Jacob's contest medals, best brackets and personal bests",
     "skyblock-level": "View your SkyBlock level and the cheapest SkyBlock XP",
@@ -564,6 +565,7 @@
   "number": "{{value, number}}",
   "players": "Players",
   "skyblock": {
+    "ability": "Ability",
     "accessories": "Accessories",
     "accessoryPower": "Accessory Power",
     "activePet": "Active Pet",
@@ -592,6 +594,7 @@
       "outstanding": "Outstanding",
       "treasure": "Treasure"
     },
+    "centerOfTheForest": "Center of the Forest",
     "cheapestAccessoryPower": "Cheapest Accessory Power",
     "cheapestXp": "Cheapest SkyBlock XP",
     "chocolate": "Chocolate",
@@ -629,6 +632,7 @@
     "floor": "F{{floor}}",
     "fossilsDonated": "Fossils Donated",
     "highestFloor": "Highest Floor",
+    "hotfLevel": "HOTF Level",
     "hotmLevel": "HOTM Level",
     "inactive": "Inactive",
     "itemsFished": "Items Fished",
@@ -665,6 +669,7 @@
     "noChocolate": "No Chocolate Factory yet.",
     "noCrimson": "No Crimson Isle progress yet.",
     "noFishing": "Nothing fished yet.",
+    "noHotf": "No Heart of the Forest XP yet.",
     "noInactiveAccessories": "Every accessory in the bag counts.",
     "noJacob": "No Jacob's contests yet.",
     "noJacobCrops": "No brackets or personal bests yet.",
@@ -720,6 +725,7 @@
       "crimson": "Crimson Isle",
       "dungeons": "Dungeons",
       "fishing": "Fishing",
+      "hotf": "Heart of the Forest",
       "hotm": "Heart of the Mountain",
       "jacob": "Jacob's Contests",
       "level": "Level",
@@ -739,6 +745,10 @@
     "watcherKills": "Watcher Kills",
     "weeklyBuys": "Bought This Week",
     "weeklySells": "Sold This Week",
+    "whispers": {
+      "desert": "Desert Whispers Earned",
+      "forest": "Forest Whispers Earned"
+    },
     "xp": "SkyBlock XP",
     "xpGain": "+{{xp}} XP",
     "xpOnceInBag": "+{{xp}} XP once it's in your bag",
