@@ -10,7 +10,8 @@ import { cn } from "~/lib/util";
 import { type ComponentProps, useState } from "react";
 
 // The nine public backgrounds in `public/backgrounds/`; the private blurred set never ships. They are
-// pre-blurred WebP (about 18 KB each), so no backdrop filter runs on top of them.
+// pre-blurred WebP (about 10 KB each), so no backdrop filter runs on top of them: a 2.4 px Gaussian on the 480 px image
+// matches the Next site's 8 px backdrop blur on a 900 px tall screen.
 const BACKGROUNDS = ["general", "guilds", "bingo", "bedwars", "skywars", "duels", "arcade", "uhc", "woolgames"] as const;
 
 export type BackgroundName = (typeof BACKGROUNDS)[number];

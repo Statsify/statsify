@@ -105,40 +105,28 @@
 
 /* A list item drawn as a card Box with CSS alone, for lists too long for the `Box` component (the leaderboard index's
    thousands of links, set as HTML), in the card's shape (`box-shape`) and colours (tokens.css): its link takes the
-   fill and the bevel, the item the shadow (`::before`, the parts outside the box, as `Box` clips it) and the overlay (`::after`,
-   blended with everything behind it, as `Box`'s is). The bevel clips the link's own ring, so the ring goes inside. */
+   fill and the bevel, the item the shadow (`::before`, the parts outside the box, as `Box` clips it). The bevel clips
+   the link's own ring, so the ring goes inside. */
 @utility box-item {
   position: relative;
-  margin: 0 4px 4px 0;
-
-  &::before,
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
+  margin: 0 var(--box-s) var(--box-s) 0;
 
   @apply box-shape;
 
   &::before {
-    translate: 4px 4px;
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    translate: var(--box-s) var(--box-s);
     background: var(--panel-shadow);
     clip-path: var(--box-shadow-path);
   }
 
-  &::after,
   & > a {
     clip-path: var(--box-path);
-  }
-
-  &::after {
-    background: var(--panel-overlay);
-    mix-blend-mode: overlay;
-  }
-
-  & > a {
-    background: var(--panel-background);
+    background: var(--panel-overlay), var(--panel-background);
+    background-blend-mode: overlay, normal;
   }
 
   & > a:focus-visible {
@@ -149,18 +137,18 @@
 /*
  * The space `/player`'s recently viewed section takes, from `--recent` (how many players: set on the root before first
  * paint, then on the section by React): the heading row, then the result cards, one a row on phones, two from md and
- * three from xl, 124 px tall below sm and 156 from it, 4 px apart. None for none. So the footer stays put when the cards
- * arrive.
+ * three from xl, 128 px tall below sm and 160 from it (with their shadow's 8 px), 4 px apart. None for none. So the
+ * footer stays put when the cards arrive.
  */
 @utility recent-hold {
   --recent-rows: var(--recent, 0);
-  --recent-card: 124px;
+  --recent-card: 128px;
   min-height: calc(min(var(--recent, 0), 1) * (52px + var(--recent-rows) * var(--recent-card) + (var(--recent-rows) - 1) * 4px));
   /* With nothing held, it also takes back the gap the page's column (gap-8) puts before it, so a first visit is as before. */
   margin-top: calc((min(var(--recent, 0), 1) - 1) * 32px);
 
   @variant sm {
-    --recent-card: 156px;
+    --recent-card: 160px;
   }
 
   @variant md {
@@ -179,15 +167,15 @@
 }
 
 /* The card's shape, for the `box` and `box-item` utilities: each corner's bevel and the shadow's offset come from
-   `--box-tl`, `--box-tr`, `--box-bl`, `--box-br` and `--box-s` (the card's 4 px unless a Box sets them), giving the
+   `--box-tl`, `--box-tr`, `--box-bl`, `--box-br` and `--box-s` (8 px unless a Box sets them), giving the
    panel's outline (`--box-path`) and the shadow's (`--box-shadow-path`): shaded in the bottom-right notch and along the
    right and the foot, for a layer moved out by the offset. */
 @utility box-shape {
-  --box-tl: 4px;
-  --box-tr: 4px;
-  --box-bl: 4px;
-  --box-br: 4px;
-  --box-s: 4px;
+  --box-tl: 8px;
+  --box-tr: 8px;
+  --box-bl: 8px;
+  --box-br: 8px;
+  --box-s: 8px;
   --box-path: polygon(
     var(--box-tl) 0, calc(100% - var(--box-tr)) 0, calc(100% - var(--box-tr)) var(--box-tr), 100% var(--box-tr),
     100% calc(100% - var(--box-br)), calc(100% - var(--box-br)) calc(100% - var(--box-br)),
@@ -211,11 +199,11 @@
 
 /* The card Box (`box.tsx`), drawn here so a Box's markup carries no polygons: its shape from `box-shape`, and the fill
    and shadow colours from `--box-fill` and `--box-shadow`, the card's (tokens.css) unless the Box sets them. The shadow
-   is the Box's `::before`; a square bottom-right corner (`data-square-corner`) has no notch. The panel and the overlay
-   are the fill's `::before` and `::after`, beside the content, so the overlay blends with whatever is behind the Box. */
+   is the Box's `::before`; a square bottom-right corner (`data-square-corner`) has no notch. The fill's first layer is
+   blended onto the rest with `overlay`, inside the fill only. */
 @utility box {
   @apply box-shape;
-  --box-fill: var(--panel-background);
+  --box-fill: var(--panel-overlay), var(--panel-background);
   --box-shadow: var(--panel-shadow);
 
   &::before {
@@ -238,26 +226,12 @@
     );
   }
 
-  & > [data-slot="fill"],
-  & > [data-slot="fill"]::before,
-  & > [data-slot="fill"]::after {
+  & > [data-slot="fill"] {
     position: absolute;
     inset: 0;
-  }
-
-  & > [data-slot="fill"]::before,
-  & > [data-slot="fill"][data-overlay]::after {
-    content: "";
     clip-path: var(--box-path);
-  }
-
-  & > [data-slot="fill"]::before {
     background: var(--box-fill);
-  }
-
-  & > [data-slot="fill"]::after {
-    background: var(--panel-overlay);
-    mix-blend-mode: overlay;
+    background-blend-mode: overlay, normal;
   }
 
   & > [data-slot="content"] {

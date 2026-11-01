@@ -60,9 +60,8 @@ function toBorderRadius(borderRadius: BoxBorderRadius): {
   };
 }
 
-// The card look from `@statsify/tokens`: the panel colour, the renderer's overlay gradient and a shadow at the
-// card's opacity, which the `box` utility (app.css) draws from tokens.css. The tinted variants keep their radial
-// gradients and have no overlay.
+// The default card is the `box` utility's (app.css, from tokens.css). Each fill's first layer is blended onto the rest
+// with `overlay`, as the Next site's variants were.
 const boxVariants = {
   red: {
     background: `radial-gradient(circle at 50% -10%, rgb(0 0 0 / 0.06) 40%, hsl(0 100% 30% / 0.5) 110%), ${panel.background}`,
@@ -78,7 +77,7 @@ const boxVariants = {
   },
   // The bot's highlighted leaderboard row (`leaderboard.profile.tsx`): a white panel with a lighter shadow.
   highlight: {
-    background: "rgb(255 255 255 / 0.35)",
+    background: "var(--panel-overlay), rgb(255 255 255 / 0.35)",
     shadow: "rgb(0 0 0 / 0.3)",
   },
 };
@@ -169,17 +168,14 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
   return (
     <Component
       className={cn(
-        "box relative text-mc-white me-1 mb-1 content:p-4 content:text-mc-2 content:h-full",
+        "box relative text-mc-white me-2 mb-2 content:p-4 content:text-mc-2 content:h-full",
         className
       )}
       data-square-corner={borderRadius.bottomRight === 0 || undefined}
       style={vars as CSSProperties}
       {...(props as object)}
     >
-      {/* The card lays its gradient over everything beneath the panel with `overlay` compositing (`Box.ts`
-          renderOverlay), so the background brightens at the top and darkens at the bottom. A blend mode beside the
-          content does the same (the fill's `::after`); inside the clipped content it could only see the panel colour. */}
-      <div data-slot="fill" data-overlay={variant === "default" || variant === "highlight" || undefined} />
+      <div data-slot="fill" />
       <div data-slot="content" className="relative" style={style}>
         {title !== undefined && (
           <div data-slot="title" className="-mx-4 -mt-4 mb-3 border-b-2 border-black/30 bg-black/20 px-4 py-2 text-center">

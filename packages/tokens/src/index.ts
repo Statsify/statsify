@@ -7,12 +7,10 @@
  */
 
 /**
- * Design tokens for the site. The `§` colours and the card panel's colour and shadow are the bot's own, read from the
- * import-free entries of `@statsify/util` and `@statsify/rendering`.
+ * Design tokens for the site. The `§` colours are the bot's own, read from the import-free entry of `@statsify/util`.
  * `scripts/tokens-css.ts` turns these into `dist/tokens.css` for Tailwind's `@theme`.
  */
 
-import { DEFAULT_COLOR, SHADOW_OPACITY } from "@statsify/rendering/colors";
 import { minecraftColors } from "@statsify/util/minecraft-colors";
 
 const mc = (code: string) => minecraftColors.find((color) => color.code === code)!.hex;
@@ -64,16 +62,20 @@ export const colors = {
   },
 } as const;
 
-/** The card panel, as `@statsify/rendering`'s `Box` draws it. Lengths are in px. */
+/**
+ * The card panel as the Next site drew its boxes: a black fill with a faint light-to-dark gradient over it, blended
+ * with `overlay` inside the box only, so the background shows through untinted; an 8 px bevel and a hard 8 px shadow.
+ * Lengths are in px.
+ */
 export const panel = {
-  background: DEFAULT_COLOR,
+  background: "rgb(0 0 0 / 0.5)",
   overlay: {
-    from: "rgba(255, 255, 255, 0.3)",
-    to: "rgba(0, 0, 0, 0.3)",
+    from: "rgb(255 255 255 / 0.06)",
+    to: "rgb(0 0 0 / 0.5)",
   },
-  bevel: 4,
-  shadow: 4,
-  shadowOpacity: SHADOW_OPACITY,
+  bevel: 8,
+  shadow: 8,
+  shadowOpacity: 0.42,
 } as const;
 
 const SANS = [
