@@ -57,6 +57,7 @@ export interface RawMember {
   currencies?: { coin_purse?: number; essence?: Record<string, { current?: number }> };
   fairy_soul?: { total_collected?: number };
   player_stats?: { pets?: { total_exp_gained?: number } };
+  bestiary?: { kills?: Record<string, number> };
   player_data?: { experience?: Record<string, number>; perks?: Record<string, number> };
   collection?: Record<string, number>;
   inventory?: {
@@ -102,7 +103,14 @@ export interface RawMember {
     highest_magical_power?: number;
   };
   rift?: { access?: { consumed_prism?: boolean }; dead_cats?: { montezuma?: RawPet } };
-  nether_island_player_data?: { abiphone?: { active_contacts?: string[] } };
+  nether_island_player_data?: {
+    abiphone?: { active_contacts?: string[] };
+    selected_faction?: "mages" | "barbarians";
+    mages_reputation?: number;
+    barbarians_reputation?: number;
+    kuudra_completed_tiers?: Record<string, number>; // <tier> completions, highest_wave_<tier>
+    dojo?: Record<string, number>; // dojo_points_<test>, dojo_time_<test>
+  };
 }
 
 export interface RawProfile {

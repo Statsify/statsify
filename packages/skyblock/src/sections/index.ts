@@ -8,6 +8,7 @@
 
 import { getAccessories } from "./accessories.js";
 import { getApiSettings } from "../api-settings.js";
+import { getCrimson } from "./crimson.js";
 import { gameModeOf } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
 import { getHotm } from "./hotm.js";
@@ -23,6 +24,7 @@ export type SectionNeed = "museum" | "prices" | "items";
 /** Every section a lookup can ask for: SECTIONS' and networth, which ./networth computes. */
 export const SKYBLOCK_SECTIONS = [
   "accessories",
+  "crimson",
   "dungeons",
   "hotm",
   "level",
@@ -51,7 +53,15 @@ interface Section<K extends keyof MemberView> {
 /** Ironman, stranded and bingo profiles can't use the Auction House or the Bazaar. */
 const hasMarket = (profile: RawProfile) => gameModeOf(profile) === "normal";
 
-export type SectionKey = "accessories" | "dungeons" | "hotm" | "level" | "pets" | "skills" | "slayers";
+export type SectionKey =
+  | "accessories"
+  | "crimson"
+  | "dungeons"
+  | "hotm"
+  | "level"
+  | "pets"
+  | "skills"
+  | "slayers";
 
 /** The caller fetches each section's needs before compute(). */
 export const SECTIONS: { [K in SectionKey]: Section<K> } = {
@@ -62,6 +72,7 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
       return getAccessories(member, items, prices, hasMarket(profile));
     },
   },
+  crimson: { needs: [], compute: async ({ member }) => getCrimson(member) },
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
   hotm: { needs: [], compute: async ({ member }) => getHotm(member) },
   level: {
