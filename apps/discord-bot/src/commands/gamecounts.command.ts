@@ -57,8 +57,6 @@ class GameCountsModeArgument extends AbstractArgument {
   ): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
 
-    if (!currentValue) return GAMECOUNT_GAME_CHOICES.slice(0, 25);
-
     return GAMECOUNT_GAME_CHOICES
       .filter(({ name, value }) =>
         name.toLowerCase().includes(currentValue) ||
