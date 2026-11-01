@@ -58,9 +58,9 @@ export class GuildService {
       throw new GuildNotFoundException(displayName);
     }
 
-    // The cached guild doesn't match the one we got from the API, just ignore the cached guild
+    // The cached guild isn't the one we got from the API, so merge with our saved copy of that guild instead
     if (guild.id !== cachedGuild?.id) {
-      cachedGuild = null;
+      [cachedGuild] = await this.getCachedGuild(guild.id, GuildQuery.ID);
     }
 
     const memberMap = Object.fromEntries(
