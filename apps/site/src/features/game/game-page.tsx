@@ -9,22 +9,22 @@
 import { PageBackground, backgroundFor } from "~/components/ui/background";
 import { BOX_GAP, Box } from "~/components/ui/box";
 import { Command } from "~/components/ui/command";
+import { ComparePanel } from "~/features/compare/compare-form";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode, type Ref, useEffect, useId, useRef, useState } from "react";
-import { GameNav } from "./game-nav";
 import { Hint, PointerText, Spoken } from "~/components/ui/hint";
 import { InlineStat, LeaderboardLink, StatCell, StatNumber, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText, colourClass, leadingColourClass, nameColour, plainText } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "~/features/player/mini-header";
-import { ModeSwitcher } from "./mode-switcher";
+import { GameSwitchers } from "./mode-switcher";
 import { PanelToggle, SharePanel } from "~/features/player/share-panel";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SessionLine } from "~/features/session/session-line";
 import { SkinBust } from "~/components/ui/skin";
 import { StatPanel, useLabelText } from "./stat-panel";
 import { cn } from "~/lib/util";
-import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "./game-data";
+import { type GameScope, gamePageQuery, headingText, pageSearch } from "./game-data";
 import { imageSize, pageCard } from "@statsify/profiles/protocol";
 import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
@@ -56,18 +56,19 @@ export function GameView({ page }: { page: GamePage }) {
   const queryClient = useQueryClient();
   const nametag = useRef<HTMLDivElement>(null);
   const shareId = useId();
+  const compareId = useId();
   const [sharing, setSharing] = useState(false);
+  const [comparing, setComparing] = useState(false);
   const [filter, setFilter] = useState("");
   const { session } = page;
+  const scope: GameScope = { kind: session ? "session" : "player", name: page.username };
 
   useEffect(
     () => addRecentPlayer({ uuid: page.uuid, name: page.username, colour: nameColour(page.displayName) }),
     [page.uuid, page.username, page.displayName]
   );
 
-  const mode = modeSearch(page, page.mode);
-  const submode = submodeSearch(page, page.submode);
-  const period = periodSearch(page, page.period);
+  const { mode, submode, period } = pageSearch(page);
   // The card the page unfurls with, as its route's head picks it.
   const card = new URLSearchParams({ game: page.game.key, ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }), v: String(page.updatedAt) });
   const cardSize = imageSize(pageCard(page), "og");
@@ -115,10 +116,15 @@ export function GameView({ page }: { page: GamePage }) {
     return result;
   };
 
-  const shareToggle = (
-    <PanelToggle open={sharing} controls={shareId} onToggle={() => setSharing(!sharing)}>
-      {t("player.share.open")}
-    </PanelToggle>
+  const toggles = (
+    <>
+      <PanelToggle open={sharing} controls={shareId} onToggle={() => setSharing(!sharing)}>
+        {t("player.share.open")}
+      </PanelToggle>
+      <PanelToggle open={comparing} controls={compareId} onToggle={() => setComparing(!comparing)}>
+        {t("compare.open")}
+      </PanelToggle>
+    </>
   );
 
   return (
@@ -130,12 +136,14 @@ export function GameView({ page }: { page: GamePage }) {
             overview under both; from `lg` the overview goes under the level. An overview with no level sits beside the
             nametag at its own height, and a nametag with neither (Parkour) is as wide as its content. */}
         <div className={cn("grid grid-cols-1 md:grid-cols-[fit-content(50%)_minmax(0,1fr)]", BOX_GAP)}>
-          {/* A session's page has no card to share, and Update would refresh the player's totals, not the session. */}
+          {/* A session's page has nothing to share or compare, and Update would refresh the totals, not the session. */}
           <GameHeader
             ref={nametag}
             page={page}
-            actions={session ? undefined : shareToggle}
-            refresh={session ? undefined : <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto beside={shareToggle} />}
+            actions={session ? undefined : toggles}
+            refresh={session ?
+              undefined :
+              <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto beside={<div className="flex flex-wrap gap-x-4">{toggles}</div>} />}
             className={cn(page.level && page.overview.length > 0 && "lg:row-span-2", !page.level && page.overview.length === 0 && "md:col-span-2 md:w-fit")}
           />
           {page.level && <LevelPanel level={page.level} username={page.username} />}
@@ -167,17 +175,8 @@ export function GameView({ page }: { page: GamePage }) {
             file={`${[page.username, page.game.key, mode, submode, period].filter(Boolean).join("-")}.png`}
           />
         )}
-        {/* The Games button and the mode select share a row (on phones, so the tables start nearer the top); the open
-            Games grid lies over the page below it. On phones the tabs share it too; from `md` links and tabs take rows
-            of their own. */}
-        <div className="relative flex flex-wrap items-start gap-x-2 gap-y-4 empty:hidden">
-          {page.games.length > 1 && (
-            <GameNav games={page.games} username={page.username} current={page.game.key} session={session !== undefined} className="shrink-0" />
-          )}
-          {page.modes.length > 1 && <ModeSwitcher page={page} />}
-        </div>
-        {page.submodes.length > 1 && <ModeSwitcher page={page} kind="submode" />}
-        {(page.periods?.length ?? 0) > 1 && <ModeSwitcher page={page} kind="period" />}
+        {comparing && <ComparePanel id={compareId} page={page} />}
+        <GameSwitchers page={page} scope={scope} />
         {page.window && <PeriodDates {...page.window} />}
         {page.games.find(({ key }) => key === page.game.key)?.played === false && (
           <NeverPlayed name={page.username} game={plainText(page.game.name)} session={session !== undefined} />

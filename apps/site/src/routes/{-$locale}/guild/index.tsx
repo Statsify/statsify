@@ -11,6 +11,7 @@ import { SearchIcon } from "~/components/icons/search";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { searchPageMeta } from "~/lib/social-meta";
+import { searchParam } from "~/features/game/game-data";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -18,12 +19,7 @@ import { useTranslation } from "react-i18next";
  * page's scripts load (it sends `?name=` here, and the loader on); with them, it navigates in place.
  */
 export const Route = createFileRoute("/{-$locale}/guild/")({
-  validateSearch: (search: Record<string, unknown>): { name?: string } => {
-    // The router reads `?name=123` as a number.
-    const raw = search.name;
-    const name = typeof raw === "string" || typeof raw === "number" ? String(raw).slice(0, 32).trim() : "";
-    return { name: name || undefined };
-  },
+  validateSearch: (search: Record<string, unknown>): { name?: string } => ({ name: searchParam(search.name)?.trim() || undefined }),
   loaderDeps: ({ search }) => search,
   loader: ({ deps: { name } }) => {
     if (name) throw redirect({ to: "/{-$locale}/guild/$name", params: { name } });

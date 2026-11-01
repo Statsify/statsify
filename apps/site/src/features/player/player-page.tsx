@@ -11,6 +11,7 @@ import { BOX_GAP, Box, CELL, HEADING_BOX, StatBox } from "~/components/ui/box";
 import { ClockScript } from "~/lib/clock";
 import { Discord } from "~/components/icons/discord";
 import { GameNav } from "~/features/game/game-nav";
+import { gameLink } from "~/features/game/game-data";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
@@ -145,7 +146,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
             its grid lies over the panels. From `md` the panels are near enough. */}
         {page.games.length > 0 && (
           <div className="relative md:hidden">
-            <GameNav games={navGames} username={page.username} wide />
+            <GameNav games={navGames} scope={{ kind: "player", name: page.username }} wide />
           </div>
         )}
         <GameGrid games={page.games} username={page.username} />
@@ -562,11 +563,7 @@ function GamePanel({ game, username, session }: { game: GameSummary; username: s
       <Box className={HEADING_BOX}>
         <h2>
           {/* The whole box is the link, its ring on the box's edge: the box clips anything past it. */}
-          <Link
-            to={session ? "/{-$locale}/player/$name/session/$game" : "/{-$locale}/player/$name/$game"}
-            params={{ name: username, game: game.page }}
-            className={cn(STAT_LINK, "after:inset-0")}
-          >
+          <Link {...gameLink({ kind: session ? "session" : "player", name: username }, game.page)} className={cn(STAT_LINK, "after:inset-0")}>
             {title}
             {/* Text, not an icon, so the title's box keeps the height of every other panel's. */}
             <span aria-hidden className="text-mc-1.5 text-mc-gray"> »</span>

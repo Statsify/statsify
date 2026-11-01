@@ -19,7 +19,7 @@ import { cacheNotFoundResponse } from "~/lib/response";
 import { createI18n } from "~/i18n/i18n";
 import { ensurePlayer } from "~/features/player/resolve";
 import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
-import { headingText, modeSearch, submodeSearch } from "~/features/game/game-data";
+import { headingText, pageSearch, searchParam } from "~/features/game/game-data";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { orNull } from "~/lib/orpc";
 import { plainText } from "~/components/ui/minecraft-text";
@@ -28,12 +28,10 @@ import { sessionGameQuery, sessionPageQuery } from "~/features/session/session-d
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-/** A search parameter as typed, as on the game page; the API checks it. */
-const param = (raw: unknown) => (typeof raw === "string" || typeof raw === "number" ? String(raw).slice(0, 32) || undefined : undefined);
-
+/** As on the game page, without its period: a session's pages have none. */
 const validateSearch = (search: Record<string, unknown>): { mode?: string; submode?: string } => ({
-  mode: param(search.mode),
-  submode: param(search.submode),
+  mode: searchParam(search.mode),
+  submode: searchParam(search.submode),
 });
 
 /** Which not-found page to show: the player one, the one for a player without a session, or the plain 404. */
@@ -96,8 +94,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/session/$game")({
       throw notFound({ data: { missing: session ? "game" : "session" } satisfies Missing });
     }
 
-    const mode = modeSearch(page, page.mode);
-    const submode = submodeSearch(page, page.submode);
+    const { mode, submode } = pageSearch(page);
 
     if (deps.mode !== mode || deps.submode !== submode) {
       throw redirect({

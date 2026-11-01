@@ -53,6 +53,11 @@
       "description": "View {{name}} Hypixel session stats on Statsify.",
       "gameDescription": "View {{name}} Hypixel {{game}} session stats on Statsify."
     },
+    "compare": {
+      "title": "{{a}} vs {{b}} {{page}} | Statsify",
+      "lead": "{{a}} vs {{b}} in {{game}}:",
+      "description": "View {{a}} and {{b}} Hypixel {{game}} stats side by side on Statsify."
+    },
     "leaderboard": {
       "gameTitle": "{{game}} Leaderboards | Statsify",
       "gameDescription": "{{game}} leaderboards on Statsify, by mode.",
@@ -196,6 +201,13 @@
       "title": "No Session",
       "description": "{{name}} hasn't started a session. Linked players start one with /session in Discord."
     }
+  },
+  "compare": {
+    "open": "Compare",
+    "title": "Compare With Another Player",
+    "player": "Player",
+    "submit": "Compare",
+    "versus": "{{a}} vs {{b}}"
   },
   "leaderboards": {
     "title": "Leaderboards",

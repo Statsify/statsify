@@ -8,7 +8,7 @@
 
 import { BOX_GAP, BOX_RING, Box, CELL } from "~/components/ui/box";
 import { Chevron } from "~/components/icons/chevron";
-import { DEFAULT_LOCALE } from "~/i18n/locales";
+import { DEFAULT_LOCALE, localePrefix } from "~/i18n/locales";
 import { FilterBox } from "~/components/filter-box";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { type GroupSummary, type ListGroup, boardLinksHtml, fetchLeaderboardList, filterGroups } from "./leaderboard-list";
@@ -36,8 +36,7 @@ const boardHref = (prefix: string, field: string) => `${prefix}/leaderboards/${e
 /** The page's locale prefix for links, and the handlers that make plain leaderboard links act like router links. */
 function useBoardLinks() {
   const { locale } = localeRoute.useRouteContext();
-  const prefix = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
-  return { prefix, delegation: useLinkDelegation(locale === DEFAULT_LOCALE ? undefined : locale) };
+  return { prefix: localePrefix(locale), delegation: useLinkDelegation(locale === DEFAULT_LOCALE ? undefined : locale) };
 }
 
 /**

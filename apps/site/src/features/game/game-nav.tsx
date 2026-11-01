@@ -13,6 +13,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { cn } from "~/lib/util";
+import { type GameScope, gameLink } from "./game-data";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import type { GamePage } from "@statsify/contract";
@@ -44,19 +45,16 @@ function GameName({ game }: { game: NavGame }) {
  */
 export function GameNav({
   games,
-  username,
+  scope,
   current,
   open,
   wide = false,
-  session = false,
   className,
 }: {
   games: NavGame[];
-  username: string;
+  scope: GameScope;
   /** The key of the game page it's on. */
   current?: string;
-  /** Link to the games' pages for the player's session. */
-  session?: boolean;
   open?: boolean;
   /** The button as wide as its row, its label shown on phones too: a row of its own, with no tabs beside it. */
   wide?: boolean;
@@ -65,7 +63,6 @@ export function GameNav({
   const { t } = useTranslation();
   const details = useRef<HTMLDetailsElement>(null);
   const links = games.length <= DESKTOP_GAMES;
-  const to = session ? "/{-$locale}/player/$name/session/$game" : "/{-$locale}/player/$name/$game";
   const close = () => {
     if (details.current) details.current.open = false;
   };
@@ -121,8 +118,7 @@ export function GameNav({
             {games.map((game) => (
               <li key={game.key}>
                 <Link
-                  to={to}
-                  params={{ name: username, game: game.key }}
+                  {...gameLink(scope, game.key)}
                   aria-current={ariaCurrent(game)}
                   onClick={close}
                   className={cn(
@@ -142,8 +138,7 @@ export function GameNav({
           {games.map((game) => (
             <li key={game.key}>
               <Link
-                to={to}
-                params={{ name: username, game: game.key }}
+                {...gameLink(scope, game.key)}
                 aria-current={ariaCurrent(game)}
                 className="group block"
               >

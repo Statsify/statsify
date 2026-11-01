@@ -444,6 +444,7 @@ const OVERVIEW = { title: null, rows: [GAME_PAGE.overview] };
 
 function GameSection() {
   const { username } = GAME_PAGE;
+  const scope = { kind: "player", name: username } as const;
 
   return (
     <Section id="games">
@@ -467,42 +468,42 @@ function GameSection() {
       </div>
       <Demo label="Games: the player's game pages in the registry's order, links from md up, a Games button on phones, one never played dimmed">
         <div className="relative">
-          <GameNav games={GAME_PAGE.games} username={username} current={GAME_PAGE.game.key} />
+          <GameNav games={GAME_PAGE.games} scope={scope} current={GAME_PAGE.game.key} />
         </div>
       </Demo>
       <Demo label="The Games button open on phones: a grid of the pages, the current one marked">
         {/* The open grid lies over what follows, so the demo keeps room for it. */}
         <div className="max-md:min-h-56">
           <div className="relative">
-            <GameNav games={GAME_PAGE.games} username={username} current={GAME_PAGE.game.key} open />
+            <GameNav games={GAME_PAGE.games} scope={scope} current={GAME_PAGE.game.key} open />
           </div>
         </div>
       </Demo>
       <Demo label="24 pages, open: past 10, the Games button at every width">
         <div className="min-h-[41rem] sm:min-h-[29rem] lg:min-h-[23rem] xl:min-h-[20rem]">
           <div className="relative">
-            <GameNav games={GAME_NAV_ALL} username={username} current={GAME_PAGE.game.key} open />
+            <GameNav games={GAME_NAV_ALL} scope={scope} current={GAME_PAGE.game.key} open />
           </div>
         </div>
       </Demo>
       <Demo label="16 modes: past 10, a select at every width, Fours marked as the mode played most">
-        <ModeSwitcher page={GAME_PAGE} />
+        <ModeSwitcher page={GAME_PAGE} scope={scope} />
       </Demo>
       <Demo label="7 modes: a select on phones, links from md up, Fours marked by a gold square">
-        <ModeSwitcher page={SEVEN_MODES} />
+        <ModeSwitcher page={SEVEN_MODES} scope={scope} />
       </Demo>
       <Demo label="7 modes: another mode, the first hovered" force="hover">
-        <ModeSwitcher page={{ ...SEVEN_MODES, mode: "solo" }} />
+        <ModeSwitcher page={{ ...SEVEN_MODES, mode: "solo" }} scope={scope} />
       </Demo>
       <Demo label="A mode with submodes: up to 4, tabs at every width (segments on phones), the player's kit marked">
         <div className="flex flex-col gap-4">
           <GameHeader page={SUBMODE_PAGE} />
-          <ModeSwitcher page={SUBMODE_PAGE} />
-          <ModeSwitcher page={SUBMODE_PAGE} kind="submode" />
+          <ModeSwitcher page={SUBMODE_PAGE} scope={scope} />
+          <ModeSwitcher page={SUBMODE_PAGE} scope={scope} kind="submode" />
         </div>
       </Demo>
       <Demo label="45 modes: a select at every width, the player's kit marked">
-        <ModeSwitcher page={{ ...GAME_PAGE, modes: MANY_MODES }} />
+        <ModeSwitcher page={{ ...GAME_PAGE, modes: MANY_MODES }} scope={scope} />
       </Demo>
       <Demo label="Headline table: Final and Normal over the kills rows, every stat opens its leaderboard at the player (the first hovered)" force="hover">
         <StatPanel section={HEADLINE} username={username} headline />

@@ -56,7 +56,7 @@ const sectionColumns = (rows: Stat[][]) =>
   Math.max(0, ...rows.filter((row) => !row.every((cell) => cell.inline)).map((row) => row.length));
 
 /** A section's heading: the site's or the card's word for it, or the card's own Minecraft-formatted heading. */
-function SectionTitle({ section }: { section: StatSection }) {
+export function SectionTitle({ section }: { section: StatSection }) {
   const { t } = useTranslation();
   if (section.name) return <MinecraftText>{section.name}</MinecraftText>;
   if (section.title === null) return null;
@@ -205,7 +205,7 @@ export function StatPanel({
  * A stat's heading: the card's own name for it (in its colours, else the stat's), or the bot's word for it, with the
  * full name where that word shortens one (FKDR).
  */
-function useStatLabel(cell: Stat): { text: string; node: ReactNode; full?: string } {
+export function useStatLabel(cell: Stat): { text: string; node: ReactNode; full?: string } {
   const text = useLabelText()(cell);
   const full = useStatName()(cell.label);
   if (cell.name !== undefined) return { text, node: <MinecraftText>{`${cell.colour}${cell.name}`}</MinecraftText> };
@@ -225,7 +225,7 @@ export function useLabelText(): (cell: Stat) => string {
  * number the format shortens carries the exact one, as a `Hint`, or under a link only for screen readers, since the
  * link shows it.
  */
-function useStatValue(cell: Stat, linked = false): ReactNode {
+export function useStatValue(cell: Stat, linked = false): ReactNode {
   const n = useNumberFormat(cell.trim);
   const exact = useExactNumber();
   const Short = linked ? Spoken : Hint;

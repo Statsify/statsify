@@ -10,7 +10,8 @@ import { Box, CELL } from "~/components/ui/box";
 import { Chevron } from "~/components/icons/chevron";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { cn } from "~/lib/util";
-import { modeSearch, periodSearch, submodeSearch } from "./game-data";
+import { GameNav } from "./game-nav";
+import { type GameScope, gameLink, modeSearch, pageSearch, periodSearch, submodeSearch } from "./game-data";
 import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { GamePage } from "@statsify/contract";
@@ -41,7 +42,7 @@ const SWITCHER_WORDS = {
  * gold square, with the words for screen readers and what counted on hover, and a line under the tabs saying what the
  * square means. The words say "most wins" where the game counts wins alone.
  */
-export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: keyof typeof SWITCHER_WORDS }) {
+export function ModeSwitcher({ page, scope, kind = "mode" }: { page: GamePage; scope: GameScope; kind?: keyof typeof SWITCHER_WORDS }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const router = useRouter();
@@ -49,9 +50,7 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
   const periods = (page.periods ?? []).map((key) => ({ key, name: t(`game.periodNames.${key}`) }));
   const options: GamePage["modes"] = { mode: page.modes, submode: page.submodes, period: periods }[kind];
   const current = { mode: page.mode, submode: page.submode, period: page.period ?? null }[kind];
-  const mode = modeSearch(page, page.mode);
-  const submode = submodeSearch(page, page.submode);
-  const period = periodSearch(page, page.period);
+  const { mode, submode, period } = pageSearch(page);
   // A new mode starts on its first submode, in the period shown.
   const search = (key: string) => ({
     mode: kind === "mode" ? modeSearch(page, key) : mode,
@@ -70,11 +69,7 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
     setShown(current);
     setPick(current);
   }
-  const to = (key: string) => ({
-    to: page.session ? "/{-$locale}/player/$name/session/$game" as const : "/{-$locale}/player/$name/$game" as const,
-    params: { name: page.username, game: page.game.key },
-    search: search(key),
-  });
+  const to = (key: string) => ({ ...gameLink(scope, page.game.key), search: search(key) });
   // The picker stays open a moment, so the likely picks load meanwhile: the mode played most, and the first.
   const preload = () => {
     for (const option of new Set([options.find((option) => option.mostPlayed), options[0]])) {
@@ -171,5 +166,23 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
         </p>
       )}
     </nav>
+  );
+}
+
+/**
+ * A game page's Games button and switchers. The Games button and the mode select share a row (on phones, so the tables
+ * start nearer the top); the open Games grid lies over the page below it. On phones the tabs share it too; from `md`
+ * links and tabs take rows of their own.
+ */
+export function GameSwitchers({ page, scope }: { page: GamePage; scope: GameScope }) {
+  return (
+    <>
+      <div className="relative flex flex-wrap items-start gap-x-2 gap-y-4 empty:hidden">
+        {page.games.length > 1 && <GameNav games={page.games} scope={scope} current={page.game.key} className="shrink-0" />}
+        {page.modes.length > 1 && <ModeSwitcher page={page} scope={scope} />}
+      </div>
+      {page.submodes.length > 1 && <ModeSwitcher page={page} scope={scope} kind="submode" />}
+      {(page.periods?.length ?? 0) > 1 && <ModeSwitcher page={page} scope={scope} kind="period" />}
+    </>
   );
 }
