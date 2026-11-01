@@ -369,6 +369,15 @@ try {
     )
   );
 
+  // Every sea creature, by the bestiary's fishing pages: its name and the kill ids (one per level it spawns at)
+  const bestiary = await readJson<{ fishing: Record<string, { mobs?: { name: string; mobs: string[] }[] }> }>(
+    "constants/bestiary.json"
+  );
+  await write(
+    "sea-creatures.json",
+    Object.values(bestiary.fishing).flatMap((page) => page.mobs?.map(({ name, mobs }) => ({ name: removeFormatting(name), ids: mobs })) ?? [])
+  );
+
   // player_data.perks, which keeps the levels bought, calls NEU's eagle_advantage eagles_advantage
   const perkIds: Record<string, string> = { eagle_advantage: "eagles_advantage" };
   const shops = await readJson<Record<string, Record<string, { costs: number[] }>>>("constants/essenceshops.json");
@@ -390,6 +399,8 @@ try {
   const skinTextures: Record<string, string> = {};
   const powers: Record<string, { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }> = {};
   const kuudraKeys: Record<string, string> = {};
+  const trophyFish = new Set(Object.keys(await readJson<Record<string, number[]>>("constants/trophyfish.json")));
+  const trophyNames: Record<string, string> = {};
   const files = (await readdir(join(dir, "items"))).filter((file) => file.endsWith(".json"));
   const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
 
@@ -409,6 +420,10 @@ try {
     const kuudraKey = /^KUUDRA_(?:(\w+)_)?TIER_KEY$/.exec(item.internalname);
     const keyHash = kuudraKey && skullHash(item.nbttag);
     if (kuudraKey && keyHash) kuudraKeys[kuudraKey[1]?.toLowerCase() ?? "none"] = keyHash;
+
+    // Trophy fish are <FISH>_<TIER>, named "§fSulphur Skitter §8§lBRONZE"
+    const trophy = /^(\w+)_BRONZE$/.exec(item.internalname);
+    if (trophy && trophyFish.has(trophy[1])) trophyNames[trophy[1]] = removeFormatting(item.displayname).replace(/ BRONZE$/, "");
 
     const skin = item.internalname.startsWith("PET_SKIN_") && skullHash(item.nbttag);
     if (skin) skinTextures[item.internalname.slice("PET_SKIN_".length)] = skin;
@@ -446,6 +461,7 @@ try {
   const keyless = KUUDRA_TIERS.filter((tier) => !kuudraKeys[tier]);
   if (keyless.length > 0) throw new Error(`no Kuudra key head for ${keyless.join(", ")}`);
   await write("kuudra-keys.json", kuudraKeys);
+  await write("trophyfish.json", trophyNames);
 
   const pets = await readJson<Record<string, unknown>>("constants/pets.json");
   const offsets = pets.pet_rarity_offset as Record<string, number>;
