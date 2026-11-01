@@ -72,7 +72,6 @@ export class SocialsCommand {
     const url = link && social ? parseSocialLink(social) : undefined;
     if (url) return `[\`Here\`](${url})`;
 
-    // Backticks can't be escaped inside a code span, and current Discord usernames can't contain them
     const text = social?.replaceAll("`", "").trim();
     return `\`${text || "N/A"}\``;
   }
