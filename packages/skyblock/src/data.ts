@@ -9,6 +9,7 @@
 // Typed views of the data scripts/sync-data.ts writes to src/generated/: NEU-REPO's (MIT, see src/generated/NOTICE.md),
 // plus the skill tables and max levels from Hypixel's skills resource.
 import accessories from "./generated/accessories.json" with { type: "json" };
+import essenceShops from "./generated/essenceshops.json" with { type: "json" };
 import hotmLayout from "./generated/hotmlayout.json" with { type: "json" };
 import leveling from "./generated/leveling.json" with { type: "json" };
 import petTextures from "./generated/pet-textures.json" with { type: "json" };
@@ -56,3 +57,6 @@ export const HOTM_LAYOUT = hotmLayout as Record<
   string,
   { name: string; x: number; y: number; maxLevel: number }
 >;
+
+/** Essence type (WITHER, CRIMSON…) → its shop's perks → each perk's max level. */
+export const ESSENCE_SHOPS = essenceShops as Record<string, Record<string, number>>;

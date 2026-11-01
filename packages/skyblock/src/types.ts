@@ -127,15 +127,22 @@ export interface SlayersSection {
   bosses: Record<SlayerBoss, { level: Level; kills: number[] }>; // kills[tier - 1]
 }
 
+export type DungeonGrade = "S+" | "S" | "A" | "B" | "C" | "D";
+
 export interface DungeonFloor {
   floor: number;
   played: number;
   completions: number;
   bestScore?: number;
+  grade?: DungeonGrade; // the best score's
   fastest?: number;
   fastestS?: number;
   fastestSPlus?: number;
 }
+
+export const DUNGEON_CLASSES = ["healer", "mage", "berserk", "archer", "tank"] as const;
+
+export type DungeonClass = (typeof DUNGEON_CLASSES)[number];
 
 export interface DungeonsSection {
   catacombs: Level;
@@ -145,6 +152,16 @@ export interface DungeonsSection {
   secrets: number;
   floors: Record<"normal" | "master", DungeonFloor[]>;
   highestFloor: Partial<Record<"normal" | "master", number>>;
+  mostDamage: Record<"normal" | "master", Record<string, number>>; // by class, 0 for one never played
+  watcherKills: number;
+  essence: Essence[];
+}
+
+export interface Essence {
+  type: string; // WITHER, CRIMSON…
+  amount?: number; // missing for a type Hypixel doesn't send, like Forest and Fossil
+  perks: number; // shop perk levels bought
+  maxPerks: number;
 }
 
 export const POWDERS = ["mithril", "gemstone", "glacite"] as const;

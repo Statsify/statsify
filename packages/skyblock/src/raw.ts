@@ -36,6 +36,8 @@ export interface RawDungeonType {
   fastest_time?: Record<string, number>;
   fastest_time_s?: Record<string, number>;
   fastest_time_s_plus?: Record<string, number>;
+  watcher_kills?: Record<string, number>; // per floor, plus "total"
+  [damage: `most_damage_${string}`]: Record<string, number> | undefined; // per floor, plus "best"
 }
 
 export interface RawSlayerBoss {
@@ -52,9 +54,9 @@ export interface RawMember {
     first_join?: number;
   };
   leveling?: { experience?: number; highest_pet_score?: number };
-  currencies?: { coin_purse?: number };
+  currencies?: { coin_purse?: number; essence?: Record<string, { current?: number }> };
   fairy_soul?: { total_collected?: number };
-  player_data?: { experience?: Record<string, number> };
+  player_data?: { experience?: Record<string, number>; perks?: Record<string, number> };
   collection?: Record<string, number>;
   inventory?: {
     inv_contents?: RawNbt;

@@ -378,6 +378,19 @@ try {
     )
   );
 
+  // player_data.perks, which keeps the levels bought, calls NEU's eagle_advantage eagles_advantage
+  const perkIds: Record<string, string> = { eagle_advantage: "eagles_advantage" };
+  const shops = await readJson<Record<string, Record<string, { costs: number[] }>>>("constants/essenceshops.json");
+  await write(
+    "essenceshops.json",
+    Object.fromEntries(
+      Object.entries(shops).map(([shop, perks]) => [
+        shop.replace("ESSENCE_", ""),
+        Object.fromEntries(Object.entries(perks).map(([id, { costs }]) => [perkIds[id] ?? id, costs.length])),
+      ])
+    )
+  );
+
   // Accessory id → its tier's rank, and NEU's per-variant ids (an Abicase model, a party hat color) → the API's one id.
   const accessoryRanks = new Map<string, number>();
   const apiIds = new Map<string, string>();
