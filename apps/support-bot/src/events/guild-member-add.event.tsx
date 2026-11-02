@@ -128,7 +128,7 @@ function getDiscordAvatar(member: APIGuildMember): Promise<Image> {
       `https://cdn.discordapp.com/avatars/${member.user!.id}/${avatar}.png?size=96`
     );
 
-  // Discord's rule: users without a #tag (discriminator "0") pick from 6 defaults by id
+  // choose the proper default Discord avatar for the user
   const { id, discriminator } = member.user!;
   const index = discriminator === "0" ? (BigInt(id) >> 22n) % 6n : Number(discriminator) % 5;
 
