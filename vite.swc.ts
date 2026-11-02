@@ -74,12 +74,12 @@ export const swc = createUnplugin(({ minify, ...options }: SwcOptions = {}) => {
     vite: {
       config() {
         return {
-          esbuild: false,
+          oxc: false,
         };
       },
     },
     rollup: {
-      async renderChunk(code, chunk) {
+      async renderChunk(code: string, chunk: { fileName: string }) {
         if (minify) {
           const result = await transform(code, {
             sourceMaps: true,

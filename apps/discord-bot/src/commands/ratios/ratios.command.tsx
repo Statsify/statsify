@@ -51,6 +51,7 @@ import {
   mapBackground,
 } from "#constants";
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
+import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
@@ -109,7 +110,7 @@ export class RatiosCommand {
 
   @SubCommand({ description: (t) => t("commands.ratios-megawalls"), args })
   public megawalls(context: CommandContext) {
-    return this.run(context, MEGAWALLS_MODES);
+    return this.run(context, MEGAWALLS_MODES, filterMegaWallsKits);
   }
 
   @SubCommand({ description: (t) => t("commands.ratios-murdermystery"), args })
@@ -246,9 +247,8 @@ export class RatiosCommand {
 
   private getModeStats(game: PlayerStats[keyof PlayerStats], mode: GameModeWithSubModes<any>) {
     if (mode.submodes.length > 0) {
-      let stats = game[mode.api as keyof typeof game];
-      stats = stats[mode.submodes[0].api as keyof typeof game];
-      return mode.submodes[0].api === "overall" ? stats || game : stats;
+      const modeStats = game[mode.api as keyof typeof game];
+      return modeStats[mode.submodes[0].api as keyof typeof game] ?? modeStats;
     }
 
     const stats = game[mode.api as keyof typeof game];
@@ -302,6 +302,6 @@ export class RatiosCommand {
 
     const submode = mode.submodes[0].api;
     const submodeType = Reflect.getMetadata("design:type", modeType.prototype, submode);
-    return submode === "overall" ? submodeType || modeType : submodeType;
+    return submodeType ?? modeType;
   }
 }

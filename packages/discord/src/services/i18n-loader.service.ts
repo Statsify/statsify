@@ -54,23 +54,36 @@ export class I18nLoaderService {
   }
 }
 
+const numberFormats = new Map<string, Intl.NumberFormat>();
+
+function getNumberFormat(lng: string | undefined, digits: number) {
+  const key = `${lng}|${digits}`;
+  let numberFormat = numberFormats.get(key);
+
+  if (!numberFormat) {
+    numberFormat = Intl.NumberFormat(lng, {
+      maximumFractionDigits: digits,
+      minimumFractionDigits: digits,
+    });
+
+    numberFormats.set(key, numberFormat);
+  }
+
+  return numberFormat;
+}
+
 function format(value: any, format?: string | undefined, lng?: string): string {
   switch (format) {
     case "number": {
       const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
-      const digits = hasDecimals ? 2 : 0;
-
-      const formatOptions = {
-        maximumFractionDigits: digits,
-        minimumFractionDigits: digits,
-      };
+      const numberFormat = getNumberFormat(lng, hasDecimals ? 2 : 0);
 
       if ((value as number) >= 1_000_000) {
         const [number, suffix] = abbreviationNumber(value);
-        return `${Intl.NumberFormat(lng, formatOptions).format(number)}${suffix}`;
+        return `${numberFormat.format(number)}${suffix}`;
       }
 
-      return Intl.NumberFormat(lng, formatOptions).format(value as number);
+      return numberFormat.format(value as number);
     }
   }
 
