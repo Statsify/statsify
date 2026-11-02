@@ -16,6 +16,7 @@ import {
   Command,
   CommandContext,
   EmbedBuilder,
+  ErrorMessage,
   LocalizationString,
   Page,
   paginate,
@@ -40,8 +41,8 @@ const GAMECOUNT_GAME_CHOICES = GAMECOUNT_GAME_IDS.map((id) => ({
   value: id,
 }));
 
-class GameCountsModeArgument extends AbstractArgument {
-  public name = "mode";
+class GameArgument extends AbstractArgument {
+  public name = "game";
   public description: LocalizationString;
   public type = ApplicationCommandOptionType.String;
   public required = false;
@@ -68,20 +69,20 @@ class GameCountsModeArgument extends AbstractArgument {
 
 @Command({
   description: (t) => t("commands.game-counts"),
-  args: [GameCountsModeArgument],
+  args: [GameArgument],
 })
 export class GameCountsCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
+    const game = context.option<string | undefined>("game", undefined);
+    if (game && !this.isGameCountGameId(game)) throw new ErrorMessage("errors.invalidGame");
+
     const t = context.t();
     const gamecounts = await this.apiService.getGamecounts();
-    const selectedGame = context.option<string | undefined>("mode", undefined);
 
-    if (this.isGameCountGameId(selectedGame)) {
-      return {
-        embeds: [this.createGameCountsEmbed(selectedGame, gamecounts[selectedGame], true)],
-      };
+    if (game) {
+      return { embeds: [this.createGameCountsEmbed(game, gamecounts[game], true)] };
     }
 
     const gamecountEntries = Object.entries(gamecounts) as [keyof GameCounts, GamePlayers][];
@@ -154,7 +155,7 @@ export class GameCountsCommand {
       });
   }
 
-  private isGameCountGameId(id?: string): id is keyof GameCounts {
+  private isGameCountGameId(id: string): id is keyof GameCounts {
     return GAMECOUNT_GAME_IDS.includes(id as keyof GameCounts);
   }
 }
