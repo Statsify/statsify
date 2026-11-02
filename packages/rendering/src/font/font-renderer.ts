@@ -149,8 +149,6 @@ export class FontRenderer {
         }
       }
 
-      if (!matches) continue;
-
       const effect = token?.effect(
         part,
         matches as RegExpMatchArray,
@@ -158,7 +156,7 @@ export class FontRenderer {
       );
       let text = effect?.text ?? part;
 
-      if (matches) text = text.slice(matches[0].length);
+      text = text.slice(matches ? matches[0].length : 1);
 
       state = Object.assign({}, state, effect);
 
