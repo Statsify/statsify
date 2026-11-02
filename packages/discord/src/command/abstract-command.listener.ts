@@ -141,8 +141,11 @@ export abstract class AbstractCommandListener {
           })),
         };
 
+        const user = await this.getUser(ownerId);
+        this.tierPrecondition(command, user);
+
         const context = new CommandContext(this, interaction, data);
-        context.setUser(await this.getUser(ownerId));
+        context.setUser(user);
 
         message = await command.execute(context);
 
@@ -151,11 +154,16 @@ export abstract class AbstractCommandListener {
           this.cacheRerun(cacheKey, message, interaction.getLocale());
       }
 
+      await interaction.acknowledged;
+
       if (isOwner && !message.ephemeral) return await interaction.editReply(message);
 
       return await interaction.sendFollowup({ ...message, components: [], ephemeral: true });
     } catch (err) {
-      if (err instanceof Message) return interaction.sendFollowup({ ...err, ephemeral: true });
+      if (err instanceof Message) {
+        await interaction.acknowledged;
+        return interaction.sendFollowup({ ...err, ephemeral: true });
+      }
 
       this.logger.error(`An error occurred when re-running "${path.join(" ")}"`);
       this.logger.error(err);
