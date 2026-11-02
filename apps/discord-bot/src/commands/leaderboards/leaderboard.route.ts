@@ -23,8 +23,6 @@ import type { LeaderboardType } from "./leaderboard.profile.js";
  */
 export const LEADERBOARD_ROUTE = "lb";
 
-type LeaderboardSearch = LeaderboardQuery.INPUT | LeaderboardQuery.POSITION;
-
 export function leaderboardRoute(listener: AbstractCommandListener): ComponentRoute {
   return (interaction, { ownerId, values: [action, leaderboard] }) => {
     const [subcommand, ...key] = leaderboard.split(".");
@@ -48,7 +46,7 @@ export function leaderboardRoute(listener: AbstractCommandListener): ComponentRo
   };
 }
 
-function getSearchModal(type: LeaderboardType, search: LeaderboardSearch) {
+function getSearchModal(type: LeaderboardType, search: LeaderboardQuery.INPUT | LeaderboardQuery.POSITION) {
   const input =
     search === LeaderboardQuery.INPUT ?
       new TextInputBuilder()
