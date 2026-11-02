@@ -97,6 +97,31 @@ const processQuests = (
   }
 };
 
+const assignQuestMetadata = (
+  constructor: Constructor<any>,
+  time: QuestTime,
+  options: QuestOption<string>[]
+) => {
+  for (const quest of options) {
+    const hasOverall = quest.overall !== undefined;
+    const canDisplayOverall = hasOverall && time === QuestTime.Overall;
+
+    const decorator = Field({
+      type: () => Number,
+      leaderboard: {
+        limit: 10_000,
+        name: canDisplayOverall ? quest.overall?.name : quest.name,
+        fieldName: canDisplayOverall ? quest.overall?.fieldName : quest.fieldName,
+        enabled: time === QuestTime.Overall && quest.leaderboard,
+        additionalFields: ["this.total"],
+      },
+      historical: { enabled: false },
+    });
+
+    decorator(constructor.prototype, quest.propertyKey ?? quest.field);
+  }
+};
+
 const createQuestProgress = (
   time: Exclude<QuestTime, QuestTime.Overall>,
   options: QuestOption<string>[],
@@ -121,42 +146,9 @@ const createQuestProgress = (
     }
   }
 
-  for (const quest of tracked) {
-    const decorator = Field({
-      type: () => Number,
-      leaderboard: { enabled: false },
-      historical: { enabled: false },
-    });
-
-    decorator(Progress.prototype, quest.propertyKey);
-  }
+  assignQuestMetadata(Progress, time, tracked);
 
   return Progress;
-};
-
-const assignQuestMetadata = (
-  constructor: Constructor<any>,
-  time: QuestTime,
-  options: QuestOption<string>[]
-) => {
-  for (const quest of options) {
-    const hasOverall = quest.overall !== undefined;
-    const canDisplayOverall = hasOverall && time === QuestTime.Overall;
-
-    const decorator = Field({
-      type: () => Number,
-      leaderboard: {
-        limit: 10_000,
-        name: canDisplayOverall ? quest.overall?.name : quest.name,
-        fieldName: canDisplayOverall ? quest.overall?.fieldName : quest.fieldName,
-        enabled: time === QuestTime.Overall && quest.leaderboard,
-        additionalFields: ["this.total"],
-      },
-      historical: { enabled: false },
-    });
-
-    decorator(constructor.prototype, quest.propertyKey ?? quest.field);
-  }
 };
 
 const questTotalFieldData = (game: FormattedGame, enabled = false) => ({
