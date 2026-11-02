@@ -128,11 +128,11 @@ function getDiscordAvatar(member: APIGuildMember): Promise<Image> {
       `https://cdn.discordapp.com/avatars/${member.user!.id}/${avatar}.png?size=96`
     );
 
-  return loadImage(
-    `https://cdn.discordapp.com/embed/avatars/${
-      Number(member.user!.discriminator) % 5
-    }.png?size=96`
-  );
+  // Discord's rule: users without a #tag (discriminator "0") pick from 6 defaults by id
+  const { id, discriminator } = member.user!;
+  const index = discriminator === "0" ? (BigInt(id) >> 22n) % 6n : Number(discriminator) % 5;
+
+  return loadImage(`https://cdn.discordapp.com/embed/avatars/${index}.png?size=96`);
 }
 
 const randomJoinMessage = () => JOIN_MESSAGES[Math.floor(Math.random() * JOIN_MESSAGES.length)];
