@@ -42,6 +42,7 @@ import {
   paginate,
   PlayerArgument,
   SubCommand,
+  createCustomId,
 } from "@statsify/discord";
 import { Constructor, prettify } from "@statsify/util";
 import {
@@ -50,6 +51,7 @@ import {
   MODES_TO_FORMATTED,
   mapBackground,
 } from "#constants";
+import { PROFILE_ROUTE } from "#commands/base.hypixel-command";
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getBackground, getLogo } from "@statsify/assets";
@@ -187,7 +189,7 @@ export class RatiosCommand {
     filterModes?: (player: Player, modes: GameModeWithSubModes<T>[]) => GameModeWithSubModes<T>[]
   ) {
     const user = context.getUser();
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    const player = await this.apiService.getPlayer(context.option("player"), user, context.getCacheLevel());
 
     const [logo, skin, badge] = await Promise.all([
       getLogo(user),
@@ -242,7 +244,15 @@ export class RatiosCommand {
       },
     }));
 
-    return paginate(context, pages);
+    return paginate(context, pages, (page) =>
+      createCustomId(
+        PROFILE_ROUTE,
+        context.getInteraction().getUserId(),
+        `ratios.${context.getCommandName()}`,
+        player.uuid,
+        page
+      )
+    );
   }
 
   private getModeStats(game: PlayerStats[keyof PlayerStats], mode: GameModeWithSubModes<any>) {
