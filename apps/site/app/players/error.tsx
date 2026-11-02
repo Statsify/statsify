@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "Unknown Error | Statsify",
 };
 
-export default function UnknownErrorPage() {
+export default function UnknownErrorPage({ retry }: { retry: () => void }) {
   return (
     <Error>
       <div className="flex grow flex-col items-center justify-center gap-4">
@@ -30,11 +30,16 @@ export default function UnknownErrorPage() {
           </p>
         </div>
       </div>
-      <Link href="/" className="mb-4">
-        <Button className="content:bg-blueify-400">
-          <p className="text-nowrap">Home Page</p>
+      <div className="mb-4 flex gap-4">
+        <Button className="content:bg-green-500" onClick={retry}>
+          <p className="text-nowrap">Try Again</p>
         </Button>
-      </Link>
+        <Link href="/">
+          <Button className="content:bg-blueify-400">
+            <p className="text-nowrap">Home Page</p>
+          </Button>
+        </Link>
+      </div>
     </Error>
   );
 }

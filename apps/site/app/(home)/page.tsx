@@ -34,15 +34,20 @@ import { SessionSection } from "./sections/session-section";
 import { Wordmark } from "~/components/icons/logo";
 import { getGuild, getLeaderboard, getPlayer } from "~/app/api";
 
+// A failed preview hides its section instead of erroring the whole homepage
+function optional<T>(promise: Promise<T>) {
+  return promise.catch(() => undefined);
+}
+
 export default async function Home() {
   const [player1, player2, player3, player4, player5, guild, leaderboard] = await Promise.all([
-    getPlayer(BEDWARS_PREVIEW),
-    getPlayer(SKYWARS_PREVIEW),
-    getPlayer(DUELS_PREVIEW),
-    getPlayer(ARCADE_PREVIEW),
-    getPlayer(SESSION_PREVIEW),
-    getGuild(GUILD_MEMBER_PREVIEW),
-    getLeaderboard(LEADERBOARD_PREVIEW),
+    optional(getPlayer(BEDWARS_PREVIEW)),
+    optional(getPlayer(SKYWARS_PREVIEW)),
+    optional(getPlayer(DUELS_PREVIEW)),
+    optional(getPlayer(ARCADE_PREVIEW)),
+    optional(getPlayer(SESSION_PREVIEW)),
+    optional(getGuild(GUILD_MEMBER_PREVIEW)),
+    optional(getLeaderboard(LEADERBOARD_PREVIEW)),
   ]);
 
   return (
@@ -104,10 +109,10 @@ export default async function Home() {
         </Box>
       </div>
       <div>
-        <PlayerSection players={[player1!, player2!, player3!, player4!]} />
-        <LeaderboardSection leaderboard={leaderboard} />
-        <SessionSection player={player5!} />
-        <GuildSection guild={guild} />
+        <PlayerSection players={[player1, player2, player3, player4]} />
+        {leaderboard && <LeaderboardSection leaderboard={leaderboard} />}
+        {player5 && <SessionSection player={player5} />}
+        {guild && <GuildSection guild={guild} />}
       </div>
       <div className="bg-white/10 backdrop-blur-lg text-mc-white -mt-45 p-8 flex flex-col gap-6 w-container w-auto lg:w-[50%] text-balance text-center">
         <div className="flex flex-col gap-2">

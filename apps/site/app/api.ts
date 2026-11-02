@@ -17,6 +17,9 @@ export async function getPlayer(slug: string): Promise<Player | undefined> {
     headers: { "X-API-KEY": env.API_KEY },
   });
 
+  if (response.status === 404) return;
+  if (!response.ok) throw new Error(`Failed to get player: ${response.status}`);
+
   const body = await response.json();
   return body.player;
 }
@@ -26,15 +29,20 @@ export async function getPlayerSuggestions(query: string): Promise<string[]> {
     headers: { "X-API-KEY": env.API_KEY },
   });
 
+  if (!response.ok) throw new Error(`Failed to search players: ${response.status}`);
+
   const body = await response.json();
   return body.players ?? [];
 }
 
-export async function getGuild(slug: string): Promise<Guild> {
+export async function getGuild(slug: string): Promise<Guild | undefined> {
   const response = await fetch(`${env.API_URL}/guild?${new URLSearchParams({ guild: slug, type: "PLAYER" })}`, {
     headers: { "X-API-KEY": env.API_KEY },
-
   });
+
+  if (response.status === 404) return;
+  if (!response.ok) throw new Error(`Failed to get guild: ${response.status}`);
+
   const { guild } = await response.json();
   return guild;
 }
@@ -49,6 +57,8 @@ export async function getLeaderboard(field: string) {
     }),
   });
 
+  if (!response.ok) throw new Error(`Failed to get leaderboard: ${response.status}`);
+
   const body = await response.json();
 
   return body as PostLeaderboardResponse;
@@ -58,6 +68,8 @@ export async function getSkinRender(uuid: string): Promise<ArrayBuffer> {
   const response = await fetch(`${env.API_URL}/skin?${new URLSearchParams({ uuid })}`, {
     headers: { "X-API-KEY": env.API_KEY },
   });
+
+  if (!response.ok) throw new Error(`Failed to get skin render: ${response.status}`);
 
   const body = await response.arrayBuffer();
   return body;

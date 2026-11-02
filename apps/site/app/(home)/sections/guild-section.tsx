@@ -23,6 +23,8 @@ import { t } from "~/localize";
 import type { Guild } from "@statsify/schemas";
 
 export function GuildSection({ guild }: { guild: Guild }) {
+  const member = guild.members.find((member) => member.uuid === GUILD_MEMBER_PREVIEW);
+
   return (
     <BaseSection
       background="guilds"
@@ -33,7 +35,7 @@ export function GuildSection({ guild }: { guild: Guild }) {
           <GuildOverall guild={guild} />
           <GuildLevelling guild={guild} />
           <GuildTop guild={guild} />
-          <GuildMember guild={guild} />
+          {member && <GuildMember guild={guild} member={member} />}
         </Carousel>
       </div>
       <div className="block md:hidden">
@@ -206,13 +208,7 @@ function GuildTop({ guild }: { guild: Guild }) {
   );
 }
 
-function GuildMember({ guild }: { guild: Guild }) {
-  const member = guild.members.find(
-    (member) => member.uuid === GUILD_MEMBER_PREVIEW
-  );
-  if (!member)
-    throw new Error(`Could not find Guild Member: ${GUILD_MEMBER_PREVIEW}`);
-
+function GuildMember({ guild, member }: { guild: Guild; member: Guild["members"][number] }) {
   return (
     <div className="relative grid grid-cols-content-1 lg:grid-cols-content-2 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
       <Skin uuid={member.uuid} className="row-span-3 hidden lg:block" />

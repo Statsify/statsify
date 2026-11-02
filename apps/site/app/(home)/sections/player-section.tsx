@@ -56,13 +56,20 @@ const games = [
 export function PlayerSection({
   players,
 }: {
-  players: [Player, Player, Player, Player];
+  players: (Player | undefined)[];
 }) {
   const [gameIndex, setGameIndex] = useState<number>(0);
 
+  const previews = games.flatMap((game, index) => {
+    const player = players[index];
+    return player ? [{ ...game, player }] : [];
+  });
+
+  if (previews.length === 0) return null;
+
   return (
     <BaseSection
-      background={games[gameIndex].tab}
+      background={previews[gameIndex].tab}
       className="flex-col lg:flex-row justify-between items-center lg:py-0"
     >
       <div className="mx-4 lg:mx-0 flex flex-col gap-4 max-w-100 xl:max-w-120 text-mc-white text-center lg:text-start ">
@@ -85,7 +92,7 @@ export function PlayerSection({
             onTabChange={setGameIndex}
             className="grid grid-cols-2 xl:grid-cols-4 grid-flow-row gap-4 text-center xl:w-full"
           >
-            {games.map(({ tab, formatted, icon }, index) => (
+            {previews.map(({ tab, formatted, icon }, index) => (
               <Tab key={tab} tab={index}>
                 <Image
                   src={icon}
@@ -101,8 +108,8 @@ export function PlayerSection({
           </Tabs>
           <Divider variant="black" />
           <div className="grid grid-areas-stack">
-            {games.map(({ tab, component: GamePreview }, index) => (
-              <PlayerProvider key={tab} player={players[index]}>
+            {previews.map(({ tab, component: GamePreview, player }, index) => (
+              <PlayerProvider key={tab} player={player}>
                 <GamePreview
                   className={cn(
                     "grid-area-stack invisible",
