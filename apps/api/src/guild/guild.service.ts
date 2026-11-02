@@ -22,6 +22,11 @@ import { PlayerService } from "#player";
 import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
+type MemberName = Pick<Player, "username" | "displayName" | "guildId">;
+
+const isNameCached = (cachedMember?: GuildMember): cachedMember is GuildMember =>
+  !!cachedMember && Date.now() < cachedMember.expiresAt;
+
 const byDayDescending = ([a]: [string, number], [b]: [string, number]) => (a < b ? 1 : -1);
 
 @Injectable()
@@ -72,10 +77,16 @@ export class GuildService {
     const guildExpHistory: Record<string, number> = {};
     const requireGuildId: string[] = [];
 
+    const memberNames = await this.getMemberNames(
+      guild.members
+        .filter((member) => !isNameCached(memberMap[member.uuid]))
+        .map((member) => member.uuid)
+    );
+
     const fetchMembers = guild.members.map(async (member) => {
       const cacheMember = memberMap[member.uuid];
 
-      await this.getMemberName(member, cacheMember);
+      await this.getMemberName(member, cacheMember, memberNames.get(member.uuid));
 
       // These members will need their player document updated with the correct guild id
       if (member.guildId !== guild.id) {
@@ -209,8 +220,24 @@ export class GuildService {
     return await this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec();
   }
 
-  private async getMemberName(member: GuildMember, cachedMember?: GuildMember) {
-    if (cachedMember && Date.now() < cachedMember.expiresAt) {
+  private async getMemberNames(uuids: string[]): Promise<Map<string, MemberName>> {
+    if (uuids.length === 0) return new Map();
+
+    const players = await this.playerModel
+      .find({ uuid: { $in: uuids } })
+      .select({ uuid: true, username: true, displayName: true, guildId: true })
+      .lean()
+      .exec();
+
+    return new Map(players.map((player) => [player.uuid, player]));
+  }
+
+  private async getMemberName(
+    member: GuildMember,
+    cachedMember?: GuildMember,
+    memberName?: MemberName
+  ) {
+    if (isNameCached(cachedMember)) {
       member.displayName = cachedMember.displayName;
       member.username = cachedMember.username;
       member.expiresAt = cachedMember.expiresAt;
@@ -218,13 +245,16 @@ export class GuildService {
       return;
     }
 
-    const player = await this.playerService
-      .get(member.uuid, CacheLevel.CACHE_ONLY, {
-        username: true,
-        displayName: true,
-        guildId: true,
-      })
-      .catch(() => null);
+    // Members the query missed go through PlayerService, which fetches unknown players from Hypixel
+    const player =
+      memberName ??
+      (await this.playerService
+        .get(member.uuid, CacheLevel.CACHE_ONLY, {
+          username: true,
+          displayName: true,
+          guildId: true,
+        })
+        .catch(() => null));
 
     if (player) {
       member.username = player.username;
