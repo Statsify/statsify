@@ -12,6 +12,7 @@ x-app: &app
   volumes:
     - /home/config.js:/app/config.js:ro
   logging: &logging
+    driver: json-file
     options:
       max-size: 10m
       max-file: "3"
