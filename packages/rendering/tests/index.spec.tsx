@@ -167,4 +167,14 @@ suite("FontRenderer", () => {
       expect.objectContaining({ text: " Player", bold: false }),
     ]);
   });
+
+  it("keeps the text after an unknown code", () => {
+    const renderer = new FontRenderer(false);
+    const nodes = renderer.lex("§aHi §zthere");
+
+    expect(nodes).toEqual([
+      expect.objectContaining({ text: "Hi ", color: "#55FF55" }),
+      expect.objectContaining({ text: "there", color: "#55FF55" }),
+    ]);
+  });
 });
