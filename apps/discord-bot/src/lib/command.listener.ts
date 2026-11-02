@@ -17,6 +17,7 @@ import {
   Interaction,
 } from "@statsify/discord";
 import { Container } from "typedi";
+import { GUILD_ROUTE, guildRoute } from "#commands/guild/guild.route";
 import { LEADERBOARD_ROUTE, leaderboardRoute } from "#commands/leaderboards/leaderboard.route";
 import { PROFILE_ROUTE, profileRoute } from "#commands/base.hypixel-command";
 import { STATUS_COLORS } from "@statsify/logger";
@@ -54,6 +55,7 @@ export class CommandListener extends AbstractCommandListener {
 
     this.addRoute(PROFILE_ROUTE, profileRoute(this));
     this.addRoute(LEADERBOARD_ROUTE, leaderboardRoute(this));
+    this.addRoute(GUILD_ROUTE, guildRoute(this));
   }
 
   protected async onCommand(interaction: Interaction): Promise<void> {

@@ -50,9 +50,11 @@ import {
   PlayerArgument,
   SubCommand,
   type SubCommandOptions,
+  createCustomId,
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
+import { PROFILE_ROUTE } from "#commands/base.hypixel-command";
 import { RankingsProfile } from "./rankings.profile.js";
 import { arrayGroup } from "@statsify/util";
 import { games } from "./games.js";
@@ -309,7 +311,7 @@ export class RankingsCommand {
     const user = context.getUser();
     const t = context.t();
 
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    const player = await this.apiService.getPlayer(context.option("player"), user, context.getCacheLevel());
 
     const isGameNotAll = game !== "all";
 
@@ -365,7 +367,15 @@ export class RankingsCommand {
       ),
       new ButtonBuilder().emoji(t("emojis:up")).style(ButtonStyle.Success),
       new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger),
-      true
+      true,
+      (page) =>
+        createCustomId(
+          PROFILE_ROUTE,
+          context.getInteraction().getUserId(),
+          `rankings.${context.getCommandName()}`,
+          player.uuid,
+          page
+        )
     );
   }
 }

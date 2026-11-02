@@ -199,8 +199,7 @@ export async function paginate(
  * @param forwardButton The button to use for forward pagination
  * @param backwardButton The button to use for back pagination
  * @param invertButtons Whether to invert the buttons (backward becomes forward, forward becomes backward)
- * @param startingIndex  The starting page
- * @param timeout When to stop the pagination (ms), defaults to 300000
+ * @param customId Makes the buttons keep working after a restart, as in paginate
  */
 export async function scrollingPagination(
   context: CommandContext,
@@ -208,10 +207,9 @@ export async function scrollingPagination(
   forwardButton?: ButtonBuilder,
   backwardButton?: ButtonBuilder,
   invertButtons = false,
-  startingIndex = 0,
-  timeout = 300_000,
+  customId?: (page: string) => string,
 ) {
-  let currentIndex = startingIndex;
+  let currentIndex = 0;
   const cache = new Map<number, Message>();
   const t = context.t();
 
@@ -235,6 +233,22 @@ export async function scrollingPagination(
   ];
 
   if (invertButtons) controller.reverse();
+
+  if (customId) {
+    const interaction = context.getInteraction();
+
+    const index = interaction.isMessageComponentInteraction() ?
+      getScrolledPage(parseCustomId(interaction.getCustomId()).values.at(-1)!, pages.length) :
+      0;
+
+    controller[0].customId(customId(`prev.${index}`));
+    controller[1].customId(customId(`next.${index}`));
+
+    const message = await getMessage(index);
+    message.components = [new ActionRowBuilder(controller)];
+
+    return message;
+  }
 
   const listener = context.getListener();
 
@@ -276,12 +290,21 @@ export async function scrollingPagination(
     cache.clear();
   }
 
-  setTimeout(onTimeout, timeout);
+  setTimeout(onTimeout, 300_000);
 
   const message = await getMessage(currentIndex);
   message.components = [new ActionRowBuilder(controller)];
 
   return message;
+}
+
+/**
+ * The page a scroll button asks for, wrapping around. Its custom id ends with `prev.<page>` or
+ * `next.<page>` for the page it's on, since with two pages both buttons would ask for the same one
+ */
+export function getScrolledPage(target: string, pageCount: number) {
+  const [direction, page] = target.split(".");
+  return (Number(page) + (direction === "prev" ? pageCount - 1 : 1)) % pageCount;
 }
 
 /** The page a click asks for: the select menu's value, or the end of the button's custom id */
