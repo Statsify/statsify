@@ -9,6 +9,7 @@
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
+  type ApiSubModeForMode,
   BEDWARS_MODES,
   BLITZSG_MODES,
   BlitzSGKit,
@@ -213,7 +214,7 @@ export class RatiosCommand {
     ): SubPage => ({
       label,
       generator: async (t) => {
-        const background = await getBackground(...mapBackground(modes, mode.api));
+        const background = await getBackground(...mapBackground(modes, mode.api, submode?.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
 
         const props: RatiosProfileProps = {
           player,
