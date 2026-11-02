@@ -225,8 +225,6 @@ export async function scrollingPagination(
 
   if (pages.length === 1) return getMessage(currentIndex);
 
-  const userId = context.getInteraction().getUserId();
-
   const controller = [
     backwardButton ?? new ButtonBuilder().emoji(t("emojis:backward")),
     forwardButton ?? new ButtonBuilder().emoji(t("emojis:forward")),
@@ -250,6 +248,7 @@ export async function scrollingPagination(
     return message;
   }
 
+  const userId = context.getInteraction().getUserId();
   const listener = context.getListener();
 
   for (const [index, component] of controller.entries()) {
