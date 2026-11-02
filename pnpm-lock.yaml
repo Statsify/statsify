@@ -428,7 +428,7 @@ importers:
         specifier: ^9.0.7
         version: 9.0.10
 
-  apps/site:
+  apps/site-legacy:
     dependencies:
       '@radix-ui/react-popover':
         specifier: ^1.1.15
