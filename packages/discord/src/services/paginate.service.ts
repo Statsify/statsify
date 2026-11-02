@@ -20,7 +20,7 @@ import {
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
 } from "#messages";
-import { Interaction } from "#interaction";
+import { Interaction, parseCustomId } from "#interaction";
 import type {
   AbstractCommandListener,
   CommandContext,
@@ -53,12 +53,13 @@ type PageId = `${number}|${number}`;
  *
  * @param context The context of the command
  * @param pages The array of pages to paginate against
- * @param timeout When to stop the pagination (ms), defaults to 300000
+ * @param customId Makes the page buttons keep working after a restart. It returns a custom id
+ * that ends with `page`, whose route re-runs the command. Without it, the buttons stop after 5 minutes
  */
 export async function paginate(
   context: CommandContext,
   pages: Page[],
-  timeout = 300_000,
+  customId?: (page: string) => string,
 ) {
   const cache = new Map<PageId, Message>();
   const t = context.t();
@@ -85,6 +86,22 @@ export async function paginate(
 
   // If there is only one page with no sub pages, return the message immediately without pagination
   if (pages.length === 1 && "generator" in pages[0]) return getMessage(0, 0);
+
+  if (customId) {
+    const [index, subIndex] = getRequestedPage(context.getInteraction());
+    const page = pages[index];
+
+    const message = await getMessage(index, subIndex);
+
+    message.components = [
+      new PageController(pages, index, customId).getActionRow(),
+      "subPages" in page && page.subPages.length > 1 ?
+        new PageController(page.subPages, subIndex, customId, index).getActionRow() :
+        undefined,
+    ].filter((row) => row !== undefined);
+
+    return message;
+  }
 
   const userId = context.getInteraction().getUserId();
   const listener = context.getListener();
@@ -164,7 +181,7 @@ export async function paginate(
     return context.reply({ components: [] });
   }
 
-  setTimeout(onTimeout, timeout);
+  setTimeout(onTimeout, 300_000);
 
   const message = await getMessage(currentIndex, currentSubIndex);
   message.components = [
@@ -267,6 +284,18 @@ export async function scrollingPagination(
   return message;
 }
 
+/** The page a click asks for: the select menu's value, or the end of the button's custom id */
+function getRequestedPage(interaction: Interaction): [index: number, subIndex: number] {
+  if (!interaction.isMessageComponentInteraction()) return [0, 0];
+
+  const target = interaction.isSelectMenuInteraction() ?
+    interaction.getData().values[0] :
+    parseCustomId(interaction.getCustomId()).values.at(-1)!;
+
+  const [index, subIndex = 0] = target.split(".").map(Number);
+  return [index, subIndex];
+}
+
 async function contentToMessage(
   content: PaginateInteractionContent,
 ): Promise<Message> {
@@ -291,14 +320,26 @@ async function contentToMessage(
 class PageController {
   #menu: SelectMenuBuilder | ButtonBuilder[];
 
-  public constructor(pages: PageInput[], selected: number) {
+  /**
+   * @param customId Gives the buttons custom ids that keep working after a restart (see paginate)
+   * @param parent The page these sub pages belong to, so their targets read `<parent>.<index>`
+   */
+  public constructor(
+    pages: PageInput[],
+    selected: number,
+    customId?: (page: string) => string,
+    parent?: number
+  ) {
+    const target = (index: number) => (parent === undefined ? `${index}` : `${parent}.${index}`);
+
     if (pages.length > 5) {
       const menu = new SelectMenuBuilder();
+      if (customId) menu.customId(customId(parent === undefined ? "menu" : "submenu"));
 
       for (const [index, page] of pages.entries()) {
         const option = new SelectMenuOptionBuilder()
           .label(page.label)
-          .value(`${index}`);
+          .value(target(index));
         if (page.emoji) option.emoji(page.emoji);
         menu.option(option);
       }
@@ -310,6 +351,7 @@ class PageController {
         const button = new ButtonBuilder()
           .label(page.label)
           .style(ButtonStyle.Secondary);
+        if (customId) button.customId(customId(target(index)));
         if (page.emoji) button.emoji(page.emoji);
         if (index === selected) button.style(ButtonStyle.Primary);
         return button;

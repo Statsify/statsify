@@ -7,16 +7,20 @@
  */
 
 import {
+  AbstractCommandListener,
   ApiService,
   Command,
   CommandContext,
+  ComponentRoute,
   LocalizationString,
   LocalizeFunction,
   Page,
   paginate,
   PlayerArgument,
   SubPage,
+  createCustomId,
 } from "@statsify/discord";
+import { CacheLevel } from "@statsify/api-client";
 import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalTimeData } from "#components";
@@ -47,6 +51,14 @@ export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
 
 export type ModeEmoji = LocalizationString | false | undefined;
 
+/** Page buttons re-run the command: `p:<user id>:<command>:<player uuid>:<page>` */
+export const PROFILE_ROUTE = "p";
+
+export function profileRoute(listener: AbstractCommandListener): ComponentRoute {
+  return (interaction, { ownerId, values: [command, uuid] }) =>
+    listener.rerunCommand(interaction, ownerId, [command], { player: uuid });
+}
+
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   getPreProfileData?(player: Player): K | Promise<K>;
   filterModes?(player: Player, modes: GameModeWithSubModes<T>[]): GameModeWithSubModes<T>[];
@@ -69,8 +81,14 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
 
   public async run(context: CommandContext) {
     const user = context.getUser();
+    const interaction = context.getInteraction();
 
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    // A page button reads the cached player, so a click never asks Hypixel
+    const player = await this.apiService.getPlayer(
+      context.option("player"),
+      user,
+      interaction.isCommandInteraction() ? undefined : CacheLevel.CACHE_ONLY
+    );
 
     const [logo, skin, badge] = await Promise.all([
       getLogo(user),
@@ -157,7 +175,9 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
       return { ...pageInput, subPages };
     });
 
-    return paginate(context, pages);
+    return paginate(context, pages, (page) =>
+      createCustomId(PROFILE_ROUTE, interaction.getUserId(), context.getCommandName(), player.uuid, page)
+    );
   }
 
   public abstract getProfile(
