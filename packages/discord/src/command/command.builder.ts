@@ -67,6 +67,20 @@ export function scanCommands<T extends object>(
   return commandResolvable;
 }
 
+export function scanUserCommand<T extends object>(
+  target: T,
+  constructor: Constructor<T>,
+) {
+  const metadata = Reflect.getMetadata(
+    "statsify:command",
+    constructor,
+  ) as CommandMetadata;
+
+  if (!metadata.contextMenu) return;
+
+  return new CommandResolvable(metadata, target).asUserCommand(metadata.contextMenu);
+}
+
 if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
 
@@ -210,6 +224,19 @@ if (import.meta.vitest) {
             ],
           },
         ],
+      });
+    });
+
+    it("should build a user command without a description or options", () => {
+      @Command({ description: "test", contextMenu: "Test User" })
+      class TestCommand {}
+
+      expect(scanUserCommand(new TestCommand(), TestCommand)?.toJSON()).toEqual({
+        name: "Test User",
+        name_localizations: {},
+        type: ApplicationCommandType.User,
+        integration_types,
+        contexts,
       });
     });
 

@@ -14,20 +14,27 @@ import {
   InteractionContextType,
 } from "discord-api-types/v10";
 import { UserTier } from "@statsify/schemas";
-import { getLocalizeFunction, translateField, translateToAllLanguages } from "#messages";
+import {
+  type LocalizationString,
+  getLocalizeFunction,
+  translateField,
+  translateToAllLanguages,
+} from "#messages";
 import type { CommandContext } from "./command.context.js";
 import type { CommandMetadata } from "./command.interface.js";
 
 export class CommandResolvable {
   public type:
     | ApplicationCommandType.ChatInput |
+    ApplicationCommandType.User |
     ApplicationCommandOptionType.Subcommand |
     ApplicationCommandOptionType.SubcommandGroup;
 
   public name: string;
-  public description: string;
+  public name_localizations?: Record<string, string>;
+  public description?: string;
   public options?: any[];
-  public description_localizations: Record<string, string>;
+  public description_localizations?: Record<string, string>;
   public integration_types: ApplicationIntegrationType[];
   public contexts: InteractionContextType[];
 
@@ -111,9 +118,23 @@ export class CommandResolvable {
     return this;
   }
 
+  public asUserCommand(name: LocalizationString) {
+    this.type = ApplicationCommandType.User;
+    this.name = translateField(getLocalizeFunction("en_US"), name);
+    this.name_localizations = translateToAllLanguages(name);
+
+    // Discord rejects a description or options on user commands
+    this.description = undefined;
+    this.description_localizations = undefined;
+    this.options = undefined;
+
+    return this;
+  }
+
   public toJSON() {
     return {
       name: this.name,
+      name_localizations: this.name_localizations,
       description: this.description,
       description_localizations: this.description_localizations,
       type: this.type,
@@ -139,6 +160,11 @@ export class CommandResolvable {
 
       for (let i = 0; i < this.options.length; i++)
         if (!this.options[i].equals(other.options[i])) return false;
+    }
+
+    if (d.name_localizations && other.name_localizations) {
+      for (const key in this.name_localizations)
+        if (d.name_localizations[key] !== other.name_localizations[key]) return false;
     }
 
     if (d.description_localizations && other.description_localizations) {

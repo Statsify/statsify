@@ -16,7 +16,10 @@ import { BedWarsProfile } from "./bedwars.profile.js";
 import { Command } from "@statsify/discord";
 import { BedWarsChallengesProfile } from "./bedwars-challenges.profile.js";
 
-@Command({ description: (t) => t("commands.bedwars") })
+@Command({
+  description: (t) => t("commands.bedwars"),
+  contextMenu: (t) => t("commands.bedwars-user-command"),
+})
 export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
   public constructor() {
     super(BEDWARS_MODES);
