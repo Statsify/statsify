@@ -50,7 +50,7 @@ export type TitleRequirement = "overall" | "default" | "half";
 
 export const DUELS_TITLES = {
   overall: { mode: "", titleRequirement: "overall" },
-  arena: { mode: "Duel Arena", titleRequirement: "default" },
+  arena: { mode: "Arena", titleRequirement: "default" },
   bedwars: { mode: "Bed Wars", titleRequirement: "default" },
   blitzsg: { mode: "Blitz", titleRequirement: "default" },
   bow: { mode: "Bow", titleRequirement: "default" },
