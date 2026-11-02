@@ -67,6 +67,10 @@ export class CommandListener extends AbstractCommandListener {
     return this.executeCommand({ commandName, command, context, preconditions });
   }
 
+  protected getUser(id: string) {
+    return this.apiService.getUser(id);
+  }
+
   public static create(
     client: WebsocketShard,
     rest: RestClient,

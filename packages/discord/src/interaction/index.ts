@@ -6,5 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+export * from "./custom-id.js";
 export * from "./interaction.js";
 export * from "./interaction.content.js";
