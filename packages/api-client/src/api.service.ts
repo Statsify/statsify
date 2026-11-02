@@ -214,8 +214,7 @@ export class ApiService {
 
   public getUser(tag: string) {
     return this.request<GetUserResponse>("/user", { tag })
-      .then((data) => data.user ?? null)
-      .catch(() => null);
+      .then((data) => data.user ?? null);
   }
 
   public updateUser(tag: string, update: UpdateUser) {
