@@ -13,7 +13,7 @@ import type { Guild, Player } from "@statsify/schemas";
 import type { PostLeaderboardResponse } from "@statsify/api-client";
 
 export async function getPlayer(slug: string): Promise<Player | undefined> {
-  const response = await fetch(`${env.API_URL}/player?player=${slug}`, {
+  const response = await fetch(`${env.API_URL}/player?${new URLSearchParams({ player: slug })}`, {
     headers: { "X-API-KEY": env.API_KEY },
   });
 
@@ -22,7 +22,7 @@ export async function getPlayer(slug: string): Promise<Player | undefined> {
 }
 
 export async function getPlayerSuggestions(query: string): Promise<string[]> {
-  const response = await fetch(`${env.API_URL}/player/search?query=${query}`, {
+  const response = await fetch(`${env.API_URL}/player/search?${new URLSearchParams({ query })}`, {
     headers: { "X-API-KEY": env.API_KEY },
   });
 
@@ -31,7 +31,7 @@ export async function getPlayerSuggestions(query: string): Promise<string[]> {
 }
 
 export async function getGuild(slug: string): Promise<Guild> {
-  const response = await fetch(`${env.API_URL}/guild?guild=${slug}&type=PLAYER`, {
+  const response = await fetch(`${env.API_URL}/guild?${new URLSearchParams({ guild: slug, type: "PLAYER" })}`, {
     headers: { "X-API-KEY": env.API_KEY },
 
   });
@@ -55,7 +55,7 @@ export async function getLeaderboard(field: string) {
 }
 
 export async function getSkinRender(uuid: string): Promise<ArrayBuffer> {
-  const response = await fetch(`${env.API_URL}/skin?uuid=${uuid}`, {
+  const response = await fetch(`${env.API_URL}/skin?${new URLSearchParams({ uuid })}`, {
     headers: { "X-API-KEY": env.API_KEY },
   });
 
