@@ -17,7 +17,6 @@ export type ParkourModes = ExtractGameModes<typeof PARKOUR_MODES>;
 const fieldOptions = { sort: "ASC", formatter: formatTime, fieldName: "Time" };
 const historical = { enabled: false };
 
-// A 0ms run is a real time, so store 0 and leave lobbies without a run undefined
 const store = { required: false, serialize: false, deserialize: false };
 
 export class Parkour {
