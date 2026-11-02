@@ -55,7 +55,7 @@ export class ApiService extends StatsifyApiService {
         const error = err.response.data as PlayerNotFoundException;
 
         if (error.message === "player") throw this.missingPlayer(type, tag);
-        if (error.message === "hypixel") throw this.hypixelUnavailable(error as HypixelUnavailableException);
+        if (error.message === "hypixel") throw this.hypixelUnavailable(error);
 
         throw this.unknownError();
       });
@@ -74,7 +74,7 @@ export class ApiService extends StatsifyApiService {
       const error = err.response.data as PlayerNotFoundException | SessionNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
-      if (error.message === "hypixel") throw this.hypixelUnavailable(error as HypixelUnavailableException);
+      if (error.message === "hypixel") throw this.hypixelUnavailable(error);
 
       if (error.message === "session") {
         const { displayName } = error as SessionNotFoundException;
@@ -106,7 +106,7 @@ export class ApiService extends StatsifyApiService {
         PlayerNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
-      if (error.message === "hypixel") throw this.hypixelUnavailable(error as HypixelUnavailableException);
+      if (error.message === "hypixel") throw this.hypixelUnavailable(error);
 
       if (error.message === "status") {
         const { displayName } = error as StatusNotFoundException;
@@ -183,7 +183,7 @@ export class ApiService extends StatsifyApiService {
       }
 
       if (error.message === "player") throw this.missingPlayer(playerType, input);
-      if (error.message === "hypixel") throw this.hypixelUnavailable(error as HypixelUnavailableException);
+      if (error.message === "hypixel") throw this.hypixelUnavailable(error);
 
       throw this.unknownError();
     });
