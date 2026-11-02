@@ -34,7 +34,7 @@ export interface Server {
   };
   version?: string;
   online: boolean;
-  protocol: number;
+  protocol?: { version: number; name?: string };
   hostname: string;
   name: string;
   icon: string;
