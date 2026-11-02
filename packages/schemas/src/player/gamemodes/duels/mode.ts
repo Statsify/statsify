@@ -334,7 +334,7 @@ export class ArenaDuels extends SinglePVPDuelsGameMode {
   public shotsFired: number;
 
   public constructor(data: APIData) {
-    super(data, "arena", "duel_arena", data.duel_arena_kills);
+    super(data, "arena", "duel_arena", data.duel_arena_kills ?? 0);
     this.shotsFired = data[`duel_arena_bow_shots`];
   }
 }
