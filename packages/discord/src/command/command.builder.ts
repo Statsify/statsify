@@ -67,7 +67,7 @@ export function scanCommands<T extends object>(
   return commandResolvable;
 }
 
-export function scanUserCommand<T extends object>(
+export function scanContextMenu<T extends object>(
   target: T,
   constructor: Constructor<T>,
 ) {
@@ -78,7 +78,7 @@ export function scanUserCommand<T extends object>(
 
   if (!metadata.contextMenu) return;
 
-  return new CommandResolvable(metadata, target).asUserCommand(metadata.contextMenu);
+  return new CommandResolvable(metadata, target).asContextMenu(metadata.contextMenu);
 }
 
 if (import.meta.vitest) {
@@ -227,11 +227,11 @@ if (import.meta.vitest) {
       });
     });
 
-    it("should build a user command without a description or options", () => {
+    it("should build a context menu without a description or options", () => {
       @Command({ description: "test", contextMenu: "Test User" })
       class TestCommand {}
 
-      expect(scanUserCommand(new TestCommand(), TestCommand)?.toJSON()).toEqual({
+      expect(scanContextMenu(new TestCommand(), TestCommand)?.toJSON()).toEqual({
         name: "Test User",
         name_localizations: {},
         type: ApplicationCommandType.User,

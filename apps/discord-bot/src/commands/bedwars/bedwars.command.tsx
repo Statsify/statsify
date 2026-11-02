@@ -18,7 +18,7 @@ import { BedWarsChallengesProfile } from "./bedwars-challenges.profile.js";
 
 @Command({
   description: (t) => t("commands.bedwars"),
-  contextMenu: (t) => t("commands.bedwars-user-command"),
+  contextMenu: (t) => t("commands.bedwars-context-menu"),
 })
 export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
   public constructor() {

@@ -118,7 +118,7 @@ export class CommandResolvable {
     return this;
   }
 
-  public asUserCommand(name: LocalizationString) {
+  public asContextMenu(name: LocalizationString) {
     this.type = ApplicationCommandType.User;
     this.name = translateField(getLocalizeFunction("en_US"), name);
     this.name_localizations = translateToAllLanguages(name);
