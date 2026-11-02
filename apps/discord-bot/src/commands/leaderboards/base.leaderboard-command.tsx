@@ -13,11 +13,11 @@ import {
   ErrorMessage,
   IMessage,
   Interaction,
-  ModalBuilder,
-  TextInputBuilder,
+  createCustomId,
+  parseCustomId,
 } from "@statsify/discord";
-import { ButtonStyle, InteractionResponseType } from "discord-api-types/v10";
-import { CommandListener } from "#lib/command.listener";
+import { ButtonStyle } from "discord-api-types/v10";
+import { LEADERBOARD_ROUTE } from "./leaderboard.route.js";
 import {
   LeaderboardProfile,
   LeaderboardProfileProps,
@@ -66,11 +66,11 @@ export class BaseLeaderboardCommand {
     type,
     getLeaderboardDataIcon,
   }: CreateLeaderboardOptions) {
-    const userId = context.getInteraction().getUserId();
+    const interaction = context.getInteraction();
     const user = context.getUser();
     const t = context.t();
-    const cache = new Map<number, IMessage>();
 
+    const params = this.getLeaderboardParams(interaction);
     const logo = await getLogo(user);
 
     const props: BaseLeaderboardProps = {
@@ -80,186 +80,6 @@ export class BaseLeaderboardCommand {
       user,
       type,
     };
-
-    const up = new ButtonBuilder()
-      .emoji(t("emojis:up"))
-      .style(ButtonStyle.Success)
-      .disable(true);
-
-    const down = new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger);
-
-    const searchDocument = new ButtonBuilder()
-      .emoji(t(`emojis:search.${type}`))
-      .style(ButtonStyle.Primary);
-
-    const searchPosition = new ButtonBuilder()
-      .emoji(t("emojis:search.position"))
-      .style(ButtonStyle.Primary);
-
-    let currentPage = 0;
-
-    const changePage =
-      (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
-        if (user?.locale) interaction.setLocale(user.locale);
-
-        const params = fn();
-
-        const [message, page] = await this.getLeaderboardMessage(
-          user,
-          cache,
-          type,
-          getLeaderboard,
-          field,
-          params,
-          props,
-          getLeaderboardDataIcon
-        );
-
-        if (interaction.getUserId() === userId && !message.ephemeral) {
-          up.disable(page === 0);
-          currentPage = page || currentPage;
-          const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
-
-          context.reply({
-            ...message,
-            components: [row],
-            attachments: [],
-          });
-        } else {
-          interaction.sendFollowup({ ...message, ephemeral: true });
-        }
-      };
-
-    const [message, page] = await this.getLeaderboardMessage(
-      user,
-      cache,
-      type,
-      getLeaderboard,
-      field,
-      { input: currentPage, type: LeaderboardQuery.PAGE },
-      props,
-      getLeaderboardDataIcon
-    );
-
-    if (message.ephemeral) return message;
-
-    const listener = CommandListener.getInstance();
-
-    listener.addHook(
-      up.getCustomId(),
-      changePage(() => ({
-        input: currentPage - 1,
-        type: LeaderboardQuery.PAGE,
-      }))
-    );
-
-    listener.addHook(
-      down.getCustomId(),
-      changePage(() => ({
-        input: currentPage + 1,
-        type: LeaderboardQuery.PAGE,
-      }))
-    );
-
-    const documentModal = new ModalBuilder()
-      .title((t) => t("leaderboard.modal.title"))
-      .component(
-        new ActionRowBuilder().component(
-          new TextInputBuilder()
-            .label((t) => t(`leaderboard.${type}Input.label`))
-            .placeholder((t) => t(`leaderboard.${type}Input.placeholder`))
-            .minLength(1)
-            .maxLength(type === "player" ? 16 : 36)
-            .required(true)
-        )
-      );
-
-    const positionModal = new ModalBuilder()
-      .title((t) => t("leaderboard.modal.title"))
-      .component(
-        new ActionRowBuilder().component(
-          new TextInputBuilder()
-            .label((t) => t("leaderboard.positionInput.label"))
-            .placeholder((t) => t("leaderboard.positionInput.placeholder"))
-            .minLength(1)
-            .maxLength(6)
-            .required(true)
-        )
-      );
-
-    listener.addHook(searchDocument.getCustomId(), () => ({
-      type: InteractionResponseType.Modal,
-      data: documentModal.build(t),
-    }));
-
-    listener.addHook(searchPosition.getCustomId(), () => ({
-      type: InteractionResponseType.Modal,
-      data: positionModal.build(t),
-    }));
-
-    listener.addHook(documentModal.getCustomId(), async (interaction) => {
-      const data = interaction.getData();
-      const documentInput = data.components[0].components[0].value;
-      changePage(() => ({ input: documentInput, type: LeaderboardQuery.INPUT }))(
-        interaction
-      );
-    });
-
-    listener.addHook(positionModal.getCustomId(), async (interaction) => {
-      const data = interaction.getData();
-      const positionInput = data.components[0].components[0].value.trim();
-
-      const position = Number(positionInput);
-
-      if (user?.locale) interaction.setLocale(user.locale);
-
-      if (!/^\d+$/.test(positionInput) || position < 1) {
-        const error = new ErrorMessage("errors.leaderboardInvalidPosition");
-
-        return interaction.sendFollowup({
-          ...error,
-          ephemeral: true,
-        });
-      }
-
-      changePage(() => ({ input: position, type: LeaderboardQuery.POSITION }))(
-        interaction
-      );
-    });
-
-    const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
-
-    setTimeout(() => {
-      listener.removeHook(up.getCustomId());
-      listener.removeHook(down.getCustomId());
-      listener.removeHook(searchDocument.getCustomId());
-      listener.removeHook(searchPosition.getCustomId());
-      listener.removeHook(documentModal.getCustomId());
-      listener.removeHook(positionModal.getCustomId());
-
-      context.reply({ embeds: [], components: [] });
-      cache.clear();
-    }, 300_000);
-
-    currentPage = page ?? currentPage;
-
-    return { ...message, components: [row] };
-  }
-
-  private async getLeaderboardMessage(
-    user: User | null,
-    cache: Map<number, IMessage>,
-    type: LeaderboardType,
-    getLeaderboard: GetLeaderboard,
-    field: string,
-    params: LeaderboardParams,
-    props: BaseLeaderboardProps,
-    getLeaderboardDataIcon?: GetLeaderboardDataIcon
-  ): Promise<[message: IMessage, page: number | null]> {
-    if (params.type === LeaderboardQuery.PAGE && cache.has(params.input as number)) {
-      const page = params.input as number;
-      return [cache.get(page)!, page];
-    }
 
     const [message, page] = await this.renderLeaderboardMessage(
       user,
@@ -271,9 +91,56 @@ export class BaseLeaderboardCommand {
       getLeaderboardDataIcon
     );
 
-    if (params.type === LeaderboardQuery.PAGE && page !== null) cache.set(page, message);
+    if (page === null) return message;
 
-    return [message, page];
+    // Player leaderboard subcommands are named after the game in the field
+    const leaderboard = type === "player" ? field.replace(/^stats\./, "") : `guild.${field}`;
+
+    const customId = (action: string | number) =>
+      createCustomId(LEADERBOARD_ROUTE, interaction.getUserId(), action, leaderboard);
+
+    const row = new ActionRowBuilder([
+      new ButtonBuilder()
+        .emoji(t("emojis:up"))
+        .style(ButtonStyle.Success)
+        .customId(customId(page - 1))
+        .disable(page === 0),
+      new ButtonBuilder()
+        .emoji(t("emojis:down"))
+        .style(ButtonStyle.Danger)
+        .customId(customId(page + 1)),
+      new ButtonBuilder()
+        .emoji(t(`emojis:search.${type}`))
+        .style(ButtonStyle.Primary)
+        .customId(customId(LeaderboardQuery.INPUT)),
+      new ButtonBuilder()
+        .emoji(t("emojis:search.position"))
+        .style(ButtonStyle.Primary)
+        .customId(customId(LeaderboardQuery.POSITION)),
+    ]);
+
+    return { ...message, components: [row], attachments: [] };
+  }
+
+  /** The first page for the command, otherwise the page or search a button or modal asks for */
+  private getLeaderboardParams(interaction: Interaction): LeaderboardParams {
+    if (interaction.isCommandInteraction()) return { input: 0, type: LeaderboardQuery.PAGE };
+
+    const [action] = parseCustomId(interaction.getCustomId()).values;
+
+    if (!interaction.isModalInteraction()) return { input: Number(action), type: LeaderboardQuery.PAGE };
+
+    const input = interaction.getData().components[0].components[0].value;
+
+    if (action === LeaderboardQuery.INPUT) return { input, type: LeaderboardQuery.INPUT };
+
+    const positionInput = input.trim();
+    const position = Number(positionInput);
+
+    if (!/^\d+$/.test(positionInput) || position < 1)
+      throw new ErrorMessage("errors.leaderboardInvalidPosition");
+
+    return { input: position, type: LeaderboardQuery.POSITION };
   }
 
   private async renderLeaderboardMessage(
