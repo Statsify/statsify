@@ -11,6 +11,6 @@ import { GeneralCommand } from "./general.command.js";
 
 @Command({
   description: (t) => t("commands.general"),
-  contextMenu: (t) => t("commands.hypixel-user-command"),
+  contextMenu: (t) => t("commands.hypixel-context-menu"),
 })
 export class HypixelCommand extends GeneralCommand {}

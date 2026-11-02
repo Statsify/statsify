@@ -72,8 +72,8 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    // User commands have no options, so the player is the user it was used on
-    const tag = context.option<string>("player") ?? context.getInteraction().getData().target_id;
+    // User commands have no options, so default to the user it was used on
+    const tag = context.option<string>("player", context.getInteraction().getData().target_id);
     const player = await this.apiService.getPlayer(tag, user);
 
     const [logo, skin, badge] = await Promise.all([
