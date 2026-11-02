@@ -97,9 +97,7 @@ logger.log("Server Started");
 
 server.on("login", async (client) => {
   try {
-    logger.verbose(
-      `${client.username} [${client.uuid}] has joined on protocol ${client.protocolVersion}`
-    );
+    logger.verbose(`${client.username} [${client.uuid}] has joined`);
 
     const uuid = client.uuid.replaceAll("-", "");
 
