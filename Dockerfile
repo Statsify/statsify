@@ -1,6 +1,8 @@
 FROM node:24.7.0-bookworm AS base
 ENV CI=true TURBO_TELEMETRY_DISABLED=1
-RUN corepack enable
+# Node 24.7.0's corepack can't run pnpm 11 or later, so install the pinned pnpm with npm
+RUN --mount=type=bind,source=package.json,target=/tmp/package.json \
+  npm install -g "$(node -p 'require("/tmp/package.json").packageManager')"
 WORKDIR /app
 
 FROM base AS prune
@@ -22,7 +24,7 @@ COPY --from=prune /app/out/full/ .
 COPY .swcrc Cargo.toml ./
 RUN pnpm turbo run build --filter="$APP"
 # A fresh install, since --prod over the full one unlinks dev dependencies but leaves them in node_modules
-RUN rm -rf node_modules apps/*/node_modules packages/*/node_modules target \
+RUN rm -rf node_modules apps/*/node_modules packages/*/node_modules target .turbo apps/*/.turbo packages/*/.turbo \
   && pnpm install --frozen-lockfile --prod --offline \
   && mv node_modules /node_modules
 COPY locales locales
