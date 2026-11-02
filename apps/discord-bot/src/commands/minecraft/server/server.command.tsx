@@ -57,7 +57,16 @@ export class ServerCommand {
 
     const buffer = await canvas.toBuffer("png");
 
-    return { files: [{ name: "server.png", data: buffer, type: "image/png" }] };
+    return {
+      files: [
+        {
+          name: "server.png",
+          data: buffer,
+          type: "image/png",
+          description: t("altText.server", { server: server.hostname }),
+        },
+      ],
+    };
   }
 
   private async getServer(tag: string) {

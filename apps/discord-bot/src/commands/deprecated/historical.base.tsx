@@ -9,6 +9,7 @@
 import {
   Command,
   EmbedBuilder,
+  InteractionAttachment,
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
@@ -18,10 +19,11 @@ import { getAssetPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
 import type { HistoricalType } from "@statsify/api-client";
 
-const preview = {
+const preview: InteractionAttachment = {
   name: "preview.png",
   data: readFileSync(getAssetPath("previews/session.png")),
   type: "image/png",
+  description: (t) => t("altText.sessionPreview"),
 };
 
 const embed = new EmbedBuilder()

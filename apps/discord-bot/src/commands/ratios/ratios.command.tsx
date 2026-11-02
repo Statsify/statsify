@@ -43,7 +43,7 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { Constructor, prettify } from "@statsify/util";
+import { Constructor, prettify, removeFormatting } from "@statsify/util";
 import {
   GamesWithBackgrounds,
   MODES_TO_API,
@@ -236,7 +236,18 @@ export class RatiosCommand {
         const buffer = await canvas.toBuffer("png");
 
         return {
-          files: [{ name: "ratios.png", data: buffer, type: "image/png" }],
+          files: [
+            {
+              name: "ratios.png",
+              data: buffer,
+              type: "image/png",
+              description: t("altText.ratios", {
+                game: removeFormatting(props.gameName),
+                player: player.username,
+                mode: mode.formatted,
+              }),
+            },
+          ],
           attachments: [],
         };
       },

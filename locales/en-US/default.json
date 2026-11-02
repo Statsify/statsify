@@ -1,4 +1,23 @@
 {
+  "altText": {
+    "badge": "Profile preview with your badge",
+    "footer": "Profile preview with your footer",
+    "guildList": "Member list of {{guild}}",
+    "guildMember": "{{player}}'s guild stats in {{guild}}",
+    "guildTop": "Top GEXP members of {{guild}} ({{period}})",
+    "head": "{{player}}'s Minecraft head",
+    "leaderboard": "{{name}} leaderboard",
+    "logo": "Statsify logo",
+    "profile": "{{game}} stats for {{player}} ({{mode}})",
+    "ratios": "{{game}} ratios for {{player}} ({{mode}})",
+    "server": "Status of {{server}}",
+    "session": "{{game}} session stats for {{player}} ({{mode}})",
+    "sessionPreview": "Example of a session stats card",
+    "skin": "{{player}}'s Minecraft skin",
+    "status": "Online status of {{player}}",
+    "text": "Your text in the Minecraft font",
+    "theme": "Profile preview with your theme"
+  },
   "arguments": {
     "choice": "Choose an option",
     "file": "Upload a file",

@@ -42,7 +42,7 @@ export class InviteCommand {
 
     return {
       embeds: [embed],
-      files: [{ name: "logo.png", data: logo, type: "image/png" }],
+      files: [{ name: "logo.png", data: logo, type: "image/png", description: (t) => t("altText.logo") }],
     };
   }
 }

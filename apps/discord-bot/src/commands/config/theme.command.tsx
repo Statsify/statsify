@@ -115,7 +115,7 @@ export class ThemeCommand {
 
     return {
       content: t("config.theme.view"),
-      files: [{ name: "theme.png", data: profile, type: "image/png" }],
+      files: [{ name: "theme.png", data: profile, type: "image/png", description: t("altText.theme") }],
     };
   }
 
@@ -199,7 +199,7 @@ export class ThemeCommand {
 
     return {
       content: t("config.footer.reset"),
-      files: [{ name: "footer.png", data: profile, type: "image/png" }],
+      files: [{ name: "footer.png", data: profile, type: "image/png", description: t("altText.footer") }],
     };
   }
 
@@ -227,7 +227,7 @@ export class ThemeCommand {
     return {
       content:
         mode === "theme" ? t("config.theme.set") : t("config.footer.set"),
-      files: [{ name: `${mode}.png`, data: profile, type: "image/png" }],
+      files: [{ name: `${mode}.png`, data: profile, type: "image/png", description: t(`altText.${mode}`) }],
     };
   }
 
