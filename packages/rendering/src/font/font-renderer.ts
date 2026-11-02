@@ -38,7 +38,8 @@ interface GlyphRun {
 const getGlyphRuns = ({ data, width, height }: ImageData) => {
   const runs: GlyphRun[] = [];
 
-  const isOpaque = (x: number, y: number) => data[(y * width + x) * 4 + 3] !== 0;
+  const isOpaque = (x: number, y: number) =>
+    data[(y * width + x) * 4 + 3] !== 0;
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
@@ -337,7 +338,7 @@ export class FontRenderer {
       size,
     } = metadata;
 
-    // Characters repeat across a card, so read and scan each glyph's pixels once
+    // Characters repeat across a card, so scan each glyph's pixels once
     let runs = this.glyphs.get(char);
 
     if (!runs) {
@@ -500,7 +501,12 @@ export class FontRenderer {
           offset *= scale * size;
         }
 
-        ctx.rect(x + offset + run.x * size, y + run.y * size, run.length * size, size);
+        ctx.rect(
+          x + offset + run.x * size,
+          y + run.y * size,
+          run.length * size,
+          size
+        );
       }
 
       ctx.closePath();
