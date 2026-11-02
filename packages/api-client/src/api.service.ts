@@ -214,7 +214,11 @@ export class ApiService {
 
   public getUser(tag: string) {
     return this.request<GetUserResponse>("/user", { tag })
-      .then((data) => data.user ?? null);
+      .then((data) => data.user ?? null)
+      .catch((err) => {
+        if (axios.isAxiosError(err) && (!err.response || err.response.status >= 500)) throw err;
+        return null;
+      });
   }
 
   public updateUser(tag: string, update: UpdateUser) {
