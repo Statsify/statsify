@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CHIP, Callout, KeyTable, Paragraph, READING_SIZE, Section, Subheading, TextEmail, TextLink, TextPage } from "./text-page";
+import { CHIP, Callout, KeyTable, Paragraph, Section, Subheading, TextEmail, TextLink, TextPage } from "./text-page";
 import { Link } from "@tanstack/react-router";
 import { PointerText } from "~/components/ui/hint";
 import { Trans, useTranslation } from "react-i18next";
@@ -44,7 +44,7 @@ export function AboutPage() {
       <Section id="stats" title={t("about.stats")}>
         <Paragraph>{t("about.statsText")}</Paragraph>
         <Callout label={t("about.note")}>
-          <p>{t("about.leaderboardsNote")}</p>
+          <Paragraph>{t("about.leaderboardsNote")}</Paragraph>
         </Callout>
         <Subheading>{t("about.names")}</Subheading>
         <Paragraph>{t("about.namesText")}</Paragraph>
@@ -67,7 +67,7 @@ function SampleChip() {
     <Link
       to="/{-$locale}/leaderboards/$field"
       params={{ field: "stats.bedwars.overall.fkdr" }}
-      className={`${CHIP} mx-0.5 align-baseline ${READING_SIZE} hover:bg-white/15`}
+      className={`${CHIP} mx-0.5 align-baseline hover:bg-[#2e2e2e]`}
     >
       <span className="text-mc-gray">{t("stats.fkdr", { ns: "default" })}:</span>
       <span className="text-mc-gold">{n(3.42)}</span>

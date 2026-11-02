@@ -56,7 +56,8 @@ export function Button({
       >
         <div className={`absolute top-0 left-0 w-full ${styles.topShadow}`} />
         <div className={`absolute inset-0 ${styles.buttonOverlay}`} />
-        <Slottable>{children}</Slottable>
+        {/* The label on its own, so it's drawn crisp (`mc-crisp`) without the bevel's shading around it. */}
+        <Slottable child={children}>{(label) => <span className="mc-crisp flex items-center gap-1">{label}</span>}</Slottable>
         <div className={`absolute bottom-0 left-0 w-full ${styles.bottomShadow}`} />
       </Component>
     </div>

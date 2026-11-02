@@ -271,7 +271,7 @@ function SocialLinks({ socials }: { socials: Socials }) {
           <>
             <Icon className="size-5 shrink-0" />
             <span className="sr-only">{t(`player.socials.${key}`)}</span>
-            <span className="max-w-40 truncate">{socialHandle(value)}</span>
+            <span className="mc-crisp max-w-40 truncate">{socialHandle(value)}</span>
           </>
         );
 
@@ -381,7 +381,7 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
             value={link && "page" in link ?
               (
                 <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: link.page }} className={STAT_LINK}>
-                  <Spoken full={exact(value)}>{n(value)}</Spoken>
+                  <span className="mc-crisp"><Spoken full={exact(value)}>{n(value)}</Spoken></span>
                   <span className="sr-only"> {t("player.page", { name: label })}</span>
                 </Link>
               ) :
@@ -426,7 +426,7 @@ function PlayerFacts({
             label={t("default:stats.guild.guild")}
             value={(
               <Link to="/{-$locale}/guild/$name" params={{ name: guild.name }} className={cn(STAT_LINK, "after:inset-0")}>
-                {guild.name}
+                <span className="mc-crisp">{guild.name}</span>
               </Link>
             )}
             color="text-mc-dark-green"
@@ -462,7 +462,7 @@ function PlayerFacts({
             (
               // Over the whole box: the box, not the value's clip, holds its ::after.
               <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: lastGamePage }} className={cn(STAT_LINK, "after:inset-0")}>
-                {lastGame}
+                <span className="mc-crisp">{lastGame}</span>
               </Link>
             ) :
             (lastGame ?? t("player.na"))}
@@ -475,7 +475,7 @@ function PlayerFacts({
             label={t("session.title")}
             value={(
               <Link to="/{-$locale}/player/$name/session" params={{ name: username }} className={cn(STAT_LINK, "after:inset-0")}>
-                <LoginDate ms={session.start} linked />
+                <span className="mc-crisp"><LoginDate ms={session.start} linked /></span>
               </Link>
             )}
             color="text-mc-dark-aqua"

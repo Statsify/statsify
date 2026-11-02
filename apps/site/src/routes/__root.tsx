@@ -8,6 +8,7 @@
 
 import appCss from "~/styles/app.css?url";
 import { CLOCK_SCRIPT } from "~/lib/clock";
+import { CrispTextFilters } from "~/components/ui/crisp-text";
 import { FONT_HOLD, PIXEL_RATIO_SCRIPT } from "~/lib/fonts";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext, useRouterState } from "@tanstack/react-router";
 import { LOGO_ICON } from "~/lib/tab-icon";
@@ -64,6 +65,7 @@ function RootDocument({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body className="antialiased leading-[normal] min-h-screen flex flex-col bg-blackify-950">
+        <CrispTextFilters />
         {children}
         <Scripts />
       </body>

@@ -6,6 +6,15 @@
   /* All text is Minecraft, also text with no `text-mc-*` size. */
   --default-font-family: var(--font-minecraft);
 
+  /* The crisp filter for each Minecraft size (`CrispTextFilters`): its shadow is one font pixel down and right. */
+  --mc-crisp-1: url(#mc-crisp-1);
+  --mc-crisp-1\.5: url(#mc-crisp-1-5);
+  --mc-crisp-2: url(#mc-crisp-2);
+  --mc-crisp-3: url(#mc-crisp-3);
+  --mc-crisp-4: url(#mc-crisp-4);
+  --mc-crisp-7: url(#mc-crisp-7);
+  --mc-snap-crisp-1\.25: url(#mc-crisp-snap);
+
   --drop-shadow-mc-1: 1px 1px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-4: 4px 4px color-mix(in srgb, currentColor 25%, #000 75%);
 
@@ -47,12 +56,15 @@
 }
 
 /* Minecraft text: 16px × N with an N px hard shadow. Use only N ∈ {1, 1.5, 2, 3, 4, 7}: 16, 24, 32, 48, 64 and 112 px,
-   the sizes on the Minecraft pixel grid. 24 lands on half pixels at DPR 1 and 3, so it is for headings and inline
-   values only. */
+   the sizes on the Minecraft pixel grid. Drawn through the crisp filter, which puts every pixel fully on or off, so
+   the half-pixel symbols and the 24's half pixels stay sharp; text it would spoil keeps its CSS shadow (`@layer base`). */
 @utility text-mc-* {
+  --mc-text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
+  --mc-crisp: --value(--mc-crisp-*);
   font-family: var(--font-minecraft);
   font-size: calc(16px * --value(number));
-  text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
+  text-shadow: var(--mc-plain-shadow, none);
+  filter: var(--mc-plain-filter, var(--mc-crisp));
 }
 
 /* Minecraft text as near 16px × N as the screen allows while staying sharp: a font pixel takes a whole number of
@@ -64,9 +76,31 @@
   --mc-even: calc(2 * round(nearest, var(--mc-x) / 2, 1));
   --mc-fits: round(down, clamp(0, 1 + 1000 * (var(--mc-x) / 4 - max(var(--mc-even) - var(--mc-x), var(--mc-x) - var(--mc-even))), 1), 1);
   --mc-px: calc(1px * (var(--mc-fits) * var(--mc-even) + (1 - var(--mc-fits)) * round(nearest, var(--mc-x), 1)) / var(--dpr, 1));
+  --mc-text-shadow: var(--mc-px) var(--mc-px) color-mix(in srgb, currentColor 25%, #000 75%);
+  --mc-crisp: --value(--mc-snap-crisp-*);
   font-family: var(--font-minecraft);
   font-size: calc(16 * var(--mc-px));
-  text-shadow: var(--mc-px) var(--mc-px) color-mix(in srgb, currentColor 25%, #000 75%);
+  text-shadow: var(--mc-plain-shadow, none);
+  filter: var(--mc-plain-filter, var(--mc-crisp));
+}
+
+/* Text inside a `text-mc-*` element that the filter can't take whole (a link with a hover background, a cell with a
+   button over its corner): drawn through that size's crisp filter on its own. */
+@utility mc-crisp {
+  text-shadow: var(--mc-plain-shadow, none);
+  filter: var(--mc-plain-filter, var(--mc-crisp));
+}
+
+/* Per element, so a text that keeps its shadow doesn't pass that on to the text inside it. (`--mc-text-shadow` is
+   inherited, so `mc-crisp` text that keeps it has its size's.) */
+@property --mc-plain-filter {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mc-plain-shadow {
+  syntax: "*";
+  inherits: false;
 }
 
 /* The keyboard focus, drawn like the panels: a white ring on the pixel grid 2 px out from the control, with a hard
@@ -131,29 +165,39 @@
 }
 
 /* A list item drawn as a card Box with CSS alone, for lists too long for the `Box` component (the leaderboard index's
-   thousands of links, set as HTML), in the card's shape (`box-shape`) and colours (tokens.css): its link takes the
-   fill and the bevel, the item the shadow (`::before`, the parts outside the box, as `Box` clips it). The bevel clips
-   the link's own ring, so the ring goes inside. */
+   thousands of links, set as HTML), in the card's shape (`box-shape`) and colours (tokens.css): the item draws the
+   shadow (`::before`, the parts outside the box, as `Box` clips it) and the fill (`::after`) under its link, so the
+   link's crisp filter takes only its text. The bevel clips the link's own ring, so the ring goes inside. */
 @utility box-item {
   position: relative;
+  isolation: isolate;
   margin: 0 var(--box-s) var(--box-s) 0;
 
   @apply box-shape;
 
-  &::before {
+  &::before,
+  &::after {
     content: "";
     position: absolute;
     inset: 0;
+    z-index: -1;
     pointer-events: none;
+  }
+
+  &::before {
     translate: var(--box-s) var(--box-s);
     background: var(--panel-shadow);
     clip-path: var(--box-shadow-path);
   }
 
-  & > a {
+  &::after {
     clip-path: var(--box-path);
     background: var(--panel-overlay), var(--panel-background);
     background-blend-mode: overlay, normal;
+  }
+
+  & > a {
+    clip-path: var(--box-path);
   }
 
   & > a:focus-visible {
@@ -274,6 +318,28 @@
   /* `focus-ring`, for every control that doesn't draw its own. */
   :focus-visible {
     @apply focus-ring;
+  }
+
+  /* Minecraft text the crisp filter would spoil keeps the font's own edges and its CSS shadow: a filter forces alpha
+     to 0 or 1 (translucent colours, boxes, fades), adds a shadow to whatever is inside (icons, images, nested sizes and
+     `mc-crisp` text, which have their own), clips what sits outside the element (stretched links, focus rings), holds
+     what is positioned inside it, and is replaced by a hover filter. A Hint inherits its text's shadow and holds its own
+     tap area, so it can go inside. A Box's own translucent colour (a dimmed tab) reaches its text by inheritance. */
+  .box[class*="/"] :is([class*="text-mc-"], [data-slot="content"], .mc-crisp),
+  :is([class*="text-mc-"], [data-slot="content"], .mc-crisp):is(
+      input, textarea, select, :focus-visible, [class*="/"], [class*="shadow"], [class*="box"],
+      [class*="after:absolute"], [class*="before:absolute"], [class*="brightness"], [class*="blur"]
+    ),
+  :is([class*="text-mc-"], [data-slot="content"], .mc-crisp):has(
+      img, svg, canvas, video, iframe, input, textarea, select, :focus-visible, [data-slot="content"],
+      [class*="mc-crisp"], [class*="/"], [class*="shadow"]:not([class*="[text-shadow:inherit]"]), [class*="box"],
+      [class*="opacity"], [class*="animate-"], [class~="absolute"], [class*="after:absolute"]:not([class~="relative"]),
+      [class*="before:absolute"]:not([class~="relative"]), [class*="fixed"], [class*="sticky"], [style*="opacity"],
+      [class*="text-mc-1"], [class*="text-mc-2"], [class*="text-mc-3"], [class*="text-mc-4"], [class*="text-mc-7"],
+      [class*="text-mc-snap"]
+    ) {
+    --mc-plain-filter: none;
+    --mc-plain-shadow: var(--mc-text-shadow);
   }
 
   /* The scrollbar's room is kept on short pages too, so with classic scrollbars a page that grows past the fold

@@ -96,7 +96,7 @@ function FoldedContents({ contents }: { contents: ContentsItem[] }) {
     <Box as="nav" aria-label={t("content.contents")} className="lg:hidden content:py-2">
       <details className="group">
         <summary className="flex min-h-11 cursor-pointer list-none items-center gap-3 text-mc-1.5 font-bold select-none [&::-webkit-details-marker]:hidden">
-          <span className="grow">
+          <span className="mc-crisp grow">
             {t("content.contents")} <span className="font-normal text-mc-gray">({contents.length})</span>
           </span>
           <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
@@ -115,10 +115,10 @@ function ContentsList({ contents, current }: { contents: ContentsItem[]; current
           <a
             href={`#${id}`}
             aria-current={id === current ? "location" : undefined}
-            className="flex min-h-11 items-center justify-between gap-2 px-2 text-mc-1.5 text-white/60 hover:bg-white/10 hover:text-white aria-[current=location]:bg-white/10 aria-[current=location]:font-bold aria-[current=location]:text-white"
+            className="flex min-h-11 items-center justify-between gap-2 px-2 text-mc-1.5 text-mc-gray hover:bg-white/10 hover:text-white aria-[current=location]:bg-white/10 aria-[current=location]:font-bold aria-[current=location]:text-white"
           >
-            <span>{label}</span>
-            {count !== undefined && <span className="font-normal text-mc-gray">{count}</span>}
+            <span className="mc-crisp">{label}</span>
+            {count !== undefined && <span className="mc-crisp font-normal text-mc-gray">{count}</span>}
           </a>
         </li>
       ))}
@@ -250,13 +250,13 @@ export function Subheading({ children }: { children: ReactNode }) {
 }
 
 export function Paragraph({ children }: { children: ReactNode }) {
-  return <p className="max-w-(--measure)">{children}</p>;
+  return <p className="mc-crisp max-w-(--measure)">{children}</p>;
 }
 
 /** A list with the site's square bullets, each centred on its first line's lowercase letters (7/16 em down). */
 export function List({ children }: { children: ReactNode }) {
   return (
-    <ul className="flex max-w-(--measure) flex-col gap-2 [&>li]:relative [&>li]:pl-6 [&>li]:before:absolute [&>li]:before:top-[calc(0.4375em-3px)] [&>li]:before:left-1 [&>li]:before:size-1.5 [&>li]:before:bg-mc-dark-gray">
+    <ul className="flex max-w-(--measure) flex-col gap-2 [&>li]:relative [&>li]:mc-crisp [&>li]:pl-6 [&>li]:before:absolute [&>li]:before:top-[calc(0.4375em-3px)] [&>li]:before:left-1 [&>li]:before:size-1.5 [&>li]:before:bg-mc-dark-gray">
       {children}
     </ul>
   );
@@ -313,12 +313,12 @@ export function Callout({ label, tone = "note", children }: { label: ReactNode; 
 export function KeyTable({ head, rows }: { head: [ReactNode, ReactNode]; rows: [label: ReactNode, value: ReactNode][] }) {
   return (
     <div className="overflow-x-auto bg-black/20">
-      <table className="w-full border-collapse text-16 leading-normal">
+      <table className="w-full border-collapse text-mc-1 leading-normal">
         <thead className="max-sm:hidden">
           <tr>
             {head.map((cell, index) => (
               <th key={index} className="border-b-2 border-black/30 bg-black/20 px-4 py-3 text-start text-mc-1 font-normal text-mc-gray whitespace-nowrap">
-                {cell}
+                <span className="mc-crisp">{cell}</span>
               </th>
             ))}
           </tr>
@@ -327,7 +327,7 @@ export function KeyTable({ head, rows }: { head: [ReactNode, ReactNode]; rows: [
           {rows.map(([label, value], index) => (
             <tr key={index} className="max-sm:block not-first:border-t-2 border-black/20">
               <td className="px-4 py-3 align-top text-mc-1 text-white whitespace-nowrap max-sm:block max-sm:pb-0">{label}</td>
-              <td className="px-4 py-3 align-top max-sm:block max-sm:pt-1">{value}</td>
+              <td className="mc-crisp px-4 py-3 align-top max-sm:block max-sm:pt-1">{value}</td>
             </tr>
           ))}
         </tbody>
@@ -336,5 +336,8 @@ export function KeyTable({ head, rows }: { head: [ReactNode, ReactNode]; rows: [
   );
 }
 
-/** The pixel bevel of the site's inline insets: 2 px corners and no radius. */
-export const CHIP = "inline-flex items-baseline gap-1.5 bg-black/45 px-2 py-0.5 whitespace-nowrap [clip-path:polygon(2px_0,calc(100%-2px)_0,100%_2px,100%_calc(100%-2px),calc(100%-2px)_100%,2px_100%,0_calc(100%-2px),0_2px)]";
+/**
+ * The pixel bevel of the site's inline insets: 2 px corners and no radius. Solid (what black at 45% shows over a panel),
+ * so the text around it can be drawn crisp: the crisp filter makes see-through colours solid.
+ */
+export const CHIP = "inline-flex items-baseline gap-1.5 bg-[#090909] px-2 py-0.5 whitespace-nowrap [clip-path:polygon(2px_0,calc(100%-2px)_0,100%_2px,100%_calc(100%-2px),calc(100%-2px)_100%,2px_100%,0_calc(100%-2px),0_2px)]";

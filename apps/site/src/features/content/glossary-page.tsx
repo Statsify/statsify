@@ -147,18 +147,18 @@ function Formula({ formula, label, colour }: { formula: NonNullable<GlossaryItem
 
   return (
     <p className={cn("mt-3 flex flex-wrap items-center gap-x-1 gap-y-2", READING_SIZE)}>
-      <span className={`${CHIP} text-mc-green`}>{part(formula.numerator)}</span>
-      <span className="px-0.5 text-mc-gray">÷</span>
-      <span className={`${CHIP} text-mc-red`}>{part(formula.denominator)}</span>
+      <span className={`${CHIP} text-mc-green`}><span className="mc-crisp">{part(formula.numerator)}</span></span>
+      <span className="mc-crisp px-0.5 text-mc-gray">÷</span>
+      <span className={`${CHIP} text-mc-red`}><span className="mc-crisp">{part(formula.denominator)}</span></span>
       {formula.multiplier !== 1 && (
         <>
-          <span className="px-0.5 text-mc-gray">×</span>
-          <span className={CHIP}>{n(formula.multiplier)}</span>
+          <span className="mc-crisp px-0.5 text-mc-gray">×</span>
+          <span className={CHIP}><span className="mc-crisp">{n(formula.multiplier)}</span></span>
         </>
       )}
-      <span className="px-0.5 text-mc-gray">=</span>
+      <span className="mc-crisp px-0.5 text-mc-gray">=</span>
       <span className={CHIP}>
-        <MinecraftText>{`${colour}${label}`}</MinecraftText>
+        <MinecraftText className="mc-crisp">{`${colour}${label}`}</MinecraftText>
       </span>
     </p>
   );

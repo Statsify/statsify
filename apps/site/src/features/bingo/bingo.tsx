@@ -65,7 +65,7 @@ export function Bingo({ player, refresh }: { player: BingoPlayer; refresh?: Reac
           </div>
         </div>
         <Divider variant="black" />
-        <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4 **:text-mc-1.5 **:lg:text-mc-2">
+        <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4">
           <Tabs tab={category} onTabChange={(category) => select({ category })}>
             <Tab tab="casual">{t("bingo.categories.casual")}</Tab>
             <Tab tab="pvp">{t("bingo.categories.pvp")}</Tab>
@@ -185,7 +185,7 @@ function BingoBoard({
     <>
       {/* Below `xl` the 6×6 board doesn't fit, so the 16 tasks are a list (two columns on tablets) followed by the
           rewards, instead of a grid scrolling sideways. Text is 24 px. */}
-      <ol className={cn("grid grid-cols-1 md:grid-cols-2 xl:hidden **:text-mc-1.5", BOX_GAP)}>
+      <ol className={cn("grid grid-cols-1 md:grid-cols-2 xl:hidden", BOX_GAP)}>
         {board.tasks.map((task) => (
           <li key={`${keyPrefix}-${String(task.field)}`} className="grid">
             <TaskCard task={task} finished={bingo[task.field]} complete={bingo[task.field] >= task.progress} />
@@ -204,7 +204,7 @@ function BingoBoard({
           <RewardCard reward={board.blackoutReward} variant="blackout" completed={blackout} />
         </li>
       </ol>
-      <div className={cn("hidden xl:grid grid-cols-[repeat(6,minmax(0,1fr))] grid-rows-6 **:text-mc-1.5", BOX_GAP)}>
+      <div className={cn("hidden xl:grid grid-cols-[repeat(6,minmax(0,1fr))] grid-rows-6", BOX_GAP)}>
         <RewardCard key={`${keyPrefix}-diagonal-0`} reward={board.diagonalRewards[0]} completed={diagonalCompletion[0]} />
         {board.columnRewards.map((reward, column) => (
           <RewardCard key={`${keyPrefix}-${reward.name}`} reward={reward} completed={columnCompletion[column]} />
@@ -244,7 +244,7 @@ function RewardCard({
   return (
     <Box
       {...props}
-      className={`min-w-0 grow content:flex content:flex-col content:gap-2 ${className}`}
+      className={`min-w-0 grow content:flex content:flex-col content:gap-2 content:text-mc-1.5 ${className}`}
       variant={completed ? "pink" : "default"}
     >
       <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
@@ -270,7 +270,7 @@ function TaskCard({ task, finished, complete }: { task: TaskInfo; finished: numb
 
   return (
     <Box
-      className="grow min-w-0 content:flex content:flex-col content:justify-between content:gap-2 content:text-center"
+      className="grow min-w-0 content:flex content:flex-col content:justify-between content:gap-2 content:text-center content:text-mc-1.5"
       variant={complete ? "green" : "red"}
     >
       <div className="flex flex-col gap-2">

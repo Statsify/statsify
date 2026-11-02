@@ -114,7 +114,7 @@ export function StatCell({
       </dt>
       {/* The control goes in the `<dd>`, as a `<dl>` holds only terms and details; it still sits over the cell's corner. */}
       <dd className={cn("max-w-full text-mc-2", large && cn("lg:text-mc-3", SNAP_LARGE))}>
-        {value}
+        <span className="mc-crisp">{value}</span>
         {info}
       </dd>
     </div>
@@ -143,10 +143,10 @@ export function InlineStat({
 
   return (
     <div className={cn("flex min-w-0 items-baseline gap-1 text-mc-1", large && cn("lg:max-w-full lg:text-mc-1.5", SNAP_LARGE), className)}>
-      <dt className={cn("shrink-0 text-mc-gray after:content-[':']", snap)}>{label}</dt>
+      <dt className={cn("mc-crisp shrink-0 text-mc-gray after:content-[':']", snap)}>{label}</dt>
       {/* Room inside the clip for a Hint's focus ring, its hard shadow and its 44 px tap area: 10 px past a short value
           and 18 px over and under a 10 px line. */}
-      <dd className={cn("-mx-2.5 -my-4.5 min-w-0 truncate px-2.5 py-4.5", snap, color)} style={style}>{value}</dd>
+      <dd className={cn("mc-crisp -mx-2.5 -my-4.5 min-w-0 truncate px-2.5 py-4.5", snap, color)} style={style}>{value}</dd>
     </div>
   );
 }
@@ -178,7 +178,7 @@ export function LeaderboardLink({
   return (
     <>
       <Link to="/{-$locale}/leaderboards/$field" params={{ field }} search={{ around: username }} className={STAT_LINK} {...props}>
-        {children}
+        <span className="mc-crisp">{children}</span>
         <span className="sr-only"> {t("game.leaderboard", { stat })}</span>
       </Link>
       {tooltip}
