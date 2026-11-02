@@ -88,8 +88,11 @@ export async function paginate(
   if (pages.length === 1 && "generator" in pages[0]) return getMessage(0, 0);
 
   if (customId) {
-    const [index, subIndex] = getRequestedPage(context.getInteraction());
+    let [index, subIndex] = getRequestedPage(context.getInteraction());
+    if (index >= pages.length) [index, subIndex] = [0, 0];
+
     const page = pages[index];
+    if ("subPages" in page && subIndex >= page.subPages.length) subIndex = 0;
 
     const message = await getMessage(index, subIndex);
 
