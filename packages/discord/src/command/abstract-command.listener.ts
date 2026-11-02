@@ -141,8 +141,11 @@ export abstract class AbstractCommandListener {
           })),
         };
 
+        const user = await this.getUser(ownerId);
+        this.tierPrecondition(command, user);
+
         const context = new CommandContext(this, interaction, data);
-        context.setUser(await this.getUser(ownerId));
+        context.setUser(user);
 
         message = await command.execute(context);
 
