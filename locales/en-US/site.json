@@ -188,6 +188,7 @@
     "members": "Members",
     "member": "Member",
     "memberCount": "{{count}}/125",
+    "scrollHint": "Scroll sideways to see every column.",
     "unlisted": "{{count}} not listed: Statsify hasn't seen them yet.",
     "search": {
       "heading": "Search Hypixel Guilds",
