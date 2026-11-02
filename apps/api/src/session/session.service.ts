@@ -57,9 +57,9 @@ export class SessionService {
   public async resetPlayer(player: Player) {
     // Sessions only compare stats, so empty layouts keep the inventories out of them
     const flatPlayer = flatten({ ...player, layouts: new PlayerLayouts({}) });
-    const doc = serialize(Player, flatPlayer);
+    flatPlayer.sessionReset = Math.round(DateTime.now().toMillis() / 1000);
 
-    doc.sessionReset = Math.round(DateTime.now().toMillis() / 1000);
+    const doc = serialize(Player, flatPlayer);
 
     await this.sessionModel.replaceOne({ uuid: doc.uuid }, doc, { upsert: true }).lean().exec();
 
