@@ -75,13 +75,12 @@ export class GameCountsCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
-    const game = context.option<string | undefined>("game", undefined);
-    if (game && !this.isGameCountGameId(game)) throw new ErrorMessage("errors.invalidGame");
-
     const t = context.t();
     const gamecounts = await this.apiService.getGamecounts();
+    const game = context.option<string | undefined>("game", undefined);
 
     if (game) {
+      if (!this.isGameCountGameId(game)) throw new ErrorMessage("errors.invalidGame");
       return { embeds: [this.createGameCountsEmbed(game, gamecounts[game], true)] };
     }
 
