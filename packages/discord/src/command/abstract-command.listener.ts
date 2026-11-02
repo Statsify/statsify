@@ -350,8 +350,10 @@ export abstract class AbstractCommandListener {
   }
 
   private cacheRerun(key: string, message: IMessage | Message, locale: string) {
-    if (this.rerunCache.size >= RERUN_CACHE_SIZE)
-      this.rerunCache.delete(this.rerunCache.keys().next().value!);
+    if (this.rerunCache.size >= RERUN_CACHE_SIZE) {
+      const [oldest] = this.rerunCache.keys();
+      this.rerunCache.delete(oldest);
+    }
 
     this.rerunCache.set(key, { message, locale, expiresAt: Date.now() + RERUN_CACHE_TTL });
   }

@@ -75,10 +75,10 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     const [modeIndex, page] = this.getRequestedPage(interaction, modes, pageCount);
     const [key, title] = modes[modeIndex];
 
-    const customId = (...values: string[]) =>
+    const customId = (...values: (string | number)[]) =>
       createCustomId(GUILD_ROUTE, interaction.getUserId(), context.getCommandName(), guild.id, ...values);
 
-    const dropdown = new SelectMenuBuilder().customId(customId("menu", `${page}`));
+    const dropdown = new SelectMenuBuilder().customId(customId("menu", page));
 
     for (const [index, [key, title]] of modes.entries()) {
       dropdown.option(
@@ -98,13 +98,13 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
             new ButtonBuilder()
               .emoji(t("emojis:up"))
               .style(ButtonStyle.Success)
-              .customId(customId(`${key}`, `prev.${page}`))
+              .customId(customId(key, `prev.${page}`))
           )
           .component(
             new ButtonBuilder()
               .emoji(t("emojis:down"))
               .style(ButtonStyle.Danger)
-              .customId(customId(`${key}`, `next.${page}`))
+              .customId(customId(key, `next.${page}`))
           )
       );
 
