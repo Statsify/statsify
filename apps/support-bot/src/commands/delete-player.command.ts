@@ -35,8 +35,8 @@ export class DeletePlayerCommand {
         (t) => t("errors.invalidPlayer.title"),
         (t) =>
           t("errors.invalidPlayer.description", {
-            type: "username",
-            name: player.username,
+            context: "username",
+            tag: player.username,
           })
       );
 
