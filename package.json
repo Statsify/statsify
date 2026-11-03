@@ -10,8 +10,8 @@
     "url": "git+https://github.com/Statsify/statsify.git"
   },
   "scripts": {
-    "build": "turbo run build --filter=!site",
-    "build:watch": "turbo watch build --filter=!site",
+    "build": "turbo run build --filter=!site-legacy",
+    "build:watch": "turbo watch build --filter=!site-legacy",
     "typecheck": "turbo run typecheck",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -22,7 +22,7 @@
     "api": "pnpm --filter api",
     "discord-bot": "pnpm --filter discord-bot",
     "support-bot": "pnpm --filter support-bot",
-    "site": "pnpm --filter site",
+    "site-legacy": "pnpm --filter site-legacy",
     "scripts": "pnpm --filter scripts",
     "verify-server": "pnpm --filter verify-server"
   },
