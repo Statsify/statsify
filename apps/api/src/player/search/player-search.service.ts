@@ -31,7 +31,7 @@ export class PlayerSearchService {
         "FT.SUGGET",
         "player:autocomplete",
         query,
-        "FUZZY",
+        ...(query.length > 2 ? ["FUZZY"] : []),
         "MAX",
         "25"
       )) as string[];
