@@ -69,7 +69,7 @@ export interface GuildProfileProps {
   logo: Image;
   user: User | null;
   t: LocalizeFunction;
-  ranking: number;
+  ranking?: number;
   page: "overall" | "gexp" | "expPerGame" | "misc";
 }
 
@@ -132,7 +132,7 @@ interface GuildOverallPageProps {
   skin: Image;
   gameIcons: Record<string, Image>;
   t: LocalizeFunction;
-  ranking: number;
+  ranking?: number;
 }
 
 const GuildOverallPage = ({
@@ -148,6 +148,7 @@ const GuildOverallPage = ({
     locale: t.locale,
   });
   const preferredGames = guild.preferredGames.map((g) => gameIcons[g]);
+  const formattedRanking = ranking ? ` §8[§7#§f${t(ranking)}§8]` : "";
 
   return (
     <>
@@ -164,9 +165,8 @@ const GuildOverallPage = ({
               guild.members.length
             )}§8/§f125`}
             </text>
-            <text {...text}>{`§2${t("stats.guild.gexp")}:§f ${t(guild.exp)} §8[§7#§f${t(
-              ranking
-            )}§8]`}
+            <text {...text}>
+              {`§2${t("stats.guild.gexp")}:§f ${t(guild.exp)}${formattedRanking}`}
             </text>
             <text {...text}>{`§e${t("stats.guild.level")}:§f ${t(guild.level)}`}</text>
           </box>
@@ -177,7 +177,7 @@ const GuildOverallPage = ({
               <box {...box}>
                 {wordGroup(description, 10).map((m) => (
                   <text {...text}>
-                    {m.replace(LINK_REGEX, (match) => `§b§u${match}§r`)}
+                    {m.replaceAll(LINK_REGEX, (match) => `§b§u${match}§r`)}
                   </text>
                 ))}
               </box>
@@ -356,8 +356,13 @@ interface GuildMiscPageProps {
   t: LocalizeFunction;
 }
 
+const formatGuildAchievementTitle = (name: string, tier: string) =>
+  tier ? `${name} ${tier}` : name;
+
 const formatGuildAchievement = (achievement: Progression, t: LocalizeFunction) =>
-  `${t(achievement.current)}§7/${t(achievement.max!)}`;
+  achievement.max ?
+    `${t(achievement.current)}§7/${t(achievement.max)}` :
+    t(achievement.current);
 
 const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
   const { achievements } = guild;
@@ -369,24 +374,24 @@ const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
         <Table.table>
           <Table.tr>
             <Table.td
-              title={`Prestige ${achievements.prestigeTier}`}
+              title={formatGuildAchievementTitle("Prestige", achievements.prestigeTier)}
               value={formatGuildAchievement(achievements.prestigeProgression, t)}
               color="§e"
             />
             <Table.td
-              title={`Experience Kings ${achievements.experienceKingsTier}`}
+              title={formatGuildAchievementTitle("Experience Kings", achievements.experienceKingsTier)}
               value={formatGuildAchievement(achievements.experienceKingsProgression, t)}
               color="§e"
             />
           </Table.tr>
           <Table.tr>
             <Table.td
-              title={`Winners ${achievements.winnersTier}`}
+              title={formatGuildAchievementTitle("Winners", achievements.winnersTier)}
               value={formatGuildAchievement(achievements.winnersProgression, t)}
               color="§e"
             />
             <Table.td
-              title={`Family ${achievements.familyTier}`}
+              title={formatGuildAchievementTitle("Family", achievements.familyTier)}
               value={formatGuildAchievement(achievements.familyProgression, t)}
               color="§e"
             />
