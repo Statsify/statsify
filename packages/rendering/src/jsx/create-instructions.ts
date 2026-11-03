@@ -59,7 +59,6 @@ export const createInstructions = (
 
       child[side].size =
         paddlessSideLength * toDecimal(child[side].size as Percent | Fraction);
-      remainingSide -= child[side].size as number;
     }
 
     remainingSide -= child[side].size as number;
