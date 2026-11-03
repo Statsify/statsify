@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import minecraftData from "../../data/minecraft-data.json" with { type: "json" };
 import { type Unzipped, unzip } from "fflate";
 
 /** A pack zip, or a client jar, as bytes or a URL to fetch */
@@ -99,6 +100,40 @@ function layoutOf(meta: PackMeta | undefined, files: ReadonlyMap<string, Uint8Ar
   return "flattened";
 }
 
+interface Upgrade {
+  /** Texture ids 26.3 renamed, or null where 26.3 draws the texture another way */
+  textures: Record<string, string | null>;
+  /** Folders 26.3 can't read, left out */
+  drop: string[];
+}
+
+// Older layouts load as 26.3's, so the rest of the package reads one layout. 1.8's models
+// have no gui transforms (1.8 drew inventories in code), so 26.3's shape its textures
+const UPGRADES: Partial<Record<PackLayout, Upgrade>> = {
+  legacy: {
+    textures: minecraftData.legacyTextures,
+    drop: ["assets/minecraft/models/", "assets/minecraft/blockstates/"],
+  },
+};
+
+const TEXTURE_FILE = /^assets\/minecraft\/textures\/(.+)\.png(\.mcmeta)?$/;
+
+function upgrade(files: ReadonlyMap<string, Uint8Array>, { textures, drop }: Upgrade) {
+  const upgraded = new Map<string, Uint8Array>();
+
+  for (const [path, file] of files) {
+    if (drop.some((folder) => path.startsWith(folder))) continue;
+
+    const texture = TEXTURE_FILE.exec(path);
+    const id = texture && (texture[1] in textures ? textures[texture[1]] : texture[1]);
+
+    if (!texture) upgraded.set(path, file);
+    else if (id) upgraded.set(`assets/minecraft/textures/${id}.png${texture[2] ?? ""}`, file);
+  }
+
+  return upgraded;
+}
+
 const unzipAssets = (data: Uint8Array) =>
   new Promise<Unzipped>((resolve, reject) => {
     unzip(
@@ -171,7 +206,10 @@ export async function loadPack(source: PackSource, name = sourceName(source)): P
 
   if (files.size === 0) throw new Error(`${name} has no assets folder`);
 
-  return { name, hash, layout: layoutOf(meta, files), files };
+  const layout = layoutOf(meta, files);
+  const layoutUpgrade = UPGRADES[layout];
+
+  return { name, hash, layout, files: layoutUpgrade ? upgrade(files, layoutUpgrade) : files };
 }
 
 /** Packs layered the way Minecraft layers them, lowest priority first */
@@ -179,8 +217,10 @@ export class PackStack {
   public readonly hash: string;
 
   public constructor(public readonly packs: readonly Pack[]) {
-    const legacy = packs.find((pack) => pack.layout === "legacy");
-    if (legacy) throw new Error(`${legacy.name} is a 1.8.9 pack, which isn't supported yet`);
+    // Only 26.3 packs have item model definitions, so older ones can only retexture one
+    if (!packs.some((pack) => pack.layout === "modern")) {
+      throw new Error(`${packs.map((pack) => pack.name).join(", ")} need a 26.3 pack in the stack`);
+    }
 
     this.hash = packs.map((pack) => pack.hash.slice(0, 16)).join("+");
   }
