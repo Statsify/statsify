@@ -235,6 +235,28 @@ function displayMatrix(display?: Transform): Mat3 {
   return multiply(multiply(rotation("x", rx), rotation("y", ry)), rotation("z", rz));
 }
 
+const degrees = (radians: number) => (radians * 180) / Math.PI;
+
+/** One display transform that applies `inner` and then `outer`, whose scale must be uniform */
+export function composeTransforms(outer: Transform, inner: Transform): Transform {
+  const m = multiply(displayMatrix(outer), displayMatrix(inner));
+  const [scale] = outer.scale ?? [1, 1, 1];
+  const [ix, iy, iz] = inner.translation ?? [0, 0, 0];
+  const [ox, oy, oz] = outer.translation ?? [0, 0, 0];
+  const [tx, ty, tz] = apply(displayMatrix(outer), [ix * scale, iy * scale, iz * scale]);
+
+  // Back to x, y, z angles for displayMatrix's Rx · Ry · Rz
+  const y = Math.asin(Math.max(-1, Math.min(1, m[2])));
+  const [x, z] =
+    Math.abs(m[2]) < 0.999_999 ? [Math.atan2(-m[5], m[8]), Math.atan2(-m[1], m[0])] : [Math.atan2(m[7], m[4]), 0];
+
+  return {
+    rotation: [degrees(x), degrees(y), degrees(z)],
+    translation: [ox + tx, oy + ty, oz + tz],
+    scale: (inner.scale ?? [1, 1, 1]).map((value) => value * scale) as Vec3,
+  };
+}
+
 /**
  * Draws quads the way Minecraft draws a 3D item in a slot: through the model's gui display
  * transform, with an orthographic camera, back faces culled, nearest-texel sampling, cutout
