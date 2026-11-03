@@ -141,6 +141,19 @@ export class BaseLeaderboardCommand {
         }
       };
 
+    const [message, page] = await this.getLeaderboardMessage(
+      user,
+      cache,
+      type,
+      getLeaderboard,
+      field,
+      { input: currentPage, type: LeaderboardQuery.PAGE },
+      props,
+      getLeaderboardDataIcon
+    );
+
+    if (message.ephemeral) return message;
+
     const listener = CommandListener.getInstance();
 
     listener.addHook(
@@ -223,13 +236,13 @@ export class BaseLeaderboardCommand {
 
     listener.addHook(positionModal.getCustomId(), async (interaction) => {
       const data = interaction.getData();
-      const positionInput = data.components[0].components[0].value;
+      const positionInput = data.components[0].components[0].value.trim();
 
-      const position = Number.parseInt(positionInput, 10);
+      const position = Number(positionInput);
 
       if (user?.locale) interaction.setLocale(user.locale);
 
-      if (Number.isNaN(position) || position < 1) {
+      if (!/^\d+$/.test(positionInput) || position < 1) {
         const error = new ErrorMessage("errors.leaderboardInvalidPosition");
 
         return interaction.sendFollowup({
@@ -268,19 +281,6 @@ export class BaseLeaderboardCommand {
         interaction
       );
     });
-
-    const [message, page] = await this.getLeaderboardMessage(
-      user,
-      cache,
-      type,
-      getLeaderboard,
-      field,
-      { input: currentPage, type: LeaderboardQuery.PAGE },
-      props,
-      getLeaderboardDataIcon
-    );
-
-    if (message.ephemeral) return message;
 
     setTimeout(() => {
       listener.removeHook(up.getCustomId());
