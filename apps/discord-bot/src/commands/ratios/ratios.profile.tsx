@@ -8,9 +8,9 @@
 
 import { Container, Footer, Header, List, Table } from "#components";
 import { FormattedGame, type GameMode } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
+import type { LocalizeFunction } from "@statsify/discord";
 import { unroundedRatio } from "@statsify/math";
-import { formatDuelsMode } from "../duels/duels.profile.js";
+import { formatDuelsMode } from "#commands/duels/duels.profile";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 interface RatioProps {
