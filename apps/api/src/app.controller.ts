@@ -7,10 +7,26 @@
  */
 
 import { ApiExcludeEndpoint } from "@nestjs/swagger";
-import { Controller, Get, Header, Render } from "@nestjs/common";
+import { type Connection, ConnectionStates } from "mongoose";
+import { Controller, Get, Header, Render, ServiceUnavailableException } from "@nestjs/common";
+import { InjectConnection } from "@m8a/nestjs-typegoose";
+import { InjectRedis } from "#redis";
+import { Redis } from "ioredis";
 
 @Controller("/")
 export class AppController {
+  public constructor(
+    @InjectConnection() private readonly connection: Connection,
+    @InjectRedis() private readonly redis: Redis
+  ) {}
+
+  @Get("healthz")
+  @ApiExcludeEndpoint()
+  public healthz() {
+    if (this.connection.readyState !== ConnectionStates.connected || this.redis.status !== "ready")
+      throw new ServiceUnavailableException();
+  }
+
   @Get()
   @Render("redoc.handlebars")
   @Header(
