@@ -17,6 +17,11 @@ export const MegaWallsQuests = createGameModeQuests({
     { field: "win", propertyKey: "win" },
     { field: "kill", propertyKey: "kills" },
     { field: "faithful", propertyKey: "faithful" },
+    { field: "aggressor", propertyKey: "aggressor" },
+    { field: "defender", propertyKey: "defender" },
   ],
-  weekly: [{ field: "weekly", propertyKey: "megaWaller" }],
+  weekly: [
+    { field: "weekly", propertyKey: "megaWaller" },
+    { field: "teamwork", propertyKey: "teamwork" },
+  ],
 });
