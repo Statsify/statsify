@@ -26,7 +26,6 @@
     "badge-set": "Déposez un nouveau badge de profil",
     "badge-view": "Voir votre badge de profil actuel",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
-    "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Voir les capes Minecraft et Optifine de quelqu'un",
@@ -140,7 +139,6 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
-    "links": "Réseaux de Statsify",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "Voir vos statistiques mensuelles dans les différents jeux",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
@@ -216,7 +214,6 @@
     "theme": "Changer votre thème pour chaque profil",
     "theme-boxes": "Changer l'apparence des boîtes de profil",
     "theme-font": "Changer la police des profils",
-    "theme-footer": "Personnaliser le pied de page de votre profil",
     "theme-footer-icon": "Modifier l'icône de pied de page de votre profil",
     "theme-footer-message": "Modifier le message de pied de page de votre profil. https://rgb.birdflop.com : créez des dégradés.",
     "theme-footer-reset": "Réinitialiser le pied de page de votre profil",
@@ -224,7 +221,6 @@
     "theme-view": "Voir votre thème de profil actuel",
     "ticket-menu": "Envoyer le message du ticket au channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
-    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Dissocier vos comptes Discord et Minecraft",
@@ -238,7 +234,6 @@
     "weekly": "Voir vos statistiques hebdomadaires dans différents jeux",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "Voir vos statistiques d'hier dans différents jeux",
-    "reset-historical": "Réinnisialiser vos historiques de stats",
     "reset-session": "Réinnisialiser vos stats de session"
   },
   "config": {
@@ -391,14 +386,6 @@
       "title": "Session invalide",
       "description": "**{{displayName}}** n'a pas de session active. Il peut en créer une en tappant `/session` en étant vérifié."
     },
-    "invalidResetTime": {
-      "description": "`{{time}}` ne correspond pas au format `h:mm a`. Entrez une heure dans le format similaire à `12:00 PM` ou `1:00 AM`.",
-      "title": "Heure de réinitialisation invalide"
-    },
-    "invalidResetTimezone": {
-      "description": "`{{timezone}}` n'est pas un fuseau horaire valide. Entrez un fuseau horaire similaire à `EST` ou `PST`.",
-      "title": "Fuseau horaire invalide"
-    },
     "invalidSearch": {
       "description": "Nous n'avons pas pu trouver ce que vous cherchiez !\nEntrez un nom d'utilisateur, uuid, ou mention discord.",
       "title": "Recherche invalide"
@@ -461,10 +448,6 @@
       "description": "**{{displayName}}** n'a pas de classements !",
       "title": "Pas de classements"
     },
-    "noRecentGames": {
-      "description": "Les parties récentes de **{{displayName}}** n'ont pas pu être trouvées !",
-      "title": "Parties récentes introuvables"
-    },
     "noStatus": {
       "description": "Le statut Hypixel de **{{displayName}}** n'a pas pu être trouvé !",
       "title": "Statut non trouvé"
@@ -505,17 +488,6 @@
     }
   },
   "historical": {
-    "aboutResetting": "Cliquez sur reset ci-dessous pour réinitialiser vos stats historiques tous les jours **à l'heure actuelle**.\n\n**ATTENTION** : Ceci supprimera toutes vos statistiques historiques et **ne pourra pas être annulé**. \nSi vous voulez être en mesure de réinitialiser à un moment spécifique, regardez $t(socials.premium).",
-    "aboutResettingPremium": "Cliquez sur le bouton reset ci-dessous pour réinitialiser vos stats historiques. \n\n**ATTENTION:** Cela supprimera toutes vos statistiques historiques et **ne peut pas être annulé**.",
-    "modal": {
-      "resetTime": "Choisir une Heure de Réinitialisation",
-      "timezone": "Choisir un Fuseau Horaire",
-      "title": "Heure de Réinitialisation Historique"
-    },
-    "new": "** Les statistiques historiques de {{displayName}}** ont été vérifiées pour la première fois sur Statsify. Ses statistiques seront maintenant mises à jour chaque jour à cette heure.",
-    "reset": "$t(emojis:clock) **Se réinitialise** <t:{{time}}:R>",
-    "resetButton": "Cliquer pour Réinitialiser",
-    "setResetTime": "Définissez votre temps de réinitialisation à <t:{{time}}:t>.",
     "newSession": "Les stats de session de **{{displayName}}** ont été vérifiées pour la première fois sur Statsify.",
     "setSessionReset": "Vous avez bien réinitialisé vos stats de session.",
     "deleteSession": "Successfully deleted your session stats.",
@@ -830,12 +802,7 @@
     "resetSession": "$t(emojis:reset) Vous pouvez **réinitialiser** vos stats de session avec `/reset session`.",
     "sessions": "$t(emojis:reset) Suivez la progression de vos stats avec les Sessions et `/session`."
   },
-  "unknown": "Inconnu",
   "verification": {
-    "alreadyVerified": {
-      "description": "Vous êtes déjà lié à un compte Minecraft. Exécutez `/unverify` pour dissocier votre compte Minecraft.",
-      "title": "Déjà vérifié"
-    },
     "invalidCode": {
       "title": "Code de vérification invalide",
       "description": "Vérifiez votre code de vérification, ou réessayez en suivant ces étapes : ",
