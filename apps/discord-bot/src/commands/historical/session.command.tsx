@@ -44,6 +44,7 @@ import {
   Command,
   CommandContext,
   EmbedBuilder,
+  type LocalizeFunction,
   Page,
   paginate,
   PlayerArgument,
@@ -384,6 +385,13 @@ export class SessionCommand {
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
     const modeEmojis = getModeEmojis ? getModeEmojis(displayedModes) : [];
 
+    const getContent = (t: LocalizeFunction) => {
+      if (player.isNew)
+        return t("historical.newSession", { displayName: this.apiService.emojiDisplayName(t, player.displayName) });
+
+      return Math.random() < 0.1 ? t("tips.resetSession") : undefined;
+    };
+
     const pages: Page[] = displayedModes.map((mode, index) => {
       const submodes = filterSubmodes?.(player, mode) ?? mode.submodes;
 
@@ -392,16 +400,6 @@ export class SessionCommand {
         emoji: modeEmojis[index],
         generator: async (t) => {
           const background = await getBackground(...mapBackground(modes, mode.api));
-
-          const displayName = this.apiService.emojiDisplayName(t, player.displayName);
-
-          let content: string | undefined = undefined;
-
-          if (player.isNew) {
-            content = t("historical.newSession", { displayName });
-          } else if (Math.random() < 0.1) {
-            content = t("tips.resetSession");
-          }
 
           const profile = getProfile(
             {
@@ -426,7 +424,7 @@ export class SessionCommand {
           const buffer = await canvas.toBuffer("png");
 
           return {
-            content,
+            content: getContent(t),
             files: [{ name: "session.png", data: buffer, type: "image/png" }],
             attachments: [],
           };
@@ -464,6 +462,7 @@ export class SessionCommand {
           const buffer = await canvas.toBuffer("png");
 
           return {
+            content: getContent(t),
             files: [{ name: "session.png", data: buffer, type: "image/png" }],
             attachments: [],
           };
