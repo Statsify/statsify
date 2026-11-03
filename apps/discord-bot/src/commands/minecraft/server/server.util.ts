@@ -37,7 +37,7 @@ export interface Server {
   protocol?: { version: number; name?: string };
   hostname: string;
   name: string;
-  icon: string;
+  icon?: string;
   ping: number;
   mapping?: ServerMappingsServer;
 }
