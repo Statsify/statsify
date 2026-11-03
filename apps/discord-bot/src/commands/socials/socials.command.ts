@@ -69,13 +69,25 @@ export class SocialsCommand {
   }
 
   private formatSocial(social?: string, link = true) {
-    if (!social) return "`N/A`";
+    const url = link && social ? parseSocialLink(social) : undefined;
+    if (url) return `[\`Here\`](${url})`;
 
-    if (link) {
-      social = social.startsWith("https://") ? social : `https://${social}`;
-      return `[\`Here\`](${social})`;
-    }
-
-    return `\`${social}\``;
+    const text = social?.replaceAll("`", "").trim();
+    return `\`${text || "N/A"}\``;
   }
+}
+
+/**
+ * A player can input a social link without a scheme. 
+ * So this returns the link with http(s) and makes sure the link can't escape markdown
+ */
+function parseSocialLink(social: string) {
+  const value = social.trim();
+  const hasScheme = /^[a-z][\d+.a-z-]*:\/\//i.test(value);
+  const url = URL.parse(hasScheme ? value : `https://${value}`);
+
+  if (!url || (url.protocol !== "http:" && url.protocol !== "https:")) return;
+
+  // Parentheses would end the Markdown link early, and a backslash would escape the next character
+  return url.href.replaceAll("(", "%28").replaceAll(")", "%29").replaceAll("\\", "%5C");
 }
