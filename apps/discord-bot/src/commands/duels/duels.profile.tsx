@@ -47,14 +47,21 @@ export const DuelsProfile = <T extends ProfileTime>({
 
   const stats = duels[mode.api];
 
-  if ("shotsFired" in stats) {
-    sidebar.push([t("stats.shotsFired"), t(stats.shotsFired), "§6"]);
-  } else if ("overall" in stats && "shotsFired" in stats.overall) {
-    sidebar.push([t("stats.shotsFired"), t(stats.overall.shotsFired), "§6"]);
+  const bow = "overall" in stats ? stats.overall : stats;
+
+  if ("shotsHit" in bow) {
+    sidebar.push(
+      [t("stats.bowShots"), t(bow.shotsFired), "§6"],
+      [t("stats.bowHits"), t(bow.shotsHit), "§c"]
+    );
   }
 
-  if ("headshots" in stats)
-    sidebar.push([t("stats.headshots"), t(stats.headshots), "§3"]);
+  if ("headshots" in stats) {
+    sidebar.push(
+      [t("stats.shotsFired"), t(stats.shotsFired), "§6"],
+      [t("stats.headshots"), t(stats.headshots), "§3"]
+    );
+  }
 
   if ("kit" in stats)
     sidebar.push([t("stats.kit"), prettify(stats.kit), "§e"]);
