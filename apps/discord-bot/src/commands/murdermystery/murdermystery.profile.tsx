@@ -19,7 +19,7 @@ import {
   type GameMode,
   MurderMysteryModes,
 } from "@statsify/schemas";
-import { formatTime } from "@statsify/util";
+import { formatRecordTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface MurderMysteryProfileProps extends BaseProfileProps {
@@ -197,20 +197,12 @@ export const MurderMysteryProfile = ({
             <Table.tr>
               <Table.td
                 title={t("stats.fastestMurdererWin")}
-                value={
-                  stats.fastestMurdererWin ?
-                    formatTime(stats.fastestMurdererWin) :
-                    "N/A"
-                }
+                value={formatRecordTime(stats.fastestMurdererWin)}
                 color="§c"
               />
               <Table.td
                 title={t("stats.fastestDetectiveWin")}
-                value={
-                  stats.fastestDetectiveWin ?
-                    formatTime(stats.fastestDetectiveWin) :
-                    "N/A"
-                }
+                value={formatRecordTime(stats.fastestDetectiveWin)}
                 color="§b"
               />
             </Table.tr>
@@ -320,11 +312,11 @@ export const MurderMysteryProfile = ({
     `§7${t("stats.knife")}: §a${murdermystery.knife.name}`,
   ];
 
-  if (murdermystery.knife.progression.percent >= 1)
+  if (murdermystery.knife.progression.percent >= 1 || murdermystery.knife.progression.max === undefined)
     description.push(`§7${t("stats.progression.exp")}: §l§dPRESTIGED`);
   else
     description.push(
-      `§7${t("stats.progression.exp")}: ${knifePrestigeProgressBar(murdermystery.knife.progression.percent)} §e${murdermystery.knife.progression.current}§7/§d${murdermystery.knife.progression.max}`
+      `§7${t("stats.progression.exp")}: ${knifePrestigeProgressBar(murdermystery.knife.progression.percent)} §e${t(murdermystery.knife.progression.current)}§7/§d${t(murdermystery.knife.progression.max)}`
     );
 
   return (

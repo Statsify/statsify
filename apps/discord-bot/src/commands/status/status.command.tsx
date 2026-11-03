@@ -22,7 +22,7 @@ import { render } from "@statsify/rendering";
 @Command({
   description: (t) => t("commands.status"),
   args: [PlayerArgument],
-  cooldown: 5,
+  cooldown: 10,
 })
 export class StatusCommand {
   public constructor(private readonly apiService: ApiService) {}

@@ -53,6 +53,15 @@ export class PlayerService {
     cacheLevel: CacheLevel,
     selector?: Record<string, boolean>
   ): Promise<Player | null> {
+    // ensure we have all the necessary data to replace the player document if we don't do a cache only request
+    if (selector && Object.keys(selector).length > 0) {
+      selector.uuid = true;
+      selector.username = true;
+      selector.guildId = true;
+      selector.sessionReset = true;
+      selector.expiresAt = true;
+    }
+
     const mongoPlayer = await this.findMongoDocument(tag, selector);
 
     if (

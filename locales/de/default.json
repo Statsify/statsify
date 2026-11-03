@@ -26,9 +26,7 @@
     "badge-set": "Lade ein neues Profilabzeichen hoch",
     "badge-view": "Zeigt dein aktuelles Profilabzeichen an",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
-    "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
-    "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Zeigt die Minecraft und Optifine Capes von jemandem an",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
@@ -37,13 +35,13 @@
     "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
     "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
     "quests-weekly": "$t(commands.quests-command, { \"name\": \"Weekly\" })",
+    "quests-monthly": "$t(commands.quests-command, { \"name\": \"Monthly\" })",
     "close": "Close the current support ticket",
     "colors": "Eine Liste der Minecraft Farbcodes",
     "commands": "View Statsify command usage",
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
-    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -87,10 +85,10 @@
     "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
     "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
-    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "View your {{name}} session stats",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-delete": "Delete your session stats",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -141,7 +139,6 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
-    "links": "Statsify Socials",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
@@ -191,6 +188,7 @@
     "ratios-megawalls": "$t(commands.ratios-command, { \"name\": \"MegaWalls\" })",
     "ratios-murdermystery": "$t(commands.ratios-command, { \"name\": \"Murder Mystery\" })",
     "ratios-paintball": "$t(commands.ratios-command, { \"name\": \"Paintball\" })",
+    "ratios-pit": "$t(commands.ratios-command, { \"name\": \"Pit\" })",
     "ratios-quake": "$t(commands.ratios-command, { \"name\": \"Quake\" })",
     "ratios-skywars": "$t(commands.ratios-command, { \"name\": \"SkyWars\" })",
     "ratios-smashheroes": "$t(commands.ratios-command, { \"name\": \"Smash Heroes\" })",
@@ -200,7 +198,6 @@
     "ratios-walls": "$t(commands.ratios-command, { \"name\": \"Walls\" })",
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolgames": "$t(commands.ratios-command, { \"name\": \"WoolGames\" })",
-    "recentgames": "Zeigt die letzten Hypixel Spiele von jemandem an",
     "server": "Zeigt den Minecraft Serverstatus an",
     "skin": "Zeigt den Minecraft Skin von jemandem an",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -217,7 +214,6 @@
     "theme": "Change your theme for every profile",
     "theme-boxes": "Ändert das Aussehen der Profilboxen",
     "theme-font": "Ändert die Schriftart der Profile",
-    "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "Ändert das Fußzeilensymbol deines Profils",
     "theme-footer-message": "Ändert die Fußzeilennachricht deines Profils. Benutze https://rgb.birdflop.com für Textverläufe.",
     "theme-footer-reset": "Setzt die Fußzeile deines Profils zurück",
@@ -225,7 +221,6 @@
     "theme-view": "Zeigt dein aktuelles Profildesign an",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
-    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Entknüpft deine Discord und Minecraft Konten",
@@ -239,7 +234,6 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
     "reset-session": "Reset your session stats"
   },
   "config": {
@@ -392,14 +386,6 @@
       "title": "Invalid Session",
       "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
     },
-    "invalidResetTime": {
-      "description": "`{{time}}` stimmt nicht mit dem Format `h:mm a` überein. Gebe eine Zeit im Format ähnlich wie `12:00 PM` oder `1:00 AM` ein.",
-      "title": "Ungültige Reset Zeit"
-    },
-    "invalidResetTimezone": {
-      "description": "`{{timezone}}` ist keine gültige Zeitzone. Gebe eine Zeitzone ähnlich wie `EST` oder `PST` ein.",
-      "title": "Ungültige Reset Zeitzone"
-    },
     "invalidSearch": {
       "description": "Wir konnten nicht herausfinden, wonach du genau gesucht hast!\nGib einen Benutzernamen, UUID oder Discord-Erwähnung an.",
       "title": "Ungültige Suche"
@@ -462,10 +448,6 @@
       "description": "**{{displayName}}** hat keine Bestenlistenplatzierungen!",
       "title": "Keine Bestenlistenplatzierungen"
     },
-    "noRecentGames": {
-      "description": "Die letzten Spiele von **{{displayName}}** konnten nicht gefunden werden!",
-      "title": "Keine letzten Spiele gefunden"
-    },
     "noStatus": {
       "description": "Der Hypixel Status von **{{displayName}}** konnte nicht gefunden werden!",
       "title": "Status nicht gefunden"
@@ -506,19 +488,9 @@
     }
   },
   "historical": {
-    "aboutResetting": "Klicke unten auf den Reset-Button, um deine historischen Statistiken jeden Tag **zu dieser Zeit** zurückzusetzen.\n\n**WARNUNG**: Dies wird alle deine historischen Statistiken löschen und **kann nicht rückgängig gemacht werden**. \nWenn du zu einem bestimmten Zeitpunkt zurücksetzen möchtest, siehe $t(socials.premium).",
-    "aboutResettingPremium": "Klicke unten auf den Reset-Button, um deine historischen Statistiken zurückzusetzen. \n\n**WARNUNG:** dies wird alle deine historischen Statistiken löschen und **kann nicht rückgängig gemacht werden**.",
-    "modal": {
-      "resetTime": "Wähle eine Reset Zeit",
-      "timezone": "Wähle eine Zeitzone",
-      "title": "Historische Reset Zeit"
-    },
-    "new": "Die historischen Statistiken von **{{displayName}}** wurden zum ersten Mal auf Statsify angesehen. Die Statistiken werden jetzt jeden Tag um diese Zeit aktualisiert.",
-    "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
-    "resetButton": "Klicke zum Zurücksetzen",
-    "setResetTime": "Setze deine Reset Zeit auf <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
     "setSessionReset": "Successfully reset your session stats.",
+    "deleteSession": "Successfully deleted your session stats.",
     "disabledWarning": {
       "title": "Historical Commands are no Longer Available",
       "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
@@ -557,10 +529,16 @@
     "premium": "[Premium](<https://statsify.net/premium>)",
     "website": "[Website](https://statsify.net/)"
   },
+  "deprecated": {
+    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} has been merged into the {{newCommandName}} command. Please run {{newCommand}} and select {{mode}} in the dropdown.",
+    "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} has been removed in favor of {{newCommandName}}. Please run {{newCommand}} instead.",
+    "command-description": "This command has been removed in favor of {{newCommandName}}."
+  },
   "stats": {
     "achievementPoints": "Erfolgspunkte",
     "adrenaline": "Adrenalin",
     "assists": "Unterstützungen",
+    "alphaWins": "Alpha Wins",
     "bblr": "BBLR",
     "bedsBroken": "Bette Zerstört",
     "bedsLost": "Bette Verloren",
@@ -580,6 +558,7 @@
     "bronzeTrophies": "Bronzetrophäen",
     "candyFound": "Süßigkeiten Gefunden",
     "challenges": "Herausforderungen",
+    "checkpoints": "Checkpoints",
     "class": "Klasse",
     "coins": "Münzen",
     "contracts": "Verträge",
@@ -588,10 +567,12 @@
     "deaths": "Tode",
     "detectiveWins": "Detektiv Siege",
     "diamonds": "Diamanten",
+    "doorsOpened": "Doors Opened",
     "doublesWins": "Duos Siege",
     "eggsFound": "Eier Gefunden",
     "emeralds": "Smaragde",
     "empireKills": "Verteidiger Kills",
+    "emblem": "Emblem",
     "ended": "Beendet",
     "endurance": "Ausdauer",
     "event-level": "Event Level",
@@ -652,6 +633,7 @@
     "headshots": "Kopfschüsse",
     "headstart": "Vorsprung",
     "healing": "Heilung",
+    "heroKills": "Hero Kills",
     "heroWins": "Helden Siege",
     "hidden": "Versteckt",
     "hiderWins": "Verstecker Siege",
@@ -663,6 +645,7 @@
     "humans-killed": "Menschen Getötet",
     "infectedWins": "Infizierter Siege",
     "iron": "Eisen",
+    "itemsPurchased": "Items Purchased",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Schüsse",
@@ -670,8 +653,11 @@
     "killsAsInfected": "Kills als Infizierter",
     "killsAsMurderer": "Kills als Mörder",
     "killsAsSurvivor": "Kills als Überlebender",
+    "killsAsAlpha": "Kills as Alpha",
     "killstreaks": "Killstreaks",
     "kit": "Aktuelles Kit",
+    "knife": "Knife",
+    "knifeKills": "Knife Kills",
     "kwr": "KWR",
     "lapsCompleted": "Runden",
     "lastAction": "Letzte Aktion",
@@ -682,6 +668,7 @@
     "layers": "Schichten",
     "level": "Level",
     "levelsGained": "Erhaltene Level",
+    "lifetimeRenown": "Lifetime Renown",
     "loginTime": "Anmeldezeit",
     "logoutTime": "Abmeldezeit",
     "longestGame": "Longest Game",
@@ -706,6 +693,7 @@
     "online": "Online",
     "opals": "Opale",
     "overallWins": "Siege Insgesamt",
+    "perfectBuilds": "Perfect Builds",
     "pingRange": "Ping Bereich",
     "playtime": "Spielzeit",
     "points": "Punkte",
@@ -747,6 +735,7 @@
     "superVotes": "Super Stimmen",
     "superluck": "Super Glück",
     "support": "Unterstützung",
+    "survivals": "Survivals",
     "survivorWins": "Überlebender Siege",
     "tags": "Tags",
     "tauntsUsed": "Verbrauchte Verspottungen",
@@ -783,13 +772,26 @@
     "positions": "Positions",
     "powerupsCollected": "Power-Ups gesammelt",
     "roundsCompleted": "Runden abgeschlossen",
+    "totalRounds": "Total Rounds",
     "totalExp": "Total EXP",
     "gamesFinished": "Games Finished",
     "flawlessGames": "Flawless Games",
     "fails": "Fails",
     "mapsCompleted": "Maps Completed",
     "arcadeWins": "Arcade Wins",
-    "draws": "Draws"
+    "spec": "Spec",
+    "capturePoints": "Capture Points",
+    "defendPoints": "Defend Points",
+    "draws": "Draws",
+    "sheepThrown": "Sheep Thrown",
+    "sheepKilled": "Sheep Killed",
+    "magicWool": "Magic Wool",
+    "flagCaptures": "Flag Captures",
+    "flagReturns": "Flag Returns",
+    "airTime": "Air Time",
+    "potionsSplashed": "Potions Splashed",
+    "powerOrbs": "Power Orbs",
+    "grenadeKills": "Grenade Kills"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Trete unserem **$t(socials.discord)** bei und erhalte **20% niedrigere Abklingzeit** $t(emojis:heart)",
@@ -800,12 +802,7 @@
     "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
     "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
-  "unknown": "Unbekannt",
   "verification": {
-    "alreadyVerified": {
-      "description": "Du bist bereits mit einem Minecraft Konto verknüpft. Führe `/unverify` aus, um die Verknüpfung deines Minecraft Kontos zu entfernen.",
-      "title": "Bereits Verifiziert"
-    },
     "invalidCode": {
       "title": "Ungültiger Verifizierungscode",
       "description": "Check your verification code or try again by following these steps: ",
