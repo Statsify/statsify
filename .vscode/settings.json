@@ -4,12 +4,6 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": ["source.fixAll.oxc"],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "files.exclude": {
-    // "**/dist/**": true,
-    "**/node_modules/**": true,
-    "**/.turbo/**": true,
-    "**/.pnpm-store/**": true
-  },
   "[js][ts][tsx]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
