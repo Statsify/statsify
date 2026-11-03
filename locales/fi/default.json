@@ -26,7 +26,6 @@
     "badge-set": "Lataa uusi profiilimerkki",
     "badge-view": "Katsele nykyistä profiilimerkkiä",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
-    "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Näytä jonkun Minecraft- ja Optifine-viitat",
@@ -140,7 +139,6 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
-    "links": "Statsifyn sosiaaliset mediat",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
@@ -216,7 +214,6 @@
     "theme": "Change your theme for every profile",
     "theme-boxes": "Muuta profiililaatikon ulkonäköä",
     "theme-font": "Muuta profiilin fonttia",
-    "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "Muuta profiilisi alatunnisteen kuvaketta",
     "theme-footer-message": "Muuta profiilisi alatunnisteen viestiä. Käytä https://rgb.birdflop.com luodaksesi gradienttitekstiä.",
     "theme-footer-reset": "Nollaa profiilisi alatunniste",
@@ -224,7 +221,6 @@
     "theme-view": "Tarkastele nykyistä profiiliteemaa",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
-    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Poista Discord- ja Minecraft-tilisi linkitys",
@@ -238,7 +234,6 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
     "reset-session": "Reset your session stats"
   },
   "config": {
@@ -391,14 +386,6 @@
       "title": "Invalid Session",
       "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
     },
-    "invalidResetTime": {
-      "description": "`{{time}}` ei vastaa muotoa `h:mm a`. Kirjoita aika muodossa `12:00 PM` tai `1:00 AM`.",
-      "title": "Virheellinen nollausaika"
-    },
-    "invalidResetTimezone": {
-      "description": "`{{timezone}}` ei ole kelvollinen aikavyöhyke. Syötä aikavyöhyke, joka on samanlainen kuin `EST` tai `PST`.",
-      "title": "Virheellinen nollaus aikavyöhyke"
-    },
     "invalidSearch": {
       "description": "Emme saaneet selville, mitä tarkalleen ottaen etsit!\nAnna käyttäjätunnus, uuid tai discord-maininta.",
       "title": "Virheellinen haku"
@@ -461,10 +448,6 @@
       "description": "Pelaajalla **{{displayName}}** ei ole sijoituksia!",
       "title": "Ei sijoituksia"
     },
-    "noRecentGames": {
-      "description": "Pelaajan **{{displayName}}** vimeaikaisia pelejä ei löytynyt!",
-      "title": "Viimeisimpiä pelejä ei löytynyt"
-    },
     "noStatus": {
       "description": "Pelaajan **{{displayName}}** Hypixel-statusta ei löytynyt!",
       "title": "Statusta ei löytynyt"
@@ -505,17 +488,6 @@
     }
   },
   "historical": {
-    "aboutResetting": "Klikkaa alla olevaa nollauspainiketta nollataksesi historialliset tilastosi joka päivä **tähän aikaan**.\n\n**VAROITUS**: Tämä poistaa kaikki historiatilastosi, **eikä sitä voi peruuttaa**. \nJos haluat nollata tilastot tiettyyn aikaan, tarkista $t(socials.premium).",
-    "aboutResettingPremium": "Klikkaa alla olevaa nollauspainiketta nollataksesi historialliset tilastot. \n\n**VAROITUS:** Tämä poistaa kaikki historiatilastosi, **eikä sitä voi peruuttaa**.",
-    "modal": {
-      "resetTime": "Valitse nollausaika",
-      "timezone": "Valitse aikavyöhyke",
-      "title": "Historiallinen nollausaika"
-    },
-    "new": "Pelaajan **{{displayName}}** historialliset tilastot on tarkistettu ensimmäistä kertaa Statsifylla. Heidän tilastonsa päivitetään nyt tähän aikaan joka päivä.",
-    "reset": "$t(emojis:clock) **Nollaantuu** <t:{{time}}:R>",
-    "resetButton": "Klikkaa nollataksesi",
-    "setResetTime": "Aseta nollausajaksi <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
     "setSessionReset": "Successfully reset your session stats.",
     "deleteSession": "Successfully deleted your session stats.",
@@ -595,6 +567,7 @@
     "deaths": "Kuolemia",
     "detectiveWins": "Voittoja etsivänä",
     "diamonds": "Timantteja",
+    "doorsOpened": "Doors Opened",
     "doublesWins": "Doubles-voittoja",
     "eggsFound": "Munia löydetty",
     "emeralds": "Smaragdeja",
@@ -829,12 +802,7 @@
     "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
     "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
-  "unknown": "Tuntematon",
   "verification": {
-    "alreadyVerified": {
-      "description": "Olet jo linkitetty Minecraft-tiliin. Suorita `/unverify` poistaaksesi linkityksen Minecraft-tiliisi.",
-      "title": "Jo vahvistettu"
-    },
     "invalidCode": {
       "title": "Virheellinen vahvistuskoodi",
       "description": "Check your verification code or try again by following these steps: ",
