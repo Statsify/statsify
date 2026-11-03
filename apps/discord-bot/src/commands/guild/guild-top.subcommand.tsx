@@ -71,23 +71,23 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       ["weekly", "This Week"],
       ["monthly", "This Month"],
       [1, "Yesterday"],
-      [2, "3 days ago"],
-      [3, "4 days ago"],
-      [4, "5 days ago"],
-      [5, "6 days ago"],
-      [6, "7 days ago"],
+      [2, "2 days ago"],
+      [3, "3 days ago"],
+      [4, "4 days ago"],
+      [5, "5 days ago"],
+      [6, "6 days ago"],
     ];
 
     const dropdown = new SelectMenuBuilder();
 
-    modes.forEach(([key, title], index) =>
+    for (const [index, [key, title]] of modes.entries()) {
       dropdown.option(
         new SelectMenuOptionBuilder()
           .label(title)
           .value(`${key}`)
           .default(index === 0)
-      )
-    );
+      );
+    }
 
     const components = [new ActionRowBuilder().component(dropdown)];
 
@@ -145,8 +145,8 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     listener.addHook(
       dropdown.getCustomId(),
       changePage((interaction) => {
-        const value = interaction.getData().values[0] as GuildTopKey;
-        return { modeIndex: modes.findIndex((m) => m[0] == value) };
+        const value = interaction.getData().values[0];
+        return { modeIndex: modes.findIndex(([key]) => `${key}` === value) };
       })
     );
 

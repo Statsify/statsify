@@ -127,8 +127,7 @@ export class CommandListener extends AbstractCommandListener {
     const newCooldown = now + command.cooldown * 1000 * reduction;
 
     if (!cooldownForCommand) {
-      const cooldownForCommand = new Map();
-      cooldownForCommand.set(userId, newCooldown);
+      const cooldownForCommand = new Map([[userId, newCooldown]]);
       this.cooldowns.set(command.name, cooldownForCommand);
 
       return;
@@ -164,11 +163,14 @@ export class CommandListener extends AbstractCommandListener {
 
     if (User.isIron(user) || Math.random() > TIP_CHANCE) return undefined;
 
+    // commandName is the full path, e.g. "session bedwars"
+    const [rootName] = commandName.split(" ");
+
     const useableTips = tips.filter(
-      (t) => !t.disabled?.includes(commandName) && !t.uneligible?.(user)
+      (t) => !t.disabled?.includes(rootName) && !t.uneligible?.(user)
     );
 
-    if (!useableTips.length) return undefined;
+    if (useableTips.length === 0) return undefined;
 
     const tip = useableTips[Math.floor(Math.random() * useableTips.length)];
     return tip.message;

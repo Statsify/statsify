@@ -87,9 +87,9 @@ const BRACKETS: Record<string, (prefix: string) => string> = {
 };
 
 const PREFIX_STAT: Record<string, (mm: MurderMystery) => number | undefined> = {
-  random_cosmetic: () => undefined,
-  random_favorite_cosmetic: () => undefined,
-  prefixstat_none: () => undefined,
+  random_cosmetic: () => {},
+  random_favorite_cosmetic: () => {},
+  prefixstat_none: () => {},
   prefixstat_classic_wins: (mm) => add(mm.classic.wins, mm.doubleUp.wins),
   prefixstat_infection_wins: (mm) => mm.infection.wins ?? 0,
   prefixstat_assassins_wins: (mm) => mm.assassins.wins ?? 0,

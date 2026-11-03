@@ -19,24 +19,25 @@
     "build:napi:debug": "napi build --platform && mv index.js index.cjs",
     "build:wasm": "wasm-pack build --target web --release",
     "build:wasm:debug": "wasm-pack build --target web --dev",
-    "lint": "cargo fmt && cargo clippy --fix --allow-dirty"
+    "lint": "cargo fmt && cargo clippy --fix --allow-dirty",
+    "lint:ci": "cargo fmt && cargo clippy --fix --allow-dirty"
   },
   "napi": {
     "binaryName": "skin-renderer",
-    "targetes": {
-      "defaults": true,
-      "additional": [
-        "x86_64-unknown-linux-musl",
-        "aarch64-unknown-linux-gnu",
-        "i686-pc-windows-msvc",
-        "armv7-unknown-linux-gnueabihf",
-        "aarch64-apple-darwin",
-        "aarch64-linux-android",
-        "x86_64-unknown-freebsd",
-        "aarch64-unknown-linux-musl",
-        "aarch64-pc-windows-msvc",
-        "armv7-linux-androideabi"
-      ]
-    }
+    "targets": [
+      "x86_64-apple-darwin",
+      "aarch64-apple-darwin",
+      "x86_64-pc-windows-msvc",
+      "x86_64-unknown-linux-gnu",
+      "x86_64-unknown-linux-musl",
+      "aarch64-unknown-linux-gnu",
+      "i686-pc-windows-msvc",
+      "armv7-unknown-linux-gnueabihf",
+      "aarch64-linux-android",
+      "x86_64-unknown-freebsd",
+      "aarch64-unknown-linux-musl",
+      "aarch64-pc-windows-msvc",
+      "armv7-linux-androideabi"
+    ]
   }
 }

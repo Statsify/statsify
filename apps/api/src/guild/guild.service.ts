@@ -41,7 +41,6 @@ export class GuildService {
     type: GuildQuery,
     cache: CacheLevel
   ): Promise<Guild | null> {
-    // eslint-disable-next-line prefer-const
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
     if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
@@ -61,9 +60,9 @@ export class GuildService {
       throw new GuildNotFoundException(displayName);
     }
 
-    // The cached guild doesn't match the one we got from the API, just ignore the cached guild
+    // The cached guild isn't the one we got from the API, so merge with our saved copy of that guild instead
     if (guild.id !== cachedGuild?.id) {
-      cachedGuild = null;
+      [cachedGuild] = await this.getCachedGuild(guild.id, GuildQuery.ID);
     }
 
     const memberMap = Object.fromEntries(
@@ -96,16 +95,12 @@ export class GuildService {
       };
 
       // Add all the days to the guild total exp history
-      Object.entries(combinedExpHistory)
-        .sort()
-        .toReversed()
-        .slice(0, 30)
-        .forEach(([day, exp], index) => {
-          member.expHistory[index] = exp;
-          member.expHistoryDays[index] = day;
-          guildExpHistory[day] = guildExpHistory[day] ? guildExpHistory[day] + exp : exp;
-          member.monthly += exp;
-        });
+      for (const [index, [day, exp]] of Object.entries(combinedExpHistory).toSorted().toReversed().slice(0, 30).entries()) {
+        member.expHistory[index] = exp;
+        member.expHistoryDays[index] = day;
+        guildExpHistory[day] = guildExpHistory[day] ? guildExpHistory[day] + exp : exp;
+        member.monthly += exp;
+      }
 
       guild.questParticipation = guild.questParticipation + member.questParticipation;
 
@@ -120,30 +115,26 @@ export class GuildService {
       .exec();
 
     // Get scaled gexp
-    Object.entries(guildExpHistory)
-      .sort()
-      .toReversed()
-      .slice(0, 30)
-      .forEach(([day, exp], index) => {
-        const scaled = this.scaleGexp(exp);
-
-        guild.expHistory[index] = exp;
-        guild.expHistoryDays[index] = day;
-        guild.scaledExpHistory[index] = scaled;
-
-        if (index === 0) {
-          guild.daily = exp;
-          guild.scaledDaily = scaled;
-        }
-
-        if (index < 7) {
-          guild.weekly += exp;
-          guild.scaledWeekly += scaled;
-        }
-
-        guild.monthly += exp;
-        guild.scaledMonthly += scaled;
-      });
+   for (const [index, [day, exp]] of Object.entries(guildExpHistory).toSorted().toReversed().slice(0, 30).entries()) {
+      const scaled = this.scaleGexp(exp);
+    
+      guild.expHistory[index] = exp;
+      guild.expHistoryDays[index] = day;
+      guild.scaledExpHistory[index] = scaled;
+    
+      if (index === 0) {
+        guild.daily = exp;
+        guild.scaledDaily = scaled;
+      }
+    
+      if (index < 7) {
+        guild.weekly += exp;
+        guild.scaledWeekly += scaled;
+      }
+    
+      guild.monthly += exp;
+      guild.scaledMonthly += scaled;
+    }
 
     // Cache guilds responses for 10 minutes
     guild.expiresAt = Date.now() + 600_000;

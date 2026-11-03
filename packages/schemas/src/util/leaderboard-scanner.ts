@@ -7,59 +7,70 @@
  */
 
 import {
+  type FieldMetadata,
   type LeaderboardEnabledMetadata,
   type LeaderboardMetadata,
-  MetadataScanner,
+  scanMetadata,
 } from "#metadata";
 import { parseAdditionalFields } from "./parse-fields.js";
 import type { Constructor } from "@statsify/util";
 
-export class LeaderboardScanner {
-  public static getLeaderboardFields<T>(constructor: Constructor<T>) {
-    const metadata = MetadataScanner.scan(constructor);
+const fieldMaps = new Map<Constructor, Map<string, FieldMetadata>>();
 
-    const fields = metadata.filter(([, { leaderboard }]) => leaderboard.enabled);
+export function getLeaderboardFields<T>(constructor: Constructor<T>) {
+  const metadata = scanMetadata(constructor);
 
-    return fields;
+  const fields = metadata.filter(([, { leaderboard }]) => leaderboard.enabled);
+
+  return fields;
+}
+
+export function getLeaderboardField<T>(
+  constructor: Constructor<T>,
+  key: string,
+  leaderboardMustBeEnabled?: true,
+): LeaderboardEnabledMetadata;
+export function getLeaderboardField<T>(
+  constructor: Constructor<T>,
+  key: string,
+  leaderboardMustBeEnabled: false,
+): LeaderboardMetadata;
+export function getLeaderboardField<T>(
+  constructor: Constructor<T>,
+  key: string,
+  leaderboardMustBeEnabled = true,
+): LeaderboardMetadata {
+  let fields = fieldMaps.get(constructor);
+
+  if (!fields) {
+    fields = new Map(scanMetadata(constructor));
+    fieldMaps.set(constructor, fields);
   }
 
-  public static getLeaderboardField<T>(
-    constructor: Constructor<T>,
-    key: string,
-    leaderboardMustBeEnabled?: true
-  ): LeaderboardEnabledMetadata;
-  public static getLeaderboardField<T>(
-    constructor: Constructor<T>,
-    key: string,
-    leaderboardMustBeEnabled: false
-  ): LeaderboardMetadata;
-  public static getLeaderboardField<T>(
-    constructor: Constructor<T>,
-    key: string,
-    leaderboardMustBeEnabled = true
-  ): LeaderboardMetadata {
-    const metadata = MetadataScanner.scan(constructor);
+  const field = fields.get(key);
 
-    const field = metadata.find(([k]) => k === key);
+  if (!field) throw new Error(`${key} is not a field for ${constructor.name}`);
 
-    if (!field) throw new Error(`${key} is not a field for ${constructor.name}`);
+  const { store, leaderboard } = field;
 
-    const [, { store, leaderboard }] = field;
+  if (!leaderboard.enabled && leaderboardMustBeEnabled)
+    throw new Error(
+      `${key} is not a leaderboard field for ${constructor.name}`,
+    );
 
-    if (!leaderboard.enabled && leaderboardMustBeEnabled)
-      throw new Error(`${key} is not a leaderboard field for ${constructor.name}`);
+  leaderboard.default = store.default;
 
-    leaderboard.default = store.default;
-
-    if (Array.isArray(leaderboard.additionalFields)) {
-      leaderboard.additionalFields = leaderboard.additionalFields.map(
-        parseAdditionalFields.bind(this, key)
-      );
-    }
-
-    if (leaderboard.extraDisplay)
-      leaderboard.extraDisplay = parseAdditionalFields(key, leaderboard.extraDisplay);
-
-    return leaderboard;
+  if (Array.isArray(leaderboard.additionalFields)) {
+    leaderboard.additionalFields = leaderboard.additionalFields.map(
+      parseAdditionalFields.bind(null, key),
+    );
   }
+
+  if (leaderboard.extraDisplay)
+    leaderboard.extraDisplay = parseAdditionalFields(
+      key,
+      leaderboard.extraDisplay,
+    );
+
+  return leaderboard;
 }

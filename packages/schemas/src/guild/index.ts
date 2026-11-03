@@ -113,7 +113,8 @@ export class Guild {
   public cached?: boolean;
 
   public constructor(data: APIData = {}) {
-    this.id = data._id;
+    // oxlint-disable-next-line no-underscore-dangle
+    this.id = data._id; // Hypixel uses MongoDB which has object id fields that start with an underscore
     this.name = data.name;
     this.nameToLower = this.name?.toLowerCase();
     this.description = data.description;

@@ -1,6 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base", "helpers:pinGitHubActionDigests", "group:allNonMajor"],
+  "extends": [
+    "config:recommended",
+    "helpers:pinGitHubActionDigests",
+    "group:allNonMajor"
+  ],
   "labels": ["dependencies"],
   "schedule": ["before 12pm on Sunday"],
   "npm": {
@@ -13,12 +17,18 @@
         "commitMessagePrefix": "chore(deps):"
       },
       {
-        "matchPackagePatterns": ["chalk", "@swc/cli", "@swc/core", "@swc/jest"],
+        "matchDepTypes": ["engines"],
         "enabled": false
       },
       {
-        "matchDepTypes": ["engines"],
-        "enabled": false
+        "matchPackageNames": ["mongoose", "@typegoose/typegoose", "@m8a/nestjs-typegoose"],
+        "matchUpdateTypes": ["major"],
+        "groupName": "mongoose"
+      },
+      {
+        "matchPackageNames": ["@nestjs/**", "@fastify/static", "@fastify/view"],
+        "matchUpdateTypes": ["major"],
+        "groupName": "nest"
       }
     ]
   }

@@ -8,4 +8,3 @@
 
 export * from "./leaderboard-scanner.js";
 export * from "./create-historical-player.js";
-export * from "./historical-scanner.js";

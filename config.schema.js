@@ -11,8 +11,8 @@
  */
 export default {
   database: {
-    mongoUri: "",
-    redisUrl: "",
+    mongoUri: "mongodb://statsify:statsify@localhost:27017/statsify?authSource=admin",
+    redisUrl: "redis://:statsify@localhost:6379",
   },
   hypixelApi: {
     key: "",

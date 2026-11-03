@@ -13,7 +13,7 @@ import {
   LocalizationString,
   LocalizeFunction,
   Page,
-  PaginateService,
+  paginate,
   PlayerArgument,
   SubPage,
 } from "@statsify/discord";
@@ -62,11 +62,9 @@ export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
 })
 export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   protected readonly apiService: ApiService;
-  protected readonly paginateService: PaginateService;
 
   public constructor(protected readonly modes: GameModes<T>) {
     this.apiService = Container.get(ApiService);
-    this.paginateService = Container.get(PaginateService);
   }
 
   public async run(context: CommandContext) {
@@ -159,7 +157,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
       return { ...pageInput, subPages };
     });
 
-    return this.paginateService.paginate(context, pages);
+    return paginate(context, pages);
   }
 
   public abstract getProfile(

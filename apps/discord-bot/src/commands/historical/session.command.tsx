@@ -10,14 +10,15 @@ import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
   type ApiModeFromGameModes,
-  ApiSubModeForMode,
+  type ApiSubModeForMode,
   BEDWARS_MODES,
   BLITZSG_MODES,
   BUILD_BATTLE_MODES,
+  type BedWarsModes,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   GENERAL_MODES,
-  GameMode,
+  type GameMode,
   type GameModeWithSubModes,
   GameModes,
   MEGAWALLS_MODES,
@@ -43,8 +44,9 @@ import {
   Command,
   CommandContext,
   EmbedBuilder,
+  type LocalizeFunction,
   Page,
-  PaginateService,
+  paginate,
   PlayerArgument,
   SubCommand,
   SubPage,
@@ -88,10 +90,7 @@ import type { HistoricalTimeData } from "#components";
 
 @Command({ description: "session stats" })
 export class SessionCommand {
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({ description: (t) => t("commands.session-arcade"), args: [PlayerArgument] })
   public arcade(context: CommandContext) {
@@ -127,7 +126,8 @@ export class SessionCommand {
     return this.run({
       context,
       modes: BEDWARS_MODES,
-      getProfile: (base, mode) => <BedWarsProfile {...base} mode={mode} />,
+      getProfile: (base, mode) => <BedWarsProfile {...base} mode={mode as Exclude<GameMode<BedWarsModes>, { api:"challenges" }>} />,
+      filterModes: (_, modes) => modes.filter((mode) => mode.api !== "challenges")
     });
   }
 
@@ -385,6 +385,13 @@ export class SessionCommand {
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
     const modeEmojis = getModeEmojis ? getModeEmojis(displayedModes) : [];
 
+    const getContent = (t: LocalizeFunction) => {
+      if (player.isNew)
+        return t("historical.newSession", { displayName: this.apiService.emojiDisplayName(t, player.displayName) });
+
+      return Math.random() < 0.1 ? t("tips.resetSession") : undefined;
+    };
+
     const pages: Page[] = displayedModes.map((mode, index) => {
       const submodes = filterSubmodes?.(player, mode) ?? mode.submodes;
 
@@ -393,16 +400,6 @@ export class SessionCommand {
         emoji: modeEmojis[index],
         generator: async (t) => {
           const background = await getBackground(...mapBackground(modes, mode.api));
-
-          const displayName = this.apiService.emojiDisplayName(t, player.displayName);
-
-          let content: string | undefined = undefined;
-
-          if (player.isNew) {
-            content = t("historical.newSession", { displayName });
-          } else if (Math.random() < 0.1) {
-            content = t("tips.resetSession");
-          }
 
           const profile = getProfile(
             {
@@ -427,7 +424,7 @@ export class SessionCommand {
           const buffer = await canvas.toBuffer("png");
 
           return {
-            content,
+            content: getContent(t),
             files: [{ name: "session.png", data: buffer, type: "image/png" }],
             attachments: [],
           };
@@ -465,6 +462,7 @@ export class SessionCommand {
           const buffer = await canvas.toBuffer("png");
 
           return {
+            content: getContent(t),
             files: [{ name: "session.png", data: buffer, type: "image/png" }],
             attachments: [],
           };
@@ -478,6 +476,6 @@ export class SessionCommand {
       };
     });
 
-    return this.paginateService.paginate(context, pages);
+    return paginate(context, pages);
   }
 }

@@ -12,7 +12,12 @@ import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
 import { PlayerSocials } from "./socials.js";
 import { PlayerStats } from "./stats.js";
 import { PlayerStatus } from "./status.js";
-import { PlayerUtil } from "./util.js";
+import {
+  getDisplayName,
+  getPlayerRank,
+  getPlusColor,
+  getRankColor,
+} from "./util.js";
 import type { APIData } from "@statsify/util";
 
 @ModelOptions({ options: { allowMixed: Severity.ALLOW } })
@@ -34,7 +39,8 @@ export class Player {
 
   @Field({
     docs: {
-      description: "The player's name with their rank color as seen in game lobbies",
+      description:
+        "The player's name with their rank color as seen in game lobbies",
       examples: ["§bj4cobi"],
     },
   })
@@ -84,13 +90,13 @@ export class Player {
     this.username = data.displayname;
     this.usernameToLower = this.username?.toLowerCase();
 
-    this.rank = PlayerUtil.getRank(data);
-    this.plusColor = PlayerUtil.getPlusColor(this.rank, data?.rankPlusColor);
-    this.prefixName = `${PlayerUtil.getRankColor(this.rank).toString()}${this.username}`;
-    this.displayName = PlayerUtil.getDisplayName(
+    this.rank = getPlayerRank(data);
+    this.plusColor = getPlusColor(this.rank, data?.rankPlusColor);
+    this.prefixName = `${getRankColor(this.rank).toString()}${this.username}`;
+    this.displayName = getDisplayName(
       this.username,
       this.rank,
-      this.plusColor.code
+      this.plusColor.code,
     );
 
     this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});
@@ -106,4 +112,4 @@ export * from "./gamemodes/index.js";
 export * from "./socials.js";
 export * from "./stats.js";
 export * from "./status.js";
-export { rankMap } from "./util.js";
+export { RANK_MAP as rankMap } from "./util.js";

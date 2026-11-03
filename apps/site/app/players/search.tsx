@@ -90,31 +90,6 @@ export function Search({
         console.log(`Redirecting to ${playerUrl(query)}`);
         router.push(playerUrl(query));
       }}
-      onKeyDown={(event) => {
-        if (event.key === "Enter") {
-          ref.current?.requestSubmit();
-        }
-
-        if (suggestions.isPending || suggestions.isError) return;
-
-        switch (event.key) {
-          case "Escape":
-            setSelected(undefined);
-            break;
-
-          case "ArrowDown": {
-            const newSelected = ((selected ?? -1) + 1) % suggestions.data.length;
-            onSelectionChange(newSelected);
-            break;
-          }
-
-          case "ArrowUp": {
-            const newSelected = selected ? selected - 1 : suggestions.data.length - 1;
-            onSelectionChange(newSelected);
-            break;
-          }
-        }
-      }}
     >
       <div className="h-16 flex items-center px-4 gap-4 bg-gradient-to-r from-white/20 to-white/40 outline-white/0 outline-4 transition-all duration-150 focus-within:outline-white/50 -outline-offset-4 backdrop-blur-sm">
         <SearchIcon className="size-8 text-white drop-shadow-mc-2" />
@@ -127,10 +102,36 @@ export function Search({
             setQuery(event.target.value);
             setInput(event.target.value);
           }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              ref.current?.requestSubmit();
+            }
+    
+            if (suggestions.isPending || suggestions.isError) return;
+    
+            switch (event.key) {
+              case "Escape":
+                setSelected(undefined);
+                break;
+    
+              case "ArrowDown": {
+                const newSelected = ((selected ?? -1) + 1) % suggestions.data.length;
+                onSelectionChange(newSelected);
+                break;
+              }
+    
+              case "ArrowUp": {
+                const newSelected = selected ? selected - 1 : suggestions.data.length - 1;
+                onSelectionChange(newSelected);
+                break;
+              }
+            }
+          }}
           spellCheck={false}
           autoComplete="off"
           disabled={disabled}
           onFocus={() => setFocused(true)}
+          aria-label="Search players"
         />
       </div>
       <motion.div

@@ -13,7 +13,10 @@ import type {
   LeaderboardMetadata,
   TypeMetadata,
 } from "../metadata.interface.js";
-import type { HistoricalOptions, LeaderboardOptions } from "../field.options.js";
+import type {
+  HistoricalOptions,
+  LeaderboardOptions,
+} from "../field.options.js";
 
 const getLeaderboardName = (field: string) => {
   const ratioIndex = RATIOS.indexOf(field);
@@ -55,9 +58,10 @@ export const getLeaderboardMetadata = (
   typeMetadata: TypeMetadata,
   propertyKey: string,
   leaderboardOptions?: LeaderboardOptions,
-  historicalOptions?: HistoricalOptions
+  historicalOptions?: HistoricalOptions,
 ): { leaderboard: LeaderboardMetadata; historical: HistoricalMetadata } => {
-  const fieldName = leaderboardOptions?.fieldName ?? getLeaderboardName(propertyKey);
+  const fieldName =
+    leaderboardOptions?.fieldName ?? getLeaderboardName(propertyKey);
   const name = leaderboardOptions?.name ?? fieldName;
 
   const historicalFieldName = historicalOptions?.fieldName ?? fieldName;
@@ -77,8 +81,6 @@ export const getLeaderboardMetadata = (
       fieldName,
       name,
     };
-
-    historical = { ...leaderboard, fieldName: historicalFieldName, name: historicalName };
   } else if (leaderboardOptions?.enabled === false) {
     leaderboard = {
       enabled: false,
@@ -88,13 +90,6 @@ export const getLeaderboardMetadata = (
       resetEvery: leaderboardOptions?.resetEvery,
       fieldName,
       name,
-    };
-
-    historical = {
-      ...leaderboard,
-      ...historicalOptions,
-      fieldName: historicalFieldName,
-      name: historicalName,
     };
   } else {
     leaderboard = {
@@ -107,17 +102,18 @@ export const getLeaderboardMetadata = (
       additionalFields: leaderboardOptions?.additionalFields || [],
       extraDisplay: leaderboardOptions?.extraDisplay,
       formatter: leaderboardOptions?.formatter,
-      limit: leaderboardOptions?.limit ?? getDefaultLeaderboardLimit(propertyKey),
+      limit:
+        leaderboardOptions?.limit ?? getDefaultLeaderboardLimit(propertyKey),
       resetEvery: leaderboardOptions?.resetEvery,
     };
-
-    historical = {
-      ...leaderboard,
-      ...historicalOptions,
-      fieldName: historicalFieldName,
-      name: historicalName,
-    };
   }
+
+  historical = {
+    ...leaderboard,
+    ...historicalOptions,
+    fieldName: historicalFieldName,
+    name: historicalName,
+  };
 
   return { leaderboard, historical };
 };

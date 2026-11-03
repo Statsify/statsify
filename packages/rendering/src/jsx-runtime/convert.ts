@@ -156,7 +156,7 @@ export const elementToNode = (
 
   let nodeOtherLength = 0;
 
-  node.children.forEach((child) => {
+  for (const child of node.children) {
     sideData = gatherSideData(child, side, sideData);
 
     if (typeof child[other].size === "string" && child[other].size !== "remaining") {
@@ -170,7 +170,7 @@ export const elementToNode = (
       const childOtherLength = getTotalSize(child[other]);
       if (childOtherLength > nodeOtherLength) nodeOtherLength = childOtherLength;
     }
-  });
+  }
 
   node[other].minSize = nodeOtherLength;
   node[side].minSize = processSideData(sideData);

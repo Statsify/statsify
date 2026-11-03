@@ -22,9 +22,7 @@ export const getLevel = (exp: number) => {
   let level = 0;
 
   for (let i = 0; i <= 1000; i += 1) {
-    let need = 0;
-
-    need = i >= REQUIRED_GEXP.length ? REQUIRED_GEXP.at(-1)! : REQUIRED_GEXP[i];
+    const need = i >= REQUIRED_GEXP.length ? REQUIRED_GEXP.at(-1)! : REQUIRED_GEXP[i];
 
     if (exp - need < 0)
       return {

@@ -20,10 +20,18 @@ export class I18nLoaderService {
   private namespaces: string[] = [];
 
   public async init() {
-    this.languages = await readdir("../../locales");
-    this.namespaces = (await readdir(`../../locales/${DEFAULT_LANGUAGE}/`)).map((p) =>
-      p.replace(".json", "")
-    );
+    const languageEntries = await readdir("../../locales", { withFileTypes: true });
+    this.languages = languageEntries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
+
+    const namespaceEntries = await readdir(`../../locales/${DEFAULT_LANGUAGE}/`, {
+      withFileTypes: true,
+    });
+
+    this.namespaces = namespaceEntries
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+      .map((entry) => entry.name.replace(".json", ""));
 
     await i18next.use(Backend).init({
       backend: {
@@ -39,32 +47,45 @@ export class I18nLoaderService {
       initImmediate: false,
       defaultNS: "default",
       interpolation: {
-        format: this.format,
+        format,
         escapeValue: false,
       },
     });
   }
+}
 
-  private format(value: any, format?: string | undefined, lng?: string): string {
-    switch (format) {
-      case "number": {
-        const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
-        const digits = hasDecimals ? 2 : 0;
+const numberFormats = new Map<string, Intl.NumberFormat>();
 
-        const formatOptions = {
-          maximumFractionDigits: digits,
-          minimumFractionDigits: digits,
-        };
+function getNumberFormat(lng: string | undefined, digits: number) {
+  const key = `${lng}|${digits}`;
+  let numberFormat = numberFormats.get(key);
 
-        if ((value as number) >= 1_000_000) {
-          const [number, suffix] = abbreviationNumber(value);
-          return `${Intl.NumberFormat(lng, formatOptions).format(number)}${suffix}`;
-        }
+  if (!numberFormat) {
+    numberFormat = Intl.NumberFormat(lng, {
+      maximumFractionDigits: digits,
+      minimumFractionDigits: digits,
+    });
 
-        return Intl.NumberFormat(lng, formatOptions).format(value as number);
-      }
-    }
-
-    return value;
+    numberFormats.set(key, numberFormat);
   }
+
+  return numberFormat;
+}
+
+function format(value: any, format?: string | undefined, lng?: string): string {
+  switch (format) {
+    case "number": {
+      const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
+      const numberFormat = getNumberFormat(lng, hasDecimals ? 2 : 0);
+
+      if ((value as number) >= 1_000_000) {
+        const [number, suffix] = abbreviationNumber(value);
+        return `${numberFormat.format(number)}${suffix}`;
+      }
+
+      return numberFormat.format(value as number);
+    }
+  }
+
+  return value;
 }

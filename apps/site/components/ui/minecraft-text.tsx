@@ -68,7 +68,7 @@ export function MinecraftText({ children, className }: { children: string | stri
       }
     }
 
-    if (!text.length) return undefined;
+    if (text.length === 0) return undefined;
 
     return <span key={index} className={`${bold ? "font-bold" : ""} ${italic ? "italic" : "not-italic"} ${color} ${className ?? ""}`}>{text}</span>;
   }).filter((element) => element !== undefined);

@@ -6,21 +6,27 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, type Circular, type Flatten, flatten } from "@statsify/util";
 import {
-  CacheLevel,
-  StatusNotFoundException,
-} from "@statsify/api-client";
+  type APIData,
+  type Circular,
+  type Flatten,
+  flatten,
+} from "@statsify/util";
+import { CacheLevel, StatusNotFoundException } from "@statsify/api-client";
 import { HypixelService } from "#hypixel";
-import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
-import { InjectModel } from "@m8a/nestjs-typegoose";
 import {
-  Player,
-  deserialize,
-  serialize,
-} from "@statsify/schemas";
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from "@nestjs/common";
+import { InjectModel } from "@m8a/nestjs-typegoose";
+import { Player, deserialize, serialize } from "@statsify/schemas";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
-import { PlayerSearchService, RedisPlayer } from "./search/player-search.service.js";
+import {
+  PlayerSearchService,
+  RedisPlayer,
+} from "./search/player-search.service.js";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
@@ -46,6 +52,15 @@ export class PlayerService {
     cacheLevel: CacheLevel,
     selector?: Record<string, boolean>
   ): Promise<Player | null> {
+    // ensure we have all the necessary data to replace the player document if we don't do a cache only request
+    if (selector && Object.keys(selector).length > 0) {
+      selector.uuid = true;
+      selector.username = true;
+      selector.guildId = true;
+      selector.sessionReset = true;
+      selector.expiresAt = true;
+    }
+
     const mongoPlayer = await this.findMongoDocument(tag, selector);
 
     if (
@@ -55,7 +70,9 @@ export class PlayerService {
       return deserialize(Player, mongoPlayer);
     }
 
-    const player = await this.hypixelService.getPlayer(mongoPlayer?.uuid ?? tag);
+    const player = await this.hypixelService.getPlayer(
+      mongoPlayer?.uuid ?? tag
+    );
 
     if (player) {
       player.expiresAt = Date.now() + 120_000;
@@ -137,13 +154,20 @@ export class PlayerService {
   public async delete(tag: string) {
     const player = await this.findMongoDocument(tag, {});
 
-    if (!player) return null;
+    if (!player) return false;
 
     await Promise.all([
       this.playerModel.deleteOne({ uuid: player.uuid }).exec(),
       this.playerSearchService.delete(player.username),
-      this.playerLeaderboardService.addLeaderboards(Player, player, "uuid", true),
+      this.playerLeaderboardService.addLeaderboards(
+        Player,
+        player,
+        "uuid",
+        true
+      ),
     ]);
+
+    return true;
   }
 
   public async saveOne(player: Player, registerAutocomplete: boolean) {
@@ -155,7 +179,12 @@ export class PlayerService {
       this.playerModel
         .replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true })
         .exec(),
-      this.playerLeaderboardService.addLeaderboards(Player, flatPlayer, "uuid", false),
+      this.playerLeaderboardService.addLeaderboards(
+        Player,
+        flatPlayer,
+        "uuid",
+        false
+      ),
     ];
 
     if (registerAutocomplete)

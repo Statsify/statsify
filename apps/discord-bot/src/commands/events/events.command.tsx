@@ -10,7 +10,7 @@ import {
   ApiService,
   Command,
   CommandContext,
-  PaginateService,
+  scrollingPagination,
   PlayerArgument,
 } from "@statsify/discord";
 import { EVENT_TYPES, GENERAL_MODES } from "@statsify/schemas";
@@ -23,10 +23,7 @@ import { render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.events"), args: [PlayerArgument] })
 export class EventsCommand {
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
     const user = context.getUser();
@@ -40,7 +37,7 @@ export class EventsCommand {
       this.apiService.getUserBadge(player.uuid),
     ]);
 
-    return this.paginateService.scrollingPagination(
+    return scrollingPagination(
       context,
       arrayGroup(EVENT_TYPES, 4).map((events) => async () => {
         const background = await getBackground(

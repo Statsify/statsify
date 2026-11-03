@@ -16,13 +16,14 @@ import {
   GameQuests,
   GenericQuestInstance,
   METADATA_KEY,
-  MetadataScanner,
+  MonthlyQuests,
   OverallQuests,
   QuestModes,
   QuestTime,
   User,
   UserPalette,
   WeeklyQuests,
+  scanMetadata,
 } from "@statsify/schemas";
 import {
   Container,
@@ -49,15 +50,18 @@ function getQuestMetadata<T>(constructor: Constructor<T>) {
 
   const metadata = entries.map(([key, data]) => [
     key,
-    Object.fromEntries(MetadataScanner.scan(data.type.type)),
+    Object.fromEntries(scanMetadata(data.type.type)),
   ]);
 
   return Object.fromEntries(metadata);
 }
 
-const questMetadata = [DailyQuests, WeeklyQuests, OverallQuests].map((constructor) =>
-  getQuestMetadata(constructor as Constructor<GenericQuestInstance>)
-);
+const questMetadata: Record<QuestTime, ReturnType<typeof getQuestMetadata>> = {
+  [QuestTime.Daily]: getQuestMetadata(DailyQuests),
+  [QuestTime.Weekly]: getQuestMetadata(WeeklyQuests),
+  [QuestTime.Monthly]: getQuestMetadata(MonthlyQuests),
+  [QuestTime.Overall]: getQuestMetadata(OverallQuests),
+};
 
 export interface QuestProfileProps extends Omit<BaseProfileProps, "time"> {
   mode: GameMode<QuestModes>;
@@ -91,7 +95,7 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
 
   const entries: GameEntry[] = questEntries
     // Require more than just a total field
-    .filter(([_, q]) => Object.keys(q).length > 1)
+    .filter(([, q]) => Object.keys(q).length > 1)
     .map(([k, v]) => [k, v, Object.keys(v).length - 1] as const)
     .sort((a, b) => ratio(b[1]?.total ?? 0, b[2]) - ratio(a[1]?.total ?? 0, a[2]))
     .map(([k, v, total]) => {

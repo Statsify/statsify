@@ -44,18 +44,18 @@ export function SessionAnimation() {
       ]);
 
       return () => controls.cancel();
-    } else {
-      const controls = animate([
-        ...typingRefs.current.map(
-          (ref) => [ref, { y: 10, opacity: 0 }, { duration: 0 }] satisfies ObjectSegmentWithTransition
+    }
+    
+    const controls = animate([
+      ...typingRefs.current.map(
+        (ref) => [ref, { y: 10, opacity: 0 }, { duration: 0 }] satisfies ObjectSegmentWithTransition
         ),
         [profileRef.current, { opacity: 0, y: 20, filter: "blur(5px)" }, { duration: 0 }],
         [searchRef.current, { opacity: 1 }, { duration: 0 }],
         [daysBack, 0, { duration: 0 }],
       ]);
 
-      return () => controls.cancel();
-    }
+    return () => controls.cancel();
   }, [inView, animate, daysBack]);
 
   return (

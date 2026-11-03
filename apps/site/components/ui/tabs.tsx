@@ -9,7 +9,7 @@
 "use client";
 
 import { Box } from "~/components/ui/box";
-import { type ComponentProps, createContext, use, useState } from "react";
+import { type ComponentProps, createContext, use, useState, useMemo, useCallback } from "react";
 import { SkeletonBox } from "./skeleton-box";
 import { cn } from "~/lib/util";
 
@@ -41,15 +41,17 @@ export function Tabs<T extends string | number>({
 }: TabsProps<T>) {
   const [internalTab, setInternalTab] = useState(defaultTab as T);
 
-  function onTabChange(tab: T) {
+  const onTabChange = useCallback((tab: T) => {
     setInternalTab(tab);
     externalOnTabChange?.(tab);
-  }
+  }, [externalOnTabChange]);
 
   const tab = externalTab ?? internalTab;
 
+  const value = useMemo(() => ({ tab, onTabChange: onTabChange as (tab: string | number) => void }), [tab, onTabChange]);
+
   return (
-    <TabsContext value={{ tab, onTabChange: onTabChange as (tab: string | number) => void }}>
+    <TabsContext value={value}>
       <div
         {...props}
         className={cn("grid auto-cols-[1fr] grid-flow-col gap-4 items-center justify-center text-center", className)}
