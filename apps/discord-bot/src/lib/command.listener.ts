@@ -75,7 +75,7 @@ export class CommandListener extends AbstractCommandListener {
       guild: interaction.getGuildId() ?? null,
     });
 
-    const user = await this.apiService.getUser(id);
+    const user = await this.apiService.getUser(id).catch(() => null);
 
     Sentry.setUser({
       id,
