@@ -111,7 +111,7 @@ export class PlayerLeaderboardGuildArgument extends AbstractArgument {
 
     let results = guilds.map((guild) => ({ name: guild, value: guild }));
 
-    if (query && (!guilds.length || !guilds.some((guild) => guild.toLowerCase() === query))) {
+    if (query && (guilds.length === 0 || !guilds.some((guild) => guild.toLowerCase() === query))) {
       results = results.slice(0, 24);
       results.push(searched);
     }

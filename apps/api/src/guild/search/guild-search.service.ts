@@ -47,7 +47,7 @@ export class GuildSearchService {
       return [];
     });
 
-    if (redisResults.length) return redisResults;
+    if (redisResults.length > 0) return redisResults;
 
     return this.getCachedGuilds(query);
   }
@@ -77,7 +77,7 @@ export class GuildSearchService {
   }
 
   private escapeRegex(input: string) {
-    return input.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+    return input.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
   }
 
   private handleRedisError(error: unknown) {

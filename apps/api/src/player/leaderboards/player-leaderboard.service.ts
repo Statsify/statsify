@@ -14,7 +14,7 @@ import {
   PlayerNotFoundException,
 } from "@statsify/api-client";
 import { type Circular, flatten } from "@statsify/util";
-import { Guild, LeaderboardScanner, Player, serialize } from "@statsify/schemas";
+import { Guild, Player, getLeaderboardField, serialize } from "@statsify/schemas";
 import { HypixelService } from "#hypixel";
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
@@ -53,7 +53,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
       sort,
       name,
       hidden,
-    } = LeaderboardScanner.getLeaderboardField(Player, field);
+    } = getLeaderboardField(Player, field);
 
     const guild = await this.getGuild(guildInput);
     const memberIds = guild.members.map(({ uuid }) => uuid);
@@ -105,11 +105,11 @@ export class PlayerLeaderboardService extends LeaderboardService {
     const page = leaderboard.slice(top, bottom);
 
     const additionalFieldMetadata = additionalFields.map((k) =>
-      LeaderboardScanner.getLeaderboardField(Player, k, false)
+      getLeaderboardField(Player, k, false)
     );
 
     const extraDisplayMetadata = extraDisplay ?
-      LeaderboardScanner.getLeaderboardField(Player, extraDisplay, false) :
+      getLeaderboardField(Player, extraDisplay, false) :
       undefined;
 
     const additionalStats = await this.getAdditionalStats(
@@ -178,7 +178,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
 
     const pipeline = this.redis.pipeline();
     const leaderboardFields = fields.map((field) => {
-      const metadata = LeaderboardScanner.getLeaderboardField(Player, field);
+      const metadata = getLeaderboardField(Player, field);
       const key = `player.${field}`;
 
       pipeline.call("ZMSCORE", key, ...memberIds);
