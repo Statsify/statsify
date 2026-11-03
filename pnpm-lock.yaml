@@ -366,8 +366,8 @@ importers:
         specifier: 4.0.0
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d
-        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d
+        specifier: https://github.com/timotejroiko/tiny-discord.git#d10ed4c4dff53c9bb0c24846457afaffbadb2776
+        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -415,8 +415,8 @@ importers:
         specifier: 4.0.0
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d
-        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d
+        specifier: https://github.com/timotejroiko/tiny-discord.git#d10ed4c4dff53c9bb0c24846457afaffbadb2776
+        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776
       toad-scheduler:
         specifier: ^3.0.1
         version: 3.1.0
@@ -549,8 +549,8 @@ importers:
         specifier: 4.0.0
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d
-        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d
+        specifier: https://github.com/timotejroiko/tiny-discord.git#d10ed4c4dff53c9bb0c24846457afaffbadb2776
+        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776
       toad-scheduler:
         specifier: ^3.0.1
         version: 3.1.0
@@ -679,8 +679,8 @@ importers:
         specifier: 4.0.0
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d
-        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d
+        specifier: https://github.com/timotejroiko/tiny-discord.git#d10ed4c4dff53c9bb0c24846457afaffbadb2776
+        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -5485,8 +5485,8 @@ packages:
     resolution: {integrity: sha512-75voc/9G4rDIJleOo4jPvN4/YC4GRZrY8yy1uU4lwrB3XEQbWve8zXoO5No4eFrGcTAMYyoY67p8jRQdtA1HbA==}
     engines: {node: '>=12'}
 
-  tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d:
-    resolution: {gitHosted: true, integrity: sha512-QHUcOW3yWBQa2BrcwRetAhzBwwnX+RfN9/B15L4qzB4uuyCouDGIWIcImF6HPjzqAcUzQeWL/4tImfSsA6mZ3A==, tarball: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d}
+  tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776:
+    resolution: {gitHosted: true, integrity: sha512-3QdoeA+fA/TU7Ei/DNB6YP/cVKJ7ZmdjkNd0/vcPhBTuyd/cgJBhosI95PrDOExhokslLpWr2OYm5srYhSMYpQ==, tarball: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776}
     version: 0.0.1
 
   tinybench@6.2.2:
@@ -10169,7 +10169,7 @@ snapshots:
     dependencies:
       convert-hrtime: 5.0.0
 
-  tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d: {}
+  tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776: {}
 
   tinybench@6.2.2: {}
 
