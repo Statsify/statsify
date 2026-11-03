@@ -95,10 +95,10 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
 
     if (!mode) return [];
 
-    mode.aliases.forEach((alias: string) => aliases.add(alias));
-    mode.submodes
-      .find(({ api }) => api === submodeKey)
-      ?.aliases.forEach((alias: string) => aliases.add(alias));
+    for (const alias of mode.aliases) aliases.add(alias);
+    const submode = mode.submodes.find(({ api }) => api === submodeKey);
+    if (submode)
+      for (const alias of submode.aliases) aliases.add(alias);
 
     return [...aliases];
   }
