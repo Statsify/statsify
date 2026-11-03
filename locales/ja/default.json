@@ -5,7 +5,6 @@
     "gtbhelper": "現在のヒント",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "ギルド名または属するプレイヤーのユーザー名",
-    "guild-filter": "A guild name or guild ID",
     "guild-type": "検索クエリの種類",
     "mojang-player": "Minecraftのユーザー名またはUUID",
     "number": "数字",

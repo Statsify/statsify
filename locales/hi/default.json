@@ -5,7 +5,6 @@
     "gtbhelper": "वर्तमान हिंट",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "गिल्ड का नाम या गिल्ड मेंबर",
-    "guild-filter": "A guild name or guild ID",
     "guild-type": "गिल्ड सर्च का प्रकार",
     "mojang-player": "A Minecraft username or UUID",
     "number": "एक नंबर",
