@@ -15,7 +15,7 @@ import {
 } from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
 import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
-import { formatTime, prettify } from "@statsify/util";
+import { formatRecordTime, prettify } from "@statsify/util";
 import type { BaseProfileProps, ProfileTime } from "#commands/base.hypixel-command";
 import type { DuelsModeIcons } from "./duels.command.js";
 
@@ -60,10 +60,10 @@ export const DuelsProfile = <T extends ProfileTime>({
     sidebar.push([t("stats.kit"), prettify(stats.kit), "§e"]);
 
   if (mode.api === "parkour") {
-    sidebar.push(
-      [t("stats.bestTime"), duels.parkour.bestTime === 0 ? "N/A" : formatTime(duels.parkour.bestTime), "§d"],
-      [t("stats.checkpoints"), t(duels.parkour.checkpoints), "§5"]
-    );
+    if (time === "LIVE")
+      sidebar.push([t("stats.bestTime"), formatRecordTime(duels.parkour.bestTime), "§d"]);
+
+    sidebar.push([t("stats.checkpoints"), t(duels.parkour.checkpoints), "§5"]);
   }
 
   const isTitles = time === "LIVE" && mode.api === "overall" && mode.submode.api === "titles";

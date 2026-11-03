@@ -26,9 +26,7 @@
     "badge-set": "Завантажити новий значок профілю",
     "badge-view": "Переглянути поточний значок профілю",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
-    "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
-    "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Переглянути чиїсь Minecraft та Optifine плащі",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
@@ -37,13 +35,13 @@
     "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
     "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
     "quests-weekly": "$t(commands.quests-command, { \"name\": \"Weekly\" })",
+    "quests-monthly": "$t(commands.quests-command, { \"name\": \"Monthly\" })",
     "close": "Close the current support ticket",
     "colors": "Список кодів кольорів Minecraft",
     "commands": "View Statsify command usage",
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
-    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -87,10 +85,10 @@
     "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
     "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
-    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "Перегляньте статистику ваших сеансів {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-delete": "Delete your session stats",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -141,7 +139,6 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
-    "links": "Соціальні мережі Statsify",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
@@ -191,6 +188,7 @@
     "ratios-megawalls": "$t(commands.ratios-command, { \"name\": \"MegaWalls\" })",
     "ratios-murdermystery": "$t(commands.ratios-command, { \"name\": \"Murder Mystery\" })",
     "ratios-paintball": "$t(commands.ratios-command, { \"name\": \"Paintball\" })",
+    "ratios-pit": "$t(commands.ratios-command, { \"name\": \"Pit\" })",
     "ratios-quake": "$t(commands.ratios-command, { \"name\": \"Quake\" })",
     "ratios-skywars": "$t(commands.ratios-command, { \"name\": \"SkyWars\" })",
     "ratios-smashheroes": "$t(commands.ratios-command, { \"name\": \"Smash Heroes\" })",
@@ -200,7 +198,6 @@
     "ratios-walls": "$t(commands.ratios-command, { \"name\": \"Walls\" })",
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolgames": "$t(commands.ratios-command, { \"name\": \"WoolGames\" })",
-    "recentgames": "Переглянути чиїсь нещодавні ігри Hypixel",
     "server": "Переглянути статус сервера Minecraft",
     "skin": "Переглянути чийсь скін Minecraft",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -217,7 +214,6 @@
     "theme": "Change your theme for every profile",
     "theme-boxes": "Змінити зовнішній вигляд поля профілю",
     "theme-font": "Змінити шрифт профілю",
-    "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "Змінити значок нижнього колонтитулу вашого профілю",
     "theme-footer-message": "Змініть нижній колонтитул свого профілю. https://rgb.birdflop.com, щоб створити градієнт.",
     "theme-footer-reset": "Скинути нижній колонтитул вашого профілю",
@@ -225,7 +221,6 @@
     "theme-view": "Переглянути поточну тему профілю",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
-    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Відв'язати свої облікові записи Discord та Minecraft",
@@ -239,7 +234,6 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Скинути вашу історичну статистику",
     "reset-session": "Скинути статистику сеансу"
   },
   "config": {
@@ -392,14 +386,6 @@
       "title": "Недійсна сесія",
       "description": "**{{displayName}}** немає активних сесій. Вони можуть створити сесію, запустивши команду /session, будучи перевіреними."
     },
-    "invalidResetTime": {
-      "description": "{{time}} Не відповідає формату 'h:mm a'. Введіть час у форматі, подібному до '12:00 PM' або '1:00 AM'.",
-      "title": "Неприпустимий час скидання"
-    },
-    "invalidResetTimezone": {
-      "description": "{{timezone}}` не є дійсним часовим поясом. Введіть часовий пояс, аналогічний `EST` або `PST`.",
-      "title": "Недійсний часовий пояс скидання"
-    },
     "invalidSearch": {
       "description": "Ми не змогли з'ясувати, що саме ви шукали!\nВведіть ім'я користувача, uuid або discord.",
       "title": "Невірний пошук"
@@ -462,10 +448,6 @@
       "description": "**{{displayName}}** не має рейтингу!",
       "title": "Немає рейтингів"
     },
-    "noRecentGames": {
-      "description": "Останні гри **{{displayName}}** не знайдені!",
-      "title": "Останні ігри не знайдені"
-    },
     "noStatus": {
       "description": "Останній Hypixel статус гравця **{{displayName}}** не знайдено!",
       "title": "Статус не знайдено"
@@ -506,19 +488,9 @@
     }
   },
   "historical": {
-    "aboutResetting": "Натисніть на кнопку «скинути», щоб скинути статистику за кожен день **в даний момент**.\n\n**УВАГА**: Це видаляє всю статистику і **не може бути скасовано**.\nЯкщо ви хочете, щоб ви могли скинути у певний час, перевірте $t(socials.premium).",
-    "aboutResettingPremium": "Натисніть кнопку скидання, щоб скинути історичну статистику.\n\n**ПОПЕРЕДЖЕННЯ:** Це видаляє всю статистику і **не може бути скасовано**.",
-    "modal": {
-      "resetTime": "Виберіть час скидання",
-      "timezone": "Виберіть часовий пояс",
-      "title": "Час історичного скидання"
-    },
-    "new": "**{{displayName}}** історичну статистику було вперше перевірено на Statsify. Тепер їхня статистика оновлюватиметься щодня в цей час.",
-    "reset": "$t(emojis:clock) **Скидання** <t:{{time}}:R>",
-    "resetButton": "Натисніть, щоб скинути",
-    "setResetTime": "Установіть час скидання на <t:{{time}}:t>.",
     "newSession": "**{{displayName}}** Статистика сесії була вперше перевірена за допомогою Statsify.",
     "setSessionReset": "Успішно скинуто статистику сеансу.",
+    "deleteSession": "Successfully deleted your session stats.",
     "disabledWarning": {
       "title": "Історичні команди більше не доступні",
       "description": "Нові [Умови API] Hypixel(https://developer.hypixel.net/policies/) більше не дозволяють \"постійне отримання даних гравця\", що означає, що Statsify більше не зможе відстежувати статистику гравців щодня.\n\nНатомість ви можете спробувати запустити сесію використовуючи `/session`. Коли ви починаєте сесію, бот буде автоматично відстежувати вашу статистику від моменту коли ви використовуєте команду до моменту коли ви використаєте цю команду ще раз. Щоб скинути вашу сесію ви можете використати `/reset session`."
@@ -557,10 +529,16 @@
     "premium": "[Premium](<https://statsify.net/premium>)",
     "website": "[Website](https://statsify.net/)"
   },
+  "deprecated": {
+    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} було об'єднано в команду {{newCommandName}}. Будь ласка, запустіть {{newCommand}} і виберіть {{mode}} в розкривному списку.",
+    "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} було видалено на користь {{newCommandName}}. Будь ласка запустіть {{newCommand}} натомість.",
+    "command-description": "Цю команду було видалено на користь {{newCommandName}}."
+  },
   "stats": {
     "achievementPoints": "Очки досягнень",
     "adrenaline": "Адреналін",
     "assists": "Сприянь",
+    "alphaWins": "Alpha Wins",
     "bblr": "BBLR",
     "bedsBroken": "Ліжок зламано",
     "bedsLost": "Ліжок втрачено",
@@ -580,6 +558,7 @@
     "bronzeTrophies": "Бронзових Трофеїв",
     "candyFound": "Цукерок Знайдено",
     "challenges": "Випробувань",
+    "checkpoints": "Checkpoints",
     "class": "Клас",
     "coins": "Монет",
     "contracts": "Контрактів",
@@ -588,10 +567,12 @@
     "deaths": "Смертей",
     "detectiveWins": "Перемог за детектива",
     "diamonds": "Діамантів",
+    "doorsOpened": "Doors Opened",
     "doublesWins": "Перемог у Doubles",
     "eggsFound": "Яєць знайдено",
     "emeralds": "Смарагдів",
     "empireKills": "Вбивств за захисника",
+    "emblem": "Emblem",
     "ended": "Закінчено",
     "endurance": "Витривалість",
     "event-level": "Рівень події",
@@ -652,6 +633,7 @@
     "headshots": "Пострілів у голову",
     "headstart": "Перевага",
     "healing": "Зцілено",
+    "heroKills": "Hero Kills",
     "heroWins": "Перемог за героя",
     "hidden": "Прихований",
     "hiderWins": "Перемог за ховаючих",
@@ -663,6 +645,7 @@
     "humans-killed": "Убитих людей",
     "infectedWins": "Перемог за інфікованих",
     "iron": "Залізо",
+    "itemsPurchased": "Items Purchased",
     "karma": "Карма",
     "kdr": "KDR",
     "kicks": "Поштовхів",
@@ -670,8 +653,11 @@
     "killsAsInfected": "Вбивств за інфікованого",
     "killsAsMurderer": "Вбивств за вбивцю",
     "killsAsSurvivor": "Вбивств за невинного",
+    "killsAsAlpha": "Kills as Alpha",
     "killstreaks": "Серій вбивств",
     "kit": "Поточний набір",
+    "knife": "Knife",
+    "knifeKills": "Knife Kills",
     "kwr": "KWR",
     "lapsCompleted": "Кругів",
     "lastAction": "Остання дія",
@@ -682,6 +668,7 @@
     "layers": "Слоїв",
     "level": "Рівень",
     "levelsGained": "Рівнів отримано",
+    "lifetimeRenown": "Lifetime Renown",
     "loginTime": "Час входу",
     "logoutTime": "Час виходу",
     "longestGame": "Найдовша гра",
@@ -706,6 +693,7 @@
     "online": "Онлайн",
     "opals": "Опалів",
     "overallWins": "Загальних перемог",
+    "perfectBuilds": "Perfect Builds",
     "pingRange": "Діапазон пінгу",
     "playtime": "Ігрового часу",
     "points": "Очок ",
@@ -736,10 +724,10 @@
     "shotsFired": "Постріли",
     "silver": "Срібло",
     "silverTrophies": "Срібних трофеїв",
-    "slumberTickets": "Slumber Tickets",
+    "slumberTickets": "Сонні квитки",
     "soloWins": "Перемог в соло ",
     "souls": "Душі",
-    "coinConversions": "Конвертація монет",
+    "coinConversions": "Конвертацій монет",
     "starsEarned": "Зірок зароблено",
     "started": "Розпочав",
     "status": "Статус",
@@ -747,6 +735,7 @@
     "superVotes": "Супер голосів",
     "superluck": "Superluck",
     "support": "Підтримка",
+    "survivals": "Survivals",
     "survivorWins": "Перемог за вцілилих",
     "tags": "Теги",
     "tauntsUsed": "Використано глузувань",
@@ -754,7 +743,7 @@
     "title": "Титул",
     "tokens": "Токенів",
     "total": "Всього",
-    "totalSlumberTickets": "Total Slumber Tickets",
+    "totalSlumberTickets": "Всього сонних квитків",
     "totalTrophies": "Всього Трофеїв",
     "trail": "Слід",
     "transfusion": "Transfusion",
@@ -783,13 +772,26 @@
     "positions": "Позиції",
     "powerupsCollected": "Зібрано бонусів",
     "roundsCompleted": "Раунди завершено",
+    "totalRounds": "Total Rounds",
     "totalExp": "Усього досвіду",
     "gamesFinished": "Закінчено ігор",
     "flawlessGames": "Бездоганні ігри",
     "fails": "Невдач",
     "mapsCompleted": "Мапи завершено",
     "arcadeWins": "Arcade перемоги",
-    "draws": "Нічиї"
+    "spec": "Спеціалізація",
+    "capturePoints": "Захоплено точок",
+    "defendPoints": "Захищено точок",
+    "draws": "Нічиї",
+    "sheepThrown": "Овець кинуто",
+    "sheepKilled": "Овець убито",
+    "magicWool": "Магічної вовни",
+    "flagCaptures": "Захоплено прапорів",
+    "flagReturns": "Повернуто прапорів",
+    "airTime": "Час у повітрі",
+    "potionsSplashed": "Використано вибухових зіллів",
+    "powerOrbs": "Куль сили",
+    "grenadeKills": "Grenade Kills"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Приєднуйся до нас**$t(socials.discord)**, та отримуйте **перезаряджання на 20% нижче** $t(emojis:heart)",
@@ -800,12 +802,7 @@
     "resetSession": "$t(emojis:reset) Ви можете **скинути** вашу сесію за допомогою команди `/reset session`.",
     "sessions": "$t(emojis:reset) Відстежуйте свою статистику за допомогою сесій та `/session`."
   },
-  "unknown": "Невідомо",
   "verification": {
-    "alreadyVerified": {
-      "description": "Ви вже прив'язали свій обліковий запис Minecraft. Запустіть `/unverify`, щоб відв'язати ваш обліковий запис Minecraft.",
-      "title": "Вже перевірено"
-    },
     "invalidCode": {
       "title": "Невірний код прив'язки",
       "description": "Перевірте ваш код підтвердження або спробуйте ще раз, дотримуючись цих кроків: ",
@@ -814,7 +811,7 @@
     "instructions": {
       "title": "Пов'яжіть ваш обліковий запис Minecraft з Statsify",
       "steps": {
-        "one": "Open **Minecraft** (`1.7.10` - `1.19.4`) and go to the server list",
+        "one": "Відкрийте **Minecraft** (`1.7.10` - `1.19.4`) та перейдіть до списку серверів",
         "two": "Підключіться до **`verify.statsify.net`** та скопіюйте відображений код",
         "three": "Поверніться до **Discord** та натисніть кнопку нижче, потім введіть свій код"
       },

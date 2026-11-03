@@ -162,7 +162,10 @@ function findLastAction(data: APIData): { action: string; time: number } {
   if (data.parkourCompletions) {
     const lobbies = Object.values(data.parkourCompletions);
 
-    const starts = lobbies.map((l: any) => l[0].timeStart);
+    // The latest run in any lobby, since Hypixel doesn't guarantee the order of completions
+    const starts = lobbies.flatMap((completions: any) =>
+      completions.map((completion: any) => completion.timeStart),
+    );
     actions.push({ action: "LOBBY_PARKOUR", time: Math.max(...starts) });
   }
 
