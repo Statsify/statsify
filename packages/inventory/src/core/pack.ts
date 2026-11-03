@@ -8,6 +8,8 @@
 
 import minecraftData from "../../data/minecraft-data.json" with { type: "json" };
 import { type Unzipped, unzip } from "fflate";
+import type { Transform } from "./models.js";
+import { composeTransforms } from "./geometry.js";
 
 /** A pack zip, or a client jar, as bytes or a URL to fetch */
 export type PackSource = Blob | ArrayBuffer | Uint8Array | string;
@@ -100,40 +102,6 @@ function layoutOf(meta: PackMeta | undefined, files: ReadonlyMap<string, Uint8Ar
   return "flattened";
 }
 
-interface Upgrade {
-  /** Texture ids 26.3 renamed, or null where 26.3 draws the texture another way */
-  textures: Record<string, string | null>;
-  /** Folders 26.3 can't read, left out */
-  drop: string[];
-}
-
-// Older layouts load as 26.3's, so the rest of the package reads one layout. 1.8's models
-// have no gui transforms (1.8 drew inventories in code), so 26.3's shape its textures
-const UPGRADES: Partial<Record<PackLayout, Upgrade>> = {
-  legacy: {
-    textures: minecraftData.legacyTextures,
-    drop: ["assets/minecraft/models/", "assets/minecraft/blockstates/"],
-  },
-};
-
-const TEXTURE_FILE = /^assets\/minecraft\/textures\/(.+)\.png(\.mcmeta)?$/;
-
-function upgrade(files: ReadonlyMap<string, Uint8Array>, { textures, drop }: Upgrade) {
-  const upgraded = new Map<string, Uint8Array>();
-
-  for (const [path, file] of files) {
-    if (drop.some((folder) => path.startsWith(folder))) continue;
-
-    const texture = TEXTURE_FILE.exec(path);
-    const id = texture && (texture[1] in textures ? textures[texture[1]] : texture[1]);
-
-    if (!texture) upgraded.set(path, file);
-    else if (id) upgraded.set(`assets/minecraft/textures/${id}.png${texture[2] ?? ""}`, file);
-  }
-
-  return upgraded;
-}
-
 const unzipAssets = (data: Uint8Array) =>
   new Promise<Unzipped>((resolve, reject) => {
     unzip(
@@ -150,6 +118,106 @@ const decoder = new TextDecoder();
 
 const parseJson = <T>(file: Uint8Array, reviver?: (key: string, value: unknown) => unknown) =>
   JSON.parse(decoder.decode(file), reviver) as T;
+
+const encoder = new TextEncoder();
+
+/** A texture's 26.3 name, null where 26.3 draws it another way, or the frame of a strip a slot shows */
+type LegacyTexture = string | null | { texture: string; frame: number };
+
+interface Upgrade {
+  textures: Record<string, LegacyTexture>;
+  /** Model ids 26.3 renamed */
+  models: Record<string, string>;
+  /** The gui transform the version gave every 3D item in code, under the model's own */
+  gui?: Transform;
+  /** Folders 26.3 doesn't read */
+  drop: string[];
+}
+
+// Older layouts load as 26.3's, so the rest of the package reads one layout
+const UPGRADES: Partial<Record<PackLayout, Upgrade>> = {
+  legacy: {
+    textures: minecraftData.legacyTextures,
+    models: minecraftData.legacyModels,
+    // RenderItem.setupGuiTransform turns every 3D item like a block before the model's gui
+    gui: { rotation: [30, 225, 0], scale: [0.625, 0.625, 0.625] },
+    drop: ["assets/minecraft/blockstates/"],
+  },
+};
+
+const TEXTURE_FILE = /^assets\/minecraft\/textures\/(.+)\.png(\.mcmeta)?$/;
+const MODEL_FILE = /^assets\/minecraft\/models\/(.+)\.json$/;
+
+interface OlderModel {
+  parent?: string;
+  textures?: Record<string, string>;
+  elements?: unknown[];
+  display?: Record<string, Transform>;
+}
+
+/** An older model with 26.3's names and gui, or undefined where 26.3 draws the item another way */
+function upgradeModel(file: Uint8Array, { textures, models, gui }: Upgrade) {
+  const model = parseJson<OlderModel>(file);
+  const parent = model.parent?.replace("minecraft:", "");
+
+  // Chests, heads and banners, which 26.3 draws in code
+  if (parent === "builtin/entity") return;
+
+  const renamed: Record<string, string> = {};
+
+  for (const [key, value] of Object.entries(model.textures ?? {})) {
+    const id = value.replace("minecraft:", "");
+    const target = value.startsWith("#") || !(id in textures) ? value : textures[id];
+    if (target === null) return;
+
+    renamed[key] = typeof target === "string" ? target : target.texture;
+  }
+
+  const display =
+    gui && (model.elements || model.display?.gui)
+      ? { ...model.display, gui: composeTransforms(gui, model.display?.gui ?? {}) }
+      : model.display;
+
+  return encoder.encode(
+    JSON.stringify({ ...model, parent: parent && (models[parent] ?? parent), textures: renamed, display }),
+  );
+}
+
+function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade) {
+  const upgraded = new Map<string, Uint8Array>();
+  const { textures, models, drop } = layoutUpgrade;
+
+  for (const [path, file] of files) {
+    if (drop.some((folder) => path.startsWith(folder))) continue;
+
+    const model = MODEL_FILE.exec(path);
+    const texture = TEXTURE_FILE.exec(path);
+
+    if (model) {
+      const upgradedModel = upgradeModel(file, layoutUpgrade);
+      if (upgradedModel) upgraded.set(`assets/minecraft/models/${models[model[1]] ?? model[1]}.json`, upgradedModel);
+      continue;
+    }
+
+    if (!texture) {
+      upgraded.set(path, file);
+      continue;
+    }
+
+    const target = texture[1] in textures ? textures[texture[1]] : texture[1];
+
+    if (typeof target === "string") {
+      upgraded.set(`assets/minecraft/textures/${target}.png${texture[2] ?? ""}`, file);
+    } else if (target && !texture[2]) {
+      // The strip's own mcmeta played every frame; this one holds the frame a slot shows
+      const animation = { animation: { frames: [target.frame] } };
+      upgraded.set(`assets/minecraft/textures/${target.texture}.png`, file);
+      upgraded.set(`assets/minecraft/textures/${target.texture}.png.mcmeta`, encoder.encode(JSON.stringify(animation)));
+    }
+  }
+
+  return upgraded;
+}
 
 async function readSource(source: PackSource): Promise<Uint8Array> {
   if (typeof source === "string") {

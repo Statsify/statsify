@@ -12,7 +12,7 @@ import { context, createCanvas, createImageData, decodePng, hex } from "./canvas
 import { TextureLoader } from "./textures.js";
 import type { IconCache } from "./icon-cache.js";
 import type { ItemStack } from "./item-stack.js";
-import { type PackStack, namespaced } from "./pack.js";
+import { type PackStack, assetPath, namespaced } from "./pack.js";
 import { tintColor } from "./tints.js";
 
 const SIZE = 16;
@@ -29,8 +29,11 @@ const HEADS: Record<string, { texture: string; hat: boolean }> = {
   zombie: { texture: "entity/zombie/zombie", hat: true },
 };
 
-// Heads without a skin get the default skin, as in game
+// Heads without a skin, or whose skin doesn't load, get the default skin, as in game
 const DEFAULT_SKIN = "entity/player/wide/steve";
+
+const GLINT = "misc/enchanted_glint_item";
+const LEGACY_GLINT = "misc/enchanted_item_glint";
 
 function tinted(pixels: ImageData, color: number) {
   const red = (color >> 16) & 0xff;
@@ -55,39 +58,91 @@ function drawSprite(ctx: OffscreenCanvasRenderingContext2D, pixels: ImageData, c
   ctx.drawImage(sprite, 0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
-// Minecraft scrolls the glint over each sprite's eighth of the item atlas, tilted 10° at speed 0.5,
-// and adds it as src² + dst at strength 0.75
-function drawGlint(ctx: OffscreenCanvasRenderingContext2D, glint: ImageData, tick: number) {
-  const { width, height } = ctx.canvas;
-  const pixels = ctx.getImageData(0, 0, width, height);
-  const cos = Math.cos(Math.PI / 18);
-  const sin = Math.sin(Math.PI / 18);
+interface GlintPass {
+  angle: number;
+  scrollU: number;
+  scrollV: number;
+}
 
+interface Glint {
+  passes: GlintPass[];
+  /** Multiplies the texture, channel by channel */
+  tint: [number, number, number];
+}
+
+// 26.3: one pass tilted 10° at speed 0.5, at strength 0.75
+function modernGlint(tick: number): Glint {
   const time = tick * 50 * 0.5 * 8;
-  const scrollU = -(time % 110_000) / 110_000;
   const scrollV = (time % 30_000) / 30_000;
+  return { passes: [{ angle: Math.PI / 18, scrollU: -(time % 110_000) / 110_000, scrollV }], tint: [0.75, 0.75, 0.75] };
+}
 
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const out = (y * width + x) * 4;
-      if (pixels.data[out + 3] === 0) continue;
+// 1.8 (RenderItem.renderEffect): its grey texture tinted 0x8040CC, in two passes at -50° and 10°
+// that scroll over 3 and 4.873 seconds
+function legacyGlint(tick: number): Glint {
+  const ms = tick * 50;
+  return {
+    passes: [
+      { angle: (-5 * Math.PI) / 18, scrollU: (ms % 3000) / 3000, scrollV: 0 },
+      { angle: Math.PI / 18, scrollU: -(ms % 4873) / 4873, scrollV: 0 },
+    ],
+    tint: [0x80 / 255, 0x40 / 255, 0xcc / 255],
+  };
+}
 
-      const u = (x + 0.5) / width / 8;
-      const v = (y + 0.5) / height / 8;
-      const gu = u * cos - v * sin + scrollU;
-      const gv = u * sin + v * cos + scrollV;
-      const gx = Math.floor((gu - Math.floor(gu)) * glint.width);
-      const gy = Math.floor((gv - Math.floor(gv)) * glint.height);
-      const texel = (gy * glint.width + gx) * 4;
+/** The glint texture tinted and squared, so adding it with "lighter" is Minecraft's src² + dst */
+function squaredGlint(texture: ImageData, tint: Glint["tint"]) {
+  const squared = createImageData(texture.width, texture.height);
 
-      for (let channel = 0; channel < 3; channel++) {
-        const strength = (glint.data[texel + channel] / 255) * 0.75;
-        pixels.data[out + channel] += strength * strength * 255;
-      }
+  for (let i = 0; i < texture.data.length; i += 4) {
+    for (let channel = 0; channel < 3; channel++) {
+      const strength = (texture.data[i + channel] / 255) * tint[channel];
+      squared.data[i + channel] = strength * strength * 255;
     }
+
+    squared.data[i + 3] = 255;
   }
 
-  ctx.putImageData(pixels, 0, 0);
+  const canvas = createCanvas(texture.width, texture.height);
+  context(canvas).putImageData(squared, 0, 0);
+  return canvas;
+}
+
+// Minecraft scrolls the glint over each sprite's eighth of the item atlas. Drawn as a pattern and
+// masked by the icon, so the GPU adds it and no pixels are read back each tick
+function drawGlint(ctx: OffscreenCanvasRenderingContext2D, glint: OffscreenCanvas, passes: GlintPass[]) {
+  const { width, height } = ctx.canvas;
+  const layer = createCanvas(width, height);
+  const layerCtx = context(layer);
+  layerCtx.globalCompositeOperation = "lighter";
+
+  for (const { angle, scrollU, scrollV } of passes) {
+    // A pixel centre c samples the texel at A·c + offset: rotated, an eighth of a texture per icon
+    const a11 = (glint.width * Math.cos(angle)) / (8 * width);
+    const a12 = (-glint.width * Math.sin(angle)) / (8 * height);
+    const a21 = (glint.height * Math.sin(angle)) / (8 * width);
+    const a22 = (glint.height * Math.cos(angle)) / (8 * height);
+    const offsetX = scrollU * glint.width;
+    const offsetY = scrollV * glint.height;
+
+    // The pattern's transform goes the other way, from texels to pixels
+    const determinant = a11 * a22 - a12 * a21;
+    const a = a22 / determinant;
+    const b = -a21 / determinant;
+    const c = -a12 / determinant;
+    const d = a11 / determinant;
+
+    const pattern = layerCtx.createPattern(glint, "repeat")!;
+    pattern.setTransform({ a, b, c, d, e: -(a * offsetX + c * offsetY), f: -(b * offsetX + d * offsetY) });
+    layerCtx.fillStyle = pattern;
+    layerCtx.fillRect(0, 0, width, height);
+  }
+
+  layerCtx.globalCompositeOperation = "destination-in";
+  layerCtx.drawImage(ctx.canvas, 0, 0);
+
+  ctx.globalCompositeOperation = "lighter";
+  ctx.drawImage(layer, 0, 0);
 }
 
 function crossFade(from: OffscreenCanvas, to: OffscreenCanvas, blend: number) {
@@ -124,7 +179,10 @@ export class ItemRenderer {
   private models: ModelResolver;
   private textures: TextureLoader;
   private icons = new Map<string, Promise<OffscreenCanvas>>();
-  private skins = new Map<string, Promise<ImageData>>();
+  private skins = new Map<string, Promise<ImageData | undefined>>();
+  /** Whether the top pack's glint is 1.8's, which 1.8 coloured and moved in its own way */
+  private legacyGlint: boolean;
+  private glint?: Promise<OffscreenCanvas>;
 
   public constructor(
     private stack: PackStack,
@@ -132,6 +190,11 @@ export class ItemRenderer {
   ) {
     this.models = new ModelResolver(stack);
     this.textures = new TextureLoader(stack);
+
+    const legacy = assetPath(LEGACY_GLINT, "textures", ".png");
+    this.legacyGlint =
+      stack.packs.findLast(({ files }) => files.has(legacy) || files.has(assetPath(GLINT, "textures", ".png")))
+        ?.files.has(legacy) ?? false;
   }
 
   /** Whether an item's icon changes over time, from an animated texture or the glint */
@@ -154,12 +217,18 @@ export class ItemRenderer {
     const canvas = createCanvas(icon.width, icon.height);
     const ctx = context(canvas);
     ctx.drawImage(icon, 0, 0);
-    drawGlint(ctx, await this.textures.get("misc/enchanted_glint_item"), tick);
+    const { passes, tint } = this.legacyGlint ? legacyGlint(tick) : modernGlint(tick);
+    this.glint ??= this.textures.get(this.legacyGlint ? LEGACY_GLINT : GLINT).then((texture) => squaredGlint(texture, tint));
+    drawGlint(ctx, await this.glint, passes);
 
     return canvas;
   }
 
-  private async base(item: ItemStack, scale: number, tick: number): Promise<OffscreenCanvas> {
+  private async base(requested: ItemStack, scale: number, tick: number): Promise<OffscreenCanvas> {
+    // A head whose skin doesn't load is drawn, and cached, as the default skin
+    const item =
+      requested.skin && !(await this.skin(requested.skin)) ? { ...requested, skin: undefined } : requested;
+
     const resolved = this.models.resolve(item);
 
     const animated = resolved
@@ -306,11 +375,8 @@ export class ItemRenderer {
       throw new Error(`${item.id} uses a ${name} model, which isn't supported yet`);
     }
 
-    const texture = head.texture
-      ? await this.textures.get(head.texture)
-      : item.skin
-        ? await this.skin(item.skin)
-        : await this.textures.get(DEFAULT_SKIN);
+    const skin = !head.texture && item.skin ? await this.skin(item.skin) : undefined;
+    const texture = skin ?? (await this.textures.get(head.texture ?? DEFAULT_SKIN));
 
     // SkullModel: an 8 × 8 × 8 head with the hat a quarter pixel out from it
     const quads = boxQuads([-4, -8, -4], [8, 8, 8], [0, 0], texture);
@@ -319,13 +385,17 @@ export class ItemRenderer {
     return transformQuads(quads, special.transformation);
   }
 
+  /** A skin's pixels, or undefined when it doesn't load, which the next call tries again */
   private skin(url: string) {
     let skin = this.skins.get(url);
 
     if (!skin) {
       skin = (async () => {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`The skin ${url} didn't load: ${response.status}`);
+        const response = await fetch(url).catch(() => undefined);
+        if (!response?.ok) {
+          this.skins.delete(url);
+          return;
+        }
 
         const image = await decodePng(new Uint8Array(await response.arrayBuffer()));
         return context(image).getImageData(0, 0, image.width, image.height);
