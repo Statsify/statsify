@@ -81,10 +81,9 @@ export class GuildService {
         .map((member) => member.uuid)
     );
 
-    for (const member of guild.members) {
+    const fetchMembers = guild.members.map(async (member) => {
       const cacheMember = memberMap[member.uuid];
 
-      // eslint-disable-next-line no-await-in-loop -- Missing players must be fetched from Hypixel one at a time.
       await this.getMemberName(member, cacheMember, memberNames.get(member.uuid));
 
       // These members will need their player document updated with the correct guild id
@@ -113,7 +112,11 @@ export class GuildService {
       }
 
       guild.questParticipation = guild.questParticipation + member.questParticipation;
-    }
+
+      return member;
+    });
+
+    guild.members = await Promise.all(fetchMembers);
 
     await this.playerModel
       .updateMany({ uuid: { $in: requireGuildId } }, { guildId: guild.id })
