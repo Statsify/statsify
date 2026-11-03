@@ -26,7 +26,6 @@
     "badge-set": "Ladda upp ett nytt profilemblem",
     "badge-view": "Visa ditt nuvarande profilemblem",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
-    "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Visa någons Minecraft och Optifine mantlar",
@@ -140,7 +139,6 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
-    "links": "Statsify sociala medier",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
@@ -216,7 +214,6 @@
     "theme": "Change your theme for every profile",
     "theme-boxes": "Ändra utseendet på profilrutorna",
     "theme-font": "Ändra typsnittet för profilerna",
-    "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "Ändra din profils footer icon",
     "theme-footer-message": "Ändra din profils footer meddelande.",
     "theme-footer-reset": "Återställ din profils footer",
@@ -224,7 +221,6 @@
     "theme-view": "Visa ditt nuvarande profiltema",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
-    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Koppla från dina Discord och Minecraft konton",
@@ -238,7 +234,6 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Återställ din historiska statistik",
     "reset-session": "Återställ din sessions statistik"
   },
   "config": {
@@ -391,14 +386,6 @@
       "title": "Ogiltig Session",
       "description": "**{{displayName}}** har inga aktiva sessioner. De kan skapa en session genom att köra `/session` när de är verifierade."
     },
-    "invalidResetTime": {
-      "description": "`{{time}}` matchar inte formatet `h:mm a`. Ange en tid i formatet som liknar `12:00 PM` eller `1:00 AM`.",
-      "title": "Ogiltig återställningstid"
-    },
-    "invalidResetTimezone": {
-      "description": "`{{timezone}}` är inte en giltig tidszon. Ange en tidszon som liknar `EST` eller `PST`.",
-      "title": "Ogiltig återställningstid för tidszon"
-    },
     "invalidSearch": {
       "description": "Vi kunde inte räkna ut exakt vad du letade efter!\nAnge ett användarnamn, uuid, eller omnämnande av discord.",
       "title": "Ogiltig sökning"
@@ -461,10 +448,6 @@
       "description": "**{{displayName}}** har inga rankningar!",
       "title": "Inga rankningar"
     },
-    "noRecentGames": {
-      "description": "**{{displayName}}**s senaste spel kunde inte hittas!",
-      "title": "Senaste spelen hittades inte"
-    },
     "noStatus": {
       "description": "**{{displayName}}**s Hypixel status kunde inte hittas!",
       "title": "Status kunde inte hittas"
@@ -505,17 +488,6 @@
     }
   },
   "historical": {
-    "aboutResetting": "Klicka på återställningsknappen nedan för att återställa din historiska statistik varje dag **just nu**.\n\n**VARNING**: Detta kommer att ta bort alla din historiska statistik och **kan inte ångras**. \nOm du vill kunna återställa vid en viss tidpunkt kolla in $t(socials.premium).",
-    "aboutResettingPremium": "Klicka på återställningsknappen nedan för att återställa din historiska statistik. \n\n**VARNING:** Detta kommer att ta bort all din historiska statistik och **kan inte ångras**.",
-    "modal": {
-      "resetTime": "Välj en återställningstid",
-      "timezone": "Välj en tidszon",
-      "title": "Historisk återställningstid"
-    },
-    "new": "**{{displayName}}**s historiska statistik har kontrollerats för första gången på Statsify. Deras statistik kommer nu att uppdateras denna gång varje dag.",
-    "reset": "$t(emojis:clock) **Återställs** <t:{{time}}:R>",
-    "resetButton": "Klicka för att återställa",
-    "setResetTime": "Ställ in din återställningstid till <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**s sessions statistik har blivit checkad för första gången på Statsify.",
     "setSessionReset": "Lyckades med återställningen av din sessions statistik.",
     "deleteSession": "Successfully deleted your session stats.",
@@ -595,6 +567,7 @@
     "deaths": "Dödsfall",
     "detectiveWins": "Detektiv Vinster",
     "diamonds": "Diamanter",
+    "doorsOpened": "Doors Opened",
     "doublesWins": "Dubbel vinster",
     "eggsFound": "Ägg hittade",
     "emeralds": "Smaragder",
@@ -829,12 +802,7 @@
     "resetSession": "$t(emojis:reset) Du kan **återställa** din sessions statistik med `/reset session`.",
     "sessions": "$t(emojis:reset) Håll reda på din statistikprogression med Sessioner och `/session`."
   },
-  "unknown": "Okänd",
   "verification": {
-    "alreadyVerified": {
-      "description": "Du är redan länkad till ett Minecraft-konto. Kör `/unverify` för att avlänka ditt Minecraft-konto.",
-      "title": "Redan verifierad"
-    },
     "invalidCode": {
       "title": "Ogiltig verifieringskod",
       "description": "Kontrollera din verifikationskod eller försök igen genom att följa dessa steg: ",
