@@ -60,10 +60,10 @@ export const DuelsProfile = <T extends ProfileTime>({
     sidebar.push([t("stats.kit"), prettify(stats.kit), "§e"]);
 
   if (mode.api === "parkour") {
-    sidebar.push(
-      [t("stats.bestTime"), formatRecordTime(duels.parkour.bestTime), "§d"],
-      [t("stats.checkpoints"), t(duels.parkour.checkpoints), "§5"]
-    );
+    if (time === "LIVE")
+      sidebar.push([t("stats.bestTime"), formatRecordTime(duels.parkour.bestTime), "§d"]);
+
+    sidebar.push([t("stats.checkpoints"), t(duels.parkour.checkpoints), "§5"]);
   }
 
   const isTitles = time === "LIVE" && mode.api === "overall" && mode.submode.api === "titles";
