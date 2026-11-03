@@ -19,6 +19,16 @@
       {
         "matchDepTypes": ["engines"],
         "enabled": false
+      },
+      {
+        "matchPackageNames": ["mongoose", "@typegoose/typegoose", "@m8a/nestjs-typegoose"],
+        "matchUpdateTypes": ["major"],
+        "groupName": "mongoose"
+      },
+      {
+        "matchPackageNames": ["@nestjs/**", "@fastify/static", "@fastify/view"],
+        "matchUpdateTypes": ["major"],
+        "groupName": "nest"
       }
     ]
   }

@@ -15,6 +15,6 @@
     "@statsify/schemas": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "axios": "1.11.0",
-    "skia-canvas": "3.0.8"
+    "skia-canvas": "4.0.0"
   }
 }

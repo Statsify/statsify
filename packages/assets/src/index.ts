@@ -11,15 +11,20 @@ import { User, UserLogo } from "@statsify/schemas";
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
-const PATH = "../../assets";
-const PRIVATE_PATH = join(PATH, "private");
+type AssetSource = "public" | "private";
 
-const hasPrivateAssets = existsSync(join(PRIVATE_PATH, "package.json"));
+const ASSETS_PATH = "../../assets";
+const PRIVATE_ASSETS_PATH = join(ASSETS_PATH, "private");
 
-const checkAsset = (file: string) =>
-  hasPrivateAssets && existsSync(join(PRIVATE_PATH, file)) ? "private" : "public";
+export const HAS_PRIVATE_ASSETS = existsSync(join(PRIVATE_ASSETS_PATH, "LICENSE"));
 
-export const getAssetPath = (path: string) => join(PATH, checkAsset(path), path);
+const inferAssetSource = (file: string): AssetSource =>
+  HAS_PRIVATE_ASSETS && existsSync(join(PRIVATE_ASSETS_PATH, file)) ? "private" : "public";
+
+export const getAssetPath = (path: string, source?: AssetSource) => {
+  source ??= inferAssetSource(path);
+  return join(ASSETS_PATH, source, path);
+}
 
 const getImage = (path: string) => loadImage(getAssetPath(path));
 
@@ -30,7 +35,7 @@ const getImage = (path: string) => loadImage(getAssetPath(path));
  * @returns the full path to the texture
  */
 export const getMinecraftTexturePath = (texturePath: string, pack = "default") => {
-  const effectivePack = !hasPrivateAssets ? "default" : pack;
+  const effectivePack = !HAS_PRIVATE_ASSETS ? "default" : pack;
   return join(getAssetPath(`minecraft-textures/${effectivePack}/assets/minecraft/`), texturePath);
 };
 
@@ -53,7 +58,7 @@ function getBackgroundPaths() {
 }
 
 export function getBackground(pathOrGame: string, mode?: string): Promise<Image> {
-  if (!hasPrivateAssets) return getImage("out/backgrounds/background.png");
+  if (!HAS_PRIVATE_ASSETS) return getImage("out/backgrounds/background.png");
 
   if (typeof mode === "string") {
     const path = `${pathOrGame}_${mode}_`;
