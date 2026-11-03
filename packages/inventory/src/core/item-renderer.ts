@@ -90,37 +90,59 @@ function legacyGlint(tick: number): Glint {
   };
 }
 
-// Minecraft scrolls the glint over each sprite's eighth of the item atlas and adds it as src² + dst
-function drawGlint(ctx: OffscreenCanvasRenderingContext2D, texture: ImageData, { passes, tint }: Glint) {
-  const { width, height } = ctx.canvas;
-  const pixels = ctx.getImageData(0, 0, width, height);
+/** The glint texture tinted and squared, so adding it with "lighter" is Minecraft's src² + dst */
+function squaredGlint(texture: ImageData, tint: Glint["tint"]) {
+  const squared = createImageData(texture.width, texture.height);
 
-  for (const { angle, scrollU, scrollV } of passes) {
-    const cos = Math.cos(angle);
-    const sin = Math.sin(angle);
-
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const out = (y * width + x) * 4;
-        if (pixels.data[out + 3] === 0) continue;
-
-        const u = (x + 0.5) / width / 8;
-        const v = (y + 0.5) / height / 8;
-        const gu = u * cos - v * sin + scrollU;
-        const gv = u * sin + v * cos + scrollV;
-        const gx = Math.floor((gu - Math.floor(gu)) * texture.width);
-        const gy = Math.floor((gv - Math.floor(gv)) * texture.height);
-        const texel = (gy * texture.width + gx) * 4;
-
-        for (let channel = 0; channel < 3; channel++) {
-          const strength = (texture.data[texel + channel] / 255) * tint[channel];
-          pixels.data[out + channel] += strength * strength * 255;
-        }
-      }
+  for (let i = 0; i < texture.data.length; i += 4) {
+    for (let channel = 0; channel < 3; channel++) {
+      const strength = (texture.data[i + channel] / 255) * tint[channel];
+      squared.data[i + channel] = strength * strength * 255;
     }
+
+    squared.data[i + 3] = 255;
   }
 
-  ctx.putImageData(pixels, 0, 0);
+  const canvas = createCanvas(texture.width, texture.height);
+  context(canvas).putImageData(squared, 0, 0);
+  return canvas;
+}
+
+// Minecraft scrolls the glint over each sprite's eighth of the item atlas. Drawn as a pattern and
+// masked by the icon, so the GPU adds it and no pixels are read back each tick
+function drawGlint(ctx: OffscreenCanvasRenderingContext2D, glint: OffscreenCanvas, passes: GlintPass[]) {
+  const { width, height } = ctx.canvas;
+  const layer = createCanvas(width, height);
+  const layerCtx = context(layer);
+  layerCtx.globalCompositeOperation = "lighter";
+
+  for (const { angle, scrollU, scrollV } of passes) {
+    // A pixel centre c samples the texel at A·c + offset: rotated, an eighth of a texture per icon
+    const a11 = (glint.width * Math.cos(angle)) / (8 * width);
+    const a12 = (-glint.width * Math.sin(angle)) / (8 * height);
+    const a21 = (glint.height * Math.sin(angle)) / (8 * width);
+    const a22 = (glint.height * Math.cos(angle)) / (8 * height);
+    const offsetX = scrollU * glint.width;
+    const offsetY = scrollV * glint.height;
+
+    // The pattern's transform goes the other way, from texels to pixels
+    const determinant = a11 * a22 - a12 * a21;
+    const a = a22 / determinant;
+    const b = -a21 / determinant;
+    const c = -a12 / determinant;
+    const d = a11 / determinant;
+
+    const pattern = layerCtx.createPattern(glint, "repeat")!;
+    pattern.setTransform({ a, b, c, d, e: -(a * offsetX + c * offsetY), f: -(b * offsetX + d * offsetY) });
+    layerCtx.fillStyle = pattern;
+    layerCtx.fillRect(0, 0, width, height);
+  }
+
+  layerCtx.globalCompositeOperation = "destination-in";
+  layerCtx.drawImage(ctx.canvas, 0, 0);
+
+  ctx.globalCompositeOperation = "lighter";
+  ctx.drawImage(layer, 0, 0);
 }
 
 function crossFade(from: OffscreenCanvas, to: OffscreenCanvas, blend: number) {
@@ -160,6 +182,7 @@ export class ItemRenderer {
   private skins = new Map<string, Promise<ImageData | undefined>>();
   /** Whether the top pack's glint is 1.8's, which 1.8 coloured and moved in its own way */
   private legacyGlint: boolean;
+  private glint?: Promise<OffscreenCanvas>;
 
   public constructor(
     private stack: PackStack,
@@ -183,11 +206,9 @@ export class ItemRenderer {
     const canvas = createCanvas(icon.width, icon.height);
     const ctx = context(canvas);
     ctx.drawImage(icon, 0, 0);
-    drawGlint(
-      ctx,
-      await this.textures.get(this.legacyGlint ? LEGACY_GLINT : GLINT),
-      this.legacyGlint ? legacyGlint(tick) : modernGlint(tick),
-    );
+    const { passes, tint } = this.legacyGlint ? legacyGlint(tick) : modernGlint(tick);
+    this.glint ??= this.textures.get(this.legacyGlint ? LEGACY_GLINT : GLINT).then((texture) => squaredGlint(texture, tint));
+    drawGlint(ctx, await this.glint, passes);
 
     return canvas;
   }
