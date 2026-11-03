@@ -60,9 +60,11 @@ const DYES: Record<string, string> = {
 
 const RECORDS = ["11", "13", "blocks", "cat", "chirp", "far", "mall", "mellohi", "stal", "strad", "wait", "ward"];
 
-// 1.8.9 textures whose models were renamed too, so no same-named model pairs them with 26.3's.
-// null keeps 26.3's own, where 26.3 draws the texture another way (frames, or in code)
-const LEGACY_TEXTURES: Record<string, string | null> = {
+/** A texture's 26.3 name, null where 26.3 draws it another way, or one frame of a 1.8 strip */
+type LegacyTexture = string | null | { texture: string; frame: number };
+
+// 1.8.9 textures whose models were renamed too, so no same-named model pairs them with 26.3's
+const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
   ...Object.fromEntries(
     Object.entries(DYES).flatMap(([color, dye]) => [
       [`blocks/hardened_clay_stained_${color}`, `block/${color === "silver" ? "light_gray" : color}_terracotta`],
@@ -132,11 +134,11 @@ const LEGACY_TEXTURES: Record<string, string | null> = {
   "items/potion_bottle_splash": "item/splash_potion",
   "items/reeds": "item/sugar_cane",
   "items/sign": "item/oak_sign",
-  // 1.8 colours its grey glint purple in code, and 26.3's glint comes coloured
-  "misc/enchanted_item_glint": null,
+  // 1.8 animated these strips in code; a slot shows 26.3's first entry, at its frame
+  "items/clock": { texture: "item/clock_00", frame: 0 },
+  "items/compass": { texture: "item/compass_16", frame: 16 },
+  // 26.3 draws beds in code, and gives each spawn egg its own texture where 1.8 tinted one
   "items/bed": null,
-  "items/clock": null,
-  "items/compass": null,
   "items/spawn_egg": null,
   "items/spawn_egg_overlay": null,
 };
@@ -172,6 +174,7 @@ const names = { items: new Set<string>(), effects: new Set<string>() };
 interface ModelFile {
   parent?: string;
   textures?: Record<string, string | { sprite: string }>;
+  elements?: { faces: Record<string, { texture: string }> }[];
 }
 
 const MODEL = /^assets\/minecraft\/models\/((?:item|block)\/.+)\.json$/;
@@ -268,7 +271,8 @@ const output = {
   items: {} as Record<string, string>,
   durability: {} as Record<string, number>,
   effects: {} as Record<string, string>,
-  legacyTextures: {} as Record<string, string | null>,
+  legacyTextures: {} as Record<string, LegacyTexture>,
+  legacyModels: {} as Record<string, string>,
 };
 
 const SPAWN_EGG = 383;
@@ -372,12 +376,71 @@ for (const texture of [...legacyAssets.textures].toSorted()) {
 
   if (target === undefined) {
     if (drawn.has(texture)) missing.push(`texture ${texture}`);
-  } else if (target !== null && !modernAssets.textures.has(target)) {
-    missing.push(`texture ${texture} as ${target}`);
+  } else if (target !== null && !modernAssets.textures.has(typeof target === "string" ? target : target.texture)) {
+    missing.push(`texture ${texture} as ${JSON.stringify(target)}`);
   } else if (target !== texture) {
     output.legacyTextures[texture] = target;
   }
 }
+
+const renamedTexture = (texture: string) => {
+  const target = texture in output.legacyTextures ? output.legacyTextures[texture] : texture;
+  return typeof target === "string" ? target : target?.texture;
+};
+
+/** Whether a model's elements use a texture variable it never sets, as a parent template does */
+function isTemplate(models: Map<string, ModelFile>, id: string) {
+  const textures = modelTextures(models, id);
+  let elements: ModelFile["elements"];
+
+  for (let next: string | undefined = id; next && models.has(next) && !elements; ) {
+    const model: ModelFile = models.get(next)!;
+    elements = model.elements;
+    next = model.parent && stripNamespace(model.parent);
+  }
+
+  return (elements ?? []).some((element) =>
+    Object.values(element.faces).some(({ texture }) => texture.startsWith("#") && !(texture.slice(1) in textures)),
+  );
+}
+
+// A 1.8.9 model whose name 26.3 gives another role (1.8's block/anvil is its damage levels'
+// template, 26.3's is the anvil) moves aside, so it doesn't replace 26.3's, and its children follow it
+const moved = new Set(
+  [...legacyAssets.models.keys()].filter(
+    (id) => modernAssets.models.has(id) && isTemplate(legacyAssets.models, id) !== isTemplate(modernAssets.models, id),
+  ),
+);
+
+for (const id of moved) output.legacyModels[id] = `legacy/${id}`;
+
+// A 1.8.9 model 26.3 renamed takes the name of its first renamed texture that names a 26.3 model
+// in the same folder (item/reeds draws item/sugar_cane), unless two models would end up with one name
+const modelNames = Map.groupBy(
+  [...legacyAssets.models.keys()]
+    .filter((id) => !modernAssets.models.has(id))
+    .flatMap((id) => {
+      const name = Object.values(modelTextures(legacyAssets.models, id))
+        .map(renamedTexture)
+        .find(
+          (texture) =>
+            texture?.startsWith(id.slice(0, id.indexOf("/") + 1)) &&
+            modernAssets.models.has(texture) &&
+            (!legacyAssets.models.has(texture) || moved.has(texture)),
+        );
+
+      return name ? [{ id, name }] : [];
+    }),
+  ({ name }) => name,
+);
+
+for (const [name, models] of modelNames) {
+  if (models.length === 1) output.legacyModels[models[0].id] = name;
+}
+
+// Flat items whose frame 1.8 picked in code, which the pinned strip frames above stand in for
+output.legacyModels["builtin/clock"] = "builtin/generated";
+output.legacyModels["builtin/compass"] = "builtin/generated";
 
 if (missing.length > 0) {
   throw new Error(`Not in ${path}, add them to RENAMES or LEGACY_TEXTURES:\n${missing.join("\n")}`);
@@ -389,5 +452,5 @@ await writeFile(
 );
 
 console.log(
-  `${Object.keys(output.items).length} items, ${Object.keys(output.durability).length} with durability, ${Object.keys(output.effects).length} effects, ${Object.keys(output.legacyTextures).length} 1.8.9 textures renamed`,
+  `${Object.keys(output.items).length} items, ${Object.keys(output.durability).length} with durability, ${Object.keys(output.effects).length} effects, ${Object.keys(output.legacyTextures).length} 1.8.9 textures and ${Object.keys(output.legacyModels).length} models renamed`,
 );
