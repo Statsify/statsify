@@ -26,7 +26,6 @@
     "badge-set": "Upload een nieuwe profiel badge",
     "badge-view": "Bekijk je huidige profiel badge",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
-    "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Bekijk iemands Minecraft en Optifine capes",
@@ -140,7 +139,6 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
-    "links": "Statsify Sociale Media",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
@@ -216,7 +214,6 @@
     "theme": "Change your theme for every profile",
     "theme-boxes": "Het uiterlijk van de profielvakken wijzigen",
     "theme-font": "Het lettertype van de profielen wijzigen",
-    "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "Verander het voettekst icoon van je profiel",
     "theme-footer-message": "Verander de voettekst van je profiel. Gebruik https://rgb.birdflop.com om kleurovergangen te maken.",
     "theme-footer-reset": "Reset de voettekst van je profiel",
@@ -224,7 +221,6 @@
     "theme-view": "Bekijk je huidige profielthema",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
-    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Ontkoppel je Discord en Minecraft accounts",
@@ -238,7 +234,6 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
     "reset-session": "Reset your session stats"
   },
   "config": {
@@ -391,14 +386,6 @@
       "title": "Invalid Session",
       "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
     },
-    "invalidResetTime": {
-      "description": "`{{time}}` komt niet overeen met het formaat `u:mm a`. Voor een tijd formaat in dat lijkt op `12:00 PM` or `1:00 AM`.",
-      "title": "Ongeldige Resettijd"
-    },
-    "invalidResetTimezone": {
-      "description": "`{{timezone}}` is geen geldige tijdzone. Voer een tijdzone in die lijkt op `GMT` or `PST`.",
-      "title": "Ongeldige Reset Tijdzone"
-    },
     "invalidSearch": {
       "description": "We konden niet precies vinden waar je naar zocht! Voer een gebruikersnaam, uuid of discord vermelding in.",
       "title": "Ongeldige Zoekopdracht"
@@ -461,10 +448,6 @@
       "description": "**{{displayName}}** heeft geen rangposities!",
       "title": "Geen Rangposities"
     },
-    "noRecentGames": {
-      "description": "**{{displayName}}**'s recente spellen konden niet gevonden worden!",
-      "title": "Recente Spellen Niet Gevonden"
-    },
     "noStatus": {
       "description": "**{{displayName}}**'s Hypixel status kon niet gevonden worden!",
       "title": "Status Niet Gevonden"
@@ -505,17 +488,6 @@
     }
   },
   "historical": {
-    "aboutResetting": "Klik op de reset knop hieronder om je historische statistieken elke dag te resetten **op dit moment**.\n\n**WAARSCHUWING**: Dit zal al je historische statistieken verwijderen en **kan niet ongedaan gemaakt worden**. \nAls je dit op een bepaald moment wilt instellen bekijk dan $t(socials.premium).",
-    "aboutResettingPremium": "Klik op de reset knop hieronder om je historische statistieken te resetten. \n\n**WAARSCHUWING:** Dit zal al je historische statistieken verwijderen en **kan niet ongedaan worden gemaakt**.",
-    "modal": {
-      "resetTime": "Kies een Reset Tijd",
-      "timezone": "Kies een Tijdzone",
-      "title": "Historische Reset Tijd"
-    },
-    "new": "**{{displayName}}**'s historische statistieken zijn voor de eerste keer opgevraagd aan Statsify. Hun statistieken worden vanaf nu op dit moment elke dag bijgewerkt.",
-    "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
-    "resetButton": "Klik om te Resetten",
-    "setResetTime": "Je reset tijd is gezet op <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
     "setSessionReset": "Successfully reset your session stats.",
     "deleteSession": "Successfully deleted your session stats.",
@@ -830,12 +802,7 @@
     "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
     "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
-  "unknown": "Onbekend",
   "verification": {
-    "alreadyVerified": {
-      "description": "Je bent al gekoppeld aan een Minecraft account. Voer `/unverify` uit om je Minecraft account te ontkoppelen.",
-      "title": "Al geverifieerd"
-    },
     "invalidCode": {
       "title": "Ongeldige verificatiecode",
       "description": "Check your verification code or try again by following these steps: ",
