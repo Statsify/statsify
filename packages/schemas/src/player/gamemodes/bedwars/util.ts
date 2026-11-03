@@ -34,7 +34,7 @@ export const getLevel = (exp = 0): number => {
     remainingExp -= expForNextLevel;
   }
 
-  return level + remainingExp / getExpReq(level + 1);
+  return level + remainingExp / getExpReq(level);
 };
 
 type Brackets = [left: string, right: string];
@@ -58,12 +58,12 @@ function createUniformScheme(
   digitColor = bracketColor,
   starColor = digitColor,
 ): Scheme {
-  return ({ level, bold, underline, strikethrough, star }) => {
+  return ({ level, bold, underline, strikethrough, star, brackets }) => {
     const boldFormat = bold ? "§l" : "";
     const underlineFormat = underline ? "§n" : "";
     const strikethroughFormat = strikethrough ? "§m" : "";
 
-    return `${bracketColor}${underlineFormat}${strikethroughFormat}[§r${boldFormat}${digitColor}${underlineFormat}${level}${starColor}${underlineFormat}${star}§r${bracketColor}${underlineFormat}${strikethroughFormat}]§r`;
+    return `${bracketColor}${underlineFormat}${strikethroughFormat}${brackets[0]}§r${boldFormat}${digitColor}${underlineFormat}${level}${starColor}${underlineFormat}${star}§r${bracketColor}${underlineFormat}${strikethroughFormat}${brackets[1]}§r`;
   };
 }
 
@@ -115,13 +115,13 @@ function createSuffixScheme(remainingColor: string, suffix: string[]): Scheme {
   return (options) =>
     createLevelParts(options)
       .map((part, index, parts) => {
-        const relativeIndex = parts.length - index;
+        const suffixIndex = index - (parts.length - suffix.length);
 
-        if (relativeIndex >= suffix.length) {
+        if (suffixIndex < 0) {
           return `${remainingColor}${part}`;
         }
 
-        return `${suffix[relativeIndex]}${part}`;
+        return `${suffix[suffixIndex]}${part}`;
       })
       .join("");
 }

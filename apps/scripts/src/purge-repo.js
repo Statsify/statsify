@@ -8,10 +8,10 @@
 
 import inquirer from "inquirer";
 import { ROOT, fetchWorkspaces, inquirerConfirmation, inquirerLogger } from "./utils.js";
-import { exec as _exec } from "node:child_process";
 import { join, resolve } from "node:path";
-import { promisify } from "node:util";
+import { once } from "node:events";
 import { rm } from "node:fs/promises";
+import { spawn } from "node:child_process";
 
 const dirname = import.meta.dirname;
 
@@ -19,12 +19,16 @@ const dirname = import.meta.dirname;
  *
  * @param {string} script
  */
-const exec = (script) =>
-  promisify(_exec)(script, {
+const exec = async (script) => {
+  const child = spawn(script, {
     shell: true,
     stdio: "inherit",
     cwd: resolve(dirname, "../../../"),
   });
+
+  const [code] = await once(child, "exit");
+  if (code !== 0) throw new Error(`${script} exited with code ${code}`);
+};
 
 const workspaces = [
   ...(await fetchWorkspaces("apps")),
@@ -50,7 +54,7 @@ const nodeModules = async () => {
 
   if (!(await inquirerConfirmation("Recreate node_modules"))) return;
 
-  await exec("pnpm");
+  await exec("pnpm install");
 
   inquirerLogger("Recreater", "node_modules installed");
 };
@@ -70,9 +74,9 @@ const coverage = () => deleteFromWorkspaces("coverage");
 const swc = () => deleteFromWorkspaces(".swc");
 
 const all = async () => {
+  await Promise.all([turboRepo(), coverage(), swc()]);
   await nodeModules();
   await dist();
-  await Promise.all([turboRepo(), coverage(), swc()]);
 };
 
 const purge = async () => {
