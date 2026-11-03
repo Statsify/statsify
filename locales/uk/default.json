@@ -26,7 +26,6 @@
     "badge-set": "Завантажити новий значок профілю",
     "badge-view": "Переглянути поточний значок профілю",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
-    "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Переглянути чиїсь Minecraft та Optifine плащі",
@@ -140,7 +139,6 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
-    "links": "Соціальні мережі Statsify",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
@@ -216,7 +214,6 @@
     "theme": "Change your theme for every profile",
     "theme-boxes": "Змінити зовнішній вигляд поля профілю",
     "theme-font": "Змінити шрифт профілю",
-    "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "Змінити значок нижнього колонтитулу вашого профілю",
     "theme-footer-message": "Змініть нижній колонтитул свого профілю. https://rgb.birdflop.com, щоб створити градієнт.",
     "theme-footer-reset": "Скинути нижній колонтитул вашого профілю",
@@ -224,7 +221,6 @@
     "theme-view": "Переглянути поточну тему профілю",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
-    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Відв'язати свої облікові записи Discord та Minecraft",
@@ -238,7 +234,6 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Скинути вашу історичну статистику",
     "reset-session": "Скинути статистику сеансу"
   },
   "config": {
@@ -391,14 +386,6 @@
       "title": "Недійсна сесія",
       "description": "**{{displayName}}** немає активних сесій. Вони можуть створити сесію, запустивши команду /session, будучи перевіреними."
     },
-    "invalidResetTime": {
-      "description": "{{time}} Не відповідає формату 'h:mm a'. Введіть час у форматі, подібному до '12:00 PM' або '1:00 AM'.",
-      "title": "Неприпустимий час скидання"
-    },
-    "invalidResetTimezone": {
-      "description": "{{timezone}}` не є дійсним часовим поясом. Введіть часовий пояс, аналогічний `EST` або `PST`.",
-      "title": "Недійсний часовий пояс скидання"
-    },
     "invalidSearch": {
       "description": "Ми не змогли з'ясувати, що саме ви шукали!\nВведіть ім'я користувача, uuid або discord.",
       "title": "Невірний пошук"
@@ -461,10 +448,6 @@
       "description": "**{{displayName}}** не має рейтингу!",
       "title": "Немає рейтингів"
     },
-    "noRecentGames": {
-      "description": "Останні гри **{{displayName}}** не знайдені!",
-      "title": "Останні ігри не знайдені"
-    },
     "noStatus": {
       "description": "Останній Hypixel статус гравця **{{displayName}}** не знайдено!",
       "title": "Статус не знайдено"
@@ -505,17 +488,6 @@
     }
   },
   "historical": {
-    "aboutResetting": "Натисніть на кнопку «скинути», щоб скинути статистику за кожен день **в даний момент**.\n\n**УВАГА**: Це видаляє всю статистику і **не може бути скасовано**.\nЯкщо ви хочете, щоб ви могли скинути у певний час, перевірте $t(socials.premium).",
-    "aboutResettingPremium": "Натисніть кнопку скидання, щоб скинути історичну статистику.\n\n**ПОПЕРЕДЖЕННЯ:** Це видаляє всю статистику і **не може бути скасовано**.",
-    "modal": {
-      "resetTime": "Виберіть час скидання",
-      "timezone": "Виберіть часовий пояс",
-      "title": "Час історичного скидання"
-    },
-    "new": "**{{displayName}}** історичну статистику було вперше перевірено на Statsify. Тепер їхня статистика оновлюватиметься щодня в цей час.",
-    "reset": "$t(emojis:clock) **Скидання** <t:{{time}}:R>",
-    "resetButton": "Натисніть, щоб скинути",
-    "setResetTime": "Установіть час скидання на <t:{{time}}:t>.",
     "newSession": "**{{displayName}}** Статистика сесії була вперше перевірена за допомогою Statsify.",
     "setSessionReset": "Успішно скинуто статистику сеансу.",
     "deleteSession": "Successfully deleted your session stats.",
@@ -830,12 +802,7 @@
     "resetSession": "$t(emojis:reset) Ви можете **скинути** вашу сесію за допомогою команди `/reset session`.",
     "sessions": "$t(emojis:reset) Відстежуйте свою статистику за допомогою сесій та `/session`."
   },
-  "unknown": "Невідомо",
   "verification": {
-    "alreadyVerified": {
-      "description": "Ви вже прив'язали свій обліковий запис Minecraft. Запустіть `/unverify`, щоб відв'язати ваш обліковий запис Minecraft.",
-      "title": "Вже перевірено"
-    },
     "invalidCode": {
       "title": "Невірний код прив'язки",
       "description": "Перевірте ваш код підтвердження або спробуйте ще раз, дотримуючись цих кроків: ",
