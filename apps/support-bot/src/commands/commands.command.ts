@@ -12,7 +12,7 @@ import {
   CommandContext,
   EmbedBuilder,
   ErrorMessage,
-  PaginateService,
+  scrollingPagination,
   TextArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
@@ -28,10 +28,7 @@ const COMMANDS_PER_PAGE = 25;
   userCommand: false,
 })
 export class CommandsCommand {
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
     const commands = await this.apiService.getCommandUsage();
@@ -44,7 +41,7 @@ export class CommandsCommand {
     const commandList = Object.entries(commands).sort((a, b) => b[1] - a[1]);
     const groups = arrayGroup(commandList, COMMANDS_PER_PAGE);
 
-    return this.paginateService.scrollingPagination(
+    return scrollingPagination(
       context,
       groups.map(
         (group, index) => () =>

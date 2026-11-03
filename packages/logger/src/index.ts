@@ -23,6 +23,15 @@ export const STATUS_COLORS = {
   fatal: 0x81181A,
 } as const;
 
+const ColorByLogLevel: Record<LogLevel, number> = {
+  debug: STATUS_COLORS.debug,
+  warn: STATUS_COLORS.warn,
+  error: STATUS_COLORS.error,
+  verbose: STATUS_COLORS.info,
+  log: STATUS_COLORS.success,
+  fatal: STATUS_COLORS.fatal,
+};
+
 const isProduction = await config("environment") === "prod";
 
 /**
@@ -59,7 +68,7 @@ export class Logger implements LoggerService {
       ...optionalParameters,
     ]);
 
-    this.printMessage(messages, context, "log");
+    Logger.printMessage(messages, context, "log");
   }
 
   public error(message: any, context?: string): void;
@@ -69,20 +78,22 @@ export class Logger implements LoggerService {
       return;
     }
 
+    let normalizedMessage = message;
+
     if (message instanceof Error) {
       const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
       transaction?.setStatus("internal_error");
 
       Sentry.captureException(message);
-      message = message.stack;
+      normalizedMessage = message.stack;
     }
 
     const { messages, context } = this.getContextAndMessages([
-      message,
+      normalizedMessage,
       ...optionalParameters,
     ]);
 
-    this.printMessage(messages, context, "error", "stderr", "📉");
+    Logger.printMessage(messages, context, "error", "stderr", "📉");
   }
 
   public warn(message: any, context?: string): void;
@@ -97,7 +108,7 @@ export class Logger implements LoggerService {
       ...optionalParameters,
     ]);
 
-    this.printMessage(messages, context, "warn");
+    Logger.printMessage(messages, context, "warn");
   }
 
   public debug(message: any, context?: string): void;
@@ -112,7 +123,7 @@ export class Logger implements LoggerService {
       ...optionalParameters,
     ]);
 
-    this.printMessage(messages, context, "debug");
+    Logger.printMessage(messages, context, "debug");
   }
 
   public verbose(message: any, context?: string): void;
@@ -127,7 +138,7 @@ export class Logger implements LoggerService {
       ...optionalParameters,
     ]);
 
-    this.printMessage(messages, context, "verbose");
+    Logger.printMessage(messages, context, "verbose");
   }
 
   public fatal(message: any, context?: string): void;
@@ -137,20 +148,22 @@ export class Logger implements LoggerService {
       return;
     }
 
+    let normalizedMessage = message;
+
     if (message instanceof Error) {
       const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
       transaction?.setStatus("internal_error");
 
       Sentry.captureException(message);
-      message = message.stack;
+      normalizedMessage = message.stack;
     }
 
     const { messages, context } = this.getContextAndMessages([
-      message,
+      normalizedMessage,
       ...optionalParameters,
     ]);
 
-    this.printMessage(messages, context, "fatal", "stderr", "📉");
+    Logger.printMessage(messages, context, "fatal", "stderr", "📉");
   }
 
   public setLogLevels(levels: LogLevel[]) {
@@ -187,29 +200,7 @@ export class Logger implements LoggerService {
     return { messages, context: this.context };
   }
 
-  private getColorByLogLevel(logLevel: LogLevel) {
-    switch (logLevel) {
-      case "debug":
-        return STATUS_COLORS.debug;
-
-      case "warn":
-        return STATUS_COLORS.warn;
-
-      case "error":
-        return STATUS_COLORS.error;
-
-      case "verbose":
-        return STATUS_COLORS.info;
-
-      case "log":
-        return STATUS_COLORS.success;
-
-      case "fatal":
-        return STATUS_COLORS.fatal;
-    }
-  }
-
-  private getTimeStamp() {
+  private static getTimeStamp() {
     if (isProduction) return DateTime.now().toFormat("h:mma");
 
     const now = Date.now();
@@ -225,18 +216,18 @@ export class Logger implements LoggerService {
     return diff;
   }
 
-  private printMessage(
+  private static printMessage(
     messages: unknown[],
     context = "Default",
     logLevel: LogLevel = "log",
     writeStreamType: "stdout" | "stderr" = "stdout",
     icon = "📈"
   ) {
-    const color = this.getColorByLogLevel(logLevel);
+    const color = ColorByLogLevel[logLevel];
 
     for (const message of messages) {
       const output = typeof message === "object" ? JSON.stringify(message) : message;
-      const timeStamp = this.getTimeStamp();
+      const timeStamp = Logger.getTimeStamp();
 
       const computedMessage = `${chalk.bold(`${icon}`)} ${chalk.hex(color.toString(16))(
         context
@@ -246,6 +237,8 @@ export class Logger implements LoggerService {
     }
   }
 }
+
+
 
 if (import.meta.vitest) {
   const { suite, it, expect, vi } = import.meta.vitest;

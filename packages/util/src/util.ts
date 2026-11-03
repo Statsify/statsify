@@ -86,28 +86,30 @@ export const romanNumeral = (num: number): string => {
 };
 
 export const prettify = (s: string): string => {
-  if (/[a-z]/gi.test(s) && s === s.toUpperCase()) {
-    s = s.toLowerCase();
+  let formatted = s;
+  
+  if (/[a-z]/gi.test(formatted) && formatted === formatted.toUpperCase()) {
+    formatted = formatted.toLowerCase();
   }
 
   // Convert camelCase to Snake_Case (if applicable)
   if (!["_", " "].some((l) => s.includes(l))) {
-    s =
-      s.charAt(0).toLowerCase() +
-      s.slice(1).replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+    formatted =
+      formatted.charAt(0).toLowerCase() +
+      formatted.slice(1).replaceAll(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
   }
 
   // Convert snake_case to Title Case
-  return s
+  return formatted
     .replaceAll("_", " ")
-    .replace(
+    .replaceAll(
       /\w\S*/g,
       (t) => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase()
     );
 };
 
 export const removeFormatting = (s: string): string =>
-  s.replace(/§#([A-Fa-f0-9]{6})|§./gm, "");
+  s.replaceAll(/§#([A-Fa-f0-9]{6})|§./gm, "");
 
 export interface FormatTimeOptions {
   /**
@@ -180,6 +182,9 @@ export const relativeTime = (time: number) =>
 
 export const formatRaceTime = (timeMs: number) =>
   `${(timeMs / 1000).toFixed(3)}s`;
+
+export const formatRecordTime = (timeMs: number) =>
+  timeMs ? formatTime(timeMs) : "N/A";
 
 export const abbreviationNumber = (
   num: number,

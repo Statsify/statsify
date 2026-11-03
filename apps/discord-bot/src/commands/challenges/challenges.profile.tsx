@@ -22,7 +22,6 @@ import {
   type GameMode,
   MegaWallsChallenges,
   MetadataEntry,
-  MetadataScanner,
   MurderMysteryChallenges,
   PaintballChallenges,
   QuakeChallenges,
@@ -36,6 +35,7 @@ import {
   WallsChallenges,
   WarlordsChallenges,
   WoolGamesChallenges,
+  scanMetadata,
 } from "@statsify/schemas";
 import { Container, Footer, GameList, Header, SidebarItem, Table } from "#components";
 
@@ -56,7 +56,8 @@ interface NormalTableProps {
 }
 
 const NormalTable = ({ challenges, t, gameIcons }: NormalTableProps) => {
-  const { total: _, ...challengesByGame } = challenges;
+  const { total, ...challengesByGame } = challenges;
+  void total;
 
   const entries: [GameId, any][] = Object.entries(challengesByGame)
     .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
@@ -72,27 +73,27 @@ interface GameTableProps {
 }
 
 const METADATA: Record<Exclude<GameMode<ChallengeModes>["api"], "overall">, MetadataEntry[]> = {
-  ARCADE: MetadataScanner.scan(ArcadeChallenges),
-  ARENA_BRAWL: MetadataScanner.scan(ArenaBrawlChallenges),
-  BEDWARS: MetadataScanner.scan(BedWarsChallenges),
-  BLITZSG: MetadataScanner.scan(BlitzSGChallenges),
-  BUILD_BATTLE: MetadataScanner.scan(BuildBattleChallenges),
-  COPS_AND_CRIMS: MetadataScanner.scan(CopsAndCrimsChallenges),
-  DUELS: MetadataScanner.scan(DuelsChallenges),
-  MEGAWALLS: MetadataScanner.scan(MegaWallsChallenges),
-  MURDER_MYSTERY: MetadataScanner.scan(MurderMysteryChallenges),
-  PAINTBALL: MetadataScanner.scan(PaintballChallenges),
-  QUAKE: MetadataScanner.scan(QuakeChallenges),
-  SKYWARS: MetadataScanner.scan(SkyWarsChallenges),
-  SMASH_HEROES: MetadataScanner.scan(SmashHeroesChallenges),
-  SPEED_UHC: MetadataScanner.scan(SpeedUHCChallenges),
-  TNT_GAMES: MetadataScanner.scan(TNTGamesChallenges),
-  TURBO_KART_RACERS: MetadataScanner.scan(TurboKartRacersChallenges),
-  UHC: MetadataScanner.scan(UHCChallenges),
-  VAMPIREZ: MetadataScanner.scan(VampireZChallenges),
-  WALLS: MetadataScanner.scan(WallsChallenges),
-  WARLORDS: MetadataScanner.scan(WarlordsChallenges),
-  WOOLGAMES: MetadataScanner.scan(WoolGamesChallenges),
+  ARCADE: scanMetadata(ArcadeChallenges),
+  ARENA_BRAWL: scanMetadata(ArenaBrawlChallenges),
+  BEDWARS: scanMetadata(BedWarsChallenges),
+  BLITZSG: scanMetadata(BlitzSGChallenges),
+  BUILD_BATTLE: scanMetadata(BuildBattleChallenges),
+  COPS_AND_CRIMS: scanMetadata(CopsAndCrimsChallenges),
+  DUELS: scanMetadata(DuelsChallenges),
+  MEGAWALLS: scanMetadata(MegaWallsChallenges),
+  MURDER_MYSTERY: scanMetadata(MurderMysteryChallenges),
+  PAINTBALL: scanMetadata(PaintballChallenges),
+  QUAKE: scanMetadata(QuakeChallenges),
+  SKYWARS: scanMetadata(SkyWarsChallenges),
+  SMASH_HEROES: scanMetadata(SmashHeroesChallenges),
+  SPEED_UHC: scanMetadata(SpeedUHCChallenges),
+  TNT_GAMES: scanMetadata(TNTGamesChallenges),
+  TURBO_KART_RACERS: scanMetadata(TurboKartRacersChallenges),
+  UHC: scanMetadata(UHCChallenges),
+  VAMPIREZ: scanMetadata(VampireZChallenges),
+  WALLS: scanMetadata(WallsChallenges),
+  WARLORDS: scanMetadata(WarlordsChallenges),
+  WOOLGAMES: scanMetadata(WoolGamesChallenges),
 };
 
 const GameTable = ({ gameChallenges, mode, t }: GameTableProps) => {
@@ -106,7 +107,7 @@ const GameTable = ({ gameChallenges, mode, t }: GameTableProps) => {
       .filter(([k]) => k !== "total")
       .sort((a, b) => b[1] - a[1])
       .map(([challenge, completions]) => {
-        const [_, field] = metadata.find(([k]) => k === challenge)!;
+        const [, field] = metadata.find(([k]) => k === challenge)!;
 
         const realName = field.leaderboard?.name ?? prettify(challenge);
         return [realName, t(completions)];

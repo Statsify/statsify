@@ -12,10 +12,9 @@ import type { RestClient } from "tiny-discord";
 export const parseDiscordResponse = <T>(response: RestClient.RequestResult): T => {
   if (response.headers["content-type"] !== "application/json") return noop();
 
-  // @ts-ignore tiny-discord doesn't have a proper types yet
+  // @ts-expect-error tiny-discord doesn't have a proper types yet
   if (response.status >= 200 && response.status < 300) return response.body.json as T;
 
-  // @ts-ignore tiny-discord doesn't have a proper types yet
   const body = response.body.json as Record<string, any>;
 
   let message = body.message;
@@ -30,7 +29,7 @@ export const parseDiscordResponse = <T>(response: RestClient.RequestResult): T =
 
 export const parseDiscordError = (error: any = {}, errorKey = ""): string => {
   if (typeof error.message === "string")
-    return `${errorKey.length ? `${errorKey} - ${error.code}` : `${error.code}`}: ${
+    return `${errorKey.length > 0 ? `${errorKey} - ${error.code}` : `${error.code}`}: ${
       error.message
     }`.trim();
 
@@ -47,8 +46,13 @@ export const parseDiscordError = (error: any = {}, errorKey = ""): string => {
     }
 
     if (typeof value === "string") message += value;
-    else if ("_errors" in value)
-      for (const error of value._errors) message += parseDiscordError(error, nextKey);
+    else if ("_errors" in value) {
+      // Discord's api uses dangling underscores when reporting errors
+      // oxlint-disable-next-line no-underscore-dangle
+      for (const error of value._errors) { 
+        message += parseDiscordError(error, nextKey);
+      }
+    }
     else message += parseDiscordError(value, nextKey);
   }
 

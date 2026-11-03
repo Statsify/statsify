@@ -41,7 +41,7 @@ export class PlayerArgument extends AbstractArgument {
 
     let results = players.map((p) => ({ name: p, value: p }));
 
-    if (query && (!players.length || !players.some((p) => p.toLowerCase() === query))) {
+    if (query && (players.length === 0 || !players.some((p) => p.toLowerCase() === query))) {
       results = results.slice(0, 24);
       results.push(searched);
     }

@@ -7,7 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
+import axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
   CacheLevel,
   GuildQuery,
@@ -55,7 +55,7 @@ export class ApiService {
   private axios: AxiosInstance;
 
   public constructor(private apiRoute: string, private apiKey: string) {
-    this.axios = Axios.create({
+    this.axios = axios.create({
       baseURL: this.apiRoute,
       headers: {
         "x-api-key": this.apiKey,

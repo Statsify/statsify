@@ -8,7 +8,7 @@
 
 import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
 import { CopsAndCrimsModes, FormattedGame, type GameMode } from "@statsify/schemas";
-import { formatTime } from "@statsify/util";
+import { formatRecordTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface CopsAndCrimsProfileProps extends BaseProfileProps {
@@ -34,6 +34,7 @@ export const CopsAndCrimsProfile = ({
     [t("stats.knifeKills"), t(copsandcrims.overall.knifeKills), "§7"],
     [t("stats.headshotKills"), t(copsandcrims.overall.headshotKills), "§4"],
     [t("stats.grenadeKills"), t(copsandcrims.overall.grenadeKills), "§2"],
+    [t("stats.shotsFired"), t(copsandcrims.overall.shotsFired), "§6"],
   ];
 
   let table: JSX.Element;
@@ -105,7 +106,7 @@ export const CopsAndCrimsProfile = ({
             <Historical.exclude time={time}>
               <Table.td
                 title={t("stats.bestTime")}
-                value={formatTime(stats.fastestWin)}
+                value={formatRecordTime(stats.fastestWin)}
                 color="§b"
               />
             </Historical.exclude>

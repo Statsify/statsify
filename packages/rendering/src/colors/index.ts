@@ -44,7 +44,7 @@ export const parseColor = (color: string): RGBA => {
       .split(")")[0]
       .split(",")
       .map((o) => +o) as RGBA;
-  } else {
-    return [0, 0, 0, 0];
   }
+
+  return [0, 0, 0, 0];
 };

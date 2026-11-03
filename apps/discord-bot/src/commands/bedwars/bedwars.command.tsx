@@ -14,6 +14,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { BedWarsProfile } from "./bedwars.profile.js";
 import { Command } from "@statsify/discord";
+import { BedWarsChallengesProfile } from "./bedwars-challenges.profile.js";
 
 @Command({ description: (t) => t("commands.bedwars") })
 export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
@@ -23,8 +24,12 @@ export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<BedWarsModes, never>
+    { mode }: ProfileData<BedWarsModes, never>,
   ): JSX.Element {
+    if (mode.api === "challenges") {
+      return <BedWarsChallengesProfile {...base} />;
+    }
+
     return <BedWarsProfile {...base} mode={mode} />;
   }
 }

@@ -33,7 +33,7 @@ export function BedWarsPreview({ className }: { className?: string }) {
           label="Level"
           metric="EXP"
           progression={bedwars.progression}
-          currentLevel={bedwars.levelFormatted}
+          currentLevel={bedwars.naturalLevelFormatted}
           nextLevel={bedwars.nextLevelFormatted}
         />
         <Box className="row-start-4 xl:row-start-3 xl:col-start-2">

@@ -18,7 +18,7 @@ export class GTBHelperCommand {
     const hint = context.option<string>("hint");
     const words = findSolutions(hint);
 
-    if (!words.length) {
+    if (words.length === 0) {
       throw new ErrorMessage(
         (t) => t("errors.noGTBSolutions.title"),
         (t) => t("errors.noGTBSolutions.description")
@@ -31,9 +31,9 @@ export class GTBHelperCommand {
 
     const groups = arrayGroup(words, Math.ceil(words.length / 3));
 
-    groups.forEach((solutions) =>
-      embed.field("\u200b", solutions.map((s) => `\`•\` ${s}`).join("\n"), true)
-    );
+    for (const solutions of groups) {
+      embed.field("\u200b", solutions.map((s) => `\`•\` ${s}`).join("\n"), true);
+    }
 
     return { embeds: [embed] };
   }

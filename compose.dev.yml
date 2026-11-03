@@ -1,0 +1,19 @@
+services:
+  redis:
+    image: redis:8
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - "./data/redis:/data"
+    command: redis-server --requirepass statsify
+  mongodb:
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: statsify
+      MONGO_INITDB_ROOT_PASSWORD: statsify
+    volumes:
+      - "./data/mongodb:/data/db"

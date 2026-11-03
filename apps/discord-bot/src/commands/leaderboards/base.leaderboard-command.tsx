@@ -130,6 +130,19 @@ export class BaseLeaderboardCommand {
         }
       };
 
+    const [message, page] = await this.getLeaderboardMessage(
+      user,
+      cache,
+      type,
+      getLeaderboard,
+      field,
+      { input: currentPage, type: LeaderboardQuery.PAGE },
+      props,
+      getLeaderboardDataIcon
+    );
+
+    if (message.ephemeral) return message;
+
     const listener = CommandListener.getInstance();
 
     listener.addHook(
@@ -194,13 +207,13 @@ export class BaseLeaderboardCommand {
 
     listener.addHook(positionModal.getCustomId(), async (interaction) => {
       const data = interaction.getData();
-      const positionInput = data.components[0].components[0].value;
+      const positionInput = data.components[0].components[0].value.trim();
 
-      const position = Number.parseInt(positionInput, 10);
+      const position = Number(positionInput);
 
       if (user?.locale) interaction.setLocale(user.locale);
 
-      if (Number.isNaN(position) || position < 1) {
+      if (!/^\d+$/.test(positionInput) || position < 1) {
         const error = new ErrorMessage("errors.leaderboardInvalidPosition");
 
         return interaction.sendFollowup({
@@ -216,19 +229,6 @@ export class BaseLeaderboardCommand {
 
     const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
 
-    const [message, page] = await this.getLeaderboardMessage(
-      user,
-      cache,
-      type,
-      getLeaderboard,
-      field,
-      { input: currentPage, type: LeaderboardQuery.PAGE },
-      props,
-      getLeaderboardDataIcon
-    );
-
-    if (message.ephemeral) return message;
-
     setTimeout(() => {
       listener.removeHook(up.getCustomId());
       listener.removeHook(down.getCustomId());
@@ -241,7 +241,7 @@ export class BaseLeaderboardCommand {
       cache.clear();
     }, 300_000);
 
-    currentPage = page || currentPage;
+    currentPage = page ?? currentPage;
 
     return { ...message, components: [row] };
   }
@@ -271,7 +271,7 @@ export class BaseLeaderboardCommand {
       getLeaderboardDataIcon
     );
 
-    if (params.type === LeaderboardQuery.PAGE && page) cache.set(page, message);
+    if (params.type === LeaderboardQuery.PAGE && page !== null) cache.set(page, message);
 
     return [message, page];
   }

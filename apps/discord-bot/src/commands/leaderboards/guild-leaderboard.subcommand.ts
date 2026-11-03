@@ -25,7 +25,7 @@ export class GuildLeaderboardSubCommand extends BaseLeaderboardCommand {
   public async leaderboard(context: CommandContext) {
     const leaderboard = context.option<string>("leaderboard");
 
-    const field = leaderboard.replace(/ /g, ".");
+    const field = leaderboard.replaceAll(' ', ".");
     const background = await getBackground("hypixel", "overall");
 
     return this.createLeaderboard({

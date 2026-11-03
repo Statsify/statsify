@@ -15,7 +15,12 @@ import {
 } from "@nestjs/swagger";
 import { Auth, AuthRole } from "#auth";
 import { Body, Controller, Delete, Get, Post, Query } from "@nestjs/common";
-import { CachedPlayerDto, PlayerDto, PlayerGroupDto, UpdatePlayerDto } from "#dtos";
+import {
+  CachedPlayerDto,
+  PlayerDto,
+  PlayerGroupDto,
+  UpdatePlayerDto,
+} from "#dtos";
 import {
   DeletePlayerResponse,
   ErrorResponse,
@@ -72,7 +77,7 @@ export class PlayerController {
     const deleted = await this.playerService.delete(player);
 
     return {
-      success: !!deleted,
+      success: deleted,
     };
   }
 

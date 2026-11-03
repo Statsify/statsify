@@ -92,8 +92,10 @@ export type BoxProps<T extends keyof JSX.IntrinsicElements = "div"> = BoxOnlyPro
   keyof BoxOnlyProps
 >;
 
+const DEFAULT_BORDER_RADIUS_PROP: BoxBorderRadius = {};
+
 export function Box<T extends keyof JSX.IntrinsicElements = "div">({
-  borderRadius: partialBorderRadius = {},
+  borderRadius: partialBorderRadius = DEFAULT_BORDER_RADIUS_PROP,
   shadow = 8,
   className,
   variant = "default",

@@ -3,6 +3,7 @@ config.json
 dist
 node_modules
 .turbo
+'.turbo'
 package-lock.json
 out
 .yarn/install-state.gz
@@ -14,6 +15,8 @@ out
 *.tar.gz
 *.7z
 *.rar
+.DS_Store
+**/.DS_Store
 .swc
 .next
 .
@@ -24,6 +27,5 @@ apps/support-bot/commands.json
 Cargo.lock
 /target
 /data
-compose.dev.yml
 *.node
 .env

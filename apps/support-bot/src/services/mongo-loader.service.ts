@@ -15,13 +15,13 @@ import { getModelForClass } from "@typegoose/typegoose";
 @Service()
 export class MongoLoaderService {
   public async init() {
-    const connection = createConnection(await config("database.mongoUri"));
+    const connection = await createConnection(await config("database.mongoUri")).asPromise();
 
     const models = [Ticket, Tag, User];
 
-    models.forEach((modelClass) => {
+    for (const modelClass of models) {
       const model = getModelForClass(modelClass, { existingConnection: connection });
       Container.set(modelClass, model);
-    });
+    }
   }
 }

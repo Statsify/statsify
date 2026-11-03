@@ -15,13 +15,13 @@ import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/
 import {
   ClassMetadata,
   type GameModes,
-  LeaderboardScanner,
   METADATA_KEY,
   PlayerStats,
+  getLeaderboardFields,
 } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
-type LeaderboardChoice = APIApplicationCommandOptionChoice & { aliases?: string[] };
+type LeaderboardChoice = APIApplicationCommandOptionChoice<string> & { aliases?: string[] };
 
 const entries = Object.entries(
   Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
@@ -37,13 +37,14 @@ const FUSE_OPTIONS = {
 };
 
 const fields = entries.reduce((acc, [prefix, value]) => {
-  const list = LeaderboardScanner.getLeaderboardFields(value.type.type).map(
+  const list = getLeaderboardFields(value.type.type).map(
     ([key, { leaderboard }]) => ({ value: key, name: removeFormatting(leaderboard.name) })
   );
 
   const fuse = new Fuse(list, FUSE_OPTIONS);
+  acc[prefix as keyof PlayerStats] = [fuse, list];
 
-  return { ...acc, [prefix]: [fuse, list] };
+  return acc;
 }, {} as Record<keyof PlayerStats, [Fuse<LeaderboardChoice>, LeaderboardChoice[]]>);
 
 export class PlayerLeaderboardArgument extends AbstractArgument {

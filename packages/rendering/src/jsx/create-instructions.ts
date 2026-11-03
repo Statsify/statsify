@@ -67,7 +67,7 @@ export const createInstructions = (
     node.children[i] = createInstructions(child, child.component ?? component);
   }
 
-  if (!remaining.length) return node as Instruction;
+  if (remaining.length === 0) return node as Instruction;
 
   const remainingSideLength = remainingSide / remaining.length;
 
