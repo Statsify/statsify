@@ -60,12 +60,12 @@ export const TurboKartRacersProfile = ({
         <Table.tr>
           <Table.td
             title={t("stats.goldRate")}
-            value={`${turbokartracers.goldRate}%`}
+            value={`${t(turbokartracers.goldRate)}%`}
             color="§6"
           />
           <Table.td
             title={t("stats.trophyRate")}
-            value={`${turbokartracers.trophyRate}%`}
+            value={`${t(turbokartracers.trophyRate)}%`}
             color="§b"
           />
           <Table.td

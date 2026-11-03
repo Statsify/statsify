@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Multiline } from "#components";
+import { Container, If, Multiline } from "#components";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { Server } from "./server.util.js";
@@ -22,8 +22,9 @@ const ServerLogo = ({ serverLogo }: ServerLogoProps) => (
   </box>
 );
 
-export interface ServerProfileProps extends ServerLogoProps {
+export interface ServerProfileProps {
   background: Image;
+  serverLogo?: Image;
   server: Server;
   t: LocalizeFunction;
 }
@@ -41,7 +42,9 @@ export const ServerProfile = ({
       </text>
     </box>
     <div width="100%">
-      <ServerLogo serverLogo={serverLogo} />
+      <If condition={serverLogo}>
+        {(logo) => <ServerLogo serverLogo={logo} />}
+      </If>
       <box
         width="remaining"
         height="100%"
@@ -49,7 +52,7 @@ export const ServerProfile = ({
       >
         <div height="100%" direction="column">
           <Multiline margin={2}>
-            {server.motd.raw.map((m) => m.replaceAll(/\s{2,}/g, "")).join("\n")}
+            {server.motd.raw.map((m) => m.replaceAll(/\s{2,}/g, " ").trim()).join("\n")}
           </Multiline>
         </div>
       </box>

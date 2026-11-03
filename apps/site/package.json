@@ -18,7 +18,7 @@
     "@vercel/speed-insights": "^2.0.0",
     "date-fns": "^4.1.0",
     "motion": "^12.23.25",
-    "next": "^16.0.7",
+    "next": "^16.4.2",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "tailwind-merge": "^3.6.0",
