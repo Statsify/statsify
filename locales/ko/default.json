@@ -26,7 +26,6 @@
     "badge-set": "새 프로필 배지를 업로드해요",
     "badge-view": "내 프로필 배지를 봐요",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
-    "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "다른 사람의 Minecraft 및 Optifine 망토를 봐요",
@@ -140,7 +139,6 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
-    "links": "Statsify의 소셜 미디어를 봐요",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
@@ -216,7 +214,6 @@
     "theme": "Change your theme for every profile",
     "theme-boxes": "프로필 상자의 외관을 변경해요",
     "theme-font": "프로필의 글꼴을 변경해요",
-    "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "프로필 하단 아이콘을 변경해요",
     "theme-footer-message": "프로필 하단 메시지를 변경해요(https://rgb.birdflop.com에서 그라데이션 문자를 작성하세요)",
     "theme-footer-reset": "프로필 하단을 초기화해요",
@@ -224,7 +221,6 @@
     "theme-view": "내 프로필 테마를 봐요",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
-    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Discord와 Minecraft 계정의 연결을 해제해요",
@@ -238,7 +234,6 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "기간 전적을 초기화해요",
     "reset-session": "세션 전적을 초기화해요"
   },
   "config": {
@@ -391,14 +386,6 @@
       "title": "잘못된 세션",
       "description": "**{{displayName}}**님이 시작한 세션이 없어요. 인증하고 나면 `/session` 명령어를 실행해서 세션을 만들 수 있어요."
     },
-    "invalidResetTime": {
-      "description": "`{{time}}`이(가) `h:mm a` 형식과 일치하지 않아요. `12:00 PM` 또는 `1:00 AM`과 유사한 형태로 시간을 입력하세요.",
-      "title": "잘못된 초기화 시간"
-    },
-    "invalidResetTimezone": {
-      "description": "`{{timezone}}`은(는) 올바른 시간대가 아니에요. `EST` 또는 `PST`와 유사한 형태로 시간대를 입력하세요.",
-      "title": "잘못된 초기화 시간대"
-    },
     "invalidSearch": {
       "description": "찾으시는 걸 정확히 알아내지 못했어요!\n사용자 이름이나 UUID나 Discord 멘션을 입력하세요.",
       "title": "잘못된 검색"
@@ -461,10 +448,6 @@
       "description": "**{{displayName}}**님은 어떠한 순위에도 올라가지 못했어요!",
       "title": "순위 없음"
     },
-    "noRecentGames": {
-      "description": "**{{displayName}}**님이 최근 플레이한 게임을 찾지 못했어요!",
-      "title": "최근 플레이한 게임을 찾지 못함"
-    },
     "noStatus": {
       "description": "**{{displayName}}**님의 Hypixel 상태를 찾지 못했어요!",
       "title": "상태를 찾지 못함"
@@ -505,17 +488,6 @@
     }
   },
   "historical": {
-    "aboutResetting": "아래 초기화 버튼을 클릭해 내 기간 전적을 **매일 이 시간에** 초기화해요.\n\n**경고**: 나의 이전 기간 전적이 모두 삭제되고 **다시 복구할 수 없어요**. \n특정 시간에 초기화하고 싶으시면 $t(socials.premium)을 확인하세요.",
-    "aboutResettingPremium": "아래 초기화 버튼을 클릭해 내 기간 전적을 **매일 이 시간에** 초기화해요. \n\n**경고**: 나의 이전 기간 전적이 모두 삭제되고 **다시 복구할 수 없어요**.",
-    "modal": {
-      "resetTime": "초기화 시간을 고르세요",
-      "timezone": "시간대를 고르세요",
-      "title": "기간 전적 초기화 시간"
-    },
-    "new": "Statsify에서 **{{displayName}}**님의 기간 전적을 처음으로 확인했어요. 이제 매일 이 시간에 갱신돼요.",
-    "reset": "$t(emojis:clock) <t:{{time}}:R> **초기화**",
-    "resetButton": "눌러서 초기화",
-    "setResetTime": "초기화 시간을 <t:{{time}}:t>로 설정했어요.",
     "newSession": "Statsify에서 **{{displayName}}**님의 세션 전적을 처음으로 확인했어요.",
     "setSessionReset": "세션 전적을 초기화했어요.",
     "deleteSession": "세션 전적을 삭제했어요.",
@@ -830,12 +802,7 @@
     "resetSession": "$t(emojis:reset) `/reset session` 명령어로 세션 전적을 **초기화**할 수 있어요.",
     "sessions": "$t(emojis:reset) 세션(`/session`)으로 전적 진행도를 추적해 보세요."
   },
-  "unknown": "알 수 없음",
   "verification": {
-    "alreadyVerified": {
-      "description": "이미 Minecraft 계정과 연결했어요. Minecraft 계정 연결을 해제하려면 `/unverify` 명령어를 실행하세요.",
-      "title": "이미 인증됨"
-    },
     "invalidCode": {
       "title": "잘못된 인증 코드",
       "description": "인증 코드를 확인하거나 다음 단계를 따라 다시 시도해 보세요: ",
