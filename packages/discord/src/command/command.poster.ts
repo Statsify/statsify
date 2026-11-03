@@ -64,15 +64,28 @@ export class CommandPoster {
       commandsToPost
     );
 
+    let cmds: APIApplicationCommand[];
+
     try {
-      const cmds = parseDiscordResponse<APIApplicationCommand[]>(response);
-      this.logger.log(`Successfully posted ${commandsToPost.length} commands`);
-      return cmds;
+      cmds = parseDiscordResponse<APIApplicationCommand[]>(response);
+      // A response could return a non-JSON error, like a 502 page
+      if (!cmds) throw new Error(`Discord responded with ${response.status}`);
     } catch (err) {
       this.logger.error("Failed to post commands");
       this.logger.error(err);
       return null;
     }
+
+    await writeFile(
+      "./commands.json",
+      JSON.stringify({
+        guildId,
+        commands: Object.fromEntries(commands),
+      })
+    );
+
+    this.logger.log(`Successfully posted ${commandsToPost.length} commands`);
+    return cmds;
   }
 
   private async postSingle(
@@ -90,14 +103,6 @@ export class CommandPoster {
 
   private async shouldPost(commands: Map<string, CommandResolvable>, guildId?: string) {
     const file = await readFile("./commands.json", "utf8").catch(() => null);
-
-    await writeFile(
-      "./commands.json",
-      JSON.stringify({
-        guildId,
-        commands: Object.fromEntries(commands),
-      })
-    );
 
     if (!file) return true;
 
