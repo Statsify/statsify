@@ -39,7 +39,7 @@ export const QuakeProfile = ({
     [t("stats.coins"), t(quake.coins), "§6"],
     [t("stats.tokens"), t(quake.tokens), "§e"],
     [t("stats.godlikes"), t(quake.godlikes), "§3"],
-    [t("stats.trigger"), `${quake.trigger}s`, "§b"],
+    [t("stats.trigger"), `${t(quake.trigger)}s`, "§b"],
     [t("stats.highestKillstreak"), t(quake.highestKillstreak), "§4"],
     [t("stats.blocksTraveled"), t(stats.blocksTraveled), "§b"],
   ];
@@ -84,12 +84,12 @@ export const QuakeProfile = ({
         <Table.tr>
           <Table.td
             title={t("stats.shotAccuracy")}
-            value={`${stats.quakeShotAccuracy}%`}
+            value={`${t(stats.quakeShotAccuracy)}%`}
             color="§a"
           />
           <Table.td
             title={t("stats.headshotAccuracy")}
-            value={`${stats.headshotAccuracy}%`}
+            value={`${t(stats.headshotAccuracy)}%`}
             color="§6"
           />
         </Table.tr>

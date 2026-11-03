@@ -38,6 +38,9 @@ const PRESTIGE_XP_REQUIREMENTS = [
   11_787_293_080,
 ];
 
+export const FINAL_PRESTIGE_XP =
+  PRESTIGE_XP_REQUIREMENTS[PRESTIGE_XP_REQUIREMENTS.length - 1];
+
 const PRESTIGE_COLORS = [
   "7",
   "9",
@@ -79,13 +82,13 @@ export type Bounty = {
 };
 
 export const getPrestige = (xp: number) => {
-  for (let i = 0; i <= 50; i++) {
+  for (let i = 0; i < PRESTIGE_XP_REQUIREMENTS.length; i++) {
     if (xp <= PRESTIGE_XP_REQUIREMENTS[i]) {
       return i;
     }
   }
 
-  return PRESTIGE_XP_REQUIREMENTS[1];
+  return PRESTIGE_XP_REQUIREMENTS.length - 1;
 };
 
 export const getPrestigeReq = (prestige: number) =>
@@ -97,7 +100,7 @@ export const getLevel = (pres: number, xp: number) => {
   let level = 120;
   if (
     (4_042_276_727 <= xp && xp <= 5_192_293_080) ||
-    (7_339_776_727 <= xp && xp <= 11_787_293_080)
+    (7_339_776_727 <= xp && xp <= FINAL_PRESTIGE_XP)
   )
     return 120;
 

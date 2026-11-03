@@ -23,11 +23,12 @@ import { User, UserTier } from "@statsify/schemas";
 import { UserService } from "#services";
 import { config } from "@statsify/util";
 
+// Highest tier first, so findTier and findRoleTier pick the highest one a member has
 const PREMIUM_TIERS = [
   UserTier.NETHERITE,
   UserTier.EMERALD,
-  UserTier.GOLD,
   UserTier.DIAMOND,
+  UserTier.GOLD,
   UserTier.IRON,
 ] as const;
 
@@ -214,6 +215,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     if (User.isStaff(await this.userService.getTier(memberId))) return;
 
     this.log(`ADDING \`${User.getTierName(tier)}\` to <@${memberId}>`);
+    for (const premiumTier of PREMIUM_TIERS) this.tiers[premiumTier].delete(memberId);
     this.tiers[tier].add(memberId);
 
     await this.userService.addPremium(memberId, tier);

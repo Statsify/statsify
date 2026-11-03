@@ -94,6 +94,7 @@ export const ZombiesMapDifficultyTable = ({ stats, t, time }: ZombiesMapDifficul
       <Table.tr>
         <Table.td title={t("stats.fastestWin")} value={formatRecordTime(stats.fastestWin, formatTimeWithSeconds)} color="§b" size="small" />
         <Table.td title={t("stats.totalRounds")} value={t(stats.totalRounds)} color="§d" size="small" />
+        <Table.td title={t("stats.doorsOpened")} value={t(stats.doorsOpened)} color="§9" size="small" />
       </Table.tr>
     </Historical.exclude>
   </>

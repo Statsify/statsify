@@ -34,7 +34,7 @@ export const getLevel = (exp = 0): number => {
     remainingExp -= expForNextLevel;
   }
 
-  return level + remainingExp / getExpReq(level + 1);
+  return level + remainingExp / getExpReq(level);
 };
 
 type Brackets = [left: string, right: string];
@@ -115,13 +115,13 @@ function createSuffixScheme(remainingColor: string, suffix: string[]): Scheme {
   return (options) =>
     createLevelParts(options)
       .map((part, index, parts) => {
-        const relativeIndex = parts.length - index;
+        const suffixIndex = index - (parts.length - suffix.length);
 
-        if (relativeIndex >= suffix.length) {
+        if (suffixIndex < 0) {
           return `${remainingColor}${part}`;
         }
 
-        return `${suffix[relativeIndex]}${part}`;
+        return `${suffix[suffixIndex]}${part}`;
       })
       .join("");
 }
