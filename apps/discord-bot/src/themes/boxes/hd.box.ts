@@ -78,10 +78,11 @@ export const render: Render<Box.BoxRenderProps> = (
     ctx.stroke();
   }
 
-  if (!shadowDistance) return;
+  const shadowAlpha = shadowOpacity - 0.3;
+  if (!shadowDistance || shadowAlpha <= 0) return;
   shadowDistance /= 2;
 
-  ctx.globalAlpha = shadowOpacity - 0.3;
+  ctx.globalAlpha = shadowAlpha;
   ctx.fillStyle = fill;
 
   ctx.fillRect(
