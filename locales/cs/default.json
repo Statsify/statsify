@@ -26,7 +26,6 @@
     "badge-set": "Nahrát nový profilový odznak",
     "badge-view": "Zobrazit svůj aktuální profilový odznak",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
-    "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Zobrazit něčí Minecraft a Optifine pláště",
@@ -140,7 +139,6 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
-    "links": "Sociální média Statsify",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
@@ -216,7 +214,6 @@
     "theme": "Change your theme for every profile",
     "theme-boxes": "Změnit vzhled profilových polí",
     "theme-font": "Změnit písmo profilů",
-    "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "Změnit svojí profilovou ikonu zápatí",
     "theme-footer-message": "Změnit svojí profilovou zprávu zápatí. Můžeš použít například https://rgb.birdflop.com.",
     "theme-footer-reset": "Resetovat svoje zápatí profilu",
@@ -224,7 +221,6 @@
     "theme-view": "Zobrazit svůj aktuální motiv profilu",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
-    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Zrušit propojení svého Discord a Minecraft účtu",
@@ -238,7 +234,6 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Vyresetovat statistiky za určitou dobu",
     "reset-session": "Vyresetovat statistiky za období"
   },
   "config": {
@@ -391,14 +386,6 @@
       "title": "Invalid Session",
       "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
     },
-    "invalidResetTime": {
-      "description": "`{{time}}` neodpovídá formátu `h:mm a`. Zadej čas ve formátu podobnému k `12:00 PM` nebo `1:00 AM`.",
-      "title": "Neplatný čas vyresetování"
-    },
-    "invalidResetTimezone": {
-      "description": "`{{timezone}}` není platné časové pásmo. Zadej časové pásmo podobné k `CET` nebo `GMT`.",
-      "title": "Neplatné časové pásmo pro vyresetování"
-    },
     "invalidSearch": {
       "description": "Nemohli jsme nalézt to, co hledáš! Napiš jméno, uuid nebo někoho označ.",
       "title": "Neplatné hledání"
@@ -461,10 +448,6 @@
       "description": "Hráč **{{displayName}}** nemá žádné pořadí!",
       "title": "Žádná pořadí"
     },
-    "noRecentGames": {
-      "description": "Nedávné hry hráče **{{displayName}}** nemohly být nazeleny!",
-      "title": "Nedávné hry nebyly nalezeny"
-    },
     "noStatus": {
       "description": "Hypixel stav hráče **{{displayName}}** nemohl být nalezen!",
       "title": "Stav nebyl nalezen"
@@ -505,17 +488,6 @@
     }
   },
   "historical": {
-    "aboutResetting": "Klikni na tlačítko níže pro vyresetování tvých statistik za určitou dobu každý den **tento čas**.\n\n**VAROVÁNÍ**: Tohle odstraní tvé veškeré statistiky za určitou dobu a **nelze vrátit zpět**. \nPokud chceš být schopen resetovat v určitém čase, tak se podívej na $t(socials.premium).",
-    "aboutResettingPremium": "Klikni na tlačítko níže pro vyresetování tvých statistik za určitou dobu. \n\n**VAROVÁNÍ:** Tohle odstraní tvé veškeré statistiky za určitou dobu a **nelze vrátit zpět**.",
-    "modal": {
-      "resetTime": "Zvolit čas vyresetování",
-      "timezone": "Zvolit časové pásmo",
-      "title": "Čas vyresetování statistik za určitou dobu"
-    },
-    "new": "Statistiky za určitou dobu hráče **{{displayName}}** byly poprvé zkontrolovány na Statsify. Statistiky hráče se nyní budou každý den tento čas aktualizovat.",
-    "reset": "$t(emojis:clock) **Vyresetuje se** <t:{{time}}:R>",
-    "resetButton": "Klikni pro vyresetování",
-    "setResetTime": "Čas vyresetování byl nastaven na <t:{{time}}:t>.",
     "newSession": "Statistiky hráče **{{displayName}}** byly ve Statsify zkontrolovány poprvé.",
     "setSessionReset": "Tvoje statistiky za období byly úspěšně zrušeny.",
     "deleteSession": "Successfully deleted your session stats.",
@@ -830,12 +802,7 @@
     "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
     "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
-  "unknown": "Neznámý",
   "verification": {
-    "alreadyVerified": {
-      "description": "Již jsi propojen s Minecraft účtem. Napiš `/unverify` pro zrušení propojení svého Minecraft účtu.",
-      "title": "Již ověřený"
-    },
     "invalidCode": {
       "title": "Neplatný ověřovací kód",
       "description": "Check your verification code or try again by following these steps: ",
