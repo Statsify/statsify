@@ -55,9 +55,9 @@ export class SessionService {
    */
   public async resetPlayer(player: Player) {
     const flatPlayer = flatten(player);
-    const doc = serialize(Player, flatPlayer);
+    flatPlayer.sessionReset = Math.round(DateTime.now().toMillis() / 1000);
 
-    doc.sessionReset = Math.round(DateTime.now().toMillis() / 1000);
+    const doc = serialize(Player, flatPlayer);
 
     await this.sessionModel.replaceOne({ uuid: doc.uuid }, doc, { upsert: true }).lean().exec();
 

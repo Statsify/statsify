@@ -299,7 +299,10 @@ export abstract class AbstractCommandListener {
     client.on("interaction", async (event) => {
       const interaction = new Interaction(this.rest, event.interaction, this.applicationId);
       const response = await this.onInteraction(interaction);
-      interaction.reply(response);
+      await interaction.reply(response);
+
+      event.response.statusCode = 204;
+      event.response.end();
     });
   }
 
