@@ -26,7 +26,6 @@
     "badge-set": "Új Profil Ikon Feltöltése",
     "badge-view": "Jelenlegi Profil Ikon Megtekintése",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
-    "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Nézd meg valaki Minecraft és Optifine köpenyjeit",
@@ -140,7 +139,6 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
-    "links": "Statsify Linkek",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
@@ -216,7 +214,6 @@
     "theme": "Change your theme for every profile",
     "theme-boxes": "Profil dobozok megjelenésének átállítása",
     "theme-font": "Profilok betűtípusának átállítása",
-    "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "Profil alsó ikonjának átállítása",
     "theme-footer-message": "Profil alsó üzenetének átállítása. Karakterek formázásához segítség: https://rgb.birdflop.com",
     "theme-footer-reset": "Profil Aljának Visszaállítása",
@@ -224,7 +221,6 @@
     "theme-view": "Jelenlegi Profil Téma Megtekintése",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
-    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Kapcsold szét a Discord és Minecraft fiókjaid",
@@ -238,7 +234,6 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Munkamenet statisztikák nullázása",
     "reset-session": "Munkamenet statisztikáid nullázása"
   },
   "config": {
@@ -391,14 +386,6 @@
       "title": "Érvénytelen Munkamenet",
       "description": "**{{displayName}}** nem rendelkezik aktív munkamenettel. Lehetősége van csinálni egyet, ha használja a `/session` parancsot és ellenőrzött a fiókja."
     },
-    "invalidResetTime": {
-      "description": "Az általad megadott idő formátuma nem megfelelő: `{{time}}`. Kérjük használd a következő formátumot: `h:mm a` pl:`12:00 PM` vagy `1:00 AM`.",
-      "title": "Érvénytelen Visszaállítási Idő"
-    },
-    "invalidResetTimezone": {
-      "description": "`{{timezone}}` nem egy létező időzóna. Próbálj meg ezekhez hasonló időzónát beírni: `EST` vagy `PST`.",
-      "title": "Érvénytelen Visszaállítási Időzóna"
-    },
     "invalidSearch": {
       "description": "Nem tudtunk rájönni mire szeretnél keresni pontosan!\nAdj meg egy játékosnevet, uuid-t, vagy tagelj meg egy discord felhasználót.",
       "title": "Ismeretlen Keresés"
@@ -461,10 +448,6 @@
       "description": "**{{displayName}}** nem rendelkezik kiemelkedő pozícióval!",
       "title": "Nem Található Pozíció"
     },
-    "noRecentGames": {
-      "description": "Nem találhatóak **{{displayName}}** játékelőzményei!",
-      "title": "Nem Található Játékelőzmény"
-    },
     "noStatus": {
       "description": "**{{displayName}}**'s Hypixel státusza nem található!",
       "title": "Nem Található Státusz"
@@ -505,17 +488,6 @@
     }
   },
   "historical": {
-    "aboutResetting": "Kattints a visszaállítás gombra, hogy a történelmi statisztikáid minden nap **ekkor** álljanak vissza.\n\n**FIGYELEM:** Ez törölni fogja a történelmi statisztikáid és **nem lehet visszacsinálni**.\nHa ezt egy megadott időpontra szeretnéd állítani nézd itt találhatsz segítséget: $t(socials.premium).",
-    "aboutResettingPremium": "Kattints a visszaállítás gombra, hogy visszaállítsd a történelmi statisztikáid. \n\n**FIGYELEM:** Ez törölni fogja a történelmi statisztikáid és **nem lehet visszacsinálni**.",
-    "modal": {
-      "resetTime": "Válassz egy Visszaállítási Időt",
-      "timezone": "Válassz egy Időzónát",
-      "title": "Történelmi Visszaállítási Idő"
-    },
-    "new": "**{{displayName}}** történelmi statisztikái most lettek előszőr megtekintve a Statsify-on. Mostantól minden nap ebben az időpontban fognak frissülni a történelmi statisztikái.",
-    "reset": "$t(emojis:clock) **Visszaállítás** <t:{{time}}:R>",
-    "resetButton": "Kattints a Visszaállításhoz",
-    "setResetTime": "Visszaállíási idő beállítva erre: <t:{{time}}:t>.",
     "newSession": "**{{displayName}}** munkamenet statisztikái most először lettek megtekintve Statsify-on.",
     "setSessionReset": "Sikeresen visszaállítottad a munkamenet statisztikáid.",
     "deleteSession": "Sikeresen törölted a munkamenet statisztikáid.",
@@ -830,12 +802,7 @@
     "resetSession": "$t(emojis:reset) A munkamenet statisztikáid visszaállíthatod a `/reset session` paranccsal.",
     "sessions": "$t(emojis:reset) Kövesd a statisztikáid fejlődését a Munkamenetek segítségével és a `/session` paranccsal."
   },
-  "unknown": "Ismeretlen",
   "verification": {
-    "alreadyVerified": {
-      "description": "Már összekapcsoltad a fiókod egy Minecraft fiókkal. Használd az `/unverify` parancsot ennek megszüntetéséhez.",
-      "title": "Igazolva Van"
-    },
     "invalidCode": {
       "title": "Helytelen Igazolási Kód",
       "description": "Nézd meg az ellenőrző kódod vagy kövesd az alábbi lépéseket: ",
