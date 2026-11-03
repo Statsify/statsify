@@ -33,7 +33,7 @@ export class ColorsCommand {
         desc += `${t("emojis:colors.m")} \`§m\` • ~~${t(
           "embeds.colors.strikethrough"
         )}~~\n`;
-        desc += `${t("emojis:colors.n")} \`§n\` • _${t("embeds.colors.underline")}_\n`;
+        desc += `${t("emojis:colors.n")} \`§n\` • __${t("embeds.colors.underline")}__\n`;
         desc += `${t("emojis:colors.o")} \`§o\` • *${t("embeds.colors.italic")}*\n`;
         desc += `${t("emojis:colors.r")} \`§r\` • ${t("embeds.colors.reset")}\n`;
 
