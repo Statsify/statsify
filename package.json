@@ -22,6 +22,7 @@
     "api": "pnpm --filter api",
     "discord-bot": "pnpm --filter discord-bot",
     "support-bot": "pnpm --filter support-bot",
+    "site": "pnpm --filter site",
     "site-legacy": "pnpm --filter site-legacy",
     "scripts": "pnpm --filter scripts",
     "verify-server": "pnpm --filter verify-server"

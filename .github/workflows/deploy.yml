@@ -26,6 +26,26 @@ jobs:
 
       - name: Build Code
         run: pnpm scripts purge-repo --dist && pnpm build --force
+        env:
+          # The site's Sentry release (apps/site/turbo.json passes it to the site's build), so its errors match the
+          # sourcemaps uploaded below.
+          VITE_SENTRY_RELEASE: ${{ github.ref_name }}
+
+      - name: Upload Site Sourcemaps
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_SITE_PROJECT }}
+        run: |
+          if [ -z "$SENTRY_AUTH_TOKEN" ]; then
+            echo "SENTRY_AUTH_TOKEN is not set, so the site's sourcemaps are not uploaded"
+            exit 0
+          fi
+          npx --yes @sentry/cli@2 sourcemaps upload --release "${{ github.ref_name }}" --url-prefix "~/assets" apps/site/.output/public/assets
+
+      - name: Remove Site Sourcemaps
+        # Once they're uploaded, or the upload is skipped, so the site doesn't serve them.
+        run: rm -f apps/site/.output/public/assets/*.map
 
       - name: Prepare Assets
         run: pnpm scripts blur-backgrounds

@@ -12,6 +12,10 @@
     "./jsx-runtime": {
       "types": "./src/jsx-runtime/index.ts",
       "default": "./dist/jsx-runtime/index.js"
+    },
+    "./colors": {
+      "types": "./src/colors/index.ts",
+      "default": "./dist/colors/index.js"
     }
   },
   "scripts": {
