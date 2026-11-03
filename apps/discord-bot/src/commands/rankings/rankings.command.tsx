@@ -53,7 +53,7 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
-import { PlayerLeaderboardGuildArgument } from "../leaderboards/player-leaderboard.argument.js";
+import { PlayerLeaderboardGuildArgument } from "#commands/leaderboards/player-leaderboard.argument";
 import { RankingsProfile } from "./rankings.profile.js";
 import { arrayGroup } from "@statsify/util";
 import { games } from "./games.js";
