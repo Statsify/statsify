@@ -29,6 +29,10 @@ export enum QuestTime {
 
 export interface QuestOption<TField extends string> {
   field: string;
+  /**
+   * The quest's full key before Hypixel renamed it, so its old completions still count
+   */
+  legacyField?: string;
   propertyKey: TField;
   fieldName?: string;
   name?: string;
@@ -75,6 +79,7 @@ const processQuests = (
     const field = fieldPrefix ? `${fieldPrefix}_${quest.field}` : quest.field;
 
     instance[k] = getQuestCountDuring(time, quests[field]);
+    if (quest.legacyField) instance[k] += getQuestCountDuring(time, quests[quest.legacyField]);
     instance.total += instance[k] ?? 0;
   }
 };

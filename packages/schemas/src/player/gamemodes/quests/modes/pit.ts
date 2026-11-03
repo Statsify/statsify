@@ -11,10 +11,10 @@ import { createGameModeQuests } from "../util.js";
 
 export const PitQuests = createGameModeQuests({
   game: FormattedGame.PIT,
-  fieldPrefix: "prototype_pit",
+  fieldPrefix: "pit",
   daily: [
-    { field: "daily_kills", propertyKey: "hunter" },
-    { field: "daily_contract", propertyKey: "contracted" },
+    { field: "daily_kills", legacyField: "prototype_pit_daily_kills", propertyKey: "hunter" },
+    { field: "daily_contract", legacyField: "prototype_pit_daily_contract", propertyKey: "contracted" },
   ],
-  weekly: [{ field: "weekly_gold", propertyKey: "doubleUp" }],
+  weekly: [{ field: "weekly_gold", legacyField: "prototype_pit_weekly_gold", propertyKey: "doubleUp" }],
 });
