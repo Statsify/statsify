@@ -262,8 +262,8 @@ async function waitForImage(
 
 /** The bot's general card for a stored player, as PNG bytes. Throws `PoolBusyError` when the queue is full. */
 async function renderCard(uuid: string, variant: ImageVariant, updatedAt: number): Promise<Uint8Array<ArrayBuffer>> {
-  // A miss reads the player and renders the skin (asking Mojang for it, if it's old) before it can queue, so a queue
-  // with no room left, counting the misses still loading, answers busy first.
+  // A miss reads the player and renders the skin (asking Minecraft's session server for it, if it's old) before it
+  // can queue, so a queue with no room left, counting the misses still loading, answers busy first.
   const renders = await renderPool();
   if (renders.pending + loading >= RENDER_QUEUE_LIMIT) throw new PoolBusyError();
 
