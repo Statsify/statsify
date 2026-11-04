@@ -40,7 +40,7 @@ export function Skin({ uuid, className = "", ...props }: ComponentProps<typeof B
 /**
  * A player's face, `size` px square. The image is always the 8×8 face and the browser scales it up without
  * smoothing, so every size shares one cached image per player. By `name` (a search suggestion's) or with `stored`,
- * it's drawn only from the skin the API has stored, so a long list of heads never reaches Mojang.
+ * it's drawn only from the skin the API has stored, so a long list of heads never reaches Minecraft's servers.
  */
 export function SkinHead({
   size = 32,
