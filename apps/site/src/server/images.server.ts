@@ -86,8 +86,8 @@ const RENDER_QUEUE_TIMEOUT_MS = 6000;
 const RENDER_TIMEOUT_MS = 8000;
 /**
  * The first request for a missing image renders it under this lock; the others wait for its PNG. It outlasts the
- * owner's slowest path: 5 s to load the player and skin (the skin may come from Mojang), the queue, the render and 1 s
- * for the cache write. An owner slower than that only costs a second render.
+ * owner's slowest path: 5 s to load the player and skin (the skin may come from Minecraft's session server), the
+ * queue, the render and 1 s for the cache write. An owner slower than that only costs a second render.
  */
 const LOCK_TTL_MS = 5000 + RENDER_QUEUE_TIMEOUT_MS + RENDER_TIMEOUT_MS + 1000;
 const LOCK_POLL_MS = 100;
