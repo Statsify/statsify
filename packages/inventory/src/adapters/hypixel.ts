@@ -15,7 +15,6 @@ import { gunzipSync } from "fflate";
 
 const base64Bytes = (base64: string) => Uint8Array.from(atob(base64), (char) => char.codePointAt(0)!);
 
-// 1.8's banner pattern codes (TileEntityBanner.EnumBannerPattern) by their 26.3 banner_pattern ids
 const LEGACY_PATTERNS: Record<string, string | undefined> = {
   b: "base",
   bl: "square_bottom_left",
@@ -108,7 +107,7 @@ function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefine
 
   return {
     ...item,
-    // A banner's Base wins over the Damage its id came from, as in 1.8's ItemBanner.getBaseColor
+    // 1.8 colours a banner by its Base before its Damage
     id: banner?.Base === undefined ? item.id : `minecraft:${legacyDye(banner.Base)}_banner`,
     patterns: patterns?.length ? patterns : undefined,
     count: Count,

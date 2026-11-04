@@ -49,7 +49,7 @@ const EFFECT_COLORS: Record<string, number | undefined> = {
   "minecraft:saturation": 0xf8_24_23,
 };
 
-/** 26.3's dye colours in DyeColor's id order, which is wool's Damage in 1.8 */
+/** In the order of 1.8 wool's Damage values */
 export const DYES = [
   "white",
   "orange",
@@ -71,7 +71,6 @@ export const DYES = [
 
 export type DyeColor = (typeof DYES)[number];
 
-// DyeColor's texture diffuse colours, which tint banner and shield patterns
 const DYE_COLORS: Record<string, number | undefined> = {
   white: 0xf9_ff_fe,
   orange: 0xf9_80_1d,

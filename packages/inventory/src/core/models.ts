@@ -60,7 +60,6 @@ export interface SpecialModel {
   type: string;
   kind?: string;
   texture?: string;
-  /** A banner's dye colour */
   color?: string;
   transformation?: Transformation;
 }

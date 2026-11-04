@@ -15,7 +15,6 @@ export interface PotionEffect {
   amplifier?: number;
 }
 
-/** One layer of 26.3's banner_patterns component */
 export interface BannerLayer {
   /** A banner_pattern id, like "minecraft:stripe_top" */
   pattern: string;
@@ -34,9 +33,9 @@ export interface ItemStack {
   enchanted?: boolean;
   /** A player head's skin texture URL, from its profile's textures */
   skin?: string;
-  /** A banner's or shield's patterns, bottom layer first */
+  /** Bottom layer first */
   patterns?: BannerLayer[];
-  /** A shield's banner colour. Banners take theirs from their id */
+  /** A shield's base colour. Banners take theirs from their id */
   baseColor?: DyeColor;
   /** § codes or a JSON text component */
   name?: TextComponent;

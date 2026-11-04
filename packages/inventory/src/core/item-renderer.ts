@@ -32,8 +32,7 @@ const HEADS: Record<string, { texture: string; hat: boolean }> = {
 // Heads without a skin, or whose skin doesn't load, get the default skin, as in game
 const DEFAULT_SKIN = "entity/player/wide/steve";
 
-// BannerFlagModel hangs the flag 44 pixels up and tilts it to its wave at time 0, which is how a
-// banner in a slot is drawn
+// A banner in a slot has its flag at the start of its wave
 const FLAG_TILT = (-0.0125 + 0.01) * Math.PI;
 const FLAG_POSE: Transformation = {
   left_rotation: [Math.sin(FLAG_TILT / 2), 0, 0, Math.cos(FLAG_TILT / 2)],
@@ -379,7 +378,6 @@ export class ItemRenderer {
       ];
     }
 
-    // ShulkerBoxModel, closed: the lid's teeth fill the gaps between the base's
     if (special.type === "minecraft:shulker_box" && special.texture) {
       const [namespace, name] = namespaced(special.texture).split(":");
       const texture = await this.textures.get(`${namespace}:entity/shulker/${name}`);
@@ -392,7 +390,6 @@ export class ItemRenderer {
       ];
     }
 
-    // BannerModel's pole and bar, and the flag with its base and patterns over it
     if (special.type === "minecraft:banner" && special.color) {
       const texture = await this.textures.get("entity/banner/banner_base");
       const flag = (layer: ImageData) =>
@@ -410,8 +407,7 @@ export class ItemRenderer {
       ];
     }
 
-    // ShieldModel's plate and handle. A shield with a banner on it has a blank plate under it,
-    // with white as the base when only patterns are set
+    // A shield with only patterns has a white base under them
     if (special.type === "minecraft:shield") {
       const banner = item.baseColor !== undefined || Boolean(item.patterns?.length);
       const texture = await this.textures.get(
@@ -446,10 +442,7 @@ export class ItemRenderer {
     return [place(quads)];
   }
 
-  /**
-   * A banner's flag or a shield's plate again for its base colour and each pattern, dyed. Each is
-   * a pass of its own: at its part's exact depth, it would lose ties in the 32-bit depth buffer
-   */
+  // Each pattern is its own pass, since at its part's exact depth it would lose depth ties and stripe
   private async patternPasses(
     part: (texture: ImageData) => Quad[],
     folder: "banner" | "shield",
