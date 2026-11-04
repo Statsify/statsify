@@ -6,12 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { DyeColor } from "./tints.js";
 import type { TextComponent } from "./text.js";
 
 export interface PotionEffect {
   /** A namespaced 26.3 effect id, like "minecraft:speed" */
   id: string;
   amplifier?: number;
+}
+
+/** One layer of 26.3's banner_patterns component */
+export interface BannerLayer {
+  /** A banner_pattern id, like "minecraft:stripe_top" */
+  pattern: string;
+  color: DyeColor;
 }
 
 export interface ItemStack {
@@ -26,6 +34,10 @@ export interface ItemStack {
   enchanted?: boolean;
   /** A player head's skin texture URL, from its profile's textures */
   skin?: string;
+  /** A banner's or shield's patterns, bottom layer first */
+  patterns?: BannerLayer[];
+  /** A shield's banner colour. Banners take theirs from their id */
+  baseColor?: DyeColor;
   /** § codes or a JSON text component */
   name?: TextComponent;
   lore?: TextComponent[];

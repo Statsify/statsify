@@ -9,10 +9,57 @@
 import { ARMOR, HOTBAR } from "./kits.js";
 import { type Compound, readNbt } from "./nbt.js";
 import { legacyEffect, legacyItem } from "../core/legacy-items.js";
-import type { ItemStack } from "../core/item-stack.js";
+import type { BannerLayer, ItemStack } from "../core/item-stack.js";
+import { DYES } from "../core/tints.js";
 import { gunzipSync } from "fflate";
 
 const base64Bytes = (base64: string) => Uint8Array.from(atob(base64), (char) => char.codePointAt(0)!);
+
+// 1.8's banner pattern codes (TileEntityBanner.EnumBannerPattern) by their 26.3 banner_pattern ids
+const LEGACY_PATTERNS: Record<string, string | undefined> = {
+  b: "base",
+  bl: "square_bottom_left",
+  br: "square_bottom_right",
+  tl: "square_top_left",
+  tr: "square_top_right",
+  bs: "stripe_bottom",
+  ts: "stripe_top",
+  ls: "stripe_left",
+  rs: "stripe_right",
+  cs: "stripe_center",
+  ms: "stripe_middle",
+  drs: "stripe_downright",
+  dls: "stripe_downleft",
+  ss: "small_stripes",
+  cr: "cross",
+  sc: "straight_cross",
+  bt: "triangle_bottom",
+  tt: "triangle_top",
+  bts: "triangles_bottom",
+  tts: "triangles_top",
+  ld: "diagonal_left",
+  rd: "diagonal_up_right",
+  lud: "diagonal_up_left",
+  rud: "diagonal_right",
+  mc: "circle",
+  mr: "rhombus",
+  vh: "half_vertical",
+  hh: "half_horizontal",
+  vhr: "half_vertical_right",
+  hhb: "half_horizontal_bottom",
+  bo: "border",
+  cbo: "curly_border",
+  cre: "creeper",
+  gra: "gradient",
+  gru: "gradient_up",
+  bri: "bricks",
+  sku: "skull",
+  flo: "flower",
+  moj: "mojang",
+};
+
+// 1.8 banners give colours as dye Damage values, which run the other way to wool's
+const legacyDye = (damage: number) => DYES[15 - damage];
 
 // The parts of a 1.8 item compound read here. An empty slot is {}
 interface LegacyItem {
@@ -26,6 +73,7 @@ interface LegacyItem {
     Unbreakable?: number;
     HideFlags?: number;
     SkullOwner?: { Properties?: { textures?: { Value?: string }[] } };
+    BlockEntityTag?: { Base?: number; Patterns?: { Pattern: string; Color: number }[] };
   };
 }
 
@@ -52,8 +100,17 @@ function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefine
     return effect ? [{ id: effect, amplifier: Amplifier }] : [];
   });
 
+  const banner = tag?.BlockEntityTag;
+  const patterns = banner?.Patterns?.flatMap(({ Pattern, Color }): BannerLayer[] => {
+    const pattern = LEGACY_PATTERNS[Pattern];
+    return pattern ? [{ pattern: `minecraft:${pattern}`, color: legacyDye(Color) }] : [];
+  });
+
   return {
     ...item,
+    // A banner's Base wins over the Damage its id came from, as in 1.8's ItemBanner.getBaseColor
+    id: banner?.Base === undefined ? item.id : `minecraft:${legacyDye(banner.Base)}_banner`,
+    patterns: patterns?.length ? patterns : undefined,
     count: Count,
     name: tag?.display?.Name,
     lore: tag?.display?.Lore,

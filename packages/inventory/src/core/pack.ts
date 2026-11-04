@@ -130,7 +130,7 @@ interface Upgrade {
   models: Record<string, string>;
   /** The gui transform the version gave every 3D item in code, under the model's own */
   gui?: Transform;
-  /** Folders 26.3 doesn't read */
+  /** Folders 26.3 doesn't read, or reads in another format */
   drop: string[];
 }
 
@@ -141,7 +141,8 @@ const UPGRADES: Partial<Record<PackLayout, Upgrade>> = {
     models: minecraftData.legacyModels,
     // RenderItem.setupGuiTransform turns every 3D item like a block before the model's gui
     gui: { rotation: [30, 225, 0], scale: [0.625, 0.625, 0.625] },
-    drop: ["assets/minecraft/blockstates/"],
+    // 1.8's banner patterns are opaque masks, white where the dye goes, where 26.3's are alpha
+    drop: ["assets/minecraft/blockstates/", "assets/minecraft/textures/entity/banner/"],
   },
 };
 
