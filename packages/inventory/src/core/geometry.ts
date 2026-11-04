@@ -177,7 +177,7 @@ export function elementQuads(
 }
 
 /**
- * An entity model cube, laid out on its texture the way Minecraft's ModelPart.Cube is. Entity
+ * An entity model cube, laid out on its texture the way Minecraft lays out entity textures. Entity
  * models put y downwards, which the special model's transformation undoes.
  */
 export function boxQuads(
