@@ -6,14 +6,23 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Builds data/duels-modes.json and data/tnt-games.json from StatsifyDump exports (the
-// ChatTriggers module) that opened Duels' and TNT Games' layout editors, so each kit item has the
-// count, name and tooltip the game gives it. Each dump session writes its own exports, so pass the
-// last export of every session needed:
+// Builds data/duels-modes.json, data/tnt-games.json and data/legacy-kits.json from StatsifyDump
+// exports (the ChatTriggers module) that opened Duels', TNT Games', Blitz's and Mega Walls' layout
+// editors, so each kit item has the count, name and tooltip the game gives it. Each dump session
+// writes its own exports, so pass the last export of every session needed:
 //   pnpm --filter @statsify/inventory build
 //   node scripts/import-dump.ts <dump.json> [<dump.json> …]
 
-import { ARMOR, type ItemStack, type Kit, type KitItem, kitKey, legacyItem, skinUrl } from "@statsify/inventory";
+import {
+  ARMOR,
+  type ItemStack,
+  type Kit,
+  type KitItem,
+  type LegacyKit,
+  kitKey,
+  legacyItem,
+  skinUrl,
+} from "@statsify/inventory";
 import { readFile, writeFile } from "node:fs/promises";
 import data from "../data/minecraft-data.json" with { type: "json" };
 import { fetchJson } from "./minecraft-data.ts";
@@ -90,6 +99,15 @@ const KIT_EDITORS = {
 // Mini page is the one with Champion, a kit only Mini has
 const SKYWARS_MINI_KIT = "Champion";
 
+// Blitz's and Mega Walls' "Edit <Kit> Layout" editors share titles (both have a Pigman), so the
+// page their Go Back button returns to tells them apart
+const LEGACY_KIT_PAGES = { Upgrades: "blitz", Class: "megawalls" } as const;
+
+// Kits whose editor showed a layout the dumping account had saved, not the default
+const SAVED_LAYOUTS = { blitz: ["Pigman"], megawalls: [] as string[] };
+
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+
 const ARMOR_PIECE = /(Leather|Chainmail|Iron|Gold|Diamond) (Helmet|Chestplate|Leggings|Boots)$/;
 
 interface DumpItem {
@@ -158,10 +176,12 @@ function kitItem(dumped: DumpItem, numeric = legacyId(dumped)): ItemStack {
   const { id, damage, count, name, lore, nbt } = dumped;
   const item = legacyItem(numeric, damage);
   if (!item) throw new Error(`No 26.3 item for ${id}:${damage}`);
+  const color = /display:\{[^}]*color:(\d+)/.exec(nbt)?.[1];
 
   return {
     ...item,
     count: count > 1 ? count : undefined,
+    color: color === undefined ? undefined : Number(color),
     // Only a custom name: the rest take the pack's name, as other items do
     name: /display:\{[^}]*Name:"/.test(nbt) ? name : undefined,
     tooltip: lore.length > 0 ? lore : undefined,
@@ -344,17 +364,102 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
   output.kits[mode] = kits;
 }
 
+const legacyKits = { blitz: {} as Record<string, LegacyKit>, megawalls: {} as Record<string, LegacyKit> };
+
+// Blitz names its kit items "<Kit>'s <Material> (<level>)", which a renamed item replaces with
+// its new name and an Owner line
+const BLITZ_ITEM_NAME = /^§f.+'s (.+) §7\([IVX]+\)$/;
+const blitzMaterialNames = new Map(
+  screens.flatMap((screen) =>
+    screen.slots.flatMap(({ item }) => {
+      const material = item && BLITZ_ITEM_NAME.exec(item.name)?.[1];
+      return material ? [[item.id, material] as const] : [];
+    }),
+  ),
+);
+
+function withoutRename(item: DumpItem, kit: string, level: number): DumpItem {
+  const lore = item.lore.filter((line) => !plain(line).startsWith("Owner: "));
+  if (lore.length === item.lore.length) return item;
+
+  const material = blitzMaterialNames.get(item.id);
+  if (!material) throw new Error(`No other Blitz kit names a ${item.id}, so ${kit}'s renamed one can't be restored`);
+  return { ...item, name: `§f${kit}'s ${material} §7(${ROMAN[level - 1]})`, lore };
+}
+
+/** The Blitz level an Upgrades page shows unlocked, or the Kit upgrade a Mega Walls class page shows */
+function legacyKitLevel(page: Screen, game: keyof typeof legacyKits, kit: string) {
+  const entries = pickerEntries(page);
+
+  if (game === "blitz") {
+    const unlocked = entries.flatMap((item) => {
+      const level = ROMAN.indexOf(new RegExp(`^${kit} ([IVX]+)$`).exec(plain(item.name))?.[1] ?? "") + 1;
+      return level > 0 && item.lore.some((line) => plain(line) === "UNLOCKED") ? [level] : [];
+    });
+    if (unlocked.length === 0) throw new Error(`${page.title} shows no unlocked level`);
+    return { level: Math.max(...unlocked) };
+  }
+
+  const upgrade = entries.find((item) => plain(item.name) === `Kit - ${kit}`);
+  const tier = upgrade?.lore.map((line) => /^Tier: ([IVX]+)$/.exec(plain(line))?.[1]).find(Boolean);
+  if (!upgrade || !tier) throw new Error(`${page.title} shows no Kit tier`);
+  return { level: ROMAN.indexOf(tier) + 1, armor: pickerArmor(upgrade.lore) };
+}
+
+for (const [index, screen] of screens.entries()) {
+  const kit = /^Edit (.+) Layout$/.exec(plain(screen.title))?.[1];
+  const back = screen.slots.find(({ item }) => item && plain(item.name) === "Go Back")?.item;
+  const page = back && /^To (.+) (Upgrades|Class)$/.exec(plain(back.lore[0] ?? ""));
+  // A screen without its buttons was captured before it finished loading
+  if (!kit || !page || page[1] !== kit) continue;
+
+  const game = LEGACY_KIT_PAGES[page[2] as keyof typeof LEGACY_KIT_PAGES];
+  const key = kitKey(kit);
+  // The first screen is the default; later ones may show items the player moved
+  if (legacyKits[game][key]) continue;
+
+  const pageTitle = `${kit} ${page[2]}`;
+  const shownPage = screens.slice(0, index).findLast((shown) => plain(shown.title) === pageTitle);
+  if (!shownPage) throw new Error(`No ${pageTitle} page before ${screen.title}`);
+  const { level, armor } = legacyKitLevel(shownPage, game, kit);
+
+  const items = screen.slots
+    .flatMap(({ slot, item }) => {
+      const stored = storedSlot(slot);
+      if (!item || stored === undefined) return [];
+      const shown = game === "blitz" ? withoutRename(item, kit, level) : item;
+      const numeric = legacyId(shown);
+      return [{ slot: stored, token: `${numeric},${shown.damage}`, item: kitItem(shown, numeric) }];
+    })
+    .toSorted((a, b) => a.slot - b.slot);
+
+  // Stored layouts name items only by token
+  const tokens = items.map(({ token }) => token);
+  if (new Set(tokens).size < tokens.length) throw new Error(`${screen.title} shows two items of one token`);
+
+  legacyKits[game][key] = {
+    name: kit,
+    level,
+    items,
+    armor,
+    saved: SAVED_LAYOUTS[game].includes(kit) || undefined,
+  };
+}
+
 if (Object.keys(output.modes).length > 0 || Object.keys(output.kits).length > 0) {
   await writeFile(new URL("../data/duels-modes.json", import.meta.url), `${JSON.stringify(output, null, 2)}\n`);
 }
 if (Object.keys(tntGames).length > 0) {
   await writeFile(new URL("../data/tnt-games.json", import.meta.url), `${JSON.stringify(tntGames, null, 2)}\n`);
 }
+if (Object.keys(legacyKits.blitz).length > 0 || Object.keys(legacyKits.megawalls).length > 0) {
+  await writeFile(new URL("../data/legacy-kits.json", import.meta.url), `${JSON.stringify(legacyKits, null, 2)}\n`);
+}
 
 console.log(
   `${Object.keys(output.modes).length} Duels modes, ${Object.keys(tntGames).length} TNT Games modes; kits: ${Object.entries(output.kits)
     .map(([mode, kits]) => `${mode} ${Object.keys(kits).length}`)
-    .join(", ")}` +
+    .join(", ")}, blitz ${Object.keys(legacyKits.blitz).length}, megawalls ${Object.keys(legacyKits.megawalls).length}` +
     (missing.length > 0 ? `; not in these dumps: ${missing.join(", ")}` : "") +
     (unnamed.size > 0 ? `; skipped the last screens of ${[...unnamed].join(", ")}, which no picker follows` : ""),
 );

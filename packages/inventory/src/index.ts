@@ -10,6 +10,7 @@ export * from "./adapters/bedwars.js";
 export * from "./adapters/duels.js";
 export * from "./adapters/hypixel.js";
 export * from "./adapters/kits.js";
+export * from "./adapters/legacy-kits.js";
 export * from "./adapters/tnt-games.js";
 export { type CanvasBackend, setCanvasBackend } from "./core/canvas.js";
 export * from "./core/icon-cache.js";
