@@ -54,7 +54,6 @@ const LEGACY_PATTERNS: Record<string, string | undefined> = {
   bri: "bricks",
   sku: "skull",
   flo: "flower",
-  moj: "mojang",
 };
 
 // 1.8 banners give colours as dye Damage values, which run the other way to wool's
