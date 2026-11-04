@@ -1,0 +1,5637 @@
+{
+  "mini_scout": {
+    "name": "Mini Scout",
+    "items": [
+      {
+        "slot": 0,
+        "token": "DIAMOND_AXE:0:16",
+        "item": {
+          "id": "minecraft:diamond_axe",
+          "tooltip": [
+            "Sharpness I",
+            "",
+            "§9+7.25 Attack Damage"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 1,
+        "token": "DIAMOND_PICKAXE:0:32",
+        "item": {
+          "id": "minecraft:diamond_pickaxe",
+          "tooltip": [
+            "Efficiency II",
+            "",
+            "§9+5 Attack Damage"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 2,
+        "token": "POTION:2",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:speed",
+              "amplifier": 0
+            }
+          ],
+          "count": 3,
+          "name": "Splash Potion of Speed II (0:20)",
+          "tooltip": [
+            "§7Speed II (0:20)",
+            "",
+            "§5When Applied:",
+            "§9+40% Speed"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0",
+        "item": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "IRON_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:iron_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "DIAMOND_BOOTS:0:2",
+        "item": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Feather Falling I"
+          ]
+        }
+      }
+    ]
+  },
+  "mini_pyromancer": {
+    "name": "Mini Pyromancer",
+    "items": [
+      {
+        "slot": 0,
+        "token": "POTION:3",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:fire_resistance",
+              "amplifier": 0
+            }
+          ],
+          "tooltip": [
+            "§7Fire Resistance (1:30)"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "DIAMOND_SWORD:0:20",
+        "item": {
+          "id": "minecraft:diamond_sword",
+          "tooltip": [
+            "Fire Aspect I",
+            "",
+            "§9+7 Attack Damage"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 36,
+        "token": "DIAMOND_BOOTS:0:0,1",
+        "item": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III",
+            "Fire Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "LAVA_BUCKET:0",
+        "item": {
+          "id": "minecraft:lava_bucket"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "LAVA_BUCKET:0",
+        "item": {
+          "id": "minecraft:lava_bucket"
+        }
+      },
+      {
+        "slot": 4,
+        "token": "IRON_PICKAXE:0",
+        "item": {
+          "id": "minecraft:iron_pickaxe",
+          "tooltip": [
+            "",
+            "§9+4 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 5,
+        "token": "IRON_AXE:0",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0",
+        "item": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "IRON_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:iron_leggings"
+        }
+      }
+    ]
+  },
+  "mini_paladin": {
+    "name": "Mini Paladin",
+    "items": [
+      {
+        "slot": 0,
+        "token": "DIAMOND_SWORD:0",
+        "item": {
+          "id": "minecraft:diamond_sword",
+          "tooltip": [
+            "",
+            "§9+7 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "IRON_PICKAXE:0",
+        "item": {
+          "id": "minecraft:iron_pickaxe"
+        }
+      },
+      {
+        "slot": 2,
+        "token": "IRON_AXE:0",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0",
+        "item": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "DIAMOND_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:diamond_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "IRON_BOOTS:0",
+        "item": {
+          "id": "minecraft:iron_boots"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "POTION:1",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:regeneration",
+              "amplifier": 0
+            }
+          ],
+          "count": 3,
+          "tooltip": [
+            "§7Resistance (0:15)",
+            "§7Regeneration (0:08)"
+          ]
+        }
+      }
+    ]
+  },
+  "mini_magician": {
+    "name": "Mini Magician",
+    "items": [
+      {
+        "slot": 0,
+        "token": "DIAMOND_SWORD:0",
+        "item": {
+          "id": "minecraft:diamond_sword",
+          "tooltip": [
+            "",
+            "§9+7 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "IRON_PICKAXE:0",
+        "item": {
+          "id": "minecraft:iron_pickaxe"
+        }
+      },
+      {
+        "slot": 2,
+        "token": "IRON_AXE:0",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0",
+        "item": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "DIAMOND_CHESTPLATE:0:1",
+        "item": {
+          "id": "minecraft:diamond_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Fire Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 37,
+        "token": "IRON_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:iron_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "IRON_BOOTS:0",
+        "item": {
+          "id": "minecraft:iron_boots"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "MILK_BUCKET:0",
+        "item": {
+          "id": "minecraft:milk_bucket"
+        }
+      },
+      {
+        "slot": 4,
+        "token": "MILK_BUCKET:0",
+        "item": {
+          "id": "minecraft:milk_bucket"
+        }
+      },
+      {
+        "slot": 5,
+        "token": "POTION:8",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:weakness",
+              "amplifier": 0
+            }
+          ],
+          "count": 2,
+          "tooltip": [
+            "§cWeakness (0:08)",
+            "§cPoison (0:08)",
+            "",
+            "§5When Applied:",
+            "§c-0.5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 6,
+        "token": "POTION:12",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:instant_damage",
+              "amplifier": 0
+            }
+          ],
+          "count": 3,
+          "name": "Splash Potion of Harming (2❤)",
+          "tooltip": [
+            "§cInstant Damage"
+          ]
+        }
+      }
+    ]
+  },
+  "mini_hound": {
+    "name": "Mini Hound",
+    "items": [
+      {
+        "token": "COOKED_BEEF:0",
+        "item": {
+          "id": "minecraft:cooked_beef",
+          "count": 16
+        }
+      },
+      {
+        "token": "DIAMOND_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "token": "DIAMOND_SWORD:0",
+        "item": {
+          "id": "minecraft:diamond_sword",
+          "tooltip": [
+            "",
+            "§9+7 Attack Damage"
+          ]
+        }
+      },
+      {
+        "token": "IRON_PICKAXE:0",
+        "item": {
+          "id": "minecraft:iron_pickaxe"
+        }
+      },
+      {
+        "token": "IRON_AXE:0",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "token": "IRON_HELMET:0",
+        "item": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      },
+      {
+        "token": "IRON_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:iron_leggings"
+        }
+      }
+    ]
+  },
+  "mini_healer": {
+    "name": "Mini Healer",
+    "items": [
+      {
+        "slot": 0,
+        "token": "POTION:1",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:regeneration",
+              "amplifier": 0
+            }
+          ],
+          "count": 2,
+          "tooltip": [
+            "§7Regeneration II (0:12)"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "POTION:5",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:instant_health",
+              "amplifier": 0
+            }
+          ],
+          "count": 2,
+          "name": "Splash Potion of Healing (2❤)",
+          "tooltip": [
+            "§7Instant Health"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "DIAMOND_SWORD:0",
+        "item": {
+          "id": "minecraft:diamond_sword",
+          "tooltip": [
+            "",
+            "§9+7 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 3,
+        "token": "IRON_PICKAXE:0",
+        "item": {
+          "id": "minecraft:iron_pickaxe"
+        }
+      },
+      {
+        "slot": 4,
+        "token": "IRON_AXE:0",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0",
+        "item": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "IRON_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:iron_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "DIAMOND_BOOTS:0",
+        "item": {
+          "id": "minecraft:diamond_boots"
+        }
+      },
+      {
+        "slot": 5,
+        "token": "GOLDEN_APPLE:0",
+        "item": {
+          "id": "minecraft:golden_apple",
+          "count": 2
+        }
+      }
+    ]
+  },
+  "mini_champion": {
+    "name": "Mini Champion",
+    "items": [
+      {
+        "slot": 0,
+        "token": "DIAMOND_SWORD:0:16",
+        "item": {
+          "id": "minecraft:diamond_sword",
+          "name": "§fChampion's Diamond Sword",
+          "tooltip": [
+            "Sharpness II",
+            "",
+            "§9+9.5 Attack Damage"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 1,
+        "token": "IRON_PICKAXE:0",
+        "item": {
+          "id": "minecraft:iron_pickaxe"
+        }
+      },
+      {
+        "slot": 2,
+        "token": "IRON_AXE:0",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0",
+        "item": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "IRON_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:iron_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "IRON_BOOTS:0",
+        "item": {
+          "id": "minecraft:iron_boots"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "ANVIL:0",
+        "item": {
+          "id": "minecraft:anvil"
+        }
+      },
+      {
+        "slot": 4,
+        "token": "ENCHANTED_BOOK:0:16",
+        "item": {
+          "id": "minecraft:enchanted_book",
+          "count": 3,
+          "enchanted": true,
+          "tooltip": [
+            "Sharpness I"
+          ]
+        }
+      }
+    ]
+  },
+  "mini_bowman": {
+    "name": "Mini Bowman",
+    "items": [
+      {
+        "slot": 0,
+        "token": "BOW:0:48",
+        "item": {
+          "id": "minecraft:bow",
+          "name": "§fBowman's Bow",
+          "tooltip": [
+            "Power III"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 1,
+        "token": "ARROW:0",
+        "item": {
+          "id": "minecraft:arrow",
+          "count": 32
+        }
+      },
+      {
+        "slot": 2,
+        "token": "IRON_SWORD:0",
+        "item": {
+          "id": "minecraft:iron_sword"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "IRON_PICKAXE:0",
+        "item": {
+          "id": "minecraft:iron_pickaxe"
+        }
+      },
+      {
+        "slot": 4,
+        "token": "IRON_AXE:0",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "DIAMOND_HELMET:0:0",
+        "item": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 38,
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "IRON_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:iron_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "IRON_BOOTS:0",
+        "item": {
+          "id": "minecraft:iron_boots"
+        }
+      }
+    ]
+  },
+  "mini_blacksmith": {
+    "name": "Mini Blacksmith",
+    "items": [
+      {
+        "token": "ANVIL:0",
+        "item": {
+          "id": "minecraft:anvil"
+        }
+      },
+      {
+        "token": "IRON_SWORD:0",
+        "item": {
+          "id": "minecraft:iron_sword"
+        }
+      },
+      {
+        "token": "DIAMOND_PICKAXE:0",
+        "item": {
+          "id": "minecraft:diamond_pickaxe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "token": "IRON_AXE:0",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "token": "IRON_HELMET:0",
+        "item": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      },
+      {
+        "token": "IRON_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:iron_leggings"
+        }
+      },
+      {
+        "token": "IRON_BOOTS:0",
+        "item": {
+          "id": "minecraft:iron_boots"
+        }
+      },
+      {
+        "token": "BOW:0",
+        "item": {
+          "id": "minecraft:bow"
+        }
+      },
+      {
+        "token": "ARROW:0",
+        "item": {
+          "id": "minecraft:arrow",
+          "count": 16
+        }
+      }
+    ]
+  },
+  "mini_athlete": {
+    "name": "Mini Athlete",
+    "items": [
+      {
+        "slot": 0,
+        "token": "WATER_BUCKET:0",
+        "item": {
+          "id": "minecraft:water_bucket"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "DIAMOND_SWORD:0",
+        "item": {
+          "id": "minecraft:diamond_sword",
+          "tooltip": [
+            "",
+            "§9+7 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "FISHING_ROD:0",
+        "item": {
+          "id": "minecraft:fishing_rod"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "POTION:0",
+        "item": {
+          "id": "minecraft:potion",
+          "effects": [],
+          "name": "§fPotion of Increase Damage"
+        }
+      },
+      {
+        "slot": 4,
+        "token": "POTION:2",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:speed",
+              "amplifier": 0
+            }
+          ],
+          "count": 2,
+          "name": "Splash Potion of Speed III (0:04)",
+          "tooltip": [
+            "§7Speed III (0:04)",
+            "",
+            "§5When Applied:",
+            "§9+60% Speed"
+          ]
+        }
+      },
+      {
+        "slot": 5,
+        "token": "GOLDEN_APPLE:0",
+        "item": {
+          "id": "minecraft:golden_apple",
+          "count": 2
+        }
+      },
+      {
+        "slot": 6,
+        "token": "IRON_PICKAXE:0",
+        "item": {
+          "id": "minecraft:iron_pickaxe"
+        }
+      },
+      {
+        "slot": 7,
+        "token": "IRON_AXE:0",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0",
+        "item": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "IRON_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:iron_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "IRON_BOOTS:0:2",
+        "item": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Feather Falling X"
+          ]
+        }
+      }
+    ]
+  },
+  "mini_armorer": {
+    "name": "Mini Armorer",
+    "items": [
+      {
+        "slot": 38,
+        "token": "DIAMOND_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:diamond_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "DIAMOND_BOOTS:0",
+        "item": {
+          "id": "minecraft:diamond_boots"
+        }
+      },
+      {
+        "slot": 0,
+        "token": "IRON_PICKAXE:0",
+        "item": {
+          "id": "minecraft:iron_pickaxe"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "IRON_AXE:0",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0",
+        "item": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "IRON_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:iron_leggings"
+        }
+      }
+    ]
+  },
+  "normal_default": {
+    "name": "Normal Default",
+    "items": [
+      {
+        "slot": 0,
+        "token": "WOOD_PICKAXE:0",
+        "item": {
+          "id": "minecraft:wooden_pickaxe",
+          "tooltip": [
+            "",
+            "§9+2 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "WOOD_AXE:0",
+        "item": {
+          "id": "minecraft:wooden_axe",
+          "tooltip": [
+            "",
+            "§9+3 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "WOOD_SPADE:0",
+        "item": {
+          "id": "minecraft:wooden_shovel",
+          "tooltip": [
+            "",
+            "§9+1 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 3,
+        "token": "WOOD_SWORD:0",
+        "item": {
+          "id": "minecraft:wooden_sword",
+          "tooltip": [
+            "",
+            "§9+4 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      }
+    ]
+  },
+  "normal_armorsmith": {
+    "name": "Normal Armorsmith",
+    "items": [
+      {
+        "slot": 0,
+        "token": "ANVIL:0",
+        "item": {
+          "id": "minecraft:anvil"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "ENCHANTED_BOOK:0:0,16",
+        "item": {
+          "id": "minecraft:enchanted_book",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II",
+            "Sharpness I"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "EXP_BOTTLE:0",
+        "item": {
+          "id": "minecraft:experience_bottle",
+          "count": 64
+        }
+      },
+      {
+        "slot": 39,
+        "token": "DIAMOND_HELMET:0",
+        "item": {
+          "id": "minecraft:diamond_helmet"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "ENCHANTED_BOOK:0:48",
+        "item": {
+          "id": "minecraft:enchanted_book",
+          "enchanted": true,
+          "tooltip": [
+            "Power I"
+          ]
+        }
+      }
+    ]
+  },
+  "normal_ecologist": {
+    "name": "Normal Ecologist",
+    "items": [
+      {
+        "slot": 0,
+        "token": "STONE_AXE:0:16,32",
+        "item": {
+          "id": "minecraft:stone_axe",
+          "enchanted": true,
+          "tooltip": [
+            "Efficiency II",
+            "Sharpness I"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "LOG:0",
+        "item": {
+          "id": "minecraft:oak_log",
+          "count": 24
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      }
+    ]
+  },
+  "normal_enchanter": {
+    "name": "Normal Enchanter",
+    "items": [
+      {
+        "token": "ENCHANTMENT_TABLE:0",
+        "item": {
+          "id": "minecraft:enchanting_table"
+        }
+      },
+      {
+        "token": "EXP_BOTTLE:0",
+        "item": {
+          "id": "minecraft:experience_bottle",
+          "count": 64
+        }
+      },
+      {
+        "token": "GOLD_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:golden_leggings"
+        }
+      },
+      {
+        "token": "GOLD_BOOTS:0",
+        "item": {
+          "id": "minecraft:golden_boots"
+        }
+      }
+    ]
+  },
+  "normal_rookie": {
+    "name": "Normal Rookie",
+    "items": [
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0",
+        "item": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      },
+      {
+        "slot": 0,
+        "token": "STONE_SWORD:0",
+        "item": {
+          "id": "minecraft:stone_sword"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "GLASS:0",
+        "item": {
+          "id": "minecraft:glass",
+          "count": 16
+        }
+      }
+    ]
+  },
+  "normal_batguy": {
+    "name": "Normal Batguy",
+    "items": [
+      {
+        "token": "LEATHER_HELMET:0",
+        "item": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      },
+      {
+        "token": "MONSTER_EGG:65",
+        "item": {
+          "id": "minecraft:bat_spawn_egg",
+          "count": 5
+        }
+      }
+    ]
+  },
+  "normal_disco": {
+    "name": "Normal Disco",
+    "items": [
+      {
+        "token": "LEATHER_HELMET:0:4",
+        "item": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Projectile Protection II"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0:2",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Feather Falling II"
+          ]
+        }
+      },
+      {
+        "token": "JUKEBOX:0",
+        "item": {
+          "id": "minecraft:jukebox"
+        }
+      },
+      {
+        "token": "NOTE_BLOCK:0",
+        "item": {
+          "id": "minecraft:note_block",
+          "count": 24
+        }
+      }
+    ]
+  },
+  "normal_energix": {
+    "name": "Normal Energix",
+    "items": [
+      {
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      }
+    ]
+  },
+  "normal_frog": {
+    "name": "Normal Frog",
+    "items": [
+      {
+        "slot": 0,
+        "token": "SKULL_ITEM:3",
+        "item": {
+          "id": "minecraft:player_head",
+          "name": "§aFrog's Hat",
+          "skin": "https://textures.minecraft.net/texture/fa72d7d2195a51fbe546e7348a6b75de1197bce21ea1dec6227df1f2ed8b73"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "POTION:2",
+        "item": {
+          "id": "minecraft:potion",
+          "effects": [
+            {
+              "id": "minecraft:speed",
+              "amplifier": 0
+            }
+          ],
+          "name": "§aFrog's Potion",
+          "tooltip": [
+            "§7Speed (0:45)",
+            "§7Jump Boost IV (0:45)",
+            "",
+            "§5When Applied:",
+            "§9+20% Speed"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "WATER_LILY:0",
+        "item": {
+          "id": "minecraft:lily_pad",
+          "count": 16
+        }
+      }
+    ]
+  },
+  "normal_grenade": {
+    "name": "Normal Grenade",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0:3",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Blast Protection IV"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0:3",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Blast Protection IV"
+          ]
+        }
+      }
+    ]
+  },
+  "normal_healer": {
+    "name": "Normal Healer",
+    "items": [
+      {
+        "token": "GOLDEN_APPLE:0",
+        "item": {
+          "id": "minecraft:golden_apple"
+        }
+      }
+    ]
+  },
+  "normal_scout": {
+    "name": "Normal Scout",
+    "items": [
+      {
+        "token": "WOOD_SWORD:0",
+        "item": {
+          "id": "minecraft:wooden_sword"
+        }
+      },
+      {
+        "token": "IRON_BOOTS:0",
+        "item": {
+          "id": "minecraft:iron_boots"
+        }
+      }
+    ]
+  },
+  "normal_cactus": {
+    "name": "Normal Cactus",
+    "items": [
+      {
+        "slot": 0,
+        "token": "CACTUS:0",
+        "item": {
+          "id": "minecraft:cactus",
+          "count": 8
+        }
+      },
+      {
+        "slot": 1,
+        "token": "SAND:0",
+        "item": {
+          "id": "minecraft:sand",
+          "count": 16
+        }
+      },
+      {
+        "slot": 2,
+        "token": "SANDSTONE:0",
+        "item": {
+          "id": "minecraft:sandstone",
+          "count": 16
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0:7,34",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Thorns V",
+            "Unbreaking V"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0:7,34",
+        "item": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Thorns V",
+            "Unbreaking V"
+          ]
+        }
+      }
+    ]
+  },
+  "normal_armorer": {
+    "name": "Normal Armorer",
+    "items": [
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0",
+        "item": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "GOLD_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:golden_chestplate"
+        }
+      }
+    ]
+  },
+  "normal_baseballplayer": {
+    "name": "Normal Baseball Player",
+    "items": [
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0:0",
+        "item": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "WOOD_SWORD:0:19",
+        "item": {
+          "id": "minecraft:wooden_sword",
+          "enchanted": true,
+          "tooltip": [
+            "Knockback I"
+          ]
+        }
+      }
+    ]
+  },
+  "normal_enderchest": {
+    "name": "Normal Enderchest",
+    "items": [
+      {
+        "slot": 0,
+        "token": "GOLDEN_APPLE:0",
+        "item": {
+          "id": "minecraft:golden_apple"
+        }
+      }
+    ]
+  },
+  "normal_farmer": {
+    "name": "Normal Farmer",
+    "items": [
+      {
+        "slot": 37,
+        "token": "IRON_LEGGINGS:0:4",
+        "item": {
+          "id": "minecraft:iron_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Projectile Protection III"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "EGG:0",
+        "item": {
+          "id": "minecraft:egg",
+          "count": 16
+        }
+      }
+    ]
+  },
+  "normal_fisherman": {
+    "name": "Normal Fisherman",
+    "items": [
+      {
+        "slot": 0,
+        "token": "FISHING_ROD:0:34,61,62",
+        "item": {
+          "id": "minecraft:fishing_rod",
+          "enchanted": true,
+          "tooltip": [
+            "Unbreaking X",
+            "Luck of the Sea X",
+            "Lure VII"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "CHAINMAIL_HELMET:0:5",
+        "item": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Respiration II"
+          ]
+        }
+      },
+      {
+        "slot": 37,
+        "token": "CHAINMAIL_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:chainmail_leggings"
+        }
+      }
+    ]
+  },
+  "normal_hunter": {
+    "name": "Normal Hunter",
+    "items": [
+      {
+        "slot": 0,
+        "token": "BOW:0:48",
+        "item": {
+          "id": "minecraft:bow",
+          "enchanted": true,
+          "tooltip": [
+            "Power I"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "ARROW:0",
+        "item": {
+          "id": "minecraft:arrow",
+          "count": 8
+        }
+      }
+    ]
+  },
+  "normal_knight": {
+    "name": "Normal Knight",
+    "items": [
+      {
+        "slot": 0,
+        "token": "GOLD_SWORD:0:16,34",
+        "item": {
+          "id": "minecraft:golden_sword",
+          "enchanted": true,
+          "tooltip": [
+            "Sharpness II",
+            "Unbreaking V"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0:0",
+        "item": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      }
+    ]
+  },
+  "normal_pharaoh": {
+    "name": "Normal Pharaoh",
+    "items": [
+      {
+        "token": "GOLD_HELMET:0",
+        "item": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "EMERALD_BLOCK:0",
+        "item": {
+          "id": "minecraft:emerald_block",
+          "count": 42
+        }
+      }
+    ]
+  },
+  "normal_snowman": {
+    "name": "Normal Snowman",
+    "items": [
+      {
+        "slot": 0,
+        "token": "SNOW_BALL:0",
+        "item": {
+          "id": "minecraft:snowball",
+          "count": 16
+        }
+      },
+      {
+        "slot": 1,
+        "token": "SNOW_BLOCK:0",
+        "item": {
+          "id": "minecraft:snow_block",
+          "count": 2
+        }
+      },
+      {
+        "slot": 2,
+        "token": "IRON_SPADE:0:16",
+        "item": {
+          "id": "minecraft:iron_shovel",
+          "enchanted": true,
+          "tooltip": [
+            "Sharpness II"
+          ]
+        }
+      },
+      {
+        "slot": 3,
+        "token": "PUMPKIN:0",
+        "item": {
+          "id": "minecraft:carved_pumpkin"
+        }
+      },
+      {
+        "slot": 4,
+        "token": "COAL_BLOCK:0",
+        "item": {
+          "id": "minecraft:coal_block",
+          "count": 16
+        }
+      },
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0:1",
+        "item": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Fire Protection III"
+          ]
+        }
+      }
+    ]
+  },
+  "normal_speleologist": {
+    "name": "Normal Speleologist",
+    "items": [
+      {
+        "slot": 0,
+        "token": "IRON_PICKAXE:0:16,32,34",
+        "item": {
+          "id": "minecraft:iron_pickaxe",
+          "enchanted": true,
+          "tooltip": [
+            "Efficiency III",
+            "Sharpness I",
+            "Unbreaking III"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "STONE:0",
+        "item": {
+          "id": "minecraft:stone",
+          "count": 24
+        }
+      },
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0",
+        "item": {
+          "id": "minecraft:golden_helmet"
+        }
+      }
+    ]
+  },
+  "normal_princess": {
+    "name": "Normal Princess",
+    "items": [
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0:0",
+        "item": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "BOW:0:50",
+        "item": {
+          "id": "minecraft:bow",
+          "enchanted": true,
+          "tooltip": [
+            "Flame I"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "ARROW:0",
+        "item": {
+          "id": "minecraft:arrow",
+          "count": 3
+        }
+      }
+    ]
+  },
+  "normal_engineer": {
+    "name": "Normal Engineer",
+    "items": [
+      {
+        "slot": 0,
+        "token": "TRIPWIRE_HOOK:0",
+        "item": {
+          "id": "minecraft:tripwire_hook",
+          "count": 64
+        }
+      },
+      {
+        "slot": 1,
+        "token": "WEB:0",
+        "item": {
+          "id": "minecraft:cobweb",
+          "count": 8
+        }
+      },
+      {
+        "slot": 2,
+        "token": "PISTON_BASE:0",
+        "item": {
+          "id": "minecraft:piston",
+          "count": 64
+        }
+      },
+      {
+        "slot": 3,
+        "token": "SLIME_BALL:0",
+        "item": {
+          "id": "minecraft:slime_ball",
+          "count": 64
+        }
+      },
+      {
+        "slot": 4,
+        "token": "REDSTONE:0",
+        "item": {
+          "id": "minecraft:redstone",
+          "count": 64
+        }
+      },
+      {
+        "slot": 5,
+        "token": "LEVER:0",
+        "item": {
+          "id": "minecraft:lever",
+          "count": 64
+        }
+      },
+      {
+        "slot": 6,
+        "token": "DISPENSER:0",
+        "item": {
+          "id": "minecraft:dispenser",
+          "count": 64
+        }
+      },
+      {
+        "slot": 7,
+        "token": "SULPHUR:0",
+        "item": {
+          "id": "minecraft:gunpowder",
+          "count": 64
+        }
+      },
+      {
+        "slot": 8,
+        "token": "SAND:0",
+        "item": {
+          "id": "minecraft:sand",
+          "count": 64
+        }
+      },
+      {
+        "slot": 9,
+        "token": "GRAVEL:0",
+        "item": {
+          "id": "minecraft:gravel",
+          "count": 64
+        }
+      },
+      {
+        "slot": 10,
+        "token": "ARROW:0",
+        "item": {
+          "id": "minecraft:arrow",
+          "count": 64
+        }
+      },
+      {
+        "slot": 11,
+        "token": "FLINT_AND_STEEL:0",
+        "item": {
+          "id": "minecraft:flint_and_steel",
+          "count": 4
+        }
+      },
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0",
+        "item": {
+          "id": "minecraft:golden_helmet"
+        }
+      }
+    ]
+  },
+  "normal_pigrider": {
+    "name": "Normal Pig Rider",
+    "items": [
+      {
+        "slot": 0,
+        "token": "SADDLE:0",
+        "item": {
+          "id": "minecraft:saddle"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "MONSTER_EGG:90",
+        "item": {
+          "id": "minecraft:pig_spawn_egg"
+        }
+      },
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0:0",
+        "item": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "CARROT_STICK:0",
+        "item": {
+          "id": "minecraft:carrot_on_a_stick"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "HAY_BLOCK:0",
+        "item": {
+          "id": "minecraft:hay_block",
+          "count": 16
+        }
+      }
+    ]
+  },
+  "normal_sloth": {
+    "name": "Normal Sloth",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "LEATHER_HELMET:0",
+        "item": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      },
+      {
+        "token": "LOG:3",
+        "item": {
+          "id": "minecraft:jungle_log",
+          "count": 4
+        }
+      }
+    ]
+  },
+  "normal_magician": {
+    "name": "Normal Magician",
+    "items": [
+      {
+        "token": "MONSTER_EGG:101",
+        "item": {
+          "id": "minecraft:rabbit_spawn_egg"
+        }
+      },
+      {
+        "token": "LEATHER_HELMET:0",
+        "item": {
+          "id": "minecraft:leather_helmet"
+        }
+      }
+    ]
+  },
+  "normal_warlock": {
+    "name": "Normal Warlock",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "token": "CHAINMAIL_BOOTS:0",
+        "item": {
+          "id": "minecraft:chainmail_boots"
+        }
+      }
+    ]
+  },
+  "normal_cannoneer": {
+    "name": "Normal Cannoneer",
+    "items": [
+      {
+        "token": "TNT:0",
+        "item": {
+          "id": "minecraft:tnt",
+          "count": 16
+        }
+      },
+      {
+        "token": "REDSTONE_BLOCK:0",
+        "item": {
+          "id": "minecraft:redstone_block",
+          "count": 4
+        }
+      },
+      {
+        "token": "IRON_BOOTS:0:2,3",
+        "item": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Feather Falling III",
+            "Blast Protection III"
+          ]
+        }
+      },
+      {
+        "token": "WATER_BUCKET:0",
+        "item": {
+          "id": "minecraft:water_bucket"
+        }
+      }
+    ]
+  },
+  "normal_enderman": {
+    "name": "Normal Enderman",
+    "items": [
+      {
+        "token": "IRON_HELMET:0:0",
+        "item": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "token": "IRON_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      }
+    ]
+  },
+  "normal_pyro": {
+    "name": "Normal Pyro",
+    "items": [
+      {
+        "slot": 0,
+        "token": "FLINT_AND_STEEL:35",
+        "item": {
+          "id": "minecraft:flint_and_steel",
+          "damage": 35
+        }
+      },
+      {
+        "slot": 1,
+        "token": "LAVA_BUCKET:0",
+        "item": {
+          "id": "minecraft:lava_bucket"
+        }
+      },
+      {
+        "slot": 2,
+        "token": "LAVA_BUCKET:0",
+        "item": {
+          "id": "minecraft:lava_bucket"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "CHAINMAIL_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:chainmail_chestplate"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "CHAINMAIL_BOOTS:0",
+        "item": {
+          "id": "minecraft:chainmail_boots"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "POTION:3",
+        "item": {
+          "id": "minecraft:potion",
+          "effects": [
+            {
+              "id": "minecraft:fire_resistance",
+              "amplifier": 0
+            }
+          ],
+          "name": "§fPotion of Fire Resistance",
+          "tooltip": [
+            "§7Fire Resistance (2:00)"
+          ]
+        }
+      }
+    ]
+  },
+  "normal_troll": {
+    "name": "Normal Troll",
+    "items": [
+      {
+        "token": "WEB:0",
+        "item": {
+          "id": "minecraft:cobweb",
+          "count": 12
+        }
+      },
+      {
+        "token": "FIREWORK:0",
+        "item": {
+          "id": "minecraft:firework_rocket",
+          "count": 5
+        }
+      },
+      {
+        "token": "LEATHER_HELMET:0",
+        "item": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      }
+    ]
+  },
+  "normal_guardian": {
+    "name": "Normal Guardian",
+    "items": [
+      {
+        "token": "OBSIDIAN:0",
+        "item": {
+          "id": "minecraft:obsidian",
+          "count": 6
+        }
+      },
+      {
+        "token": "MONSTER_EGG:51",
+        "item": {
+          "id": "minecraft:skeleton_spawn_egg",
+          "count": 2
+        }
+      },
+      {
+        "token": "MONSTER_EGG:54",
+        "item": {
+          "id": "minecraft:zombie_spawn_egg",
+          "count": 2
+        }
+      },
+      {
+        "token": "CHAINMAIL_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:chainmail_leggings"
+        }
+      },
+      {
+        "token": "CHAINMAIL_BOOTS:0",
+        "item": {
+          "id": "minecraft:chainmail_boots"
+        }
+      }
+    ]
+  },
+  "normal_salmon": {
+    "name": "Normal Salmon",
+    "items": [
+      {
+        "slot": 0,
+        "token": "RAW_FISH:1:16,19",
+        "item": {
+          "id": "minecraft:salmon",
+          "enchanted": true,
+          "tooltip": [
+            "Sharpness II",
+            "Knockback I"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "SPONGE:0",
+        "item": {
+          "id": "minecraft:sponge",
+          "count": 16
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      }
+    ]
+  },
+  "normal_slime": {
+    "name": "Normal Slime",
+    "items": [
+      {
+        "slot": 36,
+        "token": "IRON_BOOTS:0:2",
+        "item": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Feather Falling IV"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "SLIME_BLOCK:0",
+        "item": {
+          "id": "minecraft:slime_block",
+          "count": 32
+        }
+      }
+    ]
+  },
+  "normal_jester": {
+    "name": "Normal Jester",
+    "items": [
+      {
+        "token": "GOLDEN_APPLE:0",
+        "item": {
+          "id": "minecraft:golden_apple",
+          "count": 2
+        }
+      }
+    ]
+  },
+  "normal_zookeeper": {
+    "name": "Normal Zookeeper",
+    "items": []
+  },
+  "normal_archeologist": {
+    "name": "Normal Archeologist",
+    "items": []
+  },
+  "normal_fallenangel": {
+    "name": "Normal Fallen Angel",
+    "items": [
+      {
+        "slot": 0,
+        "token": "DIAMOND_HOE:0:16",
+        "item": {
+          "id": "minecraft:diamond_hoe",
+          "enchanted": true,
+          "tooltip": [
+            "Sharpness VI"
+          ]
+        }
+      }
+    ]
+  },
+  "normal_endlord": {
+    "name": "Normal End Lord",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      }
+    ]
+  },
+  "normal_monstertrainer": {
+    "name": "Normal Monster Trainer",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      }
+    ]
+  },
+  "normal_netherlord": {
+    "name": "Normal Nether Lord",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      },
+      {
+        "token": "NETHERRACK:0",
+        "item": {
+          "id": "minecraft:netherrack",
+          "count": 16
+        }
+      }
+    ]
+  },
+  "normal_fishmonger": {
+    "name": "Normal Fishmonger",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      }
+    ]
+  },
+  "normal_thundermeister": {
+    "name": "Normal Thundermeister",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      }
+    ]
+  },
+  "normal_chronobreaker": {
+    "name": "Normal Chronobreaker",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      }
+    ]
+  },
+  "normal_cryomancer": {
+    "name": "Normal Cryomancer",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      },
+      {
+        "token": "SNOW_BALL:0",
+        "item": {
+          "id": "minecraft:snowball",
+          "count": 16
+        }
+      }
+    ]
+  },
+  "insane_default": {
+    "name": "Insane Default",
+    "items": [
+      {
+        "slot": 0,
+        "token": "IRON_PICKAXE:0",
+        "item": {
+          "id": "minecraft:iron_pickaxe"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "IRON_AXE:0",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "IRON_SPADE:0",
+        "item": {
+          "id": "minecraft:iron_shovel",
+          "tooltip": [
+            "",
+            "§9+3 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 3,
+        "token": "IRON_SWORD:0",
+        "item": {
+          "id": "minecraft:iron_sword"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      }
+    ]
+  },
+  "insane_armorer": {
+    "name": "Insane Armorer",
+    "items": [
+      {
+        "slot": 38,
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "IRON_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:iron_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "DIAMOND_BOOTS:0",
+        "item": {
+          "id": "minecraft:diamond_boots"
+        }
+      },
+      {
+        "slot": 0,
+        "token": "POTION:1",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:regeneration",
+              "amplifier": 0
+            }
+          ],
+          "name": "§fSplash Potion of Resistance",
+          "tooltip": [
+            "§7Resistance (0:10)"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_armorsmith": {
+    "name": "Insane Armorsmith",
+    "items": [
+      {
+        "slot": 0,
+        "token": "ANVIL:0",
+        "item": {
+          "id": "minecraft:anvil"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "ENCHANTED_BOOK:0:0,2,16,48,51",
+        "item": {
+          "id": "minecraft:enchanted_book",
+          "tooltip": [
+            "Protection III",
+            "Sharpness I",
+            "Power III",
+            "Feather Falling IV",
+            "Infinity I"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "EXP_BOTTLE:0",
+        "item": {
+          "id": "minecraft:experience_bottle",
+          "count": 64
+        }
+      },
+      {
+        "slot": 39,
+        "token": "DIAMOND_HELMET:0",
+        "item": {
+          "id": "minecraft:diamond_helmet"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "ENCHANTED_BOOK:0:48",
+        "item": {
+          "id": "minecraft:enchanted_book",
+          "tooltip": [
+            "Power I"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_ecologist": {
+    "name": "Insane Ecologist",
+    "items": [
+      {
+        "slot": 0,
+        "token": "IRON_AXE:0:16,32",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "Efficiency II",
+            "Sharpness I",
+            "",
+            "§9+6.25 Attack Damage"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 1,
+        "token": "LOG:0",
+        "item": {
+          "id": "minecraft:oak_log",
+          "count": 24
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_healer": {
+    "name": "Insane Healer",
+    "items": [
+      {
+        "slot": 0,
+        "token": "POTION:5",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:instant_health",
+              "amplifier": 0
+            }
+          ],
+          "count": 3,
+          "tooltip": [
+            "§7Instant Health"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "POTION:33",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:regeneration",
+              "amplifier": 1
+            }
+          ],
+          "count": 2,
+          "tooltip": [
+            "§7Regeneration II (0:16)"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "GOLDEN_APPLE:0",
+        "item": {
+          "id": "minecraft:golden_apple",
+          "count": 2
+        }
+      }
+    ]
+  },
+  "insane_knight": {
+    "name": "Insane Knight",
+    "items": [
+      {
+        "slot": 0,
+        "token": "IRON_SWORD:0:16",
+        "item": {
+          "id": "minecraft:iron_sword",
+          "tooltip": [
+            "Sharpness II",
+            "",
+            "§9+8.5 Attack Damage"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0:0,34",
+        "item": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II",
+            "Unbreaking III"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_pro": {
+    "name": "Insane Pro",
+    "items": [
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0",
+        "item": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      },
+      {
+        "slot": 0,
+        "token": "IRON_SWORD:0:16",
+        "item": {
+          "id": "minecraft:iron_sword",
+          "enchanted": true,
+          "tooltip": [
+            "Sharpness I"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "GLASS:0",
+        "item": {
+          "id": "minecraft:glass",
+          "count": 16
+        }
+      },
+      {
+        "slot": 2,
+        "token": "GOLDEN_APPLE:0",
+        "item": {
+          "id": "minecraft:golden_apple"
+        }
+      }
+    ]
+  },
+  "insane_scout": {
+    "name": "Insane Scout",
+    "items": [
+      {
+        "slot": 0,
+        "token": "DIAMOND_SWORD:0",
+        "item": {
+          "id": "minecraft:diamond_sword",
+          "tooltip": [
+            "",
+            "§9+7 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "POTION:2",
+        "item": {
+          "id": "minecraft:potion",
+          "effects": [
+            {
+              "id": "minecraft:speed",
+              "amplifier": 0
+            }
+          ],
+          "count": 2,
+          "tooltip": [
+            "§7Speed II (1:00)",
+            "",
+            "§5When Applied:",
+            "§9+40% Speed"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "DIAMOND_BOOTS:0",
+        "item": {
+          "id": "minecraft:diamond_boots"
+        }
+      }
+    ]
+  },
+  "insane_batguy": {
+    "name": "Insane Batguy",
+    "items": [
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0:0",
+        "item": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "IRON_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "POTION:12",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:instant_damage",
+              "amplifier": 0
+            }
+          ],
+          "count": 2,
+          "tooltip": [
+            "§cBlindness (0:11)"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "MONSTER_EGG:65",
+        "item": {
+          "id": "minecraft:bat_spawn_egg",
+          "count": 10
+        }
+      }
+    ]
+  },
+  "insane_disco": {
+    "name": "Insane Disco",
+    "items": [
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0:4",
+        "item": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Projectile Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0:0,7",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III",
+            "Thorns III"
+          ]
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "LEATHER_BOOTS:0:2",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Feather Falling IV"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "JUKEBOX:0",
+        "item": {
+          "id": "minecraft:jukebox"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "NOTE_BLOCK:0",
+        "item": {
+          "id": "minecraft:note_block",
+          "count": 12
+        }
+      },
+      {
+        "slot": 2,
+        "token": "GOLD_RECORD:0",
+        "item": {
+          "id": "minecraft:music_disc_13",
+          "name": "§fRandom Music Disc",
+          "tooltip": [
+            "C418 - 13"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_energix": {
+    "name": "Insane Energix",
+    "items": [
+      {
+        "slot": 0,
+        "token": "POTION:9",
+        "item": {
+          "id": "minecraft:potion",
+          "effects": [
+            {
+              "id": "minecraft:strength",
+              "amplifier": 0
+            }
+          ],
+          "tooltip": [
+            "§7Strength (0:07)",
+            "",
+            "§5When Applied:",
+            "§9+130% Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_cactus": {
+    "name": "Insane Cactus",
+    "items": [
+      {
+        "slot": 0,
+        "token": "CACTUS:0",
+        "item": {
+          "id": "minecraft:cactus",
+          "count": 16
+        }
+      },
+      {
+        "slot": 1,
+        "token": "SAND:0",
+        "item": {
+          "id": "minecraft:sand",
+          "count": 32
+        }
+      },
+      {
+        "slot": 2,
+        "token": "SANDSTONE:0",
+        "item": {
+          "id": "minecraft:sandstone",
+          "count": 16
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0:7,34",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Thorns V",
+            "Unbreaking V"
+          ]
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0:7,34",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Thorns V",
+            "Unbreaking V"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0:7,34",
+        "item": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Thorns V",
+            "Unbreaking V"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_frog": {
+    "name": "Insane Frog",
+    "items": [
+      {
+        "slot": 0,
+        "token": "SKULL_ITEM:3",
+        "item": {
+          "id": "minecraft:player_head",
+          "name": "§aFrog's Hat",
+          "skin": "https://textures.minecraft.net/texture/fa72d7d2195a51fbe546e7348a6b75de1197bce21ea1dec6227df1f2ed8b73"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "POTION:2",
+        "item": {
+          "id": "minecraft:potion",
+          "effects": [
+            {
+              "id": "minecraft:speed",
+              "amplifier": 0
+            }
+          ],
+          "name": "§aFrog's Potion",
+          "tooltip": [
+            "§7Speed (0:45)",
+            "§7Jump Boost IV (0:45)",
+            "",
+            "§5When Applied:",
+            "§9+20% Speed"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "WATER_LILY:0",
+        "item": {
+          "id": "minecraft:lily_pad",
+          "count": 16
+        }
+      }
+    ]
+  },
+  "insane_grenade": {
+    "name": "Insane Grenade",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0:3",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Blast Protection IV"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0:3",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Blast Protection IV"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0:3",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Blast Protection IV"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_baseballplayer": {
+    "name": "Insane Baseball Player",
+    "items": [
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0:0",
+        "item": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "STONE_SWORD:0:19",
+        "item": {
+          "id": "minecraft:stone_sword",
+          "tooltip": [
+            "Knockback I",
+            "",
+            "§9+5 Attack Damage"
+          ],
+          "enchanted": true
+        }
+      }
+    ]
+  },
+  "insane_enchanter": {
+    "name": "Insane Enchanter",
+    "items": [
+      {
+        "slot": 0,
+        "token": "ENCHANTMENT_TABLE:0",
+        "item": {
+          "id": "minecraft:enchanting_table"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "EXP_BOTTLE:0",
+        "item": {
+          "id": "minecraft:experience_bottle",
+          "count": 64
+        }
+      },
+      {
+        "slot": 2,
+        "token": "BOOKSHELF:0",
+        "item": {
+          "id": "minecraft:bookshelf",
+          "count": 8
+        }
+      },
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0",
+        "item": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "GOLD_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:golden_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "GOLD_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:golden_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "GOLD_BOOTS:0",
+        "item": {
+          "id": "minecraft:golden_boots"
+        }
+      }
+    ]
+  },
+  "insane_hunter": {
+    "name": "Insane Hunter",
+    "items": [
+      {
+        "slot": 0,
+        "token": "BOW:0:48",
+        "item": {
+          "id": "minecraft:bow",
+          "tooltip": [
+            "Power II"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 1,
+        "token": "ARROW:0",
+        "item": {
+          "id": "minecraft:arrow",
+          "count": 16
+        }
+      }
+    ]
+  },
+  "insane_pharaoh": {
+    "name": "Insane Pharaoh",
+    "items": [
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0:0,34",
+        "item": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection IV",
+            "Unbreaking V"
+          ]
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "slot": 0,
+        "token": "BEACON:0",
+        "item": {
+          "id": "minecraft:beacon"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "EMERALD_BLOCK:0",
+        "item": {
+          "id": "minecraft:emerald_block",
+          "count": 42
+        }
+      },
+      {
+        "slot": 36,
+        "token": "GOLD_BOOTS:0:0,34",
+        "item": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection IV",
+            "Unbreaking V"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "IRON_BLOCK:0",
+        "item": {
+          "id": "minecraft:iron_block",
+          "count": 2
+        }
+      },
+      {
+        "slot": 3,
+        "token": "GOLD_BLOCK:0",
+        "item": {
+          "id": "minecraft:gold_block",
+          "count": 2
+        }
+      }
+    ]
+  },
+  "insane_snowman": {
+    "name": "Insane Snowman",
+    "items": [
+      {
+        "slot": 0,
+        "token": "SNOW_BALL:0",
+        "item": {
+          "id": "minecraft:snowball",
+          "count": 32
+        }
+      },
+      {
+        "slot": 1,
+        "token": "SNOW_BLOCK:0",
+        "item": {
+          "id": "minecraft:snow_block",
+          "count": 2
+        }
+      },
+      {
+        "slot": 2,
+        "token": "DIAMOND_SPADE:0:16",
+        "item": {
+          "id": "minecraft:diamond_shovel",
+          "tooltip": [
+            "Sharpness III",
+            "",
+            "§9+7.75 Attack Damage"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 3,
+        "token": "PUMPKIN:0",
+        "item": {
+          "id": "minecraft:carved_pumpkin"
+        }
+      },
+      {
+        "slot": 4,
+        "token": "COAL_BLOCK:0",
+        "item": {
+          "id": "minecraft:coal_block",
+          "count": 16
+        }
+      },
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0:1",
+        "item": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Fire Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      }
+    ]
+  },
+  "insane_speleologist": {
+    "name": "Insane Speleologist",
+    "items": [
+      {
+        "slot": 0,
+        "token": "DIAMOND_PICKAXE:0:16,32,34,35",
+        "item": {
+          "id": "minecraft:diamond_pickaxe",
+          "tooltip": [
+            "Efficiency III",
+            "Sharpness II",
+            "Unbreaking III",
+            "Fortune II",
+            "",
+            "§9+7.5 Attack Damage"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 1,
+        "token": "STONE:0",
+        "item": {
+          "id": "minecraft:stone",
+          "count": 32
+        }
+      },
+      {
+        "slot": 39,
+        "token": "DIAMOND_HELMET:0",
+        "item": {
+          "id": "minecraft:diamond_helmet"
+        }
+      }
+    ]
+  },
+  "insane_warlock": {
+    "name": "Insane Warlock",
+    "items": [
+      {
+        "slot": 0,
+        "token": "POTION:12",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:instant_damage",
+              "amplifier": 0
+            }
+          ],
+          "count": 2,
+          "tooltip": [
+            "§cInstant Damage"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "POTION:8",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:weakness",
+              "amplifier": 0
+            }
+          ],
+          "count": 2,
+          "tooltip": [
+            "§cWeakness III (0:10)",
+            "",
+            "§5When Applied:",
+            "§c-1.5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "POTION:4",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:poison",
+              "amplifier": 0
+            }
+          ],
+          "tooltip": [
+            "§cPoison (0:10)"
+          ]
+        }
+      },
+      {
+        "slot": 3,
+        "token": "GOLDEN_APPLE:0",
+        "item": {
+          "id": "minecraft:golden_apple",
+          "count": 2
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "CHAINMAIL_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_engineer": {
+    "name": "Insane Engineer",
+    "items": [
+      {
+        "slot": 0,
+        "token": "TRIPWIRE_HOOK:0",
+        "item": {
+          "id": "minecraft:tripwire_hook",
+          "count": 64
+        }
+      },
+      {
+        "slot": 1,
+        "token": "WEB:0",
+        "item": {
+          "id": "minecraft:cobweb",
+          "count": 8
+        }
+      },
+      {
+        "slot": 2,
+        "token": "PISTON_BASE:0",
+        "item": {
+          "id": "minecraft:piston",
+          "count": 64
+        }
+      },
+      {
+        "slot": 3,
+        "token": "SLIME_BALL:0",
+        "item": {
+          "id": "minecraft:slime_ball",
+          "count": 64
+        }
+      },
+      {
+        "slot": 4,
+        "token": "REDSTONE:0",
+        "item": {
+          "id": "minecraft:redstone",
+          "count": 64
+        }
+      },
+      {
+        "slot": 5,
+        "token": "LEVER:0",
+        "item": {
+          "id": "minecraft:lever",
+          "count": 64
+        }
+      },
+      {
+        "slot": 6,
+        "token": "DISPENSER:0",
+        "item": {
+          "id": "minecraft:dispenser",
+          "count": 64
+        }
+      },
+      {
+        "slot": 7,
+        "token": "SULPHUR:0",
+        "item": {
+          "id": "minecraft:gunpowder",
+          "count": 64
+        }
+      },
+      {
+        "slot": 8,
+        "token": "SAND:0",
+        "item": {
+          "id": "minecraft:sand",
+          "count": 64
+        }
+      },
+      {
+        "slot": 9,
+        "token": "GRAVEL:0",
+        "item": {
+          "id": "minecraft:gravel",
+          "count": 64
+        }
+      },
+      {
+        "slot": 10,
+        "token": "ARROW:0",
+        "item": {
+          "id": "minecraft:arrow",
+          "count": 64
+        }
+      },
+      {
+        "slot": 11,
+        "token": "FLINT_AND_STEEL:0",
+        "item": {
+          "id": "minecraft:flint_and_steel",
+          "count": 4
+        }
+      },
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0:0",
+        "item": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_pigrider": {
+    "name": "Insane Pig Rider",
+    "items": [
+      {
+        "slot": 0,
+        "token": "SADDLE:0",
+        "item": {
+          "id": "minecraft:saddle"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "MONSTER_EGG:90",
+        "item": {
+          "id": "minecraft:pig_spawn_egg"
+        }
+      },
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0:0",
+        "item": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 38,
+        "token": "GOLD_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 37,
+        "token": "GOLD_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:golden_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "GOLD_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "CARROT_STICK:0",
+        "item": {
+          "id": "minecraft:carrot_on_a_stick"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "GOLD_SWORD:0:16",
+        "item": {
+          "id": "minecraft:golden_sword",
+          "tooltip": [
+            "Sharpness II",
+            "",
+            "§9+6.5 Attack Damage"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 4,
+        "token": "HAY_BLOCK:0",
+        "item": {
+          "id": "minecraft:hay_block",
+          "count": 16
+        }
+      }
+    ]
+  },
+  "insane_sloth": {
+    "name": "Insane Sloth",
+    "items": [
+      {
+        "slot": 0,
+        "token": "POTION:10",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:slowness",
+              "amplifier": 0
+            }
+          ],
+          "count": 5,
+          "name": "§7Sloth Potion",
+          "tooltip": [
+            "§cSlowness II (0:05)",
+            "",
+            "§5When Applied:",
+            "§c-30% Speed"
+          ]
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0:0",
+        "item": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "LEATHER_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "LOG:3",
+        "item": {
+          "id": "minecraft:jungle_log",
+          "count": 16
+        }
+      },
+      {
+        "slot": 2,
+        "token": "GHAST_TEAR:0:16",
+        "item": {
+          "id": "minecraft:ghast_tear",
+          "tooltip": [
+            "Sharpness V"
+          ],
+          "enchanted": true
+        }
+      }
+    ]
+  },
+  "insane_magician": {
+    "name": "Insane Magician",
+    "items": [
+      {
+        "slot": 0,
+        "token": "MONSTER_EGG:101",
+        "item": {
+          "id": "minecraft:rabbit_spawn_egg"
+        }
+      },
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0",
+        "item": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "POTION:14",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:invisibility",
+              "amplifier": 0
+            }
+          ],
+          "count": 2,
+          "name": "§7Magician Potion",
+          "tooltip": [
+            "§7Invisibility (0:10)"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "STICK:0:16",
+        "item": {
+          "id": "minecraft:stick",
+          "name": "§7The Wand",
+          "tooltip": [
+            "Sharpness VII"
+          ],
+          "enchanted": true
+        }
+      }
+    ]
+  },
+  "insane_enderchest": {
+    "name": "Insane Enderchest",
+    "items": [
+      {
+        "slot": 0,
+        "token": "GOLDEN_APPLE:0",
+        "item": {
+          "id": "minecraft:golden_apple",
+          "count": 3
+        }
+      }
+    ]
+  },
+  "insane_farmer": {
+    "name": "Insane Farmer",
+    "items": [
+      {
+        "slot": 37,
+        "token": "DIAMOND_LEGGINGS:0:4",
+        "item": {
+          "id": "minecraft:diamond_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Projectile Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "EGG:0",
+        "item": {
+          "id": "minecraft:egg",
+          "count": 16
+        }
+      },
+      {
+        "slot": 1,
+        "token": "GOLDEN_APPLE:0",
+        "item": {
+          "id": "minecraft:golden_apple"
+        }
+      }
+    ]
+  },
+  "insane_fisherman": {
+    "name": "Insane Fisherman",
+    "items": [
+      {
+        "slot": 0,
+        "token": "FISHING_ROD:0:34,61,62",
+        "item": {
+          "id": "minecraft:fishing_rod",
+          "tooltip": [
+            "Unbreaking X",
+            "Luck of the Sea X",
+            "Lure X"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 39,
+        "token": "CHAINMAIL_HELMET:0:0,5",
+        "item": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II",
+            "Respiration III"
+          ]
+        }
+      },
+      {
+        "slot": 37,
+        "token": "CHAINMAIL_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_princess": {
+    "name": "Insane Princess",
+    "items": [
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0:0",
+        "item": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "BOW:370:48",
+        "item": {
+          "id": "minecraft:bow",
+          "damage": 370,
+          "tooltip": [
+            "Power I"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 1,
+        "token": "ARROW:0",
+        "item": {
+          "id": "minecraft:arrow",
+          "count": 5
+        }
+      }
+    ]
+  },
+  "insane_cannoneer": {
+    "name": "Insane Cannoneer",
+    "items": [
+      {
+        "slot": 0,
+        "token": "TNT:0",
+        "item": {
+          "id": "minecraft:tnt",
+          "count": 24
+        }
+      },
+      {
+        "slot": 1,
+        "token": "REDSTONE_BLOCK:0",
+        "item": {
+          "id": "minecraft:redstone_block",
+          "count": 10
+        }
+      },
+      {
+        "slot": 36,
+        "token": "DIAMOND_BOOTS:0:2,3",
+        "item": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Feather Falling IV",
+            "Blast Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "WATER_BUCKET:0",
+        "item": {
+          "id": "minecraft:water_bucket"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "STONE_PLATE:0",
+        "item": {
+          "id": "minecraft:stone_pressure_plate",
+          "count": 4
+        }
+      }
+    ]
+  },
+  "insane_enderman": {
+    "name": "Insane Enderman",
+    "items": [
+      {
+        "slot": 0,
+        "token": "ENDER_PEARL:0",
+        "item": {
+          "id": "minecraft:ender_pearl",
+          "name": "§d§lCorrupted Pearl",
+          "tooltip": [
+            "§5§oInflicts Slowness IV for 4s upon",
+            "§5§olanding."
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0:0",
+        "item": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "IRON_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_guardian": {
+    "name": "Insane Guardian",
+    "items": [
+      {
+        "slot": 0,
+        "token": "OBSIDIAN:0",
+        "item": {
+          "id": "minecraft:obsidian",
+          "count": 10
+        }
+      },
+      {
+        "slot": 1,
+        "token": "POTION:1",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:regeneration",
+              "amplifier": 0
+            }
+          ],
+          "count": 2,
+          "tooltip": [
+            "§7Resistance (0:10)"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "MONSTER_EGG:51",
+        "item": {
+          "id": "minecraft:skeleton_spawn_egg",
+          "count": 2
+        }
+      },
+      {
+        "slot": 3,
+        "token": "MONSTER_EGG:54",
+        "item": {
+          "id": "minecraft:zombie_spawn_egg",
+          "count": 3
+        }
+      },
+      {
+        "slot": 37,
+        "token": "CHAINMAIL_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "CHAINMAIL_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_archeologist": {
+    "name": "Insane Archeologist",
+    "items": [
+      {
+        "token": "FISHING_ROD:0:34,61",
+        "item": {
+          "id": "minecraft:fishing_rod",
+          "name": "§fSimple Fishing Rod",
+          "tooltip": [
+            "Unbreaking X",
+            "Luck of the Sea III"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "token": "POTION:3",
+        "item": {
+          "id": "minecraft:potion",
+          "effects": [
+            {
+              "id": "minecraft:fire_resistance",
+              "amplifier": 0
+            }
+          ],
+          "name": "§6Blazing Potion",
+          "tooltip": [
+            "§7Fire Resistance (0:30)",
+            "§7Speed (0:30)",
+            "",
+            "§5When Applied:",
+            "§9+20% Speed"
+          ]
+        }
+      },
+      {
+        "token": "POTION:5",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:instant_health",
+              "amplifier": 0
+            }
+          ],
+          "name": "§dPotion of Hearts",
+          "tooltip": [
+            "§7Instant Health"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_fallenangel": {
+    "name": "Insane Fallen Angel",
+    "items": [
+      {
+        "slot": 0,
+        "token": "DIAMOND_HOE:0:16",
+        "item": {
+          "id": "minecraft:diamond_hoe",
+          "enchanted": true,
+          "tooltip": [
+            "Sharpness IX"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_salmon": {
+    "name": "Insane Salmon",
+    "items": [
+      {
+        "slot": 0,
+        "token": "RAW_FISH:1:16,19",
+        "item": {
+          "id": "minecraft:salmon",
+          "tooltip": [
+            "Sharpness III",
+            "Knockback I"
+          ],
+          "enchanted": true
+        }
+      },
+      {
+        "slot": 1,
+        "token": "SPONGE:0",
+        "item": {
+          "id": "minecraft:sponge",
+          "count": 16
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "LEATHER_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_slime": {
+    "name": "Insane Slime",
+    "items": [
+      {
+        "slot": 36,
+        "token": "DIAMOND_BOOTS:0:0,2",
+        "item": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Feather Falling X",
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "SLIME_BLOCK:0",
+        "item": {
+          "id": "minecraft:slime_block",
+          "count": 64
+        }
+      }
+    ]
+  },
+  "insane_jester": {
+    "name": "Insane Jester",
+    "items": [
+      {
+        "token": "POTION:1",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:regeneration",
+              "amplifier": 0
+            }
+          ],
+          "count": 2,
+          "tooltip": [
+            "§7Regeneration II (0:10)"
+          ]
+        }
+      },
+      {
+        "token": "GOLDEN_APPLE:0",
+        "item": {
+          "id": "minecraft:golden_apple",
+          "count": 2
+        }
+      }
+    ]
+  },
+  "insane_zookeeper": {
+    "name": "Insane Zookeeper",
+    "items": [
+      {
+        "slot": 0,
+        "token": "MONSTER_EGG:0",
+        "item": {
+          "id": "minecraft:pig_spawn_egg",
+          "count": 5,
+          "name": "§dMystery Egg",
+          "tooltip": [
+            "§5§oSpawns a random monster."
+          ]
+        }
+      }
+    ]
+  },
+  "insane_pyro": {
+    "name": "Insane Pyro",
+    "items": [
+      {
+        "slot": 0,
+        "token": "FLINT_AND_STEEL:0",
+        "item": {
+          "id": "minecraft:flint_and_steel"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "LAVA_BUCKET:0",
+        "item": {
+          "id": "minecraft:lava_bucket"
+        }
+      },
+      {
+        "slot": 2,
+        "token": "LAVA_BUCKET:0",
+        "item": {
+          "id": "minecraft:lava_bucket"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "LAVA_BUCKET:0",
+        "item": {
+          "id": "minecraft:lava_bucket"
+        }
+      },
+      {
+        "slot": 4,
+        "token": "LAVA_BUCKET:0",
+        "item": {
+          "id": "minecraft:lava_bucket"
+        }
+      },
+      {
+        "slot": 5,
+        "token": "LAVA_BUCKET:0",
+        "item": {
+          "id": "minecraft:lava_bucket"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "DIAMOND_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:diamond_chestplate"
+        }
+      },
+      {
+        "slot": 6,
+        "token": "POTION:3",
+        "item": {
+          "id": "minecraft:potion",
+          "effects": [
+            {
+              "id": "minecraft:fire_resistance",
+              "amplifier": 0
+            }
+          ],
+          "name": "§fPotion of Fire Resistance",
+          "tooltip": [
+            "§7Fire Resistance (2:00)"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_troll": {
+    "name": "Insane Troll",
+    "items": [
+      {
+        "slot": 0,
+        "token": "WEB:0",
+        "item": {
+          "id": "minecraft:cobweb",
+          "count": 12
+        }
+      },
+      {
+        "slot": 1,
+        "token": "FIREWORK:0",
+        "item": {
+          "id": "minecraft:firework_rocket",
+          "count": 5
+        }
+      },
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0:0,1,3,7,34",
+        "item": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III",
+            "Fire Protection IV",
+            "Blast Protection IV",
+            "Thorns I",
+            "Unbreaking II"
+          ]
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0:0,1,3,7,34",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III",
+            "Fire Protection IV",
+            "Blast Protection IV",
+            "Thorns I",
+            "Unbreaking II"
+          ]
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0:0,1,3,7,34",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III",
+            "Fire Protection IV",
+            "Blast Protection IV",
+            "Thorns I",
+            "Unbreaking II"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "LEATHER_BOOTS:0:0,1,3,7,34",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III",
+            "Fire Protection IV",
+            "Blast Protection IV",
+            "Thorns I",
+            "Unbreaking II"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "POTION:4",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:poison",
+              "amplifier": 0
+            }
+          ],
+          "tooltip": [
+            "§cPoison II (0:05)"
+          ]
+        }
+      },
+      {
+        "slot": 3,
+        "token": "POTION:10",
+        "item": {
+          "id": "minecraft:splash_potion",
+          "effects": [
+            {
+              "id": "minecraft:slowness",
+              "amplifier": 0
+            }
+          ],
+          "count": 2,
+          "tooltip": [
+            "§cSlowness II (0:05)",
+            "",
+            "§5When Applied:",
+            "§c-30% Speed"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_golem": {
+    "name": "Insane Golem",
+    "items": [
+      {
+        "slot": 38,
+        "token": "IRON_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "IRON_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "BAKED_POTATO:0",
+        "item": {
+          "id": "minecraft:baked_potato",
+          "name": "§e§lMy Precious",
+          "tooltip": [
+            "§5§oGives a boost of health!"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "RED_ROSE:0:16",
+        "item": {
+          "id": "minecraft:poppy",
+          "name": "§f§lGolem's Poppy",
+          "tooltip": [
+            "Sharpness I"
+          ],
+          "enchanted": true
+        }
+      }
+    ]
+  },
+  "insane_endlord": {
+    "name": "Insane End Lord",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_monstertrainer": {
+    "name": "Insane Monster Trainer",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_netherlord": {
+    "name": "Insane Nether Lord",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "NETHERRACK:0",
+        "item": {
+          "id": "minecraft:netherrack",
+          "count": 16
+        }
+      }
+    ]
+  },
+  "insane_fishmonger": {
+    "name": "Insane Fishmonger",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_thundermeister": {
+    "name": "Insane Thundermeister",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_chronobreaker": {
+    "name": "Insane Chronobreaker",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      }
+    ]
+  },
+  "insane_cryomancer": {
+    "name": "Insane Cryomancer",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III"
+          ]
+        }
+      },
+      {
+        "token": "SNOW_BALL:0",
+        "item": {
+          "id": "minecraft:snowball",
+          "count": 16
+        }
+      }
+    ]
+  },
+  "mega_witch": {
+    "name": "Mega Witch",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_HELMET:0:0",
+        "item": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "token": "WOOD_SWORD:0:16",
+        "item": {
+          "id": "minecraft:wooden_sword",
+          "enchanted": true,
+          "tooltip": [
+            "Sharpness IV"
+          ]
+        }
+      }
+    ]
+  },
+  "mega_skeletor": {
+    "name": "Mega Skeletor",
+    "items": [
+      {
+        "slot": 36,
+        "token": "CHAINMAIL_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "MONSTER_EGG:51",
+        "item": {
+          "id": "minecraft:skeleton_spawn_egg",
+          "count": 4
+        }
+      },
+      {
+        "slot": 39,
+        "token": "CHAINMAIL_HELMET:0:0",
+        "item": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 38,
+        "token": "CHAINMAIL_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 37,
+        "token": "CHAINMAIL_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection II"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "ARROW:0",
+        "item": {
+          "id": "minecraft:arrow",
+          "count": 16
+        }
+      },
+      {
+        "slot": 2,
+        "token": "BOW:0",
+        "item": {
+          "id": "minecraft:bow"
+        }
+      }
+    ]
+  },
+  "mega_scout": {
+    "name": "Mega Scout",
+    "items": [
+      {
+        "token": "DIAMOND_SWORD:0",
+        "item": {
+          "id": "minecraft:diamond_sword"
+        }
+      },
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "WOOL:11",
+        "item": {
+          "id": "minecraft:blue_wool",
+          "count": 32
+        }
+      }
+    ]
+  },
+  "mega_pyro": {
+    "name": "Mega Pyro",
+    "items": [
+      {
+        "token": "DIAMOND_AXE:0:20",
+        "item": {
+          "id": "minecraft:diamond_axe",
+          "enchanted": true,
+          "tooltip": [
+            "Fire Aspect I"
+          ]
+        }
+      },
+      {
+        "token": "FLINT_AND_STEEL:0",
+        "item": {
+          "id": "minecraft:flint_and_steel"
+        }
+      },
+      {
+        "token": "LEATHER_CHESTPLATE:0:0,34",
+        "item": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Unbreaking X",
+            "Protection V"
+          ]
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0:0,34",
+        "item": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Unbreaking X",
+            "Protection V"
+          ]
+        }
+      },
+      {
+        "token": "LAVA_BUCKET:0",
+        "item": {
+          "id": "minecraft:lava_bucket"
+        }
+      }
+    ]
+  },
+  "mega_paladin": {
+    "name": "Mega Paladin",
+    "items": [
+      {
+        "slot": 0,
+        "token": "GOLDEN_APPLE:0",
+        "item": {
+          "id": "minecraft:golden_apple",
+          "count": 2
+        }
+      },
+      {
+        "slot": 39,
+        "token": "IRON_HELMET:0",
+        "item": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "IRON_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:iron_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "IRON_SWORD:0:17",
+        "item": {
+          "id": "minecraft:iron_sword",
+          "enchanted": true,
+          "tooltip": [
+            "Smite X"
+          ]
+        }
+      }
+    ]
+  },
+  "mega_knight": {
+    "name": "Mega Knight",
+    "items": [
+      {
+        "slot": 0,
+        "token": "DIAMOND_SWORD:0:16",
+        "item": {
+          "id": "minecraft:diamond_sword",
+          "enchanted": true,
+          "tooltip": [
+            "Sharpness II"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "GOLD_HELMET:0",
+        "item": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "GOLD_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:golden_leggings"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "GOLD_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:golden_chestplate"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "GOLD_BOOTS:0",
+        "item": {
+          "id": "minecraft:golden_boots"
+        }
+      },
+      {
+        "slot": 1,
+        "token": "FLINT_AND_STEEL:0",
+        "item": {
+          "id": "minecraft:flint_and_steel"
+        }
+      }
+    ]
+  },
+  "mega_hunter": {
+    "name": "Mega Hunter",
+    "items": [
+      {
+        "slot": 0,
+        "token": "BOW:0:48",
+        "item": {
+          "id": "minecraft:bow",
+          "enchanted": true,
+          "tooltip": [
+            "Power III"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "ARROW:0",
+        "item": {
+          "id": "minecraft:arrow",
+          "count": 32
+        }
+      },
+      {
+        "slot": 38,
+        "token": "CHAINMAIL_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:chainmail_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "CHAINMAIL_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:chainmail_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "CHAINMAIL_BOOTS:0",
+        "item": {
+          "id": "minecraft:chainmail_boots"
+        }
+      }
+    ]
+  },
+  "mega_hellhound": {
+    "name": "Mega Hellhound",
+    "items": [
+      {
+        "slot": 0,
+        "token": "DIAMOND_AXE:0",
+        "item": {
+          "id": "minecraft:diamond_axe"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "DIAMOND_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "MONSTER_EGG:95",
+        "item": {
+          "id": "minecraft:wolf_spawn_egg",
+          "count": 3
+        }
+      },
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0",
+        "item": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      }
+    ]
+  },
+  "mega_healer": {
+    "name": "Mega Healer",
+    "items": [
+      {
+        "token": "DIAMOND_SPADE:0",
+        "item": {
+          "id": "minecraft:diamond_shovel"
+        }
+      },
+      {
+        "token": "GOLD_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "token": "GOLD_LEGGINGS:0:0",
+        "item": {
+          "id": "minecraft:golden_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "token": "GOLD_HELMET:0:0",
+        "item": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "token": "GOLD_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      }
+    ]
+  },
+  "mega_fisherman": {
+    "name": "Mega Fisherman",
+    "items": [
+      {
+        "slot": 0,
+        "token": "FISHING_ROD:0:34,61,62",
+        "item": {
+          "id": "minecraft:fishing_rod",
+          "enchanted": true,
+          "tooltip": [
+            "Lure V",
+            "Luck of the Sea XL",
+            "Unbreaking X"
+          ]
+        }
+      },
+      {
+        "slot": 36,
+        "token": "DIAMOND_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "DIAMOND_HELMET:0",
+        "item": {
+          "id": "minecraft:diamond_helmet"
+        }
+      }
+    ]
+  },
+  "mega_enderman": {
+    "name": "Mega Enderman",
+    "items": [
+      {
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "token": "DIAMOND_BOOTS:0:0,2",
+        "item": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Feather Falling II",
+            "Protection I"
+          ]
+        }
+      }
+    ]
+  },
+  "mega_default": {
+    "name": "Mega Default",
+    "items": [
+      {
+        "slot": 0,
+        "token": "IRON_PICKAXE:0",
+        "item": {
+          "id": "minecraft:iron_pickaxe",
+          "tooltip": [
+            "",
+            "§9+4 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 1,
+        "token": "IRON_AXE:0",
+        "item": {
+          "id": "minecraft:iron_axe",
+          "tooltip": [
+            "",
+            "§9+5 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 2,
+        "token": "IRON_SPADE:0",
+        "item": {
+          "id": "minecraft:iron_shovel",
+          "tooltip": [
+            "",
+            "§9+3 Attack Damage"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0",
+        "item": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "LEATHER_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "slot": 36,
+        "token": "LEATHER_BOOTS:0",
+        "item": {
+          "id": "minecraft:leather_boots"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "IRON_SWORD:0",
+        "item": {
+          "id": "minecraft:iron_sword",
+          "tooltip": [
+            "",
+            "§9+6 Attack Damage"
+          ]
+        }
+      }
+    ]
+  },
+  "mega_cannoneer": {
+    "name": "Mega Cannoneer",
+    "items": [
+      {
+        "slot": 0,
+        "token": "TNT:0",
+        "item": {
+          "id": "minecraft:tnt",
+          "count": 32
+        }
+      },
+      {
+        "slot": 1,
+        "token": "REDSTONE_BLOCK:0",
+        "item": {
+          "id": "minecraft:redstone_block",
+          "count": 4
+        }
+      },
+      {
+        "slot": 2,
+        "token": "WATER_BUCKET:0",
+        "item": {
+          "id": "minecraft:water_bucket"
+        }
+      },
+      {
+        "slot": 37,
+        "token": "DIAMOND_LEGGINGS:0:3",
+        "item": {
+          "id": "minecraft:diamond_leggings",
+          "enchanted": true,
+          "tooltip": [
+            "Blast Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "STONE_SWORD:0:16",
+        "item": {
+          "id": "minecraft:stone_sword",
+          "enchanted": true,
+          "tooltip": [
+            "Sharpness I"
+          ]
+        }
+      },
+      {
+        "slot": 39,
+        "token": "LEATHER_HELMET:0",
+        "item": {
+          "id": "minecraft:leather_helmet"
+        }
+      }
+    ]
+  },
+  "mega_baseballplayer": {
+    "name": "Mega Baseball Player",
+    "items": [
+      {
+        "slot": 39,
+        "token": "DIAMOND_HELMET:0:0",
+        "item": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true,
+          "tooltip": [
+            "Protection IV"
+          ]
+        }
+      },
+      {
+        "slot": 0,
+        "token": "DIAMOND_SWORD:0:19",
+        "item": {
+          "id": "minecraft:diamond_sword",
+          "enchanted": true,
+          "tooltip": [
+            "Knockback I"
+          ]
+        }
+      },
+      {
+        "slot": 38,
+        "token": "LEATHER_CHESTPLATE:0",
+        "item": {
+          "id": "minecraft:leather_chestplate"
+        }
+      }
+    ]
+  },
+  "mega_armorsmith": {
+    "name": "Mega Armorsmith",
+    "items": [
+      {
+        "slot": 0,
+        "token": "ANVIL:0",
+        "item": {
+          "id": "minecraft:anvil",
+          "count": 3
+        }
+      },
+      {
+        "slot": 1,
+        "token": "EXP_BOTTLE:0",
+        "item": {
+          "id": "minecraft:experience_bottle",
+          "count": 24
+        }
+      },
+      {
+        "slot": 2,
+        "token": "ENCHANTED_BOOK:0:0,16",
+        "item": {
+          "id": "minecraft:enchanted_book",
+          "enchanted": true,
+          "tooltip": [
+            "Protection III",
+            "Sharpness I"
+          ]
+        }
+      },
+      {
+        "slot": 37,
+        "token": "DIAMOND_LEGGINGS:0",
+        "item": {
+          "id": "minecraft:diamond_leggings"
+        }
+      },
+      {
+        "slot": 3,
+        "token": "ENCHANTMENT_TABLE:0",
+        "item": {
+          "id": "minecraft:enchanting_table"
+        }
+      }
+    ]
+  },
+  "mega_armorer": {
+    "name": "Mega Armorer",
+    "items": [
+      {
+        "token": "DIAMOND_CHESTPLATE:0:0",
+        "item": {
+          "id": "minecraft:diamond_chestplate",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      },
+      {
+        "token": "DIAMOND_BOOTS:0:0",
+        "item": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true,
+          "tooltip": [
+            "Protection I"
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -13,6 +13,7 @@ export * from "./adapters/hypixel.js";
 export * from "./adapters/kits.js";
 export * from "./adapters/legacy-kits.js";
 export * from "./adapters/quake.js";
+export * from "./adapters/skywars.js";
 export * from "./adapters/speed-uhc.js";
 export * from "./adapters/tnt-games.js";
 export * from "./adapters/turbo-kart-racers.js";
