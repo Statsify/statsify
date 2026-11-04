@@ -6,14 +6,26 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Builds data/duels-modes.json and data/tnt-games.json from StatsifyDump exports (the
-// ChatTriggers module) that opened Duels' and TNT Games' layout editors, so each kit item has the
-// count, name and tooltip the game gives it. Each dump session writes its own exports, so pass the
-// last export of every session needed:
+// Builds data/duels-modes.json, data/tnt-games.json and data/legacy-kits.json from StatsifyDump
+// exports (the ChatTriggers module) that opened Duels', TNT Games', Blitz's and Mega Walls' layout
+// editors, so each kit item has the count, name and tooltip the game gives it, data/skywars-kits.json
+// from the SkyWars lobby's kit menus and Kit Customizers, and data/quake.json, data/arena.json,
+// data/turbo-kart-racers.json and data/speed-uhc.json from those games' shop menus. Each dump
+// session writes its own exports, so pass the last export of every session needed:
 //   pnpm --filter @statsify/inventory build
 //   node scripts/import-dump.ts <dump.json> [<dump.json> …]
 
-import { ARMOR, type ItemStack, type Kit, type KitItem, kitKey, legacyItem, skinUrl } from "@statsify/inventory";
+import {
+  ARMOR,
+  type ItemStack,
+  type Kit,
+  type KitItem,
+  type LegacyKit,
+  type SkyWarsKit,
+  kitKey,
+  legacyItem,
+  skinUrl,
+} from "@statsify/inventory";
 import { readFile, writeFile } from "node:fs/promises";
 import data from "../data/minecraft-data.json" with { type: "json" };
 import { fetchJson } from "./minecraft-data.ts";
@@ -90,6 +102,15 @@ const KIT_EDITORS = {
 // Mini page is the one with Champion, a kit only Mini has
 const SKYWARS_MINI_KIT = "Champion";
 
+// Blitz's and Mega Walls' "Edit <Kit> Layout" editors share titles (both have a Pigman), so the
+// page their Go Back button returns to tells them apart
+const LEGACY_KIT_PAGES = { Upgrades: "blitz", Class: "megawalls" } as const;
+
+// Kits whose editor showed a layout the dumping account had saved, not the default
+const SAVED_LAYOUTS = { blitz: ["Pigman"], megawalls: [] as string[] };
+
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+
 const ARMOR_PIECE = /(Leather|Chainmail|Iron|Gold|Diamond) (Helmet|Chestplate|Leggings|Boots)$/;
 
 interface DumpItem {
@@ -120,10 +141,38 @@ const dumps = await Promise.all(
 const items = dumps.flatMap((dump) => dump.items);
 const screens = dumps.flatMap((dump) => dump.screens ?? []).toSorted((a, b) => a.capturedAt.localeCompare(b.capturedAt));
 
-const legacyIds = new Map((await fetchJson<{ id: number; name: string }[]>("1.8/items.json")).map(({ id, name }) => [name, id]));
+interface LegacyName {
+  id: number;
+  displayName: string;
+  variations?: { metadata: number; displayName: string }[];
+}
+
+const legacyItems = await fetchJson<(LegacyName & { name: string })[]>("1.8/items.json");
+const legacyIds = new Map(legacyItems.map(({ id, name }) => [name, id]));
 const materials = new Map(Object.entries(data.materials).map(([name, id]) => [id, name.toLowerCase()]));
 
+// Menus that list items by name use 1.8's own, Damage variants included (Blue Wool), or the
+// item's Bukkit material ("Gold Helmet"); the rest are Hypixel's ("Awkward Potion"). minecraft-data
+// gives some block items their item's name (Nether Quartz), so blocks' names count too, and a
+// name two items share matches neither
+const legacyNames = new Map<string, { id: number; damage: number } | undefined>();
+for (const { id, displayName, variations = [] } of [...legacyItems, ...(await fetchJson<LegacyName[]>("1.8/blocks.json"))]) {
+  for (const { metadata: damage, displayName: name } of [{ metadata: 0, displayName }, ...variations]) {
+    const known = legacyNames.get(name);
+    const same = !legacyNames.has(name) || (known?.id === id && known.damage === damage);
+    legacyNames.set(name, same ? { id, damage } : undefined);
+  }
+}
+
+const bukkitIds: Record<string, number | undefined> = data.materials;
+
+function namedItem(name: string) {
+  const material = bukkitIds[name.toUpperCase().replaceAll(" ", "_")];
+  return legacyNames.get(name) ?? (material === undefined ? undefined : { id: material, damage: 0 });
+}
+
 const plain = (text: string) => text.replaceAll(/§./g, "");
+const blank = (line: string) => plain(line).trim() === "";
 
 // The editor's chest: the main rows in 0 to 26, the hotbar in 36 to 44
 const storedSlot = (slot: number) => (slot >= 36 && slot <= 44 ? slot - 36 : slot <= 26 ? slot + 9 : undefined);
@@ -158,10 +207,12 @@ function kitItem(dumped: DumpItem, numeric = legacyId(dumped)): ItemStack {
   const { id, damage, count, name, lore, nbt } = dumped;
   const item = legacyItem(numeric, damage);
   if (!item) throw new Error(`No 26.3 item for ${id}:${damage}`);
+  const color = /display:\{[^}]*color:(\d+)/.exec(nbt)?.[1];
 
   return {
     ...item,
     count: count > 1 ? count : undefined,
+    color: color === undefined ? undefined : Number(color),
     // Only a custom name: the rest take the pack's name, as other items do
     name: /display:\{[^}]*Name:"/.test(nbt) ? name : undefined,
     tooltip: lore.length > 0 ? lore : undefined,
@@ -185,6 +236,7 @@ const output = {
 
 const missing: string[] = [];
 const unnamed = new Set<string>();
+const unmatched: string[] = [];
 
 /** A single-kit editor's item for each token, and its default layout as Hypixel would store it */
 function singleKit(title: string, tokens: Readonly<Record<string, number>>) {
@@ -286,6 +338,9 @@ function skyWarsGroup(name: string, lore: string[]) {
   return page.mini ? "Mini" : "Insane";
 }
 
+// SkyWars Duel's editors with their picker's lore, whose item list the lobby's kit menus share
+const skyWarsDuelEditors: { key: string; lore: string[]; shown: DumpItem[] }[] = [];
+
 for (const [title, mode] of Object.entries(KIT_EDITORS)) {
   const kits: Record<string, Kit> = {};
 
@@ -320,6 +375,7 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
       }),
       armor: pickerArmor(kit.lore),
     };
+    if (mode === "sw_duel") skyWarsDuelEditors.push({ key, lore: kit.lore, shown: shown.map(({ item }) => item) });
   }
 
   if (Object.keys(kits).length === 0) {
@@ -344,17 +400,553 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
   output.kits[mode] = kits;
 }
 
+const enchantmentIds = new Map(
+  (await fetchJson<{ id: number; displayName: string }[]>("1.8/enchantments.json")).map(({ id, displayName }) => [displayName, id]),
+);
+
+const POTION = 373;
+const SPLASH = 0x40_00;
+
+// An enchanted book's are its StoredEnchantments, which kit layouts list too
+const dumpedEnchantments = ({ nbt }: DumpItem) =>
+  [...(/(?:ench|StoredEnchantments):\[([^\]]*)\]/.exec(nbt)?.[1].matchAll(/id:(\d+)s/g) ?? [])].map(([, id]) => Number(id));
+
+const sameIds = (a: number[], b: number[]) => a.toSorted().join() === b.toSorted().join();
+
+/** An item as a SkyWars kit layout names it, like DIAMOND_AXE:0:16: potions drop their splash and drinkable bits */
+function skyWarsToken(id: number, damage: number, enchantments: number[]) {
+  const material = materials.get(id);
+  if (!material) throw new Error(`No Bukkit material for ${id}`);
+  const ids = enchantments.toSorted((a, b) => a - b).join(",");
+  return [material.toUpperCase(), id === POTION ? damage & 0x1f_ff : damage, ...(ids ? [ids] : [])].join(":");
+}
+
+const backTo = (screen: Screen) =>
+  plain(screen.slots.find(({ item }) => item && plain(item.name) === "Go Back")?.item?.lore[0] ?? "").replace(/^To /, "");
+
+// The SkyWars lobby's kit menus, Normal and Insane, Mini and Mega
+const SKYWARS_MENU = /^(Normal|Insane|Mini|Mega) Kits$/;
+
+// Each Kit Customizer by its menu and kit, from the kit's page, which goes back to its menu
+const skyWarsCustomizers = new Map<string, { slot: number; item: DumpItem }[]>();
+
+for (const [index, screen] of screens.entries()) {
+  const kit = /^(.+) Kit Customizer$/.exec(plain(screen.title))?.[1];
+  // A screen without its buttons was captured before it finished loading
+  if (!kit || backTo(screen) !== `${kit} Kit`) continue;
+
+  const page = screens.slice(0, index).findLast((shown) => plain(shown.title) === `${kit} Kit`);
+  const menu = page && SKYWARS_MENU.exec(backTo(page))?.[1];
+  if (!menu) throw new Error(`No SkyWars kit menu before ${screen.title}`);
+
+  const key = `${menu.toLowerCase()}_${kitKey(kit)}`;
+  if (skyWarsCustomizers.has(key)) continue;
+  skyWarsCustomizers.set(
+    key,
+    screen.slots.flatMap(({ slot, item }) => {
+      const stored = storedSlot(slot);
+      return item && stored !== undefined ? [{ slot: stored, item }] : [];
+    }),
+  );
+}
+
+interface Listed {
+  text: string;
+  count?: number;
+  enchantments: string[];
+}
+
+/**
+ * A kit menu item's list: its §7§7 lore lines up to the first blank one, each with the enchantments
+ * under it. Lore lines start with §5§o, which leaves out the client's lines above them (a potion
+ * icon's effects, "Dyed"), and notes like "Spawns a 4th chest" are a single §7
+ */
+function listedItems(lore: string[]) {
+  const listed: Listed[] = [];
+
+  for (const line of lore.filter((shown) => shown.startsWith("§5§o"))) {
+    if (blank(line)) break;
+    const enchantment = /^§5§o§7 {3}∙ (.+?)(?: x(\d+))?$/.exec(line);
+    const text = /^§5§o§7§7([^§].*)$/.exec(line)?.[1];
+    const last = listed.at(-1);
+
+    if (enchantment && last) {
+      last.enchantments.push(plain(enchantment[1]));
+      // An enchanted book's count follows its enchantment
+      if (enchantment[2]) last.count = Number(enchantment[2]);
+    } else if (text) {
+      const [, name, count] = /^(.+?)(?: x(\d+))?$/.exec(text)!;
+      listed.push({ text: name, count: count ? Number(count) : undefined, enchantments: [] });
+    }
+  }
+
+  return listed;
+}
+
+type Pooled = { slot?: number; item: DumpItem };
+
+const listedEnchantments = ({ enchantments }: Listed) =>
+  enchantments.map((line) => enchantmentIds.get(/^(.+) [IVXLC]+$/.exec(line)?.[1] ?? ""));
+
+/** Dumped items with a listed item's count and enchantments */
+const fitting = (listed: Listed, pool: Pooled[]) =>
+  pool.filter(
+    ({ item }) =>
+      (item.count > 1 ? item.count : undefined) === listed.count &&
+      sameIds(dumpedEnchantments(item), listedEnchantments(listed) as number[]),
+  );
+
+/** 1.8's item a listed name gives, which has no potions and none of Hypixel's own items */
+function namedListed({ text }: Listed) {
+  const armor = ARMOR_PIECE.exec(text);
+  const egg = /^(.+) Egg$/.exec(text)?.[1];
+  // 1.8 names spawn eggs like "Spawn Bat"
+  return armor ? namedItem(armor[0]) : (namedItem(text) ?? (egg ? namedItem(`Spawn ${egg}`) : undefined));
+}
+
+/** The dumped item a listed one is: of its fitting ones, the one of its name or material, or for potions the only one of its kind */
+function dumpedListed(listed: Listed, pool: Pooled[]) {
+  const fits = fitting(listed, pool);
+  const named = namedListed(listed);
+  const potion = /^(Splash )?Potion of (\w+)/.exec(listed.text);
+  const potions = fits.filter(({ item }) => potion && legacyId(item) === POTION && Boolean(item.damage & SPLASH) === Boolean(potion[1]));
+  const described = potions.filter(({ item }) => [item.name, ...item.lore].some((line) => potion && plain(line).includes(potion[2])));
+
+  return (
+    fits.find(({ item }) => plain(item.name) === listed.text) ??
+    (named && fits.find(({ item }) => legacyId(item) === named.id)) ??
+    (potions.length === 1 ? potions[0] : described.length === 1 ? described[0] : undefined)
+  );
+}
+
+function lobbyItem(listed: Listed, dumped?: Pooled) {
+  if (dumped) {
+    const id = legacyId(dumped.item);
+    const token = skyWarsToken(id, dumped.item.damage, dumpedEnchantments(dumped.item));
+    return { id, slot: dumped.slot, token, item: kitItem(dumped.item, id) };
+  }
+
+  const ids = listedEnchantments(listed);
+  const named = namedListed(listed);
+  const item = named && legacyItem(named.id, named.damage);
+  if (!named || !item || ids.includes(undefined)) return undefined;
+
+  const { count, enchantments } = listed;
+  return {
+    id: named.id,
+    token: skyWarsToken(named.id, named.damage, ids as number[]),
+    item: {
+      ...item,
+      count,
+      enchanted: enchantments.length > 0 || undefined,
+      tooltip: enchantments.length > 0 ? enchantments : undefined,
+    },
+  };
+}
+
+const skyWarsKits: Record<string, SkyWarsKit> = {};
+
+for (const screen of screens) {
+  const menu = SKYWARS_MENU.exec(plain(screen.title))?.[1];
+  if (!menu) continue;
+
+  for (const entry of pickerEntries(screen)) {
+    if (!entry.lore.some((line) => plain(line) === "Right-click to open breakdown!")) continue;
+    const name = `${menu} ${plain(entry.name)}`;
+    const key = `${menu.toLowerCase()}_${kitKey(plain(entry.name))}`;
+    if (skyWarsKits[key]) continue;
+
+    // A SkyWars Duel kit whose picker lists the same items holds them, with the mode's shared ones added
+    const listed = listedItems(entry.lore);
+    const duel = skyWarsDuelEditors.find(({ lore }) => JSON.stringify(listedItems(lore)) === JSON.stringify(listed));
+    const pool: Pooled[] = [
+      ...(skyWarsCustomizers.get(key) ??
+        duel?.shown.filter((_, index) => !output.kits.sw_duel[duel.key].items[index].shared).map((item) => ({ item })) ??
+        []),
+    ];
+
+    const dumped = listed.map((item) => {
+      const match = dumpedListed(item, pool);
+      if (match) pool.splice(pool.indexOf(match), 1);
+      return match;
+    });
+
+    // The last dumped item left is the last listed one no name matched (Hypixel's Bookcase is a bookshelf)
+    const left = listed.flatMap((item, index) => (dumped[index] || lobbyItem(item) ? [] : [index]));
+    if (left.length === 1 && pool.length === 1 && fitting(listed[left[0]], pool).length === 1) dumped[left[0]] = pool.pop();
+
+    // A player who never saved a layout gets the list in order, armour put on and the rest from
+    // slot 0, as every Kit Customizer dumped shows
+    const items: SkyWarsKit["items"] = [];
+    let next = 0;
+    let known = true;
+
+    for (const [index, { text }] of listed.entries()) {
+      const found = lobbyItem(listed[index], dumped[index]);
+      if (!found) {
+        unmatched.push(`SkyWars ${name}'s ${text}`);
+        known = false;
+        continue;
+      }
+
+      const material = materials.get(found.id)!;
+      const armor = Object.entries(ARMOR).find(([piece]) => material.endsWith(`_${piece}`))?.[1];
+      const slot = armor ?? next++;
+      if (armor !== undefined && items.some((item) => item.slot === armor)) throw new Error(`${name} lists two items for slot ${armor}`);
+      if (known && found.slot !== undefined && found.slot !== slot) {
+        throw new Error(`${name}'s Kit Customizer shows ${text} in slot ${found.slot}, not ${slot}`);
+      }
+
+      const same = items.find(({ token }) => token === found.token);
+      if (same && JSON.stringify(same.item) !== JSON.stringify(found.item)) throw new Error(`${name} has two items stored as ${found.token}`);
+      items.push({ slot, token: found.token, item: found.item });
+    }
+
+    skyWarsKits[key] = { name, items: known ? items : items.map(({ token, item }) => ({ token, item })) };
+  }
+}
+
+if (Object.keys(skyWarsKits).length === 0) missing.push("SkyWars kit menus");
+
+const legacyKits ={ blitz: {} as Record<string, LegacyKit>, megawalls: {} as Record<string, LegacyKit> };
+
+// Blitz names its kit items "<Kit>'s <Material> (<level>)", which a renamed item replaces with
+// its new name and an Owner line
+const BLITZ_ITEM_NAME = /^§f.+'s (.+) §7\([IVX]+\)$/;
+const blitzMaterialNames = new Map(
+  screens.flatMap((screen) =>
+    screen.slots.flatMap(({ item }) => {
+      const material = item && BLITZ_ITEM_NAME.exec(item.name)?.[1];
+      return material ? [[item.id, material] as const] : [];
+    }),
+  ),
+);
+
+function withoutRename(item: DumpItem, kit: string, level: number): DumpItem {
+  const lore = item.lore.filter((line) => !plain(line).startsWith("Owner: "));
+  if (lore.length === item.lore.length) return item;
+
+  const material = blitzMaterialNames.get(item.id);
+  if (!material) throw new Error(`No other Blitz kit names a ${item.id}, so ${kit}'s renamed one can't be restored`);
+  return { ...item, name: `§f${kit}'s ${material} §7(${ROMAN[level - 1]})`, lore };
+}
+
+/** The Blitz level an Upgrades page shows unlocked, or the Kit upgrade a Mega Walls class page shows */
+function legacyKitLevel(page: Screen, game: keyof typeof legacyKits, kit: string) {
+  const entries = pickerEntries(page);
+
+  if (game === "blitz") {
+    const unlocked = entries.flatMap((item) => {
+      const level = ROMAN.indexOf(new RegExp(`^${kit} ([IVX]+)$`).exec(plain(item.name))?.[1] ?? "") + 1;
+      return level > 0 && item.lore.some((line) => plain(line) === "UNLOCKED") ? [level] : [];
+    });
+    if (unlocked.length === 0) throw new Error(`${page.title} shows no unlocked level`);
+    return { level: Math.max(...unlocked) };
+  }
+
+  const upgrade = entries.find((item) => plain(item.name) === `Kit - ${kit}`);
+  const tier = upgrade?.lore.map((line) => /^Tier: ([IVX]+)$/.exec(plain(line))?.[1]).find(Boolean);
+  if (!upgrade || !tier) throw new Error(`${page.title} shows no Kit tier`);
+  return { level: ROMAN.indexOf(tier) + 1, armor: pickerArmor(upgrade.lore) };
+}
+
+for (const [index, screen] of screens.entries()) {
+  const kit = /^Edit (.+) Layout$/.exec(plain(screen.title))?.[1];
+  const back = screen.slots.find(({ item }) => item && plain(item.name) === "Go Back")?.item;
+  const page = back && /^To (.+) (Upgrades|Class)$/.exec(plain(back.lore[0] ?? ""));
+  // A screen without its buttons was captured before it finished loading
+  if (!kit || !page || page[1] !== kit) continue;
+
+  const game = LEGACY_KIT_PAGES[page[2] as keyof typeof LEGACY_KIT_PAGES];
+  const key = kitKey(kit);
+  // The first screen is the default; later ones may show items the player moved
+  if (legacyKits[game][key]) continue;
+
+  const pageTitle = `${kit} ${page[2]}`;
+  const shownPage = screens.slice(0, index).findLast((shown) => plain(shown.title) === pageTitle);
+  if (!shownPage) throw new Error(`No ${pageTitle} page before ${screen.title}`);
+  const { level, armor } = legacyKitLevel(shownPage, game, kit);
+
+  const items = screen.slots
+    .flatMap(({ slot, item }) => {
+      const stored = storedSlot(slot);
+      if (!item || stored === undefined) return [];
+      const shown = game === "blitz" ? withoutRename(item, kit, level) : item;
+      const numeric = legacyId(shown);
+      return [{ slot: stored, token: `${numeric},${shown.damage}`, item: kitItem(shown, numeric) }];
+    })
+    .toSorted((a, b) => a.slot - b.slot);
+
+  // Stored layouts name items only by token
+  const tokens = items.map(({ token }) => token);
+  if (new Set(tokens).size < tokens.length) throw new Error(`${screen.title} shows two items of one token`);
+
+  legacyKits[game][key] = {
+    name: kit,
+    level,
+    items,
+    armor,
+    saved: SAVED_LAYOUTS[game].includes(kit) || undefined,
+  };
+}
+
+/** A menu's first screen that finished loading (it shows Go Back), by its title and the page it goes back to */
+function menuScreen(title: string, back?: string) {
+  const index = screens.findIndex(
+    (shown) =>
+      plain(shown.title) === title &&
+      shown.slots.some(
+        ({ item }) => item && plain(item.name) === "Go Back" && (back === undefined || plain(item.lore[0] ?? "") === `To ${back}`),
+      ),
+  );
+  if (index === -1) missing.push(back ? `${back} > ${title}` : title);
+  return index;
+}
+
+/** A menu's items without its buttons */
+function menu(title: string, back?: string) {
+  const screen = screens[menuScreen(title, back)];
+  if (!screen) return [];
+
+  return pickerEntries(screen).filter(
+    (item) => !/^(Go Back|Close|Reset .+|Left-click for (next|previous) page!|.+ Coins: .+)$/.test(plain(item.name)),
+  );
+}
+
+// What a menu shows about the dumping account rather than the item: how to get it, whether it's
+// selected, and the menu's prompt. Requirements continue on indented lines
+const MENU_STATUS =
+  /^(Click to (select|purchase|view)!|> Click to activate! <|>>> ACTIVE <<<|SELECTED!|Equipped!|Missing parts!|Cost: .+|Unlocked in .+|[✖✔] .+|Choose an? .+!|Collect all the hats!)$/;
+
+/**
+ * A menu item as a loadout shows it: without the account's status lines, and, where the menu
+ * colours names by whether the account owns or picked them, named in the selected item's green.
+ * The selected item's glint is the menu's too, so only real enchantments glint
+ */
+function menuItem(dumped: DumpItem, recolor: boolean): ItemStack {
+  const item = kitItem(dumped);
+  const tooltip: string[] = [];
+  let dropping = false;
+
+  for (const line of dumped.lore) {
+    const text = plain(line).trim();
+    dropping = MENU_STATUS.test(text) || (dropping && /^\s/.test(plain(line)) && text !== "");
+    if (dropping || (blank(line) && (tooltip.length === 0 || blank(tooltip.at(-1)!)))) continue;
+    tooltip.push(line);
+  }
+  while (tooltip.length > 0 && blank(tooltip.at(-1)!)) tooltip.pop();
+
+  return {
+    ...item,
+    name: recolor ? dumped.name.replace(/^§[ac7]/, "§a") : dumped.name,
+    tooltip: tooltip.length > 0 ? tooltip : undefined,
+    enchanted: /ench:\[\d/.test(dumped.nbt) || undefined,
+  };
+}
+
+/** Items by key, throwing if two share one */
+function byKey(entries: [string, ItemStack][], where: string) {
+  const keyed: Record<string, ItemStack> = {};
+  for (const [key, item] of entries) {
+    if (keyed[key]) throw new Error(`${where} has two items keyed ${key}`);
+    keyed[key] = item;
+  }
+  return keyed;
+}
+
+// Quake's shop menus, by the stats key each one's pick is stored under. The Laser is "sight"
+// and the Kits menu's chestplates "armor"; the hat is worn as the helmet
+const QUAKE_MENUS = [
+  ["case", "Case", "Quakecraft Shop"],
+  ["barrel", "Barrel", "Quakecraft Shop"],
+  ["trigger", "Trigger", "Quakecraft Shop"],
+  ["muzzle", "Muzzle", "Quakecraft Shop"],
+  ["sight", "Laser", "Quakecraft Shop"],
+  ["hat", "Hats", "Armor"],
+  ["hat", "(2/2) Hats", "Armor"],
+  ["armor", "Kits", "Armor"],
+  ["leggings", "Leggings", "Armor"],
+  ["boots", "Boots", "Armor"],
+] as const;
+
+const DIGITS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+
+/** The key a Quake part's stored id gives once fromQuakeLoadout trims it */
+function quakeKey(part: (typeof QUAKE_MENUS)[number][0], item: DumpItem) {
+  const name = plain(item.name);
+
+  // Triggers are stored spelled out: 0.85s is ZERO_POINT_EIGHT_FIVE
+  if (part === "trigger") {
+    const time = /^(\d+\.\d+)s/.exec(name)?.[1];
+    if (!time) throw new Error(`Quake trigger ${name} names no time`);
+    return [...time].map((char) => (char === "." ? "point" : DIGITS[Number(char)])).join("");
+  }
+
+  // Cases are stored by Bukkit material, with SHINY_ for the Power X ones (SHINY_DIAMOND_HOE)
+  if (part === "case") {
+    const material = materials.get(legacyId(item));
+    if (!material) throw new Error(`No Bukkit material for ${item.id}`);
+    return kitKey(`${/ench:\[\d/.test(item.nbt) ? "shiny" : ""}${material}`);
+  }
+
+  return kitKey(name.replace(/ \S+$/, ""));
+}
+
+const quake: Record<string, Record<string, ItemStack>> = {};
+
+for (const [part, title, back] of QUAKE_MENUS) {
+  const entries = menu(title, back).flatMap((item): [string, ItemStack][] =>
+    // The axe cases' ids aren't their Bukkit material (packages hold case.wooden_axe), so they can't be matched
+    part === "case" && item.id.endsWith("_axe") ? [] : [[quakeKey(part, item), menuItem(item, true)]],
+  );
+  quake[part] = byKey([...Object.entries(quake[part] ?? {}), ...entries], `Quake ${title}`);
+}
+
+// Arena's skill menus by the stats key of each slot
+const ARENA_SKILLS = {
+  offensive: "Offensive Skills",
+  utility: "Utility Skills",
+  support: "Support Skills",
+  ultimate: "Ultimate Skills",
+} as const;
+
+const arena: Record<string, Record<string, ItemStack>> = {};
+
+for (const [slot, title] of Object.entries(ARENA_SKILLS)) {
+  arena[slot] = byKey(
+    menu(title).map((item) => [kitKey(plain(item.name)), menuItem(item, true)]),
+    `Arena ${title}`,
+  );
+}
+
+// Each rune's row starts with the rune and goes on with its upgrades (Rune of Speed II). Its
+// description gives the first level's chance, and the stored rune_level_<rune> isn't known to
+// count from it, so the rune keeps only its name
+arena.active_rune = byKey(
+  menu("Runes").flatMap((item): [string, ItemStack][] => {
+    const rune = /^Rune of ([A-Za-z]+)$/.exec(plain(item.name))?.[1];
+    return rune ? [[kitKey(rune), { ...menuItem(item, false), tooltip: undefined }]] : [];
+  }),
+  "Arena Runes",
+);
+
+interface KartPart {
+  rarity: string;
+  /** Each attribute's level, as KartAttributeType names it (TOP_SPEED) */
+  attributes: Record<string, number>;
+  item: ItemStack;
+}
+
+// TKR's part selectors by the PartType their parts are stored with
+const KART_SELECTORS = { ENGINE: "Engine Selector", TURBOCHARGER: "Turbocharger Selector", FRAME: "Frame Selector" } as const;
+
+const kart: Record<string, KartPart[]> = {};
+
+for (const [type, title] of Object.entries(KART_SELECTORS)) {
+  const parts: KartPart[] = [];
+
+  for (const item of menu(title)) {
+    // Named <name> <rarity> <type>, like Eternal Awesome Engine
+    const rarity = plain(item.name).split(" ").at(-2)!.toUpperCase();
+    // Each attribute's bar is five >, green up to its level: §a>§a>§4>§4>§4>§r  Top speed
+    const attributes = Object.fromEntries(
+      item.lore.flatMap((line) => {
+        const name = /^>+\s+(.+)$/.exec(plain(line))?.[1];
+        return name ? [[name.toUpperCase().replaceAll(" ", "_"), line.match(/§a>/g)?.length ?? 0]] : [];
+      }),
+    );
+
+    const part = { rarity, attributes, item: kitItem(item) };
+    if (!parts.some((shown) => JSON.stringify(shown) === JSON.stringify(part))) parts.push(part);
+  }
+
+  if (parts.length > 0) kart[type] = parts;
+}
+
+// The Speed UHC Shop's Kits page lists each kit's items by name, like "Stick x2", with
+// enchantments on indented lines under them
+const speedUhc: Record<string, Record<string, (ItemStack | null)[]>> = {};
+
+/** A Speed UHC kit's items, null where a name can't be matched */
+function speedUhcKit(kit: DumpItem) {
+  const items: (ItemStack | null)[] = [];
+
+  // The client adds the icon's own enchantments above the lore, whose lines start with §5§o.
+  // The list ends at the first blank line
+  const lines = kit.lore.filter((line) => line.startsWith("§5§o"));
+  const end = lines.findIndex(blank);
+
+  for (const line of lines.slice(0, end === -1 ? undefined : end)) {
+    const enchantment = /^\s+∙ (.+)$/.exec(plain(line))?.[1];
+    const last = items.at(-1);
+    if (enchantment) {
+      if (last) Object.assign(last, { enchanted: true, tooltip: [...(last.tooltip ?? []), enchantment] });
+      continue;
+    }
+
+    const [, name, count] = /^(.+?)(?: x(\d+))?$/.exec(plain(line))!;
+    const named = namedItem(name);
+    const item = named && legacyItem(named.id, named.damage);
+    if (!item) unmatched.push(`Speed UHC ${plain(kit.name)}'s ${name}`);
+    items.push(item ? { ...item, count: count ? Number(count) : undefined } : null);
+  }
+
+  return items;
+}
+
+const kitsPage = menuScreen("Kits", "Speed UHC Shop");
+
+if (kitsPage !== -1) {
+  // The shop's Kits item names the mode its page is for: "Selection of unique kits for Normal Mode."
+  const mode = screens
+    .slice(0, kitsPage)
+    .filter((screen) => plain(screen.title) === "Speed UHC Shop")
+    .flatMap(pickerEntries)
+    .findLast((item) => plain(item.name) === "Kits")
+    ?.lore.map(plain)
+    .join(" ")
+    .match(/kits for (\w+) Mode/)?.[1];
+  if (!mode) throw new Error("No Speed UHC Shop before its Kits page names the mode");
+
+  speedUhc[mode.toLowerCase()] = Object.fromEntries(
+    menu("Kits", "Speed UHC Shop").map((kit) => [kitKey(plain(kit.name)), speedUhcKit(kit)]),
+  );
+}
+
 if (Object.keys(output.modes).length > 0 || Object.keys(output.kits).length > 0) {
   await writeFile(new URL("../data/duels-modes.json", import.meta.url), `${JSON.stringify(output, null, 2)}\n`);
 }
 if (Object.keys(tntGames).length > 0) {
   await writeFile(new URL("../data/tnt-games.json", import.meta.url), `${JSON.stringify(tntGames, null, 2)}\n`);
 }
+if (Object.keys(legacyKits.blitz).length > 0 || Object.keys(legacyKits.megawalls).length > 0) {
+  await writeFile(new URL("../data/legacy-kits.json", import.meta.url), `${JSON.stringify(legacyKits, null, 2)}\n`);
+}
+if (Object.keys(skyWarsKits).length > 0) {
+  await writeFile(new URL("../data/skywars-kits.json", import.meta.url), `${JSON.stringify(skyWarsKits, null, 2)}\n`);
+}
+
+const count = (menus: Record<string, object>) => Object.values(menus).reduce((sum, items) => sum + Object.keys(items).length, 0);
+
+if (count(quake) > 0) {
+  await writeFile(new URL("../data/quake.json", import.meta.url), `${JSON.stringify(quake, null, 2)}\n`);
+}
+if (count(arena) > 0) {
+  await writeFile(new URL("../data/arena.json", import.meta.url), `${JSON.stringify(arena, null, 2)}\n`);
+}
+if (count(kart) > 0) {
+  await writeFile(new URL("../data/turbo-kart-racers.json", import.meta.url), `${JSON.stringify(kart, null, 2)}\n`);
+}
+if (count(speedUhc) > 0) {
+  await writeFile(new URL("../data/speed-uhc.json", import.meta.url), `${JSON.stringify(speedUhc, null, 2)}\n`);
+}
 
 console.log(
   `${Object.keys(output.modes).length} Duels modes, ${Object.keys(tntGames).length} TNT Games modes; kits: ${Object.entries(output.kits)
     .map(([mode, kits]) => `${mode} ${Object.keys(kits).length}`)
-    .join(", ")}` +
+    .join(", ")}, blitz ${Object.keys(legacyKits.blitz).length}, megawalls ${Object.keys(legacyKits.megawalls).length}, SkyWars ${Object.keys(skyWarsKits).length}` +
+    `; Quake ${count(quake)} items, Arena ${count(arena)}, TKR ${count(kart)} parts, Speed UHC ${count(speedUhc)} kits` +
     (missing.length > 0 ? `; not in these dumps: ${missing.join(", ")}` : "") +
-    (unnamed.size > 0 ? `; skipped the last screens of ${[...unnamed].join(", ")}, which no picker follows` : ""),
+    (unnamed.size > 0 ? `; skipped the last screens of ${[...unnamed].join(", ")}, which no picker follows` : "") +
+    (unmatched.length > 0 ? `; left out ${unmatched.join(", ")}, whose names match no item` : ""),
 );
