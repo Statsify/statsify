@@ -364,8 +364,8 @@ async function renderCard(
   updatedAt: number,
   game?: GameImage
 ): Promise<Uint8Array<ArrayBuffer>> {
-  // A miss reads the player and renders the skin (asking Mojang for it, if it's old) before it can queue, so a queue
-  // with no room left, counting the misses still loading, answers busy first.
+  // A miss reads the player and renders the skin (asking Minecraft's session server for it, if it's old) before it
+  // can queue, so a queue with no room left, counting the misses still loading, answers busy first.
   const renders = await renderPool();
   if (renders.pending + loading >= RENDER_QUEUE_LIMIT) throw new PoolBusyError();
 
