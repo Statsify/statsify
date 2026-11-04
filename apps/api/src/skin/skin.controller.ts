@@ -38,7 +38,7 @@ export class SkinController {
 
   /**
    * The site's lists of heads (search suggestions by name, a guild's members by UUID): the stored skin's 8×8 face,
-   * never one fetched from Mojang for it.
+   * never one fetched from Minecraft's session server for it.
    */
   @Get("/head/stored")
   @Auth({ role: AuthRole.SITE, siteUnlimited: true })

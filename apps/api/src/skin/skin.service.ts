@@ -68,7 +68,8 @@ export class SkinService {
 
   /**
    * A skin face from the skin stored for a player, by a stored player's name or by UUID (Steve or Alex if none is
-   * stored). Never asks Mojang, so lists of heads (search suggestions, a guild's members) don't spend its rate limit.
+   * stored). Never asks Minecraft's session server, so lists of heads (search suggestions, a guild's members) don't
+   * spend its rate limit.
    */
   public async getStoredHead(tag: string): Promise<Buffer> {
     const uuid = tag.length > 16 ? tag.replaceAll("-", "").toLowerCase() : await this.storedUuid(tag);
