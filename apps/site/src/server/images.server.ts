@@ -86,8 +86,8 @@ const RENDER_QUEUE_TIMEOUT_MS = 6000;
 const RENDER_TIMEOUT_MS = 8000;
 /**
  * The first request for a missing image renders it under this lock; the others wait for its PNG. It outlasts the
- * owner's slowest path: 5 s to load the player and skin (the skin may come from Mojang), the queue, the render and 1 s
- * for the cache write. An owner slower than that only costs a second render.
+ * owner's slowest path: 5 s to load the player and skin (the skin may come from Minecraft's session server), the
+ * queue, the render and 1 s for the cache write. An owner slower than that only costs a second render.
  */
 const LOCK_TTL_MS = 5000 + RENDER_QUEUE_TIMEOUT_MS + RENDER_TIMEOUT_MS + 1000;
 const LOCK_POLL_MS = 100;
@@ -364,8 +364,8 @@ async function renderCard(
   updatedAt: number,
   game?: GameImage
 ): Promise<Uint8Array<ArrayBuffer>> {
-  // A miss reads the player and renders the skin (asking Mojang for it, if it's old) before it can queue, so a queue
-  // with no room left, counting the misses still loading, answers busy first.
+  // A miss reads the player and renders the skin (asking Minecraft's session server for it, if it's old) before it
+  // can queue, so a queue with no room left, counting the misses still loading, answers busy first.
   const renders = await renderPool();
   if (renders.pending + loading >= RENDER_QUEUE_LIMIT) throw new PoolBusyError();
 
