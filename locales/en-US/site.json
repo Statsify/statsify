@@ -360,7 +360,7 @@
     "note": "Note",
     "leaderboardsNote": "Leaderboards rank players who've been looked up on Statsify, not all of Hypixel.",
     "names": "Names and Skins",
-    "namesText": "Names and skins come from Mojang and update upon search.",
+    "namesText": "Names and skins come from Minecraft's servers and update upon search.",
     "source": "Open Source",
     "sourceText": "Statsify is open source. See the code on <github>GitHub</github>."
   },

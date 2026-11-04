@@ -66,7 +66,10 @@ export class SkinService {
     return drawHead(skin, size);
   }
 
-  /** A stored player's skin face, by name. Never asks Mojang, so search suggestions don't spend its rate limit. */
+  /**
+   * A stored player's skin face, by name. Never asks Minecraft's session server, so search suggestions don't spend its
+   * rate limit.
+   */
   public async getStoredHead(name: string): Promise<Buffer> {
     const player = await this.playerModel.findOne({ usernameToLower: name.toLowerCase() }).select({ uuid: true }).lean().exec();
     if (!player) throw new PlayerNotFoundException();

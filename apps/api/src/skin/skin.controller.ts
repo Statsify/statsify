@@ -36,7 +36,10 @@ export class SkinController {
     return new StreamableFile(head, { type: "image/png" });
   }
 
-  /** The site's search suggestion heads: the stored skin's 8×8 face, never one fetched from Mojang for it. */
+  /**
+   * The site's search suggestion heads: the stored skin's 8×8 face, never one fetched from Minecraft's session server
+   * for it.
+   */
   @Get("/head/stored")
   @Auth({ role: AuthRole.SITE, siteUnlimited: true })
   @ApiExcludeEndpoint()
