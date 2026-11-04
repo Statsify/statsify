@@ -104,6 +104,19 @@ setCanvasBackend(skiaCanvas);
   layout, it's the default at that level: `BLITZ_KITS` and `MEGA_WALLS_KITS` list them.
 - `fromSkyWarsKit(layout)`: a SkyWars `kit_…_inventory`, which names items by their Bukkit
   material (`legacyMaterial(name, damage)`) and lists enchantment ids on enchanted ones.
+- `fromQuakeLoadout(stats)`: the Quake stats' gun (`case`, `barrel`, `trigger`, `muzzle`, and
+  `sight`, its laser), `hat`, `armor` (the Kits menu's chestplate), `leggings` and `boots` as a
+  row of 9, with the Quakecraft Shop menus' items from `data/quake.json`.
+- `fromArenaLoadout(stats)`: the Arena stats' `offensive`, `utility`, `support` and `ultimate`
+  skills and `active_rune` as a row of 5, with the Arena Shop's items from `data/arena.json`.
+- `fromTurboKartRacersKart(stats)`: the GingerBread stats' `engine_active`, `booster_active` and
+  `frame_active` parts as a row of 3, matched to the part selectors' items in
+  `data/turbo-kart-racers.json` by rarity and attribute levels.
+- `fromSpeedUhcKit(id)`: an `activeKit_<MODE>` kit, like `kit_basic_normal_logger`, as a row of
+  its items from the Speed UHC Shop's Kits page (`data/speed-uhc.json`). Only Normal's page is
+  dumped.
+
+In these four, a pick the dumped menus don't have leaves its slot empty.
 
 `data/duels-modes.json`, `data/tnt-games.json` and `data/legacy-kits.json` come from the game:
 open the layout editors with the StatsifyDump ChatTriggers module running, then `pnpm build` and
@@ -111,6 +124,7 @@ open the layout editors with the StatsifyDump ChatTriggers module running, then 
 with the last export of each dump session. Open each kit's editor from its picker before moving
 anything: the picker shown next names the kit, and only an unsaved kit shows the default. Blitz's
 and Mega Walls' editors open from each kit's Upgrades or Class page, which gives the level.
+The Quake, Arena, TKR and Speed UHC data comes the same way, from those games' shop menus.
 An item's `tooltip` holds the lines under its name as the game drew them, enchantments and
 attributes included.
 

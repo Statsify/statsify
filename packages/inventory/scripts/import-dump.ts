@@ -8,8 +8,9 @@
 
 // Builds data/duels-modes.json, data/tnt-games.json and data/legacy-kits.json from StatsifyDump
 // exports (the ChatTriggers module) that opened Duels', TNT Games', Blitz's and Mega Walls' layout
-// editors, so each kit item has the count, name and tooltip the game gives it. Each dump session
-// writes its own exports, so pass the last export of every session needed:
+// editors, so each kit item has the count, name and tooltip the game gives it, and data/quake.json,
+// data/arena.json, data/turbo-kart-racers.json and data/speed-uhc.json from those games' shop
+// menus. Each dump session writes its own exports, so pass the last export of every session needed:
 //   pnpm --filter @statsify/inventory build
 //   node scripts/import-dump.ts <dump.json> [<dump.json> …]
 
@@ -21,6 +22,7 @@ import {
   type LegacyKit,
   kitKey,
   legacyItem,
+  legacyMaterial,
   skinUrl,
 } from "@statsify/inventory";
 import { readFile, writeFile } from "node:fs/promises";
@@ -138,7 +140,8 @@ const dumps = await Promise.all(
 const items = dumps.flatMap((dump) => dump.items);
 const screens = dumps.flatMap((dump) => dump.screens ?? []).toSorted((a, b) => a.capturedAt.localeCompare(b.capturedAt));
 
-const legacyIds = new Map((await fetchJson<{ id: number; name: string }[]>("1.8/items.json")).map(({ id, name }) => [name, id]));
+const legacyItems = await fetchJson<{ id: number; name: string; displayName: string }[]>("1.8/items.json");
+const legacyIds = new Map(legacyItems.map(({ id, name }) => [name, id]));
 const materials = new Map(Object.entries(data.materials).map(([name, id]) => [id, name.toLowerCase()]));
 
 const plain = (text: string) => text.replaceAll(/§./g, "");
@@ -446,6 +449,240 @@ for (const [index, screen] of screens.entries()) {
   };
 }
 
+/** A menu's first screen that finished loading (it shows Go Back), by its title and the page it goes back to */
+function menuScreen(title: string, back?: string) {
+  const index = screens.findIndex(
+    (shown) =>
+      plain(shown.title) === title &&
+      shown.slots.some(
+        ({ item }) => item && plain(item.name) === "Go Back" && (back === undefined || plain(item.lore[0] ?? "") === `To ${back}`),
+      ),
+  );
+  if (index === -1) missing.push(back ? `${back} > ${title}` : title);
+  return index;
+}
+
+/** A menu's items without its buttons */
+function menu(title: string, back?: string) {
+  const screen = screens[menuScreen(title, back)];
+  if (!screen) return [];
+
+  return pickerEntries(screen).filter(
+    (item) => !/^(Go Back|Close|Reset .+|Left-click for (next|previous) page!|.+ Coins: .+)$/.test(plain(item.name)),
+  );
+}
+
+// What a menu shows about the dumping account rather than the item: how to get it, whether it's
+// selected, and the menu's prompt. Requirements continue on indented lines
+const MENU_STATUS =
+  /^(Click to (select|purchase|view)!|> Click to activate! <|>>> ACTIVE <<<|SELECTED!|Equipped!|Missing parts!|Cost: .+|Unlocked in .+|[✖✔] .+|Choose an? .+!|Collect all the hats!)$/;
+
+const blank = (line: string) => plain(line).trim() === "";
+
+/**
+ * A menu item as a loadout shows it: without the account's status lines, and, where the menu
+ * colours names by whether the account owns or picked them, named in the selected item's green.
+ * The selected item's glint is the menu's too, so only real enchantments glint
+ */
+function menuItem(dumped: DumpItem, recolor: boolean): ItemStack {
+  const item = kitItem(dumped);
+  const tooltip: string[] = [];
+  let dropping = false;
+
+  for (const line of dumped.lore) {
+    const text = plain(line).trim();
+    dropping = MENU_STATUS.test(text) || (dropping && /^\s/.test(plain(line)) && text !== "");
+    if (dropping || (blank(line) && (tooltip.length === 0 || blank(tooltip.at(-1)!)))) continue;
+    tooltip.push(line);
+  }
+  while (tooltip.length > 0 && blank(tooltip.at(-1)!)) tooltip.pop();
+
+  return {
+    ...item,
+    name: recolor ? dumped.name.replace(/^§[ac7]/, "§a") : dumped.name,
+    tooltip: tooltip.length > 0 ? tooltip : undefined,
+    enchanted: /ench:\[\d/.test(dumped.nbt) || undefined,
+  };
+}
+
+/** Items by key, throwing if two share one */
+function byKey(entries: [string, ItemStack][], where: string) {
+  const keyed: Record<string, ItemStack> = {};
+  for (const [key, item] of entries) {
+    if (keyed[key]) throw new Error(`${where} has two items keyed ${key}`);
+    keyed[key] = item;
+  }
+  return keyed;
+}
+
+// Quake's shop menus, by the stats key each one's pick is stored under. The Laser is "sight"
+// and the Kits menu's chestplates "armor"; the hat is worn as the helmet
+const QUAKE_MENUS = [
+  ["case", "Case", "Quakecraft Shop"],
+  ["barrel", "Barrel", "Quakecraft Shop"],
+  ["trigger", "Trigger", "Quakecraft Shop"],
+  ["muzzle", "Muzzle", "Quakecraft Shop"],
+  ["sight", "Laser", "Quakecraft Shop"],
+  ["hat", "Hats", "Armor"],
+  ["hat", "(2/2) Hats", "Armor"],
+  ["armor", "Kits", "Armor"],
+  ["leggings", "Leggings", "Armor"],
+  ["boots", "Boots", "Armor"],
+] as const;
+
+const DIGITS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+
+/** The key a Quake part's stored id gives once fromQuakeLoadout trims it */
+function quakeKey(part: (typeof QUAKE_MENUS)[number][0], item: DumpItem) {
+  const name = plain(item.name);
+
+  // Triggers are stored spelled out: 0.85s is ZERO_POINT_EIGHT_FIVE
+  if (part === "trigger") {
+    const time = /^(\d+\.\d+)s/.exec(name)?.[1];
+    if (!time) throw new Error(`Quake trigger ${name} names no time`);
+    return [...time].map((char) => (char === "." ? "point" : DIGITS[Number(char)])).join("");
+  }
+
+  // Cases are stored by Bukkit material, with SHINY_ for the Power X ones (SHINY_DIAMOND_HOE)
+  if (part === "case") {
+    const material = materials.get(legacyId(item));
+    if (!material) throw new Error(`No Bukkit material for ${item.id}`);
+    return kitKey(`${/ench:\[\d/.test(item.nbt) ? "shiny" : ""}${material}`);
+  }
+
+  return kitKey(name.replace(/ \S+$/, ""));
+}
+
+const quake: Record<string, Record<string, ItemStack>> = {};
+
+for (const [part, title, back] of QUAKE_MENUS) {
+  const entries = menu(title, back).flatMap((item): [string, ItemStack][] =>
+    // The axe cases' ids aren't their Bukkit material (packages hold case.wooden_axe), so they can't be matched
+    part === "case" && item.id.endsWith("_axe") ? [] : [[quakeKey(part, item), menuItem(item, true)]],
+  );
+  quake[part] = byKey([...Object.entries(quake[part] ?? {}), ...entries], `Quake ${title}`);
+}
+
+// Arena's skill menus by the stats key of each slot
+const ARENA_SKILLS = {
+  offensive: "Offensive Skills",
+  utility: "Utility Skills",
+  support: "Support Skills",
+  ultimate: "Ultimate Skills",
+} as const;
+
+const arena: Record<string, Record<string, ItemStack>> = {};
+
+for (const [slot, title] of Object.entries(ARENA_SKILLS)) {
+  arena[slot] = byKey(
+    menu(title).map((item) => [kitKey(plain(item.name)), menuItem(item, true)]),
+    `Arena ${title}`,
+  );
+}
+
+// Each rune's row starts with the rune and goes on with its upgrades (Rune of Speed II). Its
+// description gives the first level's chance, and the stored rune_level_<rune> isn't known to
+// count from it, so the rune keeps only its name
+arena.active_rune = byKey(
+  menu("Runes").flatMap((item): [string, ItemStack][] => {
+    const rune = /^Rune of ([A-Za-z]+)$/.exec(plain(item.name))?.[1];
+    return rune ? [[kitKey(rune), { ...menuItem(item, false), tooltip: undefined }]] : [];
+  }),
+  "Arena Runes",
+);
+
+interface KartPart {
+  rarity: string;
+  /** Each attribute's level, as KartAttributeType names it (TOP_SPEED) */
+  attributes: Record<string, number>;
+  item: ItemStack;
+}
+
+// TKR's part selectors by the PartType their parts are stored with
+const KART_SELECTORS = { ENGINE: "Engine Selector", TURBOCHARGER: "Turbocharger Selector", FRAME: "Frame Selector" } as const;
+
+const kart: Record<string, KartPart[]> = {};
+
+for (const [type, title] of Object.entries(KART_SELECTORS)) {
+  const parts: KartPart[] = [];
+
+  for (const item of menu(title)) {
+    // Named <name> <rarity> <type>, like Eternal Awesome Engine
+    const rarity = plain(item.name).split(" ").at(-2)!.toUpperCase();
+    // Each attribute's bar is five >, green up to its level: §a>§a>§4>§4>§4>§r  Top speed
+    const attributes = Object.fromEntries(
+      item.lore.flatMap((line) => {
+        const name = /^>+\s+(.+)$/.exec(plain(line))?.[1];
+        return name ? [[name.toUpperCase().replaceAll(" ", "_"), line.match(/§a>/g)?.length ?? 0]] : [];
+      }),
+    );
+
+    const part = { rarity, attributes, item: kitItem(item) };
+    if (!parts.some((shown) => JSON.stringify(shown) === JSON.stringify(part))) parts.push(part);
+  }
+
+  if (parts.length > 0) kart[type] = parts;
+}
+
+// The Speed UHC Shop's Kits page lists each kit's items by name, like "Stick x2", with
+// enchantments on indented lines under them. A name is 1.8's own or the item's Bukkit material
+// ("Gold Helmet"); the rest are Hypixel's ("Pig Egg", "Awkward Potion") and are left out.
+// minecraft-data gives some block items their item's name (Nether Quartz), so blocks' names count
+// too, and a name two ids share matches neither
+const legacyNames = new Map<string, number | undefined>();
+for (const { id, displayName } of [...legacyItems, ...(await fetchJson<{ id: number; displayName: string }[]>("1.8/blocks.json"))]) {
+  legacyNames.set(displayName, legacyNames.has(displayName) && legacyNames.get(displayName) !== id ? undefined : id);
+}
+
+const unmatched: string[] = [];
+const speedUhc: Record<string, Record<string, (ItemStack | null)[]>> = {};
+
+/** A Speed UHC kit's items, null where a name can't be matched */
+function speedUhcKit(kit: DumpItem) {
+  const items: (ItemStack | null)[] = [];
+
+  // The client adds the icon's own enchantments above the lore, whose lines start with §5§o.
+  // The list ends at the first blank line
+  const lines = kit.lore.filter((line) => line.startsWith("§5§o"));
+  const end = lines.findIndex(blank);
+
+  for (const line of lines.slice(0, end === -1 ? undefined : end)) {
+    const enchantment = /^\s+∙ (.+)$/.exec(plain(line))?.[1];
+    const last = items.at(-1);
+    if (enchantment) {
+      if (last) Object.assign(last, { enchanted: true, tooltip: [...(last.tooltip ?? []), enchantment] });
+      continue;
+    }
+
+    const [, name, count] = /^(.+?)(?: x(\d+))?$/.exec(plain(line))!;
+    const id = legacyNames.get(name);
+    const item = id === undefined ? legacyMaterial(name.toUpperCase().replaceAll(" ", "_")) : legacyItem(id);
+    if (!item) unmatched.push(`Speed UHC ${plain(kit.name)}'s ${name}`);
+    items.push(item ? { ...item, count: count ? Number(count) : undefined } : null);
+  }
+
+  return items;
+}
+
+const kitsPage = menuScreen("Kits", "Speed UHC Shop");
+
+if (kitsPage !== -1) {
+  // The shop's Kits item names the mode its page is for: "Selection of unique kits for Normal Mode."
+  const mode = screens
+    .slice(0, kitsPage)
+    .filter((screen) => plain(screen.title) === "Speed UHC Shop")
+    .flatMap(pickerEntries)
+    .findLast((item) => plain(item.name) === "Kits")
+    ?.lore.map(plain)
+    .join(" ")
+    .match(/kits for (\w+) Mode/)?.[1];
+  if (!mode) throw new Error("No Speed UHC Shop before its Kits page names the mode");
+
+  speedUhc[mode.toLowerCase()] = Object.fromEntries(
+    menu("Kits", "Speed UHC Shop").map((kit) => [kitKey(plain(kit.name)), speedUhcKit(kit)]),
+  );
+}
+
 if (Object.keys(output.modes).length > 0 || Object.keys(output.kits).length > 0) {
   await writeFile(new URL("../data/duels-modes.json", import.meta.url), `${JSON.stringify(output, null, 2)}\n`);
 }
@@ -456,10 +693,27 @@ if (Object.keys(legacyKits.blitz).length > 0 || Object.keys(legacyKits.megawalls
   await writeFile(new URL("../data/legacy-kits.json", import.meta.url), `${JSON.stringify(legacyKits, null, 2)}\n`);
 }
 
+const count = (menus: Record<string, object>) => Object.values(menus).reduce((sum, items) => sum + Object.keys(items).length, 0);
+
+if (count(quake) > 0) {
+  await writeFile(new URL("../data/quake.json", import.meta.url), `${JSON.stringify(quake, null, 2)}\n`);
+}
+if (count(arena) > 0) {
+  await writeFile(new URL("../data/arena.json", import.meta.url), `${JSON.stringify(arena, null, 2)}\n`);
+}
+if (count(kart) > 0) {
+  await writeFile(new URL("../data/turbo-kart-racers.json", import.meta.url), `${JSON.stringify(kart, null, 2)}\n`);
+}
+if (count(speedUhc) > 0) {
+  await writeFile(new URL("../data/speed-uhc.json", import.meta.url), `${JSON.stringify(speedUhc, null, 2)}\n`);
+}
+
 console.log(
   `${Object.keys(output.modes).length} Duels modes, ${Object.keys(tntGames).length} TNT Games modes; kits: ${Object.entries(output.kits)
     .map(([mode, kits]) => `${mode} ${Object.keys(kits).length}`)
     .join(", ")}, blitz ${Object.keys(legacyKits.blitz).length}, megawalls ${Object.keys(legacyKits.megawalls).length}` +
+    `; Quake ${count(quake)} items, Arena ${count(arena)}, TKR ${count(kart)} parts, Speed UHC ${count(speedUhc)} kits` +
     (missing.length > 0 ? `; not in these dumps: ${missing.join(", ")}` : "") +
-    (unnamed.size > 0 ? `; skipped the last screens of ${[...unnamed].join(", ")}, which no picker follows` : ""),
+    (unnamed.size > 0 ? `; skipped the last screens of ${[...unnamed].join(", ")}, which no picker follows` : "") +
+    (unmatched.length > 0 ? `; left out ${unmatched.join(", ")}, whose names match no item` : ""),
 );

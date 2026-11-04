@@ -1,0 +1,690 @@
+{
+  "offensive": {
+    "bouldertoss": {
+      "id": "minecraft:dirt",
+      "name": "§aBoulder Toss",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e75",
+        "§5§o",
+        "§5§o§9Launch a large boulder that will shatter",
+        "§5§o§9after colliding with the ground, dealing",
+        "§5§o§c230§9 damage to enemies nearby. Launching a",
+        "§5§o§9boulder directly under a player's feet will",
+        "§5§o§2immobilize§9 them for §c2§9 seconds.",
+        "§5§o",
+        "§5§o§fExplosion Radius: §c5",
+        "§5§o",
+        "§5§o§7Type: §bSHORT-RANGED",
+        "§5§o§7Difficulty: §c●●●§8●"
+      ]
+    },
+    "cookieshotgun": {
+      "id": "minecraft:cookie",
+      "name": "§aCookie Shotgun",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e65",
+        "§5§o",
+        "§5§o§9Fire §c7§9 cookies in a cone in front of",
+        "§5§o§9you that each deal §c27§9 damage.",
+        "§5§o",
+        "§5§o§7Type: §bSHORT-RANGED",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    },
+    "falconpunch": {
+      "id": "minecraft:feather",
+      "name": "§aFalcon Punch",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e100",
+        "§5§o",
+        "§5§o§9Charging your fists will §aslow§9 you ",
+        "§5§o§9for §c1§9 second. Charged fists can",
+        "§5§o§9break any structure with a single hit, or will",
+        "§5§o§9deal §c260§9 damage on your next melee hit.",
+        "§5§o",
+        "§5§o§7Type: §bMELEE",
+        "§5§o§7Difficulty: §c●●●§8●"
+      ]
+    },
+    "fireball": {
+      "id": "minecraft:fire_charge",
+      "name": "§aFireball",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e40",
+        "§5§o",
+        "§5§o§9Shoot a fireball that will explode for §c95§9",
+        "§5§o§9damage. A direct hit will cause the enemy",
+        "§5§o§9to take an additional §c10§9 damage.",
+        "§5§o",
+        "§5§o§fExplosion Radius: §c4",
+        "§5§o",
+        "§5§o§7Type: §bLONG-RANGED",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "flamebreath": {
+      "id": "minecraft:blaze_powder",
+      "name": "§aFlame Breath",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e60",
+        "§5§o",
+        "§5§o§9Breathe fire in a cone in front of you,",
+        "§5§o§9dealing §c135§9 damage instantly and setting",
+        "§5§o§9the air on fire for §c2§9 seconds. Enemy",
+        "§5§o§9players standing inside the fire will take ",
+        "§5§o§c15 §9damage per second.",
+        "§5§o",
+        "§5§o§fBreath Range: §c8",
+        "§5§o",
+        "§5§o§7Type: §bSHORT-RANGED",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "freezingbreath": {
+      "id": "minecraft:snow_block",
+      "name": "§aFreezing Breath",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e90",
+        "§5§o",
+        "§5§o§9Breathe cold air in a cone in front of you,",
+        "§5§o§9dealing §c200§9 damage instantly. ",
+        "§5§o§9If an enemy is hit by the breath, they",
+        "§5§o§9will be §5slowed§9 for §c2§9 seconds.",
+        "§5§o",
+        "§5§o§fBreath Range: §c8",
+        "§5§o",
+        "§5§o§7Type: §bSHORT-RANGED",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "guidedpig": {
+      "id": "minecraft:cooked_porkchop",
+      "name": "§aGuided Pig 2000",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e100",
+        "§5§o",
+        "§5§o§9Shoot a pig that will explode,",
+        "§5§o§9dealing §c255§9 damage to all nearby",
+        "§5§o§9enemies. Your rotation influences",
+        "§5§o§9the flight.",
+        "§5§o",
+        "§5§o§fExplosion Radius: §c4",
+        "§5§o",
+        "§5§o§7Type: §bLONG-RANGED",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    },
+    "lightningstrike": {
+      "id": "minecraft:golden_axe",
+      "name": "§aLightning Strike",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e80",
+        "§5§o",
+        "§5§o§9Call down a lightning strike on your",
+        "§5§o§9target that deals §c180§9 damage and",
+        "§5§o§9has a chance to §2immobilize§9 them",
+        "§5§o§9for §c1§9 second.",
+        "§5§o",
+        "§5§o§fMax Range: §c18",
+        "§5§o§fImmobilize Chance: §c40%",
+        "§5§o",
+        "§5§o§7Type: §bSHORT-RANGED",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "melonlauncher": {
+      "id": "minecraft:melon",
+      "name": "§aMelon Launcher",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e60",
+        "§5§o",
+        "§5§o§9Launch an explosive melon that deals §c140",
+        "§5§o§9damage. After exploding, §c3§9 small pieces of",
+        "§5§o§9melon will fall to the ground and explode",
+        "§5§o§9for §c10§9 damage each.",
+        "§5§o",
+        "§5§o§fBig Explosion Radius: §c4",
+        "§5§o§fSmall Explosion Radius: §c3",
+        "§5§o",
+        "§5§o§7Type: §bLONG-RANGED",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    },
+    "pumpkinlauncher": {
+      "id": "minecraft:carved_pumpkin",
+      "name": "§aPumpkin Launcher",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e30",
+        "§5§o",
+        "§5§o§9Launch an explosive pumpkin that deals §c70",
+        "§5§o§9damage. After exploding, §c3§9 small pieces of",
+        "§5§o§9pie will fall to the ground and explode",
+        "§5§o§9for §c5§9 damage each.",
+        "§5§o",
+        "§5§o§fBig Explosion Radius: §c4",
+        "§5§o§fSmall Explosion Radius: §c3",
+        "§5§o",
+        "§5§o§7Type: §bLONG-RANGED",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    },
+    "proximitymine": {
+      "id": "minecraft:red_carpet",
+      "name": "§aProximity Mine",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e100",
+        "§5§o",
+        "§5§o§9If an enemy steps on it, it will explode",
+        "§5§o§9dealing §c350§9 damage and detonating",
+        "§5§o§9all nearby mines. Only §c2§9 mines",
+        "§5§o§9can be active at a time. Disappears",
+        "§5§o§9after §c2§9 seconds.",
+        "§5§o",
+        "§5§o§fExplosion Radius: §c4",
+        "§5§o",
+        "§5§o§7Type: §bTRAP",
+        "§5§o§7Difficulty: §4●●●●§8"
+      ]
+    },
+    "rocketchicken": {
+      "id": "minecraft:cooked_chicken",
+      "name": "§aRocket Chicken",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e30",
+        "§5§o",
+        "§5§o§9Shoot a chicken that will explode,",
+        "§5§o§9dealing §c80§9 damage to all nearby",
+        "§5§o§9enemies.",
+        "§5§o",
+        "§5§o§fExplosion Radius: §c3",
+        "§5§o",
+        "§5§o§7Type: §bLONG-RANGED",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    },
+    "seismicwave": {
+      "id": "minecraft:stone_brick_stairs",
+      "name": "§aSeismic Wave",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e90",
+        "§5§o",
+        "§5§o§9An unstoppable seismic wave emerges from",
+        "§5§o§9your feet and goes in a straight line in front",
+        "§5§o§9of you, destroying player-made structures.",
+        "§5§o§9Any enemy player caught in its path will take",
+        "§5§o§c225§9 damage and will be knocked back",
+        "§5§o§9into the air.",
+        "§5§o",
+        "§5§o§7Type: §bSHORT-RANGED",
+        "§5§o§7Difficulty: §c●●●§8●"
+      ]
+    },
+    "snowball": {
+      "id": "minecraft:snowball",
+      "name": "§aSnowball",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e20",
+        "§5§o",
+        "§5§o§9Throw a snowball that deals §c60§9 damage",
+        "§5§o§9and has a chance to §5slow§9 each enemy",
+        "§5§o§9hit for §c1§9 seconds.",
+        "§5§o",
+        "§5§o§fSlow Chance: §c10%",
+        "§5§o",
+        "§5§o§7Type: §bSHORT-RANGED",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    },
+    "flamesword": {
+      "id": "minecraft:blaze_rod",
+      "name": "§aFlame Sword",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e100",
+        "§5§o",
+        "§5§o§9Enchant your weapon with the power of Fire,",
+        "§5§o§9dealing §c400%§9 of melee damage for the next",
+        "§5§o§c6§9 seconds.",
+        "§5§o§9During this time, energy regen will be halted.",
+        "§5§o",
+        "§5§o§7Type: §bMELEE",
+        "§5§o§7Difficulty: §c●●●§8●"
+      ]
+    },
+    "ancientbreath": {
+      "id": "minecraft:emerald_block",
+      "name": "§aAncient Breath",
+      "tooltip": [
+        "§5§o§7ENERGY COST: §e80",
+        "§5§o",
+        "§5§o§9Call the voice of your ancestors,",
+        "§5§o§9dealing §c185§9 damage instantly. ",
+        "§5§o§9If an enemy is hit by the breath, they",
+        "§5§o§9have a §c50% §9chance to",
+        "§5§o§9be §2immobilized§9 for §c1§9 second.",
+        "§5§o",
+        "§5§o§fBreath Range: §c8",
+        "§5§o",
+        "§5§o§7Type: §bSHORT-RANGED",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    }
+  },
+  "utility": {
+    "barricade": {
+      "id": "minecraft:iron_bars",
+      "name": "§aBarricade",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b30 SECONDS",
+        "§5§o",
+        "§5§o§9Surround yourself with a barricade that",
+        "§5§o§9lasts for §c5§9 seconds. The barricade can be",
+        "§5§o§9destroyed by some skills.",
+        "§5§o",
+        "§5§o§fGood with: §aHealing Totem",
+        "§5§o§fWeakness: §cSeismic Wave§f/§eCharge",
+        "§5§o",
+        "§5§o§7Type: §bBLOCKADE",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "bullcharge": {
+      "id": "minecraft:leather_boots",
+      "name": "§aBull Charge",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b30 SECONDS",
+        "§5§o",
+        "§5§o§9Transform into a cow while you charge",
+        "§5§o§9forward. Colliding with a player-made",
+        "§5§o§9structure will destroy it.",
+        "§5§o",
+        "§5§o§fRange: §c20",
+        "§5§o",
+        "§5§o§7Type: §bDESTROYS STRUCTURES",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "golemfall": {
+      "id": "minecraft:anvil",
+      "name": "§aGolemfall",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b30 SECONDS",
+        "§5§o",
+        "§5§o§9Drops a golem where you target,",
+        "§5§o§9destroying structures and knocking back",
+        "§5§o§9players.",
+        "§5§o",
+        "§5§o§fEffect Radius: §c4",
+        "§5§o§fKnockback Distance: §c5",
+        "§5§o",
+        "§5§o§7Type: §bDESTROYS STRUCTURES",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    },
+    "petrify": {
+      "id": "minecraft:cobblestone",
+      "name": "§aPetrify",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b40 SECONDS",
+        "§5§o",
+        "§5§o§9Transform the targeted enemy player into stone",
+        "§5§o§9for §c5§9 seconds. While §2immobilized§9, the player will",
+        "§5§o§9be unable to attack but will slowly regenerate",
+        "§5§o§9health. The skill is cancelled if the player",
+        "§5§o§9takes §c30§9 damage.",
+        "§5§o",
+        "§5§o§fMax Range: §c20",
+        "§5§o",
+        "§5§o§7Type: §bIMMOBILIZE",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    },
+    "shadowstep": {
+      "id": "minecraft:end_portal_frame",
+      "name": "§aShadow Step",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b30 SECONDS",
+        "§5§o",
+        "§5§o§9Step through the shadows and appear",
+        "§5§o§9behind an enemy target. Your movement",
+        "§5§o§9speed will be increased for §c2§9 seconds",
+        "§5§o§9afterwards.",
+        "§5§o",
+        "§5§o§fMax Range: §c20",
+        "§5§o",
+        "§5§o§7Type: §bMOVEMENT",
+        "§5§o§7Difficulty: §c●●●§8●"
+      ]
+    },
+    "swap": {
+      "id": "minecraft:comparator",
+      "name": "§aSwap",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b30 SECONDS",
+        "§5§o",
+        "§5§o§9Switch places with an enemy or teammate.",
+        "§5§o§9Before the switch occurs, you will both be",
+        "§5§o§cstunned§9 for §c2§9 seconds.",
+        "§5§o",
+        "§5§o§fMax Range: §c20",
+        "§5§o",
+        "§5§o§7Type: §bMOVEMENT",
+        "§5§o§7Difficulty: §c●●●§8●"
+      ]
+    },
+    "wallofvines": {
+      "id": "minecraft:mossy_cobblestone",
+      "name": "§aWall of Vines",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b30 SECONDS",
+        "§5§o",
+        "§5§o§9Create a wall covered in vines in front of",
+        "§5§o§9you that lasts for §c4§9 seconds. If an enemy",
+        "§5§o§9gets too close to the wall, they will be",
+        "§5§o§2immobilized§9 for §c2§9 seconds.",
+        "§5§o",
+        "§5§o§7Type: §bBLOCKADE",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    },
+    "magneticimpulse": {
+      "id": "minecraft:ender_pearl",
+      "name": "§aMagnetic Impulse",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b42 SECONDS",
+        "§5§o",
+        "§5§o§9A strong magnetic force draws §2all§9 nearby players to you.",
+        "§5§o§9They are then §2immobilized§9 for §c2.5§9 seconds.",
+        "§5§o",
+        "§5§o§fRadius: §c7.0 blocks",
+        "§5§o",
+        "§5§o§7Type: §bIMMOBILIZE",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    }
+  },
+  "support": {
+    "boneshield": {
+      "id": "minecraft:bone",
+      "name": "§aBone Shield",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b30 SECONDS",
+        "§5§o",
+        "§5§o§9Surround yourself with bones that will",
+        "§5§o§9protect you from the next §a5§9 sources",
+        "§5§o§9of damage, lasting a maximum of §c18",
+        "§5§o§9seconds. Each time damage is taken, a",
+        "§5§o§9bone is destroyed and §a25§9 health is restored.",
+        "§5§o",
+        "§5§o§7Type: §bSHIELD",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    },
+    "cactusshield": {
+      "id": "minecraft:cactus",
+      "name": "§aCactus Shield",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b25 SECONDS",
+        "§5§o",
+        "§5§o§9Surround yourself with cacti that will",
+        "§5§o§9protect you from the next §a4§9 sources",
+        "§5§o§9of damage, lasting a maximum of §c13",
+        "§5§o§9seconds. Each time damage is taken, a",
+        "§5§o§9cactus is destroyed and §c50§9 damage is",
+        "§5§o§9dealt to your attacker.",
+        "§5§o",
+        "§5§o§7Type: §bSHIELD",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    },
+    "healingtotem": {
+      "id": "minecraft:brewing_stand",
+      "name": "§aHealing Totem",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b40 SECONDS",
+        "§5§o",
+        "§5§o§9Place a totem at your feet that will heal",
+        "§5§o§9any nearby ally for §a300§9 health every",
+        "§5§o§c3§9 seconds, lasting for §c9§9 seconds. The",
+        "§5§o§9totem can be destroyed by melee hits.",
+        "§5§o§9Each heal also removes all debuffs.",
+        "§5§o",
+        "§5§o§fGood with: §eBarricade",
+        "§5§o",
+        "§5§o§7Type: §bHEALING",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "holywater": {
+      "id": "minecraft:water_bucket",
+      "name": "§aHoly Water",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b30 SECONDS",
+        "§5§o",
+        "§5§o§9Create an explosion of holy water around",
+        "§5§o§9you that will restore §a300§9 health to you",
+        "§5§o§9and §a50§9 health to nearby allies, removing",
+        "§5§o§9all debuffs. This skill can be used while",
+        "§5§o§cstunned§9.",
+        "§5§o",
+        "§5§o§fEffect Radius: §c6",
+        "§5§o",
+        "§5§o§7Type: §bHEALING",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "lifeleech": {
+      "id": "minecraft:skeleton_skull",
+      "name": "§aLife Leech",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b30 SECONDS",
+        "§5§o",
+        "§5§o§9Your next §c7§9 melee hits against an enemy",
+        "§5§o§9player will restore §a100§9 health each,",
+        "§5§o§9lasting §c6§9 seconds.",
+        "§5§o",
+        "§5§o§7Type: §bHEALING",
+        "§5§o§7Difficulty: §c●●●§8●"
+      ]
+    },
+    "songofpower": {
+      "id": "minecraft:golden_apple",
+      "name": "§aSong of Power",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b50 SECONDS",
+        "§5§o",
+        "§5§o§9Plays a rousing melody that will grant",
+        "§5§o§6immunity§9 to debuffs and increased",
+        "§5§o§9offensive skill regen for §c8§9 seconds,",
+        "§5§o§9curing any ally affected by a debuff",
+        "§5§o§9and allowing unlimited sprinting.",
+        "§5§o",
+        "§5§o§fEffect Radius: §c9",
+        "§5§o",
+        "§5§o§7Type: §bOTHER",
+        "§5§o§7Difficulty: §4●●●●§8"
+      ]
+    },
+    "starshield": {
+      "id": "minecraft:nether_star",
+      "name": "§aStar Shield",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b33 SECONDS",
+        "§5§o",
+        "§5§o§9Surround yourself with stars that will protect",
+        "§5§o§9you from the next §a3§9 sources of damage,",
+        "§5§o§9lasting a maximum of §c30§9 seconds. Each time",
+        "§5§o§9damage is taken, a star is destroyed, a",
+        "§5§o§9random crowd control effect is applied",
+        "§5§o§9to the damager lasting §c2 - 4§9 seconds,",
+        "§5§o§9and §a60§9 health is restored.",
+        "§5§o",
+        "§5§o§7Type: §bSHIELD",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "treeoflife": {
+      "id": "minecraft:oak_sapling",
+      "name": "§aTree of Life",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b40 SECONDS",
+        "§5§o",
+        "§5§o§9Plant a tree on the ground that will heal all",
+        "§5§o§9nearby allies for §a50§9 health per second while",
+        "§5§o§9it grows. Once fully grown, the tree will let out",
+        "§5§o§9a final burst of healing for §a400§9 health.",
+        "§5§o§9Can be destroyed by melee hits.",
+        "§5§o",
+        "§5§o§7Type: §bHEALING",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "spiritlink": {
+      "id": "minecraft:string",
+      "name": "§aSpirit Link",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b30 SECONDS",
+        "§5§o",
+        "§5§o§9Links your spirit to a teammate, healing you",
+        "§5§o§9every §c0.5§9 seconds for §c9%§9 of the health",
+        "§5§o§9difference when activated.",
+        "§5§o§9Lasts §c3§9 seconds.",
+        "§5§o",
+        "§5§o§7Type: §bHEALING",
+        "§5§o§7Difficulty: §c●●●§8●"
+      ]
+    },
+    "vampiricchain": {
+      "id": "minecraft:ghast_tear",
+      "name": "§aVampiric Chain",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b30 SECONDS",
+        "§5§o",
+        "§5§o§9Tethers you to an enemy within §c13§9 blocks.",
+        "§5§o§9The tether will heal you for §c70%§9 the",
+        "§5§o§9amount of damage dealt to the targeted enemy.",
+        "§5§o§9If the enemy escapes, the chains will be severed.",
+        "§5§o§9Lasts §c12§9 seconds.",
+        "§5§o",
+        "§5§o§7Type: §bHEALING",
+        "§5§o§7Difficulty: §c●●●§8●"
+      ]
+    },
+    "timewarp": {
+      "id": "minecraft:clock",
+      "name": "§aTime Warp",
+      "tooltip": [
+        "§5§o§7COOLDOWN: §b25 SECONDS",
+        "§5§o",
+        "§5§o§9Activate to select a location on the ground.",
+        "§5§o§9After §c5§9 seconds, you will warp back to that",
+        "§5§o§9location and restore §a15%§9 of your health.",
+        "§5§o",
+        "§5§o§7Type: §bHYBRID",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    }
+  },
+  "ultimate": {
+    "shieldwall": {
+      "id": "minecraft:iron_chestplate",
+      "name": "§aShield Wall",
+      "tooltip": [
+        "§5§o§6ULTIMATE",
+        "§5§o",
+        "§5§o§9Reduces damage taken by",
+        "§5§o§c65% §9for §c10§9 seconds.",
+        "§5§o",
+        "§5§o§7Type: §bPROTECTION",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "berserk": {
+      "id": "minecraft:redstone",
+      "name": "§aBerserk",
+      "tooltip": [
+        "§5§o§6ULTIMATE",
+        "§5§o",
+        "§5§o§9Doubles your melee damage and increases",
+        "§5§o§9movement speed by §c40%§9 for §c15§9 seconds.",
+        "§5§o§9Grants immunity to debuffs and increases",
+        "§5§o§9cooldown speed of all skills by §c5%§9.",
+        "§5§o",
+        "§5§o§7Type: §bDAMAGE",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "reflectdamage": {
+      "id": "minecraft:iron_ingot",
+      "name": "§aReflect Damage",
+      "tooltip": [
+        "§5§o§6ULTIMATE",
+        "§5§o",
+        "§5§o§9Reduces damage taken by §c50% §9for §c8",
+        "§5§o§9seconds and reflects §c50% §9damage back",
+        "§5§o§9to your attacker for the duration.",
+        "§5§o",
+        "§5§o§7Type: §bHYBRID",
+        "§5§o§7Difficulty: §a●§8●●●"
+      ]
+    },
+    "broodmother": {
+      "id": "minecraft:spider_spawn_egg",
+      "name": "§aBroodmother",
+      "tooltip": [
+        "§5§o§6ULTIMATE",
+        "§5§o",
+        "§5§o§9Summons a large spider that will chase down",
+        "§5§o§9and poison the targeted enemy player, dealing",
+        "§5§o§c198§9 damage over §c6§9 seconds. When slain, the",
+        "§5§o§9Broodmother spawns §c4§9 spiderlings that deal",
+        "§5§o§c5§9 damage each per attack.",
+        "§5§o",
+        "§5§o§fMax Range: §c20",
+        "§5§o§fBroodmother Health: §c5",
+        "§5§o§fSpiderling Health: §c2",
+        "§5§o",
+        "§5§o§7Type: §bDAMAGE",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    },
+    "doomshroom": {
+      "id": "minecraft:brown_mushroom",
+      "name": "§aDoom Shroom",
+      "tooltip": [
+        "§5§o§6ULTIMATE",
+        "§5§o",
+        "§5§o§9Plant a giant mushroom that will damage all",
+        "§5§o§9enemies within §c15§9 blocks for §c20§9 damage per",
+        "§5§o§9second while it grows. Once grown, the mushroom",
+        "§5§o§9will let out a final burst of §c400§9 damage and",
+        "§5§o§9destroys all structures.",
+        "§5§o§9Can be destroyed by melee hits.",
+        "§5§o",
+        "§5§o§7Type: §bDAMAGE",
+        "§5§o§7Difficulty: §e●●§8●●"
+      ]
+    }
+  },
+  "active_rune": {
+    "slowing": {
+      "id": "minecraft:soul_sand",
+      "name": "§dRune of Slowing"
+    },
+    "speed": {
+      "id": "minecraft:sugar",
+      "name": "§fRune of Speed"
+    },
+    "energy": {
+      "id": "minecraft:experience_bottle",
+      "name": "§eRune of Energy"
+    },
+    "damage": {
+      "id": "minecraft:iron_sword",
+      "name": "§cRune of Damage"
+    },
+    "defence": {
+      "id": "minecraft:iron_chestplate",
+      "name": "§6Rune of Defence"
+    }
+  }
+}
