@@ -139,7 +139,7 @@ const UPGRADES: Partial<Record<PackLayout, Upgrade>> = {
   legacy: {
     textures: minecraftData.legacyTextures,
     models: minecraftData.legacyModels,
-    // RenderItem.setupGuiTransform turns every 3D item like a block before the model's gui
+    // 1.8.9 turns every 3D item like a block in code, before the model's own gui transform
     gui: { rotation: [30, 225, 0], scale: [0.625, 0.625, 0.625] },
     // 1.8's banner patterns are opaque masks, white where the dye goes, where 26.3's are alpha
     drop: ["assets/minecraft/blockstates/", "assets/minecraft/textures/entity/banner/"],

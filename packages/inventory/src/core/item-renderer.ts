@@ -87,8 +87,8 @@ function modernGlint(tick: number): Glint {
   return { passes: [{ angle: Math.PI / 18, scrollU: -(time % 110_000) / 110_000, scrollV }], tint: [0.75, 0.75, 0.75] };
 }
 
-// 1.8 (RenderItem.renderEffect): its grey texture tinted 0x8040CC, in two passes at -50° and 10°
-// that scroll over 3 and 4.873 seconds
+// 1.8 tints its grey glint 0x8040CC and draws it twice, at -50° and 10°, scrolling over 3 and
+// 4.873 seconds
 function legacyGlint(tick: number): Glint {
   const ms = tick * 50;
   return {
@@ -365,8 +365,7 @@ export class ItemRenderer {
   private async specialPasses(special: SpecialModel, item: ItemStack): Promise<Quad[][]> {
     const place = (quads: Quad[]) => transformQuads(quads, special.transformation);
 
-    // ChestModel, closed, in block pixels. Ender and trapped chests are chests with
-    // another texture
+    // Ender and trapped chests are chests with another texture
     if (special.type === "minecraft:chest" && special.texture) {
       const [namespace, name] = namespaced(special.texture).split(":");
       const texture = await this.textures.get(`${namespace}:entity/chest/${name}`);
@@ -441,7 +440,6 @@ export class ItemRenderer {
     const skin = !head.texture && item.skin ? await this.skin(item.skin) : undefined;
     const texture = skin ?? (await this.textures.get(head.texture ?? DEFAULT_SKIN));
 
-    // SkullModel: an 8 × 8 × 8 head with the hat a quarter pixel out from it
     const quads = boxQuads([-4, -8, -4], [8, 8, 8], [0, 0], texture);
     if (head.hat) quads.push(...boxQuads([-4, -8, -4], [8, 8, 8], [32, 0], texture, 0.25));
 

@@ -138,8 +138,7 @@ export class InventoryRenderer {
       this.text.draw(ctx, count, (x + 1 + 17 - this.text.width(count)) * scale, (y + 1 + 9) * scale, { scale });
     }
 
-    // 1.8.9's bar (RenderItem.renderItemOverlayIntoGUI): black, a dark strip of what's worn, then
-    // what's left, from green to red
+    // 1.8.9's durability bar: black, a dark strip of what's worn, then what's left, from green to red
     const max = item ? maxDamage(item.id) : undefined;
     if (item?.damage && max) {
       const width = Math.round(13 - (item.damage * 13) / max);
