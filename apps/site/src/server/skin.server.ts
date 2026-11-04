@@ -30,8 +30,8 @@ export async function proxySkin(
 }
 
 /**
- * A head from only the skin the API has stored, never Mojang's: a search suggestion's by the suggested name, or a
- * guild member's by UUID (`?uuid=<uuid>&stored`).
+ * A head from only the skin the API has stored, never a fresh lookup: a search suggestion's by the suggested name,
+ * or a guild member's by UUID (`?uuid=<uuid>&stored`).
  */
 export async function proxyStoredHead(search: URLSearchParams): Promise<Response> {
   const uuid = search.get("uuid");
