@@ -29,7 +29,7 @@ export async function proxySkin(
   return proxy(path, { uuid, ...fixed });
 }
 
-/** A search suggestion's head, by the suggested name: only the skin the API has stored, never Mojang's. */
+/** A search suggestion's head, by the suggested name: only the skin the API has stored, never a fresh lookup. */
 export async function proxyStoredHead(search: URLSearchParams): Promise<Response> {
   const name = UsernameSchema.safeParse(search.get("name"));
   if (!name.success) return new Response("name is required", { status: 400 });
