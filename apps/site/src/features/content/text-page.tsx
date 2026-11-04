@@ -290,7 +290,7 @@ export function TextLink({ children, href, ...link }: { children?: ReactNode } &
 const CALLOUT_TONES = {
   /** Something worth knowing about the text around it. */
   note: { rule: "border-mc-gold", label: "text-mc-gold" },
-  /** A legal line, such as the Mojang and Hypixel notices. */
+  /** A legal line, such as the Minecraft and Hypixel notices. */
   legal: { rule: "border-mc-gray", label: "text-mc-gray" },
 };
 

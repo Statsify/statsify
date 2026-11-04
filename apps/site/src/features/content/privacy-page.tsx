@@ -40,7 +40,7 @@ const sections = (mail: ReactNode): LegalSection[] => [
       <>
         <Paragraph>
           When anyone looks a player up, on this site or with the bot, Statsify fetches the player's public stats from Hypixel's
-          API, and their name, UUID and skin from Mojang. It keeps them so pages load quickly, so leaderboards can rank the
+          API, and their name, UUID and skin from Minecraft's account servers. It keeps them so pages load quickly, so leaderboards can rank the
           player, and so the bot can show how their stats change over time. That includes players who have never used Statsify.
         </Paragraph>
         <Paragraph>
@@ -124,7 +124,7 @@ const sections = (mail: ReactNode): LegalSection[] => [
           <li>Cloudflare, which carries the site's traffic, protects it and runs Turnstile.</li>
           <li>Sentry, which keeps error reports.</li>
           <li>Discord, which carries the bot's commands under its own privacy policy.</li>
-          <li>Hypixel and Mojang, where stats, names and skins come from. Statsify sends them the names and UUIDs it looks up.</li>
+          <li>Hypixel and Minecraft's account servers, where stats, names and skins come from. Statsify sends them the names and UUIDs it looks up.</li>
           <li>Patreon, if you support Statsify there, under its own privacy policy.</li>
         </List>
         <Paragraph>
