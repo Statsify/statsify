@@ -58,17 +58,13 @@ export class PlayerLeaderboardService extends LeaderboardService {
     const guild = await this.getGuild(guildInput);
     const memberIds = guild.members.map(({ uuid }) => uuid);
 
-    const key = `player.${field}`;
-    const scores = await this.redis.call("ZMSCORE", key, ...memberIds) as (string | null)[];
+    const scores = await this.redis.call(
+      "ZMSCORE",
+      `player.${field}`,
+      ...memberIds
+    ) as (string | null)[];
 
-    const leaderboard = scores
-      .map((score, index) => (score === null ?
-        null :
-        {
-          id: memberIds[index],
-          score: Number(score),
-        }))
-      .filter((score): score is { id: string; score: number } => score !== null)
+    const leaderboard = this.getMemberScores(memberIds, scores)
       .sort((a, b) => sort === "ASC" ? a.score - b.score : b.score - a.score)
       .map((doc, index) => ({ ...doc, index }));
 
@@ -176,15 +172,10 @@ export class PlayerLeaderboardService extends LeaderboardService {
 
     if (targetIndex === -1) return [];
 
+    const leaderboardFields = fields.map((field) => getLeaderboardField(Player, field));
     const pipeline = this.redis.pipeline();
-    const leaderboardFields = fields.map((field) => {
-      const metadata = getLeaderboardField(Player, field);
-      const key = `player.${field}`;
 
-      pipeline.call("ZMSCORE", key, ...memberIds);
-
-      return metadata;
-    });
+    for (const field of fields) pipeline.call("ZMSCORE", `player.${field}`, ...memberIds);
 
     const responses = await pipeline.exec();
 
@@ -200,26 +191,16 @@ export class PlayerLeaderboardService extends LeaderboardService {
 
       const metadata = leaderboardFields[index];
       const targetValue = Number(targetScore);
-      const sortedScores = scores
-        .map((score, scoreIndex) => score === null ?
-          null :
-          {
-            id: memberIds[scoreIndex],
-            score: Number(score),
-          })
-        .filter((score): score is { id: string; score: number } => score !== null)
-        .sort((a, b) => {
-          if (a.score !== b.score)
-            return metadata.sort === "ASC" ? a.score - b.score : b.score - a.score;
+      const sortedScores = this.getMemberScores(memberIds, scores).sort((a, b) => {
+        if (a.score !== b.score)
+          return metadata.sort === "ASC" ? a.score - b.score : b.score - a.score;
 
-          return metadata.sort === "ASC" ?
-            a.id.localeCompare(b.id) :
-            b.id.localeCompare(a.id);
-        });
+        return metadata.sort === "ASC" ?
+          a.id.localeCompare(b.id) :
+          b.id.localeCompare(a.id);
+      });
 
       const rank = sortedScores.findIndex((score) => score.id === id) + 1;
-
-      if (rank < 1) continue;
 
       const formattedValue = metadata.formatter ?
         metadata.formatter(targetValue) :
@@ -332,5 +313,11 @@ export class PlayerLeaderboardService extends LeaderboardService {
     if (!player) throw new PlayerNotFoundException();
 
     return player.uuid;
+  }
+
+  private getMemberScores(memberIds: string[], scores: (string | null)[]) {
+    return scores.flatMap((score, index) =>
+      score === null ? [] : [{ id: memberIds[index], score: Number(score) }]
+    );
   }
 }
