@@ -19,7 +19,6 @@ export const IsLeaderboardField = (fields: string[]) => {
         const value: unknown = args?.value;
         if (!Array.isArray(value)) return `${args?.property} must be an array of leaderboard fields`;
 
-        // Quoted so an empty string or a stray space still shows
         const invalid = new Set(
           value.filter((field) => !fieldSet.has(field)).map((field) => JSON.stringify(field))
         );
