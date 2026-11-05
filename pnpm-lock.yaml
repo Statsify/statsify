@@ -684,10 +684,6 @@ importers:
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
-    devDependencies:
-      '@types/i18next-fs-backend':
-        specifier: ^1.2.0
-        version: 1.2.0
 
   packages/logger:
     dependencies:
@@ -2993,10 +2989,6 @@ packages:
 
   '@types/http-cache-semantics@4.2.0':
     resolution: {integrity: sha512-L3LgimLHXtGkWikKnsPg0/VFx9OGZaC+eN1u4r+OB1XRqH3meBIAVC2zr1WdMH+RHmnRkqliQAOHNJ/E0j/e0Q==}
-
-  '@types/i18next-fs-backend@1.2.0':
-    resolution: {integrity: sha512-30XnjBF+SLndemvooRQRtcoD5xmF2nNNTa5RqE63+OWssaZOxN9r895ZvXUMbkk8YZr1Cy3scpQBZ6YXLH+jEg==}
-    deprecated: This is a stub types definition. i18next-fs-backend provides its own type definitions, so you do not need this installed.
 
   '@types/inquirer@9.0.10':
     resolution: {integrity: sha512-vFW2WbXwO9eZpRT5GJGFJ/shgyMNnYozmnjakt9jCQSS1lvqX8pZEQMjJ9RdDPct/YxwciQ8+V8OYn9euIrZDA==}
@@ -7596,10 +7588,6 @@ snapshots:
   '@types/estree@1.0.10': {}
 
   '@types/http-cache-semantics@4.2.0': {}
-
-  '@types/i18next-fs-backend@1.2.0':
-    dependencies:
-      i18next-fs-backend: 2.6.9
 
   '@types/inquirer@9.0.10':
     dependencies:
