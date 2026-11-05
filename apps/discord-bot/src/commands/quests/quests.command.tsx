@@ -15,6 +15,7 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
+import { PLAYER_CACHE_TIME_MS } from "@statsify/api-client";
 import { QUEST_MODES, QuestTime } from "@statsify/schemas";
 import { QuestProfileProps, QuestsProfile } from "./quests.profile.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
@@ -112,6 +113,7 @@ export class QuestsCommand {
         },
       }));
 
-    return paginate(context, pages);
+    const message = await paginate(context, pages);
+    return { ...message, ...this.apiService.hypixelBusyNotice(player, PLAYER_CACHE_TIME_MS) };
   }
 }

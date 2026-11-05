@@ -53,6 +53,7 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
+import { PLAYER_CACHE_TIME_MS } from "@statsify/api-client";
 import { RankingsProfile } from "./rankings.profile.js";
 import { arrayGroup } from "@statsify/util";
 import { games } from "./games.js";
@@ -344,7 +345,7 @@ export class RankingsCommand {
       games.find((g) => g.key === game)?.formatted :
       undefined;
 
-    return scrollingPagination(
+    const message = await scrollingPagination(
       context,
       groups.map(
         (group) => () =>
@@ -367,5 +368,7 @@ export class RankingsCommand {
       new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger),
       true
     );
+
+    return { ...message, ...this.apiService.hypixelBusyNotice(player, PLAYER_CACHE_TIME_MS) };
   }
 }
