@@ -58,9 +58,9 @@ export function profileRoute(listener: AbstractCommandListener): ComponentRoute 
     listener.rerunCommand(interaction, ownerId, command.split("."), { player: uuid });
 }
 
-export function getProfileCustomId(context: CommandContext, uuid: string) {
+export function getProfileCustomId(context: CommandContext, uuid: string, command = context.getCommandName()) {
   return (page: string) =>
-    createCustomId(PROFILE_ROUTE, context.getInteraction().getUserId(), context.getCommandName(), uuid, page);
+    createCustomId(PROFILE_ROUTE, context.getInteraction().getUserId(), command, uuid, page);
 }
 
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
