@@ -121,7 +121,6 @@ export class BaseLeaderboardCommand {
     return { ...message, components: [row], attachments: [] };
   }
 
-  /** The first page for the command, otherwise the page or search a button or modal asks for */
   private getLeaderboardParams(interaction: Interaction): LeaderboardParams {
     if (interaction.isCommandInteraction()) return { input: 0, type: LeaderboardQuery.PAGE };
 
