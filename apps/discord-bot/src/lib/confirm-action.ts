@@ -61,7 +61,6 @@ export function confirmAction(
     if (interaction.getUserId() !== userId)
       return interaction.sendFollowup({ ...new ErrorMessage("errors.notCommandOwner"), ephemeral: true });
 
-    // Remove the hooks before running anything, so a second press can't run it twice
     close();
 
     const message = await run().catch((error): IMessage => {
