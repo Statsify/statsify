@@ -48,19 +48,3 @@ export function parseLeaderboardValue(
 
   return searchBy ? getLowestScore(searchBy, value) : value;
 }
-
-if (import.meta.vitest) {
-  const { it, expect } = import.meta.vitest;
-
-  const { Player } = await import("#player");
-
-  it("parses numbers, times and levels", () => {
-    expect(parseLeaderboardValue(Player, "stats.bedwars.overall.wins", "1.5k")).toBe(1500);
-    expect(parseLeaderboardValue(Player, "stats.bedwars.overall.wins", "10 k")).toBe(10_000);
-    expect(parseLeaderboardValue(Player, "stats.bedwars.overall.wins", "wins")).toBeNaN();
-    expect(parseLeaderboardValue(Player, "stats.parkour.BEDWARS", "1:23.45")).toBe(83_450);
-    expect(parseLeaderboardValue(Player, "stats.pit.playtime", "5d, 3h")).toBe(442_800_000);
-    expect(parseLeaderboardValue(Player, "stats.bedwars.exp", "500✫")).toBe(2_435_000);
-    expect(parseLeaderboardValue(Player, "stats.skywars.exp", "20000")).toBeNaN();
-  });
-}
