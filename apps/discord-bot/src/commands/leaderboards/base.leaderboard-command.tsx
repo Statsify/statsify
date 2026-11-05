@@ -93,8 +93,7 @@ export class BaseLeaderboardCommand {
 
     if (page === null) return message;
 
-    // Player leaderboard subcommands are named after the game in the field
-    const leaderboard = type === "player" ? field.replace(/^stats\./, "") : `guild.${field}`;
+    const leaderboard = `${context.getCommandName()}.${context.option<string>("leaderboard")}`;
 
     const customId = (action: string | number) =>
       createCustomId(LEADERBOARD_ROUTE, interaction.getUserId(), action, leaderboard);
