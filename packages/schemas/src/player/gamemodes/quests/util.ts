@@ -24,9 +24,6 @@ interface Quest {
 
 const OBJECTIVE_TARGETS: Record<string, number> = objectiveTargets;
 
-/**
- * Each game's quest targets by property key, for quests with a single objective
- */
 export const QUEST_TARGETS: Record<string, Record<string, number>> = {};
 
 export enum QuestTime {
