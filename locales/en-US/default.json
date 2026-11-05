@@ -19,6 +19,46 @@
   },
   "commands": {
     "arcade": "$t(commands.hypixel-command, { \"name\": \"Arcade\" })",
+    "options": {
+      "arcade": {
+        "overall": "Overall Arcade stats",
+        "blockingDead": "Blocking Dead stats",
+        "bountyHunters": "Bounty Hunters stats",
+        "creeperAttack": "Creeper Attack stats",
+        "disasters": "Disasters stats",
+        "dragonWars": "Dragon Wars stats",
+        "dropper": "Dropper stats",
+        "enderSpleef": "Ender Spleef stats",
+        "farmHunt": "Farm Hunt stats",
+        "football": "Football stats",
+        "galaxyWars": "Galaxy Wars stats",
+        "hideAndSeek": "Hide and Seek stats",
+        "holeInTheWall": "Hole in the Wall stats",
+        "hypixelSays": "Hypixel Says stats",
+        "miniWalls": "Mini Walls stats",
+        "partyGames": "Party Games stats",
+        "pixelPainters": "Pixel Painters stats",
+        "pixelParty": "Pixel Party stats",
+        "seasonal": "Seasonal Arcade stats",
+        "throwOut": "Throw Out stats",
+        "zombies": "Zombies stats",
+        "submodes": {
+          "overall": "Overall stats",
+          "survivals": "Survivals stats",
+          "deaths": "Deaths stats",
+          "bestTimes": "Best time stats",
+          "completions": "Completion stats",
+          "roundWins": "Round win stats",
+          "zombies": {
+            "overall": "Overall Zombies stats",
+            "deadEnd": "Dead End stats",
+            "badBlood": "Bad Blood stats",
+            "alienArcadium": "Alien Arcadium stats",
+            "prison": "Prison stats"
+          }
+        }
+      }
+    },
     "arenabrawl": "$t(commands.hypixel-command, { \"name\": \"Arena Brawl\" })",
     "available": "Check the availability of a Minecraft username",
     "badge": "Change your badge for every profile",

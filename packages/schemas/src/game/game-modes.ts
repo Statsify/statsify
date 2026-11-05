@@ -8,13 +8,19 @@
 
 import { prettify } from "@statsify/util";
 
+type OptionMetadata = {
+  aliases?: readonly string[];
+  description?: string;
+  emoji?: string;
+};
+
 export type GameMode<Modes extends Mode[]> = {
   [Key in ApiModeFromGameModes<Modes>]: {
     api: Key;
     formatted: string;
     hypixel?: string;
     submode: [SubModeForMode<Modes, Key>] extends [never] ? undefined : SubModeForMode<Modes, Key>;
-  }
+  } & OptionMetadata
 }[ApiModeFromGameModes<Modes>];
 
 export type GameModeWithSubModes<Modes extends Mode[]> = {
@@ -23,10 +29,10 @@ export type GameModeWithSubModes<Modes extends Mode[]> = {
     formatted: string;
     hypixel?: string;
     submodes: SubModeForMode<Modes, Key>[];
-  }
+  } & OptionMetadata
 }[ApiModeFromGameModes<Modes>];
 
-export type Mode = {
+export type Mode = ({
   hypixel: string;
   formatted: string;
 } | {
@@ -34,9 +40,9 @@ export type Mode = {
   api: string;
   formatted?: string;
   submodes?: SubMode[];
-};
+}) & OptionMetadata;
 
-type SubMode = { api: string; formatted?: string };
+type SubMode = { api: string; formatted?: string } & OptionMetadata;
 
 export class GameModes<Modes extends Mode[]> {
   private modes: GameModeWithSubModes<Modes>[];
@@ -47,7 +53,10 @@ export class GameModes<Modes extends Mode[]> {
       hypixel: m.hypixel,
       api: m.api,
       formatted: m.formatted ?? prettify(m.api),
-      submodes: m.submodes?.map((sm) => ({ api: sm.api, formatted: sm.formatted ?? prettify(sm.api) })) ?? [],
+      aliases: m.aliases,
+      description: m.description,
+      emoji: m.emoji,
+      submodes: m.submodes?.map((sm) => ({ ...sm, formatted: sm.formatted ?? prettify(sm.api) })) ?? [],
     })) as GameModeWithSubModes<Modes>[];
 
     this.hypixelModes = Object.fromEntries(
@@ -86,7 +95,7 @@ type ExtractSubModes<T extends Mode[], M extends ApiModeFromGameModes<T>> = Extr
 export type SubModeForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> =
   [ExtractSubModes<T, M>] extends [never] ?
     never :
-    ExtractSubModes<T, M> & { formatted: string };
+    ExtractSubModes<T, M> & OptionMetadata & { formatted: string };
 
 export type ApiSubModeForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> = NeverToUndefined<ExtractSubModes<T, M>["api"]>;
 
