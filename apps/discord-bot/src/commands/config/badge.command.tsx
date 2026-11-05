@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import axios from "axios";
 import { APIAttachment } from "discord-api-types/v10";
 import {
   ApiService,
@@ -23,13 +22,14 @@ import { type Canvas, Image } from "skia-canvas";
 import { DemoProfile } from "./demo.profile.js";
 import { User, UserTier } from "@statsify/schemas";
 import { createCanvas, loadImage, render } from "@statsify/rendering";
-import { getBackground, getLogo } from "@statsify/assets";
+import { getAssetPath, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
+import { readFile } from "node:fs/promises";
 
 const BADGE_IMAGE_TYPES = ["image/png", "image/jpeg", "image/gif", "image/webp"];
 const CUSTOM_EMOJI_REGEX = /^<a?:\w+:(\d+)>$/;
 
-const PIXEL_EMOJI_URL = "https://cdn.jsdelivr.net/gh/AmberWat/PixelTwemojiMC-18@v8.0/assets";
+const PIXEL_EMOJI_PATH = "pixel-twemoji";
 const PIXEL_EMOJI_SIZE = 18;
 
 // Keyboards send the same emoji with or without U+FE0F
@@ -204,14 +204,15 @@ export class BadgeCommand {
   }
 
   private async loadPixelEmojis() {
-    const [font, remappings, emojiAtlas, flagAtlas] = await Promise.all([
-      axios.get<MinecraftFont>(`${PIXEL_EMOJI_URL}/minecraft/font/default.json`),
-      axios.get<Record<string, string>>(`${PIXEL_EMOJI_URL}/emoji_remappings/lang/en_us.json`),
-      loadImage(`${PIXEL_EMOJI_URL}/twemoji/textures/font/emoji.png`),
-      loadImage(`${PIXEL_EMOJI_URL}/twemoji/textures/font/flags.png`),
-    ]).catch(() => {
-      throw new ErrorMessage("errors.unknown");
-    });
+    const [fontJson, remappingsJson, emojiAtlas, flagAtlas] = await Promise.all([
+      readFile(getAssetPath(`${PIXEL_EMOJI_PATH}/minecraft/font/default.json`), "utf8"),
+      readFile(getAssetPath(`${PIXEL_EMOJI_PATH}/emoji_remappings/lang/en_us.json`), "utf8"),
+      loadImage(getAssetPath(`${PIXEL_EMOJI_PATH}/twemoji/textures/font/emoji.png`)),
+      loadImage(getAssetPath(`${PIXEL_EMOJI_PATH}/twemoji/textures/font/flags.png`)),
+    ]);
+
+    const font: MinecraftFont = JSON.parse(fontJson);
+    const remappings: Record<string, string> = JSON.parse(remappingsJson);
 
     const atlases = new Map([
       ["twemoji:font/emoji.png", emojiAtlas],
@@ -220,7 +221,7 @@ export class BadgeCommand {
 
     const emojis = new Map<string, PixelEmoji>();
 
-    for (const { file, chars } of font.data.providers) {
+    for (const { file, chars } of font.providers) {
       const atlas = atlases.get(file);
       if (!atlas) continue;
 
@@ -232,7 +233,7 @@ export class BadgeCommand {
     }
 
     // Multi-character emoji (skin tones, flags, ZWJ sequences) are drawn as one remapped character
-    for (const [sequence, char] of Object.entries(remappings.data)) {
+    for (const [sequence, char] of Object.entries(remappings)) {
       const emoji = emojis.get(char);
       if (emoji) emojis.set(withoutVariationSelector(sequence), emoji);
     }
