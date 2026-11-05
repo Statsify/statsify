@@ -96,7 +96,6 @@ export class SessionService {
     if (oldPlayer) {
       oldPlayer = deserialize(Player, flatten(oldPlayer));
     } else {
-      // Same as getAndReset, a new session needs a live baseline
       if (hypixelError) throw hypixelError;
       oldPlayer = await this.resetPlayer(newPlayer);
       isNew = true;
