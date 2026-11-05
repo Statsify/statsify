@@ -245,7 +245,7 @@ export class GuildService {
       return;
     }
 
-    // Members the query missed go through PlayerService, which fetches unknown players from Hypixel
+    // CACHE_ONLY falls back to Hypixel for players Mongo doesn't have
     const player =
       memberName ??
       (await this.playerService
