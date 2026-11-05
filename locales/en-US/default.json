@@ -630,6 +630,7 @@
     "hat": "Hat",
     "heads": "Heads",
     "headsEaten": "Heads Eaten",
+    "headshotAccuracy": "Headshot Accuracy",
     "headshotKills": "Headshot Kills",
     "headshots": "Headshots",
     "headstart": "Headstart",
@@ -794,8 +795,7 @@
     "airTime": "Air Time",
     "potionsSplashed": "Potions Splashed",
     "powerOrbs": "Power Orbs",
-    "grenadeKills": "Grenade Kills",
-    "headshotAccuracy": "Headshot Accuracy"
+    "grenadeKills": "Grenade Kills"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
