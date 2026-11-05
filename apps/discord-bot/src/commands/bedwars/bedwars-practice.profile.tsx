@@ -8,7 +8,7 @@
 
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
 import { type BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
-import { formatRecordTime } from "@statsify/util";
+import { formatRaceTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 const PRACTICE_MODES = [
@@ -92,7 +92,7 @@ export const BedWarsPracticeProfile = ({
               {row.map((record) => (
                 <Table.td
                   title={t(`stats.${record}`)}
-                  value={formatRecordTime(practice.bridgingRecords[record])}
+                  value={practice.bridgingRecords[record] === 0 ? "§7N/A" : formatRaceTime(practice.bridgingRecords[record])}
                   color="§b"
                   size="small"
                 />

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
+import { type APIData, formatRaceTime } from "@statsify/util";
 import { Field } from "#metadata";
 import { add, deepAdd, ratio } from "@statsify/math";
 
@@ -32,7 +32,7 @@ export class BedWarsPracticeMode {
 }
 
 const recordOptions = {
-  leaderboard: { sort: "ASC", formatter: formatTime },
+  leaderboard: { sort: "ASC", formatter: formatRaceTime },
   historical: { enabled: false },
 } as const;
 
