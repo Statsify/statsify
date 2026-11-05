@@ -323,21 +323,17 @@ async function contentToMessage(
 class PageController {
   #menu: SelectMenuBuilder | ButtonBuilder[];
 
-  /**
-   * @param customId Gives the buttons custom ids that keep working after a restart (see paginate)
-   * @param parent The page these sub pages belong to, so their targets read `<parent>.<index>`
-   */
   public constructor(
     pages: PageInput[],
     selected: number,
     customId?: (page: string) => string,
-    parent?: number
+    parentIndex?: number
   ) {
-    const target = (index: number) => (parent === undefined ? `${index}` : `${parent}.${index}`);
+    const target = (index: number) => (parentIndex === undefined ? `${index}` : `${parentIndex}.${index}`);
 
     if (pages.length > 5) {
       const menu = new SelectMenuBuilder();
-      if (customId) menu.customId(customId(parent === undefined ? "menu" : "submenu"));
+      if (customId) menu.customId(customId(parentIndex === undefined ? "menu" : "submenu"));
 
       for (const [index, page] of pages.entries()) {
         const option = new SelectMenuOptionBuilder()
