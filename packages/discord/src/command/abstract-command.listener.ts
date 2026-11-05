@@ -32,7 +32,6 @@ export type InteractionHook = (
   interaction: Interaction
 ) => InteractionServer.InteractionReply | undefined | Promise<any>;
 
-/** Handles every custom id that starts with its route, made with createCustomId */
 export type ComponentRoute = (
   interaction: Interaction,
   customId: CustomId
@@ -104,10 +103,7 @@ export abstract class AbstractCommandListener {
     this.routes.set(route, handler);
   }
 
-  /**
-   * Runs a command again for a button, select menu or modal on its reply, as the user who
-   * ran it. Their message is edited; anyone else gets the reply as a preview only they see
-   */
+  /** Re-runs the command as its owner: their message is edited, anyone else gets an ephemeral preview */
   public async rerunCommand(
     interaction: Interaction,
     ownerId: string,
