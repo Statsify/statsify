@@ -30,7 +30,7 @@ export class GuildSearchService {
   public async get(query: string): Promise<string[]> {
     query = query.trim().toLowerCase();
 
-    if (!query) return this.getCachedGuilds();
+    if (!query) return [];
 
     const searchOptions = query.length >= 3 ? ["FUZZY", "MAX", "25"] : ["MAX", "25"];
 
@@ -60,13 +60,9 @@ export class GuildSearchService {
       .catch((e) => this.handleRedisError(e));
   }
 
-  private async getCachedGuilds(query?: string) {
-    const filter = query ?
-      { nameToLower: { $regex: `^${this.escapeRegex(query)}` } } :
-      {};
-
+  private async getCachedGuilds(query: string) {
     const guilds = await this.guildModel
-      .find(filter)
+      .find({ nameToLower: { $regex: `^${this.escapeRegex(query)}` } })
       .select({ name: true, _id: false })
       .sort({ exp: -1 })
       .limit(25)
