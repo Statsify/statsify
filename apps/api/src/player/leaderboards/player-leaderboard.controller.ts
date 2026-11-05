@@ -17,7 +17,6 @@ import { Body, Controller, Post } from "@nestjs/common";
 import {
   ErrorResponse,
   LeaderboardQuery,
-  PostGuildScopedPlayerLeaderboardResponse,
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
@@ -63,7 +62,7 @@ export class PlayerLeaderboardsController {
 
   @Post("/guild")
   @ApiOperation({ summary: "Get a Guild Scoped Player Leaderboard" })
-  @ApiOkResponse({ type: PostGuildScopedPlayerLeaderboardResponse })
+  @ApiOkResponse({ type: PostLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
   public getGuildScopedPlayerLeaderboard(

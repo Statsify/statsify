@@ -27,7 +27,6 @@ import {
   GetStatusResponse,
   GetUserResponse,
   GetWatchdogResponse,
-  PostGuildScopedPlayerLeaderboardResponse,
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
   PutUserBadgeResponse,
@@ -111,8 +110,8 @@ export class ApiService {
     field: string,
     input: string | number,
     type: LeaderboardQuery
-  ): Promise<PostGuildScopedPlayerLeaderboardResponse | null> {
-    return this.request<PostGuildScopedPlayerLeaderboardResponse>(
+  ): Promise<PostLeaderboardResponse | null> {
+    return this.request<PostLeaderboardResponse>(
       "/player/leaderboards/guild",
       {},
       "POST",
