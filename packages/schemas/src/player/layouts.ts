@@ -9,8 +9,8 @@
 import type { APIData } from "@statsify/util";
 import { Field } from "#metadata";
 
-// A game's layouts are one string, `name=slot0,slot1,,slot3;name=…`, a few KB for every kit. A run
-// of four or more empty slots is `*N`, and a SkyWars slot can hold several tokens joined by `+`
+// A game's layouts are one string, `name=slot0,slot1,,slot3;name=…`. A run of four or more empty
+// slots is `*N`, and a SkyWars slot can hold several tokens joined by `+`
 type Slots = (string | undefined)[];
 
 /** How a game sends its layouts, as slot tokens and back */
@@ -134,7 +134,6 @@ export function decodeLayouts<T>(layouts: string | undefined, shape: LayoutShape
 // Pit inventories arrive as `{ type: 0, data: [signed bytes] }` of gzipped NBT
 const encodeNbt = (nbt?: { data: number[] }) => (nbt ? Buffer.from(nbt.data).toString("base64") : "");
 
-/** Each game's inventory layouts, which only the inventory images read */
 export class PlayerLayouts {
   @Field()
   public bedwars: string;

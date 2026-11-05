@@ -55,7 +55,7 @@ export class SessionService {
    * @returns The flattened player data
    */
   public async resetPlayer(player: Player) {
-    // Sessions only compare stats, so empty layouts keep the inventories out of them
+    // Sessions only compare stats, so they don't store layouts
     const flatPlayer = flatten({ ...player, layouts: new PlayerLayouts({}) });
     flatPlayer.sessionReset = Math.round(DateTime.now().toMillis() / 1000);
 
