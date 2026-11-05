@@ -125,7 +125,6 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     return this.apiService.getGuild(query, type, user, context.getCacheLevel());
   }
 
-  /** Today's first page for the command, otherwise the mode and page a click asks for */
   private getRequestedPage(
     interaction: Interaction,
     modes: GuildTopMode[],

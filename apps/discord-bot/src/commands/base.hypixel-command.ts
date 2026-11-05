@@ -50,10 +50,7 @@ export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
 
 export type ModeEmoji = LocalizationString | false | undefined;
 
-/**
- * Page buttons on player commands re-run the command for the same player:
- * `p:<user id>:<command path joined by dots>:<player uuid>:<page>`
- */
+/** Page buttons re-run the command: `p:<user id>:<command path joined by dots>:<player uuid>:<page>` */
 export const PROFILE_ROUTE = "p";
 
 export function profileRoute(listener: AbstractCommandListener): ComponentRoute {

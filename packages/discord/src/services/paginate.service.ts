@@ -301,10 +301,7 @@ export async function scrollingPagination(
   return message;
 }
 
-/**
- * The page a scroll button asks for, wrapping around. Its custom id ends with `prev.<page>` or
- * `next.<page>` for the page it's on, since with two pages both buttons would ask for the same one
- */
+/** Ids hold the current page, since with two pages both buttons would target the same one */
 export function getScrolledPage(target: string, pageCount: number) {
   const [direction, page] = target.split(".");
   return (Number(page) + (direction === "prev" ? pageCount - 1 : 1)) % pageCount;
