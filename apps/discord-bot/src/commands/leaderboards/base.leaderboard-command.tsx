@@ -33,10 +33,7 @@ import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
 
-type BaseLeaderboardProps = Omit<
-  LeaderboardProfileProps,
-  "background" | "fields" | "logo" | "name" | "data"
->;
+type BaseLeaderboardProps = Omit<LeaderboardProfileProps, "fields" | "name" | "data">;
 
 interface LeaderboardParams {
   input: string | number;
@@ -53,7 +50,7 @@ type GetLeaderboardDataIcon = (id: string) => Promise<Image>;
 
 export interface CreateLeaderboardOptions {
   context: CommandContext;
-  background: Image | Promise<Image>;
+  background: Image;
   type: LeaderboardType;
   getLeaderboard: GetLeaderboard;
   field: string;
@@ -73,11 +70,13 @@ export class BaseLeaderboardCommand {
     const user = context.getUser();
     const t = context.t();
     const cache = new Map<number, IMessage>();
-    const backgroundPromise = Promise.resolve(background);
-    const logoPromise = getLogo(user);
+
+    const logo = await getLogo(user);
 
     const props: BaseLeaderboardProps = {
       t,
+      background,
+      logo,
       user,
       type,
     };
@@ -113,8 +112,6 @@ export class BaseLeaderboardCommand {
           field,
           params,
           props,
-          backgroundPromise,
-          logoPromise,
           getLeaderboardDataIcon
         );
 
@@ -141,8 +138,6 @@ export class BaseLeaderboardCommand {
       field,
       { input: currentPage, type: LeaderboardQuery.PAGE },
       props,
-      backgroundPromise,
-      logoPromise,
       getLeaderboardDataIcon
     );
 
@@ -259,8 +254,6 @@ export class BaseLeaderboardCommand {
     field: string,
     params: LeaderboardParams,
     props: BaseLeaderboardProps,
-    backgroundPromise: Promise<Image>,
-    logoPromise: Promise<Image>,
     getLeaderboardDataIcon?: GetLeaderboardDataIcon
   ): Promise<[message: IMessage, page: number | null]> {
     if (params.type === LeaderboardQuery.PAGE && cache.has(params.input as number)) {
@@ -275,8 +268,6 @@ export class BaseLeaderboardCommand {
       field,
       params,
       props,
-      backgroundPromise,
-      logoPromise,
       getLeaderboardDataIcon
     );
 
@@ -292,15 +283,9 @@ export class BaseLeaderboardCommand {
     field: string,
     params: LeaderboardParams,
     props: BaseLeaderboardProps,
-    backgroundPromise: Promise<Image>,
-    logoPromise: Promise<Image>,
     getLeaderboardDataIcon?: GetLeaderboardDataIcon
   ): Promise<[message: IMessage, page: number | null]> {
-    const [background, logo, leaderboard] = await Promise.all([
-      backgroundPromise,
-      logoPromise,
-      getLeaderboard(field, params.input, params.type),
-    ]);
+    const leaderboard = await getLeaderboard(field, params.input, params.type);
 
     if (!leaderboard) {
       const message = {
@@ -332,8 +317,6 @@ export class BaseLeaderboardCommand {
     const canvas = render(
       <LeaderboardProfile
         {...props}
-        background={background}
-        logo={logo}
         name={leaderboard.name}
         fields={leaderboard.fields}
         data={leaderboardData}

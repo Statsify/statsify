@@ -299,7 +299,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
     const field = `stats.${prefix}.${leaderboard.replaceAll(" ", ".")}`;
 
-    const background = getBackground(
+    const background = await getBackground(
       ...mapBackground(modes, modes.getApiModes()[0])
     );
 
