@@ -156,7 +156,6 @@ export class FontRenderer {
       );
       let text = effect?.text ?? part;
 
-      // Like Minecraft, an unknown code only hides its own character
       text = text.slice(matches ? matches[0].length : 1);
 
       state = Object.assign({}, state, effect);
