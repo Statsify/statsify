@@ -155,12 +155,11 @@ export class HypixelService {
       parseHeader(headers["retry-after"]) ??
       DEFAULT_RATE_LIMIT_SECONDS;
 
-    const wasRateLimited = Date.now() < this.rateLimitedUntil;
-    this.rateLimitedUntil = Math.max(this.rateLimitedUntil, Date.now() + seconds * 1000);
-
-    if (!wasRateLimited) {
+    if (Date.now() >= this.rateLimitedUntil) {
       this.logger.warn(`Hypixel is rate limiting requests for the next ${seconds} seconds`);
     }
+
+    this.rateLimitedUntil = Math.max(this.rateLimitedUntil, Date.now() + seconds * 1000);
   }
 
   private rateLimitError() {
@@ -169,7 +168,7 @@ export class HypixelService {
   }
 
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
-    // Resources don't need an API key, so the key's rate limit doesn't apply to them
+    // Resource endpoints don't need an API key
     const isKeyed = !url.startsWith("/resources/");
 
     if (isKeyed && Date.now() < this.rateLimitedUntil) {
@@ -194,7 +193,11 @@ export class HypixelService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        if (isKeyed && err.response?.status === 429) {
+        const outOfRequests =
+          err.response?.status === 429 &&
+          (parseHeader(err.response.headers["ratelimit-remaining"]) ?? 0) === 0;
+
+        if (isKeyed && outOfRequests) {
           this.startRateLimit(err.response.headers);
           return throwError(() => this.rateLimitError());
         }
