@@ -25,6 +25,7 @@ interface SessionChange {
   onConfirm: (uuid: string) => Promise<IMessage>;
 }
 
+// Not an async function: the command loader treats exports without a writable prototype as commands
 export function confirmSessionChange(
   context: CommandContext,
   { warning, button, onConfirm }: SessionChange
