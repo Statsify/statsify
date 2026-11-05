@@ -8,10 +8,7 @@
 
 const MAX_CUSTOM_ID_LENGTH = 100;
 
-/**
- * A custom id that keeps working after a restart: the route that handles it, the id of the
- * user who ran the command, then whatever else the route needs, joined by colons
- */
+/** A custom id that keeps working after a restart, unlike a hook's */
 export interface CustomId {
   route: string;
   ownerId: string;
