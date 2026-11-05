@@ -57,7 +57,6 @@ export class GuildService {
       };
     }
 
-    // Most players have no guild, so that answer is cached as long as a guild is
     if (
       type === GuildQuery.PLAYER &&
       !cachedGuild &&
