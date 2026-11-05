@@ -83,7 +83,6 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     const user = context.getUser();
     const interaction = context.getInteraction();
 
-    // A page button reads the cached player, so a click never asks Hypixel
     const player = await this.apiService.getPlayer(
       context.option("player"),
       user,

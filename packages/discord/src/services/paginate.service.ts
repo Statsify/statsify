@@ -53,13 +53,13 @@ type PageId = `${number}|${number}`;
  *
  * @param context The context of the command
  * @param pages The array of pages to paginate against
- * @param customId Makes the page buttons keep working after a restart. It returns a custom id
- * that ends with `page`, whose route re-runs the command. Without it, the buttons stop after 5 minutes
+ * @param getCustomId Returns a custom id ending with `page`, whose route re-runs the command.
+ * Without it, the buttons stop after 5 minutes
  */
 export async function paginate(
   context: CommandContext,
   pages: Page[],
-  customId?: (page: string) => string,
+  getCustomId?: (page: string) => string,
 ) {
   const cache = new Map<PageId, Message>();
   const t = context.t();
@@ -87,7 +87,7 @@ export async function paginate(
   // If there is only one page with no sub pages, return the message immediately without pagination
   if (pages.length === 1 && "generator" in pages[0]) return getMessage(0, 0);
 
-  if (customId) {
+  if (getCustomId) {
     let [index, subIndex] = getRequestedPage(context.getInteraction());
     if (index >= pages.length) [index, subIndex] = [0, 0];
 
@@ -97,9 +97,9 @@ export async function paginate(
     const message = await getMessage(index, subIndex);
 
     message.components = [
-      new PageController(pages, index, customId).getActionRow(),
+      new PageController(pages, index, getCustomId).getActionRow(),
       "subPages" in page && page.subPages.length > 1 ?
-        new PageController(page.subPages, subIndex, customId, index).getActionRow() :
+        new PageController(page.subPages, subIndex, getCustomId, index).getActionRow() :
         undefined,
     ].filter((row) => row !== undefined);
 
@@ -287,7 +287,6 @@ export async function scrollingPagination(
   return message;
 }
 
-/** The page a click asks for: the select menu's value, or the end of the button's custom id */
 function getRequestedPage(interaction: Interaction): [index: number, subIndex: number] {
   if (!interaction.isMessageComponentInteraction()) return [0, 0];
 
@@ -323,21 +322,17 @@ async function contentToMessage(
 class PageController {
   #menu: SelectMenuBuilder | ButtonBuilder[];
 
-  /**
-   * @param customId Gives the buttons custom ids that keep working after a restart (see paginate)
-   * @param parent The page these sub pages belong to, so their targets read `<parent>.<index>`
-   */
   public constructor(
     pages: PageInput[],
     selected: number,
-    customId?: (page: string) => string,
-    parent?: number
+    getCustomId?: (page: string) => string,
+    parentIndex?: number
   ) {
-    const target = (index: number) => (parent === undefined ? `${index}` : `${parent}.${index}`);
+    const target = (index: number) => (parentIndex === undefined ? `${index}` : `${parentIndex}.${index}`);
 
     if (pages.length > 5) {
       const menu = new SelectMenuBuilder();
-      if (customId) menu.customId(customId(parent === undefined ? "menu" : "submenu"));
+      if (getCustomId) menu.customId(getCustomId(parentIndex === undefined ? "menu" : "submenu"));
 
       for (const [index, page] of pages.entries()) {
         const option = new SelectMenuOptionBuilder()
@@ -354,7 +349,7 @@ class PageController {
         const button = new ButtonBuilder()
           .label(page.label)
           .style(ButtonStyle.Secondary);
-        if (customId) button.customId(customId(target(index)));
+        if (getCustomId) button.customId(getCustomId(target(index)));
         if (page.emoji) button.emoji(page.emoji);
         if (index === selected) button.style(ButtonStyle.Primary);
         return button;
