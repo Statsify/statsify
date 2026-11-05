@@ -248,6 +248,27 @@ export class Logger implements LoggerService {
   }
 }
 
+// Sentry doesn't scrub custom attributes, so only these keys reach spans and logs
+export type RequestAttributes = {
+  "discord.command"?: string;
+  "discord.guild.id"?: string;
+  "discord.locale"?: string;
+  "statsify.user.tier"?: number;
+  "statsify.user.uuid"?: string;
+  "statsify.mode"?: string;
+  "statsify.submode"?: string;
+  "statsify.outcome"?: "success" | "message" | "error";
+  "statsify.api.route"?: string;
+  "statsify.api.role"?: string;
+  "statsify.player"?: string;
+  "statsify.guild"?: string;
+  "statsify.cache.hit"?: boolean;
+  "hypixel.status"?: number;
+};
+
+export const setRequestAttributes = (attributes: RequestAttributes) =>
+  Sentry.setAttributes(attributes);
+
 
 
 if (import.meta.vitest) {

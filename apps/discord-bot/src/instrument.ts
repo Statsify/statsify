@@ -16,6 +16,7 @@ if (sentryDsn) {
     dsn: sentryDsn,
     // Sentry 11 collects all of these by default
     dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
+    tracePropagationTargets: [await config("apiClient.route")],
     normalizeDepth: 3,
     tracesSampleRate: await config("sentry.tracesSampleRate"),
     environment: await config("environment"),

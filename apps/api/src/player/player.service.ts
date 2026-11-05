@@ -22,6 +22,7 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Player, deserialize, serialize } from "@statsify/schemas";
+import { setRequestAttributes } from "@statsify/logger";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
 import {
   PlayerSearchService,
@@ -67,6 +68,7 @@ export class PlayerService {
       mongoPlayer &&
       this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)
     ) {
+      setRequestAttributes({ "statsify.cache.hit": true });
       return deserialize(Player, mongoPlayer);
     }
 
