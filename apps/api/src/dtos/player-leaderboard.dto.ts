@@ -7,7 +7,8 @@
  */
 
 import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
+import { IsInt, IsOptional, Min } from "class-validator";
+import { IsLeaderboardField } from "./leaderboard-field.decorator.js";
 import { Player, getLeaderboardFields } from "@statsify/schemas";
 import { PlayerDto } from "./player.dto.js";
 import { Transform } from "class-transformer";
@@ -15,7 +16,7 @@ import { Transform } from "class-transformer";
 const fields = getLeaderboardFields(Player).map(([key]) => key);
 
 export class PlayerLeaderboardDto extends PartialType(PlayerDto) {
-  @IsEnum(fields)
+  @IsLeaderboardField(fields)
   @ApiProperty({ enum: fields })
   public field: string;
 
