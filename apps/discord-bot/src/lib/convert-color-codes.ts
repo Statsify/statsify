@@ -8,6 +8,6 @@
 
 export const convertColorCodes = (content: string) => content
   .replaceAll(String.raw`\&`, "󰀀")
-  .replaceAll(/&(?=[\da-fk-oru#^])/g, "§")
+  .replaceAll(/&(?=[\da-fk-oru]|#[\dA-Fa-f]{6}|\^\d\^)/g, "§")
   .replaceAll("󰀀", "&");
 
