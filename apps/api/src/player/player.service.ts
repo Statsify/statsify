@@ -66,6 +66,9 @@ export class PlayerService {
     return player;
   }
 
+  /**
+   * Throws a HypixelUnavailableException when Hypixel failed and there is no cached player.
+   */
   public async getWithFallback(
     tag: string,
     cacheLevel: CacheLevel,
