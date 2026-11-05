@@ -45,15 +45,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
   ) {
     const PAGE_SIZE = 10;
 
-    const {
-      fieldName,
-      additionalFields = [],
-      extraDisplay,
-      formatter,
-      sort,
-      name,
-      hidden,
-    } = getLeaderboardField(Player, field);
+    const { sort } = getLeaderboardField(Player, field);
 
     const guild = await this.getGuild(guildInput);
     const memberIds = guild.members.map(({ uuid }) => uuid);
@@ -64,18 +56,19 @@ export class PlayerLeaderboardService extends LeaderboardService {
       ...memberIds
     ) as (string | null)[];
 
-    const leaderboard = this.getMemberScores(memberIds, scores)
+    const leaderboard = scores
+      .flatMap((score, index) =>
+        score === null ? [] : [{ id: memberIds[index], score: Number(score) }]
+      )
       .sort((a, b) => sort === "ASC" ? a.score - b.score : b.score - a.score)
       .map((doc, index) => ({ ...doc, index }));
 
     let top: number;
-    let bottom: number;
     let highlight: number | undefined = undefined;
 
     switch (type) {
       case LeaderboardQuery.PAGE:
         top = (input as number) * PAGE_SIZE;
-        bottom = top + PAGE_SIZE;
         break;
 
       case LeaderboardQuery.INPUT: {
@@ -85,7 +78,6 @@ export class PlayerLeaderboardService extends LeaderboardService {
         if (highlight === -1) throw new PlayerNotFoundException();
 
         top = highlight - (highlight % PAGE_SIZE);
-        bottom = top + PAGE_SIZE;
         break;
       }
 
@@ -93,72 +85,19 @@ export class PlayerLeaderboardService extends LeaderboardService {
         const position = (input as number) - 1;
         highlight = position;
         top = position - (position % PAGE_SIZE);
-        bottom = top + PAGE_SIZE;
         break;
       }
     }
 
-    const page = leaderboard.slice(top, bottom);
-
-    const additionalFieldMetadata = additionalFields.map((k) =>
-      getLeaderboardField(Player, k, false)
+    const page = await this.formatLeaderboard(
+      Player,
+      field,
+      leaderboard.slice(top, top + PAGE_SIZE),
+      top / PAGE_SIZE,
+      highlight
     );
 
-    const extraDisplayMetadata = extraDisplay ?
-      getLeaderboardField(Player, extraDisplay, false) :
-      undefined;
-
-    const additionalStats = await this.getAdditionalStats(
-      page.map(({ id }) => id),
-      [
-        ...additionalFields.filter((k) => k !== field),
-        ...(extraDisplay ? [extraDisplay] : []),
-      ]
-    );
-
-    const data = page.map((doc, index) => {
-      const stats = additionalStats[index];
-
-      if (extraDisplay) {
-        const extraDisplayValue = stats[extraDisplay] ?? extraDisplayMetadata?.default;
-        stats.name = extraDisplayValue ? `${extraDisplayValue}§r ${stats.name}` : stats.name;
-      }
-
-      const field = formatter ? formatter(doc.score) : doc.score;
-
-      const additionalValues = additionalFields.map((key, index) => {
-        const value = stats[key] ?? additionalFieldMetadata[index].default;
-
-        if (additionalFieldMetadata[index].formatter)
-          return additionalFieldMetadata[index].formatter?.(value);
-
-        return value;
-      });
-
-      const fields = [];
-
-      if (!hidden) fields.push(field);
-      fields.push(...additionalValues);
-
-      return {
-        id: doc.id,
-        fields,
-        name: stats.name,
-        position: doc.index + 1,
-        highlight: doc.index === highlight,
-      };
-    });
-
-    const fields = [];
-    if (!hidden) fields.push(fieldName);
-    fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
-
-    return {
-      name: `${name} - ${guild.nameFormatted ?? guild.name}`,
-      fields,
-      data,
-      page: top / PAGE_SIZE,
-    };
+    return { ...page, name: `${page.name} - ${guild.nameFormatted ?? guild.name}` };
   }
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
@@ -257,11 +196,5 @@ export class PlayerLeaderboardService extends LeaderboardService {
     if (!player) throw new PlayerNotFoundException();
 
     return player.uuid;
-  }
-
-  private getMemberScores(memberIds: string[], scores: (string | null)[]) {
-    return scores.flatMap((score, index) =>
-      score === null ? [] : [{ id: memberIds[index], score: Number(score) }]
-    );
   }
 }
