@@ -42,7 +42,7 @@ export function confirmSessionChange(
     .description((t) => t(warning));
 
   return confirmAction(context, {
-    prompt: { embeds: [embed], ephemeral: true },
+    prompt: { embeds: [embed] },
     confirmLabel: (t) => t(button),
     confirmStyle: ButtonStyle.Danger,
     onConfirm: () => onConfirm(uuid),
