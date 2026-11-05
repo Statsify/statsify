@@ -38,7 +38,7 @@ if (import.meta.vitest) {
   // Leaderboard buttons carry their field, so a new field that's too long would break its buttons
   it("fits the longest leaderboard field and rejects ids over 100 characters", () => {
     const fields = Object.entries(Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype)).flatMap(
-      ([game, { type }]) => getLeaderboardFields(type.type).map(([key]) => `${game}.${key}`)
+      ([game, { type }]: [string, any]) => getLeaderboardFields(type.type).map(([key]) => `${game}.${key}`)
     );
 
     const longest = fields.reduce((longest, field) => (field.length > longest.length ? field : longest));
