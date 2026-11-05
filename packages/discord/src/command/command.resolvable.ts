@@ -31,6 +31,7 @@ export class CommandResolvable {
     ApplicationCommandOptionType.SubcommandGroup;
 
   public name: string;
+  public slashCommandName: string;
   public name_localizations?: Record<string, string>;
   public description?: string;
   public options?: any[];
@@ -61,6 +62,7 @@ export class CommandResolvable {
     target: any
   ) {
     this.name = name;
+    this.slashCommandName = name;
     this.description = translateField(getLocalizeFunction("en_US"), description);
     this.description_localizations = translateToAllLanguages(description);
 
