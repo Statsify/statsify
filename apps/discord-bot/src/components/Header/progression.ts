@@ -72,8 +72,14 @@ export const formatProgression = ({
 
   if (showProgress && showLevel) output += "\n";
 
-  if (showLevel)
-    output += `${currentLevel} ${renderXp(progression.percent)} ${nextLevel}`;
+  if (showLevel) {
+    const { current, max, percent } = progression;
+
+    if (percent < 0 || percent > 1)
+      throw new Error(`Progression ${current}/${max} is outside the xp bar`);
+
+    output += `${currentLevel} ${renderXp(percent)} ${nextLevel}`;
+  }
 
   return output;
 };
