@@ -42,20 +42,15 @@ export class CommandListener extends AbstractCommandListener {
     this.commands.delete(name);
   }
 
-  protected async onCommand(interaction: Interaction): Promise<void> {
-    const parentData = interaction.getData();
-
+  protected async onCommand(
+    interaction: Interaction,
+    command: CommandResolvable,
+    data: any,
+    commandName: string
+  ): Promise<void> {
     if (interaction.getGuildId() !== await config("supportBot.guild")) return;
 
-    const parentCommand = this.commands.get(parentData.name)!;
-    if (!parentCommand) return;
-
     const id = interaction.getUserId();
-
-    const [command, data, commandName] = this.getCommandAndData(
-      parentCommand,
-      parentData
-    );
 
     const user = await this.apiService.getUser(id);
 
