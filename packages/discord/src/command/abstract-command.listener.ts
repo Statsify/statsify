@@ -125,6 +125,8 @@ export abstract class AbstractCommandListener {
       let message: IMessage | Message;
 
       if (cached && cached.expiresAt > Date.now()) {
+        if (command.tier) this.tierPrecondition(command, await this.getUser(ownerId));
+
         message = cached.message;
         interaction.setLocale(cached.locale);
       } else {
