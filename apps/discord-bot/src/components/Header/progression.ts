@@ -11,12 +11,9 @@ import type { Progression } from "@statsify/schemas";
 
 export type ProgressFunction = (pecentage: number) => string;
 
-const filledSegments = (max: number, percentage: number) =>
-  Math.ceil(max * Math.min(Math.max(percentage, 0), 1));
-
 const xpBar: ProgressFunction = (percentage) => {
   const max = 10;
-  const count = filledSegments(max, percentage);
+  const count = Math.ceil(max * percentage);
 
   return `§r§8[§b${"■".repeat(count)}§7${"■".repeat(max - count)}§8]`;
 };
@@ -25,7 +22,7 @@ export const lineXpBar =
   (color: string): ProgressFunction =>
     (percentage: number) => {
       const max = 40;
-      const count = filledSegments(max, percentage);
+      const count = Math.ceil(max * percentage);
       return `§8[${color}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]§r`;
     };
 
@@ -75,8 +72,14 @@ export const formatProgression = ({
 
   if (showProgress && showLevel) output += "\n";
 
-  if (showLevel)
-    output += `${currentLevel} ${renderXp(progression.percent)} ${nextLevel}`;
+  if (showLevel) {
+    const { current, max, percent } = progression;
+
+    if (percent < 0 || percent > 1)
+      throw new Error(`Progression ${current}/${max} is outside the xp bar`);
+
+    output += `${currentLevel} ${renderXp(percent)} ${nextLevel}`;
+  }
 
   return output;
 };
