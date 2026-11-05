@@ -32,6 +32,7 @@ import {
   TNT_GAMES_MODES,
   TURBO_KART_RACERS_MODES,
   UHC_MODES,
+  User,
   UserTier,
   VAMPIREZ_MODES,
   WALLS_MODES,
@@ -310,12 +311,13 @@ export class RankingsCommand {
     const user = context.getUser();
     const t = context.t();
 
-    const player = await this.apiService.getPlayer(context.option("player"), user);
-    const guild = context.option<string | null>("guild", null);
+    const guild = context.option<string | null>("guild");
 
-    if (guild && (user?.tier ?? UserTier.NONE) < UserTier.DIAMOND) {
+    if (guild && !User.isDiamond(user)) {
       throw new ErrorMessage("errors.diamondOnly");
     }
+
+    const player = await this.apiService.getPlayer(context.option("player"), user);
 
     const isGameNotAll = game !== "all";
 

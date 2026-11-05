@@ -31,7 +31,7 @@ import {
   TNT_GAMES_MODES,
   TURBO_KART_RACERS_MODES,
   UHC_MODES,
-  UserTier,
+  User,
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
@@ -291,9 +291,9 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
     modes: GameModes<T>
   ) {
     const leaderboard = context.option<string>("leaderboard");
-    const guild = context.option<string | null>("guild", null);
+    const guild = context.option<string | null>("guild");
 
-    if (guild && (context.getUser()?.tier ?? UserTier.NONE) < UserTier.DIAMOND) {
+    if (guild && !User.isDiamond(context.getUser())) {
       throw new ErrorMessage("errors.diamondOnly");
     }
 
