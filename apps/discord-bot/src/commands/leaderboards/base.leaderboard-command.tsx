@@ -120,7 +120,7 @@ export class BaseLeaderboardCommand {
 
         if (interaction.getUserId() === userId && !message.ephemeral) {
           up.disable(page === 0);
-          currentPage = page ?? currentPage;
+          currentPage = page || currentPage;
           const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
 
           context.reply({
@@ -246,7 +246,7 @@ export class BaseLeaderboardCommand {
       cache.clear();
     }, 300_000);
 
-    currentPage = page ?? currentPage;
+    currentPage = page || currentPage;
 
     return { ...message, components: [row] };
   }
