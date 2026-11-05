@@ -16,8 +16,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 @Module({
   imports: [
     TypegooseModule.forFeature([Skin]),
-    // Mojang lookups give up in time for the default skin to be rendered before the bot's
-    // 5 second image timeout
+    // Leaves time to render the default skin within the bot's IMAGE_DOWNLOAD_TIMEOUT
     HttpModule.register({ timeout: 3000 }),
   ],
   controllers: [SkinController],
