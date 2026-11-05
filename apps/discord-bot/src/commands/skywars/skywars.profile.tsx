@@ -47,7 +47,6 @@ export const SkyWarsProfile = ({
     [t("stats.potionsBrewed"), t(skywars.potionsBrewed), "§d"],
   ];
 
-  // Solo and Doubles both use the player's Normal and Insane kits, so their pages show both
   const showBothKits = mode.api === "solo" || mode.api === "doubles";
 
   return (
