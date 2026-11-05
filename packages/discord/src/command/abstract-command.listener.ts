@@ -16,7 +16,7 @@ import {
 import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
 import { type IMessage, Message } from "#messages";
-import { Interaction, type InteractionAttachment } from "#interaction";
+import { type CustomId, Interaction, type InteractionAttachment, parseCustomId } from "#interaction";
 import { Logger } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
@@ -32,6 +32,11 @@ export type InteractionHook = (
   interaction: Interaction
 ) => InteractionServer.InteractionReply | undefined | Promise<any>;
 
+export type ComponentRoute = (
+  interaction: Interaction,
+  customId: CustomId
+) => ReturnType<InteractionHook>;
+
 export type CommandPrecondition = () => void;
 
 export interface ExecuteCommandOptions {
@@ -42,8 +47,19 @@ export interface ExecuteCommandOptions {
   message?: IMessage | Message;
 }
 
+const RERUN_CACHE_SIZE = 50;
+const RERUN_CACHE_TTL = 300_000;
+
+interface RerunCacheEntry {
+  message: IMessage | Message;
+  locale: string;
+  expiresAt: number;
+}
+
 export abstract class AbstractCommandListener {
   protected hooks: Map<string, InteractionHook>;
+  protected routes = new Map<string, ComponentRoute>();
+  private rerunCache = new Map<string, RerunCacheEntry>();
   protected readonly logger = new Logger("CommandListener");
 
   protected constructor(
@@ -81,6 +97,75 @@ export abstract class AbstractCommandListener {
 
   public removeHook(id: string) {
     this.hooks.delete(id);
+  }
+
+  public addRoute(route: string, handler: ComponentRoute) {
+    this.routes.set(route, handler);
+  }
+
+  /** Re-runs the command as its owner: their message is edited, anyone else gets an ephemeral preview */
+  public async rerunCommand(
+    interaction: Interaction,
+    ownerId: string,
+    path: string[],
+    options: Record<string, string>
+  ) {
+    const command = this.findCommand(path);
+    if (!command) return;
+
+    const isOwner = interaction.getUserId() === ownerId;
+
+    // Modal input isn't part of the key, so only button and select replies are cached
+    const cacheKey = interaction.isMessageComponentInteraction() ?
+      [interaction.getCustomId(), interaction.getData().values?.[0], interaction.getLocale()].join("|") :
+      undefined;
+
+    try {
+      const cached = cacheKey ? this.rerunCache.get(cacheKey) : undefined;
+      let message: IMessage | Message;
+
+      if (cached && cached.expiresAt > Date.now()) {
+        if (command.tier) this.tierPrecondition(command, await this.getUser(ownerId));
+
+        message = cached.message;
+        interaction.setLocale(cached.locale);
+      } else {
+        const data = {
+          name: path.at(-1),
+          options: Object.entries(options).map(([name, value]) => ({
+            name,
+            value,
+            type: ApplicationCommandOptionType.String,
+          })),
+        };
+
+        const user = await this.getUser(ownerId);
+        this.tierPrecondition(command, user);
+
+        const context = new CommandContext(this, interaction, data);
+        context.setUser(user);
+
+        message = await command.execute(context);
+
+        // A preview's buttons are made with the clicker's id, so only the owner's reply is kept
+        if (cacheKey && isOwner && !message.ephemeral)
+          this.cacheRerun(cacheKey, message, interaction.getLocale());
+      }
+
+      await interaction.acknowledged;
+
+      if (isOwner && !message.ephemeral) return await interaction.editReply(message);
+
+      return await interaction.sendFollowup({ ...message, components: [], ephemeral: true });
+    } catch (err) {
+      if (err instanceof Message) {
+        await interaction.acknowledged;
+        return interaction.sendFollowup({ ...err, ephemeral: true });
+      }
+
+      this.logger.error(`An error occurred when re-running "${path.join(" ")}"`);
+      this.logger.error(err);
+    }
   }
 
   public listen() {
@@ -225,9 +310,11 @@ export abstract class AbstractCommandListener {
   }
 
   protected onMessageComponent(interaction: Interaction): InteractionServer.InteractionReply {
-    const hook = this.hooks.get(interaction.getCustomId());
+    const customId = interaction.getCustomId();
+    const hook = this.hooks.get(customId);
+    const parsed = parseCustomId(customId);
 
-    const res = hook?.(interaction);
+    const res = hook ? hook(interaction) : this.routes.get(parsed.route)?.(interaction, parsed);
 
     if (res && !(res instanceof Promise)) return res;
 
@@ -266,6 +353,30 @@ export abstract class AbstractCommandListener {
       type: InteractionResponseType.ApplicationCommandAutocompleteResult,
       data: { choices: response },
     };
+  }
+
+  private cacheRerun(key: string, message: IMessage | Message, locale: string) {
+    if (this.rerunCache.size >= RERUN_CACHE_SIZE) {
+      const [oldest] = this.rerunCache.keys();
+      this.rerunCache.delete(oldest);
+    }
+
+    this.rerunCache.set(key, { message, locale, expiresAt: Date.now() + RERUN_CACHE_TTL });
+  }
+
+  /** Subcommand names are unique within a command, so groups stay out of the path */
+  private findCommand([name, ...subcommands]: string[]) {
+    let command = this.commands.get(name);
+
+    for (const subcommand of subcommands) {
+      command = command?.options
+        ?.flatMap((option) =>
+          option.type === ApplicationCommandOptionType.SubcommandGroup ? option.options : option
+        )
+        .find((option) => option.name === subcommand);
+    }
+
+    return command;
   }
 
   private async onInteraction(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
@@ -323,4 +434,6 @@ export abstract class AbstractCommandListener {
   }
 
   protected abstract onCommand(interaction: Interaction): Promise<void> | void;
+
+  protected abstract getUser(id: string): Promise<User | null>;
 }
