@@ -178,11 +178,9 @@ export class PlayerService {
 
     // Mongoose doesn't cast update pipelines, so cast here. Nested, since
     // thousands of dotted keys make its change tracking O(n²)
-    const document = new this.playerModel(
-      unflatten(serializedPlayer),
-      null,
-      true
-    ).toObject();
+    const document = new this.playerModel(unflatten(serializedPlayer), null, {
+      skipId: true,
+    }).toObject();
 
     // Only guild refreshes write guildId, so keep the stored one in case a
     // refresh landed after this player was read
