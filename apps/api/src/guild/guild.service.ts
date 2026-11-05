@@ -56,7 +56,6 @@ export class GuildService {
         type.toLowerCase() as Lowercase<GuildQuery>
       );
     } catch {
-      // Serve the cache even if expired; an outage shouldn't clear or hide a guild
       if (cachedGuild) {
         return {
           ...deserialize(Guild, flatten(cachedGuild)),
