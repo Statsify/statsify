@@ -107,11 +107,17 @@ export class Interaction {
   }
 
   public async reply(data: InteractionServer.InteractionReply) {
-    await this.request({
-      method: "post",
-      path: `/interactions/${this.data.id}/${this.data.token}/callback`,
-      body: data,
-    });
+    try {
+      await this.request({
+        method: "post",
+        path: `/interactions/${this.data.id}/${this.data.token}/callback`,
+        body: data,
+      });
+    } catch (err) {
+      this.ack.promise.catch(() => {});
+      this.ack.reject(err);
+      throw err;
+    }
 
     this.ack.resolve();
   }
