@@ -19,7 +19,7 @@ import {
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface BedWarsProfileProps extends BaseProfileProps {
-  mode: Exclude<GameMode<BedWarsModes>, { api: "challenges" }>;
+  mode: Exclude<GameMode<BedWarsModes>, { api: "challenges" | "practice" }>;
 }
 
 export const BedWarsProfile = ({
