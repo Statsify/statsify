@@ -256,29 +256,23 @@ export class PlayerLeaderboardService extends LeaderboardService {
     }, {} as Record<string, boolean>);
 
     selector.displayName = true;
-    selector.uuid = true;
 
-    const players = await this.playerModel
-      .find()
-      .where("uuid")
-      .in(ids)
-      .select(selector)
-      .lean()
-      .exec();
+    return await Promise.all(
+      ids.map(async (id) => {
+        const player = await this.playerModel
+          .findOne()
+          .where("uuid")
+          .equals(id)
+          .select(selector)
+          .lean()
+          .exec();
 
-    const statsById = new Map(
-      players.map((player) => {
-        const additionalStats = flatten(player) as LeaderboardAdditionalStats & {
-          uuid: string;
-        };
-
+        const additionalStats = flatten(player) as LeaderboardAdditionalStats;
         additionalStats.name = additionalStats.displayName;
 
-        return [additionalStats.uuid, additionalStats] as const;
+        return additionalStats;
       })
     );
-
-    return ids.map((id) => statsById.get(id)!);
   }
 
   private async getGuild(input: string) {
