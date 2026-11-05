@@ -14,7 +14,7 @@ import {
 } from "@statsify/util";
 import {
   CacheLevel,
-  type HypixelUnavailableException,
+  HypixelUnavailableException,
   PLAYER_CACHE_TIME_MS,
   StatusNotFoundException,
 } from "@statsify/api-client";
