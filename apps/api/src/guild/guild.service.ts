@@ -24,6 +24,8 @@ import { Redis } from "ioredis";
 import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
+const GUILD_CACHE_TIME_MS = 600_000;
+
 @Injectable()
 export class GuildService {
   private readonly logger = new Logger("GuildService");
@@ -55,7 +57,6 @@ export class GuildService {
       };
     }
 
-    // Most players have no guild, so that answer is cached as long as a guild is
     if (
       type === GuildQuery.PLAYER &&
       !cachedGuild &&
@@ -84,7 +85,7 @@ export class GuildService {
     }
 
     if (!guild) {
-      if (type === GuildQuery.PLAYER) await this.redis.set(`guildless:${tag}`, 1, "PX", 600_000);
+      if (type === GuildQuery.PLAYER) await this.redis.set(`guildless:${tag}`, 1, "PX", GUILD_CACHE_TIME_MS);
       await this.handleGuildNotFound(cachedGuild, tag, type);
       throw new GuildNotFoundException(displayName);
     }
@@ -166,7 +167,7 @@ export class GuildService {
     }
 
     // Cache guilds responses for 10 minutes
-    guild.expiresAt = Date.now() + 600_000;
+    guild.expiresAt = Date.now() + GUILD_CACHE_TIME_MS;
 
     const flatGuild = flatten(guild);
     const serializedGuild = serialize(Guild, flatGuild);
