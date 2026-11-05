@@ -193,7 +193,11 @@ export class HypixelService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        if (isKeyed && err.response?.status === 429) {
+        const outOfRequests =
+          err.response?.status === 429 &&
+          (parseHeader(err.response.headers["ratelimit-remaining"]) ?? 0) === 0;
+
+        if (isKeyed && outOfRequests) {
           this.startRateLimit(err.response.headers);
           return throwError(() => this.rateLimitError());
         }
