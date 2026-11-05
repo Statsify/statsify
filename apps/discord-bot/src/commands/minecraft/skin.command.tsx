@@ -15,6 +15,7 @@ import {
   MojangPlayerArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
+import { all } from "better-all";
 import { createCanvas } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.skin"), args: [MojangPlayerArgument] })
@@ -23,13 +24,18 @@ export class SkinCommand {
 
   public async run(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
+    const tag = context.option<string>("player");
 
-    const player = await this.apiService.getPlayerSkinTextures(
-      context.option<string>("player"),
-      user
-    );
+    const { apiService } = this;
+    const selfUuid = apiService.selfUuid(tag, user);
 
-    const skin = await this.apiService.getPlayerSkin(player.uuid, user);
+    const { player, skin } = await all({
+      player: () => apiService.getPlayerSkinTextures(tag, user),
+      async skin() {
+        return apiService.getPlayerSkin(selfUuid ?? (await this.$.player).uuid, user);
+      },
+    });
+
     const canvas = createCanvas(skin.width, skin.height);
     canvas.getContext("2d").drawImage(skin, 0, 0);
 
