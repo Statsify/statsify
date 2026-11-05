@@ -168,14 +168,7 @@ export class ApiService extends StatsifyApiService {
           );
         }
 
-        throw new ErrorMessage(
-          (t) => t("errors.invalidGuild.title"),
-          (t) =>
-            t("errors.invalidGuild.description", {
-              context: resolvedType.toLowerCase(),
-              tag: input,
-            })
-        );
+        throw this.missingGuild(resolvedType, input);
       }
 
       if (error.message === "player") throw this.missingPlayer(playerType, input);
@@ -187,10 +180,18 @@ export class ApiService extends StatsifyApiService {
   public override getPlayerLeaderboard(
     field: string,
     input: string | number,
-    type: LeaderboardQuery
+    type: LeaderboardQuery,
+    guild?: string
   ) {
-    return super.getPlayerLeaderboard(field, input, type).catch((err: AxiosError) => {
-      if ((err.response?.data as PlayerNotFoundException).statusCode === 404) return null;
+    return super.getPlayerLeaderboard(field, input, type, guild).catch((err: AxiosError) => {
+      const error = err.response?.data as GuildNotFoundException | PlayerNotFoundException;
+
+      if (guild && error.message === "guild") {
+        const guildType = GUILD_ID_REGEX.test(guild) ? GuildQuery.ID : GuildQuery.NAME;
+        throw this.missingGuild(guildType, guild);
+      }
+
+      if (error.statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
     });
   }
@@ -307,6 +308,17 @@ export class ApiService extends StatsifyApiService {
       (t) => t("errors.invalidPlayer.title"),
       (t) => t("errors.invalidPlayer.description", { context: type, tag }),
       { buttons }
+    );
+  }
+
+  public missingGuild(type: GuildQuery, tag: string) {
+    return new ErrorMessage(
+      (t) => t("errors.invalidGuild.title"),
+      (t) =>
+        t("errors.invalidGuild.description", {
+          context: type.toLowerCase(),
+          tag,
+        })
     );
   }
 
