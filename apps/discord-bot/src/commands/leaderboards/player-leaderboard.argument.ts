@@ -99,19 +99,13 @@ export class PlayerLeaderboardGuildArgument extends AbstractArgument {
 
     const searched = { name: query, value: query };
 
-    if (!query) {
-      const guilds = await apiClient.getGuildAutocomplete(query);
-
-      return guilds.map((guild) => ({ name: guild, value: guild }));
-    }
-
     if (query.length > 32) return [searched];
 
     const guilds = await apiClient.getGuildAutocomplete(query);
 
     let results = guilds.map((guild) => ({ name: guild, value: guild }));
 
-    if (query && (guilds.length === 0 || !guilds.some((guild) => guild.toLowerCase() === query))) {
+    if (query && !guilds.some((guild) => guild.toLowerCase() === query)) {
       results = results.slice(0, 24);
       results.push(searched);
     }

@@ -35,12 +35,6 @@ export class PlayerArgument extends AbstractArgument {
 
     const searched = { name: query, value: query };
 
-    if (!query) {
-      const players = await apiClient.getPlayerAutocomplete(query);
-
-      return players.map((p) => ({ name: p, value: p }));
-    }
-
     if (query.length > 16) return [searched];
 
     const players = await apiClient.getPlayerAutocomplete(query);
