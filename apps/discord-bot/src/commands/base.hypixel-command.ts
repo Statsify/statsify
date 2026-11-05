@@ -175,7 +175,6 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     player: Player,
     mode: string
   ): Promise<IMessage> {
-    // Challenges isn't a game, so it has no FormattedGame
     const game = this.modes === CHALLENGE_MODES ?
       t("stats.challenges") :
       removeFormatting(MODES_TO_FORMATTED.get(this.modes)!);
