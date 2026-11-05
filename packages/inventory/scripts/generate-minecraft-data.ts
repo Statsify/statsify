@@ -8,8 +8,9 @@
 
 // Builds data/minecraft-data.json from minecraft-data at a pinned release, checked against a
 // 26.3 client jar or vanilla pack zip so every name it writes is one the pack can draw, and
-// pairs 1.8.9's texture names with 26.3's from the two versions' models:
-//   pnpm --filter @statsify/inventory generate <path to 26.3.jar or pack zip> <path to 1.8.9.jar>
+// pairs 1.8.9's texture names with 26.3's from the two versions' models, and takes 1.8.9's
+// English item names from StatsifyDump's `/sdump names` export:
+//   pnpm --filter @statsify/inventory generate <path to 26.3.jar or pack zip> <path to 1.8.9.jar> <names-*.json>
 
 import { readFile, writeFile } from "node:fs/promises";
 import { unzipSync } from "fflate";
@@ -166,8 +167,10 @@ const snakeCase = (name: string) =>
     .replaceAll(" ", "_")
     .toLowerCase();
 
-const [path, legacyPath] = process.argv.slice(2);
-if (!path || !legacyPath) throw new Error("Pass the paths to a 26.3 client jar or vanilla pack zip and a 1.8.9 client jar");
+const [path, legacyPath, namesPath] = process.argv.slice(2);
+if (!path || !legacyPath || !namesPath) {
+  throw new Error("Pass the paths to a 26.3 client jar or vanilla pack zip, a 1.8.9 client jar and a /sdump names export");
+}
 
 const names = { items: new Set<string>(), effects: new Set<string>() };
 
@@ -273,6 +276,7 @@ const output = {
   effects: {} as Record<string, string>,
   legacyTextures: {} as Record<string, LegacyTexture>,
   legacyModels: {} as Record<string, string>,
+  legacyNames: {} as Record<string, string>,
 };
 
 const SPAWN_EGG = 383;
@@ -317,6 +321,20 @@ for (const { metadata } of eggs) {
   const key = `${SPAWN_EGG}:${metadata}`;
   const name = modernName(key, `${snakeCase(mob.displayName)}_spawn_egg`);
   if (name) output.items[key] = name;
+}
+
+interface DumpedName {
+  id: number;
+  damage: number;
+  name: string;
+  rarity: string;
+}
+
+const dumpedNames: DumpedName[] = JSON.parse(await readFile(namesPath, "utf8")).items;
+
+for (const { id, damage, name, rarity } of dumpedNames) {
+  const modern = output.items[`${id}:${damage}`] ?? (damage === 0 ? output.items[id] : undefined);
+  if (modern) output.legacyNames[modern] = `${rarity}${name}`;
 }
 
 const mapped = new Set(Object.values(output.items));
@@ -452,5 +470,5 @@ await writeFile(
 );
 
 console.log(
-  `${Object.keys(output.items).length} items, ${Object.keys(output.durability).length} with durability, ${Object.keys(output.effects).length} effects, ${Object.keys(output.legacyTextures).length} 1.8.9 textures and ${Object.keys(output.legacyModels).length} models renamed`,
+  `${Object.keys(output.items).length} items, ${Object.keys(output.durability).length} with durability, ${Object.keys(output.effects).length} effects, ${Object.keys(output.legacyTextures).length} 1.8.9 textures and ${Object.keys(output.legacyModels).length} models renamed, ${Object.keys(output.legacyNames).length} 1.8.9 names`,
 );

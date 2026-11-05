@@ -12,6 +12,7 @@ import type { ItemStack } from "./item-stack.js";
 const items: Record<string, string | undefined> = data.items;
 const durability: Record<string, number | undefined> = data.durability;
 const effects: Record<string, string | undefined> = data.effects;
+const names: Record<string, string | undefined> = data.legacyNames;
 
 const POTION = 373;
 
@@ -49,3 +50,6 @@ export function legacyItem(id: number, damage = 0): ItemStack | undefined {
 
 /** How much wear a 26.3 item takes before it breaks */
 export const maxDamage = (id: string) => durability[id.replace("minecraft:", "")];
+
+/** 1.8's English name for a 26.3 item, after its rarity colour, like "§bGolden Apple" */
+export const legacyName = (id: string) => names[id.replace("minecraft:", "")];
