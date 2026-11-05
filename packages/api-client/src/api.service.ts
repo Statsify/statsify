@@ -125,12 +125,12 @@ export class ApiService {
     );
   }
 
-  public getPlayerRankings(fields: string[], uuid: string, guild?: string) {
+  public getPlayerRankings(fields: string[], uuid: string) {
     return this.request<PostLeaderboardRankingsResponse[]>(
       "/player/leaderboards/rankings",
       {},
       "POST",
-      { body: { fields, guild, uuid } }
+      { body: { fields, uuid } }
     );
   }
 

@@ -95,14 +95,7 @@ export class PlayerLeaderboardsController {
   @ApiOkResponse({ type: [PostLeaderboardRankingsResponse] })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 5 })
-  public async getPlayerRankings(@Body() { fields, guild, uuid }: PlayerRankingsDto) {
-    if (guild)
-      return this.playerLeaderboardService.getGuildScopedLeaderboardRankings(
-        guild,
-        fields,
-        uuid
-      );
-
+  public async getPlayerRankings(@Body() { fields, uuid }: PlayerRankingsDto) {
     return this.playerLeaderboardService.getLeaderboardRankings(Player, fields, uuid);
   }
 }

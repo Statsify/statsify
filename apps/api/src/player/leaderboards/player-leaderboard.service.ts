@@ -161,62 +161,6 @@ export class PlayerLeaderboardService extends LeaderboardService {
     };
   }
 
-  public async getGuildScopedLeaderboardRankings(
-    guildInput: string,
-    fields: string[],
-    id: string
-  ) {
-    const guild = await this.getGuild(guildInput);
-    const memberIds = guild.members.map(({ uuid }) => uuid);
-    const targetIndex = memberIds.indexOf(id);
-
-    if (targetIndex === -1) return [];
-
-    const leaderboardFields = fields.map((field) => getLeaderboardField(Player, field));
-    const pipeline = this.redis.pipeline();
-
-    for (const field of fields) pipeline.call("ZMSCORE", `player.${field}`, ...memberIds);
-
-    const responses = await pipeline.exec();
-
-    if (!responses) return [];
-
-    const rankings = [];
-
-    for (const [index, response] of responses.entries()) {
-      const scores = response[1] as (string | null)[] | null;
-      const targetScore = scores?.[targetIndex];
-
-      if (!scores || !targetScore) continue;
-
-      const metadata = leaderboardFields[index];
-      const targetValue = Number(targetScore);
-      const sortedScores = this.getMemberScores(memberIds, scores).sort((a, b) => {
-        if (a.score !== b.score)
-          return metadata.sort === "ASC" ? a.score - b.score : b.score - a.score;
-
-        return metadata.sort === "ASC" ?
-          a.id.localeCompare(b.id) :
-          b.id.localeCompare(a.id);
-      });
-
-      const rank = sortedScores.findIndex((score) => score.id === id) + 1;
-
-      const formattedValue = metadata.formatter ?
-        metadata.formatter(targetValue) :
-        targetValue;
-
-      rankings.push({
-        field: fields[index],
-        rank,
-        value: formattedValue,
-        name: metadata.name,
-      });
-    }
-
-    return rankings;
-  }
-
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
     input = await this.getPlayerId(input);
 

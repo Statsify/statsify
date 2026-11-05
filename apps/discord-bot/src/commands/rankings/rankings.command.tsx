@@ -32,7 +32,6 @@ import {
   TNT_GAMES_MODES,
   TURBO_KART_RACERS_MODES,
   UHC_MODES,
-  User,
   UserTier,
   VAMPIREZ_MODES,
   WALLS_MODES,
@@ -54,7 +53,6 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
-import { PlayerLeaderboardGuildArgument } from "#commands/leaderboards/player-leaderboard.argument";
 import { RankingsProfile } from "./rankings.profile.js";
 import { arrayGroup } from "@statsify/util";
 import { games } from "./games.js";
@@ -68,7 +66,7 @@ const choices = games.map((g) => [g.name, g.key] as Choice);
 choices.unshift(["All", "all"]);
 
 const options: Partial<SubCommandOptions> = {
-  args: [PlayerArgument, PlayerLeaderboardGuildArgument],
+  args: [PlayerArgument],
   tier: UserTier.IRON,
   preview: "rankings.png",
 };
@@ -311,12 +309,6 @@ export class RankingsCommand {
     const user = context.getUser();
     const t = context.t();
 
-    const guild = context.option<string | null>("guild");
-
-    if (guild && !User.isDiamond(user)) {
-      throw new ErrorMessage("errors.diamondOnly");
-    }
-
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
     const isGameNotAll = game !== "all";
@@ -325,11 +317,7 @@ export class RankingsCommand {
       fields.filter((f) => f.startsWith(`stats.${game}`)) :
       fields;
 
-    const rankings = await this.apiService.getPlayerRankings(
-      filteredFields,
-      player.uuid,
-      guild ?? undefined
-    );
+    const rankings = await this.apiService.getPlayerRankings(filteredFields, player.uuid);
 
     if (rankings.length === 0)
       throw new ErrorMessage(
