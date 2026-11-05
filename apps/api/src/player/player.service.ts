@@ -82,7 +82,8 @@ export class PlayerService {
       if (mongoPlayer && mongoPlayer.username !== player.username)
         await this.playerSearchService.delete(mongoPlayer.username);
 
-      const flatPlayer = await this.saveOne(player, true);
+      // A selector only loads part of the stored document
+      const flatPlayer = await this.saveOne(player, true, selector ? undefined : mongoPlayer);
 
       flatPlayer.isNew = !mongoPlayer;
 
@@ -170,7 +171,11 @@ export class PlayerService {
     return true;
   }
 
-  public async saveOne(player: Player, registerAutocomplete: boolean) {
+  public async saveOne(
+    player: Player,
+    registerAutocomplete: boolean,
+    previous?: Flatten<Player> | null
+  ) {
     // Serialize and flatten the player
     const flatPlayer = flatten(player);
     const serializedPlayer = serialize<Player>(Player, flatPlayer);
@@ -183,7 +188,8 @@ export class PlayerService {
         Player,
         flatPlayer,
         "uuid",
-        false
+        false,
+        previous
       ),
     ];
 
