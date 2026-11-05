@@ -287,7 +287,7 @@ export abstract class AbstractCommandListener {
         this.logger.error(err);
       });
 
-      // Discord decides who can see the reply from this first response, so a later edit can't make it ephemeral
+      // Discord sets the reply's visibility at the defer; a later edit can't make it ephemeral
       return {
         type: InteractionResponseType.DeferredChannelMessageWithSource,
         data: command.ephemeral ? { flags: MessageFlags.Ephemeral } : undefined,
