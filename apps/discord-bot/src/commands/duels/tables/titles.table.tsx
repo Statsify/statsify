@@ -23,8 +23,7 @@ interface TitleMode {
   score: number;
 }
 
-// Without the player's prefix scheme and icon, each title shows its division's own color
-const baseTitle = ({ mode, score }: TitleMode) =>
+const defaultColorTitle = ({ mode, score }: TitleMode) =>
   getTitleAndProgression({ score, data: {}, ...DUELS_TITLES[mode] }).titleFormatted;
 
 const normalizedScore = ({ mode, score }: TitleMode) =>
@@ -73,7 +72,7 @@ export const TitlesTable = ({ duels, t, modeIcons }: TitlesTableProps) => {
     <div width="100%" direction="column">
       <ModeTitle
         icon={modeIcons.overall}
-        title={baseTitle(overall)}
+        title={defaultColorTitle(overall)}
         score={overall.score}
         t={t}
       />
@@ -84,7 +83,7 @@ export const TitlesTable = ({ duels, t, modeIcons }: TitlesTableProps) => {
               <div width={`1/${row.length}`}>
                 <ModeTitle
                   icon={modeIcons[game.mode]}
-                  title={baseTitle(game)}
+                  title={defaultColorTitle(game)}
                   score={game.score}
                   t={t}
                 />
