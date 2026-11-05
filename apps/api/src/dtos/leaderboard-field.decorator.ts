@@ -6,25 +6,29 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ValidateBy } from "class-validator";
+import { ValidateBy, type ValidationOptions } from "class-validator";
 
-export const IsLeaderboardField = (fields: string[]) => {
+export const IsLeaderboardField = (fields: string[], options?: ValidationOptions) => {
   const fieldSet = new Set(fields);
 
-  return ValidateBy({
-    name: "isLeaderboardField",
-    validator: {
-      validate: (value) => Array.isArray(value) && value.every((field) => fieldSet.has(field)),
-      defaultMessage: (args) => {
-        const value: unknown = args?.value;
-        if (!Array.isArray(value)) return `${args?.property} must be an array of leaderboard fields`;
+  return ValidateBy(
+    {
+      name: "isLeaderboardField",
+      validator: {
+        validate: (value) => fieldSet.has(value),
+        defaultMessage: (args) => {
+          const value = args?.value;
+          if (value === undefined) return `${args?.property} is required`;
 
-        const invalid = new Set(
-          value.filter((field) => !fieldSet.has(field)).map((field) => JSON.stringify(field))
-        );
+          const values = options?.each && Array.isArray(value) ? value : [value];
+          const invalid = new Set(
+            values.filter((field) => !fieldSet.has(field)).map((field) => JSON.stringify(field))
+          );
 
-        return `unknown leaderboard field${invalid.size === 1 ? "" : "s"}: ${[...invalid].join(", ")}`;
+          return `unknown leaderboard field${invalid.size === 1 ? "" : "s"}: ${[...invalid].join(", ")}`;
+        },
       },
     },
-  });
+    options
+  );
 };
