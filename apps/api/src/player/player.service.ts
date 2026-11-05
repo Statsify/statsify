@@ -177,8 +177,7 @@ export class PlayerService {
     const serializedPlayer = serialize<Player>(Player, flatPlayer);
 
     const promises = [
-      // Mongoose gets the nested document: with thousands of dotted keys, its change
-      // tracking makes the replace O(n²)
+      // Thousands of dotted keys make Mongoose's change tracking O(n²)
       this.playerModel
         .replaceOne({ uuid: player.uuid }, unflatten(serializedPlayer), {
           upsert: true,
