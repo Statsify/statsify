@@ -10,6 +10,7 @@ import type { TextComponent, TextRenderer } from "./text.js";
 import type { ItemStack } from "./item-stack.js";
 import type { PackStack } from "./pack.js";
 import { context, createCanvas } from "./canvas.js";
+import { legacyName } from "./legacy-items.js";
 
 // The HideFlags bit that hides Unbreakable
 const HIDE_UNBREAKABLE = 4;
@@ -27,19 +28,25 @@ export function loadNames(stack: PackStack) {
 const prefixed = (text: TextComponent, codes: string, style: { color?: string; italic?: boolean }): TextComponent =>
   typeof text === "string" ? `${codes}${text}` : { text: "", ...style, extra: [text] };
 
+/** An unnamed item's name: 1.8's where it had one, since Hypixel players see those, else the pack's */
+function plainName(item: ItemStack, names: Record<string, string>) {
+  const legacy = legacyName(item.id);
+  // 1.8 makes only common items aqua when enchanted
+  if (legacy) return item.enchanted && legacy.startsWith("§f") ? `§b${legacy.slice(2)}` : legacy;
+
+  const path = item.id.replace(/^minecraft:/, "");
+  const key = names[`item.minecraft.${path}`] ? `item.minecraft.${path}` : `block.minecraft.${path}`;
+  return `${item.enchanted ? "§b" : ""}${names[key] ?? key}`;
+}
+
 /**
  * An item's tooltip lines in 1.8's order: the name, the lore in dark purple italics, then
  * Unbreakable unless HideFlags hides it. Renamed items start italic, which a colour code at
  * the start of the name clears, as in game.
  */
 export function tooltipLines(item: ItemStack, names: Record<string, string>): TextComponent[] {
-  const path = item.id.replace(/^minecraft:/, "");
-  const key = names[`item.minecraft.${path}`] ? `item.minecraft.${path}` : `block.minecraft.${path}`;
-
   const lines: TextComponent[] = [
-    item.name === undefined
-      ? `${item.enchanted ? "§b" : ""}${names[key] ?? key}`
-      : prefixed(item.name, "§o", { italic: true }),
+    item.name === undefined ? plainName(item, names) : prefixed(item.name, "§o", { italic: true }),
   ];
 
   // 1.8 draws every line under the name gray unless it sets its own colour

@@ -13,6 +13,7 @@ const items: Record<string, string | undefined> = data.items;
 const durability: Record<string, number | undefined> = data.durability;
 const effects: Record<string, string | undefined> = data.effects;
 const materials: Record<string, number | undefined> = data.materials;
+const names: Record<string, string | undefined> = data.legacyNames;
 
 const POTION = 373;
 
@@ -56,3 +57,6 @@ export function legacyMaterial(name: string, damage = 0) {
 
 /** How much wear a 26.3 item takes before it breaks */
 export const maxDamage = (id: string) => durability[id.replace("minecraft:", "")];
+
+/** 1.8's English name for a 26.3 item, after its rarity colour, like "§bGolden Apple" */
+export const legacyName = (id: string) => names[id.replace("minecraft:", "")];
