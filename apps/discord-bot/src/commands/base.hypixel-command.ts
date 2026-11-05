@@ -18,6 +18,7 @@ import {
   SubPage,
 } from "@statsify/discord";
 import { Container } from "typedi";
+import { all } from "better-all";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalTimeData } from "#components";
 import { getBackground, getLogo } from "@statsify/assets";
@@ -71,16 +72,23 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     const user = context.getUser();
     const tag = context.option<string>("player");
 
-    const selfSkinAndBadge = !tag && user?.uuid ? this.getSkinAndBadge(user.uuid, user) : undefined;
-    selfSkinAndBadge?.catch(noop);
+    const selfUuid = tag ? undefined : user?.uuid;
+    const { apiService } = this;
+    const getPreProfileData = this.getPreProfileData?.bind(this);
 
-    const player = await this.apiService.getPlayer(tag, user);
-
-    const [logo, [skin, badge], data = noop<K>()] = await Promise.all([
-      getLogo(user),
-      selfSkinAndBadge ?? this.getSkinAndBadge(player.uuid, user),
-      this.getPreProfileData?.(player),
-    ]);
+    const { player, logo, skin, badge, data } = await all({
+      player: () => apiService.getPlayer(tag, user),
+      logo: () => getLogo(user),
+      async skin() {
+        return apiService.getPlayerSkin(selfUuid ?? (await this.$.player).uuid, user);
+      },
+      async badge() {
+        return apiService.getUserBadge(selfUuid ?? (await this.$.player).uuid);
+      },
+      async data() {
+        return (await getPreProfileData?.(await this.$.player)) ?? noop<K>();
+      },
+    });
 
     const allModes = this.modes.getModes();
     const filteredModes = this.filterModes?.(player, allModes) ?? allModes;
@@ -160,10 +168,6 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     });
 
     return paginate(context, pages);
-  }
-
-  private getSkinAndBadge(uuid: string, user: User | null) {
-    return Promise.all([this.apiService.getPlayerSkin(uuid, user), this.apiService.getUserBadge(uuid)]);
   }
 
   public abstract getProfile(
