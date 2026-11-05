@@ -57,19 +57,16 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
   private fuse: Fuse<LeaderboardChoice>;
   private list: LeaderboardChoice[];
 
-  public constructor(private prefix: keyof PlayerStats, modes?: GameModes<any>) {
+  public constructor(prefix: keyof PlayerStats, modes?: GameModes<any>) {
     super();
     this.description = (t) => t("arguments.player-leaderboard");
 
-    const [, baseList] = fields[this.prefix];
-    this.list = modes ?
-      baseList.map((choice) => ({
-        ...choice,
-        aliases: this.getAliases(choice.value as string, modes),
-      })) :
-      baseList;
+    [this.fuse, this.list] = fields[prefix];
 
-    this.fuse = new Fuse(this.list, FUSE_OPTIONS);
+    if (modes) {
+      this.list = this.list.map((choice) => ({ ...choice, aliases: this.getAliases(choice.value, modes) }));
+      this.fuse = new Fuse(this.list, FUSE_OPTIONS);
+    }
   }
 
   public autocompleteHandler(
@@ -89,18 +86,10 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
 
   private getAliases(key: string, modes: GameModes<any>): string[] {
     const [modeKey, submodeKey] = key.split(".");
-    const aliases = new Set<string>();
-
     const mode = modes.getModes().find(({ api }) => api === modeKey);
+    const submode = mode?.submodes.find(({ api }) => api === submodeKey);
 
-    if (!mode) return [];
-
-    for (const alias of mode.aliases) aliases.add(alias);
-    const submode = mode.submodes.find(({ api }) => api === submodeKey);
-    if (submode)
-      for (const alias of submode.aliases) aliases.add(alias);
-
-    return [...aliases];
+    return [...mode?.aliases ?? [], ...submode?.aliases ?? []];
   }
 
   private toChoices(choices: LeaderboardChoice[]): APIApplicationCommandOptionChoice[] {

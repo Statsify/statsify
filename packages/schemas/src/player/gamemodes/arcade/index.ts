@@ -36,7 +36,6 @@ import type { APIData } from "@statsify/util";
 export const ARCADE_MODES = new GameModes([
   {
     api: "overall",
-    aliases: ["arcade"],
     description: "commands.options.arcade.overall",
     emoji: "emojis:arcade.overall",
   },
@@ -64,13 +63,11 @@ export const ARCADE_MODES = new GameModes([
   {
     api: "disasters",
     hypixel: "DISASTERS",
-    aliases: [],
     description: "commands.options.arcade.disasters",
     emoji: "emojis:arcade.disasters",
     submodes: [
       {
         api: "overall",
-        aliases: [],
         description: "commands.options.arcade.submodes.overall",
       },
       {
@@ -80,7 +77,6 @@ export const ARCADE_MODES = new GameModes([
       },
       {
         api: "deaths",
-        aliases: [],
         description: "commands.options.arcade.submodes.deaths",
       },
     ],
@@ -95,23 +91,19 @@ export const ARCADE_MODES = new GameModes([
   {
     api: "dropper",
     hypixel: "DROPPER",
-    aliases: [],
     description: "commands.options.arcade.dropper",
     emoji: "emojis:arcade.dropper",
     submodes: [
       {
         api: "overall",
-        aliases: [],
         description: "commands.options.arcade.submodes.overall",
       },
       {
         api: "bestTimes",
-        aliases: ["times"],
         description: "commands.options.arcade.submodes.bestTimes",
       },
       {
         api: "completions",
-        aliases: ["comps"],
         description: "commands.options.arcade.submodes.completions",
       },
     ],
@@ -180,12 +172,10 @@ export const ARCADE_MODES = new GameModes([
     submodes: [
       {
         api: "overall",
-        aliases: [],
         description: "commands.options.arcade.submodes.overall",
       },
       {
         api: "roundWins",
-        aliases: ["rounds"],
         description: "commands.options.arcade.submodes.roundWins",
       },
     ],
@@ -206,7 +196,6 @@ export const ARCADE_MODES = new GameModes([
   },
   {
     api: "seasonal",
-    aliases: [],
     description: "commands.options.arcade.seasonal",
     emoji: "emojis:arcade.seasonal",
   },
@@ -225,7 +214,6 @@ export const ARCADE_MODES = new GameModes([
     submodes: [
       {
         api: "overall",
-        aliases: [],
         description: "commands.options.arcade.submodes.zombies.overall",
         emoji: "emojis:zombies.overall",
       },
@@ -249,7 +237,6 @@ export const ARCADE_MODES = new GameModes([
       },
       {
         api: "prison",
-        aliases: [],
         description: "commands.options.arcade.submodes.zombies.prison",
         emoji: "emojis:zombies.prison",
       },
