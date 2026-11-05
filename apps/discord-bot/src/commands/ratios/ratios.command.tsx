@@ -207,12 +207,11 @@ export class RatiosCommand {
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
 
     const getPage = (
-      label: string,
       mode: GameModeWithSubModes<T>,
       ratios: RatioWithStats[],
       submode?: GameModeWithSubModes<T>["submodes"][number]
     ): SubPage => ({
-      label,
+      label: (submode ?? mode).formatted,
       generator: async (t) => {
         const background = await getBackground(...mapBackground(modes, mode.api, submode?.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
 
@@ -249,13 +248,13 @@ export class RatiosCommand {
           modeStats[submode.api]
         );
 
-        return ratios.length > 0 ? [getPage(submode.formatted, mode, ratios, submode)] : [];
+        return ratios.length > 0 ? [getPage(mode, ratios, submode)] : [];
       });
 
       if (subPages.length > 0) return [{ label: mode.formatted, subPages }];
 
       const ratios = this.getRatios(modeClass, modeStats);
-      return ratios.length > 0 ? [getPage(mode.formatted, mode, ratios)] : [];
+      return ratios.length > 0 ? [getPage(mode, ratios)] : [];
     });
 
     return paginate(context, pages);
