@@ -32,7 +32,7 @@ const CUSTOM_EMOJI_REGEX = /^<a?:\w+:(\d+)>$/;
 const PIXEL_EMOJI_URL = "https://cdn.jsdelivr.net/gh/AmberWat/PixelTwemojiMC-18@v8.0/assets";
 const PIXEL_EMOJI_SIZE = 18;
 
-// The same emoji arrives with or without U+FE0F depending on the keyboard, so lookups ignore it
+// Keyboards send the same emoji with or without U+FE0F
 const withoutVariationSelector = (emoji: string) => emoji.replaceAll("\uFE0F", "");
 
 interface PixelEmoji {
@@ -183,7 +183,7 @@ export class BadgeCommand {
 
     if (!emoji) throw new ErrorMessage("errors.invalidBadgeEmoji");
 
-    // At 2x the pixel art stays sharp and is as tall as Minecraft draws it beside the name
+    // An integer scale keeps the pixel art sharp
     const canvas = createCanvas(PIXEL_EMOJI_SIZE * 2, PIXEL_EMOJI_SIZE * 2);
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
@@ -231,8 +231,7 @@ export class BadgeCommand {
       }
     }
 
-    // The pack draws multi-character emoji (skin tones, flags, keycaps, ZWJ sequences) from
-    // single characters it remaps them to
+    // Multi-character emoji (skin tones, flags, ZWJ sequences) are drawn as one remapped character
     for (const [sequence, char] of Object.entries(remappings.data)) {
       const emoji = emojis.get(char);
       if (emoji) emojis.set(withoutVariationSelector(sequence), emoji);
