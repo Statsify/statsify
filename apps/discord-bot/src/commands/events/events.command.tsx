@@ -15,6 +15,7 @@ import {
 } from "@statsify/discord";
 import { EVENT_TYPES, GENERAL_MODES } from "@statsify/schemas";
 import { EventsProfile } from "./events.profile.js";
+import { all } from "better-all";
 import { arrayGroup } from "@statsify/util";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -28,14 +29,21 @@ export class EventsCommand {
   public async run(context: CommandContext) {
     const user = context.getUser();
     const t = context.t();
+    const tag = context.option<string>("player");
 
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    const selfUuid = tag ? undefined : user?.uuid;
+    const { apiService } = this;
 
-    const [logo, skin, badge] = await Promise.all([
-      getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid, user),
-      this.apiService.getUserBadge(player.uuid),
-    ]);
+    const { player, logo, skin, badge } = await all({
+      player: () => apiService.getPlayer(tag, user),
+      logo: () => getLogo(user),
+      async skin() {
+        return apiService.getPlayerSkin(selfUuid ?? (await this.$.player).uuid, user);
+      },
+      async badge() {
+        return apiService.getUserBadge(selfUuid ?? (await this.$.player).uuid);
+      },
+    });
 
     return scrollingPagination(
       context,

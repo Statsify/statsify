@@ -23,6 +23,7 @@ import { GuildMemberProfile } from "./guild-member.profile.js";
 import { GuildProfile, GuildProfileProps } from "./guild.profile.js";
 import { GuildQuery } from "@statsify/api-client";
 import { GuildTopSubCommand } from "./guild-top.subcommand.js";
+import { all } from "better-all";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
@@ -38,19 +39,27 @@ export class GuildCommand extends GuildTopSubCommand {
     const user = context.getUser();
     const t = context.t();
 
-    const guild = await this.getGuild(context);
+    const { apiService } = this;
 
-    const guildMaster = guild.members.find((m) => GuildMember.isGuildMaster(m));
+    const { guild, guildMaster, gameIcons, guildRanking, skin, logo, background } = await all({
+      guild: () => this.getGuild(context),
+      async guildMaster() {
+        const guildMaster = (await this.$.guild).members.find((m) => GuildMember.isGuildMaster(m));
 
-    if (!guildMaster) throw new ErrorMessage("errors.unknown");
+        if (!guildMaster) throw new ErrorMessage("errors.unknown");
 
-    const [gameIcons, guildRanking, skin, logo, background] = await Promise.all([
-      getAllGameIcons(),
-      this.apiService.getGuildRankings(["exp"], guild.id),
-      this.apiService.getPlayerHead(guildMaster.uuid, 16),
-      getLogo(user),
-      getBackground("hypixel", "overall"),
-    ]);
+        return guildMaster;
+      },
+      gameIcons: () => getAllGameIcons(),
+      async guildRanking() {
+        return apiService.getGuildRankings(["exp"], (await this.$.guild).id);
+      },
+      async skin() {
+        return apiService.getPlayerHead((await this.$.guildMaster).uuid, 16);
+      },
+      logo: () => getLogo(user),
+      background: () => getBackground("hypixel", "overall"),
+    });
 
     const ranking = guildRanking[0]?.rank;
 
@@ -93,9 +102,8 @@ export class GuildCommand extends GuildTopSubCommand {
     const user = context.getUser();
     const t = context.t();
 
-    const guild = await this.getGuild(context);
-
-    const [logo, background] = await Promise.all([
+    const [guild, logo, background] = await Promise.all([
+      this.getGuild(context),
       getLogo(user),
       getBackground("hypixel", "overall"),
     ]);
@@ -121,19 +129,26 @@ export class GuildCommand extends GuildTopSubCommand {
     const user = context.getUser();
     const t = context.t();
 
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    const tag = context.option<string>("player");
 
-    const guild = await this.apiService.getGuild(
-      player.guildId || player.uuid,
-      player.guildId ? GuildQuery.ID : GuildQuery.PLAYER
-    );
+    const selfUuid = tag ? undefined : user?.uuid;
+    const { apiService } = this;
 
-    const [skin, badge, logo, background] = await Promise.all([
-      this.apiService.getPlayerSkin(player.uuid, user),
-      this.apiService.getUserBadge(player.uuid),
-      getLogo(user),
-      getBackground("hypixel", "overall"),
-    ]);
+    const { player, guild, skin, badge, logo, background } = await all({
+      player: () => apiService.getPlayer(tag, user),
+      async guild() {
+        const { guildId, uuid } = await this.$.player;
+        return apiService.getGuild(guildId || uuid, guildId ? GuildQuery.ID : GuildQuery.PLAYER);
+      },
+      async skin() {
+        return apiService.getPlayerSkin(selfUuid ?? (await this.$.player).uuid, user);
+      },
+      async badge() {
+        return apiService.getUserBadge(selfUuid ?? (await this.$.player).uuid);
+      },
+      logo: () => getLogo(user),
+      background: () => getBackground("hypixel", "overall"),
+    });
 
     const canvas = render(
       <GuildMemberProfile
