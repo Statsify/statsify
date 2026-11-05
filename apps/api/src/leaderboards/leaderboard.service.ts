@@ -59,7 +59,6 @@ export abstract class LeaderboardService {
       const key = `${name}.${String(field)}`;
 
       if (remove || !isScore(value)) {
-        // Redis only has a score for the player if their stored document did
         if (previous && !isScore(previous[field] ?? metadata.store.default)) continue;
 
         pipeline.zrem(key, id);
