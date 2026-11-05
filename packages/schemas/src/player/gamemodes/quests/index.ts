@@ -95,6 +95,7 @@ export const OverallQuests = createQuestsInstance(QuestTime.Overall, questModes)
 
 export interface GameQuests {
   total: number;
+  progress?: Record<string, number>;
 }
 
 export type GenericQuestInstance = {
@@ -163,4 +164,4 @@ export class Quests {
   }
 }
 
-export { QuestTime } from "./util.js";
+export { QUEST_TARGETS, QuestTime } from "./util.js";

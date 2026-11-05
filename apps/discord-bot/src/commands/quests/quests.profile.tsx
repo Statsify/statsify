@@ -18,6 +18,7 @@ import {
   METADATA_KEY,
   MonthlyQuests,
   OverallQuests,
+  QUEST_TARGETS,
   QuestModes,
   QuestTime,
   User,
@@ -63,6 +64,9 @@ const questMetadata: Record<QuestTime, ReturnType<typeof getQuestMetadata>> = {
   [QuestTime.Overall]: getQuestMetadata(OverallQuests),
 };
 
+const getQuestEntries = (quests: GameQuests) =>
+  Object.entries(quests).filter(([key]) => key !== "total" && key !== "progress");
+
 export interface QuestProfileProps extends Omit<BaseProfileProps, "time"> {
   mode: GameMode<QuestModes>;
   gameIcons: Record<GameId, Image>;
@@ -94,9 +98,8 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
   const BOX_COLOR = (colorPalette?.boxes?.color as string) ?? Box.DEFAULT_COLOR;
 
   const entries: GameEntry[] = questEntries
-    // Require more than just a total field
-    .filter(([, q]) => Object.keys(q).length > 1)
-    .map(([k, v]) => [k, v, Object.keys(v).length - 1] as const)
+    .map(([k, v]) => [k, v, getQuestEntries(v).length] as const)
+    .filter(([, , total]) => total > 0)
     .sort((a, b) => ratio(b[1]?.total ?? 0, b[2]) - ratio(a[1]?.total ?? 0, a[2]))
     .map(([k, v, total]) => {
       const completed = v.total;
@@ -147,12 +150,14 @@ interface GameTableProps {
 
 const GameTable = ({ quests, t, game, time, logos: [cross, check] }: GameTableProps) => {
   const isOverall = time === QuestTime.Overall;
+  const targets = QUEST_TARGETS[FormattedGame[game]];
 
-  const entries = Object.entries(quests)
-    .filter(([k, v]) => k !== "total" && v !== null)
+  const entries = getQuestEntries(quests)
+    .filter(([, v]) => v !== null)
     .sort((a, b) => b[1] - a[1])
     .map(([quest, completions]) => {
       const name = questMetadata[time][game][quest].leaderboard.name;
+      const progress = quests.progress?.[quest];
 
       return (
         <box width="100%">
@@ -162,7 +167,9 @@ const GameTable = ({ quests, t, game, time, logos: [cross, check] }: GameTablePr
           <div width="remaining" />
           {isOverall ?
             <text>{t(completions)}</text> :
-            <img margin={2} image={completions === 0 ? cross : check} />}
+            completions === 0 && progress ?
+              <text>§6{t(progress)}/{t(targets[quest])}</text> :
+              <img margin={2} image={completions === 0 ? cross : check} />}
         </box>
       );
     });
