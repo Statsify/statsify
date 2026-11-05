@@ -44,7 +44,6 @@ import {
   Command,
   CommandContext,
   EmbedBuilder,
-  type LocalizationString,
   type LocalizeFunction,
   Page,
   paginate,
@@ -81,16 +80,12 @@ import { WarlordsProfile } from "../warlords/warlords.profile.js";
 import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
 import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
-import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "../arcade/arcade.command.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getDuelsModeEmojis } from "../duels/duels.command.js";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
-import type { BaseProfileProps, ModeEmoji } from "#commands/base.hypixel-command";
+import { type BaseProfileProps, type ModeEmoji, localizeKey } from "#commands/base.hypixel-command";
 import type { HistoricalTimeData } from "#components";
-
-const metadataString = (key?: string): LocalizationString | undefined =>
-  key ? (t) => t(key) : undefined;
 
 @Command({ description: "session stats" })
 export class SessionCommand {
@@ -107,8 +102,6 @@ export class SessionCommand {
         if (mode.api === "partyGames") return mode.submodes.filter((submode) => submode.api !== "roundWins");
         return mode.submodes;
       },
-      getModeEmojis: getArcadeModeEmojis,
-      getSubModeEmojis: getArcadeSubModeEmojis,
     });
   }
 
@@ -401,8 +394,8 @@ export class SessionCommand {
 
       if (submodes.length === 0) return {
         label: mode.formatted,
-        description: metadataString(mode.description),
-        emoji: modeEmojis[index] ?? metadataString(mode.emoji),
+        description: localizeKey(mode.description),
+        emoji: modeEmojis[index] ?? localizeKey(mode.emoji),
         generator: async (t) => {
           const background = await getBackground(...mapBackground(modes, mode.api));
 
@@ -440,8 +433,8 @@ export class SessionCommand {
 
       const subPages = submodes.map((submode, index): SubPage => ({
         label: submode.formatted,
-        description: metadataString(submode.description),
-        emoji: submodeEmojis[index] ?? metadataString(submode.emoji),
+        description: localizeKey(submode.description),
+        emoji: submodeEmojis[index] ?? localizeKey(submode.emoji),
         generator: async (t) => {
           const background = await getBackground(...mapBackground(modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
 
@@ -477,8 +470,8 @@ export class SessionCommand {
 
       return {
         label: mode.formatted,
-        description: metadataString(mode.description),
-        emoji: modeEmojis[index] ?? metadataString(mode.emoji),
+        description: localizeKey(mode.description),
+        emoji: modeEmojis[index] ?? localizeKey(mode.emoji),
         subPages,
       };
     });

@@ -38,7 +38,6 @@ import {
   ApiService,
   Command,
   CommandContext,
-  LocalizationString,
   Page,
   paginate,
   PlayerArgument,
@@ -55,11 +54,10 @@ import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
+import { localizeKey } from "#commands/base.hypixel-command";
 import { render } from "@statsify/rendering";
 
 const args = [PlayerArgument];
-const metadataString = (key?: string): LocalizationString | undefined =>
-  key ? (t) => t(key) : undefined;
 
 @Command({ description: (t) => t("commands.ratios") })
 export class RatiosCommand {
@@ -209,8 +207,8 @@ export class RatiosCommand {
 
     const pages: Page[] = displayedModes.map((mode, index) => ({
       label: mode.formatted,
-      description: metadataString(mode.description),
-      emoji: metadataString(mode.emoji),
+      description: localizeKey(mode.description),
+      emoji: localizeKey(mode.emoji),
       generator: async (t) => {
         const background = await getBackground(...mapBackground(modes, mode.api));
 
