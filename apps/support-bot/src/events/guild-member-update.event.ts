@@ -17,7 +17,7 @@ import {
   GatewayDispatchEvents,
   GatewayGuildMemberUpdateDispatchData,
 } from "discord-api-types/v10";
-import { Logger, STATUS_COLORS } from "@statsify/logger";
+import { STATUS_COLORS, setRequestAttributes } from "@statsify/logger";
 import { Service } from "typedi";
 import { User, UserTier } from "@statsify/schemas";
 import { UserService } from "#services";
@@ -58,7 +58,6 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   private patreons: Set<string>;
 
   private loadedPremium: boolean;
-  private readonly logger = new Logger("GuildMemberUpdateEventListener");
 
   public constructor(
     private readonly userService: UserService,
@@ -249,7 +248,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   }
 
   private log(message: string) {
-    this.logger.verbose(message);
+    setRequestAttributes({ "statsify.premium.change": message });
 
     const embed = new EmbedBuilder()
       .color(message.includes("ADDING") ? STATUS_COLORS.success : STATUS_COLORS.error)

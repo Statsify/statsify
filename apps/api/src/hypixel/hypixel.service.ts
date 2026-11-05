@@ -17,13 +17,12 @@ import {
 } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { Logger } from "@statsify/logger";
-import { Observable, catchError, lastValueFrom, map, of, throwError } from "rxjs";
+import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
+import { getRequestAttributes, setRequestAttributes, setRequestError } from "@statsify/logger";
 import type { APIData } from "@statsify/util";
 
 @Injectable()
 export class HypixelService {
-  private readonly logger = new Logger("HypixelService");
   private resources = new Map<string, APIData>();
 
   public constructor(private readonly httpService: HttpService) {}
@@ -42,10 +41,7 @@ export class HypixelService {
           if (data.player) return new Player(data.player);
           return null;
         }),
-        catchError((err) => {
-          this.logger.error(err);
-          return of(null);
-        })
+        catchError(() => of(null))
       )
     );
   }
@@ -57,10 +53,7 @@ export class HypixelService {
           if (data.guild) return new Guild(data.guild);
           return null;
         }),
-        catchError((err) => {
-          this.logger.error(err);
-          return of(null);
-        })
+        catchError(() => of(null))
       )
     );
   }
@@ -72,10 +65,7 @@ export class HypixelService {
           if (data.games) return data.games.map((game: APIData) => new RecentGame(game));
           return [];
         }),
-        catchError((err) => {
-          this.logger.error(err);
-          return of([]);
-        })
+        catchError(() => of([]))
       )
     );
   }
@@ -87,10 +77,7 @@ export class HypixelService {
           if (data.session) return new Status(data.session);
           return null;
         }),
-        catchError((err) => {
-          this.logger.error(err);
-          return of(null);
-        })
+        catchError(() => of(null))
       )
     );
   }
@@ -99,10 +86,7 @@ export class HypixelService {
     return lastValueFrom(
       this.request<APIData>("/watchdogstats").pipe(
         map((data) => new Watchdog(data)),
-        catchError((err) => {
-          this.logger.error(err);
-          return of(null);
-        })
+        catchError(() => of(null))
       )
     );
   }
@@ -114,10 +98,7 @@ export class HypixelService {
           if (data.games) return new GameCounts(data.games);
           return null;
         }),
-        catchError((err) => {
-          this.logger.error(err);
-          return of(null);
-        })
+        catchError(() => of(null))
       )
     );
   }
@@ -127,10 +108,7 @@ export class HypixelService {
 
     const resource$ = this.request<APIData>(`/resources/${resource}`).pipe(
       map((data) => data),
-      catchError((err) => {
-        this.logger.error(err);
-        return of(null);
-      })
+      catchError(() => of(null))
     );
 
     const resourceData = await lastValueFrom(resource$);
@@ -141,16 +119,45 @@ export class HypixelService {
   }
 
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
+    const start = performance.now();
+
     return this.httpService.get(url, { params }).pipe(
+      tap({
+        next: (res) => this.recordRequest(start, res.status, res.headers["ratelimit-remaining"]),
+        error: (err) => this.recordRequest(start, err.response?.status, err.response?.headers["ratelimit-remaining"]),
+      }),
       map((res) => res.data),
-      catchError((err) =>
-        throwError(
-          () =>
-            new Error(`Fetching ${url} failed with reason: ${err.message}`, {
-              cause: err,
-            })
-        )
-      )
+      catchError((err) => {
+        const error = new Error(`Fetching ${url} failed with reason: ${err.message}`, { cause: err });
+        const status: number | undefined = err.response?.status;
+
+        setRequestError(error, {
+          code: status,
+          retryable: status === undefined || status === 429 || status >= 500,
+        });
+
+        return throwError(() => error);
+      })
     );
+  }
+
+  private recordRequest(start: number, status?: number, rateLimitRemaining?: string) {
+    const {
+      "hypixel.request.count": count = 0,
+      "hypixel.request.duration_ms": duration = 0,
+      "hypixel.response.status_codes": statuses,
+    } = getRequestAttributes();
+
+    setRequestAttributes({
+      "hypixel.request.count": count + 1,
+      "hypixel.request.duration_ms": Math.round(duration + performance.now() - start),
+    });
+
+    if (status === undefined) return;
+
+    setRequestAttributes({
+      "hypixel.response.status_codes": statuses ? `${statuses},${status}` : `${status}`,
+      ...(rateLimitRemaining !== undefined && { "hypixel.ratelimit.remaining": Number(rateLimitRemaining) }),
+    });
   }
 }

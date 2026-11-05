@@ -12,7 +12,7 @@ import {
   GatewayDispatchEvents,
   GatewayMessageCreateDispatchData,
 } from "discord-api-types/v10";
-import { Logger } from "@statsify/logger";
+import { setRequestAttributes } from "@statsify/logger";
 import { Service } from "typedi";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
 import { config } from "@statsify/util";
@@ -25,7 +25,6 @@ export class MessageCreateEventListener extends AbstractEventListener<GatewayDis
   public event = GatewayDispatchEvents.MessageCreate as const;
   private cache: Set<string>;
   private readonly job: SimpleIntervalJob;
-  private readonly logger = new Logger("MessageCreateEventListener");
 
   public constructor(
     private readonly apiService: ApiService,
@@ -63,7 +62,11 @@ export class MessageCreateEventListener extends AbstractEventListener<GatewayDis
       .catch(() => null);
 
     if (!player) {
-      this.logger.error(`Could not get player for ${user.id} | ${user.uuid}`);
+      setRequestAttributes({
+        "statsify.outcome": "error",
+        "statsify.user.uuid": user.uuid,
+        "error.message": "Could not get the verified user's player",
+      });
       return;
     }
 

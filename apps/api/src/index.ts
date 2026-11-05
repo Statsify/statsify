@@ -11,7 +11,14 @@ import packageJson from "../package.json" with { type: "json" };
 import { AppModule } from "./app.module.js";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { Logger, NestLogger, setRequestAttributes } from "@statsify/logger";
+import {
+  Logger,
+  NestLogger,
+  type RequestOutcome,
+  emitRequestEvent,
+  getRequestAttributes,
+  setRequestAttributes,
+} from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
@@ -26,6 +33,15 @@ const logger = new Logger("api");
 
 process.on("uncaughtException", (error) => logger.error(error));
 process.on("unhandledRejection", (reason) => logger.error(reason));
+
+// Half of the Hypixel client's 5 second timeout
+const SLOW_REQUEST_MS = 2500;
+
+const getOutcome = (status: number): RequestOutcome => {
+  if (status >= 500) return "error";
+  if (status >= 400) return "message";
+  return "success";
+};
 
 const mediaRoot = await config("api.mediaRoot");
 
@@ -47,12 +63,32 @@ adapter
   );
 
 adapter.getInstance().addHook("onRequest", (request, _reply, done) => {
-  const { player, uuid, guild } = request.query as Record<string, string | undefined>;
+  const { player, uuid, guild, cache } = request.query as Record<string, string | undefined>;
 
   setRequestAttributes({
-    "statsify.api.route": request.routeOptions.url,
+    "http.request.method": request.method,
+    "http.route": request.routeOptions.url,
     "statsify.player.tag": player ?? uuid,
     "statsify.guild.tag": guild,
+    "statsify.cache.level": cache,
+  });
+
+  done();
+});
+
+// A Nest interceptor would miss requests the guards reject
+adapter.getInstance().addHook("onResponse", (request, reply, done) => {
+  const status = reply.statusCode;
+  const { "statsify.outcome": outcome } = getRequestAttributes();
+
+  setRequestAttributes({
+    "http.response.status_code": status,
+    "statsify.outcome": outcome ?? getOutcome(status),
+  });
+
+  emitRequestEvent([request.method, request.routeOptions.url].filter(Boolean).join(" "), {
+    durationMs: reply.elapsedTime,
+    slowMs: SLOW_REQUEST_MS,
   });
 
   done();

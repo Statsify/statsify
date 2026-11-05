@@ -9,7 +9,7 @@
 import { AbstractEventListener } from "./abstract-event.listener.js";
 import { Container } from "typedi";
 import { GatewayDispatchEvents } from "discord-api-types/v10";
-import { Logger } from "@statsify/logger";
+import { Logger, setRequestAttributes, withRequestEvent } from "@statsify/logger";
 import { WebsocketShard } from "tiny-discord";
 import { readdir } from "node:fs/promises";
 import { statSync } from "node:fs";
@@ -17,6 +17,8 @@ import { pathToFileURL } from "node:url";
 import { join } from "node:path";
 
 const logger = new Logger("EventLoader");
+
+const SLOW_EVENT_MS = 5000;
 
 export async function loadEvents(websocket: WebsocketShard, dir: string) {
   const files = await getEventFileUrls(dir);
@@ -27,7 +29,15 @@ export async function loadEvents(websocket: WebsocketShard, dir: string) {
 
   websocket.on("event", (event) => {
     const listener = eventsMap.get(event.t as GatewayDispatchEvents);
-    if (listener) listener.onEvent(event.d);
+    if (!listener) return;
+
+    return withRequestEvent(
+      () => {
+        setRequestAttributes({ "discord.gateway.event": event.t });
+        return listener.onEvent(event.d);
+      },
+      () => ({ message: `gateway ${event.t}`, slowMs: SLOW_EVENT_MS })
+    );
   });
 }
 

@@ -11,6 +11,7 @@ import chalk from "chalk";
 import { DateTime } from "luxon";
 import { config } from "@statsify/util";
 import { inspect } from "node:util";
+import type { RequestAttributes } from "./event.js";
 
 export type LogLevel = "log" | "error" | "warn" | "debug" | "verbose" | "fatal";
 
@@ -41,30 +42,7 @@ const SentryLogByLogLevel: Record<LogLevel, typeof Sentry.logger.info> = {
   fatal: Sentry.logger.fatal,
 };
 
-const isProduction = await config("environment") === "prod";
-
-// Sentry doesn't scrub these, so no Discord usernames or API keys
-export type RequestAttributes = {
-  "discord.command"?: string;
-  "discord.guild.id"?: string;
-  "discord.locale"?: string;
-  "statsify.user.tier"?: string;
-  "statsify.user.uuid"?: string;
-  "statsify.mode"?: string;
-  "statsify.submode"?: string;
-  "statsify.outcome"?: "message";
-  "statsify.api.route"?: string;
-  "statsify.api.role"?: string;
-  "statsify.player"?: string;
-  "statsify.player.tag"?: string;
-  "statsify.guild.tag"?: string;
-  "statsify.cache.hit"?: boolean;
-};
-
-export const setRequestAttributes = (attributes: RequestAttributes) => {
-  Sentry.setAttributes(attributes);
-  Sentry.setTags(attributes);
-};
+export const isProduction = await config("environment") === "prod";
 
 const format = (message: unknown) => {
   if (typeof message === "string") return message;
@@ -72,8 +50,15 @@ const format = (message: unknown) => {
   return inspect(message, { depth: 3, breakLength: Infinity });
 };
 
+export const captureError = (error: unknown) => {
+  const span = Sentry.getActiveSpan();
+  if (span) Sentry.getRootSpan(span).setStatus({ code: 2, message: "internal_error" });
+
+  Sentry.captureException(error);
+};
+
 /**
- * Prints `{icon} {context} {time} {message}` and sends the message to Sentry Logs with its attributes.
+ * Prints `{icon} {context} {time} {message} {attributes}` and sends the message to Sentry Logs with its attributes.
  * Errors passed to `error` or `fatal` are also captured as Sentry issues.
  */
 export class Logger {
@@ -105,27 +90,32 @@ export class Logger {
     this.write("fatal", message, attributes);
   }
 
-  private write(level: LogLevel, message: unknown, attributes?: RequestAttributes) {
+  /**
+   * Prints to stdout or stderr without sending to Sentry Logs.
+   */
+  public print(level: LogLevel, message: unknown, attributes: RequestAttributes = {}) {
     const isError = level === "error" || level === "fatal";
-    const output = format(message);
-
-    if (isError && message instanceof Error) {
-      const span = Sentry.getActiveSpan();
-      if (span) Sentry.getRootSpan(span).setStatus({ code: 2, message: "internal_error" });
-
-      Sentry.captureException(message);
-    }
-
     const color = ColorByLogLevel[level];
     const timeStamp = Logger.getTimeStamp();
+
+    const fields = Object.entries(attributes)
+      .filter(([, value]) => value !== undefined)
+      .map(([key, value]) => ` ${key}=${value}`)
+      .join("");
 
     process[isError ? "stderr" : "stdout"].write(
       `${chalk.bold(isError ? "📉" : "📈")} ${chalk.hex(color.toString(16))(this.context)} ${chalk.gray(
         `${timeStamp}${isProduction ? "" : "ms"}`
-      )} ${output}\n`
+      )} ${format(message)}${chalk.gray(fields)}\n`
     );
+  }
 
-    SentryLogByLogLevel[level](message instanceof Error ? message.message : output, {
+  private write(level: LogLevel, message: unknown, attributes?: RequestAttributes) {
+    if ((level === "error" || level === "fatal") && message instanceof Error) captureError(message);
+
+    this.print(level, message, attributes);
+
+    SentryLogByLogLevel[level](message instanceof Error ? message.message : format(message), {
       context: this.context,
       ...(message instanceof Error && { "error.type": message.name }),
       ...attributes,

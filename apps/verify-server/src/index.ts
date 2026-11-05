@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Logger } from "@statsify/logger";
+import { Logger, setRequestAttributes, withRequestEvent } from "@statsify/logger";
 import { UserLogo, VerifyCode } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { connect } from "mongoose";
@@ -20,6 +20,8 @@ const logger = new Logger("verify-server");
 
 process.on("uncaughtException", (error) => logger.error(error));
 process.on("unhandledRejection", (reason) => logger.error(reason));
+
+const SLOW_LOGIN_MS = 2500;
 
 const codeCreatedMessage = (code: string, time: Date) => {
   // Add on the expirey time to the time provided by mongo
@@ -59,25 +61,27 @@ const server = createServer({
 
 logger.log("Server Started");
 
-server.on("login", async (client) => {
-  try {
-    logger.verbose(`${client.username} [${client.uuid}] has joined`);
+server.on("login", (client) =>
+  withRequestEvent(
+    async () => {
+      const uuid = client.uuid.replaceAll("-", "");
+      setRequestAttributes({ "statsify.player": uuid });
 
-    const uuid = client.uuid.replaceAll("-", "");
+      const previousVerifyCode = await verifyCodesModel.findOne({ uuid }).lean().exec();
 
-    const previousVerifyCode = await verifyCodesModel.findOne({ uuid }).lean().exec();
+      if (previousVerifyCode) {
+        setRequestAttributes({ "statsify.verify.code": "existing" });
+        return client.end(
+          codeCreatedMessage(previousVerifyCode.code, previousVerifyCode.expireAt)
+        );
+      }
 
-    if (previousVerifyCode)
-      return client.end(
-        codeCreatedMessage(previousVerifyCode.code, previousVerifyCode.expireAt)
-      );
+      const code = await generateCode(verifyCodesModel);
+      const verifyCode = await verifyCodesModel.create(new VerifyCode(uuid, code));
 
-    const code = await generateCode(verifyCodesModel);
-    const verifyCode = await verifyCodesModel.create(new VerifyCode(uuid, code));
-
-    client.end(codeCreatedMessage(verifyCode.code, verifyCode.expireAt));
-    logger.verbose(`${client.username} has been assigned to the code ${verifyCode.code}`);
-  } catch (error) {
-    logger.error(error);
-  }
-});
+      setRequestAttributes({ "statsify.verify.code": "created" });
+      client.end(codeCreatedMessage(verifyCode.code, verifyCode.expireAt));
+    },
+    () => ({ message: "login", slowMs: SLOW_LOGIN_MS })
+  )
+);

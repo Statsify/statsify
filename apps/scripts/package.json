@@ -9,7 +9,7 @@
     "lint:ci": "oxlint --format=github",
     "api-key": "node src/api-key.js",
     "delete-sessions": "node src/delete-sessions.js",
-    "limit-redis": "node src/limit-redis.js",
+    "limit-redis": "node --import ./src/instrument.js src/limit-redis.js",
     "purge-repo": "node src/purge-repo.js",
     "rank-emojis": "node src/rank-emojis.js",
     "timestamp": "node --no-warnings src/timestamp.js",
@@ -17,6 +17,7 @@
     "blur-backgrounds": "node src/blur-backgrounds.ts"
   },
   "dependencies": {
+    "@sentry/node": "^11.8.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
