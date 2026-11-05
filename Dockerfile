@@ -1,6 +1,5 @@
-FROM node:24.7.0-bookworm AS base
+FROM node:24.22.1-bookworm AS base
 ENV CI=true TURBO_TELEMETRY_DISABLED=1
-# Node 24.7.0's corepack can't run pnpm 11 or later
 RUN --mount=type=bind,source=package.json,target=/tmp/package.json \
   npm install -g "$(node -p 'require("/tmp/package.json").packageManager')"
 WORKDIR /app
