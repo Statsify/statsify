@@ -9,7 +9,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Guild, getLeaderboardFields } from "@statsify/schemas";
 import {
-  IsEnum,
   IsInt,
   IsOptional,
   IsString,
@@ -17,12 +16,13 @@ import {
   Min,
   MinLength,
 } from "class-validator";
+import { IsLeaderboardField } from "./leaderboard-field.decorator.js";
 import { Transform } from "class-transformer";
 
 const fields = getLeaderboardFields(Guild).map(([key]) => key);
 
 export class GuildLeaderboardDto {
-  @IsEnum(fields)
+  @IsLeaderboardField(fields)
   @ApiProperty({ enum: fields })
   public field: string;
 
