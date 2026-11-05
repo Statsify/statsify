@@ -28,7 +28,7 @@ const entries = Object.entries(
 );
 
 const FUSE_OPTIONS = {
-  keys: ["name", "value", "aliases"],
+  keys: ["name", "aliases"],
   includeScore: false,
   shouldSort: true,
   isCaseSensitive: false,
