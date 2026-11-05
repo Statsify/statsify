@@ -9,6 +9,7 @@
 import {
   CURRENCIES,
   DEFAULT_HOTBAR,
+  DEFAULT_QUICK_BUY,
   EMPTY_SLOT,
   HOTBAR_CATEGORIES,
   HOTBAR_MANAGER,
@@ -48,9 +49,9 @@ function quickBuyLore({ cost: [amount, currency], description = [], upgradable }
   ];
 }
 
-/** The BedWars item shop open on Quick Buy, as 54 slots, with a player's quick buy from favourites_2 */
-export function fromBedwarsQuickBuy(favourites: string): (ItemStack | undefined)[] {
-  const tokens = favourites.split(",");
+/** The BedWars item shop open on Quick Buy, as 54 slots, with a player's quick buy from favourites_2 or else the default */
+export function fromBedwarsQuickBuy(favourites: string | null | undefined): (ItemStack | undefined)[] {
+  const tokens = (favourites ?? DEFAULT_QUICK_BUY).split(",");
   const slots: (ItemStack | undefined)[] = Array.from({ length: SHOP_ROWS * SHOP_COLUMNS });
 
   for (const [index, category] of SHOP_CATEGORIES.entries()) {
