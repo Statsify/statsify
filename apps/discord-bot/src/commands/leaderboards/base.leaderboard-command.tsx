@@ -246,7 +246,7 @@ export class BaseLeaderboardCommand {
       cache.clear();
     }, 300_000);
 
-    currentPage = page || currentPage;
+    currentPage = page ?? currentPage;
 
     return { ...message, components: [row] };
   }
