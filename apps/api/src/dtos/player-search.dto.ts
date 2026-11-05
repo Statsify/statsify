@@ -7,12 +7,11 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString, MaxLength } from "class-validator";
+import { IsString, MaxLength } from "class-validator";
 
 export class PlayerSearchDto {
-  @IsOptional()
   @IsString()
   @MaxLength(16)
-  @ApiProperty({ required: false })
-  public query?: string;
+  @ApiProperty()
+  public query: string;
 }
