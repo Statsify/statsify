@@ -11,6 +11,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiServiceUnavailableResponse,
   ApiTags,
 } from "@nestjs/swagger";
 import { Auth, AuthRole } from "#auth";
@@ -26,6 +27,7 @@ import {
   ErrorResponse,
   GetPlayerResponse,
   GetStatusResponse,
+  HypixelUnavailableException,
   PlayerNotFoundException,
   StatusNotFoundException,
 } from "@statsify/api-client";
@@ -41,16 +43,18 @@ export class PlayerController {
   @ApiOkResponse({ type: GetPlayerResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiNotFoundResponse({ type: PlayerNotFoundException })
+  @ApiServiceUnavailableResponse({ type: HypixelUnavailableException })
   @Auth()
   @Get()
   public async getPlayer(@Query() { player: tag, cache }: CachedPlayerDto) {
-    const player = await this.playerService.get(tag, cache);
+    const { player, hypixelError } = await this.playerService.getWithFallback(tag, cache);
 
     if (!player) throw new PlayerNotFoundException();
 
     return {
       success: !!player,
       player,
+      hypixelUnavailable: Boolean(hypixelError),
     };
   }
 
@@ -86,6 +90,7 @@ export class PlayerController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiNotFoundResponse({ type: StatusNotFoundException })
   @ApiNotFoundResponse({ type: PlayerNotFoundException })
+  @ApiServiceUnavailableResponse({ type: HypixelUnavailableException })
   @Auth({ weight: 2 })
   @Get("/status")
   public async getStatus(@Query() { player: tag }: PlayerDto) {

@@ -14,6 +14,7 @@ import {
   GUILD_ID_REGEX,
   GuildNotFoundException,
   GuildQuery,
+  HypixelUnavailableException,
   LeaderboardQuery,
   PlayerNotFoundException,
   SessionNotFoundException,
@@ -54,6 +55,7 @@ export class ApiService extends StatsifyApiService {
         const error = err.response.data as PlayerNotFoundException;
 
         if (error.message === "player") throw this.missingPlayer(type, tag);
+        if (error.message === "hypixel") throw this.hypixelUnavailable();
 
         throw this.unknownError();
       });
@@ -72,6 +74,7 @@ export class ApiService extends StatsifyApiService {
       const error = err.response.data as PlayerNotFoundException | SessionNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
+      if (error.message === "hypixel") throw this.hypixelUnavailable();
 
       if (error.message === "session") {
         const { displayName } = error as SessionNotFoundException;
@@ -103,6 +106,7 @@ export class ApiService extends StatsifyApiService {
         PlayerNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
+      if (error.message === "hypixel") throw this.hypixelUnavailable();
 
       if (error.message === "status") {
         const { displayName } = error as StatusNotFoundException;
@@ -179,6 +183,7 @@ export class ApiService extends StatsifyApiService {
       }
 
       if (error.message === "player") throw this.missingPlayer(playerType, input);
+      if (error.message === "hypixel") throw this.hypixelUnavailable();
 
       throw this.unknownError();
     });
@@ -191,6 +196,10 @@ export class ApiService extends StatsifyApiService {
   ) {
     return super.getPlayerLeaderboard(field, input, type).catch((err: AxiosError) => {
       if (!err.response || !err.response.data) throw this.unknownError();
+
+      const error = err.response.data as HypixelUnavailableException;
+      if (error.message === "hypixel") throw this.hypixelUnavailable();
+
       if ((err.response.data as PlayerNotFoundException).statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
     });
@@ -225,6 +234,15 @@ export class ApiService extends StatsifyApiService {
       if (error.message === "player") throw this.missingPlayer(type, tag);
 
       throw this.unknownError();
+    });
+  }
+
+  public override resetPlayerSession(tag: string) {
+    return super.resetPlayerSession(tag).catch((err: AxiosError) => {
+      const error = err.response?.data as HypixelUnavailableException | undefined;
+      if (error?.message === "hypixel") throw this.hypixelUnavailable();
+
+      throw err;
     });
   }
 
@@ -314,6 +332,10 @@ export class ApiService extends StatsifyApiService {
 
   public unknownError() {
     return new ErrorMessage("errors.unknown");
+  }
+
+  public hypixelUnavailable() {
+    return new ErrorMessage("errors.hypixelUnavailable");
   }
 
   private isDiscordId(tag: string) {
