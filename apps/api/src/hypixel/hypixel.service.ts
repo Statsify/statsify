@@ -155,12 +155,11 @@ export class HypixelService {
       parseHeader(headers["retry-after"]) ??
       DEFAULT_RATE_LIMIT_SECONDS;
 
-    const wasRateLimited = Date.now() < this.rateLimitedUntil;
-    this.rateLimitedUntil = Math.max(this.rateLimitedUntil, Date.now() + seconds * 1000);
-
-    if (!wasRateLimited) {
+    if (Date.now() >= this.rateLimitedUntil) {
       this.logger.warn(`Hypixel is rate limiting requests for the next ${seconds} seconds`);
     }
+
+    this.rateLimitedUntil = Math.max(this.rateLimitedUntil, Date.now() + seconds * 1000);
   }
 
   private rateLimitError() {
