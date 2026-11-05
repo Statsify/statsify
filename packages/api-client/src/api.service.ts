@@ -116,14 +116,6 @@ export class ApiService {
     );
   }
 
-  public getGuildAutocomplete(query: string) {
-    return this.requestKey<GetGuildSearchResponse, "guilds">(
-      "/guild/search",
-      "guilds",
-      { query }
-    );
-  }
-
   public getGuild(tag: string, type: GuildQuery) {
     return this.requestKey<GetGuildResponse, "guild">("/guild", "guild", {
       guild: tag,
@@ -152,6 +144,14 @@ export class ApiService {
       {
         body: { fields, id },
       }
+    );
+  }
+
+  public getGuildAutocomplete(query: string) {
+    return this.requestKey<GetGuildSearchResponse, "guilds">(
+      "/guild/search",
+      "guilds",
+      { query }
     );
   }
 
