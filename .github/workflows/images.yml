@@ -44,7 +44,6 @@ jobs:
       - name: Build and push
         run: |
           for app in $APPS; do
-            docker build --build-arg APP="$app" --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from "$IMAGE:$app-latest" \
-              -t "$IMAGE:$app-$GITHUB_SHA" -t "$IMAGE:$app-latest" .
+            docker build --build-arg APP="$app" -t "$IMAGE:$app-$GITHUB_SHA" -t "$IMAGE:$app-latest" .
           done
           docker push --all-tags "$IMAGE"
