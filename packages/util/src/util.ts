@@ -193,7 +193,7 @@ const TIME_UNITS: Record<string, number> = {
   y: MS * SECONDS * MINUTES * HOURS * MONTHS * YEARS,
 };
 
-// Reads back formatTime and formatRaceTime, or seconds like 1:23.45, into milliseconds
+// Reads formatTime or formatRaceTime output, or a time like 1:23.45, back into milliseconds
 export const parseTime = (input: string) => {
   const units = [...input.matchAll(/(\d*\.?\d+)\s*(mo|ms|[ydhms])/g)];
 

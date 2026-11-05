@@ -11,7 +11,6 @@ import { getLeaderboardField } from "./leaderboard-scanner.js";
 
 const SUFFIXES: Record<string, number> = { k: 1e3, m: 1e6, b: 1e9 };
 
-// Binary search for the lowest score that reaches the value, which needs searchBy to never go down
 function getLowestScore(searchBy: (score: number) => number, value: number) {
   let low = 0;
   let high = Number.MAX_SAFE_INTEGER;
@@ -29,8 +28,7 @@ function getLowestScore(searchBy: (score: number) => number, value: number) {
 }
 
 /**
- * Turns a value searched on a leaderboard, like `10k`, `500✫` or `1:23.45`, into the score the leaderboard is sorted by
- * @returns NaN if the value can't be read
+ * @returns The score a search like `10k`, `500✫` or `1:23.45` sorts at, or NaN if it can't be read
  */
 export function parseLeaderboardValue(
   constructor: Constructor,
