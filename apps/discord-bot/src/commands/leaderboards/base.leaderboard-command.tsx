@@ -93,36 +93,34 @@ export class BaseLeaderboardCommand {
 
     if (page === null) return message;
 
-    // Player leaderboard subcommands are named after the game in the field
-    const leaderboard = type === "player" ? field.replace(/^stats\./, "") : `guild.${field}`;
+    const leaderboard = `${context.getCommandName()}.${context.option<string>("leaderboard")}`;
 
-    const customId = (action: string | number) =>
+    const getCustomId = (action: string | number) =>
       createCustomId(LEADERBOARD_ROUTE, interaction.getUserId(), action, leaderboard);
 
     const row = new ActionRowBuilder([
       new ButtonBuilder()
         .emoji(t("emojis:up"))
         .style(ButtonStyle.Success)
-        .customId(customId(page - 1))
+        .customId(getCustomId(page - 1))
         .disable(page === 0),
       new ButtonBuilder()
         .emoji(t("emojis:down"))
         .style(ButtonStyle.Danger)
-        .customId(customId(page + 1)),
+        .customId(getCustomId(page + 1)),
       new ButtonBuilder()
         .emoji(t(`emojis:search.${type}`))
         .style(ButtonStyle.Primary)
-        .customId(customId(LeaderboardQuery.INPUT)),
+        .customId(getCustomId(LeaderboardQuery.INPUT)),
       new ButtonBuilder()
         .emoji(t("emojis:search.position"))
         .style(ButtonStyle.Primary)
-        .customId(customId(LeaderboardQuery.POSITION)),
+        .customId(getCustomId(LeaderboardQuery.POSITION)),
     ]);
 
     return { ...message, components: [row], attachments: [] };
   }
 
-  /** The first page for the command, otherwise the page or search a button or modal asks for */
   private getLeaderboardParams(interaction: Interaction): LeaderboardParams {
     if (interaction.isCommandInteraction()) return { input: 0, type: LeaderboardQuery.PAGE };
 
