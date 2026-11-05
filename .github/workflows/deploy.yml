@@ -6,12 +6,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  checks: write
-  contents: write
+  contents: read
+  packages: read
 
-concurrency:
-  group: deploy
-  cancel-in-progress: false
+concurrency: deploy
 
 jobs:
   images:
@@ -27,9 +25,6 @@ jobs:
     needs: images
     runs-on: core
     environment: production
-    permissions:
-      contents: read
-      packages: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
