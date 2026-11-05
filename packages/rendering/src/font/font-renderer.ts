@@ -57,11 +57,11 @@ const getGlyphRuns = ({ data, width, height }: ImageData) => {
 
 export class FontRenderer {
   private images: Map<string, Canvas>;
-  private glyphs: Map<string, GlyphRun[]>;
+  private glyphRuns: Map<string, GlyphRun[]>;
 
   public constructor(private gradient: boolean) {
     this.images = new Map();
-    this.glyphs = new Map();
+    this.glyphRuns = new Map();
   }
 
   public async loadImages(fontPath: string) {
@@ -338,14 +338,13 @@ export class FontRenderer {
       size,
     } = metadata;
 
-    // Characters repeat across a card, so scan each glyph's pixels once
-    let runs = this.glyphs.get(char);
+    let runs = this.glyphRuns.get(char);
 
     if (!runs) {
       runs = getGlyphRuns(
         image.getContext("2d").getImageData(charX, charY, width, height)
       );
-      this.glyphs.set(char, runs);
+      this.glyphRuns.set(char, runs);
     }
 
     ctx.filter = this.gradient ? "brightness(15%)" : "brightness(25%)";
