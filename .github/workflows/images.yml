@@ -32,8 +32,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # The images include the private assets, and a package this workflow created would take the
-      # repository's public visibility, so the package must already exist and refuse anonymous pulls
+      # The images hold the private assets, and a package this push created would be public like the repo
       - name: Check the package is private
         run: |
           docker manifest inspect "$IMAGE:api-latest" > /dev/null
@@ -46,7 +45,6 @@ jobs:
       - name: Build and push
         run: |
           for app in $APPS; do
-            docker build --build-arg APP="$app" --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from "$IMAGE:$app-latest" \
-              -t "$IMAGE:$app-$GITHUB_SHA" -t "$IMAGE:$app-latest" .
+            docker build --build-arg APP="$app" -t "$IMAGE:$app-$GITHUB_SHA" -t "$IMAGE:$app-latest" .
           done
           docker push --all-tags "$IMAGE"
