@@ -93,7 +93,7 @@ export const BedWarsPracticeProfile = ({
                 <Table.td
                   title={t(`stats.${record}`)}
                   value={practice.bridgingRecords[record] === 0 ? "§7N/A" : formatRaceTime(practice.bridgingRecords[record])}
-                  color="§b"
+                  color={record.startsWith("straight") ? "§e" : "§d"}
                   size="small"
                 />
               ))}
