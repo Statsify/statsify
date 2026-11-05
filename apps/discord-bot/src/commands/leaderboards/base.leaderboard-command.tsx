@@ -95,27 +95,27 @@ export class BaseLeaderboardCommand {
 
     const leaderboard = `${context.getCommandName()}.${context.option<string>("leaderboard")}`;
 
-    const customId = (action: string | number) =>
+    const getCustomId = (action: string | number) =>
       createCustomId(LEADERBOARD_ROUTE, interaction.getUserId(), action, leaderboard);
 
     const row = new ActionRowBuilder([
       new ButtonBuilder()
         .emoji(t("emojis:up"))
         .style(ButtonStyle.Success)
-        .customId(customId(page - 1))
+        .customId(getCustomId(page - 1))
         .disable(page === 0),
       new ButtonBuilder()
         .emoji(t("emojis:down"))
         .style(ButtonStyle.Danger)
-        .customId(customId(page + 1)),
+        .customId(getCustomId(page + 1)),
       new ButtonBuilder()
         .emoji(t(`emojis:search.${type}`))
         .style(ButtonStyle.Primary)
-        .customId(customId(LeaderboardQuery.INPUT)),
+        .customId(getCustomId(LeaderboardQuery.INPUT)),
       new ButtonBuilder()
         .emoji(t("emojis:search.position"))
         .style(ButtonStyle.Primary)
-        .customId(customId(LeaderboardQuery.POSITION)),
+        .customId(getCustomId(LeaderboardQuery.POSITION)),
     ]);
 
     return { ...message, components: [row], attachments: [] };
