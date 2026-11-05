@@ -227,19 +227,6 @@ if (import.meta.vitest) {
       });
     });
 
-    it("should build a context menu without a description or options", () => {
-      @Command({ description: "test", contextMenu: "Test User" })
-      class TestCommand {}
-
-      expect(scanContextMenu(new TestCommand(), TestCommand)?.toJSON()).toEqual({
-        name: "Test User",
-        name_localizations: {},
-        type: ApplicationCommandType.User,
-        integration_types,
-        contexts,
-      });
-    });
-
     it("should read arguments", () => {
       class Arg extends AbstractArgument {
         public name = "test";

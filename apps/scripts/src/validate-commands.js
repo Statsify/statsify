@@ -52,7 +52,6 @@ const chatInputCommandSchema = z.object({
   type: z.optional(z.literal(1)),
 });
 
-// User and message commands have no description or options
 const contextMenuCommandSchema = z.strictObject({
   name,
   name_localizations,
