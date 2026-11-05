@@ -80,7 +80,7 @@ setCanvasBackend(skiaCanvas);
   `playerInventoryOrder` puts a player inventory's hotbar last, as the game shows it.
 - `fromBedwarsQuickBuy(favourites)`: the 9 × 6 BedWars shop open on Quick Buy, with each
   item's count, cost and description. `src/adapters/bedwars-shop.ts` holds the shop as
-  Hypixel's own NBT has it.
+  Hypixel's own NBT has it. Without one, the default quick buy.
 - `fromBedwarsHotbar(favoriteSlots)`: a BedWars hotbar from `favorite_slots`, as the Hotbar
   Manager shows it. Without one, the default hotbar.
 - `fromDuelsKit(layout, key)`: a Duels `layout_*` kit. The key (`layout_uhc_duel_layout`,
