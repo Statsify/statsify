@@ -11,7 +11,7 @@ import packageJson from "../package.json" with { type: "json" };
 import { AppModule } from "./app.module.js";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { Logger, setRequestAttributes } from "@statsify/logger";
+import { Logger, NestLogger, setRequestAttributes } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
@@ -23,10 +23,9 @@ import { mkdir } from "node:fs/promises";
 const directory = import.meta.dirname;
 
 const logger = new Logger("api");
-const handleError = logger.error.bind(logger);
 
-process.on("uncaughtException", handleError);
-process.on("unhandledRejection", handleError);
+process.on("uncaughtException", (error) => logger.error(error));
+process.on("unhandledRejection", (reason) => logger.error(reason));
 
 const mediaRoot = await config("api.mediaRoot");
 
@@ -60,7 +59,7 @@ adapter.getInstance().addHook("onRequest", (request, _reply, done) => {
 });
 
 const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
-  logger: new Logger(),
+  logger: new NestLogger(),
 });
 
 // Validation using `class-validator` and `class-transformer`
