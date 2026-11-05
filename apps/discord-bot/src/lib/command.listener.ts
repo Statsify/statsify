@@ -19,7 +19,7 @@ import {
 import { Container } from "typedi";
 import type { APIApplicationCommandInteractionDataBasicOption } from "discord-api-types/v10";
 import { STATUS_COLORS, setRequestAttributes } from "@statsify/logger";
-import { User, UserTier } from "@statsify/schemas";
+import { User } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { getAssetPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
@@ -66,14 +66,17 @@ export class CommandListener extends AbstractCommandListener {
     );
 
     const options = (data.options ?? []) as APIApplicationCommandInteractionDataBasicOption[];
-    Sentry.setContext("options", Object.fromEntries(options.map(({ name, value }) => [name, value])));
+    Sentry.setContext(
+      "options",
+      Object.fromEntries(options.map(({ name, value }) => [name, value]))
+    );
 
     const user = await this.apiService.getUser(id);
 
     Sentry.setUser({ id, theme: user?.theme, serverMember: user?.serverMember });
 
     setRequestAttributes({
-      "statsify.user.tier": user?.tier ?? UserTier.NONE,
+      "statsify.user.tier": User.getTierName(user),
       "statsify.user.uuid": user?.uuid,
     });
 

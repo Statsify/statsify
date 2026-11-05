@@ -275,17 +275,16 @@ async function contentToMessage(
   if (content instanceof EmbedBuilder)
     return new Message({ embeds: [content] });
   if (content instanceof Canvas)
-    return Sentry.startSpan({ op: "image.encode", name: "Encode PNG" }, async () =>
-      new Message({
-        files: [
-          {
-            name: "image.png",
-            data: await content.toBuffer("png"),
-            type: "image/png",
-          },
-        ],
-        attachments: [],
-      }));
+    return new Message({
+      files: [
+        {
+          name: "image.png",
+          data: await Sentry.startSpan({ op: "image.encode", name: "Encode PNG" }, () => content.toBuffer("png")),
+          type: "image/png",
+        },
+      ],
+      attachments: [],
+    });
 
   return new Message(content);
 }

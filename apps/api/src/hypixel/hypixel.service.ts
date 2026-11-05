@@ -17,8 +17,8 @@ import {
 } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { Logger, setRequestAttributes } from "@statsify/logger";
-import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
+import { Logger } from "@statsify/logger";
+import { Observable, catchError, lastValueFrom, map, of, throwError } from "rxjs";
 import type { APIData } from "@statsify/util";
 
 @Injectable()
@@ -142,18 +142,15 @@ export class HypixelService {
 
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
     return this.httpService.get(url, { params }).pipe(
-      tap((res) => setRequestAttributes({ "hypixel.status": res.status })),
       map((res) => res.data),
-      catchError((err) => {
-        setRequestAttributes({ "hypixel.status": err.response?.status });
-
-        return throwError(
+      catchError((err) =>
+        throwError(
           () =>
             new Error(`Fetching ${url} failed with reason: ${err.message}`, {
               cause: err,
             })
-        );
-      })
+        )
+      )
     );
   }
 }

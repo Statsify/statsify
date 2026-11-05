@@ -60,7 +60,10 @@ export class CommandListener extends AbstractCommandListener {
     );
 
     const options = (data.options ?? []) as APIApplicationCommandInteractionDataBasicOption[];
-    Sentry.setContext("options", Object.fromEntries(options.map(({ name, value }) => [name, value])));
+    Sentry.setContext(
+      "options",
+      Object.fromEntries(options.map(({ name, value }) => [name, value]))
+    );
 
     const user = await this.apiService.getUser(id);
 

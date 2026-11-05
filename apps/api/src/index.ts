@@ -52,8 +52,8 @@ adapter.getInstance().addHook("onRequest", (request, _reply, done) => {
 
   setRequestAttributes({
     "statsify.api.route": request.routeOptions.url,
-    "statsify.player": player ?? uuid,
-    "statsify.guild": guild,
+    "statsify.player.tag": player ?? uuid,
+    "statsify.guild.tag": guild,
   });
 
   done();

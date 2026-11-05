@@ -137,11 +137,10 @@ export abstract class AbstractCommandListener {
       }
 
       const response = await command.execute(context);
-      setRequestAttributes({ "statsify.outcome": "success" });
 
       if (typeof response !== "object") return;
 
-      context.reply({
+      return context.reply({
         ...message,
         ...response,
       });
@@ -151,7 +150,6 @@ export abstract class AbstractCommandListener {
         return context.reply(err);
       }
 
-      setRequestAttributes({ "statsify.outcome": "error" });
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
     }
@@ -227,9 +225,13 @@ export abstract class AbstractCommandListener {
   protected onMessageComponent(interaction: Interaction): InteractionServer.InteractionReply {
     const hook = this.hooks.get(interaction.getCustomId());
 
-    const res = Sentry.startSpan(
-      { op: "component", name: interaction.isModalInteraction() ? "modal" : "component" },
-      () => hook?.(interaction)
+    const res = hook && Sentry.startSpan(
+      {
+        op: "component",
+        name: interaction.isModalInteraction() ? "modal" : "component",
+        parentSpan: null,
+      },
+      () => hook(interaction)
     );
 
     if (res && !(res instanceof Promise)) return res;
@@ -276,13 +278,13 @@ export abstract class AbstractCommandListener {
       Sentry.setUser({ id: interaction.getUserId() });
 
       setRequestAttributes({
-        "discord.guild.id": interaction.getGuildId() ?? "dm",
+        "discord.guild.id": interaction.getGuildId(),
         "discord.locale": interaction.getLocale(),
       });
 
       if (interaction.isCommandInteraction()) {
         Sentry.startSpan(
-          { op: "command", name: interaction.getData().name },
+          { op: "command", name: interaction.getData().name, parentSpan: null },
           () => this.onCommand(interaction)
         );
 
@@ -291,7 +293,7 @@ export abstract class AbstractCommandListener {
 
       if (interaction.isAutocompleteInteraction())
         return Sentry.startSpan(
-          { op: "autocomplete", name: interaction.getData().name },
+          { op: "autocomplete", name: interaction.getData().name, parentSpan: null },
           () => this.onAutocomplete(interaction)
         );
 

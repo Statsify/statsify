@@ -248,25 +248,24 @@ export class Logger implements LoggerService {
   }
 }
 
-// Sentry sends these unscrubbed on every span, log and error, so no usernames, keys or free text
+// Sentry doesn't scrub these, so no Discord usernames or API keys
 export type RequestAttributes = {
   "discord.command"?: string;
   "discord.guild.id"?: string;
   "discord.locale"?: string;
-  "statsify.user.tier"?: number;
+  "statsify.user.tier"?: string;
   "statsify.user.uuid"?: string;
   "statsify.mode"?: string;
   "statsify.submode"?: string;
-  "statsify.outcome"?: "success" | "message" | "error";
+  "statsify.outcome"?: "message";
   "statsify.api.route"?: string;
   "statsify.api.role"?: string;
   "statsify.player"?: string;
-  "statsify.guild"?: string;
+  "statsify.player.tag"?: string;
+  "statsify.guild.tag"?: string;
   "statsify.cache.hit"?: boolean;
-  "hypixel.status"?: number;
 };
 
-// Attributes reach spans and logs, tags reach error events
 export const setRequestAttributes = (attributes: RequestAttributes) => {
   Sentry.setAttributes(attributes);
   Sentry.setTags(attributes);
