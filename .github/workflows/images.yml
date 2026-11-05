@@ -31,8 +31,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # The images include the private assets, and a package this workflow created would take the
-      # repository's public visibility, so the package must already exist and refuse anonymous pulls
+      # The images hold the private assets, and a package this push created would be public like the repo
       - name: Check the package is private
         run: |
           docker manifest inspect "$IMAGE:api-latest" > /dev/null
