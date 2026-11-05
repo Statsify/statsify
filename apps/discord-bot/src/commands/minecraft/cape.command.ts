@@ -25,11 +25,8 @@ interface CapeFront {
   height: number;
 }
 
-/**
- * Cape textures use the vanilla 64x32 layout, where the front is the 10x16 area at (1, 1).
- * Like OptiFine, other sizes (its 46x22 capes and HD capes) are read as that layout scaled
- * up by the smallest power of two that fits the texture.
- */
+// Like OptiFine, read every texture (its 46x22 and HD capes too) as the vanilla 64x32
+// layout scaled up by the smallest power of two that fits
 function getCapeFront(cape: Image): CapeFront | undefined {
   let scale = 1;
   while (64 * scale < cape.width || 32 * scale < cape.height) scale *= 2;
@@ -94,7 +91,6 @@ export class CapeCommand {
   }
 
   private renderCape(cape: Image, front: CapeFront) {
-    // The front is always 10 by 16, so it fills this canvas at every texture scale
     const canvas = createCanvas(640, 1024);
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
