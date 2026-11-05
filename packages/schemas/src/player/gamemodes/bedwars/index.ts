@@ -14,6 +14,7 @@ import {
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
+import { BedWarsPractice } from "./practice.js";
 import { Slumber } from "./slumber.js";
 import { deepSub } from "@statsify/math";
 import {
@@ -47,6 +48,7 @@ export const BEDWARS_MODES = new GameModes([
   { api: "voidless" },
   { api: "oneBlock", hypixel: "BEDWARS_EIGHT_ONE_ONEBLOCK" },
   { api: "challenges" },
+  { api: "practice", hypixel: "BEDWARS_PRACTICE" },
 
   { hypixel: "BEDWARS_EIGHT_TWO_ARMED", formatted: "Armed Doubles" },
   { hypixel: "BEDWARS_FOUR_FOUR_ARMED", formatted: "Armed Fours" },
@@ -62,7 +64,6 @@ export const BEDWARS_MODES = new GameModes([
   { hypixel: "BEDWARS_FOUR_FOUR_UNDERWORLD", formatted: "Underworld Fours" },
   { hypixel: "BEDWARS_EIGHT_TWO_VOIDLESS", formatted: "Voidless Doubles" },
   { hypixel: "BEDWARS_FOUR_FOUR_VOIDLESS", formatted: "Voidless Fours" },
-  { hypixel: "BEDWARS_PRACTICE", formatted: "Practice" },
 ] as const);
 
 export type BedWarsModes = ExtractGameModes<typeof BEDWARS_MODES>;
@@ -170,6 +171,9 @@ export class BedWars {
   @Field()
   public challenges: BedWarsModeChallenges;
 
+  @Field()
+  public practice: BedWarsPractice;
+
   @Field({ leaderboard: { fieldName: "" } })
   public slumber: Slumber;
 
@@ -256,9 +260,11 @@ export class BedWars {
     this.core.winstreak = this.overall.winstreak;
 
     this.challenges = new BedWarsModeChallenges(data);
+    this.practice = new BedWarsPractice(data.practice);
     this.slumber = new Slumber(data.slumber);
   }
 }
 
 export * from "./mode.js";
+export * from "./practice.js";
 export * from "./slumber.js";
