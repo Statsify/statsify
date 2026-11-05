@@ -291,7 +291,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
     modes: GameModes<T>
   ) {
     const leaderboard = context.option<string>("leaderboard");
-    const guild = context.option<string | null>("guild");
+    const guild = context.option<string | undefined>("guild");
 
     if (guild && !User.isDiamond(context.getUser())) {
       throw new ErrorMessage("errors.diamondOnly");
@@ -303,15 +303,12 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
       ...mapBackground(modes, modes.getApiModes()[0])
     );
 
-    const getLeaderboard = guild ?
-      this.apiService.getGuildScopedPlayerLeaderboard.bind(this.apiService, guild) :
-      this.apiService.getPlayerLeaderboard.bind(this.apiService);
-
     return this.createLeaderboard({
       context,
       background,
       field,
-      getLeaderboard,
+      getLeaderboard: (field, input, type) =>
+        this.apiService.getPlayerLeaderboard(field, input, type, guild),
       type: "player",
       getLeaderboardDataIcon: (id) => this.apiService.getPlayerHead(id, 24),
     });

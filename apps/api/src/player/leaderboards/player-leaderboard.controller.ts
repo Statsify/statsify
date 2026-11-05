@@ -20,12 +20,8 @@ import {
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
-import {
-  GuildScopedPlayerLeaderboardDto,
-  PlayerLeaderboardDto,
-  PlayerRankingsDto,
-} from "#dtos";
 import { Player } from "@statsify/schemas";
+import { PlayerLeaderboardDto, PlayerRankingsDto } from "#dtos";
 import { PlayerLeaderboardService } from "./player-leaderboard.service.js";
 
 @Controller("/player/leaderboards")
@@ -41,7 +37,7 @@ export class PlayerLeaderboardsController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
   public getPlayerLeaderboard(
-    @Body() { field, page, player, position }: PlayerLeaderboardDto
+    @Body() { field, guild, page, player, position }: PlayerLeaderboardDto
   ) {
     let input: number | string;
     let type: LeaderboardQuery;
@@ -56,38 +52,16 @@ export class PlayerLeaderboardsController {
       input = page;
       type = LeaderboardQuery.PAGE;
     }
+
+    if (guild)
+      return this.playerLeaderboardService.getGuildScopedLeaderboard(
+        guild,
+        field,
+        input,
+        type
+      );
 
     return this.playerLeaderboardService.getLeaderboard(Player, field, input, type);
-  }
-
-  @Post("/guild")
-  @ApiOperation({ summary: "Get a Guild Scoped Player Leaderboard" })
-  @ApiOkResponse({ type: PostLeaderboardResponse })
-  @ApiBadRequestResponse({ type: ErrorResponse })
-  @Auth({ weight: 3 })
-  public getGuildScopedPlayerLeaderboard(
-    @Body() { field, page, player, position, guild }: GuildScopedPlayerLeaderboardDto
-  ) {
-    let input: number | string;
-    let type: LeaderboardQuery;
-
-    if (player) {
-      input = player;
-      type = LeaderboardQuery.INPUT;
-    } else if (position) {
-      input = position;
-      type = LeaderboardQuery.POSITION;
-    } else {
-      input = page;
-      type = LeaderboardQuery.PAGE;
-    }
-
-    return this.playerLeaderboardService.getGuildScopedLeaderboard(
-      guild,
-      field,
-      input,
-      type
-    );
   }
 
   @Post("/rankings")

@@ -19,6 +19,13 @@ export class PlayerLeaderboardDto extends PartialType(PlayerDto) {
   @ApiProperty({ enum: fields })
   public field: string;
 
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(32)
+  @ApiProperty({ required: false })
+  public guild?: string;
+
   @Transform((params) => +params.value)
   @IsInt()
   @Min(0)
@@ -31,12 +38,4 @@ export class PlayerLeaderboardDto extends PartialType(PlayerDto) {
   @Min(1)
   @ApiProperty({ minimum: 1, type: () => Number, required: false })
   public position?: number;
-}
-
-export class GuildScopedPlayerLeaderboardDto extends PlayerLeaderboardDto {
-  @IsString()
-  @MinLength(3)
-  @MaxLength(32)
-  @ApiProperty()
-  public guild: string;
 }

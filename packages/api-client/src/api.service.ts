@@ -87,34 +87,16 @@ export class ApiService {
   public getPlayerLeaderboard(
     field: string,
     input: string | number,
-    type: LeaderboardQuery
+    type: LeaderboardQuery,
+    guild?: string
   ): Promise<PostLeaderboardResponse | null> {
     return this.request<PostLeaderboardResponse>("/player/leaderboards", {}, "POST", {
       body: {
         field,
+        guild,
         [type === LeaderboardQuery.INPUT ? "player" : type]: input,
       },
     });
-  }
-
-  public getGuildScopedPlayerLeaderboard(
-    guild: string,
-    field: string,
-    input: string | number,
-    type: LeaderboardQuery
-  ): Promise<PostLeaderboardResponse | null> {
-    return this.request<PostLeaderboardResponse>(
-      "/player/leaderboards/guild",
-      {},
-      "POST",
-      {
-        body: {
-          guild,
-          field,
-          [type === LeaderboardQuery.INPUT ? "player" : type]: input,
-        },
-      }
-    );
   }
 
   public getPlayerRankings(fields: string[], uuid: string) {
