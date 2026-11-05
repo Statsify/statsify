@@ -6,6 +6,7 @@ packages:
 allowBuilds:
   '@nestjs/core': true
   '@scarf/scarf': true
+  '@sentry/node-cpu-profiler': false
   '@swc/core': true
   esbuild: true
   sharp: true
