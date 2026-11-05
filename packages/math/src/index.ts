@@ -44,6 +44,21 @@ export const unroundedRatio = (n1 = 0, n2 = 0, multiply = 1) => {
 export const ratio = (n1 = 0, n2 = 0, multiply = 1) =>
   roundTo(unroundedRatio(n1, n2, multiply));
 
+/**
+ *
+ * @param n1 The numerator of the ratio
+ * @param n2 The denominator of the ratio
+ * @returns An estimate of the numerator when the ratio reaches its next whole number, playing at 1.5x that ratio from now on
+ */
+export const estimateAtNextRatio = (n1 = 0, n2 = 0) => {
+  const denominator = Math.max(n2, 1);
+  const target = Math.floor(unroundedRatio(n1, n2)) + 1;
+  const needed = target * denominator - n1;
+
+  // At 1.5x the target, the n2 gained on the way costs another 2 * needed
+  return target * denominator + 2 * needed;
+};
+
 export const add = (...args: number[]): number =>
   args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
 
@@ -94,6 +109,11 @@ export const deepSub = <T>(...args: T[]): T => deep(sub, ...args);
 if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
 
+  const zeroLoss = (n1: number, n2: number) => {
+    const target = Math.floor(unroundedRatio(n1, n2)) + 1;
+    return { target, total: target * Math.max(n2, 1) };
+  };
+
   suite("basic math", () => {
     it("should add numbers together", () => {
       expect(add(1, 2)).toBe(3);
@@ -130,6 +150,45 @@ if (import.meta.vitest) {
 
     it("should subtract numbers", () => {
       expect(deepSub(a, b)).toMatchObject(new TestClass(0, 0));
+    });
+  });
+
+  suite("estimateAtNextRatio", () => {
+    const cases = [[527, 264], [100, 100], [1000, 100], [10, 100], [0, 0], [5, 0], [3, 2]];
+
+    it("should never estimate below the zero-loss total", () => {
+      for (const [n1, n2] of cases)
+        expect(estimateAtNextRatio(n1, n2)).toBeGreaterThanOrEqual(zeroLoss(n1, n2).total);
+    });
+
+    it("should land within 2 of the zero-loss total one win away", () => {
+      expect(estimateAtNextRatio(527, 264)).toBe(530);
+      expect(estimateAtNextRatio(99_999, 1000)).toBe(100_002);
+    });
+
+    it("should not decrease as more of the numerator is needed", () => {
+      expect([199, 150, 100].map((n1) => estimateAtNextRatio(n1, 100))).toEqual([202, 300, 400]);
+    });
+
+    it("should imply a finite pace above the target", () => {
+      for (const [n1, n2] of cases) {
+        const { target, total } = zeroLoss(n1, n2);
+        const pace = target + (target * (total - n1)) / (estimateAtNextRatio(n1, n2) - total);
+        expect(pace).toBe(1.5 * target);
+      }
+    });
+
+    it("should handle empty, unbeaten, whole, high and tiny ratios", () => {
+      expect(estimateAtNextRatio(0, 100)).toBe(300);
+      expect(estimateAtNextRatio(5, 0)).toBe(8);
+      expect(estimateAtNextRatio(0, 0)).toBe(3);
+      expect(estimateAtNextRatio(300, 100)).toBe(600);
+      expect(estimateAtNextRatio(6000, 100)).toBe(6300);
+      expect(estimateAtNextRatio(3, 2)).toBe(6);
+    });
+
+    it("should scale with games played at the same ratio", () => {
+      expect(estimateAtNextRatio(1000, 1000)).toBe(10 * estimateAtNextRatio(100, 100));
     });
   });
 }
