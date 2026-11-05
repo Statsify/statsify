@@ -18,7 +18,7 @@ export interface InteractionAttachment {
   name: string;
   data: Buffer;
   type?: string;
-  /** Alt text, read by screen readers */
+  /** Alt text */
   description?: LocalizationString;
 }
 
