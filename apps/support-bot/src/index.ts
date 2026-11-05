@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import { CommandListener } from "#lib";
 import {
   CommandPoster,
@@ -38,18 +37,6 @@ process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
 
 setGlobalOptions({ schemaOptions: { _id: false } });
-
-const sentryDsn = await config("sentry.supportBotDsn", { required: false });
-
-if (sentryDsn) {
-  Sentry.init({
-    dsn: sentryDsn,
-    integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
-    normalizeDepth: 3,
-    tracesSampleRate: await config("sentry.tracesSampleRate"),
-    environment: await config("environment"),
-  });
-}
 
 const rest = new RestClient({ token: await config("supportBot.token") });
 Container.set(RestClient, rest);
