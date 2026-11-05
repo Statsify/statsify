@@ -26,7 +26,6 @@ export class ServerCommand {
   public constructor() {
     this.axios = axios.create({
       baseURL: "https://api.mcsrvstat.us/3/",
-      // The server option is free text, so a URL in it must not replace mcsrvstat
       allowAbsoluteUrls: false,
       headers: { "User-Agent": "Statsify (https://statsify.net)" },
       timeout: 10_000,
