@@ -66,10 +66,6 @@ export class PlayerService {
     return player;
   }
 
-  /**
-   * Same as `get`, but also says whether the cached player was served because Hypixel failed.
-   * Throws a HypixelUnavailableException when Hypixel failed and there is no cached player.
-   */
   public async getWithFallback(
     tag: string,
     cacheLevel: CacheLevel,
@@ -164,7 +160,6 @@ export class PlayerService {
 
     const [status, games] = await Promise.all([
       this.hypixelService.getStatus(player.uuid),
-      // Recent games are optional on the status image, so a failure just leaves them out
       this.hypixelService.getRecentGames(player.uuid).catch(() => []),
     ]);
 
