@@ -59,6 +59,11 @@ export function profileRoute(listener: AbstractCommandListener): ComponentRoute 
     listener.rerunCommand(interaction, ownerId, [command], { player: uuid });
 }
 
+export function getProfileCustomId(context: CommandContext, uuid: string) {
+  return (page: string) =>
+    createCustomId(PROFILE_ROUTE, context.getInteraction().getUserId(), context.getCommandName(), uuid, page);
+}
+
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   getPreProfileData?(player: Player): K | Promise<K>;
   filterModes?(player: Player, modes: GameModeWithSubModes<T>[]): GameModeWithSubModes<T>[];
@@ -174,9 +179,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
       return { ...pageInput, subPages };
     });
 
-    return paginate(context, pages, (page) =>
-      createCustomId(PROFILE_ROUTE, interaction.getUserId(), context.getCommandName(), player.uuid, page)
-    );
+    return paginate(context, pages, getProfileCustomId(context, player.uuid));
   }
 
   public abstract getProfile(
