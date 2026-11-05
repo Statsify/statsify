@@ -37,7 +37,7 @@ export class PlayerLeaderboardsController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
   public getPlayerLeaderboard(
-    @Body() { field, page, player, position }: PlayerLeaderboardDto
+    @Body() { field, guild, page, player, position }: PlayerLeaderboardDto
   ) {
     let input: number | string;
     let type: LeaderboardQuery;
@@ -52,6 +52,14 @@ export class PlayerLeaderboardsController {
       input = page;
       type = LeaderboardQuery.PAGE;
     }
+
+    if (guild)
+      return this.playerLeaderboardService.getGuildScopedLeaderboard(
+        guild,
+        field,
+        input,
+        type
+      );
 
     return this.playerLeaderboardService.getLeaderboard(Player, field, input, type);
   }

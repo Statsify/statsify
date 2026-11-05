@@ -6,13 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
+import {
+  CacheLevel,
+  GUILD_ID_REGEX,
+  GuildNotFoundException,
+  LeaderboardQuery,
+  PlayerNotFoundException,
+} from "@statsify/api-client";
 import { type Circular, flatten } from "@statsify/util";
+import { Guild, Player, getLeaderboardField, serialize } from "@statsify/schemas";
+import { HypixelService } from "#hypixel";
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
-import { Player } from "@statsify/schemas";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -22,21 +29,79 @@ export class PlayerLeaderboardService extends LeaderboardService {
   public constructor(
     @Inject(forwardRef(() => PlayerService))
     private readonly playerService: Circular<PlayerService>,
+    private readonly hypixelService: HypixelService,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
+    @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>,
     @InjectRedis() redis: Redis
   ) {
     super(redis);
   }
 
-  protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
-    if (input.length <= 16) {
-      const player = await this.playerService.get(input, CacheLevel.CACHE_ONLY, {
-        uuid: true,
-      });
+  public async getGuildScopedLeaderboard(
+    guildInput: string,
+    field: string,
+    input: number | string,
+    type: LeaderboardQuery
+  ) {
+    const PAGE_SIZE = 10;
 
-      if (!player) throw new PlayerNotFoundException();
-      input = player.uuid;
+    const { sort } = getLeaderboardField(Player, field);
+
+    const guild = await this.getGuild(guildInput);
+    const memberIds = guild.members.map(({ uuid }) => uuid);
+
+    const scores = await this.redis.call(
+      "ZMSCORE",
+      `player.${field}`,
+      ...memberIds
+    ) as (string | null)[];
+
+    const leaderboard = scores
+      .flatMap((score, index) =>
+        score === null ? [] : [{ id: memberIds[index], score: Number(score) }]
+      )
+      .sort((a, b) => sort === "ASC" ? a.score - b.score : b.score - a.score)
+      .map((doc, index) => ({ ...doc, index }));
+
+    let top: number;
+    let highlight: number | undefined = undefined;
+
+    switch (type) {
+      case LeaderboardQuery.PAGE:
+        top = (input as number) * PAGE_SIZE;
+        break;
+
+      case LeaderboardQuery.INPUT: {
+        const playerId = await this.getPlayerId(input as string);
+        highlight = leaderboard.findIndex(({ id }) => id === playerId);
+
+        if (highlight === -1) throw new PlayerNotFoundException();
+
+        top = highlight - (highlight % PAGE_SIZE);
+        break;
+      }
+
+      case LeaderboardQuery.POSITION: {
+        const position = (input as number) - 1;
+        highlight = position;
+        top = position - (position % PAGE_SIZE);
+        break;
+      }
     }
+
+    const page = await this.formatLeaderboard(
+      Player,
+      field,
+      leaderboard.slice(top, top + PAGE_SIZE),
+      top / PAGE_SIZE,
+      highlight
+    );
+
+    return { ...page, name: `${page.name} - ${guild.nameFormatted ?? guild.name}` };
+  }
+
+  protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
+    input = await this.getPlayerId(input);
 
     const ranking = await this.getLeaderboardRankings(Player, [field], input);
 
@@ -72,5 +137,64 @@ export class PlayerLeaderboardService extends LeaderboardService {
         return additionalStats;
       })
     );
+  }
+
+  private async getGuild(input: string) {
+    const isGuildId = GUILD_ID_REGEX.test(input);
+
+    const guild = await this.guildModel
+      .findOne()
+      .where(isGuildId ? "id" : "nameToLower")
+      .equals(isGuildId ? input : input.toLowerCase())
+      .select({ "id": true, "members.uuid": true, "name": true, "nameFormatted": true })
+      .lean()
+      .exec();
+
+    if (guild) return guild;
+
+    const fetchedGuild = await this.hypixelService.getGuild(
+      input,
+      isGuildId ? "id" : "name"
+    );
+
+    if (!fetchedGuild) throw new GuildNotFoundException();
+
+    const memberIds = fetchedGuild.members.map(({ uuid }) => uuid);
+
+    await Promise.all([
+      this.playerModel
+        .updateMany({ uuid: { $in: memberIds } }, { guildId: fetchedGuild.id })
+        .lean()
+        .exec(),
+      this.guildModel
+        .replaceOne({ id: fetchedGuild.id }, serialize(Guild, flatten(fetchedGuild)), {
+          upsert: true,
+        })
+        .lean()
+        .exec(),
+      this.addGuildAutocomplete(fetchedGuild.name),
+    ]);
+
+    return fetchedGuild;
+  }
+
+  private async addGuildAutocomplete(name: string) {
+    if (name.length < 3 || name.length > 32) return;
+
+    await this.redis
+      .call("FT.SUGADD", "guild:autocomplete", name, "1", "INCR")
+      .catch(() => undefined);
+  }
+
+  private async getPlayerId(input: string) {
+    if (input.length > 16) return input;
+
+    const player = await this.playerService.get(input, CacheLevel.CACHE_ONLY, {
+      uuid: true,
+    });
+
+    if (!player) throw new PlayerNotFoundException();
+
+    return player.uuid;
   }
 }

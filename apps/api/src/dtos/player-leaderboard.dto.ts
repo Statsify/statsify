@@ -7,7 +7,7 @@
  */
 
 import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
+import { IsEnum, IsInt, IsOptional, IsString, MaxLength, Min, MinLength } from "class-validator";
 import { Player, getLeaderboardFields } from "@statsify/schemas";
 import { PlayerDto } from "./player.dto.js";
 import { Transform } from "class-transformer";
@@ -18,6 +18,13 @@ export class PlayerLeaderboardDto extends PartialType(PlayerDto) {
   @IsEnum(fields)
   @ApiProperty({ enum: fields })
   public field: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(32)
+  @ApiProperty({ required: false })
+  public guild?: string;
 
   @Transform((params) => +params.value)
   @IsInt()
