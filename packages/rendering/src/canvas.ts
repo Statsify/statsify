@@ -18,7 +18,6 @@ export function createCanvas(
   return new Canvas(width, height, { gpu: false, ...options });
 }
 
-/** The front of a player's head as a PNG: the face from a skin texture with the hat layer on top */
 export function renderHead(skin: Image, size: number) {
   const canvas = createCanvas(size, size);
   const ctx = canvas.getContext("2d");
