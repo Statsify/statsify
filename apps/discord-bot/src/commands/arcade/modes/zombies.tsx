@@ -9,7 +9,7 @@
 import { ApiSubModeForMode, ArcadeModes, Zombies, ZombiesMapDifficulty } from "@statsify/schemas";
 import { Historical, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
-import { formatRecordTime, formatTimeWithSeconds } from "@statsify/util";
+import { formatPreciseTime, formatRecordTime } from "@statsify/util";
 import type { ProfileTime } from "#commands/base.hypixel-command";
 
 interface ZombiesMapColumnProps {
@@ -21,7 +21,7 @@ interface ZombiesMapColumnProps {
 
 const ZombiesMapColumn = ({ title, stats, t, time }: ZombiesMapColumnProps) => {
   const mapStat = stats.wins >= 1 ?
-    [t("stats.fastestWin"), formatRecordTime(stats.fastestWin, formatTimeWithSeconds)] :
+    [t("stats.fastestWin"), formatRecordTime(stats.fastestWin, formatPreciseTime)] :
     [t("stats.bestRound"), t(stats.bestRound)];
 
   return (
@@ -92,7 +92,7 @@ export const ZombiesMapDifficultyTable = ({ stats, t, time }: ZombiesMapDifficul
     </Table.tr>
     <Historical.exclude time={time}>
       <Table.tr>
-        <Table.td title={t("stats.fastestWin")} value={formatRecordTime(stats.fastestWin, formatTimeWithSeconds)} color="§b" size="small" />
+        <Table.td title={t("stats.fastestWin")} value={formatRecordTime(stats.fastestWin, formatPreciseTime)} color="§b" size="small" />
         <Table.td title={t("stats.totalRounds")} value={t(stats.totalRounds)} color="§d" size="small" />
         <Table.td title={t("stats.doorsOpened")} value={t(stats.doorsOpened)} color="§9" size="small" />
       </Table.tr>

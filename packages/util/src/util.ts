@@ -177,7 +177,7 @@ export const formatTime = (
     .join(", ");
 };
 
-export const formatTimeWithSeconds = (time: number) =>
+export const formatPreciseTime = (time: number) =>
   formatTime(time, { entries: 3 });
 
 export const relativeTime = (time: number) =>

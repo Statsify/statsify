@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatRaceTime, formatTime, formatTimeWithSeconds } from "@statsify/util";
+import { type APIData, formatPreciseTime, formatRaceTime, formatTime } from "@statsify/util";
 import {
   EasterSimulator,
   GrinchSimulator,
@@ -733,7 +733,7 @@ export class Dropper {
   @Field()
   public flawlessGames: number;
 
-  @Field({ leaderboard: { formatter: formatTimeWithSeconds, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatPreciseTime, sort: "ASC" } })
   public bestTime: number;
 
   @Field({ leaderboard: { name: "Maps:" } })
@@ -1374,7 +1374,7 @@ export class ZombiesMapDifficulty {
   @Field({
     leaderboard: {
       sort: "ASC",
-      formatter: formatTimeWithSeconds,
+      formatter: formatPreciseTime,
       additionalFields: ["this.wins"],
     },
     historical: { enabled: false },
