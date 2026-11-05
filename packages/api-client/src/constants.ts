@@ -37,5 +37,6 @@ export enum CacheLevel {
 export enum LeaderboardQuery {
   PAGE = "page",
   INPUT = "input",
-  POSITION = "position"
+  POSITION = "position",
+  VALUE = "value"
 }

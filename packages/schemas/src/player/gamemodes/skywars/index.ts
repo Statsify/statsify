@@ -44,6 +44,7 @@ export class SkyWars {
       fieldName: "Level",
       hidden: true,
       formatter: (exp: number) => getLevel(exp),
+      searchBy: getLevel,
       additionalFields: ["this.overall.wins", "this.overall.kills", "this.overall.kdr"],
     },
     historical: {
