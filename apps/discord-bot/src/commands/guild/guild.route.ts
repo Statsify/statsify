@@ -8,7 +8,7 @@
 
 import type { AbstractCommandListener, ComponentRoute } from "@statsify/discord";
 
-/** Buttons on /guild re-run the subcommand for the same guild: `g:<user id>:<subcommand>:<guild id>:...` */
+/** Guild buttons re-run `/guild <subcommand>`: `g:<user id>:<subcommand>:<guild id>:...` */
 export const GUILD_ROUTE = "g";
 
 export function guildRoute(listener: AbstractCommandListener): ComponentRoute {

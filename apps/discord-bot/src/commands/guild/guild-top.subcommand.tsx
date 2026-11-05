@@ -75,10 +75,10 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     const [modeIndex, page] = this.getRequestedPage(interaction, modes, pageCount);
     const [key, title] = modes[modeIndex];
 
-    const customId = (...values: (string | number)[]) =>
+    const getCustomId = (...values: (string | number)[]) =>
       createCustomId(GUILD_ROUTE, interaction.getUserId(), context.getCommandName(), guild.id, ...values);
 
-    const dropdown = new SelectMenuBuilder().customId(customId("menu", page));
+    const dropdown = new SelectMenuBuilder().customId(getCustomId("menu", page));
 
     for (const [index, [key, title]] of modes.entries()) {
       dropdown.option(
@@ -98,13 +98,13 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
             new ButtonBuilder()
               .emoji(t("emojis:up"))
               .style(ButtonStyle.Success)
-              .customId(customId(key, `prev.${page}`))
+              .customId(getCustomId(key, `prev.${page}`))
           )
           .component(
             new ButtonBuilder()
               .emoji(t("emojis:down"))
               .style(ButtonStyle.Danger)
-              .customId(customId(key, `next.${page}`))
+              .customId(getCustomId(key, `next.${page}`))
           )
       );
 
@@ -125,7 +125,6 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     return this.apiService.getGuild(query, type, user, context.getCacheLevel());
   }
 
-  /** Today's first page for the command, otherwise the mode and page a click asks for */
   private getRequestedPage(
     interaction: Interaction,
     modes: GuildTopMode[],
