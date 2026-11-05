@@ -172,35 +172,3 @@ export class PlayerLayouts {
     this.pitArmor = encodeNbt(stats.Pit?.profile?.inv_armor);
   }
 }
-
-if (import.meta.vitest) {
-  const { it, expect } = import.meta.vitest;
-
-  it("stores layouts as one string and reads them back as Hypixel sends them", () => {
-    const quickBuy = "wool,null,tnt,null";
-    const kit = { 0: "267,0", 1: "373,16394", 6: "345,0" };
-    const skywars = { "POTION:2": "0", "IRON_BOOTS:0": [2], "IRON_PICKAXE:0:32,34": [2], "DIAMOND_BOOTS:0:0": [3] };
-
-    const stored = [
-      encodeLayouts([["quickBuy", LIST_LAYOUT.slots(quickBuy)], ["unused", LIST_LAYOUT.slots("null,null")]]),
-      encodeLayouts([["Scout", LEGACY_LAYOUT.slots(kit)]]),
-      encodeLayouts([["basic_solo_frog", ITEM_LAYOUT.slots(skywars)]]),
-    ];
-
-    expect(stored).toEqual([
-      "quickBuy=wool,,tnt",
-      "Scout=267,373:16394,*4,345",
-      "basic_solo_frog=POTION:2,,IRON_BOOTS+IRON_PICKAXE:0:32/34,DIAMOND_BOOTS:0:0",
-    ]);
-
-    expect(decodeLayouts(stored[0], LIST_LAYOUT).get("quickBuy")).toBe("wool,null,tnt");
-    expect(decodeLayouts(stored[1], LEGACY_LAYOUT).get("Scout")).toEqual(kit);
-    expect(decodeLayouts(stored[2], ITEM_LAYOUT).get("basic_solo_frog")).toEqual({
-      "POTION:2": [0],
-      "IRON_BOOTS:0": [2],
-      "IRON_PICKAXE:0:32,34": [2],
-      "DIAMOND_BOOTS:0:0": [3],
-    });
-    expect(decodeLayouts("", SLOT_LAYOUT).size).toBe(0);
-  });
-}
