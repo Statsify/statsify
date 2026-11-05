@@ -26,8 +26,8 @@ export class SkinCommand {
     const user = context.getUser();
     const tag = context.option<string>("player");
 
-    const selfUuid = tag ? undefined : user?.uuid;
     const { apiService } = this;
+    const selfUuid = apiService.selfUuid(tag, user);
 
     const { player, skin } = await all({
       player: () => apiService.getPlayerSkinTextures(tag, user),

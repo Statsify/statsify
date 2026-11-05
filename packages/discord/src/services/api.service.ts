@@ -272,6 +272,10 @@ export class ApiService extends StatsifyApiService {
     throw new ErrorMessage("errors.invalidSearch");
   }
 
+  public selfUuid(tag: string, user: User | null) {
+    return tag ? undefined : user?.uuid;
+  }
+
   public async resolveTag(tag: string, type: PlayerTag, user: User | null) {
     if (type === "discordId") {
       const searchedUser = await this.getUser(tag);

@@ -371,8 +371,8 @@ export class SessionCommand {
     const user = context.getUser();
     const tag = context.option<string>("player");
 
-    const selfUuid = tag ? undefined : user?.uuid;
     const { apiService } = this;
+    const selfUuid = apiService.selfUuid(tag, user);
 
     const { player, logo, skin, badge } = await all({
       player: () => apiService.getPlayerSession(tag, user?.uuid, user),

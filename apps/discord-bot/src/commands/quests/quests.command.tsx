@@ -69,8 +69,8 @@ export class QuestsCommand {
     const user = context.getUser();
     const tag = context.option<string>("player");
 
-    const selfUuid = tag ? undefined : user?.uuid;
     const { apiService } = this;
+    const selfUuid = apiService.selfUuid(tag, user);
 
     const { player, logo, skin, badge, gameIcons, verifiedLogo, crossLogo } = await all({
       player: () => apiService.getPlayer(tag, user),

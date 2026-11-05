@@ -317,8 +317,8 @@ export class RankingsCommand {
       fields.filter((f) => f.startsWith(`stats.${game}`)) :
       fields;
 
-    const selfUuid = tag ? undefined : user?.uuid;
     const { apiService } = this;
+    const selfUuid = apiService.selfUuid(tag, user);
 
     const { player, rankings, skin, badge, logo, background } = await all({
       player: () => apiService.getPlayer(tag, user),

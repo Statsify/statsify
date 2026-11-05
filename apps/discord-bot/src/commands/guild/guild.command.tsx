@@ -131,8 +131,8 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const tag = context.option<string>("player");
 
-    const selfUuid = tag ? undefined : user?.uuid;
     const { apiService } = this;
+    const selfUuid = apiService.selfUuid(tag, user);
 
     const { player, guild, skin, badge, logo, background } = await all({
       player: () => apiService.getPlayer(tag, user),

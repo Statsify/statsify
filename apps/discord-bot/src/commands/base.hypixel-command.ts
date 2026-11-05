@@ -72,8 +72,8 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     const user = context.getUser();
     const tag = context.option<string>("player");
 
-    const selfUuid = tag ? undefined : user?.uuid;
     const { apiService } = this;
+    const selfUuid = apiService.selfUuid(tag, user);
     const getPreProfileData = this.getPreProfileData?.bind(this);
 
     const { player, logo, skin, badge, data } = await all({
