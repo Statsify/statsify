@@ -202,8 +202,8 @@ export async function paginate(
  * @param forwardButton The button to use for forward pagination
  * @param backwardButton The button to use for back pagination
  * @param invertButtons Whether to invert the buttons (backward becomes forward, forward becomes backward)
- * @param startingIndex  The starting page
- * @param timeout When to stop the pagination (ms), defaults to 300000
+ * @param getCustomId Returns a custom id ending with `page`, whose route re-runs the command.
+ * Without it, the buttons stop after 5 minutes
  */
 export async function scrollingPagination(
   context: CommandContext,
@@ -211,10 +211,9 @@ export async function scrollingPagination(
   forwardButton?: ButtonBuilder,
   backwardButton?: ButtonBuilder,
   invertButtons = false,
-  startingIndex = 0,
-  timeout = 300_000,
+  getCustomId?: (page: string) => string,
 ) {
-  let currentIndex = startingIndex;
+  let currentIndex = 0;
   const cache = new Map<number, Message>();
   const t = context.t();
 
@@ -230,8 +229,6 @@ export async function scrollingPagination(
 
   if (pages.length === 1) return getMessage(currentIndex);
 
-  const userId = context.getInteraction().getUserId();
-
   const controller = [
     backwardButton ?? new ButtonBuilder().emoji(t("emojis:backward")),
     forwardButton ?? new ButtonBuilder().emoji(t("emojis:forward")),
@@ -239,6 +236,23 @@ export async function scrollingPagination(
 
   if (invertButtons) controller.reverse();
 
+  if (getCustomId) {
+    const interaction = context.getInteraction();
+
+    const index = interaction.isMessageComponentInteraction() ?
+      getScrolledPage(parseCustomId(interaction.getCustomId()).values.at(-1)!, pages.length) :
+      0;
+
+    controller[0].customId(getCustomId(`prev.${index}`));
+    controller[1].customId(getCustomId(`next.${index}`));
+
+    const message = await getMessage(index);
+    message.components = [new ActionRowBuilder(controller)];
+
+    return message;
+  }
+
+  const userId = context.getInteraction().getUserId();
   const listener = context.getListener();
 
   for (const [index, component] of controller.entries()) {
@@ -279,12 +293,18 @@ export async function scrollingPagination(
     cache.clear();
   }
 
-  setTimeout(onTimeout, timeout);
+  setTimeout(onTimeout, 300_000);
 
   const message = await getMessage(currentIndex);
   message.components = [new ActionRowBuilder(controller)];
 
   return message;
+}
+
+/** Ids hold the current page, since with two pages both buttons would target the same one */
+export function getScrolledPage(target: string, pageCount: number) {
+  const [direction, page] = target.split(".");
+  return (Number(page) + (direction === "prev" ? pageCount - 1 : 1)) % pageCount;
 }
 
 function getRequestedPage(interaction: Interaction): [index: number, subIndex: number] {

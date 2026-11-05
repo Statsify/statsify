@@ -20,7 +20,6 @@ import {
   SubPage,
   createCustomId,
 } from "@statsify/discord";
-import { CacheLevel } from "@statsify/api-client";
 import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalTimeData } from "#components";
@@ -51,17 +50,17 @@ export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
 
 export type ModeEmoji = LocalizationString | false | undefined;
 
-/** Page buttons re-run the command: `p:<user id>:<command>:<player uuid>:<page>` */
+/** Page buttons re-run the command: `p:<user id>:<command path joined by dots>:<player uuid>:<page>` */
 export const PROFILE_ROUTE = "p";
 
 export function profileRoute(listener: AbstractCommandListener): ComponentRoute {
   return (interaction, { ownerId, values: [command, uuid] }) =>
-    listener.rerunCommand(interaction, ownerId, [command], { player: uuid });
+    listener.rerunCommand(interaction, ownerId, command.split("."), { player: uuid });
 }
 
-export function getProfileCustomId(context: CommandContext, uuid: string) {
+export function getProfileCustomId(context: CommandContext, uuid: string, command = context.getCommandName()) {
   return (page: string) =>
-    createCustomId(PROFILE_ROUTE, context.getInteraction().getUserId(), context.getCommandName(), uuid, page);
+    createCustomId(PROFILE_ROUTE, context.getInteraction().getUserId(), command, uuid, page);
 }
 
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
@@ -86,13 +85,8 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
 
   public async run(context: CommandContext) {
     const user = context.getUser();
-    const interaction = context.getInteraction();
 
-    const player = await this.apiService.getPlayer(
-      context.option("player"),
-      user,
-      interaction.isCommandInteraction() ? undefined : CacheLevel.CACHE_ONLY
-    );
+    const player = await this.apiService.getPlayer(context.option("player"), user, context.getCacheLevel());
 
     const [logo, skin, badge] = await Promise.all([
       getLogo(user),
