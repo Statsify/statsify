@@ -6,11 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/**
- * Removes files from dist whose source in src no longer exists. It runs as each package's
- * turbo clean task, before both builds and cache restores, which add files to dist but
- * never delete any. Only orphans are removed, so dist stays usable during build:watch.
- */
+// swc and turbo cache restores only add files to dist. Deleting just the orphans,
+// not all of dist, keeps dist usable while build:watch runs.
 
 import { existsSync, readdirSync, rmSync, rmdirSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -18,8 +15,7 @@ import { join, relative } from "node:path";
 const DIST = "dist";
 const SRC = "src";
 
-// swc keeps each file's path and only changes its extension, so a dist file has a source
-// when a src file has the same path once .map and both extensions are removed
+// src/a.ts builds to dist/a.js and dist/a.js.map, which all share the stem "a"
 const stem = (path) => path.replace(/\.map$/, "").replace(/\.[^./\\]+$/, "");
 
 const entries = (dir) => readdirSync(dir, { recursive: true, withFileTypes: true });
@@ -35,13 +31,12 @@ if (existsSync(DIST)) {
 
   for (const orphan of orphans) rmSync(join(DIST, orphan));
 
-  // Deepest first, so a folder emptied by removing its subfolders is removed too
-  const folders = entries(DIST)
+  const foldersDeepestFirst = entries(DIST)
     .filter((entry) => entry.isDirectory())
     .map((entry) => join(entry.parentPath, entry.name))
     .sort((a, b) => b.length - a.length);
 
-  for (const folder of folders) {
+  for (const folder of foldersDeepestFirst) {
     if (readdirSync(folder).length === 0) rmdirSync(folder);
   }
 
