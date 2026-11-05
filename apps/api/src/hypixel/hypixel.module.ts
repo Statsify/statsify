@@ -20,7 +20,6 @@ import { config } from "@statsify/util";
         "API-Key": await config("hypixelApi.key"),
         "accept-encoding": "*",
       },
-      // Node's default agent closes idle sockets after 5 s, shorter than the usual gap between requests
       httpsAgent: new Agent({ keepAlive: true, timeout: 30_000 }),
       timeout: await config("hypixelApi.timeout", { default: 5000 }),
     }),
