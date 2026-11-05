@@ -55,7 +55,7 @@ export abstract class LeaderboardService {
     const id = instance[idField] as unknown as string;
 
     for (const [field, metadata] of fields) {
-      const value = instance[field] as unknown as number;
+      const value = instance[field];
       const key = `${name}.${String(field)}`;
 
       if (remove || !isScore(value)) {
