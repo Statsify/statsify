@@ -202,7 +202,8 @@ export async function paginate(
  * @param forwardButton The button to use for forward pagination
  * @param backwardButton The button to use for back pagination
  * @param invertButtons Whether to invert the buttons (backward becomes forward, forward becomes backward)
- * @param customId Makes the buttons keep working after a restart, as in paginate
+ * @param getCustomId Returns a custom id ending with `page`, whose route re-runs the command.
+ * Without it, the buttons stop after 5 minutes
  */
 export async function scrollingPagination(
   context: CommandContext,
@@ -210,7 +211,7 @@ export async function scrollingPagination(
   forwardButton?: ButtonBuilder,
   backwardButton?: ButtonBuilder,
   invertButtons = false,
-  customId?: (page: string) => string,
+  getCustomId?: (page: string) => string,
 ) {
   let currentIndex = 0;
   const cache = new Map<number, Message>();
@@ -235,15 +236,15 @@ export async function scrollingPagination(
 
   if (invertButtons) controller.reverse();
 
-  if (customId) {
+  if (getCustomId) {
     const interaction = context.getInteraction();
 
     const index = interaction.isMessageComponentInteraction() ?
       getScrolledPage(parseCustomId(interaction.getCustomId()).values.at(-1)!, pages.length) :
       0;
 
-    controller[0].customId(customId(`prev.${index}`));
-    controller[1].customId(customId(`next.${index}`));
+    controller[0].customId(getCustomId(`prev.${index}`));
+    controller[1].customId(getCustomId(`next.${index}`));
 
     const message = await getMessage(index);
     message.components = [new ActionRowBuilder(controller)];
