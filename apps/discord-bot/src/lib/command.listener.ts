@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import {
   AbstractCommandListener,
   ApiService,
@@ -16,6 +17,7 @@ import {
   Interaction,
 } from "@statsify/discord";
 import { Container } from "typedi";
+import type { APIApplicationCommandInteractionDataBasicOption } from "discord-api-types/v10";
 import { STATUS_COLORS, setRequestAttributes } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
@@ -63,7 +65,12 @@ export class CommandListener extends AbstractCommandListener {
       parentData
     );
 
+    const options = (data.options ?? []) as APIApplicationCommandInteractionDataBasicOption[];
+    Sentry.setContext("options", Object.fromEntries(options.map(({ name, value }) => [name, value])));
+
     const user = await this.apiService.getUser(id);
+
+    Sentry.setUser({ id, theme: user?.theme, serverMember: user?.serverMember });
 
     setRequestAttributes({
       "statsify.user.tier": user?.tier ?? UserTier.NONE,

@@ -248,7 +248,7 @@ export class Logger implements LoggerService {
   }
 }
 
-// Sentry doesn't scrub custom attributes, so only these keys reach spans and logs
+// Sentry sends these unscrubbed on every span, log and error, so no usernames, keys or free text
 export type RequestAttributes = {
   "discord.command"?: string;
   "discord.guild.id"?: string;
@@ -266,8 +266,11 @@ export type RequestAttributes = {
   "hypixel.status"?: number;
 };
 
-export const setRequestAttributes = (attributes: RequestAttributes) =>
+// Attributes reach spans and logs, tags reach error events
+export const setRequestAttributes = (attributes: RequestAttributes) => {
   Sentry.setAttributes(attributes);
+  Sentry.setTags(attributes);
+};
 
 
 
