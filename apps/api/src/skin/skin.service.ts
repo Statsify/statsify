@@ -87,7 +87,6 @@ export class SkinService {
     this.requestSkin(uuid)
       .then((skin) => this.save(skin))
       .catch(() => this.skinModel.updateOne({ uuid }, { expiresAt: Date.now() + RETRY_AFTER }).exec())
-      // The database failed too, so the next request tries again
       .catch(() => undefined)
       .finally(() => this.refreshing.delete(uuid));
   }
