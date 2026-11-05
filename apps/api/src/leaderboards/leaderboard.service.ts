@@ -118,14 +118,13 @@ export abstract class LeaderboardService {
         break;
       }
       case LeaderboardQuery.VALUE: {
-        const position = await this.searchLeaderboardValue(
+        highlight = await this.searchLeaderboardValue(
           constructor,
           field,
           input as number,
           sort
         );
-        highlight = position;
-        top = position - (position % PAGE_SIZE);
+        top = highlight - (highlight % PAGE_SIZE);
         bottom = top + PAGE_SIZE;
         break;
       }
