@@ -337,7 +337,8 @@ export class ApiService extends StatsifyApiService {
   public hypixelUnavailable({ retryAfter }: HypixelUnavailableException) {
     if (!retryAfter) return new ErrorMessage("errors.hypixelUnavailable");
 
-    const time = formatTime(retryAfter * 1000, { short: false, entries: 1 });
+    const seconds = retryAfter > 60 ? Math.ceil(retryAfter / 60) * 60 : retryAfter;
+    const time = formatTime(seconds * 1000, { short: false, entries: 1 });
 
     return new ErrorMessage(
       (t) => t("errors.hypixelRateLimited.title"),
