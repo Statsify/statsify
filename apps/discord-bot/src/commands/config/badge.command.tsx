@@ -132,7 +132,7 @@ export class BadgeCommand {
       }
 
       case "reset": {
-        // Badges need a premium tier, so without a custom badge the API serves the footer logo
+        // After a reset the API serves the footer logo as the badge
         const profile = await this.getProfile(t, user, await getLogo(user));
 
         return previewChange(
