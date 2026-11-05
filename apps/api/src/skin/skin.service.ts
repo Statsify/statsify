@@ -64,7 +64,7 @@ export class SkinService {
       .findOne()
       .where(isUsername ? "usernameToLower" : "uuid")
       .equals(tag)
-      // A name can be on more than one skin after a rename, so take the most recently refreshed
+      // Two skins can share a name after a rename
       .sort({ expiresAt: -1 })
       .lean()
       .exec();
