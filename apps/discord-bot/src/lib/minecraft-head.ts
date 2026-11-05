@@ -12,6 +12,7 @@ import { createCanvas } from "@statsify/rendering";
 export async function minecraftHeadAttachment(
   apiService: ApiService,
   uuid: string,
+  username: string,
   size = 160,
 ): Promise<InteractionAttachment> {
   const head = await apiService.getPlayerHead(uuid, size);
@@ -24,5 +25,6 @@ export async function minecraftHeadAttachment(
     name: `${uuid}.png`,
     data: await canvas.toBuffer("png"),
     type: "image/png",
+    description: (t) => t("altText.head", { player: username }),
   };
 }

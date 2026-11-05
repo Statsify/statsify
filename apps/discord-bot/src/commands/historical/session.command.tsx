@@ -59,7 +59,8 @@ import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
 import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile.js";
-import { type GamesWithBackgrounds, mapBackground } from "#constants";
+import { type GamesWithBackgrounds, MODES_TO_FORMATTED, mapBackground } from "#constants";
+import { removeFormatting } from "@statsify/util";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
 import { HistoricalTimes } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
@@ -381,6 +382,7 @@ export class SessionCommand {
       this.apiService.getUserBadge(player.uuid),
     ]);
 
+    const game = removeFormatting(MODES_TO_FORMATTED.get(modes)!);
     const allModes = modes.getModes();
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
     const modeEmojis = getModeEmojis ? getModeEmojis(displayedModes) : [];
@@ -425,7 +427,14 @@ export class SessionCommand {
 
           return {
             content: getContent(t),
-            files: [{ name: "session.png", data: buffer, type: "image/png" }],
+            files: [
+              {
+                name: "session.png",
+                data: buffer,
+                type: "image/png",
+                description: t("altText.session", { game, player: player.username, mode: mode.formatted }),
+              },
+            ],
             attachments: [],
           };
         },
@@ -463,7 +472,18 @@ export class SessionCommand {
 
           return {
             content: getContent(t),
-            files: [{ name: "session.png", data: buffer, type: "image/png" }],
+            files: [
+              {
+                name: "session.png",
+                data: buffer,
+                type: "image/png",
+                description: t("altText.session", {
+                  game,
+                  player: player.username,
+                  mode: `${mode.formatted} ${submode.formatted}`,
+                }),
+              },
+            ],
             attachments: [],
           };
         },

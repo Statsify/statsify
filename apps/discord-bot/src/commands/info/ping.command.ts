@@ -69,7 +69,7 @@ export class PingCommand {
     return {
       content: (t) => t("embeds.ping.pong"),
       embeds: [embed],
-      files: [{ name: "logo.png", data: logo, type: "image/png" }],
+      files: [{ name: "logo.png", data: logo, type: "image/png", description: (t) => t("altText.logo") }],
     };
   }
 }

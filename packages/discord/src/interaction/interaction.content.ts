@@ -12,11 +12,14 @@ import type {
   APIBaseComponent,
   APIEmbed,
 } from "discord-api-types/v10";
+import type { LocalizationString } from "#messages";
 
 export interface InteractionAttachment {
   name: string;
   data: Buffer;
   type?: string;
+  /** Alt text */
+  description?: LocalizationString;
 }
 
 export interface InteractionContent {
