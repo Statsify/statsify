@@ -53,7 +53,6 @@ export class GuildService {
       return this.fromCache(cachedGuild, false);
     }
 
-    // Most players have no guild, so that answer is cached as long as a guild is
     if (
       type === GuildQuery.PLAYER &&
       !cachedGuild &&
@@ -76,7 +75,7 @@ export class GuildService {
     }
 
     if (!guild) {
-      if (type === GuildQuery.PLAYER) await this.redis.set(`guildless:${tag}`, 1, "PX", 600_000);
+      if (type === GuildQuery.PLAYER) await this.redis.set(`guildless:${tag}`, 1, "PX", GUILD_CACHE_TIME_MS);
       await this.handleGuildNotFound(cachedGuild, tag, type);
       throw new GuildNotFoundException(displayName);
     }
