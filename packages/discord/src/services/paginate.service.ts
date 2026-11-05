@@ -53,8 +53,8 @@ type PageId = `${number}|${number}`;
  *
  * @param context The context of the command
  * @param pages The array of pages to paginate against
- * @param customId Makes the page buttons keep working after a restart. It returns a custom id
- * that ends with `page`, whose route re-runs the command. Without it, the buttons stop after 5 minutes
+ * @param customId Returns a custom id ending with `page`, whose route re-runs the command.
+ * Without it, the buttons stop after 5 minutes
  */
 export async function paginate(
   context: CommandContext,
@@ -287,7 +287,6 @@ export async function scrollingPagination(
   return message;
 }
 
-/** The page a click asks for: the select menu's value, or the end of the button's custom id */
 function getRequestedPage(interaction: Interaction): [index: number, subIndex: number] {
   if (!interaction.isMessageComponentInteraction()) return [0, 0];
 
