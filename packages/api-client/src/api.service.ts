@@ -287,7 +287,7 @@ export class ApiService {
     method: Method = "GET",
     { body, headers, responseType }: ExtraData = {}
   ): Promise<T> {
-    const res = await this.axios.request({
+    const { data } = await this.axios.request({
       url,
       method,
       params,
@@ -295,8 +295,6 @@ export class ApiService {
       data: body,
       responseType,
     });
-
-    const data = res.data;
 
     if (data.success === false) throw new Error("API request was unsuccessful");
 
