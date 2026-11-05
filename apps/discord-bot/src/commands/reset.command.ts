@@ -20,16 +20,11 @@ import { STATUS_COLORS } from "@statsify/logger";
 import { confirmAction } from "#lib/confirm-action";
 
 interface SessionChange {
-  /** Locale key of the warning shown before the change */
   warning: string;
-  /** Locale key of the button that makes the change */
   button: string;
   onConfirm: (uuid: string) => Promise<IMessage>;
 }
 
-/**
- * Not an async function: the command loader treats exports without a writable prototype as commands.
- */
 export function confirmSessionChange(
   context: CommandContext,
   { warning, button, onConfirm }: SessionChange
