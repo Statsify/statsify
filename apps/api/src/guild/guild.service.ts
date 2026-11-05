@@ -70,7 +70,6 @@ export class GuildService {
         type.toLowerCase() as Lowercase<GuildQuery>
       );
     } catch (error) {
-      // Serve the cache even if expired; an outage shouldn't clear or hide a guild
       if (cachedGuild && listsPlayer) return this.fromCache(cachedGuild, true);
       throw error;
     }
