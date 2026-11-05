@@ -114,15 +114,7 @@ export class Player {
 }
 
 export * from "./gamemodes/index.js";
-export {
-  ITEM_LAYOUT,
-  LEGACY_LAYOUT,
-  LIST_LAYOUT,
-  type LayoutShape,
-  PlayerLayouts,
-  SLOT_LAYOUT,
-  decodeLayouts,
-} from "./layouts.js";
+export * from "./layouts.js";
 export * from "./socials.js";
 export * from "./stats.js";
 export * from "./status.js";
