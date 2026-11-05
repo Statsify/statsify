@@ -77,7 +77,7 @@ export class GameCountsCommand {
   public async run(context: CommandContext) {
     const t = context.t();
     const gamecounts = await this.apiService.getGamecounts();
-    const game = context.option<string | undefined>("game", undefined);
+    const game = context.option<string | null>("game");
 
     if (game) {
       if (!this.isGameCountGameId(game)) throw new ErrorMessage("errors.invalidGame");
