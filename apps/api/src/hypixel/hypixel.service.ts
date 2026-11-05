@@ -169,7 +169,7 @@ export class HypixelService {
   }
 
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
-    // Resources don't need an API key, so the key's rate limit doesn't apply to them
+    // Resource endpoints don't need an API key
     const isKeyed = !url.startsWith("/resources/");
 
     if (isKeyed && Date.now() < this.rateLimitedUntil) {
