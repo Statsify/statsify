@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import Fuse from "fuse.js";
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
@@ -41,6 +42,15 @@ const GAMECOUNT_GAME_CHOICES = GAMECOUNT_GAME_IDS.map((id) => ({
   value: id,
 }));
 
+const GAMECOUNT_GAME_FUSE = new Fuse(GAMECOUNT_GAME_CHOICES, {
+  keys: ["name", "value"],
+  includeScore: false,
+  shouldSort: true,
+  isCaseSensitive: false,
+  threshold: 0.3,
+  ignoreLocation: true,
+});
+
 class GameArgument extends AbstractArgument {
   public name = "game";
   public description: LocalizationString;
@@ -58,11 +68,11 @@ class GameArgument extends AbstractArgument {
   ): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
 
-    return GAMECOUNT_GAME_CHOICES
-      .filter(({ name, value }) =>
-        name.toLowerCase().includes(currentValue) ||
-        value.toLowerCase().includes(currentValue)
-      )
+    if (!currentValue) return GAMECOUNT_GAME_CHOICES.slice(0, 25);
+
+    return GAMECOUNT_GAME_FUSE
+      .search(currentValue)
+      .map((result) => result.item)
       .slice(0, 25);
   }
 }
