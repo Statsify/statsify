@@ -181,7 +181,6 @@ export class Pit {
         getLevelFormatted(120, prestige) :
         getLevelFormatted(1, prestige + 1);
 
-    // Hypixel keeps counting gold after the requirement is met
     const goldReq = getPrestigeGoldReq(prestige);
     this.goldProgression = new Progression(Math.min(profile[`cash_during_prestige_${prestige}`] ?? 0, goldReq), goldReq);
 
