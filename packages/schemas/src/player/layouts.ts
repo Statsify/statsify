@@ -117,7 +117,7 @@ function collectLayouts<T>(data: APIData, key: RegExp, shape: LayoutShape<T>) {
 }
 
 /** Stored layouts by name, each back in the shape Hypixel sends it */
-export function decodeLayouts<T>(layouts: string | undefined, shape: LayoutShape<T>) {
+export function decodeLayouts<T>(layouts: string, shape: LayoutShape<T>) {
   return new Map(
     (layouts ? layouts.split(";") : []).map((layout) => {
       const [name, packed] = layout.split("=");
