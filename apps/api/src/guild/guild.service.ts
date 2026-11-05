@@ -44,7 +44,7 @@ export class GuildService {
   ): Promise<{ guild: Guild; hypixelUnavailable: boolean }> {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
-    // A player's saved guild id isn't cleared when they leave, so only use a cached guild that still lists them
+    // A player's saved guild id isn't cleared when they leave
     const listsPlayer =
       type !== GuildQuery.PLAYER || cachedGuild?.members.some((member) => member.uuid === tag);
 
