@@ -7,7 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { CacheLevel } from "@statsify/api-client";
+import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
 import {
   FormattedGame,
   type GameId,
@@ -47,6 +47,7 @@ import type {
 import { ORPCError } from "@orpc/nest";
 import { PLAYER_COOLDOWN_MS, type PlayerGuild, buildPlayerPage } from "./player-page.js";
 import { PlayerSearchService, PlayerService } from "#player";
+import { SkinService } from "#skin";
 import { Redis } from "ioredis";
 import { config, flatten, removeFormatting } from "@statsify/util";
 import { isIPv6 } from "node:net";
@@ -61,10 +62,10 @@ const HOME_PREVIEWS_RETRY_MS = 5000;
 
 /**
  * Unknown usernames are remembered so repeated misses never reach Mongo again for a while: `stored` when the name
- * isn't in the database, `hypixel` when Hypixel answered that there is no such player.
+ * isn't in the database, `absent` when Mojang or Hypixel answered that there is no such player.
  */
 const MISS_TTL_SECONDS = 15 * 60;
-type Miss = "stored" | "hypixel";
+type Miss = "stored" | "absent";
 
 /** Site-initiated Hypixel calls across all visitors per 5 minutes; `site.hypixelBudget` in `config.js`, 0 for none. */
 const DEFAULT_HYPIXEL_BUDGET = 15;
@@ -200,7 +201,8 @@ export class SiteService implements OnApplicationBootstrap {
     private readonly playerSearchService: PlayerSearchService,
     @InjectModel(Player) private readonly playerModel: PlayerModel,
     @InjectModel(Guild) private readonly guildModel: GuildModel,
-    @InjectRedis() private readonly redis: Redis
+    @InjectRedis() private readonly redis: Redis,
+    private readonly skinService: SkinService
   ) {}
 
   /** Builds the home previews once at start, without holding up the API's readiness. */
@@ -270,15 +272,22 @@ export class SiteService implements OnApplicationBootstrap {
       return known;
     }
 
-    // Hypixel has already said there's no such player, so the answer is the same and costs no budget.
-    if ((await this.redis.get(missKey(key))) === "hypixel") throw notFound();
+    // Mojang or Hypixel has already said there's no such player, so the answer is the same and costs no budget.
+    if ((await this.redis.get(missKey(key))) === "absent") throw notFound();
+
+    const uuid = byUuid ? tag : await this.mojangUuid(tag);
+
+    if (!uuid) {
+      await this.rememberMiss(key, "absent");
+      throw notFound();
+    }
 
     await this.consumeBudget(clientIp);
 
     let player: Player | null;
 
     try {
-      player = await this.playerService.get(tag, CacheLevel.CACHE, undefined, { throwOnHypixelError: true });
+      player = await this.playerService.get(uuid, CacheLevel.CACHE, undefined, { throwOnHypixelError: true });
     } catch (error) {
       // Not an answer about the name, so nothing is remembered and the visitor can try again.
       if (error instanceof HypixelUnavailableError) throw hypixelUnavailable();
@@ -286,13 +295,27 @@ export class SiteService implements OnApplicationBootstrap {
     }
 
     if (!player) {
-      await this.rememberMiss(key, "hypixel");
+      await this.rememberMiss(key, "absent");
       throw notFound();
     }
 
     await this.redis.del(missKey(key));
 
     return { uuid: player.uuid, username: player.username };
+  }
+
+  /**
+   * A name's UUID from Mojang, or null when no account has it: a typo costs no Hypixel budget, and Hypixel is asked by
+   * UUID, as its name lookup is deprecated.
+   */
+  private async mojangUuid(name: string): Promise<string | null> {
+    try {
+      return await this.skinService.getUuid(name);
+    } catch (error) {
+      if (error instanceof PlayerNotFoundException) return null;
+      // To the visitor Mojang not answering is the same as Hypixel not answering: try again shortly.
+      throw hypixelUnavailable();
+    }
   }
 
   public async suggest(query: string): Promise<string[]> {
