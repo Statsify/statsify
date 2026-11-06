@@ -38,15 +38,17 @@ import { Route as ApiSkinRenderRouteImport } from './routes/api/skin/render'
 import { Route as ApiSkinTextureRouteImport } from './routes/api/skin/texture'
 import { Route as Char123LocaleChar125CompareIndexRouteImport } from './routes/{-$locale}/compare/index'
 import { Route as Char123LocaleChar125GuildIndexRouteImport } from './routes/{-$locale}/guild/index'
-import { Route as Char123LocaleChar125GuildNameRouteImport } from './routes/{-$locale}/guild/$name'
 import { Route as Char123LocaleChar125LeaderboardsIndexRouteImport } from './routes/{-$locale}/leaderboards/index'
 import { Route as Char123LocaleChar125LeaderboardsFieldRouteImport } from './routes/{-$locale}/leaderboards/$field'
 import { Route as Char123LocaleChar125PlayerIndexRouteImport } from './routes/{-$locale}/player/index'
 import { Route as Char123LocaleChar125PrestigesBedwarsRouteImport } from './routes/{-$locale}/prestiges/bedwars'
+import { Route as Char123LocaleChar125GuildNameIndexRouteImport } from './routes/{-$locale}/guild/$name/index'
 import { Route as Char123LocaleChar125PlayerNameIndexRouteImport } from './routes/{-$locale}/player/$name/index'
 import { Route as Char123LocaleChar125PlayerNameGameRouteImport } from './routes/{-$locale}/player/$name/$game'
 import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name/bingo'
 import { Route as Char123LocaleChar125CompareABGameRouteImport } from './routes/{-$locale}/compare/$a/$b/$game'
+import { Route as Char123LocaleChar125GuildNameCompareIndexRouteImport } from './routes/{-$locale}/guild/$name/compare/index'
+import { Route as Char123LocaleChar125GuildNameCompareBRouteImport } from './routes/{-$locale}/guild/$name/compare/$b'
 import { Route as Char123LocaleChar125PlayerNameSessionIndexRouteImport } from './routes/{-$locale}/player/$name/session/index'
 import { Route as Char123LocaleChar125PlayerNameSessionGameRouteImport } from './routes/{-$locale}/player/$name/session/$game'
 
@@ -179,12 +181,6 @@ const Char123LocaleChar125GuildIndexRoute =
     path: '/guild/',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
-const Char123LocaleChar125GuildNameRoute =
-  Char123LocaleChar125GuildNameRouteImport.update({
-    id: '/guild/$name',
-    path: '/guild/$name',
-    getParentRoute: () => Char123LocaleChar125Route,
-  } as any)
 const Char123LocaleChar125LeaderboardsIndexRoute =
   Char123LocaleChar125LeaderboardsIndexRouteImport.update({
     id: '/leaderboards/',
@@ -209,6 +205,12 @@ const Char123LocaleChar125PrestigesBedwarsRoute =
     path: '/prestiges/bedwars',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
+const Char123LocaleChar125GuildNameIndexRoute =
+  Char123LocaleChar125GuildNameIndexRouteImport.update({
+    id: '/guild/$name/',
+    path: '/guild/$name/',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
 const Char123LocaleChar125PlayerNameIndexRoute =
   Char123LocaleChar125PlayerNameIndexRouteImport.update({
     id: '/player/$name/',
@@ -231,6 +233,18 @@ const Char123LocaleChar125CompareABGameRoute =
   Char123LocaleChar125CompareABGameRouteImport.update({
     id: '/compare/$a/$b/$game',
     path: '/compare/$a/$b/$game',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125GuildNameCompareIndexRoute =
+  Char123LocaleChar125GuildNameCompareIndexRouteImport.update({
+    id: '/guild/$name/compare/',
+    path: '/guild/$name/compare/',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125GuildNameCompareBRoute =
+  Char123LocaleChar125GuildNameCompareBRouteImport.update({
+    id: '/guild/$name/compare/$b',
+    path: '/guild/$name/compare/$b',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
 const Char123LocaleChar125PlayerNameSessionIndexRoute =
@@ -268,7 +282,6 @@ export interface FileRoutesByFullPath {
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
   '/api/skin/texture': typeof ApiSkinTextureRoute
-  '/{-$locale}/guild/$name': typeof Char123LocaleChar125GuildNameRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
   '/{-$locale}/compare/': typeof Char123LocaleChar125CompareIndexRoute
@@ -277,9 +290,12 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
+  '/{-$locale}/guild/$name/': typeof Char123LocaleChar125GuildNameIndexRoute
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
   '/{-$locale}/compare/$a/$b/$game': typeof Char123LocaleChar125CompareABGameRoute
+  '/{-$locale}/guild/$name/compare/$b': typeof Char123LocaleChar125GuildNameCompareBRoute
   '/{-$locale}/player/$name/session/$game': typeof Char123LocaleChar125PlayerNameSessionGameRoute
+  '/{-$locale}/guild/$name/compare/': typeof Char123LocaleChar125GuildNameCompareIndexRoute
   '/{-$locale}/player/$name/session/': typeof Char123LocaleChar125PlayerNameSessionIndexRoute
 }
 export interface FileRoutesByTo {
@@ -303,7 +319,6 @@ export interface FileRoutesByTo {
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
   '/api/skin/texture': typeof ApiSkinTextureRoute
-  '/{-$locale}/guild/$name': typeof Char123LocaleChar125GuildNameRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
   '/{-$locale}/compare': typeof Char123LocaleChar125CompareIndexRoute
@@ -312,9 +327,12 @@ export interface FileRoutesByTo {
   '/{-$locale}/player': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
+  '/{-$locale}/guild/$name': typeof Char123LocaleChar125GuildNameIndexRoute
   '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameIndexRoute
   '/{-$locale}/compare/$a/$b/$game': typeof Char123LocaleChar125CompareABGameRoute
+  '/{-$locale}/guild/$name/compare/$b': typeof Char123LocaleChar125GuildNameCompareBRoute
   '/{-$locale}/player/$name/session/$game': typeof Char123LocaleChar125PlayerNameSessionGameRoute
+  '/{-$locale}/guild/$name/compare': typeof Char123LocaleChar125GuildNameCompareIndexRoute
   '/{-$locale}/player/$name/session': typeof Char123LocaleChar125PlayerNameSessionIndexRoute
 }
 export interface FileRoutesById {
@@ -340,7 +358,6 @@ export interface FileRoutesById {
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
   '/api/skin/texture': typeof ApiSkinTextureRoute
-  '/{-$locale}/guild/$name': typeof Char123LocaleChar125GuildNameRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
   '/{-$locale}/compare/': typeof Char123LocaleChar125CompareIndexRoute
@@ -349,9 +366,12 @@ export interface FileRoutesById {
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
+  '/{-$locale}/guild/$name/': typeof Char123LocaleChar125GuildNameIndexRoute
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
   '/{-$locale}/compare/$a/$b/$game': typeof Char123LocaleChar125CompareABGameRoute
+  '/{-$locale}/guild/$name/compare/$b': typeof Char123LocaleChar125GuildNameCompareBRoute
   '/{-$locale}/player/$name/session/$game': typeof Char123LocaleChar125PlayerNameSessionGameRoute
+  '/{-$locale}/guild/$name/compare/': typeof Char123LocaleChar125GuildNameCompareIndexRoute
   '/{-$locale}/player/$name/session/': typeof Char123LocaleChar125PlayerNameSessionIndexRoute
 }
 export interface FileRouteTypes {
@@ -378,7 +398,6 @@ export interface FileRouteTypes {
     | '/api/skin/head'
     | '/api/skin/render'
     | '/api/skin/texture'
-    | '/{-$locale}/guild/$name'
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/prestiges/bedwars'
     | '/{-$locale}/compare/'
@@ -387,9 +406,12 @@ export interface FileRouteTypes {
     | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/$game'
     | '/{-$locale}/player/$name/bingo'
+    | '/{-$locale}/guild/$name/'
     | '/{-$locale}/player/$name/'
     | '/{-$locale}/compare/$a/$b/$game'
+    | '/{-$locale}/guild/$name/compare/$b'
     | '/{-$locale}/player/$name/session/$game'
+    | '/{-$locale}/guild/$name/compare/'
     | '/{-$locale}/player/$name/session/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -413,7 +435,6 @@ export interface FileRouteTypes {
     | '/api/skin/head'
     | '/api/skin/render'
     | '/api/skin/texture'
-    | '/{-$locale}/guild/$name'
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/prestiges/bedwars'
     | '/{-$locale}/compare'
@@ -422,9 +443,12 @@ export interface FileRouteTypes {
     | '/{-$locale}/player'
     | '/{-$locale}/player/$name/$game'
     | '/{-$locale}/player/$name/bingo'
+    | '/{-$locale}/guild/$name'
     | '/{-$locale}/player/$name'
     | '/{-$locale}/compare/$a/$b/$game'
+    | '/{-$locale}/guild/$name/compare/$b'
     | '/{-$locale}/player/$name/session/$game'
+    | '/{-$locale}/guild/$name/compare'
     | '/{-$locale}/player/$name/session'
   id:
     | '__root__'
@@ -449,7 +473,6 @@ export interface FileRouteTypes {
     | '/api/skin/head'
     | '/api/skin/render'
     | '/api/skin/texture'
-    | '/{-$locale}/guild/$name'
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/prestiges/bedwars'
     | '/{-$locale}/compare/'
@@ -458,9 +481,12 @@ export interface FileRouteTypes {
     | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/$game'
     | '/{-$locale}/player/$name/bingo'
+    | '/{-$locale}/guild/$name/'
     | '/{-$locale}/player/$name/'
     | '/{-$locale}/compare/$a/$b/$game'
+    | '/{-$locale}/guild/$name/compare/$b'
     | '/{-$locale}/player/$name/session/$game'
+    | '/{-$locale}/guild/$name/compare/'
     | '/{-$locale}/player/$name/session/'
   fileRoutesById: FileRoutesById
 }
@@ -645,13 +671,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125GuildIndexRouteImport
       parentRoute: typeof Char123LocaleChar125Route
     }
-    '/{-$locale}/guild/$name': {
-      id: '/{-$locale}/guild/$name'
-      path: '/guild/$name'
-      fullPath: '/{-$locale}/guild/$name'
-      preLoaderRoute: typeof Char123LocaleChar125GuildNameRouteImport
-      parentRoute: typeof Char123LocaleChar125Route
-    }
     '/{-$locale}/leaderboards/': {
       id: '/{-$locale}/leaderboards/'
       path: '/leaderboards'
@@ -678,6 +697,13 @@ declare module '@tanstack/react-router' {
       path: '/prestiges/bedwars'
       fullPath: '/{-$locale}/prestiges/bedwars'
       preLoaderRoute: typeof Char123LocaleChar125PrestigesBedwarsRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/guild/$name/': {
+      id: '/{-$locale}/guild/$name/'
+      path: '/guild/$name'
+      fullPath: '/{-$locale}/guild/$name/'
+      preLoaderRoute: typeof Char123LocaleChar125GuildNameIndexRouteImport
       parentRoute: typeof Char123LocaleChar125Route
     }
     '/{-$locale}/player/$name/': {
@@ -708,6 +734,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125CompareABGameRouteImport
       parentRoute: typeof Char123LocaleChar125Route
     }
+    '/{-$locale}/guild/$name/compare/': {
+      id: '/{-$locale}/guild/$name/compare/'
+      path: '/guild/$name/compare'
+      fullPath: '/{-$locale}/guild/$name/compare/'
+      preLoaderRoute: typeof Char123LocaleChar125GuildNameCompareIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/guild/$name/compare/$b': {
+      id: '/{-$locale}/guild/$name/compare/$b'
+      path: '/guild/$name/compare/$b'
+      fullPath: '/{-$locale}/guild/$name/compare/$b'
+      preLoaderRoute: typeof Char123LocaleChar125GuildNameCompareBRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
     '/{-$locale}/player/$name/session/': {
       id: '/{-$locale}/player/$name/session/'
       path: '/player/$name/session'
@@ -732,7 +772,6 @@ interface Char123LocaleChar125RouteChildren {
   Char123LocaleChar125PrivacyRoute: typeof Char123LocaleChar125PrivacyRoute
   Char123LocaleChar125TermsRoute: typeof Char123LocaleChar125TermsRoute
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
-  Char123LocaleChar125GuildNameRoute: typeof Char123LocaleChar125GuildNameRoute
   Char123LocaleChar125LeaderboardsFieldRoute: typeof Char123LocaleChar125LeaderboardsFieldRoute
   Char123LocaleChar125PrestigesBedwarsRoute: typeof Char123LocaleChar125PrestigesBedwarsRoute
   Char123LocaleChar125CompareIndexRoute: typeof Char123LocaleChar125CompareIndexRoute
@@ -741,9 +780,12 @@ interface Char123LocaleChar125RouteChildren {
   Char123LocaleChar125PlayerIndexRoute: typeof Char123LocaleChar125PlayerIndexRoute
   Char123LocaleChar125PlayerNameGameRoute: typeof Char123LocaleChar125PlayerNameGameRoute
   Char123LocaleChar125PlayerNameBingoRoute: typeof Char123LocaleChar125PlayerNameBingoRoute
+  Char123LocaleChar125GuildNameIndexRoute: typeof Char123LocaleChar125GuildNameIndexRoute
   Char123LocaleChar125PlayerNameIndexRoute: typeof Char123LocaleChar125PlayerNameIndexRoute
   Char123LocaleChar125CompareABGameRoute: typeof Char123LocaleChar125CompareABGameRoute
+  Char123LocaleChar125GuildNameCompareBRoute: typeof Char123LocaleChar125GuildNameCompareBRoute
   Char123LocaleChar125PlayerNameSessionGameRoute: typeof Char123LocaleChar125PlayerNameSessionGameRoute
+  Char123LocaleChar125GuildNameCompareIndexRoute: typeof Char123LocaleChar125GuildNameCompareIndexRoute
   Char123LocaleChar125PlayerNameSessionIndexRoute: typeof Char123LocaleChar125PlayerNameSessionIndexRoute
 }
 
@@ -754,7 +796,6 @@ const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
   Char123LocaleChar125PrivacyRoute: Char123LocaleChar125PrivacyRoute,
   Char123LocaleChar125TermsRoute: Char123LocaleChar125TermsRoute,
   Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
-  Char123LocaleChar125GuildNameRoute: Char123LocaleChar125GuildNameRoute,
   Char123LocaleChar125LeaderboardsFieldRoute:
     Char123LocaleChar125LeaderboardsFieldRoute,
   Char123LocaleChar125PrestigesBedwarsRoute:
@@ -768,12 +809,18 @@ const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
     Char123LocaleChar125PlayerNameGameRoute,
   Char123LocaleChar125PlayerNameBingoRoute:
     Char123LocaleChar125PlayerNameBingoRoute,
+  Char123LocaleChar125GuildNameIndexRoute:
+    Char123LocaleChar125GuildNameIndexRoute,
   Char123LocaleChar125PlayerNameIndexRoute:
     Char123LocaleChar125PlayerNameIndexRoute,
   Char123LocaleChar125CompareABGameRoute:
     Char123LocaleChar125CompareABGameRoute,
+  Char123LocaleChar125GuildNameCompareBRoute:
+    Char123LocaleChar125GuildNameCompareBRoute,
   Char123LocaleChar125PlayerNameSessionGameRoute:
     Char123LocaleChar125PlayerNameSessionGameRoute,
+  Char123LocaleChar125GuildNameCompareIndexRoute:
+    Char123LocaleChar125GuildNameCompareIndexRoute,
   Char123LocaleChar125PlayerNameSessionIndexRoute:
     Char123LocaleChar125PlayerNameSessionIndexRoute,
 }

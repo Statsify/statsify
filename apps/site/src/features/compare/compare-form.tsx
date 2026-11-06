@@ -17,34 +17,77 @@ import type { GamePage } from "@statsify/contract";
 
 const localeRoute = getRouteApi("/{-$locale}");
 
-/**
- * The game page's Compare panel: another player's name, then the two side by side in the game and mode shown. A form, so
- * it works before the page's scripts load (the `/compare` route sends it on); with them, it navigates in place.
- */
+/** The game page's Compare panel: another player's name, then the two side by side in the game and mode shown. */
 export function ComparePanel({ id, page }: { id: string; page: GamePage }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const search = pageSearch(page);
+
+  return (
+    <CompareForm
+      id={id}
+      title={t("compare.title")}
+      label={t("compare.player")}
+      action="/compare"
+      fields={{ a: page.username, game: page.game.key, ...search }}
+      open={(b) => navigate({ ...gameLink({ kind: "compare", a: page.username, b }, page.game.key), search })}
+    />
+  );
+}
+
+/** The guild page's Compare panel: another guild's name, then the two side by side. */
+export function GuildComparePanel({ id, name }: { id: string; name: string }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  return (
+    <CompareForm
+      id={id}
+      title={t("compare.guildTitle")}
+      label={t("compare.guild")}
+      action={`/guild/${encodeURIComponent(name)}/compare`}
+      open={(b) => navigate({ to: "/{-$locale}/guild/$name/compare/$b", params: { name, b } })}
+    />
+  );
+}
+
+/**
+ * The other name's box. A form, so it works before the page's scripts load (`action`, under the locale, sends it on
+ * with `fields` and the name as `b`); with them, `open` navigates in place.
+ */
+function CompareForm({
+  id,
+  title,
+  label,
+  action,
+  fields,
+  open,
+}: {
+  id: string;
+  title: string;
+  label: string;
+  action: string;
+  fields?: Record<string, string | undefined>;
+  open: (b: string) => Promise<void>;
+}) {
+  const { t } = useTranslation();
   const inputId = useId();
   const { locale } = localeRoute.useRouteContext();
-  const search = pageSearch(page);
   useRevealOnOpen(id);
 
   return (
-    <Box id={id} title={<h2 className="text-mc-1.5">{t("compare.title")}</h2>}>
+    <Box id={id} title={<h2 className="text-mc-1.5">{title}</h2>}>
       <form
         method="get"
-        action={`${localePrefix(locale)}/compare`}
+        action={`${localePrefix(locale)}${action}`}
         onSubmit={(event) => {
           event.preventDefault();
-          const b = String(new FormData(event.currentTarget).get("b")).trim();
-          void navigate({ ...gameLink({ kind: "compare", a: page.username, b }, page.game.key), search });
+          void open(String(new FormData(event.currentTarget).get("b")).trim());
         }}
         className="flex flex-wrap items-center gap-3"
       >
-        <input type="hidden" name="a" value={page.username} />
-        <input type="hidden" name="game" value={page.game.key} />
-        {Object.entries(search).map(([key, value]) => value !== undefined && <input key={key} type="hidden" name={key} value={value} />)}
-        <label htmlFor={inputId} className="shrink-0 text-mc-1 text-mc-gray">{t("compare.player")}</label>
+        {Object.entries(fields ?? {}).map(([key, value]) => value !== undefined && <input key={key} type="hidden" name={key} value={value} />)}
+        <label htmlFor={inputId} className="shrink-0 text-mc-1 text-mc-gray">{label}</label>
         <input
           id={inputId}
           name="b"
