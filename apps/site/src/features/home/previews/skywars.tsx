@@ -16,19 +16,19 @@ import { cn } from "~/lib/util";
 import { useTranslation } from "react-i18next";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { usePlayer } from "~/components/player-context";
+import type { SkyWarsPreview } from "@statsify/contract";
 
 export function SkyWarsPreview({ className }: { className?: string }) {
-  const player = usePlayer();
+  const skywars = usePlayer<SkyWarsPreview>();
   const n = useNumberFormat();
   const { t } = useTranslation();
-  const skywars = player.stats.skywars;
   const stats = skywars.overall;
 
   return (
     <div className={cn("grid grid-cols-3 gap-2 sm:whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-1 xl:grid-cols-balanced gap-2 text-center">
-        <Skin uuid={player.uuid} className="xl:row-start-1 xl:row-end-4 hidden xl:block" />
-        <Nametag prefixName={player.prefixName} className="row-start-1 xl:col-start-2" />
+        <Skin uuid={skywars.uuid} className="xl:row-start-1 xl:row-end-4 hidden xl:block" />
+        <Nametag prefixName={skywars.prefixName} className="row-start-1 xl:col-start-2" />
         <Progression
           className="row-start-2 xl:col-start-2"
           label="Level"

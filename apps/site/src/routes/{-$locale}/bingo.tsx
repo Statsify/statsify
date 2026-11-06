@@ -8,7 +8,7 @@
 
 import { Background } from "~/components/ui/background";
 import { BingoHeading } from "~/features/bingo/bingo-layout";
-import { Search } from "~/features/bingo/search";
+import { Search } from "~/components/search";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -36,7 +36,7 @@ function BingoSearchPage() {
       <div className="w-full h-full flex justify-center items-center flex-col gap-8 py-12">
         <BingoHeading subtitle="13th Anniversary Bingo" />
         <div className="w-[80%]">
-          <Search />
+          <Search target="bingo" />
         </div>
       </div>
     </div>

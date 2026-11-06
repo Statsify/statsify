@@ -18,6 +18,33 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service"
   },
+  "search": {
+    "label": "Search players",
+    "placeholder": "Search a player",
+    "heading": "Search Your Hypixel Stats",
+    "noResults": "No players match \"{{query}}\""
+  },
+  "player": {
+    "multiplier": "Level Multiplier",
+    "highestStreak": "Highest Streak",
+    "na": "N/A",
+    "updated": "Updated {{time}}",
+    "refresh": "Update stats",
+    "refreshing": "Refreshing…",
+    "refreshIn": "Refresh in {{seconds}}s",
+    "refreshLimited": "Too many updates right now, try again shortly.",
+    "notFound": {
+      "title": "Player Not Found",
+      "description": "We haven't seen {{name}} yet. Check the spelling, or ask Hypixel to look them up.",
+      "lookup": "Look Up on Hypixel",
+      "lookingUp": "Looking up…",
+      "unknown": "Hypixel doesn't know a player called {{name}} either.",
+      "verify": "Please complete the verification first.",
+      "limited": "Too many lookups right now, try again in {{seconds}}s.",
+      "unavailable": "Hypixel didn't answer. Try again in a minute.",
+      "error": "Something went wrong. Try again in a moment."
+    }
+  },
   "notFound": {
     "title": "OOPS!",
     "description": "Looks like the page you're trying to reach does not exist"
@@ -27,5 +54,12 @@
     "description": "Try again in a moment.",
     "tryAgain": "Try Again",
     "home": "Home"
+  },
+  "bingo": {
+    "notFound": {
+      "title": "Player Not Found",
+      "description": "We haven't seen {{name}} yet. Check the spelling, or look them up on Hypixel.",
+      "lookup": "Look Up {{name}}"
+    }
   }
 }

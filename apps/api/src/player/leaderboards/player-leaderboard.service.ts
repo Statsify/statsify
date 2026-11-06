@@ -55,22 +55,57 @@ export class PlayerLeaderboardService extends LeaderboardService {
     }, {} as Record<string, boolean>);
 
     selector.displayName = true;
+    selector.uuid = true;
 
-    return await Promise.all(
-      ids.map(async (id) => {
-        const player = await this.playerModel
-          .findOne()
-          .where("uuid")
-          .equals(id)
-          .select(selector)
-          .lean()
-          .exec();
+    // One query for the whole page instead of one per row. `$in` returns documents in no
+    // particular order, so the rows are rebuilt in the leaderboard's order from `ids`; a missing player
+    // flattens to the same empty row the one-query-per-row lookup produced.
+    const players = await this.playerModel
+      .find({ uuid: { $in: ids } })
+      .select(selector)
+      .lean()
+      .exec();
 
-        const additionalStats = flatten(player) as LeaderboardAdditionalStats;
-        additionalStats.name = additionalStats.displayName;
+    const playersByUuid = new Map(players.map((player) => [player.uuid, player]));
 
-        return additionalStats;
-      })
-    );
+    return ids.map((id) => {
+      const additionalStats = flatten(playersByUuid.get(id) ?? null) as LeaderboardAdditionalStats;
+      additionalStats.name = additionalStats.displayName;
+
+      return additionalStats;
+    });
   }
+}
+
+if (import.meta.vitest) {
+  const { describe, expect, it } = import.meta.vitest;
+
+  describe("PlayerLeaderboardService.getAdditionalStats", () => {
+    it("returns rows in leaderboard order, with an empty row for a missing player", async () => {
+      // Mongo hands `$in` matches back in its own order, here reversed, with one id missing.
+      const players = [
+        { uuid: "c", displayName: "C", stats: { bedwars: { wins: 3 } } },
+        { uuid: "a", displayName: "A", stats: { bedwars: { wins: 1 } } },
+      ];
+
+      const playerModel = {
+        find: () => ({ select: () => ({ lean: () => ({ exec: () => Promise.resolve(players) }) }) }),
+      };
+
+      class Exposed extends PlayerLeaderboardService {
+        public stats(ids: string[], fields: string[]) {
+          return this.getAdditionalStats(ids, fields);
+        }
+      }
+
+      const service = new Exposed(undefined as never, playerModel as never, undefined as never);
+
+      expect(await service.stats(["a", "b", "c"], ["stats.bedwars.wins"])).toEqual([
+        { uuid: "a", displayName: "A", name: "A", "stats.bedwars.wins": 1 },
+        // `flatten(null)`, as the one-query-per-row lookup returned for a missing player.
+        { "": null },
+        { uuid: "c", displayName: "C", name: "C", "stats.bedwars.wins": 3 },
+      ]);
+    });
+  });
 }

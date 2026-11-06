@@ -16,7 +16,10 @@ const EDGE_TTL_SECONDS = 600;
 export const Route = createFileRoute("/{-$locale}/")({
   loader: () => getHomeData(),
   staleTime: EDGE_TTL_SECONDS * 1000,
-  headers: () => cacheHeaders(`max-age=${EDGE_TTL_SECONDS}, stale-while-revalidate=86400`),
+  headers: ({ loaderData }) =>
+    loaderData?.unavailable ?
+      { "Cache-Control": "no-store", "CDN-Cache-Control": "no-store" } :
+      cacheHeaders(`max-age=${EDGE_TTL_SECONDS}, stale-while-revalidate=86400, stale-if-error=86400`),
   component: HomePage,
 });
 

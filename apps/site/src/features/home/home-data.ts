@@ -6,42 +6,24 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ARCADE_PREVIEW,
-  BEDWARS_PREVIEW,
-  DUELS_PREVIEW,
-  GUILD_MEMBER_PREVIEW,
-  LEADERBOARD_PREVIEW,
-  SESSION_PREVIEW,
-  SKYWARS_PREVIEW,
-} from "./preview-constants";
-import { createServerFn } from "@tanstack/react-start";
-import { getGuild, getLeaderboard, getPlayer } from "~/server/api.server";
+import { rpc } from "~/lib/orpc";
+import type { HomePreviews } from "@statsify/contract";
 
-async function previewPlayer(uuid: string) {
-  const player = await getPlayer(uuid);
-  if (!player) throw new Error(`Preview player ${uuid} is not in the database`);
-  return player;
-}
+export type HomeData = HomePreviews & {
+  /** The API didn't answer, so every preview is missing and the page mustn't be cached. */
+  unavailable?: true;
+};
 
-/** The fixed preview players, guild and leaderboard the home page sections render. */
-export const getHomeData = createServerFn({ method: "GET" }).handler(async () => {
-  const [bedwars, skywars, duels, arcade, session, guild, leaderboard] = await Promise.all([
-    previewPlayer(BEDWARS_PREVIEW),
-    previewPlayer(SKYWARS_PREVIEW),
-    previewPlayer(DUELS_PREVIEW),
-    previewPlayer(ARCADE_PREVIEW),
-    previewPlayer(SESSION_PREVIEW),
-    getGuild(GUILD_MEMBER_PREVIEW),
-    getLeaderboard(LEADERBOARD_PREVIEW),
-  ]);
+/** Every preview missing: the home page still renders, without them. */
+const NO_PREVIEWS: HomeData = {
+  players: { bedwars: null, skywars: null, duels: null, arcade: null, session: null },
+  guild: null,
+  leaderboard: null,
+  unavailable: true,
+};
 
-  return {
-    players: [bedwars, skywars, duels, arcade] as const,
-    sessionPlayer: session,
-    guild,
-    leaderboard,
-  };
-});
-
-export type HomeData = Awaited<ReturnType<typeof getHomeData>>;
+/**
+ * The home page's previews through the contract: strict cache-only, trimmed view models rather
+ * than whole player documents. Each preview is `null` when its data is missing, and its section hides.
+ */
+export const getHomeData = (): Promise<HomeData> => rpc.home.previews().catch(() => NO_PREVIEWS);

@@ -22,6 +22,7 @@ export const getLocaleData = createServerFn({ method: "GET" })
 
     return {
       resources,
+      turnstileSiteKey: config.turnstileSiteKey,
       sentry: {
         dsn: config.sentryDsn,
         environment: config.environment,

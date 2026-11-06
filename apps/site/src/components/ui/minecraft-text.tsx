@@ -6,72 +6,124 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-const minecraftColors = [
-  { code: "0", className: "text-mc-black" },
-  { code: "1", className: "text-mc-dark-blue" },
-  { code: "2", className: "text-mc-dark-green" },
-  { code: "3", className: "text-mc-dark-aqua" },
-  { code: "4", className: "text-mc-dark-red" },
-  { code: "5", className: "text-mc-dark-purple" },
-  { code: "6", className: "text-mc-gold" },
-  { code: "7", className: "text-mc-gray" },
-  { code: "8", className: "text-mc-dark-gray" },
-  { code: "9", className: "text-mc-blue" },
-  { code: "a", className: "text-mc-green" },
-  { code: "b", className: "text-mc-aqua" },
-  { code: "c", className: "text-mc-red" },
-  { code: "d", className: "text-mc-pink" },
-  { code: "e", className: "text-mc-yellow" },
-  { code: "f", className: "text-mc-white" },
-];
+import { cn } from "~/lib/util";
+import type { CSSProperties, ReactNode } from "react";
 
+const COLOR_CLASSES: Record<string, string> = {
+  0: "text-mc-black",
+  1: "text-mc-dark-blue",
+  2: "text-mc-dark-green",
+  3: "text-mc-dark-aqua",
+  4: "text-mc-dark-red",
+  5: "text-mc-dark-purple",
+  6: "text-mc-gold",
+  7: "text-mc-gray",
+  8: "text-mc-dark-gray",
+  9: "text-mc-blue",
+  a: "text-mc-green",
+  b: "text-mc-aqua",
+  c: "text-mc-red",
+  d: "text-mc-pink",
+  e: "text-mc-yellow",
+  f: "text-mc-white",
+};
+
+const HEX_COLOR = /^#[\dA-Fa-f]{6}/;
+const SIZE = /^\^(\d+(?:\.\d+)?)\^/;
+
+/** The renderer's default text size; `§^N^` is relative to it. */
+const BASE_SIZE = 2;
+
+/**
+ * Renders Minecraft-formatted text the way the bot's cards do: `§0`–`§f` and `§#rrggbb` colours, `§l` bold,
+ * `§o` italic, `§n` and `§u` underline, `§m` strikethrough, `§k` ignored, `§r` reset and the renderer's `§^N^` size codes.
+ */
 export function MinecraftText({ children, className }: { children: string | string[]; className?: string }) {
-  const input = typeof children === "string" ? children : children.join("");
-  const parts = input.split("§");
-
-  if (input.startsWith("§")) parts.shift();
+  const input = Array.isArray(children) ? children.join("") : children;
+  const [plain = "", ...coded] = input.split("§");
 
   let bold = false;
   let italic = false;
-  let color = "text-mc-white";
+  let underline = false;
+  let strike = false;
+  let colorClass = "text-mc-white";
+  let hex: string | undefined;
+  let size: number | undefined;
 
-  const elements = parts.map((part, index) => {
-    const modifier = part[0];
+  const elements: ReactNode[] = [];
+
+  const push = (text: string, key: number) => {
+    if (text.length === 0) return;
+
+    const style: CSSProperties = {};
+    if (hex) style.color = hex;
+    if (size !== undefined) style.fontSize = `${size / BASE_SIZE}em`;
+
+    elements.push(
+      <span
+        key={key}
+        className={cn(
+          bold && "font-bold",
+          italic ? "italic" : "not-italic",
+          underline && "underline",
+          strike && "line-through",
+          hex ? undefined : colorClass,
+          className
+        )}
+        style={style}
+      >
+        {text}
+      </span>
+    );
+  };
+
+  push(plain, 0);
+
+  for (const [index, part] of coded.entries()) {
+    const code = part[0];
+    const hexMatch = HEX_COLOR.exec(part);
+    const sizeMatch = SIZE.exec(part);
     let text: string;
 
-    switch (modifier) {
-      case "l":
-        bold = true;
-        text = part.slice(1);
-        break;
-
-      case "o":
-        italic = true;
-        text = part.slice(1);
-        break;
-
-      case "r":
-        bold = false;
-        italic = false;
-        color = "text-mc-white";
-        text = part.slice(1);
-        break;
-
-      default: {
-        const colorCode = minecraftColors.find((color) => color.code === modifier);
-        if (colorCode) {
-          color = colorCode.className;
-          text = part.slice(1);
-        } else {
-          text = `§${part}`;
-        }
-      }
+    if (hexMatch) {
+      hex = hexMatch[0];
+      text = part.slice(hexMatch[0].length);
+    } else if (sizeMatch) {
+      size = Number(sizeMatch[1]);
+      text = part.slice(sizeMatch[0].length);
+    } else if (code === "l") {
+      bold = true;
+      text = part.slice(1);
+    } else if (code === "o") {
+      italic = true;
+      text = part.slice(1);
+    } else if (code === "n" || code === "u") {
+      underline = true;
+      text = part.slice(1);
+    } else if (code === "k") {
+      // The bot's renderer draws obfuscated text as it is.
+      text = part.slice(1);
+    } else if (code === "m") {
+      strike = true;
+      text = part.slice(1);
+    } else if (code === "r") {
+      bold = false;
+      italic = false;
+      underline = false;
+      strike = false;
+      hex = undefined;
+      colorClass = "text-mc-white";
+      text = part.slice(1);
+    } else if (code !== undefined && code in COLOR_CLASSES) {
+      colorClass = COLOR_CLASSES[code];
+      hex = undefined;
+      text = part.slice(1);
+    } else {
+      text = `§${part}`;
     }
 
-    if (text.length === 0) return undefined;
-
-    return <span key={index} className={`${bold ? "font-bold" : ""} ${italic ? "italic" : "not-italic"} ${color} ${className ?? ""}`}>{text}</span>;
-  }).filter((element) => element !== undefined);
+    push(text, index + 1);
+  }
 
   return <span>{elements}</span>;
 }

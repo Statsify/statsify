@@ -8,6 +8,7 @@
 
 import { Box } from "./box";
 import { ComponentProps } from "react";
+import { cn } from "~/lib/util";
 
 export function Skin({ uuid, className = "", ...props }: ComponentProps<typeof Box> & { uuid: string }) {
   return (
@@ -40,5 +41,20 @@ export function SkinHead({ uuid, size = 32, className }: { uuid: string; size?: 
       style={{ imageRendering: "pixelated" }}
       className={className}
     />
+  );
+}
+
+/** The top of the full-body render, height-cropped: the bust in profile blocks and result cards. */
+export function SkinBust({ uuid, className }: { uuid: string; className?: string }) {
+  return (
+    <div className={cn("relative overflow-hidden", className)}>
+      <img
+        src={`/api/skin/render?uuid=${uuid}`}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-x-0 top-0 w-full object-top pointer-events-none"
+      />
+    </div>
   );
 }

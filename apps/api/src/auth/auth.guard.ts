@@ -34,6 +34,7 @@ export class AuthGuard implements CanActivate {
 
     const weight = this.reflector.get<number>("auth-weight", handler);
     const role = this.reflector.get<AuthRole>("auth-role", handler);
+    const siteUnlimited = this.reflector.get<boolean>("auth-site-unlimited", handler);
 
     if (weight === undefined || role === undefined) return true;
 
@@ -45,7 +46,7 @@ export class AuthGuard implements CanActivate {
 
     if (!apiKey) throw new UnauthorizedException();
 
-    const keyInfo = await this.authService.limited(apiKey, weight, role);
+    const keyInfo = await this.authService.limited(apiKey, weight, role, siteUnlimited);
 
     context.switchToHttp().getResponse<FastifyReply>().headers({
       "x-ratelimit-used": keyInfo.used,
