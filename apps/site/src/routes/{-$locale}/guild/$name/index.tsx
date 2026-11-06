@@ -38,7 +38,7 @@ export const Route = createFileRoute("/{-$locale}/guild/$name/")({
     return {
       name: guild.name,
       // For the link preview's text.
-      headline: { level: Math.floor(guild.level), members: guild.members.length, exp: guild.exp, weekly: guild.weekly },
+      headline: { level: Math.floor(guild.level), members: guild.memberCount, exp: guild.exp, weekly: guild.weekly },
     };
   },
   staleTime: 60_000,
