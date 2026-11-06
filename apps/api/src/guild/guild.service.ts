@@ -17,15 +17,13 @@ import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.servic
 import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";
-import { Logger, setRequestAttributes } from "@statsify/logger";
+import { addRequestAttributes, setRequestAttributes } from "@statsify/logger";
 import { PlayerService } from "#player";
 import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class GuildService {
-  private readonly logger = new Logger("GuildService");
-
   public constructor(
     private readonly hypixelService: HypixelService,
     private readonly playerService: PlayerService,
@@ -238,7 +236,7 @@ export class GuildService {
     }
 
     if (!member.username) {
-      this.logger.error(`Could not get username data for: ${member.uuid}`);
+      addRequestAttributes({ "statsify.guild.members.unresolved": 1 });
 
       member.username = `ERROR ${member.uuid}`;
       member.displayName = member.username;

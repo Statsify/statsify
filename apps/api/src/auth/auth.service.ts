@@ -12,7 +12,6 @@ import {
   HttpException,
   Injectable,
   InternalServerErrorException,
-  Logger,
   UnauthorizedException,
 } from "@nestjs/common";
 import { InjectRedis } from "#redis";
@@ -23,8 +22,6 @@ import { createHash, randomUUID } from "node:crypto";
 
 @Injectable()
 export class AuthService {
-  private readonly logger = new Logger("AuthGuard");
-
   public constructor(@InjectRedis() private readonly redis: Redis) {}
 
   public async limited(apiKey: string, weight: number, role: AuthRole) {
@@ -41,7 +38,7 @@ export class AuthService {
 
     const [apiKeyRole, apiKeyLimit] = keyInfo.map(Number);
 
-    setRequestAttributes({ "statsify.api.role": AuthRole[apiKeyRole] });
+    setRequestAttributes({ "statsify.api.client": name, "statsify.api.role": AuthRole[apiKeyRole] });
 
     if (apiKeyRole < role) throw new ForbiddenException();
 
@@ -72,13 +69,7 @@ export class AuthService {
 
     const resetTime = 60_000 - (time - (requests[1] as [Error | null, number])[1]);
 
-    if (weightedTotal > apiKeyLimit) {
-      this.logger.warn(
-        `${name} has exceeded their request limit of ${apiKeyLimit} and has requested ${weightedTotal} times`
-      );
-
-      throw new HttpException("Too Many Requests", 429);
-    }
+    if (weightedTotal > apiKeyLimit) throw new HttpException("Too Many Requests", 429);
 
     return {
       canActivate: true,
