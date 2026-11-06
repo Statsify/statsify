@@ -18,9 +18,9 @@ import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { orNull } from "~/lib/orpc";
 import { preloadBackground } from "~/components/ui/background";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import type { ComponentProps } from "react";
 
-/** The guild the comparison couldn't find, and whether it's the second one. */
-type Missing = { name: string; second: boolean };
+type Missing = ComponentProps<typeof GuildNotFoundView>;
 
 export const Route = createFileRoute("/{-$locale}/guild/$name/compare/$b")({
   loader: async ({ params, context }) => {
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/{-$locale}/guild/$name/compare/$b")({
 
     if (!a || !b) {
       cacheNotFoundResponse();
-      throw notFound({ data: (a ? { name: params.b, second: true } : { name: params.name, second: false }) satisfies Missing });
+      throw notFound({ data: (a ? { name: params.b, first: params.name } : { name: params.name }) satisfies Missing });
     }
 
     if (a.name !== params.name || b.name !== params.b) {
@@ -87,16 +87,9 @@ export const Route = createFileRoute("/{-$locale}/guild/$name/compare/$b")({
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),
-  notFoundComponent: GuildCompareNotFound,
+  notFoundComponent: ({ data }) => <GuildNotFoundView {...(data as Missing)} />,
   component: GuildComparePage,
 });
-
-/** The guild page's lookup; when it finds the second guild, the page reloads under the same first guild. */
-function GuildCompareNotFound({ data }: { data?: unknown }) {
-  const { name } = Route.useParams();
-  const missing = data as Missing;
-  return <GuildNotFoundView name={missing.name} first={missing.second ? name : undefined} />;
-}
 
 function GuildComparePage() {
   const { a, b } = Route.useLoaderData();
