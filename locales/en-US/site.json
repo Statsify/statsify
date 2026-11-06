@@ -58,6 +58,10 @@
       "lead": "{{a}} vs {{b}} in {{game}}:",
       "description": "View {{a}} and {{b}} Hypixel {{game}} stats side by side on Statsify."
     },
+    "compareGuilds": {
+      "title": "{{a}} vs {{b}} Guild Stats | Statsify",
+      "lead": "{{a}} vs {{b}}:"
+    },
     "leaderboard": {
       "gameTitle": "{{game}} Leaderboards | Statsify",
       "gameDescription": "{{game}} leaderboards on Statsify, by mode.",
@@ -215,6 +219,9 @@
     "open": "Compare",
     "title": "Compare With Another Player",
     "player": "Player",
+    "guildTitle": "Compare With Another Guild",
+    "guild": "Guild",
+    "guildHeading": "Guild Comparison",
     "submit": "Compare",
     "versus": "{{a}} vs {{b}}"
   },
