@@ -21,27 +21,23 @@ import type { ReactNode } from "react";
 
 const MAX_MEMBERS = 125;
 
-type Cell = Omit<Stat, "leaderboard">;
-
-/** A stat cell of both guilds, with what differs between them. */
-const pair = (base: Cell, a: Partial<Cell>, b: Partial<Cell>): Pair => ({
-  a: { leaderboard: null, ...base, ...a },
-  b: { leaderboard: null, ...base, ...b },
-});
-
-/** The guild page's summary and its GEXP by period for two guilds, paired as the player comparison pairs a game's. */
-export function guildPairs(a: GuildPage, b: GuildPage, formatDate: (time: number) => string): { title?: string; pairs: Pair[] }[] {
+/** The guild page's summary and GEXP boxes, a pair per stat. */
+function guildPairs(a: GuildPage, b: GuildPage, date: Intl.DateTimeFormat): { title?: string; pairs: Pair[] }[] {
+  const pair = (cell: (guild: GuildPage) => Omit<Stat, "leaderboard">): Pair => ({
+    a: { ...cell(a), leaderboard: null },
+    b: { ...cell(b), leaderboard: null },
+  });
   const gexp = (key: string, label: string, value: (guild: GuildPage) => number) =>
-    pair({ key, label, colour: "§2", value: 0 }, { value: value(a) }, { value: value(b) });
+    pair((guild) => ({ key, label, colour: "§2", value: value(guild) }));
 
   return [
     {
       pairs: [
-        pair({ key: "level", label: "stats.guild.level", colour: "§f", value: 0 }, { value: a.level, colour: a.tagColor }, { value: b.level, colour: b.tagColor }),
-        pair({ key: "members", label: "stats.guild.members", colour: "§9", value: 0, of: MAX_MEMBERS }, { value: a.memberCount }, { value: b.memberCount }),
+        pair((guild) => ({ key: "level", label: "stats.guild.level", colour: guild.tagColor, value: guild.level })),
+        pair((guild) => ({ key: "members", label: "stats.guild.members", colour: "§9", value: guild.memberCount, of: MAX_MEMBERS })),
         gexp("exp", "stats.guild.gexp", (guild) => guild.exp),
-        pair({ key: "createdAt", label: "stats.guild.createdOn", colour: "§3", value: 0 }, { value: formatDate(a.createdAt) }, { value: formatDate(b.createdAt) }),
-        ...(a.master && b.master ? [pair({ key: "master", label: "stats.guild.guildMaster", colour: "§b", value: 0 }, { value: a.master }, { value: b.master })] : []),
+        pair((guild) => ({ key: "createdAt", label: "stats.guild.createdOn", colour: "§3", value: date.format(guild.createdAt) })),
+        ...(a.master && b.master ? [pair((guild) => ({ key: "master", label: "stats.guild.guildMaster", colour: "§b", value: guild.master! }))] : []),
       ],
     },
     {
@@ -68,11 +64,11 @@ type TableRow = { key: string; label: ReactNode; values: [number, number] };
 const gameExp = (guild: GuildPage, id: string) => guild.expByGame.find((game) => game.id === id)?.exp ?? 0;
 
 /** The days both guilds' histories have, newest first. */
-function historyRows(a: GuildPage, b: GuildPage, formatDate: (time: number) => string): TableRow[] {
+function historyRows(a: GuildPage, b: GuildPage, date: Intl.DateTimeFormat): TableRow[] {
   const days = new Map(b.history.map(({ day, exp }) => [day, exp]));
   return a.history.flatMap(({ day, exp }) => {
     const other = days.get(day);
-    return other === undefined ? [] : [{ key: day, label: formatDate(Date.parse(day)), values: [exp, other] }];
+    return other === undefined ? [] : [{ key: day, label: date.format(Date.parse(day)), values: [exp, other] }];
   });
 }
 
@@ -98,9 +94,8 @@ function gameRows(a: GuildPage, b: GuildPage): TableRow[] {
 export function GuildCompareView({ a, b }: { a: GuildPage; b: GuildPage }) {
   const { t, i18n } = useTranslation();
   const date = dateFormat(i18n.language);
-  const formatDate = (time: number) => date.format(time);
   const sides: Sides = [<GuildRowName key="a" guild={a} />, <GuildRowName key="b" guild={b} />];
-  const history = historyRows(a, b, formatDate);
+  const history = historyRows(a, b, date);
   const byGame = gameRows(a, b);
 
   return (
@@ -115,7 +110,7 @@ export function GuildCompareView({ a, b }: { a: GuildPage; b: GuildPage }) {
             {t("compare.guildHeading")}
           </Box>
         </div>
-        {guildPairs(a, b, formatDate).map(({ title, pairs }) => (
+        {guildPairs(a, b, date).map(({ title, pairs }) => (
           <CompareSection key={title ?? "summary"} title={title && t(title)} pairs={pairs} sides={sides} />
         ))}
         <div className={cn("grid grid-cols-1 lg:grid-cols-2 lg:[&>:only-child]:col-span-2", BOX_GAP)}>
