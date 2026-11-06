@@ -44,7 +44,9 @@ export class ServerCommand {
     const server = await this.getServer(context.option<string>("server"));
 
     const [serverLogo, background] = await Promise.all([
-      server.icon ? loadImage(server.icon) : undefined,
+      server.icon?.startsWith("data:image/png;base64,") ?
+        loadImage(server.icon) :
+        undefined,
       getServerBackground(server.mapping),
     ]);
 

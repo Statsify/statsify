@@ -18,7 +18,7 @@ interface ServerLogoProps {
 // Required for theming
 const ServerLogo = ({ serverLogo }: ServerLogoProps) => (
   <box>
-    <img margin={8} image={serverLogo} />
+    <img margin={8} image={serverLogo} width={64} height={64} />
   </box>
 );
 
