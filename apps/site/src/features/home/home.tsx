@@ -112,7 +112,7 @@ function DiscordInvite({ className = "" }: { className?: string }) {
     <Button variant="primary" className={`content:bg-discord-500 ${className}`} asChild>
       <a href="/invite">
         <Discord className="drop-shadow-mc-1" />
-        <p className="text-nowrap">Try On Discord</p>
+        <p className="mc-crisp text-nowrap">Try On Discord</p>
       </a>
     </Button>
   );
@@ -123,7 +123,7 @@ function BingoInvite() {
     <Button className="content:bg-green-500" asChild>
       <Link to="/{-$locale}/bingo">
         <Board className="drop-shadow-mc-1" />
-        <p className="text-nowrap">Bingo Tracker</p>
+        <p className="mc-crisp text-nowrap">Bingo Tracker</p>
       </Link>
     </Button>
   );

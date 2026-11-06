@@ -27,7 +27,7 @@ const localeRoute = getRouteApi("/{-$locale}");
 // One class on each list instead of one per link: there are thousands of them. Each link is a box drawn by CSS
 // (`box-item`), 4 px apart, as a game page's list draws its lines.
 const LIST = cn(
-  "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&>li]:box-item [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:text-mc-1.5 [&_a:hover]:brightness-125 [&_a:hover]:underline [&_a:active]:brightness-125",
+  "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&>li]:box-item [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:text-mc-1.5 [&_a:hover]:underline [&>li:hover]:after:brightness-125 [&>li:active]:after:brightness-125",
   BOX_GAP
 );
 

@@ -301,11 +301,11 @@ function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat
       {/* The icon inside the term, since a <dl>'s rows hold only terms and values. */}
       <dt className={cn("flex min-w-0 grow items-center gap-2", !plain && "font-bold")}>
         {cell.icon && hasGameIcon(cell.icon) && <span aria-hidden className="size-8 shrink-0"><GameIcon game={cell.icon} /></span>}
-        <span className="min-w-0 truncate">
+        <span className="mc-crisp min-w-0 truncate">
           {cell.leaderboard ? <Spoken full={label.full}>{label.node}</Spoken> : <Hint full={label.full}>{label.node}</Hint>}
         </span>
       </dt>
-      <dd className="shrink-0">
+      <dd className="mc-crisp shrink-0">
         {cell.leaderboard ?
           (
             <LeaderboardLink

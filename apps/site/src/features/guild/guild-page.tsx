@@ -7,6 +7,7 @@
  */
 
 import { BOX_GAP, Box, HEADING_BOX } from "~/components/ui/box";
+import { Chevron } from "~/components/icons/chevron";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hint } from "~/components/ui/hint";
 import { Link } from "@tanstack/react-router";
@@ -39,7 +40,7 @@ export function GuildView({ guild }: { guild: GuildPage }) {
 
   return (
     <div className="relative grow">
-      <PageBackground background="guilds" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background="guilds" />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className={cn("grid grid-cols-1 lg:grid-cols-2", BOX_GAP)}>
           <Box as="h1" className={cn(HEADING_BOX, "content:text-mc-3 md:content:text-mc-4")}>
@@ -136,12 +137,12 @@ function BarList({ title, rows }: { title: string; rows: BarRow[] }) {
           <li key={key} className="grid grid-cols-[minmax(0,10rem)_1fr_auto] items-center gap-3">
             <span className="flex min-w-0 items-center gap-2">
               {icon && hasGameIcon(icon) && <span className="shrink-0"><GameIcon game={icon} /></span>}
-              <span className="min-w-0 wrap-anywhere">{label}</span>
+              <span className="mc-crisp min-w-0 wrap-anywhere">{label}</span>
             </span>
             <span className="h-2 bg-black/30" aria-hidden>
               <span className="block h-full bg-mc-dark-green" style={{ width: `${max > 0 ? (value / max) * 100 : 0}%` }} />
             </span>
-            <span className="text-end text-mc-dark-green">{n(value)}</span>
+            <span className="mc-crisp text-end text-mc-dark-green">{n(value)}</span>
           </li>
         ))}
       </ul>
@@ -201,11 +202,11 @@ function MemberTable({ members, total }: { members: GuildMemberRow[]; total: num
                   >
                     <button
                       type="button"
-                      className={cn("min-h-11 cursor-pointer hover:text-mc-white focus-visible:focus-ring-inset", sort.key === key && "text-mc-yellow")}
+                      className={cn("inline-flex min-h-11 cursor-pointer items-center hover:text-mc-white focus-visible:focus-ring-inset", sort.key === key && "text-mc-yellow")}
                       onClick={() => setSort({ key, reversed: sort.key === key && !sort.reversed })}
                     >
-                      {label}
-                      {sort.key === key && <span aria-hidden> {highestFirst === sort.reversed ? "↑" : "↓"}</span>}
+                      <span className="mc-crisp">{label}</span>
+                      {sort.key === key && <Chevron className={cn("size-6", highestFirst === sort.reversed ? "-rotate-90" : "rotate-90")} />}
                     </button>
                   </th>
                 ))}
@@ -213,7 +214,7 @@ function MemberTable({ members, total }: { members: GuildMemberRow[]; total: num
             </thead>
             <tbody>
               {sorted.map((member) => (
-                <tr key={member.uuid} className="border-t-2 border-black/20">
+                <tr key={member.uuid} className="border-t-2 border-black/20 [&>td]:mc-crisp">
                   <th scope="row" className="px-2 py-1 text-start font-normal">
                     <Link
                       to="/{-$locale}/player/$name"
@@ -221,7 +222,7 @@ function MemberTable({ members, total }: { members: GuildMemberRow[]; total: num
                       className="flex items-center gap-2 whitespace-nowrap hover:underline"
                     >
                       <SkinHead uuid={member.uuid} stored size={20} className="shrink-0" />
-                      <MinecraftText>{member.displayName}</MinecraftText>
+                      <MinecraftText className="mc-crisp">{member.displayName}</MinecraftText>
                     </Link>
                   </th>
                   <td className="px-2 py-1 whitespace-nowrap text-mc-yellow">{member.rank}</td>

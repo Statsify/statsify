@@ -32,7 +32,7 @@ const LINKS = [
   { key: "bot", href: "/invite" },
 ] as const;
 
-const NAV_LINK = "flex min-h-11 min-w-11 items-center justify-center opacity-80 transition-opacity hover:opacity-100 hover:underline";
+const NAV_LINK = "flex min-h-11 min-w-11 items-center justify-center text-mc-1.5 opacity-80 transition-opacity hover:opacity-100 hover:underline";
 
 /**
  * Every page carries a compact search in the header except those with a search of their own: Players, Guilds, and Bingo
@@ -80,7 +80,7 @@ export function Header() {
   };
 
   return (
-    <header className="text-mc-white flex justify-center px-4 py-4 md:px-8">
+    <header className="text-mc-white flex justify-center bg-blackify-950 px-4 py-4 md:px-8">
       <div className="w-container flex flex-wrap items-center gap-x-4 gap-y-2 lg:gap-x-8">
         <Link to="/{-$locale}" aria-label="Statsify" className="flex min-h-11 min-w-11 items-center gap-3">
           <Logo className="size-8 shrink-0" />
@@ -100,7 +100,7 @@ export function Header() {
         )}
         {/* Below md the pages get a row of their own under the logo; from md they sit beside it. */}
         <nav aria-label={t("nav.label")} className="order-last basis-full md:order-none md:basis-auto">
-          <ul className="flex items-center gap-4 text-mc-1.5 sm:gap-6">
+          <ul className="flex items-center gap-4 sm:gap-6">
             {PAGES.map(({ key, to }) => (
               <li key={key}>
                 <Link
@@ -133,7 +133,7 @@ export function Header() {
           </div>
         )}
         <nav aria-label={t("nav.external")} className="ms-auto">
-          <ul className="flex items-center gap-4 text-mc-1.5 sm:gap-6">
+          <ul className="flex items-center gap-4 sm:gap-6">
             {LINKS.map(({ key, href }) => (
               <li key={key}>
                 <a href={href} target="_blank" rel="noreferrer" className={NAV_LINK}>

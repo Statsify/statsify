@@ -45,10 +45,8 @@ export const CLOCK_SCRIPT = `window.__clock = (element, args) => {
   const fill = (template, time) => template.replace(${JSON.stringify(TIME_SLOT)}, time);
   element.querySelector("[data-clock=updated]").textContent = fill(args.updated, relativeTime(args.updatedAt, now, args.locale));
   const refresh = element.querySelector("[data-clock=refresh]");
-  // Only the label's own text: the button's shadows are elements beside it.
-  for (const node of refresh.childNodes) {
-    if (node.nodeType === Node.TEXT_NODE) node.data = remaining ? fill(args.refreshIn, formatCountdown(remaining)) : args.refresh;
-  }
+  refresh.querySelector("[data-clock=countdown]").textContent = remaining ? formatCountdown(remaining) : "";
+  refresh.setAttribute("aria-label", remaining ? fill(args.refreshIn, formatCountdown(remaining)) : args.refresh);
   refresh.setAttribute("aria-disabled", String(remaining > 0));
 };`;
 

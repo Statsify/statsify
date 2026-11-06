@@ -7,7 +7,6 @@
  */
 
 import { DEFAULT_LOCALE } from "~/i18n/locales";
-import { SANS_PRELOAD } from "~/lib/fonts";
 import { createI18n } from "~/i18n/i18n";
 import { localeData, socialMeta } from "~/lib/social-meta";
 
@@ -56,6 +55,5 @@ export function textPageHead({
       { name: "description", content: description },
       ...(origin ? socialMeta({ origin, path, title, description, image: "/images/og-home.png", trail: { name: heading } }) : []),
     ],
-    links: [SANS_PRELOAD],
   };
 }

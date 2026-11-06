@@ -15,9 +15,11 @@ export function Command({ command }: { command: string }) {
 
   return (
     <>
+      {/* Solid shades of the blurple, so the text around it can be drawn crisp: the crisp filter makes see-through
+          colours solid. They're what the half-transparent fill and outline showed over the dark sections. */}
       <button
         type="button"
-        className="bg-discord-500/50 hover:bg-discord-500/80 transition-colors px-1.5 border-2 border-discord-500/50 text-[oklab(0.870541_0.00545415_-0.0617369)] cursor-pointer"
+        className="bg-[color-mix(in_srgb,var(--color-discord-500)_50%,#000)] hover:bg-[color-mix(in_srgb,var(--color-discord-500)_80%,#000)] transition-colors px-1.5 border-2 border-[color-mix(in_srgb,var(--color-discord-500)_75%,#000)] hover:border-[color-mix(in_srgb,var(--color-discord-500)_90%,#000)] text-[oklab(0.870541_0.00545415_-0.0617369)] cursor-pointer"
         onClick={(event) => void copy(command, event.currentTarget.getBoundingClientRect())}
       >
         {command}

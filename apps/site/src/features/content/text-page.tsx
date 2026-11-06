@@ -48,7 +48,7 @@ export function TextPage({
 
   return (
     <div className="relative grow">
-      <PageBackground background={background} viewport mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background={background} />
       <div className="w-container px-4 pt-8 pb-12 text-mc-white md:px-8 md:pt-12 md:pb-16">
         <div
           className={cn(
@@ -96,7 +96,7 @@ function FoldedContents({ contents }: { contents: ContentsItem[] }) {
     <Box as="nav" aria-label={t("content.contents")} className="lg:hidden content:py-2">
       <details className="group">
         <summary className="flex min-h-11 cursor-pointer list-none items-center gap-3 text-mc-1.5 font-bold select-none [&::-webkit-details-marker]:hidden">
-          <span className="grow">
+          <span className="mc-crisp grow">
             {t("content.contents")} <span className="font-normal text-mc-gray">({contents.length})</span>
           </span>
           <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
@@ -115,10 +115,10 @@ function ContentsList({ contents, current }: { contents: ContentsItem[]; current
           <a
             href={`#${id}`}
             aria-current={id === current ? "location" : undefined}
-            className="flex min-h-11 items-center justify-between gap-2 px-2 text-mc-1.5 text-white/60 hover:bg-white/10 hover:text-white aria-[current=location]:bg-white/10 aria-[current=location]:font-bold aria-[current=location]:text-white"
+            className="flex min-h-11 items-center justify-between gap-2 px-2 text-mc-1.5 text-mc-gray hover:bg-white/10 hover:text-white aria-[current=location]:bg-white/10 aria-[current=location]:font-bold aria-[current=location]:text-white"
           >
-            <span>{label}</span>
-            {count !== undefined && <span className="font-normal text-mc-gray">{count}</span>}
+            <span className="mc-crisp">{label}</span>
+            {count !== undefined && <span className="mc-crisp font-normal text-mc-gray">{count}</span>}
           </a>
         </li>
       ))}
@@ -206,32 +206,20 @@ export function LegalPage({
   );
 }
 
+/** Room between the lines of a paragraph: the font's own spacing is the game's chat, too tight to read a page of. */
+export const READING_LEADING = "leading-[0.875]";
+
+/** Reading text's size: 20 that stays sharp on phones (`text-mc-snap-1.25`), 24 from `lg`. */
+export const READING_SIZE = "text-mc-snap-1.25 lg:text-mc-1.5";
+
 /**
- * A panel of reading text: Mona Sans at 16, 20 from `lg`, lines kept to 68 characters. `short` sets one-sentence
- * paragraphs (about, prestiges) in Minecraft instead, at 16, 24 from `lg`. `lang` marks text that stays in one
- * language whatever the page's locale (the legal pages are English only).
+ * A panel of reading text: Minecraft at `READING_SIZE`, lines kept to 68 characters. `lang` marks text that stays in
+ * one language whatever the page's locale (the legal pages are English only).
  */
-export function Article({
-  children,
-  lang,
-  short = false,
-  className,
-}: {
-  children: ReactNode;
-  lang?: string;
-  short?: boolean;
-  className?: string;
-}) {
+export function Article({ children, lang, className }: { children: ReactNode; lang?: string; className?: string }) {
   return (
     <Box className={cn("content:p-4 lg:content:px-10 lg:content:pt-8 lg:content:pb-10", className)}>
-      <div
-        lang={lang}
-        // Lines of about 68 characters: 68ch in Minecraft, 33em in Mona Sans, whose letters are narrower than its zero
-        // (68ch let its lines run to 90).
-        className={short ?
-          "text-mc-1 text-mc-gray lg:text-mc-1.5 [--measure:68ch]" :
-          "font-sans text-16 leading-[1.6] font-medium text-mc-gray lg:text-20 [--measure:33em]"}
-      >
+      <div lang={lang} className={cn(READING_SIZE, "text-mc-gray [--measure:68ch]", READING_LEADING)}>
         {children}
       </div>
     </Box>
@@ -240,21 +228,9 @@ export function Article({
 
 /**
  * A section of a text page: the heading the contents link to in a box of its own, then its paragraphs in an `Article`
- * under it, 4 px apart, as the bot's cards draw a title box over its panel. `short` and `lang` are as for `Article`.
+ * under it, 4 px apart, as the bot's cards draw a title box over its panel. `lang` is as for `Article`.
  */
-export function Section({
-  id,
-  title,
-  short,
-  lang,
-  children,
-}: {
-  id: string;
-  title: ReactNode;
-  short?: boolean;
-  lang?: string;
-  children: ReactNode;
-}) {
+export function Section({ id, title, lang, children }: { id: string; title: ReactNode; lang?: string; children: ReactNode }) {
   return (
     <section lang={lang} className={cn("flex flex-col", BOX_GAP)}>
       <Box className={HEADING_BOX}>
@@ -262,7 +238,7 @@ export function Section({
           {title}
         </h2>
       </Box>
-      <Article short={short}>
+      <Article>
         <div className="flex flex-col gap-4">{children}</div>
       </Article>
     </section>
@@ -270,17 +246,17 @@ export function Section({
 }
 
 export function Subheading({ children }: { children: ReactNode }) {
-  return <h3 className="mt-4 -mb-2 text-mc-1 lg:text-mc-1.5 font-bold text-white">{children}</h3>;
+  return <h3 className={cn("mt-4 -mb-2 font-bold text-white", READING_SIZE)}>{children}</h3>;
 }
 
 export function Paragraph({ children }: { children: ReactNode }) {
-  return <p className="max-w-(--measure)">{children}</p>;
+  return <p className="mc-crisp max-w-(--measure)">{children}</p>;
 }
 
-/** A list with the site's square bullets. */
+/** A list with the site's square bullets, each centred on its first line's lowercase letters (7/16 em down). */
 export function List({ children }: { children: ReactNode }) {
   return (
-    <ul className="flex max-w-(--measure) flex-col gap-2 [&>li]:relative [&>li]:pl-6 [&>li]:before:absolute [&>li]:before:top-[0.7em] [&>li]:before:left-1 [&>li]:before:size-1.5 [&>li]:before:bg-mc-dark-gray">
+    <ul className="flex max-w-(--measure) flex-col gap-2 [&>li]:relative [&>li]:mc-crisp [&>li]:pl-6 [&>li]:before:absolute [&>li]:before:top-[calc(0.4375em-3px)] [&>li]:before:left-1 [&>li]:before:size-1.5 [&>li]:before:bg-mc-dark-gray">
       {children}
     </ul>
   );
@@ -337,12 +313,12 @@ export function Callout({ label, tone = "note", children }: { label: ReactNode; 
 export function KeyTable({ head, rows }: { head: [ReactNode, ReactNode]; rows: [label: ReactNode, value: ReactNode][] }) {
   return (
     <div className="overflow-x-auto bg-black/20">
-      <table className="w-full border-collapse text-16 leading-normal">
+      <table className="w-full border-collapse text-mc-1 leading-normal">
         <thead className="max-sm:hidden">
           <tr>
             {head.map((cell, index) => (
               <th key={index} className="border-b-2 border-black/30 bg-black/20 px-4 py-3 text-start text-mc-1 font-normal text-mc-gray whitespace-nowrap">
-                {cell}
+                <span className="mc-crisp">{cell}</span>
               </th>
             ))}
           </tr>
@@ -351,7 +327,7 @@ export function KeyTable({ head, rows }: { head: [ReactNode, ReactNode]; rows: [
           {rows.map(([label, value], index) => (
             <tr key={index} className="max-sm:block not-first:border-t-2 border-black/20">
               <td className="px-4 py-3 align-top text-mc-1 text-white whitespace-nowrap max-sm:block max-sm:pb-0">{label}</td>
-              <td className="px-4 py-3 align-top max-sm:block max-sm:pt-1">{value}</td>
+              <td className="mc-crisp px-4 py-3 align-top max-sm:block max-sm:pt-1">{value}</td>
             </tr>
           ))}
         </tbody>
@@ -360,5 +336,8 @@ export function KeyTable({ head, rows }: { head: [ReactNode, ReactNode]; rows: [
   );
 }
 
-/** The pixel bevel of the site's inline insets: 2 px corners and no radius. */
-export const CHIP = "inline-flex items-baseline gap-1.5 bg-black/45 px-2 py-0.5 whitespace-nowrap [clip-path:polygon(2px_0,calc(100%-2px)_0,100%_2px,100%_calc(100%-2px),calc(100%-2px)_100%,2px_100%,0_calc(100%-2px),0_2px)]";
+/**
+ * The pixel bevel of the site's inline insets: 2 px corners and no radius. Solid (what black at 45% shows over a panel),
+ * so the text around it can be drawn crisp: the crisp filter makes see-through colours solid.
+ */
+export const CHIP = "inline-flex items-baseline gap-1.5 bg-[#090909] px-2 py-0.5 whitespace-nowrap [clip-path:polygon(2px_0,calc(100%-2px)_0,100%_2px,100%_calc(100%-2px),calc(100%-2px)_100%,2px_100%,0_calc(100%-2px),0_2px)]";

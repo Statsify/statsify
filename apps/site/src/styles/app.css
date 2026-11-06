@@ -3,6 +3,18 @@
 @import "./fonts.css";
 
 @theme {
+  /* All text is Minecraft, also text with no `text-mc-*` size. */
+  --default-font-family: var(--font-minecraft);
+
+  /* The crisp filter for each Minecraft size (`CrispTextFilters`): its shadow is one font pixel down and right. */
+  --mc-crisp-1: url(#mc-crisp-1);
+  --mc-crisp-1\.5: url(#mc-crisp-1-5);
+  --mc-crisp-2: url(#mc-crisp-2);
+  --mc-crisp-3: url(#mc-crisp-3);
+  --mc-crisp-4: url(#mc-crisp-4);
+  --mc-crisp-7: url(#mc-crisp-7);
+  --mc-snap-crisp-1\.25: url(#mc-crisp-snap);
+
   --drop-shadow-mc-1: 1px 1px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-4: 4px 4px color-mix(in srgb, currentColor 25%, #000 75%);
 
@@ -31,15 +43,64 @@
   }
 
   --animate-fade-out: fade-out 400ms ease-out forwards;
+
+  /* A tooltip opening (`Hint`): in quickly from 2 px lower. `transform`, since its place is set with `translate`. */
+  @keyframes tooltip-in {
+    from {
+      opacity: 0;
+      transform: translateY(2px);
+    }
+  }
+
+  --animate-tooltip-in: tooltip-in 120ms ease-out;
 }
 
 /* Minecraft text: 16px × N with an N px hard shadow. Use only N ∈ {1, 1.5, 2, 3, 4, 7}: 16, 24, 32, 48, 64 and 112 px,
-   the sizes on the Minecraft pixel grid. 24 lands on half pixels at DPR 1 and 3, so it is for headings and inline
-   values only. */
+   the sizes on the Minecraft pixel grid. Drawn through the crisp filter, which puts every pixel fully on or off, so
+   the half-pixel symbols and the 24's half pixels stay sharp; text it would spoil keeps its CSS shadow (`@layer base`). */
 @utility text-mc-* {
+  --mc-text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
+  --mc-crisp: --value(--mc-crisp-*);
   font-family: var(--font-minecraft);
   font-size: calc(16px * --value(number));
-  text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
+  text-shadow: var(--mc-plain-shadow, none);
+  filter: var(--mc-plain-filter, var(--mc-crisp));
+}
+
+/* Minecraft text as near 16px × N as the screen allows while staying sharp: a font pixel takes a whole number of
+   screen pixels near N × the screen's pixel ratio (`--dpr`, set before first paint). An even number where that's within
+   a quarter of the size, as the symbols (stars, emblems) are drawn in half pixels. `text-mc-snap-1.25` is the 20
+   between 16 and 24: 21.3 px on a 3× phone, 18.3 to 24.4 on Android ones, 16 on 2× and 1× screens. */
+@utility text-mc-snap-* {
+  --mc-x: calc(--value(number) * var(--dpr, 1));
+  --mc-even: calc(2 * round(nearest, var(--mc-x) / 2, 1));
+  --mc-fits: round(down, clamp(0, 1 + 1000 * (var(--mc-x) / 4 - max(var(--mc-even) - var(--mc-x), var(--mc-x) - var(--mc-even))), 1), 1);
+  --mc-px: calc(1px * (var(--mc-fits) * var(--mc-even) + (1 - var(--mc-fits)) * round(nearest, var(--mc-x), 1)) / var(--dpr, 1));
+  --mc-text-shadow: var(--mc-px) var(--mc-px) color-mix(in srgb, currentColor 25%, #000 75%);
+  --mc-crisp: --value(--mc-snap-crisp-*);
+  font-family: var(--font-minecraft);
+  font-size: calc(16 * var(--mc-px));
+  text-shadow: var(--mc-plain-shadow, none);
+  filter: var(--mc-plain-filter, var(--mc-crisp));
+}
+
+/* Text inside a `text-mc-*` element that the filter can't take whole (a link with a hover background, a cell with a
+   button over its corner): drawn through that size's crisp filter on its own. */
+@utility mc-crisp {
+  text-shadow: var(--mc-plain-shadow, none);
+  filter: var(--mc-plain-filter, var(--mc-crisp));
+}
+
+/* Per element, so a text that keeps its shadow doesn't pass that on to the text inside it. (`--mc-text-shadow` is
+   inherited, so `mc-crisp` text that keeps it has its size's.) */
+@property --mc-plain-filter {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --mc-plain-shadow {
+  syntax: "*";
+  inherits: false;
 }
 
 /* The keyboard focus, drawn like the panels: a white ring on the pixel grid 2 px out from the control, with a hard
@@ -104,41 +165,39 @@
 }
 
 /* A list item drawn as a card Box with CSS alone, for lists too long for the `Box` component (the leaderboard index's
-   thousands of links, set as HTML), in the card's shape (`box-shape`) and colours (tokens.css): its link takes the
-   fill and the bevel, the item the shadow (`::before`, the parts outside the box, as `Box` clips it) and the overlay (`::after`,
-   blended with everything behind it, as `Box`'s is). The bevel clips the link's own ring, so the ring goes inside. */
+   thousands of links, set as HTML), in the card's shape (`box-shape`) and colours (tokens.css): the item draws the
+   shadow (`::before`, the parts outside the box, as `Box` clips it) and the fill (`::after`) under its link, so the
+   link's crisp filter takes only its text. The bevel clips the link's own ring, so the ring goes inside. */
 @utility box-item {
   position: relative;
-  margin: 0 4px 4px 0;
+  isolation: isolate;
+  margin: 0 var(--box-s) var(--box-s) 0;
+
+  @apply box-shape;
 
   &::before,
   &::after {
     content: "";
     position: absolute;
     inset: 0;
+    z-index: -1;
     pointer-events: none;
   }
 
-  @apply box-shape;
-
   &::before {
-    translate: 4px 4px;
+    translate: var(--box-s) var(--box-s);
     background: var(--panel-shadow);
     clip-path: var(--box-shadow-path);
   }
 
-  &::after,
+  &::after {
+    clip-path: var(--box-path);
+    background: var(--panel-overlay), var(--panel-background);
+    background-blend-mode: overlay, normal;
+  }
+
   & > a {
     clip-path: var(--box-path);
-  }
-
-  &::after {
-    background: var(--panel-overlay);
-    mix-blend-mode: overlay;
-  }
-
-  & > a {
-    background: var(--panel-background);
   }
 
   & > a:focus-visible {
@@ -149,18 +208,18 @@
 /*
  * The space `/player`'s recently viewed section takes, from `--recent` (how many players: set on the root before first
  * paint, then on the section by React): the heading row, then the result cards, one a row on phones, two from md and
- * three from xl, 124 px tall below sm and 156 from it, 4 px apart. None for none. So the footer stays put when the cards
- * arrive.
+ * three from xl, 128 px tall below sm and 160 from it (with their shadow's 8 px), 4 px apart. None for none. So the
+ * footer stays put when the cards arrive.
  */
 @utility recent-hold {
   --recent-rows: var(--recent, 0);
-  --recent-card: 124px;
+  --recent-card: 128px;
   min-height: calc(min(var(--recent, 0), 1) * (52px + var(--recent-rows) * var(--recent-card) + (var(--recent-rows) - 1) * 4px));
   /* With nothing held, it also takes back the gap the page's column (gap-8) puts before it, so a first visit is as before. */
   margin-top: calc((min(var(--recent, 0), 1) - 1) * 32px);
 
   @variant sm {
-    --recent-card: 156px;
+    --recent-card: 160px;
   }
 
   @variant md {
@@ -179,15 +238,15 @@
 }
 
 /* The card's shape, for the `box` and `box-item` utilities: each corner's bevel and the shadow's offset come from
-   `--box-tl`, `--box-tr`, `--box-bl`, `--box-br` and `--box-s` (the card's 4 px unless a Box sets them), giving the
-   panel's outline (`--box-path`) and the shadow's (`--box-shadow-path`): shaded in the bottom-right notch and along the
-   right and the foot, for a layer moved out by the offset. */
+   `--box-tl`, `--box-tr`, `--box-bl`, `--box-br` (the panel's bevel, tokens.css) and `--box-s` (8 px), unless a Box
+   sets them, giving the panel's outline (`--box-path`) and the shadow's (`--box-shadow-path`): shaded in the
+   bottom-right notch and along the right and the foot, for a layer moved out by the offset. */
 @utility box-shape {
-  --box-tl: 4px;
-  --box-tr: 4px;
-  --box-bl: 4px;
-  --box-br: 4px;
-  --box-s: 4px;
+  --box-tl: var(--panel-bevel);
+  --box-tr: var(--panel-bevel);
+  --box-bl: var(--panel-bevel);
+  --box-br: var(--panel-bevel);
+  --box-s: 8px;
   --box-path: polygon(
     var(--box-tl) 0, calc(100% - var(--box-tr)) 0, calc(100% - var(--box-tr)) var(--box-tr), 100% var(--box-tr),
     100% calc(100% - var(--box-br)), calc(100% - var(--box-br)) calc(100% - var(--box-br)),
@@ -211,11 +270,11 @@
 
 /* The card Box (`box.tsx`), drawn here so a Box's markup carries no polygons: its shape from `box-shape`, and the fill
    and shadow colours from `--box-fill` and `--box-shadow`, the card's (tokens.css) unless the Box sets them. The shadow
-   is the Box's `::before`; a square bottom-right corner (`data-square-corner`) has no notch. The panel and the overlay
-   are the fill's `::before` and `::after`, beside the content, so the overlay blends with whatever is behind the Box. */
+   is the Box's `::before`; a square bottom-right corner (`data-square-corner`) has no notch. The fill's first layer is
+   blended onto the rest with `overlay`, inside the fill only. */
 @utility box {
   @apply box-shape;
-  --box-fill: var(--panel-background);
+  --box-fill: var(--panel-overlay), var(--panel-background);
   --box-shadow: var(--panel-shadow);
 
   &::before {
@@ -238,26 +297,12 @@
     );
   }
 
-  & > [data-slot="fill"],
-  & > [data-slot="fill"]::before,
-  & > [data-slot="fill"]::after {
+  & > [data-slot="fill"] {
     position: absolute;
     inset: 0;
-  }
-
-  & > [data-slot="fill"]::before,
-  & > [data-slot="fill"][data-overlay]::after {
-    content: "";
     clip-path: var(--box-path);
-  }
-
-  & > [data-slot="fill"]::before {
     background: var(--box-fill);
-  }
-
-  & > [data-slot="fill"]::after {
-    background: var(--panel-overlay);
-    mix-blend-mode: overlay;
+    background-blend-mode: overlay, normal;
   }
 
   & > [data-slot="content"] {
@@ -275,11 +320,31 @@
     @apply focus-ring;
   }
 
-  /* Mona Sans numbers line up in tables; stat values are Minecraft anyway. */
+  /* Minecraft text the crisp filter would spoil keeps the font's own edges and its CSS shadow: a filter forces alpha
+     to 0 or 1 (translucent colours, boxes, fades), adds a shadow to whatever is inside (icons, images, nested sizes and
+     `mc-crisp` text, which have their own), clips what sits outside the element (stretched links, focus rings), holds
+     what is positioned inside it, and is replaced by a hover filter. A Hint inherits its text's shadow and holds its own
+     tap area, so it can go inside. A Box's own translucent colour (a dimmed tab) reaches its text by inheritance. */
+  .box[class*="/"] :is([class*="text-mc-"], [data-slot="content"], .mc-crisp),
+  :is([class*="text-mc-"], [data-slot="content"], .mc-crisp):is(
+      input, textarea, select, :focus-visible, [class*="/"], [class*="shadow"], [class*="box"],
+      [class*="after:absolute"], [class*="before:absolute"], [class*="brightness"], [class*="blur"]
+    ),
+  :is([class*="text-mc-"], [data-slot="content"], .mc-crisp):has(
+      img, svg, canvas, video, iframe, input, textarea, select, :focus-visible, [data-slot="content"],
+      [class*="mc-crisp"], [class*="/"], [class*="shadow"]:not([class*="[text-shadow:inherit]"]), [class*="box"],
+      [class*="opacity"], [class*="animate-"], [class~="absolute"], [class*="after:absolute"]:not([class~="relative"]),
+      [class*="before:absolute"]:not([class~="relative"]), [class*="fixed"], [class*="sticky"], [style*="opacity"],
+      [class*="text-mc-1"], [class*="text-mc-2"], [class*="text-mc-3"], [class*="text-mc-4"], [class*="text-mc-7"],
+      [class*="text-mc-snap"]
+    ) {
+    --mc-plain-filter: none;
+    --mc-plain-shadow: var(--mc-text-shadow);
+  }
+
   /* The scrollbar's room is kept on short pages too, so with classic scrollbars a page that grows past the fold
      (a game page loading in, search results) doesn't shift sideways. */
   html {
-    font-variant-numeric: tabular-nums;
     scrollbar-gutter: stable;
   }
 }
