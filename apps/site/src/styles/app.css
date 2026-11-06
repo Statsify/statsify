@@ -238,14 +238,14 @@
 }
 
 /* The card's shape, for the `box` and `box-item` utilities: each corner's bevel and the shadow's offset come from
-   `--box-tl`, `--box-tr`, `--box-bl`, `--box-br` and `--box-s` (8 px unless a Box sets them), giving the
-   panel's outline (`--box-path`) and the shadow's (`--box-shadow-path`): shaded in the bottom-right notch and along the
-   right and the foot, for a layer moved out by the offset. */
+   `--box-tl`, `--box-tr`, `--box-bl`, `--box-br` (the panel's bevel, tokens.css) and `--box-s` (8 px), unless a Box
+   sets them, giving the panel's outline (`--box-path`) and the shadow's (`--box-shadow-path`): shaded in the
+   bottom-right notch and along the right and the foot, for a layer moved out by the offset. */
 @utility box-shape {
-  --box-tl: 8px;
-  --box-tr: 8px;
-  --box-bl: 8px;
-  --box-br: 8px;
+  --box-tl: var(--panel-bevel);
+  --box-tr: var(--panel-bevel);
+  --box-bl: var(--panel-bevel);
+  --box-br: var(--panel-bevel);
   --box-s: 8px;
   --box-path: polygon(
     var(--box-tl) 0, calc(100% - var(--box-tr)) 0, calc(100% - var(--box-tr)) var(--box-tr), 100% var(--box-tr),
