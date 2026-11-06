@@ -16,7 +16,15 @@ export { getLevel } from "./leveling.js";
 export { findProfile, toProfileSummary, toProfilesView } from "./profiles.js";
 export { parseItemsResource, toItemView } from "./items.js";
 export { resourceTexture, textureOf } from "./textures.js";
-export { SECTIONS, toMemberView, type SectionInput, type SectionKey, type SectionNeed } from "./sections/index.js";
+export {
+  SECTIONS,
+  SKYBLOCK_SECTIONS,
+  toMemberView,
+  type SectionInput,
+  type SectionKey,
+  type SectionNeed,
+  type SkyBlockSection,
+} from "./sections/index.js";
 export { getAccessories } from "./sections/accessories.js";
 export { getDungeons } from "./sections/dungeons.js";
 export { getHotm } from "./sections/hotm.js";
