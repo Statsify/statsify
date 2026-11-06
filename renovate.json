@@ -29,6 +29,11 @@
         "matchPackageNames": ["@nestjs/**", "@fastify/static", "@fastify/view"],
         "matchUpdateTypes": ["major"],
         "groupName": "nest"
+      },
+      {
+        "matchPackageNames": ["skyhelper-networth"],
+        "groupName": "skyhelper-networth",
+        "automerge": false
       }
     ]
   }
