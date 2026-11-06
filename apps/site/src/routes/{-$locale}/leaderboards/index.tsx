@@ -7,10 +7,13 @@
  */
 
 import { AllLeaderboards } from "~/features/leaderboards/leaderboard-index";
-import { Background } from "~/components/ui/background";
+import { PageBackground } from "~/components/ui/background";
 import { MAX_QUERY_LENGTH, getLeaderboardIndex, listForClient } from "~/features/leaderboards/leaderboard-data";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
+import { DEFAULT_LOCALE } from "~/i18n/locales";
+import { createI18n } from "~/i18n/i18n";
+import { localeData, socialMeta } from "~/lib/social-meta";
 import { useTranslation } from "react-i18next";
 
 /** The list is schema metadata: an hour fresh, a day stale. */
@@ -32,13 +35,32 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/")({
     return { data, list: await listForClient(data.hash) };
   },
   staleTime: EDGE_TTL_SECONDS * 1000,
-  head: ({ match }) => ({
-    meta: [
-      { title: "Leaderboards | Statsify" },
-      { name: "description", content: "Browse more than 2,000 Hypixel leaderboards on Statsify." },
-      ...(match.search.q ? [{ name: "robots", content: "noindex" }] : []),
-    ],
-  }),
+  head: ({ match, matches }) => {
+    const locale = localeData(matches);
+    // In English, from the server's `site.json`.
+    const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
+    const title = words.t("meta.leaderboards.title");
+    const description = words.t("meta.leaderboards.description");
+    const origin = locale?.origin;
+
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        ...(match.search.q ? [{ name: "robots", content: "noindex" }] : []),
+        ...(origin ?
+          socialMeta({
+            origin,
+            path: "/leaderboards",
+            title,
+            description,
+            image: "/images/og-home.png",
+            trail: { name: words.t("leaderboards.title") },
+          }) :
+          []),
+      ],
+    };
+  },
   headers: () => cacheHeaders(`max-age=${EDGE_TTL_SECONDS}, stale-while-revalidate=86400`),
   component: LeaderboardsPage,
 });
@@ -50,14 +72,7 @@ function LeaderboardsPage() {
 
   return (
     <div className="relative grow">
-      <Background
-        background="general"
-        priority
-        viewport
-        className="h-full"
-        mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
-      />
-      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)" />
       <div className="w-container flex flex-col gap-6 px-4 py-12 text-mc-white md:px-8">
         <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{t("leaderboards.title")}</h1>
         {/* A new `?q=` (back and forward) starts the filter over from it. */}

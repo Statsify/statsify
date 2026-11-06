@@ -6,7 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { GAMES, type Stat, gameStats, modeName, modeStats } from "@statsify/catalog";
+import { type GameId, Player, getLeaderboardFields } from "@statsify/schemas";
+import { GAMES, type Stat, allStats, modeName } from "@statsify/catalog";
+import { gameName, siteName } from "./names.js";
 import { removeFormatting } from "@statsify/util";
 import type { LeaderboardColumn, LeaderboardGame, LeaderboardGroup } from "@statsify/contract";
 
@@ -16,10 +18,7 @@ let catalog: Map<string, Stat> | undefined;
 export function catalogStats(): Map<string, Stat> {
   catalog ??= new Map(
     Object.values(GAMES)
-      .flatMap((game) => [
-        ...gameStats(game),
-        ...game.shapes.flatMap(({ modes }) => modes.flatMap((at) => modeStats(game, at))),
-      ])
+      .flatMap((game) => allStats(game))
       .map((stat) => [stat.path, stat])
   );
 
@@ -32,17 +31,14 @@ export function catalogStats(): Map<string, Stat> {
  */
 export function leaderboardColumn(field: string, name: string): LeaderboardColumn {
   const stat = catalogStats().get(field);
-  return { field, name, label: stat?.label ?? null, colour: typeof stat?.colour === "string" ? stat.colour : null };
+  return { field, name: siteName(name), label: stat?.label ?? null, colour: typeof stat?.colour === "string" ? stat.colour : null };
 }
 
 /** The `stats.*` locale key the bot's cards label a stat with, where the catalog describes it. */
-export const catalogLabel = (field: string): string | undefined => catalogStats().get(field)?.label;
+const catalogLabel = (field: string): string | undefined => catalogStats().get(field)?.label;
 
 /** The `glossary.*` key that explains a stat, where the glossary has it: not one shown under its card's name. */
-export function catalogGlossary(field: string): string | null {
-  const stat = catalogStats().get(field);
-  return stat && stat.name === undefined ? stat.glossary : null;
-}
+export const catalogGlossary = (field: string): string | null => catalogStats().get(field)?.glossary ?? null;
 
 /**
  * A name past a leading prefix and the " - " or space after it, the prefix matched ignoring case and spaces ("WoolWars"
@@ -74,12 +70,14 @@ export function leaderboardGame({ leaderboards, ...group }: LeaderboardGroup): L
   const modes = new Map<string, LeaderboardGame["modes"][number]>([["", { key: "", name: null, leaderboards: [] }]]);
 
   for (const { api } of game?.modes.getModes() ?? []) {
-    modes.set(api, { key: api, name: removeFormatting(modeName(game, api)), leaderboards: [] });
+    modes.set(api, { key: api, name: removeFormatting(siteName(modeName(game, api))), leaderboards: [] });
   }
+
+  const groupName = removeFormatting(group.formatted);
 
   for (const { field, name } of leaderboards) {
     const mode = modes.get(modeKey(field, (key) => modes.has(key)))!;
-    const short = withoutPrefix(withoutPrefix(withoutPrefix(name, group.name), mode.name ?? ""), group.name);
+    const short = withoutPrefix(withoutPrefix(withoutPrefix(name, groupName), mode.name ?? ""), groupName);
     mode.leaderboards.push({ field, name: short });
   }
 
@@ -99,6 +97,70 @@ export function leaderboardIndex(field: string): { key: string; mode: string } |
   if (root !== "stats" || !key) return;
   const modes = new Set(GAMES[key]?.modes.getModes().map(({ api }) => api));
   return { key, mode: modeKey(field, (mode) => modes.has(mode)) };
+}
+
+type GroupNames = Pick<LeaderboardGroup, "game" | "formatted">;
+
+const gameGroup = (game: GameId): GroupNames => ({ game, formatted: gameName(game) });
+
+/** A group that isn't a game's, so it has no colours. */
+const otherGroup = (name: string): GroupNames => ({ game: null, formatted: name });
+
+/** `PlayerStats` keys → the leaderboard group they belong to. */
+export const LEADERBOARD_GROUPS: Record<string, GroupNames> = {
+  arcade: gameGroup("ARCADE"),
+  arenabrawl: gameGroup("ARENA_BRAWL"),
+  bedwars: gameGroup("BEDWARS"),
+  blitzsg: gameGroup("BLITZSG"),
+  buildbattle: gameGroup("BUILD_BATTLE"),
+  challenges: otherGroup("Challenges"),
+  copsandcrims: gameGroup("COPS_AND_CRIMS"),
+  duels: gameGroup("DUELS"),
+  general: gameGroup("GENERAL"),
+  megawalls: gameGroup("MEGAWALLS"),
+  murdermystery: gameGroup("MURDER_MYSTERY"),
+  paintball: gameGroup("PAINTBALL"),
+  parkour: gameGroup("PARKOUR"),
+  pit: gameGroup("PIT"),
+  quake: gameGroup("QUAKE"),
+  quests: otherGroup("Quests"),
+  skywars: gameGroup("SKYWARS"),
+  smashheroes: gameGroup("SMASH_HEROES"),
+  speeduhc: gameGroup("SPEED_UHC"),
+  tntgames: gameGroup("TNT_GAMES"),
+  turbokartracers: gameGroup("TURBO_KART_RACERS"),
+  uhc: gameGroup("UHC"),
+  vampirez: gameGroup("VAMPIREZ"),
+  walls: gameGroup("WALLS"),
+  warlords: gameGroup("WARLORDS"),
+  woolgames: gameGroup("WOOLGAMES"),
+};
+
+/** Every enabled player leaderboard, grouped by the `stats.<game>` it lives under. Static metadata. */
+export function buildLeaderboardGroups(): LeaderboardGroup[] {
+  const groups = new Map<string, LeaderboardGroup>();
+
+  for (const [field, { leaderboard }] of getLeaderboardFields(Player)) {
+    const [root, statsKey] = field.split(".");
+    if (root !== "stats" || !statsKey) continue;
+
+    let group = groups.get(statsKey);
+
+    if (!group) {
+      group = { key: statsKey, ...(LEADERBOARD_GROUPS[statsKey] ?? otherGroup(statsKey)), leaderboards: [] };
+      groups.set(statsKey, group);
+    }
+
+    const label = catalogLabel(field);
+    group.leaderboards.push({
+      field,
+      name: removeFormatting(siteName(leaderboard.name)),
+      ...(label && { label }),
+      ...(leaderboard.enabled && leaderboard.aliases.length > 0 && { aliases: leaderboard.aliases }),
+    });
+  }
+
+  return [...groups.values()];
 }
 
 if (import.meta.vitest) {

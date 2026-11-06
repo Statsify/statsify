@@ -4,111 +4,7 @@
 
 @theme {
   --drop-shadow-mc-1: 1px 1px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-2: 2px 2px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-3: 3px 3px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-4: 4px 4px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-5: 5px 5px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-6: 6px 6px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-7: 7px 7px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-8: 8px 8px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-9: 9px 9px color-mix(in srgb, currentColor 25%, #000 75%);
-  --drop-shadow-mc-10: 10px 10px color-mix(in srgb, currentColor 25%, #000 75%);
-
-  @keyframes slide-in-up-and-fade {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-  }
-
-  @keyframes slide-out-down-and-fade {
-    from {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-
-    to {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-  }
-
-  @keyframes slide-in-down-and-fade {
-    from {
-      opacity: 0;
-      transform: translateY(-4px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-  }
-
-  @keyframes slide-out-up-and-fade {
-    from {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-
-    to {
-      opacity: 0;
-      transform: translateY(-4px);
-    }
-  }
-
-  @keyframes slide-in-left-and-fade {
-    from {
-      opacity: 0;
-      transform: translateX(4px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-  }
-
-  @keyframes slide-out-right-and-fade {
-    from {
-      opacity: 1;
-      transform: translateX(0px);
-    }
-
-    to {
-      opacity: 0;
-      transform: translateX(4px);
-    }
-  }
-
-  @keyframes slide-in-right-and-fade {
-    from {
-      opacity: 0;
-      transform: translateX(-4px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-  }
-
-  @keyframes slide-out-left-and-fade {
-    from {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-
-    to {
-      opacity: 0;
-      transform: translateX(-4px);
-    }
-  }
 
   /* A third-wide segment from just off the left edge to just off the right. */
   @keyframes progress-slide {
@@ -120,16 +16,6 @@
       transform: translateX(300%);
     }
   }
-
-  --animate-slide-in-up-and-fade: slide-in-up-and-fade 150ms ease-in;
-  --animate-slide-in-down-and-fade: slide-in-down-and-fade 150ms ease-in;
-  --animate-slide-in-left-and-fade: slide-in-left-and-fade 150ms ease-in;
-  --animate-slide-in-right-and-fade: slide-in-right-and-fade 150ms ease-in;
-
-  --animate-slide-out-up-and-fade: slide-out-up-and-fade 150ms ease-out;
-  --animate-slide-out-down-and-fade: slide-out-down-and-fade 150ms ease-out;
-  --animate-slide-out-left-and-fade: slide-out-left-and-fade 150ms ease-out;
-  --animate-slide-out-right-and-fade: slide-out-right-and-fade 150ms ease-out;
 
   --animate-progress-slide: progress-slide 1200ms ease-in-out infinite;
 
@@ -148,8 +34,8 @@
 }
 
 /* Minecraft text: 16px × N with an N px hard shadow. Use only N ∈ {1, 1.5, 2, 3, 4, 7}: 16, 24, 32, 48, 64 and 112 px,
-   the sizes in `type.minecraftSizes` (@statsify/tokens). 24 lands on half pixels at DPR 1 and 3, so it is for headings
-   and inline values only. */
+   the sizes on the Minecraft pixel grid. 24 lands on half pixels at DPR 1 and 3, so it is for headings and inline
+   values only. */
 @utility text-mc-* {
   font-family: var(--font-minecraft);
   font-size: calc(16px * --value(number));
@@ -189,19 +75,16 @@
   grid-area: stack;
 }
 
-/* N equal columns an even number of pixels wide, for pixel-font cells with an 8 px column gap (`gap-2`, `gap-x-2`):
-   a plain `1fr` split starts every column after the first on a fraction of a pixel, which blurs the font on 1×
-   screens, and an even width centres a Minecraft 32 value (always an even number of pixels wide) on a whole pixel.
-   The pixels left over go after the last column. A column is never narrower than its content. */
+/* N equal columns an even number of pixels wide, for pixel-font cells with an 8 px column gap (`gap-2`, `gap-x-2`),
+   or the gap `--snap-gap` sets (a grid of boxes, `BOX_GAP`): a plain `1fr` split starts every column after the first
+   on a fraction of a pixel, which blurs the font on 1× screens, and an even width centres a Minecraft 32 value (always
+   an even number of pixels wide) on a whole pixel. The pixels left over go after the last column. A column is never
+   narrower than its content. */
 @utility grid-cols-snap-* {
   grid-template-columns: repeat(
     --value(integer),
-    minmax(min-content, round(down, calc((100% - (--value(integer) - 1) * 8px) / --value(integer)), 2px))
+    minmax(min-content, round(down, calc((100% - (--value(integer) - 1) * var(--snap-gap, 8px)) / --value(integer)), 2px))
   );
-}
-
-@utility grid-cols-fluid-* {
-  grid-template-columns: repeat(--value(integer), minmax(min-content, 1fr));
 }
 
 @utility grid-cols-content-* {
@@ -214,30 +97,65 @@
       max-content);
 }
 
-@utility mask-feather-* {
-  mask: linear-gradient(90deg,
-      rgb(0 0 0 / 0) 0%,
-      rgb(0 0 0 / 1) --value(integer) %,
-      rgb(0 0 0 / 1) calc(100% - --value(integer) %),
-      rgb(0 0 0 / 0) 100%);
-}
-
 @utility w-container {
   width: 100%;
   max-width: 1440px;
   margin-inline: auto;
 }
 
+/* A list item drawn as a card Box with CSS alone, for lists too long for the `Box` component (the leaderboard index's
+   thousands of links, set as HTML), in the card's shape (`box-shape`) and colours (tokens.css): its link takes the
+   fill and the bevel, the item the shadow (`::before`, the parts outside the box, as `Box` clips it) and the overlay (`::after`,
+   blended with everything behind it, as `Box`'s is). The bevel clips the link's own ring, so the ring goes inside. */
+@utility box-item {
+  position: relative;
+  margin: 0 4px 4px 0;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  @apply box-shape;
+
+  &::before {
+    translate: 4px 4px;
+    background: var(--panel-shadow);
+    clip-path: var(--box-shadow-path);
+  }
+
+  &::after,
+  & > a {
+    clip-path: var(--box-path);
+  }
+
+  &::after {
+    background: var(--panel-overlay);
+    mix-blend-mode: overlay;
+  }
+
+  & > a {
+    background: var(--panel-background);
+  }
+
+  & > a:focus-visible {
+    @apply focus-ring-inset;
+  }
+}
+
 /*
  * The space `/player`'s recently viewed section takes, from `--recent` (how many players: set on the root before first
  * paint, then on the section by React): the heading row, then the result cards, one a row on phones, two from md and
- * three from xl, 124 px tall below sm and 156 from it, 8 px apart. None for none. So the footer stays put when the cards
+ * three from xl, 124 px tall below sm and 156 from it, 4 px apart. None for none. So the footer stays put when the cards
  * arrive.
  */
 @utility recent-hold {
   --recent-rows: var(--recent, 0);
   --recent-card: 124px;
-  min-height: calc(min(var(--recent, 0), 1) * (52px + var(--recent-rows) * var(--recent-card) + (var(--recent-rows) - 1) * 8px));
+  min-height: calc(min(var(--recent, 0), 1) * (52px + var(--recent-rows) * var(--recent-card) + (var(--recent-rows) - 1) * 4px));
   /* With nothing held, it also takes back the gap the page's column (gap-8) puts before it, so a first visit is as before. */
   margin-top: calc((min(var(--recent, 0), 1) - 1) * 32px);
 
@@ -260,7 +178,7 @@
   }
 }
 
-/* The card's shape, for the `box` utility: each corner's bevel and the shadow's offset come from
+/* The card's shape, for the `box` and `box-item` utilities: each corner's bevel and the shadow's offset come from
    `--box-tl`, `--box-tr`, `--box-bl`, `--box-br` and `--box-s` (the card's 4 px unless a Box sets them), giving the
    panel's outline (`--box-path`) and the shadow's (`--box-shadow-path`): shaded in the bottom-right notch and along the
    right and the foot, for a layer moved out by the offset. */

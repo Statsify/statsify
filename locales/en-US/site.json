@@ -7,7 +7,8 @@
     "description": "Statsify is the largest Hypixel Discord bot for viewing your Hypixel Network stats, leaderboards, sessions, and more.",
     "notFound": {
       "player": "Player Not Found | Statsify",
-      "page": "Not Found | Statsify"
+      "page": "Not Found | Statsify",
+      "leaderboard": "Leaderboard Not Found | Statsify"
     },
     "bingo": {
       "playerTitle": "{{name}} Bingo Stats | Statsify",
@@ -26,6 +27,31 @@
     "prestiges": {
       "title": "BedWars Prestiges and Colors | Statsify",
       "description": "Every BedWars prestige from 0 to 10,000 stars, with its colors, its star and the EXP it takes."
+    },
+    "levelFirst": "{{level}} {{title}}",
+    "player": {
+      "title": "{{name}} Hypixel Stats | Statsify",
+      "lead": "{{name}} Hypixel stats:"
+    },
+    "game": {
+      "title": "{{name}} {{page}} | Statsify",
+      "lead": "{{name}} {{game}} stats:",
+      "description": "View {{name}} Hypixel {{game}} stats on Statsify."
+    },
+    "leaderboard": {
+      "gameTitle": "{{game}} Leaderboards | Statsify",
+      "gameDescription": "{{game}} leaderboards on Statsify, by mode.",
+      "title": "{{name}} Leaderboard | Statsify",
+      "lead": "{{name}} leaderboard:",
+      "description": "The top Hypixel players by {{name}} on Statsify."
+    },
+    "leaderboards": {
+      "title": "Leaderboards | Statsify",
+      "description": "Browse over 2,000 Hypixel leaderboards."
+    },
+    "about": {
+      "title": "About Statsify | Statsify",
+      "description": "About Statsify and how to reach us."
     }
   },
   "nav": {
@@ -43,17 +69,18 @@
   },
   "footer": {
     "copyright": "© {{year}} Statsify. All Rights Reserved.",
-    "affiliation": "Statsify is not affiliated with or endorsed by Hypixel Inc. or Mojang.",
-    "mojang": "Not an official Minecraft service. Not approved by or associated with Mojang or Microsoft.",
-    "operator": "Run by statsify.net.",
+    "affiliation": "Not affiliated with or endorsed by Hypixel Inc.",
+    "mojang": "Not an official Minecraft service.",
+    "mojangApproval": "Not approved by or associated with Mojang or Microsoft.",
     "email": "contact@statsify.net",
+    "copied": "Copied!",
     "about": "About",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service"
   },
   "search": {
     "label": "Search players",
-    "placeholder": "Search a player",
+    "placeholder": "Search a player...",
     "heading": "Search Your Hypixel Stats",
     "noResults": "No players match \"{{query}}\". Check the spelling, or look them up on Hypixel.",
     "lookup": "Look Up {{name}}",
@@ -71,11 +98,11 @@
     "statusHidden": "They hide their online status in Hypixel's API settings.",
     "updated": "Updated {{time}}",
     "refresh": "Update stats",
-    "refreshing": "Refreshing…",
+    "refreshing": "Updating...",
     "refreshIn": "Update in {{time}}",
     "refreshLimited": "Too many updates right now, try again shortly.",
     "refreshFailed": "Couldn't update. Try again in a minute.",
-    "refreshError": "Couldn't refresh. Try again in a moment.",
+    "refreshError": "Something went wrong. Try again in a moment.",
     "share": {
       "open": "Share",
       "title": "Share",
@@ -91,19 +118,18 @@
       "label": "Turn {{name}}'s skin",
       "angle": "{{degrees}} degrees",
       "file": "{{name}}'s skin file",
-      "hint": "Drag to turn it.",
       "download": "Download Skin",
-      "error": "The skin didn't load. Try again later."
+      "error": "Couldn't load skin. Try again later."
     },
     "signature": {
-      "title": "Get signature",
-      "description": "Paste one of these into your Hypixel Forums signature, or anywhere else that shows images. The image carries the stats from the last refresh on this page, with the time they were fetched printed on it.",
+      "title": "Forum Signature",
+      "description": "Show off your stats in your forum signature!",
       "alt": "{{name}}'s Hypixel stats on Statsify",
       "url": "Image URL",
       "bbcode": "BBCode (Hypixel Forums)",
       "markdown": "Markdown",
       "html": "HTML",
-      "card": "Full card URL (808×540, too tall for a forum signature)",
+      "card": "Full card URL (808×540)",
       "more": "More Formats",
       "copy": "Copy",
       "copied": "Copied!"
@@ -111,35 +137,54 @@
     "notFound": {
       "title": "Player Not Found",
       "description": "We haven't seen {{name}} yet. Check the spelling, or ask Hypixel to look them up.",
+      "invalid": "\"{{name}}\" isn't a valid Minecraft name.",
       "lookup": "Look Up on Hypixel",
-      "lookingUp": "Looking up…",
+      "lookingUp": "Looking up...",
       "unknown": "Hypixel doesn't know a player called {{name}} either. Check the spelling, or they may never have joined Hypixel.",
-      "verify": "The verification didn't go through. Complete it, then try again.",
-      "verifyFailed": "The verification didn't load. Allow challenges.cloudflare.com, then reload the page.",
+      "verify": "Verification failed. Try again.",
+      "verifyFailed": "The verification didn't load. If you use a blocker, allow challenges.cloudflare.com and reload.",
       "limited": "Too many lookups right now, try again in {{time}}.",
-      "unavailable": "Hypixel didn't answer. Try again in a minute.",
+      "unavailable": "Hypixel didn't respond. Try again in a minute.",
       "error": "The lookup didn't go through. Try again in a moment."
     }
   },
   "leaderboards": {
     "title": "Leaderboards",
-    "filter": "Filter leaderboards",
+    "filter": "Filter leaderboards...",
     "noMatches": "No leaderboards match \"{{query}}\". Try fewer words, or a game or stat name.",
-    "loading": "Loading…",
+    "loading": "Loading...",
     "listFailed": "Couldn't load the list. Click the box to try again.",
     "position": "Pos",
     "player": "Player",
     "page": "Page {{page}} of {{pages}}",
+    "pageRange": "Pages {{first}}–{{last}} of {{pages}}",
     "pages": "Pages",
+    "stream": {
+      "more": "Load More",
+      "previous": "Load Previous Page",
+      "continue": "Continue to Page {{page}}",
+      "open": "Open Page {{page}}",
+      "retry": "Try Again",
+      "pause": "Pause loading",
+      "resume": "Resume loading",
+      "skip": "Skip to the footer",
+      "notice": "Ranks can change while you scroll.",
+      "loaded": "{{players}} more players loaded.",
+      "loadedOne": "1 more player loaded.",
+      "end": "That's the end of the leaderboard.",
+      "failed": "Couldn't load page {{page}}.",
+      "busy": "Statsify is busy, so page {{page}} didn't load. Try again in 30 seconds.",
+      "gone": "Page {{page}} isn't on this leaderboard any more."
+    },
     "previous": "Previous",
     "next": "Next",
-    "find": "Find a player on this leaderboard",
-    "unknown": "We haven't seen {{name}} yet. Check the spelling, or open their player page to look them up.",
-    "unranked": "{{name}} isn't on this leaderboard yet: it only ranks values above 0. Refresh their player page after they've played.",
+    "find": "Find a player on this leaderboard...",
+    "jump": "Go to #",
+    "jumpPosition": "Go to position",
+    "unknown": "We haven't seen {{name}} yet. Check the spelling, or <profile>open their profile</profile> to look them up.",
+    "unranked": "{{name}} isn't on this leaderboard. They might not rank high enough to be listed.",
     "moved": "{{name}}'s rank changed while the page loaded, so they're not on it. Try again to find them.",
-    "empty": "Nobody's on this leaderboard yet. Players join it once someone looks them up on Statsify.",
-    "aboutHighest": "Ranks players looked up on Statsify with a non-zero value, highest first. Values are from each player's last lookup.",
-    "aboutLowest": "Ranks players looked up on Statsify with a non-zero value, lowest first. Values are from each player's last lookup.",
+    "empty": "No one's on this leaderboard yet.",
     "gameTitle": "{{game}} Leaderboards",
     "gameWide": "General",
     "all": "All Leaderboards",
@@ -168,10 +213,11 @@
     "selected": "{{name}} (selected)",
     "games": "Games",
     "unplayed": "(not played)",
-    "neverPlayed": "{{name}} has no {{game}} stats yet, so everything here is 0. Pick another game, or press Refresh after they've played.",
-    "filter": "Filter by name",
+    "neverPlayed": "{{name}} hasn't played {{game}} yet.",
+    "filter": "Filter by name...",
     "noMatches": "No stats match \"{{query}}\". Try fewer letters, or clear the box.",
-    "hint": "Select any stat to see its leaderboard around {{name}}.",
+    "hint": "Click any stat to see where {{name}} ranks.",
+    "hintTouch": "Tap a stat to see where {{name}} ranks.",
     "discord": "Use in Discord:",
     "addApp": "Add to your apps",
     "leaderboard": "({{stat}} leaderboard)",
@@ -288,8 +334,6 @@
     "task": "{{game}} Task",
     "progress": "Progress:",
     "notFound": {
-      "title": "Player Not Found",
-      "description": "We haven't seen {{name}} yet. Check the spelling, or look them up on Hypixel.",
       "lookup": "Look Up {{name}}"
     }
   },
@@ -300,13 +344,10 @@
   "about": {
     "title": "About Statsify",
     "what": "What Statsify Is",
-    "whatText": "Statsify shows Hypixel stats as images in Discord and as pages on this site. Look up a player, then open any game for every stat it tracks.",
-    "linksText": "Every stat with a leaderboard links to it: a player's <chip/> opens the FKDR leaderboard at their rank. What each stat means is in the <glossary>Stat Glossary</glossary>.",
-    "operator": "Who Runs Statsify",
-    "operatorText": "Statsify is run by statsify.net.",
-    "notOfficial": "Not Official",
+    "whatText": "The largest Hypixel stats bot on Discord, now on the web.",
+    "linksText": "Click a stat, like <chip/>, to see where the player ranks. The <glossary>Stat Glossary</glossary> explains what each one means.",
+    "linksTextTouch": "Tap a stat, like <chip/>, to see where the player ranks. The <glossary>Stat Glossary</glossary> explains what each one means.",
     "contact": "Contact",
-    "contactText": "Help is on Discord. Everything else goes by email, so there's a written record.",
     "topic": "Topic",
     "where": "Where",
     "help": "Help and Bugs",
@@ -315,22 +356,23 @@
     "legal": "Legal and Business",
     "security": "Security",
     "stats": "Where Stats Come From",
-    "statsText": "Stats come from Hypixel's public API. A player's page shows their stats from the last time anyone looked them up, and <strong>Refresh</strong> fetches new ones.",
+    "statsText": "Stats come from Hypixel's API and update each time someone looks a player up.",
     "note": "Note",
-    "leaderboardsNote": "Leaderboards only include players someone has looked up on Statsify, so a rank is among those players, not everyone on Hypixel.",
+    "leaderboardsNote": "Leaderboards rank players who've been looked up on Statsify, not all of Hypixel.",
     "names": "Names and Skins",
-    "namesText": "Names and skins come from Mojang, and change when the player changes them.",
+    "namesText": "Names and skins come from Minecraft's servers and update upon search.",
     "source": "Open Source",
-    "sourceText": "The bot and this site are open source under the GNU AGPL v3 or later. The code is <github>on GitHub</github>."
+    "sourceText": "Statsify is open source. See the code on <github>GitHub</github>."
   },
   "glossary": {
     "title": "Stat Glossary",
     "meta": "{{stats}} stats",
     "intro": "What each stat on Statsify means, how the ratios are worked out, and which games show it. The labels are the ones on the bot's cards.",
     "levels": "BedWars levels and their colors are on the <prestiges>BedWars Prestiges</prestiges> page.",
-    "filter": "Filter stats",
+    "filter": "Filter stats...",
     "noMatches": "No stats match \"{{query}}\". Try fewer letters, or clear the box.",
     "ratios": "Ratios",
+    "ratiosNote": "Ratios are rounded to two decimal places. With nothing to divide by, a ratio equals the top number.",
     "shared": "Across Games",
     "usedIn": "Used in {{games}}",
     "usedInMore": "Used in {{games}} and {{more}} more",
@@ -340,10 +382,7 @@
   "prestiges": {
     "title": "BedWars Prestiges",
     "meta": "{{prestiges}} prestiges",
-    "intro": "Every BedWars prestige up to {{top}} stars, in the colors its level shows in game. A prestige is 100 levels and takes {{exp}} EXP.",
-    "levels": "The first levels of each prestige are quicker ({{first}} EXP); every level after them takes {{steady}}.",
-    "note": "Note",
-    "noteText": "Hypixel sells other prestige colors, stars and brackets, so a player's level can look different from its prestige here.",
+    "intro": "Every BedWars prestige up to {{top}} stars. Each is 100 levels and {{exp}} EXP.",
     "exp": "{{exp}} EXP",
     "stars": "Stars",
     "brackets": "Brackets"

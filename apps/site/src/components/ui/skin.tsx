@@ -27,9 +27,14 @@ export function Skin({ uuid, className = "", ...props }: ComponentProps<typeof B
 
 /**
  * A player's face, `size` px square. The image is always the 8×8 face and the browser scales it up without
- * smoothing, so every size shares one cached image per player.
+ * smoothing, so every size shares one cached image per player. By `name` it's a search suggestion's head: only the
+ * skin the API has stored for that name.
  */
-export function SkinHead({ uuid, size = 32, className }: { uuid: string; size?: number; className?: string }) {
+export function SkinHead({
+  size = 32,
+  className,
+  ...player
+}: ({ uuid: string } | { name: string }) & { size?: number; className?: string }) {
   return (
     <img
       height={size}
@@ -37,7 +42,7 @@ export function SkinHead({ uuid, size = 32, className }: { uuid: string; size?: 
       alt=""
       loading="lazy"
       decoding="async"
-      src={`/api/skin/head?uuid=${uuid}`}
+      src={"uuid" in player ? `/api/skin/head?uuid=${player.uuid}` : `/api/skin/head?name=${encodeURIComponent(player.name)}`}
       style={{ imageRendering: "pixelated" }}
       className={className}
     />

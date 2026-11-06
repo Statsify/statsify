@@ -13,6 +13,7 @@ import {
   createServerOnlyFn,
   createStart,
 } from "@tanstack/react-start";
+import { NO_STORE_EDGE, RETRY_AFTER_SECONDS } from "~/lib/cache";
 import { captureServerError, ensureServerSentry } from "~/server/sentry.server";
 import { redirectFor } from "~/lib/redirects";
 import { sentryGlobalFunctionMiddleware, sentryGlobalRequestMiddleware } from "@sentry/tanstackstart-react";
@@ -34,29 +35,17 @@ const sentryInit = createMiddleware({ type: "request" }).server(async ({ next })
 /** `/discord`, `/premium` and the other vanity links, and the old `/players/*` URLs. */
 const redirects = createMiddleware({ type: "request" }).server(({ request, next }) => {
   const url = new URL(request.url);
-  const target = redirectFor(url.pathname);
+  const target = redirectFor(url.pathname, url.search);
   if (!target) return next();
 
   return new Response(null, {
     status: 301,
     headers: {
-      // Site paths keep the query string (`?category=`), external links do not.
-      Location: target.startsWith("/") ? `${target}${url.search}` : target,
+      Location: target,
       "Cache-Control": "public, max-age=3600",
       "CDN-Cache-Control": "max-age=86400",
     },
   });
-});
-
-/**
- * `site.indexable` off (a staging deploy): every response the app sends carries `X-Robots-Tag: noindex`. Static
- * files skip this middleware, so the proxy in front adds the header for them.
- */
-const robotsTag = createMiddleware({ type: "request" }).server(async ({ next }) => {
-  const { indexable } = await siteConfig();
-  const result = await next();
-  if (!indexable) result.response.headers.set("X-Robots-Tag", "noindex");
-  return result;
 });
 
 const publicOrigin = createServerOnlyFn(async () => new URL((await siteConfig()).publicUrl).origin);
@@ -76,9 +65,6 @@ const SECURITY_HEADERS = {
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "Content-Security-Policy": "frame-ancestors 'none'",
 };
-
-/** How long a visitor should wait after a server route failed. */
-const RETRY_AFTER_SECONDS = 30;
 
 /**
  * Errors never reach the edge cache: a 5xx or 429 replaces the route's `CDN-Cache-Control` with
@@ -103,8 +89,7 @@ const responseHeaders = createMiddleware({ type: "request" }).server(async ({ ne
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) response.headers.set(name, value);
 
   if (response.status >= 500 || response.status === 429 || handlerType === "serverFn") {
-    response.headers.set("Cache-Control", "no-store");
-    response.headers.set("CDN-Cache-Control", "no-store");
+    for (const [name, value] of Object.entries(NO_STORE_EDGE)) response.headers.set(name, value);
   }
 
   return result ? { ...result, response } : response;
@@ -129,8 +114,7 @@ export const startInstance = createStart(() => {
   const sentry = sentryMiddleware();
 
   return {
-    // robotsTag sits outside responseHeaders, which hands it a response with mutable headers.
-    requestMiddleware: [sentryInit, ...sentry.request, robotsTag, responseHeaders, redirects, csrf, unfurlImages],
+    requestMiddleware: [sentryInit, ...sentry.request, responseHeaders, redirects, csrf, unfurlImages],
     functionMiddleware: sentry.function,
   };
 });

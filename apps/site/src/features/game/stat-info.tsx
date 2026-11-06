@@ -9,7 +9,7 @@
 /* eslint-disable jsx-a11y/prefer-tag-over-role -- a non-modal box floating in a portal; a `<dialog>` element would bring
    the browser's own position, margins and colours to undo. */
 
-import { Floating } from "~/components/ui/hint";
+import { Floating, useDismiss } from "~/components/ui/hint";
 import { Link, getRouteApi } from "@tanstack/react-router";
 import { glossaryWordsQuery } from "~/features/content/content-data";
 import { useEffect, useId, useRef, useState } from "react";
@@ -36,26 +36,13 @@ export function StatInfo({ glossary, label }: { glossary: string; label: string 
   const { glossaryHash } = localeRoute.useLoaderData();
   const words = useQuery({ ...glossaryWordsQuery(glossaryHash), enabled: anchor !== null, select: (words) => words[glossary] });
 
+  useDismiss(anchor, (target) => !!(button.current?.contains(target) || box.current?.contains(target)), () => setAnchor(null));
+
   useEffect(() => {
     if (!anchor) return;
-
     // Next frame: the box stays hidden until it has measured where it fits, and a hidden box can't take focus.
     const frame = requestAnimationFrame(() => box.current?.focus({ preventScroll: true }));
-    const close = () => setAnchor(null);
-    const outside = (event: PointerEvent) => {
-      const target = event.target as Node;
-      if (!button.current?.contains(target) && !box.current?.contains(target)) close();
-    };
-
-    addEventListener("scroll", close, { capture: true, passive: true });
-    addEventListener("resize", close);
-    document.addEventListener("pointerdown", outside);
-    return () => {
-      cancelAnimationFrame(frame);
-      removeEventListener("scroll", close, { capture: true });
-      removeEventListener("resize", close);
-      document.removeEventListener("pointerdown", outside);
-    };
+    return () => cancelAnimationFrame(frame);
   }, [anchor]);
 
   return (
@@ -67,7 +54,8 @@ export function StatInfo({ glossary, label }: { glossary: string; label: string 
         aria-controls={id}
         aria-label={t("game.about", { stat: label })}
         onClick={(event) => setAnchor(anchor ? null : (event.currentTarget.closest(".relative") ?? event.currentTarget).getBoundingClientRect())}
-        className="absolute -top-2 -end-2 z-10 flex size-11 items-start justify-end p-1 text-mc-1 text-mc-gray hover:text-mc-white"
+        // In the stat box's top corner, with its ring inside, as the box clips anything past its edge.
+        className="absolute -top-2 -end-1 z-10 flex size-11 items-start justify-end p-1 text-mc-1 text-mc-gray hover:text-mc-white focus-visible:focus-ring-inset"
       >
         ?
       </button>

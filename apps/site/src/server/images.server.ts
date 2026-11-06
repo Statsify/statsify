@@ -6,16 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  type CardChoice,
-  type ImageVariant,
-  PoolBusyError,
-  RenderPool,
-  isGameCard,
-} from "@statsify/profiles/pool";
-import { ORPCError } from "@orpc/client";
-import { cacheHeaders } from "~/lib/cache";
+import { type CardChoice, type ImageVariant, pageCard } from "@statsify/profiles/protocol";
+import { PoolBusyError, RenderPool } from "@statsify/profiles/pool";
+import { NOT_FOUND_EDGE, NO_STORE, cacheHeaders } from "~/lib/cache";
 import { compactUuid } from "~/lib/uuid";
+import { orNull } from "~/lib/orpc";
 import { createRequire } from "node:module";
 import { join } from "node:path";
 import { proxySkin } from "./skin.server";
@@ -99,8 +94,6 @@ const RELEASE_LOCK = `if redis.call("get", KEYS[1]) == ARGV[1] then return redis
  */
 const RENDER_QUEUE_LIMIT = 48;
 
-const NO_STORE = { "Cache-Control": "no-store" };
-
 /** How an image route caches. */
 export interface ImagePolicy {
   /** Headers on a rendered image. */
@@ -149,7 +142,7 @@ let pool: Promise<RenderPool> | undefined;
 let loading = 0;
 const placeholders = new Map<ImageVariant, Promise<Uint8Array<ArrayBuffer>>>();
 
-const NOT_FOUND_HEADERS = cacheHeaders("max-age=300");
+const NOT_FOUND_HEADERS = cacheHeaders(NOT_FOUND_EDGE);
 
 /** The `ETag` of a player image: its `updatedAt`, which only the player page's refresh action changes. */
 const etagOf = (updatedAt: number) => `"${updatedAt}"`;
@@ -335,26 +328,16 @@ async function waitForImage(
 
 /**
  * The game page's card: the API checks the game and mode (the page's own rules, so an unfurl exists exactly when the
- * page does), and a game whose card the pool can't draw yet gets the general one.
+ * page does), and a page the bot has no card for (a game's all-time Quests) gets the general one.
  */
 async function gameCard(uuid: string, { game, mode, submode, period }: GameImage): Promise<CardChoice> {
-  const page = await rpcServerClient.player.game({ uuid, game, mode: mode ?? undefined, submode: submode ?? undefined, period: period ?? undefined }).catch((error: unknown) => {
-    if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) {
-      throw new GameImageNotFoundError();
-    }
+  const page = await orNull(
+    rpcServerClient.player.game({ uuid, game, mode: mode ?? undefined, submode: submode ?? undefined, period: period ?? undefined }),
+    ["NOT_FOUND", "BAD_REQUEST"]
+  );
+  if (!page) throw new GameImageNotFoundError();
 
-    throw error;
-  });
-
-  if (!isGameCard(page.game.key, page.mode, page.period)) return { card: "general" };
-
-  return {
-    card: page.game.key,
-    mode: page.mode,
-    ...(page.submode !== null && { submode: page.submode }),
-    ...(page.period !== undefined && { period: page.period }),
-    ...(page.window && { window: page.window }),
-  };
+  return pageCard(page);
 }
 
 /** One of the bot's cards for a stored player, as PNG bytes. Throws `PoolBusyError` when the queue is full. */

@@ -29,6 +29,8 @@ const REDIRECTS: Readonly<Record<string, string>> = {
   "/youtube": "https://youtube.com/@statsifybot",
   "/translate": "https://crowdin.com/project/statsify",
   "/contact": "/about#contact",
+  // Where the bot's invite link sends a server's owner once it's added, with Discord's `code` and `guild_id`.
+  "/bot/thanks": "/",
 };
 
 /** The Next app's Bingo URLs: `/players` and `/players/:slug[/general[/bingo]]`, in any case, as Next matched them. */
@@ -40,8 +42,11 @@ const SHORT_PLAYER = /^\/p\/([^/]+)$/;
 /** The pages with a fixed path, which the router also matches in another case (`/About`). */
 const STATIC_PAGES = new Set(["/about", "/bingo", "/glossary", "/leaderboards", "/player", "/prestiges/bedwars", "/privacy", "/terms"]);
 
-/** Where a path redirects to (absolute URL or site path), or `undefined` to route it normally. */
-export function redirectFor(pathname: string): string | undefined {
+/**
+ * Where a request redirects to, or `undefined` to route it normally: an absolute URL, or a site path that keeps the
+ * query string (`?category=`). A vanity link's target is fixed, so it drops it.
+ */
+export function redirectFor(pathname: string, search = ""): string | undefined {
   // The lookbehind starts a match only at a run's first slash; `/\/+$/` retries at every slash of a run, which is
   // quadratic on a path of thousands of them.
   const path = pathname.length > 1 ? pathname.replace(/(?<!\/)\/+$/, "") : pathname;
@@ -49,24 +54,24 @@ export function redirectFor(pathname: string): string | undefined {
   // English is served unprefixed. Answering here, before the router, takes `/en-US/` there in one hop rather than a
   // trailing-slash redirect followed by the locale route's.
   const english = `/${DEFAULT_LOCALE}`;
-  if (path === english || path.startsWith(`${english}/`)) return sitePath(path.slice(english.length));
+  if (path === english || path.startsWith(`${english}/`)) return sitePath(path.slice(english.length)) + search;
 
   // Next matched the vanity links in any case (`/Discord`), so they still do.
   const vanity = REDIRECTS[path.toLowerCase()];
   if (vanity) return vanity;
 
   const players = LEGACY_PLAYERS.exec(path);
-  if (players) return players[1] ? `/player/${players[1]}/bingo` : "/bingo";
+  if (players) return (players[1] ? `/player/${players[1]}/bingo` : "/bingo") + search;
 
   const short = SHORT_PLAYER.exec(path);
-  if (short) return `/player/${short[1]}`;
+  if (short) return `/player/${short[1]}${search}`;
 
   // One URL per page, as the player and game pages land another casing on theirs.
   const lower = path.toLowerCase();
-  if (lower !== path && STATIC_PAGES.has(lower)) return lower;
+  if (lower !== path && STATIC_PAGES.has(lower)) return lower + search;
 
   // Any other trailing slash too: a 301 with the other redirects' cache headers rather than the router's 307.
-  return path === pathname ? undefined : sitePath(path);
+  return path === pathname ? undefined : sitePath(path) + search;
 }
 
 /**
@@ -89,6 +94,7 @@ if (import.meta.vitest) {
       expect(redirectFor("/players/j4cobi/general/bingo")).toBe("/player/j4cobi/bingo");
       expect(redirectFor("/Players/J4cobi")).toBe("/player/J4cobi/bingo");
       expect(redirectFor("/players/j4cobi/other")).toBeUndefined();
+      expect(redirectFor("/players", "?category=pvp")).toBe("/bingo?category=pvp");
     });
 
     it("shortens /p/:name to the player page", () => {
@@ -104,6 +110,7 @@ if (import.meta.vitest) {
       expect(redirectFor("/")).toBeUndefined();
       expect(redirectFor("/player/j4cobi/bingo")).toBeUndefined();
       expect(redirectFor("/DISCORD/")).toBe("https://discord.gg/5VgxMQY");
+      expect(redirectFor("/bot/thanks", "?code=x&guild_id=1")).toBe("/");
     });
 
     it("drops the English prefix and a trailing slash without leaving the site", () => {
@@ -116,7 +123,7 @@ if (import.meta.vitest) {
 
     it("lowers the case of the fixed pages only", () => {
       expect(redirectFor("/About")).toBe("/about");
-      expect(redirectFor("/PRIVACY/")).toBe("/privacy");
+      expect(redirectFor("/PRIVACY/", "?x=1")).toBe("/privacy?x=1");
       expect(redirectFor("/Prestiges/BedWars")).toBe("/prestiges/bedwars");
       expect(redirectFor("/about")).toBeUndefined();
       expect(redirectFor("/player/J4cobi")).toBeUndefined();

@@ -11,12 +11,11 @@ import { Button } from "~/components/ui/button";
 import { dashedUuid } from "~/lib/uuid";
 import { getRouteApi, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useCopy } from "~/components/ui/copied";
 import { useTranslation } from "react-i18next";
 import type { ReactNode } from "react";
 
 export const LABEL = "text-mc-1 text-mc-white";
-/** How long a copy button reads "Copied!". */
-const COPIED_MS = 2000;
 
 const localeRoute = getRouteApi("/{-$locale}");
 
@@ -48,7 +47,9 @@ export function PanelToggle({
       onClick={onToggle}
       onPointerEnter={onIntent}
       onFocus={onIntent}
-      className={`flex min-h-11 items-center ${size} text-mc-yellow hover:underline`}
+      // The tap area reaches 10 px under the button: on a game page's phone header, the tap area of the Updated hint
+      // 8 px above it takes the button's top 9 px.
+      className={`relative flex min-h-11 min-w-11 items-center justify-center ${size} text-mc-yellow hover:underline after:absolute after:inset-x-0 after:top-0 after:-bottom-2.5`}
     >
       {children}
     </button>
@@ -165,19 +166,8 @@ function useShareableCard(src: string, file: string) {
  */
 export function Snippet({ label, text }: { label: string; text: string }) {
   const { t } = useTranslation();
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    if (!copied) return;
-    const id = setTimeout(() => setCopied(false), COPIED_MS);
-    return () => clearTimeout(id);
-  }, [copied]);
-
   // Without clipboard access (plain HTTP, old browsers) the field stays selectable, so nothing is reported.
-  const copy = () => {
-    if (!navigator.clipboard) return;
-    navigator.clipboard.writeText(text).then(() => setCopied(true), () => undefined);
-  };
+  const [copied, copy] = useCopy<true>();
 
   return (
     <div className="flex flex-col gap-1">
@@ -191,7 +181,7 @@ export function Snippet({ label, text }: { label: string; text: string }) {
           className="h-11 min-w-0 grow bg-blackify-800 px-3 text-mc-1 text-mc-white focus:focus-ring-inset"
         />
         <Button asChild size="small" className="sm:min-w-32">
-          <button type="button" onClick={copy}>
+          <button type="button" onClick={() => void copy(text, true)}>
             {copied ? t("player.signature.copied") : t("player.signature.copy")}
           </button>
         </Button>

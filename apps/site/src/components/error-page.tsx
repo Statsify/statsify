@@ -7,7 +7,7 @@
  */
 
 import { Button } from "~/components/ui/button";
-import { Error } from "~/components/ui/error";
+import { Error, ErrorText } from "~/components/ui/error";
 import { LogoError } from "~/components/icons/logo-error";
 import { reportRouteError } from "~/lib/sentry";
 import { useRouter } from "@tanstack/react-router";
@@ -31,9 +31,10 @@ export function ErrorPage({ error, reset }: ErrorComponentProps) {
   return (
     <Error>
       <LogoError className="size-40 sm:size-64" />
-      <div className="flex flex-col items-center gap-4">
-        <h1 className="text-mc-2 sm:text-mc-3 font-bold text-mc-red">{t("error.title", "Something Went Wrong")}</h1>
-        <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray text-center">{t("error.description", "Statsify couldn't load this page. Try again in a moment.")}</p>
+      <div className="flex w-full flex-col items-center gap-4">
+        <ErrorText heading={<h1 className="text-mc-2 sm:text-mc-3 font-bold text-mc-red">{t("error.title", "Something Went Wrong")}</h1>}>
+          <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray text-center">{t("error.description", "Statsify couldn't load this page. Try again in a moment.")}</p>
+        </ErrorText>
         {/* One primary action; home is a plain link. */}
         <div className="flex flex-col items-center gap-2 pt-2">
           <Button asChild variant="primary" className="min-w-48">

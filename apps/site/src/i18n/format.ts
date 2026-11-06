@@ -6,18 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { abbreviationNumber } from "@statsify/util/util";
+
 /**
- * Number formatting identical to the bot's (`@statsify/discord` i18n-loader.service.ts), kept
- * here because `@statsify/util` pulls `config.ts` and `node:fs` into the browser bundle.
+ * The bot's number format (`formatNumber` in `@statsify/util`) plus a `trim` option and cached formats. The helpers
+ * come from its `/util` entry, since the package's own pulls `config.ts` and `node:fs` into the browser bundle.
  */
-
-const ABBREVIATIONS = ["", "K", "M", "B", "T"];
-
-function abbreviationNumber(num: number, decimals = 2): [num: number, suffix: string] {
-  const base = Math.floor(num === 0 ? 0 : Math.log(num) / Math.log(1000));
-  const shift = 10 ** decimals;
-  return [+(Math.floor((num / 1000 ** base) * shift) / shift).toFixed(decimals), ABBREVIATIONS[base]];
-}
 
 const numberFormats = new Map<string, Intl.NumberFormat>();
 

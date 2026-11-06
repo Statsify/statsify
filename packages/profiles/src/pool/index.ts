@@ -9,10 +9,7 @@
 import { Worker, type WorkerOptions } from "node:worker_threads";
 import type { RenderRequest, WorkerMessage, WorkerRequest } from "./protocol.js";
 
-export { IMAGE_VARIANTS, isGameCard } from "./protocol.js";
-export type { CardChoice, ImageVariant, RenderRequest } from "./protocol.js";
-
-/** Every worker is busy and the queue is full; answer 503 with `Retry-After`. */
+/** No worker took the job in time, or the queue is full; answer 503 with `Retry-After`. */
 export class PoolBusyError extends Error {
   public readonly retryAfter = 2;
 

@@ -38,6 +38,8 @@ const ACTION_TIMEOUT_MS = 10_000;
  */
 export const BROWSER_TIMEOUT_MS = 12_000;
 
+const RETRY_MARGIN_S = 5;
+
 /** The visitor's address: nginx passes Cloudflare's `CF-Connecting-IP` through. */
 function clientIp(): string {
   return getRequest().headers.get("cf-connecting-ip") ?? getRequestIP() ?? "unknown";
@@ -52,8 +54,9 @@ function failure(error: unknown, deadline: AbortSignal): ActionResult<never> {
     if (error.code === "SERVICE_UNAVAILABLE") return { ok: false, code: "UNAVAILABLE" };
 
     if (error.code === "TOO_MANY_REQUESTS") {
+      // A few seconds past the API's own wait, so a refresh or lookup the moment the countdown ends isn't refused again.
       const { retryAfter } = error.data as { retryAfter: number };
-      return { ok: false, code: "TOO_MANY_REQUESTS", retryAfter };
+      return { ok: false, code: "TOO_MANY_REQUESTS", retryAfter: retryAfter + RETRY_MARGIN_S };
     }
   }
 

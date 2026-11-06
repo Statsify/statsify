@@ -70,8 +70,9 @@ export function RefreshBar({
   expiresAt: number;
   refresh: (deadline: AbortSignal, auto: boolean) => Promise<ActionResult<unknown>>;
   /**
-   * Once the page opens, update a save older than 15 minutes by itself, once per page view. It fails quietly: a
-   * refusal counts down without the message, and anything else leaves the button as it was.
+   * Once the page opens, update a save older than 15 minutes (past its cooldown when the search opened the page) by
+   * itself, once per page view. It fails quietly: a refusal counts down without the message, and anything else leaves
+   * the button as it was.
    */
   auto?: boolean;
   /** One row on phones too, the time beside a smaller button: a game page, whose tables should start near the top. */
@@ -90,6 +91,7 @@ export function RefreshBar({
   // The location once its page has rendered: during a navigation `location` is already the next page's.
   // eslint-disable-next-line no-underscore-dangle -- the history entry's key, under TanStack's name
   const view = useRouterState({ select: ({ resolvedLocation }) => resolvedLocation?.state.__TSR_key });
+  const searchedAt = useRouterState({ select: ({ resolvedLocation }) => resolvedLocation?.state.searchedAt });
 
   const lockedUntil = state.status === "limited" ? state.until : expiresAt;
   const remaining = now === undefined ? undefined : Math.max(0, Math.ceil((lockedUntil - now) / 1000));
@@ -125,7 +127,10 @@ export function RefreshBar({
 
   const autoUpdate = useEffectEvent(() => {
     const now = Date.now();
-    if (state.status === "pending" || now < lockedUntil || now - updatedAt < AUTO_UPDATE_AGE_MS) return;
+    // Opened from the search, any save past its cooldown updates, as for a bot command. A reload keeps history state,
+    // so only a search made since this document loaded counts.
+    const age = searchedAt !== undefined && searchedAt > performance.timeOrigin ? 0 : AUTO_UPDATE_AGE_MS;
+    if (state.status === "pending" || now < lockedUntil || now - updatedAt < age) return;
     if (navigator.webdriver || BOT_AGENT.test(navigator.userAgent)) return;
     void run(true);
   });

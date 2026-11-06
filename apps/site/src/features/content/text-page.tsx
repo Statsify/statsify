@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background, type BackgroundName } from "~/components/ui/background";
+import { type BackgroundName, PageBackground } from "~/components/ui/background";
 import { Chevron } from "~/components/icons/chevron";
-import { Box } from "~/components/ui/box";
+import { BOX_GAP, Box, HEADING_BOX } from "~/components/ui/box";
+import { EmailLink } from "~/components/ui/email-link";
 import { Link, type LinkProps } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
 import { cn } from "~/lib/util";
@@ -21,6 +22,8 @@ export interface ContentsItem {
   count?: number;
 }
 
+const NO_CONTENTS: ContentsItem[] = [];
+
 /**
  * The layout of the site's text pages (about, the glossary, prestiges, privacy, terms): the title and a meta line over
  * one reading column, with the page's contents in a rail beside it from `lg` and folded into a panel above it on
@@ -29,37 +32,37 @@ export interface ContentsItem {
 export function TextPage({
   title,
   meta,
-  contents,
+  contents = NO_CONTENTS,
   background = "general",
   children,
 }: {
   title: ReactNode;
   meta?: ReactNode;
-  contents: ContentsItem[];
+  /** None for a short page (about), which then has no rail or folded panel. */
+  contents?: ContentsItem[];
   background?: BackgroundName;
   children: ReactNode;
 }) {
   const current = useCurrentSection(contents.map(({ id }) => id));
+  const listed = contents.length > 0;
 
   return (
     <div className="relative grow">
-      <Background
-        background={background}
-        priority
-        viewport
-        className="h-full"
-        mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
-      />
-      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <PageBackground background={background} viewport mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)" />
       <div className="w-container px-4 pt-8 pb-12 text-mc-white md:px-8 md:pt-12 md:pb-16">
-        <div className="grid items-start gap-6 lg:grid-cols-[280px_minmax(0,768px)] lg:justify-center lg:gap-8">
-          <Rail contents={contents} current={current} />
+        <div
+          className={cn(
+            "grid items-start gap-6 lg:justify-center lg:gap-8",
+            listed ? "lg:grid-cols-[280px_minmax(0,768px)]" : "lg:grid-cols-[minmax(0,768px)]"
+          )}
+        >
+          {listed && <Rail contents={contents} current={current} />}
           <div className="flex min-w-0 flex-col gap-6">
             <header className="flex flex-col gap-2">
               <h1 className="text-mc-2 lg:text-mc-3 font-bold">{title}</h1>
               {meta && <p className="text-mc-1 text-mc-gray">{meta}</p>}
             </header>
-            <FoldedContents contents={contents} />
+            {listed && <FoldedContents contents={contents} />}
             {children}
           </div>
         </div>
@@ -131,6 +134,7 @@ function useCurrentSection(ids: string[]): string | undefined {
   const key = ids.join(" ");
 
   useEffect(() => {
+    if (!key) return;
     const sections = key.split(" ");
     let frame = 0;
 
@@ -191,40 +195,76 @@ export function LegalPage({
       contents={sections.map(({ id, title }) => ({ id, label: <span lang="en">{title}</span> }))}
     >
       <Article lang="en">
-        {/* The sections after it keep their space above, as each section does after the one before. */}
         <div className="flex flex-col gap-4">{intro}</div>
-        {sections.map(({ id, title, body }) => (
-          <Section key={id} id={id} title={title}>
-            {body}
-          </Section>
-        ))}
       </Article>
+      {sections.map(({ id, title, body }) => (
+        <Section key={id} id={id} title={title} lang="en">
+          {body}
+        </Section>
+      ))}
     </TextPage>
   );
 }
 
 /**
- * A panel of reading text: Mona Sans at 16, 20 from `lg`, lines kept to 68 characters. `lang` marks text that stays in
- * one language whatever the page's locale (the legal pages are English only).
+ * A panel of reading text: Mona Sans at 16, 20 from `lg`, lines kept to 68 characters. `short` sets one-sentence
+ * paragraphs (about, prestiges) in Minecraft instead, at 16, 24 from `lg`. `lang` marks text that stays in one
+ * language whatever the page's locale (the legal pages are English only).
  */
-export function Article({ children, lang, className }: { children: ReactNode; lang?: string; className?: string }) {
+export function Article({
+  children,
+  lang,
+  short = false,
+  className,
+}: {
+  children: ReactNode;
+  lang?: string;
+  short?: boolean;
+  className?: string;
+}) {
   return (
     <Box className={cn("content:p-4 lg:content:px-10 lg:content:pt-8 lg:content:pb-10", className)}>
-      <div lang={lang} className="font-sans text-16 leading-[1.6] font-medium text-mc-gray lg:text-20">
+      <div
+        lang={lang}
+        // Lines of about 68 characters: 68ch in Minecraft, 33em in Mona Sans, whose letters are narrower than its zero
+        // (68ch let its lines run to 90).
+        className={short ?
+          "text-mc-1 text-mc-gray lg:text-mc-1.5 [--measure:68ch]" :
+          "font-sans text-16 leading-[1.6] font-medium text-mc-gray lg:text-20 [--measure:33em]"}
+      >
         {children}
       </div>
     </Box>
   );
 }
 
-/** A section of an article: a heading the contents link to, then its paragraphs. */
-export function Section({ id, title, children }: { id: string; title: ReactNode; children: ReactNode }) {
+/**
+ * A section of a text page: the heading the contents link to in a box of its own, then its paragraphs in an `Article`
+ * under it, 4 px apart, as the bot's cards draw a title box over its panel. `short` and `lang` are as for `Article`.
+ */
+export function Section({
+  id,
+  title,
+  short,
+  lang,
+  children,
+}: {
+  id: string;
+  title: ReactNode;
+  short?: boolean;
+  lang?: string;
+  children: ReactNode;
+}) {
   return (
-    <section className="flex flex-col gap-4 not-first:mt-10 lg:not-first:mt-14">
-      <h2 id={id} className="-mb-2 scroll-mt-6 text-mc-1.5 lg:text-mc-2 font-bold text-white">
-        {title}
-      </h2>
-      {children}
+    <section lang={lang} className={cn("flex flex-col", BOX_GAP)}>
+      <Box className={HEADING_BOX}>
+        <h2 id={id} className="scroll-mt-6 text-mc-1.5 lg:text-mc-2 font-bold text-white">
+          {title}
+        </h2>
+      </Box>
+      <Article short={short}>
+        <div className="flex flex-col gap-4">{children}</div>
+      </Article>
     </section>
   );
 }
@@ -234,26 +274,27 @@ export function Subheading({ children }: { children: ReactNode }) {
 }
 
 export function Paragraph({ children }: { children: ReactNode }) {
-  return <p className="max-w-[68ch]">{children}</p>;
+  return <p className="max-w-(--measure)">{children}</p>;
 }
 
 /** A list with the site's square bullets. */
 export function List({ children }: { children: ReactNode }) {
   return (
-    <ul className="flex max-w-[68ch] flex-col gap-2 [&>li]:relative [&>li]:pl-6 [&>li]:before:absolute [&>li]:before:top-[0.7em] [&>li]:before:left-1 [&>li]:before:size-1.5 [&>li]:before:bg-mc-dark-gray">
+    <ul className="flex max-w-(--measure) flex-col gap-2 [&>li]:relative [&>li]:pl-6 [&>li]:before:absolute [&>li]:before:top-[0.7em] [&>li]:before:left-1 [&>li]:before:size-1.5 [&>li]:before:bg-mc-dark-gray">
       {children}
     </ul>
   );
 }
 
-// `children` is optional on the inline pieces so translated text can place them (`<Trans components={…}>`).
-export function Strong({ children }: { children?: ReactNode }) {
-  return <strong className="font-semibold text-white">{children}</strong>;
-}
-
 const TEXT_LINK = "font-semibold text-white underline decoration-2 underline-offset-3 hover:text-mc-aqua";
 
-/** A link in reading text: to a page of the site, or anywhere by `href` (mail, vanity links the server redirects). */
+/** An email address in reading text, styled as a link: a click copies it. */
+export const TextEmail = ({ email }: { email: string }) => <EmailLink email={email} className={TEXT_LINK} />;
+
+/**
+ * A link in reading text: to a page of the site, or anywhere by `href` (vanity links the server redirects). `children`
+ * is optional so translated text can place it (`<Trans components={…}>`).
+ */
 export function TextLink({ children, href, ...link }: { children?: ReactNode } & ({ href: string } | (LinkProps & { href?: never }))) {
   if (href !== undefined) {
     return (
@@ -282,7 +323,7 @@ export function Callout({ label, tone = "note", children }: { label: ReactNode; 
   const { rule, label: labelColour } = CALLOUT_TONES[tone];
 
   return (
-    <div className={cn("flex max-w-[68ch] flex-col gap-2 border-l-4 bg-black/35 p-4", rule)}>
+    <div className={cn("flex max-w-(--measure) flex-col gap-2 border-l-4 bg-black/35 p-4", rule)}>
       <span className={cn("text-mc-1 font-bold", labelColour)}>{label}</span>
       {children}
     </div>

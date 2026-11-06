@@ -9,7 +9,7 @@
 import { type Game, type StatEntry, classesOf, selection } from "../catalog.js";
 import { TNT_GAMES_MODES, type TNTGamesModes } from "@statsify/schemas";
 
-/** Wizards' ten classes, its submodes after Overall, each storing the games played as it. */
+/** Wizards' ten classes, its submodes after Overall, each storing its kills, deaths and assists. */
 export const TNT_WIZARDS_CLASSES = classesOf(TNT_GAMES_MODES, "wizards");
 
 const BEST_TIME: StatEntry = { colour: "§e", label: "stats.bestTime", unset: "N/A" };

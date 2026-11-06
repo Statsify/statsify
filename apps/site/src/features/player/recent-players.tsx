@@ -6,7 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { BOX_GAP, Box, CELL } from "~/components/ui/box";
 import { ResultCardView } from "./result-card";
+import { cn } from "~/lib/util";
 import { type RecentPlayer, clearPlayers, updatePlayer, useRecentPlayers } from "./recent";
 import { orpc } from "~/lib/orpc";
 import { resolveQuery } from "./resolve";
@@ -33,8 +35,9 @@ export function RecentPlayers({ onClear }: { onClear: () => void }) {
   return (
     <div className="recent-hold w-full" style={recent ? ({ "--recent": players.length } as CSSProperties) : undefined}>
       {players.length > 0 && (
-        <section aria-labelledby={headingId} className="flex flex-col gap-2">
-          <div className="flex min-h-11 items-center justify-between gap-4">
+        <section aria-labelledby={headingId} className={cn("flex flex-col", BOX_GAP)}>
+          {/* The heading in a box over the cards, as a game page's are; Clear's ring sits inside, as the box clips. */}
+          <Box className={cn(CELL, "content:justify-between content:gap-4 content:py-0")}>
             <h2 id={headingId} className="text-mc-1.5 font-bold">{t("search.recent.title")}</h2>
             <button
               type="button"
@@ -42,12 +45,12 @@ export function RecentPlayers({ onClear }: { onClear: () => void }) {
                 clearPlayers();
                 onClear();
               }}
-              className="min-h-11 text-mc-1 text-mc-gray underline hover:text-mc-white"
+              className="min-h-11 min-w-11 text-end text-mc-1 text-mc-gray underline hover:text-mc-white focus-visible:focus-ring-inset"
             >
               {t("search.recent.clear")}
             </button>
-          </div>
-          <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
+          </Box>
+          <ul className={cn("grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3", BOX_GAP)}>
             {players.map((player) => <RecentCard key={player.uuid} player={player} />)}
           </ul>
         </section>

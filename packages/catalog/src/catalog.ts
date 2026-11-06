@@ -7,9 +7,11 @@
  */
 
 import {
+  type ClassMetadata,
   type FieldMetadata,
   type GameId,
   type GameModes,
+  METADATA_KEY,
   type Mode,
   Player,
   type PlayerStats,
@@ -62,7 +64,7 @@ export interface StatEntry {
 /** The entry for a selection the card shows by name (a kit, a trail): Hypixel's id, prettified. */
 export const selection = (colour: ColourCode): StatEntry => ({ colour, format: (value) => prettify(String(value)) });
 
-/** A challenge's colour on the bot's challenges cards: green once done, red before. */
+/** Green once done, red before: a challenge on the bot's challenges cards, a quest on its Quests card. */
 export const doneColour: ReadValue<ColourCode> = (value) => (Number(value) > 0 ? "§a" : "§c");
 
 /** Stats stored with the same fields at one or more places below the game. */
@@ -95,14 +97,14 @@ export interface Stat {
   /** The field in the player document, `stats.bedwars.solo.wins`, which is also its leaderboard's key. */
   path: string;
   label: string;
-  /** The key of the `glossary.*` entry that explains it. */
-  glossary: string;
+  /** The key of the `glossary.*` entry that explains it; none for a stat shown under its card's name, a name to read. */
+  glossary?: string;
   name?: string;
   colour: StatEntry["colour"];
   /** The field it is shown out of (`12/25`) by path, or its fixed cap, when it has one. */
   of?: string | number;
   /** The field's leaderboard, when it has one. */
-  leaderboard: { name: string; fieldName: string; sort: "ASC" | "DESC"; hidden: boolean } | null;
+  leaderboard: { hidden: boolean } | null;
   /** The entry's format, else the schema's leaderboard formatter (levels, times); plain numbers have none. */
   format?: ReadValue<string>;
   unset?: string;
@@ -124,6 +126,12 @@ export const numberFields = (prefix: string): string[] =>
     .filter(([path, { type }]) => path.startsWith(prefix) && type.type === Number && !type.array)
     .map(([path]) => path);
 
+/** The schema classes in a class's fields (each game's quests, a game's classes), by field name, in the class's order. */
+export const childClasses = (parent: { prototype: object }): [string, Parameters<typeof scanMetadata>[0]][] =>
+  Object.entries(Reflect.getMetadata(METADATA_KEY, parent.prototype) as ClassMetadata)
+    .filter(([, { type }]) => !type.primitive && !type.array)
+    .map(([key, { type }]) => [key, type.type as Parameters<typeof scanMetadata>[0]]);
+
 /** A field of the player document by path. */
 function field(path: string): FieldMetadata {
   const metadata = playerFields().get(path);
@@ -143,13 +151,11 @@ function resolve(key: string, base: string, entry: StatEntry): Stat {
     key,
     path,
     label,
-    glossary: entry.glossary ?? label.slice(label.lastIndexOf(".") + 1),
+    ...(entry.name === undefined && { glossary: entry.glossary ?? label.slice(label.lastIndexOf(".") + 1) }),
     name: entry.name,
     colour: entry.colour,
     of,
-    leaderboard: leaderboard.enabled ?
-      { name: leaderboard.name, fieldName: leaderboard.fieldName ?? "", sort: leaderboard.sort, hidden: leaderboard.hidden ?? false } :
-      null,
+    leaderboard: leaderboard.enabled ? { hidden: leaderboard.hidden ?? false } : null,
     format: entry.format ?? (formatter && ((value) => formatter(value))),
     unset: entry.unset,
     suffix: entry.suffix,
@@ -235,10 +241,12 @@ export function cardColours(
   };
 }
 
-/** The catalog paths of a game's stats, game stats first: everything the catalog describes. */
+/** Every stat of a game, its own first, then each shape's at each place that stores it: everything the catalog describes. */
+export function allStats(game: Game): Stat[] {
+  return [...gameStats(game), ...game.shapes.flatMap(({ modes }) => modes.flatMap((at) => modeStats(game, at)))];
+}
+
+/** The catalog paths of a game's stats, game stats first. */
 export function catalogPaths(game: Game): string[] {
-  return [
-    ...gameStats(game).map(({ path }) => path),
-    ...game.shapes.flatMap(({ modes }) => modes.flatMap((at) => modeStats(game, at).map(({ path }) => path))),
-  ];
+  return allStats(game).map(({ path }) => path);
 }

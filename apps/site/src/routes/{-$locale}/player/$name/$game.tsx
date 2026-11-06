@@ -9,28 +9,24 @@
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { backgroundFor, preloadBackground } from "~/components/ui/background";
 import { GameView } from "~/features/game/game-page";
-import { imageSize, isGameCard } from "@statsify/profiles/protocol";
+import { imageSize, pageCard } from "@statsify/profiles/protocol";
 import { NotFound } from "~/components/not-found";
-import { ORPCError } from "@orpc/client";
 import { PlayerNotFound } from "~/features/player/player-not-found";
-import { SANS_PRELOAD } from "~/lib/fonts";
+import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/player-route";
+import { orNull } from "~/lib/orpc";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
-import { createI18n } from "~/i18n/i18n";
+import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
+import { formatNumber } from "~/i18n/format";
+import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
 import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "~/features/game/game-data";
-import { localeData, socialMeta } from "~/lib/social-meta";
+import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { ensurePlayer } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-
-/** As the player page: fresh for a minute, stale for ten, and served stale for a day if the API is down. */
-const EDGE_CACHE = "max-age=60, stale-while-revalidate=600, stale-if-error=86400";
-const REDIRECT_HEADERS = { "Cache-Control": "public, max-age=3600", "CDN-Cache-Control": "max-age=3600" };
-
-const possessive = (username: string) => `${username}'${username.endsWith("s") ? "" : "s"}`;
 
 /** A search parameter as typed (the router reads `?mode=4v4` as a string and `?mode=123` as a number); the API checks it. */
 const param = (raw: unknown) => (typeof raw === "string" || typeof raw === "number" ? String(raw).slice(0, 32) || undefined : undefined);
@@ -52,7 +48,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const identity = await ensurePlayer(context.queryClient, params.name);
 
     if (!identity) {
-      cacheNotFoundResponse("max-age=300");
+      cacheNotFoundResponse();
       throw notFound({ data: { player: true } satisfies Missing });
     }
 
@@ -64,20 +60,43 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
         to: "/{-$locale}/player/$name/$game",
         params: { name: identity.username, game },
         search: { mode: deps.mode, submode: deps.submode, period: deps.period },
+        // A search's history state goes along, as on the player page; so do the redirects below.
+        state: true,
         statusCode: 301,
         headers: REDIRECT_HEADERS,
       });
     }
 
+    // The bot's General is the player page itself.
+    if (game === "general") {
+      throw redirect({ to: "/{-$locale}/player/$name", params: { name: identity.username }, state: true, statusCode: 301, headers: REDIRECT_HEADERS });
+    }
+
     preloadBackground(backgroundFor(game));
-    const page = await context.queryClient.ensureQueryData(gamePageQuery(identity.uuid, game, deps.mode, deps.submode, deps.period)).catch((error) => {
+    const load = (key: string) =>
       // A game without a page, a mode or submode it doesn't have, or a name too long to be either.
-      if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) return null;
-      throw error;
-    });
+      orNull(context.queryClient.ensureQueryData(gamePageQuery(identity.uuid, key, deps.mode, deps.submode, deps.period)), ["NOT_FOUND", "BAD_REQUEST"]);
+    const page = await load(game);
 
     if (!page) {
-      cacheNotFoundResponse("max-age=300");
+      // The short names the bot's users type (`/player/anrie/bw`) land on the game they stand for, where it has a page.
+      // The site has no list of game keys, so only a name that 404s is tried as one.
+      const keys = gameKeysFor(game);
+      const pages = await Promise.all(keys.map(load));
+      const key = keys.find((_, index) => pages[index]);
+
+      if (key) {
+        throw redirect({
+          to: "/{-$locale}/player/$name/$game",
+          params: { name: identity.username, game: key },
+          search: { mode: deps.mode, submode: deps.submode, period: deps.period },
+          state: true,
+          statusCode: 301,
+          headers: REDIRECT_HEADERS,
+        });
+      }
+
+      cacheNotFoundResponse();
       throw notFound({ data: { player: false } satisfies Missing });
     }
 
@@ -93,6 +112,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
         to: "/{-$locale}/player/$name/$game",
         params: { name: identity.username, game },
         search: { mode: modeSearch(page, page.mode), submode: submodeSearch(page, page.submode), period: periodSearch(page, page.period) },
+        state: true,
         statusCode: 301,
         headers: REDIRECT_HEADERS,
       });
@@ -103,6 +123,10 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const period = periodSearch(page, page.period);
     // The card's title in plain text, without the mode on the game's first page.
     const titled = mode || submode ? page : { ...page, heading: { ...page.heading, mode: null } };
+    // For the unfurl's text: the level and the first numbers of the headline table, or of the game-wide row on a page
+    // that has none (a list of maps, a period's quests).
+    const table = page.sections.find((section) => section.title === null && !section.list && !section.ticks);
+    const cells = (table?.rows.flat() ?? page.overview).filter((cell) => !cell.inline).slice(0, 6);
 
     return {
       ...identity,
@@ -116,25 +140,33 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       updatedAt: page.updatedAt,
       // The unfurl's size: the game's card when the pool draws one for this mode (and period), as `/og` picks it, else the
       // general.
-      unfurl: imageSize(isGameCard(page.game.key, page.mode, page.period) ? { card: page.game.key, mode: page.mode } : { card: "general" }, "og"),
+      unfurl: imageSize(pageCard(page), "og"),
+      headline: {
+        level: page.level && { label: page.level.label, value: page.level.current },
+        cells: cells.map(({ label, name, params, value, hidden, suffix, of }) => ({ label, name, params, value, hidden, suffix, of })),
+      },
     };
   },
   staleTime: 60_000,
   staticData: { tabIcon: playerTabIcon },
   head: ({ loaderData, matches }) => {
-    if (!loaderData) {
-      return { meta: [{ title: createI18n(DEFAULT_LOCALE, localeData(matches)?.resources ?? {}).t("meta.notFound.page") }], links: [SANS_PRELOAD] };
-    }
+    if (!loaderData) return notFoundHead(createI18n(DEFAULT_LOCALE, localeData(matches)?.resources ?? {}).t("meta.notFound.page"));
 
-    const { username, uuid, updatedAt, game, mode, submode, period, heading, gameName, modeName, unfurl } = loaderData;
+    const { username, uuid, updatedAt, game, mode, submode, period, heading, gameName, modeName, unfurl, headline } = loaderData;
     const locale = localeData(matches);
     // The card's title in plain text, its words (`game.stats`) in English like the rest, from the server's `site.json`.
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
     const card = plainText(headingText(heading, (key) => words.t(key))).replaceAll(/\s+/g, " ").trim();
     // The card names no period (the switcher does), so the title does: "Daily Quests (SkyWars)".
     const when = period ? `${words.t(`game.periodNames.${period}`)} ` : "";
-    const title = `${possessive(username)} ${when}${card} | Statsify`;
-    const description = `View ${possessive(username)} Hypixel ${gameName}${modeName ? ` ${modeName}` : ""} stats on Statsify.`;
+    const name = possessive(username);
+    const gameTitle = words.t("meta.game.title", { name, page: `${when}${card}` });
+    // The game's own level or prefix first, as its card formats it: "[223✫] anrie's BedWars Stats". Not a title (Duels'
+    // "Bridge Legend III"), which reads as part of the name.
+    const level = headline.level?.label === "stats.title" ? undefined : headline.level?.value;
+    const title = level ? words.t("meta.levelFirst", { level: plainText(level), title: gameTitle }) : gameTitle;
+    const gameAndMode = `${gameName}${modeName ? ` ${modeName}` : ""}`;
+    const fallback = words.t("meta.game.description", { name, game: gameAndMode });
     const origin = locale?.origin;
     const query = new URLSearchParams({ ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }) });
     const path = `/player/${username}/${game}${query.size > 0 ? `?${query}` : ""}`;
@@ -144,11 +176,39 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const unfurlQuery = new URLSearchParams({ game, ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }), v: String(updatedAt) });
     const image = `/og/${uuid}.png?${unfurlQuery}`;
 
+    // A link preview without the card still shows the numbers: the stats' labels as the page shows them, in English.
+    const label = (key: string, params?: Record<string, string>) => words.t(key, { ns: LABEL_NAMESPACES, ...params });
+    const parts = [
+      ...(headline.level ? [statText(label(headline.level.label), headline.level.value)] : []),
+      ...headline.cells.map((cell) =>
+        statText(
+          cell.name === undefined ? label(cell.label, cell.params) : plainText(cell.name),
+          cell.hidden ? words.t("default:stats.hidden") : cell.value,
+          `${cell.suffix ?? ""}${cell.of === undefined ? "" : `/${formatNumber(cell.of, DEFAULT_LOCALE)}`}`
+        )
+      ),
+    ];
+    const stats = statsDescription(parts);
+    const lead = words.t("meta.game.lead", { name, game: gameAndMode });
+    const description = statsDescription(parts, { lead, max: SEARCH_DESCRIPTION_MAX }) || fallback;
+
     return {
       meta: [
         { title },
         { name: "description", content: description },
-        ...(origin ? socialMeta({ origin, path, title, description, image, imageSize: unfurl, type: "profile" }) : []),
+        ...(origin ?
+          socialMeta({
+            origin,
+            path,
+            title,
+            description: stats || fallback,
+            image,
+            imageSize: unfurl,
+            type: "profile",
+            // The game alone, whatever the mode or period.
+            trail: { above: [{ name: username, path: `/player/${username}` }], name: gameName },
+          }) :
+          []),
       ],
     };
   },

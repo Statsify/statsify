@@ -6,81 +6,37 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background, backgroundFor } from "~/components/ui/background";
-import { Box } from "~/components/ui/box";
-import { Check } from "~/components/icons/check";
-import { Chevron } from "~/components/icons/chevron";
+import { PageBackground, backgroundFor } from "~/components/ui/background";
+import { BOX_GAP, Box } from "~/components/ui/box";
 import { Command } from "~/components/ui/command";
-import { Cross } from "~/components/icons/cross";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode, type Ref, useEffect, useId, useRef, useState } from "react";
-import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { GameNav } from "./game-nav";
-import { Hint, Spoken } from "~/components/ui/hint";
-import { Hidden, InlineStat, LeaderboardLink, StatCell, StatNumber, glossaryKey, linkHint, useStatName } from "~/components/ui/stat";
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { MinecraftText, colourClass, colourOf, leadingColourClass, plainText } from "~/components/ui/minecraft-text";
+import { Hint, PointerText, Spoken } from "~/components/ui/hint";
+import { InlineStat, LeaderboardLink, StatCell, StatNumber, useStatName } from "~/components/ui/stat";
+import { Link } from "@tanstack/react-router";
+import { MinecraftText, colourClass, leadingColourClass, plainText } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "~/features/player/mini-header";
+import { ModeSwitcher } from "./mode-switcher";
 import { PanelToggle, SharePanel } from "~/features/player/share-panel";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
-import { StatInfo } from "./stat-info";
+import { StatPanel, useLabelText } from "./stat-panel";
 import { cn } from "~/lib/util";
 import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "./game-data";
-import { imageSize, isGameCard } from "@statsify/profiles/protocol";
+import { imageSize, pageCard } from "@statsify/profiles/protocol";
 import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { refreshGame } from "~/features/player/player-actions";
 import { addRecentPlayer } from "~/features/player/recent";
-import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
+import { useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { GamePage, StatCell as Stat, StatSection } from "@statsify/contract";
 
 type Level = NonNullable<GamePage["level"]>;
 
-/** A stat's label: the bot's word in `default.json`, or the site's own for a stat the bot doesn't show. */
-const LABEL_NAMESPACES = ["default", "site"];
-
-/** On a phone an odd last cell spans its row, centred, rather than sitting alone in the first column. */
-const ODD_LAST = "max-sm:[&>:last-child:nth-child(odd)]:col-span-2";
-
-/**
- * A table's columns by its widest row: up to two on phones (three in the headline, as on the card), and from `sm` up to
- * five, a longer row wrapping evenly (six as 3 + 3, seven as 4 + 3).
- */
-const COLUMNS = [
-  "grid-cols-1",
-  "grid-cols-1",
-  "grid-cols-snap-2",
-  `grid-cols-snap-2 sm:grid-cols-snap-3 ${ODD_LAST}`,
-  `grid-cols-snap-2 sm:grid-cols-snap-4 ${ODD_LAST}`,
-  `grid-cols-snap-2 sm:grid-cols-snap-5 ${ODD_LAST}`,
-];
-
-const MOST_COLUMNS = COLUMNS.length - 1;
-
-const columnsOf = (count: number, headline: boolean) =>
-  headline && count === 3 ?
-    "grid-cols-snap-3" :
-    COLUMNS[count <= MOST_COLUMNS ? count : Math.ceil(count / Math.ceil(count / MOST_COLUMNS))];
-
-/**
- * Every row of a section takes the columns of its widest, so the cells line up down the table and a short row leaves
- * its last columns blank (Duels' two winstreaks over Wins and Losses).
- */
-const sectionColumns = (rows: Stat[][]) =>
-  Math.max(0, ...rows.filter((row) => !row.every((cell) => cell.inline)).map((row) => row.length));
-
 const cellsOf = (sections: StatSection[]) => sections.flatMap(({ rows }) => rows.flat());
-
-/**
- * The mode switcher goes by how many modes there are, not the screen's width, so the server's render and the hydrated
- * page agree. Up to `PHONE_TABS` it's tabs at every width; past that, a select below `md`. Up to `DESKTOP_TABS` it's
- * links from `md` up; past that, the select at every width.
- */
-const PHONE_TABS = 4;
-const DESKTOP_TABS = 10;
 
 /** The card's side-by-side boxes, in as many equal columns from `lg` up; four go two by two, as the card draws them. */
 const BOX_COLUMNS = ["", "", "lg:grid-cols-snap-2", "lg:grid-cols-snap-3", "lg:grid-cols-snap-2"];
@@ -108,7 +64,7 @@ export function GameView({ page }: { page: GamePage }) {
   const period = periodSearch(page, page.period);
   // The card the page unfurls with, as its route's head picks it.
   const card = new URLSearchParams({ game: page.game.key, ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }), v: String(page.updatedAt) });
-  const cardSize = imageSize(isGameCard(page.game.key, page.mode, page.period) ? { card: page.game.key, mode: page.mode } : { card: "general" }, "og");
+  const cardSize = imageSize(pageCard(page), "og");
   const boxes = page.sections.filter(({ box }) => box);
   const lists = page.sections.filter(({ box, list }) => !box && list);
   // The first other table is the headline; the rest go beside it.
@@ -121,7 +77,7 @@ export function GameView({ page }: { page: GamePage }) {
   const shown = searchedCells.filter((cell) => matches(labelText(cell))).length;
 
   const boxPanels = boxes.length > 0 && (
-    <div key="boxes" className={cn("grid grid-cols-1 gap-2", BOX_COLUMNS[Math.min(boxes.length, BOX_COLUMNS.length - 1)])}>
+    <div key="boxes" className={cn("grid grid-cols-1", BOX_GAP, BOX_COLUMNS[Math.min(boxes.length, BOX_COLUMNS.length - 1)])}>
       {boxes.map((section, index) => (
         <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
       ))}
@@ -129,10 +85,10 @@ export function GameView({ page }: { page: GamePage }) {
   );
 
   const headlinePanels = headline && (
-    <div key="headline" className="grid grid-cols-1 gap-2 lg:grid-cols-[minmax(0,1fr)_round(down,40%,8px)]">
+    <div key="headline" className={cn("grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_round(down,40%,8px)]", BOX_GAP)}>
       <StatPanel section={headline} username={page.username} headline className={cn(tables.length === 0 && "lg:col-span-2")} />
       {tables.length > 0 && (
-        <div className="flex flex-col gap-2">
+        <div className={cn("flex flex-col", BOX_GAP)}>
           {tables.map((section, index) => (
             <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
           ))}
@@ -161,20 +117,13 @@ export function GameView({ page }: { page: GamePage }) {
 
   return (
     <div className="relative grow">
-      <Background
-        background={backgroundFor(page.game.key)}
-        priority
-        viewport
-        className="h-full"
-        mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)"
-      />
-      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <PageBackground background={backgroundFor(page.game.key)} viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} game={`${page.game.name}${page.heading.mode ? ` §r(${page.heading.mode}§r)` : ""}`} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         {/* From `md` the nametag is as wide as its content (up to half the row) and the level sits beside it, the
             overview under both; from `lg` the overview goes under the level. An overview with no level sits beside the
             nametag at its own height, and a nametag with neither (Parkour) is as wide as its content. */}
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-[fit-content(50%)_minmax(0,1fr)]">
+        <div className={cn("grid grid-cols-1 md:grid-cols-[fit-content(50%)_minmax(0,1fr)]", BOX_GAP)}>
           <GameHeader
             ref={nametag}
             page={page}
@@ -221,7 +170,7 @@ export function GameView({ page }: { page: GamePage }) {
           <NeverPlayed name={page.username} game={plainText(page.game.name)} />
         )}
         <p className="text-mc-1 text-mc-gray">
-          {t("game.hint", { name: page.username })}{" "}
+          <PointerText mouse={t("game.hint", { name: page.username })} touch={t("game.hintTouch", { name: page.username })} />{" "}
           {/* The game's index of leaderboards, opened and scrolled to this mode's. */}
           <Link
             to="/{-$locale}/leaderboards/$field"
@@ -330,7 +279,7 @@ export function GameHeader({
  * The card's description: the level (linked to the leaderboard of what it ranks), the bar from this level to the
  * next, and the progress, under the card's own words for the level and for what the bar counts.
  */
-export function LevelPanel({ level, username, className }: { level: Level; username: string; className?: string }) {
+export function LevelPanel({ level, username }: { level: Level; username: string }) {
   const { t } = useTranslation();
   const statName = useStatName();
   const { current, max, percent } = level.progression;
@@ -341,7 +290,7 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
 
   // Every line centred, a wrapped one too (a long title, its bar and the next one on a phone).
   return (
-    <Box className={cn("content:flex content:h-full content:flex-col content:items-center content:justify-center content:gap-3 content:text-center", className)}>
+    <Box className="content:flex content:h-full content:flex-col content:items-center content:justify-center content:gap-3 content:text-center">
       {/* Within the panel: a long level (The Pit past its last prestige) breaks rather than widening the page. */}
       <dl className="max-w-full">
         <StatCell
@@ -378,414 +327,6 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
         />
       </dl>
     </Box>
-  );
-}
-
-/** A section's heading: the site's or the card's word for it, or the card's own Minecraft-formatted heading. */
-function SectionTitle({ section }: { section: StatSection }) {
-  const { t } = useTranslation();
-  if (section.name) return <MinecraftText>{section.name}</MinecraftText>;
-  if (section.title === null) return null;
-  const { className, style } = colourOf(section.colour ?? "§f");
-  return <span className={className} style={style}>{t(section.title, { ns: LABEL_NAMESPACES })}</span>;
-}
-
-/** A heading over one of a panel's rows, between rules. */
-const ROW_HEADING =
-  "flex items-center gap-3 text-mc-1 text-mc-gray before:h-0.5 before:grow before:bg-white/10 after:h-0.5 after:grow after:bg-white/10";
-
-/**
- * A panel of stats in the card's rows, under the section's heading when it has one. A list (maps, challenges) is
- * name and value lines in columns instead, and a long one starts folded behind its heading and count. A list the
- * page's filter searches keeps the lines whose name matches, and opens while it filters.
- */
-export function StatPanel({
-  section,
-  username,
-  headline = false,
-  filter,
-  className,
-}: {
-  section: StatSection;
-  username: string;
-  /** The page's first table, whose rows of three keep three columns on a phone, as on the card. */
-  headline?: boolean;
-  /** The page's filter, for a list it searches. */
-  filter?: string;
-  className?: string;
-}) {
-  const { t } = useTranslation();
-  const n = useNumberFormat();
-  const labelText = useLabelText();
-  const heading = section.title === null && !section.name ?
-    undefined :
-    <h2 className="text-mc-1.5 font-bold"><SectionTitle section={section} /></h2>;
-
-  if (section.list) {
-    const all = section.rows.flat();
-    const filtering = filter !== undefined && filter.trim() !== "";
-    const matches = wordMatcher(filter ?? "");
-    const shown = (cells: Stat[]) => (filtering ? cells.filter((cell) => matches(labelText(cell))) : cells);
-    const cells = shown(all);
-    const lines = (cells: Stat[]) => (
-      <dl className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {cells.map((cell) => <ListStat key={cell.key} cell={cell} username={username} plain={section.plain} ticks={section.ticks} />)}
-      </dl>
-    );
-    const { rowNames } = section;
-    // Under the card's own headings (Dropper's difficulties), a row at a time; one the filter empties goes with its heading.
-    const list = rowNames ?
-      (
-        <div className="flex flex-col gap-4">
-          {section.rows.map((row, index) => {
-            const kept = shown(row);
-            return kept.length > 0 && (
-              <div key={index} className="flex flex-col gap-2">
-                <h3 className={ROW_HEADING}><MinecraftText>{rowNames[index]}</MinecraftText></h3>
-                {lines(kept)}
-              </div>
-            );
-          })}
-        </div>
-      ) :
-      lines(cells);
-
-    if (!section.collapsed) return <Box className={className} title={heading}>{list}</Box>;
-
-    return (
-      <Box className={className}>
-        <details open={filtering} className="group">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 [&::-webkit-details-marker]:hidden">
-            <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
-            <h2 className="text-mc-1.5 font-bold"><SectionTitle section={section} /></h2>
-            <span className="text-mc-1.5 text-mc-gray">
-              ({filtering ? t("filter.count", { shown: n(cells.length), total: n(all.length) }) : n(all.length)})
-            </span>
-          </summary>
-          <div className="pt-3">{list}</div>
-        </details>
-      </Box>
-    );
-  }
-
-  // A row's heading sits under the panel's, or takes its level where the panel has none (the headline table).
-  const RowHeading = heading ? "h3" : "h2";
-
-  return (
-    <Box className={className} title={heading}>
-      <div className="flex flex-col gap-4">
-        {section.rows.map((row, index) => {
-          const cells = row.every((cell) => cell.inline) ?
-            (
-              <dl key={index} className="flex flex-col gap-2">
-                {row.map((cell) => <SelectionStat key={cell.key} cell={cell} />)}
-              </dl>
-            ) :
-            (
-              <dl key={index} className={cn("grid gap-x-2 gap-y-4", columnsOf(sectionColumns(section.rows), headline))}>
-                {row.map((cell) => <GameStat key={cell.key} cell={cell} username={username} />)}
-              </dl>
-            );
-          const title = section.rowTitles?.[index];
-
-          // A row under a heading (Final, Normal) whose cells drop the word it says; rules either side show it spans the
-          // row, not the middle cell.
-          return title ?
-            (
-              <div key={index} className="flex flex-col gap-2">
-                <RowHeading className={ROW_HEADING}>{t(title)}</RowHeading>
-                {cells}
-              </div>
-            ) :
-            cells;
-        })}
-      </div>
-    </Box>
-  );
-}
-
-/**
- * A stat's heading: the card's own name for it (in its colours, else the stat's), or the bot's word for it, with the
- * full name where that word shortens one (FKDR).
- */
-function useStatLabel(cell: Stat): { text: string; node: ReactNode; full?: string } {
-  const text = useLabelText()(cell);
-  const full = useStatName()(cell.label);
-  if (cell.name !== undefined) return { text, node: <MinecraftText>{`${cell.colour}${cell.name}`}</MinecraftText> };
-  return { text, node: text, full };
-}
-
-const plainName = (name: string) => name.replaceAll(/§#[\dA-Fa-f]{6}|§./g, "");
-
-/** A stat's heading as plain text, for its link and the filter: the card's own name, or the label's words. */
-function useLabelText(): (cell: Stat) => string {
-  const { t } = useTranslation();
-  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainName(cell.name));
-}
-
-/**
- * A stat's value as the card prints it: a number in the locale's format (with its cap or unit), or the API's text. A
- * number the format shortens carries the exact one, as a `Hint`, or under a link only for screen readers, since the
- * link shows it.
- */
-function useStatValue(cell: Stat, linked = false): ReactNode {
-  const n = useNumberFormat(cell.trim);
-  const exact = useExactNumber();
-  const Short = linked ? Spoken : Hint;
-  const number = (value: number) => <Short full={exact(value)}>{n(value)}</Short>;
-  if (cell.hidden) return <Hidden />;
-  // Text the API formatted takes the stat's colour, unless it brings its own (a level, a §7 N/A).
-  const value = typeof cell.value === "number" ?
-    <>{number(cell.value)}{cell.suffix ?? ""}</> :
-    <MinecraftText>{`${cell.colour}${cell.value}`}</MinecraftText>;
-
-  if (cell.of === undefined) return value;
-
-  return (
-    <>
-      {value}
-      <span className="text-mc-1 text-mc-gray">/{number(cell.of)}</span>
-    </>
-  );
-}
-
-/**
- * One stat as the card draws it, in its colour, with the bot's label. A capped stat shows its cap after it (`12/25`) in
- * §7 like the card, at the label's size so the pair fits a phone's cell.
- */
-function GameStat({ cell, username }: { cell: Stat; username: string }) {
-  const { t } = useTranslation();
-  const exact = useExactNumber();
-  const label = useStatLabel(cell);
-  const value = useStatValue(cell, cell.leaderboard !== undefined);
-  const { className, style } = colourOf(cell.colour);
-  // The short label shows under the row's heading; the link keeps the whole name.
-  const shown = cell.short ? t(cell.short, { ns: LABEL_NAMESPACES }) : label.node;
-  // Explained in place: an abbreviation, and a stat that means something else in this game.
-  const glossary = cell.glossary ?? (label.full === undefined ? undefined : glossaryKey(cell.label));
-
-  return (
-    <StatCell
-      label={cell.leaderboard ? <Spoken full={label.full}>{shown}</Spoken> : <Hint full={label.full}>{shown}</Hint>}
-      info={glossary && <StatInfo glossary={glossary} label={label.text} />}
-      value={cell.leaderboard ?
-        (
-          <LeaderboardLink
-            field={cell.leaderboard}
-            username={username}
-            stat={label.full ?? label.text}
-            hint={linkHint(label.full, typeof cell.value === "number" ? exact(cell.value) : undefined)}
-          >
-            {value}
-          </LeaderboardLink>
-        ) :
-        value}
-      color={className}
-      style={style}
-      className="relative"
-    />
-  );
-}
-
-/**
- * A name and its value on one line, as the card's lists draw them: the name on the left, bold unless the list keeps the
- * card's own formatting, and the value on the right, or a tick or a cross in a list of things done or not.
- */
-function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat; username: string; plain?: boolean; ticks?: boolean }) {
-  const exact = useExactNumber();
-  const label = useStatLabel(cell);
-  const count = useStatValue(cell, cell.leaderboard !== undefined);
-  const value = ticks ? <Tick done={Number(cell.value) > 0} /> : count;
-  const { className, style } = colourOf(cell.colour);
-
-  return (
-    <div className={cn("relative flex min-h-11 min-w-0 items-center gap-2 py-1 text-mc-1", className)} style={style}>
-      {cell.icon && hasGameIcon(cell.icon) && <span aria-hidden className="size-8 shrink-0"><GameIcon game={cell.icon} /></span>}
-      <dt className={cn("min-w-0 grow truncate", !plain && "font-bold")}>
-        {cell.leaderboard ? <Spoken full={label.full}>{label.node}</Spoken> : <Hint full={label.full}>{label.node}</Hint>}
-      </dt>
-      <dd className="shrink-0">
-        {cell.leaderboard ?
-          (
-            <LeaderboardLink
-              field={cell.leaderboard}
-              username={username}
-              stat={label.full ?? label.text}
-              hint={linkHint(label.full, !ticks && typeof cell.value === "number" ? exact(cell.value) : undefined)}
-            >
-              {value}
-            </LeaderboardLink>
-          ) :
-          value}
-      </dd>
-    </div>
-  );
-}
-
-/** The card's tick or cross, in the stat's colour, with its words for screen readers. */
-function Tick({ done }: { done: boolean }) {
-  const { t } = useTranslation();
-  const Icon = done ? Check : Cross;
-
-  return (
-    <>
-      <Icon className="block size-6" />
-      <span className="sr-only">{t(done ? "game.done" : "game.notDone")}</span>
-    </>
-  );
-}
-
-/** A selection the card shows (a kit, a trail) as `§7Label: value`, never a link. */
-function SelectionStat({ cell }: { cell: Stat }) {
-  const label = useStatLabel(cell);
-  const value = useStatValue(cell);
-  const { className, style } = colourOf(cell.colour);
-  return <InlineStat label={<Hint full={label.full}>{label.text}</Hint>} value={value} color={className} style={style} />;
-}
-
-/** The mark's words in `site.json`: "most played", or "most wins" where the game counts wins alone. */
-const markWords = (counted: NonNullable<GamePage["modes"][number]["mostPlayed"]>) =>
-  counted === "wins" ? "game.mostWins" : "game.mostPlayed";
-
-/** Each switcher's words in `site.json`: its nav's label and its select's. */
-const SWITCHER_WORDS = {
-  mode: { nav: "game.modes", select: "game.mode" },
-  submode: { nav: "game.submodes", select: "game.submode" },
-  period: { nav: "game.periods", select: "game.period" },
-} as const;
-
-/**
- * The mode switcher, or the submode or period one: tabs, as joined segments on phones and links from `md` up, or a
- * native select, by how many there are (`PHONE_TABS`, `DESKTOP_TABS`). Both keep the scroll position, and every target
- * is 44 px tall. The player's kit or class is marked, and so is the mode they've played most: in a select's options by its words, on a tab by a
- * gold square, with the words for screen readers and what counted on hover, and a line under the tabs saying what the
- * square means. The words say "most wins" where the game counts wins alone.
- */
-export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: keyof typeof SWITCHER_WORDS }) {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const router = useRouter();
-  const id = useId();
-  const periods = (page.periods ?? []).map((key) => ({ key, name: t(`game.periodNames.${key}`) }));
-  const options: GamePage["modes"] = { mode: page.modes, submode: page.submodes, period: periods }[kind];
-  const current = { mode: page.mode, submode: page.submode, period: page.period ?? null }[kind];
-  const mode = modeSearch(page, page.mode);
-  const submode = submodeSearch(page, page.submode);
-  const period = periodSearch(page, page.period);
-  // A new mode starts on its first submode, in the period shown.
-  const search = (key: string) => ({
-    mode: kind === "mode" ? modeSearch(page, key) : mode,
-    submode: kind === "submode" ? submodeSearch(page, key) : kind === "mode" ? undefined : submode,
-    period: kind === "period" ? periodSearch(page, key) : period,
-  });
-  const name = (option: (typeof options)[number]) => (option.selected ? t("game.selected", { name: option.name }) : option.name);
-  const phoneTabs = options.length <= PHONE_TABS;
-  const desktopTabs = options.length <= DESKTOP_TABS;
-  const marked = options.find((option) => option.mostPlayed)?.mostPlayed;
-  // One select stays mounted, so a pick keeps its focus: it shows the pick while that page loads, then whatever page is
-  // current (the pick's, or one Back went to).
-  const [pick, setPick] = useState(current);
-  const [shown, setShown] = useState(current);
-  if (shown !== current) {
-    setShown(current);
-    setPick(current);
-  }
-  const to = (key: string) => ({
-    to: "/{-$locale}/player/$name/$game" as const,
-    params: { name: page.username, game: page.game.key },
-    search: search(key),
-  });
-  // The picker stays open a moment, so the likely picks load meanwhile: the mode played most, and the first.
-  const preload = () => {
-    for (const option of new Set([options.find((option) => option.mostPlayed), options[0]])) {
-      if (option && option.key !== current) void router.preloadRoute(to(option.key));
-    }
-  };
-
-  return (
-    <nav
-      aria-label={t(SWITCHER_WORDS[kind].nav)}
-      // Beside the Games button: a select takes what the button leaves, and so do a phone's tabs.
-      className={kind === "mode" ? cn(phoneTabs ? "min-w-0 grow basis-0" : "min-w-0 grow basis-48", desktopTabs && "md:basis-full") : undefined}
-    >
-      {!phoneTabs && (
-        // A form, so the select works without the page's scripts: its button, shown only then, sends the pick with the
-        // rest of the page's search it keeps (a submode's mode, the period), which the route reads. With them, a pick
-        // navigates in place.
-        <form method="get" className={cn("flex items-center gap-3", desktopTabs && "md:hidden")}>
-          {Object.entries(search(current ?? "")).map(([key, value]) =>
-            key !== kind && value !== undefined && <input key={key} type="hidden" name={key} value={value} />)}
-          <label htmlFor={id} className="shrink-0 text-mc-1 text-mc-gray">{t(SWITCHER_WORDS[kind].select)}</label>
-          <div className="relative min-w-0 grow md:max-w-sm">
-            <select
-              id={id}
-              name={kind}
-              value={pick ?? undefined}
-              onFocus={preload}
-              onPointerDown={preload}
-              onChange={(event) => {
-                setPick(event.target.value);
-                void navigate({ ...to(event.target.value), resetScroll: false });
-              }}
-              className="h-11 w-full min-w-0 appearance-none truncate bg-blackify-800 ps-3 pe-10 text-mc-1.5 text-white focus-visible:focus-ring-inset"
-            >
-              {options.map((option) => (
-                <option key={option.key} value={option.key}>
-                  {option.mostPlayed ?
-                    t(`${markWords(option.mostPlayed)}.${option.selected ? "optionSelected" : "option"}`, { name: option.name }) :
-                    name(option)}
-                </option>
-              ))}
-            </select>
-            <Chevron className="pointer-events-none absolute end-2 top-1/2 size-6 -translate-y-1/2 rotate-90 text-mc-gray" />
-          </div>
-          <noscript>
-            <button
-              type="submit"
-              className="h-11 shrink-0 bg-blackify-800 px-3 text-mc-1.5 text-white hover:bg-blackify-700 focus-visible:focus-ring-inset"
-            >
-              {t("game.go")}
-            </button>
-          </noscript>
-        </form>
-      )}
-      {desktopTabs && (
-        <ul
-          className={cn(
-            "md:flex md:flex-wrap md:gap-x-1 md:gap-y-2",
-            // Segments share a phone's width equally; a long name wraps inside its own.
-            phoneTabs ? "grid auto-cols-fr grid-flow-col gap-x-1" : "hidden"
-          )}
-        >
-          {options.map((option) => (
-            <li key={option.key} className="min-w-0">
-              <Link
-                {...to(option.key)}
-                resetScroll={false}
-                activeOptions={{ exact: true, includeSearch: true }}
-                title={option.mostPlayed && t(`${markWords(option.mostPlayed)}.${option.mostPlayed}`)}
-                // A column, so the box grows and segments in one row are the same height when a name wraps.
-                className="group flex h-full flex-col"
-              >
-                <Box className="grow text-mc-white/60 group-hover:text-mc-white group-aria-[current=page]:font-bold group-aria-[current=page]:text-mc-white content:flex content:min-h-11 content:items-center content:justify-center content:gap-2 content:px-2 content:py-1 content:text-center content:text-mc-1 content:text-balance md:content:justify-start md:content:px-3 md:content:py-0 md:content:text-start">
-                  {option.mostPlayed && <span aria-hidden className="size-2 shrink-0 bg-mc-gold forced-color-adjust-none" />}
-                  <span className="min-w-0 wrap-break-word">{name(option)}</span>
-                  {option.mostPlayed && <span className="sr-only"> {t(`${markWords(option.mostPlayed)}.mark`)}</span>}
-                </Box>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-      {/* What the gold square means, wherever the tabs show it; a select's option says it in words. Each marked tab
-          has the words for screen readers. */}
-      {marked && desktopTabs && (
-        <p aria-hidden className={cn("mt-2 flex items-center gap-2 text-mc-1 text-mc-gray", !phoneTabs && "hidden md:flex")}>
-          <span className="size-2 shrink-0 bg-mc-gold forced-color-adjust-none" />
-          {t(`${markWords(marked)}.line`)}
-        </p>
-      )}
-    </nav>
   );
 }
 

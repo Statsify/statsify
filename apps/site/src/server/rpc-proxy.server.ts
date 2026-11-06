@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { cacheHeaders } from "~/lib/cache";
-import { rpcHeaders, rpcUrl } from "./rpc.server";
+import { NOT_FOUND_EDGE, NO_STORE, cacheHeaders } from "~/lib/cache";
+import { fetchApi, rpcUrl, unavailable } from "./rpc.server";
 
 /**
  * Each GET procedure the browser may call through `/api/rpc/<procedure>`: its edge TTL in seconds and
@@ -28,11 +28,8 @@ const RPC_PROCEDURES = new Map<string, { ttl: number; params: readonly string[] 
   ["content/prestiges", { ttl: 3600, params: [] }],
 ]);
 
-/** How long a browser should wait after the API refused or failed; never cached. */
-const RETRY_AFTER_SECONDS = 30;
-
 const json = (status: number, body: Record<string, unknown>, headers: Record<string, string> = {}) =>
-  Response.json({ status, ...body }, { status, headers: { "Cache-Control": "no-store", ...headers } });
+  Response.json({ status, ...body }, { status, headers: { ...NO_STORE, ...headers } });
 
 /**
  * The query string the API sees: only the procedure's own parameters, in a fixed order. `null` when the request
@@ -59,8 +56,8 @@ function upstreamSearch(search: string, params: readonly string[]): string | nul
  */
 function proxyCacheHeaders(status: number, ttl: number, byName: boolean): Record<string, string> {
   if (status === 200) return cacheHeaders(`max-age=${ttl}`);
-  if (status === 404 && !byName) return cacheHeaders("max-age=300");
-  return { "Cache-Control": "no-store" };
+  if (status === 404 && !byName) return cacheHeaders(NOT_FOUND_EDGE);
+  return NO_STORE;
 }
 
 /**
@@ -75,16 +72,8 @@ export async function proxyRpc(procedure: string, search: string): Promise<Respo
   const query = upstreamSearch(search, entry.params);
   if (query === null) return json(400, { code: "BAD_REQUEST", message: "Unknown query parameter" });
 
-  const upstream = await fetch(`${await rpcUrl()}/${procedure}${query}`, { headers: await rpcHeaders() }).catch(() => null);
-
-  if (!upstream || upstream.status === 429 || upstream.status >= 500) {
-    await upstream?.body?.cancel();
-    return json(
-      503,
-      { code: "SERVICE_UNAVAILABLE", message: "Statsify is busy, try again shortly" },
-      { "Retry-After": String(RETRY_AFTER_SECONDS) }
-    );
-  }
+  const upstream = await fetchApi(`${await rpcUrl()}/${procedure}${query}`);
+  if (!upstream) return unavailable({ status: 503, code: "SERVICE_UNAVAILABLE", message: "Statsify is busy, try again shortly" });
 
   const byName = procedure === "player/resolve" && new URLSearchParams(query).has("name");
   const headers = new Headers(proxyCacheHeaders(upstream.status, entry.ttl, byName));

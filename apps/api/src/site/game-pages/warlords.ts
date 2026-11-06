@@ -7,16 +7,11 @@
  */
 
 import type { CellSpec, GameLayout, PageSpec } from "./layout.js";
-import { type ClassMetadata, METADATA_KEY, WarlordsMage, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "@statsify/schemas";
-import { type ColourCode, WARLORDS, WARLORDS_CLASSES, WARLORDS_SPECS } from "@statsify/catalog";
+import { type ClassMetadata, METADATA_KEY, Warlords } from "@statsify/schemas";
+import { type ColourCode, WARLORDS, WARLORDS_CLASSES, WARLORDS_SPECS, childClasses } from "@statsify/catalog";
 
 /** Each class's schema type, whose metadata names its specs (`@Field` leaderboard names the bot doesn't localize). */
-const CLASS_TYPES: Record<string, { prototype: object }> = {
-  mage: WarlordsMage,
-  warrior: WarlordsWarrior,
-  paladin: WarlordsPaladin,
-  shaman: WarlordsShaman,
-};
+const CLASS_TYPES = Object.fromEntries(childClasses(Warlords));
 
 const specName = (mode: string, spec: string) =>
   (Reflect.getMetadata(METADATA_KEY, CLASS_TYPES[mode].prototype) as ClassMetadata)[spec].leaderboard.name;

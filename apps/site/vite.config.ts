@@ -56,9 +56,9 @@ export default defineConfig({
     }),
     viteReact(),
     nitro({
-      // Checks the config at startup, and closes the render pool, Redis and Sentry on shutdown, so SIGINT and SIGTERM end
-      // the process.
-      plugins: ["./src/server/config.plugin.ts", "./src/server/shutdown.plugin.ts"],
+      // Checks the config at startup, marks every response noindex on a staging deploy (static files too), and closes the
+      // render pool, Redis and Sentry on shutdown, so SIGINT and SIGTERM end the process.
+      plugins: ["./src/server/config.plugin.ts", "./src/server/robots.plugin.ts", "./src/server/shutdown.plugin.ts"],
       routeRules: {
         "/fonts/**": FONTS,
         "/backgrounds/**": STATIC_ASSETS,

@@ -7,7 +7,7 @@
  */
 
 import { ARCADE, cardColours } from "@statsify/catalog";
-import { LocalizeFunction } from "../../../types.js";
+import type { LocalizeFunction } from "../../../types.js";
 import { PixelParty } from "@statsify/schemas";
 import { Table } from "../../../components/index.js";
 

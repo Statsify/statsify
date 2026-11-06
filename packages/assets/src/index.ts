@@ -69,7 +69,12 @@ function hash(text: string) {
  * the same image, so an image keyed on a player is the same on every render.
  */
 export function getBackground(pathOrGame: string, mode?: string, seed?: string): Promise<Image> {
-  if (!HAS_PRIVATE_ASSETS) return getImage("out/backgrounds/background.png");
+  return loadImage(getBackgroundPath(pathOrGame, mode, seed));
+}
+
+/** The file `getBackground` loads. */
+export function getBackgroundPath(pathOrGame: string, mode?: string, seed?: string): string {
+  if (!HAS_PRIVATE_ASSETS) return getAssetPath("out/backgrounds/background.png");
 
   if (typeof mode === "string") {
     const path = `${pathOrGame}_${mode}_`;
@@ -80,10 +85,10 @@ export function getBackground(pathOrGame: string, mode?: string, seed?: string):
 
     if (!background) throw new Error(`No background found for ${pathOrGame}_${mode}`);
 
-    return getImage(`out/backgrounds/${background}`);
+    return getAssetPath(`out/backgrounds/${background}`);
   }
 
-  return getImage(`out/backgrounds/${pathOrGame}.png`);
+  return getAssetPath(`out/backgrounds/${pathOrGame}.png`);
 }
 
 export function getLogo(

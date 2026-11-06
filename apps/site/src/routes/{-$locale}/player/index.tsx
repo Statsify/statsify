@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background } from "~/components/ui/background";
+import { PageBackground } from "~/components/ui/background";
 import { HOLD_SCRIPT } from "~/features/player/recent";
 import { RecentPlayers } from "~/features/player/recent-players";
 import { ResultCards } from "~/features/player/result-card";
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/{-$locale}/player/")({
   loaderDeps: ({ search }) => ({ q: search.q }),
   loader: async ({ deps }): Promise<{ q: string | undefined; cards: ResultCard[] }> => {
     if (!deps.q) return { q: undefined, cards: [] };
-    if (UUID_PATTERN.test(deps.q)) throw redirect({ to: "/{-$locale}/player/$name", params: { name: deps.q } });
+    if (UUID_PATTERN.test(deps.q)) throw redirect({ to: "/{-$locale}/player/$name", params: { name: deps.q }, state: true, statusCode: 301 });
 
     const names = await rpc.search.suggest({ query: deps.q });
     const cards = names.length > 0 ? await rpc.search.cards({ names }) : [];
@@ -46,7 +46,7 @@ export const Route = createFileRoute("/{-$locale}/player/")({
   },
   staleTime: 60_000,
   head: ({ loaderData, matches }) => ({
-    meta: searchPageMeta(matches, { key: "search", path: "/player", image: "/images/og-home.png", noindex: Boolean(loaderData?.q) }),
+    meta: searchPageMeta(matches, { key: "search", nav: "players", path: "/player", image: "/images/og-home.png", noindex: Boolean(loaderData?.q) }),
     scripts: loaderData?.q ? [] : [{ children: HOLD_SCRIPT }],
   }),
   headers: ({ loaderData }) =>
@@ -61,14 +61,7 @@ function PlayerSearchPage() {
 
   return (
     <div className="relative grow">
-      <Background
-        background="general"
-        priority
-        viewport
-        className="h-full"
-        mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
-      />
-      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)" />
       <div className="w-container flex flex-col items-center gap-8 px-4 py-12 text-mc-white md:px-8">
         <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{t("search.heading")}</h1>
         <div ref={search} className="w-full max-w-200">

@@ -1,8 +1,5 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "jsx": "preserve"
-  },
   "include": [
     "src",
     "vitest.config.ts"

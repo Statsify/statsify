@@ -11,10 +11,12 @@
 
 import { Link, useNavigate } from "@tanstack/react-router";
 import { SearchIcon } from "~/components/icons/search";
+import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
 import { orpc } from "~/lib/orpc";
 import { useDebounce } from "~/hooks/use-debounce";
-import { useOutisdeClick } from "~/hooks/use-outside-click";
+import { useRecentPlayers } from "~/features/player/recent";
+import { useOutsideClick } from "~/hooks/use-outside-click";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -35,13 +37,37 @@ interface GameTarget {
 
 // Rows are at least 44 px tall, an easy tap target; `item` must match `itemHeight` for the keyboard scrolling. The
 // sheet is 300 px tall from `sm`, and a row shorter on phones, so the on-screen keyboard doesn't cover its last name.
+// `rows` is how many rows the 300 px sheet can show at once, counting one cut off at each edge. Heads are a whole
+// multiple of the 8×8 face, so its pixels stay square.
 const SIZES = {
-  regular: { itemHeight: 56, item: "h-14 px-4", bar: "h-16 px-4 gap-4", icon: "size-8", text: "text-mc-2", sheet: "max-h-61 sm:max-h-75" },
-  compact: { itemHeight: 44, item: "h-11 px-3", bar: "h-11 px-3 gap-3", icon: "size-5", text: "text-mc-1.5", sheet: "max-h-64 sm:max-h-75" },
+  regular: {
+    itemHeight: 56,
+    rows: 7,
+    item: "h-14 px-4",
+    bar: "h-16 px-4 gap-4",
+    icon: "size-8",
+    head: 32,
+    headSlot: "size-8",
+    text: "text-mc-2",
+    sheet: "max-h-61 sm:max-h-75",
+  },
+  compact: {
+    itemHeight: 44,
+    rows: 8,
+    item: "h-11 px-3",
+    bar: "h-11 px-3 gap-3",
+    icon: "size-5",
+    head: 24,
+    headSlot: "size-6",
+    text: "text-mc-1.5",
+    sheet: "max-h-64 sm:max-h-75",
+  },
 } as const;
 
-function usePlayerSuggestions(input: string, focused: boolean) {
+/** `skipEmpty`: an empty box asks for nothing (the API suggests nothing for it), as one that lists recent players. */
+function usePlayerSuggestions(input: string, focused: boolean, skipEmpty: boolean) {
   const debouncedInput = useDebounce(input, SEARCH_DEBOUNCE_MS);
+  const length = debouncedInput.trim().length;
 
   // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch alone. While the next query loads,
   // the last suggestions stay up, so the sheet never empties between keystrokes.
@@ -49,7 +75,7 @@ function usePlayerSuggestions(input: string, focused: boolean) {
     orpc.search.suggest.queryOptions({
       input: { query: debouncedInput },
       // A pasted UUID is longer than any name, and the API refuses it.
-      enabled: focused && debouncedInput.trim().length <= 16,
+      enabled: focused && length <= 16 && !(skipEmpty && length === 0),
       retry: false,
       gcTime: SEARCH_CACHE_TIME_MS,
       placeholderData: keepPreviousData,
@@ -57,21 +83,27 @@ function usePlayerSuggestions(input: string, focused: boolean) {
   );
 }
 
+/**
+ * The history state of a page the search opens: its player updates as for a bot command (`RefreshBar`). Not in the
+ * URL, so a shared link doesn't.
+ */
+export const searchState = () => ({ searchedAt: Date.now() });
+
 function useSearchNavigation(target: SearchTarget) {
   const navigate = useNavigate();
 
   return (name: string) => {
     if (typeof target === "object") {
-      return navigate({ to: "/{-$locale}/player/$name/$game", params: { name, game: target.game }, search: target.search });
+      return navigate({ to: "/{-$locale}/player/$name/$game", params: { name, game: target.game }, search: target.search, state: searchState });
     }
 
     switch (target) {
       case "bingo":
-        return navigate({ to: "/{-$locale}/player/$name/bingo", params: { name } });
+        return navigate({ to: "/{-$locale}/player/$name/bingo", params: { name }, state: searchState });
       case "results":
-        return navigate({ to: "/{-$locale}/player", search: { q: name } });
+        return navigate({ to: "/{-$locale}/player", search: { q: name }, state: searchState });
       case "player":
-        return navigate({ to: "/{-$locale}/player/$name", params: { name } });
+        return navigate({ to: "/{-$locale}/player/$name", params: { name }, state: searchState });
     }
   };
 }
@@ -91,6 +123,7 @@ export function Search({
   target = "player",
   compact = false,
   shortcut = false,
+  recent = false,
   placeholder,
   onSelect,
 }: {
@@ -101,6 +134,8 @@ export function Search({
   compact?: boolean;
   /** "/" focuses this box: the page's one player search (the header's, or the page's own where the header has none). */
   shortcut?: boolean;
+  /** Until something is typed, the sheet lists the players this device viewed last (`/player` shows them as cards). */
+  recent?: boolean;
   placeholder?: string;
   /** Handles a submitted or picked name instead of navigating to `target`. */
   onSelect?: (name: string) => unknown;
@@ -113,14 +148,25 @@ export function Search({
   const [input, setInput] = useState(defaultValue);
   const [query, setQuery] = useState(defaultValue);
   const [focused, setFocused] = useState(false);
-  const suggestions = usePlayerSuggestions(query, focused);
+  const suggestions = usePlayerSuggestions(query, focused, recent);
+  const recentPlayers = useRecentPlayers();
+  // `query` is the typed text; the arrows put a row's name in the box without leaving the recent players.
+  const names = recent && query.trim() === "" ? recentPlayers?.map((player) => player.name) : suggestions.data;
   const [selected, setSelected] = useState<number | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigateTo = useSearchNavigation(target);
   const go = onSelect ?? navigateTo;
   const listId = useId();
   const optionId = (index: number) => `${listId}-${index}`;
-  const count = suggestions.data?.length ?? 0;
+  const count = names?.length ?? 0;
+  const open = focused && count > 0;
+  // Heads load for the rows in view, not all 25: each one is a request, and the edge allows a visitor 60 in 10 seconds.
+  const [firstRow, setFirstRow] = useState(0);
+
+  // A hidden sheet loses its scroll position without a scroll event.
+  useEffect(() => {
+    if (!open) setFirstRow(0);
+  }, [open]);
 
   const close = () => {
     setFocused(false);
@@ -137,7 +183,7 @@ export function Search({
     inputRef.current?.blur();
   };
 
-  const ref = useOutisdeClick<HTMLFormElement>(close);
+  const ref = useOutsideClick<HTMLFormElement>(close);
 
   useEffect(() => {
     if (!shortcut) return;
@@ -155,10 +201,10 @@ export function Search({
 
   function onSelectionChange(selected: number) {
     setSelected(selected);
-    if (suggestions.data) setInput(suggestions.data[selected]);
+    if (names) setInput(names[selected]);
 
     const visible = containerRef.current?.clientHeight ?? 0;
-    const maxScroll = (suggestions.data?.length ?? 0) * size.itemHeight - visible;
+    const maxScroll = count * size.itemHeight - visible;
     const halfVisible = Math.floor(visible / 2);
     let scrollTop = selected * size.itemHeight - halfVisible + size.itemHeight / 2;
     scrollTop = Math.max(0, Math.min(scrollTop, maxScroll));
@@ -224,7 +270,7 @@ export function Search({
           }}
           role="combobox"
           aria-autocomplete="list"
-          aria-expanded={focused && count > 0}
+          aria-expanded={open}
           aria-controls={listId}
           aria-activedescendant={selected === undefined ? undefined : optionId(selected)}
           spellCheck={false}
@@ -242,14 +288,16 @@ export function Search({
         id={listId}
         role="listbox"
         aria-label={label}
-        hidden={!focused || count === 0}
+        hidden={!open}
+        onScroll={(event) => setFirstRow(Math.floor(event.currentTarget.scrollTop / size.itemHeight))}
         className={cn("absolute z-100 w-full overflow-auto bg-blackify-800 shadow-[4px_4px_0_rgb(0_0_0_/_0.5)]", size.sheet)}
       >
-        {suggestions.data?.map((suggestion, index) => (
+        {names?.map((name, index) => (
           <SearchPlayer
-            key={suggestion}
+            key={name}
             id={optionId(index)}
-            player={suggestion}
+            player={name}
+            head={index >= firstRow && index < firstRow + size.rows}
             selected={selected === index}
             target={target}
             compact={compact}
@@ -265,6 +313,7 @@ export function Search({
 function SearchPlayer({
   id,
   player,
+  head,
   selected = false,
   target,
   compact,
@@ -273,6 +322,8 @@ function SearchPlayer({
 }: {
   id: string;
   player: string;
+  /** Whether the row is in view, so its head loads; its slot keeps the name in place either way. */
+  head: boolean;
   selected?: boolean;
   target: SearchTarget;
   compact: boolean;
@@ -285,7 +336,12 @@ function SearchPlayer({
     "relative flex items-center gap-4 w-full hover:bg-white/10 active:bg-white/5 aria-selected:bg-white/10 aria-selected:before:content-[''] aria-selected:before:absolute aria-selected:before:bg-blueify-500 aria-selected:before:h-full aria-selected:before:w-1 aria-selected:before:left-0",
     size.item
   );
-  const text = cn("text-white selection:bg-white/50", size.text);
+  const content = (
+    <>
+      <span className={cn("shrink-0", size.headSlot)}>{head && <SkinHead name={player} size={size.head} />}</span>
+      <p className={cn("text-white selection:bg-white/50", size.text)}>{player}</p>
+    </>
+  );
 
   // Rows are reached with the arrow keys (`aria-activedescendant`), so Tab leaves the box rather than walking them.
   // With a handler the suggestion is handed over like a submitted name (the leaderboard `around` box).
@@ -303,7 +359,7 @@ function SearchPlayer({
         aria-selected={selected}
         className={className}
       >
-        <p className={text}>{player}</p>
+        {content}
       </button>
     );
   }
@@ -318,11 +374,12 @@ function SearchPlayer({
         to="/{-$locale}/player/$name/$game"
         params={{ name: player, game: target.game }}
         search={target.search}
+        state={searchState}
         onClick={onPick}
         aria-selected={selected}
         className={className}
       >
-        <p className={text}>{player}</p>
+        {content}
       </Link>
     );
   }
@@ -335,11 +392,12 @@ function SearchPlayer({
         tabIndex={-1}
         to="/{-$locale}/player/$name/bingo"
         params={{ name: player }}
+        state={searchState}
         onClick={onPick}
         aria-selected={selected}
         className={className}
       >
-        <p className={text}>{player}</p>
+        {content}
       </Link>
     );
   }
@@ -351,11 +409,12 @@ function SearchPlayer({
       tabIndex={-1}
       to="/{-$locale}/player/$name"
       params={{ name: player }}
+      state={searchState}
       onClick={onPick}
       aria-selected={selected}
       className={className}
     >
-      <p className={text}>{player}</p>
+      {content}
     </Link>
   );
 }
