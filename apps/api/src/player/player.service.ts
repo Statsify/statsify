@@ -12,11 +12,13 @@ import {
   type Flatten,
   flatten,
 } from "@statsify/util";
-import { CacheLevel, StatusNotFoundException } from "@statsify/api-client";
+import { CacheLevel, PlayerNotFoundException, StatusNotFoundException } from "@statsify/api-client";
+import { HttpService } from "@nestjs/axios";
 import { HypixelService } from "#hypixel";
 import {
   Inject,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   forwardRef,
 } from "@nestjs/common";
@@ -27,6 +29,7 @@ import {
   PlayerSearchService,
   RedisPlayer,
 } from "./search/player-search.service.js";
+import { catchError, lastValueFrom, map } from "rxjs";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
@@ -41,7 +44,8 @@ export class PlayerService {
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: Circular<PlayerLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
-    @InjectModel(Player) private readonly playerModel: PlayerModel
+    @InjectModel(Player) private readonly playerModel: PlayerModel,
+    private readonly httpService: HttpService
   ) {}
 
   /**
@@ -201,6 +205,23 @@ export class PlayerService {
     return flatPlayer;
   }
 
+  public getUuid(username: string): Promise<string> {
+    return lastValueFrom(
+      this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
+        map((response) => response.data as AccountProfile),
+        map((data) => data.id),
+        catchError((error) => {
+          if (error.response.status === 404) throw new PlayerNotFoundException();
+          // Ratelimited
+          if (error.response.status === 429) throw new InternalServerErrorException();
+
+          // Unknown
+          throw new InternalServerErrorException();
+        })
+      )
+    );
+  }
+
   private async findMongoDocument(
     tag: string,
     selector: Record<string, boolean> = {}
@@ -221,4 +242,11 @@ export class PlayerService {
 
     return flatten(mongoPlayer);
   }
+}
+
+interface AccountProfile {
+  id: string;
+  name: string;
+  legacy?: true;
+  demo?: true;
 }
