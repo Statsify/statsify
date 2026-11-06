@@ -13,7 +13,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { type PowerStat, RARITIES } from "#types";
+import { KUUDRA_TIERS, type PowerStat, RARITIES } from "#types";
 import { prettify, removeFormatting } from "@statsify/util";
 import { skinHash } from "#textures";
 import { tmpdir } from "node:os";
@@ -342,6 +342,7 @@ try {
   );
   await write("leveling.json", {
     catacombs: leveling.catacombs,
+    HOTF: leveling.HOTF,
     HOTM: leveling.HOTM,
     leveling_caps: leveling.leveling_caps,
     leveling_xp: xpTable("COMBAT"),
@@ -369,6 +370,25 @@ try {
     )
   );
 
+  const hotf = await readJson<{ hotf: { perks: Record<string, { name: string; x: number; y: number; maxLevel: number }> } }>(
+    "constants/hotflayout.json"
+  );
+  await write(
+    "hotflayout.json",
+    Object.fromEntries(Object.entries(hotf.hotf.perks).map(([id, { name, x, y, maxLevel }]) => [id, { name, x, y, maxLevel }]))
+  );
+
+  const { hoppity } = await readJson<{ hoppity: { rarities: Record<string, { rabbits: string[] }> } }>("constants/hoppity.json");
+  await write("hoppity.json", Object.fromEntries(Object.entries(hoppity.rarities).map(([rarity, { rabbits }]) => [rarity, rabbits])));
+
+  const bestiary = await readJson<{ fishing: Record<string, { mobs?: { name: string; mobs: string[] }[] }> }>(
+    "constants/bestiary.json"
+  );
+  await write(
+    "sea-creatures.json",
+    Object.values(bestiary.fishing).flatMap((page) => page.mobs?.map(({ name, mobs }) => ({ name: removeFormatting(name), ids: mobs })) ?? [])
+  );
+
   // player_data.perks, which keeps the levels bought, calls NEU's eagle_advantage eagles_advantage
   const perkIds: Record<string, string> = { eagle_advantage: "eagles_advantage" };
   const shops = await readJson<Record<string, Record<string, { costs: number[] }>>>("constants/essenceshops.json");
@@ -389,6 +409,9 @@ try {
   const petNames: Record<string, string> = {};
   const skinTextures: Record<string, string> = {};
   const powers: Record<string, { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }> = {};
+  const kuudraKeys: Record<string, string> = {};
+  const trophyFish = new Set(Object.keys(await readJson<Record<string, number[]>>("constants/trophyfish.json")));
+  const trophyNames: Record<string, string> = {};
   const files = (await readdir(join(dir, "items"))).filter((file) => file.endsWith(".json"));
   const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
 
@@ -403,6 +426,15 @@ try {
       const name = removeFormatting(item.displayname).replace(/^\[Lvl [^\]]+\] /, "");
       if (name !== prettify(pet[1])) petNames[pet[1]] ??= name;
     }
+
+    // Kuudra's keys, KUUDRA_TIER_KEY for the basic tier the API calls "none" and KUUDRA_<TIER>_TIER_KEY for the rest
+    const kuudraKey = /^KUUDRA_(?:(\w+)_)?TIER_KEY$/.exec(item.internalname);
+    const keyHash = kuudraKey && skullHash(item.nbttag);
+    if (kuudraKey && keyHash) kuudraKeys[kuudraKey[1]?.toLowerCase() ?? "none"] = keyHash;
+
+    // Trophy fish are <FISH>_<TIER>, named "§fSulphur Skitter §8§lBRONZE"
+    const trophy = /^(\w+)_BRONZE$/.exec(item.internalname);
+    if (trophy && trophyFish.has(trophy[1])) trophyNames[trophy[1]] = removeFormatting(item.displayname).replace(/ BRONZE$/, "");
 
     const skin = item.internalname.startsWith("PET_SKIN_") && skullHash(item.nbttag);
     if (skin) skinTextures[item.internalname.slice("PET_SKIN_".length)] = skin;
@@ -437,6 +469,10 @@ try {
 
   await write("pet-textures.json", { pets: petTextures, skins: skinTextures });
   await write("powers.json", powers);
+  const keyless = KUUDRA_TIERS.filter((tier) => !kuudraKeys[tier]);
+  if (keyless.length > 0) throw new Error(`no Kuudra key head for ${keyless.join(", ")}`);
+  await write("kuudra-keys.json", kuudraKeys);
+  await write("trophyfish.json", trophyNames);
 
   const pets = await readJson<Record<string, unknown>>("constants/pets.json");
   const offsets = pets.pet_rarity_offset as Record<string, number>;

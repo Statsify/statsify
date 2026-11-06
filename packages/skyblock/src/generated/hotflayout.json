@@ -1,0 +1,218 @@
+{
+  "250_gifts": {
+    "maxLevel": 40,
+    "name": "250 Gifts",
+    "x": 3,
+    "y": 4
+  },
+  "axe_toss": {
+    "maxLevel": 1,
+    "name": "Axe Toss",
+    "x": 5,
+    "y": 6
+  },
+  "beekeeper": {
+    "maxLevel": 1,
+    "name": "Beekeeper",
+    "x": 6,
+    "y": 0
+  },
+  "center_of_the_forest": {
+    "maxLevel": 5,
+    "name": "Center of the Forest",
+    "x": 3,
+    "y": 3
+  },
+  "collector": {
+    "maxLevel": 50,
+    "name": "Collector",
+    "x": 4,
+    "y": 6
+  },
+  "daily_wishes": {
+    "maxLevel": 100,
+    "name": "Daily Wishes",
+    "x": 4,
+    "y": 4
+  },
+  "damage_boost": {
+    "maxLevel": 1,
+    "name": "Damage Boost",
+    "x": 1,
+    "y": 6
+  },
+  "deep_waters": {
+    "maxLevel": 50,
+    "name": "Deep Waters",
+    "x": 1,
+    "y": 5
+  },
+  "early_bird": {
+    "maxLevel": 1,
+    "name": "Early Bird",
+    "x": 5,
+    "y": 4
+  },
+  "efficient_forager": {
+    "maxLevel": 100,
+    "name": "Efficient Forager",
+    "x": 5,
+    "y": 2
+  },
+  "essence_fortune": {
+    "maxLevel": 50,
+    "name": "Essence Fortune",
+    "x": 2,
+    "y": 0
+  },
+  "foraging_fortune": {
+    "maxLevel": 50,
+    "name": "Foraging Fortune",
+    "x": 3,
+    "y": 6
+  },
+  "foraging_madness": {
+    "maxLevel": 1,
+    "name": "Foraging Madness",
+    "x": 1,
+    "y": 4
+  },
+  "forest_fisher": {
+    "maxLevel": 40,
+    "name": "Forest Fisher",
+    "x": 1,
+    "y": 2
+  },
+  "forest_speed": {
+    "maxLevel": 50,
+    "name": "Forest Speed",
+    "x": 1,
+    "y": 0
+  },
+  "forest_strength": {
+    "maxLevel": 50,
+    "name": "Forest Strength",
+    "x": 5,
+    "y": 0
+  },
+  "free_trial": {
+    "maxLevel": 1,
+    "name": "Free Trial",
+    "x": 5,
+    "y": 3
+  },
+  "galateas_might": {
+    "maxLevel": 50,
+    "name": "Galatea's Might",
+    "x": 5,
+    "y": 5
+  },
+  "half_empty": {
+    "maxLevel": 25,
+    "name": "Half Empty",
+    "x": 1,
+    "y": 1
+  },
+  "half_full": {
+    "maxLevel": 25,
+    "name": "Half Full",
+    "x": 5,
+    "y": 1
+  },
+  "homing_axe": {
+    "maxLevel": 1,
+    "name": "Homing Axe",
+    "x": 0,
+    "y": 2
+  },
+  "hunters_luck": {
+    "maxLevel": 50,
+    "name": "Hunters Luck",
+    "x": 3,
+    "y": 5
+  },
+  "iron_lungs": {
+    "maxLevel": 50,
+    "name": "Iron Lungs",
+    "x": 2,
+    "y": 4
+  },
+  "lottery": {
+    "maxLevel": 1,
+    "name": "Lottery",
+    "x": 0,
+    "y": 4
+  },
+  "luck_of_the_forest": {
+    "maxLevel": 40,
+    "name": "Luck of the Forest",
+    "x": 2,
+    "y": 6
+  },
+  "maniac_slicer": {
+    "maxLevel": 1,
+    "name": "Maniac Slicer",
+    "x": 6,
+    "y": 2
+  },
+  "monster_hunter": {
+    "maxLevel": 1,
+    "name": "Monster Hunter",
+    "x": 0,
+    "y": 0
+  },
+  "precision_cutting": {
+    "maxLevel": 1,
+    "name": "Precision Cutting",
+    "x": 6,
+    "y": 4
+  },
+  "ricochet": {
+    "maxLevel": 10,
+    "name": "Ricochet",
+    "x": 3,
+    "y": 1
+  },
+  "speed_boost": {
+    "maxLevel": 50,
+    "name": "Speed Boost",
+    "x": 4,
+    "y": 2
+  },
+  "starlyn_supreme": {
+    "maxLevel": 100,
+    "name": "Starlyn Supreme",
+    "x": 3,
+    "y": 2
+  },
+  "strength_boost": {
+    "maxLevel": 50,
+    "name": "Strength Boost",
+    "x": 2,
+    "y": 2
+  },
+  "sweep": {
+    "maxLevel": 50,
+    "name": "Sweep",
+    "x": 3,
+    "y": 7
+  },
+  "timber": {
+    "maxLevel": 10,
+    "name": "Timber",
+    "x": 3,
+    "y": 0
+  },
+  "tree_whisperer": {
+    "maxLevel": 1,
+    "name": "Tree Whisperer",
+    "x": 1,
+    "y": 3
+  },
+  "two_for_one": {
+    "maxLevel": 100,
+    "name": "Two For One",
+    "x": 4,
+    "y": 0
+  }
+}

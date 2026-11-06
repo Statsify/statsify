@@ -8,56 +8,15 @@
 
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { LevelBar } from "./components/LevelBar.js";
-import { minecraftColors, prettify } from "@statsify/util";
-import { type HotmSection, type Powder, POWDERS } from "@statsify/skyblock";
+import { POWDERS, type Powder } from "@statsify/skyblock";
+import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
+import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const POWDER_COLORS: Record<Powder, string> = {
   mithril: "§2",
   gemstone: "§d",
   glacite: "§b",
-};
-
-const fill = (code: string) => minecraftColors.find((color) => color.code === code)!.hex;
-
-// The perk tree as the menu lays it out: 7 columns, the top tier first
-const TREE_WIDTH = 7;
-const TREE_HEIGHT = 10;
-const PERK_SIZE = 14;
-
-const perkColor = ({ level, maxLevel, enabled }: HotmSection["nodes"][number]) => {
-  if (level === 0) return fill("§8");
-  if (!enabled) return fill("§c");
-  return fill(level === maxLevel ? "§a" : "§e");
-};
-
-const PerkTree = ({ nodes }: { nodes: HotmSection["nodes"] }) => {
-  const byPosition = new Map(nodes.map((node) => [`${node.x},${node.y}`, node]));
-
-  return (
-    <div direction="column" margin={{ top: 8, bottom: 8, left: 6, right: 6 }}>
-      {Array.from({ length: TREE_HEIGHT }, (_, y) => (
-        <div>
-          {Array.from({ length: TREE_WIDTH }, (_, x) => {
-            const node = byPosition.get(`${x},${y}`);
-            return node ?
-              (
-                <box
-                  width={PERK_SIZE}
-                  height={PERK_SIZE}
-                  color={perkColor(node)}
-                  padding={0}
-                  margin={1}
-                  border={{ topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 }}
-                  shadowDistance={0}
-                />
-              ) :
-              <div width={PERK_SIZE} height={PERK_SIZE} margin={1} />;
-          })}
-        </div>
-      ))}
-    </div>
-  );
 };
 
 export const SkyBlockHotmProfile = ({
@@ -81,18 +40,15 @@ export const SkyBlockHotmProfile = ({
 
   if (loadout.total > 1) sidebar.unshift([t("skyblock.loadout"), t("skyblock.loadoutOf", loadout), "§b"]);
 
-  const powders = POWDERS.map((type) => {
-    const color = POWDER_COLORS[type];
-    const { available, spent } = powder[type];
-
-    return (
-      <box direction="column" location="center" width="100%">
-        <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`${color}${t(`skyblock.powders.${type}`)}`}</text>
-        <text margin={{ top: 0, bottom: 4, left: 10, right: 10 }}>{`§^3^${color}${t(available)}`}</text>
-        <text margin={{ top: 0, bottom: 8, left: 10, right: 10 }}>{`§7${t("skyblock.spent")}: ${color}${t(spent)}`}</text>
-      </box>
-    );
-  });
+  const powders = POWDERS.map((type) => (
+    <PerkCurrency
+      name={t(`skyblock.powders.${type}`)}
+      color={POWDER_COLORS[type]}
+      amount={powder[type].available}
+      spent={powder[type].spent}
+      t={t}
+    />
+  ));
 
   const stats: [string, number, string][] = [
     [t("skyblock.crystalsFound"), crystals.found, "§d"],

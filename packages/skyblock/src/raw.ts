@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { Faction, JacobMedal, Whisper } from "#types";
+
 // The parts of Hypixel's /v2/skyblock responses this package reads. Everything is optional, since Hypixel leaves out
 // whatever a player never touched or an API setting hides.
 
@@ -56,7 +58,13 @@ export interface RawMember {
   leveling?: { experience?: number; highest_pet_score?: number };
   currencies?: { coin_purse?: number; essence?: Record<string, { current?: number }> };
   fairy_soul?: { total_collected?: number };
-  player_stats?: { pets?: { total_exp_gained?: number } };
+  player_stats?: {
+    pets?: { total_exp_gained?: number };
+    items_fished?: Record<string, number>;
+    sea_creature_kills?: number;
+  };
+  bestiary?: { kills?: Record<string, number> };
+  trophy_fish?: Record<string, unknown>; // <fish> and <fish>_<tier> counts, plus total_caught, rewards…
   player_data?: { experience?: Record<string, number>; perks?: Record<string, number> };
   collection?: Record<string, number>;
   inventory?: {
@@ -71,7 +79,28 @@ export interface RawMember {
     bag_contents?: Partial<Record<"talisman_bag" | "potion_bag" | "fishing_bag" | "quiver" | "sacks_bag", RawNbt>>;
     sacks_counts?: Record<string, number>;
   };
-  jacobs_contest?: { perks?: { farming_level_cap?: number } };
+  jacobs_contest?: {
+    perks?: { farming_level_cap?: number; double_drops?: number };
+    medals_inv?: Partial<Record<JacobMedal, number>>;
+    unique_brackets?: Record<string, string[]>; // bracket → the crops it was reached on
+    personal_bests?: Record<string, number>;
+    contests?: Record<string, unknown>; // "<year>:<month>_<day>:<crop>" → the entry
+  };
+  events?: {
+    easter?: {
+      chocolate?: number;
+      total_chocolate?: number;
+      chocolate_since_prestige?: number;
+      chocolate_level?: number;
+      rabbits?: Record<string, unknown>; // rabbit → times found, plus collected_eggs
+      employees?: Record<string, number>;
+      time_tower?: { level?: number };
+    };
+  };
+  foraging_core?: {
+    // A loadout's spending is under its slot number
+    whispers?: Partial<Record<Whisper, Record<string, number | { spent?: number; spent_non_refundable?: number } | undefined>>>;
+  };
   pets_data?: { pets?: RawPet[]; pet_care?: { pet_types_sacrificed?: string[] } };
   dungeons?: {
     dungeon_types?: { catacombs?: RawDungeonType; master_catacombs?: RawDungeonType };
@@ -102,7 +131,14 @@ export interface RawMember {
     highest_magical_power?: number;
   };
   rift?: { access?: { consumed_prism?: boolean }; dead_cats?: { montezuma?: RawPet } };
-  nether_island_player_data?: { abiphone?: { active_contacts?: string[] } };
+  nether_island_player_data?: {
+    abiphone?: { active_contacts?: string[] };
+    selected_faction?: Faction;
+    mages_reputation?: number;
+    barbarians_reputation?: number;
+    kuudra_completed_tiers?: Record<string, number>; // <tier> completions, highest_wave_<tier>
+    dojo?: Record<string, number>; // dojo_points_<test>, dojo_time_<test>
+  };
 }
 
 export interface RawProfile {

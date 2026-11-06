@@ -72,6 +72,11 @@ export interface MemberView {
   slayers?: SlayersSection;
   networth?: NetworthSection;
   level?: SkyBlockLevelSection;
+  crimson?: CrimsonSection | null;
+  fishing?: FishingSection | null;
+  jacob?: JacobSection | null;
+  chocolate?: ChocolateSection | null;
+  hotf?: HotfSection | null;
 }
 
 export interface ApiSettings {
@@ -174,10 +179,108 @@ export interface HotmSection {
   tokens: { spent: number; total: number };
   ability?: string;
   powder: Record<Powder, { available: number; spent: number }>;
-  nodes: { id: string; name: string; level: number; maxLevel: number; x: number; y: number; enabled: boolean }[];
+  nodes: TreeNode[];
   crystals: { found: number; placed: number }; // over every gem
   nucleusRuns: number;
   glacite: { corpses: number; fossils: number; mineshafts: number }; // corpses looted, fossils donated
+}
+
+/** A perk in the Heart of the Mountain's or the Forest's tree, at its spot in the menu. */
+export interface TreeNode {
+  id: string;
+  name: string;
+  level: number;
+  maxLevel: number;
+  x: number;
+  y: number;
+  enabled: boolean;
+}
+
+export type TreeLayout = Record<string, { name: string; x: number; y: number; maxLevel: number }>;
+
+export const WHISPERS = ["forest", "desert"] as const;
+
+export type Whisper = (typeof WHISPERS)[number];
+
+export interface HotfSection {
+  level: Level;
+  centerLevel: number; // Center of the Forest's
+  loadout: { selected: number; total: number };
+  tokensSpent: number;
+  ability?: string;
+  whispers: Record<Whisper, { total: number; spent: number }>; // total earned; spent by this loadout
+  nodes: TreeNode[];
+}
+
+export interface CrimsonSection {
+  faction?: Faction;
+  reputation: Record<Faction, number>;
+  kuudra: KuudraTier[];
+  dojo: { test: string; points: number }[]; // each test's best
+  dojoPoints: number;
+  minibosses: { boss: string; kills: number }[];
+}
+
+export type Faction = "mages" | "barbarians";
+
+// The API's names: "none" is the basic tier
+export const KUUDRA_TIERS = ["none", "hot", "burning", "fiery", "infernal"] as const;
+
+export interface KuudraTier {
+  tier: string;
+  completions: number;
+  texture: ItemTexture; // its key
+}
+
+export interface FishingSection {
+  trophyFish: TrophyFish[];
+  trophyFishCaught: number;
+  itemsFished: Record<"total" | "normal" | "treasure" | "largeTreasure" | "outstanding", number>;
+  seaCreatureKills: number;
+  seaCreatures: { name: string; kills: number }[]; // bestiary kills, the most killed first, none at 0
+}
+
+export const TROPHY_TIERS = ["bronze", "silver", "gold", "diamond"] as const;
+
+export type TrophyTier = (typeof TROPHY_TIERS)[number];
+
+export interface TrophyFish {
+  id: string;
+  name: string;
+  tiers: Record<TrophyTier, number>;
+}
+
+export const JACOB_BRACKETS = ["bronze", "silver", "gold", "platinum", "diamond"] as const;
+
+export type JacobBracket = (typeof JACOB_BRACKETS)[number];
+
+export const JACOB_MEDALS = ["gold", "silver", "bronze"] as const;
+
+export type JacobMedal = (typeof JACOB_MEDALS)[number];
+
+export interface JacobSection {
+  medals: Record<JacobMedal, number>; // unspent
+  contests: number; // entered
+  crops: JacobCrop[];
+  perks: { doubleDrops: number; farmingLevelCap: number };
+}
+
+export interface JacobCrop {
+  id: string; // the item id the API uses: WHEAT, INK_SACK:3…
+  name: string;
+  texture?: ItemTexture;
+  bracket?: JacobBracket; // the best one reached
+  personalBest?: number;
+}
+
+export interface ChocolateSection {
+  level: number; // the factory's, raised by prestige
+  chocolate: number;
+  total: number; // all-time
+  sincePrestige: number;
+  rabbits: { rarity: Rarity; found: number; total: number }[];
+  employees: { employee: string; level: number }[];
+  timeTower: number;
 }
 
 export interface PetsSection {
