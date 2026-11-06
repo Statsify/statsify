@@ -177,17 +177,31 @@ export interface PetView {
 }
 
 /** One price per unit; listings is the BIN count behind it. */
-export interface PriceEntry {
-  coins: number;
-  source: "bazaar" | "bin";
-  listings?: number;
-}
+export type PriceEntry =
+  | { coins: number; source: "bin"; listings: number }
+  | { coins: number; source: "bazaar"; buy: number } // coins is the sell price, buy what buying one costs
+  | { coins: number; source: "npc" };
 
 export interface PriceMap {
   asOf: number;
   auctionsUpdated: number;
   bazaarUpdated: number;
   entries: Record<string, PriceEntry>;
+}
+
+export interface BazaarProduct {
+  id: string;
+  instantBuy?: number;
+  instantSell?: number;
+  buyPrice: number;
+  sellPrice: number;
+  buyMovingWeek: number;
+  sellMovingWeek: number;
+}
+
+export interface Bazaar {
+  lastUpdated: number;
+  products: Record<string, BazaarProduct>;
 }
 
 export interface MissingAccessory {
@@ -267,6 +281,7 @@ export interface ItemsResource {
       color?: string;
       category?: string;
       riftOnly?: boolean;
+      npcPrice?: number;
     }
   >;
 }
