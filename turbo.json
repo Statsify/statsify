@@ -8,6 +8,10 @@
       "outputs": ["dist/**", ".next/**", "pkg/**"],
       "dependsOn": ["^build"]
     },
+    "@statsify/skin-renderer#build": {
+      "outputs": ["pkg/**", "*.node"],
+      "dependsOn": ["^build"]
+    },
     "typecheck": {
       "outputs": [],
       "dependsOn": ["^typecheck"]
