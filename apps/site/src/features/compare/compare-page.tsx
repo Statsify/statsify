@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BOX_GAP, Box, CELL, HEADING_BOX } from "~/components/ui/box";
+import { BOX_GAP, Box, CELL, HEADING_BOX, StatBox } from "~/components/ui/box";
 import { Difference } from "~/components/ui/stat";
 import { Hint } from "~/components/ui/hint";
 import { Link } from "@tanstack/react-router";
@@ -19,6 +19,7 @@ import { type GameScope, gameLink, headingText, pageSearch } from "~/features/ga
 import { cn } from "~/lib/util";
 import { useTranslation } from "react-i18next";
 import type { GamePage, StatCell as Stat, StatSection } from "@statsify/contract";
+import type { ReactNode } from "react";
 
 type Pair = { a: Stat; b: Stat };
 
@@ -48,14 +49,16 @@ const lead = (cell: Stat, other: Stat) =>
   typeof cell.value === "number" && typeof other.value === "number" && !cell.hidden && !other.hidden ? Math.max(cell.value - other.value, 0) : 0;
 
 /**
- * Two players' pages of one game, stat by stat: each stat's label over both values, the higher with how far it leads.
- * The nametags link to each player's own page of the game; the game nav and mode switcher keep to the comparison.
+ * Two players' pages of one game, stat by stat: each table as a leaderboard's rows, one per player, every stat's label
+ * over its value and the higher with how far it leads. The nametags link to each player's own page of the game; the game
+ * nav and mode switcher keep to the comparison.
  */
 export function CompareView({ a, b }: { a: GamePage; b: GamePage }) {
   const { t } = useTranslation();
   const scope: GameScope = { kind: "compare", a: a.username, b: b.username };
   const games = a.games.map((game) => ({ ...game, played: game.played || b.games.some(({ key, played }) => played && key === game.key) }));
   const page = { ...a, games, modes: unmarked(a.modes), submodes: unmarked(a.submodes) };
+  const sides: Sides = [<PlayerRowName key="a" page={a} />, <PlayerRowName key="b" page={b} />];
 
   return (
     <div className="relative grow">
@@ -71,14 +74,12 @@ export function CompareView({ a, b }: { a: GamePage; b: GamePage }) {
         </div>
         <GameSwitchers page={page} scope={scope} />
         {comparePairs(a, b).map(({ section, pairs }, index) => (
-          <section key={section?.title ?? section?.name ?? index} className={cn("flex flex-col", BOX_GAP)}>
-            {section && (section.title !== null || section.name) && (
-              <Box className={HEADING_BOX}><h2 className="text-mc-1.5 font-bold"><SectionTitle section={section} /></h2></Box>
-            )}
-            <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3", BOX_GAP)}>
-              {pairs.map((pair) => <CompareStat key={pair.a.key} {...pair} names={[a.username, b.username]} />)}
-            </div>
-          </section>
+          <CompareSection
+            key={section?.title ?? section?.name ?? index}
+            title={section && (section.title !== null || section.name) && <SectionTitle section={section} />}
+            pairs={pairs}
+            sides={sides}
+          />
         ))}
       </div>
     </div>
@@ -100,34 +101,75 @@ function CompareNametag({ page, end = false }: { page: GamePage; end?: boolean }
   );
 }
 
-/** A stat's label over both players' values, the higher with how far it leads, in grey: higher isn't always better. */
-function CompareStat({ a, b, names }: Pair & { names: [string, string] }) {
-  const label = useStatLabel(a);
-  const { className, style } = colourOf(a.colour);
-
+/** A player's head and name at the start of their row, as a leaderboard row's. */
+function PlayerRowName({ page }: { page: GamePage }) {
   return (
-    <div className={cn("grid grid-cols-2", BOX_GAP)}>
-      <Box className={HEADING_BOX}>
-        <p className={cn("text-mc-1", className)} style={style}><Hint full={label.full}>{label.node}</Hint></p>
-      </Box>
-      <CompareValue cell={a} other={b} name={names[0]} />
-      <CompareValue cell={b} other={a} name={names[1]} />
-    </div>
+    <>
+      <SkinHead uuid={page.uuid} size={24} className="shrink-0" />
+      <h3 className="min-w-0 wrap-anywhere text-mc-1.5"><MinecraftText>{page.displayName}</MinecraftText></h3>
+    </>
   );
 }
 
-function CompareValue({ cell, other, name }: { cell: Stat; other: Stat; name: string }) {
+/** What starts each side's row: the player's name, in the first page's order. */
+type Sides = [ReactNode, ReactNode];
+
+/** A row's columns: three across a phone at most (two for four), and up to six from `md`. */
+const COLUMNS: Record<number, string> = {
+  1: "grid-cols-1",
+  2: "grid-cols-2",
+  3: "grid-cols-3",
+  4: "grid-cols-2 md:grid-cols-4",
+  5: "grid-cols-3 md:grid-cols-5",
+};
+
+const columnsFor = (count: number) => COLUMNS[count] ?? "grid-cols-3 md:grid-cols-6";
+
+/**
+ * A table of a comparison as a leaderboard's rows: its heading, when it has one, then for each player their name across
+ * the row and a box per stat. Both rows share their columns, so a stat sits over the same stat of the other side.
+ */
+function CompareSection({ title, pairs, sides }: { title?: ReactNode; pairs: Pair[]; sides: Sides }) {
+  return (
+    <section className={cn("flex flex-col", BOX_GAP)}>
+      {title && <Box className={HEADING_BOX}><h2 className="text-mc-1.5 font-bold">{title}</h2></Box>}
+      <div className="flex flex-col gap-2">
+        {sides.map((side, index) => (
+          <div key={index} className={cn("grid", BOX_GAP, columnsFor(pairs.length))}>
+            <Box className={cn(CELL, "col-span-full content:gap-2 content:px-2")}>{side}</Box>
+            {pairs.map(({ a, b }) => index === 0 ? <CompareStat key={a.key} cell={a} other={b} /> : <CompareStat key={b.key} cell={b} other={a} />)}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/** A leaderboard cell's size: one on phones, a size up from `lg`. */
+const TEXT = "text-mc-1.5 lg:text-mc-2";
+
+/**
+ * A stat's label in its colour over the value, as a leaderboard's phone cells draw them, and after a higher value how far
+ * it leads, in grey: higher isn't always better.
+ */
+function CompareStat({ cell, other }: { cell: Stat; other: Stat }) {
+  const label = useStatLabel(cell);
   const value = useStatValue(cell);
   const { className, style } = colourOf(cell.colour);
   const by = lead(cell, other);
 
   return (
-    <Box className={cn(CELL, "content:flex-col content:justify-start content:gap-1 content:text-center")}>
-      <p className={cn("max-w-full text-mc-2 wrap-break-word", className)} style={style}>
-        <span className="sr-only">{name}: </span>
-        {value}
-      </p>
-      {by > 0 && <Difference value={by} suffix={cell.suffix} className="ms-0 text-mc-gray" />}
-    </Box>
+    <StatBox>
+      <div className="flex min-w-0 grow flex-col items-center justify-end gap-1 text-center">
+        <dt className={cn("max-w-full text-mc-1.5 text-balance wrap-break-word", className)} style={style}>
+          <Hint full={label.full}>{label.node}</Hint>
+        </dt>
+        {/* A lead that doesn't fit goes under the value whole, rather than breaking mid-number. */}
+        <dd className={cn("flex max-w-full flex-wrap items-baseline justify-center gap-x-2", TEXT)}>
+          <span className="mc-crisp min-w-0 wrap-break-word">{value}</span>
+          {by > 0 && <Difference value={by} suffix={cell.suffix} className="ms-0 whitespace-nowrap text-mc-gray" />}
+        </dd>
+      </div>
+    </StatBox>
   );
 }
