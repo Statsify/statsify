@@ -49,9 +49,8 @@ const lead = (cell: Stat, other: Stat) =>
   typeof cell.value === "number" && typeof other.value === "number" && !cell.hidden && !other.hidden ? Math.max(cell.value - other.value, 0) : 0;
 
 /**
- * Two players' pages of one game, stat by stat: each table as a leaderboard's rows, one per player, every stat's label
- * over its value and the higher with how far it leads. The nametags link to each player's own page of the game; the game
- * nav and mode switcher keep to the comparison.
+ * Two players' pages of one game, each table as a leaderboard's rows, one per player. The nametags link to each player's
+ * own page of the game; the game nav and mode switcher keep to the comparison.
  */
 export function CompareView({ a, b }: { a: GamePage; b: GamePage }) {
   const { t } = useTranslation();
@@ -101,7 +100,6 @@ function CompareNametag({ page, end = false }: { page: GamePage; end?: boolean }
   );
 }
 
-/** A player's head and name at the start of their row, as a leaderboard row's. */
 function PlayerRowName({ page }: { page: GamePage }) {
   return (
     <>
@@ -145,13 +143,7 @@ function CompareSection({ title, pairs, sides }: { title?: ReactNode; pairs: Pai
   );
 }
 
-/** A leaderboard cell's size: one on phones, a size up from `lg`. */
-const TEXT = "text-mc-1.5 lg:text-mc-2";
-
-/**
- * A stat's label in its colour over the value, as a leaderboard's phone cells draw them, and after a higher value how far
- * it leads, in grey: higher isn't always better.
- */
+/** A stat's label over its value, the higher with how far it leads, in grey: higher isn't always better. */
 function CompareStat({ cell, other }: { cell: Stat; other: Stat }) {
   const label = useStatLabel(cell);
   const value = useStatValue(cell);
@@ -164,8 +156,7 @@ function CompareStat({ cell, other }: { cell: Stat; other: Stat }) {
         <dt className={cn("max-w-full text-mc-1.5 text-balance wrap-break-word", className)} style={style}>
           <Hint full={label.full}>{label.node}</Hint>
         </dt>
-        {/* A lead that doesn't fit goes under the value whole, rather than breaking mid-number. */}
-        <dd className={cn("flex max-w-full flex-wrap items-baseline justify-center gap-x-2", TEXT)}>
+        <dd className="flex max-w-full flex-wrap items-baseline justify-center gap-x-2 text-mc-1.5 lg:text-mc-2">
           <span className="mc-crisp min-w-0 wrap-break-word">{value}</span>
           {by > 0 && <Difference value={by} suffix={cell.suffix} className="ms-0 whitespace-nowrap text-mc-gray" />}
         </dd>
