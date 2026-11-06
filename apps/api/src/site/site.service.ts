@@ -71,8 +71,11 @@ const DEFAULT_HYPIXEL_BUDGET = 15;
 const BUDGET_WINDOW_SECONDS = 5 * 60;
 const BUDGET_KEY = "site:hypixel:budget";
 
-/** Site-initiated Hypixel calls per visitor address in the same 5 minutes: at most a fifth of the default budget. */
-const IP_LIMIT = 3;
+/**
+ * Site-initiated Hypixel calls per visitor address in the same 5 minutes, enough for a school or mobile network whose
+ * visitors share one address.
+ */
+const IP_LIMIT = 10;
 const IP_WINDOW_SECONDS = BUDGET_WINDOW_SECONDS;
 
 const IDENTITY_FIELDS = { uuid: true, username: true };
