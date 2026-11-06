@@ -72,7 +72,7 @@ const HOME_PREVIEWS_RETRY_MS = 5000;
 
 /**
  * Unknown usernames are remembered so repeated misses never reach Mongo again for a while: `stored` when the name
- * isn't in the database, `absent` when Mojang or Hypixel answered that there is no such player.
+ * isn't in the database, `absent` when Minecraft's account servers or Hypixel answered that there is no such player.
  */
 const MISS_TTL_SECONDS = 15 * 60;
 type Miss = "stored" | "absent";
@@ -245,10 +245,10 @@ export class SiteService implements OnApplicationBootstrap {
       return known;
     }
 
-    // Mojang or Hypixel has already said there's no such player, so the answer is the same and costs no budget.
+    // Asking again would get the same answer and spend budget.
     if ((await this.redis.get(missKey(key))) === "absent") throw notFound();
 
-    const uuid = byUuid ? tag : await this.mojangUuid(tag);
+    const uuid = byUuid ? tag : await this.accountUuid(tag);
 
     if (!uuid) {
       await this.rememberMiss(key, "absent");
@@ -277,16 +277,13 @@ export class SiteService implements OnApplicationBootstrap {
     return { uuid: player.uuid, username: player.username, updatedAt: freshness(player).updatedAt };
   }
 
-  /**
-   * A name's UUID from Mojang, or null when no account has it: a typo costs no Hypixel budget, and Hypixel is asked by
-   * UUID, as its name lookup is deprecated.
-   */
-  private async mojangUuid(name: string): Promise<string | null> {
+  /** Hypixel is asked by UUID: its name lookup is deprecated, and a typo then costs no budget. */
+  private async accountUuid(name: string): Promise<string | null> {
     try {
       return await this.skinService.getUuid(name);
     } catch (error) {
       if (error instanceof PlayerNotFoundException) return null;
-      // To the visitor Mojang not answering is the same as Hypixel not answering: try again shortly.
+      // An account-server outage looks the same to the visitor as a Hypixel one.
       throw hypixelUnavailable();
     }
   }
