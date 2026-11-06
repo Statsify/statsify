@@ -60,6 +60,18 @@ export function fullDate(ms: number, locale?: string, short = false): string {
   }).format(ms);
 }
 
+/** A login date to the minute in the zone `Intl` runs in, the browser's own after mount: "10/24/26, 8:30 PM EDT". */
+export function shortDate(ms: number, locale?: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  }).format(ms);
+}
+
 /** A countdown as `m:ss`, or `h:mm:ss` from an hour up. */
 export function formatCountdown(seconds: number): string {
   const total = Math.max(0, Math.ceil(seconds));

@@ -7,9 +7,12 @@
  */
 
 import appCss from "~/styles/app.css?url";
+import { CLOCK_SCRIPT } from "~/lib/clock";
 import { FONT_HOLD } from "~/lib/fonts";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext, useRouterState } from "@tanstack/react-router";
 import { LOGO_ICON } from "~/lib/tab-icon";
+import { SEARCH_SCRIPT } from "~/components/search";
+import { SKIN_FADE_SCRIPT } from "~/components/ui/skin";
 import { colors } from "@statsify/tokens";
 import { localeFromPath } from "~/i18n/locales";
 import type { ReactNode } from "react";
@@ -35,7 +38,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       { rel: "preload", href: "/fonts/Minecraft Bold.ttf", as: "font", type: "font/ttf", crossOrigin: "anonymous" },
     ],
     styles: [{ children: FONT_HOLD.style }],
-    scripts: [{ children: FONT_HOLD.script }],
+    scripts: [{ children: FONT_HOLD.script }, { children: CLOCK_SCRIPT }, { children: SEARCH_SCRIPT }, { children: SKIN_FADE_SCRIPT }],
   }),
   shellComponent: RootDocument,
   component: Outlet,

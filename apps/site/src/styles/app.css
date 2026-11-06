@@ -276,8 +276,22 @@
   }
 
   /* Mona Sans numbers line up in tables; stat values are Minecraft anyway. */
+  /* The scrollbar's room is kept on short pages too, so with classic scrollbars a page that grows past the fold
+     (a game page loading in, search results) doesn't shift sideways. */
   html {
     font-variant-numeric: tabular-nums;
+    scrollbar-gutter: stable;
+  }
+}
+
+/* Skins and heads fade in as they load (`SKIN_FADE_SCRIPT`); without scripts nothing marks them, so they just show. */
+@media (scripting: enabled) {
+  img[data-skin] {
+    transition: opacity 150ms ease-out;
+  }
+
+  img[data-skin]:not([data-loaded]) {
+    opacity: 0;
   }
 }
 

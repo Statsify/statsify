@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Link, useLocation, useMatch } from "@tanstack/react-router";
+import { Link, useMatch, useRouterState } from "@tanstack/react-router";
 import { Logo, Wordmark } from "~/components/icons/logo";
 import { Search } from "~/components/search";
 import { SearchIcon } from "~/components/icons/search";
@@ -39,15 +39,25 @@ const NAV_LINK = "flex min-h-11 min-w-11 items-center justify-center opacity-80 
  */
 const OWN_SEARCH = /^\/player\/?$|^\/bingo\/?$|^\/player\/[^/]+\/bingo\/?$/;
 
-function pathWithoutLocale(pathname: string) {
+/** A player's board sits under Players' path but belongs to Bingo in the nav. */
+const BINGO_BOARD = /^\/player\/[^/]+\/bingo\/?$/;
+
+const withoutLocale = (pathname: string) => {
   const [, first = "", ...rest] = pathname.split("/");
   return isSupportedLocale(first) ? `/${rest.join("/")}` : pathname;
+};
+
+function hasOwnSearch(pathname: string) {
+  return OWN_SEARCH.test(withoutLocale(pathname));
 }
 
 export function Header() {
   const { t } = useTranslation();
-  const pathname = useLocation({ select: (location) => location.pathname });
-  const showSearch = !OWN_SEARCH.test(pathWithoutLocale(pathname));
+  // The page on screen, not the one loading, so the header's search and the page's own never show at once. The matches
+  // change once a page renders, or once a player's page puts up its shell.
+  const pathname = useRouterState({ select: ({ matches, location }) => matches.at(-1)?.pathname ?? location.pathname });
+  const showSearch = !hasOwnSearch(pathname);
+  const bingoBoard = BINGO_BOARD.test(withoutLocale(pathname));
   // On a game page a picked name opens the same game, mode and period, to compare; the profile is a tap away from there.
   const gameTarget = useMatch({
     from: "/{-$locale}/player/$name/$game",
@@ -75,13 +85,35 @@ export function Header() {
           <Logo className="size-8 shrink-0" />
           <Wordmark className="hidden text-mc-1.5 sm:block md:hidden xl:block" />
         </Link>
+        {/* Beside the logo, so the links at the row's end stay put on every page. */}
+        {showSearch && compact && (
+          <button
+            type="button"
+            aria-label={t("search.label")}
+            aria-expanded={searching}
+            onClick={openSearch}
+            className="flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden"
+          >
+            <SearchIcon className="size-5" />
+          </button>
+        )}
         {/* Below md the pages get a row of their own under the logo; from md they sit beside it. */}
         <nav aria-label={t("nav.label")} className="order-last basis-full md:order-none md:basis-auto">
           <ul className="flex items-center gap-4 text-mc-1.5 sm:gap-6">
             {PAGES.map(({ key, to }) => (
               <li key={key}>
-                <Link to={to} className={cn(NAV_LINK, "data-[status=active]:font-bold data-[status=active]:underline data-[status=active]:opacity-100")}>
-                  {t(`nav.${key}`)}
+                <Link
+                  to={to}
+                  activeOptions={{ exact: key === "players" && bingoBoard }}
+                  data-status={key === "bingo" && bingoBoard ? "active" : undefined}
+                  aria-current={key === "bingo" && bingoBoard ? "page" : undefined}
+                  className={cn(NAV_LINK, "data-[status=active]:font-bold data-[status=active]:underline data-[status=active]:opacity-100")}
+                >
+                  {/* Each name holds its bold width, so the links after it don't move when it becomes the page's. */}
+                  <span className="grid justify-items-center">
+                    <span className="col-start-1 row-start-1">{t(`nav.${key}`)}</span>
+                    <span aria-hidden className="invisible col-start-1 row-start-1 font-bold">{t(`nav.${key}`)}</span>
+                  </span>
                 </Link>
               </li>
             ))}
@@ -111,17 +143,6 @@ export function Header() {
             ))}
           </ul>
         </nav>
-        {showSearch && compact && (
-          <button
-            type="button"
-            aria-label={t("search.label")}
-            aria-expanded={searching}
-            onClick={openSearch}
-            className="flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden"
-          >
-            <SearchIcon className="size-5" />
-          </button>
-        )}
       </div>
     </header>
   );

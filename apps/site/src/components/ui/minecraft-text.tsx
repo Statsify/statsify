@@ -43,6 +43,9 @@ export const colourOf = (code: string): { className?: string; style?: CSSPropert
 /** The class of the first colour in a formatted string, for a title that takes its value's colour. */
 export const leadingColourClass = (text: string): string => colourClass(/§([\da-f])/.exec(text)?.[1] ?? "");
 
+/** The colour a display name gives the name itself, its last code: `§b[MVP§c+§b] anrie` is `§b`. */
+export const nameColour = (displayName: string): string | undefined => /.*(§[\da-f])/.exec(displayName)?.[1];
+
 /** The text without its `§` codes, for a page title or an alt text. */
 export const plainText = (text: string): string => text.replaceAll(/§#[\dA-Fa-f]{6}|§\^\d+(?:\.\d+)?\^|§./g, "");
 
