@@ -64,7 +64,8 @@ export const colors = {
 
 /**
  * The card panel as the Next site drew its boxes: a black fill with a faint light-to-dark gradient over it, blended
- * with `overlay` inside the box only, so the background shows through untinted; an 8 px bevel and a hard 8 px shadow.
+ * with `overlay` inside the box only, so the background shows through untinted; a 4 px bevel (the Next site's was 8)
+ * and a hard 8 px shadow.
  * Lengths are in px.
  */
 export const panel = {
@@ -73,7 +74,7 @@ export const panel = {
     from: "rgb(255 255 255 / 0.06)",
     to: "rgb(0 0 0 / 0.5)",
   },
-  bevel: 8,
+  bevel: 4,
   shadow: 8,
   shadowOpacity: 0.42,
 } as const;
