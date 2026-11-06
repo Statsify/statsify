@@ -17,7 +17,7 @@ import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.servic
 import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";
-import { Logger } from "@statsify/logger";
+import { Logger, setRequestAttributes } from "@statsify/logger";
 import { PlayerService } from "#player";
 import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -42,6 +42,8 @@ export class GuildService {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
     if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
+      setRequestAttributes({ "statsify.cache.hit": true });
+
       return {
         ...deserialize(Guild, flatten(cachedGuild)),
         cached: true,
