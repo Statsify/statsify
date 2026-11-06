@@ -113,8 +113,8 @@ export function GuildCompareView({ a, b }: { a: GuildPage; b: GuildPage }) {
           <CompareSection key={title ?? "summary"} title={title && t(title)} pairs={pairs} sides={sides} />
         ))}
         <div className={cn("grid grid-cols-1 lg:grid-cols-2 lg:[&>:only-child]:col-span-2", BOX_GAP)}>
-          {history.length > 0 && <CompareTable title={t("guild.history")} heading={t("default:stats.guild.date")} guilds={[a, b]} rows={history} />}
-          {byGame.length > 0 && <CompareTable title={t("guild.byGame")} heading={t("default:stats.game")} guilds={[a, b]} rows={byGame} />}
+          {history.length > 0 && <GexpTable title={t("guild.history")} heading={t("default:stats.guild.date")} guilds={[a, b]} rows={history} />}
+          {byGame.length > 0 && <GexpTable title={t("guild.byGame")} heading={t("default:stats.game")} guilds={[a, b]} rows={byGame} />}
         </div>
       </div>
     </div>
@@ -135,7 +135,7 @@ function GuildRowName({ guild }: { guild: GuildPage }) {
   return <h3 className="min-w-0 wrap-anywhere text-mc-1.5"><MinecraftText>{guild.nameFormatted}</MinecraftText></h3>;
 }
 
-function CompareTable({ title, heading, guilds, rows }: { title: string; heading: string; guilds: [GuildPage, GuildPage]; rows: TableRow[] }) {
+function GexpTable({ title, heading, guilds, rows }: { title: string; heading: string; guilds: [GuildPage, GuildPage]; rows: TableRow[] }) {
   const n = useNumberFormat();
 
   return (
