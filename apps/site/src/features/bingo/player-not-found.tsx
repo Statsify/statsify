@@ -14,15 +14,20 @@ import { Skin } from "~/components/ui/skin";
 import { Link, useParams } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
-/** Bingo reads stored players only, so an unknown name is sent to its player page, which can look it up on Hypixel. */
+/** Bingo's player-not-found page for the route's name. */
 export function PlayerNotFound() {
-  const { t } = useTranslation();
   const { name = "" } = useParams({ strict: false });
+  return <BingoPlayerNotFound name={name} />;
+}
+
+/** Bingo reads stored players only, so an unknown name is sent to its player page, which can look it up on Hypixel. */
+export function BingoPlayerNotFound({ name }: { name: string }) {
+  const { t } = useTranslation();
 
   return (
     // The same layout as the player page's not-found, plus a Bingo search: the header has none on Bingo pages.
     <Error className="flex-col-reverse md:flex-col">
-      <Search key={name} className="w-full max-w-200 self-center" defaultValue={name} target="bingo" />
+      <Search key={name} className="w-full max-w-200 self-center" defaultValue={name} target="bingo" shortcut />
       <div className="flex w-full max-w-160 flex-col items-center gap-4 self-center">
         <div className="flex max-w-full flex-col items-center gap-4">
           <Skin uuid="76a56ac7fcf649fca0531cb5c77cd9ae" className="h-40 sm:h-64" />

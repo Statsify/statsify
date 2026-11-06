@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { formatNumber } from "./format";
+import { exactNumber, formatNumber } from "./format";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -14,4 +14,10 @@ import { useTranslation } from "react-i18next";
 export function useNumberFormat(trim = false) {
   const { i18n } = useTranslation();
   return useCallback((value: number) => formatNumber(value, i18n.language, trim), [i18n.language, trim]);
+}
+
+/** The exact number where the bot's format shortens it, in the active locale: `1234567` → "1,234,567", `26607` → nothing. */
+export function useExactNumber() {
+  const { i18n } = useTranslation();
+  return useCallback((value: number) => exactNumber(value, i18n.language), [i18n.language]);
 }

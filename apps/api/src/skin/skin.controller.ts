@@ -6,12 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Auth } from "#auth";
-import { Controller, Get, Query, StreamableFile } from "@nestjs/common";
+import {
+  ApiBadRequestResponse,
+  ApiExcludeEndpoint,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
+import { Auth, AuthRole } from "#auth";
+import { Controller, Get, Query, Res, StreamableFile } from "@nestjs/common";
 import { ErrorResponse, GetSkinTexturesResponse, PlayerNotFoundException } from "@statsify/api-client";
 import { HeadDto, PlayerDto, UuidDto } from "#dtos";
 import { SkinService } from "./skin.service.js";
+import type { FastifyReply } from "fastify";
 
 @Controller("/skin")
 @ApiTags("Skins")
@@ -35,6 +43,16 @@ export class SkinController {
   public async getRender(@Query() { uuid }: UuidDto) {
     const render = await this.skinService.getRender(uuid, false);
     return new StreamableFile(render, { type: "image/png" });
+  }
+
+  /** The site's skin viewer: the texture, and in `X-Skin-Model` its arm width, which the texture doesn't carry. */
+  @Get("/texture")
+  @Auth({ role: AuthRole.SITE, siteUnlimited: true })
+  @ApiExcludeEndpoint()
+  public async getTexture(@Query() { uuid }: UuidDto, @Res({ passthrough: true }) reply: FastifyReply) {
+    const { texture, slim } = await this.skinService.getTexture(uuid);
+    reply.header("X-Skin-Model", slim ? "slim" : "classic");
+    return new StreamableFile(texture, { type: "image/png" });
   }
 
   @Get("/extruded")

@@ -12,9 +12,10 @@ import { PlayerView } from "~/features/player/player-page";
 import { cacheHeaders } from "~/lib/cache";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { cacheNotFoundResponse } from "~/lib/response";
+import { playerTabIcon } from "~/lib/tab-icon";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { localeData, socialMeta } from "~/lib/social-meta";
-import { playerPageQuery, resolvePlayer } from "~/features/player/resolve";
+import { ensurePlayer, playerPageQuery } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 /** Fresh for a minute, stale for ten, and served stale for a day if the API is down. */
@@ -24,7 +25,7 @@ const possessive = (username: string) => `${username}'${username.endsWith("s") ?
 
 export const Route = createFileRoute("/{-$locale}/player/$name/")({
   loader: async ({ params, context }) => {
-    const identity = await resolvePlayer(params.name);
+    const identity = await ensurePlayer(context.queryClient, params.name);
 
     if (!identity) {
       // Five minutes at the edge. A lookup that finds the player navigates in the browser, so it never sees this page.
@@ -48,6 +49,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
     return { ...identity, updatedAt: page.updatedAt };
   },
   staleTime: 60_000,
+  staticData: { tabIcon: playerTabIcon },
   head: ({ loaderData, matches }) => {
     if (!loaderData) return { meta: [{ title: "Player Not Found | Statsify" }], links: [SANS_PRELOAD] };
 
@@ -74,7 +76,6 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
           }) :
           []),
       ],
-      links: [{ rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),

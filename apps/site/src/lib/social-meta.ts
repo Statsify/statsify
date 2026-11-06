@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { DEFAULT_LOCALE } from "~/i18n/locales";
+import { createI18n } from "~/i18n/i18n";
 import type { AnyRouteMatch } from "@tanstack/react-router";
 import type { LocaleData } from "~/i18n/locale-data";
 
@@ -80,4 +82,24 @@ export function canonicalLink(origin: string, path: string) {
 export function localeData(matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>): LocaleData | undefined {
   const match = matches.find((candidate) => candidate.routeId === "/{-$locale}");
   return match?.loaderData as LocaleData | undefined;
+}
+
+/** A search page's tags (`/bingo`, `/player`): `meta.<key>`'s title and description, then its preview's. */
+export function searchPageMeta(
+  matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>,
+  { key, path, image, noindex = false }: { key: string; path: string; image: string; noindex?: boolean }
+) {
+  const locale = localeData(matches);
+  // In English, from the server's `site.json`.
+  const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
+  const title = words.t(`meta.${key}.title`);
+  const description = words.t(`meta.${key}.description`);
+  const origin = locale?.origin;
+
+  return [
+    { title },
+    { name: "description", content: description },
+    ...(noindex ? [{ name: "robots", content: "noindex" }] : []),
+    ...(origin ? socialMeta({ origin, path, title, description, image }) : []),
+  ];
 }

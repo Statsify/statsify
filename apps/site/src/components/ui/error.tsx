@@ -15,6 +15,7 @@ export function Error({ children, className }: { className?: string; children: R
     <div className="relative grow">
       <Background
         background="general"
+        priority
         className="h-full"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />

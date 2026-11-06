@@ -11,14 +11,10 @@ import { BingoHeading } from "~/features/bingo/bingo-layout";
 import { Search } from "~/components/search";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
+import { searchPageMeta } from "~/lib/social-meta";
 
 export const Route = createFileRoute("/{-$locale}/bingo")({
-  head: () => ({
-    meta: [
-      { title: "Search | Statsify" },
-      { name: "description", content: "Search players to view their Hypixel stats." },
-    ],
-  }),
+  head: ({ matches }) => ({ meta: searchPageMeta(matches, { key: "bingo", path: "/bingo", image: "/images/og-bingo.png" }) }),
   headers: () => cacheHeaders("max-age=600, stale-while-revalidate=86400"),
   component: BingoSearchPage,
 });
@@ -37,7 +33,7 @@ function BingoSearchPage() {
       <div className="w-full h-full flex justify-center items-center flex-col gap-8 py-12">
         <BingoHeading />
         <div className="w-full px-4 md:px-8 lg:w-[80%]">
-          <Search target="bingo" />
+          <Search target="bingo" shortcut />
         </div>
       </div>
     </div>

@@ -34,7 +34,7 @@ export const BEDWARS: Game<BedWarsModes> = {
   modes: BEDWARS_MODES,
   game: {
     // The level's leaderboard ranks EXP; the session card shows EXP gained in §b.
-    "exp": { colour: "§b" },
+    "exp": { colour: "§b", glossary: "level" },
     "tokens": { colour: "§2" },
     "slumber.tickets": { colour: "§b", label: "stats.slumberTickets", of: "slumber.wallet" },
     "slumber.totalTickets": { colour: "§d", label: "stats.totalSlumberTickets" },

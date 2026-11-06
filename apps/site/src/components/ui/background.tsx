@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { animate, motion, useMotionValue, useReducedMotion } from "motion/react";
 import { cn } from "~/lib/util";
-import { useEffect, useRef } from "react";
+import { useState } from "react";
 
 // The nine public backgrounds in `public/backgrounds/`; the private blurred set never ships. They are
 // pre-blurred WebP (about 18 KB each), so no backdrop filter runs on top of them.
@@ -21,6 +20,16 @@ export const backgroundFor = (name: string): BackgroundName =>
   (BACKGROUNDS as readonly string[]).includes(name) ? (name as BackgroundName) : "general";
 
 const src = (background: BackgroundName) => `/backgrounds/${background}.webp`;
+
+/**
+ * Starts fetching a page's background from its route's loader, beside the page's data, so a game page doesn't sit on
+ * plain #111 while its image loads after the content. Only in the browser; the server's HTML asks for it early anyway.
+ */
+export function preloadBackground(background: BackgroundName) {
+  if (typeof Image === "undefined") return;
+  const image = new Image();
+  image.src = src(background);
+}
 
 export function Background({
   background,
@@ -40,17 +49,10 @@ export function Background({
    */
   viewport?: boolean;
 }) {
-  const oldBackground = useRef<BackgroundName | undefined>(undefined);
-  const opacity = useMotionValue(0);
-  const reduceMotion = useReducedMotion();
-
-  // With reduced motion the new background replaces the old one without the crossfade.
-  useEffect(() => {
-    opacity.jump(1);
-    oldBackground.current = background;
-    const controls = animate(opacity, 0, { duration: reduceMotion ? 0 : 0.4 });
-    return () => controls.stop();
-  }, [background, opacity, reduceMotion]);
+  // The background before the last change fades out over the new one, with CSS rather than Motion, which every page
+  // would otherwise load for this. Reduced motion ends the fade at once (app.css).
+  const [shown, setShown] = useState<{ background: BackgroundName; old?: BackgroundName }>({ background });
+  if (shown.background !== background) setShown({ background, old: shown.background });
 
   const image = viewport
     ? "absolute inset-x-0 top-0 h-svh w-full object-cover object-top"
@@ -67,16 +69,15 @@ export function Background({
         className={image}
         style={{ mask }}
       />
-      {/* Crossfade between oldBackground and currentBackground */}
-      {oldBackground.current && oldBackground.current !== background && (
-        <motion.div style={{ opacity }}>
-          <img
-            src={src(oldBackground.current)}
-            alt=""
-            className={image}
-            style={{ mask }}
-          />
-        </motion.div>
+      {shown.old && (
+        <img
+          key={`${shown.old}:${background}`}
+          src={src(shown.old)}
+          alt=""
+          className={cn(image, "animate-fade-out")}
+          style={{ mask }}
+          onAnimationEnd={() => setShown({ background })}
+        />
       )}
     </div>
   );

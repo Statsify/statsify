@@ -6,16 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { resolvePlayer } from "~/features/player/resolve";
+import { ensurePlayer } from "~/features/player/resolve";
 import { rpc } from "~/lib/orpc";
 import type { BingoPlayer } from "@statsify/contract";
+import type { QueryClient } from "@tanstack/react-query";
 
 /**
  * The boards for a URL name or UUID through the contract, strict cache-only: a page view never
  * calls Hypixel, and `refreshBingo` is the only way to fetch the player again. `null` when the API has
  * never seen the name.
  */
-export async function loadBingoPlayer(name: string): Promise<BingoPlayer | null> {
-  const identity = await resolvePlayer(name);
+export async function loadBingoPlayer(queryClient: QueryClient, name: string): Promise<BingoPlayer | null> {
+  const identity = await ensurePlayer(queryClient, name);
   return identity && (await rpc.player.bingo({ uuid: identity.uuid }));
 }

@@ -35,6 +35,11 @@ export interface StatEntry {
    */
   label?: string;
   /**
+   * The key of the stat's `glossary.*` entry in the locale files, where the label's own entry doesn't say what this stat
+   * is: Quests' Total counts quests and Challenges' counts challenges. Defaults to the label's key (`fkdr`).
+   */
+  glossary?: string;
+  /**
    * The card's own title where it doesn't translate one: a map, challenge or disaster name, Minecraft-formatted, taken
    * from the schema where the card takes it from there. Shown in place of `label`.
    */
@@ -90,6 +95,8 @@ export interface Stat {
   /** The field in the player document, `stats.bedwars.solo.wins`, which is also its leaderboard's key. */
   path: string;
   label: string;
+  /** The key of the `glossary.*` entry that explains it. */
+  glossary: string;
   name?: string;
   colour: StatEntry["colour"];
   /** The field it is shown out of (`12/25`) by path, or its fixed cap, when it has one. */
@@ -130,11 +137,13 @@ function resolve(key: string, base: string, entry: StatEntry): Stat {
   const of = typeof entry.of === "string" ? `${base}.${entry.of}` : entry.of;
   if (typeof of === "string") field(of);
   const formatter = leaderboard.formatter as ((value: unknown) => string) | undefined;
+  const label = entry.label ?? `stats.${key.slice(key.lastIndexOf(".") + 1)}`;
 
   return {
     key,
     path,
-    label: entry.label ?? `stats.${key.slice(key.lastIndexOf(".") + 1)}`,
+    label,
+    glossary: entry.glossary ?? label.slice(label.lastIndexOf(".") + 1),
     name: entry.name,
     colour: entry.colour,
     of,

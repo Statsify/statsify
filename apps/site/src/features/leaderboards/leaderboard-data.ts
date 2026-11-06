@@ -6,14 +6,66 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type GroupSummary, type ListGroup, fetchLeaderboardList, filterGroups } from "./leaderboard-list";
 import { ORPCError } from "@orpc/client";
 import { cacheNotFoundResponse } from "~/lib/response";
+import { createServerFn } from "@tanstack/react-start";
+import { leaderboardList } from "~/server/leaderboard-list.server";
 import { notFound, redirect } from "@tanstack/react-router";
-import { resolvePlayer } from "~/features/player/resolve";
+import { ensurePlayer } from "~/features/player/resolve";
 import { rpc } from "~/lib/orpc";
-import type { LeaderboardPage } from "@statsify/contract";
+import { z } from "zod";
+import type { LeaderboardGame, LeaderboardPage } from "@statsify/contract";
+import type { QueryClient } from "@tanstack/react-query";
 
 const PAGE_SIZE = 25;
+
+/** The longest `?q=` on `/leaderboards`; anything past it is cut. */
+export const MAX_QUERY_LENGTH = 64;
+
+/**
+ * What `/leaderboards` carries in its hydration data: each group without its leaderboards and the list's hash. With
+ * `?q=`, also the groups with a match and how many. The links themselves are in the server's HTML, and the filter
+ * fetches the list by its hash.
+ */
+export interface IndexData {
+  groups: GroupSummary[];
+  hash: string;
+  matches?: GroupSummary[];
+}
+
+const summaries = (groups: ListGroup[]): GroupSummary[] =>
+  groups.map(({ key, game, name, leaderboards }) => ({ key, game, name, count: leaderboards.length }));
+
+export const getLeaderboardIndex = createServerFn({ method: "GET" })
+  .validator(z.object({ q: z.string().max(MAX_QUERY_LENGTH).optional() }))
+  .handler(async ({ data }): Promise<IndexData> => {
+    const list = await leaderboardList();
+    const matches = data.q?.trim() ? { matches: summaries(filterGroups(list.groups, data.q)) } : {};
+    return { groups: summaries(list.groups), hash: list.hash, ...matches };
+  });
+
+/**
+ * The list for a client-side visit to `/leaderboards`, so its links and filter are ready at once; the server's render
+ * has its own copy and leaves it out of the page's data. A failed fetch leaves it to the filter to try again.
+ */
+export const listForClient = (hash: string): Promise<ListGroup[] | undefined> =>
+  import.meta.env.SSR ? Promise.resolve(undefined) : fetchLeaderboardList(hash).catch(() => undefined);
+
+/** `/leaderboards/<key>` is a game's index rather than a leaderboard: every leaderboard's field has a dot. */
+export const isGameKey = (field: string): boolean => !field.includes(".");
+
+/** A game's index of leaderboards; an unknown game is a 404, cached like an unknown leaderboard. */
+export async function loadLeaderboardGame(key: string): Promise<LeaderboardGame> {
+  try {
+    if (key.length <= 32) return await rpc.leaderboard.game({ key });
+  } catch (error) {
+    if (!(error instanceof ORPCError && error.code === "NOT_FOUND")) throw error;
+  }
+
+  cacheNotFoundResponse("max-age=300");
+  throw notFound();
+}
 
 interface PageQuery {
   field: string;
@@ -42,7 +94,11 @@ export interface LeaderboardView {
  * and asks the API for the page they are on; an unknown or unranked player falls back to the
  * requested page with a notice. An unknown leaderboard is a 404.
  */
-export async function loadLeaderboardPage(field: string, { page, around }: { page: number; around?: string }): Promise<LeaderboardView> {
+export async function loadLeaderboardPage(
+  queryClient: QueryClient,
+  field: string,
+  { page, around }: { page: number; around?: string }
+): Promise<LeaderboardView> {
   if (!around) {
     const shown = await requirePage({ field, page });
     // Past the last page goes to the last page, cached for a minute only, since the board can grow.
@@ -57,7 +113,7 @@ export async function loadLeaderboardPage(field: string, { page, around }: { pag
     return { page: shown, noindex: page > 0 };
   }
 
-  const identity = await resolvePlayer(around);
+  const identity = await ensurePlayer(queryClient, around);
   if (!identity) return { page: await requirePage({ field, page }), miss: { kind: "unknown", name: around }, noindex: true };
 
   const anchored = await fetchPage({ field, around: identity.uuid });

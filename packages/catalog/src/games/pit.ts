@@ -19,9 +19,10 @@ export const PIT: Game<PitModes> = {
   modes: PIT_MODES,
   game: {
     // The level's leaderboard ranks EXP.
-    exp: { colour: "§b" },
+    exp: { colour: "§b", glossary: "level" },
     trueLevel: { colour: "§b", label: "stats.levelsGained" },
-    gold: { colour: "§6" },
+    // The gold held now, where BedWars' Gold is ingots collected.
+    gold: { colour: "§6", glossary: "pitGold" },
     goldEarned: { colour: "§6" },
     contractsCompleted: { colour: "§a", label: "stats.contracts" },
     renown: { colour: "§e" },
@@ -38,7 +39,7 @@ export const PIT: Game<PitModes> = {
     tier1MysticsEnchanted: { colour: "§a", label: "stats.tier" },
     tier2MysticsEnchanted: { colour: "§e", label: "stats.tier" },
     tier3MysticsEnchanted: { colour: "§c", label: "stats.tier" },
-    totalMysticsEnchanted: { colour: "§6", label: "stats.total" },
+    totalMysticsEnchanted: { colour: "§6", label: "stats.total", glossary: "mysticsEnchanted" },
     joins: { colour: "§e" },
     ragePotatoesEaten: { colour: "§a" },
     goldIngotsGathered: { colour: "§6" },

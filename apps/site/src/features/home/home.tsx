@@ -81,7 +81,7 @@ export function Home({ players, guild, leaderboard }: HomeData) {
               style={{ imageRendering: "pixelated" }}
               className="mb-3"
             />
-            <p className="text-center text-mc-3 text-mc-white font-bold"><AnimatedNumber value={70_000_000} />+</p>
+            <p className="text-center text-mc-3 text-mc-white font-bold"><AnimatedNumber value={70_000_000} trim />+</p>
             <p className="text-center text-mc-2 text-mc-white">Commands Run</p>
           </Box>
         </div>

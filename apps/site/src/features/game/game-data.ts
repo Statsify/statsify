@@ -32,3 +32,13 @@ export const submodeSearch = (page: Pick<GamePage, "submodes">, submode: string 
 /** The `&period=` of a page: none for its first period (all time), or a page without periods. */
 export const periodSearch = (page: Pick<GamePage, "periods">, period: string | undefined): string | undefined =>
   period === undefined || period === page.periods?.[0] ? undefined : period;
+
+/**
+ * The card's title: the game, the word after it ("Stats") and the mode as the card names it. It lives here, not with
+ * the game view, because the route's `head()` uses it, and every page's first load carries what `head()` imports.
+ */
+export function headingText(page: Pick<GamePage, "game" | "heading">, word: (key: string) => string): string {
+  const { name } = page.game;
+  const { word: key, mode } = page.heading;
+  return `§l${name}${key ? ` §f${word(key)}` : ""}${mode ? ` §r(${mode}§r)` : ""}`;
+}

@@ -13,20 +13,26 @@ import { Chevron } from "~/components/icons/chevron";
 import { Command } from "~/components/ui/command";
 import { Cross } from "~/components/icons/cross";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
-import { Fragment, type ReactNode, useEffect, useId, useRef, useState } from "react";
+import { Fragment, type ReactNode, type Ref, useEffect, useId, useRef, useState } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
-import { Hidden, InlineStat, LeaderboardLink, StatCell } from "~/components/ui/stat";
+import { GameNav } from "./game-nav";
+import { Hint, Spoken } from "~/components/ui/hint";
+import { Hidden, InlineStat, LeaderboardLink, StatCell, StatNumber, glossaryKey, linkHint, useStatName } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { Menu } from "~/components/icons/menu";
-import { MinecraftText, colourClass, colourOf, leadingColourClass } from "~/components/ui/minecraft-text";
+import { MinecraftText, colourClass, colourOf, leadingColourClass, plainText } from "~/components/ui/minecraft-text";
+import { MiniHeader } from "~/features/player/mini-header";
+import { PanelToggle, SharePanel } from "~/features/player/share-panel";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
+import { StatInfo } from "./stat-info";
 import { cn } from "~/lib/util";
-import { gamePageQuery, modeSearch, periodSearch, submodeSearch } from "./game-data";
+import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "./game-data";
+import { imageSize, isGameCard } from "@statsify/profiles/protocol";
 import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { refreshGame } from "~/features/player/player-actions";
-import { useNumberFormat } from "~/i18n/use-number-format";
+import { addRecentPlayer } from "~/features/player/recent";
+import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { GamePage, StatCell as Stat, StatSection } from "@statsify/contract";
@@ -46,17 +52,17 @@ const ODD_LAST = "max-sm:[&>:last-child:nth-child(odd)]:col-span-2";
 const COLUMNS = [
   "grid-cols-1",
   "grid-cols-1",
-  "grid-cols-2",
-  `grid-cols-2 sm:grid-cols-3 ${ODD_LAST}`,
-  `grid-cols-2 sm:grid-cols-4 ${ODD_LAST}`,
-  `grid-cols-2 sm:grid-cols-5 ${ODD_LAST}`,
+  "grid-cols-snap-2",
+  `grid-cols-snap-2 sm:grid-cols-snap-3 ${ODD_LAST}`,
+  `grid-cols-snap-2 sm:grid-cols-snap-4 ${ODD_LAST}`,
+  `grid-cols-snap-2 sm:grid-cols-snap-5 ${ODD_LAST}`,
 ];
 
 const MOST_COLUMNS = COLUMNS.length - 1;
 
 const columnsOf = (count: number, headline: boolean) =>
   headline && count === 3 ?
-    "grid-cols-3" :
+    "grid-cols-snap-3" :
     COLUMNS[count <= MOST_COLUMNS ? count : Math.ceil(count / Math.ceil(count / MOST_COLUMNS))];
 
 /**
@@ -77,23 +83,32 @@ const PHONE_TABS = 4;
 const DESKTOP_TABS = 10;
 
 /** The card's side-by-side boxes, in as many equal columns from `lg` up; four go two by two, as the card draws them. */
-const BOX_COLUMNS = ["", "", "lg:grid-cols-2", "lg:grid-cols-3", "lg:grid-cols-2"];
+const BOX_COLUMNS = ["", "", "lg:grid-cols-snap-2", "lg:grid-cols-snap-3", "lg:grid-cols-snap-2"];
 
 /**
  * A player's page for one game, in the order of the bot's card: nametag and title, level and progress, the stats for
  * the whole game, then one mode's stats under the mode switcher (and the submode's, where a mode has them). Every stat
- * opens its leaderboard at the player. Phones stack the panels; from `lg` up the nametag sits beside the level, the
- * card's boxes sit side by side, and the headline table beside the mode's other tables. Lists (maps, challenges) take
+ * opens its leaderboard at the player. Phones stack the panels; from `md` up the nametag sits beside the level, and
+ * from `lg` up the card's boxes sit side by side, and the headline table beside the mode's other tables. Lists (maps, challenges) take
  * the full width below, and one filter box above the first long one searches them all.
  */
 export function GameView({ page }: { page: GamePage }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
   const queryClient = useQueryClient();
+  const nametag = useRef<HTMLDivElement>(null);
+  const shareId = useId();
+  const [sharing, setSharing] = useState(false);
   const [filter, setFilter] = useState("");
+
+  useEffect(() => addRecentPlayer({ uuid: page.uuid, name: page.username }), [page.uuid, page.username]);
+
   const mode = modeSearch(page, page.mode);
   const submode = submodeSearch(page, page.submode);
   const period = periodSearch(page, page.period);
+  // The card the page unfurls with, as its route's head picks it.
+  const card = new URLSearchParams({ game: page.game.key, ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }), v: String(page.updatedAt) });
+  const cardSize = imageSize(isGameCard(page.game.key, page.mode, page.period) ? { card: page.game.key, mode: page.mode } : { card: "general" }, "og");
   const boxes = page.sections.filter(({ box }) => box);
   const lists = page.sections.filter(({ box, list }) => !box && list);
   // The first other table is the headline; the rest go beside it.
@@ -114,7 +129,7 @@ export function GameView({ page }: { page: GamePage }) {
   );
 
   const headlinePanels = headline && (
-    <div key="headline" className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
+    <div key="headline" className="grid grid-cols-1 gap-2 lg:grid-cols-[minmax(0,1fr)_round(down,40%,8px)]">
       <StatPanel section={headline} username={page.username} headline className={cn(tables.length === 0 && "lg:col-span-2")} />
       {tables.length > 0 && (
         <div className="flex flex-col gap-2">
@@ -127,8 +142,8 @@ export function GameView({ page }: { page: GamePage }) {
   );
 
   // Everything cached for this player predates the refresh: it reloads the next time it's shown.
-  const refresh = async () => {
-    const result = await refreshGame({ data: { uuid: page.uuid, game: page.game.key, mode, submode, period } });
+  const refresh = async (deadline: AbortSignal, auto: boolean) => {
+    const result = await refreshGame({ data: { uuid: page.uuid, game: page.game.key, mode, submode, period, auto }, signal: deadline });
 
     if (result.ok) {
       await queryClient.invalidateQueries({ queryKey: orpc.player.key({ input: { uuid: page.uuid } }), refetchType: "none" });
@@ -138,47 +153,86 @@ export function GameView({ page }: { page: GamePage }) {
     return result;
   };
 
+  const shareToggle = (
+    <PanelToggle open={sharing} controls={shareId} onToggle={() => setSharing(!sharing)}>
+      {t("player.share.open")}
+    </PanelToggle>
+  );
+
   return (
     <div className="relative grow">
       <Background
         background={backgroundFor(page.game.key)}
         priority
+        viewport
         className="h-full"
         mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)"
       />
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} game={`${page.game.name}${page.heading.mode ? ` §r(${page.heading.mode}§r)` : ""}`} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
-        <div className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
-          {/* With neither a level nor an overview beside it (Parkour), the nametag takes the whole row. */}
-          <GameHeader page={page} className={page.level || page.overview.length > 0 ? "lg:row-span-2" : "lg:col-span-2"} />
+        {/* From `md` the nametag is as wide as its content (up to half the row) and the level sits beside it, the
+            overview under both; from `lg` the overview goes under the level. An overview with no level sits beside the
+            nametag at its own height, and a nametag with neither (Parkour) is as wide as its content. */}
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-[fit-content(50%)_minmax(0,1fr)]">
+          <GameHeader
+            ref={nametag}
+            page={page}
+            actions={shareToggle}
+            refresh={<RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto beside={shareToggle} />}
+            className={cn(page.level && page.overview.length > 0 && "lg:row-span-2", !page.level && page.overview.length === 0 && "md:col-span-2 md:w-fit")}
+          />
           {page.level && <LevelPanel level={page.level} username={page.username} />}
           {page.overview.length > 0 && (
             <StatPanel
               section={overviewSection(page.overview)}
               username={page.username}
-              // With no level beside the nametag, the overview takes the nametag's height, its row in the middle.
-              className={cn(!page.level && "lg:row-span-2 content:flex content:flex-col content:justify-center")}
+              className={page.level ? "md:col-span-2 lg:col-span-1" : "md:self-center"}
             />
           )}
           <RefreshBar
             updatedAt={page.updatedAt}
             expiresAt={page.expiresAt}
             refresh={refresh}
+            auto
             row
-            className="mb-2 lg:col-span-2 lg:mt-2 lg:mb-0"
+            className="max-md:hidden md:col-span-2 md:mt-2"
           />
         </div>
+        {sharing && (
+          <SharePanel
+            id={shareId}
+            name={page.username}
+            card={{ src: `/og/${page.uuid}.png?${card}`, ...cardSize }}
+            file={`${[page.username, page.game.key, mode, submode, period].filter(Boolean).join("-")}.png`}
+          />
+        )}
         {/* The Games button and the mode select share a row (on phones, so the tables start nearer the top); the open
             Games grid lies over the page below it. On phones the tabs share it too; from `md` links and tabs take rows
             of their own. */}
         <div className="relative flex flex-wrap items-start gap-x-2 gap-y-4 empty:hidden">
-          {page.games.length > 1 && <GameNav page={page} className="shrink-0" />}
+          {page.games.length > 1 && <GameNav games={page.games} username={page.username} current={page.game.key} className="shrink-0" />}
           {page.modes.length > 1 && <ModeSwitcher page={page} />}
         </div>
         {page.submodes.length > 1 && <ModeSwitcher page={page} kind="submode" />}
         {(page.periods?.length ?? 0) > 1 && <ModeSwitcher page={page} kind="period" />}
         {page.window && <PeriodDates {...page.window} />}
-        <p className="text-mc-1 text-mc-gray">{t("game.hint", { name: page.username })}</p>
+        {page.games.find(({ key }) => key === page.game.key)?.played === false && (
+          <NeverPlayed name={page.username} game={plainText(page.game.name)} />
+        )}
+        <p className="text-mc-1 text-mc-gray">
+          {t("game.hint", { name: page.username })}{" "}
+          {/* The game's index of leaderboards, opened and scrolled to this mode's. */}
+          <Link
+            to="/{-$locale}/leaderboards/$field"
+            params={{ field: page.game.key }}
+            search={{ mode: page.mode }}
+            hash={page.mode}
+            className="text-mc-yellow underline underline-offset-2"
+          >
+            {t("leaderboards.gameTitle", { game: plainText(page.game.name) })}
+          </Link>
+        </p>
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-mc-1 text-mc-gray">
           {t("game.discord")}
           <Command command={botCommand(page)} />
@@ -198,6 +252,7 @@ export function GameView({ page }: { page: GamePage }) {
                 count={t("filter.count", { shown: n(shown), total: n(searchedCells.length) })}
               />
             )}
+            {section === searched[0] && shown === 0 && <NoStatMatches query={filter} />}
             <StatPanel section={section} username={page.username} filter={section.search ? filter : undefined} />
           </Fragment>
         ))}
@@ -214,6 +269,18 @@ function botCommand({ game, period, username }: GamePage) {
   return `/${game.key}${period === undefined ? "" : ` ${period}`} player:${username}`;
 }
 
+/** A game the player has never played: its page is all zeros, so it says so rather than look like real stats. */
+export function NeverPlayed({ name, game }: { name: string; game: string }) {
+  const { t } = useTranslation();
+  return <p className="text-mc-1 text-mc-yellow">{t("game.neverPlayed", { name, game })}</p>;
+}
+
+/** The filter box matched nothing, so the lists below it are empty. */
+export function NoStatMatches({ query }: { query: string }) {
+  const { t } = useTranslation();
+  return <p className="text-mc-1.5 text-mc-gray text-center">{t("game.noMatches", { query: query.trim() })}</p>;
+}
+
 /** The game-wide cells in one row, then the card's selections (kit, class) as `Label: value` lines. */
 function overviewSection(cells: Stat[]): StatSection {
   const inline = cells.filter((cell) => cell.inline);
@@ -221,27 +288,40 @@ function overviewSection(cells: Stat[]): StatSection {
   return { title: null, rows: [table, inline].filter((row) => row.length > 0) };
 }
 
-/** The card's title: the game, the word after it ("Stats") and the mode as the card names it. */
-export function headingText(page: Pick<GamePage, "game" | "heading">, word: (key: string) => string): string {
-  const { name } = page.game;
-  const { word: key, mode } = page.heading;
-  return `§l${name}${key ? ` §f${word(key)}` : ""}${mode ? ` §r(${mode}§r)` : ""}`;
-}
-
 /** The nametag, linking back to the player page, over the card's title. */
-export function GameHeader({ page, className }: { page: GamePage; className?: string }) {
+export function GameHeader({
+  page,
+  actions,
+  refresh,
+  className,
+  ref,
+}: {
+  page: GamePage;
+  /** Buttons under the title that open panels under the header. */
+  actions?: ReactNode;
+  /** The refresh bar, in place of `actions` on phones (it carries them), so the tables start higher. */
+  refresh?: ReactNode;
+  className?: string;
+  ref?: Ref<HTMLDivElement>;
+}) {
   const { t } = useTranslation();
 
   return (
-    <Box className={cn("content:flex content:h-full content:items-center content:gap-4", className)}>
+    <Box ref={ref} className={cn("content:flex content:h-full content:items-center content:gap-4", className)}>
       <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28" />
-      <h1 className="flex min-w-0 grow flex-col gap-2">
-        {/* A long rank and name wraps onto a second line beside a phone's bust rather than being cut off. */}
-        <Link to="/{-$locale}/player/$name" params={{ name: page.username }} className="wrap-break-word text-mc-2 hover:underline">
-          <MinecraftText>{page.displayName}</MinecraftText>
-        </Link>
-        <MinecraftText className="text-mc-1.5">{headingText(page, (key) => t(key))}</MinecraftText>
-      </h1>
+      <div className="flex min-w-0 grow flex-col">
+        <h1 className="flex flex-col gap-2">
+          {/* A long rank and name wraps onto a second line beside a phone's bust rather than being cut off. */}
+          <Link to="/{-$locale}/player/$name" params={{ name: page.username }} className="wrap-break-word text-mc-2 hover:underline">
+            <MinecraftText>{page.displayName}</MinecraftText>
+          </Link>
+          {/* Read as text, the two lines would otherwise run together ("anrieBedWars Stats"). */}
+          <span className="sr-only"> · </span>
+          <MinecraftText className="text-mc-1.5">{headingText(page, (key) => t(key))}</MinecraftText>
+        </h1>
+        {actions && <div className={cn("flex flex-wrap gap-x-4", refresh !== undefined && "max-md:hidden")}>{actions}</div>}
+        {refresh !== undefined && <div className="mt-2 md:hidden">{refresh}</div>}
+      </div>
     </Box>
   );
 }
@@ -252,10 +332,11 @@ export function GameHeader({ page, className }: { page: GamePage; className?: st
  */
 export function LevelPanel({ level, username, className }: { level: Level; username: string; className?: string }) {
   const { t } = useTranslation();
-  const n = useNumberFormat();
+  const statName = useStatName();
   const { current, max, percent } = level.progression;
   const { colours } = level;
   const label = t(`default:${level.label}`);
+  const full = statName(level.label);
   const value = <MinecraftText>{level.current}</MinecraftText>;
 
   // Every line centred, a wrapped one too (a long title, its bar and the next one on a phone).
@@ -264,8 +345,10 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
       {/* Within the panel: a long level (The Pit past its last prestige) breaks rather than widening the page. */}
       <dl className="max-w-full">
         <StatCell
-          label={label}
-          value={level.leaderboard ? <LeaderboardLink field={level.leaderboard} username={username} stat={label}>{value}</LeaderboardLink> : value}
+          label={level.leaderboard ? <Spoken full={full}>{label}</Spoken> : <Hint full={full}>{label}</Hint>}
+          value={level.leaderboard ?
+            <LeaderboardLink field={level.leaderboard} username={username} stat={full ?? label} hint={full}>{value}</LeaderboardLink> :
+            value}
           color={leadingColourClass(level.current)}
           className="relative wrap-break-word"
         />
@@ -282,14 +365,14 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
       )}
       <dl>
         <InlineStat
-          label={t(`default:${level.progress}`)}
+          label={<Hint full={statName(level.progress)}>{t(`default:${level.progress}`)}</Hint>}
           value={max === undefined ?
             <span className={cn("font-bold", colourClass(colours?.maxed ?? "§b"))}>{t(`game.${level.maxedWord ?? "maxed"}`)}</span> :
             (
               <>
-                <span className={colourClass(colours?.current ?? "§b")}>{n(current)}</span>
+                <span className={colourClass(colours?.current ?? "§b")}><StatNumber value={current} /></span>
                 {colours ? <span className={colourClass(colours.slash)}>/</span> : "/"}
-                <span className={colourClass(colours?.max ?? "§a")}>{n(max)}</span>
+                <span className={colourClass(colours?.max ?? "§a")}><StatNumber value={max} /></span>
               </>
             )}
         />
@@ -372,7 +455,7 @@ export function StatPanel({
     return (
       <Box className={className}>
         <details open={filtering} className="group">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 outline-none focus-visible:outline-2 focus-visible:outline-white/60 [&::-webkit-details-marker]:hidden">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 [&::-webkit-details-marker]:hidden">
             <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
             <h2 className="text-mc-1.5 font-bold"><SectionTitle section={section} /></h2>
             <span className="text-mc-1.5 text-mc-gray">
@@ -384,6 +467,9 @@ export function StatPanel({
       </Box>
     );
   }
+
+  // A row's heading sits under the panel's, or takes its level where the panel has none (the headline table).
+  const RowHeading = heading ? "h3" : "h2";
 
   return (
     <Box className={className} title={heading}>
@@ -407,7 +493,7 @@ export function StatPanel({
           return title ?
             (
               <div key={index} className="flex flex-col gap-2">
-                <h3 className={ROW_HEADING}>{t(title)}</h3>
+                <RowHeading className={ROW_HEADING}>{t(title)}</RowHeading>
                 {cells}
               </div>
             ) :
@@ -418,10 +504,15 @@ export function StatPanel({
   );
 }
 
-/** A stat's heading: the card's own name for it (in its colours, else the stat's), or the bot's word for it. */
-function useStatLabel(cell: Stat): { text: string; node: ReactNode } {
+/**
+ * A stat's heading: the card's own name for it (in its colours, else the stat's), or the bot's word for it, with the
+ * full name where that word shortens one (FKDR).
+ */
+function useStatLabel(cell: Stat): { text: string; node: ReactNode; full?: string } {
   const text = useLabelText()(cell);
-  return { text, node: cell.name === undefined ? text : <MinecraftText>{`${cell.colour}${cell.name}`}</MinecraftText> };
+  const full = useStatName()(cell.label);
+  if (cell.name !== undefined) return { text, node: <MinecraftText>{`${cell.colour}${cell.name}`}</MinecraftText> };
+  return { text, node: text, full };
 }
 
 const plainName = (name: string) => name.replaceAll(/§#[\dA-Fa-f]{6}|§./g, "");
@@ -432,13 +523,20 @@ function useLabelText(): (cell: Stat) => string {
   return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainName(cell.name));
 }
 
-/** A stat's value as the card prints it: a number in the locale's format (with its cap or unit), or the API's text. */
-function useStatValue(cell: Stat): ReactNode {
+/**
+ * A stat's value as the card prints it: a number in the locale's format (with its cap or unit), or the API's text. A
+ * number the format shortens carries the exact one, as a `Hint`, or under a link only for screen readers, since the
+ * link shows it.
+ */
+function useStatValue(cell: Stat, linked = false): ReactNode {
   const n = useNumberFormat(cell.trim);
+  const exact = useExactNumber();
+  const Short = linked ? Spoken : Hint;
+  const number = (value: number) => <Short full={exact(value)}>{n(value)}</Short>;
   if (cell.hidden) return <Hidden />;
   // Text the API formatted takes the stat's colour, unless it brings its own (a level, a §7 N/A).
   const value = typeof cell.value === "number" ?
-    `${n(cell.value)}${cell.suffix ?? ""}` :
+    <>{number(cell.value)}{cell.suffix ?? ""}</> :
     <MinecraftText>{`${cell.colour}${cell.value}`}</MinecraftText>;
 
   if (cell.of === undefined) return value;
@@ -446,7 +544,7 @@ function useStatValue(cell: Stat): ReactNode {
   return (
     <>
       {value}
-      <span className="text-mc-1 text-mc-gray">/{n(cell.of)}</span>
+      <span className="text-mc-1 text-mc-gray">/{number(cell.of)}</span>
     </>
   );
 }
@@ -457,15 +555,31 @@ function useStatValue(cell: Stat): ReactNode {
  */
 function GameStat({ cell, username }: { cell: Stat; username: string }) {
   const { t } = useTranslation();
+  const exact = useExactNumber();
   const label = useStatLabel(cell);
-  const value = useStatValue(cell);
+  const value = useStatValue(cell, cell.leaderboard !== undefined);
   const { className, style } = colourOf(cell.colour);
+  // The short label shows under the row's heading; the link keeps the whole name.
+  const shown = cell.short ? t(cell.short, { ns: LABEL_NAMESPACES }) : label.node;
+  // Explained in place: an abbreviation, and a stat that means something else in this game.
+  const glossary = cell.glossary ?? (label.full === undefined ? undefined : glossaryKey(cell.label));
 
   return (
     <StatCell
-      // The short label shows under the row's heading; the link keeps the whole name.
-      label={cell.short ? t(cell.short, { ns: LABEL_NAMESPACES }) : label.node}
-      value={cell.leaderboard ? <LeaderboardLink field={cell.leaderboard} username={username} stat={label.text}>{value}</LeaderboardLink> : value}
+      label={cell.leaderboard ? <Spoken full={label.full}>{shown}</Spoken> : <Hint full={label.full}>{shown}</Hint>}
+      info={glossary && <StatInfo glossary={glossary} label={label.text} />}
+      value={cell.leaderboard ?
+        (
+          <LeaderboardLink
+            field={cell.leaderboard}
+            username={username}
+            stat={label.full ?? label.text}
+            hint={linkHint(label.full, typeof cell.value === "number" ? exact(cell.value) : undefined)}
+          >
+            {value}
+          </LeaderboardLink>
+        ) :
+        value}
       color={className}
       style={style}
       className="relative"
@@ -478,17 +592,31 @@ function GameStat({ cell, username }: { cell: Stat; username: string }) {
  * card's own formatting, and the value on the right, or a tick or a cross in a list of things done or not.
  */
 function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat; username: string; plain?: boolean; ticks?: boolean }) {
+  const exact = useExactNumber();
   const label = useStatLabel(cell);
-  const count = useStatValue(cell);
+  const count = useStatValue(cell, cell.leaderboard !== undefined);
   const value = ticks ? <Tick done={Number(cell.value) > 0} /> : count;
   const { className, style } = colourOf(cell.colour);
 
   return (
     <div className={cn("relative flex min-h-11 min-w-0 items-center gap-2 py-1 text-mc-1", className)} style={style}>
       {cell.icon && hasGameIcon(cell.icon) && <span aria-hidden className="size-8 shrink-0"><GameIcon game={cell.icon} /></span>}
-      <dt className={cn("min-w-0 grow truncate", !plain && "font-bold")}>{label.node}</dt>
+      <dt className={cn("min-w-0 grow truncate", !plain && "font-bold")}>
+        {cell.leaderboard ? <Spoken full={label.full}>{label.node}</Spoken> : <Hint full={label.full}>{label.node}</Hint>}
+      </dt>
       <dd className="shrink-0">
-        {cell.leaderboard ? <LeaderboardLink field={cell.leaderboard} username={username} stat={label.text}>{value}</LeaderboardLink> : value}
+        {cell.leaderboard ?
+          (
+            <LeaderboardLink
+              field={cell.leaderboard}
+              username={username}
+              stat={label.full ?? label.text}
+              hint={linkHint(label.full, !ticks && typeof cell.value === "number" ? exact(cell.value) : undefined)}
+            >
+              {value}
+            </LeaderboardLink>
+          ) :
+          value}
       </dd>
     </div>
   );
@@ -512,7 +640,7 @@ function SelectionStat({ cell }: { cell: Stat }) {
   const label = useStatLabel(cell);
   const value = useStatValue(cell);
   const { className, style } = colourOf(cell.colour);
-  return <InlineStat label={label.text} value={value} color={className} style={style} />;
+  return <InlineStat label={<Hint full={label.full}>{label.text}</Hint>} value={value} color={className} style={style} />;
 }
 
 /** The mark's words in `site.json`: "most played", or "most wins" where the game counts wins alone. */
@@ -599,7 +727,7 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
                 setPick(event.target.value);
                 void navigate({ ...to(event.target.value), resetScroll: false });
               }}
-              className="h-11 w-full min-w-0 appearance-none truncate bg-blackify-800 ps-3 pe-10 text-mc-1.5 text-white -outline-offset-2 focus-visible:outline-2 focus-visible:outline-white/60"
+              className="h-11 w-full min-w-0 appearance-none truncate bg-blackify-800 ps-3 pe-10 text-mc-1.5 text-white focus-visible:focus-ring-inset"
             >
               {options.map((option) => (
                 <option key={option.key} value={option.key}>
@@ -614,7 +742,7 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
           <noscript>
             <button
               type="submit"
-              className="h-11 shrink-0 bg-blackify-800 px-3 text-mc-1.5 text-white -outline-offset-2 hover:bg-blackify-700 focus-visible:outline-2 focus-visible:outline-white/60"
+              className="h-11 shrink-0 bg-blackify-800 px-3 text-mc-1.5 text-white hover:bg-blackify-700 focus-visible:focus-ring-inset"
             >
               {t("game.go")}
             </button>
@@ -637,7 +765,7 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
                 activeOptions={{ exact: true, includeSearch: true }}
                 title={option.mostPlayed && t(`${markWords(option.mostPlayed)}.${option.mostPlayed}`)}
                 // A column, so the box grows and segments in one row are the same height when a name wraps.
-                className="group flex h-full flex-col outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60"
+                className="group flex h-full flex-col"
               >
                 <Box className="grow text-mc-white/60 group-hover:text-mc-white group-aria-[current=page]:font-bold group-aria-[current=page]:text-mc-white content:flex content:min-h-11 content:items-center content:justify-center content:gap-2 content:px-2 content:py-1 content:text-center content:text-mc-1 content:text-balance md:content:justify-start md:content:px-3 md:content:py-0 md:content:text-start">
                   {option.mostPlayed && <span aria-hidden className="size-2 shrink-0 bg-mc-gold forced-color-adjust-none" />}
@@ -669,126 +797,4 @@ function PeriodDates({ start, end }: NonNullable<GamePage["window"]>) {
   const { t, i18n } = useTranslation();
   const format = new Intl.DateTimeFormat(i18n.language, { month: "2-digit", day: "2-digit", year: "numeric", timeZone: "America/New_York" });
   return <p className="text-mc-1 text-mc-gray">{t("game.window", { start: format.format(start), end: format.format(end) })}</p>;
-}
-
-/** From `md` up, the game nav lists up to this many pages as links; past it, the Games button, as on phones. */
-const DESKTOP_GAMES = 10;
-
-type NavGame = GamePage["games"][number];
-
-/** A game's icon, its name, and words for screen readers when the player has never played it. */
-function GameName({ game }: { game: NavGame }) {
-  const { t } = useTranslation();
-
-  return (
-    <>
-      {game.id && hasGameIcon(game.id) && <span aria-hidden className="size-6 shrink-0"><GameIcon game={game.id} /></span>}
-      <MinecraftText className="min-w-0">{game.name}</MinecraftText>
-      {!game.played && <span className="sr-only"> {t("game.unplayed")}</span>}
-    </>
-  );
-}
-
-/**
- * The player's other game pages, in the game registry's order. On phones, and from `md` up past `DESKTOP_GAMES`, a
- * Games button opens a grid of them over the page; up to it, a link each from `md` up. The button is a `<details>`, so
- * it opens before the page hydrates; after, Escape, a pick, a tap outside or tabbing out closes it. The current game is
- * marked, and a game the player has never played is dimmed and says so. The grid takes the width of the nearest
- * positioned ancestor, the row the nav shares with the mode select.
- */
-export function GameNav({ page, open, className }: { page: GamePage; open?: boolean; className?: string }) {
-  const { t } = useTranslation();
-  const details = useRef<HTMLDetailsElement>(null);
-  const links = page.games.length <= DESKTOP_GAMES;
-  const close = () => {
-    if (details.current) details.current.open = false;
-  };
-
-  useEffect(() => {
-    const element = details.current;
-    if (!element) return;
-
-    const outside = (event: PointerEvent) => {
-      if (element.open && !element.contains(event.target as Node)) element.open = false;
-    };
-    // Back to the button, so the keyboard carries on from where the grid opened.
-    const escape = (event: KeyboardEvent) => {
-      if (!element.open || event.key !== "Escape") return;
-      element.open = false;
-      element.querySelector("summary")?.focus();
-    };
-    // Tabbing out closes it, so it never lies over the element with focus. Focus going nowhere (a click on the page) is
-    // the pointerdown's to judge, so a click on the grid's padding leaves it open.
-    const blur = (event: FocusEvent) => {
-      if (element.open && event.relatedTarget instanceof Node && !element.contains(event.relatedTarget)) element.open = false;
-    };
-
-    document.addEventListener("pointerdown", outside);
-    document.addEventListener("keydown", escape);
-    element.addEventListener("focusout", blur);
-    return () => {
-      document.removeEventListener("pointerdown", outside);
-      document.removeEventListener("keydown", escape);
-      element.removeEventListener("focusout", blur);
-    };
-  }, []);
-
-  const current = (game: NavGame) => (game.key === page.game.key ? "page" : undefined);
-
-  return (
-    <nav aria-label={t("game.games")} className={cn(links && "md:basis-full", className)}>
-      <details ref={details} open={open} className={cn("group/games w-fit", links && "md:hidden")}>
-        <summary className="flex h-11 cursor-pointer list-none items-center gap-2 bg-blackify-800 ps-3 pe-2 text-mc-1.5 text-white -outline-offset-2 select-none focus-visible:outline-2 focus-visible:outline-white/60 [&::-webkit-details-marker]:hidden">
-          {/* A square on phones, so it fits beside the mode tabs. */}
-          <span className="max-md:sr-only">{t("game.games")}</span>
-          <Menu className="size-6 text-mc-gray md:hidden" />
-          <Chevron className="size-6 rotate-90 text-mc-gray group-open/games:-rotate-90 max-md:hidden" />
-        </summary>
-        {/* Opaque, as the selects are, since it lies over the stats; the shadow is the panels'. */}
-        <div className="absolute inset-x-0 top-full z-10 mt-2 bg-blackify-800 p-2 shadow-[4px_4px_0_rgb(0_0_0/0.84)]">
-          <ul className="grid grid-cols-2 gap-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {page.games.map((game) => (
-              <li key={game.key}>
-                <Link
-                  to="/{-$locale}/player/$name/$game"
-                  params={{ name: page.username, game: game.key }}
-                  aria-current={current(game)}
-                  onClick={close}
-                  className={cn(
-                    "flex min-h-11 items-center gap-2 px-2 text-mc-1 outline-none hover:bg-white/10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white/60 aria-[current=page]:bg-white/15 aria-[current=page]:font-bold",
-                    !game.played && "opacity-50"
-                  )}
-                >
-                  <GameName game={game} />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </details>
-      {links && (
-        <ul className="hidden flex-wrap gap-x-1 gap-y-2 md:flex">
-          {page.games.map((game) => (
-            <li key={game.key}>
-              <Link
-                to="/{-$locale}/player/$name/$game"
-                params={{ name: page.username, game: game.key }}
-                aria-current={current(game)}
-                className="group block outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60"
-              >
-                <Box
-                  className={cn(
-                    "group-hover:brightness-125 content:flex content:min-h-11 content:items-center content:gap-2 content:px-3 content:py-0 content:text-mc-1 group-aria-[current=page]:font-bold",
-                    !game.played && "opacity-50"
-                  )}
-                >
-                  <GameName game={game} />
-                </Box>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </nav>
-  );
 }

@@ -22,8 +22,10 @@ const RPC_PROCEDURES = new Map<string, { ttl: number; params: readonly string[] 
   ["search/suggest", { ttl: 30, params: ["query"] }],
   ["search/cards", { ttl: 60, params: ["names"] }],
   ["leaderboard/list", { ttl: 3600, params: [] }],
+  ["leaderboard/game", { ttl: 3600, params: ["key"] }],
   ["leaderboard/page", { ttl: 60, params: ["field", "page", "size", "around"] }],
   ["home/previews", { ttl: 600, params: [] }],
+  ["content/prestiges", { ttl: 3600, params: [] }],
 ]);
 
 /** How long a browser should wait after the API refused or failed; never cached. */
