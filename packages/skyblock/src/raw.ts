@@ -36,6 +36,8 @@ export interface RawDungeonType {
   fastest_time?: Record<string, number>;
   fastest_time_s?: Record<string, number>;
   fastest_time_s_plus?: Record<string, number>;
+  watcher_kills?: Record<string, number>; // per floor, plus "total"
+  [damage: `most_damage_${string}`]: Record<string, number> | undefined; // per floor, plus "best"
 }
 
 export interface RawSlayerBoss {
@@ -52,9 +54,10 @@ export interface RawMember {
     first_join?: number;
   };
   leveling?: { experience?: number; highest_pet_score?: number };
-  currencies?: { coin_purse?: number };
+  currencies?: { coin_purse?: number; essence?: Record<string, { current?: number }> };
   fairy_soul?: { total_collected?: number };
-  player_data?: { experience?: Record<string, number> };
+  player_stats?: { pets?: { total_exp_gained?: number } };
+  player_data?: { experience?: Record<string, number>; perks?: Record<string, number> };
   collection?: Record<string, number>;
   inventory?: {
     inv_contents?: RawNbt;
@@ -89,14 +92,16 @@ export interface RawMember {
     nodes?: Record<string, number | boolean>;
     tokens_spent?: number;
     selected_pickaxe_ability?: string;
+    crystals?: Record<string, { total_found?: number; total_placed?: number }>;
     [powder: `powder_${string}`]: number | undefined;
   };
+  glacite_player_data?: { corpses_looted?: Record<string, number>; fossils_donated?: string[]; mineshafts_entered?: number };
   accessory_bag_storage?: {
     tuning?: Record<string, unknown> & { slot_0?: Record<string, number> };
     selected_power?: string;
     highest_magical_power?: number;
   };
-  rift?: { access?: { consumed_prism?: boolean } };
+  rift?: { access?: { consumed_prism?: boolean }; dead_cats?: { montezuma?: RawPet } };
   nether_island_player_data?: { abiphone?: { active_contacts?: string[] } };
 }
 

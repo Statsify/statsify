@@ -87,7 +87,7 @@ export interface Level {
   level: number;
   maxLevel: number;
   xp: number;
-  xpCurrent: number;
+  xpCurrent: number; // into the next level; at the max, everything past it
   xpForNext?: number;
   progress: number;
 }
@@ -127,24 +127,40 @@ export interface SlayersSection {
   bosses: Record<SlayerBoss, { level: Level; kills: number[] }>; // kills[tier - 1]
 }
 
+export type DungeonGrade = "S+" | "S" | "A" | "B" | "C" | "D";
+
 export interface DungeonFloor {
   floor: number;
   played: number;
   completions: number;
-  bestScore?: number;
+  best?: { score: number; grade: DungeonGrade };
   fastest?: number;
   fastestS?: number;
   fastestSPlus?: number;
 }
 
+export const DUNGEON_CLASSES = ["healer", "mage", "berserk", "archer", "tank"] as const;
+
+export type DungeonClass = (typeof DUNGEON_CLASSES)[number];
+
 export interface DungeonsSection {
   catacombs: Level;
-  classes: Record<string, Level>;
+  classes: Record<DungeonClass, Level>;
   classAverage: number;
   selectedClass?: string;
   secrets: number;
   floors: Record<"normal" | "master", DungeonFloor[]>;
   highestFloor: Partial<Record<"normal" | "master", number>>;
+  mostDamage: Record<"normal" | "master", Record<DungeonClass, number>>; // 0 for a class never played
+  watcherKills: number;
+  essence: Essence[];
+}
+
+export interface Essence {
+  type: string; // WITHER, CRIMSON…
+  amount?: number; // missing for a type Hypixel doesn't send, like Forest and Fossil
+  perks: number; // shop perk levels bought
+  maxPerks: number;
 }
 
 export const POWDERS = ["mithril", "gemstone", "glacite"] as const;
@@ -153,17 +169,22 @@ export type Powder = (typeof POWDERS)[number];
 
 export interface HotmSection {
   level: Level;
+  coreLevel: number; // Core of the Mountain's
   loadout: { selected: number; total: number };
   tokens: { spent: number; total: number };
   ability?: string;
   powder: Record<Powder, { available: number; spent: number }>;
   nodes: { id: string; name: string; level: number; maxLevel: number; x: number; y: number; enabled: boolean }[];
+  crystals: { found: number; placed: number }; // over every gem
+  nucleusRuns: number;
+  glacite: { corpses: number; fossils: number; mineshafts: number }; // corpses looted, fossils donated
 }
 
 export interface PetsSection {
   score: number;
   active?: PetView;
   pets: PetView[];
+  totalXp: number; // every pet's XP ever gained
 }
 
 export interface PetView {
@@ -173,6 +194,7 @@ export interface PetView {
   rarity: Rarity;
   level: Level;
   heldItem?: string;
+  heldItemTexture?: ItemTexture;
   skin?: string;
   candyUsed: number;
   active: boolean;
@@ -228,13 +250,26 @@ export interface AccessoriesSection {
   accessoryPower: number;
   highestAccessoryPower?: number;
   selectedPower?: string;
+  powerStats?: PowerStat[]; // at this Accessory Power, plus the stone's Unique Power Bonus; only for stone Powers
   tuning: Record<string, number>;
+  tuningPoints: number; // spent
+  enrichments: number; // on active accessories
   pricesAsOf: number;
   market: boolean;
   active: ItemView[];
-  inactive: ItemView[]; // duplicates and tiers an upgrade in the bag replaces
+  inactive: InactiveAccessory[];
   missing: MissingAccessory[];
 }
+
+export interface PowerStat {
+  name: string; // Strength, Crit Damage…
+  color: string; // its § code
+  value: number;
+}
+
+/** A duplicate, or a lower tier or variant that another accessory in the bag replaces. */
+export type InactiveAccessory = ItemView &
+  ({ reason: "duplicate" } | { reason: "replaced"; replacedBy: { id: string; name: string } });
 
 export interface NetworthSection {
   total: number;
@@ -291,6 +326,7 @@ export interface ItemView {
   stars?: number;
   recombobulated: boolean;
   enchantments?: Record<string, number>;
+  enrichment?: string; // an accessory's, as its stat id
 }
 
 export type ItemTexture =
@@ -312,6 +348,7 @@ export interface RawItem {
       dungeon_item_level?: number;
       rarity_upgrades?: number;
       enchantments?: Record<string, number>;
+      talisman_enrichment?: string;
       [key: string]: unknown;
     };
     SkullOwner?: { Properties?: { textures?: { Value: string }[] } };

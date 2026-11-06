@@ -1,0 +1,102 @@
+{
+  "CRIMSON": {
+    "crimson_training": 3,
+    "fresh_tools_kuudra": 5,
+    "fungus_fortuna": 10,
+    "harena_fortuna": 10,
+    "headstart_kuudra": 5,
+    "master_kuudra": 1,
+    "strongarm_kuudra": 2,
+    "wither_piper": 5
+  },
+  "DIAMOND": {
+    "diamond_in_the_rough": 5,
+    "high_roller": 1,
+    "radiant_fisher": 10,
+    "return_to_sender": 10,
+    "rhinestone_infusion": 10,
+    "under_pressure": 5
+  },
+  "DRAGON": {
+    "combat_wisdom_in_end": 3,
+    "dragon_reforges_buff": 5,
+    "edrag_cd": 5,
+    "fero_vs_dragons": 5,
+    "flat_damage_vs_ender": 5,
+    "inc_zealots_odds": 5,
+    "increased_sup_chances": 1,
+    "mana_after_ender_kill": 10,
+    "unbridled_rage": 5
+  },
+  "FOREST": {
+    "axed": 1,
+    "extreme_pressure": 10,
+    "forest_training": 3,
+    "lumberjack": 10,
+    "tasty": 5,
+    "trapped": 5
+  },
+  "FOSSIL": {
+    "chilled_to_the_bone": 10,
+    "cut_loose": 5,
+    "dwarven_expertise": 10,
+    "prehistorian": 10,
+    "resourceful": 5,
+    "sleight_of_hand": 1
+  },
+  "GOLD": {
+    "dwarven_training": 3,
+    "eager_miner": 10,
+    "heart_of_gold": 5,
+    "midas_lure": 10,
+    "treasures_of_the_earth": 5,
+    "unbreaking": 5
+  },
+  "ICE": {
+    "cold_efficiency": 5,
+    "cooled_forges": 5,
+    "drake_piper": 1,
+    "frozen_skin": 5,
+    "season_of_joy": 10
+  },
+  "SAFARI": {
+    "amateur_hour": 10,
+    "critter_catcher": 8,
+    "critter_master": 1,
+    "deep_diver": 10,
+    "eagles_advantage": 5,
+    "floortunate": 5,
+    "fresh_footprints": 10,
+    "head_start": 1,
+    "hunting_hotspot": 5,
+    "quickdraw": 10,
+    "sparkling_specialist": 1,
+    "thawing": 10
+  },
+  "SPIDER": {
+    "bane": 5,
+    "empowered_agility": 10,
+    "spider_training": 3,
+    "toxophilite": 5,
+    "vermin_control": 5
+  },
+  "UNDEAD": {
+    "catacombs_boss_luck": 4,
+    "catacombs_crit_damage": 5,
+    "catacombs_defense": 5,
+    "catacombs_health": 5,
+    "catacombs_intelligence": 5,
+    "catacombs_looting": 5,
+    "catacombs_strength": 5,
+    "revive_stone": 1
+  },
+  "WITHER": {
+    "dungeonbreaker_secrets": 5,
+    "forbidden_blessing": 10,
+    "permanent_defense": 5,
+    "permanent_health": 5,
+    "permanent_intelligence": 5,
+    "permanent_speed": 2,
+    "permanent_strength": 5
+  }
+}
