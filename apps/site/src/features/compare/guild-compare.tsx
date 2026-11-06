@@ -63,7 +63,7 @@ type TableRow = { key: string; label: ReactNode; values: [number, number] };
 
 const gameExp = (guild: GuildPage, id: string) => guild.expByGame.find((game) => game.id === id)?.exp ?? 0;
 
-/** The days both guilds' histories have, newest first. */
+/** The days both guilds' histories have. */
 function historyRows(a: GuildPage, b: GuildPage, date: Intl.DateTimeFormat): TableRow[] {
   const days = new Map(b.history.map(({ day, exp }) => [day, exp]));
   return a.history.flatMap(({ day, exp }) => {
@@ -72,7 +72,7 @@ function historyRows(a: GuildPage, b: GuildPage, date: Intl.DateTimeFormat): Tab
   });
 }
 
-/** Every game either guild has GEXP in, most first by the two together; a game one has none in counts as 0. */
+/** Every game either guild has GEXP in, most first by the two together. */
 function gameRows(a: GuildPage, b: GuildPage): TableRow[] {
   const games = new Map([...a.expByGame, ...b.expByGame].map(({ id, name }) => [id, name]));
 
@@ -90,7 +90,6 @@ function gameRows(a: GuildPage, b: GuildPage): TableRow[] {
     .toSorted((x, y) => y.values[0] + y.values[1] - (x.values[0] + x.values[1]));
 }
 
-/** Two guilds side by side: a row each of the summary and GEXP boxes, then the GEXP by day and by game as tables. */
 export function GuildCompareView({ a, b }: { a: GuildPage; b: GuildPage }) {
   const { t, i18n } = useTranslation();
   const date = dateFormat(i18n.language);
@@ -122,7 +121,6 @@ export function GuildCompareView({ a, b }: { a: GuildPage; b: GuildPage }) {
   );
 }
 
-/** A guild's name with its tag, linking to its page. */
 function GuildNametag({ guild, end = false }: { guild: GuildPage; end?: boolean }) {
   return (
     <Box className={cn("content:flex content:items-center", end && "content:justify-end content:text-end")}>
@@ -137,7 +135,6 @@ function GuildRowName({ guild }: { guild: GuildPage }) {
   return <h3 className="min-w-0 wrap-anywhere text-mc-1.5"><MinecraftText>{guild.nameFormatted}</MinecraftText></h3>;
 }
 
-/** Both guilds' GEXP by row, a column each, the higher in bright green so a scan down a column finds who led. */
 function CompareTable({ title, heading, guilds, rows }: { title: string; heading: string; guilds: [GuildPage, GuildPage]; rows: TableRow[] }) {
   const n = useNumberFormat();
 

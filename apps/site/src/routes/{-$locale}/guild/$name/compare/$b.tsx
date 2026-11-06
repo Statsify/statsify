@@ -46,7 +46,7 @@ export const Route = createFileRoute("/{-$locale}/guild/$name/compare/$b")({
     return {
       a: a.name,
       b: b.name,
-      // For the link preview's text, as on the guild page.
+      // For the link preview's text.
       headline: [
         { key: "level", values: [Math.floor(a.level), Math.floor(b.level)] },
         { key: "members", values: [a.memberCount, b.memberCount] },
