@@ -8,6 +8,7 @@
 
 import { type Item, type Items, ProfileNetworthCalculator, parseItems, setItems } from "skyhelper-networth";
 import { boostedRarity, petTexture } from "../sections/pets.js";
+import { normalizeItemText } from "../lore.js";
 import { describeKey } from "#prices";
 import { add } from "@statsify/math";
 import { lookupKeys } from "#auctions";
@@ -51,7 +52,7 @@ function pricedTexture({ id, item, petData }: Priced, items: ItemsResource): Ite
 
 const toNetworthItem = (priced: Priced, items: ItemsResource): NetworthItem => ({
   id: priced.id,
-  name: priced.name,
+  name: normalizeItemText(priced.name),
   count: priced.count ?? 1,
   price: priced.price,
   soulbound: priced.soulbound,
