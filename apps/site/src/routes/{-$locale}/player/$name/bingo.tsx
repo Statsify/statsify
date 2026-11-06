@@ -10,13 +10,12 @@ import { Bingo } from "~/features/bingo/bingo";
 import { BoardSearchSchema } from "~/features/bingo/board-search";
 import { loadBingoPlayer } from "~/features/bingo/bingo-data";
 import { BingoLayout } from "~/features/bingo/bingo-layout";
-import { BingoSkeleton } from "~/features/bingo/bingo-skeleton";
 import { PlayerNotFound } from "~/features/bingo/player-not-found";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
-import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { refreshBingo } from "~/features/player/player-actions";
 import { useState } from "react";
@@ -59,12 +58,11 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
         { name: "description", content: description },
         ...(origin ? socialMeta({ origin, path: `/player/${username}/bingo`, title, description, image: "/images/og-bingo.png" }) : []),
       ],
-      links: [SANS_PRELOAD, { rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
+      links: [{ rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
     };
   },
   headers: () => cacheHeaders(`max-age=${EDGE_TTL_SECONDS}, stale-while-revalidate=3600`),
   notFoundComponent: PlayerNotFound,
-  pendingComponent: BingoPending,
   component: BingoPage,
 });
 
@@ -86,20 +84,10 @@ function BingoBoards({ initial }: { initial: BingoPlayer }) {
 
   return (
     <BingoLayout name={player.username}>
-      <div className="w-[80%]">
+      <div className="w-full lg:w-[80%]">
         <RefreshBar updatedAt={player.updatedAt} expiresAt={player.expiresAt} refresh={refresh} />
       </div>
       <Bingo player={player} />
-    </BingoLayout>
-  );
-}
-
-function BingoPending() {
-  const { name = "" } = useParams({ strict: false });
-
-  return (
-    <BingoLayout name={name}>
-      <BingoSkeleton />
     </BingoLayout>
   );
 }

@@ -9,7 +9,7 @@
 import { Container, Footer, Header, If, List } from "#components";
 import { LEADERBOARD_RATIOS } from "@statsify/schemas";
 import { PostLeaderboardRankingsResponse } from "@statsify/api-client";
-import { formatPosition } from "#lib/format-position";
+import { formatPosition } from "@statsify/profiles/format-position";
 import { games, removeGameDash } from "./games.js";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
@@ -84,7 +84,7 @@ export const RankingsProfile = ({
           <text align="left">{formatStat(d, originGame?.formatted ?? game)}</text>
         </box>
         <box width="100%">
-          <text>{formatPosition(t, d.rank)}</text>
+          <text>{formatPosition(d.rank, t)}</text>
         </box>
         <box width="100%">
           <text>{typeof d.value === "string" ? d.value : t(d.value)}</text>

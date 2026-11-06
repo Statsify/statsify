@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { animate, motion, useMotionValue } from "motion/react";
+import { animate, motion, useMotionValue, useReducedMotion } from "motion/react";
 import { cn } from "~/lib/util";
 import { useEffect, useRef } from "react";
 
@@ -23,32 +23,44 @@ export function Background({
   className,
   mask,
   priority = false,
+  viewport = false,
 }: {
   background: BackgroundName;
   className?: string;
   mask?: string;
   /** The page's first background: fetched early. Every other one waits until it nears the viewport. */
   priority?: boolean;
+  /**
+   * Size the image to the viewport instead of the content, for pages whose content changes height in place (Bingo's
+   * tabs, the leaderboard filter, search results). A content-sized image would rescale and shift with every change.
+   */
+  viewport?: boolean;
 }) {
   const oldBackground = useRef<BackgroundName | undefined>(undefined);
   const opacity = useMotionValue(0);
+  const reduceMotion = useReducedMotion();
 
+  // With reduced motion the new background replaces the old one without the crossfade.
   useEffect(() => {
     opacity.jump(1);
     oldBackground.current = background;
-    const controls = animate(opacity, 0, { duration: 0.4 });
+    const controls = animate(opacity, 0, { duration: reduceMotion ? 0 : 0.4 });
     return () => controls.stop();
-  }, [background, opacity]);
+  }, [background, opacity, reduceMotion]);
+
+  const image = viewport
+    ? "absolute inset-x-0 top-0 h-svh w-full object-cover object-top"
+    : "absolute inset-0 size-full object-cover object-top";
 
   return (
-    <div className={cn("absolute w-full pointer-events-none -z-50", className)}>
+    <div className={cn("absolute w-full pointer-events-none -z-50", viewport && "overflow-hidden", className)}>
       <img
         src={src(background)}
         alt=""
         fetchPriority={priority ? "high" : undefined}
         loading={priority ? undefined : "lazy"}
         decoding="async"
-        className="absolute inset-0 size-full object-cover object-top"
+        className={image}
         style={{ mask }}
       />
       {/* Crossfade between oldBackground and currentBackground */}
@@ -57,7 +69,7 @@ export function Background({
           <img
             src={src(oldBackground.current)}
             alt=""
-            className="absolute inset-0 size-full object-cover object-top"
+            className={image}
             style={{ mask }}
           />
         </motion.div>

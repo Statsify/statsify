@@ -18,6 +18,10 @@ export interface RouterContext {
   queryClient: QueryClient;
 }
 
+// The component gallery (`src/gallery`) exists on the dev server only: a production build drops this branch and the
+// gallery's code with it, and `scripts/check-public-output.ts` fails the build if any of it ships.
+if (import.meta.env.DEV) await import("./gallery/route").then((gallery) => gallery.addGalleryRoute());
+
 export function getRouter() {
   const queryClient = new QueryClient();
 

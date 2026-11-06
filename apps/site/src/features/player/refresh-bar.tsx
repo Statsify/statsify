@@ -8,16 +8,19 @@
 
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/util";
+import { formatCountdown } from "~/i18n/format";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ActionResult } from "./player-actions";
 
-const LABEL = "font-sans text-16 font-medium text-mc-gray";
+const META = "text-mc-1 text-mc-gray";
 
 type RefreshState =
   | { status: "idle" }
   | { status: "pending" }
   | { status: "limited"; until: number }
+  /** Hypixel didn't answer in time; the page still shows the stored stats. */
+  | { status: "unavailable" }
   | { status: "error" };
 
 /** Ticks once a second after mount; `undefined` during SSR so the HTML never carries a clock value. */
@@ -53,10 +56,12 @@ export function RefreshBar({
   updatedAt,
   expiresAt,
   refresh,
+  className,
 }: {
   updatedAt: number;
   expiresAt: number;
   refresh: () => Promise<ActionResult<unknown>>;
+  className?: string;
 }) {
   const { t, i18n } = useTranslation();
   const now = useNow();
@@ -89,25 +94,30 @@ export function RefreshBar({
       return;
     }
 
-    setState({ status: "error" });
+    setState({ status: result.code === "UNAVAILABLE" ? "unavailable" : "error" });
   }
 
   let label = t("player.refresh");
   if (state.status === "pending") label = t("player.refreshing");
-  else if (remaining) label = t("player.refreshIn", { seconds: remaining });
+  else if (remaining) label = t("player.refreshIn", { time: formatCountdown(remaining) });
 
+  let message: string | undefined;
+  if (state.status === "limited" && remaining) message = t("player.refreshLimited");
+  else if (state.status === "unavailable") message = t("player.refreshFailed");
+  else if (state.status === "error") message = t("error.description");
+
+  // Phones: the time over a full-width button; wider screens: one row.
   return (
-    <div className={cn(LABEL, "flex flex-wrap items-center justify-between gap-3")}>
-      <p>{now === undefined ? " " : t("player.updated", { time: relativeTime(updatedAt, now, i18n.language) })}</p>
-      <div className="flex flex-wrap items-center gap-3">
-        {state.status === "limited" && remaining ? <span className="text-mc-red">{t("player.refreshLimited")}</span> : null}
-        {state.status === "error" && <span className="text-mc-red">{t("error.description")}</span>}
-        <Button asChild className={cn("w-56", disabled && "opacity-60")}>
+    <div className={cn("flex flex-col gap-2", className)}>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+        <p className={META}>{now === undefined ? " " : t("player.updated", { time: relativeTime(updatedAt, now, i18n.language) })}</p>
+        <Button asChild variant="primary" size="small" className="w-full sm:w-auto sm:min-w-48">
           <button type="button" disabled={disabled} onClick={() => void run()}>
             {label}
           </button>
         </Button>
       </div>
+      <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>
     </div>
   );
 }

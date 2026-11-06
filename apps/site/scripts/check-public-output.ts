@@ -7,9 +7,10 @@
  */
 
 /**
- * Fails the build if anything in the site's public output is byte-identical to a file in the
- * private assets submodule (the 380 blurred backgrounds, textures, …). Runs after `vite build`.
- * Private files are only hashed when their size matches an output file, so the check stays fast.
+ * Runs after `vite build` and fails the build if the output holds something that must never ship:
+ * - the dev-only component gallery (`src/gallery`), found by its route path anywhere in the server or browser output;
+ * - a file byte-identical to one in the private assets submodule (the 380 blurred backgrounds, textures, …). Private
+ *   files are only hashed when their size matches an output file, so the check stays fast.
  */
 
 import { createHash } from "node:crypto";
@@ -37,6 +38,17 @@ const sha256 = (file: string) => createHash("sha256").update(readFileSync(file))
 
 if (!existsSync(output)) {
   console.error(`check-public-output: ${relative(site, output)} does not exist; run \`vite build\` first.`);
+  process.exit(1);
+}
+
+// Matches `GALLERY_PATH` in `src/gallery/route.tsx`.
+const GALLERY_PATH = "dev/gallery";
+const TEXT = /\.(?:c?m?js|json|html|css|map|txt|xml)$/;
+const gallery = walk(join(site, ".output")).filter((file) => TEXT.test(file) && readFileSync(file, "utf8").includes(GALLERY_PATH));
+
+if (gallery.length > 0) {
+  console.error("check-public-output: the dev-only component gallery is in the build output:");
+  for (const file of gallery) console.error(`  ${relative(site, file)}`);
   process.exit(1);
 }
 

@@ -110,13 +110,14 @@
     }
   }
 
-  @keyframes gradient-loading-slide {
-    0% {
+  /* A third-wide segment from just off the left edge to just off the right. */
+  @keyframes progress-slide {
+    from {
       transform: translateX(-100%);
     }
 
-    100% {
-      transform: translateX(50%);
+    to {
+      transform: translateX(300%);
     }
   }
 
@@ -130,19 +131,16 @@
   --animate-slide-out-left-and-fade: slide-out-left-and-fade 150ms ease-out;
   --animate-slide-out-right-and-fade: slide-out-right-and-fade 150ms ease-out;
 
-  --animate-gradient-loading-slide: 6000ms cubic-bezier(0.5, 0, 0.3, 1) infinite normal both running gradient-loading-slide;
+  --animate-progress-slide: progress-slide 1200ms ease-in-out infinite;
 }
 
-/* Minecraft text: 16px × N with an N px hard shadow. Use only N ∈ {1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 7} (the pixel grid). */
+/* Minecraft text: 16px × N with an N px hard shadow. Use only N ∈ {1, 1.5, 2, 3, 4, 7}: 16, 24, 32, 48, 64 and 112 px,
+   the sizes in `type.minecraftSizes` (@statsify/tokens). 24 lands on half pixels at DPR 1 and 3, so it is for headings
+   and inline values only. */
 @utility text-mc-* {
   font-family: var(--font-minecraft);
   font-size: calc(16px * --value(number));
   text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
-}
-
-/* Mona Sans at 90% width for phone labels that would otherwise wrap. */
-@utility font-narrow {
-  font-stretch: 90%;
 }
 
 @utility grid-areas-stack {
@@ -184,6 +182,93 @@
 @custom-variant content {
   &>[data-slot="content"] {
     @slot;
+  }
+}
+
+/* The card's shape, for the `box` utility: each corner's bevel and the shadow's offset come from
+   `--box-tl`, `--box-tr`, `--box-bl`, `--box-br` and `--box-s` (the card's 4 px unless a Box sets them), giving the
+   panel's outline (`--box-path`) and the shadow's (`--box-shadow-path`): shaded in the bottom-right notch and along the
+   right and the foot, for a layer moved out by the offset. */
+@utility box-shape {
+  --box-tl: 4px;
+  --box-tr: 4px;
+  --box-bl: 4px;
+  --box-br: 4px;
+  --box-s: 4px;
+  --box-path: polygon(
+    var(--box-tl) 0, calc(100% - var(--box-tr)) 0, calc(100% - var(--box-tr)) var(--box-tr), 100% var(--box-tr),
+    100% calc(100% - var(--box-br)), calc(100% - var(--box-br)) calc(100% - var(--box-br)),
+    calc(100% - var(--box-br)) 100%, var(--box-bl) 100%, var(--box-bl) calc(100% - var(--box-bl)),
+    0 calc(100% - var(--box-bl)), 0 var(--box-tl), var(--box-tl) var(--box-tl)
+  );
+  --box-shadow-path: polygon(
+    calc(100% - var(--box-br) - var(--box-s)) calc(100% - var(--box-br) - var(--box-s)),
+    calc(100% - var(--box-s)) calc(100% - var(--box-br) - var(--box-s)),
+    calc(100% - var(--box-s)) calc(100% - var(--box-s)),
+    calc(100% - var(--box-br) - var(--box-s)) calc(100% - var(--box-s)),
+    calc(100% - var(--box-br) - var(--box-s)) calc(100% - var(--box-br) - var(--box-s)),
+    var(--box-bl) calc(100% - var(--box-s)), var(--box-bl) 100%, calc(100% - var(--box-br)) 100%,
+    calc(100% - var(--box-br)) calc(100% - var(--box-s)), var(--box-bl) calc(100% - var(--box-s)),
+    calc(100% - var(--box-br) - var(--box-s)) calc(100% - var(--box-br) - var(--box-s)),
+    calc(100% - var(--box-s)) var(--box-tr), 100% var(--box-tr), 100% calc(100% - var(--box-br)),
+    calc(100% - var(--box-s)) calc(100% - var(--box-br)), calc(100% - var(--box-s)) var(--box-tr),
+    calc(100% - var(--box-br) - var(--box-s)) calc(100% - var(--box-br) - var(--box-s))
+  );
+}
+
+/* The card Box (`box.tsx`), drawn here so a Box's markup carries no polygons: its shape from `box-shape`, and the fill
+   and shadow colours from `--box-fill` and `--box-shadow`, the card's (tokens.css) unless the Box sets them. The shadow
+   is the Box's `::before`; a square bottom-right corner (`data-square-corner`) has no notch. The panel and the overlay
+   are the fill's `::before` and `::after`, beside the content, so the overlay blends with whatever is behind the Box. */
+@utility box {
+  @apply box-shape;
+  --box-fill: var(--panel-background);
+  --box-shadow: var(--panel-shadow);
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--box-shadow);
+    transform: translate(var(--box-s), var(--box-s));
+    clip-path: var(--box-shadow-path);
+  }
+
+  &[data-square-corner]::before {
+    clip-path: polygon(
+      var(--box-bl) calc(100% - var(--box-s)), var(--box-bl) 100%, calc(100% - var(--box-s)) 100%,
+      calc(100% - var(--box-s)) calc(100% - var(--box-s)), var(--box-bl) calc(100% - var(--box-s)),
+      calc(100% - var(--box-s)) var(--box-tr), 100% var(--box-tr), 100% 100%, calc(100% - var(--box-s)) 100%,
+      calc(100% - var(--box-s)) var(--box-tr), var(--box-bl) calc(100% - var(--box-s))
+    );
+  }
+
+  & > [data-slot="fill"],
+  & > [data-slot="fill"]::before,
+  & > [data-slot="fill"]::after {
+    position: absolute;
+    inset: 0;
+  }
+
+  & > [data-slot="fill"]::before,
+  & > [data-slot="fill"][data-overlay]::after {
+    content: "";
+    clip-path: var(--box-path);
+  }
+
+  & > [data-slot="fill"]::before {
+    background: var(--box-fill);
+  }
+
+  & > [data-slot="fill"]::after {
+    background: var(--panel-overlay);
+    mix-blend-mode: overlay;
+  }
+
+  & > [data-slot="content"] {
+    clip-path: var(--box-path);
   }
 }
 

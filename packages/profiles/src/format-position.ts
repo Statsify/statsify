@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LocalizeFunction } from "@statsify/discord";
-
-export const formatPosition = (t: LocalizeFunction, position: number): string => {
+/** A leaderboard position as the bot prints it: a bold number, gold, silver and bronze for the top three. */
+export const formatPosition = (position: number, format: (value: number) => string): string => {
   let color = "§f";
 
   switch (position) {
@@ -25,5 +24,5 @@ export const formatPosition = (t: LocalizeFunction, position: number): string =>
       break;
   }
 
-  return `${color}#§l${t(position)}`;
+  return `${color}#§l${format(position)}`;
 };

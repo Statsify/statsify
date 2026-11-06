@@ -7,7 +7,15 @@
  */
 
 import { Chevron } from "~/components/icons/chevron";
-import { ObjectSegmentWithTransition, cubicBezier, motion, useAnimate, useInView, useMotionValue } from "motion/react";
+import {
+  ObjectSegmentWithTransition,
+  cubicBezier,
+  motion,
+  useAnimate,
+  useInView,
+  useMotionValue,
+  useReducedMotion,
+} from "motion/react";
 import { WoolWarsPreview } from "./previews/woolwars";
 import { useEffect, useRef } from "react";
 
@@ -22,9 +30,17 @@ export function SessionAnimation() {
   const daysBack = useMotionValue(0);
 
   const inView = useInView(scope, { amount: "some" });
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (!searchRef.current || !profileRef.current) return;
+
+    // Reduced motion: the finished state, with no typing and no wait for the block to scroll into view. The
+    // `motion-reduce:` classes below already show it before hydration.
+    if (reduceMotion) {
+      daysBack.jump(7);
+      return;
+    }
 
     if (inView) {
       const controls = animate([
@@ -54,17 +70,18 @@ export function SessionAnimation() {
     ]);
 
     return () => controls.cancel();
-  }, [inView, animate, daysBack]);
+  }, [inView, animate, daysBack, reduceMotion]);
 
   return (
     <div ref={scope} className="relative">
       <motion.div
         ref={searchRef}
         initial={{ opacity: 1 }}
-        className="absolute w-full h-16 flex items-center px-4 gap-4 bg-white/30 border-4 border-white/40 backdrop-blur-sm"
+        className="absolute w-full h-16 flex items-center px-4 gap-4 bg-white/30 border-4 border-white/40 backdrop-blur-sm motion-reduce:static motion-reduce:mb-2"
       >
         <div className="w-full text-mc-2 placeholder-mc-darkgray text-white outline-none h-full selection:bg-white/50 flex items-center justify-between">
-          <div className="flex justify-center">
+          <span className="sr-only">{text}</span>
+          <div aria-hidden className="flex justify-center">
             {SPLIT_TEXT.map((current, i) => (
               <motion.div
                 key={i}
@@ -72,7 +89,7 @@ export function SessionAnimation() {
                   if (el) typingRefs.current[i] = el;
                 }}
                 initial={{ y: 10, opacity: 0 }}
-                className="whitespace-pre"
+                className="whitespace-pre motion-reduce:!opacity-100 motion-reduce:![transform:none]"
               >
                 {current}
               </motion.div>
@@ -81,7 +98,11 @@ export function SessionAnimation() {
           <Chevron />
         </div>
       </motion.div>
-      <motion.div ref={profileRef} initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}>
+      <motion.div
+        ref={profileRef}
+        initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}
+        className="motion-reduce:!translate-none motion-reduce:!opacity-100 motion-reduce:![filter:none]"
+      >
         <WoolWarsPreview daysBack={daysBack} />
       </motion.div>
     </div>
