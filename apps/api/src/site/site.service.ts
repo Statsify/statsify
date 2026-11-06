@@ -57,7 +57,6 @@ import { LEADERBOARD_GROUPS, buildLeaderboardGroups, catalogGlossary, leaderboar
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
 import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
-import { SkinService } from "#skin";
 import { Redis } from "ioredis";
 import { config, flatten, removeFormatting } from "@statsify/util";
 import { isIPv6 } from "node:net";
@@ -170,8 +169,7 @@ export class SiteService implements OnApplicationBootstrap {
     private readonly playerSearchService: PlayerSearchService,
     @InjectModel(Player) private readonly playerModel: PlayerModel,
     @InjectModel(Guild) private readonly guildModel: GuildModel,
-    @InjectRedis() private readonly redis: Redis,
-    private readonly skinService: SkinService
+    @InjectRedis() private readonly redis: Redis
   ) {}
 
   /** Builds the home previews once at start, without holding up the API's readiness. */
@@ -280,7 +278,7 @@ export class SiteService implements OnApplicationBootstrap {
   /** Hypixel is asked by UUID: its name lookup is deprecated, and a typo then costs no budget. */
   private async accountUuid(name: string): Promise<string | null> {
     try {
-      return await this.skinService.getUuid(name);
+      return await this.playerService.getUuid(name);
     } catch (error) {
       if (error instanceof PlayerNotFoundException) return null;
       // An account-server outage looks the same to the visitor as a Hypixel one.

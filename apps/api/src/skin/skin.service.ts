@@ -12,6 +12,7 @@ import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
 import { Player, Skin } from "@statsify/schemas";
+import { PlayerService } from "#player";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
@@ -54,6 +55,7 @@ function drawHead(skin: Image, size: number): Promise<Buffer> {
 export class SkinService {
   public constructor(
     private readonly httpService: HttpService,
+    private readonly playerService: PlayerService,
     @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>
   ) {}
@@ -108,7 +110,7 @@ export class SkinService {
       return cachedSkin;
     }
 
-    const uuid = isUsername ? await this.getUuid(tag) : tag;
+    const uuid = isUsername ? await this.playerService.getUuid(tag) : tag;
 
     const skin = await this.requestSkin(uuid).catch((error) => {
       if (cachedSkin) return cachedSkin;
@@ -121,23 +123,6 @@ export class SkinService {
     await this.skinModel.replaceOne({ uuid }, skin, { upsert: true }).lean().exec();
 
     return skin;
-  }
-
-  public getUuid(username: string): Promise<string> {
-    return lastValueFrom(
-      this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
-        map((response) => response.data as MojangProfile),
-        map((data) => data.id),
-        catchError((error) => {
-          if (error.response.status === 404) throw new PlayerNotFoundException();
-          // Ratelimited
-          if (error.response.status === 429) throw new InternalServerErrorException();
-
-          // Unknown
-          throw new InternalServerErrorException();
-        })
-      )
-    );
   }
 
   private requestSkin(uuid: string) {
@@ -156,13 +141,6 @@ export class SkinService {
       )
     );
   }
-}
-
-interface MojangProfile {
-  id: string;
-  name: string;
-  legacy?: true;
-  demo?: true;
 }
 
 if (import.meta.vitest) {
