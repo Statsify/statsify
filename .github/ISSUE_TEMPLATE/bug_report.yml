@@ -21,6 +21,7 @@ body:
         - verify-server
         - "@statsify/api-client"
         - "@statsify/assets"
+        - "@statsify/catalog"
         - "@statsify/contract"
         - "@statsify/discord"
         - "@statsify/logger"

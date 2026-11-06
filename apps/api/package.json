@@ -27,6 +27,7 @@
     "@sentry/node": "^7.118.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
+    "@statsify/catalog": "workspace:^",
     "@statsify/contract": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/rendering": "workspace:^",

@@ -10,10 +10,15 @@ import { DEFAULT_LOCALE } from "~/i18n/locales";
 
 const PATREON = "https://patreon.com/statsify";
 
+const AUTHORIZE = "https://discord.com/oauth2/authorize?client_id=718827787422793820";
+
+/** The bot in a user's own apps (Discord's user install), so its commands work anywhere, with only `applications.commands`. */
+const ADD_APP_URL = `${AUTHORIZE}&integration_type=1&scope=applications.commands`;
+
 /** The vanity redirects, answered with a 301 before routing. */
 const REDIRECTS: Readonly<Record<string, string>> = {
-  "/invite":
-    "https://discord.com/oauth2/authorize?client_id=718827787422793820&scope=applications.commands%20bot&permissions=412384021568",
+  "/invite": `${AUTHORIZE}&scope=applications.commands%20bot&permissions=412384021568`,
+  "/invite-user": ADD_APP_URL,
   "/discord": "https://discord.gg/5VgxMQY",
   "/support": "https://discord.gg/ZnV3VcHyEJ",
   "/premium": PATREON,

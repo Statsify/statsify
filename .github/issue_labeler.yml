@@ -22,6 +22,9 @@
 "@statsify/assets":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/assets"
 
+"@statsify/catalog":
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/catalog"
+
 "@statsify/contract":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/contract"
 

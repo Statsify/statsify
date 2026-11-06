@@ -7,7 +7,7 @@
  */
 
 import { ARENA_BRAWL_MODES, ArenaBrawlModes } from "@statsify/schemas";
-import { ArenaBrawlProfile } from "./arenabrawl.profile.js";
+import { ArenaBrawlProfile } from "@statsify/profiles";
 import {
   BaseHypixelCommand,
   BaseProfileProps,

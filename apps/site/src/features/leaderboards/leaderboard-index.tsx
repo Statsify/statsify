@@ -8,10 +8,11 @@
 
 import { Box } from "~/components/ui/box";
 import { DEFAULT_LOCALE } from "~/i18n/locales";
+import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { getRouteApi, useRouter } from "@tanstack/react-router";
-import { SearchIcon } from "~/components/icons/search";
 import { type MouseEvent, type SyntheticEvent, useRef, useState } from "react";
+import { useNumberFormat } from "~/i18n/use-number-format";
 import { useTranslation } from "react-i18next";
 import type { LeaderboardGroup } from "@statsify/contract";
 
@@ -28,12 +29,15 @@ export function withoutGroupPrefix(groups: LeaderboardGroup[]): LeaderboardGroup
   }));
 }
 
+const boardCount = (groups: LeaderboardGroup[]) => groups.reduce((sum, group) => sum + group.leaderboards.length, 0);
+
 /**
  * Every leaderboard grouped by game, each group a closed `<details>` so the 2,700 links cost no layout until
  * opened. The filter matches every word of the query against "<game> <leaderboard>" and opens what's left.
  */
 export function LeaderboardIndex({ groups }: { groups: LeaderboardGroup[] }) {
   const { t } = useTranslation();
+  const n = useNumberFormat();
   const { locale } = localeRoute.useRouteContext();
 
   // Over 2,000 links: plain anchors keep the index light, where a router Link each would cost a component and its
@@ -42,34 +46,22 @@ export function LeaderboardIndex({ groups }: { groups: LeaderboardGroup[] }) {
   const href = (field: string) => `${prefix}/leaderboards/${encodeURIComponent(field)}`;
   const delegation = useLinkDelegation(locale === DEFAULT_LOCALE ? undefined : locale);
   const [filter, setFilter] = useState("");
-  const words = filter.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  const filtering = words.length > 0;
+  const matches = wordMatcher(filter);
+  const filtering = filter.trim() !== "";
 
   const visible = groups
-    .map((group) => {
-      const game = group.name.toLowerCase();
-      const leaderboards = group.leaderboards.filter(({ name }) => {
-        const text = `${game} ${name.toLowerCase()}`;
-        return words.every((word) => text.includes(word));
-      });
-      return { ...group, leaderboards };
-    })
+    .map((group) => ({ ...group, leaderboards: group.leaderboards.filter(({ name }) => matches(`${group.name} ${name}`)) }))
     .filter((group) => group.leaderboards.length > 0);
 
   return (
     <div className="flex flex-col gap-4">
-      {/* The same square, solid input as the player search. */}
-      <label className="flex h-11 w-full max-w-200 items-center gap-3 self-center bg-blackify-800 px-3 -outline-offset-2 focus-within:outline-2 focus-within:outline-white/60">
-        <SearchIcon className="size-5 shrink-0 text-mc-gray" />
-        <input
-          type="search"
-          value={filter}
-          onChange={(event) => setFilter(event.target.value)}
-          placeholder={t("leaderboards.filter")}
-          aria-label={t("leaderboards.filter")}
-          className="h-full w-full min-w-0 bg-transparent text-mc-1.5 text-white text-ellipsis outline-none placeholder:text-mc-gray selection:bg-white/50"
-        />
-      </label>
+      <FilterBox
+        value={filter}
+        onChange={setFilter}
+        label={t("leaderboards.filter")}
+        count={t("filter.count", { shown: n(boardCount(visible)), total: n(boardCount(groups)) })}
+        className="max-w-200 self-center"
+      />
       {visible.length === 0 && (
         <p className="text-mc-1.5 text-mc-gray text-center">{t("leaderboards.noMatches", { query: filter.trim() })}</p>
       )}

@@ -1,0 +1,68 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU AGPL v3 or later license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import { BEDWARS_MODES, BedWarsModeChallenges, type BedWarsModes, scanMetadata } from "@statsify/schemas";
+import { type Game, type StatEntry, doneColour } from "../catalog.js";
+import { prettify } from "@statsify/util";
+
+/**
+ * The challenges card (`bedwars-challenges.profile.tsx`): the two totals in its sidebar, then every challenge under its
+ * leaderboard name, green once completed and red before.
+ */
+const CHALLENGES: Record<string, StatEntry> = {
+  totalChallenges: { colour: "§6", name: "Total Completions" },
+  uniqueChallenges: { colour: "§e", name: "Unique Completions" },
+  ...Object.fromEntries(
+    scanMetadata(BedWarsModeChallenges)
+      .filter(([key]) => key !== "totalChallenges" && key !== "uniqueChallenges")
+      .map(([key, { leaderboard }]): [string, StatEntry] => [
+        key,
+        { colour: doneColour, name: leaderboard.fieldName ?? prettify(key) },
+      ])
+  ),
+};
+
+/** The colours and labels of the bot's BedWars card (`bedwars.profile.tsx`); games played is the site's addition. */
+export const BEDWARS: Game<BedWarsModes> = {
+  key: "bedwars",
+  id: "BEDWARS",
+  modes: BEDWARS_MODES,
+  game: {
+    // The level's leaderboard ranks EXP; the session card shows EXP gained in §b.
+    "exp": { colour: "§b" },
+    "tokens": { colour: "§2" },
+    "slumber.tickets": { colour: "§b", label: "stats.slumberTickets", of: "slumber.wallet" },
+    "slumber.totalTickets": { colour: "§d", label: "stats.totalSlumberTickets" },
+  },
+  shapes: [
+    {
+      modes: BEDWARS_MODES.getApiModes().filter((mode) => mode !== "challenges"),
+      stats: {
+        "wins": { colour: "§a" },
+        "losses": { colour: "§c" },
+        "wlr": { colour: "§6" },
+        "finalKills": { colour: "§a" },
+        "finalDeaths": { colour: "§c" },
+        "fkdr": { colour: "§6" },
+        "kills": { colour: "§a" },
+        "deaths": { colour: "§c" },
+        "kdr": { colour: "§6" },
+        "bedsBroken": { colour: "§a" },
+        "bedsLost": { colour: "§c" },
+        "bblr": { colour: "§6" },
+        "winstreak": { colour: "§a" },
+        "gamesPlayed": { colour: "§e" },
+        "itemsCollected.iron": { colour: "§7", label: "stats.iron" },
+        "itemsCollected.gold": { colour: "§6", label: "stats.gold" },
+        "itemsCollected.diamond": { colour: "§b", label: "stats.diamonds" },
+        "itemsCollected.emerald": { colour: "§2", label: "stats.emeralds" },
+      },
+    },
+    { modes: ["challenges"], stats: CHALLENGES },
+  ],
+};
