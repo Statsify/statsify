@@ -1,0 +1,9 @@
+{
+  "repo": "https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO",
+  "sha": "5a5e9866a8578c8a36891acc508fc1e46e41eb31",
+  "skills": {
+    "url": "https://api.hypixel.net/v2/resources/skyblock/skills",
+    "version": "0.27.2.21"
+  },
+  "syncedAt": "2026-10-30T22:40:40.442Z"
+}
