@@ -1,0 +1,4797 @@
+{
+  "blitz": {
+    "archer": {
+      "name": "Archer",
+      "level": 3,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "§fArcher's Bow §7(III)"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "262,0",
+          "item": {
+            "id": "minecraft:arrow",
+            "count": 22
+          }
+        },
+        {
+          "slot": 3,
+          "token": "306,0",
+          "item": {
+            "id": "minecraft:iron_helmet",
+            "name": "§fArcher's Iron Helmet §7(III)"
+          }
+        },
+        {
+          "slot": 4,
+          "token": "300,0",
+          "item": {
+            "id": "minecraft:leather_leggings",
+            "color": 65280,
+            "name": "§fArcher's Leather Leggings §7(III)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "301,0",
+          "item": {
+            "id": "minecraft:leather_boots",
+            "color": 65280,
+            "name": "§fArcher's Leather Boots §7(III)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        }
+      ]
+    },
+    "meatmaster": {
+      "name": "Meatmaster",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "383,92",
+          "item": {
+            "id": "minecraft:cow_spawn_egg",
+            "count": 2
+          }
+        },
+        {
+          "slot": 2,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "count": 2
+          }
+        },
+        {
+          "slot": 3,
+          "token": "268,0",
+          "item": {
+            "id": "minecraft:wooden_sword",
+            "name": "§fMeatmaster's Wood Sword §7(I)",
+            "tooltip": [
+              "Looting I",
+              "",
+              "§9+4 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 4,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 16012866,
+            "name": "§fMeatmaster's Leather Helmet §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "301,0",
+          "item": {
+            "id": "minecraft:leather_boots",
+            "color": 16012866,
+            "name": "§fMeatmaster's Leather Boots §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        }
+      ]
+    },
+    "speleologist": {
+      "name": "Speleologist",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "383,96",
+          "item": {
+            "id": "minecraft:mooshroom_spawn_egg"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "281,0",
+          "item": {
+            "id": "minecraft:bowl"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "274,0",
+          "item": {
+            "id": "minecraft:stone_pickaxe",
+            "name": "§fSpeleologist's Stone Pickaxe §7(I)",
+            "tooltip": [
+              "",
+              "§9+3 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 15752027,
+            "name": "§fSpeleologist's Leather Helmet §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "309,0",
+          "item": {
+            "id": "minecraft:iron_boots",
+            "name": "§fSpeleologist's Iron Boots §7(I)"
+          }
+        }
+      ]
+    },
+    "baker": {
+      "name": "Baker",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "268,0",
+          "item": {
+            "id": "minecraft:wooden_sword",
+            "name": "§fBaker's Wood Sword §7(I)",
+            "tooltip": [
+              "",
+              "§9+4 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 2,
+          "token": "297,0",
+          "item": {
+            "id": "minecraft:bread",
+            "count": 2
+          }
+        },
+        {
+          "slot": 3,
+          "token": "354,0",
+          "item": {
+            "id": "minecraft:cake",
+            "name": "§fBaker's Cake §7(I)"
+          }
+        },
+        {
+          "slot": 4,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 15639797,
+            "name": "§fBaker's Leather Helmet §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,16385",
+          "item": {
+            "id": "minecraft:splash_potion",
+            "effects": [
+              {
+                "id": "minecraft:regeneration",
+                "amplifier": 0
+              }
+            ],
+            "tooltip": [
+              "§5§o§7Damage Resistance I (0:10)"
+            ]
+          }
+        }
+      ]
+    },
+    "knight": {
+      "name": "Knight",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "283,0",
+          "item": {
+            "id": "minecraft:golden_sword",
+            "name": "§fKnight's Gold Sword §7(I)",
+            "tooltip": [
+              "",
+              "§9+4 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 2,
+          "token": "314,0",
+          "item": {
+            "id": "minecraft:golden_helmet",
+            "name": "§fKnight's Gold Helmet §7(I)"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "317,0",
+          "item": {
+            "id": "minecraft:golden_boots",
+            "name": "§fKnight's Gold Boots §7(I)"
+          }
+        }
+      ]
+    },
+    "guardian": {
+      "name": "Guardian",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "373,8197",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "tooltip": [
+              "§5§o§7Heal I (0:00)"
+            ]
+          }
+        },
+        {
+          "slot": 2,
+          "token": "271,0",
+          "item": {
+            "id": "minecraft:wooden_axe",
+            "name": "§fGuardian's Wood Axe §7(I)",
+            "tooltip": [
+              "",
+              "§9+3 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "299,0",
+          "item": {
+            "id": "minecraft:leather_chestplate",
+            "color": 1660200,
+            "name": "§fGuardian's Leather Chestplate §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        }
+      ]
+    },
+    "scout": {
+      "name": "Scout",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "373,2",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:speed",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "tooltip": [
+              "§5§o§7Speed II (0:12)"
+            ]
+          }
+        },
+        {
+          "slot": 2,
+          "token": "373,16394",
+          "item": {
+            "id": "minecraft:splash_potion",
+            "effects": [
+              {
+                "id": "minecraft:slowness",
+                "amplifier": 0
+              }
+            ],
+            "tooltip": [
+              "§5§o§7Slow II (0:08)"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "373,24590",
+          "item": {
+            "id": "minecraft:splash_potion",
+            "effects": [
+              {
+                "id": "minecraft:invisibility",
+                "amplifier": 0
+              }
+            ],
+            "tooltip": [
+              "§5§o§7Invisibility II (0:10)"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "299,0",
+          "item": {
+            "id": "minecraft:leather_chestplate",
+            "color": 2302940,
+            "name": "§fScout's Leather Chestplate §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        }
+      ]
+    },
+    "hunter": {
+      "name": "Hunter",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "§fHunter's Bow §7(I)",
+            "tooltip": [
+              "Unbreaking I"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "262,0",
+          "item": {
+            "id": "minecraft:arrow",
+            "count": 8
+          }
+        },
+        {
+          "slot": 3,
+          "token": "271,0",
+          "item": {
+            "id": "minecraft:wooden_axe",
+            "name": "§fHunter's Wood Axe §7(I)",
+            "tooltip": [
+              "",
+              "§9+3 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "299,0",
+          "item": {
+            "id": "minecraft:leather_chestplate",
+            "color": 65535,
+            "name": "§fHunter's Leather Chestplate §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "300,0",
+          "item": {
+            "id": "minecraft:leather_leggings",
+            "color": 65535,
+            "name": "§fHunter's Leather Leggings §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        }
+      ]
+    },
+    "hypetrain": {
+      "name": "Hype Train",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "275,0",
+          "item": {
+            "id": "minecraft:stone_axe",
+            "name": "§fHype Train's Stone Axe §7(I)",
+            "tooltip": [
+              "",
+              "§9+4 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 2,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 32768,
+            "name": "§fHype Train's Leather Helmet §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "328,0",
+          "item": {
+            "id": "minecraft:minecart",
+            "name": "§fHype Train's Minecart §7(I)"
+          }
+        },
+        {
+          "slot": 4,
+          "token": "66,0",
+          "item": {
+            "id": "minecraft:rail",
+            "count": 16
+          }
+        },
+        {
+          "slot": 5,
+          "token": "27,0",
+          "item": {
+            "id": "minecraft:powered_rail",
+            "count": 3
+          }
+        },
+        {
+          "slot": 6,
+          "token": "76,0",
+          "item": {
+            "id": "minecraft:redstone_torch",
+            "count": 3
+          }
+        }
+      ]
+    },
+    "fisherman": {
+      "name": "Fisherman",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "346,0",
+          "item": {
+            "id": "minecraft:fishing_rod",
+            "name": "§fFisherman's Fishing Rod §7(I)",
+            "tooltip": [
+              "Sharpness II",
+              "Unbreaking X"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "350,0",
+          "item": {
+            "id": "minecraft:cooked_cod",
+            "count": 2
+          }
+        },
+        {
+          "slot": 3,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 6403023,
+            "name": "§fFisherman's Leather Helmet §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        }
+      ]
+    },
+    "armorer": {
+      "name": "Armorer",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "357,0",
+          "item": {
+            "id": "minecraft:cookie"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 16753920,
+            "name": "§fArmorer's Leather Helmet §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "299,0",
+          "item": {
+            "id": "minecraft:leather_chestplate",
+            "color": 32768,
+            "name": "§fArmorer's Leather Chestplate §7(I)",
+            "tooltip": [
+              "Protection I",
+              "Blast Protection I",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 4,
+          "token": "300,0",
+          "item": {
+            "id": "minecraft:leather_leggings",
+            "color": 255,
+            "name": "§fArmorer's Leather Leggings §7(I)",
+            "tooltip": [
+              "Protection I",
+              "Fire Protection I",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 5,
+          "token": "301,0",
+          "item": {
+            "id": "minecraft:leather_boots",
+            "color": 8421504,
+            "name": "§fArmorer's Leather Boots §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        }
+      ]
+    },
+    "astronaut": {
+      "name": "Astronaut",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "373,1",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:regeneration",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "tooltip": [
+              "§5§o§7Damage Resistance I (0:08)"
+            ]
+          }
+        },
+        {
+          "slot": 2,
+          "token": "305,0",
+          "item": {
+            "id": "minecraft:chainmail_boots",
+            "name": "§fAstronaut's Chainmail Boots §7(I)",
+            "tooltip": [
+              "Feather Falling III"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 3,
+          "token": "271,0",
+          "item": {
+            "id": "minecraft:wooden_axe",
+            "name": "§fAstronaut's Wood Axe §7(I)",
+            "tooltip": [
+              "",
+              "§9+3 Attack Damage"
+            ]
+          }
+        }
+      ]
+    },
+    "troll": {
+      "name": "Troll",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "383,98",
+          "item": {
+            "id": "minecraft:ocelot_spawn_egg"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "280,0",
+          "item": {
+            "id": "minecraft:stick",
+            "tooltip": [
+              "Sharpness II",
+              "Smite II",
+              "Bane of Arthropods II"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 3,
+          "token": "299,0",
+          "item": {
+            "id": "minecraft:leather_chestplate",
+            "color": 16716947,
+            "name": "§fTroll's Leather Chestplate §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "332,0",
+          "item": {
+            "id": "minecraft:snowball",
+            "count": 32
+          }
+        }
+      ]
+    },
+    "reaper": {
+      "name": "Reaper",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "290,0",
+          "item": {
+            "id": "minecraft:wooden_hoe",
+            "name": "§fReaper's Wood Scythe §7(I)",
+            "tooltip": [
+              "Sharpness II"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 0,
+            "name": "§fReaper's Leather Helmet §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "300,0",
+          "item": {
+            "id": "minecraft:leather_leggings",
+            "color": 0,
+            "name": "§fReaper's Leather Leggings §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "373,16392",
+          "item": {
+            "id": "minecraft:splash_potion",
+            "effects": [
+              {
+                "id": "minecraft:weakness",
+                "amplifier": 0
+              }
+            ],
+            "tooltip": [
+              "§5§o§7Wither III (0:04)"
+            ]
+          }
+        }
+      ]
+    },
+    "shark": {
+      "name": "Shark",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "370,0",
+          "item": {
+            "id": "minecraft:ghast_tear",
+            "name": "§fShark Tooth",
+            "tooltip": [
+              "Sharpness II"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "397,3",
+          "item": {
+            "id": "minecraft:player_head",
+            "name": "§fShark's Head",
+            "tooltip": [
+              "Protection I",
+              "Depth Strider I",
+              "Respiration X"
+            ],
+            "enchanted": true,
+            "skin": "https://textures.minecraft.net/texture/51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "373,1",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:regeneration",
+                "amplifier": 0
+              }
+            ],
+            "tooltip": [
+              "§5§o§7Saturation I (20:00)"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "299,0",
+          "item": {
+            "id": "minecraft:leather_chestplate",
+            "color": 12632256,
+            "name": "§fShark's Leather Chestplate §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        }
+      ]
+    },
+    "reddragon": {
+      "name": "RedDragon",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "383,62",
+          "item": {
+            "id": "minecraft:magma_cube_spawn_egg"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "373,16387",
+          "item": {
+            "id": "minecraft:splash_potion",
+            "effects": [
+              {
+                "id": "minecraft:fire_resistance",
+                "amplifier": 0
+              }
+            ],
+            "tooltip": [
+              "§5§o§7Fire Resistance II (0:17)"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "271,0",
+          "item": {
+            "id": "minecraft:wooden_axe",
+            "name": "§fRedDragon's Wood Axe §7(I)",
+            "tooltip": [
+              "",
+              "§9+3 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 16711680,
+            "name": "§fRedDragon's Leather Helmet §7(I)",
+            "tooltip": [
+              "Fire Protection III",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 5,
+          "token": "299,0",
+          "item": {
+            "id": "minecraft:leather_chestplate",
+            "color": 16711680,
+            "name": "§fRedDragon's Leather Chestplate §7(I)",
+            "tooltip": [
+              "Fire Protection III",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        }
+      ]
+    },
+    "slimeyslime": {
+      "name": "SlimeySlime",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "383,55",
+          "item": {
+            "id": "minecraft:slime_spawn_egg"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "373,16394",
+          "item": {
+            "id": "minecraft:splash_potion",
+            "effects": [
+              {
+                "id": "minecraft:slowness",
+                "amplifier": 0
+              }
+            ],
+            "tooltip": [
+              "§5§o§7Slow II (0:06)"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "302,0",
+          "item": {
+            "id": "minecraft:chainmail_helmet",
+            "name": "§fSlimeySlime's Chainmail Helmet §7(I)",
+            "tooltip": [
+              "Projectile Protection IV"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 4,
+          "token": "275,0",
+          "item": {
+            "id": "minecraft:stone_axe",
+            "name": "§fSlimeySlime's Stone Axe §7(I)",
+            "tooltip": [
+              "Knockback I",
+              "",
+              "§9+4 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        }
+      ]
+    },
+    "golem": {
+      "name": "Golem",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "271,0",
+          "item": {
+            "id": "minecraft:wooden_axe",
+            "name": "§fGolem's Wood Axe §7(I)",
+            "tooltip": [
+              "",
+              "§9+3 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 2,
+          "token": "299,0",
+          "item": {
+            "id": "minecraft:leather_chestplate",
+            "color": 6909294,
+            "name": "§fGolem's Leather Chestplate §7(I)",
+            "tooltip": [
+              "Unbreaking III",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 3,
+          "token": "301,0",
+          "item": {
+            "id": "minecraft:leather_boots",
+            "color": 6909294,
+            "name": "§fGolem's Leather Boots §7(I)",
+            "tooltip": [
+              "Unbreaking III",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        }
+      ]
+    },
+    "viking": {
+      "name": "Viking",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "271,0",
+          "item": {
+            "id": "minecraft:wooden_axe",
+            "name": "§fViking's Wood Axe §7(I)",
+            "tooltip": [
+              "",
+              "§9+3 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 2,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 3875072,
+            "name": "§fViking's Leather Helmet §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "299,0",
+          "item": {
+            "id": "minecraft:leather_chestplate",
+            "color": 3875072,
+            "name": "§fViking's Leather Chestplate §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "301,0",
+          "item": {
+            "id": "minecraft:leather_boots",
+            "color": 3875072,
+            "name": "§fViking's Leather Boots §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "333,0",
+          "item": {
+            "id": "minecraft:oak_boat",
+            "name": "§fViking's Boat §7(I)"
+          }
+        },
+        {
+          "slot": 6,
+          "token": "350,0",
+          "item": {
+            "id": "minecraft:cooked_cod",
+            "count": 2
+          }
+        }
+      ]
+    },
+    "shadowknight": {
+      "name": "Shadow Knight",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "397,1",
+          "item": {
+            "id": "minecraft:wither_skeleton_skull",
+            "name": "§fShadow Knight's Helmet",
+            "tooltip": [
+              "Protection I",
+              "Feather Falling I"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "271,0",
+          "item": {
+            "id": "minecraft:wooden_axe",
+            "name": "§fShadow Knight's Wood Axe §7(I)",
+            "tooltip": [
+              "",
+              "§9+3 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "300,0",
+          "item": {
+            "id": "minecraft:leather_leggings",
+            "color": 3947580,
+            "name": "§fShadow Knight's Leather Leggings §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "301,0",
+          "item": {
+            "id": "minecraft:leather_boots",
+            "color": 3947580,
+            "name": "§fShadow Knight's Leather Boots §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        }
+      ]
+    },
+    "pigman": {
+      "name": "Pigman",
+      "level": 10,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "383,57",
+          "item": {
+            "id": "minecraft:zombified_piglin_spawn_egg"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "373,16396",
+          "item": {
+            "id": "minecraft:splash_potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_damage",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "tooltip": [
+              "§5§o§7Harm I (0:01)"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "283,0",
+          "item": {
+            "id": "minecraft:golden_sword",
+            "name": "§fPigman's Gold Sword §7(X)",
+            "tooltip": [
+              "Sharpness II",
+              "Unbreaking X",
+              "",
+              "§9+6.5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 4,
+          "token": "314,0",
+          "item": {
+            "id": "minecraft:golden_helmet",
+            "name": "§fPigman's Gold Helmet §7(X)",
+            "tooltip": [
+              "Protection II",
+              "Unbreaking I"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 5,
+          "token": "299,0",
+          "item": {
+            "id": "minecraft:leather_chestplate",
+            "color": 16776960,
+            "name": "§fPigman's Leather Chestplate §7(X)",
+            "tooltip": [
+              "Fire Protection III",
+              "Unbreaking I",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 6,
+          "token": "300,0",
+          "item": {
+            "id": "minecraft:leather_leggings",
+            "color": 16776960,
+            "name": "§fPigman's Leather Leggings §7(X)",
+            "tooltip": [
+              "Unbreaking I",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 7,
+          "token": "317,0",
+          "item": {
+            "id": "minecraft:golden_boots",
+            "name": "§fPigman's Gold Boots §7(X)",
+            "tooltip": [
+              "Protection I",
+              "Unbreaking I"
+            ],
+            "enchanted": true
+          }
+        }
+      ],
+      "saved": true
+    },
+    "paladin": {
+      "name": "Paladin",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "373,16389",
+          "item": {
+            "id": "minecraft:splash_potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "tooltip": [
+              "§5§o§7Heal I (0:00)"
+            ]
+          }
+        },
+        {
+          "slot": 2,
+          "token": "268,0",
+          "item": {
+            "id": "minecraft:wooden_sword",
+            "name": "§fPaladin's Wood Sword §7(I)",
+            "tooltip": [
+              "",
+              "§9+4 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 13050413,
+            "name": "§fPaladin's Leather Helmet §7(I)",
+            "tooltip": [
+              "Unbreaking I",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 4,
+          "token": "299,0",
+          "item": {
+            "id": "minecraft:leather_chestplate",
+            "color": 13050413,
+            "name": "§fPaladin's Leather Chestplate §7(I)",
+            "tooltip": [
+              "Unbreaking I",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        }
+      ]
+    },
+    "necromancer": {
+      "name": "Necromancer",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "383,54",
+          "item": {
+            "id": "minecraft:zombie_spawn_egg"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "302,0",
+          "item": {
+            "id": "minecraft:chainmail_helmet",
+            "name": "§fNecromancer's Chainmail Helmet §7(I)"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "305,0",
+          "item": {
+            "id": "minecraft:chainmail_boots",
+            "name": "§fNecromancer's Chainmail Boots §7(I)"
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,375",
+          "item": {
+            "id": "minecraft:bow",
+            "damage": 375,
+            "name": "§fNecromancer's Bow §7(I)",
+            "tooltip": [
+              "Punch I"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 5,
+          "token": "262,0",
+          "item": {
+            "id": "minecraft:arrow",
+            "count": 10
+          }
+        }
+      ]
+    },
+    "florist": {
+      "name": "Florist",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "38,0",
+          "item": {
+            "id": "minecraft:poppy",
+            "tooltip": [
+              "Knockback I"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "271,0",
+          "item": {
+            "id": "minecraft:wooden_axe",
+            "name": "§fFlorist's Wood Axe §7(I)",
+            "tooltip": [
+              "Thorns I",
+              "",
+              "§9+3 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 3,
+          "token": "360,0",
+          "item": {
+            "id": "minecraft:melon_slice",
+            "count": 4
+          }
+        },
+        {
+          "slot": 4,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 16056320,
+            "name": "§fFlorist's Leather Helmet §7(I)",
+            "tooltip": [
+              "Unbreaking X",
+              "Thorns I",
+              "§oDyed",
+              "§9Unbreakable"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 5,
+          "token": "301,0",
+          "item": {
+            "id": "minecraft:leather_boots",
+            "color": 9563009,
+            "name": "§fFlorist's Leather Boots §7(I)",
+            "tooltip": [
+              "Unbreaking X",
+              "Thorns I",
+              "§oDyed",
+              "§9Unbreakable"
+            ],
+            "enchanted": true
+          }
+        }
+      ]
+    },
+    "diver": {
+      "name": "Diver",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 0,
+            "name": "§fDiver's Leather Helmet §7(I)",
+            "tooltip": [
+              "Respiration I",
+              "Aqua Affinity I",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "301,0",
+          "item": {
+            "id": "minecraft:leather_boots",
+            "color": 0,
+            "name": "§fDiver's Leather Boots §7(I)",
+            "tooltip": [
+              "Depth Strider I",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 3,
+          "token": "271,0",
+          "item": {
+            "id": "minecraft:wooden_axe",
+            "name": "§fDiver's Wood Axe §7(I)",
+            "tooltip": [
+              "",
+              "§9+3 Attack Damage"
+            ]
+          }
+        }
+      ]
+    },
+    "arachnologist": {
+      "name": "Arachnologist",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "298,0",
+          "item": {
+            "id": "minecraft:leather_helmet",
+            "color": 8421504,
+            "name": "§fArachnologist's Leather Helmet §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 2,
+          "token": "300,0",
+          "item": {
+            "id": "minecraft:leather_leggings",
+            "color": 8421504,
+            "name": "§fArachnologist's Leather Leggings §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "301,0",
+          "item": {
+            "id": "minecraft:leather_boots",
+            "color": 8421504,
+            "name": "§fArachnologist's Leather Boots §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "271,0",
+          "item": {
+            "id": "minecraft:wooden_axe",
+            "name": "§fArachnologist's Wood Axe §7(I)",
+            "tooltip": [
+              "",
+              "§9+3 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "383,52",
+          "item": {
+            "id": "minecraft:spider_spawn_egg"
+          }
+        }
+      ]
+    },
+    "blaze": {
+      "name": "Blaze",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "383,61",
+          "item": {
+            "id": "minecraft:blaze_spawn_egg"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "275,132",
+          "item": {
+            "id": "minecraft:stone_axe",
+            "damage": 132,
+            "name": "§fBlaze's Stone Axe §7(I)",
+            "tooltip": [
+              "Fire Aspect I",
+              "",
+              "§9+4 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 3,
+          "token": "268,0",
+          "item": {
+            "id": "minecraft:wooden_sword",
+            "name": "§fBlaze's Wood Sword §7(I)",
+            "tooltip": [
+              "",
+              "§9+4 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "301,0",
+          "item": {
+            "id": "minecraft:leather_boots",
+            "color": 16753920,
+            "name": "§fBlaze's Leather Boots §7(I)",
+            "tooltip": [
+              "Fire Protection II",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        }
+      ]
+    },
+    "wolftamer": {
+      "name": "Wolftamer",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "383,95",
+          "item": {
+            "id": "minecraft:wolf_spawn_egg"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "367,0",
+          "item": {
+            "id": "minecraft:rotten_flesh",
+            "count": 10
+          }
+        },
+        {
+          "slot": 3,
+          "token": "305,0",
+          "item": {
+            "id": "minecraft:chainmail_boots",
+            "name": "§fWolftamer's Chainmail Boots §7(I)"
+          }
+        },
+        {
+          "slot": 4,
+          "token": "271,0",
+          "item": {
+            "id": "minecraft:wooden_axe",
+            "name": "§fWolftamer's Wood Axe §7(I)",
+            "tooltip": [
+              "",
+              "§9+3 Attack Damage"
+            ]
+          }
+        }
+      ]
+    },
+    "tim": {
+      "name": "Tim",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "384,0",
+          "item": {
+            "id": "minecraft:experience_bottle",
+            "count": 3
+          }
+        },
+        {
+          "slot": 2,
+          "token": "300,0",
+          "item": {
+            "id": "minecraft:leather_leggings",
+            "color": 718130,
+            "name": "§fTim's Leather Leggings §7(I)",
+            "tooltip": [
+              "§oDyed"
+            ]
+          }
+        },
+        {
+          "slot": 3,
+          "token": "268,0",
+          "item": {
+            "id": "minecraft:wooden_sword",
+            "name": "§fTim's Wood Sword §7(I)",
+            "tooltip": [
+              "",
+              "§9+4 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "260,0",
+          "item": {
+            "id": "minecraft:apple",
+            "count": 2
+          }
+        }
+      ]
+    },
+    "farmer": {
+      "name": "Farmer",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "383,93",
+          "item": {
+            "id": "minecraft:chicken_spawn_egg"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "344,0",
+          "item": {
+            "id": "minecraft:egg",
+            "count": 3
+          }
+        },
+        {
+          "slot": 3,
+          "token": "305,0",
+          "item": {
+            "id": "minecraft:chainmail_boots",
+            "name": "§fFarmer's Chainmail Boots §7(I)"
+          }
+        },
+        {
+          "slot": 4,
+          "token": "268,0",
+          "item": {
+            "id": "minecraft:wooden_sword",
+            "name": "§fFarmer's Wood Sword §7(I)",
+            "tooltip": [
+              "",
+              "§9+4 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "366,0",
+          "item": {
+            "id": "minecraft:cooked_chicken",
+            "count": 4
+          }
+        }
+      ]
+    },
+    "creepertamer": {
+      "name": "Creepertamer",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "383,50",
+          "item": {
+            "id": "minecraft:creeper_spawn_egg"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "315,0",
+          "item": {
+            "id": "minecraft:golden_chestplate",
+            "name": "§fCreepertamer's Gold Chestplate §7(I)",
+            "tooltip": [
+              "Blast Protection II"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 3,
+          "token": "271,0",
+          "item": {
+            "id": "minecraft:wooden_axe",
+            "name": "§fCreepertamer's Wood Axe §7(I)",
+            "tooltip": [
+              "",
+              "§9+3 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "46,0",
+          "item": {
+            "id": "minecraft:tnt"
+          }
+        }
+      ]
+    },
+    "phoenix": {
+      "name": "Phoenix",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fTracking Device"
+          }
+        },
+        {
+          "slot": 1,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "§fPhoenix's Bow §7(I)"
+          }
+        },
+        {
+          "slot": 2,
+          "token": "314,0",
+          "item": {
+            "id": "minecraft:golden_helmet",
+            "name": "§fPhoenix's Gold Helmet §7(I)"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "299,0",
+          "item": {
+            "id": "minecraft:leather_chestplate",
+            "color": 16033602,
+            "name": "§fPhoenix's Leather Chestplate §7(I)",
+            "tooltip": [
+              "Unbreaking I",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 4,
+          "token": "300,0",
+          "item": {
+            "id": "minecraft:leather_leggings",
+            "color": 16033602,
+            "name": "§fPhoenix's Leather Leggings §7(I)",
+            "tooltip": [
+              "Unbreaking I",
+              "§oDyed"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 5,
+          "token": "317,0",
+          "item": {
+            "id": "minecraft:golden_boots",
+            "name": "§fPhoenix's Gold Boots §7(I)"
+          }
+        },
+        {
+          "slot": 6,
+          "token": "262,0",
+          "item": {
+            "id": "minecraft:arrow",
+            "count": 3
+          }
+        }
+      ]
+    }
+  },
+  "megawalls": {
+    "cow": {
+      "name": "Cow",
+      "level": 5,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§dCow Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§dCow Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§dCow Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Cow Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Cow Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Cow Potion of Health (10 Hearts)",
+            "tooltip": [
+              "§7Instant Health"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "373,2",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:speed",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "name": "Cow Potion of Speed II (0:15s)",
+            "tooltip": [
+              "§7Speed II (0:15)",
+              "",
+              "§5When Applied:",
+              "§9+40% Speed"
+            ]
+          }
+        },
+        {
+          "slot": 7,
+          "token": "335,0",
+          "item": {
+            "id": "minecraft:milk_bucket",
+            "count": 3,
+            "name": "Cow Milk Buckets of Regeneration II (2 Hearts / 0:05s) & Resistance I (0:05s)"
+          }
+        },
+        {
+          "slot": 8,
+          "token": "297,0",
+          "item": {
+            "id": "minecraft:bread",
+            "count": 6,
+            "name": "Cow Bread"
+          }
+        }
+      ],
+      "armor": {
+        "38": {
+          "id": "minecraft:diamond_chestplate",
+          "enchanted": true
+        }
+      }
+    },
+    "hunter": {
+      "name": "Hunter",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§aHunter Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§aHunter Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§aHunter Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Hunter Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Hunter Bow",
+            "tooltip": [
+              "Infinity I",
+              "§9Unbreakable"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 5,
+          "token": "322,0",
+          "item": {
+            "id": "minecraft:golden_apple",
+            "name": "Hunter Golden Apple (3 Hearts + 2 Temp Hearts)"
+          }
+        },
+        {
+          "slot": 6,
+          "token": "262,0",
+          "item": {
+            "id": "minecraft:arrow",
+            "name": "Hunter Arrow"
+          }
+        },
+        {
+          "slot": 7,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Hunter Steak"
+          }
+        },
+        {
+          "slot": 8,
+          "token": "398,0",
+          "item": {
+            "id": "minecraft:carrot_on_a_stick",
+            "name": "Hunter's Pig Lure (Spawns Pig)",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        }
+      ],
+      "armor": {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      }
+    },
+    "shark": {
+      "name": "Shark",
+      "level": 5,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§3Shark Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§3Shark Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§3Shark Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "276,0",
+          "item": {
+            "id": "minecraft:diamond_sword",
+            "name": "Shark Sword",
+            "tooltip": [
+              "",
+              "§9+7 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Shark Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "name": "Shark Potion of Health (8 Hearts)",
+            "tooltip": [
+              "§7Instant Health III"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "373,2",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:speed",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "name": "Shark Potion of Speed II (0:15s)",
+            "tooltip": [
+              "§7Speed II (0:15)",
+              "",
+              "§5When Applied:",
+              "§9+40% Speed"
+            ]
+          }
+        },
+        {
+          "slot": 7,
+          "token": "350,0",
+          "item": {
+            "id": "minecraft:cooked_cod",
+            "count": 6,
+            "name": "Shark Food"
+          }
+        }
+      ],
+      "armor": {
+        "36": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      }
+    },
+    "arcanist": {
+      "name": "Arcanist",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§cArcanist Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§cArcanist Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§cArcanist Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Arcanist Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Arcane Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Arcanist Potion of Health (8 Hearts)",
+            "tooltip": [
+              "§7Instant Health III"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Arcanist Steak"
+          }
+        }
+      ],
+      "armor": {
+        "37": {
+          "id": "minecraft:iron_leggings",
+          "enchanted": true
+        }
+      }
+    },
+    "dreadlord": {
+      "name": "Dreadlord",
+      "level": 5,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§4Dreadlord Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§4Dreadlord Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§4Dreadlord Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "276,0",
+          "item": {
+            "id": "minecraft:diamond_sword",
+            "name": "Dreadlord Sword",
+            "tooltip": [
+              "Smite I",
+              "",
+              "§9+7 Attack Damage",
+              "§9Unbreakable"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Dreadlord Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "name": "Dreadlord Potion of Health (8 Hearts)",
+            "tooltip": [
+              "§7Instant Health III"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "373,2",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:speed",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "name": "Dreadlord Potion of Speed II (0:15s)",
+            "tooltip": [
+              "§7Speed II (0:15)",
+              "",
+              "§5When Applied:",
+              "§9+40% Speed"
+            ]
+          }
+        },
+        {
+          "slot": 7,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "count": 3,
+            "name": "Dreadlord Steak"
+          }
+        }
+      ],
+      "armor": {
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      }
+    },
+    "golem": {
+      "name": "Golem",
+      "level": 5,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§bGolem Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§bGolem Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§bGolem Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Golem Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Golem Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,1",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:regeneration",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "name": "Golem Potion of Regeneration III (10 Hearts / 0:12s)",
+            "tooltip": [
+              "§7Regeneration III (0:12)"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "373,16394",
+          "item": {
+            "id": "minecraft:splash_potion",
+            "effects": [
+              {
+                "id": "minecraft:slowness",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "name": "Golem Splash Potion of Weakness IV and Slowness I (0:07s)",
+            "tooltip": [
+              "§cSlowness (0:07)",
+              "§cWeakness IV (0:07)",
+              "",
+              "§5When Applied:",
+              "§c-15% Speed",
+              "§c-2 Attack Damage"
+            ]
+          }
+        },
+        {
+          "slot": 7,
+          "token": "258,0",
+          "item": {
+            "id": "minecraft:iron_axe",
+            "name": "Golem Axe",
+            "tooltip": [
+              "Efficiency I",
+              "",
+              "§9+5 Attack Damage",
+              "§9Unbreakable"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 8,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "count": 3,
+            "name": "Golem Steak"
+          }
+        }
+      ],
+      "armor": {
+        "36": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:diamond_chestplate",
+          "enchanted": true
+        }
+      }
+    },
+    "herobrine": {
+      "name": "Herobrine",
+      "level": 5,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§eHerobrine Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§eHerobrine Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§eHerobrine Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "276,0",
+          "item": {
+            "id": "minecraft:diamond_sword",
+            "name": "Herobrine Sword",
+            "tooltip": [
+              "",
+              "§9+7 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Herobrine Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "name": "Herobrine Potion of Health (7 Hearts)",
+            "tooltip": [
+              "§7Instant Health",
+              "§7Regeneration potion.potency.4"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "373,2",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:speed",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "name": "Herobrine Potion of Speed II (0:15s)",
+            "tooltip": [
+              "§7Speed II (0:15)",
+              "",
+              "§5When Applied:",
+              "§9+40% Speed"
+            ]
+          }
+        },
+        {
+          "slot": 7,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "count": 3,
+            "name": "Herobrine Steak"
+          }
+        }
+      ],
+      "armor": {
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      }
+    },
+    "pigman": {
+      "name": "Pigman",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§dPigman Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§dPigman Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§dPigman Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Pigman Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Pigman Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Pigman Potion of Health (6 Hearts)",
+            "tooltip": [
+              "§7Instant Health"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Pigman Steak"
+          }
+        }
+      ],
+      "armor": {
+        "38": {
+          "id": "minecraft:iron_chestplate"
+        }
+      }
+    },
+    "zombie": {
+      "name": "Zombie",
+      "level": 5,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§2Zombie Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§2Zombie Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§2Zombie Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Zombie Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Zombie Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Zombie Potion of Health (10 Hearts)",
+            "tooltip": [
+              "§7Instant Health"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "373,2",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:speed",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "name": "Zombie Potion of Speed II (0:15s)",
+            "tooltip": [
+              "§7Speed II (0:15)",
+              "",
+              "§5When Applied:",
+              "§9+40% Speed"
+            ]
+          }
+        },
+        {
+          "slot": 7,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "count": 3,
+            "name": "Zombie Steak"
+          }
+        }
+      ],
+      "armor": {
+        "38": {
+          "id": "minecraft:diamond_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      }
+    },
+    "blaze": {
+      "name": "Blaze",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§cBlaze Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§cBlaze Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§cBlaze Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Blaze Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Blaze Bow",
+            "tooltip": [
+              "Power I",
+              "§9Unbreakable"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Blaze Potion of Health (8 Hearts)",
+            "tooltip": [
+              "§7Instant Health III"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "262,0",
+          "item": {
+            "id": "minecraft:arrow",
+            "count": 32,
+            "name": "Blaze Arrow"
+          }
+        },
+        {
+          "slot": 7,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Blaze Steak"
+          }
+        }
+      ],
+      "armor": {
+        "37": {
+          "id": "minecraft:iron_leggings",
+          "enchanted": true
+        }
+      }
+    },
+    "enderman": {
+      "name": "Enderman",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§5Enderman Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§5Enderman Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§5Enderman Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Enderman Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Enderman Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Enderman Potion of Health (8 Hearts)",
+            "tooltip": [
+              "§7Instant Health III"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Enderman Steak"
+          }
+        }
+      ],
+      "armor": {
+        "36": {
+          "id": "minecraft:iron_boots"
+        }
+      }
+    },
+    "shaman": {
+      "name": "Shaman",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§aShaman Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§aShaman Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§aShaman Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Shaman Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Shaman Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Shaman Potion of Health (8 Hearts)",
+            "tooltip": [
+              "§7Instant Health III"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Shaman Steak"
+          }
+        }
+      ],
+      "armor": {
+        "36": {
+          "id": "minecraft:iron_boots"
+        }
+      }
+    },
+    "squid": {
+      "name": "Squid",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§9Squid Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§9Squid Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§9Squid Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Squid Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Squid Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Squid Potion of Health (6 Hearts)",
+            "tooltip": [
+              "§7Instant Health"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "350,1",
+          "item": {
+            "id": "minecraft:cooked_salmon",
+            "count": 2,
+            "name": "Squid Sushi"
+          }
+        }
+      ],
+      "armor": {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        }
+      }
+    },
+    "creeper": {
+      "name": "Creeper",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§aCreeper Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§aCreeper Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§aCreeper Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Creeper Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Creeper Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Creeper Potion of Health (8 Hearts)",
+            "tooltip": [
+              "§7Instant Health III"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Creeper Steak"
+          }
+        },
+        {
+          "slot": 7,
+          "token": "46,0",
+          "item": {
+            "id": "minecraft:tnt",
+            "name": "Creeper TNT"
+          }
+        }
+      ],
+      "armor": {
+        "37": {
+          "id": "minecraft:iron_leggings",
+          "enchanted": true
+        }
+      }
+    },
+    "pirate": {
+      "name": "Pirate",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§6Pirate Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§6Pirate Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§6Pirate Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Pirate Cutlass",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Pirate Shortbow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,1",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:regeneration",
+                "amplifier": 0
+              }
+            ],
+            "name": "Pirate Rum of Regeneration III & Absorption I (2.5 Hearts / 0:03s + 2 Temp Hearts)",
+            "tooltip": [
+              "§7Regeneration III (0:03)",
+              "§7Absorption (0:03)"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Pirate Steak"
+          }
+        }
+      ],
+      "armor": {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      }
+    },
+    "sheep": {
+      "name": "Sheep",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§fSheep Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§fSheep Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§fSheep Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Sheep Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Sheep Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "359,0",
+          "item": {
+            "id": "minecraft:shears",
+            "name": "Sheep Shears",
+            "tooltip": [
+              "Efficiency V",
+              "§9Unbreakable"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 6,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Sheep Potion of Health (6 Hearts)",
+            "tooltip": [
+              "§7Instant Health II"
+            ]
+          }
+        },
+        {
+          "slot": 7,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Sheep Steak"
+          }
+        }
+      ],
+      "armor": {
+        "37": {
+          "id": "minecraft:iron_leggings"
+        }
+      }
+    },
+    "skeleton": {
+      "name": "Skeleton",
+      "level": 5,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§bSkeleton Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§bSkeleton Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§bSkeleton Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Skeleton Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Skeleton Bow",
+            "tooltip": [
+              "Power III",
+              "§9Unbreakable"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "name": "Skeleton Potion of Health (8 Hearts)",
+            "tooltip": [
+              "§7Instant Health III"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "373,2",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:speed",
+                "amplifier": 0
+              }
+            ],
+            "count": 2,
+            "name": "Skeleton Potion of Speed II (0:15s)",
+            "tooltip": [
+              "§7Speed II (0:15)",
+              "",
+              "§5When Applied:",
+              "§9+40% Speed"
+            ]
+          }
+        },
+        {
+          "slot": 7,
+          "token": "258,0",
+          "item": {
+            "id": "minecraft:iron_axe",
+            "name": "Skeleton Axe",
+            "tooltip": [
+              "Efficiency I",
+              "",
+              "§9+5 Attack Damage",
+              "§9Unbreakable"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 8,
+          "token": "262,0",
+          "item": {
+            "id": "minecraft:arrow",
+            "count": 64,
+            "name": "Skeleton Arrow"
+          }
+        },
+        {
+          "slot": 9,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "count": 3,
+            "name": "Skeleton Steak"
+          }
+        }
+      ],
+      "armor": {
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      }
+    },
+    "spider": {
+      "name": "Spider",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§5Spider Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§5Spider Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§5Spider Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Spider Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Spider Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Spider Potion of Health (8 Hearts)",
+            "tooltip": [
+              "§7Instant Health III"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "256,0",
+          "item": {
+            "id": "minecraft:iron_shovel",
+            "name": "Spider Shovel",
+            "tooltip": [
+              "Efficiency I",
+              "",
+              "§9+3 Attack Damage",
+              "§9Unbreakable"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 7,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Spider Steak"
+          }
+        }
+      ],
+      "armor": {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        }
+      }
+    },
+    "werewolf": {
+      "name": "Werewolf",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§2Werewolf Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§2Werewolf Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§2Werewolf Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Werewolf Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Werewolf Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Werewolf Potion of Health (6 Hearts)",
+            "tooltip": [
+              "§7Instant Health"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "373,2",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:speed",
+                "amplifier": 0
+              }
+            ],
+            "name": "Werewolf Moonshine of Speed II (0:15s) and Jump Boost V (0:05s)",
+            "tooltip": [
+              "§7Speed II (0:15)",
+              "§7Jump Boost potion.potency.4 (0:05)",
+              "",
+              "§5When Applied:",
+              "§9+40% Speed"
+            ]
+          }
+        },
+        {
+          "slot": 7,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Werewolf Steak"
+          }
+        }
+      ],
+      "armor": {
+        "38": {
+          "id": "minecraft:iron_chestplate"
+        }
+      }
+    },
+    "automaton": {
+      "name": "Automaton",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§eAutomaton Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§eAutomaton Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§eAutomaton Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Automaton Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Automaton Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Automaton Gasoline Can (6.5 Hearts)",
+            "tooltip": [
+              "§7Instant Health",
+              "§7Regeneration potion.potency.4"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Automaton Steak"
+          }
+        }
+      ],
+      "armor": {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:iron_leggings",
+          "enchanted": true
+        }
+      }
+    },
+    "moleman": {
+      "name": "Moleman",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§eMoleman Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§eMoleman Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§eMoleman Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "256,0",
+          "item": {
+            "id": "minecraft:iron_shovel",
+            "name": "Moleman Shovel",
+            "tooltip": [
+              "Efficiency I",
+              "Sharpness III",
+              "",
+              "§9+6.75 Attack Damage",
+              "§9Unbreakable"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Moleman Bow",
+            "tooltip": [
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Moleman Potion of Health (3 Hearts)",
+            "tooltip": [
+              "§7Instant Health",
+              "§7Regeneration potion.potency.4"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "364,0",
+          "item": {
+            "id": "minecraft:cooked_beef",
+            "name": "Moleman Steak"
+          }
+        }
+      ],
+      "armor": {
+        "37": {
+          "id": "minecraft:iron_leggings",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      }
+    },
+    "phoenix": {
+      "name": "Phoenix",
+      "level": 1,
+      "items": [
+        {
+          "slot": 0,
+          "token": "345,0",
+          "item": {
+            "id": "minecraft:compass",
+            "name": "§cPhoenix Compass",
+            "tooltip": [
+              "§5§o§7Multi-function tracking tool",
+              "§5§o",
+              "§5§o§7Above hotbar: Right-click to switch team",
+              "§5§o",
+              "§5§o§7Top of screen:",
+              "§5§o §cx §7= enemy, §cʌ§7/§cv §7= higher/lower",
+              "§5§o §aallies §7in green",
+              "§5§o",
+              "§5§o§7§7Cannot track enemies if their wither has died and it is",
+              "§5§o§7before Deathmatch, unless they are in your own base. All",
+              "§5§o§7enemies and allies are shown during Deathmatch.",
+              "§5§o",
+              "§5§o§6Right-click to change tracked teams.",
+              "§5§o§6Left-click while tracking your own team to track individual teammates.",
+              "§5§o§6Sneak Left-click while tracking teammates to restore tracking behavior."
+            ]
+          }
+        },
+        {
+          "slot": 1,
+          "token": "278,0",
+          "item": {
+            "id": "minecraft:diamond_pickaxe",
+            "name": "§cPhoenix Pickaxe",
+            "tooltip": [
+              "Efficiency III",
+              "Unbreaking III",
+              "",
+              "§9+5 Attack Damage"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 2,
+          "token": "130,0",
+          "item": {
+            "id": "minecraft:ender_chest",
+            "name": "§cPhoenix Ender Chest"
+          }
+        },
+        {
+          "slot": 3,
+          "token": "267,0",
+          "item": {
+            "id": "minecraft:iron_sword",
+            "name": "Phoenix Sword",
+            "tooltip": [
+              "",
+              "§9+6 Attack Damage",
+              "§9Unbreakable"
+            ]
+          }
+        },
+        {
+          "slot": 4,
+          "token": "261,0",
+          "item": {
+            "id": "minecraft:bow",
+            "name": "Phoenix Bow",
+            "tooltip": [
+              "Infinity I",
+              "§9Unbreakable"
+            ],
+            "enchanted": true
+          }
+        },
+        {
+          "slot": 5,
+          "token": "373,5",
+          "item": {
+            "id": "minecraft:potion",
+            "effects": [
+              {
+                "id": "minecraft:instant_health",
+                "amplifier": 0
+              }
+            ],
+            "name": "Phoenix Potion of Health (8 Hearts)",
+            "tooltip": [
+              "§7Instant Health III"
+            ]
+          }
+        },
+        {
+          "slot": 6,
+          "token": "262,0",
+          "item": {
+            "id": "minecraft:arrow",
+            "name": "Phoenix Arrow"
+          }
+        },
+        {
+          "slot": 7,
+          "token": "350,1",
+          "item": {
+            "id": "minecraft:cooked_salmon",
+            "count": 2,
+            "name": "Phoenix Smoked Salmon"
+          }
+        }
+      ],
+      "armor": {
+        "37": {
+          "id": "minecraft:iron_leggings"
+        },
+        "38": {
+          "id": "minecraft:iron_chestplate"
+        }
+      }
+    }
+  }
+}

@@ -12,6 +12,7 @@ import type { ItemStack } from "./item-stack.js";
 const items: Record<string, string | undefined> = data.items;
 const durability: Record<string, number | undefined> = data.durability;
 const effects: Record<string, string | undefined> = data.effects;
+const materials: Record<string, number | undefined> = data.materials;
 const names: Record<string, string | undefined> = data.legacyNames;
 
 const POTION = 373;
@@ -23,7 +24,7 @@ const LEVEL_II = 0x20;
 const SPLASH = 0x40_00;
 
 /** A 26.3 effect id for a 1.8 numeric effect id */
-function legacyEffect(id: number) {
+export function legacyEffect(id: number) {
   const name = effects[id];
   return name ? `minecraft:${name}` : undefined;
 }
@@ -46,6 +47,12 @@ export function legacyItem(id: number, damage = 0): ItemStack | undefined {
   if (!name) return;
 
   return { id: `minecraft:${name}`, damage: durability[name] && damage > 0 ? damage : undefined };
+}
+
+/** The 26.3 item for a 1.8 Bukkit material name, like GOLD_CHESTPLATE, and Damage value */
+export function legacyMaterial(name: string, damage = 0) {
+  const id = materials[name];
+  return id === undefined ? undefined : legacyItem(id, damage);
 }
 
 /** How much wear a 26.3 item takes before it breaks */

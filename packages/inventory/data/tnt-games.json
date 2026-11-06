@@ -1,0 +1,168 @@
+{
+  "tntrun": {
+    "name": "TNT Run",
+    "tokens": {
+      "double_jump": {
+        "id": "minecraft:feather",
+        "name": "§a§lDouble Jump"
+      },
+      "speed_potion": {
+        "id": "minecraft:splash_potion",
+        "effects": [
+          {
+            "id": "minecraft:speed",
+            "amplifier": 0
+          }
+        ],
+        "name": "§bPersonal Splash Potion of Speed I",
+        "tooltip": [
+          "§7Speed (2:30)",
+          "",
+          "§5When Applied:",
+          "§9+20% Speed"
+        ]
+      },
+      "slowness_potion": {
+        "id": "minecraft:splash_potion",
+        "effects": [
+          {
+            "id": "minecraft:jump_boost",
+            "amplifier": 0
+          }
+        ],
+        "name": "§dPersonal Splash Potion of Slow I",
+        "tooltip": [
+          "§cSlowness (2:30)",
+          "",
+          "§5When Applied:",
+          "§c-15% Speed"
+        ]
+      }
+    },
+    "default": {
+      "0": "double_jump",
+      "1": "speed_potion",
+      "2": "slowness_potion"
+    }
+  },
+  "pvprun": {
+    "name": "PVP Run",
+    "tokens": {
+      "iron_sword": {
+        "id": "minecraft:iron_sword",
+        "tooltip": [
+          "",
+          "§9+6 Attack Damage"
+        ]
+      },
+      "double_jump": {
+        "id": "minecraft:feather",
+        "name": "§a§lDouble Jump"
+      },
+      "slowness_potion": {
+        "id": "minecraft:splash_potion",
+        "effects": [
+          {
+            "id": "minecraft:jump_boost",
+            "amplifier": 0
+          }
+        ],
+        "name": "§d Splash Potion of Slow I",
+        "tooltip": [
+          "§cSlowness (2:30)",
+          "",
+          "§5When Applied:",
+          "§c-15% Speed"
+        ]
+      },
+      "speed_potion": {
+        "id": "minecraft:splash_potion",
+        "effects": [
+          {
+            "id": "minecraft:speed",
+            "amplifier": 0
+          }
+        ],
+        "name": "§b Splash Potion of Speed I",
+        "tooltip": [
+          "§7Speed (2:30)",
+          "",
+          "§5When Applied:",
+          "§9+20% Speed"
+        ]
+      }
+    },
+    "default": {
+      "0": "iron_sword",
+      "1": "double_jump",
+      "2": "slowness_potion",
+      "3": "speed_potion"
+    }
+  },
+  "spleef": {
+    "name": "Bow Spleef",
+    "tokens": {
+      "bow": {
+        "id": "minecraft:bow",
+        "name": "§bBow"
+      },
+      "double_jump": {
+        "id": "minecraft:feather",
+        "name": "§a§lDouble Jump"
+      },
+      "arrow_volley": {
+        "id": "minecraft:blaze_powder",
+        "name": "§a§lArrow Volley"
+      },
+      "arrow": {
+        "id": "minecraft:arrow",
+        "name": "Arrow"
+      }
+    },
+    "default": {
+      "0": "bow",
+      "1": "double_jump",
+      "2": "arrow_volley",
+      "3": "arrow"
+    }
+  },
+  "wizards": {
+    "name": "Wizards",
+    "tokens": {
+      "attack_wand": {
+        "id": "minecraft:blaze_rod",
+        "name": "§cAttack Wand"
+      },
+      "defense_wand": {
+        "id": "minecraft:stick",
+        "name": "§aDefense Wand"
+      },
+      "class_selector": {
+        "id": "minecraft:nether_star",
+        "name": "§aClass Selector"
+      }
+    },
+    "default": {
+      "0": "attack_wand",
+      "1": "defense_wand",
+      "8": "class_selector"
+    }
+  },
+  "tnttag": {
+    "name": "TNT Tag",
+    "tokens": {
+      "tnt": {
+        "id": "minecraft:tnt",
+        "name": "§cTNT"
+      },
+      "locate_compass": {
+        "id": "minecraft:compass",
+        "name": "§a§6Locate Compass"
+      }
+    },
+    "default": {
+      "0": "tnt",
+      "1": "locate_compass"
+    }
+  }
+}
