@@ -36,7 +36,7 @@ import {
 } from "#components";
 import { DateTime } from "luxon";
 import { HistoricalTimes } from "@statsify/api-client";
-import { Palette, getColorPalette } from "../../themes/palette.js";
+import { Palette, getColorPalette } from "#themes";
 import { ratio } from "@statsify/math";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { Constructor } from "@statsify/util";

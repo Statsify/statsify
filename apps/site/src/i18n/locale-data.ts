@@ -22,6 +22,8 @@ export const getLocaleData = createServerFn({ method: "GET" })
 
     return {
       resources,
+      /** `site.publicUrl`; Open Graph URLs must be absolute and never come from request headers. */
+      origin: config.publicUrl,
       turnstileSiteKey: config.turnstileSiteKey,
       sentry: {
         dsn: config.sentryDsn,

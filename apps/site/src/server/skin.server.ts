@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { UUID_PATTERN } from "~/lib/uuid";
+import { compactUuid } from "~/lib/uuid";
 import { siteConfig } from "./config.server";
 
 /**
@@ -19,7 +19,9 @@ export async function proxySkin(
   fixed: Record<string, string> = {}
 ): Promise<Response> {
   const uuid = search.get("uuid");
-  if (!uuid || !UUID_PATTERN.test(uuid)) return new Response("uuid is required", { status: 400 });
+  if (!uuid || !isPageQuery(uuid, search, fixed)) {
+    return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
+  }
 
   const { apiRoute, apiKey } = await siteConfig();
   if (!apiKey) return new Response("site.apiKey is not configured", { status: 503 });
@@ -49,4 +51,18 @@ export async function proxySkin(
       "Cache-Control": "public, max-age=3600",
     },
   });
+}
+
+/**
+ * Whether a skin request is one the pages make: the UUID as the API stores it (undashed, lower case) and no other
+ * parameter than the route's own `fixed` ones, at their values. Any other spelling would be one more edge cache key for
+ * the same player, each reaching the API.
+ */
+function isPageQuery(uuid: string, search: URLSearchParams, fixed: Record<string, string>): boolean {
+  const keys = [...search.keys()];
+  return (
+    compactUuid(uuid) === uuid &&
+    new Set(keys).size === keys.length &&
+    keys.every((key) => key === "uuid" || search.get(key) === fixed[key])
+  );
 }

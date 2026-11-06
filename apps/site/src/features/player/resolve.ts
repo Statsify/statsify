@@ -7,8 +7,8 @@
  */
 
 import { ORPCError } from "@orpc/client";
-import { orpc, rpc } from "~/lib/orpc";
 import { UUID_PATTERN } from "~/lib/uuid";
+import { orpc, rpc } from "~/lib/orpc";
 import type { PlayerIdentity } from "@statsify/contract";
 
 /** How long a loaded player page stays fresh in the query cache; matches the page's edge TTL. */

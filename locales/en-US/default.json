@@ -753,6 +753,8 @@
     "trophyRate": "Trophy Rate",
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimates Crafted",
+    "updated": "Updated",
+    "updatedDate": "{{date}} UTC",
     "utility": "Utility",
     "vampires-killed": "Vampires Killed",
     "version": "Version",

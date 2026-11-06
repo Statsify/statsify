@@ -1,0 +1,46 @@
+{
+  "$schema": "https://swc.rs/schema.json",
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true,
+      "decorators": true,
+      "dynamicImport": true
+    },
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": true,
+      "react": {
+        "runtime": "automatic",
+        "importSource": "@statsify/rendering"
+      },
+      "optimizer": {
+        "simplify": true,
+        "globals": {
+          "vars": {
+            "import.meta.vitest": "false"
+          }
+        },
+        "jsonify": {
+          "minCost": 2048
+        }
+      }
+    },
+    "target": "es2022",
+    "keepClassNames": true,
+    "loose": false,
+    "externalHelpers": true,
+    "preserveAllComments": false,
+    "experimental": {
+      "keepImportAttributes": true
+    }
+  },
+  "module": {
+    "type": "es6",
+    "strict": true,
+    "strictMode": true,
+    "lazy": false,
+    "noInterop": false
+  },
+  "sourceMaps": true
+}

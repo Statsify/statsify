@@ -11,7 +11,6 @@ import {
   Command,
   CommandContext,
   LocalizationString,
-  LocalizeFunction,
   Page,
   paginate,
   PlayerArgument,
@@ -19,26 +18,14 @@ import {
 } from "@statsify/discord";
 import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
-import { HistoricalTimeData } from "#components";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { noop } from "@statsify/util";
 import { render } from "@statsify/rendering";
-import type { ApiModeFromGameModes, ApiSubModeForMode, GameMode, GameModeWithSubModes, GameModes, Player, SubModeForMode, User } from "@statsify/schemas";
-import type { Image } from "skia-canvas";
+import type { ApiModeFromGameModes, ApiSubModeForMode, GameMode, GameModeWithSubModes, GameModes, Player, SubModeForMode } from "@statsify/schemas";
+import type { BaseProfileProps } from "@statsify/profiles";
 
-export type ProfileTime = "LIVE" | HistoricalTimeData;
-
-export interface BaseProfileProps {
-  skin: Image;
-  player: Player;
-  background: Image;
-  logo: Image;
-  user: User | null;
-  badge?: Image;
-  t: LocalizeFunction;
-  time: ProfileTime;
-}
+export type { BaseProfileProps, ProfileTime } from "@statsify/profiles";
 
 export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
   mode: GameMode<T>;

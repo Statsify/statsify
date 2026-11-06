@@ -15,20 +15,44 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OembedRouteImport } from './routes/oembed'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as SitemapChar123nameChar125DotxmlRouteImport } from './routes/sitemap-{$name}[.]xml'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as Char123LocaleChar125RouteImport } from './routes/{-$locale}'
+import { Route as CardChar123uuidChar125DotpngRouteImport } from './routes/card/{$uuid}[.]png'
+import { Route as OgChar123uuidChar125DotpngRouteImport } from './routes/og/{$uuid}[.]png'
+import { Route as SigChar123uuidChar125DotpngRouteImport } from './routes/sig/{$uuid}[.]png'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
 import { Route as Char123LocaleChar125BingoRouteImport } from './routes/{-$locale}/bingo'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as ApiSkinHeadRouteImport } from './routes/api/skin/head'
 import { Route as ApiSkinRenderRouteImport } from './routes/api/skin/render'
+import { Route as Char123LocaleChar125LeaderboardsIndexRouteImport } from './routes/{-$locale}/leaderboards/index'
+import { Route as Char123LocaleChar125LeaderboardsFieldRouteImport } from './routes/{-$locale}/leaderboards/$field'
 import { Route as Char123LocaleChar125PlayerIndexRouteImport } from './routes/{-$locale}/player/index'
 import { Route as Char123LocaleChar125PlayerNameIndexRouteImport } from './routes/{-$locale}/player/$name/index'
 import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name/bingo'
 
+const OembedRoute = OembedRouteImport.update({
+  id: '/oembed',
+  path: '/oembed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapChar123nameChar125DotxmlRoute =
+  SitemapChar123nameChar125DotxmlRouteImport.update({
+    id: '/sitemap-{$name}.xml',
+    path: '/sitemap-{$name}.xml',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Char123LocaleChar125Route = Char123LocaleChar125RouteImport.update({
@@ -36,6 +60,24 @@ const Char123LocaleChar125Route = Char123LocaleChar125RouteImport.update({
   path: '/{-$locale}',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CardChar123uuidChar125DotpngRoute =
+  CardChar123uuidChar125DotpngRouteImport.update({
+    id: '/card/{$uuid}.png',
+    path: '/card/{$uuid}.png',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const OgChar123uuidChar125DotpngRoute =
+  OgChar123uuidChar125DotpngRouteImport.update({
+    id: '/og/{$uuid}.png',
+    path: '/og/{$uuid}.png',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SigChar123uuidChar125DotpngRoute =
+  SigChar123uuidChar125DotpngRouteImport.update({
+    id: '/sig/{$uuid}.png',
+    path: '/sig/{$uuid}.png',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const Char123LocaleChar125IndexRoute =
   Char123LocaleChar125IndexRouteImport.update({
     id: '/',
@@ -63,6 +105,18 @@ const ApiSkinRenderRoute = ApiSkinRenderRouteImport.update({
   path: '/api/skin/render',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char123LocaleChar125LeaderboardsIndexRoute =
+  Char123LocaleChar125LeaderboardsIndexRouteImport.update({
+    id: '/leaderboards/',
+    path: '/leaderboards/',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125LeaderboardsFieldRoute =
+  Char123LocaleChar125LeaderboardsFieldRouteImport.update({
+    id: '/leaderboards/$field',
+    path: '/leaderboards/$field',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
 const Char123LocaleChar125PlayerIndexRoute =
   Char123LocaleChar125PlayerIndexRouteImport.update({
     id: '/player/',
@@ -83,37 +137,61 @@ const Char123LocaleChar125PlayerNameBingoRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
+  '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
+  '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
+  '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
+  '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 export interface FileRoutesByTo {
+  '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
+  '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
+  '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}': typeof Char123LocaleChar125IndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
+  '/{-$locale}/leaderboards': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
+  '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
+  '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
+  '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
+  '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
@@ -121,44 +199,74 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/oembed'
     | '/robots.txt'
+    | '/sitemap-{$name}.xml'
+    | '/sitemap.xml'
     | '/{-$locale}'
+    | '/card/{$uuid}.png'
+    | '/og/{$uuid}.png'
+    | '/sig/{$uuid}.png'
     | '/{-$locale}/bingo'
     | '/{-$locale}/'
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/{-$locale}/leaderboards/$field'
+    | '/{-$locale}/leaderboards/'
     | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/bingo'
     | '/{-$locale}/player/$name/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/oembed'
     | '/robots.txt'
+    | '/sitemap-{$name}.xml'
+    | '/sitemap.xml'
+    | '/card/{$uuid}.png'
+    | '/og/{$uuid}.png'
+    | '/sig/{$uuid}.png'
     | '/{-$locale}/bingo'
     | '/{-$locale}'
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/{-$locale}/leaderboards/$field'
+    | '/{-$locale}/leaderboards'
     | '/{-$locale}/player'
     | '/{-$locale}/player/$name/bingo'
     | '/{-$locale}/player/$name'
   id:
     | '__root__'
+    | '/oembed'
     | '/robots.txt'
+    | '/sitemap-{$name}.xml'
+    | '/sitemap.xml'
     | '/{-$locale}'
+    | '/card/{$uuid}.png'
+    | '/og/{$uuid}.png'
+    | '/sig/{$uuid}.png'
     | '/{-$locale}/bingo'
     | '/{-$locale}/'
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/{-$locale}/leaderboards/$field'
+    | '/{-$locale}/leaderboards/'
     | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/bingo'
     | '/{-$locale}/player/$name/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  OembedRoute: typeof OembedRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
+  SitemapChar123nameChar125DotxmlRoute: typeof SitemapChar123nameChar125DotxmlRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char123LocaleChar125Route: typeof Char123LocaleChar125RouteWithChildren
+  CardChar123uuidChar125DotpngRoute: typeof CardChar123uuidChar125DotpngRoute
+  OgChar123uuidChar125DotpngRoute: typeof OgChar123uuidChar125DotpngRoute
+  SigChar123uuidChar125DotpngRoute: typeof SigChar123uuidChar125DotpngRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
   ApiSkinHeadRoute: typeof ApiSkinHeadRoute
   ApiSkinRenderRoute: typeof ApiSkinRenderRoute
@@ -166,6 +274,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/oembed': {
+      id: '/oembed'
+      path: '/oembed'
+      fullPath: '/oembed'
+      preLoaderRoute: typeof OembedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/robots.txt': {
       id: '/robots.txt'
       path: '/robots.txt'
@@ -173,11 +288,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap-{$name}.xml': {
+      id: '/sitemap-{$name}.xml'
+      path: '/sitemap-{$name}.xml'
+      fullPath: '/sitemap-{$name}.xml'
+      preLoaderRoute: typeof SitemapChar123nameChar125DotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/{-$locale}': {
       id: '/{-$locale}'
       path: '/{-$locale}'
       fullPath: '/{-$locale}'
       preLoaderRoute: typeof Char123LocaleChar125RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/card/{$uuid}.png': {
+      id: '/card/{$uuid}.png'
+      path: '/card/{$uuid}.png'
+      fullPath: '/card/{$uuid}.png'
+      preLoaderRoute: typeof CardChar123uuidChar125DotpngRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/og/{$uuid}.png': {
+      id: '/og/{$uuid}.png'
+      path: '/og/{$uuid}.png'
+      fullPath: '/og/{$uuid}.png'
+      preLoaderRoute: typeof OgChar123uuidChar125DotpngRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sig/{$uuid}.png': {
+      id: '/sig/{$uuid}.png'
+      path: '/sig/{$uuid}.png'
+      fullPath: '/sig/{$uuid}.png'
+      preLoaderRoute: typeof SigChar123uuidChar125DotpngRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/{-$locale}/': {
@@ -215,6 +365,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSkinRenderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/{-$locale}/leaderboards/': {
+      id: '/{-$locale}/leaderboards/'
+      path: '/leaderboards'
+      fullPath: '/{-$locale}/leaderboards/'
+      preLoaderRoute: typeof Char123LocaleChar125LeaderboardsIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/leaderboards/$field': {
+      id: '/{-$locale}/leaderboards/$field'
+      path: '/leaderboards/$field'
+      fullPath: '/{-$locale}/leaderboards/$field'
+      preLoaderRoute: typeof Char123LocaleChar125LeaderboardsFieldRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
     '/{-$locale}/player/': {
       id: '/{-$locale}/player/'
       path: '/player'
@@ -242,6 +406,8 @@ declare module '@tanstack/react-router' {
 interface Char123LocaleChar125RouteChildren {
   Char123LocaleChar125BingoRoute: typeof Char123LocaleChar125BingoRoute
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
+  Char123LocaleChar125LeaderboardsFieldRoute: typeof Char123LocaleChar125LeaderboardsFieldRoute
+  Char123LocaleChar125LeaderboardsIndexRoute: typeof Char123LocaleChar125LeaderboardsIndexRoute
   Char123LocaleChar125PlayerIndexRoute: typeof Char123LocaleChar125PlayerIndexRoute
   Char123LocaleChar125PlayerNameBingoRoute: typeof Char123LocaleChar125PlayerNameBingoRoute
   Char123LocaleChar125PlayerNameIndexRoute: typeof Char123LocaleChar125PlayerNameIndexRoute
@@ -250,6 +416,10 @@ interface Char123LocaleChar125RouteChildren {
 const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
   Char123LocaleChar125BingoRoute: Char123LocaleChar125BingoRoute,
   Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
+  Char123LocaleChar125LeaderboardsFieldRoute:
+    Char123LocaleChar125LeaderboardsFieldRoute,
+  Char123LocaleChar125LeaderboardsIndexRoute:
+    Char123LocaleChar125LeaderboardsIndexRoute,
   Char123LocaleChar125PlayerIndexRoute: Char123LocaleChar125PlayerIndexRoute,
   Char123LocaleChar125PlayerNameBingoRoute:
     Char123LocaleChar125PlayerNameBingoRoute,
@@ -261,8 +431,14 @@ const Char123LocaleChar125RouteWithChildren =
   Char123LocaleChar125Route._addFileChildren(Char123LocaleChar125RouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  OembedRoute: OembedRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
+  SitemapChar123nameChar125DotxmlRoute: SitemapChar123nameChar125DotxmlRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   Char123LocaleChar125Route: Char123LocaleChar125RouteWithChildren,
+  CardChar123uuidChar125DotpngRoute: CardChar123uuidChar125DotpngRoute,
+  OgChar123uuidChar125DotpngRoute: OgChar123uuidChar125DotpngRoute,
+  SigChar123uuidChar125DotpngRoute: SigChar123uuidChar125DotpngRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
   ApiSkinHeadRoute: ApiSkinHeadRoute,
   ApiSkinRenderRoute: ApiSkinRenderRoute,

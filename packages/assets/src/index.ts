@@ -57,14 +57,26 @@ function getBackgroundPaths() {
   return backgrounds;
 }
 
-export function getBackground(pathOrGame: string, mode?: string): Promise<Image> {
+/** FNV-1a, made non-negative: a stable spread for picking from a list. */
+function hash(text: string) {
+  let value = 0x81_1c_9d_c5;
+  for (const char of text) value = Math.imul(value ^ (char.codePointAt(0) ?? 0), 0x01_00_01_93);
+  return Math.abs(value);
+}
+
+/**
+ * One of the game and mode's backgrounds: a random one, or the one `seed` picks when given. The same seed always gets
+ * the same image, so an image keyed on a player is the same on every render.
+ */
+export function getBackground(pathOrGame: string, mode?: string, seed?: string): Promise<Image> {
   if (!HAS_PRIVATE_ASSETS) return getImage("out/backgrounds/background.png");
 
   if (typeof mode === "string") {
     const path = `${pathOrGame}_${mode}_`;
     const backgrounds = getBackgroundPaths().filter((p) => p.startsWith(path));
 
-    const background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    const index = seed === undefined ? Math.floor(Math.random() * backgrounds.length) : hash(seed) % backgrounds.length;
+    const background = backgrounds[index];
 
     if (!background) throw new Error(`No background found for ${pathOrGame}_${mode}`);
 

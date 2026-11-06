@@ -34,6 +34,8 @@ const Freshness = {
 export const PlayerIdentitySchema = z.object({
   uuid: z.string(),
   username: z.string(),
+  /** When the API last fetched the player from Hypixel (ms); keys the unfurl image cache. */
+  updatedAt: z.number(),
 });
 
 /** One label/value row of a game panel. */
@@ -116,8 +118,17 @@ export const PlayerPageSchema = z.object({
 
 /** The stored player document as JSON, for the card renderer. Server-only, never proxied. */
 export type PlayerDocument = Record<string, unknown>;
+/** The player's guild document as JSON (name, tag and the member rows the card shows). */
+export type GuildDocument = Record<string, unknown>;
 
-const PlayerDocumentSchema = z.custom<PlayerDocument>((value) => typeof value === "object" && value !== null);
+const isDocument = (value: unknown) => typeof value === "object" && value !== null;
+const PlayerDocumentSchema = z.custom<PlayerDocument>(isDocument);
+const GuildDocumentSchema = z.custom<GuildDocument>(isDocument);
+
+export const PlayerFullSchema = z.object({
+  player: PlayerDocumentSchema,
+  guild: GuildDocumentSchema.nullable(),
+});
 
 export const ResultCardSchema = z.object({
   ...PlayerName,
@@ -328,9 +339,9 @@ export const contract = {
       .input(PlayerInputSchema)
       .output(PlayerPageSchema),
     full: errors
-      .route({ method: "GET", path: "/player/full", summary: "The stored player document" })
+      .route({ method: "GET", path: "/player/full", summary: "The stored player and guild documents" })
       .input(PlayerInputSchema)
-      .output(PlayerDocumentSchema),
+      .output(PlayerFullSchema),
     refresh: errors
       .route({ method: "POST", path: "/player/refresh", summary: "Refresh a known player from Hypixel" })
       .input(RefreshInputSchema)
@@ -375,6 +386,7 @@ export type SiteClient = ContractRouterClient<SiteContract>;
 
 export type PlayerIdentity = z.infer<typeof PlayerIdentitySchema>;
 export type PlayerPage = z.infer<typeof PlayerPageSchema>;
+export type PlayerFull = z.infer<typeof PlayerFullSchema>;
 export type GameSummary = z.infer<typeof GameSummarySchema>;
 export type StatRow = z.infer<typeof StatRowSchema>;
 export type ResultCard = z.infer<typeof ResultCardSchema>;

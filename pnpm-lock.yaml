@@ -341,6 +341,9 @@ importers:
       '@statsify/math':
         specifier: workspace:^
         version: link:../../packages/math
+      '@statsify/profiles':
+        specifier: workspace:^
+        version: link:../../packages/profiles
       '@statsify/rendering':
         specifier: workspace:^
         version: link:../../packages/rendering
@@ -466,6 +469,9 @@ importers:
       '@statsify/contract':
         specifier: workspace:^
         version: link:../../packages/contract
+      '@statsify/profiles':
+        specifier: workspace:^
+        version: link:../../packages/profiles
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../../packages/schemas
@@ -490,6 +496,9 @@ importers:
       i18next:
         specifier: 26.5.3
         version: 26.5.3(typescript@7.0.2)
+      ioredis:
+        specifier: 5.7.0
+        version: 5.7.0(supports-color@7.2.0)
       motion:
         specifier: ^12.23.25
         version: 12.43.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -772,6 +781,9 @@ importers:
       '@statsify/logger':
         specifier: workspace:^
         version: link:../logger
+      '@statsify/profiles':
+        specifier: workspace:^
+        version: link:../profiles
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../schemas
@@ -843,6 +855,46 @@ importers:
       '@swc/helpers':
         specifier: ^0.5.23
         version: 0.5.23
+
+  packages/profiles:
+    dependencies:
+      '@statsify/api-client':
+        specifier: workspace:^
+        version: link:../api-client
+      '@statsify/assets':
+        specifier: workspace:^
+        version: link:../assets
+      '@statsify/math':
+        specifier: workspace:^
+        version: link:../math
+      '@statsify/rendering':
+        specifier: workspace:^
+        version: link:../rendering
+      '@statsify/schemas':
+        specifier: workspace:^
+        version: link:../schemas
+      '@statsify/util':
+        specifier: workspace:^
+        version: link:../util
+      '@swc/helpers':
+        specifier: ^0.5.23
+        version: 0.5.23
+      i18next:
+        specifier: ^21.10.0
+        version: 21.10.0
+      luxon:
+        specifier: ^3.5.0
+        version: 3.7.2
+      skia-canvas:
+        specifier: 4.0.0
+        version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+      typedi:
+        specifier: ^0.10.0
+        version: 0.10.0
+    devDependencies:
+      '@types/luxon':
+        specifier: ^3.4.2
+        version: 3.7.6
 
   packages/rendering:
     dependencies:

@@ -7,9 +7,29 @@
  */
 
 import { createFileRoute } from "@tanstack/react-router";
+import { siteConfig } from "~/server/config.server";
 
-// No sitemap: 2.45M player pages.
-const ROBOTS = `User-agent: *
+/**
+ * Paged and "around" leaderboard variants carry `noindex` too; the sitemap index lists what may be
+ * crawled (no player pages yet).
+ */
+const robots = (sitemap: string) => `User-agent: *
+Disallow: /api/
+Disallow: /_serverFn/
+Disallow: /*?page=
+Disallow: /*?*&page=
+Disallow: /*?around=
+Disallow: /*?*&around=
+
+Sitemap: ${sitemap}
+`;
+
+/**
+ * `site.indexable` off (a staging deploy): crawling stays open so crawlers see the `X-Robots-Tag: noindex` every
+ * response carries (`start.ts`) and drop the pages. `Disallow: /` would hide that header, and URLs linked from
+ * elsewhere could then be indexed without their content. No sitemap: they 404 here.
+ */
+const NOT_INDEXABLE = `User-agent: *
 Disallow: /api/
 Disallow: /_serverFn/
 `;
@@ -17,14 +37,17 @@ Disallow: /_serverFn/
 export const Route = createFileRoute("/robots.txt")({
   server: {
     handlers: {
-      GET: () =>
-        new Response(ROBOTS, {
+      GET: async () => {
+        const { publicUrl, indexable } = await siteConfig();
+
+        return new Response(indexable ? robots(`${publicUrl}/sitemap.xml`) : NOT_INDEXABLE, {
           headers: {
             "Content-Type": "text/plain; charset=utf-8",
             "Cache-Control": "public, max-age=3600",
             "CDN-Cache-Control": "max-age=86400",
           },
-        }),
+        });
+      },
     },
   },
 });
