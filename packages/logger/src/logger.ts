@@ -73,7 +73,7 @@ const format = (message: unknown) => {
 };
 
 /**
- * Prints `{icon} {context} {time} {message}` and sends the message to Sentry Logs with its attributes.
+ * Prints `{icon} {context} {time} {message}` and sends the message to Sentry Logs.
  * Errors passed to `error` or `fatal` are also captured as Sentry issues.
  */
 export class Logger {
@@ -81,31 +81,31 @@ export class Logger {
 
   public constructor(private readonly context = "Default") {}
 
-  public log(message: unknown, attributes?: RequestAttributes) {
-    this.write("log", message, attributes);
+  public log(message: unknown) {
+    this.write("log", message);
   }
 
-  public error(message: unknown, attributes?: RequestAttributes) {
-    this.write("error", message, attributes);
+  public error(message: unknown) {
+    this.write("error", message);
   }
 
-  public warn(message: unknown, attributes?: RequestAttributes) {
-    this.write("warn", message, attributes);
+  public warn(message: unknown) {
+    this.write("warn", message);
   }
 
-  public debug(message: unknown, attributes?: RequestAttributes) {
-    this.write("debug", message, attributes);
+  public debug(message: unknown) {
+    this.write("debug", message);
   }
 
-  public verbose(message: unknown, attributes?: RequestAttributes) {
-    this.write("verbose", message, attributes);
+  public verbose(message: unknown) {
+    this.write("verbose", message);
   }
 
-  public fatal(message: unknown, attributes?: RequestAttributes) {
-    this.write("fatal", message, attributes);
+  public fatal(message: unknown) {
+    this.write("fatal", message);
   }
 
-  private write(level: LogLevel, message: unknown, attributes?: RequestAttributes) {
+  private write(level: LogLevel, message: unknown) {
     const isError = level === "error" || level === "fatal";
     const output = format(message);
 
@@ -128,7 +128,6 @@ export class Logger {
     SentryLogByLogLevel[level](message instanceof Error ? message.message : output, {
       context: this.context,
       ...(message instanceof Error && { "error.type": message.name }),
-      ...attributes,
     });
   }
 
