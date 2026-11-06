@@ -23,7 +23,7 @@ Older packs load as 26.3's layout, so they stack over a 26.3 pack the same way. 
 the 1.8.9 client jar) gives its textures and models under their 26.3 names. Its 3D models get the
 turn 1.8.9 gave every 3D item in code, its compass and clock strips show the frame a slot shows,
 and its glint is tinted and moved the way 1.8 did it. Chests, heads and banners stay 26.3's, which
-draws them in code. A stack needs at least one 26.3 pack, which has the item model definitions.
+draws them in code, and banners keep 26.3's pattern textures, since 1.8's are masks. A stack needs at least one 26.3 pack, which has the item model definitions.
 Another version needs only its tables in `UPGRADES` (`src/core/pack.ts`).
 
 ## Items
@@ -32,7 +32,10 @@ Another version needs only its tables in `UPGRADES` (`src/core/pack.ts`).
 - Block items in 3D, through the model's gui transform with the GUI's lighting. A small software
   rasterizer draws them, so they match the game pixel for pixel and need no WebGL.
 - Player heads (the default skin, or `item.skin`, a textures.minecraft.net URL, which the page
-  can fetch over https), mob heads, chests.
+  can fetch over https), mob heads, chests, shulker boxes.
+- Banners and shields with their patterns: `item.patterns`, as 26.3's `banner_patterns` component
+  has them (`{ pattern: "minecraft:border", color: "red" }`), and a shield's `item.baseColor`.
+  A banner's base colour is in its id.
 - The enchantment glint, and animated textures by game tick: `render(item, scale, tick)`.
 
 `legacyItem(id, damage)` turns a 1.8 id and Damage value into a 26.3 item. Its table is
@@ -77,7 +80,9 @@ setCanvasBackend(skiaCanvas);
 
 ## Adapters
 
-- `fromHypixelNBT(data)`: Hypixel's gzipped NBT, like the Pit's `inv_contents`, as items.
+- `fromHypixelNBT(data)`: Hypixel's gzipped NBT, like the Pit's `inv_contents`, as items. A 1.8
+  banner's `BlockEntityTag` gives its base colour and patterns, with 1.8's pattern codes (`bo`,
+  `cr`) turned into 26.3's ids.
   `playerInventoryOrder` puts a player inventory's hotbar last, as the game shows it.
 - `fromBedwarsQuickBuy(favourites)`: the 9 × 6 BedWars shop open on Quick Buy, with each
   item's count, cost and description. `src/adapters/bedwars-shop.ts` holds the shop as
