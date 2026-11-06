@@ -113,7 +113,7 @@ export class SkinService {
     };
   }
 
-  private getUuid(username: string): Promise<string> {
+  public getUuid(username: string): Promise<string> {
     return lastValueFrom(
       this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
         map((response) => response.data as MojangProfile),
