@@ -14,7 +14,8 @@ import type {
   PreviewIdentity,
   SkyWarsPreview,
 } from "@statsify/contract";
-import { FormattedGame, type GameId, type Guild, GuildMember, type Player, type Progression } from "@statsify/schemas";
+import { type GameId, type Guild, GuildMember, type Player, type Progression } from "@statsify/schemas";
+import { gameName } from "./names.js";
 import { removeFormatting } from "@statsify/util";
 
 /** The fixed sample players, guild member and leaderboard the home page previews. */
@@ -29,6 +30,29 @@ export const HOME_PREVIEWS = {
 } as const;
 
 const progression = ({ current, max, percent }: Progression) => ({ current, max, percent });
+
+/** Whether a member has their names: `GuildService` saves one without a stored player as `ERROR <uuid>`. */
+export const isNamed = (member: GuildMember): member is GuildMember & { username: string; displayName: string } =>
+  member.username !== undefined && member.displayName !== undefined && !member.username.startsWith("ERROR ");
+
+/** What the home page's guild card and the guild page both show. */
+export const guildSummary = (guild: Guild) => ({
+  name: guild.name,
+  nameFormatted: guild.nameFormatted,
+  tagColor: guild.tagColor.code,
+  description: guild.description ?? "",
+  createdAt: guild.createdAt,
+  exp: guild.exp,
+  level: guild.level,
+  progression: progression(guild.progression),
+  daily: guild.daily,
+  weekly: guild.weekly,
+  monthly: guild.monthly,
+  // The schema types them as `GameCode`s, but they hold the ids `FormattedGame` is keyed by.
+  preferredGames: guild.preferredGames.map((game) => ({ id: game, name: removeFormatting(gameName(game as GameId)) })),
+  master: guild.members.find((member) => GuildMember.isGuildMaster(member) && isNamed(member))?.displayName || null,
+  memberCount: guild.members.length,
+});
 
 export const previewIdentity = (player: Player): PreviewIdentity => ({
   uuid: player.uuid,
@@ -144,23 +168,9 @@ export function guildPreview(guild: Guild, memberUuid: string): GuildPreview {
   }));
 
   return {
-    name: guild.name,
-    nameFormatted: guild.nameFormatted,
+    ...guildSummary(guild),
     tagFormatted: guild.tagFormatted,
-    tagColor: guild.tagColor.code,
-    description: guild.description ?? "",
-    createdAt: guild.createdAt,
-    exp: guild.exp,
-    level: guild.level,
-    progression: progression(guild.progression),
-    daily: guild.daily,
-    weekly: guild.weekly,
-    monthly: guild.monthly,
-    // The schema types them as `GameCode`s, but they hold the ids `FormattedGame` is keyed by.
-    preferredGames: guild.preferredGames.map((game) => ({ id: game, name: removeFormatting(FormattedGame[game as GameId]) })),
-    memberCount: members.length,
     topDaily: members.toSorted((a, b) => b.daily - a.daily).slice(0, 6),
-    master: guild.members.find((member) => GuildMember.isGuildMaster(member))?.displayName || null,
     member: members.find((member) => member.uuid === memberUuid) ?? null,
   };
 }

@@ -20,7 +20,7 @@ const TABLES: Record<string, CellSpec[][]> = {
   overall: SHARED,
   defusal: [["wins", "roundWins"], ["kills", "deaths", "kdr", "assists"], ["bombsDefused", "bombsPlanted"]],
   deathmatch: SHARED,
-  gunGame: [["wins", "fastestWin"], ["kills", "deaths", "kdr", "assists"]],
+  gunGame: [["wins", { key: "fastestWin", session: false }], ["kills", "deaths", "kdr", "assists"]],
 };
 
 export const COPS_AND_CRIMS_PAGE: GameLayout = {

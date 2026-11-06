@@ -70,15 +70,15 @@ const unwon: typeof won = (...args) => !won(...args);
 
 /** A Zombies block: the card's Wins (Best Round before a win), Kills and Deaths, then Fastest Win and Total Rounds. */
 const zombiesBlock = (place: string): CellSpec[][] => [
-  [{ key: "wins", at: place, when: won }, { key: "bestRound", at: place, when: unwon }, ...at(place, ["kills", "deaths"])],
-  at(place, ["fastestWin", "totalRounds", "doorsOpened"]),
+  [{ key: "wins", at: place, when: won }, { key: "bestRound", at: place, when: unwon, session: false }, ...at(place, ["kills", "deaths"])],
+  [{ key: "fastestWin", at: place, session: false }, { key: "totalRounds", at: place, session: false }, ...at(place, ["doorsOpened"])],
 ];
 
 function zombies(submode: string): PageSpec {
   if (submode === "overall") {
     return {
       sections: [
-        { name: "§6Overall", rows: [["wins", "kills", "deaths"], ["totalRounds", "doorsOpened"]] },
+        { name: "§6Overall", rows: [["wins", "kills", "deaths"], [{ key: "totalRounds", session: false }, "doorsOpened"]] },
         // Each map's Overall as Zombies › Overall shows it: Wins, then Fastest Win once won, else Best Round, in §e.
         ...ZOMBIES_MAPS.map(([map, name]): SectionSpec => {
           const place = map === "alienArcadium" ? "zombies.alienArcadium" : `zombies.${map}.overall`;
@@ -89,8 +89,8 @@ function zombies(submode: string): PageSpec {
             rows: [
               [
                 { key: "wins", at: place },
-                { key: "fastestWin", at: place, colour, when: won },
-                { key: "bestRound", at: place, colour, when: unwon },
+                { key: "fastestWin", at: place, colour, when: won, session: false },
+                { key: "bestRound", at: place, colour, when: unwon, session: false },
               ],
             ],
           };
@@ -152,7 +152,7 @@ const PAGES: Record<string, PageSpec> = {
       { title: "game.sections.weapons", rows: [["bowKills", "swordKills"]] },
     ],
   },
-  creeperAttack: { sections: [{ rows: [["maxWave"]] }] },
+  creeperAttack: { sections: [{ rows: [[{ key: "maxWave", session: false }]] }] },
   disasters: {
     sections: [
       {
@@ -173,10 +173,10 @@ const PAGES: Record<string, PageSpec> = {
         rows: [
           ["wins", "fails", "mapsCompleted"],
           ["gamesPlayed", "gamesFinished"],
-          [{ key: "bestTime", when: timed }, { key: "flawlessGames", when: timed }],
+          [{ key: "bestTime", when: timed, session: false }, { key: "flawlessGames", when: timed }],
         ],
       },
-      { title: "game.sections.bestTimes", ...DROPPER_LIST("bestTime"), list: true, collapsed: true, search: true, pairs: true },
+      { title: "game.sections.bestTimes", ...DROPPER_LIST("bestTime"), list: true, collapsed: true, search: true, pairs: true, session: false },
       { title: "game.sections.completions", ...DROPPER_LIST("completions"), list: true, collapsed: true, search: true, pairs: true },
     ],
   },
@@ -205,14 +205,14 @@ const PAGES: Record<string, PageSpec> = {
       { name: "§6Prop Hunt", rows: [at("hideAndSeek.propHunt", ["wins", "hiderWins", "seekerWins"])] },
     ],
   },
-  holeInTheWall: { sections: [{ rows: [["wins", "wallsFaced"], ["highestScoreQualifications", "highestScoreFinals"]] }] },
+  holeInTheWall: { sections: [{ rows: [["wins", "wallsFaced"], [{ key: "highestScoreQualifications", session: false }, { key: "highestScoreFinals", session: false }]] }] },
   hypixelSays: {
     sections: [
-      { name: "§6Hypixel Says", rows: [["wins", "roundsWon"], ["points", "maxScore"]] },
+      { name: "§6Hypixel Says", rows: [["wins", "roundsWon"], ["points", { key: "maxScore", session: false }]] },
       ...[
         ["hypixelSays.simonSays", "§6Simon Says"],
         ["hypixelSays.santaSays", "§6Santa Says"],
-      ].map(([place, name]) => ({ name, box: true, rows: [at(place, ["wins", "roundsWon"]), at(place, ["points", "maxScore"])] })),
+      ].map(([place, name]): SectionSpec => ({ name, box: true, rows: [at(place, ["wins", "roundsWon"]), [...at(place, ["points"]), { key: "maxScore", at: place, session: false }]] })),
     ],
   },
   miniWalls: {
@@ -221,8 +221,8 @@ const PAGES: Record<string, PageSpec> = {
   partyGames: {
     sections: [
       { rows: [["wins", "roundsWon", "starsEarned"]] },
-      { title: "game.sections.bestTimes", cells: PARTY_ROUNDS("BestTime"), list: true },
-      { title: "game.sections.bestScores", cells: PARTY_ROUNDS("BestScore"), list: true, pairs: true },
+      { title: "game.sections.bestTimes", cells: PARTY_ROUNDS("BestTime"), list: true, session: false },
+      { title: "game.sections.bestScores", cells: PARTY_ROUNDS("BestScore"), list: true, pairs: true, session: false },
       { title: "stats.roundWins", cells: PARTY_ROUNDS("Wins"), list: true, collapsed: true, pairs: true },
     ],
   },

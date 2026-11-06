@@ -21,6 +21,9 @@ export function isSupportedLocale(value: string | undefined): value is Locale {
   return value !== undefined && (SUPPORTED_LOCALES as readonly string[]).includes(value);
 }
 
+/** A path's start in a locale: none for English, `/{locale}` for the rest. */
+export const localePrefix = (locale: string) => (locale === DEFAULT_LOCALE ? "" : `/${locale}`);
+
 /** The locale of a path, for the HTML `lang` attribute; unknown prefixes fall back to English. */
 export function localeFromPath(pathname: string): Locale {
   const [, first] = pathname.split("/");

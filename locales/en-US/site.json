@@ -8,7 +8,9 @@
     "notFound": {
       "player": "Player Not Found | Statsify",
       "page": "Not Found | Statsify",
-      "leaderboard": "Leaderboard Not Found | Statsify"
+      "leaderboard": "Leaderboard Not Found | Statsify",
+      "guild": "Guild Not Found | Statsify",
+      "session": "No Session | Statsify"
     },
     "bingo": {
       "playerTitle": "{{name}} Bingo Stats | Statsify",
@@ -19,6 +21,10 @@
     "search": {
       "title": "Search | Statsify",
       "description": "Search players to view their Hypixel stats."
+    },
+    "guilds": {
+      "title": "Guild Search | Statsify",
+      "description": "Search a Hypixel guild to view its level, GEXP and members."
     },
     "glossary": {
       "title": "Stat Glossary | Statsify",
@@ -37,6 +43,20 @@
       "title": "{{name}} {{page}} | Statsify",
       "lead": "{{name}} {{game}} stats:",
       "description": "View {{name}} Hypixel {{game}} stats on Statsify."
+    },
+    "guild": {
+      "title": "{{name}} Guild Stats | Statsify",
+      "lead": "{{name}} guild stats:"
+    },
+    "session": {
+      "title": "{{name}} Session Stats | Statsify",
+      "description": "View {{name}} Hypixel session stats on Statsify.",
+      "gameDescription": "View {{name}} Hypixel {{game}} session stats on Statsify."
+    },
+    "compare": {
+      "title": "{{a}} vs {{b}} {{page}} | Statsify",
+      "lead": "{{a}} vs {{b}} in {{game}}:",
+      "description": "View {{a}} and {{b}} Hypixel {{game}} stats side by side on Statsify."
     },
     "leaderboard": {
       "gameTitle": "{{game}} Leaderboards | Statsify",
@@ -62,6 +82,7 @@
     "players": "Players",
     "leaderboards": "Leaderboards",
     "bingo": "Bingo",
+    "guilds": "Guilds",
     "external": "Statsify elsewhere",
     "newTab": "(opens in a new tab)",
     "loading": "Loading",
@@ -148,6 +169,45 @@
       "error": "The lookup didn't go through. Try again in a moment."
     }
   },
+  "guild": {
+    "info": "Guild Info",
+    "description": "Guild Description",
+    "preferredGames": "Preferred Games",
+    "exp": "Guild Experience",
+    "history": "GEXP History",
+    "byGame": "GEXP by Game",
+    "members": "Members",
+    "member": "Member",
+    "memberCount": "{{count}}/125",
+    "unlisted": "{{count}} not listed: Statsify hasn't seen them yet.",
+    "search": {
+      "heading": "Search Hypixel Guilds",
+      "placeholder": "Search a guild..."
+    },
+    "notFound": {
+      "title": "Guild Not Found",
+      "description": "We haven't seen a guild called {{name}} yet. Check the spelling, or ask Hypixel to look it up.",
+      "unknown": "Hypixel doesn't know a guild called {{name}} either. Check the spelling."
+    }
+  },
+  "session": {
+    "title": "Session",
+    "started": "Session started",
+    "noGames": "{{name}} hasn't played a game this session yet.",
+    "unplayed": "{{name}} hasn't played {{game}} this session.",
+    "back": "Back to the session",
+    "notFound": {
+      "title": "No Session",
+      "description": "{{name}} hasn't started a session. Linked players start one with /session in Discord."
+    }
+  },
+  "compare": {
+    "open": "Compare",
+    "title": "Compare With Another Player",
+    "player": "Player",
+    "submit": "Compare",
+    "versus": "{{a}} vs {{b}}"
+  },
   "leaderboards": {
     "title": "Leaderboards",
     "filter": "Filter leaderboards...",
@@ -192,6 +252,7 @@
   },
   "game": {
     "stats": "Stats",
+    "session": "Session",
     "wins": "Wins",
     "times": "Times",
     "challenges": "Challenges",

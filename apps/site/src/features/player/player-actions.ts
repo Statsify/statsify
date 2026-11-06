@@ -117,6 +117,22 @@ export const refreshGame = createServerFn({ method: "POST" })
     }
   });
 
+/** Looks a guild the site hasn't stored up on Hypixel by name, as `lookupPlayer` does a player. */
+export const lookupGuild = createServerFn({ method: "POST" })
+  .validator(z.object({ name: z.string().trim().min(1).max(32), token: z.string().max(4096).optional() }))
+  .handler(async ({ data }): Promise<ActionResult<{ name: string }>> => {
+    const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
+    const ip = clientIp();
+
+    if (!(await verifyTurnstile(data.token, ip))) return { ok: false, code: "VERIFICATION" };
+
+    try {
+      return { ok: true, data: await rpcServerClient.guild.lookup({ name: data.name, clientIp: ip }, { signal }) };
+    } catch (error) {
+      return failure(error, signal);
+    }
+  });
+
 /** Looks an unknown name or UUID up on Hypixel once the visitor has passed Turnstile. */
 export const lookupPlayer = createServerFn({ method: "POST" })
   .validator(

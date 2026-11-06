@@ -9,21 +9,22 @@
 import { PageBackground, backgroundFor } from "~/components/ui/background";
 import { BOX_GAP, Box } from "~/components/ui/box";
 import { Command } from "~/components/ui/command";
+import { ComparePanel } from "~/features/compare/compare-form";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode, type Ref, useEffect, useId, useRef, useState } from "react";
-import { GameNav } from "./game-nav";
 import { Hint, PointerText, Spoken } from "~/components/ui/hint";
 import { InlineStat, LeaderboardLink, StatCell, StatNumber, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText, colourClass, leadingColourClass, nameColour, plainText } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "~/features/player/mini-header";
-import { ModeSwitcher } from "./mode-switcher";
+import { GameSwitchers } from "./mode-switcher";
 import { PanelToggle, SharePanel } from "~/features/player/share-panel";
 import { RefreshBar } from "~/features/player/refresh-bar";
+import { SessionLine } from "~/features/session/session-line";
 import { SkinBust } from "~/components/ui/skin";
 import { StatPanel, useLabelText } from "./stat-panel";
 import { cn } from "~/lib/util";
-import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "./game-data";
+import { type GameScope, gamePageQuery, headingText, pageSearch } from "./game-data";
 import { imageSize, pageCard } from "@statsify/profiles/protocol";
 import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
@@ -46,7 +47,8 @@ const BOX_COLUMNS = ["", "", "lg:grid-cols-snap-2", "lg:grid-cols-snap-3", "lg:g
  * the whole game, then one mode's stats under the mode switcher (and the submode's, where a mode has them). Every stat
  * opens its leaderboard at the player. Phones stack the panels; from `md` up the nametag sits beside the level, and
  * from `lg` up the card's boxes sit side by side, and the headline table beside the mode's other tables. Lists (maps, challenges) take
- * the full width below, and one filter box above the first long one searches them all.
+ * the full width below, and one filter box above the first long one searches them all. A session's page has its gains
+ * since it started, which rank on no leaderboard.
  */
 export function GameView({ page }: { page: GamePage }) {
   const { t } = useTranslation();
@@ -54,17 +56,19 @@ export function GameView({ page }: { page: GamePage }) {
   const queryClient = useQueryClient();
   const nametag = useRef<HTMLDivElement>(null);
   const shareId = useId();
+  const compareId = useId();
   const [sharing, setSharing] = useState(false);
+  const [comparing, setComparing] = useState(false);
   const [filter, setFilter] = useState("");
+  const { session } = page;
+  const scope: GameScope = { kind: session ? "session" : "player", name: page.username };
 
   useEffect(
     () => addRecentPlayer({ uuid: page.uuid, name: page.username, colour: nameColour(page.displayName) }),
     [page.uuid, page.username, page.displayName]
   );
 
-  const mode = modeSearch(page, page.mode);
-  const submode = submodeSearch(page, page.submode);
-  const period = periodSearch(page, page.period);
+  const { mode, submode, period } = pageSearch(page);
   // The card the page unfurls with, as its route's head picks it.
   const card = new URLSearchParams({ game: page.game.key, ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }), v: String(page.updatedAt) });
   const cardSize = imageSize(pageCard(page), "og");
@@ -112,10 +116,15 @@ export function GameView({ page }: { page: GamePage }) {
     return result;
   };
 
-  const shareToggle = (
-    <PanelToggle open={sharing} controls={shareId} onToggle={() => setSharing(!sharing)}>
-      {t("player.share.open")}
-    </PanelToggle>
+  const toggles = (
+    <>
+      <PanelToggle open={sharing} controls={shareId} onToggle={() => setSharing(!sharing)}>
+        {t("player.share.open")}
+      </PanelToggle>
+      <PanelToggle open={comparing} controls={compareId} onToggle={() => setComparing(!comparing)}>
+        {t("compare.open")}
+      </PanelToggle>
+    </>
   );
 
   return (
@@ -127,11 +136,14 @@ export function GameView({ page }: { page: GamePage }) {
             overview under both; from `lg` the overview goes under the level. An overview with no level sits beside the
             nametag at its own height, and a nametag with neither (Parkour) is as wide as its content. */}
         <div className={cn("grid grid-cols-1 md:grid-cols-[fit-content(50%)_minmax(0,1fr)]", BOX_GAP)}>
+          {/* A session's page has nothing to share or compare, and Update would refresh the totals, not the session. */}
           <GameHeader
             ref={nametag}
             page={page}
-            actions={shareToggle}
-            refresh={<RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto beside={shareToggle} />}
+            actions={session ? undefined : toggles}
+            refresh={session ?
+              undefined :
+              <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto beside={<div className="flex flex-wrap gap-x-4">{toggles}</div>} />}
             className={cn(page.level && page.overview.length > 0 && "lg:row-span-2", !page.level && page.overview.length === 0 && "md:col-span-2 md:w-fit")}
           />
           {page.level && <LevelPanel level={page.level} username={page.username} />}
@@ -142,14 +154,18 @@ export function GameView({ page }: { page: GamePage }) {
               className={page.level ? "md:col-span-2 lg:col-span-1" : "md:self-center"}
             />
           )}
-          <RefreshBar
-            updatedAt={page.updatedAt}
-            expiresAt={page.expiresAt}
-            refresh={refresh}
-            auto
-            row
-            className="max-md:hidden md:col-span-2 md:mt-2"
-          />
+          {session ?
+            <SessionLine start={session.start} updatedAt={page.updatedAt} className="md:col-span-2 md:mt-2" /> :
+            (
+              <RefreshBar
+                updatedAt={page.updatedAt}
+                expiresAt={page.expiresAt}
+                refresh={refresh}
+                auto
+                row
+                className="max-md:hidden md:col-span-2 md:mt-2"
+              />
+            )}
         </div>
         {sharing && (
           <SharePanel
@@ -159,40 +175,38 @@ export function GameView({ page }: { page: GamePage }) {
             file={`${[page.username, page.game.key, mode, submode, period].filter(Boolean).join("-")}.png`}
           />
         )}
-        {/* The Games button and the mode select share a row (on phones, so the tables start nearer the top); the open
-            Games grid lies over the page below it. On phones the tabs share it too; from `md` links and tabs take rows
-            of their own. */}
-        <div className="relative flex flex-wrap items-start gap-x-2 gap-y-4 empty:hidden">
-          {page.games.length > 1 && <GameNav games={page.games} username={page.username} current={page.game.key} className="shrink-0" />}
-          {page.modes.length > 1 && <ModeSwitcher page={page} />}
-        </div>
-        {page.submodes.length > 1 && <ModeSwitcher page={page} kind="submode" />}
-        {(page.periods?.length ?? 0) > 1 && <ModeSwitcher page={page} kind="period" />}
+        {comparing && <ComparePanel id={compareId} page={page} />}
+        <GameSwitchers page={page} scope={scope} />
         {page.window && <PeriodDates {...page.window} />}
         {page.games.find(({ key }) => key === page.game.key)?.played === false && (
-          <NeverPlayed name={page.username} game={plainText(page.game.name)} />
+          <NeverPlayed name={page.username} game={plainText(page.game.name)} session={session !== undefined} />
         )}
-        <p className="text-mc-1 text-mc-gray">
-          <PointerText mouse={t("game.hint", { name: page.username })} touch={t("game.hintTouch", { name: page.username })} />{" "}
-          {/* The game's index of leaderboards, opened and scrolled to this mode's. */}
-          <Link
-            to="/{-$locale}/leaderboards/$field"
-            params={{ field: page.game.key }}
-            search={{ mode: page.mode }}
-            hash={page.mode}
-            className="text-mc-yellow underline underline-offset-2"
-          >
-            {t("leaderboards.gameTitle", { game: plainText(page.game.name) })}
-          </Link>
-        </p>
-        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-mc-1 text-mc-gray">
-          {t("game.discord")}
-          <Command command={botCommand(page)} />
-          <a href="/invite-user" target="_blank" rel="noreferrer" className="text-mc-yellow underline underline-offset-2">
-            {t("game.addApp")}
-            <span className="sr-only"> {t("nav.newTab")}</span>
-          </a>
-        </p>
+        {/* A session's stats rank nowhere, and the bot's `/session` takes some games under a group. */}
+        {!session && (
+          <>
+            <p className="text-mc-1 text-mc-gray">
+              <PointerText mouse={t("game.hint", { name: page.username })} touch={t("game.hintTouch", { name: page.username })} />{" "}
+              {/* The game's index of leaderboards, opened and scrolled to this mode's. */}
+              <Link
+                to="/{-$locale}/leaderboards/$field"
+                params={{ field: page.game.key }}
+                search={{ mode: page.mode }}
+                hash={page.mode}
+                className="text-mc-yellow underline underline-offset-2"
+              >
+                {t("leaderboards.gameTitle", { game: plainText(page.game.name) })}
+              </Link>
+            </p>
+            <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-mc-1 text-mc-gray">
+              {t("game.discord")}
+              <Command command={botCommand(page)} />
+              <a href="/invite-user" target="_blank" rel="noreferrer" className="text-mc-yellow underline underline-offset-2">
+                {t("game.addApp")}
+                <span className="sr-only"> {t("nav.newTab")}</span>
+              </a>
+            </p>
+          </>
+        )}
         {page.sections[0]?.box ? [boxPanels, headlinePanels] : [headlinePanels, boxPanels]}
         {lists.map((section, index) => (
           <Fragment key={section.title ?? section.name ?? index}>
@@ -222,9 +236,9 @@ function botCommand({ game, period, username }: GamePage) {
 }
 
 /** A game the player has never played: its page is all zeros, so it says so rather than look like real stats. */
-export function NeverPlayed({ name, game }: { name: string; game: string }) {
+export function NeverPlayed({ name, game, session = false }: { name: string; game: string; session?: boolean }) {
   const { t } = useTranslation();
-  return <p className="text-mc-1 text-mc-yellow">{t("game.neverPlayed", { name, game })}</p>;
+  return <p className="text-mc-1 text-mc-yellow">{t(session ? "session.unplayed" : "game.neverPlayed", { name, game })}</p>;
 }
 
 /** The filter box matched nothing, so the lists below it are empty. */

@@ -19,7 +19,11 @@ const RPC_PROCEDURES = new Map<string, { ttl: number; params: readonly string[] 
   ["player/page", { ttl: 60, params: ["uuid"] }],
   ["player/bingo", { ttl: 300, params: ["uuid"] }],
   ["player/game", { ttl: 60, params: ["uuid", "game", "mode", "submode", "period"] }],
+  ["player/session", { ttl: 60, params: ["uuid"] }],
+  ["player/session/game", { ttl: 60, params: ["uuid", "game", "mode", "submode"] }],
+  ["guild/page", { ttl: 60, params: ["name"] }],
   ["search/suggest", { ttl: 30, params: ["query"] }],
+  ["search/guilds", { ttl: 30, params: ["query"] }],
   ["search/cards", { ttl: 60, params: ["names"] }],
   ["leaderboard/list", { ttl: 3600, params: [] }],
   ["leaderboard/game", { ttl: 3600, params: ["key"] }],
@@ -51,8 +55,9 @@ function upstreamSearch(search: string, params: readonly string[]): string | nul
 }
 
 /**
- * Unknown players are cached at the edge for 5 minutes, but not a name `player/resolve` didn't find: a Hypixel lookup
- * can add the player a moment later, and the page it opens then resolves the same URL. Other failures are never cached.
+ * Unknown players are cached at the edge for 5 minutes, but not a name `player/resolve` or `guild/page` didn't find: a
+ * Hypixel lookup can add it a moment later, and the page it opens then asks for the same URL. Other failures are never
+ * cached.
  */
 function proxyCacheHeaders(status: number, ttl: number, byName: boolean): Record<string, string> {
   if (status === 200) return cacheHeaders(`max-age=${ttl}`);
@@ -75,7 +80,7 @@ export async function proxyRpc(procedure: string, search: string): Promise<Respo
   const upstream = await fetchApi(`${await rpcUrl()}/${procedure}${query}`);
   if (!upstream) return unavailable({ status: 503, code: "SERVICE_UNAVAILABLE", message: "Statsify is busy, try again shortly" });
 
-  const byName = procedure === "player/resolve" && new URLSearchParams(query).has("name");
+  const byName = procedure === "guild/page" || (procedure === "player/resolve" && new URLSearchParams(query).has("name"));
   const headers = new Headers(proxyCacheHeaders(upstream.status, entry.ttl, byName));
   headers.set("content-type", upstream.headers.get("content-type") ?? "application/json");
 

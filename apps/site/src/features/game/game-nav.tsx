@@ -13,6 +13,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { cn } from "~/lib/util";
+import { type GameScope, gameLink } from "./game-data";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import type { GamePage } from "@statsify/contract";
@@ -44,14 +45,14 @@ function GameName({ game }: { game: NavGame }) {
  */
 export function GameNav({
   games,
-  username,
+  scope,
   current,
   open,
   wide = false,
   className,
 }: {
   games: NavGame[];
-  username: string;
+  scope: GameScope;
   /** The key of the game page it's on. */
   current?: string;
   open?: boolean;
@@ -117,8 +118,7 @@ export function GameNav({
             {games.map((game) => (
               <li key={game.key}>
                 <Link
-                  to="/{-$locale}/player/$name/$game"
-                  params={{ name: username, game: game.key }}
+                  {...gameLink(scope, game.key)}
                   aria-current={ariaCurrent(game)}
                   onClick={close}
                   className={cn(
@@ -138,8 +138,7 @@ export function GameNav({
           {games.map((game) => (
             <li key={game.key}>
               <Link
-                to="/{-$locale}/player/$name/$game"
-                params={{ name: username, game: game.key }}
+                {...gameLink(scope, game.key)}
                 aria-current={ariaCurrent(game)}
                 className="group block"
               >

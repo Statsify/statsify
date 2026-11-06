@@ -29,8 +29,17 @@ export async function proxySkin(
   return proxy(path, { uuid, ...fixed });
 }
 
-/** A search suggestion's head, by the suggested name: only the skin the API has stored, never a fresh lookup. */
+/**
+ * A head from only the skin the API has stored, never a fresh lookup: a search suggestion's by the suggested name,
+ * or a guild member's by UUID (`?uuid=<uuid>&stored`).
+ */
 export async function proxyStoredHead(search: URLSearchParams): Promise<Response> {
+  const uuid = search.get("uuid");
+  if (uuid !== null) {
+    if (!isPageQuery(uuid, search, { stored: "" })) return new Response(null, { status: 404, headers: NO_STORE });
+    return proxy("/skin/head/stored", { player: uuid });
+  }
+
   const name = UsernameSchema.safeParse(search.get("name"));
   if (!name.success) return new Response("name is required", { status: 400 });
 

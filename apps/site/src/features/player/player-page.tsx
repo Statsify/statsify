@@ -11,6 +11,7 @@ import { BOX_GAP, Box, CELL, HEADING_BOX, StatBox } from "~/components/ui/box";
 import { ClockScript } from "~/lib/clock";
 import { Discord } from "~/components/icons/discord";
 import { GameNav } from "~/features/game/game-nav";
+import { gameLink } from "~/features/game/game-data";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
@@ -18,6 +19,7 @@ import { Link } from "@tanstack/react-router";
 import { MinecraftText, colourOf, nameColour } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
+import { LoginDate } from "./login-date";
 import { RefreshBar, savedDate, useNow } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust, SkinHead } from "~/components/ui/skin";
@@ -28,7 +30,7 @@ import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { playerPageQuery } from "./resolve";
 import { refreshPlayer } from "./player-actions";
-import { relativeTime, shortDate } from "~/i18n/format";
+import { relativeTime } from "~/i18n/format";
 import { addRecentPlayer } from "./recent";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
@@ -121,8 +123,8 @@ export function PlayerView({ page }: { page: PlayerPage }) {
             className="mb-2 md:col-span-full md:row-start-3 md:mt-2 md:mb-0 xl:row-start-3"
           />
           {/* From `xl` the nametag shares its row with the level and overview, too narrow for the facts' values, so they
-              get a row of their own; below that `NametagPanel` draws them. */}
-          <PlayerFacts page={page} className="hidden xl:col-span-full xl:row-start-2 xl:grid xl:grid-cols-3" />
+              get a row of their own, three across, the last row filled; below that `NametagPanel` draws them. */}
+          <PlayerFacts page={page} className="hidden xl:col-span-full xl:row-start-2 xl:grid xl:grid-cols-3 xl:[&>:last-child:nth-child(3n+1)]:col-span-3 xl:[&>:last-child:nth-child(3n+2)]:col-span-2" />
           <NetworkLevelPanel level={page.level} username={page.username} className="md:col-start-1 md:row-start-2 xl:col-start-2 xl:row-start-1" />
           <OverviewPanel overview={page.overview} username={page.username} className="md:col-start-2 md:row-start-2 xl:col-start-3 xl:row-start-1" />
         </div>
@@ -144,7 +146,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
             its grid lies over the panels. From `md` the panels are near enough. */}
         {page.games.length > 0 && (
           <div className="relative md:hidden">
-            <GameNav games={navGames} username={page.username} wide />
+            <GameNav games={navGames} scope={{ kind: "player", name: page.username }} wide />
           </div>
         )}
         <GameGrid games={page.games} username={page.username} />
@@ -220,7 +222,9 @@ function NametagPanel({
           {page.guild?.tagFormatted && (
             <>
               {" "}
-              <MinecraftText>{page.guild.tagFormatted}</MinecraftText>
+              <Link to="/{-$locale}/guild/$name" params={{ name: page.guild.name }} className="hover:underline">
+                <MinecraftText>{page.guild.tagFormatted}</MinecraftText>
+              </Link>
             </>
           )}
         </h1>
@@ -395,11 +399,12 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
 }
 
 /**
- * The guild, status and logins the card's header lists, each in its own box, two across from `sm`; a player with no
- * guild has five, so the last takes the row. The last game links to its page where the player has one for it.
+ * The guild, status and logins the card's header lists, and the session the bot's `/session` started, each in its own
+ * box, two across from `sm`; an odd last one takes the row. The last game links to its page where the player has one
+ * for it.
  */
 function PlayerFacts({
-  page: { uuid, guild, status, games, username, updatedAt, expiresAt },
+  page: { uuid, guild, status, games, username, updatedAt, expiresAt, session },
   className,
 }: {
   page: PlayerPage;
@@ -410,10 +415,19 @@ function PlayerFacts({
   const lastGamePage = games.find((game) => game.id === status.lastGame?.id)?.page;
 
   return (
-    <div className={cn("grid grid-cols-1 sm:grid-cols-2 sm:[&>:last-child:nth-child(odd)]:col-span-2", BOX_GAP, className)}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 sm:max-xl:[&>:last-child:nth-child(odd)]:col-span-2", BOX_GAP, className)}>
       {guild && (
         <Fact>
-          <InlineStat label={t("default:stats.guild.guild")} value={guild.name} color="text-mc-dark-green" large />
+          <InlineStat
+            label={t("default:stats.guild.guild")}
+            value={(
+              <Link to="/{-$locale}/guild/$name" params={{ name: guild.name }} className={cn(STAT_LINK, "after:inset-0")}>
+                {guild.name}
+              </Link>
+            )}
+            color="text-mc-dark-green"
+            large
+          />
         </Fact>
       )}
       <Fact>
@@ -451,6 +465,20 @@ function PlayerFacts({
           large
         />
       </Fact>
+      {session && (
+        <Fact>
+          <InlineStat
+            label={t("session.title")}
+            value={(
+              <Link to="/{-$locale}/player/$name/session" params={{ name: username }} className={cn(STAT_LINK, "after:inset-0")}>
+                <LoginDate ms={session.start} linked />
+              </Link>
+            )}
+            color="text-mc-dark-aqua"
+            large
+          />
+        </Fact>
+      )}
     </div>
   );
 }
@@ -498,55 +526,20 @@ function HiddenStatus() {
   return <Hint full={hint} spoken={`${hidden}. ${hint}`}>{hidden}</Hint>;
 }
 
-const twoDigits = (value: number) => String(value).padStart(2, "0");
-
-/**
- * The card's `LL/dd/yy, hh:mm a` in UTC, from the date's parts rather than `Intl`: ICU versions differ in the space
- * before AM/PM, so the server's text and the browser's could differ and break hydration.
- */
-function loginText(ms: number): string {
-  const date = new Date(ms);
-  const hours = date.getUTCHours();
-  const day = `${twoDigits(date.getUTCMonth() + 1)}/${twoDigits(date.getUTCDate())}/${twoDigits(date.getUTCFullYear() % 100)}`;
-  return `${day}, ${twoDigits(hours % 12 || 12)}:${twoDigits(date.getUTCMinutes())} ${hours < 12 ? "AM" : "PM"}`;
-}
-
-/**
- * A login date in the visitor's zone. Once the page has mounted, how long ago it was and the card's UTC show on hover,
- * focus or tap. The HTML has UTC, as the server can't know the zone; `ClockScript` puts the browser's in its place
- * before first paint.
- */
-function LoginDate({ ms }: { ms: number }) {
-  const { t, i18n } = useTranslation();
-  const now = useNow();
-  if (ms <= 0) return t("player.na");
-
-  const utc = `${loginText(ms)} UTC`;
-  // `now` is undefined while hydrating, so the server's HTML and the first render carry no clock value.
-  const text = now === undefined ? utc : shortDate(ms, i18n.language);
-  const ago = now === undefined ? undefined : relativeTime(ms, now, i18n.language);
-
-  return (
-    <>
-      <Hint full={ago && `${ago} · ${utc}`} spoken={ago && `${text}, ${ago}`}>
-        <time dateTime={new Date(ms).toISOString()} suppressHydrationWarning>{text}</time>
-      </Hint>
-      <ClockScript args={{ at: ms, locale: i18n.language }} />
-    </>
-  );
-}
-
-export function GameGrid({ games, username }: { games: GameSummary[]; username: string }) {
+/** The games' panels; on a session's page, with the session's numbers and linking to its game pages. */
+export function GameGrid({ games, username, session = false }: { games: GameSummary[]; username: string; session?: boolean }) {
   const { t } = useTranslation();
 
-  if (games.length === 0) return <p className="text-mc-1.5 text-mc-gray text-center">{t("player.noGames", { name: username })}</p>;
+  if (games.length === 0) {
+    return <p className="text-mc-1.5 text-mc-gray text-center">{t(session ? "session.noGames" : "player.noGames", { name: username })}</p>;
+  }
 
   // Two 32 px cells side by side need about 300 px, so columns are added only when every panel keeps that width.
   return (
     <ul className={cn("grid grid-cols-1 md:grid-cols-snap-2 lg:grid-cols-snap-3 xl:grid-cols-snap-4", BOX_GAP)}>
       {games.map((game) => (
         <li key={game.id}>
-          <GamePanel game={game} username={username} />
+          <GamePanel game={game} username={username} session={session} />
         </li>
       ))}
     </ul>
@@ -558,7 +551,7 @@ export function GameGrid({ games, username }: { games: GameSummary[]; username: 
  * leaderboard at the player's row. A linked number shows its label's full name and exact number on hover and keyboard
  * focus, as on the game page; an unlinked one shows them on a tap too.
  */
-function GamePanel({ game, username }: { game: GameSummary; username: string }) {
+function GamePanel({ game, username, session }: { game: GameSummary; username: string; session: boolean }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
   const exact = useExactNumber();
@@ -570,7 +563,7 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
       <Box className={HEADING_BOX}>
         <h2>
           {/* The whole box is the link, its ring on the box's edge: the box clips anything past it. */}
-          <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: game.page }} className={cn(STAT_LINK, "after:inset-0")}>
+          <Link {...gameLink({ kind: session ? "session" : "player", name: username }, game.page)} className={cn(STAT_LINK, "after:inset-0")}>
             {title}
             {/* Text, not an icon, so the title's box keeps the height of every other panel's. */}
             <span aria-hidden className="text-mc-1.5 text-mc-gray"> »</span>

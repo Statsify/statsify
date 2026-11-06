@@ -22,6 +22,9 @@ import { PlayerService } from "#player";
 import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
+/** `GuildService.get` refreshes a guild from Hypixel at most once per this cooldown. */
+export const GUILD_COOLDOWN_MS = 600_000;
+
 @Injectable()
 export class GuildService {
   private readonly logger = new Logger("GuildService");
@@ -34,10 +37,16 @@ export class GuildService {
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>
   ) {}
 
+  /**
+   * With `namesFromHypixel: false` a member is named from their stored player only, so a fetch is one Hypixel call;
+   * the rest are saved as `ERROR <uuid>` and named on a fetch past their 10 minutes. With `throwOnHypixelError` a
+   * failed request rejects with `HypixelUnavailableError` rather than reading as no such guild.
+   */
   public async get(
     inputtedTag: string,
     type: GuildQuery,
-    cache: CacheLevel
+    cache: CacheLevel,
+    { namesFromHypixel = true, throwOnHypixelError = false }: { namesFromHypixel?: boolean; throwOnHypixelError?: boolean } = {}
   ): Promise<Guild | null> {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
@@ -50,7 +59,8 @@ export class GuildService {
 
     const guild = await this.hypixelService.getGuild(
       tag,
-      type.toLowerCase() as Lowercase<GuildQuery>
+      type.toLowerCase() as Lowercase<GuildQuery>,
+      { throwOnError: throwOnHypixelError }
     );
 
     if (!guild) {
@@ -73,7 +83,7 @@ export class GuildService {
     const fetchMembers = guild.members.map(async (member) => {
       const cacheMember = memberMap[member.uuid];
 
-      await this.getMemberName(member, cacheMember);
+      await this.getMemberName(member, cacheMember, namesFromHypixel);
 
       // These members will need their player document updated with the correct guild id
       if (member.guildId !== guild.id) {
@@ -134,8 +144,7 @@ export class GuildService {
       guild.scaledMonthly += scaled;
     }
 
-    // Cache guilds responses for 10 minutes
-    guild.expiresAt = Date.now() + 600_000;
+    guild.expiresAt = Date.now() + GUILD_COOLDOWN_MS;
 
     const flatGuild = flatten(guild);
     const serializedGuild = serialize(Guild, flatGuild);
@@ -208,7 +217,7 @@ export class GuildService {
     return await this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec();
   }
 
-  private async getMemberName(member: GuildMember, cachedMember?: GuildMember) {
+  private async getMemberName(member: GuildMember, cachedMember: GuildMember | undefined, namesFromHypixel: boolean) {
     if (cachedMember && Date.now() < cachedMember.expiresAt) {
       member.displayName = cachedMember.displayName;
       member.username = cachedMember.username;
@@ -217,13 +226,12 @@ export class GuildService {
       return;
     }
 
-    const player = await this.playerService
-      .get(member.uuid, CacheLevel.CACHE_ONLY, {
-        username: true,
-        displayName: true,
-        guildId: true,
-      })
-      .catch(() => null);
+    const fields = { username: true, displayName: true, guildId: true };
+
+    // `CACHE_ONLY` still asks Hypixel for a player that isn't stored.
+    const player = namesFromHypixel ?
+      await this.playerService.get(member.uuid, CacheLevel.CACHE_ONLY, fields).catch(() => null) :
+      await this.playerModel.findOne({ uuid: member.uuid }).select(fields).lean().exec();
 
     if (player) {
       member.username = player.username;

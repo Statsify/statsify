@@ -78,6 +78,7 @@ export const PLAYER_PAGE: PlayerPage = {
   },
   socials: { discord: "anrie", twitter: "https://twitter.com/anrie", youtube: "https://youtube.com/@anrie" },
   games: [],
+  session: null,
   updatedAt: NOW - 17 * 60_000,
   expiresAt: NOW - 15 * 60_000,
 };

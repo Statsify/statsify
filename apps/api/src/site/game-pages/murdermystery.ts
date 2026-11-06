@@ -15,9 +15,9 @@ const WEAPONS = ["thrownKnifeKills", "trapKills", "heroKills", "bowKills", "suic
 /** The card's table for each mode. */
 const TABLES: Record<string, CellSpec[][]> = {
   overall: [["wins", "murdererWins", "detectiveWins", "heroWins"], KILLS, WEAPONS],
-  classic: [["wins", "murdererWins", "detectiveWins"], KILLS, WEAPONS, ["fastestMurdererWin", "fastestDetectiveWin"]],
+  classic: [["wins", "murdererWins", "detectiveWins"], KILLS, WEAPONS, [{ key: "fastestMurdererWin", session: false }, { key: "fastestDetectiveWin", session: false }]],
   assassins: [["wins", "kills", "deaths", "kdr"], ["thrownKnifeKills", "trapKills", "bowKills"]],
-  infection: [["wins", "lastAliveGames"], ["killsAsInfected", "killsAsSurvivor"], ["alphaWins", "killsAsAlpha"]],
+  infection: [["wins", { key: "lastAliveGames", session: false }], ["killsAsInfected", "killsAsSurvivor"], ["alphaWins", "killsAsAlpha"]],
 };
 
 /** What the card leaves off Assassins and Infection, which have leaderboards. */
