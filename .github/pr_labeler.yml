@@ -34,6 +34,10 @@
   - changed-files:
     - any-glob-to-any-file: packages/discord/**/*
 
+"@statsify/inventory":
+  - changed-files:
+    - any-glob-to-any-file: packages/inventory/**/*
+
 "@statsify/logger":
   - changed-files:
     - any-glob-to-any-file: packages/logger/**/*
