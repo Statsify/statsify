@@ -17,9 +17,35 @@ import {
 } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
-import { getRequestAttributes, setRequestAttributes, setRequestError } from "@statsify/logger";
+import {
+  Observable,
+  type OperatorFunction,
+  catchError,
+  lastValueFrom,
+  map,
+  of,
+  tap,
+  throwError,
+} from "rxjs";
+import {
+  addRequestAttributes,
+  getRequestAttributes,
+  setRequestAttributes,
+  setRequestError,
+} from "@statsify/logger";
 import type { APIData } from "@statsify/util";
+
+const recover = <T, F>(fallback: F): OperatorFunction<T, T | F> =>
+  catchError((error) => {
+    const status: number | undefined = error.cause?.response?.status;
+
+    setRequestError(error, {
+      code: status,
+      retryable: status === 429 || (status !== undefined && status >= 500),
+    });
+
+    return of(fallback);
+  });
 
 @Injectable()
 export class HypixelService {
@@ -41,7 +67,7 @@ export class HypixelService {
           if (data.player) return new Player(data.player);
           return null;
         }),
-        catchError(() => of(null))
+        recover(null)
       )
     );
   }
@@ -53,7 +79,7 @@ export class HypixelService {
           if (data.guild) return new Guild(data.guild);
           return null;
         }),
-        catchError(() => of(null))
+        recover(null)
       )
     );
   }
@@ -65,7 +91,7 @@ export class HypixelService {
           if (data.games) return data.games.map((game: APIData) => new RecentGame(game));
           return [];
         }),
-        catchError(() => of([]))
+        recover([])
       )
     );
   }
@@ -77,7 +103,7 @@ export class HypixelService {
           if (data.session) return new Status(data.session);
           return null;
         }),
-        catchError(() => of(null))
+        recover(null)
       )
     );
   }
@@ -86,7 +112,7 @@ export class HypixelService {
     return lastValueFrom(
       this.request<APIData>("/watchdogstats").pipe(
         map((data) => new Watchdog(data)),
-        catchError(() => of(null))
+        recover(null)
       )
     );
   }
@@ -98,7 +124,7 @@ export class HypixelService {
           if (data.games) return new GameCounts(data.games);
           return null;
         }),
-        catchError(() => of(null))
+        recover(null)
       )
     );
   }
@@ -108,7 +134,7 @@ export class HypixelService {
 
     const resource$ = this.request<APIData>(`/resources/${resource}`).pipe(
       map((data) => data),
-      catchError(() => of(null))
+      recover(null)
     );
 
     const resourceData = await lastValueFrom(resource$);
@@ -127,33 +153,26 @@ export class HypixelService {
         error: (err) => this.recordRequest(start, err.response?.status, err.response?.headers["ratelimit-remaining"]),
       }),
       map((res) => res.data),
-      catchError((err) => {
-        const error = new Error(`Fetching ${url} failed with reason: ${err.message}`, { cause: err });
-        const status: number | undefined = err.response?.status;
-
-        setRequestError(error, {
-          code: status,
-          retryable: status === undefined || status === 429 || status >= 500,
-        });
-
-        return throwError(() => error);
-      })
+      catchError((err) =>
+        throwError(
+          () =>
+            new Error(`Fetching ${url} failed with reason: ${err.message}`, {
+              cause: err,
+            })
+        )
+      )
     );
   }
 
   private recordRequest(start: number, status?: number, rateLimitRemaining?: string) {
-    const {
-      "hypixel.request.count": count = 0,
-      "hypixel.request.duration_ms": duration = 0,
-      "hypixel.response.status_codes": statuses,
-    } = getRequestAttributes();
-
-    setRequestAttributes({
-      "hypixel.request.count": count + 1,
-      "hypixel.request.duration_ms": Math.round(duration + performance.now() - start),
+    addRequestAttributes({
+      "hypixel.request.count": 1,
+      "hypixel.request.duration_ms": Math.round(performance.now() - start),
     });
 
     if (status === undefined) return;
+
+    const { "hypixel.response.status_codes": statuses } = getRequestAttributes();
 
     setRequestAttributes({
       "hypixel.response.status_codes": statuses ? `${statuses},${status}` : `${status}`,

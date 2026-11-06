@@ -34,7 +34,6 @@ const logger = new Logger("api");
 process.on("uncaughtException", (error) => logger.error(error));
 process.on("unhandledRejection", (reason) => logger.error(reason));
 
-// Half of the Hypixel client's 5 second timeout
 const SLOW_REQUEST_MS = 2500;
 
 const getOutcome = (status: number): RequestOutcome => {

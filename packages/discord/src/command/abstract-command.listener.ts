@@ -332,10 +332,12 @@ export abstract class AbstractCommandListener {
 
         const [response, work] = this.handleInteraction(interaction);
 
-        await acknowledge(await response);
-        setRequestAttributes({ "discord.interaction.ack_ms": Math.round(performance.now() - start) });
+        const acknowledged = (async () => {
+          await acknowledge(await response);
+          setRequestAttributes({ "discord.interaction.ack_ms": Math.round(performance.now() - start) });
+        })();
 
-        await work;
+        await Promise.all([acknowledged, work]);
       },
       ({ "discord.interaction.type": type, "discord.command": command, "statsify.user.tier": tier }) => ({
         message: [type, command].filter(Boolean).join(" "),

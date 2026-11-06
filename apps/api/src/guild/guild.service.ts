@@ -17,7 +17,7 @@ import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.servic
 import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";
-import { getRequestAttributes, setRequestAttributes } from "@statsify/logger";
+import { addRequestAttributes, setRequestAttributes } from "@statsify/logger";
 import { PlayerService } from "#player";
 import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -236,8 +236,7 @@ export class GuildService {
     }
 
     if (!member.username) {
-      const { "statsify.guild.members.unresolved": unresolved = 0 } = getRequestAttributes();
-      setRequestAttributes({ "statsify.guild.members.unresolved": unresolved + 1 });
+      addRequestAttributes({ "statsify.guild.members.unresolved": 1 });
 
       member.username = `ERROR ${member.uuid}`;
       member.displayName = member.username;

@@ -68,15 +68,47 @@ const SAMPLE_RATE = isProduction ? 0.05 : 1;
 // Discord fails the interaction when the acknowledgement takes over 3 seconds
 const SLOW_ACK_MS = 1500;
 
+// Error events only get tags, and Sentry drops tag keys over 32 characters
+const TAGGED_ATTRIBUTES = new Set<string>([
+  "discord.command",
+  "discord.guild.id",
+  "discord.locale",
+  "http.route",
+  "statsify.user.tier",
+  "statsify.user.uuid",
+  "statsify.mode",
+  "statsify.submode",
+  "statsify.outcome",
+  "statsify.api.role",
+  "statsify.player",
+  "statsify.player.tag",
+  "statsify.guild.tag",
+  "statsify.cache.hit",
+] satisfies (keyof RequestAttributes)[]);
+
+type CountAttribute = {
+  [K in keyof RequestAttributes]-?: NonNullable<RequestAttributes[K]> extends number ? K : never;
+}[keyof RequestAttributes];
+
 const logger = new Logger("Event");
 
 export const setRequestAttributes = (attributes: RequestAttributes) => {
   Sentry.setAttributes(attributes);
-  Sentry.setTags(attributes);
+  Sentry.setTags(Object.fromEntries(Object.entries(attributes).filter(([key]) => TAGGED_ATTRIBUTES.has(key))));
 };
 
 export const getRequestAttributes = () =>
   Sentry.getIsolationScope().getScopeData().attributes as RequestAttributes;
+
+export const addRequestAttributes = (counts: Partial<Record<CountAttribute, number>>) => {
+  const attributes = getRequestAttributes();
+
+  setRequestAttributes(
+    Object.fromEntries(
+      Object.entries(counts).map(([key, count]) => [key, (attributes[key as CountAttribute] ?? 0) + count])
+    )
+  );
+};
 
 export const setRequestError = (
   error: unknown,
@@ -123,9 +155,6 @@ export const emitRequestEvent = (message: string, options: RequestEventOptions) 
   });
 };
 
-/**
- * Runs `request` in its own isolation scope, records what it throws, and emits its event when it settles.
- */
 export const withRequestEvent = (
   request: () => unknown,
   getEvent: (attributes: RequestAttributes) => RequestEvent

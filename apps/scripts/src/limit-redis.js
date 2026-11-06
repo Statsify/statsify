@@ -10,7 +10,7 @@ import Redis from "ioredis";
 import { CurrentHistoricalType } from "@statsify/api-client";
 import { Guild, scanMetadata, Player } from "@statsify/schemas";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
-import { getRequestAttributes, setRequestAttributes, withRequestEvent } from "@statsify/logger";
+import { addRequestAttributes, withRequestEvent } from "@statsify/logger";
 
 const redis = new Redis(process.env.REDIS_URL);
 
@@ -58,14 +58,9 @@ const runLimit = async (constructors, prefixes) => {
     // oxlint-disable-next-line no-await-in-loop
     await limitLeaderboardPipeline.exec();
 
-    const {
-      "statsify.leaderboard.count": count = 0,
-      "statsify.leaderboard.member_limit": memberLimit = 0,
-    } = getRequestAttributes();
-
-    setRequestAttributes({
-      "statsify.leaderboard.count": count + leaderboards.length,
-      "statsify.leaderboard.member_limit": memberLimit + memberCount,
+    addRequestAttributes({
+      "statsify.leaderboard.count": leaderboards.length,
+      "statsify.leaderboard.member_limit": memberCount,
     });
   }
 }

@@ -9,7 +9,6 @@
 import * as Sentry from "@sentry/node";
 import { config } from "@statsify/util";
 
-// The leaderboard cron reports to the API's project
 const sentryDsn = await config("sentry.apiDsn", { required: false });
 
 if (sentryDsn) {
