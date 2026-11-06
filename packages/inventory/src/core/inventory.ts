@@ -15,6 +15,15 @@ import type { PackStack } from "./pack.js";
 import { TextRenderer } from "./text.js";
 import { maxDamage } from "./legacy-items.js";
 
+export const LAYOUTS = {
+  chest: { rows: 3, cols: 9 },
+  "large-chest": { rows: 6, cols: 9 },
+  shop: { rows: 6, cols: 9 },
+  hotbar: { rows: 1, cols: 9 },
+} as const;
+
+export type InventoryLayout = keyof typeof LAYOUTS;
+
 export interface InventorySize {
   rows: number;
   cols: number;
@@ -39,8 +48,15 @@ const CHEST_SCREEN_BOTTOM = 215;
 const slotsTop = (title?: string) => (title ? TITLE_HEIGHT : EDGE);
 
 /** A slot's top left, in GUI pixels */
-const slotOrigin = ({ cols, title }: InventorySize, slot: number) =>
+export const slotOrigin = ({ cols, title }: InventorySize, slot: number) =>
   [EDGE + (slot % cols) * SLOT, slotsTop(title) + Math.floor(slot / cols) * SLOT] as const;
+
+/** The slot under a point, in GUI pixels from the inventory's top left, or -1 */
+export function slotAt({ rows, cols, title }: InventorySize, x: number, y: number) {
+  const col = Math.floor((x - EDGE) / SLOT);
+  const row = Math.floor((y - slotsTop(title)) / SLOT);
+  return col >= 0 && col < cols && row >= 0 && row < rows ? row * cols + col : -1;
+}
 
 /** Fills a rectangle given in GUI pixels */
 function fill(ctx: OffscreenCanvasRenderingContext2D, scale: number, x: number, y: number, w: number, h: number, color: string) {
@@ -86,8 +102,13 @@ export class InventoryRenderer {
     return drawTooltip(this.text, tooltipLines(item, this.names), scale, tick);
   }
 
+  /** Whether an item's icon changes from tick to tick */
+  public animates(item: ItemStack) {
+    return this.itemRenderer.animates(item);
+  }
+
   /** An item's icon at a game tick, or undefined when the pack can't draw it */
-  private async icon(item: ItemStack, scale: number, tick: number) {
+  public async icon(item: ItemStack, scale: number, tick: number) {
     if (this.broken.has(item)) return undefined;
 
     try {
@@ -100,7 +121,7 @@ export class InventoryRenderer {
   }
 
   /** A slot's icon, count and durability bar */
-  private drawSlot(
+  public drawSlot(
     ctx: OffscreenCanvasRenderingContext2D,
     size: InventorySize,
     slot: number,
