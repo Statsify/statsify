@@ -10,6 +10,7 @@ import {
   type ItemView,
   type ItemsResource,
   PLAYER_STATS,
+  type PetView,
   type PlayerStat,
   SKILLS,
   STAT_SOURCES,
@@ -18,7 +19,7 @@ import {
   type StatTotal,
   type StatsSection,
 } from "#types";
-import { POWERS, STAT_TABLES } from "#data";
+import { PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
 import { add, roundTo } from "@statsify/math";
 import { bagAccessories, powerScale, stonePowerStats } from "./accessories.js";
 import { decodeSlots } from "#items";
@@ -105,6 +106,25 @@ const tuningStats = (points: Record<string, number>): Stats =>
     })
   );
 
+/** The active pet's stats at its level, raised by its item's percents, plus the item's own stats. */
+function petStats(pet: PetView | undefined): Stats | undefined {
+  if (!pet) return undefined;
+
+  const table = PET_STATS[pet.type]?.[pet.rarity];
+  const item = pet.heldItem ? PET_ITEMS[pet.heldItem] : undefined;
+  const [from, to] = table?.levels ?? [1, 100];
+  const progress = (Math.min(Math.max(pet.level.level, from), to) - from) / (to - from);
+
+  const own = Object.keys({ ...table?.first, ...table?.last }).map((key) => {
+    const stat = key as PlayerStat;
+    const first = table?.first[stat] ?? 0;
+    const boost = 1 + ((item?.allPetStats ?? 0) + (item?.petStats?.[stat] ?? 0)) / 100;
+    return { [stat]: (first + ((table?.last[stat] ?? 0) - first) * progress) * boost };
+  });
+
+  return sumStats([...own, item?.stats ?? {}]);
+}
+
 // Blaze levels' stats (wiki: Blaze Slayer), which NEU's bonus table lacks. Vampire's are Rift Time, a Rift-only stat.
 const BLAZE_LEVELS: Stats[] = [
   { health: 3 },
@@ -154,7 +174,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
 
   const skills = getSkills(profile, member);
   const slayers = getSlayers(member).bosses;
-  const score = getPets(member).score;
+  const pets = getPets(member);
 
   const sources: Partial<Record<StatSource, Stats>> = {
     base: STAT_TABLES.base,
@@ -169,14 +189,15 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
       Object.entries(STAT_TABLES.slayers).map(([boss, levels]) => upTo(levels, slayers[boss as keyof typeof slayers].level.level))
     ),
     blaze: upTo(BLAZE_LEVELS, slayers.blaze.level.level),
-    petScore: { magic_find: petScoreMagicFind(score) },
+    pet: petStats(pets.active),
+    petScore: { magic_find: petScoreMagicFind(pets.score) },
   };
 
   const unverified: StatSource[] = [];
   if (power) unverified.push("power");
   if (Object.keys(tuning).length > 0) unverified.push("tuning");
   if (slayers.blaze.level.level > 0) unverified.push("blaze");
-  if (score >= UNVERIFIED_PET_SCORE) unverified.push("petScore");
+  if (pets.score >= UNVERIFIED_PET_SCORE) unverified.push("petScore");
 
   return { stats: toTotals(sources), weapon: weapon?.name, unverified };
 }

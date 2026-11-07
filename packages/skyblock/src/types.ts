@@ -540,6 +540,7 @@ export const STAT_SOURCES = [
   "accessories",
   "power",
   "tuning",
+  "pet",
   "skills",
   "slayers",
   "blaze",
