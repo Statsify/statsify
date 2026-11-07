@@ -551,6 +551,7 @@ export const STAT_SOURCES = [
   "slayerTiers", // Combat Wisdom from each slayer boss tier killed
   "petScore",
   "essence",
+  "fortuneUpgrades",
   "hotm",
   "hotf",
   "bestiary",
