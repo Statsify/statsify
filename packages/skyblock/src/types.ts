@@ -300,10 +300,14 @@ export interface KuudraTier {
   texture: ItemTexture; // its key
 }
 
+export const CATCHES = ["normal", "treasure", "largeTreasure", "outstanding"] as const;
+
+export type Catch = (typeof CATCHES)[number];
+
 export interface FishingSection {
   trophyFish: TrophyFish[];
   trophyFishCaught: number;
-  itemsFished: Record<"total" | "normal" | "treasure" | "largeTreasure" | "outstanding", number>;
+  itemsFished: Record<"total" | Catch, number>;
   seaCreatureKills: number;
   seaCreatures: { name: string; kills: number }[]; // bestiary kills, the most killed first, none at 0
 }
@@ -378,6 +382,10 @@ export interface RiftSection {
   catsFound: number;
 }
 
+export const AUCTION_STATS = ["created", "completed", "won", "bids", "highestBid", "goldSpent", "goldEarned", "fees"] as const;
+
+export type AuctionStat = (typeof AUCTION_STATS)[number];
+
 export interface MiscSection {
   kills: number;
   deaths: number;
@@ -385,7 +393,7 @@ export interface MiscSection {
   topDeaths: { id: string; count: number }[]; // by cause
   highestDamage?: number;
   highestCriticalDamage?: number;
-  auctions: Record<"created" | "completed" | "won" | "bids" | "highestBid" | "goldSpent" | "goldEarned" | "fees", number>;
+  auctions: Record<AuctionStat, number>;
   gifts: { given: number; received: number };
   mythological: { kills: number; chains: number }; // burrow chains completed
   candy: number; // collected at Spooky Festivals
@@ -397,6 +405,8 @@ export interface PetsSection {
   active?: PetView;
   pets: PetView[];
   totalXp: number; // every pet's XP ever gained
+  skinned: number;
+  candyUsed: number; // over every pet
 }
 
 export interface PetView {
@@ -405,8 +415,6 @@ export interface PetView {
   name: string;
   rarity: Rarity;
   level: Level;
-  skinned: number;
-  candyUsed: number; // over every pet
   heldItem?: string;
   heldItemTexture?: ItemTexture;
   skin?: string;

@@ -8,14 +8,12 @@
 
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { MEDAL_COLORS, TROPHY_TIERS } from "@statsify/skyblock/display";
+import { CATCHES, MEDAL_COLORS, TROPHY_TIERS } from "@statsify/skyblock/display";
 import { gridRows } from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
 import type { FishingSection } from "@statsify/skyblock";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
-
-const CATCHES = ["normal", "treasure", "largeTreasure", "outstanding"] as const;
 
 const SEA_CREATURES_SHOWN = 24;
 
