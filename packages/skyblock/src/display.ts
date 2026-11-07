@@ -7,10 +7,20 @@
  */
 
 // Its own entry, with no data, so the bot's cards and the site's pages draw names and rarities alike.
-import type { DungeonClass, DungeonGrade, GameMode, Powder, Rarity, Skill, SlayerBoss } from "#types";
+import type { DungeonClass, DungeonGrade, Faction, GameMode, JacobBracket, Powder, Rarity, Skill, SlayerBoss, Whisper } from "#types";
 
 // The registries a page lists, from here rather than the root, whose NBT decoding would ride along into the browser.
-export { DUNGEON_CLASSES, INVENTORIES, POWDERS, RARITIES, SKILLS, SLAYER_BOSSES } from "#types";
+export {
+  DUNGEON_CLASSES,
+  INVENTORIES,
+  JACOB_MEDALS,
+  POWDERS,
+  RARITIES,
+  SKILLS,
+  SLAYER_BOSSES,
+  TROPHY_TIERS,
+  WHISPERS,
+} from "#types";
 
 export const RARITY_COLORS: Record<Rarity, string> = {
   COMMON: "§f",
@@ -63,6 +73,19 @@ export const POWDER_COLORS: Record<Powder, string> = {
   gemstone: "§d",
   glacite: "§b",
 };
+
+export const FACTION_COLORS: Record<Faction, string> = { mages: "§5", barbarians: "§c" };
+
+/** Jacob's contest brackets and medals, and the trophy fish tiers, which share four of them. */
+export const MEDAL_COLORS: Record<JacobBracket, string> = {
+  bronze: "§c",
+  silver: "§f",
+  gold: "§6",
+  platinum: "§3",
+  diamond: "§b",
+};
+
+export const WHISPER_COLORS: Record<Whisper, string> = { forest: "§a", desert: "§e" };
 
 export const BOSS_COLORS: Record<SlayerBoss, string> = {
   zombie: "§a",
