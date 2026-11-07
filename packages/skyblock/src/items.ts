@@ -35,7 +35,6 @@ export function toItemView(item: RawItem): ItemView {
 
   return {
     id,
-    uuid: attributes.uuid,
     name: normalizeItemText(item.tag?.display?.Name ?? id),
     lore,
     rarity: rarityOf(lore),
