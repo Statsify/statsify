@@ -409,6 +409,36 @@ try {
     ])
   );
 
+  // The Garden response keys crops by their collection ids; NEU keys the milestones by crop name
+  const gardenCrops: Record<string, string> = {
+    CARROT: "CARROT_ITEM",
+    COCOA_BEANS: "INK_SACK:3",
+    MUSHROOM: "MUSHROOM_COLLECTION",
+    NETHER_WART: "NETHER_STALK",
+    POTATO: "POTATO_ITEM",
+    SUNFLOWER: "DOUBLE_PLANT",
+  };
+  const garden = await readJson<{
+    garden_exp: number[];
+    crop_milestones: Record<string, number[]>;
+    visitors: Record<string, string>;
+    plots: Record<string, unknown>;
+    crop_upgrades: number[];
+    composter_upgrades: Record<string, Record<string, unknown>>;
+  }>("constants/garden.json");
+  await write("garden.json", {
+    garden_exp: garden.garden_exp,
+    crop_milestones: Object.fromEntries(
+      Object.entries(garden.crop_milestones).map(([crop, tiers]) => [gardenCrops[crop] ?? crop, tiers])
+    ),
+    visitors: garden.visitors,
+    plots: Object.keys(garden.plots).toSorted(),
+    crop_upgrades: garden.crop_upgrades.length,
+    composter_upgrades: Object.fromEntries(
+      Object.entries(garden.composter_upgrades).map(([id, levels]) => [id, Object.keys(levels).length])
+    ),
+  });
+
   // Accessory id → its tier's rank, and NEU's per-variant ids (an Abicase model, a party hat color) → the API's one id.
   const accessoryRanks = new Map<string, number>();
   const apiIds = new Map<string, string>();
