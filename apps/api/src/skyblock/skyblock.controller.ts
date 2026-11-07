@@ -8,6 +8,7 @@
 
 import {
   ApiBadRequestResponse,
+  ApiExcludeEndpoint,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -15,8 +16,8 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { Auth, AuthRole } from "#auth";
-import { CachedPlayerDto, SkyBlockItemsDto, SkyBlockPriceDto, SkyBlockProfileDto } from "#dtos";
-import { Controller, Get, Query } from "@nestjs/common";
+import { BadRequestException, Controller, Get, NotFoundException, Query, Res, StreamableFile } from "@nestjs/common";
+import { CachedPlayerDto, SkyBlockIconDto, SkyBlockItemsDto, SkyBlockPriceDto, SkyBlockProfileDto } from "#dtos";
 import {
   ErrorResponse,
   GetSkyBlockItemsResponse,
@@ -26,15 +27,19 @@ import {
   SkyBlockNotFoundException,
   SkyBlockUnavailableException,
 } from "@statsify/api-client";
+import { FAILED_HEAD_SECONDS, SkyBlockIconsService } from "./skyblock-icons.service.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
 import { SkyBlockService } from "./skyblock.service.js";
+import { parseIconKey } from "@statsify/skyblock/icon-key";
+import type { FastifyReply } from "fastify";
 
 @Controller("/skyblock")
 @ApiTags("SkyBlock")
 export class SkyBlockController {
   public constructor(
     private readonly skyblockService: SkyBlockService,
-    private readonly pricesService: SkyBlockPricesService
+    private readonly pricesService: SkyBlockPricesService,
+    private readonly iconsService: SkyBlockIconsService
   ) {}
 
   @ApiOperation({
@@ -89,6 +94,24 @@ export class SkyBlockController {
       success: true,
       price,
     };
+  }
+
+  /**
+   * The site's item icons, which it proxies with a year's edge cache. A Steve stand-in for a head whose skin didn't load
+   * is cached only as long as the failure is remembered, so the real head shows once it loads.
+   */
+  @Get("/icons")
+  @Auth({ role: AuthRole.WORKER, weight: 0 })
+  @ApiExcludeEndpoint()
+  public async getIcon(@Query() { texture: key, size, glint }: SkyBlockIconDto, @Res({ passthrough: true }) reply: FastifyReply) {
+    const texture = parseIconKey(key);
+    if (!texture) throw new BadRequestException("texture must be an icon key");
+
+    const icon = await this.iconsService.getIcon(texture, size, glint === 1);
+    if (!icon) throw new NotFoundException("no texture");
+
+    reply.header("Cache-Control", icon.standIn ? `public, max-age=${FAILED_HEAD_SECONDS}` : "public, max-age=31536000, immutable");
+    return new StreamableFile(icon.png, { type: "image/png" });
   }
 
   @ApiOperation({ summary: "Get a Fuzzy Searched List of Priced SkyBlock Items" })

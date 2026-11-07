@@ -7,4 +7,5 @@
  */
 
 export * from "./skyblock.module.js";
+export * from "./skyblock-prices.service.js";
 export * from "./skyblock.service.js";
