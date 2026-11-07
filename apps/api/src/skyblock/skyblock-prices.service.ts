@@ -189,7 +189,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     for (const key of Object.keys(map.entries)) {
       const described = describeKey(key, items);
       if (!described) continue;
-      const payload = JSON.stringify({ id: key, rarity: described.rarity });
+      const payload = JSON.stringify({ id: key, rarity: described.rarity, texture: described.texture });
       pipeline.call("FT.SUGADD", next, described.name, "1", "PAYLOAD", payload);
     }
 
