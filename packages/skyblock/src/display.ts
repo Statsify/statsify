@@ -9,6 +9,9 @@
 // Its own entry, with no data, so the bot's cards and the site's pages draw names and rarities alike.
 import type { DungeonClass, DungeonGrade, GameMode, Powder, Rarity, Skill, SlayerBoss } from "#types";
 
+// The registries a page lists, from here rather than the root, whose NBT decoding would ride along into the browser.
+export { DUNGEON_CLASSES, INVENTORIES, POWDERS, RARITIES, SKILLS, SLAYER_BOSSES } from "#types";
+
 export const RARITY_COLORS: Record<Rarity, string> = {
   COMMON: "§f",
   UNCOMMON: "§a",
