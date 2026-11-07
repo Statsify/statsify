@@ -164,6 +164,10 @@ const treeStats = (nodes: TreeNode[], layout: TreeLayout) =>
     )
   );
 
+// Defaults NEU's base_stats leaves out (wiki: Stats), and its Magic Find of 10, which the wiki puts at 0
+const { magic_find: baseMagicFind, ...BASE } = STAT_TABLES.base;
+const WIKI_BASE: Stats = { swing_range: 3, health_regen: 100, vitality: 100, mending: 100, respiration: 30, magic_find: baseMagicFind };
+
 // +2 Health per bestiary milestone and per Catacombs level to 50 (wiki: Health); +5 Health per SkyBlock level and +1
 // Strength per 5 (wiki: SkyBlock Levels). Fairy souls stopped giving stats in 2022.
 const BESTIARY_HEALTH = 2;
@@ -225,7 +229,8 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   const level = Math.floor((member.leveling?.experience ?? 0) / SKYBLOCK_XP_PER_LEVEL);
 
   const sources: Partial<Record<StatSource, Stats>> = {
-    base: STAT_TABLES.base,
+    base: BASE,
+    wikiBase: WIKI_BASE,
     armor: inventory?.inv_armor ? loreStats(decodeSlots(inventory.inv_armor)) : undefined,
     equipment: inventory?.equipment_contents ? loreStats(decodeSlots(inventory.equipment_contents)) : undefined,
     weapon: weapon && loreStats([weapon]),
@@ -247,7 +252,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     level: { health: LEVEL_STATS.health * level, strength: Math.floor(level / LEVEL_STATS.strengthEvery) },
   };
 
-  const unverified: StatSource[] = [];
+  const unverified: StatSource[] = ["wikiBase"];
   if (power) unverified.push("power");
   if (Object.keys(tuning).length > 0) unverified.push("tuning");
   if (slayers.blaze.level.level > 0) unverified.push("blaze");
