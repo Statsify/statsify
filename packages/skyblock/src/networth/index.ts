@@ -41,7 +41,8 @@ function toNetworthPrices(map: PriceMap): Record<string, number> {
 }
 
 function pricedTexture({ id, item, petData }: Priced, items: ItemsResource): ItemTexture | undefined {
-  if (item) return textureOf(item);
+  // A toolkit's items are bare ExtraAttributes, with no id to draw
+  if (item?.id !== undefined) return textureOf(item);
   if (petData) return petTexture(petData.type, boostedRarity(petData), petData.skin, items);
 
   // Essence and runes of one tier (RUNE_LIGHTNING_1) have no items-resource id.
