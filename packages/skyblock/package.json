@@ -20,6 +20,10 @@
     "./icon-key": {
       "types": "./src/icon-key.ts",
       "default": "./dist/icon-key.js"
+    },
+    "./display": {
+      "types": "./src/display.ts",
+      "default": "./dist/display.js"
     }
   },
   "scripts": {

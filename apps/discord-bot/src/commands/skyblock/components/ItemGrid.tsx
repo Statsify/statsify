@@ -9,22 +9,8 @@
 import { type ItemIcons, ItemSlot } from "./ItemSlot.js";
 import { Table } from "#components";
 import { arrayGroup, formatTime } from "@statsify/util";
-import type { ItemTexture, JacobBracket, Rarity } from "@statsify/skyblock";
+import type { ItemTexture, JacobBracket } from "@statsify/skyblock";
 import type { LocalizeFunction } from "@statsify/discord";
-
-export const RARITY_COLORS: Record<Rarity, string> = {
-  COMMON: "§f",
-  UNCOMMON: "§a",
-  RARE: "§9",
-  EPIC: "§5",
-  LEGENDARY: "§6",
-  MYTHIC: "§d",
-  DIVINE: "§b",
-  SPECIAL: "§c",
-  VERY_SPECIAL: "§c",
-  ULTIMATE: "§4",
-  ADMIN: "§4",
-};
 
 export const MEDAL_COLORS: Record<JacobBracket, string> = {
   bronze: "§c",

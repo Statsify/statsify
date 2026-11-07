@@ -8,7 +8,8 @@
 
 import { Container, Footer, Header, type SidebarItem } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
-import { ItemGrid, RARITY_COLORS, pricesAsOf } from "./components/ItemGrid.js";
+import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
+import { RARITY_COLORS } from "@statsify/skyblock/display";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { InactiveAccessory, MemberView, PowerStat } from "@statsify/skyblock";

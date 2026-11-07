@@ -38,6 +38,7 @@ import { SkyBlockPetsProfile, petIcons } from "./pets.profile.js";
 import { SkyBlockSkillsProfile } from "./skills.profile.js";
 import { SkyBlockSlayersProfile } from "./slayers.profile.js";
 import { SkyBlockSummaryProfile } from "./summary.profile.js";
+import { formatProfileName } from "@statsify/skyblock/display";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getItemIcon } from "@statsify/skyblock/icons";
 import { getTheme } from "#themes";
@@ -52,35 +53,11 @@ import type {
 } from "@statsify/skyblock";
 import type { Image } from "skia-canvas";
 
-const GAME_MODES: Record<GameMode, { emoji: string | false; badge: string }> = {
-  normal: { emoji: false, badge: "" },
-  ironman: { emoji: "♻️", badge: " §7♲" },
-  stranded: { emoji: "🏝️", badge: " §a☀" },
-  bingo: { emoji: "🎯", badge: " §6Ⓑ" },
-};
-
-const FORMATTED_PROFILES: Record<string, string | undefined> = {
-  Apple: "§cApple",
-  Banana: "§eBanana",
-  Blueberry: "§9Blueberry",
-  Coconut: "§6Coco§fnut",
-  Cucumber: "§2Cucumber",
-  Grapes: "§5Grapes",
-  Kiwi: "§aKiwi",
-  Lemon: "§eLemon",
-  Lime: "§aLime",
-  Mango: "§6Mango",
-  Orange: "§6Orange",
-  Papaya: "§6Papaya",
-  Peach: "§dPeach",
-  Pear: "§aPear",
-  Pineapple: "§ePineapple",
-  Pomegranate: "§4Pomegranate",
-  Raspberry: "§dRaspberry",
-  Strawberry: "§cStrawberry",
-  Tomato: "§cTomato",
-  Watermelon: "§aWater§cmelon",
-  Zucchini: "§2Zucchini",
+const GAME_MODE_EMOJI: Record<GameMode, string | false> = {
+  normal: false,
+  ironman: "♻️",
+  stranded: "🏝️",
+  bingo: "🎯",
 };
 
 export interface SkyBlockProfileProps {
@@ -211,7 +188,7 @@ type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
 
 // Not arrow functions: the command loader takes those for commands
 export function skyBlockTitle(t: LocalizeFunction, profile: SkyBlockProfileView, name: SkyBlockCardName) {
-  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)} §r(${FORMATTED_PROFILES[profile.cuteName] ?? profile.cuteName}${GAME_MODES[profile.gameMode].badge}§r)`;
+  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)} §r(${formatProfileName(profile)}§r)`;
 }
 
 export function getSkyBlockBackground() {
@@ -387,7 +364,7 @@ export class SkyBlockCommand {
     };
 
     const pages: Page[] = summaries.map(({ id, cuteName, gameMode }) => {
-      const page = { label: cuteName, emoji: GAME_MODES[gameMode].emoji };
+      const page = { label: cuteName, emoji: GAME_MODE_EMOJI[gameMode] };
 
       if (Array.isArray(card.profile)) {
         const subPages = card.profile.map(({ label, profile, icons }) => ({ label, generator: generator(id, profile, icons) }));

@@ -8,7 +8,8 @@
 
 import { Container, Footer, Header, type SidebarItem } from "#components";
 import { Empty } from "./components/Empty.js";
-import { ItemGrid, RARITY_COLORS } from "./components/ItemGrid.js";
+import { ItemGrid } from "./components/ItemGrid.js";
+import { RARITY_COLORS } from "@statsify/skyblock/display";
 import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 

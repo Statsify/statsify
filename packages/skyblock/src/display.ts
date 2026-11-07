@@ -1,0 +1,62 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+// Its own entry, with no data, so the bot's cards and the site's pages draw names and rarities alike.
+import type { GameMode, Rarity } from "#types";
+
+export const RARITY_COLORS: Record<Rarity, string> = {
+  COMMON: "§f",
+  UNCOMMON: "§a",
+  RARE: "§9",
+  EPIC: "§5",
+  LEGENDARY: "§6",
+  MYTHIC: "§d",
+  DIVINE: "§b",
+  SPECIAL: "§c",
+  VERY_SPECIAL: "§c",
+  ULTIMATE: "§4",
+  ADMIN: "§4",
+};
+
+/** The symbol after a profile's name in game; a normal profile has none. */
+export const GAME_MODE_BADGES: Record<GameMode, string> = {
+  normal: "",
+  ironman: "§7♲",
+  stranded: "§a☀",
+  bingo: "§6Ⓑ",
+};
+
+const FORMATTED_PROFILES: Record<string, string | undefined> = {
+  Apple: "§cApple",
+  Banana: "§eBanana",
+  Blueberry: "§9Blueberry",
+  Coconut: "§6Coco§fnut",
+  Cucumber: "§2Cucumber",
+  Grapes: "§5Grapes",
+  Kiwi: "§aKiwi",
+  Lemon: "§eLemon",
+  Lime: "§aLime",
+  Mango: "§6Mango",
+  Orange: "§6Orange",
+  Papaya: "§6Papaya",
+  Peach: "§dPeach",
+  Pear: "§aPear",
+  Pineapple: "§ePineapple",
+  Pomegranate: "§4Pomegranate",
+  Raspberry: "§dRaspberry",
+  Strawberry: "§cStrawberry",
+  Tomato: "§cTomato",
+  Watermelon: "§aWater§cmelon",
+  Zucchini: "§2Zucchini",
+};
+
+/** A profile's cute name in its fruit's colours, then its mode's badge after a space. */
+export function formatProfileName({ cuteName, gameMode }: { cuteName: string; gameMode: GameMode }) {
+  const badge = GAME_MODE_BADGES[gameMode];
+  return `${FORMATTED_PROFILES[cuteName] ?? cuteName}${badge && ` ${badge}`}`;
+}
