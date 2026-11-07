@@ -217,7 +217,7 @@ export interface DungeonsSection {
 
 export interface Essence {
   type: string; // WITHER, CRIMSON…
-  amount?: number; // missing for a type Hypixel doesn't send, like Forest and Fossil
+  amount?: number; // missing for a type Hypixel doesn't send, like Forest
   perks: number; // shop perk levels bought
   maxPerks: number;
 }
@@ -232,11 +232,25 @@ export interface HotmSection {
   loadout: { selected: number; total: number };
   tokens: { spent: number; total: number };
   ability?: string;
-  powder: Record<Powder, { available: number; spent: number }>;
+  powder: Record<Powder, { total: number; spent: number; available?: number }>; // total: all earned; available: unknown on older saves
   nodes: TreeNode[];
-  crystals: { found: number; placed: number }; // over every gem
+  crystals: { found: number; placed: number; gems: Crystal[] }; // found and placed over every gem, then each gem found
   nucleusRuns: number;
-  glacite: { corpses: number; fossils: number; mineshafts: number }; // corpses looted, fossils donated
+  kingQuests: number; // the Goblin King's, in the Crystal Hollows
+  glacite: {
+    corpses: number; // looted, of every type
+    corpsesByType: { type: string; count: number }[];
+    fossils: number; // donated
+    fossilDust: number;
+    mineshafts: number;
+  };
+}
+
+/** A gem's crystal the member has found. Only the Crystal Nucleus's five count placed ones. */
+export interface Crystal {
+  gem: string;
+  found: number;
+  placed?: number;
 }
 
 /** A perk in the Heart of the Mountain's or the Forest's tree, at its spot in the menu. */
