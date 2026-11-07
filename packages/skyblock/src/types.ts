@@ -86,6 +86,7 @@ export interface MemberView {
   experiments?: ExperimentsSection | null;
   rift?: RiftSection | null;
   misc?: MiscSection;
+  stats?: StatsSection;
 }
 
 /** An inventory's slots in the game's order; an empty slot is null. */
@@ -266,7 +267,11 @@ export interface TreeNode {
   enabled: boolean;
 }
 
-export type TreeLayout = Record<string, { name: string; x: number; y: number; maxLevel: number }>;
+/** A perk's stat, when it grants one outright: base + perLevel × its level. */
+export type TreeLayout = Record<
+  string,
+  { name: string; x: number; y: number; maxLevel: number; stat?: { id: PlayerStat; base: number; perLevel: number } }
+>;
 
 export const WHISPERS = ["forest", "desert"] as const;
 
@@ -524,6 +529,24 @@ export type PlayerStat = (typeof PLAYER_STATS)[number]["id"];
 export interface StatValue {
   stat: PlayerStat;
   value: number;
+}
+
+/** Where a stat comes from; the weapon is the first sword, bow or wand in the hotbar, since the API has no held slot. */
+export const STAT_SOURCES = ["base", "armor", "equipment", "weapon", "skills", "slayers", "blaze", "petScore"] as const;
+
+export type StatSource = (typeof STAT_SOURCES)[number];
+
+export interface StatTotal {
+  stat: PlayerStat;
+  total: number;
+  bySource: Partial<Record<StatSource, number>>;
+}
+
+/** The permanent stat sheet; temporary buffs (Booster Cookie, potions, the mayor) aren't in the API. */
+export interface StatsSection {
+  stats: StatTotal[]; // in PLAYER_STATS' order, only stats something gives
+  weapon?: string; // the counted weapon's name
+  unverified: StatSource[]; // sources whose numbers here aren't checked in game
 }
 
 export const AUCTION_STATS = ["created", "completed", "won", "bids", "highestBid", "goldSpent", "goldEarned", "fees"] as const;

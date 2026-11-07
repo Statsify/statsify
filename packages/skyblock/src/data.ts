@@ -21,8 +21,9 @@ import pets from "./generated/pets.json" with { type: "json" };
 import powers from "./generated/powers.json" with { type: "json" };
 import sblevels from "./generated/sblevels.json" with { type: "json" };
 import seaCreatures from "./generated/sea-creatures.json" with { type: "json" };
+import stats from "./generated/stats.json" with { type: "json" };
 import trophyFish from "./generated/trophyfish.json" with { type: "json" };
-import type { PowerStat, Rarity, TreeLayout } from "#types";
+import type { PlayerStat, PowerStat, Rarity, Skill, TreeLayout } from "#types";
 
 export const LEVELING = leveling as {
   catacombs: number[];
@@ -94,4 +95,17 @@ export const GARDEN = garden as {
   plots: string[];
   crop_upgrades: number;
   composter_upgrades: Record<string, number>;
+};
+
+type Stats = Partial<Record<PlayerStat, number>>;
+
+/**
+ * Base stats, what each skill and slayer level adds (skills from Hypixel's skills resource), and pet score's Magic
+ * Find from each score up.
+ */
+export const STAT_TABLES = stats as {
+  base: Stats;
+  skills: Record<Skill, Stats[]>;
+  slayers: Record<"zombie" | "spider" | "wolf" | "enderman", Stats[]>;
+  pet_score: Record<string, number>;
 };

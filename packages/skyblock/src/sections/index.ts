@@ -27,6 +27,7 @@ import { getPets } from "./pets.js";
 import { getRift } from "./rift.js";
 import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
+import { getStats } from "./stats.js";
 import type { ItemsResource, MemberView, PriceMap } from "#types";
 import type { RawGarden, RawMember, RawMuseum, RawMuseumMember, RawProfile } from "#raw";
 
@@ -54,6 +55,7 @@ export const SKYBLOCK_SECTIONS = [
   "rift",
   "skills",
   "slayers",
+  "stats",
 ] as const;
 
 export type SkyBlockSection = (typeof SKYBLOCK_SECTIONS)[number];
@@ -123,6 +125,7 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
   rift: { needs: [], compute: async ({ member }) => getRift(member) },
   skills: { needs: [], compute: async ({ profile, member }) => getSkills(profile, member) },
   slayers: { needs: [], compute: async ({ member }) => getSlayers(member) },
+  stats: { needs: [], compute: async ({ profile, member }) => getStats(profile, member) },
 };
 
 /** museum is the whole museum response, when it was fetched. */
