@@ -220,7 +220,9 @@ function notes(t: LocalizeFunction, view: SkyBlockProfileView, card: SkyBlockCar
       t("skyblock.apiOffNote", { settings: apiOff.map((setting) => t(`skyblock.apiSettings.${setting}`)).join(", ") }) :
       "",
     off.includes("banking") ? t("skyblock.bankingOffNote") : "",
-    view.member.networth?.museumIncluded === false ? t("skyblock.museumNotCounted") : "",
+    !view.newProfile && !["bingo", "stranded"].includes(view.gameMode) && view.member.networth?.museumIncluded === false ?
+      t("skyblock.museumNotCounted") :
+      "",
     view.marketDown ? t("skyblock.pricesNotReady") : "",
   ]
     .filter(Boolean)
