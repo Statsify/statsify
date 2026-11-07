@@ -9,11 +9,10 @@
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { ItemSlot } from "./components/ItemSlot.js";
+import { FACTION_COLORS } from "@statsify/skyblock/display";
 import { prettify } from "@statsify/util";
-import type { Faction, MemberView } from "@statsify/skyblock";
+import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
-
-const FACTION_COLORS: Record<Faction, string> = { mages: "§5", barbarians: "§c" };
 
 export const crimsonIcons = ({ crimson }: MemberView) => crimson?.kuudra.map(({ texture }) => texture) ?? [];
 

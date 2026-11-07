@@ -9,16 +9,8 @@
 import { type ItemIcons, ItemSlot } from "./ItemSlot.js";
 import { Table } from "#components";
 import { arrayGroup, formatTime } from "@statsify/util";
-import type { ItemTexture, JacobBracket } from "@statsify/skyblock";
+import type { ItemTexture } from "@statsify/skyblock";
 import type { LocalizeFunction } from "@statsify/discord";
-
-export const MEDAL_COLORS: Record<JacobBracket, string> = {
-  bronze: "§c",
-  silver: "§f",
-  gold: "§6",
-  platinum: "§3",
-  diamond: "§b",
-};
 
 export const pricesAsOf = (t: LocalizeFunction, asOf: number) =>
   t("skyblock.pricesAsOf", { time: formatTime(Date.now() - asOf, { entries: 1 }) });

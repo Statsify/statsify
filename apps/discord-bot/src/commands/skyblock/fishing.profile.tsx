@@ -8,9 +8,10 @@
 
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { MEDAL_COLORS, gridRows } from "./components/ItemGrid.js";
-import { type FishingSection, TROPHY_TIERS } from "@statsify/skyblock";
+import { MEDAL_COLORS, TROPHY_TIERS } from "@statsify/skyblock/display";
+import { gridRows } from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
+import type { FishingSection } from "@statsify/skyblock";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
