@@ -545,6 +545,7 @@ export const STAT_SOURCES = [
   "slayers",
   "blaze",
   "petScore",
+  "essence",
 ] as const;
 
 export type StatSource = (typeof STAT_SOURCES)[number];

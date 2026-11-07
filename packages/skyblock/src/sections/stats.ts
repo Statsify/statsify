@@ -126,6 +126,30 @@ function petStats(pet: PetView | undefined): Stats | undefined {
   return sumStats([...own, item?.stats ?? {}]);
 }
 
+// Essence shop perks that count everywhere, per level (wiki: Essence Shops' pages). The Catacombs perks count only in
+// dungeons, and the rest only on an island or against some mobs.
+const ESSENCE_PERKS: Record<string, Stats> = {
+  permanent_health: { health: 2 },
+  permanent_defense: { defense: 1 },
+  permanent_speed: { speed: 1 },
+  permanent_intelligence: { intelligence: 2 },
+  permanent_strength: { strength: 1 },
+  unbreaking: { vitality: 1 },
+  frozen_skin: { cold_resistance: 1 },
+  extreme_pressure: { pressure_resistance: 3 },
+  lumberjack: { foraging_fortune: 2 },
+  // Its Speed and Mana Regen are the Rift's
+  blessing_of_time: { health: 5, strength: 2, intelligence: 2, defense: 2 },
+};
+
+const essenceStats = (perks: Record<string, number>) =>
+  sumStats(
+    Object.entries(perks).flatMap(([perk, level]) => {
+      const stats = ESSENCE_PERKS[perk];
+      return stats ? [scaleStats(stats, level)] : [];
+    })
+  );
+
 // Blaze levels' stats (wiki: Blaze Slayer), which NEU's bonus table lacks. Vampire's are Rift Time, a Rift-only stat.
 const BLAZE_LEVELS: Stats[] = [
   { health: 3 },
@@ -176,6 +200,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   const skills = getSkills(profile, member);
   const slayers = getSlayers(member).bosses;
   const pets = getPets(member);
+  const essence = essenceStats(member.player_data?.perks ?? {});
 
   const sources: Partial<Record<StatSource, Stats>> = {
     base: STAT_TABLES.base,
@@ -192,6 +217,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     blaze: upTo(BLAZE_LEVELS, slayers.blaze.level.level),
     pet: petStats(pets.active),
     petScore: { magic_find: petScoreMagicFind(pets.score) },
+    essence,
   };
 
   const unverified: StatSource[] = [];
@@ -199,6 +225,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   if (Object.keys(tuning).length > 0) unverified.push("tuning");
   if (slayers.blaze.level.level > 0) unverified.push("blaze");
   if (pets.score >= UNVERIFIED_PET_SCORE) unverified.push("petScore");
+  if (Object.keys(essence).length > 0) unverified.push("essence");
 
   return { stats: toTotals(sources), weapon: weapon?.name, unverified };
 }
