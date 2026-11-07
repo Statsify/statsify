@@ -38,9 +38,9 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
 const upgradesOf = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
 
 // How a Power's stats scale with Accessory Power, per the wiki
-const powerScale = (accessoryPower: number) => 29.97 * Math.log(0.0019 * accessoryPower + 1) ** 1.2;
+export const powerScale = (accessoryPower: number) => 29.97 * Math.log(0.0019 * accessoryPower + 1) ** 1.2;
 
-function stonePowerStats({ accessoryPower: listedAt, stats, bonus }: (typeof POWERS)[string], accessoryPower: number) {
+export function stonePowerStats({ accessoryPower: listedAt, stats, bonus }: (typeof POWERS)[string], accessoryPower: number) {
   const scaled = stats.map((stat) => ({ ...stat, value: (stat.value * powerScale(accessoryPower)) / powerScale(listedAt) }));
 
   for (const extra of bonus) {
@@ -92,6 +92,36 @@ export function getAccessories(
   market: boolean,
   order: (accessoryPower: number, highest: number | undefined) => StepOrder = () => byCoinsPerAccessoryPower
 ): AccessoriesSection | null {
+  const bag = bagAccessories(member, items);
+  if (!bag) return null;
+
+  const { active, inactive, owned, contacts, accessoryPower } = bag;
+  const storage = member.accessory_bag_storage;
+  const tuning = storage?.tuning?.slot_0 ?? {};
+  const stone = storage?.selected_power ? POWERS[storage.selected_power] : undefined;
+  const stepOrder = order(accessoryPower, storage?.highest_magical_power);
+  const stored = storedAccessories(member, items);
+
+  return {
+    accessoryPower,
+    highestAccessoryPower: storage?.highest_magical_power,
+    selectedPower: storage?.selected_power,
+    powerStats: stone && stonePowerStats(stone, accessoryPower),
+    tuning,
+    tuningPoints: add(...Object.values(tuning)),
+    enrichments: active.filter((view) => view.enrichment).length,
+    unenriched: active.filter((view) => !view.enrichment && RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY")).length,
+    recombobulated: active.filter((view) => view.recombobulated).length,
+    pricesAsOf: prices.asOf,
+    market,
+    active,
+    inactive,
+    missing: getMissing(owned, stored, active, contacts, items, stepOrder, market ? prices : undefined),
+  };
+}
+
+/** The bag's accessories that count and those that don't, and their accessory power; null with the inventory API off. */
+export function bagAccessories(member: RawMember, items: ItemsResource) {
   const bag = member.inventory?.bag_contents?.talisman_bag;
   if (!bag) return null;
 
@@ -124,29 +154,8 @@ export function getAccessories(
     }
   }
 
-  const storage = member.accessory_bag_storage;
-  const tuning = storage?.tuning?.slot_0 ?? {};
   const accessoryPower = add(...active.map(power), prism.length * powerOf("RIFT_PRISM", undefined, 0));
-  const stone = storage?.selected_power ? POWERS[storage.selected_power] : undefined;
-  const stepOrder = order(accessoryPower, storage?.highest_magical_power);
-  const stored = storedAccessories(member, items);
-
-  return {
-    accessoryPower,
-    highestAccessoryPower: storage?.highest_magical_power,
-    selectedPower: storage?.selected_power,
-    powerStats: stone && stonePowerStats(stone, accessoryPower),
-    tuning,
-    tuningPoints: add(...Object.values(tuning)),
-    enrichments: active.filter((view) => view.enrichment).length,
-    unenriched: active.filter((view) => !view.enrichment && RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY")).length,
-    recombobulated: active.filter((view) => view.recombobulated).length,
-    pricesAsOf: prices.asOf,
-    market,
-    active,
-    inactive,
-    missing: getMissing(owned, stored, active, contacts, items, stepOrder, market ? prices : undefined),
-  };
+  return { active, inactive, owned, contacts, accessoryPower };
 }
 
 /** Outside the bag first, since it costs nothing, then coins per point gained; unpriced ones sort last, by points. */

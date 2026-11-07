@@ -532,7 +532,19 @@ export interface StatValue {
 }
 
 /** Where a stat comes from; the weapon is the first sword, bow or wand in the hotbar, since the API has no held slot. */
-export const STAT_SOURCES = ["base", "armor", "equipment", "weapon", "skills", "slayers", "blaze", "petScore"] as const;
+export const STAT_SOURCES = [
+  "base",
+  "armor",
+  "equipment",
+  "weapon",
+  "accessories",
+  "power",
+  "tuning",
+  "skills",
+  "slayers",
+  "blaze",
+  "petScore",
+] as const;
 
 export type StatSource = (typeof STAT_SOURCES)[number];
 
