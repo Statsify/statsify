@@ -28,7 +28,7 @@ function isNew(member: RawMember) {
 }
 
 /** Leaving a profile leaves the member behind with a deletion_notice; a pending invite lists them unconfirmed. */
-function isMember(profile: RawProfile, uuid: string) {
+export function isMember(profile: RawProfile, uuid: string) {
   const member = profile.members[uuid];
   if (!member) return false;
   return member.profile?.deletion_notice === undefined && member.profile?.coop_invitation?.confirmed !== false;
