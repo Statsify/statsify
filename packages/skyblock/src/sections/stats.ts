@@ -13,7 +13,9 @@ import {
   type PetView,
   type PlayerStat,
   SKILLS,
+  SLAYER_BOSSES,
   STAT_SOURCES,
+  type SlayerBoss,
   type Slots,
   type StatSource,
   type StatTotal,
@@ -173,18 +175,52 @@ const CATACOMBS_HEALTH = { perLevel: 2, maxLevel: 50 };
 const LEVEL_STATS = { health: 5, strengthEvery: 5 };
 const PEPPER_HEALTH = 1;
 
-// Blaze levels' stats (wiki: Blaze Slayer), which NEU's bonus table lacks. Vampire's are Rift Time, a Rift-only stat.
-const BLAZE_LEVELS: Stats[] = [
-  { health: 3 },
-  { strength: 1 },
-  { health: 4 },
-  { true_defense: 1 },
-  { health: 5 },
-  { strength: 2 },
-  { health: 6 },
-  { true_defense: 2 },
-  { health: 7 },
-];
+const neuHealth = (levels: Stats[]) => levels.map(({ health }) => (health ? { health } : {}));
+
+// Each boss's level stats, NEU's and the wiki's. NEU's Zombie, Spider and Enderman tables predate 0.19.2, so only their
+// Health (which matches the wiki's) is kept, and it has no Blaze table. Vampire's are Rift Time, a Rift-only stat.
+const SLAYER_LEVELS = {
+  zombie: { neu: neuHealth(STAT_TABLES.slayers.zombie), wiki: [{}, {}, {}, {}, {}, {}, {}, { health_regen: 30 }, {}] },
+  spider: {
+    neu: neuHealth(STAT_TABLES.slayers.spider),
+    wiki: [
+      { crit_damage: 1 },
+      { crit_damage: 1 },
+      { crit_damage: 1 },
+      { crit_damage: 1 },
+      { crit_damage: 2 },
+      { crit_damage: 2 },
+      { crit_damage: 2 },
+      { crit_damage: 3, alchemy_wisdom: 5 },
+      { crit_damage: 3 },
+    ],
+  },
+  wolf: { neu: STAT_TABLES.slayers.wolf, wiki: [] },
+  enderman: {
+    neu: neuHealth(STAT_TABLES.slayers.enderman),
+    wiki: [{}, { intelligence: 2 }, {}, { intelligence: 2 }, {}, { intelligence: 5 }, {}, { intelligence: 4 }, { tracking: 5 }],
+  },
+  blaze: {
+    neu: [],
+    wiki: [
+      { health: 3 },
+      { strength: 1 },
+      { health: 4 },
+      { true_defense: 1 },
+      { health: 5 },
+      { strength: 2 },
+      { health: 6 },
+      { true_defense: 2 },
+      { health: 7 },
+    ],
+  },
+} satisfies Partial<Record<SlayerBoss, { neu: Stats[]; wiki: Stats[] }>>;
+
+// Combat Wisdom for each boss tier killed once: 1 for tiers I to III, 2 for IV and V, Vampire's too (the wiki's Combat
+// Wisdom page, an owner exception, unverified)
+const tierWisdom = (kills: number[]) => add(...kills.map((count, tier) => (count > 0 ? (tier < 3 ? 1 : 2) : 0)));
+
+const STAT_SLAYERS = Object.keys(SLAYER_LEVELS) as (keyof typeof SLAYER_LEVELS)[];
 
 // Pet score's Magic Find past NEU's last step at 325 (wiki: Pet Score)
 const PET_SCORE_STEPS = { ...STAT_TABLES.pet_score, 375: 11, 450: 12, 500: 13 };
@@ -227,6 +263,13 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   const catacombs = getDungeons(member).catacombs.level;
   const level = Math.floor((member.leveling?.experience ?? 0) / SKYBLOCK_XP_PER_LEVEL);
   const peppers = member.player_data?.reaper_peppers_eaten ?? 0;
+  const slayerTiers = add(...SLAYER_BOSSES.map((boss) => tierWisdom(slayers[boss].kills)));
+
+  const slayerStats = STAT_SLAYERS.map((boss) => {
+    const { neu, wiki } = SLAYER_LEVELS[boss];
+    const level = slayers[boss].level.level;
+    return { boss, neu: upTo(neu, level), wiki: upTo(wiki, level) };
+  });
 
   const sources: Partial<Record<StatSource, Stats>> = {
     base: BASE,
@@ -238,10 +281,8 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     power,
     tuning,
     skills: skills ? sumStats(SKILLS.map((skill) => upTo(STAT_TABLES.skills[skill], skills.skills[skill].level))) : undefined,
-    slayers: sumStats(
-      Object.entries(STAT_TABLES.slayers).map(([boss, levels]) => upTo(levels, slayers[boss as keyof typeof slayers].level.level))
-    ),
-    blaze: upTo(BLAZE_LEVELS, slayers.blaze.level.level),
+    ...Object.fromEntries(slayerStats.map(({ boss, neu, wiki }) => [boss, sumStats([neu, wiki])])),
+    slayerTiers: { combat_wisdom: slayerTiers },
     pet: petStats(pets.active),
     petScore: { magic_find: petScoreMagicFind(pets.score) },
     essence,
@@ -256,7 +297,8 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   const unverified: StatSource[] = ["wikiBase"];
   if (power) unverified.push("power");
   if (Object.keys(tuning).length > 0) unverified.push("tuning");
-  if (slayers.blaze.level.level > 0) unverified.push("blaze");
+  unverified.push(...slayerStats.flatMap(({ boss, wiki }) => (Object.keys(wiki).length > 0 ? [boss] : [])));
+  if (slayerTiers > 0) unverified.push("slayerTiers");
   if (pets.score >= UNVERIFIED_PET_SCORE) unverified.push("petScore");
   if (Object.keys(essence).length > 0) unverified.push("essence");
   if (member.bestiary?.milestone?.last_claimed_milestone) unverified.push("bestiary");

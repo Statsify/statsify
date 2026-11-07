@@ -543,8 +543,12 @@ export const STAT_SOURCES = [
   "tuning",
   "pet",
   "skills",
-  "slayers",
+  "zombie",
+  "spider",
+  "wolf",
+  "enderman",
   "blaze",
+  "slayerTiers", // Combat Wisdom from each slayer boss tier killed
   "petScore",
   "essence",
   "hotm",
