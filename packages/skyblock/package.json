@@ -16,6 +16,10 @@
     "./icons": {
       "types": "./src/icons/index.ts",
       "default": "./dist/icons/index.js"
+    },
+    "./icon-key": {
+      "types": "./src/icon-key.ts",
+      "default": "./dist/icon-key.js"
     }
   },
   "scripts": {

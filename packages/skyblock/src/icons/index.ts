@@ -15,6 +15,8 @@ import type { ItemTexture } from "#types";
 export interface IconOptions {
   /** Width and height in pixels; 16 is the game's own size. */
   size?: number;
+  /** The enchantment glint, as 1.8 draws it in an inventory at its first frame. */
+  glint?: boolean;
 }
 
 /** A head's skin PNG by its texture hash; undefined when it has none. */
@@ -22,6 +24,10 @@ export type HeadSource = (hash: string) => Promise<Buffer | undefined>;
 
 const TEXTURES: Record<string, string | undefined> = textures.textures;
 const BASE_SIZE = 16;
+const GLINT = "misc/enchanted_item_glint";
+// 1.8 tints its grey glint 0x8040CC and draws it twice, at -50° and 10°, each pass an eighth of the texture per icon
+const GLINT_TINT = [0x80 / 255, 0x40 / 255, 0xcc / 255];
+const GLINT_ANGLES = [(-5 * Math.PI) / 18, Math.PI / 18];
 const CACHE_SIZE = 2000;
 const HEAD_TIMEOUT = 5000;
 
@@ -227,12 +233,63 @@ async function drawBase(plan: Plan, key: string) {
   return canvas;
 }
 
+/** The glint texture tinted and squared, so adding it with "lighter" is the game's src² + dst. */
+let glintTexture: Promise<Canvas> | undefined;
+const squaredGlint = () =>
+  (glintTexture ??= loadTexture(GLINT).then((image) => {
+    const canvas = createCanvas(image.width, image.height);
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(image, 0, 0);
+    const pixels = ctx.getImageData(0, 0, image.width, image.height);
+
+    for (let i = 0; i < pixels.data.length; i += 4) {
+      for (let channel = 0; channel < 3; channel++) {
+        const strength = (pixels.data[i + channel] / 255) * GLINT_TINT[channel];
+        pixels.data[i + channel] = strength * strength * 255;
+      }
+      pixels.data[i + 3] = 255;
+    }
+
+    ctx.putImageData(pixels, 0, 0);
+    return canvas;
+  }));
+
+/** Adds the glint over the icon, masked by the icon's own pixels. */
+async function drawGlint(icon: Canvas) {
+  const glint = await squaredGlint();
+  const { width, height } = icon;
+  const layer = createCanvas(width, height);
+  const ctx = layer.getContext("2d");
+  ctx.globalCompositeOperation = "lighter";
+
+  for (const angle of GLINT_ANGLES) {
+    // A pixel samples the texel at A·pixel; the pattern's transform is A's inverse
+    const a11 = (glint.width * Math.cos(angle)) / (8 * width);
+    const a12 = (-glint.width * Math.sin(angle)) / (8 * height);
+    const a21 = (glint.height * Math.sin(angle)) / (8 * width);
+    const a22 = (glint.height * Math.cos(angle)) / (8 * height);
+    const determinant = a11 * a22 - a12 * a21;
+
+    const pattern = ctx.createPattern(glint, "repeat")!;
+    pattern.setTransform(a22 / determinant, -a21 / determinant, -a12 / determinant, a11 / determinant, 0, 0);
+    ctx.fillStyle = pattern;
+    ctx.fillRect(0, 0, width, height);
+  }
+
+  ctx.globalCompositeOperation = "destination-in";
+  ctx.drawImage(icon, 0, 0);
+
+  const iconCtx = icon.getContext("2d");
+  iconCtx.globalCompositeOperation = "lighter";
+  iconCtx.drawImage(layer, 0, 0);
+}
+
 const icons = new Map<string, Promise<Canvas | undefined>>();
 
-const cacheKey = (texture: ItemTexture, size: number) =>
-  `${texture.kind === "head" ? texture.skin : `${texture.id}:${texture.damage}:${texture.color ?? ""}`}:${size}`;
+const cacheKey = (texture: ItemTexture, size: number, glint: boolean) =>
+  `${texture.kind === "head" ? texture.skin : `${texture.id}:${texture.damage}:${texture.color ?? ""}`}:${size}:${glint}`;
 
-async function drawIcon(texture: ItemTexture, size: number, key: string) {
+async function drawIcon(texture: ItemTexture, size: number, glint: boolean, key: string) {
   const plan = planOf(texture);
   if (!plan) return undefined;
 
@@ -241,19 +298,21 @@ async function drawIcon(texture: ItemTexture, size: number, key: string) {
   const ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(base, 0, 0, size, size);
+  // 1.8 draws heads, chests and banners with their block entity renderer, which never glints
+  if (glint && plan.kind === "layers") await drawGlint(canvas);
 
   return canvas;
 }
 
 /** undefined when the 1.8 pack has no texture for the item (a barrier). */
-export function getItemIcon(texture: ItemTexture, { size = BASE_SIZE }: IconOptions = {}): Promise<Canvas | undefined> {
-  const key = cacheKey(texture, size);
+export function getItemIcon(texture: ItemTexture, { size = BASE_SIZE, glint = false }: IconOptions = {}): Promise<Canvas | undefined> {
+  const key = cacheKey(texture, size, glint);
   let icon = icons.get(key);
 
   if (icon) {
     icons.delete(key);
   } else {
-    icon = drawIcon(texture, size, key);
+    icon = drawIcon(texture, size, glint, key);
     icon.catch(() => icons.delete(key));
   }
 
