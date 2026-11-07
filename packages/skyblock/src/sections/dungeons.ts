@@ -84,7 +84,11 @@ export function getDungeons(member: RawMember): DungeonsSection {
     watcherKills: watcherKills(types?.catacombs),
     essence: Object.entries(ESSENCE_SHOPS).map(([type, shop]) => ({
       type,
-      amount: member.currencies?.essence?.[type]?.current,
+      // Fossil Essence was Fossil Dust until 2026-04-21, and the API still sends it under that name, unrounded
+      amount:
+        type === "FOSSIL" ?
+          member.glacite_player_data?.fossil_dust && Math.floor(member.glacite_player_data.fossil_dust) :
+          member.currencies?.essence?.[type]?.current,
       perks: add(...Object.keys(shop).map((perk) => member.player_data?.perks?.[perk] ?? 0)),
       maxPerks: add(...Object.values(shop)),
     })),
