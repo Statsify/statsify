@@ -11,6 +11,8 @@ import type { DungeonClass, DungeonGrade, Faction, GameMode, JacobBracket, Powde
 
 // The registries a page lists, from here rather than the root, whose NBT decoding would ride along into the browser.
 export {
+  AUCTION_STATS,
+  CATCHES,
   DUNGEON_CLASSES,
   INVENTORIES,
   JACOB_MEDALS,
