@@ -98,14 +98,12 @@ export class OverallMurderMysteryMode extends StandardMurderMysteryMode {
 
 export class ClassicMurderMysteryMode extends StandardMurderMysteryMode {
   @Field({
-    leaderboard: { sort: "ASC", formatter: formatTime },
-    historical: { enabled: false },
+    leaderboard: { sort: "ASC", formatter: formatTime, limit: 50_000 },
   })
   public fastestDetectiveWin: number;
 
   @Field({
-    leaderboard: { sort: "ASC", formatter: formatTime },
-    historical: { enabled: false },
+    leaderboard: { sort: "ASC", formatter: formatTime, limit: 50_000 },
   })
   public fastestMurdererWin: number;
 

@@ -32,7 +32,7 @@ export class BedWarsModeItemsCollected {
 }
 
 export class BedWarsMode {
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: 50_000 } })
   public winstreak: number;
 
   @Field()

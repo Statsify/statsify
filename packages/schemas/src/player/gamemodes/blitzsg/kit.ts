@@ -45,8 +45,7 @@ export class BlitzSGKit {
 
   @Field({
     store: { required: false },
-    leaderboard: { formatter: formatTime },
-    historical: { enabled: false },
+    leaderboard: { formatter: formatTime, limit: 50_000 },
   })
   public playtime: number;
 
