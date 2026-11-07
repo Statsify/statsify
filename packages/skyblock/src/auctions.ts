@@ -356,6 +356,7 @@ if (import.meta.vitest) {
       ENCHANTED_DIAMOND: { name: "Enchanted Diamond", material: "DIAMOND", npcPrice: 1280 },
       HYPERION: { name: "Hyperion", material: "IRON_SWORD", npcPrice: 100 },
     },
+    museum: {},
   };
 
   test("buildPriceMap keeps the lowest BIN per unit behind the outlier guard, the bazaar wins, and NPC prices fill in", async () => {

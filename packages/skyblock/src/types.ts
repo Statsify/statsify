@@ -77,6 +77,50 @@ export interface MemberView {
   jacob?: JacobSection | null;
   chocolate?: ChocolateSection | null;
   hotf?: HotfSection | null;
+  gear?: GearSection | null;
+  inventories?: InventoriesSection | null;
+  museum?: MuseumView | null; // null: nothing to show (the profile's museumFetchedAt says whether it was fetched)
+}
+
+/** An inventory's slots in the game's order; an empty slot is null. */
+export type Slots = (ItemView | null)[];
+
+/** Worn and saved gear. null with the inventory API off. */
+export interface GearSection {
+  armor: Slots; // helmet to boots
+  equipment: Slots; // necklace, cloak, belt, gloves
+  wardrobe: { slot: number; armor: Slots }[]; // sets with anything in them, helmet to boots
+  wardrobeSlot?: number; // the set being worn
+  weapons: ItemView[]; // swords, bows and wands in the inventory, in its order
+}
+
+export const INVENTORIES = [
+  "inventory",
+  "enderChest",
+  "backpacks",
+  "personalVault",
+  "accessoryBag",
+  "potionBag",
+  "fishingBag",
+  "quiver",
+  "sacksBag",
+] as const;
+
+export type InventoryId = (typeof INVENTORIES)[number];
+
+/** Every inventory as pages of slots (the ender chest's pages, one per backpack), and the sacks. null with the inventory API off. */
+export interface InventoriesSection {
+  pages: Partial<Record<InventoryId, Slots[]>>; // personalVault is missing with its own setting off
+  backpackIcons: (ItemView | null)[]; // by backpack, as `pages.backpacks`
+  sacks: { id: string; name: string; count: number; rarity?: Rarity; glint: boolean; texture?: ItemTexture }[]; // largest first
+}
+
+export interface MuseumView {
+  value: number;
+  appraisal: boolean;
+  items: { id: string; category?: string; donatedAt?: number; items: Slots }[]; // id: the museum's key (an item, or an armor set)
+  special: { donatedAt?: number; items: Slots }[];
+  donated: { category: string; count: number }[]; // keys donated per museum_data category, most first
 }
 
 export interface ApiSettings {
@@ -431,6 +475,8 @@ export interface ItemView {
   recombobulated: boolean;
   enchantments?: Record<string, number>;
   enrichment?: string; // an accessory's, as its stat id
+  hotPotato?: number; // hot potato books applied
+  obtainedAt?: number; // ms
 }
 
 export type ItemTexture =
@@ -464,6 +510,7 @@ export interface ItemsResource {
   // API-internal, never sent to clients
   lastUpdated: number;
   raw: object[]; // as Hypixel sent it, for the networth library
+  museum: Record<string, string>; // a museum key (an item, or an armor set) → its museum category
   items: Record<
     string,
     {
@@ -476,6 +523,7 @@ export interface ItemsResource {
       category?: string;
       riftOnly?: boolean;
       npcPrice?: number;
+      glowing?: boolean;
     }
   >;
 }

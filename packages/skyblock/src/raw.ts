@@ -76,8 +76,15 @@ export interface RawMember {
     wardrobe_contents?: RawNbt;
     wardrobe_equipped_slot?: number;
     backpack_contents?: Record<string, RawNbt>;
+    backpack_icons?: Record<string, RawNbt>;
     bag_contents?: Partial<Record<"talisman_bag" | "potion_bag" | "fishing_bag" | "quiver" | "sacks_bag", RawNbt>>;
     sacks_counts?: Record<string, number>;
+  };
+  // Where the wardrobe moved from inventory.wardrobe_contents: each set by its slot number, one blob per piece
+  loadout?: {
+    armor?: Record<`${number}`, Partial<Record<"HELMET" | "CHESTPLATE" | "LEGGINGS" | "BOOTS", RawNbt>> & { id?: number }> & {
+      equipped_set?: number;
+    };
   };
   jacobs_contest?: {
     perks?: { farming_level_cap?: number; double_drops?: number };
