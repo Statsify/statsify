@@ -16,6 +16,8 @@ import hotfLayout from "./generated/hotflayout.json" with { type: "json" };
 import hotmLayout from "./generated/hotmlayout.json" with { type: "json" };
 import kuudraKeys from "./generated/kuudra-keys.json" with { type: "json" };
 import leveling from "./generated/leveling.json" with { type: "json" };
+import petItems from "./generated/pet-items.json" with { type: "json" };
+import petNums from "./generated/petnums.json" with { type: "json" };
 import petTextures from "./generated/pet-textures.json" with { type: "json" };
 import pets from "./generated/pets.json" with { type: "json" };
 import powers from "./generated/powers.json" with { type: "json" };
@@ -109,3 +111,9 @@ export const STAT_TABLES = stats as {
   slayers: Record<"zombie" | "spider" | "wolf" | "enderman", Stats[]>;
   pet_score: Record<string, number>;
 };
+
+/** Each pet's stats by rarity at its first and last stat level: 1 and 100, or `levels` (101 and 200 for the dragons). */
+export const PET_STATS = petNums as Record<string, Partial<Record<Rarity, { first: Stats; last: Stats; levels?: number[] }>>>;
+
+/** A pet item's flat stats, and the percent it raises some or all of the pet's own stats by. */
+export const PET_ITEMS = petItems as Record<string, { stats?: Stats; petStats?: Stats; allPetStats?: number }>;
