@@ -440,6 +440,7 @@ export interface NetworthSection {
   museumIncluded: boolean;
   pricesAsOf: number;
   categories: Record<string, { total: number; unsoulbound: number; top: NetworthItem[] }>;
+  petPrices: Record<string, number>; // by the pet's uuid, for every pet the pets category priced
   unpriced: { key: string; name: string; count: number }[];
   unpricedCount: number;
 }
@@ -452,6 +453,8 @@ export interface NetworthItem {
   soulbound: boolean;
   cosmetic: boolean;
   texture?: ItemTexture;
+  basePrice: number; // the item's (or the whole stack's) before what's applied to it
+  modifiers: { type: string; price: number }[]; // a single item's, summed per kind (ENCHANTMENT, REFORGE…), priciest first; pet candy is negative
 }
 
 export interface SkyBlockLevelSection {
