@@ -221,6 +221,7 @@ function notes(t: LocalizeFunction, view: SkyBlockProfileView, card: SkyBlockCar
       "",
     off.includes("banking") ? t("skyblock.bankingOffNote") : "",
     view.member.networth?.museumIncluded === false ? t("skyblock.museumNotCounted") : "",
+    view.marketDown ? t("skyblock.pricesNotReady") : "",
   ]
     .filter(Boolean)
     .join("\n");

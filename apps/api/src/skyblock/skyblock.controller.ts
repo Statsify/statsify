@@ -63,7 +63,8 @@ export class SkyBlockController {
 
   @ApiOperation({
     summary: "Get a SkyBlock Profile",
-    description: "The requested sections of the player's member, computed from the stored copy of their profiles.",
+    description:
+      "The requested sections of the player's member, computed from the stored copy of their profiles. Until the price map and items resource are built, the sections that need them are left out and listed in marketDown, and the request fails only when every one does.",
   })
   @ApiOkResponse({ type: GetSkyBlockProfileResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })

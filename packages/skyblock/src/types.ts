@@ -60,6 +60,7 @@ export interface ProfileSummary {
 export interface SkyBlockProfileView extends PlayerRef, Freshness, ProfileSummary {
   member: MemberView;
   museumFetchedAt?: number;
+  marketDown?: Exclude<keyof MemberView, "apiSettings">[]; // asked for, but left out until the price map and items resource are built
 }
 
 export interface MemberView {

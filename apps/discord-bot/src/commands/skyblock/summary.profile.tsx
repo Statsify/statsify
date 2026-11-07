@@ -22,6 +22,10 @@ export const SkyBlockSummaryProfile = ({
   const { skills, dungeons, slayers, accessories, networth } = profile.member;
 
   const missing = (color: string) => (profile.newProfile ? { value: t(0), color } : { value: t("skyblock.apiOff"), color: "§c" });
+  const notReady = { value: t("skyblock.notReady"), color: "§7" };
+  const accessoryPower = profile.marketDown?.includes("accessories") ?
+    notReady :
+    accessories ? { value: t(accessories.accessoryPower), color: "§d" } : missing("§d");
   const bank = profile.bank === undefined ? missing("§6") : { value: t(Math.floor(profile.bank)), color: "§6" };
 
   const sidebar: SidebarItem[] = [
@@ -38,11 +42,13 @@ export const SkyBlockSummaryProfile = ({
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("skyblock.networth")} value={t(Math.floor(networth!.total))} color="§6" />
+          <Table.td
+            title={t("skyblock.networth")}
+            {...(networth ? { value: t(Math.floor(networth.total)), color: "§6" } : notReady)}
+          />
           <Table.td
             title={t("skyblock.nonCosmeticNetworth")}
-            value={t(Math.floor(networth!.nonCosmetic.total))}
-            color="§e"
+            {...(networth ? { value: t(Math.floor(networth.nonCosmetic.total)), color: "§e" } : notReady)}
           />
         </Table.tr>
         <Table.tr>
@@ -55,10 +61,7 @@ export const SkyBlockSummaryProfile = ({
         </Table.tr>
         <Table.tr>
           <Table.td title={t("skyblock.slayerXp")} value={t(slayers!.xp)} color="§5" />
-          <Table.td
-            title={t("skyblock.accessoryPower")}
-            {...(accessories ? { value: t(accessories.accessoryPower), color: "§d" } : missing("§d"))}
-          />
+          <Table.td title={t("skyblock.accessoryPower")} {...accessoryPower} />
           <Table.td title={t("skyblock.fairySouls")} value={t(profile.fairySouls)} color="§d" />
         </Table.tr>
       </Table.table>
