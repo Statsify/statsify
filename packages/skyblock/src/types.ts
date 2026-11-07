@@ -267,10 +267,10 @@ export interface TreeNode {
   enabled: boolean;
 }
 
-/** A perk's stat, when it grants one outright: base + perLevel × its level. */
+/** A perk's stats, when it grants them outright: base + perLevel × its level. */
 export type TreeLayout = Record<
   string,
-  { name: string; x: number; y: number; maxLevel: number; stat?: { id: PlayerStat; base: number; perLevel: number } }
+  { name: string; x: number; y: number; maxLevel: number; stats?: { id: PlayerStat; base: number; perLevel: number }[] }
 >;
 
 export const WHISPERS = ["forest", "desert"] as const;
@@ -546,6 +546,8 @@ export const STAT_SOURCES = [
   "blaze",
   "petScore",
   "essence",
+  "hotm",
+  "hotf",
 ] as const;
 
 export type StatSource = (typeof STAT_SOURCES)[number];
