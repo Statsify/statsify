@@ -125,7 +125,13 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
   rift: { needs: [], compute: async ({ member }) => getRift(member) },
   skills: { needs: [], compute: async ({ profile, member }) => getSkills(profile, member) },
   slayers: { needs: [], compute: async ({ member }) => getSlayers(member) },
-  stats: { needs: [], compute: async ({ profile, member }) => getStats(profile, member) },
+  stats: {
+    needs: ["items"],
+    compute: async ({ profile, member, items }) => {
+      if (!items) throw new TypeError("stats needs items");
+      return getStats(profile, member, items);
+    },
+  },
 };
 
 /** museum is the whole museum response, when it was fetched. */
