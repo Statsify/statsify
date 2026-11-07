@@ -187,6 +187,10 @@ export interface DungeonFloor {
   fastest?: number;
   fastestS?: number;
   fastestSPlus?: number;
+  mobsKilled: number;
+  mostMobsKilled?: number; // in one run
+  mostHealing?: number; // in one run
+  milestoneCompletions: number;
 }
 
 export const DUNGEON_CLASSES = ["healer", "mage", "berserk", "archer", "tank"] as const;
@@ -197,8 +201,10 @@ export interface DungeonsSection {
   catacombs: Level;
   classes: Record<DungeonClass, Level>;
   classAverage: number;
+  classXp: number; // the five classes' XP summed
   selectedClass?: string;
   secrets: number;
+  secretsPerRun: number; // over every completion in both modes
   floors: Record<"normal" | "master", DungeonFloor[]>;
   highestFloor: Partial<Record<"normal" | "master", number>>;
   mostDamage: Record<"normal" | "master", Record<DungeonClass, number>>; // 0 for a class never played
@@ -403,6 +409,8 @@ export interface AccessoriesSection {
   tuning: Record<string, number>;
   tuningPoints: number; // spent
   enrichments: number; // on active accessories
+  unenriched: number; // active Legendary-and-up accessories without an enrichment, the ones that can take one
+  recombobulated: number; // active
   pricesAsOf: number;
   market: boolean;
   active: ItemView[];

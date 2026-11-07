@@ -8,6 +8,7 @@
 
 import { ACCESSORY_UPGRADES, IGNORED_ACCESSORIES, POWERS } from "#data";
 import { add } from "@statsify/math";
+import { RARITIES } from "#types";
 import { costOf } from "#prices";
 import { decodeInventory } from "#nbt";
 import { resourceTexture } from "#textures";
@@ -139,6 +140,8 @@ export function getAccessories(
     tuning,
     tuningPoints: add(...Object.values(tuning)),
     enrichments: active.filter((view) => view.enrichment).length,
+    unenriched: active.filter((view) => !view.enrichment && RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY")).length,
+    recombobulated: active.filter((view) => view.recombobulated).length,
     pricesAsOf: prices.asOf,
     market,
     active,

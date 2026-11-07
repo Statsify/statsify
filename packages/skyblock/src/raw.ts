@@ -39,6 +39,11 @@ export interface RawDungeonType {
   fastest_time_s?: Record<string, number>;
   fastest_time_s_plus?: Record<string, number>;
   watcher_kills?: Record<string, number>; // per floor, plus "total"
+  // Per floor, beside a "total" or "best" that doesn't match the floors
+  mobs_killed?: Record<string, number>;
+  most_mobs_killed?: Record<string, number>;
+  most_healing?: Record<string, number>;
+  milestone_completions?: Record<string, number>;
   [damage: `most_damage_${string}`]: Record<string, number> | undefined; // per floor, plus "best"
 }
 
