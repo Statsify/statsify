@@ -25,6 +25,8 @@ import { HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } f
 import { add, roundTo } from "@statsify/math";
 import { bagAccessories, powerScale, stonePowerStats } from "./accessories.js";
 import { decodeSlots } from "#items";
+import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
+import { getDungeons } from "./dungeons.js";
 import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
 import { getPets } from "./pets.js";
@@ -162,6 +164,12 @@ const treeStats = (nodes: TreeNode[], layout: TreeLayout) =>
     )
   );
 
+// +2 Health per bestiary milestone and per Catacombs level to 50 (wiki: Health); +5 Health per SkyBlock level and +1
+// Strength per 5 (wiki: SkyBlock Levels). Fairy souls stopped giving stats in 2022.
+const BESTIARY_HEALTH = 2;
+const CATACOMBS_HEALTH = { perLevel: 2, maxLevel: 50 };
+const LEVEL_STATS = { health: 5, strengthEvery: 5 };
+
 // Blaze levels' stats (wiki: Blaze Slayer), which NEU's bonus table lacks. Vampire's are Rift Time, a Rift-only stat.
 const BLAZE_LEVELS: Stats[] = [
   { health: 3 },
@@ -213,6 +221,8 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   const slayers = getSlayers(member).bosses;
   const pets = getPets(member);
   const essence = essenceStats(member.player_data?.perks ?? {});
+  const catacombs = getDungeons(member).catacombs.level;
+  const level = Math.floor((member.leveling?.experience ?? 0) / SKYBLOCK_XP_PER_LEVEL);
 
   const sources: Partial<Record<StatSource, Stats>> = {
     base: STAT_TABLES.base,
@@ -232,6 +242,9 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     essence,
     hotm: treeStats(getHotm(member).nodes, HOTM_LAYOUT),
     hotf: treeStats(getHotf(member)?.nodes ?? [], HOTF_LAYOUT),
+    bestiary: { health: BESTIARY_HEALTH * (member.bestiary?.milestone?.last_claimed_milestone ?? 0) },
+    catacombs: { health: CATACOMBS_HEALTH.perLevel * Math.min(catacombs, CATACOMBS_HEALTH.maxLevel) },
+    level: { health: LEVEL_STATS.health * level, strength: Math.floor(level / LEVEL_STATS.strengthEvery) },
   };
 
   const unverified: StatSource[] = [];
@@ -240,6 +253,9 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   if (slayers.blaze.level.level > 0) unverified.push("blaze");
   if (pets.score >= UNVERIFIED_PET_SCORE) unverified.push("petScore");
   if (Object.keys(essence).length > 0) unverified.push("essence");
+  if (member.bestiary?.milestone?.last_claimed_milestone) unverified.push("bestiary");
+  if (catacombs > 0) unverified.push("catacombs");
+  if (level > 0) unverified.push("level");
 
   return { stats: toTotals(sources), weapon: weapon?.name, unverified };
 }
