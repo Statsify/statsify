@@ -534,6 +534,7 @@ export interface StatValue {
 /** Where a stat comes from; the weapon is the first sword, bow or wand in the hotbar, since the API has no held slot. */
 export const STAT_SOURCES = [
   "base",
+  "wikiBase",
   "armor",
   "equipment",
   "weapon",
