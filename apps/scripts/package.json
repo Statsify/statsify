@@ -17,7 +17,6 @@
     "blur-backgrounds": "node src/blur-backgrounds.ts"
   },
   "dependencies": {
-    "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/rendering": "workspace:^",

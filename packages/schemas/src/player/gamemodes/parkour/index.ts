@@ -14,118 +14,99 @@ export const PARKOUR_MODES = new GameModes([{ api: "overall" }] as const);
 
 export type ParkourModes = ExtractGameModes<typeof PARKOUR_MODES>;
 
-const fieldOptions = { sort: "ASC", formatter: formatTime, fieldName: "Time" };
-const historical = { enabled: false };
+const fieldOptions = { sort: "ASC", formatter: formatTime, fieldName: "Time", limit: 50_000 };
 
 export class Parkour {
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.ARCADE} Lobby` },
-    historical,
   })
   public ARCADE: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.BEDWARS} Lobby` },
-    historical,
   })
   public BEDWARS: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.BLITZSG} Lobby` },
-    historical,
   })
   public BLITZSG: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.BUILD_BATTLE} Lobby` },
-    historical,
   })
   public BUILD_BATTLE: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.CLASSIC} Lobby` },
-    historical,
   })
   public CLASSIC: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.COPS_AND_CRIMS} Lobby` },
-    historical,
   })
   public COPS_AND_CRIMS: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.DUELS} Lobby` },
-    historical,
   })
   public DUELS: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.HOUSING} Lobby` },
-    historical,
   })
   public HOUSING: number;
 
-  @Field({ leaderboard: { ...fieldOptions, name: FormattedGame.MAIN_LOBBY }, historical })
+  @Field({ leaderboard: { ...fieldOptions, name: FormattedGame.MAIN_LOBBY } })
   public MAIN_LOBBY: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.MEGAWALLS} Lobby` },
-    historical,
   })
   public MEGAWALLS: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.MURDER_MYSTERY} Lobby` },
-    historical,
   })
   public MURDER_MYSTERY: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.PROTOTYPE} Lobby` },
-    historical,
   })
   public PROTOTYPE: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.SKYWARS} Lobby` },
-    historical,
   })
   public SKYWARS: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.SMASH_HEROES} Lobby` },
-    historical,
   })
   public SMASH_HEROES: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.TNT_GAMES} Lobby` },
-    historical,
   })
   public TNT_GAMES: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: FormattedGame.TOURNAMENT_LOBBY },
-    historical,
   })
   public TOURNAMENT_LOBBY: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.UHC} Lobby` },
-    historical,
   })
   public UHC: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.WARLORDS} Lobby` },
-    historical,
   })
   public WARLORDS: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.WOOLGAMES} Lobby` },
-    historical,
   })
   public WOOLGAMES: number;
 

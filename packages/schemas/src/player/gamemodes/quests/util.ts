@@ -97,7 +97,6 @@ const assignQuestMetadata = (
         enabled: time === QuestTime.Overall && quest.leaderboard,
         additionalFields: ["this.total"],
       },
-      historical: { enabled: false },
     });
 
     decorator(constructor.prototype, quest.propertyKey ?? quest.field);
@@ -109,8 +108,8 @@ const questTotalFieldData = (game: FormattedGame, enabled = false) => ({
     name: "Total",
     fieldName: `${removeFormatting(game)} Total`,
     enabled,
+    limit: 50_000,
   },
-  historical: { enabled: false },
 });
 
 type GameWithQuestMode<Fields extends string> = {
@@ -236,7 +235,6 @@ export function createQuestsInstance<
     const decorator = Field({
       type: () => GameModeClass,
       leaderboard: { fieldName: `${FormattedGame[gameName]} Quests -` },
-      historical: { enabled: false },
     });
 
     decorator(QuestInstance.prototype, gameName);

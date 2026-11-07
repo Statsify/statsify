@@ -39,7 +39,7 @@ const prefixes: GamePrefix[] = [
 ];
 
 export class Walls {
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
   @Field()
@@ -63,7 +63,7 @@ export class Walls {
   @Field()
   public assists: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public tokens: number;
 
   @Field()

@@ -10,13 +10,13 @@ import { APIData } from "@statsify/util";
 import { Field } from "#metadata";
 
 export class Slumber {
-  @Field({ historical: { enabled: false }, leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false } })
   public tickets: number;
 
   @Field({ leaderboard: { fieldName: "Total Slumber Tickets" } })
   public totalTickets: number;
 
-  @Field({ historical: { enabled: false }, leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false } })
   public wallet: number;
 
   public constructor(data: APIData = {}) {
