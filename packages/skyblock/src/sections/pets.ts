@@ -106,6 +106,8 @@ export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
     active: pets.find((pet) => pet.active),
     pets,
     totalXp: member.player_stats?.pets?.total_exp_gained ?? 0,
+    skinned: views.filter(({ skin }) => skin).length,
+    candyUsed: add(...views.map(({ candyUsed }) => candyUsed)),
   };
 }
 

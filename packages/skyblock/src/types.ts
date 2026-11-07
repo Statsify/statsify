@@ -405,6 +405,8 @@ export interface PetView {
   name: string;
   rarity: Rarity;
   level: Level;
+  skinned: number;
+  candyUsed: number; // over every pet
   heldItem?: string;
   heldItemTexture?: ItemTexture;
   skin?: string;
