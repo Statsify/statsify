@@ -18,11 +18,15 @@ import {
   type StatSource,
   type StatTotal,
   type StatsSection,
+  type TreeLayout,
+  type TreeNode,
 } from "#types";
-import { PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
+import { HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
 import { add, roundTo } from "@statsify/math";
 import { bagAccessories, powerScale, stonePowerStats } from "./accessories.js";
 import { decodeSlots } from "#items";
+import { getHotf } from "./hotf.js";
+import { getHotm } from "./hotm.js";
 import { getPets } from "./pets.js";
 import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
@@ -150,6 +154,14 @@ const essenceStats = (perks: Record<string, number>) =>
     })
   );
 
+/** The stats of a tree's perks that grant them outright, while the perk is on. */
+const treeStats = (nodes: TreeNode[], layout: TreeLayout) =>
+  sumStats(
+    nodes.flatMap(({ id, level, enabled }) =>
+      enabled ? (layout[id]?.stats ?? []).map((stat) => ({ [stat.id]: stat.base + stat.perLevel * level })) : []
+    )
+  );
+
 // Blaze levels' stats (wiki: Blaze Slayer), which NEU's bonus table lacks. Vampire's are Rift Time, a Rift-only stat.
 const BLAZE_LEVELS: Stats[] = [
   { health: 3 },
@@ -218,6 +230,8 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     pet: petStats(pets.active),
     petScore: { magic_find: petScoreMagicFind(pets.score) },
     essence,
+    hotm: treeStats(getHotm(member).nodes, HOTM_LAYOUT),
+    hotf: treeStats(getHotf(member)?.nodes ?? [], HOTF_LAYOUT),
   };
 
   const unverified: StatSource[] = [];
