@@ -11,8 +11,7 @@ import { Empty } from "./components/Empty.js";
 import { LevelBar } from "./components/LevelBar.js";
 import { arrayGroup, formatTime, prettify } from "@statsify/util";
 import { gridRows } from "./components/ItemGrid.js";
-import { CLASS_COLORS, GRADE_COLORS } from "@statsify/skyblock/display";
-import { DUNGEON_CLASSES } from "@statsify/skyblock";
+import { CLASS_COLORS, DUNGEON_CLASSES, GRADE_COLORS } from "@statsify/skyblock/display";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 export interface SkyBlockDungeonsProfileProps extends SkyBlockProfileProps {

@@ -9,8 +9,7 @@
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
 import { LevelBar } from "./components/LevelBar.js";
-import { SKILLS } from "@statsify/skyblock";
-import { SKILL_COLORS } from "@statsify/skyblock/display";
+import { SKILLS, SKILL_COLORS } from "@statsify/skyblock/display";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 

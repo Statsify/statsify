@@ -8,8 +8,7 @@
 
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { LevelBar } from "./components/LevelBar.js";
-import { BOSS_COLORS } from "@statsify/skyblock/display";
-import { SLAYER_BOSSES } from "@statsify/skyblock";
+import { BOSS_COLORS, SLAYER_BOSSES } from "@statsify/skyblock/display";
 import { arrayGroup, prettify, romanNumeral } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
