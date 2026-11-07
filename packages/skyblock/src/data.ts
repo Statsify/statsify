@@ -10,6 +10,7 @@
 // plus the skill tables and max levels from Hypixel's skills resource.
 import accessories from "./generated/accessories.json" with { type: "json" };
 import essenceShops from "./generated/essenceshops.json" with { type: "json" };
+import garden from "./generated/garden.json" with { type: "json" };
 import hoppity from "./generated/hoppity.json" with { type: "json" };
 import hotfLayout from "./generated/hotflayout.json" with { type: "json" };
 import hotmLayout from "./generated/hotmlayout.json" with { type: "json" };
@@ -84,3 +85,13 @@ export const TROPHY_FISH = trophyFish as Record<string, string>;
 
 /** Every sea creature, with its bestiary kill ids (one per level it spawns at). */
 export const SEA_CREATURES = seaCreatures as { name: string; ids: string[] }[];
+
+/** NEU's Garden tables, with the crop milestones by the API's crop id and each upgrade's level count. */
+export const GARDEN = garden as {
+  garden_exp: number[];
+  crop_milestones: Record<string, number[]>;
+  visitors: Record<string, Rarity>;
+  plots: string[];
+  crop_upgrades: number;
+  composter_upgrades: Record<string, number>;
+};
