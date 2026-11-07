@@ -81,6 +81,9 @@ export interface MemberView {
   gear?: GearSection | null;
   inventories?: InventoriesSection | null;
   museum?: MuseumView | null; // null: nothing to show (the profile's museumFetchedAt says whether it was fetched)
+  experiments?: ExperimentsSection | null;
+  rift?: RiftSection | null;
+  misc?: MiscSection;
 }
 
 /** An inventory's slots in the game's order; an empty slot is null. */
@@ -333,6 +336,46 @@ export interface ChocolateSection {
   rabbits: { rarity: Rarity; found: number; total: number }[];
   employees: { employee: string; level: number }[];
   timeTower: number;
+}
+
+// The API's names for Superpairs, Chronomatron and Ultrasequencer
+export const EXPERIMENTS = ["pairings", "simon", "numbers"] as const;
+
+export type Experiment = (typeof EXPERIMENTS)[number];
+
+export interface ExperimentsSection {
+  games: { game: Experiment; bonusClicks: number; tiers: ExperimentTier[] }[];
+  serums: number; // drunk
+}
+
+export interface ExperimentTier {
+  tier: number; // the API's index, which each game numbers its own way (Ultrasequencer's start at 1)
+  attempts?: number; // not kept for every game
+  claims: number;
+  bestScore?: number;
+}
+
+export interface RiftSection {
+  motes: number;
+  lifetimeMotes: number;
+  visits: number;
+  enigmaSouls: number; // found
+  timecharms: number; // secured
+  catsFound: number;
+}
+
+export interface MiscSection {
+  kills: number;
+  deaths: number;
+  topKills: { id: string; count: number }[]; // the 20 most, by mob id
+  topDeaths: { id: string; count: number }[]; // by cause
+  highestDamage?: number;
+  highestCriticalDamage?: number;
+  auctions: Record<"created" | "completed" | "won" | "bids" | "highestBid" | "goldSpent" | "goldEarned" | "fees", number>;
+  gifts: { given: number; received: number };
+  mythological: { kills: number; chains: number }; // burrow chains completed
+  candy: number; // collected at Spooky Festivals
+  soulflow: number;
 }
 
 export interface PetsSection {

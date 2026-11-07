@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { Faction, JacobMedal, Whisper } from "#types";
+import type { Experiment, Faction, JacobMedal, Whisper } from "#types";
 
 // The parts of Hypixel's /v2/skyblock responses this package reads. Everything is optional, since Hypixel leaves out
 // whatever a player never touched or an API setting hides.
@@ -27,6 +27,11 @@ export interface RawPet {
   heldItem?: string | null;
   candyUsed?: number;
   skin?: string | null;
+}
+
+export interface RawExperiment {
+  [tier: `${"attempts" | "claims" | "best_score"}_${number}`]: number | undefined;
+  bonus_clicks?: number;
 }
 
 export interface RawDungeonType {
@@ -61,12 +66,23 @@ export interface RawMember {
     first_join?: number;
   };
   leveling?: { experience?: number; highest_pet_score?: number };
-  currencies?: { coin_purse?: number; essence?: Record<string, { current?: number }> };
+  currencies?: { coin_purse?: number; motes_purse?: number; essence?: Record<string, { current?: number }> };
+  item_data?: { soulflow?: number };
+  experimentation?: Partial<Record<Experiment, RawExperiment>> & { serums_drank?: number };
   fairy_soul?: { total_collected?: number };
   player_stats?: {
     pets?: { total_exp_gained?: number };
     items_fished?: Record<string, number>;
     sea_creature_kills?: number;
+    kills?: Record<string, number>; // by mob id, plus "total"
+    deaths?: Record<string, number>; // by cause, plus "total"
+    highest_damage?: number;
+    highest_critical_damage?: number;
+    auctions?: Partial<Record<"created" | "completed" | "won" | "bids" | "highest_bid" | "gold_spent" | "gold_earned" | "fees", number>>;
+    gifts?: { total_given?: number; total_received?: number };
+    mythos?: { kills?: number; burrows_chains_complete?: { total?: number } };
+    candy_collected?: { total?: number };
+    rift?: { visits?: number; lifetime_motes_earned?: number };
   };
   bestiary?: { kills?: Record<string, number> };
   trophy_fish?: Record<string, unknown>; // <fish> and <fish>_<tier> counts, plus total_caught, rewards…
@@ -142,7 +158,12 @@ export interface RawMember {
     selected_power?: string;
     highest_magical_power?: number;
   };
-  rift?: { access?: { consumed_prism?: boolean }; dead_cats?: { montezuma?: RawPet } };
+  rift?: {
+    access?: { consumed_prism?: boolean };
+    dead_cats?: { montezuma?: RawPet; found_cats?: string[] };
+    enigma?: { found_souls?: string[] };
+    gallery?: { secured_trophies?: unknown[] };
+  };
   nether_island_player_data?: {
     abiphone?: { active_contacts?: string[] };
     selected_faction?: Faction;

@@ -12,15 +12,18 @@ import { getChocolate } from "./chocolate.js";
 import { getCrimson } from "./crimson.js";
 import { gameModeOf } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
+import { getExperiments } from "./experiments.js";
 import { getFishing } from "./fishing.js";
 import { getGear } from "./gear.js";
 import { getInventories } from "./inventories.js";
 import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
 import { getJacob } from "./jacob.js";
+import { getMisc } from "./misc.js";
 import { getSkyBlockLevel } from "./level.js";
 import { getMuseum } from "./museum.js";
 import { getPets } from "./pets.js";
+import { getRift } from "./rift.js";
 import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
 import type { ItemsResource, MemberView, PriceMap } from "#types";
@@ -34,6 +37,7 @@ export const SKYBLOCK_SECTIONS = [
   "chocolate",
   "crimson",
   "dungeons",
+  "experiments",
   "fishing",
   "gear",
   "hotf",
@@ -41,9 +45,11 @@ export const SKYBLOCK_SECTIONS = [
   "inventories",
   "jacob",
   "level",
+  "misc",
   "museum",
   "networth",
   "pets",
+  "rift",
   "skills",
   "slayers",
 ] as const;
@@ -81,6 +87,7 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
   chocolate: { needs: [], compute: async ({ member }) => getChocolate(member) },
   crimson: { needs: [], compute: async ({ member }) => getCrimson(member) },
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
+  experiments: { needs: [], compute: async ({ member }) => getExperiments(member) },
   fishing: { needs: [], compute: async ({ member }) => getFishing(member) },
   gear: { needs: [], compute: async ({ member }) => getGear(member) },
   hotf: { needs: [], compute: async ({ member }) => getHotf(member) },
@@ -100,6 +107,7 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
       return getSkyBlockLevel(member, items, prices, hasMarket(profile));
     },
   },
+  misc: { needs: [], compute: async ({ member }) => getMisc(member) },
   museum: {
     needs: ["items", "museum"],
     compute: async ({ items, museum }) => {
@@ -108,6 +116,7 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
     },
   },
   pets: { needs: ["items"], compute: async ({ member, items }) => getPets(member, items) },
+  rift: { needs: [], compute: async ({ member }) => getRift(member) },
   skills: { needs: [], compute: async ({ profile, member }) => getSkills(profile, member) },
   slayers: { needs: [], compute: async ({ member }) => getSlayers(member) },
 };
