@@ -168,11 +168,11 @@ const treeStats = (nodes: TreeNode[], layout: TreeLayout) =>
 const { magic_find: baseMagicFind, ...BASE } = STAT_TABLES.base;
 const WIKI_BASE: Stats = { swing_range: 3, health_regen: 100, vitality: 100, mending: 100, respiration: 30, magic_find: baseMagicFind };
 
-// +2 Health per bestiary milestone and per Catacombs level to 50 (wiki: Health); +5 Health per SkyBlock level and +1
-// Strength per 5 (wiki: SkyBlock Levels). Fairy souls stopped giving stats in 2022.
+// wiki: Health, and SkyBlock Levels for the level's stats. Fairy souls stopped giving stats in 2022.
 const BESTIARY_HEALTH = 2;
 const CATACOMBS_HEALTH = { perLevel: 2, maxLevel: 50 };
 const LEVEL_STATS = { health: 5, strengthEvery: 5 };
+const PEPPER_HEALTH = 1;
 
 // Blaze levels' stats (wiki: Blaze Slayer), which NEU's bonus table lacks. Vampire's are Rift Time, a Rift-only stat.
 const BLAZE_LEVELS: Stats[] = [
@@ -227,6 +227,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   const essence = essenceStats(member.player_data?.perks ?? {});
   const catacombs = getDungeons(member).catacombs.level;
   const level = Math.floor((member.leveling?.experience ?? 0) / SKYBLOCK_XP_PER_LEVEL);
+  const peppers = member.player_data?.reaper_peppers_eaten ?? 0;
 
   const sources: Partial<Record<StatSource, Stats>> = {
     base: BASE,
@@ -250,6 +251,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     bestiary: { health: BESTIARY_HEALTH * (member.bestiary?.milestone?.last_claimed_milestone ?? 0) },
     catacombs: { health: CATACOMBS_HEALTH.perLevel * Math.min(catacombs, CATACOMBS_HEALTH.maxLevel) },
     level: { health: LEVEL_STATS.health * level, strength: Math.floor(level / LEVEL_STATS.strengthEvery) },
+    peppers: { health: PEPPER_HEALTH * peppers },
   };
 
   const unverified: StatSource[] = ["wikiBase"];
@@ -261,6 +263,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   if (member.bestiary?.milestone?.last_claimed_milestone) unverified.push("bestiary");
   if (catacombs > 0) unverified.push("catacombs");
   if (level > 0) unverified.push("level");
+  if (peppers > 0) unverified.push("peppers");
 
   return { stats: toTotals(sources), weapon: weapon?.name, unverified };
 }

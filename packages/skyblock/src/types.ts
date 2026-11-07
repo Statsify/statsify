@@ -552,6 +552,7 @@ export const STAT_SOURCES = [
   "bestiary",
   "catacombs",
   "level",
+  "peppers",
 ] as const;
 
 export type StatSource = (typeof STAT_SOURCES)[number];
