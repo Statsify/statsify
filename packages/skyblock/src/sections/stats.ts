@@ -224,6 +224,10 @@ const tierWisdom = (kills: number[]) => add(...kills.map((count, tier) => (count
 
 const STAT_SLAYERS = Object.keys(SLAYER_LEVELS) as (keyof typeof SLAYER_LEVELS)[];
 
+// Anita's Extra Farming Fortune and Agatha's and Miria's log fortunes, per level (wiki: Farming, Fig, Mangrove and Helix
+// Fortune)
+const FORTUNE_PER_UPGRADE = 4;
+
 // Pet score's Magic Find past NEU's last step at 325 (wiki: Pet Score)
 const PET_SCORE_STEPS = { ...STAT_TABLES.pet_score, 375: 11, 450: 12, 500: 13 };
 const UNVERIFIED_PET_SCORE = 375;
@@ -261,7 +265,8 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   const skills = getSkills(profile, member);
   const slayers = getSlayers(member).bosses;
   const pets = getPets(member);
-  const essence = essenceStats(member.player_data?.perks ?? {});
+  const perks = member.player_data?.perks ?? {};
+  const essence = essenceStats(perks);
   const catacombs = getDungeons(member).catacombs.level;
   const level = Math.floor((member.leveling?.experience ?? 0) / SKYBLOCK_XP_PER_LEVEL);
   const peppers = member.player_data?.reaper_peppers_eaten ?? 0;
@@ -272,6 +277,15 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     const level = slayers[boss].level.level;
     return { boss, neu: upTo(neu, level), wiki: upTo(wiki, level) };
   });
+  const fortuneUpgrades = scaleStats(
+    {
+      farming_fortune: member.jacobs_contest?.perks?.double_drops ?? 0,
+      fig_fortune: perks.agatha_fig_fortune ?? 0,
+      mangrove_fortune: perks.agatha_mangrove_fortune ?? 0,
+      helix_fortune: perks.miria_helix_fortune ?? 0,
+    },
+    FORTUNE_PER_UPGRADE
+  );
 
   const sources: Partial<Record<StatSource, Stats>> = {
     base: BASE,
@@ -294,6 +308,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     catacombs: { health: CATACOMBS_HEALTH.perLevel * Math.min(catacombs, CATACOMBS_HEALTH.maxLevel) },
     level: { health: LEVEL_STATS.health * level, strength: Math.floor(level / LEVEL_STATS.strengthEvery) },
     peppers: { health: PEPPER_HEALTH * peppers },
+    fortuneUpgrades,
   };
 
   const unverified: StatSource[] = ["wikiBase"];
@@ -307,6 +322,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   if (catacombs > 0) unverified.push("catacombs");
   if (level > 0) unverified.push("level");
   if (peppers > 0) unverified.push("peppers");
+  if (Object.values(fortuneUpgrades).some((value) => value > 0)) unverified.push("fortuneUpgrades");
 
   return { stats: toTotals(sources), weapon: weapon?.name, unverified };
 }
