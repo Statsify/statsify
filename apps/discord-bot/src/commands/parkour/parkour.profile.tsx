@@ -16,7 +16,6 @@ interface ParkourProfileProps extends BaseProfileProps {
   gameIcons: Record<GameId, Image>;
 }
 
-// The API leaves out lobbies without a run
 const LOBBIES = scanMetadata(Parkour).map(([lobby]) => lobby as keyof Parkour);
 
 export const ParkourProfile = ({
