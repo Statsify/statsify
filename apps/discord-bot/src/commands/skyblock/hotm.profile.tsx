@@ -8,16 +8,11 @@
 
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { LevelBar } from "./components/LevelBar.js";
-import { POWDERS, type Powder } from "@statsify/skyblock";
+import { POWDERS } from "@statsify/skyblock";
+import { POWDER_COLORS } from "@statsify/skyblock/display";
 import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
-
-const POWDER_COLORS: Record<Powder, string> = {
-  mithril: "§2",
-  gemstone: "§d",
-  glacite: "§b",
-};
 
 export const SkyBlockHotmProfile = ({
   profile,

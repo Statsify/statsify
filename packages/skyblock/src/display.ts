@@ -7,7 +7,7 @@
  */
 
 // Its own entry, with no data, so the bot's cards and the site's pages draw names and rarities alike.
-import type { GameMode, Rarity } from "#types";
+import type { DungeonClass, DungeonGrade, GameMode, Powder, Rarity, Skill, SlayerBoss } from "#types";
 
 export const RARITY_COLORS: Record<Rarity, string> = {
   COMMON: "§f",
@@ -21,6 +21,53 @@ export const RARITY_COLORS: Record<Rarity, string> = {
   VERY_SPECIAL: "§c",
   ULTIMATE: "§4",
   ADMIN: "§4",
+};
+
+export const SKILL_COLORS: Record<Skill, string> = {
+  farming: "§e",
+  mining: "§7",
+  combat: "§c",
+  foraging: "§2",
+  fishing: "§3",
+  enchanting: "§5",
+  alchemy: "§d",
+  taming: "§a",
+  carpentry: "§6",
+  hunting: "§b",
+  runecrafting: "§d",
+  social: "§a",
+};
+
+export const CLASS_COLORS: Record<DungeonClass, string> = {
+  healer: "§d",
+  mage: "§b",
+  berserk: "§c",
+  archer: "§6",
+  tank: "§7",
+};
+
+export const GRADE_COLORS: Record<DungeonGrade, string> = {
+  "S+": "§6",
+  "S": "§e",
+  "A": "§5",
+  "B": "§a",
+  "C": "§9",
+  "D": "§c",
+};
+
+export const POWDER_COLORS: Record<Powder, string> = {
+  mithril: "§2",
+  gemstone: "§d",
+  glacite: "§b",
+};
+
+export const BOSS_COLORS: Record<SlayerBoss, string> = {
+  zombie: "§a",
+  spider: "§c",
+  wolf: "§f",
+  enderman: "§d",
+  blaze: "§6",
+  vampire: "§b",
 };
 
 /** The symbol after a profile's name in game; a normal profile has none. */
