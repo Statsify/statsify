@@ -461,9 +461,9 @@ export interface SkyBlockLevelSection {
   }[];
 }
 
+// No item uuid: nothing reads it, and its random bytes were a fifth of a full inventories payload gzipped
 export interface ItemView {
   id: string; // vanilla items: "minecraft:<id>:<damage>"
-  uuid?: string;
   name: string;
   lore: string[]; // § codes kept, as 1.8 draws them (normalizeItemText)
   rarity?: Rarity;
@@ -492,7 +492,6 @@ export interface RawItem {
     display?: { Name?: string; Lore?: string[]; color?: number };
     ExtraAttributes?: {
       id?: string;
-      uuid?: string;
       modifier?: string;
       upgrade_level?: number;
       dungeon_item_level?: number;
