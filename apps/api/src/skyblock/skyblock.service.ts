@@ -146,9 +146,10 @@ export class SkyBlockService {
       needs.has("items") ? this.pricesService.getItems() : undefined,
     ]);
 
-    if ((needs.has("prices") && !prices) || (needs.has("items") && !items)) {
-      throw new SkyBlockUnavailableException("market");
-    }
+    const built = { museum: true, prices: !!prices, items: !!items };
+    const ready = sections.filter((name) => DEFINITIONS[name].needs.every((need) => built[need]));
+    const marketDown = sections.filter((name) => !ready.includes(name));
+    if (ready.length === 0 && marketDown.length > 0) throw new SkyBlockUnavailableException("market");
 
     const input: SectionInput = {
       uuid: player.uuid,
@@ -166,11 +167,12 @@ export class SkyBlockService {
       ...toProfileSummary(profile, player.uuid),
       member: await toMemberView(
         input,
-        sections,
+        ready,
         (name) => this.getSection(name, input, fetchedAt, museum?.fetchedAt),
         museum?.value
       ),
       museumFetchedAt: museum?.fetchedAt,
+      ...(marketDown.length > 0 && { marketDown }),
     };
   }
 
