@@ -8,6 +8,13 @@
   "blockhead": {
     "maxLevel": 20,
     "name": "Blockhead",
+    "stats": [
+      {
+        "base": 0,
+        "id": "block_fortune",
+        "perLevel": 5
+      }
+    ],
     "x": 1,
     "y": 4
   },
@@ -50,12 +57,26 @@
   "efficient_miner": {
     "maxLevel": 100,
     "name": "Efficient Miner",
+    "stats": [
+      {
+        "base": 0,
+        "id": "mining_spread",
+        "perLevel": 3
+      }
+    ],
     "x": 3,
     "y": 7
   },
   "fortunate_mineman": {
     "maxLevel": 50,
     "name": "Fortunate Mineman",
+    "stats": [
+      {
+        "base": 0,
+        "id": "mining_fortune",
+        "perLevel": 3
+      }
+    ],
     "x": 5,
     "y": 3
   },
@@ -68,6 +89,13 @@
   "gem_lover": {
     "maxLevel": 20,
     "name": "Gem Lover",
+    "stats": [
+      {
+        "base": 20,
+        "id": "gemstone_fortune",
+        "perLevel": 4
+      }
+    ],
     "x": 4,
     "y": 6
   },
@@ -92,6 +120,13 @@
   "keep_it_cool": {
     "maxLevel": 50,
     "name": "Keep It Cool",
+    "stats": [
+      {
+        "base": 0,
+        "id": "heat_resistance",
+        "perLevel": 0.4
+      }
+    ],
     "x": 3,
     "y": 4
   },
@@ -116,6 +151,13 @@
   "metal_head": {
     "maxLevel": 20,
     "name": "Metal Head",
+    "stats": [
+      {
+        "base": 0,
+        "id": "dwarven_metal_fortune",
+        "perLevel": 5
+      }
+    ],
     "x": 1,
     "y": 1
   },
@@ -134,18 +176,39 @@
   "mining_fortune": {
     "maxLevel": 50,
     "name": "Mining Fortune",
+    "stats": [
+      {
+        "base": 0,
+        "id": "mining_fortune",
+        "perLevel": 2
+      }
+    ],
     "x": 3,
     "y": 8
   },
   "mining_master": {
     "maxLevel": 10,
     "name": "Mining Master",
+    "stats": [
+      {
+        "base": 0,
+        "id": "pristine",
+        "perLevel": 0.1
+      }
+    ],
     "x": 3,
     "y": 0
   },
   "mining_speed": {
     "maxLevel": 50,
     "name": "Mining Speed",
+    "stats": [
+      {
+        "base": 0,
+        "id": "mining_speed",
+        "perLevel": 20
+      }
+    ],
     "x": 3,
     "y": 9
   },
@@ -170,6 +233,13 @@
   "old_school": {
     "maxLevel": 20,
     "name": "Old-School",
+    "stats": [
+      {
+        "base": 0,
+        "id": "ore_fortune",
+        "perLevel": 5
+      }
+    ],
     "x": 1,
     "y": 6
   },
@@ -212,6 +282,13 @@
   "seasoned_mineman": {
     "maxLevel": 100,
     "name": "Seasoned Mineman",
+    "stats": [
+      {
+        "base": 5,
+        "id": "mining_wisdom",
+        "perLevel": 0.1
+      }
+    ],
     "x": 5,
     "y": 6
   },
@@ -230,6 +307,13 @@
   "speedy_mineman": {
     "maxLevel": 50,
     "name": "Speedy Mineman",
+    "stats": [
+      {
+        "base": 0,
+        "id": "mining_speed",
+        "perLevel": 40
+      }
+    ],
     "x": 1,
     "y": 3
   },
@@ -272,6 +356,13 @@
   "warm_heart": {
     "maxLevel": 50,
     "name": "Warm Heart",
+    "stats": [
+      {
+        "base": 0,
+        "id": "cold_resistance",
+        "perLevel": 0.4
+      }
+    ],
     "x": 4,
     "y": 2
   }
