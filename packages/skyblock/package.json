@@ -63,6 +63,10 @@
       "types": "./src/items.ts",
       "default": "./dist/items.js"
     },
+    "#lore": {
+      "types": "./src/lore.ts",
+      "default": "./dist/lore.js"
+    },
     "#nbt": {
       "types": "./src/nbt.ts",
       "default": "./dist/nbt.js"

@@ -425,6 +425,107 @@ export interface RiftSection {
   catsFound: number;
 }
 
+export const STAT_GROUPS = ["combat", "mining", "farming", "foraging", "fishing", "misc", "wisdoms"] as const;
+
+export type StatGroup = (typeof STAT_GROUPS)[number];
+
+/**
+ * Player stats in the wiki's order, with 1.8 lore's symbols and colors; lore names a stat as `prettify(id)`, or by an
+ * older name in `aliases`. Rift-only stats aren't here. A list and not a record keyed by id: swc's jsonify step sorts a
+ * large object literal's keys.
+ */
+export const PLAYER_STATS = [
+  { id: "health", symbol: "❤", color: "§c", group: "combat" },
+  { id: "defense", symbol: "❈", color: "§a", group: "combat" },
+  { id: "true_defense", symbol: "❂", color: "§f", group: "combat" },
+  { id: "strength", symbol: "❁", color: "§c", group: "combat" },
+  { id: "crit_damage", symbol: "☠", color: "§9", group: "combat", percent: true },
+  { id: "crit_chance", symbol: "☣", color: "§9", group: "combat", percent: true },
+  { id: "attack_speed", symbol: "⚔", color: "§e", group: "combat", percent: true, aliases: ["Bonus Attack Speed"] },
+  { id: "swing_range", symbol: "Ⓢ", color: "§e", group: "combat" },
+  { id: "intelligence", symbol: "✎", color: "§b", group: "combat" },
+  { id: "ferocity", symbol: "⫽", color: "§c", group: "combat" },
+  { id: "ability_damage", symbol: "๑", color: "§c", group: "combat", percent: true },
+  { id: "health_regen", symbol: "❣", color: "§c", group: "combat" },
+  { id: "vitality", symbol: "♨", color: "§4", group: "combat" },
+  { id: "mending", symbol: "☄", color: "§a", group: "combat" },
+  { id: "breaking_power", symbol: "Ⓟ", color: "§2", group: "mining" },
+  { id: "mining_speed", symbol: "⸕", color: "§6", group: "mining" },
+  { id: "mining_spread", symbol: "▚", color: "§e", group: "mining" },
+  { id: "gemstone_spread", symbol: "▚", color: "§e", group: "mining" },
+  { id: "pristine", symbol: "✧", color: "§5", group: "mining" },
+  { id: "mining_fortune", symbol: "☘", color: "§6", group: "mining" },
+  { id: "ore_fortune", symbol: "☘", color: "§6", group: "mining" },
+  { id: "block_fortune", symbol: "☘", color: "§6", group: "mining" },
+  { id: "dwarven_metal_fortune", symbol: "☘", color: "§6", group: "mining" },
+  { id: "gemstone_fortune", symbol: "☘", color: "§6", group: "mining" },
+  { id: "heat_resistance", symbol: "♨", color: "§c", group: "mining" },
+  { id: "cold_resistance", symbol: "❄", color: "§b", group: "mining" },
+  { id: "farming_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "wheat_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "carrot_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "potato_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "pumpkin_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "melon_slice_fortune", symbol: "☘", color: "§6", group: "farming", aliases: ["Melon Fortune"] },
+  { id: "mushroom_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "cactus_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "sugar_cane_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "nether_wart_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "cocoa_beans_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "sunflower_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "moonflower_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "wild_rose_fortune", symbol: "☘", color: "§6", group: "farming" },
+  { id: "bonus_pest_chance", symbol: "ൠ", color: "§2", group: "farming", percent: true },
+  { id: "overbloom", symbol: "☀", color: "§e", group: "farming" },
+  { id: "sweep", symbol: "∮", color: "§2", group: "foraging" },
+  { id: "foraging_fortune", symbol: "☘", color: "§6", group: "foraging" },
+  { id: "fig_fortune", symbol: "☘", color: "§6", group: "foraging" },
+  { id: "mangrove_fortune", symbol: "☘", color: "§6", group: "foraging" },
+  { id: "helix_fortune", symbol: "☘", color: "§6", group: "foraging" },
+  { id: "timber", symbol: "", color: "§4", group: "foraging", percent: true },
+  { id: "sea_creature_chance", symbol: "α", color: "§3", group: "fishing", percent: true },
+  { id: "fishing_speed", symbol: "☂", color: "§b", group: "fishing" },
+  { id: "double_hook_chance", symbol: "⚓", color: "§9", group: "fishing", percent: true },
+  { id: "treasure_chance", symbol: "⛃", color: "§6", group: "fishing", percent: true },
+  { id: "trophy_chance", symbol: "♔", color: "§6", group: "fishing", percent: true, aliases: ["Trophy Fish Chance"] },
+  { id: "speed", symbol: "✦", color: "§f", group: "misc" },
+  { id: "magic_find", symbol: "✯", color: "§b", group: "misc" },
+  { id: "pet_luck", symbol: "♣", color: "§d", group: "misc" },
+  { id: "tracking", symbol: "❃", color: "§d", group: "misc" },
+  { id: "respiration", symbol: "⚶", color: "§3", group: "misc" },
+  { id: "pressure_resistance", symbol: "❍", color: "§9", group: "misc" },
+  { id: "fear", symbol: "", color: "§5", group: "misc" },
+  { id: "hunting_fortune", symbol: "", color: "§d", group: "misc", aliases: ["Hunter Fortune"] },
+  { id: "pull", symbol: "", color: "§b", group: "misc" },
+  { id: "charm_chance", symbol: "", color: "§d", group: "misc" },
+  { id: "combat_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
+  { id: "mining_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
+  { id: "farming_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
+  { id: "foraging_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
+  { id: "fishing_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
+  { id: "enchanting_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
+  { id: "alchemy_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
+  { id: "carpentry_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
+  { id: "runecrafting_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
+  { id: "social_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
+  { id: "taming_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
+  { id: "hunting_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
+] as const satisfies readonly {
+  id: string;
+  symbol: string;
+  color: string;
+  group: StatGroup;
+  percent?: true;
+  aliases?: readonly string[];
+}[];
+
+export type PlayerStat = (typeof PLAYER_STATS)[number]["id"];
+
+export interface StatValue {
+  stat: PlayerStat;
+  value: number;
+}
+
 export const AUCTION_STATS = ["created", "completed", "won", "bids", "highestBid", "goldSpent", "goldEarned", "fees"] as const;
 
 export type AuctionStat = (typeof AUCTION_STATS)[number];
