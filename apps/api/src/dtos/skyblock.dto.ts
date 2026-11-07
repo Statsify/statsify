@@ -6,11 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, PartialType } from "@nestjs/swagger";
 import { CachedPlayerDto } from "./cached-player.dto.js";
 import { ICON_SIZES, type IconSize } from "@statsify/skyblock/icon-key";
-import { IsArray, IsIn, IsOptional, IsString, MaxLength } from "class-validator";
+import { IsArray, IsEnum, IsIn, IsInt, IsOptional, IsString, MaxLength, Min } from "class-validator";
+import { PlayerDto } from "./player.dto.js";
 import { SKYBLOCK_SECTIONS, type SkyBlockSection } from "@statsify/skyblock";
+import { SkyBlockStats, getLeaderboardFields } from "@statsify/schemas";
 import { Transform } from "class-transformer";
 
 export class SkyBlockProfileDto extends CachedPlayerDto {
@@ -65,4 +67,25 @@ export class SkyBlockItemsDto {
   @MaxLength(100)
   @ApiProperty({ example: "hyperion" })
   public query: string;
+}
+
+const leaderboardFields = getLeaderboardFields(SkyBlockStats).map(([key]) => key);
+
+export class SkyBlockLeaderboardDto extends PartialType(PlayerDto) {
+  @IsEnum(leaderboardFields)
+  @ApiProperty({ enum: leaderboardFields })
+  public field: string;
+
+  @Transform((params) => +params.value)
+  @IsInt()
+  @Min(0)
+  @ApiProperty({ default: 0, minimum: 0, type: () => Number, required: false })
+  public page = 0;
+
+  @Transform((params) => +params.value)
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @ApiProperty({ minimum: 1, type: () => Number, required: false })
+  public position?: number;
 }

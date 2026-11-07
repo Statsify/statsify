@@ -22,14 +22,18 @@ import { NETWORTH } from "@statsify/skyblock/networth";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
 import {
+  MEMBER_STATS_SECTIONS,
   SECTIONS,
   type SectionInput,
   findProfile,
+  isMember,
+  toMemberStats,
   toMemberView,
   toProfileSummary,
   toProfilesView,
 } from "@statsify/skyblock";
 import { Singleflight } from "./singleflight.js";
+import { SkyBlockLeaderboardService } from "./leaderboards/skyblock-leaderboard.service.js";
 import { SkyBlockGarden, SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
 import { unzip, zip } from "./zip.js";
@@ -45,6 +49,7 @@ import type {
   SkyBlockSection,
 } from "@statsify/skyblock";
 import type { ReturnModelType } from "@typegoose/typegoose";
+import type { SkyBlockStatsRow } from "@statsify/schemas";
 
 /** How long a stored copy is new enough that a lookup at `CACHE` doesn't fetch it again. */
 export const SKYBLOCK_FRESH_FOR = 300_000;
@@ -57,6 +62,8 @@ const SECTION_VERSION = 4;
 const MAX_DOCUMENT = 15 * 1024 * 1024;
 
 const DEFINITIONS = { ...SECTIONS, networth: NETWORTH } satisfies Record<SkyBlockSection, { needs: readonly SectionNeed[] }>;
+
+const isReady = (name: SkyBlockSection, built: Record<SectionNeed, boolean>) => DEFINITIONS[name].needs.every((need) => built[need]);
 
 interface Stored<T> {
   value: T;
@@ -104,6 +111,7 @@ export class SkyBlockService {
     private readonly hypixelService: HypixelService,
     private readonly budgetService: SkyBlockBudgetService,
     private readonly pricesService: SkyBlockPricesService,
+    private readonly leaderboardService: SkyBlockLeaderboardService,
     @InjectModel(SkyBlockProfiles) private readonly profilesModel: ReturnModelType<typeof SkyBlockProfiles>,
     @InjectModel(SkyBlockMuseum) private readonly museumModel: ReturnModelType<typeof SkyBlockMuseum>,
     @InjectModel(SkyBlockGarden) private readonly gardenModel: ReturnModelType<typeof SkyBlockGarden>,
@@ -145,14 +153,23 @@ export class SkyBlockService {
 
     const needs = new Set(sections.flatMap((name) => DEFINITIONS[name].needs));
     const [museum, garden, prices, items] = await Promise.all([
-      needs.has("museum") ? this.getStoredMuseum(profile.profile_id, cache) : undefined,
+      // The rows ranked when these profiles were stored went without the museum a refetch here stores. A copy served
+      // stale is older than rows a co-op partner's newer copy may have written, so it isn't ranked again. Bingo and
+      // Stranded ("island") profiles have no museum.
+      needs.has("museum") && !["bingo", "island"].includes(profile.game_mode ?? "") ?
+        this.getStoredMuseum(
+          profile.profile_id,
+          cache,
+          stale ? undefined : () => this.rankInBackground(player.uuid, profiles, fetchedAt)
+        ) :
+        undefined,
       needs.has("garden") ? this.getStoredGarden(profile.profile_id, cache, requireGarden) : undefined,
       needs.has("prices") ? this.pricesService.getPriceMap() : undefined,
       needs.has("items") ? this.pricesService.getItems() : undefined,
     ]);
 
     const built = { museum: true, garden: true, prices: !!prices, items: !!items };
-    const ready = sections.filter((name) => DEFINITIONS[name].needs.every((need) => built[need]));
+    const ready = sections.filter((name) => isReady(name, built));
     const marketDown = sections.filter((name) => !ready.includes(name));
     if (ready.length === 0 && marketDown.length > 0) throw new SkyBlockUnavailableException("market");
 
@@ -240,14 +257,69 @@ export class SkyBlockService {
       const fetchedAt = Date.now();
 
       const data = await this.compress(profiles, uuid);
-      if (data) await this.profilesModel.replaceOne({ uuid }, { uuid, fetchedAt, data }, { upsert: true });
+      if (data) {
+        await this.profilesModel.replaceOne({ uuid }, { uuid, fetchedAt, data }, { upsert: true });
+        this.rankInBackground(uuid, profiles ?? [], fetchedAt);
+      }
 
       return { value: profiles, fetchedAt };
     });
   }
 
+  /** Not awaited, so a failed write never fails the lookup. */
+  private rankInBackground(uuid: string, profiles: RawProfile[], fetchedAt: number) {
+    void this.rankMembers(uuid, profiles, fetchedAt).catch((error) => this.logger.error(error));
+  }
+
+  /**
+   * The leaderboard rows of a copy just stored, for every current member Statsify has a player record for, with the
+   * stored museums and the prices of the hour. It never fetches.
+   */
+  private async rankMembers(uuid: string, profiles: RawProfile[], fetchedAt: number) {
+    const [players, prices, items, museums] = await Promise.all([
+      this.leaderboardService.knownPlayers(profiles.flatMap((profile) => Object.keys(profile.members))),
+      this.pricesService.getPriceMap(),
+      this.pricesService.getItems(),
+      Promise.all(profiles.map((profile) => this.getStoredMuseum(profile.profile_id, CacheLevel.CACHE_ONLY))),
+    ]);
+
+    const built = { museum: true, garden: true, prices: !!prices, items: !!items };
+    const ready = MEMBER_STATS_SECTIONS.filter((name) => isReady(name, built));
+
+    const removed = profiles.flatMap((profile) =>
+      Object.keys(profile.members)
+        .filter((member) => !isMember(profile, member))
+        .map((member) => `${member}:${profile.profile_id}`)
+    );
+
+    const rows = await Promise.all(
+      profiles.flatMap((profile, index) =>
+        Object.entries(profile.members)
+          .filter(([member]) => isMember(profile, member) && players.has(member))
+          .map(async ([member, raw]): Promise<SkyBlockStatsRow> => {
+            const museum = museums[index]?.value.members?.[member];
+            const input: SectionInput = { uuid: member, profile, member: raw, museum, prices, items };
+            const view = await toMemberView(input, ready, (name) => DEFINITIONS[name].compute(input));
+            const summary = toProfileSummary(profile, member);
+
+            return {
+              uuid: member,
+              profileId: profile.profile_id,
+              cuteName: summary.cuteName,
+              gameMode: summary.gameMode,
+              fetchedAt,
+              networthAsOf: view.networth?.pricesAsOf,
+              boards: toMemberStats(input, view),
+            };
+          })
+      )
+    );
+
+    await this.leaderboardService.addMembers(uuid, profiles.map((profile) => profile.profile_id), rows, removed);
+  }
+
   /** The museum is optional, so a lookup goes on without it when Hypixel or the budget refuses. */
-  private async getStoredMuseum(profileId: string, cache: CacheLevel): Promise<Stored<RawMuseum> | undefined> {
+  private async getStoredMuseum(profileId: string, cache: CacheLevel, onStored?: () => void): Promise<Stored<RawMuseum> | undefined> {
     const document = await this.museumModel.findOne({ profileId }).exec();
     const stored = document && {
       fetchedAt: document.fetchedAt,
@@ -262,7 +334,10 @@ export class SkyBlockService {
       const fetchedAt = Date.now();
 
       const data = await this.compress(museum.members, profileId);
-      if (data) await this.museumModel.replaceOne({ profileId }, { profileId, fetchedAt, data }, { upsert: true });
+      if (data) {
+        await this.museumModel.replaceOne({ profileId }, { profileId, fetchedAt, data }, { upsert: true });
+        onStored?.();
+      }
 
       return { value: museum, fetchedAt };
     }).catch((error) => {
