@@ -8,7 +8,7 @@
 
 import { DUNGEON_CLASSES, type DungeonFloor, type DungeonGrade, type DungeonsSection } from "#types";
 import { ESSENCE_SHOPS, LEVELING } from "#data";
-import { add } from "@statsify/math";
+import { add, ratio } from "@statsify/math";
 import { fractionalLevel, getLevel } from "#leveling";
 import type { RawDungeonType, RawMember } from "#raw";
 
@@ -33,6 +33,10 @@ function floorsOf(type: RawDungeonType | undefined, first: number): DungeonFloor
       fastest: type?.fastest_time?.[key],
       fastestS: type?.fastest_time_s?.[key],
       fastestSPlus: type?.fastest_time_s_plus?.[key],
+      mobsKilled: type?.mobs_killed?.[key] ?? 0,
+      mostMobsKilled: type?.most_mobs_killed?.[key],
+      mostHealing: type?.most_healing?.[key],
+      milestoneCompletions: type?.milestone_completions?.[key] ?? 0,
     };
   });
 }
@@ -59,13 +63,19 @@ export function getDungeons(member: RawMember): DungeonsSection {
     ])
   ) as DungeonsSection["classes"];
 
+  const floors = { normal: floorsOf(types?.catacombs, 0), master: floorsOf(types?.master_catacombs, 1) };
+  const secrets = dungeons?.secrets ?? 0;
+
   return {
     catacombs: getLevel(types?.catacombs?.experience ?? 0, LEVELING.catacombs, MAX_LEVEL, true),
     classes,
     classAverage: add(...Object.values(classes).map(fractionalLevel)) / DUNGEON_CLASSES.length,
+    classXp: add(...Object.values(classes).map(({ xp }) => xp)),
     selectedClass: dungeons?.selected_dungeon_class,
-    secrets: dungeons?.secrets ?? 0,
-    floors: { normal: floorsOf(types?.catacombs, 0), master: floorsOf(types?.master_catacombs, 1) },
+    secrets,
+    // The floors' own completions: the raw "total" counts only some of them
+    secretsPerRun: ratio(secrets, add(...[...floors.normal, ...floors.master].map(({ completions }) => completions))),
+    floors,
     highestFloor: {
       normal: types?.catacombs?.highest_tier_completed,
       master: types?.master_catacombs?.highest_tier_completed,
