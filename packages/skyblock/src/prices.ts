@@ -91,7 +91,8 @@ export function toPriceView(id: string, map: PriceMap, bazaar: Bazaar, items: It
   const npc = own(items.items, id)?.npcPrice;
   if (!described || !(product || lowestBin || npc)) return;
 
-  return { ...described, bazaar: product, lowestBin, npc, asOf: map.asOf };
+  const current = entry && { coins: entry.coins, source: entry.source };
+  return { ...described, current, bazaar: product, lowestBin, npc, asOf: map.asOf };
 }
 
 /** An NPC sell price is what an NPC pays for an item, so one priced only by that has no cost. */
