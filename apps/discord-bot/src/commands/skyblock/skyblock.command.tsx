@@ -7,7 +7,9 @@
  */
 
 import {
+  ActionRowBuilder,
   ApiService,
+  ButtonBuilder,
   Command,
   CommandContext,
   ErrorMessage,
@@ -20,6 +22,7 @@ import {
   SubCommand,
   paginate,
 } from "@statsify/discord";
+import { ButtonStyle } from "discord-api-types/v10";
 import { FormattedGame, type User } from "@statsify/schemas";
 import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
@@ -38,6 +41,7 @@ import { SkyBlockPetsProfile, petIcons } from "./pets.profile.js";
 import { SkyBlockSkillsProfile } from "./skills.profile.js";
 import { SkyBlockSlayersProfile } from "./slayers.profile.js";
 import { SkyBlockSummaryProfile } from "./summary.profile.js";
+import { config } from "@statsify/util";
 import { formatProfileName } from "@statsify/skyblock/display";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getItemIcon } from "@statsify/skyblock/icons";
@@ -52,6 +56,8 @@ import type {
   SkyBlockSection,
 } from "@statsify/skyblock";
 import type { Image } from "skia-canvas";
+
+const siteUrl = await config("skyblock.siteUrl", { required: false });
 
 const GAME_MODE_EMOJI: Record<GameMode, string | false> = {
   normal: false,
@@ -194,6 +200,13 @@ export function skyBlockTitle(t: LocalizeFunction, profile: SkyBlockProfileView,
 export function getSkyBlockBackground() {
   // There are no SkyBlock backgrounds yet, and getBackground throws for a game without any
   return getBackground("hypixel", "overall");
+}
+
+// By uuid, which the site sends on to the name, since a name like "item" is one of the site's own paths
+function fullProfile(uuid: string, cuteName: string) {
+  if (!siteUrl) return;
+  const url = `${siteUrl}/skyblock/${uuid}/${encodeURIComponent(cuteName.toLowerCase())}`;
+  return [new ActionRowBuilder([new ButtonBuilder().label((t) => t("skyblock.fullProfile")).style(ButtonStyle.Link).url(url)])];
 }
 
 // A new profile reads every API setting as off
@@ -364,7 +377,7 @@ export class SkyBlockCommand {
     };
 
     const pages: Page[] = summaries.map(({ id, cuteName, gameMode }) => {
-      const page = { label: cuteName, emoji: GAME_MODE_EMOJI[gameMode] };
+      const page = { label: cuteName, emoji: GAME_MODE_EMOJI[gameMode], rows: fullProfile(player.uuid, cuteName) };
 
       if (Array.isArray(card.profile)) {
         const subPages = card.profile.map(({ label, profile, icons }) => ({ label, generator: generator(id, profile, icons) }));
