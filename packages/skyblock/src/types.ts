@@ -533,6 +533,7 @@ export interface PriceView {
   name: string;
   rarity?: Rarity;
   texture?: ItemTexture;
+  current?: { coins: number; source: PriceEntry["source"] }; // the price map's, which networth counts
   bazaar?: BazaarProduct;
   lowestBin?: { coins: number; listings: number };
   npc?: number;
