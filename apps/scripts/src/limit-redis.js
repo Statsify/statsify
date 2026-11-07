@@ -11,9 +11,10 @@ import { CurrentHistoricalType } from "@statsify/api-client";
 import { Guild, scanMetadata, Player } from "@statsify/schemas";
 import { Logger } from "@statsify/logger";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
+import { config } from "@statsify/util";
 
 const logger = new Logger("Redis Limiter");
-const redis = new Redis(process.env.REDIS_URL);
+const redis = new Redis(await config("database.redisUrl"));
 
 const runLimit = async (constructors, prefixes) => {
   for (const [i, constructor] of constructors.entries()) {
