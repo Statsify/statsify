@@ -545,4 +545,5 @@ export interface ItemMatch {
   id: string;
   name: string;
   rarity?: Rarity;
+  texture?: ItemTexture;
 }
