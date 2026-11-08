@@ -122,7 +122,7 @@ interface CollectionItem {
   unlocked: boolean;
   active?: boolean;
   source?: string;
-  location?: string;
+  detail?: string;
 }
 
 const CollectionTable = ({ t, items, columns }: { t: LocalizeFunction; items: CollectionItem[]; columns: number }) => (
@@ -145,7 +145,7 @@ const CollectionTable = ({ t, items, columns }: { t: LocalizeFunction; items: Co
                 {status}
                 {item.source ? ` §7- ${item.source}` : ""}
               </text>
-              {item.location ? <text>{item.location}</text> : <></>}
+              {item.detail ? <text>{item.detail}</text> : <></>}
             </box>
           );
         })}
@@ -261,7 +261,7 @@ const Specials = ({ t, fishing, specialFish }: PageProps & { specialFish: (typeo
     name: prettify(fish.id),
     unlocked: fishing.specialFish[fish.id],
     source: t(`stats.fishing.sources.${fish.source}`),
-    location: `§7${t("stats.fishing.foundIn")}: ${ENVIRONMENT_COLORS[fish.environment]}${t(`stats.fishing.environments.${fish.environment}`)}`,
+    detail: `§7${t("stats.fishing.foundIn")}: ${ENVIRONMENT_COLORS[fish.environment]}${t(`stats.fishing.environments.${fish.environment}`)}`,
   }));
 
   return <CollectionTable t={t} items={items} columns={3} />;
@@ -277,7 +277,7 @@ const Collections = ({ t, fishing }: PageProps) => (
           name: rodName(id),
           unlocked: isRodUnlocked(fishing, id),
           active: fishing.activeRod === id,
-          location: `§7${t(`stats.fishing.rodRequirements.${id}`)}`,
+          detail: `§7${t(`stats.fishing.rodRequirements.${id}`)}`,
         }))}
       />
     </Table.ts>
