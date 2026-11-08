@@ -133,9 +133,6 @@ const getSampleReason = (
   return undefined;
 };
 
-/**
- * Emits the request's attributes as one Sentry log once the request is done, if the tail sampler keeps it.
- */
 export const emitRequestEvent = (event: RequestEvent) => {
   const attributes = getRequestAttributes();
   const reason = getSampleReason(attributes, event);
