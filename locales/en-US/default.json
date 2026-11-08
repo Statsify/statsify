@@ -810,7 +810,6 @@
         "collector": "Collector",
         "dumpsterDiver": "Dumpster Diver",
         "herbivore": "Herbivore",
-        "landLine": "Land Line",
         "luck": "Luck",
         "lure": "Lure",
         "mythicalHook": "Mythical Hook",
@@ -843,8 +842,6 @@
       "locked": "Locked",
       "maxed": "Maxed",
       "maxWeight": "Max Weight",
-      "off": "Off",
-      "on": "On",
       "overviewTitle": "Stats",
       "page": "Page {{page}} / {{pages}}",
       "pages": {

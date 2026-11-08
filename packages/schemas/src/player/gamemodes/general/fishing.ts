@@ -277,57 +277,40 @@ export class FishingSeasonalYear {
   }
 }
 
-export class FishingEnchantment {
-  @Field({ leaderboard: { enabled: false } })
-  public level: number;
-
-  @Field()
-  public enabled: boolean;
-
-  public constructor(data: APIData = {}, legacyToggle?: boolean) {
-    this.level = data.level;
-    this.enabled = data.toggle ?? legacyToggle;
-  }
-}
-
 export class FishingEnchantments {
-  @Field()
-  public luck: FishingEnchantment;
+  @Field({ leaderboard: { enabled: false } })
+  public luck: number;
 
-  @Field()
-  public lure: FishingEnchantment;
+  @Field({ leaderboard: { enabled: false } })
+  public lure: number;
 
-  @Field()
-  public mythicalHook: FishingEnchantment;
+  @Field({ leaderboard: { enabled: false } })
+  public mythicalHook: number;
 
-  @Field()
-  public collector: FishingEnchantment;
+  @Field({ leaderboard: { enabled: false } })
+  public collector: number;
 
-  @Field()
-  public dumpsterDiver: FishingEnchantment;
+  @Field({ leaderboard: { enabled: false } })
+  public dumpsterDiver: number;
 
-  @Field()
-  public vulcansBlessing: FishingEnchantment;
+  @Field({ leaderboard: { enabled: false } })
+  public vulcansBlessing: number;
 
-  @Field()
-  public neptunesFury: FishingEnchantment;
+  @Field({ leaderboard: { enabled: false } })
+  public neptunesFury: number;
 
-  @Field()
-  public herbivore: FishingEnchantment;
+  @Field({ leaderboard: { enabled: false } })
+  public herbivore: number;
 
-  @Field()
-  public landLine: FishingEnchantment;
-
-  public constructor(data: APIData = {}, mainLobby: APIData = {}) {
-    this.luck = new FishingEnchantment(data.luck, mainLobby.fishing_enchant_LUCK_toggle);
-    this.lure = new FishingEnchantment(data.lure);
-    this.mythicalHook = new FishingEnchantment(data.mythical_hook);
-    this.collector = new FishingEnchantment(data.collector, mainLobby.fishing_enchant_COLLECTOR_toggle);
-    this.dumpsterDiver = new FishingEnchantment(data.dumpster_diver, mainLobby.fishing_enchant_DUMPSTER_DIVER_toggle);
-    this.vulcansBlessing = new FishingEnchantment(data.vulcans_blessing);
-    this.neptunesFury = new FishingEnchantment(data.neptunes_fury);
-    this.herbivore = new FishingEnchantment(data.herbivore);
-    this.landLine = new FishingEnchantment(data.land_line);
+  public constructor(data: APIData = {}) {
+    this.luck = data.luck?.level;
+    this.lure = data.lure?.level;
+    this.mythicalHook = data.mythical_hook?.level;
+    this.collector = data.collector?.level;
+    this.dumpsterDiver = data.dumpster_diver?.level;
+    this.vulcansBlessing = data.vulcans_blessing?.level;
+    this.neptunesFury = data.neptunes_fury?.level;
+    this.herbivore = data.herbivore?.level;
   }
 }
 
@@ -477,7 +460,7 @@ export class Fishing {
       (id) => packages.includes(id) || id === this.activeHookTrail || (unlockedHookTrails[id] ?? false)
     );
 
-    this.enchants = new FishingEnchantments(fishing.enchants, mainLobby);
+    this.enchants = new FishingEnchantments(fishing.enchants);
     this.fireproofing = new FishingFireproofing(fishing.fireproofing);
   }
 }

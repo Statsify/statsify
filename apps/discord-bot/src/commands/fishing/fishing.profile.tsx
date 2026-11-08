@@ -95,7 +95,6 @@ const ENCHANTS = [
   ["vulcansBlessing", "§c"],
   ["neptunesFury", "§b"],
   ["herbivore", "§2"],
-  ["landLine", "§6"],
 ] as const satisfies [keyof Fishing["enchants"], string][];
 
 const rodName = (id: string) => prettify(id.replace("fishing_rod_", ""));
@@ -201,17 +200,9 @@ const Overview = ({ t, fishing }: PageProps) => (
     <Table.ts title={`§b${t("stats.fishing.rodPerks")}`}>
       {arrayGroup([...ENCHANTS], 3).map((row) => (
         <Table.tr>
-          {row.map(([enchant, color]) => {
-            const { level, enabled } = fishing.enchants[enchant];
-
-            return (
-              <Table.td
-                title={t(`stats.fishing.enchants.${enchant}`)}
-                value={`${t(level)} ${t(enabled ? "stats.fishing.on" : "stats.fishing.off")}`}
-                color={color}
-              />
-            );
-          })}
+          {row.map(([enchant, color]) => (
+            <Table.td title={t(`stats.fishing.enchants.${enchant}`)} value={t(fishing.enchants[enchant])} color={color} />
+          ))}
         </Table.tr>
       ))}
     </Table.ts>
