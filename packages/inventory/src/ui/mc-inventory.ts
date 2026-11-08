@@ -13,8 +13,7 @@ import { IconCache } from "../core/icon-cache.js";
 import type { ItemStack } from "../core/item-stack.js";
 import type { PackStack } from "../core/pack.js";
 
-// Milliseconds per game tick
-const TICK = 50;
+const MS_PER_TICK = 50;
 
 interface Resources {
   renderer: Promise<InventoryRenderer>;
@@ -76,7 +75,7 @@ export class McInventory extends HTMLElement implements TooltipOwner {
   });
 
   private static run(time: number) {
-    const tick = Math.floor(time / TICK);
+    const tick = Math.floor(time / MS_PER_TICK);
 
     if (tick !== McInventory.clock) {
       McInventory.clock = tick;
@@ -93,13 +92,13 @@ export class McInventory extends HTMLElement implements TooltipOwner {
     this.canvas.style.display = "block";
     root.append(this.canvas);
 
-    this.canvas.addEventListener("pointermove", (event) => this.pointer(event));
+    this.canvas.addEventListener("pointermove", (event) => this.hover(event));
     this.canvas.addEventListener("pointerdown", (event) => {
       // The overlay hides on any pointerdown that reaches the document
       event.stopPropagation();
       if (event.pointerType === "mouse") return;
       this.hovered = -1;
-      this.pointer(event);
+      this.hover(event);
     });
     this.canvas.addEventListener("pointerleave", (event) => {
       if (event.pointerType !== "mouse") return;
@@ -160,7 +159,7 @@ export class McInventory extends HTMLElement implements TooltipOwner {
     return this.hasAttribute("freeze") ? 0 : McInventory.clock;
   }
 
-  private pointer(event: PointerEvent) {
+  private hover(event: PointerEvent) {
     if (!this.view) return;
 
     const { renderer, tooltips, size } = this.view;
