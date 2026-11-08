@@ -32,10 +32,10 @@ export const SkyBlockSkillsProfile = ({
     SKILLS.map((name) => {
       const level = skills.skills[name];
       const pastMax = level.xpForNext === undefined && level.xpCurrent > 0 && !level.unverified ?
-        `§7${t("skyblock.xpPastMax", { xp: t(Math.floor(level.xpCurrent)) })}` :
-        undefined;
+        [`§7${t("skyblock.xpPastMax", { xp: t(Math.floor(level.xpCurrent)) })}`] :
+        [];
 
-      return <LevelBar title={prettify(name)} level={level} color={SKILL_COLORS[name]} t={t} note={pastMax} />;
+      return <LevelBar title={prettify(name)} level={level} color={SKILL_COLORS[name]} t={t} notes={pastMax} />;
     }) :
     [];
 

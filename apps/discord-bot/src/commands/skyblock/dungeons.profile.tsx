@@ -48,8 +48,8 @@ export const SkyBlockDungeonsProfile = ({
   const classes = DUNGEON_CLASSES.map((name) => {
     const color = CLASS_COLORS[name];
     const damage = dungeons.mostDamage[mode][name];
-    const note = damage > 0 ? `§7${t("skyblock.mostDamage")}: ${color}${t(Math.floor(damage))}` : undefined;
-    return <LevelBar title={prettify(name)} level={dungeons.classes[name]} color={color} t={t} note={note} />;
+    const notes = damage > 0 ? [`§7${t("skyblock.mostDamage")}: ${color}${t(Math.floor(damage))}`] : [];
+    return <LevelBar title={prettify(name)} level={dungeons.classes[name]} color={color} t={t} notes={notes} />;
   });
 
   const time = (ms?: number) => (ms === undefined ? none : formatTime(ms));

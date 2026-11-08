@@ -34,14 +34,13 @@ export const SkyBlockSlayersProfile = ({
     const lines = arrayGroup(tiers, Math.ceil(tiers.length / 2));
 
     return (
-      <box direction="column" location="center" width="100%" padding={0}>
-        <LevelBar title={prettify(name)} level={level} color={BOSS_COLORS[name]} t={t} />
-        <>
-          {lines.map((line, index) => (
-            <text margin={{ top: 0, bottom: index === lines.length - 1 ? 8 : 2, left: 10, right: 10 }}>{line.join("§8 • ")}</text>
-          ))}
-        </>
-      </box>
+      <LevelBar
+        title={prettify(name)}
+        level={level}
+        color={BOSS_COLORS[name]}
+        t={t}
+        notes={lines.map((line) => line.join("§8 • "))}
+      />
     );
   });
 
