@@ -35,20 +35,19 @@ export class FishingCommand {
     const player = await this.apiService.getPlayer(context.option("player"), user);
     const { seasonal } = player.stats.general.fishing;
 
-    const [logo, skin, badge] = await Promise.all([
+    const [logo, skin, badge, background] = await Promise.all([
       getLogo(user),
       this.apiService.getPlayerSkin(player.uuid, user),
       this.apiService.getUserBadge(player.uuid),
+      getBackground(...mapBackground(GENERAL_MODES, GENERAL_MODES.getApiModes()[0])),
     ]);
 
     const yearGroups = arrayGroup(seasonal.toReversed(), 3);
     const pages: readonly FishingPage[] =
       yearGroups.length > 0 ? FISHING_PAGES : FISHING_PAGES.filter((page) => page !== "yearly");
 
-    const renderPage = async (t: LocalizeFunction, page: FishingPage, seasonalYears: FishingSeasonalYear[]) => {
-      const background = await getBackground(...mapBackground(GENERAL_MODES, GENERAL_MODES.getApiModes()[0]));
-
-      return render(
+    const renderPage = (t: LocalizeFunction, page: FishingPage, seasonalYears: FishingSeasonalYear[]) =>
+      render(
         <FishingProfile
           player={player}
           skin={skin}
@@ -65,7 +64,6 @@ export class FishingCommand {
         />,
         getTheme(user)
       );
-    };
 
     return paginate(
       context,
