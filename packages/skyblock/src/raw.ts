@@ -93,6 +93,8 @@ export interface RawMember {
     crafted_generators?: string[]; // "WHEAT_11": each minion tier crafted
   };
   collection?: Record<string, number>;
+  attributes?: { stacks?: Record<string, number> }; // Hunting shards syphoned, by attribute
+  shards?: { owned?: { type: string; amount_owned?: number }[] }; // Hunting shards held, by shard
   inventory?: {
     inv_contents?: RawNbt;
     inv_armor?: RawNbt;
