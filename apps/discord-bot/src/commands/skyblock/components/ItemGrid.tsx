@@ -32,16 +32,35 @@ export interface ItemGridProps {
   items: ItemGridEntry[];
   icons: ItemIcons;
   columns?: number;
+  /**
+   * The value under the name instead of beside it, for long values that would widen the card.
+   * Held left, so icons and text line up down a column when the card is wider than the cells need.
+   */
+  stacked?: boolean;
 }
 
-export const ItemGrid = ({ items, icons, columns = 2 }: ItemGridProps) => {
+export const ItemGrid = ({ items, icons, columns = 2, stacked = false }: ItemGridProps) => {
   const cells = items.map(({ texture, badge, name, value }) => (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
       <ItemSlot icon={texture && icons.get(texture)} />
       {badge && icons.has(badge) ? <img image={icons.get(badge)!} width={16} height={16} margin={{ left: -14, top: 18 }} /> : <></>}
-      <text margin={{ left: 8, right: 4, top: 6, bottom: 6 }}>{name}</text>
-      <div width="remaining" margin={{ left: 4, right: 4 }} />
-      <text>{value}</text>
+      {stacked ?
+        (
+          <>
+            <div direction="column" margin={{ left: 8, right: 4 }}>
+              <text align="left" margin={{ top: 0, bottom: 2 }}>{name}</text>
+              <text align="left" margin={{ top: 0, bottom: 0 }}>{value}</text>
+            </div>
+            <div width="remaining" />
+          </>
+        ) :
+        (
+          <>
+            <text margin={{ left: 8, right: 4, top: 6, bottom: 6 }}>{name}</text>
+            <div width="remaining" margin={{ left: 4, right: 4 }} />
+            <text>{value}</text>
+          </>
+        )}
     </box>
   ));
 
