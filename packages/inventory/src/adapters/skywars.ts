@@ -24,10 +24,10 @@ export interface SkyWarsKit {
 // Built by scripts/import-dump.ts from the lobby's kit menus and Kit Customizers
 const KITS = dumped as Record<string, SkyWarsKit>;
 
+const hasDefault = ({ items }: SkyWarsKit) => items.every(({ slot }) => slot !== undefined);
+
 /** Every SkyWars kit with a default layout, by the key fromSkyWarsKit takes (normal_scout) and its menu's name */
-export const SKYWARS_KITS = Object.entries(KITS).flatMap(([key, { name, items }]) =>
-  items.every(({ slot }) => slot !== undefined) ? [{ key, name }] : [],
-);
+export const SKYWARS_KITS = Object.entries(KITS).flatMap(([key, kit]) => (hasDefault(kit) ? [{ key, name: kit.name }] : []));
 
 // Kit ids are kit_<type>_<mode>_<kit>. Ranked's kits (kit_ranked_ranked_scout) hold Mini's items
 const MENUS: Record<string, string | undefined> = { solo: "normal", team: "insane", ranked: "mini", mega: "mega" };
@@ -71,23 +71,23 @@ export function fromSkyWarsKit(
   const dumpedKit = skyWarsKit(kit);
 
   if (!stored) {
-    if (!dumpedKit?.items.every(({ slot }) => slot !== undefined)) throw new Error(`No default SkyWars layout for ${kit}`);
+    if (!dumpedKit || !hasDefault(dumpedKit)) throw new Error(`No default SkyWars layout for ${kit}`);
     for (const { slot, item } of dumpedKit.items) if (slot !== undefined) slots[slot] = item;
     return slots;
   }
 
-  const items = new Map(dumpedKit?.items.map((listed) => [listed.token, listed.item]));
+  const listed = new Map(dumpedKit?.items.map(({ token, item }) => [token, item]));
 
   // Older versions of a kit leave their items in a layout, so a slot can hold two: the kit's
   // current item wins, then the first
-  const entries = Object.entries(stored).toSorted(
-    ([a], [b]) => Number(items.has(token(b))) - Number(items.has(token(a))),
-  );
+  const entries = Object.entries(stored)
+    .map(([key, value]) => ({ key, value, listedItem: listed.get(token(key)) }))
+    .toSorted((a, b) => Number(b.listedItem !== undefined) - Number(a.listedItem !== undefined));
 
-  for (const [key, value] of entries) {
+  for (const { key, value, listedItem } of entries) {
     const [material, damage, enchantments] = key.split(":");
     const plain = legacyMaterial(material, Number(damage));
-    const item = items.get(token(key)) ?? (plain && { ...plain, enchanted: enchantments ? true : undefined });
+    const item = listedItem ?? (plain && { ...plain, enchanted: enchantments ? true : undefined });
     if (!item) continue;
 
     for (const slot of [value].flat().map(Number)) {
