@@ -176,10 +176,24 @@ export class ModelResolver {
     return model;
   }
 
+  // 1.8.9 drew block items through an item model of their own, with its own gui transform,
+  // where 26.3's definitions select the block's model
+  private itemModel(item: ItemStack, selected: string) {
+    if (!namespaced(selected).split(":")[1].startsWith("block/")) return selected;
+
+    const [namespace, name] = namespaced(item.id).split(":");
+    const legacy = `${namespace}:item/${name}`;
+    const legacyPath = assetPath(legacy, "models", ".json");
+    const selectedPath = assetPath(selected, "models", ".json");
+
+    const pack = this.stack.packs.findLast(({ files }) => files.has(legacyPath) || files.has(selectedPath));
+    return pack?.layout === "legacy" && pack.files.has(legacyPath) ? legacy : selected;
+  }
+
   private layers(model: ItemModel, item: ItemStack): ItemLayer[] {
     switch (model.type) {
       case "minecraft:model":
-        return [{ model: this.model(model.model), tints: model.tints ?? [] }];
+        return [{ model: this.model(this.itemModel(item, model.model)), tints: model.tints ?? [] }];
 
       case "minecraft:composite":
         return model.models.flatMap((child) => this.layers(child, item));

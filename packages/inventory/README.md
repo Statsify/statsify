@@ -20,7 +20,8 @@ const icon = await renderer.render({ id: "minecraft:red_wool" }, 4); // a 64 × 
 ```
 
 Older packs load as 26.3's layout, so they stack over a 26.3 pack the same way. A 1.8.9 pack (or
-the 1.8.9 client jar) gives its textures and models under their 26.3 names. Its 3D models get the
+the 1.8.9 client jar) gives its textures and models under their 26.3 names, and block items draw
+from its item models, as 1.8.9 drew them. Its 3D models get the
 turn 1.8.9 gave every 3D item in code, its compass and clock strips show the frame a slot shows,
 and its glint is tinted and moved the way 1.8 did it. Chests and heads use 26.3's models, which
 are drawn in code. Banners aren't supported yet. A stack needs at least one 26.3 pack, which
