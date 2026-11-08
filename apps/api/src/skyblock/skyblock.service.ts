@@ -103,6 +103,7 @@ const failedKey = (key: string) => `skyblock:failed:${key}`;
 export class SkyBlockService {
   private readonly logger = new Logger("SkyBlockService");
   private readonly singleflight = new Singleflight();
+  private readonly rankings = new Map<string, Promise<void>>();
 
   public constructor(
     private readonly playerService: PlayerService,
@@ -158,7 +159,7 @@ export class SkyBlockService {
         this.getStoredMuseum(
           profile.profile_id,
           cache,
-          stale ? undefined : () => this.rankInBackground(player.uuid, profiles, fetchedAt)
+          stale ? undefined : () => this.rankInBackground(player.uuid, profiles, fetchedAt, profile.profile_id)
         ) :
         undefined,
       needs.has("garden") ? this.getStoredGarden(profile.profile_id, cache, requireGarden) : undefined,
@@ -264,34 +265,46 @@ export class SkyBlockService {
     });
   }
 
-  /** Not awaited, so a failed write never fails the lookup. */
-  private rankInBackground(uuid: string, profiles: RawProfile[], fetchedAt: number) {
-    void this.rankMembers(uuid, profiles, fetchedAt).catch((error) => this.logger.error(error));
+  /**
+   * Not awaited, so a failed write never fails the lookup. A player's rankings run in order, so one profile's rows
+   * ranked with its new museum land after the whole copy's rows ranked without it.
+   */
+  private rankInBackground(uuid: string, profiles: RawProfile[], fetchedAt: number, profileId?: string) {
+    const ranking = (this.rankings.get(uuid) ?? Promise.resolve())
+      .then(() => this.rankMembers(uuid, profiles, fetchedAt, profileId))
+      .catch((error) => this.logger.error(error));
+
+    this.rankings.set(uuid, ranking);
+    void ranking.finally(() => {
+      if (this.rankings.get(uuid) === ranking) this.rankings.delete(uuid);
+    });
   }
 
   /**
    * The leaderboard rows of a copy just stored, for every current member Statsify has a player record for, with the
-   * stored museums and the prices of the hour. It never fetches.
+   * stored museums and the prices of the hour; only `profileId`'s when given. It never fetches.
    */
-  private async rankMembers(uuid: string, profiles: RawProfile[], fetchedAt: number) {
+  private async rankMembers(uuid: string, profiles: RawProfile[], fetchedAt: number, profileId?: string) {
+    const ranked = profileId ? profiles.filter((profile) => profile.profile_id === profileId) : profiles;
+
     const [players, prices, items, museums] = await Promise.all([
-      this.leaderboardService.knownPlayers(profiles.flatMap((profile) => Object.keys(profile.members))),
+      this.leaderboardService.knownPlayers(ranked.flatMap((profile) => Object.keys(profile.members))),
       this.pricesService.getPriceMap(),
       this.pricesService.getItems(),
-      Promise.all(profiles.map((profile) => this.getStoredMuseum(profile.profile_id, CacheLevel.CACHE_ONLY))),
+      Promise.all(ranked.map((profile) => this.getStoredMuseum(profile.profile_id, CacheLevel.CACHE_ONLY))),
     ]);
 
     const built = { museum: true, garden: true, prices: !!prices, items: !!items };
     const ready = MEMBER_STATS_SECTIONS.filter((name) => isReady(name, built));
 
-    const removed = profiles.flatMap((profile) =>
+    const removed = ranked.flatMap((profile) =>
       Object.keys(profile.members)
         .filter((member) => !isMember(profile, member))
         .map((member) => `${member}:${profile.profile_id}`)
     );
 
     const rows = await Promise.all(
-      profiles.flatMap((profile, index) =>
+      ranked.flatMap((profile, index) =>
         Object.entries(profile.members)
           .filter(([member]) => isMember(profile, member) && players.has(member))
           .map(async ([member, raw]): Promise<SkyBlockStatsRow> => {
@@ -313,6 +326,7 @@ export class SkyBlockService {
       )
     );
 
+    // Every profile's id, not only the ranked ones: addMembers drops the player's rows on profiles it isn't given
     await this.leaderboardService.addMembers(uuid, profiles.map((profile) => profile.profile_id), rows, removed);
   }
 
