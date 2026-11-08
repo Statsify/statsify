@@ -8,8 +8,7 @@
 
 import minecraftData from "../../data/minecraft-data.json" with { type: "json" };
 import { type Unzipped, unzip } from "fflate";
-import type { Transform } from "./models.js";
-import { composeTransforms } from "./geometry.js";
+import { pngSize } from "./canvas.js";
 
 /** A pack zip, or a client jar, as bytes or a URL to fetch */
 export type PackSource = Blob | ArrayBuffer | Uint8Array | string;
@@ -121,26 +120,19 @@ const parseJson = <T>(file: Uint8Array, reviver?: (key: string, value: unknown) 
 
 const encoder = new TextEncoder();
 
-/** A texture's 26.3 name, null where 26.3 draws it another way, or the frame of a strip a slot shows */
-type LegacyTexture = string | null | { texture: string; frame: number };
+/** A texture's 26.3 name, null where 26.3 draws it another way, or how far along a strip the frame a slot shows sits */
+type LegacyTexture = string | null | { texture: string; position: number };
 
 interface Upgrade {
   textures: Record<string, LegacyTexture>;
-  /** Model ids 26.3 renamed */
   models: Record<string, string>;
-  /** The gui transform the version gave every 3D item in code, under the model's own */
-  gui?: Transform;
-  /** Folders 26.3 doesn't read */
   drop: string[];
 }
 
-// Older layouts load as 26.3's, so the rest of the package reads one layout
 const UPGRADES: Partial<Record<PackLayout, Upgrade>> = {
   legacy: {
     textures: minecraftData.legacyTextures,
     models: minecraftData.legacyModels,
-    // 1.8.9 turns every 3D item like a block in code, before the model's own gui transform
-    gui: { rotation: [30, 225, 0], scale: [0.625, 0.625, 0.625] },
     drop: ["assets/minecraft/blockstates/"],
   },
 };
@@ -151,12 +143,9 @@ const MODEL_FILE = /^assets\/minecraft\/models\/(.+)\.json$/;
 interface OlderModel {
   parent?: string;
   textures?: Record<string, string>;
-  elements?: unknown[];
-  display?: Record<string, Transform>;
 }
 
-/** An older model with 26.3's names and gui, or undefined where 26.3 draws the item another way */
-function upgradeModel(file: Uint8Array, { textures, models, gui }: Upgrade) {
+function upgradeModel(file: Uint8Array, { textures, models }: Upgrade) {
   const model = parseJson<OlderModel>(file);
   const parent = model.parent?.replace("minecraft:", "");
 
@@ -173,14 +162,7 @@ function upgradeModel(file: Uint8Array, { textures, models, gui }: Upgrade) {
     renamed[key] = typeof target === "string" ? target : target.texture;
   }
 
-  const display =
-    gui && (model.elements || model.display?.gui)
-      ? { ...model.display, gui: composeTransforms(gui, model.display?.gui ?? {}) }
-      : model.display;
-
-  return encoder.encode(
-    JSON.stringify({ ...model, parent: parent && (models[parent] ?? parent), textures: renamed, display }),
-  );
+  return encoder.encode(JSON.stringify({ ...model, parent: parent && (models[parent] ?? parent), textures: renamed }));
 }
 
 function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade) {
@@ -191,13 +173,14 @@ function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade)
     if (drop.some((folder) => path.startsWith(folder))) continue;
 
     const model = MODEL_FILE.exec(path);
-    const texture = TEXTURE_FILE.exec(path);
 
     if (model) {
       const upgradedModel = upgradeModel(file, layoutUpgrade);
       if (upgradedModel) upgraded.set(`assets/minecraft/models/${models[model[1]] ?? model[1]}.json`, upgradedModel);
       continue;
     }
+
+    const texture = TEXTURE_FILE.exec(path);
 
     if (!texture) {
       upgraded.set(path, file);
@@ -210,7 +193,9 @@ function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade)
       upgraded.set(`assets/minecraft/textures/${target}.png${texture[2] ?? ""}`, file);
     } else if (target && !texture[2]) {
       // The strip's own mcmeta played every frame; this one holds the frame a slot shows
-      const animation = { animation: { frames: [target.frame] } };
+      const { width, height } = pngSize(file);
+      const frames = Math.max(1, Math.floor(height / width));
+      const animation = { animation: { frames: [Math.floor(target.position * frames)] } };
       upgraded.set(`assets/minecraft/textures/${target.texture}.png`, file);
       upgraded.set(`assets/minecraft/textures/${target.texture}.png.mcmeta`, encoder.encode(JSON.stringify(animation)));
     }
