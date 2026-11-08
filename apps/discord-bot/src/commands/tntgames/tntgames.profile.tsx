@@ -198,6 +198,11 @@ export const TNTGamesProfile = ({
       break;
   }
 
+  // A kit's name already ends in "Wizard"
+  const modeTitle = mode.submode && mode.submode.api !== "overall" ?
+    mode.submode.formatted :
+    `${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""}`;
+
   return (
     <Container background={background}>
       <Header
@@ -205,7 +210,7 @@ export const TNTGamesProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.TNT_GAMES} §fStats §r(${mode.submode && mode.submode.api !== "overall" ? mode.submode.formatted : `${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""}`})`}
+        title={`§l${FormattedGame.TNT_GAMES} §fStats §r(${modeTitle})`}
         description={mode.api === "overall" ?
           undefined :
           `§7${t("stats.prefix")}: ${
