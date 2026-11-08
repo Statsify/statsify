@@ -194,7 +194,8 @@ function NametagPanel({
         </h1>
         <div className="flex max-w-full flex-wrap items-center justify-center gap-x-4">
           <SocialLinks socials={page.socials} />
-          {actions}
+          {/* One item, so the buttons wrap under the socials together rather than one at a time */}
+          <div className="flex max-w-full flex-wrap items-center justify-center gap-x-4">{actions}</div>
         </div>
       </Box>
       <PlayerFacts page={page} className="col-span-full md:col-span-1 md:col-start-2 xl:hidden" />
