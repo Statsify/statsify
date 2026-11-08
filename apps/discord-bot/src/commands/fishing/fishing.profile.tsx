@@ -271,7 +271,7 @@ const Specials = ({ t, fishing, specialFish }: PageProps & { specialFish: (typeo
     location: `§7${t("stats.fishing.foundIn")}: ${ENVIRONMENT_COLORS[fish.environment]}${t(`stats.fishing.environments.${fish.environment}`)}`,
   }));
 
-  return <CollectionTable t={t} items={items} columns={4} />;
+  return <CollectionTable t={t} items={items} columns={3} />;
 };
 
 const Collections = ({ t, fishing }: PageProps) => (
