@@ -17,7 +17,6 @@ import {
   Interaction,
 } from "@statsify/discord";
 import { Container } from "typedi";
-import type { APIApplicationCommandInteractionDataBasicOption } from "discord-api-types/v10";
 import { STATUS_COLORS, setRequestAttributes } from "@statsify/logger";
 import { User } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
@@ -65,11 +64,7 @@ export class CommandListener extends AbstractCommandListener {
       parentData
     );
 
-    const options = (data.options ?? []) as APIApplicationCommandInteractionDataBasicOption[];
-    Sentry.setContext(
-      "options",
-      Object.fromEntries(options.map(({ name, value }) => [name, value]))
-    );
+    this.setCommandOptionsContext(data.options);
 
     const user = await this.apiService.getUser(id);
 
