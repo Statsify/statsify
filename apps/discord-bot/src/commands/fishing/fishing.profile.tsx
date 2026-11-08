@@ -310,7 +310,7 @@ const CatchSection = ({ t, fishing, type }: { t: LocalizeFunction; fishing: Fish
 
   return (
     <Table.ts title={`§b${t(`stats.fishing.catchTypes.${type}`)} §7- ${color}${t(fishing[type])}`}>
-      {arrayGroup([...FISHING_ITEMS[type]], 3).map((row) => (
+      {arrayGroup([...FISHING_ITEMS[type]], 2).map((row) => (
         <Table.tr>
           {row.map((id) => (
             <Table.td title={prettify(id)} value={t(catches[id])} color={color} size="inline" />
