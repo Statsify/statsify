@@ -81,8 +81,11 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
   /** Tied rows share a rank, unlike on the player and guild boards. */
   public async getLeaderboard<T>(constructor: Constructor<T>, field: string, input: number | string, type: LeaderboardQuery) {
     const leaderboard = await super.getLeaderboard(constructor, field, input, type);
-    const scores = await Promise.all(leaderboard.data.map(({ id }) => this.redis.zscore(`skyblockstats.${field}`, id)));
-    const ranks = await this.sharedRanks(field, scores.map(Number), (leaderboard.data[0]?.position ?? 1) - 1);
+    const [first] = leaderboard.data;
+    if (!first) return leaderboard;
+
+    const scores = await this.redis.zmscore(`skyblockstats.${field}`, leaderboard.data.map(({ id }) => id));
+    const ranks = await this.sharedRanks(field, scores.map(Number), first.position - 1);
     return { ...leaderboard, data: leaderboard.data.map((row, index) => ({ ...row, position: ranks[index] })) };
   }
 
