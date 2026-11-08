@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { type BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { formatRaceTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -56,43 +56,43 @@ export const BedWarsPracticeProfile = ({
         time={time}
       />
       <Table.table>
-        <>
-          {PRACTICE_MODES.map((row) => (
-            <Table.tr>
-              {row.map((practiceMode) => (
-                <Table.ts title={`§6${t(`stats.${practiceMode}`)}`}>
-                  <Table.tr>
-                    <Table.td
-                      title={t("stats.successes")}
-                      value={t(practice[practiceMode].successes)}
-                      color="§a"
-                      size="small"
-                    />
-                    <Table.td
-                      title={t("stats.fails")}
-                      value={t(practice[practiceMode].fails)}
-                      color="§c"
-                      size="small"
-                    />
-                    <Table.td
-                      title={t("stats.successRatio")}
-                      value={t(practice[practiceMode].successRatio)}
-                      color="§6"
-                      size="small"
-                    />
-                  </Table.tr>
-                </Table.ts>
-              ))}
-            </Table.tr>
-          ))}
-        </>
+        {PRACTICE_MODES.map((row) => (
+          <Table.tr>
+            {row.map((practiceMode) => (
+              <Table.ts title={`§6${t(`stats.${practiceMode}`)}`}>
+                <Table.tr>
+                  <Table.td
+                    title={t("stats.successes")}
+                    value={t(practice[practiceMode].successes)}
+                    color="§a"
+                    size="small"
+                  />
+                  <Table.td
+                    title={t("stats.fails")}
+                    value={t(practice[practiceMode].fails)}
+                    color="§c"
+                    size="small"
+                  />
+                  <Table.td
+                    title={t("stats.successRatio")}
+                    value={t(practice[practiceMode].successRatio)}
+                    color="§6"
+                    size="small"
+                  />
+                </Table.tr>
+              </Table.ts>
+            ))}
+          </Table.tr>
+        ))}
         <Table.ts title={`§6${t("stats.bridgingRecords")}`}>
           {BRIDGING_RECORDS.map((row) => (
             <Table.tr>
               {row.map((record) => (
                 <Table.td
                   title={t(`stats.${record}`)}
-                  value={practice.bridgingRecords[record] === 0 ? "§7N/A" : formatRaceTime(practice.bridgingRecords[record])}
+                  value={practice.bridgingRecords[record] === 0 ?
+                    `§7${t("stats.notAvailable")}` :
+                    formatRaceTime(practice.bridgingRecords[record])}
                   color={record.startsWith("straight") ? "§e" : "§d"}
                   size="small"
                 />
