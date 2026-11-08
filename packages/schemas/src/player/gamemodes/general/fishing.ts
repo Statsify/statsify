@@ -20,7 +20,7 @@ export const FISHING_CATCH_TYPES = ["fish", "junk", "treasure", "plant", "creatu
 export type FishingCatchType = (typeof FISHING_CATCH_TYPES)[number];
 
 export const FISHING_ITEMS = {
-  fish: ["salmon", "clownfish", "cooked_salmon", "charred_pufferfish", "cooked_cod", "pufferfish", "cod", "trout", "pike", "perch"],
+  fish: ["salmon", "clownfish", "cooked_salmon", "charred_pufferfish", "cooked_cod", "pufferfish", "cod", "trout", "pike", "perch", "kelp"],
   junk: [
     "charcoal", "soggy_paper", "ink_sac", "broken_fishing_rod", "water_bottle", "bowl", "rotten_flesh", "string", "rabbit_hide",
     "leather", "lily_pad", "bone", "leather_boots", "tripwire_hook", "stick", "coal", "fermented_spider_eye", "burned_flesh",
@@ -132,6 +132,7 @@ export const FISHING_HOOK_TRAILS = [
   "mainlobby_fishing_creature_catch",
   "mainlobby_fishing_neptune_grace",
   "mainlobby_fishing_ominous_rain",
+  "mainlobby_fishing_gold_particles",
 ] as const;
 
 export type FishingHookTrail = (typeof FISHING_HOOK_TRAILS)[number];
@@ -402,7 +403,8 @@ export class Fishing {
   @Field()
   public activeHookTrail: string;
 
-  @Field({ type: () => [FishingSeasonalYear] })
+  // Players saved before this field existed come back from Mongo without it
+  @Field({ type: () => [FishingSeasonalYear], store: { default: [] } })
   public seasonal: FishingSeasonalYear[];
 
   @Field()
@@ -445,15 +447,20 @@ export class Fishing {
       .filter((year) => year.total > 0)
       .sort((a, b) => Number(a.year) - Number(b.year));
 
+    this.activeRod = fishing.activeFishingRod;
+    this.activeHookTrail = fishing.activeFishHookTrail === "none" ? undefined : fishing.activeFishHookTrail;
+
+    // Hypixel only lists event rewards in packages, so the rest are inferred from their requirements
     const unlockedRods: Partial<Record<FishingRod, boolean>> = {
-      fishing_rod_3000: true,
       fishing_rod_inaugural_ice: this.seasonal.some((year) => year.year === "2022" && year.christmas.ice.total > 0),
       fishing_rod_overgrown:
         this.specialFish.poisonous_potato && this.specialFish.golden_apple && this.specialFish.burnt_plant,
       fishing_rod_zoologist: this.catches.creature.squid > 0,
     };
 
-    this.rods = new FishingRodUnlocks((id) => packages.includes(id) || (unlockedRods[id] ?? false));
+    this.rods = new FishingRodUnlocks(
+      (id) => packages.includes(id) || id === this.activeRod || (unlockedRods[id] ?? false)
+    );
 
     const unlockedHookTrails: Partial<Record<FishingHookTrail, boolean>> = {
       mainlobby_fishing_emerald: this.mythical >= 500,
@@ -466,10 +473,9 @@ export class Fishing {
       mainlobby_fishing_creature_catch: this.creature >= 1000,
     };
 
-    this.hookTrails = new FishingHookTrailUnlocks((id) => packages.includes(id) || (unlockedHookTrails[id] ?? false));
-
-    this.activeRod = fishing.activeFishingRod;
-    this.activeHookTrail = fishing.activeFishHookTrail === "none" ? undefined : fishing.activeFishHookTrail;
+    this.hookTrails = new FishingHookTrailUnlocks(
+      (id) => packages.includes(id) || id === this.activeHookTrail || (unlockedHookTrails[id] ?? false)
+    );
 
     this.enchants = new FishingEnchantments(fishing.enchants, mainLobby);
     this.fireproofing = new FishingFireproofing(fishing.fireproofing);

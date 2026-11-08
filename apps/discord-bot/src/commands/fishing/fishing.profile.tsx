@@ -27,6 +27,7 @@ import {
   type FishingCatchType,
   type FishingEnvironmentStats,
   type FishingEvent,
+  type FishingRod,
   type FishingSeasonalYear,
   FormattedGame,
 } from "@statsify/schemas";
@@ -98,6 +99,9 @@ const ENCHANTS = [
 ] as const satisfies [keyof Fishing["enchants"], string][];
 
 const rodName = (id: string) => prettify(id.replace("fishing_rod_", ""));
+
+// Everyone has the default rod, so the schema doesn't store it
+const isRodUnlocked = (fishing: Fishing, id: FishingRod) => id === "fishing_rod_3000" || fishing.rods[id];
 const hookTrailName = (id: string) => prettify(id.replace("mainlobby_fishing_", ""));
 
 interface FishingProfileProps extends BaseProfileProps {
@@ -278,7 +282,7 @@ const Collections = ({ t, fishing }: PageProps) => (
         columns={2}
         items={FISHING_RODS.map((id) => ({
           name: rodName(id),
-          unlocked: fishing.rods[id],
+          unlocked: isRodUnlocked(fishing, id),
           active: fishing.activeRod === id,
           source: t(`stats.fishing.rodRequirements.${id}`),
         }))}
@@ -453,7 +457,7 @@ export const FishingProfile = ({
   seasonalYears,
 }: FishingProfileProps) => {
   const { fishing } = player.stats.general;
-  const unlockedRods = FISHING_RODS.filter((id) => fishing.rods[id]).length;
+  const unlockedRods = FISHING_RODS.filter((id) => isRodUnlocked(fishing, id)).length;
   const unlockedHookTrails = FISHING_HOOK_TRAILS.filter((id) => fishing.hookTrails[id]).length;
 
   const sidebar: SidebarItem[] = [
