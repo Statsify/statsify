@@ -72,9 +72,20 @@ const Cell = ({ name, value }: { name: string; value: string }) => (
   </box>
 );
 
+// The counts under the name, held left so names and counts line up down each column
+const StackedCell = ({ name, value }: { name: string; value: string }) => (
+  <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
+    <div direction="column">
+      <text align="left" margin={{ top: 0, bottom: 2 }}>{name}</text>
+      <text align="left" margin={{ top: 0, bottom: 0 }}>{value}</text>
+    </div>
+    <div width="remaining" />
+  </box>
+);
+
 const TrophyFishTable = ({ fishing, t }: FishingTableProps) => {
   const fish = fishing.trophyFish.map(({ name, tiers }) => (
-    <Cell
+    <StackedCell
       name={`${TROPHY_TIERS.some((tier) => tiers[tier] > 0) ? "§f" : "§8"}${name}`}
       value={TROPHY_TIERS.map((tier) => `${MEDAL_COLORS[tier]}${t(tiers[tier])}`).join(" §8• ")}
     />
@@ -92,7 +103,7 @@ const TrophyFishTable = ({ fishing, t }: FishingTableProps) => {
         </Table.tr>
       </Table.ts>
       <Table.ts title={`§6${t("skyblock.trophyFish")} §8(${legend}§8)`}>
-        {gridRows(fish, 2)}
+        {gridRows(fish, 3)}
       </Table.ts>
     </Table.table>
   );
