@@ -78,7 +78,7 @@ export class GameCountsCommand {
 
     const pages: Page[] = [
       {
-        label: "Overall",
+        label: t("overall"),
         generator: () => overall,
       },
       ...subGameGenerators,
