@@ -16,6 +16,7 @@
 import {
   ARMOR,
   type ItemStack,
+  type KartPart,
   type Kit,
   type KitItem,
   type LegacyKit,
@@ -814,13 +815,6 @@ arena.active_rune = byKey(
   }),
   "Arena Runes",
 );
-
-interface KartPart {
-  rarity: string;
-  /** Each attribute's level, as KartAttributeType names it (TOP_SPEED) */
-  attributes: Record<string, number>;
-  item: ItemStack;
-}
 
 // TKR's part selectors by the PartType their parts are stored with
 const KART_SELECTORS = { ENGINE: "Engine Selector", TURBOCHARGER: "Turbocharger Selector", FRAME: "Frame Selector" } as const;
