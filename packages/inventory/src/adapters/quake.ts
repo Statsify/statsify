@@ -18,9 +18,9 @@ type QuakePart = (typeof LOADOUT)[number];
 // Built by scripts/import-dump.ts from the Quakecraft Shop's menus
 const PARTS = dumped as Record<QuakePart, Record<string, ItemStack>>;
 
-// Ids are the menu's name without its last word, some with a word of their own: LARGE_BALL is
-// the Large Barrel, lantern and discohat the Lantern and Disco Hats, disco_leggings the Disco Pants
-const partKey = (id: string) => kitKey(id).replace(/(ball|hat|kit|leggings|boots)$/, "");
+// Ids are the menu's name without its last word, some with words of their own: LARGE_BALL is
+// the Large Barrel, lantern and discohat the Lantern and Disco Hats, snowkit_boots the Snow Boots
+const partKey = (id: string) => kitKey(id).replace(/(ball|hat|kit|leggings|boots)+$/, "");
 
 /**
  * A Quake loadout from the Quake stats ({ case: "SHINY_DIAMOND_HOE", barrel: "LARGE_BALL" }) as a
