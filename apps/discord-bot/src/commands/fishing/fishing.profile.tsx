@@ -154,15 +154,6 @@ const CollectionTable = ({ t, items, columns }: { t: LocalizeFunction; items: Co
   </Table.table>
 );
 
-const sumCatchTypes = (stats: FishingEnvironmentStats[]) => ({
-  fish: add(...stats.map((environment) => environment.fish)),
-  junk: add(...stats.map((environment) => environment.junk)),
-  treasure: add(...stats.map((environment) => environment.treasure)),
-  plant: add(...stats.map((environment) => environment.plant)),
-  creature: add(...stats.map((environment) => environment.creature)),
-  mythical: add(...stats.map((environment) => environment.mythical)),
-});
-
 const eventStats = (years: FishingSeasonalYear[], events: readonly FishingEvent[]) =>
   years.flatMap((year) => events.flatMap((event) => FISHING_ENVIRONMENTS.map((environment) => year[event][environment])));
 
@@ -351,10 +342,10 @@ const Environments = ({ t, fishing }: PageProps) => (
   </Table.table>
 );
 
-const CatchTypeRow = ({ t, stats, types }: { t: LocalizeFunction; stats: ReturnType<typeof sumCatchTypes>; types: (keyof typeof CATCH_TYPE_COLORS)[] }) => (
+const CatchTypeRow = ({ t, stats, types }: { t: LocalizeFunction; stats: FishingEnvironmentStats[]; types: readonly (keyof typeof CATCH_TYPE_COLORS)[] }) => (
   <Table.tr>
     {types.map((type) => (
-      <Table.td title={t(`stats.fishing.catchTypes.${type}`)} value={t(stats[type])} color={CATCH_TYPE_COLORS[type]} />
+      <Table.td title={t(`stats.fishing.catchTypes.${type}`)} value={t(add(...stats.map((environment) => environment[type])))} color={CATCH_TYPE_COLORS[type]} />
     ))}
   </Table.tr>
 );
@@ -363,12 +354,12 @@ const Seasonal = ({ t, fishing }: PageProps) => (
   <Table.table>
     {[
       <Table.ts title={`§b${t("stats.fishing.seasonalCatchTypes")}`}>
-        <CatchTypeRow t={t} stats={sumCatchTypes(eventStats(fishing.seasonal, FISHING_EVENTS))} types={[...FISHING_CATCH_TYPES]} />
+        <CatchTypeRow t={t} stats={eventStats(fishing.seasonal, FISHING_EVENTS)} types={FISHING_CATCH_TYPES} />
       </Table.ts>,
       ...arrayGroup([...FISHING_EVENTS], 2).map((events) => (
         <Table.tr>
           {events.map((event) => {
-            const stats = sumCatchTypes(eventStats(fishing.seasonal, [event]));
+            const stats = eventStats(fishing.seasonal, [event]);
             const total = add(...fishing.seasonal.map((year) => year[event].total));
 
             return (
@@ -419,7 +410,7 @@ const Yearly = ({ t, fishing, seasonalYears }: PageProps) => {
                 )),
                 <Table.td
                   title={t("stats.fishing.catchTypes.mythical")}
-                  value={t(sumCatchTypes(eventStats([year], FISHING_EVENTS)).mythical)}
+                  value={t(add(...eventStats([year], FISHING_EVENTS).map((environment) => environment.mythical)))}
                   color={CATCH_TYPE_COLORS.mythical}
                 />,
               ]}
