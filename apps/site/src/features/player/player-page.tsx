@@ -329,7 +329,7 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
   return (
     <div
       className={cn(
-        "grid grid-cols-snap-2 sm:grid-cols-snap-4 max-sm:[&>:last-child:nth-child(odd)]:col-span-2",
+        "grid grid-cols-snap-2 sm:grid-cols-snap-4 max-sm:[&>:last-child:nth-child(odd)]:col-span-2 sm:[&>:last-child:nth-child(4n+3)]:col-span-2",
         BOX_GAP,
         !overview.guildMember && "xl:grid-cols-snap-2",
         className
