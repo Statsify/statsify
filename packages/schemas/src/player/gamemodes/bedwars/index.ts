@@ -216,9 +216,9 @@ export class BedWars {
       level: flooredLevel,
       star,
       brackets,
-      bold: false,
-      underline: false,
-      strikethrough: false,
+      bold: data.dreamfeast?.toggle_bold_numbers ?? false,
+      underline: data.dreamfeast?.toggle_underlined_prestige ?? false,
+      strikethrough: data.dreamfeast?.toggle_strikethrough_brackets ?? false,
     });
 
     this.naturalLevelFormatted = getIntendedFormattedLevel(flooredLevel);
