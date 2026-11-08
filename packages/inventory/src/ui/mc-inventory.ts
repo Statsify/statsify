@@ -7,11 +7,11 @@
  */
 
 import { type InventoryLayout, InventoryRenderer, type InventorySize, LAYOUTS, slotAt, slotOrigin } from "../core/inventory.js";
-import { type TooltipOwner, tooltipOverlay } from "./tooltip-overlay.js";
 import { context, createCanvas } from "../core/canvas.js";
 import { IconCache } from "../core/icon-cache.js";
 import type { ItemStack } from "../core/item-stack.js";
 import type { PackStack } from "../core/pack.js";
+import { tooltipOverlay } from "./tooltip-overlay.js";
 
 const MS_PER_TICK = 50;
 
@@ -46,7 +46,7 @@ interface View {
 }
 
 /** <mc-inventory>: a container drawn the way Minecraft draws one, from a resource pack */
-export class McInventory extends HTMLElement implements TooltipOwner {
+export class McInventory extends HTMLElement {
   public static observedAttributes = ["rows", "cols", "scale", "label", "layout", "freeze"];
 
   // Inventories with moving slots share one clock, so their animations stay in step. It runs on

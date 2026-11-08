@@ -6,18 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { McInventory } from "./mc-inventory.js";
 import { TOOLTIP_PADDING } from "../core/tooltip.js";
-
-/** Whatever opened the tooltip, which drops its hover when the tooltip moves elsewhere or closes */
-export interface TooltipOwner {
-  unhover(): void;
-}
 
 /** One tooltip canvas for the page, its text 12 GUI pixels right of and above the cursor as in 1.8 */
 class TooltipOverlay {
   private canvas = document.createElement("canvas");
   private scale = 1;
-  private owner?: TooltipOwner;
+  private owner?: McInventory;
 
   public constructor() {
     Object.assign(this.canvas.style, {
@@ -38,7 +34,7 @@ class TooltipOverlay {
     });
   }
 
-  public show(tooltip: OffscreenCanvas, scale: number, event: PointerEvent, owner: TooltipOwner) {
+  public show(tooltip: OffscreenCanvas, scale: number, event: PointerEvent, owner: McInventory) {
     if (owner !== this.owner) this.owner?.unhover();
     this.owner = owner;
 
