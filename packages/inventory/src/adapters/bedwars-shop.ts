@@ -241,8 +241,7 @@ export const HOTBAR_MANAGER: ItemStack = {
   lore: ["§7Edit preferred slots for your items", "§7per category.", "", "§eClick to edit!"],
 };
 
-// Not dumped from an unedited account: these are the first 14 slots that saved players who
-// kept the default's start agree on, and the last 7 are empty
+// Not dumped from an unedited account: the first 14 slots as saved players have them
 export const DEFAULT_QUICK_BUY =
   "wool,stone_sword,chainmail_boots,wooden_pickaxe,bow,speed_ii_potion_(45_seconds),tnt,oak_wood_planks,iron_sword,iron_boots,shears,arrow,invisibility_potion_(30_seconds),water_bucket";
 

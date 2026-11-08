@@ -50,13 +50,14 @@ function fromDumpedKit(
   level: number,
   renames: Readonly<Record<string, string>> = {},
 ): (ItemStack | undefined)[] {
-  // A dumped kit's items only hold at the level it was dumped at
   const kit = KITS[game][kitKey(name)];
-  const current = kit?.level === level ? kit : undefined;
+  const dumpedAtLevel = kit?.level === level ? kit : undefined;
 
   const layout =
     stored ??
-    (current && !current.saved ? Object.fromEntries(current.items.map(({ slot, token }) => [slot, token])) : undefined);
+    (dumpedAtLevel && !dumpedAtLevel.saved
+      ? Object.fromEntries(dumpedAtLevel.items.map(({ slot, token }) => [slot, token]))
+      : undefined);
   if (!layout) throw new Error(`No default ${game} layout for ${name} at level ${level}`);
 
   const renamed = new Map(Object.entries(renames).map(([material, rename]) => [materials[material.toUpperCase()], rename]));
@@ -65,14 +66,14 @@ function fromDumpedKit(
   for (const [slot, token] of Object.entries(layout)) {
     const index = Number(slot);
     if (!inRange(index, SLOTS)) continue;
-    const item = current?.items.find((candidate) => candidate.token === token)?.item ?? slots[index];
+    const item = dumpedAtLevel?.items.find((candidate) => candidate.token === token)?.item ?? slots[index];
     if (!item) continue;
 
     const rename = renamed.get(Number(token.split(",")[0]));
     slots[index] = rename ? { ...item, name: rename } : item;
   }
 
-  for (const [slot, item] of Object.entries(current?.armor ?? {})) slots[Number(slot)] = item;
+  for (const [slot, item] of Object.entries(dumpedAtLevel?.armor ?? {})) slots[Number(slot)] = item;
 
   return slots;
 }

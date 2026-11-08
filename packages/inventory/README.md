@@ -129,14 +129,12 @@ setCanvasBackend(skiaCanvas);
 
 In these four, a pick the dumped menus don't have leaves its slot empty.
 
-`data/duels-modes.json`, `data/tnt-games.json` and `data/legacy-kits.json` come from the game:
-open the layout editors with the StatsifyDump ChatTriggers module running, then `pnpm build` and
+Every `data/*.json` but `minecraft-data.json` comes from the game: open the layout editors, kit
+menus and shop menus with the StatsifyDump ChatTriggers module running, then `pnpm build` and
 `node scripts/import-dump.ts <dump.json> …`
 with the last export of each dump session. Open each kit's editor from its picker before moving
 anything: the picker shown next names the kit, and only an unsaved kit shows the default. Blitz's
 and Mega Walls' editors open from each kit's Upgrades or Class page, which gives the level.
-The Quake, Arena, TKR and Speed UHC data comes the same way, from those games' shop menus, and
-`data/skywars-kits.json` from the SkyWars lobby's kit menus and each kit's Kit Customizer.
 An item's `tooltip` holds the lines under its name as the game drew them, enchantments and
 attributes included.
 
