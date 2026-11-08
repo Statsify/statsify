@@ -19,12 +19,12 @@ import {
   type SlayerBoss,
 } from "#types";
 import { add } from "@statsify/math";
+import { bagAccessories } from "./sections/accessories.js";
 import { isMember, toProfileSummary } from "./profiles.js";
 import type { SectionInput, SkyBlockSection } from "./sections/index.js";
 
 /** The sections a member's stats come from; the level and fairy souls are the profile summary's. */
 export const MEMBER_STATS_SECTIONS = [
-  "accessories",
   "chocolate",
   "crimson",
   "dungeons",
@@ -92,10 +92,10 @@ const cappedLevel = ({ level, maxLevel }: Level) => Math.min(level, maxLevel);
  * hide counts 0. What a co-op shares counts the member's own part: their own Social XP, and their share of the bank.
  */
 export function toMemberStats(
-  { uuid, profile, member }: Pick<SectionInput, "uuid" | "profile" | "member">,
+  { uuid, profile, member, items, prices }: Pick<SectionInput, "uuid" | "profile" | "member" | "items" | "prices">,
   view: MemberView
 ): Partial<MemberStats> {
-  const { accessories, chocolate, crimson, dungeons, fishing, hotm, networth, pets, skills, slayers } = view;
+  const { chocolate, crimson, dungeons, fishing, hotm, networth, pets, skills, slayers } = view;
   const summary = toProfileSummary(profile, uuid);
   const stats: Partial<MemberStats> = { xp: summary.xp, level: summary.level, fairySouls: summary.fairySouls };
 
@@ -151,7 +151,9 @@ export function toMemberStats(
     stats.hotmLevel = hotm.level.level;
   }
 
-  if (accessories !== undefined) stats.accessoryPower = accessories?.accessoryPower ?? 0;
+  // The bag alone, without the accessories section's stored items and upgrades. It waits for prices as that section
+  // does, so the board and the page agree
+  if (items && prices) stats.accessoryPower = bagAccessories(member, items)?.accessoryPower ?? 0;
   if (pets) stats.petScore = pets.score;
   if (fishing !== undefined) stats.trophyFish = fishing?.trophyFishCaught ?? 0;
   if (chocolate !== undefined) stats.chocolate = chocolate?.total ?? 0;
