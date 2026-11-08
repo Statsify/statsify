@@ -23,6 +23,7 @@ import {
   paginate,
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
+import { Container } from "typedi";
 import { FormattedGame, type User } from "@statsify/schemas";
 import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
@@ -36,6 +37,8 @@ import { SkyBlockGardenProfile, gardenIcons } from "./garden.profile.js";
 import { SkyBlockHotfProfile } from "./hotf.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
 import { SkyBlockJacobProfile, jacobIcons } from "./jacob.profile.js";
+import { SkyBlockLeaderboardArgument } from "#commands/leaderboards/skyblock-leaderboard.argument";
+import { SkyBlockLeaderboardSubCommand } from "#commands/leaderboards/skyblock-leaderboard.subcommand";
 import { SkyBlockLevelProfile, levelIcons } from "./level.profile.js";
 import { SkyBlockNetworthProfile, networthIcons } from "./networth.profile.js";
 import { SkyBlockPetsProfile, petIcons } from "./pets.profile.js";
@@ -313,6 +316,11 @@ export class SkyBlockCommand {
   @SubCommand({ description: (t) => t("commands.skyblock-hotf"), args: [PlayerArgument] })
   public hotf(context: CommandContext) {
     return this.run(context, "hotf");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-leaderboard"), args: [SkyBlockLeaderboardArgument] })
+  public leaderboard(context: CommandContext) {
+    return Container.get(SkyBlockLeaderboardSubCommand).leaderboard(context);
   }
 
   @SubCommand({ description: (t) => t("commands.skyblock-price"), args: [new ItemArgument()] })
