@@ -19,10 +19,23 @@ import type {
   ItemView,
   ItemsResource,
   MissingAccessory,
+  PlayerStat,
   PriceMap,
   Rarity,
 } from "#types";
 import type { RawMember } from "#raw";
+
+// What a tuning point gives, by the API's tuning keys (wiki: each stat's page)
+export const TUNING: Record<string, [PlayerStat, number]> = {
+  health: ["health", 5],
+  defense: ["defense", 1],
+  walk_speed: ["speed", 1.5],
+  strength: ["strength", 1],
+  critical_damage: ["crit_damage", 1],
+  critical_chance: ["crit_chance", 0.2],
+  attack_speed: ["attack_speed", 0.3],
+  intelligence: ["intelligence", 2],
+};
 
 const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
   COMMON: 3,

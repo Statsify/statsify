@@ -26,7 +26,7 @@ import {
 import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
 import { add, roundTo } from "@statsify/math";
 import { attributeLevel } from "./attributes.js";
-import { bagAccessories, powerScale, stonePowerStats } from "./accessories.js";
+import { TUNING, bagAccessories, powerScale, stonePowerStats } from "./accessories.js";
 import { decodeSlots } from "#items";
 import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
@@ -94,18 +94,6 @@ function powerStats(power: string | undefined, accessoryPower: number): Stats | 
   const learned = power ? LEARNED_POWERS[power] : undefined;
   return learned && scaleStats(learned, powerScale(accessoryPower));
 }
-
-// What a tuning point gives, by the API's tuning keys (wiki: each stat's page)
-const TUNING: Record<string, [PlayerStat, number]> = {
-  health: ["health", 5],
-  defense: ["defense", 1],
-  walk_speed: ["speed", 1.5],
-  strength: ["strength", 1],
-  critical_damage: ["crit_damage", 1],
-  critical_chance: ["crit_chance", 0.2],
-  attack_speed: ["attack_speed", 0.3],
-  intelligence: ["intelligence", 2],
-};
 
 const tuningStats = (points: Record<string, number>): Stats =>
   sumStats(

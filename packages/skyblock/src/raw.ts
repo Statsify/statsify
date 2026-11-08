@@ -113,6 +113,22 @@ export interface RawMember {
     armor?: Record<`${number}`, Partial<Record<"HELMET" | "CHESTPLATE" | "LEGGINGS" | "BOOTS", RawNbt>> & { id?: number }> & {
       equipped_set?: number;
     };
+    equipment?: Record<`${number}`, Partial<Record<`EQUIPMENT_SLOT_${1 | 2 | 3 | 4}`, RawNbt>> & { id?: number }> & {
+      equipped_set?: number;
+    };
+    // Saved loadouts, by id: a wardrobe set, an equipment set, a pet (its uniqueId, not its uuid), a Power and a tuning slot
+    loadouts?: Record<
+      string,
+      {
+        id: number;
+        name: string;
+        armor_set_id?: number;
+        equipment_set_id?: number;
+        pet?: string;
+        power_stone?: string;
+        tuning_points_slot?: number;
+      }
+    >;
   };
   garden_player_data?: { copper?: number; discovered_greenhouse_crops?: string[]; analyzed_greenhouse_crops?: string[] };
   jacobs_contest?: {
