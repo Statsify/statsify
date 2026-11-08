@@ -66,8 +66,7 @@ type StepOrder = (a: MissingAccessory, b: MissingAccessory) => number;
 
 /**
  * null when the inventory API is off. Only the best of each upgrade chain counts, one of each duplicate and one party
- * hat, and a consumed Rift Prism counts as one in the bag. Each chain's missing step is the first in `order`, which
- * gets the bag's accessory power and its highest.
+ * hat, and a consumed Rift Prism counts as one in the bag. Each chain's missing step is the first in `order`.
  */
 export function getAccessories(
   member: RawMember,
