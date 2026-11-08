@@ -35,7 +35,11 @@ export const SkyBlockLevelProfile = ({
 
   const sidebar: SidebarItem[] = [[t("skyblock.xp"), t(level.xp), "§3"]];
 
-  const cheapest = topSources(profile.member).map(({ name, xp, outsideBag, cost, coinsPerXp, texture }) => {
+  const sources = topSources(profile.member);
+  // A price or the outside-bag note beside the name widens the card, so those values go under it
+  const stacked = market || sources.some(({ outsideBag }) => outsideBag);
+
+  const cheapest = sources.map(({ name, xp, outsideBag, cost, coinsPerXp, texture }) => {
     let value = `§3${t("skyblock.xpGain", { xp: t(xp) })}`;
     if (outsideBag) value = `§3${t("skyblock.xpOnceInBag", { xp: t(xp) })}`;
     else if (cost && coinsPerXp !== undefined)
@@ -62,7 +66,7 @@ export const SkyBlockLevelProfile = ({
             <box width="100%">
               <text>{`§l${t(market ? "skyblock.cheapestXp" : "skyblock.mostXp")}`}</text>
             </box>
-            <ItemGrid items={cheapest} icons={icons} />
+            <ItemGrid items={cheapest} icons={icons} stacked={stacked} />
           </>
         ) :
         <Empty text={t("skyblock.noXpSources")} />}
