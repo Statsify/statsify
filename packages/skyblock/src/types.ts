@@ -89,6 +89,7 @@ export interface MemberView {
   stats?: StatsSection;
   collections?: CollectionsSection | null;
   minions?: MinionsSection;
+  bestiary?: BestiarySection;
 }
 
 /** An inventory's slots in the game's order; an empty slot is null. */
@@ -366,6 +367,24 @@ export interface MinionsSection {
   total: number; // every tier of every minion
   slots: { total: number; crafts: number; community: number; next?: number }; // from unique crafts (the wiki's table) and the Community Shop; next: the unique crafts the next slot needs
   members: { uuid: string; amount: number }[]; // each member's own unique crafts, most first
+}
+
+/** The member's bestiary: each family's tier from its kills, by NEU's pages. */
+export interface BestiarySection {
+  milestone: number; // a milestone per 10 family tiers (the wiki's rule), or the last one claimed in game if higher
+  tiers: number;
+  maxTiers: number;
+  maxed: number; // families at their last tier
+  total: number;
+  pages: { category?: string; name: string; families: BestiaryFamilyView[] }[];
+}
+
+export interface BestiaryFamilyView {
+  name: string;
+  kills: number;
+  tier: number;
+  maxTier: number;
+  next?: number; // the kills the next tier needs
 }
 
 export interface JacobSection {
