@@ -79,7 +79,9 @@ export class SkyBlockPricesService implements OnModuleDestroy {
       if (data) this.map = await unzip<PriceMap>(data);
     }
 
-    if (!this.map || Date.now() - this.map.asOf > PRICES_REFRESH) void this.rebuild();
+    if (!this.map || Date.now() - this.map.asOf > PRICES_REFRESH) {
+      void this.rebuild().catch((error) => this.logger.error(error));
+    }
     return this.map;
   }
 
