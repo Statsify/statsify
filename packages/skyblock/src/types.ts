@@ -88,6 +88,7 @@ export interface MemberView {
   misc?: MiscSection;
   stats?: StatsSection;
   collections?: CollectionsSection | null;
+  minions?: MinionsSection;
 }
 
 /** An inventory's slots in the game's order; an empty slot is null. */
@@ -356,6 +357,15 @@ export interface CollectionView {
   maxTier: number;
   next?: number; // the amount the next tier needs
   members: { uuid: string; amount: number }[]; // each counted member's part, most first
+}
+
+/** The co-op's crafted minions: every member who accepted their invite, ex-members included (unverified). */
+export interface MinionsSection {
+  minions: { id: string; name: string; texture?: ItemTexture; tiers: number[]; maxTier: number }[]; // every minion, by name
+  unique: number; // tiers crafted, each once
+  total: number; // every tier of every minion
+  slots: { total: number; crafts: number; community: number; next?: number }; // from unique crafts (the wiki's table) and the Community Shop; next: the unique crafts the next slot needs
+  members: { uuid: string; amount: number }[]; // each member's own unique crafts, most first
 }
 
 export interface JacobSection {
@@ -816,6 +826,8 @@ export interface ItemsResource {
       riftOnly?: boolean;
       npcPrice?: number;
       glowing?: boolean;
+      generator?: string; // a minion's type, on each of its tiers
+      generatorTier?: number;
     }
   >;
 }

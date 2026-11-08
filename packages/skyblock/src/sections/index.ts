@@ -21,6 +21,7 @@ import { getInventories } from "./inventories.js";
 import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
 import { getJacob } from "./jacob.js";
+import { getMinions } from "./minions.js";
 import { getMisc } from "./misc.js";
 import { getSkyBlockLevel } from "./level.js";
 import { getMuseum } from "./museum.js";
@@ -50,6 +51,7 @@ export const SKYBLOCK_SECTIONS = [
   "inventories",
   "jacob",
   "level",
+  "minions",
   "misc",
   "museum",
   "networth",
@@ -120,6 +122,13 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
     compute: async ({ profile, member, items, prices }) => {
       if (!items || !prices) throw new TypeError("level needs prices and items");
       return getSkyBlockLevel(member, items, prices, hasMarket(profile));
+    },
+  },
+  minions: {
+    needs: ["items"],
+    compute: async ({ profile, items }) => {
+      if (!items) throw new TypeError("minions needs items");
+      return getMinions(profile, items);
     },
   },
   misc: { needs: [], compute: async ({ member }) => getMisc(member) },
