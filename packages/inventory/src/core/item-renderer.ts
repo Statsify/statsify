@@ -29,7 +29,6 @@ const HEADS: Record<string, { texture: string; hat: boolean }> = {
   zombie: { texture: "entity/zombie/zombie", hat: true },
 };
 
-// Heads without a skin, or whose skin doesn't load, get the default skin, as in game
 const DEFAULT_SKIN = "entity/player/wide/steve";
 
 const GLINT = "misc/enchanted_glint_item";
@@ -66,19 +65,15 @@ interface GlintPass {
 
 interface Glint {
   passes: GlintPass[];
-  /** Multiplies the texture, channel by channel */
   tint: [number, number, number];
 }
 
-// 26.3: one pass tilted 10° at speed 0.5, at strength 0.75
 function modernGlint(tick: number): Glint {
   const time = tick * 50 * 0.5 * 8;
   const scrollV = (time % 30_000) / 30_000;
   return { passes: [{ angle: Math.PI / 18, scrollU: -(time % 110_000) / 110_000, scrollV }], tint: [0.75, 0.75, 0.75] };
 }
 
-// 1.8 tints its grey glint 0x8040CC and draws it twice, at -50° and 10°, scrolling over 3 and
-// 4.873 seconds
 function legacyGlint(tick: number): Glint {
   const ms = tick * 50;
   return {
@@ -108,8 +103,7 @@ function squaredGlint(texture: ImageData, tint: Glint["tint"]) {
   return canvas;
 }
 
-// Minecraft scrolls the glint over each sprite's eighth of the item atlas. Drawn as a pattern and
-// masked by the icon, so the GPU adds it and no pixels are read back each tick
+// A canvas pattern avoids reading pixels back for each tick
 function drawGlint(ctx: OffscreenCanvasRenderingContext2D, glint: OffscreenCanvas, passes: GlintPass[]) {
   const { width, height } = ctx.canvas;
   const layer = createCanvas(width, height);
@@ -180,7 +174,6 @@ export class ItemRenderer {
   private textures: TextureLoader;
   private icons = new Map<string, Promise<OffscreenCanvas>>();
   private skins = new Map<string, Promise<ImageData | undefined>>();
-  /** Whether the top pack's glint is 1.8's, which 1.8 coloured and moved in its own way */
   private legacyGlint: boolean;
   private glint?: Promise<OffscreenCanvas>;
 
@@ -214,7 +207,7 @@ export class ItemRenderer {
   }
 
   private async base(requested: ItemStack, scale: number, tick: number): Promise<OffscreenCanvas> {
-    // A head whose skin doesn't load is drawn, and cached, as the default skin
+    // Failed skins share the default head's cache entry
     const item =
       requested.skin && !(await this.skin(requested.skin)) ? { ...requested, skin: undefined } : requested;
 
@@ -372,7 +365,7 @@ export class ItemRenderer {
     return transformQuads(quads, special.transformation);
   }
 
-  /** A skin's pixels, or undefined when it doesn't load, which the next call tries again */
+  /** A skin's pixels; failed fetches return undefined and are retried */
   private skin(url: string) {
     let skin = this.skins.get(url);
 

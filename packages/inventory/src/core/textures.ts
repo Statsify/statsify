@@ -49,7 +49,7 @@ function frameRect(width: number, height: number, animation: Animation | undefin
   };
 }
 
-/** Plays the animation forward to a tick, as SpriteContents.AnimatedTexture does */
+/** Plays the animation forward to a game tick */
 function frameAt(width: number, height: number, animation: Animation, tick: number): Frame {
   const size = frameSize(width, height, animation);
   const count = Math.floor(width / size.width) * Math.floor(height / size.height);
