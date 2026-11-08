@@ -100,7 +100,43 @@ function squaredGlint(texture: ImageData, tint: Glint["tint"]) {
 
   const canvas = createCanvas(texture.width, texture.height);
   context(canvas).putImageData(squared, 0, 0);
-  return canvas;
+  return { pixels: squared, canvas };
+}
+
+const translucent = (icon: OffscreenCanvas) =>
+  context(icon)
+    .getImageData(0, 0, icon.width, icon.height)
+    .data.some((value, i) => i % 4 === 3 && value > 0 && value < 255);
+
+// "lighter" adds alpha too, which would make translucent icons more opaque, so those add the glint
+// to their pixels' colours one by one
+function addGlint(ctx: OffscreenCanvasRenderingContext2D, glint: ImageData, passes: GlintPass[]) {
+  const { width, height } = ctx.canvas;
+  const pixels = ctx.getImageData(0, 0, width, height);
+
+  for (const { angle, scrollU, scrollV } of passes) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const out = (y * width + x) * 4;
+        if (pixels.data[out + 3] === 0) continue;
+
+        const u = (x + 0.5) / width / 8;
+        const v = (y + 0.5) / height / 8;
+        const gu = u * cos - v * sin + scrollU;
+        const gv = u * sin + v * cos + scrollV;
+        const gx = Math.floor((gu - Math.floor(gu)) * glint.width);
+        const gy = Math.floor((gv - Math.floor(gv)) * glint.height);
+        const texel = (gy * glint.width + gx) * 4;
+
+        for (let channel = 0; channel < 3; channel++) pixels.data[out + channel] += glint.data[texel + channel];
+      }
+    }
+  }
+
+  ctx.putImageData(pixels, 0, 0);
 }
 
 // A canvas pattern avoids reading pixels back for each tick
@@ -175,7 +211,8 @@ export class ItemRenderer {
   private icons = new Map<string, Promise<OffscreenCanvas>>();
   private skins = new Map<string, Promise<ImageData | undefined>>();
   private legacyGlint: boolean;
-  private glint?: Promise<OffscreenCanvas>;
+  private glint?: Promise<ReturnType<typeof squaredGlint>>;
+  private translucentIcons = new WeakMap<OffscreenCanvas, boolean>();
 
   public constructor(
     private stack: PackStack,
@@ -201,7 +238,12 @@ export class ItemRenderer {
     ctx.drawImage(icon, 0, 0);
     const { passes, tint } = this.legacyGlint ? legacyGlint(tick) : modernGlint(tick);
     this.glint ??= this.textures.get(this.legacyGlint ? LEGACY_GLINT : GLINT).then((texture) => squaredGlint(texture, tint));
-    drawGlint(ctx, await this.glint, passes);
+    const glint = await this.glint;
+
+    if (!this.translucentIcons.has(icon)) this.translucentIcons.set(icon, translucent(icon));
+
+    if (this.translucentIcons.get(icon)) addGlint(ctx, glint.pixels, passes);
+    else drawGlint(ctx, glint.canvas, passes);
 
     return canvas;
   }
