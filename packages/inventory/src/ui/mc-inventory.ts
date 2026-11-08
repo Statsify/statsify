@@ -40,6 +40,7 @@ function resourcesFor(pack: PackStack) {
 /** What the last full draw made, which ticks and hovers draw over */
 interface View {
   renderer: InventoryRenderer;
+  tooltips: Resources["tooltips"];
   size: InventorySize;
   /** The inventory without its moving slots' contents */
   still: OffscreenCanvas;
@@ -160,9 +161,9 @@ export class McInventory extends HTMLElement implements TooltipOwner {
   }
 
   private pointer(event: PointerEvent) {
-    if (!this.view || !this.packStack) return;
+    if (!this.view) return;
 
-    const { renderer, size } = this.view;
+    const { renderer, tooltips, size } = this.view;
     const bounds = this.canvas.getBoundingClientRect();
     const slot = slotAt(size, (event.clientX - bounds.left) / size.scale, (event.clientY - bounds.top) / size.scale);
     const overlay = tooltipOverlay();
@@ -181,7 +182,6 @@ export class McInventory extends HTMLElement implements TooltipOwner {
       return;
     }
 
-    const { tooltips } = resourcesFor(this.packStack);
     let tooltip = tooltips.get(item);
 
     if (tooltip?.scale !== size.scale) {
@@ -198,7 +198,8 @@ export class McInventory extends HTMLElement implements TooltipOwner {
     const drawing = ++this.drawing;
     const size = this.size;
     const tick = this.tick;
-    const renderer = await resourcesFor(this.packStack).renderer;
+    const resources = resourcesFor(this.packStack);
+    const renderer = await resources.renderer;
     const shown = this.items.slice(0, size.rows * size.cols);
     const frozen = this.hasAttribute("freeze");
     const moving = shown.flatMap((item, slot) => (item && !frozen && renderer.animates(item) ? [slot] : []));
@@ -211,7 +212,7 @@ export class McInventory extends HTMLElement implements TooltipOwner {
     // A newer draw started while this one waited
     if (drawing !== this.drawing) return;
 
-    this.view = { renderer, size, still, composed: createCanvas(still.width, still.height) };
+    this.view = { renderer, tooltips: resources.tooltips, size, still, composed: createCanvas(still.width, still.height) };
     this.moving = moving;
     this.movingIcons = icons;
     this.canvas.width = still.width;
