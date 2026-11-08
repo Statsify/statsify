@@ -52,16 +52,16 @@ export const FISHING_PAGES = [
 export type FishingPage = (typeof FISHING_PAGES)[number];
 
 const FISHING_PAGE_TITLES = {
-  overview: "overview",
-  mythicals: "mythicals",
-  specialsOne: "specials",
-  specialsTwo: "specials",
-  collections: "collections",
-  catchesOne: "catches",
-  catchesTwo: "catches",
-  environments: "environments",
-  seasonal: "seasonal",
-  yearly: "yearly",
+  overview: "stats.fishing.overviewTitle",
+  mythicals: "stats.fishing.pages.mythicals",
+  specialsOne: "stats.fishing.specialFish",
+  specialsTwo: "stats.fishing.specialFish",
+  collections: "stats.fishing.pages.collections",
+  catchesOne: "stats.fishing.catches",
+  catchesTwo: "stats.fishing.catches",
+  environments: "stats.fishing.pages.environments",
+  seasonal: "stats.fishing.pages.seasonal",
+  yearly: "stats.fishing.pages.yearly",
 } as const satisfies Record<FishingPage, string>;
 
 const CATCH_TYPE_COLORS = {
@@ -473,7 +473,7 @@ export const FishingProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.FISHING} §f${t(`stats.fishing.titles.${FISHING_PAGE_TITLES[page]}`)}`}
+        title={`§l${FormattedGame.FISHING} §f${t(FISHING_PAGE_TITLES[page])}`}
         description={`§7${t("stats.fishing.page", { page: t(pageNumber + 1), pages: t(pageCount) })}`}
         time={time}
       />

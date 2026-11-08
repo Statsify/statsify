@@ -845,6 +845,7 @@
       "maxWeight": "Max Weight",
       "off": "Off",
       "on": "On",
+      "overviewTitle": "Stats",
       "page": "Page {{page}} / {{pages}}",
       "pages": {
         "catchesOne": "Catches I",
@@ -889,16 +890,6 @@
         "summer": "$t(stats.fishing.events.summer)"
       },
       "specialFish": "Special Fish",
-      "titles": {
-        "catches": "$t(stats.fishing.catches)",
-        "collections": "$t(stats.fishing.pages.collections)",
-        "environments": "$t(stats.fishing.pages.environments)",
-        "mythicals": "$t(stats.fishing.pages.mythicals)",
-        "overview": "Stats",
-        "seasonal": "$t(stats.fishing.pages.seasonal)",
-        "specials": "$t(stats.fishing.specialFish)",
-        "yearly": "$t(stats.fishing.pages.yearly)"
-      },
       "totalCatches": "Total Catches",
       "unlocked": "Unlocked"
     }
