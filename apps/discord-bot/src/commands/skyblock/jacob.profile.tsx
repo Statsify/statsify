@@ -60,7 +60,7 @@ export const SkyBlockJacobProfile = ({
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
       {items.length > 0 ?
-        <ItemGrid items={items} icons={icons} columns={2} /> :
+        <ItemGrid items={items} icons={icons} columns={2} spreadLastRow /> :
         <Empty text={t("skyblock.noJacobCrops")} />}
       <Footer logo={logo} user={user} />
     </Container>

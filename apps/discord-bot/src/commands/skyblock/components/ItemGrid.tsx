@@ -15,10 +15,10 @@ import type { LocalizeFunction } from "@statsify/discord";
 export const pricesAsOf = (t: LocalizeFunction, asOf: number) =>
   t("skyblock.pricesAsOf", { time: formatTime(Date.now() - asOf, { entries: 1 }) });
 
-// Table.tr splits its width by its cells, so a short last row is padded to keep the columns
-export const gridRows = (cells: JSX.Element[], columns: number) =>
+// Table.tr splits its width by its cells, so a short last row is padded to keep the columns unless it spreads
+export const gridRows = (cells: JSX.Element[], columns: number, spreadLastRow = false) =>
   arrayGroup(cells, columns).map((row) => (
-    <Table.tr>{[...row, ...Array.from({ length: columns - row.length }, () => <div />)]}</Table.tr>
+    <Table.tr>{spreadLastRow ? row : [...row, ...Array.from({ length: columns - row.length }, () => <div />)]}</Table.tr>
   ));
 
 export interface ItemGridEntry {
@@ -37,9 +37,11 @@ export interface ItemGridProps {
    * Held left, so icons and text line up down a column when the card is wider than the cells need.
    */
   stacked?: boolean;
+  /** A short last row's cells share the card's width, so it leaves no hole. */
+  spreadLastRow?: boolean;
 }
 
-export const ItemGrid = ({ items, icons, columns = 2, stacked = false }: ItemGridProps) => {
+export const ItemGrid = ({ items, icons, columns = 2, stacked = false, spreadLastRow = false }: ItemGridProps) => {
   const cells = items.map(({ texture, badge, name, value }) => (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
       <ItemSlot icon={texture && icons.get(texture)} />
@@ -64,5 +66,5 @@ export const ItemGrid = ({ items, icons, columns = 2, stacked = false }: ItemGri
     </box>
   ));
 
-  return <Table.table>{gridRows(cells, columns)}</Table.table>;
+  return <Table.table>{gridRows(cells, columns, spreadLastRow)}</Table.table>;
 };
