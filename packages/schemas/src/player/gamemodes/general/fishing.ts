@@ -143,6 +143,8 @@ const createRegistryStats = <Id extends string, Type extends NumberConstructor |
   type: Type
 ) => {
   class RegistryStats {
+    [id: string]: ReturnType<Type>;
+
     public constructor(value: (id: Id) => ReturnType<Type>) {
       Object.assign(this, Object.fromEntries(ids.map((id) => [id, value(id)])));
     }
