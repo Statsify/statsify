@@ -56,34 +56,36 @@ export const BedWarsPracticeProfile = ({
         time={time}
       />
       <Table.table>
-        {PRACTICE_MODES.map((row) => (
-          <Table.tr>
-            {row.map((practiceMode) => (
-              <Table.ts title={`§6${t(`stats.${practiceMode}`)}`}>
-                <Table.tr>
-                  <Table.td
-                    title={t("stats.successes")}
-                    value={t(practice[practiceMode].successes)}
-                    color="§a"
-                    size="small"
-                  />
-                  <Table.td
-                    title={t("stats.fails")}
-                    value={t(practice[practiceMode].fails)}
-                    color="§c"
-                    size="small"
-                  />
-                  <Table.td
-                    title={t("stats.successRatio")}
-                    value={t(practice[practiceMode].successRatio)}
-                    color="§6"
-                    size="small"
-                  />
-                </Table.tr>
-              </Table.ts>
-            ))}
-          </Table.tr>
-        ))}
+        <>
+          {PRACTICE_MODES.map((row) => (
+            <Table.tr>
+              {row.map((practiceMode) => (
+                <Table.ts title={`§6${t(`stats.${practiceMode}`)}`}>
+                  <Table.tr>
+                    <Table.td
+                      title={t("stats.successes")}
+                      value={t(practice[practiceMode].successes)}
+                      color="§a"
+                      size="small"
+                    />
+                    <Table.td
+                      title={t("stats.fails")}
+                      value={t(practice[practiceMode].fails)}
+                      color="§c"
+                      size="small"
+                    />
+                    <Table.td
+                      title={t("stats.successRatio")}
+                      value={t(practice[practiceMode].successRatio)}
+                      color="§6"
+                      size="small"
+                    />
+                  </Table.tr>
+                </Table.ts>
+              ))}
+            </Table.tr>
+          ))}
+        </>
         <Table.ts title={`§6${t("stats.bridgingRecords")}`}>
           {BRIDGING_RECORDS.map((row) => (
             <Table.tr>
