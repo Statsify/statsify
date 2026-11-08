@@ -126,15 +126,11 @@ type LegacyTexture = string | null | { texture: string; frame: number };
 
 interface Upgrade {
   textures: Record<string, LegacyTexture>;
-  /** Model ids 26.3 renamed */
   models: Record<string, string>;
-  /** The gui transform the version gave every 3D item in code, under the model's own */
   gui?: Transform;
-  /** Folders 26.3 doesn't read */
   drop: string[];
 }
 
-// Older layouts load as 26.3's, so the rest of the package reads one layout
 const UPGRADES: Partial<Record<PackLayout, Upgrade>> = {
   legacy: {
     textures: minecraftData.legacyTextures,
@@ -155,7 +151,6 @@ interface OlderModel {
   display?: Record<string, Transform>;
 }
 
-/** An older model with 26.3's names and gui, or undefined where 26.3 draws the item another way */
 function upgradeModel(file: Uint8Array, { textures, models, gui }: Upgrade) {
   const model = parseJson<OlderModel>(file);
   const parent = model.parent?.replace("minecraft:", "");
@@ -191,13 +186,14 @@ function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade)
     if (drop.some((folder) => path.startsWith(folder))) continue;
 
     const model = MODEL_FILE.exec(path);
-    const texture = TEXTURE_FILE.exec(path);
 
     if (model) {
       const upgradedModel = upgradeModel(file, layoutUpgrade);
       if (upgradedModel) upgraded.set(`assets/minecraft/models/${models[model[1]] ?? model[1]}.json`, upgradedModel);
       continue;
     }
+
+    const texture = TEXTURE_FILE.exec(path);
 
     if (!texture) {
       upgraded.set(path, file);

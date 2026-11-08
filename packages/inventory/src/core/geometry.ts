@@ -104,7 +104,7 @@ export function transformQuads(quads: Quad[], transformation: Transformation = {
   }));
 }
 
-// The corners of each face in the order Minecraft assigns uvs to them (FaceInfo)
+// The corners of each face in the order Minecraft assigns uvs to them
 const FACE_CORNERS: Record<Direction, (from: Vec3, to: Vec3) => Vec3[]> = {
   down: (f, t) => [[f[0], f[1], t[2]], [f[0], f[1], f[2]], [t[0], f[1], f[2]], [t[0], f[1], t[2]]],
   up: (f, t) => [[f[0], t[1], f[2]], [f[0], t[1], t[2]], [t[0], t[1], t[2]], [t[0], t[1], f[2]]],
@@ -176,10 +176,7 @@ export function elementQuads(
   });
 }
 
-/**
- * An entity model cube, laid out on its texture the way Minecraft lays out entity textures. Entity
- * models put y downwards, which the special model's transformation undoes.
- */
+/** An entity cube with Minecraft's texture layout and downward y axis */
 export function boxQuads(
   origin: Vec3,
   size: Vec3,
@@ -222,7 +219,7 @@ export function boxQuads(
   ];
 }
 
-// The two lights Minecraft sets up for 3D items in a GUI (Lighting.setupFor3DItems), moved
+// The two lights Minecraft sets up for 3D items in a GUI, moved
 // into model space after the y flip GUI rendering applies
 const LIGHT_0: Vec3 = [-0.9334, 0.2627, -0.2443];
 const LIGHT_1: Vec3 = [-0.1036, 0.9766, 0.1884];
@@ -239,21 +236,25 @@ const degrees = (radians: number) => (radians * 180) / Math.PI;
 
 /** One display transform that applies `inner` and then `outer`, whose scale must be uniform */
 export function composeTransforms(outer: Transform, inner: Transform): Transform {
-  const m = multiply(displayMatrix(outer), displayMatrix(inner));
+  const outerMatrix = displayMatrix(outer);
+  const matrix = multiply(outerMatrix, displayMatrix(inner));
   const [scale] = outer.scale ?? [1, 1, 1];
+  const [sx, sy, sz] = inner.scale ?? [1, 1, 1];
   const [ix, iy, iz] = inner.translation ?? [0, 0, 0];
   const [ox, oy, oz] = outer.translation ?? [0, 0, 0];
-  const [tx, ty, tz] = apply(displayMatrix(outer), [ix * scale, iy * scale, iz * scale]);
+  const [tx, ty, tz] = apply(outerMatrix, [ix * scale, iy * scale, iz * scale]);
 
   // Back to x, y, z angles for displayMatrix's Rx · Ry · Rz
-  const y = Math.asin(Math.max(-1, Math.min(1, m[2])));
+  const y = Math.asin(Math.max(-1, Math.min(1, matrix[2])));
   const [x, z] =
-    Math.abs(m[2]) < 0.999_999 ? [Math.atan2(-m[5], m[8]), Math.atan2(-m[1], m[0])] : [Math.atan2(m[7], m[4]), 0];
+    Math.abs(matrix[2]) < 0.999_999
+      ? [Math.atan2(-matrix[5], matrix[8]), Math.atan2(-matrix[1], matrix[0])]
+      : [Math.atan2(matrix[7], matrix[4]), 0];
 
   return {
     rotation: [degrees(x), degrees(y), degrees(z)],
     translation: [ox + tx, oy + ty, oz + tz],
-    scale: (inner.scale ?? [1, 1, 1]).map((value) => value * scale) as Vec3,
+    scale: [sx * scale, sy * scale, sz * scale],
   };
 }
 
