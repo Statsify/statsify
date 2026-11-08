@@ -45,7 +45,7 @@ export interface ProfileSummary {
   cuteName: string;
   gameMode: GameMode;
   selected: boolean;
-  members: { uuid: string; removed: boolean }[];
+  members: { uuid: string; removed: boolean; username?: string; displayName?: string }[]; // the site adds the names from stored players
   level: number;
   levelColor: string; // the § code of the level's bracket
   xp: number;
@@ -87,6 +87,7 @@ export interface MemberView {
   rift?: RiftSection | null;
   misc?: MiscSection;
   stats?: StatsSection;
+  collections?: CollectionsSection | null;
 }
 
 /** An inventory's slots in the game's order; an empty slot is null. */
@@ -336,6 +337,26 @@ export type JacobBracket = (typeof JACOB_BRACKETS)[number];
 export const JACOB_MEDALS = ["gold", "silver", "bronze"] as const;
 
 export type JacobMedal = (typeof JACOB_MEDALS)[number];
+
+/** null with the member's own Collections API off. */
+export interface CollectionsSection {
+  categories: { id: string; name: string; items: CollectionView[] }[];
+  maxed: number; // collections at their last tier
+  total: number; // every collection the resource lists
+  hidden: string[]; // members Hypixel sends no `collection` for (the Collections API off, or some who left), so their part isn't counted
+}
+
+/** A collection's co-op total: every member who accepted their invite, ex-members included (unverified). */
+export interface CollectionView {
+  id: string;
+  name: string;
+  texture?: ItemTexture;
+  amount: number;
+  tier: number;
+  maxTier: number;
+  next?: number; // the amount the next tier needs
+  members: { uuid: string; amount: number }[]; // each counted member's part, most first
+}
 
 export interface JacobSection {
   medals: Record<JacobMedal, number>; // unspent

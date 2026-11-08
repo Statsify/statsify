@@ -7,9 +7,10 @@
  */
 
 // Typed views of the data scripts/sync-data.ts writes to src/generated/: NEU-REPO's (MIT, see src/generated/NOTICE.md),
-// plus the skill tables and max levels from Hypixel's skills resource.
+// plus the skill tables and max levels from Hypixel's skills resource and the tiers from its collections resource.
 import accessories from "./generated/accessories.json" with { type: "json" };
 import bestiary from "./generated/bestiary.json" with { type: "json" };
+import collections from "./generated/collections.json" with { type: "json" };
 import essenceShops from "./generated/essenceshops.json" with { type: "json" };
 import garden from "./generated/garden.json" with { type: "json" };
 import hoppity from "./generated/hoppity.json" with { type: "json" };
@@ -111,6 +112,9 @@ const ISLAND_SEA_CREATURES: Record<string, string[]> = {
 export const SEA_CREATURES = BESTIARY.pages.flatMap(({ name, category, families }) =>
   category === "Fishing" ? families : families.filter((family) => ISLAND_SEA_CREATURES[name]?.includes(family.name))
 );
+
+/** Hypixel's collections by category, each item's tiers as the amount each needs, in the resource's order. */
+export const COLLECTIONS = collections as { id: string; name: string; items: { id: string; name: string; tiers: number[] }[] }[];
 
 /** NEU's Garden tables, with the crop milestones by the API's crop id and each upgrade's level count. */
 export const GARDEN = garden as {
