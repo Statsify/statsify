@@ -52,15 +52,12 @@ export type RequestAttributes = {
   "statsify.leaderboard.member_limit"?: number;
 };
 
-export interface RequestEventOptions {
+export interface RequestEvent {
+  message: string;
   durationMs: number;
   slowMs?: number;
   alwaysKeep?: boolean;
   sampleRate?: number;
-}
-
-export interface RequestEvent extends Omit<RequestEventOptions, "durationMs"> {
-  message: string;
 }
 
 const SAMPLE_RATE = isProduction ? 0.05 : 1;
@@ -127,7 +124,7 @@ export const setRequestError = (
 
 const getSampleReason = (
   attributes: RequestAttributes,
-  { durationMs, slowMs = Number.POSITIVE_INFINITY, alwaysKeep = false, sampleRate = SAMPLE_RATE }: RequestEventOptions
+  { durationMs, slowMs = Number.POSITIVE_INFINITY, alwaysKeep = false, sampleRate = SAMPLE_RATE }: RequestEvent
 ): SampleReason | undefined => {
   if (attributes["statsify.outcome"] === "error") return "error";
   if (durationMs >= slowMs || (attributes["discord.interaction.ack_ms"] ?? 0) >= SLOW_ACK_MS) return "slow";
@@ -139,25 +136,25 @@ const getSampleReason = (
 /**
  * Emits the request's attributes as one Sentry log once the request is done, if the tail sampler keeps it.
  */
-export const emitRequestEvent = (message: string, options: RequestEventOptions) => {
+export const emitRequestEvent = (event: RequestEvent) => {
   const attributes = getRequestAttributes();
-  const reason = getSampleReason(attributes, options);
+  const reason = getSampleReason(attributes, event);
 
   if (!reason) return;
 
   const outcome = attributes["statsify.outcome"] ?? "success";
 
-  logger[outcome === "error" ? "error" : "log"](message, {
+  logger[outcome === "error" ? "error" : "log"](event.message, {
     ...attributes,
     "statsify.outcome": outcome,
-    "statsify.duration_ms": Math.round(options.durationMs),
+    "statsify.duration_ms": Math.round(event.durationMs),
     "statsify.sample.reason": reason,
   });
 };
 
 export const withRequestEvent = (
   request: () => unknown,
-  getEvent: (attributes: RequestAttributes) => RequestEvent
+  getEvent: (attributes: RequestAttributes) => Omit<RequestEvent, "durationMs">
 ) =>
   Sentry.withIsolationScope(async () => {
     const start = performance.now();
@@ -168,7 +165,6 @@ export const withRequestEvent = (
       logger.print("error", error);
       setRequestError(error);
     } finally {
-      const { message, ...options } = getEvent(getRequestAttributes());
-      emitRequestEvent(message, { ...options, durationMs: performance.now() - start });
+      emitRequestEvent({ ...getEvent(getRequestAttributes()), durationMs: performance.now() - start });
     }
   });

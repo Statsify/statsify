@@ -85,7 +85,8 @@ adapter.getInstance().addHook("onResponse", (request, reply, done) => {
     "statsify.outcome": outcome ?? getOutcome(status),
   });
 
-  emitRequestEvent([request.method, request.routeOptions.url].filter(Boolean).join(" "), {
+  emitRequestEvent({
+    message: [request.method, request.routeOptions.url].filter(Boolean).join(" "),
     durationMs: reply.elapsedTime,
     slowMs: SLOW_REQUEST_MS,
   });
