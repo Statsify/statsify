@@ -9,11 +9,13 @@
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { RARITY_COLORS } from "@statsify/skyblock/display";
-import { gridRows } from "./components/ItemGrid.js";
-import { prettify, romanNumeral } from "@statsify/util";
+import { arrayGroup, prettify, romanNumeral } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const COLUMNS = 4;
+
+// Not gridRows: a short last row shares the full width instead of leaving an empty cell
+const rows = (cells: JSX.Element[]) => arrayGroup(cells, COLUMNS).map((row) => <Table.tr>{row}</Table.tr>);
 
 export const SkyBlockChocolateProfile = ({
   profile,
@@ -63,8 +65,8 @@ export const SkyBlockChocolateProfile = ({
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
       <Table.table>
-        <Table.ts title={`§a${t("skyblock.rabbits")}`}>{gridRows(rabbits, COLUMNS)}</Table.ts>
-        <Table.ts title={`§a${t("skyblock.employees")}`}>{gridRows(employees, COLUMNS)}</Table.ts>
+        <Table.ts title={`§a${t("skyblock.rabbits")}`}>{rows(rabbits)}</Table.ts>
+        <Table.ts title={`§a${t("skyblock.employees")}`}>{rows(employees)}</Table.ts>
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>
