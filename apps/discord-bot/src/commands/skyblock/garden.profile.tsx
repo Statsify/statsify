@@ -84,7 +84,7 @@ export const SkyBlockGardenProfile = ({
           <LevelBar title={t("skyblock.gardenLevel")} level={level} color="§a" t={t} notes={pastMax} />
         </Table.tr>
       </Table.table>
-      <ItemGrid items={crops} icons={icons} columns={2} />
+      <ItemGrid items={crops} icons={icons} columns={2} spreadLastRow />
       <Table.table>
         {/* Five upgrades in one row set the card's width, so they wrap three and two */}
         <Table.ts title={`§2${t("skyblock.composter")}`}>
