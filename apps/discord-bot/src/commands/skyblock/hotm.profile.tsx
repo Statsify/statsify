@@ -61,17 +61,18 @@ export const SkyBlockHotmProfile = ({
           <LevelBar title={t("skyblock.hotmLevel")} level={level} color="§5" t={t} />
         </Table.tr>
         <Table.tr>{powders}</Table.tr>
-        <Table.tr>
-          <box direction="column" width="100%" location="center">
+        {/* Not a Table.tr: its cells keep their own height, and the stats' box should be as tall as the tree's */}
+        <div width="100%">
+          <box direction="column" width="1/2" location="center">
             <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`§5${t("skyblock.perkTree")}`}</text>
             <PerkTree nodes={nodes} />
           </box>
-          <box direction="column" location="center" width="100%">
+          <box direction="column" width="1/2" height="remaining" location="center">
             {stats.map(([name, value, color]) => (
               <text margin={{ top: 2, bottom: 2, left: 10, right: 10 }}>{`§7${name}: ${color}${t(value)}`}</text>
             ))}
           </box>
-        </Table.tr>
+        </div>
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>
