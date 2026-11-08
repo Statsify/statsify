@@ -48,7 +48,6 @@ export class MegaWallsKit {
 
   @Field({
     leaderboard: { limit: 10_000, formatter: formatTime },
-    historical: { enabled: false },
   })
   public playtime: number;
 

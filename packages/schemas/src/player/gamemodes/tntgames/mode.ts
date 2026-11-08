@@ -95,7 +95,7 @@ export class PVPRun {
   @Field()
   public kdr: number;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTime, limit: 50_000 } })
   public record: number;
 
   @Field()
@@ -149,7 +149,7 @@ export class TNTRun {
   @Field()
   public wlr: number;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTime, limit: 50_000 } })
   public record: number;
 
   @Field()

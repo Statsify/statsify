@@ -39,7 +39,7 @@ export const TNT_GAMES_MODES = new GameModes([
 export type TNTGamesModes = ExtractGameModes<typeof TNT_GAMES_MODES>;
 
 export class TNTGames {
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
   @Field()
