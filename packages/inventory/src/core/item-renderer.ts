@@ -407,21 +407,21 @@ export class ItemRenderer {
     return transformQuads(quads, special.transformation);
   }
 
-  /** A skin's pixels; failed fetches return undefined and are retried */
+  /** A skin's pixels; failed loads return undefined and are retried */
   private skin(url: string) {
     let skin = this.skins.get(url);
 
     if (!skin) {
       skin = (async () => {
-        const response = await fetch(url).catch(() => undefined);
-        if (!response?.ok) {
-          this.skins.delete(url);
-          return;
-        }
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
 
         const image = await decodePng(new Uint8Array(await response.arrayBuffer()));
         return context(image).getImageData(0, 0, image.width, image.height);
-      })();
+      })().catch(() => {
+        this.skins.delete(url);
+        return undefined;
+      });
 
       this.skins.set(url, skin);
     }
