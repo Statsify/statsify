@@ -20,7 +20,7 @@ export const FISHING_CATCH_TYPES = ["fish", "junk", "treasure", "plant", "creatu
 export type FishingCatchType = (typeof FISHING_CATCH_TYPES)[number];
 
 export const FISHING_ITEMS = {
-  fish: ["salmon", "clownfish", "cooked_salmon", "charred_pufferfish", "cooked_cod", "pufferfish", "cod", "trout", "pike", "perch", "kelp"],
+  fish: ["salmon", "clownfish", "cooked_salmon", "charred_pufferfish", "cooked_cod", "pufferfish", "cod", "trout", "pike", "perch"],
   junk: [
     "charcoal", "soggy_paper", "ink_sac", "broken_fishing_rod", "water_bottle", "bowl", "rotten_flesh", "string", "rabbit_hide",
     "leather", "lily_pad", "bone", "leather_boots", "tripwire_hook", "stick", "coal", "fermented_spider_eye", "burned_flesh",
