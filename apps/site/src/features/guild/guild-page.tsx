@@ -52,7 +52,7 @@ export function GuildView({ guild }: { guild: GuildPage }) {
         <div className={cn("grid grid-cols-1 lg:grid-cols-2", BOX_GAP)}>
           <Box className={cn(HEADING_BOX, "content:flex-col content:gap-1")}>
             <h1 className="min-w-0 wrap-anywhere text-center text-mc-3 md:text-mc-4"><MinecraftText>{guild.nameFormatted}</MinecraftText></h1>
-            <PanelToggle open={comparing} controls={compareId} onToggle={() => setComparing(!comparing)}>
+            <PanelToggle open={comparing} controls={compareId} onToggle={() => setComparing(!comparing)} size="text-mc-1.5">
               {t("compare.open")}
             </PanelToggle>
           </Box>
