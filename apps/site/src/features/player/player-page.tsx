@@ -175,10 +175,10 @@ function NametagPanel({
 }) {
   // The card's header split into its boxes: the skin down the side, the name with the socials and buttons beside it,
   // and under that a box per fact. On phones the facts take the whole width under the skin and name; from `xl`, a row
-  // of their own under the panels (`PlayerView`).
+  // of their own under the panels (`PlayerView`), so the skin spans one row there, or the name's box would end halfway.
   return (
     <div ref={ref} className={cn("grid grid-cols-[auto_minmax(0,1fr)]", BOX_GAP, className)}>
-      <Box className="md:row-span-2 content:flex content:items-center content:justify-center content:p-3">
+      <Box className="md:row-span-2 xl:row-span-1 content:flex content:items-center content:justify-center content:p-3">
         <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28" />
       </Box>
       <Box className="content:flex content:flex-col content:items-center content:justify-center content:gap-2 content:p-3 content:text-center">
