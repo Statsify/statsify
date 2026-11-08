@@ -14,7 +14,6 @@ export * from "./Historical/index.js";
 export * from "./If.js";
 export * from "./List.js";
 export * from "./Multiline.js";
-export * from "./ProgressBar.js";
 export * from "./Sidebar.js";
 export * from "./Skin.js";
 export * from "./Table/index.js";
