@@ -13,11 +13,7 @@ export interface TooltipOwner {
   unhover(): void;
 }
 
-/**
- * One tooltip canvas for the page, placed where 1.8 places it: its text 12 pixels right of and
- * above the cursor, moved to the cursor's left when it would run off the right edge and up
- * when it would run off the bottom.
- */
+/** One tooltip canvas for the page, its text 12 GUI pixels right of and above the cursor as in 1.8 */
 class TooltipOverlay {
   private canvas = document.createElement("canvas");
   private scale = 1;

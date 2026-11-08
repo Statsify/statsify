@@ -21,7 +21,6 @@ interface Resources {
   tooltips: WeakMap<ItemStack, { scale: number; canvas: OffscreenCanvas }>;
 }
 
-// Inventories on one page share each pack's renderers and one icon cache
 const cache = new IconCache();
 const resources = new WeakMap<PackStack, Resources>();
 
@@ -208,7 +207,6 @@ export class McInventory extends HTMLElement implements TooltipOwner {
       Promise.all(moving.map((slot) => renderer.icon(shown[slot]!, size.scale, tick))),
     ]);
 
-    // A newer draw started while this one waited
     if (drawing !== this.drawing) return;
 
     this.view = { renderer, tooltips: resources.tooltips, size, still, composed: createCanvas(still.width, still.height) };
@@ -234,7 +232,6 @@ export class McInventory extends HTMLElement implements TooltipOwner {
     try {
       const icons = await Promise.all(this.moving.map((slot) => renderer.icon(this.items[slot]!, size.scale, this.tick)));
 
-      // A full draw started meanwhile and shows this tick itself
       if (drawing === this.drawing) {
         this.movingIcons = icons;
         this.show();
