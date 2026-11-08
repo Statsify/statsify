@@ -205,7 +205,7 @@ export const TNTGamesProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.TNT_GAMES} §fStats §r(${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""})`}
+        title={`§l${FormattedGame.TNT_GAMES} §fStats §r(${mode.submode && mode.submode.api !== "overall" ? mode.submode.formatted : `${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""}`})`}
         description={mode.api === "overall" ?
           undefined :
           `§7${t("stats.prefix")}: ${
