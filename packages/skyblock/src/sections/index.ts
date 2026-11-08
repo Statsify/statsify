@@ -94,7 +94,13 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
   experiments: { needs: [], compute: async ({ member }) => getExperiments(member) },
   fishing: { needs: [], compute: async ({ member }) => getFishing(member) },
-  garden: { needs: ["garden", "items"], compute: async ({ member, garden, items }) => getGarden(member, garden, items) },
+  garden: {
+    needs: ["garden", "items"],
+    compute: async ({ member, garden, items }) => {
+      if (!items) throw new TypeError("garden needs items");
+      return getGarden(member, garden, items);
+    },
+  },
   gear: { needs: [], compute: async ({ member }) => getGear(member) },
   hotf: { needs: [], compute: async ({ member }) => getHotf(member) },
   hotm: { needs: [], compute: async ({ member }) => getHotm(member) },

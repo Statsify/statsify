@@ -53,8 +53,8 @@ const VISITOR_NAMES: Record<string, string> = {
 const byName = <T extends { name: string }>(a: T, b: T) => a.name.localeCompare(b.name);
 const rank = (rarity?: Rarity) => (rarity ? RARITIES.indexOf(rarity) : -1);
 
-function itemOf(items: ItemsResource | undefined, id: string) {
-  const found = items?.items[id];
+function itemOf(items: ItemsResource, id: string) {
+  const found = items.items[id];
   return { name: found?.name ?? prettify(id), texture: found && resourceTexture(found) };
 }
 
@@ -63,16 +63,16 @@ function itemOf(items: ItemsResource | undefined, id: string) {
 const ITEMLESS_GREENHOUSE_SKINS = new Set(["dante", "shipwreck"]);
 const ITEMLESS_SKIN_NAMES: Record<string, string> = { dante: "Dante's Uprising", end: "The End" };
 
-const skinItemName = (items: ItemsResource | undefined, id: string, kind: "Barn" | "Greenhouse") =>
-  items?.items[`${id.toUpperCase()}_${kind.toUpperCase()}_SKIN`]?.name.replace(` ${kind} Skin`, "");
+const skinItemName = (items: ItemsResource, id: string, kind: "Barn" | "Greenhouse") =>
+  items.items[`${id.toUpperCase()}_${kind.toUpperCase()}_SKIN`]?.name.replace(` ${kind} Skin`, "");
 
-const isGreenhouseSkin = (items: ItemsResource | undefined, id: string) =>
+const isGreenhouseSkin = (items: ItemsResource, id: string) =>
   ITEMLESS_GREENHOUSE_SKINS.has(id) || skinItemName(items, id, "Greenhouse") !== undefined;
 
-const skinName = (items: ItemsResource | undefined, id: string, kind: "Barn" | "Greenhouse") =>
+const skinName = (items: ItemsResource, id: string, kind: "Barn" | "Greenhouse") =>
   skinItemName(items, id, kind) ?? ITEMLESS_SKIN_NAMES[id] ?? prettify(id);
 
-export function getGarden(member: RawMember, garden: RawGarden | null | undefined, items?: ItemsResource): GardenSection {
+export function getGarden(member: RawMember, garden: RawGarden | null | undefined, items: ItemsResource): GardenSection {
   const player = member.garden_player_data;
   const analyzed = new Set(player?.analyzed_greenhouse_crops);
 
@@ -81,7 +81,7 @@ export function getGarden(member: RawMember, garden: RawGarden | null | undefine
     // By their item ids in lowercase, with plants that aren't mutations, such as the Dead Plant a decayed one leaves
     greenhouse: (player?.discovered_greenhouse_crops ?? [])
       .flatMap((id) => {
-        const found = items?.items[id.toUpperCase()];
+        const found = items.items[id.toUpperCase()];
         return found?.category === "MUTATION" ? [{ id, name: found.name, analyzed: analyzed.has(id) }] : [];
       })
       .toSorted(byName),
@@ -89,7 +89,7 @@ export function getGarden(member: RawMember, garden: RawGarden | null | undefine
   };
 }
 
-function toGardenView(garden: RawGarden, items?: ItemsResource): GardenView {
+function toGardenView(garden: RawGarden, items: ItemsResource): GardenView {
   const commissions = garden.commission_data;
   const { selected_barn_skin: selected, unlocked_barn_skins: unlockedSkins = [] } = garden;
 
@@ -139,8 +139,9 @@ function toGardenView(garden: RawGarden, items?: ItemsResource): GardenView {
 if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
 
+  const items: ItemsResource = { lastUpdated: 0, raw: [], museum: {}, items: {} };
   const at = (xp: number, collected: number) =>
-    getGarden({}, { garden_experience: xp, resources_collected: { WHEAT: collected } }).garden!;
+    getGarden({}, { garden_experience: xp, resources_collected: { WHEAT: collected } }, items).garden!;
 
   test("getGarden levels the Garden and each crop's milestone", () => {
     const wheat = GARDEN.crop_milestones.WHEAT;
