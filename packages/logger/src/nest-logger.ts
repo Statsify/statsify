@@ -37,10 +37,13 @@ export class NestLogger implements LoggerService {
   }
 
   public error(message: unknown, ...parameters: unknown[]) {
-    const [first] = parameters;
-    const hasStack = typeof first === "string" && (parameters.length > 1 || STACK_PATTERN.test(first));
+    const [stack, ...rest] = parameters;
 
-    this.write("error", hasStack ? `${message}\n${first}` : message, hasStack ? parameters.slice(1) : parameters);
+    if (typeof stack === "string" && (rest.length > 0 || STACK_PATTERN.test(stack))) {
+      this.write("error", `${message}\n${stack}`, rest);
+    } else {
+      this.write("error", message, parameters);
+    }
   }
 
   private write(level: LogLevel, message: unknown, parameters: unknown[]) {
