@@ -86,7 +86,12 @@ export interface RawMember {
   };
   bestiary?: { kills?: Record<string, number>; milestone?: { last_claimed_milestone?: number } };
   trophy_fish?: Record<string, unknown>; // <fish> and <fish>_<tier> counts, plus total_caught, rewards…
-  player_data?: { experience?: Record<string, number>; perks?: Record<string, number>; reaper_peppers_eaten?: number };
+  player_data?: {
+    experience?: Record<string, number>;
+    perks?: Record<string, number>;
+    reaper_peppers_eaten?: number;
+    crafted_generators?: string[]; // "WHEAT_11": each minion tier crafted
+  };
   collection?: Record<string, number>;
   inventory?: {
     inv_contents?: RawNbt;
@@ -187,6 +192,7 @@ export interface RawProfile {
   selected?: boolean;
   game_mode?: string;
   banking?: { balance?: number };
+  community_upgrades?: { upgrade_states?: { upgrade: string; tier: number }[] }; // one entry per tier bought
   members: Record<string, RawMember>;
 }
 
