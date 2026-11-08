@@ -10,6 +10,7 @@ import minecraftData from "../../data/minecraft-data.json" with { type: "json" }
 import { type Unzipped, unzip } from "fflate";
 import type { Transform } from "./models.js";
 import { composeTransforms } from "./geometry.js";
+import { pngSize } from "./canvas.js";
 
 /** A pack zip, or a client jar, as bytes or a URL to fetch */
 export type PackSource = Blob | ArrayBuffer | Uint8Array | string;
@@ -121,8 +122,8 @@ const parseJson = <T>(file: Uint8Array, reviver?: (key: string, value: unknown) 
 
 const encoder = new TextEncoder();
 
-/** A texture's 26.3 name, null where 26.3 draws it another way, or the frame of a strip a slot shows */
-type LegacyTexture = string | null | { texture: string; frame: number };
+/** A texture's 26.3 name, null where 26.3 draws it another way, or how far along a strip the frame a slot shows sits */
+type LegacyTexture = string | null | { texture: string; position: number };
 
 interface Upgrade {
   textures: Record<string, LegacyTexture>;
@@ -206,7 +207,9 @@ function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade)
       upgraded.set(`assets/minecraft/textures/${target}.png${texture[2] ?? ""}`, file);
     } else if (target && !texture[2]) {
       // The strip's own mcmeta played every frame; this one holds the frame a slot shows
-      const animation = { animation: { frames: [target.frame] } };
+      const { width, height } = pngSize(file);
+      const frames = Math.max(1, Math.floor(height / width));
+      const animation = { animation: { frames: [Math.floor(target.position * frames)] } };
       upgraded.set(`assets/minecraft/textures/${target.texture}.png`, file);
       upgraded.set(`assets/minecraft/textures/${target.texture}.png.mcmeta`, encoder.encode(JSON.stringify(animation)));
     }

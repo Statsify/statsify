@@ -7,7 +7,7 @@
  */
 
 import { type PackStack, assetPath } from "./pack.js";
-import { context, decodePng } from "./canvas.js";
+import { context, decodePng, pngSize } from "./canvas.js";
 
 interface Animation {
   width?: number;
@@ -78,12 +78,6 @@ function frameAt(width: number, height: number, animation: Animation, tick: numb
   }
 
   return { index: frames[0].index, next: frames[0].index, blend: 0, start: tick, end: tick };
-}
-
-// A PNG's size sits in its IHDR chunk, so animations can be timed before decoding
-function pngSize(file: Uint8Array) {
-  const view = new DataView(file.buffer, file.byteOffset, file.byteLength);
-  return { width: view.getUint32(16), height: view.getUint32(20) };
 }
 
 /** Sprites from a pack stack as pixels, decoded once each */

@@ -1103,13 +1103,13 @@
     "items/clay_ball": "item/clay_ball",
     "items/clock": {
       "texture": "item/clock_00",
-      "frame": 0
+      "position": 0
     },
     "items/coal": "item/coal",
     "items/comparator": "item/comparator",
     "items/compass": {
       "texture": "item/compass_16",
-      "frame": 16
+      "position": 0.5
     },
     "items/cookie": "item/cookie",
     "items/diamond": "item/diamond",

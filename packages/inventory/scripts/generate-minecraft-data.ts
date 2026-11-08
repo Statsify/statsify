@@ -55,8 +55,8 @@ const DYES: Record<string, string> = {
 
 const RECORDS = ["11", "13", "blocks", "cat", "chirp", "far", "mall", "mellohi", "stal", "strad", "wait", "ward"] as const;
 
-/** A texture's 26.3 name, null where 26.3 draws it another way, or one frame of a 1.8 strip */
-type LegacyTexture = string | null | { texture: string; frame: number };
+/** A texture's 26.3 name, null where 26.3 draws it another way, or one frame of a 1.8 strip, by how far along it sits */
+type LegacyTexture = string | null | { texture: string; position: number };
 
 // 1.8.9 textures whose models were renamed too, so no same-named model pairs them with 26.3's
 const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
@@ -129,9 +129,10 @@ const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
   "items/potion_bottle_splash": "item/splash_potion",
   "items/reeds": "item/sugar_cane",
   "items/sign": "item/oak_sign",
-  // 1.8 animated these strips in code; a slot shows 26.3's first entry, at its frame
-  "items/clock": { texture: "item/clock_00", frame: 0 },
-  "items/compass": { texture: "item/compass_16", frame: 16 },
+  // 1.8 animated these strips in code; a slot shows 26.3's first entry, frame 0 of 64 and 16 of 32.
+  // Packs replace them with strips of any length, so the frame is kept as a point along the strip
+  "items/clock": { texture: "item/clock_00", position: 0 },
+  "items/compass": { texture: "item/compass_16", position: 0.5 },
   // 26.3 draws beds in code, and gives each spawn egg its own texture where 1.8 tinted one
   "items/bed": null,
   "items/spawn_egg": null,
