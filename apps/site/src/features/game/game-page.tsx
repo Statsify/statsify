@@ -85,7 +85,7 @@ export function GameView({ page }: { page: GamePage }) {
   );
 
   const headlinePanels = headline && (
-    <div key="headline" className={cn("grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_round(down,40%,8px)]", BOX_GAP)}>
+    <div key="headline" className={cn("grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_round(down,40%,8px)] lg:items-start", BOX_GAP)}>
       <StatPanel section={headline} username={page.username} headline className={cn(tables.length === 0 && "lg:col-span-2")} />
       {tables.length > 0 && (
         <div className={cn("flex flex-col", BOX_GAP)}>
