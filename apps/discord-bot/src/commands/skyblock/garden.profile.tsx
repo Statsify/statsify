@@ -10,6 +10,7 @@ import { Container, Footer, Header, type SidebarItem, Table } from "#components"
 import { Empty } from "./components/Empty.js";
 import { ItemGrid } from "./components/ItemGrid.js";
 import { LevelBar } from "./components/LevelBar.js";
+import { arrayGroup } from "@statsify/util";
 import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -85,8 +86,9 @@ export const SkyBlockGardenProfile = ({
       </Table.table>
       <ItemGrid items={crops} icons={icons} columns={2} />
       <Table.table>
+        {/* Five upgrades in one row set the card's width, so they wrap three and two */}
         <Table.ts title={`§2${t("skyblock.composter")}`}>
-          <Table.tr>{composter}</Table.tr>
+          {arrayGroup(composter, 3).map((row) => <Table.tr>{row}</Table.tr>)}
         </Table.ts>
       </Table.table>
       <Footer logo={logo} user={user} />
