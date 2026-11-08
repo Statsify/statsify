@@ -8,6 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import {
+  type APIApplicationCommandInteractionDataBasicOption,
   type APIUser,
   ApplicationCommandOptionType,
   GatewayDispatchEvents,
@@ -120,6 +121,13 @@ export abstract class AbstractCommandListener {
     }
 
     return [command, data, name];
+  }
+
+  protected setCommandOptionsContext(options?: APIApplicationCommandInteractionDataBasicOption[]) {
+    Sentry.setContext(
+      "options",
+      Object.fromEntries((options ?? []).map(({ name, value }) => [name, value]))
+    );
   }
 
   protected async executeCommand({

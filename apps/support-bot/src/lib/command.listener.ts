@@ -12,9 +12,7 @@ import {
   CommandResolvable,
   Interaction,
 } from "@statsify/discord";
-import * as Sentry from "@sentry/node";
 import { ApiService } from "@statsify/api-client";
-import type { APIApplicationCommandInteractionDataBasicOption } from "discord-api-types/v10";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { config } from "@statsify/util";
 
@@ -59,11 +57,7 @@ export class CommandListener extends AbstractCommandListener {
       parentData
     );
 
-    const options = (data.options ?? []) as APIApplicationCommandInteractionDataBasicOption[];
-    Sentry.setContext(
-      "options",
-      Object.fromEntries(options.map(({ name, value }) => [name, value]))
-    );
+    this.setCommandOptionsContext(data.options);
 
     const user = await this.apiService.getUser(id);
 
