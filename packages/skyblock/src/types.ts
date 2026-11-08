@@ -627,6 +627,7 @@ export const STAT_SOURCES = [
   "catacombs",
   "level",
   "peppers",
+  "attributes", // only for `unverified`: each attribute is its own line, in `byAttribute`
 ] as const;
 
 export type StatSource = (typeof STAT_SOURCES)[number];
@@ -635,6 +636,7 @@ export interface StatTotal {
   stat: PlayerStat;
   total: number;
   bySource: Partial<Record<StatSource, number>>;
+  byAttribute?: Record<string, number>; // each Hunting attribute's part, by its name
 }
 
 /** The permanent stat sheet; temporary buffs (Booster Cookie, potions, the mayor) aren't in the API. */
