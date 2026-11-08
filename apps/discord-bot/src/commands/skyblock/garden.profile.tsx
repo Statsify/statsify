@@ -57,8 +57,8 @@ export const SkyBlockGardenProfile = ({
 
   const { level } = garden;
   const pastMax = level.xpForNext === undefined && level.xpCurrent > 0 ?
-    `§7${t("skyblock.xpPastMax", { xp: t(Math.floor(level.xpCurrent)) })}` :
-    undefined;
+    [`§7${t("skyblock.xpPastMax", { xp: t(Math.floor(level.xpCurrent)) })}`] :
+    [];
 
   const crops = garden.crops.map(({ name, texture, milestone, upgrade }) => {
     const tierColor = milestone.xpForNext === undefined ? "§6" : "§e";
@@ -80,7 +80,7 @@ export const SkyBlockGardenProfile = ({
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
       <Table.table>
         <Table.tr>
-          <LevelBar title={t("skyblock.gardenLevel")} level={level} color="§a" t={t} note={pastMax} />
+          <LevelBar title={t("skyblock.gardenLevel")} level={level} color="§a" t={t} notes={pastMax} />
         </Table.tr>
       </Table.table>
       <ItemGrid items={crops} icons={icons} columns={2} />
