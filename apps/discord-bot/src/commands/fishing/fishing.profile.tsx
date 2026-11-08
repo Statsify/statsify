@@ -284,7 +284,7 @@ const Collections = ({ t, fishing }: PageProps) => (
           name: rodName(id),
           unlocked: isRodUnlocked(fishing, id),
           active: fishing.activeRod === id,
-          source: t(`stats.fishing.rodRequirements.${id}`),
+          location: `§7${t(`stats.fishing.rodRequirements.${id}`)}`,
         }))}
       />
     </Table.ts>
