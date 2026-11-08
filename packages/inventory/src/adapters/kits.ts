@@ -20,6 +20,9 @@ export const ARMOR_SLOTS = [ARMOR.helmet, ARMOR.chestplate, ARMOR.leggings, ARMO
 
 export const inRange = (slot: number, length: number) => slot >= 0 && slot < length;
 
+/** Kit names as keys: "Hype Train" and hype_train are both hypetrain */
+export const kitKey = (name: string) => name.toLowerCase().replaceAll(/[^a-z]/g, "");
+
 /**
  * A kit layout of 1.8 "id,damage" values by slot, as Mega Walls' <class>Inventory, Blitz's
  * <Kit>Inventory and classic Walls' InventoryLayout send it: { "0": "267,0", "5": "373,2" }.

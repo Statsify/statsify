@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARMOR, SLOTS, inRange } from "./kits.js";
+import { ARMOR, SLOTS, inRange, kitKey } from "./kits.js";
 import type { ItemStack } from "../core/item-stack.js";
 import dumped from "../../data/duels-modes.json" with { type: "json" };
 import { legacyMaterial } from "../core/legacy-items.js";
@@ -65,9 +65,6 @@ export const DUELS_DEFAULT_KEYS = Object.keys(DEFAULTS).map((mode) => `layout_${
 export const DUELS_KITS = Object.entries(KITS).flatMap(([mode, kits]) =>
   Object.entries(kits).map(([kit, { name }]) => ({ key: `layout_${mode}_${kit}`, name })),
 );
-
-/** Kit names as keys: "Hype Train" and hype_train are both hypetrain */
-export const kitKey = (name: string) => name.toLowerCase().replaceAll(/[^a-z]/g, "");
 
 function duelsKit(mode: string, kit: string): Kit | undefined {
   const kits = KITS[mode];

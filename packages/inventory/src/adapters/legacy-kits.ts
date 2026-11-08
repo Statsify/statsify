@@ -6,11 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { SLOTS, fromLegacyKit, inRange } from "./kits.js";
+import { SLOTS, fromLegacyKit, inRange, kitKey } from "./kits.js";
 import type { ItemStack } from "../core/item-stack.js";
 import data from "../../data/minecraft-data.json" with { type: "json" };
 import dumped from "../../data/legacy-kits.json" with { type: "json" };
-import { kitKey } from "./duels.js";
 
 export interface LegacyKit {
   /** As its editor's title names it, like Hype Train */

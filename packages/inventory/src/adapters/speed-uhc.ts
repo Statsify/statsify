@@ -8,7 +8,7 @@
 
 import type { ItemStack } from "../core/item-stack.js";
 import dumped from "../../data/speed-uhc.json" with { type: "json" };
-import { kitKey } from "./duels.js";
+import { kitKey } from "./kits.js";
 
 // Built by scripts/import-dump.ts from the Speed UHC Shop's Kits page, by mode and kit. An item
 // whose name the page gives in Hypixel's words (Pig Egg, Awkward Potion) is null

@@ -8,7 +8,7 @@
 
 import type { ItemStack } from "../core/item-stack.js";
 import dumped from "../../data/quake.json" with { type: "json" };
-import { kitKey } from "./duels.js";
+import { kitKey } from "./kits.js";
 
 // The gun's parts (sight is its laser), then the hat and the armour, as the Quake stats keys name them
 const LOADOUT = ["case", "barrel", "trigger", "muzzle", "sight", "hat", "armor", "leggings", "boots"] as const;

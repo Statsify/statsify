@@ -8,7 +8,7 @@
 
 import type { ItemStack } from "../core/item-stack.js";
 import dumped from "../../data/arena.json" with { type: "json" };
-import { kitKey } from "./duels.js";
+import { kitKey } from "./kits.js";
 
 const LOADOUT = ["offensive", "utility", "support", "ultimate", "active_rune"] as const;
 

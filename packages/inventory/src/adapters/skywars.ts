@@ -6,10 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { SLOTS, inRange } from "./kits.js";
+import { SLOTS, inRange, kitKey } from "./kits.js";
 import type { ItemStack } from "../core/item-stack.js";
 import dumped from "../../data/skywars-kits.json" with { type: "json" };
-import { kitKey } from "./duels.js";
 import { legacyMaterial } from "../core/legacy-items.js";
 
 export interface SkyWarsKit {
