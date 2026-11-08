@@ -62,7 +62,8 @@ export const SkyBlockHotmProfile = ({
         </Table.tr>
         <Table.tr>{powders}</Table.tr>
         <Table.tr>
-          <box width="100%" location="center">
+          <box direction="column" width="100%" location="center">
+            <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`§5${t("skyblock.perkTree")}`}</text>
             <PerkTree nodes={nodes} />
           </box>
           <box direction="column" location="center" width="100%">

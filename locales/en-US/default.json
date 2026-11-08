@@ -701,6 +701,7 @@
     "nucleusRuns": "Nucleus Runs",
     "perAp": "{{coins}}/AP",
     "perXp": "{{coins}}/XP",
+    "perkTree": "Perks",
     "perksBought": "Perks: {{bought}}/{{total}}",
     "personalBank": "Personal Bank",
     "personalBest": "Best: {{amount}}",

@@ -68,7 +68,8 @@ export const SkyBlockHotfProfile = ({
           <div direction="column" width="1/2">
             {pools}
           </div>
-          <box width="1/2" height="remaining" location="center">
+          <box direction="column" width="1/2" height="remaining" location="center">
+            <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`§a${t("skyblock.perkTree")}`}</text>
             <PerkTree nodes={nodes} />
           </box>
         </div>
