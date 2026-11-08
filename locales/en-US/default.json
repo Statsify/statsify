@@ -593,6 +593,7 @@
     "fortune": "Fortune",
     "game": "Game",
     "game-total": "{{game}} Total",
+    "gameTotal": "Game Total",
     "gamesPlayed": "Games Played",
     "giftsFound": "Gifts Found",
     "giftsSent": "Gifts Sent",
