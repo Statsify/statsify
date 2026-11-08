@@ -117,7 +117,8 @@ interface CollectionItem {
   name: string;
   unlocked: boolean;
   active?: boolean;
-  details?: string[];
+  source?: string;
+  location?: string;
 }
 
 const CollectionTable = ({ t, items, columns }: { t: LocalizeFunction; items: CollectionItem[]; columns: number }) => (
@@ -138,9 +139,9 @@ const CollectionTable = ({ t, items, columns }: { t: LocalizeFunction; items: Co
               <text>
                 {color}
                 {status}
-                {item.details?.[0] ? ` §7- ${item.details[0]}` : ""}
+                {item.source ? ` §7- ${item.source}` : ""}
               </text>
-              {item.details?.[1] ? <text>{item.details[1]}</text> : <></>}
+              {item.location ? <text>{item.location}</text> : <></>}
             </box>
           );
         })}
@@ -262,10 +263,8 @@ const Specials = ({ t, fishing, specialFish }: PageProps & { specialFish: (typeo
   const items = specialFish.map((fish) => ({
     name: prettify(fish.id),
     unlocked: fishing.specialFish[fish.id],
-    details: [
-      t(`stats.fishing.sources.${fish.source}`),
-      `§7${t("stats.fishing.foundIn")}: ${ENVIRONMENT_COLORS[fish.environment]}${t(`stats.fishing.environments.${fish.environment}`)}`,
-    ],
+    source: t(`stats.fishing.sources.${fish.source}`),
+    location: `§7${t("stats.fishing.foundIn")}: ${ENVIRONMENT_COLORS[fish.environment]}${t(`stats.fishing.environments.${fish.environment}`)}`,
   }));
 
   return <CollectionTable t={t} items={items} columns={4} />;
@@ -281,7 +280,7 @@ const Collections = ({ t, fishing }: PageProps) => (
           name: rodName(id),
           unlocked: fishing.rods[id],
           active: fishing.activeRod === id,
-          details: [t(`stats.fishing.rodRequirements.${id}`)],
+          source: t(`stats.fishing.rodRequirements.${id}`),
         }))}
       />
     </Table.ts>

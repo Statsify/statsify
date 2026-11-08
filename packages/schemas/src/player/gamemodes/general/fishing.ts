@@ -285,7 +285,7 @@ export class FishingEnchantment {
 
   public constructor(data: APIData = {}, legacyToggle?: boolean) {
     this.level = data.level;
-    this.enabled = data.toggle ?? legacyToggle ?? false;
+    this.enabled = data.toggle ?? legacyToggle;
   }
 }
 
