@@ -78,7 +78,8 @@ export const SkyBlockDungeonsProfile = ({
           <Table.tr>
             <LevelBar title={t("skyblock.catacombs")} level={dungeons.catacombs} color="§c" t={t} />
           </Table.tr>,
-          <Table.tr>{classes}</Table.tr>,
+          // Five classes in one row set the card's width, so they wrap three and two
+          ...arrayGroup(classes, 3).map((row) => <Table.tr>{row}</Table.tr>),
           ...(floors.length > 0 ?
             arrayGroup(floors, 4).map((row) => <Table.tr>{row}</Table.tr>) :
             [
