@@ -25,7 +25,7 @@ import {
 } from "#types";
 import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
 import { add, roundTo } from "@statsify/math";
-import { attributeLevel } from "./attributes.js";
+import { getLevel } from "#leveling";
 import { TUNING, bagAccessories, powerScale, stonePowerStats } from "./accessories.js";
 import { decodeSlots } from "#items";
 import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
@@ -231,7 +231,8 @@ type AttributeStat = { stat: PlayerStat; name: string; value: number };
 function attributeStats(member: RawMember): AttributeStat[] {
   const stacks = member.attributes?.stacks ?? {};
   return ATTRIBUTE_SHARDS.shards.flatMap(({ attribute, attributeName, rarity, grants = [], unconsumable }) => {
-    const level = grants.length > 0 && !unconsumable ? attributeLevel(stacks[attribute] ?? 0, ATTRIBUTE_SHARDS.levels[rarity]) : 0;
+    const levels = ATTRIBUTE_SHARDS.levels[rarity];
+    const level = grants.length > 0 && !unconsumable ? getLevel(stacks[attribute] ?? 0, levels, levels.length).level : 0;
     return level > 0 ? grants.map(({ stat, value }) => ({ stat, name: attributeName, value: value * level })) : [];
   });
 }
