@@ -175,13 +175,18 @@ function drawGlint(ctx: OffscreenCanvasRenderingContext2D, glint: OffscreenCanva
   ctx.drawImage(layer, 0, 0);
 }
 
+// Mixed pixel by pixel like the texels, since drawing one icon over the other at an alpha isn't a
+// linear blend: two identical translucent icons would come out more opaque
 function crossFade(from: OffscreenCanvas, to: OffscreenCanvas, blend: number) {
-  const canvas = createCanvas(from.width, from.height);
-  const ctx = context(canvas);
-  ctx.drawImage(from, 0, 0);
-  ctx.globalAlpha = blend;
-  ctx.drawImage(to, 0, 0);
+  const pixels = context(from).getImageData(0, 0, from.width, from.height);
+  const next = context(to).getImageData(0, 0, to.width, to.height);
 
+  for (let i = 0; i < pixels.data.length; i++) {
+    pixels.data[i] = pixels.data[i] * (1 - blend) + next.data[i] * blend;
+  }
+
+  const canvas = createCanvas(from.width, from.height);
+  context(canvas).putImageData(pixels, 0, 0);
   return canvas;
 }
 
