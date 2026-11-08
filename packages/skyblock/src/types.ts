@@ -102,7 +102,21 @@ export interface GearSection {
   equipment: Slots; // necklace, cloak, belt, gloves
   wardrobe: { slot: number; armor: Slots }[]; // sets with anything in them, helmet to boots
   wardrobeSlot?: number; // the set being worn
+  equipmentSets: { slot: number; equipment: Slots }[]; // sets with anything in them, necklace to gloves
+  equipmentSlot?: number; // the set being worn
   weapons: ItemView[]; // swords, bows and wands in the inventory, in its order
+  loadouts: Loadout[]; // the ones with anything saved
+}
+
+/** A saved loadout: the sets are wardrobe and equipment set slots, the pet a pet's `uniqueId`. */
+export interface Loadout {
+  id: number;
+  name: string;
+  armorSet?: number;
+  equipmentSet?: number;
+  pet?: string;
+  power?: string;
+  tuning?: Record<string, number>; // the tuning slot's points per stat
 }
 
 export const INVENTORIES = [
@@ -675,6 +689,7 @@ export interface PetsSection {
 
 export interface PetView {
   uuid?: string;
+  uniqueId?: string; // what a saved loadout names its pet by
   type: string;
   name: string;
   rarity: Rarity;
