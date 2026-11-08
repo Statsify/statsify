@@ -27,6 +27,7 @@ export const SkyBlockSkillsProfile = ({
 
   const sidebar: SidebarItem[] = skills ? [[t("skyblock.skillAverage"), t(skills.average), "§a"]] : [];
 
+  // Laid out three to a row: four "XP past max" notes in one row set the card's width
   const cells = skills ?
     SKILLS.map((name) => {
       const level = skills.skills[name];
@@ -44,7 +45,7 @@ export const SkyBlockSkillsProfile = ({
       {skills ?
         (
           <Table.table>
-            {arrayGroup(cells, 4).map((row) => (
+            {arrayGroup(cells, 3).map((row) => (
               <Table.tr>{row}</Table.tr>
             ))}
           </Table.table>
