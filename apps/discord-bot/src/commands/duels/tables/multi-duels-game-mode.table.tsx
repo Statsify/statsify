@@ -9,6 +9,7 @@
 import { Historical, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { MultiPVPDuelsGameMode, PVPBaseDuelsGameMode } from "@statsify/schemas";
+import { SingleDuelsGameModeTable } from "./single-duels-game-mode.table.js";
 import { prettify } from "@statsify/util";
 import type { ProfileTime } from "#commands/base.hypixel-command";
 
@@ -62,10 +63,13 @@ export const MultiDuelsGameModeTable = ({
   t,
   time,
 }: MultiDuelsGameModeTableProps) => {
-  const modes = ["overall", "solo", "doubles"] as const;
+  const modes = ["solo", "doubles"] as const;
 
   return (
     <Table.table>
+      <Table.ts title={`§6${prettify("overall")}`}>
+        <SingleDuelsGameModeTable stats={stats.overall} t={t} time={time} />
+      </Table.ts>
       <Table.tr>
         {modes.map((mode) => (
           <MultiDuelsGameModeModeTable
