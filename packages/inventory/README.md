@@ -130,7 +130,7 @@ setCanvasBackend(skiaCanvas);
 In these four, a pick the dumped menus don't have leaves its slot empty.
 
 Every `data/*.json` but `minecraft-data.json` comes from the game: open the layout editors, kit
-menus and shop menus with the StatsifyDump ChatTriggers module running, then `pnpm build` and
+menus and shop menus with the StatsifyDump module running, then `pnpm build` and
 `node scripts/import-dump.ts <dump.json> …`
 with the last export of each dump session. Open each kit's editor from its picker before moving
 anything: the picker shown next names the kit, and only an unsaved kit shows the default. Blitz's
