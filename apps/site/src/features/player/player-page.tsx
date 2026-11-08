@@ -355,7 +355,8 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
                 <StatNumber value={value} />}
             color={color}
             large
-            className={cn("grow", link && "relative")}
+            // Centred, not at the foot: the nametag can stretch these boxes, and the room would all sit above the value
+            className={cn("grow justify-center", link && "relative")}
           />
         </StatBox>
       ))}
