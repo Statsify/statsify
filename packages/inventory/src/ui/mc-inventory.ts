@@ -229,15 +229,12 @@ export class McInventory extends HTMLElement {
     const drawing = this.drawing;
     const { renderer, size } = this.view;
 
-    try {
-      const icons = await Promise.all(this.moving.map((slot) => renderer.icon(this.items[slot]!, size.scale, this.tick)));
+    const icons = await Promise.all(this.moving.map((slot) => renderer.icon(this.items[slot]!, size.scale, this.tick)));
+    this.stepping = false;
 
-      if (drawing === this.drawing) {
-        this.movingIcons = icons;
-        this.show();
-      }
-    } finally {
-      this.stepping = false;
+    if (drawing === this.drawing) {
+      this.movingIcons = icons;
+      this.show();
     }
   }
 
