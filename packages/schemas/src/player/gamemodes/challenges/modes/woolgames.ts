@@ -38,7 +38,13 @@ export class WoolGamesChallenges implements GameChallenges {
   public total: number;
 
   public constructor(challenges: APIData) {
-    this.woolWarsChallenge = challenges.WOOL_GAMES__wool_wars_challenge;
+    // Wool Wars used to have three challenges, and players keep their counts under those ids
+    this.woolWarsChallenge = add(
+      challenges.WOOL_GAMES__wool_wars_challenge,
+      challenges.WOOL_GAMES__merciless_killer_challenge,
+      challenges.WOOL_GAMES__builder_challenge,
+      challenges.WOOL_GAMES__flawless_challenge
+    );
     this.sheepWarsChallenge = challenges.WOOL_GAMES__sheep_wars_challenge;
     this.captureTheWoolChallenge = challenges.WOOL_GAMES__capture_the_wool_challenge;
 

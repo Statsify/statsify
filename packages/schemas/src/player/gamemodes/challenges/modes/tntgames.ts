@@ -54,7 +54,11 @@ export class TNTGamesChallenges implements GameChallenges {
     this.pvpRun = challenges.TNTGAMES__pvp_run_challenge;
     this.bowSpleef = challenges.TNTGAMES__bow_spleef_challenge;
     this.tntTag = challenges.TNTGAMES__tnt_tag_challenge;
-    this.tntWizards = challenges.TNTGAMES__tnt_wizards_challenge;
+    // Older completions are still counted under the singular id Hypixel used before
+    this.tntWizards = add(
+      challenges.TNTGAMES__tnt_wizards_challenge,
+      challenges.TNTGAMES__tnt_wizard_challenge
+    );
 
     this.total = add(
       this.tntRun,
