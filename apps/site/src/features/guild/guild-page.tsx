@@ -62,7 +62,7 @@ export function GuildView({ guild }: { guild: GuildPage }) {
               {t("default:stats.guild.gexp")}: <span className="text-mc-white">{n(guild.exp)}</span>
             </p>
           </Box>
-          <Box className="content:flex content:flex-col content:justify-center content:leading-[24px]">
+          <Box className="content:flex content:flex-col content:items-center content:justify-center content:text-center content:leading-[24px]">
             <p>{t("default:stats.guild.level")}: <MinecraftText>{`${colour}${n(guild.level)}`}</MinecraftText></p>
             <p>
               {t("default:stats.progression.gexp")}: <span className="text-mc-aqua">{n(guild.progression.current)}</span>/
