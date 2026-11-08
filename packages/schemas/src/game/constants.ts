@@ -48,7 +48,7 @@ export const GameIdMapping = {
 } as const;
 
 export const GameCodeMapping = Object.fromEntries(
-  Object.entries(GameIdMapping).map(([code, id]) => [id, code]),
+  Object.entries(GameIdMapping).map(([code, id]) => [id, code])
 ) as Record<GameId, GameCode>;
 
 export enum FormattedGame {
@@ -91,7 +91,7 @@ export enum FormattedGame {
   REPLAY = "§fReplay§f",
   IDLE = "§fIdle§f",
   LIMBO = "§fLimbo§f",
-  SMP = "§fSMP§f",
+  SMP = "§fSMP§f"
 }
 
 /**
