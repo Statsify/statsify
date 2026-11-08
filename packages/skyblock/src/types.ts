@@ -90,6 +90,7 @@ export interface MemberView {
   collections?: CollectionsSection | null;
   minions?: MinionsSection;
   bestiary?: BestiarySection;
+  attributes?: AttributesSection;
 }
 
 /** An inventory's slots in the game's order; an empty slot is null. */
@@ -385,6 +386,24 @@ export interface BestiaryFamilyView {
   tier: number;
   maxTier: number;
   next?: number; // the kills the next tier needs
+}
+
+/** Every Hunting shard, held and syphoned into its attribute. Chameleon's can't be syphoned, so it has no levels. */
+export interface AttributesSection {
+  attributes: {
+    id: string;
+    name: string;
+    attribute: string;
+    rarity: Rarity;
+    families: string[];
+    level: number;
+    maxLevel: number;
+    owned: number;
+  }[];
+  unlocked: number; // attributes past level 0
+  maxed: number;
+  total: number; // attributes with levels
+  owned: number; // shards held
 }
 
 export interface JacobSection {

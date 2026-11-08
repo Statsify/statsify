@@ -8,6 +8,7 @@
 
 import { getAccessories } from "./accessories.js";
 import { getApiSettings } from "../api-settings.js";
+import { getAttributes } from "./attributes.js";
 import { getBestiary } from "./bestiary.js";
 import { getChocolate } from "./chocolate.js";
 import { getCollections } from "./collections.js";
@@ -39,6 +40,7 @@ export type SectionNeed = "museum" | "garden" | "prices" | "items";
 /** Every section a lookup can ask for: SECTIONS' and networth, which ./networth computes. */
 export const SKYBLOCK_SECTIONS = [
   "accessories",
+  "attributes",
   "bestiary",
   "chocolate",
   "collections",
@@ -95,6 +97,7 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
       return getAccessories(member, items, prices, hasMarket(profile));
     },
   },
+  attributes: { needs: [], compute: async ({ member }) => getAttributes(member) },
   bestiary: { needs: [], compute: async ({ member }) => getBestiary(member) },
   chocolate: { needs: [], compute: async ({ member }) => getChocolate(member) },
   collections: { needs: ["items"], compute: async ({ profile, member, items }) => getCollections(profile, member, items) },
