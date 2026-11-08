@@ -449,6 +449,16 @@ for (const [name, models] of modelNames) {
 output.legacyModels["builtin/clock"] = "builtin/generated";
 output.legacyModels["builtin/compass"] = "builtin/generated";
 
+// Block items draw 1.8.9's item model of the same name, and these 1.8 names are other 26.3 items:
+// 1.8's snow is the block, its stone slab and stairs are smooth stone and cobblestone's
+Object.assign(output.legacyModels, {
+  "item/smooth_red_sandstone": "item/cut_red_sandstone",
+  "item/smooth_sandstone": "item/cut_sandstone",
+  "item/snow": "item/snow_block",
+  "item/stone_slab": "item/smooth_stone_slab",
+  "item/stone_stairs": "item/cobblestone_stairs",
+});
+
 if (missing.length > 0) {
   throw new Error(`Not in ${path}, add them to RENAMES or LEGACY_TEXTURES:\n${missing.join("\n")}`);
 }
