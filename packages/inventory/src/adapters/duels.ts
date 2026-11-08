@@ -74,10 +74,10 @@ function duelsKit(mode: string, kit: string): Kit | undefined {
 
   // SkyWars Duel keys use SkyWars kit ids, kit_<type>_<mode>_<kit>, where Mini's and Ranked's are
   // the Mini picker's kits. Older keys name the kit alone
-  const id = /^kit_([a-z]+)_[a-z]+_(.+)$/.exec(kit);
-  const name = kitKey(id?.[2] ?? kit);
+  const id = /^kit_([a-z]+)_([a-z]+)_(.+)$/.exec(kit);
+  const name = kitKey(id?.[3] ?? kit);
   if (!id) return kits[`mini_${name}`] ?? kits[`insane_${name}`];
-  return kits[`${id[1] === "mini" || id[1] === "ranked" ? "mini" : "insane"}_${name}`];
+  return kits[`${id[1] === "mini" || id[2] === "ranked" ? "mini" : "insane"}_${name}`];
 }
 
 const withoutCopy = (token: string) => token.replace(/_?\d+$/, "");
