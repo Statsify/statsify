@@ -102,11 +102,7 @@ export class General {
 
     this.events = new Events(data.seasonal);
     this.bingo = new Bingo(data.seasonal);
-    this.fishing = new Fishing(
-      data.stats?.MainLobby ?? {},
-      data.achievements ?? {},
-      data.fishing ?? {}
-    );
+    this.fishing = new Fishing(data.stats?.MainLobby);
   }
 }
 

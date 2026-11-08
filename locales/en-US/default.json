@@ -792,7 +792,116 @@
     "airTime": "Air Time",
     "potionsSplashed": "Potions Splashed",
     "powerOrbs": "Power Orbs",
-    "grenadeKills": "Grenade Kills"
+    "grenadeKills": "Grenade Kills",
+    "fishing": {
+      "activeRod": "Active Rod",
+      "activeTrail": "Active Trail",
+      "allTimeSeasonal": "All-Time Seasonal",
+      "catches": "Catches",
+      "catchTypes": {
+        "creature": "Creatures",
+        "fish": "Fish",
+        "junk": "Junk",
+        "mythical": "Mythicals",
+        "plant": "Plants",
+        "treasure": "Treasure"
+      },
+      "enchants": {
+        "collector": "Collector",
+        "dumpsterDiver": "Dumpster Diver",
+        "herbivore": "Herbivore",
+        "landLine": "Land Line",
+        "luck": "Luck",
+        "lure": "Lure",
+        "mythicalHook": "Mythical Hook",
+        "neptunesFury": "Neptune's Fury",
+        "vulcansBlessing": "Vulcan's Blessing"
+      },
+      "environmentBreakdown": "Environment Breakdown",
+      "environmentDetails": "Environment Details",
+      "environments": {
+        "ice": "Ice",
+        "lava": "Lava",
+        "water": "Water"
+      },
+      "events": {
+        "christmas": "Holiday",
+        "easter": "Easter",
+        "halloween": "Halloween",
+        "summer": "Summer"
+      },
+      "fireproofing": {
+        "flame": "Flame",
+        "scales": "Scales",
+        "sealant": "Sealant",
+        "title": "Fireproofing"
+      },
+      "fishingRods": "Fishing Rods",
+      "foundIn": "Found In",
+      "hookTrails": "Hook Trails",
+      "lifetimeCatches": "Lifetime Catches",
+      "locked": "Locked",
+      "maxed": "Maxed",
+      "maxWeight": "Max Weight",
+      "off": "Off",
+      "on": "On",
+      "page": "Page {{page}} / {{pages}}",
+      "pages": {
+        "catchesOne": "Catches I",
+        "catchesTwo": "Catches II",
+        "collections": "Collections",
+        "environments": "Environments",
+        "mythicals": "Mythicals",
+        "overview": "Overview",
+        "seasonal": "Seasonal",
+        "specialsOne": "Special Fish I",
+        "specialsTwo": "Special Fish II",
+        "yearly": "Yearly"
+      },
+      "rarities": {
+        "common": "Common",
+        "rare": "Rare",
+        "ultra_rare": "Ultra Rare",
+        "uncommon": "Uncommon"
+      },
+      "rarity": "Rarity",
+      "rodPerks": "Rod Perks",
+      "rodRequirements": {
+        "fishing_rod_3000": "Default fishing rod",
+        "fishing_rod_festive": "Holidays Fishing Reward",
+        "fishing_rod_haunted": "Halloween Fishing Reward",
+        "fishing_rod_inaugural_ice": "Holidays 2022 limited item",
+        "fishing_rod_overgrown": "Poisonous Potato, Golden Apple, Burnt Plant",
+        "fishing_rod_solar": "Summer Fishing Reward",
+        "fishing_rod_springtime": "Spring Fishing Reward",
+        "fishing_rod_zoologist": "Catch 1 squid during Creatures modifier"
+      },
+      "rods": "Rods",
+      "seasonalCatchTypes": "Seasonal Catch Types",
+      "share": "Share",
+      "sources": {
+        "anytime": "Anytime",
+        "christmas": "$t(stats.fishing.events.christmas)",
+        "denseVegetation": "Dense Vegetation",
+        "easter": "$t(stats.fishing.events.easter)",
+        "fishingFriday": "Fishing Friday",
+        "halloween": "$t(stats.fishing.events.halloween)",
+        "summer": "$t(stats.fishing.events.summer)"
+      },
+      "specialFish": "Special Fish",
+      "titles": {
+        "catches": "$t(stats.fishing.catches)",
+        "collections": "$t(stats.fishing.pages.collections)",
+        "environments": "$t(stats.fishing.pages.environments)",
+        "mythicals": "$t(stats.fishing.pages.mythicals)",
+        "overview": "Stats",
+        "seasonal": "$t(stats.fishing.pages.seasonal)",
+        "specials": "$t(stats.fishing.specialFish)",
+        "yearly": "$t(stats.fishing.pages.yearly)"
+      },
+      "totalCatches": "Total Catches",
+      "unlocked": "Unlocked"
+    }
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
