@@ -10,12 +10,15 @@ import {
   type Bazaar,
   type ItemMatch,
   type ItemsResource,
+  type MayorView,
   type PriceMap,
   type PriceView,
   type RawBazaar,
+  type RawElection,
   describeKey,
   parseBazaar,
   parseItemsResource,
+  toMayorView,
   toPriceView,
 } from "@statsify/skyblock";
 import { HttpService } from "@nestjs/axios";
@@ -36,11 +39,15 @@ const PRICES_KEY = "skyblock:prices";
 const LOCK_KEY = "skyblock:prices:lock";
 const BAZAAR_KEY = "skyblock:bazaar";
 const ITEMS_KEY = "skyblock:resource:items";
+const ELECTION_KEY = "skyblock:resource:election";
 const AUTOCOMPLETE_KEY = "skyblock:items:autocomplete";
 
 const PRICES_REFRESH = (await config("skyblock.pricesRefreshMinutes", { default: 15 })) * 60_000;
 const BAZAAR_REFRESH = 60_000;
 const ITEMS_REFRESH = 12 * 60 * 60_000;
+const ELECTION_REFRESH = 30 * 60_000;
+/** How long a failed refetch serves the stored copy, or nothing, before Hypixel is tried again. */
+export const SKYBLOCK_FAILED_FOR = 60_000;
 // Outlives the slowest rebuild, and holds the next pull back as long after each one, so a feed whose lastUpdated
 // stops moving isn't pulled back to back
 const LOCK_MS = 300_000;
@@ -99,6 +106,13 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     if (!raw) return;
     if (raw.lastUpdated !== this.items?.lastUpdated) this.items = parseItemsResource(raw);
     return this.items;
+  }
+
+  /** The mayor in office, from the keyless election resource. */
+  public getMayor(): Promise<MayorView | undefined> {
+    return this.getCopy(ELECTION_KEY, ELECTION_REFRESH, async () =>
+      toMayorView(await this.get<RawElection>("/v2/resources/skyblock/election"))
+    );
   }
 
   public async getPrice(id: string): Promise<PriceView> {
@@ -198,20 +212,23 @@ export class SkyBlockPricesService implements OnModuleDestroy {
 
   private async getCopy<T>(key: string, maxAge: number, fetch: () => Promise<T>): Promise<T | undefined> {
     let copy = this.copies.get(key) as Copy<T> | undefined;
+    if (copy && Date.now() - copy.fetchedAt <= maxAge) return copy.value;
 
-    if (!copy || Date.now() - copy.fetchedAt > maxAge) {
-      const [data, storedAt] = await this.redis.hmgetBuffer(key, "data", "fetchedAt");
-      const fetchedAt = Number(storedAt?.toString());
-      if (data && fetchedAt > (copy?.fetchedAt ?? 0)) {
-        copy = { value: await unzip<T>(data), fetchedAt };
-        this.copies.set(key, copy);
-      }
+    const [data, storedAt, failedAt] = await this.redis.hmgetBuffer(key, "data", "fetchedAt", "failedAt");
+    const fetchedAt = Number(storedAt?.toString());
+    if (data && fetchedAt > (copy?.fetchedAt ?? 0)) {
+      copy = { value: await unzip<T>(data), fetchedAt };
+      this.copies.set(key, copy);
     }
 
     if (copy && Date.now() - copy.fetchedAt <= maxAge) return copy.value;
+    if (Date.now() - Number(failedAt?.toString()) < SKYBLOCK_FAILED_FOR) return copy?.value;
 
     const refetch = this.singleflight.run(key, async () => {
-      const value = await fetch();
+      const value = await fetch().catch(async (error) => {
+        await this.redis.hset(key, "failedAt", Date.now());
+        throw error;
+      });
       const fetchedAt = Date.now();
       await this.redis.hset(key, { data: await zip(value), fetchedAt });
       this.copies.set(key, { value, fetchedAt });

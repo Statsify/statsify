@@ -270,3 +270,17 @@ export interface RawBazaar {
     }
   >;
 }
+
+interface RawPerk {
+  name: string;
+  description: string;
+}
+
+/** /v2/resources/skyblock/election (keyless), with only what the mayor's view reads. */
+export interface RawElection {
+  mayor: {
+    name: string;
+    perks: RawPerk[];
+    minister?: { name: string; perk: RawPerk };
+  };
+}
