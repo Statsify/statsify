@@ -8,8 +8,6 @@
 
 import minecraftData from "../../data/minecraft-data.json" with { type: "json" };
 import { type Unzipped, unzip } from "fflate";
-import type { Transform } from "./models.js";
-import { composeTransforms } from "./geometry.js";
 import { pngSize } from "./canvas.js";
 
 /** A pack zip, or a client jar, as bytes or a URL to fetch */
@@ -128,7 +126,6 @@ type LegacyTexture = string | null | { texture: string; position: number };
 interface Upgrade {
   textures: Record<string, LegacyTexture>;
   models: Record<string, string>;
-  gui?: Transform;
   drop: string[];
 }
 
@@ -136,8 +133,6 @@ const UPGRADES: Partial<Record<PackLayout, Upgrade>> = {
   legacy: {
     textures: minecraftData.legacyTextures,
     models: minecraftData.legacyModels,
-    // 1.8.9 turns every 3D item like a block in code, before the model's own gui transform
-    gui: { rotation: [30, 225, 0], scale: [0.625, 0.625, 0.625] },
     drop: ["assets/minecraft/blockstates/"],
   },
 };
@@ -148,11 +143,9 @@ const MODEL_FILE = /^assets\/minecraft\/models\/(.+)\.json$/;
 interface OlderModel {
   parent?: string;
   textures?: Record<string, string>;
-  elements?: unknown[];
-  display?: Record<string, Transform>;
 }
 
-function upgradeModel(file: Uint8Array, { textures, models, gui }: Upgrade) {
+function upgradeModel(file: Uint8Array, { textures, models }: Upgrade) {
   const model = parseJson<OlderModel>(file);
   const parent = model.parent?.replace("minecraft:", "");
 
@@ -169,14 +162,7 @@ function upgradeModel(file: Uint8Array, { textures, models, gui }: Upgrade) {
     renamed[key] = typeof target === "string" ? target : target.texture;
   }
 
-  const display =
-    gui && (model.elements || model.display?.gui)
-      ? { ...model.display, gui: composeTransforms(gui, model.display?.gui ?? {}) }
-      : model.display;
-
-  return encoder.encode(
-    JSON.stringify({ ...model, parent: parent && (models[parent] ?? parent), textures: renamed, display }),
-  );
+  return encoder.encode(JSON.stringify({ ...model, parent: parent && (models[parent] ?? parent), textures: renamed }));
 }
 
 function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade) {
