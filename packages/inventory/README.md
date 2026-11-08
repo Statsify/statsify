@@ -14,7 +14,7 @@ Swapping a stack swaps every icon, since cache keys start with the stack's hash.
 import { ItemRenderer, IconCache, PackStack, loadPack } from "@statsify/inventory";
 
 const stack = new PackStack([await loadPack(vanillaZip), await loadPack(userPack)]);
-const renderer = new ItemRenderer(stack, { cache: new IconCache() });
+const renderer = new ItemRenderer(stack, new IconCache());
 
 const icon = await renderer.render({ id: "minecraft:red_wool" }, 4); // a 64 × 64 canvas
 ```
@@ -22,9 +22,9 @@ const icon = await renderer.render({ id: "minecraft:red_wool" }, 4); // a 64 × 
 Older packs load as 26.3's layout, so they stack over a 26.3 pack the same way. A 1.8.9 pack (or
 the 1.8.9 client jar) gives its textures and models under their 26.3 names. Its 3D models get the
 turn 1.8.9 gave every 3D item in code, its compass and clock strips show the frame a slot shows,
-and its glint is tinted and moved the way 1.8 did it. Chests, heads and banners stay 26.3's, which
-draws them in code. A stack needs at least one 26.3 pack, which has the item model definitions.
-Another version needs only its tables in `UPGRADES` (`src/core/pack.ts`).
+and its glint is tinted and moved the way 1.8 did it. Chests and heads use 26.3's models, which
+are drawn in code. Banners aren't supported yet. A stack needs at least one 26.3 pack, which
+has the item model definitions.
 
 ## Items
 
