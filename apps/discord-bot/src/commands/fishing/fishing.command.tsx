@@ -12,7 +12,7 @@ import {
   CommandContext,
   type LocalizeFunction,
   type Page,
-  PaginateService,
+  paginate,
   PlayerArgument,
 } from "@statsify/discord";
 import { type FishingPageData, FishingProfile } from "./fishing.profile.js";
@@ -30,10 +30,7 @@ const seasonalPageLabel = (years: FishingSeasonalYear[]) =>
 
 @Command({ description: (t) => t("commands.fishing"), args: [PlayerArgument] })
 export class FishingCommand {
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
     const user = context.getUser();
@@ -101,7 +98,7 @@ export class FishingCommand {
       );
     };
 
-    return this.paginateService.paginate(
+    return paginate(
       context,
       pages.map((pageData, page): Page => {
         if (pageData.id === "yearly") {
