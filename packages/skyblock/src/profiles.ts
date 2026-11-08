@@ -27,11 +27,16 @@ function isNew(member: RawMember) {
   return member.leveling !== undefined && !member.leveling.experience && !skillXp && !inventoryOff;
 }
 
-/** Leaving a profile leaves the member behind with a deletion_notice; a pending invite lists them unconfirmed. */
+const isPending = (member: RawMember) => member.profile?.coop_invitation?.confirmed === false;
+
+/** Everyone who accepted their invite, ex-members included, as co-op sums count them (unverified). */
+export const coopMembers = (profile: RawProfile) => Object.entries(profile.members).filter(([, member]) => !isPending(member));
+
+/** Leaving a profile leaves the member behind with a deletion_notice. */
 export function isMember(profile: RawProfile, uuid: string) {
   const member = profile.members[uuid];
   if (!member) return false;
-  return member.profile?.deletion_notice === undefined && member.profile?.coop_invitation?.confirmed !== false;
+  return member.profile?.deletion_notice === undefined && !isPending(member);
 }
 
 /** NEU's level brackets, one every 40 levels from gray to dark red; level 0 takes the first. */
@@ -51,7 +56,7 @@ export function toProfileSummary(profile: RawProfile, uuid: string): ProfileSumm
     cuteName: profile.cute_name,
     gameMode: gameModeOf(profile),
     selected: profile.selected ?? false,
-    members: Object.entries(profile.members).map(([id, other]) => ({
+    members: coopMembers(profile).map(([id, other]) => ({
       uuid: id,
       removed: other.profile?.deletion_notice !== undefined,
     })),
