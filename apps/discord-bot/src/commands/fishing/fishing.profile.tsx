@@ -169,15 +169,17 @@ const eventStats = (years: FishingSeasonalYear[], events: readonly FishingEvent[
 const Overview = ({ t, fishing }: PageProps) => (
   <Table.table>
     <Table.ts title={`§b${t("stats.fishing.lifetimeCatches")}`}>
-      <Table.tr>
-        {[...FISHING_CATCH_TYPES, "mythical" as const].map((type) => (
-          <Table.td
-            title={t(`stats.fishing.catchTypes.${type}`)}
-            value={t(fishing[type])}
-            color={CATCH_TYPE_COLORS[type]}
-          />
-        ))}
-      </Table.tr>
+      {arrayGroup([...FISHING_CATCH_TYPES, "mythical" as const], 3).map((types) => (
+        <Table.tr>
+          {types.map((type) => (
+            <Table.td
+              title={t(`stats.fishing.catchTypes.${type}`)}
+              value={t(fishing[type])}
+              color={CATCH_TYPE_COLORS[type]}
+            />
+          ))}
+        </Table.tr>
+      ))}
     </Table.ts>
     <Table.ts title={`§b${t("stats.fishing.environmentBreakdown")}`}>
       {FISHING_ENVIRONMENTS.map((environment) => {
