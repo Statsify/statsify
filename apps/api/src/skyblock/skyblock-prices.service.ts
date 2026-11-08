@@ -126,7 +126,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
       return arrayGroup(reply ?? [], 2).map(([name, payload]) => ({ name, ...JSON.parse(payload) }));
     } catch (error) {
       this.logger.error(error);
-      return [];
+      throw new SkyBlockUnavailableException("market");
     }
   }
 
