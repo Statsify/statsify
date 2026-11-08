@@ -9,6 +9,7 @@
 import { getAccessories } from "./accessories.js";
 import { getApiSettings } from "../api-settings.js";
 import { getChocolate } from "./chocolate.js";
+import { getCollections } from "./collections.js";
 import { getCrimson } from "./crimson.js";
 import { gameModeOf } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
@@ -37,6 +38,7 @@ export type SectionNeed = "museum" | "garden" | "prices" | "items";
 export const SKYBLOCK_SECTIONS = [
   "accessories",
   "chocolate",
+  "collections",
   "crimson",
   "dungeons",
   "experiments",
@@ -90,6 +92,7 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
     },
   },
   chocolate: { needs: [], compute: async ({ member }) => getChocolate(member) },
+  collections: { needs: ["items"], compute: async ({ profile, member, items }) => getCollections(profile, member, items) },
   crimson: { needs: [], compute: async ({ member }) => getCrimson(member) },
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
   experiments: { needs: [], compute: async ({ member }) => getExperiments(member) },
