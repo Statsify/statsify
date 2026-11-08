@@ -11,6 +11,7 @@ import { InjectRedis } from "#redis";
 import { Injectable, type OnModuleInit } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Redis } from "ioredis";
+import { Singleflight } from "./singleflight.js";
 import { getItemIcon, setHeadSource } from "@statsify/skyblock/icons";
 import { lastValueFrom } from "rxjs";
 import type { IconSize } from "@statsify/skyblock/icon-key";
@@ -34,6 +35,7 @@ export interface Icon {
 @Injectable()
 export class SkyBlockIconsService implements OnModuleInit {
   private readonly logger = new Logger("SkyBlockIconsService");
+  private readonly singleflight = new Singleflight();
 
   public constructor(
     private readonly httpService: HttpService,
@@ -53,26 +55,28 @@ export class SkyBlockIconsService implements OnModuleInit {
     return { png: await icon.toBuffer("png"), standIn };
   }
 
-  private async getHead(hash: string): Promise<Buffer | undefined> {
-    const [stored, failed] = await Promise.all([this.redis.getBuffer(headKey(hash)), this.redis.exists(failedHeadKey(hash))]);
-    if (stored) return stored;
-    if (failed) return undefined;
+  private getHead(hash: string): Promise<Buffer | undefined> {
+    return this.singleflight.run(hash, async () => {
+      const [stored, failed] = await Promise.all([this.redis.getBuffer(headKey(hash)), this.redis.exists(failedHeadKey(hash))]);
+      if (stored) return stored;
+      if (failed) return undefined;
 
-    try {
-      const response = await lastValueFrom(
-        this.httpService.get<ArrayBuffer>(`https://textures.minecraft.net/texture/${hash}`, {
-          responseType: "arraybuffer",
-          timeout: HEAD_TIMEOUT,
-        })
-      );
+      try {
+        const response = await lastValueFrom(
+          this.httpService.get<ArrayBuffer>(`https://textures.minecraft.net/texture/${hash}`, {
+            responseType: "arraybuffer",
+            timeout: HEAD_TIMEOUT,
+          })
+        );
 
-      const skin = Buffer.from(response.data);
-      await this.redis.set(headKey(hash), skin, "EX", HEAD_SECONDS);
-      return skin;
-    } catch (error) {
-      this.logger.warn(`Couldn't load the head ${hash}: ${String(error)}`);
-      await this.redis.set(failedHeadKey(hash), "1", "EX", FAILED_HEAD_SECONDS);
-      return undefined;
-    }
+        const skin = Buffer.from(response.data);
+        await this.redis.set(headKey(hash), skin, "EX", HEAD_SECONDS);
+        return skin;
+      } catch (error) {
+        this.logger.warn(`Couldn't load the head ${hash}: ${String(error)}`);
+        await this.redis.set(failedHeadKey(hash), "1", "EX", FAILED_HEAD_SECONDS);
+        return undefined;
+      }
+    });
   }
 }
