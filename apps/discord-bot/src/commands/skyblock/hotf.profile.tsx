@@ -56,6 +56,7 @@ export const SkyBlockHotfProfile = ({
     />
   ));
 
+  // The tree's row isn't a Table.tr: its cells keep their own height, and the tree's box should be as tall as the whispers
   return (
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
@@ -63,14 +64,14 @@ export const SkyBlockHotfProfile = ({
         <Table.tr>
           <LevelBar title={t("skyblock.hotfLevel")} level={level} color="§a" t={t} />
         </Table.tr>
-        <Table.tr>
-          <div direction="column" width="100%">
+        <div width="100%">
+          <div direction="column" width="1/2">
             {pools}
           </div>
-          <box width="100%" location="center">
+          <box width="1/2" height="remaining" location="center">
             <PerkTree nodes={nodes} />
           </box>
-        </Table.tr>
+        </div>
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>
