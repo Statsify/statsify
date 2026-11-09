@@ -216,7 +216,7 @@ function fullProfile(uuid: string, cuteName: string) {
   return [new ActionRowBuilder([new ButtonBuilder().label((t) => t("skyblock.fullProfile")).style(ButtonStyle.Link).url(url)])];
 }
 
-// A new profile reads every API setting as off
+// A new profile reads every API setting as off and has no museum yet
 function notes(t: LocalizeFunction, view: SkyBlockProfileView, card: SkyBlockCard) {
   const off = view.newProfile ? [] : card.settings.filter((setting) => view.member.apiSettings[setting] === false);
   const apiOff = off.filter((setting) => setting !== "banking");
