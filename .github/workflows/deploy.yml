@@ -32,7 +32,7 @@ jobs:
         run: docker image prune -af --filter "label=org.opencontainers.image.source=https://github.com/Statsify/statsify" --filter "until=336h"
 
       - name: Build images
-        run: docker compose -f compose.prod.yml build
+        run: docker compose -f compose.prod.yml build --pull
 
       - name: Start containers
         run: docker compose -f compose.prod.yml up -d --remove-orphans --wait --wait-timeout 300
