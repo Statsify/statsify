@@ -35,4 +35,4 @@ jobs:
         run: docker compose -f compose.prod.yml build --pull
 
       - name: Start containers
-        run: docker compose -f compose.prod.yml up -d --remove-orphans --wait --wait-timeout 300
+        run: docker compose -f compose.prod.yml up -d --remove-orphans --wait
