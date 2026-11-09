@@ -97,6 +97,8 @@ export class McInventory extends HTMLElement {
       this.unhover();
       this.hover(event);
     });
+    // A touch the browser takes over for a scroll ends in pointercancel
+    this.canvas.addEventListener("pointercancel", () => this.unhover());
     this.canvas.addEventListener("pointerleave", (event) => {
       if (event.pointerType !== "mouse") return;
       tooltipOverlay().hide();
