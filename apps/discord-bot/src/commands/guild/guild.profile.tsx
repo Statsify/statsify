@@ -150,10 +150,10 @@ const GuildOverallPage = ({
     locale: t.locale,
   });
   const preferredGames = guild.preferredGames.map((g) => gameIcons[g]);
-  // A guild can prefer every game, and one row of them would set the card's width
+  const preferredGameRowCount = Math.ceil(preferredGames.length / MAX_GAMES_PER_ROW);
   const preferredGameRows = arrayGroup(
     preferredGames,
-    Math.ceil(preferredGames.length / Math.ceil(preferredGames.length / MAX_GAMES_PER_ROW))
+    Math.ceil(preferredGames.length / preferredGameRowCount)
   );
   const formattedRanking = ranking ? ` §8[§7#§f${t(ranking)}§8]` : "";
 
