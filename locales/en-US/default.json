@@ -502,7 +502,7 @@
       "description": "SkyBlock stats can't be loaded right now.",
       "description_budget": "SkyBlock lookups are paused for a few minutes to keep the bot's Hypixel key under its limit.",
       "description_hypixel": "Hypixel's API didn't answer, and there's no saved copy of this player's profiles to show instead.",
-      "description_market": "SkyBlock prices are loading for the first time. They're ready shortly.",
+      "description_market": "SkyBlock prices aren't ready right now. Try again shortly.",
       "description_throttled": "Hypixel is limiting the bot's requests, and there's no saved copy of this player's profiles to show instead.",
       "retry": "Try again <t:{{time}}:R>.",
       "title": "SkyBlock Unavailable"
@@ -663,7 +663,7 @@
     "mostAccessoryPower": "Most Accessory Power",
     "mostDamage": "Most Damage",
     "mostXp": "Most SkyBlock XP",
-    "museumNotCounted": "Networth doesn't count the museum, since it couldn't be loaded for this player.",
+    "museumNotCounted": "Networth doesn't count the museum, since Hypixel didn't send one for this player.",
     "networth": "Networth",
     "noAccessories": "No accessories yet.",
     "noBinListing": "No BIN listing",
