@@ -93,15 +93,15 @@ export class McInventory extends HTMLElement {
 
     this.canvas.addEventListener("pointermove", (event) => this.hover(event));
     this.canvas.addEventListener("pointerdown", (event) => {
-      // The overlay hides on any pointerdown that reaches the document
-      event.stopPropagation();
       if (event.pointerType === "mouse") return;
-      this.hovered = -1;
+      this.unhover();
       this.hover(event);
     });
+    // A touch the browser takes over for a scroll ends in pointercancel
+    this.canvas.addEventListener("pointercancel", () => this.unhover());
     this.canvas.addEventListener("pointerleave", (event) => {
-      if (event.pointerType !== "mouse") return;
-      tooltipOverlay().hide();
+      // A lifted finger leaves too, which would close the tooltip its tap opened
+      if (event.pointerType === "touch") return;
       this.unhover();
     });
   }
@@ -112,6 +112,7 @@ export class McInventory extends HTMLElement {
 
   public set pack(pack: PackStack | undefined) {
     this.packStack = pack;
+    this.unhover();
     void this.draw();
   }
 
@@ -121,6 +122,7 @@ export class McInventory extends HTMLElement {
 
   public set slots(slots: (ItemStack | undefined)[]) {
     this.items = slots;
+    this.unhover();
     void this.draw();
   }
 
@@ -140,8 +142,10 @@ export class McInventory extends HTMLElement {
   }
 
   public unhover() {
+    if (this.hovered < 0) return;
     this.hovered = -1;
     this.show();
+    tooltipOverlay().release(this);
   }
 
   private get size(): InventorySize {
@@ -163,7 +167,11 @@ export class McInventory extends HTMLElement {
 
     const { renderer, tooltips, size } = this.view;
     const bounds = this.canvas.getBoundingClientRect();
-    const slot = slotAt(size, (event.clientX - bounds.left) / size.scale, (event.clientY - bounds.top) / size.scale);
+    const slot = slotAt(
+      size,
+      (event.clientX - bounds.left) / (size.scale * (bounds.width / this.canvas.width)),
+      (event.clientY - bounds.top) / (size.scale * (bounds.height / this.canvas.height)),
+    );
     const overlay = tooltipOverlay();
 
     if (slot === this.hovered) {

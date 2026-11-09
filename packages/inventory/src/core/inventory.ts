@@ -102,9 +102,17 @@ export class InventoryRenderer {
     return drawTooltip(this.text, tooltipLines(item, this.names), scale, tick);
   }
 
-  /** Whether an item's icon changes from tick to tick */
+  /** Whether an item's icon changes from tick to tick, or false when the pack can't draw it */
   public animates(item: ItemStack) {
-    return this.itemRenderer.animates(item);
+    if (this.broken.has(item)) return false;
+
+    try {
+      return this.itemRenderer.animates(item);
+    } catch (error) {
+      this.broken.add(item);
+      console.error(error);
+      return false;
+    }
   }
 
   /** An item's icon at a game tick, or undefined when the pack can't draw it */

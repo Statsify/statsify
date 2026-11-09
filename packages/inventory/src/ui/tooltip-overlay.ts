@@ -26,11 +26,9 @@ class TooltipOverlay {
 
     document.body.append(this.canvas);
 
-    // A tap opens a tooltip until the next tap anywhere else
-    document.addEventListener("pointerdown", () => {
-      this.hide();
-      this.owner?.unhover();
-      this.owner = undefined;
+    // A tap opens a tooltip until the next tap outside its inventory
+    document.addEventListener("pointerdown", (event) => {
+      if (this.owner && !event.composedPath().includes(this.owner)) this.owner.unhover();
     });
   }
 
@@ -60,6 +58,13 @@ class TooltipOverlay {
 
   public hide() {
     this.canvas.style.display = "none";
+  }
+
+  /** Hides the tooltip if `owner` shows it */
+  public release(owner: McInventory) {
+    if (owner !== this.owner) return;
+    this.hide();
+    this.owner = undefined;
   }
 }
 
