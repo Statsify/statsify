@@ -64,16 +64,19 @@ function failure(error: unknown, deadline: AbortSignal): ActionResult<never> {
 }
 
 /**
- * Asks the API to refresh a known player from Hypixel, within the per-address and global budgets. `auto`: the page's
- * own update once it opened, which the API refuses sooner.
+ * Asks the API to refresh a known player from Hypixel once the visitor has passed Turnstile, within the per-address and
+ * global budgets. `auto`: the page's own update once it opened, which needs no token since the API refuses it sooner.
  */
 export const refreshPlayer = createServerFn({ method: "POST" })
-  .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.boolean().optional() }))
+  .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.boolean().optional(), token: z.string().max(4096).optional() }))
   .handler(async ({ data }): Promise<ActionResult<PlayerPage>> => {
     const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
+    const ip = clientIp();
+
+    if (!data.auto && !(await verifyTurnstile(data.token, ip))) return { ok: false, code: "VERIFICATION" };
 
     try {
-      return { ok: true, data: await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: clientIp(), auto: data.auto }, { signal }) };
+      return { ok: true, data: await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: ip, auto: data.auto }, { signal }) };
     } catch (error) {
       return failure(error, signal);
     }
@@ -81,12 +84,15 @@ export const refreshPlayer = createServerFn({ method: "POST" })
 
 /** Refreshes a known player like `refreshPlayer`, then hands back their Bingo boards. */
 export const refreshBingo = createServerFn({ method: "POST" })
-  .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.boolean().optional() }))
+  .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.boolean().optional(), token: z.string().max(4096).optional() }))
   .handler(async ({ data }): Promise<ActionResult<BingoPlayer>> => {
     const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
+    const ip = clientIp();
+
+    if (!data.auto && !(await verifyTurnstile(data.token, ip))) return { ok: false, code: "VERIFICATION" };
 
     try {
-      await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: clientIp(), auto: data.auto }, { signal });
+      await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: ip, auto: data.auto }, { signal });
       return { ok: true, data: await rpcServerClient.player.bingo({ uuid: data.uuid }, { signal }) };
     } catch (error) {
       return failure(error, signal);
@@ -103,13 +109,17 @@ export const refreshGame = createServerFn({ method: "POST" })
       submode: z.string().min(1).max(32).optional(),
       period: z.string().min(1).max(32).optional(),
       auto: z.boolean().optional(),
+      token: z.string().max(4096).optional(),
     })
   )
   .handler(async ({ data }): Promise<ActionResult<GamePage>> => {
     const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
+    const ip = clientIp();
+
+    if (!data.auto && !(await verifyTurnstile(data.token, ip))) return { ok: false, code: "VERIFICATION" };
 
     try {
-      await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: clientIp(), auto: data.auto }, { signal });
+      await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: ip, auto: data.auto }, { signal });
       const { uuid, game, mode, submode, period } = data;
       return { ok: true, data: await rpcServerClient.player.game({ uuid, game, mode, submode, period }, { signal }) };
     } catch (error) {
