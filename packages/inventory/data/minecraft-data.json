@@ -1398,6 +1398,7 @@
     "blocks/wool_colored_silver": "block/light_gray_wool",
     "blocks/wool_colored_white": "block/white_wool",
     "blocks/wool_colored_yellow": "block/yellow_wool",
+    "entity/banner_base": "entity/banner/banner_base",
     "entity/steve": "entity/player/wide/steve",
     "items/apple": "item/apple",
     "items/apple_golden": "item/golden_apple",
