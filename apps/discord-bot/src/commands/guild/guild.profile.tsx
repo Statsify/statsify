@@ -378,59 +378,35 @@ const formatGuildAchievement = (achievement: Progression, t: LocalizeFunction) =
 const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
   const { achievements } = guild;
 
-  const prestige = (
+  const achievementCells = (
+    [
+      ["Prestige", achievements.prestigeTier, achievements.prestigeProgression],
+      ["Experience Kings", achievements.experienceKingsTier, achievements.experienceKingsProgression],
+      ["Winners", achievements.winnersTier, achievements.winnersProgression],
+      ["Family", achievements.familyTier, achievements.familyProgression],
+    ] as const
+  ).map(([name, tier, progression]) => (
     <Table.td
-      title={formatGuildAchievementTitle("Prestige", achievements.prestigeTier)}
-      value={formatGuildAchievement(achievements.prestigeProgression, t)}
+      title={formatGuildAchievementTitle(name, tier)}
+      value={formatGuildAchievement(progression, t)}
       color="§e"
     />
-  );
-  const experienceKings = (
-    <Table.td
-      title={formatGuildAchievementTitle("Experience Kings", achievements.experienceKingsTier)}
-      value={formatGuildAchievement(achievements.experienceKingsProgression, t)}
-      color="§e"
-    />
-  );
-  const winners = (
-    <Table.td
-      title={formatGuildAchievementTitle("Winners", achievements.winnersTier)}
-      value={formatGuildAchievement(achievements.winnersProgression, t)}
-      color="§e"
-    />
-  );
-  const family = (
-    <Table.td
-      title={formatGuildAchievementTitle("Family", achievements.familyTier)}
-      value={formatGuildAchievement(achievements.familyProgression, t)}
-      color="§e"
-    />
-  );
+  ));
 
   const rankNames = guild.ranks.map((rank) => `${rank.name}${rank.tag ? ` [${rank.tag}]` : ""}`);
-  // Rank cells share one width; two a row only when three of the widest would set the card's width
   const rankWidth = Math.max(...rankNames.map((name) => useComponentWidth(<box><text>{name}</text></box>)));
-  const achievementWidth = Math.max(
-    ...[prestige, experienceKings, winners, family].map((cell) => useComponentWidth(cell))
-  );
+  const achievementWidth = Math.max(...achievementCells.map((cell) => useComponentWidth(cell)));
   const nameWidth = useComponentWidth(<box><text>§^4^{guild.nameFormatted}</text></box>);
-  const ranksGroups = arrayGroup(
-    rankNames,
-    3 * rankWidth > Math.max(2 * achievementWidth, nameWidth) ? 2 : 3
-  );
+  const widthWithoutRanks = Math.max(2 * achievementWidth, nameWidth);
+  const ranksGroups = arrayGroup(rankNames, 3 * rankWidth > widthWithoutRanks ? 2 : 3);
 
   return (
     <>
       <GuildBlock width="100%" title="Guild Achievements">
         <Table.table>
-          <Table.tr>
-            {prestige}
-            {experienceKings}
-          </Table.tr>
-          <Table.tr>
-            {winners}
-            {family}
-          </Table.tr>
+          {arrayGroup(achievementCells, 2).map((row) => (
+            <Table.tr>{row}</Table.tr>
+          ))}
         </Table.table>
       </GuildBlock>
       <GuildBlock width="100%" title="Guild Quests">
