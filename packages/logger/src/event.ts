@@ -109,12 +109,9 @@ export const addRequestAttributes = (counts: Partial<Record<CountAttribute, numb
   );
 };
 
-export const setRequestError = (
-  error: unknown,
-  details: { code?: string | number; retryable?: boolean } = {}
-) => {
-  captureError(error);
+type ErrorDetails = { code?: string | number; retryable?: boolean };
 
+export const setUncapturedRequestError = (error: unknown, details: ErrorDetails = {}) => {
   setRequestAttributes({
     "statsify.outcome": "error",
     "error.type": error instanceof Error ? error.name : typeof error,
@@ -122,6 +119,11 @@ export const setRequestError = (
     "statsify.error.code": details.code,
     "statsify.error.retryable": details.retryable,
   });
+};
+
+export const setRequestError = (error: unknown, details: ErrorDetails = {}) => {
+  captureError(error);
+  setUncapturedRequestError(error, details);
 };
 
 const recordError = (error: unknown) => {

@@ -25,6 +25,7 @@ import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
+import { setUncapturedRequestError } from "@statsify/logger";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
@@ -50,12 +51,12 @@ export class ApiService extends StatsifyApiService {
     return super
       .getCachedPlayer(input, User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE)
       .catch((err) => {
-        if (!err.response || !err.response.data) throw this.unknownError();
+        if (!err.response || !err.response.data) throw this.unknownError(err);
         const error = err.response.data as PlayerNotFoundException;
 
         if (error.message === "player") throw this.missingPlayer(type, tag);
 
-        throw this.unknownError();
+        throw this.unknownError(err);
       });
   }
 
@@ -68,7 +69,7 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super.getPlayerSession(input, userUuid).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
+      if (!err.response || !err.response.data) throw this.unknownError(err);
       const error = err.response.data as PlayerNotFoundException | SessionNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
@@ -82,7 +83,7 @@ export class ApiService extends StatsifyApiService {
         );
       }
 
-      throw this.unknownError();
+      throw this.unknownError(err);
     });
   }
 
@@ -97,7 +98,7 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super.getStatus(input).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
+      if (!err.response || !err.response.data) throw this.unknownError(err);
       const error = err.response.data as
         | StatusNotFoundException |
         PlayerNotFoundException;
@@ -116,7 +117,7 @@ export class ApiService extends StatsifyApiService {
         );
       }
 
-      throw this.unknownError();
+      throw this.unknownError(err);
     });
   }
 
@@ -151,7 +152,7 @@ export class ApiService extends StatsifyApiService {
     }
 
     return super.getGuild(input, resolvedType).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
+      if (!err.response || !err.response.data) throw this.unknownError(err);
 
       const error = err.response.data as GuildNotFoundException | PlayerNotFoundException;
 
@@ -180,7 +181,7 @@ export class ApiService extends StatsifyApiService {
 
       if (error.message === "player") throw this.missingPlayer(playerType, input);
 
-      throw this.unknownError();
+      throw this.unknownError(err);
     });
   }
 
@@ -217,12 +218,12 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super.getPlayerSkinTextures(input).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
+      if (!err.response || !err.response.data) throw this.unknownError(err);
 
       const error = err.response.data as PlayerNotFoundException;
       if (error.message === "player") throw this.missingPlayer(type, tag);
 
-      throw this.unknownError();
+      throw this.unknownError(err);
     });
   }
 
@@ -310,7 +311,8 @@ export class ApiService extends StatsifyApiService {
     );
   }
 
-  public unknownError() {
+  public unknownError(error: unknown) {
+    setUncapturedRequestError(error);
     return new ErrorMessage("errors.unknown");
   }
 

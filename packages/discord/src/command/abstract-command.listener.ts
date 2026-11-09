@@ -18,7 +18,13 @@ import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
 import { type IMessage, Message } from "#messages";
 import { Interaction, type InteractionAttachment } from "#interaction";
-import { Logger, setRequestAttributes, settleAll, withRequestEvent } from "@statsify/logger";
+import {
+  Logger,
+  getRequestAttributes,
+  setRequestAttributes,
+  settleAll,
+  withRequestEvent,
+} from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
@@ -163,7 +169,7 @@ export abstract class AbstractCommandListener {
     } catch (err) {
       if (!(err instanceof Message)) throw err;
 
-      setRequestAttributes({ "statsify.outcome": "message" });
+      setRequestAttributes({ "statsify.outcome": getRequestAttributes()["statsify.outcome"] ?? "message" });
       return context.reply(err);
     }
   }
