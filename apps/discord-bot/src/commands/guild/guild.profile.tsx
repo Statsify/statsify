@@ -25,6 +25,8 @@ import { arrayGroup, wordGroup } from "@statsify/util";
 import { ratio } from "@statsify/math";
 import type { Image } from "skia-canvas";
 
+const MAX_GAMES_PER_ROW = 13;
+
 const LINK_REGEX =
   /https?:\/\/(www\.)?[\w#%+.:=@~-]{1,256}\.[\d()A-Za-z]{1,6}\b([\w#%&()+./:=?@~-]*)|[\w#%+.:=@~-]{1,256}\.[\d()A-Za-z]{1,6}\b([\w#%&()+./:=?@~-]*)/g;
 
@@ -148,6 +150,11 @@ const GuildOverallPage = ({
     locale: t.locale,
   });
   const preferredGames = guild.preferredGames.map((g) => gameIcons[g]);
+  // A guild can prefer every game, and one row of them would set the card's width
+  const preferredGameRows = arrayGroup(
+    preferredGames,
+    Math.ceil(preferredGames.length / Math.ceil(preferredGames.length / MAX_GAMES_PER_ROW))
+  );
   const formattedRanking = ranking ? ` §8[§7#§f${t(ranking)}§8]` : "";
 
   return (
@@ -204,19 +211,23 @@ const GuildOverallPage = ({
       </GuildBlock>
       <If condition={preferredGames.length > 0}>
         <GuildBlock title="Preferred Games" width="100%">
-          <box {...box} direction="row">
-            {preferredGames.map((g, i) => (
-              <img
-                image={g}
-                width={32}
-                height={32}
-                margin={{
-                  top: 4,
-                  bottom: 4,
-                  left: i === 0 ? 0 : 4,
-                  right: i === preferredGames.length - 1 ? 0 : 4,
-                }}
-              />
+          <box {...box}>
+            {preferredGameRows.map((row) => (
+              <div align="center">
+                {row.map((g, i) => (
+                  <img
+                    image={g}
+                    width={32}
+                    height={32}
+                    margin={{
+                      top: 4,
+                      bottom: 4,
+                      left: i === 0 ? 0 : 4,
+                      right: i === row.length - 1 ? 0 : 4,
+                    }}
+                  />
+                ))}
+              </div>
             ))}
           </box>
         </GuildBlock>
