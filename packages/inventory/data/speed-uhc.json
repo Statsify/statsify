@@ -240,6 +240,15 @@
         "id": "minecraft:cooked_beef",
         "count": 4
       }
+    ],
+    "default": [
+      {
+        "id": "minecraft:oak_planks",
+        "count": 6
+      },
+      {
+        "id": "minecraft:iron_chestplate"
+      }
     ]
   }
 }
