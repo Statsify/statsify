@@ -100,8 +100,8 @@ export class McInventory extends HTMLElement {
     // A touch the browser takes over for a scroll ends in pointercancel
     this.canvas.addEventListener("pointercancel", () => this.unhover());
     this.canvas.addEventListener("pointerleave", (event) => {
-      if (event.pointerType !== "mouse") return;
-      tooltipOverlay().hide();
+      // A lifted finger leaves too, which would close the tooltip its tap opened
+      if (event.pointerType === "touch") return;
       this.unhover();
     });
   }
