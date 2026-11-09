@@ -184,7 +184,7 @@ export function getSkyBlockBackground() {
   return getBackground("hypixel", "overall");
 }
 
-// A new profile reads every API setting as off
+// A new profile reads every API setting as off and has no museum yet
 function notes(t: LocalizeFunction, view: SkyBlockProfileView, card: SkyBlockCard) {
   const off = view.newProfile ? [] : card.settings.filter((setting) => view.member.apiSettings[setting] === false);
   const apiOff = off.filter((setting) => setting !== "banking");
@@ -195,7 +195,7 @@ function notes(t: LocalizeFunction, view: SkyBlockProfileView, card: SkyBlockCar
       t("skyblock.apiOffNote", { settings: apiOff.map((setting) => t(`skyblock.apiSettings.${setting}`)).join(", ") }) :
       "",
     off.includes("banking") ? t("skyblock.bankingOffNote") : "",
-    view.member.networth?.museumIncluded === false ? t("skyblock.museumNotCounted") : "",
+    !view.newProfile && view.member.networth?.museumIncluded === false ? t("skyblock.museumNotCounted") : "",
   ]
     .filter(Boolean)
     .join("\n");

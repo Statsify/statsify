@@ -26,7 +26,7 @@ export class ItemArgument extends AbstractArgument {
     const query = context.option<string>(this.name, "");
     if (!query) return [];
 
-    const items = await Container.get(ApiService).getSkyBlockItems(query);
+    const items = await Container.get(ApiService).getSkyBlockItems(query).catch(() => []);
     return items.map(({ id, name }) => ({ name, value: id }));
   }
 }
