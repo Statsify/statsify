@@ -23,7 +23,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { ResultCard } from "@statsify/contract";
 
-/** The `/player?q=` result grid: one column on phones, two from tablets up. */
+/**
+ * The `/player?q=` result grid: one column on phones, two from tablets up, three on wide screens. One or two cards don't
+ * fill a wide row, so they sit under the search box at its width instead of at the page's left edge.
+ */
 export function ResultCards({ cards, query }: { cards: ResultCard[]; query: string }) {
   const { t } = useTranslation();
 
@@ -46,7 +49,7 @@ export function ResultCards({ cards, query }: { cards: ResultCard[]; query: stri
   }
 
   return (
-    <ul className={cn("w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3", BOX_GAP)}>
+    <ul className={cn("w-full grid grid-cols-1 md:grid-cols-2", cards.length < 3 ? "max-w-200" : "xl:grid-cols-3", BOX_GAP)}>
       {cards.map((card) => (
         <li key={card.uuid}>
           <ResultCardView card={card} />
