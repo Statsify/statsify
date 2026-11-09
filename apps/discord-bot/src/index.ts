@@ -19,10 +19,9 @@ import { join } from "node:path";
 const directory = import.meta.dirname;
 
 const logger = new Logger("discord-bot");
-const handleError = logger.error.bind(logger);
 
-process.on("uncaughtException", handleError);
-process.on("unhandledRejection", handleError);
+process.on("uncaughtException", (error) => logger.error(error));
+process.on("unhandledRejection", (reason) => logger.error(reason));
 
 await Promise.all(
   [I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init())
