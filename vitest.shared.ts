@@ -10,14 +10,15 @@ import { defineConfig } from "vitest/config";
 import { readFile } from "node:fs/promises";
 import { swc } from "./vite.swc.js";
 
-async function getSwcrc(path?: string) {
-  const config = await readFile(path ?? "./.swcrc", "utf8").then(JSON.parse);
+async function getSwcrc() {
+  // Next to this file, not the working directory, so running vitest from a package folder works
+  const config = await readFile(new URL(".swcrc", import.meta.url), "utf8").then(JSON.parse);
   delete config["$schema"];
   return config;
 }
 
-export async function config(path?: string) {
-  const swcrc = await getSwcrc(path);
+export async function config() {
+  const swcrc = await getSwcrc();
 
   return defineConfig({
     optimizeDeps: {
