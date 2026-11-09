@@ -21,7 +21,10 @@ x-app: &app
 services:
   api:
     <<: *app
-    image: ghcr.io/statsify/statsify:api-${TAG:?}
+    image: statsify-api:${TAG:?}
+    build:
+      args:
+        APP: api
     volumes:
       - /home/config.js:/app/config.js:ro
       # The same path as api.mediaRoot in the config
@@ -29,17 +32,29 @@ services:
 
   discord-bot:
     <<: *app
-    image: ghcr.io/statsify/statsify:discord-bot-${TAG:?}
+    image: statsify-discord-bot:${TAG:?}
+    build:
+      args:
+        APP: discord-bot
 
   support-bot:
     <<: *app
-    image: ghcr.io/statsify/statsify:support-bot-${TAG:?}
+    image: statsify-support-bot:${TAG:?}
+    build:
+      args:
+        APP: support-bot
 
   verify-server:
     <<: *app
-    image: ghcr.io/statsify/statsify:verify-server-${TAG:?}
+    image: statsify-verify-server:${TAG:?}
+    build:
+      args:
+        APP: verify-server
 
   leaderboard-limiting:
     <<: *app
-    image: ghcr.io/statsify/statsify:scripts-${TAG:?}
+    image: statsify-scripts:${TAG:?}
+    build:
+      args:
+        APP: scripts
     command: node src/limit-redis.js
