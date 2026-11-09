@@ -1,5 +1,5 @@
 FROM node:24.22.1-bookworm AS base
-ENV CI=true TURBO_TELEMETRY_DISABLED=1
+ENV CI=true TURBO_TELEMETRY_DISABLED=1 PNPM_HOME=/pnpm
 RUN --mount=type=bind,source=package.json,target=/tmp/package.json \
   npm install -g "$(node -p 'require("/tmp/package.json").packageManager')"
 WORKDIR /app
@@ -7,30 +7,34 @@ WORKDIR /app
 FROM base AS prune
 ARG APP
 COPY . .
-RUN pnpm dlx "turbo@$(node -p 'require("./package.json").devDependencies.turbo')" prune "$APP" --docker
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store --mount=type=cache,id=pnpm-cache,target=/root/.cache/pnpm \
+  pnpm dlx "turbo@$(node -p 'require("./package.json").devDependencies.turbo')" prune "$APP" --docker
 
 FROM base AS build
-ARG APP
 ENV PATH="/root/.cargo/bin:$PATH"
+# Before ARG APP and the package files, so every app shares this layer and dependency changes don't reinstall Rust
+RUN curl -fsSL https://sh.rustup.rs | sh -s -- -y --profile minimal --target wasm32-unknown-unknown \
+  && curl -fsSL https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
+ARG APP
 COPY --from=prune /app/out/json/ .
-RUN if [ -e packages/skin-renderer ]; then \
-    curl -fsSL https://sh.rustup.rs | sh -s -- -y --profile minimal --target wasm32-unknown-unknown \
-    && curl -fsSL https://rustwasm.github.io/wasm-pack/installer/init.sh | sh; \
-  fi
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store pnpm install --frozen-lockfile
 COPY --from=prune /app/out/full/ .
 # turbo prune leaves out root files, like these and the locales
 COPY .swcrc Cargo.toml ./
-RUN pnpm turbo run build --filter="$APP"
+RUN --mount=type=cache,id=cargo-registry,target=/root/.cargo/registry \
+  --mount=type=cache,id=cargo-target,target=/app/target \
+  --mount=type=cache,id=wasm-pack,target=/root/.cache/.wasm-pack \
+  pnpm turbo run build --filter="$APP"
 # --prod over the full install unlinks dev dependencies but leaves them in node_modules
-RUN rm -rf node_modules apps/*/node_modules packages/*/node_modules target .turbo apps/*/.turbo packages/*/.turbo \
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+  rm -rf node_modules apps/*/node_modules packages/*/node_modules .turbo apps/*/.turbo packages/*/.turbo \
   && pnpm install --frozen-lockfile --prod --offline \
   && mv node_modules /node_modules
 COPY locales locales
 
 FROM base AS assets
 COPY . .
-RUN pnpm install --frozen-lockfile \
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store pnpm install --frozen-lockfile \
   && pnpm turbo run build --filter=@statsify/assets \
   && pnpm scripts blur-backgrounds && rm -rf assets/private/backgrounds
 
