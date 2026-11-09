@@ -675,15 +675,16 @@ for (const [index, screen] of screens.entries()) {
   };
 }
 
-/** A menu's first screen that finished loading (it shows Go Back), by its title and the page it goes back to */
-function menuScreen(title: string, back?: string) {
-  const index = screens.findIndex(
-    (shown) =>
-      plain(shown.title) === title &&
-      shown.slots.some(
-        ({ item }) => item && plain(item.name) === "Go Back" && (back === undefined || plain(item.lore[0] ?? "") === `To ${back}`),
-      ),
+/** Whether a screen is a menu that finished loading (it shows Go Back), by its title and the page it goes back to */
+const isMenu = (shown: Screen, title: string, back?: string) =>
+  plain(shown.title) === title &&
+  shown.slots.some(
+    ({ item }) => item && plain(item.name) === "Go Back" && (back === undefined || plain(item.lore[0] ?? "") === `To ${back}`),
   );
+
+/** A menu's first screen that finished loading */
+function menuScreen(title: string, back?: string) {
+  const index = screens.findIndex((shown) => isMenu(shown, title, back));
   if (index === -1) missing.push(back ? `${back} > ${title}` : title);
   return index;
 }
@@ -822,8 +823,11 @@ const kart: Record<string, KartPart[]> = {};
 
 for (const [type, title] of Object.entries(KART_SELECTORS)) {
   const parts: KartPart[] = [];
+  const suffix = title.replace(/^(\w+) Selector$/, " $1");
 
-  for (const item of menu(title)) {
+  // A selector lists only the parts the dumping account owns, so a later screen can show more
+  const shown = screens.filter((screen) => isMenu(screen, title)).flatMap(pickerEntries);
+  for (const item of shown.filter((item) => plain(item.name).endsWith(suffix))) {
     // Named <name> <rarity> <type>, like Eternal Awesome Engine
     const rarity = plain(item.name).split(" ").at(-2)!.toUpperCase();
     // Each attribute's bar is five >, green up to its level: §a>§a>§4>§4>§4>§r  Top speed
@@ -839,6 +843,7 @@ for (const [type, title] of Object.entries(KART_SELECTORS)) {
   }
 
   if (parts.length > 0) kart[type] = parts;
+  else missing.push(title);
 }
 
 // The Speed UHC Shop's Kits page lists each kit's items by name, like "Stick x2", with
@@ -890,6 +895,12 @@ if (kitsPage !== -1) {
     menu("Kits", "Speed UHC Shop").map((kit) => [kitKey(plain(kit.name)), speedUhcKit(kit)]),
   );
 }
+
+// The shop leaves out the free Default kit, which only the Gear Selector in a game lists (Speed UHC
+// only has Normal games)
+const gearSelector = screens.find((screen) => plain(screen.title) === "Gear Selector");
+const defaultKit = gearSelector && pickerEntries(gearSelector).find((item) => plain(item.name) === "Default");
+if (defaultKit && speedUhc.normal) speedUhc.normal.default = speedUhcKit(defaultKit);
 
 const count = (menus: Record<string, object>) => Object.values(menus).reduce((sum, items) => sum + Object.keys(items).length, 0);
 

@@ -103,6 +103,24 @@
           "§5§o§a>§4>§4>§4>§4>§r  Traction"
         ]
       }
+    },
+    {
+      "rarity": "AWESOME",
+      "attributes": {
+        "START_POSITION": 1,
+        "HANDLING": 1,
+        "TRACTION": 1
+      },
+      "item": {
+        "id": "minecraft:minecart",
+        "name": "§a§nAuxiliary Awesome Frame",
+        "tooltip": [
+          "§5§o             ❼",
+          "§5§o§a>§4>§4>§4>§4>§r  Start position",
+          "§5§o§a>§4>§4>§4>§4>§r  Handling",
+          "§5§o§a>§4>§4>§4>§4>§r  Traction"
+        ]
+      }
     }
   ]
 }
