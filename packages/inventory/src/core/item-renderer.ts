@@ -40,6 +40,11 @@ const FLAG_POSE: Transformation = {
 
 const PATTERNED = new Set(["minecraft:banner", "minecraft:shield"]);
 
+const entityTexture = (folder: string, id: string) => {
+  const [namespace, name] = namespaced(id).split(":");
+  return `${namespace}:entity/${folder}/${name}`;
+};
+
 const GLINT = "misc/enchanted_glint_item";
 const LEGACY_GLINT = "misc/enchanted_item_glint";
 
@@ -406,8 +411,7 @@ export class ItemRenderer {
 
     // Ender and trapped chests are chests with another texture
     if (special.type === "minecraft:chest" && special.texture) {
-      const [namespace, name] = namespaced(special.texture).split(":");
-      const texture = await this.textures.get(`${namespace}:entity/chest/${name}`);
+      const texture = await this.textures.get(entityTexture("chest", special.texture));
 
       return [
         place([
@@ -419,8 +423,7 @@ export class ItemRenderer {
     }
 
     if (special.type === "minecraft:shulker_box" && special.texture) {
-      const [namespace, name] = namespaced(special.texture).split(":");
-      const texture = await this.textures.get(`${namespace}:entity/shulker/${name}`);
+      const texture = await this.textures.get(entityTexture("shulker", special.texture));
 
       return [
         place([
@@ -493,8 +496,7 @@ export class ItemRenderer {
 
     return Promise.all(
       layers.map(async ({ pattern, color }) => {
-        const [namespace, name] = namespaced(pattern).split(":");
-        const texture = await this.textures.get(`${namespace}:entity/${folder}/${name}`);
+        const texture = await this.textures.get(entityTexture(folder, pattern));
         return part(texture).map((quad) => ({ ...quad, tint: dyeColor(color) }));
       }),
     );
