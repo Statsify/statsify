@@ -54,6 +54,20 @@ $ docker build --platform linux/amd64 --build-arg APP={app name} .
 
 ## 🚢 Deploying
 * Pushing a `v*` tag builds an image for each production app and runs them on the server with `compose.prod.yml`
+* The apps read the server's `/home/config.js`, mounted read-only, so restart them after changing it
+* Run compose commands from the deploy checkout, where `.env` holds the deployed commit
+
+```bash
+# Building and starting every app
+$ docker compose -f compose.prod.yml up -d --build
+
+# Following an app's logs
+$ docker compose -f compose.prod.yml logs -f {service name}
+
+# Restarting or stopping an app
+$ docker compose -f compose.prod.yml restart {service name}
+$ docker compose -f compose.prod.yml stop {service name}
+```
 
 ## 💁 Contributing
 * Follow the guidelines in [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md)
