@@ -13,14 +13,16 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store --mount=type=cache,id=pn
 FROM base AS build
 ENV PATH="/root/.cargo/bin:$PATH"
 # Before ARG APP and the package files, so every app shares this layer and dependency changes don't reinstall Rust
-RUN curl -fsSL https://sh.rustup.rs | sh -s -- -y --profile minimal --target wasm32-unknown-unknown \
+COPY rust-toolchain.toml ./
+RUN curl -fsSL https://sh.rustup.rs | sh -s -- -y --default-toolchain none \
+  && rustup toolchain install \
   && curl -fsSL https://rustwasm.github.io/wasm-pack/installer/init.sh | sh
 ARG APP
 COPY --from=prune /app/out/json/ .
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store pnpm install --frozen-lockfile
 COPY --from=prune /app/out/full/ .
 # turbo prune leaves out root files, like these and the locales
-COPY .swcrc Cargo.toml ./
+COPY .swcrc Cargo.toml Cargo.lock ./
 RUN --mount=type=cache,id=cargo-registry,target=/root/.cargo/registry \
   --mount=type=cache,id=cargo-target,target=/app/target \
   --mount=type=cache,id=wasm-pack,target=/root/.cache/.wasm-pack \
