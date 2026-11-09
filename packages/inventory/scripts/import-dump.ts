@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Builds every data/*.json but minecraft-data.json from StatsifyDump exports (the ChatTriggers
-// module) of the games' layout editors, kit menus and shop menus, so each item has the count, name
-// and tooltip the game gives it. Each dump session writes its own exports, so pass the last export
+// Builds every data/*.json but minecraft-data.json from StatsifyDump exports of the games' layout
+// editors, kit menus and shop menus, so each item has the count, name and tooltip the game gives it. Each dump session writes its own exports, so pass the last export
 // of every session needed:
 //   pnpm --filter @statsify/inventory build
 //   node scripts/import-dump.ts <dump.json> [<dump.json> …]
