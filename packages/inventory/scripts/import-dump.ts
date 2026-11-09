@@ -891,6 +891,12 @@ if (kitsPage !== -1) {
   );
 }
 
+// The shop leaves out the free Default kit, which only the Gear Selector in a game lists (Speed UHC
+// only has Normal games)
+const gearSelector = screens.find((screen) => plain(screen.title) === "Gear Selector");
+const defaultKit = gearSelector && pickerEntries(gearSelector).find((item) => plain(item.name) === "Default");
+if (defaultKit && speedUhc.normal) speedUhc.normal.default = speedUhcKit(defaultKit);
+
 const count = (menus: Record<string, object>) => Object.values(menus).reduce((sum, items) => sum + Object.keys(items).length, 0);
 
 /** Writes a data file, unless these dumps had nothing for it */
