@@ -30,6 +30,10 @@ const upgradesOf = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
 /** Variants that replace each other (party hats) list each other; a higher tier doesn't list its lower one. */
 const isMutual = (a: string, b: string) => upgradesOf(b).includes(a);
 
+/** Of two party hats, the one with the most AP counts, then the first id. */
+const outranks = (by: string, id: string, power: (id: string) => number) =>
+  power(by) > power(id) || (power(by) === power(id) && by < id);
+
 function powerOf(id: string, rarity: Rarity | undefined, contacts: number) {
   if (id === "RIFT_PRISM") return 11;
   const power = (rarity && ACCESSORY_POWER[rarity]) ?? 0;
@@ -114,11 +118,18 @@ function getMissing(
   items: ItemsResource,
   prices: PriceMap
 ) {
-  const outside = new Map<string, ItemView>();
+  const byId = new Map<string, ItemView>();
   for (const view of stored) {
-    const kept = outside.get(view.id);
-    if (!kept || powerOf(view.id, view.rarity, contacts) > powerOf(kept.id, kept.rarity, contacts)) outside.set(view.id, view);
+    const kept = byId.get(view.id);
+    if (!kept || powerOf(view.id, view.rarity, contacts) > powerOf(kept.id, kept.rarity, contacts)) byId.set(view.id, view);
   }
+
+  const storedPower = (id: string) => powerOf(id, byId.get(id)?.rarity, contacts);
+  const outside = new Map(
+    [...byId].filter(
+      ([id]) => !upgradesOf(id).some((by) => byId.has(by) && isMutual(id, by) && outranks(by, id, storedPower))
+    )
+  );
 
   const open = new Map(
     Object.entries(items.items).filter(
@@ -132,10 +143,9 @@ function getMissing(
 
   const power = (id: string) => powerOf(id, outside.get(id)?.rarity ?? open.get(id)?.tier, contacts);
 
-  // Of the open ids in one chain, its top tier, and any kept outside the bag; of party hats, the one with the most AP,
-  // then the first id.
+  // Of the open ids in one chain, its top tier, and any kept outside the bag.
   const beats = (by: string, id: string) =>
-    !outside.has(id) && open.has(by) && (!isMutual(id, by) || power(by) > power(id) || (power(by) === power(id) && by < id));
+    !outside.has(id) && open.has(by) && (!isMutual(id, by) || outranks(by, id, power));
 
   return [...open]
     .filter(([id]) => !upgradesOf(id).some((by) => beats(by, id)))
