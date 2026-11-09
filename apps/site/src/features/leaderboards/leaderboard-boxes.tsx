@@ -224,7 +224,7 @@ const PhoneChunk = memo(function PhoneChunk({ page, heading }: { page: Leaderboa
               single ? "grid-cols-[minmax(0,1fr)_auto]" : page.columns.length === 3 ? "grid-cols-3" : "grid-cols-2"
             )}
           >
-            <Box role="none" variant={variant} className={cn(CELL, "content:gap-2 content:px-2", !single && "col-span-full", tone)}>
+            <Box role="none" variant={variant} className={cn(CELL, "content:justify-start content:gap-2 content:px-2", !single && "col-span-full", tone)}>
               <span role="cell" className="shrink-0">
                 <Position position={row.position} className="text-mc-1.5" />
               </span>
