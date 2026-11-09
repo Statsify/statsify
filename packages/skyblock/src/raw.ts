@@ -98,8 +98,9 @@ export interface RawMember {
     };
   };
   foraging_core?: {
-    // A loadout's spending is under its slot number
-    whispers?: Partial<Record<Whisper, Record<string, number | { spent?: number; spent_non_refundable?: number } | undefined>>>;
+    whispers?: Partial<
+      Record<Whisper, { total?: number; [slot: number]: { spent?: number; spent_non_refundable?: number } | undefined }>
+    >;
   };
   pets_data?: { pets?: RawPet[]; pet_care?: { pet_types_sacrificed?: string[] } };
   dungeons?: {
