@@ -67,7 +67,7 @@ const FORMATTING_BEFORE_COLOR = /§[k-o](?:[^§]|§[k-o])*(?=§[\da-f])/gi;
 
 // A dropped glyph takes the space after it when it starts a word ("§2<glyph> Undead" → "§2Undead"), and the space
 // before it when punctuation follows ("Undead <glyph>!" → "Undead!")
-const UNMAPPED_GLYPH = /(?<=(?:^|\s)(?:§.)*)\p{Co} | \p{Co}(?=\p{P})|\p{Co}/gu;
+const UNMAPPED_GLYPH = /(?<=(?:^|\s)(?:§.)*)\p{Co} | \p{Co}(?=(?!§)\p{P})|\p{Co}/gu;
 
 /** Item text as 1.8 draws it, minus obfuscated text and glyphs with no 1.8 symbol (mob types, weather, newer stats). */
 export function normalizeItemText(text: string) {
