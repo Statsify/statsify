@@ -9,6 +9,7 @@
 import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
 import { Error } from "~/components/ui/error";
+import { PLACEHOLDER_UUID } from "~/lib/uuid";
 import { Search } from "~/components/search";
 import { Skin } from "~/components/ui/skin";
 import { Turnstile } from "~/components/turnstile";
@@ -19,9 +20,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const localeRoute = getRouteApi("/{-$locale}");
-
-/** Steve, for players we have nothing to show yet. */
-const PLACEHOLDER_UUID = "76a56ac7fcf649fca0531cb5c77cd9ae";
 
 /** The player-not-found page with the Turnstile-gated "Look up on Hypixel" action. */
 export function PlayerNotFound() {
