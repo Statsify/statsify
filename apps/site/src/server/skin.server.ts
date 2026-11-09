@@ -10,6 +10,7 @@ import { fetchApi, unavailable } from "./rpc.server";
 import { NO_STORE } from "~/lib/cache";
 import { compactUuid } from "~/lib/uuid";
 import { UsernameSchema } from "@statsify/contract";
+import { resolvePlayer } from "~/features/player/resolve";
 import { siteConfig } from "./config.server";
 
 /**
@@ -25,6 +26,8 @@ export async function proxySkin(
   if (!uuid || !isPageQuery(uuid, search, fixed)) {
     return new Response(null, { status: 404, headers: NO_STORE });
   }
+  // The API doesn't limit the site's key on skins, so a UUID it doesn't store must not reach Minecraft's session server.
+  if (!(await resolvePlayer(uuid))) return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
 
   return proxy(path, { uuid, ...fixed });
 }
