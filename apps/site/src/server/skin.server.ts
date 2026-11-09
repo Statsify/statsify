@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { UUID_PATTERN } from "~/lib/uuid";
+import { PLACEHOLDER_UUID, UUID_PATTERN } from "~/lib/uuid";
 import { resolvePlayer } from "~/features/player/resolve";
 import { siteConfig } from "./config.server";
 
@@ -21,8 +21,9 @@ export async function proxySkin(
 ): Promise<Response> {
   const uuid = search.get("uuid");
   if (!uuid || !UUID_PATTERN.test(uuid)) return new Response("uuid is required", { status: 400 });
-  // The API doesn't limit the site's key on skins, so a UUID it doesn't store must not reach Minecraft's session server.
-  if (!(await resolvePlayer(uuid))) return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
+  // The API doesn't limit the site's key on skins, so only a stored player's UUID, or the not-found pages' one fixed
+  // stand-in, may reach Minecraft's session server.
+  if (uuid !== PLACEHOLDER_UUID && !(await resolvePlayer(uuid))) return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
 
   const { apiRoute, apiKey } = await siteConfig();
   if (!apiKey) return new Response("site.apiKey is not configured", { status: 503 });
