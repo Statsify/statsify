@@ -39,7 +39,7 @@ COPY . .
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store --mount=type=cache,id=pnpm-cache,target=/root/.cache/pnpm \
   pnpm dlx "turbo@$(node -p 'require("./package.json").devDependencies.turbo')" prune scripts --docker
 
-# Only the blur's inputs, so it reruns when backgrounds, the script or dependencies change instead of on every commit
+# Only the blur's inputs, so it doesn't rerun on every commit
 FROM base AS assets
 COPY --from=assets-prune /app/out/json/ .
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store pnpm install --frozen-lockfile --filter scripts
