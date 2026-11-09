@@ -92,6 +92,7 @@ export function RefreshBar({
   const now = useNow();
   const [state, setState] = useState<RefreshState>({ status: "idle" });
   const [verifying, setVerifying] = useState(false);
+  const [widgetFailed, setWidgetFailed] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
   // The location once its page has rendered: during a navigation `location` is already the next page's.
   // eslint-disable-next-line no-underscore-dangle -- the history entry's key, under TanStack's name
@@ -99,7 +100,8 @@ export function RefreshBar({
 
   const lockedUntil = state.status === "limited" ? state.until : expiresAt;
   const remaining = now === undefined ? undefined : Math.max(0, Math.ceil((lockedUntil - now) / 1000));
-  const disabled = verifying || state.status === "pending" || remaining === undefined || remaining > 0;
+  // A widget whose script didn't load stays broken until the page reloads, so the button does too.
+  const disabled = verifying || widgetFailed || state.status === "pending" || remaining === undefined || remaining > 0;
 
   async function run(auto: boolean, token?: string) {
     setVerifying(false);
@@ -150,7 +152,8 @@ export function RefreshBar({
   else if (remaining) label = t("player.refreshIn", { time: formatCountdown(remaining) });
 
   let message: string | undefined;
-  if (state.status === "limited" && !state.auto && remaining) message = t("player.refreshLimited");
+  if (widgetFailed) message = t("player.notFound.verifyFailed");
+  else if (state.status === "limited" && !state.auto && remaining) message = t("player.refreshLimited");
   else if (state.status === "unavailable") message = t("player.refreshFailed");
   else if (state.status === "error") message = t("player.refreshError");
 
@@ -198,6 +201,7 @@ export function RefreshBar({
             setVerifying(false);
             setState({ status: "error" });
           }}
+          onLoadError={() => setWidgetFailed(true)}
           className="w-full"
         />
       )}
