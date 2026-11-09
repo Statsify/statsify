@@ -117,6 +117,7 @@ export class SkyBlockController {
 
   @ApiOperation({ summary: "Get a Fuzzy Searched List of Priced SkyBlock Items" })
   @ApiOkResponse({ type: GetSkyBlockItemsResponse })
+  @ApiServiceUnavailableResponse({ type: SkyBlockUnavailableException, description: "market" })
   @Auth({ role: AuthRole.WORKER, weight: 0 })
   @Get("/items")
   public async getItems(@Query() { query }: SkyBlockItemsDto) {

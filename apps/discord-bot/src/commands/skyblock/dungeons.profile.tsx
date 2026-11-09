@@ -43,7 +43,6 @@ export const SkyBlockDungeonsProfile = ({
     [t("skyblock.highestFloor"), highest === undefined ? none : floorName(highest), "§c"],
   ];
 
-  // The count covers both modes, so only the Catacombs page shows it
   if (mode === "normal") sidebar.push([t("skyblock.watcherKills"), t(dungeons.watcherKills), "§4"]);
 
   const classes = DUNGEON_CLASSES.map((name): LevelBarProps => {

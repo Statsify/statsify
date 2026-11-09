@@ -68,6 +68,10 @@ export function stonePowerStats({ accessoryPower: listedAt, stats, bonus }: (typ
 /** Variants that replace each other (party hats) list each other; a higher tier doesn't list its lower one. */
 const isMutual = (a: string, b: string) => upgradesOf(b).includes(a);
 
+/** Of two party hats, the one with the most AP counts, then the first id. */
+const outranks = (by: string, id: string, power: (id: string) => number) =>
+  power(by) > power(id) || (power(by) === power(id) && by < id);
+
 function powerOf(id: string, rarity: Rarity | undefined, contacts: number) {
   if (id === "RIFT_PRISM") return 11;
   const power = (rarity && ACCESSORY_POWER[rarity]) ?? 0;
@@ -96,8 +100,7 @@ type StepOrder = (a: MissingAccessory, b: MissingAccessory) => number;
 
 /**
  * null when the inventory API is off. Only the best of each upgrade chain counts, one of each duplicate and one party
- * hat, and a consumed Rift Prism counts as one in the bag. Each chain's missing step is the first in `order`, which
- * gets the bag's accessory power and its highest.
+ * hat, and a consumed Rift Prism counts as one in the bag. Each chain's missing step is the first in `order`.
  */
 export function getAccessories(
   member: RawMember,
@@ -199,11 +202,18 @@ function getMissing(
   order: StepOrder,
   prices?: PriceMap
 ) {
-  const outside = new Map<string, ItemView>();
+  const byId = new Map<string, ItemView>();
   for (const view of stored) {
-    const kept = outside.get(view.id);
-    if (!kept || powerOf(view.id, view.rarity, contacts) > powerOf(kept.id, kept.rarity, contacts)) outside.set(view.id, view);
+    const kept = byId.get(view.id);
+    if (!kept || powerOf(view.id, view.rarity, contacts) > powerOf(kept.id, kept.rarity, contacts)) byId.set(view.id, view);
   }
+
+  const storedPower = (id: string) => powerOf(id, byId.get(id)?.rarity, contacts);
+  const outside = new Map(
+    [...byId].filter(
+      ([id]) => !upgradesOf(id).some((by) => byId.has(by) && isMutual(id, by) && outranks(by, id, storedPower))
+    )
+  );
 
   const steps = Object.entries(items.items)
     .flatMap(([id, item]): MissingAccessory[] => {
