@@ -182,7 +182,7 @@ const GuildOverallPage = ({
           {(description) => (
             <GuildBlock title="Guild Description" height="100%">
               <box {...box}>
-                {wordGroup(description, 10).map((m) => (
+                {wordGroup(description, 6).map((m) => (
                   <text {...text}>
                     {m.replaceAll(LINK_REGEX, (match) => `§b§u${match}§r`)}
                   </text>
