@@ -30,17 +30,6 @@ export function GuildSection({ guild }: { guild: GuildPreview }) {
       background="guilds"
       className="flex-col items-center relative overflow-hidden"
     >
-      <div className="hidden md:block">
-        <Carousel className="backdrop-blur-2xl bg-black/40">
-          <GuildOverall guild={guild} />
-          <GuildLevelling guild={guild} />
-          <GuildTop guild={guild} />
-          {guild.member && <GuildMember guild={guild} member={guild.member} />}
-        </Carousel>
-      </div>
-      <div className="block md:hidden">
-        <GuildOverall guild={guild} className="shadow-none" />
-      </div>
       <div className="flex flex-col gap-4 max-w-120 xl:max-w-200 text-mc-white">
         <h2 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow">
           Guilds
@@ -56,6 +45,17 @@ export function GuildSection({ guild }: { guild: GuildPreview }) {
           <Command command="/guild leaderboard" /> and{" "}
           <Command command="/guild overall" />.
         </p>
+      </div>
+      <div className="hidden md:block">
+        <Carousel className="backdrop-blur-2xl bg-black/40">
+          <GuildOverall guild={guild} />
+          <GuildLevelling guild={guild} />
+          <GuildTop guild={guild} />
+          {guild.member && <GuildMember guild={guild} member={guild.member} />}
+        </Carousel>
+      </div>
+      <div className="block md:hidden">
+        <GuildOverall guild={guild} className="shadow-none" />
       </div>
     </BaseSection>
   );
