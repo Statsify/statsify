@@ -255,7 +255,12 @@ export abstract class AbstractCommandListener {
 
     if (res && !(res instanceof Promise)) return [res];
 
-    return [{ type: InteractionResponseType.DeferredMessageUpdate }, res];
+    const work = res?.catch((err) => {
+      if (!(err instanceof Message)) throw err;
+      setRequestAttributes({ "statsify.outcome": getRequestAttributes()["statsify.outcome"] ?? "message" });
+    });
+
+    return [{ type: InteractionResponseType.DeferredMessageUpdate }, work];
   }
 
   protected onModal(interaction: Interaction): InteractionHandling {
