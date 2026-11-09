@@ -27,7 +27,7 @@ export async function proxySkin(
     return new Response(null, { status: 404, headers: NO_STORE });
   }
   // The API doesn't limit the site's key on skins, so a UUID it doesn't store must not reach Minecraft's session server.
-  if (!(await resolvePlayer(uuid))) return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
+  if (!(await resolvePlayer(uuid))) return new Response(null, { status: 404, headers: NO_STORE });
 
   return proxy(path, { uuid, ...fixed });
 }
