@@ -72,10 +72,11 @@ const PLACEHOLDERS: Record<ImageVariant, string> = {
 };
 
 /**
- * Rendered PNGs stay in Redis only briefly (about 300 KB each, in the leaderboard Redis); Cloudflare holds them
- * for an hour anyway.
+ * Rendered PNGs stay in Redis only long enough for the requests waiting on the render to read them: they're about
+ * 300 KB each, in the leaderboard Redis, and a crawl of distinct image URLs writes one per render. Cloudflare holds
+ * them for an hour anyway.
  */
-const CACHE_TTL_SECONDS = 120;
+const CACHE_TTL_SECONDS = 20;
 /** How long the pool lets a render wait for a worker, and then run. */
 const RENDER_QUEUE_TIMEOUT_MS = 6000;
 const RENDER_TIMEOUT_MS = 8000;
