@@ -25,7 +25,8 @@ import {
   InteractionResponseType,
   TextInputStyle,
 } from "discord-api-types/v10";
-import { STATUS_COLORS } from "@statsify/logger";
+import { STATUS_COLORS, setRequestAttributes } from "@statsify/logger";
+import { User } from "@statsify/schemas";
 import { config } from "@statsify/util";
 
 const SUPPORT_BOT_GUILD_ID = await config("supportBot.guild");
@@ -78,6 +79,7 @@ export class VerifyCommand {
     listener.addHook(VERIFY_MODAL.getCustomId(), async (interaction) => {
       const savedUser = await this.apiService.getUser(interaction.getUserId());
       if (savedUser?.locale) interaction.setLocale(savedUser.locale);
+      setRequestAttributes({ "statsify.user.tier": User.getTierName(savedUser) });
 
       const t = interaction.t();
       const data = interaction.getData();

@@ -30,6 +30,8 @@ import { GuildQuery } from "@statsify/api-client";
 import { Theme, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
+import { User } from "@statsify/schemas";
+import { setRequestAttributes } from "@statsify/logger";
 
 type BaseGuildTopProfileProps = Omit<GuildTopProfileProps, "page" | "members" | "title">;
 type GuildTopKey = "daily" | "weekly" | "monthly" | number;
@@ -104,6 +106,9 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     const changePage =
       (fn: (interaction: Interaction) => Partial<GuildTopPageState>) =>
         async (interaction: Interaction) => {
+          if (interaction.getUserId() === userId)
+            setRequestAttributes({ "statsify.user.tier": User.getTierName(user) });
+
           if (user?.locale) interaction.setLocale(user.locale);
 
           const state = fn(interaction);

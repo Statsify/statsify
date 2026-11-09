@@ -17,7 +17,7 @@ import {
   Interaction,
 } from "@statsify/discord";
 import { Container } from "typedi";
-import { STATUS_COLORS, setRequestAttributes } from "@statsify/logger";
+import { STATUS_COLORS } from "@statsify/logger";
 import { User } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { getAssetPath } from "@statsify/assets";
@@ -69,11 +69,6 @@ export class CommandListener extends AbstractCommandListener {
     const user = await this.apiService.getUser(id);
 
     Sentry.setUser({ id, theme: user?.theme, serverMember: user?.serverMember });
-
-    setRequestAttributes({
-      "statsify.user.tier": User.getTierName(user),
-      "statsify.user.uuid": user?.uuid,
-    });
 
     const context = new CommandContext(this, interaction, data);
     context.setUser(user);

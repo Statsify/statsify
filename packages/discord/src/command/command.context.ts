@@ -12,6 +12,7 @@ import {
 } from "discord-api-types/v10";
 import { User } from "@statsify/schemas";
 import { noop } from "@statsify/util";
+import { setRequestAttributes } from "@statsify/logger";
 import type { AbstractCommandListener } from "./abstract-command.listener.js";
 import type { IMessage, LocalizeFunction, Message } from "#messages";
 import type { Interaction } from "#interaction";
@@ -36,6 +37,11 @@ export class CommandContext {
   public setUser(user: User | null) {
     this.user = user;
     if (user?.locale) this.interaction.setLocale(user?.locale);
+
+    setRequestAttributes({
+      "statsify.user.tier": User.getTierName(user),
+      "statsify.user.uuid": user?.uuid,
+    });
   }
 
   public option<T>(name: string, defaultValue?: T): T {
