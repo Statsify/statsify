@@ -133,7 +133,7 @@ const UPGRADES: Partial<Record<PackLayout, Upgrade>> = {
   legacy: {
     textures: minecraftData.legacyTextures,
     models: minecraftData.legacyModels,
-    // 1.8's banner patterns are opaque masks, white where the dye goes, where 26.3's are alpha
+    // 1.8's banner patterns are opaque masks, where 26.3's use alpha
     drop: ["assets/minecraft/blockstates/", "assets/minecraft/textures/entity/banner/"],
   },
 };
