@@ -10,7 +10,7 @@ import * as Sentry from "@sentry/node";
 import { Logger, captureError, isProduction } from "./logger.js";
 
 export type RequestOutcome = "success" | "message" | "error";
-export type SampleReason = "error" | "slow" | "user" | "sampled";
+export type SampleReason = "error" | "slow" | "unresolved" | "user" | "sampled";
 
 // Sentry doesn't scrub these, so no Discord usernames, API keys or message content
 export type RequestAttributes = {
@@ -137,6 +137,7 @@ const getSampleReason = (
 ): SampleReason | undefined => {
   if (attributes["statsify.outcome"] === "error") return "error";
   if (durationMs >= slowMs || (attributes["discord.interaction.ack_ms"] ?? 0) >= SLOW_ACK_MS) return "slow";
+  if ((attributes["statsify.guild.members.unresolved"] ?? 0) > 0) return "unresolved";
   if (alwaysKeep) return "user";
   if (Math.random() < sampleRate) return "sampled";
   return undefined;
