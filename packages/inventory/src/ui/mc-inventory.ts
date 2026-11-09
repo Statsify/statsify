@@ -93,8 +93,6 @@ export class McInventory extends HTMLElement {
 
     this.canvas.addEventListener("pointermove", (event) => this.hover(event));
     this.canvas.addEventListener("pointerdown", (event) => {
-      // The overlay hides on any pointerdown that reaches the document
-      event.stopPropagation();
       if (event.pointerType === "mouse") return;
       this.unhover();
       this.hover(event);
