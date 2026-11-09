@@ -18,6 +18,8 @@ if (sentryDsn) {
     integrations: (integrations) => integrations.filter((integration) => integration.name !== "Redis"),
     // Sentry 11 collects all of these by default
     dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
+    tracePropagationTargets: [],
+    strictTraceContinuation: true,
     normalizeDepth: 3,
     tracesSampleRate: await config("sentry.tracesSampleRate"),
     environment: await config("environment"),

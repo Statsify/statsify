@@ -57,6 +57,8 @@ export class CommandListener extends AbstractCommandListener {
       parentData
     );
 
+    this.setCommandOptionsContext(data.options);
+
     const user = await this.apiService.getUser(id);
 
     const context = new CommandContext(this, interaction, data);

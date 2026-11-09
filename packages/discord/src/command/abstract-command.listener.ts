@@ -6,7 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import {
+  type APIApplicationCommandInteractionDataBasicOption,
   type APIUser,
   ApplicationCommandOptionType,
   GatewayDispatchEvents,
@@ -16,7 +18,7 @@ import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
 import { type IMessage, Message } from "#messages";
 import { Interaction, type InteractionAttachment } from "#interaction";
-import { Logger } from "@statsify/logger";
+import { Logger, setRequestAttributes } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
@@ -121,6 +123,13 @@ export abstract class AbstractCommandListener {
     return [command, data, name];
   }
 
+  protected setCommandOptionsContext(options?: APIApplicationCommandInteractionDataBasicOption[]) {
+    Sentry.setContext(
+      "options",
+      Object.fromEntries((options ?? []).map(({ name, value }) => [name, value]))
+    );
+  }
+
   protected async executeCommand({
     commandName,
     command,
@@ -128,6 +137,8 @@ export abstract class AbstractCommandListener {
     preconditions = [],
     message,
   }: ExecuteCommandOptions) {
+    setRequestAttributes({ "discord.command": commandName });
+
     try {
       for (const precondition of preconditions) {
         precondition();
@@ -137,12 +148,15 @@ export abstract class AbstractCommandListener {
 
       if (typeof response !== "object") return;
 
-      context.reply({
+      return context.reply({
         ...message,
         ...response,
       });
     } catch (err) {
-      if (err instanceof Message) return context.reply(err);
+      if (err instanceof Message) {
+        setRequestAttributes({ "statsify.outcome": "message" });
+        return context.reply(err);
+      }
 
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
@@ -219,7 +233,14 @@ export abstract class AbstractCommandListener {
   protected onMessageComponent(interaction: Interaction): InteractionServer.InteractionReply {
     const hook = this.hooks.get(interaction.getCustomId());
 
-    const res = hook?.(interaction);
+    const res = hook && Sentry.startSpan(
+      {
+        op: "component",
+        name: interaction.isModalInteraction() ? "modal" : "component",
+        parentSpan: null,
+      },
+      () => hook(interaction)
+    );
 
     if (res && !(res instanceof Promise)) return res;
 
@@ -260,18 +281,36 @@ export abstract class AbstractCommandListener {
     };
   }
 
-  private async onInteraction(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
-    if (interaction.isCommandInteraction()) {
-      this.onCommand(interaction);
-      return { type: InteractionResponseType.DeferredChannelMessageWithSource };
-    }
+  private onInteraction(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
+    return Sentry.withIsolationScope(async () => {
+      Sentry.setUser({ id: interaction.getUserId() });
 
-    if (interaction.isAutocompleteInteraction()) return this.onAutocomplete(interaction);
-    if (interaction.isMessageComponentInteraction())
-      return this.onMessageComponent(interaction);
-    if (interaction.isModalInteraction()) return this.onModal(interaction);
+      setRequestAttributes({
+        "discord.guild.id": interaction.getGuildId(),
+        "discord.locale": interaction.getLocale(),
+      });
 
-    return { type: InteractionResponseType.Pong };
+      if (interaction.isCommandInteraction()) {
+        Sentry.startSpan(
+          { op: "command", name: interaction.getData().name, parentSpan: null },
+          () => this.onCommand(interaction)
+        );
+
+        return { type: InteractionResponseType.DeferredChannelMessageWithSource };
+      }
+
+      if (interaction.isAutocompleteInteraction())
+        return Sentry.startSpan(
+          { op: "autocomplete", name: interaction.getData().name, parentSpan: null },
+          () => this.onAutocomplete(interaction)
+        );
+
+      if (interaction.isMessageComponentInteraction())
+        return this.onMessageComponent(interaction);
+      if (interaction.isModalInteraction()) return this.onModal(interaction);
+
+      return { type: InteractionResponseType.Pong };
+    });
   }
 
   private handleInteractionServer(client: InteractionServer) {

@@ -17,8 +17,8 @@ import {
   Interaction,
 } from "@statsify/discord";
 import { Container } from "typedi";
-import { STATUS_COLORS } from "@statsify/logger";
-import { User, UserTier } from "@statsify/schemas";
+import { STATUS_COLORS, setRequestAttributes } from "@statsify/logger";
+import { User } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { getAssetPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
@@ -57,53 +57,41 @@ export class CommandListener extends AbstractCommandListener {
 
     if (!parentCommand) return;
 
-    const { id, username, discriminator } = interaction.getUser();
-    const locale = interaction.getLocale();
+    const id = interaction.getUserId();
 
     const [command, data, commandName] = this.getCommandAndData(
       parentCommand,
       parentData
     );
 
-    return Sentry.withIsolationScope(() =>
-      Sentry.startSpan({ name: commandName, op: "command" }, async () => {
-        Sentry.setContext("command", {
-          command: commandName,
-          options: data.options,
-          guild: interaction.getGuildId() ?? null,
-        });
+    this.setCommandOptionsContext(data.options);
 
-        const user = await this.apiService.getUser(id);
+    const user = await this.apiService.getUser(id);
 
-        Sentry.setUser({
-          id,
-          username: `${username}#${discriminator}`,
-          locale,
-          uuid: user?.uuid ?? null,
-          tier: user?.tier ?? UserTier.NONE,
-          serverMember: user?.serverMember ?? false,
-          theme: user?.theme ?? null,
-        });
+    Sentry.setUser({ id, theme: user?.theme, serverMember: user?.serverMember });
 
-        const context = new CommandContext(this, interaction, data);
-        context.setUser(user);
+    setRequestAttributes({
+      "statsify.user.tier": User.getTierName(user),
+      "statsify.user.uuid": user?.uuid,
+    });
 
-        const preconditions = [
-          this.tierPrecondition.bind(this, command, user),
-          this.cooldownPrecondition.bind(this, parentCommand, user, id),
-        ];
+    const context = new CommandContext(this, interaction, data);
+    context.setUser(user);
 
-        this.apiService.incrementCommand(commandName);
+    const preconditions = [
+      this.tierPrecondition.bind(this, command, user),
+      this.cooldownPrecondition.bind(this, parentCommand, user, id),
+    ];
 
-        return this.executeCommand({
-          commandName,
-          command,
-          context,
-          preconditions,
-          message: this.getTipResponse(commandName, user),
-        });
-      })
-    );
+    this.apiService.incrementCommand(commandName);
+
+    return this.executeCommand({
+      commandName,
+      command,
+      context,
+      preconditions,
+      message: this.getTipResponse(commandName, user),
+    });
   }
 
   private cooldownPrecondition(

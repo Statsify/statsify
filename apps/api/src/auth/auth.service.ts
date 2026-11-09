@@ -18,6 +18,7 @@ import {
 import { InjectRedis } from "#redis";
 import { Key } from "@statsify/schemas";
 import { Redis } from "ioredis";
+import { setRequestAttributes } from "@statsify/logger";
 import { createHash, randomUUID } from "node:crypto";
 
 @Injectable()
@@ -39,6 +40,8 @@ export class AuthService {
     if (name === null) throw new UnauthorizedException();
 
     const [apiKeyRole, apiKeyLimit] = keyInfo.map(Number);
+
+    setRequestAttributes({ "statsify.api.role": AuthRole[apiKeyRole] });
 
     if (apiKeyRole < role) throw new ForbiddenException();
 
