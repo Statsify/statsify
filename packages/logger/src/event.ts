@@ -112,12 +112,27 @@ export const addRequestAttributes = (counts: Partial<Record<CountAttribute, numb
 type ErrorDetails = { code?: string | number; retryable?: boolean };
 
 export const setUncapturedRequestError = (error: unknown, details: ErrorDetails = {}) => {
+  const code = details.code ?? (
+    error instanceof Error && "code" in error && (typeof error.code === "number" || typeof error.code === "string") ?
+      error.code :
+      undefined
+  );
+
+  const retryable = details.retryable ?? (
+    error instanceof Error && "retryable" in error && typeof error.retryable === "boolean" ? error.retryable : undefined
+  );
+
+  // An earlier error's code and retryable must not stay attached to this one
+  const scope = Sentry.getIsolationScope();
+  if (code === undefined) scope.removeAttribute("statsify.error.code");
+  if (retryable === undefined) scope.removeAttribute("statsify.error.retryable");
+
   setRequestAttributes({
     "statsify.outcome": "error",
     "error.type": error instanceof Error ? error.name : typeof error,
     "error.message": error instanceof Error ? error.message : String(error),
-    "statsify.error.code": details.code,
-    "statsify.error.retryable": details.retryable,
+    "statsify.error.code": code,
+    "statsify.error.retryable": retryable,
   });
 };
 
