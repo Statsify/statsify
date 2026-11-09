@@ -19,17 +19,26 @@ const INACTIVE_SHOWN = 12;
 const MAX_POWER_STATS_PER_LINE = 5; // more is wider than the card
 
 const topMissing = ({ accessories }: MemberView) => accessories?.missing.slice(0, MISSING_SHOWN) ?? [];
-// One row per accessory, so a stack of duplicates doesn't fill the page. Variants that share an id (Abicase colors)
-// keep their own rows and names.
+const baseName = ({ name, reforge }: InactiveAccessory) => {
+  const plain = name.replaceAll(/§./g, "");
+  const prefix = reforge ? `${prettify(reforge)} ` : "";
+  return prefix && plain.startsWith(prefix) ? plain.slice(prefix.length) : plain;
+};
+
+// One row per accessory, so a stack of duplicates doesn't fill the page. Copies with different names (Abicase colors)
+// share the name they have in common, or the item's.
 function topInactive({ accessories }: MemberView) {
-  const rows = new Map<string, InactiveAccessory & { count: number }>();
-  for (const view of accessories?.inactive ?? []) {
-    const key = `${view.id} ${view.name}`;
-    const row = rows.get(key);
-    if (row) row.count++;
-    else rows.set(key, { ...view, count: 1 });
-  }
-  return [...rows.values()].slice(0, INACTIVE_SHOWN);
+  const copies = new Map<string, InactiveAccessory[]>();
+  for (const view of accessories?.inactive ?? []) copies.set(view.id, [...(copies.get(view.id) ?? []), view]);
+
+  return [...copies].slice(0, INACTIVE_SHOWN).map(([id, [first, ...rest]]) => {
+    const bases = new Set([first, ...rest].map(baseName));
+    const color = /^(?:§.)*/.exec(first.name)?.[0] ?? "";
+    const name = rest.every((view) => view.name === first.name) ?
+      first.name :
+      `${color}${bases.size === 1 ? baseName(first) : prettify(id)}`;
+    return { ...first, name, count: rest.length + 1 };
+  });
 }
 
 export interface SkyBlockAccessoriesProfileProps extends SkyBlockProfileProps {
