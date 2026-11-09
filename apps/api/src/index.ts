@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/nestjs";
 import handlebars from "handlebars";
 import packageJson from "../package.json" with { type: "json" };
 import { AppModule } from "./app.module.js";
@@ -61,7 +62,8 @@ adapter
     done(null, body)
   );
 
-adapter.getInstance().addHook("onRequest", (request, _reply, done) => {
+// A Nest interceptor would miss requests the guards reject
+adapter.getInstance().addHook("onRequest", (request, reply, done) => {
   const { player, uuid, guild, cache } = request.query as Record<string, string | undefined>;
 
   setRequestAttributes({
@@ -72,24 +74,27 @@ adapter.getInstance().addHook("onRequest", (request, _reply, done) => {
     "statsify.cache.level": cache,
   });
 
-  done();
-});
+  // Unlike onResponse, close fires for aborted requests, but it can run in another request's async context
+  const scope = Sentry.getIsolationScope();
 
-// A Nest interceptor would miss requests the guards reject
-adapter.getInstance().addHook("onResponse", (request, reply, done) => {
-  const status = reply.statusCode;
-  const { "statsify.outcome": outcome } = getRequestAttributes();
+  reply.raw.once("close", () =>
+    Sentry.withIsolationScope(scope, () => {
+      const status = reply.statusCode;
+      const { "statsify.outcome": outcome } = getRequestAttributes();
 
-  setRequestAttributes({
-    "http.response.status_code": status,
-    "statsify.outcome": outcome ?? getOutcome(status),
-  });
+      setRequestAttributes(
+        reply.raw.writableFinished ?
+          { "http.response.status_code": status, "statsify.outcome": outcome ?? getOutcome(status) } :
+          { "statsify.outcome": "error", "error.type": "RequestAborted" }
+      );
 
-  emitRequestEvent({
-    message: [request.method, request.routeOptions.url].filter(Boolean).join(" "),
-    durationMs: reply.elapsedTime,
-    slowMs: SLOW_REQUEST_MS,
-  });
+      emitRequestEvent({
+        message: [request.method, request.routeOptions.url].filter(Boolean).join(" "),
+        durationMs: reply.elapsedTime,
+        slowMs: SLOW_REQUEST_MS,
+      });
+    })
+  );
 
   done();
 });
