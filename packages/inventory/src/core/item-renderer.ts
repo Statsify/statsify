@@ -452,15 +452,15 @@ export class ItemRenderer {
 
     // A shield with only patterns has a white base under them
     if (special.type === "minecraft:shield") {
-      const banner = item.baseColor !== undefined || Boolean(item.patterns?.length);
+      const patterned = item.baseColor !== undefined || Boolean(item.patterns?.length);
       const texture = await this.textures.get(
-        banner ? "entity/shield/shield_base" : "entity/shield/shield_base_nopattern",
+        patterned ? "entity/shield/shield_base" : "entity/shield/shield_base_nopattern",
       );
       const plate = (layer: ImageData) => place(boxQuads([-6, -11, -2], [12, 22, 1], [0, 0], layer));
 
       return [
         [...place(boxQuads([-1, -3, -1], [2, 6, 6], [26, 0], texture)), ...plate(texture)],
-        ...(banner ? await this.patternPasses(plate, "shield", item.baseColor ?? "white", item.patterns ?? []) : []),
+        ...(patterned ? await this.patternPasses(plate, "shield", item.baseColor ?? "white", item.patterns ?? []) : []),
       ];
     }
 
