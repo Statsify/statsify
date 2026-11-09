@@ -112,6 +112,7 @@ export class McInventory extends HTMLElement {
 
   public set pack(pack: PackStack | undefined) {
     this.packStack = pack;
+    this.unhover();
     void this.draw();
   }
 
@@ -121,6 +122,7 @@ export class McInventory extends HTMLElement {
 
   public set slots(slots: (ItemStack | undefined)[]) {
     this.items = slots;
+    this.unhover();
     void this.draw();
   }
 
@@ -140,8 +142,10 @@ export class McInventory extends HTMLElement {
   }
 
   public unhover() {
+    if (this.hovered < 0) return;
     this.hovered = -1;
     this.show();
+    tooltipOverlay().release(this);
   }
 
   private get size(): InventorySize {

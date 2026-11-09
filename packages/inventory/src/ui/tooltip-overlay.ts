@@ -61,6 +61,13 @@ class TooltipOverlay {
   public hide() {
     this.canvas.style.display = "none";
   }
+
+  /** Hides the tooltip if `owner` shows it */
+  public release(owner: McInventory) {
+    if (owner !== this.owner) return;
+    this.hide();
+    this.owner = undefined;
+  }
 }
 
 let overlay: TooltipOverlay | undefined;
