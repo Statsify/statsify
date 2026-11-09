@@ -9,6 +9,8 @@
 import * as Sentry from "@sentry/node";
 import { ButtonStyle } from "discord-api-types/v10";
 import { Canvas } from "skia-canvas";
+import { User } from "@statsify/schemas";
+import { setRequestAttributes } from "@statsify/logger";
 
 import {
   ActionRowBuilder,
@@ -125,6 +127,8 @@ export async function paginate(
       });
     }
 
+    setRequestAttributes({ "statsify.user.tier": User.getTierName(context.getUser()) });
+
     if (index !== currentIndex) {
       subController?.unregister(listener);
       mainController.switchPage(index);
@@ -239,6 +243,7 @@ export async function scrollingPagination(
       const message = await getMessage(page);
 
       if (interaction.getUserId() === userId) {
+        setRequestAttributes({ "statsify.user.tier": User.getTierName(context.getUser()) });
         currentIndex = page;
         message.components = [new ActionRowBuilder(controller)];
         return context.reply(message);

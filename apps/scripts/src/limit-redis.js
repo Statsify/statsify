@@ -9,10 +9,9 @@
 import Redis from "ioredis";
 import { CurrentHistoricalType } from "@statsify/api-client";
 import { Guild, scanMetadata, Player } from "@statsify/schemas";
-import { Logger } from "@statsify/logger";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
+import { addRequestAttributes, settleAll, withRequestEvent } from "@statsify/logger";
 
-const logger = new Logger("Redis Limiter");
 const redis = new Redis(process.env.REDIS_URL);
 
 const runLimit = async (constructors, prefixes) => {
@@ -59,28 +58,29 @@ const runLimit = async (constructors, prefixes) => {
     // oxlint-disable-next-line no-await-in-loop
     await limitLeaderboardPipeline.exec();
 
-    logger.log(`Limited ${leaderboards.length} ${name} leaderboards`);
-    logger.log(
-      `There are ${memberCount.toLocaleString()} possible members in the ${
-        prefixes ? prefixes[i].toLowerCase() : "lifetime"
-      } ${name} leaderboards`
-    );
+    addRequestAttributes({
+      "statsify.leaderboard.count": leaderboards.length,
+      "statsify.leaderboard.member_limit": memberCount,
+    });
   }
 }
 
-const limit = async () => {
-  await Promise.all([
-    runLimit([Player, Guild]),
-    runLimit(
-      [Player, Player, Player],
-      [
-        CurrentHistoricalType.DAILY,
-        CurrentHistoricalType.WEEKLY,
-        CurrentHistoricalType.MONTHLY,
-      ]
-    ),
-  ]);
-};
+const limit = () =>
+  withRequestEvent(
+    () =>
+      settleAll([
+        runLimit([Player, Guild]),
+        runLimit(
+          [Player, Player, Player],
+          [
+            CurrentHistoricalType.DAILY,
+            CurrentHistoricalType.WEEKLY,
+            CurrentHistoricalType.MONTHLY,
+          ]
+        ),
+      ]),
+    () => ({ message: "cron limit-redis", sampleRate: 1 })
+  );
 
 const task = new Task("leaderboard limiting", limit);
 const job = new SimpleIntervalJob({ minutes: 10, runImmediately: true }, task);

@@ -6,12 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/nestjs";
 import handlebars from "handlebars";
 import packageJson from "../package.json" with { type: "json" };
 import { AppModule } from "./app.module.js";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { Logger, NestLogger, setRequestAttributes } from "@statsify/logger";
+import {
+  Logger,
+  NestLogger,
+  type RequestOutcome,
+  emitRequestEvent,
+  getRequestAttributes,
+  setRequestAttributes,
+} from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
@@ -26,6 +34,14 @@ const logger = new Logger("api");
 
 process.on("uncaughtException", (error) => logger.error(error));
 process.on("unhandledRejection", (reason) => logger.error(reason));
+
+const SLOW_REQUEST_MS = 2500;
+
+const getOutcome = (status: number): RequestOutcome => {
+  if (status >= 500) return "error";
+  if (status >= 400) return "message";
+  return "success";
+};
 
 const mediaRoot = await config("api.mediaRoot");
 
@@ -46,14 +62,39 @@ adapter
     done(null, body)
   );
 
-adapter.getInstance().addHook("onRequest", (request, _reply, done) => {
-  const { player, uuid, guild } = request.query as Record<string, string | undefined>;
+// A Nest interceptor would miss requests the guards reject
+adapter.getInstance().addHook("onRequest", (request, reply, done) => {
+  const { player, uuid, guild, cache } = request.query as Record<string, string | undefined>;
 
   setRequestAttributes({
-    "statsify.api.route": request.routeOptions.url,
+    "http.request.method": request.method,
+    "http.route": request.routeOptions.url,
     "statsify.player.tag": player ?? uuid,
     "statsify.guild.tag": guild,
+    "statsify.cache.level": cache,
   });
+
+  // Unlike onResponse, close fires for aborted requests, but it can run in another request's async context
+  const scope = Sentry.getIsolationScope();
+
+  reply.raw.once("close", () =>
+    Sentry.withIsolationScope(scope, () => {
+      const status = reply.statusCode;
+      const { "statsify.outcome": outcome } = getRequestAttributes();
+
+      setRequestAttributes(
+        reply.raw.writableFinished ?
+          { "http.response.status_code": status, "statsify.outcome": outcome ?? getOutcome(status) } :
+          { "statsify.outcome": "error", "error.type": "RequestAborted" }
+      );
+
+      emitRequestEvent({
+        message: [request.method, request.routeOptions.url].filter(Boolean).join(" "),
+        durationMs: reply.elapsedTime,
+        slowMs: SLOW_REQUEST_MS,
+      });
+    })
+  );
 
   done();
 });

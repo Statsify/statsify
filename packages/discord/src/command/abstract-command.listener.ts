@@ -18,7 +18,13 @@ import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
 import { type IMessage, Message } from "#messages";
 import { Interaction, type InteractionAttachment } from "#interaction";
-import { Logger, setRequestAttributes } from "@statsify/logger";
+import {
+  Logger,
+  getRequestAttributes,
+  setRequestAttributes,
+  settleAll,
+  withRequestEvent,
+} from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
@@ -34,6 +40,14 @@ export type InteractionHook = (
 ) => InteractionServer.InteractionReply | undefined | Promise<any>;
 
 export type CommandPrecondition = () => void;
+
+type InteractionHandling = [
+  response: InteractionServer.InteractionReply | Promise<InteractionServer.InteractionReply>,
+  work?: void | Promise<unknown>,
+];
+
+const SLOW_INTERACTION_MS = 5000;
+const ALWAYS_KEPT_TIERS = [UserTier.STAFF, UserTier.CORE].map((tier) => User.getTierName(tier));
 
 export interface ExecuteCommandOptions {
   commandName: string;
@@ -153,13 +167,10 @@ export abstract class AbstractCommandListener {
         ...response,
       });
     } catch (err) {
-      if (err instanceof Message) {
-        setRequestAttributes({ "statsify.outcome": "message" });
-        return context.reply(err);
-      }
+      if (!(err instanceof Message)) throw err;
 
-      this.logger.error(`An error occurred when running "${commandName}"`);
-      this.logger.error(err);
+      setRequestAttributes({ "statsify.outcome": getRequestAttributes()["statsify.outcome"] ?? "message" });
+      return context.reply(err);
     }
   }
 
@@ -230,7 +241,7 @@ export abstract class AbstractCommandListener {
     }
   }
 
-  protected onMessageComponent(interaction: Interaction): InteractionServer.InteractionReply {
+  protected onMessageComponent(interaction: Interaction): InteractionHandling {
     const hook = this.hooks.get(interaction.getCustomId());
 
     const res = hook && Sentry.startSpan(
@@ -242,12 +253,17 @@ export abstract class AbstractCommandListener {
       () => hook(interaction)
     );
 
-    if (res && !(res instanceof Promise)) return res;
+    if (res && !(res instanceof Promise)) return [res];
 
-    return { type: InteractionResponseType.DeferredMessageUpdate };
+    const work = res?.catch((err) => {
+      if (!(err instanceof Message)) throw err;
+      setRequestAttributes({ "statsify.outcome": getRequestAttributes()["statsify.outcome"] ?? "message" });
+    });
+
+    return [{ type: InteractionResponseType.DeferredMessageUpdate }, work];
   }
 
-  protected onModal(interaction: Interaction): InteractionServer.InteractionReply {
+  protected onModal(interaction: Interaction): InteractionHandling {
     // Currently the message component handler is the same implementation as the modal handler
     return this.onMessageComponent(interaction);
   }
@@ -281,36 +297,73 @@ export abstract class AbstractCommandListener {
     };
   }
 
-  private onInteraction(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
-    return Sentry.withIsolationScope(async () => {
-      Sentry.setUser({ id: interaction.getUserId() });
+  private handleInteraction(interaction: Interaction): InteractionHandling {
+    if (interaction.isCommandInteraction()) {
+      setRequestAttributes({ "discord.interaction.type": "command" });
 
-      setRequestAttributes({
-        "discord.guild.id": interaction.getGuildId(),
-        "discord.locale": interaction.getLocale(),
-      });
+      const work = Sentry.startSpan(
+        { op: "command", name: interaction.getData().name, parentSpan: null },
+        () => this.onCommand(interaction)
+      );
 
-      if (interaction.isCommandInteraction()) {
+      return [{ type: InteractionResponseType.DeferredChannelMessageWithSource }, work];
+    }
+
+    if (interaction.isAutocompleteInteraction()) {
+      setRequestAttributes({ "discord.interaction.type": "autocomplete" });
+
+      return [
         Sentry.startSpan(
-          { op: "command", name: interaction.getData().name, parentSpan: null },
-          () => this.onCommand(interaction)
-        );
-
-        return { type: InteractionResponseType.DeferredChannelMessageWithSource };
-      }
-
-      if (interaction.isAutocompleteInteraction())
-        return Sentry.startSpan(
           { op: "autocomplete", name: interaction.getData().name, parentSpan: null },
           () => this.onAutocomplete(interaction)
-        );
+        ),
+      ];
+    }
 
-      if (interaction.isMessageComponentInteraction())
-        return this.onMessageComponent(interaction);
-      if (interaction.isModalInteraction()) return this.onModal(interaction);
+    if (interaction.isMessageComponentInteraction()) {
+      setRequestAttributes({ "discord.interaction.type": "component" });
+      return this.onMessageComponent(interaction);
+    }
 
-      return { type: InteractionResponseType.Pong };
-    });
+    if (interaction.isModalInteraction()) {
+      setRequestAttributes({ "discord.interaction.type": "modal" });
+      return this.onModal(interaction);
+    }
+
+    setRequestAttributes({ "discord.interaction.type": "ping" });
+    return [{ type: InteractionResponseType.Pong }];
+  }
+
+  private onInteraction(
+    interaction: Interaction,
+    acknowledge: (response: InteractionServer.InteractionReply) => Promise<unknown>
+  ) {
+    return withRequestEvent(
+      async () => {
+        const start = performance.now();
+
+        Sentry.setUser({ id: interaction.getUserId() });
+
+        setRequestAttributes({
+          "discord.guild.id": interaction.getGuildId(),
+          "discord.locale": interaction.getLocale(),
+        });
+
+        const [response, work] = this.handleInteraction(interaction);
+
+        const acknowledged = (async () => {
+          await acknowledge(await response);
+          setRequestAttributes({ "discord.interaction.ack_ms": Math.round(performance.now() - start) });
+        })();
+
+        await settleAll([acknowledged, work]);
+      },
+      ({ "discord.interaction.type": type, "discord.command": command, "statsify.user.tier": tier }) => ({
+        message: [type, command].filter(Boolean).join(" "),
+        slowMs: SLOW_INTERACTION_MS,
+        alwaysKeep: tier !== undefined && ALWAYS_KEPT_TIERS.includes(tier),
+      })
+    );
   }
 
   private handleInteractionServer(client: InteractionServer) {
@@ -318,13 +371,15 @@ export abstract class AbstractCommandListener {
       this.logger.error(err);
     });
 
-    client.on("interaction", async (event) => {
+    client.on("interaction", (event) => {
       const interaction = new Interaction(this.rest, event.interaction, this.applicationId);
-      const response = await this.onInteraction(interaction);
-      await interaction.reply(response);
 
-      event.response.statusCode = 204;
-      event.response.end();
+      return this.onInteraction(interaction, async (response) => {
+        await interaction.reply(response);
+
+        event.response.statusCode = 204;
+        event.response.end();
+      });
     });
   }
 
@@ -348,8 +403,7 @@ export abstract class AbstractCommandListener {
         this.applicationId
       );
 
-      const response = await this.onInteraction(interaction);
-      interaction.reply(response);
+      return this.onInteraction(interaction, (response) => interaction.reply(response));
     });
   }
 

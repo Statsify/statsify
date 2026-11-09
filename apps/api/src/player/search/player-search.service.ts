@@ -8,7 +8,7 @@
 
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
-import { Logger } from "@statsify/logger";
+import { setRequestError } from "@statsify/logger";
 import { Redis } from "ioredis";
 
 const REDI_SEARCH_NOT_INSTALLED =
@@ -21,8 +21,6 @@ export interface RedisPlayer {
 
 @Injectable()
 export class PlayerSearchService {
-  private logger = new Logger("PlayerSearchService");
-
   public constructor(@InjectRedis() private readonly redis: Redis) {}
 
   public async get(query: string): Promise<string[]> {
@@ -36,8 +34,7 @@ export class PlayerSearchService {
         "25"
       )) as string[];
     } catch (e) {
-      this.logger.error(e);
-      this.logger.error(REDI_SEARCH_NOT_INSTALLED);
+      setRequestError(new Error(REDI_SEARCH_NOT_INSTALLED, { cause: e }));
 
       return [];
     }
@@ -55,15 +52,13 @@ export class PlayerSearchService {
         "INCR"
       );
     } catch (e) {
-      this.logger.error(e);
-      this.logger.error(REDI_SEARCH_NOT_INSTALLED);
+      setRequestError(new Error(REDI_SEARCH_NOT_INSTALLED, { cause: e }));
     }
   }
 
   public delete(name: string) {
     return this.redis.call("FT.SUGDEL", "player:autocomplete", name).catch((e) => {
-      this.logger.error(e);
-      this.logger.error(REDI_SEARCH_NOT_INSTALLED);
+      setRequestError(new Error(REDI_SEARCH_NOT_INSTALLED, { cause: e }));
     });
   }
 }
