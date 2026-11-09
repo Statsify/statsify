@@ -7,14 +7,13 @@
  */
 
 import { type InventoryLayout, InventoryRenderer, type InventorySize, LAYOUTS, slotAt, slotOrigin } from "../core/inventory.js";
-import { type TooltipOwner, tooltipOverlay } from "./tooltip-overlay.js";
 import { context, createCanvas } from "../core/canvas.js";
 import { IconCache } from "../core/icon-cache.js";
 import type { ItemStack } from "../core/item-stack.js";
 import type { PackStack } from "../core/pack.js";
+import { tooltipOverlay } from "./tooltip-overlay.js";
 
-// Milliseconds per game tick
-const TICK = 50;
+const MS_PER_TICK = 50;
 
 interface Resources {
   renderer: Promise<InventoryRenderer>;
@@ -22,7 +21,6 @@ interface Resources {
   tooltips: WeakMap<ItemStack, { scale: number; canvas: OffscreenCanvas }>;
 }
 
-// Inventories on one page share each pack's renderers and one icon cache
 const cache = new IconCache();
 const resources = new WeakMap<PackStack, Resources>();
 
@@ -40,6 +38,7 @@ function resourcesFor(pack: PackStack) {
 /** What the last full draw made, which ticks and hovers draw over */
 interface View {
   renderer: InventoryRenderer;
+  tooltips: Resources["tooltips"];
   size: InventorySize;
   /** The inventory without its moving slots' contents */
   still: OffscreenCanvas;
@@ -47,7 +46,7 @@ interface View {
 }
 
 /** <mc-inventory>: a container drawn the way Minecraft draws one, from a resource pack */
-export class McInventory extends HTMLElement implements TooltipOwner {
+export class McInventory extends HTMLElement {
   public static observedAttributes = ["rows", "cols", "scale", "label", "layout", "freeze"];
 
   // Inventories with moving slots share one clock, so their animations stay in step. It runs on
@@ -75,7 +74,7 @@ export class McInventory extends HTMLElement implements TooltipOwner {
   });
 
   private static run(time: number) {
-    const tick = Math.floor(time / TICK);
+    const tick = Math.floor(time / MS_PER_TICK);
 
     if (tick !== McInventory.clock) {
       McInventory.clock = tick;
@@ -92,13 +91,13 @@ export class McInventory extends HTMLElement implements TooltipOwner {
     this.canvas.style.display = "block";
     root.append(this.canvas);
 
-    this.canvas.addEventListener("pointermove", (event) => this.pointer(event));
+    this.canvas.addEventListener("pointermove", (event) => this.hover(event));
     this.canvas.addEventListener("pointerdown", (event) => {
       // The overlay hides on any pointerdown that reaches the document
       event.stopPropagation();
       if (event.pointerType === "mouse") return;
       this.hovered = -1;
-      this.pointer(event);
+      this.hover(event);
     });
     this.canvas.addEventListener("pointerleave", (event) => {
       if (event.pointerType !== "mouse") return;
@@ -159,10 +158,10 @@ export class McInventory extends HTMLElement implements TooltipOwner {
     return this.hasAttribute("freeze") ? 0 : McInventory.clock;
   }
 
-  private pointer(event: PointerEvent) {
-    if (!this.view || !this.packStack) return;
+  private hover(event: PointerEvent) {
+    if (!this.view) return;
 
-    const { renderer, size } = this.view;
+    const { renderer, tooltips, size } = this.view;
     const bounds = this.canvas.getBoundingClientRect();
     const slot = slotAt(size, (event.clientX - bounds.left) / size.scale, (event.clientY - bounds.top) / size.scale);
     const overlay = tooltipOverlay();
@@ -181,7 +180,6 @@ export class McInventory extends HTMLElement implements TooltipOwner {
       return;
     }
 
-    const { tooltips } = resourcesFor(this.packStack);
     let tooltip = tooltips.get(item);
 
     if (tooltip?.scale !== size.scale) {
@@ -198,7 +196,8 @@ export class McInventory extends HTMLElement implements TooltipOwner {
     const drawing = ++this.drawing;
     const size = this.size;
     const tick = this.tick;
-    const renderer = await resourcesFor(this.packStack).renderer;
+    const resources = resourcesFor(this.packStack);
+    const renderer = await resources.renderer;
     const shown = this.items.slice(0, size.rows * size.cols);
     const frozen = this.hasAttribute("freeze");
     const moving = shown.flatMap((item, slot) => (item && !frozen && renderer.animates(item) ? [slot] : []));
@@ -208,10 +207,9 @@ export class McInventory extends HTMLElement implements TooltipOwner {
       Promise.all(moving.map((slot) => renderer.icon(shown[slot]!, size.scale, tick))),
     ]);
 
-    // A newer draw started while this one waited
     if (drawing !== this.drawing) return;
 
-    this.view = { renderer, size, still, composed: createCanvas(still.width, still.height) };
+    this.view = { renderer, tooltips: resources.tooltips, size, still, composed: createCanvas(still.width, still.height) };
     this.moving = moving;
     this.movingIcons = icons;
     this.canvas.width = still.width;
@@ -231,16 +229,12 @@ export class McInventory extends HTMLElement implements TooltipOwner {
     const drawing = this.drawing;
     const { renderer, size } = this.view;
 
-    try {
-      const icons = await Promise.all(this.moving.map((slot) => renderer.icon(this.items[slot]!, size.scale, this.tick)));
+    const icons = await Promise.all(this.moving.map((slot) => renderer.icon(this.items[slot]!, size.scale, this.tick)));
+    this.stepping = false;
 
-      // A full draw started meanwhile and shows this tick itself
-      if (drawing === this.drawing) {
-        this.movingIcons = icons;
-        this.show();
-      }
-    } finally {
-      this.stepping = false;
+    if (drawing === this.drawing) {
+      this.movingIcons = icons;
+      this.show();
     }
   }
 

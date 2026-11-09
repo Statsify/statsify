@@ -29,7 +29,6 @@ const HEADS: Record<string, { texture: string; hat: boolean }> = {
   zombie: { texture: "entity/zombie/zombie", hat: true },
 };
 
-// Heads without a skin, or whose skin doesn't load, get the default skin, as in game
 const DEFAULT_SKIN = "entity/player/wide/steve";
 
 // A banner in a slot has its flag at the start of its wave
@@ -75,19 +74,15 @@ interface GlintPass {
 
 interface Glint {
   passes: GlintPass[];
-  /** Multiplies the texture, channel by channel */
   tint: [number, number, number];
 }
 
-// 26.3: one pass tilted 10° at speed 0.5, at strength 0.75
 function modernGlint(tick: number): Glint {
   const time = tick * 50 * 0.5 * 8;
   const scrollV = (time % 30_000) / 30_000;
   return { passes: [{ angle: Math.PI / 18, scrollU: -(time % 110_000) / 110_000, scrollV }], tint: [0.75, 0.75, 0.75] };
 }
 
-// 1.8 tints its grey glint 0x8040CC and draws it twice, at -50° and 10°, scrolling over 3 and
-// 4.873 seconds
 function legacyGlint(tick: number): Glint {
   const ms = tick * 50;
   return {
@@ -114,11 +109,46 @@ function squaredGlint(texture: ImageData, tint: Glint["tint"]) {
 
   const canvas = createCanvas(texture.width, texture.height);
   context(canvas).putImageData(squared, 0, 0);
-  return canvas;
+  return { pixels: squared, canvas };
 }
 
-// Minecraft scrolls the glint over each sprite's eighth of the item atlas. Drawn as a pattern and
-// masked by the icon, so the GPU adds it and no pixels are read back each tick
+const translucent = (icon: OffscreenCanvas) =>
+  context(icon)
+    .getImageData(0, 0, icon.width, icon.height)
+    .data.some((value, i) => i % 4 === 3 && value > 0 && value < 255);
+
+// "lighter" adds alpha too, which would make translucent icons more opaque, so those add the glint
+// to their pixels' colours one by one
+function addGlint(ctx: OffscreenCanvasRenderingContext2D, glint: ImageData, passes: GlintPass[]) {
+  const { width, height } = ctx.canvas;
+  const pixels = ctx.getImageData(0, 0, width, height);
+
+  for (const { angle, scrollU, scrollV } of passes) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const out = (y * width + x) * 4;
+        if (pixels.data[out + 3] === 0) continue;
+
+        const u = (x + 0.5) / width / 8;
+        const v = (y + 0.5) / height / 8;
+        const gu = u * cos - v * sin + scrollU;
+        const gv = u * sin + v * cos + scrollV;
+        const gx = Math.floor((gu - Math.floor(gu)) * glint.width);
+        const gy = Math.floor((gv - Math.floor(gv)) * glint.height);
+        const texel = (gy * glint.width + gx) * 4;
+
+        for (let channel = 0; channel < 3; channel++) pixels.data[out + channel] += glint.data[texel + channel];
+      }
+    }
+  }
+
+  ctx.putImageData(pixels, 0, 0);
+}
+
+// A canvas pattern avoids reading pixels back for each tick
 function drawGlint(ctx: OffscreenCanvasRenderingContext2D, glint: OffscreenCanvas, passes: GlintPass[]) {
   const { width, height } = ctx.canvas;
   const layer = createCanvas(width, height);
@@ -154,13 +184,18 @@ function drawGlint(ctx: OffscreenCanvasRenderingContext2D, glint: OffscreenCanva
   ctx.drawImage(layer, 0, 0);
 }
 
+// Mixed pixel by pixel like the texels, since drawing one icon over the other at an alpha isn't a
+// linear blend: two identical translucent icons would come out more opaque
 function crossFade(from: OffscreenCanvas, to: OffscreenCanvas, blend: number) {
-  const canvas = createCanvas(from.width, from.height);
-  const ctx = context(canvas);
-  ctx.drawImage(from, 0, 0);
-  ctx.globalAlpha = blend;
-  ctx.drawImage(to, 0, 0);
+  const pixels = context(from).getImageData(0, 0, from.width, from.height);
+  const next = context(to).getImageData(0, 0, to.width, to.height);
 
+  for (let i = 0; i < pixels.data.length; i++) {
+    pixels.data[i] = pixels.data[i] * (1 - blend) + next.data[i] * blend;
+  }
+
+  const canvas = createCanvas(from.width, from.height);
+  context(canvas).putImageData(pixels, 0, 0);
   return canvas;
 }
 
@@ -189,9 +224,9 @@ export class ItemRenderer {
   private textures: TextureLoader;
   private icons = new Map<string, Promise<OffscreenCanvas>>();
   private skins = new Map<string, Promise<ImageData | undefined>>();
-  /** Whether the top pack's glint is 1.8's, which 1.8 coloured and moved in its own way */
   private legacyGlint: boolean;
-  private glint?: Promise<OffscreenCanvas>;
+  private glint?: Promise<ReturnType<typeof squaredGlint>>;
+  private translucentIcons = new WeakMap<OffscreenCanvas, boolean>();
 
   public constructor(
     private stack: PackStack,
@@ -228,13 +263,18 @@ export class ItemRenderer {
     ctx.drawImage(icon, 0, 0);
     const { passes, tint } = this.legacyGlint ? legacyGlint(tick) : modernGlint(tick);
     this.glint ??= this.textures.get(this.legacyGlint ? LEGACY_GLINT : GLINT).then((texture) => squaredGlint(texture, tint));
-    drawGlint(ctx, await this.glint, passes);
+    const glint = await this.glint;
+
+    if (!this.translucentIcons.has(icon)) this.translucentIcons.set(icon, translucent(icon));
+
+    if (this.translucentIcons.get(icon)) addGlint(ctx, glint.pixels, passes);
+    else drawGlint(ctx, glint.canvas, passes);
 
     return canvas;
   }
 
   private async base(requested: ItemStack, scale: number, tick: number): Promise<OffscreenCanvas> {
-    // A head whose skin doesn't load is drawn, and cached, as the default skin
+    // Failed skins share the default head's cache entry
     const item =
       requested.skin && !(await this.skin(requested.skin)) ? { ...requested, skin: undefined } : requested;
 
@@ -460,21 +500,21 @@ export class ItemRenderer {
     );
   }
 
-  /** A skin's pixels, or undefined when it doesn't load, which the next call tries again */
+  /** A skin's pixels; failed loads return undefined and are retried */
   private skin(url: string) {
     let skin = this.skins.get(url);
 
     if (!skin) {
       skin = (async () => {
-        const response = await fetch(url).catch(() => undefined);
-        if (!response?.ok) {
-          this.skins.delete(url);
-          return;
-        }
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
 
         const image = await decodePng(new Uint8Array(await response.arrayBuffer()));
         return context(image).getImageData(0, 0, image.width, image.height);
-      })();
+      })().catch(() => {
+        this.skins.delete(url);
+        return undefined;
+      });
 
       this.skins.set(url, skin);
     }

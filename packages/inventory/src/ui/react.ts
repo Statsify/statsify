@@ -26,9 +26,8 @@ export interface InventoryProps {
 }
 
 /**
- * <mc-inventory> for React. The element extends HTMLElement, so it's only defined in the browser:
- * a server render leaves an empty tag, and `pack` and `slots` are set once the element exists,
- * since React would turn them into attributes on an element that isn't defined yet.
+ * <mc-inventory> for React. The element loads only in the browser, and `pack` and `slots` wait for
+ * it: React would set them as attributes on an element that isn't defined yet.
  */
 export function Inventory({ pack, slots, ...attributes }: InventoryProps) {
   const ref = useRef<McInventory>(null);

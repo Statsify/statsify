@@ -9,7 +9,7 @@
 import type { ItemStack } from "../core/item-stack.js";
 import dumped from "../../data/turbo-kart-racers.json" with { type: "json" };
 
-interface KartPart {
+export interface KartPart {
   /** As PartRarity names it, like AWESOME */
   rarity: string;
   /** Each attribute's level, as KartAttributeType names it, like { TOP_SPEED: 5 } */

@@ -126,7 +126,7 @@ function potionColor(effects: PotionEffect[]) {
   );
 }
 
-/** A grass colour from the pack's colormap/grass.png, as GrassColor.get reads it */
+/** A grass colour from the pack's colormap/grass.png */
 function grassColor(colormap: ImageData, temperature: number, downfall: number) {
   const x = Math.floor((1 - temperature) * 255);
   const y = Math.floor((1 - downfall * temperature) * 255);

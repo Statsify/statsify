@@ -28,7 +28,7 @@ export function loadNames(stack: PackStack) {
 const prefixed = (text: TextComponent, codes: string, style: { color?: string; italic?: boolean }): TextComponent =>
   typeof text === "string" ? `${codes}${text}` : { text: "", ...style, extra: [text] };
 
-/** An unnamed item's name: 1.8's where it had one, since Hypixel players see those, else the pack's */
+/** 1.8 names take priority because those are the names Hypixel players see */
 function plainName(item: ItemStack, names: Record<string, string>) {
   const legacy = legacyName(item.id);
   // 1.8 makes only common items aqua when enchanted
@@ -65,7 +65,7 @@ const BORDER_BOTTOM = "rgba(40, 0, 127, 0.314)";
 /** How far the tooltip box reaches past its text on each side, in GUI pixels */
 export const TOOLTIP_PADDING = 4;
 
-/** Draws a tooltip the way 1.8's drawHoveringText does */
+/** Draws a tooltip the way 1.8 does */
 export function drawTooltip(text: TextRenderer, lines: TextComponent[], scale: number, tick: number) {
   const width = Math.max(...lines.map((line) => text.width(line)));
   const height = 8 + (lines.length > 1 ? 2 + (lines.length - 1) * 10 : 0);

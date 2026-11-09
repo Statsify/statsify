@@ -6,12 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Builds data/minecraft-data.json from minecraft-data at a pinned release, checked against a
-// 26.3 client jar or vanilla pack zip so every name it writes is one the pack can draw, and
-// pairs 1.8.9's texture names with 26.3's from the two versions' models, and takes 1.8.9's
-// English item names from StatsifyDump's `/sdump names` export:
-//   pnpm --filter @statsify/inventory generate <path to 26.3.jar or pack zip> <path to 1.8.9.jar> <names-*.json>
-
 import { readFile, writeFile } from "node:fs/promises";
 import { fetchJson } from "./minecraft-data.ts";
 import { unzipSync } from "fflate";
@@ -57,10 +51,10 @@ const DYES: Record<string, string> = {
   black: "ink_sac",
 };
 
-const RECORDS = ["11", "13", "blocks", "cat", "chirp", "far", "mall", "mellohi", "stal", "strad", "wait", "ward"];
+const RECORDS = ["11", "13", "blocks", "cat", "chirp", "far", "mall", "mellohi", "stal", "strad", "wait", "ward"] as const;
 
-/** A texture's 26.3 name, null where 26.3 draws it another way, or one frame of a 1.8 strip */
-type LegacyTexture = string | null | { texture: string; frame: number };
+/** A texture's 26.3 name, null where 26.3 draws it another way, or one frame of a 1.8 strip, by how far along it sits */
+type LegacyTexture = string | null | { texture: string; position: number };
 
 // 1.8.9 textures whose models were renamed too, so no same-named model pairs them with 26.3's
 const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
@@ -133,9 +127,10 @@ const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
   "items/potion_bottle_splash": "item/splash_potion",
   "items/reeds": "item/sugar_cane",
   "items/sign": "item/oak_sign",
-  // 1.8 animated these strips in code; a slot shows 26.3's first entry, at its frame
-  "items/clock": { texture: "item/clock_00", frame: 0 },
-  "items/compass": { texture: "item/compass_16", frame: 16 },
+  // 1.8 animated these strips in code; a slot shows 26.3's first entry, frame 0 of 64 and 16 of 32.
+  // Packs replace them with strips of any length, so the frame is kept as a point along the strip
+  "items/clock": { texture: "item/clock_00", position: 0 },
+  "items/compass": { texture: "item/compass_16", position: 0.5 },
   // 26.3 draws beds in code, and gives each spawn egg its own texture where 1.8 tinted one
   "items/bed": null,
   "items/spawn_egg": null,
@@ -181,7 +176,6 @@ interface ModelFile {
 const MODEL = /^assets\/minecraft\/models\/((?:item|block)\/.+)\.json$/;
 const TEXTURE = /^assets\/minecraft\/textures\/(.+)\.png$/;
 
-/** A jar's item and block models by id ("item/stick"), and its texture ids ("item/stick") */
 async function readAssets(source: string) {
   const textures = new Set<string>();
 
@@ -360,9 +354,7 @@ for (const [, name, id] of (await materials.text()).matchAll(/^\s+([A-Z0-9_]+)\(
   if (drawn.has(Number(id))) output.materials[name] = Number(id);
 }
 
-// A texture 26.3 still has keeps its name. The rest pair up through models named the same in
-// both versions, key by key, and the most common pairing wins (1.8's one command block texture
-// is 26.3's side, front and back)
+// 1.8's command block texture has several 26.3 counterparts; the most common pairing wins
 const pairings = new Map<string, Map<string, number>>();
 
 for (const id of legacyAssets.models.keys()) {
@@ -385,8 +377,7 @@ const mostPaired = (counts: Map<string, number>) =>
 
 const sameName = (texture: string) => texture.replace(/^items\//, "item/").replace(/^blocks\//, "block/");
 
-// A texture an item model draws that finds no 26.3 name would leave 26.3's in its place unnoticed
-const legacyDrawn = new Set(
+const itemTextures = new Set(
   [...legacyAssets.models.keys()]
     .filter((id) => id.startsWith("item/"))
     .flatMap((id) => Object.values(modelTextures(legacyAssets.models, id))),
@@ -402,7 +393,7 @@ for (const texture of [...legacyAssets.textures].toSorted()) {
         : paired && mostPaired(paired);
 
   if (target === undefined) {
-    if (legacyDrawn.has(texture)) missing.push(`texture ${texture}`);
+    if (itemTextures.has(texture)) missing.push(`texture ${texture}`);
   } else if (target !== null && !modernAssets.textures.has(typeof target === "string" ? target : target.texture)) {
     missing.push(`texture ${texture} as ${JSON.stringify(target)}`);
   } else if (target !== texture) {
@@ -441,8 +432,6 @@ const moved = new Set(
 
 for (const id of moved) output.legacyModels[id] = `legacy/${id}`;
 
-// A 1.8.9 model 26.3 renamed takes the name of its first renamed texture that names a 26.3 model
-// in the same folder (item/reeds draws item/sugar_cane), unless two models would end up with one name
 const modelNames = Map.groupBy(
   [...legacyAssets.models.keys()]
     .filter((id) => !modernAssets.models.has(id))
@@ -468,6 +457,16 @@ for (const [name, models] of modelNames) {
 // Flat items whose frame 1.8 picked in code, which the pinned strip frames above stand in for
 output.legacyModels["builtin/clock"] = "builtin/generated";
 output.legacyModels["builtin/compass"] = "builtin/generated";
+
+// Block items draw 1.8.9's item model of the same name, and these 1.8 names are other 26.3 items:
+// 1.8's snow is the block, its stone slab and stairs are smooth stone and cobblestone's
+Object.assign(output.legacyModels, {
+  "item/smooth_red_sandstone": "item/cut_red_sandstone",
+  "item/smooth_sandstone": "item/cut_sandstone",
+  "item/snow": "item/snow_block",
+  "item/stone_slab": "item/smooth_stone_slab",
+  "item/stone_stairs": "item/cobblestone_stairs",
+});
 
 if (missing.length > 0) {
   throw new Error(`Not in ${path}, add them to RENAMES or LEGACY_TEXTURES:\n${missing.join("\n")}`);

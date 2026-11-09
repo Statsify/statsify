@@ -7,7 +7,7 @@
  */
 
 import { type PackStack, assetPath } from "./pack.js";
-import { context, decodePng } from "./canvas.js";
+import { context, decodePng, pngSize } from "./canvas.js";
 
 interface Animation {
   width?: number;
@@ -49,7 +49,7 @@ function frameRect(width: number, height: number, animation: Animation | undefin
   };
 }
 
-/** Plays the animation forward to a tick, as SpriteContents.AnimatedTexture does */
+/** Plays the animation forward to a game tick */
 function frameAt(width: number, height: number, animation: Animation, tick: number): Frame {
   const size = frameSize(width, height, animation);
   const count = Math.floor(width / size.width) * Math.floor(height / size.height);
@@ -78,12 +78,6 @@ function frameAt(width: number, height: number, animation: Animation, tick: numb
   }
 
   return { index: frames[0].index, next: frames[0].index, blend: 0, start: tick, end: tick };
-}
-
-// A PNG's size sits in its IHDR chunk, so animations can be timed before decoding
-function pngSize(file: Uint8Array) {
-  const view = new DataView(file.buffer, file.byteOffset, file.byteLength);
-  return { width: view.getUint32(16), height: view.getUint32(20) };
 }
 
 /** Sprites from a pack stack as pixels, decoded once each */

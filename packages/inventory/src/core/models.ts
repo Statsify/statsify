@@ -9,7 +9,7 @@
 import { type PackStack, assetPath, namespaceTypes, namespaced } from "./pack.js";
 import type { ItemStack } from "./item-stack.js";
 import type { TintSource } from "./tints.js";
-import type { Transformation, Vec3 } from "./geometry.js";
+import { type Transformation, type Vec3, composeTransforms } from "./geometry.js";
 
 export interface Transform {
   rotation?: Vec3;
@@ -118,6 +118,8 @@ const select = (model: Extract<ItemModel, { type: "minecraft:select" }>) =>
 
 const BUILTIN_GENERATED = "minecraft:builtin/generated";
 
+const LEGACY_TURN: Transform = { rotation: [30, 225, 0], scale: [0.625, 0.625, 0.625] };
+
 export class ModelResolver {
   private models = new Map<string, Model>();
   private definitions = new Map<string, ItemModel>();
@@ -146,6 +148,7 @@ export class ModelResolver {
     if (cached) return cached;
 
     const chain: ModelFile[] = [];
+    const legacy: boolean[] = [];
     let generated = false;
 
     for (let next: string | undefined = id; next; ) {
@@ -154,10 +157,12 @@ export class ModelResolver {
         break;
       }
 
-      const file: ModelFile | undefined = this.stack.json(assetPath(next, "models", ".json"));
+      const path = assetPath(next, "models", ".json");
+      const file: ModelFile | undefined = this.stack.json(path);
       if (!file) throw new Error(`${id} needs the model ${next}, which isn't in the pack`);
 
       chain.push(file);
+      legacy.push(this.stack.packs.findLast(({ files }) => files.has(path))?.layout === "legacy");
       next = file.parent;
     }
 
@@ -174,14 +179,35 @@ export class ModelResolver {
       guiLight: chain.find((file) => file.gui_light)?.gui_light ?? "side",
     };
 
+    // 1.8.9 turned every 3D item like a block in code before the gui transform its model inherits,
+    // so a model gets both when that transform comes from a 1.8.9 file, or it has none and any 1.8.9 file
+    const gui = chain.findIndex((file) => file.display?.gui);
+    if (!generated && (gui === -1 ? legacy.includes(true) : legacy[gui])) {
+      model.display.gui = composeTransforms(LEGACY_TURN, model.display.gui ?? {});
+    }
+
     this.models.set(model.id, model);
     return model;
+  }
+
+  // 1.8.9 drew block items through an item model of their own, with its own gui transform,
+  // where 26.3's definitions select the block's model
+  private itemModel(item: ItemStack, selected: string) {
+    if (!namespaced(selected).split(":")[1].startsWith("block/")) return selected;
+
+    const [namespace, name] = namespaced(item.id).split(":");
+    const legacy = `${namespace}:item/${name}`;
+    const legacyPath = assetPath(legacy, "models", ".json");
+    const selectedPath = assetPath(selected, "models", ".json");
+
+    const pack = this.stack.packs.findLast(({ files }) => files.has(legacyPath) || files.has(selectedPath));
+    return pack?.layout === "legacy" && pack.files.has(legacyPath) ? legacy : selected;
   }
 
   private layers(model: ItemModel, item: ItemStack, transformation?: Transformation): ItemLayer[] {
     switch (model.type) {
       case "minecraft:model":
-        return [{ model: this.model(model.model), tints: model.tints ?? [] }];
+        return [{ model: this.model(this.itemModel(item, model.model)), tints: model.tints ?? [] }];
 
       case "minecraft:composite":
         return model.models.flatMap((child) => this.layers(child, item));
