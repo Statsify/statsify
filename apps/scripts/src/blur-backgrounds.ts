@@ -9,13 +9,15 @@
 import cluster from "node:cluster";
 import os from "node:os";
 import { Canvas, loadImage } from "skia-canvas";
+import { existsSync } from "node:fs";
 import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { getAssetPath, HAS_PRIVATE_ASSETS } from "@statsify/assets";
 
-const assetsSource = HAS_PRIVATE_ASSETS ? "private" : "public";
-const BACKGROUNDS_PATH = getAssetPath("backgrounds", assetsSource);
-const BACKGROUNDS_OUTPUT_PATH = getAssetPath("out/backgrounds", assetsSource);
+// Not from @statsify/assets, which loads @statsify/schemas: the Docker build runs this script without building them
+const ASSETS_PATH = "../../assets";
+const assetsSource = existsSync(join(ASSETS_PATH, "private", "LICENSE")) ? "private" : "public";
+const BACKGROUNDS_PATH = join(ASSETS_PATH, assetsSource, "backgrounds");
+const BACKGROUNDS_OUTPUT_PATH = join(ASSETS_PATH, assetsSource, "out/backgrounds");
 
 const backgroundPaths = await readdir(BACKGROUNDS_PATH);
 
