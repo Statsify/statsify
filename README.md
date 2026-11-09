@@ -28,16 +28,17 @@ A Hypixel and Minecraft focused Discord Bot
 * Set up a `config.js` file in the root of the project following the `config.schema.js` file (copy paste it over and fill it in)
 * Pull the git submodules (`git submodule update --init`)
 * Use `pnpm build` to build all packages and apps,
+* Use `pnpm scripts blur-backgrounds` after building to make the blurred backgrounds
 * Use `pnpm build:watch` to watch files and build them while you code
 * Use `pnpm {appName} start` to run an app, eg `pnpm api start` to run the API
 
 ### 🤖 Other Important commands
 ```bash
 # Change things in a package/app
-$ pnpm workspace {app or package name} {command}
+$ pnpm --filter {app or package name} {command}
 
 # Example: Adding a dependency
-$ pnpm workspace {app or package name} add {dependency}
+$ pnpm --filter {app or package name} add {dependency}
 
 # Linting
 $ pnpm lint
