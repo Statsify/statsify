@@ -408,12 +408,16 @@ const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
   );
 
   const rankNames = guild.ranks.map((rank) => `${rank.name}${rank.tag ? ` [${rank.tag}]` : ""}`);
-  // Rank cells share one width; two a row only when three of the widest would outgrow the achievements above
+  // Rank cells share one width; two a row only when three of the widest would set the card's width
   const rankWidth = Math.max(...rankNames.map((name) => useComponentWidth(<box><text>{name}</text></box>)));
   const achievementWidth = Math.max(
     ...[prestige, experienceKings, winners, family].map((cell) => useComponentWidth(cell))
   );
-  const ranksGroups = arrayGroup(rankNames, 3 * rankWidth > 2 * achievementWidth ? 2 : 3);
+  const nameWidth = useComponentWidth(<box><text>§^4^{guild.nameFormatted}</text></box>);
+  const ranksGroups = arrayGroup(
+    rankNames,
+    3 * rankWidth > Math.max(2 * achievementWidth, nameWidth) ? 2 : 3
+  );
 
   return (
     <>
