@@ -32,11 +32,19 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
   && mv node_modules /node_modules
 COPY locales locales
 
-FROM base AS assets
+FROM base AS assets-prune
 COPY . .
-RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store pnpm install --frozen-lockfile \
-  && pnpm turbo run build --filter=@statsify/assets \
-  && pnpm scripts blur-backgrounds && rm -rf assets/private/backgrounds
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store --mount=type=cache,id=pnpm-cache,target=/root/.cache/pnpm \
+  pnpm dlx "turbo@$(node -p 'require("./package.json").devDependencies.turbo')" prune scripts --docker
+
+# Only the blur's inputs, so it reruns when backgrounds, the script or dependencies change instead of on every commit
+FROM base AS assets
+COPY --from=assets-prune /app/out/json/ .
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store pnpm install --frozen-lockfile --filter scripts
+COPY apps/scripts/src/blur-backgrounds.ts apps/scripts/src/
+COPY assets assets
+WORKDIR /app/apps/scripts
+RUN node src/blur-backgrounds.ts && rm -rf ../../assets/private/backgrounds
 
 FROM ubuntu:24.04
 LABEL org.opencontainers.image.source=https://github.com/Statsify/statsify
