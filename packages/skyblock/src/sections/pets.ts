@@ -74,28 +74,32 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
 export const petScorePoints = (tier: string) => PET_RARITIES.indexOf(tier as Rarity) + 1;
 
 /**
- * Pet score: one pet per type counts, the one with the best rarity from the API's tier (which leaves out Tier Boost),
- * then the highest level. It scores Common 1 … Mythic 6, plus 1 if it's at max level. Special and Very Special pets
- * never count. Pets are sorted active first, then by rarity and XP.
+ * Pet score: one pet per type counts, the one with the best rarity, Tier Boost included (the wiki's Rift Ferret page,
+ * unverified), then the highest level. It scores Common 1 … Mythic 6, plus 1 if it's at max level. Special and Very
+ * Special pets never count. Pets are sorted active first, then by rarity and XP.
  *
  * Montezuma lives in the Rift's dead_cats, where its active flag means summoned in the Rift. It's listed but doesn't
  * score: counting it would put members above their highest_pet_score.
  */
 export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
-  const raw = member.pets_data?.pets ?? [];
-  const montezuma = member.rift?.dead_cats?.montezuma;
-  const views = [...raw, ...(montezuma ? [{ ...montezuma, active: false }] : [])].map((pet) => toPetView(pet, items));
-
+  const views: PetView[] = [];
   const best = new Map<string, { points: number; level: PetView["level"] }>();
-  for (const [i, pet] of raw.entries()) {
-    const points = petScorePoints(pet.tier);
+
+  for (const pet of member.pets_data?.pets ?? []) {
+    const view = toPetView(pet, items);
+    views.push(view);
+
+    const points = petScorePoints(view.rarity);
     if (points === 0) continue;
 
-    const { level } = views[i];
+    const { level } = view;
     const seen = best.get(pet.type);
     if (!seen || points > seen.points || (points === seen.points && level.level > seen.level.level))
       best.set(pet.type, { points, level });
   }
+
+  const montezuma = member.rift?.dead_cats?.montezuma;
+  if (montezuma) views.push(toPetView({ ...montezuma, active: false }, items));
 
   const pets = views.toSorted(
     (a, b) => Number(b.active) - Number(a.active) || rank(b.rarity) - rank(a.rarity) || b.level.xp - a.level.xp
@@ -131,7 +135,7 @@ if (import.meta.vitest) {
     expect(active).toMatchObject({ rarity: "LEGENDARY", level: { level: 96, maxLevel: 100 } });
     expect(pets.find((pet) => !pet.active && pet.type === "BEE")?.level.level).toBe(100);
     expect(pets.find((pet) => pet.type === "GOLDEN_DRAGON")?.level).toMatchObject({ level: 100, maxLevel: 200 });
-    // Jerry scores its Mythic over its maxed Common, and Phoenix never scores
-    expect(score).toBe(4 + 1 + 5 + 6);
+    // The boosted Bee scores Legendary, Jerry its Mythic over its maxed Common, and Phoenix never scores
+    expect(score).toBe(5 + 5 + 6);
   });
 }

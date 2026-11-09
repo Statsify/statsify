@@ -29,19 +29,17 @@ export function getHotf(member: RawMember): HotfSection | null {
     ([key, spent]) => /^forest(_\d+)?$/.test(key) && spent > 0
   );
   const loadouts = new Set([...used.map(([key]) => key), `forest${suffix}`]).size;
+  const centerLevel = Number(nodes.center_of_the_forest ?? 0);
 
   const whispers = (type: Whisper) => {
-    const pool = member.foraging_core?.whispers?.[type] ?? {};
-    const spending = pool[String(slot)];
-    return {
-      total: typeof pool.total === "number" ? pool.total : 0,
-      spent: typeof spending === "object" ? add(spending.spent ?? 0, spending.spent_non_refundable ?? 0) : 0,
-    };
+    const pool = member.foraging_core?.whispers?.[type];
+    const spending = pool?.[slot];
+    return { total: pool?.total ?? 0, spent: add(spending?.spent ?? 0, spending?.spent_non_refundable ?? 0) };
   };
 
   return {
     level: getLevel(xp, LEVELING.HOTF, LEVELING.leveling_caps.HOTF),
-    centerLevel: Number(nodes.center_of_the_forest ?? 0),
+    centerLevel,
     loadout: { selected: slot, total: Math.max(slot, loadouts) },
     tokensSpent: tree?.tokens_spent?.[`forest${suffix}`] ?? 0,
     ability: tree?.selected_ability?.[`foraging${suffix}`],
