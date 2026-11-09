@@ -19,13 +19,15 @@ const INACTIVE_SHOWN = 12;
 const MAX_POWER_STATS_PER_LINE = 5; // more is wider than the card
 
 const topMissing = ({ accessories }: MemberView) => accessories?.missing.slice(0, MISSING_SHOWN) ?? [];
-// One row per accessory, so a stack of duplicates doesn't fill the page
+// One row per accessory, so a stack of duplicates doesn't fill the page. Variants that share an id (Abicase colors)
+// keep their own rows and names.
 function topInactive({ accessories }: MemberView) {
   const rows = new Map<string, InactiveAccessory & { count: number }>();
   for (const view of accessories?.inactive ?? []) {
-    const row = rows.get(view.id);
+    const key = `${view.id} ${view.name}`;
+    const row = rows.get(key);
     if (row) row.count++;
-    else rows.set(view.id, { ...view, count: 1 });
+    else rows.set(key, { ...view, count: 1 });
   }
   return [...rows.values()].slice(0, INACTIVE_SHOWN);
 }
