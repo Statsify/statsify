@@ -33,10 +33,11 @@ const PLACEHOLDERS: Record<ImageVariant, string> = {
 };
 
 /**
- * Rendered PNGs stay in Redis only briefly (about 300 KB each, in the leaderboard Redis); Cloudflare holds them
- * for an hour anyway.
+ * Rendered PNGs stay in Redis only long enough for the requests waiting on the render to read them: they're about
+ * 300 KB each, in the leaderboard Redis, and a crawl of distinct image URLs writes one per render. Cloudflare holds
+ * them for an hour anyway.
  */
-const CACHE_TTL_SECONDS = 120;
+const CACHE_TTL_SECONDS = 20;
 /** The first request for a missing image renders it under this lock; the others wait for its PNG. */
 const LOCK_TTL_MS = 15_000;
 const LOCK_POLL_MS = 100;
