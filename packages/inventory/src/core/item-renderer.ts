@@ -497,7 +497,8 @@ export class ItemRenderer {
     return Promise.all(
       layers.map(async ({ pattern, color }) => {
         const texture = await this.textures.get(entityTexture(folder, pattern));
-        return part(texture).map((quad) => ({ ...quad, tint: dyeColor(color) }));
+        const tint = dyeColor(color);
+        return part(texture).map((quad) => ({ ...quad, tint }));
       }),
     );
   }
