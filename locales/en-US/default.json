@@ -663,7 +663,7 @@
     "mostAccessoryPower": "Most Accessory Power",
     "mostDamage": "Most Damage",
     "mostXp": "Most SkyBlock XP",
-    "museumNotCounted": "Networth doesn't count the museum, since it couldn't be loaded for this player.",
+    "museumNotCounted": "Networth doesn't count the museum, since Hypixel didn't send one for this player.",
     "networth": "Networth",
     "noAccessories": "No accessories yet.",
     "noBinListing": "No BIN listing",
