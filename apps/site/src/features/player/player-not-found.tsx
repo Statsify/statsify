@@ -12,7 +12,7 @@ import { Error, ErrorText } from "~/components/ui/error";
 import { Skin } from "~/components/ui/skin";
 import { Turnstile } from "~/components/turnstile";
 import { formatCountdown } from "~/i18n/format";
-import { isPlayerTag } from "~/lib/uuid";
+import { PLACEHOLDER_UUID, isPlayerTag } from "~/lib/uuid";
 import { getRouteApi, useNavigate, useParams } from "@tanstack/react-router";
 import { type ActionResult, BROWSER_TIMEOUT_MS, lookupPlayer } from "./player-actions";
 import { type ReactNode, useEffect, useState } from "react";
@@ -22,9 +22,6 @@ import { useTranslation } from "react-i18next";
 import type { PlayerIdentity } from "@statsify/contract";
 
 const localeRoute = getRouteApi("/{-$locale}");
-
-/** Steve, for players we have nothing to show yet. */
-const PLACEHOLDER_UUID = "76a56ac7fcf649fca0531cb5c77cd9ae";
 
 /** Looks a name up on Hypixel. The gallery passes its own outcomes, as it does for `RefreshBar`'s refresh. */
 type Lookup = (name: string, token: string | undefined, deadline: AbortSignal) => Promise<ActionResult<PlayerIdentity>>;
