@@ -65,11 +65,10 @@ const HOME_PREVIEWS_TTL_MS = 60_000;
 const HOME_PREVIEWS_RETRY_MS = 5000;
 
 /**
- * Unknown usernames are remembered so repeated misses never reach Mongo again for a while: `stored` when the name
- * isn't in the database, `absent` when Minecraft's account servers or Hypixel answered that there is no such player.
+ * Usernames Minecraft's account servers or Hypixel answered have no such player, so a lookup doesn't ask again for a
+ * while. A name that's only missing from the database isn't remembered: every name a visitor types would become a key.
  */
 const MISS_TTL_SECONDS = 15 * 60;
-type Miss = "stored" | "absent";
 
 /** Site-initiated Hypixel calls across all visitors per 5 minutes; `site.hypixelBudget` in `config.js`, 0 for none. */
 const DEFAULT_HYPIXEL_BUDGET = 15;
@@ -235,11 +234,7 @@ export class SiteService implements OnApplicationBootstrap {
 
     const player = await this.findIdentity("usernameToLower", nameLower);
 
-    if (!player) {
-      await this.rememberMiss(nameLower, "stored");
-      throw notFound();
-    }
-
+    if (!player) throw notFound();
     return player;
   }
 
@@ -295,7 +290,7 @@ export class SiteService implements OnApplicationBootstrap {
     const uuid = byUuid ? tag : await this.accountUuid(tag);
 
     if (!uuid) {
-      await this.rememberMiss(key, "absent");
+      await this.rememberMiss(key);
       throw notFound();
     }
 
@@ -312,7 +307,7 @@ export class SiteService implements OnApplicationBootstrap {
     }
 
     if (!player) {
-      await this.rememberMiss(key, "absent");
+      await this.rememberMiss(key);
       throw notFound();
     }
 
@@ -640,8 +635,8 @@ export class SiteService implements OnApplicationBootstrap {
     }
   }
 
-  private rememberMiss(nameLower: string, miss: Miss) {
-    return this.redis.set(missKey(nameLower), miss, "EX", MISS_TTL_SECONDS);
+  private rememberMiss(nameLower: string) {
+    return this.redis.set(missKey(nameLower), "absent", "EX", MISS_TTL_SECONDS);
   }
 
   /**
