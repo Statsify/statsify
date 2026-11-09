@@ -90,8 +90,10 @@ type CountAttribute = {
 const logger = new Logger("Event");
 
 export const setRequestAttributes = (attributes: RequestAttributes) => {
-  Sentry.setAttributes(attributes);
-  Sentry.setTags(Object.fromEntries(Object.entries(attributes).filter(([key]) => TAGGED_ATTRIBUTES.has(key))));
+  const entries = Object.entries(attributes).filter(([, value]) => value !== undefined);
+
+  Sentry.setAttributes(Object.fromEntries(entries));
+  Sentry.setTags(Object.fromEntries(entries.filter(([key]) => TAGGED_ATTRIBUTES.has(key))));
 };
 
 export const getRequestAttributes = () =>
