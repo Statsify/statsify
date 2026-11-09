@@ -167,7 +167,11 @@ export class McInventory extends HTMLElement {
 
     const { renderer, tooltips, size } = this.view;
     const bounds = this.canvas.getBoundingClientRect();
-    const slot = slotAt(size, (event.clientX - bounds.left) / size.scale, (event.clientY - bounds.top) / size.scale);
+    const slot = slotAt(
+      size,
+      (event.clientX - bounds.left) / (size.scale * (bounds.width / this.canvas.width)),
+      (event.clientY - bounds.top) / (size.scale * (bounds.height / this.canvas.height)),
+    );
     const overlay = tooltipOverlay();
 
     if (slot === this.hovered) {
