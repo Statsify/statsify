@@ -7,6 +7,7 @@
  */
 
 import { Button } from "~/components/ui/button";
+import { cn } from "~/lib/util";
 import { type Direction, useLeaderboardStream } from "./use-leaderboard-stream";
 import { FindPlayer, PageNav } from "./leaderboard-table";
 import { LeaderboardBoxes } from "./leaderboard-boxes";
@@ -89,7 +90,13 @@ export function LeaderboardStream({ view }: { view: LeaderboardView }) {
   return (
     <>
       <FindPlayer field={board.field} pages={pages} miss={stream.seed.miss} />
-      <div ref={stream.rootRef} tabIndex={-1} className="relative flex flex-col gap-4 focus-ring-none">
+      {/* A board of one or two stats fits the search row's width, so it takes it and its values sit near their names. A
+          wider board fitted to its columns would end just past the row's edges, so it keeps the page's width. */}
+      <div
+        ref={stream.rootRef}
+        tabIndex={-1}
+        className={cn("relative flex flex-col gap-4 focus-ring-none", board.columns.length <= 2 && "w-full max-w-200 self-center")}
+      >
         {hydrated && stream.hasNext && (
           <button
             type="button"
