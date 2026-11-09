@@ -8,7 +8,7 @@
 
 import type { ItemStack } from "../core/item-stack.js";
 import dumped from "../../data/arena.json" with { type: "json" };
-import { kitKey } from "./duels.js";
+import { kitKey } from "./kits.js";
 
 const LOADOUT = ["offensive", "utility", "support", "ultimate", "active_rune"] as const;
 
@@ -17,8 +17,7 @@ type ArenaSlot = (typeof LOADOUT)[number];
 // Built by scripts/import-dump.ts from the Arena Shop's skill and rune menus
 const MENUS = dumped as Record<ArenaSlot, Record<string, ItemStack>>;
 
-// Hypixel spelled berserk wrong, and stores the Rune of Defence as tank: the rune_level_<rune>
-// keys are the Runes menu's five with tank for Defence
+// Hypixel stores berserk as bersek, and the Rune of Defence as tank, as its rune_level_tank key does
 const RENAMED: Record<string, string> = { bersek: "berserk", tank: "defence" };
 
 /**

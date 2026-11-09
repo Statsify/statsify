@@ -8,16 +8,15 @@
 
 import type { ItemStack } from "../core/item-stack.js";
 import dumped from "../../data/speed-uhc.json" with { type: "json" };
-import { kitKey } from "./duels.js";
+import { kitKey } from "./kits.js";
 
-// Built by scripts/import-dump.ts from the Speed UHC Shop's Kits page, by mode and kit. An item
-// whose name the page gives in Hypixel's words (Pig Egg, Awkward Potion) is null
+// Built by scripts/import-dump.ts from the Speed UHC Shop's Kits page, by mode and kit
 const KITS = dumped as Record<string, Record<string, (ItemStack | null)[]>>;
 
 /**
  * A Speed UHC kit by its activeKit_<MODE> id, like kit_basic_normal_logger, as a row of its items
  * in the Kits page's order, with their counts and enchantments. An item the page names in
- * Hypixel's words leaves its slot empty.
+ * Hypixel's words (Pig Egg, Awkward Potion) leaves its slot empty.
  */
 export function fromSpeedUhcKit(id: string): (ItemStack | undefined)[] {
   const [, mode, name] = /^kit_basic_([a-z]+)_(.+)$/.exec(id) ?? [];

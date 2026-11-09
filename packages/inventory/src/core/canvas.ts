@@ -34,6 +34,12 @@ export const createCanvas = (width: number, height: number) => backend.createCan
 
 export const decodePng = (file: Uint8Array) => backend.decodePng(file);
 
+// A PNG's size sits in its IHDR chunk, so it's known without decoding
+export function pngSize(file: Uint8Array) {
+  const view = new DataView(file.buffer, file.byteOffset, file.byteLength);
+  return { width: view.getUint32(16), height: view.getUint32(20) };
+}
+
 export function context(canvas: OffscreenCanvas) {
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Canvas 2D isn't available");

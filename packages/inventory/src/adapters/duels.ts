@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARMOR, SLOTS, inRange } from "./kits.js";
+import { ARMOR, SLOTS, inRange, kitKey } from "./kits.js";
 import type { ItemStack } from "../core/item-stack.js";
 import dumped from "../../data/duels-modes.json" with { type: "json" };
 import { legacyMaterial } from "../core/legacy-items.js";
@@ -66,9 +66,6 @@ export const DUELS_KITS = Object.entries(KITS).flatMap(([mode, kits]) =>
   Object.entries(kits).map(([kit, { name }]) => ({ key: `layout_${mode}_${kit}`, name })),
 );
 
-/** Kit names as keys: "Hype Train" and hype_train are both hypetrain */
-export const kitKey = (name: string) => name.toLowerCase().replaceAll(/[^a-z]/g, "");
-
 function duelsKit(mode: string, kit: string): Kit | undefined {
   const kits = KITS[mode];
   if (!kits) return undefined;
@@ -77,10 +74,10 @@ function duelsKit(mode: string, kit: string): Kit | undefined {
 
   // SkyWars Duel keys use SkyWars kit ids, kit_<type>_<mode>_<kit>, where Mini's and Ranked's are
   // the Mini picker's kits. Older keys name the kit alone
-  const id = /^kit_([a-z]+)_[a-z]+_(.+)$/.exec(kit);
-  const name = kitKey(id?.[2] ?? kit);
+  const id = /^kit_([a-z]+)_([a-z]+)_(.+)$/.exec(kit);
+  const name = kitKey(id?.[3] ?? kit);
   if (!id) return kits[`mini_${name}`] ?? kits[`insane_${name}`];
-  return kits[`${id[1] === "mini" || id[1] === "ranked" ? "mini" : "insane"}_${name}`];
+  return kits[`${id[1] === "mini" || id[2] === "ranked" ? "mini" : "insane"}_${name}`];
 }
 
 const withoutCopy = (token: string) => token.replace(/_?\d+$/, "");

@@ -28,6 +28,9 @@ const SHOP_ROWS = 6;
 const SHOP_COLUMNS = 9;
 const BOTTOM_ROW = (SHOP_ROWS - 1) * SHOP_COLUMNS;
 
+// Older quick buys store Wood as wood
+const RENAMED: Record<string, string | undefined> = { wood: "oak_wood_planks" };
+
 // The quick buy's 21 slots: rows 3 to 5 of the shop, less their first and last columns
 const QUICK_BUY_SLOTS = [2, 3, 4].flatMap((row) =>
   Array.from({ length: SHOP_COLUMNS - 2 }, (_, column) => row * SHOP_COLUMNS + column + 1),
@@ -75,7 +78,7 @@ export function fromBedwarsQuickBuy(favourites: string | null | undefined): (Ite
       continue;
     }
 
-    const item = SHOP_ITEMS[token];
+    const item = SHOP_ITEMS[RENAMED[token] ?? token];
     if (!item) continue;
 
     slots[slot] = {

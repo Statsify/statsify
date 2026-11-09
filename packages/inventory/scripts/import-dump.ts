@@ -6,18 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Builds data/duels-modes.json, data/tnt-games.json and data/legacy-kits.json from StatsifyDump
-// exports (the ChatTriggers module) that opened Duels', TNT Games', Blitz's and Mega Walls' layout
-// editors, so each kit item has the count, name and tooltip the game gives it, data/skywars-kits.json
-// from the SkyWars lobby's kit menus and Kit Customizers, and data/quake.json, data/arena.json,
-// data/turbo-kart-racers.json and data/speed-uhc.json from those games' shop menus. Each dump
-// session writes its own exports, so pass the last export of every session needed:
+// Builds every data/*.json but minecraft-data.json from StatsifyDump exports (the ChatTriggers
+// module) of the games' layout editors, kit menus and shop menus, so each item has the count, name
+// and tooltip the game gives it. Each dump session writes its own exports, so pass the last export
+// of every session needed:
 //   pnpm --filter @statsify/inventory build
 //   node scripts/import-dump.ts <dump.json> [<dump.json> …]
 
 import {
   ARMOR,
   type ItemStack,
+  type KartPart,
   type Kit,
   type KitItem,
   type LegacyKit,
@@ -177,16 +176,17 @@ const blank = (line: string) => plain(line).trim() === "";
 // The editor's chest: the main rows in 0 to 26, the hotbar in 36 to 44
 const storedSlot = (slot: number) => (slot >= 36 && slot <= 44 ? slot - 36 : slot <= 26 ? slot + 9 : undefined);
 
+const editorItems = (screen: Screen) =>
+  screen.slots.flatMap(({ slot, item }) => {
+    const stored = storedSlot(slot);
+    return item && stored !== undefined ? [{ slot: stored, item }] : [];
+  });
+
 /** A single-kit editor's items by stored slot, from its first screen (the default) or, in older dumps, where each was seen */
 function editor(title: string) {
   const screen = screens.find((shown) => plain(shown.title) === `Layout Editor - ${title}`);
-  if (screen) {
-    return screen.slots.flatMap(({ slot, item }) => {
-      const stored = storedSlot(slot);
-      // Wizards fills the main rows with blank panes, since its kit only fits the hotbar
-      return item && stored !== undefined && plain(item.name).trim() !== "" ? [{ slot: stored, item }] : [];
-    });
-  }
+  // Wizards fills the main rows with blank panes, since its kit only fits the hotbar
+  if (screen) return editorItems(screen).filter(({ item }) => plain(item.name).trim() !== "");
 
   return items.flatMap((item) =>
     item.seen.flatMap((seen) => {
@@ -358,12 +358,7 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
     // The first screen is the default; later ones may show items the player moved
     if (kits[key]) continue;
 
-    const shown = screen.slots
-      .flatMap(({ slot, item }) => {
-        const stored = storedSlot(slot);
-        return item && stored !== undefined ? [{ slot: stored, item }] : [];
-      })
-      .toSorted((a, b) => a.slot - b.slot);
+    const shown = editorItems(screen).toSorted((a, b) => a.slot - b.slot);
 
     kits[key] = {
       name: group ? `${group} ${kit.name}` : kit.name,
@@ -441,13 +436,7 @@ for (const [index, screen] of screens.entries()) {
 
   const key = `${menu.toLowerCase()}_${kitKey(kit)}`;
   if (skyWarsCustomizers.has(key)) continue;
-  skyWarsCustomizers.set(
-    key,
-    screen.slots.flatMap(({ slot, item }) => {
-      const stored = storedSlot(slot);
-      return item && stored !== undefined ? [{ slot: stored, item }] : [];
-    }),
-  );
+  skyWarsCustomizers.set(key, editorItems(screen));
 }
 
 interface Listed {
@@ -608,7 +597,7 @@ for (const screen of screens) {
 
 if (Object.keys(skyWarsKits).length === 0) missing.push("SkyWars kit menus");
 
-const legacyKits ={ blitz: {} as Record<string, LegacyKit>, megawalls: {} as Record<string, LegacyKit> };
+const legacyKits = { blitz: {} as Record<string, LegacyKit>, megawalls: {} as Record<string, LegacyKit> };
 
 // Blitz names its kit items "<Kit>'s <Material> (<level>)", which a renamed item replaces with
 // its new name and an Owner line
@@ -652,8 +641,7 @@ function legacyKitLevel(page: Screen, game: keyof typeof legacyKits, kit: string
 
 for (const [index, screen] of screens.entries()) {
   const kit = /^Edit (.+) Layout$/.exec(plain(screen.title))?.[1];
-  const back = screen.slots.find(({ item }) => item && plain(item.name) === "Go Back")?.item;
-  const page = back && /^To (.+) (Upgrades|Class)$/.exec(plain(back.lore[0] ?? ""));
+  const page = /^(.+) (Upgrades|Class)$/.exec(backTo(screen));
   // A screen without its buttons was captured before it finished loading
   if (!kit || !page || page[1] !== kit) continue;
 
@@ -667,13 +655,11 @@ for (const [index, screen] of screens.entries()) {
   if (!shownPage) throw new Error(`No ${pageTitle} page before ${screen.title}`);
   const { level, armor } = legacyKitLevel(shownPage, game, kit);
 
-  const items = screen.slots
-    .flatMap(({ slot, item }) => {
-      const stored = storedSlot(slot);
-      if (!item || stored === undefined) return [];
+  const items = editorItems(screen)
+    .map(({ slot, item }) => {
       const shown = game === "blitz" ? withoutRename(item, kit, level) : item;
       const numeric = legacyId(shown);
-      return [{ slot: stored, token: `${numeric},${shown.damage}`, item: kitItem(shown, numeric) }];
+      return { slot, token: `${numeric},${shown.damage}`, item: kitItem(shown, numeric) };
     })
     .toSorted((a, b) => a.slot - b.slot);
 
@@ -830,13 +816,6 @@ arena.active_rune = byKey(
   "Arena Runes",
 );
 
-interface KartPart {
-  rarity: string;
-  /** Each attribute's level, as KartAttributeType names it (TOP_SPEED) */
-  attributes: Record<string, number>;
-  item: ItemStack;
-}
-
 // TKR's part selectors by the PartType their parts are stored with
 const KART_SELECTORS = { ENGINE: "Engine Selector", TURBOCHARGER: "Turbocharger Selector", FRAME: "Frame Selector" } as const;
 
@@ -913,33 +892,21 @@ if (kitsPage !== -1) {
   );
 }
 
-if (Object.keys(output.modes).length > 0 || Object.keys(output.kits).length > 0) {
-  await writeFile(new URL("../data/duels-modes.json", import.meta.url), `${JSON.stringify(output, null, 2)}\n`);
-}
-if (Object.keys(tntGames).length > 0) {
-  await writeFile(new URL("../data/tnt-games.json", import.meta.url), `${JSON.stringify(tntGames, null, 2)}\n`);
-}
-if (Object.keys(legacyKits.blitz).length > 0 || Object.keys(legacyKits.megawalls).length > 0) {
-  await writeFile(new URL("../data/legacy-kits.json", import.meta.url), `${JSON.stringify(legacyKits, null, 2)}\n`);
-}
-if (Object.keys(skyWarsKits).length > 0) {
-  await writeFile(new URL("../data/skywars-kits.json", import.meta.url), `${JSON.stringify(skyWarsKits, null, 2)}\n`);
-}
-
 const count = (menus: Record<string, object>) => Object.values(menus).reduce((sum, items) => sum + Object.keys(items).length, 0);
 
-if (count(quake) > 0) {
-  await writeFile(new URL("../data/quake.json", import.meta.url), `${JSON.stringify(quake, null, 2)}\n`);
+/** Writes a data file, unless these dumps had nothing for it */
+async function writeData(file: string, found: boolean, value: unknown) {
+  if (found) await writeFile(new URL(`../data/${file}`, import.meta.url), `${JSON.stringify(value, null, 2)}\n`);
 }
-if (count(arena) > 0) {
-  await writeFile(new URL("../data/arena.json", import.meta.url), `${JSON.stringify(arena, null, 2)}\n`);
-}
-if (count(kart) > 0) {
-  await writeFile(new URL("../data/turbo-kart-racers.json", import.meta.url), `${JSON.stringify(kart, null, 2)}\n`);
-}
-if (count(speedUhc) > 0) {
-  await writeFile(new URL("../data/speed-uhc.json", import.meta.url), `${JSON.stringify(speedUhc, null, 2)}\n`);
-}
+
+await writeData("duels-modes.json", Object.keys(output.modes).length > 0 || Object.keys(output.kits).length > 0, output);
+await writeData("tnt-games.json", Object.keys(tntGames).length > 0, tntGames);
+await writeData("legacy-kits.json", count(legacyKits) > 0, legacyKits);
+await writeData("skywars-kits.json", Object.keys(skyWarsKits).length > 0, skyWarsKits);
+await writeData("quake.json", count(quake) > 0, quake);
+await writeData("arena.json", count(arena) > 0, arena);
+await writeData("turbo-kart-racers.json", count(kart) > 0, kart);
+await writeData("speed-uhc.json", count(speedUhc) > 0, speedUhc);
 
 console.log(
   `${Object.keys(output.modes).length} Duels modes, ${Object.keys(tntGames).length} TNT Games modes; kits: ${Object.entries(output.kits)

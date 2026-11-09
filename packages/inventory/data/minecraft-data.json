@@ -1441,13 +1441,13 @@
     "items/clay_ball": "item/clay_ball",
     "items/clock": {
       "texture": "item/clock_00",
-      "frame": 0
+      "position": 0
     },
     "items/coal": "item/coal",
     "items/comparator": "item/comparator",
     "items/compass": {
       "texture": "item/compass_16",
-      "frame": 16
+      "position": 0.5
     },
     "items/cookie": "item/cookie",
     "items/diamond": "item/diamond",
@@ -1726,7 +1726,12 @@
     "item/sign": "item/oak_sign",
     "item/speckled_melon": "item/glistering_melon_slice",
     "builtin/clock": "builtin/generated",
-    "builtin/compass": "builtin/generated"
+    "builtin/compass": "builtin/generated",
+    "item/smooth_red_sandstone": "item/cut_red_sandstone",
+    "item/smooth_sandstone": "item/cut_sandstone",
+    "item/snow": "item/snow_block",
+    "item/stone_slab": "item/smooth_stone_slab",
+    "item/stone_stairs": "item/cobblestone_stairs"
   },
   "legacyNames": {
     "stone": "§fStone",

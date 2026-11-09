@@ -14,17 +14,18 @@ Swapping a stack swaps every icon, since cache keys start with the stack's hash.
 import { ItemRenderer, IconCache, PackStack, loadPack } from "@statsify/inventory";
 
 const stack = new PackStack([await loadPack(vanillaZip), await loadPack(userPack)]);
-const renderer = new ItemRenderer(stack, { cache: new IconCache() });
+const renderer = new ItemRenderer(stack, new IconCache());
 
 const icon = await renderer.render({ id: "minecraft:red_wool" }, 4); // a 64 × 64 canvas
 ```
 
 Older packs load as 26.3's layout, so they stack over a 26.3 pack the same way. A 1.8.9 pack (or
-the 1.8.9 client jar) gives its textures and models under their 26.3 names. Its 3D models get the
+the 1.8.9 client jar) gives its textures and models under their 26.3 names, and block items draw
+from its item models, as 1.8.9 drew them. Its 3D models get the
 turn 1.8.9 gave every 3D item in code, its compass and clock strips show the frame a slot shows,
-and its glint is tinted and moved the way 1.8 did it. Chests, heads and banners stay 26.3's, which
-draws them in code. A stack needs at least one 26.3 pack, which has the item model definitions.
-Another version needs only its tables in `UPGRADES` (`src/core/pack.ts`).
+and its glint is tinted and moved the way 1.8 did it. Chests and heads use 26.3's models, which
+are drawn in code. Banners aren't supported yet. A stack needs at least one 26.3 pack, which
+has the item model definitions.
 
 ## Items
 
@@ -129,14 +130,12 @@ setCanvasBackend(skiaCanvas);
 
 In these four, a pick the dumped menus don't have leaves its slot empty.
 
-`data/duels-modes.json`, `data/tnt-games.json` and `data/legacy-kits.json` come from the game:
-open the layout editors with the StatsifyDump ChatTriggers module running, then `pnpm build` and
+Every `data/*.json` but `minecraft-data.json` comes from the game: open the layout editors, kit
+menus and shop menus with the StatsifyDump module running, then `pnpm build` and
 `node scripts/import-dump.ts <dump.json> …`
 with the last export of each dump session. Open each kit's editor from its picker before moving
 anything: the picker shown next names the kit, and only an unsaved kit shows the default. Blitz's
 and Mega Walls' editors open from each kit's Upgrades or Class page, which gives the level.
-The Quake, Arena, TKR and Speed UHC data comes the same way, from those games' shop menus, and
-`data/skywars-kits.json` from the SkyWars lobby's kit menus and each kit's Kit Customizer.
 An item's `tooltip` holds the lines under its name as the game drew them, enchantments and
 attributes included.
 
