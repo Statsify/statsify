@@ -11,7 +11,7 @@ import { decodePng } from "./canvas.js";
 const STORE = "icons";
 
 // Bump whenever icons draw differently, so browsers drop the ones older code drew
-const VERSION = 2;
+const VERSION = 3;
 
 const settled = <T>(request: IDBRequest<T>) =>
   new Promise<T>((resolve, reject) => {
