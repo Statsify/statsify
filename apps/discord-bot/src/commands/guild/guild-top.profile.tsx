@@ -41,7 +41,6 @@ export const GuildTopProfile = ({
   user,
   logo,
 }: GuildTopProfileProps) => {
-  // A short page stays one column, so an odd count doesn't leave the second column a row short
   const groups = arrayGroup(
     members,
     members.length > MAX_SINGLE_COLUMN ? Math.ceil(members.length / 2) : members.length
