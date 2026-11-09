@@ -42,7 +42,7 @@ export const findScore = <T extends { req: number }>(data: T[], score = 0): T =>
 export const isObject = (value: any): value is object =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-// Every thousand is another M, built all at once, so a number someone typed could stall the process or run it out of memory
+// Each thousand adds an M, so a typed number can run the process out of memory
 const MAX_ROMAN_NUMERAL = 99_999;
 
 export const romanNumeral = (num: number): string => {
