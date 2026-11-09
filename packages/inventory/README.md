@@ -123,10 +123,11 @@ setCanvasBackend(skiaCanvas);
   skills and `active_rune` as a row of 5, with the Arena Shop's items from `data/arena.json`.
 - `fromTurboKartRacersKart(stats)`: the GingerBread stats' `engine_active`, `booster_active` and
   `frame_active` parts as a row of 3, matched to the part selectors' items in
-  `data/turbo-kart-racers.json` by rarity and attribute levels.
+  `data/turbo-kart-racers.json` by rarity and attribute levels (Basic parts by rarity, since
+  they're stored without attributes).
 - `fromSpeedUhcKit(id)`: an `activeKit_<MODE>` kit, like `kit_basic_normal_logger`, as a row of
-  its items from the Speed UHC Shop's Kits page (`data/speed-uhc.json`). Only Normal's page is
-  dumped.
+  its items from the Speed UHC Shop's Kits page, and the Default kit from a game's Gear Selector
+  (`data/speed-uhc.json`). Only Normal's page is dumped.
 
 In these four, a pick the dumped menus don't have leaves its slot empty.
 
