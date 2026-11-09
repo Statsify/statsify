@@ -7,10 +7,14 @@
  */
 
 import { Button } from "~/components/ui/button";
+import { Turnstile } from "~/components/turnstile";
 import { cn } from "~/lib/util";
+import { getRouteApi } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ActionResult } from "./player-actions";
+
+const localeRoute = getRouteApi("/{-$locale}");
 
 const LABEL = "font-sans text-16 font-medium text-mc-gray";
 
@@ -47,7 +51,8 @@ function relativeTime(then: number, now: number, locale: string): string {
 
 /**
  * "Updated N minutes ago" and the refresh button, disabled with a countdown until `expiresAt`.
- * `refresh` runs the page's refresh action and applies its data itself; the bar shows the outcome.
+ * `refresh` runs the page's refresh action with the visitor's Turnstile token and applies its data itself; the bar
+ * shows the outcome. A click shows the Turnstile widget first, since each refresh spends the site's shared Hypixel budget.
  */
 export function RefreshBar({
   updatedAt,
@@ -56,23 +61,26 @@ export function RefreshBar({
 }: {
   updatedAt: number;
   expiresAt: number;
-  refresh: () => Promise<ActionResult<unknown>>;
+  refresh: (token: string | undefined) => Promise<ActionResult<unknown>>;
 }) {
   const { t, i18n } = useTranslation();
+  const { turnstileSiteKey } = localeRoute.useLoaderData();
   const now = useNow();
   const [state, setState] = useState<RefreshState>({ status: "idle" });
+  const [verifying, setVerifying] = useState(false);
 
   const lockedUntil = state.status === "limited" ? state.until : expiresAt;
   const remaining = now === undefined ? undefined : Math.max(0, Math.ceil((lockedUntil - now) / 1000));
-  const disabled = state.status === "pending" || remaining === undefined || remaining > 0;
+  const disabled = verifying || state.status === "pending" || remaining === undefined || remaining > 0;
 
-  async function run() {
+  async function run(token?: string) {
+    setVerifying(false);
     setState({ status: "pending" });
 
     let result: ActionResult<unknown>;
 
     try {
-      result = await refresh();
+      result = await refresh(token);
     } catch {
       // A 500, a Cloudflare 429 or a dropped connection: say so and let the visitor try again.
       setState({ status: "error" });
@@ -103,11 +111,23 @@ export function RefreshBar({
         {state.status === "limited" && remaining ? <span className="text-mc-red">{t("player.refreshLimited")}</span> : null}
         {state.status === "error" && <span className="text-mc-red">{t("error.description")}</span>}
         <Button asChild className={cn("w-56", disabled && "opacity-60")}>
-          <button type="button" disabled={disabled} onClick={() => void run()}>
+          <button type="button" disabled={disabled} onClick={() => (turnstileSiteKey ? setVerifying(true) : void run())}>
             {label}
           </button>
         </Button>
       </div>
+      {verifying && (
+        <Turnstile
+          siteKey={turnstileSiteKey}
+          onToken={(token) => {
+            if (token) return void run(token);
+            // The widget failed or its token expired: the button comes back for another try.
+            setVerifying(false);
+            setState({ status: "error" });
+          }}
+          className="w-full"
+        />
+      )}
     </div>
   );
 }

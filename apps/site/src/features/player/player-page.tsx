@@ -46,8 +46,8 @@ export function PlayerView({ page }: { page: PlayerPage }) {
 
   // The refreshed page replaces the cached query, so every panel re-renders with the new numbers. The player's game
   // pages predate the refresh: they reload the next time they're shown.
-  const refresh = async () => {
-    const result = await refreshPlayer({ data: { uuid: page.uuid } });
+  const refresh = async (token: string | undefined) => {
+    const result = await refreshPlayer({ data: { uuid: page.uuid, token } });
 
     if (result.ok) {
       await queryClient.invalidateQueries({ queryKey: orpc.player.key({ input: { uuid: page.uuid } }), refetchType: "none" });
