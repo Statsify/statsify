@@ -10,7 +10,8 @@ import type { ItemStack } from "../core/item-stack.js";
 import dumped from "../../data/speed-uhc.json" with { type: "json" };
 import { kitKey } from "./kits.js";
 
-// Built by scripts/import-dump.ts from the Speed UHC Shop's Kits page, by mode and kit
+// Built by scripts/import-dump.ts from the Speed UHC Shop's Kits page and the Gear Selector's
+// Default kit, by mode and kit
 const KITS = dumped as Record<string, Record<string, (ItemStack | null)[]>>;
 
 /**

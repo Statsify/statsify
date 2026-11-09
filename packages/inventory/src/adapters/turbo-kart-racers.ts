@@ -34,7 +34,11 @@ function kartPart(stored: string) {
     stored.matchAll(/KartAttributeType:(\w+),Level:(\d+)/g).map(([, attribute, level]) => [attribute, Number(level)]),
   );
 
-  return PARTS[type ?? ""]?.find((part) => part.rarity === rarity && sameAttributes(part.attributes, attributes))?.item;
+  // Starter (Basic) parts are stored without their attributes
+  const matches = (part: KartPart) =>
+    part.rarity === rarity && (Object.keys(attributes).length === 0 || sameAttributes(part.attributes, attributes));
+
+  return PARTS[type ?? ""]?.find(matches)?.item;
 }
 
 /**
