@@ -20,7 +20,7 @@ import { DateTime } from "luxon";
 import { GameId, Guild, GuildMember, Progression, User } from "@statsify/schemas";
 import { GexpTable } from "./gexp.table.js";
 import { LocalizeFunction } from "@statsify/discord";
-import { StyleLocation } from "@statsify/rendering";
+import { StyleLocation, useComponentWidth } from "@statsify/rendering";
 import { arrayGroup, wordGroup } from "@statsify/util";
 import { ratio } from "@statsify/math";
 import type { Image } from "skia-canvas";
@@ -377,35 +377,55 @@ const formatGuildAchievement = (achievement: Progression, t: LocalizeFunction) =
 
 const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
   const { achievements } = guild;
-  const ranksGroups = arrayGroup(guild.ranks, 3);
+
+  const prestige = (
+    <Table.td
+      title={formatGuildAchievementTitle("Prestige", achievements.prestigeTier)}
+      value={formatGuildAchievement(achievements.prestigeProgression, t)}
+      color="§e"
+    />
+  );
+  const experienceKings = (
+    <Table.td
+      title={formatGuildAchievementTitle("Experience Kings", achievements.experienceKingsTier)}
+      value={formatGuildAchievement(achievements.experienceKingsProgression, t)}
+      color="§e"
+    />
+  );
+  const winners = (
+    <Table.td
+      title={formatGuildAchievementTitle("Winners", achievements.winnersTier)}
+      value={formatGuildAchievement(achievements.winnersProgression, t)}
+      color="§e"
+    />
+  );
+  const family = (
+    <Table.td
+      title={formatGuildAchievementTitle("Family", achievements.familyTier)}
+      value={formatGuildAchievement(achievements.familyProgression, t)}
+      color="§e"
+    />
+  );
+
+  const rankNames = guild.ranks.map((rank) => `${rank.name}${rank.tag ? ` [${rank.tag}]` : ""}`);
+  // Rank cells share one width; two a row only when three of the widest would outgrow the achievements above
+  const rankWidth = Math.max(...rankNames.map((name) => useComponentWidth(<box><text>{name}</text></box>)));
+  const achievementWidth = Math.max(
+    ...[prestige, experienceKings, winners, family].map((cell) => useComponentWidth(cell))
+  );
+  const ranksGroups = arrayGroup(rankNames, 3 * rankWidth > 2 * achievementWidth ? 2 : 3);
 
   return (
     <>
       <GuildBlock width="100%" title="Guild Achievements">
         <Table.table>
           <Table.tr>
-            <Table.td
-              title={formatGuildAchievementTitle("Prestige", achievements.prestigeTier)}
-              value={formatGuildAchievement(achievements.prestigeProgression, t)}
-              color="§e"
-            />
-            <Table.td
-              title={formatGuildAchievementTitle("Experience Kings", achievements.experienceKingsTier)}
-              value={formatGuildAchievement(achievements.experienceKingsProgression, t)}
-              color="§e"
-            />
+            {prestige}
+            {experienceKings}
           </Table.tr>
           <Table.tr>
-            <Table.td
-              title={formatGuildAchievementTitle("Winners", achievements.winnersTier)}
-              value={formatGuildAchievement(achievements.winnersProgression, t)}
-              color="§e"
-            />
-            <Table.td
-              title={formatGuildAchievementTitle("Family", achievements.familyTier)}
-              value={formatGuildAchievement(achievements.familyProgression, t)}
-              color="§e"
-            />
+            {winners}
+            {family}
           </Table.tr>
         </Table.table>
       </GuildBlock>
@@ -425,11 +445,7 @@ const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
           <div width="100%">
             {ranks.map((rank) => (
               <box width={`1/${ranks.length}`}>
-                <text>
-                  {`${guild.tagColor.code}${rank.name}${
-                    rank.tag ? ` [${rank.tag}]` : ""
-                  }`}
-                </text>
+                <text>{`${guild.tagColor.code}${rank}`}</text>
               </box>
             ))}
           </div>
