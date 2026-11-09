@@ -40,7 +40,7 @@ export function parseBazaar(raw: RawBazaar): Bazaar {
   };
 }
 
-const BOOK_KEY = /^ENCHANTMENT_(.+)_(\d+)$/;
+const BOOK_KEY = /^ENCHANTMENT_(.+)_(\d{1,2})$/;
 const PET_KEY = /^LVL_(\d+)_(VERY_SPECIAL|[A-Z]+)_(.+)$/;
 
 // Typed /price names reach these lookups, so "constructor" or "__proto__" mustn't read Object.prototype.

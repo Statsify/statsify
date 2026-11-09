@@ -50,10 +50,12 @@ export function getSkyBlockLevel(
   prices: PriceMap,
   market: boolean
 ): SkyBlockLevelSection {
-  // Each chain keeps its cheapest step per XP: under the highest, the cheapest per accessory power can pay none.
+  // Each chain keeps its cheapest step per XP: under the highest, the cheapest per accessory power can pay none, and a
+  // step that pays none goes last even when it's free.
   const accessories = getAccessories(member, items, prices, market, (power, highest) => {
     const xp = (step: MissingAccessory) => accessoryXp(power, highest, step.accessoryPower);
-    return cheapestFirst<MissingAccessory>((step) => step.cost && step.cost.coins / xp(step), xp);
+    const cheapest = cheapestFirst<MissingAccessory>((step) => step.cost && step.cost.coins / xp(step), xp);
+    return (a, b) => Number(xp(a) === 0) - Number(xp(b) === 0) || cheapest(a, b);
   });
   const { score, pets } = getPets(member);
   const owned = new Set(pets.map((pet) => pet.type));
