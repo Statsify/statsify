@@ -9,6 +9,9 @@
 /** A Minecraft UUID in a URL: 32 hex digits, with or without the four dashes, in any case. */
 export const UUID_PATTERN = /^[\da-f]{32}$|^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i;
 
+/** The account whose skin stands in for players we have nothing to show yet. */
+export const PLACEHOLDER_UUID = "76a56ac7fcf649fca0531cb5c77cd9ae";
+
 /**
  * A name or UUID that could be a player's. A name is letters, digits and underscores, at most 16 of them (some of the
  * oldest are shorter than today's 3).
