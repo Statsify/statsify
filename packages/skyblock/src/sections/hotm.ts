@@ -29,7 +29,8 @@ export function getHotm(member: RawMember): HotmSection {
   const nodes = tree?.nodes?.[`mining${suffix}`] ?? core.nodes ?? {};
 
   const level = getLevel(tree?.experience?.mining ?? core.experience ?? 0, LEVELING.HOTM, LEVELING.leveling_caps.HOTM);
-  const coreLevel = Number(nodes.core_of_the_mountain ?? 0);
+  // The old mining_core tree names it special_0
+  const coreLevel = Number(nodes.core_of_the_mountain ?? nodes.special_0 ?? 0);
   const loadouts = Object.keys(tree?.tokens_spent ?? {}).filter((key) => /^mountain(_\d+)?$/.test(key)).length;
 
   return {
