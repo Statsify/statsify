@@ -9,6 +9,9 @@
 /** A Minecraft UUID in a URL: 32 hex digits, with or without the four dashes, in any case. */
 export const UUID_PATTERN = /^[\da-f]{32}$|^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i;
 
+/** The account whose skin stands in for players we have nothing to show yet. */
+export const PLACEHOLDER_UUID = "76a56ac7fcf649fca0531cb5c77cd9ae";
+
 /**
  * The UUID the way the API stores it, undashed and lower case, or `null` for anything that isn't one.
  * The image routes read every spelling through this, so they serve one image under one cache key.
