@@ -16,9 +16,9 @@ export function SessionSection({ player }: { player: PreviewIdentity }) {
   return (
     <BaseSection
       background="woolgames"
-      className="flex-col items-center relative"
+      className="flex-col xl:flex-row justify-between items-center relative"
     >
-      <div className="flex flex-col gap-4 max-w-120 xl:max-w-200 text-mc-white">
+      <div className="flex flex-col gap-4 max-w-120 text-mc-white">
         <h2 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow">
           Sessions
         </h2>
