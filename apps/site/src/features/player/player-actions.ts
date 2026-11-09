@@ -99,13 +99,17 @@ export const refreshGame = createServerFn({ method: "POST" })
       mode: z.string().min(1).max(32).optional(),
       submode: z.string().min(1).max(32).optional(),
       period: z.string().min(1).max(32).optional(),
+      token: z.string().max(4096).optional(),
     })
   )
   .handler(async ({ data }): Promise<ActionResult<GamePage>> => {
     const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
+    const ip = clientIp();
+
+    if (!(await verifyTurnstile(data.token, ip))) return { ok: false, code: "VERIFICATION" };
 
     try {
-      await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: clientIp() }, { signal });
+      await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: ip }, { signal });
       const { uuid, game, mode, submode, period } = data;
       return { ok: true, data: await rpcServerClient.player.game({ uuid, game, mode, submode, period }, { signal }) };
     } catch (error) {
