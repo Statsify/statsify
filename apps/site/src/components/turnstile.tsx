@@ -62,12 +62,15 @@ export function Turnstile({
   siteKey,
   onToken,
   onLoadError,
+  size = "flexible",
   className,
 }: {
   siteKey: string;
   onToken: (token: string | undefined) => void;
   /** Cloudflare's script didn't load (blocked, offline), so there's no widget to complete. */
   onLoadError?: () => void;
+  /** `flexible` fills its box but needs at least 300 px; `compact` is 150 px wide. */
+  size?: "flexible" | "compact";
   className?: string;
 }) {
   const container = useRef<HTMLDivElement>(null);
@@ -94,7 +97,7 @@ export function Turnstile({
         widgetId = turnstile.render(target, {
           sitekey: siteKey,
           theme: "dark",
-          size: "flexible",
+          size,
           callback: (token) => callback.current(token),
           "expired-callback": () => callback.current(undefined),
           "error-callback": () => callback.current(undefined),
@@ -111,7 +114,7 @@ export function Turnstile({
       cancelled = true;
       if (widgetId) window.turnstile?.remove(widgetId);
     };
-  }, [siteKey]);
+  }, [siteKey, size]);
 
   return <div ref={container} className={className} />;
 }

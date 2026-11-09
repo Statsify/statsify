@@ -199,7 +199,9 @@ export function RefreshBar({
             setState({ status: "error" });
           }}
           onLoadError={() => setWidgetFailed(true)}
-          className="basis-full"
+          // The bar sits in the profile card, narrower than the flexible widget's 300 px.
+          size="compact"
+          className="flex basis-full justify-center"
         />
       )}
       <ClockScript
