@@ -18,7 +18,7 @@ import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
 import { type IMessage, Message } from "#messages";
 import { Interaction, type InteractionAttachment } from "#interaction";
-import { Logger, setRequestAttributes, withRequestEvent } from "@statsify/logger";
+import { Logger, setRequestAttributes, settleAll, withRequestEvent } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
@@ -345,7 +345,7 @@ export abstract class AbstractCommandListener {
           setRequestAttributes({ "discord.interaction.ack_ms": Math.round(performance.now() - start) });
         })();
 
-        await Promise.all([acknowledged, work]);
+        await settleAll([acknowledged, work]);
       },
       ({ "discord.interaction.type": type, "discord.command": command, "statsify.user.tier": tier }) => ({
         message: [type, command].filter(Boolean).join(" "),

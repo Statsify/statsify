@@ -124,6 +124,11 @@ export const setRequestError = (
   });
 };
 
+const recordError = (error: unknown) => {
+  logger.print("error", error);
+  setRequestError(error);
+};
+
 const getSampleReason = (
   attributes: RequestAttributes,
   { durationMs, slowMs = Number.POSITIVE_INFINITY, alwaysKeep = false, sampleRate = SAMPLE_RATE }: RequestEvent
@@ -161,9 +166,14 @@ export const withRequestEvent = (
     try {
       await request();
     } catch (error) {
-      logger.print("error", error);
-      setRequestError(error);
+      recordError(error);
     } finally {
       emitRequestEvent({ ...getEvent(getRequestAttributes()), durationMs: performance.now() - start });
     }
   });
+
+export const settleAll = async (work: unknown[]) => {
+  for (const result of await Promise.allSettled(work)) {
+    if (result.status === "rejected") recordError(result.reason);
+  }
+};

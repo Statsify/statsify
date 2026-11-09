@@ -10,7 +10,7 @@ import Redis from "ioredis";
 import { CurrentHistoricalType } from "@statsify/api-client";
 import { Guild, scanMetadata, Player } from "@statsify/schemas";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
-import { addRequestAttributes, withRequestEvent } from "@statsify/logger";
+import { addRequestAttributes, settleAll, withRequestEvent } from "@statsify/logger";
 
 const redis = new Redis(process.env.REDIS_URL);
 
@@ -68,7 +68,7 @@ const runLimit = async (constructors, prefixes) => {
 const limit = () =>
   withRequestEvent(
     () =>
-      Promise.all([
+      settleAll([
         runLimit([Player, Guild]),
         runLimit(
           [Player, Player, Player],
