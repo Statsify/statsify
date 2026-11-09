@@ -19,8 +19,14 @@ type QuakePart = (typeof LOADOUT)[number];
 const PARTS = dumped as Record<QuakePart, Record<string, ItemStack>>;
 
 // Ids are the menu's name without its last word, some with words of their own: LARGE_BALL is
-// the Large Barrel, lantern and discohat the Lantern and Disco Hats, snowkit_boots the Snow Boots
-const partKey = (id: string) => kitKey(id).replace(/(ball|hat|kit|leggings|boots)+$/, "");
+// the Large Barrel, lantern and discohat the Lantern and Disco Hats, snowkit_boots the Snow Boots,
+// and exodiakit the Quakezodia Kit
+const RENAMED: Record<string, string | undefined> = { exodia: "quakezodia" };
+
+const partKey = (id: string) => {
+  const key = kitKey(id).replace(/(ball|hat|kit|leggings|boots)+$/, "");
+  return RENAMED[key] ?? key;
+};
 
 /**
  * A Quake loadout from the Quake stats ({ case: "SHINY_DIAMOND_HOE", barrel: "LARGE_BALL" }) as a
