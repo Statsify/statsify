@@ -9,12 +9,15 @@
 import { Button } from "~/components/ui/button";
 import { ClockScript, TIME_SLOT } from "~/lib/clock";
 import { Hint } from "~/components/ui/hint";
+import { Turnstile } from "~/components/turnstile";
 import { cn } from "~/lib/util";
 import { formatCountdown, fullDate, relativeTime } from "~/i18n/format";
 import { type ReactNode, useEffect, useEffectEvent, useRef, useState } from "react";
 import { type ActionResult, BROWSER_TIMEOUT_MS } from "./player-actions";
-import { useHydrated, useRouterState } from "@tanstack/react-router";
+import { getRouteApi, useHydrated, useRouterState } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+
+const localeRoute = getRouteApi("/{-$locale}");
 
 const META = "text-mc-1 text-mc-gray";
 
@@ -59,8 +62,9 @@ export function useNow(): number | undefined {
 
 /**
  * "Updated N minutes ago" and the refresh button, disabled with a countdown until `expiresAt`.
- * `refresh` runs the page's refresh action with the bar's deadline and applies its data itself; the bar shows the
- * outcome.
+ * `refresh` runs the page's refresh action with the bar's deadline and, for a click, the visitor's Turnstile token, and
+ * applies its data itself; the bar shows the outcome. A click shows the Turnstile widget first, since each refresh
+ * spends the site's shared Hypixel budget; the automatic update needs no token, as the API caps those sooner.
  */
 export function RefreshBar({
   updatedAt,
@@ -73,7 +77,7 @@ export function RefreshBar({
 }: {
   updatedAt: number;
   expiresAt: number;
-  refresh: (deadline: AbortSignal, auto: boolean) => Promise<ActionResult<unknown>>;
+  refresh: (deadline: AbortSignal, auto: boolean, token: string | undefined) => Promise<ActionResult<unknown>>;
   /**
    * Once the page opens, update a save older than 15 minutes (past its cooldown when the search opened the page) by
    * itself, once per page view. It fails quietly: a refusal counts down without the message, and anything else leaves
@@ -90,8 +94,11 @@ export function RefreshBar({
   className?: string;
 }) {
   const { t, i18n } = useTranslation();
+  const { turnstileSiteKey } = localeRoute.useLoaderData();
   const now = useNow();
   const [state, setState] = useState<RefreshState>({ status: "idle" });
+  const [verifying, setVerifying] = useState(false);
+  const [widgetFailed, setWidgetFailed] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
   // The location once its page has rendered: during a navigation `location` is already the next page's.
   // eslint-disable-next-line no-underscore-dangle -- the history entry's key, under TanStack's name
@@ -100,16 +107,18 @@ export function RefreshBar({
 
   const lockedUntil = state.status === "limited" ? state.until : expiresAt;
   const remaining = now === undefined ? undefined : Math.max(0, Math.ceil((lockedUntil - now) / 1000));
-  const disabled = state.status === "pending" || remaining === undefined || remaining > 0;
+  // A widget whose script didn't load stays broken until the page reloads, so the button does too.
+  const disabled = verifying || widgetFailed || state.status === "pending" || remaining === undefined || remaining > 0;
 
-  async function run(auto = false) {
+  async function run(auto: boolean, token?: string) {
+    setVerifying(false);
     setState({ status: "pending", auto });
 
     const deadline = AbortSignal.timeout(BROWSER_TIMEOUT_MS);
     let result: ActionResult<unknown>;
 
     try {
-      result = await refresh(deadline, auto);
+      result = await refresh(deadline, auto, token);
     } catch {
       // A 500, a Cloudflare 429 or a dropped connection: say so and let the visitor try again. A hung one reads as
       // Hypixel not answering, as when the server's own deadline runs out.
@@ -153,7 +162,8 @@ export function RefreshBar({
   else if (remaining) label = t("player.refreshIn", { time: formatCountdown(remaining) });
 
   let message: string | undefined;
-  if (state.status === "limited" && !state.auto && remaining) message = t("player.refreshLimited");
+  if (widgetFailed) message = t("player.notFound.verifyFailed");
+  else if (state.status === "limited" && !state.auto && remaining) message = t("player.refreshLimited");
   else if (state.status === "unavailable") message = t("player.refreshFailed");
   else if (state.status === "error") message = t("player.refreshError");
 
@@ -173,7 +183,9 @@ export function RefreshBar({
         aria-disabled={disabled}
         suppressHydrationWarning
         onClick={() => {
-          if (!disabled) void run();
+          if (disabled) return;
+          if (turnstileSiteKey) setVerifying(true);
+          else void run(false);
         }}
       >
         {label}
@@ -198,6 +210,19 @@ export function RefreshBar({
           </p>
           {beside === undefined ? button : <div className="flex items-center justify-between gap-3">{beside}{button}</div>}
         </div>
+        {verifying && (
+          <Turnstile
+            siteKey={turnstileSiteKey}
+            onToken={(token) => {
+              if (token) return void run(false, token);
+              // The widget failed or its token expired: the button comes back for another try.
+              setVerifying(false);
+              setState({ status: "error" });
+            }}
+            onLoadError={() => setWidgetFailed(true)}
+            className="w-full"
+          />
+        )}
         <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>
         <output className="sr-only">
           {state.status === "pending" && !state.auto && t("player.refreshing")}
