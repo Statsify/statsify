@@ -20,6 +20,8 @@ lazy_static! {
 #[derive(Default)]
 pub struct RenderOptions {
   pub armor: Option<Armor>,
+  /// Enchantment glint texture (PNG), needed when an armour piece is enchanted.
+  pub glint: Option<Uint8Array>,
   /// Cape texture (PNG).
   pub cape: Option<Uint8Array>,
   /// Camera angle around the player in radians: 0 faces the front, π the back.
@@ -60,6 +62,7 @@ pub async fn render_skin(
     model_kind,
     model_outer_layer,
     &armor,
+    options.glint.as_deref(),
     options.cape.as_deref(),
   )?;
   let buffer = renderer
