@@ -61,6 +61,9 @@ export class MegaWallsKit {
   @Field({ leaderboard: { limit } })
   public points: number;
 
+  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+  public kitLevel: number;
+
   public constructor(data: APIData, kit: string) {
     kit = kit ? `${kit}_` : kit;
 
@@ -81,6 +84,7 @@ export class MegaWallsKit {
     this.witherKills = data[`${kit}wither_kills`];
 
     this.points = data[`${kit}class_points`];
+    this.kitLevel = data[`${kit}new_d`] ?? 1;
 
     MegaWallsKit.applyRatios(this);
   }

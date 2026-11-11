@@ -422,15 +422,18 @@ export class SkyWarsDuels extends MultiPVPDuelsGameMode {
   @Field({ store: { default: "none" } })
   public kit: string;
 
+  // Names the kit's menu, which `kit` drops: kit_defending_team_armorer (Insane) and kit_ranked_ranked_armorer (Mini) are both armorer
+  @Field({ store: { required: false } })
+  public kitId?: string;
+
   public constructor(data: APIData) {
     super(data, "SkyWars", "sw", "skywars", "default");
 
-    const kit =
+    this.kitId =
       data.sw_duels_kit_new3 ??
       data.sw_duels_kit_new2 ??
-      data.sw_duels_kit_new ??
-      "none";
-    this.kit = kit
+      data.sw_duels_kit_new;
+    this.kit = (this.kitId ?? "none")
       .replace("kit_", "")
       .replaceAll("ranked_", "")
       .replaceAll("mega_", "")
