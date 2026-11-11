@@ -4419,6 +4419,7 @@
           },
           "38": {
             "id": "minecraft:leather_chestplate",
+            "color": 32768,
             "enchanted": true
           },
           "39": {
@@ -10569,6 +10570,7 @@
           },
           "39": {
             "id": "minecraft:leather_helmet",
+            "color": 0,
             "enchanted": true
           }
         }

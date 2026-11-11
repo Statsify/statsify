@@ -287,11 +287,11 @@ for (const [name, { mode, tokens }] of Object.entries(TNT_GAMES_EDITORS)) {
 const pickerEntries = (screen: Screen) =>
   screen.slots.flatMap(({ slot, item }) => (item && slot < screen.size - 36 ? [item] : []));
 
-/** The kit a picker shows as selected, and its lore */
+/** The kit a picker shows as selected, its lore and its icon */
 function selected(screen: Screen) {
   for (const item of pickerEntries(screen)) {
     const name = /^Currently Selected - (.+)$/.exec(plain(item.name))?.[1];
-    if (name) return { name, lore: item.lore };
+    if (name) return { name, lore: item.lore, icon: item };
   }
 
   return undefined;
@@ -299,10 +299,7 @@ function selected(screen: Screen) {
 
 const SKULL = 397;
 
-/**
- * A skull a picker lists, worn as a helmet: Shadow Knight's Wither Skeleton Skull, or Shark's
- * player head, listed by its Bukkit material, whose skin is on real-game Blitz's "Shark's Head"
- */
+// A skull a picker lists, worn as a helmet; Shark's "Skull Item" takes Blitz's dumped "Shark's Head" skin
 function pickerSkull(text: string, kit: string) {
   if (text === "Wither Skeleton Skull") return legacyItem(SKULL, 1);
   if (text !== "Skull Item") return undefined;
@@ -334,6 +331,14 @@ function pickerArmor(lore: string[], kit: string) {
   }
 
   return Object.keys(armor).length > 0 ? armor : undefined;
+}
+
+/** Dyes the listed leather piece a picker's icon shows, when the list names no dye for it (Batguy's helmet) */
+function iconDye(icon: DumpItem, pieces: ItemStack[]) {
+  if (!icon.id.startsWith("minecraft:leather_")) return;
+  const { id, color } = kitItem(icon);
+  const piece = pieces.find((listed) => listed.id === id && listed.color === undefined);
+  if (piece && color !== undefined) piece.color = color;
 }
 
 // SkyWars kit pages, each kit's lore with whether its page is Mini's
@@ -379,6 +384,8 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
     if (kits[key]) continue;
 
     const shown = editorItems(screen).toSorted((a, b) => a.slot - b.slot);
+    const armor = pickerArmor(kit.lore, kit.name);
+    iconDye(kit.icon, Object.values(armor ?? {}));
 
     kits[key] = {
       name: group ? `${group} ${kit.name}` : kit.name,
@@ -388,7 +395,7 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
         if (!material) throw new Error(`No Bukkit material for ${item.id}`);
         return { slot, material, item: kitItem(item, numeric) };
       }),
-      armor: pickerArmor(kit.lore, kit.name),
+      armor,
     };
     if (mode === "sw_duel") skyWarsDuelEditors.push({ key, lore: kit.lore, shown: shown.map(({ item }) => item) });
   }
@@ -612,6 +619,7 @@ for (const screen of screens) {
       items.push({ slot, token: found.token, item: found.item });
     }
 
+    iconDye(entry, items.map(({ item }) => item));
     skyWarsKits[key] = { name, items: known ? items : items.map(({ token, item }) => ({ token, item })) };
   }
 }
@@ -695,6 +703,31 @@ for (const [index, screen] of screens.entries()) {
     armor,
     saved: SAVED_LAYOUTS[game].includes(kit) || undefined,
   };
+}
+
+// Each Blitz kit's armour at levels I to X, from its Upgrades page. The page names few dyes, so
+// leather takes the colour its editor shows on that piece, where one was dumped
+const blitzArmor: Record<string, Record<number, ItemStack>[]> = {};
+
+for (const screen of screens) {
+  const kit = /^(.+) Upgrades$/.exec(plain(screen.title))?.[1];
+  if (!kit) continue;
+  const key = kitKey(kit);
+
+  for (const entry of pickerEntries(screen)) {
+    const tier = ROMAN.indexOf(new RegExp(`^${kit} ([IVX]+)$`).exec(plain(entry.name))?.[1] ?? "");
+    if (tier === -1 || blitzArmor[key]?.[tier]) continue;
+
+    const armor = pickerArmor(entry.lore, kit) ?? {};
+    for (const piece of Object.values(armor)) {
+      piece.color ??= legacyKits.blitz[key]?.items.find(({ item }) => item.id === piece.id)?.item.color;
+    }
+    (blitzArmor[key] ??= [])[tier] = armor;
+  }
+}
+
+for (const [kit, levels] of Object.entries(blitzArmor)) {
+  if (!ROMAN.every((_, tier) => levels[tier])) throw new Error(`${kit}'s Upgrades page misses a level`);
 }
 
 /** Whether a screen is a menu that finished loading (it shows Go Back), by its title and the page it goes back to */
@@ -933,7 +966,7 @@ async function writeData(file: string, found: boolean, value: unknown) {
 
 await writeData("duels-modes.json", Object.keys(output.modes).length > 0 || Object.keys(output.kits).length > 0, output);
 await writeData("tnt-games.json", Object.keys(tntGames).length > 0, tntGames);
-await writeData("legacy-kits.json", count(legacyKits) > 0, legacyKits);
+await writeData("legacy-kits.json", count(legacyKits) > 0, { ...legacyKits, blitzArmor });
 await writeData("skywars-kits.json", Object.keys(skyWarsKits).length > 0, skyWarsKits);
 await writeData("quake.json", count(quake) > 0, quake);
 await writeData("arena.json", count(arena) > 0, arena);
