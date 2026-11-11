@@ -14,7 +14,7 @@ import { gameModeOf } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
 import { getExperiments } from "./experiments.js";
 import { getFishing } from "./fishing.js";
-import { getGear } from "./gear.js";
+import { getArmor, getGear } from "./gear.js";
 import { getInventories } from "./inventories.js";
 import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
@@ -34,6 +34,7 @@ export type SectionNeed = "museum" | "prices" | "items";
 /** Every section a lookup can ask for: SECTIONS' and networth, which ./networth computes. */
 export const SKYBLOCK_SECTIONS = [
   "accessories",
+  "armor",
   "chocolate",
   "crimson",
   "dungeons",
@@ -84,6 +85,7 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
       return getAccessories(member, items, prices, hasMarket(profile));
     },
   },
+  armor: { needs: [], compute: async ({ member }) => getArmor(member) },
   chocolate: { needs: [], compute: async ({ member }) => getChocolate(member) },
   crimson: { needs: [], compute: async ({ member }) => getCrimson(member) },
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },

@@ -47,14 +47,13 @@ import { getBackground, getLogo } from "@statsify/assets";
 import { getItemIcon } from "@statsify/skyblock/icons";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
-import {
-  type ApiSettings,
-  type GameMode,
-  type ItemTexture,
-  type MemberView,
-  type SkyBlockProfileView,
-  type SkyBlockSection,
-  skinArmor,
+import type {
+  ApiSettings,
+  GameMode,
+  ItemTexture,
+  MemberView,
+  SkyBlockProfileView,
+  SkyBlockSection,
 } from "@statsify/skyblock";
 import type { Image } from "skia-canvas";
 
@@ -346,17 +345,19 @@ export class SkyBlockCommand {
     const summaries = player.profiles.toSorted((a, b) => Number(b.selected) - Number(a.selected));
     if (summaries.length === 0) throw new ErrorMessage("errors.skyblockNoProfiles");
 
-    const getView = oncePerProfile((id) => this.apiService.getSkyBlockProfile(player.uuid, [...card.sections, "gear"], user, id));
+    const getView = oncePerProfile((id) => this.apiService.getSkyBlockProfile(player.uuid, card.sections, user, id));
 
+    // Its own request: armor never waits on prices, so asking for it with a card's sections would hide the market 503
     const getSkin = oncePerProfile(async (id) => {
-      const { gear } = (await getView(id)).member;
-      return this.apiService.getPlayerSkin(player.uuid, user, gear ? skinArmor(gear.armor) : undefined);
+      const { armor } = (await this.apiService.getSkyBlockProfile(player.uuid, ["armor"], user, id)).member;
+      return this.apiService.getPlayerSkin(player.uuid, user, armor ?? undefined);
     });
 
     const [logo, badge, background] = await Promise.all([
       getLogo(user),
       this.apiService.getUserBadge(player.uuid),
       getSkyBlockBackground(),
+      getView(summaries[0].id),
       getSkin(summaries[0].id),
     ]);
 
