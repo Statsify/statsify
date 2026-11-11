@@ -20,7 +20,7 @@ export class AutocompleteController {
 
   @ApiOperation({ summary: "Get Player or Guild Names Ranked for a Discord User" })
   @ApiOkResponse({ type: GetAutocompleteResponse })
-  @Auth({ role: AuthRole.ADMIN })
+  @Auth({ role: AuthRole.ADMIN, weight: 0 })
   @Get()
   public async getNames(@Query() { type, id, query }: AutocompleteDto) {
     const names = await this.autocompleteService.suggest(type, id, query);
@@ -33,7 +33,7 @@ export class AutocompleteController {
 
   @ApiOperation({ summary: "Record a Discord User's Player or Guild Lookup" })
   @ApiOkResponse({ type: SuccessResponse })
-  @Auth({ role: AuthRole.ADMIN })
+  @Auth({ role: AuthRole.ADMIN, weight: 0 })
   @Post("/history")
   public async addHistory(@Body() { type, id, name }: AutocompleteHistoryDto) {
     await this.autocompleteService.record(type, id, name);
@@ -42,7 +42,7 @@ export class AutocompleteController {
 
   @ApiOperation({ summary: "Clear a Discord User's Lookups" })
   @ApiOkResponse({ type: SuccessResponse })
-  @Auth({ role: AuthRole.ADMIN })
+  @Auth({ role: AuthRole.ADMIN, weight: 0 })
   @Delete("/history")
   public async clearHistory(@Query() { id }: UserIdDto) {
     await this.autocompleteService.clear(id);
