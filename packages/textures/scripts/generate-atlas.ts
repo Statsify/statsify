@@ -27,13 +27,13 @@ import {
   loadPack,
   namespaced,
   setCanvasBackend,
-} from "@statsify/inventory";
+} from "@statsify/textures";
 import { basename } from "node:path";
 import { createHash } from "node:crypto";
 import { parseArgs } from "node:util";
 import { mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
 import { Canvas } from "skia-canvas";
-import { skiaCanvas } from "@statsify/inventory/node";
+import { skiaCanvas } from "@statsify/textures/node";
 
 const { values, positionals } = parseArgs({ allowPositionals: true, options: { scales: { type: "string", default: "2,3" } } });
 const [name, ...packPaths] = positionals;

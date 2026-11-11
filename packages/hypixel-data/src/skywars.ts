@@ -7,10 +7,9 @@
  */
 
 import { SLOTS, inRange, kitKey } from "./kits.js";
-import type { ItemStack } from "../core/item-stack.js";
+import { type ItemStack, legacyMaterial } from "@statsify/textures";
 import { armorOf } from "./armor.js";
-import dumped from "../../data/skywars-kits.json" with { type: "json" };
-import { legacyMaterial } from "../core/legacy-items.js";
+import dumped from "../data/skywars-kits.json" with { type: "json" };
 
 export interface SkyWarsKit {
   /** As the lobby's kit menus name it, menu first, like Normal Scout */

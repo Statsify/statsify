@@ -7,7 +7,7 @@
  */
 
 import { ARMOR } from "./kits.js";
-import type { ItemStack } from "../core/item-stack.js";
+import type { ItemStack } from "@statsify/textures";
 
 type ArmorMaterial = "leather" | "chainmail" | "iron" | "gold" | "diamond";
 
