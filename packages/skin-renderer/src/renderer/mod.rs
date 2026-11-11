@@ -20,6 +20,7 @@ use crate::instance::InstanceRaw;
 use crate::light::LightUniform;
 use crate::material::Material;
 use crate::model::{DrawModel, Model, ModelKind, ModelOuterLayer};
+use crate::pose::Pose;
 use crate::skin_loader::{load_cape_from_memory, load_skin_from_memory};
 use crate::texture::Texture;
 
@@ -390,6 +391,7 @@ impl<T: Backend> SkinRenderer<T> {
     model_outer_layer: ModelOuterLayer,
     armor: &Armor,
     cape: Option<&[u8]>,
+    pose: Pose,
   ) -> Result<Model> {
     let device = self.backend.device();
     let queue = self.backend.queue();
@@ -401,6 +403,7 @@ impl<T: Backend> SkinRenderer<T> {
       load_skin_from_memory(skin)?,
       model_kind,
       model_outer_layer,
+      pose,
     );
 
     model.attach_armor(device, queue, &self.texture_bind_group_layout, armor);
@@ -467,6 +470,14 @@ impl SkinRenderer<wasm::WasmBackend> {
     self.camera.process_mouse_movement(delta);
   }
 
+  pub fn frame(&mut self, pose: Pose) {
+    let Camera::Orbital(camera) = &mut self.camera;
+
+    if let Some(radius) = pose.camera_radius() {
+      camera.update_radius(radius);
+    }
+  }
+
   pub fn process_mouse_scroll(&mut self, delta: &MouseScrollDelta) {
     if !self.backend.mouse_pressed {
       return;
@@ -509,8 +520,13 @@ impl SkinRenderer<native::NativeBackend> {
       self.config.height as f32,
     );
 
-    let camera = Camera::Orbital(match yaw {
+    let camera = match yaw {
       Some(yaw) => camera.with_theta(yaw),
+      None => camera,
+    };
+
+    let camera = Camera::Orbital(match model.pose().camera_radius() {
+      Some(radius) => camera.with_radius(radius),
       None => camera,
     });
 

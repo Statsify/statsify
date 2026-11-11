@@ -14,6 +14,7 @@ use winit::window::{Window, WindowBuilder, WindowId};
 use crate::armor::Armor;
 use crate::error::{Error, Result};
 use crate::model::{Model, ModelKind, ModelOuterLayer};
+use crate::pose::Pose;
 use crate::renderer::wasm::WasmBackend;
 use crate::renderer::SkinRenderer;
 
@@ -43,7 +44,23 @@ impl JsMessenger {
   }
 
   #[wasm_bindgen(js_name = renderSkin)]
-  pub fn render_skin(canvas_id: String, bytes: Vec<u8>, slim: bool, extruded: bool) {
+  pub fn render_skin(
+    canvas_id: String,
+    bytes: Vec<u8>,
+    slim: bool,
+    extruded: bool,
+    #[wasm_bindgen(
+      unchecked_optional_param_type = "'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly'"
+    )]
+    pose: Option<String>,
+  ) -> std::result::Result<(), JsError> {
+    let pose = match pose {
+      Some(pose) => pose
+        .parse::<Pose>()
+        .map_err(|_| JsError::new(&format!("Unknown pose: {pose}")))?,
+      None => Pose::default(),
+    };
+
     let model_kind = if slim {
       ModelKind::Slim
     } else {
@@ -62,9 +79,12 @@ impl JsMessenger {
           bytes,
           model_kind,
           model_outer_layer,
+          pose,
         },
       })
     };
+
+    Ok(())
   }
 
   #[wasm_bindgen(js_name = unregisterCanvas)]
@@ -77,6 +97,7 @@ struct JsModel {
   bytes: Vec<u8>,
   model_kind: ModelKind,
   model_outer_layer: ModelOuterLayer,
+  pose: Pose,
 }
 
 #[wasm_bindgen(js_name = SkinRenderer)]
@@ -137,7 +158,7 @@ impl JsSkinRenderer {
 
             // If the renderer is not ready, stage the model and wait for the renderer to be
             // ready
-            let Some(renderer) = renderers.get(window_id) else {
+            let Some(renderer) = renderers.get_mut(window_id) else {
               staged_models.insert(*window_id, model);
               continue;
             };
@@ -148,7 +169,9 @@ impl JsSkinRenderer {
               model.model_outer_layer,
               &Armor::default(),
               None,
+              model.pose,
             ) {
+              renderer.frame(model.pose());
               models.insert(*window_id, model);
             }
           }
@@ -166,7 +189,7 @@ impl JsSkinRenderer {
       // Poll the receivers to see if any renderers are ready. If a renderer is ready
       // we can remove the receiver and check for any staged models
       receivers.retain(|window_id, rx| match rx.try_recv() {
-        Ok(Some(renderer)) => {
+        Ok(Some(mut renderer)) => {
           if let Some(model) = staged_models.remove(window_id).and_then(|model| {
             renderer
               .load_skin(
@@ -175,9 +198,11 @@ impl JsSkinRenderer {
                 model.model_outer_layer,
                 &Armor::default(),
                 None,
+                model.pose,
               )
               .ok()
           }) {
+            renderer.frame(model.pose());
             models.insert(*window_id, model);
           }
 
