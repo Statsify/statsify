@@ -11,11 +11,10 @@ import {
   ForbiddenException,
   HttpException,
   Injectable,
-  InternalServerErrorException,
   Logger,
   UnauthorizedException,
 } from "@nestjs/common";
-import { InjectRedis } from "#redis";
+import { InjectRedis, pipelineValues } from "#redis";
 import { Key } from "@statsify/schemas";
 import { Redis } from "ioredis";
 import { createHash, randomUUID } from "node:crypto";
@@ -55,19 +54,13 @@ export class AuthService {
     pipeline.hincrby(`key:${hash}`, "requests", weight);
     pipeline.expire(key, expirey / 1000);
 
-    const pipelineResult = await pipeline.exec();
+    const requests = pipelineValues(await pipeline.exec())[2] as string[];
 
-    if (!pipelineResult) throw new InternalServerErrorException();
-
-    const requests = pipelineResult[2];
-
-    if (requests[0]) throw new InternalServerErrorException();
-
-    const weightedTotal = (requests[1] as string[])
+    const weightedTotal = requests
       .filter((_, i) => i % 2 === 0)
       .reduce((acc, key) => acc + Number(key.split(":")[1]), 0);
 
-    const resetTime = 60_000 - (time - (requests[1] as [Error | null, number])[1]);
+    const resetTime = 60_000 - (time - Number(requests[1]));
 
     if (weightedTotal > apiKeyLimit) {
       this.logger.warn(
@@ -112,22 +105,20 @@ export class AuthService {
     pipeline.hmget(`key:${hash}`, "name", "requests", "limit");
     pipeline.zrange(key, 0, -1, "WITHSCORES");
 
-    const pipelineResult = await pipeline.exec();
+    const [keydata, requests] = pipelineValues(await pipeline.exec()) as [
+      [string, number, number],
+      string[],
+    ];
 
-    if (!pipelineResult) throw new InternalServerErrorException();
+    const [name, lifetimeRequests, limit] = keydata;
 
-    const [keydata, requests] = pipelineResult;
-
-    const [name, lifetimeRequests, limit] = keydata[1] as [string, number, number];
-
-    const recentRequests = (requests[1] as string[])
+    const recentRequests = requests
       .filter((_, i) => i % 2 === 0)
       .reduce((acc, key) => acc + Number(key.split(":")[1]), 0);
 
     const time = Date.now();
 
-    const resetTime =
-      60_000 - (time - Number((requests[1] as [Error | null, number])[1]));
+    const resetTime = 60_000 - (time - Number(requests[1]));
 
     return {
       name,

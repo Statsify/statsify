@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { InternalServerErrorException } from "@nestjs/common";
 import {
   REDIS_MODULE_CONNECTION,
   REDIS_MODULE_CONNECTION_TOKEN,
@@ -25,4 +26,14 @@ export function getRedisConnectionToken(connection?: string): string {
 export function createRedisConnection(options: RedisModuleOptions) {
   const { config } = options;
   return config.url ? new Redis(config.url, config) : new Redis(config);
+}
+
+// ioredis resolves a pipeline even when single commands fail, as [error, value] pairs
+export function pipelineValues(results: [error: Error | null, value: unknown][] | null) {
+  if (!results) throw new InternalServerErrorException();
+
+  return results.map(([error, value]) => {
+    if (error) throw error;
+    return value;
+  });
 }

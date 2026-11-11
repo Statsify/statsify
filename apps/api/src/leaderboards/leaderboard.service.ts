@@ -9,8 +9,8 @@
 import * as Sentry from "@sentry/node";
 import { Constructor, Flatten } from "@statsify/util";
 import { DateTime } from "luxon";
-import { InjectRedis } from "#redis";
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { InjectRedis, pipelineValues } from "#redis";
+import { Injectable } from "@nestjs/common";
 import { type LeaderboardEnabledMetadata, getLeaderboardField, getLeaderboardFields } from "@statsify/schemas";
 import { LeaderboardQuery } from "@statsify/api-client";
 import { Redis } from "ioredis";
@@ -319,14 +319,4 @@ export abstract class LeaderboardService {
 
     return Math.ceil(now.getTime() / 1000);
   }
-}
-
-// ioredis resolves a pipeline even when single commands fail, as [error, value] pairs
-function pipelineValues(results: [error: Error | null, value: unknown][] | null) {
-  if (!results) throw new InternalServerErrorException();
-
-  return results.map(([error, value]) => {
-    if (error) throw error;
-    return value;
-  });
 }
