@@ -51,6 +51,10 @@ pub async fn render_skin(
   let options = options.unwrap_or_default();
   let armor = options.armor.unwrap_or_default();
 
+  if options.yaw.is_some_and(|yaw| !yaw.is_finite()) {
+    return Err(crate::error::Error::InvalidYaw.into());
+  }
+
   let model = renderer.load_skin(
     skin,
     model_kind,
