@@ -11,8 +11,13 @@ import type { ItemStack } from "../core/item-stack.js";
 
 type ArmorMaterial = "leather" | "chainmail" | "iron" | "gold" | "diamond";
 
-/** A worn piece as a skin render draws it: armour, or a player head by its textures.minecraft.net hash */
-export type ArmorPiece = { material: ArmorMaterial; color?: number; enchanted?: boolean } | { head: string; enchanted?: boolean };
+type Skull = "skeleton" | "wither_skeleton" | "zombie" | "creeper";
+
+/** A worn piece as a skin render draws it: armour, a player head by its textures.minecraft.net hash, or a mob skull */
+export type ArmorPiece =
+  | { material: ArmorMaterial; color?: number; enchanted?: boolean }
+  | { head: string; enchanted?: boolean }
+  | { skull: Skull };
 
 export type Armor = Partial<Record<keyof typeof ARMOR, ArmorPiece>>;
 
@@ -24,12 +29,20 @@ const MATERIALS: Record<string, ArmorMaterial | undefined> = {
   diamond: "diamond",
 };
 
+// 1.8 has no dragon head to wear
+const SKULLS: Record<string, Skull | undefined> = {
+  "minecraft:skeleton_skull": "skeleton",
+  "minecraft:wither_skeleton_skull": "wither_skeleton",
+  "minecraft:zombie_head": "zombie",
+  "minecraft:creeper_head": "creeper",
+};
+
 const PIECE = /^minecraft:(\w+?)_(helmet|chestplate|leggings|boots)$/;
 const SKIN_HASH = /^https:\/\/textures\.minecraft\.net\/texture\/([\da-f]+)$/;
 
 /**
  * The armour among items, like Pit's inv_armor, a kit's items or slots 36 to 39, each piece the
- * first of its kind. Anything else on the head, a block or a mob skull, is left out
+ * first of its kind. Anything else on the head, like a block, is left out
  */
 export function armorOf(items: Iterable<ItemStack | undefined>): Armor {
   const armor: Armor = {};
@@ -40,6 +53,12 @@ export function armorOf(items: Iterable<ItemStack | undefined>): Armor {
     if (item.id === "minecraft:player_head") {
       const head = item.skin && SKIN_HASH.exec(item.skin)?.[1];
       if (head) armor.helmet ??= { head, enchanted: item.enchanted };
+      continue;
+    }
+
+    const skull = SKULLS[item.id];
+    if (skull) {
+      armor.helmet ??= { skull };
       continue;
     }
 
@@ -87,7 +106,7 @@ if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
 
   describe("armor", () => {
-    it("names leather dyes and keeps only armour and player heads", () => {
+    it("names leather dyes and keeps only armour, player heads and mob skulls", () => {
       expect(leatherColor("White Leather Chestplate")).toBe(0xff_ff_ff);
       expect(leatherColor("Gray Leather Boots")).toBe(0x80_80_80);
       expect(leatherColor("Leather Boots")).toBeUndefined();
@@ -107,7 +126,10 @@ if (import.meta.vitest) {
         chestplate: { material: "gold", enchanted: true },
         helmet: { head, enchanted: true },
       });
-      expect(armorOf([{ id: "minecraft:wither_skeleton_skull" }, { id: "minecraft:carved_pumpkin" }])).toEqual({});
+      expect(armorOf([{ id: "minecraft:carved_pumpkin" }, { id: "minecraft:wither_skeleton_skull" }])).toEqual({
+        helmet: { skull: "wither_skeleton" },
+      });
+      expect(armorOf([{ id: "minecraft:dragon_head" }])).toEqual({});
     });
   });
 }
