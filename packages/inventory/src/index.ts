@@ -7,6 +7,7 @@
  */
 
 export * from "./adapters/arena.js";
+export * from "./adapters/armor.js";
 export * from "./adapters/bedwars.js";
 export * from "./adapters/duels.js";
 export * from "./adapters/hypixel.js";

@@ -21,6 +21,7 @@ import {
   type LegacyKit,
   type SkyWarsKit,
   kitKey,
+  leatherColor,
   legacyItem,
   skinUrl,
 } from "@statsify/inventory";
@@ -296,20 +297,40 @@ function selected(screen: Screen) {
   return undefined;
 }
 
+const SKULL = 397;
+
+/**
+ * A skull a picker lists, worn as a helmet: Shadow Knight's Wither Skeleton Skull, or Shark's
+ * player head, listed by its Bukkit material, whose skin is on real-game Blitz's "Shark's Head"
+ */
+function pickerSkull(text: string, kit: string) {
+  if (text === "Wither Skeleton Skull") return legacyItem(SKULL, 1);
+  if (text !== "Skull Item") return undefined;
+
+  const head = items.find((item) => plain(item.name) === `${kit}'s Head`);
+  if (!head) unmatched.push(`${kit}'s Skull Item, as no ${kit}'s Head was dumped`);
+  return head && { ...legacyItem(SKULL, 3)!, skin: kitItem(head).skin };
+}
+
 /** The armour a picker's item list names, in its armour slots */
-function pickerArmor(lore: string[]) {
+function pickerArmor(lore: string[], kit: string) {
   const lines = lore.map(plain);
   const armor: Record<number, ItemStack> = {};
 
   for (const [index, line] of lines.entries()) {
     // Blitz lists " ▪ Iron Helmet" with enchantments indented under it; SkyWars drops the bullet
     if (/^\s{2,}/.test(line)) continue;
-    const match = ARMOR_PIECE.exec(line.replace(/^ ▪ /, "").replace(/ x\d+$/, ""));
+    const text = line.replace(/^ ▪ /, "").replace(/ x\d+$/, "");
+    const enchanted = /^\s{2,}[∙▪]/.test(lines[index + 1] ?? "") || undefined;
+
+    const skull = pickerSkull(text, kit);
+    if (skull) armor[ARMOR.helmet] = { ...skull, enchanted };
+
+    const match = ARMOR_PIECE.exec(text);
     if (!match) continue;
     const material = match[1] === "Gold" ? "golden" : match[1].toLowerCase();
     const piece = match[2].toLowerCase() as keyof typeof ARMOR;
-    const enchanted = /^\s{2,}[∙▪]/.test(lines[index + 1] ?? "") || undefined;
-    armor[ARMOR[piece]] = { id: `minecraft:${material}_${piece}`, enchanted };
+    armor[ARMOR[piece]] = { id: `minecraft:${material}_${piece}`, color: leatherColor(text), enchanted };
   }
 
   return Object.keys(armor).length > 0 ? armor : undefined;
@@ -367,7 +388,7 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
         if (!material) throw new Error(`No Bukkit material for ${item.id}`);
         return { slot, material, item: kitItem(item, numeric) };
       }),
-      armor: pickerArmor(kit.lore),
+      armor: pickerArmor(kit.lore, kit.name),
     };
     if (mode === "sw_duel") skyWarsDuelEditors.push({ key, lore: kit.lore, shown: shown.map(({ item }) => item) });
   }
@@ -525,6 +546,7 @@ function lobbyItem(listed: Listed, dumped?: Pooled) {
     token: skyWarsToken(named.id, named.damage, ids as number[]),
     item: {
       ...item,
+      color: leatherColor(listed.text),
       count,
       enchanted: enchantments.length > 0 || undefined,
       tooltip: enchantments.length > 0 ? enchantments : undefined,
@@ -635,7 +657,7 @@ function legacyKitLevel(page: Screen, game: keyof typeof legacyKits, kit: string
   const upgrade = entries.find((item) => plain(item.name) === `Kit - ${kit}`);
   const tier = upgrade?.lore.map((line) => /^Tier: ([IVX]+)$/.exec(plain(line))?.[1]).find(Boolean);
   if (!upgrade || !tier) throw new Error(`${page.title} shows no Kit tier`);
-  return { level: ROMAN.indexOf(tier) + 1, armor: pickerArmor(upgrade.lore) };
+  return { level: ROMAN.indexOf(tier) + 1, armor: pickerArmor(upgrade.lore, kit) };
 }
 
 for (const [index, screen] of screens.entries()) {

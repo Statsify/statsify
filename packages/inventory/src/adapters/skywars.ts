@@ -8,6 +8,7 @@
 
 import { SLOTS, inRange, kitKey } from "./kits.js";
 import type { ItemStack } from "../core/item-stack.js";
+import { armorOf } from "./armor.js";
 import dumped from "../../data/skywars-kits.json" with { type: "json" };
 import { legacyMaterial } from "../core/legacy-items.js";
 
@@ -46,6 +47,13 @@ function skyWarsKit(kit: string) {
 
   const key = `${menu}_${kitKey(id[3])}`;
   return KITS[RENAMED[key] ?? key];
+}
+
+/** The armour a SkyWars kit's menu lists, by kit id or SKYWARS_KITS key as fromSkyWarsKit takes it */
+export function skyWarsKitArmor(kit: string) {
+  const items = skyWarsKit(kit)?.items;
+  // The game puts on only armour; a listed head, like Frog's Hat, starts in the hotbar
+  return items && armorOf(items.flatMap(({ token, item }) => (/_(HELMET|CHESTPLATE|LEGGINGS|BOOTS):/.test(token) ? [item] : [])));
 }
 
 /** A layout key with its enchantment ids in order, as tokens have them */
