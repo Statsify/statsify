@@ -1,5 +1,5 @@
 {
-  "name": "@statsify/inventory",
+  "name": "@statsify/textures",
   "version": "0.0.0",
   "type": "module",
   "types": "./src/index.ts",
