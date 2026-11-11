@@ -99,25 +99,11 @@ impl<T: Backend> SkinRenderer<T> {
       &light_bind_group_layout,
     ];
 
-    let render_pipeline = Self::create_render_pipeline(
-      device,
-      &bind_group_layouts,
-      &config,
-      "fs_main",
-      wgpu::BlendState::ALPHA_BLENDING,
-      true,
-      wgpu::CompareFunction::LessEqual,
-    );
+    let render_pipeline =
+      Self::create_render_pipeline(device, &bind_group_layouts, &config, "fs_main");
 
-    let attachment_pipeline = Self::create_render_pipeline(
-      device,
-      &bind_group_layouts,
-      &config,
-      "fs_attachment",
-      wgpu::BlendState::ALPHA_BLENDING,
-      true,
-      wgpu::CompareFunction::LessEqual,
-    );
+    let attachment_pipeline =
+      Self::create_render_pipeline(device, &bind_group_layouts, &config, "fs_attachment");
 
     let enchanted_pipeline = Self::create_render_pipeline(
       device,
@@ -129,9 +115,6 @@ impl<T: Backend> SkinRenderer<T> {
       ],
       &config,
       "fs_enchanted",
-      wgpu::BlendState::ALPHA_BLENDING,
-      true,
-      wgpu::CompareFunction::LessEqual,
     );
 
     let glint_texture = Texture::from_image_with_sampler(
@@ -275,9 +258,6 @@ impl<T: Backend> SkinRenderer<T> {
     bind_group_layouts: &[&wgpu::BindGroupLayout],
     config: &wgpu::SurfaceConfiguration,
     fragment_entry_point: &str,
-    blend: wgpu::BlendState,
-    depth_write_enabled: bool,
-    depth_compare: wgpu::CompareFunction,
   ) -> wgpu::RenderPipeline {
     let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
       label: Some("shader.wgsl"),
@@ -304,7 +284,7 @@ impl<T: Backend> SkinRenderer<T> {
         entry_point: Some(fragment_entry_point),
         targets: &[Some(wgpu::ColorTargetState {
           format: config.format,
-          blend: Some(blend),
+          blend: Some(wgpu::BlendState::ALPHA_BLENDING),
           write_mask: wgpu::ColorWrites::ALL,
         })],
         compilation_options: wgpu::PipelineCompilationOptions::default(),
@@ -320,8 +300,8 @@ impl<T: Backend> SkinRenderer<T> {
       },
       depth_stencil: Some(wgpu::DepthStencilState {
         format: Texture::DEPTH_FORMAT,
-        depth_write_enabled,
-        depth_compare,
+        depth_write_enabled: true,
+        depth_compare: wgpu::CompareFunction::LessEqual,
         stencil: wgpu::StencilState::default(),
         bias: wgpu::DepthBiasState::default(),
       }),
@@ -473,13 +453,6 @@ impl SkinRenderer<wasm::WasmBackend> {
     self.camera.process_mouse_movement(delta);
   }
 
-  pub fn frame(&mut self, pose: Pose) {
-    let Camera::Orbital(camera) = &mut self.camera;
-
-    // Without a distance of its own the pose zooms back in, which clamps to the minimum
-    camera.update_radius(pose.camera_radius().unwrap_or(0.0));
-  }
-
   pub fn process_mouse_scroll(&mut self, delta: &MouseScrollDelta) {
     if !self.backend.mouse_pressed {
       return;
@@ -527,10 +500,17 @@ impl SkinRenderer<native::NativeBackend> {
       None => camera,
     };
 
-    let camera = Camera::Orbital(match model.pose().camera_radius() {
-      Some(radius) => camera.with_radius(radius),
-      None => camera,
-    });
+    let radius = model.pose().camera_radius();
+
+    // Boots reach below the frame that fits a bare player, and every armoured render
+    // pulls back with them so they share one scale
+    let radius = if model.wears_armor() {
+      radius + 3.0
+    } else {
+      radius
+    };
+
+    let camera = Camera::Orbital(camera.with_radius(radius));
 
     let camera_bind_group = self.uniform_bind_group(
       &self.camera_bind_group_layout,

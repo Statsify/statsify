@@ -82,7 +82,7 @@ impl OrbitalCamera {
     self
   }
 
-  pub fn update_radius(&mut self, radius: f32) {
+  fn update_radius(&mut self, radius: f32) {
     self.radius = radius.clamp(self.min_radius, self.max_radius);
   }
 

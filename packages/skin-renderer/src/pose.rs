@@ -9,8 +9,7 @@ use crate::model::Part;
   not(target_arch = "wasm32"),
   napi(string_enum = "lowercase", skip_typescript)
 )]
-#[derive(Clone, Copy, Default, PartialEq, strum::EnumString)]
-#[strum(serialize_all = "lowercase")]
+#[derive(Clone, Copy, Default)]
 pub enum Pose {
   #[default]
   Standing,
@@ -72,17 +71,17 @@ impl Pose {
   // Extra swing of the cape away from the back, and where it moves to
   pub fn cape(self) -> (f32, Vector3<f32>) {
     match self {
-      // The game drops a sneaking cape 2.27 but leaves out the body's 3.2, which place() adds
+      // place() drops the whole model 3.2, but the game drops a sneaking cape only 2.27
       Pose::Sneak => (25.0, Vector3::new(0.0, 3.2 - 2.27, 0.28)),
       Pose::Jump => (25.0, Vector3::zero()),
       _ => (0.0, Vector3::zero()),
     }
   }
 
-  pub fn camera_radius(self) -> Option<f32> {
+  pub fn camera_radius(self) -> f32 {
     match self {
-      Pose::Swim | Pose::Fly => Some(100.0),
-      _ => None,
+      Pose::Swim | Pose::Fly => 100.0,
+      _ => 50.0,
     }
   }
 
@@ -90,12 +89,11 @@ impl Pose {
   pub fn place(self, geometry: &mut Geometry) {
     match self {
       Pose::Sneak => geometry.translate(Vector3::new(0.0, -3.2, 0.0)),
-      Pose::Jump => geometry.translate(Vector3::new(0.0, 4.0, 0.0)),
       Pose::Swim | Pose::Fly => geometry.rotate_around(Rotation {
         quaternion: Quaternion::from_angle_x(Deg(90.0)),
         pivot: Vector3::zero(),
       }),
-      Pose::Standing | Pose::Punch => {}
+      Pose::Standing | Pose::Punch | Pose::Jump => {}
     }
   }
 }

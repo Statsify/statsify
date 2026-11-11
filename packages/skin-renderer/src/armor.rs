@@ -20,8 +20,7 @@ const DEFAULT_LEATHER_COLOR: u32 = 0xa06540;
   not(target_arch = "wasm32"),
   napi(string_enum = "lowercase", skip_typescript)
 )]
-#[derive(Clone, Copy, strum::EnumString)]
-#[strum(serialize_all = "lowercase")]
+#[derive(Clone, Copy)]
 pub enum ArmorMaterial {
   Leather,
   Chainmail,

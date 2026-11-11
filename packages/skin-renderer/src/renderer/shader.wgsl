@@ -115,11 +115,8 @@ fn shade(in: VertexOutput, object_color: vec4<f32>) -> vec4<f32> {
     return vec4<f32>(result, object_color.a);
 }
 
-// The game draws the glint as a second pass that adds its squared layers to the
-// armour's gamma-encoded colour. Blending would add in linear space and wash the
-// glint out, so enchanted armour adds it here instead. A gamma of 2 stands in for
-// sRGB, since pow is slow on software renderers and the square root squares back
-// to the same colour where there's no glint
+// The game adds the glint to the gamma-encoded colour, which blending in linear space
+// would wash out. Gamma 2 stands in for sRGB, since pow is slow on software renderers
 @fragment
 fn fs_enchanted(in: VertexOutput) -> @location(0) vec4<f32> {
     let tint = vec3<f32>(0.38, 0.19, 0.608);
