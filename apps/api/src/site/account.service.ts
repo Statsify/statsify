@@ -27,10 +27,12 @@ const DISCORD_API = "https://discord.com/api/v10";
 const DISCORD_TIMEOUT_MS = 5000;
 
 // Each login asks Discord to check its code. Past Discord's rate limit, every refusal counts toward the limit after
-// which it blocks the server's address, so a script of junk codes could cut the bot off too.
+// which it blocks the server's address, so a script of junk codes could cut the bot off too. Hence a limit per
+// address, and no calls at all while Discord says to wait.
 const LOGIN_LIMIT = 10;
 const LOGIN_WINDOW_SECONDS = 5 * 60;
 const loginKey = (clientIp: string) => `site:account:login:${rateLimitAddress(clientIp)}`;
+const DISCORD_COOLDOWN_KEY = "site:account:login:discord-cooldown";
 
 // Redis keeps a hash of the cookie's token, so a copy of Redis can't be replayed as live sessions.
 const sessionKey = (session: string) => `site:account:session:${createHash("sha256").update(session).digest("base64url")}`;
@@ -52,9 +54,9 @@ export class AccountService {
 
   public async login(code: string, redirectUri: string, clientIp: string): Promise<{ session: string }> {
     const [attempts] = await hitWindow(this.redis, loginKey(clientIp), LOGIN_WINDOW_SECONDS);
-    if (attempts > LOGIN_LIMIT) throw new ORPCError("TOO_MANY_REQUESTS");
+    if (attempts > LOGIN_LIMIT || (await this.redis.exists(DISCORD_COOLDOWN_KEY))) throw new ORPCError("TOO_MANY_REQUESTS");
 
-    const discordId = await discordUserId(code, redirectUri);
+    const discordId = await discordUserId(this.redis, code, redirectUri);
 
     const account = await this.accountModel
       .findOneAndUpdate(
@@ -103,13 +105,17 @@ export class AccountService {
     const uuid = normalizeUuid(input);
     await this.requireOwned(account.id, uuid);
 
-    if (account.primaryUuid === uuid) {
-      if (await this.profileModel.exists({ accountId: account.id, uuid: { $ne: uuid } })) throw new ORPCError("CONFLICT");
+    const primary = account.primaryUuid === uuid;
+    if (primary && (await this.profileModel.exists({ accountId: account.id, uuid: { $ne: uuid } }))) throw new ORPCError("CONFLICT");
+
+    const { matchedCount } = await this.profileModel.updateOne({ uuid, accountId: account.id }, { $unset: { accountId: "" } }).exec();
+    if (!matchedCount) throw new ORPCError("NOT_FOUND");
+
+    if (primary) {
       await this.accountModel.updateOne({ id: account.id }, { $unset: { primaryUuid: "" } }).exec();
       await this.verifyBot(account.discordId, undefined);
     }
 
-    await this.profileModel.updateOne({ uuid }, { $unset: { accountId: "" } }).exec();
     return this.page(account.id);
   }
 
@@ -172,10 +178,13 @@ export class AccountService {
       // An account that linked it after this `/verify` proved it more recently, so it keeps it.
       if (profile?.accountId && profile.linkedAt > (user.verifiedAt ?? 0)) return;
 
-      await this.profileModel
-        .updateOne({ uuid }, { $set: { accountId: account.id, linkedAt: Date.now() } }, { upsert: true })
+      // Only from the owner read above, so a claim that landed in between isn't overwritten.
+      const owner = profile ? { accountId: profile.accountId ?? { $exists: false }, linkedAt: profile.linkedAt } : {};
+      const moved = await this.profileModel
+        .updateOne({ uuid, ...owner }, { $set: { accountId: account.id, linkedAt: Date.now() } }, { upsert: !profile })
         .exec();
 
+      if (!moved.matchedCount && !moved.upsertedCount) return;
       if (profile?.accountId) await this.release(profile.accountId, uuid);
     }
 
@@ -246,7 +255,7 @@ export class AccountService {
 }
 
 /** The access token is used once here and never kept. */
-async function discordUserId(code: string, redirectUri: string): Promise<string> {
+async function discordUserId(redis: Redis, code: string, redirectUri: string): Promise<string> {
   const [clientId, clientSecret] = await Promise.all([
     config("site.discordLogin.clientId", { required: false }),
     config("site.discordLogin.clientSecret", { required: false }),
@@ -271,6 +280,13 @@ async function discordUserId(code: string, redirectUri: string): Promise<string>
 
   // 400 `invalid_grant`: a used, expired or made-up code, or a redirect URI the authorize request didn't name.
   if (token.status === 400) throw new ORPCError("UNAUTHORIZED");
+
+  if (token.status === 429) {
+    const retryAfter = Math.ceil(Number(token.headers.get("Retry-After"))) || 60;
+    await redis.set(DISCORD_COOLDOWN_KEY, "1", "EX", retryAfter);
+    throw new ORPCError("TOO_MANY_REQUESTS");
+  }
+
   if (!token.ok) throw new Error(`Discord's token exchange answered ${token.status}`);
 
   const { access_token: accessToken } = (await token.json()) as { access_token: string };
