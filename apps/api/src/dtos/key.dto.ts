@@ -17,10 +17,10 @@ export class AddKeyDto {
 }
 
 export class KeyParamDto {
-  public static schema = z.object({ key: z.string() });
+  public static schema = z.object({ key: z.string().optional() });
 
-  @ApiProperty()
-  public key: string;
+  @ApiProperty({ required: false })
+  public key?: string;
 }
 
 export class KeyHeaderDto {
