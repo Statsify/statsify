@@ -950,7 +950,8 @@
             "enchanted": true
           },
           "37": {
-            "id": "minecraft:leather_leggings"
+            "id": "minecraft:leather_leggings",
+            "color": 16777215
           },
           "38": {
             "id": "minecraft:chainmail_chestplate"
@@ -1399,6 +1400,11 @@
           },
           "38": {
             "id": "minecraft:chainmail_chestplate",
+            "enchanted": true
+          },
+          "39": {
+            "id": "minecraft:player_head",
+            "skin": "https://textures.minecraft.net/texture/51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40",
             "enchanted": true
           }
         }
@@ -2391,6 +2397,10 @@
           },
           "38": {
             "id": "minecraft:leather_chestplate"
+          },
+          "39": {
+            "id": "minecraft:wither_skeleton_skull",
+            "enchanted": true
           }
         }
       },
@@ -3664,13 +3674,16 @@
             "id": "minecraft:iron_boots"
           },
           "37": {
-            "id": "minecraft:leather_leggings"
+            "id": "minecraft:leather_leggings",
+            "color": 16777215
           },
           "38": {
-            "id": "minecraft:leather_chestplate"
+            "id": "minecraft:leather_chestplate",
+            "color": 16777215
           },
           "39": {
             "id": "minecraft:leather_helmet",
+            "color": 16777215,
             "enchanted": true
           }
         }
@@ -4235,10 +4248,12 @@
             "enchanted": true
           },
           "37": {
-            "id": "minecraft:leather_leggings"
+            "id": "minecraft:leather_leggings",
+            "color": 16777215
           },
           "38": {
-            "id": "minecraft:leather_chestplate"
+            "id": "minecraft:leather_chestplate",
+            "color": 16777215
           },
           "39": {
             "id": "minecraft:iron_helmet",
@@ -10211,10 +10226,12 @@
             "enchanted": true
           },
           "37": {
-            "id": "minecraft:leather_leggings"
+            "id": "minecraft:leather_leggings",
+            "color": 16777215
           },
           "38": {
-            "id": "minecraft:leather_chestplate"
+            "id": "minecraft:leather_chestplate",
+            "color": 16777215
           },
           "39": {
             "id": "minecraft:golden_helmet",
@@ -10414,13 +10431,16 @@
         ],
         "armor": {
           "36": {
-            "id": "minecraft:leather_boots"
+            "id": "minecraft:leather_boots",
+            "color": 16777215
           },
           "37": {
-            "id": "minecraft:leather_leggings"
+            "id": "minecraft:leather_leggings",
+            "color": 16777215
           },
           "38": {
-            "id": "minecraft:leather_chestplate"
+            "id": "minecraft:leather_chestplate",
+            "color": 16777215
           },
           "39": {
             "id": "minecraft:leather_helmet",
