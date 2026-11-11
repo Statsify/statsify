@@ -67,9 +67,11 @@ export abstract class LeaderboardService {
       }
     }
 
-    await pipeline.exec();
+    const results = await pipeline.exec();
 
     child?.finish();
+
+    pipelineValues(results);
   }
 
   public async getLeaderboard<T>(
@@ -221,17 +223,16 @@ export abstract class LeaderboardService {
       }
     }
 
-    const responses = await pipeline.exec();
+    const results = await pipeline.exec();
 
     child?.finish();
 
-    if (!responses) throw new InternalServerErrorException();
-
+    const responses = pipelineValues(results);
     const rankings = [];
 
     for (let i = 0; i < responses.length; i += 2) {
-      const rank = responses[i + 1][1];
-      const value = responses[i][1];
+      const rank = responses[i + 1];
+      const value = responses[i];
 
       if (rank === undefined || rank === null || !value) continue;
 
@@ -318,4 +319,14 @@ export abstract class LeaderboardService {
 
     return Math.ceil(now.getTime() / 1000);
   }
+}
+
+// ioredis resolves a pipeline even when single commands fail, as [error, value] pairs
+function pipelineValues(results: [error: Error | null, value: unknown][] | null) {
+  if (!results) throw new InternalServerErrorException();
+
+  return results.map(([error, value]) => {
+    if (error) throw error;
+    return value;
+  });
 }
