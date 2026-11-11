@@ -323,9 +323,9 @@ importers:
       '@statsify/discord':
         specifier: workspace:^
         version: link:../../packages/discord
-      '@statsify/inventory':
+      '@statsify/hypixel-data':
         specifier: workspace:^
-        version: link:../../packages/inventory
+        version: link:../../packages/hypixel-data
       '@statsify/logger':
         specifier: workspace:^
         version: link:../../packages/logger

@@ -13,7 +13,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { ApiModeFromGameModes, GameMode, GameModeWithSubModes, MEGAWALLS_MODES, MegaWallsKit, MegaWallsModes, Player } from "@statsify/schemas";
-import { kitKey, megaWallsKitArmor } from "@statsify/inventory";
+import { kitKey, megaWallsKitArmor } from "@statsify/hypixel-data";
 import { MegaWallsProfile } from "./megawalls.profile.js";
 
 @Command({ description: (t) => t("commands.megawalls") })

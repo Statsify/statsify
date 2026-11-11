@@ -18,7 +18,7 @@ import {
   SubPage,
 } from "@statsify/discord";
 import { Container } from "typedi";
-import type { Armor } from "@statsify/inventory";
+import type { Armor } from "@statsify/hypixel-data";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalTimeData } from "#components";
 import { getBackground, getLogo } from "@statsify/assets";

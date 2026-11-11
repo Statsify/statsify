@@ -14,7 +14,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { BlitzSGProfile } from "./blitzsg.profile.js";
 import { Command } from "@statsify/discord";
-import { blitzKitArmor, kitKey } from "@statsify/inventory";
+import { blitzKitArmor, kitKey } from "@statsify/hypixel-data";
 
 @Command({ description: (t) => t("commands.blitzsg") })
 export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {

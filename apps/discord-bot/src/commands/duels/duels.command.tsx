@@ -22,7 +22,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { DuelsProfile } from "./duels.profile.js";
-import { duelsKitArmor } from "@statsify/inventory";
+import { duelsKitArmor } from "@statsify/hypixel-data";
 import { getAssetPath } from "@statsify/assets";
 import { loadImage } from "@statsify/rendering";
 import { readdir } from "node:fs/promises";

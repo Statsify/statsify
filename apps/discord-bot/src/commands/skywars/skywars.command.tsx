@@ -13,7 +13,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { GameMode, Player, SKYWARS_MODES, SkyWarsModes } from "@statsify/schemas";
-import { skyWarsKitArmor } from "@statsify/inventory";
+import { skyWarsKitArmor } from "@statsify/hypixel-data";
 import { SkyWarsProfile } from "./skywars.profile.js";
 
 @Command({ description: (t) => t("commands.skywars") })
