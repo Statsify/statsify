@@ -11,7 +11,7 @@ use winit::event_loop::{ControlFlow, EventLoop, EventLoopWindowTarget};
 use winit::platform::web::{EventLoopExtWebSys, WindowBuilderExtWebSys};
 use winit::window::{Window, WindowBuilder, WindowId};
 
-use crate::armor::Armor;
+use crate::armor::{Armor, ArmorPiece};
 use crate::error::{Error, Result};
 use crate::model::{Model, ModelKind, ModelOuterLayer};
 use crate::pose::Pose;
@@ -49,16 +49,18 @@ impl JsMessenger {
     bytes: Vec<u8>,
     slim: bool,
     extruded: bool,
-    #[wasm_bindgen(
-      unchecked_optional_param_type = "'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly'"
-    )]
-    pose: Option<String>,
+    options: Option<RenderOptions>,
   ) -> std::result::Result<(), JsError> {
-    let pose = match pose {
-      Some(pose) => pose
-        .parse::<Pose>()
-        .map_err(|_| JsError::new(&format!("Unknown pose: {pose}")))?,
-      None => Pose::default(),
+    let (armor, cape, pose) = match options {
+      Some(options) => (
+        options.armor().map(|armor| armor.read()).transpose()?,
+        options.cape(),
+        options
+          .pose()
+          .map(|pose| parse::<Pose>("pose", &pose))
+          .transpose()?,
+      ),
+      None => (None, None, None),
     };
 
     let model_kind = if slim {
@@ -79,7 +81,9 @@ impl JsMessenger {
           bytes,
           model_kind,
           model_outer_layer,
-          pose,
+          armor: armor.unwrap_or_default(),
+          cape,
+          pose: pose.unwrap_or_default(),
         },
       })
     };
@@ -97,7 +101,104 @@ struct JsModel {
   bytes: Vec<u8>,
   model_kind: ModelKind,
   model_outer_layer: ModelOuterLayer,
+  armor: Armor,
+  cape: Option<Vec<u8>>,
   pose: Pose,
+}
+
+#[wasm_bindgen(typescript_custom_section)]
+const RENDER_OPTIONS: &str = r#"
+export interface ArmorPiece {
+  material: "leather" | "chainmail" | "iron" | "gold" | "diamond";
+  /** Dye as `0xRRGGBB`, leather only. Undyed leather is brown. */
+  color?: number;
+  enchanted?: boolean;
+}
+
+export interface Armor {
+  helmet?: ArmorPiece;
+  chestplate?: ArmorPiece;
+  leggings?: ArmorPiece;
+  boots?: ArmorPiece;
+}
+
+export interface RenderOptions {
+  armor?: Armor;
+  /** Cape texture (PNG). */
+  cape?: Uint8Array;
+  pose?: "standing" | "punch" | "sneak" | "jump" | "swim" | "fly";
+}
+"#;
+
+#[wasm_bindgen]
+extern "C" {
+  #[wasm_bindgen(typescript_type = "RenderOptions")]
+  pub type RenderOptions;
+
+  #[wasm_bindgen(method, getter)]
+  fn armor(this: &RenderOptions) -> Option<JsArmor>;
+
+  #[wasm_bindgen(method, getter)]
+  fn cape(this: &RenderOptions) -> Option<Vec<u8>>;
+
+  #[wasm_bindgen(method, getter)]
+  fn pose(this: &RenderOptions) -> Option<String>;
+
+  #[wasm_bindgen(typescript_type = "Armor")]
+  type JsArmor;
+
+  #[wasm_bindgen(method, getter)]
+  fn helmet(this: &JsArmor) -> Option<JsArmorPiece>;
+
+  #[wasm_bindgen(method, getter)]
+  fn chestplate(this: &JsArmor) -> Option<JsArmorPiece>;
+
+  #[wasm_bindgen(method, getter)]
+  fn leggings(this: &JsArmor) -> Option<JsArmorPiece>;
+
+  #[wasm_bindgen(method, getter)]
+  fn boots(this: &JsArmor) -> Option<JsArmorPiece>;
+
+  #[wasm_bindgen(typescript_type = "ArmorPiece")]
+  type JsArmorPiece;
+
+  #[wasm_bindgen(method, getter)]
+  fn material(this: &JsArmorPiece) -> String;
+
+  #[wasm_bindgen(method, getter)]
+  fn color(this: &JsArmorPiece) -> Option<u32>;
+
+  #[wasm_bindgen(method, getter)]
+  fn enchanted(this: &JsArmorPiece) -> Option<bool>;
+}
+
+impl JsArmor {
+  fn read(&self) -> std::result::Result<Armor, JsError> {
+    let read = |piece: Option<JsArmorPiece>| piece.map(|piece| piece.read()).transpose();
+
+    Ok(Armor {
+      helmet: read(self.helmet())?,
+      chestplate: read(self.chestplate())?,
+      leggings: read(self.leggings())?,
+      boots: read(self.boots())?,
+    })
+  }
+}
+
+impl JsArmorPiece {
+  fn read(&self) -> std::result::Result<ArmorPiece, JsError> {
+    Ok(ArmorPiece {
+      material: parse("armor material", &self.material())?,
+      color: self.color(),
+      enchanted: self.enchanted(),
+    })
+  }
+}
+
+fn parse<T: std::str::FromStr>(kind: &str, value: &str) -> std::result::Result<T, JsError> {
+  value
+    .parse()
+    .map_err(|_| JsError::new(&format!("Unknown {kind}: {value}")))
 }
 
 #[wasm_bindgen(js_name = SkinRenderer)]
@@ -167,8 +268,8 @@ impl JsSkinRenderer {
               &model.bytes,
               model.model_kind,
               model.model_outer_layer,
-              &Armor::default(),
-              None,
+              &model.armor,
+              model.cape.as_deref(),
               model.pose,
             ) {
               renderer.frame(model.pose());
@@ -196,8 +297,8 @@ impl JsSkinRenderer {
                 &model.bytes,
                 model.model_kind,
                 model.model_outer_layer,
-                &Armor::default(),
-                None,
+                &model.armor,
+                model.cape.as_deref(),
                 model.pose,
               )
               .ok()
