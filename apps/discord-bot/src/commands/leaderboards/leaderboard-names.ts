@@ -64,9 +64,14 @@ export class LeaderboardChoices {
       name: removeFormatting(translateLeaderboardName(t, leaderboard)),
     }));
 
+    const englishNames = new Map(
+      this.fields.map(([value, { leaderboard }]) => [value, removeFormatting(leaderboard.name)])
+    );
+
     search = [
       new Fuse(list, {
-        keys: ["name"],
+        // People type Hypixel's English stat names whatever their Discord language is
+        keys: ["name", { name: "english", getFn: (choice) => englishNames.get(choice.value) }],
         includeScore: false,
         shouldSort: true,
         isCaseSensitive: false,
