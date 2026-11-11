@@ -2,7 +2,7 @@ use image::{imageops, DynamicImage};
 #[cfg(not(target_arch = "wasm32"))]
 use napi_derive::napi;
 
-use crate::model::{ModelOuterLayer, Part};
+use crate::model::Part;
 
 macro_rules! texture {
   ($name:literal) => {
@@ -57,18 +57,25 @@ pub enum ArmorLayer {
 }
 
 impl ArmorLayer {
-  pub fn inflation(self, outer_layer: ModelOuterLayer) -> f32 {
-    match (self, outer_layer) {
-      (ArmorLayer::Outer, _) => 1.0,
-      // The game's leggings sit 0.5 out, but this renderer's outer skin layer
-      // reaches that far (0.75 extruded), so they move just past it
-      (ArmorLayer::Inner, ModelOuterLayer::D2) => 0.55,
-      (ArmorLayer::Inner, ModelOuterLayer::D3) => 0.8,
+  pub fn inflation(self) -> f32 {
+    match self {
+      ArmorLayer::Outer => 1.0,
+      // The game's leggings sit 0.5 out, where the flat outer layer reaches on
+      // the body's sides, so they move just past it
+      ArmorLayer::Inner => 0.55,
     }
   }
 }
 
 impl Armor {
+  // An extruded outer layer would poke through the leggings, so parts under them
+  // get the flat one, which the game draws under armour anyway
+  pub fn flattens(&self, part: Part) -> bool {
+    self
+      .pieces()
+      .any(|(_, layer, parts)| matches!(layer, ArmorLayer::Inner) && parts.contains(&part))
+  }
+
   pub fn pieces(&self) -> impl Iterator<Item = (&ArmorPiece, ArmorLayer, &'static [Part])> {
     [
       (&self.helmet, ArmorLayer::Outer, &[Part::Head][..]),

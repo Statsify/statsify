@@ -44,7 +44,8 @@ pub struct SkinRenderer<T: Backend> {
   camera_bind_group: wgpu::BindGroup,
   light_bind_group: wgpu::BindGroup,
   render_pipeline: wgpu::RenderPipeline,
-  glint_pipeline: wgpu::RenderPipeline,
+  attachment_pipeline: wgpu::RenderPipeline,
+  enchanted_pipeline: wgpu::RenderPipeline,
   glint_material: Material,
   instance_buffer: wgpu::Buffer,
 
@@ -107,26 +108,29 @@ impl<T: Backend> SkinRenderer<T> {
       wgpu::CompareFunction::LessEqual,
     );
 
-    // Equal depth, so the glint only lands on visible armour
-    let glint_pipeline = Self::create_render_pipeline(
+    let attachment_pipeline = Self::create_render_pipeline(
       device,
       &bind_group_layouts,
       &config,
-      "fs_glint",
-      wgpu::BlendState {
-        color: wgpu::BlendComponent {
-          src_factor: wgpu::BlendFactor::One,
-          dst_factor: wgpu::BlendFactor::One,
-          operation: wgpu::BlendOperation::Add,
-        },
-        alpha: wgpu::BlendComponent {
-          src_factor: wgpu::BlendFactor::Zero,
-          dst_factor: wgpu::BlendFactor::One,
-          operation: wgpu::BlendOperation::Add,
-        },
-      },
-      false,
-      wgpu::CompareFunction::Equal,
+      "fs_attachment",
+      wgpu::BlendState::ALPHA_BLENDING,
+      true,
+      wgpu::CompareFunction::LessEqual,
+    );
+
+    let enchanted_pipeline = Self::create_render_pipeline(
+      device,
+      &[
+        &texture_bind_group_layout,
+        &camera_bind_group_layout,
+        &light_bind_group_layout,
+        &texture_bind_group_layout,
+      ],
+      &config,
+      "fs_enchanted",
+      wgpu::BlendState::ALPHA_BLENDING,
+      true,
+      wgpu::CompareFunction::LessEqual,
     );
 
     let glint_texture = Texture::from_image_with_sampler(
@@ -163,7 +167,8 @@ impl<T: Backend> SkinRenderer<T> {
       camera_bind_group,
       light_bind_group,
       render_pipeline,
-      glint_pipeline,
+      attachment_pipeline,
+      enchanted_pipeline,
       glint_material,
       instance_buffer,
 
@@ -371,13 +376,12 @@ impl<T: Backend> SkinRenderer<T> {
       render_pass.set_pipeline(&self.render_pipeline);
       render_pass.draw_model(model, camera_bind_group, light_bind_group);
 
-      render_pass.set_pipeline(&self.glint_pipeline);
-      render_pass.draw_glint(
-        model,
-        &self.glint_material,
-        camera_bind_group,
-        light_bind_group,
-      );
+      render_pass.set_pipeline(&self.attachment_pipeline);
+      render_pass.draw_attachments(model, false, camera_bind_group, light_bind_group);
+
+      render_pass.set_pipeline(&self.enchanted_pipeline);
+      render_pass.set_bind_group(3, &self.glint_material.bind_group, &[]);
+      render_pass.draw_attachments(model, true, camera_bind_group, light_bind_group);
     };
 
     (encoder, output_texture)
@@ -401,9 +405,8 @@ impl<T: Backend> SkinRenderer<T> {
       load_skin_from_memory(skin)?,
       model_kind,
       model_outer_layer,
+      armor,
     );
-
-    model.attach_armor(device, queue, &self.texture_bind_group_layout, armor);
 
     if let Some(cape) = cape {
       model.attach_cape(
