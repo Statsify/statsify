@@ -33,7 +33,6 @@ pub(super) trait TextureProvider {
 pub struct TextureRegion {
   pub location: Coordinate<u32>,
   pub texture_size: Coordinate<u32>,
-  // Mirrors the texture, as the game does for left limbs
   pub mirror: bool,
 }
 
