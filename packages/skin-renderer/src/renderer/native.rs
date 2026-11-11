@@ -134,12 +134,16 @@ impl Backend for NativeBackend {
     if let Some(Ok(())) = receiver.receive().await {
       let padded_buffer = buffer_slice.get_mapped_range();
 
-      let buffer = padded_buffer
+      let row_bytes = self.dimensions.unpadded_bytes_per_row as usize;
+      let mut buffer = Vec::with_capacity(row_bytes * self.dimensions.height as usize);
+
+      // A byte at a time this took about as long as the PNG encode on lavapipe
+      for row in padded_buffer
         .chunks(self.dimensions.padded_bytes_per_row as usize)
         .take(self.dimensions.height as usize)
-        .flat_map(|row| &row[..self.dimensions.unpadded_bytes_per_row as usize])
-        .copied()
-        .collect::<Vec<u8>>();
+      {
+        buffer.extend_from_slice(&row[..row_bytes]);
+      }
 
       let image =
         ImageBuffer::<Rgba<u8>, _>::from_vec(self.dimensions.width, self.dimensions.height, buffer)
