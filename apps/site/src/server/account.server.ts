@@ -13,7 +13,6 @@ import { randomBytes } from "node:crypto";
 import { siteConfig } from "./config.server";
 
 const SESSION_COOKIE = "statsify_session";
-/** The login's `state`, kept only for the trip to Discord and back. */
 const STATE_COOKIE = "statsify_login_state";
 const STATE_PATH = "/auth/discord";
 const STATE_MAX_AGE_SECONDS = 10 * 60;

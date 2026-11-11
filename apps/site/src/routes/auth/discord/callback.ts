@@ -26,7 +26,6 @@ export const Route = createFileRoute("/auth/discord/callback")({
         const state = search.get("state");
         const expected = loginState();
 
-        // Without a code, the visitor said no on Discord's screen (`error=access_denied`).
         if (!code || !state || state !== expected) return redirect("/account?login=failed", [await clearStateCookie()]);
 
         try {

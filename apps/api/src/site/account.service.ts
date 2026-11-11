@@ -174,7 +174,6 @@ export class AccountService {
     const profile = await this.profileModel.findOne({ uuid }).lean().exec();
 
     if (profile?.accountId !== account.id) {
-      // An account that linked it after this `/verify` proved it more recently, so it keeps it.
       if (profile?.accountId && profile.linkedAt > (user.verifiedAt ?? 0)) return;
 
       // Only from the owner read above, so a claim that landed in between isn't overwritten.
