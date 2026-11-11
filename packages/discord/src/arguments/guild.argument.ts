@@ -46,6 +46,8 @@ class GuildQueryArgument extends AbstractArgument {
     const query = context.option<string>(this.name, "");
     const searched = { name: query, value: query };
 
+    // Discord rejects the whole list when a choice is over 100 characters
+    if (query.length > 100) return [];
     if (query.length > 32) return [searched];
 
     const guilds = await apiClient.getAutocomplete(
