@@ -17,8 +17,11 @@ lazy_static! {
 }
 
 #[napi(object)]
+#[derive(Default)]
 pub struct RenderOptions {
   pub armor: Option<Armor>,
+  /// Enchantment glint texture (PNG), needed when an armour piece is enchanted.
+  pub glint: Option<Uint8Array>,
 }
 
 #[napi]
@@ -42,11 +45,16 @@ pub async fn render_skin(
     ModelOuterLayer::D2
   };
 
-  let armor = options
-    .and_then(|options| options.armor)
-    .unwrap_or_default();
+  let options = options.unwrap_or_default();
+  let armor = options.armor.unwrap_or_default();
 
-  let model = renderer.load_skin(skin, model_kind, model_outer_layer, &armor)?;
+  let model = renderer.load_skin(
+    skin,
+    model_kind,
+    model_outer_layer,
+    &armor,
+    options.glint.as_deref(),
+  )?;
   let buffer = renderer.render(&model).await?;
 
   Ok(buffer.into())

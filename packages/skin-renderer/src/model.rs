@@ -2,6 +2,7 @@ use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation3, Vector3};
 use image::DynamicImage;
 
 use crate::armor::Armor;
+use crate::error::Result;
 use crate::geometry::coordinate::Coordinate;
 use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, TextureRegion};
 use crate::instance::InstanceRaw;
@@ -141,7 +142,7 @@ impl Part {
   }
 
   // Armour textures only have the right limbs, which the left limbs mirror
-  fn armor_region(self) -> TextureRegion {
+  fn armor_region(self, texture_size: Coordinate<u32>) -> TextureRegion {
     let location = match self {
       Part::Head => (0, 0),
       Part::Body => (16, 16),
@@ -151,7 +152,7 @@ impl Part {
 
     TextureRegion {
       location,
-      texture_size: (64, 32),
+      texture_size,
       mirror: matches!(self, Part::LeftArm | Part::LeftLeg),
     }
   }
@@ -254,6 +255,7 @@ pub struct Model {
   material: Material,
   meshes: Vec<Mesh>,
   attachments: Vec<Attachment>,
+  glint: Option<Material>,
 }
 
 impl Model {
@@ -265,7 +267,7 @@ impl Model {
     kind: ModelKind,
     outer_layer: ModelOuterLayer,
     armor: &Armor,
-  ) -> Self {
+  ) -> Result<Self> {
     let arm_width = kind.arm_width();
 
     let (inner_meshes, outer_meshes): (Vec<Mesh>, Vec<Mesh>) = Part::ALL
@@ -295,10 +297,11 @@ impl Model {
       material,
       meshes: inner_meshes.into_iter().chain(outer_meshes).collect(),
       attachments: vec![],
+      glint: None,
     };
 
-    model.attach_armor(device, queue, layout, armor);
-    model
+    model.attach_armor(device, queue, layout, armor)?;
+    Ok(model)
   }
 
   fn attach_armor(
@@ -307,73 +310,91 @@ impl Model {
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
     armor: &Armor,
-  ) {
+  ) -> Result<()> {
     for (piece, layer, parts) in armor.pieces() {
+      let texture = image::load_from_memory(&piece.texture)?;
+      // Packs draw the 64 wide layout at any resolution, and skins are square where armour is 2:1
+      let texture_size = (64, 64 * texture.height() / texture.width());
       let mut geometry = Geometry::new(vec![], vec![]);
 
-      for part in parts {
+      // A worn skull grows from the neck instead of being inflated, as the game draws one
+      let skull = piece.is_skull();
+      let (inflation, hat_inflation) = if skull {
+        (0.0, 0.25)
+      } else {
+        (layer.inflation(), layer.inflation() + 0.5)
+      };
+
+      for &part in parts {
         // Armour is shaped for classic arms on every skin
         let placement = part.placement(ModelKind::Classic.arm_width());
         let (position, rotation) = placement.resolve();
+        let neck = position - Vector3::unit_y() * placement.dimensions.y / 2.0;
 
-        let mut box_geometry = BoxGeometry {
-          position,
-          dimensions: placement.dimensions,
-          texture_region: part.armor_region(),
-          rotation,
-          inflation: layer.inflation(),
+        let mut boxes = vec![(part.armor_region(texture_size), inflation)];
+
+        if part == Part::Head {
+          let hat = TextureRegion {
+            location: part.skin_layer_locations().1,
+            texture_size,
+            mirror: false,
+          };
+
+          boxes.push((hat, hat_inflation));
         }
-        .create();
 
-        box_geometry.scale_around(part.z_fighting_scale(), position);
-        geometry.combine(box_geometry);
+        for (texture_region, inflation) in boxes {
+          let mut box_geometry = BoxGeometry {
+            position,
+            dimensions: placement.dimensions,
+            texture_region,
+            rotation,
+            inflation,
+          }
+          .create();
+
+          if skull {
+            box_geometry.scale_around(1.1875, neck);
+          } else {
+            box_geometry.scale_around(part.z_fighting_scale(), position);
+          }
+
+          geometry.combine(box_geometry);
+        }
       }
 
-      self.attach(
-        device,
-        queue,
-        layout,
-        &piece.texture(layer),
-        geometry,
-        piece.enchanted.unwrap_or(false),
-      );
+      self.attach(device, queue, layout, &texture, geometry, piece.enchanted);
     }
+
+    Ok(())
   }
 
-  // Sized as the game draws a worn skull
-  pub fn attach_head(
+  pub fn attach_glint(
     &mut self,
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
-    head: &DynamicImage,
-  ) {
-    let placement = Part::Head.placement(ModelKind::Classic.arm_width());
-    let (position, rotation) = placement.resolve();
-    let (head_location, hat_location) = Part::Head.skin_layer_locations();
-    let mut geometry = Geometry::new(vec![], vec![]);
+    glint: &DynamicImage,
+  ) -> Result<()> {
+    let texture = Texture::from_image_with_sampler(
+      device,
+      queue,
+      glint,
+      &wgpu::SamplerDescriptor {
+        address_mode_u: wgpu::AddressMode::Repeat,
+        address_mode_v: wgpu::AddressMode::Repeat,
+        mag_filter: wgpu::FilterMode::Linear,
+        min_filter: wgpu::FilterMode::Linear,
+        ..Default::default()
+      },
+    )?;
 
-    for (location, inflation) in [(head_location, 0.0), (hat_location, 0.25)] {
-      geometry.combine(
-        BoxGeometry {
-          position,
-          dimensions: placement.dimensions,
-          texture_region: TextureRegion {
-            location,
-            texture_size: (64, 64),
-            mirror: false,
-          },
-          rotation,
-          inflation,
-        }
-        .create(),
-      );
-    }
+    self.glint = Some(Material::new(device, texture, layout));
+    Ok(())
+  }
 
-    let neck = position - Vector3::unit_y() * placement.dimensions.y / 2.0;
-    geometry.scale_around(1.1875, neck);
-
-    self.attach(device, queue, layout, head, geometry, false);
+  pub fn glint(&self) -> Option<&Material> {
+    self.glint.as_ref()
   }
 
   fn attach(
