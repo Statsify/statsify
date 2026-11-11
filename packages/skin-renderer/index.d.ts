@@ -27,6 +27,8 @@ export interface Helmet {
   material?: 'leather' | 'chainmail' | 'iron' | 'gold' | 'diamond'
   /** Skin texture (PNG) whose head is worn as a player head, in place of a material. */
   head?: Uint8Array
+  /** Vanilla mob skull worn in place of a material. */
+  skull?: 'skeleton' | 'wither_skeleton' | 'zombie' | 'creeper'
   /** Dye as `0xRRGGBB`, leather only. Undyed leather is brown. */
   color?: number
   enchanted?: boolean
