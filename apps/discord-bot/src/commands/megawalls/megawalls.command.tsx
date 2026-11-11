@@ -12,7 +12,8 @@ import {
   ProfileData,
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
-import { GameModeWithSubModes, MEGAWALLS_MODES, MegaWallsModes, Player } from "@statsify/schemas";
+import { ApiModeFromGameModes, GameMode, GameModeWithSubModes, MEGAWALLS_MODES, MegaWallsKit, MegaWallsModes, Player } from "@statsify/schemas";
+import { kitKey, megaWallsKitArmor } from "@statsify/inventory";
 import { MegaWallsProfile } from "./megawalls.profile.js";
 
 @Command({ description: (t) => t("commands.megawalls") })
@@ -26,6 +27,13 @@ export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
     modes: GameModeWithSubModes<MegaWallsModes>[]
   ): GameModeWithSubModes<MegaWallsModes>[] {
     return filterMegaWallsKits(player, modes);
+  }
+
+  public getArmor(player: Player, { api }: GameMode<MegaWallsModes>) {
+    const { megawalls } = player.stats;
+    const kit = (api === "overall" ? kitKey(megawalls.class) : api) as ApiModeFromGameModes<MegaWallsModes>;
+    const level = (megawalls[kit] as MegaWallsKit | undefined)?.kitLevel;
+    return level ? megaWallsKitArmor(kit, level) : undefined;
   }
 
   public getProfile(

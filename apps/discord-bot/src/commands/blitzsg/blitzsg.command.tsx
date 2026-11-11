@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BLITZSG_MODES, BlitzSGKit, BlitzSGModes, GameModeWithSubModes, Player } from "@statsify/schemas";
+import { ApiModeFromGameModes, BLITZSG_MODES, BlitzSGKit, BlitzSGModes, GameMode, GameModeWithSubModes, Player } from "@statsify/schemas";
 import {
   BaseHypixelCommand,
   BaseProfileProps,
@@ -14,6 +14,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { BlitzSGProfile } from "./blitzsg.profile.js";
 import { Command } from "@statsify/discord";
+import { blitzKitArmor, kitKey } from "@statsify/inventory";
 
 @Command({ description: (t) => t("commands.blitzsg") })
 export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
@@ -26,6 +27,13 @@ export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
     modes: GameModeWithSubModes<BlitzSGModes>[]
   ): GameModeWithSubModes<BlitzSGModes>[] {
     return filterBlitzKits(player, modes);
+  }
+
+  public getArmor(player: Player, { api }: GameMode<BlitzSGModes>) {
+    const { blitzsg } = player.stats;
+    const kit = (api === "overall" ? kitKey(blitzsg.kit) : api) as ApiModeFromGameModes<BlitzSGModes>;
+    const level = (blitzsg[kit] as BlitzSGKit | undefined)?.level;
+    return level ? blitzKitArmor(kit, level) : undefined;
   }
 
   public getProfile(

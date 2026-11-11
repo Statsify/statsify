@@ -18,6 +18,7 @@ import {
   SubPage,
 } from "@statsify/discord";
 import { Container } from "typedi";
+import type { Armor } from "@statsify/inventory";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalTimeData } from "#components";
 import { getBackground, getLogo } from "@statsify/assets";
@@ -53,6 +54,7 @@ export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   filterSubmodes?(player: Player, mode: GameModeWithSubModes<T>): GameModeWithSubModes<T>["submodes"];
   getModeEmojis?(modes: GameModeWithSubModes<T>[]): ModeEmoji[];
   getSubModeEmojis?<M extends ApiModeFromGameModes<T>>(mode: M, submodes: SubModeForMode<T, M>[]): ModeEmoji[];
+  getArmor?(player: Player, mode: GameMode<T>): Armor | undefined;
 }
 
 @Command({
@@ -79,6 +81,11 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     ]);
 
     const data: K = (await this.getPreProfileData?.(player)) ?? noop();
+
+    const getSkin = (mode: GameMode<T>) => {
+      const armor = this.getArmor?.(player, mode);
+      return armor && Object.keys(armor).length > 0 ? this.apiService.getPlayerSkin(player.uuid, user, armor) : skin;
+    };
 
     const allModes = this.modes.getModes();
     const filteredModes = this.filterModes?.(player, allModes) ?? allModes;
@@ -107,7 +114,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
             const profile = this.getProfile(
               {
                 player,
-                skin,
+                skin: await getSkin(gameMode),
                 background,
                 logo,
                 t,
@@ -139,7 +146,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
           const profile = this.getProfile(
             {
               player,
-              skin,
+              skin: await getSkin(gameMode),
               background,
               logo,
               t,

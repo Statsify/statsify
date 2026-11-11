@@ -323,6 +323,9 @@ importers:
       '@statsify/discord':
         specifier: workspace:^
         version: link:../../packages/discord
+      '@statsify/inventory':
+        specifier: workspace:^
+        version: link:../../packages/inventory
       '@statsify/logger':
         specifier: workspace:^
         version: link:../../packages/logger
