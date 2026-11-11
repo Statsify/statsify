@@ -10,7 +10,7 @@ import { DateTime } from "luxon";
 import { config } from "@statsify/util";
 import { connect, type mongo as mongodb } from "mongoose";
 
-// @ts-expect-error config() is async and isn't awaited, so connect() rejects the Promise as a uri
+// @ts-expect-error config() isn't awaited
 const mongo = await connect(config("database.mongoUri"));
 const now = DateTime.now();
 

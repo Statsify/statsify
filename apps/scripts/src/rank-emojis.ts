@@ -117,7 +117,7 @@ const drawColorChanger = async (rank: string, prefixIndex: string) => {
 
   for (const [index, image] of Object.entries(sharedImages).entries()) {
     emojis.push({
-      // @ts-expect-error entries() of Object.entries() yields [i, [key, image]], so this pushes the pair
+      // @ts-expect-error this pushes the [key, image] pair
       buffer: image,
       rank,
       category: "SHARED",
@@ -127,10 +127,10 @@ const drawColorChanger = async (rank: string, prefixIndex: string) => {
   }
 
   for (const [index, images] of coloredEmojis) {
-    // @ts-expect-error without entries(), index and images are each color's first two images
+    // @ts-expect-error missing entries(), so index is an image
     const color = minecraftColors[index];
 
-    // @ts-expect-error images is a string, so entries() throws
+    // @ts-expect-error images is a string
     for (const [i, image] of images.entries()) {
       if (sharedImages[i]) continue;
 
@@ -174,7 +174,7 @@ logger.debug(`Creating ${emojis.length} emojis`);
 const rankEmotes: Record<string, string[]> = {};
 const colorChangerEmotes: Record<string, Record<string, Record<number, string>>> = {};
 
-// @ts-expect-error config() is async and isn't awaited, so token is a Promise
+// @ts-expect-error config() isn't awaited
 const client = new RestClient({ token });
 
 // For ratelimiting purposes it is better to run these requests serially

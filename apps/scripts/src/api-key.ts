@@ -12,7 +12,7 @@ import { config } from "@statsify/util";
 import { createHash, randomUUID } from "node:crypto";
 import { inquirerConfirmation, inquirerLogger } from "./utils.ts";
 
-// @ts-expect-error config() is async and isn't awaited, so ioredis gets a Promise and connects to localhost
+// @ts-expect-error config() isn't awaited
 const redis = new Redis(config("database.redisUrl"));
 
 interface NewKey {
@@ -194,7 +194,7 @@ const deleteKey = async () => {
     },
   ]);
 
-  // @ts-expect-error false lands in the message slot, not the default
+  // @ts-expect-error false is passed as the message
   if (!(await inquirerConfirmation(false))) return;
 
   const activeKeys = await getKeys();
@@ -261,7 +261,7 @@ const editKey = async () => {
     }
   }
 
-  // @ts-expect-error the number prompt gets the stored string as its default
+  // @ts-expect-error the default is the stored string
   const newValue = await inquirer.prompt([
     {
       type: "number",

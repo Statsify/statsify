@@ -60,26 +60,25 @@ type CountedOption = Pick<
   "name" | "description_localizations" | "choices"
 >;
 
-// The bot writes this file when it posts commands, so it isn't there to import at typecheck time
+// The bot writes this file at runtime, so typecheck can't import it
 const commands: { commands: Record<string, Command> } = JSON.parse(
   await readFile(new URL(import.meta.resolve("discord-bot/commands.json")), "utf8")
 );
 
 for (const [commandName, command] of Object.entries(commands.commands)) {
-  try {
-    commandSchema.parse(command);
-  } catch (e) {
-    console.error(e);
-    console.log(command);
+  const { error } = commandSchema.safeParse(command);
+  if (!error) continue;
 
-    for (const error of (e as z.ZodError).issues) {
-      console.error(error.message);
-      console.error(`${command.name}.${error.path.join(".")}`);
-    }
+  console.error(error);
+  console.log(command);
 
-    console.error(`Command "${commandName}" is invalid.`);
-    process.exit(1);
+  for (const issue of error.issues) {
+    console.error(issue.message);
+    console.error(`${command.name}.${issue.path.join(".")}`);
   }
+
+  console.error(`Command "${commandName}" is invalid.`);
+  process.exit(1);
 }
 
 const commandChars: Record<string, number> = {};
