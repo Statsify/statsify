@@ -55,12 +55,11 @@ export class SkinService {
     extruded: boolean,
     { cape, armor = {}, ...options }: Omit<SkinRenderDto, "uuid">
   ): Promise<Buffer> {
-    const skin = await this.getSkin(uuid);
+    const [skin, resolvedArmor] = await Promise.all([this.getSkin(uuid), this.resolveArmor(armor)]);
 
-    const [{ skin: image }, capeImage, resolvedArmor] = await Promise.all([
+    const [{ skin: image }, capeImage] = await Promise.all([
       this.resolveSkin(skin.skinUrl, skin.slim),
       cape && skin.capeUrl ? loadImage(skin.capeUrl).catch(() => undefined) : undefined,
-      this.resolveArmor(armor),
     ]);
 
     const enchanted = Object.values(resolvedArmor).some((piece) => piece?.enchanted);
