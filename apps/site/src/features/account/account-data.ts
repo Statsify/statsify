@@ -15,11 +15,6 @@ import { siteConfig } from "~/server/config.server";
 import { z } from "zod";
 import type { AccountPage } from "@statsify/contract";
 
-const ACCOUNT_ERRORS = ["UNAUTHORIZED", "NOT_FOUND", "CONFLICT"] as const;
-
-/** An account change's outcome. Contract errors travel as values; anything unexpected is thrown and reaches Sentry. */
-export type AccountResult = { ok: true; account: AccountPage } | { ok: false; code: (typeof ACCOUNT_ERRORS)[number] };
-
 /** The visitor's account, or null when they aren't logged in or their session ended. */
 export const getAccount = createServerFn().handler(async (): Promise<{ loginEnabled: boolean; account: AccountPage | null }> => {
   const { discordClientId } = await siteConfig();
@@ -35,15 +30,15 @@ export const getAccount = createServerFn().handler(async (): Promise<{ loginEnab
   }
 });
 
-async function act(call: (session: string) => Promise<AccountPage>): Promise<AccountResult> {
+/** The account after a change, or null when the API refused it. Anything unexpected is thrown and reaches Sentry. */
+async function act(call: (session: string) => Promise<AccountPage>): Promise<AccountPage | null> {
   const session = sessionToken();
-  if (!session) return { ok: false, code: "UNAUTHORIZED" };
+  if (!session) return null;
 
   try {
-    return { ok: true, account: await call(session) };
+    return await call(session);
   } catch (error) {
-    const code = error instanceof ORPCError && error.defined ? ACCOUNT_ERRORS.find((known) => known === error.code) : undefined;
-    if (code) return { ok: false, code };
+    if (error instanceof ORPCError && error.defined) return null;
     throw error;
   }
 }

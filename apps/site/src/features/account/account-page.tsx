@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type AccountResult, claimVerified, dismissMoved, setPrimaryProfile, unlinkProfile } from "./account-data";
+import { claimVerified, dismissMoved, setPrimaryProfile, unlinkProfile } from "./account-data";
 import type { AccountPage as AccountData, AccountPageProfile } from "@statsify/contract";
 import { BOX_GAP, Box, CELL, HEADING_BOX } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
@@ -86,12 +86,12 @@ function LoggedIn({ initial }: { initial: AccountData }) {
   const primary = account.profiles.find((profile) => profile.primary);
   const selected = account.profiles.find((profile) => profile.uuid === chosen) ?? primary ?? account.profiles[0];
 
-  const run = async (action: () => Promise<AccountResult>) => {
+  const run = async (action: () => Promise<AccountData | null>) => {
     setPending(true);
 
     try {
-      const result = await action();
-      if (result.ok) return setAccount(result.account);
+      const changed = await action();
+      if (changed) return setAccount(changed);
       // The session ended, or the account changed since the page loaded (another tab, a claim): show it as it is now.
       await router.invalidate();
     } finally {
