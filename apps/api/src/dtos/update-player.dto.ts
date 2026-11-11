@@ -6,23 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
+import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export class UpdatePlayerDto {
+export class UpdatePlayerDto extends createZodDto(
   // The rest of the Hypixel player passes through to `new Player()`
-  public static schema = z.looseObject({
+  z.looseObject({
     uuid: z.string(),
     playername: z.string(),
     displayname: z.string(),
-  });
-
-  @ApiProperty()
-  public uuid: string;
-
-  @ApiProperty()
-  public playername: string;
-
-  @ApiProperty()
-  public displayname: string;
-}
+  })
+) {}

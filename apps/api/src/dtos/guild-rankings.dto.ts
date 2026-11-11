@@ -6,22 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
 import { Guild } from "@statsify/schemas";
+import { createZodDto } from "nestjs-zod";
 import { leaderboardField } from "./leaderboard-field.js";
 import { z } from "zod";
 
-const field = leaderboardField(Guild);
-
-export class GuildRankingDto {
-  public static schema = z.object({
-    fields: z.array(field),
+export class GuildRankingDto extends createZodDto(
+  z.object({
+    fields: z.array(leaderboardField(Guild)),
     id: z.string().length(24),
-  });
-
-  @ApiProperty({ enum: field.options, type: [String] })
-  public fields: string[];
-
-  @ApiProperty()
-  public id: string;
-}
+  })
+) {}

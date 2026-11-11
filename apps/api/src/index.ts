@@ -10,16 +10,18 @@ import * as Sentry from "@sentry/node";
 import handlebars from "handlebars";
 import packageJson from "../package.json" with { type: "json" };
 import { AppModule } from "./app.module.js";
+import { BadRequestException } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
-import { ZodValidationPipe } from "./validation/zod-validation.pipe.js";
+import { cleanupOpenApiDoc, createZodValidationPipe } from "nestjs-zod";
 import { config } from "@statsify/util";
 import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
+import type { ZodError } from "zod";
 
 const directory = import.meta.dirname;
 
@@ -67,6 +69,16 @@ const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter,
   logger: new Logger(),
 });
 
+// Keeps the 400 body Nest's ValidationPipe sent, with `message` as a list of strings
+const ZodValidationPipe = createZodValidationPipe({
+  createValidationException: (error) =>
+    new BadRequestException(
+      (error as ZodError).issues.map(({ path, message }) =>
+        path.length > 0 ? `${path.join(".")}: ${message}` : message
+      )
+    ),
+});
+
 app.useGlobalPipes(new ZodValidationPipe());
 
 // Sentry
@@ -94,6 +106,6 @@ app.setViewEngine({
 
 const document = SwaggerModule.createDocument(app, redoc);
 
-SwaggerModule.setup("swagger", app, document);
+SwaggerModule.setup("swagger", app, cleanupOpenApiDoc(document));
 
 await app.listen(await config("api.port"));
