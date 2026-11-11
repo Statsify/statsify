@@ -234,6 +234,7 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
+    "reset-searches": "Clear the players and guilds you searched recently",
     "reset-session": "Reset your session stats"
   },
   "config": {
@@ -250,6 +251,9 @@
     },
     "language": {
       "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
+    },
+    "searches": {
+      "reset": "$t(emojis:config.reset) Successfully cleared your recent searches."
     },
     "theme": {
       "profile": "This is how your theme will look on your profiles",

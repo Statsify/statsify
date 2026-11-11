@@ -9,12 +9,14 @@
 import * as Sentry from "@sentry/node";
 import axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
+  AutocompleteType,
   CacheLevel,
   GuildQuery,
   LeaderboardQuery,
 } from "./constants.js";
 import {
   DeletePlayerResponse,
+  GetAutocompleteResponse,
   GetCommandUsageResponse,
   GetGamecountsResponse,
   GetGuildResponse,
@@ -127,6 +129,27 @@ export class ApiService {
       "guilds",
       { query }
     );
+  }
+
+  /**
+   * @param id Discord ID of the user typing, whose lookups and guild rank first
+   */
+  public getAutocomplete(type: AutocompleteType, id: string, query: string) {
+    return this.requestKey<GetAutocompleteResponse, "names">("/autocomplete", "names", {
+      type,
+      id,
+      query,
+    });
+  }
+
+  public addAutocompleteHistory(type: AutocompleteType, id: string, name: string) {
+    return this.request<SuccessResponse>("/autocomplete/history", {}, "POST", {
+      body: { type, id, name },
+    });
+  }
+
+  public clearAutocompleteHistory(id: string) {
+    return this.request<SuccessResponse>("/autocomplete/history", { id }, "DELETE");
   }
 
   public getGuildLeaderboard(

@@ -15,13 +15,13 @@ import { ApiService } from "#services";
 import { ChoiceArgument } from "./choice.argument.js";
 import { CommandContext } from "#command";
 import { Container } from "typedi";
-import { GuildQuery } from "@statsify/api-client";
+import { AutocompleteType, GuildQuery } from "@statsify/api-client";
 import { LocalizationString } from "#messages";
 import { PlayerArgument } from "./player.argument.js";
 
 const apiClient = Container.get(ApiService);
 
-class GuildQueryArgument extends AbstractArgument {
+export class GuildQueryArgument extends AbstractArgument {
   public description: LocalizationString;
   public name = "query";
   public type = ApplicationCommandOptionType.String;
@@ -43,18 +43,20 @@ class GuildQueryArgument extends AbstractArgument {
     if (type === GuildQuery.PLAYER) return this.playerArgument.autocompleteHandler(context);
     if (type === GuildQuery.ID) return [];
 
-    const query = context.option<string>(this.name);
-    if (!query) return [];
-
+    const query = context.option<string>(this.name, "");
     const searched = { name: query, value: query };
 
     if (query.length > 32) return [searched];
 
-    const guilds = await apiClient.getGuildAutocomplete(query);
+    const guilds = await apiClient.getAutocomplete(
+      AutocompleteType.GUILD,
+      context.getInteraction().getUserId(),
+      query
+    );
 
     let results = guilds.map((g) => ({ name: g, value: g }));
 
-    if (!guilds.some((g) => g.toLowerCase() === query.toLowerCase())) {
+    if (query && !guilds.some((g) => g.toLowerCase() === query.toLowerCase())) {
       results = results.slice(0, 24);
       results.push(searched);
     }

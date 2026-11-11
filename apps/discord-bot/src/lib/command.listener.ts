@@ -13,9 +13,12 @@ import {
   CommandContext,
   CommandResolvable,
   ErrorMessage,
+  GuildQueryArgument,
   IMessage,
   Interaction,
+  PlayerArgument,
 } from "@statsify/discord";
+import { AutocompleteType, GuildQuery } from "@statsify/api-client";
 import { Container } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
@@ -97,13 +100,34 @@ export class CommandListener extends AbstractCommandListener {
 
     this.apiService.incrementCommand(commandName);
 
-    return this.executeCommand({
+    await this.executeCommand({
       commandName,
       command,
       context,
       preconditions,
       message: this.getTipResponse(commandName, user),
     });
+
+    this.recordLookups(command, context, id);
+  }
+
+  /** The API keeps only names that are stored by now, so a failed command records nothing. */
+  private recordLookups(command: CommandResolvable, context: CommandContext, userId: string) {
+    const guildType = context.option<GuildQuery>("type");
+
+    for (const arg of command.args) {
+      const name = context.option<string>(arg.name);
+      if (!name || name.length > 32) continue;
+
+      let type: AutocompleteType;
+
+      if (arg instanceof PlayerArgument) type = AutocompleteType.PLAYER;
+      else if (arg instanceof GuildQueryArgument && guildType !== GuildQuery.ID)
+        type = guildType === GuildQuery.PLAYER ? AutocompleteType.PLAYER : AutocompleteType.GUILD;
+      else continue;
+
+      this.apiService.addAutocompleteHistory(type, userId, name).catch(() => null);
+    }
   }
 
   private cooldownPrecondition(

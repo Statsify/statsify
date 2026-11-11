@@ -12,6 +12,7 @@ import {
 } from "discord-api-types/v10";
 import { AbstractArgument } from "./abstract.argument.js";
 import { ApiService } from "#services";
+import { AutocompleteType } from "@statsify/api-client";
 import { CommandContext } from "#command";
 import { Container } from "typedi";
 import { LocalizationString } from "#messages";
@@ -37,7 +38,11 @@ export class PlayerArgument extends AbstractArgument {
 
     if (query.length > 16) return [searched];
 
-    const players = await apiClient.getPlayerAutocomplete(query);
+    const players = await apiClient.getAutocomplete(
+      AutocompleteType.PLAYER,
+      context.getInteraction().getUserId(),
+      query
+    );
 
     let results = players.map((p) => ({ name: p, value: p }));
 
