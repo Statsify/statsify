@@ -145,7 +145,8 @@ export function Header() {
             ))}
           </ul>
         </nav>
-        <AccountLink className={NAV_LINK} />
+        {/* A game page's phone logo row has the search button and no room for it, so the row stays one line. */}
+        <AccountLink className={cn(NAV_LINK, compact && "max-md:hidden")} />
       </div>
     </header>
   );
