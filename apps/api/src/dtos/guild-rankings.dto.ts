@@ -16,7 +16,7 @@ const field = leaderboardField(Guild);
 export class GuildRankingDto {
   public static schema = z.object({
     fields: z.array(field),
-    id: z.string().min(24).max(24),
+    id: z.string().length(24),
   });
 
   @ApiProperty({ enum: field.options, type: [String] })

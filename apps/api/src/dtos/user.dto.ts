@@ -8,6 +8,7 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { z } from "zod";
+import type { UserFooter, UserTheme } from "@statsify/schemas";
 
 export class UserIdDto {
   public static schema = z.object({ id: z.string().min(17).max(20) });
@@ -24,7 +25,6 @@ export class UserDto {
 }
 
 export class UpdateUserDto {
-  // Admin callers can set any other User field through this body too
   public static schema = z.looseObject({
     serverMember: z.boolean().nullish(),
     theme: z.object({
@@ -41,9 +41,9 @@ export class UpdateUserDto {
 
   public serverMember?: boolean;
 
-  public theme?: { font?: string; palette?: string; boxes?: string };
+  public theme?: UserTheme;
 
-  public footer?: { message?: string; icon?: number };
+  public footer?: UserFooter;
 
   public locale?: string;
 }
