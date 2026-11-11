@@ -8,6 +8,7 @@
 
 import { SLOTS, fromLegacyKit, inRange, kitKey } from "./kits.js";
 import type { ItemStack } from "../core/item-stack.js";
+import { armorOf } from "./armor.js";
 import data from "../../data/minecraft-data.json" with { type: "json" };
 import dumped from "../../data/legacy-kits.json" with { type: "json" };
 
@@ -77,6 +78,19 @@ function fromDumpedKit(
 
   return slots;
 }
+
+// Blitz's editors hold its armour among the items, and Mega Walls' class pages list theirs
+function dumpedKitArmor(game: Game, name: string, level: number) {
+  const kit = KITS[game][kitKey(name)];
+  if (kit?.level !== level) return undefined;
+  return armorOf([...Object.values(kit.armor ?? {}), ...kit.items.map(({ item }) => item)]);
+}
+
+/** A Blitz kit's armour at a level, which is only known at the level its editor was dumped at */
+export const blitzKitArmor = (kit: string, level: number) => dumpedKitArmor("blitz", kit, level);
+
+/** A Mega Walls class's armour at a Kit upgrade level, which is only known at the level its editor was dumped at */
+export const megaWallsKitArmor = (kit: string, level: number) => dumpedKitArmor("megawalls", kit, level);
 
 /**
  * A Blitz <Kit>Inventory ({ "0": "345,0", "1": "261,0" }) as 40 player inventory slots, or

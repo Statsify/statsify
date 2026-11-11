@@ -1646,13 +1646,15 @@
       {
         "token": "LEATHER_CHESTPLATE:0",
         "item": {
-          "id": "minecraft:leather_chestplate"
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
         }
       },
       {
         "token": "LEATHER_LEGGINGS:0",
         "item": {
-          "id": "minecraft:leather_leggings"
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
         }
       },
       {
@@ -2322,19 +2324,22 @@
       {
         "token": "LEATHER_CHESTPLATE:0",
         "item": {
-          "id": "minecraft:leather_chestplate"
+          "id": "minecraft:leather_chestplate",
+          "color": 8388736
         }
       },
       {
         "token": "LEATHER_LEGGINGS:0",
         "item": {
-          "id": "minecraft:leather_leggings"
+          "id": "minecraft:leather_leggings",
+          "color": 8388736
         }
       },
       {
         "token": "LEATHER_BOOTS:0",
         "item": {
-          "id": "minecraft:leather_boots"
+          "id": "minecraft:leather_boots",
+          "color": 8388736
         }
       }
     ]
@@ -2345,19 +2350,22 @@
       {
         "token": "LEATHER_CHESTPLATE:0",
         "item": {
-          "id": "minecraft:leather_chestplate"
+          "id": "minecraft:leather_chestplate",
+          "color": 32768
         }
       },
       {
         "token": "LEATHER_LEGGINGS:0",
         "item": {
-          "id": "minecraft:leather_leggings"
+          "id": "minecraft:leather_leggings",
+          "color": 32768
         }
       },
       {
         "token": "LEATHER_BOOTS:0",
         "item": {
-          "id": "minecraft:leather_boots"
+          "id": "minecraft:leather_boots",
+          "color": 32768
         }
       }
     ]
@@ -2368,19 +2376,22 @@
       {
         "token": "LEATHER_CHESTPLATE:0",
         "item": {
-          "id": "minecraft:leather_chestplate"
+          "id": "minecraft:leather_chestplate",
+          "color": 16753920
         }
       },
       {
         "token": "LEATHER_LEGGINGS:0",
         "item": {
-          "id": "minecraft:leather_leggings"
+          "id": "minecraft:leather_leggings",
+          "color": 16753920
         }
       },
       {
         "token": "LEATHER_BOOTS:0",
         "item": {
-          "id": "minecraft:leather_boots"
+          "id": "minecraft:leather_boots",
+          "color": 16753920
         }
       },
       {
@@ -2398,19 +2409,22 @@
       {
         "token": "LEATHER_CHESTPLATE:0",
         "item": {
-          "id": "minecraft:leather_chestplate"
+          "id": "minecraft:leather_chestplate",
+          "color": 8421504
         }
       },
       {
         "token": "LEATHER_LEGGINGS:0",
         "item": {
-          "id": "minecraft:leather_leggings"
+          "id": "minecraft:leather_leggings",
+          "color": 8421504
         }
       },
       {
         "token": "LEATHER_BOOTS:0",
         "item": {
-          "id": "minecraft:leather_boots"
+          "id": "minecraft:leather_boots",
+          "color": 8421504
         }
       }
     ]
@@ -2421,19 +2435,22 @@
       {
         "token": "LEATHER_CHESTPLATE:0",
         "item": {
-          "id": "minecraft:leather_chestplate"
+          "id": "minecraft:leather_chestplate",
+          "color": 255
         }
       },
       {
         "token": "LEATHER_LEGGINGS:0",
         "item": {
-          "id": "minecraft:leather_leggings"
+          "id": "minecraft:leather_leggings",
+          "color": 255
         }
       },
       {
         "token": "LEATHER_BOOTS:0",
         "item": {
-          "id": "minecraft:leather_boots"
+          "id": "minecraft:leather_boots",
+          "color": 255
         }
       }
     ]
@@ -2444,19 +2461,22 @@
       {
         "token": "LEATHER_CHESTPLATE:0",
         "item": {
-          "id": "minecraft:leather_chestplate"
+          "id": "minecraft:leather_chestplate",
+          "color": 255
         }
       },
       {
         "token": "LEATHER_LEGGINGS:0",
         "item": {
-          "id": "minecraft:leather_leggings"
+          "id": "minecraft:leather_leggings",
+          "color": 255
         }
       },
       {
         "token": "LEATHER_BOOTS:0",
         "item": {
-          "id": "minecraft:leather_boots"
+          "id": "minecraft:leather_boots",
+          "color": 255
         }
       }
     ]
@@ -2467,19 +2487,22 @@
       {
         "token": "LEATHER_CHESTPLATE:0",
         "item": {
-          "id": "minecraft:leather_chestplate"
+          "id": "minecraft:leather_chestplate",
+          "color": 8421504
         }
       },
       {
         "token": "LEATHER_LEGGINGS:0",
         "item": {
-          "id": "minecraft:leather_leggings"
+          "id": "minecraft:leather_leggings",
+          "color": 8421504
         }
       },
       {
         "token": "LEATHER_BOOTS:0",
         "item": {
-          "id": "minecraft:leather_boots"
+          "id": "minecraft:leather_boots",
+          "color": 8421504
         }
       },
       {
@@ -3305,14 +3328,16 @@
         "slot": 38,
         "token": "LEATHER_CHESTPLATE:0",
         "item": {
-          "id": "minecraft:leather_chestplate"
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
         }
       },
       {
         "slot": 37,
         "token": "LEATHER_LEGGINGS:0",
         "item": {
-          "id": "minecraft:leather_leggings"
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
         }
       },
       {
@@ -3422,21 +3447,24 @@
         "slot": 38,
         "token": "LEATHER_CHESTPLATE:0",
         "item": {
-          "id": "minecraft:leather_chestplate"
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
         }
       },
       {
         "slot": 37,
         "token": "LEATHER_LEGGINGS:0",
         "item": {
-          "id": "minecraft:leather_leggings"
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
         }
       },
       {
         "slot": 36,
         "token": "LEATHER_BOOTS:0",
         "item": {
-          "id": "minecraft:leather_boots"
+          "id": "minecraft:leather_boots",
+          "color": 16777215
         }
       }
     ]
@@ -4614,6 +4642,7 @@
         "token": "LEATHER_CHESTPLATE:0:0",
         "item": {
           "id": "minecraft:leather_chestplate",
+          "color": 8388736,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4624,6 +4653,7 @@
         "token": "LEATHER_LEGGINGS:0:0",
         "item": {
           "id": "minecraft:leather_leggings",
+          "color": 8388736,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4634,6 +4664,7 @@
         "token": "LEATHER_BOOTS:0:0",
         "item": {
           "id": "minecraft:leather_boots",
+          "color": 8388736,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4649,6 +4680,7 @@
         "token": "LEATHER_CHESTPLATE:0:0",
         "item": {
           "id": "minecraft:leather_chestplate",
+          "color": 32768,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4659,6 +4691,7 @@
         "token": "LEATHER_LEGGINGS:0:0",
         "item": {
           "id": "minecraft:leather_leggings",
+          "color": 32768,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4669,6 +4702,7 @@
         "token": "LEATHER_BOOTS:0:0",
         "item": {
           "id": "minecraft:leather_boots",
+          "color": 32768,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4684,6 +4718,7 @@
         "token": "LEATHER_CHESTPLATE:0:0",
         "item": {
           "id": "minecraft:leather_chestplate",
+          "color": 16753920,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4694,6 +4729,7 @@
         "token": "LEATHER_LEGGINGS:0:0",
         "item": {
           "id": "minecraft:leather_leggings",
+          "color": 16753920,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4704,6 +4740,7 @@
         "token": "LEATHER_BOOTS:0:0",
         "item": {
           "id": "minecraft:leather_boots",
+          "color": 16753920,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4726,6 +4763,7 @@
         "token": "LEATHER_CHESTPLATE:0:0",
         "item": {
           "id": "minecraft:leather_chestplate",
+          "color": 8421504,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4736,6 +4774,7 @@
         "token": "LEATHER_LEGGINGS:0:0",
         "item": {
           "id": "minecraft:leather_leggings",
+          "color": 8421504,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4746,6 +4785,7 @@
         "token": "LEATHER_BOOTS:0:0",
         "item": {
           "id": "minecraft:leather_boots",
+          "color": 8421504,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4761,6 +4801,7 @@
         "token": "LEATHER_CHESTPLATE:0:0",
         "item": {
           "id": "minecraft:leather_chestplate",
+          "color": 255,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4771,6 +4812,7 @@
         "token": "LEATHER_LEGGINGS:0:0",
         "item": {
           "id": "minecraft:leather_leggings",
+          "color": 255,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4781,6 +4823,7 @@
         "token": "LEATHER_BOOTS:0:0",
         "item": {
           "id": "minecraft:leather_boots",
+          "color": 255,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4796,6 +4839,7 @@
         "token": "LEATHER_CHESTPLATE:0:0",
         "item": {
           "id": "minecraft:leather_chestplate",
+          "color": 255,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4806,6 +4850,7 @@
         "token": "LEATHER_LEGGINGS:0:0",
         "item": {
           "id": "minecraft:leather_leggings",
+          "color": 255,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4816,6 +4861,7 @@
         "token": "LEATHER_BOOTS:0:0",
         "item": {
           "id": "minecraft:leather_boots",
+          "color": 255,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4831,6 +4877,7 @@
         "token": "LEATHER_CHESTPLATE:0:0",
         "item": {
           "id": "minecraft:leather_chestplate",
+          "color": 8421504,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4841,6 +4888,7 @@
         "token": "LEATHER_LEGGINGS:0:0",
         "item": {
           "id": "minecraft:leather_leggings",
+          "color": 8421504,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -4851,6 +4899,7 @@
         "token": "LEATHER_BOOTS:0:0",
         "item": {
           "id": "minecraft:leather_boots",
+          "color": 8421504,
           "enchanted": true,
           "tooltip": [
             "Protection III"
@@ -5101,14 +5150,16 @@
         "slot": 37,
         "token": "LEATHER_LEGGINGS:0",
         "item": {
-          "id": "minecraft:leather_leggings"
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
         }
       },
       {
         "slot": 36,
         "token": "LEATHER_BOOTS:0",
         "item": {
-          "id": "minecraft:leather_boots"
+          "id": "minecraft:leather_boots",
+          "color": 16777215
         }
       },
       {
