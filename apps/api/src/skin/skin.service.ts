@@ -49,14 +49,17 @@ export class SkinService {
     { cape, armor, ...options }: SkinRenderOptions
   ): Promise<Buffer> {
     const skin = await this.getSkin(uuid);
-    const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
-
-    const capeImage = cape && skin.capeUrl ? await loadImage(skin.capeUrl).catch(() => undefined) : undefined;
     const { helmet, ...pieces } = armor ?? {};
+
+    const [{ skin: image }, capeImage, resolvedHelmet] = await Promise.all([
+      this.resolveSkin(skin.skinUrl, skin.slim),
+      cape && skin.capeUrl ? loadImage(skin.capeUrl).catch(() => undefined) : undefined,
+      this.resolveHelmet(helmet),
+    ]);
 
     return renderSkin(imageData(image), skin.slim ?? false, extruded, {
       ...options,
-      armor: { ...pieces, helmet: await this.resolveHelmet(helmet) },
+      armor: { ...pieces, helmet: resolvedHelmet },
       cape: capeImage && imageData(capeImage),
     });
   }
