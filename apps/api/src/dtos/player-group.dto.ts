@@ -6,18 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
+import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export class PlayerGroupDto {
-  public static schema = z.object({
+export class PlayerGroupDto extends createZodDto(
+  z.object({
     start: z.coerce.number().min(0),
     end: z.coerce.number(),
-  });
-
-  @ApiProperty()
-  public start: number;
-
-  @ApiProperty()
-  public end: number;
-}
+  })
+) {}

@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
+import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export class PlayerSearchDto {
-  public static schema = z.object({ query: z.string().max(16) });
-
-  @ApiProperty()
-  public query: string;
-}
+export class PlayerSearchDto extends createZodDto(z.object({ query: z.string().max(16) })) {}

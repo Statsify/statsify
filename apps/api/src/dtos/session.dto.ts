@@ -7,10 +7,9 @@
  */
 
 import { PlayerDto } from "./player.dto.js";
+import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export class SessionDto extends PlayerDto {
-  public static override schema = PlayerDto.schema.extend({ userUuid: z.string().optional() });
-
-  public userUuid?: string;
-}
+export class SessionDto extends createZodDto(
+  PlayerDto.schema.extend({ userUuid: z.string().optional() })
+) {}

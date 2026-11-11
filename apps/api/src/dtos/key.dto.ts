@@ -6,24 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
+import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export class AddKeyDto {
-  public static schema = z.object({ name: z.string() });
+export class AddKeyDto extends createZodDto(z.object({ name: z.string() })) {}
 
-  @ApiProperty()
-  public name: string;
-}
+export class KeyParamDto extends createZodDto(z.object({ key: z.string().optional() })) {}
 
-export class KeyParamDto {
-  public static schema = z.object({ key: z.string().optional() });
-
-  @ApiProperty({ required: false })
-  public key?: string;
-}
-
-export class KeyHeaderDto {
-  @ApiProperty()
-  public "x-api-key": string;
-}
+// The auth guard also takes the key from `?key=`, so the header can be missing
+export class KeyHeaderDto extends createZodDto(z.object({ "x-api-key": z.string().optional() })) {}
