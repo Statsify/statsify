@@ -257,7 +257,6 @@ pub struct Model {
 }
 
 impl Model {
-  // The armour decides which parts keep an extruded outer layer, so it can't be attached later
   pub fn new(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
@@ -326,7 +325,6 @@ impl Model {
         }
         .create();
 
-        // Neighbouring boxes share faces where they overlap, like the legs and body
         box_geometry.scale_around(part.z_fighting_scale(), position);
         geometry.combine(box_geometry);
       }
