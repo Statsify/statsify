@@ -6,7 +6,7 @@ pub enum Error {
   #[error("The provided image is not a valid skin texture")]
   InvalidSkinTexture,
 
-  #[error("A helmet needs either a material or a head")]
+  #[error("A helmet needs exactly one of a material, a head or a skull")]
   InvalidHelmet,
 
   #[error(transparent)]

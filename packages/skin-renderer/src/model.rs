@@ -340,7 +340,7 @@ impl Model {
     }
   }
 
-  // Sized as the game draws a worn player head
+  // Sized as the game draws a worn skull
   pub fn attach_head(
     &mut self,
     device: &wgpu::Device,
