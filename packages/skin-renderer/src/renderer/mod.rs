@@ -476,9 +476,8 @@ impl SkinRenderer<wasm::WasmBackend> {
   pub fn frame(&mut self, pose: Pose) {
     let Camera::Orbital(camera) = &mut self.camera;
 
-    if let Some(radius) = pose.camera_radius() {
-      camera.update_radius(radius);
-    }
+    // Without a distance of its own the pose zooms back in, which clamps to the minimum
+    camera.update_radius(pose.camera_radius().unwrap_or(0.0));
   }
 
   pub fn process_mouse_scroll(&mut self, delta: &MouseScrollDelta) {
