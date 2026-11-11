@@ -8,7 +8,7 @@ use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, Textu
 use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
-use crate::pose::Pose;
+use crate::pose::{PartPose, Pose};
 use crate::texture::Texture;
 
 pub enum ModelKind {
@@ -329,12 +329,16 @@ impl Model {
     Ok(model)
   }
 
-  pub fn pose(&self) -> Pose {
-    self.pose
-  }
+  // Boots and a player head reach past the frame that fits a bare player, and every
+  // armoured render pulls back with them so they share one scale
+  pub fn camera_radius(&self) -> f32 {
+    let radius = self.pose.camera_radius();
 
-  pub fn wears_armor(&self) -> bool {
-    self.wears_armor
+    if self.wears_armor {
+      radius + 3.0
+    } else {
+      radius
+    }
   }
 
   fn attach_armor(
@@ -467,11 +471,11 @@ impl Model {
     }
     .create();
 
-    let (swing, offset) = self.pose.cape();
+    let PartPose { rotation, offset } = self.pose.cape();
 
     geometry.rotate_around(Rotation {
       // A standing player's cape swings 6 degrees out from the back
-      quaternion: Quaternion::from_angle_x(Deg(6.0 + swing)),
+      quaternion: Quaternion::from_angle_x(Deg(6.0 + rotation.x)),
       pivot: Vector3::new(0.0, top, back),
     });
     geometry.translate(offset);
