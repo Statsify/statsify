@@ -42,7 +42,7 @@ export class AccountController {
   @Auth(SITE_ONLY)
   @Implement(contract.account.claimVerified)
   public claimVerified() {
-    return implement(contract.account.claimVerified).handler(({ input }) => this.accountService.recheck(input.session));
+    return implement(contract.account.claimVerified).handler(({ input }) => this.accountService.claimVerified(input.session));
   }
 
   @Auth(SITE_ONLY)

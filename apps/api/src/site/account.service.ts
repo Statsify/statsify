@@ -58,7 +58,7 @@ export class AccountService {
       .lean()
       .exec();
 
-    await this.claimVerified(account);
+    await this.linkVerified(account);
 
     const session = randomBytes(32).toString("base64url");
     await this.redis.set(sessionKey(session), account.id, "EX", SESSION_TTL_SECONDS);
@@ -75,9 +75,9 @@ export class AccountService {
   }
 
   /** For a visitor who ran the bot's `/verify` since logging in. */
-  public async recheck(session: string): Promise<AccountPage> {
+  public async claimVerified(session: string): Promise<AccountPage> {
     const account = await this.account(session);
-    await this.claimVerified(account);
+    await this.linkVerified(account);
     return this.page(account.id);
   }
 
@@ -119,7 +119,7 @@ export class AccountService {
    */
   public async botVerified(discordId: string, uuid: string) {
     const account = await this.accountModel.findOne({ discordId }).lean().exec();
-    if (account) return this.claimVerified(account);
+    if (account) return this.linkVerified(account);
 
     const profile = await this.profileModel
       .findOneAndUpdate({ uuid, accountId: { $exists: true } }, { $unset: { accountId: "" } })
@@ -156,7 +156,7 @@ export class AccountService {
    * Links the UUID the account's Discord user verified with the bot, moving it from any account that linked it before
    * that `/verify`, and makes it the primary, since the primary is the bot's verified UUID.
    */
-  private async claimVerified(account: Account) {
+  private async linkVerified(account: Account) {
     if (!account.discordId) return;
 
     const user = await this.userModel.findOne({ id: account.discordId }, { uuid: true, verifiedAt: true }).lean().exec();
