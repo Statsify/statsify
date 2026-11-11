@@ -72,6 +72,7 @@ interface View {
   renderer: InventoryRenderer;
   tooltips: Resources["tooltips"];
   size: InventorySize;
+  atlas: boolean;
   /** The inventory without its moving slots' contents */
   still: OffscreenCanvas;
   composed: OffscreenCanvas;
@@ -174,6 +175,7 @@ export class McInventory extends HTMLElement {
 
   public disconnectedCallback() {
     this.observer.unobserve(this.canvas);
+    this.unhover();
     this.onScreen = false;
     this.play();
   }
@@ -207,7 +209,7 @@ export class McInventory extends HTMLElement {
   private hover(event: PointerEvent) {
     if (!this.view) return;
 
-    const { renderer, tooltips, size } = this.view;
+    const { renderer, tooltips, size, atlas } = this.view;
     const bounds = this.canvas.getBoundingClientRect();
     const slot = slotAt(
       size,
@@ -215,7 +217,6 @@ export class McInventory extends HTMLElement {
       (event.clientY - bounds.top) / (size.scale * (bounds.height / this.canvas.height)),
     );
     const overlay = tooltipOverlay();
-    const atlas = this.packStack instanceof Atlas;
 
     if (slot === this.hovered) {
       if (atlas) this.changeTooltip(event);
@@ -269,7 +270,7 @@ export class McInventory extends HTMLElement {
     this.dispatchEvent(new CustomEvent("mc-tooltip-change", { detail, bubbles: true, composed: true }));
   }
 
-  private placeText(size: InventorySize, shown: (ItemStack | undefined)[], width: number) {
+  private placeText(size: InventorySize, shown: (ItemStack | undefined)[], width: number, atlas: boolean) {
     const labels: HTMLSpanElement[] = [];
 
     const place = (part: string, text: string, top: number, side: "left" | "right", offset: number) => {
@@ -281,7 +282,7 @@ export class McInventory extends HTMLElement {
       labels.push(label);
     };
 
-    if (this.packStack instanceof Atlas) {
+    if (atlas) {
       const [titleX, titleY] = TITLE_ORIGIN;
       if (size.title) place("title", size.title, titleY, "left", titleX);
 
@@ -303,6 +304,7 @@ export class McInventory extends HTMLElement {
     const drawing = ++this.drawing;
     const size = this.size;
     const tick = this.tick;
+    const atlas = this.packStack instanceof Atlas;
     const resources = resourcesFor(this.packStack);
     const renderer = await resources.renderer;
     const shown = this.items.slice(0, size.rows * size.cols);
@@ -316,12 +318,12 @@ export class McInventory extends HTMLElement {
 
     if (drawing !== this.drawing) return;
 
-    this.view = { renderer, tooltips: resources.tooltips, size, still, composed: createCanvas(still.width, still.height) };
+    this.view = { renderer, tooltips: resources.tooltips, size, atlas, still, composed: createCanvas(still.width, still.height) };
     this.moving = moving;
     this.movingIcons = icons;
     this.canvas.width = still.width;
     this.canvas.height = still.height;
-    this.placeText(size, shown, still.width / size.scale);
+    this.placeText(size, shown, still.width / size.scale, atlas);
     this.show();
 
     this.drawn = drawing;
