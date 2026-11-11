@@ -4793,5 +4793,5628 @@
         }
       }
     }
+  },
+  "blitzArmor": {
+    "archer": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 65280
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 65280
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65280
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 65280
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65280
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 65280
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65280
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 65280
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65280
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 65280
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65280
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 65280
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65280
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 65280
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65280
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 65280
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65280
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 65280
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65280
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "meatmaster": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16012866
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16012866
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16012866,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16012866,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16012866,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "speleologist": [
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15752027
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15752027
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15752027
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15752027
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "baker": [
+      {
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15639797
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15639797
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15639797
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15639797
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15639797
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15639797
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15639797
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15639797
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15639797
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 15639797
+        }
+      }
+    ],
+    "knight": [
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:golden_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:golden_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:golden_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "guardian": [
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 1660200
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 1660200
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 1660200
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 1660200
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 1660200
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 1660200,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 1660200,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:iron_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:iron_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      }
+    ],
+    "scout": [
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 2302940
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 2302940
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 2302940
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 2302940
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 2302940
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 2302940
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 2302940
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 2302940
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 2302940
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 2302940
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "hunter": [
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65535
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 65535
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65535
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 65535
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65535
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 65535
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65535
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 65535
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65535
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 65535
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 65535,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 65535
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 65535
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 65535
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 65535,
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      }
+    ],
+    "hypetrain": [
+      {
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 32768
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 32768
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 32768,
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 32768,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 32768,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 32768,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 32768,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 32768,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 32768,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 32768,
+          "enchanted": true
+        }
+      }
+    ],
+    "fisherman": [
+      {
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 6403023
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 6403023
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 6403023
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 6403023
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 6403023
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate"
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate"
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:diamond_boots"
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate"
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet"
+        }
+      }
+    ],
+    "armorer": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 255,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 32768,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16753920
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 255,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 32768,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16753920,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 255,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 32768,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16753920,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 255,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 32768,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16753920,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 255,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 32768,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16753920,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 255,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 32768,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16753920,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 255,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 32768,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16753920,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 255,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 32768,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16753920,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 255,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 32768,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16753920,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 255,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 32768,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16753920,
+          "enchanted": true
+        }
+      }
+    ],
+    "horsetamer": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:diamond_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      }
+    ],
+    "astronaut": [
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate"
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate"
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "troll": [
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16716947
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16716947,
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16716947,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16716947,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16716947,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16716947,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16716947,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16716947,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16716947,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16716947,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "reaper": [
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 0
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 0
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 0
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 0
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 0
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 0
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 0,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 0,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "shark": [
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 12632256
+        },
+        "39": {
+          "id": "minecraft:player_head",
+          "skin": "https://textures.minecraft.net/texture/51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40",
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 12632256
+        },
+        "39": {
+          "id": "minecraft:player_head",
+          "skin": "https://textures.minecraft.net/texture/51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40",
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 12632256
+        },
+        "39": {
+          "id": "minecraft:player_head",
+          "skin": "https://textures.minecraft.net/texture/51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 12632256
+        },
+        "39": {
+          "id": "minecraft:player_head",
+          "skin": "https://textures.minecraft.net/texture/51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 12632256
+        },
+        "39": {
+          "id": "minecraft:player_head",
+          "skin": "https://textures.minecraft.net/texture/51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 12632256,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:player_head",
+          "skin": "https://textures.minecraft.net/texture/51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 12632256,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:player_head",
+          "skin": "https://textures.minecraft.net/texture/51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate"
+        },
+        "39": {
+          "id": "minecraft:player_head",
+          "skin": "https://textures.minecraft.net/texture/51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate"
+        },
+        "39": {
+          "id": "minecraft:player_head",
+          "skin": "https://textures.minecraft.net/texture/51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:player_head",
+          "skin": "https://textures.minecraft.net/texture/51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40",
+          "enchanted": true
+        }
+      }
+    ],
+    "reddragon": [
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16711680,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16711680,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16711680,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16711680,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16711680,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16711680,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16711680,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16711680,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16711680,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16711680,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16711680,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16711680,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16711680,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16711680,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:diamond_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "toxicologist": [
+      {
+        "37": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:iron_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      }
+    ],
+    "rogue": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      }
+    ],
+    "warlock": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:diamond_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      }
+    ],
+    "slimeyslime": [
+      {
+        "39": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "jockey": [
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 0,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 0,
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 0,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 0,
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 0,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 0,
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 0,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 0,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:golden_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:golden_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        }
+      }
+    ],
+    "viking": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3875072
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 3875072
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 3875072
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3875072
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 3875072
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 3875072,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3875072
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 3875072
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 3875072,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3875072,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 3875072
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 3875072,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3875072,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 3875072
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 3875072,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 3875072
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 3875072
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 3875072
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 3875072
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 3875072
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "shadowknight": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3947580
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 3947580
+        },
+        "39": {
+          "id": "minecraft:wither_skeleton_skull",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3947580
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 3947580
+        },
+        "39": {
+          "id": "minecraft:wither_skeleton_skull",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3947580
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 3947580
+        },
+        "39": {
+          "id": "minecraft:wither_skeleton_skull",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3947580
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 3947580
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:wither_skeleton_skull",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3947580
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 3947580,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:wither_skeleton_skull",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3947580
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:wither_skeleton_skull",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3947580
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:wither_skeleton_skull",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3947580
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:wither_skeleton_skull",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3947580
+        },
+        "37": {
+          "id": "minecraft:golden_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:wither_skeleton_skull",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 3947580
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:wither_skeleton_skull",
+          "enchanted": true
+        }
+      }
+    ],
+    "pigman": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16776960,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16776960,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "paladin": [
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 13050413,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 13050413,
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 13050413,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 13050413,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "necromancer": [
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots"
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate"
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:chainmail_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "florist": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 9563009,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16056320,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 9563009,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16056320,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 9563009,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16056320,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 9563009,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16056320,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16056320,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:golden_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16056320,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:golden_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16056320,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16056320,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "diver": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 0,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 0,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 0,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 0,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 0,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "arachnologist": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 8421504
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 8421504
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 8421504
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 8421504
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 8421504
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 8421504
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 8421504
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 8421504
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 8421504
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 8421504
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 8421504
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 8421504
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      }
+    ],
+    "blaze": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16753920,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16753920,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16753920,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16753920,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16753920,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16753920,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16753920,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16753920,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16753920,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16753920,
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "wolftamer": [
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:diamond_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:diamond_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      }
+    ],
+    "tim": [
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 718130
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:golden_leggings"
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:chainmail_leggings",
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:iron_leggings"
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:iron_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:iron_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:iron_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:iron_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:diamond_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        }
+      }
+    ],
+    "farmer": [
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots"
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:chainmail_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:iron_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:iron_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate"
+        },
+        "39": {
+          "id": "minecraft:leather_helmet"
+        }
+      }
+    ],
+    "creepertamer": [
+      {
+        "38": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:golden_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:iron_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:diamond_chestplate",
+          "enchanted": true
+        }
+      }
+    ],
+    "snowman": [
+      {
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215
+        }
+      },
+      {
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16777215
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16777215
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16777215
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16777215
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:iron_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "ranger": [
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:diamond_boots"
+        },
+        "37": {
+          "id": "minecraft:golden_leggings"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      }
+    ],
+    "donkeytamer": [
+      {},
+      {
+        "36": {
+          "id": "minecraft:leather_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "enchanted": true
+        }
+      }
+    ],
+    "warrior": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:golden_chestplate"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:iron_chestplate"
+        }
+      }
+    ],
+    "phoenix": [
+      {
+        "36": {
+          "id": "minecraft:golden_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet"
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16033602
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16033602
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16033602
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16033602
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16033602
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:golden_boots",
+          "enchanted": true
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16033602,
+          "enchanted": true
+        },
+        "39": {
+          "id": "minecraft:golden_helmet",
+          "enchanted": true
+        }
+      }
+    ],
+    "milkman": [
+      {
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16777215
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16777215
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16777215
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16777215
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 16777215
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:iron_boots"
+        },
+        "37": {
+          "id": "minecraft:leather_leggings",
+          "color": 16777215
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 16777215
+        },
+        "39": {
+          "id": "minecraft:leather_helmet",
+          "color": 16777215,
+          "enchanted": true
+        }
+      }
+    ],
+    "golem": [
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 6909294,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 6909294,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 6909294,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 6909294,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 6909294,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 6909294,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 6909294,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 6909294,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 6909294,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 6909294,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 6909294,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 6909294,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 6909294,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 6909294,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 6909294,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:leather_chestplate",
+          "color": 6909294,
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:leather_boots",
+          "color": 6909294,
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      },
+      {
+        "36": {
+          "id": "minecraft:chainmail_boots",
+          "enchanted": true
+        },
+        "38": {
+          "id": "minecraft:chainmail_chestplate",
+          "enchanted": true
+        }
+      }
+    ]
   }
 }

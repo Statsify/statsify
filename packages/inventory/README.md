@@ -145,9 +145,11 @@ Kits come back as 40 slots: the hotbar, the three main rows, then boots to helme
 
 For a skin render, `armorOf(items)` turns items (Pit's `inv_armor`, slots 36 to 39) into
 `{ helmet, chestplate, leggings, boots }`, each `{ material, color, enchanted }` or a player head's
-`{ head }` texture hash; other things on the head, like a mob skull, are left out.
+`{ head, enchanted }` texture hash; other things on the head, like a mob skull, are left out.
 `duelsKitArmor(key)`, `skyWarsKitArmor(kit)`, `blitzKitArmor(kit, level)` and
-`megaWallsKitArmor(kit, level)` give a kit's armour by the keys the adapters above take. Leather is
-dyed by the name its picker gives (White Leather Chestplate). Mega Walls Duel's picker lists no
-armour, so its classes come back undefined.
+`megaWallsKitArmor(kit, level)` give a kit's armour by the keys the adapters above take; Blitz's
+covers every level from its Upgrades page. Leather is dyed by the name its picker gives (White
+Leather Chestplate), else by the picker icon when it shows that piece, else (Blitz) by the colour
+its editor shows on that piece. Mega Walls Duel's picker lists no armour, so its classes come back
+undefined.
 
