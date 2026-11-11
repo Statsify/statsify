@@ -6,20 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty, PartialType } from "@nestjs/swagger";
 import { UuidDto } from "./uuid.dto.js";
+import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export class VerifyCodeDto extends PartialType(UuidDto) {
-  public static schema = z.object({
+export class VerifyCodeDto extends createZodDto(
+  z.object({
     uuid: UuidDto.schema.shape.uuid.optional(),
-    id: z.string().min(17),
-    code: z.string().length(4).optional(),
-  });
-
-  @ApiProperty({ description: "Discord ID" })
-  public id: string;
-
-  @ApiProperty({ description: "Verification Code" })
-  public code?: string;
-}
+    id: z.string().min(17).describe("Discord ID"),
+    code: z.string().length(4).optional().describe("Verification Code"),
+  })
+) {}

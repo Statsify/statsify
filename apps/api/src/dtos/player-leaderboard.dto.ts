@@ -6,28 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty, PartialType } from "@nestjs/swagger";
 import { Player } from "@statsify/schemas";
 import { PlayerDto } from "./player.dto.js";
+import { createZodDto } from "nestjs-zod";
 import { leaderboardField } from "./leaderboard-field.js";
 import { z } from "zod";
 
-const field = leaderboardField(Player);
-
-export class PlayerLeaderboardDto extends PartialType(PlayerDto) {
-  public static schema = z.object({
+export class PlayerLeaderboardDto extends createZodDto(
+  z.object({
     player: PlayerDto.schema.shape.player.nullish(),
-    field,
+    field: leaderboardField(Player),
     page: z.coerce.number().int().min(0).default(0),
     position: z.coerce.number().int().min(1).optional(),
-  });
-
-  @ApiProperty({ enum: field.options })
-  public field: string;
-
-  @ApiProperty({ default: 0, minimum: 0, type: () => Number, required: false })
-  public page: number;
-
-  @ApiProperty({ minimum: 1, type: () => Number, required: false })
-  public position?: number;
-}
+  })
+) {}

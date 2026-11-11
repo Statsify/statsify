@@ -6,15 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
+import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export class PlayerDto {
-  public static schema = z.object({ player: z.string().min(1).max(36) });
-
-  @ApiProperty({
-    example: "j4cobi",
-    description: "The player's username or uuid",
+export class PlayerDto extends createZodDto(
+  z.object({
+    player: z.string().min(1).max(36).meta({
+      example: "j4cobi",
+      description: "The player's username or uuid",
+    }),
   })
-  public player: string;
-}
+) {}

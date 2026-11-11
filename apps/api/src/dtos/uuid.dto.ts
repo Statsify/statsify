@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
+import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export class UuidDto {
-  public static schema = z.object({ uuid: z.string().min(32).max(36) });
-
-  @ApiProperty()
-  public uuid: string;
-}
+export class UuidDto extends createZodDto(z.object({ uuid: z.string().min(32).max(36) })) {}

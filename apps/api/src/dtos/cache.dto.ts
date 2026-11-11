@@ -6,22 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
 import { CacheLevel } from "@statsify/api-client";
+import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export class CacheDto {
-  public static schema = z.object({
-    cache: z.enum(CacheLevel).default(CacheLevel.CACHE),
-  });
-
-  @ApiProperty({
-    enum: CacheLevel,
-    enumName: "CacheLevel",
-    example: CacheLevel.CACHE,
-    default: CacheLevel.CACHE,
-    description: "Describes whether to return live data or cached data.",
-    required: false,
+export class CacheDto extends createZodDto(
+  z.object({
+    cache: z
+      .enum(CacheLevel)
+      .meta({ id: "CacheLevel" })
+      .default(CacheLevel.CACHE)
+      .meta({
+        example: CacheLevel.CACHE,
+        description: "Describes whether to return live data or cached data.",
+      }),
   })
-  public cache: CacheLevel;
-}
+) {}
