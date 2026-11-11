@@ -9,7 +9,7 @@
 import { readFile } from "node:fs/promises";
 import { z } from "zod";
 
-function toEnum<const T extends number[]>(...args: T) {
+function toEnum(...args: number[]) {
   return z.union(args.map((arg) => z.literal(arg)));
 }
 
