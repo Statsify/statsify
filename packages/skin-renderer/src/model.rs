@@ -254,10 +254,10 @@ pub struct Model {
   material: Material,
   meshes: Vec<Mesh>,
   attachments: Vec<Attachment>,
-  outer_layer: ModelOuterLayer,
 }
 
 impl Model {
+  // The armour decides which parts keep an extruded outer layer, so it can't be attached later
   pub fn new(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
@@ -265,6 +265,7 @@ impl Model {
     image: DynamicImage,
     kind: ModelKind,
     outer_layer: ModelOuterLayer,
+    armor: &Armor,
   ) -> Self {
     let arm_width = kind.arm_width();
 
@@ -278,7 +279,11 @@ impl Model {
           image: &image,
           layer1_location,
           layer2_location,
-          outer_layer,
+          outer_layer: if armor.flattens(part) {
+            ModelOuterLayer::D2
+          } else {
+            outer_layer
+          },
         }
         .create(part.z_fighting_scale(), device)
       })
@@ -287,15 +292,17 @@ impl Model {
     let texture = Texture::from_image(device, queue, &image).unwrap();
     let material = Material::new(device, texture, layout);
 
-    Self {
+    let mut model = Self {
       material,
       meshes: inner_meshes.into_iter().chain(outer_meshes).collect(),
       attachments: vec![],
-      outer_layer,
-    }
+    };
+
+    model.attach_armor(device, queue, layout, armor);
+    model
   }
 
-  pub fn attach_armor(
+  fn attach_armor(
     &mut self,
     device: &wgpu::Device,
     queue: &wgpu::Queue,
@@ -310,16 +317,18 @@ impl Model {
         let placement = part.placement(ModelKind::Classic.arm_width());
         let (position, rotation) = placement.resolve();
 
-        geometry.combine(
-          BoxGeometry {
-            position,
-            dimensions: placement.dimensions,
-            texture_region: part.armor_region(),
-            rotation,
-            inflation: layer.inflation(self.outer_layer),
-          }
-          .create(),
-        );
+        let mut box_geometry = BoxGeometry {
+          position,
+          dimensions: placement.dimensions,
+          texture_region: part.armor_region(),
+          rotation,
+          inflation: layer.inflation(),
+        }
+        .create();
+
+        // Neighbouring boxes share faces where they overlap, like the legs and body
+        box_geometry.scale_around(part.z_fighting_scale(), position);
+        geometry.combine(box_geometry);
       }
 
       self.attach(
@@ -370,10 +379,10 @@ pub trait DrawModel<'a> {
     light_bind_group: &'a wgpu::BindGroup,
   );
 
-  fn draw_glint(
+  fn draw_attachments(
     &mut self,
     model: &'a Model,
-    glint_material: &'a Material,
+    enchanted: bool,
     camera_bind_group: &'a wgpu::BindGroup,
     light_bind_group: &'a wgpu::BindGroup,
   );
@@ -389,32 +398,23 @@ impl<'a> DrawModel<'a> for wgpu::RenderPass<'a> {
     model.meshes.iter().for_each(|mesh| {
       self.draw_mesh(mesh, &model.material, camera_bind_group, light_bind_group);
     });
-
-    model.attachments.iter().for_each(|attachment| {
-      self.draw_mesh(
-        &attachment.mesh,
-        &attachment.material,
-        camera_bind_group,
-        light_bind_group,
-      );
-    });
   }
 
-  fn draw_glint(
+  fn draw_attachments(
     &mut self,
     model: &'a Model,
-    glint_material: &'a Material,
+    enchanted: bool,
     camera_bind_group: &'a wgpu::BindGroup,
     light_bind_group: &'a wgpu::BindGroup,
   ) {
     model
       .attachments
       .iter()
-      .filter(|attachment| attachment.enchanted)
+      .filter(|attachment| attachment.enchanted == enchanted)
       .for_each(|attachment| {
         self.draw_mesh(
           &attachment.mesh,
-          glint_material,
+          &attachment.material,
           camera_bind_group,
           light_bind_group,
         );
