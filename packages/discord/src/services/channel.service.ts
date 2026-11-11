@@ -50,10 +50,27 @@ export class ChannelService {
     parseDiscordResponse(response);
   }
 
+  /** Every message in the channel, newest first */
   public async getMessages(channelId: string): Promise<APIMessage[]> {
     // 100 is the most messages Discord returns in one request
-    const response = await this.rest.get(`/channels/${channelId}/messages?limit=100`);
-    return parseDiscordResponse(response);
+    const limit = 100;
+    const messages: APIMessage[] = [];
+    let page: APIMessage[];
+
+    do {
+      const before = messages.length > 0 ? `&before=${messages.at(-1)!.id}` : "";
+
+      // Each page starts before the oldest message of the last one, so they can't be fetched in parallel
+      // oxlint-disable-next-line no-await-in-loop
+      const response = await this.rest.get(
+        `/channels/${channelId}/messages?limit=${limit}${before}`
+      );
+
+      page = parseDiscordResponse(response);
+      messages.push(...page);
+    } while (page.length === limit);
+
+    return messages;
   }
 
   public async bulkDelete(channelId: string, messages: string[]) {
