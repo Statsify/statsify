@@ -184,7 +184,7 @@ const lang = stack.json<Record<string, string>>("assets/minecraft/lang/en_us.jso
 if (!lang) throw new Error("The packs have no assets/minecraft/lang/en_us.json");
 const names: Record<string, string> = {};
 
-for (const id of icons.keys()) {
+for (const id of ids) {
   const path = id.replace(/^minecraft:/, "");
   for (const key of [`item.minecraft.${path}`, `block.minecraft.${path}`]) {
     if (lang[key]) names[key] = lang[key];
@@ -230,7 +230,9 @@ await Promise.all([
 
 await mkdir(OUT, { recursive: true });
 
-const stale = (await readdir(OUT)).filter((file) => file.startsWith(`${name}.`) && file.endsWith(".png") && file !== data.image);
+const stale = (await readdir(OUT)).filter(
+  (file) => file.startsWith(`${name}.`) && /^[\da-f]{16}\.png$/.test(file.slice(name.length + 1)) && file !== data.image,
+);
 await Promise.all(stale.map((file) => unlink(new URL(file, OUT))));
 
 await writeFile(new URL(data.image, OUT), png);
