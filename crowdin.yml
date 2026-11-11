@@ -6,4 +6,32 @@ files:
     translation: /locales/%locale%/%original_file_name%
     languages_mapping:
       locale:
+        bg: bg
+        cs: cs
+        da: da
+        de: de
+        el: el
+        es-ES: es-ES
+        fi: fi
+        fr: fr
+        hi: hi
+        hr: hr
+        hu: hu
         id: id
+        it: it
+        ja: ja
+        ko: ko
+        lt: lt
+        nl: nl
+        "no": "no"
+        pl: pl
+        pt-BR: pt-BR
+        ro: ro
+        ru: ru
+        sv-SE: sv-SE
+        th: th
+        tr: tr
+        uk: uk
+        vi: vi
+        zh-CN: zh-CN
+        zh-TW: zh-TW
