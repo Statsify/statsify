@@ -7,8 +7,15 @@
  */
 
 import { readFile, writeFile } from "node:fs/promises";
-import { fetchJson } from "./minecraft-data.ts";
 import { unzipSync } from "fflate";
+
+const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
+
+const fetchJson = async <T>(path: string): Promise<T> => {
+  const response = await fetch(`${MINECRAFT_DATA}/${path}`);
+  if (!response.ok) throw new Error(`${path}: ${response.status}`);
+  return response.json() as Promise<T>;
+};
 
 // Bukkit's 1.8 Material enum (from a Spigot 1.8 source mirror), since SkyWars' kit layouts name
 // items by it, like GOLD_CHESTPLATE or MONSTER_EGG

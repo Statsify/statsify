@@ -7,8 +7,8 @@
  */
 
 import { ARMOR, inRange } from "./kits.js";
-import type { ItemStack } from "../core/item-stack.js";
-import dumped from "../../data/tnt-games.json" with { type: "json" };
+import type { ItemStack } from "@statsify/textures";
+import dumped from "../data/tnt-games.json" with { type: "json" };
 
 // Built by scripts/import-dump.ts from the game's layout editors
 const MODES = dumped as Record<string, { name: string; tokens: Record<string, ItemStack>; default: Record<string, string> }>;

@@ -1,5 +1,5 @@
 {
-  "name": "@statsify/inventory",
+  "name": "@statsify/textures",
   "version": "0.0.0",
   "type": "module",
   "types": "./src/index.ts",
@@ -11,7 +11,8 @@
     "./node": {
       "types": "./src/node.ts",
       "default": "./dist/node.js"
-    }
+    },
+    "./data/*": "./data/*"
   },
   "scripts": {
     "build": "swc src --config-file ../../.swcrc --out-dir dist --strip-leading-paths",

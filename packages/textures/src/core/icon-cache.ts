@@ -38,7 +38,7 @@ async function open(name: string) {
 
 /** Rendered icons as PNGs in IndexedDB, so the next page load skips drawing them */
 export class IconCache {
-  private db = open("statsify-inventory");
+  private db = open("statsify-textures");
 
   public async get(key: string) {
     const store = (await this.db).transaction(STORE).objectStore(STORE);

@@ -1,0 +1,23 @@
+{
+  "name": "@statsify/hypixel-data",
+  "version": "0.0.0",
+  "type": "module",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "swc src --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint",
+    "lint:ci": "oxlint --format=github"
+  },
+  "dependencies": {
+    "@statsify/textures": "workspace:^",
+    "@swc/helpers": "^0.5.23",
+    "fflate": "^0.8.3"
+  }
+}

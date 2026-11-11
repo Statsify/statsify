@@ -22,7 +22,7 @@ import {
   UPGRADABLE,
 } from "./bedwars-shop.js";
 import { HOTBAR } from "./kits.js";
-import type { ItemStack } from "../core/item-stack.js";
+import type { ItemStack } from "@statsify/textures";
 
 const SHOP_ROWS = 6;
 const SHOP_COLUMNS = 9;

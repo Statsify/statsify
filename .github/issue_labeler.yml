@@ -25,8 +25,8 @@
 "@statsify/discord":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/discord"
 
-"@statsify/inventory":
-  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/inventory"
+"@statsify/hypixel-data":
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/hypixel-data"
 
 "@statsify/rendering":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/rendering"
@@ -39,6 +39,9 @@
 
 "@statsify/schemas":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/schemas"
+
+"@statsify/textures":
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/textures"
 
 "@statsify/util":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/util"
