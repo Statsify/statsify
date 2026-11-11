@@ -79,10 +79,10 @@ impl Pose {
     }
   }
 
-  pub fn camera_radius(self) -> Option<f32> {
+  pub fn camera_radius(self) -> f32 {
     match self {
-      Pose::Swim | Pose::Fly => Some(100.0),
-      _ => None,
+      Pose::Swim | Pose::Fly => 100.0,
+      _ => 50.0,
     }
   }
 
