@@ -137,7 +137,6 @@ impl Backend for NativeBackend {
       let row_bytes = self.dimensions.unpadded_bytes_per_row as usize;
       let mut buffer = Vec::with_capacity(row_bytes * self.dimensions.height as usize);
 
-      // A byte at a time this took about as long as the PNG encode on lavapipe
       for row in padded_buffer
         .chunks(self.dimensions.padded_bytes_per_row as usize)
         .take(self.dimensions.height as usize)
