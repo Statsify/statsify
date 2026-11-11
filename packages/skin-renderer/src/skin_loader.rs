@@ -44,7 +44,7 @@ pub fn load_cape_from_memory(cape: &[u8]) -> Result<DynamicImage> {
 
   // The padded texture has to fit the device's 2048 texture limit
   if cape.width() > 2048 || cape.height() > 1024 {
-    return Err(Error::InvalidCapeTexture);
+    return Err(Error::CapeTooLarge);
   }
 
   let (mut width, mut height) = (64, 32);

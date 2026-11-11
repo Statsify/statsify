@@ -7,7 +7,7 @@ pub enum Error {
   InvalidSkinTexture,
 
   #[error("The provided image is too large for a cape texture")]
-  InvalidCapeTexture,
+  CapeTooLarge,
 
   #[error(transparent)]
   Image(#[from] image::ImageError),
