@@ -20,12 +20,12 @@ export interface AtlasData {
   image: string;
   /** The image's content hash, which icon cache keys start with */
   hash: string;
-  /** Screen pixels per GUI pixel that 3D icons are drawn at. Flat icons are 16 pixels */
-  scale: number;
+  /** Screen pixels per GUI pixel that 3D icons are drawn at, each once. Flat icons are 16 pixels */
+  scales: number[];
   /** Whether the glint moves the way 1.8's does */
   legacyGlint: boolean;
-  /** Every item's icon as a plain stack, unenchanted, at its first animation frame */
-  icons: Record<string, AtlasRect>;
+  /** Every item's icon as a plain stack, unenchanted, at its first animation frame, smallest first */
+  icons: Record<string, AtlasRect[]>;
   /** The models of items whose look depends on their stack: dyes, potions, banners, shields and heads */
   layers: Record<string, ItemLayer[]>;
   /** Their sprites, the glint and the chest screen, by namespaced texture id */
@@ -71,13 +71,14 @@ export class Atlas {
     return id in this.data.layers;
   }
 
-  /** An item's icon, 16 × scale pixels square */
+  /** An item's icon, 16 × scale pixels square. A 3D icon at a scale the atlas lacks is resized from its largest */
   public icon(id: string, scale: number) {
     const key = `${id}/${scale}`;
     let icon = this.icons.get(key);
 
     if (!icon) {
-      const [x, y, width, height] = rectOf(this.data.icons, id);
+      const rects = rectOf(this.data.icons, id);
+      const [x, y, width, height] = rects.find(([, , width]) => width === 16 * scale) ?? rects.at(-1)!;
       icon = createCanvas(16 * scale, 16 * scale);
       context(icon).drawImage(this.image, x, y, width, height, 0, 0, icon.width, icon.height);
       this.icons.set(key, icon);
@@ -107,7 +108,7 @@ export class Atlas {
   }
 }
 
-function rectOf(rects: Record<string, AtlasRect>, id: string) {
+function rectOf<T>(rects: Record<string, T>, id: string) {
   const rect = rects[id];
   if (!rect) throw new Error(`${id} isn't in the atlas`);
   return rect;

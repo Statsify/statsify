@@ -88,13 +88,12 @@ image is named by its content hash, so it can be cached for good.
 
 ```sh
 pnpm --filter @statsify/inventory build
-pnpm --filter @statsify/inventory atlas <name> <pack> [<pack> …] [--scale 3]
+pnpm --filter @statsify/inventory atlas <name> <pack> [<pack> …] [--scales 2,3]
 ```
 
-3D icons are drawn at `--scale`, 48 pixels at 3, and flat ones at 16 pixels, which any whole scale
-draws exactly. At other scales, 3D icons are resized from the atlas's. Each atlas is
-1648 × 1664 pixels (about 1.1 MB), and its map is 190 KB (30 KB gzipped). Rerun it whenever a
-change draws icons differently, as with the icon cache's `VERSION`. It lists the items it can't draw.
+3D icons are drawn once at each of `--scales`, and flat ones at 16 pixels, which any whole scale
+draws exactly. At another scale, a 3D icon is resized from its largest. Rerun it whenever a change
+draws icons differently, as with the icon cache's `VERSION`. It lists the items it can't draw.
 
 Items whose look depends on their stack are still drawn in the browser, from models and textures
 the atlas carries: dyed leather, potions, banners, shields and player heads with skins, and the glint

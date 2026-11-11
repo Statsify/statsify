@@ -35,10 +35,10 @@ import { mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
 import { Canvas } from "skia-canvas";
 import { skiaCanvas } from "@statsify/inventory/node";
 
-const { values, positionals } = parseArgs({ allowPositionals: true, options: { scale: { type: "string", default: "3" } } });
+const { values, positionals } = parseArgs({ allowPositionals: true, options: { scales: { type: "string", default: "2,3" } } });
 const [name, ...packPaths] = positionals;
-const scale = Number(values.scale);
-if (!name || packPaths.length === 0) throw new Error("Usage: pnpm atlas <name> <pack> [<pack> …] [--scale 3]");
+const scales = values.scales.split(",").map(Number).toSorted((a, b) => a - b);
+if (!name || packPaths.length === 0) throw new Error("Usage: pnpm atlas <name> <pack> [<pack> …] [--scales 2,3]");
 
 const OUT = new URL("../atlas/", import.meta.url);
 const ITEM_FILE = /^assets\/([^/]+)\/items\/(.+)\.json$/;
@@ -82,14 +82,15 @@ const drawn = await Promise.all(
 
       // A flat icon is its 16-pixel textures, which any whole scale draws exactly
       const flat = resolved.every(({ model, special }) => model.generated && !special);
-      return { id, resolved, icon: await renderer.render({ id }, flat ? 1 : scale) };
+      const drawnAt = await Promise.all((flat ? [1] : scales).map((scale) => renderer.render({ id }, scale)));
+      return { id, resolved, drawnAt };
     } catch (error) {
       return { id, error: (error as Error).message };
     }
   }),
 );
 
-const icons = new Map<string, OffscreenCanvas>();
+const icons = new Map<string, OffscreenCanvas[]>();
 const layers: Record<string, ItemLayer[]> = {};
 const textureIds = new Set([CHEST_SCREEN, renderer.legacyGlint ? LEGACY_GLINT : GLINT, DEFAULT_SKIN].map(namespaced));
 const skipped: string[] = [];
@@ -100,8 +101,8 @@ for (const result of drawn) {
     continue;
   }
 
-  const { id, resolved, icon } = result;
-  icons.set(id, icon);
+  const { id, resolved, drawnAt } = result;
+  icons.set(id, drawnAt);
 
   if (!drawsInClient(resolved)) continue;
   layers[id] = resolved;
@@ -130,23 +131,20 @@ const textures = new Map(
   ),
 );
 
-interface Sprite {
-  id: string;
-  canvas: OffscreenCanvas;
-  rects: Record<string, AtlasRect>;
-}
+/** Shelf-packs the sprites into a roughly square atlas, returning each one's rect in order */
+function packSprites(sprites: OffscreenCanvas[]) {
+  const area = sprites.reduce((total, { width, height }) => total + width * height, 0);
+  const width = Math.max(...sprites.map((sprite) => sprite.width), Math.ceil(Math.sqrt(area) / 16) * 16);
+  const order = sprites
+    .map((_, index) => index)
+    .toSorted((a, b) => sprites[b].height - sprites[a].height || sprites[b].width - sprites[a].width);
 
-/** Shelf-packs the sprites into a roughly square atlas, writing each one's rect */
-function packSprites(sprites: Sprite[]) {
-  const area = sprites.reduce((total, { canvas }) => total + canvas.width * canvas.height, 0);
-  const width = Math.max(...sprites.map(({ canvas }) => canvas.width), Math.ceil(Math.sqrt(area) / 16) * 16);
-  const sorted = sprites.toSorted((a, b) => b.canvas.height - a.canvas.height || b.canvas.width - a.canvas.width);
-
+  const rects: AtlasRect[] = [];
   const shelf = { y: 0, height: 0, x: width };
   const column = { x: 0, y: 0, width: 0 };
 
-  for (const sprite of sorted) {
-    const { width: w, height: h } = sprite.canvas;
+  for (const index of order) {
+    const { width: w, height: h } = sprites[index];
 
     if (w > column.width || column.y + h > shelf.y + shelf.height) {
       if (shelf.x + w > width) Object.assign(shelf, { y: shelf.y + shelf.height, height: h, x: 0 });
@@ -154,34 +152,36 @@ function packSprites(sprites: Sprite[]) {
       shelf.x += w;
     }
 
-    sprite.rects[sprite.id] = [column.x, column.y, w, h];
+    rects[index] = [column.x, column.y, w, h];
     column.y += h;
   }
 
-  return { width, height: shelf.y + shelf.height };
+  return { width, height: shelf.y + shelf.height, rects };
 }
 
-const iconRects: Record<string, AtlasRect> = {};
-const textureRects: Record<string, AtlasRect> = {};
+const iconSprites = [...icons].flatMap(([id, drawnAt]) => drawnAt.map((canvas) => ({ id, canvas })));
+const textureSprites = [...textures].map(([id, canvas]) => ({ id, canvas }));
+const sprites = [...iconSprites, ...textureSprites];
 
-const sprites: Sprite[] = [
-  ...[...icons].map(([id, canvas]) => ({ id, canvas, rects: iconRects })),
-  ...[...textures].map(([id, canvas]) => ({ id, canvas, rects: textureRects })),
-];
-
-const size = packSprites(sprites);
+const size = packSprites(sprites.map(({ canvas }) => canvas));
 const image = new Canvas(size.width, size.height);
 const ctx = image.getContext("2d");
 
-for (const { id, canvas, rects } of sprites) {
-  const [x, y] = rects[id];
+for (const [index, { canvas }] of sprites.entries()) {
+  const [x, y] = size.rects[index];
   ctx.drawImage(canvas as unknown as Canvas, x, y);
 }
+
+const iconRects: Record<string, AtlasRect[]> = {};
+for (const [index, { id }] of iconSprites.entries()) (iconRects[id] ??= []).push(size.rects[index]);
+
+const textureRects = Object.fromEntries(textureSprites.map(({ id }, index) => [id, size.rects[iconSprites.length + index]]));
 
 const png = await image.toBuffer("png");
 const hash = createHash("sha256").update(png).digest("hex").slice(0, 16);
 
-const lang = stack.json<Record<string, string>>("assets/minecraft/lang/en_us.json") ?? {};
+const lang = stack.json<Record<string, string>>("assets/minecraft/lang/en_us.json");
+if (!lang) throw new Error("The packs have no assets/minecraft/lang/en_us.json");
 const names: Record<string, string> = {};
 
 for (const id of icons.keys()) {
@@ -194,7 +194,7 @@ for (const id of icons.keys()) {
 const data: AtlasData = {
   image: `${name}.${hash}.png`,
   hash,
-  scale,
+  scales,
   legacyGlint: renderer.legacyGlint,
   icons: iconRects,
   layers,
@@ -207,9 +207,9 @@ const atlas = new Atlas(data, await skiaCanvas.decodePng(png));
 
 const pixels = (canvas: OffscreenCanvas) => canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data;
 
-for (const [id, icon] of icons) {
-  const expected = pixels(icon);
-  if (!pixels(atlas.icon(id, icon.width / 16)).every((value, i) => value === expected[i])) {
+for (const { id, canvas } of iconSprites) {
+  const expected = pixels(canvas);
+  if (!pixels(atlas.icon(id, canvas.width / 16)).every((value, i) => value === expected[i])) {
     throw new Error(`${id}'s icon came back different from the atlas`);
   }
 }
@@ -224,7 +224,7 @@ await Promise.all([
   InventoryRenderer.load(atlas),
   ...Object.keys(layers).map((id) => {
     const item: ItemStack = { id, enchanted: true, color: 0xff_00_00, effects: [{ id: "minecraft:speed" }], patterns, baseColor: "blue" };
-    return inBrowser.render(item, scale);
+    return inBrowser.render(item, scales.at(-1)!);
   }),
 ]);
 
