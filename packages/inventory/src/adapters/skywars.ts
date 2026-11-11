@@ -52,8 +52,8 @@ function skyWarsKit(kit: string) {
 /** The armour a SkyWars kit's menu lists, by kit id or SKYWARS_KITS key as fromSkyWarsKit takes it */
 export function skyWarsKitArmor(kit: string) {
   const items = skyWarsKit(kit)?.items;
-  // The game puts on only armour; a listed head, like Frog's Hat, starts in the hotbar
-  return items && armorOf(items.flatMap(({ token, item }) => (/_(HELMET|CHESTPLATE|LEGGINGS|BOOTS):/.test(token) ? [item] : [])));
+  // A listed head, like Frog's Hat, starts in the hotbar, since the game only puts on armour
+  return items && armorOf(items.map(({ item }) => item).filter(({ id }) => id !== "minecraft:player_head"));
 }
 
 /** A layout key with its enchantment ids in order, as tokens have them */

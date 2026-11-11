@@ -51,8 +51,7 @@ export function armorOf(items: Iterable<ItemStack | undefined>): Armor {
   return armor;
 }
 
-// Hypixel dyes kit leather with Bukkit's Color constants, which the kit pickers name ("White
-// Leather Chestplate"); none of the dumped kit pieces uses 1.8's dye colours
+// Hypixel dyes kit leather with Bukkit's Color constants, not 1.8's dye colours
 const LEATHER_COLORS: Record<string, number | undefined> = {
   White: 0xff_ff_ff,
   Silver: 0xc0_c0_c0,
@@ -90,7 +89,7 @@ if (import.meta.vitest) {
   describe("armor", () => {
     it("names leather dyes and keeps only armour and player heads", () => {
       expect(leatherColor("White Leather Chestplate")).toBe(0xff_ff_ff);
-      expect(leatherColor("Grey Leather Boots")).toBe(0x80_80_80);
+      expect(leatherColor("Gray Leather Boots")).toBe(0x80_80_80);
       expect(leatherColor("Leather Boots")).toBeUndefined();
       expect(() => leatherColor("Plaid Leather Boots")).toThrow();
 

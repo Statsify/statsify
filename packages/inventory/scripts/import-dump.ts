@@ -299,10 +299,7 @@ function selected(screen: Screen) {
 
 const SKULL = 397;
 
-/**
- * A skull a picker lists, worn as a helmet: Shadow Knight's Wither Skeleton Skull, or Shark's
- * player head, listed by its Bukkit material, whose skin is on real-game Blitz's "Shark's Head"
- */
+// A skull a picker lists, worn as a helmet; Shark's "Skull Item" takes Blitz's dumped "Shark's Head" skin
 function pickerSkull(text: string, kit: string) {
   if (text === "Wither Skeleton Skull") return legacyItem(SKULL, 1);
   if (text !== "Skull Item") return undefined;
