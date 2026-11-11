@@ -14,7 +14,7 @@ import { Injectable } from "@nestjs/common";
 import { ORPCError } from "@orpc/nest";
 import { Redis } from "ioredis";
 import { config } from "@statsify/util";
-import { hitWindow, rateLimitAddress } from "./site.service.js";
+import { hitWindow, normalizeUuid, rateLimitAddress } from "./site.service.js";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
@@ -36,7 +36,6 @@ const DISCORD_COOLDOWN_KEY = "site:account:login:discord-cooldown";
 
 // Redis keeps a hash of the cookie's token, so a copy of Redis can't be replayed as live sessions.
 const sessionKey = (session: string) => `site:account:session:${createHash("sha256").update(session).digest("base64url")}`;
-const normalizeUuid = (uuid: string) => uuid.replaceAll("-", "").toLowerCase();
 
 /**
  * Site logins and the Minecraft profiles they own. Each of the site's calls but `login` takes the visitor's session and

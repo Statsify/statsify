@@ -120,7 +120,7 @@ const CARD_FIELDS = {
 
 const missKey = (nameLower: string) => `site:miss:${nameLower}`;
 const ipKey = (clientIp: string) => `site:ip:${rateLimitAddress(clientIp)}`;
-const normalizeUuid = (uuid: string) => uuid.replaceAll("-", "").toLowerCase();
+export const normalizeUuid = (uuid: string) => uuid.replaceAll("-", "").toLowerCase();
 // A game page's mode, submode or period in any case, as the game segment is (`?mode=SOLO`); the site redirects to the key.
 const pageKey = <K extends string>(keys: readonly K[], key: string) => keys.find((known) => known.toLowerCase() === key.toLowerCase());
 
