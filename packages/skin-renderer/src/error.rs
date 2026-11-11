@@ -13,6 +13,9 @@ pub enum Error {
   #[error("The camera yaw must be a finite number")]
   InvalidYaw,
 
+  #[error("A helmet needs either a material or a head")]
+  InvalidHelmet,
+
   #[error(transparent)]
   Image(#[from] image::ImageError),
 
