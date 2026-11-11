@@ -27,9 +27,8 @@ export interface TooltipChange {
   pointerType: string;
 }
 
-// The page's own font draws an atlas inventory's text, which ::part(title) and ::part(count) can
-// restyle. The site's Minecraft.ttf has 16 GUI pixels to the em, and trimming each line to its cap
-// height puts a glyph's top where the game draws it
+// The site's Minecraft.ttf has 16 GUI pixels to the em, and trimming each line to its cap height
+// puts a glyph's top where the game draws it
 const STYLE = `
   .frame { position: relative; width: fit-content; }
   canvas { display: block; image-rendering: pixelated; }
@@ -207,7 +206,6 @@ export class McInventory extends HTMLElement {
       (event.clientY - bounds.top) / (size.scale * (bounds.height / this.canvas.height)),
     );
     const overlay = tooltipOverlay();
-
     const atlas = this.packStack instanceof Atlas;
 
     if (slot === this.hovered) {
@@ -262,7 +260,6 @@ export class McInventory extends HTMLElement {
     this.dispatchEvent(new CustomEvent("mc-tooltip-change", { detail, bubbles: true, composed: true }));
   }
 
-  /** An atlas has no font, so its title and counts are the page's text, placed as the game places them */
   private placeText(size: InventorySize, shown: (ItemStack | undefined)[], width: number) {
     const labels: HTMLSpanElement[] = [];
 

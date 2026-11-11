@@ -72,7 +72,6 @@ export class InventoryRenderer {
 
   private constructor(
     private itemRenderer: ItemRenderer,
-    /** An atlas has no font, since the page draws its text */
     private text: TextRenderer | undefined,
     private names: Record<string, string>,
     private chestScreen?: OffscreenCanvas,
