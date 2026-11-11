@@ -86,10 +86,8 @@ export class Atlas {
     return icon;
   }
 
-  /** A texture as a canvas of its own, or undefined when the atlas doesn't have it */
+  /** A texture as a canvas of its own */
   public texture(id: string) {
-    if (!(namespaced(id) in this.data.textures)) return undefined;
-
     const pixels = this.sprite(id);
     const canvas = createCanvas(pixels.width, pixels.height);
     context(canvas).putImageData(pixels, 0, 0);
