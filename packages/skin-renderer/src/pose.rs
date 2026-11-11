@@ -90,12 +90,11 @@ impl Pose {
   pub fn place(self, geometry: &mut Geometry) {
     match self {
       Pose::Sneak => geometry.translate(Vector3::new(0.0, -3.2, 0.0)),
-      Pose::Jump => geometry.translate(Vector3::new(0.0, 4.0, 0.0)),
       Pose::Swim | Pose::Fly => geometry.rotate_around(Rotation {
         quaternion: Quaternion::from_angle_x(Deg(90.0)),
         pivot: Vector3::zero(),
       }),
-      Pose::Standing | Pose::Punch => {}
+      Pose::Standing | Pose::Punch | Pose::Jump => {}
     }
   }
 }
