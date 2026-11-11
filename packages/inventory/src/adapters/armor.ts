@@ -12,7 +12,7 @@ import type { ItemStack } from "../core/item-stack.js";
 type ArmorMaterial = "leather" | "chainmail" | "iron" | "gold" | "diamond";
 
 /** A worn piece as a skin render draws it: armour, or a player head by its textures.minecraft.net hash */
-export type ArmorPiece = { material: ArmorMaterial; color?: number; enchanted?: boolean } | { head: string };
+export type ArmorPiece = { material: ArmorMaterial; color?: number; enchanted?: boolean } | { head: string; enchanted?: boolean };
 
 export type Armor = Partial<Record<keyof typeof ARMOR, ArmorPiece>>;
 
@@ -39,7 +39,7 @@ export function armorOf(items: Iterable<ItemStack | undefined>): Armor {
 
     if (item.id === "minecraft:player_head") {
       const head = item.skin && SKIN_HASH.exec(item.skin)?.[1];
-      if (head) armor.helmet ??= { head };
+      if (head) armor.helmet ??= { head, enchanted: item.enchanted };
       continue;
     }
 
@@ -51,7 +51,7 @@ export function armorOf(items: Iterable<ItemStack | undefined>): Armor {
   return armor;
 }
 
-// Hypixel dyes kit leather with Bukkit's Color constants, not 1.8's dye colours
+// The dyes kit pickers name are Bukkit's Color constants, as Hypixel's kit leather uses, not 1.8's dye colours
 const LEATHER_COLORS: Record<string, number | undefined> = {
   White: 0xff_ff_ff,
   Silver: 0xc0_c0_c0,
@@ -100,12 +100,12 @@ if (import.meta.vitest) {
           undefined,
           { id: "minecraft:golden_chestplate", enchanted: true },
           { id: "minecraft:iron_chestplate" },
-          { id: "minecraft:player_head", skin: `https://textures.minecraft.net/texture/${head}` },
+          { id: "minecraft:player_head", enchanted: true, skin: `https://textures.minecraft.net/texture/${head}` },
         ]),
       ).toEqual({
         boots: { material: "leather", color: 0 },
         chestplate: { material: "gold", enchanted: true },
-        helmet: { head },
+        helmet: { head, enchanted: true },
       });
       expect(armorOf([{ id: "minecraft:wither_skeleton_skull" }, { id: "minecraft:carved_pumpkin" }])).toEqual({});
     });
