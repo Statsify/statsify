@@ -8,14 +8,12 @@
 
 import { AccountService } from "./account.service.js";
 import { ApiExcludeController } from "@nestjs/swagger";
-import { Auth, AuthRole } from "#auth";
+import { Auth } from "#auth";
 import { Controller } from "@nestjs/common";
 import { Implement, implement } from "@orpc/nest";
+import { SITE_ONLY } from "./site.controller.js";
 import { contract } from "@statsify/contract";
 
-const SITE_ONLY = { role: AuthRole.SITE, siteUnlimited: true };
-
-/** The site's account procedures under `/rpc`, beside `SiteController`'s; each needs the visitor's session but `login`. */
 @Controller("/rpc")
 @ApiExcludeController()
 export class AccountController {
