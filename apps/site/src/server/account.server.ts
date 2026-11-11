@@ -7,7 +7,7 @@
  */
 
 import { NO_STORE_EDGE } from "~/lib/cache";
-import { SESSION_TTL_SECONDS } from "@statsify/contract";
+import { SESSION_TTL_SECONDS, SessionSchema } from "@statsify/contract";
 import { getCookie } from "@tanstack/react-start/server";
 import { randomBytes } from "node:crypto";
 import { siteConfig } from "./config.server";
@@ -18,9 +18,7 @@ const STATE_COOKIE = "statsify_login_state";
 const STATE_PATH = "/auth/discord";
 const STATE_MAX_AGE_SECONDS = 10 * 60;
 
-/** 32 random bytes, base64url: the session token's and the login state's shape. */
-const TOKEN_PATTERN = /^[\w-]{43}$/;
-
+/** Shaped like the API's session tokens, so `SessionSchema` checks the login's `state` too. */
 export const randomToken = () => randomBytes(32).toString("base64url");
 
 /** The visitor's session token, for the account procedures; the API decides whether it's still live. */
@@ -35,7 +33,7 @@ export function loginState(): string | undefined {
 // An edited cookie reads as none, rather than reaching the API and failing its validation.
 function tokenCookie(name: string): string | undefined {
   const value = getCookie(name);
-  return value && TOKEN_PATTERN.test(value) ? value : undefined;
+  return SessionSchema.safeParse(value).success ? value : undefined;
 }
 
 export async function discordCallbackUrl(): Promise<string> {
