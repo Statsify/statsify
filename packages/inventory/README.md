@@ -206,6 +206,5 @@ import { Inventory } from "@statsify/inventory/react";
 ```
 
 `Inventory` takes the element's properties and attributes as props, and `onTooltipChange` for an
-atlas's tooltip events. It's a client component that
-loads `<mc-inventory>` in the browser, so it's safe to server render. React is an optional peer
-dependency.
+atlas's tooltip events. It's a client component that loads `<mc-inventory>` in the browser, so it's
+safe to server render. React is an optional peer dependency.
