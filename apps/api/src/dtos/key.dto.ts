@@ -7,22 +7,24 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { z } from "zod";
 
 export class AddKeyDto {
-  @IsString()
+  public static schema = z.object({ name: z.string() });
+
   @ApiProperty()
   public name: string;
 }
 
 export class KeyParamDto {
-  @IsString()
+  public static schema = z.object({ key: z.string() });
+
   @ApiProperty()
   public key: string;
 }
 
+// Nest doesn't run pipes on @Headers(), so this only types and documents the header
 export class KeyHeaderDto {
-  @IsString()
   @ApiProperty()
   public "x-api-key": string;
 }

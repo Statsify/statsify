@@ -7,12 +7,11 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, MaxLength, MinLength } from "class-validator";
+import { z } from "zod";
 
 export class UuidDto {
-  @IsString()
-  @MaxLength(36)
-  @MinLength(32)
+  public static schema = z.object({ uuid: z.string().min(32).max(36) });
+
   @ApiProperty()
   public uuid: string;
 }

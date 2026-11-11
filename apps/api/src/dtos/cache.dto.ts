@@ -8,9 +8,13 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { CacheLevel } from "@statsify/api-client";
-import { IsEnum, IsOptional } from "class-validator";
+import { z } from "zod";
 
 export class CacheDto {
+  public static schema = z.object({
+    cache: z.enum(CacheLevel).default(CacheLevel.CACHE),
+  });
+
   @ApiProperty({
     enum: CacheLevel,
     enumName: "CacheLevel",
@@ -19,7 +23,5 @@ export class CacheDto {
     description: "Describes whether to return live data or cached data.",
     required: false,
   })
-  @IsOptional()
-  @IsEnum(CacheLevel)
-  public cache: CacheLevel = CacheLevel.CACHE;
+  public cache: CacheLevel;
 }
