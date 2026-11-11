@@ -8,7 +8,7 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import type { ArmorPiece, RenderOptions } from "@statsify/skin-renderer";
-import { IsBoolean, IsIn, IsInt, IsNumber, IsOptional, Max, Min, ValidateNested } from "class-validator";
+import { IsBoolean, IsIn, IsInt, IsNumber, IsObject, IsOptional, Max, Min, ValidateIf, ValidateNested } from "class-validator";
 import { Transform, Type, plainToInstance } from "class-transformer";
 import { UuidDto } from "./uuid.dto.js";
 
@@ -31,23 +31,30 @@ class ArmorPieceDto {
   public enchanted?: boolean;
 }
 
+// IsOptional also lets null through, which the renderer rejects with a 500
+const isSet = (_: unknown, value: unknown) => value !== undefined;
+
 class ArmorDto {
-  @IsOptional()
+  @ValidateIf(isSet)
+  @IsObject()
   @ValidateNested()
   @Type(() => ArmorPieceDto)
   public helmet?: ArmorPieceDto;
 
-  @IsOptional()
+  @ValidateIf(isSet)
+  @IsObject()
   @ValidateNested()
   @Type(() => ArmorPieceDto)
   public chestplate?: ArmorPieceDto;
 
-  @IsOptional()
+  @ValidateIf(isSet)
+  @IsObject()
   @ValidateNested()
   @Type(() => ArmorPieceDto)
   public leggings?: ArmorPieceDto;
 
-  @IsOptional()
+  @ValidateIf(isSet)
+  @IsObject()
   @ValidateNested()
   @Type(() => ArmorPieceDto)
   public boots?: ArmorPieceDto;
@@ -55,7 +62,7 @@ class ArmorDto {
 
 export class SkinRenderDto extends UuidDto {
   @IsOptional()
-  @Transform(({ value }) => +value)
+  @Transform(({ value }) => (value === "" ? undefined : +value))
   @IsNumber()
   @Min(-Math.PI * 2)
   @Max(Math.PI * 2)
@@ -68,13 +75,13 @@ export class SkinRenderDto extends UuidDto {
   public pose?: (typeof POSES)[number];
 
   @IsOptional()
-  @Transform(({ value }) => value === "true")
+  @Transform(({ value }) => (value === "true" || value === "false" ? value === "true" : value))
   @IsBoolean()
   @ApiProperty({ required: false, description: "Draw the player's cape, if they have one" })
   public cape?: boolean;
 
   // Bad JSON passes through unparsed so validation answers 400, where a throw here would be a 500
-  @IsOptional()
+  @ValidateIf(isSet)
   @Transform(({ value }) => {
     try {
       return plainToInstance(ArmorDto, JSON.parse(value));
@@ -82,6 +89,7 @@ export class SkinRenderDto extends UuidDto {
       return value;
     }
   })
+  @IsObject()
   @ValidateNested()
   @ApiProperty({
     required: false,

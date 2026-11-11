@@ -51,7 +51,7 @@ export class SkinService {
     const skin = await this.getSkin(uuid);
     const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
 
-    const capeImage = cape && skin.capeUrl ? await loadImage(skin.capeUrl) : undefined;
+    const capeImage = cape && skin.capeUrl ? await loadImage(skin.capeUrl).catch(() => undefined) : undefined;
 
     return renderSkin(imageData(image), skin.slim ?? false, extruded, {
       ...options,
