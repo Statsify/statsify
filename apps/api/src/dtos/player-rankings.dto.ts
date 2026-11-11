@@ -6,17 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
 import { Player } from "@statsify/schemas";
 import { UuidDto } from "./uuid.dto.js";
+import { createZodDto } from "nestjs-zod";
 import { leaderboardField } from "./leaderboard-field.js";
 import { z } from "zod";
 
-const field = leaderboardField(Player);
-
-export class PlayerRankingsDto extends UuidDto {
-  public static override schema = UuidDto.schema.extend({ fields: z.array(field) });
-
-  @ApiProperty({ enum: field.options, type: [String] })
-  public fields: string[];
-}
+export class PlayerRankingsDto extends createZodDto(
+  UuidDto.schema.extend({ fields: z.array(leaderboardField(Player)) })
+) {}

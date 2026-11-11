@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
+import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export class CommandDto {
-  public static schema = z.object({ command: z.string() });
-
-  @ApiProperty()
-  public command: string;
-}
+export class CommandDto extends createZodDto(z.object({ command: z.string() })) {}
