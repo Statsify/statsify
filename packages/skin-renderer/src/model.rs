@@ -340,8 +340,7 @@ impl Model {
     }
   }
 
-  // Drawn as the game draws a worn player head: the skin's head and a hat 0.25 out,
-  // scaled 1.1875 from the neck
+  // Sized as the game draws a worn player head
   pub fn attach_head(
     &mut self,
     device: &wgpu::Device,
