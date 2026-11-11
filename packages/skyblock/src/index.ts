@@ -30,7 +30,7 @@ export { getChocolate } from "./sections/chocolate.js";
 export { getCrimson } from "./sections/crimson.js";
 export { getDungeons } from "./sections/dungeons.js";
 export { getFishing } from "./sections/fishing.js";
-export { getGear } from "./sections/gear.js";
+export { getGear, skinArmor } from "./sections/gear.js";
 export { getHotf } from "./sections/hotf.js";
 export { getHotm } from "./sections/hotm.js";
 export { getInventories } from "./sections/inventories.js";
