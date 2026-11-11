@@ -306,8 +306,14 @@ impl Model {
     Ok(model)
   }
 
-  pub fn wears_armor(&self) -> bool {
-    self.wears_armor
+  // Boots and a player head reach past the frame that fits a bare player, and every
+  // armoured render pulls back with them so they share one scale
+  pub fn camera_radius(&self) -> f32 {
+    if self.wears_armor {
+      53.0
+    } else {
+      50.0
+    }
   }
 
   fn attach_armor(
