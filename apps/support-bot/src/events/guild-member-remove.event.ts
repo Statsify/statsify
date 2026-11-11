@@ -11,6 +11,7 @@ import {
   GatewayDispatchEvents,
   GatewayGuildMemberRemoveDispatchData,
 } from "discord-api-types/v10";
+import { GuildMemberUpdateEventListener } from "./guild-member-update.event.js";
 import { Service } from "typedi";
 import { TicketService, UserService } from "#services";
 import { config } from "@statsify/util";
@@ -24,7 +25,8 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
   public constructor(
     private readonly ticketService: TicketService,
     private readonly apiService: ApiService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly memberUpdateListener: GuildMemberUpdateEventListener
   ) {
     super();
   }
@@ -34,6 +36,8 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
     if (guildId !== GUILD_ID) return;
 
     const memberId = data.user.id;
+
+    this.memberUpdateListener.forget(memberId);
 
     await Promise.all([
       this.apiService.updateUser(memberId, { serverMember: false }),
