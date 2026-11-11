@@ -73,16 +73,35 @@ var t_diffuse: texture_2d<f32>;
 @group(0)@binding(1)
 var s_diffuse: sampler;
 
+@group(3) @binding(0)
+var t_glint: texture_2d<f32>;
+
+@group(3) @binding(1)
+var s_glint: sampler;
+
 @fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
+    return shade(in, textureSample(t_diffuse, s_diffuse, in.texture_coordinates));
+}
+
+// Armour has see-through gaps, which must not hide what's drawn behind them later.
+// The skin keeps fs_main, since a discard turns off early depth testing on software renderers
+@fragment
+fn fs_attachment(in: VertexOutput) -> @location(0) vec4<f32> {
+    return attachment_color(in);
+}
+
+fn attachment_color(in: VertexOutput) -> vec4<f32> {
     let object_color: vec4<f32> = textureSample(t_diffuse, s_diffuse, in.texture_coordinates);
 
-    // Armour has see-through gaps, which must not hide what's drawn behind them later
-    // or take the glint, which only draws where the armour wrote depth
     if object_color.a == 0.0 {
         discard;
     }
 
+    return shade(in, object_color);
+}
+
+fn shade(in: VertexOutput, object_color: vec4<f32>) -> vec4<f32> {
     let ambient_strength = 0.2;
     let ambient_color = light.color * ambient_strength;
 
@@ -96,10 +115,19 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     return vec4<f32>(result, object_color.a);
 }
 
-// The game squares and adds each glint layer on gamma-encoded colours, so the
-// sample is encoded again or the glint all but disappears
+fn to_srgb(color: vec3<f32>) -> vec3<f32> {
+    return select(1.055 * pow(color, vec3<f32>(1.0 / 2.4)) - 0.055, color * 12.92, color <= vec3<f32>(0.0031308));
+}
+
+fn to_linear(color: vec3<f32>) -> vec3<f32> {
+    return select(pow((color + 0.055) / 1.055, vec3<f32>(2.4)), color / 12.92, color <= vec3<f32>(0.04045));
+}
+
+// The game draws the glint as a second pass that adds its squared layers to the
+// armour's gamma-encoded colour. Blending would add in linear space and wash the
+// glint out, so enchanted armour adds it here instead
 @fragment
-fn fs_glint(in: VertexOutput) -> @location(0) vec4<f32> {
+fn fs_enchanted(in: VertexOutput) -> @location(0) vec4<f32> {
     let tint = vec3<f32>(0.38, 0.19, 0.608);
     var glint = vec3<f32>(0.0);
 
@@ -107,10 +135,12 @@ fn fs_glint(in: VertexOutput) -> @location(0) vec4<f32> {
         let angle = radians(30.0 - f32(i) * 60.0);
         let rotation = mat2x2<f32>(cos(angle), sin(angle), -sin(angle), cos(angle));
         let uv = rotation * in.texture_coordinates / 3.0;
-        let texel = pow(textureSample(t_diffuse, s_diffuse, uv).rgb, vec3<f32>(1.0 / 2.2));
-        let layer = texel * tint;
+        let layer = to_srgb(textureSample(t_glint, s_glint, uv).rgb) * tint;
         glint += layer * layer;
     }
 
-    return vec4<f32>(glint, 1.0);
+    let armor = attachment_color(in);
+    let color = min(to_srgb(armor.rgb) + glint, vec3<f32>(1.0));
+
+    return vec4<f32>(to_linear(color), armor.a);
 }
