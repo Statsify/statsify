@@ -1,8 +1,16 @@
 use image::{imageops, DynamicImage};
 #[cfg(not(target_arch = "wasm32"))]
+use napi::bindgen_prelude::Uint8Array;
+#[cfg(not(target_arch = "wasm32"))]
 use napi_derive::napi;
 
+use crate::error::{Error, Result};
 use crate::model::Part;
+
+#[cfg(not(target_arch = "wasm32"))]
+type Bytes = Uint8Array;
+#[cfg(target_arch = "wasm32")]
+type Bytes = Vec<u8>;
 
 macro_rules! texture {
   ($name:literal) => {
@@ -30,6 +38,7 @@ pub enum ArmorMaterial {
 }
 
 #[cfg_attr(not(target_arch = "wasm32"), napi(object))]
+#[derive(Clone, Copy)]
 pub struct ArmorPiece {
   #[cfg_attr(
     not(target_arch = "wasm32"),
@@ -42,9 +51,24 @@ pub struct ArmorPiece {
 }
 
 #[cfg_attr(not(target_arch = "wasm32"), napi(object))]
+pub struct Helmet {
+  #[cfg_attr(
+    not(target_arch = "wasm32"),
+    napi(ts_type = "'leather' | 'chainmail' | 'iron' | 'gold' | 'diamond'")
+  )]
+  pub material: Option<ArmorMaterial>,
+  /// Skin texture (PNG) whose head is worn as a player head, in place of a material.
+  #[cfg_attr(not(target_arch = "wasm32"), napi(ts_type = "Uint8Array"))]
+  pub head: Option<Bytes>,
+  /// Dye as `0xRRGGBB`, leather only. Undyed leather is brown.
+  pub color: Option<u32>,
+  pub enchanted: Option<bool>,
+}
+
+#[cfg_attr(not(target_arch = "wasm32"), napi(object))]
 #[derive(Default)]
 pub struct Armor {
-  pub helmet: Option<ArmorPiece>,
+  pub helmet: Option<Helmet>,
   pub chestplate: Option<ArmorPiece>,
   pub leggings: Option<ArmorPiece>,
   pub boots: Option<ArmorPiece>,
@@ -68,35 +92,61 @@ impl ArmorLayer {
 }
 
 impl Armor {
-  // An extruded outer layer would poke through the leggings, so parts under them
-  // get the flat one, which the game draws under armour anyway
+  // An extruded outer layer would poke through the leggings and reach a player head's
+  // surface, so parts under them get the flat one, which the game draws under armour anyway
   pub fn flattens(&self, part: Part) -> bool {
-    self
-      .pieces()
-      .any(|(_, layer, parts)| matches!(layer, ArmorLayer::Inner) && parts.contains(&part))
+    let wears_head = self
+      .helmet
+      .as_ref()
+      .is_some_and(|helmet| helmet.head.is_some());
+
+    (part == Part::Head && wears_head)
+      || self
+        .pieces()
+        .any(|(_, layer, parts)| matches!(layer, ArmorLayer::Inner) && parts.contains(&part))
   }
 
-  pub fn pieces(&self) -> impl Iterator<Item = (&ArmorPiece, ArmorLayer, &'static [Part])> {
+  pub fn head(&self) -> Result<Option<&[u8]>> {
+    let Some(helmet) = &self.helmet else {
+      return Ok(None);
+    };
+
+    match (helmet.material, &helmet.head) {
+      (Some(_), None) => Ok(None),
+      (None, Some(head)) => Ok(Some(&head[..])),
+      _ => Err(Error::InvalidHelmet),
+    }
+  }
+
+  pub fn pieces(&self) -> impl Iterator<Item = (ArmorPiece, ArmorLayer, &'static [Part])> {
+    let helmet = self.helmet.as_ref().and_then(|helmet| {
+      helmet.material.map(|material| ArmorPiece {
+        material,
+        color: helmet.color,
+        enchanted: helmet.enchanted,
+      })
+    });
+
     [
-      (&self.helmet, ArmorLayer::Outer, &[Part::Head][..]),
+      (helmet, ArmorLayer::Outer, &[Part::Head][..]),
       (
-        &self.chestplate,
+        self.chestplate,
         ArmorLayer::Outer,
         &[Part::Body, Part::RightArm, Part::LeftArm],
       ),
       (
-        &self.leggings,
+        self.leggings,
         ArmorLayer::Inner,
         &[Part::Body, Part::RightLeg, Part::LeftLeg],
       ),
       (
-        &self.boots,
+        self.boots,
         ArmorLayer::Outer,
         &[Part::RightLeg, Part::LeftLeg],
       ),
     ]
     .into_iter()
-    .filter_map(|(piece, layer, parts)| piece.as_ref().map(|piece| (piece, layer, parts)))
+    .filter_map(|(piece, layer, parts)| piece.map(|piece| (piece, layer, parts)))
   }
 }
 

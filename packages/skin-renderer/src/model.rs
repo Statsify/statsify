@@ -346,6 +346,42 @@ impl Model {
     }
   }
 
+  // Drawn as the game draws a worn player head: the skin's head and a hat 0.25 out,
+  // scaled 1.1875 from the neck
+  pub fn attach_head(
+    &mut self,
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    layout: &wgpu::BindGroupLayout,
+    head: &DynamicImage,
+  ) {
+    let placement = Part::Head.placement(ModelKind::Classic.arm_width());
+    let (position, rotation) = placement.resolve();
+    let mut geometry = Geometry::new(vec![], vec![]);
+
+    for (location, inflation) in [((0, 0), 0.0), ((32, 0), 0.25)] {
+      geometry.combine(
+        BoxGeometry {
+          position,
+          dimensions: placement.dimensions,
+          texture_region: TextureRegion {
+            location,
+            texture_size: (64, 64),
+            mirror: false,
+          },
+          rotation,
+          inflation,
+        }
+        .create(),
+      );
+    }
+
+    let neck = position - Vector3::unit_y() * placement.dimensions.y / 2.0;
+    geometry.scale_around(1.1875, neck);
+
+    self.attach(device, queue, layout, head, geometry, false);
+  }
+
   pub fn attach_cape(
     &mut self,
     device: &wgpu::Device,

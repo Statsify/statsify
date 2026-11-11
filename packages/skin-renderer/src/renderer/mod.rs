@@ -377,6 +377,7 @@ impl<T: Backend> SkinRenderer<T> {
   ) -> Result<Model> {
     let device = self.backend.device();
     let queue = self.backend.queue();
+    let head = armor.head()?.map(load_skin_from_memory).transpose()?;
 
     let mut model = Model::new(
       device,
@@ -387,6 +388,10 @@ impl<T: Backend> SkinRenderer<T> {
       model_outer_layer,
       armor,
     );
+
+    if let Some(head) = head {
+      model.attach_head(device, queue, &self.texture_bind_group_layout, &head);
+    }
 
     if let Some(cape) = cape {
       model.attach_cape(
