@@ -33,6 +33,9 @@ type Game = "blitz" | "megawalls";
 // Built by scripts/import-dump.ts from the game's layout editors
 const KITS = dumped as Record<Game, Record<string, LegacyKit>>;
 
+// Each Blitz kit's armour by level, I to X, from its Upgrades page
+const BLITZ_ARMOR = dumped.blitzArmor as Record<string, Record<string, ItemStack>[]>;
+
 const materials: Record<string, number | undefined> = data.materials;
 
 const withDefaults = (game: Game) =>
@@ -79,18 +82,17 @@ function fromDumpedKit(
   return slots;
 }
 
-// Blitz's editors hold its armour among the items, and Mega Walls' class pages list theirs
-function dumpedKitArmor(game: Game, name: string, level: number) {
-  const kit = KITS[game][kitKey(name)];
-  if (kit?.level !== level) return undefined;
-  return armorOf([...Object.values(kit.armor ?? {}), ...kit.items.map(({ item }) => item)]);
+/** A Blitz kit's armour at a level (1 to 10), from its Upgrades page */
+export function blitzKitArmor(kit: string, level: number) {
+  const armor = BLITZ_ARMOR[kitKey(kit)]?.[level - 1];
+  return armor && armorOf(Object.values(armor));
 }
 
-/** A Blitz kit's armour at a level, which is only known at the level its editor was dumped at */
-export const blitzKitArmor = (kit: string, level: number) => dumpedKitArmor("blitz", kit, level);
-
 /** A Mega Walls class's armour at a Kit upgrade level, which is only known at the level its editor was dumped at */
-export const megaWallsKitArmor = (kit: string, level: number) => dumpedKitArmor("megawalls", kit, level);
+export function megaWallsKitArmor(kit: string, level: number) {
+  const dumpedKit = KITS.megawalls[kitKey(kit)];
+  return dumpedKit?.level === level ? armorOf(Object.values(dumpedKit.armor ?? {})) : undefined;
+}
 
 /**
  * A Blitz <Kit>Inventory ({ "0": "345,0", "1": "261,0" }) as 40 player inventory slots, or

@@ -1199,7 +1199,8 @@
       {
         "token": "LEATHER_HELMET:0",
         "item": {
-          "id": "minecraft:leather_helmet"
+          "id": "minecraft:leather_helmet",
+          "color": 0
         }
       },
       {
@@ -2867,6 +2868,7 @@
         "token": "LEATHER_HELMET:0:0",
         "item": {
           "id": "minecraft:leather_helmet",
+          "color": 0,
           "enchanted": true,
           "tooltip": [
             "Protection II"
@@ -5416,7 +5418,8 @@
       {
         "token": "LEATHER_CHESTPLATE:0",
         "item": {
-          "id": "minecraft:leather_chestplate"
+          "id": "minecraft:leather_chestplate",
+          "color": 8388736
         }
       },
       {
