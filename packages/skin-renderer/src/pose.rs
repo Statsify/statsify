@@ -9,8 +9,7 @@ use crate::model::Part;
   not(target_arch = "wasm32"),
   napi(string_enum = "lowercase", skip_typescript)
 )]
-#[derive(Clone, Copy, Default, strum::EnumString)]
-#[strum(serialize_all = "lowercase")]
+#[derive(Clone, Copy, Default)]
 pub enum Pose {
   #[default]
   Standing,

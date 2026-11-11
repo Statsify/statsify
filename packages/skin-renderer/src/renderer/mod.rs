@@ -453,11 +453,6 @@ impl SkinRenderer<wasm::WasmBackend> {
     self.camera.process_mouse_movement(delta);
   }
 
-  pub fn frame(&mut self, pose: Pose) {
-    let Camera::Orbital(camera) = &mut self.camera;
-    camera.update_radius(pose.camera_radius());
-  }
-
   pub fn process_mouse_scroll(&mut self, delta: &MouseScrollDelta) {
     if !self.backend.mouse_pressed {
       return;
