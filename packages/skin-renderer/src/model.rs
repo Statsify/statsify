@@ -8,7 +8,7 @@ use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, Textu
 use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
-use crate::pose::Pose;
+use crate::pose::{PartPose, Pose};
 use crate::texture::Texture;
 
 pub enum ModelKind {
@@ -471,11 +471,11 @@ impl Model {
     }
     .create();
 
-    let (swing, offset) = self.pose.cape();
+    let PartPose { rotation, offset } = self.pose.cape();
 
     geometry.rotate_around(Rotation {
       // A standing player's cape swings 6 degrees out from the back
-      quaternion: Quaternion::from_angle_x(Deg(6.0 + swing)),
+      quaternion: Quaternion::from_angle_x(Deg(6.0 + rotation.x)),
       pivot: Vector3::new(0.0, top, back),
     });
     geometry.translate(offset);

@@ -68,13 +68,12 @@ impl Pose {
     Some(pose)
   }
 
-  // Extra swing of the cape away from the back, and where it moves to
-  pub fn cape(self) -> (f32, Vector3<f32>) {
+  pub fn cape(self) -> PartPose {
     match self {
       // place() drops the whole model 3.2, but the game drops a sneaking cape only 2.27
-      Pose::Sneak => (25.0, Vector3::new(0.0, 3.2 - 2.27, 0.28)),
-      Pose::Jump => (25.0, Vector3::zero()),
-      _ => (0.0, Vector3::zero()),
+      Pose::Sneak => part_pose([25.0, 0.0, 0.0], [0.0, 3.2 - 2.27, 0.28]),
+      Pose::Jump => part_pose([25.0, 0.0, 0.0], [0.0; 3]),
+      _ => part_pose([0.0; 3], [0.0; 3]),
     }
   }
 
