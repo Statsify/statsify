@@ -6,11 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Draws every item in a pack stack onto one atlas image, with a map of where each icon sits, so a
-// page can show inventories without loading the pack. Packs go lowest priority first:
-//   pnpm --filter @statsify/inventory build
-//   pnpm atlas <name> <pack> [<pack> …] [--scale 3]
-// It writes atlas/<name>.json and atlas/<name>.<hash>.png, and removes that name's older images.
+// Packs go lowest priority first. Writes atlas/<name>.json and atlas/<name>.<hash>.png, and removes
+// that name's older images
 
 import {
   Atlas,
@@ -139,10 +136,7 @@ interface Sprite {
   rects: Record<string, AtlasRect>;
 }
 
-/**
- * Packs sprites tallest first into shelves, stacking shorter ones in columns down a shelf, and
- * gives the atlas about square
- */
+/** Shelf-packs the sprites into a roughly square atlas, writing each one's rect */
 function packSprites(sprites: Sprite[]) {
   const area = sprites.reduce((total, { canvas }) => total + canvas.width * canvas.height, 0);
   const width = Math.max(...sprites.map(({ canvas }) => canvas.width), Math.ceil(Math.sqrt(area) / 16) * 16);
@@ -167,20 +161,12 @@ function packSprites(sprites: Sprite[]) {
   return { width, height: shelf.y + shelf.height };
 }
 
-const data: AtlasData = {
-  image: "",
-  hash: "",
-  scale,
-  legacyGlint: renderer.legacyGlint,
-  icons: {},
-  layers,
-  textures: {},
-  names: {},
-};
+const iconRects: Record<string, AtlasRect> = {};
+const textureRects: Record<string, AtlasRect> = {};
 
 const sprites: Sprite[] = [
-  ...[...icons].map(([id, canvas]) => ({ id, canvas, rects: data.icons })),
-  ...[...textures].map(([id, canvas]) => ({ id, canvas, rects: data.textures })),
+  ...[...icons].map(([id, canvas]) => ({ id, canvas, rects: iconRects })),
+  ...[...textures].map(([id, canvas]) => ({ id, canvas, rects: textureRects })),
 ];
 
 const size = packSprites(sprites);
@@ -193,20 +179,30 @@ for (const { id, canvas, rects } of sprites) {
 }
 
 const png = await image.toBuffer("png");
-data.hash = createHash("sha256").update(png).digest("hex").slice(0, 16);
-data.image = `${name}.${data.hash}.png`;
+const hash = createHash("sha256").update(png).digest("hex").slice(0, 16);
 
 const lang = stack.json<Record<string, string>>("assets/minecraft/lang/en_us.json") ?? {};
+const names: Record<string, string> = {};
 
 for (const id of icons.keys()) {
   const path = id.replace(/^minecraft:/, "");
   for (const key of [`item.minecraft.${path}`, `block.minecraft.${path}`]) {
-    if (lang[key]) data.names[key] = lang[key];
+    if (lang[key]) names[key] = lang[key];
   }
 }
 
-// Reads the written image back the way a page does, so an icon in the wrong place or a texture the
-// browser draws with that the atlas lacks fails here
+const data: AtlasData = {
+  image: `${name}.${hash}.png`,
+  hash,
+  scale,
+  legacyGlint: renderer.legacyGlint,
+  icons: iconRects,
+  layers,
+  textures: textureRects,
+  names,
+};
+
+// Reads the image back the way a page does, so a misplaced icon or a missing texture fails here
 const atlas = new Atlas(data, await skiaCanvas.decodePng(png));
 
 const pixels = (canvas: OffscreenCanvas) => canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data;
