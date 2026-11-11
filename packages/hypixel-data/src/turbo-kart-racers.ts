@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { ItemStack } from "../core/item-stack.js";
-import dumped from "../../data/turbo-kart-racers.json" with { type: "json" };
+import type { ItemStack } from "@statsify/textures";
+import dumped from "../data/turbo-kart-racers.json" with { type: "json" };
 
 export interface KartPart {
   /** As PartRarity names it, like AWESOME */

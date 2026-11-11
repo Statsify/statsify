@@ -7,10 +7,9 @@
  */
 
 import { ARMOR, SLOTS, inRange, kitKey } from "./kits.js";
-import type { ItemStack } from "../core/item-stack.js";
+import { type ItemStack, legacyMaterial } from "@statsify/textures";
 import { armorOf } from "./armor.js";
-import dumped from "../../data/duels-modes.json" with { type: "json" };
-import { legacyMaterial } from "../core/legacy-items.js";
+import dumped from "../data/duels-modes.json" with { type: "json" };
 
 export interface KitItem {
   /** Where the game's editor puts it before the player moves anything */

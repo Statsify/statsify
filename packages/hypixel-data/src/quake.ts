@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { ItemStack } from "../core/item-stack.js";
-import dumped from "../../data/quake.json" with { type: "json" };
+import type { ItemStack } from "@statsify/textures";
+import dumped from "../data/quake.json" with { type: "json" };
 import { kitKey } from "./kits.js";
 
 // The gun's parts (sight is its laser), then the hat and the armour, as the Quake stats keys name them

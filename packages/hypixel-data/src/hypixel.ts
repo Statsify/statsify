@@ -8,8 +8,7 @@
 
 import { ARMOR, HOTBAR } from "./kits.js";
 import { type Compound, readNbt } from "./nbt.js";
-import { legacyEffect, legacyItem } from "../core/legacy-items.js";
-import type { ItemStack } from "../core/item-stack.js";
+import { type ItemStack, legacyEffect, legacyItem } from "@statsify/textures";
 import { gunzipSync } from "fflate";
 
 const base64Bytes = (base64: string) => Uint8Array.from(atob(base64), (char) => char.codePointAt(0)!);

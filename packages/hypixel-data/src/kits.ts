@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { legacyItem } from "../core/legacy-items.js";
-import type { ItemStack } from "../core/item-stack.js";
+import { type ItemStack, legacyItem } from "@statsify/textures";
 
 // A player inventory and its armour: the hotbar is slots 0 to 8, the main rows 9 to 35, then
 // boots, leggings, chestplate and helmet in 36 to 39

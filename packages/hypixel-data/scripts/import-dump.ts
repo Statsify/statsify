@@ -6,15 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Builds every data/*.json but minecraft-data.json from StatsifyDump exports of the games' layout
+// Builds every data/*.json from StatsifyDump exports of the games' layout
 // editors, kit menus and shop menus, so each item has the count, name and tooltip the game gives it. Each dump session writes its own exports, so pass the last export
 // of every session needed:
-//   pnpm --filter @statsify/textures build
+//   pnpm --filter @statsify/hypixel-data build
 //   node scripts/import-dump.ts <dump.json> [<dump.json> …]
 
 import {
   ARMOR,
-  type ItemStack,
   type KartPart,
   type Kit,
   type KitItem,
@@ -22,12 +21,19 @@ import {
   type SkyWarsKit,
   kitKey,
   leatherColor,
-  legacyItem,
   skinUrl,
-} from "@statsify/textures";
+} from "@statsify/hypixel-data";
+import { type ItemStack, legacyItem } from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
-import data from "../data/minecraft-data.json" with { type: "json" };
-import { fetchJson } from "./minecraft-data.ts";
+import data from "@statsify/textures/data/minecraft-data.json" with { type: "json" };
+
+const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
+
+const fetchJson = async <T>(path: string): Promise<T> => {
+  const response = await fetch(`${MINECRAFT_DATA}/${path}`);
+  if (!response.ok) throw new Error(`${path}: ${response.status}`);
+  return response.json() as Promise<T>;
+};
 
 // Each single-kit editor's mode, as its layout_<mode>_layout key names it, and its tokens
 // without copy numbers (wood_1 is wood) by the slot the editor shows the default layout in
