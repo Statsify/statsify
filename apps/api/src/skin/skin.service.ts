@@ -17,6 +17,7 @@ import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
+import type { SkinRenderDto } from "#dtos";
 
 @Injectable()
 export class SkinService {
@@ -43,12 +44,20 @@ export class SkinService {
     return canvas.toBuffer("png");
   }
 
-  public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {
+  public async getRender(
+    uuid: string,
+    extruded: boolean,
+    { cape, ...options }: Omit<SkinRenderDto, "uuid">
+  ): Promise<Buffer> {
     const skin = await this.getSkin(uuid);
     const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
-    // This field is set by loadImage from `@statsify/rendering`
-    const { _data: buffer } = image as unknown as { _data: Buffer };
-    return renderSkin(buffer, skin.slim ?? false, extruded);
+
+    const capeImage = cape && skin.capeUrl ? await loadImage(skin.capeUrl) : undefined;
+
+    return renderSkin(imageData(image), skin.slim ?? false, extruded, {
+      ...options,
+      cape: capeImage && imageData(capeImage),
+    });
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -134,6 +143,12 @@ export class SkinService {
     );
   }
 }
+
+// This field is set by loadImage from `@statsify/rendering`
+const imageData = (image: Image) => {
+  const { _data: data } = image as unknown as { _data: Buffer };
+  return data;
+};
 
 interface MojangProfile {
   id: string;
