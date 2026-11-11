@@ -368,7 +368,12 @@ impl<T: Backend> SkinRenderer<T> {
       render_pass.draw_model(model, &self.camera_bind_group, &self.light_bind_group);
 
       render_pass.set_pipeline(&self.attachment_pipeline);
-      render_pass.draw_attachments(model, false, &self.camera_bind_group, &self.light_bind_group);
+      render_pass.draw_attachments(
+        model,
+        false,
+        &self.camera_bind_group,
+        &self.light_bind_group,
+      );
 
       render_pass.set_pipeline(&self.enchanted_pipeline);
       render_pass.set_bind_group(3, &self.glint_material.bind_group, &[]);
