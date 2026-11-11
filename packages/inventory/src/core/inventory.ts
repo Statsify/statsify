@@ -52,6 +52,15 @@ const slotsTop = (title?: string) => (title ? TITLE_HEIGHT : EDGE);
 export const slotOrigin = ({ cols, title }: InventorySize, slot: number) =>
   [EDGE + (slot % cols) * SLOT, slotsTop(title) + Math.floor(slot / cols) * SLOT] as const;
 
+/** Where the title's text starts, in GUI pixels */
+export const TITLE_ORIGIN = [8, 6] as const;
+
+/** Where a slot's count ends on the right and starts at the top, in GUI pixels */
+export function countOrigin(size: InventorySize, slot: number) {
+  const [x, y] = slotOrigin(size, slot);
+  return [x + 18, y + 10] as const;
+}
+
 /** The slot under a point, in GUI pixels from the inventory's top left, or -1 */
 export function slotAt({ rows, cols, title }: InventorySize, x: number, y: number) {
   const col = Math.floor((x - EDGE) / SLOT);
@@ -154,7 +163,8 @@ export class InventoryRenderer {
 
     if (this.text && item?.count !== undefined && item.count > 1) {
       const count = `${item.count}`;
-      this.text.draw(ctx, count, (x + 1 + 17 - this.text.width(count)) * scale, (y + 1 + 9) * scale, { scale });
+      const [right, top] = countOrigin(size, slot);
+      this.text.draw(ctx, count, (right - this.text.width(count)) * scale, top * scale, { scale });
     }
 
     // 1.8.9 colours the worn strip separately from the remaining durability
@@ -205,7 +215,10 @@ export class InventoryRenderer {
       }
     }
 
-    if (title && this.text) this.text.draw(ctx, title, 8 * scale, 6 * scale, { scale, shadow: false, color: 0x40_40_40 });
+    if (title && this.text) {
+      const [x, y] = TITLE_ORIGIN;
+      this.text.draw(ctx, title, x * scale, y * scale, { scale, shadow: false, color: 0x40_40_40 });
+    }
 
     return canvas;
   }

@@ -6,7 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type InventoryLayout, InventoryRenderer, type InventorySize, LAYOUTS, slotAt, slotOrigin } from "../core/inventory.js";
+import {
+  type InventoryLayout,
+  InventoryRenderer,
+  type InventorySize,
+  LAYOUTS,
+  TITLE_ORIGIN,
+  countOrigin,
+  slotAt,
+  slotOrigin,
+} from "../core/inventory.js";
 import { context, createCanvas } from "../core/canvas.js";
 import { Atlas } from "../core/atlas.js";
 import { IconCache } from "../core/icon-cache.js";
@@ -273,12 +282,13 @@ export class McInventory extends HTMLElement {
     };
 
     if (this.packStack instanceof Atlas) {
-      if (size.title) place("title", size.title, 6, "left", 8);
+      const [titleX, titleY] = TITLE_ORIGIN;
+      if (size.title) place("title", size.title, titleY, "left", titleX);
 
       for (const [slot, item] of shown.entries()) {
         if (!item?.count || item.count <= 1) continue;
-        const [x, y] = slotOrigin(size, slot);
-        place("count", `${item.count}`, y + 10, "right", width - (x + 18));
+        const [right, top] = countOrigin(size, slot);
+        place("count", `${item.count}`, top, "right", width - right);
       }
     }
 
