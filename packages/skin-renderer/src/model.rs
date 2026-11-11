@@ -271,6 +271,7 @@ pub struct Model {
   meshes: Vec<Mesh>,
   attachments: Vec<Attachment>,
   pose: Pose,
+  wears_armor: bool,
 }
 
 impl Model {
@@ -318,6 +319,7 @@ impl Model {
       meshes: inner_meshes.into_iter().chain(outer_meshes).collect(),
       attachments: vec![],
       pose,
+      wears_armor: armor.pieces().next().is_some(),
     };
 
     model.attach_armor(device, queue, layout, armor);
@@ -326,6 +328,10 @@ impl Model {
 
   pub fn pose(&self) -> Pose {
     self.pose
+  }
+
+  pub fn wears_armor(&self) -> bool {
+    self.wears_armor
   }
 
   fn attach_armor(
@@ -352,7 +358,6 @@ impl Model {
         }
         .create();
 
-        // Neighbouring boxes share faces where they overlap, like the legs and body
         box_geometry.scale_around(part.z_fighting_scale(), position);
         geometry.combine(box_geometry);
       }
