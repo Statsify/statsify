@@ -13,9 +13,6 @@ import { abbreviationNumber } from "@statsify/util";
 import { readFile, readdir } from "node:fs/promises";
 
 const DEFAULT_LANGUAGE = "en-US";
-
-// Keys whose text never changes by language. Crowdin only uploads default.json, so these live
-// apart and other locales reach them through the en-US fallback.
 const UNTRANSLATED_FILE = "untranslated.json";
 
 @Service()
@@ -61,7 +58,7 @@ export class I18nLoaderService {
     });
 
     const untranslated = await readFile(`../../locales/${DEFAULT_LANGUAGE}/${UNTRANSLATED_FILE}`, "utf8");
-    i18n.addResourceBundle(DEFAULT_LANGUAGE, "default", JSON.parse(untranslated), true, false);
+    i18n.addResourceBundle(DEFAULT_LANGUAGE, "default", JSON.parse(untranslated), true);
   }
 }
 
