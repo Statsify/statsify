@@ -22,7 +22,9 @@ export class AccountController {
   @Auth(SITE_ONLY)
   @Implement(contract.account.login)
   public login() {
-    return implement(contract.account.login).handler(({ input }) => this.accountService.login(input.code, input.redirectUri));
+    return implement(contract.account.login).handler(({ input }) =>
+      this.accountService.login(input.code, input.redirectUri, input.clientIp)
+    );
   }
 
   @Auth(SITE_ONLY)

@@ -14,6 +14,7 @@ import { Injectable } from "@nestjs/common";
 import { ORPCError } from "@orpc/nest";
 import { Redis } from "ioredis";
 import { config } from "@statsify/util";
+import { hitWindow, rateLimitAddress } from "./site.service.js";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
@@ -24,6 +25,12 @@ type PlayerModel = ReturnModelType<typeof Player>;
 
 const DISCORD_API = "https://discord.com/api/v10";
 const DISCORD_TIMEOUT_MS = 5000;
+
+// Each login asks Discord to check its code. Past Discord's rate limit, every refusal counts toward the limit after
+// which it blocks the server's address, so a script of junk codes could cut the bot off too.
+const LOGIN_LIMIT = 10;
+const LOGIN_WINDOW_SECONDS = 5 * 60;
+const loginKey = (clientIp: string) => `site:account:login:${rateLimitAddress(clientIp)}`;
 
 // Redis keeps a hash of the cookie's token, so a copy of Redis can't be replayed as live sessions.
 const sessionKey = (session: string) => `site:account:session:${createHash("sha256").update(session).digest("base64url")}`;
@@ -43,7 +50,10 @@ export class AccountService {
     @InjectRedis() private readonly redis: Redis
   ) {}
 
-  public async login(code: string, redirectUri: string): Promise<{ session: string }> {
+  public async login(code: string, redirectUri: string, clientIp: string): Promise<{ session: string }> {
+    const [attempts] = await hitWindow(this.redis, loginKey(clientIp), LOGIN_WINDOW_SECONDS);
+    if (attempts > LOGIN_LIMIT) throw new ORPCError("TOO_MANY_REQUESTS");
+
     const discordId = await discordUserId(code, redirectUri);
 
     const account = await this.accountModel

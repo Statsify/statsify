@@ -760,28 +760,28 @@ export class SiteService implements OnApplicationBootstrap {
    * stops at two-thirds of the budget, so a third stays for clicks and for names the site has never stored.
    */
   private async consumeBudget(clientIp: string, auto = false): Promise<void> {
-    const [attempts, ipTtl] = await this.hit(ipKey(clientIp), IP_WINDOW_SECONDS);
+    const [attempts, ipTtl] = await hitWindow(this.redis, ipKey(clientIp), IP_WINDOW_SECONDS);
     if (attempts > IP_LIMIT) throw tooManyRequests(ipTtl);
 
     const budget = (await this.hypixelBudget) ?? DEFAULT_HYPIXEL_BUDGET;
     const limit = auto ? Math.floor((budget * 2) / 3) : budget;
-    const [calls, budgetTtl] = await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS);
+    const [calls, budgetTtl] = await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS);
 
     if (calls > limit) {
       await this.redis.decr(BUDGET_KEY);
       throw tooManyRequests(budgetTtl);
     }
   }
+}
 
-  /**
-   * Counts a hit in a fixed window that opens on the first hit; returns the count and the seconds left. The window's
-   * key is created with its expiry in the same transaction as the count, so it can never be left without one.
-   */
-  private async hit(key: string, windowSeconds: number): Promise<[count: number, ttl: number]> {
-    const results = await this.redis.multi().set(key, 0, "EX", windowSeconds, "NX").incr(key).ttl(key).exec();
-    if (!results || results.some(([error]) => error)) throw new InternalServerErrorException();
-    return [Number(results[1][1]), Number(results[2][1])];
-  }
+/**
+ * Counts a hit in a fixed window that opens on the first hit; returns the count and the seconds left. The window's
+ * key is created with its expiry in the same transaction as the count, so it can never be left without one.
+ */
+export async function hitWindow(redis: Redis, key: string, windowSeconds: number): Promise<[count: number, ttl: number]> {
+  const results = await redis.multi().set(key, 0, "EX", windowSeconds, "NX").incr(key).ttl(key).exec();
+  if (!results || results.some(([error]) => error)) throw new InternalServerErrorException();
+  return [Number(results[1][1]), Number(results[2][1])];
 }
 
 if (import.meta.vitest) {

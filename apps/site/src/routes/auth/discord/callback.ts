@@ -9,6 +9,7 @@
 import { ORPCError } from "@orpc/client";
 import { clearStateCookie, discordCallbackUrl, loginState, redirect, sessionCookie } from "~/server/account.server";
 import { captureServerError } from "~/server/sentry.server";
+import { clientIp } from "~/server/client-ip.server";
 import { createFileRoute } from "@tanstack/react-router";
 import { rpcServerClient } from "~/server/rpc.server";
 
@@ -29,11 +30,12 @@ export const Route = createFileRoute("/auth/discord/callback")({
         if (!code || !state || state !== expected) return redirect("/account?login=failed", [await clearStateCookie()]);
 
         try {
-          const { session } = await rpcServerClient.account.login({ code, redirectUri: await discordCallbackUrl() });
+          const redirectUri = await discordCallbackUrl();
+          const { session } = await rpcServerClient.account.login({ code, redirectUri, clientIp: clientIp() });
           return redirect("/account", [await clearStateCookie(), await sessionCookie(session)]);
         } catch (error) {
-          // A refused code is the visitor's to retry; anything else (Discord or the API down) is ours to hear about.
-          if (!(error instanceof ORPCError && error.defined && error.code === "UNAUTHORIZED")) captureServerError(error);
+          // A refused code or too many tries is the visitor's to retry; anything else (Discord or the API down) is ours.
+          if (!(error instanceof ORPCError && error.defined)) captureServerError(error);
           return redirect("/account?login=failed", [await clearStateCookie()]);
         }
       },

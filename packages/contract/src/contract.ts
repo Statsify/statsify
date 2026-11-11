@@ -682,6 +682,7 @@ const AccountLoginInputSchema = z.object({
   code: z.string().min(1).max(256),
   /** The callback URL the authorize request named, which the token exchange has to repeat. */
   redirectUri: z.url().max(512),
+  clientIp: ClientIpSchema,
 });
 
 export const AccountPageProfileSchema = z.object({
@@ -706,6 +707,8 @@ const accountErrors = oc.errors({
   NOT_FOUND: { message: "That profile isn't on this account" },
   /** Unlinking the primary while the account owns another profile. */
   CONFLICT: { message: "Pick another primary profile first" },
+  /** Login tries per address, since each one asks Discord to check its code. */
+  TOO_MANY_REQUESTS: { message: "Too many login attempts, try again shortly" },
 });
 
 const errors = oc.errors({
