@@ -1,0 +1,126 @@
+{
+  "ENGINE": [
+    {
+      "rarity": "AWESOME",
+      "attributes": {
+        "RECOVERY": 5,
+        "ACCELERATION": 5,
+        "TOP_SPEED": 5
+      },
+      "item": {
+        "id": "minecraft:anvil",
+        "name": "§5§nEternal Awesome Engine",
+        "tooltip": [
+          "§5§o             ❹",
+          "§5§o§a>§a>§a>§a>§a>§r  Recovery",
+          "§5§o§a>§a>§a>§a>§a>§r  Acceleration",
+          "§5§o§a>§a>§a>§a>§a>§r  Top speed"
+        ]
+      }
+    },
+    {
+      "rarity": "SUPER",
+      "attributes": {
+        "ACCELERATION": 1,
+        "TOP_SPEED": 1
+      },
+      "item": {
+        "id": "minecraft:anvil",
+        "name": "§7§nMini Super Engine",
+        "tooltip": [
+          "§5§o          ❹",
+          "§5§o§a>§4>§4>§4>§4>§r  Acceleration",
+          "§5§o§a>§4>§4>§4>§4>§r  Top speed"
+        ]
+      }
+    }
+  ],
+  "TURBOCHARGER": [
+    {
+      "rarity": "AWESOME",
+      "attributes": {
+        "BOOSTER_SPEED": 5,
+        "DRIFTING_EFFICIENCY": 5,
+        "BRAKES": 5
+      },
+      "item": {
+        "id": "minecraft:dispenser",
+        "name": "§5§nEternal Awesome Turbocharger",
+        "tooltip": [
+          "§5§o                ❶",
+          "§5§o§a>§a>§a>§a>§a>§r  Booster speed",
+          "§5§o§a>§a>§a>§a>§a>§r  Drifting efficiency",
+          "§5§o§a>§a>§a>§a>§a>§r  Brakes"
+        ]
+      }
+    }
+  ],
+  "FRAME": [
+    {
+      "rarity": "AWESOME",
+      "attributes": {
+        "TRACTION": 5,
+        "START_POSITION": 5,
+        "HANDLING": 5
+      },
+      "item": {
+        "id": "minecraft:minecart",
+        "name": "§5§nEternal Awesome Frame",
+        "tooltip": [
+          "§5§o            ❼",
+          "§5§o§a>§a>§a>§a>§a>§r  Traction",
+          "§5§o§a>§a>§a>§a>§a>§r  Start position",
+          "§5§o§a>§a>§a>§a>§a>§r  Handling"
+        ]
+      }
+    },
+    {
+      "rarity": "SUPER",
+      "attributes": {
+        "HANDLING": 1,
+        "TRACTION": 4
+      },
+      "item": {
+        "id": "minecraft:minecart",
+        "name": "§a§nPrimary Super Frame",
+        "tooltip": [
+          "§5§o           ❼",
+          "§5§o§a>§4>§4>§4>§4>§r  Handling",
+          "§5§o§a>§a>§a>§a>§4>§r  Traction"
+        ]
+      }
+    },
+    {
+      "rarity": "BASIC",
+      "attributes": {
+        "TRACTION": 1
+      },
+      "item": {
+        "id": "minecraft:minecart",
+        "name": "§7§nStarter Basic Frame",
+        "tooltip": [
+          "§5§o           ❼",
+          "§5§o§a>§4>§4>§4>§4>§r  Traction"
+        ]
+      }
+    },
+    {
+      "rarity": "AWESOME",
+      "attributes": {
+        "START_POSITION": 1,
+        "HANDLING": 1,
+        "TRACTION": 1
+      },
+      "item": {
+        "id": "minecraft:minecart",
+        "name": "§a§nAuxiliary Awesome Frame",
+        "tooltip": [
+          "§5§o             ❼",
+          "§5§o§a>§4>§4>§4>§4>§r  Start position",
+          "§5§o§a>§4>§4>§4>§4>§r  Handling",
+          "§5§o§a>§4>§4>§4>§4>§r  Traction"
+        ]
+      }
+    }
+  ]
+}
