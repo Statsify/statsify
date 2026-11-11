@@ -12,6 +12,7 @@ import { GuildService } from "#guild";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
+import { Logger } from "@statsify/logger";
 import { PlayerSearchService } from "#player";
 import { Redis } from "ioredis";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -54,6 +55,8 @@ const blend = (query: string, personal: string[][], global: string[]) => {
 
 @Injectable()
 export class AutocompleteService {
+  private readonly logger = new Logger("AutocompleteService");
+
   public constructor(
     @InjectRedis() private readonly redis: Redis,
     private readonly playerSearchService: PlayerSearchService,
@@ -102,8 +105,8 @@ export class AutocompleteService {
 
   private async suggestPlayers(id: string, query: string) {
     const [history, guild, global] = await Promise.all([
-      this.getHistory(AutocompleteType.PLAYER, id),
-      this.getLinkedGuild(id),
+      this.orEmpty(this.getHistory(AutocompleteType.PLAYER, id), []),
+      this.orEmpty(this.getLinkedGuild(id), null),
       query ? this.playerSearchService.get(query) : [],
     ]);
 
@@ -118,12 +121,19 @@ export class AutocompleteService {
 
   private async suggestGuilds(id: string, query: string) {
     const [history, guild, stored] = await Promise.all([
-      this.getHistory(AutocompleteType.GUILD, id),
-      this.getLinkedGuild(id),
+      this.orEmpty(this.getHistory(AutocompleteType.GUILD, id), []),
+      this.orEmpty(this.getLinkedGuild(id), null),
       this.guildService.search(query),
     ]);
 
     return blend(query, [guild ? [guild.name] : [], history], stored.map((g) => g.name));
+  }
+
+  private orEmpty<T>(read: Promise<T>, empty: T) {
+    return read.catch((error) => {
+      this.logger.error(error);
+      return empty;
+    });
   }
 
   private async getHistory(type: AutocompleteType, id: string) {
