@@ -9,4 +9,39 @@
  */
 export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-wasip1'
 
-export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: boolean): Promise<Buffer>
+export interface Armor {
+  helmet?: Helmet
+  chestplate?: ArmorPiece
+  leggings?: ArmorPiece
+  boots?: ArmorPiece
+}
+
+export interface ArmorPiece {
+  material: 'leather' | 'chainmail' | 'iron' | 'gold' | 'diamond'
+  /** Dye as `0xRRGGBB`, leather only. Undyed leather is brown. */
+  color?: number
+  enchanted?: boolean
+}
+
+export interface Helmet {
+  material?: 'leather' | 'chainmail' | 'iron' | 'gold' | 'diamond'
+  /** Skin texture (PNG) whose head is worn as a player head, in place of a material. */
+  head?: Uint8Array
+  /** Dye as `0xRRGGBB`, leather only. Undyed leather is brown. */
+  color?: number
+  enchanted?: boolean
+}
+
+export interface RenderOptions {
+  armor?: Armor
+  /** Cape texture (PNG). */
+  cape?: Uint8Array
+  /**
+   * Camera angle around the player in radians: 0 faces the front, π the back.
+   * Defaults to -0.3.
+   */
+  yaw?: number
+  pose?: 'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly'
+}
+
+export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: boolean, options?: RenderOptions | undefined | null): Promise<Buffer>

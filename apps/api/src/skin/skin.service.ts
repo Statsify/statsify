@@ -15,7 +15,7 @@ import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
-import { renderSkin } from "@statsify/skin-renderer";
+import { type Armor, type ArmorPiece, type Helmet, type RenderOptions, renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
@@ -43,12 +43,25 @@ export class SkinService {
     return canvas.toBuffer("png");
   }
 
-  public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {
+  public async getRender(
+    uuid: string,
+    extruded: boolean,
+    { cape, armor, ...options }: SkinRenderOptions
+  ): Promise<Buffer> {
     const skin = await this.getSkin(uuid);
-    const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
-    // This field is set by loadImage from `@statsify/rendering`
-    const { _data: buffer } = image as unknown as { _data: Buffer };
-    return renderSkin(buffer, skin.slim ?? false, extruded);
+    const { helmet, ...pieces } = armor ?? {};
+
+    const [{ skin: image }, capeImage, resolvedHelmet] = await Promise.all([
+      this.resolveSkin(skin.skinUrl, skin.slim),
+      cape && skin.capeUrl ? loadImage(skin.capeUrl).catch(() => undefined) : undefined,
+      this.resolveHelmet(helmet),
+    ]);
+
+    return renderSkin(imageData(image), skin.slim ?? false, extruded, {
+      ...options,
+      armor: { ...pieces, helmet: resolvedHelmet },
+      cape: capeImage && imageData(capeImage),
+    });
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -100,6 +113,13 @@ export class SkinService {
     };
   }
 
+  private async resolveHelmet(helmet?: ArmorPiece | { head: string }): Promise<Helmet | undefined> {
+    if (!helmet || !("head" in helmet)) return helmet;
+
+    const head = await loadImage(`https://textures.minecraft.net/texture/${helmet.head}`).catch(() => undefined);
+    return head && { head: imageData(head) };
+  }
+
   private getUuid(username: string): Promise<string> {
     return lastValueFrom(
       this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
@@ -134,6 +154,17 @@ export class SkinService {
     );
   }
 }
+
+// This field is set by loadImage from `@statsify/rendering`
+const imageData = (image: Image) => {
+  const { _data: data } = image as unknown as { _data: Buffer };
+  return data;
+};
+
+type SkinRenderOptions = Omit<RenderOptions, "armor" | "cape"> & {
+  armor?: Omit<Armor, "helmet"> & { helmet?: ArmorPiece | { head: string } };
+  cape?: boolean;
+};
 
 interface MojangProfile {
   id: string;

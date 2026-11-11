@@ -72,6 +72,16 @@ impl OrbitalCamera {
     }
   }
 
+  pub fn with_theta(mut self, theta: f32) -> Self {
+    self.update_theta(theta);
+    self
+  }
+
+  pub fn with_radius(mut self, radius: f32) -> Self {
+    self.update_radius(radius);
+    self
+  }
+
   fn update_radius(&mut self, radius: f32) {
     self.radius = radius.clamp(self.min_radius, self.max_radius);
   }
