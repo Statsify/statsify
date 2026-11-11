@@ -8,7 +8,7 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import type { ArmorPiece, RenderOptions } from "@statsify/skin-renderer";
-import { IsBoolean, IsIn, IsInt, IsNumber, IsObject, IsOptional, Max, Min, ValidateIf, ValidateNested } from "class-validator";
+import { IsBoolean, IsEmpty, IsIn, IsInt, IsNumber, IsObject, IsOptional, Matches, Max, Min, ValidateIf, ValidateNested } from "class-validator";
 import { Transform, Type, plainToInstance } from "class-transformer";
 import { UuidDto } from "./uuid.dto.js";
 
@@ -31,6 +31,18 @@ class ArmorPieceDto {
   public enchanted?: boolean;
 }
 
+// The hex after textures.minecraft.net/texture/, which older textures write with fewer than 64 digits
+const TEXTURE_HASH = /^[\da-f]{1,64}$/;
+
+class HeadDto {
+  @Matches(TEXTURE_HASH)
+  public head: string;
+
+  // A helmet is either a head or a material, never both
+  @IsEmpty()
+  public material?: undefined;
+}
+
 // IsOptional also lets null through, which the renderer rejects with a 500
 const isSet = (_: unknown, value: unknown) => value !== undefined;
 
@@ -38,8 +50,8 @@ class ArmorDto {
   @ValidateIf(isSet)
   @IsObject()
   @ValidateNested()
-  @Type(() => ArmorPieceDto)
-  public helmet?: ArmorPieceDto;
+  @Type((options) => (options?.object.helmet?.head === undefined ? ArmorPieceDto : HeadDto))
+  public helmet?: ArmorPieceDto | HeadDto;
 
   @ValidateIf(isSet)
   @IsObject()
@@ -94,7 +106,7 @@ export class SkinRenderDto extends UuidDto {
   @ApiProperty({
     required: false,
     type: String,
-    description: "JSON, e.g. {\"chestplate\":{\"material\":\"leather\",\"color\":16711680,\"enchanted\":true}}",
+    description: "JSON, e.g. {\"helmet\":{\"head\":\"5797c77ccee3c04c3deed770595ea83ea1e84c9a4629b753af5d351c0cc11a74\"},\"chestplate\":{\"material\":\"leather\",\"color\":16711680,\"enchanted\":true}}",
   })
   public armor?: ArmorDto;
 }

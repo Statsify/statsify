@@ -15,7 +15,7 @@ import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
-import { type RenderOptions, renderSkin } from "@statsify/skin-renderer";
+import { type Armor, type ArmorPiece, type Helmet, type RenderOptions, renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
@@ -46,15 +46,17 @@ export class SkinService {
   public async getRender(
     uuid: string,
     extruded: boolean,
-    { cape, ...options }: Omit<RenderOptions, "cape"> & { cape?: boolean }
+    { cape, armor, ...options }: SkinRenderOptions
   ): Promise<Buffer> {
     const skin = await this.getSkin(uuid);
     const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
 
     const capeImage = cape && skin.capeUrl ? await loadImage(skin.capeUrl).catch(() => undefined) : undefined;
+    const { helmet, ...pieces } = armor ?? {};
 
     return renderSkin(imageData(image), skin.slim ?? false, extruded, {
       ...options,
+      armor: { ...pieces, helmet: await this.resolveHelmet(helmet) },
       cape: capeImage && imageData(capeImage),
     });
   }
@@ -108,6 +110,14 @@ export class SkinService {
     };
   }
 
+  // A head that fails to load is left off, like a cape
+  private async resolveHelmet(helmet?: ArmorPiece | { head: string }): Promise<Helmet | undefined> {
+    if (!helmet || !("head" in helmet)) return helmet;
+
+    const head = await loadImage(`https://textures.minecraft.net/texture/${helmet.head}`).catch(() => undefined);
+    return head && { head: imageData(head) };
+  }
+
   private getUuid(username: string): Promise<string> {
     return lastValueFrom(
       this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
@@ -147,6 +157,12 @@ export class SkinService {
 const imageData = (image: Image) => {
   const { _data: data } = image as unknown as { _data: Buffer };
   return data;
+};
+
+// A helmet's head comes as a texture hash, and a cape as whether to draw the player's own
+type SkinRenderOptions = Omit<RenderOptions, "armor" | "cape"> & {
+  armor?: Omit<Armor, "helmet"> & { helmet?: ArmorPiece | { head: string } };
+  cape?: boolean;
 };
 
 interface MojangProfile {
