@@ -7,7 +7,7 @@
  */
 
 import inquirer from "inquirer";
-import { ROOT, fetchWorkspaces, inquirerConfirmation, inquirerLogger } from "./utils.js";
+import { ROOT, fetchWorkspaces, inquirerConfirmation, inquirerLogger } from "./utils.ts";
 import { join, resolve } from "node:path";
 import { once } from "node:events";
 import { rm } from "node:fs/promises";
@@ -15,11 +15,7 @@ import { spawn } from "node:child_process";
 
 const dirname = import.meta.dirname;
 
-/**
- *
- * @param {string} script
- */
-const exec = async (script) => {
+const exec = async (script: string) => {
   const child = spawn(script, {
     shell: true,
     stdio: "inherit",
@@ -35,13 +31,7 @@ const workspaces = [
   ...(await fetchWorkspaces("packages")),
 ];
 
-/**
- *
- * @param {string} path
- * @param {string[]} _workspaces
- * @returns {Promise<void>}
- */
-function deleteFromWorkspaces(path, _workspaces = workspaces) {
+function deleteFromWorkspaces(path: string, _workspaces = workspaces) {
   return Promise.all(
     _workspaces.map((workspace) =>
       rm(join(workspace, path), { recursive: true, force: true })

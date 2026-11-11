@@ -411,6 +411,12 @@ importers:
       ioredis:
         specifier: ^5.7.0
         version: 5.11.1(supports-color@7.2.0)
+      luxon:
+        specifier: ^3.5.0
+        version: 3.7.2
+      mongoose:
+        specifier: ^8.5.2
+        version: 8.24.7(socks@2.8.10)(supports-color@7.2.0)
       skia-canvas:
         specifier: 4.0.0
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -427,6 +433,9 @@ importers:
       '@types/inquirer':
         specifier: ^9.0.7
         version: 9.0.10
+      '@types/luxon':
+        specifier: ^3.4.2
+        version: 3.7.6
 
   apps/site:
     dependencies:

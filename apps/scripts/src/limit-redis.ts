@@ -6,16 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Redis from "ioredis";
+import { Redis } from "ioredis";
 import { CurrentHistoricalType } from "@statsify/api-client";
+import type { Constructor } from "@statsify/util";
 import { Guild, scanMetadata, Player } from "@statsify/schemas";
 import { Logger } from "@statsify/logger";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
 
 const logger = new Logger("Redis Limiter");
-const redis = new Redis(process.env.REDIS_URL);
+const redis = new Redis(process.env.REDIS_URL!);
 
-const runLimit = async (constructors, prefixes) => {
+const runLimit = async (constructors: Constructor[], prefixes?: CurrentHistoricalType[]) => {
   for (const [i, constructor] of constructors.entries()) {
     const oldLeaderboardPipeline = redis.pipeline();
     const limitLeaderboardPipeline = redis.pipeline();
@@ -39,6 +40,8 @@ const runLimit = async (constructors, prefixes) => {
     let memberCount = 0;
 
     for (const [key, value] of leaderboards) {
+      if (!value.leaderboard.enabled) continue;
+
       const path = `${name}.${key}`;
       const { sort } = value.leaderboard;
       let { limit } = value.leaderboard;

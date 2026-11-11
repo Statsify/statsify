@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import commands from "discord-bot/commands.json" with { type: "json" };
+import { readFile } from "node:fs/promises";
 import { z } from "zod";
 
-function toEnum(...args) {
+function toEnum<const T extends number[]>(...args: T) {
   return z.union(args.map((arg) => z.literal(arg)));
 }
 
@@ -34,7 +34,9 @@ const optionSchema = z.object({
   description_localizations,
   required: z.optional(z.boolean()),
   choices: z.optional(z.array(choicesSchema)),
-  options: z.optional(z.array(z.lazy(() => optionSchema))),
+  get options() {
+    return z.optional(z.array(optionSchema));
+  },
   channel_types: z.optional(z.array(toEnum(0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15))),
   min_value: z.optional(z.number()),
   max_value: z.optional(z.number()),
@@ -52,6 +54,17 @@ const commandSchema = z.object({
   type: z.optional(toEnum(1, 2, 3)),
 });
 
+type Command = z.infer<typeof commandSchema>;
+type CountedOption = Pick<
+  z.infer<typeof optionSchema>,
+  "name" | "description_localizations" | "choices"
+>;
+
+// The bot writes this file when it posts commands, so it isn't there to import at typecheck time
+const commands: { commands: Record<string, Command> } = JSON.parse(
+  await readFile(new URL(import.meta.resolve("discord-bot/commands.json")), "utf8")
+);
+
 for (const [commandName, command] of Object.entries(commands.commands)) {
   try {
     commandSchema.parse(command);
@@ -59,7 +72,7 @@ for (const [commandName, command] of Object.entries(commands.commands)) {
     console.error(e);
     console.log(command);
 
-    for (const error of e.issues) {
+    for (const error of (e as z.ZodError).issues) {
       console.error(error.message);
       console.error(`${command.name}.${error.path.join(".")}`);
     }
@@ -69,12 +82,12 @@ for (const [commandName, command] of Object.entries(commands.commands)) {
   }
 }
 
-const commandChars = {};
+const commandChars: Record<string, number> = {};
 
-const findLongestLocalizationLength = (localizations = {}) =>
+const findLongestLocalizationLength = (localizations: Record<string, string> = {}) =>
   Math.max(0, ...Object.values(localizations).map((l) => l.length));
 
-const findOptionsLength = (options = []) =>
+const findOptionsLength = (options: CountedOption[] = []) =>
   options
     .map(
       (option) =>
@@ -86,8 +99,8 @@ const findOptionsLength = (options = []) =>
     )
     .reduce((a, b) => a + b, 0);
 
-const findTotalCommandChars = (command) => {
-  const topCommandOptions = command.flatMap((option) => option.options);
+const findTotalCommandChars = (command: Command[]) => {
+  const topCommandOptions = command.flatMap((option) => option.options!);
   const subCommandOptions = topCommandOptions.flatMap((option) => option.options ?? []);
   const subsubCommandOptions = subCommandOptions.flatMap(
     (option) => option.options ?? []

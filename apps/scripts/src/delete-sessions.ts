@@ -9,9 +9,10 @@
 import { config } from "@statsify/util";
 import { connect } from "mongoose";
 
+// @ts-expect-error config() is async and isn't awaited, so connect() rejects the Promise as a uri
 const mongo = await connect(config("database.mongoUri"));
 
-const session = mongo.connection.db.collection("session");
+const session = mongo.connection.db!.collection("session");
 
 await session.deleteMany();
 
