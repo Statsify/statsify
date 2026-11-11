@@ -77,8 +77,9 @@ impl OrbitalCamera {
     self
   }
 
+  // A fixed render isn't bound by the viewer's zoom limits
   pub fn with_radius(mut self, radius: f32) -> Self {
-    self.update_radius(radius);
+    self.radius = radius;
     self
   }
 

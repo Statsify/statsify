@@ -13,8 +13,8 @@ pub enum Error {
   #[error("The camera yaw must be a finite number")]
   InvalidYaw,
 
-  #[error("A helmet needs exactly one of a material, a head or a skull")]
-  InvalidHelmet,
+  #[error("Enchanted armour needs a glint texture")]
+  MissingGlint,
 
   #[error(transparent)]
   Image(#[from] image::ImageError),
