@@ -30,7 +30,8 @@ export const LastHistoricalType = {
   LAST_MONTH: "LAST_MONTH",
 } as const;
 
-export type LastHistoricalType = (typeof LastHistoricalType)[keyof typeof LastHistoricalType];
+export type LastHistoricalType =
+  (typeof LastHistoricalType)[keyof typeof LastHistoricalType];
 
 export const HistoricalTimes = { ...LastHistoricalType, ...CurrentHistoricalType };
 export type HistoricalType = LastHistoricalType | CurrentHistoricalType;
