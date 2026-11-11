@@ -7,6 +7,7 @@
  */
 
 export { METADATA_KEY } from "./metadata/constants.js";
+export * from "./account/index.js";
 export * from "./color.js";
 export * from "./commands/index.js";
 export * from "./game/index.js";
