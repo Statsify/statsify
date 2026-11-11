@@ -6,30 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Fuse from "fuse.js";
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import { Guild, getLeaderboardFields } from "@statsify/schemas";
-import { removeFormatting } from "@statsify/util";
+import { LeaderboardChoices } from "./leaderboard-names.js";
 
-const list = getLeaderboardFields(Guild).map(
-  ([key, { leaderboard }]) => ({
-    value: key,
-    name: removeFormatting(leaderboard.name),
-  })
-);
-
-const fuse = new Fuse(list, {
-  keys: ["name", "key"],
-  includeScore: false,
-  shouldSort: true,
-  isCaseSensitive: false,
-  threshold: 0.3,
-  ignoreLocation: true,
-});
+const choices = new LeaderboardChoices(getLeaderboardFields(Guild));
 
 export class GuildLeaderboardArgument extends AbstractArgument {
   public name = "leaderboard";
@@ -47,12 +32,6 @@ export class GuildLeaderboardArgument extends AbstractArgument {
     context: CommandContext
   ): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
-
-    if (!currentValue) return list.slice(0, 25);
-
-    return fuse
-      .search(currentValue)
-      .map((result) => result.item)
-      .slice(0, 25);
+    return choices.search(context.t(), currentValue);
   }
 }

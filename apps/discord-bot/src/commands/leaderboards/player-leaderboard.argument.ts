@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Fuse from "fuse.js";
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
@@ -18,31 +17,18 @@ import {
   PlayerStats,
   getLeaderboardFields,
 } from "@statsify/schemas";
-import { removeFormatting } from "@statsify/util";
+import { LeaderboardChoices } from "./leaderboard-names.js";
 
 const entries = Object.entries(
   Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
 );
 
-const FUSE_OPTIONS = {
-  keys: ["name", "key"],
-  includeScore: false,
-  shouldSort: true,
-  isCaseSensitive: false,
-  threshold: 0.3,
-  ignoreLocation: true,
-};
-
-const fields = entries.reduce((acc, [prefix, value]) => {
-  const list = getLeaderboardFields(value.type.type).map(
-    ([key, { leaderboard }]) => ({ value: key, name: removeFormatting(leaderboard.name) })
-  );
-
-  const fuse = new Fuse(list, FUSE_OPTIONS);
-  acc[prefix as keyof PlayerStats] = [fuse, list];
-
-  return acc;
-}, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice<string>>, APIApplicationCommandOptionChoice[]]>);
+const choices = Object.fromEntries(
+  entries.map(([prefix, value]) => [
+    prefix,
+    new LeaderboardChoices(getLeaderboardFields(value.type.type)),
+  ])
+) as Record<keyof PlayerStats, LeaderboardChoices>;
 
 export class PlayerLeaderboardArgument extends AbstractArgument {
   public name = "leaderboard";
@@ -60,14 +46,6 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
     context: CommandContext
   ): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
-
-    const [fuse, list] = fields[this.prefix];
-
-    if (!currentValue) return list.slice(0, 25);
-
-    return fuse
-      .search(currentValue)
-      .map((result) => result.item)
-      .slice(0, 25);
+    return choices[this.prefix].search(context.t(), currentValue);
   }
 }
