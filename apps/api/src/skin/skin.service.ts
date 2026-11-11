@@ -110,7 +110,6 @@ export class SkinService {
     };
   }
 
-  // A head that fails to load is left off, like a cape
   private async resolveHelmet(helmet?: ArmorPiece | { head: string }): Promise<Helmet | undefined> {
     if (!helmet || !("head" in helmet)) return helmet;
 
@@ -159,7 +158,6 @@ const imageData = (image: Image) => {
   return data;
 };
 
-// A helmet's head comes as a texture hash, and a cape as whether to draw the player's own
 type SkinRenderOptions = Omit<RenderOptions, "armor" | "cape"> & {
   armor?: Omit<Armor, "helmet"> & { helmet?: ArmorPiece | { head: string } };
   cape?: boolean;
