@@ -84,7 +84,8 @@ setCanvasBackend(skiaCanvas);
 An atlas is a pack stack's icons drawn ahead of time: one image, and a JSON map of where each
 item's icon sits, so a page can show inventories without loading a pack. `atlas/` holds two:
 `vanilla-26.3`, from the 26.3 client, and `vanilla-1.8.9`, with the 1.8.9 client jar over it. Each
-image is named by its content hash, so it can be cached for good.
+image is named by its content hash, so it can be cached for good. The map keeps its name, so serve it
+`no-cache`: a regeneration deletes the image an old map names.
 
 ```sh
 pnpm --filter @statsify/inventory build
