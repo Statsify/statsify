@@ -296,7 +296,7 @@ impl Model {
       material,
       meshes: inner_meshes.into_iter().chain(outer_meshes).collect(),
       attachments: vec![],
-      wears_armor: armor.pieces().next().is_some(),
+      wears_armor: armor.helmet.is_some() || armor.pieces().next().is_some(),
     };
 
     model.attach_armor(device, queue, layout, armor);
