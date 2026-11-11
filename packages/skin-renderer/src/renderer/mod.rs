@@ -507,8 +507,8 @@ impl SkinRenderer<native::NativeBackend> {
 
     let radius = model.pose().camera_radius();
 
-    // Boots reach below the frame that fits a bare player, and every armoured render
-    // pulls back with them so they share one scale
+    // Boots and a player head reach past the frame that fits a bare player, and every
+    // armoured render pulls back with them so they share one scale
     let radius = if model.wears_armor() {
       radius + 3.0
     } else {
