@@ -26,11 +26,9 @@ interface HistoryEntry {
   lookups: number[];
 }
 
-/** Each lookup counts half as much every three days, so a player checked often outranks one checked once recently. */
 const frecency = (lookups: number[], now: number) =>
   lookups.reduce((score, time) => score + 0.5 ** ((now - time) / HALF_LIFE_MS), 0);
 
-/** The global results are fuzzy matches, so only the personal tiers are filtered to the query's prefix. */
 const blend = (query: string, personal: string[][], global: string[]) => {
   const prefix = query.toLowerCase();
   const seen = new Set<string>();
@@ -71,7 +69,6 @@ export class AutocompleteService {
       this.suggestPlayers(id, query);
   }
 
-  /** Records only names that are stored, so a typo or a failed lookup is never suggested back. */
   public async record(type: AutocompleteType, id: string, name: string) {
     const lower = name.toLowerCase();
 
@@ -120,9 +117,9 @@ export class AutocompleteService {
   }
 
   private async suggestGuilds(id: string, query: string) {
-    const [guild, history, stored] = await Promise.all([
-      this.getLinkedGuild(id),
+    const [history, guild, stored] = await Promise.all([
       this.getHistory(AutocompleteType.GUILD, id),
+      this.getLinkedGuild(id),
       this.guildService.search(query),
     ]);
 
@@ -138,7 +135,6 @@ export class AutocompleteService {
       .map((entry) => entry.name);
   }
 
-  /** Every write refreshes the key's expiry, so lookups past the window are dropped here, one by one. */
   private async readHistory(type: AutocompleteType, id: string, now: number): Promise<HistoryEntry[]> {
     const raw = await this.redis.get(this.historyKey(type, id));
     if (!raw) return [];

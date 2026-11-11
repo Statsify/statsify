@@ -111,7 +111,6 @@ export class CommandListener extends AbstractCommandListener {
     this.recordLookups(command, context, id);
   }
 
-  /** The API keeps only names that are stored by now, so a failed command records nothing. */
   private recordLookups(command: CommandResolvable, context: CommandContext, userId: string) {
     const guildType = context.option<GuildQuery>("type");
 

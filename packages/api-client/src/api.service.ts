@@ -20,7 +20,6 @@ import {
   GetCommandUsageResponse,
   GetGamecountsResponse,
   GetGuildResponse,
-  GetGuildSearchResponse,
   GetKeyResponse,
   GetPlayerResponse,
   GetPlayerSearchResponse,
@@ -123,17 +122,6 @@ export class ApiService {
     });
   }
 
-  public getGuildAutocomplete(query: string) {
-    return this.requestKey<GetGuildSearchResponse, "guilds">(
-      "/guild/search",
-      "guilds",
-      { query }
-    );
-  }
-
-  /**
-   * @param id Discord ID of the user typing, whose lookups and guild rank first
-   */
   public getAutocomplete(type: AutocompleteType, id: string, query: string) {
     return this.requestKey<GetAutocompleteResponse, "names">("/autocomplete", "names", {
       type,

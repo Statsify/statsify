@@ -47,13 +47,13 @@
     "@types/luxon": "^3.4.2"
   },
   "imports": {
-    "#autocomplete": {
-      "types": "./src/autocomplete/index.ts",
-      "default": "./dist/autocomplete/index.js"
-    },
     "#auth": {
       "types": "./src/auth/index.ts",
       "default": "./dist/auth/index.js"
+    },
+    "#autocomplete": {
+      "types": "./src/autocomplete/index.ts",
+      "default": "./dist/autocomplete/index.js"
     },
     "#commands": {
       "types": "./src/commands/index.ts",
