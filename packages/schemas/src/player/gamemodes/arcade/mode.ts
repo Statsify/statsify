@@ -1388,9 +1388,6 @@ export class ZombiesMapDifficulty {
   public deaths: number;
 
   @Field({ leaderboard: { enabled: false } })
-  public kdr: number;
-
-  @Field({ leaderboard: { enabled: false } })
   public bestRound: number;
 
   @Field()
@@ -1406,7 +1403,6 @@ export class ZombiesMapDifficulty {
     this.fastestWin = (data[`fastest_time_30_zombies${mode}`] ?? 0) * 1000;
     this.kills = data[`zombie_kills_zombies${mode}`];
     this.deaths = data[`deaths_zombies${mode}`];
-    this.kdr = ratio(this.kills, this.deaths);
     this.bestRound = data[`best_round_zombies${mode}`];
     this.doorsOpened = data[`doors_opened_zombies${mode}`];
     this.totalRounds = data[`total_rounds_survived_zombies${mode}`];
@@ -1416,6 +1412,14 @@ export class ZombiesMapDifficulty {
 export class ZombiesOverall extends ZombiesMapDifficulty {
   @Field()
   public declare kills: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public kdr: number;
+
+  public constructor(data: APIData) {
+    super(data);
+    this.kdr = ratio(this.kills, this.deaths);
+  }
 }
 
 export class ZombiesMap {
