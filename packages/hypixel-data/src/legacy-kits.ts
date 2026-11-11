@@ -7,10 +7,10 @@
  */
 
 import { SLOTS, fromLegacyKit, inRange, kitKey } from "./kits.js";
-import type { ItemStack } from "../core/item-stack.js";
+import type { ItemStack } from "@statsify/textures";
 import { armorOf } from "./armor.js";
-import data from "../../data/minecraft-data.json" with { type: "json" };
-import dumped from "../../data/legacy-kits.json" with { type: "json" };
+import data from "@statsify/textures/data/minecraft-data.json" with { type: "json" };
+import dumped from "../data/legacy-kits.json" with { type: "json" };
 
 export interface LegacyKit {
   /** As its editor's title names it, like Hype Train */

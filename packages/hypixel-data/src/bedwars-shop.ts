@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { ItemStack, PotionEffect } from "../core/item-stack.js";
+import type { ItemStack, PotionEffect } from "@statsify/textures";
 
 // The BedWars item shop as Hypixel's NBT had it in game on 2026-10-26, with 26.3 ids. The shop
 // shows white wool and plain clay and glass whatever your team.
