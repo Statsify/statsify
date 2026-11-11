@@ -81,7 +81,6 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   }
 
   public async onEvent(data: GatewayGuildMemberUpdateDispatchData): Promise<void> {
-    // Until a load succeeds every member reads as having no premium, so retry a failed one
     this.premiumLoad ??= this.loadPremium().catch((error) => {
       this.premiumLoad = undefined;
       throw error;
