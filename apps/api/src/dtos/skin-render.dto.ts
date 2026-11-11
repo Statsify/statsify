@@ -46,11 +46,6 @@ class PlayerHeadDto {
 
   @IsEmpty()
   public skull?: undefined;
-
-  // Accepted so an enchanted head validates, but the game draws no glint on a worn head
-  @IsOptional()
-  @IsBoolean()
-  public enchanted?: boolean;
 }
 
 class SkullDto {
@@ -96,7 +91,7 @@ export class ArmorDto {
 
 export class SkinRenderDto extends UuidDto {
   @IsOptional()
-  @Transform(({ value }) => (value === "" ? undefined : +value))
+  @Transform((params) => +params.value)
   @IsNumber()
   @Min(-Math.PI * 2)
   @Max(Math.PI * 2)
