@@ -41,6 +41,11 @@ class PlayerHeadDto {
   // A helmet is either a head or a material, never both
   @IsEmpty()
   public material?: undefined;
+
+  // Accepted so an enchanted head validates, but the game draws no glint on a worn head
+  @IsOptional()
+  @IsBoolean()
+  public enchanted?: boolean;
 }
 
 // IsOptional also lets null through, which the renderer rejects with a 500
