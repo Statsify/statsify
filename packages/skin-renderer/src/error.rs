@@ -6,6 +6,9 @@ pub enum Error {
   #[error("The provided image is not a valid skin texture")]
   InvalidSkinTexture,
 
+  #[error("The provided image is too large for a cape texture")]
+  InvalidCapeTexture,
+
   #[error(transparent)]
   Image(#[from] image::ImageError),
 
