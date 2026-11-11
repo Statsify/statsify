@@ -11,7 +11,7 @@ import { AccountService } from "./account.service.js";
 import { Module } from "@nestjs/common";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
-/** Its own module so the bot's verify routes (UserModule) can keep accounts in step without the rest of the site. */
+/** Apart from `SiteModule`, so `UserModule` can use it without the rest of the site. */
 @Module({
   imports: [TypegooseModule.forFeature([Account, AccountProfile, User, Player])],
   providers: [AccountService],

@@ -152,7 +152,6 @@ function LoggedIn({ initial }: { initial: AccountData }) {
   );
 }
 
-/** One login owns several profiles; the switcher picks the one the panel below acts on. */
 function ProfileSwitcher({
   profiles,
   selected,
@@ -197,7 +196,6 @@ function ProfilePanel({
   onUnlink: () => void;
 }) {
   const { t, i18n } = useTranslation();
-  // Unlinking takes a second press, since it unclaims the page and, for the last profile, the bot's verification.
   const [confirming, setConfirming] = useState<string>();
   const confirm = confirming === profile.uuid;
 

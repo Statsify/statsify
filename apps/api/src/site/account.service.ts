@@ -30,8 +30,8 @@ const sessionKey = (session: string) => `site:account:session:${createHash("sha2
 const normalizeUuid = (uuid: string) => uuid.replaceAll("-", "").toLowerCase();
 
 /**
- * Site logins and the Minecraft profiles they own. Every method but `login` takes the visitor's session and acts for
- * its account alone, so the site's key can't act for anyone without that visitor's cookie.
+ * Site logins and the Minecraft profiles they own. Each of the site's calls but `login` takes the visitor's session and
+ * acts for its account alone, so the site's key can't act for anyone without that visitor's cookie.
  */
 @Injectable()
 export class AccountService {
@@ -43,7 +43,6 @@ export class AccountService {
     @InjectRedis() private readonly redis: Redis
   ) {}
 
-  /** Swaps a Discord authorization code for the user's ID, finds or makes their account and opens a session. */
   public async login(code: string, redirectUri: string): Promise<{ session: string }> {
     const discordId = await discordUserId(code, redirectUri);
 
@@ -73,7 +72,6 @@ export class AccountService {
     return this.page(account.id);
   }
 
-  /** For a visitor who ran the bot's `/verify` since logging in. */
   public async claimVerified(session: string): Promise<AccountPage> {
     const account = await this.account(session);
     await this.linkVerified(account);
@@ -90,7 +88,6 @@ export class AccountService {
     return this.page(account.id);
   }
 
-  /** The primary can go only once another profile is primary, or when it's the account's last one. */
   public async unlink(session: string, input: string): Promise<AccountPage> {
     const account = await this.account(session);
     const uuid = normalizeUuid(input);
@@ -151,10 +148,7 @@ export class AccountService {
     if (!(await this.profileModel.exists({ uuid, accountId }))) throw new ORPCError("NOT_FOUND");
   }
 
-  /**
-   * Links the UUID the account's Discord user verified with the bot, moving it from any account that linked it before
-   * that `/verify`, and makes it the primary, since the primary is the bot's verified UUID.
-   */
+  /** Moves the bot-verified UUID here as the primary, from any account that linked it before that `/verify`. */
   private async linkVerified(account: Account) {
     if (!account.discordId) return;
 
@@ -241,7 +235,7 @@ export class AccountService {
   }
 }
 
-/** The code flow's two calls. The access token is used once here and never kept. */
+/** The access token is used once here and never kept. */
 async function discordUserId(code: string, redirectUri: string): Promise<string> {
   const [clientId, clientSecret] = await Promise.all([
     config("site.discordLogin.clientId", { required: false }),

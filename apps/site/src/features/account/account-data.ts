@@ -58,7 +58,6 @@ export const unlinkProfile = createServerFn({ method: "POST" })
   .validator(ProfileInput)
   .handler(({ data }) => act((session) => rpcServerClient.account.unlink({ session, uuid: data.uuid })));
 
-/** After the visitor ran the bot's `/verify`: links that profile. */
 export const claimVerified = createServerFn({ method: "POST" }).handler(() =>
   act((session) => rpcServerClient.account.claimVerified({ session }))
 );

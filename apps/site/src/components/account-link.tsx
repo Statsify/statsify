@@ -16,9 +16,8 @@ import { useTranslation } from "react-i18next";
 const CELL = "col-start-1 row-start-1";
 
 /**
- * The header's way to `/account`: the logged-in visitor's head, or Log In. The server renders it empty, since the page
- * is cached for everyone; the browser fills it in from the account hint. Every state takes the same cell, sized to the
- * widest, so the header doesn't move when it does.
+ * Empty from the server, since pages are cached for everyone; the browser fills it in from the account hint. Every
+ * state shares one cell sized to the widest, so the header doesn't move.
  */
 export function AccountLink({ className }: { className?: string }) {
   const { t } = useTranslation();

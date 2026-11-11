@@ -679,7 +679,6 @@ export const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
 const SessionInputSchema = z.object({ session: SessionSchema });
 const AccountProfileInputSchema = SessionInputSchema.extend({ uuid: UuidSchema });
 const AccountLoginInputSchema = z.object({
-  /** The code Discord sent to the site's callback. */
   code: z.string().min(1).max(256),
   /** The callback URL the authorize request named, which the token exchange has to repeat. */
   redirectUri: z.url().max(512),

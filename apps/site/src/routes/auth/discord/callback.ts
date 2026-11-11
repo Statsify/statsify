@@ -13,7 +13,7 @@ import { rpcServerClient } from "~/server/rpc.server";
 
 /**
  * Discord's redirect back. The `state` has to match the visitor's cookie, so nobody can log a visitor into another
- * account with a code of their own. The API swaps the code for the Discord user and opens the session.
+ * account with a code of their own.
  */
 export const Route = createFileRoute("/auth/discord/callback")({
   server: {

@@ -10,7 +10,6 @@ import { clearSessionCookie, redirect, sessionToken } from "~/server/account.ser
 import { createFileRoute } from "@tanstack/react-router";
 import { rpcServerClient } from "~/server/rpc.server";
 
-/** The account page's Log out form: ends the session in the API, clears the cookie and goes back to the page. */
 export const Route = createFileRoute("/auth/logout")({
   server: {
     handlers: {
