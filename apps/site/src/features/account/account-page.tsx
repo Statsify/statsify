@@ -17,8 +17,9 @@ import { PageBackground } from "~/components/ui/background";
 import { SkinBust, SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
 import { dashedUuid } from "~/lib/uuid";
+import { rememberAccount } from "~/lib/account-hint";
 import { dateFormat } from "~/features/guild/guild-page";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export function AccountPage({
@@ -49,6 +50,7 @@ export function AccountPage({
 
 function LoggedOut({ loginEnabled, failed }: { loginEnabled: boolean; failed: boolean }) {
   const { t } = useTranslation();
+  useEffect(() => rememberAccount(null), []);
 
   return (
     <Box className={cn(CELL, "content:flex-col content:gap-4 content:py-6 content:text-center")}>
@@ -79,6 +81,7 @@ function LoggedIn({ initial }: { initial: AccountData }) {
   }
   const [pending, setPending] = useState(false);
   const [chosen, setChosen] = useState<string>();
+  useEffect(() => rememberAccount(account), [account]);
 
   const primary = account.profiles.find((profile) => profile.primary);
   const selected = account.profiles.find((profile) => profile.uuid === chosen) ?? primary ?? account.profiles[0];

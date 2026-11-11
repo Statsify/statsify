@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { AccountLink } from "~/components/account-link";
 import { Link, useMatch, useRouterState } from "@tanstack/react-router";
 import { Logo, Wordmark } from "~/components/icons/logo";
 import { Search } from "~/components/search";
@@ -144,6 +145,7 @@ export function Header() {
             ))}
           </ul>
         </nav>
+        <AccountLink className={NAV_LINK} />
       </div>
     </header>
   );
