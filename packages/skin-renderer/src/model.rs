@@ -254,6 +254,7 @@ pub struct Model {
   material: Material,
   meshes: Vec<Mesh>,
   attachments: Vec<Attachment>,
+  wears_armor: bool,
 }
 
 impl Model {
@@ -295,10 +296,15 @@ impl Model {
       material,
       meshes: inner_meshes.into_iter().chain(outer_meshes).collect(),
       attachments: vec![],
+      wears_armor: armor.pieces().next().is_some(),
     };
 
     model.attach_armor(device, queue, layout, armor);
     model
+  }
+
+  pub fn wears_armor(&self) -> bool {
+    self.wears_armor
   }
 
   fn attach_armor(
