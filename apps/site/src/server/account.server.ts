@@ -7,6 +7,7 @@
  */
 
 import { NO_STORE_EDGE } from "~/lib/cache";
+import { SESSION_TTL_SECONDS } from "@statsify/contract";
 import { getCookie } from "@tanstack/react-start/server";
 import { randomBytes } from "node:crypto";
 import { siteConfig } from "./config.server";
@@ -15,9 +16,6 @@ const SESSION_COOKIE = "statsify_session";
 /** The login's `state`, kept only for the trip to Discord and back. */
 const STATE_COOKIE = "statsify_login_state";
 const STATE_PATH = "/auth/discord";
-
-/** The API's session TTL, so the cookie and the session end together. */
-const SESSION_MAX_AGE_SECONDS = 30 * 24 * 60 * 60;
 const STATE_MAX_AGE_SECONDS = 10 * 60;
 
 /** 32 random bytes, base64url: the session token's and the login state's shape. */
@@ -52,7 +50,7 @@ export function redirect(location: string, cookies: string[]): Response {
   return new Response(null, { status: 303, headers });
 }
 
-export const sessionCookie = (session: string) => cookie(SESSION_COOKIE, session, SESSION_MAX_AGE_SECONDS, "/");
+export const sessionCookie = (session: string) => cookie(SESSION_COOKIE, session, SESSION_TTL_SECONDS, "/");
 export const clearSessionCookie = () => cookie(SESSION_COOKIE, "", 0, "/");
 export const stateCookie = (state: string) => cookie(STATE_COOKIE, state, STATE_MAX_AGE_SECONDS, STATE_PATH);
 export const clearStateCookie = () => cookie(STATE_COOKIE, "", 0, STATE_PATH);

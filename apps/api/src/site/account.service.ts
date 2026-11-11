@@ -7,7 +7,7 @@
  */
 
 import { Account, AccountProfile, Player, User } from "@statsify/schemas";
-import type { AccountPage } from "@statsify/contract";
+import { type AccountPage, SESSION_TTL_SECONDS } from "@statsify/contract";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
@@ -22,7 +22,6 @@ type ProfileModel = ReturnModelType<typeof AccountProfile>;
 type UserModel = ReturnModelType<typeof User>;
 type PlayerModel = ReturnModelType<typeof Player>;
 
-const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
 const DISCORD_API = "https://discord.com/api/v10";
 const DISCORD_TIMEOUT_MS = 5000;
 

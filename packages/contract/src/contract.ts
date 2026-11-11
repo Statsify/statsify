@@ -675,6 +675,7 @@ const LeaderboardGameInputSchema = z.object({
 
 /** The opaque token in the visitor's session cookie: 32 random bytes, base64url. */
 const SessionSchema = z.string().regex(/^[\w-]{43}$/);
+export const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
 const SessionInputSchema = z.object({ session: SessionSchema });
 const AccountProfileInputSchema = SessionInputSchema.extend({ uuid: UuidSchema });
 const AccountLoginInputSchema = z.object({
