@@ -351,9 +351,10 @@ impl Model {
   ) {
     let placement = Part::Head.placement(ModelKind::Classic.arm_width());
     let (position, rotation) = placement.resolve();
+    let (head_location, hat_location) = Part::Head.skin_layer_locations();
     let mut geometry = Geometry::new(vec![], vec![]);
 
-    for (location, inflation) in [((0, 0), 0.0), ((32, 0), 0.25)] {
+    for (location, inflation) in [(head_location, 0.0), (hat_location, 0.25)] {
       geometry.combine(
         BoxGeometry {
           position,
