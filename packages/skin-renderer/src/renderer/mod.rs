@@ -12,11 +12,13 @@ use winit::dpi::PhysicalSize;
 use winit::event::{ElementState, MouseScrollDelta};
 
 use self::backend::{Backend, OutputTexture};
+use crate::armor::{load_texture, Armor, GLINT_TEXTURE};
 use crate::camera::{Camera, CameraUniform, OrbitalCamera};
 use crate::error::Result;
 use crate::geometry::vertex::{Vertex, VertexDescriptor};
 use crate::instance::InstanceRaw;
 use crate::light::LightUniform;
+use crate::material::Material;
 use crate::model::{DrawModel, Model, ModelKind, ModelOuterLayer};
 use crate::skin_loader::load_skin_from_memory;
 use crate::texture::Texture;
@@ -40,6 +42,8 @@ pub struct SkinRenderer<T: Backend> {
   camera_bind_group: wgpu::BindGroup,
   light_bind_group: wgpu::BindGroup,
   render_pipeline: wgpu::RenderPipeline,
+  glint_pipeline: wgpu::RenderPipeline,
+  glint_material: Material,
   instance_buffer: wgpu::Buffer,
 
   depth_texture: Texture,
@@ -85,15 +89,57 @@ impl<T: Backend> SkinRenderer<T> {
     let (light_uniform, light_buffer, light_bind_group_layout, light_bind_group) =
       Self::create_light(device, &camera);
 
+    let bind_group_layouts = [
+      &texture_bind_group_layout,
+      &camera_bind_group_layout,
+      &light_bind_group_layout,
+    ];
+
     let render_pipeline = Self::create_render_pipeline(
       device,
-      &[
-        &texture_bind_group_layout,
-        &camera_bind_group_layout,
-        &light_bind_group_layout,
-      ],
+      &bind_group_layouts,
       &config,
+      "fs_main",
+      wgpu::BlendState::ALPHA_BLENDING,
+      true,
+      wgpu::CompareFunction::LessEqual,
     );
+
+    // Equal depth, so the glint only lands on visible armour
+    let glint_pipeline = Self::create_render_pipeline(
+      device,
+      &bind_group_layouts,
+      &config,
+      "fs_glint",
+      wgpu::BlendState {
+        color: wgpu::BlendComponent {
+          src_factor: wgpu::BlendFactor::One,
+          dst_factor: wgpu::BlendFactor::One,
+          operation: wgpu::BlendOperation::Add,
+        },
+        alpha: wgpu::BlendComponent {
+          src_factor: wgpu::BlendFactor::Zero,
+          dst_factor: wgpu::BlendFactor::One,
+          operation: wgpu::BlendOperation::Add,
+        },
+      },
+      false,
+      wgpu::CompareFunction::Equal,
+    );
+
+    let glint_texture = Texture::from_image_with_sampler(
+      device,
+      backend.queue(),
+      &load_texture(GLINT_TEXTURE),
+      &wgpu::SamplerDescriptor {
+        address_mode_u: wgpu::AddressMode::Repeat,
+        address_mode_v: wgpu::AddressMode::Repeat,
+        mag_filter: wgpu::FilterMode::Linear,
+        min_filter: wgpu::FilterMode::Linear,
+        ..Default::default()
+      },
+    )?;
+    let glint_material = Material::new(device, glint_texture, &texture_bind_group_layout);
 
     let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
 
@@ -113,6 +159,8 @@ impl<T: Backend> SkinRenderer<T> {
       camera_bind_group,
       light_bind_group,
       render_pipeline,
+      glint_pipeline,
+      glint_material,
       instance_buffer,
 
       depth_texture,
@@ -216,6 +264,10 @@ impl<T: Backend> SkinRenderer<T> {
     device: &wgpu::Device,
     bind_group_layouts: &[&wgpu::BindGroupLayout],
     config: &wgpu::SurfaceConfiguration,
+    fragment_entry_point: &str,
+    blend: wgpu::BlendState,
+    depth_write_enabled: bool,
+    depth_compare: wgpu::CompareFunction,
   ) -> wgpu::RenderPipeline {
     let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
       label: Some("shader.wgsl"),
@@ -239,10 +291,10 @@ impl<T: Backend> SkinRenderer<T> {
       },
       fragment: Some(wgpu::FragmentState {
         module: &shader,
-        entry_point: Some("fs_main"),
+        entry_point: Some(fragment_entry_point),
         targets: &[Some(wgpu::ColorTargetState {
           format: config.format,
-          blend: Some(wgpu::BlendState::ALPHA_BLENDING),
+          blend: Some(blend),
           write_mask: wgpu::ColorWrites::ALL,
         })],
         compilation_options: wgpu::PipelineCompilationOptions::default(),
@@ -258,8 +310,8 @@ impl<T: Backend> SkinRenderer<T> {
       },
       depth_stencil: Some(wgpu::DepthStencilState {
         format: Texture::DEPTH_FORMAT,
-        depth_write_enabled: true,
-        depth_compare: wgpu::CompareFunction::LessEqual,
+        depth_write_enabled,
+        depth_compare,
         stencil: wgpu::StencilState::default(),
         bias: wgpu::DepthBiasState::default(),
       }),
@@ -309,6 +361,14 @@ impl<T: Backend> SkinRenderer<T> {
       render_pass.set_vertex_buffer(1, self.instance_buffer.slice(..));
       render_pass.set_pipeline(&self.render_pipeline);
       render_pass.draw_model(model, &self.camera_bind_group, &self.light_bind_group);
+
+      render_pass.set_pipeline(&self.glint_pipeline);
+      render_pass.draw_glint(
+        model,
+        &self.glint_material,
+        &self.camera_bind_group,
+        &self.light_bind_group,
+      );
     };
 
     (encoder, output_texture)
@@ -319,15 +379,23 @@ impl<T: Backend> SkinRenderer<T> {
     skin: &[u8],
     model_kind: ModelKind,
     model_outer_layer: ModelOuterLayer,
+    armor: &Armor,
   ) -> Result<Model> {
-    Ok(Model::new(
-      self.backend.device(),
-      self.backend.queue(),
+    let device = self.backend.device();
+    let queue = self.backend.queue();
+
+    let mut model = Model::new(
+      device,
+      queue,
       &self.texture_bind_group_layout,
       load_skin_from_memory(skin)?,
       model_kind,
       model_outer_layer,
-    ))
+    );
+
+    model.attach_armor(device, queue, &self.texture_bind_group_layout, armor);
+
+    Ok(model)
   }
 }
 

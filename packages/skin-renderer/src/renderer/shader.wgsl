@@ -77,6 +77,12 @@ var s_diffuse: sampler;
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     let object_color: vec4<f32> = textureSample(t_diffuse, s_diffuse, in.texture_coordinates);
 
+    // Armour has see-through gaps, which must not hide what's drawn behind them later
+    // or take the glint, which only draws where the armour wrote depth
+    if object_color.a == 0.0 {
+        discard;
+    }
+
     let ambient_strength = 0.2;
     let ambient_color = light.color * ambient_strength;
 
@@ -88,4 +94,23 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     let result = (ambient_color + diffuse_color) * object_color.xyz;
 
     return vec4<f32>(result, object_color.a);
+}
+
+// The game squares and adds each glint layer on gamma-encoded colours, so the
+// sample is encoded again or the glint all but disappears
+@fragment
+fn fs_glint(in: VertexOutput) -> @location(0) vec4<f32> {
+    let tint = vec3<f32>(0.38, 0.19, 0.608);
+    var glint = vec3<f32>(0.0);
+
+    for (var i = 0; i < 2; i++) {
+        let angle = radians(30.0 - f32(i) * 60.0);
+        let rotation = mat2x2<f32>(cos(angle), sin(angle), -sin(angle), cos(angle));
+        let uv = rotation * in.texture_coordinates / 3.0;
+        let texel = pow(textureSample(t_diffuse, s_diffuse, uv).rgb, vec3<f32>(1.0 / 2.2));
+        let layer = texel * tint;
+        glint += layer * layer;
+    }
+
+    return vec4<f32>(glint, 1.0);
 }

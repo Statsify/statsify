@@ -33,6 +33,8 @@ pub(super) trait TextureProvider {
 pub struct TextureRegion {
   pub location: Coordinate<u32>,
   pub texture_size: Coordinate<u32>,
+  // Mirrors the texture, as the game does for left limbs
+  pub mirror: bool,
 }
 
 impl TextureProvider for TextureRegion {
@@ -43,13 +45,19 @@ impl TextureProvider for TextureRegion {
   ) -> (u32, u32, u32, u32) {
     let (x, y) = self.location;
 
+    let orientation = match (self.mirror, orientation) {
+      (true, Orientation::Left) => &Orientation::Right,
+      (true, Orientation::Right) => &Orientation::Left,
+      _ => orientation,
+    };
+
     let (width, height, depth) = (
       dimensions.x as u32,
       dimensions.y as u32,
       dimensions.z as u32,
     );
 
-    match orientation {
+    let (x1, y1, x2, y2) = match orientation {
       Orientation::Top => (x + depth, y, x + width + depth, y + depth),
       Orientation::Bottom => (x + (2 * width) + depth, y, x + depth + width, y + depth),
       Orientation::Front => (x + depth, y + depth, x + width + depth, y + height + depth),
@@ -66,6 +74,12 @@ impl TextureProvider for TextureRegion {
         x + width + (2 * depth),
         y + height + depth,
       ),
+    };
+
+    if self.mirror {
+      (x2, y1, x1, y2)
+    } else {
+      (x1, y1, x2, y2)
     }
   }
 
@@ -108,10 +122,15 @@ pub(super) struct Prism {
 
 impl Prism {
   pub fn new(dimensions: Vector3<f32>, position: Vector3<f32>) -> Self {
+    Self::inflated(dimensions, position, 0.0)
+  }
+
+  // The texture keeps the layout of `dimensions`
+  pub fn inflated(dimensions: Vector3<f32>, position: Vector3<f32>, inflation: f32) -> Self {
     // Scale the prism from the center
-    let half_width = dimensions.x / 2.0;
-    let half_height = dimensions.y / 2.0;
-    let half_depth = dimensions.z / 2.0;
+    let half_width = dimensions.x / 2.0 + inflation;
+    let half_height = dimensions.y / 2.0 + inflation;
+    let half_depth = dimensions.z / 2.0 + inflation;
 
     // Vertices relative to the center
     let top_left_front = Vector3::new(-half_width, half_height, half_depth) + position;

@@ -1,8 +1,9 @@
-use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation3, Vector3, Zero};
+use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation3, Vector3};
 use image::DynamicImage;
 
+use crate::armor::Armor;
 use crate::geometry::coordinate::Coordinate;
-use crate::geometry::{BoxGeometry, OuterLayerGeometry, Rotation, TextureRegion};
+use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, TextureRegion};
 use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
@@ -13,6 +14,16 @@ pub enum ModelKind {
   Slim,
 }
 
+impl ModelKind {
+  fn arm_width(&self) -> f32 {
+    match self {
+      ModelKind::Classic => 4.0,
+      ModelKind::Slim => 3.0,
+    }
+  }
+}
+
+#[derive(Clone, Copy)]
 pub enum ModelOuterLayer {
   // Extrude outer layer (3D)
   D3,
@@ -22,56 +33,183 @@ pub enum ModelOuterLayer {
 
 const VOXEL_3D_THICKNESS: f32 = 0.75;
 
+#[derive(Clone, Copy)]
 struct CenterRotation {
   pub quaternion: Quaternion<f32>,
   pub pivot_delta: Vector3<f32>,
 }
 
+struct Placement {
+  position: Vector3<f32>,
+  dimensions: Vector3<f32>,
+  rotation: Option<CenterRotation>,
+}
+
+impl Placement {
+  fn resolve(&self) -> (Vector3<f32>, Option<Rotation>) {
+    let mut position = self.position;
+    position.y -= 1.0;
+
+    let rotation = self.rotation.map(|rotation| Rotation {
+      quaternion: rotation.quaternion,
+      pivot: position + rotation.pivot_delta,
+    });
+
+    (position, rotation)
+  }
+}
+
+// Right and left are the player's own, so the right limbs sit on the -x side
+#[derive(Clone, Copy, PartialEq)]
+pub enum Part {
+  Head,
+  Body,
+  RightArm,
+  LeftArm,
+  RightLeg,
+  LeftLeg,
+}
+
+impl Part {
+  const ALL: [Part; 6] = [
+    Part::Head,
+    Part::Body,
+    Part::RightArm,
+    Part::LeftArm,
+    Part::RightLeg,
+    Part::LeftLeg,
+  ];
+
+  fn placement(self, arm_width: f32) -> Placement {
+    let side = match self {
+      Part::RightArm | Part::RightLeg => -1.0,
+      _ => 1.0,
+    };
+
+    let (position, dimensions, rest_angle, pivot_height) = match self {
+      Part::Head => (
+        Vector3::new(0.0, 12.0, 0.0),
+        Vector3::new(8.0, 8.0, 8.0),
+        0.0,
+        -4.0,
+      ),
+      Part::Body => (
+        Vector3::new(0.0, 2.0, 0.0),
+        Vector3::new(8.0, 12.0, 4.0),
+        0.0,
+        6.0,
+      ),
+      Part::RightArm | Part::LeftArm => (
+        Vector3::new(side * (8.0 + arm_width) / 2.0, 2.0, 0.0),
+        Vector3::new(arm_width, 12.0, 4.0),
+        side * 7.0,
+        4.0,
+      ),
+      Part::RightLeg | Part::LeftLeg => (
+        Vector3::new(side * 2.0, -10.0, 0.0),
+        Vector3::new(4.0, 12.0, 4.0),
+        side,
+        6.0,
+      ),
+    };
+
+    // Even a turn by nothing would round the body's vertices and shift every render
+    let quaternion = match self {
+      Part::Body => None,
+      _ => Some(Quaternion::from_angle_z(Deg(rest_angle))),
+    };
+
+    Placement {
+      position,
+      dimensions,
+      rotation: quaternion.map(|quaternion| CenterRotation {
+        quaternion,
+        pivot_delta: Vector3::unit_y() * pivot_height,
+      }),
+    }
+  }
+
+  fn skin_layer_locations(self) -> (Coordinate<u32>, Coordinate<u32>) {
+    match self {
+      Part::Head => ((0, 0), (32, 0)),
+      Part::Body => ((16, 16), (16, 32)),
+      Part::RightArm => ((40, 16), (40, 32)),
+      Part::LeftArm => ((32, 48), (48, 48)),
+      Part::RightLeg => ((0, 16), (0, 32)),
+      Part::LeftLeg => ((16, 48), (0, 48)),
+    }
+  }
+
+  // Armour textures only have the right limbs, which the left limbs mirror
+  fn armor_region(self) -> TextureRegion {
+    let location = match self {
+      Part::Head => (0, 0),
+      Part::Body => (16, 16),
+      Part::RightArm | Part::LeftArm => (40, 16),
+      Part::RightLeg | Part::LeftLeg => (0, 16),
+    };
+
+    TextureRegion {
+      location,
+      texture_size: (64, 32),
+      mirror: matches!(self, Part::LeftArm | Part::LeftLeg),
+    }
+  }
+
+  // When the meshes exactly overlap a weird flickering occurs called z fighting
+  // This is fixed by making some parts slightly bigger
+  fn z_fighting_scale(self) -> f32 {
+    let z_fighting_scale = 0.002;
+
+    match self {
+      Part::Head | Part::LeftLeg => 1.0 + 2.0 * z_fighting_scale,
+      Part::Body => 1.0,
+      Part::RightArm | Part::LeftArm | Part::RightLeg => 1.0 + z_fighting_scale,
+    }
+  }
+}
+
 struct BodyPart<'a> {
-  pub position: Vector3<f32>,
-  pub dimensions: Vector3<f32>,
+  pub placement: Placement,
 
   pub image: &'a DynamicImage,
 
   pub layer1_location: Coordinate<u32>,
   pub layer2_location: Coordinate<u32>,
 
-  pub rotation: Option<CenterRotation>,
-
-  pub outer_layer: &'a ModelOuterLayer,
+  pub outer_layer: ModelOuterLayer,
 }
 
 impl<'a> BodyPart<'a> {
-  fn create(mut self, scale: f32, device: &wgpu::Device) -> (Mesh, Mesh) {
+  fn create(self, scale: f32, device: &wgpu::Device) -> (Mesh, Mesh) {
     let texture_size = (64, 64);
 
-    self.position.y -= 1.0;
-
-    let rotation = self.rotation.map(|rotation| Rotation {
-      quaternion: rotation.quaternion,
-      pivot: self.position + rotation.pivot_delta,
-    });
+    let (position, rotation) = self.placement.resolve();
+    let dimensions = self.placement.dimensions;
 
     let mut inner_geometry = BoxGeometry {
-      position: self.position,
-      dimensions: self.dimensions,
+      position,
+      dimensions,
       texture_region: TextureRegion {
         location: self.layer1_location,
         texture_size,
+        mirror: false,
       },
       rotation,
+      inflation: 0.0,
     }
     .create();
 
     let texture_region = TextureRegion {
       location: self.layer2_location,
       texture_size,
+      mirror: false,
     };
 
     let mut outer_geometry = match self.outer_layer {
       ModelOuterLayer::D3 => OuterLayerGeometry {
-        position: self.position,
-        dimensions: self.dimensions,
+        position,
+        dimensions,
         image: self.image,
         thickness: VOXEL_3D_THICKNESS,
         texture_region,
@@ -81,8 +219,8 @@ impl<'a> BodyPart<'a> {
       .create(),
       ModelOuterLayer::D2 => {
         let mut layer = OuterLayerGeometry {
-          position: self.position,
-          dimensions: self.dimensions,
+          position,
+          dimensions,
           image: self.image,
           thickness: 0.001,
           texture_region,
@@ -91,13 +229,13 @@ impl<'a> BodyPart<'a> {
         }
         .create();
         // In Minecraft the outer layer is scaled up 12.5%
-        layer.scale_around(1.125, self.position);
+        layer.scale_around(1.125, position);
         layer
       }
     };
 
-    inner_geometry.scale_around(scale, self.position);
-    outer_geometry.scale_around(scale, self.position);
+    inner_geometry.scale_around(scale, position);
+    outer_geometry.scale_around(scale, position);
 
     (
       Mesh::from_geometry(device, inner_geometry),
@@ -106,9 +244,17 @@ impl<'a> BodyPart<'a> {
   }
 }
 
+struct Attachment {
+  material: Material,
+  mesh: Mesh,
+  enchanted: bool,
+}
+
 pub struct Model {
   material: Material,
   meshes: Vec<Mesh>,
+  attachments: Vec<Attachment>,
+  outer_layer: ModelOuterLayer,
 }
 
 impl Model {
@@ -120,121 +266,89 @@ impl Model {
     kind: ModelKind,
     outer_layer: ModelOuterLayer,
   ) -> Self {
-    let outer_layer = &outer_layer;
+    let arm_width = kind.arm_width();
 
-    let head = BodyPart {
-      position: Vector3::new(0.0, 12.0, 0.0),
-      dimensions: Vector3::new(8.0, 8.0, 8.0),
-      image: &image,
-      layer1_location: (0, 0),
-      layer2_location: (32, 0),
-      rotation: Some(CenterRotation {
-        quaternion: Quaternion::zero(),
-        pivot_delta: Vector3::unit_y() * -4.0,
-      }),
-      outer_layer,
-    };
+    let (inner_meshes, outer_meshes): (Vec<Mesh>, Vec<Mesh>) = Part::ALL
+      .iter()
+      .map(|&part| {
+        let (layer1_location, layer2_location) = part.skin_layer_locations();
 
-    let body = BodyPart {
-      position: Vector3::new(0.0, 2.0, 0.0),
-      dimensions: Vector3::new(8.0, 12.0, 4.0),
-      image: &image,
-      layer1_location: (16, 16),
-      layer2_location: (16, 32),
-      rotation: None,
-      outer_layer,
-    };
-
-    let arm_width = match kind {
-      ModelKind::Classic => 4.0,
-      ModelKind::Slim => 3.0,
-    };
-
-    let arm_dimensions = Vector3::new(arm_width, 12.0, 4.0);
-
-    let left_arm = BodyPart {
-      position: Vector3::new((-body.dimensions.x - arm_width) / 2.0, 2.0, 0.0),
-      dimensions: arm_dimensions,
-      image: &image,
-      layer1_location: (40, 16),
-      layer2_location: (40, 32),
-      rotation: Some(CenterRotation {
-        quaternion: Quaternion::from_angle_z(Deg(-7.0)),
-        pivot_delta: Vector3::unit_y() * 4.0,
-      }),
-      outer_layer,
-    };
-
-    let right_arm = BodyPart {
-      position: Vector3::new((body.dimensions.x + arm_width) / 2.0, 2.0, 0.0),
-      dimensions: arm_dimensions,
-      image: &image,
-      layer1_location: (32, 48),
-      layer2_location: (48, 48),
-      rotation: Some(CenterRotation {
-        quaternion: Quaternion::from_angle_z(Deg(7.0)),
-        pivot_delta: Vector3::unit_y() * 4.0,
-      }),
-      outer_layer,
-    };
-
-    let leg_dimensions = Vector3::new(4.0, 12.0, 4.0);
-
-    let left_leg = BodyPart {
-      position: Vector3::new(-leg_dimensions.x / 2.0, -10.0, 0.0),
-      dimensions: leg_dimensions,
-      image: &image,
-      layer1_location: (0, 16),
-      layer2_location: (0, 32),
-      rotation: Some(CenterRotation {
-        quaternion: Quaternion::from_angle_z(Deg(-1.0)),
-        pivot_delta: Vector3::unit_y() * 6.0,
-      }),
-      outer_layer,
-    };
-
-    let right_leg = BodyPart {
-      position: Vector3::new(leg_dimensions.x / 2.0, -10.0, 0.0),
-      dimensions: leg_dimensions,
-      image: &image,
-      layer1_location: (16, 48),
-      layer2_location: (0, 48),
-      rotation: Some(CenterRotation {
-        quaternion: Quaternion::from_angle_z(Deg(1.0)),
-        pivot_delta: Vector3::unit_y() * 6.0,
-      }),
-      outer_layer,
-    };
+        BodyPart {
+          placement: part.placement(arm_width),
+          image: &image,
+          layer1_location,
+          layer2_location,
+          outer_layer,
+        }
+        .create(part.z_fighting_scale(), device)
+      })
+      .unzip();
 
     let texture = Texture::from_image(device, queue, &image).unwrap();
     let material = Material::new(device, texture, layout);
 
-    // When the meshes exactly overlap a weird flickering occurs called z fighting
-    // This is fixed by making some parts slightly bigger
-    let z_fighting_scale = 0.002;
-    let (head_inner, head_outer) = head.create(1.0 + 2.0 * z_fighting_scale, device);
-    let (body_inner, body_outer) = body.create(1.0, device);
-    let (left_arm_inner, left_arm_outer) = left_arm.create(1.0 + z_fighting_scale, device);
-    let (right_arm_inner, right_arm_outer) = right_arm.create(1.0 + z_fighting_scale, device);
-    let (left_leg_inner, left_leg_outer) = left_leg.create(1.0 + z_fighting_scale, device);
-    let (right_leg_inner, right_leg_outer) = right_leg.create(1.0 + 2.0 * z_fighting_scale, device);
+    Self {
+      material,
+      meshes: inner_meshes.into_iter().chain(outer_meshes).collect(),
+      attachments: vec![],
+      outer_layer,
+    }
+  }
 
-    let meshes = vec![
-      head_inner,
-      body_inner,
-      left_arm_inner,
-      right_arm_inner,
-      left_leg_inner,
-      right_leg_inner,
-      head_outer,
-      body_outer,
-      left_arm_outer,
-      right_arm_outer,
-      left_leg_outer,
-      right_leg_outer,
-    ];
+  pub fn attach_armor(
+    &mut self,
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    layout: &wgpu::BindGroupLayout,
+    armor: &Armor,
+  ) {
+    for (piece, layer, parts) in armor.pieces() {
+      let mut geometry = Geometry::new(vec![], vec![]);
 
-    Self { material, meshes }
+      for part in parts {
+        // Armour is shaped for classic arms on every skin
+        let placement = part.placement(ModelKind::Classic.arm_width());
+        let (position, rotation) = placement.resolve();
+
+        geometry.combine(
+          BoxGeometry {
+            position,
+            dimensions: placement.dimensions,
+            texture_region: part.armor_region(),
+            rotation,
+            inflation: layer.inflation(self.outer_layer),
+          }
+          .create(),
+        );
+      }
+
+      self.attach(
+        device,
+        queue,
+        layout,
+        &piece.texture(layer),
+        geometry,
+        piece.enchanted.unwrap_or(false),
+      );
+    }
+  }
+
+  fn attach(
+    &mut self,
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    layout: &wgpu::BindGroupLayout,
+    texture: &DynamicImage,
+    geometry: Geometry,
+    enchanted: bool,
+  ) {
+    let texture = Texture::from_image(device, queue, texture).unwrap();
+
+    self.attachments.push(Attachment {
+      material: Material::new(device, texture, layout),
+      mesh: Mesh::from_geometry(device, geometry),
+      enchanted,
+    });
   }
 
   pub fn to_raw() -> InstanceRaw {
@@ -255,6 +369,14 @@ pub trait DrawModel<'a> {
     camera_bind_group: &'a wgpu::BindGroup,
     light_bind_group: &'a wgpu::BindGroup,
   );
+
+  fn draw_glint(
+    &mut self,
+    model: &'a Model,
+    glint_material: &'a Material,
+    camera_bind_group: &'a wgpu::BindGroup,
+    light_bind_group: &'a wgpu::BindGroup,
+  );
 }
 
 impl<'a> DrawModel<'a> for wgpu::RenderPass<'a> {
@@ -267,5 +389,35 @@ impl<'a> DrawModel<'a> for wgpu::RenderPass<'a> {
     model.meshes.iter().for_each(|mesh| {
       self.draw_mesh(mesh, &model.material, camera_bind_group, light_bind_group);
     });
+
+    model.attachments.iter().for_each(|attachment| {
+      self.draw_mesh(
+        &attachment.mesh,
+        &attachment.material,
+        camera_bind_group,
+        light_bind_group,
+      );
+    });
+  }
+
+  fn draw_glint(
+    &mut self,
+    model: &'a Model,
+    glint_material: &'a Material,
+    camera_bind_group: &'a wgpu::BindGroup,
+    light_bind_group: &'a wgpu::BindGroup,
+  ) {
+    model
+      .attachments
+      .iter()
+      .filter(|attachment| attachment.enchanted)
+      .for_each(|attachment| {
+        self.draw_mesh(
+          &attachment.mesh,
+          glint_material,
+          camera_bind_group,
+          light_bind_group,
+        );
+      });
   }
 }

@@ -9,4 +9,22 @@
  */
 export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-wasip1'
 
-export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: boolean): Promise<Buffer>
+export interface Armor {
+  helmet?: ArmorPiece
+  chestplate?: ArmorPiece
+  leggings?: ArmorPiece
+  boots?: ArmorPiece
+}
+
+export interface ArmorPiece {
+  material: 'leather' | 'chainmail' | 'iron' | 'gold' | 'diamond'
+  /** Dye as `0xRRGGBB`, leather only. Undyed leather is brown. */
+  color?: number
+  enchanted?: boolean
+}
+
+export interface RenderOptions {
+  armor?: Armor
+}
+
+export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: boolean, options?: RenderOptions | undefined | null): Promise<Buffer>
