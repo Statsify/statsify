@@ -22,7 +22,6 @@ import {
   GetGuildResponse,
   GetKeyResponse,
   GetPlayerResponse,
-  GetPlayerSearchResponse,
   GetSessionResponse,
   GetSkinTexturesResponse,
   GetStatusResponse,
@@ -104,14 +103,6 @@ export class ApiService {
       {},
       "POST",
       { body: { fields, uuid } }
-    );
-  }
-
-  public getPlayerAutocomplete(query: string) {
-    return this.requestKey<GetPlayerSearchResponse, "players">(
-      "/player/search",
-      "players",
-      { query }
     );
   }
 
