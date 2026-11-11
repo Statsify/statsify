@@ -184,6 +184,7 @@ export class AccountService {
 
       if (!moved.matchedCount && !moved.upsertedCount) return;
       if (profile?.accountId) await this.release(profile.accountId, uuid);
+      await this.accountModel.updateOne({ id: account.id }, { $pull: { notices: { uuid } } }).exec();
     }
 
     if (account.primaryUuid !== uuid) await this.accountModel.updateOne({ id: account.id }, { $set: { primaryUuid: uuid } }).exec();
