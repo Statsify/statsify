@@ -34,9 +34,9 @@
   - changed-files:
     - any-glob-to-any-file: packages/discord/**/*
 
-"@statsify/inventory":
+"@statsify/hypixel-data":
   - changed-files:
-    - any-glob-to-any-file: packages/inventory/**/*
+    - any-glob-to-any-file: packages/hypixel-data/**/*
 
 "@statsify/logger":
   - changed-files:
@@ -57,6 +57,10 @@
 "@statsify/skin-renderer":
   - changed-files:
     - any-glob-to-any-file: packages/skin-renderer/**/*
+
+"@statsify/textures":
+  - changed-files:
+    - any-glob-to-any-file: packages/textures/**/*
 
 "@statsify/util":
   - changed-files:
