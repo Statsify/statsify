@@ -329,12 +329,16 @@ impl Model {
     Ok(model)
   }
 
-  pub fn pose(&self) -> Pose {
-    self.pose
-  }
+  // Boots and a player head reach past the frame that fits a bare player, and every
+  // armoured render pulls back with them so they share one scale
+  pub fn camera_radius(&self) -> f32 {
+    let radius = self.pose.camera_radius();
 
-  pub fn wears_armor(&self) -> bool {
-    self.wears_armor
+    if self.wears_armor {
+      radius + 3.0
+    } else {
+      radius
+    }
   }
 
   fn attach_armor(
