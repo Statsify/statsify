@@ -6,36 +6,47 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export enum GuildQuery {
-  ID = "ID",
-  NAME = "NAME",
-  PLAYER = "PLAYER"
-}
+export const GuildQuery = {
+  ID: "ID",
+  NAME: "NAME",
+  PLAYER: "PLAYER",
+} as const;
 
-export enum CurrentHistoricalType {
-  SESSION = "SESSION",
-  DAILY = "DAILY",
-  WEEKLY = "WEEKLY",
-  MONTHLY = "MONTHLY"
-}
+export type GuildQuery = (typeof GuildQuery)[keyof typeof GuildQuery];
 
-export enum LastHistoricalType {
-  LAST_DAY = "LAST_DAY",
-  LAST_WEEK = "LAST_WEEK",
-  LAST_MONTH = "LAST_MONTH"
-}
+export const CurrentHistoricalType = {
+  SESSION: "SESSION",
+  DAILY: "DAILY",
+  WEEKLY: "WEEKLY",
+  MONTHLY: "MONTHLY",
+} as const;
+
+export type CurrentHistoricalType =
+  (typeof CurrentHistoricalType)[keyof typeof CurrentHistoricalType];
+
+export const LastHistoricalType = {
+  LAST_DAY: "LAST_DAY",
+  LAST_WEEK: "LAST_WEEK",
+  LAST_MONTH: "LAST_MONTH",
+} as const;
+
+export type LastHistoricalType = (typeof LastHistoricalType)[keyof typeof LastHistoricalType];
 
 export const HistoricalTimes = { ...LastHistoricalType, ...CurrentHistoricalType };
 export type HistoricalType = LastHistoricalType | CurrentHistoricalType;
 
-export enum CacheLevel {
-  CACHE = "CACHE",
-  CACHE_ONLY = "CACHE_ONLY",
-  LIVE = "LIVE"
-}
+export const CacheLevel = {
+  CACHE: "CACHE",
+  CACHE_ONLY: "CACHE_ONLY",
+  LIVE: "LIVE",
+} as const;
 
-export enum LeaderboardQuery {
-  PAGE = "page",
-  INPUT = "input",
-  POSITION = "position"
-}
+export type CacheLevel = (typeof CacheLevel)[keyof typeof CacheLevel];
+
+export const LeaderboardQuery = {
+  PAGE: "page",
+  INPUT: "input",
+  POSITION: "position",
+} as const;
+
+export type LeaderboardQuery = (typeof LeaderboardQuery)[keyof typeof LeaderboardQuery];
