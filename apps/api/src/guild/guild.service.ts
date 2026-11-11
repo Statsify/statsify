@@ -150,12 +150,8 @@ export class GuildService {
     return deserialize(Guild, flatGuild);
   }
 
-  /**
-   * Stored guilds whose name starts with the query, alphabetically. A range on the `nameToLower` index rather than a
-   * regex, so nothing typed needs escaping and the scan stops at the 25th.
-   */
-  public search(query: string): Promise<Pick<Guild, "name" | "nameFormatted">[]> {
-    if (!query) return Promise.resolve([]);
+  public async search(query: string): Promise<Pick<Guild, "name" | "nameFormatted">[]> {
+    if (!query) return [];
     const prefix = query.toLowerCase();
 
     return this.guildModel
