@@ -15,9 +15,8 @@ import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
-import { renderSkin } from "@statsify/skin-renderer";
+import { type RenderOptions, renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
-import type { SkinRenderDto } from "#dtos";
 
 @Injectable()
 export class SkinService {
@@ -47,7 +46,7 @@ export class SkinService {
   public async getRender(
     uuid: string,
     extruded: boolean,
-    { cape, ...options }: Omit<SkinRenderDto, "uuid">
+    { cape, ...options }: Omit<RenderOptions, "cape"> & { cape?: boolean }
   ): Promise<Buffer> {
     const skin = await this.getSkin(uuid);
     const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
