@@ -10,8 +10,8 @@ import { getLeaderboardFields } from "@statsify/schemas";
 import { z } from "zod";
 import type { Constructor } from "@statsify/util";
 
-// class-validator listed no values for an array enum, and listing every leaderboard field would bloat each 400
+// Zod's default message would list every leaderboard field
 export const leaderboardField = (constructor: Constructor<unknown>) =>
   z.enum(getLeaderboardFields(constructor).map(([key]) => key), {
-    error: "must be one of the following values: ",
+    error: "Invalid leaderboard field",
   });

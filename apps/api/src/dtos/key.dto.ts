@@ -23,7 +23,6 @@ export class KeyParamDto {
   public key: string;
 }
 
-// Nest doesn't run pipes on @Headers(), so this only types and documents the header
 export class KeyHeaderDto {
   @ApiProperty()
   public "x-api-key": string;

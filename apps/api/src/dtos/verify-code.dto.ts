@@ -14,7 +14,7 @@ export class VerifyCodeDto extends PartialType(UuidDto) {
   public static schema = z.object({
     uuid: UuidDto.schema.shape.uuid.optional(),
     id: z.string().min(17),
-    code: z.string().min(4).max(4).optional(),
+    code: z.string().length(4).optional(),
   });
 
   @ApiProperty({ description: "Discord ID" })

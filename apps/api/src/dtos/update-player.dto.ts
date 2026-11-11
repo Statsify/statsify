@@ -10,7 +10,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { z } from "zod";
 
 export class UpdatePlayerDto {
-  // The body is the whole Hypixel player, so every other key has to reach `new Player()`
+  // The rest of the Hypixel player passes through to `new Player()`
   public static schema = z.looseObject({
     uuid: z.string(),
     playername: z.string(),
