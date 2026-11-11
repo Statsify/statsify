@@ -6,21 +6,60 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import {
+  APIApplicationCommandOptionChoice,
+  ApplicationCommandOptionType,
+} from "discord-api-types/v10";
 import { AbstractArgument } from "./abstract.argument.js";
-import { ApplicationCommandOptionType } from "discord-api-types/v10";
+import { ApiService } from "#services";
 import { ChoiceArgument } from "./choice.argument.js";
+import { CommandContext } from "#command";
+import { Container } from "typedi";
 import { GuildQuery } from "@statsify/api-client";
 import { LocalizationString } from "#messages";
+import { PlayerArgument } from "./player.argument.js";
+
+const apiClient = Container.get(ApiService);
 
 class GuildQueryArgument extends AbstractArgument {
   public description: LocalizationString;
   public name = "query";
   public type = ApplicationCommandOptionType.String;
   public required = false;
+  public autocomplete = true;
+
+  private playerArgument = new PlayerArgument(this.name);
 
   public constructor() {
     super();
     this.description = (t) => t("arguments.guild-query");
+  }
+
+  public async autocompleteHandler(
+    context: CommandContext
+  ): Promise<APIApplicationCommandOptionChoice[]> {
+    const type = context.option<GuildQuery>("type");
+
+    if (type === GuildQuery.PLAYER) return this.playerArgument.autocompleteHandler(context);
+    if (type === GuildQuery.ID) return [];
+
+    const query = context.option<string>(this.name);
+    if (!query) return [];
+
+    const searched = { name: query, value: query };
+
+    if (query.length > 32) return [searched];
+
+    const guilds = await apiClient.getGuildAutocomplete(query);
+
+    let results = guilds.map((g) => ({ name: g, value: g }));
+
+    if (!guilds.some((g) => g.toLowerCase() === query.toLowerCase())) {
+      results = results.slice(0, 24);
+      results.push(searched);
+    }
+
+    return results;
   }
 }
 
