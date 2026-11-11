@@ -81,12 +81,12 @@ export class AutocompleteService {
 
     const now = Date.now();
     const entries = await this.readHistory(type, id, now);
-    const entry = entries.find((e) => e.name === stored);
+    const previous = entries.find((e) => e.name === stored)?.lookups ?? [];
+    const recorded = { name: stored, lookups: [now, ...previous].slice(0, LOOKUPS_PER_ENTRY) };
+    const others = sortByFrecency(entries.filter((e) => e.name !== stored), now);
 
-    if (entry) entry.lookups = [now, ...entry.lookups].slice(0, LOOKUPS_PER_ENTRY);
-    else entries.push({ name: stored, lookups: [now] });
-
-    const kept = sortByFrecency(entries, now).slice(0, MAX_CHOICES);
+    // A new name scores below a full history's names, so it goes in ahead of the cut
+    const kept = [recorded, ...others.slice(0, MAX_CHOICES - 1)];
     await this.redis.set(this.historyKey(type, id), JSON.stringify(kept), "PX", HISTORY_MS);
   }
 
@@ -120,7 +120,7 @@ export class AutocompleteService {
       this.guildService.search(query),
     ]);
 
-    return blend(query, [guild ? [guild.name] : [], history], stored.map((g) => g.name));
+    return blend(query, [history, guild ? [guild.name] : []], stored.map((g) => g.name));
   }
 
   private orEmpty<T>(read: Promise<T>, empty: T) {
