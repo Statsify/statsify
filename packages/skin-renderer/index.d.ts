@@ -10,7 +10,7 @@
 export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-wasip1'
 
 export interface Armor {
-  helmet?: ArmorPiece
+  helmet?: Helmet
   chestplate?: ArmorPiece
   leggings?: ArmorPiece
   boots?: ArmorPiece
@@ -18,6 +18,15 @@ export interface Armor {
 
 export interface ArmorPiece {
   material: 'leather' | 'chainmail' | 'iron' | 'gold' | 'diamond'
+  /** Dye as `0xRRGGBB`, leather only. Undyed leather is brown. */
+  color?: number
+  enchanted?: boolean
+}
+
+export interface Helmet {
+  material?: 'leather' | 'chainmail' | 'iron' | 'gold' | 'diamond'
+  /** Skin texture (PNG) whose head is worn as a player head, in place of a material. */
+  head?: Uint8Array
   /** Dye as `0xRRGGBB`, leather only. Undyed leather is brown. */
   color?: number
   enchanted?: boolean

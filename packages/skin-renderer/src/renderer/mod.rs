@@ -370,15 +370,25 @@ impl<T: Backend> SkinRenderer<T> {
     model_outer_layer: ModelOuterLayer,
     armor: &Armor,
   ) -> Result<Model> {
-    Ok(Model::new(
-      self.backend.device(),
-      self.backend.queue(),
+    let device = self.backend.device();
+    let queue = self.backend.queue();
+    let head = armor.head()?.map(load_skin_from_memory).transpose()?;
+
+    let mut model = Model::new(
+      device,
+      queue,
       &self.texture_bind_group_layout,
       load_skin_from_memory(skin)?,
       model_kind,
       model_outer_layer,
       armor,
-    ))
+    );
+
+    if let Some(head) = head {
+      model.attach_head(device, queue, &self.texture_bind_group_layout, &head);
+    }
+
+    Ok(model)
   }
 }
 
