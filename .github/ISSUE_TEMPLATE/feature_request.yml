@@ -22,12 +22,12 @@ body:
         - "@statsify/api-client"
         - "@statsify/assets"
         - "@statsify/discord"
-        - "@statsify/inventory"
         - "@statsify/logger"
         - "@statsify/math"
         - "@statsify/rendering"
         - "@statsify/schemas"
         - "@statsify/skin-renderer"
+        - "@statsify/textures"
         - "@statsify/util"
     validations:
       required: true

@@ -1,4 +1,4 @@
-# @statsify/inventory
+# @statsify/textures
 
 Draws Minecraft items, text, tooltips and inventories from a resource pack, in the browser or in
 Node. Nothing is pre-rendered and no game assets ship with it: drop in a 26.3 pack
@@ -11,7 +11,7 @@ game does, lowest priority first, so a texture-only pack can sit on top of a van
 Swapping a stack swaps every icon, since cache keys start with the stack's hash.
 
 ```ts
-import { ItemRenderer, IconCache, PackStack, loadPack } from "@statsify/inventory";
+import { ItemRenderer, IconCache, PackStack, loadPack } from "@statsify/textures";
 
 const stack = new PackStack([await loadPack(vanillaZip), await loadPack(userPack)]);
 const renderer = new ItemRenderer(stack, new IconCache());
@@ -70,8 +70,8 @@ backend first, and `draw` returns a skia-canvas `Canvas` (typed as `OffscreenCan
 skia-canvas is an optional peer dependency.
 
 ```ts
-import { setCanvasBackend } from "@statsify/inventory";
-import { skiaCanvas } from "@statsify/inventory/node";
+import { setCanvasBackend } from "@statsify/textures";
+import { skiaCanvas } from "@statsify/textures/node";
 
 setCanvasBackend(skiaCanvas);
 ```
