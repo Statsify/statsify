@@ -12,16 +12,16 @@ import {
 } from "discord-api-types/v10";
 import { AbstractArgument } from "./abstract.argument.js";
 import { ApiService } from "#services";
+import { AutocompleteType, GuildQuery } from "@statsify/api-client";
 import { ChoiceArgument } from "./choice.argument.js";
 import { CommandContext } from "#command";
 import { Container } from "typedi";
-import { AutocompleteType, GuildQuery } from "@statsify/api-client";
 import { LocalizationString } from "#messages";
 import { PlayerArgument } from "./player.argument.js";
 
 const apiClient = Container.get(ApiService);
 
-export class GuildQueryArgument extends AbstractArgument {
+class GuildQueryArgument extends AbstractArgument {
   public description: LocalizationString;
   public name = "query";
   public type = ApplicationCommandOptionType.String;
@@ -62,6 +62,12 @@ export class GuildQueryArgument extends AbstractArgument {
     }
 
     return results;
+  }
+
+  public autocompleteType(context: CommandContext) {
+    const type = context.option<GuildQuery>("type");
+    if (type === GuildQuery.ID) return undefined;
+    return type === GuildQuery.PLAYER ? AutocompleteType.PLAYER : AutocompleteType.GUILD;
   }
 }
 

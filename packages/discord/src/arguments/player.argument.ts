@@ -53,4 +53,8 @@ export class PlayerArgument extends AbstractArgument {
 
     return results;
   }
+
+  public autocompleteType() {
+    return AutocompleteType.PLAYER;
+  }
 }

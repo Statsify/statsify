@@ -13,12 +13,9 @@ import {
   CommandContext,
   CommandResolvable,
   ErrorMessage,
-  GuildQueryArgument,
   IMessage,
   Interaction,
-  PlayerArgument,
 } from "@statsify/discord";
-import { AutocompleteType, GuildQuery } from "@statsify/api-client";
 import { Container } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
@@ -112,18 +109,10 @@ export class CommandListener extends AbstractCommandListener {
   }
 
   private recordLookups(command: CommandResolvable, context: CommandContext, userId: string) {
-    const guildType = context.option<GuildQuery>("type");
-
     for (const arg of command.args) {
+      const type = arg.autocompleteType?.(context);
       const name = context.option<string>(arg.name);
-      if (!name || name.length > 32) continue;
-
-      let type: AutocompleteType;
-
-      if (arg instanceof PlayerArgument) type = AutocompleteType.PLAYER;
-      else if (arg instanceof GuildQueryArgument && guildType !== GuildQuery.ID)
-        type = guildType === GuildQuery.PLAYER ? AutocompleteType.PLAYER : AutocompleteType.GUILD;
-      else continue;
+      if (!type || !name || name.length > 32) continue;
 
       this.apiService.addAutocompleteHistory(type, userId, name).catch(() => null);
     }

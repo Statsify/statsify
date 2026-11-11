@@ -17,12 +17,15 @@ import type {
   ApplicationCommandOptionType,
   ChannelType,
 } from "discord-api-types/v10";
+import type { AutocompleteType } from "@statsify/api-client";
 import type { CommandContext } from "#command";
 
 export interface AbstractArgument {
   autocompleteHandler?(
     context: CommandContext
   ): APIApplicationCommandOptionChoice[] | Promise<APIApplicationCommandOptionChoice[]>;
+
+  autocompleteType?(context: CommandContext): AutocompleteType | undefined;
 }
 
 export abstract class AbstractArgument {
