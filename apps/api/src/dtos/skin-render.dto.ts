@@ -34,7 +34,7 @@ class ArmorPieceDto {
 // The hex after textures.minecraft.net/texture/, which older textures write with fewer than 64 digits
 const TEXTURE_HASH = /^[\da-f]{1,64}$/;
 
-class HeadDto {
+class PlayerHeadDto {
   @Matches(TEXTURE_HASH)
   public head: string;
 
@@ -50,8 +50,8 @@ class ArmorDto {
   @ValidateIf(isSet)
   @IsObject()
   @ValidateNested()
-  @Type((options) => (options?.object.helmet?.head === undefined ? ArmorPieceDto : HeadDto))
-  public helmet?: ArmorPieceDto | HeadDto;
+  @Type((options) => (options?.object.helmet?.head === undefined ? ArmorPieceDto : PlayerHeadDto))
+  public helmet?: ArmorPieceDto | PlayerHeadDto;
 
   @ValidateIf(isSet)
   @IsObject()
