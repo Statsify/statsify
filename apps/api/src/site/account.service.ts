@@ -46,7 +46,7 @@ export class AccountService {
 
   /** Swaps a Discord authorization code for the user's ID, finds or makes their account and opens a session. */
   public async login(code: string, redirectUri: string): Promise<{ session: string }> {
-    const discordId = await this.discordUserId(code, redirectUri);
+    const discordId = await discordUserId(code, redirectUri);
 
     const account = await this.accountModel
       .findOneAndUpdate(
@@ -81,9 +81,9 @@ export class AccountService {
     return this.page(account.id);
   }
 
-  public async setPrimary(session: string, uuid: string): Promise<AccountPage> {
+  public async setPrimary(session: string, input: string): Promise<AccountPage> {
     const account = await this.account(session);
-    uuid = normalizeUuid(uuid);
+    const uuid = normalizeUuid(input);
     await this.requireOwned(account.id, uuid);
 
     await this.accountModel.updateOne({ id: account.id }, { $set: { primaryUuid: uuid } }).exec();
@@ -92,9 +92,9 @@ export class AccountService {
   }
 
   /** The primary can go only once another profile is primary, or when it's the account's last one. */
-  public async unlink(session: string, uuid: string): Promise<AccountPage> {
+  public async unlink(session: string, input: string): Promise<AccountPage> {
     const account = await this.account(session);
-    uuid = normalizeUuid(uuid);
+    const uuid = normalizeUuid(input);
     await this.requireOwned(account.id, uuid);
 
     if (account.primaryUuid === uuid) {
@@ -111,6 +111,34 @@ export class AccountService {
     const account = await this.account(session);
     await this.accountModel.updateOne({ id: account.id }, { $unset: { notices: "" } }).exec();
     return this.page(account.id);
+  }
+
+  /**
+   * After the bot's `/verify`, a fresh proof: the Discord user's account claims the UUID, or without an account, the
+   * account that held it loses it.
+   */
+  public async botVerified(discordId: string, uuid: string) {
+    const account = await this.accountModel.findOne({ discordId }).lean().exec();
+    if (account) return this.claimVerified(account);
+
+    const profile = await this.profileModel
+      .findOneAndUpdate({ uuid, accountId: { $exists: true } }, { $unset: { accountId: "" } })
+      .lean()
+      .exec();
+
+    if (profile?.accountId) await this.release(profile.accountId, uuid);
+  }
+
+  /**
+   * After the bot's `/unverify`, the page is unclaimed. The account is left with no primary rather than the next
+   * profile, which would verify the user with the bot again straight after they asked not to be.
+   */
+  public async botUnverified(discordId: string, uuid: string) {
+    const account = await this.accountModel.findOne({ discordId }).lean().exec();
+    if (!account) return;
+
+    await this.profileModel.updateOne({ uuid, accountId: account.id }, { $unset: { accountId: "" } }).exec();
+    if (account.primaryUuid === uuid) await this.accountModel.updateOne({ id: account.id }, { $unset: { primaryUuid: "" } }).exec();
   }
 
   private async account(session: string): Promise<Account> {
@@ -212,41 +240,41 @@ export class AccountService {
       moved: notices.map(({ uuid, movedAt }) => ({ uuid, username: byUuid.get(uuid)?.username ?? null, movedAt })),
     };
   }
+}
 
-  /** The code flow's two calls. The access token is used once here and never kept. */
-  private async discordUserId(code: string, redirectUri: string): Promise<string> {
-    const [clientId, clientSecret] = await Promise.all([
-      config("site.discordLogin.clientId", { required: false }),
-      config("site.discordLogin.clientSecret", { required: false }),
-    ]);
+/** The code flow's two calls. The access token is used once here and never kept. */
+async function discordUserId(code: string, redirectUri: string): Promise<string> {
+  const [clientId, clientSecret] = await Promise.all([
+    config("site.discordLogin.clientId", { required: false }),
+    config("site.discordLogin.clientSecret", { required: false }),
+  ]);
 
-    if (!clientId || !clientSecret) throw new Error("site.discordLogin needs both clientId and clientSecret");
+  if (!clientId || !clientSecret) throw new Error("site.discordLogin needs both clientId and clientSecret");
 
-    const signal = AbortSignal.timeout(DISCORD_TIMEOUT_MS);
+  const signal = AbortSignal.timeout(DISCORD_TIMEOUT_MS);
 
-    const token = await fetch(`${DISCORD_API}/oauth2/token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        grant_type: "authorization_code",
-        code,
-        redirect_uri: redirectUri,
-        client_id: clientId,
-        client_secret: clientSecret,
-      }),
-      signal,
-    });
+  const token = await fetch(`${DISCORD_API}/oauth2/token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "authorization_code",
+      code,
+      redirect_uri: redirectUri,
+      client_id: clientId,
+      client_secret: clientSecret,
+    }),
+    signal,
+  });
 
-    // 400 `invalid_grant`: a used, expired or made-up code, or a redirect URI the authorize request didn't name.
-    if (token.status === 400) throw new ORPCError("UNAUTHORIZED");
-    if (!token.ok) throw new Error(`Discord's token exchange answered ${token.status}`);
+  // 400 `invalid_grant`: a used, expired or made-up code, or a redirect URI the authorize request didn't name.
+  if (token.status === 400) throw new ORPCError("UNAUTHORIZED");
+  if (!token.ok) throw new Error(`Discord's token exchange answered ${token.status}`);
 
-    const { access_token: accessToken } = (await token.json()) as { access_token: string };
+  const { access_token: accessToken } = (await token.json()) as { access_token: string };
 
-    const me = await fetch(`${DISCORD_API}/users/@me`, { headers: { Authorization: `Bearer ${accessToken}` }, signal });
-    if (!me.ok) throw new Error(`Discord's users/@me answered ${me.status}`);
+  const me = await fetch(`${DISCORD_API}/users/@me`, { headers: { Authorization: `Bearer ${accessToken}` }, signal });
+  if (!me.ok) throw new Error(`Discord's users/@me answered ${me.status}`);
 
-    const { id } = (await me.json()) as { id: string };
-    return id;
-  }
+  const { id } = (await me.json()) as { id: string };
+  return id;
 }

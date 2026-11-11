@@ -29,7 +29,7 @@ export class Account {
   @Field({ mongo: { index: true, unique: true, sparse: true }, store: { required: false } })
   public discordId?: string;
 
-  /** One of its profiles: the bot's verified UUID for `discordId`. Unset while it owns none. */
+  /** One of its profiles: the bot's verified UUID for `discordId`. Unset while it owns none, or after `/unverify`. */
   @Field({ store: { required: false } })
   public primaryUuid?: string;
 
