@@ -17,8 +17,14 @@ lazy_static! {
 }
 
 #[napi(object)]
+#[derive(Default)]
 pub struct RenderOptions {
   pub armor: Option<Armor>,
+  /// Cape texture (PNG).
+  pub cape: Option<Uint8Array>,
+  /// Camera angle around the player in radians: 0 faces the front, π the back.
+  /// Defaults to -0.3.
+  pub yaw: Option<f64>,
 }
 
 #[napi]
@@ -42,12 +48,19 @@ pub async fn render_skin(
     ModelOuterLayer::D2
   };
 
-  let armor = options
-    .and_then(|options| options.armor)
-    .unwrap_or_default();
+  let options = options.unwrap_or_default();
+  let armor = options.armor.unwrap_or_default();
 
-  let model = renderer.load_skin(skin, model_kind, model_outer_layer, &armor)?;
-  let buffer = renderer.render(&model).await?;
+  let model = renderer.load_skin(
+    skin,
+    model_kind,
+    model_outer_layer,
+    &armor,
+    options.cape.as_deref(),
+  )?;
+  let buffer = renderer
+    .render(&model, options.yaw.map(|yaw| yaw as f32))
+    .await?;
 
   Ok(buffer.into())
 }

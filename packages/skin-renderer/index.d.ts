@@ -25,6 +25,13 @@ export interface ArmorPiece {
 
 export interface RenderOptions {
   armor?: Armor
+  /** Cape texture (PNG). */
+  cape?: Uint8Array
+  /**
+   * Camera angle around the player in radians: 0 faces the front, π the back.
+   * Defaults to -0.3.
+   */
+  yaw?: number
 }
 
 export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: boolean, options?: RenderOptions | undefined | null): Promise<Buffer>

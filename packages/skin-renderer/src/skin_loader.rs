@@ -36,6 +36,29 @@ pub fn load_skin_from_memory(skin: &[u8]) -> Result<DynamicImage> {
   Ok(skin)
 }
 
+// Capes follow a 64x32 layout, or a multiple of it for higher resolutions. Some are
+// drawn on a smaller canvas (46x22 is common), which the game pads out from the
+// top left corner to the next size of the layout.
+pub fn load_cape_from_memory(cape: &[u8]) -> Result<DynamicImage> {
+  let cape = image::load_from_memory(cape)?;
+
+  let (mut width, mut height) = (64, 32);
+
+  while width < cape.width() || height < cape.height() {
+    width *= 2;
+    height *= 2;
+  }
+
+  if cape.dimensions() == (width, height) {
+    return Ok(cape);
+  }
+
+  let mut padded = DynamicImage::new_rgba8(width, height);
+  padded.copy_from(&cape, 0, 0)?;
+
+  Ok(padded)
+}
+
 fn process_skin(skin: DynamicImage) -> Result<DynamicImage> {
   let format = SkinFormat::try_from_image(&skin).ok_or(Error::InvalidSkinTexture)?;
 

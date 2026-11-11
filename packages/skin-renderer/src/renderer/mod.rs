@@ -20,7 +20,7 @@ use crate::instance::InstanceRaw;
 use crate::light::LightUniform;
 use crate::material::Material;
 use crate::model::{DrawModel, Model, ModelKind, ModelOuterLayer};
-use crate::skin_loader::load_skin_from_memory;
+use crate::skin_loader::{load_cape_from_memory, load_skin_from_memory};
 use crate::texture::Texture;
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -39,6 +39,8 @@ pub struct SkinRenderer<T: Backend> {
   light_uniform: LightUniform,
   light_buffer: wgpu::Buffer,
 
+  camera_bind_group_layout: wgpu::BindGroupLayout,
+  light_bind_group_layout: wgpu::BindGroupLayout,
   camera_bind_group: wgpu::BindGroup,
   light_bind_group: wgpu::BindGroup,
   render_pipeline: wgpu::RenderPipeline,
@@ -156,6 +158,8 @@ impl<T: Backend> SkinRenderer<T> {
       light_uniform,
       light_buffer,
 
+      camera_bind_group_layout,
+      light_bind_group_layout,
       camera_bind_group,
       light_bind_group,
       render_pipeline,
@@ -325,7 +329,12 @@ impl<T: Backend> SkinRenderer<T> {
     })
   }
 
-  fn render_sync(&self, model: &Model) -> (wgpu::CommandEncoder, OutputTexture<'_>) {
+  fn render_sync(
+    &self,
+    model: &Model,
+    camera_bind_group: &wgpu::BindGroup,
+    light_bind_group: &wgpu::BindGroup,
+  ) -> (wgpu::CommandEncoder, OutputTexture<'_>) {
     let device = self.backend.device();
     let output_texture = self.backend.get_output_texture();
     let view = T::create_view(&output_texture);
@@ -360,14 +369,14 @@ impl<T: Backend> SkinRenderer<T> {
 
       render_pass.set_vertex_buffer(1, self.instance_buffer.slice(..));
       render_pass.set_pipeline(&self.render_pipeline);
-      render_pass.draw_model(model, &self.camera_bind_group, &self.light_bind_group);
+      render_pass.draw_model(model, camera_bind_group, light_bind_group);
 
       render_pass.set_pipeline(&self.glint_pipeline);
       render_pass.draw_glint(
         model,
         &self.glint_material,
-        &self.camera_bind_group,
-        &self.light_bind_group,
+        camera_bind_group,
+        light_bind_group,
       );
     };
 
@@ -380,6 +389,7 @@ impl<T: Backend> SkinRenderer<T> {
     model_kind: ModelKind,
     model_outer_layer: ModelOuterLayer,
     armor: &Armor,
+    cape: Option<&[u8]>,
   ) -> Result<Model> {
     let device = self.backend.device();
     let queue = self.backend.queue();
@@ -394,6 +404,16 @@ impl<T: Backend> SkinRenderer<T> {
     );
 
     model.attach_armor(device, queue, &self.texture_bind_group_layout, armor);
+
+    if let Some(cape) = cape {
+      model.attach_cape(
+        device,
+        queue,
+        &self.texture_bind_group_layout,
+        &load_cape_from_memory(cape)?,
+        armor.chestplate.is_some(),
+      );
+    }
 
     Ok(model)
   }
@@ -413,7 +433,8 @@ impl SkinRenderer<wasm::WasmBackend> {
   }
 
   pub fn render(&self, model: &Model) {
-    let (encoder, output_texture) = self.render_sync(model);
+    let (encoder, output_texture) =
+      self.render_sync(model, &self.camera_bind_group, &self.light_bind_group);
 
     self
       .backend
@@ -479,8 +500,49 @@ impl SkinRenderer<native::NativeBackend> {
     Self::create(backend).await
   }
 
-  pub async fn render(&self, model: &Model) -> Result<SkinRender> {
-    let (encoder, _) = self.render_sync(model);
+  // Renders run on several threads at once, so each gets its own camera and light
+  // instead of rewriting the shared ones
+  pub async fn render(&self, model: &Model, yaw: Option<f32>) -> Result<SkinRender> {
+    let camera = OrbitalCamera::new(
+      (0.0, 0.0, 0.0).into(),
+      self.config.width as f32,
+      self.config.height as f32,
+    );
+
+    let camera = Camera::Orbital(match yaw {
+      Some(yaw) => camera.with_theta(yaw),
+      None => camera,
+    });
+
+    let camera_bind_group = self.uniform_bind_group(
+      &self.camera_bind_group_layout,
+      cast_slice(&[CameraUniform::new(&camera)]),
+    );
+    let light_bind_group = self.uniform_bind_group(
+      &self.light_bind_group_layout,
+      cast_slice(&[LightUniform::from(&camera)]),
+    );
+
+    let (encoder, _) = self.render_sync(model, &camera_bind_group, &light_bind_group);
     self.backend.handle_encoder_after_render(encoder).await
+  }
+
+  fn uniform_bind_group(&self, layout: &wgpu::BindGroupLayout, contents: &[u8]) -> wgpu::BindGroup {
+    let device = self.backend.device();
+
+    let buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+      label: None,
+      contents,
+      usage: wgpu::BufferUsages::UNIFORM,
+    });
+
+    device.create_bind_group(&wgpu::BindGroupDescriptor {
+      layout,
+      entries: &[wgpu::BindGroupEntry {
+        binding: 0,
+        resource: buffer.as_entire_binding(),
+      }],
+      label: None,
+    })
   }
 }

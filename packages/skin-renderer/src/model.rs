@@ -333,6 +333,52 @@ impl Model {
     }
   }
 
+  pub fn attach_cape(
+    &mut self,
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    layout: &wgpu::BindGroupLayout,
+    cape: &DynamicImage,
+    chestplate: bool,
+  ) {
+    let body = Part::Body.placement(ModelKind::Classic.arm_width());
+    let (body_position, _) = body.resolve();
+
+    // Over a chestplate the cape moves out and up so it doesn't cut through it, as
+    // newer versions of the game do
+    let (lift, gap) = if chestplate { (0.85, 1.1) } else { (0.0, 0.0) };
+    let top = body_position.y + body.dimensions.y / 2.0 + lift;
+    let back = body_position.z - body.dimensions.z / 2.0 - gap;
+
+    let dimensions = Vector3::new(10.0, 16.0, 1.0);
+    let position = Vector3::new(0.0, top - dimensions.y / 2.0, back - dimensions.z / 2.0);
+
+    // Turned around so the outside of the cape shows its front texture
+    let mut geometry = BoxGeometry {
+      position,
+      dimensions,
+      texture_region: TextureRegion {
+        location: (0, 0),
+        texture_size: (64, 32),
+        mirror: false,
+      },
+      rotation: Some(Rotation {
+        quaternion: Quaternion::from_angle_y(Deg(180.0)),
+        pivot: position,
+      }),
+      inflation: 0.0,
+    }
+    .create();
+
+    // A standing player's cape swings 6 degrees out from the back
+    geometry.rotate_around(Rotation {
+      quaternion: Quaternion::from_angle_x(Deg(6.0)),
+      pivot: Vector3::new(0.0, top, back),
+    });
+
+    self.attach(device, queue, layout, cape, geometry, false);
+  }
+
   fn attach(
     &mut self,
     device: &wgpu::Device,
