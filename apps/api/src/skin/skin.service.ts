@@ -113,7 +113,7 @@ export class SkinService {
     };
   }
 
-  private async resolveHelmet(helmet?: ArmorPiece | { head: string }): Promise<Helmet | undefined> {
+  private async resolveHelmet(helmet?: HelmetOption): Promise<Helmet | undefined> {
     if (!helmet || !("head" in helmet)) return helmet;
 
     const head = await loadImage(`https://textures.minecraft.net/texture/${helmet.head}`).catch(() => undefined);
@@ -161,8 +161,10 @@ const imageData = (image: Image) => {
   return data;
 };
 
+type HelmetOption = ArmorPiece | { head: string } | Required<Pick<Helmet, "skull">>;
+
 type SkinRenderOptions = Omit<RenderOptions, "armor" | "cape"> & {
-  armor?: Omit<Armor, "helmet"> & { helmet?: ArmorPiece | { head: string } };
+  armor?: Omit<Armor, "helmet"> & { helmet?: HelmetOption };
   cape?: boolean;
 };
 

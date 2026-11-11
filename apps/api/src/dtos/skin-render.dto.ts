@@ -7,7 +7,7 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import type { ArmorPiece, RenderOptions } from "@statsify/skin-renderer";
+import type { ArmorPiece, Helmet, RenderOptions } from "@statsify/skin-renderer";
 import { IsBoolean, IsEmpty, IsIn, IsInt, IsNumber, IsObject, IsOptional, Matches, Max, Min, ValidateIf, ValidateNested } from "class-validator";
 import { Transform, Type, plainToInstance } from "class-transformer";
 import { UuidDto } from "./uuid.dto.js";
@@ -15,6 +15,8 @@ import { UuidDto } from "./uuid.dto.js";
 const POSES = ["standing", "punch", "sneak", "jump", "swim", "fly"] as const satisfies readonly NonNullable<RenderOptions["pose"]>[];
 
 const ARMOR_MATERIALS = ["leather", "chainmail", "iron", "gold", "diamond"] as const satisfies readonly ArmorPiece["material"][];
+
+const SKULLS = ["skeleton", "wither_skeleton", "zombie", "creeper"] as const satisfies readonly NonNullable<Helmet["skull"]>[];
 
 class ArmorPieceDto {
   @IsIn(ARMOR_MATERIALS)
@@ -38,14 +40,25 @@ class PlayerHeadDto {
   @Matches(TEXTURE_HASH)
   public head: string;
 
-  // A helmet is either a head or a material, never both
+  // A helmet is exactly one of a material, a head or a skull
   @IsEmpty()
   public material?: undefined;
+
+  @IsEmpty()
+  public skull?: undefined;
 
   // Accepted so an enchanted head validates, but the game draws no glint on a worn head
   @IsOptional()
   @IsBoolean()
   public enchanted?: boolean;
+}
+
+class SkullDto {
+  @IsIn(SKULLS)
+  public skull: (typeof SKULLS)[number];
+
+  @IsEmpty()
+  public material?: undefined;
 }
 
 // IsOptional also lets null through, which the renderer rejects with a 500
@@ -55,8 +68,12 @@ class ArmorDto {
   @ValidateIf(isSet)
   @IsObject()
   @ValidateNested()
-  @Type((options) => (options?.object.helmet?.head === undefined ? ArmorPieceDto : PlayerHeadDto))
-  public helmet?: ArmorPieceDto | PlayerHeadDto;
+  @Type((options) => {
+    const helmet = options?.object.helmet;
+    if (helmet?.head !== undefined) return PlayerHeadDto;
+    return helmet?.skull === undefined ? ArmorPieceDto : SkullDto;
+  })
+  public helmet?: ArmorPieceDto | PlayerHeadDto | SkullDto;
 
   @ValidateIf(isSet)
   @IsObject()
