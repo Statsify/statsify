@@ -502,8 +502,8 @@ impl SkinRenderer<native::NativeBackend> {
       None => camera,
     };
 
-    // Boots reach below the frame that fits a bare player, and every armoured render
-    // pulls back with them so they share one scale
+    // Boots and a player head reach past the frame that fits a bare player, and every
+    // armoured render pulls back with them so they share one scale
     let camera = Camera::Orbital(if model.wears_armor() {
       camera.with_radius(53.0)
     } else {
