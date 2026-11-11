@@ -35,6 +35,8 @@ export interface SiteConfig {
   turnstileSiteKey: string;
   /** `site.turnstile.secretKey`: verifies lookup tokens; empty blocks lookups outside `dev`. */
   turnstileSecretKey: string;
+  /** `site.discordLogin.clientId`: the Discord application visitors log in with; empty turns login off. */
+  discordClientId: string;
   /** `sentry.tracesSampleRate`, 0.1 when unset */
   tracesSampleRate: number;
   /** `environment`; only an explicit `"dev"` relaxes anything, so a missing value counts as production. */
@@ -51,6 +53,7 @@ interface RawConfig {
     publicUrl?: string;
     indexable?: boolean;
     turnstile?: { siteKey?: string; secretKey?: string };
+    discordLogin?: { clientId?: string };
     renderWorkers?: unknown;
   };
   sentry?: { siteDsn?: string; tracesSampleRate?: number };
@@ -65,6 +68,7 @@ const TEST_CONFIG: SiteConfig = {
   apiKey: "",
   turnstileSiteKey: "",
   turnstileSecretKey: "",
+  discordClientId: "",
   tracesSampleRate: 1,
   environment: "dev",
   renderWorkers: 2,
@@ -96,6 +100,7 @@ async function load(): Promise<SiteConfig> {
     apiKey: raw.site?.apiKey ?? "",
     turnstileSiteKey: raw.site?.turnstile?.siteKey ?? "",
     turnstileSecretKey: raw.site?.turnstile?.secretKey ?? "",
+    discordClientId: raw.site?.discordLogin?.clientId ?? "",
     sentryDsn: raw.sentry?.siteDsn || undefined,
     tracesSampleRate: raw.sentry?.tracesSampleRate ?? 0.1,
     environment: raw.environment ?? "prod",
