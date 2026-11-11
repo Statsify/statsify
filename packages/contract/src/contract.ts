@@ -707,7 +707,7 @@ const accountErrors = oc.errors({
   NOT_FOUND: { message: "That profile isn't on this account" },
   /** Unlinking the primary while the account owns another profile. */
   CONFLICT: { message: "Pick another primary profile first" },
-  /** Login tries per address. */
+  /** Login tries per address, or while Discord says to wait. */
   TOO_MANY_REQUESTS: { message: "Too many login attempts, try again shortly" },
 });
 
