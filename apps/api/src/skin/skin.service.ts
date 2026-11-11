@@ -122,15 +122,15 @@ export class SkinService {
     };
   }
 
-  private async resolveArmor({ helmet, chestplate, leggings, boots }: ArmorDto): Promise<Armor> {
-    const pieces = await Promise.all([
-      this.resolveHelmet(helmet),
-      chestplate && resolveArmorPiece(chestplate, 1),
-      leggings && resolveArmorPiece(leggings, 2),
-      boots && resolveArmorPiece(boots, 1),
+  private async resolveArmor(armor: ArmorDto): Promise<Armor> {
+    const [helmet, chestplate, leggings, boots] = await Promise.all([
+      this.resolveHelmet(armor.helmet),
+      armor.chestplate && resolveArmorPiece(armor.chestplate, 1),
+      armor.leggings && resolveArmorPiece(armor.leggings, 2),
+      armor.boots && resolveArmorPiece(armor.boots, 1),
     ]);
 
-    return { helmet: pieces[0], chestplate: pieces[1], leggings: pieces[2], boots: pieces[3] };
+    return { helmet, chestplate, leggings, boots };
   }
 
   private async resolveHelmet(helmet: ArmorDto["helmet"]): Promise<ArmorPiece | undefined> {
@@ -210,7 +210,6 @@ const SKULL_TEXTURES: Record<(typeof SKULLS)[number], string> = {
 
 const UNDYED_LEATHER = 0xA0_65_40;
 
-// Leggings use the armour's second layer, everything else the first
 async function resolveArmorPiece({ material, color = UNDYED_LEATHER, enchanted = false }: ArmorPieceDto, layer: 1 | 2): Promise<ArmorPiece> {
   const path = getMinecraftTexturePath(`textures/models/armor/${material}_layer_${layer}`);
   if (material !== "leather") return { texture: await readFile(`${path}.png`), enchanted };
