@@ -30,6 +30,9 @@ interface HistoryEntry {
 const frecency = (lookups: number[], now: number) =>
   lookups.reduce((score, time) => score + 0.5 ** ((now - time) / HALF_LIFE_MS), 0);
 
+const sortByFrecency = (entries: HistoryEntry[], now: number) =>
+  entries.sort((a, b) => frecency(b.lookups, now) - frecency(a.lookups, now));
+
 const blend = (query: string, personal: string[][], global: string[]) => {
   const prefix = query.toLowerCase();
   const seen = new Set<string>();
@@ -73,13 +76,7 @@ export class AutocompleteService {
   }
 
   public async record(type: AutocompleteType, id: string, name: string) {
-    const lower = name.toLowerCase();
-
-    const stored =
-      type === AutocompleteType.PLAYER ?
-        (await this.playerModel.findOne({ usernameToLower: lower }).select({ username: true }).lean().exec())?.username :
-        (await this.guildModel.findOne({ nameToLower: lower }).select({ name: true }).lean().exec())?.name;
-
+    const stored = await this.findStoredName(type, name);
     if (!stored) return;
 
     const now = Date.now();
@@ -89,10 +86,7 @@ export class AutocompleteService {
     if (entry) entry.lookups = [now, ...entry.lookups].slice(0, LOOKUPS_PER_ENTRY);
     else entries.push({ name: stored, lookups: [now] });
 
-    const kept = entries
-      .sort((a, b) => frecency(b.lookups, now) - frecency(a.lookups, now))
-      .slice(0, MAX_CHOICES);
-
+    const kept = sortByFrecency(entries, now).slice(0, MAX_CHOICES);
     await this.redis.set(this.historyKey(type, id), JSON.stringify(kept), "PX", HISTORY_MS);
   }
 
@@ -139,19 +133,41 @@ export class AutocompleteService {
   private async getHistory(type: AutocompleteType, id: string) {
     const now = Date.now();
     const entries = await this.readHistory(type, id, now);
-
-    return entries
-      .sort((a, b) => frecency(b.lookups, now) - frecency(a.lookups, now))
-      .map((entry) => entry.name);
+    return sortByFrecency(entries, now).map((entry) => entry.name);
   }
 
-  private async readHistory(type: AutocompleteType, id: string, now: number): Promise<HistoryEntry[]> {
+  private async readHistory(type: AutocompleteType, id: string, now: number) {
     const raw = await this.redis.get(this.historyKey(type, id));
     if (!raw) return [];
 
     return (JSON.parse(raw) as HistoryEntry[])
-      .map((entry) => ({ ...entry, lookups: entry.lookups.filter((time) => now - time < HISTORY_MS) }))
+      .map((entry) => ({
+        ...entry,
+        lookups: entry.lookups.filter((time) => now - time < HISTORY_MS),
+      }))
       .filter((entry) => entry.lookups.length > 0);
+  }
+
+  private async findStoredName(type: AutocompleteType, name: string) {
+    const lower = name.toLowerCase();
+
+    if (type === AutocompleteType.PLAYER) {
+      const player = await this.playerModel
+        .findOne({ usernameToLower: lower })
+        .select({ username: true })
+        .lean()
+        .exec();
+
+      return player?.username;
+    }
+
+    const guild = await this.guildModel
+      .findOne({ nameToLower: lower })
+      .select({ name: true })
+      .lean()
+      .exec();
+
+    return guild?.name;
   }
 
   private async getLinkedGuild(id: string) {
