@@ -12,13 +12,12 @@ use winit::dpi::PhysicalSize;
 use winit::event::{ElementState, MouseScrollDelta};
 
 use self::backend::{Backend, OutputTexture};
-use crate::armor::{load_texture, Armor, GLINT_TEXTURE};
+use crate::armor::Armor;
 use crate::camera::{Camera, CameraUniform, OrbitalCamera};
-use crate::error::Result;
+use crate::error::{Error, Result};
 use crate::geometry::vertex::{Vertex, VertexDescriptor};
 use crate::instance::InstanceRaw;
 use crate::light::LightUniform;
-use crate::material::Material;
 use crate::model::{DrawModel, Model, ModelKind, ModelOuterLayer};
 use crate::pose::Pose;
 use crate::skin_loader::{load_cape_from_memory, load_skin_from_memory};
@@ -47,7 +46,6 @@ pub struct SkinRenderer<T: Backend> {
   render_pipeline: wgpu::RenderPipeline,
   attachment_pipeline: wgpu::RenderPipeline,
   enchanted_pipeline: wgpu::RenderPipeline,
-  glint_material: Material,
   instance_buffer: wgpu::Buffer,
 
   depth_texture: Texture,
@@ -117,20 +115,6 @@ impl<T: Backend> SkinRenderer<T> {
       "fs_enchanted",
     );
 
-    let glint_texture = Texture::from_image_with_sampler(
-      device,
-      backend.queue(),
-      &load_texture(GLINT_TEXTURE),
-      &wgpu::SamplerDescriptor {
-        address_mode_u: wgpu::AddressMode::Repeat,
-        address_mode_v: wgpu::AddressMode::Repeat,
-        mag_filter: wgpu::FilterMode::Linear,
-        min_filter: wgpu::FilterMode::Linear,
-        ..Default::default()
-      },
-    )?;
-    let glint_material = Material::new(device, glint_texture, &texture_bind_group_layout);
-
     let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
 
     Ok(Self {
@@ -153,7 +137,6 @@ impl<T: Backend> SkinRenderer<T> {
       render_pipeline,
       attachment_pipeline,
       enchanted_pipeline,
-      glint_material,
       instance_buffer,
 
       depth_texture,
@@ -360,26 +343,30 @@ impl<T: Backend> SkinRenderer<T> {
       render_pass.set_pipeline(&self.attachment_pipeline);
       render_pass.draw_attachments(model, false, camera_bind_group, light_bind_group);
 
-      render_pass.set_pipeline(&self.enchanted_pipeline);
-      render_pass.set_bind_group(3, &self.glint_material.bind_group, &[]);
-      render_pass.draw_attachments(model, true, camera_bind_group, light_bind_group);
+      if let Some(glint) = model.glint() {
+        render_pass.set_pipeline(&self.enchanted_pipeline);
+        render_pass.set_bind_group(3, &glint.bind_group, &[]);
+        render_pass.draw_attachments(model, true, camera_bind_group, light_bind_group);
+      }
     };
 
     (encoder, output_texture)
   }
 
+  // Each render option is its own texture or setting, which the wasm renderer leaves unset
+  #[allow(clippy::too_many_arguments)]
   pub fn load_skin(
     &self,
     skin: &[u8],
     model_kind: ModelKind,
     model_outer_layer: ModelOuterLayer,
     armor: &Armor,
+    glint: Option<&[u8]>,
     cape: Option<&[u8]>,
     pose: Pose,
   ) -> Result<Model> {
     let device = self.backend.device();
     let queue = self.backend.queue();
-    let head = armor.head()?.map(load_skin_from_memory).transpose()?;
 
     let mut model = Model::new(
       device,
@@ -390,10 +377,11 @@ impl<T: Backend> SkinRenderer<T> {
       model_outer_layer,
       pose,
       armor,
-    );
+    )?;
 
-    if let Some(head) = head {
-      model.attach_head(device, queue, &self.texture_bind_group_layout, &head);
+    if armor.pieces().any(|(piece, ..)| piece.enchanted) {
+      let glint = image::load_from_memory(glint.ok_or(Error::MissingGlint)?)?;
+      model.attach_glint(device, queue, &self.texture_bind_group_layout, &glint)?;
     }
 
     if let Some(cape) = cape {
@@ -505,17 +493,7 @@ impl SkinRenderer<native::NativeBackend> {
       None => camera,
     };
 
-    let radius = model.pose().camera_radius();
-
-    // Boots and a player head reach past the frame that fits a bare player, and every
-    // armoured render pulls back with them so they share one scale
-    let radius = if model.wears_armor() {
-      radius + 3.0
-    } else {
-      radius
-    };
-
-    let camera = Camera::Orbital(camera.with_radius(radius));
+    let camera = Camera::Orbital(camera.with_radius(model.camera_radius()));
 
     let camera_bind_group = self.uniform_bind_group(
       &self.camera_bind_group_layout,
