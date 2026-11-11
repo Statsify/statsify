@@ -19,14 +19,16 @@
     "./node": {
       "types": "./src/node.ts",
       "default": "./dist/node.js"
-    }
+    },
+    "./atlas/*": "./atlas/*"
   },
   "scripts": {
     "build": "swc src --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "lint:ci": "oxlint --format=github",
-    "generate": "node scripts/generate-minecraft-data.ts"
+    "generate": "node scripts/generate-minecraft-data.ts",
+    "atlas": "node scripts/generate-atlas.ts"
   },
   "dependencies": {
     "@swc/helpers": "^0.5.23",

@@ -8,12 +8,36 @@
 
 import { type InventoryLayout, InventoryRenderer, type InventorySize, LAYOUTS, slotAt, slotOrigin } from "../core/inventory.js";
 import { context, createCanvas } from "../core/canvas.js";
+import { Atlas } from "../core/atlas.js";
 import { IconCache } from "../core/icon-cache.js";
 import type { ItemStack } from "../core/item-stack.js";
 import type { PackStack } from "../core/pack.js";
+import type { TextComponent } from "../core/text.js";
 import { tooltipOverlay } from "./tooltip-overlay.js";
 
 const MS_PER_TICK = 50;
+
+/** What an atlas inventory's `mc-tooltip-change` events carry while a slot with an item is hovered */
+export interface TooltipChange {
+  item: ItemStack;
+  slot: number;
+  lines: TextComponent[];
+  clientX: number;
+  clientY: number;
+  pointerType: string;
+}
+
+// The page's own font draws an atlas inventory's text, which ::part(title) and ::part(count) can
+// restyle. The site's Minecraft.ttf has 16 GUI pixels to the em, and trimming each line to its cap
+// height puts a glyph's top where the game draws it
+const STYLE = `
+  .frame { position: relative; width: fit-content; }
+  canvas { display: block; image-rendering: pixelated; }
+  .text { position: absolute; inset: 0; pointer-events: none; white-space: pre; font-family: var(--mc-inventory-font, "Minecraft"); }
+  .text > span { position: absolute; line-height: 0.5em; text-box: trim-both cap alphabetic; }
+  [part="title"] { color: #404040; }
+  [part="count"] { color: #ffffff; text-shadow: var(--gui-pixel) var(--gui-pixel) 0 #3f3f3f; }
+`;
 
 interface Resources {
   renderer: Promise<InventoryRenderer>;
@@ -22,9 +46,9 @@ interface Resources {
 }
 
 const cache = new IconCache();
-const resources = new WeakMap<PackStack, Resources>();
+const resources = new WeakMap<PackStack | Atlas, Resources>();
 
-function resourcesFor(pack: PackStack) {
+function resourcesFor(pack: PackStack | Atlas) {
   let shared = resources.get(pack);
 
   if (!shared) {
@@ -45,7 +69,10 @@ interface View {
   composed: OffscreenCanvas;
 }
 
-/** <mc-inventory>: a container drawn the way Minecraft draws one, from a resource pack */
+/**
+ * <mc-inventory>: a container drawn the way Minecraft draws one, from a resource pack or an atlas.
+ * With an atlas, the title and counts are HTML, and the page draws tooltips from `mc-tooltip-change`
+ */
 export class McInventory extends HTMLElement {
   public static observedAttributes = ["rows", "cols", "scale", "label", "layout", "freeze"];
 
@@ -56,7 +83,8 @@ export class McInventory extends HTMLElement {
   private static frame?: number;
 
   private canvas = document.createElement("canvas");
-  private packStack?: PackStack;
+  private text = document.createElement("div");
+  private packStack?: PackStack | Atlas;
   private items: (ItemStack | undefined)[] = [];
   private hovered = -1;
   private drawing = 0;
@@ -67,6 +95,7 @@ export class McInventory extends HTMLElement {
   private movingIcons: (OffscreenCanvas | undefined)[] = [];
   private stepping = false;
   private onScreen = false;
+  private tooltipOpen = false;
 
   private observer = new IntersectionObserver((entries) => {
     this.onScreen = entries.at(-1)!.isIntersecting;
@@ -87,9 +116,13 @@ export class McInventory extends HTMLElement {
   public constructor() {
     super();
     const root = this.attachShadow({ mode: "open" });
-    this.canvas.style.imageRendering = "pixelated";
-    this.canvas.style.display = "block";
-    root.append(this.canvas);
+    const style = document.createElement("style");
+    style.textContent = STYLE;
+    const frame = document.createElement("div");
+    frame.className = "frame";
+    this.text.className = "text";
+    frame.append(this.canvas, this.text);
+    root.append(style, frame);
 
     this.canvas.addEventListener("pointermove", (event) => this.hover(event));
     this.canvas.addEventListener("pointerdown", (event) => {
@@ -110,7 +143,7 @@ export class McInventory extends HTMLElement {
     return this.packStack;
   }
 
-  public set pack(pack: PackStack | undefined) {
+  public set pack(pack: PackStack | Atlas | undefined) {
     this.packStack = pack;
     this.unhover();
     void this.draw();
@@ -146,6 +179,7 @@ export class McInventory extends HTMLElement {
     this.hovered = -1;
     this.show();
     tooltipOverlay().release(this);
+    this.changeTooltip();
   }
 
   private get size(): InventorySize {
@@ -174,13 +208,22 @@ export class McInventory extends HTMLElement {
     );
     const overlay = tooltipOverlay();
 
+    const atlas = this.packStack instanceof Atlas;
+
     if (slot === this.hovered) {
-      overlay.move(event);
+      if (atlas) this.changeTooltip(event);
+      else overlay.move(event);
       return;
     }
 
     this.hovered = slot;
     this.show();
+
+    if (atlas) {
+      overlay.claim(this);
+      this.changeTooltip(event);
+      return;
+    }
 
     const item = this.items[slot];
     if (!item) {
@@ -196,6 +239,55 @@ export class McInventory extends HTMLElement {
     }
 
     overlay.show(tooltip.canvas, size.scale, event, this);
+  }
+
+  /** Tells the page which item's tooltip to show, or null once none is */
+  private changeTooltip(event?: PointerEvent) {
+    const item = event && this.items[this.hovered];
+    if (!item && !this.tooltipOpen) return;
+    this.tooltipOpen = Boolean(item);
+
+    const detail: TooltipChange | null =
+      item && this.view
+        ? {
+            item,
+            slot: this.hovered,
+            lines: this.view.renderer.lines(item),
+            clientX: event.clientX,
+            clientY: event.clientY,
+            pointerType: event.pointerType,
+          }
+        : null;
+
+    this.dispatchEvent(new CustomEvent("mc-tooltip-change", { detail, bubbles: true, composed: true }));
+  }
+
+  /** An atlas has no font, so its title and counts are the page's text, placed as the game places them */
+  private placeText(size: InventorySize, shown: (ItemStack | undefined)[], width: number) {
+    const labels: HTMLSpanElement[] = [];
+
+    const place = (part: string, text: string, top: number, side: "left" | "right", offset: number) => {
+      const label = document.createElement("span");
+      label.setAttribute("part", part);
+      label.textContent = text;
+      label.style.top = `${top * size.scale}px`;
+      label.style[side] = `${offset * size.scale}px`;
+      labels.push(label);
+    };
+
+    if (this.packStack instanceof Atlas) {
+      if (size.title) place("title", size.title, 6, "left", 8);
+
+      for (const [slot, item] of shown.entries()) {
+        if (!item?.count || item.count <= 1) continue;
+        const [x, y] = slotOrigin(size, slot);
+        place("count", `${item.count}`, y + 10, "right", width - (x + 18));
+      }
+    }
+
+    this.text.style.fontSize = `${16 * size.scale}px`;
+    this.text.style.setProperty("--gui-pixel", `${size.scale}px`);
+    this.text.replaceChildren(...labels);
   }
 
   private async draw() {
@@ -222,6 +314,7 @@ export class McInventory extends HTMLElement {
     this.movingIcons = icons;
     this.canvas.width = still.width;
     this.canvas.height = still.height;
+    this.placeText(size, shown, still.width / size.scale);
     this.show();
 
     this.drawn = drawing;

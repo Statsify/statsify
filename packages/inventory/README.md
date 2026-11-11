@@ -1,8 +1,8 @@
 # @statsify/inventory
 
 Draws Minecraft items, text, tooltips and inventories from a resource pack, in the browser or in
-Node. Nothing is pre-rendered and no game assets ship with it: drop in a 26.3 pack
-(or the 26.3 client jar) and every icon is drawn from it, then cached.
+Node. Drop in a 26.3 pack (or the 26.3 client jar) and every icon is drawn from it, then cached, or
+draw from an [atlas](#atlas) of icons drawn ahead of time.
 
 ## Packs
 
@@ -78,6 +78,34 @@ import { skiaCanvas } from "@statsify/inventory/node";
 
 setCanvasBackend(skiaCanvas);
 ```
+
+## Atlas
+
+An atlas is a pack stack's icons drawn ahead of time: one image, and a JSON map of where each
+item's icon sits, so a page can show inventories without loading a pack. `atlas/` holds two:
+`vanilla-26.3`, from the 26.3 client, and `vanilla-1.8.9`, with the 1.8.9 client jar over it. Each
+image is named by its content hash, so it can be cached for good.
+
+```sh
+pnpm --filter @statsify/inventory build
+pnpm --filter @statsify/inventory atlas <name> <pack> [<pack> …] [--scale 3]
+```
+
+3D icons are drawn at `--scale`, 48 pixels at 3, and flat ones at 16 pixels, which any whole scale
+draws exactly. At other scales, 3D icons are resized from the atlas's. Each atlas is
+1648 × 1664 pixels (about 1.1 MB), and its map is 190 KB (30 KB gzipped). Rerun it whenever a
+change draws icons differently, as with the icon cache's `VERSION`. It lists the items it can't draw.
+
+Items whose look depends on their stack are still drawn in the browser, from models and textures
+the atlas carries: dyed leather, potions, banners, shields and player heads with skins, and the glint
+on anything. Atlas icons don't animate.
+
+`loadAtlas(url)` loads one, and it goes wherever a `PackStack` does: `ItemRenderer`,
+`InventoryRenderer.load` and `<mc-inventory>`'s `pack`. An atlas has no font, so `<mc-inventory>`
+puts its title and counts in HTML, in the page's `Minecraft` font (or `--mc-inventory-font`;
+`::part(title)` and `::part(count)` restyle them). It draws no tooltips: it sends
+`mc-tooltip-change` events with the hovered `item`, its tooltip `lines` and the pointer, and `null`
+once the tooltip should close. `InventoryRenderer.lines(item)` gives the same lines.
 
 ## Adapters
 
@@ -177,6 +205,7 @@ import { Inventory } from "@statsify/inventory/react";
 <Inventory pack={stack} slots={slots} layout="shop" label="Quick Buy" scale={3} />;
 ```
 
-`Inventory` takes the element's properties and attributes as props. It's a client component that
+`Inventory` takes the element's properties and attributes as props, and `onTooltipChange` for an
+atlas's tooltip events. It's a client component that
 loads `<mc-inventory>` in the browser, so it's safe to server render. React is an optional peer
 dependency.
