@@ -7,81 +7,43 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-  ValidateNested,
-} from "class-validator";
-import { Transform } from "class-transformer";
+import { z } from "zod";
 
 export class UserIdDto {
+  public static schema = z.object({ id: z.string().min(17).max(20) });
+
   @ApiProperty({ description: "Discord ID" })
-  @IsString()
-  @MinLength(17)
-  @MaxLength(20)
   public id: string;
 }
 
 export class UserDto {
+  public static schema = z.object({ tag: z.string().min(17).max(36) });
+
   @ApiProperty({ description: "Discord ID or UUID" })
-  @IsString()
-  @MinLength(17)
-  @MaxLength(36)
   public tag: string;
 }
 
-class UserTheme {
-  @IsOptional()
-  @IsString()
-  public font?: string;
-
-  @IsOptional()
-  @IsString()
-  public palette?: string;
-
-  @IsOptional()
-  @IsString()
-  public boxes?: string;
-}
-
-class UserFooter {
-  @IsOptional()
-  @IsString()
-  public message?: string;
-
-  @IsOptional()
-  @IsNumber()
-  public icon?: number;
-}
-
 export class UpdateUserDto {
-  @IsBoolean()
-  @IsOptional()
+  // Admin callers can set any other User field through this body too
+  public static schema = z.looseObject({
+    serverMember: z.boolean().nullish(),
+    theme: z.object({
+      font: z.string().nullish(),
+      palette: z.string().nullish(),
+      boxes: z.string().nullish(),
+    }).optional(),
+    footer: z.object({
+      message: z.string().nullish(),
+      icon: z.number().nullish(),
+    }).optional(),
+    locale: z.string().nullish(),
+  });
+
   public serverMember?: boolean;
 
-  @IsOptional()
-  @ValidateNested()
-  @Transform((params) => {
-    const theme = new UserTheme();
-    Object.assign(theme, params.value);
-    return theme;
-  })
-  public theme?: UserTheme;
+  public theme?: { font?: string; palette?: string; boxes?: string };
 
-  @IsOptional()
-  @ValidateNested()
-  @Transform((params) => {
-    const footer = new UserFooter();
-    Object.assign(footer, params.value);
-    return footer;
-  })
-  public footer?: UserFooter;
+  public footer?: { message?: string; icon?: number };
 
-  @IsString()
-  @IsOptional()
   public locale?: string;
 }

@@ -9,19 +9,20 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { CacheDto } from "./cache.dto.js";
 import { GuildQuery } from "@statsify/api-client";
-import { IsEnum, IsString, MaxLength, MinLength } from "class-validator";
+import { z } from "zod";
 
 export class GuildDto extends CacheDto {
-  @IsString()
-  @MinLength(1)
-  @MaxLength(36)
+  public static override schema = CacheDto.schema.extend({
+    guild: z.string().min(1).max(36),
+    type: z.enum(GuildQuery),
+  });
+
   @ApiProperty({
     example: "bluebloods",
     description: "The guild's name or id or a guild member's uuid",
   })
   public guild: string;
 
-  @IsEnum(GuildQuery)
   @ApiProperty({
     enum: GuildQuery,
     enumName: "GuildQuery",

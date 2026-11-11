@@ -7,19 +7,19 @@
  */
 
 import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { UuidDto } from "./uuid.dto.js";
+import { z } from "zod";
 
 export class VerifyCodeDto extends PartialType(UuidDto) {
+  public static schema = z.object({
+    uuid: UuidDto.schema.shape.uuid.optional(),
+    id: z.string().min(17),
+    code: z.string().min(4).max(4).optional(),
+  });
+
   @ApiProperty({ description: "Discord ID" })
-  @IsString()
-  @MinLength(17)
   public id: string;
 
   @ApiProperty({ description: "Verification Code" })
-  @IsString()
-  @IsOptional()
-  @MinLength(4)
-  @MaxLength(4)
   public code?: string;
 }

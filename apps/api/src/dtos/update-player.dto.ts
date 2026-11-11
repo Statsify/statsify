@@ -7,18 +7,22 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { z } from "zod";
 
 export class UpdatePlayerDto {
-  @IsString()
+  // The body is the whole Hypixel player, so every other key has to reach `new Player()`
+  public static schema = z.looseObject({
+    uuid: z.string(),
+    playername: z.string(),
+    displayname: z.string(),
+  });
+
   @ApiProperty()
   public uuid: string;
 
-  @IsString()
   @ApiProperty()
   public playername: string;
 
-  @IsString()
   @ApiProperty()
   public displayname: string;
 }

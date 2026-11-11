@@ -7,14 +7,16 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum } from "class-validator";
-import { Player, getLeaderboardFields } from "@statsify/schemas";
+import { Player } from "@statsify/schemas";
 import { UuidDto } from "./uuid.dto.js";
+import { leaderboardField } from "./leaderboard-field.js";
+import { z } from "zod";
 
-const fields = getLeaderboardFields(Player).map(([key]) => key);
+const field = leaderboardField(Player);
 
 export class PlayerRankingsDto extends UuidDto {
-  @ApiProperty({ enum: fields, type: [String] })
-  @IsEnum(fields, { each: true })
+  public static override schema = UuidDto.schema.extend({ fields: z.array(field) });
+
+  @ApiProperty({ enum: field.options, type: [String] })
   public fields: string[];
 }

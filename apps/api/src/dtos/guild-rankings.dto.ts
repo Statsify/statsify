@@ -7,19 +7,21 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { Guild, getLeaderboardFields } from "@statsify/schemas";
-import { IsEnum, IsString, MaxLength, MinLength } from "class-validator";
+import { Guild } from "@statsify/schemas";
+import { leaderboardField } from "./leaderboard-field.js";
+import { z } from "zod";
 
-const fields = getLeaderboardFields(Guild).map(([key]) => key);
+const field = leaderboardField(Guild);
 
 export class GuildRankingDto {
-  @ApiProperty({ enum: fields, type: [String] })
-  @IsEnum(fields, { each: true })
+  public static schema = z.object({
+    fields: z.array(field),
+    id: z.string().min(24).max(24),
+  });
+
+  @ApiProperty({ enum: field.options, type: [String] })
   public fields: string[];
 
-  @IsString()
-  @MinLength(24)
-  @MaxLength(24)
   @ApiProperty()
   public id: string;
 }

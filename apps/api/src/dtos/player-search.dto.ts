@@ -7,11 +7,11 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, MaxLength } from "class-validator";
+import { z } from "zod";
 
 export class PlayerSearchDto {
-  @IsString()
-  @MaxLength(16)
+  public static schema = z.object({ query: z.string().max(16) });
+
   @ApiProperty()
   public query: string;
 }

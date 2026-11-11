@@ -7,28 +7,27 @@
  */
 
 import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
-import { Player, getLeaderboardFields } from "@statsify/schemas";
+import { Player } from "@statsify/schemas";
 import { PlayerDto } from "./player.dto.js";
-import { Transform } from "class-transformer";
+import { leaderboardField } from "./leaderboard-field.js";
+import { z } from "zod";
 
-const fields = getLeaderboardFields(Player).map(([key]) => key);
+const field = leaderboardField(Player);
 
 export class PlayerLeaderboardDto extends PartialType(PlayerDto) {
-  @IsEnum(fields)
-  @ApiProperty({ enum: fields })
+  public static schema = z.object({
+    player: PlayerDto.schema.shape.player.nullish(),
+    field,
+    page: z.coerce.number().int().min(0).default(0),
+    position: z.coerce.number().int().min(1).optional(),
+  });
+
+  @ApiProperty({ enum: field.options })
   public field: string;
 
-  @Transform((params) => +params.value)
-  @IsInt()
-  @Min(0)
   @ApiProperty({ default: 0, minimum: 0, type: () => Number, required: false })
-  public page = 0;
+  public page: number;
 
-  @Transform((params) => +params.value)
-  @IsOptional()
-  @IsInt()
-  @Min(1)
   @ApiProperty({ minimum: 1, type: () => Number, required: false })
   public position?: number;
 }
