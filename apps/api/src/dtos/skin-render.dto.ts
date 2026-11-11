@@ -7,20 +7,20 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import type { ArmorPiece, Helmet, RenderOptions } from "@statsify/skin-renderer";
+import type { RenderOptions } from "@statsify/skin-renderer";
 import { IsBoolean, IsEmpty, IsIn, IsInt, IsNumber, IsObject, IsOptional, Matches, Max, Min, ValidateIf, ValidateNested } from "class-validator";
 import { Transform, Type, plainToInstance } from "class-transformer";
 import { UuidDto } from "./uuid.dto.js";
 
 const POSES = ["standing", "punch", "sneak", "jump", "swim", "fly"] as const satisfies readonly NonNullable<RenderOptions["pose"]>[];
 
-const ARMOR_MATERIALS = ["leather", "chainmail", "iron", "gold", "diamond"] as const satisfies readonly ArmorPiece["material"][];
+const ARMOR_MATERIALS = ["leather", "chainmail", "iron", "gold", "diamond"] as const;
 
-const SKULLS = ["skeleton", "wither_skeleton", "zombie", "creeper"] as const satisfies readonly NonNullable<Helmet["skull"]>[];
+export const SKULLS = ["skeleton", "wither_skeleton", "zombie", "creeper"] as const;
 
-class ArmorPieceDto {
+export class ArmorPieceDto {
   @IsIn(ARMOR_MATERIALS)
-  public material: ArmorPiece["material"];
+  public material: (typeof ARMOR_MATERIALS)[number];
 
   @IsOptional()
   @IsInt()
@@ -64,7 +64,7 @@ class SkullDto {
 // IsOptional also lets null through, which the renderer rejects with a 500
 const isSet = (_: unknown, value: unknown) => value !== undefined;
 
-class ArmorDto {
+export class ArmorDto {
   @ValidateIf(isSet)
   @IsObject()
   @ValidateNested()
