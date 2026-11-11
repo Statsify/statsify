@@ -115,17 +115,11 @@ fn shade(in: VertexOutput, object_color: vec4<f32>) -> vec4<f32> {
     return vec4<f32>(result, object_color.a);
 }
 
-fn to_srgb(color: vec3<f32>) -> vec3<f32> {
-    return select(1.055 * pow(color, vec3<f32>(1.0 / 2.4)) - 0.055, color * 12.92, color <= vec3<f32>(0.0031308));
-}
-
-fn to_linear(color: vec3<f32>) -> vec3<f32> {
-    return select(pow((color + 0.055) / 1.055, vec3<f32>(2.4)), color / 12.92, color <= vec3<f32>(0.04045));
-}
-
 // The game draws the glint as a second pass that adds its squared layers to the
 // armour's gamma-encoded colour. Blending would add in linear space and wash the
-// glint out, so enchanted armour adds it here instead
+// glint out, so enchanted armour adds it here instead. A gamma of 2 stands in for
+// sRGB, since pow is slow on software renderers and the square root squares back
+// to the same colour where there's no glint
 @fragment
 fn fs_enchanted(in: VertexOutput) -> @location(0) vec4<f32> {
     let tint = vec3<f32>(0.38, 0.19, 0.608);
@@ -135,12 +129,11 @@ fn fs_enchanted(in: VertexOutput) -> @location(0) vec4<f32> {
         let angle = radians(30.0 - f32(i) * 60.0);
         let rotation = mat2x2<f32>(cos(angle), sin(angle), -sin(angle), cos(angle));
         let uv = rotation * in.texture_coordinates / 3.0;
-        let layer = to_srgb(textureSample(t_glint, s_glint, uv).rgb) * tint;
-        glint += layer * layer;
+        glint += textureSample(t_glint, s_glint, uv).rgb * tint * tint;
     }
 
     let armor = attachment_color(in);
-    let color = min(to_srgb(armor.rgb) + glint, vec3<f32>(1.0));
+    let color = min(sqrt(armor.rgb) + glint, vec3<f32>(1.0));
 
-    return vec4<f32>(to_linear(color), armor.a);
+    return vec4<f32>(color * color, armor.a);
 }
