@@ -8,6 +8,7 @@
 
 import { ARMOR, SLOTS, inRange, kitKey } from "./kits.js";
 import type { ItemStack } from "../core/item-stack.js";
+import { armorOf } from "./armor.js";
 import dumped from "../../data/duels-modes.json" with { type: "json" };
 import { legacyMaterial } from "../core/legacy-items.js";
 
@@ -78,6 +79,16 @@ function duelsKit(mode: string, kit: string): Kit | undefined {
   const name = kitKey(id?.[3] ?? kit);
   if (!id) return kits[`mini_${name}`] ?? kits[`insane_${name}`];
   return kits[`${id[1] === "mini" || id[2] === "ranked" ? "mini" : "insane"}_${name}`];
+}
+
+/**
+ * The armour a Duels kit's picker lists, by layout key as fromDuelsKit takes it. Undefined for a
+ * kit the picker lists none for, which is every Mega Walls Duel class
+ */
+export function duelsKitArmor(key: string) {
+  const { mode, kit: name } = duelsMode(key);
+  const armor = name ? duelsKit(mode, name)?.armor : undefined;
+  return armor && armorOf(Object.values(armor));
 }
 
 const withoutCopy = (token: string) => token.replace(/_?\d+$/, "");
