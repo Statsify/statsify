@@ -37,6 +37,18 @@ pub enum ArmorMaterial {
   Diamond,
 }
 
+#[cfg_attr(
+  not(target_arch = "wasm32"),
+  napi(string_enum = "snake_case", skip_typescript)
+)]
+#[derive(Clone, Copy)]
+pub enum Skull {
+  Skeleton,
+  WitherSkeleton,
+  Zombie,
+  Creeper,
+}
+
 #[cfg_attr(not(target_arch = "wasm32"), napi(object))]
 #[derive(Clone, Copy)]
 pub struct ArmorPiece {
@@ -60,6 +72,12 @@ pub struct Helmet {
   /// Skin texture (PNG) whose head is worn as a player head, in place of a material.
   #[cfg_attr(not(target_arch = "wasm32"), napi(ts_type = "Uint8Array"))]
   pub head: Option<Bytes>,
+  /// Vanilla mob skull worn in place of a material.
+  #[cfg_attr(
+    not(target_arch = "wasm32"),
+    napi(ts_type = "'skeleton' | 'wither_skeleton' | 'zombie' | 'creeper'")
+  )]
+  pub skull: Option<Skull>,
   /// Dye as `0xRRGGBB`, leather only. Undyed leather is brown.
   pub color: Option<u32>,
   pub enchanted: Option<bool>,
@@ -92,13 +110,13 @@ impl ArmorLayer {
 }
 
 impl Armor {
-  // An extruded outer layer would poke through the leggings and reach a player head's
+  // An extruded outer layer would poke through the leggings and reach a worn head's
   // surface, so parts under them get the flat one, which the game draws under armour anyway
   pub fn flattens(&self, part: Part) -> bool {
     let wears_head = self
       .helmet
       .as_ref()
-      .is_some_and(|helmet| helmet.head.is_some());
+      .is_some_and(|helmet| helmet.material.is_none());
 
     (part == Part::Head && wears_head)
       || self
@@ -111,9 +129,10 @@ impl Armor {
       return Ok(None);
     };
 
-    match (helmet.material, &helmet.head) {
-      (Some(_), None) => Ok(None),
-      (None, Some(head)) => Ok(Some(&head[..])),
+    match (helmet.material, &helmet.head, helmet.skull) {
+      (Some(_), None, None) => Ok(None),
+      (None, Some(head), None) => Ok(Some(&head[..])),
+      (None, None, Some(skull)) => Ok(Some(skull.texture())),
       _ => Err(Error::InvalidHelmet),
     }
   }
@@ -147,6 +166,17 @@ impl Armor {
     ]
     .into_iter()
     .filter_map(|(piece, layer, parts)| piece.map(|piece| (piece, layer, parts)))
+  }
+}
+
+impl Skull {
+  fn texture(self) -> &'static [u8] {
+    match self {
+      Skull::Skeleton => texture!("skeleton"),
+      Skull::WitherSkeleton => texture!("wither_skeleton"),
+      Skull::Zombie => texture!("zombie"),
+      Skull::Creeper => texture!("creeper"),
+    }
   }
 }
 

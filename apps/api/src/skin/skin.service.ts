@@ -18,8 +18,13 @@ import { getMinecraftTexturePath } from "@statsify/assets";
 import { type Armor, type ArmorPiece, type Helmet, type RenderOptions, renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
+// A texture hash always serves the same image, so heads never need refetching
+const HEAD_CACHE_SIZE = 500;
+
 @Injectable()
 export class SkinService {
+  private readonly heads = new Map<string, Buffer>();
+
   public constructor(
     private readonly httpService: HttpService,
     @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
@@ -113,11 +118,20 @@ export class SkinService {
     };
   }
 
-  private async resolveHelmet(helmet?: ArmorPiece | { head: string }): Promise<Helmet | undefined> {
+  private async resolveHelmet(helmet?: HelmetOption): Promise<Helmet | undefined> {
     if (!helmet || !("head" in helmet)) return helmet;
 
-    const head = await loadImage(`https://textures.minecraft.net/texture/${helmet.head}`).catch(() => undefined);
-    return head && { head: imageData(head) };
+    const head = this.heads.get(helmet.head) ??
+      await loadImage(`https://textures.minecraft.net/texture/${helmet.head}`).then(imageData).catch(() => undefined);
+
+    if (!head) return;
+
+    // Re-inserting keeps the least recently used head first in the Map, where it's evicted from
+    this.heads.delete(helmet.head);
+    this.heads.set(helmet.head, head);
+    if (this.heads.size > HEAD_CACHE_SIZE) this.heads.delete(this.heads.keys().next().value!);
+
+    return { head };
   }
 
   private getUuid(username: string): Promise<string> {
@@ -161,8 +175,10 @@ const imageData = (image: Image) => {
   return data;
 };
 
+type HelmetOption = ArmorPiece | { head: string } | Required<Pick<Helmet, "skull">>;
+
 type SkinRenderOptions = Omit<RenderOptions, "armor" | "cape"> & {
-  armor?: Omit<Armor, "helmet"> & { helmet?: ArmorPiece | { head: string } };
+  armor?: Omit<Armor, "helmet"> & { helmet?: HelmetOption };
   cape?: boolean;
 };
 
