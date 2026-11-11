@@ -72,7 +72,8 @@ impl Pose {
   // Extra swing of the cape away from the back, and where it moves to
   pub fn cape(self) -> (f32, Vector3<f32>) {
     match self {
-      Pose::Sneak => (25.0, Vector3::new(0.0, -2.27, 0.28)),
+      // The game drops a sneaking cape 2.27 but leaves out the body's 3.2, which place() adds
+      Pose::Sneak => (25.0, Vector3::new(0.0, 3.2 - 2.27, 0.28)),
       Pose::Jump => (25.0, Vector3::zero()),
       _ => (0.0, Vector3::zero()),
     }

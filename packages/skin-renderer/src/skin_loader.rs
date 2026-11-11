@@ -42,6 +42,11 @@ pub fn load_skin_from_memory(skin: &[u8]) -> Result<DynamicImage> {
 pub fn load_cape_from_memory(cape: &[u8]) -> Result<DynamicImage> {
   let cape = image::load_from_memory(cape)?;
 
+  // The padded texture has to fit the device's 2048 texture limit
+  if cape.width() > 2048 || cape.height() > 1024 {
+    return Err(Error::InvalidCapeTexture);
+  }
+
   let (mut width, mut height) = (64, 32);
 
   while width < cape.width() || height < cape.height() {
