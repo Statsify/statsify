@@ -4,3 +4,7 @@ append_commit_message:
 files:
   - source: /locales/en-US/default.json
     translation: /locales/%locale%/%original_file_name%
+    # Folder names are sent to Discord as locales, and Discord only accepts "id" for Indonesian
+    languages_mapping:
+      locale:
+        id: id
