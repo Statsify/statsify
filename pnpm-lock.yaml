@@ -268,12 +268,6 @@ importers:
       '@typegoose/typegoose':
         specifier: ^12.6.0
         version: 12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
-      class-transformer:
-        specifier: 0.5.1
-        version: 0.5.1
-      class-validator:
-        specifier: ^0.14.1
-        version: 0.14.4
       fastify:
         specifier: ^5.5.0
         version: 5.12.7
@@ -301,6 +295,9 @@ importers:
       toad-scheduler:
         specifier: ^3.0.1
         version: 3.1.0
+      zod:
+        specifier: ^4.1.5
+        version: 4.6.7
     devDependencies:
       '@nestjs/testing':
         specifier: ^11.1.24
@@ -767,9 +764,6 @@ importers:
       '@typegoose/typegoose':
         specifier: ^12.6.0
         version: 12.21.1(mongoose@8.21.1(socks@2.8.10)(supports-color@7.2.0))
-      class-validator:
-        specifier: ^0.14.1
-        version: 0.14.4
       luxon:
         specifier: ^3.5.0
         version: 3.7.2
@@ -7705,7 +7699,8 @@ snapshots:
     dependencies:
       '@types/node': 26.6.6
 
-  '@types/validator@13.15.10': {}
+  '@types/validator@13.15.10':
+    optional: true
 
   '@types/webidl-conversions@7.0.3': {}
 
@@ -8183,13 +8178,15 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  class-transformer@0.5.1: {}
+  class-transformer@0.5.1:
+    optional: true
 
   class-validator@0.14.4:
     dependencies:
       '@types/validator': 13.15.10
       libphonenumber-js: 1.13.15
       validator: 13.15.35
+    optional: true
 
   cli-tableau@2.0.1:
     dependencies:
@@ -9015,7 +9012,8 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  libphonenumber-js@1.13.15: {}
+  libphonenumber-js@1.13.15:
+    optional: true
 
   lie@3.1.1:
     dependencies:
@@ -10330,7 +10328,8 @@ snapshots:
 
   uuid@8.3.2: {}
 
-  validator@13.15.35: {}
+  validator@13.15.35:
+    optional: true
 
   vite@8.3.5(@types/node@25.9.9)(jiti@2.7.0):
     dependencies:

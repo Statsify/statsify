@@ -7,10 +7,11 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { z } from "zod";
 
 export class CommandDto {
-  @IsString()
+  public static schema = z.object({ command: z.string() });
+
   @ApiProperty()
   public command: string;
 }

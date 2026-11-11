@@ -16,7 +16,7 @@ import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
-import { ValidationPipe } from "@nestjs/common";
+import { ZodValidationPipe } from "./validation/zod-validation.pipe.js";
 import { config } from "@statsify/util";
 import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
@@ -67,8 +67,7 @@ const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter,
   logger: new Logger(),
 });
 
-// Validation using `class-validator` and `class-transformer`
-app.useGlobalPipes(new ValidationPipe({ transform: true }));
+app.useGlobalPipes(new ZodValidationPipe());
 
 // Sentry
 app.useGlobalInterceptors(new SentryInterceptor());

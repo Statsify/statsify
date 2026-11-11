@@ -7,12 +7,11 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, MaxLength, MinLength } from "class-validator";
+import { z } from "zod";
 
 export class PlayerDto {
-  @IsString()
-  @MinLength(1)
-  @MaxLength(36)
+  public static schema = z.object({ player: z.string().min(1).max(36) });
+
   @ApiProperty({
     example: "j4cobi",
     description: "The player's username or uuid",
