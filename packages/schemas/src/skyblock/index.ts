@@ -110,8 +110,8 @@ export class SkyBlockCropBoards {
 }
 
 /**
- * A board per collection item and per bestiary family, keyed as `boards.json` lists them (written by
- * @statsify/skyblock's sync-data). Hundreds of boards, so each keeps a shallower depth than the main ones' 50,000.
+ * Keyed as `boards.json` lists them, which @statsify/skyblock's sync-data writes since schemas can't import it. Hundreds
+ * of boards, so each keeps a shallower depth than the main ones.
  */
 export class SkyBlockCollectionBoards {
   [key: string]: number;
