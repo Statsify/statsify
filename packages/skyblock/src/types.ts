@@ -514,7 +514,8 @@ export interface JacobSection {
   contests: number; // entered
   uniqueGolds: number; // crops with a gold bracket or better
   crops: JacobCrop[];
-  perks: { doubleDrops: number; farmingLevelCap: number };
+  // Anita's: double_drops is Hypixel's name for the Extra Farming Fortune tiers, and farmingFortune what they give
+  perks: { doubleDrops: number; farmingFortune: number; farmingLevelCap: number };
   history: JacobContest[]; // the latest, newest first
 }
 
