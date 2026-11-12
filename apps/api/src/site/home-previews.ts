@@ -154,7 +154,7 @@ export function arcadePreview(player: Player): ArcadePreview {
   };
 }
 
-/** The guild card's slides: info, levelling, today's top GEXP and the featured member (`memberUuid`). */
+/** The guild card's slides: info, leveling, today's top GEXP and the featured member (`memberUuid`). */
 export function guildPreview(guild: Guild, memberUuid: string): GuildPreview {
   const members = guild.members.map((member) => ({
     uuid: member.uuid,
