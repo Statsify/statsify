@@ -191,7 +191,7 @@ if (import.meta.vitest) {
               additionalFields: [],
               aliases: [],
               sort: "DESC",
-              limit: 50_000,
+              limit: 5_000,
             },
             type: { type: Number, array: false, primitive: true },
             store: {
@@ -205,7 +205,7 @@ if (import.meta.vitest) {
               enabled: true,
               name: prettify("fieldA"),
               aliases: [],
-              limit: 50_000,
+              limit: 5_000,
               sort: "DESC",
               fieldName: prettify("fieldA"),
               additionalFields: [],
@@ -339,7 +339,7 @@ if (import.meta.vitest) {
         extraDisplay: "fieldA",
         aliases: [],
         sort: "DESC",
-        limit: 50_000,
+        limit: 5_000,
         resetEvery: undefined,
       });
     });

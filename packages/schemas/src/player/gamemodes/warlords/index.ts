@@ -49,7 +49,7 @@ export class Warlords {
   @Field({ store: { default: "warrior" } })
   public class: string;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
   @Field({ store: { default: defaultPrefix(titles) } })
