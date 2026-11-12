@@ -15,9 +15,11 @@ import {
   setItems,
 } from "skyhelper-networth";
 import { PET_STATS } from "#data";
+import { RARITIES } from "#types";
 import { boostedRarity, petName, petScorePoints, petTexture } from "../sections/pets.js";
 import { decodeAttributes, decodeInventory } from "#nbt";
-import { inventoryPages } from "../sections/inventories.js";
+import { byKey, inventoryPages } from "../sections/inventories.js";
+import { EQUIPMENT_PIECES } from "../sections/gear.js";
 import { normalizeItemText } from "../lore.js";
 import { describeKey } from "#prices";
 import { add } from "@statsify/math";
@@ -37,7 +39,7 @@ import type {
   ValuesSection,
 } from "#types";
 import type { RawNbt, RawPet } from "#raw";
-import type { SectionInput } from "../sections/index.js";
+import { type SectionInput, hasMarket } from "../sections/index.js";
 
 const TOP_ITEMS = 10;
 
@@ -180,12 +182,32 @@ export const NETWORTH = {
   },
 };
 
-/** Each pet type the member has none of, at the cheapest rarity a level 1 sells for. */
-function getMissingPets(member: SectionInput["member"], map: PriceMap, items: ItemsResource): MissingPet[] {
+/**
+ * Each pet type the member has none of: at the cheapest rarity a level 1 sells for, or, on a profile without the market,
+ * unpriced at its lowest rarity that scores.
+ */
+function getMissingPets(member: SectionInput["member"], map: PriceMap, items: ItemsResource, market: boolean): MissingPet[] {
   const owned = new Set((member.pets_data?.pets ?? []).map(({ type }) => type));
+  const missing = Object.entries(PET_STATS).filter(([type]) => !owned.has(type));
+  const pet = (type: string, rarity: Rarity, price?: number): MissingPet => ({
+    type,
+    name: petName(type),
+    rarity,
+    price,
+    points: petScorePoints(rarity),
+    texture: petTexture(type, rarity, undefined, items),
+  });
 
-  return Object.entries(PET_STATS)
-    .filter(([type]) => !owned.has(type))
+  if (!market) {
+    return missing
+      .flatMap(([type, rarities]) => {
+        const rarity = RARITIES.find((rarity) => rarity in rarities && petScorePoints(rarity) > 0);
+        return rarity ? [pet(type, rarity)] : [];
+      })
+      .toSorted((a, b) => a.name.localeCompare(b.name));
+  }
+
+  return missing
     .flatMap(([type, rarities]) => {
       const priced = (Object.keys(rarities) as Rarity[])
         .filter((rarity) => petScorePoints(rarity) > 0)
@@ -194,12 +216,10 @@ function getMissingPets(member: SectionInput["member"], map: PriceMap, items: It
           return entry ? [{ rarity, price: entry.coins }] : [];
         })
         .toSorted((a, b) => a.price - b.price)[0];
-      if (!priced) return [];
-
-      const { rarity, price } = priced;
-      return [{ type, name: petName(type), rarity, price, points: petScorePoints(rarity), texture: petTexture(type, rarity, undefined, items) }];
+      return priced ? [{ type, ...priced }] : [];
     })
-    .toSorted((a, b) => a.price - b.price);
+    .toSorted((a, b) => a.price - b.price)
+    .map(({ type, rarity, price }) => pet(type, rarity, price));
 }
 
 /** A toolkit tool is bare ExtraAttributes, so the library gets it as one item named from the resource. */
@@ -210,28 +230,79 @@ function toolkitItem(blob: RawNbt, items: ItemsResource): RawItem | null {
 
 type InventoryValues = NonNullable<ValuesSection["inventories"]>;
 
+// The library's ITEMS_WITH_UNIQUE_MODIFIERS, which it doesn't export
+const UNIQUE_MODIFIER_ITEMS = new Set(["SAFARI_BELT"]);
+
+// The library's order, after worn and loadout equipment: a unique modifier counts on the first item in it that has one
+const NETWORTH_ORDER: string[] = [
+  "inventory",
+  "enderChest",
+  "accessoryBag",
+  "personalVault",
+  "fishingBag",
+  "potionBag",
+  "sacksBag",
+  "quiver",
+  "backpacks",
+];
+const networthOrder = (id: string) => (NETWORTH_ORDER.includes(id) ? NETWORTH_ORDER.indexOf(id) : NETWORTH_ORDER.length);
+
 async function getInventoryValues(member: SectionInput["member"], map: PriceMap, items: ItemsResource): Promise<InventoryValues | null> {
-  const itemPages = inventoryPages(member, decodeInventory, (blob) => toolkitItem(blob, items));
+  // Networth leaves out a tool its toolkit doesn't hold; one taken out is priced where it sits
+  const unheld = new Set<RawItem>();
+  const itemPages = inventoryPages(member, decodeInventory, (blob, held) => {
+    const item = toolkitItem(blob, items);
+    if (item && !held) unheld.add(item);
+    return item;
+  });
   if (!itemPages) return null;
 
+  const equipment = [
+    member.inventory?.equipment_contents,
+    ...Object.values(member.loadout?.equipment ?? {}).flatMap((set) =>
+      typeof set === "number" ? [] : EQUIPMENT_PIECES.map((piece) => set[piece])
+    ),
+  ].flatMap((blob) => (blob ? decodeInventory(blob) : []));
+
   const options = { prices: toNetworthPrices(map) };
-  const worth = async (item: RawItem | null) => {
-    if (!item) return null;
-    const { price } = await new ItemNetworthCalculator(item).getNetworth(options);
-    return price > 0 ? price : null;
+  const price = async (item: RawItem | null) => (item && !unheld.has(item) ? new ItemNetworthCalculator(item).getNetworth(options) : null);
+  const [priced, pricedBackpacks, pricedEquipment] = await Promise.all([
+    Promise.all(
+      Object.entries(itemPages).map(
+        async ([id, inventory]) => [id, await Promise.all(inventory.map((page) => Promise.all(page.map(price))))] as const
+      )
+    ),
+    Promise.all(byKey(member.inventory?.backpack_icons).map((blob) => price(decodeInventory(blob)[0] ?? null))),
+    Promise.all(equipment.map(price)),
+  ]);
+
+  // As in networth, a unique modifier counts once per profile, on the first item that has it
+  const counted = new Set<string>();
+  const worth = (result: Item | null) => {
+    if (!result) return null;
+    let coins = result.price;
+    if (UNIQUE_MODIFIER_ITEMS.has(result.id)) {
+      for (const { type, id, price } of result.calculation ?? []) {
+        const key = `${result.id}:${type}:${id}`;
+        if (counted.has(key)) coins -= price;
+        else counted.add(key);
+      }
+    }
+    return coins > 0 ? coins : null;
   };
 
+  for (const result of pricedEquipment) worth(result);
   const pages: InventoryValues["pages"] = Object.fromEntries(
-    await Promise.all(
-      Object.entries(itemPages).map(
-        async ([id, inventory]) => [id, await Promise.all(inventory.map((page) => Promise.all(page.map(worth))))] as const
-      )
-    )
+    priced
+      .toSorted(([a], [b]) => networthOrder(a) - networthOrder(b))
+      .map(([id, inventory]) => [id, inventory.map((page) => page.map(worth))])
   );
+  const backpackIcons = pricedBackpacks.map(worth);
 
   const totals: InventoryValues["totals"] = Object.fromEntries(
-    Object.entries(pages).map(([id, inventory]) => [id, add(...inventory.flat().map((price) => price ?? 0))])
+    Object.entries(pages).map(([id, inventory]) => [id, add(...inventory.flat().map((coins) => coins ?? 0))])
   );
+  totals.backpacks = add(totals.backpacks ?? 0, ...backpackIcons.map((coins) => coins ?? 0));
 
   const sacks = Object.fromEntries(
     Object.entries(member.inventory?.sacks_counts ?? {}).flatMap(([id, count]) => {
@@ -240,20 +311,20 @@ async function getInventoryValues(member: SectionInput["member"], map: PriceMap,
     })
   );
 
-  return { pages, totals, sacks };
+  return { pages, backpackIcons, totals, sacks };
 }
 
 /** Beside NETWORTH for the same reason: it prices each item with the networth library. */
 export const VALUES = {
   needs: ["prices", "items"] as const,
-  async compute({ member, prices, items }: SectionInput): Promise<ValuesSection> {
+  async compute({ profile, member, prices, items }: SectionInput): Promise<ValuesSection> {
     if (!prices || !items) throw new TypeError("values needs prices and items");
     useItems(items);
 
     return {
       pricesAsOf: prices.asOf,
       inventories: await getInventoryValues(member, prices, items),
-      missingPets: getMissingPets(member, prices, items),
+      missingPets: getMissingPets(member, prices, items, hasMarket(profile)),
     };
   },
 };

@@ -34,12 +34,19 @@ export const byKey = (blobs: Record<string, RawNbt> = {}) =>
 /** The hotbar comes first in the blob and last on screen. */
 const hotbarLast = <T>(slots: T[]) => [...slots.slice(9), ...slots.slice(0, 9)];
 
-/** A toolkit's tools, kind by kind; IN_USE and IS_UNLOCKED aren't tools, and an emptied slot is null. */
-const toolkitPage = <T>(toolkit: RawToolkit, tool: (blob: RawNbt) => T | null): T[] =>
-  Object.values(toolkit)
-    .flatMap((tools) => (Array.isArray(tools) ? (tools as (RawNbt | null)[]) : []))
-    .map((blob) => blob && tool(blob))
+/**
+ * A toolkit's tools, kind by kind, each with whether the toolkit holds it: not while it's taken out into an inventory,
+ * nor before the toolkit is unlocked. IN_USE and IS_UNLOCKED aren't tools, and an emptied slot is null.
+ */
+const toolkitPage = <T>(toolkit: RawToolkit, tool: (blob: RawNbt, held: boolean) => T | null): T[] => {
+  const inUse = toolkit.IN_USE as Record<string, Record<string, boolean>> | undefined;
+  const held = (kind: string, slot: number) => Boolean(toolkit.IS_UNLOCKED) && inUse?.[kind]?.[slot] !== true;
+  return Object.entries(toolkit)
+    .flatMap(([kind, tools]) =>
+      Array.isArray(tools) ? (tools as (RawNbt | null)[]).map((blob, slot) => blob && tool(blob, held(kind, slot))) : []
+    )
     .filter((item) => item !== null);
+};
 
 type Pages<T> = Partial<Record<InventoryId, (T | null)[][]>>;
 
@@ -47,7 +54,7 @@ type Pages<T> = Partial<Record<InventoryId, (T | null)[][]>>;
 export function inventoryPages<T>(
   member: RawMember,
   slots: (blob: RawNbt) => (T | null)[],
-  tool: (blob: RawNbt) => T | null
+  tool: (blob: RawNbt, held: boolean) => T | null
 ): Pages<T> | null {
   const inventory = member.inventory;
   if (!inventory?.inv_contents) return null;
