@@ -9,4 +9,31 @@
  */
 export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-wasip1'
 
-export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: boolean): Promise<Buffer>
+export interface Armor {
+  helmet?: ArmorPiece
+  chestplate?: ArmorPiece
+  leggings?: ArmorPiece
+  boots?: ArmorPiece
+}
+
+export interface ArmorPiece {
+  /**
+   * Texture (PNG) in the armor layout: `layer_1` for helmets, chestplates and boots,
+   * `layer_2` for leggings.
+   */
+  texture: Uint8Array
+  enchanted: boolean
+  /**
+   * Draws the helmet's texture, a skin or mob texture, as a worn skull or player head
+   * instead of an armor layer.
+   */
+  skull?: boolean
+}
+
+export interface RenderOptions {
+  armor?: Armor
+  /** Enchantment glint texture (PNG), needed when an armor piece is enchanted. */
+  glint?: Uint8Array
+}
+
+export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: boolean, options?: RenderOptions | undefined | null): Promise<Buffer>

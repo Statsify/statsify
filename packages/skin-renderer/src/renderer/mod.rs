@@ -12,8 +12,9 @@ use winit::dpi::PhysicalSize;
 use winit::event::{ElementState, MouseScrollDelta};
 
 use self::backend::{Backend, OutputTexture};
+use crate::armor::Armor;
 use crate::camera::{Camera, CameraUniform, OrbitalCamera};
-use crate::error::Result;
+use crate::error::{Error, Result};
 use crate::geometry::vertex::{Vertex, VertexDescriptor};
 use crate::instance::InstanceRaw;
 use crate::light::LightUniform;
@@ -40,6 +41,8 @@ pub struct SkinRenderer<T: Backend> {
   camera_bind_group: wgpu::BindGroup,
   light_bind_group: wgpu::BindGroup,
   render_pipeline: wgpu::RenderPipeline,
+  attachment_pipeline: wgpu::RenderPipeline,
+  enchanted_pipeline: wgpu::RenderPipeline,
   instance_buffer: wgpu::Buffer,
 
   depth_texture: Texture,
@@ -85,14 +88,28 @@ impl<T: Backend> SkinRenderer<T> {
     let (light_uniform, light_buffer, light_bind_group_layout, light_bind_group) =
       Self::create_light(device, &camera);
 
-    let render_pipeline = Self::create_render_pipeline(
+    let bind_group_layouts = [
+      &texture_bind_group_layout,
+      &camera_bind_group_layout,
+      &light_bind_group_layout,
+    ];
+
+    let render_pipeline =
+      Self::create_render_pipeline(device, &bind_group_layouts, &config, "fs_main");
+
+    let attachment_pipeline =
+      Self::create_render_pipeline(device, &bind_group_layouts, &config, "fs_attachment");
+
+    let enchanted_pipeline = Self::create_render_pipeline(
       device,
       &[
         &texture_bind_group_layout,
         &camera_bind_group_layout,
         &light_bind_group_layout,
+        &texture_bind_group_layout,
       ],
       &config,
+      "fs_enchanted",
     );
 
     let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
@@ -113,6 +130,8 @@ impl<T: Backend> SkinRenderer<T> {
       camera_bind_group,
       light_bind_group,
       render_pipeline,
+      attachment_pipeline,
+      enchanted_pipeline,
       instance_buffer,
 
       depth_texture,
@@ -216,6 +235,7 @@ impl<T: Backend> SkinRenderer<T> {
     device: &wgpu::Device,
     bind_group_layouts: &[&wgpu::BindGroupLayout],
     config: &wgpu::SurfaceConfiguration,
+    fragment_entry_point: &str,
   ) -> wgpu::RenderPipeline {
     let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
       label: Some("shader.wgsl"),
@@ -239,7 +259,7 @@ impl<T: Backend> SkinRenderer<T> {
       },
       fragment: Some(wgpu::FragmentState {
         module: &shader,
-        entry_point: Some("fs_main"),
+        entry_point: Some(fragment_entry_point),
         targets: &[Some(wgpu::ColorTargetState {
           format: config.format,
           blend: Some(wgpu::BlendState::ALPHA_BLENDING),
@@ -309,6 +329,20 @@ impl<T: Backend> SkinRenderer<T> {
       render_pass.set_vertex_buffer(1, self.instance_buffer.slice(..));
       render_pass.set_pipeline(&self.render_pipeline);
       render_pass.draw_model(model, &self.camera_bind_group, &self.light_bind_group);
+
+      render_pass.set_pipeline(&self.attachment_pipeline);
+      render_pass.draw_attachments(
+        model,
+        false,
+        &self.camera_bind_group,
+        &self.light_bind_group,
+      );
+
+      if let Some(glint) = model.glint() {
+        render_pass.set_pipeline(&self.enchanted_pipeline);
+        render_pass.set_bind_group(3, &glint.bind_group, &[]);
+        render_pass.draw_attachments(model, true, &self.camera_bind_group, &self.light_bind_group);
+      }
     };
 
     (encoder, output_texture)
@@ -319,15 +353,28 @@ impl<T: Backend> SkinRenderer<T> {
     skin: &[u8],
     model_kind: ModelKind,
     model_outer_layer: ModelOuterLayer,
+    armor: &Armor,
+    glint: Option<&[u8]>,
   ) -> Result<Model> {
-    Ok(Model::new(
-      self.backend.device(),
-      self.backend.queue(),
+    let device = self.backend.device();
+    let queue = self.backend.queue();
+
+    let mut model = Model::new(
+      device,
+      queue,
       &self.texture_bind_group_layout,
       load_skin_from_memory(skin)?,
       model_kind,
       model_outer_layer,
-    ))
+      armor,
+    )?;
+
+    if armor.pieces().any(|(piece, ..)| piece.enchanted) {
+      let glint = image::load_from_memory(glint.ok_or(Error::MissingGlint)?)?;
+      model.attach_glint(device, queue, &self.texture_bind_group_layout, &glint)?;
+    }
+
+    Ok(model)
   }
 }
 
