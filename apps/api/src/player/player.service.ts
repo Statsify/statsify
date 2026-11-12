@@ -78,6 +78,7 @@ export class PlayerService {
     if (selector && Object.keys(selector).length > 0) {
       selector.uuid = true;
       selector.username = true;
+      selector.usernameToLower = true;
       selector.guildId = true;
       selector.sessionReset = true;
       selector.expiresAt = true;
@@ -114,6 +115,15 @@ export class PlayerService {
         await this.playerSearchService.delete(mongoPlayer.username);
 
       const flatPlayer = await this.saveOne(player, true);
+
+      // The save moved the renamed owner's doc off the name, so the retry finds its new owner
+      if (
+        tag.length <= 16 &&
+        mongoPlayer &&
+        mongoPlayer.usernameToLower !== player.usernameToLower
+      ) {
+        return this.getWithFallback(tag, cacheLevel, selector);
+      }
 
       flatPlayer.isNew = !mongoPlayer;
 
