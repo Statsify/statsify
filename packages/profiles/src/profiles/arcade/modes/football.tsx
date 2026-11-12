@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColours } from "@statsify/catalog";
+import { ARCADE, cardColors } from "@statsify/catalog";
 import { Football } from "@statsify/schemas";
 import { LocalizeFunction } from "../../../types.js";
 import { Table } from "../../../components/index.js";
 
-const colour = cardColours(ARCADE, "football");
+const color = cardColors(ARCADE, "football");
 
 interface FootballTableProps {
   stats: Football;
@@ -21,12 +21,12 @@ interface FootballTableProps {
 export const FootballTable = ({ stats, t }: FootballTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-      <Table.td title={t("stats.goals")} value={t(stats.goals)} color={colour("goals")} />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+      <Table.td title={t("stats.goals")} value={t(stats.goals)} color={color("goals")} />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t("stats.kicks")} value={t(stats.kicks)} color={colour("kicks")} />
-      <Table.td title={t("stats.powerKicks")} value={t(stats.powerKicks)} color={colour("powerKicks")} />
+      <Table.td title={t("stats.kicks")} value={t(stats.kicks)} color={color("kicks")} />
+      <Table.td title={t("stats.powerKicks")} value={t(stats.powerKicks)} color={color("powerKicks")} />
     </Table.tr>
   </Table.table>
 );

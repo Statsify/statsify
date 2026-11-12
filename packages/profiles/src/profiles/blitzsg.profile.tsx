@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BLITZSG, cardColours } from "@statsify/catalog";
+import { BLITZSG, cardColors } from "@statsify/catalog";
 import {
   BlitzSG,
   BlitzSGKit,
@@ -26,7 +26,7 @@ import { LocalizeFunction } from "../types.js";
 import { formatTime, prettify, romanNumeral } from "@statsify/util";
 import type { BaseProfileProps } from "../types.js";
 
-const colour = cardColours(BLITZSG);
+const color = cardColors(BLITZSG);
 
 interface OverallBlitzSGTableProps {
   blitzsg: BlitzSG;
@@ -40,22 +40,22 @@ const OverallBlitzSGTable = ({ blitzsg, t }: OverallBlitzSGTableProps) => (
         <Table.td
           title={t("stats.wins")}
           value={t(blitzsg.overall.wins)}
-          color={colour("overall.wins")}
+          color={color("overall.wins")}
         />
         <Table.td
           title={t("stats.kills")}
           value={t(blitzsg.overall.kills)}
-          color={colour("overall.kills")}
+          color={color("overall.kills")}
         />
         <Table.td
           title={t("stats.deaths")}
           value={t(blitzsg.overall.deaths)}
-          color={colour("overall.deaths")}
+          color={color("overall.deaths")}
         />
         <Table.td
           title={t("stats.kdr")}
           value={t(blitzsg.overall.kdr)}
-          color={colour("overall.kdr")}
+          color={color("overall.kdr")}
         />
       </Table.tr>
     </Table.ts>
@@ -65,13 +65,13 @@ const OverallBlitzSGTable = ({ blitzsg, t }: OverallBlitzSGTableProps) => (
           <Table.td
             title={t("stats.wins")}
             value={t(blitzsg.solo.wins)}
-            color={colour("solo.wins")}
+            color={color("solo.wins")}
             size="small"
           />
           <Table.td
             title={t("stats.kills")}
             value={t(blitzsg.solo.kills)}
-            color={colour("solo.kills")}
+            color={color("solo.kills")}
             size="small"
           />
         </Table.tr>
@@ -81,13 +81,13 @@ const OverallBlitzSGTable = ({ blitzsg, t }: OverallBlitzSGTableProps) => (
           <Table.td
             title={t("stats.wins")}
             value={t(blitzsg.doubles.wins)}
-            color={colour("doubles.wins")}
+            color={color("doubles.wins")}
             size="small"
           />
           <Table.td
             title={t("stats.kills")}
             value={t(blitzsg.doubles.kills)}
-            color={colour("doubles.kills")}
+            color={color("doubles.kills")}
             size="small"
           />
         </Table.tr>
@@ -98,36 +98,36 @@ const OverallBlitzSGTable = ({ blitzsg, t }: OverallBlitzSGTableProps) => (
 
 interface KitBlitzSGTableProps {
   stats: BlitzSGKit;
-  /** The kit's mode, where the table's colours are. */
+  /** The kit's mode, where the table's colors are. */
   kit: string;
   t: LocalizeFunction;
 }
 
 const KitBlitzSGTable = ({ stats, kit, t }: KitBlitzSGTableProps) => {
-  const colour = cardColours(BLITZSG, kit);
+  const color = cardColors(BLITZSG, kit);
 
   return (
     <Table.table>
       <Table.tr>
-        <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-        <Table.td title={t("stats.losses")} value={t(stats.losses)} color={colour("losses")} />
-        <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={colour("wlr")} />
+        <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+        <Table.td title={t("stats.losses")} value={t(stats.losses)} color={color("losses")} />
+        <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={color("wlr")} />
       </Table.tr>
       <Table.tr>
-        <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
-        <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
-        <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
+        <Table.td title={t("stats.kills")} value={t(stats.kills)} color={color("kills")} />
+        <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={color("deaths")} />
+        <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={color("kdr")} />
       </Table.tr>
       <Table.tr>
         <Table.td
           title={t("stats.playtime")}
           value={formatTime(stats.playtime)}
-          color={colour("playtime")}
+          color={color("playtime")}
         />
         <Table.td
           title={t("stats.gamesPlayed")}
           value={t(stats.gamesPlayed)}
-          color={colour("gamesPlayed")}
+          color={color("gamesPlayed")}
         />
       </Table.tr>
     </Table.table>
@@ -151,7 +151,7 @@ export const BlitzSGProfile = ({
 }: BlitzSGProfileProps) => {
   const { blitzsg } = player.stats;
 
-  const sidebar: SidebarItem[] = [[t("stats.coins"), t(blitzsg.coins), colour("coins")]];
+  const sidebar: SidebarItem[] = [[t("stats.coins"), t(blitzsg.coins), color("coins")]];
 
   let table: JSX.Element;
 
@@ -159,12 +159,12 @@ export const BlitzSGProfile = ({
     case "overall":
       table = <OverallBlitzSGTable blitzsg={blitzsg} t={t} />;
 
-      sidebar.push([t("stats.kit"), prettify(blitzsg.kit), colour("kit")]);
+      sidebar.push([t("stats.kit"), prettify(blitzsg.kit), color("kit")]);
       break;
 
     default: {
       const stats = blitzsg[mode.api];
-      const kitColour = cardColours(BLITZSG, mode.api);
+      const kitColor = cardColors(BLITZSG, mode.api);
 
       if (stats.level) {
         let level = romanNumeral(stats.level);
@@ -174,8 +174,8 @@ export const BlitzSGProfile = ({
         if (stats.level === 10) level = `§l${level}`;
 
         sidebar.push(
-          [t("stats.level"), level, kitColour("level", stats.level, stats)],
-          [t("stats.exp"), t(stats.exp), kitColour("exp")]
+          [t("stats.level"), level, kitColor("level", stats.level, stats)],
+          [t("stats.exp"), t(stats.exp), kitColor("exp")]
         );
       }
 

@@ -28,20 +28,20 @@ const COLOR_CLASSES: Record<string, string> = {
   f: "text-mc-white",
 };
 
-/** The text class for a `§` colour code (`§a` → `text-mc-green`); white for anything else. */
-export const colourClass = (code: string): string => COLOR_CLASSES[code.replace(/^§/, "")] ?? "text-mc-white";
+/** The text class for a `§` color code (`§a` → `text-mc-green`); white for anything else. */
+export const colorClass = (code: string): string => COLOR_CLASSES[code.replace(/^§/, "")] ?? "text-mc-white";
 
 /**
- * How to colour text with a card's colour code: the theme class for `§0`–`§f`, or an inline colour for the `§#rrggbb`
+ * How to color text with a card's color code: the theme class for `§0`–`§f`, or an inline color for the `§#rrggbb`
  * codes some cards draw.
  */
-export const colourOf = (code: string): { className?: string; style?: CSSProperties } => {
+export const colorOf = (code: string): { className?: string; style?: CSSProperties } => {
   const hex = /^§(#[\dA-Fa-f]{6})$/.exec(code)?.[1];
-  return hex ? { style: { color: hex } } : { className: colourClass(code) };
+  return hex ? { style: { color: hex } } : { className: colorClass(code) };
 };
 
-/** The class of the first colour in a formatted string, for a title that takes its value's colour. */
-export const leadingColourClass = (text: string): string => colourClass(/§([\da-f])/.exec(text)?.[1] ?? "");
+/** The class of the first color in a formatted string, for a title that takes its value's color. */
+export const leadingColorClass = (text: string): string => colorClass(/§([\da-f])/.exec(text)?.[1] ?? "");
 
 /** The text without its `§` codes, for a page title or an alt text. */
 export const plainText = (text: string): string => text.replaceAll(/§#[\dA-Fa-f]{6}|§\^\d+(?:\.\d+)?\^|§./g, "");
@@ -150,7 +150,7 @@ if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
 
   describe("plainText", () => {
-    it("drops colour, hex colour, size and style codes", () => {
+    it("drops color, hex color, size and style codes", () => {
       expect(plainText("§b[MVP§c+] j4cobi")).toBe("[MVP+] j4cobi");
       expect(plainText("§#FF55aa§^3^Big§r §ltext")).toBe("Big text");
       expect(plainText("§^1.5^half")).toBe("half");

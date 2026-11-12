@@ -13,7 +13,7 @@ import type { CSSProperties, ReactNode } from "react";
 
 /**
  * For a link that makes a whole stat (or panel) clickable: it stretches over its nearest `relative` ancestor, which
- * lightens on hover and shows the keyboard focus. The text keeps its colour and gets no underline.
+ * lightens on hover and shows the keyboard focus. The text keeps its color and gets no underline.
  */
 export const STAT_LINK =
   "outline-none after:absolute after:-inset-1 hover:after:bg-white/10 focus-visible:after:outline-2 focus-visible:after:outline-white/60";
@@ -40,7 +40,7 @@ export function StatCell({
   label: ReactNode;
   value: ReactNode;
   color?: string;
-  /** For a colour with no theme class (a card's `§#rrggbb`). */
+  /** For a color with no theme class (a card's `§#rrggbb`). */
   style?: CSSProperties;
   className?: string;
 }) {

@@ -10,7 +10,7 @@ import { BUILD_BATTLE_MODES, type BuildBattleModes } from "@statsify/schemas";
 import type { Game } from "../catalog.js";
 
 /**
- * The colours and labels of the bot's Build Battle card (`buildbattle.profile.tsx`): its sidebar, and each sub-game's
+ * The colors and labels of the bot's Build Battle card (`buildbattle.profile.tsx`): its sidebar, and each sub-game's
  * wins. The sub-games store only their wins (and Speed Builders its perfect builds), once for the game.
  */
 export const BUILD_BATTLE: Game<BuildBattleModes> = {
@@ -18,19 +18,19 @@ export const BUILD_BATTLE: Game<BuildBattleModes> = {
   id: "BUILD_BATTLE",
   modes: BUILD_BATTLE_MODES,
   game: {
-    "coins": { colour: "§6" },
+    "coins": { color: "§6" },
     // Score sets the title.
-    "score": { colour: "§a" },
-    "votes": { colour: "§c" },
-    "superVotes": { colour: "§b" },
-    "correctGuesses": { colour: "§9" },
-    "speedBuilders.perfectBuilds": { colour: "§e" },
-    "overall.wins": { colour: "§a" },
-    "pro.wins": { colour: "§a" },
-    "speedBuilders.wins": { colour: "§a" },
-    "solo.wins": { colour: "§a" },
-    "teams.wins": { colour: "§a" },
-    "guessTheBuild.wins": { colour: "§a" },
+    "score": { color: "§a" },
+    "votes": { color: "§c" },
+    "superVotes": { color: "§b" },
+    "correctGuesses": { color: "§9" },
+    "speedBuilders.perfectBuilds": { color: "§e" },
+    "overall.wins": { color: "§a" },
+    "pro.wins": { color: "§a" },
+    "speedBuilders.wins": { color: "§a" },
+    "solo.wins": { color: "§a" },
+    "teams.wins": { color: "§a" },
+    "guessTheBuild.wins": { color: "§a" },
   },
   shapes: [],
 };

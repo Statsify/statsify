@@ -11,7 +11,7 @@ import { Box } from "~/components/ui/box";
 import { Discord } from "~/components/icons/discord";
 import { Hidden, InlineStat, LeaderboardLink, STAT_LINK, StatCell } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
-import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
 import { RefreshBar } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust } from "~/components/ui/skin";
@@ -203,7 +203,7 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
   const { t } = useTranslation();
   const n = useNumberFormat();
 
-  // The general card's cells and colours: points §6, quests and challenges §a, karma and streaks §d, gifts §5. Quests
+  // The general card's cells and colors: points §6, quests and challenges §a, karma and streaks §d, gifts §5. Quests
   // and Challenges link to their pages, the rest to their leaderboards (`stats.general.<board>`).
   const cells: [label: string, value: number, color: string, link?: { page: string } | { board: string }][] = [
     [t("default:stats.achievementPoints"), overview.achievementPoints, "text-mc-gold", { board: "achievementPoints" }],
@@ -332,18 +332,18 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
       <dl className="grid grid-cols-2 gap-x-2 gap-y-4">
         {game.rows.map((row) => {
           const label = t(`stats.${row.key}`, { ns: ["default", "site"] });
-          // Text the API formatted takes the stat's colour, unless it brings its own (Layers' 74/100).
+          // Text the API formatted takes the stat's color, unless it brings its own (Layers' 74/100).
           const value = row.hidden ?
             <Hidden /> :
             typeof row.value === "number" ?
               <>{n(row.value)}{row.suffix}</> :
-              <MinecraftText>{`${row.colour}${row.value}`}</MinecraftText>;
-          const { className, style } = colourOf(row.colour);
+              <MinecraftText>{`${row.color}${row.value}`}</MinecraftText>;
+          const { className, style } = colorOf(row.color);
 
           return (
             <StatCell
               key={row.key}
-              label={row.name === undefined ? label : <MinecraftText>{`${row.colour}${row.name}`}</MinecraftText>}
+              label={row.name === undefined ? label : <MinecraftText>{`${row.color}${row.name}`}</MinecraftText>}
               value={row.leaderboard ?
                 (
                   <LeaderboardLink field={row.leaderboard} username={username} stat={label}>

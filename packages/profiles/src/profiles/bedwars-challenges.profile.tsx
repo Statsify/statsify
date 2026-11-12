@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BEDWARS, cardColours } from "@statsify/catalog";
+import { BEDWARS, cardColors } from "@statsify/catalog";
 import { Container, Footer, Header, SidebarItem, Table } from "../components/index.js";
 import {
   BedWarsModeChallenges,
@@ -26,7 +26,7 @@ const challengeFields = getLeaderboardFields(BedWarsModeChallenges).filter(
 
 const rows = arrayGroup(challengeFields, 3);
 
-const colour = cardColours(BEDWARS, "challenges");
+const color = cardColors(BEDWARS, "challenges");
 
 export const BedWarsChallengesProfile = ({
   skin,
@@ -41,8 +41,8 @@ export const BedWarsChallengesProfile = ({
   const { challenges } = player.stats.bedwars;
 
   const sidebar: SidebarItem[] = [
-    ["Total Completions", t(challenges.totalChallenges as number), colour("totalChallenges")],
-    ["Unique Completions", t(challenges.uniqueChallenges as number), colour("uniqueChallenges")],
+    ["Total Completions", t(challenges.totalChallenges as number), color("totalChallenges")],
+    ["Unique Completions", t(challenges.uniqueChallenges as number), color("uniqueChallenges")],
   ];
 
   return (
@@ -67,12 +67,12 @@ export const BedWarsChallengesProfile = ({
                   padding={{ left: 8, right: 8, top: 4, bottom: 4 }}
                 >
                   <text>
-                    §l{colour(field, completions)}
+                    §l{color(field, completions)}
                     {metadata.leaderboard.fieldName ?? prettify(field)}
                   </text>
                   <div width="remaining" margin={{ left: 4, right: 4 }} />
                   <text>
-                    {colour(field, completions)}
+                    {color(field, completions)}
                     {t(completions)}
                   </text>
                 </box>

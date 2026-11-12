@@ -62,19 +62,19 @@ const CLASSES: Record<string, Parameters<typeof scanMetadata>[0]> = {
 
 /**
  * The bot's `/challenges` card (`challenges.profile.tsx`): the total in §b, each game's total in §a, and its challenges
- * under their leaderboard names, coloured by rank where they're shown.
+ * under their leaderboard names, colored by rank where they're shown.
  */
 export const CHALLENGES: Game<ChallengeModes> = {
   key: "challenges",
   id: null,
   modes: CHALLENGE_MODES,
-  game: { total: { colour: "§b" } },
+  game: { total: { color: "§b" } },
   shapes: Object.entries(CLASSES).map(([game, type]): Shape => ({
     modes: [game],
     stats: Object.fromEntries(
       scanMetadata(type).map(([key, { leaderboard }]) => [
         key,
-        key === "total" ? { colour: "§a" } : { colour: "§a", name: leaderboard.name ?? prettify(key) },
+        key === "total" ? { color: "§a" } : { color: "§a", name: leaderboard.name ?? prettify(key) },
       ])
     ),
   })),

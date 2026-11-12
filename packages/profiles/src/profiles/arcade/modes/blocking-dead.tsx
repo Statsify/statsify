@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColours } from "@statsify/catalog";
+import { ARCADE, cardColors } from "@statsify/catalog";
 import { BlockingDead } from "@statsify/schemas";
 import { LocalizeFunction } from "../../../types.js";
 import { Table } from "../../../components/index.js";
 
-const colour = cardColours(ARCADE, "blockingDead");
+const color = cardColors(ARCADE, "blockingDead");
 
 interface BlockingDeadTableProps {
   stats: BlockingDead;
@@ -21,9 +21,9 @@ interface BlockingDeadTableProps {
 export const BlockingDeadTable = ({ stats, t }: BlockingDeadTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-      <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
-      <Table.td title={t("stats.headshots")} value={t(stats.headshots)} color={colour("headshots")} />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color={color("kills")} />
+      <Table.td title={t("stats.headshots")} value={t(stats.headshots)} color={color("headshots")} />
     </Table.tr>
   </Table.table>
 );

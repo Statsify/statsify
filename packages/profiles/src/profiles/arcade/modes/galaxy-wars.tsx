@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColours } from "@statsify/catalog";
+import { ARCADE, cardColors } from "@statsify/catalog";
 import { GalaxyWars } from "@statsify/schemas";
 import { LocalizeFunction } from "../../../types.js";
 import { Table } from "../../../components/index.js";
 
-const colour = cardColours(ARCADE, "galaxyWars");
+const color = cardColors(ARCADE, "galaxyWars");
 
 interface GalaxyWarsTableProps {
   stats: GalaxyWars;
@@ -21,14 +21,14 @@ interface GalaxyWarsTableProps {
 export const GalaxyWarsTable = ({ stats, t }: GalaxyWarsTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-      <Table.td title={t("stats.rebelKills")} value={t(stats.rebelKills)} color={colour("rebelKills")} />
-      <Table.td title={t("stats.empireKills")} value={t(stats.empireKills)} color={colour("empireKills")} />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+      <Table.td title={t("stats.rebelKills")} value={t(stats.rebelKills)} color={color("rebelKills")} />
+      <Table.td title={t("stats.empireKills")} value={t(stats.empireKills)} color={color("empireKills")} />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
-      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
-      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color={color("kills")} />
+      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={color("deaths")} />
+      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={color("kdr")} />
     </Table.tr>
   </Table.table>
 );

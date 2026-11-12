@@ -7,11 +7,11 @@
  */
 
 import { Table } from "../../../components/index.js";
-import { WARLORDS, cardColours } from "@statsify/catalog";
+import { WARLORDS, cardColors } from "@statsify/catalog";
 import type { LocalizeFunction } from "../../../types.js";
 import type { Warlords } from "@statsify/schemas";
 
-const colour = cardColours(WARLORDS);
+const color = cardColors(WARLORDS);
 
 export interface WarlordsOverallTableProps {
   warlords: Warlords;
@@ -21,20 +21,20 @@ export interface WarlordsOverallTableProps {
 export const WarlordsOverallTable = ({ warlords, t }: WarlordsOverallTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(warlords.wins)} color={colour("wins")} />
-      <Table.td title={t("stats.losses")} value={t(warlords.losses)} color={colour("losses")} />
-      <Table.td title={t("stats.wlr")} value={t(warlords.wlr)} color={colour("wlr")} />
+      <Table.td title={t("stats.wins")} value={t(warlords.wins)} color={color("wins")} />
+      <Table.td title={t("stats.losses")} value={t(warlords.losses)} color={color("losses")} />
+      <Table.td title={t("stats.wlr")} value={t(warlords.wlr)} color={color("wlr")} />
       <Table.td
         title={t("stats.gamesPlayed")}
         value={t(warlords.gamesPlayed)}
-        color={colour("gamesPlayed")}
+        color={color("gamesPlayed")}
       />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t("stats.kills")} value={t(warlords.kills)} color={colour("kills")} />
-      <Table.td title={t("stats.deaths")} value={t(warlords.deaths)} color={colour("deaths")} />
-      <Table.td title={t("stats.kdr")} value={t(warlords.kdr)} color={colour("kdr")} />
-      <Table.td title={t("stats.assists")} value={t(warlords.assists)} color={colour("assists")} />
+      <Table.td title={t("stats.kills")} value={t(warlords.kills)} color={color("kills")} />
+      <Table.td title={t("stats.deaths")} value={t(warlords.deaths)} color={color("deaths")} />
+      <Table.td title={t("stats.kdr")} value={t(warlords.kdr)} color={color("kdr")} />
+      <Table.td title={t("stats.assists")} value={t(warlords.assists)} color={color("assists")} />
     </Table.tr>
   </Table.table>
 );

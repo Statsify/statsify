@@ -504,14 +504,14 @@ function GameSection() {
         <Demo label="A stat without a leaderboard: no link">
           <StatPanel section={{ title: null, rows: [[{ ...TOKENS, leaderboard: null }]] }} username={username} />
         </Demo>
-        <Demo label="Hex colours, and a selection as a Label: value line">
+        <Demo label="Hex colors, and a selection as a Label: value line">
           <StatPanel section={SELECTION_SECTION} username={username} />
         </Demo>
-        <Demo label="The card's own heading, in its colours">
+        <Demo label="The card's own heading, in its colors">
           <StatPanel section={{ ...RESOURCES, name: "§6Solo" }} username={username} />
         </Demo>
-        <Demo label="A translated heading in the card's colour">
-          <StatPanel section={{ ...RESOURCES, colour: "§b" }} username={username} />
+        <Demo label="A translated heading in the card's color">
+          <StatPanel section={{ ...RESOURCES, color: "§b" }} username={username} />
         </Demo>
       </div>
       <Demo label="A list: the card's names, a time never set as N/A with no link">

@@ -19,16 +19,16 @@ import { prettify } from "@statsify/util";
 
 type HexDigit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "a" | "b" | "c" | "d" | "e" | "f";
 
-/** A Minecraft colour code as the bot's cards write them: `§0` to `§f`, or `§#rrggbb` where a card draws a hex colour. */
-export type ColourCode = `§${HexDigit}` | `§#${string}`;
+/** A Minecraft color code as the bot's cards write them: `§0` to `§f`, or `§#rrggbb` where a card draws a hex color. */
+export type ColorCode = `§${HexDigit}` | `§#${string}`;
 
 /** Something read from a stat's value and the object it is stored in (a kit's level shows its prestige). */
 export type ReadValue<T> = (value: unknown, parent: Record<string, unknown>) => T;
 
 /** What the catalog adds to a field: only what `@Field` doesn't know. */
 export interface StatEntry {
-  /** The colour the bot's card draws the stat in, or how it picks one from the value. */
-  colour: ColourCode | ReadValue<ColourCode>;
+  /** The color the bot's card draws the stat in, or how it picks one from the value. */
+  color: ColorCode | ReadValue<ColorCode>;
   /**
    * The `stats.*` locale key of the label: the bot's own word, abbreviation included (`stats.fkdr` is "FKDR"). Defaults
    * to `stats.<the field's name>`; set where the bot uses another key (`itemsCollected.diamond` is `stats.diamonds`).
@@ -55,10 +55,10 @@ export interface StatEntry {
 }
 
 /** The entry for a selection the card shows by name (a kit, a trail): Hypixel's id, prettified. */
-export const selection = (colour: ColourCode): StatEntry => ({ colour, format: (value) => prettify(String(value)) });
+export const selection = (color: ColorCode): StatEntry => ({ color, format: (value) => prettify(String(value)) });
 
-/** A challenge's colour on the bot's challenges cards: green once done, red before. */
-export const doneColour: ReadValue<ColourCode> = (value) => (Number(value) > 0 ? "§a" : "§c");
+/** A challenge's color on the bot's challenges cards: green once done, red before. */
+export const doneColor: ReadValue<ColorCode> = (value) => (Number(value) > 0 ? "§a" : "§c");
 
 /** Stats stored with the same fields at one or more places below the game. */
 export interface Shape {
@@ -69,7 +69,7 @@ export interface Shape {
 
 /**
  * One game: where its stats live, its modes (the schema's registry, not a copy) and an entry for every stat. The site's
- * and the bot's layouts pick from these; neither repeats a path, label, colour or leaderboard.
+ * and the bot's layouts pick from these; neither repeats a path, label, color or leaderboard.
  */
 export interface Game<M extends Mode[] = Mode[]> {
   /** The game's `PlayerStats` key: the bot's command name and the site's URL segment. */
@@ -91,7 +91,7 @@ export interface Stat {
   path: string;
   label: string;
   name?: string;
-  colour: StatEntry["colour"];
+  color: StatEntry["color"];
   /** The field it is shown out of (`12/25`) by path, or its fixed cap, when it has one. */
   of?: string | number;
   /** The field's leaderboard, when it has one. */
@@ -136,7 +136,7 @@ function resolve(key: string, base: string, entry: StatEntry): Stat {
     path,
     label: entry.label ?? `stats.${key.slice(key.lastIndexOf(".") + 1)}`,
     name: entry.name,
-    colour: entry.colour,
+    color: entry.color,
     of,
     leaderboard: leaderboard.enabled ?
       { name: leaderboard.name, fieldName: leaderboard.fieldName ?? "", sort: leaderboard.sort, hidden: leaderboard.hidden ?? false } :
@@ -188,17 +188,17 @@ export function statAt(game: Game, at: string, key: string): Stat {
 }
 
 /**
- * A card's colours: one for each of the game's own stats and, at each place given (a mode, or a mode and submode), the
+ * A card's colors: one for each of the game's own stats and, at each place given (a mode, or a mode and submode), the
  * stats stored there, a later place's winning over an earlier one's of the same key. A key that isn't one of those
  * names a stat a level deeper by its path: `partyPooper.wins` at `hideAndSeek` is `wins` at `hideAndSeek.partyPooper`,
- * and `disasters.powerups` at the game is `powerups` at `disasters`. A stat whose colour depends on its value (a kit's level,
- * a quest done or not) takes the value and the object it's stored in. A key the catalog has no colour for, or one whose
- * colour needs a value that isn't given, throws, so a card can't draw a stat in a colour the catalog doesn't hold.
+ * and `disasters.powerups` at the game is `powerups` at `disasters`. A stat whose color depends on its value (a kit's level,
+ * a quest done or not) takes the value and the object it's stored in. A key the catalog has no color for, or one whose
+ * color needs a value that isn't given, throws, so a card can't draw a stat in a color the catalog doesn't hold.
  */
-export function cardColours(
+export function cardColors(
   game: Game,
   ...at: string[]
-): (key: string, value?: unknown, parent?: object) => ColourCode {
+): (key: string, value?: unknown, parent?: object) => ColorCode {
   const entries = new Map(
     [
       game.game,
@@ -219,10 +219,10 @@ export function cardColours(
   };
 
   return (key, value, parent = {}) => {
-    const colour = (entries.get(key) ?? deeper(key))?.colour;
-    if (typeof colour === "function" && value !== undefined) return colour(value, parent as Record<string, unknown>);
-    if (typeof colour !== "string") throw new Error(`The catalog has no single colour for ${game.key} ${key}`);
-    return colour;
+    const color = (entries.get(key) ?? deeper(key))?.color;
+    if (typeof color === "function" && value !== undefined) return color(value, parent as Record<string, unknown>);
+    if (typeof color !== "string") throw new Error(`The catalog has no single color for ${game.key} ${key}`);
+    return color;
   };
 }
 

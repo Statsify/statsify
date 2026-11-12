@@ -9,20 +9,20 @@
 import { DUELS_MODES, type DuelsModes } from "@statsify/schemas";
 import { type Game, type StatEntry, selection } from "../catalog.js";
 
-// The colours of the bot's Duels card (`duels.profile.tsx` and its tables), the same on every table.
+// The colors of the bot's Duels card (`duels.profile.tsx` and its tables), the same on every table.
 const RECORD: Record<string, StatEntry> = {
-  winstreak: { colour: "§e" },
-  bestWinstreak: { colour: "§e" },
-  wins: { colour: "§a" },
-  losses: { colour: "§c" },
-  wlr: { colour: "§6" },
+  winstreak: { color: "§e" },
+  bestWinstreak: { color: "§e" },
+  wins: { color: "§a" },
+  losses: { color: "§c" },
+  wlr: { color: "§6" },
 };
 
-const KILLS: Record<string, StatEntry> = { kills: { colour: "§a" }, deaths: { colour: "§c" }, kdr: { colour: "§6" } };
+const KILLS: Record<string, StatEntry> = { kills: { color: "§a" }, deaths: { color: "§c" }, kdr: { color: "§6" } };
 // The sidebar's Blocks Placed is Overall's; every mode but BedWars Overall stores its own.
-const BASE: Record<string, StatEntry> = { ...RECORD, blocksPlaced: { colour: "§9" } };
+const BASE: Record<string, StatEntry> = { ...RECORD, blocksPlaced: { color: "§9" } };
 const PVP: Record<string, StatEntry> = { ...BASE, ...KILLS };
-const SHOTS: Record<string, StatEntry> = { shotsFired: { colour: "§6" } };
+const SHOTS: Record<string, StatEntry> = { shotsFired: { color: "§6" } };
 const KIT: Record<string, StatEntry> = { kit: selection("§e") };
 
 export const DUELS: Game<DuelsModes> = {
@@ -30,8 +30,8 @@ export const DUELS: Game<DuelsModes> = {
   id: "DUELS",
   modes: DUELS_MODES,
   game: {
-    tokens: { colour: "§2" },
-    pingRange: { colour: "§a", suffix: "ms" },
+    tokens: { color: "§2" },
+    pingRange: { color: "§a", suffix: "ms" },
   },
   shapes: [
     {
@@ -58,33 +58,33 @@ export const DUELS: Game<DuelsModes> = {
     { modes: ["boxing", "combo", "megawalls", "nodebuff", "sumo", "bedwars.bedwars", "bedwars.rush"], stats: PVP },
     { modes: ["arena", "spleef.bowSpleef"], stats: { ...BASE, ...SHOTS } },
     { modes: ["blitzsg"], stats: { ...PVP, ...SHOTS, ...KIT } },
-    { modes: ["quake"], stats: { ...PVP, headshots: { colour: "§3" }, ...SHOTS } },
+    { modes: ["quake"], stats: { ...PVP, headshots: { color: "§3" }, ...SHOTS } },
     {
       modes: ["bridge.overall", "bridge.solo", "bridge.doubles", "bridge.threes", "bridge.fours"],
-      stats: { ...PVP, ...SHOTS, goals: { colour: "§e" } },
+      stats: { ...PVP, ...SHOTS, goals: { color: "§e" } },
     },
     {
       modes: ["bedwars.overall"],
       stats: {
         ...RECORD,
         ...KILLS,
-        finalKills: { colour: "§a" },
-        finalDeaths: { colour: "§c" },
-        fkdr: { colour: "§6" },
-        bedsBroken: { colour: "§a" },
-        bedsLost: { colour: "§c" },
-        bblr: { colour: "§6" },
-        itemsPurchased: { colour: "§d" },
+        finalKills: { color: "§a" },
+        finalDeaths: { color: "§c" },
+        fkdr: { color: "§6" },
+        bedsBroken: { color: "§a" },
+        bedsLost: { color: "§c" },
+        bblr: { color: "§6" },
+        itemsPurchased: { color: "§d" },
       },
     },
     {
       modes: ["parkour"],
-      stats: { ...BASE, bestTime: { colour: "§d", unset: "N/A" }, checkpoints: { colour: "§5" } },
+      stats: { ...BASE, bestTime: { color: "§d", unset: "N/A" }, checkpoints: { color: "§5" } },
     },
-    { modes: ["spleef.spleef"], stats: { ...BASE, blocksBroken: { colour: "§b" } } },
+    { modes: ["spleef.spleef"], stats: { ...BASE, blocksBroken: { color: "§b" } } },
     // Wins over both Spleef modes, which its title counts.
-    { modes: ["spleef"], stats: { overallWins: { colour: "§a" } } },
+    { modes: ["spleef"], stats: { overallWins: { color: "§a" } } },
     { modes: ["skywars"], stats: KIT },
-    { modes: ["uhc"], stats: { gapplesEaten: { colour: "§a" } } },
+    { modes: ["uhc"], stats: { gapplesEaten: { color: "§a" } } },
   ],
 };

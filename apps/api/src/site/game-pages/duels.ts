@@ -48,7 +48,7 @@ const streak = (key: string, at?: string): CellSpec => ({ key, ...(at && { at })
 const TITLES: CellSpec[] = [
   "bedwars", "blitzsg", "bow", "spleef", "boxing", "bridge", "classic", "combo", "megawalls", "nodebuff", "op", "quake", "parkour",
   "skywars", "sumo", "uhc",
-].map((mode) => ({ ...winsOf(mode), name: (stats: PlayerStats) => titled(stats, mode).titleFormatted, colour: "§f" }));
+].map((mode) => ({ ...winsOf(mode), name: (stats: PlayerStats) => titled(stats, mode).titleFormatted, color: "§f" }));
 
 /**
  * The Bridge and UHC submodes whose card shows the mode's overall Shots Fired in place of their own. Their Shots Fired

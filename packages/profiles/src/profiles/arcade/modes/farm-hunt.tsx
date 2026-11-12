@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColours } from "@statsify/catalog";
+import { ARCADE, cardColors } from "@statsify/catalog";
 import { FarmHunt } from "@statsify/schemas";
 import { LocalizeFunction } from "../../../types.js";
 import { Table } from "../../../components/index.js";
 
-const colour = cardColours(ARCADE, "farmHunt");
+const color = cardColors(ARCADE, "farmHunt");
 
 interface FarmHuntTableProps {
   stats: FarmHunt;
@@ -22,26 +22,26 @@ export const FarmHuntTable = ({ stats, t }: FarmHuntTableProps) => (
   <Table.table>
     <Table.ts title="§6Overall">
       <Table.tr>
-        <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-        <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
-        <Table.td title={t("stats.tauntsUsed")} value={t(stats.tauntsUsed)} color={colour("tauntsUsed")} />
+        <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+        <Table.td title={t("stats.kills")} value={t(stats.kills)} color={color("kills")} />
+        <Table.td title={t("stats.tauntsUsed")} value={t(stats.tauntsUsed)} color={color("tauntsUsed")} />
         <Table.td
           title={t("stats.poopCollected")}
           value={t(stats.poopCollected)}
-          color={colour("poopCollected")}
+          color={color("poopCollected")}
         />
       </Table.tr>
     </Table.ts>
     <Table.ts title="§6Animal">
       <Table.tr>
-        <Table.td title={t("stats.wins")} value={t(stats.animalWins)} color={colour("animalWins")} />
-        <Table.td title={t("stats.kills")} value={t(stats.animalKills)} color={colour("animalKills")} />
+        <Table.td title={t("stats.wins")} value={t(stats.animalWins)} color={color("animalWins")} />
+        <Table.td title={t("stats.kills")} value={t(stats.animalKills)} color={color("animalKills")} />
       </Table.tr>
     </Table.ts>
     <Table.ts title="§6Hunter">
       <Table.tr>
-        <Table.td title={t("stats.wins")} value={t(stats.hunterWins)} color={colour("hunterWins")} />
-        <Table.td title={t("stats.kills")} value={t(stats.hunterKills)} color={colour("hunterKills")} />
+        <Table.td title={t("stats.wins")} value={t(stats.hunterWins)} color={color("hunterWins")} />
+        <Table.td title={t("stats.kills")} value={t(stats.hunterKills)} color={color("hunterKills")} />
       </Table.tr>
     </Table.ts>
   </Table.table>

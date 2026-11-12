@@ -18,7 +18,7 @@ import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hidden, InlineStat, LeaderboardLink, StatCell } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
-import { MinecraftText, colourClass, colourOf, leadingColourClass } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorClass, colorOf, leadingColorClass } from "~/components/ui/minecraft-text";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
@@ -36,7 +36,7 @@ type Level = NonNullable<GamePage["level"]>;
 /** A stat's label: the bot's word in `default.json`, or the site's own for a stat the bot doesn't show. */
 const LABEL_NAMESPACES = ["default", "site"];
 
-/** On a phone an odd last cell spans its row, centred, rather than sitting alone in the first column. */
+/** On a phone an odd last cell spans its row, centered, rather than sitting alone in the first column. */
 const ODD_LAST = "max-sm:[&>:last-child:nth-child(odd)]:col-span-2";
 
 /**
@@ -254,11 +254,11 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
   const { t } = useTranslation();
   const n = useNumberFormat();
   const { current, max, percent } = level.progression;
-  const { colours } = level;
+  const { colors } = level;
   const label = t(`default:${level.label}`);
   const value = <MinecraftText>{level.current}</MinecraftText>;
 
-  // Every line centred, a wrapped one too (a long title, its bar and the next one on a phone).
+  // Every line centered, a wrapped one too (a long title, its bar and the next one on a phone).
   return (
     <Box className={cn("content:flex content:h-full content:flex-col content:items-center content:justify-center content:gap-3 content:text-center", className)}>
       {/* Within the panel: a long level (The Pit past its last prestige) breaks rather than widening the page. */}
@@ -266,7 +266,7 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
         <StatCell
           label={label}
           value={level.leaderboard ? <LeaderboardLink field={level.leaderboard} username={username} stat={label}>{value}</LeaderboardLink> : value}
-          color={leadingColourClass(level.current)}
+          color={leadingColorClass(level.current)}
           className="relative wrap-break-word"
         />
       </dl>
@@ -284,12 +284,12 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
         <InlineStat
           label={t(`default:${level.progress}`)}
           value={max === undefined ?
-            <span className={cn("font-bold", colourClass(colours?.maxed ?? "§b"))}>{t(`game.${level.maxedWord ?? "maxed"}`)}</span> :
+            <span className={cn("font-bold", colorClass(colors?.maxed ?? "§b"))}>{t(`game.${level.maxedWord ?? "maxed"}`)}</span> :
             (
               <>
-                <span className={colourClass(colours?.current ?? "§b")}>{n(current)}</span>
-                {colours ? <span className={colourClass(colours.slash)}>/</span> : "/"}
-                <span className={colourClass(colours?.max ?? "§a")}>{n(max)}</span>
+                <span className={colorClass(colors?.current ?? "§b")}>{n(current)}</span>
+                {colors ? <span className={colorClass(colors.slash)}>/</span> : "/"}
+                <span className={colorClass(colors?.max ?? "§a")}>{n(max)}</span>
               </>
             )}
         />
@@ -303,7 +303,7 @@ function SectionTitle({ section }: { section: StatSection }) {
   const { t } = useTranslation();
   if (section.name) return <MinecraftText>{section.name}</MinecraftText>;
   if (section.title === null) return null;
-  const { className, style } = colourOf(section.colour ?? "§f");
+  const { className, style } = colorOf(section.color ?? "§f");
   return <span className={className} style={style}>{t(section.title, { ns: LABEL_NAMESPACES })}</span>;
 }
 
@@ -418,10 +418,10 @@ export function StatPanel({
   );
 }
 
-/** A stat's heading: the card's own name for it (in its colours, else the stat's), or the bot's word for it. */
+/** A stat's heading: the card's own name for it (in its colors, else the stat's), or the bot's word for it. */
 function useStatLabel(cell: Stat): { text: string; node: ReactNode } {
   const text = useLabelText()(cell);
-  return { text, node: cell.name === undefined ? text : <MinecraftText>{`${cell.colour}${cell.name}`}</MinecraftText> };
+  return { text, node: cell.name === undefined ? text : <MinecraftText>{`${cell.color}${cell.name}`}</MinecraftText> };
 }
 
 const plainName = (name: string) => name.replaceAll(/§#[\dA-Fa-f]{6}|§./g, "");
@@ -436,10 +436,10 @@ function useLabelText(): (cell: Stat) => string {
 function useStatValue(cell: Stat): ReactNode {
   const n = useNumberFormat(cell.trim);
   if (cell.hidden) return <Hidden />;
-  // Text the API formatted takes the stat's colour, unless it brings its own (a level, a §7 N/A).
+  // Text the API formatted takes the stat's color, unless it brings its own (a level, a §7 N/A).
   const value = typeof cell.value === "number" ?
     `${n(cell.value)}${cell.suffix ?? ""}` :
-    <MinecraftText>{`${cell.colour}${cell.value}`}</MinecraftText>;
+    <MinecraftText>{`${cell.color}${cell.value}`}</MinecraftText>;
 
   if (cell.of === undefined) return value;
 
@@ -452,14 +452,14 @@ function useStatValue(cell: Stat): ReactNode {
 }
 
 /**
- * One stat as the card draws it, in its colour, with the bot's label. A capped stat shows its cap after it (`12/25`) in
+ * One stat as the card draws it, in its color, with the bot's label. A capped stat shows its cap after it (`12/25`) in
  * §7 like the card, at the label's size so the pair fits a phone's cell.
  */
 function GameStat({ cell, username }: { cell: Stat; username: string }) {
   const { t } = useTranslation();
   const label = useStatLabel(cell);
   const value = useStatValue(cell);
-  const { className, style } = colourOf(cell.colour);
+  const { className, style } = colorOf(cell.color);
 
   return (
     <StatCell
@@ -481,7 +481,7 @@ function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat
   const label = useStatLabel(cell);
   const count = useStatValue(cell);
   const value = ticks ? <Tick done={Number(cell.value) > 0} /> : count;
-  const { className, style } = colourOf(cell.colour);
+  const { className, style } = colorOf(cell.color);
 
   return (
     <div className={cn("relative flex min-h-11 min-w-0 items-center gap-2 py-1 text-mc-1", className)} style={style}>
@@ -494,7 +494,7 @@ function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat
   );
 }
 
-/** The card's tick or cross, in the stat's colour, with its words for screen readers. */
+/** The card's tick or cross, in the stat's color, with its words for screen readers. */
 function Tick({ done }: { done: boolean }) {
   const { t } = useTranslation();
   const Icon = done ? Check : Cross;
@@ -511,7 +511,7 @@ function Tick({ done }: { done: boolean }) {
 function SelectionStat({ cell }: { cell: Stat }) {
   const label = useStatLabel(cell);
   const value = useStatValue(cell);
-  const { className, style } = colourOf(cell.colour);
+  const { className, style } = colorOf(cell.color);
   return <InlineStat label={label.text} value={value} color={className} style={style} />;
 }
 
