@@ -44,6 +44,17 @@ export const unroundedRatio = (n1 = 0, n2 = 0, multiply = 1) => {
 export const ratio = (n1 = 0, n2 = 0, multiply = 1) =>
   roundTo(unroundedRatio(n1, n2, multiply));
 
+/**
+ * @returns The estimated numerator at the next whole ratio, playing at 1.5x that ratio
+ */
+export const estimateAtNextRatio = (n1 = 0, n2 = 0) => {
+  const denominator = Math.max(n2, 1);
+  const target = Math.floor(unroundedRatio(n1, n2)) + 1;
+  const needed = target * denominator - n1;
+
+  return target * denominator + 2 * needed;
+};
+
 export const add = (...args: number[]): number =>
   args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
 
@@ -114,6 +125,15 @@ if (import.meta.vitest) {
       expect(ratio(1)).toBe(1);
       expect(ratio(1, 0)).toBe(1);
       expect(ratio(Number.NaN, 1)).toBe(0);
+    });
+
+    it("should estimate the numerator at the next whole ratio", () => {
+      expect(estimateAtNextRatio()).toBe(3);
+      expect(estimateAtNextRatio(0, 100)).toBe(300);
+      expect(estimateAtNextRatio(5, 0)).toBe(8);
+      expect(estimateAtNextRatio(527, 264)).toBe(530);
+      expect(estimateAtNextRatio(300, 100)).toBe(600);
+      expect(estimateAtNextRatio(99_999, 1000)).toBe(100_002);
     });
   });
 
