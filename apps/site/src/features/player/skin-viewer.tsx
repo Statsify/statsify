@@ -103,7 +103,7 @@ type Cuboid = [u: number, v: number, w: number, h: number, d: number];
 
 /**
  * One part of the model: a cuboid's six faces, each a window onto the texture, placed at `at` (skin pixels from the
- * model's centre). `inflate` grows an outer layer past the part under it, as the game does; `mirror` draws a legacy
+ * model's center). `inflate` grows an outer layer past the part under it, as the game does; `mirror` draws a legacy
  * skin's left limb from the right one.
  */
 function Part({ cuboid, at, texture, inflate = 0, mirror = false }: { cuboid: Cuboid; at: [number, number, number]; texture: Texture; inflate?: number; mirror?: boolean }) {

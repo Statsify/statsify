@@ -86,13 +86,13 @@ export function Turnstile({
     const element = container.current;
     if (!element) return;
 
-    let cancelled = false;
+    let canceled = false;
     let widgetId: string | undefined;
 
     async function mount(target: HTMLElement) {
       try {
         const turnstile = await loadTurnstile();
-        if (cancelled) return;
+        if (canceled) return;
 
         widgetId = turnstile.render(target, {
           sitekey: siteKey,
@@ -104,14 +104,14 @@ export function Turnstile({
         });
       } catch {
         callback.current(undefined);
-        if (!cancelled) loadError.current?.();
+        if (!canceled) loadError.current?.();
       }
     }
 
     void mount(element);
 
     return () => {
-      cancelled = true;
+      canceled = true;
       if (widgetId) window.turnstile?.remove(widgetId);
     };
   }, [siteKey, size]);

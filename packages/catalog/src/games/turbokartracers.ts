@@ -9,27 +9,27 @@
 import { TURBO_KART_RACERS_MODES, type TurboKartRacersModes } from "@statsify/schemas";
 import type { Game } from "../catalog.js";
 
-/** The colours and labels of the bot's Turbo Kart Racers card (`turbokartracers.profile.tsx`): its sidebar and table. */
+/** The colors and labels of the bot's Turbo Kart Racers card (`turbokartracers.profile.tsx`): its sidebar and table. */
 export const TURBO_KART_RACERS: Game<TurboKartRacersModes> = {
   key: "turbokartracers",
   id: "TURBO_KART_RACERS",
   modes: TURBO_KART_RACERS_MODES,
   game: {
-    coins: { colour: "§6" },
-    tokens: { colour: "§e" },
-    boxesPickedUp: { colour: "§c" },
-    grandPrixTokens: { colour: "§b" },
-    lapsCompleted: { colour: "§2" },
-    goldRate: { colour: "§6", suffix: "%" },
-    trophyRate: { colour: "§b", suffix: "%" },
-    gamesPlayed: { colour: "§a" },
-    // The trophies in their metals' colours. Gold trophies also set the prefix.
-    gold: { colour: "§#ffd700", label: "stats.goldTrophies" },
-    silver: { colour: "§#c0c0c0", label: "stats.silverTrophies" },
-    bronze: { colour: "§#cd7f32", label: "stats.bronzeTrophies" },
-    total: { colour: "§a", label: "stats.totalTrophies" },
+    coins: { color: "§6" },
+    tokens: { color: "§e" },
+    boxesPickedUp: { color: "§c" },
+    grandPrixTokens: { color: "§b" },
+    lapsCompleted: { color: "§2" },
+    goldRate: { color: "§6", suffix: "%" },
+    trophyRate: { color: "§b", suffix: "%" },
+    gamesPlayed: { color: "§a" },
+    // The trophies in their metals' colors. Gold trophies also set the prefix.
+    gold: { color: "§#ffd700", label: "stats.goldTrophies" },
+    silver: { color: "§#c0c0c0", label: "stats.silverTrophies" },
+    bronze: { color: "§#cd7f32", label: "stats.bronzeTrophies" },
+    total: { color: "§a", label: "stats.totalTrophies" },
     // On neither the card nor a leaderboard, so no page shows it.
-    coinsPickedUp: { colour: "§6" },
+    coinsPickedUp: { color: "§6" },
   },
   shapes: [],
 };

@@ -28,16 +28,16 @@ function guildPairs(a: GuildPage, b: GuildPage, date: Intl.DateTimeFormat): { ti
     b: { ...cell(b), leaderboard: null },
   });
   const gexp = (key: string, label: string, value: (guild: GuildPage) => number) =>
-    pair((guild) => ({ key, label, colour: "§2", value: value(guild) }));
+    pair((guild) => ({ key, label, color: "§2", value: value(guild) }));
 
   return [
     {
       pairs: [
-        pair((guild) => ({ key: "level", label: "stats.guild.level", colour: guild.tagColor, value: guild.level })),
-        pair((guild) => ({ key: "members", label: "stats.guild.members", colour: "§9", value: guild.memberCount, of: MAX_MEMBERS })),
+        pair((guild) => ({ key: "level", label: "stats.guild.level", color: guild.tagColor, value: guild.level })),
+        pair((guild) => ({ key: "members", label: "stats.guild.members", color: "§9", value: guild.memberCount, of: MAX_MEMBERS })),
         gexp("exp", "stats.guild.gexp", (guild) => guild.exp),
-        pair((guild) => ({ key: "createdAt", label: "stats.guild.createdOn", colour: "§3", value: date.format(guild.createdAt) })),
-        ...(a.master && b.master ? [pair((guild) => ({ key: "master", label: "stats.guild.guildMaster", colour: "§b", value: guild.master! }))] : []),
+        pair((guild) => ({ key: "createdAt", label: "stats.guild.createdOn", color: "§3", value: date.format(guild.createdAt) })),
+        ...(a.master && b.master ? [pair((guild) => ({ key: "master", label: "stats.guild.guildMaster", color: "§b", value: guild.master! }))] : []),
       ],
     },
     {

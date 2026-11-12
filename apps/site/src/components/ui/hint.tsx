@@ -14,7 +14,7 @@ import { createPortal } from "react-dom";
 const GAP = 8;
 
 /**
- * A box on the opaque panel colour with the panels' hard shadow, centred over `anchor` (under it when the window's top
+ * A box on the opaque panel color with the panels' hard shadow, centered over `anchor` (under it when the window's top
  * leaves no room for it) and kept inside the window, in a portal so no panel's clipped corners cut it off.
  */
 export function Floating({ anchor, className, style, ref: outer, ...props }: { anchor: DOMRect } & ComponentProps<"div">) {

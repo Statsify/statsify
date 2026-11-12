@@ -16,7 +16,7 @@ import {
   formatProgression,
 } from "../components/index.js";
 import { FormattedGame } from "@statsify/schemas";
-import { PIT, cardColours } from "@statsify/catalog";
+import { PIT, cardColors } from "@statsify/catalog";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "../types.js";
 
@@ -31,16 +31,16 @@ export const PitProfile = ({
   time,
 }: BaseProfileProps) => {
   const { pit } = player.stats;
-  const colour = cardColours(PIT);
+  const color = cardColors(PIT);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.gold"), t(pit.gold), colour("gold")],
-    [t("stats.goldEarned"), t(pit.goldEarned), colour("goldEarned")],
-    [t("stats.contracts"), t(pit.contractsCompleted), colour("contractsCompleted")],
-    [t("stats.renown"), t(pit.renown), colour("renown")],
-    [t("stats.lifetimeRenown"), t(pit.lifetimeRenown), colour("lifetimeRenown")],
-    [t("stats.bounty"), t(pit.bounty), colour("bounty")],
-    [t("stats.blocksPlaced"), t(pit.blocksPlaced), colour("blocksPlaced")],
+    [t("stats.gold"), t(pit.gold), color("gold")],
+    [t("stats.goldEarned"), t(pit.goldEarned), color("goldEarned")],
+    [t("stats.contracts"), t(pit.contractsCompleted), color("contractsCompleted")],
+    [t("stats.renown"), t(pit.renown), color("renown")],
+    [t("stats.lifetimeRenown"), t(pit.lifetimeRenown), color("lifetimeRenown")],
+    [t("stats.bounty"), t(pit.bounty), color("bounty")],
+    [t("stats.blocksPlaced"), t(pit.blocksPlaced), color("blocksPlaced")],
   ];
 
   return (
@@ -63,25 +63,25 @@ export const PitProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(pit.kills)} color={colour("kills")} />
-          <Table.td title={t("stats.deaths")} value={t(pit.deaths)} color={colour("deaths")} />
-          <Table.td title={t("stats.kdr")} value={t(pit.kdr)} color={colour("kdr")} />
+          <Table.td title={t("stats.kills")} value={t(pit.kills)} color={color("kills")} />
+          <Table.td title={t("stats.deaths")} value={t(pit.deaths)} color={color("deaths")} />
+          <Table.td title={t("stats.kdr")} value={t(pit.kdr)} color={color("kdr")} />
         </Table.tr>
         <Table.tr>
           <Historical.exclude time={time}>
             <Table.td
               title={t("stats.highestStreak")}
               value={t(pit.highestStreak)}
-              color={colour("highestStreak")}
+              color={color("highestStreak")}
             />
           </Historical.exclude>
 
           <Table.td
             title={t("stats.playtime")}
             value={formatTime(pit.playtime)}
-            color={colour("playtime")}
+            color={color("playtime")}
           />
-          <Table.td title={t("stats.assists")} value={t(pit.assists)} color={colour("assists")} />
+          <Table.td title={t("stats.assists")} value={t(pit.assists)} color={color("assists")} />
         </Table.tr>
       </Table.table>
       <Historical.progression

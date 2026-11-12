@@ -18,13 +18,13 @@ const VIEWER_KEY = "statsify:viewer";
 const RECENT_LIMIT = 8;
 
 /**
- * A player by UUID, with the name they had when last seen, so a rename or a reused name can be caught, and the colour
- * their rank gave it then (`nameColour`).
+ * A player by UUID, with the name they had when last seen, so a rename or a reused name can be caught, and the color
+ * their rank gave it then (`nameColor`).
  */
 export interface RecentPlayer {
   uuid: string;
   name: string;
-  colour?: string;
+  color?: string;
 }
 
 const NONE: RecentPlayer[] = [];

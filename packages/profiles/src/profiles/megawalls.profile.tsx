@@ -8,7 +8,7 @@
 
 import { Container, Footer, Header, SidebarItem, Table } from "../components/index.js";
 import { FormattedGame, type GameMode, MegaWallsModes } from "@statsify/schemas";
-import { MEGAWALLS, cardColours } from "@statsify/catalog";
+import { MEGAWALLS, cardColors } from "@statsify/catalog";
 import { formatTime, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "../types.js";
 
@@ -29,12 +29,12 @@ export const MegaWallsProfile = ({
 }: MegaWallsProfileProps) => {
   const { megawalls } = player.stats;
   const stats = megawalls[mode.api];
-  const colour = cardColours(MEGAWALLS, mode.api);
+  const color = cardColors(MEGAWALLS, mode.api);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(megawalls.coins), colour("coins")],
-    [t("stats.mythic-favor"), t(megawalls.mythicFavor), colour("mythicFavor")],
-    [t("stats.class"), prettify(megawalls.class), colour("class")],
+    [t("stats.coins"), t(megawalls.coins), color("coins")],
+    [t("stats.mythic-favor"), t(megawalls.mythicFavor), color("mythicFavor")],
+    [t("stats.class"), prettify(megawalls.class), color("class")],
   ];
 
   return (
@@ -49,51 +49,51 @@ export const MegaWallsProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-          <Table.td title={t("stats.losses")} value={t(stats.losses)} color={colour("losses")} />
-          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={colour("wlr")} />
+          <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+          <Table.td title={t("stats.losses")} value={t(stats.losses)} color={color("losses")} />
+          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={color("wlr")} />
         </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.finalKills")}
             value={t(stats.finalKills)}
-            color={colour("finalKills")}
+            color={color("finalKills")}
           />
           <Table.td
             title={t("stats.finalDeaths")}
             value={t(stats.finalDeaths)}
-            color={colour("finalDeaths")}
+            color={color("finalDeaths")}
           />
-          <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color={colour("fkdr")} />
+          <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color={color("fkdr")} />
           <Table.td
             title={t("stats.finalAssists")}
             value={t(stats.finalAssists)}
-            color={colour("finalAssists")}
+            color={color("finalAssists")}
           />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
-          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
-          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
-          <Table.td title={t("stats.assists")} value={t(stats.assists)} color={colour("assists")} />
+          <Table.td title={t("stats.kills")} value={t(stats.kills)} color={color("kills")} />
+          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={color("deaths")} />
+          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={color("kdr")} />
+          <Table.td title={t("stats.assists")} value={t(stats.assists)} color={color("assists")} />
         </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.playtime")}
             value={formatTime(stats.playtime)}
-            color={colour("playtime")}
+            color={color("playtime")}
           />
           <Table.td
             title={t("stats.witherDamage")}
             value={t(stats.witherDamage)}
-            color={colour("witherDamage")}
+            color={color("witherDamage")}
           />
           <Table.td
             title={t("stats.witherKills")}
             value={t(stats.witherKills)}
-            color={colour("witherKills")}
+            color={color("witherKills")}
           />
-          <Table.td title={t("stats.points")} value={t(stats.points)} color={colour("points")} />
+          <Table.td title={t("stats.points")} value={t(stats.points)} color={color("points")} />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />

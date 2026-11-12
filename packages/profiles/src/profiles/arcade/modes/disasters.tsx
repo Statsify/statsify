@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColours } from "@statsify/catalog";
+import { ARCADE, cardColors } from "@statsify/catalog";
 import {
   ArcadeModes,
   DisasterSurvivals,
@@ -18,7 +18,7 @@ import type { LocalizeFunction } from "../../../types.js";
 import { Table } from "../../../components/index.js";
 import { arrayGroup, formatTime } from "@statsify/util";
 
-const colour = cardColours(ARCADE, "disasters");
+const color = cardColors(ARCADE, "disasters");
 
 interface DisastersTableProps {
   stats: Disasters;
@@ -35,29 +35,29 @@ export const DisastersTable = ({ stats, t, submode }: DisastersTableProps) => {
   return (
     <Table.table>
       <Table.tr>
-        <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
+        <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
         <Table.td
           title={t("stats.losses")}
           value={t(stats.losses)}
-          color={colour("losses")}
+          color={color("losses")}
         />
-        <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={colour("wlr")} />
+        <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={color("wlr")} />
       </Table.tr>
       <Table.tr>
         <Table.td
           title={t("stats.gamesPlayed")}
           value={t(stats.gamesPlayed)}
-          color={colour("gamesPlayed")}
+          color={color("gamesPlayed")}
         />
         <Table.td
           title={t("stats.playtime")}
           value={formatTime(stats.playtime)}
-          color={colour("playtime")}
+          color={color("playtime")}
         />
         <Table.td
           title={t("stats.survivals")}
           value={t(stats.survivals.overall)}
-          // The catalog keeps the survivals table's white for this stat; the summary draws it in its own colour.
+          // The catalog keeps the survivals table's white for this stat; the summary draws it in its own color.
           color="§d"
         />
       </Table.tr>
@@ -121,7 +121,7 @@ const DisastersSurvivalsTable = ({
               title={label}
               value={t(survivals)}
               size="inline"
-              color={colour(`survivals.${key}`)}
+              color={color(`survivals.${key}`)}
             />
           ))}
         </Table.tr>
@@ -182,7 +182,7 @@ const DisastersDeathsTable = ({
               title={label}
               value={t(deaths)}
               size="inline"
-              color={colour(`deaths.${key}`)}
+              color={color(`deaths.${key}`)}
             />
           ))}
         </Table.tr>
