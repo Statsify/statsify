@@ -7,11 +7,11 @@
  */
 
 import * as Sentry from "@sentry/node";
+import minecraftProtocol, { createServer, states } from "minecraft-protocol";
 import { Logger } from "@statsify/logger";
 import { UserLogo, VerifyCode } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { connect } from "mongoose";
-import { createServer } from "minecraft-protocol";
 import { generateCode } from "./generate-code.js";
 import { getLogoPath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
@@ -60,15 +60,36 @@ const server = createServer({
   maxPlayers: 2,
   motd: "§9§lStatsify Verification",
   version: false,
+  // Players are kicked during login, so only the handshake, ping and login packets have to match their version.
+  // Those rarely change, so versions newer than minecraft-protocol use the packets of the newest one it supports.
+  fallbackVersion: minecraftProtocol.supportedVersions.at(-1),
   errorHandler: (_, error) => {
     logger.error(error);
   },
-  beforePing: (response) => {
-    // Remove the version from the response
+  beforePing: (response, client) => {
+    // Remove the version from the response, and show the server as compatible with every version
     response.version.name = "";
+    response.version.protocol = client.protocolVersion;
 
     // Set the server icon
     response.favicon = `data:image/png;base64,${serverLogo}`;
+  },
+  beforeLogin: (client) => {
+    // Mojang has verified the player by now, so their code is sent in a login disconnect.
+    // The configuration and play states need registry data for the client's version,
+    // so every packet but compress is dropped and the client never receives login success.
+    const { write, end } = client;
+
+    client.write = (name, params) => {
+      if (name === "compress") write.call(client, name, params);
+    };
+
+    client.end = (reason) => {
+      client.write = write;
+      // minecraft-protocol moves clients older than 1.20.2 to the play state right after login success
+      client.state = states.LOGIN;
+      end.call(client, reason);
+    };
   },
 });
 
