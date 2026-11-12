@@ -33,7 +33,6 @@ export class AuthController {
     @Query() { key }: KeyParamDto,
     @Headers() { "x-api-key": keyHeader }: KeyHeaderDto
   ) {
-    // @Auth() already rejected requests with neither the query key nor the header
     const keyData = await this.authService.getKey((key ?? keyHeader)!);
 
     return {
