@@ -11,6 +11,11 @@ use crate::buffer_dimensions::BufferDimensions;
 use crate::error::{Error, Result as SkinRendererResult};
 use crate::texture::Texture;
 
+// Smaller sizes leave no room inside the camera's pixel margins, and narrower ones pull the
+// camera back until its far plane clips the player
+pub const MIN_SIZE: u32 = 16;
+pub const MAX_ASPECT_RATIO: u32 = 4;
+
 pub struct NativeBackend {
   device: wgpu::Device,
   queue: wgpu::Queue,
@@ -54,8 +59,9 @@ impl NativeBackend {
     }
 
     let limit = self.device.limits().max_texture_dimension_2d;
+    let (short, long) = (width.min(height), width.max(height));
 
-    if !(1..=limit).contains(&width) || !(1..=limit).contains(&height) {
+    if short < MIN_SIZE || long > limit || long > short * MAX_ASPECT_RATIO {
       return Err(Error::InvalidSize(limit));
     }
 

@@ -11,7 +11,11 @@ pub enum Error {
   InvalidYaw,
 
   #[cfg(not(target_arch = "wasm32"))]
-  #[error("The render width and height must be between 1 and {0} pixels")]
+  #[error(
+    "The render width and height must be between {min} and {0} pixels, and neither more than {ratio} times the other",
+    min = crate::renderer::native::MIN_SIZE,
+    ratio = crate::renderer::native::MAX_ASPECT_RATIO
+  )]
   InvalidSize(u32),
 
   #[error("The provided image is too large for a texture")]

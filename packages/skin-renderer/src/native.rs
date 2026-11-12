@@ -26,9 +26,9 @@ pub struct RenderOptions {
   pub yaw: Option<f64>,
   #[napi(ts_type = "'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly'")]
   pub pose: Option<Pose>,
-  /// Output width in pixels. Defaults to 460.
+  /// Output width in pixels, from 16 to 2048 and at most 4 times the height. Defaults to 460.
   pub width: Option<u32>,
-  /// Output height in pixels. Defaults to 800.
+  /// Output height in pixels, from 16 to 2048 and at most 4 times the width. Defaults to 800.
   pub height: Option<u32>,
 }
 
