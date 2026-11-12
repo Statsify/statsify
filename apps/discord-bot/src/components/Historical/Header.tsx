@@ -57,9 +57,9 @@ const RELATIVE_TIME_UNITS = [
   ["second", differenceInSeconds, addSeconds],
 ] as const;
 
-// Counted by hand since differenceInMonths makes Jan 29 6pm to Feb 28 noon a month, because Feb 28
-// ends its month, where luxon said 29 days
-const formatRelative = (date: Date) => {
+// Counted by hand since differenceInMonths makes Jan 29 6pm to Feb 28 noon a month instead of 29
+// days, because Feb 28 ends its month
+const formatRelativeTime = (date: Date) => {
   const now = new Date();
   const [earlier, later, sign] = date < now ? [date, now, -1] : [now, date, 1];
   const formatter = new Intl.RelativeTimeFormat();
@@ -124,7 +124,7 @@ export const HistoricalHeader = ({
         <box width="100%" height="remaining">
           <text>
             {timeType === HistoricalTimes.SESSION ?
-              `Started ${format(sessionReset!, DATE_FORMAT)} (${formatRelative(sessionReset!)})` :
+              `Started ${format(sessionReset!, DATE_FORMAT)} (${formatRelativeTime(sessionReset!)})` :
               `${format(start, DATE_FORMAT)} ➡ ${format(end, DATE_FORMAT)}`}
           </text>
         </box>
