@@ -11,9 +11,11 @@
 
 import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
-import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from "react";
+import { type KeyboardEvent, type PointerEvent, useEffect, useId, useRef, useState } from "react";
+import { cn } from "~/lib/util";
 import { useRevealOnOpen } from "./share-panel";
 import { useTranslation } from "react-i18next";
+import type { SkinMessenger } from "@statsify/skin-renderer/wasm";
 
 /** Screen pixels per skin pixel. */
 const SCALE = 8;
@@ -21,13 +23,84 @@ const SCALE = 8;
 const STEP = 15;
 const DRAG = 0.6;
 const MAX_PITCH = 60;
+/** The canvas's size in CSS pixels: the stage's `w-64 h-80`. The renderer scales it by the screen's pixel ratio. */
+const [CANVAS_WIDTH, CANVAS_HEIGHT] = [256, 320];
 
 interface Texture {
   src: string;
+  bytes: Uint8Array;
   /** Alex's 3-pixel arms. */
   slim: boolean;
   /** A 64×32 skin from before 1.8: no outer layer but the hat, and the left limbs mirror the right ones. */
   legacy: boolean;
+}
+
+let messenger: Promise<typeof SkinMessenger> | undefined;
+
+/** The skin renderer's wasm build, fetched and started once per page, since its event loop can only start once. */
+function loadMessenger() {
+  messenger ??= import("@statsify/skin-renderer/wasm").then(async ({ default: init, SkinMessenger, SkinRenderer }) => {
+    await init();
+    new SkinRenderer().run();
+    return SkinMessenger;
+  });
+
+  return messenger;
+}
+
+/**
+ * Whether the wasm renderer can draw here at all, checked before its download. A browser can have WebGPU but no
+ * adapter for it, and then the renderer draws with WebGL.
+ */
+async function canDraw3d() {
+  if (typeof WebAssembly !== "object") return false;
+  const adapter = await navigator.gpu?.requestAdapter().catch(() => null);
+  return !!adapter || document.createElement("canvas").getContext("webgl2") !== null;
+}
+
+/** The model's turn in degrees, as the renderer's camera angle: the camera turns the opposite way, in radians. */
+const cameraYaw = (yaw: number) => (-yaw * Math.PI) / 180;
+
+/**
+ * Draws the skin with the wasm renderer on the canvas `canvasId`, turned to `yaw`. True once it's drawn; false while
+ * it loads and where it can't draw, and the CSS model stands in.
+ */
+function useRenderer(canvasId: string, texture: Texture | undefined, yaw: number) {
+  const [drawn, setDrawn] = useState(false);
+  const renderer = useRef<typeof SkinMessenger>(undefined);
+  const latestYaw = useRef(yaw);
+
+  useEffect(() => {
+    if (!texture) return;
+    let active = true;
+
+    canDraw3d()
+      .then((can) => (can ? loadMessenger() : undefined))
+      .then((messenger) => {
+        if (!messenger || !active) return;
+        renderer.current = messenger;
+        messenger.registerCanvas(canvasId);
+        return messenger
+          .renderSkin(canvasId, texture.bytes, texture.slim, true, { yaw: cameraYaw(latestYaw.current) })
+          .then(() => active && setDrawn(true));
+      })
+      // Where the renderer fails, the CSS model stays.
+      .catch(() => undefined);
+
+    return () => {
+      active = false;
+      renderer.current?.unregisterCanvas(canvasId);
+      renderer.current = undefined;
+      setDrawn(false);
+    };
+  }, [canvasId, texture]);
+
+  useEffect(() => {
+    latestYaw.current = yaw;
+    if (drawn) renderer.current?.setYaw(canvasId, cameraYaw(yaw));
+  }, [canvasId, drawn, yaw]);
+
+  return drawn;
 }
 
 /** A cuboid on the skin: where its faces start on the texture and its size, in skin pixels. */
@@ -113,14 +186,17 @@ function Model({ texture }: { texture: Texture }) {
 /**
  * The skin panel: the skin in 3D, turned by dragging (only sideways on a touch screen, so a vertical swipe still
  * scrolls) or with the arrow keys, its texture as uploaded, and a download. The player page loads this module, and the
- * texture, only when the panel opens.
+ * texture, only when the panel opens. The skin renderer's wasm build draws the model once it has loaded; until then,
+ * and where it can't draw (no WebAssembly, WebGPU or WebGL), the CSS model does, which a mouse can also tilt.
  */
 export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: string }) {
   const { t } = useTranslation();
+  const canvasId = useId();
   const src = `/api/skin/texture?uuid=${uuid}`;
   const [texture, setTexture] = useState<Texture | "error">();
   const [angle, setAngle] = useState({ yaw: -30, pitch: -10 });
   const drag = useRef<{ x: number; y: number } | null>(null);
+  const drawn = useRenderer(canvasId, texture === "error" ? undefined : texture, angle.yaw);
   useRevealOnOpen(id);
 
   // Fetched rather than loaded as an image, for `X-Skin-Model`: the game takes the arm width from the account, not the
@@ -132,11 +208,17 @@ export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: 
     fetch(src, { signal: controller.signal })
       .then(async (response): Promise<Texture> => {
         if (!response.ok) throw new Error(`The skin texture answered ${response.status}`);
-        url = URL.createObjectURL(await response.blob());
+        const blob = await response.blob();
+        url = URL.createObjectURL(blob);
         const image = new Image();
         image.src = url;
         await image.decode();
-        return { src: url, slim: response.headers.get("X-Skin-Model") === "slim", legacy: image.naturalHeight === 32 };
+        return {
+          src: url,
+          bytes: new Uint8Array(await blob.arrayBuffer()),
+          slim: response.headers.get("X-Skin-Model") === "slim",
+          legacy: image.naturalHeight === 32,
+        };
       })
       .then(setTexture)
       .catch(() => {
@@ -194,13 +276,23 @@ export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: 
               onPointerCancel={() => (drag.current = null)}
               className="relative h-80 w-64 cursor-grab touch-pan-y select-none perspective-[1000px] active:cursor-grabbing"
             >
-              {texture && (
+              {texture && !drawn && (
                 <div
                   className="absolute top-1/2 left-1/2 transform-3d"
                   style={{ transform: `rotateX(${angle.pitch}deg) rotateY(${angle.yaw}deg)` }}
                 >
                   <Model texture={texture} />
                 </div>
+              )}
+              {/* Hidden until the skin is drawn on it. The stage takes the pointer, so a drag turns either model. */}
+              {texture && (
+                <canvas
+                  id={canvasId}
+                  width={CANVAS_WIDTH}
+                  height={CANVAS_HEIGHT}
+                  aria-hidden
+                  className={cn("pointer-events-none absolute inset-0", !drawn && "invisible")}
+                />
               )}
             </div>
             {/* Its box is held from the start, so the panel opens at its full height and the download is in view. */}
