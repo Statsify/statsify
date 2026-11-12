@@ -18,20 +18,17 @@ export class UserDto extends createZodDto(
 ) {}
 
 export class UpdateUserDto extends createZodDto(
-  z
-    .looseObject({
-      serverMember: z.boolean().nullish(),
-      theme: z.object({
-        font: z.string().nullish(),
-        palette: z.string().nullish(),
-        boxes: z.string().nullish(),
-      }).optional(),
-      footer: z.object({
-        message: z.string().nullish(),
-        icon: z.number().nullish(),
-      }).optional(),
-      locale: z.string().nullish(),
-    })
-    // Nest's ValidationPipe read a missing body as `{}`, which this DTO accepts
-    .default({})
+  z.looseObject({
+    serverMember: z.boolean().nullish(),
+    theme: z.object({
+      font: z.string().nullish(),
+      palette: z.string().nullish(),
+      boxes: z.string().nullish(),
+    }).optional(),
+    footer: z.object({
+      message: z.string().nullish(),
+      icon: z.number().nullish(),
+    }).optional(),
+    locale: z.string().nullish(),
+  }).default({})
 ) {}
