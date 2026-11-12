@@ -422,7 +422,7 @@ export class SkyWarsDuels extends MultiPVPDuelsGameMode {
   @Field({ store: { default: "none" } })
   public kit: string;
 
-  // Names the kit's menu, which `kit` drops: kit_defending_team_armorer (Insane) and kit_ranked_ranked_armorer (Mini) are both armorer
+  // kit drops the menu, and Insane and Mini both have an Armorer
   @Field({ store: { required: false } })
   public kitId?: string;
 

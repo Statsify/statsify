@@ -99,7 +99,7 @@ export class SkyWarsMode {
   @Field({ store: { default: "default" } })
   public kit: string;
 
-  // Names the kit's menu, which `kit` drops: kit_basic_solo_scout (Normal) and kit_attacking_team_scout (Insane) are both scout
+  // kit drops the menu, and Normal and Insane both have a Scout
   @Field({ store: { required: false } })
   public kitId?: string;
 
