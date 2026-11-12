@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import type { GamePage, StatCell as Stat, StatSection } from "@statsify/contract";
 import type { ReactNode } from "react";
 
-type Pair = { a: Stat; b: Stat };
+export type Pair = { a: Stat; b: Stat };
 
 /**
  * The stats both pages show, paired by key in the first page's order: the game-wide row, then each table. Lists (maps,
@@ -109,8 +109,8 @@ function PlayerRowName({ page }: { page: GamePage }) {
   );
 }
 
-/** What starts each side's row: the player's name, in the first page's order. */
-type Sides = [ReactNode, ReactNode];
+/** What starts each side's row: the player's or guild's name, in the first page's order. */
+export type Sides = [ReactNode, ReactNode];
 
 /** A row's columns: three across a phone at most (two for four), and up to six from `md`. */
 const COLUMNS: Record<number, string> = {
@@ -124,10 +124,10 @@ const COLUMNS: Record<number, string> = {
 const columnsFor = (count: number) => COLUMNS[count] ?? "grid-cols-3 md:grid-cols-6";
 
 /**
- * A table of a comparison as a leaderboard's rows: its heading, when it has one, then for each player their name across
- * the row and a box per stat. Both rows share their columns, so a stat sits over the same stat of the other side.
+ * A table of a comparison as a leaderboard's rows: its heading, when it has one, then for each side its name across the
+ * row and a box per stat. Both rows share their columns, so a stat sits over the same stat of the other side.
  */
-function CompareSection({ title, pairs, sides }: { title?: ReactNode; pairs: Pair[]; sides: Sides }) {
+export function CompareSection({ title, pairs, sides }: { title?: ReactNode; pairs: Pair[]; sides: Sides }) {
   return (
     <section className={cn("flex flex-col", BOX_GAP)}>
       {title && <Box className={HEADING_BOX}><h2 className="text-mc-1.5 font-bold">{title}</h2></Box>}
