@@ -59,8 +59,9 @@ export function getCrimson(member: RawMember): CrimsonSection | null {
   if (!island || (!started && Object.keys(tiers).length === 0)) return null;
 
   const dojo = DOJO_TESTS.map((test) => {
-    const points = island.dojo?.[`dojo_points_${test}`] ?? 0;
-    return { test, points, grade: dojoGrade(points), time: island.dojo?.[`dojo_time_${test}`] };
+    const points = island.dojo?.[`dojo_points_${test}`];
+    const grade = points === undefined ? undefined : dojoGrade(points);
+    return { test, points: points ?? 0, grade, time: island.dojo?.[`dojo_time_${test}`] };
   });
   const dojoPoints = add(...dojo.map(({ points }) => points));
   const reputation: Record<Faction, number> = {
