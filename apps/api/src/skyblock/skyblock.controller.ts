@@ -17,14 +17,16 @@ import {
 } from "@nestjs/swagger";
 import { Auth, AuthRole } from "#auth";
 import { BadRequestException, Controller, Get, NotFoundException, Query, Res, StreamableFile } from "@nestjs/common";
-import { CachedPlayerDto, SkyBlockIconDto, SkyBlockItemsDto, SkyBlockPriceDto, SkyBlockProfileDto } from "#dtos";
+import { CachedPlayerDto, PlayerDto, SkyBlockIconDto, SkyBlockItemsDto, SkyBlockPriceDto, SkyBlockProfileDto } from "#dtos";
 import {
   ErrorResponse,
+  GetSkyBlockBingoResponse,
   GetSkyBlockItemsResponse,
   GetSkyBlockMayorResponse,
   GetSkyBlockPriceResponse,
   GetSkyBlockProfileResponse,
   GetSkyBlockProfilesResponse,
+  PlayerNotFoundException,
   SkyBlockNotFoundException,
   SkyBlockUnavailableException,
 } from "@statsify/api-client";
@@ -110,6 +112,25 @@ export class SkyBlockController {
     return {
       success: true,
       mayor,
+    };
+  }
+
+  @ApiOperation({
+    summary: "Get a Player's SkyBlock Bingo",
+    description: "This month's Bingo card with the player's points and completed goals. Each request asks Hypixel for the player's Bingo.",
+  })
+  @ApiOkResponse({ type: GetSkyBlockBingoResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: PlayerNotFoundException })
+  @ApiServiceUnavailableResponse({ type: SkyBlockUnavailableException })
+  @Auth({ role: AuthRole.WORKER, weight: 2 })
+  @Get("/bingo")
+  public async getBingo(@Query() { player }: PlayerDto) {
+    const bingo = await this.skyblockService.getBingo(player);
+
+    return {
+      success: true,
+      bingo,
     };
   }
 

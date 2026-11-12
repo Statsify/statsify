@@ -23,7 +23,7 @@ import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
 import { Redis } from "ioredis";
 import { type APIData, config } from "@statsify/util";
-import type { RawGarden, RawMuseum, RawProfile } from "@statsify/skyblock";
+import type { RawGarden, RawMuseum, RawPlayerBingo, RawProfile } from "@statsify/skyblock";
 import type { Span } from "@sentry/node";
 
 const RATE_LIMIT_KEY = "hypixel:ratelimit";
@@ -63,6 +63,15 @@ function toSkyBlockError(error: Error) {
   const reset = Number(response.headers["ratelimit-reset"]);
   return new HypixelThrottledError(Number.isNaN(reset) ? undefined : reset * 1000, response.data?.global === true);
 }
+
+/** Hypixel's 404 ("No result was found") as null, and any other failure as toSkyBlockError's. */
+const nullWhenNotFound = <T>(source: Observable<T>) =>
+  source.pipe(
+    catchError((error: Error) => {
+      const { response } = (error.cause ?? {}) as { response?: { status: number } };
+      return response?.status === 404 ? of(null) : throwError(() => toSkyBlockError(error));
+    })
+  );
 
 @Injectable()
 export class HypixelService {
@@ -206,15 +215,22 @@ export class HypixelService {
     );
   }
 
-  /** null when the profile has no Garden, which Hypixel answers with a 404 ("No result was found"). */
+  /** null when the profile has no Garden. */
   public getSkyBlockGarden(profileId: string): Promise<RawGarden | null> {
     return lastValueFrom(
       this.request<{ garden: RawGarden }>("/v2/skyblock/garden", { profile: profileId }, SKYBLOCK_TIMEOUT).pipe(
         map(({ garden }) => garden),
-        catchError((error: Error) => {
-          const { response } = (error.cause ?? {}) as { response?: { status: number } };
-          return response?.status === 404 ? of(null) : throwError(() => toSkyBlockError(error));
-        })
+        nullWhenNotFound
+      )
+    );
+  }
+
+  /** null when the player never played Bingo. */
+  public getSkyBlockBingo(uuid: string): Promise<RawPlayerBingo | null> {
+    return lastValueFrom(
+      this.request<RawPlayerBingo>("/v2/skyblock/bingo", { uuid }, SKYBLOCK_TIMEOUT).pipe(
+        map(({ events }) => ({ events })),
+        nullWhenNotFound
       )
     );
   }

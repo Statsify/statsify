@@ -346,3 +346,24 @@ export interface RawElection {
     minister?: { name: string; perk: RawPerk };
   };
 }
+
+/** /v2/resources/skyblock/bingo (keyless): this month's card. */
+export interface RawBingoResource {
+  id: number;
+  name: string;
+  start: number;
+  end: number;
+  goals: {
+    id: string;
+    name: string;
+    lore: string;
+    // Community goals only: the whole network's progress and the amounts each tier needs
+    tiers?: number[];
+    progress?: number;
+  }[];
+}
+
+/** /v2/skyblock/bingo: each Bingo event the player took part in, keyed by the event's id. */
+export interface RawPlayerBingo {
+  events: { key: number; points: number; completed_goals: string[] }[];
+}

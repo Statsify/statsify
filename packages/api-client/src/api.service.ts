@@ -23,6 +23,7 @@ import {
   GetPlayerSearchResponse,
   GetSessionResponse,
   GetSkinTexturesResponse,
+  GetSkyBlockBingoResponse,
   GetSkyBlockItemsResponse,
   GetSkyBlockMayorResponse,
   GetSkyBlockPriceResponse,
@@ -155,6 +156,10 @@ export class ApiService {
 
   public getSkyBlockMayor() {
     return this.requestKey<GetSkyBlockMayorResponse, "mayor">("/skyblock/mayor", "mayor");
+  }
+
+  public getSkyBlockBingo(player: string) {
+    return this.requestKey<GetSkyBlockBingoResponse, "bingo">("/skyblock/bingo", "bingo", { player });
   }
 
   public getSkyBlockRankings(player: string) {
