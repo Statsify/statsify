@@ -617,6 +617,7 @@
       "wall_jump": "Stamina"
     },
     "duplicate": "Duplicate",
+    "earned": "Earned",
     "employees": "Employees",
     "enderChest": "Ender Chest",
     "enrichments": "Enrichments",
@@ -746,8 +747,8 @@
     "weeklyBuys": "Bought This Week",
     "weeklySells": "Sold This Week",
     "whispers": {
-      "desert": "Desert Whispers Earned",
-      "forest": "Forest Whispers Earned"
+      "desert": "Desert Whispers",
+      "forest": "Forest Whispers"
     },
     "xp": "SkyBlock XP",
     "xpGain": "+{{xp}} XP",
