@@ -27,8 +27,8 @@ thread_local! {
 
 fn send(message: JsMessage) {
   JS_MESSAGE_QUEUE.with_borrow_mut(|queue| queue.push(message));
-  // winit runs the loop inside the wake, so it waits for the caller's script: wgpu panics on
-  // a canvas the script registers and then removes
+  // winit runs the loop inside the wake, so it waits for the caller's script: a canvas the
+  // script registers and then removes isn't found, rather than drawn off the page
   spawn_local(async { wake() });
 }
 

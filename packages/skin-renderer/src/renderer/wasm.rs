@@ -1,5 +1,5 @@
-use std::sync::Arc;
 use winit::dpi::PhysicalSize;
+use winit::platform::web::WindowExtWebSys;
 use winit::window::Window;
 
 use super::backend::{Backend, OutputTexture};
@@ -11,7 +11,7 @@ pub struct WasmBackend {
   adapter: wgpu::Adapter,
   pub surface: wgpu::Surface<'static>,
 
-  window: Arc<Window>,
+  window: Window,
   pub size: PhysicalSize<u32>,
 
   pub mouse_pressed: bool,
@@ -25,8 +25,11 @@ impl WasmBackend {
       ..Default::default()
     })
     .await;
-    let window = Arc::new(window);
-    let surface = instance.create_surface(Arc::clone(&window))?;
+
+    // From the element: given the window, wgpu looks its canvas up in the page, and panics
+    // if the page has taken it out since it was registered
+    let canvas = window.canvas().ok_or(Error::CanvasNotFound)?;
+    let surface = instance.create_surface(wgpu::SurfaceTarget::Canvas(canvas))?;
 
     // WebGL's adapter comes from the canvas's context, so it needs the surface
     let adapter = instance
