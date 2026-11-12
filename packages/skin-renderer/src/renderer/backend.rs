@@ -1,12 +1,7 @@
-#[cfg(not(target_arch = "wasm32"))]
-use super::PngBytes;
 use crate::error::{Error, Result as SkinRendererResult};
 
 #[cfg(target_arch = "wasm32")]
 pub type OutputTexture<'a> = wgpu::SurfaceTexture;
-
-#[cfg(not(target_arch = "wasm32"))]
-pub type OutputTexture<'a> = &'a wgpu::Texture;
 
 pub trait Backend {
   fn device(&self) -> &wgpu::Device;
@@ -32,15 +27,11 @@ pub trait Backend {
 
   fn create_config(&self) -> wgpu::SurfaceConfiguration;
 
+  #[cfg(target_arch = "wasm32")]
   fn get_output_texture(&self) -> OutputTexture<'_>;
 
+  #[cfg(target_arch = "wasm32")]
   fn create_view(output_texture: &OutputTexture) -> wgpu::TextureView;
-
-  #[cfg(not(target_arch = "wasm32"))]
-  async fn handle_encoder_after_render(
-    &self,
-    encoder: wgpu::CommandEncoder,
-  ) -> SkinRendererResult<PngBytes>;
 
   #[cfg(target_arch = "wasm32")]
   fn handle_encoder_after_render(

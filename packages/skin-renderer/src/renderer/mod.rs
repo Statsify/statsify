@@ -14,7 +14,7 @@ use winit::dpi::PhysicalSize;
 #[cfg(target_arch = "wasm32")]
 use winit::event::{ElementState, MouseScrollDelta};
 
-use self::backend::{Backend, OutputTexture};
+use self::backend::Backend;
 use crate::armor::Armor;
 use crate::camera::{Camera, CameraUniform, OrbitalCamera};
 use crate::error::{Error, Result};
@@ -341,12 +341,12 @@ impl<T: Backend> SkinRenderer<T> {
   fn render_sync(
     &self,
     model: &Model,
+    view: &wgpu::TextureView,
+    depth_view: &wgpu::TextureView,
     camera_bind_group: &wgpu::BindGroup,
     light_bind_group: &wgpu::BindGroup,
-  ) -> (wgpu::CommandEncoder, OutputTexture<'_>) {
+  ) -> wgpu::CommandEncoder {
     let device = self.backend.device();
-    let output_texture = self.backend.get_output_texture();
-    let view = T::create_view(&output_texture);
 
     let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
       label: Some("Render Encoder"),
@@ -356,7 +356,7 @@ impl<T: Backend> SkinRenderer<T> {
       let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
         label: Some("Render Pass"),
         color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-          view: &view,
+          view,
           resolve_target: None,
           depth_slice: None,
           ops: wgpu::Operations {
@@ -365,7 +365,7 @@ impl<T: Backend> SkinRenderer<T> {
           },
         })],
         depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
-          view: &self.depth_texture.view,
+          view: depth_view,
           depth_ops: Some(wgpu::Operations {
             load: wgpu::LoadOp::Clear(1.0),
             store: wgpu::StoreOp::Store,
@@ -390,7 +390,7 @@ impl<T: Backend> SkinRenderer<T> {
       }
     };
 
-    (encoder, output_texture)
+    encoder
   }
 
   // The wasm renderer has no RenderOptions, so each option is its own argument
@@ -460,8 +460,16 @@ impl SkinRenderer<wasm::WasmBackend> {
   }
 
   pub fn render(&self, model: &Model) {
-    let (encoder, output_texture) =
-      self.render_sync(model, &self.camera_bind_group, &self.light_bind_group);
+    let output_texture = self.backend.get_output_texture();
+    let view = wasm::WasmBackend::create_view(&output_texture);
+
+    let encoder = self.render_sync(
+      model,
+      &view,
+      &self.depth_texture.view,
+      &self.camera_bind_group,
+      &self.light_bind_group,
+    );
 
     self
       .backend
@@ -527,12 +535,16 @@ impl SkinRenderer<native::NativeBackend> {
     Self::create(backend).await
   }
 
-  pub async fn render(&self, model: &Model, yaw: Option<f32>) -> Result<PngBytes> {
-    let camera = OrbitalCamera::new(
-      (0.0, 0.0, 0.0).into(),
-      self.config.width as f32,
-      self.config.height as f32,
-    );
+  pub async fn render(
+    &self,
+    model: &Model,
+    yaw: Option<f32>,
+    width: u32,
+    height: u32,
+  ) -> Result<PngBytes> {
+    let target = self.backend.render_target(width, height)?;
+
+    let camera = OrbitalCamera::new((0.0, 0.0, 0.0).into(), width as f32, height as f32);
 
     let camera = match yaw {
       Some(yaw) => camera.with_theta(yaw),
@@ -556,12 +568,14 @@ impl SkinRenderer<native::NativeBackend> {
       cast_slice(&[LightUniform::from(&camera)]),
     );
 
-    let (encoder, _) = self.render_sync(
+    let encoder = self.render_sync(
       model,
+      &target.view,
+      &target.depth_texture.view,
       &uniforms.camera_bind_group,
       &uniforms.light_bind_group,
     );
-    let png = self.backend.handle_encoder_after_render(encoder).await?;
+    let png = target.read(self.backend.device(), queue, encoder).await?;
 
     self.uniforms.lock().unwrap().push(uniforms);
 

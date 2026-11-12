@@ -10,6 +10,10 @@ pub enum Error {
   #[error("The camera yaw must be a finite number")]
   InvalidYaw,
 
+  #[cfg(not(target_arch = "wasm32"))]
+  #[error("The render width and height must be between 1 and {0} pixels")]
+  InvalidSize(u32),
+
   #[error("The provided image is too large for a texture")]
   TextureTooLarge,
 

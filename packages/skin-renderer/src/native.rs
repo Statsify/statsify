@@ -8,6 +8,9 @@ use crate::pose::Pose;
 use crate::renderer::native::NativeBackend;
 use crate::renderer::SkinRenderer;
 
+const DEFAULT_WIDTH: u32 = 460;
+const DEFAULT_HEIGHT: u32 = 800;
+
 // A renderer that fails to start leaves the cell empty, so the next render tries again
 static SKIN_RENDERER: OnceCell<SkinRenderer<NativeBackend>> = OnceCell::const_new();
 
@@ -24,6 +27,10 @@ pub struct RenderOptions {
   pub yaw: Option<f64>,
   #[napi(ts_type = "'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly'")]
   pub pose: Option<Pose>,
+  /// Output width in pixels. Defaults to 460.
+  pub width: Option<u32>,
+  /// Output height in pixels. Defaults to 800.
+  pub height: Option<u32>,
 }
 
 #[napi]
@@ -34,7 +41,7 @@ pub async fn render_skin(
   options: Option<RenderOptions>,
 ) -> Result<Buffer> {
   let renderer = SKIN_RENDERER
-    .get_or_try_init(|| SkinRenderer::new(460, 800))
+    .get_or_try_init(|| SkinRenderer::new(DEFAULT_WIDTH, DEFAULT_HEIGHT))
     .await?;
 
   let model_kind = if slim {
@@ -68,7 +75,14 @@ pub async fn render_skin(
     options.cape.as_deref(),
     options.pose.unwrap_or_default(),
   )?;
-  let buffer = renderer.render(&model, yaw).await?;
+  let png = renderer
+    .render(
+      &model,
+      yaw,
+      options.width.unwrap_or(DEFAULT_WIDTH),
+      options.height.unwrap_or(DEFAULT_HEIGHT),
+    )
+    .await?;
 
-  Ok(buffer.into())
+  Ok(png.into())
 }
