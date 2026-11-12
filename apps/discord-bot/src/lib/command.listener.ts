@@ -97,13 +97,25 @@ export class CommandListener extends AbstractCommandListener {
 
     this.apiService.incrementCommand(commandName);
 
-    return this.executeCommand({
+    await this.executeCommand({
       commandName,
       command,
       context,
       preconditions,
       message: this.getTipResponse(commandName, user),
     });
+
+    this.recordLookups(command, context, id);
+  }
+
+  private recordLookups(command: CommandResolvable, context: CommandContext, userId: string) {
+    for (const arg of command.args) {
+      const type = arg.autocompleteType?.(context);
+      const name = context.option<string>(arg.name);
+      if (!type || !name || name.length > 32) continue;
+
+      this.apiService.addAutocompleteHistory(type, userId, name).catch(() => null);
+    }
   }
 
   private cooldownPrecondition(

@@ -39,3 +39,8 @@ export enum LeaderboardQuery {
   INPUT = "input",
   POSITION = "position"
 }
+
+export enum AutocompleteType {
+  PLAYER = "player",
+  GUILD = "guild"
+}
