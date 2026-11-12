@@ -95,7 +95,13 @@ export const SkyBlockAccessoriesProfile = ({
     [t("skyblock.accessories"), t(accessories.active.length), "§a"],
     [t("skyblock.missing"), t(accessories.missing.length), "§c"],
     [t("skyblock.enrichments"), t(accessories.enrichments), "§b"],
-    [t("skyblock.tuningPoints"), t(accessories.tuningPoints), "§6"],
+    [
+      t("skyblock.tuningPoints"),
+      accessories.tuningTotal === undefined ?
+        t(accessories.tuningPoints) :
+        `${t(accessories.tuningPoints)}§7/§6${t(accessories.tuningTotal)}`,
+      "§6",
+    ],
   ];
 
   if (page === "inactive") {

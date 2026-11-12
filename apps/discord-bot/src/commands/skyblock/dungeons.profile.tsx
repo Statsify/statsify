@@ -56,7 +56,7 @@ export const SkyBlockDungeonsProfile = ({
 
   const floors = dungeons.floors[mode]
     .filter(({ played }) => played > 0)
-    .map(({ floor, completions, best, fastest, fastestS, fastestSPlus }) => (
+    .map(({ floor, completions, best, fastest, fastestS, fastestSPlus, bestRun }) => (
       <box direction="column" location="center" width="100%">
         <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`§l§c${floorName(floor)}`}</text>
         <text margin={{ top: 0, bottom: 2 }}>{`§7${t("skyblock.completions")}: §a${t(completions)}`}</text>
@@ -65,7 +65,10 @@ export const SkyBlockDungeonsProfile = ({
         </text>
         <text margin={{ top: 0, bottom: 2 }}>{`§7${t("skyblock.fastest")}: §6${time(fastest)}`}</text>
         <text margin={{ top: 0, bottom: 2 }}>{`§7${t("skyblock.fastestS")}: §6${time(fastestS)}`}</text>
-        <text margin={{ top: 0, bottom: 8 }}>{`§7${t("skyblock.fastestSPlus")}: §6${time(fastestSPlus)}`}</text>
+        <text margin={{ top: 0, bottom: 2 }}>{`§7${t("skyblock.fastestSPlus")}: §6${time(fastestSPlus)}`}</text>
+        <text margin={{ top: 0, bottom: 8 }}>
+          {`§7${t("skyblock.bestRun")}: ${bestRun ? `${CLASS_COLORS[bestRun.dungeonClass]}${prettify(bestRun.dungeonClass)}` : `§6${none}`}`}
+        </text>
       </box>
     ));
 

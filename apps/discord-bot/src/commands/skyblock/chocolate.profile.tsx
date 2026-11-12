@@ -51,6 +51,8 @@ export const SkyBlockChocolateProfile = ({
       "§6",
     ],
     [t("skyblock.timeTower"), t(chocolate.timeTower), "§d"],
+    [t("skyblock.duplicateRabbits"), t(chocolate.duplicates), "§a"],
+    [t("skyblock.eggLocations"), t(chocolate.eggLocations), "§b"],
   ];
 
   const rabbits = chocolate.rabbits.map(({ rarity, found, total }) => (

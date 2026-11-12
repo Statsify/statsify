@@ -7,6 +7,7 @@
  */
 
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { DateTime } from "luxon";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 export const SkyBlockSummaryProfile = ({
@@ -33,6 +34,16 @@ export const SkyBlockSummaryProfile = ({
     [t("skyblock.purse"), t(Math.floor(profile.purse)), "§6"],
     [t("skyblock.bank"), bank.value, bank.color],
   ];
+
+  const none = t("skyblock.none");
+  const current = profile.members.filter(({ removed, invited }) => !removed && !invited).length;
+  const left = profile.members.filter(({ removed }) => removed).length;
+  const invited = profile.members.filter(({ invited }) => invited).length;
+  const coop = [
+    t(current),
+    ...(left > 0 ? [`§7${t("skyblock.membersLeft", { count: left })}`] : []),
+    ...(invited > 0 ? [`§7${t("skyblock.membersInvited", { count: invited })}`] : []),
+  ].join(" §8• ");
 
   if (profile.personalBank !== undefined)
     sidebar.push([t("skyblock.personalBank"), t(Math.floor(profile.personalBank)), "§6"]);
@@ -62,7 +73,19 @@ export const SkyBlockSummaryProfile = ({
         <Table.tr>
           <Table.td title={t("skyblock.slayerXp")} value={t(slayers!.xp)} color="§5" />
           <Table.td title={t("skyblock.accessoryPower")} {...accessoryPower} />
-          <Table.td title={t("skyblock.fairySouls")} value={t(profile.fairySouls)} color="§d" />
+          <Table.td
+            title={t("skyblock.fairySouls")}
+            value={profile.maxFairySouls ? `${t(profile.fairySouls)}§7/${t(profile.maxFairySouls)}` : t(profile.fairySouls)}
+            color="§d"
+          />
+        </Table.tr>
+        <Table.tr>
+          <Table.td
+            title={t("skyblock.firstJoin")}
+            value={profile.firstJoin ? DateTime.fromMillis(profile.firstJoin).toFormat("LL/dd/yy", { locale: t.locale }) : none}
+            color="§b"
+          />
+          <Table.td title={t("skyblock.coopMembers")} value={coop} color="§e" />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />
