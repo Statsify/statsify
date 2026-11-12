@@ -6,7 +6,7 @@ use image::{ExtendedColorType, ImageEncoder};
 use napi::bindgen_prelude::spawn_blocking;
 
 use super::backend::Backend;
-use super::PngBytes;
+use super::{PngBytes, SPARE_BUFFERS};
 use crate::buffer_dimensions::BufferDimensions;
 use crate::error::{Error, Result as SkinRendererResult};
 use crate::texture::Texture;
@@ -212,7 +212,12 @@ impl RenderTarget {
     };
 
     output_buffer.unmap();
-    self.output_buffers.lock().unwrap().push(output_buffer);
+
+    let mut spares = self.output_buffers.lock().unwrap();
+
+    if spares.len() < SPARE_BUFFERS {
+      spares.push(output_buffer);
+    }
 
     Ok(png)
   }

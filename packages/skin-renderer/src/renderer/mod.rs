@@ -28,6 +28,11 @@ use crate::texture::Texture;
 #[cfg(not(target_arch = "wasm32"))]
 pub type PngBytes = Vec<u8>;
 
+// Spares past this are dropped, or one burst of renders keeps a buffer for every render it ran
+// at once for the life of the process
+#[cfg(not(target_arch = "wasm32"))]
+const SPARE_BUFFERS: usize = 8;
+
 #[cfg(not(target_arch = "wasm32"))]
 struct Uniforms {
   camera_buffer: wgpu::Buffer,
@@ -570,7 +575,11 @@ impl SkinRenderer<native::NativeBackend> {
     );
     let png = target.read(self.backend.device(), queue, encoder).await?;
 
-    self.uniforms.lock().unwrap().push(uniforms);
+    let mut spares = self.uniforms.lock().unwrap();
+
+    if spares.len() < SPARE_BUFFERS {
+      spares.push(uniforms);
+    }
 
     Ok(png)
   }
