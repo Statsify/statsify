@@ -266,7 +266,8 @@ impl<T: Backend> SkinRenderer<T> {
         module: &shader,
         entry_point: Some(fragment_entry_point),
         targets: &[Some(wgpu::ColorTargetState {
-          format: config.format,
+          // Every backend draws through an sRGB view of its texture (see the wasm backend)
+          format: config.format.add_srgb_suffix(),
           blend: Some(wgpu::BlendState::ALPHA_BLENDING),
           write_mask: wgpu::ColorWrites::ALL,
         })],
@@ -298,14 +299,14 @@ impl<T: Backend> SkinRenderer<T> {
     })
   }
 
-  fn render_sync(
+  fn render_sync<'a>(
     &self,
     model: &Model,
+    output_texture: OutputTexture<'a>,
     camera_bind_group: &wgpu::BindGroup,
     light_bind_group: &wgpu::BindGroup,
-  ) -> (wgpu::CommandEncoder, OutputTexture<'_>) {
+  ) -> (wgpu::CommandEncoder, OutputTexture<'a>) {
     let device = self.backend.device();
-    let output_texture = self.backend.get_output_texture();
     let view = T::create_view(&output_texture);
 
     let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
@@ -411,9 +412,25 @@ impl SkinRenderer<wasm::WasmBackend> {
     Self::create(backend).await
   }
 
+  // Browsers drop the canvas's frames on tab switches and resizes. A lost or outdated
+  // surface is set up again and the frame skipped, as is one that timed out.
   pub fn render(&self, model: &Model) {
-    let (encoder, output_texture) =
-      self.render_sync(model, &self.camera_bind_group, &self.light_bind_group);
+    let surface = &self.backend.surface;
+
+    let output_texture = match surface.get_current_texture() {
+      Ok(texture) => texture,
+      Err(wgpu::SurfaceError::Lost | wgpu::SurfaceError::Outdated) => {
+        return surface.configure(self.backend.device(), &self.config)
+      }
+      Err(_) => return,
+    };
+
+    let (encoder, output_texture) = self.render_sync(
+      model,
+      output_texture,
+      &self.camera_bind_group,
+      &self.light_bind_group,
+    );
 
     self
       .backend
@@ -504,7 +521,12 @@ impl SkinRenderer<native::NativeBackend> {
       cast_slice(&[LightUniform::from(&camera)]),
     );
 
-    let (encoder, _) = self.render_sync(model, &camera_bind_group, &light_bind_group);
+    let (encoder, _) = self.render_sync(
+      model,
+      self.backend.get_output_texture(),
+      &camera_bind_group,
+      &light_bind_group,
+    );
     self.backend.handle_encoder_after_render(encoder).await
   }
 

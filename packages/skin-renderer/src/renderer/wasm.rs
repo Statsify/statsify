@@ -1,10 +1,9 @@
 use std::sync::Arc;
-use wgpu::TextureFormat;
 use winit::dpi::PhysicalSize;
 use winit::window::Window;
 
 use super::backend::{Backend, OutputTexture};
-use crate::error::Result as SkinRendererResult;
+use crate::error::{Error, Result as SkinRendererResult};
 
 pub struct WasmBackend {
   device: wgpu::Device,
@@ -20,10 +19,23 @@ pub struct WasmBackend {
 
 impl WasmBackend {
   pub async fn new(window: Window) -> SkinRendererResult<Self> {
-    let instance = Self::create_instance();
+    // Some browsers have WebGPU but no adapter for it, and then draw with WebGL
+    let instance = wgpu::util::new_instance_with_webgpu_detection(&wgpu::InstanceDescriptor {
+      backends: wgpu::Backends::all(),
+      ..Default::default()
+    })
+    .await;
     let window = Arc::new(window);
     let surface = instance.create_surface(Arc::clone(&window))?;
-    let adapter = Self::request_adapter(instance).await?;
+
+    // WebGL's adapter comes from the canvas's context, so it needs the surface
+    let adapter = instance
+      .request_adapter(&wgpu::RequestAdapterOptions {
+        compatible_surface: Some(&surface),
+        ..Default::default()
+      })
+      .await
+      .map_err(|_| Error::MissingAdapter)?;
     let (device, queue) = Self::request_device(&adapter).await?;
 
     let size = window.inner_size();
@@ -56,7 +68,9 @@ impl Backend for WasmBackend {
       .request_device(&wgpu::DeviceDescriptor {
         label: None,
         required_features: wgpu::Features::empty(),
-        required_limits: wgpu::Limits::downlevel_defaults(),
+        // WebGL2 has no compute, so the limits are its own, with the adapter's texture size
+        required_limits: wgpu::Limits::downlevel_webgl2_defaults()
+          .using_resolution(adapter.limits()),
         memory_hints: Default::default(),
         trace: wgpu::Trace::Off,
       })
@@ -66,8 +80,6 @@ impl Backend for WasmBackend {
   fn create_config(&self) -> wgpu::SurfaceConfiguration {
     let surface_caps = self.surface.get_capabilities(&self.adapter);
 
-    // TODO: handle non srgb surfaces
-    // If the surface isn't srgb then it will appear darker
     let surface_format = surface_caps
       .formats
       .iter()
@@ -75,14 +87,25 @@ impl Backend for WasmBackend {
       .find(|f| f.is_srgb())
       .unwrap_or(surface_caps.formats[0]);
 
+    // An opaque canvas paints the page behind the model black. WebGPU canvases take
+    // premultiplied alpha though wgpu lists only opaque; WebGL's are transparent already
+    let alpha_mode = match self.adapter.get_info().backend {
+      wgpu::Backend::BrowserWebGpu => wgpu::CompositeAlphaMode::PreMultiplied,
+      _ => surface_caps.alpha_modes[0],
+    };
+
+    // WebGPU canvases offer no sRGB format, so the model is drawn through an sRGB view of
+    // the canvas's format; drawn straight to it, the model comes out darker
     let config = wgpu::SurfaceConfiguration {
       usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
       format: surface_format,
-      width: self.size.width,
-      height: self.size.height,
+      // A new window has no size until the browser lays its canvas out, and its first
+      // resize sets the real one
+      width: self.size.width.max(1),
+      height: self.size.height.max(1),
       present_mode: surface_caps.present_modes[0],
-      alpha_mode: surface_caps.alpha_modes[0],
-      view_formats: vec![],
+      alpha_mode,
+      view_formats: vec![surface_format.add_srgb_suffix()],
       desired_maximum_frame_latency: 2,
     };
 
@@ -91,14 +114,13 @@ impl Backend for WasmBackend {
     config
   }
 
-  fn get_output_texture(&self) -> OutputTexture {
-    self.surface.get_current_texture().unwrap()
-  }
-
   fn create_view(output_texture: &OutputTexture) -> wgpu::TextureView {
-    output_texture
-      .texture
-      .create_view(&wgpu::TextureViewDescriptor::default())
+    let texture = &output_texture.texture;
+
+    texture.create_view(&wgpu::TextureViewDescriptor {
+      format: Some(texture.format().add_srgb_suffix()),
+      ..Default::default()
+    })
   }
 
   fn handle_encoder_after_render(
