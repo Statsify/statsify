@@ -59,7 +59,7 @@ export function LeaderboardPreview({
             <SkinHead uuid={row.uuid} />
           </Box>
           <Box className="col-span-3 md:col-span-1 min-w-0 content:min-w-0 content:text-start justify-center content:flex content:items-center">
-            {/* `MinecraftText` styles every colour segment, so the truncation sits on a wrapper. */}
+            {/* `MinecraftText` styles every color segment, so the truncation sits on a wrapper. */}
             <span className="block min-w-0 truncate">
               <MinecraftText className="text-mc-1.5 lg:text-mc-2">{row.name}</MinecraftText>
             </span>
