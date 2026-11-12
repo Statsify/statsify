@@ -153,7 +153,7 @@ impl Part {
     }
   }
 
-  // Armour textures only have the right limbs, which the left limbs mirror
+  // Armor textures only have the right limbs, which the left limbs mirror
   fn armor_region(self, texture_size: Coordinate<u32>) -> TextureRegion {
     let location = match self {
       Part::Head => (0, 0),
@@ -243,9 +243,9 @@ impl<'a> BodyPart<'a> {
         }
         .create();
 
-        // A posed part grows around where its turn left its centre. Standing parts keep
-        // the unturned centre they've always used, so bare renders don't move.
-        let centre = match rotation {
+        // A posed part grows around where its turn left its center. Standing parts keep
+        // the unturned center they've always used, so bare renders don't move.
+        let center = match rotation {
           Some(rotation) if self.placement.posed => {
             rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot
           }
@@ -253,7 +253,7 @@ impl<'a> BodyPart<'a> {
         };
 
         // In Minecraft the outer layer is scaled up 12.5%
-        layer.scale_around(1.125, centre);
+        layer.scale_around(1.125, center);
         layer
       }
     };
@@ -300,7 +300,7 @@ fn mesh_with_points(
 }
 
 impl Model {
-  // Armour and the pose shape the body's own meshes, so neither can be attached later
+  // Armor and the pose shape the body's own meshes, so neither can be attached later
   #[allow(clippy::too_many_arguments)]
   pub fn new(
     device: &wgpu::Device,
@@ -360,7 +360,7 @@ impl Model {
   }
 
   // Boots and a player head reach past the frame that fits a bare player, and every
-  // armoured render pulls back with them so they share one scale
+  // armored render pulls back with them so they share one scale
   pub fn camera_radius(&self) -> f32 {
     let radius = self.pose.camera_radius();
 
@@ -390,7 +390,7 @@ impl Model {
       } else {
         image::load_from_memory(&piece.texture)?
       };
-      // Packs draw the 64 wide layout at any resolution, and skins are square where armour is 2:1
+      // Packs draw the 64 wide layout at any resolution, and skins are square where armor is 2:1
       let texture_size = (64, 64 * texture.height() / texture.width());
       let mut geometry = Geometry::new(vec![], vec![]);
 
@@ -402,7 +402,7 @@ impl Model {
       };
 
       for &part in parts {
-        // Armour is shaped for classic arms on every skin
+        // Armor is shaped for classic arms on every skin
         let placement = part.placement(ModelKind::Classic.arm_width(), self.pose);
         let (position, rotation) = placement.resolve();
         let neck = position - Vector3::unit_y() * placement.dimensions.y / 2.0;
