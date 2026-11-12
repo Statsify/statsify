@@ -83,7 +83,7 @@ export interface RawMember {
     bank_account?: number;
     first_join?: number;
   };
-  leveling?: { experience?: number; highest_pet_score?: number };
+  leveling?: { experience?: number; highest_pet_score?: number; completed_tasks?: string[] };
   currencies?: { coin_purse?: number; motes_purse?: number; essence?: Record<string, { current?: number }> };
   item_data?: { soulflow?: number };
   experimentation?: Partial<Record<Experiment, RawExperiment>> & { serums_drank?: number };

@@ -18,7 +18,7 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 const SEA_CREATURES_SHOWN = 24;
 
 export interface SkyBlockFishingProfileProps extends SkyBlockProfileProps {
-  page: "trophyFish" | "seaCreatures";
+  page: keyof typeof TABLES;
 }
 
 export const SkyBlockFishingProfile = ({
@@ -55,10 +55,12 @@ export const SkyBlockFishingProfile = ({
     ],
   ];
 
+  const PageTable = TABLES[page];
+
   return (
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
-      {page === "trophyFish" ? <TrophyFishTable fishing={fishing} t={t} /> : <SeaCreatureTable fishing={fishing} t={t} />}
+      <PageTable fishing={fishing} t={t} />
       <Footer logo={logo} user={user} />
     </Container>
   );
@@ -114,6 +116,28 @@ const TrophyFishTable = ({ fishing, t }: FishingTableProps) => {
   );
 };
 
+const TrophyFrogTable = ({ fishing, t }: FishingTableProps) => {
+  const frogs = fishing.trophyFrogs.map(({ name, tiers }) => (
+    <StackedCell
+      name={`${TROPHY_TIERS.some((tier) => tiers[tier]) ? "§f" : "§8"}${name}`}
+      value={TROPHY_TIERS.map((tier) => `${tiers[tier] ? MEDAL_COLORS[tier] : "§8"}${prettify(tier)}`).join(" §8• ")}
+    />
+  ));
+
+  return (
+    <Table.table>
+      {fishing.trophyFrogsCaught === undefined ?
+        <></> :
+        (
+          <Table.tr>
+            <Table.td title={t("skyblock.trophyFrogsCaught")} value={t(fishing.trophyFrogsCaught)} color="§a" />
+          </Table.tr>
+        )}
+      <Table.ts title={`§a${t("skyblock.trophyFrogs")}`}>{gridRows(frogs, 3)}</Table.ts>
+    </Table.table>
+  );
+};
+
 const SeaCreatureTable = ({ fishing, t }: FishingTableProps) => {
   const creatures = fishing.seaCreatures.slice(0, SEA_CREATURES_SHOWN).map(({ name, kills }) => (
     <Cell name={`§3${name}`} value={`§f${t(kills)}`} />
@@ -123,3 +147,5 @@ const SeaCreatureTable = ({ fishing, t }: FishingTableProps) => {
 
   return <Table.table>{gridRows(creatures, 3)}</Table.table>;
 };
+
+const TABLES = { trophyFish: TrophyFishTable, trophyFrogs: TrophyFrogTable, seaCreatures: SeaCreatureTable };

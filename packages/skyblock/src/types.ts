@@ -429,6 +429,8 @@ export type Catch = (typeof CATCHES)[number];
 export interface FishingSection {
   trophyFish: TrophyFish[];
   trophyFishCaught: number;
+  trophyFrogs: TrophyFrog[];
+  trophyFrogsCaught?: number; // missing on some saves with frogs caught
   itemsFished: Record<"total" | Catch, number>;
   seaCreatureKills: number;
   seaCreatures: { name: string; kills: number }[]; // bestiary kills, the most killed first, none at 0
@@ -447,6 +449,12 @@ export interface TrophyFish {
   id: string;
   name: string;
   tiers: Record<TrophyTier, number>;
+}
+
+export interface TrophyFrog {
+  id: string;
+  name: string;
+  tiers: Record<TrophyTier, boolean>; // caught at least once
 }
 
 export const JACOB_BRACKETS = ["bronze", "silver", "gold", "platinum", "diamond"] as const;
