@@ -1,11 +1,10 @@
-use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation as _, Rotation3, Vector3};
+use cgmath::{Deg, Quaternion, Rotation as _, Rotation3, Vector3};
 use image::DynamicImage;
 
 use crate::armor::Armor;
 use crate::error::Result;
 use crate::geometry::coordinate::Coordinate;
 use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, TextureRegion};
-use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
 use crate::pose::{PartPose, Pose};
@@ -529,16 +528,6 @@ impl Model {
       mesh: mesh_with_points(device, geometry, &mut self.points),
       enchanted,
     });
-  }
-
-  pub fn to_raw() -> InstanceRaw {
-    let position = Vector3::new(0.0, 0.0, 0.0);
-    let rotation = Quaternion::from_axis_angle(Vector3::unit_y(), Deg(0.0));
-
-    InstanceRaw {
-      model: (Matrix4::from_translation(position) * Matrix4::from(rotation)).into(),
-      normal: Matrix3::from(rotation).into(),
-    }
   }
 }
 
