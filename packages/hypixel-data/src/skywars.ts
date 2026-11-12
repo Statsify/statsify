@@ -48,10 +48,10 @@ function skyWarsKit(kit: string) {
   return KITS[RENAMED[key] ?? key];
 }
 
-/** The armour a SkyWars kit's menu lists, by kit id or SKYWARS_KITS key as fromSkyWarsKit takes it */
+/** The armor a SkyWars kit's menu lists, by kit id or SKYWARS_KITS key as fromSkyWarsKit takes it */
 export function skyWarsKitArmor(kit: string) {
   const items = skyWarsKit(kit)?.items;
-  // A listed head, like Frog's Hat, starts in the hotbar, since the game only puts on armour
+  // A listed head, like Frog's Hat, starts in the hotbar, since the game only puts on armor
   return items && armorOf(items.map(({ item }) => item).filter(({ id }) => id !== "minecraft:player_head"));
 }
 

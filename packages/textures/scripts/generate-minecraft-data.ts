@@ -38,7 +38,7 @@ const RENAMES: Record<string, string | null> = {
   giant_spawn_egg: null,
 };
 
-// 1.8's dye items by colour, with silver as 1.8's name for light gray
+// 1.8's dye items by color, with silver as 1.8's name for light gray
 const DYES: Record<string, string> = {
   white: "bone_meal",
   orange: "orange_dye",

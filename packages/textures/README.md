@@ -29,7 +29,7 @@ needs at least one 26.3 pack, which has the item model definitions.
 
 ## Items
 
-- Flat items with tints: leather dye, potion colours, spawn eggs.
+- Flat items with tints: leather dye, potion colors, spawn eggs.
 - Block items in 3D, through the model's gui transform with the GUI's lighting. A small software
   rasterizer draws them, so they match the game pixel for pixel and need no WebGL.
 - Player heads (the default skin, or `item.skin`, a textures.minecraft.net URL, which the page
@@ -86,7 +86,7 @@ import "@statsify/textures/mc-inventory";
 
 const inventory = document.querySelector("mc-inventory");
 inventory.pack = stack;
-inventory.slots = fromBedwarsQuickBuy(favourites);
+inventory.slots = fromBedwarsQuickBuy(favorites);
 ```
 
 ```html
