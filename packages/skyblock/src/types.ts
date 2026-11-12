@@ -350,11 +350,11 @@ export type ReputationRank = (typeof REPUTATION_RANKS)[number];
 export type DojoGrade = "S" | "A" | "B" | "C" | "D" | "F";
 export type DojoBelt = "white" | "yellow" | "green" | "blue" | "brown" | "black";
 
-/** A Dojo test's best points, the grade they earn and its best time (ms), which Hypixel keeps apart from the points. */
+/** A Dojo test's best points, their grade (none before it's taken) and its best time (ms), which Hypixel keeps apart. */
 export interface DojoTest {
   test: string;
   points: number;
-  grade: DojoGrade;
+  grade?: DojoGrade;
   time?: number;
 }
 
