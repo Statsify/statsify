@@ -13,10 +13,10 @@ import { resourceTexture } from "#textures";
 
 const TOP = 20;
 
-/** The most counted, without Hypixel's own "total" entry. */
+/** The most counted, without Hypixel's own "total" and "unknown" (no named mob or cause) entries. */
 const topOf = (counts: Record<string, number> = {}) =>
   Object.entries(counts)
-    .filter(([id]) => id !== "total")
+    .filter(([id]) => id !== "total" && id !== "unknown")
     .toSorted((a, b) => b[1] - a[1])
     .slice(0, TOP)
     .map(([id, count]) => ({ id, count }));
