@@ -85,7 +85,7 @@ export type MemberStat =
   | "trophyFish"
   | "chocolate";
 
-export const FLOOR_BOARDS = [
+const FLOOR_BOARDS = [
   "entrance",
   "floor1",
   "floor2",
@@ -103,10 +103,10 @@ export const FLOOR_BOARDS = [
   "master7",
 ] as const;
 
-export type FloorBoard = (typeof FLOOR_BOARDS)[number];
+type FloorBoard = (typeof FLOOR_BOARDS)[number];
 
 // The crop ids Jacob's contests use, by the board each ranks its personal best on
-export const CROP_BOARDS = {
+const CROP_BOARDS = {
   CACTUS: "cactus",
   CARROT_ITEM: "carrot",
   "INK_SACK:3": "cocoaBeans",
@@ -122,19 +122,18 @@ export const CROP_BOARDS = {
   WILD_ROSE: "wildRose",
 } as const;
 
-export type CropBoard = (typeof CROP_BOARDS)[keyof typeof CROP_BOARDS];
+type CropBoard = (typeof CROP_BOARDS)[keyof typeof CROP_BOARDS];
 
 const slug = (text: string) => text.toLowerCase().replaceAll(/[^\da-z]+/g, "_").replaceAll(/^_|_$/g, "");
 
 /**
  * A board per collection item, keyed by its id (LOG:2 and LOG_2 are both logs, so only the colon changes), and per
- * bestiary family, keyed by its page and name since two pages share a family name. `scripts/sync-data.ts` writes the
- * keys for @statsify/schemas, which can't import this package.
+ * bestiary family, keyed by its page and name since two pages share a family name.
  */
-export const collectionBoards = (collections: typeof COLLECTIONS) =>
+export const collectionBoards = (collections: { items: { id: string; name: string }[] }[]) =>
   collections.flatMap(({ items }) => items.map(({ id, name }) => ({ key: id.replace(":", "-"), id, name })));
 
-export const bestiaryBoards = (bestiary: typeof BESTIARY) =>
+export const bestiaryBoards = (bestiary: { pages: { name: string; families: { name: string }[] }[] }) =>
   bestiary.pages.flatMap((page) =>
     page.families.map((family) => ({ key: `${slug(page.name)}_${slug(family.name)}`, name: `${family.name} (${page.name})` }))
   );
@@ -267,7 +266,7 @@ export function toMemberStats(
 
   if (bestiary) {
     const kills = bestiary.pages.flatMap(({ families }) => families.map(({ kills }) => kills));
-    stats.bestiary = Object.fromEntries(BESTIARY_BOARDS.map(({ key }, index) => [key, kills[index] ?? 0]));
+    stats.bestiary = Object.fromEntries(BESTIARY_BOARDS.map(({ key }, index) => [key, kills[index]]));
   }
 
   stats.kills = member.player_stats?.kills?.total ?? 0;

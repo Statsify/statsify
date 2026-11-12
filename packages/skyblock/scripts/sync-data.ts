@@ -21,7 +21,6 @@ import { skinHash } from "#textures";
 import { tmpdir } from "node:os";
 import { bestiaryBoards, collectionBoards } from "@statsify/skyblock";
 import { toLevelCosts } from "#leveling";
-import type { BESTIARY } from "#data";
 
 const REPO = "NotEnoughUpdates/NotEnoughUpdates-REPO";
 const HYPIXEL_SKILLS = "https://api.hypixel.net/v2/resources/skyblock/skills";
@@ -918,12 +917,11 @@ try {
     syncedAt: new Date().toISOString(),
   });
 
-  // @statsify/schemas registers a leaderboard per key and can't import this package. A key is a Mongo path and a Redis
-  // key, so one that changes here leaves its old board behind
+  // Each key is a Mongo path and a Redis key, so one that changes here leaves its old board behind
   await writeFile(
     new URL("../../schemas/src/skyblock/boards.json", import.meta.url),
     `${JSON.stringify(
-      { collections: boards(collectionBoards(collectionData)), bestiary: boards(bestiaryBoards(bestiaryData as typeof BESTIARY)) },
+      { collections: boards(collectionBoards(collectionData)), bestiary: boards(bestiaryBoards(bestiaryData)) },
       null,
       2
     )}\n`
