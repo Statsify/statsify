@@ -83,7 +83,7 @@ import "@statsify/textures/mc-inventory";
 
 const inventory = document.querySelector("mc-inventory");
 inventory.pack = stack;
-inventory.slots = fromBedwarsQuickBuy(favourites);
+inventory.slots = fromBedwarsQuickBuy(favorites);
 ```
 
 ```html
