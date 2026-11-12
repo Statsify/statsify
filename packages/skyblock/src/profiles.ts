@@ -95,7 +95,7 @@ export function toProfilesView(player: PlayerRef, profiles: RawProfile[], freshn
   };
 }
 
-// Read from the achievement names and unchecked in game. Carpentry, hunting, runecrafting and social have none.
+// Read from the achievement names and unchecked in game. Carpentry, runecrafting and social have none.
 const SKILL_ACHIEVEMENTS = {
   farming: "harvester",
   mining: "excavator",
@@ -105,6 +105,7 @@ const SKILL_ACHIEVEMENTS = {
   enchanting: "augmentation",
   alchemy: "concoctor",
   taming: "domesticator",
+  hunting: "predator",
 } as const satisfies Partial<Record<Skill, keyof StoredPlayerSkyBlock>>;
 
 export function toPlayerExtras(stored: StoredPlayerSkyBlock): PlayerExtras {
