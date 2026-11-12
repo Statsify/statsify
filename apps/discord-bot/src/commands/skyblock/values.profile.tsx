@@ -8,7 +8,7 @@
 
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { INVENTORIES, RARITY_COLORS } from "@statsify/skyblock/display";
+import { INVENTORIES, RARITY_COLORS, formatProfileName } from "@statsify/skyblock/display";
 import { ItemGrid, gridRows, pricesAsOf } from "./components/ItemGrid.js";
 import { add } from "@statsify/math";
 import { removeFormatting } from "@statsify/util";
@@ -106,13 +106,13 @@ export const SkyBlockRanksProfile = ({
   t,
   title,
 }: SkyBlockRanksProfileProps) => {
-  const cuteNames = new Map(profiles.map(({ id, cuteName }) => [id, cuteName]));
+  const profileNames = new Map(profiles.map((profile) => [profile.id, formatProfileName(profile)]));
 
   // A row on a profile the player has since left lingers until the boards next drop it
   const rows = rankings
     .flatMap(({ name, rank, value, id }) => {
-      const cuteName = cuteNames.get(id.split(":")[1]);
-      if (!cuteName) return [];
+      const profileName = profileNames.get(id.split(":")[1]);
+      if (!profileName) return [];
 
       return [
         <Table.tr>
@@ -122,7 +122,7 @@ export const SkyBlockRanksProfile = ({
             color="§f"
             size="small"
           />
-          <Table.td title={t("skyblock.profile")} value={cuteName} color="§a" size="small" />
+          <Table.td title={t("skyblock.profile")} value={profileName} color="§f" size="small" />
         </Table.tr>,
       ];
     })
