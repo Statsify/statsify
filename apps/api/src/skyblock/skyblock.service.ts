@@ -29,16 +29,19 @@ import {
   isMember,
   toMemberStats,
   toMemberView,
+  toPlayerExtras,
   toProfileSummary,
   toProfilesView,
 } from "@statsify/skyblock";
 import { Singleflight } from "./singleflight.js";
+import { unflatten } from "@statsify/util";
 import { SkyBlockLeaderboardService } from "./leaderboards/skyblock-leaderboard.service.js";
 import { SkyBlockGarden, SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
 import { SKYBLOCK_FAILED_FOR, SkyBlockPricesService } from "./skyblock-prices.service.js";
 import { unzip, zip } from "./zip.js";
 import type {
   MemberView,
+  PlayerExtras,
   PlayerRef,
   RawGarden,
   RawMuseum,
@@ -49,19 +52,22 @@ import type {
   SkyBlockSection,
 } from "@statsify/skyblock";
 import type { ReturnModelType } from "@typegoose/typegoose";
-import type { SkyBlockStatsRow } from "@statsify/schemas";
+import type { Player, SkyBlockStatsRow } from "@statsify/schemas";
 
 /** How long a stored copy is new enough that a lookup at `CACHE` doesn't fetch it again. */
 export const SKYBLOCK_FRESH_FOR = 300_000;
 const LIVE_FLOOR = 60_000;
 const SECTION_SECONDS = 300;
 // Bump it when a section's shape changes, so a deploy never serves a section that older code cached
-const SECTION_VERSION = 6;
+const SECTION_VERSION = 7;
 const MAX_DOCUMENT = 15 * 1024 * 1024;
 
 const DEFINITIONS = { ...SECTIONS, networth: NETWORTH } satisfies Record<SkyBlockSection, { needs: readonly SectionNeed[] }>;
 
 const isReady = (name: SkyBlockSection, built: Record<SectionNeed, boolean>) => DEFINITIONS[name].needs.every((need) => built[need]);
+
+// Runecrafting's cap: false only for a player known to have no rank
+const isRanked = (rank: string | undefined) => (rank === undefined ? undefined : rank !== "DEFAULT");
 
 interface Stored<T> {
   value: T;
@@ -95,6 +101,12 @@ function toUnavailable(error: Unavailable) {
   return new SkyBlockUnavailableException("hypixel");
 }
 
+/** The stored Player's rank and /player values, when the lookup has them. */
+interface SkyBlockPlayer extends PlayerRef {
+  ranked?: boolean;
+  extras?: PlayerExtras;
+}
+
 const timeOf = ({ fetchedAt }: { fetchedAt: number }) => new Date(fetchedAt).toISOString();
 
 const failedKey = (key: string) => `skyblock:failed:${key}`;
@@ -118,7 +130,8 @@ export class SkyBlockService {
   ) {}
 
   public async getProfiles(tag: string, cache: CacheLevel): Promise<SkyBlockProfilesView> {
-    return this.getProfilesOf(await this.getPlayer(tag), cache);
+    const { uuid, username, displayName } = await this.getPlayer(tag);
+    return this.getProfilesOf({ uuid, username, displayName }, cache);
   }
 
   /** For a caller that already knows the player, so the lookup never costs an identity call. */
@@ -138,7 +151,7 @@ export class SkyBlockService {
 
   /** With `requireGarden`, a Garden Hypixel or the budget refuses throws, as the profiles do, instead of being left out. */
   public async getProfileOf(
-    player: PlayerRef,
+    { ranked, extras, ...player }: SkyBlockPlayer,
     sections: SkyBlockSection[],
     cache: CacheLevel,
     profileName?: string,
@@ -180,6 +193,7 @@ export class SkyBlockService {
       garden: garden?.value,
       prices,
       items,
+      ranked,
     };
 
     return {
@@ -187,6 +201,7 @@ export class SkyBlockService {
       fetchedAt,
       stale,
       ...toProfileSummary(profile, player.uuid),
+      player: extras,
       member: await toMemberView(
         input,
         ready,
@@ -226,9 +241,10 @@ export class SkyBlockService {
     return { profiles, fetchedAt, stale };
   }
 
-  private async getPlayer(tag: string): Promise<PlayerRef> {
-    const selector = { uuid: true, username: true, displayName: true };
-    let player = await this.playerService.findMongoDocument(tag, selector);
+  private async getPlayer(tag: string): Promise<SkyBlockPlayer> {
+    const selector = { uuid: true, username: true, displayName: true, rank: true, skyblock: true };
+    const document = await this.playerService.findMongoDocument(tag, selector);
+    let player = document && unflatten<Player>(document);
 
     if (!player) {
       await this.budgetService.take().catch((error) => {
@@ -241,7 +257,14 @@ export class SkyBlockService {
     }
 
     if (!player) throw new PlayerNotFoundException();
-    return { uuid: player.uuid, username: player.username, displayName: player.displayName };
+    return {
+      uuid: player.uuid,
+      username: player.username,
+      displayName: player.displayName,
+      ranked: isRanked(player.rank),
+      // Players stored before the object existed have none until their next /player
+      extras: player.skyblock && toPlayerExtras(player.skyblock),
+    };
   }
 
   private async getStoredProfiles(uuid: string, cache: CacheLevel): Promise<Stored<RawProfile[] | null>> {
@@ -309,7 +332,7 @@ export class SkyBlockService {
           .filter(([member]) => isMember(profile, member) && players.has(member))
           .map(async ([member, raw]): Promise<SkyBlockStatsRow> => {
             const museum = museums[index]?.value.members?.[member];
-            const input: SectionInput = { uuid: member, profile, member: raw, museum, prices, items };
+            const input: SectionInput = { uuid: member, profile, member: raw, museum, prices, items, ranked: isRanked(players.get(member)) };
             const view = await toMemberView(input, ready, (name) => DEFINITIONS[name].compute(input));
             const summary = toProfileSummary(profile, member);
 

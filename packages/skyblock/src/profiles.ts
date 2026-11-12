@@ -8,7 +8,17 @@
 
 import { LEVELING } from "#data";
 import { minecraftColors } from "@statsify/util";
-import type { Freshness, GameMode, PlayerRef, ProfileSummary, SkyBlockProfilesView } from "#types";
+import {
+  type Freshness,
+  type GameMode,
+  PLAYER_CLAIMS,
+  type PlayerExtras,
+  type PlayerRef,
+  type ProfileSummary,
+  type Skill,
+  type SkyBlockProfilesView,
+  type StoredPlayerSkyBlock,
+} from "#types";
 import type { RawMember, RawProfile } from "#raw";
 
 export const SKYBLOCK_XP_PER_LEVEL = 100;
@@ -82,6 +92,28 @@ export function toProfilesView(player: PlayerRef, profiles: RawProfile[], freshn
     ...player,
     ...freshness,
     profiles: profiles.filter((profile) => isMember(profile, player.uuid)).map((profile) => toProfileSummary(profile, player.uuid)),
+  };
+}
+
+// Read from the achievement names and unchecked in game. Carpentry, hunting, runecrafting and social have none.
+const SKILL_ACHIEVEMENTS = {
+  farming: "harvester",
+  mining: "excavator",
+  combat: "combat",
+  foraging: "gatherer",
+  fishing: "angler",
+  enchanting: "augmentation",
+  alchemy: "concoctor",
+  taming: "domesticator",
+} as const satisfies Partial<Record<Skill, keyof StoredPlayerSkyBlock>>;
+
+export function toPlayerExtras(stored: StoredPlayerSkyBlock): PlayerExtras {
+  return {
+    highestSkills: Object.fromEntries(
+      Object.entries(SKILL_ACHIEVEMENTS).flatMap(([skill, key]) => (stored[key] > 0 ? [[skill, stored[key]]] : []))
+    ),
+    commissions: stored.hardWorkingMiner,
+    claimed: Object.fromEntries(PLAYER_CLAIMS.flatMap((claim) => (stored[claim] > 0 ? [[claim, stored[claim]]] : []))),
   };
 }
 
