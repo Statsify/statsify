@@ -42,7 +42,7 @@ export const SkyBlockJacobProfile = ({
   const sidebar: SidebarItem[] = [
     [t("skyblock.contests"), t(jacob.contests), "§e"],
     ...JACOB_MEDALS.map((medal): SidebarItem => [t(`skyblock.medals.${medal}`), t(jacob.medals[medal]), MEDAL_COLORS[medal]]),
-    [t("skyblock.doubleDrops"), t(jacob.perks.doubleDrops), "§a"],
+    [t("skyblock.extraFarmingFortune"), `+${t(jacob.perks.farmingFortune)}`, "§a"],
     [t("skyblock.farmingLevelCap"), `+${t(jacob.perks.farmingLevelCap)}`, "§a"],
   ];
 
