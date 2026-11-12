@@ -33,6 +33,7 @@ export const SkyBlockHotmProfile = ({
   ];
 
   if (loadout.total > 1) sidebar.unshift([t("skyblock.loadout"), t("skyblock.loadoutOf", loadout), "§b"]);
+  if (profile.player) sidebar.push([t("skyblock.lifetimeCommissions"), t(profile.player.commissions), "§2"]);
 
   const powders = POWDERS.map((type) => (
     <PerkCurrency
