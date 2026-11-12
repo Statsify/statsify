@@ -1,4 +1,4 @@
-use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation3, Vector3};
+use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation as _, Rotation3, Vector3};
 use image::DynamicImage;
 
 use crate::armor::Armor;
@@ -9,6 +9,7 @@ use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
 use crate::pose::{PartPose, Pose};
+use crate::skin_loader::load_skull_from_memory;
 use crate::texture::Texture;
 
 pub enum ModelKind {
@@ -45,6 +46,7 @@ struct Placement {
   position: Vector3<f32>,
   dimensions: Vector3<f32>,
   rotation: Option<CenterRotation>,
+  posed: bool,
 }
 
 impl Placement {
@@ -115,19 +117,18 @@ impl Part {
       ),
     };
 
-    let quaternion = match pose.part(self) {
+    let part_pose = pose.part(self);
+    let quaternion = match part_pose {
       // Even a turn by nothing would round the body's vertices and shift every render
       None if self == Part::Body => None,
       None => Some(Quaternion::from_angle_z(Deg(rest_angle))),
-      Some(part_pose) => {
-        position += part_pose.offset;
-
-        let turn = part_pose.rotation;
+      Some(PartPose { rotation, offset }) => {
+        position += offset;
 
         Some(
-          Quaternion::from_angle_z(Deg(rest_angle + turn.z))
-            * Quaternion::from_angle_y(Deg(turn.y))
-            * Quaternion::from_angle_x(Deg(turn.x)),
+          Quaternion::from_angle_z(Deg(rest_angle + rotation.z))
+            * Quaternion::from_angle_y(Deg(rotation.y))
+            * Quaternion::from_angle_x(Deg(rotation.x)),
         )
       }
     };
@@ -139,6 +140,7 @@ impl Part {
         quaternion,
         pivot_delta: Vector3::unit_y() * pivot_height,
       }),
+      posed: part_pose.is_some(),
     }
   }
 
@@ -195,7 +197,7 @@ struct BodyPart<'a> {
 }
 
 impl<'a> BodyPart<'a> {
-  fn create(self, scale: f32, device: &wgpu::Device) -> (Mesh, Mesh) {
+  fn create(self, scale: f32) -> (Geometry, Geometry) {
     let texture_size = (64, 64);
 
     let (position, rotation) = self.placement.resolve();
@@ -242,8 +244,18 @@ impl<'a> BodyPart<'a> {
           extrude: false,
         }
         .create();
+
+        // A posed part grows around where its turn left its centre. Standing parts keep
+        // the unturned centre they've always used, so bare renders don't move.
+        let centre = match rotation {
+          Some(rotation) if self.placement.posed => {
+            rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot
+          }
+          _ => position,
+        };
+
         // In Minecraft the outer layer is scaled up 12.5%
-        layer.scale_around(1.125, position);
+        layer.scale_around(1.125, centre);
         layer
       }
     };
@@ -254,10 +266,7 @@ impl<'a> BodyPart<'a> {
     self.pose.place(&mut inner_geometry);
     self.pose.place(&mut outer_geometry);
 
-    (
-      Mesh::from_geometry(device, inner_geometry),
-      Mesh::from_geometry(device, outer_geometry),
-    )
+    (inner_geometry, outer_geometry)
   }
 }
 
@@ -274,11 +283,26 @@ pub struct Model {
   glint: Option<Material>,
   pose: Pose,
   wears_armor: bool,
+  points: Vec<Vector3<f32>>,
+}
+
+// Keeps where every vertex ends up, so a render can fit the camera to them
+fn mesh_with_points(
+  device: &wgpu::Device,
+  geometry: Geometry,
+  points: &mut Vec<Vector3<f32>>,
+) -> Mesh {
+  points.extend(
+    geometry
+      .vertices
+      .iter()
+      .map(|vertex| Vector3::from(vertex.position)),
+  );
+  Mesh::from_geometry(device, geometry)
 }
 
 impl Model {
-  // The armour decides which parts keep an extruded outer layer, so it can't be attached later
-  // Three of the arguments are the wgpu handles every attachment is built with
+  // Armour and the pose shape the body's own meshes, so neither can be attached later
   #[allow(clippy::too_many_arguments)]
   pub fn new(
     device: &wgpu::Device,
@@ -292,7 +316,7 @@ impl Model {
   ) -> Result<Self> {
     let arm_width = kind.arm_width();
 
-    let (inner_meshes, outer_meshes): (Vec<Mesh>, Vec<Mesh>) = Part::ALL
+    let (inner_geometries, outer_geometries): (Vec<Geometry>, Vec<Geometry>) = Part::ALL
       .iter()
       .map(|&part| {
         let (layer1_location, layer2_location) = part.skin_layer_locations();
@@ -309,20 +333,28 @@ impl Model {
           },
           pose,
         }
-        .create(part.z_fighting_scale(), device)
+        .create(part.z_fighting_scale())
       })
       .unzip();
 
-    let texture = Texture::from_image(device, queue, &image).unwrap();
+    let mut points = vec![];
+    let meshes = inner_geometries
+      .into_iter()
+      .chain(outer_geometries)
+      .map(|geometry| mesh_with_points(device, geometry, &mut points))
+      .collect();
+
+    let texture = Texture::from_image(device, queue, &image)?;
     let material = Material::new(device, texture, layout);
 
     let mut model = Self {
       material,
-      meshes: inner_meshes.into_iter().chain(outer_meshes).collect(),
+      meshes,
       attachments: vec![],
       glint: None,
       pose,
       wears_armor: armor.pieces().next().is_some(),
+      points,
     };
 
     model.attach_armor(device, queue, layout, armor)?;
@@ -341,6 +373,10 @@ impl Model {
     }
   }
 
+  pub fn points(&self) -> &[Vector3<f32>] {
+    &self.points
+  }
+
   fn attach_armor(
     &mut self,
     device: &wgpu::Device,
@@ -349,13 +385,17 @@ impl Model {
     armor: &Armor,
   ) -> Result<()> {
     for (piece, layer, parts) in armor.pieces() {
-      let texture = image::load_from_memory(&piece.texture)?;
+      let skull = piece.is_skull();
+      let texture = if skull {
+        load_skull_from_memory(&piece.texture)?
+      } else {
+        image::load_from_memory(&piece.texture)?
+      };
       // Packs draw the 64 wide layout at any resolution, and skins are square where armour is 2:1
       let texture_size = (64, 64 * texture.height() / texture.width());
       let mut geometry = Geometry::new(vec![], vec![]);
 
       // A worn skull grows from the neck instead of being inflated, as the game draws one
-      let skull = piece.is_skull();
       let (inflation, hat_inflation) = if skull {
         (0.0, 0.25)
       } else {
@@ -391,7 +431,7 @@ impl Model {
           .create();
 
           if skull {
-            box_geometry.scale_around(1.1875, neck);
+            box_geometry.grow_around(1.1875, neck);
           } else {
             box_geometry.scale_around(part.z_fighting_scale(), position);
           }
@@ -400,7 +440,7 @@ impl Model {
         }
       }
 
-      self.attach(device, queue, layout, &texture, geometry, piece.enchanted);
+      self.attach(device, queue, layout, &texture, geometry, piece.enchanted)?;
     }
 
     Ok(())
@@ -441,7 +481,7 @@ impl Model {
     layout: &wgpu::BindGroupLayout,
     cape: &DynamicImage,
     chestplate: bool,
-  ) {
+  ) -> Result<()> {
     let body = Part::Body.placement(ModelKind::Classic.arm_width(), Pose::Standing);
     let (body_position, _) = body.resolve();
 
@@ -480,7 +520,7 @@ impl Model {
     });
     geometry.translate(offset);
 
-    self.attach(device, queue, layout, cape, geometry, false);
+    self.attach(device, queue, layout, cape, geometry, false)
   }
 
   fn attach(
@@ -491,16 +531,18 @@ impl Model {
     texture: &DynamicImage,
     mut geometry: Geometry,
     enchanted: bool,
-  ) {
+  ) -> Result<()> {
     self.pose.place(&mut geometry);
 
-    let texture = Texture::from_image(device, queue, texture).unwrap();
+    let texture = Texture::from_image(device, queue, texture)?;
 
     self.attachments.push(Attachment {
       material: Material::new(device, texture, layout),
-      mesh: Mesh::from_geometry(device, geometry),
+      mesh: mesh_with_points(device, geometry, &mut self.points),
       enchanted,
     });
+
+    Ok(())
   }
 
   pub fn to_raw() -> InstanceRaw {
