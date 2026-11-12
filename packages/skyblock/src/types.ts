@@ -908,7 +908,7 @@ export interface AccessoriesSection {
   accessoryPower: number;
   highestAccessoryPower?: number;
   selectedPower?: string;
-  powerStats?: PowerStat[]; // at this Accessory Power, plus the stone's Unique Power Bonus; only for stone Powers
+  powerStats?: PowerStat[]; // at this Accessory Power, plus a stone's Unique Power Bonus
   tuning: Record<string, number>;
   tuningPoints: number; // spent
   tuningTotal?: number; // missing below Tuning Box X but above 0, whose points nothing gives

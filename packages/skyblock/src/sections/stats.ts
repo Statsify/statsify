@@ -26,7 +26,14 @@ import {
 import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
 import { add, roundTo } from "@statsify/math";
 import { getLevel } from "#leveling";
-import { TUNING, bagAccessories, heldAccessories, powerScale, stonePowerStats } from "./accessories.js";
+import {
+  LEARNED_POWERS,
+  TUNING,
+  bagAccessories,
+  heldAccessories,
+  powerScale,
+  stonePowerStats,
+} from "./accessories.js";
 import { decodeSlots } from "#items";
 import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
@@ -64,20 +71,6 @@ const upTo = (levels: readonly Stats[], level: number) => sumStats(levels.slice(
 
 const scaleStats = (stats: Stats, factor: number): Stats =>
   Object.fromEntries(Object.entries(stats).map(([stat, value]) => [stat, value * factor]));
-
-// Learned Powers' stats per unit of powerScale (wiki: Powers); stone Powers list theirs on the stone
-const LEARNED_POWERS: Record<string, Stats> = {
-  fortuitous: { health: 3.35, defense: 1.2, strength: 4.8, crit_chance: 4.35, crit_damage: 4.8 },
-  pretty: { health: 1.65, defense: 1.2, speed: 0.65, strength: 4.8, intelligence: 10.8, crit_chance: 0.475, crit_damage: 1.2 },
-  protected: { health: 11.75, defense: 10.8, strength: 2.4, crit_chance: 0.475, crit_damage: 1.2 },
-  simple: { health: 5.02, defense: 3.6, speed: 1.2, strength: 3.6, intelligence: 5.4, crit_chance: 1.45, crit_damage: 3.6 },
-  warrior: { health: 3.35, defense: 1.2, strength: 8.4, crit_chance: 2.4, crit_damage: 6 },
-  commando: { health: 5.02, defense: 2.4, strength: 8.4, crit_chance: 0.475, crit_damage: 8.4 },
-  disciplined: { health: 5.02, defense: 2.4, strength: 7.2, crit_chance: 1.45, crit_damage: 7.2 },
-  inspired: { health: 1.65, defense: 1.2, strength: 4.8, intelligence: 16.2, crit_chance: 0.95, crit_damage: 3.6 },
-  ominous: { health: 5.02, speed: 0.95, strength: 3.6, intelligence: 6.1, crit_chance: 1.45, crit_damage: 3.6, attack_speed: 0.9 },
-  prepared: { health: 12.4, defense: 11.3, strength: 1.95, crit_chance: 0.4, crit_damage: 0.95 },
-};
 
 /** The selected Power's stats at the bag's accessory power. */
 function powerStats(power: string | undefined, accessoryPower: number): Stats | undefined {

@@ -8,7 +8,8 @@
 
 import { ACCESSORY_UPGRADES, ATTRIBUTE_SHARDS, IGNORED_ACCESSORIES, POWERS } from "#data";
 import { add } from "@statsify/math";
-import { RARITIES } from "#types";
+import { prettify } from "@statsify/util";
+import { PLAYER_STATS, RARITIES } from "#types";
 import { costOf } from "#prices";
 import { decodeInventory } from "#nbt";
 import { getLevel } from "#leveling";
@@ -21,6 +22,7 @@ import type {
   ItemsResource,
   MissingAccessory,
   PlayerStat,
+  PowerStat,
   PriceMap,
   Rarity,
 } from "#types";
@@ -65,6 +67,26 @@ export function stonePowerStats({ accessoryPower: listedAt, stats, bonus }: (typ
 
   return scaled;
 }
+
+// Learned Powers' stats per unit of powerScale (wiki: Powers); stone Powers list theirs on the stone
+export const LEARNED_POWERS: Record<string, Partial<Record<PlayerStat, number>>> = {
+  fortuitous: { health: 3.35, defense: 1.2, strength: 4.8, crit_chance: 4.35, crit_damage: 4.8 },
+  pretty: { health: 1.65, defense: 1.2, speed: 0.65, strength: 4.8, intelligence: 10.8, crit_chance: 0.475, crit_damage: 1.2 },
+  protected: { health: 11.75, defense: 10.8, strength: 2.4, crit_chance: 0.475, crit_damage: 1.2 },
+  simple: { health: 5.02, defense: 3.6, speed: 1.2, strength: 3.6, intelligence: 5.4, crit_chance: 1.45, crit_damage: 3.6 },
+  warrior: { health: 3.35, defense: 1.2, strength: 8.4, crit_chance: 2.4, crit_damage: 6 },
+  commando: { health: 5.02, defense: 2.4, strength: 8.4, crit_chance: 0.475, crit_damage: 8.4 },
+  disciplined: { health: 5.02, defense: 2.4, strength: 7.2, crit_chance: 1.45, crit_damage: 7.2 },
+  inspired: { health: 1.65, defense: 1.2, strength: 4.8, intelligence: 16.2, crit_chance: 0.95, crit_damage: 3.6 },
+  ominous: { health: 5.02, speed: 0.95, strength: 3.6, intelligence: 6.1, crit_chance: 1.45, crit_damage: 3.6, attack_speed: 0.9 },
+  prepared: { health: 12.4, defense: 11.3, strength: 1.95, crit_chance: 0.4, crit_damage: 0.95 },
+};
+
+const learnedPowerStats = (perUnit: Partial<Record<PlayerStat, number>>, accessoryPower: number): PowerStat[] =>
+  PLAYER_STATS.flatMap(({ id, color }) => {
+    const value = perUnit[id];
+    return value === undefined ? [] : [{ name: prettify(id), color, value: value * powerScale(accessoryPower) }];
+  });
 
 /** Variants that replace each other (party hats) list each other; a higher tier doesn't list its lower one. */
 const isMutual = (a: string, b: string) => upgradesOf(b).includes(a);
@@ -137,6 +159,7 @@ export function getAccessories(
   const storage = member.accessory_bag_storage;
   const tuning = storage?.tuning?.slot_0 ?? {};
   const stone = storage?.selected_power ? POWERS[storage.selected_power] : undefined;
+  const learned = storage?.selected_power ? LEARNED_POWERS[storage.selected_power] : undefined;
   const stepOrder = order(accessoryPower, storage?.highest_magical_power);
   const stored = storedAccessories(member, items);
 
@@ -144,7 +167,7 @@ export function getAccessories(
     accessoryPower,
     highestAccessoryPower: storage?.highest_magical_power,
     selectedPower: storage?.selected_power,
-    powerStats: stone && stonePowerStats(stone, accessoryPower),
+    powerStats: stone ? stonePowerStats(stone, accessoryPower) : learned && learnedPowerStats(learned, accessoryPower),
     tuning,
     tuningPoints: add(...Object.values(tuning)),
     tuningTotal: tuningTotal(member, accessoryPower),
