@@ -109,21 +109,19 @@ export const SkyBlockRanksProfile = ({
   const profileNames = new Map(profiles.map((profile) => [profile.id, formatProfileName(profile)]));
 
   // A row on a profile the player has since left lingers until the boards next drop it
-  const rows = rankings
+  const cells = rankings
     .flatMap(({ name, rank, value, id }) => {
       const profileName = profileNames.get(id.split(":")[1]);
       if (!profileName) return [];
 
+      const shown = typeof value === "number" ? t(value) : value;
       return [
-        <Table.tr>
-          <Table.td
-            title={`§f${boardName(name)}`}
-            value={`§e#${t(rank)} §7${typeof value === "number" ? t(value) : value}`}
-            color="§f"
-            size="small"
-          />
-          <Table.td title={t("skyblock.profile")} value={profileName} color="§f" size="small" />
-        </Table.tr>,
+        <Table.td
+          title={`§f${boardName(name)}`}
+          value={`§e#${t(rank)} §7${shown} §7(${profileName}§7)`}
+          color="§f"
+          size="small"
+        />,
       ];
     })
     .slice(0, RANKS);
@@ -131,7 +129,7 @@ export const SkyBlockRanksProfile = ({
   return (
     <Container background={background}>
       <Header skin={skin} name={displayName} badge={badge} title={title} time="LIVE" />
-      {rows.length > 0 ? <Table.table>{rows}</Table.table> : <Empty text={t("skyblock.noRanks")} />}
+      {cells.length > 0 ? <Table.table>{gridRows(cells, 2)}</Table.table> : <Empty text={t("skyblock.noRanks")} />}
       <Footer logo={logo} user={user} />
     </Container>
   );
