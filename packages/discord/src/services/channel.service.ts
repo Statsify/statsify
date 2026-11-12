@@ -58,7 +58,8 @@ export class ChannelService {
     let page: APIMessage[];
 
     do {
-      const before = messages.length > 0 ? `&before=${messages.at(-1)!.id}` : "";
+      const oldest = messages.at(-1);
+      const before = oldest ? `&before=${oldest.id}` : "";
 
       // Each page starts before the oldest message of the last one, so they can't be fetched in parallel
       // oxlint-disable-next-line no-await-in-loop
