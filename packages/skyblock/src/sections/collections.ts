@@ -10,7 +10,7 @@ import { COLLECTIONS } from "#data";
 import { add } from "@statsify/math";
 import { coopMembers } from "../profiles.js";
 import { resourceTexture } from "#textures";
-import { type BossCollection, type CollectionsSection, type ItemsResource, KUUDRA_TIERS } from "#types";
+import { type BossCollection, type CollectionView, type CollectionsSection, type ItemsResource, KUUDRA_TIERS } from "#types";
 import type { RawMember, RawProfile } from "#raw";
 
 /** The tiers reached at an amount, out of each tier's amount needed. */
@@ -51,32 +51,53 @@ function getBossCollections(member: RawMember): BossCollection[] {
   ];
 }
 
+/** The highest tier each collection reached, from `unlocked_coll_tiers`. */
+function unlockedTiers(unlocked: string[]) {
+  const tiers = new Map<string, number>();
+  for (const entry of unlocked) {
+    const split = entry.lastIndexOf("_");
+    const id = entry.slice(0, split);
+    tiers.set(id, Math.max(tiers.get(id) ?? 0, Number(entry.slice(split + 1))));
+  }
+  return tiers;
+}
+
 /**
- * Collections count the whole co-op's gathering, and a tier unlocks for every member. Only the resource's collections,
- * since the API still keeps retired ones (ENCHANTED_DIAMOND).
+ * The whole co-op's gathering, for the resource's collections only (the API keeps retired ones like ENCHANTED_DIAMOND).
+ * With the member's Collections API off, only tiers come, from `unlocked_coll_tiers`, which can trail the co-op's.
  */
 export function getCollections(profile: RawProfile, member: RawMember, items?: ItemsResource): CollectionsSection | null {
-  if (!member.collection) return null;
+  const unlocked = member.collection ? undefined : member.player_data?.unlocked_coll_tiers;
+  if (!member.collection && !unlocked) return null;
 
   const members = coopMembers(profile);
   const counted = members.filter(([, other]) => other.collection);
+  const reached = unlocked && unlockedTiers(unlocked);
 
   const categories = COLLECTIONS.map(({ id, name, items: collections }) => ({
     id,
     name,
-    items: collections.map(({ id, name, tiers }) => {
+    items: collections.map(({ id, name, tiers }): CollectionView => {
+      const item = items?.items[id];
+      const texture = item && resourceTexture(item);
+
+      if (reached) {
+        // The list can name tiers the resource no longer has (Redstone at 16 of 9)
+        const tier = Math.min(reached.get(id) ?? 0, tiers.length);
+        return { id, name, texture, tier, maxTier: tiers.length, next: tiers[tier], members: [] };
+      }
+
       const parts = counted
         .map(([uuid, other]) => ({ uuid, amount: other.collection?.[id] ?? 0 }))
         .filter(({ amount }) => amount > 0)
         .toSorted((a, b) => b.amount - a.amount);
       const amount = add(...parts.map(({ amount }) => amount));
       const tier = collectionTier(amount, tiers);
-      const item = items?.items[id];
 
       return {
         id,
         name,
-        texture: item && resourceTexture(item),
+        texture,
         amount,
         tier,
         maxTier: tiers.length,
@@ -104,5 +125,15 @@ if (import.meta.vitest) {
     expect(collectionTier(99, [50, 100, 250])).toBe(1);
     expect(collectionTier(100, [50, 100, 250])).toBe(2);
     expect(collectionTier(1e9, [50, 100, 250])).toBe(3);
+  });
+
+  test("unlockedTiers keeps each collection's highest tier", () => {
+    expect(unlockedTiers(["BONE_-1", "INK_SACK:3_2", "INK_SACK:3_9", "INK_SACK:3_8", "MUTTON_1"])).toEqual(
+      new Map([
+        ["BONE", 0],
+        ["INK_SACK:3", 9],
+        ["MUTTON", 1],
+      ])
+    );
   });
 }

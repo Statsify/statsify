@@ -647,6 +647,7 @@
     "chocolate": "Chocolate",
     "claims": "Claims",
     "classAverage": "Class Average",
+    "collectionTiersOnly": "The Collections API is off, so these are the tiers this player unlocked.",
     "completions": "Completions",
     "composter": "Composter",
     "contests": "Contests",

@@ -515,7 +515,7 @@ export interface CollectionView {
   id: string;
   name: string;
   texture?: ItemTexture;
-  amount: number;
+  amount?: number; // missing with the member's Collections API off, when only the tier comes
   tier: number;
   maxTier: number;
   next?: number; // the amount the next tier needs

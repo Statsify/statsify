@@ -121,6 +121,7 @@ export interface RawMember {
   player_data?: {
     experience?: Record<string, number>;
     perks?: Record<string, number>;
+    unlocked_coll_tiers?: string[]; // <collection>_<tier>, with -1 for one found at no tier yet
     reaper_peppers_eaten?: number;
     bee_saliva_eaten?: number;
     isopod_husks_eaten?: number;
