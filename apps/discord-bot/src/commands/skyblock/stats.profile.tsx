@@ -14,7 +14,7 @@ import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 import type { StatGroup } from "@statsify/skyblock";
 
-const STATS = new Map(PLAYER_STATS.map((stat) => [stat.id as string, stat]));
+const STATS = new Map(PLAYER_STATS.map((stat) => [stat.id, stat]));
 const ATTRIBUTES = 30;
 
 // Seven groups as seven buttons crowd the profile menu, so the gathering skills share a page
@@ -73,8 +73,8 @@ export const SkyBlockAttributesProfile = ({
   t,
 }: SkyBlockProfileProps) => {
   const attributes = profile.member.attributes!;
-  // A late-game member has 200+ unlocked, so the card keeps the ones still levelling, closest to max first
-  const unlocked = attributes.attributes
+  // A late-game member has 200+ unlocked, so the ones still levelling come first
+  const shown = attributes.attributes
     .filter(({ level }) => level > 0)
     .toSorted((a, b) => Number(a.level === a.maxLevel) - Number(b.level === b.maxLevel) || b.level - a.level)
     .slice(0, ATTRIBUTES);
@@ -85,7 +85,7 @@ export const SkyBlockAttributesProfile = ({
     [t("skyblock.shardsOwned"), t(attributes.owned), "§b"],
   ];
 
-  const cells = unlocked.map(({ attribute, rarity, level, maxLevel }) => (
+  const cells = shown.map(({ attribute, rarity, level, maxLevel }) => (
     <Table.td
       title={attribute}
       value={`${level === maxLevel ? "§6" : "§e"}${t(level)}§7/${t(maxLevel)}`}

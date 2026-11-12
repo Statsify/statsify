@@ -22,7 +22,6 @@ import type { User } from "@statsify/schemas";
 const MISSING_PETS = 12;
 const RANKS = 16;
 
-// The board's name without the SkyBlock prefix every one shares
 const boardName = (name: string) => removeFormatting(name).replace(/^SkyBlock /, "");
 
 export const missingPetIcons = ({ values }: MemberView) => values?.missingPets.slice(0, MISSING_PETS).map(({ texture }) => texture) ?? [];
