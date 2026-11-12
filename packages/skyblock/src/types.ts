@@ -971,6 +971,10 @@ export interface ItemAttributes {
   rarity_upgrades?: number;
   enchantments?: Record<string, number>;
   talisman_enrichment?: string;
+  runes?: Record<string, number>;
+  dye_item?: string;
+  skin?: string;
+  originTag?: string;
   [key: string]: unknown;
 }
 

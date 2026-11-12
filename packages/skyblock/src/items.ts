@@ -88,7 +88,7 @@ function attributeDetails(attributes: ItemAttributes) {
     const value = nbtNumber(attributes[key]);
     return value === undefined ? [] : [[key, Math.floor(value)] as const];
   });
-  const [rune] = Object.entries((attributes.runes ?? {}) as Record<string, number>);
+  const [rune] = Object.entries(attributes.runes ?? {});
 
   return {
     reforge: attributes.modifier,
@@ -100,10 +100,10 @@ function attributeDetails(attributes: ItemAttributes) {
     obtainedAt: nbtNumber(attributes.timestamp),
     gems: gemsOf(attributes.gems),
     counters: counters.length > 0 ? Object.fromEntries(counters) : undefined,
-    dye: attributes.dye_item as string | undefined,
+    dye: attributes.dye_item,
     rune: rune && { id: rune[0], level: rune[1] },
-    skin: attributes.skin as string | undefined,
-    origin: attributes.originTag as string | undefined,
+    skin: attributes.skin,
+    origin: attributes.originTag,
     drillParts: nonEmpty(
       DRILL_PARTS.flatMap((part) => {
         const id = attributes[part];
