@@ -100,7 +100,7 @@ export const SkyBlockAttributesProfile = ({
   return (
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
-      {cells.length > 0 ? <Table.table>{gridRows(cells, 3)}</Table.table> : <Empty text={t("skyblock.noAttributes")} />}
+      {cells.length > 0 ? <Table.table>{gridRows(cells, 3, true)}</Table.table> : <Empty text={t("skyblock.noAttributes")} />}
       <Footer logo={logo} user={user} />
     </Container>
   );
