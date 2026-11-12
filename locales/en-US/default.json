@@ -594,6 +594,7 @@
     "apiOffNote": "Some stats are missing because these API settings are off: {{settings}}. They're under Settings → API Settings in SkyBlock.",
     "apiSettings": {
       "banking": "Banking",
+      "collections": "Collections",
       "inventory": "Inventory",
       "personalVault": "Personal Vault",
       "skills": "Skills"
