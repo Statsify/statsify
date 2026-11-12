@@ -26,7 +26,7 @@ import {
 import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
 import { add, roundTo } from "@statsify/math";
 import { getLevel } from "#leveling";
-import { TUNING, bagAccessories, powerScale, stonePowerStats } from "./accessories.js";
+import { TUNING, bagAccessories, heldAccessories, powerScale, stonePowerStats } from "./accessories.js";
 import { decodeSlots } from "#items";
 import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
@@ -297,7 +297,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     armor: inventory?.inv_armor ? loreStats(decodeSlots(inventory.inv_armor)) : undefined,
     equipment: inventory?.equipment_contents ? loreStats(decodeSlots(inventory.equipment_contents)) : undefined,
     weapon: weapon && loreStats([weapon]),
-    accessories: bag ? loreStats(bag.active) : undefined,
+    accessories: bag ? loreStats([...bag.active, ...heldAccessories(member, items, bag.owned)]) : undefined,
     power,
     tuning,
     skills: skills ? sumStats(SKILLS.map((skill) => upTo(STAT_TABLES.skills[skill], skills.skills[skill].level))) : undefined,
