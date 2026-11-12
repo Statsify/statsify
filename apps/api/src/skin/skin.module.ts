@@ -16,7 +16,8 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 @Module({
   imports: [
     TypegooseModule.forFeature([Skin]),
-    HttpModule.register({}),
+    // Leaves time to render the default skin within the bot's IMAGE_DOWNLOAD_TIMEOUT
+    HttpModule.register({ timeout: 3000 }),
   ],
   controllers: [SkinController],
   providers: [SkinService],
