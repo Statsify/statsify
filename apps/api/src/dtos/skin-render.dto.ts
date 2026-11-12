@@ -18,17 +18,20 @@ const ARMOR_MATERIALS = ["leather", "chainmail", "iron", "gold", "diamond"] as c
 
 export const SKULLS = ["skeleton", "wither_skeleton", "zombie", "creeper"] as const;
 
+// IsOptional also lets null through, which the renderer rejects with a 500
+const isSet = (_: unknown, value: unknown) => value !== undefined;
+
 export class ArmorPieceDto {
   @IsIn(ARMOR_MATERIALS)
   public material: (typeof ARMOR_MATERIALS)[number];
 
-  @IsOptional()
+  @ValidateIf(isSet)
   @IsInt()
   @Min(0)
   @Max(0xFF_FF_FF)
   public color?: number;
 
-  @IsOptional()
+  @ValidateIf(isSet)
   @IsBoolean()
   public enchanted?: boolean;
 }
@@ -55,9 +58,6 @@ class SkullDto {
   @IsEmpty()
   public material?: undefined;
 }
-
-// IsOptional also lets null through, which the renderer rejects with a 500
-const isSet = (_: unknown, value: unknown) => value !== undefined;
 
 export class ArmorDto {
   @ValidateIf(isSet)
