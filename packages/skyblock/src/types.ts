@@ -455,6 +455,10 @@ export const JACOB_MEDALS = ["gold", "silver", "bronze"] as const;
 
 export type JacobMedal = (typeof JACOB_MEDALS)[number];
 
+export const COLLECTION_CATEGORIES = ["FARMING", "MINING", "COMBAT", "FORAGING", "FISHING", "RIFT"] as const;
+
+export type CollectionCategory = (typeof COLLECTION_CATEGORIES)[number];
+
 /** null with the member's own Collections API off. */
 export interface CollectionsSection {
   categories: { id: string; name: string; items: CollectionView[] }[];
