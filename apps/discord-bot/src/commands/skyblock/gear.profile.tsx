@@ -99,7 +99,7 @@ export const SkyBlockMuseumProfile = ({
   return (
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
-      <Table.table>{gridRows(categories, 3)}</Table.table>
+      <Table.table>{gridRows(categories, 3, true)}</Table.table>
       <Footer logo={logo} user={user} />
     </Container>
   );
