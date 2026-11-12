@@ -12,7 +12,7 @@
 
 "site":
   - changed-files:
-    - any-glob-to-any-file: apps/site/**/*
+    - any-glob-to-any-file: apps/site*/**/*
 
 "support-bot":
   - changed-files:
