@@ -11,7 +11,6 @@ import { HeaderBody } from "./HeaderBody.js";
 import { HeaderNametag } from "./HeaderNametag.js";
 import { Historical, type HistoricalTimeData } from "../Historical/index.js";
 import { Image } from "skia-canvas";
-import { Multiline } from "../Multiline.js";
 import { Sidebar, SidebarItem } from "../Sidebar.js";
 import { Skin } from "../Skin.js";
 import { useChildren, useComponentHeight, useComponentWidth } from "@statsify/rendering";
@@ -51,10 +50,9 @@ const fitTitle = (title: string, nameTag: JSX.Element, sidebar: SidebarItem[]) =
   if (!title.includes("\n")) return title;
 
   const line = title.replace("\n", " ");
-  if (sidebar.length === 0 || useComponentWidth(<text>{line}</text>) <= useComponentWidth(nameTag)) return line;
+  if (sidebar.length === 0 || useComponentWidth(<HeaderBody title={line} />) <= useComponentWidth(nameTag)) return line;
 
-  const lines = <div direction="column"><Multiline>{title}</Multiline></div>;
-  const height = useComponentHeight(nameTag) + useComponentHeight(lines);
+  const height = useComponentHeight(nameTag) + useComponentHeight(<HeaderBody title={title} />);
   return height <= useComponentHeight(<Sidebar items={sidebar} />) ? title : line;
 };
 
