@@ -84,7 +84,7 @@ function powerOf(id: string, rarity: Rarity | undefined, contacts: number) {
 const isCandidate = (id: string, item: ItemsResource["items"][string]) =>
   item.category === "ACCESSORY" && !item.riftOnly && !IGNORED_ACCESSORIES.has(id);
 
-/** Accessories in the inventory, ender chest, backpacks and vault: owned, but worth nothing until they're in the bag. */
+/** Accessories in the inventory, ender chest, backpacks and vault: owned, but no accessory power until they're in the bag. */
 function storedAccessories(member: RawMember, items: ItemsResource) {
   const { inv_contents, ender_chest_contents, personal_vault_contents, backpack_contents } = member.inventory ?? {};
   const blobs = [inv_contents, ender_chest_contents, personal_vault_contents, ...Object.values(backpack_contents ?? {})];
@@ -95,6 +95,26 @@ function storedAccessories(member: RawMember, items: ItemsResource) {
     const resource = items.items[id];
     return resource && isCandidate(id, resource) ? [toItemView(item)] : [];
   });
+}
+
+/**
+ * Accessories in the inventory whose family isn't in the bag, one of each: they give their stats there too, but no
+ * accessory power (the wiki's Accessories page, unverified).
+ */
+export function heldAccessories(member: RawMember, items: ItemsResource, owned: ReadonlySet<string>) {
+  const inBag = (id: string) =>
+    owned.has(id) || upgradesOf(id).some((by) => owned.has(by)) || [...owned].some((bagged) => upgradesOf(bagged).includes(id));
+  const blob = member.inventory?.inv_contents;
+  const held = new Map<string, ItemView>();
+
+  for (const item of blob ? decodeInventory(blob) : []) {
+    const id = item?.tag?.ExtraAttributes?.id;
+    if (!item || typeof id !== "string" || held.has(id) || inBag(id)) continue;
+    const resource = items.items[id];
+    if (resource && isCandidate(id, resource)) held.set(id, toItemView(item));
+  }
+
+  return [...held.values()];
 }
 
 type StepOrder = (a: MissingAccessory, b: MissingAccessory) => number;
