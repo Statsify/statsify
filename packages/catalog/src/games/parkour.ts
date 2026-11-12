@@ -20,7 +20,7 @@ export const PARKOUR: Game<ParkourModes> = {
   game: Object.fromEntries(
     scanMetadata(Parkour).map(([lobby]): [string, StatEntry] => [
       lobby,
-      { colour: "§f", name: FormattedGame[lobby as keyof typeof FormattedGame], unset: "N/A" },
+      { color: "§f", name: FormattedGame[lobby as keyof typeof FormattedGame], unset: "N/A" },
     ])
   ),
   shapes: [],

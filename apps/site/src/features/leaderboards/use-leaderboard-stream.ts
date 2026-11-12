@@ -218,7 +218,7 @@ export function useLeaderboardStream(view: LeaderboardView) {
     }
 
     const pages = result.data?.pages ?? [];
-    // Cancelled by End: the page is left to Load More.
+    // Canceled by End: the page is left to Load More.
     if (pages.length === loaded) return;
     const added = (direction === "next" ? pages.at(-1) : pages[0])?.page.rows.length ?? 0;
     const ended = direction === "next" ? !result.hasNextPage : !result.hasPreviousPage;
@@ -427,7 +427,7 @@ export function useLeaderboardStream(view: LeaderboardView) {
     if (document.activeElement === document.body) rootRef.current?.focus({ preventScroll: true });
   }, [first, last, loading]);
 
-  // An `around` or `position` row is centred once, when its stream starts; not on Back, and not as pages load.
+  // An `around` or `position` row is centered once, when its stream starts; not on Back, and not as pages load.
   useEffect(() => {
     if (returning) return;
     const highlighted = visibleTable(rootRef.current)?.querySelector<HTMLElement>("[aria-current] [data-row], [data-row][aria-current]");
@@ -435,7 +435,7 @@ export function useLeaderboardStream(view: LeaderboardView) {
 
     const scroll = () => highlighted.scrollIntoView({ block: "center", inline: "nearest" });
     scroll();
-    // After a client navigation the router scrolls to the top once the page is on screen, so centre it again then.
+    // After a client navigation the router scrolls to the top once the page is on screen, so center it again then.
     const unsubscribe = router.subscribe("onRendered", () => {
       unsubscribe();
       if (scrollY === 0) scroll();

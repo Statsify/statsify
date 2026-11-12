@@ -253,7 +253,7 @@ export function Paragraph({ children }: { children: ReactNode }) {
   return <p className="mc-crisp max-w-(--measure)">{children}</p>;
 }
 
-/** A list with the site's square bullets, each centred on its first line's lowercase letters (7/16 em down). */
+/** A list with the site's square bullets, each centered on its first line's lowercase letters (7/16 em down). */
 export function List({ children }: { children: ReactNode }) {
   return (
     <ul className="flex max-w-(--measure) flex-col gap-2 [&>li]:relative [&>li]:mc-crisp [&>li]:pl-6 [&>li]:before:absolute [&>li]:before:top-[calc(0.4375em-3px)] [&>li]:before:left-1 [&>li]:before:size-1.5 [&>li]:before:bg-mc-dark-gray">
@@ -294,13 +294,13 @@ const CALLOUT_TONES = {
   legal: { rule: "border-mc-gray", label: "text-mc-gray" },
 };
 
-/** A darker inset with a § colour rule down its left and a Minecraft label. */
+/** A darker inset with a § color rule down its left and a Minecraft label. */
 export function Callout({ label, tone = "note", children }: { label: ReactNode; tone?: keyof typeof CALLOUT_TONES; children: ReactNode }) {
-  const { rule, label: labelColour } = CALLOUT_TONES[tone];
+  const { rule, label: labelColor } = CALLOUT_TONES[tone];
 
   return (
     <div className={cn("flex max-w-(--measure) flex-col gap-2 border-l-4 bg-black/35 p-4", rule)}>
-      <span className={cn("text-mc-1 font-bold", labelColour)}>{label}</span>
+      <span className={cn("text-mc-1 font-bold", labelColor)}>{label}</span>
       {children}
     </div>
   );
@@ -338,6 +338,6 @@ export function KeyTable({ head, rows }: { head: [ReactNode, ReactNode]; rows: [
 
 /**
  * The pixel bevel of the site's inline insets: 2 px corners and no radius. Solid (what black at 45% shows over a panel),
- * so the text around it can be drawn crisp: the crisp filter makes see-through colours solid.
+ * so the text around it can be drawn crisp: the crisp filter makes see-through colors solid.
  */
 export const CHIP = "inline-flex items-baseline gap-1.5 bg-[#090909] px-2 py-0.5 whitespace-nowrap [clip-path:polygon(2px_0,calc(100%-2px)_0,100%_2px,100%_calc(100%-2px),calc(100%-2px)_100%,2px_100%,0_calc(100%-2px),0_2px)]";

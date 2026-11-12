@@ -15,11 +15,11 @@ import type { GameId } from "@statsify/schemas";
 const GAMES = CHALLENGES.shapes.flatMap(({ modes }) => modes) as GameId[];
 
 /** Overall: every game's total under its name and icon, highest first, the values in the card's default white. */
-const OVERALL = rankingPage(GAMES, { at: (game) => game, sort: "desc", colour: "§f" });
+const OVERALL = rankingPage(GAMES, { at: (game) => game, sort: "desc", color: "§f" });
 
 /**
  * A game: its challenges, most completed first, in rows that grow with the count as the card's do (four for a short
- * list, about the root of the count otherwise), each row a colour down from §a; the game's total beside the overall.
+ * list, about the root of the count otherwise), each row a color down from §a; the game's total beside the overall.
  */
 function game(id: GameId): PageSpec {
   const keys = shapeKeys(CHALLENGES, id);
@@ -33,7 +33,7 @@ function game(id: GameId): PageSpec {
       {
         cells: keys.filter((key) => key !== "total"),
         sort: "desc",
-        ranks: { size, colours: ["§a", "§e", "§6", "§c", "§4"] },
+        ranks: { size, colors: ["§a", "§e", "§6", "§c", "§4"] },
       },
     ],
   };

@@ -254,15 +254,15 @@ export class RenderPool {
 if (import.meta.vitest) {
   const { afterEach, describe, expect, it, vi } = import.meta.vitest;
 
-  // A worker that follows the protocol without skia-canvas; `player` carries the behaviour to test.
+  // A worker that follows the protocol without skia-canvas; `player` carries the behavior to test.
   const STUB_WORKER = `
     const { parentPort } = require("node:worker_threads");
     parentPort.on("message", (request) => {
-      const { behaviour = "echo", delay = 0 } = request.player;
-      if (behaviour === "hang") return;
-      if (behaviour === "crash") throw new Error("crashed");
+      const { behavior = "echo", delay = 0 } = request.player;
+      if (behavior === "hang") return;
+      if (behavior === "crash") throw new Error("crashed");
       setTimeout(() => {
-        if (behaviour === "fail") parentPort.postMessage({ type: "error", id: request.id, message: "boom" });
+        if (behavior === "fail") parentPort.postMessage({ type: "error", id: request.id, message: "boom" });
         else parentPort.postMessage({ type: "done", id: request.id, png: new Uint8Array([request.id]) });
       }, delay);
     });
@@ -300,7 +300,7 @@ if (import.meta.vitest) {
 
       expect([...first]).toEqual([0]);
       expect([...second]).toEqual([1]);
-      await expect(pool.render(request({ behaviour: "fail" }))).rejects.toThrow("boom");
+      await expect(pool.render(request({ behavior: "fail" }))).rejects.toThrow("boom");
       expect([...(await pool.render(request()))]).toEqual([3]);
     });
 
@@ -321,7 +321,7 @@ if (import.meta.vitest) {
       // The 50 ms also covers the first render, which can take longer on a busy machine.
       const [warm] = await vi.waitFor(() => pool.render(request()), { timeout: 5000 });
 
-      await expect(pool.render(request({ behaviour: "hang" }))).rejects.toBeInstanceOf(RenderTimeoutError);
+      await expect(pool.render(request({ behavior: "hang" }))).rejects.toBeInstanceOf(RenderTimeoutError);
       expect([...(await pool.render(request()))]).toEqual([warm + 2]);
     });
 
@@ -346,7 +346,7 @@ if (import.meta.vitest) {
       const pool = create({ size: 1 });
       await pool.render(request());
 
-      await expect(pool.render(request({ behaviour: "crash" }))).rejects.toThrow("crashed");
+      await expect(pool.render(request({ behavior: "crash" }))).rejects.toThrow("crashed");
       expect([...(await pool.render(request()))]).toEqual([2]);
     });
   });
