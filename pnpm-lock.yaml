@@ -749,6 +749,9 @@ importers:
 
   packages/schemas:
     dependencies:
+      '@date-fns/tz':
+        specifier: ^1.5.0
+        version: 1.5.0
       '@nestjs/swagger':
         specifier: ^11.2.0
         version: 11.4.7(@fastify/static@8.3.0)(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
@@ -770,13 +773,9 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.4
-      luxon:
-        specifier: ^3.5.0
-        version: 3.7.2
-    devDependencies:
-      '@types/luxon':
-        specifier: ^3.4.2
-        version: 3.7.6
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.4.0
 
   packages/skin-renderer: {}
 
@@ -833,6 +832,9 @@ packages:
 
   '@cacheable/utils@2.5.0':
     resolution: {integrity: sha512-buipgOVDkkPXNR5+xBpDw7Zk2n1EvU7qBJCNUcL7rhQ//kfpOXPAvQ511Os0vpLYJ1pZnvudNytkQt2hst3wqA==}
+
+  '@date-fns/tz@1.5.0':
+    resolution: {integrity: sha512-lwYN/vDPeNRULcepoE/LO2Pgx+7/RV+S9ARfbc9lr2DtGkOD7pAiruHvbR1RX3Qyf6ja47EWJDMsNK5vK08DJg==}
 
   '@emnapi/core@1.11.2':
     resolution: {integrity: sha512-TC8MkTuZUtcTSiFeuC0ksCh9QIJ5+F21MvZ4Wn4ORfYaFJ/0dsiudv5tVkejgwZlwQ39jL9WWDe2lz8x0WglOA==}
@@ -5912,6 +5914,8 @@ snapshots:
     dependencies:
       hashery: 1.5.1
       keyv: 5.6.0
+
+  '@date-fns/tz@1.5.0': {}
 
   '@emnapi/core@1.11.2':
     dependencies:

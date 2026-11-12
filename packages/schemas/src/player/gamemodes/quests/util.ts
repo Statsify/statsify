@@ -12,9 +12,10 @@ import {
   type UnwrapConstructor,
   removeFormatting,
 } from "@statsify/util";
-import { DateTime } from "luxon";
 import { Field } from "#metadata";
 import { FormattedGame } from "#game";
+import { addDays, startOfDay, startOfISOWeek, startOfMonth, subDays } from "date-fns";
+import { tz } from "@date-fns/tz";
 
 interface Quest {
   completions?: { time: number }[];
@@ -245,30 +246,55 @@ export function createQuestsInstance<
   return QuestInstance as unknown as IQuestInstance<Time, GamesWithQuests>;
 }
 
+const HYPIXEL_TIME_ZONE = tz("America/New_York");
+
+/** Weekly quests reset at midnight on Friday, New York time. */
+export const getWeeklyQuestReset = (now = Date.now()) => {
+  const friday = addDays(startOfISOWeek(now, { in: HYPIXEL_TIME_ZONE }), 4);
+  return friday.getTime() < now ? friday : subDays(friday, 7);
+};
+
 export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) => {
   if (!quest?.completions) return 0;
   if (time === QuestTime.Overall) return quest.completions.length;
 
-  let t: DateTime = DateTime.now().setZone("America/New_York");
+  const now = Date.now();
+  let start: Date;
 
   switch (time) {
     case QuestTime.Daily:
-      t = t.startOf("day");
+      start = startOfDay(now, { in: HYPIXEL_TIME_ZONE });
       break;
 
     case QuestTime.Weekly:
-      t = t.startOf("week");
-      t = t.plus({ days: 4 }).toMillis() < Date.now() ?
-        t.plus({ days: 4 }) :
-        t.minus({ days: 3 });
+      start = getWeeklyQuestReset(now);
       break;
 
     case QuestTime.Monthly:
-      t = t.startOf("month");
+      start = startOfMonth(now, { in: HYPIXEL_TIME_ZONE });
       break;
   }
 
-  const millis = t.toMillis();
+  const millis = start.getTime();
 
   return quest.completions.filter((ms) => ms.time >= millis).length;
 };
+
+if (import.meta.vitest) {
+  const { it, expect } = import.meta.vitest;
+
+  it("getWeeklyQuestReset", () => {
+    const cases = [
+      // Wednesday
+      ["2024-11-13T12:00:00-05:00", "2024-11-08T00:00:00.000-05:00"],
+      // Thursday 23:59 and Friday 00:01
+      ["2024-11-14T23:59:00-05:00", "2024-11-08T00:00:00.000-05:00"],
+      ["2024-11-15T00:01:00-05:00", "2024-11-15T00:00:00.000-05:00"],
+      // Monday after daylight saving time ended, reset on the Friday before it
+      ["2024-11-04T12:00:00-05:00", "2024-11-01T00:00:00.000-04:00"],
+    ];
+
+    for (const [now, reset] of cases)
+      expect(getWeeklyQuestReset(Date.parse(now)).toISOString()).toBe(reset);
+  });
+}
