@@ -234,7 +234,7 @@ export abstract class LeaderboardService {
       const rank = responses[i + 1];
       const value = responses[i];
 
-      if (rank === undefined || rank === null || !value) continue;
+      if (rank === null || !value) continue;
 
       const index = i / 2;
       const metadata = leaderboardFields[index];
