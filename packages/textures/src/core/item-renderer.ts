@@ -232,6 +232,17 @@ export class ItemRenderer {
         ?.files.has(legacy) ?? false;
   }
 
+  /** Whether an item's icon changes over time, from an animated texture or the glint */
+  public animates(item: ItemStack) {
+    return (
+      Boolean(item.enchanted) ||
+      this.models
+        .resolve(item)
+        .flatMap(textureIds)
+        .some((id) => this.textures.frame(id, 0))
+    );
+  }
+
   /** Draws an item 16 × scale pixels square, at a game tick for animated textures and the glint */
   public async render(item: ItemStack, scale: number, tick = 0): Promise<OffscreenCanvas> {
     const icon = await this.base(item, scale, tick);

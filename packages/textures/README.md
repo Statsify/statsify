@@ -75,3 +75,36 @@ import { skiaCanvas } from "@statsify/textures/node";
 
 setCanvasBackend(skiaCanvas);
 ```
+
+## `<mc-inventory>`
+
+```ts
+import "@statsify/textures/mc-inventory";
+
+const inventory = document.querySelector("mc-inventory");
+inventory.pack = stack;
+inventory.slots = fromBedwarsQuickBuy(favorites);
+```
+
+```html
+<mc-inventory layout="shop" label="Quick Buy" scale="3"></mc-inventory>
+```
+
+Attributes: `rows`, `cols`, `scale`, `label` (the title; `title` would also open the browser's
+own tooltip), `layout` (`chest`, `large-chest`, `shop`, `hotbar`) and `freeze`, which stops
+animations. Tooltips follow the cursor, flip at the window's edges and open on tap.
+
+Every inventory on a page animates on one clock, redrawing only its moving slots, and stops
+while it's off screen or the tab is in the background.
+
+## React
+
+```tsx
+import { Inventory } from "@statsify/textures/react";
+
+<Inventory pack={stack} slots={slots} layout="shop" label="Quick Buy" scale={3} />;
+```
+
+`Inventory` takes the element's properties and attributes as props. It's a client component that
+loads `<mc-inventory>` in the browser, so it's safe to server render. React is an optional peer
+dependency.
