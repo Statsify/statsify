@@ -15,7 +15,7 @@ import { Hint, Spoken } from "~/components/ui/hint";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
-import { MinecraftText, colourOf, nameColour } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorOf, nameColor } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
 import { RefreshBar, savedDate, useNow } from "./refresh-bar";
@@ -68,7 +68,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
   const navGames = page.games.map(({ page: key, id, name }) => ({ key, id, name, played: true }));
 
   useEffect(
-    () => addRecentPlayer({ uuid: page.uuid, name: page.username, colour: nameColour(page.displayName) }),
+    () => addRecentPlayer({ uuid: page.uuid, name: page.username, color: nameColor(page.displayName) }),
     [page.uuid, page.username, page.displayName]
   );
 

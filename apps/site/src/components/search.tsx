@@ -13,7 +13,7 @@ import { Link, useHydrated, useNavigate, useRouterState } from "@tanstack/react-
 import { SearchIcon } from "~/components/icons/search";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
-import { colourClass, nameColour } from "~/components/ui/minecraft-text";
+import { colorClass, nameColor } from "~/components/ui/minecraft-text";
 import { orpc } from "~/lib/orpc";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useRecentPlayers } from "~/features/player/recent";
@@ -96,15 +96,15 @@ const SIZES = {
   },
 } as const;
 
-/** A row of the sheet: a suggested or recent name, in the colour the player's rank gives it where known. */
-type SearchedPlayer = { name: string; colour?: string };
+/** A row of the sheet: a suggested or recent name, in the color the player's rank gives it where known. */
+type SearchedPlayer = { name: string; color?: string };
 
 /** `skipEmpty`: an empty box asks for nothing (the API suggests nothing for it), as one that lists recent players. */
 function usePlayerSuggestions(input: string, focused: boolean, skipEmpty: boolean) {
   const debouncedInput = useDebounce(input, SEARCH_DEBOUNCE_MS);
   const length = debouncedInput.trim().length;
 
-  // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch, with one lookup for the rank colours.
+  // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch, with one lookup for the rank colors.
   // While the next query loads, the last suggestions stay up, so the sheet never empties between keystrokes.
   return useQuery(
     orpc.search.suggest.queryOptions({
@@ -202,7 +202,7 @@ export function Search({
   const players: SearchedPlayer[] | undefined =
     recent && query.trim() === "" ?
       (recentPlayers ?? undefined) :
-      suggestions.data?.map(({ name, displayName }) => ({ name, colour: displayName === null ? undefined : nameColour(displayName) }));
+      suggestions.data?.map(({ name, displayName }) => ({ name, color: displayName === null ? undefined : nameColor(displayName) }));
   const [selected, setSelected] = useState<number | undefined>(undefined);
   // Typing on a keyboard completes the name in place from the first suggestion that starts with it, the rest selected,
   // so Enter opens it and typing on replaces it; none when a suggestion is the name typed. Only while typing at the end:
@@ -462,7 +462,7 @@ function SearchPlayer({
   const content = (
     <>
       <span className={cn("shrink-0", size.headSlot)}>{head && <SkinHead name={player.name} size={size.head} />}</span>
-      <p className={cn(player.colour ? colourClass(player.colour) : "text-white", "selection:bg-white/50", size.text)}>{player.name}</p>
+      <p className={cn(player.color ? colorClass(player.color) : "text-white", "selection:bg-white/50", size.text)}>{player.name}</p>
     </>
   );
 

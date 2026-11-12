@@ -140,7 +140,7 @@ export const PlayerFullSchema = z.object({
   guild: GuildDocumentSchema.nullable(),
 });
 
-/** A suggested name, with the player's display name where the API has them, for the colour their rank gives the name. */
+/** A suggested name, with the player's display name where the API has them, for the color their rank gives the name. */
 export const SuggestionSchema = z.object({ name: z.string(), displayName: z.string().nullable() });
 
 export const ResultCardSchema = z.object({

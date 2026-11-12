@@ -15,7 +15,7 @@ import { GameNav } from "./game-nav";
 import { Hint, PointerText, Spoken } from "~/components/ui/hint";
 import { InlineStat, LeaderboardLink, StatCell, StatNumber, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
-import { MinecraftText, colourClass, leadingColourClass, nameColour, plainText } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorClass, leadingColorClass, nameColor, plainText } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "~/features/player/mini-header";
 import { ModeSwitcher } from "./mode-switcher";
 import { PanelToggle, SharePanel } from "~/features/player/share-panel";
@@ -58,7 +58,7 @@ export function GameView({ page }: { page: GamePage }) {
   const [filter, setFilter] = useState("");
 
   useEffect(
-    () => addRecentPlayer({ uuid: page.uuid, name: page.username, colour: nameColour(page.displayName) }),
+    () => addRecentPlayer({ uuid: page.uuid, name: page.username, color: nameColor(page.displayName) }),
     [page.uuid, page.username, page.displayName]
   );
 
