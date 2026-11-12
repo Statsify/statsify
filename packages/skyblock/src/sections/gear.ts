@@ -7,6 +7,7 @@
  */
 
 import { TUNING } from "./accessories.js";
+import { byKey } from "./inventories.js";
 import { decodeSlots } from "#items";
 import { removeFormatting } from "@statsify/util";
 import type { GearSection, ItemView, Loadout, Slots } from "#types";
@@ -105,9 +106,7 @@ function getWeapons({ inventory }: RawMember): ItemView[] {
   const blobs = [
     inventory?.inv_contents,
     inventory?.ender_chest_contents,
-    ...Object.entries(inventory?.backpack_contents ?? {})
-      .toSorted(([a], [b]) => Number(a) - Number(b))
-      .map(([, blob]) => blob),
+    ...byKey(inventory?.backpack_contents),
     inventory?.personal_vault_contents,
   ];
   return blobs
