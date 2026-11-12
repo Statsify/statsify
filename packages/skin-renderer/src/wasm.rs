@@ -416,11 +416,16 @@ fn create_window(canvas_id: &str, window_target: &EventLoopWindowTarget<()>) -> 
     .and_then(|canvas| canvas.dyn_into::<web_sys::HtmlCanvasElement>().ok())
     .ok_or(Error::CanvasNotFound)?;
 
+  // Its laid-out size: wgpu sets its width and height to device pixels when it draws, so
+  // those would grow a canvas registered again by the pixel ratio. A canvas under a hidden
+  // parent has no layout yet, and its attributes are still the page's.
+  let (width, height) = match (canvas.client_width(), canvas.client_height()) {
+    (0, _) | (_, 0) => (canvas.width(), canvas.height()),
+    (width, height) => (width as u32, height as u32),
+  };
+
   let window = WindowBuilder::new()
-    .with_inner_size(LogicalSize::new(
-      canvas.width() as f64,
-      canvas.height() as f64,
-    ))
+    .with_inner_size(LogicalSize::new(width, height))
     .with_canvas(Some(canvas))
     // The page around the canvas takes the keyboard, so the canvas is no tab stop of its own
     .with_focusable(false)
