@@ -17,6 +17,7 @@ import {
   getLevel,
   getLevelFormatted,
   getPrestige,
+  getPrestigeGoldReq,
   getPrestigeReq,
   getRenownShopCost,
 } from "./util.js";
@@ -67,6 +68,9 @@ export class Pit {
 
   @Field()
   public progression: Progression;
+
+  @Field()
+  public goldProgression: Progression;
 
   @Field({
     leaderboard: { additionalFields: ["this.goldEarned"] },
@@ -176,6 +180,9 @@ export class Pit {
       prestige === 50 ?
         getLevelFormatted(120, prestige) :
         getLevelFormatted(1, prestige + 1);
+
+    const goldReq = getPrestigeGoldReq(prestige);
+    this.goldProgression = new Progression(Math.min(profile[`cash_during_prestige_${prestige}`] ?? 0, goldReq), goldReq);
 
     this.contractsCompleted = data.contracts_completed;
 
