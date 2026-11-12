@@ -84,7 +84,7 @@ export class MegaWallsKit {
     this.witherKills = data[`${kit}wither_kills`];
 
     this.points = data[`${kit}class_points`];
-    this.kitLevel = data[`${kit}new_d`] ?? 1;
+    this.kitLevel = data[`${kit}new_d`];
 
     MegaWallsKit.applyRatios(this);
   }
