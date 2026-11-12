@@ -386,7 +386,7 @@ impl<T: Backend> SkinRenderer<T> {
         &self.texture_bind_group_layout,
         &load_cape_from_memory(cape)?,
         armor.chestplate.is_some(),
-      );
+      )?;
     }
 
     Ok(model)

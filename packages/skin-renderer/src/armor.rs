@@ -13,12 +13,12 @@ type Bytes = Vec<u8>;
 #[cfg_attr(not(target_arch = "wasm32"), napi(object))]
 pub struct ArmorPiece {
   /// Texture (PNG) in the armour layout: `layer_1` for helmets, chestplates and boots,
-  /// `layer_2` for leggings. A skin or mob texture works as a helmet too.
+  /// `layer_2` for leggings.
   #[cfg_attr(not(target_arch = "wasm32"), napi(ts_type = "Uint8Array"))]
   pub texture: Bytes,
   pub enchanted: bool,
-  /// Draws a helmet's texture as a worn skull or player head, which sits on the neck
-  /// with a thin hat layer, instead of as an armour layer.
+  /// Draws the helmet's texture, a skin or mob texture, as a worn skull or player head
+  /// instead of an armour layer.
   pub skull: Option<bool>,
 }
 
@@ -55,8 +55,8 @@ impl ArmorLayer {
 }
 
 impl Armor {
-  // An extruded outer layer would poke through the leggings and reach a worn skull's
-  // surface, so parts under them get the flat one, which the game draws under armour anyway
+  // An extruded outer layer would poke through leggings or a worn skull, so parts under
+  // them get the flat one, which the game draws under armour anyway
   pub fn flattens(&self, part: Part) -> bool {
     self.pieces().any(|(piece, layer, parts)| {
       (matches!(layer, ArmorLayer::Inner) || piece.is_skull()) && parts.contains(&part)

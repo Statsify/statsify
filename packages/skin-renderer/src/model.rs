@@ -8,6 +8,7 @@ use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, Textu
 use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
+use crate::skin_loader::load_skull_from_memory;
 use crate::texture::Texture;
 
 pub enum ModelKind {
@@ -291,7 +292,7 @@ impl Model {
       })
       .unzip();
 
-    let texture = Texture::from_image(device, queue, &image).unwrap();
+    let texture = Texture::from_image(device, queue, &image)?;
     let material = Material::new(device, texture, layout);
 
     let mut model = Self {
@@ -324,13 +325,17 @@ impl Model {
     armor: &Armor,
   ) -> Result<()> {
     for (piece, layer, parts) in armor.pieces() {
-      let texture = image::load_from_memory(&piece.texture)?;
+      let skull = piece.is_skull();
+      let texture = if skull {
+        load_skull_from_memory(&piece.texture)?
+      } else {
+        image::load_from_memory(&piece.texture)?
+      };
       // Packs draw the 64 wide layout at any resolution, and skins are square where armour is 2:1
       let texture_size = (64, 64 * texture.height() / texture.width());
       let mut geometry = Geometry::new(vec![], vec![]);
 
       // A worn skull grows from the neck instead of being inflated, as the game draws one
-      let skull = piece.is_skull();
       let (inflation, hat_inflation) = if skull {
         (0.0, 0.25)
       } else {
@@ -366,7 +371,7 @@ impl Model {
           .create();
 
           if skull {
-            box_geometry.scale_around(1.1875, neck);
+            box_geometry.grow_around(1.1875, neck);
           } else {
             box_geometry.scale_around(part.z_fighting_scale(), position);
           }
@@ -375,7 +380,7 @@ impl Model {
         }
       }
 
-      self.attach(device, queue, layout, &texture, geometry, piece.enchanted);
+      self.attach(device, queue, layout, &texture, geometry, piece.enchanted)?;
     }
 
     Ok(())
@@ -416,7 +421,7 @@ impl Model {
     layout: &wgpu::BindGroupLayout,
     cape: &DynamicImage,
     chestplate: bool,
-  ) {
+  ) -> Result<()> {
     let body = Part::Body.placement(ModelKind::Classic.arm_width());
     let (body_position, _) = body.resolve();
 
@@ -452,7 +457,7 @@ impl Model {
       pivot: Vector3::new(0.0, top, back),
     });
 
-    self.attach(device, queue, layout, cape, geometry, false);
+    self.attach(device, queue, layout, cape, geometry, false)
   }
 
   fn attach(
@@ -463,14 +468,16 @@ impl Model {
     texture: &DynamicImage,
     geometry: Geometry,
     enchanted: bool,
-  ) {
-    let texture = Texture::from_image(device, queue, texture).unwrap();
+  ) -> Result<()> {
+    let texture = Texture::from_image(device, queue, texture)?;
 
     self.attachments.push(Attachment {
       material: Material::new(device, texture, layout),
       mesh: Mesh::from_geometry(device, geometry),
       enchanted,
     });
+
+    Ok(())
   }
 
   pub fn to_raw() -> InstanceRaw {
