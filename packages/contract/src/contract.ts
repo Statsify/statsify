@@ -9,7 +9,7 @@
 import { type ContractRouterClient, oc } from "@orpc/contract";
 import { z } from "zod";
 
-/** A Minecraft UUID, dashed or not; the API normalises it before querying. */
+/** A Minecraft UUID, dashed or not; the API normalizes it before querying. */
 export const UuidSchema = z
   .string()
   .regex(/^[\da-f]{32}$|^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i, "Expected a Minecraft UUID");
@@ -244,7 +244,7 @@ export const GuildPreviewSchema = z.object({
   name: z.string(),
   nameFormatted: z.string(),
   tagFormatted: z.string(),
-  /** The tag's Minecraft colour code, e.g. `§6`, which colours the level bar. */
+  /** The tag's Minecraft color code, e.g. `§6`, which colors the level bar. */
   tagColor: z.string(),
   description: z.string(),
   createdAt: z.number(),
