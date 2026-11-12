@@ -57,8 +57,7 @@ const RELATIVE_TIME_UNITS = [
   ["second", differenceInSeconds, addSeconds],
 ] as const;
 
-// A unit counts once adding it to the earlier date doesn't pass the later one, so Nov 29 to Feb 28
-// is "3 months ago" where differenceInMonths gives 2
+// Counted by hand since differenceInMonths makes Jan 31 to Feb 28 a month, not 28 days
 const formatRelative = (date: Date) => {
   const now = new Date();
   const [earlier, later, sign] = date < now ? [date, now, -1] : [now, date, 1];
