@@ -14,8 +14,8 @@ import {
   MojangPlayerArgument,
   paginate
 } from "@statsify/discord";
-import { Image, loadImage } from "skia-canvas";
-import { createCanvas } from "@statsify/rendering";
+import type { Image } from "skia-canvas";
+import { createCanvas, loadImage } from "@statsify/rendering";
 import type { Skin } from "@statsify/schemas";
 
 @Command({ description: (t) => t("commands.cape"), args: [MojangPlayerArgument] })
