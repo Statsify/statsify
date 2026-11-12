@@ -19,7 +19,9 @@ import { add, roundTo } from "@statsify/math";
 import { prettify, removeFormatting } from "@statsify/util";
 import { skinHash } from "#textures";
 import { tmpdir } from "node:os";
+import { bestiaryBoards, collectionBoards } from "@statsify/skyblock";
 import { toLevelCosts } from "#leveling";
+import type { BESTIARY } from "#data";
 
 const REPO = "NotEnoughUpdates/NotEnoughUpdates-REPO";
 const HYPIXEL_SKILLS = "https://api.hypixel.net/v2/resources/skyblock/skills";
@@ -474,6 +476,8 @@ const sorted = (value: unknown): unknown => {
 const write = (file: string, data: unknown) =>
   writeFile(new URL(file, out), `${JSON.stringify(sorted(data), null, 2)}\n`);
 
+const boards = (list: { key: string; name: string }[]) => list.map(({ key, name }) => [key, name]);
+
 /** The texture hash in an item's SkullOwner, from its SNBT. */
 const skullHash = (nbt: string) => {
   const value = /Value:"([\w+/=]+)"/.exec(nbt)?.[1];
@@ -494,18 +498,16 @@ try {
   const { collections, version: collectionsVersion } = await hypixelResource<{
     collections: Record<string, HypixelCollections>;
   }>(HYPIXEL_COLLECTIONS);
-  await write(
-    "collections.json",
-    Object.entries(collections).map(([category, { name, items }]) => ({
-      id: category,
-      name,
-      items: Object.entries(items).map(([id, item]) => ({
-        id,
-        name: item.name,
-        tiers: item.tiers.map(({ amountRequired }) => amountRequired),
-      })),
-    }))
-  );
+  const collectionData = Object.entries(collections).map(([category, { name, items }]) => ({
+    id: category,
+    name,
+    items: Object.entries(items).map(([id, item]) => ({
+      id,
+      name: item.name,
+      tiers: item.tiers.map(({ amountRequired }) => amountRequired),
+    })),
+  }));
+  await write("collections.json", collectionData);
 
   const leveling = await readJson<Record<string, unknown>>("constants/leveling.json");
   const slayerXp = leveling.slayer_xp as Record<string, number[]>;
@@ -595,14 +597,15 @@ try {
     }));
   const subpages = (page: NeuPage) =>
     Object.values(page).filter((value: unknown): value is NeuPage => typeof value === "object" && value !== null && "mobs" in value);
-  await write("bestiary.json", {
+  const bestiaryData = {
     brackets: allBrackets,
-    pages: Object.values(islands).flatMap((page): { category?: string; name: string; families: unknown[] }[] =>
+    pages: Object.values(islands).flatMap((page) =>
       page.hasSubcategories
         ? subpages(page).map((sub) => ({ category: page.name, name: sub.name, families: families(sub) }))
         : [{ name: page.name, families: families(page) }]
     ),
-  });
+  };
+  await write("bestiary.json", bestiaryData);
 
   // Hunting's shards and the attributes they level: shards.owned keys a shard by its bazaar name, attributes.stacks an
   // attribute by its internal name, and each level costs its rarity's next count of shards.
@@ -914,6 +917,17 @@ try {
     collections: { url: HYPIXEL_COLLECTIONS, version: collectionsVersion },
     syncedAt: new Date().toISOString(),
   });
+
+  // @statsify/schemas registers a leaderboard per key and can't import this package. A key is a Mongo path and a Redis
+  // key, so one that changes here leaves its old board behind
+  await writeFile(
+    new URL("../../schemas/src/skyblock/boards.json", import.meta.url),
+    `${JSON.stringify(
+      { collections: boards(collectionBoards(collectionData)), bestiary: boards(bestiaryBoards(bestiaryData as typeof BESTIARY)) },
+      null,
+      2
+    )}\n`
+  );
   const license = await readFile(join(dir, "LICENSE"), "utf8");
   await writeFile(
     new URL("NOTICE.md", out),
