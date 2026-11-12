@@ -397,7 +397,7 @@ function overview(player: Player, game: Game, specs: OverviewSpec[], session: bo
   return specs.flatMap((spec) => {
     if (!isComputed(spec)) return cells(player, game, "", [spec], session).map(({ cell }) => cell);
     if (session && spec.session === false) return [];
-    return [{ key: spec.key, label: spec.label, value: finite(spec.compute(player.stats)), colour: spec.colour, leaderboard: null }];
+    return [{ key: spec.key, label: spec.label, value: finite(spec.compute(player.stats)), color: spec.color, leaderboard: null }];
   });
 }
 

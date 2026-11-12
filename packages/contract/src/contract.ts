@@ -145,7 +145,7 @@ export const PlayerFullSchema = z.object({
 /** A suggested name, with the player's display name where the API has them, for the color their rank gives the name. */
 export const SuggestionSchema = z.object({ name: z.string(), displayName: z.string().nullable() });
 
-/** A suggested guild: its name, and the name with its tag in the tag's colour, as the guild page's title shows it. */
+/** A suggested guild: its name, and the name with its tag in the tag's color, as the guild page's title shows it. */
 export const GuildSuggestionSchema = z.object({ name: z.string(), nameFormatted: z.string() });
 
 export const ResultCardSchema = z.object({
@@ -504,7 +504,7 @@ const GuildSummary = {
   name: z.string(),
   /** The Minecraft-formatted name with its tag. */
   nameFormatted: z.string(),
-  /** The tag's Minecraft colour code, e.g. `§6`, which colours the level bar. */
+  /** The tag's Minecraft color code, e.g. `§6`, which colors the level bar. */
   tagColor: z.string(),
   description: z.string(),
   createdAt: z.number(),

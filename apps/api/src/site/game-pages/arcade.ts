@@ -89,8 +89,8 @@ function zombies(submode: string): PageSpec {
             rows: [
               [
                 { key: "wins", at: place },
-                { key: "fastestWin", at: place, colour, when: won, session: false },
-                { key: "bestRound", at: place, colour, when: unwon, session: false },
+                { key: "fastestWin", at: place, color, when: won, session: false },
+                { key: "bestRound", at: place, color, when: unwon, session: false },
               ],
             ],
           };

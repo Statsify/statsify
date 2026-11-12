@@ -23,8 +23,8 @@ const prefix = (mode: Prefixed): LevelSpec => ({
 /** A mode's best time, which a session leaves out, as the bot's does. */
 const RECORD: CellSpec = { key: "record", session: false };
 
-/** The colours of a column's cells on Overall, by their place in it, whatever the stat. */
-const PLACES: ColourCode[] = ["§a", "§c", "§6"];
+/** The colors of a column's cells on Overall, by their place in it, whatever the stat. */
+const PLACES: ColorCode[] = ["§a", "§c", "§6"];
 
 /** Overall's five columns, each a mode's three stats, as the card draws them; Overall stores none of its own. */
 const COLUMNS: [mode: Prefixed, keys: string[]][] = [
@@ -39,7 +39,7 @@ const OVERALL: PageSpec = {
   sections: COLUMNS.map(([mode, keys]) => ({
     name: `§6${modeName(TNT_GAMES, mode)}`,
     box: true,
-    rows: [keys.map((key, index): CellSpec => ({ ...(key === "record" ? RECORD : { key }), at: mode, colour: PLACES[index] }))],
+    rows: [keys.map((key, index): CellSpec => ({ ...(key === "record" ? RECORD : { key }), at: mode, color: PLACES[index] }))],
   })),
 };
 
