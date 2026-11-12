@@ -11,7 +11,14 @@ import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
-import { Player, SkyBlockStats, type SkyBlockStatsRow, getLeaderboardField, serialize } from "@statsify/schemas";
+import {
+  Player,
+  SkyBlockStats,
+  type SkyBlockStatsRow,
+  getLeaderboardField,
+  getLeaderboardFields,
+  serialize,
+} from "@statsify/schemas";
 import { type LeaderboardQuery, PlayerNotFoundException } from "@statsify/api-client";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
@@ -114,6 +121,46 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     const ranks = await Promise.all(rows.map(({ id }) => (ascending ? this.redis.zrank(key, id) : this.redis.zrevrank(key, id))));
     const ranked = ranks.filter((rank) => rank !== null);
     return ranked.length > 0 ? Math.min(...ranked) : undefined;
+  }
+
+  /**
+   * Where the player ranks on every board they're on within its depth, best rank first. Each board counts once, at the
+   * player's best profile on it, and ties share a rank as on the boards.
+   */
+  public async getPlayerRankings(tag: string) {
+    const player = await this.playerService.findMongoDocument(tag, { uuid: true });
+    if (!player) throw new PlayerNotFoundException();
+
+    const rows = await this.statsModel.find({ uuid: player.uuid }).select({ id: true }).lean().exec();
+    const fields = getLeaderboardFields(SkyBlockStats).map(([field]) => ({ field, ...getLeaderboardField(SkyBlockStats, field) }));
+
+    const scores = this.redis.pipeline();
+    for (const { field } of fields) for (const { id } of rows) scores.zscore(`skyblockstats.${field}`, id);
+    const scored = (await scores.exec()) ?? [];
+
+    const best = fields.flatMap((board, index) => {
+      const own = scored
+        .slice(index * rows.length, (index + 1) * rows.length)
+        .flatMap(([, score], row) => (score === null ? [] : [{ id: rows[row].id, score: Number(score) }]));
+      if (own.length === 0) return [];
+
+      const pick = own.reduce((a, b) => ((board.sort === "ASC" ? b.score < a.score : b.score > a.score) ? b : a));
+      return [{ ...board, ...pick }];
+    });
+
+    const counts = this.redis.pipeline();
+    for (const { field, sort, score } of best) {
+      const key = `skyblockstats.${field}`;
+      if (sort === "ASC") counts.zcount(key, "-inf", `(${score}`);
+      else counts.zcount(key, `(${score}`, "+inf");
+    }
+    const ahead = (await counts.exec()) ?? [];
+
+    return best
+      .map((board, index) => ({ ...board, rank: Number(ahead[index][1]) + 1 }))
+      .filter(({ rank, limit }) => rank <= limit)
+      .toSorted((a, b) => a.rank - b.rank)
+      .map(({ field, name, id, rank, formatter, score }) => ({ field, name, id, rank, value: formatter ? formatter(score) : score }));
   }
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
