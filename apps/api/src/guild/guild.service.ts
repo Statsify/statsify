@@ -218,7 +218,19 @@ export class GuildService {
         .exec();
     }
 
-    return await this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec();
+    if (type === GuildQuery.NAME) {
+      // A renamed guild isn't found by its old name either, so only its id confirms a disband
+      try {
+        if (await this.hypixelService.getGuild(cachedGuild.id, "id")) return;
+      } catch {
+        return;
+      }
+    }
+
+    return await Promise.all([
+      this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec(),
+      this.guildLeaderboardService.addLeaderboards(Guild, flatten(cachedGuild), "id", true),
+    ]);
   }
 
   private async getMemberName(member: GuildMember, cachedMember?: GuildMember) {
