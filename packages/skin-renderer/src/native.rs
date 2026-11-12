@@ -5,6 +5,7 @@ use napi_derive::napi;
 
 use crate::armor::Armor;
 use crate::model::{ModelKind, ModelOuterLayer};
+use crate::pose::Pose;
 use crate::renderer::native::NativeBackend;
 use crate::renderer::SkinRenderer;
 
@@ -27,6 +28,8 @@ pub struct RenderOptions {
   /// Camera angle around the player in radians: 0 faces the front, π the back.
   /// Defaults to -0.3.
   pub yaw: Option<f64>,
+  #[napi(ts_type = "'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly'")]
+  pub pose: Option<Pose>,
 }
 
 #[napi]
@@ -67,6 +70,7 @@ pub async fn render_skin(
     &armor,
     options.glint.as_deref(),
     options.cape.as_deref(),
+    options.pose.unwrap_or_default(),
   )?;
   let buffer = renderer.render(&model, yaw).await?;
 

@@ -1,4 +1,4 @@
-use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation3, Vector3};
+use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation as _, Rotation3, Vector3};
 use image::DynamicImage;
 
 use crate::armor::Armor;
@@ -8,6 +8,7 @@ use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, Textu
 use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
+use crate::pose::{PartPose, Pose};
 use crate::skin_loader::load_skull_from_memory;
 use crate::texture::Texture;
 
@@ -45,6 +46,7 @@ struct Placement {
   position: Vector3<f32>,
   dimensions: Vector3<f32>,
   rotation: Option<CenterRotation>,
+  posed: bool,
 }
 
 impl Placement {
@@ -82,13 +84,13 @@ impl Part {
     Part::LeftLeg,
   ];
 
-  fn placement(self, arm_width: f32) -> Placement {
+  fn placement(self, arm_width: f32, pose: Pose) -> Placement {
     let side = match self {
       Part::RightArm | Part::RightLeg => -1.0,
       _ => 1.0,
     };
 
-    let (position, dimensions, rest_angle, pivot_height) = match self {
+    let (mut position, dimensions, rest_angle, pivot_height) = match self {
       Part::Head => (
         Vector3::new(0.0, 12.0, 0.0),
         Vector3::new(8.0, 8.0, 8.0),
@@ -115,10 +117,20 @@ impl Part {
       ),
     };
 
-    // Even a turn by nothing would round the body's vertices and shift every render
-    let quaternion = match self {
-      Part::Body => None,
-      _ => Some(Quaternion::from_angle_z(Deg(rest_angle))),
+    let part_pose = pose.part(self);
+    let quaternion = match part_pose {
+      // Even a turn by nothing would round the body's vertices and shift every render
+      None if self == Part::Body => None,
+      None => Some(Quaternion::from_angle_z(Deg(rest_angle))),
+      Some(PartPose { rotation, offset }) => {
+        position += offset;
+
+        Some(
+          Quaternion::from_angle_z(Deg(rest_angle + rotation.z))
+            * Quaternion::from_angle_y(Deg(rotation.y))
+            * Quaternion::from_angle_x(Deg(rotation.x)),
+        )
+      }
     };
 
     Placement {
@@ -128,6 +140,7 @@ impl Part {
         quaternion,
         pivot_delta: Vector3::unit_y() * pivot_height,
       }),
+      posed: part_pose.is_some(),
     }
   }
 
@@ -180,6 +193,7 @@ struct BodyPart<'a> {
   pub layer2_location: Coordinate<u32>,
 
   pub outer_layer: ModelOuterLayer,
+  pub pose: Pose,
 }
 
 impl<'a> BodyPart<'a> {
@@ -230,14 +244,27 @@ impl<'a> BodyPart<'a> {
           extrude: false,
         }
         .create();
+
+        // A posed part grows around where its turn left its center. Standing parts keep
+        // the unturned center they've always used, so bare renders don't move.
+        let center = match rotation {
+          Some(rotation) if self.placement.posed => {
+            rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot
+          }
+          _ => position,
+        };
+
         // In Minecraft the outer layer is scaled up 12.5%
-        layer.scale_around(1.125, position);
+        layer.scale_around(1.125, center);
         layer
       }
     };
 
     inner_geometry.scale_around(scale, position);
     outer_geometry.scale_around(scale, position);
+
+    self.pose.place(&mut inner_geometry);
+    self.pose.place(&mut outer_geometry);
 
     (inner_geometry, outer_geometry)
   }
@@ -254,6 +281,7 @@ pub struct Model {
   meshes: Vec<Mesh>,
   attachments: Vec<Attachment>,
   glint: Option<Material>,
+  pose: Pose,
   wears_armor: bool,
   points: Vec<Vector3<f32>>,
 }
@@ -274,6 +302,8 @@ fn mesh_with_points(
 }
 
 impl Model {
+  // Armor and the pose shape the body's own meshes, so neither can be attached later
+  #[allow(clippy::too_many_arguments)]
   pub fn new(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
@@ -281,6 +311,7 @@ impl Model {
     image: DynamicImage,
     kind: ModelKind,
     outer_layer: ModelOuterLayer,
+    pose: Pose,
     armor: &Armor,
   ) -> Result<Self> {
     let arm_width = kind.arm_width();
@@ -291,7 +322,7 @@ impl Model {
         let (layer1_location, layer2_location) = part.skin_layer_locations();
 
         BodyPart {
-          placement: part.placement(arm_width),
+          placement: part.placement(arm_width, pose),
           image: &image,
           layer1_location,
           layer2_location,
@@ -300,6 +331,7 @@ impl Model {
           } else {
             outer_layer
           },
+          pose,
         }
         .create(part.z_fighting_scale())
       })
@@ -320,6 +352,7 @@ impl Model {
       meshes,
       attachments: vec![],
       glint: None,
+      pose,
       wears_armor: armor.pieces().next().is_some(),
       points,
     };
@@ -331,10 +364,12 @@ impl Model {
   // Boots and a player head reach past the frame that fits a bare player, and every
   // armored render pulls back with them so they share one scale
   pub fn camera_radius(&self) -> f32 {
+    let radius = self.pose.camera_radius();
+
     if self.wears_armor {
-      53.0
+      radius + 3.0
     } else {
-      50.0
+      radius
     }
   }
 
@@ -369,7 +404,7 @@ impl Model {
 
       for &part in parts {
         // Armor is shaped for classic arms on every skin
-        let placement = part.placement(ModelKind::Classic.arm_width());
+        let placement = part.placement(ModelKind::Classic.arm_width(), self.pose);
         let (position, rotation) = placement.resolve();
         let neck = position - Vector3::unit_y() * placement.dimensions.y / 2.0;
 
@@ -447,7 +482,7 @@ impl Model {
     cape: &DynamicImage,
     chestplate: bool,
   ) -> Result<()> {
-    let body = Part::Body.placement(ModelKind::Classic.arm_width());
+    let body = Part::Body.placement(ModelKind::Classic.arm_width(), Pose::Standing);
     let (body_position, _) = body.resolve();
 
     // Over a chestplate the cape moves out and up so it doesn't cut through it, as
@@ -476,11 +511,14 @@ impl Model {
     }
     .create();
 
-    // A standing player's cape swings 6 degrees out from the back
+    let PartPose { rotation, offset } = self.pose.cape();
+
     geometry.rotate_around(Rotation {
-      quaternion: Quaternion::from_angle_x(Deg(6.0)),
+      // A standing player's cape swings 6 degrees out from the back
+      quaternion: Quaternion::from_angle_x(Deg(6.0 + rotation.x)),
       pivot: Vector3::new(0.0, top, back),
     });
+    geometry.translate(offset);
 
     self.attach(device, queue, layout, cape, geometry, false)
   }
@@ -491,9 +529,11 @@ impl Model {
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
     texture: &DynamicImage,
-    geometry: Geometry,
+    mut geometry: Geometry,
     enchanted: bool,
   ) -> Result<()> {
+    self.pose.place(&mut geometry);
+
     let texture = Texture::from_image(device, queue, texture)?;
 
     self.attachments.push(Attachment {

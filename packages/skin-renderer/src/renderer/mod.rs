@@ -19,6 +19,7 @@ use crate::geometry::vertex::{Vertex, VertexDescriptor};
 use crate::instance::InstanceRaw;
 use crate::light::LightUniform;
 use crate::model::{DrawModel, Model, ModelKind, ModelOuterLayer};
+use crate::pose::Pose;
 use crate::skin_loader::{load_cape_from_memory, load_skin_from_memory};
 use crate::texture::Texture;
 
@@ -352,6 +353,8 @@ impl<T: Backend> SkinRenderer<T> {
     (encoder, output_texture)
   }
 
+  // The wasm renderer has no RenderOptions, so each option is its own argument
+  #[allow(clippy::too_many_arguments)]
   pub fn load_skin(
     &self,
     skin: &[u8],
@@ -360,6 +363,7 @@ impl<T: Backend> SkinRenderer<T> {
     armor: &Armor,
     glint: Option<&[u8]>,
     cape: Option<&[u8]>,
+    pose: Pose,
   ) -> Result<Model> {
     let device = self.backend.device();
     let queue = self.backend.queue();
@@ -371,6 +375,7 @@ impl<T: Backend> SkinRenderer<T> {
       load_skin_from_memory(skin)?,
       model_kind,
       model_outer_layer,
+      pose,
       armor,
     )?;
 
