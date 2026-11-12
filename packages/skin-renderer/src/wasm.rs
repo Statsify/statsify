@@ -148,6 +148,7 @@ impl JsSkinRenderer {
               model.model_outer_layer,
               &Armor::default(),
               None,
+              None,
             ) {
               models.insert(*window_id, model);
             }
@@ -174,6 +175,7 @@ impl JsSkinRenderer {
                 model.model_kind,
                 model.model_outer_layer,
                 &Armor::default(),
+                None,
                 None,
               )
               .ok()

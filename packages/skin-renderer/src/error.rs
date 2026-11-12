@@ -6,6 +6,13 @@ pub enum Error {
   #[error("The provided image is not a valid skin texture")]
   InvalidSkinTexture,
 
+  #[error("The provided image is too large for a cape texture")]
+  CapeTooLarge,
+
+  #[cfg(not(target_arch = "wasm32"))]
+  #[error("The camera yaw must be a finite number")]
+  InvalidYaw,
+
   #[error("The provided image is too large for a texture")]
   TextureTooLarge,
 
