@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::cell::{OnceCell, RefCell};
 use std::collections::HashMap;
 
 use futures_channel::oneshot;
@@ -7,7 +7,7 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::{future_to_promise, js_sys, spawn_local, wasm_bindgen};
 use winit::dpi::LogicalSize;
 use winit::event::{DeviceEvent, Event, MouseButton, WindowEvent};
-use winit::event_loop::{ControlFlow, EventLoop, EventLoopWindowTarget};
+use winit::event_loop::{EventLoop, EventLoopProxy, EventLoopWindowTarget};
 use winit::platform::web::{EventLoopExtWebSys, WindowBuilderExtWebSys};
 use winit::window::{Window, WindowBuilder, WindowId};
 
@@ -22,10 +22,22 @@ thread_local! {
   // The winit event loop owns itself once it runs, so JavaScript's calls wait here for
   // its next turn
   static JS_MESSAGE_QUEUE: RefCell<Vec<JsMessage>> = const { RefCell::new(Vec::new()) };
+  static EVENT_LOOP: OnceCell<EventLoopProxy<()>> = const { OnceCell::new() };
 }
 
 fn send(message: JsMessage) {
   JS_MESSAGE_QUEUE.with_borrow_mut(|queue| queue.push(message));
+  wake();
+}
+
+// The event loop sleeps until an event, so a message or a new renderer wakes it. Before it
+// runs there's nothing to wake, and its first turn takes what's queued.
+fn wake() {
+  EVENT_LOOP.with(|proxy| {
+    if let Some(proxy) = proxy.get() {
+      let _ = proxy.send_event(());
+    }
+  });
 }
 
 type Loaded = oneshot::Sender<std::result::Result<(), JsError>>;
@@ -241,17 +253,11 @@ impl JsSkinRenderer {
     let mut staged_models = HashMap::<WindowId, (JsModel, Loaded)>::new();
     let mut models = HashMap::<WindowId, Model>::new();
 
-    self.event_loop.spawn(move |event, window_target| {
-      // If there are no renderers or there are receivers we should poll the event
-      // loop to avoid missing messages
-      if renderers.is_empty() || !receivers.is_empty() {
-        window_target.set_control_flow(ControlFlow::Poll);
-      } else {
-        // If there are renderers and no receivers we can wait for messages since events
-        // will be sent with the next frame
-        window_target.set_control_flow(ControlFlow::Wait);
-      }
+    EVENT_LOOP.with(|proxy| {
+      let _ = proxy.set(self.event_loop.create_proxy());
+    });
 
+    self.event_loop.spawn(move |event, window_target| {
       // Drain the message queue and process each message
       let messages = JS_MESSAGE_QUEUE.take();
 
@@ -439,6 +445,7 @@ fn create_window(canvas_id: &str, window_target: &EventLoopWindowTarget<()>) -> 
 fn send_renderer(window: Window, tx: oneshot::Sender<RendererResult>) {
   spawn_local(async move {
     let _ = tx.send(SkinRenderer::new(window).await);
+    wake();
   });
 }
 
