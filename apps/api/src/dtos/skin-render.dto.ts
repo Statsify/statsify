@@ -91,8 +91,9 @@ export class ArmorDto {
 }
 
 export class SkinRenderDto extends UuidDto {
+  // An empty ?yaw= keeps the default angle, where +"" would turn it to the front
   @IsOptional()
-  @Transform((params) => +params.value)
+  @Transform(({ value }) => (value === "" ? undefined : +value))
   @IsNumber()
   @Min(-Math.PI * 2)
   @Max(Math.PI * 2)
