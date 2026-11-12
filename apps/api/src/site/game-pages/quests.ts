@@ -28,7 +28,7 @@ const OVERVIEW: OverviewSpec[] = [
   {
     key: "monthlyTotal",
     label: "stats.monthlyTotal",
-    colour: "§b",
+    color: "§b",
     compute: ({ quests }) => Quests.getTotal(quests.monthly),
   },
   "weeklyTotal",
@@ -66,7 +66,7 @@ function game(id: GameId, period: QuestPeriod): PageSpec {
     sections: [
       {
         cells: quests.map(({ key, name }): CellSpec =>
-          allTime ? { key, colour: "§f", name: (stats) => `${done(stats, key) ? "§a" : "§c"}${name}` } : key),
+          allTime ? { key, color: "§f", name: (stats) => `${done(stats, key) ? "§a" : "§c"}${name}` } : key),
         sort: "desc",
         list: true,
         ...(!allTime && { ticks: true }),

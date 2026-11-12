@@ -12,7 +12,7 @@ import { MiniWalls } from "@statsify/schemas";
 import { Table } from "../../../components/index.js";
 import { prettify } from "@statsify/util";
 
-const colour = cardColours(ARCADE, "miniWalls");
+const color = cardColors(ARCADE, "miniWalls");
 
 interface MiniWallsTableProps {
   stats: MiniWalls;
@@ -22,25 +22,25 @@ interface MiniWallsTableProps {
 export const MiniWallsTable = ({ stats, t }: MiniWallsTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.finalKills")} value={t(stats.finalKills)} color={colour("finalKills")} />
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-      <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color={colour("kit")} />
+      <Table.td title={t("stats.finalKills")} value={t(stats.finalKills)} color={color("finalKills")} />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+      <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color={color("kit")} />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
-      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
-      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color={color("kills")} />
+      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={color("deaths")} />
+      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={color("kdr")} />
     </Table.tr>
     <Table.tr>
       <Table.td
         title={t("stats.witherKills")}
         value={t(stats.witherKills)}
-        color={colour("witherKills")}
+        color={color("witherKills")}
       />
       <Table.td
         title={t("stats.witherDamage")}
         value={t(stats.witherDamage)}
-        color={colour("witherDamage")}
+        color={color("witherDamage")}
       />
     </Table.tr>
   </Table.table>

@@ -21,15 +21,15 @@ interface WarlordsClassColumnProps {
 }
 
 const WarlordsSpecificationColumn = ({ title, stats, place, t }: WarlordsClassColumnProps) => {
-  const colour = cardColours(WARLORDS, place);
+  const color = cardColors(WARLORDS, place);
 
   return (
     <Table.ts title={title}>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-      <Table.td title={t("stats.damage")} value={t(stats.damage)} color={colour("damage")} />
-      <Table.td title={t("stats.healing")} value={t(stats.healing)} color={colour("healing")} />
-      <Table.td title={t("stats.prevent")} value={t(stats.prevent)} color={colour("prevent")} />
-      <Table.td title={t("stats.total")} value={t(stats.total)} color={colour("total")} />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+      <Table.td title={t("stats.damage")} value={t(stats.damage)} color={color("damage")} />
+      <Table.td title={t("stats.healing")} value={t(stats.healing)} color={color("healing")} />
+      <Table.td title={t("stats.prevent")} value={t(stats.prevent)} color={color("prevent")} />
+      <Table.td title={t("stats.total")} value={t(stats.total)} color={color("total")} />
     </Table.ts>
   );
 };

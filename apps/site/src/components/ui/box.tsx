@@ -60,7 +60,7 @@ function toBorderRadius(borderRadius: BoxBorderRadius): {
   };
 }
 
-// The card look from `@statsify/tokens`: the panel colour, the renderer's overlay gradient and a shadow at the
+// The card look from `@statsify/tokens`: the panel color, the renderer's overlay gradient and a shadow at the
 // card's opacity, which the `box` utility (app.css) draws from tokens.css. The tinted variants keep their radial
 // gradients and have no overlay.
 const boxVariants = {
@@ -153,7 +153,7 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
   const borderRadius = toBorderRadius(partialBorderRadius);
   const Component: ElementType = as ?? "div";
 
-  // The `box` utility (app.css) draws the default card: its bevels, shadow and colours. A Box's style carries only
+  // The `box` utility (app.css) draws the default card: its bevels, shadow and colors. A Box's style carries only
   // what differs from it, so most carry none.
   const vars: Record<string, string> = {};
   if (variant !== "default") {

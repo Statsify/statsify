@@ -52,7 +52,7 @@ export function useColumnLabel(): (column: LeaderboardColumn) => string {
 }
 
 /**
- * A column's label in the colour the bot's cards give its stat, where that doesn't depend on the value, with the full
+ * A column's label in the color the bot's cards give its stat, where that doesn't depend on the value, with the full
  * name where the label shortens one (FKDR).
  */
 export function ColumnLabel({ column }: { column: LeaderboardColumn }) {
@@ -60,7 +60,7 @@ export function ColumnLabel({ column }: { column: LeaderboardColumn }) {
   const statName = useStatName();
   return (
     <Hint full={column.label ? statName(column.label) : undefined}>
-      {column.colour ? <span {...colourOf(column.colour)}>{text}</span> : text}
+      {column.color ? <span {...colorOf(column.color)}>{text}</span> : text}
     </Hint>
   );
 }

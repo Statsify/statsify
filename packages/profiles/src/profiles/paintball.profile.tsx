@@ -16,7 +16,7 @@ import {
   formatProgression,
 } from "../components/index.js";
 import { FormattedGame } from "@statsify/schemas";
-import { PAINTBALL, cardColours } from "@statsify/catalog";
+import { PAINTBALL, cardColors } from "@statsify/catalog";
 import { formatTime, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "../types.js";
 
@@ -31,14 +31,14 @@ export const PaintballProfile = ({
   time,
 }: BaseProfileProps) => {
   const { paintball } = player.stats;
-  const colour = cardColours(PAINTBALL);
+  const color = cardColors(PAINTBALL);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(paintball.coins), colour("coins")],
-    [t("stats.tokens"), t(paintball.tokens), colour("tokens")],
-    [t("stats.forcefieldTime"), formatTime(paintball.forcefieldTime), colour("forcefieldTime")],
-    [t("stats.hat"), prettify(paintball.hat), colour("hat")],
-    [t("stats.killstreaks"), t(paintball.killstreaks), colour("killstreaks")],
+    [t("stats.coins"), t(paintball.coins), color("coins")],
+    [t("stats.tokens"), t(paintball.tokens), color("tokens")],
+    [t("stats.forcefieldTime"), formatTime(paintball.forcefieldTime), color("forcefieldTime")],
+    [t("stats.hat"), prettify(paintball.hat), color("hat")],
+    [t("stats.killstreaks"), t(paintball.killstreaks), color("killstreaks")],
   ];
 
   return (
@@ -62,22 +62,22 @@ export const PaintballProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(paintball.wins)} color={colour("wins")} />
+          <Table.td title={t("stats.wins")} value={t(paintball.wins)} color={color("wins")} />
           <Table.td
             title={t("stats.shotsFired")}
             value={t(paintball.shotsFired)}
-            color={colour("shotsFired")}
+            color={color("shotsFired")}
           />
           <Table.td
             title={t("stats.shotAccuracy")}
             value={`${t(paintball.shotAccuracy)}%`}
-            color={colour("shotAccuracy")}
+            color={color("shotAccuracy")}
           />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(paintball.kills)} color={colour("kills")} />
-          <Table.td title={t("stats.deaths")} value={t(paintball.deaths)} color={colour("deaths")} />
-          <Table.td title={t("stats.kdr")} value={t(paintball.kdr)} color={colour("kdr")} />
+          <Table.td title={t("stats.kills")} value={t(paintball.kills)} color={color("kills")} />
+          <Table.td title={t("stats.deaths")} value={t(paintball.deaths)} color={color("deaths")} />
+          <Table.td title={t("stats.kdr")} value={t(paintball.kdr)} color={color("kdr")} />
         </Table.tr>
         <Historical.exclude time={time}>
           <Table.ts title="§6Perks">
@@ -85,19 +85,19 @@ export const PaintballProfile = ({
               <Table.td
                 title={t("stats.adrenaline")}
                 value={t(paintball.perks.adrenaline)}
-                color={colour("perks.adrenaline")}
+                color={color("perks.adrenaline")}
                 size="small"
               />
               <Table.td
                 title={t("stats.endurance")}
                 value={t(paintball.perks.endurance)}
-                color={colour("perks.endurance")}
+                color={color("perks.endurance")}
                 size="small"
               />
               <Table.td
                 title={t("stats.fortune")}
                 value={t(paintball.perks.fortune)}
-                color={colour("perks.fortune")}
+                color={color("perks.fortune")}
                 size="small"
               />
             </Table.tr>
@@ -105,25 +105,25 @@ export const PaintballProfile = ({
               <Table.td
                 title={t("stats.godfather")}
                 value={t(paintball.perks.godfather)}
-                color={colour("perks.godfather")}
+                color={color("perks.godfather")}
                 size="small"
               />
               <Table.td
                 title={t("stats.headstart")}
                 value={t(paintball.perks.headstart)}
-                color={colour("perks.headstart")}
+                color={color("perks.headstart")}
                 size="small"
               />
               <Table.td
                 title={t("stats.superluck")}
                 value={t(paintball.perks.superluck)}
-                color={colour("perks.superluck")}
+                color={color("perks.superluck")}
                 size="small"
               />
               <Table.td
                 title={t("stats.transfusion")}
                 value={t(paintball.perks.transfusion)}
-                color={colour("perks.transfusion")}
+                color={color("perks.transfusion")}
                 size="small"
               />
             </Table.tr>

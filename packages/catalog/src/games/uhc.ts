@@ -9,29 +9,29 @@
 import { type Game, selection } from "../catalog.js";
 import { UHC_MODES, type UHCModes } from "@statsify/schemas";
 
-/** The colours and labels of the bot's UHC card (`uhc.profile.tsx`): its sidebar and the table every mode shares. */
+/** The colors and labels of the bot's UHC card (`uhc.profile.tsx`): its sidebar and the table every mode shares. */
 export const UHC: Game<UHCModes> = {
   key: "uhc",
   id: "UHC",
   modes: UHC_MODES,
   game: {
-    coins: { colour: "§6" },
-    score: { colour: "§b" },
+    coins: { color: "§6" },
+    score: { color: "§b" },
     // The title as stored and the kit prettified, as the card shows them.
-    title: { colour: "§e" },
+    title: { color: "§e" },
     kit: selection("§a"),
   },
   shapes: [
     {
       modes: ["overall", "solo", "teams"],
       stats: {
-        wins: { colour: "§e" },
-        kills: { colour: "§a" },
-        deaths: { colour: "§c" },
-        kdr: { colour: "§6" },
-        headsEaten: { colour: "§6" },
-        ultimatesCrafted: { colour: "§b" },
-        extraUltimates: { colour: "§d" },
+        wins: { color: "§e" },
+        kills: { color: "§a" },
+        deaths: { color: "§c" },
+        kdr: { color: "§6" },
+        headsEaten: { color: "§6" },
+        ultimatesCrafted: { color: "§b" },
+        extraUltimates: { color: "§d" },
       },
     },
   ],

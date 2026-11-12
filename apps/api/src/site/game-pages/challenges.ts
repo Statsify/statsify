@@ -19,7 +19,7 @@ const OVERALL = rankingPage(GAMES, { at: (game) => game, sort: "desc", colour: "
 
 /**
  * A game: its challenges, most completed first, in rows that grow with the count as the card's do (four for a short
- * list, about the root of the count otherwise), each row a colour down from §a; the game's total beside the overall.
+ * list, about the root of the count otherwise), each row a color down from §a; the game's total beside the overall.
  */
 function game(id: GameId): PageSpec {
   const keys = shapeKeys(CHALLENGES, id);
@@ -33,7 +33,7 @@ function game(id: GameId): PageSpec {
       {
         cells: keys.filter((key) => key !== "total"),
         sort: "desc",
-        ranks: { size, colours: ["§a", "§e", "§6", "§c", "§4"] },
+        ranks: { size, colors: ["§a", "§e", "§6", "§c", "§4"] },
       },
     ],
   };

@@ -37,7 +37,7 @@ const quest = (name: string): StatEntry => ({ colour: doneColour, name });
 
 /** A period's total, out of the game's quests for the period: green when all are done, gold when some are, red when none. */
 const done = (count: number): StatEntry => ({
-  colour: (value) => (count > 0 && Number(value) >= count ? "§a" : Number(value) > 0 ? "§6" : "§c"),
+  color: (value) => (count > 0 && Number(value) >= count ? "§a" : Number(value) > 0 ? "§6" : "§c"),
   of: count,
 });
 
@@ -54,7 +54,7 @@ export const QUESTS: Game<QuestModes> = {
       return {
         modes: [`${period}.${game}`],
         stats: {
-          total: { ...(period === "overall" ? { colour: "§a" } : done(quests.length)), glossary: "questsTotal" },
+          total: { ...(period === "overall" ? { color: "§a" } : done(quests.length)), glossary: "questsTotal" },
           ...Object.fromEntries(quests.map(([key, { leaderboard }]) => [key, quest(leaderboard.name)])),
         },
       };

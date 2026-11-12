@@ -52,16 +52,16 @@ export function Hidden() {
 }
 
 /**
- * For `large`: a Minecraft 24 pixel is 1.5 px, so text at 24 and 48 can end on a half pixel, and whatever is centred on
+ * For `large`: a Minecraft 24 pixel is 1.5 px, so text at 24 and 48 can end on a half pixel, and whatever is centered on
  * it or follows it lands on one, blurred on 1× screens. Where `calc-size()` works, its boxes round their width up to an
- * even number of pixels with the text at the start, so centring them lands on whole pixels (as `grid-cols-snap-*` does
+ * even number of pixels with the text at the start, so centering them lands on whole pixels (as `grid-cols-snap-*` does
  * for the cells).
  */
 export const SNAP_LARGE = "lg:w-[calc-size(fit-content,round(up,size,2px))] lg:text-start";
 
 /**
- * For `large`, a title's words each in a `SNAP_LARGE` box, so it stays centred: a line is then even boxes and 6 px
- * spaces, an even width, and centring it in its even box lands on a whole pixel, wrapped or not.
+ * For `large`, a title's words each in a `SNAP_LARGE` box, so it stays centered: a line is then even boxes and 6 px
+ * spaces, an even width, and centering it in its even box lands on a whole pixel, wrapped or not.
  */
 const snapWords = (label: ReactNode) =>
   typeof label === "string" ?
@@ -69,7 +69,7 @@ const snapWords = (label: ReactNode) =>
     label;
 
 /**
- * A card table cell (`Table.td`): a Minecraft 16 title over a Minecraft 32 value, both in the stat's colour and centred
+ * A card table cell (`Table.td`): a Minecraft 16 title over a Minecraft 32 value, both in the stat's color and centered
  * (the number is the hero). A long title wraps to two lines; the value keeps to the bottom of the cell, so the values
  * in a row line up whatever their titles do. Renders a `<div>` holding a `<dt>` and a `<dd>`, so a list of cells goes
  * inside a `<dl>`.
@@ -88,7 +88,7 @@ export function StatCell({
   /** A control over the cell's corner (a `relative` cell), after the value. */
   info?: ReactNode;
   color?: string;
-  /** For a colour with no theme class (a card's `§#rrggbb`). */
+  /** For a color with no theme class (a card's `§#rrggbb`). */
   style?: CSSProperties;
   /** From `lg`, one size up: a Minecraft 24 title over a Minecraft 48 value (the profile's identity block). */
   large?: boolean;
@@ -108,7 +108,7 @@ export function StatCell({
   );
 }
 
-/** An inline row like the card's `§7Label: §3value`: one size, a §7 label and the value in its colour. */
+/** An inline row like the card's `§7Label: §3value`: one size, a §7 label and the value in its color. */
 export function InlineStat({
   label,
   value,

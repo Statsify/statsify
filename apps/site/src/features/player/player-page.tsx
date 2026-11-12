@@ -14,7 +14,7 @@ import { Hint, Spoken } from "~/components/ui/hint";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
-import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
 import { RefreshBar, savedDate, useNow } from "./refresh-bar";
@@ -299,7 +299,7 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
   const n = useNumberFormat();
   const exact = useExactNumber();
 
-  // The general card's cells and colours: points §6, quests and challenges §a, karma and streaks §d, gifts §5. Quests
+  // The general card's cells and colors: points §6, quests and challenges §a, karma and streaks §d, gifts §5. Quests
   // and Challenges link to their pages, the rest to their leaderboards (`stats.general.<board>`).
   const cells: [label: string, value: number, color: string, link?: { page: string } | { board: string }][] = [
     [t("default:stats.achievementPoints"), overview.achievementPoints, "text-mc-gold", { board: "achievementPoints" }],

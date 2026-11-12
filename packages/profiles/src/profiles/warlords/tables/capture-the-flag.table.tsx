@@ -7,11 +7,11 @@
  */
 
 import { Table } from "../../../components/index.js";
-import { WARLORDS, cardColours } from "@statsify/catalog";
+import { WARLORDS, cardColors } from "@statsify/catalog";
 import type { LocalizeFunction } from "../../../types.js";
 import type { Warlords } from "@statsify/schemas";
 
-const colour = cardColours(WARLORDS);
+const color = cardColors(WARLORDS);
 
 export interface WarlordsCaptureTheFlagTableProps {
   warlords: Warlords;
@@ -21,12 +21,12 @@ export interface WarlordsCaptureTheFlagTableProps {
 export const WarlordsCaptureTheFlagTable = ({ warlords, t }: WarlordsCaptureTheFlagTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(warlords.captureTheFlag.wins)} color={colour("captureTheFlag.wins")} />
-      <Table.td title={t("stats.kills")} value={t(warlords.captureTheFlag.kills)} color={colour("captureTheFlag.kills")} />
+      <Table.td title={t("stats.wins")} value={t(warlords.captureTheFlag.wins)} color={color("captureTheFlag.wins")} />
+      <Table.td title={t("stats.kills")} value={t(warlords.captureTheFlag.kills)} color={color("captureTheFlag.kills")} />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t("stats.flagCaptures")} value={t(warlords.captureTheFlag.flagCaptures)} color={colour("captureTheFlag.flagCaptures")} />
-      <Table.td title={t("stats.flagReturns")} value={t(warlords.captureTheFlag.flagReturns)} color={colour("captureTheFlag.flagReturns")} />
+      <Table.td title={t("stats.flagCaptures")} value={t(warlords.captureTheFlag.flagCaptures)} color={color("captureTheFlag.flagCaptures")} />
+      <Table.td title={t("stats.flagReturns")} value={t(warlords.captureTheFlag.flagReturns)} color={color("captureTheFlag.flagReturns")} />
     </Table.tr>
   </Table.table>
 );
