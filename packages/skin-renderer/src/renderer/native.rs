@@ -1,7 +1,6 @@
-use std::io::{BufWriter, Cursor};
-
 use futures_intrusive::channel;
-use image::{ImageBuffer, Rgba};
+use image::codecs::png::PngEncoder;
+use image::{ExtendedColorType, ImageEncoder};
 use napi::bindgen_prelude::spawn_blocking;
 
 use super::backend::{Backend, OutputTexture};
@@ -144,17 +143,16 @@ impl Backend for NativeBackend {
         .copied()
         .collect::<Vec<u8>>();
 
-      let image =
-        ImageBuffer::<Rgba<u8>, _>::from_vec(self.dimensions.width, self.dimensions.height, buffer)
-          .expect("Failed to create image buffer");
+      let mut png = Vec::new();
 
-      let mut writer = BufWriter::new(Cursor::new(Vec::new()));
+      PngEncoder::new(&mut png).write_image(
+        &buffer,
+        self.dimensions.width,
+        self.dimensions.height,
+        ExtendedColorType::Rgba8,
+      )?;
 
-      image.write_to(&mut writer, image::ImageFormat::Png)?;
-
-      let bytes = writer.into_inner().unwrap().into_inner();
-
-      Ok(bytes)
+      Ok(png)
     } else {
       Err(Error::RenderFailure)
     }
