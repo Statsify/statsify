@@ -18,21 +18,21 @@ export interface Armor {
 
 export interface ArmorPiece {
   /**
-   * Texture (PNG) in the armour layout: `layer_1` for helmets, chestplates and boots,
+   * Texture (PNG) in the armor layout: `layer_1` for helmets, chestplates and boots,
    * `layer_2` for leggings.
    */
   texture: Uint8Array
   enchanted: boolean
   /**
    * Draws the helmet's texture, a skin or mob texture, as a worn skull or player head
-   * instead of an armour layer.
+   * instead of an armor layer.
    */
   skull?: boolean
 }
 
 export interface RenderOptions {
   armor?: Armor
-  /** Enchantment glint texture (PNG), needed when an armour piece is enchanted. */
+  /** Enchantment glint texture (PNG), needed when an armor piece is enchanted. */
   glint?: Uint8Array
 }
 

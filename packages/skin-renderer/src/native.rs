@@ -20,7 +20,7 @@ lazy_static! {
 #[derive(Default)]
 pub struct RenderOptions {
   pub armor: Option<Armor>,
-  /// Enchantment glint texture (PNG), needed when an armour piece is enchanted.
+  /// Enchantment glint texture (PNG), needed when an armor piece is enchanted.
   pub glint: Option<Uint8Array>,
 }
 
