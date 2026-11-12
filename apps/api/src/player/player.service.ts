@@ -12,11 +12,13 @@ import {
   type Flatten,
   flatten,
 } from "@statsify/util";
-import { CacheLevel, StatusNotFoundException } from "@statsify/api-client";
+import { CacheLevel, PlayerNotFoundException, StatusNotFoundException } from "@statsify/api-client";
+import { HttpService } from "@nestjs/axios";
 import { HypixelService } from "#hypixel";
 import {
   Inject,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   forwardRef,
 } from "@nestjs/common";
@@ -27,6 +29,7 @@ import {
   PlayerSearchService,
   RedisPlayer,
 } from "./search/player-search.service.js";
+import { catchError, lastValueFrom, map } from "rxjs";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
@@ -38,7 +41,8 @@ export class PlayerService {
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: Circular<PlayerLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
-    @InjectModel(Player) private readonly playerModel: PlayerModel
+    @InjectModel(Player) private readonly playerModel: PlayerModel,
+    private readonly httpService: HttpService
   ) {}
 
   /**
@@ -46,11 +50,14 @@ export class PlayerService {
    * @param tag UUID or username
    * @param cacheLevel What type of data to return (cached/live)
    * @param selector (optional) A mongo selector to select specific fields
+   * @param options.throwOnHypixelError (optional) For a player that isn't stored, reject with
+   * `HypixelUnavailableError` when Hypixel doesn't answer, instead of returning `null` as for an unknown player
    */
   public async get(
     tag: string,
     cacheLevel: CacheLevel,
-    selector?: Record<string, boolean>
+    selector?: Record<string, boolean>,
+    { throwOnHypixelError = false }: { throwOnHypixelError?: boolean } = {}
   ): Promise<Player | null> {
     // ensure we have all the necessary data to replace the player document if we don't do a cache only request
     if (selector && Object.keys(selector).length > 0) {
@@ -70,9 +77,10 @@ export class PlayerService {
       return deserialize(Player, mongoPlayer);
     }
 
-    const player = await this.hypixelService.getPlayer(
-      mongoPlayer?.uuid ?? tag
-    );
+    // A stored player still falls back to Mongo below, so only an unknown one needs the error.
+    const player = await this.hypixelService.getPlayer(mongoPlayer?.uuid ?? tag, {
+      throwOnError: throwOnHypixelError && !mongoPlayer,
+    });
 
     if (player) {
       player.expiresAt = Date.now() + 120_000;
@@ -194,6 +202,23 @@ export class PlayerService {
     return flatPlayer;
   }
 
+  public getUuid(username: string): Promise<string> {
+    return lastValueFrom(
+      this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
+        map((response) => response.data as AccountProfile),
+        map((data) => data.id),
+        catchError((error) => {
+          if (error.response.status === 404) throw new PlayerNotFoundException();
+          // Ratelimited
+          if (error.response.status === 429) throw new InternalServerErrorException();
+
+          // Unknown
+          throw new InternalServerErrorException();
+        })
+      )
+    );
+  }
+
   private async findMongoDocument(
     tag: string,
     selector: Record<string, boolean> = {}
@@ -214,4 +239,11 @@ export class PlayerService {
 
     return flatten(mongoPlayer);
   }
+}
+
+interface AccountProfile {
+  id: string;
+  name: string;
+  legacy?: true;
+  demo?: true;
 }

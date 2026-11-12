@@ -8,7 +8,7 @@
 
 import { cn } from "~/lib/util";
 import { panel } from "@statsify/tokens";
-import type { ComponentProps, ElementType, JSX } from "react";
+import type { ComponentProps, ElementType, JSX, ReactNode } from "react";
 
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 
@@ -85,6 +85,8 @@ type BoxOnlyProps = {
   borderRadius?: BoxBorderRadius;
   shadow?: number;
   variant?: keyof typeof boxVariants;
+  /** A panel header rendered above the content, like the title boxes on the bot's cards. */
+  title?: ReactNode;
 };
 
 export type BoxProps<T extends keyof JSX.IntrinsicElements = "div"> = BoxOnlyProps & { as?: T } & Omit<
@@ -99,6 +101,7 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
   shadow = panel.shadow,
   className,
   variant = "default",
+  title,
   as,
   style,
   children,
@@ -178,6 +181,11 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
           clipPath: contentPath,
         }}
       >
+        {title !== undefined && (
+          <div data-slot="title" className="-mx-4 -mt-4 mb-3 border-b-2 border-black/30 bg-black/20 px-4 py-2 text-center">
+            {title}
+          </div>
+        )}
         {children}
       </div>
     </Component>

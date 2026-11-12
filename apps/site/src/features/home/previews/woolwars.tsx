@@ -15,9 +15,10 @@ import { useTranslation } from "react-i18next";
 import { cn } from "~/lib/util";
 import { formatDate, subDays } from "date-fns";
 import { usePlayer } from "~/components/player-context";
+import type { PreviewIdentity } from "@statsify/contract";
 
 export function WoolWarsPreview({ className, daysBack }: { className?: string; daysBack: MotionValue<number> }) {
-  const player = usePlayer();
+  const player = usePlayer<PreviewIdentity>();
   const today = new Date();
   const { t } = useTranslation();
 

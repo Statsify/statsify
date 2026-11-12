@@ -44,8 +44,12 @@ const GAME_ICONS = new Set<string>([
   "WOOLGAMES",
 ]);
 
-export function GameIcon({ game }: { game: GameCode }) {
+/** Whether `public/games/` has an icon for the code. */
+export const hasGameIcon = (game: string): game is GameCode => GAME_ICONS.has(game);
+
+/** `alt` names the game where the icon stands alone; beside the game's printed name it stays empty. */
+export function GameIcon({ game, alt = "" }: { game: GameCode; alt?: string }) {
   if (!GAME_ICONS.has(game)) throw new Error(`Unsupported GameIcon ${game}`);
 
-  return <img src={`/games/${game}.png`} width={32} height={32} alt={game.toLowerCase()} loading="lazy" decoding="async" />;
+  return <img src={`/games/${game}.png`} width={32} height={32} alt={alt} loading="lazy" decoding="async" />;
 }

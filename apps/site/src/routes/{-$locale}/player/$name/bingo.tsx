@@ -8,13 +8,18 @@
 
 import { Bingo } from "~/features/bingo/bingo";
 import { BoardSearchSchema } from "~/features/bingo/board-search";
+import { loadBingoPlayer } from "~/features/bingo/bingo-data";
 import { BingoLayout } from "~/features/bingo/bingo-layout";
 import { BingoSkeleton } from "~/features/bingo/bingo-skeleton";
 import { PlayerNotFound } from "~/features/bingo/player-not-found";
+import { RefreshBar } from "~/features/player/refresh-bar";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { cacheHeaders } from "~/lib/cache";
+import { cacheNotFoundResponse } from "~/lib/response";
 import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
-import { getBingoPlayer } from "~/features/bingo/bingo-data";
+import { refreshBingo } from "~/features/player/player-actions";
+import { useState } from "react";
+import type { BingoPlayer } from "@statsify/contract";
 
 const EDGE_TTL_SECONDS = 300;
 
@@ -23,8 +28,13 @@ const possessive = (username: string) => `${username}'${username.endsWith("s") ?
 export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
   validateSearch: BoardSearchSchema,
   loader: async ({ params }) => {
-    const player = await getBingoPlayer({ data: { name: params.name } });
-    if (!player) throw notFound();
+    const player = await loadBingoPlayer(params.name);
+
+    if (!player) {
+      cacheNotFoundResponse("max-age=300");
+      throw notFound();
+    }
+
     return player;
   },
   staleTime: EDGE_TTL_SECONDS * 1000,
@@ -46,9 +56,25 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
 
 function BingoPage() {
   const player = Route.useLoaderData();
+  // Fresh loader data (another player, or a revalidation) resets the refreshed copy below.
+  return <BingoBoards key={`${player.uuid}:${player.updatedAt}`} initial={player} />;
+}
+
+/** The boards plus the refresh bar; a refresh swaps in the boards the action hands back. */
+function BingoBoards({ initial }: { initial: BingoPlayer }) {
+  const [player, setPlayer] = useState(initial);
+
+  const refresh = async (token: string | undefined) => {
+    const result = await refreshBingo({ data: { uuid: player.uuid, token } });
+    if (result.ok) setPlayer(result.data);
+    return result;
+  };
 
   return (
     <BingoLayout name={player.username}>
+      <div className="w-[80%]">
+        <RefreshBar updatedAt={player.updatedAt} expiresAt={player.expiresAt} refresh={refresh} />
+      </div>
       <Bingo player={player} />
     </BingoLayout>
   );

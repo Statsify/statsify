@@ -205,6 +205,28 @@ export interface Config {
     botToken?: string;
   };
 
+  site?: {
+    /**
+     * The Statsify API key the site uses, separate from the bot's key
+     */
+    apiKey?: string;
+    /**
+     * How many site-initiated Hypixel calls (refresh and lookup) are allowed per 5 minutes across all visitors
+     * @example 15
+     */
+    hypixelBudget?: number;
+    turnstile?: {
+      /**
+       * The Cloudflare Turnstile site key rendered on the player-not-found page
+       */
+      siteKey?: string;
+      /**
+       * The Cloudflare Turnstile secret used to verify lookup tokens
+       */
+      secretKey?: string;
+    };
+  };
+
   sentry?: {
     /**
      * The Sentry Dsn used by the Discord Bot
@@ -223,6 +245,10 @@ export interface Config {
      * The Sentry Dsn used by the Support Bot
      */
     supportBotDsn?: string;
+    /**
+     * The Sentry Dsn used by the site
+     */
+    siteDsn?: string;
 
     /**
      * The percentage of transactions to send to Sentry

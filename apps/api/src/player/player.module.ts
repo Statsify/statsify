@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { HttpModule } from "@nestjs/axios";
 import { HypixelModule } from "#hypixel";
 import { Module } from "@nestjs/common";
 import { Player } from "@statsify/schemas";
@@ -21,9 +22,10 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
   imports: [
     HypixelModule,
     TypegooseModule.forFeature([Player]),
+    HttpModule.register({}),
   ],
   controllers: [PlayerController, PlayerLeaderboardsController, PlayerSearchController],
   providers: [PlayerService, PlayerLeaderboardService, PlayerSearchService],
-  exports: [PlayerService],
+  exports: [PlayerService, PlayerSearchService],
 })
 export class PlayerModule {}

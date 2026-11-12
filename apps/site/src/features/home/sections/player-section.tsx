@@ -17,8 +17,7 @@ import { SkyWarsPreview } from "../previews/skywars";
 import { Tab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
 import { useState } from "react";
-import type { Json } from "~/lib/json";
-import type { Player } from "@statsify/schemas";
+import type { HomePreviews } from "@statsify/contract";
 
 const games = [
   {
@@ -47,16 +46,21 @@ const games = [
   },
 ] as const;
 
-export function PlayerSection({
-  players,
-}: {
-  players: readonly [Json<Player>, Json<Player>, Json<Player>, Json<Player>];
-}) {
+export function PlayerSection({ players }: { players: HomePreviews["players"] }) {
   const [gameIndex, setGameIndex] = useState<number>(0);
+
+  // Only the games whose sample player loaded get a tab; with none the section hides.
+  const available = games.flatMap((game) => {
+    const player = players[game.tab];
+    return player ? [{ ...game, player }] : [];
+  });
+
+  const current = available[gameIndex] ?? available[0];
+  if (!current) return null;
 
   return (
     <BaseSection
-      background={games[gameIndex].tab}
+      background={current.tab}
       className="flex-col lg:flex-row justify-between items-center lg:py-0"
     >
       <div className="mx-4 lg:mx-0 flex flex-col gap-4 max-w-100 xl:max-w-120 text-mc-white text-center lg:text-start ">
@@ -79,7 +83,7 @@ export function PlayerSection({
             onTabChange={setGameIndex}
             className="grid grid-cols-2 xl:grid-cols-4 grid-flow-row gap-4 text-center xl:w-full"
           >
-            {games.map(({ tab, formatted, icon }, index) => (
+            {available.map(({ tab, formatted, icon }, index) => (
               <Tab key={tab} tab={index}>
                 <img
                   src={icon}
@@ -95,8 +99,8 @@ export function PlayerSection({
           </Tabs>
           <Divider variant="black" />
           <div className="grid grid-areas-stack">
-            {games.map(({ tab, component: GamePreview }, index) => (
-              <PlayerProvider key={tab} player={players[index]}>
+            {available.map(({ tab, component: GamePreview, player }, index) => (
+              <PlayerProvider key={tab} player={player}>
                 <GamePreview
                   className={cn(
                     "grid-area-stack invisible",

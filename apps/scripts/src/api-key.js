@@ -79,6 +79,7 @@ const defaultKey = () =>
 
 const roles = {
   member: 0,
+  site: 100,
   worker: 300,
   admin: 999,
 };

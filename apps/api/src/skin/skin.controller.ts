@@ -19,7 +19,7 @@ export class SkinController {
   public constructor(private readonly skinService: SkinService) {}
 
   @Get("/head")
-  @Auth()
+  @Auth({ siteUnlimited: true })
   @ApiOperation({ summary: "Get a Player Head" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getHead(@Query() { uuid, size }: HeadDto) {
@@ -29,7 +29,7 @@ export class SkinController {
   }
 
   @Get()
-  @Auth()
+  @Auth({ siteUnlimited: true })
   @ApiOperation({ summary: "Get a Player Render" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getRender(@Query() { uuid }: UuidDto) {

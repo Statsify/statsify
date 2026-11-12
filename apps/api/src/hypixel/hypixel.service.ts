@@ -22,6 +22,13 @@ import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
 import type { APIData } from "@statsify/util";
 
+/** Hypixel didn't answer (network, timeout, 4xx or 5xx), as opposed to answering that there is no such player. */
+export class HypixelUnavailableError extends Error {
+  public constructor(cause: unknown) {
+    super("Hypixel did not answer", { cause });
+  }
+}
+
 @Injectable()
 export class HypixelService {
   private readonly logger = new Logger("HypixelService");
@@ -36,7 +43,11 @@ export class HypixelService {
     );
   }
 
-  public getPlayer(tag: string) {
+  /**
+   * `null` when Hypixel has no such player. A failed request is logged and also gives `null`, unless
+   * `throwOnError` is set: then it rejects with `HypixelUnavailableError`, so the caller can tell the two apart.
+   */
+  public getPlayer(tag: string, { throwOnError = false } = {}) {
     return lastValueFrom(
       this.request<APIData>("/player", { [tag.length > 16 ? "uuid" : "name"]: tag }).pipe(
         map((data) => {
@@ -45,7 +56,7 @@ export class HypixelService {
         }),
         catchError((err) => {
           this.logger.error(err);
-          return of(null);
+          return throwOnError ? throwError(() => new HypixelUnavailableError(err)) : of(null);
         })
       )
     );
