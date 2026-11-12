@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Guild, Player } from "@statsify/schemas";
 import { HypixelModule } from "#hypixel";
 import { Module } from "@nestjs/common";
-import { Player } from "@statsify/schemas";
 import { PlayerController } from "./player.controller.js";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
 import { PlayerLeaderboardsController } from "./leaderboards/player-leaderboard.controller.js";
@@ -20,7 +20,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 @Module({
   imports: [
     HypixelModule,
-    TypegooseModule.forFeature([Player]),
+    TypegooseModule.forFeature([Guild, Player]),
   ],
   controllers: [PlayerController, PlayerLeaderboardsController, PlayerSearchController],
   providers: [PlayerService, PlayerLeaderboardService, PlayerSearchService],
