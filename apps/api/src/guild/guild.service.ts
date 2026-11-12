@@ -198,9 +198,7 @@ export class GuildService {
     if (type === GuildQuery.PLAYER) {
       // Remove this guild id from the player document, because the player is no longer in the guild
       return await this.playerModel
-        .updateOne({ $unset: { guildId: "" } })
-        .where("uuid")
-        .equals(tag)
+        .updateOne({ uuid: tag }, { $unset: { guildId: "" } })
         .lean()
         .exec();
     }
