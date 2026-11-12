@@ -25,6 +25,16 @@ export type DuelsProfileProps<T extends ProfileTime> = Omit<BaseProfileProps, "t
   modeIcons: T extends "LIVE" ? DuelsModeIcons : undefined;
 };
 
+export function formatDuelsMode(mode: GameMode<DuelsModes>) {
+  if (mode.api === "overall")
+    return mode.submode.api === "stats" ? "Overall" : mode.submode.formatted;
+
+  if ((mode.api === "bedwars" || mode.api === "spleef") && mode.submode.api !== "overall")
+    return mode.submode.formatted;
+
+  return `${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""}`;
+}
+
 export const DuelsProfile = <T extends ProfileTime>({
   skin,
   player,
@@ -107,15 +117,7 @@ export const DuelsProfile = <T extends ProfileTime>({
       break;
   }
 
-  let formattedMode;
-
-  if (mode.api === "overall") {
-    formattedMode = mode.submode.api === "stats" ? "Overall" : mode.submode.formatted;
-  } else if ((mode.api === "bedwars" || mode.api === "spleef") && mode.submode.api !== "overall") {
-    formattedMode = mode.submode.formatted;
-  } else {
-    formattedMode = `${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""}`;
-  }
+  const formattedMode = formatDuelsMode(mode);
 
   return (
     <Container background={background}>
