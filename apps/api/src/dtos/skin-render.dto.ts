@@ -66,7 +66,8 @@ export class ArmorDto {
   @Type((options) => {
     const helmet = options?.object.helmet;
     if (helmet?.head !== undefined) return PlayerHeadDto;
-    return helmet?.skull === undefined ? ArmorPieceDto : SkullDto;
+    if (helmet?.skull !== undefined) return SkullDto;
+    return ArmorPieceDto;
   })
   public helmet?: ArmorPieceDto | PlayerHeadDto | SkullDto;
 
