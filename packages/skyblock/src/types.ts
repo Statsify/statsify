@@ -341,7 +341,8 @@ export interface JacobSection {
   medals: Record<JacobMedal, number>; // unspent
   contests: number; // entered
   crops: JacobCrop[];
-  perks: { doubleDrops: number; farmingLevelCap: number };
+  // Anita's: double_drops is Hypixel's name for the Extra Farming Fortune tiers, and farmingFortune what they give
+  perks: { doubleDrops: number; farmingFortune: number; farmingLevelCap: number };
 }
 
 export interface JacobCrop {
