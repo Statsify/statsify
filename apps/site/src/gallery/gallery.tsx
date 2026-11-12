@@ -79,7 +79,7 @@ import type { PlayerIdentity } from "@statsify/contract";
 
 const SECTIONS = [
   ["type", "Type"],
-  ["colours", "Colours and codes"],
+  ["colors", "Colors and codes"],
   ["panels", "Panels"],
   ["buttons", "Buttons"],
   ["stats", "Stat cells"],
@@ -147,7 +147,7 @@ export function Gallery() {
           </nav>
         </header>
         <TypeSection />
-        <ColourSection />
+        <ColorSection />
         <PanelSection />
         <ButtonSection />
         <StatSection />
@@ -256,9 +256,9 @@ function TypeSection() {
   );
 }
 
-function ColourSection() {
+function ColorSection() {
   return (
-    <Section id="colours">
+    <Section id="colors">
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">
         {SWATCHES.map(([code, hex]) => (
           <li key={code} className="flex items-center gap-2">
@@ -267,7 +267,7 @@ function ColourSection() {
           </li>
         ))}
       </ul>
-      <Demo label="Formatting codes, hex colours and sizes">
+      <Demo label="Formatting codes, hex colors and sizes">
         <p className="text-mc-2">
           <MinecraftText>{"§lBold§r §oItalic§r §nUnderline§r §mStrike§r §#ff55aaHex§r §^4^Size 4§r §6[2,904✫] §b[MVP§c+§b] anrie"}</MinecraftText>
         </p>
@@ -506,14 +506,14 @@ function GameSection() {
         <Demo label="A stat without a leaderboard: no link">
           <StatPanel section={{ title: null, rows: [[{ ...TOKENS, leaderboard: null }]] }} username={username} />
         </Demo>
-        <Demo label="Hex colours, and a selection as a Label: value line">
+        <Demo label="Hex colors, and a selection as a Label: value line">
           <StatPanel section={SELECTION_SECTION} username={username} />
         </Demo>
-        <Demo label="The card's own heading, in its colours">
+        <Demo label="The card's own heading, in its colors">
           <StatPanel section={{ ...RESOURCES, name: "§6Solo" }} username={username} />
         </Demo>
-        <Demo label="A translated heading in the card's colour">
-          <StatPanel section={{ ...RESOURCES, colour: "§b" }} username={username} />
+        <Demo label="A translated heading in the card's color">
+          <StatPanel section={{ ...RESOURCES, color: "§b" }} username={username} />
         </Demo>
       </div>
       <Demo label="A list: the card's names, a time never set as N/A with no link">

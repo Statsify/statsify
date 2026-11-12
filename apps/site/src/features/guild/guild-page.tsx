@@ -35,7 +35,7 @@ export function GuildView({ guild }: { guild: GuildPage }) {
   const { t, i18n } = useTranslation();
   const n = useNumberFormat();
   const date = dateFormat(i18n.language);
-  const colour = guild.tagColor;
+  const color = guild.tagColor;
   const level = Math.floor(guild.level);
 
   return (
@@ -63,12 +63,12 @@ export function GuildView({ guild }: { guild: GuildPage }) {
             </p>
           </Box>
           <Box className="content:flex content:flex-col content:items-center content:justify-center content:text-center content:leading-[24px]">
-            <p>{t("default:stats.guild.level")}: <MinecraftText>{`${colour}${n(guild.level)}`}</MinecraftText></p>
+            <p>{t("default:stats.guild.level")}: <MinecraftText>{`${color}${n(guild.level)}`}</MinecraftText></p>
             <p>
               {t("default:stats.progression.gexp")}: <span className="text-mc-aqua">{n(guild.progression.current)}</span>/
               <span className="text-mc-green">{n(guild.progression.max!)}</span>
             </p>
-            <p aria-hidden><MinecraftText>{`${colour}${n(level)} ${guildXpBar(colour)(guild.progression.percent)} ${colour}${n(level + 1)}`}</MinecraftText></p>
+            <p aria-hidden><MinecraftText>{`${color}${n(level)} ${guildXpBar(color)(guild.progression.percent)} ${color}${n(level + 1)}`}</MinecraftText></p>
           </Box>
           {guild.description && (
             <Box title={<h2 className="text-mc-1.5 text-mc-gray">{t("guild.description")}</h2>} className="lg:col-span-2 content:break-words">
@@ -125,7 +125,7 @@ function Updated({ updatedAt }: { updatedAt: number }) {
 
 type BarRow = { key: string; label: string; value: number; icon?: string };
 
-/** Labelled numbers with a bar each against the largest, as a two-column list. */
+/** Labeled numbers with a bar each against the largest, as a two-column list. */
 function BarList({ title, rows }: { title: string; rows: BarRow[] }) {
   const n = useNumberFormat();
   const max = Math.max(...rows.map(({ value }) => value));

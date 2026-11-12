@@ -15,7 +15,7 @@ import { minecraftColors } from "@statsify/util/minecraft-colors";
 
 const mc = (code: string) => minecraftColors.find((color) => color.code === code)!.hex;
 
-/** The 16 `§` colours, under the site's names, and the site palette. */
+/** The 16 `§` colors, under the site's names, and the site palette. */
 export const colors = {
   minecraft: {
     black: mc("§0"),

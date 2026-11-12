@@ -24,7 +24,7 @@ const SAMPLE_LEVEL = 100;
 type Prestige = PrestigeSheet["prestiges"][number];
 
 /**
- * Every BedWars prestige in the colours its level shows in game, a panel per thousand stars, then the game's other stars
+ * Every BedWars prestige in the colors its level shows in game, a panel per thousand stars, then the game's other stars
  * and brackets. Drawn from the same scheme map as the cards, so a change to it shows here.
  */
 export function PrestigePage({ sheet }: { sheet: PrestigeSheet }) {

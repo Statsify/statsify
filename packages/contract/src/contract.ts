@@ -9,7 +9,7 @@
 import { type ContractRouterClient, oc } from "@orpc/contract";
 import { z } from "zod";
 
-/** A Minecraft UUID, dashed or not; the API normalises it before querying. */
+/** A Minecraft UUID, dashed or not; the API normalizes it before querying. */
 export const UuidSchema = z
   .string()
   .regex(/^[\da-f]{32}$|^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i, "Expected a Minecraft UUID");
@@ -50,8 +50,8 @@ export const StatRowSchema = z.object({
   hidden: z.boolean().optional(),
   /** Printed after a number, as on the card, e.g. `%`. */
   suffix: z.string().optional(),
-  /** The bot's colour code for the stat, e.g. `§a` or `§#ffd700`. */
-  colour: z.string(),
+  /** The bot's color code for the stat, e.g. `§a` or `§#ffd700`. */
+  color: z.string(),
   /** The stat's leaderboard, as the `/leaderboards/<field>` segment, or null when it has none. */
   leaderboard: z.string().nullable(),
 });
@@ -142,10 +142,10 @@ export const PlayerFullSchema = z.object({
   guild: GuildDocumentSchema.nullable(),
 });
 
-/** A suggested name, with the player's display name where the API has them, for the colour their rank gives the name. */
+/** A suggested name, with the player's display name where the API has them, for the color their rank gives the name. */
 export const SuggestionSchema = z.object({ name: z.string(), displayName: z.string().nullable() });
 
-/** A suggested guild: its name, and the name with its tag in the tag's colour, as the guild page's title shows it. */
+/** A suggested guild: its name, and the name with its tag in the tag's color, as the guild page's title shows it. */
 export const GuildSuggestionSchema = z.object({ name: z.string(), nameFormatted: z.string() });
 
 export const ResultCardSchema = z.object({
@@ -173,7 +173,7 @@ export const LeaderboardGroupSchema = z.object({
   key: z.string(),
   /** The `GameId` for the icon, or `null` for groups without a game (quests, challenges). */
   game: z.string().nullable(),
-  /** The name in the game's colours, Minecraft-formatted (`§cBed§fWars§f`), as the bot draws it. */
+  /** The name in the game's colors, Minecraft-formatted (`§cBed§fWars§f`), as the bot draws it. */
   formatted: z.string(),
   leaderboards: z.array(LeaderboardListEntrySchema),
 });
@@ -210,13 +210,13 @@ export const LeaderboardColumnSchema = z.object({
   name: z.string(),
   /** The catalog's `stats.*` locale key for the stat (the bot's card's word for it), or null where the catalog has none. */
   label: z.string().nullable(),
-  /** The colour the bot's card draws the stat in, or null where it depends on the value. */
-  colour: z.string().nullable(),
+  /** The color the bot's card draws the stat in, or null where it depends on the value. */
+  color: z.string().nullable(),
 });
 
 export const LeaderboardPageSchema = z.object({
   field: z.string(),
-  /** The name as the bot's leaderboard titles it, its game in the game's colours, Minecraft-formatted. */
+  /** The name as the bot's leaderboard titles it, its game in the game's colors, Minecraft-formatted. */
   formatted: z.string(),
   /** The board's `GameId`, for the icon, or `null` for a board without a game (quests, challenges). */
   game: z.string().nullable(),
@@ -280,8 +280,8 @@ export const StatCellSchema = z.object({
   trim: z.boolean().optional(),
   /** The number the value is out of (`12/25`), for a stat with a cap. */
   of: z.number().optional(),
-  /** The bot's colour code for the stat, e.g. `§a` or `§#a7673f`. */
-  colour: z.string(),
+  /** The bot's color code for the stat, e.g. `§a` or `§#a7673f`. */
+  color: z.string(),
   /** The stat's leaderboard, as the `/leaderboards/<field>` segment, or null when it has none. */
   leaderboard: z.string().nullable(),
   /** A `GameId` whose icon goes before the name, as on the card's game lists. */
@@ -301,8 +301,8 @@ export const StatSectionSchema = z.object({
   title: z.string().nullable(),
   /** The card's own Minecraft-formatted heading where it doesn't translate one, e.g. `§6Solo`. */
   name: z.string().optional(),
-  /** The card's colour for a translated heading, e.g. `§b` for Power-Up Activations; white otherwise. */
-  colour: z.string().optional(),
+  /** The card's color for a translated heading, e.g. `§b` for Power-Up Activations; white otherwise. */
+  color: z.string().optional(),
   /** The card's rows of cells. */
   rows: z.array(z.array(StatCellSchema)),
   /** A `site.json` heading over each row, by index, or null for none: BedWars' Final and Normal over its kills rows. */
@@ -393,10 +393,10 @@ export const GamePageSchema = z.object({
       progress: z.string(),
       maxedWord: z.enum(["maxed", "prestiged"]).optional(),
       /**
-       * The card's colours for the progress where they aren't the panel's own (Murder Mystery's knife): the count, the
+       * The card's colors for the progress where they aren't the panel's own (Murder Mystery's knife): the count, the
        * slash and the max, and the maxed word, which stays bold.
        */
-      colours: z.object({ current: z.string(), slash: z.string(), max: z.string(), maxed: z.string() }).optional(),
+      colors: z.object({ current: z.string(), slash: z.string(), max: z.string(), maxed: z.string() }).optional(),
       leaderboard: z.string().nullable(),
     })
     .nullable(),
@@ -504,7 +504,7 @@ const GuildSummary = {
   name: z.string(),
   /** The Minecraft-formatted name with its tag. */
   nameFormatted: z.string(),
-  /** The tag's Minecraft colour code, e.g. `§6`, which colours the level bar. */
+  /** The tag's Minecraft color code, e.g. `§6`, which colors the level bar. */
   tagColor: z.string(),
   description: z.string(),
   createdAt: z.number(),
@@ -580,8 +580,8 @@ const GlossaryEntrySchema = z.object({
   label: z.string(),
   /** Values for the label's placeholders, e.g. `{ tier: "I–III" }` for "Tier {{tier}}". */
   params: z.record(z.string(), z.string()).optional(),
-  /** Its colour on the cards, or null where the colour depends on the value. */
-  colour: z.string().nullable(),
+  /** Its color on the cards, or null where the color depends on the value. */
+  color: z.string().nullable(),
   /** The games that show it: BedWars, SkyWars and Duels first, then by leaderboards. */
   games: z.array(GlossaryGameSchema),
   /** Its leaderboard's field when exactly one ranks it. */

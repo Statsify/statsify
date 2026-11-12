@@ -11,46 +11,46 @@ import { MURDER_MYSTERY_MODES, type MurderMysteryModes } from "@statsify/schemas
 
 /** What every mode stores: the card's kills row and its per-mode sidebar rows. */
 const BASE: Record<string, StatEntry> = {
-  wins: { colour: "§a" },
-  gamesPlayed: { colour: "§b" },
-  kills: { colour: "§a" },
-  deaths: { colour: "§c" },
-  kdr: { colour: "§6" },
-  bowKills: { colour: "§6" },
-  goldPickedUp: { colour: "§6" },
+  wins: { color: "§a" },
+  gamesPlayed: { color: "§b" },
+  kills: { color: "§a" },
+  deaths: { color: "§c" },
+  kdr: { color: "§6" },
+  bowKills: { color: "§6" },
+  goldPickedUp: { color: "§6" },
 };
 
 /** Overall's, Classic's and Double Up's roles and kills. */
 const STANDARD: Record<string, StatEntry> = {
   ...BASE,
-  murdererWins: { colour: "§c" },
-  detectiveWins: { colour: "§b" },
-  killsAsMurderer: { colour: "§4" },
-  thrownKnifeKills: { colour: "§a" },
-  trapKills: { colour: "§c" },
-  heroKills: { colour: "§e" },
-  suicides: { colour: "§4" },
+  murdererWins: { color: "§c" },
+  detectiveWins: { color: "§b" },
+  killsAsMurderer: { color: "§4" },
+  thrownKnifeKills: { color: "§a" },
+  trapKills: { color: "§c" },
+  heroKills: { color: "§e" },
+  suicides: { color: "§4" },
 };
 
-/** The colours and labels of the bot's Murder Mystery card (`murdermystery.profile.tsx`): a table per mode. */
+/** The colors and labels of the bot's Murder Mystery card (`murdermystery.profile.tsx`): a table per mode. */
 export const MURDER_MYSTERY: Game<MurderMysteryModes> = {
   key: "murdermystery",
   id: "MURDER_MYSTERY",
   modes: MURDER_MYSTERY_MODES,
   game: {
-    tokens: { colour: "§2" },
-    prefix: { colour: "§7" },
+    tokens: { color: "§2" },
+    prefix: { color: "§7" },
     // The level panel's name for the knife, which has no leaderboard.
-    "knife.name": { colour: "§a" },
+    "knife.name": { color: "§a" },
   },
   shapes: [
-    { modes: ["overall"], stats: { ...STANDARD, heroWins: { colour: "§e" } } },
+    { modes: ["overall"], stats: { ...STANDARD, heroWins: { color: "§e" } } },
     {
       modes: ["classic", "doubleUp"],
       stats: {
         ...STANDARD,
-        fastestMurdererWin: { colour: "§c", unset: "N/A" },
-        fastestDetectiveWin: { colour: "§b", unset: "N/A" },
+        fastestMurdererWin: { color: "§c", unset: "N/A" },
+        fastestDetectiveWin: { color: "§b", unset: "N/A" },
       },
     },
     {
@@ -58,21 +58,21 @@ export const MURDER_MYSTERY: Game<MurderMysteryModes> = {
       stats: {
         ...BASE,
         // This card draws Wins in §e.
-        wins: { colour: "§e" },
-        thrownKnifeKills: { colour: "§a" },
-        trapKills: { colour: "§c" },
-        knifeKills: { colour: "§a" },
+        wins: { color: "§e" },
+        thrownKnifeKills: { color: "§a" },
+        trapKills: { color: "§c" },
+        knifeKills: { color: "§a" },
       },
     },
     {
       modes: ["infection"],
       stats: {
         ...BASE,
-        lastAliveGames: { colour: "§b" },
-        killsAsInfected: { colour: "§2" },
-        killsAsSurvivor: { colour: "§6" },
-        alphaWins: { colour: "§c" },
-        killsAsAlpha: { colour: "§4" },
+        lastAliveGames: { color: "§b" },
+        killsAsInfected: { color: "§2" },
+        killsAsSurvivor: { color: "§6" },
+        alphaWins: { color: "§c" },
+        killsAsAlpha: { color: "§4" },
       },
     },
   ],

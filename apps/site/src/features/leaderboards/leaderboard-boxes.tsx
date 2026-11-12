@@ -25,7 +25,7 @@ import type { LeaderboardPage } from "@statsify/contract";
 
 const TEXT = "text-mc-1.5 lg:text-mc-2";
 
-// Forced colours drop the boxes' fills, so there the highlighted row is outlined.
+// Forced colors drop the boxes' fills, so there the highlighted row is outlined.
 const TONE = "forced-colors:outline-2 forced-colors:outline-[color:Highlight]";
 
 /**

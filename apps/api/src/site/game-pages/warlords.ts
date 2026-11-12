@@ -8,7 +8,7 @@
 
 import type { CellSpec, GameLayout, PageSpec } from "./layout.js";
 import { type ClassMetadata, METADATA_KEY, Warlords } from "@statsify/schemas";
-import { type ColourCode, WARLORDS, WARLORDS_CLASSES, WARLORDS_SPECS, childClasses } from "@statsify/catalog";
+import { type ColorCode, WARLORDS, WARLORDS_CLASSES, WARLORDS_SPECS, childClasses } from "@statsify/catalog";
 
 /** Each class's schema type, whose metadata names its specs (`@Field` leaderboard names the bot doesn't localize). */
 const CLASS_TYPES = Object.fromEntries(childClasses(Warlords));
@@ -16,9 +16,9 @@ const CLASS_TYPES = Object.fromEntries(childClasses(Warlords));
 const specName = (mode: string, spec: string) =>
   (Reflect.getMetadata(METADATA_KEY, CLASS_TYPES[mode].prototype) as ClassMetadata)[spec].leaderboard.name;
 
-/** The card's colours: each class's column heading, and each spec's by its place (attack, defense, healer). */
-const CLASS_COLOURS: Record<string, ColourCode> = { mage: "§b", warrior: "§7", paladin: "§e", shaman: "§2" };
-const SPEC_COLOURS: ColourCode[] = ["§4", "§7", "§3"];
+/** The card's colors: each class's column heading, and each spec's by its place (attack, defense, healer). */
+const CLASS_COLORS: Record<string, ColorCode> = { mage: "§b", warrior: "§7", paladin: "§e", shaman: "§2" };
+const SPEC_COLORS: ColorCode[] = ["§4", "§7", "§3"];
 
 const COLUMN = ["wins", "damage", "healing", "prevent", "total"];
 
@@ -34,9 +34,9 @@ const TABLES: Record<string, PageSpec> = {
 const classPage = (mode: string): PageSpec => ({
   overview: ["coins", { key: "specification", at: mode, inline: true }, { key: "level", at: mode }],
   sections: [
-    { name: `${CLASS_COLOURS[mode]}Overall`, rows: [COLUMN] },
+    { name: `${CLASS_COLORS[mode]}Overall`, rows: [COLUMN] },
     ...WARLORDS_SPECS.map((spec, index) => ({
-      name: `${SPEC_COLOURS[index]}${specName(mode, spec)}`,
+      name: `${SPEC_COLORS[index]}${specName(mode, spec)}`,
       rows: [COLUMN.map((key): CellSpec => ({ key, at: `${mode}.${spec}` }))],
     })),
   ],

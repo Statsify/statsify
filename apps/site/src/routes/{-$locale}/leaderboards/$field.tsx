@@ -251,7 +251,7 @@ function LeaderboardPage({ view }: { view: LeaderboardView & { explanation?: Exp
               {t("leaderboards.gameTitle", { game: page.index.name })}
             </Link>
           )}
-          {/* What the stat is: a line that wraps reads from the start, not centred. */}
+          {/* What the stat is: a line that wraps reads from the start, not centered. */}
           {explanation && (
             <p className={`max-w-200 text-mc-gray ${READING_SIZE}`}>
               {explanation.text}{" "}
