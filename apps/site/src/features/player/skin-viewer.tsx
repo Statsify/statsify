@@ -61,10 +61,7 @@ async function canDraw3d() {
 /** The model's turn in degrees, as the renderer's camera angle: the camera turns the opposite way, in radians. */
 const cameraYaw = (yaw: number) => (-yaw * Math.PI) / 180;
 
-/**
- * Draws the skin with the wasm renderer on the canvas `canvasId`, turned to `yaw`. True once it's drawn; false while
- * it loads and where it can't draw, and the CSS model stands in.
- */
+/** True once the wasm renderer has drawn the skin; until then, and where it can't draw, the CSS model stands in. */
 function useRenderer(canvasId: string, texture: Texture | undefined, yaw: number) {
   const [drawn, setDrawn] = useState(false);
   const renderer = useRef<typeof SkinMessenger>(undefined);
@@ -84,7 +81,6 @@ function useRenderer(canvasId: string, texture: Texture | undefined, yaw: number
           .renderSkin(canvasId, texture.bytes, texture.slim, true, { yaw: cameraYaw(latestYaw.current) })
           .then(() => active && setDrawn(true));
       })
-      // Where the renderer fails, the CSS model stays.
       .catch(() => undefined);
 
     return () => {
@@ -186,8 +182,7 @@ function Model({ texture }: { texture: Texture }) {
 /**
  * The skin panel: the skin in 3D, turned by dragging (only sideways on a touch screen, so a vertical swipe still
  * scrolls) or with the arrow keys, its texture as uploaded, and a download. The player page loads this module, and the
- * texture, only when the panel opens. The skin renderer's wasm build draws the model once it has loaded; until then,
- * and where it can't draw (no WebAssembly, WebGPU or WebGL), the CSS model does, which a mouse can also tilt.
+ * texture, only when the panel opens.
  */
 export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: string }) {
   const { t } = useTranslation();
@@ -284,7 +279,7 @@ export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: 
                   <Model texture={texture} />
                 </div>
               )}
-              {/* Hidden until the skin is drawn on it. The stage takes the pointer, so a drag turns either model. */}
+              {/* The stage takes the pointer, so a drag turns either model. */}
               {texture && (
                 <canvas
                   id={canvasId}
