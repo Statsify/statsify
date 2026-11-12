@@ -57,7 +57,8 @@ const RELATIVE_TIME_UNITS = [
   ["second", differenceInSeconds, addSeconds],
 ] as const;
 
-// Counted by hand since differenceInMonths makes Jan 31 to Feb 28 a month, not 28 days
+// Counted by hand since differenceInMonths makes Jan 29 6pm to Feb 28 noon a month, because Feb 28
+// ends its month, where luxon said 29 days
 const formatRelative = (date: Date) => {
   const now = new Date();
   const [earlier, later, sign] = date < now ? [date, now, -1] : [now, date, 1];
