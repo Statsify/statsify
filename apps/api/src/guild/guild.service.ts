@@ -8,6 +8,7 @@
 
 import {
   CacheLevel,
+  GUILD_CACHE_TIME_MS,
   GuildNotFoundException,
   GuildQuery,
   PlayerNotFoundException,
@@ -23,8 +24,6 @@ import { PlayerService } from "#player";
 import { Redis } from "ioredis";
 import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
-
-const GUILD_CACHE_TIME_MS = 600_000;
 
 @Injectable()
 export class GuildService {
@@ -157,7 +156,6 @@ export class GuildService {
       guild.scaledMonthly += scaled;
     }
 
-    // Cache guilds responses for 10 minutes
     guild.expiresAt = Date.now() + GUILD_CACHE_TIME_MS;
 
     const flatGuild = flatten(guild);

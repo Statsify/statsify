@@ -34,6 +34,9 @@ export enum CacheLevel {
   LIVE = "LIVE"
 }
 
+export const PLAYER_CACHE_TIME_MS = 120_000;
+export const GUILD_CACHE_TIME_MS = 600_000;
+
 export enum LeaderboardQuery {
   PAGE = "page",
   INPUT = "input",

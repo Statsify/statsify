@@ -7,7 +7,7 @@
  */
 
 import { AxiosError } from "axios";
-import { ButtonBuilder, LocalizeFunction } from "#messages";
+import { ButtonBuilder, type IMessage, LocalizeFunction } from "#messages";
 import { ButtonStyle } from "discord-api-types/v10";
 import {
   CacheLevel,
@@ -344,6 +344,22 @@ export class ApiService extends StatsifyApiService {
       (t) => t("errors.hypixelRateLimited.title"),
       (t) => t("errors.hypixelRateLimited.description", { time })
     );
+  }
+
+  /**
+   * @param cacheTimeMs The cache time behind expiresAt. Sessions leave it out, since their expiresAt is a difference
+   */
+  public hypixelBusyNotice(
+    { hypixelUnavailable, expiresAt }: { hypixelUnavailable?: boolean; expiresAt: number },
+    cacheTimeMs?: number
+  ): IMessage | undefined {
+    if (!hypixelUnavailable) return;
+    if (cacheTimeMs === undefined) return { content: (t) => t("hypixelBusy.noAge") };
+
+    const age = Math.max(Date.now() - (expiresAt - cacheTimeMs), 1000);
+    const time = formatTime(age, { short: false, entries: 1 });
+
+    return { content: (t) => t("hypixelBusy.age", { time }) };
   }
 
   private isDiscordId(tag: string) {

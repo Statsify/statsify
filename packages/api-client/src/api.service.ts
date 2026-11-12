@@ -64,11 +64,13 @@ export class ApiService {
     });
   }
 
-  public getCachedPlayer(tag: string, cache: CacheLevel) {
-    return this.requestKey<GetPlayerResponse, "player">("/player", "player", {
+  public async getCachedPlayer(tag: string, cache: CacheLevel) {
+    const { player, hypixelUnavailable } = await this.request<GetPlayerResponse>("/player", {
       player: tag,
       cache,
     });
+
+    return Object.assign(player, { hypixelUnavailable });
   }
 
   public deletePlayer(tag: string) {
@@ -113,11 +115,13 @@ export class ApiService {
     );
   }
 
-  public getGuild(tag: string, type: GuildQuery) {
-    return this.requestKey<GetGuildResponse, "guild">("/guild", "guild", {
+  public async getGuild(tag: string, type: GuildQuery) {
+    const { guild, hypixelUnavailable } = await this.request<GetGuildResponse>("/guild", {
       guild: tag,
       type,
     });
+
+    return Object.assign(guild, { hypixelUnavailable });
   }
 
   public getGuildLeaderboard(
@@ -181,11 +185,13 @@ export class ApiService {
     });
   }
 
-  public getPlayerSession(tag: string, userUuid?: string) {
-    return this.requestKey<GetSessionResponse, "player">("/session", "player", {
+  public async getPlayerSession(tag: string, userUuid?: string) {
+    const { player, hypixelUnavailable } = await this.request<GetSessionResponse>("/session", {
       player: tag,
       userUuid,
     });
+
+    return Object.assign(player, { hypixelUnavailable });
   }
 
   public resetPlayerSession(
