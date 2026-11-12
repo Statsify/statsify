@@ -1,0 +1,1802 @@
+{
+  "collections": [
+    [
+      "INK_SACK-3",
+      "Cocoa Beans"
+    ],
+    [
+      "MOONFLOWER",
+      "Moonflower"
+    ],
+    [
+      "CARROT_ITEM",
+      "Carrot"
+    ],
+    [
+      "DOUBLE_PLANT",
+      "Sunflower"
+    ],
+    [
+      "WILD_ROSE",
+      "Wild Rose"
+    ],
+    [
+      "CACTUS",
+      "Cactus"
+    ],
+    [
+      "RAW_CHICKEN",
+      "Raw Chicken"
+    ],
+    [
+      "SUGAR_CANE",
+      "Sugar Cane"
+    ],
+    [
+      "PUMPKIN",
+      "Pumpkin"
+    ],
+    [
+      "WHEAT",
+      "Wheat"
+    ],
+    [
+      "SEEDS",
+      "Seeds"
+    ],
+    [
+      "MUSHROOM_COLLECTION",
+      "Mushroom"
+    ],
+    [
+      "RABBIT",
+      "Raw Rabbit"
+    ],
+    [
+      "NETHER_STALK",
+      "Nether Wart"
+    ],
+    [
+      "MUTTON",
+      "Raw Mutton"
+    ],
+    [
+      "MELON",
+      "Melon Slice"
+    ],
+    [
+      "POTATO_ITEM",
+      "Potato"
+    ],
+    [
+      "LEATHER",
+      "Leather"
+    ],
+    [
+      "PORK",
+      "Raw Porkchop"
+    ],
+    [
+      "FEATHER",
+      "Feather"
+    ],
+    [
+      "INK_SACK-4",
+      "Lapis Lazuli"
+    ],
+    [
+      "REDSTONE",
+      "Redstone Dust"
+    ],
+    [
+      "UMBER",
+      "Umber"
+    ],
+    [
+      "COAL",
+      "Coal"
+    ],
+    [
+      "MYCEL",
+      "Mycelium"
+    ],
+    [
+      "ENDER_STONE",
+      "End Stone"
+    ],
+    [
+      "QUARTZ",
+      "Nether Quartz"
+    ],
+    [
+      "SAND",
+      "Sand"
+    ],
+    [
+      "IRON_INGOT",
+      "Iron Ingot"
+    ],
+    [
+      "GEMSTONE_COLLECTION",
+      "Gemstone"
+    ],
+    [
+      "TUNGSTEN",
+      "Tungsten"
+    ],
+    [
+      "OBSIDIAN",
+      "Obsidian"
+    ],
+    [
+      "DIAMOND",
+      "Diamond"
+    ],
+    [
+      "COBBLESTONE",
+      "Cobblestone"
+    ],
+    [
+      "GLOWSTONE_DUST",
+      "Glowstone Dust"
+    ],
+    [
+      "GOLD_INGOT",
+      "Gold Ingot"
+    ],
+    [
+      "GRAVEL",
+      "Gravel"
+    ],
+    [
+      "HARD_STONE",
+      "Hard Stone"
+    ],
+    [
+      "MITHRIL_ORE",
+      "Mithril"
+    ],
+    [
+      "EMERALD",
+      "Emerald"
+    ],
+    [
+      "SAND-1",
+      "Red Sand"
+    ],
+    [
+      "ICE",
+      "Ice"
+    ],
+    [
+      "GLACITE",
+      "Glacite"
+    ],
+    [
+      "SULPHUR_ORE",
+      "Sulphur"
+    ],
+    [
+      "NETHERRACK",
+      "Netherrack"
+    ],
+    [
+      "ENDER_PEARL",
+      "Ender Pearl"
+    ],
+    [
+      "CHILI_PEPPER",
+      "Chili Pepper"
+    ],
+    [
+      "SLIME_BALL",
+      "Slimeball"
+    ],
+    [
+      "MAGMA_CREAM",
+      "Magma Cream"
+    ],
+    [
+      "GHAST_TEAR",
+      "Ghast Tear"
+    ],
+    [
+      "SULPHUR",
+      "Gunpowder"
+    ],
+    [
+      "ROTTEN_FLESH",
+      "Rotten Flesh"
+    ],
+    [
+      "SPIDER_EYE",
+      "Spider Eye"
+    ],
+    [
+      "BONE",
+      "Bone"
+    ],
+    [
+      "BLAZE_ROD",
+      "Blaze Rod"
+    ],
+    [
+      "STRING",
+      "String"
+    ],
+    [
+      "SEA_LUMIES",
+      "Sea Lumies"
+    ],
+    [
+      "LOG_2",
+      "Acacia Log"
+    ],
+    [
+      "RUBY_VEILSHROOM",
+      "Ruby Veilshroom"
+    ],
+    [
+      "LOG-1",
+      "Spruce Log"
+    ],
+    [
+      "VINESAP",
+      "Vinesap"
+    ],
+    [
+      "LOG-3",
+      "Jungle Log"
+    ],
+    [
+      "LOG-2",
+      "Birch Log"
+    ],
+    [
+      "LUSHLILAC",
+      "Lushlilac"
+    ],
+    [
+      "MANGROVE_LOG",
+      "Mangrove Log"
+    ],
+    [
+      "HELIX_LOG",
+      "Helix Log"
+    ],
+    [
+      "LOG",
+      "Oak Log"
+    ],
+    [
+      "HONEYCOMB",
+      "Honeycomb"
+    ],
+    [
+      "FIG_LOG",
+      "Fig Log"
+    ],
+    [
+      "TENDER_WOOD",
+      "Tender Wood"
+    ],
+    [
+      "LOG_2-1",
+      "Dark Oak Log"
+    ],
+    [
+      "WATER_LILY",
+      "Lily Pad"
+    ],
+    [
+      "PRISMARINE_SHARD",
+      "Prismarine Shard"
+    ],
+    [
+      "INK_SACK",
+      "Ink Sac"
+    ],
+    [
+      "RAW_FISH",
+      "Raw Cod"
+    ],
+    [
+      "RAW_FISH-3",
+      "Pufferfish"
+    ],
+    [
+      "LOTUS",
+      "Lotus"
+    ],
+    [
+      "RAW_FISH-2",
+      "Tropical Fish"
+    ],
+    [
+      "RAW_FISH-1",
+      "Raw Salmon"
+    ],
+    [
+      "MAGMA_FISH",
+      "Magmafish"
+    ],
+    [
+      "PRISMARINE_CRYSTALS",
+      "Prismarine Crystals"
+    ],
+    [
+      "CLAY_BALL",
+      "Clay Ball"
+    ],
+    [
+      "SPONGE",
+      "Sponge"
+    ],
+    [
+      "WILTED_BERBERIS",
+      "Wilted Berberis"
+    ],
+    [
+      "METAL_HEART",
+      "Living Metal Heart"
+    ],
+    [
+      "CADUCOUS_STEM",
+      "Caducous Stem"
+    ],
+    [
+      "AGARICUS_CAP",
+      "Agaricus Cap"
+    ],
+    [
+      "HEMOVIBE",
+      "Hemovibe"
+    ],
+    [
+      "HALF_EATEN_CARROT",
+      "Half-Eaten Carrot"
+    ],
+    [
+      "TIMITE",
+      "Timite"
+    ]
+  ],
+  "bestiary": [
+    [
+      "private_island_bat",
+      "Bat (Private Island)"
+    ],
+    [
+      "private_island_creeper",
+      "Creeper (Private Island)"
+    ],
+    [
+      "private_island_enderman",
+      "Enderman (Private Island)"
+    ],
+    [
+      "private_island_skeleton",
+      "Skeleton (Private Island)"
+    ],
+    [
+      "private_island_slime",
+      "Slime (Private Island)"
+    ],
+    [
+      "private_island_spider",
+      "Spider (Private Island)"
+    ],
+    [
+      "private_island_witch",
+      "Witch (Private Island)"
+    ],
+    [
+      "private_island_zombie",
+      "Zombie (Private Island)"
+    ],
+    [
+      "hub_crypt_ghoul",
+      "Crypt Ghoul (Hub)"
+    ],
+    [
+      "hub_golden_ghoul",
+      "Golden Ghoul (Hub)"
+    ],
+    [
+      "hub_graveyard_zombie",
+      "Graveyard Zombie (Hub)"
+    ],
+    [
+      "hub_old_wolf",
+      "Old Wolf (Hub)"
+    ],
+    [
+      "hub_shiny_pig",
+      "Shiny Pig (Hub)"
+    ],
+    [
+      "hub_wolf",
+      "Wolf (Hub)"
+    ],
+    [
+      "hub_zombie_villager",
+      "Zombie Villager (Hub)"
+    ],
+    [
+      "the_farming_islands_chicken",
+      "Chicken (The Farming Islands)"
+    ],
+    [
+      "the_farming_islands_cow",
+      "Cow (The Farming Islands)"
+    ],
+    [
+      "the_farming_islands_mushroom_cow",
+      "Mushroom Cow (The Farming Islands)"
+    ],
+    [
+      "the_farming_islands_pig",
+      "Pig (The Farming Islands)"
+    ],
+    [
+      "the_farming_islands_rabbit",
+      "Rabbit (The Farming Islands)"
+    ],
+    [
+      "the_farming_islands_sheep",
+      "Sheep (The Farming Islands)"
+    ],
+    [
+      "spider_s_den_arachne",
+      "Arachne (Spider's Den)"
+    ],
+    [
+      "spider_s_den_arachne_s_brood",
+      "Arachne's Brood (Spider's Den)"
+    ],
+    [
+      "spider_s_den_arachne_s_keeper",
+      "Arachne's Keeper (Spider's Den)"
+    ],
+    [
+      "spider_s_den_broodmother",
+      "Broodmother (Spider's Den)"
+    ],
+    [
+      "spider_s_den_dasher_spider",
+      "Dasher Spider (Spider's Den)"
+    ],
+    [
+      "spider_s_den_flint_skeleton",
+      "Flint Skeleton (Spider's Den)"
+    ],
+    [
+      "spider_s_den_rain_slime",
+      "Rain Slime (Spider's Den)"
+    ],
+    [
+      "spider_s_den_silverfish",
+      "Silverfish (Spider's Den)"
+    ],
+    [
+      "spider_s_den_spider_jockey",
+      "Spider Jockey (Spider's Den)"
+    ],
+    [
+      "spider_s_den_splitter_spider",
+      "Splitter Spider (Spider's Den)"
+    ],
+    [
+      "spider_s_den_voracious_spider",
+      "Voracious Spider (Spider's Den)"
+    ],
+    [
+      "spider_s_den_weaver_spider",
+      "Weaver Spider (Spider's Den)"
+    ],
+    [
+      "the_end_dragon",
+      "Dragon (The End)"
+    ],
+    [
+      "the_end_enderman",
+      "Enderman (The End)"
+    ],
+    [
+      "the_end_endermite",
+      "Endermite (The End)"
+    ],
+    [
+      "the_end_end_stone_protector",
+      "End Stone Protector (The End)"
+    ],
+    [
+      "the_end_obsidian_defender",
+      "Obsidian Defender (The End)"
+    ],
+    [
+      "the_end_voidling_extremist",
+      "Voidling Extremist (The End)"
+    ],
+    [
+      "the_end_voidling_fanatic",
+      "Voidling Fanatic (The End)"
+    ],
+    [
+      "the_end_seer",
+      "Seer (The End)"
+    ],
+    [
+      "the_end_zealot",
+      "Zealot (The End)"
+    ],
+    [
+      "crimson_isle_ashfang",
+      "Ashfang (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_barbarian_duke_x",
+      "Barbarian Duke X (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_bladesoul",
+      "Bladesoul (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_blaze",
+      "Blaze (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_flaming_spider",
+      "Flaming Spider (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_flare",
+      "Flare (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_ghast",
+      "Ghast (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_kada_knight",
+      "Kada Knight (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_mage_outlaw",
+      "Mage Outlaw (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_magma_boss",
+      "Magma Boss (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_magma_cube",
+      "Magma Cube (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_magma_cube_rider",
+      "Magma Cube Rider (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_matcho",
+      "Matcho (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_millennia_aged_blaze",
+      "Millennia-Aged Blaze (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_mushroom_bull",
+      "Mushroom Bull (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_smoldering_blaze",
+      "Smoldering Blaze (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_tentacle",
+      "Tentacle (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_vanquisher",
+      "Vanquisher (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_wither_skeleton",
+      "Wither Skeleton (Crimson Isle)"
+    ],
+    [
+      "crimson_isle_wither_spectre",
+      "Wither Spectre (Crimson Isle)"
+    ],
+    [
+      "deep_caverns_emerald_slime",
+      "Emerald Slime (Deep Caverns)"
+    ],
+    [
+      "deep_caverns_lapis_zombie",
+      "Lapis Zombie (Deep Caverns)"
+    ],
+    [
+      "deep_caverns_miner_skeleton",
+      "Miner Skeleton (Deep Caverns)"
+    ],
+    [
+      "deep_caverns_miner_zombie",
+      "Miner Zombie (Deep Caverns)"
+    ],
+    [
+      "deep_caverns_redstone_pigman",
+      "Redstone Pigman (Deep Caverns)"
+    ],
+    [
+      "deep_caverns_sneaky_creeper",
+      "Sneaky Creeper (Deep Caverns)"
+    ],
+    [
+      "dwarven_mines_diamond_goblin",
+      "Diamond Goblin (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_ghost",
+      "Ghost (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_glacite_bowman",
+      "Glacite Bowman (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_glacite_caver",
+      "Glacite Caver (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_glacite_mage",
+      "Glacite Mage (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_glacite_mutt",
+      "Glacite Mutt (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_glacite_walker",
+      "Glacite Walker (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_goblin",
+      "Goblin (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_goblin_raiders",
+      "Goblin Raiders (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_golden_goblin",
+      "Golden Goblin (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_littlefoot",
+      "Littlefoot (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_powder_ghast",
+      "Powder Ghast (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_star_sentry",
+      "Star Sentry (Dwarven Mines)"
+    ],
+    [
+      "dwarven_mines_treasure_hoarder",
+      "Treasure Hoarder (Dwarven Mines)"
+    ],
+    [
+      "crystal_hollows_automaton",
+      "Automaton (Crystal Hollows)"
+    ],
+    [
+      "crystal_hollows_bal",
+      "Bal (Crystal Hollows)"
+    ],
+    [
+      "crystal_hollows_boss_corleone",
+      "Boss Corleone (Crystal Hollows)"
+    ],
+    [
+      "crystal_hollows_butterfly",
+      "Butterfly (Crystal Hollows)"
+    ],
+    [
+      "crystal_hollows_grunt",
+      "Grunt (Crystal Hollows)"
+    ],
+    [
+      "crystal_hollows_key_guardian",
+      "Key Guardian (Crystal Hollows)"
+    ],
+    [
+      "crystal_hollows_sludge",
+      "Sludge (Crystal Hollows)"
+    ],
+    [
+      "crystal_hollows_thyst",
+      "Thyst (Crystal Hollows)"
+    ],
+    [
+      "crystal_hollows_stoneworm",
+      "Stoneworm (Crystal Hollows)"
+    ],
+    [
+      "crystal_hollows_yog",
+      "Yog (Crystal Hollows)"
+    ],
+    [
+      "the_park_howling_spirit",
+      "Howling Spirit (The Park)"
+    ],
+    [
+      "the_park_pack_spirit",
+      "Pack Spirit (The Park)"
+    ],
+    [
+      "the_park_soul_of_the_alpha",
+      "Soul of the Alpha (The Park)"
+    ],
+    [
+      "moonglade_marsh_azure",
+      "Azure (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_bambuleaf",
+      "Bambuleaf (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_birries",
+      "Birries (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_bogged",
+      "Bogged (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_chill",
+      "Chill (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_cod",
+      "Cod (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_coralot",
+      "Coralot (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_dreadwing",
+      "Dreadwing (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_ent",
+      "Ent (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_hewver",
+      "Hewver (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_hideonleaf",
+      "Hideonleaf (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_honeyhog",
+      "Honeyhog (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_honeymite",
+      "Honeymite (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_invisibug",
+      "Invisibug (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_joydive",
+      "Joydive (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_lumisquid",
+      "Lumisquid (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_mochibear",
+      "Mochibear (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_mossybit",
+      "Mossybit (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_murkbat",
+      "Murkbat (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_nessie",
+      "Nessie (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_phanflare",
+      "Phanflare (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_phanpyre",
+      "Phanpyre (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_salmon",
+      "Salmon (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_shellwise",
+      "Shellwise (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_spike",
+      "Spike (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_stag_beetle",
+      "Stag Beetle (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_stridersurfer",
+      "Stridersurfer (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_tadgang",
+      "Tadgang (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_the_loch_emperor",
+      "The Loch Emperor (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_tidetot",
+      "Tidetot (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_verdant",
+      "Verdant (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_wetwing",
+      "Wetwing (Moonglade Marsh)"
+    ],
+    [
+      "moonglade_marsh_woodlouse",
+      "Woodlouse (Moonglade Marsh)"
+    ],
+    [
+      "spooky_festival_crazy_witch",
+      "Crazy Witch (Spooky Festival)"
+    ],
+    [
+      "spooky_festival_headless_horseman",
+      "Headless Horseman (Spooky Festival)"
+    ],
+    [
+      "spooky_festival_phantom_spirit",
+      "Phantom Spirit (Spooky Festival)"
+    ],
+    [
+      "spooky_festival_scary_jerry",
+      "Scary Jerry (Spooky Festival)"
+    ],
+    [
+      "spooky_festival_trick_or_treater",
+      "Trick or Treater (Spooky Festival)"
+    ],
+    [
+      "spooky_festival_wither_gourd",
+      "Wither Gourd (Spooky Festival)"
+    ],
+    [
+      "spooky_festival_wraith",
+      "Wraith (Spooky Festival)"
+    ],
+    [
+      "mythological_creatures_gaia_construct",
+      "Gaia Construct (Mythological Creatures)"
+    ],
+    [
+      "mythological_creatures_minos_champion",
+      "Minos Champion (Mythological Creatures)"
+    ],
+    [
+      "mythological_creatures_minos_hunter",
+      "Minos Hunter (Mythological Creatures)"
+    ],
+    [
+      "mythological_creatures_minos_inquisitor",
+      "Minos Inquisitor (Mythological Creatures)"
+    ],
+    [
+      "mythological_creatures_minotaur",
+      "Minotaur (Mythological Creatures)"
+    ],
+    [
+      "mythological_creatures_siamese_lynx",
+      "Siamese Lynx (Mythological Creatures)"
+    ],
+    [
+      "mythological_creatures_cretan_bull",
+      "Cretan Bull (Mythological Creatures)"
+    ],
+    [
+      "mythological_creatures_harpy",
+      "Harpy (Mythological Creatures)"
+    ],
+    [
+      "mythological_creatures_king_minos",
+      "King Minos (Mythological Creatures)"
+    ],
+    [
+      "mythological_creatures_manticore",
+      "Manticore (Mythological Creatures)"
+    ],
+    [
+      "mythological_creatures_sphinx",
+      "Sphinx (Mythological Creatures)"
+    ],
+    [
+      "mythological_creatures_stranded_nymph",
+      "Stranded Nymph (Mythological Creatures)"
+    ],
+    [
+      "jerry_blue_jerry",
+      "Blue Jerry (Jerry)"
+    ],
+    [
+      "jerry_golden_jerry",
+      "Golden Jerry (Jerry)"
+    ],
+    [
+      "jerry_green_jerry",
+      "Green Jerry (Jerry)"
+    ],
+    [
+      "jerry_purple_jerry",
+      "Purple Jerry (Jerry)"
+    ],
+    [
+      "kuudra_blazing_golem",
+      "Blazing Golem (Kuudra)"
+    ],
+    [
+      "kuudra_blight",
+      "Blight (Kuudra)"
+    ],
+    [
+      "kuudra_dropship",
+      "Dropship (Kuudra)"
+    ],
+    [
+      "kuudra_explosive_imp",
+      "Explosive Imp (Kuudra)"
+    ],
+    [
+      "kuudra_inferno_magma_cube",
+      "Inferno Magma Cube (Kuudra)"
+    ],
+    [
+      "kuudra_kuudra_berserker",
+      "Kuudra Berserker (Kuudra)"
+    ],
+    [
+      "kuudra_kuudra_follower",
+      "Kuudra Follower (Kuudra)"
+    ],
+    [
+      "kuudra_kuudra_knocker",
+      "Kuudra Knocker (Kuudra)"
+    ],
+    [
+      "kuudra_kuudra_landmine",
+      "Kuudra Landmine (Kuudra)"
+    ],
+    [
+      "kuudra_kuudra_slasher",
+      "Kuudra Slasher (Kuudra)"
+    ],
+    [
+      "kuudra_magma_follower",
+      "Magma Follower (Kuudra)"
+    ],
+    [
+      "kuudra_wandering_blaze",
+      "Wandering Blaze (Kuudra)"
+    ],
+    [
+      "kuudra_wither_sentry",
+      "Wither Sentry (Kuudra)"
+    ],
+    [
+      "fishing_abyssal_miner",
+      "Abyssal Miner (Fishing)"
+    ],
+    [
+      "fishing_agarimoo",
+      "Agarimoo (Fishing)"
+    ],
+    [
+      "fishing_blue_ringed_octopus",
+      "Blue Ringed Octopus (Fishing)"
+    ],
+    [
+      "fishing_carrot_king",
+      "Carrot King (Fishing)"
+    ],
+    [
+      "fishing_catfish",
+      "Catfish (Fishing)"
+    ],
+    [
+      "fishing_deep_sea_protector",
+      "Deep Sea Protector (Fishing)"
+    ],
+    [
+      "fishing_frog_man",
+      "Frog Man (Fishing)"
+    ],
+    [
+      "fishing_guardian_defender",
+      "Guardian Defender (Fishing)"
+    ],
+    [
+      "fishing_manta_ray",
+      "Manta Ray (Fishing)"
+    ],
+    [
+      "fishing_mithril_grubber",
+      "Mithril Grubber (Fishing)"
+    ],
+    [
+      "fishing_inkling",
+      "Inkling (Fishing)"
+    ],
+    [
+      "fishing_oasis_rabbit",
+      "Oasis Rabbit (Fishing)"
+    ],
+    [
+      "fishing_oasis_sheep",
+      "Oasis Sheep (Fishing)"
+    ],
+    [
+      "fishing_poisoned_water_worm",
+      "Poisoned Water Worm (Fishing)"
+    ],
+    [
+      "fishing_rider_of_the_deep",
+      "Rider of the Deep (Fishing)"
+    ],
+    [
+      "fishing_sea_archer",
+      "Sea Archer (Fishing)"
+    ],
+    [
+      "fishing_sea_leech",
+      "Sea Leech (Fishing)"
+    ],
+    [
+      "fishing_sea_walker",
+      "Sea Walker (Fishing)"
+    ],
+    [
+      "fishing_sea_witch",
+      "Sea Witch (Fishing)"
+    ],
+    [
+      "fishing_snapping_turtle",
+      "Snapping Turtle (Fishing)"
+    ],
+    [
+      "fishing_squid",
+      "Squid (Fishing)"
+    ],
+    [
+      "fishing_water_hydra",
+      "Water Hydra (Fishing)"
+    ],
+    [
+      "fishing_water_worm",
+      "Water Worm (Fishing)"
+    ],
+    [
+      "fishing_wiki_tiki",
+      "Wiki Tiki (Fishing)"
+    ],
+    [
+      "lava_fiery_scuttler",
+      "Fiery Scuttler (Lava)"
+    ],
+    [
+      "lava_fire_eel",
+      "Fire Eel (Lava)"
+    ],
+    [
+      "lava_fireproof_witch",
+      "Fireproof Witch (Lava)"
+    ],
+    [
+      "lava_flaming_worm",
+      "Flaming Worm (Lava)"
+    ],
+    [
+      "lava_fried_chicken",
+      "Fried Chicken (Lava)"
+    ],
+    [
+      "lava_lava_blaze",
+      "Lava Blaze (Lava)"
+    ],
+    [
+      "lava_lava_flame",
+      "Lava Flame (Lava)"
+    ],
+    [
+      "lava_lava_leech",
+      "Lava Leech (Lava)"
+    ],
+    [
+      "lava_lava_pigman",
+      "Lava Pigman (Lava)"
+    ],
+    [
+      "lava_lord_jawbus",
+      "Lord Jawbus (Lava)"
+    ],
+    [
+      "lava_magma_pillar",
+      "Magma Pillar (Lava)"
+    ],
+    [
+      "lava_magma_slug",
+      "Magma Slug (Lava)"
+    ],
+    [
+      "lava_moogma",
+      "Moogma (Lava)"
+    ],
+    [
+      "lava_plhlegblast",
+      "Plhlegblast (Lava)"
+    ],
+    [
+      "lava_pyroclastic_worm",
+      "Pyroclastic Worm (Lava)"
+    ],
+    [
+      "lava_ragnarok",
+      "Ragnarok (Lava)"
+    ],
+    [
+      "lava_taurus",
+      "Taurus (Lava)"
+    ],
+    [
+      "lava_thunder",
+      "Thunder (Lava)"
+    ],
+    [
+      "lava_volcanic_snail",
+      "Volcanic Snail (Lava)"
+    ],
+    [
+      "spooky_festival_grim_reaper",
+      "Grim Reaper (Spooky Festival)"
+    ],
+    [
+      "spooky_festival_jumpin_jack",
+      "Jumpin' Jack (Spooky Festival)"
+    ],
+    [
+      "spooky_festival_nightmare",
+      "Nightmare (Spooky Festival)"
+    ],
+    [
+      "spooky_festival_phantom_fisher",
+      "Phantom Fisher (Spooky Festival)"
+    ],
+    [
+      "spooky_festival_scarecrow",
+      "Scarecrow (Spooky Festival)"
+    ],
+    [
+      "spooky_festival_werewolf",
+      "Werewolf (Spooky Festival)"
+    ],
+    [
+      "fishing_festival_blue_shark",
+      "Blue Shark (Fishing Festival)"
+    ],
+    [
+      "fishing_festival_great_white_shark",
+      "Great White Shark (Fishing Festival)"
+    ],
+    [
+      "fishing_festival_nurse_shark",
+      "Nurse Shark (Fishing Festival)"
+    ],
+    [
+      "fishing_festival_tiger_shark",
+      "Tiger Shark (Fishing Festival)"
+    ],
+    [
+      "winter_frosty",
+      "Frosty (Winter)"
+    ],
+    [
+      "winter_frozen_steve",
+      "Frozen Steve (Winter)"
+    ],
+    [
+      "winter_grinch",
+      "Grinch (Winter)"
+    ],
+    [
+      "winter_nutcracker",
+      "Nutcracker (Winter)"
+    ],
+    [
+      "winter_reindrake",
+      "Reindrake (Winter)"
+    ],
+    [
+      "winter_yeti",
+      "Yeti (Winter)"
+    ],
+    [
+      "backwater_bayou_alligator",
+      "Alligator (Backwater Bayou)"
+    ],
+    [
+      "backwater_bayou_banshee",
+      "Banshee (Backwater Bayou)"
+    ],
+    [
+      "backwater_bayou_bayou_sludge",
+      "Bayou Sludge (Backwater Bayou)"
+    ],
+    [
+      "backwater_bayou_dumpster_diver",
+      "Dumpster Diver (Backwater Bayou)"
+    ],
+    [
+      "backwater_bayou_titanoboa",
+      "Titanoboa (Backwater Bayou)"
+    ],
+    [
+      "backwater_bayou_trash_gobbler",
+      "Trash Gobbler (Backwater Bayou)"
+    ],
+    [
+      "catacombs_angry_archaeologist",
+      "Angry Archaeologist (Catacombs)"
+    ],
+    [
+      "catacombs_bat",
+      "Bat (Catacombs)"
+    ],
+    [
+      "catacombs_cellar_spider",
+      "Cellar Spider (Catacombs)"
+    ],
+    [
+      "catacombs_lonely_spider",
+      "Lonely Spider (Catacombs)"
+    ],
+    [
+      "catacombs_crypt_dreadlord",
+      "Crypt Dreadlord (Catacombs)"
+    ],
+    [
+      "catacombs_crypt_lurker",
+      "Crypt Lurker (Catacombs)"
+    ],
+    [
+      "catacombs_crypt_souleater",
+      "Crypt Souleater (Catacombs)"
+    ],
+    [
+      "catacombs_fels",
+      "Fels (Catacombs)"
+    ],
+    [
+      "catacombs_golem",
+      "Golem (Catacombs)"
+    ],
+    [
+      "catacombs_king_midas",
+      "King Midas (Catacombs)"
+    ],
+    [
+      "catacombs_lost_adventurer",
+      "Lost Adventurer (Catacombs)"
+    ],
+    [
+      "catacombs_mimic",
+      "Mimic (Catacombs)"
+    ],
+    [
+      "catacombs_scared_skeleton",
+      "Scared Skeleton (Catacombs)"
+    ],
+    [
+      "catacombs_shadow_assassin",
+      "Shadow Assassin (Catacombs)"
+    ],
+    [
+      "catacombs_skeleton_grunt",
+      "Skeleton Grunt (Catacombs)"
+    ],
+    [
+      "catacombs_skeleton_lord",
+      "Skeleton Lord (Catacombs)"
+    ],
+    [
+      "catacombs_skeleton_master",
+      "Skeleton Master (Catacombs)"
+    ],
+    [
+      "catacombs_skeleton_soldier",
+      "Skeleton Soldier (Catacombs)"
+    ],
+    [
+      "catacombs_skeletor",
+      "Skeletor (Catacombs)"
+    ],
+    [
+      "catacombs_sniper",
+      "Sniper (Catacombs)"
+    ],
+    [
+      "catacombs_super_archer",
+      "Super Archer (Catacombs)"
+    ],
+    [
+      "catacombs_super_tank_zombie",
+      "Super Tank Zombie (Catacombs)"
+    ],
+    [
+      "catacombs_tank_zombie",
+      "Tank Zombie (Catacombs)"
+    ],
+    [
+      "catacombs_terracotta",
+      "Terracotta (Catacombs)"
+    ],
+    [
+      "catacombs_undead",
+      "Undead (Catacombs)"
+    ],
+    [
+      "catacombs_undead_skeleton",
+      "Undead Skeleton (Catacombs)"
+    ],
+    [
+      "catacombs_wither_guard",
+      "Wither Guard (Catacombs)"
+    ],
+    [
+      "catacombs_wither_husk",
+      "Wither Husk (Catacombs)"
+    ],
+    [
+      "catacombs_wither_miner",
+      "Wither Miner (Catacombs)"
+    ],
+    [
+      "catacombs_withermancer",
+      "Withermancer (Catacombs)"
+    ],
+    [
+      "catacombs_zombie_commander",
+      "Zombie Commander (Catacombs)"
+    ],
+    [
+      "catacombs_zombie_grunt",
+      "Zombie Grunt (Catacombs)"
+    ],
+    [
+      "catacombs_zombie_knight",
+      "Zombie Knight (Catacombs)"
+    ],
+    [
+      "catacombs_zombie_lord",
+      "Zombie Lord (Catacombs)"
+    ],
+    [
+      "catacombs_zombie_soldier",
+      "Zombie Soldier (Catacombs)"
+    ],
+    [
+      "garden_beetle",
+      "Beetle (Garden)"
+    ],
+    [
+      "garden_cricket",
+      "Cricket (Garden)"
+    ],
+    [
+      "garden_earthworm",
+      "Earthworm (Garden)"
+    ],
+    [
+      "garden_dragonfly",
+      "Dragonfly (Garden)"
+    ],
+    [
+      "garden_field_mouse",
+      "Field Mouse (Garden)"
+    ],
+    [
+      "garden_fly",
+      "Fly (Garden)"
+    ],
+    [
+      "garden_locust",
+      "Locust (Garden)"
+    ],
+    [
+      "garden_lunar_moth",
+      "Lunar Moth (Garden)"
+    ],
+    [
+      "garden_mite",
+      "Mite (Garden)"
+    ],
+    [
+      "garden_mosquito",
+      "Mosquito (Garden)"
+    ],
+    [
+      "garden_moth",
+      "Moth (Garden)"
+    ],
+    [
+      "garden_praying_mantis",
+      "Praying Mantis (Garden)"
+    ],
+    [
+      "garden_firefly",
+      "Firefly (Garden)"
+    ],
+    [
+      "garden_rat",
+      "Rat (Garden)"
+    ],
+    [
+      "garden_slug",
+      "Slug (Garden)"
+    ],
+    [
+      "garden_timestalk_clone",
+      "Timestalk Clone (Garden)"
+    ],
+    [
+      "garden_zombuddy",
+      "Zombuddy (Garden)"
+    ],
+    [
+      "lotus_atoll_atoll_croaker",
+      "Atoll Croaker (Lotus Atoll)"
+    ],
+    [
+      "lotus_atoll_drowned_captain",
+      "Drowned Captain (Lotus Atoll)"
+    ],
+    [
+      "lotus_atoll_flipflopper",
+      "Flipflopper (Lotus Atoll)"
+    ],
+    [
+      "lotus_atoll_frog_prince",
+      "Frog Prince (Lotus Atoll)"
+    ],
+    [
+      "lotus_atoll_lotum",
+      "Lotum (Lotus Atoll)"
+    ],
+    [
+      "lotus_atoll_lotus_guardian",
+      "Lotus Guardian (Lotus Atoll)"
+    ],
+    [
+      "lotus_atoll_lotusfish",
+      "Lotusfish (Lotus Atoll)"
+    ],
+    [
+      "lotus_atoll_puddle_jumper",
+      "Puddle Jumper (Lotus Atoll)"
+    ],
+    [
+      "lotus_atoll_seashine",
+      "Seashine (Lotus Atoll)"
+    ],
+    [
+      "lotus_atoll_tewtil",
+      "Tewtil (Lotus Atoll)"
+    ],
+    [
+      "lotus_atoll_gorf",
+      "gorF (Lotus Atoll)"
+    ],
+    [
+      "torrhus_canyon_ant",
+      "Ant (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_beeheemoth",
+      "Beeheemoth (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_blue_jay",
+      "Blue Jay (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_brineling",
+      "Brineling (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_bunbun",
+      "Bunbun (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_drybark",
+      "Drybark (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_dustybit",
+      "Dustybit (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_ember",
+      "Ember (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_firefox",
+      "Firefox (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_giant_isopod",
+      "Giant Isopod (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_grizzly_bear",
+      "Grizzly Bear (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_groundhog",
+      "Groundhog (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_haggard",
+      "Haggard (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_hideonsun",
+      "Hideonsun (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_hivethief",
+      "Hivethief (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_honeybuzz",
+      "Honeybuzz (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_mountain_goat",
+      "Mountain Goat (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_pangolin",
+      "Pangolin (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_parched",
+      "Parched (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_pollendart",
+      "Pollendart (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_puck",
+      "Puck (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_queen_ant",
+      "Queen Ant (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_sepialot",
+      "Sepialot (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_silkbreeze",
+      "Silkbreeze (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_solar",
+      "Solar (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_sprawl",
+      "Sprawl (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_tiki",
+      "Tiki (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_timil",
+      "Timil (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_torrid",
+      "Torrid (Torrhus Canyon)"
+    ],
+    [
+      "torrhus_canyon_water_snake",
+      "Water Snake (Torrhus Canyon)"
+    ],
+    [
+      "cavern_biome_cavernfish",
+      "Cavernfish (Cavern Biome)"
+    ],
+    [
+      "cavern_biome_chuckwalla",
+      "Chuckwalla (Cavern Biome)"
+    ],
+    [
+      "cavern_biome_driftling",
+      "Driftling (Cavern Biome)"
+    ],
+    [
+      "cavern_biome_flitter",
+      "Flitter (Cavern Biome)"
+    ],
+    [
+      "cavern_biome_gemzie",
+      "Gemzie (Cavern Biome)"
+    ],
+    [
+      "cavern_biome_rockmite",
+      "Rockmite (Cavern Biome)"
+    ],
+    [
+      "cavern_biome_scrappy",
+      "Scrappy (Cavern Biome)"
+    ],
+    [
+      "cavern_biome_shyworm",
+      "Shyworm (Cavern Biome)"
+    ],
+    [
+      "cavern_biome_snoozle",
+      "Snoozle (Cavern Biome)"
+    ],
+    [
+      "forest_biome_bluebird",
+      "Bluebird (Forest Biome)"
+    ],
+    [
+      "forest_biome_fluffling",
+      "Fluffling (Forest Biome)"
+    ],
+    [
+      "forest_biome_foxtrot",
+      "Foxtrot (Forest Biome)"
+    ],
+    [
+      "forest_biome_hideonfloor",
+      "Hideonfloor (Forest Biome)"
+    ],
+    [
+      "forest_biome_honeybug",
+      "Honeybug (Forest Biome)"
+    ],
+    [
+      "forest_biome_macaw",
+      "Macaw (Forest Biome)"
+    ],
+    [
+      "forest_biome_parakeet",
+      "Parakeet (Forest Biome)"
+    ],
+    [
+      "forest_biome_treefrog",
+      "Treefrog (Forest Biome)"
+    ],
+    [
+      "forest_biome_woodchucker",
+      "Woodchucker (Forest Biome)"
+    ],
+    [
+      "haunted_biome_areita",
+      "Areita (Haunted Biome)"
+    ],
+    [
+      "haunted_biome_bloodbat",
+      "Bloodbat (Haunted Biome)"
+    ],
+    [
+      "haunted_biome_doomspiral",
+      "Doomspiral (Haunted Biome)"
+    ],
+    [
+      "haunted_biome_duplico",
+      "Duplico (Haunted Biome)"
+    ],
+    [
+      "haunted_biome_gazer",
+      "Gazer (Haunted Biome)"
+    ],
+    [
+      "haunted_biome_gimmiegold",
+      "Gimmiegold (Haunted Biome)"
+    ],
+    [
+      "haunted_biome_hideonwall",
+      "Hideonwall (Haunted Biome)"
+    ],
+    [
+      "haunted_biome_hideyho",
+      "Hideyho (Haunted Biome)"
+    ],
+    [
+      "haunted_biome_litterbug",
+      "Litterbug (Haunted Biome)"
+    ],
+    [
+      "haunted_biome_solsnatcher",
+      "Solsnatcher (Haunted Biome)"
+    ],
+    [
+      "icy_biome_billygoat",
+      "Billygoat (Icy Biome)"
+    ],
+    [
+      "icy_biome_mantis_shrimp",
+      "Mantis Shrimp (Icy Biome)"
+    ],
+    [
+      "icy_biome_nozzlenose",
+      "Nozzlenose (Icy Biome)"
+    ],
+    [
+      "icy_biome_polaris",
+      "Polaris (Icy Biome)"
+    ],
+    [
+      "icy_biome_shuddersquid",
+      "Shuddersquid (Icy Biome)"
+    ],
+    [
+      "icy_biome_strongarm",
+      "Strongarm (Icy Biome)"
+    ],
+    [
+      "icy_biome_tepid",
+      "Tepid (Icy Biome)"
+    ],
+    [
+      "icy_biome_troodon",
+      "Troodon (Icy Biome)"
+    ],
+    [
+      "icy_biome_wumpa",
+      "Wumpa (Icy Biome)"
+    ]
+  ]
+}

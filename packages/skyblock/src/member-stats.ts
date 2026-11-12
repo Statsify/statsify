@@ -12,12 +12,16 @@ import {
   type DungeonClass,
   KUUDRA_TIERS,
   type Level,
+  type Faction,
   type MemberView,
+  POWDERS,
+  type Powder,
   SKILLS,
   SLAYER_BOSSES,
   type Skill,
   type SlayerBoss,
 } from "#types";
+import { BESTIARY, COLLECTIONS } from "#data";
 import { add } from "@statsify/math";
 import { bagAccessories } from "./sections/accessories.js";
 import { isMember, toProfileSummary } from "./profiles.js";
@@ -25,11 +29,14 @@ import type { SectionInput, SkyBlockSection } from "./sections/index.js";
 
 /** The sections a member's stats come from; the level and fairy souls are the profile summary's. */
 export const MEMBER_STATS_SECTIONS = [
+  "bestiary",
   "chocolate",
+  "collections",
   "crimson",
   "dungeons",
   "fishing",
   "hotm",
+  "jacob",
   "networth",
   "pets",
   "skills",
@@ -53,6 +60,7 @@ export type MemberStat =
   | "level"
   | "networth"
   | "nonCosmeticNetworth"
+  | "unsoulboundNetworth"
   | "skillAverage"
   | "skillAverageOrder"
   | `${Skill}Xp`
@@ -68,14 +76,78 @@ export type MemberStat =
   | (typeof KUUDRA_STATS)[keyof typeof KUUDRA_STATS]
   | "hotmXp"
   | "hotmLevel"
+  | `${Powder}Powder`
+  | `${Faction}Reputation`
+  | "kills"
   | "accessoryPower"
   | "petScore"
   | "fairySouls"
   | "trophyFish"
   | "chocolate";
 
+const FLOOR_BOARDS = [
+  "entrance",
+  "floor1",
+  "floor2",
+  "floor3",
+  "floor4",
+  "floor5",
+  "floor6",
+  "floor7",
+  "master1",
+  "master2",
+  "master3",
+  "master4",
+  "master5",
+  "master6",
+  "master7",
+] as const;
+
+type FloorBoard = (typeof FLOOR_BOARDS)[number];
+
+// The crop ids Jacob's contests use, by the board each ranks its personal best on
+const CROP_BOARDS = {
+  CACTUS: "cactus",
+  CARROT_ITEM: "carrot",
+  "INK_SACK:3": "cocoaBeans",
+  MELON: "melon",
+  MOONFLOWER: "moonflower",
+  MUSHROOM_COLLECTION: "mushroom",
+  NETHER_STALK: "netherWart",
+  POTATO_ITEM: "potato",
+  PUMPKIN: "pumpkin",
+  SUGAR_CANE: "sugarCane",
+  DOUBLE_PLANT: "sunflower",
+  WHEAT: "wheat",
+  WILD_ROSE: "wildRose",
+} as const;
+
+type CropBoard = (typeof CROP_BOARDS)[keyof typeof CROP_BOARDS];
+
+const slug = (text: string) => text.toLowerCase().replaceAll(/[^\da-z]+/g, "_").replaceAll(/^_|_$/g, "");
+
+/**
+ * A board per collection item, keyed by its id (LOG:2 and LOG_2 are both logs, so only the colon changes), and per
+ * bestiary family, keyed by its page and name since two pages share a family name.
+ */
+export const collectionBoards = (collections: { items: { id: string; name: string }[] }[]) =>
+  collections.flatMap(({ items }) => items.map(({ id, name }) => ({ key: id.replace(":", "-"), id, name })));
+
+export const bestiaryBoards = (bestiary: { pages: { name: string; families: { name: string }[] }[] }) =>
+  bestiary.pages.flatMap((page) =>
+    page.families.map((family) => ({ key: `${slug(page.name)}_${slug(family.name)}`, name: `${family.name} (${page.name})` }))
+  );
+
+const COLLECTION_BOARDS = collectionBoards(COLLECTIONS);
+const BESTIARY_BOARDS = bestiaryBoards(BESTIARY);
+
 /** A member's numbers at a fetch, as their profile page shows them, except for what a co-op shares. */
-export type MemberStats = Record<MemberStat, number>;
+export type MemberStats = Record<MemberStat, number> & {
+  floors: Record<FloorBoard, { completions: number; fastestSPlus: number }>;
+  crops: Record<CropBoard, number>;
+  collections: Record<string, number>;
+  bestiary: Record<string, number>;
+};
 
 // 13 bits hold the average in hundredths (60.00 at most) and 40 the XP, so the score stays an exact integer
 const XP_SPAN = 2 ** 40;
@@ -95,7 +167,7 @@ export function toMemberStats(
   { uuid, profile, member, items, prices }: Pick<SectionInput, "uuid" | "profile" | "member" | "items" | "prices">,
   view: MemberView
 ): Partial<MemberStats> {
-  const { chocolate, crimson, dungeons, fishing, hotm, networth, pets, skills, slayers } = view;
+  const { bestiary, chocolate, collections, crimson, dungeons, fishing, hotm, jacob, networth, pets, skills, slayers } = view;
   const summary = toProfileSummary(profile, uuid);
   const stats: Partial<MemberStats> = { xp: summary.xp, level: summary.level, fairySouls: summary.fairySouls };
 
@@ -104,6 +176,7 @@ export function toMemberStats(
     const othersBank = networth.bank - networth.bank / members;
     stats.networth = networth.noInventory ? 0 : Math.floor(networth.total - othersBank);
     stats.nonCosmeticNetworth = networth.noInventory ? 0 : Math.floor(networth.nonCosmetic.total - othersBank);
+    stats.unsoulboundNetworth = networth.noInventory ? 0 : Math.floor(networth.unsoulbound - othersBank);
   }
 
   if (skills !== undefined) {
@@ -129,6 +202,18 @@ export function toMemberStats(
     }
 
     stats.secrets = dungeons.secrets;
+
+    const floor = (mode: "normal" | "master", number: number) => {
+      const found = dungeons.floors[mode].find((candidate) => candidate.floor === number);
+      return { completions: found?.completions ?? 0, fastestSPlus: found?.fastestSPlus ?? 0 };
+    };
+
+    stats.floors = Object.fromEntries(
+      FLOOR_BOARDS.map((board) => [
+        board,
+        board === "entrance" ? floor("normal", 0) : floor(board.startsWith("master") ? "master" : "normal", Number(board.at(-1))),
+      ])
+    ) as MemberStats["floors"];
   }
 
   if (slayers) {
@@ -144,11 +229,15 @@ export function toMemberStats(
     for (const tier of KUUDRA_TIERS) {
       stats[KUUDRA_STATS[tier]] = crimson?.kuudra.find((kuudra) => kuudra.tier === tier)?.completions ?? 0;
     }
+
+    stats.magesReputation = crimson?.reputation.mages ?? 0;
+    stats.barbariansReputation = crimson?.reputation.barbarians ?? 0;
   }
 
   if (hotm) {
     stats.hotmXp = Math.floor(hotm.level.xp);
     stats.hotmLevel = hotm.level.level;
+    for (const powder of POWDERS) stats[`${powder}Powder`] = hotm.powder[powder].total;
   }
 
   // The bag alone, without the accessories section's stored items and upgrades. It waits for prices as that section
@@ -157,6 +246,30 @@ export function toMemberStats(
   if (pets) stats.petScore = pets.score;
   if (fishing !== undefined) stats.trophyFish = fishing?.trophyFishCaught ?? 0;
   if (chocolate !== undefined) stats.chocolate = chocolate?.total ?? 0;
+
+  if (jacob !== undefined) {
+    const bests = new Map(jacob?.crops.map(({ id, personalBest }) => [id, personalBest ?? 0]));
+    stats.crops = Object.fromEntries(
+      Object.entries(CROP_BOARDS).map(([id, board]) => [board, bests.get(id) ?? 0])
+    ) as MemberStats["crops"];
+  }
+
+  // The member's own part of each co-op collection; 0 with the Collections API off
+  if (collections !== undefined) {
+    const amounts = new Map(
+      collections?.categories.flatMap(({ items }) =>
+        items.map(({ id, members }) => [id, members.find((part) => part.uuid === uuid)?.amount ?? 0] as const)
+      )
+    );
+    stats.collections = Object.fromEntries(COLLECTION_BOARDS.map(({ key, id }) => [key, amounts.get(id) ?? 0]));
+  }
+
+  if (bestiary) {
+    const kills = bestiary.pages.flatMap(({ families }) => families.map(({ kills }) => kills));
+    stats.bestiary = Object.fromEntries(BESTIARY_BOARDS.map(({ key }, index) => [key, kills[index]]));
+  }
+
+  stats.kills = member.player_stats?.kills?.total ?? 0;
 
   return stats;
 }

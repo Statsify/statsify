@@ -15,7 +15,14 @@ export { describeKey, parseBazaar, toPriceView } from "./prices.js";
 export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
 export { findProfile, isMember, toPlayerExtras, toProfileSummary, toProfilesView } from "./profiles.js";
-export { MEMBER_STATS_SECTIONS, type MemberStat, type MemberStats, toMemberStats } from "./member-stats.js";
+export {
+  bestiaryBoards,
+  collectionBoards,
+  MEMBER_STATS_SECTIONS,
+  type MemberStat,
+  type MemberStats,
+  toMemberStats,
+} from "./member-stats.js";
 export { parseItemsResource, toItemView } from "./items.js";
 export { resourceTexture, textureOf } from "./textures.js";
 export {
