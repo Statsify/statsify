@@ -68,8 +68,8 @@ const DEFINITIONS = { ...SECTIONS, networth: NETWORTH, values: VALUES } satisfie
 
 const isReady = (name: SkyBlockSection, built: Record<SectionNeed, boolean>) => DEFINITIONS[name].needs.every((need) => built[need]);
 
-// Runecrafting's cap: false only for a player known to have no rank
-const isRanked = (rank: string | undefined) => (rank === undefined ? undefined : rank !== "DEFAULT");
+// Mongo leaves out the default rank, so a stored player without one has none
+const isRanked = (rank: string | undefined) => rank !== undefined && rank !== "DEFAULT";
 
 interface Stored<T> {
   value: T;

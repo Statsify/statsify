@@ -41,10 +41,9 @@ export const SkyBlockValuesProfile = ({
   const totals = values.inventories?.totals ?? {};
   const sacks = add(...Object.values(values.inventories?.sacks ?? {}));
 
-  const sidebar: SidebarItem[] = [
-    [t("skyblock.inventoriesWorth"), t(Math.floor(add(...Object.values(totals), sacks))), "§6"],
-    [t("skyblock.missingPets"), t(values.missingPets.length), "§d"],
-  ];
+  const sidebar: SidebarItem[] = [];
+  if (values.inventories) sidebar.push([t("skyblock.inventoriesWorth"), t(Math.floor(add(...Object.values(totals), sacks))), "§6"]);
+  sidebar.push([t("skyblock.missingPets"), t(values.missingPets.length), "§d"]);
 
   const cells = [
     ...INVENTORIES.flatMap((id) => {
@@ -64,7 +63,7 @@ export const SkyBlockValuesProfile = ({
             items={values.missingPets.slice(0, MISSING_PETS).map(({ texture, name, rarity, price, points }) => ({
               texture,
               name: `${RARITY_COLORS[rarity]}${name} §7+${t(points)}`,
-              value: `§6${t(Math.floor(price))}`,
+              value: price === undefined ? "" : `§6${t(Math.floor(price))}`,
             }))}
             icons={icons}
             columns={3}
