@@ -22,7 +22,7 @@ export interface LegacyKit {
   level: number;
   /** Each item by its "id,damage" token, in the slot the editor showed it */
   items: { slot: number; token: string; item: ItemStack }[];
-  /** The armour the game equips, by armour slot */
+  /** The armor the game equips, by armor slot */
   armor?: Record<string, ItemStack>;
   /** The editor showed a layout the dumping account had saved, so its slots aren't the default */
   saved?: true;
@@ -33,7 +33,7 @@ type Game = "blitz" | "megawalls";
 // Built by scripts/import-dump.ts from the game's layout editors
 const KITS = dumped as Record<Game, Record<string, LegacyKit>>;
 
-// Each Blitz kit's armour by level, I to X, from its Upgrades page
+// Each Blitz kit's armor by level, I to X, from its Upgrades page
 const BLITZ_ARMOR = dumped.blitzArmor as Record<string, Record<string, ItemStack>[]>;
 
 const materials: Record<string, number | undefined> = data.materials;
@@ -82,13 +82,13 @@ function fromDumpedKit(
   return slots;
 }
 
-/** A Blitz kit's armour at a level (1 to 10), from its Upgrades page */
+/** A Blitz kit's armor at a level (1 to 10), from its Upgrades page */
 export function blitzKitArmor(kit: string, level: number) {
   const armor = BLITZ_ARMOR[kitKey(kit)]?.[level - 1];
   return armor && armorOf(Object.values(armor));
 }
 
-/** A Mega Walls class's armour at a Kit upgrade level, which is only known at the level its editor was dumped at */
+/** A Mega Walls class's armor at a Kit upgrade level, which is only known at the level its editor was dumped at */
 export function megaWallsKitArmor(kit: string, level: number) {
   const dumpedKit = KITS.megawalls[kitKey(kit)];
   return dumpedKit?.level === level ? armorOf(Object.values(dumpedKit.armor ?? {})) : undefined;
@@ -110,7 +110,7 @@ export const fromBlitzKit = (
 /**
  * A Mega Walls <class>Inventory as 40 player inventory slots, or without one the class's
  * default, by the class's Kit upgrade level. At the level its editor was dumped at, items get
- * the game's counts, names and tooltips, and the class's armour is put on; at others they're plain.
+ * the game's counts, names and tooltips, and the class's armor is put on; at others they're plain.
  */
 export const fromMegaWallsKit = (
   stored: Readonly<Record<string, string>> | null | undefined,
