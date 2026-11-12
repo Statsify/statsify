@@ -11,6 +11,7 @@ import {
   Footer,
   Header,
   Historical,
+  If,
   SidebarItem,
   Table,
   formatProgression,
@@ -45,6 +46,8 @@ export const SkyWarsProfile = ({
     [t("stats.heads"), t(skywars.heads), "§5"],
     [t("stats.potionsBrewed"), t(skywars.potionsBrewed), "§d"],
   ];
+
+  const showBothKits = mode.api === "solo" || mode.api === "doubles";
 
   return (
     <Container background={background}>
@@ -83,8 +86,24 @@ export const SkyWarsProfile = ({
             value={formatTime(stats.playtime)}
             color="§c"
           />
-          <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color="§6" />
+          <If condition={!showBothKits}>
+            <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color="§6" />
+          </If>
         </Table.tr>
+        <If condition={showBothKits}>
+          <Table.tr>
+            <Table.td
+              title={t("stats.normalKit")}
+              value={prettify(skywars.normalKit)}
+              color="§6"
+            />
+            <Table.td
+              title={t("stats.insaneKit")}
+              value={prettify(skywars.insaneKit)}
+              color="§6"
+            />
+          </Table.tr>
+        </If>
         <Historical.progression
           time={time}
           progression={skywars.progression}
