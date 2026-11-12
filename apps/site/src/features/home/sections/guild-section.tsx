@@ -120,7 +120,7 @@ function GuildOverall({ guild, className }: { guild: GuildPreview; className?: s
   );
 }
 
-function GuildLevelling({ guild }: { guild: GuildPreview }) {
+function GuildLeveling({ guild }: { guild: GuildPreview }) {
   const n = useNumberFormat();
   const { t } = useTranslation();
   const color = guild.tagColor;
