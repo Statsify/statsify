@@ -19,7 +19,7 @@ export interface UpdatedStampProps {
 }
 
 /**
- * "Updated" over `2026-10-20 01:12 UTC`, small and grey: the lines that tell a forum reader how old the
+ * "Updated" over `2026-10-20 01:12 UTC`, small and gray: the lines that tell a forum reader how old the
  * stats are, since a signature's URL never changes. Two lines, so it fits beside the footer, from a key each, since
  * another language may order or space the words differently.
  */

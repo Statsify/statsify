@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColours } from "@statsify/catalog";
+import { ARCADE, cardColors } from "@statsify/catalog";
 import { LocalizeFunction } from "../../../types.js";
 import { PixelPainters } from "@statsify/schemas";
 import { Table } from "../../../components/index.js";
 
-const colour = cardColours(ARCADE, "pixelPainters");
+const color = cardColors(ARCADE, "pixelPainters");
 
 interface PixelPaintersTableProps {
   stats: PixelPainters;
@@ -21,7 +21,7 @@ interface PixelPaintersTableProps {
 export const PixelPaintersTable = ({ stats, t }: PixelPaintersTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
     </Table.tr>
   </Table.table>
 );

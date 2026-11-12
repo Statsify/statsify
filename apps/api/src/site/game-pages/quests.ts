@@ -27,7 +27,7 @@ const OVERVIEW: OverviewSpec[] = [
   {
     key: "monthlyTotal",
     label: "stats.monthlyTotal",
-    colour: "§b",
+    color: "§b",
     compute: ({ quests }) => Quests.getTotal(quests.monthly),
   },
   "weeklyTotal",
@@ -45,7 +45,7 @@ function overall(period: QuestPeriod): PageSpec {
     at: `${period}.${game}`,
     name: FormattedGame[game],
     icon: game,
-    ...(allTime && { colour: "§f" as const }),
+    ...(allTime && { color: "§f" as const }),
   }));
 
   return { heading: { word: null, mode: "Overall" }, sections: [{ cells, sort: allTime ? "desc" : "share", list: true }] };
@@ -64,11 +64,11 @@ function game(id: GameId, period: QuestPeriod): PageSpec {
   return {
     place,
     heading: { word: null, mode: `§l${FormattedGame[id]}` },
-    overview: [...OVERVIEW, { key: "total", at: place, label: "stats.game-total", params: { game: modeName(QUESTS, id) }, colour: "§a" }],
+    overview: [...OVERVIEW, { key: "total", at: place, label: "stats.game-total", params: { game: modeName(QUESTS, id) }, color: "§a" }],
     sections: [
       {
         cells: quests.map(({ key, name }): CellSpec =>
-          allTime ? { key, colour: "§f", name: (stats) => `${done(stats, key) ? "§a" : "§c"}${name}` } : key),
+          allTime ? { key, color: "§f", name: (stats) => `${done(stats, key) ? "§a" : "§c"}${name}` } : key),
         sort: "desc",
         list: true,
         ...(!allTime && { ticks: true }),

@@ -9,21 +9,21 @@
 import { WALLS_MODES, type WallsModes } from "@statsify/schemas";
 import type { Game } from "../catalog.js";
 
-/** The colours and labels of the bot's Walls card (`walls.profile.tsx`): its sidebar and table. */
+/** The colors and labels of the bot's Walls card (`walls.profile.tsx`): its sidebar and table. */
 export const WALLS: Game<WallsModes> = {
   key: "walls",
   id: "WALLS",
   modes: WALLS_MODES,
   game: {
-    coins: { colour: "§6" },
-    tokens: { colour: "§e" },
-    wins: { colour: "§a" },
-    losses: { colour: "§c" },
-    wlr: { colour: "§6" },
-    kills: { colour: "§a" },
-    deaths: { colour: "§c" },
-    kdr: { colour: "§6" },
-    assists: { colour: "§e" },
+    coins: { color: "§6" },
+    tokens: { color: "§e" },
+    wins: { color: "§a" },
+    losses: { color: "§c" },
+    wlr: { color: "§6" },
+    kills: { color: "§a" },
+    deaths: { color: "§c" },
+    kdr: { color: "§6" },
+    assists: { color: "§e" },
   },
   shapes: [],
 };

@@ -14,7 +14,7 @@ import {
   TitlesTable,
 } from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "../../components/index.js";
-import { DUELS, cardColours } from "@statsify/catalog";
+import { DUELS, cardColors } from "@statsify/catalog";
 import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { formatRecordTime, prettify } from "@statsify/util";
 import type { BaseProfileProps, ProfileTime } from "../../types.js";
@@ -41,33 +41,33 @@ export const DuelsProfile = <T extends ProfileTime>({
   modeIcons,
 }: DuelsProfileProps<T>) => {
   const { duels } = player.stats;
-  const colour = cardColours(DUELS);
+  const color = cardColors(DUELS);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.tokens"), t(duels.tokens), colour("tokens")],
-    [t("stats.pingRange"), `${t(duels.pingRange)}ms`, colour("pingRange")],
-    [t("stats.blocksPlaced"), t(duels.overall.blocksPlaced), colour("overall.blocksPlaced")],
+    [t("stats.tokens"), t(duels.tokens), color("tokens")],
+    [t("stats.pingRange"), `${t(duels.pingRange)}ms`, color("pingRange")],
+    [t("stats.blocksPlaced"), t(duels.overall.blocksPlaced), color("overall.blocksPlaced")],
   ];
 
   const stats = duels[mode.api];
 
   if ("shotsFired" in stats) {
-    sidebar.push([t("stats.shotsFired"), t(stats.shotsFired), colour(`${mode.api}.shotsFired`)]);
+    sidebar.push([t("stats.shotsFired"), t(stats.shotsFired), color(`${mode.api}.shotsFired`)]);
   } else if ("overall" in stats && "shotsFired" in stats.overall) {
-    sidebar.push([t("stats.shotsFired"), t(stats.overall.shotsFired), colour(`${mode.api}.overall.shotsFired`)]);
+    sidebar.push([t("stats.shotsFired"), t(stats.overall.shotsFired), color(`${mode.api}.overall.shotsFired`)]);
   }
 
   if ("headshots" in stats)
-    sidebar.push([t("stats.headshots"), t(stats.headshots), colour(`${mode.api}.headshots`)]);
+    sidebar.push([t("stats.headshots"), t(stats.headshots), color(`${mode.api}.headshots`)]);
 
   if ("kit" in stats)
-    sidebar.push([t("stats.kit"), prettify(stats.kit), colour(`${mode.api}.kit`)]);
+    sidebar.push([t("stats.kit"), prettify(stats.kit), color(`${mode.api}.kit`)]);
 
   if (mode.api === "parkour") {
     if (time === "LIVE")
-      sidebar.push([t("stats.bestTime"), formatRecordTime(duels.parkour.bestTime), colour("parkour.bestTime")]);
+      sidebar.push([t("stats.bestTime"), formatRecordTime(duels.parkour.bestTime), color("parkour.bestTime")]);
 
-    sidebar.push([t("stats.checkpoints"), t(duels.parkour.checkpoints), colour("parkour.checkpoints")]);
+    sidebar.push([t("stats.checkpoints"), t(duels.parkour.checkpoints), color("parkour.checkpoints")]);
   }
 
   const isTitles = time === "LIVE" && mode.api === "overall" && mode.submode.api === "titles";
@@ -84,7 +84,7 @@ export const DuelsProfile = <T extends ProfileTime>({
       break;
 
     case "bedwars":
-      sidebar.push([t("stats.itemsPurchased"), t(duels.bedwars.overall.itemsPurchased), colour("bedwars.overall.itemsPurchased")]);
+      sidebar.push([t("stats.itemsPurchased"), t(duels.bedwars.overall.itemsPurchased), color("bedwars.overall.itemsPurchased")]);
       table = mode.submode.api === "overall" ? <BedWarsDuelsTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} /> : <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} place={`${mode.api}.${mode.submode.api}`} t={t} time={time} />;
       break;
 
@@ -95,7 +95,7 @@ export const DuelsProfile = <T extends ProfileTime>({
       break;
 
     case "spleef":
-      if (mode.submode.api === "spleef") sidebar.push([t("stats.blocksBroken"), t(duels.spleef.spleef.blocksBroken), colour("spleef.spleef.blocksBroken")]);
+      if (mode.submode.api === "spleef") sidebar.push([t("stats.blocksBroken"), t(duels.spleef.spleef.blocksBroken), color("spleef.spleef.blocksBroken")]);
       table = <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} place={`${mode.api}.${mode.submode.api}`} t={t} time={time} />;
       break;
 

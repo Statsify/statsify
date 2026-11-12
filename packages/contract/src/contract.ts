@@ -9,7 +9,7 @@
 import { type ContractRouterClient, oc } from "@orpc/contract";
 import { z } from "zod";
 
-/** A Minecraft UUID, dashed or not; the API normalises it before querying. */
+/** A Minecraft UUID, dashed or not; the API normalizes it before querying. */
 export const UuidSchema = z
   .string()
   .regex(/^[\da-f]{32}$|^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i, "Expected a Minecraft UUID");
@@ -50,8 +50,8 @@ export const StatRowSchema = z.object({
   hidden: z.boolean().optional(),
   /** Printed after a number, as on the card, e.g. `%`. */
   suffix: z.string().optional(),
-  /** The bot's colour code for the stat, e.g. `§a` or `§#ffd700`. */
-  colour: z.string(),
+  /** The bot's color code for the stat, e.g. `§a` or `§#ffd700`. */
+  color: z.string(),
   /** The stat's leaderboard, as the `/leaderboards/<field>` segment, or null when it has none. */
   leaderboard: z.string().nullable(),
 });
@@ -270,8 +270,8 @@ export const StatCellSchema = z.object({
   trim: z.boolean().optional(),
   /** The number the value is out of (`12/25`), for a stat with a cap. */
   of: z.number().optional(),
-  /** The bot's colour code for the stat, e.g. `§a` or `§#a7673f`. */
-  colour: z.string(),
+  /** The bot's color code for the stat, e.g. `§a` or `§#a7673f`. */
+  color: z.string(),
   /** The stat's leaderboard, as the `/leaderboards/<field>` segment, or null when it has none. */
   leaderboard: z.string().nullable(),
   /** A `GameId` whose icon goes before the name, as on the card's game lists. */
@@ -291,8 +291,8 @@ export const StatSectionSchema = z.object({
   title: z.string().nullable(),
   /** The card's own Minecraft-formatted heading where it doesn't translate one, e.g. `§6Solo`. */
   name: z.string().optional(),
-  /** The card's colour for a translated heading, e.g. `§b` for Power-Up Activations; white otherwise. */
-  colour: z.string().optional(),
+  /** The card's color for a translated heading, e.g. `§b` for Power-Up Activations; white otherwise. */
+  color: z.string().optional(),
   /** The card's rows of cells. */
   rows: z.array(z.array(StatCellSchema)),
   /** A `site.json` heading over each row, by index, or null for none: BedWars' Final and Normal over its kills rows. */
@@ -381,10 +381,10 @@ export const GamePageSchema = z.object({
       progress: z.string(),
       maxedWord: z.enum(["maxed", "prestiged"]).optional(),
       /**
-       * The card's colours for the progress where they aren't the panel's own (Murder Mystery's knife): the count, the
+       * The card's colors for the progress where they aren't the panel's own (Murder Mystery's knife): the count, the
        * slash and the max, and the maxed word, which stays bold.
        */
-      colours: z.object({ current: z.string(), slash: z.string(), max: z.string(), maxed: z.string() }).optional(),
+      colors: z.object({ current: z.string(), slash: z.string(), max: z.string(), maxed: z.string() }).optional(),
       leaderboard: z.string().nullable(),
     })
     .nullable(),
@@ -474,7 +474,7 @@ export const GuildPreviewSchema = z.object({
   name: z.string(),
   nameFormatted: z.string(),
   tagFormatted: z.string(),
-  /** The tag's Minecraft colour code, e.g. `§6`, which colours the level bar. */
+  /** The tag's Minecraft color code, e.g. `§6`, which colors the level bar. */
   tagColor: z.string(),
   description: z.string(),
   createdAt: z.number(),

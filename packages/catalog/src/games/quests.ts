@@ -41,11 +41,11 @@ const gameClasses = (period: QuestPeriod) =>
   );
 
 /** A quest under the card's name for it: green once done, red until then. */
-const quest = (name: string): StatEntry => ({ colour: (value) => (Number(value) > 0 ? "§a" : "§c"), name });
+const quest = (name: string): StatEntry => ({ color: (value) => (Number(value) > 0 ? "§a" : "§c"), name });
 
 /** A period's total, out of the game's quests for the period: green when all are done, gold when some are, red when none. */
 const done = (count: number): StatEntry => ({
-  colour: (value) => (count > 0 && Number(value) >= count ? "§a" : Number(value) > 0 ? "§6" : "§c"),
+  color: (value) => (count > 0 && Number(value) >= count ? "§a" : Number(value) > 0 ? "§6" : "§c"),
   of: count,
 });
 

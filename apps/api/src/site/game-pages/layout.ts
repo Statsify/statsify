@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ColourCode, type Game, type Stat, modeName, shapeKeys, statAt } from "@statsify/catalog";
+import { type ColorCode, type Game, type Stat, modeName, shapeKeys, statAt } from "@statsify/catalog";
 import { FormattedGame, type Player, type PlayerStats } from "@statsify/schemas";
 import { freshness } from "../cooldown.js";
 import { arrayGroup } from "@statsify/util";
@@ -21,8 +21,8 @@ export type CellSpec =
   | {
     key: string;
     at?: string;
-    /** The page's colour, where the card draws the stat here in another colour than the catalog's. */
-    colour?: ColourCode;
+    /** The page's color, where the card draws the stat here in another color than the catalog's. */
+    color?: ColorCode;
     /** The page's heading for the stat, in place of the catalog's label or name. */
     label?: string;
     /** A shorter heading under the row's title, where the title says the rest (`stats.kills` under Final). */
@@ -46,7 +46,7 @@ export type CellSpec =
 export interface ComputedSpec {
   key: string;
   label: string;
-  colour: ColourCode;
+  color: ColorCode;
   compute: (stats: PlayerStats) => number;
 }
 
@@ -61,8 +61,8 @@ export interface SectionSpec {
   title?: string;
   /** The card's own heading where it doesn't translate one (`§6Solo`). */
   name?: string;
-  /** The card's colour for the translated `title`. */
-  colour?: ColourCode;
+  /** The card's color for the translated `title`. */
+  color?: ColorCode;
   rows?: CellSpec[][];
   /** A `site.json` heading over each of `rows`, by index, or null for none (BedWars' Final and Normal). */
   rowTitles?: (string | null)[];
@@ -75,8 +75,8 @@ export interface SectionSpec {
    * (a period's quests done out of the game's). Ties keep the given order.
    */
   sort?: "desc" | "asc" | "share";
-  /** Rows of `size` cells, the n-th in the n-th colour (the last colour repeats), as the card colours by rank. */
-  ranks?: { size: number; colours?: ColourCode[] };
+  /** Rows of `size` cells, the n-th in the n-th color (the last color repeats), as the card colors by rank. */
+  ranks?: { size: number; colors?: ColorCode[] };
   /** One of the card's boxes drawn side by side, as Classic Duels draws Overall, Solo and Doubles. */
   box?: boolean;
   /** Name and value lines rather than table cells. */
@@ -102,17 +102,17 @@ export interface LevelSpec {
   progress?: string;
   /** The word at the last level: MAXED by default, PRESTIGED where reaching it prestiges (Murder Mystery's knife). */
   maxedWord?: "maxed" | "prestiged";
-  /** The card's colours for the progress, where they aren't the panel's (Murder Mystery's knife). */
-  colours?: { current: ColourCode; slash: ColourCode; max: ColourCode; maxed: ColourCode };
+  /** The card's colors for the progress, where they aren't the panel's (Murder Mystery's knife). */
+  colors?: { current: ColorCode; slash: ColorCode; max: ColorCode; maxed: ColorCode };
   read: (stats: PlayerStats) => Omit<
     NonNullable<GamePage["level"]>,
-    "leaderboard" | "label" | "progress" | "maxedWord" | "colours"
+    "leaderboard" | "label" | "progress" | "maxedWord" | "colors"
   >;
 }
 
 /**
  * A formatted level as most games store it (BedWars' stars, The Pit's prestige and level): the level as the player
- * wears it, and the bar from the level in its standard colours, where the game stores that too, else from the level.
+ * wears it, and the bar from the level in its standard colors, where the game stores that too, else from the level.
  */
 export const formattedLevel = (stored: {
   levelFormatted: string;
@@ -201,7 +201,7 @@ export interface ModeSpec {
 
 /**
  * The site's page for one game: which of the catalog's stats it shows, in what groups and order. The bot's card for the
- * game has its own layout; both take labels, colours and leaderboards from the catalog.
+ * game has its own layout; both take labels, colors and leaderboards from the catalog.
  */
 export interface GameLayout {
   game: Game;
@@ -255,7 +255,7 @@ const specOf = (cell: CellSpec): Spec => (typeof cell === "string" ? { key: cell
  */
 const finite = (value: number) => (Number.isFinite(value) ? value : 0);
 
-/** A stat's cell as the card shows it, with the page's colour, heading or icon where its layout gives one. */
+/** A stat's cell as the card shows it, with the page's color, heading or icon where its layout gives one. */
 function cell(player: Player, stat: Stat, spec: Spec): StatCell {
   const stored = read(player, stat.path);
   // A value the schema couldn't work out shows as one never set: 0, or the stat's own empty text.
@@ -264,7 +264,7 @@ function cell(player: Player, stat: Stat, spec: Spec): StatCell {
   // A 0 that means "never set" isn't on the leaderboard, so it doesn't link either.
   const unset = stat.unset !== undefined && !raw;
   const value = unset ? stat.unset! : stat.format ? stat.format(raw, parent) : typeof raw === "string" ? raw : Number(raw ?? 0);
-  const colour = spec.colour ?? (typeof stat.colour === "function" ? stat.colour(raw, parent) : stat.colour);
+  const color = spec.color ?? (typeof stat.color === "function" ? stat.color(raw, parent) : stat.color);
   const name = typeof spec.name === "function" ? spec.name(player.stats) : spec.name ?? (spec.label ? undefined : stat.name);
   const hidden = spec.hidden?.(player.stats) ?? false;
 
@@ -279,7 +279,7 @@ function cell(player: Player, stat: Stat, spec: Spec): StatCell {
     ...(stat.suffix && !hidden && { suffix: stat.suffix }),
     ...(stat.trim && { trim: true }),
     ...(stat.of !== undefined && { of: typeof stat.of === "number" ? stat.of : finite(Number(read(player, stat.of) ?? 0)) }),
-    colour,
+    color,
     leaderboard: stat.leaderboard && !unset && !hidden && !spec.inline ? stat.path : null,
     ...(spec.icon && { icon: spec.icon }),
     ...(spec.inline && { inline: true }),
@@ -322,9 +322,9 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
     const { ranks } = spec;
     rows = ranks ? arrayGroup(flat, ranks.size) : [flat];
 
-    if (ranks?.colours) {
-      const { colours } = ranks;
-      rows = rows.map((row, index) => row.map((cell) => ({ ...cell, colour: colours[Math.min(index, colours.length - 1)] })));
+    if (ranks?.colors) {
+      const { colors } = ranks;
+      rows = rows.map((row, index) => row.map((cell) => ({ ...cell, color: colors[Math.min(index, colors.length - 1)] })));
     }
   } else {
     rows = (spec.rows ?? []).map((row) => cells(player, game, place, row).map(({ cell }) => cell));
@@ -338,7 +338,7 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
   return {
     title: spec.title ?? null,
     ...(spec.name && { name: spec.name }),
-    ...(spec.colour && { colour: spec.colour }),
+    ...(spec.color && { color: spec.color }),
     rows: kept.map((index) => rows[index]),
     ...(titles && { rowTitles: kept.map((index) => titles[index] ?? null) }),
     ...(names && { rowNames: kept.map((index) => names[index]) }),
@@ -355,7 +355,7 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
 function overview(player: Player, game: Game, specs: OverviewSpec[]): StatCell[] {
   return specs.flatMap((spec) =>
     isComputed(spec) ?
-      [{ key: spec.key, label: spec.label, value: finite(spec.compute(player.stats)), colour: spec.colour, leaderboard: null }] :
+      [{ key: spec.key, label: spec.label, value: finite(spec.compute(player.stats)), color: spec.color, leaderboard: null }] :
       cells(player, game, "", [spec]).map(({ cell }) => cell));
 }
 
@@ -421,7 +421,7 @@ function level(player: Player, game: Game, spec: LevelSpec): NonNullable<GamePag
     progression: levelProgression(progression),
     progress: spec.progress ?? "stats.progression.exp",
     ...(spec.maxedWord && { maxedWord: spec.maxedWord }),
-    ...(spec.colours && { colours: spec.colours }),
+    ...(spec.colors && { colors: spec.colors }),
     leaderboard: stat.leaderboard ? stat.path : null,
   };
 }

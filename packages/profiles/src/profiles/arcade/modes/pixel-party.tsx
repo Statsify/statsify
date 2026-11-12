@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColours } from "@statsify/catalog";
+import { ARCADE, cardColors } from "@statsify/catalog";
 import { LocalizeFunction } from "../../../types.js";
 import { PixelParty } from "@statsify/schemas";
 import { Table } from "../../../components/index.js";
 
-const colour = cardColours(ARCADE, "pixelParty");
+const color = cardColors(ARCADE, "pixelParty");
 
 interface PixelPartyTableProps {
   stats: PixelParty;
@@ -22,25 +22,25 @@ export const PixelPartyTable = ({ stats, t }: PixelPartyTableProps) => (
   <Table.table>
     <Table.ts title="§6Overall">
       <Table.tr>
-        <Table.td title={t("stats.wins")} value={t(stats.overall.wins)} color={colour("overall.wins")} />
-        <Table.td title={t("stats.losses")} value={t(stats.overall.losses)} color={colour("overall.losses")} />
-        <Table.td title={t("stats.wlr")} value={t(stats.overall.wlr)} color={colour("overall.wlr")} />
+        <Table.td title={t("stats.wins")} value={t(stats.overall.wins)} color={color("overall.wins")} />
+        <Table.td title={t("stats.losses")} value={t(stats.overall.losses)} color={color("overall.losses")} />
+        <Table.td title={t("stats.wlr")} value={t(stats.overall.wlr)} color={color("overall.wlr")} />
       </Table.tr>
       <Table.tr>
         <Table.td
           title={t("stats.gamesPlayed")}
           value={t(stats.overall.gamesPlayed)}
-          color={colour("overall.gamesPlayed")}
+          color={color("overall.gamesPlayed")}
         />
         <Table.td
           title={t("stats.roundsCompleted")}
           value={t(stats.roundsCompleted)}
-          color={colour("roundsCompleted")}
+          color={color("roundsCompleted")}
         />
         <Table.td
           title={t("stats.powerupsCollected")}
           value={t(stats.powerupsCollected)}
-          color={colour("powerupsCollected")}
+          color={color("powerupsCollected")}
         />
       </Table.tr>
     </Table.ts>
@@ -50,13 +50,13 @@ export const PixelPartyTable = ({ stats, t }: PixelPartyTableProps) => (
           <Table.td
             title={t("stats.wins")}
             value={t(stats.normal.wins)}
-            color={colour("normal.wins")}
+            color={color("normal.wins")}
             size="small"
           />
           <Table.td
             title={t("stats.losses")}
             value={t(stats.normal.losses)}
-            color={colour("normal.losses")}
+            color={color("normal.losses")}
             size="small"
           />
         </Table.tr>
@@ -66,13 +66,13 @@ export const PixelPartyTable = ({ stats, t }: PixelPartyTableProps) => (
           <Table.td
             title={t("stats.wins")}
             value={t(stats.hyper.wins)}
-            color={colour("hyper.wins")}
+            color={color("hyper.wins")}
             size="small"
           />
           <Table.td
             title={t("stats.losses")}
             value={t(stats.hyper.losses)}
-            color={colour("hyper.losses")}
+            color={color("hyper.losses")}
             size="small"
           />
         </Table.tr>

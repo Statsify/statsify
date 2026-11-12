@@ -42,7 +42,7 @@ type Level = NonNullable<GamePage["level"]>;
 /** A stat's label: the bot's word in `default.json`, or the site's own for a stat the bot doesn't show. */
 const LABEL_NAMESPACES = ["default", "site"];
 
-/** On a phone an odd last cell spans its row, centred, rather than sitting alone in the first column. */
+/** On a phone an odd last cell spans its row, centered, rather than sitting alone in the first column. */
 const ODD_LAST = "max-sm:[&>:last-child:nth-child(odd)]:col-span-2";
 
 /**
@@ -334,12 +334,12 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
   const { t } = useTranslation();
   const statName = useStatName();
   const { current, max, percent } = level.progression;
-  const { colours } = level;
+  const { colors } = level;
   const label = t(`default:${level.label}`);
   const full = statName(level.label);
   const value = <MinecraftText>{level.current}</MinecraftText>;
 
-  // Every line centred, a wrapped one too (a long title, its bar and the next one on a phone).
+  // Every line centered, a wrapped one too (a long title, its bar and the next one on a phone).
   return (
     <Box className={cn("content:flex content:h-full content:flex-col content:items-center content:justify-center content:gap-3 content:text-center", className)}>
       {/* Within the panel: a long level (The Pit past its last prestige) breaks rather than widening the page. */}
@@ -367,7 +367,7 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
         <InlineStat
           label={<Hint full={statName(level.progress)}>{t(`default:${level.progress}`)}</Hint>}
           value={max === undefined ?
-            <span className={cn("font-bold", colourClass(colours?.maxed ?? "§b"))}>{t(`game.${level.maxedWord ?? "maxed"}`)}</span> :
+            <span className={cn("font-bold", colorClass(colors?.maxed ?? "§b"))}>{t(`game.${level.maxedWord ?? "maxed"}`)}</span> :
             (
               <>
                 <span className={colourClass(colours?.current ?? "§b")}><StatNumber value={current} /></span>
@@ -386,7 +386,7 @@ function SectionTitle({ section }: { section: StatSection }) {
   const { t } = useTranslation();
   if (section.name) return <MinecraftText>{section.name}</MinecraftText>;
   if (section.title === null) return null;
-  const { className, style } = colourOf(section.colour ?? "§f");
+  const { className, style } = colorOf(section.color ?? "§f");
   return <span className={className} style={style}>{t(section.title, { ns: LABEL_NAMESPACES })}</span>;
 }
 
@@ -534,7 +534,7 @@ function useStatValue(cell: Stat, linked = false): ReactNode {
   const Short = linked ? Spoken : Hint;
   const number = (value: number) => <Short full={exact(value)}>{n(value)}</Short>;
   if (cell.hidden) return <Hidden />;
-  // Text the API formatted takes the stat's colour, unless it brings its own (a level, a §7 N/A).
+  // Text the API formatted takes the stat's color, unless it brings its own (a level, a §7 N/A).
   const value = typeof cell.value === "number" ?
     <>{number(cell.value)}{cell.suffix ?? ""}</> :
     <MinecraftText>{`${cell.colour}${cell.value}`}</MinecraftText>;
@@ -550,7 +550,7 @@ function useStatValue(cell: Stat, linked = false): ReactNode {
 }
 
 /**
- * One stat as the card draws it, in its colour, with the bot's label. A capped stat shows its cap after it (`12/25`) in
+ * One stat as the card draws it, in its color, with the bot's label. A capped stat shows its cap after it (`12/25`) in
  * §7 like the card, at the label's size so the pair fits a phone's cell.
  */
 function GameStat({ cell, username }: { cell: Stat; username: string }) {
@@ -596,7 +596,7 @@ function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat
   const label = useStatLabel(cell);
   const count = useStatValue(cell, cell.leaderboard !== undefined);
   const value = ticks ? <Tick done={Number(cell.value) > 0} /> : count;
-  const { className, style } = colourOf(cell.colour);
+  const { className, style } = colorOf(cell.color);
 
   return (
     <div className={cn("relative flex min-h-11 min-w-0 items-center gap-2 py-1 text-mc-1", className)} style={style}>
@@ -622,7 +622,7 @@ function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat
   );
 }
 
-/** The card's tick or cross, in the stat's colour, with its words for screen readers. */
+/** The card's tick or cross, in the stat's color, with its words for screen readers. */
 function Tick({ done }: { done: boolean }) {
   const { t } = useTranslation();
   const Icon = done ? Check : Cross;

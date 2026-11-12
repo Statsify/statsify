@@ -62,7 +62,7 @@ const CLASSES: Record<string, Parameters<typeof scanMetadata>[0]> = {
 
 /**
  * The bot's `/challenges` card (`challenges.profile.tsx`): the total in §b, each game's total in §a, and its challenges
- * under their leaderboard names, coloured by rank where they're shown.
+ * under their leaderboard names, colored by rank where they're shown.
  */
 export const CHALLENGES: Game<ChallengeModes> = {
   key: "challenges",

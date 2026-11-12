@@ -50,8 +50,8 @@ export function PlayerLink({ page, name, className, children }: { page: Leaderbo
 }
 
 /**
- * A ref for the highlighted (`around`) row, which is brought into view, centred, when the page lands. After a client
- * navigation the router scrolls the window to the top once the new page is on screen, so the row is centred again
+ * A ref for the highlighted (`around`) row, which is brought into view, centered, when the page lands. After a client
+ * navigation the router scrolls the window to the top once the new page is on screen, so the row is centered again
  * then; a page Back or Forward put back where it was left stays there.
  */
 export function useHighlightScroll<T extends HTMLElement>(page: LeaderboardPage) {

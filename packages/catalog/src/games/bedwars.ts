@@ -7,7 +7,7 @@
  */
 
 import { BEDWARS_MODES, BedWarsModeChallenges, type BedWarsModes, scanMetadata } from "@statsify/schemas";
-import { type Game, type StatEntry, doneColour } from "../catalog.js";
+import { type Game, type StatEntry, doneColor } from "../catalog.js";
 import { prettify } from "@statsify/util";
 
 /**
@@ -15,19 +15,19 @@ import { prettify } from "@statsify/util";
  * leaderboard name, green once completed and red before.
  */
 const CHALLENGES: Record<string, StatEntry> = {
-  totalChallenges: { colour: "§6", name: "Total Completions" },
-  uniqueChallenges: { colour: "§e", name: "Unique Completions" },
+  totalChallenges: { color: "§6", name: "Total Completions" },
+  uniqueChallenges: { color: "§e", name: "Unique Completions" },
   ...Object.fromEntries(
     scanMetadata(BedWarsModeChallenges)
       .filter(([key]) => key !== "totalChallenges" && key !== "uniqueChallenges")
       .map(([key, { leaderboard }]): [string, StatEntry] => [
         key,
-        { colour: doneColour, name: leaderboard.fieldName ?? prettify(key) },
+        { color: doneColor, name: leaderboard.fieldName ?? prettify(key) },
       ])
   ),
 };
 
-/** The colours and labels of the bot's BedWars card (`bedwars.profile.tsx`); games played is the site's addition. */
+/** The colors and labels of the bot's BedWars card (`bedwars.profile.tsx`); games played is the site's addition. */
 export const BEDWARS: Game<BedWarsModes> = {
   key: "bedwars",
   id: "BEDWARS",
@@ -43,24 +43,24 @@ export const BEDWARS: Game<BedWarsModes> = {
     {
       modes: BEDWARS_MODES.getApiModes().filter((mode) => mode !== "challenges"),
       stats: {
-        "wins": { colour: "§a" },
-        "losses": { colour: "§c" },
-        "wlr": { colour: "§6" },
-        "finalKills": { colour: "§a" },
-        "finalDeaths": { colour: "§c" },
-        "fkdr": { colour: "§6" },
-        "kills": { colour: "§a" },
-        "deaths": { colour: "§c" },
-        "kdr": { colour: "§6" },
-        "bedsBroken": { colour: "§a" },
-        "bedsLost": { colour: "§c" },
-        "bblr": { colour: "§6" },
-        "winstreak": { colour: "§a" },
-        "gamesPlayed": { colour: "§e" },
-        "itemsCollected.iron": { colour: "§7", label: "stats.iron" },
-        "itemsCollected.gold": { colour: "§6", label: "stats.gold" },
-        "itemsCollected.diamond": { colour: "§b", label: "stats.diamonds" },
-        "itemsCollected.emerald": { colour: "§2", label: "stats.emeralds" },
+        "wins": { color: "§a" },
+        "losses": { color: "§c" },
+        "wlr": { color: "§6" },
+        "finalKills": { color: "§a" },
+        "finalDeaths": { color: "§c" },
+        "fkdr": { color: "§6" },
+        "kills": { color: "§a" },
+        "deaths": { color: "§c" },
+        "kdr": { color: "§6" },
+        "bedsBroken": { color: "§a" },
+        "bedsLost": { color: "§c" },
+        "bblr": { color: "§6" },
+        "winstreak": { color: "§a" },
+        "gamesPlayed": { color: "§e" },
+        "itemsCollected.iron": { color: "§7", label: "stats.iron" },
+        "itemsCollected.gold": { color: "§6", label: "stats.gold" },
+        "itemsCollected.diamond": { color: "§b", label: "stats.diamonds" },
+        "itemsCollected.emerald": { color: "§2", label: "stats.emeralds" },
       },
     },
     { modes: ["challenges"], stats: CHALLENGES },

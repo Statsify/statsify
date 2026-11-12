@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DUELS, cardColours } from "@statsify/catalog";
+import { DUELS, cardColors } from "@statsify/catalog";
 import { Historical, Table } from "../../../components/index.js";
 import type { BedWarsDuelsOverallMode } from "@statsify/schemas";
 import type { LocalizeFunction, ProfileTime } from "../../../types.js";
 
-const colour = cardColours(DUELS, "bedwars.overall");
+const color = cardColors(DUELS, "bedwars.overall");
 
 export interface BedWarsDuelsTableProps {
   stats: BedWarsDuelsOverallMode;
@@ -26,34 +26,34 @@ export const BedWarsDuelsTable = ({ stats, t, time }: BedWarsDuelsTableProps) =>
         <Table.td
           title={t("stats.winstreak")}
           value={t(stats.winstreak)}
-          color={colour("winstreak")}
+          color={color("winstreak")}
         />
         <Table.td
           title={t("stats.bestWinstreak")}
           value={t(stats.bestWinstreak)}
-          color={colour("bestWinstreak")}
+          color={color("bestWinstreak")}
         />
       </Table.tr>
     </Historical.exclude>
     <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-      <Table.td title={t("stats.losses")} value={t(stats.losses)} color={colour("losses")} />
-      <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={colour("wlr")} />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+      <Table.td title={t("stats.losses")} value={t(stats.losses)} color={color("losses")} />
+      <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={color("wlr")} />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t("stats.finalKills")} value={t(stats.finalKills)} color={colour("finalKills")} />
-      <Table.td title={t("stats.finalDeaths")} value={t(stats.finalDeaths)} color={colour("finalDeaths")} />
-      <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color={colour("fkdr")} />
+      <Table.td title={t("stats.finalKills")} value={t(stats.finalKills)} color={color("finalKills")} />
+      <Table.td title={t("stats.finalDeaths")} value={t(stats.finalDeaths)} color={color("finalDeaths")} />
+      <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color={color("fkdr")} />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
-      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
-      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color={color("kills")} />
+      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={color("deaths")} />
+      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={color("kdr")} />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t("stats.bedsBroken")} value={t(stats.bedsBroken)} color={colour("bedsBroken")} />
-      <Table.td title={t("stats.bedsLost")} value={t(stats.bedsLost)} color={colour("bedsLost")} />
-      <Table.td title={t("stats.bblr")} value={t(stats.bblr)} color={colour("bblr")} />
+      <Table.td title={t("stats.bedsBroken")} value={t(stats.bedsBroken)} color={color("bedsBroken")} />
+      <Table.td title={t("stats.bedsLost")} value={t(stats.bedsLost)} color={color("bedsLost")} />
+      <Table.td title={t("stats.bblr")} value={t(stats.bblr)} color={color("bblr")} />
     </Table.tr>
   </Table.table>
 );

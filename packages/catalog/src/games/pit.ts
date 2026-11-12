@@ -10,8 +10,8 @@ import { PIT_MODES, type PitModes } from "@statsify/schemas";
 import type { Game } from "../catalog.js";
 
 /**
- * The colours and labels of the bot's Pit card (`pit.profile.tsx`): its sidebar and table, and the session card's EXP
- * and levels gained. The card doesn't show the mystics or the last four counts yet; their colours are the site's.
+ * The colors and labels of the bot's Pit card (`pit.profile.tsx`): its sidebar and table, and the session card's EXP
+ * and levels gained. The card doesn't show the mystics or the last four counts yet; their colors are the site's.
  */
 export const PIT: Game<PitModes> = {
   key: "pit",

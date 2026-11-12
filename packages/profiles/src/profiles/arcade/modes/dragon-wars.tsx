@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColours } from "@statsify/catalog";
+import { ARCADE, cardColors } from "@statsify/catalog";
 import { DragonWars } from "@statsify/schemas";
 import { LocalizeFunction } from "../../../types.js";
 import { Table } from "../../../components/index.js";
 
-const colour = cardColours(ARCADE, "dragonWars");
+const color = cardColors(ARCADE, "dragonWars");
 
 interface DragonWarsTableProps {
   stats: DragonWars;
@@ -21,9 +21,9 @@ interface DragonWarsTableProps {
 export const DragonWarsTable = ({ stats, t }: DragonWarsTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-      <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
-      <Table.td title={t("stats.mounts")} value={t(stats.mounts)} color={colour("mounts")} />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color={color("kills")} />
+      <Table.td title={t("stats.mounts")} value={t(stats.mounts)} color={color("mounts")} />
     </Table.tr>
   </Table.table>
 );

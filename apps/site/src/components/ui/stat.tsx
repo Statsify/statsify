@@ -87,7 +87,7 @@ export function StatCell({
   /** A control over the cell's corner (a `relative` cell), after the value. */
   info?: ReactNode;
   color?: string;
-  /** For a colour with no theme class (a card's `§#rrggbb`). */
+  /** For a color with no theme class (a card's `§#rrggbb`). */
   style?: CSSProperties;
   /** From `lg`, one size up: a Minecraft 24 title over a Minecraft 48 value (the profile's identity block). */
   large?: boolean;
@@ -107,7 +107,7 @@ export function StatCell({
   );
 }
 
-/** An inline row like the card's `§7Label: §3value`: one size, a §7 label and the value in its colour. */
+/** An inline row like the card's `§7Label: §3value`: one size, a §7 label and the value in its color. */
 export function InlineStat({
   label,
   value,
