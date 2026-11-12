@@ -123,10 +123,7 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
-    const guild = await this.apiService.getGuild(
-      player.guildId || player.uuid,
-      player.guildId ? GuildQuery.ID : GuildQuery.PLAYER
-    );
+    const guild = await this.apiService.getGuild(player.uuid, GuildQuery.PLAYER);
 
     const [skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayerSkin(player.uuid, user),
