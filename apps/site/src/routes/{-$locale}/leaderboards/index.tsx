@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 const EDGE_TTL_SECONDS = 3600;
 
 export const Route = createFileRoute("/{-$locale}/leaderboards/")({
-  // The short names travel in the page's hydration data too, so they're cut down before it's serialised.
+  // The short names travel in the page's hydration data too, so they're cut down before it's serialized.
   loader: async () => withoutGroupPrefix(await rpc.leaderboard.list()),
   staleTime: EDGE_TTL_SECONDS * 1000,
   head: () => ({

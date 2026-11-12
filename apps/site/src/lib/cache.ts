@@ -8,7 +8,7 @@
 
 /**
  * Browsers always revalidate; the edge TTL goes in `CDN-Cache-Control`, which Cloudflare
- * honours and strips. (`s-maxage` + `stale-while-revalidate` does not work on Cloudflare.)
+ * honors and strips. (`s-maxage` + `stale-while-revalidate` does not work on Cloudflare.)
  */
 const BROWSER_CACHE_CONTROL = "public, max-age=0, must-revalidate";
 
