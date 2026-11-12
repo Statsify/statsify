@@ -116,9 +116,14 @@ export class PlayerService {
 
       const flatPlayer = await this.saveOne(player, true);
 
-      // The name changed owners. The save moved the old owner's doc off it, so the retry finds the new owner
-      if (tag.length <= 16 && mongoPlayer && mongoPlayer.usernameToLower !== player.usernameToLower)
+      // The save moved the renamed owner's doc off the name, so the retry finds its new owner
+      if (
+        tag.length <= 16 &&
+        mongoPlayer &&
+        mongoPlayer.usernameToLower !== player.usernameToLower
+      ) {
         return this.getWithFallback(tag, cacheLevel, selector);
+      }
 
       flatPlayer.isNew = !mongoPlayer;
 
