@@ -38,7 +38,7 @@ export const SkyBlockHotmProfile = ({
     <PerkCurrency
       name={t(`skyblock.powders.${type}`)}
       color={POWDER_COLORS[type]}
-      amount={powder[type].available}
+      amount={powder[type].total}
       spent={powder[type].spent}
       t={t}
     />
