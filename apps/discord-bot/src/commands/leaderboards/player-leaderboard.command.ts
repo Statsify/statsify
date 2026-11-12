@@ -63,7 +63,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-arcade"),
-    args: [new PlayerLeaderboardArgument("arcade")],
+    args: [new PlayerLeaderboardArgument("arcade", ARCADE_MODES)],
   })
   public arcade(context: CommandContext) {
     return this.run(context, "arcade", ARCADE_MODES);
