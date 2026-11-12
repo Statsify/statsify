@@ -119,15 +119,13 @@ impl Part {
       // Even a turn by nothing would round the body's vertices and shift every render
       None if self == Part::Body => None,
       None => Some(Quaternion::from_angle_z(Deg(rest_angle))),
-      Some(part_pose) => {
-        position += part_pose.offset;
-
-        let turn = part_pose.rotation;
+      Some(PartPose { rotation, offset }) => {
+        position += offset;
 
         Some(
-          Quaternion::from_angle_z(Deg(rest_angle + turn.z))
-            * Quaternion::from_angle_y(Deg(turn.y))
-            * Quaternion::from_angle_x(Deg(turn.x)),
+          Quaternion::from_angle_z(Deg(rest_angle + rotation.z))
+            * Quaternion::from_angle_y(Deg(rotation.y))
+            * Quaternion::from_angle_x(Deg(rotation.x)),
         )
       }
     };
