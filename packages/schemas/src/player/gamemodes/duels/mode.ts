@@ -84,9 +84,13 @@ export class BowPVPBaseDuelsGameMode extends PVPBaseDuelsGameMode {
   @Field()
   public shotsFired: number;
 
+  @Field()
+  public shotsHit: number;
+
   public constructor(data: APIData, mode: string) {
     super(data, mode);
     this.shotsFired = data[`${mode}_bow_shots`];
+    this.shotsHit = data[`${mode}_bow_hits`];
   }
 }
 
@@ -94,9 +98,13 @@ export class BowBaseDuelsGameMode extends PVPBaseDuelsGameMode {
   @Field()
   public shotsFired: number;
 
+  @Field()
+  public shotsHit: number;
+
   public constructor(data: APIData, mode: string) {
     super(data, mode);
     this.shotsFired = data[`${mode}_bow_shots`];
+    this.shotsHit = data[`${mode}_bow_hits`];
   }
 }
 
@@ -284,6 +292,9 @@ export class SingleBowPVPDuelsGameMode extends SinglePVPDuelsGameMode {
   @Field()
   public shotsFired: number;
 
+  @Field()
+  public shotsHit: number;
+
   public constructor(
     data: APIData,
     title: string,
@@ -293,6 +304,7 @@ export class SingleBowPVPDuelsGameMode extends SinglePVPDuelsGameMode {
     super(data, title, mode, titleRequirement);
     mode = mode ? `${mode}_` : mode;
     this.shotsFired = data[`${mode}bow_shots`];
+    this.shotsHit = data[`${mode}bow_hits`];
   }
 }
 
@@ -340,9 +352,13 @@ export class ArenaDuels extends SingleDuelsGameMode {
   @Field()
   public shotsFired: number;
 
+  @Field()
+  public shotsHit: number;
+
   public constructor(data: APIData) {
     super(data, "Arena", "duel_arena", "default");
     this.shotsFired = data[`duel_arena_bow_shots`];
+    this.shotsHit = data[`duel_arena_bow_hits`];
   }
 }
 
