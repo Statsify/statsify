@@ -137,7 +137,13 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
       return getMinions(profile, items);
     },
   },
-  misc: { needs: [], compute: async ({ member }) => getMisc(member) },
+  misc: {
+    needs: ["items"],
+    compute: async ({ profile, member, items }) => {
+      if (!items) throw new TypeError("misc needs items");
+      return getMisc(profile, member, items);
+    },
+  },
   museum: {
     needs: ["items", "museum"],
     compute: async ({ items, museum }) => {

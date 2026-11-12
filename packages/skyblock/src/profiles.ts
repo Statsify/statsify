@@ -50,15 +50,18 @@ export function toProfileSummary(profile: RawProfile, uuid: string): ProfileSumm
   const member = profile.members[uuid];
   const xp = member.leveling?.experience ?? 0;
   const level = Math.floor(xp / SKYBLOCK_XP_PER_LEVEL);
+  const gameMode = gameModeOf(profile);
 
   return {
     id: profile.profile_id,
     cuteName: profile.cute_name,
-    gameMode: gameModeOf(profile),
+    gameMode,
     selected: profile.selected ?? false,
-    members: coopMembers(profile).map(([id, other]) => ({
+    members: Object.entries(profile.members).map(([id, other]) => ({
       uuid: id,
       removed: other.profile?.deletion_notice !== undefined,
+      invited: isPending(other),
+      firstJoin: other.profile?.first_join,
     })),
     level,
     levelColor: levelColor(level),
@@ -69,6 +72,8 @@ export function toProfileSummary(profile: RawProfile, uuid: string): ProfileSumm
     personalBank: member.profile?.bank_account,
     firstJoin: member.profile?.first_join,
     fairySouls: member.fairy_soul?.total_collected ?? 0,
+    // Stranded and Bingo play on islands that hold fewer souls, and no data source says how many
+    maxFairySouls: ["normal", "ironman"].includes(gameMode) ? LEVELING.fairy_souls : undefined,
   };
 }
 

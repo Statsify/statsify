@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DUNGEON_CLASSES, type DungeonFloor, type DungeonGrade, type DungeonsSection } from "#types";
+import { DUNGEON_CLASSES, type DungeonFloor, type DungeonGrade, type DungeonRun, type DungeonsSection } from "#types";
 import { ESSENCE_SHOPS, LEVELING } from "#data";
 import { add, ratio } from "@statsify/math";
 import { fractionalLevel, getLevel } from "#leveling";
-import type { RawDungeonType, RawMember } from "#raw";
+import type { RawDungeonRun, RawDungeonType, RawMember } from "#raw";
 
 const MAX_LEVEL = LEVELING.leveling_caps.catacombs;
 
@@ -18,6 +18,28 @@ const MAX_LEVEL = LEVELING.leveling_caps.catacombs;
 const GRADES: [DungeonGrade, number][] = [["S+", 300], ["S", 269.5], ["A", 230], ["B", 160], ["C", 100], ["D", 0]];
 
 const dungeonGrade = (score: number) => GRADES.find(([, lowest]) => score >= lowest)![0];
+
+/** The highest scoring run, the faster on a tie. */
+function bestRun(runs: RawDungeonRun[] = []): DungeonRun | undefined {
+  const scored = runs.map((run) => ({
+    run,
+    score: add(run.score_exploration, run.score_speed, run.score_skill, run.score_bonus),
+  }));
+  const best = scored.toSorted((a, b) => b.score - a.score || a.run.elapsed_time - b.run.elapsed_time)[0];
+  if (!best) return undefined;
+
+  const { run, score } = best;
+  return {
+    score,
+    grade: dungeonGrade(score),
+    time: run.elapsed_time,
+    dungeonClass: run.dungeon_class,
+    secrets: run.secrets_found,
+    deaths: run.deaths,
+    damage: run.damage_dealt,
+    at: run.timestamp,
+  };
+}
 
 function floorsOf(type: RawDungeonType | undefined, first: number): DungeonFloor[] {
   return Array.from({ length: 8 - first }, (_, i) => {
@@ -37,6 +59,7 @@ function floorsOf(type: RawDungeonType | undefined, first: number): DungeonFloor
       mostMobsKilled: type?.most_mobs_killed?.[key],
       mostHealing: type?.most_healing?.[key],
       milestoneCompletions: type?.milestone_completions?.[key] ?? 0,
+      bestRun: bestRun(type?.best_runs?.[key]),
     };
   });
 }

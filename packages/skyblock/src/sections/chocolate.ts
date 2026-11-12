@@ -8,6 +8,7 @@
 
 import { RABBITS } from "#data";
 import { RARITIES, type ChocolateSection } from "#types";
+import { add } from "@statsify/math";
 import type { RawMember } from "#raw";
 
 // In the factory's order
@@ -16,10 +17,16 @@ const EMPLOYEES = ["rabbit_bro", "rabbit_cousin", "rabbit_sis", "rabbit_father",
 // owner exception, unverified)
 const PRESTIGE_CHOCOLATE = [150_000_000, 1_000_000_000, 4_000_000_000, 10_000_000_000, 30_000_000_000];
 
+// The rabbits record also holds faction_level
+const ALL_RABBITS = new Set(Object.values(RABBITS).flat());
+
 /** null before the member opens the Chocolate Factory. A rabbit counts once however often it was found. */
 export function getChocolate(member: RawMember): ChocolateSection | null {
   const easter = member.events?.easter;
-  const found = new Set(Object.entries(easter?.rabbits ?? {}).flatMap(([rabbit, count]) => (typeof count === "number" ? [rabbit] : [])));
+  const counts = Object.entries(easter?.rabbits ?? {}).flatMap(([rabbit, count]) =>
+    typeof count === "number" && ALL_RABBITS.has(rabbit) ? [[rabbit, count] as const] : []
+  );
+  const found = new Set(counts.map(([rabbit]) => rabbit));
 
   // Hypixel sends the record, holding only the egg objects, before the factory makes any chocolate
   if (!easter || (!easter.total_chocolate && found.size === 0)) return null;
@@ -37,6 +44,8 @@ export function getChocolate(member: RawMember): ChocolateSection | null {
     }),
     employees: EMPLOYEES.map((employee) => ({ employee, level: easter.employees?.[employee] ?? 0 })),
     timeTower: easter.time_tower?.level ?? 0,
+    duplicates: add(...counts.map(([, count]) => Math.max(0, count - 1))),
+    eggLocations: add(...Object.values(easter.rabbits?.collected_locations ?? {}).map((spots) => spots.length)),
   };
 }
 
