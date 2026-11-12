@@ -110,10 +110,10 @@ const SKILL_ACHIEVEMENTS = {
 export function toPlayerExtras(stored: StoredPlayerSkyBlock): PlayerExtras {
   return {
     highestSkills: Object.fromEntries(
-      Object.entries(SKILL_ACHIEVEMENTS).flatMap(([skill, key]) => (stored[key] > 0 ? [[skill, stored[key]]] : []))
+      Object.entries(SKILL_ACHIEVEMENTS).flatMap(([skill, key]) => (stored[key] ? [[skill, stored[key]]] : []))
     ),
-    commissions: stored.hardWorkingMiner,
-    claimed: Object.fromEntries(PLAYER_CLAIMS.flatMap((claim) => (stored[claim] > 0 ? [[claim, stored[claim]]] : []))),
+    commissions: stored.hardWorkingMiner ?? 0,
+    claimed: Object.fromEntries(PLAYER_CLAIMS.flatMap((claim) => (stored[claim] ? [[claim, stored[claim]]] : []))),
   };
 }
 
