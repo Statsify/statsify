@@ -1,3 +1,5 @@
+use std::sync::Mutex;
+
 use futures_intrusive::channel;
 use image::codecs::png::PngEncoder;
 use image::{ExtendedColorType, ImageEncoder};
@@ -16,6 +18,9 @@ pub struct NativeBackend {
 
   texture: wgpu::Texture,
   texture_extent: wgpu::Extent3d,
+
+  // Renders run at the same time, so each maps a buffer no other render is using
+  output_buffers: Mutex<Vec<wgpu::Buffer>>,
 }
 
 impl NativeBackend {
@@ -49,6 +54,7 @@ impl NativeBackend {
       dimensions,
       texture,
       texture_extent,
+      output_buffers: Mutex::default(),
     })
   }
 }
@@ -101,11 +107,14 @@ impl Backend for NativeBackend {
     &self,
     mut encoder: wgpu::CommandEncoder,
   ) -> SkinRendererResult<PngBytes> {
-    let output_buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
-      label: None,
-      size: (self.dimensions.padded_bytes_per_row * self.dimensions.height) as u64,
-      usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
-      mapped_at_creation: false,
+    let pooled = self.output_buffers.lock().unwrap().pop();
+    let output_buffer = pooled.unwrap_or_else(|| {
+      self.device.create_buffer(&wgpu::BufferDescriptor {
+        label: None,
+        size: (self.dimensions.padded_bytes_per_row * self.dimensions.height) as u64,
+        usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+        mapped_at_creation: false,
+      })
     });
 
     encoder.copy_texture_to_buffer(
@@ -133,7 +142,11 @@ impl Backend for NativeBackend {
       .await
       .map_err(|_| Error::RenderFailure)??;
 
-    if let Some(Ok(())) = receiver.receive().await {
+    let Some(Ok(())) = receiver.receive().await else {
+      return Err(Error::RenderFailure);
+    };
+
+    let png = {
       let padded_buffer = buffer_slice.get_mapped_range();
 
       let buffer = padded_buffer
@@ -152,9 +165,12 @@ impl Backend for NativeBackend {
         ExtendedColorType::Rgba8,
       )?;
 
-      Ok(png)
-    } else {
-      Err(Error::RenderFailure)
-    }
+      png
+    };
+
+    output_buffer.unmap();
+    self.output_buffers.lock().unwrap().push(output_buffer);
+
+    Ok(png)
   }
 }

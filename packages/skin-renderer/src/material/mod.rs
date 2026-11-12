@@ -1,3 +1,4 @@
+use crate::error::Result;
 use crate::texture::Texture;
 
 pub struct Material {
@@ -7,9 +8,13 @@ pub struct Material {
 impl Material {
   pub fn new(
     device: &wgpu::Device,
-    diffuse_texture: Texture,
+    queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
-  ) -> Self {
+    sampler: &wgpu::Sampler,
+    image: &image::DynamicImage,
+  ) -> Result<Self> {
+    let diffuse_texture = Texture::from_image(device, queue, image)?;
+
     let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
       layout,
       entries: &[
@@ -19,12 +24,12 @@ impl Material {
         },
         wgpu::BindGroupEntry {
           binding: 1,
-          resource: wgpu::BindingResource::Sampler(&diffuse_texture.sampler),
+          resource: wgpu::BindingResource::Sampler(sampler),
         },
       ],
       label: None,
     });
 
-    Self { bind_group }
+    Ok(Self { bind_group })
   }
 }
