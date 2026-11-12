@@ -9,7 +9,7 @@
 import { arrayGroup, prettify } from "@statsify/util";
 import { decodeSlots, toolkitItemView } from "#items";
 import { resourceTexture } from "#textures";
-import type { InventoriesSection, InventoryId, ItemsResource, Slots } from "#types";
+import type { InventoriesSection, InventoryId, ItemsResource } from "#types";
 import type { RawMember, RawNbt, RawToolkit } from "#raw";
 
 /** The ender chest's page, and the size the bags are paged at. */
@@ -23,7 +23,7 @@ const BAGS = {
   sacksBag: "sacks_bag",
 } as const satisfies Partial<Record<InventoryId, string>>;
 
-const paged = (slots: Slots) => (slots.length > 0 ? arrayGroup(slots, PAGE) : [[]]);
+const paged = <T>(slots: T[]) => (slots.length > 0 ? arrayGroup(slots, PAGE) : [[]]);
 
 /** A map's blobs in their numeric key's order, as the game numbers backpacks. */
 export const byKey = (blobs: Record<string, RawNbt> = {}) =>
@@ -32,39 +32,55 @@ export const byKey = (blobs: Record<string, RawNbt> = {}) =>
     .map(([, blob]) => blob);
 
 /** The hotbar comes first in the blob and last on screen. */
-const hotbarLast = (slots: Slots) => [...slots.slice(9), ...slots.slice(0, 9)];
+const hotbarLast = <T>(slots: T[]) => [...slots.slice(9), ...slots.slice(0, 9)];
 
 /** A toolkit's tools, kind by kind; IN_USE and IS_UNLOCKED aren't tools, and an emptied slot is null. */
-const toolkitPage = (toolkit: RawToolkit, items: ItemsResource): Slots =>
+const toolkitPage = <T>(toolkit: RawToolkit, tool: (blob: RawNbt) => T | null): T[] =>
   Object.values(toolkit)
     .flatMap((tools) => (Array.isArray(tools) ? (tools as (RawNbt | null)[]) : []))
-    .map((blob) => blob && toolkitItemView(blob, items))
+    .map((blob) => blob && tool(blob))
     .filter((item) => item !== null);
+
+/**
+ * Every inventory as the game pages it, each slot from `slots` and each toolkit tool from `tool`, which drops a tool
+ * by returning null. The values section lays its prices out the same way.
+ */
+export function inventoryPages<T>(
+  member: RawMember,
+  slots: (blob: RawNbt) => (T | null)[],
+  tool: (blob: RawNbt) => T | null
+): Partial<Record<InventoryId, (T | null)[][]>> | null {
+  const inventory = member.inventory;
+  if (!inventory?.inv_contents) return null;
+
+  const pages: Partial<Record<InventoryId, (T | null)[][]>> = { inventory: [hotbarLast(slots(inventory.inv_contents))] };
+
+  if (inventory.ender_chest_contents) pages.enderChest = paged(slots(inventory.ender_chest_contents));
+  pages.backpacks = byKey(inventory.backpack_contents).map(slots);
+  if (inventory.personal_vault_contents) pages.personalVault = [slots(inventory.personal_vault_contents)];
+
+  for (const [id, bag] of Object.entries(BAGS) as [keyof typeof BAGS, (typeof BAGS)[keyof typeof BAGS]][]) {
+    const blob = inventory.bag_contents?.[bag];
+    if (blob) pages[id] = paged(slots(blob));
+  }
+
+  const farming = member.garden_player_data?.farming_toolkit;
+  if (farming) pages.farmingToolkit = [toolkitPage(farming, tool)];
+  const hunting = member.foraging?.hunting_toolkit;
+  if (hunting) pages.huntingToolkit = [toolkitPage(hunting, tool)];
+
+  const rift = member.rift?.inventory;
+  if (rift?.inv_contents) pages.riftInventory = [hotbarLast(slots(rift.inv_contents))];
+  if (rift?.ender_chest_contents) pages.riftEnderChest = paged(slots(rift.ender_chest_contents));
+
+  return pages;
+}
 
 /** Every inventory as the game pages it, and the sacks. */
 export function getInventories(member: RawMember, items: ItemsResource): InventoriesSection | null {
   const inventory = member.inventory;
-  if (!inventory?.inv_contents) return null;
-
-  const pages: InventoriesSection["pages"] = { inventory: [hotbarLast(decodeSlots(inventory.inv_contents))] };
-
-  if (inventory.ender_chest_contents) pages.enderChest = paged(decodeSlots(inventory.ender_chest_contents));
-  pages.backpacks = byKey(inventory.backpack_contents).map(decodeSlots);
-  if (inventory.personal_vault_contents) pages.personalVault = [decodeSlots(inventory.personal_vault_contents)];
-
-  for (const [id, bag] of Object.entries(BAGS) as [keyof typeof BAGS, (typeof BAGS)[keyof typeof BAGS]][]) {
-    const blob = inventory.bag_contents?.[bag];
-    if (blob) pages[id] = paged(decodeSlots(blob));
-  }
-
-  const farming = member.garden_player_data?.farming_toolkit;
-  if (farming) pages.farmingToolkit = [toolkitPage(farming, items)];
-  const hunting = member.foraging?.hunting_toolkit;
-  if (hunting) pages.huntingToolkit = [toolkitPage(hunting, items)];
-
-  const rift = member.rift?.inventory;
-  if (rift?.inv_contents) pages.riftInventory = [hotbarLast(decodeSlots(rift.inv_contents))];
-  if (rift?.ender_chest_contents) pages.riftEnderChest = paged(decodeSlots(rift.ender_chest_contents));
+  const pages = inventoryPages(member, decodeSlots, (blob) => toolkitItemView(blob, items));
+  if (!inventory || !pages) return null;
 
   const sacks = Object.entries(inventory.sacks_counts ?? {})
     .filter(([, count]) => count > 0)

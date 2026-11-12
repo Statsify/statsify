@@ -37,7 +37,7 @@ import type { RawGarden, RawMember, RawMuseum, RawMuseumMember, RawProfile } fro
 
 export type SectionNeed = "museum" | "garden" | "prices" | "items";
 
-/** Every section a lookup can ask for: SECTIONS' and networth, which ./networth computes. */
+/** Every section a lookup can ask for: SECTIONS' and networth and values, which ./networth computes. */
 export const SKYBLOCK_SECTIONS = [
   "accessories",
   "attributes",
@@ -64,6 +64,7 @@ export const SKYBLOCK_SECTIONS = [
   "skills",
   "slayers",
   "stats",
+  "values",
 ] as const;
 
 export type SkyBlockSection = (typeof SKYBLOCK_SECTIONS)[number];
@@ -87,7 +88,7 @@ interface Section<K extends keyof MemberView> {
 /** Ironman, stranded and bingo profiles can't use the Auction House or the Bazaar. */
 const hasMarket = (profile: RawProfile) => gameModeOf(profile) === "normal";
 
-export type SectionKey = Exclude<keyof MemberView, "apiSettings" | "networth">;
+export type SectionKey = Exclude<keyof MemberView, "apiSettings" | "networth" | "values">;
 
 /** The caller fetches each section's needs before compute(). */
 export const SECTIONS: { [K in SectionKey]: Section<K> } = {
