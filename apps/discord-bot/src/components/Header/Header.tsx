@@ -11,7 +11,6 @@ import { HeaderBody } from "./HeaderBody.js";
 import { HeaderNametag } from "./HeaderNametag.js";
 import { Historical, type HistoricalTimeData } from "../Historical/index.js";
 import { Image } from "skia-canvas";
-import { Multiline } from "../Multiline.js";
 import { Sidebar, SidebarItem } from "../Sidebar.js";
 import { Skin } from "../Skin.js";
 import { useChildren, useComponentHeight, useComponentWidth } from "@statsify/rendering";
@@ -46,15 +45,15 @@ export type HeaderProps =
   SidebarHeaderProps |
   CustomHeaderBodyProps;
 
-// A title breaks at its "\n" only where that narrows the header (the title is its widest part) and the sidebar leaves room for two lines
+// Breaking only narrows the header when the title is wider than the nametag
 const fitTitle = (title: string, nameTag: JSX.Element, sidebar: SidebarItem[]) => {
   if (!title.includes("\n")) return title;
 
   const line = title.replace("\n", " ");
-  const lines = <div direction="column"><Multiline>{title}</Multiline></div>;
-  const room = sidebar.length > 0 ? useComponentHeight(<Sidebar items={sidebar} />) : 0;
-  const widest = useComponentWidth(<text>{line}</text>) > useComponentWidth(nameTag);
-  return widest && useComponentHeight(nameTag) + useComponentHeight(lines) <= room ? title : line;
+  if (sidebar.length === 0 || useComponentWidth(<HeaderBody title={line} />) <= useComponentWidth(nameTag)) return line;
+
+  const height = useComponentHeight(nameTag) + useComponentHeight(<HeaderBody title={title} />);
+  return height <= useComponentHeight(<Sidebar items={sidebar} />) ? title : line;
 };
 
 export const Header = (props: HeaderProps) => {
