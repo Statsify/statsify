@@ -76,6 +76,7 @@ export interface SectionInput {
   garden?: RawGarden | null; // null: Hypixel has no Garden for the profile
   prices?: PriceMap;
   items?: ItemsResource;
+  ranked?: boolean; // false only for a player known to have no rank
 }
 
 interface Section<K extends keyof MemberView> {
@@ -153,7 +154,7 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
   },
   pets: { needs: ["items"], compute: async ({ member, items }) => getPets(member, items) },
   rift: { needs: [], compute: async ({ member }) => getRift(member) },
-  skills: { needs: [], compute: async ({ profile, member }) => getSkills(profile, member) },
+  skills: { needs: [], compute: async ({ profile, member, ranked }) => getSkills(profile, member, ranked) },
   slayers: { needs: [], compute: async ({ member }) => getSlayers(member) },
   stats: {
     needs: ["items"],

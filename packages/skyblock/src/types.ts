@@ -36,6 +36,33 @@ export interface PlayerRef {
   displayName: string;
 }
 
+/** What the stored Player keeps from /player, as PlayerSkyBlock in @statsify/schemas. 0 means none. */
+export interface StoredPlayerSkyBlock {
+  angler: number;
+  augmentation: number;
+  combat: number;
+  concoctor: number;
+  domesticator: number;
+  excavator: number;
+  gatherer: number;
+  harvester: number;
+  hardWorkingMiner: number;
+  centuryCake: number;
+  centuryCake200: number;
+  potatoTalisman: number;
+  freeCookie: number;
+}
+
+export const PLAYER_CLAIMS = ["centuryCake", "centuryCake200", "potatoTalisman", "freeCookie"] as const;
+
+export type PlayerClaim = (typeof PLAYER_CLAIMS)[number];
+
+export interface PlayerExtras {
+  highestSkills: Partial<Record<Skill, number>>; // the best level on any profile, for when the Skills API is off
+  commissions: number; // lifetime, over every profile
+  claimed: Partial<Record<PlayerClaim, number>>; // when each was claimed
+}
+
 export interface SkyBlockProfilesView extends PlayerRef, Freshness {
   profiles: ProfileSummary[];
 }
@@ -61,6 +88,7 @@ export interface ProfileSummary {
 
 export interface SkyBlockProfileView extends PlayerRef, Freshness, ProfileSummary {
   member: MemberView;
+  player?: PlayerExtras; // missing until the player's /player is stored
   museumFetchedAt?: number;
   gardenFetchedAt?: number;
   marketDown?: Exclude<keyof MemberView, "apiSettings">[]; // asked for, but left out until the price map and items resource are built
