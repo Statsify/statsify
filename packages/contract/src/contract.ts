@@ -201,8 +201,8 @@ export const LeaderboardColumnSchema = z.object({
   name: z.string(),
   /** The catalog's `stats.*` locale key for the stat (the bot's card's word for it), or null where the catalog has none. */
   label: z.string().nullable(),
-  /** The colour the bot's card draws the stat in, or null where it depends on the value. */
-  colour: z.string().nullable(),
+  /** The color the bot's card draws the stat in, or null where it depends on the value. */
+  color: z.string().nullable(),
 });
 
 export const LeaderboardPageSchema = z.object({
@@ -523,8 +523,8 @@ const GlossaryEntrySchema = z.object({
   label: z.string(),
   /** Values for the label's placeholders, e.g. `{ tier: "I–III" }` for "Tier {{tier}}". */
   params: z.record(z.string(), z.string()).optional(),
-  /** Its colour on the cards, or null where the colour depends on the value. */
-  colour: z.string().nullable(),
+  /** Its color on the cards, or null where the color depends on the value. */
+  color: z.string().nullable(),
   /** The games that show it: BedWars, SkyWars and Duels first, then by leaderboards. */
   games: z.array(GlossaryGameSchema),
   /** Its leaderboard's field when exactly one ranks it. */

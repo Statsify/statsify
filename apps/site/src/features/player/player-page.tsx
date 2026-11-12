@@ -14,7 +14,7 @@ import { Hint, Spoken } from "~/components/ui/hint";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
-import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
 import { RefreshBar, savedDate, useNow } from "./refresh-bar";
@@ -526,18 +526,18 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
           const label = t(`stats.${row.key}`, { ns: ["default", "site"] });
           const full = statName(`stats.${row.key}`);
           const exactValue = typeof row.value === "number" ? exact(row.value) : undefined;
-          // Text the API formatted takes the stat's colour, unless it brings its own (Layers' 74/100).
+          // Text the API formatted takes the stat's color, unless it brings its own (Layers' 74/100).
           const value = row.hidden ?
             <Hidden /> :
             typeof row.value === "number" ?
               <><Spoken full={exactValue}>{n(row.value)}</Spoken>{row.suffix}</> :
-              <MinecraftText>{`${row.colour}${row.value}`}</MinecraftText>;
-          const { className, style } = colourOf(row.colour);
+              <MinecraftText>{`${row.color}${row.value}`}</MinecraftText>;
+          const { className, style } = colorOf(row.color);
 
           return (
             <StatCell
               key={row.key}
-              label={row.name === undefined ? <Spoken full={full}>{label}</Spoken> : <MinecraftText>{`${row.colour}${row.name}`}</MinecraftText>}
+              label={row.name === undefined ? <Spoken full={full}>{label}</Spoken> : <MinecraftText>{`${row.color}${row.name}`}</MinecraftText>}
               value={row.leaderboard ?
                 (
                   <LeaderboardLink field={row.leaderboard} username={username} stat={full ?? label} hint={linkHint(full, exactValue)}>

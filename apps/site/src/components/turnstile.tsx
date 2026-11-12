@@ -101,7 +101,7 @@ export function Turnstile({
         });
       } catch {
         callback.current(undefined);
-        if (!cancelled) loadError.current?.();
+        if (!canceled) loadError.current?.();
       }
     }
 

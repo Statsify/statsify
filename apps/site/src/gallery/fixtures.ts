@@ -89,8 +89,8 @@ export const LEADERBOARD_PAGE: LeaderboardPage = {
   name: "BedWars Overall Wins",
   glossary: "wins",
   columns: [
-    { field: "stats.bedwars.overall.wins", name: "Wins", label: "stats.wins", colour: "§a" },
-    { field: "stats.bedwars.overall.fkdr", name: "FKDR", label: "stats.fkdr", colour: "§6" },
+    { field: "stats.bedwars.overall.wins", name: "Wins", label: "stats.wins", color: "§a" },
+    { field: "stats.bedwars.overall.fkdr", name: "FKDR", label: "stats.fkdr", color: "§6" },
   ],
   sort: "DESC",
   page: 0,

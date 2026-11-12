@@ -194,7 +194,7 @@ function LeaderboardPage({ view: { page, miss, explanation } }: { view: Leaderbo
               {t("leaderboards.gameTitle", { game: page.index.name })}
             </Link>
           )}
-          {/* What the stat is: a line that wraps reads from the start, not centred. */}
+          {/* What the stat is: a line that wraps reads from the start, not centered. */}
           {explanation && (
             <p className="max-w-200 text-mc-1 text-mc-gray lg:text-mc-1.5">
               {explanation.text}{" "}

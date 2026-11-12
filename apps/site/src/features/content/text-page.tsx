@@ -277,13 +277,13 @@ const CALLOUT_TONES = {
   legal: { rule: "border-mc-gray", label: "text-mc-gray" },
 };
 
-/** A darker inset with a § colour rule down its left and a Minecraft label. */
+/** A darker inset with a § color rule down its left and a Minecraft label. */
 export function Callout({ label, tone = "note", children }: { label: ReactNode; tone?: keyof typeof CALLOUT_TONES; children: ReactNode }) {
-  const { rule, label: labelColour } = CALLOUT_TONES[tone];
+  const { rule, label: labelColor } = CALLOUT_TONES[tone];
 
   return (
     <div className={cn("flex max-w-[68ch] flex-col gap-2 border-l-4 bg-black/35 p-4", rule)}>
-      <span className={cn("text-mc-1 font-bold", labelColour)}>{label}</span>
+      <span className={cn("text-mc-1 font-bold", labelColor)}>{label}</span>
       {children}
     </div>
   );

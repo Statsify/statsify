@@ -27,12 +27,12 @@ export function catalogStats(): Map<string, Stat> {
 }
 
 /**
- * A leaderboard's value column, with the label and colour the bot's cards give the stat. A stat the catalog doesn't
+ * A leaderboard's value column, with the label and color the bot's cards give the stat. A stat the catalog doesn't
  * describe (some of General's) keeps the leaderboard's own name for the column.
  */
 export function leaderboardColumn(field: string, name: string): LeaderboardColumn {
   const stat = catalogStats().get(field);
-  return { field, name, label: stat?.label ?? null, colour: typeof stat?.colour === "string" ? stat.colour : null };
+  return { field, name, label: stat?.label ?? null, color: typeof stat?.color === "string" ? stat.color : null };
 }
 
 /** The `stats.*` locale key the bot's cards label a stat with, where the catalog describes it. */

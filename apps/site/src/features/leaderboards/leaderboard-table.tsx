@@ -10,7 +10,7 @@ import { Button } from "~/components/ui/button";
 import { useEffect, useRef } from "react";
 import { Hint } from "~/components/ui/hint";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
 import { Search } from "~/components/search";
 import { formatPosition } from "@statsify/profiles/format-position";
 import { StatNumber, useStatName } from "~/components/ui/stat";
@@ -28,7 +28,7 @@ export const PLAYER = "sticky col-span-3 grid grid-cols-subgrid";
 export const VALUES = "col-span-(--columns) grid grid-cols-subgrid";
 // Layers (gradients) over the panel.
 export const STRIPE = "bg-linear-to-r from-black/15 to-black/15";
-// The bot's highlighted row is a white 0.35 panel (`leaderboard.profile.tsx`). Forced colours drop backgrounds, so
+// The bot's highlighted row is a white 0.35 panel (`leaderboard.profile.tsx`). Forced colors drop backgrounds, so
 // there it's a border.
 export const HIGHLIGHT = "bg-linear-to-r from-white/35 to-white/35 forced-colors:border-y-2 forced-colors:border-[color:Highlight]";
 
@@ -90,7 +90,7 @@ export function useColumnLabel(): (column: LeaderboardColumn) => string {
 }
 
 /**
- * A column's label in the colour the bot's cards give its stat, where that doesn't depend on the value, with the full
+ * A column's label in the color the bot's cards give its stat, where that doesn't depend on the value, with the full
  * name where the label shortens one (FKDR).
  */
 export function ColumnLabel({ column }: { column: LeaderboardColumn }) {
@@ -98,7 +98,7 @@ export function ColumnLabel({ column }: { column: LeaderboardColumn }) {
   const statName = useStatName();
   return (
     <Hint full={column.label ? statName(column.label) : undefined}>
-      {column.colour ? <span {...colourOf(column.colour)}>{text}</span> : text}
+      {column.color ? <span {...colorOf(column.color)}>{text}</span> : text}
     </Hint>
   );
 }

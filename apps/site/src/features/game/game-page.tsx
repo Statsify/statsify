@@ -19,7 +19,7 @@ import { GameNav } from "./game-nav";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { Hidden, InlineStat, LeaderboardLink, StatCell, StatNumber, glossaryKey, linkHint, useStatName } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { MinecraftText, colourClass, colourOf, leadingColourClass, plainText } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorClass, colorOf, leadingColorClass, plainText } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "~/features/player/mini-header";
 import { PanelToggle, SharePanel } from "~/features/player/share-panel";
 import { RefreshBar } from "~/features/player/refresh-bar";
@@ -349,7 +349,7 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
           value={level.leaderboard ?
             <LeaderboardLink field={level.leaderboard} username={username} stat={full ?? label} hint={full}>{value}</LeaderboardLink> :
             value}
-          color={leadingColourClass(level.current)}
+          color={leadingColorClass(level.current)}
           className="relative wrap-break-word"
         />
       </dl>
@@ -370,9 +370,9 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
             <span className={cn("font-bold", colorClass(colors?.maxed ?? "§b"))}>{t(`game.${level.maxedWord ?? "maxed"}`)}</span> :
             (
               <>
-                <span className={colourClass(colours?.current ?? "§b")}><StatNumber value={current} /></span>
-                {colours ? <span className={colourClass(colours.slash)}>/</span> : "/"}
-                <span className={colourClass(colours?.max ?? "§a")}><StatNumber value={max} /></span>
+                <span className={colorClass(colors?.current ?? "§b")}><StatNumber value={current} /></span>
+                {colors ? <span className={colorClass(colors.slash)}>/</span> : "/"}
+                <span className={colorClass(colors?.max ?? "§a")}><StatNumber value={max} /></span>
               </>
             )}
         />
@@ -505,13 +505,13 @@ export function StatPanel({
 }
 
 /**
- * A stat's heading: the card's own name for it (in its colours, else the stat's), or the bot's word for it, with the
+ * A stat's heading: the card's own name for it (in its colors, else the stat's), or the bot's word for it, with the
  * full name where that word shortens one (FKDR).
  */
 function useStatLabel(cell: Stat): { text: string; node: ReactNode; full?: string } {
   const text = useLabelText()(cell);
   const full = useStatName()(cell.label);
-  if (cell.name !== undefined) return { text, node: <MinecraftText>{`${cell.colour}${cell.name}`}</MinecraftText> };
+  if (cell.name !== undefined) return { text, node: <MinecraftText>{`${cell.color}${cell.name}`}</MinecraftText> };
   return { text, node: text, full };
 }
 
@@ -537,7 +537,7 @@ function useStatValue(cell: Stat, linked = false): ReactNode {
   // Text the API formatted takes the stat's color, unless it brings its own (a level, a §7 N/A).
   const value = typeof cell.value === "number" ?
     <>{number(cell.value)}{cell.suffix ?? ""}</> :
-    <MinecraftText>{`${cell.colour}${cell.value}`}</MinecraftText>;
+    <MinecraftText>{`${cell.color}${cell.value}`}</MinecraftText>;
 
   if (cell.of === undefined) return value;
 
@@ -558,7 +558,7 @@ function GameStat({ cell, username }: { cell: Stat; username: string }) {
   const exact = useExactNumber();
   const label = useStatLabel(cell);
   const value = useStatValue(cell, cell.leaderboard !== undefined);
-  const { className, style } = colourOf(cell.colour);
+  const { className, style } = colorOf(cell.color);
   // The short label shows under the row's heading; the link keeps the whole name.
   const shown = cell.short ? t(cell.short, { ns: LABEL_NAMESPACES }) : label.node;
   // Explained in place: an abbreviation, and a stat that means something else in this game.
@@ -639,7 +639,7 @@ function Tick({ done }: { done: boolean }) {
 function SelectionStat({ cell }: { cell: Stat }) {
   const label = useStatLabel(cell);
   const value = useStatValue(cell);
-  const { className, style } = colourOf(cell.colour);
+  const { className, style } = colorOf(cell.color);
   return <InlineStat label={<Hint full={label.full}>{label.text}</Hint>} value={value} color={className} style={style} />;
 }
 

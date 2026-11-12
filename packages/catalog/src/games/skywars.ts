@@ -19,14 +19,14 @@ export const SKYWARS: Game<SkyWarsModes> = {
   modes: SKYWARS_MODES,
   game: {
     // The level's leaderboard ranks EXP, as BedWars' does.
-    exp: { colour: "§b", glossary: "level" },
-    coins: { colour: "§6" },
-    tokens: { colour: "§2" },
-    souls: { colour: "§b" },
-    opals: { colour: "§9" },
-    heads: { colour: "§5" },
-    potionsBrewed: { colour: "§d" },
-    ...Object.fromEntries(SKYWARS_CHALLENGES.map((key) => [key, { colour: doneColour }])),
+    exp: { color: "§b", glossary: "level" },
+    coins: { color: "§6" },
+    tokens: { color: "§2" },
+    souls: { color: "§b" },
+    opals: { color: "§9" },
+    heads: { color: "§5" },
+    potionsBrewed: { color: "§d" },
+    ...Object.fromEntries(SKYWARS_CHALLENGES.map((key) => [key, { color: doneColor }])),
   },
   shapes: [
     {

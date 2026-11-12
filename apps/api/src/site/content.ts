@@ -94,7 +94,7 @@ function entry(key: string, stats: Stat[], games: Record<string, string>, ratio:
     key,
     label,
     ...(LABEL_PARAMS[label] && { params: LABEL_PARAMS[label] }),
-    colour: stats.map(({ colour }) => colour).find((colour) => typeof colour === "string") ?? null,
+    color: stats.map(({ color }) => color).find((color) => typeof color === "string") ?? null,
     games: [...boards]
       .map(([game, count]) => ({ key: game, boards: count }))
       .toSorted((a, b) => gameOrder(a.key) - gameOrder(b.key) || b.boards - a.boards || games[a.key].localeCompare(games[b.key])),
@@ -103,7 +103,7 @@ function entry(key: string, stats: Stat[], games: Record<string, string>, ratio:
   };
 }
 
-/** A ratio's parts, labelled as the stats beside it are (Turbo Kart Racers' Gold is its gold trophies). */
+/** A ratio's parts, labeled as the stats beside it are (Turbo Kart Racers' Gold is its gold trophies). */
 function formula(stats: Stat[], ratio: string | undefined): GlossaryEntry["formula"] {
   if (!ratio) return null;
 
@@ -121,7 +121,7 @@ const PRESTIGE_NAMES: Record<string, string> = { none: "Stone", x_ray: "X-Ray" }
 const PRESTIGE_LEVELS = 100;
 
 /**
- * Every BedWars prestige the game colours, from the schemas' scheme map (the cards' level colours), each at its first
+ * Every BedWars prestige the game colors, from the schemas' scheme map (the cards' level colors), each at its first
  * level with the star it shows and the EXP it takes; and the stars and brackets Hypixel sells.
  */
 export function buildPrestigeSheet(): PrestigeSheet {

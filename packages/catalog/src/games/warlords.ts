@@ -19,11 +19,11 @@ export const WARLORDS_SPECS = ["attack", "defense", "healer"] as const;
 
 /** The card's column for a class or one of its specs. */
 const COLUMN: Record<string, StatEntry> = {
-  wins: { colour: "§e" },
-  damage: { colour: "§c" },
-  healing: { colour: "§a" },
-  prevent: { colour: "§b" },
-  total: { colour: "§6", glossary: "warlordsTotal" },
+  wins: { color: "§e" },
+  damage: { color: "§c" },
+  healing: { color: "§a" },
+  prevent: { color: "§b" },
+  total: { color: "§6", glossary: "warlordsTotal" },
 };
 
 /** The colors and labels of the bot's Warlords card (`warlords.profile.tsx` and its tables): one table a mode. */
