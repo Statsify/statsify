@@ -12,13 +12,15 @@ use winit::dpi::PhysicalSize;
 use winit::event::{ElementState, MouseScrollDelta};
 
 use self::backend::{Backend, OutputTexture};
+use crate::armor::Armor;
 use crate::camera::{Camera, CameraUniform, OrbitalCamera};
-use crate::error::Result;
+use crate::error::{Error, Result};
 use crate::geometry::vertex::{Vertex, VertexDescriptor};
 use crate::instance::InstanceRaw;
 use crate::light::LightUniform;
 use crate::model::{DrawModel, Model, ModelKind, ModelOuterLayer};
-use crate::skin_loader::load_skin_from_memory;
+use crate::pose::Pose;
+use crate::skin_loader::{load_cape_from_memory, load_skin_from_memory};
 use crate::texture::Texture;
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -37,9 +39,13 @@ pub struct SkinRenderer<T: Backend> {
   light_uniform: LightUniform,
   light_buffer: wgpu::Buffer,
 
+  camera_bind_group_layout: wgpu::BindGroupLayout,
+  light_bind_group_layout: wgpu::BindGroupLayout,
   camera_bind_group: wgpu::BindGroup,
   light_bind_group: wgpu::BindGroup,
   render_pipeline: wgpu::RenderPipeline,
+  attachment_pipeline: wgpu::RenderPipeline,
+  enchanted_pipeline: wgpu::RenderPipeline,
   instance_buffer: wgpu::Buffer,
 
   depth_texture: Texture,
@@ -85,14 +91,28 @@ impl<T: Backend> SkinRenderer<T> {
     let (light_uniform, light_buffer, light_bind_group_layout, light_bind_group) =
       Self::create_light(device, &camera);
 
-    let render_pipeline = Self::create_render_pipeline(
+    let bind_group_layouts = [
+      &texture_bind_group_layout,
+      &camera_bind_group_layout,
+      &light_bind_group_layout,
+    ];
+
+    let render_pipeline =
+      Self::create_render_pipeline(device, &bind_group_layouts, &config, "fs_main");
+
+    let attachment_pipeline =
+      Self::create_render_pipeline(device, &bind_group_layouts, &config, "fs_attachment");
+
+    let enchanted_pipeline = Self::create_render_pipeline(
       device,
       &[
         &texture_bind_group_layout,
         &camera_bind_group_layout,
         &light_bind_group_layout,
+        &texture_bind_group_layout,
       ],
       &config,
+      "fs_enchanted",
     );
 
     let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
@@ -110,9 +130,13 @@ impl<T: Backend> SkinRenderer<T> {
       light_uniform,
       light_buffer,
 
+      camera_bind_group_layout,
+      light_bind_group_layout,
       camera_bind_group,
       light_bind_group,
       render_pipeline,
+      attachment_pipeline,
+      enchanted_pipeline,
       instance_buffer,
 
       depth_texture,
@@ -216,6 +240,7 @@ impl<T: Backend> SkinRenderer<T> {
     device: &wgpu::Device,
     bind_group_layouts: &[&wgpu::BindGroupLayout],
     config: &wgpu::SurfaceConfiguration,
+    fragment_entry_point: &str,
   ) -> wgpu::RenderPipeline {
     let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
       label: Some("shader.wgsl"),
@@ -239,7 +264,7 @@ impl<T: Backend> SkinRenderer<T> {
       },
       fragment: Some(wgpu::FragmentState {
         module: &shader,
-        entry_point: Some("fs_main"),
+        entry_point: Some(fragment_entry_point),
         targets: &[Some(wgpu::ColorTargetState {
           format: config.format,
           blend: Some(wgpu::BlendState::ALPHA_BLENDING),
@@ -273,7 +298,12 @@ impl<T: Backend> SkinRenderer<T> {
     })
   }
 
-  fn render_sync(&self, model: &Model) -> (wgpu::CommandEncoder, OutputTexture<'_>) {
+  fn render_sync(
+    &self,
+    model: &Model,
+    camera_bind_group: &wgpu::BindGroup,
+    light_bind_group: &wgpu::BindGroup,
+  ) -> (wgpu::CommandEncoder, OutputTexture<'_>) {
     let device = self.backend.device();
     let output_texture = self.backend.get_output_texture();
     let view = T::create_view(&output_texture);
@@ -308,26 +338,63 @@ impl<T: Backend> SkinRenderer<T> {
 
       render_pass.set_vertex_buffer(1, self.instance_buffer.slice(..));
       render_pass.set_pipeline(&self.render_pipeline);
-      render_pass.draw_model(model, &self.camera_bind_group, &self.light_bind_group);
+      render_pass.draw_model(model, camera_bind_group, light_bind_group);
+
+      render_pass.set_pipeline(&self.attachment_pipeline);
+      render_pass.draw_attachments(model, false, camera_bind_group, light_bind_group);
+
+      if let Some(glint) = model.glint() {
+        render_pass.set_pipeline(&self.enchanted_pipeline);
+        render_pass.set_bind_group(3, &glint.bind_group, &[]);
+        render_pass.draw_attachments(model, true, camera_bind_group, light_bind_group);
+      }
     };
 
     (encoder, output_texture)
   }
 
+  // The wasm renderer has no RenderOptions, so each option is its own argument
+  #[allow(clippy::too_many_arguments)]
   pub fn load_skin(
     &self,
     skin: &[u8],
     model_kind: ModelKind,
     model_outer_layer: ModelOuterLayer,
+    armor: &Armor,
+    glint: Option<&[u8]>,
+    cape: Option<&[u8]>,
+    pose: Pose,
   ) -> Result<Model> {
-    Ok(Model::new(
-      self.backend.device(),
-      self.backend.queue(),
+    let device = self.backend.device();
+    let queue = self.backend.queue();
+
+    let mut model = Model::new(
+      device,
+      queue,
       &self.texture_bind_group_layout,
       load_skin_from_memory(skin)?,
       model_kind,
       model_outer_layer,
-    ))
+      pose,
+      armor,
+    )?;
+
+    if armor.pieces().any(|(piece, ..)| piece.enchanted) {
+      let glint = image::load_from_memory(glint.ok_or(Error::MissingGlint)?)?;
+      model.attach_glint(device, queue, &self.texture_bind_group_layout, &glint)?;
+    }
+
+    if let Some(cape) = cape {
+      model.attach_cape(
+        device,
+        queue,
+        &self.texture_bind_group_layout,
+        &load_cape_from_memory(cape)?,
+        armor.chestplate.is_some(),
+      )?;
+    }
+
+    Ok(model)
   }
 }
 
@@ -345,7 +412,8 @@ impl SkinRenderer<wasm::WasmBackend> {
   }
 
   pub fn render(&self, model: &Model) {
-    let (encoder, output_texture) = self.render_sync(model);
+    let (encoder, output_texture) =
+      self.render_sync(model, &self.camera_bind_group, &self.light_bind_group);
 
     self
       .backend
@@ -411,8 +479,51 @@ impl SkinRenderer<native::NativeBackend> {
     Self::create(backend).await
   }
 
-  pub async fn render(&self, model: &Model) -> Result<SkinRender> {
-    let (encoder, _) = self.render_sync(model);
+  // Renders run on several threads at once, so each gets its own camera and light
+  // instead of rewriting the shared ones
+  pub async fn render(&self, model: &Model, yaw: Option<f32>) -> Result<SkinRender> {
+    let camera = OrbitalCamera::new(
+      (0.0, 0.0, 0.0).into(),
+      self.config.width as f32,
+      self.config.height as f32,
+    );
+
+    let camera = match yaw {
+      Some(yaw) => camera.with_theta(yaw),
+      None => camera,
+    };
+
+    let camera = Camera::Orbital(camera.fitted(model.points(), model.camera_radius()));
+
+    let camera_bind_group = self.uniform_bind_group(
+      &self.camera_bind_group_layout,
+      cast_slice(&[CameraUniform::new(&camera)]),
+    );
+    let light_bind_group = self.uniform_bind_group(
+      &self.light_bind_group_layout,
+      cast_slice(&[LightUniform::from(&camera)]),
+    );
+
+    let (encoder, _) = self.render_sync(model, &camera_bind_group, &light_bind_group);
     self.backend.handle_encoder_after_render(encoder).await
+  }
+
+  fn uniform_bind_group(&self, layout: &wgpu::BindGroupLayout, contents: &[u8]) -> wgpu::BindGroup {
+    let device = self.backend.device();
+
+    let buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+      label: None,
+      contents,
+      usage: wgpu::BufferUsages::UNIFORM,
+    });
+
+    device.create_bind_group(&wgpu::BindGroupDescriptor {
+      layout,
+      entries: &[wgpu::BindGroupEntry {
+        binding: 0,
+        resource: buffer.as_entire_binding(),
+      }],
+      label: None,
+    })
   }
 }

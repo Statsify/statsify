@@ -61,7 +61,11 @@ export class MegaWallsKit {
   @Field({ leaderboard: { limit } })
   public points: number;
 
+  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+  public kitLevel: number;
+
   public constructor(data: APIData, kit: string) {
+    this.kitLevel = data.classes?.[kit]?.skill_level_d;
     kit = kit ? `${kit}_` : kit;
 
     this.wins = data[`${kit}wins`];

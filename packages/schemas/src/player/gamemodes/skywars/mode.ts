@@ -42,6 +42,9 @@ export class SkyWarsMini implements SkyWarsMode {
   @Field({ store: { default: "default" } })
   public kit: string;
 
+  @Field({ store: { required: false } })
+  public kitId?: string;
+
   public constructor(data: APIData) {
     this.wins = data.wins_mini;
     this.kills = data.kills_mini;
@@ -95,6 +98,10 @@ export class SkyWarsMode {
   // Kit gets applied in the main class
   @Field({ store: { default: "default" } })
   public kit: string;
+
+  // kit drops the menu, and Normal and Insane both have a Scout
+  @Field({ store: { required: false } })
+  public kitId?: string;
 
   public constructor(data: APIData, mode: string) {
     mode = mode ? `_${mode}` : mode;

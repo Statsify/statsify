@@ -16,6 +16,7 @@
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/discord": "workspace:^",
+    "@statsify/hypixel-data": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/rendering": "workspace:^",

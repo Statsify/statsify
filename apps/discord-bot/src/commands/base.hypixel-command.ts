@@ -18,6 +18,7 @@ import {
   SubPage,
 } from "@statsify/discord";
 import { Container } from "typedi";
+import type { Armor } from "@statsify/hypixel-data";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalTimeData } from "#components";
 import { getBackground, getLogo } from "@statsify/assets";
@@ -53,6 +54,7 @@ export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   filterSubmodes?(player: Player, mode: GameModeWithSubModes<T>): GameModeWithSubModes<T>["submodes"];
   getModeEmojis?(modes: GameModeWithSubModes<T>[]): ModeEmoji[];
   getSubModeEmojis?<M extends ApiModeFromGameModes<T>>(mode: M, submodes: SubModeForMode<T, M>[]): ModeEmoji[];
+  getArmor?(player: Player, mode: GameMode<T>): Armor | undefined;
 }
 
 @Command({
@@ -72,17 +74,32 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
-    const [logo, skin, badge] = await Promise.all([
-      getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid, user),
-      this.apiService.getUserBadge(player.uuid),
-    ]);
+    // One render per armor set, since modes often share a kit; a failed armored render falls back to the plain skin
+    const skins = new Map<string, Promise<Image>>();
+    const skinFor = (armor: Armor): Promise<Image> => {
+      const key = JSON.stringify(armor);
+      if (!skins.has(key)) {
+        skins.set(key, Object.keys(armor).length > 0 ?
+          this.apiService.getPlayerSkin(player.uuid, user, armor).catch(() => skinFor({})) :
+          this.apiService.getPlayerSkin(player.uuid, user));
+      }
 
-    const data: K = (await this.getPreProfileData?.(player)) ?? noop();
+      return skins.get(key)!;
+    };
+
+    const getSkin = (mode: GameMode<T>) => skinFor(this.getArmor?.(player, mode) ?? {});
 
     const allModes = this.modes.getModes();
     const filteredModes = this.filterModes?.(player, allModes) ?? allModes;
     const emojis = this.getModeEmojis?.(filteredModes) ?? [];
+
+    const [logo, badge] = await Promise.all([
+      getLogo(user),
+      this.apiService.getUserBadge(player.uuid),
+      getSkin(filteredModes[0] as unknown as GameMode<T>),
+    ]);
+
+    const data: K = (await this.getPreProfileData?.(player)) ?? noop();
 
     const pages: Page[] = filteredModes.map((mode, index) => {
       const pageInput = {
@@ -107,7 +124,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
             const profile = this.getProfile(
               {
                 player,
-                skin,
+                skin: await getSkin(gameMode),
                 background,
                 logo,
                 t,
@@ -139,7 +156,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
           const profile = this.getProfile(
             {
               player,
-              skin,
+              skin: await getSkin(gameMode),
               background,
               logo,
               t,
