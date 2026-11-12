@@ -1,3 +1,4 @@
+mod armor;
 #[cfg(not(target_arch = "wasm32"))]
 mod buffer_dimensions;
 mod camera;
@@ -10,6 +11,7 @@ mod mesh;
 mod model;
 #[cfg(not(target_arch = "wasm32"))]
 mod native;
+mod pose;
 mod renderer;
 mod skin_loader;
 mod texture;

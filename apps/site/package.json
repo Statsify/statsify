@@ -22,6 +22,7 @@
     "@statsify/contract": "workspace:^",
     "@statsify/profiles": "workspace:^",
     "@statsify/schemas": "workspace:^",
+    "@statsify/skin-renderer": "workspace:^",
     "@statsify/tokens": "workspace:^",
     "@statsify/util": "workspace:^",
     "@tanstack/react-query": "5.104.5",

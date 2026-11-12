@@ -3,7 +3,10 @@ use lazy_static::lazy_static;
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
 
+use crate::armor::Armor;
+use crate::error::finite_yaw;
 use crate::model::{ModelKind, ModelOuterLayer};
+use crate::pose::Pose;
 use crate::renderer::native::NativeBackend;
 use crate::renderer::SkinRenderer;
 
@@ -15,8 +18,28 @@ lazy_static! {
   });
 }
 
+#[napi(object)]
+#[derive(Default)]
+pub struct RenderOptions {
+  pub armor: Option<Armor>,
+  /// Enchantment glint texture (PNG), needed when an armor piece is enchanted.
+  pub glint: Option<Uint8Array>,
+  /// Cape texture (PNG).
+  pub cape: Option<Uint8Array>,
+  /// Camera angle around the player in radians: 0 faces the front, π the back.
+  /// Defaults to -0.3.
+  pub yaw: Option<f64>,
+  #[napi(ts_type = "'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly'")]
+  pub pose: Option<Pose>,
+}
+
 #[napi]
-pub async fn render_skin(skin: &[u8], slim: bool, extruded: bool) -> Result<Buffer> {
+pub async fn render_skin(
+  skin: &[u8],
+  slim: bool,
+  extruded: bool,
+  options: Option<RenderOptions>,
+) -> Result<Buffer> {
   let renderer = SKIN_RENDERER.get().await;
 
   let model_kind = if slim {
@@ -31,8 +54,21 @@ pub async fn render_skin(skin: &[u8], slim: bool, extruded: bool) -> Result<Buff
     ModelOuterLayer::D2
   };
 
-  let model = renderer.load_skin(skin, model_kind, model_outer_layer)?;
-  let buffer = renderer.render(&model).await?;
+  let options = options.unwrap_or_default();
+  let armor = options.armor.unwrap_or_default();
+
+  let yaw = options.yaw.map(finite_yaw).transpose()?;
+
+  let model = renderer.load_skin(
+    skin,
+    model_kind,
+    model_outer_layer,
+    &armor,
+    options.glint.as_deref(),
+    options.cape.as_deref(),
+    options.pose.unwrap_or_default(),
+  )?;
+  let buffer = renderer.render(&model, yaw).await?;
 
   Ok(buffer.into())
 }
