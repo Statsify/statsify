@@ -626,7 +626,6 @@
       "sword_swap": "Discipline",
       "wall_jump": "Stamina"
     },
-    "doubleDrops": "Double Drops",
     "duplicate": "Duplicate",
     "duplicateRabbits": "Duplicate Rabbits",
     "eggLocations": "Egg Locations Found",
@@ -635,6 +634,7 @@
     "enrichments": "Enrichments",
     "entrance": "Entrance",
     "essence": "Essence",
+    "extraFarmingFortune": "Extra Farming Fortune",
     "faction": "Faction",
     "fairySouls": "Fairy Souls",
     "farmingLevelCap": "Farming Level Cap",
