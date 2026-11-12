@@ -183,7 +183,7 @@ struct BodyPart<'a> {
 }
 
 impl<'a> BodyPart<'a> {
-  fn create(self, scale: f32, device: &wgpu::Device) -> (Mesh, Mesh) {
+  fn create(self, scale: f32) -> (Geometry, Geometry) {
     let texture_size = (64, 64);
 
     let (position, rotation) = self.placement.resolve();
@@ -239,10 +239,7 @@ impl<'a> BodyPart<'a> {
     inner_geometry.scale_around(scale, position);
     outer_geometry.scale_around(scale, position);
 
-    (
-      Mesh::from_geometry(device, inner_geometry),
-      Mesh::from_geometry(device, outer_geometry),
-    )
+    (inner_geometry, outer_geometry)
   }
 }
 
@@ -258,6 +255,22 @@ pub struct Model {
   attachments: Vec<Attachment>,
   glint: Option<Material>,
   wears_armor: bool,
+  points: Vec<Vector3<f32>>,
+}
+
+// Keeps where every vertex ends up, so a render can fit the camera to them
+fn mesh_with_points(
+  device: &wgpu::Device,
+  geometry: Geometry,
+  points: &mut Vec<Vector3<f32>>,
+) -> Mesh {
+  points.extend(
+    geometry
+      .vertices
+      .iter()
+      .map(|vertex| Vector3::from(vertex.position)),
+  );
+  Mesh::from_geometry(device, geometry)
 }
 
 impl Model {
@@ -272,7 +285,7 @@ impl Model {
   ) -> Result<Self> {
     let arm_width = kind.arm_width();
 
-    let (inner_meshes, outer_meshes): (Vec<Mesh>, Vec<Mesh>) = Part::ALL
+    let (inner_geometries, outer_geometries): (Vec<Geometry>, Vec<Geometry>) = Part::ALL
       .iter()
       .map(|&part| {
         let (layer1_location, layer2_location) = part.skin_layer_locations();
@@ -288,19 +301,27 @@ impl Model {
             outer_layer
           },
         }
-        .create(part.z_fighting_scale(), device)
+        .create(part.z_fighting_scale())
       })
       .unzip();
+
+    let mut points = vec![];
+    let meshes = inner_geometries
+      .into_iter()
+      .chain(outer_geometries)
+      .map(|geometry| mesh_with_points(device, geometry, &mut points))
+      .collect();
 
     let texture = Texture::from_image(device, queue, &image)?;
     let material = Material::new(device, texture, layout);
 
     let mut model = Self {
       material,
-      meshes: inner_meshes.into_iter().chain(outer_meshes).collect(),
+      meshes,
       attachments: vec![],
       glint: None,
       wears_armor: armor.pieces().next().is_some(),
+      points,
     };
 
     model.attach_armor(device, queue, layout, armor)?;
@@ -315,6 +336,10 @@ impl Model {
     } else {
       50.0
     }
+  }
+
+  pub fn points(&self) -> &[Vector3<f32>] {
+    &self.points
   }
 
   fn attach_armor(
@@ -473,7 +498,7 @@ impl Model {
 
     self.attachments.push(Attachment {
       material: Material::new(device, texture, layout),
-      mesh: Mesh::from_geometry(device, geometry),
+      mesh: mesh_with_points(device, geometry, &mut self.points),
       enchanted,
     });
 

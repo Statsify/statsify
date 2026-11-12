@@ -488,7 +488,7 @@ impl SkinRenderer<native::NativeBackend> {
       None => camera,
     };
 
-    let camera = Camera::Orbital(camera.with_radius(model.camera_radius()));
+    let camera = Camera::Orbital(camera.fitted(model.points(), model.camera_radius()));
 
     let camera_bind_group = self.uniform_bind_group(
       &self.camera_bind_group_layout,
