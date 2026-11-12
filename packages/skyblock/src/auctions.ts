@@ -230,11 +230,12 @@ export async function buildPriceMap(
   const entries: Record<string, PriceEntry> = {};
   for (const [key, bin] of bins) entries[key] = { coins: binPrice(bin), source: "bin", listings: bin.listings };
 
-  // quick_status averages the top orders, so one order can't move it. A sell price under the NPC's isn't what the item
-  // is worth, since the NPC always pays that.
+  // quick_status averages the top orders, so one order can't move it. The NPC always pays its price, so that's the floor.
   for (const product of Object.values(bazaar.products)) {
-    const npc = items.items[product.id]?.npcPrice ?? 0;
-    if (product.sellPrice > 0) entries[product.id] = { coins: Math.max(product.sellPrice, npc), source: "bazaar", buy: product.buyPrice };
+    if (product.sellPrice > 0) {
+      const coins = Math.max(product.sellPrice, items.items[product.id]?.npcPrice ?? 0);
+      entries[product.id] = { coins, source: "bazaar", buy: product.buyPrice };
+    }
   }
 
   // Many NPC-sold items (arrows, starter tools, low talismans) are never listed as BIN, and the NPC always pays this.
@@ -363,7 +364,7 @@ if (import.meta.vitest) {
     museum: {},
   };
 
-  test("buildPriceMap keeps the lowest BIN per unit behind the outlier guard, the bazaar wins over the NPC price, and NPC prices fill in", async () => {
+  test("buildPriceMap keeps the lowest BIN per unit behind the outlier guard, the bazaar wins but never under the NPC price, and NPC prices fill in", async () => {
     const { map, seen } = await buildPriceMap(Readable.from(pages), bazaar, items);
 
     expect(map).toMatchObject({ asOf: 1000, auctionsUpdated: 1000, bazaarUpdated: 990 });
