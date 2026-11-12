@@ -47,6 +47,8 @@ export class ChannelService {
 
   public async delete(channelId: string): Promise<void> {
     const response = await this.rest.delete(`/channels/${channelId}`);
+    if (response.status === 404) return;
+
     parseDiscordResponse(response);
   }
 
@@ -66,6 +68,8 @@ export class ChannelService {
       const response = await this.rest.get(
         `/channels/${channelId}/messages?limit=${limit}${before}`
       );
+
+      if (response.status === 404) return messages;
 
       page = parseDiscordResponse(response);
       messages.push(...page);
