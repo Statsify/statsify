@@ -359,7 +359,7 @@ impl Model {
           .create();
 
           if skull {
-            box_geometry.scale_around(1.1875, neck);
+            box_geometry.grow_around(1.1875, neck);
           } else {
             box_geometry.scale_around(part.z_fighting_scale(), position);
           }
