@@ -13,6 +13,9 @@ pub enum Error {
   #[error("The camera yaw must be a finite number")]
   InvalidYaw,
 
+  #[error("The provided image is too large for a texture")]
+  TextureTooLarge,
+
   #[error("Enchanted armour needs a glint texture")]
   MissingGlint,
 
