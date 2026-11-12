@@ -42,7 +42,12 @@ export const findScore = <T extends { req: number }>(data: T[], score = 0): T =>
 export const isObject = (value: any): value is object =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
+// Each thousand adds an M, so a typed number can run the process out of memory
+const MAX_ROMAN_NUMERAL = 99_999;
+
 export const romanNumeral = (num: number): string => {
+  if (num > MAX_ROMAN_NUMERAL) throw new RangeError(`${num} is too large for a roman numeral`);
+
   const digits = [...String(num)];
   const key = [
     "",
@@ -290,6 +295,10 @@ if (import.meta.vitest) {
       expect(romanNumeral(99_999)).toBe(
         "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMCMXCIX"
       );
+    });
+
+    it("should refuse numbers past 99,999", () => {
+      expect(() => romanNumeral(100_000)).toThrow(RangeError);
     });
   });
 
