@@ -234,6 +234,16 @@ export interface Config {
        */
       secretKey?: string;
     };
+    discordLogin?: {
+      /**
+       * The OAuth2 client ID of the Discord application the site logs in with; empty turns login off
+       */
+      clientId?: string;
+      /**
+       * That application's OAuth2 client secret, read only by the API, which exchanges the login code
+       */
+      clientSecret?: string;
+    };
     /**
      * Threads in the site's unfurl render pool, 1 to 3. Defaults to 2; the site won't start with any other value
      * @example 2

@@ -26,6 +26,9 @@
       "title": "Guild Search | Statsify",
       "description": "Search a Hypixel guild to view its level, GEXP and members."
     },
+    "account": {
+      "title": "Your Account | Statsify"
+    },
     "glossary": {
       "title": "Stat Glossary | Statsify",
       "description": "What every stat on Statsify means, from FKDR to winstreaks."
@@ -89,6 +92,8 @@
     "guilds": "Guilds",
     "external": "Statsify elsewhere",
     "newTab": "(opens in a new tab)",
+    "account": "Account",
+    "login": "Log In",
     "loading": "Loading",
     "skip": "Skip to Content"
   },
@@ -464,5 +469,38 @@
     "exp": "{{exp}} EXP",
     "stars": "Stars",
     "brackets": "Brackets"
+  },
+  "account": {
+    "title": "Your Account",
+    "logout": "Log Out",
+    "loggedOut": {
+      "description": "Log in to claim your profile and manage your settings.",
+      "discord": "Log In With Discord",
+      "failed": "Couldn't log in with Discord. Try again.",
+      "unavailable": "Logging in isn't available right now."
+    },
+    "profiles": {
+      "title": "Minecraft Profiles",
+      "switcher": "Your profiles",
+      "none": "No Minecraft account is linked yet.",
+      "primary": "Primary profile: the bot's verified account",
+      "secondary": "Linked profile",
+      "linked": "Linked {{date}}",
+      "view": "View Profile",
+      "makePrimary": "Make Primary",
+      "unlink": "Unlink",
+      "confirmUnlink": "Press Again to Unlink",
+      "primaryLocked": "Make another profile primary to unlink this one."
+    },
+    "verify": {
+      "first": "Run /verify with the Statsify bot on Discord, then check again to link that Minecraft account.",
+      "another": "To link another Minecraft account, /verify it with the bot, then check again. It becomes your primary.",
+      "check": "Check Again"
+    },
+    "moved": {
+      "title": "Claimed by Another Account",
+      "line": "{{name}} was claimed by another account on {{date}}.",
+      "dismiss": "Dismiss"
+    }
   }
 }

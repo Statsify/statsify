@@ -71,6 +71,10 @@ export default {
       siteKey: "",
       secretKey: "",
     },
+    discordLogin: {
+      clientId: "",
+      clientSecret: "",
+    },
     renderWorkers: 2,
   },
   sentry: {

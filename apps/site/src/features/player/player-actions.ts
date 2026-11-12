@@ -8,8 +8,8 @@
 
 import { ORPCError } from "@orpc/client";
 import { UUID_PATTERN } from "~/lib/uuid";
+import { clientIp } from "~/server/client-ip.server";
 import { createServerFn } from "@tanstack/react-start";
-import { getRequest, getRequestIP } from "@tanstack/react-start/server";
 import { rpcServerClient } from "~/server/rpc.server";
 import { verifyTurnstile } from "~/server/turnstile.server";
 import { z } from "zod";
@@ -39,11 +39,6 @@ const ACTION_TIMEOUT_MS = 10_000;
 export const BROWSER_TIMEOUT_MS = 12_000;
 
 const RETRY_MARGIN_S = 5;
-
-/** The visitor's address: nginx passes Cloudflare's `CF-Connecting-IP` through. */
-function clientIp(): string {
-  return getRequest().headers.get("cf-connecting-ip") ?? getRequestIP() ?? "unknown";
-}
 
 /** An action's outcome from what the API threw, or from `deadline` running out. */
 function failure(error: unknown, deadline: AbortSignal): ActionResult<never> {

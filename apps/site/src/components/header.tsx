@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { AccountLink } from "~/components/account-link";
 import { Link, useMatch, useRouterState } from "@tanstack/react-router";
 import { Logo, Wordmark } from "~/components/icons/logo";
 import { Search } from "~/components/search";
@@ -144,6 +145,8 @@ export function Header() {
             ))}
           </ul>
         </nav>
+        {/* A game page's phone logo row has the search button and no room for it, so the row stays one line. */}
+        <AccountLink className={cn(NAV_LINK, compact && "max-md:hidden")} />
       </div>
     </header>
   );

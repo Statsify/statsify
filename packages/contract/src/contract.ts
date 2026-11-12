@@ -673,6 +673,44 @@ const LeaderboardGameInputSchema = z.object({
   key: z.string().min(1).max(32),
 });
 
+/** The opaque token in the visitor's session cookie: 32 random bytes, base64url. */
+export const SessionSchema = z.string().regex(/^[\w-]{43}$/);
+export const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
+const SessionInputSchema = z.object({ session: SessionSchema });
+const AccountProfileInputSchema = SessionInputSchema.extend({ uuid: UuidSchema });
+const AccountLoginInputSchema = z.object({
+  code: z.string().min(1).max(256),
+  /** The callback URL the authorize request named, which the token exchange has to repeat. */
+  redirectUri: z.url().max(512),
+  clientIp: ClientIpSchema,
+});
+
+export const AccountPageProfileSchema = z.object({
+  uuid: z.string(),
+  /** Null for a profile whose player the API hasn't stored. */
+  username: z.string().nullable(),
+  displayName: z.string().nullable(),
+  linkedAt: z.number(),
+  primary: z.boolean(),
+});
+
+export const AccountPageSchema = z.object({
+  /** Oldest link first, so the first is the next primary. */
+  profiles: z.array(AccountPageProfileSchema),
+  /** Profiles another account proved it owns, since this one last dismissed the list. */
+  moved: z.array(z.object({ uuid: z.string(), username: z.string().nullable(), movedAt: z.number() })),
+});
+
+const accountErrors = oc.errors({
+  /** No session, an expired one, or a login code Discord refused. */
+  UNAUTHORIZED: { message: "Log in again" },
+  NOT_FOUND: { message: "That profile isn't on this account" },
+  /** Unlinking the primary while the account owns another profile. */
+  CONFLICT: { message: "Pick another primary profile first" },
+  /** Login tries per address, or while Discord says to wait. */
+  TOO_MANY_REQUESTS: { message: "Too many login attempts, try again shortly" },
+});
+
 const errors = oc.errors({
   NOT_FOUND: { message: "Player not found" },
   /** The lookups and `refresh`: Hypixel didn't answer, so nothing new is known yet. */
@@ -779,6 +817,40 @@ export const contract = {
       .route({ method: "GET", path: "/content/prestiges", summary: "Every BedWars prestige, star and bracket" })
       .output(PrestigeSheetSchema),
   },
+  /**
+   * Server-only, and POST so a session never lands in a URL. Each acts for the session's account alone; only `login`
+   * makes a session, from a code Discord gave the visitor.
+   */
+  account: {
+    login: accountErrors
+      .route({ method: "POST", path: "/account/login", summary: "Log in with a Discord authorization code" })
+      .input(AccountLoginInputSchema)
+      .output(z.object({ session: SessionSchema })),
+    logout: oc
+      .route({ method: "POST", path: "/account/logout", summary: "End a session" })
+      .input(SessionInputSchema)
+      .output(z.void()),
+    get: accountErrors
+      .route({ method: "POST", path: "/account/get", summary: "The session's account and its profiles" })
+      .input(SessionInputSchema)
+      .output(AccountPageSchema),
+    claimVerified: accountErrors
+      .route({ method: "POST", path: "/account/claim-verified", summary: "Link the profile the Discord user verified with the bot" })
+      .input(SessionInputSchema)
+      .output(AccountPageSchema),
+    setPrimary: accountErrors
+      .route({ method: "POST", path: "/account/primary", summary: "Make one of the account's profiles its primary" })
+      .input(AccountProfileInputSchema)
+      .output(AccountPageSchema),
+    unlink: accountErrors
+      .route({ method: "POST", path: "/account/unlink", summary: "Unlink a profile from the account" })
+      .input(AccountProfileInputSchema)
+      .output(AccountPageSchema),
+    dismissMoved: accountErrors
+      .route({ method: "POST", path: "/account/dismiss-moved", summary: "Clear the list of profiles that moved away" })
+      .input(SessionInputSchema)
+      .output(AccountPageSchema),
+  },
 };
 
 export type SiteContract = typeof contract;
@@ -797,6 +869,8 @@ export type LeaderboardGame = z.infer<typeof LeaderboardGameSchema>;
 export type LeaderboardRow = z.infer<typeof LeaderboardRowSchema>;
 export type LeaderboardColumn = z.infer<typeof LeaderboardColumnSchema>;
 export type LeaderboardPage = z.infer<typeof LeaderboardPageSchema>;
+export type AccountPage = z.infer<typeof AccountPageSchema>;
+export type AccountPageProfile = z.infer<typeof AccountPageProfileSchema>;
 
 /** Validated (server-side) inputs. */
 export type ResolveInput = z.infer<typeof ResolveInputSchema>;
