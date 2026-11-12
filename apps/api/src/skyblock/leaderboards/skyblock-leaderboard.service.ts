@@ -131,8 +131,18 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     const player = await this.playerService.findMongoDocument(tag, { uuid: true });
     if (!player) throw new PlayerNotFoundException();
 
-    const rows = await this.statsModel.find({ uuid: player.uuid }).select({ id: true }).lean().exec();
     const fields = getLeaderboardFields(SkyBlockStats).map(([field]) => ({ field, ...getLeaderboardField(SkyBlockStats, field) }));
+
+    // A hidden board ranks by a sort key and shows its first additional field instead, as its page does
+    const shownOf = ({ hidden, additionalFields }: (typeof fields)[number]) => (hidden ? additionalFields?.[0] : undefined);
+    const shown = fields.flatMap((board) => shownOf(board) ?? []);
+
+    const rows = await this.statsModel
+      .find({ uuid: player.uuid })
+      .select({ id: true, ...Object.fromEntries(shown.map((path) => [path, true])) })
+      .lean()
+      .exec();
+    const flatRows = new Map(rows.map((row) => [row.id, flatten(row) as LeaderboardAdditionalStats]));
 
     const scores = this.redis.pipeline();
     for (const { field } of fields) for (const { id } of rows) scores.zscore(`skyblockstats.${field}`, id);
@@ -160,7 +170,15 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
       .map((board, index) => ({ ...board, rank: Number(ahead[index][1]) + 1 }))
       .filter(({ rank, limit }) => rank <= limit)
       .toSorted((a, b) => a.rank - b.rank)
-      .map(({ field, name, id, rank, formatter, score }) => ({ field, name, id, rank, value: formatter ? formatter(score) : score }));
+      .map((board) => {
+        const { field, name, id, rank, formatter, score } = board;
+        const path = shownOf(board);
+        if (!path) return { field, name, id, rank, value: formatter ? formatter(score) : score };
+
+        const metadata = getLeaderboardField(SkyBlockStats, path, false);
+        const value = flatRows.get(id)?.[path] ?? metadata.default;
+        return { field, name, id, rank, value: metadata.formatter ? metadata.formatter(value) : value };
+      });
   }
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {

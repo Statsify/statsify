@@ -351,7 +351,8 @@ export class SkyBlockBoards {
   @Field({ leaderboard: { fieldName: "Barbarian Reputation" } })
   public barbariansReputation: number;
 
-  @Field()
+  // A field named kills defaults to 500,000 rows
+  @Field({ leaderboard: { limit: 50_000 } })
   public kills: number;
 
   @Field({ leaderboard: { name: "" } })
