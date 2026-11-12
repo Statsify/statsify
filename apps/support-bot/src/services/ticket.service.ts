@@ -36,7 +36,7 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Service()
 export class TicketService {
-  private readonly closing = new Set<string>();
+  private readonly closingChannels = new Set<string>();
 
   public constructor(
     private readonly channelService: ChannelService,
@@ -194,10 +194,8 @@ export class TicketService {
       .lean()
       .exec();
 
-    // The record stays until the channel is gone so a failed close can be retried,
-    // and `closing` stops a second close (button and command) from logging it twice meanwhile
-    if (!ticket || this.closing.has(ticket.channel)) return false;
-    this.closing.add(ticket.channel);
+    if (!ticket || this.closingChannels.has(ticket.channel)) return false;
+    this.closingChannels.add(ticket.channel);
 
     try {
       // Discord returns the newest messages first, so reverse them to log the ticket in order
@@ -256,7 +254,7 @@ export class TicketService {
       const dm = await this.channelService.create(ticket.owner);
       await this.messageService.send(dm.id, message).catch(() => null);
     } finally {
-      this.closing.delete(ticket.channel);
+      this.closingChannels.delete(ticket.channel);
     }
 
     return true;
