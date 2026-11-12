@@ -35,7 +35,7 @@ export function GuildSection({ guild }: { guild: Json<Guild> }) {
       <div className="hidden md:block">
         <Carousel className="backdrop-blur-2xl bg-black/40">
           <GuildOverall guild={guild} />
-          <GuildLevelling guild={guild} />
+          <GuildLeveling guild={guild} />
           <GuildTop guild={guild} />
           <GuildMember guild={guild} />
         </Carousel>
@@ -122,7 +122,7 @@ function GuildOverall({ guild, className }: { guild: Json<Guild>; className?: st
   );
 }
 
-function GuildLevelling({ guild }: { guild: Json<Guild> }) {
+function GuildLeveling({ guild }: { guild: Json<Guild> }) {
   const n = useNumberFormat();
   const { t } = useTranslation();
   const color = guild.tagColor.code;
