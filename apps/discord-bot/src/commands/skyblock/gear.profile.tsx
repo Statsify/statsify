@@ -11,15 +11,16 @@ import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
 import { ItemGrid, gridRows } from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
-import type { ItemView, MemberView, Slots } from "@statsify/skyblock";
+import type { GearSection, ItemView, MemberView, Slots } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const WEAPONS = 4;
 
 const filled = (slots: Slots) => slots.filter((item): item is ItemView => item !== null);
 
-export const gearIcons = ({ gear }: MemberView) =>
-  gear ? [...filled(gear.armor), ...filled(gear.equipment), ...gear.weapons.slice(0, WEAPONS)].map(({ texture }) => texture) : [];
+const gearKinds = (gear: GearSection) => [filled(gear.armor), filled(gear.equipment), gear.weapons.slice(0, WEAPONS)];
+
+export const gearIcons = ({ gear }: MemberView) => (gear ? gearKinds(gear).flat().map(({ texture }) => texture) : []);
 
 export const SkyBlockGearProfile = ({
   profile,
@@ -42,12 +43,8 @@ export const SkyBlockGearProfile = ({
     ] :
     [];
 
-  // Armor, then equipment, then the first weapons, each kind starting a row
-  const items = gear ?
-    [filled(gear.armor), filled(gear.equipment), gear.weapons.slice(0, WEAPONS)].flatMap((kind) =>
-      kind.length % 2 === 0 ? kind : [...kind, undefined]
-    ) :
-    [];
+  // Each kind starts a row
+  const items = gear ? gearKinds(gear).flatMap((kind) => (kind.length % 2 === 0 ? kind : [...kind, undefined])) : [];
 
   return (
     <Container background={background}>
