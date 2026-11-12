@@ -94,7 +94,7 @@ export const SkyBlockMinionsProfile = ({
   ];
 
   if (minions.slots.next !== undefined)
-    sidebar.push([t("skyblock.nextSlot"), t("skyblock.craftsToGo", { count: minions.slots.next - minions.slots.crafts }), "§7"]);
+    sidebar.push([t("skyblock.nextSlot"), t("skyblock.craftsToGo", { count: minions.slots.next - minions.unique }), "§7"]);
 
   return (
     <Container background={background}>
