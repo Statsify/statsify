@@ -267,7 +267,9 @@ export class McInventory extends HTMLElement {
           }
         : null;
 
-    this.dispatchEvent(new CustomEvent("mc-tooltip-change", { detail, bubbles: true, composed: true }));
+    const change = new CustomEvent("mc-tooltip-change", { detail, bubbles: true, composed: true });
+    // A removed element's events no longer reach the page, so its last close goes to the document
+    (this.isConnected ? this : document).dispatchEvent(change);
   }
 
   private placeText(size: InventorySize, shown: (ItemStack | undefined)[], width: number, atlas: boolean) {
