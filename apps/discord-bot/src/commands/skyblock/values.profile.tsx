@@ -56,7 +56,7 @@ export const SkyBlockValuesProfile = ({
   return (
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
-      {cells.length > 0 ? <Table.table>{gridRows(cells, 4)}</Table.table> : <></>}
+      {cells.length > 0 ? <Table.table>{gridRows(cells, 4, true)}</Table.table> : <></>}
       {values.missingPets.length > 0 ?
         (
           <ItemGrid
@@ -68,6 +68,7 @@ export const SkyBlockValuesProfile = ({
             icons={icons}
             columns={3}
             stacked
+            spreadLastRow
           />
         ) :
         <Empty text={t("skyblock.noMissingPets")} />}
