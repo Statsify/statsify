@@ -18,8 +18,11 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 const tierText = (t: LocalizeFunction, tier: number, maxTier: number) =>
   `${tier === maxTier ? "§6" : "§e"}${t(tier)}§7/${t(maxTier)}`;
 
+const categoryItems = (collections: MemberView["collections"], category: CollectionCategory) =>
+  collections?.categories.find(({ id }) => id === category)?.items ?? [];
+
 export const collectionIcons = (category: CollectionCategory) => ({ collections }: MemberView) =>
-  collections?.categories.find(({ id }) => id === category)?.items.flatMap(({ texture }) => (texture ? [texture] : [])) ?? [];
+  categoryItems(collections, category).flatMap(({ texture }) => (texture ? [texture] : []));
 
 export const minionIcons = ({ minions }: MemberView) => minions?.minions.flatMap(({ texture }) => (texture ? [texture] : [])) ?? [];
 
@@ -40,7 +43,7 @@ export const SkyBlockCollectionsProfile = ({
   category,
 }: SkyBlockCollectionsProfileProps) => {
   const { collections } = profile.member;
-  const items = collections?.categories.find(({ id }) => id === category)?.items ?? [];
+  const items = categoryItems(collections, category);
 
   const sidebar: SidebarItem[] = collections ?
     [
@@ -88,10 +91,10 @@ export const SkyBlockMinionsProfile = ({
   const sidebar: SidebarItem[] = [
     [t("skyblock.uniqueCrafts"), t(minions.unique), "§a"],
     [t("skyblock.minionSlots"), t(minions.slots.total), "§e"],
-    ...(minions.slots.next === undefined ?
-      [] :
-      [[t("skyblock.nextSlot"), t("skyblock.craftsToGo", { count: minions.slots.next - minions.slots.crafts }), "§7"] as SidebarItem]),
   ];
+
+  if (minions.slots.next !== undefined)
+    sidebar.push([t("skyblock.nextSlot"), t("skyblock.craftsToGo", { count: minions.slots.next - minions.slots.crafts }), "§7"]);
 
   return (
     <Container background={background}>
@@ -132,7 +135,7 @@ export const SkyBlockBestiaryProfile = ({
     [t("skyblock.maxed"), `${t(bestiary.maxed)}§7/${t(bestiary.total)}`, "§6"],
   ];
 
-  // Each page's progress, so the card stays one screen; the families are on the site
+  // Each page's progress, so the card stays one screen
   const pages = bestiary.pages.map(({ category, name, families }) => {
     const tiers = add(...families.map(({ tier }) => tier));
     const maxTiers = add(...families.map(({ maxTier }) => maxTier));
