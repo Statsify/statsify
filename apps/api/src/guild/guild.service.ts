@@ -150,6 +150,19 @@ export class GuildService {
     return deserialize(Guild, flatGuild);
   }
 
+  public async search(query: string): Promise<Pick<Guild, "name" | "nameFormatted">[]> {
+    if (!query) return [];
+    const prefix = query.toLowerCase();
+
+    return this.guildModel
+      .find({ nameToLower: { $gte: prefix, $lt: `${prefix}\uffff` } })
+      .sort({ nameToLower: 1 })
+      .limit(25)
+      .select({ _id: false, name: true, nameFormatted: true })
+      .lean()
+      .exec();
+  }
+
   private async getCachedGuild(
     tag: string,
     type: GuildQuery

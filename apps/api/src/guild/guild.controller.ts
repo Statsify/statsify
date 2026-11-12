@@ -18,10 +18,11 @@ import { Controller, Get, Query } from "@nestjs/common";
 import {
   ErrorResponse,
   GetGuildResponse,
+  GetGuildSearchResponse,
   GuildNotFoundException,
   PlayerNotFoundException,
 } from "@statsify/api-client";
-import { GuildDto } from "#dtos";
+import { GuildDto, GuildSearchDto } from "#dtos";
 import { GuildService } from "./guild.service.js";
 
 @Controller("/guild")
@@ -42,6 +43,19 @@ export class GuildController {
     return {
       success: !!guild,
       guild,
+    };
+  }
+
+  @ApiOperation({ summary: "Get Stored Guild Names Starting With a Query" })
+  @ApiOkResponse({ type: GetGuildSearchResponse })
+  @Auth({ weight: 0 })
+  @Get("/search")
+  public async searchGuilds(@Query() { query }: GuildSearchDto) {
+    const guilds = await this.guildService.search(query);
+
+    return {
+      success: true,
+      guilds: guilds.map((guild) => guild.name),
     };
   }
 }
