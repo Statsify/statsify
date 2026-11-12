@@ -274,6 +274,9 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.4
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.4.0
       fastify:
         specifier: ^5.5.0
         version: 5.12.7
@@ -283,9 +286,6 @@ importers:
       ioredis:
         specifier: 5.7.0
         version: 5.7.0(supports-color@7.2.0)
-      luxon:
-        specifier: ^3.5.0
-        version: 3.7.2
       mongoose:
         specifier: ^8.5.2
         version: 8.24.7(socks@2.8.10)(supports-color@7.2.0)
@@ -305,9 +305,6 @@ importers:
       '@nestjs/testing':
         specifier: ^11.1.24
         version: 11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))
-      '@types/luxon':
-        specifier: ^3.4.2
-        version: 3.7.6
 
   apps/discord-bot:
     dependencies:
@@ -398,6 +395,9 @@ importers:
       chalk:
         specifier: ^5.6.0
         version: 5.6.2
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.4.0
       discord-bot:
         specifier: workspace:^
         version: link:../discord-bot
@@ -699,16 +699,13 @@ importers:
       chalk:
         specifier: 5.6.0
         version: 5.6.0
-      luxon:
-        specifier: ^3.5.0
-        version: 3.7.2
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.4.0
     devDependencies:
       '@nestjs/common':
         specifier: ^11.1.6
         version: 11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0)
-      '@types/luxon':
-        specifier: ^3.4.2
-        version: 3.7.6
 
   packages/math:
     dependencies:

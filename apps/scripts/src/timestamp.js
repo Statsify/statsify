@@ -6,60 +6,71 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DateTime } from "luxon";
+import {
+  addDays,
+  addMinutes,
+  addMonths,
+  addWeeks,
+  getDate,
+  getHours,
+  getISODay,
+  getMinutes,
+  subDays,
+  subMinutes,
+  subWeeks,
+} from "date-fns";
 import { config } from "@statsify/util";
 import { connect } from "mongoose";
 
 const mongo = await connect(config("database.mongoUri"));
-const now = DateTime.now();
+const now = new Date();
+const minutesToday = getHours(now) * 60 + getMinutes(now);
+const weekday = getISODay(now);
+const day = getDate(now);
 
 const getNextResetTime = (resetMinute, time) => {
-  const hasResetToday = (resetMinute ?? 0) <= now.hour * 60 + now.minute;
+  const hasResetToday = (resetMinute ?? 0) <= minutesToday;
 
-  let resetTime = now
-    .minus({ hours: now.hour, minutes: now.minute })
-    .plus({ minutes: resetMinute ?? 0 });
+  let resetTime = addMinutes(now, (resetMinute ?? 0) - minutesToday);
 
-  const isSunday = now.weekday === 7;
-  const isStartOfMonth = now.day === 1;
+  const isSunday = weekday === 7;
+  const isStartOfMonth = day === 1;
 
   if (time === "daily" && hasResetToday) {
-    resetTime = resetTime.plus({ days: 1 });
+    resetTime = addDays(resetTime, 1);
   } else if (time === "weekly" && ((isSunday && hasResetToday) || !isSunday)) {
-    resetTime = resetTime.plus({ week: 1 }).minus({ days: isSunday ? 0 : now.weekday });
+    resetTime = subDays(addWeeks(resetTime, 1), isSunday ? 0 : weekday);
   } else if (
     time === "monthly" &&
     ((isStartOfMonth && hasResetToday) || !isStartOfMonth)
   ) {
-    resetTime = resetTime.minus({ days: now.day - 1 }).plus({ months: 1 });
+    resetTime = addMonths(subDays(resetTime, day - 1), 1);
   }
 
-  return Math.round(resetTime.toMillis() / 1000);
+  return Math.round(resetTime.getTime() / 1000);
 };
 
 // Calculate how long ago the last reset was. Basically the inverse of getNextResetTime.
 const getLastResetTime = (resetMinute, time) => {
-  const hasResetToday = (resetMinute ?? 0) <= now.hour * 60 + now.minute;
+  const hasResetToday = (resetMinute ?? 0) <= minutesToday;
 
-  let resetTime = now
-    .minus({ hours: now.hour, minutes: now.minute })
-    .plus({ minutes: resetMinute ?? 0 });
+  let resetTime = addMinutes(now, (resetMinute ?? 0) - minutesToday);
 
-  const isSunday = now.weekday === 7;
-  const isStartOfMonth = now.day === 1;
+  const isSunday = weekday === 7;
+  const isStartOfMonth = day === 1;
 
   if (time === "daily" && !hasResetToday) {
-    resetTime = resetTime.minus({ minutes: resetMinute ?? 0 });
+    resetTime = subMinutes(resetTime, resetMinute ?? 0);
   } else if (time === "weekly" && ((isSunday && hasResetToday) || !isSunday)) {
-    resetTime = resetTime.minus({ week: 1 }).plus({ days: isSunday ? 0 : now.weekday });
+    resetTime = addDays(subWeeks(resetTime, 1), isSunday ? 0 : weekday);
   } else if (
     time === "monthly" &&
     ((isStartOfMonth && hasResetToday) || !isStartOfMonth)
   ) {
-    resetTime = resetTime.minus({ days: now.day - 1 });
+    resetTime = subDays(resetTime, day - 1);
   }
 
-  return Math.round(resetTime.toMillis() / 1000);
+  return Math.round(resetTime.getTime() / 1000);
 };
 
 const setTimestamps = async (collectionName) => {
@@ -98,4 +109,4 @@ await setTimestamps("daily");
 await setTimestamps("weekly");
 await setTimestamps("monthly");
 
-console.log(`Done! Took ${DateTime.now().diff(now).as("seconds")} seconds.`);
+console.log(`Done! Took ${(Date.now() - now.getTime()) / 1000} seconds.`);
