@@ -109,7 +109,7 @@ const translucent = (icon: OffscreenCanvas) =>
     .data.some((value, i) => i % 4 === 3 && value > 0 && value < 255);
 
 // "lighter" adds alpha too, which would make translucent icons more opaque, so those add the glint
-// to their pixels' colours one by one
+// to their pixels' colors one by one
 function addGlint(ctx: OffscreenCanvasRenderingContext2D, glint: ImageData, passes: GlintPass[]) {
   const { width, height } = ctx.canvas;
   const pixels = ctx.getImageData(0, 0, width, height);
@@ -147,7 +147,7 @@ function drawGlint(ctx: OffscreenCanvasRenderingContext2D, glint: OffscreenCanva
   layerCtx.globalCompositeOperation = "lighter";
 
   for (const { angle, scrollU, scrollV } of passes) {
-    // A pixel centre c samples the texel at A·c + offset: rotated, an eighth of a texture per icon
+    // A pixel center c samples the texel at A·c + offset: rotated, an eighth of a texture per icon
     const a11 = (glint.width * Math.cos(angle)) / (8 * width);
     const a12 = (-glint.width * Math.sin(angle)) / (8 * height);
     const a21 = (glint.height * Math.sin(angle)) / (8 * width);
@@ -293,7 +293,7 @@ export class ItemRenderer {
 
     const frames = animated.map(({ index }) => index);
 
-    // Items that resolve to the same models and colours share an icon
+    // Items that resolve to the same models and colors share an icon
     const key = [
       this.stack.hash,
       ...layers.map(({ model, colors, special }) =>

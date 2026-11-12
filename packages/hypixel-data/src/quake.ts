@@ -10,7 +10,7 @@ import type { ItemStack } from "@statsify/textures";
 import dumped from "../data/quake.json" with { type: "json" };
 import { kitKey } from "./kits.js";
 
-// The gun's parts (sight is its laser), then the hat and the armour, as the Quake stats keys name them
+// The gun's parts (sight is its laser), then the hat and the armor, as the Quake stats keys name them
 const LOADOUT = ["case", "barrel", "trigger", "muzzle", "sight", "hat", "armor", "leggings", "boots"] as const;
 
 type QuakePart = (typeof LOADOUT)[number];

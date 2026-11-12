@@ -27,7 +27,7 @@ export function fromTntGamesLayout(
   const mode = MODES[key];
   if (!mode) throw new Error(`No TNT Games layout ${key}`);
 
-  // No armour, so the slots end where it would start
+  // No armor, so the slots end where it would start
   const slots: (ItemStack | undefined)[] = Array.from({ length: ARMOR.boots });
 
   for (const [slot, token] of Object.entries(stored ?? mode.default)) {
