@@ -72,7 +72,7 @@ export interface ProfileSummary {
   cuteName: string;
   gameMode: GameMode;
   selected: boolean;
-  // Pending invitees are listed, though nothing counts them. The site adds the names from stored players.
+  // The site adds the names from stored players
   members: { uuid: string; removed: boolean; invited: boolean; firstJoin?: number; username?: string; displayName?: string }[];
   level: number;
   levelColor: string; // the § code of the level's bracket
@@ -378,11 +378,11 @@ export type ReputationRank = (typeof REPUTATION_RANKS)[number];
 export type DojoGrade = "S" | "A" | "B" | "C" | "D" | "F";
 export type DojoBelt = "white" | "yellow" | "green" | "blue" | "brown" | "black";
 
-/** A Dojo test's best points, the grade they earn and its best time (ms), which Hypixel keeps apart from the points. */
+/** A Dojo test's best points, their grade (none before it's taken) and its best time (ms), which Hypixel keeps apart. */
 export interface DojoTest {
   test: string;
   points: number;
-  grade: DojoGrade;
+  grade?: DojoGrade;
   time?: number;
 }
 
@@ -999,6 +999,10 @@ export interface ItemAttributes {
   rarity_upgrades?: number;
   enchantments?: Record<string, number>;
   talisman_enrichment?: string;
+  runes?: Record<string, number>;
+  dye_item?: string;
+  skin?: string;
+  originTag?: string;
   [key: string]: unknown;
 }
 
