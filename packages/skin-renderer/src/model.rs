@@ -1,4 +1,4 @@
-use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation3, Vector3};
+use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation as _, Rotation3, Vector3};
 use image::DynamicImage;
 
 use crate::armor::Armor;
@@ -46,6 +46,7 @@ struct Placement {
   position: Vector3<f32>,
   dimensions: Vector3<f32>,
   rotation: Option<CenterRotation>,
+  posed: bool,
 }
 
 impl Placement {
@@ -116,7 +117,8 @@ impl Part {
       ),
     };
 
-    let quaternion = match pose.part(self) {
+    let part_pose = pose.part(self);
+    let quaternion = match part_pose {
       // Even a turn by nothing would round the body's vertices and shift every render
       None if self == Part::Body => None,
       None => Some(Quaternion::from_angle_z(Deg(rest_angle))),
@@ -138,6 +140,7 @@ impl Part {
         quaternion,
         pivot_delta: Vector3::unit_y() * pivot_height,
       }),
+      posed: part_pose.is_some(),
     }
   }
 
@@ -241,8 +244,18 @@ impl<'a> BodyPart<'a> {
           extrude: false,
         }
         .create();
+
+        // A posed part grows around where its turn left its centre. Standing parts keep
+        // the unturned centre they've always used, so bare renders don't move.
+        let centre = match rotation {
+          Some(rotation) if self.placement.posed => {
+            rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot
+          }
+          _ => position,
+        };
+
         // In Minecraft the outer layer is scaled up 12.5%
-        layer.scale_around(1.125, position);
+        layer.scale_around(1.125, centre);
         layer
       }
     };
