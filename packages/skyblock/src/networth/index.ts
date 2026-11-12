@@ -6,16 +6,37 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type Item, type Items, ProfileNetworthCalculator, parseItems, setItems } from "skyhelper-networth";
-import { boostedRarity, petTexture } from "../sections/pets.js";
+import {
+  type Item,
+  ItemNetworthCalculator,
+  type Items,
+  ProfileNetworthCalculator,
+  parseItems,
+  setItems,
+} from "skyhelper-networth";
+import { PET_STATS } from "#data";
+import { boostedRarity, petName, petScorePoints, petTexture } from "../sections/pets.js";
+import { decodeAttributes, decodeInventory } from "#nbt";
+import { inventoryPages } from "../sections/inventories.js";
 import { normalizeItemText } from "../lore.js";
 import { describeKey } from "#prices";
 import { add } from "@statsify/math";
 import { lookupKeys } from "#auctions";
 import { prettify } from "@statsify/util";
 import { resourceTexture, textureOf } from "#textures";
-import type { ItemTexture, ItemsResource, NetworthItem, NetworthSection, PriceMap, RawItem } from "#types";
-import type { RawPet } from "#raw";
+import { toolkitItemView } from "#items";
+import type {
+  ItemTexture,
+  ItemsResource,
+  MissingPet,
+  NetworthItem,
+  NetworthSection,
+  PriceMap,
+  Rarity,
+  RawItem,
+  ValuesSection,
+} from "#types";
+import type { RawNbt, RawPet } from "#raw";
 import type { SectionInput } from "../sections/index.js";
 
 const TOP_ITEMS = 10;
@@ -105,6 +126,13 @@ function getUnpriced(
 
 let itemsUpdated: number | undefined;
 
+// Our patch stops the library fetching the items resource itself.
+function useItems(items: ItemsResource) {
+  if (itemsUpdated === items.lastUpdated) return;
+  setItems(items.raw);
+  itemsUpdated = items.lastUpdated;
+}
+
 /**
  * Kept out of SECTIONS so the main entry, which the price worker loads under a 128 MB heap cap, never loads the networth
  * library.
@@ -113,12 +141,7 @@ export const NETWORTH = {
   needs: ["museum", "prices", "items"] as const,
   async compute({ profile, member, museum, prices, items }: SectionInput): Promise<NetworthSection> {
     if (!prices || !items) throw new TypeError("networth needs prices and items");
-
-    // Our patch stops the library fetching the items resource itself.
-    if (itemsUpdated !== items.lastUpdated) {
-      setItems(items.raw);
-      itemsUpdated = items.lastUpdated;
-    }
+    useItems(items);
 
     const parsed = (await parseItems(member, museum ?? {})) as Items;
     const calculator = ProfileNetworthCalculator.fromPreParsed(member, parsed, profile.banking?.balance ?? 0);
@@ -153,6 +176,82 @@ export const NETWORTH = {
         ((total.types.pets?.items ?? []) as Priced[]).flatMap(({ petData, price }) => (petData?.uuid ? [[petData.uuid, price]] : []))
       ),
       ...getUnpriced(parsed, prices, items),
+    };
+  },
+};
+
+/** Each pet type the member has none of, at the cheapest rarity a level 1 sells for. */
+function getMissingPets(member: SectionInput["member"], map: PriceMap, items: ItemsResource): MissingPet[] {
+  const owned = new Set((member.pets_data?.pets ?? []).map(({ type }) => type));
+
+  return Object.entries(PET_STATS)
+    .filter(([type]) => !owned.has(type))
+    .flatMap(([type, rarities]) => {
+      const priced = (Object.keys(rarities) as Rarity[])
+        .filter((rarity) => petScorePoints(rarity) > 0)
+        .flatMap((rarity) => {
+          const entry = map.entries[`LVL_1_${rarity}_${type}`];
+          return entry ? [{ rarity, price: entry.coins }] : [];
+        })
+        .toSorted((a, b) => a.price - b.price)[0];
+      if (!priced) return [];
+
+      const { rarity, price } = priced;
+      return [{ type, name: petName(type), rarity, price, points: petScorePoints(rarity), texture: petTexture(type, rarity, undefined, items) }];
+    })
+    .toSorted((a, b) => a.price - b.price);
+}
+
+/** A toolkit tool is bare ExtraAttributes, so the library gets it as one item named from the resource. */
+function toolkitItem(blob: RawNbt, items: ItemsResource): RawItem | null {
+  const view = toolkitItemView(blob, items);
+  return view && { id: 0, Count: 1, Damage: 0, tag: { display: { Name: view.name }, ExtraAttributes: decodeAttributes(blob) } };
+}
+
+type InventoryValues = NonNullable<ValuesSection["inventories"]>;
+
+async function getInventoryValues(member: SectionInput["member"], map: PriceMap, items: ItemsResource): Promise<InventoryValues | null> {
+  const raw = inventoryPages(member, decodeInventory, (blob) => toolkitItem(blob, items));
+  if (!raw) return null;
+
+  const options = { prices: toNetworthPrices(map) };
+  const worth = async (item: RawItem | null) => {
+    if (!item) return null;
+    const { price } = await new ItemNetworthCalculator(item).getNetworth(options);
+    return price > 0 ? price : null;
+  };
+
+  const pages = Object.fromEntries(
+    await Promise.all(
+      Object.entries(raw).map(async ([id, slots]) => [id, await Promise.all(slots.map((page) => Promise.all(page.map(worth))))] as const)
+    )
+  ) as InventoryValues["pages"];
+
+  const totals = Object.fromEntries(
+    Object.entries(pages).map(([id, slots]) => [id, add(...slots.flat().map((price) => price ?? 0))])
+  ) as InventoryValues["totals"];
+
+  const sacks = Object.fromEntries(
+    Object.entries(member.inventory?.sacks_counts ?? {}).flatMap(([id, count]) => {
+      const coins = map.entries[id]?.coins;
+      return count > 0 && coins ? [[id, count * coins]] : [];
+    })
+  );
+
+  return { pages, totals, sacks };
+}
+
+/** Beside NETWORTH for the same reason: it prices each item with the networth library. */
+export const VALUES = {
+  needs: ["prices", "items"] as const,
+  async compute({ member, prices, items }: SectionInput): Promise<ValuesSection> {
+    if (!prices || !items) throw new TypeError("values needs prices and items");
+    useItems(items);
+
+    return {
+      pricesAsOf: prices.asOf,
+      inventories: await getInventoryValues(member, prices, items),
+      missingPets: getMissingPets(member, prices, items),
     };
   },
 };
