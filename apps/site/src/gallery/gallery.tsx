@@ -72,6 +72,7 @@ import { Twitter } from "~/components/icons/twitter";
 import { YouTube } from "~/components/icons/youtube";
 import { colors } from "@statsify/tokens";
 import { orpc } from "~/lib/orpc";
+import { useHydrated } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import type { ActionResult } from "~/features/player/player-actions";
 import type { PlayerIdentity } from "@statsify/contract";
@@ -589,6 +590,10 @@ const hanging = () => new Promise<ActionResult<unknown>>(() => {});
 function RefreshSection() {
   // Built once, so the countdowns run against the clock the page loaded with.
   const [now] = useState(() => Date.now());
+  // Drawn after hydration: the server's `now` would put its own clock in the times the page writes before then.
+  const hydrated = useHydrated();
+
+  if (!hydrated) return <Section id="refresh">{null}</Section>;
 
   return (
     <Section id="refresh">

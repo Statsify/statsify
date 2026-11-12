@@ -47,6 +47,7 @@ import type {
   PrestigeSheet,
   ResolveInput,
   ResultCard,
+  Suggestion,
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
@@ -280,9 +281,19 @@ export class SiteService implements OnApplicationBootstrap {
     }
   }
 
-  public async suggest(query: string): Promise<string[]> {
+  public async suggest(query: string): Promise<Suggestion[]> {
     if (!query) return [];
-    return await this.playerSearchService.get(query);
+    const names = await this.playerSearchService.get(query);
+    if (names.length === 0) return [];
+
+    const players: Pick<Player, "usernameToLower" | "displayName">[] = await this.playerModel
+      .find({ usernameToLower: { $in: names.map((name) => name.toLowerCase()) } })
+      .select({ _id: false, usernameToLower: true, displayName: true })
+      .lean()
+      .exec();
+
+    const displayNames = new Map(players.map((player) => [player.usernameToLower, player.displayName]));
+    return names.map((name) => ({ name, displayName: displayNames.get(name.toLowerCase()) ?? null }));
   }
 
   public async cards(names: string[]): Promise<ResultCard[]> {

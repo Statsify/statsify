@@ -140,6 +140,9 @@ export const PlayerFullSchema = z.object({
   guild: GuildDocumentSchema.nullable(),
 });
 
+/** A suggested name, with the player's display name where the API has them, for the color their rank gives the name. */
+export const SuggestionSchema = z.object({ name: z.string(), displayName: z.string().nullable() });
+
 export const ResultCardSchema = z.object({
   ...PlayerName,
   rank: z.string(),
@@ -666,7 +669,7 @@ export const contract = {
     suggest: oc
       .route({ method: "GET", path: "/search/suggest", summary: "Username autocomplete" })
       .input(SuggestInputSchema)
-      .output(z.array(z.string()).max(25)),
+      .output(z.array(SuggestionSchema).max(25)),
     cards: oc
       .route({ method: "GET", path: "/search/cards", summary: "Result cards for a list of usernames" })
       .input(CardsInputSchema)
@@ -708,6 +711,7 @@ export type PlayerPage = z.infer<typeof PlayerPageSchema>;
 export type PlayerFull = z.infer<typeof PlayerFullSchema>;
 export type GameSummary = z.infer<typeof GameSummarySchema>;
 export type StatRow = z.infer<typeof StatRowSchema>;
+export type Suggestion = z.infer<typeof SuggestionSchema>;
 export type ResultCard = z.infer<typeof ResultCardSchema>;
 export type LeaderboardGroup = z.infer<typeof LeaderboardGroupSchema>;
 export type LeaderboardGame = z.infer<typeof LeaderboardGameSchema>;

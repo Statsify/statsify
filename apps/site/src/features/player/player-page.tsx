@@ -8,18 +8,19 @@
 
 import { PageBackground } from "~/components/ui/background";
 import { BOX_GAP, Box, CELL, HEADING_BOX, StatBox } from "~/components/ui/box";
+import { ClockScript } from "~/lib/clock";
 import { Discord } from "~/components/icons/discord";
 import { GameNav } from "~/features/game/game-nav";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
-import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorOf, nameColor } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
 import { RefreshBar, savedDate, useNow } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
-import { SkinBust } from "~/components/ui/skin";
+import { SkinBust, SkinHead } from "~/components/ui/skin";
 import { Twitter } from "~/components/icons/twitter";
 import { YouTube } from "~/components/icons/youtube";
 import { cn } from "~/lib/util";
@@ -27,13 +28,14 @@ import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { playerPageQuery } from "./resolve";
 import { refreshPlayer } from "./player-actions";
-import { relativeTime } from "~/i18n/format";
+import { relativeTime, shortDate } from "~/i18n/format";
 import { addRecentPlayer } from "./recent";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { Suspense, lazy, useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LABEL_NAMESPACES } from "~/i18n/i18n";
+import { UUID_PATTERN } from "~/lib/uuid";
 import type { ComponentType, ReactNode, Ref } from "react";
 import type { GameSummary, PlayerPage } from "@statsify/contract";
 
@@ -65,7 +67,10 @@ export function PlayerView({ page }: { page: PlayerPage }) {
   const [skin, setSkin] = useState(false);
   const navGames = page.games.map(({ page: key, id, name }) => ({ key, id, name, played: true }));
 
-  useEffect(() => addRecentPlayer({ uuid: page.uuid, name: page.username }), [page.uuid, page.username]);
+  useEffect(
+    () => addRecentPlayer({ uuid: page.uuid, name: page.username, color: nameColor(page.displayName) }),
+    [page.uuid, page.username, page.displayName]
+  );
 
   // The refreshed page replaces the cached query, so every panel re-renders with the new numbers. The player's game
   // pages predate the refresh: they reload the next time they're shown.
@@ -144,6 +149,33 @@ export function PlayerView({ page }: { page: PlayerPage }) {
         )}
         <GameGrid games={page.games} username={page.username} />
         <SignaturePanel page={page} />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * A player's page while its data loads, past `DELAY_MS`: the name the link had and the head a search showed for it,
+ * where the nametag goes, so picking a player answers at once. A UUID in the URL has no name or head to show yet.
+ */
+export function PlayerShell({ name }: { name: string }) {
+  const { t } = useTranslation();
+  const known = !UUID_PATTERN.test(name);
+
+  return (
+    <div className="relative grow" aria-busy>
+      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
+      <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
+        <div className={cn("grid grid-cols-[auto_minmax(0,1fr)] md:w-fit md:min-w-sm", BOX_GAP)}>
+          <Box className="content:flex content:items-center content:justify-center content:p-3">
+            <div className="flex h-24 w-16 items-center justify-center sm:h-40 sm:w-28">
+              {known && <SkinHead name={name} size={64} className="drop-shadow-mc-4 text-mc-black" />}
+            </div>
+          </Box>
+          <Box className="content:flex content:items-center content:justify-center content:p-3 content:text-center">
+            <h1 className="max-w-full wrap-break-word text-mc-2 text-mc-gray">{known ? name : t("nav.loading")}</h1>
+          </Box>
+        </div>
       </div>
     </div>
   );
@@ -436,8 +468,8 @@ function Fact({ children }: { children: ReactNode }) {
 
 /**
  * "Online" while the save is fresh (until Refresh unlocks); after that, how long ago the save saw them online, with its
- * full date on hover, focus or tap. Until mount the clock is when the server fetched the page, which the browser gets
- * with the page's data, so a cached page hydrates to the server's text; the browser's own clock takes over after.
+ * full date on hover, focus or tap. The HTML has the server's clock (when it fetched the page); `ClockScript` puts
+ * the browser's in its place before first paint, so a cached page shows the right time from the start.
  */
 function OnlineStatus({ uuid, updatedAt, expiresAt }: { uuid: string; updatedAt: number; expiresAt: number }) {
   const { t, i18n } = useTranslation();
@@ -449,10 +481,13 @@ function OnlineStatus({ uuid, updatedAt, expiresAt }: { uuid: string; updatedAt:
   const date = now === undefined || ago === undefined ? undefined : savedDate(updatedAt, i18n.language);
 
   return (
-    <Hint full={date} spoken={date && `${online} · ${ago}, ${date}`}>
-      {online}
-      {ago && <span className="text-mc-gray"> · {ago}</span>}
-    </Hint>
+    <>
+      <Hint full={date} spoken={date && `${online} · ${ago}, ${date}`}>
+        {online}
+        <span className="text-mc-gray" suppressHydrationWarning>{ago ? ` · ${ago}` : ""}</span>
+      </Hint>
+      <ClockScript args={{ updatedAt, expiresAt, locale: i18n.language }} />
+    </>
   );
 }
 
@@ -478,17 +513,29 @@ function loginText(ms: number): string {
   return `${day}, ${twoDigits(hours % 12 || 12)}:${twoDigits(date.getUTCMinutes())} ${hours < 12 ? "AM" : "PM"}`;
 }
 
-/** A login date as the card prints it. Once the page has mounted, how long ago it was shows on hover, focus or tap. */
+/**
+ * A login date in the visitor's zone. Once the page has mounted, how long ago it was and the card's UTC show on hover,
+ * focus or tap. The HTML has UTC, as the server can't know the zone; `ClockScript` puts the browser's in its place
+ * before first paint.
+ */
 function LoginDate({ ms }: { ms: number }) {
   const { t, i18n } = useTranslation();
   const now = useNow();
   if (ms <= 0) return t("player.na");
 
-  const text = `${loginText(ms)} UTC`;
-  // `now` is undefined until mount, so the server's HTML and the first render carry no clock value.
+  const utc = `${loginText(ms)} UTC`;
+  // `now` is undefined while hydrating, so the server's HTML and the first render carry no clock value.
+  const text = now === undefined ? utc : shortDate(ms, i18n.language);
   const ago = now === undefined ? undefined : relativeTime(ms, now, i18n.language);
 
-  return <Hint full={ago} spoken={ago && `${text}, ${ago}`}>{text}</Hint>;
+  return (
+    <>
+      <Hint full={ago && `${ago} · ${utc}`} spoken={ago && `${text}, ${ago}`}>
+        <time dateTime={new Date(ms).toISOString()} suppressHydrationWarning>{text}</time>
+      </Hint>
+      <ClockScript args={{ at: ms, locale: i18n.language }} />
+    </>
+  );
 }
 
 export function GameGrid({ games, username }: { games: GameSummary[]; username: string }) {

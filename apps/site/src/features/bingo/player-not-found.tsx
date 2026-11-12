@@ -24,7 +24,7 @@ export function BingoPlayerNotFound({ name: given }: { name?: string }) {
   return (
     <PlayerNotFoundView
       name={name}
-      search={<Search key={name} className="w-full max-w-200 self-center" defaultValue={name} target="bingo" shortcut />}
+      search={<Search className="w-full max-w-200 self-center" defaultValue={name} target="bingo" shortcut />}
     >
       <Button asChild variant="primary" className="w-full self-center sm:w-auto sm:min-w-64">
         <Link to="/{-$locale}/player/$name" params={{ name }} activeOptions={{ exact: true }}>
