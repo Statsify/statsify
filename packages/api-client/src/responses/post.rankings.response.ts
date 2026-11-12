@@ -21,3 +21,8 @@ export class PostLeaderboardRankingsResponse {
   @ApiProperty()
   public rank: number;
 }
+
+export class PostSkyBlockRankingsResponse extends PostLeaderboardRankingsResponse {
+  @ApiProperty({ description: "The ranked row: the player's uuid and the profile's id, joined by a colon" })
+  public id: string;
+}

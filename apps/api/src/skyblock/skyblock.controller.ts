@@ -21,6 +21,7 @@ import { CachedPlayerDto, SkyBlockIconDto, SkyBlockItemsDto, SkyBlockPriceDto, S
 import {
   ErrorResponse,
   GetSkyBlockItemsResponse,
+  GetSkyBlockMayorResponse,
   GetSkyBlockPriceResponse,
   GetSkyBlockProfileResponse,
   GetSkyBlockProfilesResponse,
@@ -94,6 +95,21 @@ export class SkyBlockController {
     return {
       success: true,
       price,
+    };
+  }
+
+  @ApiOperation({ summary: "Get the SkyBlock Mayor", description: "The mayor in office and their perks, from Hypixel's election resource." })
+  @ApiOkResponse({ type: GetSkyBlockMayorResponse })
+  @ApiServiceUnavailableResponse({ type: SkyBlockUnavailableException, description: "hypixel" })
+  @Auth({ role: AuthRole.WORKER, weight: 1 })
+  @Get("/mayor")
+  public async getMayor() {
+    const mayor = await this.pricesService.getMayor();
+    if (!mayor) throw new SkyBlockUnavailableException("hypixel");
+
+    return {
+      success: true,
+      mayor,
     };
   }
 
