@@ -22,7 +22,6 @@ const SCALE = 8;
 /** How far an arrow key turns the model, and how far a dragged pixel does. */
 const STEP = 15;
 const DRAG = 0.6;
-const MAX_PITCH = 60;
 /** The canvas's size in CSS pixels: the stage's `w-64 h-80`. The renderer scales it by the screen's pixel ratio. */
 const [CANVAS_WIDTH, CANVAS_HEIGHT] = [256, 320];
 
@@ -180,18 +179,18 @@ function Model({ texture }: { texture: Texture }) {
 }
 
 /**
- * The skin panel: the skin in 3D, turned by dragging (only sideways on a touch screen, so a vertical swipe still
- * scrolls) or with the arrow keys, its texture as uploaded, and a download. The player page loads this module, and the
- * texture, only when the panel opens.
+ * The skin panel: the skin in 3D, turned side to side by dragging (a vertical swipe still scrolls) or with the arrow
+ * keys, its texture as uploaded, and a download. The player page loads this module, and the texture, only when the
+ * panel opens.
  */
 export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: string }) {
   const { t } = useTranslation();
   const canvasId = useId();
   const src = `/api/skin/texture?uuid=${uuid}`;
   const [texture, setTexture] = useState<Texture | "error">();
-  const [angle, setAngle] = useState({ yaw: -30, pitch: -10 });
-  const drag = useRef<{ x: number; y: number } | null>(null);
-  const drawn = useRenderer(canvasId, texture === "error" ? undefined : texture, angle.yaw);
+  const [yaw, setYaw] = useState(-30);
+  const dragX = useRef<number | null>(null);
+  const drawn = useRenderer(canvasId, texture === "error" ? undefined : texture, yaw);
   useRevealOnOpen(id);
 
   // Fetched rather than loaded as an image, for `X-Skin-Model`: the game takes the arm width from the account, not the
@@ -226,14 +225,12 @@ export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: 
     };
   }, [src]);
 
-  const turn = (yaw: number, pitch: number) =>
-    setAngle((angle) => ({ yaw: angle.yaw + yaw, pitch: Math.max(-MAX_PITCH, Math.min(MAX_PITCH, angle.pitch + pitch)) }));
+  const turn = (by: number) => setYaw((yaw) => yaw + by);
 
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (!drag.current) return;
-    const [dx, dy] = [event.clientX - drag.current.x, event.clientY - drag.current.y];
-    drag.current = { x: event.clientX, y: event.clientY };
-    turn(dx * DRAG, event.pointerType === "mouse" ? -dy * DRAG : 0);
+    if (dragX.current === null) return;
+    turn((event.clientX - dragX.current) * DRAG);
+    dragX.current = event.clientX;
   };
 
   // A slider's keys: Right and Up turn it one way, Left and Down the other.
@@ -242,9 +239,9 @@ export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: 
     const step = keys[event.key];
     if (!step) return;
     event.preventDefault();
-    turn(step, 0);
+    turn(step);
   };
-  const degrees = ((Math.round(angle.yaw) % 360) + 360) % 360;
+  const degrees = ((Math.round(yaw) % 360) + 360) % 360;
 
   return (
     <Box id={id} title={<h2 className="text-mc-1.5">{t("player.skin.title")}</h2>} className="content:flex content:flex-col content:gap-4">
@@ -252,7 +249,6 @@ export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: 
         <p className="self-center text-mc-1 text-mc-red">{t("player.skin.error")}</p> :
         (
           <div className="flex flex-col items-center gap-6 self-center sm:flex-row sm:items-end">
-            {/* A slider for the side-to-side turn, the one a keyboard or screen reader gets; a mouse can tilt it too. */}
             <div
               role="slider"
               aria-label={t("player.skin.label", { name })}
@@ -263,18 +259,18 @@ export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: 
               tabIndex={0}
               onKeyDown={onKeyDown}
               onPointerDown={(event) => {
-                drag.current = { x: event.clientX, y: event.clientY };
+                dragX.current = event.clientX;
                 event.currentTarget.setPointerCapture(event.pointerId);
               }}
               onPointerMove={onPointerMove}
-              onPointerUp={() => (drag.current = null)}
-              onPointerCancel={() => (drag.current = null)}
+              onPointerUp={() => (dragX.current = null)}
+              onPointerCancel={() => (dragX.current = null)}
               className="relative h-80 w-64 cursor-grab touch-pan-y select-none perspective-[1000px] active:cursor-grabbing"
             >
               {texture && !drawn && (
                 <div
                   className="absolute top-1/2 left-1/2 transform-3d"
-                  style={{ transform: `rotateX(${angle.pitch}deg) rotateY(${angle.yaw}deg)` }}
+                  style={{ transform: `rotateX(-10deg) rotateY(${yaw}deg)` }}
                 >
                   <Model texture={texture} />
                 </div>
