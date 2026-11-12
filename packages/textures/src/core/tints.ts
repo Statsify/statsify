@@ -92,7 +92,7 @@ const DYE_COLORS: Record<string, number | undefined> = {
 
 export function dyeColor(dye: string) {
   const color = DYE_COLORS[dye];
-  if (color === undefined) throw new Error(`No colour for the dye ${dye}`);
+  if (color === undefined) throw new Error(`No color for the dye ${dye}`);
   return color;
 }
 

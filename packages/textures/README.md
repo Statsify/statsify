@@ -36,7 +36,7 @@ needs at least one 26.3 pack, which has the item model definitions.
   can fetch over https), mob heads, chests, shulker boxes.
 - Banners and shields with their patterns: `item.patterns`, as 26.3's `banner_patterns` component
   has them (`{ pattern: "minecraft:border", color: "red" }`), and a shield's `item.baseColor`.
-  A banner's base colour is in its id.
+  A banner's base color is in its id.
 - The enchantment glint, and animated textures by game tick: `render(item, scale, tick)`.
 
 `legacyItem(id, damage)` turns a 1.8 id and Damage value into a 26.3 item. Its table is

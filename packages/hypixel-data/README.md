@@ -6,7 +6,7 @@ Data taken from Hypixel's menus, and the adapters that turn what Hypixel stores 
 ## Adapters
 
 - `fromHypixelNBT(data)`: Hypixel's gzipped NBT, like the Pit's `inv_contents`, as items. A 1.8
-  banner's `BlockEntityTag` gives its base colour and patterns, with 1.8's pattern codes (`bo`,
+  banner's `BlockEntityTag` gives its base color and patterns, with 1.8's pattern codes (`bo`,
   `cr`) turned into 26.3's ids.
   `playerInventoryOrder` puts a player inventory's hotbar last, as the game shows it.
 - `fromBedwarsQuickBuy(favorites)`: the 9 × 6 BedWars shop open on Quick Buy, with each

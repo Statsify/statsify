@@ -35,7 +35,7 @@ export interface ItemStack {
   skin?: string;
   /** Bottom layer first */
   patterns?: BannerLayer[];
-  /** A shield's base colour. Banners take theirs from their id */
+  /** A shield's base color. Banners take theirs from their id */
   baseColor?: DyeColor;
   /** § codes or a JSON text component */
   name?: TextComponent;
