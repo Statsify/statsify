@@ -55,16 +55,15 @@ export const PerkTree = ({ nodes }: { nodes: TreeNode[] }) => {
 interface PerkCurrencyProps {
   name: string;
   color: string;
-  amount?: number;
+  earned: number;
   spent: number;
   t: LocalizeFunction;
 }
 
-/** A powder or whisper: the amount, when it's known, then what the shown loadout spent. */
-export const PerkCurrency = ({ name, color, amount, spent, t }: PerkCurrencyProps) => (
+export const PerkCurrency = ({ name, color, earned, spent, t }: PerkCurrencyProps) => (
   <box direction="column" location="center" width="100%">
     <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`${color}${name}`}</text>
-    {amount === undefined ? <></> : <text margin={{ top: 0, bottom: 4, left: 10, right: 10 }}>{`§^3^${color}${t(amount)}`}</text>}
+    <text margin={{ top: 0, bottom: 2, left: 10, right: 10 }}>{`§7${t("skyblock.earned")}: ${color}${t(earned)}`}</text>
     <text margin={{ top: 0, bottom: 8, left: 10, right: 10 }}>{`§7${t("skyblock.spent")}: ${color}${t(spent)}`}</text>
   </box>
 );
