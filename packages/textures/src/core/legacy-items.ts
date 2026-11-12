@@ -30,7 +30,7 @@ function legacyEffect(id: number) {
 
 /**
  * The 26.3 item for a 1.8 numeric id and Damage value, as Hypixel sends them.
- * Damage on a tool or armour piece is kept as wear.
+ * Damage on a tool or armor piece is kept as wear.
  */
 export function legacyItem(id: number, damage = 0): ItemStack | undefined {
   if (id === POTION) {
@@ -51,5 +51,5 @@ export function legacyItem(id: number, damage = 0): ItemStack | undefined {
 /** How much wear a 26.3 item takes before it breaks */
 export const maxDamage = (id: string) => durability[id.replace("minecraft:", "")];
 
-/** 1.8's English name for a 26.3 item, after its rarity colour, like "§bGolden Apple" */
+/** 1.8's English name for a 26.3 item, after its rarity color, like "§bGolden Apple" */
 export const legacyName = (id: string) => names[id.replace("minecraft:", "")];
