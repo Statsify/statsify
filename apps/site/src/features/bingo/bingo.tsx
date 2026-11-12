@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box } from "~/components/ui/box";
+import { BOX_GAP, Box, CELL, HEADING_BOX } from "~/components/ui/box";
 import { type Category, type Difficulty, type Reward, type Task, boards } from "./boards";
 import { Divider } from "~/components/ui/divider";
 import { MinecraftText } from "~/components/ui/minecraft-text";
@@ -16,7 +16,7 @@ import { cn } from "~/lib/util";
 import { getRouteApi } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import type { BingoPlayer } from "@statsify/contract";
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 type TaskInfo = Pick<Task, "game" | "name" | "description" | "progress">;
 
@@ -48,15 +48,18 @@ export function Bingo({ player }: { player: BingoPlayer }) {
   return (
     <>
       <div className="w-full lg:w-[80%] flex items-stretch flex-col gap-4">
-        <Box className="content:text-center content:text-mc-3 content:flex content:items-center content:justify-center content:gap-4">
-          <SkinHead uuid={player.uuid} className="drop-shadow-mc-4 text-mc-black " />
-          <MinecraftText>{player.displayName}</MinecraftText>
-        </Box>
-        <Box className="content:grid content:grid-cols-1 content:lg:grid-cols-3 content:gap-4 content:lg:gap-8">
-          <CategoryOverview player={player} category="casual" />
-          <CategoryOverview player={player} category="pvp" />
-          <CategoryOverview player={player} category="classic" />
-        </Box>
+        {/* The nametag over each category's heading and counts, every one its own box, as the bot's cards draw them. */}
+        <div className={cn("flex flex-col", BOX_GAP)}>
+          <Box className="content:text-center content:text-mc-3 content:flex content:items-center content:justify-center content:gap-4">
+            <SkinHead uuid={player.uuid} className="drop-shadow-mc-4 text-mc-black " />
+            <MinecraftText>{player.displayName}</MinecraftText>
+          </Box>
+          <div className={cn("grid grid-cols-1 lg:grid-cols-3", BOX_GAP)}>
+            <CategoryOverview player={player} category="casual" />
+            <CategoryOverview player={player} category="pvp" />
+            <CategoryOverview player={player} category="classic" />
+          </div>
+        </div>
         <Divider variant="black" />
         <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4 **:text-mc-1.5 **:lg:text-mc-2">
           <Tabs tab={category} onTabChange={(category) => select({ category })}>
@@ -69,7 +72,8 @@ export function Bingo({ player }: { player: BingoPlayer }) {
             <Tab tab="easy" className="text-mc-green/50 aria-pressed:text-mc-green">
               {t("bingo.easy")}
             </Tab>
-            <Tab tab="hard" className="text-mc-red/50 aria-pressed:text-mc-red">
+            {/* Brighter than Easy's while unpressed: red at half strength doesn't reach 3:1 on the box. */}
+            <Tab tab="hard" className="text-mc-red/80 aria-pressed:text-mc-red">
               {t("bingo.hard")}
             </Tab>
           </Tabs>
@@ -90,7 +94,6 @@ function completetionColor(completion: number) {
 
 function CategoryOverview({ player, category }: { player: BingoPlayer; category: Category }) {
   const { t } = useTranslation();
-  const { select } = useBoardState();
 
   const easyBingo = player.bingo.easy[category];
   const hardBingo = player.bingo.hard[category];
@@ -99,39 +102,47 @@ function CategoryOverview({ player, category }: { player: BingoPlayer; category:
   const hardCompletion = boards.hard[category].tasks.filter((task) => hardBingo[task.field] >= task.progress).length;
 
   return (
-    <div className="flex flex-col justify-center gap-1 lg:gap-3 text-center text-mc-1.5 lg:text-mc-2">
-      <div className="flex gap-2 items-center justify-center">
+    <div className={cn("flex flex-col text-center text-mc-1.5 lg:text-mc-2", BOX_GAP)}>
+      <Box className={cn(HEADING_BOX, "content:gap-2")}>
+        {/* At 2× its 16 px art at every width, so no pixel is split, and 1 px up: level with the capitals, as the
+            centered line also counts the tails under "g" and "y". */}
         <img
           src={CATEGORY_ICONS[category]}
           width={32}
           height={32}
           alt=""
           style={{ imageRendering: "pixelated" }}
-          className="w-6 h-6 lg:w-8 lg:h-8"
+          className="relative -top-px size-8"
         />
         <p className="font-bold text-mc-yellow">{t("bingo.cards", { category: t(`bingo.categories.${category}`) })}</p>
-      </div>
-      <div className="flex flex-col justify-center items-center">
-        <button
-          type="button"
-          className="min-h-11 text-mc-gray cursor-pointer w-fit"
-          onClick={() => select({ category, difficulty: "easy" })}
-        >
-          <span className="text-mc-green">{t("bingo.easy")}</span>:{" "}
-          <span className={completetionColor(easyCompletion)}>{easyCompletion}</span>
-          <span className="text-mc-gray">/16</span> {t("bingo.completed")}
-        </button>
-        <button
-          type="button"
-          className="min-h-11 text-mc-gray cursor-pointer w-fit"
-          onClick={() => select({ category, difficulty: "hard" })}
-        >
-          <span className="text-mc-red">{t("bingo.hard")}</span>:{" "}
-          <span className={completetionColor(hardCompletion)}>{hardCompletion}</span>
-          <span className="text-mc-gray">/16</span> {t("bingo.completed")}
-        </button>
-      </div>
+      </Box>
+      <CountBox board={{ category, difficulty: "easy" }}>
+        <span className="text-mc-green">{t("bingo.easy")}</span>:{" "}
+        <span className={completetionColor(easyCompletion)}>{easyCompletion}</span>
+        <span className="text-mc-gray">/16</span> {t("bingo.completed")}
+      </CountBox>
+      <CountBox board={{ category, difficulty: "hard" }}>
+        <span className="text-mc-red">{t("bingo.hard")}</span>:{" "}
+        <span className={completetionColor(hardCompletion)}>{hardCompletion}</span>
+        <span className="text-mc-gray">/16</span> {t("bingo.completed")}
+      </CountBox>
     </div>
+  );
+}
+
+/** A board's count in its own box, the whole box a link to the board. Its ring sits inside, as the box clips. */
+function CountBox({ board, children }: { board: { category: Category; difficulty: Difficulty }; children: ReactNode }) {
+  return (
+    <Box className={cn(CELL, "content:p-0")}>
+      <route.Link
+        search={(previous) => ({ ...previous, ...board })}
+        replace
+        resetScroll={false}
+        className="flex min-h-11 w-full items-center justify-center px-3 py-1 text-mc-gray hover:bg-white/10 focus-visible:focus-ring-inset"
+      >
+        <span>{children}</span>
+      </route.Link>
+    </Box>
   );
 }
 
@@ -170,7 +181,7 @@ function BingoBoard({
     <>
       {/* Below `xl` the 6×6 board doesn't fit, so the 16 tasks are a list (two columns on tablets) followed by the
           rewards, instead of a grid scrolling sideways. Text is 24 px. */}
-      <ol className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:hidden **:text-mc-1.5">
+      <ol className={cn("grid grid-cols-1 md:grid-cols-2 xl:hidden **:text-mc-1.5", BOX_GAP)}>
         {board.tasks.map((task) => (
           <li key={`${keyPrefix}-${String(task.field)}`} className="grid">
             <TaskCard task={task} finished={bingo[task.field]} complete={bingo[task.field] >= task.progress} />
@@ -189,7 +200,7 @@ function BingoBoard({
           <RewardCard reward={board.blackoutReward} variant="blackout" completed={blackout} />
         </li>
       </ol>
-      <div className="hidden xl:grid grid-cols-[repeat(6,minmax(0,1fr))] grid-rows-6 gap-2 **:text-mc-1.5">
+      <div className={cn("hidden xl:grid grid-cols-[repeat(6,minmax(0,1fr))] grid-rows-6 **:text-mc-1.5", BOX_GAP)}>
         <RewardCard key={`${keyPrefix}-diagonal-0`} reward={board.diagonalRewards[0]} completed={diagonalCompletion[0]} />
         {board.columnRewards.map((reward, column) => (
           <RewardCard key={`${keyPrefix}-${reward.name}`} reward={reward} completed={columnCompletion[column]} />

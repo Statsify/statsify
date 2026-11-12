@@ -9,9 +9,10 @@
 import { Box } from "~/components/ui/box";
 import { Fragment } from "react";
 import { Link } from "@tanstack/react-router";
-import { MinecraftText } from "~/components/ui/minecraft-text";
+import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
+import { PhoneRows } from "~/features/leaderboards/leaderboard-boxes";
 import { useColumnLabel } from "~/features/leaderboards/leaderboard-table";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import type { CSSProperties } from "react";
@@ -31,8 +32,8 @@ export function LeaderboardPreview({
   const n = useNumberFormat();
   const label = useColumnLabel();
 
-  // Position and head are `max-content`, the name column shrinks and truncates, the values are
-  // `max-content`, so a long name never widens the page at 375 px.
+  // From `md`, position and head are `max-content`, the name column shrinks and truncates, the values are
+  // `max-content`, so a long name never widens the page. Below it, the rows are the leaderboard page's phone rows.
   return (
     <div
       className={cn(
@@ -44,26 +45,29 @@ export function LeaderboardPreview({
       <div className="col-span-full">
         <Box>
           <Link to="/{-$locale}/leaderboards/$field" params={{ field: leaderboard.field }} className="hover:underline">
-            <MinecraftText className="font-bold text-mc-3 md:text-mc-4">{leaderboard.name}</MinecraftText>
+            <MinecraftText className="font-bold text-mc-3 md:text-mc-4">{plainText(leaderboard.formatted)}</MinecraftText>
           </Link>
         </Box>
       </div>
-      <Box className={`hidden md:block ${HEADER}`}>Pos</Box>
-      <Box className={`col-span-3 md:col-span-2 ${HEADER}`}>Player</Box>
+      <div className="col-span-full md:hidden whitespace-normal">
+        <PhoneRows page={leaderboard} />
+      </div>
+      <Box className={`max-md:hidden ${HEADER}`}>Pos</Box>
+      <Box className={`max-md:hidden col-span-2 ${HEADER}`}>Player</Box>
       {leaderboard.columns.map((column) => (
-        <Box key={column.field} className={HEADER}>
+        <Box key={column.field} className={`max-md:hidden ${HEADER}`}>
           {label(column)}
         </Box>
       ))}
       {leaderboard.rows.slice(0, 3).map((row) => (
         <Fragment key={row.uuid}>
-          <Box className="hidden md:block content:font-bold content:flex content:items-center content:justify-center">
+          <Box className="max-md:hidden content:font-bold content:flex content:items-center content:justify-center">
             #{row.position}
           </Box>
-          <Box className="hidden md:block content:py-3 content:px-5">
+          <Box className="max-md:hidden content:py-3 content:px-5">
             <SkinHead uuid={row.uuid} />
           </Box>
-          <Box className="col-span-3 md:col-span-1 min-w-0 content:min-w-0 content:text-start justify-center content:flex content:items-center">
+          <Box className="max-md:hidden min-w-0 content:min-w-0 content:text-start justify-center content:flex content:items-center">
             {/* `MinecraftText` styles every color segment, so the truncation sits on a wrapper. */}
             <span className="block min-w-0 truncate">
               <Link to="/{-$locale}/player/$name" params={{ name: row.username }} className="hover:underline">
@@ -74,7 +78,7 @@ export function LeaderboardPreview({
           {row.values.map((value, index) => (
             <Box
               key={`${leaderboard.columns[index].field}-${row.uuid}`}
-              className="content:flex content:justify-center content:items-center"
+              className="max-md:hidden content:flex content:justify-center content:items-center"
             >
               {typeof value === "number" ?
                 <span className="text-mc-1.5 lg:text-mc-2">{n(value)}</span> :

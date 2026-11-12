@@ -20,7 +20,7 @@ export type BoxBorderRadius =
 
 const DEFAULT_BORDER_RADIUS = panel.bevel;
 
-export function toBorderRadius(borderRadius: BoxBorderRadius): {
+function toBorderRadius(borderRadius: BoxBorderRadius): {
   topLeft: number;
   topRight: number;
   bottomLeft: number;
@@ -76,7 +76,46 @@ const boxVariants = {
     background: `radial-gradient(circle at 50% -10%, rgb(0 0 0 / 0.06) 40%, hsl(311 100% 50% / 0.4) 110%), ${panel.background}`,
     shadow: `rgb(10 0 10 / ${panel.shadowOpacity})`,
   },
+  // The bot's highlighted leaderboard row (`leaderboard.profile.tsx`): a white panel with a lighter shadow.
+  highlight: {
+    background: "rgb(255 255 255 / 0.35)",
+    shadow: "rgb(0 0 0 / 0.3)",
+  },
 };
+
+/**
+ * A box drawn as one of the bot's cells (a leaderboard cell, a stat, a heading): its content centered, at least a tap
+ * target tall. The Box sets its content's size, so the text and whatever wraps it carry their own; a wrapper at the
+ * Box's size would sit the text on its baseline, low. Grids of them keep the bot's 4 px gap (`BOX_GAP`).
+ */
+export const CELL = "content:flex content:min-h-11 content:items-center content:justify-center content:px-3 content:py-1";
+
+/** The bot's gap between boxes, for a grid of them; a `grid-cols-snap-*` grid sizes its columns by it. */
+export const BOX_GAP = "gap-1 [--snap-gap:4px]";
+
+/**
+ * For a Box that is itself the link, button or summary: its keyboard ring inside the box's edge, on the content, which
+ * paints last. A ring outside the edge would sit under the box's own shadow on the right and at the foot.
+ */
+export const BOX_RING = "focus-ring-none focus-visible:content:focus-ring-inset";
+
+/** A heading's box across its panel or row, slimmer than a stat's, as the card's are. */
+export const HEADING_BOX = cn(CELL, "col-span-full content:min-h-0 content:py-1.5");
+
+/**
+ * A stat's box: the value at its foot, so the values in a row line up whatever their labels do, and narrow sides, so a
+ * phone's three across still fit a long value.
+ */
+export const STAT_BOX = cn(CELL, "content:items-stretch content:px-1 content:py-2");
+
+/** A stat in its own box, as the card draws each one: the `<dl>` sits inside, since a `<dl>` can't hold the Box's wrappers. */
+export function StatBox({ className, children }: { className?: string; children: ReactNode }) {
+  return (
+    <Box className={cn(STAT_BOX, className)}>
+      <dl className="flex min-w-0 grow flex-col">{children}</dl>
+    </Box>
+  );
+}
 
 type BoxOnlyProps = {
   borderRadius?: BoxBorderRadius;
@@ -130,7 +169,7 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
   return (
     <Component
       className={cn(
-        "box relative text-mc-white me-1 mb-1 content:p-4 content:text-mc-2 content:h-full content:animate-loading-gradient",
+        "box relative text-mc-white me-1 mb-1 content:p-4 content:text-mc-2 content:h-full",
         className
       )}
       data-square-corner={borderRadius.bottomRight === 0 || undefined}
@@ -140,7 +179,7 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
       {/* The card lays its gradient over everything beneath the panel with `overlay` compositing (`Box.ts`
           renderOverlay), so the background brightens at the top and darkens at the bottom. A blend mode beside the
           content does the same (the fill's `::after`); inside the clipped content it could only see the panel color. */}
-      <div data-slot="fill" data-overlay={variant === "default" || undefined} />
+      <div data-slot="fill" data-overlay={variant === "default" || variant === "highlight" || undefined} />
       <div data-slot="content" className="relative" style={style}>
         {title !== undefined && (
           <div data-slot="title" className="-mx-4 -mt-4 mb-3 border-b-2 border-black/30 bg-black/20 px-4 py-2 text-center">

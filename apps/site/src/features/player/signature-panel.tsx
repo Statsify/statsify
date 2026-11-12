@@ -15,7 +15,6 @@ import { getRouteApi } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import type { PlayerPage } from "@statsify/contract";
 
-/** The help text is reading text, so it is Mona Sans. */
 const HELP = "text-mc-1 text-mc-gray";
 
 const localeRoute = getRouteApi("/{-$locale}");
@@ -32,7 +31,7 @@ export function SignaturePanel({ page }: { page: PlayerPage }) {
   const { origin } = localeRoute.useLoaderData();
 
   // The undashed UUID, so every snippet names the same URL (and one edge cache entry).
-  const uuid = compactUuid(page.uuid) ?? page.uuid;
+  const uuid = compactUuid(page.uuid)!;
   const image = `${origin}/sig/${uuid}.png`;
   const profile = `${origin}/player/${page.username}`;
   const alt = t("player.signature.alt", { name: page.username });

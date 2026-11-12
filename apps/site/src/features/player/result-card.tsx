@@ -6,23 +6,33 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box } from "~/components/ui/box";
+import { BOX_GAP, Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
 import { InlineStat } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinBust } from "~/components/ui/skin";
 import { Spoken } from "~/components/ui/hint";
+import { cn } from "~/lib/util";
+import { isPlayerTag } from "~/lib/uuid";
 import { rememberPlayer } from "./resolve";
+import { searchState } from "~/components/search";
 import { useEffect } from "react";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { ResultCard } from "@statsify/contract";
 
-/** The `/player?q=` result grid: one column on phones, two from tablets up. */
+/**
+ * The `/player?q=` result grid: one column on phones, two from tablets up, three on wide screens. One or two cards don't
+ * fill a wide row, so they sit under the search box at its width instead of at the page's left edge.
+ */
 export function ResultCards({ cards, query }: { cards: ResultCard[]; query: string }) {
   const { t } = useTranslation();
+
+  if (cards.length === 0 && !isPlayerTag(query)) {
+    return <p className="text-mc-1.5 text-mc-gray text-center">{t("player.notFound.invalid", { name: query })}</p>;
+  }
 
   if (cards.length === 0) {
     return (
@@ -39,7 +49,7 @@ export function ResultCards({ cards, query }: { cards: ResultCard[]; query: stri
   }
 
   return (
-    <ul className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
+    <ul className={cn("w-full grid grid-cols-1 md:grid-cols-2", cards.length < 3 ? "max-w-200" : "xl:grid-cols-3", BOX_GAP)}>
       {cards.map((card) => (
         <li key={card.uuid}>
           <ResultCardView card={card} />
@@ -61,7 +71,8 @@ export function ResultCardView({ card }: { card: ResultCard }) {
   const number = (value: number) => <Spoken full={exact(value)}>{n(value)}</Spoken>;
 
   return (
-    <Link to="/{-$locale}/player/$name" params={{ name: card.username }} className="group block">
+    // A column, so the box's foot margin stays inside the link and its ring clears the box's shadow.
+    <Link to="/{-$locale}/player/$name" params={{ name: card.username }} state={searchState} className="group flex flex-col">
       <Box className="transition group-hover:brightness-110 content:flex content:items-center content:gap-4 content:p-3">
         <SkinBust uuid={card.uuid} className="h-24 w-16 shrink-0 sm:h-32 sm:w-20" />
         <div className="flex min-w-0 grow flex-col gap-2">

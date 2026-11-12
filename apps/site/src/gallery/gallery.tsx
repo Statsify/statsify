@@ -40,20 +40,20 @@ import { FilterBox } from "~/components/filter-box";
 import { FindPlayer, PageNav } from "~/features/leaderboards/leaderboard-table";
 import { GAME_ICONS, GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { GameGrid } from "~/features/player/player-page";
-import { GameHeader, LevelPanel, ModeSwitcher, NeverPlayed, NoStatMatches, StatPanel } from "~/features/game/game-page";
+import { GameHeader, LevelPanel, NeverPlayed, NoStatMatches } from "~/features/game/game-page";
 import { GameNav } from "~/features/game/game-nav";
 import { GitHub } from "~/components/icons/github";
 import { InlineStat, StatCell } from "~/components/ui/stat";
-import { LeaderboardCards } from "~/features/leaderboards/leaderboard-cards";
+import { LeaderboardBoxes } from "~/features/leaderboards/leaderboard-boxes";
 import { ListFailed, NoMatches } from "~/features/leaderboards/leaderboard-index";
 import { LogoError } from "~/components/icons/logo-error";
 import { LookupButton, PlayerNotFoundView } from "~/features/player/player-not-found";
 import { Menu } from "~/components/icons/menu";
 import { MinecraftText } from "~/components/ui/minecraft-text";
+import { ModeSwitcher } from "~/features/game/mode-switcher";
 import { Nametag } from "~/components/ui/nametag";
 import { NotFound } from "~/components/not-found";
 import { Patreon } from "~/components/icons/patreon";
-import { PopoverTooltip } from "~/components/ui/tooltip";
 import { ProgressBar } from "~/components/navigation-progress";
 import { Progression } from "~/components/ui/progression";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -65,6 +65,7 @@ import { SearchIcon } from "~/components/icons/search";
 import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
 import { SignaturePanel } from "~/features/player/signature-panel";
 import { Skin, SkinBust, SkinHead } from "~/components/ui/skin";
+import { StatPanel } from "~/features/game/stat-panel";
 import { Tab, Tabs } from "~/components/ui/tabs";
 import { TableData } from "~/components/ui/table";
 import { Twitter } from "~/components/icons/twitter";
@@ -129,11 +130,6 @@ function useFixtureSearchClient() {
  * are forced by the visual regression harness through `data-gallery-force`; everything else renders as is.
  */
 export function Gallery() {
-  // `LeaderboardCards` scrolls its highlighted row into view on mount; the gallery opens at the top (or the hash).
-  useEffect(() => {
-    if (!globalThis.location.hash) globalThis.scrollTo(0, 0);
-  }, []);
-
   return (
     <div className="grow">
       <div className="w-container flex flex-col gap-12 px-4 py-6 text-mc-white md:px-8">
@@ -645,10 +641,10 @@ function LeaderboardSection() {
   return (
     <Section id="leaderboards">
       <Demo label="Rows: the top three, a highlighted row, a long name and nine digits">
-        <LeaderboardCards page={LEADERBOARD_PAGE} />
+        <LeaderboardBoxes page={LEADERBOARD_PAGE} />
       </Demo>
       <Demo label="Empty">
-        <LeaderboardCards page={{ ...LEADERBOARD_PAGE, rows: [] }} />
+        <LeaderboardBoxes page={{ ...LEADERBOARD_PAGE, rows: [] }} />
       </Demo>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Demo label="Page nav, first page">
@@ -658,12 +654,12 @@ function LeaderboardSection() {
           <PageNav field={LEADERBOARD_PAGE.field} page={LEADERBOARD_PAGE.pages - 1} pages={LEADERBOARD_PAGE.pages} />
         </Demo>
         <Demo label="Find a player">
-          <FindPlayer field={LEADERBOARD_PAGE.field} />
+          <FindPlayer field={LEADERBOARD_PAGE.field} pages={LEADERBOARD_PAGE.pages} />
         </Demo>
         <Demo label="Find a player: unknown and unranked">
           <div className="flex flex-col gap-4">
-            <FindPlayer field={LEADERBOARD_PAGE.field} miss={{ kind: "unknown", name: "zzznotaplayer" }} />
-            <FindPlayer field={LEADERBOARD_PAGE.field} miss={{ kind: "unranked", name: "oJakey" }} />
+            <FindPlayer field={LEADERBOARD_PAGE.field} pages={LEADERBOARD_PAGE.pages} miss={{ kind: "unknown", name: "zzznotaplayer" }} />
+            <FindPlayer field={LEADERBOARD_PAGE.field} pages={LEADERBOARD_PAGE.pages} miss={{ kind: "unranked", name: "oJakey" }} />
           </div>
         </Demo>
       </div>
@@ -698,13 +694,6 @@ function HomeSection() {
           <p className="text-mc-1.5">
             Run <Command command="/bedwars" /> in any server.
           </p>
-        </Demo>
-        <Demo label="Tooltip, open">
-          <div className="pt-12">
-            <PopoverTooltip content="Copied to Clipboard!" open asChild>
-              <button type="button" className="text-mc-1.5 underline">/session</button>
-            </PopoverTooltip>
-          </div>
         </Demo>
         <Demo label="Tabs" className="sm:col-span-2">
           <Tabs defaultTab="casual">

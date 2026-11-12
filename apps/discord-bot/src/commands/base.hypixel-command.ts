@@ -25,7 +25,7 @@ import { render } from "@statsify/rendering";
 import type { ApiModeFromGameModes, ApiSubModeForMode, GameMode, GameModeWithSubModes, GameModes, Player, SubModeForMode } from "@statsify/schemas";
 import type { BaseProfileProps } from "@statsify/profiles";
 
-export type { BaseProfileProps, ProfileTime } from "@statsify/profiles";
+export type { BaseProfileProps } from "@statsify/profiles";
 
 export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
   mode: GameMode<T>;

@@ -10,7 +10,7 @@ import { Box } from "~/components/ui/box";
 import { MotionValue, easeIn, easeOut, motion, useTransform } from "motion/react";
 import { MotionValueTableData } from "~/components/ui/table";
 import { Nametag } from "~/components/ui/nametag";
-import { Skin } from "~/components/ui/skin";
+import { Skin, SkinHead } from "~/components/ui/skin";
 import { useHydrated } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { cn } from "~/lib/util";
@@ -48,7 +48,7 @@ export function WoolWarsPreview({ className, daysBack }: { className?: string; d
     <div className={cn("grid grid-cols-3 gap-2 sm:whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-[minmax(min-content,max-content)_1fr] lg:grid-cols-content-3 gap-2 text-center">
         <Skin uuid={player.uuid} className="hidden lg:block lg:col-span-1 lg:row-span-3" />
-        <Nametag prefixName={player.prefixName} className="col-span-2 col-start-1 lg:col-start-2" />
+        <Nametag prefixName={player.prefixName} head={<SkinHead uuid={player.uuid} className="shrink-0 lg:hidden" />} className="col-span-2 col-start-1 lg:col-start-2" />
         <Box className="col-span-2 content:text-mc-1.5 content:lg:text-mc-2">
           {/* Hydration keeps the cached HTML's "today", so the span remounts once the visitor's clock can be read. */}
           Started <span key={hydrated ? "visitor" : "cached"} suppressHydrationWarning>{daysBefore(new Date(), 7)}</span> (<motion.span>{daysBackFormatted}</motion.span> days ago)

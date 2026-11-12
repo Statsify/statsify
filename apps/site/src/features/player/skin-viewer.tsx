@@ -213,7 +213,6 @@ export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: 
             />
           </div>
         )}
-      {texture !== "error" && <p className="self-center text-mc-1 text-mc-gray">{t("player.skin.hint")}</p>}
       <Button asChild className="self-center sm:min-w-48">
         <a href={src} download={`${name}-skin.png`}>
           {t("player.skin.download")}

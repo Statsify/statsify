@@ -16,7 +16,7 @@ import {
   getIntendedFormattedLevel,
 } from "@statsify/schemas";
 import { catalogStats } from "./leaderboards.js";
-import { findScore, prettify } from "@statsify/util";
+import { findScore, prettify, removeFormatting } from "@statsify/util";
 import type { Glossary, GlossaryEntry, LeaderboardGroup, PrestigeSheet } from "@statsify/contract";
 import type { Stat } from "@statsify/catalog";
 
@@ -38,8 +38,8 @@ const RATIO_ORDER = [...RATIOS.keys()];
  * to explain. Built from the catalog and the leaderboard list's game names; the words are in the locale files.
  */
 export function buildGlossary(groups: LeaderboardGroup[]): Glossary {
-  const shown = [...catalogStats().values()].filter((stat) => stat.name === undefined);
-  const names = new Map(groups.map(({ key, name }) => [key, name]));
+  const shown = [...catalogStats().values()].filter((stat): stat is Stat & { glossary: string } => stat.glossary !== undefined);
+  const names = new Map(groups.map(({ key, formatted }) => [key, removeFormatting(formatted)]));
   const games = Object.fromEntries(
     [...new Set(shown.map(gameOf))].map((game) => [game, names.get(game) ?? prettify(game)])
   );
@@ -122,14 +122,12 @@ const PRESTIGE_LEVELS = 100;
 
 /**
  * Every BedWars prestige the game colors, from the schemas' scheme map (the cards' level colors), each at its first
- * level with the star it shows and the EXP it takes; and the stars and brackets Hypixel sells.
+ * level with the star it shows and the EXP it takes; and the game's other stars and brackets.
  */
 export function buildPrestigeSheet(): PrestigeSheet {
   const levelExp = Array.from({ length: PRESTIGE_LEVELS }, (_, level) => getBedWarsExpReq(level));
   // The API doesn't depend on `@statsify/math`, so no `add` here.
   const prestigeExp = levelExp.reduce((sum, exp) => sum + exp, 0);
-  // The first levels, up to the first that takes as much as every level after it.
-  const steady = levelExp.indexOf(levelExp.at(-1)!);
 
   return {
     prestiges: PRESTIGE_SCHEMES.map(({ req, scheme }) => ({
@@ -139,7 +137,6 @@ export function buildPrestigeSheet(): PrestigeSheet {
       star: STAR_MAP[findScore(PRESTIGE_STARS, req).star],
       exp: (req / PRESTIGE_LEVELS) * prestigeExp,
     })),
-    levelExp: levelExp.slice(0, steady + 1),
     stars: Object.entries(STAR_MAP).map(([key, glyph]) => ({ key, name: prettify(key), glyph })),
     brackets: Object.entries(BRACKET_MAP).map(([key, [open, close]]) => ({ key, name: prettify(key), open, close })),
   };

@@ -7,30 +7,19 @@
  */
 
 import { Button } from "~/components/ui/button";
-import { useEffect, useRef } from "react";
+import { useId } from "react";
 import { Hint } from "~/components/ui/hint";
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
 import { Search } from "~/components/search";
 import { formatPosition } from "@statsify/profiles/format-position";
 import { StatNumber, useStatName } from "~/components/ui/stat";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
-import { useTranslation } from "react-i18next";
-import type { AroundMiss } from "./leaderboard-data";
+import { Trans, useTranslation } from "react-i18next";
+import { LABEL_NAMESPACES } from "~/i18n/i18n";
+import { type AroundMiss, PAGE_SIZE } from "./leaderboard-data";
 import type { ReactNode } from "react";
 import type { LeaderboardColumn, LeaderboardPage } from "@statsify/contract";
-
-// The table's rows from `md` up (`LeaderboardCards`): one 48 px row per player, with the column labels once in a
-// Minecraft 16 §7 header. A row's position, head and name share one element across their three columns, and its
-// values another; a row's stripe or highlight is on both.
-export const HEADER = "flex h-10 items-center border-b-2 border-black/30 bg-blackify-800 px-2 text-mc-1 text-mc-gray md:text-mc-1.5";
-export const PLAYER = "sticky col-span-3 grid grid-cols-subgrid";
-export const VALUES = "col-span-(--columns) grid grid-cols-subgrid";
-// Layers (gradients) over the panel.
-export const STRIPE = "bg-linear-to-r from-black/15 to-black/15";
-// The bot's highlighted row is a white 0.35 panel (`leaderboard.profile.tsx`). Forced colors drop backgrounds, so
-// there it's a border.
-export const HIGHLIGHT = "bg-linear-to-r from-white/35 to-white/35 forced-colors:border-y-2 forced-colors:border-[color:Highlight]";
 
 /** A row's name: a link to the player's page for the board's game and mode where there is one, else to the profile. */
 export function PlayerLink({ page, name, className, children }: { page: LeaderboardPage; name: string; className?: string; children: ReactNode }) {
@@ -48,33 +37,6 @@ export function PlayerLink({ page, name, className, children }: { page: Leaderbo
     </Link>
   );
 }
-
-/**
- * A ref for the highlighted (`around`) row, which is brought into view, centered, when the page lands. After a client
- * navigation the router scrolls the window to the top once the new page is on screen, so the row is centered again
- * then; a page Back or Forward put back where it was left stays there.
- */
-export function useHighlightScroll<T extends HTMLElement>(page: LeaderboardPage) {
-  const ref = useRef<T>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    const row = ref.current;
-    if (!row) return;
-
-    const scroll = () => row.scrollIntoView({ block: "center", inline: "nearest" });
-    scroll();
-    const unsubscribe = router.subscribe("onRendered", () => {
-      unsubscribe();
-      if (scrollY === 0) scroll();
-    });
-    return unsubscribe;
-  }, [page, router]);
-
-  return ref;
-}
-
-const LABEL_NAMESPACES = ["default", "site"];
 
 /**
  * A column's label: the catalog's word for the stat, or the leaderboard's own name for the column where the catalog has
@@ -120,8 +82,11 @@ export function Position({ position, className }: { position: number; className:
   );
 }
 
-/** Previous and next page links around the page count; the links drop `around`. */
-export function PageNav({ field, page, pages }: { field: string; page: number; pages: number }) {
+/**
+ * Previous and next page links around the page count; the links drop `around`. Under a stream of pages, `page` is its
+ * first and `last` its last, and the links go past them.
+ */
+export function PageNav({ field, page, last = page, pages }: { field: string; page: number; last?: number; pages: number }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
 
@@ -145,26 +110,90 @@ export function PageNav({ field, page, pages }: { field: string; page: number; p
     // Phones put the page count above the two buttons, so nothing wraps or overflows.
     <nav className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2" aria-label={t("leaderboards.pages")}>
       {pageLink(page - 1, t("leaderboards.previous"), page <= 0)}
-      <p className="order-first basis-full text-mc-1 whitespace-nowrap text-center sm:order-none sm:basis-auto sm:text-mc-1.5">{t("leaderboards.page", { page: n(page + 1), pages: n(Math.max(pages, 1)) })}</p>
-      {pageLink(page + 1, t("leaderboards.next"), page + 1 >= pages)}
+      <p className="order-first basis-full text-mc-1 whitespace-nowrap text-center sm:order-none sm:basis-auto sm:text-mc-1.5">
+        {last > page
+          ? t("leaderboards.pageRange", { first: n(page + 1), last: n(last + 1), pages: n(pages) })
+          : t("leaderboards.page", { page: n(page + 1), pages: n(Math.max(pages, 1)) })}
+      </p>
+      {pageLink(last + 1, t("leaderboards.next"), last + 1 >= pages)}
     </nav>
   );
 }
 
-/** The `around=<name>` entry: the shared search box, submitting into this leaderboard's query string. */
-export function FindPlayer({ field, miss }: { field: string; miss?: AroundMiss }) {
+/**
+ * The `around=<name>` entry, the shared search box submitting into this leaderboard's query string, and beside it (below
+ * on phones) the `position=<n>` one.
+ */
+export function FindPlayer({ field, pages, miss }: { field: string; pages: number; miss?: AroundMiss }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
     <div className="flex w-full max-w-200 flex-col gap-2 self-center">
-      <Search
-        compact
-        className="w-full"
-        placeholder={t("leaderboards.find")}
-        onSelect={(name) => navigate({ to: "/{-$locale}/leaderboards/$field", params: { field }, search: { around: name } })}
-      />
-      {miss && <p className="text-mc-1 text-mc-yellow text-center">{t(`leaderboards.${miss.kind}`, { name: miss.name })}</p>}
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Search
+          compact
+          recent
+          className="w-full"
+          placeholder={t("leaderboards.find")}
+          onSelect={(name) => navigate({ to: "/{-$locale}/leaderboards/$field", params: { field }, search: { around: name } })}
+        />
+        <JumpTo field={field} pages={pages} />
+      </div>
+      {miss && (
+        <p className="text-mc-1 text-mc-yellow text-center">
+          {miss.kind === "unknown" ? (
+            <Trans
+              i18nKey="leaderboards.unknown"
+              values={{ name: miss.name }}
+              components={{ profile: <Link to="/{-$locale}/player/$name" params={{ name: miss.name }} className="underline" /> }}
+            />
+          ) : (
+            t(miss.kind === "moved" ? "leaderboards.moved" : "leaderboards.unranked", { name: miss.name })
+          )}
+        </p>
+      )}
     </div>
+  );
+}
+
+/**
+ * Opens the page holding a position, with its row marked: rank 5,000 in one step rather than 200 Nexts. A plain GET
+ * form (`?position=`), so it works without scripts; with them it navigates in place.
+ */
+function JumpTo({ field, pages }: { field: string; pages: number }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const id = useId();
+
+  return (
+    <form
+      method="get"
+      onSubmit={(event) => {
+        event.preventDefault();
+        const position = Number(new FormData(event.currentTarget).get("position"));
+        void navigate({ to: "/{-$locale}/leaderboards/$field", params: { field }, search: { position } });
+      }}
+      className="flex shrink-0 items-center gap-2 self-center"
+    >
+      <label htmlFor={id} className="text-mc-1 text-mc-gray">{t("leaderboards.jump")}</label>
+      <input
+        id={id}
+        aria-label={t("leaderboards.jumpPosition")}
+        name="position"
+        type="number"
+        inputMode="numeric"
+        required
+        min={1}
+        max={Math.max(pages, 1) * PAGE_SIZE}
+        className="h-11 w-28 appearance-none bg-blackify-800 px-3 text-mc-1.5 text-white placeholder:text-mc-gray focus-ring-none focus-visible:focus-ring-inset [&::-webkit-inner-spin-button]:appearance-none"
+      />
+      <button
+        type="submit"
+        className="h-11 shrink-0 bg-blackify-800 px-3 text-mc-1.5 text-white hover:bg-blackify-700 active:bg-blackify-700 focus-visible:focus-ring-inset"
+      >
+        {t("game.go")}
+      </button>
+    </form>
   );
 }

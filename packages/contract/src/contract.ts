@@ -64,8 +64,8 @@ export const GameSummarySchema = z.object({
   /** Minecraft-formatted level or prefix string, when the game has one. */
   level: z.string().optional(),
   rows: z.array(StatRowSchema).max(4),
-  /** The game page's URL segment (`/player/<name>/<page>`), when the site has a page for the game. */
-  page: z.string().optional(),
+  /** The game page's URL segment (`/player/<name>/<page>`); every game with a panel has a page. */
+  page: z.string(),
 });
 
 export const PlayerPageSchema = z.object({
@@ -165,7 +165,8 @@ export const LeaderboardGroupSchema = z.object({
   key: z.string(),
   /** The `GameId` for the icon, or `null` for groups without a game (quests, challenges). */
   game: z.string().nullable(),
-  name: z.string(),
+  /** The name in the game's colors, Minecraft-formatted (`§cBed§fWars§f`), as the bot draws it. */
+  formatted: z.string(),
   leaderboards: z.array(LeaderboardListEntrySchema),
 });
 
@@ -207,13 +208,14 @@ export const LeaderboardColumnSchema = z.object({
 
 export const LeaderboardPageSchema = z.object({
   field: z.string(),
-  name: z.string(),
+  /** The name as the bot's leaderboard titles it, its game in the game's colors, Minecraft-formatted. */
+  formatted: z.string(),
+  /** The board's `GameId`, for the icon, or `null` for a board without a game (quests, challenges). */
+  game: z.string().nullable(),
   /** The `glossary.*` locale key that explains the board's stat, or null where the glossary has none. */
   glossary: z.string().nullable(),
   /** The value columns, matching `rows[].values`. */
   columns: z.array(LeaderboardColumnSchema),
-  /** `DESC` ranks the highest value first, `ASC` the lowest (best times). */
-  sort: z.enum(["ASC", "DESC"]),
   page: z.number(),
   pages: z.number(),
   rows: z.array(LeaderboardRowSchema),
@@ -309,6 +311,8 @@ export const StatSectionSchema = z.object({
   collapsed: z.boolean().optional(),
   /** A long list the page's filter box searches by name; one box serves every such list on the page. */
   search: z.boolean().optional(),
+  /** A list whose lines fit two across on a phone (Dropper's maps); the others take a line each there. */
+  pairs: z.boolean().optional(),
   /** Values shown as a tick above 0 and a cross at 0, for whether each was done (a period's quests). */
   ticks: z.boolean().optional(),
 });
@@ -545,7 +549,7 @@ export const GlossarySchema = z.object({
   ),
 });
 
-/** Every BedWars prestige the game draws, with the stars and brackets Hypixel sells. */
+/** Every BedWars prestige the game draws, with the game's other stars and brackets. */
 export const PrestigeSheetSchema = z.object({
   prestiges: z.array(
     z.object({
@@ -560,8 +564,6 @@ export const PrestigeSheetSchema = z.object({
       exp: z.number(),
     })
   ),
-  /** The EXP each of a prestige's first levels takes; every level after the last one listed takes as much as it. */
-  levelExp: z.array(z.number()),
   stars: z.array(z.object({ key: z.string(), name: z.string(), glyph: z.string() })),
   brackets: z.array(z.object({ key: z.string(), name: z.string(), open: z.string(), close: z.string() })),
 });
@@ -614,7 +616,7 @@ const LeaderboardGameInputSchema = z.object({
 
 const errors = oc.errors({
   NOT_FOUND: { message: "Player not found" },
-  /** `lookup` only: Hypixel didn't answer, so nothing is known about the name yet. */
+  /** `lookup` and `refresh`: Hypixel didn't answer, so nothing new is known about the player yet. */
   SERVICE_UNAVAILABLE: { message: "Hypixel didn't answer, try again shortly" },
   TOO_MANY_REQUESTS: {
     message: "Too many Hypixel lookups right now, try again shortly",

@@ -6,9 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { BOX_GAP, Box, CELL, HEADING_BOX } from "~/components/ui/box";
 import { Background } from "~/components/ui/background";
 import { cn } from "~/lib/util";
 import type { ReactNode } from "react";
+
+/** An error page's heading and its explanation, each in its own box, 4 px apart, as the bot's cards draw a title box. */
+export function ErrorText({ heading, children }: { heading: ReactNode; children: ReactNode }) {
+  return (
+    <div className={cn("flex w-full max-w-160 flex-col", BOX_GAP)}>
+      <Box className={HEADING_BOX}>{heading}</Box>
+      <Box className={cn(CELL, "content:py-3")}>{children}</Box>
+    </div>
+  );
+}
 
 export function Error({ children, className }: { className?: string; children: ReactNode }) {
   return (

@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { FormattedGame, type GameId, type PlayerStats, Quests, questPeriodStart } from "@statsify/schemas";
+import { type GameId, type PlayerStats, Quests, questPeriodStart } from "@statsify/schemas";
 import { QUESTS, QUEST_PERIODS, QUEST_TIMES, type QuestPeriod, modeName, modeStats, shapeKeys } from "@statsify/catalog";
-import { type CellSpec, type GameLayout, type OverviewSpec, type PageSpec, read } from "./layout.js";
+import { type CellSpec, type GameLayout, type OverviewSpec, type PageSpec, gamesOf, rankingPage, read } from "./layout.js";
+import { gameName, siteName } from "../names.js";
 
-const GAMES = QUESTS.modes.getApiModes().filter((mode) => mode !== "overall") as GameId[];
+const GAMES = gamesOf(QUESTS);
 
 /** How many quests a game has in a period: its stats there, less their total. */
 const count = (period: QuestPeriod, game: GameId) => shapeKeys(QUESTS, `${period}.${game}`).filter((key) => key !== "total").length;
@@ -40,15 +41,12 @@ const OVERVIEW: OverviewSpec[] = [
  */
 function overall(period: QuestPeriod): PageSpec {
   const allTime = period === "overall";
-  const cells: CellSpec[] = GAMES.filter((game) => allTime || count(period, game) > 0).map((game) => ({
-    key: "total",
-    at: `${period}.${game}`,
-    name: FormattedGame[game],
-    icon: game,
-    ...(allTime && { color: "§f" as const }),
-  }));
 
-  return { heading: { word: null, mode: "Overall" }, sections: [{ cells, sort: allTime ? "desc" : "share", list: true }] };
+  return rankingPage(GAMES.filter((game) => allTime || count(period, game) > 0), {
+    at: (game) => `${period}.${game}`,
+    sort: allTime ? "desc" : "share",
+    ...(allTime && { color: "§f" as const }),
+  });
 }
 
 /**
@@ -63,8 +61,8 @@ function game(id: GameId, period: QuestPeriod): PageSpec {
 
   return {
     place,
-    heading: { word: null, mode: `§l${FormattedGame[id]}` },
-    overview: [...OVERVIEW, { key: "total", at: place, label: "stats.game-total", params: { game: modeName(QUESTS, id) }, color: "§a" }],
+    heading: { word: null, mode: `§l${gameName(id)}` },
+    overview: [...OVERVIEW, { key: "total", at: place, label: "stats.game-total", params: { game: siteName(modeName(QUESTS, id)) }, color: "§a" }],
     sections: [
       {
         cells: quests.map(({ key, name }): CellSpec =>
@@ -87,7 +85,7 @@ export const QUESTS_PAGE: GameLayout = {
   overview: OVERVIEW,
   periods: (mode) => (MONTHLY.has(mode) ? QUEST_PERIODS : QUEST_PERIODS.filter((period) => period !== "monthly")),
   periodStart,
-  page: (mode, _submode, period = "overall") =>
+  page: (mode, _submode, period) =>
     mode === "overall" ? overall(period as QuestPeriod) : game(mode as GameId, period as QuestPeriod),
   played: ({ quests }) => quests.total > 0,
 };

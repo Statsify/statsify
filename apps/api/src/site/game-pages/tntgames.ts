@@ -67,8 +67,6 @@ export const TNT_GAMES_PAGE: GameLayout = {
         key: api,
         submodes: submodes.map(({ api: key, formatted: name }) => ({ key, name })),
         selected: ({ tntgames }) => selectedMode(TNT_GAMES, tntgames.wizards.class, TNT_WIZARDS_CLASSES),
-        // Weighed as the modes are; no class stores games, wins or losses, so none is marked.
-        mostPlayed: {},
       } :
       { key: api }),
   overview: ["coins", "wins"],

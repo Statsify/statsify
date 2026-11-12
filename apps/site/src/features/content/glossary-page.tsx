@@ -7,17 +7,18 @@
  */
 
 import { Article, CHIP, Paragraph, TextLink, TextPage } from "./text-page";
-import { Box } from "~/components/ui/box";
+import { BOX_GAP, Box, HEADING_BOX } from "~/components/ui/box";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Trans, useTranslation } from "react-i18next";
 import { type ReactNode, useState } from "react";
+import { LABEL_NAMESPACES } from "~/i18n/i18n";
+import { cn } from "~/lib/util";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import type { GlossaryGroup, GlossaryItem } from "./content-data";
 
-/** A label's words: the bot's in `default.json`, or the site's for a stat the bot doesn't show. */
-const LABEL_NAMESPACES = ["default", "site"];
+const TEXT = "max-w-[33em] font-sans text-16 leading-[1.6] font-medium text-mc-gray lg:text-20";
 
 /**
  * What every stat the site shows means, grouped as the ratios, the stats several games share, then each game's own. Each
@@ -59,23 +60,28 @@ export function GlossaryPage({ groups }: { groups: GlossaryGroup[] }) {
         count={t("filter.count", { shown: n(count), total: n(total) })}
       />
       {count === 0 && <p className="text-mc-1.5 text-mc-gray text-center">{t("glossary.noMatches", { query: filter.trim() })}</p>}
+      {/* Each group's heading in a box of its own, then each stat in its own box, 4 px apart, as the bot's cards. */}
       {shown.map((group) => (
-        <Box
-          as="section"
+        <section
           key={group.key}
           id={group.key}
           aria-labelledby={`${group.key}-heading`}
-          className="scroll-mt-6"
-          title={
+          className={cn("flex scroll-mt-6 flex-col", BOX_GAP)}
+        >
+          <Box className={HEADING_BOX}>
             <h2 id={`${group.key}-heading`} className="text-mc-1.5 font-bold">
               {groupName(group)} <span className="font-normal text-mc-gray">{group.items.length}</span>
             </h2>
-          }
-        >
+          </Box>
+          {group.key === "ratios" && (
+            <Box className="content:py-4">
+              <p className={TEXT}>{t("glossary.ratiosNote")}</p>
+            </Box>
+          )}
           {group.items.map((item) => (
             <Entry key={item.key} item={item} label={label(item)} own={group.game !== null} />
           ))}
-        </Box>
+        </section>
       ))}
     </TextPage>
   );
@@ -89,14 +95,14 @@ function Entry({ item, label, own }: { item: GlossaryItem; label: string; own: b
   const games = item.games.join(", ");
 
   return (
-    <div id={item.key} className="scroll-mt-6 border-t-2 border-black/30 py-6 first:border-t-0 first:pt-2">
+    <Box id={item.key} className="scroll-mt-6 content:py-4 lg:content:px-6">
       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <h3 className="text-mc-1.5 lg:text-mc-2">
           <MinecraftText>{`${color}${label}`}</MinecraftText>
         </h3>
         {item.name && <span className="text-mc-1 text-white lg:text-mc-1.5">{item.name}</span>}
       </div>
-      <p className="mt-2 max-w-[68ch] font-sans text-16 leading-[1.6] font-medium text-mc-gray lg:text-20">{item.text}</p>
+      <p className={`${TEXT} mt-2`}>{item.text}</p>
       {item.formula && <Formula formula={item.formula} label={label} color={color} />}
       <div className="mt-3 flex flex-wrap items-center gap-x-4 text-mc-1 text-mc-gray empty:hidden lg:text-mc-1.5">
         {!own && (
@@ -111,7 +117,7 @@ function Entry({ item, label, own }: { item: GlossaryItem; label: string; own: b
           </BoardLink>
         )}
       </div>
-    </div>
+    </Box>
   );
 }
 

@@ -7,23 +7,15 @@
  */
 
 import { CHALLENGES, modeName, shapeKeys } from "@statsify/catalog";
-import { FormattedGame, type GameId } from "@statsify/schemas";
-import type { GameLayout, PageSpec } from "./layout.js";
+import { type GameLayout, type PageSpec, rankingPage } from "./layout.js";
+import { gameName, siteName } from "../names.js";
+import type { GameId } from "@statsify/schemas";
 
 /** The games in the schema's field order, which the card keeps on a tie (the registry's puts Duels first). */
 const GAMES = CHALLENGES.shapes.flatMap(({ modes }) => modes) as GameId[];
 
 /** Overall: every game's total under its name and icon, highest first, the values in the card's default white. */
-const OVERALL: PageSpec = {
-  heading: { word: null },
-  sections: [
-    {
-      cells: GAMES.map((game) => ({ key: "total", at: game, name: FormattedGame[game], icon: game, color: "§f" as const })),
-      sort: "desc",
-      list: true,
-    },
-  ],
-};
+const OVERALL = rankingPage(GAMES, { at: (game) => game, sort: "desc", color: "§f" });
 
 /**
  * A game: its challenges, most completed first, in rows that grow with the count as the card's do (four for a short
@@ -35,8 +27,8 @@ function game(id: GameId): PageSpec {
   const size = keys.length < 5 ? 4 : (keys.length - 1) ** 0.5;
 
   return {
-    heading: { word: null, mode: `§l${FormattedGame[id]}` },
-    overview: ["total", { key: "total", at: id, label: "stats.game-total", params: { game: modeName(CHALLENGES, id) } }],
+    heading: { word: null, mode: `§l${gameName(id)}` },
+    overview: ["total", { key: "total", at: id, label: "stats.game-total", params: { game: siteName(modeName(CHALLENGES, id)) } }],
     sections: [
       {
         cells: keys.filter((key) => key !== "total"),

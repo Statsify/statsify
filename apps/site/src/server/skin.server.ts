@@ -6,7 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { fetchApi, unavailable } from "./rpc.server";
+import { NO_STORE } from "~/lib/cache";
 import { PLACEHOLDER_UUID, compactUuid } from "~/lib/uuid";
+import { UsernameSchema } from "@statsify/contract";
 import { resolvePlayer } from "~/features/player/resolve";
 import { siteConfig } from "./config.server";
 
@@ -21,31 +24,36 @@ export async function proxySkin(
 ): Promise<Response> {
   const uuid = search.get("uuid");
   if (!uuid || !isPageQuery(uuid, search, fixed)) {
-    return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
+    return new Response(null, { status: 404, headers: NO_STORE });
   }
   // The API doesn't limit the site's key on skins, so only a stored player's UUID, or the not-found pages' one fixed
   // stand-in, may reach Minecraft's session server.
-  if (uuid !== PLACEHOLDER_UUID && !(await resolvePlayer(uuid))) return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
+  if (uuid !== PLACEHOLDER_UUID && !(await resolvePlayer(uuid))) return new Response(null, { status: 404, headers: NO_STORE });
 
+  return proxy(path, { uuid, ...fixed });
+}
+
+/** A search suggestion's head, by the suggested name: only the skin the API has stored, never a fresh lookup. */
+export async function proxyStoredHead(search: URLSearchParams): Promise<Response> {
+  const name = UsernameSchema.safeParse(search.get("name"));
+  if (!name.success) return new Response("name is required", { status: 400 });
+
+  return proxy("/skin/head/stored", { player: name.data });
+}
+
+async function proxy(path: string, params: Record<string, string>): Promise<Response> {
   const { apiRoute, apiKey } = await siteConfig();
   if (!apiKey) return new Response("site.apiKey is not configured", { status: 503 });
 
   const url = new URL(path, apiRoute);
-  url.searchParams.set("uuid", uuid);
-  for (const [key, value] of Object.entries(fixed)) url.searchParams.set(key, value);
+  for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
 
-  const upstream = await fetch(url, { headers: { "x-api-key": apiKey } }).catch(() => null);
-
-  // The API refusing (429), failing (5xx) or not answering is a 503 with `Retry-After`, so it's never cached and
-  // browsers back off.
-  if (!upstream || upstream.status === 429 || upstream.status >= 500) {
-    await upstream?.body?.cancel();
-    return new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "Retry-After": "30" } });
-  }
+  const upstream = await fetchApi(url);
+  if (!upstream) return unavailable();
 
   if (!upstream.ok) {
     await upstream.body?.cancel();
-    return new Response(null, { status: upstream.status === 404 ? 404 : 502, headers: { "Cache-Control": "no-store" } });
+    return new Response(null, { status: upstream.status === 404 ? 404 : 502, headers: NO_STORE });
   }
 
   const model = upstream.headers.get("X-Skin-Model");

@@ -13,6 +13,7 @@ import { createRouter } from "@tanstack/react-router";
 import { reportRouteError } from "~/lib/sentry";
 import { routeTree } from "./routeTree.gen";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
+import type { StreamState } from "~/features/leaderboards/leaderboard-data";
 
 export interface RouterContext {
   queryClient: QueryClient;
@@ -49,5 +50,12 @@ declare module "@tanstack/react-router" {
   interface StaticDataRouteOption {
     /** The URL of the route's tab icon (a player's head, a game's icon) from its loader's data; nothing for the logo. */
     tabIcon?: (loaderData: unknown) => string | undefined;
+  }
+
+  interface HistoryState {
+    /** When the site's search opened the page (`Date.now()`), so its player updates as a bot command would. */
+    searchedAt?: number;
+    /** The leaderboard pages this visit loaded as it scrolled, so Back and the URL's page find them again. */
+    leaderboardStream?: StreamState;
   }
 }

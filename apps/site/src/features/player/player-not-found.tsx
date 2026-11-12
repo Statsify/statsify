@@ -8,14 +8,14 @@
 
 import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
-import { Error } from "~/components/ui/error";
-import { PLACEHOLDER_UUID } from "~/lib/uuid";
+import { Error, ErrorText } from "~/components/ui/error";
 import { Skin } from "~/components/ui/skin";
 import { Turnstile } from "~/components/turnstile";
 import { formatCountdown } from "~/i18n/format";
+import { PLACEHOLDER_UUID, isPlayerTag } from "~/lib/uuid";
 import { getRouteApi, useNavigate, useParams } from "@tanstack/react-router";
 import { type ActionResult, BROWSER_TIMEOUT_MS, lookupPlayer } from "./player-actions";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { rememberPlayer } from "./resolve";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -37,13 +37,23 @@ export function PlayerNotFound() {
 /**
  * The player-not-found page with the Turnstile-gated "Look up on Hypixel" action. The header already has
  * the search, so the page has none of its own. On phones the skin is 160 px, so the button lands
- * mid-screen even when the 24 px copy takes three lines.
+ * mid-screen even when the 24 px copy takes three lines. Bingo, whose header has no search, passes its own
+ * `search` (above the page, under it on phones) and its own action as `children`.
  */
-export function PlayerNotFoundView({ name, lookup, turnstileSiteKey }: { name: string; lookup?: Lookup; turnstileSiteKey?: string }) {
+export function PlayerNotFoundView({
+  name,
+  lookup,
+  turnstileSiteKey,
+  search,
+  children,
+}: { name: string; lookup?: Lookup; turnstileSiteKey?: string; search?: ReactNode; children?: ReactNode }) {
   const { t } = useTranslation();
+  // A name no account can have has nothing to look up.
+  const valid = isPlayerTag(name);
 
   return (
-    <Error>
+    <Error className={search ? "flex-col-reverse md:flex-col" : undefined}>
+      {search}
       <div className="flex w-full max-w-160 flex-col items-center gap-4 self-center">
         <div className="flex max-w-full flex-col items-center gap-4">
           <Skin uuid={PLACEHOLDER_UUID} className="h-40 sm:h-64" />
@@ -53,9 +63,12 @@ export function PlayerNotFoundView({ name, lookup, turnstileSiteKey }: { name: s
             <span className="text-mc-dark-red">]</span> {name}
           </Box>
         </div>
-        <h1 className="text-mc-3 lg:text-mc-4 text-mc-red font-bold">{t("player.notFound.title")}</h1>
-        <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray text-center">{t("player.notFound.description", { name })}</p>
-        {name && <LookupButton name={name} lookup={lookup} turnstileSiteKey={turnstileSiteKey} />}
+        <ErrorText heading={<h1 className="text-mc-3 lg:text-mc-4 text-mc-red font-bold">{t("player.notFound.title")}</h1>}>
+          <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray text-center">
+            {t(valid ? "player.notFound.description" : "player.notFound.invalid", { name })}
+          </p>
+        </ErrorText>
+        {valid && (children ?? <LookupButton name={name} lookup={lookup} turnstileSiteKey={turnstileSiteKey} />)}
       </div>
     </Error>
   );

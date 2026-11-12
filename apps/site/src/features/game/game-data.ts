@@ -6,13 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { PAGE_STALE_MS } from "~/lib/player-route";
 import { orpc } from "~/lib/orpc";
 import type { GamePage } from "@statsify/contract";
 
 export type { GamePage };
-
-/** How long a loaded game page stays fresh in the query cache; matches the page's edge TTL. */
-const PAGE_STALE_MS = 60_000;
 
 /**
  * One page of a player's game: a mode, or a mode's submode, in one of its periods. Each is left out when it is the

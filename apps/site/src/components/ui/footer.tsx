@@ -9,6 +9,7 @@
 import { Brand } from "~/components/icons/logo";
 import { Discord } from "~/components/icons/discord";
 import { Divider } from "./divider";
+import { EmailLink } from "./email-link";
 import { GitHub } from "~/components/icons/github";
 import { Link } from "@tanstack/react-router";
 import { Patreon } from "~/components/icons/patreon";
@@ -56,13 +57,13 @@ export function Footer() {
             <p suppressHydrationWarning>{t("footer.copyright", { year })}</p>
             <p>{t("footer.affiliation")}</p>
             <p>{t("footer.mojang")}</p>
-            <p>{t("footer.operator")}</p>
+            <p>{t("footer.mojangApproval")}</p>
           </div>
           <div className="flex flex-wrap justify-center gap-x-4">
             <Link to="/{-$locale}/about" className={LINK}>{t("footer.about")}</Link>
             <Link to="/{-$locale}/privacy" className={LINK}>{t("footer.privacy")}</Link>
             <Link to="/{-$locale}/terms" className={LINK}>{t("footer.terms")}</Link>
-            <a href={`mailto:${email}`} className={LINK}>{email}</a>
+            <EmailLink email={email} className={LINK} />
           </div>
         </div>
       </div>

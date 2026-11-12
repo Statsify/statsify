@@ -9,14 +9,11 @@
 import * as Sentry from "@sentry/node";
 import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
 import {
-  FormattedGame,
-  type GameId,
   Guild,
   type LeaderboardEnabledMetadata,
   Player,
   deserialize,
   getLeaderboardField,
-  getLeaderboardFields,
 } from "@statsify/schemas";
 import {
   HOME_PREVIEWS,
@@ -53,8 +50,9 @@ import type {
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
+import { siteName } from "./names.js";
 import { buildGlossary, buildPrestigeSheet } from "./content.js";
-import { catalogGlossary, catalogLabel, leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
+import { LEADERBOARD_GROUPS, buildLeaderboardGroups, catalogGlossary, leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
 import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
@@ -146,65 +144,6 @@ const tooManyRequests = (retryAfter: number) =>
     message: "Too many Hypixel lookups right now, try again shortly",
     data: { retryAfter },
   });
-
-const gameGroup = (game: GameId) => ({ game, name: removeFormatting(FormattedGame[game]) });
-
-/** `PlayerStats` keys → the leaderboard group they belong to. */
-const LEADERBOARD_GROUPS: Record<string, { game: GameId | null; name: string }> = {
-  arcade: gameGroup("ARCADE"),
-  arenabrawl: gameGroup("ARENA_BRAWL"),
-  bedwars: gameGroup("BEDWARS"),
-  blitzsg: gameGroup("BLITZSG"),
-  buildbattle: gameGroup("BUILD_BATTLE"),
-  challenges: { game: null, name: "Challenges" },
-  copsandcrims: gameGroup("COPS_AND_CRIMS"),
-  duels: gameGroup("DUELS"),
-  general: gameGroup("GENERAL"),
-  megawalls: gameGroup("MEGAWALLS"),
-  murdermystery: gameGroup("MURDER_MYSTERY"),
-  paintball: gameGroup("PAINTBALL"),
-  parkour: gameGroup("PARKOUR"),
-  pit: gameGroup("PIT"),
-  quake: gameGroup("QUAKE"),
-  quests: { game: null, name: "Quests" },
-  skywars: gameGroup("SKYWARS"),
-  smashheroes: gameGroup("SMASH_HEROES"),
-  speeduhc: gameGroup("SPEED_UHC"),
-  tntgames: gameGroup("TNT_GAMES"),
-  turbokartracers: gameGroup("TURBO_KART_RACERS"),
-  uhc: gameGroup("UHC"),
-  vampirez: gameGroup("VAMPIREZ"),
-  walls: gameGroup("WALLS"),
-  warlords: gameGroup("WARLORDS"),
-  woolgames: gameGroup("WOOLGAMES"),
-};
-
-/** Every enabled player leaderboard, grouped by the `stats.<game>` it lives under. Static metadata. */
-function buildLeaderboardGroups(): LeaderboardGroup[] {
-  const groups = new Map<string, LeaderboardGroup>();
-
-  for (const [field, { leaderboard }] of getLeaderboardFields(Player)) {
-    const [root, statsKey] = field.split(".");
-    if (root !== "stats" || !statsKey) continue;
-
-    let group = groups.get(statsKey);
-
-    if (!group) {
-      group = { key: statsKey, ...(LEADERBOARD_GROUPS[statsKey] ?? { game: null, name: statsKey }), leaderboards: [] };
-      groups.set(statsKey, group);
-    }
-
-    const label = catalogLabel(field);
-    group.leaderboards.push({
-      field,
-      name: removeFormatting(leaderboard.name),
-      ...(label && { label }),
-      ...(leaderboard.enabled && leaderboard.aliases.length > 0 && { aliases: leaderboard.aliases }),
-    });
-  }
-
-  return [...groups.values()];
-}
 
 /**
  * Strict cache-only reads for the site. Nothing here calls Hypixel except `refresh` and
@@ -568,15 +507,15 @@ export class SiteService implements OnApplicationBootstrap {
 
     return {
       field: input.field,
-      name: removeFormatting(metadata.name),
+      formatted: siteName(metadata.name),
+      game: LEADERBOARD_GROUPS[input.field.split(".")[1]]?.game ?? null,
       glossary: catalogGlossary(input.field),
       columns,
-      sort: metadata.sort,
       page,
       pages: Math.ceil(Math.min(total, metadata.limit) / size),
       rows,
       gamePage: boardGamePage(input.field),
-      index: index && { ...index, name: this.leaderboardList().find(({ key }) => key === index.key)!.name },
+      index: index && { ...index, name: removeFormatting(this.leaderboardList().find(({ key }) => key === index.key)!.formatted) },
     };
   }
 

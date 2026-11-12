@@ -74,7 +74,6 @@ export const panel = {
   bevel: 4,
   shadow: 4,
   shadowOpacity: SHADOW_OPACITY,
-  outline: 4,
 } as const;
 
 const SANS = [
@@ -104,8 +103,4 @@ export const type = {
   },
   /** The shared size scale in px; 112 is the hero wordmark only. */
   scale: [16, 20, 24, 32, 48, 64, 112],
-  /** Sizes on the Minecraft pixel grid. */
-  minecraftSizes: [16, 24, 32, 48, 64, 112],
-  /** Mona Sans weights: 500 on glass, 600 for emphasis, nothing lighter. */
-  weights: { regular: 500, emphasis: 600 },
 } as const;
