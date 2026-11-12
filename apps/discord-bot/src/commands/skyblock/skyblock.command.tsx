@@ -31,6 +31,7 @@ import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
 import { SkyBlockAccessoriesProfile, accessoryIcons } from "./accessories.profile.js";
 import { SkyBlockAttributesProfile, SkyBlockStatsProfile } from "./stats.profile.js";
 import { SkyBlockBestiaryProfile, SkyBlockCollectionsProfile, SkyBlockMinionsProfile, collectionIcons, minionIcons } from "./collections.profile.js";
+import { SkyBlockBingoProfile } from "./bingo.profile.js";
 import { SkyBlockCalendarProfile } from "./calendar.profile.js";
 import { SkyBlockChocolateProfile } from "./chocolate.profile.js";
 import { SkyBlockCrimsonProfile, crimsonIcons } from "./crimson.profile.js";
@@ -503,6 +504,37 @@ export class SkyBlockCommand {
         user={user}
         t={t}
         title={`§l${FormattedGame.SKYBLOCK} §f${t("skyblock.titles.calendar")}`}
+      />,
+      getTheme(user)
+    );
+
+    return { files: [{ name: "skyblock.png", data: await canvas.toBuffer("png"), type: "image/png" }] };
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-bingo"), args: [PlayerArgument], group: "more" })
+  public async bingo(context: CommandContext): Promise<IMessage> {
+    const user = context.getUser();
+    const t = context.t();
+    const bingo = await this.apiService.getSkyBlockBingo(context.option("player"), user);
+
+    const [logo, skin, badge, background] = await Promise.all([
+      getLogo(user),
+      this.apiService.getPlayerSkin(bingo.uuid, user),
+      this.apiService.getUserBadge(bingo.uuid),
+      getSkyBlockBackground(),
+    ]);
+
+    const canvas = render(
+      <SkyBlockBingoProfile
+        bingo={bingo}
+        now={Date.now()}
+        skin={skin}
+        badge={badge}
+        background={background}
+        logo={logo}
+        user={user}
+        t={t}
+        title={`§l${FormattedGame.SKYBLOCK} §f${t("skyblock.titles.bingo")} §r(§e${bingo.name}§r)`}
       />,
       getTheme(user)
     );

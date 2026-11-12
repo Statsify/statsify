@@ -258,6 +258,15 @@ export class ApiService extends StatsifyApiService {
     });
   }
 
+  public override async getSkyBlockBingo(tag: string, user: User | null = null) {
+    const [formattedTag, type] = this.parseTag(tag);
+    const input = await this.resolveTag(formattedTag, type, user);
+
+    return super.getSkyBlockBingo(input).catch((err) => {
+      throw this.skyBlockError(err, type, tag);
+    });
+  }
+
   public getSkyBlockProfile(
     uuid: string,
     sections: SkyBlockSection[],
