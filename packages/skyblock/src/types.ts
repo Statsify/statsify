@@ -211,7 +211,22 @@ export interface MuseumView {
   appraisal: boolean;
   items: { id: string; category?: string; donatedAt?: number; items: Slots }[]; // id: the museum's key (an item, or an armor set)
   special: { donatedAt?: number; items: Slots }[];
-  donated: { category: string; count: number }[]; // keys donated per museum_data category, most first
+  donated: MuseumCategory[]; // every museum_data category, most donated first
+  xp: number;
+  maxXp: number; // what every key in the items resource pays
+  milestone: number; // of MUSEUM_MILESTONES
+}
+
+// The wiki's Museum/Milestones page (an owner exception, unverified)
+export const MUSEUM_MILESTONES = 25;
+
+/** An item counts as donated once it, or an upgrade up its parent chain, is; so does its XP (unverified). */
+export interface MuseumCategory {
+  category: string;
+  count: number;
+  total: number;
+  xp: number;
+  maxXp: number;
 }
 
 export interface ApiSettings {
@@ -1055,7 +1070,7 @@ export interface ItemsResource {
   // API-internal, never sent to clients
   lastUpdated: number;
   raw: object[]; // as Hypixel sent it, for the networth library
-  museum: Record<string, string>; // a museum key (an item, or an armor set) → its museum category
+  museum: Record<string, { category: string; xp: number; upgrade?: string }>; // by museum key (an item, or an armor set)
   items: Record<
     string,
     {
