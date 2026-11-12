@@ -54,6 +54,10 @@
   - changed-files:
     - any-glob-to-any-file: packages/skin-renderer/**/*
 
+"@statsify/textures":
+  - changed-files:
+    - any-glob-to-any-file: packages/textures/**/*
+
 "@statsify/util":
   - changed-files:
     - any-glob-to-any-file: packages/util/**/*

@@ -27,6 +27,7 @@ body:
         - "@statsify/rendering"
         - "@statsify/schemas"
         - "@statsify/skin-renderer"
+        - "@statsify/textures"
         - "@statsify/util"
     validations:
       required: true

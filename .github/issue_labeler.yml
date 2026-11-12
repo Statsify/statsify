@@ -37,5 +37,8 @@
 "@statsify/schemas":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/schemas"
 
+"@statsify/textures":
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/textures"
+
 "@statsify/util":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/util"
