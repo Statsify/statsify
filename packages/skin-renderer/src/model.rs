@@ -290,7 +290,7 @@ impl Model {
       })
       .unzip();
 
-    let texture = Texture::from_image(device, queue, &image).unwrap();
+    let texture = Texture::from_image(device, queue, &image)?;
     let material = Material::new(device, texture, layout);
 
     let mut model = Self {
@@ -363,7 +363,7 @@ impl Model {
         }
       }
 
-      self.attach(device, queue, layout, &texture, geometry, piece.enchanted);
+      self.attach(device, queue, layout, &texture, geometry, piece.enchanted)?;
     }
 
     Ok(())
@@ -405,14 +405,16 @@ impl Model {
     texture: &DynamicImage,
     geometry: Geometry,
     enchanted: bool,
-  ) {
-    let texture = Texture::from_image(device, queue, texture).unwrap();
+  ) -> Result<()> {
+    let texture = Texture::from_image(device, queue, texture)?;
 
     self.attachments.push(Attachment {
       material: Material::new(device, texture, layout),
       mesh: Mesh::from_geometry(device, geometry),
       enchanted,
     });
+
+    Ok(())
   }
 
   pub fn to_raw() -> InstanceRaw {
