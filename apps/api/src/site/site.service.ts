@@ -38,7 +38,8 @@ import type {
   LeaderboardGroup,
   LeaderboardPage,
   LeaderboardPageInput,
-  PlayerDocument,
+  GuildDocument,
+  PlayerFull,
   PlayerIdentity,
   PlayerPage,
   ResolveInput,
@@ -77,8 +78,16 @@ const BUDGET_KEY = "site:hypixel:budget";
 const IP_LIMIT = 10;
 const IP_WINDOW_SECONDS = BUDGET_WINDOW_SECONDS;
 
-const IDENTITY_FIELDS = { uuid: true, username: true };
+const IDENTITY_FIELDS = { uuid: true, username: true, expiresAt: true };
 const GUILD_FIELDS = { id: true, name: true, tag: true, tagFormatted: true };
+/** What the player page and the general card read from the guild: its name and tag plus each member's quest and GEXP rows. */
+const CARD_GUILD_FIELDS = {
+  ...GUILD_FIELDS,
+  "members.uuid": true,
+  "members.questParticipation": true,
+  "members.daily": true,
+  "members.weekly": true,
+};
 const CARD_FIELDS = {
   uuid: true,
   username: true,
@@ -229,10 +238,14 @@ export class SiteService implements OnApplicationBootstrap {
     return this.toPage(player);
   }
 
-  public async full(uuid: string): Promise<PlayerDocument> {
+  public async full(uuid: string): Promise<PlayerFull> {
     const player = await this.loadPlayer(normalizeUuid(uuid));
     if (!player) throw notFound();
-    return { ...player };
+
+    const document = player.guildId ? await this.findGuild(player.guildId) : null;
+    const guild: GuildDocument | null = document && { ...document };
+
+    return { player: { ...player }, guild };
   }
 
   public async refresh(uuid: string, clientIp: string): Promise<PlayerPage> {
@@ -294,7 +307,7 @@ export class SiteService implements OnApplicationBootstrap {
 
     await this.redis.del(missKey(key));
 
-    return { uuid: player.uuid, username: player.username };
+    return { uuid: player.uuid, username: player.username, updatedAt: player.expiresAt - PLAYER_COOLDOWN_MS };
   }
 
   /** Hypixel is asked by UUID: its name lookup is deprecated, and a typo then costs no budget. */
@@ -523,7 +536,7 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   private async findIdentity(field: "uuid" | "usernameToLower", value: string): Promise<PlayerIdentity | null> {
-    const player: PlayerIdentity | null = await this.playerModel
+    const player: Pick<Player, "uuid" | "username" | "expiresAt"> | null = await this.playerModel
       .findOne()
       .where(field)
       .equals(value)
@@ -531,7 +544,7 @@ export class SiteService implements OnApplicationBootstrap {
       .lean()
       .exec();
 
-    return player && { uuid: player.uuid, username: player.username };
+    return player && { uuid: player.uuid, username: player.username, updatedAt: player.expiresAt - PLAYER_COOLDOWN_MS };
   }
 
   /** The stored document, flattened for `deserialize` like `PlayerService` does, so defaults and ratios are filled in. */
@@ -550,13 +563,7 @@ export class SiteService implements OnApplicationBootstrap {
       .findOne()
       .where("id")
       .equals(id)
-      .select({
-        ...GUILD_FIELDS,
-        "members.uuid": true,
-        "members.questParticipation": true,
-        "members.daily": true,
-        "members.weekly": true,
-      })
+      .select(CARD_GUILD_FIELDS)
       .lean()
       .exec();
 

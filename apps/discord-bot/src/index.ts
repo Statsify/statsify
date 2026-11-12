@@ -10,11 +10,11 @@ import * as Sentry from "@sentry/node";
 import { CommandListener } from "#lib/command.listener";
 import { CommandPoster, I18nLoaderService, loadCommands } from "@statsify/discord";
 import { Container } from "typedi";
-import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 import { Logger } from "@statsify/logger";
 import { VerifyCommand } from "#commands/verify.command";
 import { config } from "@statsify/util";
+import { loadFonts } from "@statsify/profiles";
 import { join } from "node:path";
 
 const directory = import.meta.dirname;
@@ -37,9 +37,7 @@ if (sentryDsn) {
   });
 }
 
-await Promise.all(
-  [I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init())
-);
+await Promise.all([Container.get(I18nLoaderService).init(), loadFonts()]);
 
 const rest = new RestClient({ token: await config("discordBot.token"), timeout: 60 * 1000 });
 Container.set(RestClient, rest);

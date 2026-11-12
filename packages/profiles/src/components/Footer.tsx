@@ -13,9 +13,10 @@ export interface FooterProps {
   logo: Image;
   user: User | null;
   border?: JSX.IntrinsicElements["box"]["border"];
+  height?: JSX.IntrinsicElements["box"]["height"];
 }
 
-export const Footer = ({ logo, user, border }: FooterProps) => {
+export const Footer = ({ logo, user, border, height }: FooterProps) => {
   const margin = 8;
 
   let text: string;
@@ -82,7 +83,7 @@ export const Footer = ({ logo, user, border }: FooterProps) => {
   }
 
   return (
-    <box width="100%" align="center" border={border}>
+    <box width="100%" height={height} align="center" border={border}>
       <img
         margin={{ left: margin, top: margin / 2, bottom: margin / 2, right: margin }}
         image={logo}

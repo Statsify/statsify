@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LocalizeFunction } from "@statsify/discord";
+import type { LocalizeFunction } from "../types.js";
 import { ratio } from "@statsify/math";
 
 export interface ProgressBarProps {

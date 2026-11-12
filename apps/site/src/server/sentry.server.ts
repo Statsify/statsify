@@ -7,6 +7,7 @@
  */
 
 import * as Sentry from "@sentry/tanstackstart-react";
+import { onShutdown } from "./shutdown.server";
 import { siteConfig } from "./config.server";
 
 let ready: Promise<void> | undefined;
@@ -30,4 +31,6 @@ async function init() {
   const { sentryDsn, environment, tracesSampleRate } = await siteConfig();
   if (!sentryDsn) return;
   Sentry.init({ dsn: sentryDsn, environment, tracesSampleRate, release: import.meta.env.VITE_SENTRY_RELEASE });
+  // Sends what's still queued, for up to a second, before the process exits.
+  onShutdown(() => Sentry.close(1000));
 }

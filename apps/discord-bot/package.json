@@ -19,6 +19,7 @@
     "@statsify/discord": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
+    "@statsify/profiles": "workspace:^",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
@@ -38,26 +39,16 @@
     "@types/luxon": "^3.4.2"
   },
   "imports": {
-    "#components": {
-      "types": "./src/components/index.ts",
-      "default": "./dist/components/index.js"
-    },
+    "#components": "@statsify/profiles",
     "#commands/*": {
       "types": "./src/commands/*.ts",
       "default": "./dist/commands/*.js"
-    },
-    "#services": {
-      "types": "./src/services/index.ts",
-      "default": "./dist/services/index.js"
     },
     "#constants": {
       "types": "./src/constants.ts",
       "default": "./dist/constants.js"
     },
-    "#themes": {
-      "types": "./src/themes/index.ts",
-      "default": "./dist/themes/index.js"
-    },
+    "#themes": "@statsify/profiles",
     "#lib/*": {
       "types": "./src/lib/*.ts",
       "default": "./dist/lib/*.js"

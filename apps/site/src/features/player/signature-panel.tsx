@@ -1,0 +1,105 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU AGPL v3 or later license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import { Box } from "~/components/ui/box";
+import { Button } from "~/components/ui/button";
+import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
+import { compactUuid } from "~/lib/uuid";
+import { getRouteApi } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { PlayerPage } from "@statsify/contract";
+
+const LABEL = "text-16 font-medium text-mc-gray";
+/** How long a copy button reads "Copied!". */
+const COPIED_MS = 2000;
+
+const localeRoute = getRouteApi("/{-$locale}");
+
+const { width, height } = IMAGE_VARIANTS.sig;
+
+/**
+ * "Get signature": the live `/sig` image and the snippets that embed it, each with a copy
+ * button. URLs are absolute from `site.publicUrl` (the locale loader), never from the request, so a
+ * pasted snippet works anywhere.
+ */
+export function SignaturePanel({ page }: { page: PlayerPage }) {
+  const { t } = useTranslation();
+  const { origin } = localeRoute.useLoaderData();
+
+  // The undashed UUID, so every snippet names the same URL (and one edge cache entry).
+  const uuid = compactUuid(page.uuid) ?? page.uuid;
+  const image = `${origin}/sig/${uuid}.png`;
+  const profile = `${origin}/player/${page.username}`;
+  const alt = t("player.signature.alt", { name: page.username });
+
+  const snippets: [label: string, text: string][] = [
+    [t("player.signature.url"), image],
+    [t("player.signature.bbcode"), `[URL=${profile}][IMG]${image}[/IMG][/URL]`],
+    [t("player.signature.markdown"), `[![${alt}](${image})](${profile})`],
+    [t("player.signature.html"), `<a href="${profile}"><img src="${image}" alt="${alt}" width="${width}" height="${height}"></a>`],
+    [t("player.signature.card"), `${origin}/card/${uuid}.png`],
+  ];
+
+  return (
+    <Box
+      title={<span className="text-mc-1 lg:text-mc-1.5">{t("player.signature.title")}</span>}
+      className="content:flex content:flex-col content:gap-4"
+    >
+      <p className={LABEL}>{t("player.signature.description")}</p>
+      <img
+        src={`/sig/${uuid}.png`}
+        alt={alt}
+        width={width}
+        height={height}
+        loading="lazy"
+        decoding="async"
+        className="h-auto max-w-full self-center"
+      />
+      <dl className="flex flex-col gap-3">
+        {snippets.map(([label, text]) => (
+          <Snippet key={label} label={label} text={text} />
+        ))}
+      </dl>
+    </Box>
+  );
+}
+
+function Snippet({ label, text }: { label: string; text: string }) {
+  const { t } = useTranslation();
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+    const id = setTimeout(() => setCopied(false), COPIED_MS);
+    return () => clearTimeout(id);
+  }, [copied]);
+
+  // Without clipboard access (plain HTTP, old browsers) the field stays selectable, so nothing is reported.
+  const copy = () => navigator.clipboard.writeText(text).then(() => setCopied(true), () => undefined);
+
+  return (
+    <div className="flex flex-col gap-1">
+      <dt className={LABEL}>{label}</dt>
+      <dd className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <input
+          readOnly
+          value={text}
+          aria-label={label}
+          onFocus={(event) => event.currentTarget.select()}
+          className="min-w-0 grow rounded-xs bg-black/30 px-3 py-2 font-mono text-16 text-mc-white outline-none focus:ring-2 focus:ring-mc-aqua"
+        />
+        <Button asChild className="sm:w-36">
+          <button type="button" onClick={copy}>
+            {copied ? t("player.signature.copied") : t("player.signature.copy")}
+          </button>
+        </Button>
+      </dd>
+    </div>
+  );
+}
