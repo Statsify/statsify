@@ -6,10 +6,10 @@ Data taken from Hypixel's menus, and the adapters that turn what Hypixel stores 
 ## Adapters
 
 - `fromHypixelNBT(data)`: Hypixel's gzipped NBT, like the Pit's `inv_contents`, as items. A 1.8
-  banner's `BlockEntityTag` gives its base colour and patterns, with 1.8's pattern codes (`bo`,
+  banner's `BlockEntityTag` gives its base color and patterns, with 1.8's pattern codes (`bo`,
   `cr`) turned into 26.3's ids.
   `playerInventoryOrder` puts a player inventory's hotbar last, as the game shows it.
-- `fromBedwarsQuickBuy(favourites)`: the 9 × 6 BedWars shop open on Quick Buy, with each
+- `fromBedwarsQuickBuy(favorites)`: the 9 × 6 BedWars shop open on Quick Buy, with each
   item's count, cost and description. `src/bedwars-shop.ts` holds the shop as
   Hypixel's own NBT has it. Without one, the default quick buy.
 - `fromBedwarsHotbar(favoriteSlots)`: a BedWars hotbar from `favorite_slots`, as the Hotbar
@@ -17,8 +17,8 @@ Data taken from Hypixel's menus, and the adapters that turn what Hypixel stores 
 - `fromDuelsKit(layout, key)`: a Duels `layout_*` kit. The key (`layout_uhc_duel_layout`,
   `layout_mw_duel_herobrine`, `layout_sw_duel_kit_mini_solo_scout`) picks the mode's kit in
   `data/duels-modes.json`, so items get the count, name and tooltip the game gives them, and
-  Blitz and SkyWars kits get the armour their picker lists. Armour tokens in older layouts go
-  to the armour slots, since the game equips armour. A token no dumped kit has is drawn from the
+  Blitz and SkyWars kits get the armor their picker lists. Armor tokens in older layouts go
+  to the armor slots, since the game equips armor. A token no dumped kit has is drawn from the
   Bukkit material it ends in (`hype_train_minecart_7`). Without a layout, it's the game's default
   layout: the single-kit modes in `DUELS_DEFAULT_KEYS` and every kit in `DUELS_KITS`.
 - `fromTntGamesLayout(layout, key)`: a TNT Games layout by its `TNTGames` key (`tntrun`,
@@ -33,7 +33,7 @@ Data taken from Hypixel's menus, and the adapters that turn what Hypixel stores 
   `<Kit>Inventory` by the kit's level (1 to 10) and Mega Walls' `<class>Inventory` by the class's
   Kit upgrade (1 to 5), with the "Edit <Kit> Layout" editors' items from `data/legacy-kits.json`.
   A kit's items change with its level, so they get the game's counts, names and tooltips (and Mega
-  Walls' armour) only at the level each editor was dumped at, and are plain items at the others.
+  Walls' armor) only at the level each editor was dumped at, and are plain items at the others.
   `renames` holds the player's `kit_item_rename_<Kit>_<material>` names by material. Without a
   layout, it's the default at that level: `BLITZ_KITS` and `MEGA_WALLS_KITS` list them.
 - `fromSkyWarsKit(layout, kit)`: a SkyWars `kit_…_inventory`, which names items by their Bukkit
@@ -42,7 +42,7 @@ Data taken from Hypixel's menus, and the adapters that turn what Hypixel stores 
   kit's lobby menu (Normal, Insane, Mini or Mega Kits) lists get the game's counts, names and
   tooltips from `data/skywars-kits.json`, taken from the Kit Customizers and the SkyWars Duel
   editors that hold the same items; a stale item from an older kit version loses its slot to the
-  current one. Without a layout, it's the default: the menu's list in order, armour put on and the
+  current one. Without a layout, it's the default: the menu's list in order, armor put on and the
   rest from slot 0. `SKYWARS_KITS` lists the kits whose every item is known. Mythical kits are in
   both Normal's and Insane's menus, so they stay plain.
 - `fromQuakeLoadout(stats)`: the Quake stats' gun (`case`, `barrel`, `trigger`, `muzzle`, and
@@ -70,15 +70,15 @@ An item's `tooltip` holds the lines under its name as the game drew them, enchan
 attributes included.
 
 Kits come back as 40 slots: the hotbar, the three main rows, then boots to helmet in 36 to 39.
-`ARMOR_SLOTS` lists the armour slots helmet first, as the inventory screen shows them.
+`ARMOR_SLOTS` lists the armor slots helmet first, as the inventory screen shows them.
 
 For a skin render, `armorOf(items)` turns items (Pit's `inv_armor`, slots 36 to 39) into
 `{ helmet, chestplate, leggings, boots }`, each `{ material, color, enchanted }`, a player head's
 `{ head, enchanted }` texture hash or a mob skull's `{ skull }`; other things on the head, like
 a block, are left out. `duelsKitArmor(key)`, `skyWarsKitArmor(kit)`, `blitzKitArmor(kit, level)` and
-`megaWallsKitArmor(kit, level)` give a kit's armour by the keys the adapters above take; Blitz's
+`megaWallsKitArmor(kit, level)` give a kit's armor by the keys the adapters above take; Blitz's
 covers every level from its Upgrades page. Leather is dyed by the name its picker gives (White
-Leather Chestplate), else by the picker icon when it shows that piece, else (Blitz) by the colour
-its editor shows on that piece. Mega Walls Duel's picker lists no armour, so its classes come back
+Leather Chestplate), else by the picker icon when it shows that piece, else (Blitz) by the color
+its editor shows on that piece. Mega Walls Duel's picker lists no armor, so its classes come back
 undefined.
 

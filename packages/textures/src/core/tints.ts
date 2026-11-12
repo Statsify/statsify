@@ -21,7 +21,7 @@ export type TintSource =
   | { type: "minecraft:custom_model_data"; index?: number; default: TintColor }
   | { type: "minecraft:grass"; temperature: number; downfall: number };
 
-// 26.3's effect colours for the effects 1.8 items can carry, from
+// 26.3's effect colors for the effects 1.8 items can carry, from
 // https://minecraft.wiki/w/Effect_colors
 const EFFECT_COLORS: Record<string, number | undefined> = {
   "minecraft:speed": 0x33_eb_ff,
@@ -92,7 +92,7 @@ const DYE_COLORS: Record<string, number | undefined> = {
 
 export function dyeColor(dye: string) {
   const color = DYE_COLORS[dye];
-  if (color === undefined) throw new Error(`No colour for the dye ${dye}`);
+  if (color === undefined) throw new Error(`No color for the dye ${dye}`);
   return color;
 }
 
@@ -103,7 +103,7 @@ const rgb = (color: TintColor) =>
       (Math.round(color[1] * 255) << 8) |
       Math.round(color[2] * 255);
 
-/** Effects mix weighted by level, as potion colours do in game */
+/** Effects mix weighted by level, as potion colors do in game */
 function potionColor(effects: PotionEffect[]) {
   let red = 0;
   let green = 0;
@@ -112,7 +112,7 @@ function potionColor(effects: PotionEffect[]) {
 
   for (const effect of effects) {
     const color = EFFECT_COLORS[effect.id];
-    if (color === undefined) throw new Error(`No colour for ${effect.id}`);
+    if (color === undefined) throw new Error(`No color for ${effect.id}`);
 
     const weight = (effect.amplifier ?? 0) + 1;
     red += ((color >> 16) & 0xff) * weight;
@@ -126,7 +126,7 @@ function potionColor(effects: PotionEffect[]) {
   );
 }
 
-/** A grass colour from the pack's colormap/grass.png */
+/** A grass color from the pack's colormap/grass.png */
 function grassColor(colormap: ImageData, temperature: number, downfall: number) {
   const x = Math.floor((1 - temperature) * 255);
   const y = Math.floor((1 - downfall * temperature) * 255);
@@ -136,7 +136,7 @@ function grassColor(colormap: ImageData, temperature: number, downfall: number) 
   return (red << 16) | (green << 8) | blue;
 }
 
-/** The colour a tint source gives this item, as 0xRRGGBB */
+/** The color a tint source gives this item, as 0xRRGGBB */
 export function tintColor(tint: TintSource, item: ItemStack, grass?: ImageData): number {
   switch (tint.type) {
     case "minecraft:constant":

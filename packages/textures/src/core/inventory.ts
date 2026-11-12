@@ -167,7 +167,7 @@ export class InventoryRenderer {
       this.text.draw(ctx, count, (right - this.text.width(count)) * scale, top * scale, { scale });
     }
 
-    // 1.8.9 colours the worn strip separately from the remaining durability
+    // 1.8.9 colors the worn strip separately from the remaining durability
     const max = item ? maxDamage(item.id) : undefined;
     if (item?.damage && max) {
       const width = Math.round(13 - (item.damage * 13) / max);
@@ -200,7 +200,7 @@ export class InventoryRenderer {
       strip(TITLE_HEIGHT, SLOT * rows, top);
       strip(CHEST_SCREEN_BOTTOM, EDGE, top + SLOT * rows);
     } else {
-      // A black outline with cut corners, a white top left and a grey bottom right
+      // A black outline with cut corners, a white top left and a gray bottom right
       fill(ctx, scale, 1, 0, width - 2, height, "#000000");
       fill(ctx, scale, 0, 1, width, height - 2, "#000000");
       fill(ctx, scale, 1, 1, width - 2, height - 2, "#555555");

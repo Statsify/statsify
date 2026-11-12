@@ -236,7 +236,7 @@ const output = {
   modes: {} as Record<string, Tokens>,
   // Each single-kit mode's default layout, as Hypixel would store it
   defaults: {} as Record<string, Record<string, string>>,
-  // Each kit's editor items in their default slots, and the armour its picker lists
+  // Each kit's editor items in their default slots, and the armor its picker lists
   kits: {} as Record<string, Record<string, Kit>>,
 };
 
@@ -315,7 +315,7 @@ function pickerSkull(text: string, kit: string) {
   return head && { ...legacyItem(SKULL, 3)!, skin: kitItem(head).skin };
 }
 
-/** The armour a picker's item list names, in its armour slots */
+/** The armor a picker's item list names, in its armor slots */
 function pickerArmor(lore: string[], kit: string) {
   const lines = lore.map(plain);
   const armor: Record<number, ItemStack> = {};
@@ -598,7 +598,7 @@ for (const screen of screens) {
     const left = listed.flatMap((item, index) => (dumped[index] || lobbyItem(item) ? [] : [index]));
     if (left.length === 1 && pool.length === 1 && fitting(listed[left[0]], pool).length === 1) dumped[left[0]] = pool.pop();
 
-    // A player who never saved a layout gets the list in order, armour put on and the rest from
+    // A player who never saved a layout gets the list in order, armor put on and the rest from
     // slot 0, as every Kit Customizer dumped shows
     const items: SkyWarsKit["items"] = [];
     let next = 0;
@@ -711,8 +711,8 @@ for (const [index, screen] of screens.entries()) {
   };
 }
 
-// Each Blitz kit's armour at levels I to X, from its Upgrades page. The page names few dyes, so
-// leather takes the colour its editor shows on that piece, where one was dumped
+// Each Blitz kit's armor at levels I to X, from its Upgrades page. The page names few dyes, so
+// leather takes the color its editor shows on that piece, where one was dumped
 const blitzArmor: Record<string, Record<number, ItemStack>[]> = {};
 
 for (const screen of screens) {
@@ -767,7 +767,7 @@ const MENU_STATUS =
 
 /**
  * A menu item as a loadout shows it: without the account's status lines, and, where the menu
- * colours names by whether the account owns or picked them, named in the selected item's green.
+ * colors names by whether the account owns or picked them, named in the selected item's green.
  * The selected item's glint is the menu's too, so only real enchantments glint
  */
 function menuItem(dumped: DumpItem, recolor: boolean): ItemStack {

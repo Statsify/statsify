@@ -53,8 +53,8 @@ function quickBuyLore({ cost: [amount, currency], description = [], upgradable }
 }
 
 /** The BedWars item shop open on Quick Buy, as 54 slots, with a player's quick buy from favourites_2 or else the default */
-export function fromBedwarsQuickBuy(favourites: string | null | undefined): (ItemStack | undefined)[] {
-  const tokens = (favourites ?? DEFAULT_QUICK_BUY).split(",");
+export function fromBedwarsQuickBuy(favorites: string | null | undefined): (ItemStack | undefined)[] {
+  const tokens = (favorites ?? DEFAULT_QUICK_BUY).split(",");
   const slots: (ItemStack | undefined)[] = Array.from({ length: SHOP_ROWS * SHOP_COLUMNS });
 
   for (const [index, category] of SHOP_CATEGORIES.entries()) {

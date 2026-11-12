@@ -29,14 +29,14 @@ needs at least one 26.3 pack, which has the item model definitions.
 
 ## Items
 
-- Flat items with tints: leather dye, potion colours, spawn eggs.
+- Flat items with tints: leather dye, potion colors, spawn eggs.
 - Block items in 3D, through the model's gui transform with the GUI's lighting. A small software
   rasterizer draws them, so they match the game pixel for pixel and need no WebGL.
 - Player heads (the default skin, or `item.skin`, a textures.minecraft.net URL, which the page
   can fetch over https), mob heads, chests, shulker boxes.
 - Banners and shields with their patterns: `item.patterns`, as 26.3's `banner_patterns` component
   has them (`{ pattern: "minecraft:border", color: "red" }`), and a shield's `item.baseColor`.
-  A banner's base colour is in its id.
+  A banner's base color is in its id.
 - The enchantment glint, and animated textures by game tick: `render(item, scale, tick)`.
 
 `legacyItem(id, damage)` turns a 1.8 id and Damage value into a 26.3 item. Its table is
@@ -114,7 +114,7 @@ import "@statsify/textures/mc-inventory";
 
 const inventory = document.querySelector("mc-inventory");
 inventory.pack = stack;
-inventory.slots = fromBedwarsQuickBuy(favourites);
+inventory.slots = fromBedwarsQuickBuy(favorites);
 ```
 
 ```html

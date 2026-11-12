@@ -54,7 +54,7 @@ const LEGACY_PATTERNS: Record<string, string | undefined> = {
   flo: "flower",
 };
 
-// 1.8 banners give colours as dye Damage values, which run the other way to wool's
+// 1.8 banners give colors as dye Damage values, which run the other way to wool's
 const legacyDye = (damage: number) => DYES[15 - damage];
 
 // The parts of a 1.8 item compound read here. An empty slot is {}
@@ -104,7 +104,7 @@ function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefine
 
   return {
     ...item,
-    // 1.8 colours a banner by its Base before its Damage
+    // 1.8 colors a banner by its Base before its Damage
     id: banner?.Base === undefined ? item.id : `minecraft:${legacyDye(banner.Base)}_banner`,
     patterns: patterns?.length ? patterns : undefined,
     count: Count,
