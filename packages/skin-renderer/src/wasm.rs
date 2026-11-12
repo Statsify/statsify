@@ -1,10 +1,10 @@
+use std::cell::RefCell;
 use std::collections::HashMap;
 
 use futures_channel::oneshot;
-use once_cell::sync::Lazy;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use wasm_bindgen_futures::{spawn_local, wasm_bindgen};
+use wasm_bindgen_futures::{future_to_promise, js_sys, spawn_local, wasm_bindgen};
 use winit::dpi::LogicalSize;
 use winit::event::{DeviceEvent, Event, MouseButton, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop, EventLoopWindowTarget};
@@ -18,59 +18,99 @@ use crate::pose::Pose;
 use crate::renderer::wasm::WasmBackend;
 use crate::renderer::SkinRenderer;
 
-// Since the winit EventLoop consumes self, we need a static variable to
-// communicate with JavaScript
-static mut JS_MESSAGE_QUEUE: Lazy<Vec<JsMessage>> = Lazy::new(Vec::new);
+thread_local! {
+  // The winit event loop owns itself once it runs, so JavaScript's calls wait here for
+  // its next turn
+  static JS_MESSAGE_QUEUE: RefCell<Vec<JsMessage>> = const { RefCell::new(Vec::new()) };
+}
+
+fn send(message: JsMessage) {
+  JS_MESSAGE_QUEUE.with_borrow_mut(|queue| queue.push(message));
+}
+
+type Loaded = oneshot::Sender<std::result::Result<(), JsError>>;
 
 // Basic events that can be triggered from JavaScript
 enum JsMessage {
   RegisterCanvas(String),
-  RenderSkin { canvas_id: String, model: JsModel },
+  RenderSkin {
+    canvas_id: String,
+    model: JsModel,
+    loaded: Loaded,
+  },
+  SetYaw {
+    canvas_id: String,
+    yaw: f32,
+  },
   UnregisterCanvas(String),
 }
 
 #[wasm_bindgen(js_name = SkinMessenger)]
 pub struct JsMessenger;
 
-// Modifying JS_MESSAGE_QUEUE is marked as unsafe because we are accessing a
-// mutable static variable This is safe since we are only accessing this in a
-// single thread and we are only making 1 mutable reference at a time
-
 #[wasm_bindgen(js_class = SkinMessenger)]
 impl JsMessenger {
   #[wasm_bindgen(js_name = registerCanvas)]
   pub fn register_canvas(canvas_id: String) {
-    unsafe { JS_MESSAGE_QUEUE.push(JsMessage::RegisterCanvas(canvas_id)) };
+    send(JsMessage::RegisterCanvas(canvas_id));
   }
 
-  #[wasm_bindgen(js_name = renderSkin)]
-  pub fn render_skin(canvas_id: String, bytes: Vec<u8>, slim: bool, extruded: bool) {
-    let model_kind = if slim {
-      ModelKind::Slim
-    } else {
-      ModelKind::Classic
-    };
-    let model_outer_layer = if extruded {
-      ModelOuterLayer::D3
-    } else {
-      ModelOuterLayer::D2
-    };
+  /// Resolves once the skin is loaded onto the canvas, and rejects when it can't be drawn:
+  /// a bad texture, or a browser with neither WebGPU nor WebGL.
+  #[wasm_bindgen(js_name = renderSkin, unchecked_return_type = "Promise<void>")]
+  pub fn render_skin(
+    canvas_id: String,
+    bytes: Vec<u8>,
+    slim: bool,
+    extruded: bool,
+    options: Option<RenderOptions>,
+  ) -> js_sys::Promise {
+    let (loaded, rx) = oneshot::channel();
 
-    unsafe {
-      JS_MESSAGE_QUEUE.push(JsMessage::RenderSkin {
+    match JsModel::new(bytes, slim, extruded, options) {
+      Ok(model) => send(JsMessage::RenderSkin {
         canvas_id,
-        model: JsModel {
-          bytes,
-          model_kind,
-          model_outer_layer,
-        },
-      })
-    };
+        model,
+        loaded,
+      }),
+      Err(error) => {
+        let _ = loaded.send(Err(error));
+      }
+    }
+
+    future_to_promise(async move {
+      match rx.await {
+        Ok(result) => result.map(|()| JsValue::UNDEFINED).map_err(JsValue::from),
+        Err(_) => Err(JsError::new("The canvas was rendered again or unregistered").into()),
+      }
+    })
+  }
+
+  /// Turns the camera to `yaw` radians around the player.
+  #[wasm_bindgen(js_name = setYaw)]
+  pub fn set_yaw(canvas_id: String, yaw: f64) -> std::result::Result<(), JsError> {
+    send(JsMessage::SetYaw {
+      canvas_id,
+      yaw: finite_yaw(yaw)?,
+    });
+
+    Ok(())
   }
 
   #[wasm_bindgen(js_name = unregisterCanvas)]
   pub fn unregister_canvas(canvas_id: String) {
-    unsafe { JS_MESSAGE_QUEUE.push(JsMessage::UnregisterCanvas(canvas_id)) };
+    send(JsMessage::UnregisterCanvas(canvas_id));
+  }
+}
+
+// Checked after narrowing, since a huge f64 becomes an f32 infinity
+fn finite_yaw(yaw: f64) -> Result<f32> {
+  let yaw = yaw as f32;
+
+  if yaw.is_finite() {
+    Ok(yaw)
+  } else {
+    Err(Error::InvalidYaw)
   }
 }
 
@@ -78,7 +118,106 @@ struct JsModel {
   bytes: Vec<u8>,
   model_kind: ModelKind,
   model_outer_layer: ModelOuterLayer,
+  cape: Option<Vec<u8>>,
+  yaw: Option<f32>,
+  pose: Pose,
 }
+
+impl JsModel {
+  fn new(
+    bytes: Vec<u8>,
+    slim: bool,
+    extruded: bool,
+    options: Option<RenderOptions>,
+  ) -> std::result::Result<Self, JsError> {
+    let model_kind = if slim {
+      ModelKind::Slim
+    } else {
+      ModelKind::Classic
+    };
+
+    let model_outer_layer = if extruded {
+      ModelOuterLayer::D3
+    } else {
+      ModelOuterLayer::D2
+    };
+
+    let (cape, yaw, pose) = match options {
+      Some(options) => (
+        options.cape(),
+        options.yaw().map(finite_yaw).transpose()?,
+        options
+          .pose()
+          .map(|pose| {
+            pose
+              .parse()
+              .map_err(|_| JsError::new(&format!("Unknown pose: {pose}")))
+          })
+          .transpose()?,
+      ),
+      None => (None, None, None),
+    };
+
+    Ok(Self {
+      bytes,
+      model_kind,
+      model_outer_layer,
+      cape,
+      yaw,
+      pose: pose.unwrap_or_default(),
+    })
+  }
+
+  fn load(self, renderer: &mut SkinRenderer<WasmBackend>) -> Result<Model> {
+    let model = renderer.load_skin(
+      &self.bytes,
+      self.model_kind,
+      self.model_outer_layer,
+      &Armor::default(),
+      None,
+      self.cape.as_deref(),
+      self.pose,
+    )?;
+
+    if let Some(yaw) = self.yaw {
+      renderer.set_yaw(yaw);
+    }
+
+    renderer.frame(&model);
+
+    Ok(model)
+  }
+}
+
+// Shaped like the native renderer's options, which armour and its glint can join later.
+// The package's wasm.d.ts repeats the public API for typechecks that run before a build.
+#[wasm_bindgen(typescript_custom_section)]
+const RENDER_OPTIONS: &str = r#"
+export interface RenderOptions {
+  /** Cape texture (PNG). */
+  cape?: Uint8Array;
+  /** Camera angle around the player in radians: 0 faces the front, π the back. Defaults to -0.3. */
+  yaw?: number;
+  pose?: "standing" | "punch" | "sneak" | "jump" | "swim" | "fly";
+}
+"#;
+
+#[wasm_bindgen]
+extern "C" {
+  #[wasm_bindgen(typescript_type = "RenderOptions")]
+  pub type RenderOptions;
+
+  #[wasm_bindgen(method, getter)]
+  fn cape(this: &RenderOptions) -> Option<Vec<u8>>;
+
+  #[wasm_bindgen(method, getter)]
+  fn yaw(this: &RenderOptions) -> Option<f64>;
+
+  #[wasm_bindgen(method, getter)]
+  fn pose(this: &RenderOptions) -> Option<String>;
+}
+
+type RendererResult = Result<SkinRenderer<WasmBackend>>;
 
 #[wasm_bindgen(js_name = SkinRenderer)]
 pub struct JsSkinRenderer {
@@ -87,18 +226,19 @@ pub struct JsSkinRenderer {
 
 #[wasm_bindgen(js_class = SkinRenderer)]
 impl JsSkinRenderer {
+  /// Throws when the page already has an event loop, since winit allows one.
   #[wasm_bindgen(constructor)]
-  pub fn new() -> Self {
-    Self {
-      event_loop: EventLoop::new().unwrap(),
-    }
+  pub fn new() -> std::result::Result<JsSkinRenderer, JsError> {
+    Ok(Self {
+      event_loop: EventLoop::new()?,
+    })
   }
 
   pub fn run(self) {
-    let mut receivers = HashMap::<WindowId, oneshot::Receiver<SkinRenderer<WasmBackend>>>::new();
+    let mut receivers = HashMap::<WindowId, oneshot::Receiver<RendererResult>>::new();
     let mut renderers = HashMap::<WindowId, SkinRenderer<WasmBackend>>::new();
     let mut window_ids = HashMap::<String, WindowId>::new();
-    let mut staged_models = HashMap::<WindowId, JsModel>::new();
+    let mut staged_models = HashMap::<WindowId, (JsModel, Loaded)>::new();
     let mut models = HashMap::<WindowId, Model>::new();
 
     self.event_loop.spawn(move |event, window_target| {
@@ -113,7 +253,7 @@ impl JsSkinRenderer {
       }
 
       // Drain the message queue and process each message
-      let messages = unsafe { JS_MESSAGE_QUEUE.drain(0..) };
+      let messages = JS_MESSAGE_QUEUE.take();
 
       for message in messages {
         match message {
@@ -131,28 +271,38 @@ impl JsSkinRenderer {
             window_ids.insert(canvas_id, window.id());
             send_renderer(window, tx);
           }
-          JsMessage::RenderSkin { canvas_id, model } => {
+          JsMessage::RenderSkin {
+            canvas_id,
+            model,
+            loaded,
+          } => {
             let Some(window_id) = window_ids.get(&canvas_id) else {
+              let _ = loaded.send(Err(Error::CanvasNotFound.into()));
               continue;
             };
 
             // If the renderer is not ready, stage the model and wait for the renderer to be
             // ready
-            let Some(renderer) = renderers.get(window_id) else {
-              staged_models.insert(*window_id, model);
+            let Some(renderer) = renderers.get_mut(window_id) else {
+              staged_models.insert(*window_id, (model, loaded));
               continue;
             };
 
-            if let Ok(model) = renderer.load_skin(
-              &model.bytes,
-              model.model_kind,
-              model.model_outer_layer,
-              &Armor::default(),
-              None,
-              None,
-              Pose::default(),
-            ) {
+            let result = model.load(renderer).map(|model| {
               models.insert(*window_id, model);
+            });
+
+            let _ = loaded.send(result.map_err(JsError::from));
+          }
+          JsMessage::SetYaw { canvas_id, yaw } => {
+            let Some(window_id) = window_ids.get(&canvas_id) else {
+              continue;
+            };
+
+            if let Some(renderer) = renderers.get_mut(window_id) {
+              renderer.set_yaw(yaw);
+            } else if let Some((model, _)) = staged_models.get_mut(window_id) {
+              model.yaw = Some(yaw);
             }
           }
           JsMessage::UnregisterCanvas(canvas_id) => {
@@ -169,24 +319,31 @@ impl JsSkinRenderer {
       // Poll the receivers to see if any renderers are ready. If a renderer is ready
       // we can remove the receiver and check for any staged models
       receivers.retain(|window_id, rx| match rx.try_recv() {
-        Ok(Some(renderer)) => {
-          if let Some(model) = staged_models.remove(window_id).and_then(|model| {
-            renderer
-              .load_skin(
-                &model.bytes,
-                model.model_kind,
-                model.model_outer_layer,
-                &Armor::default(),
-                None,
-                None,
-                Pose::default(),
-              )
-              .ok()
-          }) {
-            models.insert(*window_id, model);
+        Ok(Some(Ok(mut renderer))) => {
+          // The window's resizes before now went to no renderer, and the size it was built
+          // with may be from before the browser laid the canvas out
+          let size = renderer.window().inner_size();
+          renderer.resize(size);
+
+          if let Some((model, loaded)) = staged_models.remove(window_id) {
+            let result = model.load(&mut renderer).map(|model| {
+              models.insert(*window_id, model);
+            });
+
+            let _ = loaded.send(result.map_err(JsError::from));
           }
 
           renderers.insert(*window_id, renderer);
+
+          false
+        }
+        Ok(Some(Err(error))) => {
+          // Later renders to this canvas fail as unregistered
+          window_ids.retain(|_, id| id != window_id);
+
+          if let Some((_, loaded)) = staged_models.remove(window_id) {
+            let _ = loaded.send(Err(error.into()));
+          }
 
           false
         }
@@ -194,7 +351,7 @@ impl JsSkinRenderer {
           staged_models.remove(window_id);
           false
         }
-        _ => true,
+        Ok(None) => true,
       });
 
       match event {
@@ -220,7 +377,13 @@ impl JsSkinRenderer {
               ..
             } => renderer.process_mouse_input(state),
             WindowEvent::MouseWheel { delta, .. } => renderer.process_mouse_scroll(delta),
-            WindowEvent::Resized(size) => renderer.resize(*size),
+            WindowEvent::Resized(size) => {
+              renderer.resize(*size);
+
+              if let Some(model) = models.get(&window_id) {
+                renderer.frame(model);
+              }
+            }
             WindowEvent::RedrawRequested => {
               if let Some((renderer, model)) =
                 renderers.get_mut(&window_id).zip(models.get(&window_id))
@@ -246,12 +409,6 @@ impl JsSkinRenderer {
   }
 }
 
-impl Default for JsSkinRenderer {
-  fn default() -> Self {
-    Self::new()
-  }
-}
-
 fn create_window(canvas_id: &str, window_target: &EventLoopWindowTarget<()>) -> Result<Window> {
   let canvas: web_sys::HtmlCanvasElement = web_sys::window()
     .and_then(|window| window.document())
@@ -265,6 +422,8 @@ fn create_window(canvas_id: &str, window_target: &EventLoopWindowTarget<()>) -> 
       canvas.height() as f64,
     ))
     .with_canvas(Some(canvas))
+    // The page around the canvas takes the keyboard, so the canvas is no tab stop of its own
+    .with_focusable(false)
     .with_decorations(false)
     .with_transparent(true)
     .build(window_target)?;
@@ -272,11 +431,9 @@ fn create_window(canvas_id: &str, window_target: &EventLoopWindowTarget<()>) -> 
   Ok(window)
 }
 
-fn send_renderer(window: Window, tx: oneshot::Sender<SkinRenderer<WasmBackend>>) {
+fn send_renderer(window: Window, tx: oneshot::Sender<RendererResult>) {
   spawn_local(async move {
-    if let Ok(renderer) = SkinRenderer::new(window).await {
-      let _ = tx.send(renderer);
-    };
+    let _ = tx.send(SkinRenderer::new(window).await);
   });
 }
 

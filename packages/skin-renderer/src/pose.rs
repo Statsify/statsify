@@ -11,6 +11,11 @@ const SNEAK_DROP: f32 = 3.2;
   not(target_arch = "wasm32"),
   napi(string_enum = "lowercase", skip_typescript)
 )]
+#[cfg_attr(
+  target_arch = "wasm32",
+  derive(strum::EnumString),
+  strum(serialize_all = "lowercase")
+)]
 #[derive(Clone, Copy, Default)]
 pub enum Pose {
   #[default]

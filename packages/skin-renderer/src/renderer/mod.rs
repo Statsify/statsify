@@ -437,6 +437,21 @@ impl SkinRenderer<wasm::WasmBackend> {
       .handle_encoder_after_render(encoder, output_texture)
   }
 
+  // A viewer turns the model, so the camera fits it at every yaw rather than zooming as
+  // it turns. Fitted again when the canvas resizes, since the fit depends on its shape.
+  pub fn frame(&mut self, model: &Model) {
+    let Camera::Orbital(camera) = &mut self.camera;
+    camera.set_size(self.config.width as f32, self.config.height as f32);
+    *camera = camera
+      .clone()
+      .fitted_all_round(model.points(), model.camera_radius());
+  }
+
+  pub fn set_yaw(&mut self, yaw: f32) {
+    let Camera::Orbital(camera) = &mut self.camera;
+    camera.set_theta(yaw);
+  }
+
   pub fn window(&self) -> &Window {
     self.backend.window()
   }

@@ -5,7 +5,7 @@ use crate::geometry::coordinate::Coordinate;
 
 const TWO_PI: f32 = std::f32::consts::PI * 2.0;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct OrbitalCamera {
   target: Point3<f32>,
 
@@ -106,6 +106,33 @@ impl OrbitalCamera {
     }
 
     self
+  }
+
+  // The largest radius `fitted` picks over a full turn, so a model turned at any yaw stays
+  // in frame
+  #[cfg(target_arch = "wasm32")]
+  pub fn fitted_all_round(mut self, points: &[Vector3<f32>], radius: f32) -> Self {
+    const STEPS: u16 = 32;
+
+    self.radius = (0..STEPS)
+      .map(|step| {
+        let theta = f32::from(step) * TWO_PI / f32::from(STEPS);
+        self.clone().with_theta(theta).fitted(points, radius).radius
+      })
+      .fold(radius, f32::max);
+
+    self
+  }
+
+  #[cfg(target_arch = "wasm32")]
+  pub fn set_theta(&mut self, theta: f32) {
+    self.update_theta(theta);
+  }
+
+  #[cfg(target_arch = "wasm32")]
+  pub fn set_size(&mut self, width: f32, height: f32) {
+    self.width = width;
+    self.height = height;
   }
 
   fn update_radius(&mut self, radius: f32) {
