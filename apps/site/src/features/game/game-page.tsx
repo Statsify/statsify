@@ -263,7 +263,8 @@ export function GameHeader({
     <Box ref={ref} className={cn("content:flex content:h-full content:items-center content:gap-4", className)}>
       <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28" />
       <div className="flex min-w-0 grow flex-col">
-        <h1 className="flex flex-col gap-2">
+        {/* Balanced, so a game name that wraps beside a phone's bust doesn't leave "Stats" alone on its second line. */}
+        <h1 className="flex flex-col gap-2 text-balance">
           {/* A long rank and name wraps onto a second line beside a phone's bust rather than being cut off. */}
           <Link to="/{-$locale}/player/$name" params={{ name: page.username }} className="wrap-break-word text-mc-2 hover:underline">
             <MinecraftText>{page.displayName}</MinecraftText>

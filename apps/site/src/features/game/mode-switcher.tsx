@@ -127,13 +127,14 @@ export function ModeSwitcher({ page, scope, kind = "mode" }: { page: GamePage; s
       {desktopTabs && (
         <ul
           className={cn(
-            "md:flex md:flex-wrap md:gap-x-1 md:gap-y-2",
-            // Segments share a phone's width equally; a long name wraps inside its own.
-            phoneTabs ? "grid auto-cols-fr grid-flow-col gap-x-1" : "hidden"
+            "flex-wrap gap-1 md:gap-y-2",
+            // On phones a tab that doesn't fit beside the others moves to the next row whole, and each row's tabs grow
+            // to fill it; a name only wraps between words, when its tab is wider than a row.
+            phoneTabs ? "flex" : "hidden md:flex"
           )}
         >
           {options.map((option) => (
-            <li key={option.key} className="min-w-0">
+            <li key={option.key} className="grow md:grow-0">
               <Link
                 {...to(option.key)}
                 resetScroll={false}
@@ -149,7 +150,7 @@ export function ModeSwitcher({ page, scope, kind = "mode" }: { page: GamePage; s
                   )}
                 >
                   {option.mostPlayed && <span aria-hidden className="size-2 shrink-0 bg-mc-gold forced-color-adjust-none" />}
-                  <span className="min-w-0 wrap-break-word">{name(option)}</span>
+                  <span>{name(option)}</span>
                   {option.mostPlayed && <span className="sr-only"> {t(`${markWords(option.mostPlayed)}.mark`)}</span>}
                 </Box>
               </Link>
