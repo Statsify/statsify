@@ -4,7 +4,7 @@ use image::{ExtendedColorType, ImageEncoder};
 use napi::bindgen_prelude::spawn_blocking;
 
 use super::backend::{Backend, OutputTexture};
-use super::SkinRender;
+use super::PngBytes;
 use crate::buffer_dimensions::BufferDimensions;
 use crate::error::{Error, Result as SkinRendererResult};
 
@@ -100,7 +100,7 @@ impl Backend for NativeBackend {
   async fn handle_encoder_after_render(
     &self,
     mut encoder: wgpu::CommandEncoder,
-  ) -> SkinRendererResult<SkinRender> {
+  ) -> SkinRendererResult<PngBytes> {
     let output_buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
       label: None,
       size: (self.dimensions.padded_bytes_per_row * self.dimensions.height) as u64,

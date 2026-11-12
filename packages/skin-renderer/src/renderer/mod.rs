@@ -24,7 +24,7 @@ use crate::skin_loader::{load_cape_from_memory, load_skin_from_memory};
 use crate::texture::Texture;
 
 #[cfg(not(target_arch = "wasm32"))]
-pub type SkinRender = Vec<u8>;
+pub type PngBytes = Vec<u8>;
 
 pub struct SkinRenderer<T: Backend> {
   backend: T,
@@ -481,7 +481,7 @@ impl SkinRenderer<native::NativeBackend> {
 
   // Renders run on several threads at once, so each gets its own camera and light
   // instead of rewriting the shared ones
-  pub async fn render(&self, model: &Model, yaw: Option<f32>) -> Result<SkinRender> {
+  pub async fn render(&self, model: &Model, yaw: Option<f32>) -> Result<PngBytes> {
     let camera = OrbitalCamera::new(
       (0.0, 0.0, 0.0).into(),
       self.config.width as f32,
