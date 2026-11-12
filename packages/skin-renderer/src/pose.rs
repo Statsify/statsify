@@ -36,11 +36,10 @@ fn part_pose(rotation: [f32; 3], offset: [f32; 3]) -> PartPose {
 }
 
 impl Pose {
-  // Angles follow the game's own models, turned into this renderer's axes: x
-  // rotations keep their sign, y and z rotations flip it
+  // The game's angles, with y and z rotations flipped for this renderer's axes
   pub fn part(self, part: Part) -> Option<PartPose> {
     let pose = match (self, part) {
-      // A quarter of the way through the arm's swing, reaching forward
+      // A quarter of the way through the swing
       (Pose::Punch, Part::RightArm) => part_pose([-79.0, 0.0, 16.0], [0.0; 3]),
 
       (Pose::Sneak, Part::Head) => part_pose([0.0; 3], [0.0, -1.0, 0.0]),
@@ -48,7 +47,6 @@ impl Pose {
       (Pose::Sneak, Part::RightArm | Part::LeftArm) => part_pose([22.9, 0.0, 0.0], [0.0; 3]),
       (Pose::Sneak, Part::RightLeg | Part::LeftLeg) => part_pose([0.0; 3], [0.0, 3.0, -4.0]),
 
-      // Mid-stride, legs and arms swung opposite ways
       (Pose::Jump, Part::RightArm) => part_pose([-34.0, 0.0, 0.0], [0.0; 3]),
       (Pose::Jump, Part::LeftArm) => part_pose([34.0, 0.0, 0.0], [0.0; 3]),
       (Pose::Jump, Part::RightLeg) => part_pose([48.0, 0.0, 0.0], [0.0; 3]),

@@ -275,8 +275,7 @@ pub struct Model {
 }
 
 impl Model {
-  // The armour decides which parts keep an extruded outer layer, so it can't be attached later
-  // Three of the arguments are the wgpu handles every attachment is built with
+  // Armour and the pose shape the body's own meshes, so neither can be attached later
   #[allow(clippy::too_many_arguments)]
   pub fn new(
     device: &wgpu::Device,

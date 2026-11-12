@@ -353,7 +353,7 @@ impl<T: Backend> SkinRenderer<T> {
     (encoder, output_texture)
   }
 
-  // Each render option is its own texture or setting, which the wasm renderer leaves unset
+  // The wasm renderer has no RenderOptions, so each option is its own argument
   #[allow(clippy::too_many_arguments)]
   pub fn load_skin(
     &self,
