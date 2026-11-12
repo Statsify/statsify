@@ -108,7 +108,8 @@ export const SkyBlockMinionsProfile = ({
               value: tierText(t, Math.max(...tiers), maxTier),
             }))}
             icons={icons}
-            columns={4}
+            columns={3}
+            spreadLastRow
           />
         ) :
         <Empty text={t("skyblock.noMinions")} />}
