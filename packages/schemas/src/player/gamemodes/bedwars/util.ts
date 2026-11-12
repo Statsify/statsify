@@ -434,3 +434,19 @@ export const getPrestigeCosmetic = <M extends Record<string, any>>({
 
   return map[getDefault()];
 };
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("getLevel", () => {
+    it("matches the star Hypixel shows for the exp", () => {
+      expect(getLevel(0)).toBe(0);
+      expect(Math.floor(getLevel(500))).toBe(1);
+      expect(Math.floor(getLevel(88_780))).toBe(20);
+      expect(Math.floor(getLevel(486_999))).toBe(99);
+      expect(getLevel(487_000)).toBe(100);
+      expect(Math.floor(getLevel(524_215))).toBe(110);
+      expect(Math.floor(getLevel(5_172_353))).toBe(1063);
+    });
+  });
+}

@@ -509,3 +509,23 @@ export const parseKit = (kit = "default") => {
   const parsedTeam = removeAllBeforePrefix(parsedSolo, TEAMS);
   return parsedTeam.replace(MYTHICAL_KIT, "").replaceAll("-", "_");
 };
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("getLevel", () => {
+    it("matches the level Hypixel shows for the xp, up to the cap", () => {
+      expect(getLevel(0)).toBe(1);
+      expect(getLevel(10)).toBe(2);
+      expect(getLevel(1982)).toBe(9);
+      expect(getLevel(5892)).toBe(12);
+      expect(getLevel(26_759)).toBe(18);
+      expect(getLevel(26_760)).toBe(19);
+      expect(getLevel(27_898)).toBe(19);
+      expect(getLevel(754_725.6)).toBe(164);
+      expect(getLevel(49_931_759)).toBe(9999);
+      expect(getLevel(49_931_760)).toBe(10_000);
+      expect(getLevel(1_000_000_000)).toBe(10_000);
+    });
+  });
+}
