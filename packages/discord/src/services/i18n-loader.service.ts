@@ -10,9 +10,10 @@ import Backend from "i18next-fs-backend";
 import i18next from "i18next";
 import { Service } from "typedi";
 import { abbreviationNumber } from "@statsify/util";
-import { readdir } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 
 const DEFAULT_LANGUAGE = "en-US";
+const UNTRANSLATED_FILE = "untranslated.json";
 
 @Service()
 export class I18nLoaderService {
@@ -30,10 +31,14 @@ export class I18nLoaderService {
     });
 
     this.namespaces = namespaceEntries
-      .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+      .filter(
+        (entry) => entry.isFile() && entry.name.endsWith(".json") && entry.name !== UNTRANSLATED_FILE
+      )
       .map((entry) => entry.name.replace(".json", ""));
 
-    await i18next.use(Backend).init({
+    const i18n = i18next.use(Backend);
+
+    await i18n.init({
       backend: {
         loadPath: "../../locales/{{lng}}/{{ns}}.json",
       },
@@ -51,6 +56,9 @@ export class I18nLoaderService {
         escapeValue: false,
       },
     });
+
+    const untranslated = await readFile(`../../locales/${DEFAULT_LANGUAGE}/${UNTRANSLATED_FILE}`, "utf8");
+    i18n.addResourceBundle(DEFAULT_LANGUAGE, "default", JSON.parse(untranslated), true);
   }
 }
 
