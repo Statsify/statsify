@@ -12,8 +12,7 @@ import { config } from "@statsify/util";
 import { createHash, randomUUID } from "node:crypto";
 import { inquirerConfirmation, inquirerLogger } from "./utils.ts";
 
-// @ts-expect-error config() isn't awaited
-const redis = new Redis(config("database.redisUrl"));
+const redis = new Redis(await config("database.redisUrl"));
 
 interface NewKey {
   name: string;

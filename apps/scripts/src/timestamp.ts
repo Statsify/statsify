@@ -10,8 +10,7 @@ import { DateTime } from "luxon";
 import { config } from "@statsify/util";
 import { connect, type mongo as mongodb } from "mongoose";
 
-// @ts-expect-error config() isn't awaited
-const mongo = await connect(config("database.mongoUri"));
+const mongo = await connect(await config("database.mongoUri"));
 const now = DateTime.now();
 
 type ResetTime = "daily" | "weekly" | "monthly";

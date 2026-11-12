@@ -50,7 +50,7 @@ export const ALPHABET = [
 
 const logger = new Logger("rank-emojis");
 
-const token = config("rankEmojis.botToken");
+const token = await config("rankEmojis.botToken", { required: false });
 
 if (!token) {
   logger.error(
@@ -174,7 +174,6 @@ logger.debug(`Creating ${emojis.length} emojis`);
 const rankEmotes: Record<string, string[]> = {};
 const colorChangerEmotes: Record<string, Record<string, Record<number, string>>> = {};
 
-// @ts-expect-error config() isn't awaited
 const client = new RestClient({ token });
 
 // For ratelimiting purposes it is better to run these requests serially
