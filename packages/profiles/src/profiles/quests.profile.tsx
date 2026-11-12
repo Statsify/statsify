@@ -1,0 +1,310 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU AGPL v3 or later license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import { Box, DeferredGradient, useGradient } from "@statsify/rendering";
+import {
+  ClassMetadata,
+  DailyQuests,
+  FormattedGame,
+  type GameId,
+  type GameMode,
+  GameQuests,
+  GenericQuestInstance,
+  METADATA_KEY,
+  MonthlyQuests,
+  OverallQuests,
+  QuestModes,
+  QuestTime,
+  User,
+  UserPalette,
+  WeeklyQuests,
+  scanMetadata,
+} from "@statsify/schemas";
+import {
+  Container,
+  Footer,
+  GameEntry,
+  GameList,
+  Header,
+  type HistoricalTimeData,
+  SidebarItem,
+} from "../components/index.js";
+import { DateTime } from "luxon";
+import { HistoricalTimes } from "@statsify/api-client";
+import { Palette, getColorPalette } from "../themes/index.js";
+import { QUESTS, cardColors } from "@statsify/catalog";
+import { ratio } from "@statsify/math";
+import type { BaseProfileProps, LocalizeFunction } from "../types.js";
+import type { Constructor } from "@statsify/util";
+import type { Image } from "skia-canvas";
+
+function getQuestMetadata<T>(constructor: Constructor<T>) {
+  const entries = Object.entries(
+    Reflect.getMetadata(METADATA_KEY, constructor.prototype) as ClassMetadata
+  );
+
+  const metadata = entries.map(([key, data]) => [
+    key,
+    Object.fromEntries(scanMetadata(data.type.type)),
+  ]);
+
+  return Object.fromEntries(metadata);
+}
+
+const questMetadata: Record<QuestTime, ReturnType<typeof getQuestMetadata>> = {
+  [QuestTime.Daily]: getQuestMetadata(DailyQuests),
+  [QuestTime.Weekly]: getQuestMetadata(WeeklyQuests),
+  [QuestTime.Monthly]: getQuestMetadata(MonthlyQuests),
+  [QuestTime.Overall]: getQuestMetadata(OverallQuests),
+};
+
+const color = cardColors(QUESTS);
+
+export interface QuestProfileProps extends Omit<BaseProfileProps, "time"> {
+  mode: GameMode<QuestModes>;
+  gameIcons: Record<GameId, Image>;
+  logos: [cross: Image, check: Image];
+  time: QuestTime;
+  /**
+   * The dates the period's counts cover (ms), where they aren't the running period's: the site's unfurl, whose counts
+   * are from the last fetch. The bot leaves it out.
+   */
+  window?: { start: number; end: number };
+}
+
+interface NormalTableProps {
+  quests: GenericQuestInstance;
+  /** The period the quests are counted over, as the stats store it (`daily`). */
+  period: string;
+  t: LocalizeFunction;
+  gameIcons: Record<GameId, Image>;
+  time: QuestTime;
+  colorPalette?: Palette;
+}
+
+const GRADIENT_OFFSET = 0.66;
+
+const NormalTable = ({ quests, period, t, gameIcons, colorPalette, time }: NormalTableProps) => {
+  const questEntries = Object.entries(quests);
+
+  if (time === QuestTime.Overall) {
+    const entries: GameEntry[] = questEntries
+      .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
+      .map(([k, v]) => [k as GameId, t(v.total)]);
+
+    return <GameList entries={entries} gameIcons={gameIcons} />;
+  }
+
+  const BOX_COLOR = (colorPalette?.boxes?.color as string) ?? Box.DEFAULT_COLOR;
+
+  const entries: GameEntry[] = questEntries
+    // Require more than just a total field
+    .filter(([, q]) => Object.keys(q).length > 1)
+    .map(([k, v]) => [k, v, Object.keys(v).length - 1] as const)
+    .sort((a, b) => ratio(b[1]?.total ?? 0, b[2]) - ratio(a[1]?.total ?? 0, a[2]))
+    .map(([k, v, total]) => {
+      const completed = v.total;
+
+      const textColor = color(`${period}.${k}.total`, completed);
+      let boxColor: DeferredGradient;
+
+      if (completed === total) {
+        boxColor = useGradient(
+          "horizontal",
+          [GRADIENT_OFFSET, BOX_COLOR],
+          [1, "hsla(120, 100%, 30%, 0.5)"]
+        );
+      } else if (completed >= 1) {
+        boxColor = useGradient(
+          "horizontal",
+          [GRADIENT_OFFSET, BOX_COLOR],
+          [1, "hsla(40, 100%, 30%, 0.5)"]
+        );
+      } else {
+        boxColor = useGradient(
+          "horizontal",
+          [GRADIENT_OFFSET, BOX_COLOR],
+          [1, "hsla(0, 100%, 30%, 0.5)"]
+        );
+      }
+
+      return [
+        k as GameId,
+        `${textColor}${t(completed)}/${t(total)}`,
+        { color: boxColor },
+      ];
+    });
+
+  return <GameList entries={entries} gameIcons={gameIcons} />;
+};
+
+interface GameTableProps {
+  quests: GameQuests;
+  /** The period the quests are counted over, as the stats store it (`daily`). */
+  period: string;
+  t: LocalizeFunction;
+  time: QuestTime;
+  game: keyof typeof FormattedGame;
+  logos: [cross: Image, check: Image];
+}
+
+const GameTable = ({ quests, period, t, game, time, logos: [cross, check] }: GameTableProps) => {
+  const isOverall = time === QuestTime.Overall;
+
+  const entries = Object.entries(quests)
+    .filter(([k, v]) => k !== "total" && v !== null)
+    .sort((a, b) => b[1] - a[1])
+    .map(([quest, completions]) => {
+      const name = questMetadata[time][game][quest].leaderboard.name;
+
+      return (
+        <box width="100%">
+          <text align="left">
+            {color(`${period}.${game}.${quest}`, completions)}§l{name}
+          </text>
+          <div width="remaining" />
+          {isOverall ?
+            <text>{t(completions)}</text> :
+            <img margin={2} image={completions === 0 ? cross : check} />}
+        </box>
+      );
+    });
+
+  return (
+    <div width="100%" direction="column">
+      {entries}
+    </div>
+  );
+};
+
+export const QuestsProfile = ({
+  skin,
+  player,
+  background,
+  logo,
+  user,
+  badge,
+  mode,
+  t,
+  gameIcons,
+  time,
+  logos,
+  window,
+}: QuestProfileProps) => {
+  const { quests } = player.stats;
+
+  let period: "overall" | "weekly" | "daily" | "monthly";
+  let historicalTime: "LIVE" | HistoricalTimeData;
+
+  switch (time) {
+    case QuestTime.Overall:
+      period = "overall";
+      historicalTime = "LIVE";
+      break;
+
+    case QuestTime.Weekly:
+      period = "weekly";
+      historicalTime = { timeType: HistoricalTimes.WEEKLY };
+      break;
+
+    case QuestTime.Daily:
+      period = "daily";
+      historicalTime = { timeType: HistoricalTimes.DAILY };
+      break;
+
+    case QuestTime.Monthly:
+      period = "monthly";
+      historicalTime = { timeType: HistoricalTimes.MONTHLY };
+      break;
+  }
+
+  const { api, formatted } = mode;
+  let table: JSX.Element;
+
+  const colorPalette = User.isDiamond(user) ?
+    getColorPalette(user?.theme?.palette ?? UserPalette.DEFAULT) :
+    undefined;
+
+  switch (api) {
+    case "overall":
+      table = (
+        <NormalTable
+          quests={quests[period]}
+          period={period}
+          time={time}
+          t={t}
+          gameIcons={gameIcons}
+          colorPalette={colorPalette}
+        />
+      );
+      break;
+
+    default:
+      table = (
+        <GameTable
+          quests={quests[period][api]}
+          period={period}
+          game={api}
+          time={time}
+          logos={logos}
+          t={t}
+        />
+      );
+      break;
+  }
+
+  const sidebar: SidebarItem[] = [[t("stats.total"), t(quests.total), color("total")]];
+
+  if (api !== "overall") {
+    sidebar.push([
+      t("stats.game-total", { game: formatted }),
+      t(quests[period][api].total),
+      // The catalog colors a period's total by how many are done, as the Overall list does; the sidebar draws it green.
+      "§a",
+    ]);
+  }
+
+  const title =
+    api in FormattedGame ?
+      `§l${FormattedGame[api as keyof typeof FormattedGame]}` :
+      formatted;
+
+  if (time === QuestTime.Weekly) {
+    const dt = DateTime.now().setZone("America/New_York").startOf("week");
+
+    (historicalTime as HistoricalTimeData).startTime =
+      dt.plus({ days: 4 }).toMillis() < Date.now() ?
+        dt.plus({ days: 4 }) :
+        dt.minus({ days: 3 });
+
+    (historicalTime as HistoricalTimeData).endTime = (
+      historicalTime as HistoricalTimeData
+    ).startTime!.plus({ days: 6 });
+  }
+
+  // In New York time, where the periods reset.
+  if (window && historicalTime !== "LIVE") {
+    historicalTime.startTime = DateTime.fromMillis(window.start, { zone: "America/New_York" });
+    historicalTime.endTime = DateTime.fromMillis(window.end, { zone: "America/New_York" });
+  }
+
+  return (
+    <Container background={background}>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        title={`§l§eQuests §r(${title}§r)`}
+        sidebar={sidebar}
+        time={historicalTime}
+      />
+      {table}
+      <Footer logo={logo} user={user} />
+    </Container>
+  );
+};

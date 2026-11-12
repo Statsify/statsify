@@ -8,6 +8,7 @@
 
 import { Box } from "~/components/ui/box";
 import { Fragment } from "react";
+import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
@@ -40,7 +41,9 @@ export function LeaderboardPreview({
     >
       <div className="col-span-full">
         <Box>
-          <MinecraftText className="font-bold text-mc-3 md:text-mc-4">{leaderboard.name}</MinecraftText>
+          <Link to="/{-$locale}/leaderboards/$field" params={{ field: leaderboard.field }} className="hover:underline">
+            <MinecraftText className="font-bold text-mc-3 md:text-mc-4">{leaderboard.name}</MinecraftText>
+          </Link>
         </Box>
       </div>
       <Box className={`hidden md:block ${HEADER}`}>Pos</Box>
@@ -61,7 +64,9 @@ export function LeaderboardPreview({
           <Box className="col-span-3 md:col-span-1 min-w-0 content:min-w-0 content:text-start justify-center content:flex content:items-center">
             {/* `MinecraftText` styles every color segment, so the truncation sits on a wrapper. */}
             <span className="block min-w-0 truncate">
-              <MinecraftText className="text-mc-1.5 lg:text-mc-2">{row.name}</MinecraftText>
+              <Link to="/{-$locale}/player/$name" params={{ name: row.username }} className="hover:underline">
+                <MinecraftText className="text-mc-1.5 lg:text-mc-2">{row.name}</MinecraftText>
+              </Link>
             </span>
           </Box>
           {row.values.map((value, index) => (

@@ -7,6 +7,7 @@
  */
 
 import { Box } from "~/components/ui/box";
+import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Nametag } from "~/components/ui/nametag";
 import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
@@ -70,12 +71,16 @@ export function ArcadePreview({ className }: { className?: string }) {
           uuid={arcade.uuid}
           className="xl:row-start-1 xl:row-end-4 hidden xl:block"
         />
-        <Nametag prefixName={arcade.prefixName} className="row-start-1 xl:col-start-2" />
+        <Link to="/{-$locale}/player/$name" params={{ name: arcade.uuid }} className="row-start-1 xl:col-start-2 hover:underline">
+          <Nametag prefixName={arcade.prefixName} />
+        </Link>
         <Box className="row-start-3 xl:row-start-2 xl:row-span-2 xl:col-start-2">
-          <span className="font-bold">
-            <MinecraftText>§cA§6r§ec§aa§bd§de§f</MinecraftText> Wins
-          </span>{" "}
-          (Overall)
+          <Link to="/{-$locale}/player/$name/$game" params={{ name: arcade.uuid, game: "arcade" }} className="hover:underline">
+            <span className="font-bold">
+              <MinecraftText>§cA§6r§ec§aa§bd§de§f</MinecraftText> Wins
+            </span>{" "}
+            (Overall)
+          </Link>
         </Box>
         <Sidebar className="row-start-2 xl:row-start-1 xl:row-end-4">
           <SidebarItem

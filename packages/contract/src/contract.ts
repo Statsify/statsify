@@ -40,12 +40,20 @@ export const PlayerIdentitySchema = z.object({
 
 /** One label/value row of a game panel. */
 export const StatRowSchema = z.object({
-  /** A `stats.*` key in `locales/<lng>/default.json`. */
+  /** A `stats.*` key in `locales/<lng>/default.json`, or in `site.json` for a stat the bot doesn't label. */
   key: z.string(),
+  /** A Minecraft-formatted title shown in place of the label's words (a lobby's game name); `key` still names it. */
+  name: z.string().optional(),
   /** Numbers are formatted by the site; strings are Minecraft-formatted text (levels, prefixes). */
   value: z.union([z.number(), z.string()]),
+  /** The player hides the stat from Hypixel's API (winstreaks), so the site says Hidden in place of the value. */
+  hidden: z.boolean().optional(),
   /** Printed after a number, as on the card, e.g. `%`. */
   suffix: z.string().optional(),
+  /** The bot's color code for the stat, e.g. `§a` or `§#ffd700`. */
+  color: z.string(),
+  /** The stat's leaderboard, as the `/leaderboards/<field>` segment, or null when it has none. */
+  leaderboard: z.string().nullable(),
 });
 
 export const GameSummarySchema = z.object({
@@ -56,6 +64,8 @@ export const GameSummarySchema = z.object({
   /** Minecraft-formatted level or prefix string, when the game has one. */
   level: z.string().optional(),
   rows: z.array(StatRowSchema).max(4),
+  /** The game page's URL segment (`/player/<name>/<page>`), when the site has a page for the game. */
+  page: z.string().optional(),
 });
 
 export const PlayerPageSchema = z.object({
@@ -89,7 +99,7 @@ export const PlayerPageSchema = z.object({
     current: Count,
     max: Count,
     percent: z.number().min(0).max(1),
-    /** Coin multiplier derived from the level (see `levelMultiplier`). */
+    /** Coin multiplier derived from the level (see the API's `LEVEL_MULTIPLIERS`). */
     multiplier: z.number(),
   }),
   status: z.object({
@@ -180,6 +190,159 @@ export const BingoPlayerSchema = z.object({
 });
 
 const ProgressionSchema = z.object({ current: z.number(), max: z.number().optional(), percent: z.number() });
+
+/** One stat on a game page, as the bot's card shows it. */
+export const StatCellSchema = z.object({
+  /** The stat's path below the game, unique on the page, e.g. `solo.wins` or `tokens`. */
+  key: z.string(),
+  /**
+   * A `stats.*` key: the bot's word for the stat, abbreviation included, in `locales/<lng>/default.json`, or the
+   * site's own in `site.json` for a stat the bot doesn't show.
+   */
+  label: z.string(),
+  /**
+   * A shorter `stats.*` label shown under its row's heading, where the heading says the rest (Kills under Final);
+   * `label` stays the whole name, for the leaderboard link.
+   */
+  short: z.string().optional(),
+  /** The card's own title where it doesn't translate one (a map's or a challenge's name), Minecraft-formatted. */
+  name: z.string().optional(),
+  /** Values for the label's placeholders, e.g. `{ game: "Arcade" }` for "{{game}} Total". */
+  params: z.record(z.string(), z.string()).optional(),
+  /** Numbers are formatted by the site; strings come formatted (levels, times, a kit's name). */
+  value: z.union([z.number(), z.string()]),
+  /** The player hides the stat from Hypixel's API (winstreaks), so the site says Hidden in place of the value. */
+  hidden: z.boolean().optional(),
+  /** Printed after a number, as on the card, e.g. `ms`. */
+  suffix: z.string().optional(),
+  /** A number printed with only the decimals it has, as the card prints it (`1.3`, not `1.30`). */
+  trim: z.boolean().optional(),
+  /** The number the value is out of (`12/25`), for a stat with a cap. */
+  of: z.number().optional(),
+  /** The bot's color code for the stat, e.g. `§a` or `§#a7673f`. */
+  color: z.string(),
+  /** The stat's leaderboard, as the `/leaderboards/<field>` segment, or null when it has none. */
+  leaderboard: z.string().nullable(),
+  /** A `GameId` whose icon goes before the name, as on the card's game lists. */
+  icon: z.string().optional(),
+  /** A selection the card shows (a kit, a trail): a `Label: value` line rather than a cell, never a link. */
+  inline: z.boolean().optional(),
+});
+
+/** A group of stats on a game page, in the card's rows. */
+export const StatSectionSchema = z.object({
+  /** A `game.sections.*` key in `site.json` or the card's `stats.*` heading, or null for the headline table. */
+  title: z.string().nullable(),
+  /** The card's own Minecraft-formatted heading where it doesn't translate one, e.g. `§6Solo`. */
+  name: z.string().optional(),
+  /** The card's color for a translated heading, e.g. `§b` for Power-Up Activations; white otherwise. */
+  color: z.string().optional(),
+  /** The card's rows of cells. */
+  rows: z.array(z.array(StatCellSchema)),
+  /** A `site.json` heading over each row, by index, or null for none: BedWars' Final and Normal over its kills rows. */
+  rowTitles: z.array(z.string().nullable()).optional(),
+  /** The card's own Minecraft-formatted heading over each row of a list, by index: Dropper's `§cHard` over its maps. */
+  rowNames: z.array(z.string()).optional(),
+  /** One of the card's boxes drawn side by side (Overall, Solo, Doubles), shown in equal columns with the others. */
+  box: z.boolean().optional(),
+  /** Name and value lines in columns (maps, disasters, challenges) rather than table cells. */
+  list: z.boolean().optional(),
+  /** A list whose names keep the card's own formatting (titles) rather than all being bold. */
+  plain: z.boolean().optional(),
+  /** A long list that starts folded behind its heading and count; every cell is in the page either way. */
+  collapsed: z.boolean().optional(),
+  /** A long list the page's filter box searches by name; one box serves every such list on the page. */
+  search: z.boolean().optional(),
+  /** Values shown as a tick above 0 and a cross at 0, for whether each was done (a period's quests). */
+  ticks: z.boolean().optional(),
+});
+
+/**
+ * A mode or submode a switcher offers. `selected` marks the player's kit or class. `mostPlayed` marks the one the player
+ * has played most, saying what counted: games played, else wins and losses, else wins alone, the first of those the
+ * competing ones store (`wins` reads "most wins" on the page). Those that add up others (Overall, BedWars' Core) never
+ * count, a tie goes to the first, and none is marked when nothing was played.
+ */
+const ModeOptionSchema = z.object({
+  key: z.string(),
+  name: z.string(),
+  selected: z.boolean().optional(),
+  mostPlayed: z.enum(["gamesPlayed", "winsLosses", "wins"]).optional(),
+});
+
+export const GamePageSchema = z.object({
+  ...PlayerName,
+  game: z.object({
+    /** The `PlayerStats` key and URL segment, e.g. `bedwars`. */
+    key: z.string(),
+    /** The `GameId`, e.g. `BEDWARS`, or null for a page that isn't a game's (Challenges). */
+    id: z.string().nullable(),
+    /** The Minecraft-formatted name. */
+    name: z.string(),
+  }),
+  /**
+   * The card's title after the name: a `site.json` word (`game.stats`), or null where the card has none, and the
+   * mode as the card names it (`Bridge Doubles`, Minecraft-formatted), or null on a game with one mode.
+   */
+  heading: z.object({ word: z.string().nullable(), mode: z.string().nullable() }),
+  /** The modes the page offers, in order; the first is the default and has no `?mode=`. */
+  modes: z.array(ModeOptionSchema),
+  /** The mode shown. */
+  mode: z.string(),
+  /**
+   * The mode's submodes, where they split its games (Duels' Bridge); the first is the default and has no `&submode=`.
+   * Marked as modes are, among the submodes, where they're classes (TNT's Wizards).
+   */
+  submodes: z.array(ModeOptionSchema),
+  /** The submode shown, or null for a mode without submodes. */
+  submode: z.string().nullable(),
+  /**
+   * The periods the mode's stats are counted over, where they are (Quests: `overall`, all time, then `daily`, `weekly`
+   * and, on a mode with monthly quests, `monthly`); the first is the default and has no `&period=`. Absent elsewhere.
+   */
+  periods: z.array(z.string()).optional(),
+  /** The period shown, on a page with periods. */
+  period: z.string().optional(),
+  /**
+   * The dates the shown period's counts cover, on a page with a period other than all time: from the period's start to
+   * when the API last fetched the player (ms), as the card's header prints them.
+   */
+  window: z.object({ start: z.number(), end: z.number() }).optional(),
+  /**
+   * The level, the level the bar starts at and the next one, when the page shows one, with the leaderboard that ranks
+   * it (as on `StatCellSchema`). `label` is what the card calls it (`stats.level`, `stats.prefix`, `stats.title`)
+   * and `progress` what the bar counts (`stats.progression.exp`, `.kill`, `.win`). `progression.max` is absent at the
+   * last level, which shows `maxedWord` in place of the bar: MAXED by default, or PRESTIGED where reaching it
+   * prestiges (Murder Mystery's knife).
+   */
+  level: z
+    .object({
+      label: z.string(),
+      current: z.string(),
+      natural: z.string(),
+      next: z.string(),
+      progression: ProgressionSchema,
+      progress: z.string(),
+      maxedWord: z.enum(["maxed", "prestiged"]).optional(),
+      /**
+       * The card's colors for the progress where they aren't the panel's own (Murder Mystery's knife): the count, the
+       * slash and the max, and the maxed word, which stays bold.
+       */
+      colors: z.object({ current: z.string(), slash: z.string(), max: z.string(), maxed: z.string() }).optional(),
+      leaderboard: z.string().nullable(),
+    })
+    .nullable(),
+  /** Stats for the whole game, the same in every mode, and the card's selections (kit, class). */
+  overview: z.array(StatCellSchema),
+  /** The mode's stats in groups; the first is the headline table. */
+  sections: z.array(StatSectionSchema),
+  /**
+   * The site's game pages for the player, in the game registry's order (a page that isn't a game's last), for the
+   * nav between them. `played` is false for a game the player has never played.
+   */
+  games: z.array(z.object({ key: z.string(), id: z.string().nullable(), name: z.string(), played: z.boolean() })),
+  ...Freshness,
+});
 
 // The home page's preview panels show fixed sample players, a guild and a leaderboard. Each view
 // model carries only the fields its panel reads, so the HTML never ships a whole player document.
@@ -291,6 +454,20 @@ export const HomePreviewsSchema = z.object({
 
 const ResolveInputSchema = z.union([z.object({ name: UsernameSchema }), z.object({ uuid: UuidSchema })]);
 const PlayerInputSchema = z.object({ uuid: UuidSchema });
+const GameInputSchema = z.object({
+  uuid: UuidSchema,
+  /** A `PlayerStats` key the site has a page for, e.g. `bedwars`. */
+  game: z.string().min(1).max(32),
+  /** An api mode of that game; the first mode when left out. */
+  mode: z.string().min(1).max(32).optional(),
+  /** A submode of that mode, for a mode with submodes; the first when left out. */
+  submode: z.string().min(1).max(32).optional(),
+  /**
+   * A period of that mode, for a page with periods (Quests' `daily`); the first when left out. One the page has on
+   * another mode but not this one (Monthly on a game without monthly quests) gets the mode's first.
+   */
+  period: z.string().min(1).max(32).optional(),
+});
 const RefreshInputSchema = z.object({ uuid: UuidSchema, clientIp: ClientIpSchema });
 const LookupInputSchema = z.object({
   /** A username, or the UUID of a player URL that isn't stored. */
@@ -354,6 +531,10 @@ export const contract = {
       .route({ method: "GET", path: "/player/bingo", summary: "The player's Bingo boards" })
       .input(PlayerInputSchema)
       .output(BingoPlayerSchema),
+    game: errors
+      .route({ method: "GET", path: "/player/game", summary: "One game's page for a player, in one mode" })
+      .input(GameInputSchema)
+      .output(GamePageSchema),
   },
   search: {
     suggest: oc
@@ -397,8 +578,12 @@ export type LeaderboardPage = z.infer<typeof LeaderboardPageSchema>;
 /** Validated (server-side) inputs. */
 export type ResolveInput = z.infer<typeof ResolveInputSchema>;
 export type LeaderboardPageInput = z.infer<typeof LeaderboardPageInputSchema>;
+export type GameInput = z.infer<typeof GameInputSchema>;
 
 export type BingoPlayer = z.infer<typeof BingoPlayerSchema>;
+export type GamePage = z.infer<typeof GamePageSchema>;
+export type StatSection = z.infer<typeof StatSectionSchema>;
+export type StatCell = z.infer<typeof StatCellSchema>;
 export type HomePreviews = z.infer<typeof HomePreviewsSchema>;
 export type PreviewIdentity = z.infer<typeof PreviewIdentitySchema>;
 export type BedWarsPreview = z.infer<typeof BedWarsPreviewSchema>;

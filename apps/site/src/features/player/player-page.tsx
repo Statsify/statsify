@@ -9,8 +9,9 @@
 import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
 import { Discord } from "~/components/icons/discord";
-import { InlineStat, StatCell } from "~/components/ui/stat";
-import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Hidden, InlineStat, LeaderboardLink, STAT_LINK, StatCell } from "~/components/ui/stat";
+import { Link } from "@tanstack/react-router";
+import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
 import { RefreshBar } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust } from "~/components/ui/skin";
@@ -34,38 +35,6 @@ const SOCIAL_ICONS: Partial<Record<SocialKey, ComponentType<{ className?: string
   discord: Discord,
   twitter: Twitter,
   youtube: YouTube,
-};
-
-// The bot's color per stat: wins and kills §a, deaths §c, ratios, score and coins §6,
-// winstreaks §e, and the trophies in the bot's gold, silver and bronze. Anything else is §f.
-const GREEN = "text-mc-green";
-const GOLD = "text-mc-gold";
-
-const ROW_COLORS: Record<string, string> = {
-  wins: GREEN,
-  overallWins: GREEN,
-  murdererWins: GREEN,
-  detectiveWins: GREEN,
-  kills: GREEN,
-  finalKills: GREEN,
-  bedsBroken: GREEN,
-  witherKills: GREEN,
-  zombieKills: GREEN,
-  headshotKills: GREEN,
-  headshots: GREEN,
-  mostVampireKills: GREEN,
-  deaths: "text-mc-red",
-  kdr: GOLD,
-  fkdr: GOLD,
-  wlr: GOLD,
-  score: GOLD,
-  shotAccuracy: GOLD,
-  coins: GOLD,
-  gold: GOLD,
-  bestWinstreak: "text-mc-yellow",
-  goldTrophies: "text-[#ffd700]",
-  silverTrophies: "text-[#c0c0c0]",
-  bronzeTrophies: "text-[#cd7f32]",
 };
 
 /**
@@ -107,11 +76,11 @@ export function PlayerView({ page }: { page: PlayerPage }) {
             refresh={refresh}
             className="mb-2 lg:col-span-2 lg:row-start-3 lg:mt-2 lg:mb-0"
           />
-          <NetworkLevelPanel level={page.level} className="lg:col-start-2 lg:row-start-1" />
-          <OverviewPanel overview={page.overview} className="lg:col-start-1 lg:row-start-2" />
+          <NetworkLevelPanel level={page.level} username={page.username} className="lg:col-start-2 lg:row-start-1" />
+          <OverviewPanel overview={page.overview} username={page.username} className="lg:col-start-1 lg:row-start-2" />
           <LoginPanel status={page.status} className="lg:col-start-2 lg:row-start-2" />
         </div>
-        <GameGrid games={page.games} />
+        <GameGrid games={page.games} username={page.username} />
         <SignaturePanel page={page} />
       </div>
     </div>
@@ -195,7 +164,7 @@ function SocialLinks({ socials }: { socials: Socials }) {
   );
 }
 
-function NetworkLevelPanel({ level, className }: { level: PlayerPage["level"]; className?: string }) {
+function NetworkLevelPanel({ level, username, className }: { level: PlayerPage["level"]; username: string; className?: string }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
   const current = Math.floor(level.level);
@@ -203,7 +172,16 @@ function NetworkLevelPanel({ level, className }: { level: PlayerPage["level"]; c
   return (
     <Box className={cn("content:flex content:h-full content:flex-col content:items-center content:justify-center content:gap-3", className)}>
       <dl>
-        <StatCell label={t("default:stats.networkLevel")} value={n(level.level)} color="text-mc-gold" />
+        <StatCell
+          label={t("default:stats.networkLevel")}
+          value={(
+            <LeaderboardLink field="stats.general.networkExp" username={username} stat={t("default:stats.networkLevel")}>
+              {n(level.level)}
+            </LeaderboardLink>
+          )}
+          color="text-mc-gold"
+          className="relative"
+        />
       </dl>
       <MinecraftText className="text-mc-1.5">{`§6${current} ${minigameXpBar(level.percent)} §6${current + 1}`}</MinecraftText>
       <dl className="flex flex-wrap justify-center gap-x-6 gap-y-1">
@@ -221,20 +199,21 @@ function NetworkLevelPanel({ level, className }: { level: PlayerPage["level"]; c
   );
 }
 
-function OverviewPanel({ overview, className }: { overview: PlayerPage["overview"]; className?: string }) {
+function OverviewPanel({ overview, username, className }: { overview: PlayerPage["overview"]; username: string; className?: string }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
 
-  // The general card's cells and colors: points §6, quests and challenges §a, karma and streaks §d, gifts §5.
-  const cells: [label: string, value: number, color: string][] = [
-    [t("default:stats.achievementPoints"), overview.achievementPoints, "text-mc-gold"],
-    [t("default:stats.karma"), overview.karma, "text-mc-pink"],
-    [t("default:stats.quests"), overview.quests, "text-mc-green"],
-    [t("default:stats.challenges"), overview.challenges, "text-mc-green"],
-    [t("default:stats.rewardStreak"), overview.currentRewardStreak, "text-mc-pink"],
-    [t("player.highestStreak"), overview.highestRewardStreak, "text-mc-pink"],
-    [t("default:stats.giftsSent"), overview.giftsSent, "text-mc-dark-purple"],
-    [t("default:stats.ranksGifted"), overview.ranksGifted, "text-mc-dark-purple"],
+  // The general card's cells and colors: points §6, quests and challenges §a, karma and streaks §d, gifts §5. Quests
+  // and Challenges link to their pages, the rest to their leaderboards (`stats.general.<board>`).
+  const cells: [label: string, value: number, color: string, link?: { page: string } | { board: string }][] = [
+    [t("default:stats.achievementPoints"), overview.achievementPoints, "text-mc-gold", { board: "achievementPoints" }],
+    [t("default:stats.karma"), overview.karma, "text-mc-pink", { board: "karma" }],
+    [t("default:stats.quests"), overview.quests, "text-mc-green", { page: "quests" }],
+    [t("default:stats.challenges"), overview.challenges, "text-mc-green", { page: "challenges" }],
+    [t("default:stats.rewardStreak"), overview.currentRewardStreak, "text-mc-pink", { board: "currentRewardStreak" }],
+    [t("player.highestStreak"), overview.highestRewardStreak, "text-mc-pink", { board: "highestRewardStreak" }],
+    [t("default:stats.giftsSent"), overview.giftsSent, "text-mc-dark-purple", { board: "giftsSent" }],
+    [t("default:stats.ranksGifted"), overview.ranksGifted, "text-mc-dark-purple", { board: "ranksGifted" }],
   ];
 
   // The card's guild row, for a guild member. `ns`, not a `default:` prefix: the GEXP labels nest `$t(stats.guild.…)`,
@@ -251,8 +230,27 @@ function OverviewPanel({ overview, className }: { overview: PlayerPage["overview
   return (
     <Box className={cn("content:h-full", className)}>
       <dl className="grid h-full grid-cols-2 content-center gap-x-2 gap-y-4 sm:grid-cols-4 max-sm:[&>:last-child:nth-child(odd)]:col-span-2">
-        {cells.map(([label, value, color]) => (
-          <StatCell key={label} label={label} value={n(value)} color={color} />
+        {cells.map(([label, value, color, link]) => (
+          <StatCell
+            key={label}
+            label={label}
+            value={link && "page" in link ?
+              (
+                <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: link.page }} className={STAT_LINK}>
+                  {n(value)}
+                  <span className="sr-only"> {t("player.page", { name: label })}</span>
+                </Link>
+              ) :
+              link ?
+                (
+                  <LeaderboardLink field={`stats.general.${link.board}`} username={username} stat={label}>
+                    {n(value)}
+                  </LeaderboardLink>
+                ) :
+                n(value)}
+            color={color}
+            className={link && "relative"}
+          />
         ))}
       </dl>
     </Box>
@@ -292,7 +290,7 @@ function LoginPanel({ status, className }: { status: PlayerPage["status"]; class
   );
 }
 
-function GameGrid({ games }: { games: GameSummary[] }) {
+function GameGrid({ games, username }: { games: GameSummary[]; username: string }) {
   const { t } = useTranslation();
 
   if (games.length === 0) return <p className="text-mc-1.5 text-mc-gray text-center">{t("player.noGames")}</p>;
@@ -302,33 +300,63 @@ function GameGrid({ games }: { games: GameSummary[] }) {
     <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {games.map((game) => (
         <li key={game.id}>
-          <GamePanel game={game} />
+          <GamePanel game={game} username={username} />
         </li>
       ))}
     </ul>
   );
 }
 
-function GamePanel({ game }: { game: GameSummary }) {
+/**
+ * A game's headline numbers, each linking to its leaderboard at the player's row, and the rest of the panel to the
+ * game's page where it has one.
+ */
+function GamePanel({ game, username }: { game: GameSummary; username: string }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
+  const title = <MinecraftText className="text-mc-1.5">{`§l${game.name}${game.level ? `§r ${game.level}` : ""}`}</MinecraftText>;
 
   return (
     <Box
       className="h-full"
-      title={<MinecraftText className="text-mc-1.5">{`§l${game.name}${game.level ? `§r ${game.level}` : ""}`}</MinecraftText>}
+      title={game.page ?
+        (
+          <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: game.page }} className={STAT_LINK}>
+            {title}
+            {/* Text, not an icon, so the title bar keeps the height of every other panel's. */}
+            <span aria-hidden className="text-mc-1.5 text-mc-gray"> »</span>
+          </Link>
+        ) :
+        title}
     >
       <dl className="grid grid-cols-2 gap-x-2 gap-y-4">
-        {game.rows.map((row) => (
-          <StatCell
-            key={row.key}
-            label={t(`default:stats.${row.key}`)}
-            value={typeof row.value === "number" ?
+        {game.rows.map((row) => {
+          const label = t(`stats.${row.key}`, { ns: ["default", "site"] });
+          // Text the API formatted takes the stat's color, unless it brings its own (Layers' 74/100).
+          const value = row.hidden ?
+            <Hidden /> :
+            typeof row.value === "number" ?
               <>{n(row.value)}{row.suffix}</> :
-              <MinecraftText>{row.value}</MinecraftText>}
-            color={ROW_COLORS[row.key]}
-          />
-        ))}
+              <MinecraftText>{`${row.color}${row.value}`}</MinecraftText>;
+          const { className, style } = colorOf(row.color);
+
+          return (
+            <StatCell
+              key={row.key}
+              label={row.name === undefined ? label : <MinecraftText>{`${row.color}${row.name}`}</MinecraftText>}
+              value={row.leaderboard ?
+                (
+                  <LeaderboardLink field={row.leaderboard} username={username} stat={label}>
+                    {value}
+                  </LeaderboardLink>
+                ) :
+                value}
+              color={className}
+              style={style}
+              className={row.leaderboard ? "relative" : undefined}
+            />
+          );
+        })}
       </dl>
     </Box>
   );

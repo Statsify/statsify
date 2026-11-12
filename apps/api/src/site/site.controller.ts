@@ -45,6 +45,12 @@ export class SiteController {
   }
 
   @Auth(SITE_ONLY)
+  @Implement(contract.player.game)
+  public playerGame() {
+    return implement(contract.player.game).handler(({ input }) => this.siteService.game(input));
+  }
+
+  @Auth(SITE_ONLY)
   @Implement(contract.player.full)
   public playerDocument() {
     return implement(contract.player.full).handler(({ input }) => this.siteService.full(input.uuid));

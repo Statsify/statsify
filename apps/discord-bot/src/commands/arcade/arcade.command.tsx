@@ -7,7 +7,7 @@
  */
 
 import { ARCADE_MODES, ApiModeFromGameModes, ArcadeModes, GameModeWithSubModes, SubModeForMode } from "@statsify/schemas";
-import { ArcadeProfile } from "./arcade.profile.js";
+import { ArcadeProfile } from "@statsify/profiles";
 import {
   BaseHypixelCommand,
   BaseProfileProps,

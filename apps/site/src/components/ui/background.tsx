@@ -16,6 +16,10 @@ const BACKGROUNDS = ["general", "guilds", "bingo", "bedwars", "skywars", "duels"
 
 export type BackgroundName = (typeof BACKGROUNDS)[number];
 
+/** The background named `name` (a game's `PlayerStats` key, say), or `general` when there's none by that name. */
+export const backgroundFor = (name: string): BackgroundName =>
+  (BACKGROUNDS as readonly string[]).includes(name) ? (name as BackgroundName) : "general";
+
 const src = (background: BackgroundName) => `/backgrounds/${background}.webp`;
 
 export function Background({
