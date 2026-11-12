@@ -28,7 +28,7 @@ export function createRedisConnection(options: RedisModuleOptions) {
   return config.url ? new Redis(config.url, config) : new Redis(config);
 }
 
-// ioredis resolves a pipeline even when single commands fail, as [error, value] pairs
+// ioredis resolves a pipeline even when its commands fail
 export function pipelineValues(results: [error: Error | null, value: unknown][] | null) {
   if (!results) throw new InternalServerErrorException();
 
