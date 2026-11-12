@@ -36,7 +36,7 @@ export const MURDER_MYSTERY_PAGE: GameLayout = {
     key: "knife.name",
     label: "stats.knife",
     maxedWord: "prestiged",
-    colours: { current: "§e", slash: "§7", max: "§d", maxed: "§d" },
+    colors: { current: "§e", slash: "§7", max: "§d", maxed: "§d" },
     // The knife's name stands in for a level, so its bar has none at either end.
     read: ({ murdermystery: { knife } }) => ({ current: `§a${knife.name}`, natural: "", next: "", progression: { ...knife.progression } }),
   },

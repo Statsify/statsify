@@ -11,24 +11,24 @@ import { type Game, type StatEntry, selection } from "../catalog.js";
 
 /** The card's table, the same on every mode. */
 const RECORD: Record<string, StatEntry> = {
-  wins: { colour: "§a" },
-  losses: { colour: "§c" },
-  wlr: { colour: "§6" },
-  kills: { colour: "§a" },
-  deaths: { colour: "§c" },
-  kdr: { colour: "§6" },
+  wins: { color: "§a" },
+  losses: { color: "§c" },
+  wlr: { color: "§6" },
+  kills: { color: "§a" },
+  deaths: { color: "§c" },
+  kdr: { color: "§6" },
 };
 
-/** The colours and labels of the bot's Arena Brawl card (`arenabrawl.profile.tsx`): its sidebar, table and Skills. */
+/** The colors and labels of the bot's Arena Brawl card (`arenabrawl.profile.tsx`): its sidebar, table and Skills. */
 export const ARENA_BRAWL: Game<ArenaBrawlModes> = {
   key: "arenabrawl",
   id: "ARENA_BRAWL",
   modes: ARENA_BRAWL_MODES,
   game: {
-    coins: { colour: "§6" },
-    tokens: { colour: "§e" },
-    keys: { colour: "§b", label: "stats.magicalKeys" },
-    magicalChests: { colour: "§5" },
+    coins: { color: "§6" },
+    tokens: { color: "§e" },
+    keys: { color: "§b", label: "stats.magicalKeys" },
+    magicalChests: { color: "§5" },
     // The rune and the four skills, prettified as the card shows them.
     rune: selection("§9"),
     offensive: selection("§c"),
@@ -39,6 +39,6 @@ export const ARENA_BRAWL: Game<ArenaBrawlModes> = {
   shapes: [
     // Overall adds up the three modes but not their winstreaks.
     { modes: ["overall"], stats: RECORD },
-    { modes: ["solo", "doubles", "fours"], stats: { ...RECORD, winstreak: { colour: "§a" } } },
+    { modes: ["solo", "doubles", "fours"], stats: { ...RECORD, winstreak: { color: "§a" } } },
   ],
 };

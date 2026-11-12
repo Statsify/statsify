@@ -15,7 +15,7 @@ import {
   formatProgression,
 } from "../components/index.js";
 import { FormattedGame, type GameMode, UHCModes } from "@statsify/schemas";
-import { UHC, cardColours } from "@statsify/catalog";
+import { UHC, cardColors } from "@statsify/catalog";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "../types.js";
 
@@ -36,13 +36,13 @@ export const UHCProfile = ({
 }: UHCProfileProps) => {
   const { uhc } = player.stats;
   const stats = uhc[mode.api];
-  const colour = cardColours(UHC, mode.api);
+  const color = cardColors(UHC, mode.api);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(uhc.coins), colour("coins")],
-    [t("stats.score"), t(uhc.score), colour("score")],
-    [t("stats.title"), uhc.title, colour("title")],
-    [t("stats.kit"), prettify(uhc.kit), colour("kit")],
+    [t("stats.coins"), t(uhc.coins), color("coins")],
+    [t("stats.score"), t(uhc.score), color("score")],
+    [t("stats.title"), uhc.title, color("title")],
+    [t("stats.kit"), prettify(uhc.kit), color("kit")],
   ];
 
   return (
@@ -65,26 +65,26 @@ export const UHCProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-          <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
-          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
-          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
+          <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+          <Table.td title={t("stats.kills")} value={t(stats.kills)} color={color("kills")} />
+          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={color("deaths")} />
+          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={color("kdr")} />
         </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.headsEaten")}
             value={t(stats.headsEaten)}
-            color={colour("headsEaten")}
+            color={color("headsEaten")}
           />
           <Table.td
             title={t("stats.ultimatesCrafted")}
             value={t(stats.ultimatesCrafted)}
-            color={colour("ultimatesCrafted")}
+            color={color("ultimatesCrafted")}
           />
           <Table.td
             title={t("stats.extraUltimates")}
             value={t(stats.extraUltimates)}
-            color={colour("extraUltimates")}
+            color={color("extraUltimates")}
           />
         </Table.tr>
       </Table.table>
