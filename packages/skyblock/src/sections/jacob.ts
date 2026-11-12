@@ -37,7 +37,12 @@ export function getJacob(member: RawMember, items?: ItemsResource): JacobSection
         };
       })
       .toSorted((a, b) => a.name.localeCompare(b.name)),
-    perks: { doubleDrops: jacob.perks?.double_drops ?? 0, farmingLevelCap: jacob.perks?.farming_level_cap ?? 0 },
+    perks: {
+      doubleDrops: jacob.perks?.double_drops ?? 0,
+      // 4 a tier (the wiki's Anita page)
+      farmingFortune: 4 * (jacob.perks?.double_drops ?? 0),
+      farmingLevelCap: jacob.perks?.farming_level_cap ?? 0,
+    },
   };
 }
 
