@@ -18,17 +18,20 @@ const ARMOR_MATERIALS = ["leather", "chainmail", "iron", "gold", "diamond"] as c
 
 export const SKULLS = ["skeleton", "wither_skeleton", "zombie", "creeper"] as const;
 
+// IsOptional also lets null through, which the renderer rejects with a 500
+const isSet = (_: unknown, value: unknown) => value !== undefined;
+
 export class ArmorPieceDto {
   @IsIn(ARMOR_MATERIALS)
   public material: (typeof ARMOR_MATERIALS)[number];
 
-  @IsOptional()
+  @ValidateIf(isSet)
   @IsInt()
   @Min(0)
   @Max(0xFF_FF_FF)
   public color?: number;
 
-  @IsOptional()
+  @ValidateIf(isSet)
   @IsBoolean()
   public enchanted?: boolean;
 }
@@ -56,9 +59,6 @@ class SkullDto {
   public material?: undefined;
 }
 
-// IsOptional also lets null through, which the renderer rejects with a 500
-const isSet = (_: unknown, value: unknown) => value !== undefined;
-
 export class ArmorDto {
   @ValidateIf(isSet)
   @IsObject()
@@ -66,7 +66,8 @@ export class ArmorDto {
   @Type((options) => {
     const helmet = options?.object.helmet;
     if (helmet?.head !== undefined) return PlayerHeadDto;
-    return helmet?.skull === undefined ? ArmorPieceDto : SkullDto;
+    if (helmet?.skull !== undefined) return SkullDto;
+    return ArmorPieceDto;
   })
   public helmet?: ArmorPieceDto | PlayerHeadDto | SkullDto;
 
@@ -90,8 +91,9 @@ export class ArmorDto {
 }
 
 export class SkinRenderDto extends UuidDto {
+  // An empty ?yaw= keeps the default angle, where +"" would turn it to the front
   @IsOptional()
-  @Transform((params) => +params.value)
+  @Transform(({ value }) => (value === "" ? undefined : +value))
   @IsNumber()
   @Min(-Math.PI * 2)
   @Max(Math.PI * 2)

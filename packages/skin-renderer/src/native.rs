@@ -56,7 +56,10 @@ pub async fn render_skin(
   let options = options.unwrap_or_default();
   let armor = options.armor.unwrap_or_default();
 
-  if options.yaw.is_some_and(|yaw| !yaw.is_finite()) {
+  // Checked after narrowing, since a huge f64 becomes an f32 infinity
+  let yaw = options.yaw.map(|yaw| yaw as f32);
+
+  if yaw.is_some_and(|yaw| !yaw.is_finite()) {
     return Err(crate::error::Error::InvalidYaw.into());
   }
 
@@ -69,9 +72,7 @@ pub async fn render_skin(
     options.cape.as_deref(),
     options.pose.unwrap_or_default(),
   )?;
-  let buffer = renderer
-    .render(&model, options.yaw.map(|yaw| yaw as f32))
-    .await?;
+  let buffer = renderer.render(&model, yaw).await?;
 
   Ok(buffer.into())
 }
