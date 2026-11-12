@@ -17,6 +17,7 @@ import { StatusProfile } from "./status.profile.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { mapGameIdToBackground } from "#constants";
+import { removeFormatting } from "@statsify/util";
 import { render } from "@statsify/rendering";
 
 @Command({
@@ -58,7 +59,14 @@ export class StatusCommand {
     const buffer = await canvas.toBuffer("png");
 
     return {
-      files: [{ name: "status.png", data: buffer, type: "image/png" }],
+      files: [
+        {
+          name: "status.png",
+          data: buffer,
+          type: "image/png",
+          description: t("altText.status", { player: removeFormatting(status.displayName) }),
+        },
+      ],
     };
   }
 }

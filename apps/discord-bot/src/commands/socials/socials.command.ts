@@ -24,12 +24,12 @@ export class SocialsCommand {
   public async run(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
 
-    const { socials, uuid, displayName } = await this.apiService.getPlayer(
+    const { socials, uuid, username, displayName } = await this.apiService.getPlayer(
       context.option("player"),
       user
     );
 
-    const head = await minecraftHeadAttachment(this.apiService, uuid);
+    const head = await minecraftHeadAttachment(this.apiService, uuid, username);
 
     const embed = new EmbedBuilder()
       .title((t) => this.apiService.emojiDisplayName(t, displayName))

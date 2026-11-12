@@ -112,7 +112,14 @@ export class GuildCommand extends GuildTopSubCommand {
     const buffer = await canvas.toBuffer("png");
 
     return {
-      files: [{ name: "guild-list.png", data: buffer, type: "image/png" }],
+      files: [
+        {
+          name: "guild-list.png",
+          data: buffer,
+          type: "image/png",
+          description: t("altText.guildList", { guild: guild.name }),
+        },
+      ],
     };
   }
 
@@ -152,7 +159,14 @@ export class GuildCommand extends GuildTopSubCommand {
     const buffer = await canvas.toBuffer("png");
 
     return {
-      files: [{ name: "guild-member.png", data: buffer, type: "image/png" }],
+      files: [
+        {
+          name: "guild-member.png",
+          data: buffer,
+          type: "image/png",
+          description: t("altText.guildMember", { player: player.username, guild: guild.name }),
+        },
+      ],
     };
   }
 }

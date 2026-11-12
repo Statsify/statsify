@@ -30,7 +30,7 @@ export class UUIDCommand {
 
     const dashedUuid = `${uuid.slice(0, 8)}-${uuid.slice(8, 12)}-${uuid.slice(12, 16)}-${uuid.slice(16, 20)}-${uuid.slice(20)}`;
 
-    const head = await minecraftHeadAttachment(this.apiService, uuid);
+    const head = await minecraftHeadAttachment(this.apiService, uuid, username);
 
     const embed = new EmbedBuilder()
       .field((t) => t("minecraft.username"), `\`${username}\``)

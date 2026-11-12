@@ -201,7 +201,14 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     }
 
     return {
-      files: [{ name: "guild-top.png", data: image, type: "image/png" }],
+      files: [
+        {
+          name: "guild-top.png",
+          data: image,
+          type: "image/png",
+          description: props.t("altText.guildTop", { guild: props.guild.name, period: title }),
+        },
+      ],
       attachments: [],
       components,
     };

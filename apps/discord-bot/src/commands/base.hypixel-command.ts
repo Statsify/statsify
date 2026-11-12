@@ -10,6 +10,7 @@ import {
   ApiService,
   Command,
   CommandContext,
+  IMessage,
   LocalizationString,
   LocalizeFunction,
   Page,
@@ -18,14 +19,15 @@ import {
   SubPage,
 } from "@statsify/discord";
 import { Container } from "typedi";
-import { GamesWithBackgrounds, mapBackground } from "#constants";
+import { CHALLENGE_MODES } from "@statsify/schemas";
+import { GamesWithBackgrounds, MODES_TO_FORMATTED, mapBackground } from "#constants";
 import { HistoricalTimeData } from "#components";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
-import { noop } from "@statsify/util";
+import { noop, removeFormatting } from "@statsify/util";
 import { render } from "@statsify/rendering";
 import type { ApiModeFromGameModes, ApiSubModeForMode, GameMode, GameModeWithSubModes, GameModes, Player, SubModeForMode, User } from "@statsify/schemas";
-import type { Image } from "skia-canvas";
+import type { Canvas, Image } from "skia-canvas";
 
 export type ProfileTime = "LIVE" | HistoricalTimeData;
 
@@ -120,7 +122,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
               { mode: gameMode, data }
             );
 
-            return render(profile, getTheme(user));
+            return this.withAltText(t, render(profile, getTheme(user)), player, mode.formatted);
           },
         };
       }
@@ -152,7 +154,12 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
             { mode: gameMode, data }
           );
 
-          return render(profile, getTheme(user));
+          return this.withAltText(
+            t,
+            render(profile, getTheme(user)),
+            player,
+            `${mode.formatted} ${submode.formatted}`
+          );
         },
       }));
 
@@ -160,6 +167,29 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     });
 
     return paginate(context, pages);
+  }
+
+  private async withAltText(
+    t: LocalizeFunction,
+    canvas: Canvas,
+    player: Player,
+    mode: string
+  ): Promise<IMessage> {
+    const game = this.modes === CHALLENGE_MODES ?
+      t("stats.challenges") :
+      removeFormatting(MODES_TO_FORMATTED.get(this.modes)!);
+
+    return {
+      files: [
+        {
+          name: "image.png",
+          data: await canvas.toBuffer("png"),
+          type: "image/png",
+          description: t("altText.profile", { game, player: player.username, mode }),
+        },
+      ],
+      attachments: [],
+    };
   }
 
   public abstract getProfile(

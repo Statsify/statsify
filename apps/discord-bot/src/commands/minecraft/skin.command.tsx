@@ -42,7 +42,7 @@ export class SkinCommand {
 
     return {
       embeds: [embed],
-      files: [{ data: buffer, name: "skin.png", type: "image/png" }],
+      files: [{ data: buffer, name: "skin.png", type: "image/png", description: (t) => t("altText.skin", { player: player.username }) }],
     };
   }
 }
