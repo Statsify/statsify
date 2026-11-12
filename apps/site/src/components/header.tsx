@@ -21,6 +21,7 @@ const PAGES = [
   { key: "players", to: "/{-$locale}/player" },
   { key: "leaderboards", to: "/{-$locale}/leaderboards" },
   { key: "bingo", to: "/{-$locale}/bingo" },
+  { key: "guilds", to: "/{-$locale}/guild" },
 ] as const;
 
 // Vanity paths are answered by the server with a 301 to another site, so they are plain anchors rather than router
@@ -34,10 +35,10 @@ const LINKS = [
 const NAV_LINK = "flex min-h-11 min-w-11 items-center justify-center opacity-80 transition-opacity hover:opacity-100 hover:underline";
 
 /**
- * Every page carries a compact search in the header except those with a search of their own: Players, and Bingo with
- * a player's board, whose search opens another board.
+ * Every page carries a compact search in the header except those with a search of their own: Players, Guilds, and Bingo
+ * with a player's board, whose search opens another board.
  */
-const OWN_SEARCH = /^\/player\/?$|^\/bingo\/?$|^\/player\/[^/]+\/bingo\/?$/;
+const OWN_SEARCH = /^\/player\/?$|^\/guild\/?$|^\/bingo\/?$|^\/player\/[^/]+\/bingo\/?$/;
 
 /** A player's board sits under Players' path but belongs to Bingo in the nav. */
 const BINGO_BOARD = /^\/player\/[^/]+\/bingo\/?$/;

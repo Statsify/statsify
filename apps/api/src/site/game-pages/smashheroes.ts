@@ -20,7 +20,7 @@ export const SMASH_HEROES_PAGE: GameLayout = {
   game: SMASH_HEROES,
   // The schema stores the card's name for the class, one of them shortened ("Sgt. Shield" for `sergeantShield`).
   selected: ({ smashheroes: { kit } }) => selectedMode(SMASH_HEROES, kit === "Sgt. Shield" ? "sergeantShield" : kit),
-  overview: ["coins", "levelFormatted", { key: "kit", inline: true }],
+  overview: ["coins", { key: "levelFormatted", session: false }, { key: "kit", inline: true }],
   // A class's games are Solo's, Doubles' or Teams' too, so the classes compete among themselves.
   mostPlayed: { among: CLASSES },
   page: () => ({ sections: [{ rows: [["wins", "losses", "wlr"], ["kills", "deaths", "kdr"]] }] }),

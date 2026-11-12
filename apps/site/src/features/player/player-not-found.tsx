@@ -24,7 +24,7 @@ import type { PlayerIdentity } from "@statsify/contract";
 const localeRoute = getRouteApi("/{-$locale}");
 
 /** Looks a name up on Hypixel. The gallery passes its own outcomes, as it does for `RefreshBar`'s refresh. */
-type Lookup = (name: string, token: string | undefined, deadline: AbortSignal) => Promise<ActionResult<PlayerIdentity>>;
+type Lookup<T = PlayerIdentity> = (name: string, token: string | undefined, deadline: AbortSignal) => Promise<ActionResult<T>>;
 
 const lookupOnHypixel: Lookup = (name, token, deadline) => lookupPlayer({ data: { name, token }, signal: deadline });
 
@@ -84,20 +84,46 @@ type LookupState =
   | { status: "limited"; until: number };
 
 /** `turnstileSiteKey` overrides config's (the gallery passes "" for no widget). */
-export function LookupButton({
+export function LookupButton({ name, lookup = lookupOnHypixel, turnstileSiteKey }: { name: string; lookup?: Lookup; turnstileSiteKey?: string }) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
+  return (
+    <HypixelLookup
+      name={name}
+      lookup={lookup}
+      found={(identity) => {
+        // The page it opens would otherwise find the "not found" it remembers for the name.
+        rememberPlayer(queryClient, identity);
+        return identity.username;
+      }}
+      unknown={t("player.notFound.unknown", { name })}
+      turnstileSiteKey={turnstileSiteKey}
+    />
+  );
+}
+
+/**
+ * The Turnstile-gated "Look up on Hypixel" button, for a player or a guild. A find opens the page asked for under the
+ * name `found` hands back, Hypixel's spelling; `unknown` is what to say when Hypixel has nothing by that name.
+ */
+export function HypixelLookup<T>({
   name,
-  lookup = lookupOnHypixel,
+  lookup,
+  found,
+  unknown,
   turnstileSiteKey: siteKey,
 }: {
   name: string;
-  lookup?: Lookup;
+  lookup: Lookup<T>;
+  found: (data: T) => string;
+  unknown: string;
   turnstileSiteKey?: string;
 }) {
   const configured = localeRoute.useLoaderData().turnstileSiteKey;
   const turnstileSiteKey = siteKey ?? configured;
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [token, setToken] = useState<string>();
   const [widgetKey, setWidgetKey] = useState(0);
   const [widgetFailed, setWidgetFailed] = useState(false);
@@ -145,10 +171,9 @@ export function LookupButton({
     }
 
     if (result.ok) {
-      // The page it opens would otherwise find the "not found" it remembers for the name.
-      rememberPlayer(queryClient, result.data);
       // The page that was asked for (a game page keeps its game and mode) under the name Hypixel gave.
-      await navigate({ to: ".", params: (previous) => ({ ...previous, name: result.data.username }), search: true });
+      const canonical = found(result.data);
+      await navigate({ to: ".", params: (previous) => ({ ...previous, name: canonical }), search: true });
       return;
     }
 
@@ -165,7 +190,7 @@ export function LookupButton({
   let message: string | undefined;
   // Without Cloudflare's script there's no token, so the button can't be pressed at all.
   if (widgetFailed) message = t("player.notFound.verifyFailed");
-  else if (state.status === "unknown") message = t("player.notFound.unknown", { name });
+  else if (state.status === "unknown") message = unknown;
   else if (state.status === "unavailable") message = t("player.notFound.unavailable");
   else if (state.status === "verification") message = t("player.notFound.verify");
   else if (state.status === "error") message = t("player.notFound.error");

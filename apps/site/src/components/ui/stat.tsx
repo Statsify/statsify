@@ -29,6 +29,19 @@ export function useStatName(): (label: string) => string | undefined {
   };
 }
 
+/** A nonzero difference after a value, `+12` in green or `-12` in red: a comparison's lead. */
+export function Difference({ value, suffix, className }: { value: number; suffix?: string; className?: string }) {
+  const n = useNumberFormat(true);
+
+  return (
+    <span className={cn("ms-2 text-mc-1", value > 0 ? "text-mc-green" : "text-mc-red", className)}>
+      {value > 0 ? "+" : "-"}
+      {n(Math.abs(value))}
+      {suffix}
+    </span>
+  );
+}
+
 /** A number in the bot's format, with the exact number where that shortens it (`Hint`). */
 export function StatNumber({ value }: { value: number }) {
   const n = useNumberFormat();

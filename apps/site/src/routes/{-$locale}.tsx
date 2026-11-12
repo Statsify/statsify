@@ -19,6 +19,9 @@ import { createI18n } from "~/i18n/i18n";
 import { canonicalLink, oembedLink, socialMeta } from "~/lib/social-meta";
 import { startClientSentry } from "~/lib/sentry";
 
+/** The game pages (a player's, a session's, a comparison's): each is also its loader's deps, its mode, submode and period. */
+const GAME_ROUTES = new Set(["/{-$locale}/player/$name/$game", "/{-$locale}/player/$name/session/$game", "/{-$locale}/compare/$a/$b/$game"]);
+
 /**
  * Every page lives under the optional locale prefix. English is served unprefixed, so
  * `/en-US/...` redirects to the bare path; unknown prefixes are 404s.
@@ -57,9 +60,8 @@ export const Route = createFileRoute("/{-$locale}")({
     // casing (`/Leaderboards` is `/leaderboards`), and a player's name in the stored one, since other casings redirect.
     const leaf: AnyRouteMatch | undefined = matches.at(-1);
     const path = (leaf?.pathname ?? "/").replace(/(.)\/$/, "$1");
-    // A game page is also its mode, submode and period: its loader's deps, which the URL names only past the first.
-    // Every other page is its path alone.
-    const deps: Record<string, string | undefined> = leaf?.routeId === "/{-$locale}/player/$name/$game" ? leaf.loaderDeps : {};
+    // A game page's deps go in its query, which names each only past the first. Every other page is its path alone.
+    const deps: Record<string, string | undefined> = leaf && GAME_ROUTES.has(leaf.routeId) ? leaf.loaderDeps : {};
     const query = new URLSearchParams(Object.entries(deps).filter((entry): entry is [string, string] => entry[1] !== undefined));
     // But a board's page past the first is its own `?page=` (counted from 1), however the URL picked it.
     const board = leaf?.routeId === "/{-$locale}/leaderboards/$field" ? (leaf.loaderData as { page?: { page: number } } | undefined)?.page : undefined;

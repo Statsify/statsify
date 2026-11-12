@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ColorCode, GAMES, type Game, cardColors, statAt } from "@statsify/catalog";
-import { FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
-import type { GamePage, GameSummary, PlayerPage, StatRow } from "@statsify/contract";
+import { type ColorCode, GAMES, type Game, cardColors, catalogPaths, statAt } from "@statsify/catalog";
+import { EVENT_TYPES, FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
+import type { GamePage, GameSummary, PlayerPage, StatRow, StatSection } from "@statsify/contract";
 import { findScore, formatTime } from "@statsify/util";
 import { freshness } from "./cooldown.js";
 import { gameName } from "./names.js";
@@ -68,6 +68,8 @@ type RowSpec =
     color?: ColorCode;
     value?: Value;
     hidden?: (stats: PlayerStats) => boolean;
+    /** As a game page cell's `session`. */
+    session?: false;
   };
 
 /** A row the panel works out from other stats, in its own color, with no leaderboard. */
@@ -87,6 +89,8 @@ interface Summary {
   at?: string;
   /** Four rows, so the panel's two columns come out even. */
   rows: (RowSpec | ComputedRow)[];
+  /** Left off a session's overview, as the bot's `/session` has no such game (Parkour). */
+  session?: false;
 }
 
 /** A duration as the panel's text (it formats only numbers); nothing for one never set. */
@@ -116,7 +120,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "DUELS",
     at: "overall",
-    rows: ["wins", "kills", "wlr", { key: "bestWinstreak", hidden: winstreaksHidden }],
+    rows: ["wins", "kills", "wlr", { key: "bestWinstreak", hidden: winstreaksHidden, session: false }],
   },
   {
     id: "ARCADE",
@@ -167,6 +171,7 @@ const GAME_SUMMARIES: Summary[] = [
   },
   {
     id: "PARKOUR",
+    session: false,
     // Best Time pink, as Duels Parkour's and Arcade's best times; Main Lobby under its game's name, in its first color.
     rows: [
       { label: "coursesCompleted", color: "§a", compute: (s) => courseTimes(s).length },
@@ -219,7 +224,7 @@ const GAME_SUMMARIES: Summary[] = [
   },
   {
     id: "VAMPIREZ",
-    rows: ["overallWins", "zombieKills", "mostVampireKills", "coins"],
+    rows: ["overallWins", "zombieKills", { key: "mostVampireKills", session: false }, "coins"],
   },
   {
     id: "WALLS",
@@ -251,14 +256,15 @@ function catalogGame(id: GameId): Game {
   return game;
 }
 
-/** A panel row, or nothing for one the panel leaves out (a time never set). */
-function panelRow(stats: PlayerStats, game: Game, at: string, row: RowSpec | ComputedRow): StatRow | undefined {
+/** A panel row, or nothing for one the panel leaves out (a time never set, or on a session its `session`). */
+function panelRow(stats: PlayerStats, game: Game, at: string, row: RowSpec | ComputedRow, session: boolean): StatRow | undefined {
   if (isComputed(row)) {
     const value = row.compute(stats);
     return value === undefined ? undefined : { key: row.label, value, color: row.color, leaderboard: null };
   }
 
   const spec: Exclude<RowSpec, string> = typeof row === "string" ? { key: row } : row;
+  if (session && spec.session === false) return undefined;
   const place = spec.at ?? at;
   const stat = statAt(game, place, spec.key);
   const hidden = spec.hidden?.(stats) ?? false;
@@ -272,35 +278,68 @@ function panelRow(stats: PlayerStats, game: Game, at: string, row: RowSpec | Com
     ...(hidden && { hidden }),
     ...(stat.suffix && !hidden && { suffix: stat.suffix }),
     color: spec.color ?? cardColors(game, ...(place ? [place] : []))(spec.key),
-    leaderboard: stat.leaderboard && !hidden ? stat.path : null,
+    leaderboard: stat.leaderboard && !hidden && !session ? stat.path : null,
   };
 }
 
+/** Hypixel pays coins and tokens into every game at once (rewards, boosters), so on a session they alone aren't play. */
+const PAYOUTS = ["coins", "tokens"];
+
 /** A game panel, or `undefined` for a game the player has never played, which the page leaves out. */
-function summarize(stats: PlayerStats, summary: Summary): GameSummary | undefined {
+function summarize(stats: PlayerStats, summary: Summary, session = false): GameSummary | undefined {
+  if (session && summary.session === false) return undefined;
   const game = catalogGame(summary.id);
-  const rows = summary.rows.flatMap((row) => panelRow(stats, game, summary.at ?? "", row) ?? []);
+  const rows = summary.rows.flatMap((row) => panelRow(stats, game, summary.at ?? "", row, session) ?? []);
 
   // Ratios and formatted levels follow from the counts, so all-zero counts mean there is nothing to show.
-  const played = rows.some((row) => typeof row.value === "number" && row.value > 0);
+  const played = session ?
+    catalogPaths(game).some((path) => {
+      if (PAYOUTS.includes(path.slice(path.lastIndexOf(".") + 1))) return false;
+      const value = read({ stats }, path);
+      return typeof value === "number" && value !== 0;
+    }) :
+    rows.some((row) => typeof row.value === "number" && row.value > 0);
   if (!played) return undefined;
 
-  return { id: summary.id, name: gameName(summary.id), level: summary.level?.(stats), rows, page: gamePageOf(summary.id) };
+  return { id: summary.id, name: gameName(summary.id), level: session ? undefined : summary.level?.(stats), rows, page: gamePageOf(summary.id) };
 }
 
 /** The site's game pages for the nav between them, each marked when the player has never played the game. */
-export function gameNav(stats: PlayerStats): GamePage["games"] {
+export function gameNav(stats: PlayerStats, session = false): GamePage["games"] {
   return GAME_PAGES.map((layout) => {
     const { key, id } = layout.game;
     if (layout.played) return { key, id, name: pageName(layout), played: layout.played(stats) };
     const summary = GAME_SUMMARIES.find((entry) => entry.id === id);
     if (!summary) throw new Error(`${key} has no player-page panel`);
-    return { key, id, name: pageName(layout), played: summarize(stats, summary) !== undefined };
+    return { key, id, name: pageName(layout), played: summarize(stats, summary, session) !== undefined };
   });
 }
 
-/** The `player.page` view model from a deserialized player and their guild. */
-export function buildPlayerPage(player: Player, guild: PlayerGuild | null): PlayerPage {
+/** The panels of the games a player has played, or on a session (`session`) played since it started. */
+export const gamePanels = (stats: PlayerStats, session = false): GameSummary[] =>
+  GAME_SUMMARIES.flatMap((summary) => summarize(stats, summary, session) ?? []);
+
+/** A session's General row, as the bot's General session card: what the player gained since it started. */
+export function sessionOverview({ stats: { general, quests, challenges } }: Player): StatSection {
+  return {
+    title: null,
+    rows: [
+      [
+        { key: "networkLevel", label: "stats.levelsGained", value: general.networkLevel, color: "§b", leaderboard: null },
+        { key: "achievementPoints", label: "stats.achievementPoints", value: general.achievementPoints, color: "§6", leaderboard: null },
+        { key: "eventExp", label: "stats.event-exp", value: general.events[EVENT_TYPES[0].key].exp, color: "§b", leaderboard: null },
+      ],
+      [
+        { key: "quests", label: "stats.quests", value: quests.total, color: "§e", leaderboard: null },
+        { key: "challenges", label: "stats.challenges", value: challenges.total, color: "§a", leaderboard: null },
+        { key: "karma", label: "stats.karma", value: general.karma, color: "§d", leaderboard: null },
+      ],
+    ],
+  };
+}
+
+/** The `player.page` view model from a deserialized player and their guild; `SiteService` adds their session. */
+export function buildPlayerPage(player: Player, guild: PlayerGuild | null): Omit<PlayerPage, "session"> {
   const { general, quests, challenges } = player.stats;
   const { status, socials } = player;
   const lastGame = status.lastGame?.id;
@@ -365,7 +404,7 @@ export function buildPlayerPage(player: Player, guild: PlayerGuild | null): Play
       twitter: socials.twitter,
       youtube: socials.youtube,
     },
-    games: GAME_SUMMARIES.flatMap((summary) => summarize(player.stats, summary) ?? []),
+    games: gamePanels(player.stats),
     ...freshness(player),
   };
 }

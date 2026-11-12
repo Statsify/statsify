@@ -13,7 +13,7 @@ import { Command } from "~/components/ui/command";
 import { Fragment } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { MinecraftText } from "~/components/ui/minecraft-text";
-import { Progression } from "~/components/ui/progression";
+import { Progression, guildXpBar } from "~/components/ui/progression";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
@@ -138,13 +138,7 @@ function GuildLeveling({ guild }: { guild: GuildPreview }) {
           label="Guild Level"
           metric=""
           progression={guild.progression}
-          xpBar={(percentage) => {
-            const max = 40;
-            const count = Math.ceil(max * percentage);
-            return `§8[${color}${"|".repeat(count)}§7${"|".repeat(
-              max - count
-            )}§8]`;
-          }}
+          xpBar={guildXpBar(color)}
         />
       </Box>
       <Box className="lg:col-span-3 text-center">

@@ -62,7 +62,8 @@ export class HypixelService {
     );
   }
 
-  public getGuild(tag: string, type: "name" | "id" | "player") {
+  /** `null` when Hypixel has no such guild; a failed request as in `getPlayer`. */
+  public getGuild(tag: string, type: "name" | "id" | "player", { throwOnError = false } = {}) {
     return lastValueFrom(
       this.request<APIData>("/guild", { [type]: tag }).pipe(
         map((data) => {
@@ -71,7 +72,7 @@ export class HypixelService {
         }),
         catchError((err) => {
           this.logger.error(err);
-          return of(null);
+          return throwOnError ? throwError(() => new HypixelUnavailableError(err)) : of(null);
         })
       )
     );
