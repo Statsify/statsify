@@ -1,0 +1,26 @@
+{
+  "name": "@statsify/tokens",
+  "version": "0.0.0",
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css"
+  },
+  "scripts": {
+    "build": "swc src --config-file ../../.swcrc --out-dir dist --strip-leading-paths && node scripts/tokens-css.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint",
+    "lint:ci": "oxlint --format=github"
+  },
+  "dependencies": {
+    "@statsify/rendering": "workspace:^",
+    "@statsify/util": "workspace:^",
+    "@swc/helpers": "^0.5.23"
+  }
+}
