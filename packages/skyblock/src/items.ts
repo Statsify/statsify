@@ -131,8 +131,8 @@ export function toItemView(item: RawItem): ItemView {
 }
 
 /**
- * A toolkit's tool, which has only its ExtraAttributes: named and drawn from the items resource, with no lore. A
- * recombobulated tool is a rarity above its base. null for an id the resource can't draw.
+ * A toolkit's tool, which has only its ExtraAttributes: named and drawn from the items resource, with no lore. null for
+ * an id the resource can't draw.
  */
 export function toolkitItemView(blob: RawNbt, items: ItemsResource): ItemView | null {
   const attributes = decodeAttributes(blob);

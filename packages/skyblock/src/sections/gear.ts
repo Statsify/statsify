@@ -101,7 +101,6 @@ function getLoadouts(member: RawMember): Loadout[] {
     .toSorted((a, b) => a.id - b.id);
 }
 
-/** The swords, bows and wands in the inventory, the ender chest, the backpacks and the vault, in that order. */
 function getWeapons({ inventory }: RawMember): ItemView[] {
   const blobs = [
     inventory?.inv_contents,

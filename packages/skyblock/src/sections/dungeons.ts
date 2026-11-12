@@ -19,7 +19,7 @@ const GRADES: [DungeonGrade, number][] = [["S+", 300], ["S", 269.5], ["A", 230],
 
 const dungeonGrade = (score: number) => GRADES.find(([, lowest]) => score >= lowest)![0];
 
-/** The highest scoring run, the faster on a tie. A run's Dungeon Score is its four parts summed. */
+/** The highest scoring run, the faster on a tie. */
 function bestRun(runs: RawDungeonRun[] = []): DungeonRun | undefined {
   const scored = runs.map((run) => ({
     run,

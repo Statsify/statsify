@@ -45,7 +45,7 @@ export interface ProfileSummary {
   cuteName: string;
   gameMode: GameMode;
   selected: boolean;
-  // Pending invitees are listed, though nothing counts them. The site adds the names from stored players.
+  // The site adds the names from stored players
   members: { uuid: string; removed: boolean; invited: boolean; firstJoin?: number; username?: string; displayName?: string }[];
   level: number;
   levelColor: string; // the § code of the level's bracket

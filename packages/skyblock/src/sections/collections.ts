@@ -37,7 +37,6 @@ const bossCollection = (boss: string, amount: number, tiers: number[]): BossColl
   return { boss, amount, tier, maxTier: tiers.length, next: tiers[tier] };
 };
 
-/** The member's boss collections: a floor's boss from its completions, Master Mode's twice, and Kuudra by tier. */
 function getBossCollections(member: RawMember): BossCollection[] {
   const types = member.dungeons?.dungeon_types;
   const kuudra = member.nether_island_player_data?.kuudra_completed_tiers ?? {};
