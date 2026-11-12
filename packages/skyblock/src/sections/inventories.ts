@@ -41,19 +41,18 @@ const toolkitPage = <T>(toolkit: RawToolkit, tool: (blob: RawNbt) => T | null): 
     .map((blob) => blob && tool(blob))
     .filter((item) => item !== null);
 
-/**
- * Every inventory as the game pages it, each slot from `slots` and each toolkit tool from `tool`, which drops a tool
- * by returning null. The values section lays its prices out the same way.
- */
+type Pages<T> = Partial<Record<InventoryId, (T | null)[][]>>;
+
+/** Every inventory as the game pages it, each slot from `slots` and each toolkit tool from `tool`; a null tool is dropped. */
 export function inventoryPages<T>(
   member: RawMember,
   slots: (blob: RawNbt) => (T | null)[],
   tool: (blob: RawNbt) => T | null
-): Partial<Record<InventoryId, (T | null)[][]>> | null {
+): Pages<T> | null {
   const inventory = member.inventory;
   if (!inventory?.inv_contents) return null;
 
-  const pages: Partial<Record<InventoryId, (T | null)[][]>> = { inventory: [hotbarLast(slots(inventory.inv_contents))] };
+  const pages: Pages<T> = { inventory: [hotbarLast(slots(inventory.inv_contents))] };
 
   if (inventory.ender_chest_contents) pages.enderChest = paged(slots(inventory.ender_chest_contents));
   pages.backpacks = byKey(inventory.backpack_contents).map(slots);
