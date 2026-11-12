@@ -19,11 +19,11 @@ const isBracket = (medal?: string): medal is JacobBracket => JACOB_BRACKETS.incl
 
 /** "<year>:<month>_<day>:<crop>", the year counting from 0 and the month from 1 (the latest saves are today's date). */
 function toContest(key: string, { collected, claimed_position, claimed_participants, claimed_medal }: RawContest): JacobContest {
-  const [year, date, crop] = key.split(":");
+  const [year, date, ...crop] = key.split(":");
   const [month, day] = date.split("_").map(Number);
   return {
     at: skyblockTime({ year: Number(year) + 1, month: month - 1, day }),
-    crop,
+    crop: crop.join(":"),
     collected,
     place: claimed_position === undefined ? undefined : claimed_position + 1,
     participants: claimed_participants,
