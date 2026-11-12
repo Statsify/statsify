@@ -1,6 +1,6 @@
 use image::GenericImageView;
 
-use crate::error::Result;
+use crate::error::{Error, Result};
 
 pub struct Texture {
   pub texture: wgpu::Texture,
@@ -82,6 +82,12 @@ impl Texture {
     sampler: &wgpu::SamplerDescriptor,
   ) -> Result<Self> {
     let dimensions = img.dimensions();
+    let limit = device.limits().max_texture_dimension_2d;
+
+    if dimensions.0 > limit || dimensions.1 > limit {
+      return Err(Error::TextureTooLarge);
+    }
+
     let rgba = img.to_rgba8();
 
     let size = wgpu::Extent3d {

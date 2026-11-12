@@ -353,7 +353,7 @@ impl<T: Backend> SkinRenderer<T> {
     (encoder, output_texture)
   }
 
-  // Each render option is its own texture or setting, which the wasm renderer leaves unset
+  // The wasm renderer has no RenderOptions, so each option is its own argument
   #[allow(clippy::too_many_arguments)]
   pub fn load_skin(
     &self,
@@ -391,7 +391,7 @@ impl<T: Backend> SkinRenderer<T> {
         &self.texture_bind_group_layout,
         &load_cape_from_memory(cape)?,
         armor.chestplate.is_some(),
-      );
+      )?;
     }
 
     Ok(model)
@@ -493,7 +493,7 @@ impl SkinRenderer<native::NativeBackend> {
       None => camera,
     };
 
-    let camera = Camera::Orbital(camera.with_radius(model.camera_radius()));
+    let camera = Camera::Orbital(camera.fitted(model.points(), model.camera_radius()));
 
     let camera_bind_group = self.uniform_bind_group(
       &self.camera_bind_group_layout,
