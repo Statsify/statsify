@@ -54,16 +54,16 @@ export function getHotm(member: RawMember): HotmSection {
       total: add(CORE_TOKENS[coreLevel], ...TIER_TOKENS.slice(0, level.level)),
     },
     ability: tree?.selected_ability?.[`mining${suffix}`] ?? core.selected_pickaxe_ability,
-    // powder_<type> is all the powder earned, which each loadout spends from. Core of the Mountain's cost is kept apart in
-    // powder_spent_non_refundable_*, since a reset never refunds it, but older saves paid one without that key; there
-    // what's left isn't known unless the Core was never levelled.
+    // powder_<type> is all the powder ever earned. Core of the Mountain's cost is kept apart in
+    // powder_spent_non_refundable_*, since a reset never refunds it
     powder: Object.fromEntries(
-      POWDERS.map((type) => {
-        const nonRefundable = core[`powder_spent_non_refundable_${type}${suffix}`];
-        const total = core[`powder_${type}`] ?? 0;
-        const spent = add(core[`powder_spent_${type}${suffix}`] ?? 0, nonRefundable ?? 0);
-        return [type, { total, spent, available: nonRefundable !== undefined || coreLevel === 0 ? total - spent : undefined }];
-      })
+      POWDERS.map((type) => [
+        type,
+        {
+          total: core[`powder_${type}`] ?? 0,
+          spent: add(core[`powder_spent_${type}${suffix}`] ?? 0, core[`powder_spent_non_refundable_${type}${suffix}`] ?? 0),
+        },
+      ])
     ) as HotmSection["powder"],
     nodes: treeNodes(HOTM_LAYOUT, { ...nodes, core_of_the_mountain: coreLevel }),
     crystals: {
@@ -108,7 +108,6 @@ if (import.meta.vitest) {
         powder_spent_mithril: 1,
         powder_spent_mithril_2: 2,
         powder_spent_non_refundable_mithril_2: 150_000,
-        powder_gemstone: 900,
         crystals: { jade_crystal: { total_found: 3, total_placed: 2 }, ruby_crystal: { total_found: 5 }, opal_crystal: {} },
       },
     });
@@ -117,8 +116,7 @@ if (import.meta.vitest) {
     expect(hotm.loadout).toEqual({ selected: 2, total: 2 });
     expect(hotm.tokens).toEqual({ spent: 25, total: 25 });
     expect(hotm.ability).toBe("sheer_force");
-    expect(hotm.powder.mithril).toEqual({ total: 200_000, spent: 150_002, available: 49_998 });
-    expect(hotm.powder.gemstone).toEqual({ total: 900, spent: 0, available: undefined });
+    expect(hotm.powder.mithril).toEqual({ total: 200_000, spent: 150_002 });
     expect(hotm.nodes.find(({ id }) => id === "mining_fortune")).toMatchObject({ level: 3, enabled: false });
     expect(hotm.nodes.find(({ id }) => id === "mining_speed")).toMatchObject({ level: 0, enabled: false });
     expect(hotm.crystals).toEqual({
