@@ -13,4 +13,10 @@ import { SuccessResponse } from "./success.response.js";
 export class GetGuildResponse extends SuccessResponse {
   @ApiProperty()
   public guild: Guild;
+
+  @ApiProperty({
+    required: false,
+    description: "True when Hypixel failed or rate limited Statsify, so cached data was returned instead",
+  })
+  public hypixelUnavailable?: boolean;
 }

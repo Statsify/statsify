@@ -12,7 +12,11 @@ import {
   type Flatten,
   flatten,
 } from "@statsify/util";
-import { CacheLevel, StatusNotFoundException } from "@statsify/api-client";
+import {
+  CacheLevel,
+  HypixelUnavailableException,
+  StatusNotFoundException,
+} from "@statsify/api-client";
 import { HypixelService } from "#hypixel";
 import {
   Inject,
@@ -30,6 +34,12 @@ import {
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
+
+export interface PlayerLookup {
+  player: Player | null;
+  /** Set when Hypixel failed and `player` is the cached copy */
+  hypixelError?: HypixelUnavailableException;
+}
 
 @Injectable()
 export class PlayerService {
@@ -52,6 +62,18 @@ export class PlayerService {
     cacheLevel: CacheLevel,
     selector?: Record<string, boolean>
   ): Promise<Player | null> {
+    const { player } = await this.getWithFallback(tag, cacheLevel, selector);
+    return player;
+  }
+
+  /**
+   * Throws a HypixelUnavailableException when Hypixel failed and there is no cached player.
+   */
+  public async getWithFallback(
+    tag: string,
+    cacheLevel: CacheLevel,
+    selector?: Record<string, boolean>
+  ): Promise<PlayerLookup> {
     // ensure we have all the necessary data to replace the player document if we don't do a cache only request
     if (selector && Object.keys(selector).length > 0) {
       selector.uuid = true;
@@ -67,12 +89,21 @@ export class PlayerService {
       mongoPlayer &&
       this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)
     ) {
-      return deserialize(Player, mongoPlayer);
+      return { player: deserialize(Player, mongoPlayer) };
     }
 
-    const player = await this.hypixelService.getPlayer(
-      mongoPlayer?.uuid ?? tag
-    );
+    let player: Player | null;
+
+    try {
+      player = await this.hypixelService.getPlayer(mongoPlayer?.uuid ?? tag);
+    } catch (error) {
+      if (!mongoPlayer) throw error;
+
+      return {
+        player: deserialize(Player, mongoPlayer),
+        hypixelError: error as HypixelUnavailableException,
+      };
+    }
 
     if (player) {
       player.expiresAt = Date.now() + 120_000;
@@ -86,12 +117,12 @@ export class PlayerService {
 
       flatPlayer.isNew = !mongoPlayer;
 
-      return deserialize(Player, flatPlayer);
+      return { player: deserialize(Player, flatPlayer) };
     } else if (mongoPlayer) {
-      return deserialize(Player, mongoPlayer);
+      return { player: deserialize(Player, mongoPlayer) };
     }
 
-    return null;
+    return { player: null };
   }
 
   public async update(data: APIData) {
@@ -132,7 +163,7 @@ export class PlayerService {
 
     const [status, games] = await Promise.all([
       this.hypixelService.getStatus(player.uuid),
-      this.hypixelService.getRecentGames(player.uuid),
+      this.hypixelService.getRecentGames(player.uuid).catch(() => []),
     ]);
 
     if (!status) throw new StatusNotFoundException(player);
