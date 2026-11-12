@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class CommandDto {
-  @IsString()
-  @ApiProperty()
-  public command: string;
-}
+export class CommandDto extends createZodDto(z.object({ command: z.string() })) {}

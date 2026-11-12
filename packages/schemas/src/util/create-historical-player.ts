@@ -7,7 +7,7 @@
  */
 
 import { RATIOS, RATIO_STATS } from "#ratios";
-import { isObject } from "class-validator";
+import { isObject } from "@statsify/util";
 import { ratio, sub } from "@statsify/math";
 
 export function createHistoricalPlayer<T>(oldOne: T, newOne: T): T {

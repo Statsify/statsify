@@ -6,15 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum } from "class-validator";
-import { Player, getLeaderboardFields } from "@statsify/schemas";
+import { Player } from "@statsify/schemas";
 import { UuidDto } from "./uuid.dto.js";
+import { createZodDto } from "nestjs-zod";
+import { leaderboardField } from "./leaderboard-field.js";
+import { z } from "zod";
 
-const fields = getLeaderboardFields(Player).map(([key]) => key);
-
-export class PlayerRankingsDto extends UuidDto {
-  @ApiProperty({ enum: fields, type: [String] })
-  @IsEnum(fields, { each: true })
-  public fields: string[];
-}
+export class PlayerRankingsDto extends createZodDto(
+  UuidDto.schema.extend({ fields: z.array(leaderboardField(Player)) })
+) {}

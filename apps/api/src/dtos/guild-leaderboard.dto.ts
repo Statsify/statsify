@@ -6,43 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
-import { Guild, getLeaderboardFields } from "@statsify/schemas";
-import {
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsString,
-  MaxLength,
-  Min,
-  MinLength,
-} from "class-validator";
-import { Transform } from "class-transformer";
+import { Guild } from "@statsify/schemas";
+import { createZodDto } from "nestjs-zod";
+import { leaderboardField } from "./leaderboard-field.js";
+import { z } from "zod";
 
-const fields = getLeaderboardFields(Guild).map(([key]) => key);
-
-export class GuildLeaderboardDto {
-  @IsEnum(fields)
-  @ApiProperty({ enum: fields })
-  public field: string;
-
-  @Transform((params) => +params.value)
-  @IsInt()
-  @Min(0)
-  @ApiProperty({ default: 0, minimum: 0, type: () => Number, required: false })
-  public page = 0;
-
-  @Transform((params) => +params.value)
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  @ApiProperty({ minimum: 1, type: () => Number, required: false })
-  public position?: number;
-
-  @IsOptional()
-  @IsString()
-  @MinLength(3)
-  @MaxLength(32)
-  @ApiProperty({ required: false })
-  public guild?: string;
-}
+export class GuildLeaderboardDto extends createZodDto(
+  z.object({
+    field: leaderboardField(Guild),
+    page: z.coerce.number().int().min(0).default(0),
+    position: z.coerce.number().int().min(1).optional(),
+    guild: z.string().min(3).max(32).nullish(),
+  })
+) {}

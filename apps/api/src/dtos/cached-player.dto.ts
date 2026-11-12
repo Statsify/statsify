@@ -7,7 +7,7 @@
  */
 
 import { CacheDto } from "./cache.dto.js";
-import { IntersectionType } from "@nestjs/swagger";
 import { PlayerDto } from "./player.dto.js";
+import { createZodDto } from "nestjs-zod";
 
-export class CachedPlayerDto extends IntersectionType(PlayerDto, CacheDto) {}
+export class CachedPlayerDto extends createZodDto(PlayerDto.schema.extend(CacheDto.schema.shape)) {}
