@@ -22,7 +22,7 @@ const topOf = (counts: Record<string, number> = {}) =>
     .map(([id, count]) => ({ id, count }));
 
 // Each permanent consumable's count, and how many the game takes: the wiki's maximums (an owner exception, unverified)
-const CONSUMABLES: { id: string; max: number; used: (member: RawMember) => number | boolean | undefined }[] = [
+const CONSUMABLES: { id: string; max: number; used: (member: RawMember) => number | undefined }[] = [
   { id: "METAPHYSICAL_SERUM", max: 3, used: (member) => member.experimentation?.serums_drank },
   { id: "REAPER_PEPPER", max: 5, used: (member) => member.player_data?.reaper_peppers_eaten },
   { id: "WRIGGLING_LARVA", max: 5, used: (member) => member.garden_player_data?.larva_consumed },
@@ -30,7 +30,7 @@ const CONSUMABLES: { id: string; max: number; used: (member: RawMember) => numbe
   { id: "REFINED_BOTTLE_OF_JYRRE", max: 5, used: (member) => member.winter_player_data?.refined_jyrre_uses },
   { id: "BEE_SALIVA", max: 5, used: (member) => member.player_data?.bee_saliva_eaten },
   { id: "ISOPOD_HUSK", max: 5, used: (member) => member.player_data?.isopod_husks_eaten },
-  { id: "RIFT_PRISM", max: 1, used: (member) => member.rift?.access?.consumed_prism },
+  { id: "RIFT_PRISM", max: 1, used: (member) => Number(member.rift?.access?.consumed_prism ?? false) },
 ];
 
 // Every song played has a best; its completions keys also come as _perfect_completions
@@ -68,12 +68,11 @@ function getDragons(member: RawMember): Dragons {
 function getConsumables(member: RawMember, items: ItemsResource): Consumable[] {
   return CONSUMABLES.map(({ id, max, used }) => {
     const resource = items.items[id];
-    const count = used(member);
     return {
       id,
       name: resource?.name ?? prettify(id),
       texture: resource && resourceTexture(resource),
-      used: typeof count === "boolean" ? Number(count) : (count ?? 0),
+      used: used(member) ?? 0,
       max,
     };
   });

@@ -17,10 +17,15 @@ const EMPLOYEES = ["rabbit_bro", "rabbit_cousin", "rabbit_sis", "rabbit_father",
 // owner exception, unverified)
 const PRESTIGE_CHOCOLATE = [150_000_000, 1_000_000_000, 4_000_000_000, 10_000_000_000, 30_000_000_000];
 
+// The rabbits record also holds faction_level
+const ALL_RABBITS = new Set(Object.values(RABBITS).flat());
+
 /** null before the member opens the Chocolate Factory. A rabbit counts once however often it was found. */
 export function getChocolate(member: RawMember): ChocolateSection | null {
   const easter = member.events?.easter;
-  const counts = Object.entries(easter?.rabbits ?? {}).flatMap(([rabbit, count]) => (typeof count === "number" ? [[rabbit, count] as const] : []));
+  const counts = Object.entries(easter?.rabbits ?? {}).flatMap(([rabbit, count]) =>
+    typeof count === "number" && ALL_RABBITS.has(rabbit) ? [[rabbit, count] as const] : []
+  );
   const found = new Set(counts.map(([rabbit]) => rabbit));
 
   // Hypixel sends the record, holding only the egg objects, before the factory makes any chocolate

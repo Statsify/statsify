@@ -26,7 +26,7 @@ const BAGS = {
 const paged = <T>(slots: T[]) => (slots.length > 0 ? arrayGroup(slots, PAGE) : [[]]);
 
 /** A map's blobs in their numeric key's order, as the game numbers backpacks. */
-const byKey = (blobs: Record<string, RawNbt> = {}) =>
+export const byKey = (blobs: Record<string, RawNbt> = {}) =>
   Object.entries(blobs)
     .toSorted(([a], [b]) => Number(a) - Number(b))
     .map(([, blob]) => blob);
