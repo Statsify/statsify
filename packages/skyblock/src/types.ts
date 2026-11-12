@@ -253,7 +253,7 @@ export interface HotmSection {
   loadout: { selected: number; total: number };
   tokens: { spent: number; total: number };
   ability?: string;
-  powder: Record<Powder, { total: number; spent: number; available?: number }>; // total: all earned; available: unknown on older saves
+  powder: Record<Powder, { total: number; spent: number }>; // total earned; spent by this loadout
   nodes: TreeNode[];
   crystals: { found: number; placed: number; gems: Crystal[] }; // found and placed over every gem, then each gem found
   nucleusRuns: number;
