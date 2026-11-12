@@ -35,7 +35,9 @@ export const SkyBlockSummaryProfile = ({
     [t("skyblock.bank"), bank.value, bank.color],
   ];
 
-  const none = t("skyblock.none");
+  if (profile.personalBank !== undefined)
+    sidebar.push([t("skyblock.personalBank"), t(Math.floor(profile.personalBank)), "§6"]);
+
   const current = profile.members.filter(({ removed, invited }) => !removed && !invited).length;
   const left = profile.members.filter(({ removed }) => removed).length;
   const invited = profile.members.filter(({ invited }) => invited).length;
@@ -44,9 +46,6 @@ export const SkyBlockSummaryProfile = ({
     ...(left > 0 ? [`§7${t("skyblock.membersLeft", { count: left })}`] : []),
     ...(invited > 0 ? [`§7${t("skyblock.membersInvited", { count: invited })}`] : []),
   ].join(" §8• ");
-
-  if (profile.personalBank !== undefined)
-    sidebar.push([t("skyblock.personalBank"), t(Math.floor(profile.personalBank)), "§6"]);
 
   return (
     <Container background={background}>
@@ -82,7 +81,7 @@ export const SkyBlockSummaryProfile = ({
         <Table.tr>
           <Table.td
             title={t("skyblock.firstJoin")}
-            value={profile.firstJoin ? DateTime.fromMillis(profile.firstJoin).toFormat("LL/dd/yy", { locale: t.locale }) : none}
+            value={profile.firstJoin ? DateTime.fromMillis(profile.firstJoin).toFormat("LL/dd/yy", { locale: t.locale }) : t("skyblock.none")}
             color="§b"
           />
           <Table.td title={t("skyblock.coopMembers")} value={coop} color="§e" />
