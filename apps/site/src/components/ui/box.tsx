@@ -60,7 +60,7 @@ export function toBorderRadius(borderRadius: BoxBorderRadius): {
   };
 }
 
-// The card look from `@statsify/tokens`: the renderer's overlay gradient on the panel colour and a
+// The card look from `@statsify/tokens`: the renderer's overlay gradient on the panel color and a
 // shadow at the card's opacity. The tinted variants keep their radial gradients.
 const boxVariants = {
   default: {

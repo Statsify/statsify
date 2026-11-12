@@ -35,7 +35,7 @@ const SIZE = /^\^(\d+(?:\.\d+)?)\^/;
 const BASE_SIZE = 2;
 
 /**
- * Renders Minecraft-formatted text the way the bot's cards do: `§0`–`§f` and `§#rrggbb` colours, `§l` bold,
+ * Renders Minecraft-formatted text the way the bot's cards do: `§0`–`§f` and `§#rrggbb` colors, `§l` bold,
  * `§o` italic, `§n` and `§u` underline, `§m` strikethrough, `§k` ignored, `§r` reset and the renderer's `§^N^` size codes.
  */
 export function MinecraftText({ children, className }: { children: string | string[]; className?: string }) {
