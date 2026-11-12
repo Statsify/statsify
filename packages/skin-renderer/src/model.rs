@@ -155,7 +155,7 @@ impl Part {
     }
   }
 
-  // Armour textures only have the right limbs, which the left limbs mirror
+  // Armor textures only have the right limbs, which the left limbs mirror
   fn armor_region(self, texture_size: Coordinate<u32>) -> TextureRegion {
     let location = match self {
       Part::Head => (0, 0),
@@ -362,7 +362,7 @@ impl Model {
   }
 
   // Boots and a player head reach past the frame that fits a bare player, and every
-  // armoured render pulls back with them so they share one scale
+  // armored render pulls back with them so they share one scale
   pub fn camera_radius(&self) -> f32 {
     let radius = self.pose.camera_radius();
 
@@ -391,7 +391,7 @@ impl Model {
       } else {
         image::load_from_memory(&piece.texture)?
       };
-      // Packs draw the 64 wide layout at any resolution, and skins are square where armour is 2:1
+      // Packs draw the 64 wide layout at any resolution, and skins are square where armor is 2:1
       let texture_size = (64, 64 * texture.height() / texture.width());
       let mut geometry = Geometry::new(vec![], vec![]);
 
