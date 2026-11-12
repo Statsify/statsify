@@ -8,6 +8,7 @@
 
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { DateTime } from "luxon";
+import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 export const SkyBlockSummaryProfile = ({
@@ -27,7 +28,10 @@ export const SkyBlockSummaryProfile = ({
   const accessoryPower = profile.marketDown?.includes("accessories") ?
     notReady :
     accessories ? { value: t(accessories.accessoryPower), color: "§d" } : missing("§d");
-  const bank = profile.bank === undefined ? missing("§6") : { value: t(Math.floor(profile.bank)), color: "§6" };
+  const bank =
+    profile.bank === undefined ?
+      missing("§6") :
+      { value: `${t(Math.floor(profile.bank))}§7/§6${t(profile.bankLimit)}`, color: "§6" };
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.level"), t(profile.level), profile.levelColor],
@@ -35,8 +39,11 @@ export const SkyBlockSummaryProfile = ({
     [t("skyblock.bank"), bank.value, bank.color],
   ];
 
-  if (profile.personalBank !== undefined)
-    sidebar.push([t("skyblock.personalBank"), t(Math.floor(profile.personalBank)), "§6"]);
+  if (profile.personalBank !== undefined && profile.personalBankLimit !== undefined)
+    sidebar.push([t("skyblock.personalBank"), `${t(Math.floor(profile.personalBank))}§7/§6${t(profile.personalBankLimit)}`, "§6"]);
+
+  sidebar.push([t("skyblock.bankTier"), prettify(profile.bankTier), "§6"]);
+  if (profile.bankInterest !== undefined) sidebar.push([t("skyblock.bankInterest"), t(Math.round(profile.bankInterest)), "§6"]);
 
   const current = profile.members.filter(({ removed, invited }) => !removed && !invited).length;
   const left = profile.members.filter(({ removed }) => removed).length;

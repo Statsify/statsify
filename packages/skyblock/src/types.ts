@@ -68,6 +68,10 @@ export interface SkyBlockProfilesView extends PlayerRef, Freshness {
   profiles: ProfileSummary[];
 }
 
+export const BANK_TIERS = ["STARTER", "GOLD", "DELUXE", "SUPER_DELUXE", "PREMIER", "LUXURIOUS", "PALATIAL"] as const;
+
+export type BankTier = (typeof BANK_TIERS)[number];
+
 export interface ProfileSummary {
   id: string;
   cuteName: string;
@@ -81,7 +85,11 @@ export interface ProfileSummary {
   newProfile: boolean; // brand new, so missing data is empty rather than hidden by an API setting
   purse: number;
   bank?: number;
+  bankTier: BankTier; // the highest BANK_UPGRADE_* task any member has
+  bankLimit: number;
+  bankInterest?: number; // a season's, on the co-op and personal balances, without Museum milestones' boost
   personalBank?: number;
+  personalBankLimit?: number;
   firstJoin?: number;
   fairySouls: number;
   maxFairySouls?: number; // missing on Stranded and Bingo, whose islands hold fewer

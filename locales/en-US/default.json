@@ -613,6 +613,8 @@
       "won": "Won"
     },
     "bank": "Bank",
+    "bankInterest": "Interest per Season",
+    "bankTier": "Bank Account",
     "bankingOffNote": "The bank balance is missing because the Banking API is off. It's under Settings → Island Settings, on your island.",
     "bazaarBuy": "Bazaar Buy",
     "bazaarSell": "Bazaar Sell",
