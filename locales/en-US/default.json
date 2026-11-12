@@ -657,7 +657,6 @@
       "sword_swap": "Discipline",
       "wall_jump": "Stamina"
     },
-    "doubleDrops": "Double Drops",
     "dragons": "Dragons",
     "dragonsSummoned": "Summoned",
     "duplicate": "Duplicate",
@@ -686,6 +685,7 @@
       "pairings": "Superpairs",
       "simon": "Chronomatron"
     },
+    "extraFarmingFortune": "Extra Farming Fortune",
     "eyesPlaced": "Eyes Placed",
     "faction": "Faction",
     "fairySouls": "Fairy Souls",
