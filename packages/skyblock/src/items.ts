@@ -6,11 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { RARITIES, type ItemView, type ItemsResource, type Rarity, type RawItem, type Slots } from "#types";
-import { decodeInventory } from "#nbt";
+import {
+  type ItemAttributes,
+  type ItemView,
+  type ItemsResource,
+  RARITIES,
+  type Rarity,
+  type RawItem,
+  type Slots,
+} from "#types";
+import { decodeAttributes, decodeInventory } from "#nbt";
 import { normalizeItemText } from "./lore.js";
 import { removeFormatting } from "@statsify/util";
-import { skinHash, textureOf } from "#textures";
+import { resourceTexture, skinHash, textureOf } from "#textures";
 import type { RawNbt } from "#raw";
 
 // LEGENJERRY is how Jerry's cosmetics name Legendary (the wiki's Rarity page)
@@ -28,6 +36,83 @@ export function nbtNumber(value: unknown): number | undefined {
   return undefined;
 }
 
+// The API keys of the items' lifetime counters, as the saves have them, kept raw; the levels a stacking enchant's
+// counter unlocks are in STACKING_ENCHANTS
+const COUNTERS = [
+  "absorb_logs_chopped",
+  "blood_god_kills",
+  "champion_combat_xp",
+  "compact_blocks",
+  "eman_kills",
+  "expertise_kills",
+  "farmed_cultivating",
+  "hecatomb_s_runs",
+  "logs_cut",
+  "mined_crops",
+  "raider_kills",
+  "runic_kills",
+  "spider_kills",
+  "stats_book",
+  "toxophilite_combat_xp",
+  "zombie_kills",
+] as const;
+
+const DRILL_PARTS = ["drill_part_engine", "drill_part_fuel_tank", "drill_part_upgrade_module"] as const;
+
+const nonEmpty = <T>(list: T[]) => (list.length > 0 ? list : undefined);
+
+/**
+ * An item's gemstones. A slot keyed by its gem type holds the quality ("RUBY_0": "FINE"); a slot of a kind that takes
+ * several types ("COMBAT_0") names its gem beside it ("COMBAT_0_gem": "SAPPHIRE"). A quality can be an object with a
+ * uuid. unlocked_slots lists the slots opened, filled or not.
+ */
+function gemsOf(raw: unknown): ItemView["gems"] {
+  if (!raw || typeof raw !== "object") return undefined;
+  const gems = raw as Record<string, unknown>;
+
+  return nonEmpty(
+    Object.entries(gems).flatMap(([key, value]) => {
+      if (key === "unlocked_slots" || key.endsWith("_gem")) return [];
+      const quality = typeof value === "string" ? value : (value as { quality?: unknown } | null)?.quality;
+      if (typeof quality !== "string") return [];
+      const slot = key.replace(/_\d+$/, "");
+      const named = gems[`${key}_gem`];
+      return [{ slot, gem: typeof named === "string" ? named : slot, quality }];
+    })
+  );
+}
+
+/** What an item's ExtraAttributes say beyond its name and lore. */
+function attributeDetails(attributes: ItemAttributes) {
+  const counters = COUNTERS.flatMap((key) => {
+    const value = nbtNumber(attributes[key]);
+    return value === undefined ? [] : [[key, Math.floor(value)] as const];
+  });
+  const [rune] = Object.entries((attributes.runes ?? {}) as Record<string, number>);
+
+  return {
+    reforge: attributes.modifier,
+    stars: nbtNumber(attributes.upgrade_level ?? attributes.dungeon_item_level),
+    recombobulated: Boolean(attributes.rarity_upgrades),
+    enchantments: attributes.enchantments,
+    enrichment: attributes.talisman_enrichment,
+    hotPotato: nbtNumber(attributes.hot_potato_count),
+    obtainedAt: nbtNumber(attributes.timestamp),
+    gems: gemsOf(attributes.gems),
+    counters: counters.length > 0 ? Object.fromEntries(counters) : undefined,
+    dye: attributes.dye_item as string | undefined,
+    rune: rune && { id: rune[0], level: rune[1] },
+    skin: attributes.skin as string | undefined,
+    origin: attributes.originTag as string | undefined,
+    drillParts: nonEmpty(
+      DRILL_PARTS.flatMap((part) => {
+        const id = attributes[part];
+        return typeof id === "string" ? [id.toUpperCase()] : [];
+      })
+    ),
+  };
+}
+
 export function toItemView(item: RawItem): ItemView {
   const attributes = item.tag?.ExtraAttributes ?? {};
   const id = attributes.id ?? `minecraft:${item.id}:${item.Damage}`;
@@ -41,13 +126,29 @@ export function toItemView(item: RawItem): ItemView {
     count: item.Count,
     glint: item.tag?.ench !== undefined,
     texture: textureOf(item),
-    reforge: attributes.modifier,
-    stars: nbtNumber(attributes.upgrade_level ?? attributes.dungeon_item_level),
-    recombobulated: Boolean(attributes.rarity_upgrades),
-    enchantments: attributes.enchantments,
-    enrichment: attributes.talisman_enrichment,
-    hotPotato: nbtNumber(attributes.hot_potato_count),
-    obtainedAt: nbtNumber(attributes.timestamp),
+    ...attributeDetails(attributes),
+  };
+}
+
+/**
+ * A toolkit's tool, which has only its ExtraAttributes: named and drawn from the items resource, with no lore. A
+ * recombobulated tool is a rarity above its base. null for an id the resource can't draw.
+ */
+export function toolkitItemView(blob: RawNbt, items: ItemsResource): ItemView | null {
+  const attributes = decodeAttributes(blob);
+  const resource = attributes.id ? items.items[attributes.id] : undefined;
+  const texture = resource && resourceTexture(resource);
+  if (!attributes.id || !resource || !texture) return null;
+
+  return {
+    id: attributes.id,
+    name: resource.name,
+    lore: [],
+    rarity: resource.tier && RARITIES[RARITIES.indexOf(resource.tier) + (attributes.rarity_upgrades ? 1 : 0)],
+    count: 1,
+    glint: Object.keys(attributes.enchantments ?? {}).length > 0 || Boolean(resource.glowing),
+    texture,
+    ...attributeDetails(attributes),
   };
 }
 
@@ -120,6 +221,23 @@ if (import.meta.vitest) {
     expect(rarityOf(["§a§lUNCOMMON"])).toBe("UNCOMMON");
     expect(rarityOf(["§7A rare find"])).toBeUndefined();
     expect(rarityOf([])).toBeUndefined();
+  });
+
+  test("gemsOf reads a typed slot's quality and a mixed slot's gem", () => {
+    expect(
+      gemsOf({
+        unlocked_slots: ["JADE_0", "COMBAT_0", "COMBAT_1"],
+        RUBY_0: "FINE",
+        JADE_0: { uuid: "x", quality: "PERFECT" },
+        COMBAT_0: "FLAWLESS",
+        COMBAT_0_gem: "SAPPHIRE",
+      })
+    ).toEqual([
+      { slot: "RUBY", gem: "RUBY", quality: "FINE" },
+      { slot: "JADE", gem: "JADE", quality: "PERFECT" },
+      { slot: "COMBAT", gem: "SAPPHIRE", quality: "FLAWLESS" },
+    ]);
+    expect(gemsOf({ unlocked_slots: ["RUBY_0"] })).toBeUndefined();
   });
 
   test("nbtNumber joins a long's halves", () => {

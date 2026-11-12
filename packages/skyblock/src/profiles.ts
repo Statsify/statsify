@@ -56,9 +56,11 @@ export function toProfileSummary(profile: RawProfile, uuid: string): ProfileSumm
     cuteName: profile.cute_name,
     gameMode: gameModeOf(profile),
     selected: profile.selected ?? false,
-    members: coopMembers(profile).map(([id, other]) => ({
+    members: Object.entries(profile.members).map(([id, other]) => ({
       uuid: id,
       removed: other.profile?.deletion_notice !== undefined,
+      invited: isPending(other),
+      firstJoin: other.profile?.first_join,
     })),
     level,
     levelColor: levelColor(level),
@@ -69,6 +71,8 @@ export function toProfileSummary(profile: RawProfile, uuid: string): ProfileSumm
     personalBank: member.profile?.bank_account,
     firstJoin: member.profile?.first_join,
     fairySouls: member.fairy_soul?.total_collected ?? 0,
+    // Stranded and Bingo play on islands that hold fewer souls, and no data source says how many
+    maxFairySouls: ["normal", "ironman"].includes(gameModeOf(profile)) ? LEVELING.fairy_souls : undefined,
   };
 }
 

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { Experiment, Faction, JacobMedal, Whisper } from "#types";
+import type { DungeonClass, Experiment, Faction, JacobMedal, Whisper } from "#types";
 
 // The parts of Hypixel's /v2/skyblock responses this package reads. Everything is optional, since Hypixel leaves out
 // whatever a player never touched or an API setting hides.
@@ -40,6 +40,7 @@ export interface RawDungeonType {
   tier_completions?: Record<string, number>;
   highest_tier_completed?: number;
   best_score?: Record<string, number>;
+  best_runs?: Record<string, RawDungeonRun[]>; // per floor, a few of the member's best
   fastest_time?: Record<string, number>;
   fastest_time_s?: Record<string, number>;
   fastest_time_s_plus?: Record<string, number>;
@@ -52,16 +53,33 @@ export interface RawDungeonType {
   [damage: `most_damage_${string}`]: Record<string, number> | undefined; // per floor, plus "best"
 }
 
+export interface RawDungeonRun {
+  timestamp: number;
+  score_exploration: number;
+  score_speed: number;
+  score_skill: number;
+  score_bonus: number;
+  dungeon_class: DungeonClass;
+  elapsed_time: number;
+  damage_dealt: number;
+  deaths: number;
+  secrets_found: number;
+}
+
 export interface RawSlayerBoss {
   xp?: number;
-  [tier: `boss_kills_tier_${number}`]: number | undefined;
+  claimed_levels?: Record<string, boolean>; // level_<n>, and level_<n>_special past a boss's usual levels
+  [tier: `boss_${"kills" | "attempts"}_tier_${number}`]: number | undefined;
 }
+
+/** A song's counts in the harp, by `song_<song>_<count>`. */
+export type RawHarp = Record<string, number | string | boolean>;
 
 export interface RawMember {
   player_id?: string;
   profile?: {
     deletion_notice?: { timestamp: number };
-    coop_invitation?: { confirmed: boolean };
+    coop_invitation?: { confirmed: boolean; timestamp?: number };
     bank_account?: number;
     first_join?: number;
   };
@@ -83,13 +101,29 @@ export interface RawMember {
     mythos?: { kills?: number; burrows_chains_complete?: { total?: number } };
     candy_collected?: { total?: number };
     rift?: { visits?: number; lifetime_motes_earned?: number };
+    winter?: Partial<Record<"most_damage_dealt" | "most_snowballs_hit" | "most_magma_damage_dealt" | "most_cannonballs_hit", number>>;
+    end_island?: {
+      // Each by dragon type, plus "best" (or "total" for the counts)
+      dragon_fight?: {
+        fastest_kill?: Record<string, number>;
+        most_damage?: Record<string, number>;
+        highest_rank?: Record<string, number>;
+        amount_summoned?: Record<string, number>;
+        summoning_eyes_contributed?: Record<string, number>;
+        ender_crystals_destroyed?: number;
+      };
+      special_zealot_loot_collected?: number;
+      summoning_eyes_collected?: number;
+    };
   };
   bestiary?: { kills?: Record<string, number>; milestone?: { last_claimed_milestone?: number } };
-  trophy_fish?: Record<string, unknown>; // <fish> and <fish>_<tier> counts, plus total_caught, rewards…
+  trophy_fish?: Record<string, unknown> & { rewards?: number[] }; // <fish> and <fish>_<tier> counts, total_caught, rewards…
   player_data?: {
     experience?: Record<string, number>;
     perks?: Record<string, number>;
     reaper_peppers_eaten?: number;
+    bee_saliva_eaten?: number;
+    isopod_husks_eaten?: number;
     crafted_generators?: string[]; // "WHEAT_11": each minion tier crafted
   };
   collection?: Record<string, number>;
@@ -130,13 +164,19 @@ export interface RawMember {
       }
     >;
   };
-  garden_player_data?: { copper?: number; discovered_greenhouse_crops?: string[]; analyzed_greenhouse_crops?: string[] };
+  garden_player_data?: {
+    copper?: number;
+    discovered_greenhouse_crops?: string[];
+    analyzed_greenhouse_crops?: string[];
+    larva_consumed?: number;
+    farming_toolkit?: RawToolkit;
+  };
   jacobs_contest?: {
     perks?: { farming_level_cap?: number; double_drops?: number };
     medals_inv?: Partial<Record<JacobMedal, number>>;
     unique_brackets?: Record<string, string[]>; // bracket → the crops it was reached on
     personal_bests?: Record<string, number>;
-    contests?: Record<string, unknown>; // "<year>:<month>_<day>:<crop>" → the entry
+    contests?: Record<string, RawContest>; // "<year>:<month>_<day>:<crop>", the year from 0 and the month from 1
   };
   events?: {
     easter?: {
@@ -144,11 +184,22 @@ export interface RawMember {
       total_chocolate?: number;
       chocolate_since_prestige?: number;
       chocolate_level?: number;
-      rabbits?: Record<string, unknown>; // rabbit → times found, plus collected_eggs
+      rabbits?: Record<string, unknown> & { collected_locations?: Record<string, string[]> }; // rabbit → times found
+      refined_dark_cacao_truffles?: number;
       employees?: Record<string, number>;
       time_tower?: { level?: number };
     };
   };
+  foraging?: {
+    songs?: { harp?: RawHarp };
+    fish_family?: string[];
+    hina?: { tasks?: { completed_tasks?: string[] } };
+    tree_gifts?: Record<string, unknown>; // gifts by tree, plus milestone_tier_claimed
+    starlyn?: { personal_bests?: Record<string, number> };
+    hunting_toolkit?: RawToolkit;
+  };
+  quests?: { harp_quest?: RawHarp }; // where the harp was before foraging.songs
+  winter_player_data?: { refined_jyrre_uses?: number };
   foraging_core?: {
     whispers?: Partial<
       Record<Whisper, { total?: number; [slot: number]: { spent?: number; spent_non_refundable?: number } | undefined }>
@@ -194,6 +245,7 @@ export interface RawMember {
     dead_cats?: { montezuma?: RawPet; found_cats?: string[] };
     enigma?: { found_souls?: string[] };
     gallery?: { secured_trophies?: unknown[] };
+    inventory?: { inv_contents?: RawNbt; ender_chest_contents?: RawNbt };
   };
   nether_island_player_data?: {
     abiphone?: { active_contacts?: string[] };
@@ -221,6 +273,16 @@ export interface RawMuseumMember {
   items?: Record<string, { donated_time?: number; items?: RawNbt }>;
   special?: { donated_time?: number; items?: RawNbt }[];
 }
+
+export interface RawContest {
+  collected: number;
+  claimed_position?: number; // from 0
+  claimed_participants?: number;
+  claimed_medal?: string;
+}
+
+/** A toolkit's tools by kind (a crop, TRAP…), each a list of bare ExtraAttributes blobs, beside IN_USE and IS_UNLOCKED. */
+export type RawToolkit = Record<string, unknown>;
 
 /** /v2/skyblock/museum: one entry per member whose museum API is on. */
 export interface RawMuseum {

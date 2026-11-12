@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ACCESSORY_UPGRADES, IGNORED_ACCESSORIES, POWERS } from "#data";
+import { ACCESSORY_UPGRADES, ATTRIBUTE_SHARDS, IGNORED_ACCESSORIES, POWERS } from "#data";
 import { add } from "@statsify/math";
 import { RARITIES } from "#types";
 import { costOf } from "#prices";
 import { decodeInventory } from "#nbt";
+import { getLevel } from "#leveling";
 import { resourceTexture } from "#textures";
 import { toItemView } from "#items";
 import type {
@@ -126,6 +127,7 @@ export function getAccessories(
     powerStats: stone && stonePowerStats(stone, accessoryPower),
     tuning,
     tuningPoints: add(...Object.values(tuning)),
+    tuningTotal: tuningTotal(member, accessoryPower),
     enrichments: active.filter((view) => view.enrichment).length,
     unenriched: active.filter((view) => !view.enrichment && RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY")).length,
     recombobulated: active.filter((view) => view.recombobulated).length,
@@ -135,6 +137,15 @@ export function getAccessories(
     inactive,
     missing: getMissing(owned, stored, active, contacts, items, stepOrder, market ? prices : undefined),
   };
+}
+
+// A tuning point per 10 Accessory Power (the wiki's Maxwell page), and 13 more at Tuning Box X, which every saved
+// player with it fits (an owner exception, unverified). Nothing gives levels I to IX's points, so those have no total.
+function tuningTotal(member: RawMember, accessoryPower: number) {
+  const levels = ATTRIBUTE_SHARDS.levels.LEGENDARY; // the Tuning Box's shard, Hideonbox, is Legendary
+  const box = getLevel(member.attributes?.stacks?.tuning_box ?? 0, levels, levels.length).level;
+  const fromBox = box === 0 ? 0 : box === levels.length ? 13 : undefined;
+  return fromBox === undefined ? undefined : Math.floor(accessoryPower / 10) + fromBox;
 }
 
 /** The bag's accessories that count and those that don't, and their accessory power; null with the inventory API off. */

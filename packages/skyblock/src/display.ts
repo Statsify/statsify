@@ -7,7 +7,21 @@
  */
 
 // Its own entry, with no data, so the bot's cards and the site's pages draw names and rarities alike.
-import type { DungeonClass, DungeonGrade, Faction, GameMode, JacobBracket, Powder, Rarity, Skill, SlayerBoss, Whisper } from "#types";
+import type {
+  DojoBelt,
+  DojoGrade,
+  DungeonClass,
+  DungeonGrade,
+  Faction,
+  GameMode,
+  JacobBracket,
+  Powder,
+  Rarity,
+  RiftSection,
+  Skill,
+  SlayerBoss,
+  Whisper,
+} from "#types";
 
 // The registries a page lists, from here rather than the root, whose NBT decoding would ride along into the browser.
 export {
@@ -19,9 +33,11 @@ export {
   PLAYER_STATS,
   POWDERS,
   RARITIES,
+  REPUTATION_RANKS,
   SKILLS,
   SLAYER_BOSSES,
   STAT_GROUPS,
+  TROPHY_HUNTER_RANKS,
   TROPHY_TIERS,
   WHISPERS,
 } from "#types";
@@ -80,6 +96,48 @@ export const POWDER_COLORS: Record<Powder, string> = {
 };
 
 export const FACTION_COLORS: Record<Faction, string> = { mages: "§5", barbarians: "§c" };
+
+export const DOJO_GRADE_COLORS: Record<DojoGrade, string> = { S: "§6", A: "§5", B: "§a", C: "§9", D: "§e", F: "§c" };
+
+// Black as dark gray, which reads on the cards' dark backgrounds
+export const DOJO_BELT_COLORS: Record<DojoBelt, string> = {
+  white: "§f",
+  yellow: "§e",
+  green: "§a",
+  blue: "§9",
+  brown: "§6",
+  black: "§8",
+};
+
+/** How many of each the Rift hides, which no data source has: the wiki's counts (an owner exception, unverified). */
+export const RIFT_TOTALS = { enigmaSouls: 52, timecharms: 8, catsFound: 9 } as const satisfies Partial<Record<keyof RiftSection, number>>;
+
+/**
+ * Each stacking enchant's item counter and what levels I to X need of it: the wiki's Stacking Enchantments page, and
+ * Absorb's own page for Absorb (an owner exception, unverified). Take the level from the item, whose stored level can
+ * lag its counter by one.
+ */
+export const STACKING_ENCHANTS: Record<string, { counter: string; milestones: number[] }> = {
+  absorb: {
+    counter: "absorb_logs_chopped",
+    milestones: [0, 1000, 5000, 25_000, 100_000, 250_000, 1_000_000, 2_500_000, 10_000_000, 25_000_000],
+  },
+  champion: {
+    counter: "champion_combat_xp",
+    milestones: [0, 50_000, 100_000, 250_000, 500_000, 1_000_000, 1_500_000, 2_000_000, 2_500_000, 3_000_000],
+  },
+  compact: { counter: "compact_blocks", milestones: [0, 100, 500, 1500, 5000, 15_000, 50_000, 150_000, 500_000, 1_000_000] },
+  cultivating: {
+    counter: "farmed_cultivating",
+    milestones: [0, 1000, 5000, 25_000, 100_000, 250_000, 1_000_000, 2_500_000, 10_000_000, 25_000_000],
+  },
+  expertise: { counter: "expertise_kills", milestones: [0, 50, 100, 250, 500, 1000, 2500, 5500, 10_000, 15_000] },
+  hecatomb: { counter: "hecatomb_s_runs", milestones: [0, 2, 5, 10, 20, 30, 40, 60, 80, 100] },
+  toxophilite: {
+    counter: "toxophilite_combat_xp",
+    milestones: [0, 50_000, 100_000, 250_000, 500_000, 1_000_000, 1_500_000, 2_000_000, 2_500_000, 3_000_000],
+  },
+};
 
 /** Jacob's contest brackets and medals, and the trophy fish tiers, which share four of them. */
 export const MEDAL_COLORS: Record<JacobBracket, string> = {

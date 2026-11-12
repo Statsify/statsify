@@ -100,7 +100,22 @@ function getLoadouts(member: RawMember): Loadout[] {
     .toSorted((a, b) => a.id - b.id);
 }
 
-/** What the member wears and keeps in the wardrobe, and the weapons in their inventory. */
+/** The swords, bows and wands in the inventory, the ender chest, the backpacks and the vault, in that order. */
+function getWeapons({ inventory }: RawMember): ItemView[] {
+  const blobs = [
+    inventory?.inv_contents,
+    inventory?.ender_chest_contents,
+    ...Object.entries(inventory?.backpack_contents ?? {})
+      .toSorted(([a], [b]) => Number(a) - Number(b))
+      .map(([, blob]) => blob),
+    inventory?.personal_vault_contents,
+  ];
+  return blobs
+    .flatMap((blob) => (blob ? decodeSlots(blob) : []))
+    .filter((item): item is ItemView => item !== null && isWeapon(item));
+}
+
+/** What the member wears and keeps in the wardrobe, and their weapons. */
 export function getGear(member: RawMember): GearSection | null {
   const inventory = member.inventory;
   if (!inventory?.inv_contents) return null;
@@ -115,7 +130,7 @@ export function getGear(member: RawMember): GearSection | null {
     equipment,
     ...getWardrobe(member, armor),
     ...getEquipmentSets(member, equipment),
-    weapons: decodeSlots(inventory.inv_contents).filter((item): item is ItemView => item !== null && isWeapon(item)),
+    weapons: getWeapons(member),
     loadouts: getLoadouts(member),
   };
 }
