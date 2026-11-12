@@ -76,7 +76,7 @@ export function confirmAction(
 
   listener.addHook(
     cancelButton.getCustomId(),
-    ownerOnly(async () => ({ content: (t) => t("confirm.cancelled"), embeds: [], attachments: [] }))
+    ownerOnly(async () => ({ content: (t) => t("confirm.canceled"), embeds: [], attachments: [] }))
   );
 
   return { ...prompt, components: [new ActionRowBuilder([confirmButton, cancelButton])] };
