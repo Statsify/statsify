@@ -287,10 +287,10 @@ if (import.meta.vitest) {
     const cases = [
       // Wednesday
       ["2024-11-13T12:00:00-05:00", "2024-11-08T00:00:00.000-05:00"],
-      // Thursday 23:59 and Friday 00:01
+      // Either side of the reset
       ["2024-11-14T23:59:00-05:00", "2024-11-08T00:00:00.000-05:00"],
       ["2024-11-15T00:01:00-05:00", "2024-11-15T00:00:00.000-05:00"],
-      // Monday after daylight saving time ended, reset on the Friday before it
+      // Monday after daylight saving time ended
       ["2024-11-04T12:00:00-05:00", "2024-11-01T00:00:00.000-04:00"],
     ];
 
