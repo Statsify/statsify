@@ -11,6 +11,8 @@
 
 import { Floating, useDismiss } from "~/components/ui/hint";
 import { Link, getRouteApi } from "@tanstack/react-router";
+import { READING_LEADING } from "~/features/content/text-page";
+import { cn } from "~/lib/util";
 import { glossaryWordsQuery } from "~/features/content/content-data";
 import { useEffect, useId, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -54,8 +56,9 @@ export function StatInfo({ glossary, label }: { glossary: string; label: string 
         aria-controls={id}
         aria-label={t("game.about", { stat: label })}
         onClick={(event) => setAnchor(anchor ? null : (event.currentTarget.closest(".relative") ?? event.currentTarget).getBoundingClientRect())}
-        // In the stat box's top corner, with its ring inside, as the box clips anything past its edge.
-        className="absolute -top-2 -end-1 z-10 flex size-11 items-start justify-end p-1 text-mc-1 text-mc-gray hover:text-mc-white focus-visible:focus-ring-inset"
+        // In the stat box's top corner, beside its bevel and with its ring inside, as the box clips anything past its
+        // edge.
+        className="absolute -top-2 end-1 z-10 flex size-11 items-start justify-end p-1 text-mc-1 text-mc-gray hover:text-mc-white focus-visible:focus-ring-inset"
       >
         ?
       </button>
@@ -79,7 +82,7 @@ export function StatInfo({ glossary, label }: { glossary: string; label: string 
           className="flex w-72 max-w-[calc(100vw-16px)] flex-col gap-2 p-3 text-start outline-none"
         >
           <p className="text-mc-1 font-bold text-mc-white">{name}</p>
-          {words.data?.text && <p className="font-sans text-16 font-medium text-mc-gray">{words.data.text}</p>}
+          {words.data?.text && <p className={cn("text-mc-1 text-mc-gray", READING_LEADING)}>{words.data.text}</p>}
           <Link to="/{-$locale}/glossary" hash={glossary} className="flex min-h-11 items-center text-mc-1 text-mc-yellow hover:underline">
             {t("leaderboards.glossary")}
           </Link>

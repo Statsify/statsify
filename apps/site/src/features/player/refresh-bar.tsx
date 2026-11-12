@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Button } from "~/components/ui/button";
 import { ClockScript, TIME_SLOT } from "~/lib/clock";
-import { Hint } from "~/components/ui/hint";
+import { Hint, useHint } from "~/components/ui/hint";
+import { RefreshIcon } from "~/components/icons/refresh";
 import { Turnstile } from "~/components/turnstile";
 import { cn } from "~/lib/util";
 import { formatCountdown, fullDate, relativeTime } from "~/i18n/format";
-import { type ReactNode, useEffect, useEffectEvent, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import { type ActionResult, BROWSER_TIMEOUT_MS } from "./player-actions";
 import { getRouteApi, useHydrated, useRouterState } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
@@ -61,18 +61,18 @@ export function useNow(): number | undefined {
 }
 
 /**
- * "Updated N minutes ago" and the refresh button, disabled with a countdown until `expiresAt`.
- * `refresh` runs the page's refresh action with the bar's deadline and, for a click, the visitor's Turnstile token, and
- * applies its data itself; the bar shows the outcome. A click shows the Turnstile widget first, since each refresh
- * spends the site's shared Hypixel budget; the automatic update needs no token, as the API caps those sooner.
+ * "Updated N minutes ago" and a small refresh button after it, for a player's card beside its other actions: the
+ * button names itself in a tooltip and counts down until `expiresAt`. A failure, and the Turnstile widget a click shows
+ * first, sit on a line of their own, so the bar's parent wraps (`flex-wrap`). `refresh` runs the page's refresh action
+ * with the bar's deadline and, for a click, the visitor's Turnstile token, and applies its data itself; the bar shows
+ * the outcome. Each refresh spends the site's shared Hypixel budget; the automatic update needs no token, as the API
+ * caps those sooner.
  */
 export function RefreshBar({
   updatedAt,
   expiresAt,
   refresh,
   auto = false,
-  row = false,
-  beside,
   className,
 }: {
   updatedAt: number;
@@ -84,13 +84,6 @@ export function RefreshBar({
    * the button as it was.
    */
   auto?: boolean;
-  /** One row on phones too, the time beside a smaller button: a game page, whose tables should start near the top. */
-  row?: boolean;
-  /**
-   * Controls that share the button's row, under the time: a game page's nametag on phones puts the bar there, with
-   * its Share toggle, so the tables start higher.
-   */
-  beside?: ReactNode;
   className?: string;
 }) {
   const { t, i18n } = useTranslation();
@@ -99,7 +92,6 @@ export function RefreshBar({
   const [state, setState] = useState<RefreshState>({ status: "idle" });
   const [verifying, setVerifying] = useState(false);
   const [widgetFailed, setWidgetFailed] = useState(false);
-  const bar = useRef<HTMLDivElement>(null);
   // The location once its page has rendered: during a navigation `location` is already the next page's.
   // eslint-disable-next-line no-underscore-dangle -- the history entry's key, under TanStack's name
   const view = useRouterState({ select: ({ resolvedLocation }) => resolvedLocation?.state.__TSR_key });
@@ -149,17 +141,18 @@ export function RefreshBar({
     void run(true);
   });
 
-  // After mount only, so never on the server. A game page draws a bar for each layout, and the one on screen decides
-  // (no boxes means hidden; not `checkVisibility`, which Safari has only since 17.4).
+  // After mount only, so never on the server.
   useEffect(() => {
-    if (!auto || !view || autoViews.has(view) || !bar.current?.getClientRects().length) return;
+    if (!auto || !view || autoViews.has(view)) return;
     autoViews.add(view);
+    // eslint-disable-next-line react/set-state-in-effect -- starting the update is the effect's outside work
     autoUpdate();
   }, [auto, view]);
 
   let label = t("player.refresh");
   if (state.status === "pending") label = t("player.refreshing");
   else if (remaining) label = t("player.refreshIn", { time: formatCountdown(remaining) });
+  const { props: hint, tooltip } = useHint(label);
 
   let message: string | undefined;
   if (widgetFailed) message = t("player.notFound.verifyFailed");
@@ -167,68 +160,50 @@ export function RefreshBar({
   else if (state.status === "unavailable") message = t("player.refreshFailed");
   else if (state.status === "error") message = t("player.refreshError");
 
-  // A minimum width, so the countdown's changing digits don't move the button; beside other controls it's at the end
-  // of the row, where they don't move either.
-  // `aria-disabled`, not `disabled`, so the button keeps focus while it refreshes and counts down.
-  const button = (
-    <Button
-      asChild
-      variant="primary"
-      size="small"
-      className={cn("w-full sm:w-auto sm:min-w-48", row && "w-auto min-w-36 shrink-0", beside !== undefined && "w-auto shrink-0 sm:min-w-0")}
-    >
-      <button
-        type="button"
-        data-clock="refresh"
-        aria-disabled={disabled}
-        suppressHydrationWarning
-        onClick={() => {
-          if (disabled) return;
-          if (turnstileSiteKey) setVerifying(true);
-          else void run(false);
-        }}
-      >
-        {label}
-      </button>
-    </Button>
-  );
-
-  // Phones: the time over a full-width button, unless `row`; wider screens: one row. Beside other controls, the time
-  // over them and the button.
+  // `aria-disabled`, not `disabled`, so the button keeps focus while it refreshes and counts down. Its tap area reaches
+  // past its 32 px box to 44 px.
   return (
     <>
-      <div ref={bar} className={cn("flex flex-col gap-2", className)}>
-        <div
-          className={cn(
-            "flex flex-col gap-2",
-            beside === undefined && "sm:flex-row sm:items-center sm:justify-between sm:gap-4",
-            row && "flex-row items-center justify-between gap-4"
-          )}
+      <div className={cn("flex items-center gap-2", className)}>
+        <p data-clock="updated" className={cn(META, "min-w-0")} suppressHydrationWarning>
+          {state.status === "pending" ? label : now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}
+        </p>
+        <button
+          type="button"
+          data-clock="refresh"
+          aria-label={label}
+          aria-disabled={disabled}
+          suppressHydrationWarning
+          {...hint}
+          onClick={() => {
+            if (disabled) return;
+            if (turnstileSiteKey) setVerifying(true);
+            else void run(false);
+          }}
+          className="relative flex h-8 min-w-8 shrink-0 items-center justify-center gap-1 bg-blackify-800 px-2 text-mc-1 text-mc-green after:absolute after:-inset-1.5 hover:bg-blackify-700 focus-visible:focus-ring-inset aria-disabled:text-mc-gray aria-disabled:hover:bg-blackify-800"
         >
-          <p data-clock="updated" className={cn(META, "min-w-0")} suppressHydrationWarning>
-            {now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}
-          </p>
-          {beside === undefined ? button : <div className="flex items-center justify-between gap-3">{beside}{button}</div>}
-        </div>
-        {verifying && (
-          <Turnstile
-            siteKey={turnstileSiteKey}
-            onToken={(token) => {
-              if (token) return void run(false, token);
-              // The widget failed or its token expired: the button comes back for another try.
-              setVerifying(false);
-              setState({ status: "error" });
-            }}
-            onLoadError={() => setWidgetFailed(true)}
-            className="w-full"
-          />
-        )}
-        <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>
-        <output className="sr-only">
-          {state.status === "pending" && !state.auto && t("player.refreshing")}
-          {state.status === "done" && t("player.updated", { time: relativeTime(updatedAt, updatedAt, i18n.language) })}
-        </output>
+          <RefreshIcon className="size-4 shrink-0" />
+          <span data-clock="countdown" className="empty:hidden" suppressHydrationWarning>
+            {state.status !== "pending" && remaining ? formatCountdown(remaining) : ""}
+          </span>
+        </button>
+        {tooltip}
       </div>
+      {verifying && (
+        <Turnstile
+          siteKey={turnstileSiteKey}
+          onToken={(token) => {
+            if (token) return void run(false, token);
+            // The widget failed or its token expired: the button comes back for another try.
+            setVerifying(false);
+            setState({ status: "error" });
+          }}
+          onLoadError={() => setWidgetFailed(true)}
+          // The bar sits in the profile card, narrower than the flexible widget's 300 px.
+          size="compact"
+          className="flex basis-full justify-center"
+        />
+      )}
       <ClockScript
         args={{
           updatedAt,
@@ -239,6 +214,11 @@ export function RefreshBar({
           refreshIn: t("player.refreshIn", { time: TIME_SLOT }),
         }}
       />
+      <output className="block basis-full text-mc-1 text-mc-red empty:hidden">{message}</output>
+      <output className="sr-only">
+        {state.status === "pending" && !state.auto && t("player.refreshing")}
+        {state.status === "done" && t("player.updated", { time: relativeTime(updatedAt, updatedAt, i18n.language) })}
+      </output>
     </>
   );
 }

@@ -114,7 +114,7 @@
     "page": "({{name}} page)",
     "multiplier": "Level Multiplier",
     "highestStreak": "Highest Streak",
-    "noGames": "{{name}} has no game stats yet. Press Update stats after they've played a game.",
+    "noGames": "{{name}} has no game stats yet. Press the refresh button after they've played a game.",
     "na": "N/A",
     "statusHidden": "They hide their online status in Hypixel's API settings.",
     "updated": "Updated {{time}}",
@@ -124,6 +124,15 @@
     "refreshLimited": "Too many updates right now, try again shortly.",
     "refreshFailed": "Couldn't update. Try again in a minute.",
     "refreshError": "Something went wrong. Try again in a moment.",
+    "socials": {
+      "discord": "Discord",
+      "forums": "Hypixel Forums",
+      "instagram": "Instagram",
+      "tiktok": "TikTok",
+      "twitch": "Twitch",
+      "twitter": "Twitter",
+      "youtube": "YouTube"
+    },
     "share": {
       "open": "Share",
       "title": "Share",

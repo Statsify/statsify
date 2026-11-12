@@ -26,7 +26,7 @@ export function Footer() {
   const email = t("footer.email");
 
   return (
-    <footer className="text-white flex justify-center p-8">
+    <footer className="text-white flex justify-center bg-blackify-950 p-8">
       <div className="w-container flex flex-col gap-8 md:gap-4 pb-8">
         <Divider className="opacity-10" />
         <div className="flex flex-col gap-4 md:flex-row md:justify-between items-center">

@@ -103,13 +103,12 @@ const CAPTION = "text-mc-1 text-mc-gray";
 
 const MINECRAFT_SIZES = [
   ["text-mc-1", "16"],
+  ["text-mc-snap-1.25", "20"],
   ["text-mc-1.5", "24"],
   ["text-mc-2", "32"],
   ["text-mc-3", "48"],
   ["text-mc-4", "64"],
 ] as const;
-
-const SANS_SIZES = ["text-16", "text-20", "text-24"] as const;
 
 /** The § codes, in the order `colors.minecraft` lists their colors. */
 const CODES = "0123456789abcdef";
@@ -252,14 +251,6 @@ function TypeSection() {
         ))}
         {/* Glyphs the pixel font lacks come from its Unifont slices, and anything they lack from the sans stack. */}
         <p className="text-mc-1">Fallback: Łódź, Ğ, Привет, Ελλάδα, ไทย, 你好</p>
-      </div>
-      <div className="flex flex-col gap-2">
-        {SANS_SIZES.map((size) => (
-          <p key={size} className={`font-sans ${size} font-medium`}>
-            Mona Sans {size.slice(5)} medium <span className="font-semibold">semibold</span>{" "}
-            <span className="tabular-nums">0123456789</span>
-          </p>
-        ))}
       </div>
     </Section>
   );

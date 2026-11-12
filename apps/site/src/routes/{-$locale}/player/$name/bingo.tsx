@@ -12,7 +12,6 @@ import { loadBingoPlayer } from "~/features/bingo/bingo-data";
 import { BingoLayout } from "~/features/bingo/bingo-layout";
 import { BingoPlayerNotFound } from "~/features/bingo/player-not-found";
 import { RefreshBar } from "~/features/player/refresh-bar";
-import { SANS_PRELOAD } from "~/lib/fonts";
 import { REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/player-route";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { cacheHeaders } from "~/lib/cache";
@@ -58,7 +57,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
     const locale = localeData(matches);
     // In English, from the server's `site.json`.
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
-    if (!loaderData) return { ...notFoundHead(words.t("meta.notFound.player")), links: [SANS_PRELOAD] };
+    if (!loaderData) return notFoundHead(words.t("meta.notFound.player"));
 
     const { username } = loaderData;
     const name = possessive(username);
@@ -107,10 +106,7 @@ function BingoBoards({ initial }: { initial: BingoPlayer }) {
 
   return (
     <BingoLayout name={player.username}>
-      <div className="w-full lg:w-[80%]">
-        <RefreshBar updatedAt={player.updatedAt} expiresAt={player.expiresAt} refresh={refresh} auto />
-      </div>
-      <Bingo player={player} />
+      <Bingo player={player} refresh={<RefreshBar updatedAt={player.updatedAt} expiresAt={player.expiresAt} refresh={refresh} auto />} />
     </BingoLayout>
   );
 }

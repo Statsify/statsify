@@ -129,7 +129,7 @@ export function GameView({ page }: { page: GamePage }) {
 
   return (
     <div className="relative grow">
-      <PageBackground background={backgroundFor(page.game.key)} viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background={backgroundFor(page.game.key)} />
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} game={`${page.game.name}${page.heading.mode ? ` §r(${page.heading.mode}§r)` : ""}`} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         {/* From `md` the nametag is as wide as its content (up to half the row) and the level sits beside it, the
@@ -141,9 +141,7 @@ export function GameView({ page }: { page: GamePage }) {
             ref={nametag}
             page={page}
             actions={session ? undefined : toggles}
-            refresh={session ?
-              undefined :
-              <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto beside={<div className="flex flex-wrap gap-x-4">{toggles}</div>} />}
+            refresh={session ? undefined : <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto />}
             className={cn(page.level && page.overview.length > 0 && "lg:row-span-2", !page.level && page.overview.length === 0 && "md:col-span-2 md:w-fit")}
           />
           {page.level && <LevelPanel level={page.level} username={page.username} />}
@@ -154,18 +152,7 @@ export function GameView({ page }: { page: GamePage }) {
               className={page.level ? "md:col-span-2 lg:col-span-1" : "md:self-center"}
             />
           )}
-          {session ?
-            <SessionLine start={session.start} updatedAt={page.updatedAt} className="md:col-span-2 md:mt-2" /> :
-            (
-              <RefreshBar
-                updatedAt={page.updatedAt}
-                expiresAt={page.expiresAt}
-                refresh={refresh}
-                auto
-                row
-                className="max-md:hidden md:col-span-2 md:mt-2"
-              />
-            )}
+          {session && <SessionLine start={session.start} updatedAt={page.updatedAt} className="md:col-span-2 md:mt-2" />}
         </div>
         {sharing && (
           <SharePanel
@@ -265,7 +252,7 @@ export function GameHeader({
   page: GamePage;
   /** Buttons under the title that open panels under the header. */
   actions?: ReactNode;
-  /** The refresh bar, in place of `actions` on phones (it carries them), so the tables start higher. */
+  /** The refresh bar, after `actions` in their row. */
   refresh?: ReactNode;
   className?: string;
   ref?: Ref<HTMLDivElement>;
@@ -285,8 +272,12 @@ export function GameHeader({
           <span className="sr-only"> · </span>
           <MinecraftText className="text-mc-1.5">{headingText(page, (key) => t(key))}</MinecraftText>
         </h1>
-        {actions && <div className={cn("flex flex-wrap gap-x-4", refresh !== undefined && "max-md:hidden")}>{actions}</div>}
-        {refresh !== undefined && <div className="mt-2 md:hidden">{refresh}</div>}
+        {(actions || refresh) && (
+          <div className="flex flex-wrap items-center gap-x-4">
+            {actions}
+            {refresh}
+          </div>
+        )}
       </div>
     </Box>
   );

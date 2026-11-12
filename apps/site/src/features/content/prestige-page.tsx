@@ -60,7 +60,7 @@ export function PrestigePage({ sheet }: { sheet: PrestigeSheet }) {
       contents={contents}
       background="bedwars"
     >
-      <Article short>
+      <Article>
         <Paragraph>{t("prestiges.intro", { top: n(top), exp: n(prestiges[1].exp) })}</Paragraph>
       </Article>
       {sections.map(({ id, heading, group }) => (

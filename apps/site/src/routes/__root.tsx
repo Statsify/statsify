@@ -8,7 +8,8 @@
 
 import appCss from "~/styles/app.css?url";
 import { CLOCK_SCRIPT } from "~/lib/clock";
-import { FONT_HOLD } from "~/lib/fonts";
+import { CrispTextFilters } from "~/components/ui/crisp-text";
+import { FONT_HOLD, PIXEL_RATIO_SCRIPT } from "~/lib/fonts";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext, useRouterState } from "@tanstack/react-router";
 import { LOGO_ICON } from "~/lib/tab-icon";
 import { SEARCH_SCRIPT } from "~/components/search";
@@ -33,12 +34,11 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       tabIcon(matches),
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      // Mona Sans is preloaded only by the routes that use it (`~/lib/fonts`); every page has Minecraft headings.
       { rel: "preload", href: "/fonts/Minecraft.ttf", as: "font", type: "font/ttf", crossOrigin: "anonymous" },
       { rel: "preload", href: "/fonts/Minecraft Bold.ttf", as: "font", type: "font/ttf", crossOrigin: "anonymous" },
     ],
     styles: [{ children: FONT_HOLD.style }],
-    scripts: [{ children: FONT_HOLD.script }, { children: CLOCK_SCRIPT }, { children: SEARCH_SCRIPT }, { children: SKIN_FADE_SCRIPT }],
+    scripts: [{ children: FONT_HOLD.script }, { children: PIXEL_RATIO_SCRIPT }, { children: CLOCK_SCRIPT }, { children: SEARCH_SCRIPT }, { children: SKIN_FADE_SCRIPT }],
   }),
   shellComponent: RootDocument,
   component: Outlet,
@@ -59,12 +59,13 @@ function RootDocument({ children }: { children: ReactNode }) {
   const lang = useRouterState({ select: (state) => localeFromPath(state.location.pathname) });
 
   return (
-    // `/player`'s head script sets `--recent` on the root before React hydrates it.
+    // Head scripts set `--dpr`, and on `/player` `--recent`, on the root before React hydrates it.
     <html lang={lang} suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
-      <body className="antialiased leading-[normal] min-h-screen flex flex-col bg-blackify-950 font-medium">
+      <body className="antialiased leading-[normal] min-h-screen flex flex-col bg-blackify-950">
+        <CrispTextFilters />
         {children}
         <Scripts />
       </body>
