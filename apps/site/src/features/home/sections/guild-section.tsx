@@ -30,6 +30,22 @@ export function GuildSection({ guild }: { guild: GuildPreview }) {
       background="guilds"
       className="flex-col items-center relative overflow-hidden"
     >
+      <div className="flex flex-col gap-4 max-w-120 xl:max-w-200 text-mc-white">
+        <h2 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow">
+          Guilds
+        </h2>
+        <p className="text-mc-1.5 lg:text-mc-2 leading-[1.35] max-w-[60ch]">
+          Manage and keep track of your guild easier with Statsify. You can view
+          all of the guild information needed within the{" "}
+          <Command command="/guild" /> command. Want to see your guild top GEXP
+          but too lazy to log on? No problem! Just run{" "}
+          <Command command="/guild top" /> and view your top grinders. Use{" "}
+          <Command command="/guild member" /> to view your player information
+          inside your guild. And many more commands like{" "}
+          <Command command="/guild leaderboard" /> and{" "}
+          <Command command="/guild overall" />.
+        </p>
+      </div>
       <div className="hidden md:block">
         <Carousel className="backdrop-blur-2xl bg-black/40">
           <GuildOverall guild={guild} />
@@ -41,23 +57,6 @@ export function GuildSection({ guild }: { guild: GuildPreview }) {
       <div className="block md:hidden">
         <GuildOverall guild={guild} className="shadow-none" />
       </div>
-      <div className="mx-4 lg:mx-0 flex flex-col gap-4 max-w-120 xl:max-w-200 text-mc-white text-center lg:text-start">
-        <h1 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow text-center">
-          Guilds
-        </h1>
-        <p className="text-mc-1.75 lg:text-mc-2 leading-6 text-center">
-          Manage and keep track of your guild easier with Statsify. You can view
-          all of the guild information needed within the{" "}
-          <Command command="/guild" /> command. Want to see your guild top GEXP
-          but lazy to log on? No problem! Just run{" "}
-          <Command command="/guild top" /> and view your top grinders. Use{" "}
-          <Command command="/guild member" /> to view your player information
-          inside your guild. And many more commands like{" "}
-          <Command command="/guild leaderboard" /> and{" "}
-          <Command command="/guild overall" />.
-        </p>
-      </div>
-      <div className="h-20 w-full" />
     </BaseSection>
   );
 }

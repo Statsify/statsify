@@ -24,7 +24,7 @@ export function Error({ children, className }: { className?: string; children: R
         className="absolute w-full h-full -z-10"
         style={{ background: "linear-gradient(transparent 20%, var(--color-blackify-950) 95%)" }}
       />
-      <div className={cn("w-container h-full min-h-150 flex flex-col items-center justify-center z-10", className)}>
+      <div className={cn("w-container h-full min-h-150 flex flex-col items-center justify-center gap-6 px-4 py-8 text-center z-10", className)}>
         {children}
       </div>
     </div>

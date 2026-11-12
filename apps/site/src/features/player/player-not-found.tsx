@@ -10,10 +10,9 @@ import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
 import { Error } from "~/components/ui/error";
 import { PLACEHOLDER_UUID } from "~/lib/uuid";
-import { Search } from "~/components/search";
 import { Skin } from "~/components/ui/skin";
 import { Turnstile } from "~/components/turnstile";
-import { cn } from "~/lib/util";
+import { formatCountdown } from "~/i18n/format";
 import { getRouteApi, useNavigate, useParams } from "@tanstack/react-router";
 import { lookupPlayer } from "./player-actions";
 import { useEffect, useState } from "react";
@@ -21,23 +20,28 @@ import { useTranslation } from "react-i18next";
 
 const localeRoute = getRouteApi("/{-$locale}");
 
-/** The player-not-found page with the Turnstile-gated "Look up on Hypixel" action. */
+/**
+ * The player-not-found page with the Turnstile-gated "Look up on Hypixel" action. The header already has
+ * the search, so the page has none of its own. On phones the skin is 160 px, so the button lands
+ * mid-screen, and the copy is 16 px, so it stays within two lines.
+ */
 export function PlayerNotFound() {
   const { name = "" } = useParams({ strict: false });
   const { t } = useTranslation();
 
   return (
-    <Error className="gap-8 flex-col-reverse px-8 md:flex-col">
-      <Search key={name} className="w-full max-w-200" defaultValue={name} />
-      <div className="flex flex-col items-center justify-center gap-4 text-center">
-        <Box>
-          <span className="text-mc-dark-red">[</span>
-          <span className="text-mc-red">???</span>
-          <span className="text-mc-dark-red">]</span> {name}
-        </Box>
-        <Skin uuid={PLACEHOLDER_UUID} className="h-64" />
-        <h1 className="text-mc-4 lg:text-mc-7 text-mc-red font-bold">{t("player.notFound.title")}</h1>
-        <p className="max-w-200 text-20 lg:text-24 font-medium text-mc-gray">{t("player.notFound.description", { name })}</p>
+    <Error>
+      <div className="flex w-full max-w-160 flex-col items-center gap-4 self-center">
+        <div className="flex max-w-full flex-col items-center gap-4">
+          <Skin uuid={PLACEHOLDER_UUID} className="h-40 sm:h-64" />
+          <Box className="max-w-full content:truncate">
+            <span className="text-mc-dark-red">[</span>
+            <span className="text-mc-red">???</span>
+            <span className="text-mc-dark-red">]</span> {name}
+          </Box>
+        </div>
+        <h1 className="text-mc-3 lg:text-mc-4 text-mc-red font-bold">{t("player.notFound.title")}</h1>
+        <p className="text-mc-1 sm:text-mc-1.5 text-mc-gray text-center">{t("player.notFound.description", { name })}</p>
         {name && <LookupButton name={name} />}
       </div>
     </Error>
@@ -117,17 +121,17 @@ function LookupButton({ name }: { name: string }) {
   else if (state.status === "unavailable") message = t("player.notFound.unavailable");
   else if (state.status === "verification") message = t("player.notFound.verify");
   else if (state.status === "error") message = t("player.notFound.error");
-  else if (state.status === "limited" && remaining > 0) message = t("player.notFound.limited", { seconds: remaining });
+  else if (state.status === "limited" && remaining > 0) message = t("player.notFound.limited", { time: formatCountdown(remaining) });
 
   return (
-    <div className="flex w-full max-w-100 flex-col items-center gap-3">
+    <div className="flex w-full max-w-100 flex-col items-center gap-3 self-center">
       {turnstileSiteKey && <Turnstile key={widgetKey} siteKey={turnstileSiteKey} onToken={setToken} className="w-full" />}
-      <Button asChild className={cn("w-full", disabled && "opacity-60")}>
+      <Button asChild variant="primary" className="w-full">
         <button type="button" disabled={disabled} onClick={() => void lookup()}>
           {state.status === "pending" ? t("player.notFound.lookingUp") : t("player.notFound.lookup")}
         </button>
       </Button>
-      {message && <p className="text-16 font-medium text-mc-red">{message}</p>}
+      <output className="block text-mc-1 text-mc-red text-center empty:hidden">{message}</output>
     </div>
   );
 }

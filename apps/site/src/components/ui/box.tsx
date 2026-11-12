@@ -8,7 +8,7 @@
 
 import { cn } from "~/lib/util";
 import { panel } from "@statsify/tokens";
-import type { ComponentProps, ElementType, JSX, ReactNode } from "react";
+import type { CSSProperties, ComponentProps, ElementType, JSX, ReactNode } from "react";
 
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 
@@ -60,13 +60,10 @@ export function toBorderRadius(borderRadius: BoxBorderRadius): {
   };
 }
 
-// The card look from `@statsify/tokens`: the renderer's overlay gradient on the panel color and a
-// shadow at the card's opacity. The tinted variants keep their radial gradients.
+// The card look from `@statsify/tokens`: the panel color, the renderer's overlay gradient and a shadow at the
+// card's opacity, which the `box` utility (app.css) draws from tokens.css. The tinted variants keep their radial
+// gradients and have no overlay.
 const boxVariants = {
-  default: {
-    background: `linear-gradient(180deg, ${panel.overlay.from} 0%, ${panel.overlay.to} 100%), ${panel.background}`,
-    shadow: `rgb(0 0 0 / ${panel.shadowOpacity})`,
-  },
   red: {
     background: `radial-gradient(circle at 50% -10%, rgb(0 0 0 / 0.06) 40%, hsl(0 100% 30% / 0.5) 110%), ${panel.background}`,
     shadow: `rgb(10 0 0 / ${panel.shadowOpacity})`,
@@ -84,7 +81,7 @@ const boxVariants = {
 type BoxOnlyProps = {
   borderRadius?: BoxBorderRadius;
   shadow?: number;
-  variant?: keyof typeof boxVariants;
+  variant?: "default" | keyof typeof boxVariants;
   /** A panel header rendered above the content, like the title boxes on the bot's cards. */
   title?: ReactNode;
 };
@@ -95,6 +92,13 @@ export type BoxProps<T extends keyof JSX.IntrinsicElements = "div"> = BoxOnlyPro
 >;
 
 const DEFAULT_BORDER_RADIUS_PROP: BoxBorderRadius = {};
+
+const CORNER_VARS = {
+  topLeft: "--box-tl",
+  topRight: "--box-tr",
+  bottomLeft: "--box-bl",
+  bottomRight: "--box-br",
+} as const;
 
 export function Box<T extends keyof JSX.IntrinsicElements = "div">({
   borderRadius: partialBorderRadius = DEFAULT_BORDER_RADIUS_PROP,
@@ -110,77 +114,34 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
   const borderRadius = toBorderRadius(partialBorderRadius);
   const Component: ElementType = as ?? "div";
 
-  const shadowPath = polygon(
-    ...(borderRadius.bottomRight === 0 ?
-      [] :
-      ([
-        `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-        `calc(100% - ${shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-        `calc(100% - ${shadow}px) calc(100% - ${shadow}px)`,
-        `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${shadow}px)`,
-        `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-      ] as const)),
-
-    `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)`,
-    `${borderRadius.bottomLeft}px 100%`,
-    `calc(100% - ${borderRadius.bottomRight || shadow}px) 100%`,
-    `calc(100% - ${borderRadius.bottomRight || shadow}px) calc(100% - ${shadow}px)`,
-    `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)`,
-
-    borderRadius.bottomRight !== 0 &&
-    `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-
-    `calc(100% - ${shadow}px) ${borderRadius.topRight}px`,
-    `100% ${borderRadius.topRight}px`,
-    `100% calc(100% - ${borderRadius.bottomRight}px)`,
-    `calc(100% - ${shadow}px) calc(100% - ${borderRadius.bottomRight}px)`,
-    `calc(100% - ${shadow}px) ${borderRadius.topRight}px`,
-
-    borderRadius.bottomRight === 0 ?
-      `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)` :
-      `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`
-  );
-
-  const contentPath = polygon(
-    `${borderRadius.topLeft}px 0`,
-    `calc(100% - ${borderRadius.topRight}px) 0`,
-    `calc(100% - ${borderRadius.topRight}px) ${borderRadius.topRight}px`,
-    `100% ${borderRadius.topRight}px`,
-    `100% calc(100% - ${borderRadius.bottomRight}px)`,
-    `calc(100% - ${borderRadius.bottomRight}px) calc(100% - ${borderRadius.bottomRight}px)`,
-    `calc(100% - ${borderRadius.bottomRight}px) 100%`,
-    `${borderRadius.bottomLeft}px 100%`,
-    `${borderRadius.bottomLeft}px calc(100% - ${borderRadius.bottomLeft}px)`,
-    `0 calc(100% - ${borderRadius.bottomLeft}px)`,
-    `0px ${borderRadius.topLeft}px`,
-    `${borderRadius.topLeft}px ${borderRadius.topLeft}px`
-  );
+  // The `box` utility (app.css) draws the default card: its bevels, shadow and colors. A Box's style carries only
+  // what differs from it, so most carry none.
+  const vars: Record<string, string> = {};
+  if (variant !== "default") {
+    vars["--box-fill"] = boxVariants[variant].background;
+    vars["--box-shadow"] = boxVariants[variant].shadow;
+  }
+  for (const [corner, name] of Object.entries(CORNER_VARS)) {
+    const radius = borderRadius[corner as keyof typeof CORNER_VARS];
+    if (radius !== DEFAULT_BORDER_RADIUS) vars[name] = `${radius}px`;
+  }
+  if (shadow !== panel.shadow) vars["--box-s"] = `${shadow}px`;
 
   return (
     <Component
       className={cn(
-        "relative text-mc-white me-1 mb-1 content:p-4 content:text-mc-2 content:h-full content:animate-loading-gradient",
+        "box relative text-mc-white me-1 mb-1 content:p-4 content:text-mc-2 content:h-full content:animate-loading-gradient",
         className
       )}
+      data-square-corner={borderRadius.bottomRight === 0 || undefined}
+      style={vars as CSSProperties}
       {...(props as object)}
     >
-      <div
-        className="absolute w-full h-full"
-        style={{
-          backgroundColor: boxVariants[variant].shadow,
-          transform: `translate(${shadow}px, ${shadow}px)`,
-          clipPath: shadowPath,
-        }}
-      />
-      <div
-        data-slot="content"
-        style={{
-          ...style,
-          background: boxVariants[variant].background,
-          backgroundBlendMode: "overlay, normal",
-          clipPath: contentPath,
-        }}
-      >
+      {/* The card lays its gradient over everything beneath the panel with `overlay` compositing (`Box.ts`
+          renderOverlay), so the background brightens at the top and darkens at the bottom. A blend mode beside the
+          content does the same (the fill's `::after`); inside the clipped content it could only see the panel color. */}
+      <div data-slot="fill" data-overlay={variant === "default" || undefined} />
+      <div data-slot="content" className="relative" style={style}>
         {title !== undefined && (
           <div data-slot="title" className="-mx-4 -mt-4 mb-3 border-b-2 border-black/30 bg-black/20 px-4 py-2 text-center">
             {title}
@@ -190,8 +151,4 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
       </div>
     </Component>
   );
-}
-
-export function polygon(...points: (`${string} ${string}` | false)[]) {
-  return `polygon(${points.filter(Boolean).join(", ")})`;
 }

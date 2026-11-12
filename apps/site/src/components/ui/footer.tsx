@@ -17,6 +17,8 @@ import { Twitter } from "~/components/icons/twitter";
 import { YouTube } from "~/components/icons/youtube";
 import { useTranslation } from "react-i18next";
 
+const LINK = "flex min-h-11 items-center hover:text-mc-white hover:underline";
+
 export function Footer() {
   const { t, i18n } = useTranslation();
   const year = new Intl.DateTimeFormat(i18n.language, { year: "numeric" }).format(new Date());
@@ -48,17 +50,18 @@ export function Footer() {
             </IconContainer>
           </div>
         </div>
-        <div className="flex flex-col gap-4 md:flex-row md:justify-between text-mc-1.5 text-mc-white items-center text-center">
-          <div className="flex flex-col gap-1 opacity-60 text-balance">
-            <p>{t("footer.copyright", { year })}</p>
+        <div className="flex flex-col gap-4 md:flex-row md:justify-between text-mc-1.5 text-mc-gray items-center text-center md:text-start">
+          <div className="flex flex-col gap-1 text-balance">
+            {/* The year comes from the clock, which can differ between the server and the browser on New Year. */}
+            <p suppressHydrationWarning>{t("footer.copyright", { year })}</p>
             <p>{t("footer.affiliation")}</p>
             <p>{t("footer.mojang")}</p>
             <p>{t("footer.operator")}</p>
           </div>
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 **:opacity-60 **:hover:opacity-100 **:hover:underline **:transition-opacity">
-            <a href="/privacy">{t("footer.privacy")}</a>
-            <a href="/terms">{t("footer.terms")}</a>
-            <a href={`mailto:${email}`}>{email}</a>
+          <div className="flex flex-wrap justify-center gap-x-4">
+            <a href="/privacy" className={LINK}>{t("footer.privacy")}</a>
+            <a href="/terms" className={LINK}>{t("footer.terms")}</a>
+            <a href={`mailto:${email}`} className={LINK}>{email}</a>
           </div>
         </div>
       </div>
@@ -69,10 +72,12 @@ export function Footer() {
 // Vanity paths are answered by the server with a 301, so they are plain anchors, not router links.
 function IconContainer({ children, label, href }: { children: ReactNode; label: string; href: string }) {
   return (
-    <a href={href} aria-label={label} className="group">
-      <div className="bg-black/50 flex items-center justify-center p-0.5 group-hover:-translate-y-[4px] transition-all shadow-[4px_4px_0_rgb(0_0_0_/_0.2)]">
-        {children}
-      </div>
+    <a
+      href={href}
+      aria-label={label}
+      className="flex size-11 items-center justify-center bg-black/50 shadow-[4px_4px_0_rgb(0_0_0_/_0.2)] transition-colors hover:bg-black/80"
+    >
+      {children}
     </a>
   );
 }

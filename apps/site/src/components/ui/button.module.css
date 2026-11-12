@@ -10,15 +10,17 @@
   initial-value: 2;
 }
 
-.button {
+/* The bevel and shadow size; the small button (44 px tall) uses the panels' 4 px. */
+.root {
   --border: 8px;
-  --duration: 0.2s;
+}
 
-  --top-scale: 1.5;
-  --bottom-scale: 2;
+.small {
+  --border: 4px;
+}
 
-  padding: calc(2 * var(--border)) calc(3 * var(--border));
-  
+.button,
+.shadow {
   clip-path: polygon(
     var(--border) 0,
     calc(100% - var(--border)) 0,
@@ -33,11 +35,26 @@
     0px var(--border),
     var(--border) var(--border)
   );
-  
+}
+
+/* The 8 px hard shadow of the bevelled shape. */
+.shadow {
+  background-color: rgb(0 0 0 / 0.5);
+  transform: translate(var(--border), var(--border));
+}
+
+.button {
+  --duration: 0.2s;
+
+  --top-scale: 1.5;
+  --bottom-scale: 2;
+
+  padding: calc(2 * var(--border)) calc(3 * var(--border));
+
   transition: --top-scale var(--duration) ease-in-out, 
               --bottom-scale var(--duration) ease-in-out;
 
-  &:hover {
+  &:hover:not(:disabled, [aria-disabled="true"]) {
     --top-scale: 2;
     --bottom-scale: 1.5;
 
@@ -46,13 +63,32 @@
     }
   }
 
-  &:active {
+  &:active:not(:disabled, [aria-disabled="true"]) {
     --top-scale: 1.5;
     --bottom-scale: 1.5;
 
     .buttonOverlay {
       background-color: rgb(0 0 0 / 0.20);
     }
+  }
+
+  /* Disabled stays sunk, with a §7 label on §8 whatever the fill, so a countdown stays readable. Unlayered, so it
+     wins over the fill utilities. */
+  &:disabled,
+  &[aria-disabled="true"] {
+    --top-scale: 1.5;
+    --bottom-scale: 1.5;
+
+    background-color: var(--color-mc-dark-gray);
+    color: var(--color-mc-gray);
+    cursor: default;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .buttonOverlay {
+    transition: none;
   }
 }
 

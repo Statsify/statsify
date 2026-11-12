@@ -9,18 +9,31 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { Logo, Wordmark } from "~/components/icons/logo";
 import { Search } from "~/components/search";
+import { cn } from "~/lib/util";
 import { isSupportedLocale } from "~/i18n/locales";
 import { useTranslation } from "react-i18next";
 
-// Vanity paths are answered by the server with a 301, so they are plain anchors, not router links.
-const NAV = [
+const PAGES = [
+  { key: "players", to: "/{-$locale}/player" },
+  { key: "leaderboards", to: "/{-$locale}/leaderboards" },
+  { key: "bingo", to: "/{-$locale}/bingo" },
+] as const;
+
+// Vanity paths are answered by the server with a 301 to another site, so they are plain anchors rather than router
+// links, and they open in a new tab.
+const LINKS = [
   { key: "premium", href: "/premium" },
   { key: "discord", href: "/discord" },
   { key: "bot", href: "/invite" },
 ] as const;
 
-/** Inner pages carry a compact search in the header; the search pages have their own. */
-const SEARCH_PAGES = /^\/player\/[^/]+$|^\/leaderboards(?:\/|$)/;
+const NAV_LINK = "flex min-h-11 min-w-11 items-center justify-center opacity-80 transition-opacity hover:opacity-100 hover:underline";
+
+/**
+ * Every page carries a compact search in the header except those with a search of their own: Players, and Bingo with
+ * a player's board, whose search opens another board.
+ */
+const OWN_SEARCH = /^\/player\/?$|^\/bingo\/?$|^\/player\/[^/]+\/bingo\/?$/;
 
 function pathWithoutLocale(pathname: string) {
   const [, first = "", ...rest] = pathname.split("/");
@@ -30,25 +43,38 @@ function pathWithoutLocale(pathname: string) {
 export function Header() {
   const { t } = useTranslation();
   const pathname = useLocation({ select: (location) => location.pathname });
-  const showSearch = SEARCH_PAGES.test(pathWithoutLocale(pathname));
+  const showSearch = !OWN_SEARCH.test(pathWithoutLocale(pathname));
 
   return (
     <header className="text-mc-white flex justify-center px-4 py-4 md:px-8">
-      <div className="w-container flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
-        <Link to="/{-$locale}" aria-label="Statsify" className="flex items-center gap-3">
+      <div className="w-container flex flex-wrap items-center gap-x-4 gap-y-2 lg:gap-x-8">
+        <Link to="/{-$locale}" aria-label="Statsify" className="flex min-h-11 min-w-11 items-center gap-3">
           <Logo className="size-8 shrink-0" />
-          <Wordmark className="hidden text-mc-1.5 sm:block" />
+          <Wordmark className="hidden text-mc-1.5 sm:block md:hidden xl:block" />
         </Link>
-        {showSearch && (
-          // On phones the search drops below the logo row.
-          <Search compact className="order-last basis-full md:order-none md:basis-auto md:w-80 lg:w-96" />
-        )}
-        <nav aria-label={t("nav.label")}>
+        {/* Below md the pages get a row of their own under the logo; from md they sit beside it. */}
+        <nav aria-label={t("nav.label")} className="order-last basis-full md:order-none md:basis-auto">
           <ul className="flex items-center gap-4 text-mc-1.5 sm:gap-6">
-            {NAV.map(({ key, href }) => (
+            {PAGES.map(({ key, to }) => (
               <li key={key}>
-                <a href={href} className="opacity-80 transition-opacity hover:opacity-100 hover:underline">
+                <Link to={to} className={cn(NAV_LINK, "data-[status=active]:font-bold data-[status=active]:underline data-[status=active]:opacity-100")}>
                   {t(`nav.${key}`)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        {showSearch && (
+          // Below lg the search has the last row to itself.
+          <Search compact className="order-last basis-full lg:order-none lg:max-w-96 lg:min-w-0 lg:flex-1" />
+        )}
+        <nav aria-label={t("nav.external")} className="ms-auto">
+          <ul className="flex items-center gap-4 text-mc-1.5 sm:gap-6">
+            {LINKS.map(({ key, href }) => (
+              <li key={key}>
+                <a href={href} target="_blank" rel="noreferrer" className={NAV_LINK}>
+                  {t(`nav.${key}`)}
+                  <span className="sr-only"> {t("nav.newTab")}</span>
                 </a>
               </li>
             ))}

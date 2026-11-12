@@ -8,8 +8,7 @@
 
 import { Background } from "~/components/ui/background";
 import { FindPlayer, LeaderboardTable, PageNav } from "~/features/leaderboards/leaderboard-table";
-import { LeaderboardSkeleton } from "~/features/leaderboards/leaderboard-skeleton";
-import { SANS_PRELOAD } from "~/lib/fonts";
+import { NotFound } from "~/components/not-found";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
 import { loadLeaderboardPage } from "~/features/leaderboards/leaderboard-data";
@@ -51,11 +50,11 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
           { name: "description", content: `The top Hypixel players by ${loaderData.page.name} on Statsify.` },
           ...(loaderData.noindex ? [{ name: "robots", content: "noindex" }] : []),
         ],
-        links: [SANS_PRELOAD],
       } :
       { meta: [{ title: "Leaderboard Not Found | Statsify" }] },
   headers: () => cacheHeaders("max-age=60, stale-while-revalidate=600"),
-  pendingComponent: LeaderboardSkeleton,
+  // Its own boundary, so an unknown field 404s inside the layout rather than replacing it.
+  notFoundComponent: NotFound,
   component: LeaderboardPage,
 });
 

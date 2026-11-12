@@ -8,10 +8,12 @@
 
 import * as motion from "motion/react-client";
 import { AnimatedNumber } from "~/components/animations/number";
+import { Box } from "~/components/ui/box";
 import { Logo } from "~/components/icons/logo";
-import { ReactNode, useEffect, useState } from "react";
-import { SpotlightBox } from "~/components/ui/spotlight-box";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { cn } from "~/lib/util";
+import { useInView, useReducedMotion } from "motion/react";
+import { useTranslation } from "react-i18next";
 
 /**
  * A box a mouse can tug, which springs back. Only a fine pointer drags it: dragging sets `touch-action: none`, so on a
@@ -31,16 +33,14 @@ function Draggable({ children, className }: { children: ReactNode; className?: s
   );
 }
 
-function SpotlightTableData({ title, value, className = "" }: { title: string; value: number; className?: string }) {
+function StatBox({ title, value, className = "" }: { title: string; value: number; className?: string }) {
   return (
-    <SpotlightBox
-      className={`content:p-4 content:flex content:flex-col content:items-center content:gap-2 ${className}`}
-    >
-      <p className="text-mc-1.75 md:text-mc-2 mx-3">{title}</p>
+    <Box className={`content:px-8 content:py-6 content:flex content:flex-col content:items-center content:gap-2 ${className}`}>
+      <p className="text-mc-1.5 md:text-mc-2 mx-3">{title}</p>
       <p className="text-mc-3 md:text-mc-4 mx-5">
         <AnimatedNumber value={value} />
       </p>
-    </SpotlightBox>
+    </Box>
   );
 }
 
@@ -50,28 +50,37 @@ export function InteractiveLogo() {
 
   const [wins, setWins] = useState(3259);
   const [losses, setLosses] = useState(1637);
+  const reduceMotion = useReducedMotion();
+  const { t } = useTranslation();
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref);
 
+  // With reduced motion the numbers hold still, and they wait while the logo is off-screen or the tab is hidden.
   useEffect(() => {
+    if (reduceMotion !== false || !inView) return;
+
     const interval = setInterval(() => {
+      if (document.hidden) return;
       setWins(Math.floor(Math.random() * (MAX - MIN)) + MIN);
       setLosses(Math.floor(Math.random() * (MAX - MIN)) + MIN);
     }, 2500);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [reduceMotion, inView]);
 
   const wlr = wins / losses;
 
   return (
-    <div className="relative scale-79 lg:scale-90 xl:scale-95 transition-transform">
+    // The end margin keeps the Losses box, which hangs off the logo's right edge, inside the page.
+    <div ref={ref} className="relative scale-79 max-[359px]:scale-65 lg:scale-90 xl:scale-95 lg:me-28 2xl:me-16">
       <Draggable className="translate-x-[-30px] translate-y-[5px] lg:translate-y-[-20px] -z-5">
-        <SpotlightTableData title="Wins" value={wins} className="text-mc-green" />
+        <StatBox title={t("default:stats.wins")} value={wins} className="text-mc-green" />
       </Draggable>
-      <Draggable className="translate-x-[230px] translate-y-[150px] lg:translate-x-[320px] lg:translate-y-[190px] 2xl:translate-x-[270px] 2xl:translate-y-[240px]">
-        <SpotlightTableData title="Losses" value={losses} className="text-mc-red" />
+      <Draggable className="translate-x-[190px] sm:translate-x-[230px] translate-y-[150px] lg:translate-x-[320px] lg:translate-y-[190px] 2xl:translate-x-[270px] 2xl:translate-y-[240px]">
+        <StatBox title={t("default:stats.losses")} value={losses} className="text-mc-red" />
       </Draggable>
-      <Draggable className="translate-y-[230px] translate-x-[-60px] lg:translate-y-[320px]">
-        <SpotlightTableData title="WLR" value={wlr} className="text-mc-gold" />
+      <Draggable className="translate-y-[230px] translate-x-[-30px] sm:translate-x-[-60px] lg:translate-y-[320px]">
+        <StatBox title="WLR" value={wlr} className="text-mc-gold" />
       </Draggable>
       <Logo className="size-80 lg:size-100" />
     </div>

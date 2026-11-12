@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AnimatePresence, type Variants, motion } from "motion/react";
+import { AnimatePresence, type Variants, motion, useInView, useReducedMotion } from "motion/react";
 import { Box } from "./box";
 import { Chevron } from "~/components/icons/chevron";
-import { Children, ReactNode, useEffect, useState } from "react";
+import { Children, ReactNode, useEffect, useRef, useState } from "react";
 import { cn } from "~/lib/util";
+import { useTranslation } from "react-i18next";
 
 const variants: Variants = {
   enter: (direction: number) => ({
@@ -62,20 +63,41 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
     setPage(([page]) => [page + newDirection, newDirection]);
   }
 
+  const { t } = useTranslation();
+  const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+
+  // With reduced motion there's no autoplay: the first card waits for the arrows. Otherwise it holds while
+  // the carousel is off-screen, in a hidden tab, or under the pointer or focus, so a card can be read.
   useEffect(() => {
-    const interval = setInterval(() => paginate(1), 7500);
+    if (reduceMotion !== false || !inView || hovered || focused) return;
+    const interval = setInterval(() => {
+      if (!document.hidden) paginate(1);
+    }, 7500);
     return () => clearInterval(interval);
-  }, []);
+  }, [reduceMotion, inView, hovered, focused]);
 
   return (
-    <div className="flex flex-col gap-10">
+    <div
+      ref={ref}
+      className="flex flex-col gap-10"
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={() => setHovered(false)}
+      onFocus={() => setFocused(true)}
+      onBlur={(event) => setFocused(event.currentTarget.contains(event.relatedTarget))}
+    >
       <div className="flex items-center text-white gap-4 lg:gap-8">
-        {/* TODO: investigate why clicking the very edges of the button doesn't work */}
-        <Box className="hidden lg:block has-[button:active]:scale-[0.8] transition-transform z-10 content:backdrop-blur-2xl content:relative">
-          <Chevron className="rotate-180" />
-          <button aria-label="Previous Card" type="button" className="absolute inset-0" onClick={() => paginate(-1)} />
-        </Box>
-        <div className={cn("relative flex overflow-visible", "cursor-pointer")}>
+        {/* The button wraps the panel: a button inside it would lose the bevelled corners to the panel's clip, and
+            one that shrinks on press would lose a click that ends past its new edge. */}
+        <button aria-label={t("carousel.previous")} type="button" className="group z-10 hidden lg:block" onClick={() => paginate(-1)}>
+          <Box className="group-active:scale-[0.8] transition-transform content:backdrop-blur-2xl">
+            <Chevron className="rotate-180" />
+          </Box>
+        </button>
+        <div className="relative flex overflow-visible cursor-grab active:cursor-grabbing">
           <div className="grid grid-areas-stack">{cards.map((card, index) => <div key={index} className="grid-area-stack invisible">{card}</div>)}</div>
           <div className="absolute w-full h-full">
             <AnimatePresence initial={false} custom={direction}>
@@ -106,22 +128,25 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
             </AnimatePresence>
           </div>
         </div>
-        <Box className="hidden lg:block has-[button:active]:scale-[0.8] transition-transform content:backdrop-blur-2xl content:relative">
-          <button aria-label="Next Card" type="button" className="z-10 absolute inset-0" onClick={() => paginate(1)} />
-          <Chevron />
-        </Box>
+        <button aria-label={t("carousel.next")} type="button" className="group z-10 hidden lg:block" onClick={() => paginate(1)}>
+          <Box className="group-active:scale-[0.8] transition-transform content:backdrop-blur-2xl">
+            <Chevron />
+          </Box>
+        </button>
       </div>
-      <div className="flex items-center justify-center gap-6">
+      {/* 44 px targets around 16 px squares. Plain buttons, not tabs: there are no panels to own. */}
+      <div className="flex items-center justify-center gap-1">
         {cards.map((_, index) => (
           <button
-            role="tab"
             type="button"
-            aria-label={`Go to card ${index + 1}`}
-            aria-selected={cardIndex === index}
+            aria-label={t("carousel.goTo", { n: index + 1 })}
+            aria-current={cardIndex === index}
             key={index}
             onClick={() => setPage([index, index > cardIndex ? 1 : -1])}
-            className="bg-black/40 w-4 h-4 aria-selected:bg-black/70 aria-selected:scale-[1.5] transition-all"
-          />
+            className="group flex size-11 items-center justify-center"
+          >
+            <span className="size-4 bg-black/40 transition-colors group-aria-[current=true]:size-6 group-aria-[current=true]:bg-black/70" />
+          </button>
         ))}
       </div>
     </div>
