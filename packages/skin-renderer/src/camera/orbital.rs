@@ -125,11 +125,6 @@ impl OrbitalCamera {
   }
 
   #[cfg(target_arch = "wasm32")]
-  pub fn set_theta(&mut self, theta: f32) {
-    self.update_theta(theta);
-  }
-
-  #[cfg(target_arch = "wasm32")]
   pub fn set_size(&mut self, width: f32, height: f32) {
     self.width = width;
     self.height = height;
@@ -139,7 +134,7 @@ impl OrbitalCamera {
     self.radius = radius.clamp(self.min_radius, self.max_radius);
   }
 
-  fn update_theta(&mut self, theta: f32) {
+  pub(crate) fn update_theta(&mut self, theta: f32) {
     self.theta = theta.clamp(self.min_polar_angle, self.max_polar_angle);
   }
 

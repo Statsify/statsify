@@ -412,8 +412,7 @@ impl SkinRenderer<wasm::WasmBackend> {
     Self::create(backend).await
   }
 
-  // Browsers drop the canvas's frames on tab switches and resizes. A lost or outdated
-  // surface is set up again and the frame skipped, as is one that timed out.
+  // Browsers drop the canvas's frames on tab switches and resizes.
   pub fn render(&self, model: &Model) {
     let surface = &self.backend.surface;
 
@@ -437,8 +436,6 @@ impl SkinRenderer<wasm::WasmBackend> {
       .handle_encoder_after_render(encoder, output_texture)
   }
 
-  // A viewer turns the model, so the camera fits it at every yaw rather than zooming as
-  // it turns. Fitted again when the canvas resizes, since the fit depends on its shape.
   pub fn frame(&mut self, model: &Model) {
     let Camera::Orbital(camera) = &mut self.camera;
     camera.set_size(self.config.width as f32, self.config.height as f32);
@@ -449,7 +446,7 @@ impl SkinRenderer<wasm::WasmBackend> {
 
   pub fn set_yaw(&mut self, yaw: f32) {
     let Camera::Orbital(camera) = &mut self.camera;
-    camera.set_theta(yaw);
+    camera.update_theta(yaw);
   }
 
   pub fn window(&self) -> &Window {

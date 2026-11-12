@@ -202,7 +202,7 @@ impl JsModel {
   }
 }
 
-// Shaped like the native renderer's options, which armour and its glint can join later.
+// Shaped like the native renderer's options.
 // The package's wasm.d.ts repeats the public API for typechecks that run before a build.
 #[wasm_bindgen(typescript_custom_section)]
 const RENDER_OPTIONS: &str = r#"
