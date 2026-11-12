@@ -230,9 +230,11 @@ export async function buildPriceMap(
   const entries: Record<string, PriceEntry> = {};
   for (const [key, bin] of bins) entries[key] = { coins: binPrice(bin), source: "bin", listings: bin.listings };
 
-  // quick_status averages the top orders, so one order can't move it.
+  // quick_status averages the top orders, so one order can't move it. A sell price under the NPC's isn't what the item
+  // is worth, since the NPC always pays that.
   for (const product of Object.values(bazaar.products)) {
-    if (product.sellPrice > 0) entries[product.id] = { coins: product.sellPrice, source: "bazaar", buy: product.buyPrice };
+    const npc = items.items[product.id]?.npcPrice ?? 0;
+    if (product.sellPrice > 0) entries[product.id] = { coins: Math.max(product.sellPrice, npc), source: "bazaar", buy: product.buyPrice };
   }
 
   // Many NPC-sold items (arrows, starter tools, low talismans) are never listed as BIN, and the NPC always pays this.
@@ -345,6 +347,7 @@ if (import.meta.vitest) {
     products: {
       ENCHANTED_DIAMOND: { id: "ENCHANTED_DIAMOND", sellPrice: 1700, ...quickStatus },
       UNSOLD: { id: "UNSOLD", sellPrice: 0, ...quickStatus },
+      LOW_BID: { id: "LOW_BID", sellPrice: 10, ...quickStatus },
     },
   };
 
@@ -355,11 +358,12 @@ if (import.meta.vitest) {
       ARROW: { name: "Arrow", material: "ARROW", npcPrice: 2 },
       ENCHANTED_DIAMOND: { name: "Enchanted Diamond", material: "DIAMOND", npcPrice: 1280 },
       HYPERION: { name: "Hyperion", material: "IRON_SWORD", npcPrice: 100 },
+      LOW_BID: { name: "Low Bid", material: "STONE", npcPrice: 50 },
     },
     museum: {},
   };
 
-  test("buildPriceMap keeps the lowest BIN per unit behind the outlier guard, the bazaar wins, and NPC prices fill in", async () => {
+  test("buildPriceMap keeps the lowest BIN per unit behind the outlier guard, the bazaar wins over the NPC price, and NPC prices fill in", async () => {
     const { map, seen } = await buildPriceMap(Readable.from(pages), bazaar, items);
 
     expect(map).toMatchObject({ asOf: 1000, auctionsUpdated: 1000, bazaarUpdated: 990 });
@@ -370,6 +374,7 @@ if (import.meta.vitest) {
       KAT_BOUQUET: { coins: 100_000, source: "bin", listings: 1 },
       GOBLIN_CHESTPLATE: { coins: 2_000_000, source: "bin", listings: 1 },
       ENCHANTED_DIAMOND: { coins: 1700, source: "bazaar", buy: 2000 },
+      LOW_BID: { coins: 50, source: "bazaar", buy: 2000 },
       ARROW: { coins: 2, source: "npc" },
     });
     expect([...seen.values()].filter((listing) => listing === null)).toHaveLength(1);
