@@ -2,6 +2,7 @@ use std::io::{BufWriter, Cursor};
 
 use futures_intrusive::channel;
 use image::{ImageBuffer, Rgba};
+use napi::bindgen_prelude::spawn_blocking;
 
 use super::backend::{Backend, OutputTexture};
 use super::SkinRender;
@@ -127,9 +128,11 @@ impl Backend for NativeBackend {
     let (sender, receiver) = channel::shared::oneshot_channel();
     buffer_slice.map_async(wgpu::MapMode::Read, move |v| sender.send(v).unwrap());
 
-    self
-      .device
-      .poll(wgpu::PollType::WaitForSubmissionIndex(index))?;
+    // Waiting on the GPU blocks the thread, so it runs off napi's async workers
+    let device = self.device.clone();
+    spawn_blocking(move || device.poll(wgpu::PollType::WaitForSubmissionIndex(index)))
+      .await
+      .map_err(|_| Error::RenderFailure)??;
 
     if let Some(Ok(())) = receiver.receive().await {
       let padded_buffer = buffer_slice.get_mapped_range();
