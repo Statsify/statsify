@@ -17,6 +17,7 @@ import { EVENT_TYPES, GENERAL_MODES } from "@statsify/schemas";
 import { EventsProfile } from "./events.profile.js";
 import { arrayGroup } from "@statsify/util";
 import { getBackground, getLogo } from "@statsify/assets";
+import { getProfileCustomId } from "#commands/base.hypixel-command";
 import { getTheme } from "#themes";
 import { mapBackground } from "#constants";
 import { render } from "@statsify/rendering";
@@ -29,7 +30,7 @@ export class EventsCommand {
     const user = context.getUser();
     const t = context.t();
 
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    const player = await this.apiService.getPlayer(context.option("player"), user, context.getCacheLevel());
 
     const [logo, skin, badge] = await Promise.all([
       getLogo(user),
@@ -57,7 +58,11 @@ export class EventsCommand {
           />,
           getTheme(user)
         );
-      })
+      }),
+      undefined,
+      undefined,
+      false,
+      getProfileCustomId(context, player.uuid)
     );
   }
 }
