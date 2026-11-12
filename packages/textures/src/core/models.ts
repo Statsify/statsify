@@ -60,6 +60,7 @@ export interface SpecialModel {
   type: string;
   kind?: string;
   texture?: string;
+  color?: string;
   transformation?: Transformation;
 }
 
@@ -79,6 +80,7 @@ type ItemModel =
       component?: string;
       on_true: ItemModel;
       on_false: ItemModel;
+      transformation?: Transformation;
     }
   | {
       type: "minecraft:select";
@@ -202,7 +204,7 @@ export class ModelResolver {
     return pack?.layout === "legacy" && pack.files.has(legacyPath) ? legacy : selected;
   }
 
-  private layers(model: ItemModel, item: ItemStack): ItemLayer[] {
+  private layers(model: ItemModel, item: ItemStack, transformation?: Transformation): ItemLayer[] {
     switch (model.type) {
       case "minecraft:model":
         return [{ model: this.model(this.itemModel(item, model.model)), tints: model.tints ?? [] }];
@@ -210,8 +212,13 @@ export class ModelResolver {
       case "minecraft:composite":
         return model.models.flatMap((child) => this.layers(child, item));
 
+      // Shields keep their special models' transformation on the condition around them
       case "minecraft:condition":
-        return this.layers(condition(model, item) ? model.on_true : model.on_false, item);
+        return this.layers(
+          condition(model, item) ? model.on_true : model.on_false,
+          item,
+          model.transformation ?? transformation,
+        );
 
       case "minecraft:select": {
         const value = select(model);
@@ -239,7 +246,7 @@ export class ModelResolver {
           {
             model: this.model(model.base),
             tints: [],
-            special: { ...model.model, transformation: model.transformation },
+            special: { ...model.model, transformation: model.transformation ?? transformation },
           },
         ];
 

@@ -49,6 +49,53 @@ const EFFECT_COLORS: Record<string, number | undefined> = {
   "minecraft:saturation": 0xf8_24_23,
 };
 
+/** In the order of 1.8 wool's Damage values */
+export const DYES = [
+  "white",
+  "orange",
+  "magenta",
+  "light_blue",
+  "yellow",
+  "lime",
+  "pink",
+  "gray",
+  "light_gray",
+  "cyan",
+  "purple",
+  "blue",
+  "brown",
+  "green",
+  "red",
+  "black",
+] as const;
+
+export type DyeColor = (typeof DYES)[number];
+
+const DYE_COLORS: Record<string, number | undefined> = {
+  white: 0xf9_ff_fe,
+  orange: 0xf9_80_1d,
+  magenta: 0xc7_4e_bd,
+  light_blue: 0x3a_b3_da,
+  yellow: 0xfe_d8_3d,
+  lime: 0x80_c7_1f,
+  pink: 0xf3_8b_aa,
+  gray: 0x47_4f_52,
+  light_gray: 0x9d_9d_97,
+  cyan: 0x16_9c_9c,
+  purple: 0x89_32_b8,
+  blue: 0x3c_44_aa,
+  brown: 0x83_54_32,
+  green: 0x5e_7c_16,
+  red: 0xb0_2e_26,
+  black: 0x1d_1d_21,
+};
+
+export function dyeColor(dye: string) {
+  const color = DYE_COLORS[dye];
+  if (color === undefined) throw new Error(`No color for the dye ${dye}`);
+  return color;
+}
+
 const rgb = (color: TintColor) =>
   typeof color === "number"
     ? color & 0xff_ff_ff

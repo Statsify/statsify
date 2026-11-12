@@ -121,6 +121,7 @@ const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
   "blocks/waterlily": "block/lily_pad",
   "blocks/web": "block/cobweb",
   "blocks/wool_colored_silver": "block/light_gray_wool",
+  "entity/banner_base": "entity/banner/banner_base",
   "entity/steve": "entity/player/wide/steve",
   "items/boat": "item/oak_boat",
   "items/fireworks": "item/firework_rocket",
