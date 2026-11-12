@@ -59,6 +59,8 @@ pub struct SkinRenderer<T: Backend> {
   attachment_pipeline: wgpu::RenderPipeline,
   enchanted_pipeline: wgpu::RenderPipeline,
 
+  // Native renders draw into their size's RenderTarget instead
+  #[cfg(target_arch = "wasm32")]
   depth_texture: Texture,
 
   // Renders run at the same time, so each takes its own camera and light uniforms
@@ -142,6 +144,7 @@ impl<T: Backend> SkinRenderer<T> {
       "fs_enchanted",
     );
 
+    #[cfg(target_arch = "wasm32")]
     let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
 
     Ok(Self {
@@ -167,6 +170,7 @@ impl<T: Backend> SkinRenderer<T> {
       attachment_pipeline,
       enchanted_pipeline,
 
+      #[cfg(target_arch = "wasm32")]
       depth_texture,
 
       #[cfg(not(target_arch = "wasm32"))]
