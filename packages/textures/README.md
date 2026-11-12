@@ -75,4 +75,3 @@ import { skiaCanvas } from "@statsify/textures/node";
 
 setCanvasBackend(skiaCanvas);
 ```
-

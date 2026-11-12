@@ -25,6 +25,9 @@
 "@statsify/discord":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/discord"
 
+"@statsify/hypixel-data":
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/hypixel-data"
+
 "@statsify/rendering":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/rendering"
 
