@@ -4,3 +4,10 @@ resolver = "2"
 
 [profile.release]
 lto = true
+
+# The site downloads the wasm renderer, so it's built for size (about a fifth smaller)
+[profile.wasm-release]
+inherits = "release"
+opt-level = "z"
+lto = "fat"
+codegen-units = 1
