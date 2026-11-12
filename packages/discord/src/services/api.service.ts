@@ -41,14 +41,19 @@ export class ApiService extends StatsifyApiService {
    *
    * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
    * @param user User to use if no tag is provided.
+   * @param cache Defaults to live stats for Gold users and recently cached stats for everyone else
    * @returns a Player
    */
-  public async getPlayer(tag: string, user: User | null = null) {
+  public async getPlayer(
+    tag: string,
+    user: User | null = null,
+    cache = User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE
+  ) {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super
-      .getCachedPlayer(input, User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE)
+      .getCachedPlayer(input, cache)
       .catch((err) => {
         if (!err.response || !err.response.data) throw this.unknownError();
         const error = err.response.data as PlayerNotFoundException;

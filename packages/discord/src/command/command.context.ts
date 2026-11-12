@@ -33,6 +33,11 @@ export class CommandContext {
     return this.user;
   }
 
+  /** The name of the command or subcommand being run, without its parents */
+  public getCommandName(): string {
+    return this.data.name;
+  }
+
   public setUser(user: User | null) {
     this.user = user;
     if (user?.locale) this.interaction.setLocale(user?.locale);

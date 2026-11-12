@@ -17,6 +17,7 @@ import {
   Interaction,
 } from "@statsify/discord";
 import { Container } from "typedi";
+import { PROFILE_ROUTE, profileRoute } from "#commands/base.hypixel-command";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
@@ -49,6 +50,8 @@ export class CommandListener extends AbstractCommandListener {
 
     this.apiService = Container.get(ApiService);
     this.cooldowns = new Map();
+
+    this.addRoute(PROFILE_ROUTE, profileRoute(this));
   }
 
   protected async onCommand(interaction: Interaction): Promise<void> {
