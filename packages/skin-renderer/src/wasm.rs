@@ -27,11 +27,12 @@ thread_local! {
 
 fn send(message: JsMessage) {
   JS_MESSAGE_QUEUE.with_borrow_mut(|queue| queue.push(message));
-  wake();
+  // winit runs the loop inside the wake, so it waits for the caller's script: wgpu panics on
+  // a canvas the script registers and then removes
+  spawn_local(async { wake() });
 }
 
-// The event loop sleeps until an event, so a message or a new renderer wakes it. Before it
-// runs there's nothing to wake, and its first turn takes what's queued.
+// The event loop sleeps until an event. Messages from before it runs wait for its first turn.
 fn wake() {
   EVENT_LOOP.with(|proxy| {
     if let Some(proxy) = proxy.get() {
