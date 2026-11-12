@@ -18,7 +18,7 @@
     "build:debug": "pnpm build:napi:debug && pnpm build:wasm:debug",
     "build:napi": "napi build --platform --release && mv index.js index.cjs",
     "build:napi:debug": "napi build --platform && mv index.js index.cjs",
-    "build:wasm": "wasm-pack build --target web --profile wasm-release",
+    "build:wasm": "CARGO_PROFILE_RELEASE_OPT_LEVEL=z CARGO_PROFILE_RELEASE_LTO=fat CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1 wasm-pack build --target web --release",
     "build:wasm:debug": "wasm-pack build --target web --dev",
     "lint": "cargo fmt && cargo clippy --fix --allow-dirty",
     "lint:ci": "cargo fmt && cargo clippy --fix --allow-dirty"
