@@ -16,7 +16,7 @@ import {
   formatProgression,
 } from "../components/index.js";
 import { FormattedGame, type GameMode, SkyWarsModes } from "@statsify/schemas";
-import { SKYWARS, cardColours } from "@statsify/catalog";
+import { SKYWARS, cardColors } from "@statsify/catalog";
 import { formatTime, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "../types.js";
 
@@ -37,15 +37,15 @@ export const SkyWarsProfile = ({
 }: SkyWarsProfileProps) => {
   const { skywars } = player.stats;
   const stats = skywars[mode.api];
-  const colour = cardColours(SKYWARS, mode.api);
+  const color = cardColors(SKYWARS, mode.api);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(skywars.coins), colour("coins")],
-    [t("stats.tokens"), t(skywars.tokens), colour("tokens")],
-    [t("stats.souls"), t(skywars.souls), colour("souls")],
-    [t("stats.opals"), t(skywars.opals), colour("opals")],
-    [t("stats.heads"), t(skywars.heads), colour("heads")],
-    [t("stats.potionsBrewed"), t(skywars.potionsBrewed), colour("potionsBrewed")],
+    [t("stats.coins"), t(skywars.coins), color("coins")],
+    [t("stats.tokens"), t(skywars.tokens), color("tokens")],
+    [t("stats.souls"), t(skywars.souls), color("souls")],
+    [t("stats.opals"), t(skywars.opals), color("opals")],
+    [t("stats.heads"), t(skywars.heads), color("heads")],
+    [t("stats.potionsBrewed"), t(skywars.potionsBrewed), color("potionsBrewed")],
   ];
 
   return (
@@ -69,23 +69,23 @@ export const SkyWarsProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-          <Table.td title={t("stats.losses")} value={t(stats.losses)} color={colour("losses")} />
-          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={colour("wlr")} />
+          <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+          <Table.td title={t("stats.losses")} value={t(stats.losses)} color={color("losses")} />
+          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={color("wlr")} />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
-          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
-          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
+          <Table.td title={t("stats.kills")} value={t(stats.kills)} color={color("kills")} />
+          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={color("deaths")} />
+          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={color("kdr")} />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("stats.assists")} value={t(stats.assists)} color={colour("assists")} />
+          <Table.td title={t("stats.assists")} value={t(stats.assists)} color={color("assists")} />
           <Table.td
             title={t("stats.playtime")}
             value={formatTime(stats.playtime)}
-            color={colour("playtime")}
+            color={color("playtime")}
           />
-          <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color={colour("kit")} />
+          <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color={color("kit")} />
         </Table.tr>
         <Historical.progression
           time={time}

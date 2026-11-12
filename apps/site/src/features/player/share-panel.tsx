@@ -161,7 +161,7 @@ function useShareableCard(src: string, file: string) {
 }
 
 /**
- * A labelled text to copy: the text in a read-only field and a Copy button that says "Copied!" for a moment. Here
+ * A labeled text to copy: the text in a read-only field and a Copy button that says "Copied!" for a moment. Here
  * rather than in the signature panel, which game pages (and so every page's first load) would then carry.
  */
 export function Snippet({ label, text }: { label: string; text: string }) {

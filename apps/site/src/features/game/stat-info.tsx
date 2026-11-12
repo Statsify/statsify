@@ -7,7 +7,7 @@
  */
 
 /* eslint-disable jsx-a11y/prefer-tag-over-role -- a non-modal box floating in a portal; a `<dialog>` element would bring
-   the browser's own position, margins and colours to undo. */
+   the browser's own position, margins and colors to undo. */
 
 import { Floating, useDismiss } from "~/components/ui/hint";
 import { Link, getRouteApi } from "@tanstack/react-router";

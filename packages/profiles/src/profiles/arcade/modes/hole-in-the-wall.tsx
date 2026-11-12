@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColours } from "@statsify/catalog";
+import { ARCADE, cardColors } from "@statsify/catalog";
 import { Historical, Table } from "../../../components/index.js";
 import { HoleInTheWall } from "@statsify/schemas";
 import type { LocalizeFunction, ProfileTime } from "../../../types.js";
 
-const colour = cardColours(ARCADE, "holeInTheWall");
+const color = cardColors(ARCADE, "holeInTheWall");
 
 interface HoleInTheWallTableProps {
   stats: HoleInTheWall;
@@ -22,20 +22,20 @@ interface HoleInTheWallTableProps {
 export const HoleInTheWallTable = ({ stats, t, time }: HoleInTheWallTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-      <Table.td title={t("stats.wallsFaced")} value={t(stats.wallsFaced)} color={colour("wallsFaced")} />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+      <Table.td title={t("stats.wallsFaced")} value={t(stats.wallsFaced)} color={color("wallsFaced")} />
     </Table.tr>
     <Historical.exclude time={time}>
       <Table.tr>
         <Table.td
           title={t("stats.highestScoreQualifications")}
           value={t(stats.highestScoreQualifications)}
-          color={colour("highestScoreQualifications")}
+          color={color("highestScoreQualifications")}
         />
         <Table.td
           title={t("stats.highestScoreFinals")}
           value={t(stats.highestScoreFinals)}
-          color={colour("highestScoreFinals")}
+          color={color("highestScoreFinals")}
         />
       </Table.tr>
     </Historical.exclude>

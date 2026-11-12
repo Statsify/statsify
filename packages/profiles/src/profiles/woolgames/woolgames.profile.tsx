@@ -22,7 +22,7 @@ import {
   WoolGamesModes,
 } from "@statsify/schemas";
 import { SheepWarsTable } from "./sheepwars.table.js";
-import { WOOL_GAMES, cardColours } from "@statsify/catalog";
+import { WOOL_GAMES, cardColors } from "@statsify/catalog";
 import { WoolWarsTable } from "./woolwars.table.js";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "../../types.js";
@@ -43,12 +43,12 @@ export const WoolGamesProfile = ({
   time,
 }: WoolGamesProfileProps) => {
   const { woolgames } = player.stats;
-  const colour = cardColours(WOOL_GAMES);
+  const color = cardColors(WOOL_GAMES);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.wool"), t(woolgames.coins), colour("coins")],
-    [t("stats.layers"), `${t(woolgames.layers)}§8/§a${t(100)}`, colour("layers")],
-    [t("stats.playtime"), formatTime(woolgames.playtime), colour("playtime")],
+    [t("stats.wool"), t(woolgames.coins), color("coins")],
+    [t("stats.layers"), `${t(woolgames.layers)}§8/§a${t(100)}`, color("layers")],
+    [t("stats.playtime"), formatTime(woolgames.playtime), color("playtime")],
   ];
 
   let table;
@@ -59,9 +59,9 @@ export const WoolGamesProfile = ({
 
       table = <WoolWarsTable woolwars={woolgames[mode.api]} submode={mode.submode} t={t} />;
       sidebar.push(
-        [t("stats.woolPlaced"), t(stats.woolPlaced), colour("woolwars.overall.woolPlaced")],
-        [t("stats.blocksBroken"), t(stats.blocksBroken), colour("woolwars.overall.blocksBroken")],
-        [t("stats.powerups"), t(stats.powerups), colour("woolwars.overall.powerups")]
+        [t("stats.woolPlaced"), t(stats.woolPlaced), color("woolwars.overall.woolPlaced")],
+        [t("stats.blocksBroken"), t(stats.blocksBroken), color("woolwars.overall.blocksBroken")],
+        [t("stats.powerups"), t(stats.powerups), color("woolwars.overall.powerups")]
       );
       break;
     }
@@ -69,17 +69,17 @@ export const WoolGamesProfile = ({
     case "captureTheWool":
       table = <CaptureTheWoolTable captureTheWool={woolgames[mode.api]} t={t} time={time} />;
       sidebar.push(
-        [t("stats.goldEarned"), t(woolgames.captureTheWool.goldEarned), colour("captureTheWool.goldEarned")],
-        [t("stats.goldSpent"), t(woolgames.captureTheWool.goldSpent), colour("captureTheWool.goldSpent")]
+        [t("stats.goldEarned"), t(woolgames.captureTheWool.goldEarned), color("captureTheWool.goldEarned")],
+        [t("stats.goldSpent"), t(woolgames.captureTheWool.goldSpent), color("captureTheWool.goldSpent")]
       );
       break;
 
     case "sheepwars":
       table = <SheepWarsTable sheepwars={woolgames[mode.api]} t={t} />;
       sidebar.push(
-        [t("stats.magicWool"), t(woolgames.sheepwars.magicWool), colour("sheepwars.magicWool")],
-        [t("stats.sheepThrown"), t(woolgames.sheepwars.sheepThrown), colour("sheepwars.sheepThrown")],
-        [t("stats.sheepKilled"), t(woolgames.sheepwars.sheepKilled), colour("sheepwars.sheepKilled")]
+        [t("stats.magicWool"), t(woolgames.sheepwars.magicWool), color("sheepwars.magicWool")],
+        [t("stats.sheepThrown"), t(woolgames.sheepwars.sheepThrown), color("sheepwars.sheepThrown")],
+        [t("stats.sheepKilled"), t(woolgames.sheepwars.sheepKilled), color("sheepwars.sheepKilled")]
       );
       break;
   }

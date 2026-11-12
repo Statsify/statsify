@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ColourCode, GAMES, type Game, cardColours, catalogPaths, statAt } from "@statsify/catalog";
+import { type ColorCode, GAMES, type Game, cardColors, catalogPaths, statAt } from "@statsify/catalog";
 import { EVENT_TYPES, FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
 import type { GamePage, GameSummary, PlayerPage, StatRow, StatSection } from "@statsify/contract";
 import { findScore, formatTime } from "@statsify/util";
@@ -53,10 +53,10 @@ type Value = (stats: PlayerStats) => number | string | undefined;
 
 /**
  * A panel row: a catalog stat by its key, stored below the summary's `at` unless the row says where (`""` for a game
- * stat), in the catalog's colour and unit and linked to its leaderboard, under `stats.<label>` (its key by default).
+ * stat), in the catalog's color and unit and linked to its leaderboard, under `stats.<label>` (its key by default).
  * `value` is the panel's own text for it (a time, Layers out of 100), nothing leaving the row out; `hidden` says when
  * the player hides it from Hypixel's API (winstreaks), which the row then says instead of linking. `name` is a
- * formatted title shown in place of the label, and `colour` replaces the catalog's (Parkour's Main Lobby).
+ * formatted title shown in place of the label, and `color` replaces the catalog's (Parkour's Main Lobby).
  */
 type RowSpec =
   | string
@@ -65,17 +65,17 @@ type RowSpec =
     at?: string;
     label?: string;
     name?: string;
-    colour?: ColourCode;
+    color?: ColorCode;
     value?: Value;
     hidden?: (stats: PlayerStats) => boolean;
     /** As a game page cell's `session`. */
     session?: false;
   };
 
-/** A row the panel works out from other stats, in its own colour, with no leaderboard. */
+/** A row the panel works out from other stats, in its own color, with no leaderboard. */
 interface ComputedRow {
   label: string;
-  colour: ColourCode;
+  color: ColorCode;
   compute: Value;
 }
 
@@ -172,12 +172,12 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "PARKOUR",
     session: false,
-    // Best Time pink, as Duels Parkour's and Arcade's best times; Main Lobby under its game's name, in its first colour.
+    // Best Time pink, as Duels Parkour's and Arcade's best times; Main Lobby under its game's name, in its first color.
     rows: [
-      { label: "coursesCompleted", colour: "§a", compute: (s) => courseTimes(s).length },
-      { label: "bestTime", colour: "§d", compute: (s) => time(courseTimes(s).toSorted((a, b) => a - b)[0]) },
-      { key: "MAIN_LOBBY", label: "mainLobby", name: FormattedGame.MAIN_LOBBY, colour: "§3", value: (s) => time(s.parkour.MAIN_LOBBY) },
-      { label: "combinedTime", colour: "§e", compute: (s) => time(courseTimes(s).reduce((sum, ms) => sum + ms, 0)) },
+      { label: "coursesCompleted", color: "§a", compute: (s) => courseTimes(s).length },
+      { label: "bestTime", color: "§d", compute: (s) => time(courseTimes(s).toSorted((a, b) => a - b)[0]) },
+      { key: "MAIN_LOBBY", label: "mainLobby", name: FormattedGame.MAIN_LOBBY, color: "§3", value: (s) => time(s.parkour.MAIN_LOBBY) },
+      { label: "combinedTime", color: "§e", compute: (s) => time(courseTimes(s).reduce((sum, ms) => sum + ms, 0)) },
     ],
   },
   {
@@ -260,7 +260,7 @@ function catalogGame(id: GameId): Game {
 function panelRow(stats: PlayerStats, game: Game, at: string, row: RowSpec | ComputedRow, session: boolean): StatRow | undefined {
   if (isComputed(row)) {
     const value = row.compute(stats);
-    return value === undefined ? undefined : { key: row.label, value, colour: row.colour, leaderboard: null };
+    return value === undefined ? undefined : { key: row.label, value, color: row.color, leaderboard: null };
   }
 
   const spec: Exclude<RowSpec, string> = typeof row === "string" ? { key: row } : row;
@@ -277,7 +277,7 @@ function panelRow(stats: PlayerStats, game: Game, at: string, row: RowSpec | Com
     value,
     ...(hidden && { hidden }),
     ...(stat.suffix && !hidden && { suffix: stat.suffix }),
-    colour: spec.colour ?? cardColours(game, ...(place ? [place] : []))(spec.key),
+    color: spec.color ?? cardColors(game, ...(place ? [place] : []))(spec.key),
     leaderboard: stat.leaderboard && !hidden && !session ? stat.path : null,
   };
 }
@@ -325,14 +325,14 @@ export function sessionOverview({ stats: { general, quests, challenges } }: Play
     title: null,
     rows: [
       [
-        { key: "networkLevel", label: "stats.levelsGained", value: general.networkLevel, colour: "§b", leaderboard: null },
-        { key: "achievementPoints", label: "stats.achievementPoints", value: general.achievementPoints, colour: "§6", leaderboard: null },
-        { key: "eventExp", label: "stats.event-exp", value: general.events[EVENT_TYPES[0].key].exp, colour: "§b", leaderboard: null },
+        { key: "networkLevel", label: "stats.levelsGained", value: general.networkLevel, color: "§b", leaderboard: null },
+        { key: "achievementPoints", label: "stats.achievementPoints", value: general.achievementPoints, color: "§6", leaderboard: null },
+        { key: "eventExp", label: "stats.event-exp", value: general.events[EVENT_TYPES[0].key].exp, color: "§b", leaderboard: null },
       ],
       [
-        { key: "quests", label: "stats.quests", value: quests.total, colour: "§e", leaderboard: null },
-        { key: "challenges", label: "stats.challenges", value: challenges.total, colour: "§a", leaderboard: null },
-        { key: "karma", label: "stats.karma", value: general.karma, colour: "§d", leaderboard: null },
+        { key: "quests", label: "stats.quests", value: quests.total, color: "§e", leaderboard: null },
+        { key: "challenges", label: "stats.challenges", value: challenges.total, color: "§a", leaderboard: null },
+        { key: "karma", label: "stats.karma", value: general.karma, color: "§d", leaderboard: null },
       ],
     ],
   };

@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColours } from "@statsify/catalog";
+import { ARCADE, cardColors } from "@statsify/catalog";
 import { BountyHunters } from "@statsify/schemas";
 import type { LocalizeFunction } from "../../../types.js";
 import { Table } from "../../../components/index.js";
 
-const colour = cardColours(ARCADE, "bountyHunters");
+const color = cardColors(ARCADE, "bountyHunters");
 
 interface BountyHuntersTableProps {
   stats: BountyHunters;
@@ -21,13 +21,13 @@ interface BountyHuntersTableProps {
 export const BountyHuntersTable = ({ stats, t }: BountyHuntersTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-      <Table.td title={t("stats.bountyKills")} value={t(stats.bountyKills)} color={colour("bountyKills")} />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+      <Table.td title={t("stats.bountyKills")} value={t(stats.bountyKills)} color={color("bountyKills")} />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
-      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
-      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color={color("kills")} />
+      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={color("deaths")} />
+      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={color("kdr")} />
     </Table.tr>
   </Table.table>
 );

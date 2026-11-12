@@ -11,23 +11,23 @@ import { VAMPIREZ_MODES, type VampireZModes } from "@statsify/schemas";
 
 /** A life's table, the same for both, but its kills are the other side's, so their label follows the life. */
 const life = (kills: string): Record<string, StatEntry> => ({
-  wins: { colour: "§e" },
-  kills: { colour: "§a", label: kills },
-  deaths: { colour: "§c" },
-  kdr: { colour: "§6" },
+  wins: { color: "§e" },
+  kills: { color: "§a", label: kills },
+  deaths: { color: "§c" },
+  kdr: { color: "§6" },
 });
 
-/** The colours and labels of the bot's VampireZ card (`vampirez.profile.tsx`): its sidebar and table. */
+/** The colors and labels of the bot's VampireZ card (`vampirez.profile.tsx`): its sidebar and table. */
 export const VAMPIREZ: Game<VampireZModes> = {
   key: "vampirez",
   id: "VAMPIREZ",
   modes: VAMPIREZ_MODES,
   game: {
-    coins: { colour: "§6" },
-    tokens: { colour: "§e" },
-    overallWins: { colour: "§a" },
-    zombieKills: { colour: "§2" },
-    mostVampireKills: { colour: "§c" },
+    coins: { color: "§6" },
+    tokens: { color: "§e" },
+    overallWins: { color: "§a" },
+    zombieKills: { color: "§2" },
+    mostVampireKills: { color: "§c" },
   },
   shapes: [
     { modes: ["human"], stats: life("stats.vampires-killed") },
