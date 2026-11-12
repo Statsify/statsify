@@ -6,7 +6,25 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DateTime } from "luxon";
+import {
+  addDays,
+  addHours,
+  addMinutes,
+  addMonths,
+  addSeconds,
+  addYears,
+  differenceInCalendarDays,
+  differenceInCalendarMonths,
+  differenceInCalendarYears,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInSeconds,
+  format,
+  getDate,
+  getISODay,
+  sub,
+  subDays,
+} from "date-fns";
 import { ElementNode } from "@statsify/rendering";
 import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
 import { prettify } from "@statsify/util";
@@ -15,20 +33,45 @@ interface HistoricalHeaderProps {
   skin: JSX.Element;
   nameTag: JSX.Element;
   time: HistoricalTimeData;
-  startTime?: DateTime;
-  endTime?: DateTime;
+  startTime?: Date;
+  endTime?: Date;
   title: string;
   sidebar?: ElementNode;
 }
 
 export interface HistoricalTimeData {
   timeType: HistoricalType;
-  startTime?: DateTime;
-  endTime?: DateTime;
-  sessionReset?: DateTime;
+  startTime?: Date;
+  endTime?: Date;
+  sessionReset?: Date;
 }
 
 const DATE_FORMAT = "MM/dd/yyyy";
+
+const RELATIVE_TIME_UNITS = [
+  ["year", differenceInCalendarYears, addYears],
+  ["month", differenceInCalendarMonths, addMonths],
+  ["day", differenceInCalendarDays, addDays],
+  ["hour", differenceInHours, addHours],
+  ["minute", differenceInMinutes, addMinutes],
+  ["second", differenceInSeconds, addSeconds],
+] as const;
+
+// A unit counts once adding it to the earlier date doesn't pass the later one, so Nov 29 to Feb 28
+// is "3 months ago" where differenceInMonths gives 2
+const formatRelative = (date: Date) => {
+  const now = new Date();
+  const [earlier, later, sign] = date < now ? [date, now, -1] : [now, date, 1];
+  const formatter = new Intl.RelativeTimeFormat();
+
+  for (const [unit, difference, add] of RELATIVE_TIME_UNITS) {
+    let count = difference(later, earlier);
+    if (add(earlier, count) > later) count--;
+    if (count > 0) return formatter.format(sign * count, unit);
+  }
+
+  return formatter.format(sign * 0, "second");
+};
 
 export const HistoricalHeader = ({
   skin,
@@ -37,34 +80,36 @@ export const HistoricalHeader = ({
   sidebar,
   time: { timeType, startTime, endTime, sessionReset },
 }: HistoricalHeaderProps) => {
-  const now = DateTime.now();
-  let start: DateTime = now;
-  let end: DateTime = now;
+  const now = new Date();
+  const weekday = getISODay(now);
+  const day = getDate(now);
+  let start = now;
+  let end = now;
 
   switch (timeType) {
     case HistoricalTimes.DAILY:
-      start = now.minus({ days: 1 });
+      start = subDays(now, 1);
       end = now;
       break;
     case HistoricalTimes.WEEKLY:
-      start = now.minus({ days: now.weekday });
+      start = subDays(now, weekday);
       end = now;
       break;
     case HistoricalTimes.MONTHLY:
-      start = now.minus({ days: now.day - 1 });
+      start = subDays(now, day - 1);
       end = now;
       break;
     case HistoricalTimes.LAST_DAY:
-      start = now.minus({ days: 2 });
-      end = now.minus({ days: 1 });
+      start = subDays(now, 2);
+      end = subDays(now, 1);
       break;
     case HistoricalTimes.LAST_WEEK:
-      start = now.minus({ week: 1, days: now.weekday });
-      end = now.minus({ days: now.weekday });
+      start = sub(now, { weeks: 1, days: weekday });
+      end = subDays(now, weekday);
       break;
     case HistoricalTimes.LAST_MONTH:
-      start = now.minus({ months: 1, days: now.day - 2 });
-      end = now.minus({ days: now.day });
+      start = sub(now, { months: 1, days: day - 2 });
+      end = subDays(now, day);
       break;
   }
 
@@ -79,10 +124,8 @@ export const HistoricalHeader = ({
         <box width="100%" height="remaining">
           <text>
             {timeType === HistoricalTimes.SESSION ?
-              `Started ${sessionReset?.toFormat(
-                DATE_FORMAT
-              )} (${sessionReset?.toRelative()})` :
-              `${start!.toFormat(DATE_FORMAT)} ➡ ${end!.toFormat(DATE_FORMAT)}`}
+              `Started ${format(sessionReset!, DATE_FORMAT)} (${formatRelative(sessionReset!)})` :
+              `${format(start, DATE_FORMAT)} ➡ ${format(end, DATE_FORMAT)}`}
           </text>
         </box>
         <div width="100%">

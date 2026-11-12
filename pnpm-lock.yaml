@@ -347,15 +347,15 @@ importers:
       axios:
         specifier: 1.11.0
         version: 1.11.0(debug@4.4.3(supports-color@7.2.0))
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.4.0
       discord-api-types:
         specifier: ^0.38.22
         version: 0.38.57
       fuse.js:
         specifier: ^7.0.0
         version: 7.5.0
-      luxon:
-        specifier: ^3.5.0
-        version: 3.7.2
       mongoose:
         specifier: ^8.5.2
         version: 8.24.7(socks@2.8.10)(supports-color@7.2.0)
@@ -371,10 +371,6 @@ importers:
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
-    devDependencies:
-      '@types/luxon':
-        specifier: ^3.4.2
-        version: 3.7.6
 
   apps/scripts:
     dependencies:

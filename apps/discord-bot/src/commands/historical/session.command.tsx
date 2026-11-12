@@ -57,7 +57,6 @@ import { BedWarsProfile } from "../bedwars/bedwars.profile.js";
 import { BlitzSGProfile } from "../blitzsg/blitzsg.profile.js";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
-import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile.js";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
@@ -80,6 +79,7 @@ import { WarlordsProfile } from "../warlords/warlords.profile.js";
 import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
 import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
+import { fromUnixTime } from "date-fns";
 import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "../arcade/arcade.command.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getDuelsModeEmojis } from "../duels/duels.command.js";
@@ -413,8 +413,8 @@ export class SessionCommand {
               time: {
                 timeType: HistoricalTimes.SESSION,
                 sessionReset: player.sessionReset ?
-                  DateTime.fromSeconds(player.sessionReset) :
-                  DateTime.now(),
+                  fromUnixTime(player.sessionReset) :
+                  new Date(),
               },
             },
             { ...mode, submode: undefined } as unknown as GameMode<T>
@@ -451,8 +451,8 @@ export class SessionCommand {
               time: {
                 timeType: HistoricalTimes.SESSION,
                 sessionReset: player.sessionReset ?
-                  DateTime.fromSeconds(player.sessionReset) :
-                  DateTime.now(),
+                  fromUnixTime(player.sessionReset) :
+                  new Date(),
               },
             },
             { api: mode.api, formatted: mode.formatted, hypixel: mode.hypixel, submode } as GameMode<T>

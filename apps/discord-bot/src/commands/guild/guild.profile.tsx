@@ -16,12 +16,12 @@ import {
   formatProgression,
   lineXpBar,
 } from "#components";
-import { DateTime } from "luxon";
 import { GameId, Guild, GuildMember, Progression, User } from "@statsify/schemas";
 import { GexpTable } from "./gexp.table.js";
 import { LocalizeFunction } from "@statsify/discord";
 import { StyleLocation } from "@statsify/rendering";
 import { arrayGroup, wordGroup } from "@statsify/util";
+import { formatDateTime } from "#lib/format-date-time";
 import { ratio } from "@statsify/math";
 import type { Image } from "skia-canvas";
 
@@ -143,10 +143,7 @@ const GuildOverallPage = ({
   skin,
   t,
 }: GuildOverallPageProps) => {
-  const format = "LL/dd/yy',' hh:mm a";
-  const createdAt = DateTime.fromMillis(guild.createdAt).toFormat(format, {
-    locale: t.locale,
-  });
+  const createdAt = formatDateTime(t, guild.createdAt);
   const preferredGames = guild.preferredGames.map((g) => gameIcons[g]);
   const formattedRanking = ranking ? ` §8[§7#§f${t(ranking)}§8]` : "";
 

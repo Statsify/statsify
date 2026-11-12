@@ -23,6 +23,7 @@ import {
   User,
   UserPalette,
   WeeklyQuests,
+  getWeeklyQuestReset,
   scanMetadata,
 } from "@statsify/schemas";
 import {
@@ -34,9 +35,9 @@ import {
   type HistoricalTimeData,
   SidebarItem,
 } from "#components";
-import { DateTime } from "luxon";
 import { HistoricalTimes } from "@statsify/api-client";
 import { Palette, getColorPalette } from "../../themes/palette.js";
+import { addDays } from "date-fns";
 import { ratio } from "@statsify/math";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { Constructor } from "@statsify/util";
@@ -198,10 +199,16 @@ export const QuestsProfile = ({
       historicalTime = "LIVE";
       break;
 
-    case QuestTime.Weekly:
+    case QuestTime.Weekly: {
       period = "weekly";
-      historicalTime = { timeType: HistoricalTimes.WEEKLY };
+      const startTime = getWeeklyQuestReset();
+      historicalTime = {
+        timeType: HistoricalTimes.WEEKLY,
+        startTime,
+        endTime: addDays(startTime, 6),
+      };
       break;
+    }
 
     case QuestTime.Daily:
       period = "daily";
@@ -261,19 +268,6 @@ export const QuestsProfile = ({
     api in FormattedGame ?
       `§l${FormattedGame[api as keyof typeof FormattedGame]}` :
       formatted;
-
-  if (time === QuestTime.Weekly) {
-    const dt = DateTime.now().setZone("America/New_York").startOf("week");
-
-    (historicalTime as HistoricalTimeData).startTime =
-      dt.plus({ days: 4 }).toMillis() < Date.now() ?
-        dt.plus({ days: 4 }) :
-        dt.minus({ days: 3 });
-
-    (historicalTime as HistoricalTimeData).endTime = (
-      historicalTime as HistoricalTimeData
-    ).startTime!.plus({ days: 6 });
-  }
 
   return (
     <Container background={background}>
