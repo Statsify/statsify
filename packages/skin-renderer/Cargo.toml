@@ -30,9 +30,7 @@ futures-channel = "0.3.31"
 tracing-wasm = "0.2.1"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-tokio = { version = "1.45.1", features = ["full"] }
-lazy_static = "1.5.0"
-async_once = "0.2.6"
+tokio = { version = "1.45.1", features = ["sync"] }
 napi = { version = "3.2.4", features = ["async"] }
 napi-derive = "3.2.4"
 wgpu = "26.0.1"
