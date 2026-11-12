@@ -33,7 +33,7 @@ export function GuildSection({ guild }: { guild: GuildPreview }) {
       <div className="hidden md:block">
         <Carousel className="backdrop-blur-2xl bg-black/40">
           <GuildOverall guild={guild} />
-          <GuildLevelling guild={guild} />
+          <GuildLeveling guild={guild} />
           <GuildTop guild={guild} />
           {guild.member && <GuildMember guild={guild} member={guild.member} />}
         </Carousel>
