@@ -37,9 +37,8 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
 
     const memberId = data.user.id;
 
-    this.memberUpdateListener.forget(memberId);
-
     await Promise.all([
+      this.memberUpdateListener.forget(memberId),
       this.apiService.updateUser(memberId, { serverMember: false }),
       this.userService.removeAllPremium(memberId),
       this.ticketService.close(

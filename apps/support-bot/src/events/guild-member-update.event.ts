@@ -21,7 +21,7 @@ import { Logger, STATUS_COLORS } from "@statsify/logger";
 import { Service } from "typedi";
 import { User, UserTier } from "@statsify/schemas";
 import { UserService } from "#services";
-import { config } from "@statsify/util";
+import { config, noop } from "@statsify/util";
 
 // Highest tier first, so findTier and findRoleTier pick the highest one a member has
 const PREMIUM_TIERS = [
@@ -122,7 +122,10 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     if (hasServerBoosterRole && !isServerBooster) return this.serverBoosterAdd(memberId);
   }
 
-  public forget(memberId: string) {
+  public async forget(memberId: string) {
+    // A load that's still running would add them back
+    await this.premiumLoad?.catch(noop);
+
     for (const tier of PREMIUM_TIERS) this.tiers[tier].delete(memberId);
     this.patreons.delete(memberId);
     this.serverBoosters.delete(memberId);
