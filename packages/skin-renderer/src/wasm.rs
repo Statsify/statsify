@@ -12,7 +12,7 @@ use winit::platform::web::{EventLoopExtWebSys, WindowBuilderExtWebSys};
 use winit::window::{Window, WindowBuilder, WindowId};
 
 use crate::armor::Armor;
-use crate::error::{Error, Result};
+use crate::error::{finite_yaw, Error, Result};
 use crate::model::{Model, ModelKind, ModelOuterLayer};
 use crate::pose::Pose;
 use crate::renderer::wasm::WasmBackend;
@@ -113,17 +113,6 @@ impl JsMessenger {
   #[wasm_bindgen(js_name = unregisterCanvas)]
   pub fn unregister_canvas(canvas_id: String) {
     send(JsMessage::UnregisterCanvas(canvas_id));
-  }
-}
-
-// Checked after narrowing, since a huge f64 becomes an f32 infinity
-fn finite_yaw(yaw: f64) -> Result<f32> {
-  let yaw = yaw as f32;
-
-  if yaw.is_finite() {
-    Ok(yaw)
-  } else {
-    Err(Error::InvalidYaw)
   }
 }
 

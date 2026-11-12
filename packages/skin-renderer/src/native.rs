@@ -4,6 +4,7 @@ use napi::bindgen_prelude::*;
 use napi_derive::napi;
 
 use crate::armor::Armor;
+use crate::error::finite_yaw;
 use crate::model::{ModelKind, ModelOuterLayer};
 use crate::pose::Pose;
 use crate::renderer::native::NativeBackend;
@@ -56,12 +57,7 @@ pub async fn render_skin(
   let options = options.unwrap_or_default();
   let armor = options.armor.unwrap_or_default();
 
-  // Checked after narrowing, since a huge f64 becomes an f32 infinity
-  let yaw = options.yaw.map(|yaw| yaw as f32);
-
-  if yaw.is_some_and(|yaw| !yaw.is_finite()) {
-    return Err(crate::error::Error::InvalidYaw.into());
-  }
+  let yaw = options.yaw.map(finite_yaw).transpose()?;
 
   let model = renderer.load_skin(
     skin,

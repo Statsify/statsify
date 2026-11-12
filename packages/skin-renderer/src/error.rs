@@ -47,6 +47,17 @@ pub enum Error {
 
 pub type Result<T> = std::result::Result<T, Error>;
 
+// Checked after narrowing, since a huge f64 becomes an f32 infinity
+pub(crate) fn finite_yaw(yaw: f64) -> Result<f32> {
+  let yaw = yaw as f32;
+
+  if yaw.is_finite() {
+    Ok(yaw)
+  } else {
+    Err(Error::InvalidYaw)
+  }
+}
+
 #[cfg(not(target_arch = "wasm32"))]
 impl From<Error> for napi::Error {
   fn from(value: Error) -> Self {
