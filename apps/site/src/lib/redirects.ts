@@ -27,9 +27,8 @@ const REDIRECTS: Readonly<Record<string, string>> = {
   "/github": "https://github.com/Statsify/statsify",
   "/twitter": "https://twitter.com/statsifybot",
   "/youtube": "https://youtube.com/@statsifybot",
-  "/terms": "https://j4cobi.notion.site/Statsify-Terms-of-Service-0482207df97f4f41909594241cd0b381",
-  "/privacy": "https://j4cobi.notion.site/Statsify-Privacy-Policy-2e636dcacf1e4237b35d7d2ce2d53613",
   "/translate": "https://crowdin.com/project/statsify",
+  "/contact": "/about#contact",
 };
 
 /** The Next app's Bingo URLs: `/players` and `/players/:slug[/general[/bingo]]`, in any case, as Next matched them. */
@@ -37,6 +36,9 @@ const LEGACY_PLAYERS = /^\/players(?:\/([^/]+)(?:\/general(?:\/bingo)?)?)?$/i;
 
 /** `/p/:name`, the short alias for `/player/:name`. */
 const SHORT_PLAYER = /^\/p\/([^/]+)$/;
+
+/** The pages with a fixed path, which the router also matches in another case (`/About`). */
+const STATIC_PAGES = new Set(["/about", "/bingo", "/glossary", "/leaderboards", "/player", "/prestiges/bedwars", "/privacy", "/terms"]);
 
 /** Where a path redirects to (absolute URL or site path), or `undefined` to route it normally. */
 export function redirectFor(pathname: string): string | undefined {
@@ -58,6 +60,10 @@ export function redirectFor(pathname: string): string | undefined {
 
   const short = SHORT_PLAYER.exec(path);
   if (short) return `/player/${short[1]}`;
+
+  // One URL per page, as the player and game pages land another casing on theirs.
+  const lower = path.toLowerCase();
+  if (lower !== path && STATIC_PAGES.has(lower)) return lower;
 
   // Any other trailing slash too: a 301 with the other redirects' cache headers rather than the router's 307.
   return path === pathname ? undefined : sitePath(path);
@@ -106,6 +112,14 @@ if (import.meta.vitest) {
       expect(redirectFor("/en-US//evil.example/x")).toBe("/evil.example/x");
       expect(redirectFor("/en-US/\\evil.example")).toBe("/evil.example");
       expect(redirectFor("/player/j4cobi/")).toBe("/player/j4cobi");
+    });
+
+    it("lowers the case of the fixed pages only", () => {
+      expect(redirectFor("/About")).toBe("/about");
+      expect(redirectFor("/PRIVACY/")).toBe("/privacy");
+      expect(redirectFor("/Prestiges/BedWars")).toBe("/prestiges/bedwars");
+      expect(redirectFor("/about")).toBeUndefined();
+      expect(redirectFor("/player/J4cobi")).toBeUndefined();
     });
   });
 }

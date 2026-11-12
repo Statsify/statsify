@@ -150,11 +150,36 @@ export const ResultCardSchema = z.object({
   karma: Count,
 });
 
+const LeaderboardLinkSchema = z.object({ field: z.string(), name: z.string() });
+
+/** A leaderboard in the full list, with what the site's filter matches besides its name. */
+const LeaderboardListEntrySchema = LeaderboardLinkSchema.extend({
+  /** The catalog's `stats.*` locale key for the board's stat, where the catalog has the stat. */
+  label: z.string().optional(),
+  /** The schema's aliases for the board, where it has any. */
+  aliases: z.array(z.string()).optional(),
+});
+
 export const LeaderboardGroupSchema = z.object({
+  /** The `PlayerStats` key the group's leaderboards are under, which is also its index's `/leaderboards/<key>`. */
+  key: z.string(),
   /** The `GameId` for the icon, or `null` for groups without a game (quests, challenges). */
   game: z.string().nullable(),
   name: z.string(),
-  leaderboards: z.array(z.object({ field: z.string(), name: z.string() })),
+  leaderboards: z.array(LeaderboardListEntrySchema),
+});
+
+/** One game's leaderboards by mode, for its `/leaderboards/<key>` index. Names are short, without the game and mode. */
+export const LeaderboardGameSchema = LeaderboardGroupSchema.omit({ leaderboards: true }).extend({
+  modes: z.array(
+    z.object({
+      /** The mode's api key, or `""` for the game's own leaderboards. */
+      key: z.string(),
+      /** The mode's name, or `null` for the game's own leaderboards. */
+      name: z.string().nullable(),
+      leaderboards: z.array(LeaderboardLinkSchema),
+    })
+  ),
 });
 
 export const LeaderboardRowSchema = z.object({
@@ -168,14 +193,40 @@ export const LeaderboardRowSchema = z.object({
   values: z.array(z.union([z.string(), z.number()])),
 });
 
+/** A leaderboard's value column: its own stat, or one of the extra stats the bot's leaderboard shows beside it. */
+export const LeaderboardColumnSchema = z.object({
+  /** The stat's path in the player document. */
+  field: z.string(),
+  /** The leaderboard's own name for the column, shown where `label` is null. */
+  name: z.string(),
+  /** The catalog's `stats.*` locale key for the stat (the bot's card's word for it), or null where the catalog has none. */
+  label: z.string().nullable(),
+  /** The color the bot's card draws the stat in, or null where it depends on the value. */
+  color: z.string().nullable(),
+});
+
 export const LeaderboardPageSchema = z.object({
   field: z.string(),
   name: z.string(),
-  /** Column headers, matching `rows[].values`. */
-  fields: z.array(z.string()),
+  /** The `glossary.*` locale key that explains the board's stat, or null where the glossary has none. */
+  glossary: z.string().nullable(),
+  /** The value columns, matching `rows[].values`. */
+  columns: z.array(LeaderboardColumnSchema),
+  /** `DESC` ranks the highest value first, `ASC` the lowest (best times). */
+  sort: z.enum(["ASC", "DESC"]),
   page: z.number(),
   pages: z.number(),
   rows: z.array(LeaderboardRowSchema),
+  /**
+   * The player's page the rows open: the board's game, at its mode and submode where the page has them. Absent where
+   * the game has no page, so the rows open the profile.
+   */
+  gamePage: z.object({ game: z.string(), mode: z.string().optional(), submode: z.string().optional() }).optional(),
+  /**
+   * The game's index of leaderboards that lists the board (`/leaderboards/<key>`), with the game's name and the mode it's
+   * under there ("" for the game's own). Absent for a board outside a game.
+   */
+  index: z.object({ key: z.string(), name: z.string(), mode: z.string() }).optional(),
 });
 
 /** One category's task counters, keyed by the board data's `field`. */
@@ -227,6 +278,11 @@ export const StatCellSchema = z.object({
   icon: z.string().optional(),
   /** A selection the card shows (a kit, a trail): a `Label: value` line rather than a cell, never a link. */
   inline: z.boolean().optional(),
+  /**
+   * The `glossary.*` key that explains the stat, where it isn't the label's own: the catalog's entry for a stat that
+   * means something else in this game (Quests' Total).
+   */
+  glossary: z.string().optional(),
 });
 
 /** A group of stats on a game page, in the card's rows. */
@@ -452,6 +508,64 @@ export const HomePreviewsSchema = z.object({
   leaderboard: LeaderboardPageSchema.nullable(),
 });
 
+/** A game that shows a glossary entry's stat, and how many of its leaderboards rank it. */
+const GlossaryGameSchema = z.object({
+  /** The `PlayerStats` key, e.g. `bedwars`, named in the glossary's `games`. */
+  key: z.string(),
+  boards: z.number(),
+});
+
+/** One stat explained: what the glossary needs beyond its words, which are in the locale files. */
+const GlossaryEntrySchema = z.object({
+  /** The `glossary.*` locale key of its explanation (and full name, for an abbreviation), e.g. `fkdr`. */
+  key: z.string(),
+  /** The `stats.*` (or the site's) label key it's shown under, e.g. `stats.fkdr`. */
+  label: z.string(),
+  /** Values for the label's placeholders, e.g. `{ tier: "I–III" }` for "Tier {{tier}}". */
+  params: z.record(z.string(), z.string()).optional(),
+  /** Its color on the cards, or null where the color depends on the value. */
+  color: z.string().nullable(),
+  /** The games that show it: BedWars, SkyWars and Duels first, then by leaderboards. */
+  games: z.array(GlossaryGameSchema),
+  /** Its leaderboard's field when exactly one ranks it. */
+  board: z.string().nullable(),
+  /** For a ratio: the label keys it divides, and what the result is multiplied by (100 for a percentage). */
+  formula: z.object({ numerator: z.string(), denominator: z.string(), multiplier: z.number() }).nullable(),
+});
+
+export const GlossarySchema = z.object({
+  /** Every game's name by its `PlayerStats` key. */
+  games: z.record(z.string(), z.string()),
+  groups: z.array(
+    z.object({
+      /** `ratios`, `shared` (stats two or more games show) or the `PlayerStats` key of the one game that shows them. */
+      key: z.string(),
+      entries: z.array(GlossaryEntrySchema),
+    })
+  ),
+});
+
+/** Every BedWars prestige the game draws, with the stars and brackets Hypixel sells. */
+export const PrestigeSheetSchema = z.object({
+  prestiges: z.array(
+    z.object({
+      /** The prestige's first level: 0, 100 and so on. */
+      level: z.number(),
+      name: z.string(),
+      /** That level as the game draws it, Minecraft-formatted. */
+      formatted: z.string(),
+      /** The star its levels show. */
+      star: z.string(),
+      /** The EXP it takes to reach it from level 0. */
+      exp: z.number(),
+    })
+  ),
+  /** The EXP each of a prestige's first levels takes; every level after the last one listed takes as much as it. */
+  levelExp: z.array(z.number()),
+  stars: z.array(z.object({ key: z.string(), name: z.string(), glyph: z.string() })),
+  brackets: z.array(z.object({ key: z.string(), name: z.string(), open: z.string(), close: z.string() })),
+});
+
 const ResolveInputSchema = z.union([z.object({ name: UsernameSchema }), z.object({ uuid: UuidSchema })]);
 const PlayerInputSchema = z.object({ uuid: UuidSchema });
 const GameInputSchema = z.object({
@@ -468,7 +582,12 @@ const GameInputSchema = z.object({
    */
   period: z.string().min(1).max(32).optional(),
 });
-const RefreshInputSchema = z.object({ uuid: UuidSchema, clientIp: ClientIpSchema });
+const RefreshInputSchema = z.object({
+  uuid: UuidSchema,
+  clientIp: ClientIpSchema,
+  /** A page updating a stale profile by itself once it opened, which stops at two-thirds of the global budget. */
+  auto: z.boolean().optional(),
+});
 const LookupInputSchema = z.object({
   /** A username, or the UUID of a player URL that isn't stored. */
   name: z.union([UsernameSchema, UuidSchema]),
@@ -486,6 +605,11 @@ const LeaderboardPageInputSchema = z.object({
   size: PageNumber.pipe(z.number().min(1).max(50)).default(25),
   /** Show the page containing this player (UUID) and highlight them. */
   around: UuidSchema.optional(),
+});
+
+const LeaderboardGameInputSchema = z.object({
+  /** A `PlayerStats` key with leaderboards, e.g. `bedwars`. */
+  key: z.string().min(1).max(32),
 });
 
 const errors = oc.errors({
@@ -550,6 +674,10 @@ export const contract = {
     list: oc
       .route({ method: "GET", path: "/leaderboard/list", summary: "Every player leaderboard, grouped by game" })
       .output(z.array(LeaderboardGroupSchema)),
+    game: errors
+      .route({ method: "GET", path: "/leaderboard/game", summary: "One game's player leaderboards, grouped by mode" })
+      .input(LeaderboardGameInputSchema)
+      .output(LeaderboardGameSchema),
     page: errors
       .route({ method: "GET", path: "/leaderboard/page", summary: "One page of a player leaderboard" })
       .input(LeaderboardPageInputSchema)
@@ -559,6 +687,14 @@ export const contract = {
     previews: oc
       .route({ method: "GET", path: "/home/previews", summary: "The sample players, guild and leaderboard on the home page" })
       .output(HomePreviewsSchema),
+  },
+  content: {
+    glossary: oc
+      .route({ method: "GET", path: "/content/glossary", summary: "Every stat the site shows under a label, grouped for the glossary" })
+      .output(GlossarySchema),
+    prestiges: oc
+      .route({ method: "GET", path: "/content/prestiges", summary: "Every BedWars prestige, star and bracket" })
+      .output(PrestigeSheetSchema),
   },
 };
 
@@ -572,12 +708,15 @@ export type GameSummary = z.infer<typeof GameSummarySchema>;
 export type StatRow = z.infer<typeof StatRowSchema>;
 export type ResultCard = z.infer<typeof ResultCardSchema>;
 export type LeaderboardGroup = z.infer<typeof LeaderboardGroupSchema>;
+export type LeaderboardGame = z.infer<typeof LeaderboardGameSchema>;
 export type LeaderboardRow = z.infer<typeof LeaderboardRowSchema>;
+export type LeaderboardColumn = z.infer<typeof LeaderboardColumnSchema>;
 export type LeaderboardPage = z.infer<typeof LeaderboardPageSchema>;
 
 /** Validated (server-side) inputs. */
 export type ResolveInput = z.infer<typeof ResolveInputSchema>;
 export type LeaderboardPageInput = z.infer<typeof LeaderboardPageInputSchema>;
+export type LeaderboardGameInput = z.infer<typeof LeaderboardGameInputSchema>;
 export type GameInput = z.infer<typeof GameInputSchema>;
 
 export type BingoPlayer = z.infer<typeof BingoPlayerSchema>;
@@ -585,6 +724,9 @@ export type GamePage = z.infer<typeof GamePageSchema>;
 export type StatSection = z.infer<typeof StatSectionSchema>;
 export type StatCell = z.infer<typeof StatCellSchema>;
 export type HomePreviews = z.infer<typeof HomePreviewsSchema>;
+export type Glossary = z.infer<typeof GlossarySchema>;
+export type GlossaryEntry = z.infer<typeof GlossaryEntrySchema>;
+export type PrestigeSheet = z.infer<typeof PrestigeSheetSchema>;
 export type PreviewIdentity = z.infer<typeof PreviewIdentitySchema>;
 export type BedWarsPreview = z.infer<typeof BedWarsPreviewSchema>;
 export type SkyWarsPreview = z.infer<typeof SkyWarsPreviewSchema>;

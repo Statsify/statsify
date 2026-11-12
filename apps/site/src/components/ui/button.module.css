@@ -85,13 +85,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .button,
-  .buttonOverlay {
-    transition: none;
-  }
-}
-
 .buttonOverlay {
   background-color: rgb(0 0 0 / 0);
   transition: background-color var(--duration) ease-in-out;

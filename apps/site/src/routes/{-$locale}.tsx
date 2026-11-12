@@ -10,7 +10,7 @@ import { DEFAULT_LOCALE, type Locale, isSupportedLocale } from "~/i18n/locales";
 import { Footer } from "~/components/ui/footer";
 import { Header } from "~/components/header";
 import { NavigationProgress } from "~/components/navigation-progress";
-import { I18nextProvider } from "react-i18next";
+import { I18nextProvider, useTranslation } from "react-i18next";
 import { type LocaleData, getLocaleData } from "~/i18n/locale-data";
 import { NotFound } from "~/components/not-found";
 import { type AnyRouteMatch, type NotFoundRouteProps, Outlet, createFileRoute, isNotFound, notFound, redirect, useRouter } from "@tanstack/react-router";
@@ -99,6 +99,27 @@ function LocaleNotFound({ data }: NotFoundRouteProps) {
   );
 }
 
+/**
+ * The first stop for a keyboard, hidden until it has focus: it skips the header's eight links and the search. Focus
+ * moves to `<main>` itself, so the next Tab starts on the page.
+ */
+function SkipLink() {
+  const { t } = useTranslation();
+
+  return (
+    <a
+      href="#main"
+      onClick={(event) => {
+        event.preventDefault();
+        document.querySelector<HTMLElement>("#main")?.focus();
+      }}
+      className="sr-only bg-blackify-800 text-mc-1.5 text-mc-white focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-100 focus:px-4 focus:py-3"
+    >
+      {t("nav.skip")}
+    </a>
+  );
+}
+
 function LocaleShell({ locale, data, children }: { locale: Locale; data: LocaleData; children: ReactNode }) {
   const { resources, sentry } = data;
   const router = useRouter();
@@ -107,11 +128,25 @@ function LocaleShell({ locale, data, children }: { locale: Locale; data: LocaleD
 
   useEffect(() => startClientSentry(router, sentry), [router, sentry]);
 
+  // Landing on another page moves focus to it, as the skip link does, so a screen reader reads the new page and the
+  // next Tab starts there. A change of search only (a mode, a board's page) leaves focus where it is.
+  useEffect(
+    () =>
+      router.subscribe("onRendered", ({ pathChanged }) => {
+        if (pathChanged) document.querySelector<HTMLElement>("#main")?.focus({ preventScroll: true });
+      }),
+    [router]
+  );
+
   return (
     <I18nextProvider i18n={i18n}>
       <NavigationProgress />
+      <SkipLink />
       <Header />
-      {children}
+      {/* A column that grows, as the body is, so a page's own `grow` still fills the window above the footer. */}
+      <main id="main" tabIndex={-1} className="flex grow flex-col focus-ring-none">
+        {children}
+      </main>
       <Footer />
     </I18nextProvider>
   );

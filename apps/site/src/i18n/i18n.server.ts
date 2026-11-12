@@ -48,9 +48,16 @@ async function parseNamespace(key: string): Promise<Namespace | undefined> {
   }
 }
 
+/** The glossary's words for a stat, by its `glossary.*` key: a full name where its label shortens one, and what it is. */
+export type GlossaryWords = Record<string, { name?: string; text?: string }>;
+
+const glossaryOf = (defaults?: Namespace) => (defaults?.glossary ?? {}) as GlossaryWords;
+
 /**
  * What the browser needs for one locale: the `site` namespace and the `stats` subtree of the
- * bot's `default` namespace, plus the English fallback for anything untranslated.
+ * bot's `default` namespace with the glossary's full names (FKDR's "Final Kill/Death Ratio"), plus
+ * the English fallback for anything untranslated. The glossary's explanations go only to the pages
+ * that show them (`readGlossary`).
  */
 export async function loadResources(locale: string): Promise<Resource> {
   const locales = locale === DEFAULT_LOCALE ? [locale] : [locale, DEFAULT_LOCALE];
@@ -58,18 +65,28 @@ export async function loadResources(locale: string): Promise<Resource> {
   const entries = await Promise.all(
     locales.map(async (lng) => {
       const [site, defaults] = await Promise.all([readNamespace(lng, "site"), readNamespace(lng, "default")]);
+      const names = Object.entries(glossaryOf(defaults)).flatMap(([key, { name }]) => (name ? [[key, { name }]] : []));
 
       return [
         lng,
         {
           site: site ?? {},
-          default: { stats: defaults?.stats ?? {} },
+          default: { stats: defaults?.stats ?? {}, glossary: Object.fromEntries(names) },
         },
       ] as const;
     })
   );
 
   return Object.fromEntries(entries);
+}
+
+/** Every stat's glossary words in a supported locale, each falling back to English where it isn't translated. */
+export async function readGlossary(locale: string): Promise<GlossaryWords> {
+  const english = glossaryOf(await readNamespace(DEFAULT_LOCALE, "default"));
+  if (locale === DEFAULT_LOCALE) return english;
+
+  const own = glossaryOf(await readNamespace(locale, "default"));
+  return Object.fromEntries(Object.entries(english).map(([key, words]) => [key, { ...words, ...own[key] }]));
 }
 
 /** Every string in a namespace with its dotted key, for the locale-compat test. */

@@ -132,6 +132,19 @@
   --animate-slide-out-right-and-fade: slide-out-right-and-fade 150ms ease-out;
 
   --animate-progress-slide: progress-slide 1200ms ease-in-out infinite;
+
+  /* The page's old background over its new one, as `Background` crossfades. */
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
+  --animate-fade-out: fade-out 400ms ease-out forwards;
 }
 
 /* Minecraft text: 16px × N with an N px hard shadow. Use only N ∈ {1, 1.5, 2, 3, 4, 7}: 16, 24, 32, 48, 64 and 112 px,
@@ -143,12 +156,48 @@
   text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
 }
 
+/* The keyboard focus, drawn like the panels: a white ring on the pixel grid 2 px out from the control, with a hard
+   2 px shadow under it and a dark gap between, so it shows on light buttons as well as dark panels. Every control gets
+   it by default (`@layer base` below); this is for a part that shows another element's focus. */
+@utility focus-ring {
+  outline: 2px solid var(--color-mc-white);
+  outline-offset: 2px;
+  box-shadow: 2px 2px 0 4px rgb(0 0 0 / 0.84);
+}
+
+/* Inside the edge and with no shadow, like a focused Minecraft text field: for inputs, selects and bars that sit flush
+   against what's next to them. */
+@utility focus-ring-inset {
+  outline: 2px solid var(--color-mc-white);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+/* For a control whose ring another element draws (a field's bar, a stretched link's cell, a button's wrapper). */
+@utility focus-ring-none {
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
 @utility grid-areas-stack {
   grid-template-areas: "stack";
 }
 
 @utility grid-area-stack {
   grid-area: stack;
+}
+
+/* N equal columns an even number of pixels wide, for pixel-font cells with an 8 px column gap (`gap-2`, `gap-x-2`):
+   a plain `1fr` split starts every column after the first on a fraction of a pixel, which blurs the font on 1×
+   screens, and an even width centers a Minecraft 32 value (always an even number of pixels wide) on a whole pixel.
+   The pixels left over go after the last column. A column is never narrower than its content. */
+@utility grid-cols-snap-* {
+  grid-template-columns: repeat(
+    --value(integer),
+    minmax(min-content, round(down, calc((100% - (--value(integer) - 1) * 8px) / --value(integer)), 2px))
+  );
 }
 
 @utility grid-cols-fluid-* {
@@ -177,6 +226,32 @@
   width: 100%;
   max-width: 1440px;
   margin-inline: auto;
+}
+
+/*
+ * The space `/player`'s recently viewed section takes, from `--recent` (how many players: set on the root before first
+ * paint, then on the section by React): the heading row, then the result cards, one a row on phones, two from md and
+ * three from xl, 124 px tall below sm and 156 from it, 8 px apart. None for none. So the footer stays put when the cards
+ * arrive.
+ */
+@utility recent-hold {
+  --recent-rows: var(--recent, 0);
+  --recent-card: 124px;
+  min-height: calc(min(var(--recent, 0), 1) * (52px + var(--recent-rows) * var(--recent-card) + (var(--recent-rows) - 1) * 8px));
+  /* With nothing held, it also takes back the gap the page's column (gap-8) puts before it, so a first visit is as before. */
+  margin-top: calc((min(var(--recent, 0), 1) - 1) * 32px);
+
+  @variant sm {
+    --recent-card: 156px;
+  }
+
+  @variant md {
+    --recent-rows: round(up, var(--recent, 0) / 2, 1);
+  }
+
+  @variant xl {
+    --recent-rows: round(up, var(--recent, 0) / 3, 1);
+  }
 }
 
 @custom-variant content {
@@ -277,8 +352,27 @@
     cursor: pointer;
   }
 
+  /* `focus-ring`, for every control that doesn't draw its own. */
+  :focus-visible {
+    @apply focus-ring;
+  }
+
   /* Mona Sans numbers line up in tables; stat values are Minecraft anyway. */
   html {
     font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Reduced motion: nothing on the site slides, fades or turns; every animation and transition jumps to its end. What
+   carries meaning in motion has its own still form (the progress bar's full bar, the home page's final numbers), and
+   Motion's own animations check the setting where they run. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
   }
 }

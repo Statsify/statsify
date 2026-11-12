@@ -6,24 +6,37 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { AllLeaderboards } from "~/features/leaderboards/leaderboard-index";
 import { Background } from "~/components/ui/background";
-import { LeaderboardIndex, withoutGroupPrefix } from "~/features/leaderboards/leaderboard-index";
+import { MAX_QUERY_LENGTH, getLeaderboardIndex, listForClient } from "~/features/leaderboards/leaderboard-data";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
-import { rpc } from "~/lib/orpc";
 import { useTranslation } from "react-i18next";
 
 /** The list is schema metadata: an hour fresh, a day stale. */
 const EDGE_TTL_SECONDS = 3600;
 
+/** `?q=`, the filter's query when it's submitted without scripts (the router parses `?q=123` to a number). */
+const queryText = (raw: unknown) =>
+  (typeof raw === "string" || typeof raw === "number" ? String(raw).trim().slice(0, MAX_QUERY_LENGTH) : "") || undefined;
+
+/** A plain function, not a zod schema: every page's first load carries the routes' search parsing. */
+const validateSearch = (search: Record<string, unknown>): { q?: string } => ({ q: queryText(search.q) });
+
 export const Route = createFileRoute("/{-$locale}/leaderboards/")({
-  // The short names travel in the page's hydration data too, so they're cut down before it's serialized.
-  loader: async () => withoutGroupPrefix(await rpc.leaderboard.list()),
+  validateSearch,
+  loaderDeps: ({ search }) => ({ q: search.q }),
+  // The page's data is the groups and the list's hash; the links are in the server's HTML.
+  loader: async ({ deps }) => {
+    const data = await getLeaderboardIndex({ data: { q: deps.q } });
+    return { data, list: await listForClient(data.hash) };
+  },
   staleTime: EDGE_TTL_SECONDS * 1000,
-  head: () => ({
+  head: ({ match }) => ({
     meta: [
       { title: "Leaderboards | Statsify" },
       { name: "description", content: "Browse more than 2,000 Hypixel leaderboards on Statsify." },
+      ...(match.search.q ? [{ name: "robots", content: "noindex" }] : []),
     ],
   }),
   headers: () => cacheHeaders(`max-age=${EDGE_TTL_SECONDS}, stale-while-revalidate=86400`),
@@ -31,7 +44,8 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/")({
 });
 
 function LeaderboardsPage() {
-  const groups = Route.useLoaderData();
+  const { data, list } = Route.useLoaderData();
+  const { q } = Route.useSearch();
   const { t } = useTranslation();
 
   return (
@@ -46,7 +60,8 @@ function LeaderboardsPage() {
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
       <div className="w-container flex flex-col gap-6 px-4 py-12 text-mc-white md:px-8">
         <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{t("leaderboards.title")}</h1>
-        <LeaderboardIndex groups={groups} />
+        {/* A new `?q=` (back and forward) starts the filter over from it. */}
+        <AllLeaderboards key={q ?? ""} data={data} list={list} query={q} />
       </div>
     </div>
   );

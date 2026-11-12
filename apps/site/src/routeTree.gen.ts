@@ -15,6 +15,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as GlossaryChar123hashChar125DotjsonRouteImport } from './routes/glossary-{$hash}[.]json'
+import { Route as LeaderboardsChar123hashChar125DotjsonRouteImport } from './routes/leaderboards-{$hash}[.]json'
+import { Route as ManifestDotwebmanifestRouteImport } from './routes/manifest[.]webmanifest'
 import { Route as OembedRouteImport } from './routes/oembed'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapChar123nameChar125DotxmlRouteImport } from './routes/sitemap-{$name}[.]xml'
@@ -24,17 +27,40 @@ import { Route as CardChar123uuidChar125DotpngRouteImport } from './routes/card/
 import { Route as OgChar123uuidChar125DotpngRouteImport } from './routes/og/{$uuid}[.]png'
 import { Route as SigChar123uuidChar125DotpngRouteImport } from './routes/sig/{$uuid}[.]png'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
+import { Route as Char123LocaleChar125AboutRouteImport } from './routes/{-$locale}/about'
 import { Route as Char123LocaleChar125BingoRouteImport } from './routes/{-$locale}/bingo'
+import { Route as Char123LocaleChar125GlossaryRouteImport } from './routes/{-$locale}/glossary'
+import { Route as Char123LocaleChar125PrivacyRouteImport } from './routes/{-$locale}/privacy'
+import { Route as Char123LocaleChar125TermsRouteImport } from './routes/{-$locale}/terms'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as ApiSkinHeadRouteImport } from './routes/api/skin/head'
 import { Route as ApiSkinRenderRouteImport } from './routes/api/skin/render'
+import { Route as ApiSkinTextureRouteImport } from './routes/api/skin/texture'
 import { Route as Char123LocaleChar125LeaderboardsIndexRouteImport } from './routes/{-$locale}/leaderboards/index'
 import { Route as Char123LocaleChar125LeaderboardsFieldRouteImport } from './routes/{-$locale}/leaderboards/$field'
 import { Route as Char123LocaleChar125PlayerIndexRouteImport } from './routes/{-$locale}/player/index'
+import { Route as Char123LocaleChar125PrestigesBedwarsRouteImport } from './routes/{-$locale}/prestiges/bedwars'
 import { Route as Char123LocaleChar125PlayerNameIndexRouteImport } from './routes/{-$locale}/player/$name/index'
 import { Route as Char123LocaleChar125PlayerNameGameRouteImport } from './routes/{-$locale}/player/$name/$game'
 import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name/bingo'
 
+const GlossaryChar123hashChar125DotjsonRoute =
+  GlossaryChar123hashChar125DotjsonRouteImport.update({
+    id: '/glossary-{$hash}.json',
+    path: '/glossary-{$hash}.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LeaderboardsChar123hashChar125DotjsonRoute =
+  LeaderboardsChar123hashChar125DotjsonRouteImport.update({
+    id: '/leaderboards-{$hash}.json',
+    path: '/leaderboards-{$hash}.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManifestDotwebmanifestRoute = ManifestDotwebmanifestRouteImport.update({
+  id: '/manifest.webmanifest',
+  path: '/manifest.webmanifest',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OembedRoute = OembedRouteImport.update({
   id: '/oembed',
   path: '/oembed',
@@ -85,10 +111,34 @@ const Char123LocaleChar125IndexRoute =
     path: '/',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
+const Char123LocaleChar125AboutRoute =
+  Char123LocaleChar125AboutRouteImport.update({
+    id: '/about',
+    path: '/about',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
 const Char123LocaleChar125BingoRoute =
   Char123LocaleChar125BingoRouteImport.update({
     id: '/bingo',
     path: '/bingo',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125GlossaryRoute =
+  Char123LocaleChar125GlossaryRouteImport.update({
+    id: '/glossary',
+    path: '/glossary',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125PrivacyRoute =
+  Char123LocaleChar125PrivacyRouteImport.update({
+    id: '/privacy',
+    path: '/privacy',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125TermsRoute =
+  Char123LocaleChar125TermsRouteImport.update({
+    id: '/terms',
+    path: '/terms',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
@@ -104,6 +154,11 @@ const ApiSkinHeadRoute = ApiSkinHeadRouteImport.update({
 const ApiSkinRenderRoute = ApiSkinRenderRouteImport.update({
   id: '/api/skin/render',
   path: '/api/skin/render',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSkinTextureRoute = ApiSkinTextureRouteImport.update({
+  id: '/api/skin/texture',
+  path: '/api/skin/texture',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Char123LocaleChar125LeaderboardsIndexRoute =
@@ -122,6 +177,12 @@ const Char123LocaleChar125PlayerIndexRoute =
   Char123LocaleChar125PlayerIndexRouteImport.update({
     id: '/player/',
     path: '/player/',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125PrestigesBedwarsRoute =
+  Char123LocaleChar125PrestigesBedwarsRouteImport.update({
+    id: '/prestiges/bedwars',
+    path: '/prestiges/bedwars',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
 const Char123LocaleChar125PlayerNameIndexRoute =
@@ -144,6 +205,9 @@ const Char123LocaleChar125PlayerNameBingoRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/glossary-{$hash}.json': typeof GlossaryChar123hashChar125DotjsonRoute
+  '/leaderboards-{$hash}.json': typeof LeaderboardsChar123hashChar125DotjsonRoute
+  '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
@@ -152,12 +216,18 @@ export interface FileRoutesByFullPath {
   '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
   '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
   '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
+  '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
+  '/{-$locale}/glossary': typeof Char123LocaleChar125GlossaryRoute
+  '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
+  '/{-$locale}/terms': typeof Char123LocaleChar125TermsRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/api/skin/texture': typeof ApiSkinTextureRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
+  '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
   '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
@@ -165,6 +235,9 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 export interface FileRoutesByTo {
+  '/glossary-{$hash}.json': typeof GlossaryChar123hashChar125DotjsonRoute
+  '/leaderboards-{$hash}.json': typeof LeaderboardsChar123hashChar125DotjsonRoute
+  '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
@@ -172,12 +245,18 @@ export interface FileRoutesByTo {
   '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
   '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
   '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
+  '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
+  '/{-$locale}/glossary': typeof Char123LocaleChar125GlossaryRoute
+  '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
+  '/{-$locale}/terms': typeof Char123LocaleChar125TermsRoute
   '/{-$locale}': typeof Char123LocaleChar125IndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/api/skin/texture': typeof ApiSkinTextureRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
+  '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
   '/{-$locale}/leaderboards': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
@@ -186,6 +265,9 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/glossary-{$hash}.json': typeof GlossaryChar123hashChar125DotjsonRoute
+  '/leaderboards-{$hash}.json': typeof LeaderboardsChar123hashChar125DotjsonRoute
+  '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
   '/oembed': typeof OembedRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
@@ -194,12 +276,18 @@ export interface FileRoutesById {
   '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
   '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
   '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
+  '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
+  '/{-$locale}/glossary': typeof Char123LocaleChar125GlossaryRoute
+  '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
+  '/{-$locale}/terms': typeof Char123LocaleChar125TermsRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/api/skin/texture': typeof ApiSkinTextureRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
+  '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
   '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
@@ -209,6 +297,9 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/glossary-{$hash}.json'
+    | '/leaderboards-{$hash}.json'
+    | '/manifest.webmanifest'
     | '/oembed'
     | '/robots.txt'
     | '/sitemap-{$name}.xml'
@@ -217,12 +308,18 @@ export interface FileRouteTypes {
     | '/card/{$uuid}.png'
     | '/og/{$uuid}.png'
     | '/sig/{$uuid}.png'
+    | '/{-$locale}/about'
     | '/{-$locale}/bingo'
+    | '/{-$locale}/glossary'
+    | '/{-$locale}/privacy'
+    | '/{-$locale}/terms'
     | '/{-$locale}/'
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/api/skin/texture'
     | '/{-$locale}/leaderboards/$field'
+    | '/{-$locale}/prestiges/bedwars'
     | '/{-$locale}/leaderboards/'
     | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/$game'
@@ -230,6 +327,9 @@ export interface FileRouteTypes {
     | '/{-$locale}/player/$name/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/glossary-{$hash}.json'
+    | '/leaderboards-{$hash}.json'
+    | '/manifest.webmanifest'
     | '/oembed'
     | '/robots.txt'
     | '/sitemap-{$name}.xml'
@@ -237,12 +337,18 @@ export interface FileRouteTypes {
     | '/card/{$uuid}.png'
     | '/og/{$uuid}.png'
     | '/sig/{$uuid}.png'
+    | '/{-$locale}/about'
     | '/{-$locale}/bingo'
+    | '/{-$locale}/glossary'
+    | '/{-$locale}/privacy'
+    | '/{-$locale}/terms'
     | '/{-$locale}'
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/api/skin/texture'
     | '/{-$locale}/leaderboards/$field'
+    | '/{-$locale}/prestiges/bedwars'
     | '/{-$locale}/leaderboards'
     | '/{-$locale}/player'
     | '/{-$locale}/player/$name/$game'
@@ -250,6 +356,9 @@ export interface FileRouteTypes {
     | '/{-$locale}/player/$name'
   id:
     | '__root__'
+    | '/glossary-{$hash}.json'
+    | '/leaderboards-{$hash}.json'
+    | '/manifest.webmanifest'
     | '/oembed'
     | '/robots.txt'
     | '/sitemap-{$name}.xml'
@@ -258,12 +367,18 @@ export interface FileRouteTypes {
     | '/card/{$uuid}.png'
     | '/og/{$uuid}.png'
     | '/sig/{$uuid}.png'
+    | '/{-$locale}/about'
     | '/{-$locale}/bingo'
+    | '/{-$locale}/glossary'
+    | '/{-$locale}/privacy'
+    | '/{-$locale}/terms'
     | '/{-$locale}/'
     | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/api/skin/texture'
     | '/{-$locale}/leaderboards/$field'
+    | '/{-$locale}/prestiges/bedwars'
     | '/{-$locale}/leaderboards/'
     | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/$game'
@@ -272,6 +387,9 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  GlossaryChar123hashChar125DotjsonRoute: typeof GlossaryChar123hashChar125DotjsonRoute
+  LeaderboardsChar123hashChar125DotjsonRoute: typeof LeaderboardsChar123hashChar125DotjsonRoute
+  ManifestDotwebmanifestRoute: typeof ManifestDotwebmanifestRoute
   OembedRoute: typeof OembedRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapChar123nameChar125DotxmlRoute: typeof SitemapChar123nameChar125DotxmlRoute
@@ -283,10 +401,32 @@ export interface RootRouteChildren {
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
   ApiSkinHeadRoute: typeof ApiSkinHeadRoute
   ApiSkinRenderRoute: typeof ApiSkinRenderRoute
+  ApiSkinTextureRoute: typeof ApiSkinTextureRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/glossary-{$hash}.json': {
+      id: '/glossary-{$hash}.json'
+      path: '/glossary-{$hash}.json'
+      fullPath: '/glossary-{$hash}.json'
+      preLoaderRoute: typeof GlossaryChar123hashChar125DotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leaderboards-{$hash}.json': {
+      id: '/leaderboards-{$hash}.json'
+      path: '/leaderboards-{$hash}.json'
+      fullPath: '/leaderboards-{$hash}.json'
+      preLoaderRoute: typeof LeaderboardsChar123hashChar125DotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manifest.webmanifest': {
+      id: '/manifest.webmanifest'
+      path: '/manifest.webmanifest'
+      fullPath: '/manifest.webmanifest'
+      preLoaderRoute: typeof ManifestDotwebmanifestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/oembed': {
       id: '/oembed'
       path: '/oembed'
@@ -350,11 +490,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125IndexRouteImport
       parentRoute: typeof Char123LocaleChar125Route
     }
+    '/{-$locale}/about': {
+      id: '/{-$locale}/about'
+      path: '/about'
+      fullPath: '/{-$locale}/about'
+      preLoaderRoute: typeof Char123LocaleChar125AboutRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
     '/{-$locale}/bingo': {
       id: '/{-$locale}/bingo'
       path: '/bingo'
       fullPath: '/{-$locale}/bingo'
       preLoaderRoute: typeof Char123LocaleChar125BingoRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/glossary': {
+      id: '/{-$locale}/glossary'
+      path: '/glossary'
+      fullPath: '/{-$locale}/glossary'
+      preLoaderRoute: typeof Char123LocaleChar125GlossaryRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/privacy': {
+      id: '/{-$locale}/privacy'
+      path: '/privacy'
+      fullPath: '/{-$locale}/privacy'
+      preLoaderRoute: typeof Char123LocaleChar125PrivacyRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/terms': {
+      id: '/{-$locale}/terms'
+      path: '/terms'
+      fullPath: '/{-$locale}/terms'
+      preLoaderRoute: typeof Char123LocaleChar125TermsRouteImport
       parentRoute: typeof Char123LocaleChar125Route
     }
     '/api/rpc/$': {
@@ -378,6 +546,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSkinRenderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/skin/texture': {
+      id: '/api/skin/texture'
+      path: '/api/skin/texture'
+      fullPath: '/api/skin/texture'
+      preLoaderRoute: typeof ApiSkinTextureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/{-$locale}/leaderboards/': {
       id: '/{-$locale}/leaderboards/'
       path: '/leaderboards'
@@ -397,6 +572,13 @@ declare module '@tanstack/react-router' {
       path: '/player'
       fullPath: '/{-$locale}/player/'
       preLoaderRoute: typeof Char123LocaleChar125PlayerIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/prestiges/bedwars': {
+      id: '/{-$locale}/prestiges/bedwars'
+      path: '/prestiges/bedwars'
+      fullPath: '/{-$locale}/prestiges/bedwars'
+      preLoaderRoute: typeof Char123LocaleChar125PrestigesBedwarsRouteImport
       parentRoute: typeof Char123LocaleChar125Route
     }
     '/{-$locale}/player/$name/': {
@@ -424,9 +606,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface Char123LocaleChar125RouteChildren {
+  Char123LocaleChar125AboutRoute: typeof Char123LocaleChar125AboutRoute
   Char123LocaleChar125BingoRoute: typeof Char123LocaleChar125BingoRoute
+  Char123LocaleChar125GlossaryRoute: typeof Char123LocaleChar125GlossaryRoute
+  Char123LocaleChar125PrivacyRoute: typeof Char123LocaleChar125PrivacyRoute
+  Char123LocaleChar125TermsRoute: typeof Char123LocaleChar125TermsRoute
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
   Char123LocaleChar125LeaderboardsFieldRoute: typeof Char123LocaleChar125LeaderboardsFieldRoute
+  Char123LocaleChar125PrestigesBedwarsRoute: typeof Char123LocaleChar125PrestigesBedwarsRoute
   Char123LocaleChar125LeaderboardsIndexRoute: typeof Char123LocaleChar125LeaderboardsIndexRoute
   Char123LocaleChar125PlayerIndexRoute: typeof Char123LocaleChar125PlayerIndexRoute
   Char123LocaleChar125PlayerNameGameRoute: typeof Char123LocaleChar125PlayerNameGameRoute
@@ -435,10 +622,16 @@ interface Char123LocaleChar125RouteChildren {
 }
 
 const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
+  Char123LocaleChar125AboutRoute: Char123LocaleChar125AboutRoute,
   Char123LocaleChar125BingoRoute: Char123LocaleChar125BingoRoute,
+  Char123LocaleChar125GlossaryRoute: Char123LocaleChar125GlossaryRoute,
+  Char123LocaleChar125PrivacyRoute: Char123LocaleChar125PrivacyRoute,
+  Char123LocaleChar125TermsRoute: Char123LocaleChar125TermsRoute,
   Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
   Char123LocaleChar125LeaderboardsFieldRoute:
     Char123LocaleChar125LeaderboardsFieldRoute,
+  Char123LocaleChar125PrestigesBedwarsRoute:
+    Char123LocaleChar125PrestigesBedwarsRoute,
   Char123LocaleChar125LeaderboardsIndexRoute:
     Char123LocaleChar125LeaderboardsIndexRoute,
   Char123LocaleChar125PlayerIndexRoute: Char123LocaleChar125PlayerIndexRoute,
@@ -454,6 +647,11 @@ const Char123LocaleChar125RouteWithChildren =
   Char123LocaleChar125Route._addFileChildren(Char123LocaleChar125RouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  GlossaryChar123hashChar125DotjsonRoute:
+    GlossaryChar123hashChar125DotjsonRoute,
+  LeaderboardsChar123hashChar125DotjsonRoute:
+    LeaderboardsChar123hashChar125DotjsonRoute,
+  ManifestDotwebmanifestRoute: ManifestDotwebmanifestRoute,
   OembedRoute: OembedRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapChar123nameChar125DotxmlRoute: SitemapChar123nameChar125DotxmlRoute,
@@ -465,6 +663,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiRpcSplatRoute: ApiRpcSplatRoute,
   ApiSkinHeadRoute: ApiSkinHeadRoute,
   ApiSkinRenderRoute: ApiSkinRenderRoute,
+  ApiSkinTextureRoute: ApiSkinTextureRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

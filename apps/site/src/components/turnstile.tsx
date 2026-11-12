@@ -61,18 +61,23 @@ function loadTurnstile(): Promise<TurnstileApi> {
 export function Turnstile({
   siteKey,
   onToken,
+  onLoadError,
   className,
 }: {
   siteKey: string;
   onToken: (token: string | undefined) => void;
+  /** Cloudflare's script didn't load (blocked, offline), so there's no widget to complete. */
+  onLoadError?: () => void;
   className?: string;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const callback = useRef(onToken);
+  const loadError = useRef(onLoadError);
 
   useEffect(() => {
     callback.current = onToken;
-  }, [onToken]);
+    loadError.current = onLoadError;
+  }, [onToken, onLoadError]);
 
   useEffect(() => {
     const element = container.current;
@@ -96,6 +101,7 @@ export function Turnstile({
         });
       } catch {
         callback.current(undefined);
+        if (!canceled) loadError.current?.();
       }
     }
 

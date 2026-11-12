@@ -7,7 +7,8 @@
  */
 
 import { DEFAULT_LOCALE } from "~/i18n/locales";
-import { GameView, headingText } from "~/features/game/game-page";
+import { backgroundFor, preloadBackground } from "~/components/ui/background";
+import { GameView } from "~/features/game/game-page";
 import { imageSize, isGameCard } from "@statsify/profiles/protocol";
 import { NotFound } from "~/components/not-found";
 import { ORPCError } from "@orpc/client";
@@ -15,14 +16,15 @@ import { PlayerNotFound } from "~/features/player/player-not-found";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
-import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { createI18n } from "~/i18n/i18n";
-import { gamePageQuery, modeSearch, periodSearch, submodeSearch } from "~/features/game/game-data";
+import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "~/features/game/game-data";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
-import { resolvePlayer } from "~/features/player/resolve";
+import { playerTabIcon } from "~/lib/tab-icon";
+import { ensurePlayer } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { z } from "zod";
+import { useTranslation } from "react-i18next";
 
 /** As the player page: fresh for a minute, stale for ten, and served stale for a day if the API is down. */
 const EDGE_CACHE = "max-age=60, stale-while-revalidate=600, stale-if-error=86400";
@@ -31,21 +33,23 @@ const REDIRECT_HEADERS = { "Cache-Control": "public, max-age=3600", "CDN-Cache-C
 const possessive = (username: string) => `${username}'${username.endsWith("s") ? "" : "s"}`;
 
 /** A search parameter as typed (the router reads `?mode=4v4` as a string and `?mode=123` as a number); the API checks it. */
-const param = z
-  .unknown()
-  .transform((raw) => (typeof raw === "string" || typeof raw === "number" ? String(raw).slice(0, 32) || undefined : undefined))
-  .optional();
+const param = (raw: unknown) => (typeof raw === "string" || typeof raw === "number" ? String(raw).slice(0, 32) || undefined : undefined);
 
-const SearchSchema = z.object({ mode: param, submode: param, period: param });
+/** A plain function, not a zod schema: every page's first load carries the routes' search parsing. */
+const validateSearch = (search: Record<string, unknown>): { mode?: string; submode?: string; period?: string } => ({
+  mode: param(search.mode),
+  submode: param(search.submode),
+  period: param(search.period),
+});
 
 /** Which not-found page to show: the player one, with its lookup, or the plain 404 for a game or mode we don't have. */
 type Missing = { player: boolean };
 
 export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
-  validateSearch: SearchSchema,
+  validateSearch,
   loaderDeps: ({ search }) => ({ mode: search.mode, submode: search.submode, period: search.period }),
   loader: async ({ params, deps, context }) => {
-    const identity = await resolvePlayer(params.name);
+    const identity = await ensurePlayer(context.queryClient, params.name);
 
     if (!identity) {
       cacheNotFoundResponse("max-age=300");
@@ -65,6 +69,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       });
     }
 
+    preloadBackground(backgroundFor(game));
     const page = await context.queryClient.ensureQueryData(gamePageQuery(identity.uuid, game, deps.mode, deps.submode, deps.period)).catch((error) => {
       // A game without a page, a mode or submode it doesn't have, or a name too long to be either.
       if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) return null;
@@ -115,6 +120,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     };
   },
   staleTime: 60_000,
+  staticData: { tabIcon: playerTabIcon },
   head: ({ loaderData, matches }) => {
     if (!loaderData) {
       return { meta: [{ title: createI18n(DEFAULT_LOCALE, localeData(matches)?.resources ?? {}).t("meta.notFound.page") }], links: [SANS_PRELOAD] };
@@ -144,13 +150,19 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
         { name: "description", content: description },
         ...(origin ? socialMeta({ origin, path, title, description, image, imageSize: unfurl, type: "profile" }) : []),
       ],
-      links: [{ rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),
-  notFoundComponent: ({ data }) => ((data as Missing | undefined)?.player === false ? <NotFound /> : <PlayerNotFound />),
+  notFoundComponent: ({ data }) => ((data as Missing | undefined)?.player === false ? <GameNotFound /> : <PlayerNotFound />),
   component: GamePage,
 });
+
+/** A game or mode the player has no page for, with the way back to their profile (the name is canonical by now). */
+function GameNotFound() {
+  const { t } = useTranslation();
+  const { name } = Route.useParams();
+  return <NotFound back={<Link to="/{-$locale}/player/$name" params={{ name }}>{t("notFound.backProfile", { name })}</Link>} />;
+}
 
 function GamePage() {
   const { uuid, game } = Route.useLoaderData();

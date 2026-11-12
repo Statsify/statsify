@@ -68,13 +68,13 @@ export const CHALLENGES: Game<ChallengeModes> = {
   key: "challenges",
   id: null,
   modes: CHALLENGE_MODES,
-  game: { total: { color: "§b" } },
+  game: { total: { color: "§b", glossary: "challengesTotal" } },
   shapes: Object.entries(CLASSES).map(([game, type]): Shape => ({
     modes: [game],
     stats: Object.fromEntries(
       scanMetadata(type).map(([key, { leaderboard }]) => [
         key,
-        key === "total" ? { color: "§a" } : { color: "§a", name: leaderboard.name ?? prettify(key) },
+        key === "total" ? { color: "§a", glossary: "challengesTotal" } : { color: "§a", name: leaderboard.name ?? prettify(key) },
       ])
     ),
   })),

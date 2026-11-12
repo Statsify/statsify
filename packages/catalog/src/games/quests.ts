@@ -53,7 +53,7 @@ export const QUESTS: Game<QuestModes> = {
   key: "quests",
   id: null,
   modes: QUEST_MODES,
-  game: { total: { color: "§b" }, dailyTotal: { color: "§b" }, weeklyTotal: { color: "§b" } },
+  game: { total: { color: "§b", glossary: "questsTotal" }, dailyTotal: { color: "§b" }, weeklyTotal: { color: "§b" } },
   shapes: QUEST_PERIODS.flatMap((period) =>
     gameClasses(period).map(([game, type]): Shape => {
       const quests = scanMetadata(type).filter(([key]) => key !== "total");
@@ -61,7 +61,7 @@ export const QUESTS: Game<QuestModes> = {
       return {
         modes: [`${period}.${game}`],
         stats: {
-          total: period === "overall" ? { color: "§a" } : done(quests.length),
+          total: { ...(period === "overall" ? { color: "§a" } : done(quests.length)), glossary: "questsTotal" },
           ...Object.fromEntries(quests.map(([key, { leaderboard }]) => [key, quest(leaderboard.name)])),
         },
       };

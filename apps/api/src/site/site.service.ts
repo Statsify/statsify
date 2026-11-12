@@ -35,8 +35,11 @@ import type {
   BingoPlayer,
   GameInput,
   GamePage,
+  Glossary,
   GuildPreview,
   HomePreviews,
+  LeaderboardGame,
+  LeaderboardGameInput,
   LeaderboardGroup,
   LeaderboardPage,
   LeaderboardPageInput,
@@ -44,13 +47,16 @@ import type {
   PlayerFull,
   PlayerIdentity,
   PlayerPage,
+  PrestigeSheet,
   ResolveInput,
   ResultCard,
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
+import { buildGlossary, buildPrestigeSheet } from "./content.js";
+import { catalogGlossary, catalogLabel, leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
-import { buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
+import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
 import { config, flatten, removeFormatting } from "@statsify/util";
@@ -184,11 +190,17 @@ function buildLeaderboardGroups(): LeaderboardGroup[] {
     let group = groups.get(statsKey);
 
     if (!group) {
-      group = { ...(LEADERBOARD_GROUPS[statsKey] ?? { game: null, name: statsKey }), leaderboards: [] };
+      group = { key: statsKey, ...(LEADERBOARD_GROUPS[statsKey] ?? { game: null, name: statsKey }), leaderboards: [] };
       groups.set(statsKey, group);
     }
 
-    group.leaderboards.push({ field, name: removeFormatting(leaderboard.name) });
+    const label = catalogLabel(field);
+    group.leaderboards.push({
+      field,
+      name: removeFormatting(leaderboard.name),
+      ...(label && { label }),
+      ...(leaderboard.enabled && leaderboard.aliases.length > 0 && { aliases: leaderboard.aliases }),
+    });
   }
 
   return [...groups.values()];
@@ -208,6 +220,8 @@ export class SiteService implements OnApplicationBootstrap {
   private homeBuild?: Promise<HomePreviews>;
   private homeExpiresAt = 0;
   private leaderboardGroups?: LeaderboardGroup[];
+  private glossarySheet?: Glossary;
+  private prestigeSheet?: PrestigeSheet;
 
   public constructor(
     private readonly playerService: PlayerService,
@@ -254,7 +268,7 @@ export class SiteService implements OnApplicationBootstrap {
     return { player: { ...player }, guild };
   }
 
-  public async refresh(uuid: string, clientIp: string): Promise<PlayerPage> {
+  public async refresh(uuid: string, clientIp: string, auto = false): Promise<PlayerPage> {
     const tag = normalizeUuid(uuid);
     const cached = await this.loadPlayer(tag);
     if (!cached) throw notFound();
@@ -262,7 +276,7 @@ export class SiteService implements OnApplicationBootstrap {
     // Inside the API's own cooldown `CACHE` would not call Hypixel anyway, so it costs no budget.
     if (Date.now() < cached.expiresAt) return this.toPage(cached);
 
-    await this.consumeBudget(clientIp);
+    await this.consumeBudget(clientIp, auto);
     const player = await this.playerService.get(tag, CacheLevel.CACHE);
 
     // When Hypixel doesn't answer, `PlayerService` hands back the stored player, still past its cooldown: say the
@@ -461,6 +475,24 @@ export class SiteService implements OnApplicationBootstrap {
     return this.leaderboardGroups;
   }
 
+  /** The glossary's stats; static metadata, like the leaderboard list it takes its game names from. */
+  public glossary(): Glossary {
+    this.glossarySheet ??= buildGlossary(this.leaderboardList());
+    return this.glossarySheet;
+  }
+
+  /** The BedWars prestige sheet; code, so built once. */
+  public prestiges(): PrestigeSheet {
+    this.prestigeSheet ??= buildPrestigeSheet();
+    return this.prestigeSheet;
+  }
+
+  public leaderboardGame({ key }: LeaderboardGameInput): LeaderboardGame {
+    const group = this.leaderboardList().find((group) => group.key === key);
+    if (!group) throw notFound("Leaderboard not found");
+    return leaderboardGame(group);
+  }
+
   public async leaderboardPage(input: LeaderboardPageInput): Promise<LeaderboardPage> {
     const metadata = this.leaderboardMetadata(input.field);
     const key = `player.${input.field}`;
@@ -528,17 +560,23 @@ export class SiteService implements OnApplicationBootstrap {
       return { uuid, username, position: top + index + 1, name, highlight: top + index === highlight, values };
     });
 
-    const fields: string[] = [];
-    if (!metadata.hidden) fields.push(metadata.fieldName ?? "");
-    fields.push(...additionalMetadata.map((fieldMetadata) => fieldMetadata.fieldName ?? ""));
+    const columns = [
+      ...(metadata.hidden ? [] : [leaderboardColumn(input.field, metadata.fieldName ?? "")]),
+      ...additionalFields.map((field, i) => leaderboardColumn(field, additionalMetadata[i].fieldName ?? "")),
+    ];
+    const index = leaderboardIndex(input.field);
 
     return {
       field: input.field,
       name: removeFormatting(metadata.name),
-      fields,
+      glossary: catalogGlossary(input.field),
+      columns,
+      sort: metadata.sort,
       page,
       pages: Math.ceil(Math.min(total, metadata.limit) / size),
       rows,
+      gamePage: boardGamePage(input.field),
+      index: index && { ...index, name: this.leaderboardList().find(({ key }) => key === index.key)!.name },
     };
   }
 
@@ -641,16 +679,18 @@ export class SiteService implements OnApplicationBootstrap {
 
   /**
    * Per-address, then global budget. A rejected call never eats into the global budget. With
-   * `site.hypixelBudget: 0` every call is rejected here, before `PlayerService` runs.
+   * `site.hypixelBudget: 0` every call is rejected here, before `PlayerService` runs. An automatic update (`auto`)
+   * stops at two-thirds of the budget, so a third stays for clicks and for names the site has never stored.
    */
-  private async consumeBudget(clientIp: string): Promise<void> {
+  private async consumeBudget(clientIp: string, auto = false): Promise<void> {
     const [attempts, ipTtl] = await this.hit(ipKey(clientIp), IP_WINDOW_SECONDS);
     if (attempts > IP_LIMIT) throw tooManyRequests(ipTtl);
 
     const budget = (await this.hypixelBudget) ?? DEFAULT_HYPIXEL_BUDGET;
+    const limit = auto ? Math.floor((budget * 2) / 3) : budget;
     const [calls, budgetTtl] = await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS);
 
-    if (calls > budget) {
+    if (calls > limit) {
       await this.redis.decr(BUDGET_KEY);
       throw tooManyRequests(budgetTtl);
     }
@@ -668,7 +708,29 @@ export class SiteService implements OnApplicationBootstrap {
 }
 
 if (import.meta.vitest) {
-  const { it, expect } = import.meta.vitest;
+  const { it, expect, vi } = import.meta.vitest;
+
+  it("refuses an automatic update once two-thirds of the budget is used, and lets a click through", async () => {
+    // A stored player past their cooldown, 10 of the default 15 calls already spent, and Hypixel not answering.
+    const query = { where: () => query, equals: () => query, lean: () => query, exec: async () => ({ uuid: "a", expiresAt: 0 }) };
+    const counts: Record<string, number> = { [BUDGET_KEY]: 11 };
+    const redis = {
+      decr: vi.fn(),
+      multi: vi.fn(() => ({
+        set: (key: string) => ({ incr: () => ({ ttl: () => ({ exec: async () => [[null, "OK"], [null, counts[key] ?? 1], [null, 60]] }) }) }),
+      })),
+    };
+    const playerService = { get: vi.fn(async () => null) };
+    const stubs = [playerService, undefined, { findOne: () => query }, undefined, redis];
+    const service = new SiteService(...(stubs as unknown as ConstructorParameters<typeof SiteService>));
+
+    await expect(service.refresh("a", "203.0.113.7", true)).rejects.toMatchObject({ code: "TOO_MANY_REQUESTS" });
+    expect(redis.decr).toHaveBeenCalledWith(BUDGET_KEY);
+    expect(playerService.get).not.toHaveBeenCalled();
+
+    await expect(service.refresh("a", "203.0.113.7")).rejects.toMatchObject({ code: "SERVICE_UNAVAILABLE" });
+    expect(playerService.get).toHaveBeenCalledOnce();
+  });
 
   it("buckets IPv6 visitors by /64", () => {
     expect(rateLimitAddress("203.0.113.7")).toBe("203.0.113.7");

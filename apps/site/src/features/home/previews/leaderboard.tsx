@@ -12,6 +12,7 @@ import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
+import { useColumnLabel } from "~/features/leaderboards/leaderboard-table";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import type { CSSProperties } from "react";
 import type { LeaderboardPage } from "@statsify/contract";
@@ -28,6 +29,7 @@ export function LeaderboardPreview({
   className?: string;
 }) {
   const n = useNumberFormat();
+  const label = useColumnLabel();
 
   // Position and head are `max-content`, the name column shrinks and truncates, the values are
   // `max-content`, so a long name never widens the page at 375 px.
@@ -37,7 +39,7 @@ export function LeaderboardPreview({
         "grid text-center gap-2 whitespace-nowrap grid-cols-[max-content_max-content_minmax(0,1fr)_repeat(var(--fields),max-content)]",
         className
       )}
-      style={{ "--fields": leaderboard.fields.length } as CSSProperties}
+      style={{ "--fields": leaderboard.columns.length } as CSSProperties}
     >
       <div className="col-span-full">
         <Box>
@@ -48,9 +50,9 @@ export function LeaderboardPreview({
       </div>
       <Box className={`hidden md:block ${HEADER}`}>Pos</Box>
       <Box className={`col-span-3 md:col-span-2 ${HEADER}`}>Player</Box>
-      {leaderboard.fields.map((field) => (
-        <Box key={field} className={HEADER}>
-          {field}
+      {leaderboard.columns.map((column) => (
+        <Box key={column.field} className={HEADER}>
+          {label(column)}
         </Box>
       ))}
       {leaderboard.rows.slice(0, 3).map((row) => (
@@ -71,7 +73,7 @@ export function LeaderboardPreview({
           </Box>
           {row.values.map((value, index) => (
             <Box
-              key={`${leaderboard.fields[index]}-${row.uuid}`}
+              key={`${leaderboard.columns[index].field}-${row.uuid}`}
               className="content:flex content:justify-center content:items-center"
             >
               {typeof value === "number" ?

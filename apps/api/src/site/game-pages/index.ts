@@ -83,6 +83,24 @@ export const gamePageOf = (id: GameId): string | undefined => GAME_PAGES.find((l
 export const pageSubmodes = (layout: GameLayout, mode: string): string[] | undefined =>
   pageModes(layout).find(({ key }) => key === mode)?.submodes?.map(({ key }) => key);
 
+/**
+ * The game page a leaderboard's rows open: `stats.bedwars.solo.wins` is BedWars at Solo, with the submode where the
+ * mode has it (`stats.duels.bridge.doubles.wins`). A board below no mode the page has opens its first mode, and a
+ * board whose game has no page opens none. The first mode goes unnamed, as the page's own URL has it.
+ */
+export function boardGamePage(field: string): { game: string; mode?: string; submode?: string } | undefined {
+  const [, game = "", ...below] = field.split(".");
+  const layout = findGamePage(game);
+  if (!layout) return undefined;
+  const modes = pageModes(layout);
+  const isMode = (key = "") => modes.some((spec) => spec.key === key);
+  // Quests keep each game's boards below the period (`stats.quests.overall.ARCADE.total`).
+  const [mode = "", submode = ""] = below[0] === "overall" && isMode(below[1]) ? below.slice(1) : below;
+  if (!isMode(mode)) return { game: layout.game.key };
+  if (pageSubmodes(layout, mode)?.includes(submode)) return { game: layout.game.key, mode, submode };
+  return mode === modes[0].key ? { game: layout.game.key } : { game: layout.game.key, mode };
+}
+
 /** Every period any of a page's modes covers, or none for a page without periods. */
 export const pagePeriods = (layout: GameLayout): string[] => [
   ...new Set(pageModes(layout).flatMap(({ key }) => layout.periods?.(key) ?? [])),
