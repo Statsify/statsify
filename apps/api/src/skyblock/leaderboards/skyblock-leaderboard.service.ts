@@ -18,7 +18,7 @@ import { Redis } from "ioredis";
 import { formatProfileName } from "@statsify/skyblock/display";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
-/** A row's name: "Name (Profile)", the profile in its colours and with its mode's badge. */
+/** A row's name: "Name (Profile)", the profile in its colors and with its mode's badge. */
 export const memberName = (displayName: string, row: Pick<SkyBlockStatsRow, "cuteName" | "gameMode">) =>
   `${displayName}§r §7(${formatProfileName(row)}§7)`;
 

@@ -645,7 +645,7 @@ export const STAT_GROUPS = ["combat", "mining", "farming", "foraging", "fishing"
 export type StatGroup = (typeof STAT_GROUPS)[number];
 
 /**
- * Player stats in the wiki's order, with 1.8 lore's symbols and colours; lore names a stat as `prettify(id)`, or by an
+ * Player stats in the wiki's order, with 1.8 lore's symbols and colors; lore names a stat as `prettify(id)`, or by an
  * older name in `aliases`. Rift-only stats aren't here. A list and not a record keyed by id: swc's jsonify step sorts a
  * large object literal's keys.
  */
