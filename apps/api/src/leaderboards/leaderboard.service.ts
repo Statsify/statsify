@@ -9,8 +9,8 @@
 import * as Sentry from "@sentry/node";
 import { Constructor, Flatten } from "@statsify/util";
 import { DateTime } from "luxon";
-import { InjectRedis } from "#redis";
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { InjectRedis, pipelineValues } from "#redis";
+import { Injectable } from "@nestjs/common";
 import { type LeaderboardEnabledMetadata, getLeaderboardField, getLeaderboardFields } from "@statsify/schemas";
 import { LeaderboardQuery } from "@statsify/api-client";
 import { Redis } from "ioredis";
@@ -67,9 +67,11 @@ export abstract class LeaderboardService {
       }
     }
 
-    await pipeline.exec();
+    const results = await pipeline.exec();
 
     child?.finish();
+
+    pipelineValues(results);
   }
 
   public async getLeaderboard<T>(
@@ -221,19 +223,18 @@ export abstract class LeaderboardService {
       }
     }
 
-    const responses = await pipeline.exec();
+    const results = await pipeline.exec();
 
     child?.finish();
 
-    if (!responses) throw new InternalServerErrorException();
-
+    const responses = pipelineValues(results);
     const rankings = [];
 
     for (let i = 0; i < responses.length; i += 2) {
-      const rank = responses[i + 1][1];
-      const value = responses[i][1];
+      const rank = responses[i + 1];
+      const value = responses[i];
 
-      if (rank === undefined || rank === null || !value) continue;
+      if (rank === null || !value) continue;
 
       const index = i / 2;
       const metadata = leaderboardFields[index];
