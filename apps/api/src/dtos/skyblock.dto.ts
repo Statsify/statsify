@@ -47,7 +47,7 @@ export class SkyBlockPriceDto {
 export class SkyBlockIconDto {
   @IsString()
   @MaxLength(70)
-  @ApiProperty({ example: "item-276-0", description: "item-<id>-<damage>[-<colour hex>] or head-<skin hash>" })
+  @ApiProperty({ example: "item-276-0", description: "item-<id>-<damage>[-<color hex>] or head-<skin hash>" })
   public texture: string;
 
   @Transform(({ value }) => +value)

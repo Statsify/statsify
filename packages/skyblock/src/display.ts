@@ -191,7 +191,7 @@ const FORMATTED_PROFILES: Record<string, string | undefined> = {
   Zucchini: "§2Zucchini",
 };
 
-/** A profile's cute name in its fruit's colours, then its mode's badge after a space. */
+/** A profile's cute name in its fruit's colors, then its mode's badge after a space. */
 export function formatProfileName({ cuteName, gameMode }: { cuteName: string; gameMode: GameMode }) {
   const badge = GAME_MODE_BADGES[gameMode];
   return `${FORMATTED_PROFILES[cuteName] ?? cuteName}${badge && ` ${badge}`}`;
