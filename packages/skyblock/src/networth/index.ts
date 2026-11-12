@@ -211,8 +211,8 @@ function toolkitItem(blob: RawNbt, items: ItemsResource): RawItem | null {
 type InventoryValues = NonNullable<ValuesSection["inventories"]>;
 
 async function getInventoryValues(member: SectionInput["member"], map: PriceMap, items: ItemsResource): Promise<InventoryValues | null> {
-  const raw = inventoryPages(member, decodeInventory, (blob) => toolkitItem(blob, items));
-  if (!raw) return null;
+  const itemPages = inventoryPages(member, decodeInventory, (blob) => toolkitItem(blob, items));
+  if (!itemPages) return null;
 
   const options = { prices: toNetworthPrices(map) };
   const worth = async (item: RawItem | null) => {
@@ -221,15 +221,17 @@ async function getInventoryValues(member: SectionInput["member"], map: PriceMap,
     return price > 0 ? price : null;
   };
 
-  const pages = Object.fromEntries(
+  const pages: InventoryValues["pages"] = Object.fromEntries(
     await Promise.all(
-      Object.entries(raw).map(async ([id, slots]) => [id, await Promise.all(slots.map((page) => Promise.all(page.map(worth))))] as const)
+      Object.entries(itemPages).map(
+        async ([id, inventory]) => [id, await Promise.all(inventory.map((page) => Promise.all(page.map(worth))))] as const
+      )
     )
-  ) as InventoryValues["pages"];
+  );
 
-  const totals = Object.fromEntries(
-    Object.entries(pages).map(([id, slots]) => [id, add(...slots.flat().map((price) => price ?? 0))])
-  ) as InventoryValues["totals"];
+  const totals: InventoryValues["totals"] = Object.fromEntries(
+    Object.entries(pages).map(([id, inventory]) => [id, add(...inventory.flat().map((price) => price ?? 0))])
+  );
 
   const sacks = Object.fromEntries(
     Object.entries(member.inventory?.sacks_counts ?? {}).flatMap(([id, count]) => {
