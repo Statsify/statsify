@@ -8,13 +8,15 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { Guild, getLeaderboardFields } from "@statsify/schemas";
-import { IsEnum, IsString, MaxLength, MinLength } from "class-validator";
+import { IsArray, IsString, MaxLength, MinLength } from "class-validator";
+import { IsLeaderboardField } from "./leaderboard-field.decorator.js";
 
 const fields = getLeaderboardFields(Guild).map(([key]) => key);
 
 export class GuildRankingDto {
   @ApiProperty({ enum: fields, type: [String] })
-  @IsEnum(fields, { each: true })
+  @IsArray()
+  @IsLeaderboardField(fields, { each: true })
   public fields: string[];
 
   @IsString()
