@@ -55,7 +55,7 @@ export const SkyBlockHotfProfile = ({
     <PerkCurrency
       name={t(`skyblock.whispers.${type}`)}
       color={WHISPER_COLORS[type]}
-      amount={whispers[type].total}
+      earned={whispers[type].total}
       spent={whispers[type].spent}
       t={t}
     />
