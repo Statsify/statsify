@@ -259,7 +259,7 @@
   },
   "confirm": {
     "cancel": "Cancel",
-    "cancelled": "$t(emojis:cross) Cancelled. Nothing was changed.",
+    "canceled": "$t(emojis:cross) Canceled. Nothing was changed.",
     "expired": "$t(emojis:cross) Timed out. Nothing was changed."
   },
   "cooldown": {
