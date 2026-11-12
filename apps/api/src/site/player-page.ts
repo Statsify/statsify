@@ -53,10 +53,10 @@ type Value = (stats: PlayerStats) => number | string | undefined;
 
 /**
  * A panel row: a catalog stat by its key, stored below the summary's `at` unless the row says where (`""` for a game
- * stat), in the catalog's colour and unit and linked to its leaderboard, under `stats.<label>` (its key by default).
+ * stat), in the catalog's color and unit and linked to its leaderboard, under `stats.<label>` (its key by default).
  * `value` is the panel's own text for it (a time, Layers out of 100), nothing leaving the row out; `hidden` says when
  * the player hides it from Hypixel's API (winstreaks), which the row then says instead of linking. `name` is a
- * formatted title shown in place of the label, and `colour` replaces the catalog's (Parkour's Main Lobby).
+ * formatted title shown in place of the label, and `color` replaces the catalog's (Parkour's Main Lobby).
  */
 type RowSpec =
   | string
@@ -65,17 +65,17 @@ type RowSpec =
     at?: string;
     label?: string;
     name?: string;
-    colour?: ColourCode;
+    color?: ColorCode;
     value?: Value;
     hidden?: (stats: PlayerStats) => boolean;
     /** As a game page cell's `session`. */
     session?: false;
   };
 
-/** A row the panel works out from other stats, in its own colour, with no leaderboard. */
+/** A row the panel works out from other stats, in its own color, with no leaderboard. */
 interface ComputedRow {
   label: string;
-  colour: ColourCode;
+  color: ColorCode;
   compute: Value;
 }
 
@@ -174,10 +174,10 @@ const GAME_SUMMARIES: Summary[] = [
     session: false,
     // Best Time pink, as Duels Parkour's and Arcade's best times; Main Lobby under its game's name, in its first colour.
     rows: [
-      { label: "coursesCompleted", colour: "§a", compute: (s) => courseTimes(s).length },
-      { label: "bestTime", colour: "§d", compute: (s) => time(courseTimes(s).toSorted((a, b) => a - b)[0]) },
-      { key: "MAIN_LOBBY", label: "mainLobby", name: FormattedGame.MAIN_LOBBY, colour: "§3", value: (s) => time(s.parkour.MAIN_LOBBY) },
-      { label: "combinedTime", colour: "§e", compute: (s) => time(courseTimes(s).reduce((sum, ms) => sum + ms, 0)) },
+      { label: "coursesCompleted", color: "§a", compute: (s) => courseTimes(s).length },
+      { label: "bestTime", color: "§d", compute: (s) => time(courseTimes(s).toSorted((a, b) => a - b)[0]) },
+      { key: "MAIN_LOBBY", label: "mainLobby", name: FormattedGame.MAIN_LOBBY, color: "§3", value: (s) => time(s.parkour.MAIN_LOBBY) },
+      { label: "combinedTime", color: "§e", compute: (s) => time(courseTimes(s).reduce((sum, ms) => sum + ms, 0)) },
     ],
   },
   {
@@ -260,7 +260,7 @@ function catalogGame(id: GameId): Game {
 function panelRow(stats: PlayerStats, game: Game, at: string, row: RowSpec | ComputedRow, session: boolean): StatRow | undefined {
   if (isComputed(row)) {
     const value = row.compute(stats);
-    return value === undefined ? undefined : { key: row.label, value, colour: row.colour, leaderboard: null };
+    return value === undefined ? undefined : { key: row.label, value, color: row.color, leaderboard: null };
   }
 
   const spec: Exclude<RowSpec, string> = typeof row === "string" ? { key: row } : row;

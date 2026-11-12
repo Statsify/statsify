@@ -105,7 +105,7 @@ function CategoryOverview({ player, category }: { player: BingoPlayer; category:
     <div className={cn("flex flex-col text-center text-mc-1.5 lg:text-mc-2", BOX_GAP)}>
       <Box className={cn(HEADING_BOX, "content:gap-2")}>
         {/* At 2× its 16 px art at every width, so no pixel is split, and 1 px up: level with the capitals, as the
-            centred line also counts the tails under "g" and "y". */}
+            centered line also counts the tails under "g" and "y". */}
         <img
           src={CATEGORY_ICONS[category]}
           width={32}

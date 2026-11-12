@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColours } from "@statsify/catalog";
+import { ARCADE, cardColors } from "@statsify/catalog";
 import { ArcadeModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   BlockingDeadTable,
@@ -51,12 +51,12 @@ export const ArcadeProfile = ({
   time,
 }: ArcadeProfileProps) => {
   const { arcade } = player.stats;
-  const colour = cardColours(ARCADE);
+  const color = cardColors(ARCADE);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(arcade.coins), colour("coins")],
-    [t("stats.coinConversions"), t(arcade.coinConversions), colour("coinConversions")],
-    [t("stats.arcadeWins"), t(arcade.wins), colour("wins")],
+    [t("stats.coins"), t(arcade.coins), color("coins")],
+    [t("stats.coinConversions"), t(arcade.coinConversions), color("coinConversions")],
+    [t("stats.arcadeWins"), t(arcade.wins), color("wins")],
   ];
 
   const { api, submode } = mode;
@@ -76,7 +76,7 @@ export const ArcadeProfile = ({
       break;
 
     case "disasters":
-      sidebar.push([t("stats.powerups"), t(arcade.disasters.powerups), colour("disasters.powerups")]);
+      sidebar.push([t("stats.powerups"), t(arcade.disasters.powerups), color("disasters.powerups")]);
       table = (
         <DisastersTable stats={arcade[api]} t={t} submode={mode.submode} />
       );

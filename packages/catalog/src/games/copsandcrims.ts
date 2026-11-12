@@ -10,23 +10,23 @@ import { COPS_AND_CRIMS_MODES, type CopsAndCrimsModes } from "@statsify/schemas"
 import type { Game, StatEntry } from "../catalog.js";
 import { formatTime } from "@statsify/util";
 
-/** What every mode stores, in the card's colours. */
+/** What every mode stores, in the card's colors. */
 const BASE: Record<string, StatEntry> = {
-  wins: { colour: "§a" },
-  kills: { colour: "§a" },
-  deaths: { colour: "§c" },
-  kdr: { colour: "§6" },
-  assists: { colour: "§e" },
+  wins: { color: "§a" },
+  kills: { color: "§a" },
+  deaths: { color: "§c" },
+  kdr: { color: "§6" },
+  assists: { color: "§e" },
 };
 
-/** The colours and labels of the bot's Cops and Crims card (`copsandcrims.profile.tsx`): its sidebar and three tables. */
+/** The colors and labels of the bot's Cops and Crims card (`copsandcrims.profile.tsx`): its sidebar and three tables. */
 export const COPS_AND_CRIMS: Game<CopsAndCrimsModes> = {
   key: "copsandcrims",
   id: "COPS_AND_CRIMS",
   modes: COPS_AND_CRIMS_MODES,
   game: {
-    coins: { colour: "§6" },
-    score: { colour: "§a" },
+    coins: { color: "§6" },
+    score: { color: "§a" },
   },
   shapes: [
     // The four counts only Overall stores, which the card's sidebar repeats on every page.
@@ -34,15 +34,15 @@ export const COPS_AND_CRIMS: Game<CopsAndCrimsModes> = {
       modes: ["overall"],
       stats: {
         ...BASE,
-        knifeKills: { colour: "§7" },
-        headshotKills: { colour: "§4" },
-        grenadeKills: { colour: "§2" },
-        shotsFired: { colour: "§6" },
+        knifeKills: { color: "§7" },
+        headshotKills: { color: "§4" },
+        grenadeKills: { color: "§2" },
+        shotsFired: { color: "§6" },
       },
     },
     {
       modes: ["defusal"],
-      stats: { ...BASE, roundWins: { colour: "§b" }, bombsDefused: { colour: "§a" }, bombsPlanted: { colour: "§c" } },
+      stats: { ...BASE, roundWins: { color: "§b" }, bombsDefused: { color: "§a" }, bombsPlanted: { color: "§c" } },
     },
     { modes: ["deathmatch"], stats: BASE },
     {
@@ -50,7 +50,7 @@ export const COPS_AND_CRIMS: Game<CopsAndCrimsModes> = {
       stats: {
         ...BASE,
         // Milliseconds, which the card prints as a time; the field has no leaderboard to format it.
-        fastestWin: { colour: "§b", label: "stats.bestTime", format: (ms) => formatTime(Number(ms)), unset: "N/A" },
+        fastestWin: { color: "§b", label: "stats.bestTime", format: (ms) => formatTime(Number(ms)), unset: "N/A" },
       },
     },
   ],

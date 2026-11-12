@@ -7,7 +7,7 @@
  */
 
 import { type CellSpec, type GameLayout, type LevelSpec, type PageSpec, prefixLevel, selectedMode } from "./layout.js";
-import { type ColourCode, TNT_GAMES, TNT_WIZARDS_CLASSES, modeName } from "@statsify/catalog";
+import { type ColorCode, TNT_GAMES, TNT_WIZARDS_CLASSES, modeName } from "@statsify/catalog";
 
 type Prefixed = "tntRun" | "pvpRun" | "bowSpleef" | "tntTag" | "wizards";
 

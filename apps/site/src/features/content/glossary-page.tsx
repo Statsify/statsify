@@ -91,19 +91,19 @@ export function GlossaryPage({ groups }: { groups: GlossaryGroup[] }) {
 function Entry({ item, label, own }: { item: GlossaryItem; label: string; own: boolean }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
-  const colour = item.colour ?? "§f";
+  const color = item.color ?? "§f";
   const games = item.games.join(", ");
 
   return (
     <Box id={item.key} className="scroll-mt-6 content:py-4 lg:content:px-6">
       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <h3 className="text-mc-1.5 lg:text-mc-2">
-          <MinecraftText>{`${colour}${label}`}</MinecraftText>
+          <MinecraftText>{`${color}${label}`}</MinecraftText>
         </h3>
         {item.name && <span className="text-mc-1 text-white lg:text-mc-1.5">{item.name}</span>}
       </div>
       <p className={`${TEXT} mt-2`}>{item.text}</p>
-      {item.formula && <Formula formula={item.formula} label={label} colour={colour} />}
+      {item.formula && <Formula formula={item.formula} label={label} color={color} />}
       <div className="mt-3 flex flex-wrap items-center gap-x-4 text-mc-1 text-mc-gray empty:hidden lg:text-mc-1.5">
         {!own && (
           <span className="inline-flex min-h-11 items-center">
@@ -140,7 +140,7 @@ function BoardLink({ link, label, children }: { link: NonNullable<GlossaryItem["
 }
 
 /** A ratio as the stats it divides, as chips: Kills ÷ Deaths = KDR, with × 100 for a percentage. */
-function Formula({ formula, label, colour }: { formula: NonNullable<GlossaryItem["formula"]>; label: string; colour: string }) {
+function Formula({ formula, label, color }: { formula: NonNullable<GlossaryItem["formula"]>; label: string; color: string }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
   const part = (key: string) => t(key, { ns: LABEL_NAMESPACES });
@@ -158,7 +158,7 @@ function Formula({ formula, label, colour }: { formula: NonNullable<GlossaryItem
       )}
       <span className="px-0.5 text-mc-gray">=</span>
       <span className={CHIP}>
-        <MinecraftText>{`${colour}${label}`}</MinecraftText>
+        <MinecraftText>{`${color}${label}`}</MinecraftText>
       </span>
     </p>
   );

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARENA_BRAWL, cardColours } from "@statsify/catalog";
+import { ARENA_BRAWL, cardColors } from "@statsify/catalog";
 import { ArenaBrawlModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   Container,
@@ -37,18 +37,18 @@ export const ArenaBrawlProfile = ({
 }: ArenaBrawlProfileProps) => {
   const { arenabrawl } = player.stats;
   const stats = arenabrawl[mode.api];
-  const colour = cardColours(ARENA_BRAWL, mode.api);
+  const color = cardColors(ARENA_BRAWL, mode.api);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(arenabrawl.coins), colour("coins")],
-    [t("stats.tokens"), t(arenabrawl.tokens), colour("tokens")],
-    [t("stats.magicalKeys"), t(arenabrawl.keys), colour("keys")],
-    [t("stats.magicalChests"), t(arenabrawl.magicalChests), colour("magicalChests")],
-    [t("stats.rune"), prettify(arenabrawl.rune), colour("rune")],
+    [t("stats.coins"), t(arenabrawl.coins), color("coins")],
+    [t("stats.tokens"), t(arenabrawl.tokens), color("tokens")],
+    [t("stats.magicalKeys"), t(arenabrawl.keys), color("keys")],
+    [t("stats.magicalChests"), t(arenabrawl.magicalChests), color("magicalChests")],
+    [t("stats.rune"), prettify(arenabrawl.rune), color("rune")],
   ];
 
   if (time === "LIVE" && "winstreak" in stats && stats["winstreak"] > 0)
-    sidebar.push([t("stats.winstreak"), t(stats.winstreak), colour("winstreak")]);
+    sidebar.push([t("stats.winstreak"), t(stats.winstreak), color("winstreak")]);
 
   return (
     <Container background={background}>
@@ -71,14 +71,14 @@ export const ArenaBrawlProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-          <Table.td title={t("stats.losses")} value={t(stats.losses)} color={colour("losses")} />
-          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={colour("wlr")} />
+          <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+          <Table.td title={t("stats.losses")} value={t(stats.losses)} color={color("losses")} />
+          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={color("wlr")} />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(stats.kills)} color={colour("kills")} />
-          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={colour("deaths")} />
-          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={colour("kdr")} />
+          <Table.td title={t("stats.kills")} value={t(stats.kills)} color={color("kills")} />
+          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={color("deaths")} />
+          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={color("kdr")} />
         </Table.tr>
         <Historical.exclude time={time}>
           <Table.ts title="§6Skills">
@@ -86,13 +86,13 @@ export const ArenaBrawlProfile = ({
               <Table.td
                 title={t("stats.offensive")}
                 value={prettify(arenabrawl.offensive)}
-                color={colour("offensive")}
+                color={color("offensive")}
                 size="small"
               />
               <Table.td
                 title={t("stats.utility")}
                 value={prettify(arenabrawl.utility)}
-                color={colour("utility")}
+                color={color("utility")}
                 size="small"
               />
             </Table.tr>
@@ -100,13 +100,13 @@ export const ArenaBrawlProfile = ({
               <Table.td
                 title={t("stats.support")}
                 value={prettify(arenabrawl.support)}
-                color={colour("support")}
+                color={color("support")}
                 size="small"
               />
               <Table.td
                 title={t("stats.ultimate")}
                 value={prettify(arenabrawl.ultimate)}
-                color={colour("ultimate")}
+                color={color("ultimate")}
                 size="small"
               />
             </Table.tr>

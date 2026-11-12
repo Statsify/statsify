@@ -37,7 +37,7 @@ import {
 import { DateTime } from "luxon";
 import { HistoricalTimes } from "@statsify/api-client";
 import { type Palette, getColorPalette } from "../themes/palette.js";
-import { QUESTS, cardColours } from "@statsify/catalog";
+import { QUESTS, cardColors } from "@statsify/catalog";
 import { ratio } from "@statsify/math";
 import type { BaseProfileProps, LocalizeFunction } from "../types.js";
 import type { Constructor } from "@statsify/util";
@@ -63,7 +63,7 @@ const questMetadata: Record<QuestTime, ReturnType<typeof getQuestMetadata>> = {
   [QuestTime.Overall]: getQuestMetadata(OverallQuests),
 };
 
-const colour = cardColours(QUESTS);
+const color = cardColors(QUESTS);
 
 export interface QuestProfileProps extends Omit<BaseProfileProps, "time"> {
   mode: GameMode<QuestModes>;
@@ -110,7 +110,7 @@ const NormalTable = ({ quests, period, t, gameIcons, colorPalette, time }: Norma
     .map(([k, v, total]) => {
       const completed = v.total;
 
-      const textColor = colour(`${period}.${k}.total`, completed);
+      const textColor = color(`${period}.${k}.total`, completed);
       let boxColor: DeferredGradient;
 
       if (completed === total) {
@@ -165,7 +165,7 @@ const GameTable = ({ quests, period, t, game, time, logos: [cross, check] }: Gam
       return (
         <box width="100%">
           <text align="left">
-            {colour(`${period}.${game}.${quest}`, completions)}§l{name}
+            {color(`${period}.${game}.${quest}`, completions)}§l{name}
           </text>
           <div width="remaining" />
           {isOverall ?
@@ -258,13 +258,13 @@ export const QuestsProfile = ({
       break;
   }
 
-  const sidebar: SidebarItem[] = [[t("stats.total"), t(quests.total), colour("total")]];
+  const sidebar: SidebarItem[] = [[t("stats.total"), t(quests.total), color("total")]];
 
   if (api !== "overall") {
     sidebar.push([
       t("stats.game-total", { game: formatted }),
       t(quests[period][api].total),
-      // The catalog colours a period's total by how many are done, as the Overall list does; the sidebar draws it green.
+      // The catalog colors a period's total by how many are done, as the Overall list does; the sidebar draws it green.
       "§a",
     ]);
   }

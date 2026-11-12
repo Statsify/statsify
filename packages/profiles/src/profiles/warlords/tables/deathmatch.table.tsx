@@ -7,11 +7,11 @@
  */
 
 import { Table } from "../../../components/index.js";
-import { WARLORDS, cardColours } from "@statsify/catalog";
+import { WARLORDS, cardColors } from "@statsify/catalog";
 import type { LocalizeFunction } from "../../../types.js";
 import type { Warlords } from "@statsify/schemas";
 
-const colour = cardColours(WARLORDS);
+const color = cardColors(WARLORDS);
 
 export interface WarlordsDeathmatchTableProps {
   warlords: Warlords;
@@ -21,8 +21,8 @@ export interface WarlordsDeathmatchTableProps {
 export const WarlordsDeathmatchTable = ({ warlords, t }: WarlordsDeathmatchTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(warlords.teamDeathmatch.wins)} color={colour("teamDeathmatch.wins")} />
-      <Table.td title={t("stats.kills")} value={t(warlords.teamDeathmatch.kills)} color={colour("teamDeathmatch.kills")} />
+      <Table.td title={t("stats.wins")} value={t(warlords.teamDeathmatch.wins)} color={color("teamDeathmatch.wins")} />
+      <Table.td title={t("stats.kills")} value={t(warlords.teamDeathmatch.kills)} color={color("teamDeathmatch.kills")} />
     </Table.tr>
   </Table.table>
 );

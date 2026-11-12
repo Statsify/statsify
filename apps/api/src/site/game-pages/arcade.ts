@@ -38,14 +38,14 @@ const MODE_WINS: [mode: string, place: string, key: string][] = [
   ["zombies", "zombies.overall", "wins"],
 ];
 
-// The card's ranking: highest first, in rows of four, each row a colour down from §b.
+// The card's ranking: highest first, in rows of four, each row a color down from §b.
 const OVERALL: PageSpec = {
   heading: { word: "game.wins" },
   sections: [
     {
       cells: MODE_WINS.map(([mode, place, key]) => ({ key, at: place, name: modeName(ARCADE, mode) })),
       sort: "desc",
-      ranks: { size: 4, colours: ["§b", "§a", "§e", "§6", "§c"] },
+      ranks: { size: 4, colors: ["§b", "§a", "§e", "§6", "§c"] },
     },
   ],
 };
@@ -82,7 +82,7 @@ function zombies(submode: string): PageSpec {
         // Each map's Overall as Zombies › Overall shows it: Wins, then Fastest Win once won, else Best Round, in §e.
         ...ZOMBIES_MAPS.map(([map, name]): SectionSpec => {
           const place = map === "alienArcadium" ? "zombies.alienArcadium" : `zombies.${map}.overall`;
-          const colour = "§e" as const;
+          const color = "§e" as const;
           return {
             name,
             box: true,
@@ -158,7 +158,7 @@ const PAGES: Record<string, PageSpec> = {
       {
         rows: [
           ["wins", "losses", "wlr"],
-          ["gamesPlayed", "playtime", { key: "overall", at: "disasters.survivals", label: "stats.survivals", colour: "§d" }],
+          ["gamesPlayed", "playtime", { key: "overall", at: "disasters.survivals", label: "stats.survivals", color: "§d" }],
         ],
       },
       { title: "game.sections.more", rows: [["powerups"]] },
@@ -183,7 +183,7 @@ const PAGES: Record<string, PageSpec> = {
   enderSpleef: {
     sections: [
       { rows: [["wins", "blocksBroken", "trail"]] },
-      { title: "stats.powerupActivations", colour: "§b", rows: [["bigShot", "tripleShot", "powerupActivations"]] },
+      { title: "stats.powerupActivations", color: "§b", rows: [["bigShot", "tripleShot", "powerupActivations"]] },
     ],
   },
   farmHunt: {

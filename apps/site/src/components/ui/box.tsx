@@ -60,7 +60,7 @@ function toBorderRadius(borderRadius: BoxBorderRadius): {
   };
 }
 
-// The card look from `@statsify/tokens`: the panel colour, the renderer's overlay gradient and a shadow at the
+// The card look from `@statsify/tokens`: the panel color, the renderer's overlay gradient and a shadow at the
 // card's opacity, which the `box` utility (app.css) draws from tokens.css. The tinted variants keep their radial
 // gradients and have no overlay.
 const boxVariants = {
@@ -84,7 +84,7 @@ const boxVariants = {
 };
 
 /**
- * A box drawn as one of the bot's cells (a leaderboard cell, a stat, a heading): its content centred, at least a tap
+ * A box drawn as one of the bot's cells (a leaderboard cell, a stat, a heading): its content centered, at least a tap
  * target tall. The Box sets its content's size, so the text and whatever wraps it carry their own; a wrapper at the
  * Box's size would sit the text on its baseline, low. Grids of them keep the bot's 4 px gap (`BOX_GAP`).
  */
@@ -153,7 +153,7 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
   const borderRadius = toBorderRadius(partialBorderRadius);
   const Component: ElementType = as ?? "div";
 
-  // The `box` utility (app.css) draws the default card: its bevels, shadow and colours. A Box's style carries only
+  // The `box` utility (app.css) draws the default card: its bevels, shadow and colors. A Box's style carries only
   // what differs from it, so most carry none.
   const vars: Record<string, string> = {};
   if (variant !== "default") {
@@ -178,7 +178,7 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
     >
       {/* The card lays its gradient over everything beneath the panel with `overlay` compositing (`Box.ts`
           renderOverlay), so the background brightens at the top and darkens at the bottom. A blend mode beside the
-          content does the same (the fill's `::after`); inside the clipped content it could only see the panel colour. */}
+          content does the same (the fill's `::after`); inside the clipped content it could only see the panel color. */}
       <div data-slot="fill" data-overlay={variant === "default" || variant === "highlight" || undefined} />
       <div data-slot="content" className="relative" style={style}>
         {title !== undefined && (

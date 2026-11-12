@@ -108,7 +108,7 @@ function usePlayerSuggestions(input: string, focused: boolean, skipEmpty: boolea
   const debouncedInput = useDebounce(input, SEARCH_DEBOUNCE_MS);
   const length = debouncedInput.trim().length;
 
-  // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch, with one lookup for the rank colours.
+  // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch, with one lookup for the rank colors.
   // While the next query loads, the last suggestions stay up, so the sheet never empties between keystrokes.
   return useQuery(
     orpc.search.suggest.queryOptions({

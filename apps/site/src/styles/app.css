@@ -77,7 +77,7 @@
 
 /* N equal columns an even number of pixels wide, for pixel-font cells with an 8 px column gap (`gap-2`, `gap-x-2`),
    or the gap `--snap-gap` sets (a grid of boxes, `BOX_GAP`): a plain `1fr` split starts every column after the first
-   on a fraction of a pixel, which blurs the font on 1× screens, and an even width centres a Minecraft 32 value (always
+   on a fraction of a pixel, which blurs the font on 1× screens, and an even width centers a Minecraft 32 value (always
    an even number of pixels wide) on a whole pixel. The pixels left over go after the last column. A column is never
    narrower than its content. */
 @utility grid-cols-snap-* {
@@ -104,7 +104,7 @@
 }
 
 /* A list item drawn as a card Box with CSS alone, for lists too long for the `Box` component (the leaderboard index's
-   thousands of links, set as HTML), in the card's shape (`box-shape`) and colours (tokens.css): its link takes the
+   thousands of links, set as HTML), in the card's shape (`box-shape`) and colors (tokens.css): its link takes the
    fill and the bevel, the item the shadow (`::before`, the parts outside the box, as `Box` clips it) and the overlay (`::after`,
    blended with everything behind it, as `Box`'s is). The bevel clips the link's own ring, so the ring goes inside. */
 @utility box-item {
@@ -210,7 +210,7 @@
 }
 
 /* The card Box (`box.tsx`), drawn here so a Box's markup carries no polygons: its shape from `box-shape`, and the fill
-   and shadow colours from `--box-fill` and `--box-shadow`, the card's (tokens.css) unless the Box sets them. The shadow
+   and shadow colors from `--box-fill` and `--box-shadow`, the card's (tokens.css) unless the Box sets them. The shadow
    is the Box's `::before`; a square bottom-right corner (`data-square-corner`) has no notch. The panel and the overlay
    are the fill's `::before` and `::after`, beside the content, so the overlay blends with whatever is behind the Box. */
 @utility box {
