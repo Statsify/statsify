@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BUILD_BATTLE, cardColours } from "@statsify/catalog";
+import { BUILD_BATTLE, cardColors } from "@statsify/catalog";
 import {
   Container,
   Footer,
@@ -44,18 +44,18 @@ export const BuildBattleProfile = ({
   time,
 }: BaseProfileProps) => {
   const { buildbattle } = player.stats;
-  const colour = cardColours(BUILD_BATTLE);
+  const color = cardColors(BUILD_BATTLE);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(buildbattle.coins), colour("coins")],
-    [t("stats.score"), t(buildbattle.score), colour("score")],
-    [t("stats.votes"), t(buildbattle.votes), colour("votes")],
-    [t("stats.superVotes"), t(buildbattle.superVotes), colour("superVotes")],
-    [t("stats.correctGuesses"), t(buildbattle.correctGuesses), colour("correctGuesses")],
+    [t("stats.coins"), t(buildbattle.coins), color("coins")],
+    [t("stats.score"), t(buildbattle.score), color("score")],
+    [t("stats.votes"), t(buildbattle.votes), color("votes")],
+    [t("stats.superVotes"), t(buildbattle.superVotes), color("superVotes")],
+    [t("stats.correctGuesses"), t(buildbattle.correctGuesses), color("correctGuesses")],
     [
       t("stats.perfectBuilds"),
       t(buildbattle.speedBuilders.perfectBuilds),
-      colour("speedBuilders.perfectBuilds"),
+      color("speedBuilders.perfectBuilds"),
     ],
   ];
 
@@ -84,29 +84,29 @@ export const BuildBattleProfile = ({
           <BuildBattleModeTable
             title="Overall"
             stats={buildbattle.overall}
-            color={colour("overall.wins")}
+            color={color("overall.wins")}
             t={t}
           />
-          <BuildBattleModeTable title="Pro" stats={buildbattle.pro} color={colour("pro.wins")} t={t} />
+          <BuildBattleModeTable title="Pro" stats={buildbattle.pro} color={color("pro.wins")} t={t} />
           <BuildBattleModeTable
             title="Speed Builders"
             stats={{ wins: buildbattle.speedBuilders.wins }}
-            color={colour("speedBuilders.wins")}
+            color={color("speedBuilders.wins")}
             t={t}
           />
         </Table.tr>
         <Table.tr>
-          <BuildBattleModeTable title="Solo" stats={buildbattle.solo} color={colour("solo.wins")} t={t} />
+          <BuildBattleModeTable title="Solo" stats={buildbattle.solo} color={color("solo.wins")} t={t} />
           <BuildBattleModeTable
             title="Teams"
             stats={buildbattle.teams}
-            color={colour("teams.wins")}
+            color={color("teams.wins")}
             t={t}
           />
           <BuildBattleModeTable
             title="GTB"
             stats={buildbattle.guessTheBuild}
-            color={colour("guessTheBuild.wins")}
+            color={color("guessTheBuild.wins")}
             t={t}
           />
         </Table.tr>

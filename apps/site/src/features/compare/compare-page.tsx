@@ -10,7 +10,7 @@ import { BOX_GAP, Box, CELL, HEADING_BOX, StatBox } from "~/components/ui/box";
 import { Difference } from "~/components/ui/stat";
 import { Hint } from "~/components/ui/hint";
 import { Link } from "@tanstack/react-router";
-import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
 import { GameSwitchers } from "~/features/game/mode-switcher";
 import { PageBackground, backgroundFor } from "~/components/ui/background";
 import { SectionTitle, useStatLabel, useStatValue } from "~/features/game/stat-panel";
@@ -143,11 +143,11 @@ function CompareSection({ title, pairs, sides }: { title?: ReactNode; pairs: Pai
   );
 }
 
-/** A stat's label over its value, the higher with how far it leads, in grey: higher isn't always better. */
+/** A stat's label over its value, the higher with how far it leads, in gray: higher isn't always better. */
 function CompareStat({ cell, other }: { cell: Stat; other: Stat }) {
   const label = useStatLabel(cell);
   const value = useStatValue(cell);
-  const { className, style } = colourOf(cell.colour);
+  const { className, style } = colorOf(cell.color);
   const by = lead(cell, other);
 
   return (

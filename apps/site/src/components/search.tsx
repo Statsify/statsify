@@ -13,7 +13,7 @@ import { Link, useHydrated, useNavigate, useRouterState } from "@tanstack/react-
 import { SearchIcon } from "~/components/icons/search";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
-import { MinecraftText, colourClass, nameColour } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorClass, nameColor } from "~/components/ui/minecraft-text";
 import { orpc } from "~/lib/orpc";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useRecentPlayers } from "~/features/player/recent";
@@ -98,17 +98,17 @@ const SIZES = {
 } as const;
 
 /**
- * A row of the sheet: a suggested or recent player's name, in the colour their rank gives it where known, or a suggested
+ * A row of the sheet: a suggested or recent player's name, in the color their rank gives it where known, or a suggested
  * guild's name with its tag (`formatted`).
  */
-type SearchRow = { name: string; colour?: string; formatted?: string };
+type SearchRow = { name: string; color?: string; formatted?: string };
 
 /** `skipEmpty`: an empty box asks for nothing (the API suggests nothing for it), as one that lists recent players. */
 function usePlayerSuggestions(input: string, focused: boolean, skipEmpty: boolean) {
   const debouncedInput = useDebounce(input, SEARCH_DEBOUNCE_MS);
   const length = debouncedInput.trim().length;
 
-  // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch, with one lookup for the rank colours.
+  // Through the edge-cached `/api/rpc` proxy; the API answers from RediSearch, with one lookup for the rank colors.
   // While the next query loads, the last suggestions stay up, so the sheet never empties between keystrokes.
   return useQuery(
     orpc.search.suggest.queryOptions({
@@ -226,12 +226,12 @@ export function Search({
   const guildSuggestions = useGuildSuggestions(query, focused && guilds);
   const suggested: SearchRow[] | undefined = guilds ?
     guildSuggestions.data?.map(({ name, nameFormatted }) => ({ name, formatted: nameFormatted })) :
-    playerSuggestions.data?.map(({ name, displayName }) => ({ name, colour: displayName === null ? undefined : nameColour(displayName) }));
+    playerSuggestions.data?.map(({ name, displayName }) => ({ name, color: displayName === null ? undefined : nameColor(displayName) }));
   const recentPlayers = useRecentPlayers();
   // `query` is the typed text; the arrows put a row's name in the box without leaving the recent players.
   const rows = recent && query.trim() === "" ? (recentPlayers ?? undefined) : suggested;
   const [selected, setSelected] = useState<number | undefined>(undefined);
-  // Typing on a keyboard shows the rest of the first suggestion that starts with it in grey after the caret, as an
+  // Typing on a keyboard shows the rest of the first suggestion that starts with it in gray after the caret, as an
   // editor's inline suggestion: Tab or → takes it, Enter searches what was typed. None when a suggestion is the name
   // typed. Only while typing at the end: a deletion, a paste or moving the caret drops it.
   const [completing, setCompleting] = useState(false);
@@ -428,7 +428,7 @@ export function Search({
             onBlur={() => setCompleting(false)}
             aria-label={label}
           />
-          {/* The suggestion's grey rest, after a hidden copy of the typed text so it starts at the caret. Screen readers have
+          {/* The suggestion's gray rest, after a hidden copy of the typed text so it starts at the caret. Screen readers have
               the sheet. */}
           {match !== undefined && (
             <div aria-hidden className={cn("pointer-events-none absolute inset-0 flex items-center overflow-hidden whitespace-pre", size.text)}>
@@ -498,7 +498,7 @@ function SearchOption({
     row.formatted === undefined ?
       <>
         <span className={cn("shrink-0", size.headSlot)}>{head && <SkinHead name={row.name} size={size.head} />}</span>
-        <p className={cn(row.colour ? colourClass(row.colour) : "text-white", "selection:bg-white/50", size.text)}>{row.name}</p>
+        <p className={cn(row.color ? colorClass(row.color) : "text-white", "selection:bg-white/50", size.text)}>{row.name}</p>
       </> :
       <p className={cn("selection:bg-white/50", size.text)}><MinecraftText>{row.formatted}</MinecraftText></p>;
 

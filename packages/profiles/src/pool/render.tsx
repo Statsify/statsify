@@ -227,7 +227,7 @@ function isOpaque({ data }: ImageData) {
 /**
  * Renders a player image for a site visitor (no premium user, so default theme and logo): the signature
  * laid out at its canvas size, or one of the bot's cards (the general card, or a game's in one mode), on the canvas
- * `imageSize` gives. The result is drawn centred at 1:1, which keeps the bitmap font sharp, over the same
+ * `imageSize` gives. The result is drawn centered at 1:1, which keeps the bitmap font sharp, over the same
  * background; only an image that outgrew the canvas (a long name, the guild row) shrinks to fit. `og` draws the card
  * on the canvas's own background, so around a card smaller than the canvas the background carries on rather than
  * showing the card's edge. `card` gets the "Updated" stamp in its footer's corner.
@@ -328,7 +328,7 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
   return new Uint8Array(await canvas.toBuffer("png"));
 }
 
-/** Draws `image` scaled to cover the canvas, centred. */
+/** Draws `image` scaled to cover the canvas, centered. */
 function drawCover(ctx: CanvasRenderingContext2D, image: Canvas | Image, width: number, height: number) {
   const cover = Math.max(width / image.width, height / image.height);
   const coverWidth = image.width * cover;

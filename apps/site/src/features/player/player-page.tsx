@@ -18,7 +18,7 @@ import { Instagram } from "~/components/icons/instagram";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
-import { MinecraftText, colourOf, nameColour } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorOf, nameColor } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
 import { LoginDate } from "./login-date";
@@ -78,7 +78,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
   const navGames = page.games.map(({ page: key, id, name }) => ({ key, id, name, played: true }));
 
   useEffect(
-    () => addRecentPlayer({ uuid: page.uuid, name: page.username, colour: nameColour(page.displayName) }),
+    () => addRecentPlayer({ uuid: page.uuid, name: page.username, color: nameColor(page.displayName) }),
     [page.uuid, page.username, page.displayName]
   );
 
@@ -339,7 +339,7 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
   const n = useNumberFormat();
   const exact = useExactNumber();
 
-  // The general card's cells and colours: points §6, quests and challenges §a, karma and streaks §d, gifts §5. Quests
+  // The general card's cells and colors: points §6, quests and challenges §a, karma and streaks §d, gifts §5. Quests
   // and Challenges link to their pages, the rest to their leaderboards (`stats.general.<board>`).
   const cells: [label: string, value: number, color: string, link?: { page: string } | { board: string }][] = [
     [t("default:stats.achievementPoints"), overview.achievementPoints, "text-mc-gold", { board: "achievementPoints" }],
@@ -395,7 +395,7 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
                 <StatNumber value={value} />}
             color={color}
             large
-            // Centred, not at the foot: the nametag can stretch these boxes, and the room would all sit above the value
+            // Centered, not at the foot: the nametag can stretch these boxes, and the room would all sit above the value
             className={cn("grow justify-center", link && "relative")}
           />
         </StatBox>
@@ -582,19 +582,19 @@ function GamePanel({ game, username, session }: { game: GameSummary; username: s
         const exactValue = typeof row.value === "number" ? exact(row.value) : undefined;
         // Under a link the link owns the tap and shows the full form; elsewhere the text does.
         const Short = row.leaderboard ? Spoken : Hint;
-        // Text the API formatted takes the stat's colour, unless it brings its own (Layers' 74/100).
+        // Text the API formatted takes the stat's color, unless it brings its own (Layers' 74/100).
         const value = row.hidden ?
           <Hidden /> :
           typeof row.value === "number" ?
             <><Short full={exactValue}>{n(row.value)}</Short>{row.suffix}</> :
-            <MinecraftText>{`${row.colour}${row.value}`}</MinecraftText>;
-        const { className, style } = colourOf(row.colour);
+            <MinecraftText>{`${row.color}${row.value}`}</MinecraftText>;
+        const { className, style } = colorOf(row.color);
 
-        // An odd last box spans the row, centred, rather than leaving a hole beside it.
+        // An odd last box spans the row, centered, rather than leaving a hole beside it.
         return (
           <StatBox key={row.key} className={cn(index === game.rows.length - 1 && index % 2 === 0 && "col-span-2")}>
             <StatCell
-              label={row.name === undefined ? <Short full={full}>{label}</Short> : <MinecraftText>{`${row.colour}${row.name}`}</MinecraftText>}
+              label={row.name === undefined ? <Short full={full}>{label}</Short> : <MinecraftText>{`${row.color}${row.name}`}</MinecraftText>}
               value={row.leaderboard ?
                 (
                   <LeaderboardLink field={row.leaderboard} username={username} stat={full ?? label} hint={linkHint(full, exactValue)}>

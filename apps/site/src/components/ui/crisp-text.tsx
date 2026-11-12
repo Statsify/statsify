@@ -27,7 +27,7 @@ const SCREEN_SCRIPT = `(function set(){var r=devicePixelRatio,p=document.createE
 /**
  * The filters Minecraft text is drawn through: every pixel of the text fully on or off (the font's half-pixel symbols
  * and the 24's half pixels land between screen pixels, which a font softens), then its shadow, a copy one font pixel
- * down and right at a quarter of its colour, also on or off, under it. The shadow is drawn here rather than with
+ * down and right at a quarter of its color, also on or off, under it. The shadow is drawn here rather than with
  * `text-shadow`, which would blend into the text's edges before the filter sees them. A pixel counts as on from 3/8
  * covered, not half, so a symbol's half-pixel stroke on a 1.25× to 1.5× screen keeps a pixel instead of vanishing.
  */

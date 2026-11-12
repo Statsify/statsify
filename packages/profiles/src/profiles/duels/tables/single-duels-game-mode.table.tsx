@@ -7,7 +7,7 @@
  */
 
 import { BaseDuelsGameMode, PVPBaseDuelsGameMode, SingleDuelsGameMode, SinglePVPDuelsGameMode } from "@statsify/schemas";
-import { DUELS, cardColours } from "@statsify/catalog";
+import { DUELS, cardColors } from "@statsify/catalog";
 import { Historical, If, Table } from "../../../components/index.js";
 import type { LocalizeFunction, ProfileTime } from "../../../types.js";
 
@@ -25,33 +25,33 @@ export const SingleDuelsGameModeTable = ({
   t,
   time,
 }: SingleDuelsGameModeTableProps) => {
-  const colour = cardColours(DUELS, place);
+  const color = cardColors(DUELS, place);
 
   return (
     <Table.table>
       <Historical.exclude time={time}>
         <Table.tr>
-          <Table.td title={t("stats.winstreak")} value={t(stats.winstreak)} color={colour("winstreak")} />
+          <Table.td title={t("stats.winstreak")} value={t(stats.winstreak)} color={color("winstreak")} />
           <Table.td
             title={t("stats.bestWinstreak")}
             value={t(stats.bestWinstreak)}
-            color={colour("bestWinstreak")}
+            color={color("bestWinstreak")}
           />
         </Table.tr>
       </Historical.exclude>
       <Table.tr>
-        <Table.td title={t("stats.wins")} value={t(stats.wins)} color={colour("wins")} />
-        <Table.td title={t("stats.losses")} value={t(stats.losses)} color={colour("losses")} />
-        <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={colour("wlr")} />
+        <Table.td title={t("stats.wins")} value={t(stats.wins)} color={color("wins")} />
+        <Table.td title={t("stats.losses")} value={t(stats.losses)} color={color("losses")} />
+        <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color={color("wlr")} />
       </Table.tr>
       <If condition={"kills" in stats}>
         {() => {
           const s = stats as SinglePVPDuelsGameMode;
           return (
             <Table.tr>
-              <Table.td title={t("stats.kills")} value={t(s.kills)} color={colour("kills")} />
-              <Table.td title={t("stats.deaths")} value={t(s.deaths)} color={colour("deaths")} />
-              <Table.td title={t("stats.kdr")} value={t(s.kdr)} color={colour("kdr")} />
+              <Table.td title={t("stats.kills")} value={t(s.kills)} color={color("kills")} />
+              <Table.td title={t("stats.deaths")} value={t(s.deaths)} color={color("deaths")} />
+              <Table.td title={t("stats.kdr")} value={t(s.kdr)} color={color("kdr")} />
             </Table.tr>
           );
         }}

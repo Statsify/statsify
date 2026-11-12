@@ -8,7 +8,7 @@
 
 import { FormattedGame, type GameId } from "@statsify/schemas";
 
-/** The bot's joined names, each with the colour code its second word may start with ("§cWool§9Games"). */
+/** The bot's joined names, each with the color code its second word may start with ("§cWool§9Games"). */
 const JOINED = /(?<=^|[^A-Za-z]|§[\da-fk-or])(Mega|Speed|Wool|Blitz|Sheep)(§[\da-fk-or])?(Walls|UHC|Games|SG|Wars)(?![a-z])/g;
 const SPACED = new Set(["MegaWalls", "SpeedUHC", "WoolGames", "BlitzSG", "WoolWars", "SheepWars"]);
 
@@ -17,17 +17,17 @@ const SPACED = new Set(["MegaWalls", "SpeedUHC", "WoolGames", "BlitzSG", "WoolWa
  * cards keep their joined spelling, so only the site's names go through this, never a player's.
  */
 export const siteName = (name: string): string =>
-  name.replaceAll(JOINED, (joined, first: string, colour = "", second: string) =>
-    SPACED.has(first + second) ? `${first} ${colour}${second}` : joined);
+  name.replaceAll(JOINED, (joined, first: string, color = "", second: string) =>
+    SPACED.has(first + second) ? `${first} ${color}${second}` : joined);
 
-/** A game's coloured name, spelled as the site spells it. */
+/** A game's colored name, spelled as the site spells it. */
 export const gameName = (game: GameId): string => siteName(FormattedGame[game]);
 
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
 
   describe("siteName", () => {
-    it("spaces the joined game and mode names, coloured or not, and nothing else", () => {
+    it("spaces the joined game and mode names, colored or not, and nothing else", () => {
       expect(siteName("§cWool§9Games§f")).toBe("§cWool §9Games§f");
       expect(siteName("§7MegaWalls§f Challenges - Wither")).toBe("§7Mega Walls§f Challenges - Wither");
       expect(siteName("Duels - BlitzSG Wins")).toBe("Duels - Blitz SG Wins");

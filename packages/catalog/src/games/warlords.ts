@@ -19,50 +19,50 @@ export const WARLORDS_SPECS = ["attack", "defense", "healer"] as const;
 
 /** The card's column for a class or one of its specs. */
 const COLUMN: Record<string, StatEntry> = {
-  wins: { colour: "§e" },
-  damage: { colour: "§c" },
-  healing: { colour: "§a" },
-  prevent: { colour: "§b" },
-  total: { colour: "§6", glossary: "warlordsTotal" },
+  wins: { color: "§e" },
+  damage: { color: "§c" },
+  healing: { color: "§a" },
+  prevent: { color: "§b" },
+  total: { color: "§6", glossary: "warlordsTotal" },
 };
 
-/** The colours and labels of the bot's Warlords card (`warlords.profile.tsx` and its tables): one table a mode. */
+/** The colors and labels of the bot's Warlords card (`warlords.profile.tsx` and its tables): one table a mode. */
 export const WARLORDS: Game<WarlordsModes> = {
   key: "warlords",
   id: "WARLORDS",
   modes: WARLORDS_MODES,
   game: {
-    coins: { colour: "§6" },
+    coins: { color: "§6" },
     class: selection("§e"),
     // Overall's table: there's no `overall` object, so Overall reads these, stored once for the game.
-    wins: { colour: "§a" },
-    losses: { colour: "§c" },
-    wlr: { colour: "§6" },
-    gamesPlayed: { colour: "§e" },
-    kills: { colour: "§a" },
-    deaths: { colour: "§c" },
-    kdr: { colour: "§6" },
-    assists: { colour: "§e" },
+    wins: { color: "§a" },
+    losses: { color: "§c" },
+    wlr: { color: "§6" },
+    gamesPlayed: { color: "§e" },
+    kills: { color: "§a" },
+    deaths: { color: "§c" },
+    kdr: { color: "§6" },
+    assists: { color: "§e" },
   },
   shapes: [
     {
       modes: ["captureTheFlag"],
-      stats: { wins: { colour: "§a" }, kills: { colour: "§e" }, flagCaptures: { colour: "§c" }, flagReturns: { colour: "§9" } },
+      stats: { wins: { color: "§a" }, kills: { color: "§e" }, flagCaptures: { color: "§c" }, flagReturns: { color: "§9" } },
     },
     {
       modes: ["domination"],
       stats: {
-        wins: { colour: "§a" },
-        kills: { colour: "§e" },
-        score: { colour: "§6" },
-        capturePoints: { colour: "§2" },
-        defendPoints: { colour: "§b" },
+        wins: { color: "§a" },
+        kills: { color: "§e" },
+        score: { color: "§6" },
+        capturePoints: { color: "§2" },
+        defendPoints: { color: "§b" },
       },
     },
-    { modes: ["teamDeathmatch"], stats: { wins: { colour: "§a" }, kills: { colour: "§e" } } },
+    { modes: ["teamDeathmatch"], stats: { wins: { color: "§a" }, kills: { color: "§e" } } },
     {
       modes: WARLORDS_CLASSES,
-      stats: { ...COLUMN, level: { colour: "§a" }, specification: { ...selection("§a"), label: "stats.spec" } },
+      stats: { ...COLUMN, level: { color: "§a" }, specification: { ...selection("§a"), label: "stats.spec" } },
     },
     { modes: WARLORDS_CLASSES.flatMap((mode) => WARLORDS_SPECS.map((spec) => `${mode}.${spec}`)), stats: COLUMN },
   ],
