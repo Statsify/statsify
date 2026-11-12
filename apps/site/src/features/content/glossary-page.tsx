@@ -103,7 +103,7 @@ function Entry({ item, label, own }: { item: GlossaryItem; label: string; own: b
         {item.name && <span className={cn("text-white", READING_SIZE)}>{item.name}</span>}
       </div>
       <p className={`${TEXT} mt-2`}>{item.text}</p>
-      {item.formula && <Formula formula={item.formula} label={label} colour={colour} />}
+      {item.formula && <Formula formula={item.formula} label={label} color={color} />}
       <div className={cn("mt-3 flex flex-wrap items-center gap-x-4 text-mc-gray empty:hidden", READING_SIZE)}>
         {!own && (
           <span className="inline-flex min-h-11 items-center">
@@ -158,7 +158,7 @@ function Formula({ formula, label, color }: { formula: NonNullable<GlossaryItem[
       )}
       <span className="mc-crisp px-0.5 text-mc-gray">=</span>
       <span className={CHIP}>
-        <MinecraftText className="mc-crisp">{`${colour}${label}`}</MinecraftText>
+        <MinecraftText className="mc-crisp">{`${color}${label}`}</MinecraftText>
       </span>
     </p>
   );

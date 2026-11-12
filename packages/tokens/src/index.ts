@@ -7,7 +7,7 @@
  */
 
 /**
- * Design tokens for the site. The `§` colours are the bot's own, read from the import-free entry of `@statsify/util`.
+ * Design tokens for the site. The `§` colors are the bot's own, read from the import-free entry of `@statsify/util`.
  * `scripts/tokens-css.ts` turns these into `dist/tokens.css` for Tailwind's `@theme`.
  */
 

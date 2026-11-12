@@ -83,7 +83,7 @@ function useStuck<T extends Element>() {
 /**
  * From `md` up: a header row of boxes (position, player, the board's columns), then one row per player: position,
  * head, name and each value. The header row stays at the window's top while the table scrolls under it, on the page's
- * colour then, since its boxes are see-through; the colour reaches over the gap under it.
+ * color then, since its boxes are see-through; the color reaches over the gap under it.
  */
 function BoxTable({ page, chunks }: { page: LeaderboardPage; chunks: LeaderboardPage[] }) {
   const { t } = useTranslation();

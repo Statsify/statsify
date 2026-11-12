@@ -231,7 +231,7 @@ export function Search({
   // `query` is the typed text; the arrows put a row's name in the box without leaving the recent players.
   const rows = recent && query.trim() === "" ? (recentPlayers ?? undefined) : suggested;
   const [selected, setSelected] = useState<number | undefined>(undefined);
-  // Typing on a keyboard shows the rest of the first suggestion that starts with it in grey after the caret, as an
+  // Typing on a keyboard shows the rest of the first suggestion that starts with it in gray after the caret, as an
   // editor's inline suggestion: Tab or → takes it, Enter searches what was typed. None when a suggestion is the name
   // typed. Only while typing at the end: a deletion, a paste or moving the caret drops it.
   const [completing, setCompleting] = useState(false);
@@ -428,7 +428,7 @@ export function Search({
             onBlur={() => setCompleting(false)}
             aria-label={label}
           />
-          {/* The suggestion's grey rest, after a hidden copy of the typed text so it starts at the caret. Screen readers have
+          {/* The suggestion's gray rest, after a hidden copy of the typed text so it starts at the caret. Screen readers have
               the sheet. */}
           {match !== undefined && (
             <div aria-hidden className={cn("pointer-events-none absolute inset-0 flex items-center overflow-hidden whitespace-pre", size.text)}>

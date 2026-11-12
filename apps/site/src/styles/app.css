@@ -165,7 +165,7 @@
 }
 
 /* A list item drawn as a card Box with CSS alone, for lists too long for the `Box` component (the leaderboard index's
-   thousands of links, set as HTML), in the card's shape (`box-shape`) and colours (tokens.css): the item draws the
+   thousands of links, set as HTML), in the card's shape (`box-shape`) and colors (tokens.css): the item draws the
    shadow (`::before`, the parts outside the box, as `Box` clips it) and the fill (`::after`) under its link, so the
    link's crisp filter takes only its text. The bevel clips the link's own ring, so the ring goes inside. */
 @utility box-item {
@@ -269,7 +269,7 @@
 }
 
 /* The card Box (`box.tsx`), drawn here so a Box's markup carries no polygons: its shape from `box-shape`, and the fill
-   and shadow colours from `--box-fill` and `--box-shadow`, the card's (tokens.css) unless the Box sets them. The shadow
+   and shadow colors from `--box-fill` and `--box-shadow`, the card's (tokens.css) unless the Box sets them. The shadow
    is the Box's `::before`; a square bottom-right corner (`data-square-corner`) has no notch. The fill's first layer is
    blended onto the rest with `overlay`, inside the fill only. */
 @utility box {
@@ -321,10 +321,10 @@
   }
 
   /* Minecraft text the crisp filter would spoil keeps the font's own edges and its CSS shadow: a filter forces alpha
-     to 0 or 1 (translucent colours, boxes, fades), adds a shadow to whatever is inside (icons, images, nested sizes and
+     to 0 or 1 (translucent colors, boxes, fades), adds a shadow to whatever is inside (icons, images, nested sizes and
      `mc-crisp` text, which have their own), clips what sits outside the element (stretched links, focus rings), holds
      what is positioned inside it, and is replaced by a hover filter. A Hint inherits its text's shadow and holds its own
-     tap area, so it can go inside. A Box's own translucent colour (a dimmed tab) reaches its text by inheritance. */
+     tap area, so it can go inside. A Box's own translucent color (a dimmed tab) reaches its text by inheritance. */
   .box[class*="/"] :is([class*="text-mc-"], [data-slot="content"], .mc-crisp),
   :is([class*="text-mc-"], [data-slot="content"], .mc-crisp):is(
       input, textarea, select, :focus-visible, [class*="/"], [class*="shadow"], [class*="box"],

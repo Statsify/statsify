@@ -110,7 +110,7 @@ const MINECRAFT_SIZES = [
   ["text-mc-4", "64"],
 ] as const;
 
-/** The § codes, in the order `colors.minecraft` lists their colours. */
+/** The § codes, in the order `colors.minecraft` lists their colors. */
 const CODES = "0123456789abcdef";
 const SWATCHES = Object.values(colors.minecraft).map((hex, index) => [CODES[index], hex] as const);
 
