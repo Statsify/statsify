@@ -56,7 +56,9 @@ export const SkyBlockCrimsonProfile = ({
       <text margin={{ top: 4, bottom: 4 }}>{`§c${t(`skyblock.kuudraTiers.${tier}`)}`}</text>
       <text margin={{ top: 0, bottom: 4 }}>{`§^3^§f${t(completions)}`}</text>
       <text margin={{ top: 0, bottom: 4 }}>
-        {highestWave === undefined ? `§8${t("skyblock.none")}` : `§7${t("skyblock.highestWave", { wave: t(highestWave) })}`}
+        {highestWave === undefined ?
+          (completions > 0 ? "" : `§8${t("skyblock.none")}`) :
+          `§7${t("skyblock.highestWave", { wave: t(highestWave) })}`}
       </text>
     </box>
   ));
@@ -64,7 +66,9 @@ export const SkyBlockCrimsonProfile = ({
   const dojo = crimson.dojo.map(({ test, points, grade, time }) => (
     <box direction="column" location="center" width="100%">
       <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`§6${t(`skyblock.dojoTests.${test}`)}`}</text>
-      <text margin={{ top: 0, bottom: 4 }}>{`§f${t(points)} ${DOJO_GRADE_COLORS[grade]}${grade}`}</text>
+      <text margin={{ top: 0, bottom: 4 }}>
+        {grade === undefined ? `§8${t("skyblock.none")}` : `§f${t(points)} ${DOJO_GRADE_COLORS[grade]}${grade}`}
+      </text>
       <text margin={{ top: 0, bottom: 8 }}>{`§7${time === undefined ? t("skyblock.none") : formatTime(time)}`}</text>
     </box>
   ));
