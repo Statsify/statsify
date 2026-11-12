@@ -10,7 +10,7 @@ import { cn } from "~/lib/util";
 import type { ReactNode } from "react";
 
 /**
- * A card table cell (`Table.td`): a Minecraft 16 title over a Minecraft 32 value, both in the stat's colour and centred
+ * A card table cell (`Table.td`): a Minecraft 16 title over a Minecraft 32 value, both in the stat's color and centered
  * (the number is the hero). A long title wraps to two lines; the value keeps to the bottom of the cell, so the values
  * in a row line up whatever their titles do. Renders a `<div>` holding a `<dt>` and a `<dd>`, so a list of cells goes
  * inside a `<dl>`.
@@ -34,7 +34,7 @@ export function StatCell({
   );
 }
 
-/** An inline row like the card's `§7Label: §3value`: one size, a §7 label and the value in its colour. */
+/** An inline row like the card's `§7Label: §3value`: one size, a §7 label and the value in its color. */
 export function InlineStat({
   label,
   value,

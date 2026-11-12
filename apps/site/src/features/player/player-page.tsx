@@ -36,7 +36,7 @@ const SOCIAL_ICONS: Partial<Record<SocialKey, ComponentType<{ className?: string
   youtube: YouTube,
 };
 
-// The bot's colour per stat: wins and kills §a, deaths §c, ratios, score and coins §6,
+// The bot's color per stat: wins and kills §a, deaths §c, ratios, score and coins §6,
 // winstreaks §e, and the trophies in the bot's gold, silver and bronze. Anything else is §f.
 const GREEN = "text-mc-green";
 const GOLD = "text-mc-gold";
@@ -225,7 +225,7 @@ function OverviewPanel({ overview, className }: { overview: PlayerPage["overview
   const { t } = useTranslation();
   const n = useNumberFormat();
 
-  // The general card's cells and colours: points §6, quests and challenges §a, karma and streaks §d, gifts §5.
+  // The general card's cells and colors: points §6, quests and challenges §a, karma and streaks §d, gifts §5.
   const cells: [label: string, value: number, color: string][] = [
     [t("default:stats.achievementPoints"), overview.achievementPoints, "text-mc-gold"],
     [t("default:stats.karma"), overview.karma, "text-mc-pink"],

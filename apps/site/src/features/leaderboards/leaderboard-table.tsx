@@ -31,13 +31,13 @@ const PLAYER = "sticky start-0 col-span-3 grid grid-cols-subgrid border-black/30
 const VALUES = "col-span-(--columns) grid grid-cols-subgrid";
 const BASE = "max-md:bg-blackify-800";
 const CELL = "flex h-12 items-center px-2";
-// Layers (gradients), so they sit over the base colour below `md` and over the panel from `md` up.
+// Layers (gradients), so they sit over the base color below `md` and over the panel from `md` up.
 const STRIPE = "bg-linear-to-r from-black/15 to-black/15";
 // The bot's highlighted row is a white 0.35 panel (`leaderboard.profile.tsx`).
 const HIGHLIGHT = "bg-linear-to-r from-white/35 to-white/35";
 
 /**
- * Below a 33rem box the name column drops the head and the badges and shows the name alone in its rank colour. At
+ * Below a 33rem box the name column drops the head and the badges and shows the name alone in its rank color. At
  * 33rem the widest position (`#1,234,567`), the head, a 16-character name after a four-digit level and `[MVP++]`,
  * and one value column all fit (measured in the Minecraft font at 24 px: 109, 40, 292 and 85 px, and the edge), and
  * the name column takes that name's full width, 18.25rem.
@@ -46,12 +46,12 @@ const NARROW_ONLY = "@min-[33rem]:hidden";
 const WIDE_ONLY = "@max-[33rem]:hidden";
 const FULL_NAME_COLUMN = "@min-[33rem]:[--name:18.25rem]";
 
-/** A row's name without its badges (level, rank), in the last colour the badges set: the rank's. */
+/** A row's name without its badges (level, rank), in the last color the badges set: the rank's. */
 function bareName(name: string): string {
   const at = name.lastIndexOf(" ");
   if (at === -1) return name;
-  const colour = [...name.slice(0, at).matchAll(/§(?:#[\dA-Fa-f]{6}|[\da-fA-F])/g)].at(-1)?.[0] ?? "";
-  return `${colour}${name.slice(at + 1)}`;
+  const color = [...name.slice(0, at).matchAll(/§(?:#[\dA-Fa-f]{6}|[\da-fA-F])/g)].at(-1)?.[0] ?? "";
+  return `${color}${name.slice(at + 1)}`;
 }
 
 const PHONE = "(width < 48rem)";
@@ -63,8 +63,8 @@ const subscribePhone = (onChange: () => void) => {
 };
 
 /**
- * A ref for the highlighted (`around`) row, which is brought into view, centred, when the page lands. After a client
- * navigation the router scrolls the window to the top once the new page is on screen, so the row is centred again
+ * A ref for the highlighted (`around`) row, which is brought into view, centered, when the page lands. After a client
+ * navigation the router scrolls the window to the top once the new page is on screen, so the row is centered again
  * then; a page Back or Forward put back where it was left stays there.
  */
 export function useHighlightScroll<T extends HTMLElement>(page: LeaderboardPage) {
