@@ -24,7 +24,9 @@ import {
   ModelResolver,
   PackStack,
   assetPath,
+  loadNames,
   loadPack,
+  nameKeys,
   namespaced,
   setCanvasBackend,
 } from "@statsify/textures";
@@ -180,15 +182,11 @@ const textureRects = Object.fromEntries(textureSprites.map(({ id }, index) => [i
 const png = await image.toBuffer("png");
 const hash = createHash("sha256").update(png).digest("hex").slice(0, 16);
 
-const lang = stack.json<Record<string, string>>("assets/minecraft/lang/en_us.json");
-if (!lang) throw new Error("The packs have no assets/minecraft/lang/en_us.json");
+const lang = loadNames(stack);
 const names: Record<string, string> = {};
 
-for (const id of ids) {
-  const path = id.replace(/^minecraft:/, "");
-  for (const key of [`item.minecraft.${path}`, `block.minecraft.${path}`]) {
-    if (lang[key]) names[key] = lang[key];
-  }
+for (const key of ids.flatMap(nameKeys)) {
+  if (lang[key]) names[key] = lang[key];
 }
 
 const data: AtlasData = {
