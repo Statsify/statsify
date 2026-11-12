@@ -39,9 +39,10 @@ export const SkyBlockSkillsProfile = ({
     }) :
     [];
 
-  // With the Skills API off, the best level on any profile from /player. A new profile has no skills of its own yet
+  // A new profile has no skills of its own yet
+  const highestSkills = profile.newProfile ? undefined : profile.player?.highestSkills;
   const highest = SKILLS.flatMap((name) => {
-    const level = profile.newProfile ? undefined : profile.player?.highestSkills[name];
+    const level = highestSkills?.[name];
     return level === undefined ? [] : [<Table.td title={prettify(name)} value={t(level)} color="§7" size="small" />];
   });
 
