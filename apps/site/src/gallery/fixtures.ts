@@ -92,7 +92,7 @@ export const LEADERBOARD_PAGE: LeaderboardPage = {
   pages: 40_000,
   rows: rows.map(([uuid, name, wins, fkdr], index) => ({
     uuid,
-    // The name after the badges, without its colour.
+    // The name after the badges, without its color.
     username: name.slice(name.lastIndexOf(" ") + 1).replaceAll(/§./g, ""),
     position: index + 1,
     name,

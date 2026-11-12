@@ -15,7 +15,7 @@ const NAMESPACES = ["site", "default"] as const;
 
 /**
  * One i18next instance per request on the server and one per page load in the browser,
- * initialised synchronously from the resources the route loader provides.
+ * initialized synchronously from the resources the route loader provides.
  */
 export function createI18n(locale: string, resources: Resource): i18n {
   const instance = i18next.createInstance();

@@ -68,7 +68,7 @@ import type { ActionResult } from "~/features/player/player-actions";
 
 const SECTIONS = [
   ["type", "Type"],
-  ["colours", "Colours and codes"],
+  ["colors", "Colors and codes"],
   ["panels", "Panels"],
   ["buttons", "Buttons"],
   ["stats", "Stat cells"],
@@ -98,7 +98,7 @@ const MINECRAFT_SIZES = [
 
 const SANS_SIZES = ["text-16", "text-20", "text-24"] as const;
 
-/** The § codes, in the order `colors.minecraft` lists their colours. */
+/** The § codes, in the order `colors.minecraft` lists their colors. */
 const CODES = "0123456789abcdef";
 const SWATCHES = Object.values(colors.minecraft).map((hex, index) => [CODES[index], hex] as const);
 
@@ -140,7 +140,7 @@ export function Gallery() {
           </nav>
         </header>
         <TypeSection />
-        <ColourSection />
+        <ColorSection />
         <PanelSection />
         <ButtonSection />
         <StatSection />
@@ -255,9 +255,9 @@ function TypeSection() {
   );
 }
 
-function ColourSection() {
+function ColorSection() {
   return (
-    <Section id="colours">
+    <Section id="colors">
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">
         {SWATCHES.map(([code, hex]) => (
           <li key={code} className="flex items-center gap-2">
@@ -266,7 +266,7 @@ function ColourSection() {
           </li>
         ))}
       </ul>
-      <Demo label="Formatting codes, hex colours and sizes">
+      <Demo label="Formatting codes, hex colors and sizes">
         <p className="text-mc-2">
           <MinecraftText>{"§lBold§r §oItalic§r §nUnderline§r §mStrike§r §#ff55aaHex§r §^4^Size 4§r §6[2,904✫] §b[MVP§c+§b] anrie"}</MinecraftText>
         </p>

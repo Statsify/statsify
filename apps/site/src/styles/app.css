@@ -217,7 +217,7 @@
 }
 
 /* The card Box (`box.tsx`), drawn here so a Box's markup carries no polygons: its shape from `box-shape`, and the fill
-   and shadow colours from `--box-fill` and `--box-shadow`, the card's (tokens.css) unless the Box sets them. The shadow
+   and shadow colors from `--box-fill` and `--box-shadow`, the card's (tokens.css) unless the Box sets them. The shadow
    is the Box's `::before`; a square bottom-right corner (`data-square-corner`) has no notch. The panel and the overlay
    are the fill's `::before` and `::after`, beside the content, so the overlay blends with whatever is behind the Box. */
 @utility box {
