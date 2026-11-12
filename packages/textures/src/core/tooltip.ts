@@ -24,6 +24,11 @@ export function loadNames(stack: PackStack) {
   return names;
 }
 
+export function nameKeys(id: string) {
+  const path = id.replace(/^minecraft:/, "");
+  return [`item.minecraft.${path}`, `block.minecraft.${path}`] as const;
+}
+
 // Legacy text takes the default style as § codes; a component gets it as a parent to inherit
 const prefixed = (text: TextComponent, codes: string, style: { color?: string; italic?: boolean }): TextComponent =>
   typeof text === "string" ? `${codes}${text}` : { text: "", ...style, extra: [text] };
@@ -34,8 +39,8 @@ function plainName(item: ItemStack, names: Record<string, string>) {
   // 1.8 makes only common items aqua when enchanted
   if (legacy) return item.enchanted && legacy.startsWith("§f") ? `§b${legacy.slice(2)}` : legacy;
 
-  const path = item.id.replace(/^minecraft:/, "");
-  const key = names[`item.minecraft.${path}`] ? `item.minecraft.${path}` : `block.minecraft.${path}`;
+  const [itemKey, blockKey] = nameKeys(item.id);
+  const key = names[itemKey] ? itemKey : blockKey;
   return `${item.enchanted ? "§b" : ""}${names[key] ?? key}`;
 }
 

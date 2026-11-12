@@ -7,6 +7,7 @@
  */
 
 import { type ItemLayer, type Model, ModelResolver, type SpecialModel } from "./models.js";
+import { Atlas } from "./atlas.js";
 import { type Quad, type Transformation, boxQuads, elementQuads, rasterize, transformQuads } from "./geometry.js";
 import { context, createCanvas, createImageData, decodePng, hex } from "./canvas.js";
 import { TextureLoader } from "./textures.js";
@@ -29,7 +30,7 @@ const HEADS: Record<string, { texture: string; hat: boolean }> = {
   zombie: { texture: "entity/zombie/zombie", hat: true },
 };
 
-const DEFAULT_SKIN = "entity/player/wide/steve";
+export const DEFAULT_SKIN = "entity/player/wide/steve";
 
 // A banner in a slot has its flag at the start of its wave
 const FLAG_TILT = (-0.0125 + 0.01) * Math.PI;
@@ -45,8 +46,8 @@ const entityTexture = (folder: string, id: string) => {
   return `${namespace}:entity/${folder}/${name}`;
 };
 
-const GLINT = "misc/enchanted_glint_item";
-const LEGACY_GLINT = "misc/enchanted_item_glint";
+export const GLINT = "misc/enchanted_glint_item";
+export const LEGACY_GLINT = "misc/enchanted_item_glint";
 
 function tinted(pixels: ImageData, color: number) {
   const red = (color >> 16) & 0xff;
@@ -225,24 +226,37 @@ function textureIds({ model, special }: ItemLayer) {
 }
 
 export class ItemRenderer {
-  private models: ModelResolver;
-  private textures: TextureLoader;
+  /** Whether the glint moves the way 1.8's does, which a 1.8 pack's glint texture picks */
+  public readonly legacyGlint: boolean;
+  private hash: string;
+  private atlas?: Atlas;
+  private models: Pick<ModelResolver, "resolve">;
+  private textures: Pick<TextureLoader, "get" | "frame">;
   private icons = new Map<string, Promise<OffscreenCanvas>>();
   private skins = new Map<string, Promise<ImageData | undefined>>();
-  private legacyGlint: boolean;
   private glint?: Promise<ReturnType<typeof squaredGlint>>;
   private translucentIcons = new WeakMap<OffscreenCanvas, boolean>();
 
   public constructor(
-    private stack: PackStack,
+    source: PackStack | Atlas,
     private cache?: IconCache,
   ) {
-    this.models = new ModelResolver(stack);
-    this.textures = new TextureLoader(stack);
+    this.hash = source.hash;
+
+    if (source instanceof Atlas) {
+      this.atlas = source;
+      this.models = source.models;
+      this.textures = source.textures;
+      this.legacyGlint = source.legacyGlint;
+      return;
+    }
+
+    this.models = new ModelResolver(source);
+    this.textures = new TextureLoader(source);
 
     const legacy = assetPath(LEGACY_GLINT, "textures", ".png");
     this.legacyGlint =
-      stack.packs.findLast(({ files }) => files.has(legacy) || files.has(assetPath(GLINT, "textures", ".png")))
+      source.packs.findLast(({ files }) => files.has(legacy) || files.has(assetPath(GLINT, "textures", ".png")))
         ?.files.has(legacy) ?? false;
   }
 
@@ -279,6 +293,8 @@ export class ItemRenderer {
   }
 
   private async base(requested: ItemStack, scale: number, tick: number): Promise<OffscreenCanvas> {
+    if (this.atlas && !this.atlas.drawsInClient(requested.id)) return this.atlas.icon(requested.id, scale);
+
     // Failed skins share the default head's cache entry
     const item =
       requested.skin && !(await this.skin(requested.skin)) ? { ...requested, skin: undefined } : requested;
@@ -320,7 +336,7 @@ export class ItemRenderer {
 
     // Items that resolve to the same models and colors share an icon
     const key = [
-      this.stack.hash,
+      this.hash,
       ...layers.map(({ model, colors, special }) =>
         [model.id, special?.type, special?.kind, special?.texture, special?.color, ...colors.map(hex)]
           .filter(Boolean)
