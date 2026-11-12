@@ -86,7 +86,7 @@ interface Section<K extends keyof MemberView> {
 }
 
 /** Ironman, stranded and bingo profiles can't use the Auction House or the Bazaar. */
-const hasMarket = (profile: RawProfile) => gameModeOf(profile) === "normal";
+export const hasMarket = (profile: RawProfile) => gameModeOf(profile) === "normal";
 
 export type SectionKey = Exclude<keyof MemberView, "apiSettings" | "networth" | "values">;
 

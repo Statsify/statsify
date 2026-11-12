@@ -7,13 +7,14 @@
  */
 
 import { TUNING } from "./accessories.js";
+import { byKey } from "./inventories.js";
 import { decodeSlots } from "#items";
 import { removeFormatting } from "@statsify/util";
 import type { GearSection, ItemView, Loadout, Slots } from "#types";
 import type { RawMember, RawNbt } from "#raw";
 
 const ARMOR_PIECES = ["HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"] as const;
-const EQUIPMENT_PIECES = ["EQUIPMENT_SLOT_1", "EQUIPMENT_SLOT_2", "EQUIPMENT_SLOT_3", "EQUIPMENT_SLOT_4"] as const;
+export const EQUIPMENT_PIECES = ["EQUIPMENT_SLOT_1", "EQUIPMENT_SLOT_2", "EQUIPMENT_SLOT_3", "EQUIPMENT_SLOT_4"] as const;
 
 // The item type ends an item's rarity line: "LEGENDARY DUNGEON SWORD", "EPIC BOW"
 const WEAPON_LINE = /\b(?:SWORD|LONGSWORD|BOW|GAUNTLET|WAND)$/;
@@ -100,14 +101,11 @@ function getLoadouts(member: RawMember): Loadout[] {
     .toSorted((a, b) => a.id - b.id);
 }
 
-/** The swords, bows and wands in the inventory, the ender chest, the backpacks and the vault, in that order. */
 function getWeapons({ inventory }: RawMember): ItemView[] {
   const blobs = [
     inventory?.inv_contents,
     inventory?.ender_chest_contents,
-    ...Object.entries(inventory?.backpack_contents ?? {})
-      .toSorted(([a], [b]) => Number(a) - Number(b))
-      .map(([, blob]) => blob),
+    ...byKey(inventory?.backpack_contents),
     inventory?.personal_vault_contents,
   ];
   return blobs
