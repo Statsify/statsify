@@ -23,7 +23,7 @@ import { Tag } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
-const TAG_NAME_REGEX = /^[\w-]{1,32}$/;
+const TAG_NAME_REGEX = /^[\da-z_-]{1,32}$/;
 
 @Service()
 export class TagService {
