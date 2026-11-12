@@ -8,6 +8,7 @@ use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, Textu
 use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
+use crate::skin_loader::load_skull_from_memory;
 use crate::texture::Texture;
 
 pub enum ModelKind {
@@ -312,13 +313,17 @@ impl Model {
     armor: &Armor,
   ) -> Result<()> {
     for (piece, layer, parts) in armor.pieces() {
-      let texture = image::load_from_memory(&piece.texture)?;
+      let skull = piece.is_skull();
+      let texture = if skull {
+        load_skull_from_memory(&piece.texture)?
+      } else {
+        image::load_from_memory(&piece.texture)?
+      };
       // Packs draw the 64 wide layout at any resolution, and skins are square where armour is 2:1
       let texture_size = (64, 64 * texture.height() / texture.width());
       let mut geometry = Geometry::new(vec![], vec![]);
 
       // A worn skull grows from the neck instead of being inflated, as the game draws one
-      let skull = piece.is_skull();
       let (inflation, hat_inflation) = if skull {
         (0.0, 0.25)
       } else {

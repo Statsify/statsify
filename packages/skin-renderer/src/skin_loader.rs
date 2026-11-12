@@ -36,6 +36,17 @@ pub fn load_skin_from_memory(skin: &[u8]) -> Result<DynamicImage> {
   Ok(skin)
 }
 
+// A worn player head is a skin, so it gets the cleanup the game gives the wearer's own.
+// Of the vanilla mob skulls, only the skeletons' open bottom changes, and the neck covers it.
+pub fn load_skull_from_memory(skull: &[u8]) -> Result<DynamicImage> {
+  let skull = image::load_from_memory(skull)?;
+
+  match SkinFormat::try_from_image(&skull) {
+    Some(_) if skull.width() == 64 => process_skin(skull),
+    _ => Ok(skull),
+  }
+}
+
 fn process_skin(skin: DynamicImage) -> Result<DynamicImage> {
   let format = SkinFormat::try_from_image(&skin).ok_or(Error::InvalidSkinTexture)?;
 
