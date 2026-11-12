@@ -36,21 +36,21 @@ export interface PlayerRef {
   displayName: string;
 }
 
-/** What the stored Player keeps from /player, as PlayerSkyBlock in @statsify/schemas. 0 means none. */
+/** What the stored Player keeps from /player, as PlayerSkyBlock in @statsify/schemas. Mongo leaves out a 0. */
 export interface StoredPlayerSkyBlock {
-  angler: number;
-  augmentation: number;
-  combat: number;
-  concoctor: number;
-  domesticator: number;
-  excavator: number;
-  gatherer: number;
-  harvester: number;
-  hardWorkingMiner: number;
-  centuryCake: number;
-  centuryCake200: number;
-  potatoTalisman: number;
-  freeCookie: number;
+  angler?: number;
+  augmentation?: number;
+  combat?: number;
+  concoctor?: number;
+  domesticator?: number;
+  excavator?: number;
+  gatherer?: number;
+  harvester?: number;
+  hardWorkingMiner?: number;
+  centuryCake?: number;
+  centuryCake200?: number;
+  potatoTalisman?: number;
+  freeCookie?: number;
 }
 
 export const PLAYER_CLAIMS = ["centuryCake", "centuryCake200", "potatoTalisman", "freeCookie"] as const;
@@ -180,18 +180,19 @@ export interface ValuesSection {
   pricesAsOf: number;
   inventories: {
     pages: Partial<Record<InventoryId, (number | null)[][]>>; // each slot's worth as networth prices it; null: empty or unpriced
-    totals: Partial<Record<InventoryId, number>>;
+    backpackIcons: (number | null)[]; // each backpack item's worth, as the inventories section's backpackIcons
+    totals: Partial<Record<InventoryId, number>>; // backpacks with the backpack items, as networth's storage
     sacks: Record<string, number>; // each sack item's whole count, by id; only priced ones
   } | null; // null with the inventory API off
-  missingPets: MissingPet[]; // cheapest first; only types with a price
+  missingPets: MissingPet[]; // cheapest first, only types with a price; without the market, every type unpriced by name
 }
 
-/** A pet type the member has none of, at its cheapest level 1 rarity on the market. */
+/** A pet type the member has none of, at its cheapest level 1 rarity on the market, or its lowest that scores without one. */
 export interface MissingPet {
   type: string;
   name: string;
   rarity: Rarity;
-  price: number;
+  price?: number;
   points: number; // the pet score it would add
   texture: ItemTexture;
 }
