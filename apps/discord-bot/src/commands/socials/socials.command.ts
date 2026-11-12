@@ -12,6 +12,7 @@ import {
   CommandContext,
   EmbedBuilder,
   IMessage,
+  type LocalizationString,
   PlayerArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
@@ -33,7 +34,7 @@ export class SocialsCommand {
 
     const embed = new EmbedBuilder()
       .title((t) => this.apiService.emojiDisplayName(t, displayName))
-      .author("Player Socials")
+      .author((t) => t("embeds.socials.author"))
       .thumbnail(`attachment://${head.name}`)
       .color(STATUS_COLORS.info)
       .field(
@@ -68,9 +69,9 @@ export class SocialsCommand {
     return { embeds: [embed], files: [head] };
   }
 
-  private formatSocial(social?: string, link = true) {
+  private formatSocial(social?: string, link = true): LocalizationString {
     const url = link && social ? parseSocialLink(social) : undefined;
-    if (url) return `[\`Here\`](${url})`;
+    if (url) return (t) => `[\`${t("here")}\`](${url})`;
 
     const text = social?.replaceAll("`", "").trim();
     return `\`${text || "N/A"}\``;
