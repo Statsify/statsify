@@ -44,6 +44,7 @@
     "delete-player": "Delete a player from Statsify",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
+    "fishing": "$t(commands.hypixel-command, { \"name\": \"Fishing\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
     "game-counts": "View Hypixel current game counts",
@@ -791,7 +792,104 @@
     "airTime": "Air Time",
     "potionsSplashed": "Potions Splashed",
     "powerOrbs": "Power Orbs",
-    "grenadeKills": "Grenade Kills"
+    "grenadeKills": "Grenade Kills",
+    "fishing": {
+      "activeRod": "Active Rod",
+      "activeTrail": "Active Trail",
+      "allTimeSeasonal": "All-Time Seasonal",
+      "catches": "Catches",
+      "catchTypes": {
+        "creature": "Creatures",
+        "fish": "Fish",
+        "junk": "Junk",
+        "mythical": "Mythicals",
+        "plant": "Plants",
+        "treasure": "Treasure"
+      },
+      "enchants": {
+        "collector": "Collector",
+        "dumpsterDiver": "Dumpster Diver",
+        "herbivore": "Herbivore",
+        "luck": "Luck",
+        "lure": "Lure",
+        "mythicalHook": "Mythical Hook",
+        "neptunesFury": "Neptune's Fury",
+        "vulcansBlessing": "Vulcan's Blessing"
+      },
+      "environmentBreakdown": "Environment Breakdown",
+      "environmentDetails": "Environment Details",
+      "environments": {
+        "ice": "Ice",
+        "lava": "Lava",
+        "water": "Water"
+      },
+      "events": {
+        "christmas": "Holiday",
+        "easter": "Easter",
+        "halloween": "Halloween",
+        "summer": "Summer"
+      },
+      "fireproofing": {
+        "flame": "Flame",
+        "scales": "Scales",
+        "sealant": "Sealant",
+        "title": "Fireproofing"
+      },
+      "fishingRods": "Fishing Rods",
+      "foundIn": "Found In",
+      "hookTrails": "Hook Trails",
+      "lifetimeCatches": "Lifetime Catches",
+      "locked": "Locked",
+      "maxed": "Maxed",
+      "maxWeight": "Max Weight",
+      "overviewTitle": "Stats",
+      "page": "Page {{page}} / {{pages}}",
+      "pages": {
+        "catchesOne": "Catches I",
+        "catchesTwo": "Catches II",
+        "collections": "Collections",
+        "environments": "Environments",
+        "mythicals": "Mythicals",
+        "overview": "Overview",
+        "seasonal": "Seasonal",
+        "specialsOne": "Special Fish I",
+        "specialsTwo": "Special Fish II",
+        "yearly": "Yearly"
+      },
+      "rarities": {
+        "common": "Common",
+        "rare": "Rare",
+        "ultra_rare": "Ultra Rare",
+        "uncommon": "Uncommon"
+      },
+      "rarity": "Rarity",
+      "rodPerks": "Rod Perks",
+      "rodRequirements": {
+        "fishing_rod_3000": "Default fishing rod",
+        "fishing_rod_festive": "Holidays Fishing Reward",
+        "fishing_rod_haunted": "Halloween Fishing Reward",
+        "fishing_rod_inaugural_ice": "Holidays 2022 limited item",
+        "fishing_rod_overgrown": "Poisonous Potato, Golden Apple, Burnt Plant",
+        "fishing_rod_solar": "Summer Fishing Reward",
+        "fishing_rod_springtime": "Spring Fishing Reward",
+        "fishing_rod_zoologist": "Catch 1 squid during Creatures modifier"
+      },
+      "rods": "Rods",
+      "seasonalCatchTypes": "Seasonal Catch Types",
+      "share": "Share",
+      "sources": {
+        "anytime": "Anytime",
+        "christmas": "$t(stats.fishing.events.christmas)",
+        "denseVegetation": "Dense Vegetation",
+        "easter": "$t(stats.fishing.events.easter)",
+        "fishingFriday": "Fishing Friday",
+        "halloween": "$t(stats.fishing.events.halloween)",
+        "summer": "$t(stats.fishing.events.summer)"
+      },
+      "specialFish": "Special Fish",
+      "totalCatches": "Total Catches",
+      "unlocked": "Unlocked"
+    }
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",

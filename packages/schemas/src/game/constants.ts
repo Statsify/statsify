@@ -60,6 +60,7 @@ export enum FormattedGame {
   COPS_AND_CRIMS = "§6Cops §fand §aCrims§f",
   DUELS = "§bDuels§f",
   EVENTS = "§eEvents§f",
+  FISHING = "§bFishing§f",
   GENERAL = "§fGeneral§f",
   HOUSING = "§9Housing§f",
   MEGAWALLS = "§7MegaWalls§f",
