@@ -19,7 +19,7 @@ import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
 import { config } from "@statsify/util";
 
-@Command({ description: (t) => t("commands.ticket-menu"), tier: UserTier.CORE, userCommand: false })
+@Command({ description: (t) => t("commands.ticket-menu"), tier: UserTier.CORE, userCommand: false, ephemeral: true })
 export class TicketMenuCommand {
   public constructor(private readonly messageService: MessageService) {}
 
@@ -48,9 +48,6 @@ export class TicketMenuCommand {
       components: [new ActionRowBuilder().component(button)],
     });
 
-    return {
-      content: "Ticket Message Sent",
-      ephemeral: true,
-    };
+    return { content: "Ticket Message Sent" };
   }
 }
