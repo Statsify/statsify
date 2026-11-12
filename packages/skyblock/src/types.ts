@@ -46,6 +46,7 @@ export interface StoredPlayerSkyBlock {
   excavator?: number;
   gatherer?: number;
   harvester?: number;
+  predator?: number;
   hardWorkingMiner?: number;
   centuryCake?: number;
   centuryCake200?: number;
