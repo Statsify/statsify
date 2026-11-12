@@ -242,6 +242,7 @@ export interface RawMember {
   };
   rift?: {
     access?: { consumed_prism?: boolean };
+    castle?: { grubber_stacks?: number };
     dead_cats?: { montezuma?: RawPet; found_cats?: string[] };
     enigma?: { found_souls?: string[] };
     gallery?: { secured_trophies?: unknown[] };

@@ -31,6 +31,7 @@ const CONSUMABLES: { id: string; max: number; used: (member: RawMember) => numbe
   { id: "BEE_SALIVA", max: 5, used: (member) => member.player_data?.bee_saliva_eaten },
   { id: "ISOPOD_HUSK", max: 5, used: (member) => member.player_data?.isopod_husks_eaten },
   { id: "RIFT_PRISM", max: 1, used: (member) => Number(member.rift?.access?.consumed_prism ?? false) },
+  { id: "MCGRUBBER_BURGER", max: 5, used: (member) => member.rift?.castle?.grubber_stacks },
 ];
 
 // Every song played has a best; its completions keys also come as _perfect_completions
