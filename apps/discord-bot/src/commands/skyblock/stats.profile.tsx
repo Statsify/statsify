@@ -24,6 +24,9 @@ export const STAT_PAGES = {
   misc: ["misc", "wisdoms"],
 } as const satisfies Record<string, StatGroup[]>;
 
+// Gathering's long fortune names set its width four a row; elsewhere the header usually does, so three would only add height
+const COLUMNS: Record<keyof typeof STAT_PAGES, number> = { combat: 4, gathering: 3, misc: 4 };
+
 export interface SkyBlockStatsProfileProps extends SkyBlockProfileProps {
   page: keyof typeof STAT_PAGES;
 }
@@ -50,7 +53,7 @@ export const SkyBlockStatsProfile = ({
       return [<Table.td title={`${info.symbol} ${prettify(stat)}`} value={value} color={info.color} size="small" />];
     });
 
-    return cells.length > 0 ? [<Table.ts title={`§e${t(`skyblock.statGroups.${group}`)}`}>{gridRows(cells, 4)}</Table.ts>] : [];
+    return cells.length > 0 ? [<Table.ts title={`§e${t(`skyblock.statGroups.${group}`)}`}>{gridRows(cells, COLUMNS[page], true)}</Table.ts>] : [];
   });
 
   return (
