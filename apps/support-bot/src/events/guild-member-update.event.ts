@@ -21,7 +21,7 @@ import { Logger, STATUS_COLORS } from "@statsify/logger";
 import { Service } from "typedi";
 import { User, UserTier } from "@statsify/schemas";
 import { UserService } from "#services";
-import { config } from "@statsify/util";
+import { config, noop } from "@statsify/util";
 
 // Highest tier first, so findTier and findRoleTier pick the highest one a member has
 const PREMIUM_TIERS = [
@@ -57,7 +57,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   private serverBoosters: Set<string>;
   private patreons: Set<string>;
 
-  private loadedPremium: boolean;
+  private premiumLoad?: Promise<void>;
   private readonly logger = new Logger("GuildMemberUpdateEventListener");
 
   public constructor(
@@ -78,12 +78,15 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     this.serverBoosters = new Set();
     this.patreons = new Set();
-
-    this.loadedPremium = false;
   }
 
   public async onEvent(data: GatewayGuildMemberUpdateDispatchData): Promise<void> {
-    if (!this.loadedPremium) await this.loadPremium();
+    this.premiumLoad ??= this.loadPremium().catch((error) => {
+      this.premiumLoad = undefined;
+      throw error;
+    });
+
+    await this.premiumLoad;
 
     const guildId = data.guild_id;
     if (guildId !== GUILD_ID) return;
@@ -105,8 +108,8 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     // They are a new patreon
     if (!isPatreon && hasPatreonRole) return this.patreonAdd(memberId);
 
-    // They don't have premium and the role was added
-    if (currentRoleTier && currentRoleTier > (currentTier ?? 0))
+    // They bought, upgraded or downgraded a tier
+    if (currentRoleTier && currentRoleTier !== currentTier)
       return this.handlePremiumAdd(memberId, currentRoleTier);
 
     if (hasPatreonRole) return;
@@ -119,9 +122,16 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     if (hasServerBoosterRole && !isServerBooster) return this.serverBoosterAdd(memberId);
   }
 
-  private async loadPremium() {
-    this.loadedPremium = true;
+  public async forget(memberId: string) {
+    // A load that's still running would add them back
+    await this.premiumLoad?.catch(noop);
 
+    for (const tier of PREMIUM_TIERS) this.tiers[tier].delete(memberId);
+    this.patreons.delete(memberId);
+    this.serverBoosters.delete(memberId);
+  }
+
+  private async loadPremium() {
     const users = await this.userService.findAllPremium();
 
     for (const user of users) {
