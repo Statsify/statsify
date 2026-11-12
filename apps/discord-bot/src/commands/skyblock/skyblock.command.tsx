@@ -277,7 +277,8 @@ type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
 
 // Not arrow functions: the command loader takes those for commands
 export function skyBlockTitle(t: LocalizeFunction, profile: SkyBlockProfileView, name: SkyBlockCardName) {
-  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)} §r(${formatProfileName(profile)}§r)`;
+  // The Header moves the profile onto its own line where that narrows the card
+  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)}\n§r(${formatProfileName(profile)}§r)`;
 }
 
 export function getSkyBlockBackground() {
