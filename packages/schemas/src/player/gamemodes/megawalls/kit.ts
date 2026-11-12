@@ -65,6 +65,7 @@ export class MegaWallsKit {
   public kitLevel: number;
 
   public constructor(data: APIData, kit: string) {
+    this.kitLevel = data.classes?.[kit]?.skill_level_d;
     kit = kit ? `${kit}_` : kit;
 
     this.wins = data[`${kit}wins`];
@@ -84,7 +85,6 @@ export class MegaWallsKit {
     this.witherKills = data[`${kit}wither_kills`];
 
     this.points = data[`${kit}class_points`];
-    this.kitLevel = data[`${kit}new_d`];
 
     MegaWallsKit.applyRatios(this);
   }
