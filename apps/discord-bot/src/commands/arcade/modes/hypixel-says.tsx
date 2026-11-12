@@ -6,16 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Historical, Table } from "#components";
 import { HypixelSays } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
-import { Table } from "#components";
+import type { ProfileTime } from "#commands/base.hypixel-command";
 
 interface HypixelSaysTableProps {
   stats: HypixelSays;
   t: LocalizeFunction;
+  time: ProfileTime;
 }
 
-export const HypixelSaysTable = ({ stats, t }: HypixelSaysTableProps) => (
+export const HypixelSaysTable = ({ stats, t, time }: HypixelSaysTableProps) => (
   <Table.table>
     <Table.ts title="§6Hypixel Says">
       <Table.tr>
@@ -24,7 +26,9 @@ export const HypixelSaysTable = ({ stats, t }: HypixelSaysTableProps) => (
       </Table.tr>
       <Table.tr>
         <Table.td title={t("stats.points")} value={t(stats.points)} color="§e" />
-        <Table.td title={t("stats.maxPoints")} value={t(stats.maxScore)} color="§6" />
+        <Historical.exclude time={time}>
+          <Table.td title={t("stats.maxPoints")} value={t(stats.maxScore)} color="§6" />
+        </Historical.exclude>
       </Table.tr>
     </Table.ts>
     <Table.tr>
@@ -35,7 +39,9 @@ export const HypixelSaysTable = ({ stats, t }: HypixelSaysTableProps) => (
         </Table.tr>
         <Table.tr>
           <Table.td title={t("stats.points")} value={t(stats.simonSays.points)} color="§e"size="small" />
-          <Table.td title={t("stats.maxPoints")} value={t(stats.simonSays.maxScore)} color="§6"size="small" />
+          <Historical.exclude time={time}>
+            <Table.td title={t("stats.maxPoints")} value={t(stats.simonSays.maxScore)} color="§6"size="small" />
+          </Historical.exclude>
         </Table.tr>
       </Table.ts>
       <Table.ts title="§6Santa Says">
@@ -45,7 +51,9 @@ export const HypixelSaysTable = ({ stats, t }: HypixelSaysTableProps) => (
         </Table.tr>
         <Table.tr>
           <Table.td title={t("stats.points")} value={t(stats.santaSays.points)} color="§e" size="small" />
-          <Table.td title={t("stats.maxPoints")} value={t(stats.santaSays.maxScore)} color="§6" size="small" />
+          <Historical.exclude time={time}>
+            <Table.td title={t("stats.maxPoints")} value={t(stats.santaSays.maxScore)} color="§6" size="small" />
+          </Historical.exclude>
         </Table.tr>
       </Table.ts>
     </Table.tr>
