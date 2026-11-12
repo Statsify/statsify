@@ -21,13 +21,13 @@ const OVERALL: PageSpec = {
 
 /** Every kit's table, then the kit's level and EXP, which the card shows once the kit has a level. */
 const kit = (mode: string): PageSpec => {
-  const levelled = (_: unknown, { blitzsg }: PlayerStats) =>
+  const leveled = (_: unknown, { blitzsg }: PlayerStats) =>
     blitzsg[mode as Exclude<ApiModeFromGameModes<BlitzSGModes>, "overall">].level > 0;
 
   return {
     sections: [
       { rows: [["wins", "losses", "wlr"], ["kills", "deaths", "kdr"], ["playtime", "gamesPlayed"]] },
-      { title: "game.sections.kit", rows: [[{ key: "level", when: levelled }, { key: "exp", when: levelled }]] },
+      { title: "game.sections.kit", rows: [[{ key: "level", when: leveled }, { key: "exp", when: leveled }]] },
     ],
   };
 };
