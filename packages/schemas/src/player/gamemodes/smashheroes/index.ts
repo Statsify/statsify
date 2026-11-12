@@ -41,24 +41,24 @@ export const SMASH_HEROES_MODES = new GameModes([
 
 export type SmashHeroesModes = ExtractGameModes<typeof SMASH_HEROES_MODES>;
 
-enum SmashHeroesClass {
-  BOTMUN = "Botmon",
-  CAKE_MONSTER = "Cake Monster",
-  DUSK_CRAWLER = "Void Crawler",
-  FROSTY = "Cryomancer",
-  GENERAL_CLUCK = "General Cluck",
-  GOKU = "Karakot",
-  GREEN_HOOD = "Green Hood",
-  MARAUDER = "Marauder",
-  PUG = "Pug",
-  SANIC = "Sanic",
-  SERGEANT_SHIELD = "Sgt. Shield",
-  SHOOP_DA_WHOOP = "Shoop",
-  SKULLFIRE = "Skullfire",
-  SPODERMAN = "Spooderman",
-  THE_BULK = "Bulk",
-  TINMAN = "Tinman"
-}
+const SmashHeroesClass = {
+  BOTMUN: "Botmon",
+  CAKE_MONSTER: "Cake Monster",
+  DUSK_CRAWLER: "Void Crawler",
+  FROSTY: "Cryomancer",
+  GENERAL_CLUCK: "General Cluck",
+  GOKU: "Karakot",
+  GREEN_HOOD: "Green Hood",
+  MARAUDER: "Marauder",
+  PUG: "Pug",
+  SANIC: "Sanic",
+  SERGEANT_SHIELD: "Sgt. Shield",
+  SHOOP_DA_WHOOP: "Shoop",
+  SKULLFIRE: "Skullfire",
+  SPODERMAN: "Spooderman",
+  THE_BULK: "Bulk",
+  TINMAN: "Tinman",
+} as const;
 
 export class SmashHeroes {
   @Field()
