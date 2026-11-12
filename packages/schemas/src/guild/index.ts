@@ -39,7 +39,13 @@ export class Guild {
   public createdAt: number;
 
   @Field({
-    leaderboard: { fieldName: "Level", hidden: true, additionalFields: ["level"], limit },
+    leaderboard: {
+      fieldName: "Level",
+      hidden: true,
+      additionalFields: ["level"],
+      limit,
+      searchBy: (exp: number) => getLevel(exp).level,
+    },
   })
   public exp: number;
 

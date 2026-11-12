@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
+import { type APIData, formatTime, parseTime } from "@statsify/util";
 import { Field } from "#metadata";
 import { add, ratio, sub } from "@statsify/math";
 
@@ -35,7 +35,7 @@ export class SkyWarsMini implements SkyWarsMode {
   @Field()
   public assists: number;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTime, parser: parseTime }, historical: { enabled: false } })
   public playtime: number;
 
   // Kit gets applied in the main class
@@ -89,7 +89,7 @@ export class SkyWarsMode {
   @Field()
   public assists: number;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTime, parser: parseTime }, historical: { enabled: false } })
   public playtime: number;
 
   // Kit gets applied in the main class

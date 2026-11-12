@@ -32,6 +32,7 @@ export class General {
       hidden: true,
       limit: Number.POSITIVE_INFINITY,
       formatter: getNetworkLevel,
+      searchBy: getNetworkLevel,
       additionalFields: ["this.networkLevel"],
     },
     historical: {
