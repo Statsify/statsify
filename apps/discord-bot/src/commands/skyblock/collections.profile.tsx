@@ -66,6 +66,7 @@ export const SkyBlockCollectionsProfile = ({
             icons={icons}
             columns={3}
             stacked
+            spreadLastRow
           />
         ) :
         <EmptySection setting="collections" newProfile={profile.newProfile} empty={t("skyblock.noCollections")} t={t} />}
