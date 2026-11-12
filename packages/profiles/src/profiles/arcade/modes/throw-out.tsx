@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColours } from "@statsify/catalog";
+import { ARCADE, cardColors } from "@statsify/catalog";
 import type { LocalizeFunction } from "../../../types.js";
 import { Table } from "../../../components/index.js";
 import { ThrowOut } from "@statsify/schemas";

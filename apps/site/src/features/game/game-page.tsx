@@ -15,7 +15,7 @@ import { GameNav } from "./game-nav";
 import { Hint, PointerText, Spoken } from "~/components/ui/hint";
 import { InlineStat, LeaderboardLink, StatCell, StatNumber, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
-import { MinecraftText, colourClass, leadingColourClass, plainText } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorClass, leadingColorClass, plainText } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "~/features/player/mini-header";
 import { ModeSwitcher } from "./mode-switcher";
 import { PanelToggle, SharePanel } from "~/features/player/share-panel";

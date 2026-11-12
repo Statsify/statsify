@@ -328,7 +328,7 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
   return new Uint8Array(await canvas.toBuffer("png"));
 }
 
-/** Draws `image` scaled to cover the canvas, centred. */
+/** Draws `image` scaled to cover the canvas, centered. */
 function drawCover(ctx: CanvasRenderingContext2D, image: Canvas | Image, width: number, height: number) {
   const cover = Math.max(width / image.width, height / image.height);
   const coverWidth = image.width * cover;

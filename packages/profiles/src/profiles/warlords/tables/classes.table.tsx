@@ -7,7 +7,7 @@
  */
 
 import { ClassMetadata, METADATA_KEY, WarlordsClass, WarlordsSpecification } from "@statsify/schemas";
-import { WARLORDS, cardColours } from "@statsify/catalog";
+import { WARLORDS, cardColors } from "@statsify/catalog";
 import type { LocalizeFunction } from "../../../types.js";
 import { Table } from "../../../components/index.js";
 import type { Constructor } from "@statsify/util";

@@ -10,7 +10,7 @@ import { Button } from "~/components/ui/button";
 import { useId } from "react";
 import { Hint } from "~/components/ui/hint";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
 import { Search } from "~/components/search";
 import { formatPosition } from "@statsify/profiles/format-position";
 import { StatNumber, useStatName } from "~/components/ui/stat";

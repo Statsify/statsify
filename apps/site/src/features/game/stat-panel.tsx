@@ -15,7 +15,7 @@ import { Fragment, type ReactNode } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { Hidden, InlineStat, LeaderboardLink, StatCell, glossaryKey, linkHint, useStatName } from "~/components/ui/stat";
-import { MinecraftText, colourOf } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
 import { StatInfo } from "./stat-info";
 import { cn } from "~/lib/util";
 import { LABEL_NAMESPACES } from "~/i18n/i18n";
@@ -23,7 +23,7 @@ import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useTranslation } from "react-i18next";
 import type { StatCell as Stat, StatSection } from "@statsify/contract";
 
-/** On a phone an odd row's last cell spans its row, centred, rather than sitting alone in the first column. */
+/** On a phone an odd row's last cell spans its row, centered, rather than sitting alone in the first column. */
 const ODD_LAST = "max-sm:col-span-2";
 
 /**
@@ -60,7 +60,7 @@ function SectionTitle({ section }: { section: StatSection }) {
   const { t } = useTranslation();
   if (section.name) return <MinecraftText>{section.name}</MinecraftText>;
   if (section.title === null) return null;
-  const { className, style } = colourOf(section.colour ?? "§f");
+  const { className, style } = colorOf(section.color ?? "§f");
   return <span className={className} style={style}>{t(section.title, { ns: LABEL_NAMESPACES })}</span>;
 }
 
@@ -202,13 +202,13 @@ export function StatPanel({
 }
 
 /**
- * A stat's heading: the card's own name for it (in its colours, else the stat's), or the bot's word for it, with the
+ * A stat's heading: the card's own name for it (in its colors, else the stat's), or the bot's word for it, with the
  * full name where that word shortens one (FKDR).
  */
 function useStatLabel(cell: Stat): { text: string; node: ReactNode; full?: string } {
   const text = useLabelText()(cell);
   const full = useStatName()(cell.label);
-  if (cell.name !== undefined) return { text, node: <MinecraftText>{`${cell.colour}${cell.name}`}</MinecraftText> };
+  if (cell.name !== undefined) return { text, node: <MinecraftText>{`${cell.color}${cell.name}`}</MinecraftText> };
   return { text, node: text, full };
 }
 
@@ -231,10 +231,10 @@ function useStatValue(cell: Stat, linked = false): ReactNode {
   const Short = linked ? Spoken : Hint;
   const number = (value: number) => <Short full={exact(value)}>{n(value)}</Short>;
   if (cell.hidden) return <Hidden />;
-  // Text the API formatted takes the stat's colour, unless it brings its own (a level, a §7 N/A).
+  // Text the API formatted takes the stat's color, unless it brings its own (a level, a §7 N/A).
   const value = typeof cell.value === "number" ?
     <>{number(cell.value)}{cell.suffix ?? ""}</> :
-    <MinecraftText>{`${cell.colour}${cell.value}`}</MinecraftText>;
+    <MinecraftText>{`${cell.color}${cell.value}`}</MinecraftText>;
 
   if (cell.of === undefined) return value;
 
@@ -247,7 +247,7 @@ function useStatValue(cell: Stat, linked = false): ReactNode {
 }
 
 /**
- * One stat as the card draws it, in its colour, with the bot's label. A capped stat shows its cap after it (`12/25`) in
+ * One stat as the card draws it, in its color, with the bot's label. A capped stat shows its cap after it (`12/25`) in
  * §7 like the card, at the label's size so the pair fits a phone's cell.
  */
 function GameStat({ cell, username }: { cell: Stat; username: string }) {
@@ -255,7 +255,7 @@ function GameStat({ cell, username }: { cell: Stat; username: string }) {
   const exact = useExactNumber();
   const label = useStatLabel(cell);
   const value = useStatValue(cell, cell.leaderboard !== undefined);
-  const { className, style } = colourOf(cell.colour);
+  const { className, style } = colorOf(cell.color);
   // The short label shows under the row's heading; the link keeps the whole name.
   const shown = cell.short ? t(cell.short, { ns: LABEL_NAMESPACES }) : label.node;
   // Explained in place: an abbreviation, and a stat that means something else in this game.
@@ -293,7 +293,7 @@ function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat
   const label = useStatLabel(cell);
   const count = useStatValue(cell, cell.leaderboard !== undefined);
   const value = ticks ? <Tick done={Number(cell.value) > 0} /> : count;
-  const { className, style } = colourOf(cell.colour);
+  const { className, style } = colorOf(cell.color);
 
   return (
     // 32 px tall in its box's 6 px sides, so the link's area (6 px past it) and its ring end at the box's edge.
@@ -323,7 +323,7 @@ function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat
   );
 }
 
-/** The card's tick or cross, in the stat's colour, with its words for screen readers. */
+/** The card's tick or cross, in the stat's color, with its words for screen readers. */
 function Tick({ done }: { done: boolean }) {
   const { t } = useTranslation();
   const Icon = done ? Check : Cross;
@@ -340,6 +340,6 @@ function Tick({ done }: { done: boolean }) {
 function SelectionStat({ cell }: { cell: Stat }) {
   const label = useStatLabel(cell);
   const value = useStatValue(cell);
-  const { className, style } = colourOf(cell.colour);
+  const { className, style } = colorOf(cell.color);
   return <InlineStat label={<Hint full={label.full}>{label.text}</Hint>} value={value} color={className} style={style} />;
 }

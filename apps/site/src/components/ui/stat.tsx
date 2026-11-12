@@ -39,7 +39,7 @@ export function StatNumber({ value }: { value: number }) {
 /**
  * For a link that makes a whole stat (or panel) clickable: it stretches over its nearest `relative` ancestor, and 6 px
  * past its top and bottom so a stat cell is a 44 px target, which lightens on hover and while pressed and shows the
- * keyboard focus, inside its edge, since the box around it clips anything past its own. The text keeps its colour and
+ * keyboard focus, inside its edge, since the box around it clips anything past its own. The text keeps its color and
  * gets no underline.
  */
 export const STAT_LINK =

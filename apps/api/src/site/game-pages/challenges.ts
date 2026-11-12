@@ -15,7 +15,7 @@ import type { GameId } from "@statsify/schemas";
 const GAMES = CHALLENGES.shapes.flatMap(({ modes }) => modes) as GameId[];
 
 /** Overall: every game's total under its name and icon, highest first, the values in the card's default white. */
-const OVERALL = rankingPage(GAMES, { at: (game) => game, sort: "desc", colour: "§f" });
+const OVERALL = rankingPage(GAMES, { at: (game) => game, sort: "desc", color: "§f" });
 
 /**
  * A game: its challenges, most completed first, in rows that grow with the count as the card's do (four for a short

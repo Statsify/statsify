@@ -18,7 +18,7 @@ export const CHALLENGES: Game<ChallengeModes> = {
   key: "challenges",
   id: null,
   modes: CHALLENGE_MODES,
-  game: { total: { colour: "§b", glossary: "challengesTotal" } },
+  game: { total: { color: "§b", glossary: "challengesTotal" } },
   // Each game's challenges class, whose own metadata holds the names the card shows (the player's are prefixed).
   shapes: childClasses(Challenges).map(([game, type]): Shape => ({
     modes: [game],

@@ -8,7 +8,7 @@
 
 import type { CellSpec, GameLayout, PageSpec } from "./layout.js";
 import { type ClassMetadata, METADATA_KEY, Warlords } from "@statsify/schemas";
-import { type ColourCode, WARLORDS, WARLORDS_CLASSES, WARLORDS_SPECS, childClasses } from "@statsify/catalog";
+import { type ColorCode, WARLORDS, WARLORDS_CLASSES, WARLORDS_SPECS, childClasses } from "@statsify/catalog";
 
 /** Each class's schema type, whose metadata names its specs (`@Field` leaderboard names the bot doesn't localize). */
 const CLASS_TYPES = Object.fromEntries(childClasses(Warlords));

@@ -324,7 +324,7 @@ export function Callout({ label, tone = "note", children }: { label: ReactNode; 
 
   return (
     <div className={cn("flex max-w-(--measure) flex-col gap-2 border-l-4 bg-black/35 p-4", rule)}>
-      <span className={cn("text-mc-1 font-bold", labelColour)}>{label}</span>
+      <span className={cn("text-mc-1 font-bold", labelColor)}>{label}</span>
       {children}
     </div>
   );

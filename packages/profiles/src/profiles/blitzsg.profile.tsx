@@ -97,12 +97,12 @@ const OverallBlitzSGTable = ({ blitzsg, t }: OverallBlitzSGTableProps) => (
 
 interface KitBlitzSGTableProps {
   stats: BlitzSGKit;
-  /** The kit's colours, from its mode. */
-  colour: ReturnType<typeof cardColours>;
+  /** The kit's colors, from its mode. */
+  color: ReturnType<typeof cardColors>;
   t: LocalizeFunction;
 }
 
-const KitBlitzSGTable = ({ stats, colour, t }: KitBlitzSGTableProps) => {
+const KitBlitzSGTable = ({ stats, color, t }: KitBlitzSGTableProps) => {
   return (
     <Table.table>
       <Table.tr>
@@ -176,7 +176,7 @@ export const BlitzSGProfile = ({
         );
       }
 
-      table = <KitBlitzSGTable stats={stats} colour={kitColour} t={t} />;
+      table = <KitBlitzSGTable stats={stats} color={kitColor} t={t} />;
       break;
     }
   }

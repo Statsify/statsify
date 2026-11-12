@@ -84,7 +84,7 @@ const boxVariants = {
 };
 
 /**
- * A box drawn as one of the bot's cells (a leaderboard cell, a stat, a heading): its content centred, at least a tap
+ * A box drawn as one of the bot's cells (a leaderboard cell, a stat, a heading): its content centered, at least a tap
  * target tall. The Box sets its content's size, so the text and whatever wraps it carry their own; a wrapper at the
  * Box's size would sit the text on its baseline, low. Grids of them keep the bot's 4 px gap (`BOX_GAP`).
  */
@@ -178,7 +178,7 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
     >
       {/* The card lays its gradient over everything beneath the panel with `overlay` compositing (`Box.ts`
           renderOverlay), so the background brightens at the top and darkens at the bottom. A blend mode beside the
-          content does the same (the fill's `::after`); inside the clipped content it could only see the panel colour. */}
+          content does the same (the fill's `::after`); inside the clipped content it could only see the panel color. */}
       <div data-slot="fill" data-overlay={variant === "default" || variant === "highlight" || undefined} />
       <div data-slot="content" className="relative" style={style}>
         {title !== undefined && (

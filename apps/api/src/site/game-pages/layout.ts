@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ColourCode, type Game, type Stat, modeName, shapeKeys, statAt } from "@statsify/catalog";
+import { type ColorCode, type Game, type Stat, modeName, shapeKeys, statAt } from "@statsify/catalog";
 import { freshness } from "../cooldown.js";
 import { gameName, siteName } from "../names.js";
 import { arrayGroup } from "@statsify/util";
@@ -161,12 +161,12 @@ export const gamesOf = (game: Game): GameId[] => game.modes.getApiModes().filter
 /** Overall on a page with a mode per game: each game's total (at `at`) under its name and icon, as a sorted list. */
 export const rankingPage = (
   games: GameId[],
-  { at, sort, colour }: { at: (game: GameId) => string; sort: "desc" | "share"; colour?: ColourCode }
+  { at, sort, color }: { at: (game: GameId) => string; sort: "desc" | "share"; color?: ColorCode }
 ): PageSpec => ({
   heading: { word: null },
   sections: [
     {
-      cells: games.map((game) => ({ key: "total", at: at(game), name: gameName(game), icon: game, ...(colour && { colour }) })),
+      cells: games.map((game) => ({ key: "total", at: at(game), name: gameName(game), icon: game, ...(color && { color }) })),
       sort,
       list: true,
     },

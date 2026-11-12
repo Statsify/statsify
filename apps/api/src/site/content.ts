@@ -121,7 +121,7 @@ const PRESTIGE_NAMES: Record<string, string> = { none: "Stone", x_ray: "X-Ray" }
 const PRESTIGE_LEVELS = 100;
 
 /**
- * Every BedWars prestige the game colours, from the schemas' scheme map (the cards' level colours), each at its first
+ * Every BedWars prestige the game colors, from the schemas' scheme map (the cards' level colors), each at its first
  * level with the star it shows and the EXP it takes; and the game's other stars and brackets.
  */
 export function buildPrestigeSheet(): PrestigeSheet {

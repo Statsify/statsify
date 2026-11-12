@@ -45,7 +45,7 @@ function overall(period: QuestPeriod): PageSpec {
   return rankingPage(GAMES.filter((game) => allTime || count(period, game) > 0), {
     at: (game) => `${period}.${game}`,
     sort: allTime ? "desc" : "share",
-    ...(allTime && { colour: "§f" as const }),
+    ...(allTime && { color: "§f" as const }),
   });
 }
 
@@ -62,7 +62,7 @@ function game(id: GameId, period: QuestPeriod): PageSpec {
   return {
     place,
     heading: { word: null, mode: `§l${gameName(id)}` },
-    overview: [...OVERVIEW, { key: "total", at: place, label: "stats.game-total", params: { game: siteName(modeName(QUESTS, id)) }, colour: "§a" }],
+    overview: [...OVERVIEW, { key: "total", at: place, label: "stats.game-total", params: { game: siteName(modeName(QUESTS, id)) }, color: "§a" }],
     sections: [
       {
         cells: quests.map(({ key, name }): CellSpec =>

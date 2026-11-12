@@ -65,7 +65,7 @@ export interface StatEntry {
 export const selection = (color: ColorCode): StatEntry => ({ color, format: (value) => prettify(String(value)) });
 
 /** Green once done, red before: a challenge on the bot's challenges cards, a quest on its Quests card. */
-export const doneColour: ReadValue<ColourCode> = (value) => (Number(value) > 0 ? "§a" : "§c");
+export const doneColor: ReadValue<ColorCode> = (value) => (Number(value) > 0 ? "§a" : "§c");
 
 /** Stats stored with the same fields at one or more places below the game. */
 export interface Shape {
