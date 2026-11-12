@@ -232,9 +232,10 @@ export async function buildPriceMap(
 
   // quick_status averages the top orders, so one order can't move it. The NPC always pays its price, so that's the floor.
   for (const product of Object.values(bazaar.products)) {
-    if (product.sellPrice <= 0) continue;
-    const coins = Math.max(product.sellPrice, items.items[product.id]?.npcPrice ?? 0);
-    entries[product.id] = { coins, source: "bazaar", buy: product.buyPrice };
+    if (product.sellPrice > 0) {
+      const coins = Math.max(product.sellPrice, items.items[product.id]?.npcPrice ?? 0);
+      entries[product.id] = { coins, source: "bazaar", buy: product.buyPrice };
+    }
   }
 
   // Many NPC-sold items (arrows, starter tools, low talismans) are never listed as BIN, and the NPC always pays this.
