@@ -66,6 +66,9 @@ const DEFINITIONS = { ...SECTIONS, networth: NETWORTH } satisfies Record<SkyBloc
 
 const isReady = (name: SkyBlockSection, built: Record<SectionNeed, boolean>) => DEFINITIONS[name].needs.every((need) => built[need]);
 
+// Runecrafting's cap: false only for a player known to have no rank
+const isRanked = (rank: string | undefined) => (rank === undefined ? undefined : rank !== "DEFAULT");
+
 interface Stored<T> {
   value: T;
   fetchedAt: number;
@@ -258,7 +261,7 @@ export class SkyBlockService {
       uuid: player.uuid,
       username: player.username,
       displayName: player.displayName,
-      ranked: player.rank === undefined ? undefined : player.rank !== "DEFAULT",
+      ranked: isRanked(player.rank),
       // Players stored before the object existed have none until their next /player
       extras: player.skyblock && toPlayerExtras(player.skyblock),
     };
@@ -329,7 +332,7 @@ export class SkyBlockService {
           .filter(([member]) => isMember(profile, member) && players.has(member))
           .map(async ([member, raw]): Promise<SkyBlockStatsRow> => {
             const museum = museums[index]?.value.members?.[member];
-            const input: SectionInput = { uuid: member, profile, member: raw, museum, prices, items };
+            const input: SectionInput = { uuid: member, profile, member: raw, museum, prices, items, ranked: isRanked(players.get(member)) };
             const view = await toMemberView(input, ready, (name) => DEFINITIONS[name].compute(input));
             const summary = toProfileSummary(profile, member);
 
