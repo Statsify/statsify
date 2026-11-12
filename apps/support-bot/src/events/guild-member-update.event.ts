@@ -108,7 +108,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     // They are a new patreon
     if (!isPatreon && hasPatreonRole) return this.patreonAdd(memberId);
 
-    // Their highest tier role changed: a purchase, an upgrade or a downgrade
+    // They bought, upgraded or downgraded a tier
     if (currentRoleTier && currentRoleTier !== currentTier)
       return this.handlePremiumAdd(memberId, currentRoleTier);
 
