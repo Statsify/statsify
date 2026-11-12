@@ -27,10 +27,12 @@ import {
   LeaderboardQuery,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
-import { User } from "@statsify/schemas";
+import { Guild, Player, User, getLeaderboardField } from "@statsify/schemas";
 import { getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
+import { translateLeaderboardName } from "./leaderboard-names.js";
+import type { Constructor } from "@statsify/util";
 import type { Image } from "skia-canvas";
 
 type BaseLeaderboardProps = Omit<LeaderboardProfileProps, "fields" | "name" | "data">;
@@ -47,6 +49,11 @@ type GetLeaderboard = (
 ) => Promise<PostLeaderboardResponse | null>;
 
 type GetLeaderboardDataIcon = (id: string) => Promise<Image>;
+
+const LEADERBOARD_CONSTRUCTORS: Record<LeaderboardType, Constructor> = {
+  player: Player,
+  guild: Guild,
+};
 
 export interface CreateLeaderboardOptions {
   context: CommandContext;
@@ -314,10 +321,13 @@ export class BaseLeaderboardCommand {
       ) :
       leaderboard.data;
 
+    // Hidden boards leave their stat out of `leaderboard.fields`, so the title is translated from the field's metadata
+    const metadata = getLeaderboardField(LEADERBOARD_CONSTRUCTORS[type], field);
+
     const canvas = render(
       <LeaderboardProfile
         {...props}
-        name={leaderboard.name}
+        name={translateLeaderboardName(props.t, metadata)}
         fields={leaderboard.fields}
         data={leaderboardData}
       />,
