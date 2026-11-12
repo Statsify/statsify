@@ -19,13 +19,13 @@ export interface Armor {
 export interface ArmorPiece {
   /**
    * Texture (PNG) in the armour layout: `layer_1` for helmets, chestplates and boots,
-   * `layer_2` for leggings. A skin or mob texture works as a helmet too.
+   * `layer_2` for leggings.
    */
   texture: Uint8Array
   enchanted: boolean
   /**
-   * Draws a helmet's texture as a worn skull or player head, which sits on the neck
-   * with a thin hat layer, instead of as an armour layer.
+   * Draws the helmet's texture, a skin or mob texture, as a worn skull or player head
+   * instead of an armour layer.
    */
   skull?: boolean
 }
