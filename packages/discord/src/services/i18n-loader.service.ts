@@ -38,7 +38,7 @@ export class I18nLoaderService {
         loadPath: "../../locales/{{lng}}/{{ns}}.json",
       },
       debug: false,
-      fallbackLng: DEFAULT_LANGUAGE,
+      fallbackLng: { "es-419": ["es-ES", DEFAULT_LANGUAGE], default: [DEFAULT_LANGUAGE] },
       lng: DEFAULT_LANGUAGE,
       supportedLngs: this.languages,
       ns: this.namespaces,
