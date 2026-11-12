@@ -7,9 +7,9 @@
  */
 
 import { Container, Footer, Header, Table } from "#components";
-import { DateTime } from "luxon";
 import { GexpTable } from "./gexp.table.js";
 import { Guild } from "@statsify/schemas";
+import { formatDateTime } from "#lib/format-date-time";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface GuildMemberProfileProps extends Omit<BaseProfileProps, "time"> {
@@ -28,10 +28,7 @@ export const GuildMemberProfile = ({
 }: GuildMemberProfileProps) => {
   const member = guild.members.find((m) => m.uuid === player.uuid)!;
 
-  const format = "LL/dd/yy',' hh:mm a";
-  const createdAt = DateTime.fromMillis(member.joinTime).toFormat(format, {
-    locale: t.locale,
-  });
+  const createdAt = formatDateTime(t, member.joinTime);
 
   const description = [
     `§7Guild: ${guild.tagColor.code}${guild.name}`,

@@ -7,9 +7,9 @@
  */
 
 import { Container, Footer, Header, If, Table } from "#components";
-import { DateTime } from "luxon";
 import { FormattedGame, Guild, PlayerStatus } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
+import { formatDateTime } from "#lib/format-date-time";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 interface GeneralProfileHeaderBodyProps {
@@ -25,14 +25,8 @@ const GeneralProfileHeaderBody = ({
 }: GeneralProfileHeaderBodyProps) => {
   const online = status.online ? `§a${t("stats.online")}` : `§c${t("stats.offline")}`;
 
-  const format = "LL/dd/yy',' hh:mm a";
-  const firstLogin = DateTime.fromMillis(status.firstLogin).toFormat(format, {
-    locale: t.locale,
-  });
-
-  const lastLogin = status.lastLogin ?
-    DateTime.fromMillis(status.lastLogin).toFormat(format, { locale: t.locale }) :
-    "N/A";
+  const firstLogin = formatDateTime(t, status.firstLogin);
+  const lastLogin = status.lastLogin ? formatDateTime(t, status.lastLogin) : "N/A";
 
   return (
     <div height="remaining" width="remaining" direction="row">
