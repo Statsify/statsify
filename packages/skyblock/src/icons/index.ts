@@ -25,7 +25,7 @@ export type HeadSource = (hash: string) => Promise<Buffer | undefined>;
 const TEXTURES: Record<string, string | undefined> = textures.textures;
 const BASE_SIZE = 16;
 const GLINT = "misc/enchanted_item_glint";
-// 1.8 tints its grey glint 0x8040CC and draws it twice, at -50° and 10°, each pass an eighth of the texture per icon
+// 1.8 tints its gray glint 0x8040CC and draws it twice, at -50° and 10°, each pass an eighth of the texture per icon
 const GLINT_TINT = [0x80 / 255, 0x40 / 255, 0xcc / 255];
 const GLINT_ANGLES = [(-5 * Math.PI) / 18, Math.PI / 18];
 const CACHE_SIZE = 2000;
