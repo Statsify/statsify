@@ -66,8 +66,7 @@ const DEFINITIONS = { ...SECTIONS, networth: NETWORTH } satisfies Record<SkyBloc
 
 const isReady = (name: SkyBlockSection, built: Record<SectionNeed, boolean>) => DEFINITIONS[name].needs.every((need) => built[need]);
 
-// Runecrafting's cap: false only for a player known to have no rank
-const isRanked = (rank: string | undefined) => (rank === undefined ? undefined : rank !== "DEFAULT");
+const isRanked = (rank: string | undefined) => rank !== "DEFAULT";
 
 interface Stored<T> {
   value: T;

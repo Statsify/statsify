@@ -38,8 +38,8 @@ const UNRANKED_RUNECRAFTING_CAP = 3;
 
 // NEU's leveling_caps still says 50 for foraging.
 function capOf(skill: string, member: RawMember, ranked: boolean) {
-  const cap = LEVELING.leveling_caps[skill];
   if (skill === "runecrafting" && !ranked) return UNRANKED_RUNECRAFTING_CAP;
+  const cap = LEVELING.leveling_caps[skill];
   const max = LEVELING.max_levels[skill];
   if (skill === "farming") return Math.min(cap + (member.jacobs_contest?.perks?.farming_level_cap ?? 0), max);
   if (skill === "taming") return Math.min(cap + (member.pets_data?.pet_care?.pet_types_sacrificed?.length ?? 0), max);
@@ -49,7 +49,7 @@ function capOf(skill: string, member: RawMember, ranked: boolean) {
 
 /**
  * null when the skills API is off. Social sums the XP of every member who accepted their invite, since the profile
- * shares it. `ranked` is false only for a player known to have no rank.
+ * shares it.
  */
 export function getSkills(profile: RawProfile, member: RawMember, ranked = true): SkillsSection | null {
   if (!member.player_data?.experience) return null;
