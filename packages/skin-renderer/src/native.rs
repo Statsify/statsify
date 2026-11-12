@@ -1,7 +1,6 @@
-use async_once::AsyncOnce;
-use lazy_static::lazy_static;
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
+use tokio::sync::OnceCell;
 
 use crate::armor::Armor;
 use crate::model::{ModelKind, ModelOuterLayer};
@@ -9,13 +8,10 @@ use crate::pose::Pose;
 use crate::renderer::native::NativeBackend;
 use crate::renderer::SkinRenderer;
 
-lazy_static! {
-  static ref SKIN_RENDERER: AsyncOnce<SkinRenderer<NativeBackend>> = AsyncOnce::new(async {
-    SkinRenderer::new(460, 800)
-      .await
-      .expect("skin renderer initialized")
-  });
-}
+const DEFAULT_WIDTH: u32 = 460;
+const DEFAULT_HEIGHT: u32 = 800;
+
+static SKIN_RENDERER: OnceCell<SkinRenderer<NativeBackend>> = OnceCell::const_new();
 
 #[napi(object)]
 #[derive(Default)]
@@ -30,6 +26,10 @@ pub struct RenderOptions {
   pub yaw: Option<f64>,
   #[napi(ts_type = "'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly'")]
   pub pose: Option<Pose>,
+  /// Output width in pixels, from 16 to 2048 and at most 4 times the height. Defaults to 460.
+  pub width: Option<u32>,
+  /// Output height in pixels, from 16 to 2048 and at most 4 times the width. Defaults to 800.
+  pub height: Option<u32>,
 }
 
 #[napi]
@@ -39,7 +39,9 @@ pub async fn render_skin(
   extruded: bool,
   options: Option<RenderOptions>,
 ) -> Result<Buffer> {
-  let renderer = SKIN_RENDERER.get().await;
+  let renderer = SKIN_RENDERER
+    .get_or_try_init(|| SkinRenderer::new(DEFAULT_WIDTH, DEFAULT_HEIGHT))
+    .await?;
 
   let model_kind = if slim {
     ModelKind::Slim
@@ -72,7 +74,14 @@ pub async fn render_skin(
     options.cape.as_deref(),
     options.pose.unwrap_or_default(),
   )?;
-  let buffer = renderer.render(&model, yaw).await?;
+  let png = renderer
+    .render(
+      &model,
+      yaw,
+      options.width.unwrap_or(DEFAULT_WIDTH),
+      options.height.unwrap_or(DEFAULT_HEIGHT),
+    )
+    .await?;
 
-  Ok(buffer.into())
+  Ok(png.into())
 }

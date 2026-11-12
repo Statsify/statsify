@@ -1,8 +1,5 @@
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-  #[error(transparent)]
-  Io(#[from] std::io::Error),
-
   #[error("The provided image is not a valid skin texture")]
   InvalidSkinTexture,
 
@@ -12,6 +9,14 @@ pub enum Error {
   #[cfg(not(target_arch = "wasm32"))]
   #[error("The camera yaw must be a finite number")]
   InvalidYaw,
+
+  #[cfg(not(target_arch = "wasm32"))]
+  #[error(
+    "The render width and height must be between {min} and {0} pixels, and neither more than {ratio} times the other",
+    min = crate::renderer::native::MIN_SIZE,
+    ratio = crate::renderer::native::MAX_ASPECT_RATIO
+  )]
+  InvalidSize(u32),
 
   #[error("The provided image is too large for a texture")]
   TextureTooLarge,

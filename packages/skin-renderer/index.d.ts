@@ -42,6 +42,10 @@ export interface RenderOptions {
    */
   yaw?: number
   pose?: 'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly'
+  /** Output width in pixels, from 16 to 2048 and at most 4 times the height. Defaults to 460. */
+  width?: number
+  /** Output height in pixels, from 16 to 2048 and at most 4 times the width. Defaults to 800. */
+  height?: number
 }
 
 export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: boolean, options?: RenderOptions | undefined | null): Promise<Buffer>
