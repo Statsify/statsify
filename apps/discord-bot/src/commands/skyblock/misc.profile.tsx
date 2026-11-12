@@ -59,8 +59,8 @@ export const SkyBlockMiscProfile = ({
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
       <Table.table>
-        <Table.ts title={`§a${t("skyblock.topKills")}`}>{gridRows(top(misc.topKills, "§a"), 3)}</Table.ts>
-        <Table.ts title={`§c${t("skyblock.topDeaths")}`}>{gridRows(top(misc.topDeaths, "§c"), 3)}</Table.ts>
+        <Table.ts title={`§a${t("skyblock.topKills")}`}>{gridRows(top(misc.topKills, "§a"), 3, true)}</Table.ts>
+        <Table.ts title={`§c${t("skyblock.topDeaths")}`}>{gridRows(top(misc.topDeaths, "§c"), 3, true)}</Table.ts>
         <Table.ts title={`§6${t("skyblock.auctionHouse")}`}>{gridRows(auctions, 4)}</Table.ts>
         <Table.ts title={`§5${t("skyblock.dragons")}`}>{gridRows(dragonCells, 4)}</Table.ts>
       </Table.table>
@@ -73,7 +73,8 @@ export const SkyBlockMiscProfile = ({
               value: `${used >= max ? "§6" : "§e"}${t(used)}§7/${t(max)}`,
             }))}
             icons={icons}
-            columns={3}
+            columns={2}
+            spreadLastRow
           />
         ) :
         <></>}
