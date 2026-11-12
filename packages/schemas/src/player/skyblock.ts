@@ -39,6 +39,9 @@ export class PlayerSkyBlock {
   public harvester: number;
 
   @Field({ leaderboard: { enabled: false } })
+  public predator: number;
+
+  @Field({ leaderboard: { enabled: false } })
   public hardWorkingMiner: number;
 
   @Field({ leaderboard: { enabled: false } })
@@ -64,6 +67,7 @@ export class PlayerSkyBlock {
     this.excavator = achievements.skyblock_excavator ?? 0;
     this.gatherer = achievements.skyblock_gatherer ?? 0;
     this.harvester = achievements.skyblock_harvester ?? 0;
+    this.predator = achievements.skyblock_predator ?? 0;
     this.hardWorkingMiner = achievements.skyblock_hard_working_miner ?? 0;
 
     this.centuryCake = data.claimed_century_cake ?? 0;
