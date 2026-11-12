@@ -46,7 +46,6 @@ impl NativeBackend {
     }
   }
 
-  // The default size keeps its target between renders, and any other size gets one per render
   pub fn render_target(&self, width: u32, height: u32) -> SkinRendererResult<Arc<RenderTarget>> {
     let dimensions = &self.target.dimensions;
 

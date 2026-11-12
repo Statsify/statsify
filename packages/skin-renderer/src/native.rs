@@ -11,7 +11,6 @@ use crate::renderer::SkinRenderer;
 const DEFAULT_WIDTH: u32 = 460;
 const DEFAULT_HEIGHT: u32 = 800;
 
-// A renderer that fails to start leaves the cell empty, so the next render tries again
 static SKIN_RENDERER: OnceCell<SkinRenderer<NativeBackend>> = OnceCell::const_new();
 
 #[napi(object)]

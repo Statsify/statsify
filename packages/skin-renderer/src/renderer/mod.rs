@@ -59,7 +59,6 @@ pub struct SkinRenderer<T: Backend> {
   attachment_pipeline: wgpu::RenderPipeline,
   enchanted_pipeline: wgpu::RenderPipeline,
 
-  // Native renders draw into their size's RenderTarget instead
   #[cfg(target_arch = "wasm32")]
   depth_texture: Texture,
 
