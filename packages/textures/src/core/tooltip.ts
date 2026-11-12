@@ -41,7 +41,7 @@ function plainName(item: ItemStack, names: Record<string, string>) {
 
 /**
  * An item's tooltip lines in 1.8's order: the name, the lore in dark purple italics, then
- * Unbreakable unless HideFlags hides it. Renamed items start italic, which a colour code at
+ * Unbreakable unless HideFlags hides it. Renamed items start italic, which a color code at
  * the start of the name clears, as in game.
  */
 export function tooltipLines(item: ItemStack, names: Record<string, string>): TextComponent[] {

@@ -18,9 +18,9 @@ export interface ItemStack {
   /** A namespaced 26.3 item id, like "minecraft:stone_sword" */
   id: string;
   count?: number;
-  /** Durability used up, for tools and armour */
+  /** Durability used up, for tools and armor */
   damage?: number;
-  /** Leather armour dye as 0xRRGGBB */
+  /** Leather armor dye as 0xRRGGBB */
   color?: number;
   effects?: PotionEffect[];
   enchanted?: boolean;
