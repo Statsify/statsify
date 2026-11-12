@@ -67,6 +67,20 @@ export function scanCommands<T extends object>(
   return commandResolvable;
 }
 
+export function scanContextMenu<T extends object>(
+  target: T,
+  constructor: Constructor<T>,
+) {
+  const metadata = Reflect.getMetadata(
+    "statsify:command",
+    constructor,
+  ) as CommandMetadata;
+
+  if (!metadata.contextMenu) return;
+
+  return new CommandResolvable(metadata, target).asContextMenu(metadata.contextMenu);
+}
+
 if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
 

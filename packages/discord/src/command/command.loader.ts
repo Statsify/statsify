@@ -12,7 +12,7 @@ import { readdir } from "node:fs/promises";
 import { statSync } from "node:fs";
 import { join } from "node:path";
 import type { CommandResolvable } from "./command.resolvable.js";
-import { scanCommands } from "./command.builder.js";
+import { scanCommands, scanContextMenu } from "./command.builder.js";
 import { pathToFileURL } from "node:url";
 
 const logger = new Logger("CommandLoader");
@@ -42,16 +42,16 @@ async function importCommand(file: string) {
         !Object.getOwnPropertyDescriptor(value, "prototype")?.writable
       );
     })
-    .map((key) => {
+    .flatMap((key) => {
       try {
         const constructor = command[key];
         const instance = Container.get<object>(constructor);
 
-        return scanCommands(instance, constructor);
+        return [scanCommands(instance, constructor), scanContextMenu(instance, constructor)];
       } catch (err) {
         logger.error(`Failed to load command in ${file} with import ${key}`);
         logger.error(err);
-        return undefined;
+        return [];
       }
     });
 }

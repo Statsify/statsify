@@ -70,7 +70,9 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    const contextMenuTarget = context.getInteraction().getData().target_id;
+    const tag = context.option<string>("player", contextMenuTarget);
+    const player = await this.apiService.getPlayer(tag, user);
 
     const [logo, skin, badge] = await Promise.all([
       getLogo(user),
