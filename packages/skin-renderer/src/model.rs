@@ -142,7 +142,7 @@ impl Part {
     }
   }
 
-  // Armour textures only have the right limbs, which the left limbs mirror
+  // Armor textures only have the right limbs, which the left limbs mirror
   fn armor_region(self, texture_size: Coordinate<u32>) -> TextureRegion {
     let location = match self {
       Part::Head => (0, 0),
@@ -356,7 +356,7 @@ impl Model {
       } else {
         image::load_from_memory(&piece.texture)?
       };
-      // Packs draw the 64 wide layout at any resolution, and skins are square where armour is 2:1
+      // Packs draw the 64 wide layout at any resolution, and skins are square where armor is 2:1
       let texture_size = (64, 64 * texture.height() / texture.width());
       let mut geometry = Geometry::new(vec![], vec![]);
 
@@ -368,7 +368,7 @@ impl Model {
       };
 
       for &part in parts {
-        // Armour is shaped for classic arms on every skin
+        // Armor is shaped for classic arms on every skin
         let placement = part.placement(ModelKind::Classic.arm_width());
         let (position, rotation) = placement.resolve();
         let neck = position - Vector3::unit_y() * placement.dimensions.y / 2.0;

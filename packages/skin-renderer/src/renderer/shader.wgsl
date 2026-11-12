@@ -84,7 +84,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     return shade(in, textureSample(t_diffuse, s_diffuse, in.texture_coordinates));
 }
 
-// Armour has see-through gaps, which must not hide what's drawn behind them later.
+// Armor has see-through gaps, which must not hide what's drawn behind them later.
 // The skin keeps fs_main, since a discard turns off early depth testing on software renderers
 @fragment
 fn fs_attachment(in: VertexOutput) -> @location(0) vec4<f32> {
@@ -115,7 +115,7 @@ fn shade(in: VertexOutput, object_color: vec4<f32>) -> vec4<f32> {
     return vec4<f32>(result, object_color.a);
 }
 
-// The game adds the glint to the gamma-encoded colour, which blending in linear space
+// The game adds the glint to the gamma-encoded color, which blending in linear space
 // would wash out. Gamma 2 stands in for sRGB, since pow is slow on software renderers
 @fragment
 fn fs_enchanted(in: VertexOutput) -> @location(0) vec4<f32> {
