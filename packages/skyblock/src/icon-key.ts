@@ -23,7 +23,7 @@ const ITEM_KEY = new RegExp(`^item-${NUMBER}-${NUMBER}(?:-(0|[1-9a-f][\\da-f]{0,
 // Texture URLs drop a hash's leading zeros, so some are shorter than 64
 const HEAD_KEY = /^head-([\da-f]{1,64})$/;
 
-/** The icon route's key: `item-<id>-<damage>[-<colour hex>]` or `head-<hash>`. */
+/** The icon route's key: `item-<id>-<damage>[-<color hex>]` or `head-<hash>`. */
 export function iconKey(texture: ItemTexture): string {
   if (texture.kind === "head") return `head-${texture.skin}`;
   const color = texture.color === undefined ? "" : `-${texture.color.toString(16)}`;

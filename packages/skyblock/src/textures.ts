@@ -23,7 +23,7 @@ export function textureOf(item: RawItem): ItemTexture {
   const skin = value && skinHash(value);
   if (skin) return { kind: "head", skin };
 
-  // Exact leather colours identify rare armour, and a shade up to 7 off per channel looks the same
+  // Exact leather colors identify rare armor, and a shade up to 7 off per channel looks the same
   const color = item.tag?.display?.color;
   return { kind: "item", id: item.id, damage: item.Damage, ...(color === undefined ? {} : { color: color & 0xf8_f8_f8 }) };
 }
@@ -54,7 +54,7 @@ if (import.meta.vitest) {
     expect(resourceTexture({ name: "New", material: "TRIAL_KEY" })).toBeUndefined();
   });
 
-  test("textureOf rounds a dyed item's colour down to the nearest 8 a channel", () => {
+  test("textureOf rounds a dyed item's color down to the nearest 8 a channel", () => {
     expect(textureOf({ id: 301, Count: 1, Damage: 0, tag: { display: { color: 0x0f_10_17 } } })).toMatchObject({ color: 0x08_10_10 });
   });
 }
