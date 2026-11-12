@@ -40,7 +40,7 @@ export type TextComponent =
       extra?: TextComponent[];
     };
 
-// The chat colours by name, in § code order
+// The chat colors by name, in § code order
 const COLORS: Record<string, number> = {
   black: 0x00_00_00,
   dark_blue: 0x00_00_aa,
@@ -80,8 +80,8 @@ const plainStyle = (color = 0xff_ff_ff): TextStyle => ({
 });
 
 /**
- * Splits §-coded text into styled runs. A colour code clears bold, italic and the rest, and
- * §r goes back to the colour the text started in, as in game.
+ * Splits §-coded text into styled runs. A color code clears bold, italic and the rest, and
+ * §r goes back to the color the text started in, as in game.
  */
 function parseLegacy(text: string, base: TextStyle): TextRun[] {
   const runs: TextRun[] = [];
@@ -257,7 +257,7 @@ export interface DrawTextOptions {
   /** Screen pixels per GUI pixel */
   scale: number;
   shadow?: boolean;
-  /** The colour text starts in and §r goes back to, white unless set */
+  /** The color text starts in and §r goes back to, white unless set */
   color?: number;
   /** Picks the characters §k shows */
   tick?: number;
@@ -403,7 +403,7 @@ export class TextRenderer {
   ) {
     const runs = parseComponent(text, plainStyle(options.color));
 
-    // Vanilla draws the shadow first, down and right of the text at a quarter of its colour
+    // Vanilla draws the shadow first, down and right of the text at a quarter of its color
     if (options.shadow ?? true) this.line(ctx, runs, x, y, options, true);
     this.line(ctx, runs, x, y, options, false);
   }

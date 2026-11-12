@@ -25,7 +25,7 @@ export interface Kit {
   /** As its picker names it, like Hype Train or Mini Scout */
   name: string;
   items: KitItem[];
-  /** The armour its picker lists, by armour slot */
+  /** The armor its picker lists, by armor slot */
   armor?: Record<string, ItemStack>;
 }
 
@@ -81,7 +81,7 @@ function duelsKit(mode: string, kit: string): Kit | undefined {
 }
 
 /**
- * The armour a Duels kit's picker lists, by layout key as fromDuelsKit takes it. Undefined for a
+ * The armor a Duels kit's picker lists, by layout key as fromDuelsKit takes it. Undefined for a
  * kit the picker lists none for, which is every Mega Walls Duel class
  */
 export function duelsKitArmor(key: string) {
@@ -92,7 +92,7 @@ export function duelsKitArmor(key: string) {
 
 const withoutCopy = (token: string) => token.replace(/_?\d+$/, "");
 const copyNumber = (token: string) => Number(/(\d+)$/.exec(token)?.[1] ?? 0);
-// Blitz's Shadow Knight and Shark wear a skull, which their editors leave out like armour
+// Blitz's Shadow Knight and Shark wear a skull, which their editors leave out like armor
 const armorSlot = (material: string) =>
   material === "skull_item"
     ? ARMOR.helmet
@@ -120,7 +120,7 @@ export function fromDuelsKit(
   const { mode, kit: name } = duelsMode(key);
   const kit = name ? duelsKit(mode, name) : undefined;
 
-  // The game puts on the kit's armour whatever the layout holds
+  // The game puts on the kit's armor whatever the layout holds
   for (const [slot, item] of Object.entries(kit?.armor ?? {})) slots[Number(slot)] = item;
 
   if (!stored && kit) {
@@ -142,7 +142,7 @@ export function fromDuelsKit(
   for (const [slot, token] of entries) {
     const tokenMaterial = material(token);
 
-    // Layouts saved before the editor hid armour still hold it, but the game equips it instead
+    // Layouts saved before the editor hid armor still hold it, but the game equips it instead
     const worn = armorSlot(tokenMaterial);
     if (worn !== undefined && !kit?.items.some((candidate) => candidate.material === tokenMaterial)) {
       slots[worn] ??= bukkitItem(token);

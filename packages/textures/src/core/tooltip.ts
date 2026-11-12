@@ -41,7 +41,7 @@ function plainName(item: ItemStack, names: Record<string, string>) {
 
 /**
  * An item's tooltip lines in 1.8's order: the name, the lore in dark purple italics, then
- * Unbreakable unless HideFlags hides it. Renamed items start italic, which a colour code at
+ * Unbreakable unless HideFlags hides it. Renamed items start italic, which a color code at
  * the start of the name clears, as in game.
  */
 export function tooltipLines(item: ItemStack, names: Record<string, string>): TextComponent[] {
@@ -49,7 +49,7 @@ export function tooltipLines(item: ItemStack, names: Record<string, string>): Te
     item.name === undefined ? plainName(item, names) : prefixed(item.name, "§o", { italic: true }),
   ];
 
-  // 1.8 draws every line under the name gray unless it sets its own colour
+  // 1.8 draws every line under the name gray unless it sets its own color
   if (item.tooltip) return [...lines, ...item.tooltip.map((line) => prefixed(line, "§7", { color: "gray" }))];
 
   for (const line of item.lore ?? []) lines.push(prefixed(line, "§5§o", { color: "dark_purple", italic: true }));

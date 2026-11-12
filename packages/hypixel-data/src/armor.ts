@@ -13,7 +13,7 @@ type ArmorMaterial = "leather" | "chainmail" | "iron" | "gold" | "diamond";
 
 type Skull = "skeleton" | "wither_skeleton" | "zombie" | "creeper";
 
-/** A worn piece as a skin render draws it: armour, a player head by its textures.minecraft.net hash, or a mob skull */
+/** A worn piece as a skin render draws it: armor, a player head by its textures.minecraft.net hash, or a mob skull */
 export type ArmorPiece =
   | { material: ArmorMaterial; color?: number; enchanted?: boolean }
   | { head: string; enchanted?: boolean }
@@ -41,7 +41,7 @@ const PIECE = /^minecraft:(\w+?)_(helmet|chestplate|leggings|boots)$/;
 const SKIN_HASH = /^https:\/\/textures\.minecraft\.net\/texture\/([\da-f]+)$/;
 
 /**
- * The armour among items, like Pit's inv_armor, a kit's items or slots 36 to 39, each piece the
+ * The armor among items, like Pit's inv_armor, a kit's items or slots 36 to 39, each piece the
  * first of its kind. Anything else on the head, like a block, is left out
  */
 export function armorOf(items: Iterable<ItemStack | undefined>): Armor {
@@ -70,7 +70,7 @@ export function armorOf(items: Iterable<ItemStack | undefined>): Armor {
   return armor;
 }
 
-// The dyes kit pickers name are Bukkit's Color constants, as Hypixel's kit leather uses, not 1.8's dye colours
+// The dyes kit pickers name are Bukkit's Color constants, as Hypixel's kit leather uses, not 1.8's dye colors
 const LEATHER_COLORS: Record<string, number | undefined> = {
   White: 0xff_ff_ff,
   Silver: 0xc0_c0_c0,
@@ -98,7 +98,7 @@ export function leatherColor(name: string) {
   if (dye === undefined) return undefined;
 
   const color = LEATHER_COLORS[dye];
-  if (color === undefined) throw new Error(`No leather colour is named ${dye}`);
+  if (color === undefined) throw new Error(`No leather color is named ${dye}`);
   return color;
 }
 
@@ -106,7 +106,7 @@ if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
 
   describe("armor", () => {
-    it("names leather dyes and keeps only armour, player heads and mob skulls", () => {
+    it("names leather dyes and keeps only armor, player heads and mob skulls", () => {
       expect(leatherColor("White Leather Chestplate")).toBe(0xff_ff_ff);
       expect(leatherColor("Gray Leather Boots")).toBe(0x80_80_80);
       expect(leatherColor("Leather Boots")).toBeUndefined();
