@@ -74,7 +74,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
-    // One render per armour set, since modes often share a kit; a failed armoured render falls back to the plain skin
+    // One render per armor set, since modes often share a kit; a failed armored render falls back to the plain skin
     const skins = new Map<string, Promise<Image>>();
     const skinFor = (armor: Armor): Promise<Image> => {
       const key = JSON.stringify(armor);
