@@ -7,13 +7,13 @@
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "lint:ci": "oxlint --format=github",
-    "api-key": "node src/api-key.js",
-    "delete-sessions": "node src/delete-sessions.js",
-    "limit-redis": "node src/limit-redis.js",
-    "purge-repo": "node src/purge-repo.js",
-    "rank-emojis": "node src/rank-emojis.js",
-    "timestamp": "node --no-warnings src/timestamp.js",
-    "validate-commands": "node --no-warnings src/validate-commands.js",
+    "api-key": "node src/api-key.ts",
+    "delete-sessions": "node src/delete-sessions.ts",
+    "limit-redis": "node src/limit-redis.ts",
+    "purge-repo": "node src/purge-repo.ts",
+    "rank-emojis": "node src/rank-emojis.ts",
+    "timestamp": "node --no-warnings src/timestamp.ts",
+    "validate-commands": "node --no-warnings src/validate-commands.ts",
     "blur-backgrounds": "node src/blur-backgrounds.ts"
   },
   "dependencies": {
@@ -28,12 +28,15 @@
     "discord-bot": "workspace:^",
     "inquirer": "^10.1.8",
     "ioredis": "^5.7.0",
+    "luxon": "^3.5.0",
+    "mongoose": "^8.5.2",
     "skia-canvas": "4.0.0",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
     "toad-scheduler": "^3.0.1",
     "zod": "^4.1.5"
   },
   "devDependencies": {
-    "@types/inquirer": "^9.0.7"
+    "@types/inquirer": "^9.0.7",
+    "@types/luxon": "^3.4.2"
   }
 }

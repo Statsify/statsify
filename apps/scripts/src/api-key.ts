@@ -6,16 +6,23 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Redis from "ioredis";
+import { Redis } from "ioredis";
 import inquirer from "inquirer";
 import { config } from "@statsify/util";
 import { createHash, randomUUID } from "node:crypto";
-import { inquirerConfirmation, inquirerLogger } from "./utils.js";
+import { inquirerConfirmation, inquirerLogger } from "./utils.ts";
 
-const redis = new Redis(config("database.redisUrl"));
+const redis = new Redis(await config("database.redisUrl"));
+
+interface NewKey {
+  name: string;
+  key: string;
+  role: keyof typeof roles;
+  limit: number;
+}
 
 // TODO unify functions (one createKey)
-const createKey = async ({ name, key, role, limit }) => {
+const createKey = async ({ name, key, role, limit }: NewKey) => {
   const activeKeys = await getKeyNames();
 
   if (activeKeys.includes(name)) {
@@ -45,7 +52,7 @@ const createKey = async ({ name, key, role, limit }) => {
   return true;
 };
 
-const getKeys = async () => {
+const getKeys = async (): Promise<Record<string, Record<string, string>>> => {
   const keys = await redis.keys("key:*");
 
   const pipeline = redis.pipeline();
@@ -58,7 +65,7 @@ const getKeys = async () => {
 
   return Object.assign(
     {},
-    ...keyValues.map((key, index) => ({ [keys[index].replace("key:", "")]: key[1] }))
+    ...keyValues!.map((key, index) => ({ [keys[index].replace("key:", "")]: key[1] }))
   );
 };
 
@@ -186,6 +193,7 @@ const deleteKey = async () => {
     },
   ]);
 
+  // @ts-expect-error false is passed as the message
   if (!(await inquirerConfirmation(false))) return;
 
   const activeKeys = await getKeys();
@@ -252,6 +260,7 @@ const editKey = async () => {
     }
   }
 
+  // @ts-expect-error the default is the stored string
   const newValue = await inquirer.prompt([
     {
       type: "number",

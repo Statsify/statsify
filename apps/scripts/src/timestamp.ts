@@ -8,12 +8,14 @@
 
 import { DateTime } from "luxon";
 import { config } from "@statsify/util";
-import { connect } from "mongoose";
+import { connect, type mongo as mongodb } from "mongoose";
 
-const mongo = await connect(config("database.mongoUri"));
+const mongo = await connect(await config("database.mongoUri"));
 const now = DateTime.now();
 
-const getNextResetTime = (resetMinute, time) => {
+type ResetTime = "daily" | "weekly" | "monthly";
+
+const getNextResetTime = (resetMinute: number | undefined, time: ResetTime) => {
   const hasResetToday = (resetMinute ?? 0) <= now.hour * 60 + now.minute;
 
   let resetTime = now
@@ -38,7 +40,7 @@ const getNextResetTime = (resetMinute, time) => {
 };
 
 // Calculate how long ago the last reset was. Basically the inverse of getNextResetTime.
-const getLastResetTime = (resetMinute, time) => {
+const getLastResetTime = (resetMinute: number | undefined, time: ResetTime) => {
   const hasResetToday = (resetMinute ?? 0) <= now.hour * 60 + now.minute;
 
   let resetTime = now
@@ -62,13 +64,13 @@ const getLastResetTime = (resetMinute, time) => {
   return Math.round(resetTime.toMillis() / 1000);
 };
 
-const setTimestamps = async (collectionName) => {
-  const collection = mongo.connection.db.collection(collectionName);
+const setTimestamps = async (collectionName: ResetTime) => {
+  const collection = mongo.connection.db!.collection(collectionName);
   const players = await collection
     .find({ lastReset: { $exists: false } }, { projection: { resetMinute: 1 } })
     .toArray();
 
-  const bulkOperations = [];
+  const bulkOperations: mongodb.AnyBulkWriteOperation[] = [];
 
   for (const player of players) {
     const nextReset = getNextResetTime(player.resetMinute, collectionName);

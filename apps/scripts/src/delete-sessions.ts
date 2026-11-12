@@ -9,9 +9,9 @@
 import { config } from "@statsify/util";
 import { connect } from "mongoose";
 
-const mongo = await connect(config("database.mongoUri"));
+const mongo = await connect(await config("database.mongoUri"));
 
-const session = mongo.connection.db.collection("session");
+const session = mongo.connection.db!.collection("session");
 
 await session.deleteMany();
 
