@@ -49,7 +49,7 @@ The component gallery is at `/dev/gallery` on the dev server: every shared compo
 - `src/server`: server-only code (`*.server.ts`): config, the API client, the `/api/rpc` proxy, images, sitemaps and Turnstile.
 - `src/start.ts`: the security and cache headers on every response. Errors are never cached at the edge.
 - `packages/contract`: the oRPC contract the site and the API share. `apps/api/src/site` is the API side.
-- `packages/catalog`: stat labels, colours and layouts, shared with the bot's cards. `packages/profiles` holds the bot's cards, which the site renders for unfurl images.
+- `packages/catalog`: stat labels, colors and layouts, shared with the bot's cards. `packages/profiles` holds the bot's cards, which the site renders for unfurl images.
 
 The docs are this README and the comments beside the code: each route file says what it serves and how long it's cached.
 

@@ -28,20 +28,20 @@ const COLOR_CLASSES: Record<string, string> = {
   f: "text-mc-white",
 };
 
-/** The text class for a `§` colour code (`§a` → `text-mc-green`); white for anything else. */
-export const colourClass = (code: string): string => COLOR_CLASSES[code.replace(/^§/, "")] ?? "text-mc-white";
+/** The text class for a `§` color code (`§a` → `text-mc-green`); white for anything else. */
+export const colorClass = (code: string): string => COLOR_CLASSES[code.replace(/^§/, "")] ?? "text-mc-white";
 
 /**
- * How to colour text with a card's colour code: the theme class for `§0`–`§f`, or an inline colour for the `§#rrggbb`
+ * How to color text with a card's color code: the theme class for `§0`–`§f`, or an inline color for the `§#rrggbb`
  * codes some cards draw.
  */
-export const colourOf = (code: string): { className?: string; style?: CSSProperties } => {
+export const colorOf = (code: string): { className?: string; style?: CSSProperties } => {
   const hex = /^§(#[\dA-Fa-f]{6})$/.exec(code)?.[1];
-  return hex ? { style: { color: hex } } : { className: colourClass(code) };
+  return hex ? { style: { color: hex } } : { className: colorClass(code) };
 };
 
-/** The class of the first colour in a formatted string, for a title that takes its value's colour. */
-export const leadingColourClass = (text: string): string => colourClass(/§([\da-f])/.exec(text)?.[1] ?? "");
+/** The class of the first color in a formatted string, for a title that takes its value's color. */
+export const leadingColorClass = (text: string): string => colorClass(/§([\da-f])/.exec(text)?.[1] ?? "");
 
 /** The colour a display name gives the name itself, its last code: `§b[MVP§c+§b] anrie` is `§b`. */
 export const nameColour = (displayName: string): string | undefined => /.*(§[\da-f])/.exec(displayName)?.[1];
@@ -56,7 +56,7 @@ const SIZE = /^\^(\d+(?:\.\d+)?)\^/;
 const BASE_SIZE = 2;
 
 /**
- * Renders Minecraft-formatted text the way the bot's cards do: `§0`–`§f` and `§#rrggbb` colours, `§l` bold,
+ * Renders Minecraft-formatted text the way the bot's cards do: `§0`–`§f` and `§#rrggbb` colors, `§l` bold,
  * `§o` italic, `§n` and `§u` underline, `§m` strikethrough, `§k` ignored, `§r` reset and the renderer's `§^N^` size codes.
  */
 export function MinecraftText({ children, className }: { children: string | string[]; className?: string }) {
@@ -153,7 +153,7 @@ if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
 
   describe("plainText", () => {
-    it("drops colour, hex colour, size and style codes", () => {
+    it("drops color, hex color, size and style codes", () => {
       expect(plainText("§b[MVP§c+] j4cobi")).toBe("[MVP+] j4cobi");
       expect(plainText("§#FF55aa§^3^Big§r §ltext")).toBe("Big text");
       expect(plainText("§^1.5^half")).toBe("half");

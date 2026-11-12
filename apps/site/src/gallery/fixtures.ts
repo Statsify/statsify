@@ -97,14 +97,14 @@ export const LEADERBOARD_PAGE: LeaderboardPage = {
   game: "BEDWARS",
   glossary: "wins",
   columns: [
-    { field: "stats.bedwars.overall.wins", name: "Wins", label: "stats.wins", colour: "§a" },
-    { field: "stats.bedwars.overall.fkdr", name: "FKDR", label: "stats.fkdr", colour: "§6" },
+    { field: "stats.bedwars.overall.wins", name: "Wins", label: "stats.wins", color: "§a" },
+    { field: "stats.bedwars.overall.fkdr", name: "FKDR", label: "stats.fkdr", color: "§6" },
   ],
   page: 0,
   pages: 40_000,
   rows: rows.map(([uuid, name, wins, fkdr], index) => ({
     uuid,
-    // The name after the badges, without its colour.
+    // The name after the badges, without its color.
     username: name.slice(name.lastIndexOf(" ") + 1).replaceAll(/§./g, ""),
     position: index + 1,
     name,
@@ -115,12 +115,12 @@ export const LEADERBOARD_PAGE: LeaderboardPage = {
 
 export const PROGRESSION = { current: 2_120, max: 5_000, percent: 0.424 };
 
-/** A BedWars cell as `player.game` serves it: the bot's label and colour, and its leaderboard at the overall mode. */
-const bedwars = (key: string, value: number, colour: string, label = `stats.${key.slice(key.lastIndexOf(".") + 1)}`): StatCell => ({
+/** A BedWars cell as `player.game` serves it: the bot's label and color, and its leaderboard at the overall mode. */
+const bedwars = (key: string, value: number, color: string, label = `stats.${key.slice(key.lastIndexOf(".") + 1)}`): StatCell => ({
   key: `overall.${key}`,
   label,
   value,
-  colour,
+  color,
   leaderboard: `stats.bedwars.overall.${key}`,
 });
 
@@ -277,11 +277,11 @@ const listCell = (key: string, name: string, value: number | string, leaderboard
   label: "stats.bestTime",
   name,
   value,
-  colour: "§f",
+  color: "§f",
   leaderboard: leaderboard ? `stats.arcade.dropper.maps.${key}.bestTime` : null,
 });
 
-/** A list, as Dropper's best times: the card's names in their own colours, a time never set as N/A with no link. */
+/** A list, as Dropper's best times: the card's names in their own colors, a time never set as N/A with no link. */
 export const LIST_SECTION: StatSection = {
   title: "game.sections.bestTimes",
   list: true,
@@ -304,21 +304,21 @@ export const TITLE_LIST: StatSection = {
   plain: true,
   rows: [
     [
-      { key: "sumo.wins", label: "stats.wins", name: "§4§lSumo Legend", value: 2206, colour: "§f", leaderboard: "stats.duels.sumo.wins" },
-      { key: "bridge.overall.wins", label: "stats.wins", name: "§3Bridge Diamond IV", value: 816, colour: "§f", leaderboard: "stats.duels.bridge.overall.wins" },
-      { key: "bow.wins", label: "stats.wins", name: "§7Bow Rookie II", value: 30, colour: "§f", leaderboard: "stats.duels.bow.wins" },
+      { key: "sumo.wins", label: "stats.wins", name: "§4§lSumo Legend", value: 2206, color: "§f", leaderboard: "stats.duels.sumo.wins" },
+      { key: "bridge.overall.wins", label: "stats.wins", name: "§3Bridge Diamond IV", value: 816, color: "§f", leaderboard: "stats.duels.bridge.overall.wins" },
+      { key: "bow.wins", label: "stats.wins", name: "§7Bow Rookie II", value: 30, color: "§f", leaderboard: "stats.duels.bow.wins" },
     ],
   ],
 };
 
-/** Selections the card shows (a kit) and a stat in a hex colour the theme has no class for. */
+/** Selections the card shows (a kit) and a stat in a hex color the theme has no class for. */
 export const SELECTION_SECTION: StatSection = {
   title: null,
   rows: [
     [
-      { key: "miniWalls.witherKills", label: "stats.witherKills", value: 42, colour: "§#417286", leaderboard: "stats.arcade.miniWalls.witherKills" },
-      { key: "miniWalls.witherDamage", label: "stats.witherDamage", value: 12_840, colour: "§#0668af", leaderboard: null },
+      { key: "miniWalls.witherKills", label: "stats.witherKills", value: 42, color: "§#417286", leaderboard: "stats.arcade.miniWalls.witherKills" },
+      { key: "miniWalls.witherDamage", label: "stats.witherDamage", value: 12_840, color: "§#0668af", leaderboard: null },
     ],
-    [{ key: "miniWalls.kit", label: "stats.kit", value: "Soldier", colour: "§b", leaderboard: null, inline: true }],
+    [{ key: "miniWalls.kit", label: "stats.kit", value: "Soldier", color: "§b", leaderboard: null, inline: true }],
   ],
 };

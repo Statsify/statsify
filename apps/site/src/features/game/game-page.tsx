@@ -286,12 +286,12 @@ export function LevelPanel({ level, username }: { level: Level; username: string
   const { t } = useTranslation();
   const statName = useStatName();
   const { current, max, percent } = level.progression;
-  const { colours } = level;
+  const { colors } = level;
   const label = t(`default:${level.label}`);
   const full = statName(level.label);
   const value = <MinecraftText>{level.current}</MinecraftText>;
 
-  // Every line centred, a wrapped one too (a long title, its bar and the next one on a phone).
+  // Every line centered, a wrapped one too (a long title, its bar and the next one on a phone).
   return (
     <Box className="content:flex content:h-full content:flex-col content:items-center content:justify-center content:gap-3 content:text-center">
       {/* Within the panel: a long level (The Pit past its last prestige) breaks rather than widening the page. */}
@@ -301,7 +301,7 @@ export function LevelPanel({ level, username }: { level: Level; username: string
           value={level.leaderboard ?
             <LeaderboardLink field={level.leaderboard} username={username} stat={full ?? label} hint={full}>{value}</LeaderboardLink> :
             value}
-          color={leadingColourClass(level.current)}
+          color={leadingColorClass(level.current)}
           className="relative wrap-break-word"
         />
       </dl>
@@ -319,12 +319,12 @@ export function LevelPanel({ level, username }: { level: Level; username: string
         <InlineStat
           label={<Hint full={statName(level.progress)}>{t(`default:${level.progress}`)}</Hint>}
           value={max === undefined ?
-            <span className={cn("font-bold", colourClass(colours?.maxed ?? "§b"))}>{t(`game.${level.maxedWord ?? "maxed"}`)}</span> :
+            <span className={cn("font-bold", colorClass(colors?.maxed ?? "§b"))}>{t(`game.${level.maxedWord ?? "maxed"}`)}</span> :
             (
               <>
-                <span className={colourClass(colours?.current ?? "§b")}><StatNumber value={current} /></span>
-                {colours ? <span className={colourClass(colours.slash)}>/</span> : "/"}
-                <span className={colourClass(colours?.max ?? "§a")}><StatNumber value={max} /></span>
+                <span className={colorClass(colors?.current ?? "§b")}><StatNumber value={current} /></span>
+                {colors ? <span className={colorClass(colors.slash)}>/</span> : "/"}
+                <span className={colorClass(colors?.max ?? "§a")}><StatNumber value={max} /></span>
               </>
             )}
         />

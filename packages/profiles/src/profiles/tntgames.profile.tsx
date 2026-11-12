@@ -8,7 +8,7 @@
 
 import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "../components/index.js";
 import { FormattedGame, type GameMode, type TNTGamesModes } from "@statsify/schemas";
-import { TNT_GAMES, cardColours } from "@statsify/catalog";
+import { TNT_GAMES, cardColors } from "@statsify/catalog";
 import { formatRecordTime, formatTime, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "../types.js";
 
@@ -28,11 +28,11 @@ export const TNTGamesProfile = ({
   time,
 }: TNTGamesProfileProps) => {
   const { tntgames } = player.stats;
-  const colour = cardColours(TNT_GAMES);
+  const color = cardColors(TNT_GAMES);
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(tntgames.coins), colour("coins")],
-    [t("stats.overallWins"), t(tntgames.wins), colour("wins")],
+    [t("stats.coins"), t(tntgames.coins), color("coins")],
+    [t("stats.overallWins"), t(tntgames.wins), color("wins")],
   ];
 
   let table;
@@ -98,15 +98,15 @@ export const TNTGamesProfile = ({
       table = (
         <>
           <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(tntgames.tntRun.wins)} color={colour("tntRun.wins")} />
-            <Table.td title={t("stats.losses")} value={t(tntgames.tntRun.losses)} color={colour("tntRun.losses")} />
-            <Table.td title={t("stats.wlr")} value={t(tntgames.tntRun.wlr)} color={colour("tntRun.wlr")} />
+            <Table.td title={t("stats.wins")} value={t(tntgames.tntRun.wins)} color={color("tntRun.wins")} />
+            <Table.td title={t("stats.losses")} value={t(tntgames.tntRun.losses)} color={color("tntRun.losses")} />
+            <Table.td title={t("stats.wlr")} value={t(tntgames.tntRun.wlr)} color={color("tntRun.wlr")} />
           </Table.tr>
           <Table.tr>
-            <Table.td title={t("stats.potionsSplashed")} value={t(tntgames.tntRun.potionsSplashed)} color={colour("tntRun.potionsSplashed")} />
-            <Table.td title={t("stats.blocksRan")} value={t(tntgames.tntRun.blocksRan)} color={colour("tntRun.blocksRan")} />
+            <Table.td title={t("stats.potionsSplashed")} value={t(tntgames.tntRun.potionsSplashed)} color={color("tntRun.potionsSplashed")} />
+            <Table.td title={t("stats.blocksRan")} value={t(tntgames.tntRun.blocksRan)} color={color("tntRun.blocksRan")} />
             <Historical.exclude time={time}>
-              <Table.td title={t("stats.bestTime")} value={formatRecordTime(tntgames.tntRun.record)} color={colour("tntRun.record")} />
+              <Table.td title={t("stats.bestTime")} value={formatRecordTime(tntgames.tntRun.record)} color={color("tntRun.record")} />
             </Historical.exclude>
           </Table.tr>
         </>
@@ -116,22 +116,22 @@ export const TNTGamesProfile = ({
       table = (
         <>
           <Table.tr>
-            <Table.td title={t("stats.kills")} value={t(tntgames.pvpRun.kills)} color={colour("pvpRun.kills")} />
-            <Table.td title={t("stats.deaths")} value={t(tntgames.pvpRun.deaths)} color={colour("pvpRun.deaths")} />
-            <Table.td title={t("stats.kdr")} value={t(tntgames.pvpRun.kdr)} color={colour("pvpRun.kdr")} />
+            <Table.td title={t("stats.kills")} value={t(tntgames.pvpRun.kills)} color={color("pvpRun.kills")} />
+            <Table.td title={t("stats.deaths")} value={t(tntgames.pvpRun.deaths)} color={color("pvpRun.deaths")} />
+            <Table.td title={t("stats.kdr")} value={t(tntgames.pvpRun.kdr)} color={color("pvpRun.kdr")} />
             <Historical.include time={time}>
               <Table.td
                 title={t("stats.wins")}
                 value={t(tntgames.pvpRun.wins)}
-                // A session draws PVP Run's wins in its own colour; the catalog keeps the live card's.
+                // A session draws PVP Run's wins in its own color; the catalog keeps the live card's.
                 color="§e"
               />
             </Historical.include>
           </Table.tr>
           <Historical.exclude time={time}>
             <Table.tr>
-              <Table.td title={t("stats.wins")} value={t(tntgames.pvpRun.wins)} color={colour("pvpRun.wins")} />
-              <Table.td title={t("stats.bestTime")} value={formatRecordTime(tntgames.pvpRun.record)} color={colour("pvpRun.record")} />
+              <Table.td title={t("stats.wins")} value={t(tntgames.pvpRun.wins)} color={color("pvpRun.wins")} />
+              <Table.td title={t("stats.bestTime")} value={formatRecordTime(tntgames.pvpRun.record)} color={color("pvpRun.record")} />
             </Table.tr>
           </Historical.exclude>
         </>
@@ -140,26 +140,26 @@ export const TNTGamesProfile = ({
     case "bowSpleef":
       table = (
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(tntgames.bowSpleef.wins)} color={colour("bowSpleef.wins")} />
-          <Table.td title={t("stats.losses")} value={t(tntgames.bowSpleef.losses)} color={colour("bowSpleef.losses")} />
-          <Table.td title={t("stats.wlr")} value={t(tntgames.bowSpleef.wlr)} color={colour("bowSpleef.wlr")} />
-          <Table.td title={t("stats.shotsFired")} value={t(tntgames.bowSpleef.hits)} color={colour("bowSpleef.hits")} />
+          <Table.td title={t("stats.wins")} value={t(tntgames.bowSpleef.wins)} color={color("bowSpleef.wins")} />
+          <Table.td title={t("stats.losses")} value={t(tntgames.bowSpleef.losses)} color={color("bowSpleef.losses")} />
+          <Table.td title={t("stats.wlr")} value={t(tntgames.bowSpleef.wlr)} color={color("bowSpleef.wlr")} />
+          <Table.td title={t("stats.shotsFired")} value={t(tntgames.bowSpleef.hits)} color={color("bowSpleef.hits")} />
         </Table.tr>
       );
       break;
 
     case "tntTag":
-      sidebar.push([t("stats.powerups"), t(tntgames.tntTag.powerups), colour("tntTag.powerups")]);
+      sidebar.push([t("stats.powerups"), t(tntgames.tntTag.powerups), color("tntTag.powerups")]);
       table = (
         <>
           <Table.tr>
-            <Table.td title={t("stats.kills")} value={t(tntgames.tntTag.kills)} color={colour("tntTag.kills")} />
-            <Table.td title={t("stats.deaths")} value={t(tntgames.tntTag.deaths)} color={colour("tntTag.deaths")} />
-            <Table.td title={t("stats.kdr")} value={t(tntgames.tntTag.kdr)} color={colour("tntTag.kdr")} />
+            <Table.td title={t("stats.kills")} value={t(tntgames.tntTag.kills)} color={color("tntTag.kills")} />
+            <Table.td title={t("stats.deaths")} value={t(tntgames.tntTag.deaths)} color={color("tntTag.deaths")} />
+            <Table.td title={t("stats.kdr")} value={t(tntgames.tntTag.kdr)} color={color("tntTag.kdr")} />
           </Table.tr>
           <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(tntgames.tntTag.wins)} color={colour("tntTag.wins")} />
-            <Table.td title={t("stats.tags")} value={t(tntgames.tntTag.tags)} color={colour("tntTag.tags")} />
+            <Table.td title={t("stats.wins")} value={t(tntgames.tntTag.wins)} color={color("tntTag.wins")} />
+            <Table.td title={t("stats.tags")} value={t(tntgames.tntTag.tags)} color={color("tntTag.tags")} />
           </Table.tr>
         </>
       );
@@ -168,36 +168,36 @@ export const TNTGamesProfile = ({
       switch (mode.submode.api) {
         case "overall":
           sidebar.push(
-            [t("stats.class"), prettify(tntgames.wizards.class), colour("wizards.class")],
-            [t("stats.powerOrbs"), t(tntgames.wizards.powerOrbs), colour("wizards.powerOrbs")]
+            [t("stats.class"), prettify(tntgames.wizards.class), color("wizards.class")],
+            [t("stats.powerOrbs"), t(tntgames.wizards.powerOrbs), color("wizards.powerOrbs")]
           );
 
           table = (
             <>
               <Table.tr>
-                <Table.td title={t("stats.kills")} value={t(tntgames.wizards.kills)} color={colour("wizards.kills")} />
-                <Table.td title={t("stats.deaths")} value={t(tntgames.wizards.deaths)} color={colour("wizards.deaths")} />
-                <Table.td title={t("stats.kdr")} value={t(tntgames.wizards.kdr)} color={colour("wizards.kdr")} />
-                <Table.td title={t("stats.assists")} value={t(tntgames.wizards.assists)} color={colour("wizards.assists")} />
+                <Table.td title={t("stats.kills")} value={t(tntgames.wizards.kills)} color={color("wizards.kills")} />
+                <Table.td title={t("stats.deaths")} value={t(tntgames.wizards.deaths)} color={color("wizards.deaths")} />
+                <Table.td title={t("stats.kdr")} value={t(tntgames.wizards.kdr)} color={color("wizards.kdr")} />
+                <Table.td title={t("stats.assists")} value={t(tntgames.wizards.assists)} color={color("wizards.assists")} />
               </Table.tr>
               <Table.tr>
-                <Table.td title={t("stats.wins")} value={t(tntgames.wizards.wins)} color={colour("wizards.wins")} />
-                <Table.td title={t("stats.points")} value={t(tntgames.wizards.points)} color={colour("wizards.points")} />
-                <Table.td title={t("stats.airTime")} value={formatTime(tntgames.wizards.airTime)} color={colour("wizards.airTime")} />
+                <Table.td title={t("stats.wins")} value={t(tntgames.wizards.wins)} color={color("wizards.wins")} />
+                <Table.td title={t("stats.points")} value={t(tntgames.wizards.points)} color={color("wizards.points")} />
+                <Table.td title={t("stats.airTime")} value={formatTime(tntgames.wizards.airTime)} color={color("wizards.airTime")} />
               </Table.tr>
             </>
           );
           break;
         default: {
           const stats = tntgames.wizards[mode.submode.api];
-          const classColour = cardColours(TNT_GAMES, `wizards.${mode.submode.api}`);
+          const classColor = cardColors(TNT_GAMES, `wizards.${mode.submode.api}`);
 
           table = (
             <Table.tr>
-              <Table.td title={t("stats.kills")} value={t(stats.kills)} color={classColour("kills")} />
-              <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={classColour("deaths")} />
-              <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={classColour("kdr")} />
-              <Table.td title={t("stats.assists")} value={t(stats.assists)} color={classColour("assists")} />
+              <Table.td title={t("stats.kills")} value={t(stats.kills)} color={classColor("kills")} />
+              <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color={classColor("deaths")} />
+              <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color={classColor("kdr")} />
+              <Table.td title={t("stats.assists")} value={t(stats.assists)} color={classColor("assists")} />
             </Table.tr>
           );
           break;

@@ -10,7 +10,7 @@ import { ARCADE_MODES, type ArcadeModes, DropperMaps, scanMetadata } from "@stat
 import { type Game, type Shape, type StatEntry, selection } from "../catalog.js";
 import { prettify } from "@statsify/util";
 
-// The Disasters card's literals (`disasters.tsx`), in its order: names in their own colours, values in §f.
+// The Disasters card's literals (`disasters.tsx`), in its order: names in their own colors, values in §f.
 const SURVIVALS: Record<string, string> = {
   overall: "§l§fOVERALL",
   acidRain: "§l§aACID RAIN",
@@ -70,7 +70,7 @@ const DEATHS: Record<string, string> = {
 };
 
 const named = (names: Record<string, string>): Record<string, StatEntry> =>
-  Object.fromEntries(Object.entries(names).map(([key, name]) => [key, { colour: "§f", name }]));
+  Object.fromEntries(Object.entries(names).map(([key, name]) => [key, { color: "§f", name }]));
 
 // The Party Games card's round names (`party-games.tsx`): every round's wins, then the best times and best scores it
 // shows, each in the card's order.
@@ -120,17 +120,17 @@ const BEST_TIMES = [
 const BEST_SCORES = ["animalSlaughter", "dive", "highGround", "hoeHoeHoe", "lawnMoower", "rpg16"];
 
 const PARTY_GAMES: Record<string, StatEntry> = {
-  wins: { colour: "§a" },
-  roundsWon: { colour: "§e", label: "stats.roundWins" },
-  starsEarned: { colour: "§6" },
-  ...Object.fromEntries(ROUNDS.map((round) => [`${round}Wins`, { colour: "§a", name: roundName(round) }])),
-  ...Object.fromEntries(BEST_TIMES.map((round) => [`${round}BestTime`, { colour: "§a", name: roundName(round), unset: "§7N/A" }])),
-  ...Object.fromEntries(BEST_SCORES.map((round) => [`${round}BestScore`, { colour: "§a", name: roundName(round) }])),
+  wins: { color: "§a" },
+  roundsWon: { color: "§e", label: "stats.roundWins" },
+  starsEarned: { color: "§6" },
+  ...Object.fromEntries(ROUNDS.map((round) => [`${round}Wins`, { color: "§a", name: roundName(round) }])),
+  ...Object.fromEntries(BEST_TIMES.map((round) => [`${round}BestTime`, { color: "§a", name: roundName(round), unset: "§7N/A" }])),
+  ...Object.fromEntries(BEST_SCORES.map((round) => [`${round}BestScore`, { color: "§a", name: roundName(round) }])),
 };
 
 /**
  * Dropper's maps as the card lists them (`dropper.tsx`): under §cHard, §eMedium and §aEasy, each by key, under their
- * leaderboard names, which carry the difficulty's colour.
+ * leaderboard names, which carry the difficulty's color.
  */
 export const DROPPER_DIFFICULTIES: { name: string; maps: [key: keyof DropperMaps, name: string][] }[] = (() => {
   const maps = scanMetadata(DropperMaps)
@@ -151,172 +151,172 @@ const DROPPER_MAPS = DROPPER_DIFFICULTIES.flatMap(({ maps }) => maps);
 
 const DROPPER_MAP_SHAPES: Shape[] = DROPPER_MAPS.map(([key, name]) => ({
   modes: [`dropper.maps.${key}`],
-  stats: { completions: { colour: "§f", name }, bestTime: { colour: "§f", name, unset: "§7N/A" } },
+  stats: { completions: { color: "§f", name }, bestTime: { color: "§f", name, unset: "§7N/A" } },
 }));
 
 // A map's block on the Zombies cards (`zombies.tsx`); Zombies › Overall draws a map's Fastest Win and Best Round in §e.
 const ZOMBIES: Record<string, StatEntry> = {
-  wins: { colour: "§a" },
-  bestRound: { colour: "§a" },
-  kills: { colour: "§e" },
-  deaths: { colour: "§c" },
-  fastestWin: { colour: "§b", unset: "N/A" },
-  totalRounds: { colour: "§d" },
-  doorsOpened: { colour: "§9" },
+  wins: { color: "§a" },
+  bestRound: { color: "§a" },
+  kills: { color: "§e" },
+  deaths: { color: "§c" },
+  fastestWin: { color: "§b", unset: "N/A" },
+  totalRounds: { color: "§d" },
+  doorsOpened: { color: "§9" },
 };
 
 /** Zombies › Overall's own block: a map's, but with no Fastest Win, which only a map has. */
 const ZOMBIES_OVERALL: Record<string, StatEntry> = Object.fromEntries(Object.entries(ZOMBIES).filter(([key]) => key !== "fastestWin"));
 
-const HIDE_AND_SEEK: Record<string, StatEntry> = { wins: { colour: "§a" }, hiderWins: { colour: "§e" }, seekerWins: { colour: "§b" } };
+const HIDE_AND_SEEK: Record<string, StatEntry> = { wins: { color: "§a" }, hiderWins: { color: "§e" }, seekerWins: { color: "§b" } };
 
 const HYPIXEL_SAYS: Record<string, StatEntry> = {
-  wins: { colour: "§a" },
-  roundsWon: { colour: "§b", label: "stats.roundWins" },
-  points: { colour: "§e" },
-  maxScore: { colour: "§6", label: "stats.maxPoints" },
+  wins: { color: "§a" },
+  roundsWon: { color: "§b", label: "stats.roundWins" },
+  points: { color: "§e" },
+  maxScore: { color: "§6", label: "stats.maxPoints" },
 };
 
 const PIXEL_PARTY: Record<string, StatEntry> = {
-  wins: { colour: "§a" },
-  losses: { colour: "§c" },
-  wlr: { colour: "§6" },
-  gamesPlayed: { colour: "§b" },
+  wins: { color: "§a" },
+  losses: { color: "§c" },
+  wlr: { color: "§6" },
+  gamesPlayed: { color: "§b" },
 };
 
 /**
- * The colours and labels of the bot's Arcade cards (`apps/discord-bot/src/commands/arcade`). A mode's Wins is in its
- * own card's colour here; Overall colours them by rank.
+ * The colors and labels of the bot's Arcade cards (`apps/discord-bot/src/commands/arcade`). A mode's Wins is in its
+ * own card's color here; Overall colors them by rank.
  */
 export const ARCADE: Game<ArcadeModes> = {
   key: "arcade",
   id: "ARCADE",
   modes: ARCADE_MODES,
   game: {
-    coins: { colour: "§6" },
-    coinConversions: { colour: "§e" },
-    wins: { colour: "§b", label: "stats.arcadeWins" },
+    coins: { color: "§6" },
+    coinConversions: { color: "§e" },
+    wins: { color: "§b", label: "stats.arcadeWins" },
   },
   shapes: [
-    { modes: ["blockingDead"], stats: { wins: { colour: "§e" }, kills: { colour: "§a" }, headshots: { colour: "§6" } } },
+    { modes: ["blockingDead"], stats: { wins: { color: "§e" }, kills: { color: "§a" }, headshots: { color: "§6" } } },
     {
       modes: ["bountyHunters"],
       stats: {
-        wins: { colour: "§a" },
-        bountyKills: { colour: "§e" },
-        kills: { colour: "§a" },
-        deaths: { colour: "§c" },
-        kdr: { colour: "§6" },
-        // Not on the card: coloured as its Kills.
-        bowKills: { colour: "§a" },
-        swordKills: { colour: "§a" },
+        wins: { color: "§a" },
+        bountyKills: { color: "§e" },
+        kills: { color: "§a" },
+        deaths: { color: "§c" },
+        kdr: { color: "§6" },
+        // Not on the card: colored as its Kills.
+        bowKills: { color: "§a" },
+        swordKills: { color: "§a" },
       },
     },
-    { modes: ["creeperAttack"], stats: { maxWave: { colour: "§a" } } },
+    { modes: ["creeperAttack"], stats: { maxWave: { color: "§a" } } },
     {
       modes: ["disasters"],
       stats: {
-        wins: { colour: "§a" },
-        losses: { colour: "§c" },
-        wlr: { colour: "§6" },
-        gamesPlayed: { colour: "§e" },
-        playtime: { colour: "§b" },
-        powerups: { colour: "§5" },
+        wins: { color: "§a" },
+        losses: { color: "§c" },
+        wlr: { color: "§6" },
+        gamesPlayed: { color: "§e" },
+        playtime: { color: "§b" },
+        powerups: { color: "§5" },
       },
     },
     { modes: ["disasters.survivals"], stats: named(SURVIVALS) },
     { modes: ["disasters.deaths"], stats: named(DEATHS) },
-    { modes: ["dragonWars"], stats: { wins: { colour: "§e" }, kills: { colour: "§a" }, mounts: { colour: "§6" } } },
+    { modes: ["dragonWars"], stats: { wins: { color: "§e" }, kills: { color: "§a" }, mounts: { color: "§6" } } },
     {
       modes: ["dropper"],
       stats: {
-        wins: { colour: "§a" },
-        fails: { colour: "§c" },
-        mapsCompleted: { colour: "§e" },
-        gamesPlayed: { colour: "§b" },
-        gamesFinished: { colour: "§3" },
-        bestTime: { colour: "§d", unset: "N/A" },
-        flawlessGames: { colour: "§5" },
+        wins: { color: "§a" },
+        fails: { color: "§c" },
+        mapsCompleted: { color: "§e" },
+        gamesPlayed: { color: "§b" },
+        gamesFinished: { color: "§3" },
+        bestTime: { color: "§d", unset: "N/A" },
+        flawlessGames: { color: "§5" },
       },
     },
     ...DROPPER_MAP_SHAPES,
     {
       modes: ["enderSpleef"],
       stats: {
-        wins: { colour: "§a" },
-        blocksBroken: { colour: "§c" },
+        wins: { color: "§a" },
+        blocksBroken: { color: "§c" },
         trail: selection("§6"),
-        bigShot: { colour: "§a" },
-        tripleShot: { colour: "§c" },
-        powerupActivations: { colour: "§6", label: "stats.total", glossary: "powerupActivations" },
+        bigShot: { color: "§a" },
+        tripleShot: { color: "§c" },
+        powerupActivations: { color: "§6", label: "stats.total", glossary: "powerupActivations" },
       },
     },
     {
       modes: ["farmHunt"],
       stats: {
-        wins: { colour: "§e" },
-        kills: { colour: "§a" },
-        tauntsUsed: { colour: "§b" },
-        poopCollected: { colour: "§#a7673f" },
-        animalWins: { colour: "§e", label: "stats.wins" },
-        animalKills: { colour: "§a", label: "stats.kills" },
-        hunterWins: { colour: "§e", label: "stats.wins" },
-        hunterKills: { colour: "§a", label: "stats.kills" },
+        wins: { color: "§e" },
+        kills: { color: "§a" },
+        tauntsUsed: { color: "§b" },
+        poopCollected: { color: "§#a7673f" },
+        animalWins: { color: "§e", label: "stats.wins" },
+        animalKills: { color: "§a", label: "stats.kills" },
+        hunterWins: { color: "§e", label: "stats.wins" },
+        hunterKills: { color: "§a", label: "stats.kills" },
       },
     },
     {
       modes: ["football"],
-      stats: { wins: { colour: "§a" }, goals: { colour: "§b" }, kicks: { colour: "§e" }, powerKicks: { colour: "§6" } },
+      stats: { wins: { color: "§a" }, goals: { color: "§b" }, kicks: { color: "§e" }, powerKicks: { color: "§6" } },
     },
     {
       modes: ["galaxyWars"],
       stats: {
-        wins: { colour: "§a" },
-        rebelKills: { colour: "§c" },
-        empireKills: { colour: "§6" },
-        kills: { colour: "§a" },
-        deaths: { colour: "§c" },
-        kdr: { colour: "§6" },
+        wins: { color: "§a" },
+        rebelKills: { color: "§c" },
+        empireKills: { color: "§6" },
+        kills: { color: "§a" },
+        deaths: { color: "§c" },
+        kdr: { color: "§6" },
       },
     },
-    { modes: ["hideAndSeek"], stats: { objectivesCompleted: { colour: "§a", label: "stats.objectives" }, kills: { colour: "§b" } } },
+    { modes: ["hideAndSeek"], stats: { objectivesCompleted: { color: "§a", label: "stats.objectives" }, kills: { color: "§b" } } },
     { modes: ["hideAndSeek.overall", "hideAndSeek.partyPooper", "hideAndSeek.propHunt"], stats: HIDE_AND_SEEK },
     {
       modes: ["holeInTheWall"],
       stats: {
-        wins: { colour: "§a" },
-        wallsFaced: { colour: "§c" },
-        highestScoreQualifications: { colour: "§b" },
-        highestScoreFinals: { colour: "§6" },
+        wins: { color: "§a" },
+        wallsFaced: { color: "§c" },
+        highestScoreQualifications: { color: "§b" },
+        highestScoreFinals: { color: "§6" },
       },
     },
     { modes: ["hypixelSays", "hypixelSays.simonSays", "hypixelSays.santaSays"], stats: HYPIXEL_SAYS },
     {
       modes: ["miniWalls"],
       stats: {
-        finalKills: { colour: "§a" },
-        wins: { colour: "§e" },
+        finalKills: { color: "§a" },
+        wins: { color: "§e" },
         kit: selection("§b"),
-        kills: { colour: "§a" },
-        deaths: { colour: "§c" },
-        kdr: { colour: "§6" },
-        witherKills: { colour: "§#417286" },
-        witherDamage: { colour: "§#0668af" },
+        kills: { color: "§a" },
+        deaths: { color: "§c" },
+        kdr: { color: "§6" },
+        witherKills: { color: "§#417286" },
+        witherDamage: { color: "§#0668af" },
       },
     },
     { modes: ["partyGames"], stats: PARTY_GAMES },
-    { modes: ["pixelPainters"], stats: { wins: { colour: "§a" } } },
-    { modes: ["pixelParty"], stats: { roundsCompleted: { colour: "§e" }, powerupsCollected: { colour: "§d" } } },
+    { modes: ["pixelPainters"], stats: { wins: { color: "§a" } } },
+    { modes: ["pixelParty"], stats: { roundsCompleted: { color: "§e" }, powerupsCollected: { color: "§d" } } },
     { modes: ["pixelParty.overall", "pixelParty.normal", "pixelParty.hyper"], stats: PIXEL_PARTY },
-    // Only Overall's ranking shows the total, in its rank's colour.
-    { modes: ["seasonal"], stats: { totalWins: { colour: "§a" } } },
-    { modes: ["seasonal.easterSimulator"], stats: { wins: { colour: "§d" }, eggsFound: { colour: "§e" } } },
-    { modes: ["seasonal.grinchSimulator"], stats: { wins: { colour: "§a" }, giftsFound: { colour: "§c" } } },
-    { modes: ["seasonal.halloweenSimulator"], stats: { wins: { colour: "§6" }, candyFound: { colour: "§5" } } },
-    { modes: ["seasonal.scubaSimulator"], stats: { wins: { colour: "§e" }, points: { colour: "§b" } } },
+    // Only Overall's ranking shows the total, in its rank's color.
+    { modes: ["seasonal"], stats: { totalWins: { color: "§a" } } },
+    { modes: ["seasonal.easterSimulator"], stats: { wins: { color: "§d" }, eggsFound: { color: "§e" } } },
+    { modes: ["seasonal.grinchSimulator"], stats: { wins: { color: "§a" }, giftsFound: { color: "§c" } } },
+    { modes: ["seasonal.halloweenSimulator"], stats: { wins: { color: "§6" }, candyFound: { color: "§5" } } },
+    { modes: ["seasonal.scubaSimulator"], stats: { wins: { color: "§e" }, points: { color: "§b" } } },
     {
       modes: ["throwOut"],
-      stats: { wins: { colour: "§e" }, kills: { colour: "§a" }, deaths: { colour: "§c" }, kdr: { colour: "§6" } },
+      stats: { wins: { color: "§e" }, kills: { color: "§a" }, deaths: { color: "§c" }, kdr: { color: "§6" } },
     },
     { modes: ["zombies.overall"], stats: ZOMBIES_OVERALL },
     {

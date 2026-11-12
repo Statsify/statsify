@@ -10,31 +10,31 @@ import { type Game, selection } from "../catalog.js";
 import { PAINTBALL_MODES, type PaintballModes } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 
-/** The colours and labels of the bot's Paintball card (`paintball.profile.tsx`): its sidebar, its table and the Perks. */
+/** The colors and labels of the bot's Paintball card (`paintball.profile.tsx`): its sidebar, its table and the Perks. */
 export const PAINTBALL: Game<PaintballModes> = {
   key: "paintball",
   id: "PAINTBALL",
   modes: PAINTBALL_MODES,
   game: {
-    "coins": { colour: "§6" },
-    "tokens": { colour: "§e" },
+    "coins": { color: "§6" },
+    "tokens": { color: "§e" },
     // Milliseconds, which the card prints as a time; the stat has no leaderboard to format it.
-    "forcefieldTime": { colour: "§9", format: (ms) => formatTime(Number(ms)) },
-    "killstreaks": { colour: "§b" },
+    "forcefieldTime": { color: "§9", format: (ms) => formatTime(Number(ms)) },
+    "killstreaks": { color: "§b" },
     "hat": selection("§7"),
-    "wins": { colour: "§a" },
-    "shotsFired": { colour: "§c" },
-    "shotAccuracy": { colour: "§6", suffix: "%" },
-    "kills": { colour: "§a" },
-    "deaths": { colour: "§c" },
-    "kdr": { colour: "§6" },
-    "perks.adrenaline": { colour: "§4" },
-    "perks.endurance": { colour: "§d" },
-    "perks.fortune": { colour: "§2" },
-    "perks.godfather": { colour: "§e" },
-    "perks.headstart": { colour: "§c" },
-    "perks.superluck": { colour: "§6" },
-    "perks.transfusion": { colour: "§b" },
+    "wins": { color: "§a" },
+    "shotsFired": { color: "§c" },
+    "shotAccuracy": { color: "§6", suffix: "%" },
+    "kills": { color: "§a" },
+    "deaths": { color: "§c" },
+    "kdr": { color: "§6" },
+    "perks.adrenaline": { color: "§4" },
+    "perks.endurance": { color: "§d" },
+    "perks.fortune": { color: "§2" },
+    "perks.godfather": { color: "§e" },
+    "perks.headstart": { color: "§c" },
+    "perks.superluck": { color: "§6" },
+    "perks.transfusion": { color: "§b" },
   },
   shapes: [],
 };

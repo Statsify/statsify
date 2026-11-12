@@ -22,7 +22,7 @@ export interface ListGroup {
   /** The `GameId` for the icon, or `null` for groups without a game (quests, challenges). */
   game: string | null;
   name: string;
-  /** The name in the game's colours, Minecraft-formatted. */
+  /** The name in the game's colors, Minecraft-formatted. */
   formatted: string;
   leaderboards: ListBoard[];
 }

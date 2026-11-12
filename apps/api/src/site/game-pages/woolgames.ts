@@ -54,8 +54,8 @@ const CAPTURE_THE_WOOL: PageSpec = {
       ],
     },
     { title: "game.sections.gold", rows: [["goldEarned", "goldSpent"]] },
-    { title: "game.sections.againstWoolHolder", colour: "§6", box: true, rows: [["killsOnWoolHolder", "deathsToWoolHolder"]] },
-    { title: "game.sections.asWoolHolder", colour: "§6", box: true, rows: [["killsAsWoolHolder", "deathsAsWoolHolder"]] },
+    { title: "game.sections.againstWoolHolder", color: "§6", box: true, rows: [["killsOnWoolHolder", "deathsToWoolHolder"]] },
+    { title: "game.sections.asWoolHolder", color: "§6", box: true, rows: [["killsAsWoolHolder", "deathsAsWoolHolder"]] },
   ],
 };
 

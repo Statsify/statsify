@@ -7,7 +7,7 @@
  */
 
 /**
- * Design tokens for the site. The `§` colours and the card panel's colour and shadow are the bot's own, read from the
+ * Design tokens for the site. The `§` colors and the card panel's color and shadow are the bot's own, read from the
  * import-free entries of `@statsify/util` and `@statsify/rendering`.
  * `scripts/tokens-css.ts` turns these into `dist/tokens.css` for Tailwind's `@theme`.
  */
@@ -17,7 +17,7 @@ import { minecraftColors } from "@statsify/util/minecraft-colors";
 
 const mc = (code: string) => minecraftColors.find((color) => color.code === code)!.hex;
 
-/** The 16 `§` colours, under the site's names, and the site palette. */
+/** The 16 `§` colors, under the site's names, and the site palette. */
 export const colors = {
   minecraft: {
     black: mc("§0"),

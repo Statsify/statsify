@@ -21,7 +21,7 @@ const NAMED_GAMES = 3;
 export type BoardLink = { field: string } | { search: true } | null;
 
 /** One stat as the glossary shows it, with its words in the page's locale. */
-export interface GlossaryItem extends Pick<GlossaryEntry, "key" | "label" | "params" | "colour" | "formula"> {
+export interface GlossaryItem extends Pick<GlossaryEntry, "key" | "label" | "params" | "color" | "formula"> {
   name?: string;
   text: string;
   /** The first games that show it, by name, and how many more do. */
