@@ -5,6 +5,8 @@ use napi_derive::napi;
 use crate::geometry::{Geometry, Rotation};
 use crate::model::Part;
 
+const SNEAK_DROP: f32 = 3.2;
+
 #[cfg_attr(
   not(target_arch = "wasm32"),
   napi(string_enum = "lowercase", skip_typescript)
@@ -70,8 +72,8 @@ impl Pose {
 
   pub fn cape(self) -> PartPose {
     match self {
-      // place() drops the whole model 3.2, but the game drops a sneaking cape only 2.27
-      Pose::Sneak => part_pose([25.0, 0.0, 0.0], [0.0, 3.2 - 2.27, 0.28]),
+      // The game drops a sneaking cape only 2.27
+      Pose::Sneak => part_pose([25.0, 0.0, 0.0], [0.0, SNEAK_DROP - 2.27, 0.28]),
       Pose::Jump => part_pose([25.0, 0.0, 0.0], [0.0; 3]),
       _ => part_pose([0.0; 3], [0.0; 3]),
     }
@@ -87,7 +89,7 @@ impl Pose {
   // Moves and turns the whole model, after each part is in place
   pub fn place(self, geometry: &mut Geometry) {
     match self {
-      Pose::Sneak => geometry.translate(Vector3::new(0.0, -3.2, 0.0)),
+      Pose::Sneak => geometry.translate(Vector3::new(0.0, -SNEAK_DROP, 0.0)),
       Pose::Swim | Pose::Fly => geometry.rotate_around(Rotation {
         quaternion: Quaternion::from_angle_x(Deg(90.0)),
         pivot: Vector3::zero(),
