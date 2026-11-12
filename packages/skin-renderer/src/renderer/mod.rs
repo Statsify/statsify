@@ -4,9 +4,6 @@ pub mod native;
 #[cfg(target_arch = "wasm32")]
 pub mod wasm;
 
-#[cfg(not(target_arch = "wasm32"))]
-use std::sync::Mutex;
-
 use bytemuck::cast_slice;
 use wgpu::util::DeviceExt;
 #[cfg(target_arch = "wasm32")]
@@ -27,19 +24,6 @@ use crate::texture::Texture;
 
 #[cfg(not(target_arch = "wasm32"))]
 pub type PngBytes = Vec<u8>;
-
-// Spares past this are dropped, or one burst of renders keeps a buffer for every render it ran
-// at once for the life of the process
-#[cfg(not(target_arch = "wasm32"))]
-const SPARE_BUFFERS: usize = 8;
-
-#[cfg(not(target_arch = "wasm32"))]
-struct Uniforms {
-  camera_buffer: wgpu::Buffer,
-  camera_bind_group: wgpu::BindGroup,
-  light_buffer: wgpu::Buffer,
-  light_bind_group: wgpu::BindGroup,
-}
 
 pub struct SkinRenderer<T: Backend> {
   backend: T,
@@ -66,10 +50,6 @@ pub struct SkinRenderer<T: Backend> {
 
   #[cfg(target_arch = "wasm32")]
   depth_texture: Texture,
-
-  // Renders run at the same time, so each takes its own camera and light uniforms
-  #[cfg(not(target_arch = "wasm32"))]
-  uniforms: Mutex<Vec<Uniforms>>,
 }
 
 impl<T: Backend> SkinRenderer<T> {
@@ -176,9 +156,6 @@ impl<T: Backend> SkinRenderer<T> {
 
       #[cfg(target_arch = "wasm32")]
       depth_texture,
-
-      #[cfg(not(target_arch = "wasm32"))]
-      uniforms: Mutex::default(),
     })
   }
 
@@ -533,6 +510,8 @@ impl SkinRenderer<native::NativeBackend> {
     Self::create(backend).await
   }
 
+  // Renders run on several threads at once, so each gets its own camera and light
+  // instead of rewriting the shared ones
   pub async fn render(
     &self,
     model: &Model,
@@ -551,18 +530,12 @@ impl SkinRenderer<native::NativeBackend> {
 
     let camera = Camera::Orbital(camera.fitted(model.points(), model.camera_radius()));
 
-    let pooled = self.uniforms.lock().unwrap().pop();
-    let uniforms = pooled.unwrap_or_else(|| self.create_uniforms());
-
-    let queue = self.backend.queue();
-    queue.write_buffer(
-      &uniforms.camera_buffer,
-      0,
+    let camera_bind_group = self.uniform_bind_group(
+      &self.camera_bind_group_layout,
       cast_slice(&[CameraUniform::new(&camera)]),
     );
-    queue.write_buffer(
-      &uniforms.light_buffer,
-      0,
+    let light_bind_group = self.uniform_bind_group(
+      &self.light_bind_group_layout,
       cast_slice(&[LightUniform::from(&camera)]),
     );
 
@@ -570,57 +543,30 @@ impl SkinRenderer<native::NativeBackend> {
       model,
       &target.view,
       &target.depth_texture.view,
-      &uniforms.camera_bind_group,
-      &uniforms.light_bind_group,
+      &camera_bind_group,
+      &light_bind_group,
     );
-    let png = target.read(self.backend.device(), queue, encoder).await?;
-
-    let mut spares = self.uniforms.lock().unwrap();
-
-    if spares.len() < SPARE_BUFFERS {
-      spares.push(uniforms);
-    }
-
-    Ok(png)
+    target
+      .read(self.backend.device(), self.backend.queue(), encoder)
+      .await
   }
 
-  fn create_uniforms(&self) -> Uniforms {
-    let (camera_buffer, camera_bind_group) =
-      self.uniform_bind_group(&self.camera_bind_group_layout, size_of::<CameraUniform>());
-    let (light_buffer, light_bind_group) =
-      self.uniform_bind_group(&self.light_bind_group_layout, size_of::<LightUniform>());
-
-    Uniforms {
-      camera_buffer,
-      camera_bind_group,
-      light_buffer,
-      light_bind_group,
-    }
-  }
-
-  fn uniform_bind_group(
-    &self,
-    layout: &wgpu::BindGroupLayout,
-    size: usize,
-  ) -> (wgpu::Buffer, wgpu::BindGroup) {
+  fn uniform_bind_group(&self, layout: &wgpu::BindGroupLayout, contents: &[u8]) -> wgpu::BindGroup {
     let device = self.backend.device();
 
-    let buffer = device.create_buffer(&wgpu::BufferDescriptor {
+    let buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
       label: None,
-      size: size as u64,
-      usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
-      mapped_at_creation: false,
+      contents,
+      usage: wgpu::BufferUsages::UNIFORM,
     });
 
-    let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+    device.create_bind_group(&wgpu::BindGroupDescriptor {
       layout,
       entries: &[wgpu::BindGroupEntry {
         binding: 0,
         resource: buffer.as_entire_binding(),
       }],
       label: None,
-    });
-
-    (buffer, bind_group)
+    })
   }
 }

@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 
 use futures_intrusive::channel;
 use image::codecs::png::PngEncoder;
@@ -6,7 +6,7 @@ use image::{ExtendedColorType, ImageEncoder};
 use napi::bindgen_prelude::spawn_blocking;
 
 use super::backend::Backend;
-use super::{PngBytes, SPARE_BUFFERS};
+use super::PngBytes;
 use crate::buffer_dimensions::BufferDimensions;
 use crate::error::{Error, Result as SkinRendererResult};
 use crate::texture::Texture;
@@ -108,9 +108,6 @@ pub struct RenderTarget {
   texture_extent: wgpu::Extent3d,
   pub view: wgpu::TextureView,
   pub depth_texture: Texture,
-
-  // Renders run at the same time, so each maps a buffer no other render is using
-  output_buffers: Mutex<Vec<wgpu::Buffer>>,
 }
 
 impl RenderTarget {
@@ -140,7 +137,6 @@ impl RenderTarget {
       texture,
       texture_extent,
       depth_texture: Texture::create_depth_texture(device, config, "depth_texture"),
-      output_buffers: Mutex::default(),
     }
   }
 
@@ -150,14 +146,11 @@ impl RenderTarget {
     queue: &wgpu::Queue,
     mut encoder: wgpu::CommandEncoder,
   ) -> SkinRendererResult<PngBytes> {
-    let pooled = self.output_buffers.lock().unwrap().pop();
-    let output_buffer = pooled.unwrap_or_else(|| {
-      device.create_buffer(&wgpu::BufferDescriptor {
-        label: None,
-        size: (self.dimensions.padded_bytes_per_row * self.dimensions.height) as u64,
-        usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
-        mapped_at_creation: false,
-      })
+    let output_buffer = device.create_buffer(&wgpu::BufferDescriptor {
+      label: None,
+      size: (self.dimensions.padded_bytes_per_row * self.dimensions.height) as u64,
+      usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+      mapped_at_creation: false,
     });
 
     encoder.copy_texture_to_buffer(
@@ -185,11 +178,7 @@ impl RenderTarget {
       .await
       .map_err(|_| Error::RenderFailure)??;
 
-    let Some(Ok(())) = receiver.receive().await else {
-      return Err(Error::RenderFailure);
-    };
-
-    let png = {
+    if let Some(Ok(())) = receiver.receive().await {
       let padded_buffer = buffer_slice.get_mapped_range();
 
       let buffer = padded_buffer
@@ -208,17 +197,9 @@ impl RenderTarget {
         ExtendedColorType::Rgba8,
       )?;
 
-      png
-    };
-
-    output_buffer.unmap();
-
-    let mut spares = self.output_buffers.lock().unwrap();
-
-    if spares.len() < SPARE_BUFFERS {
-      spares.push(output_buffer);
+      Ok(png)
+    } else {
+      Err(Error::RenderFailure)
     }
-
-    Ok(png)
   }
 }
