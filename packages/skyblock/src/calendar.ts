@@ -68,7 +68,7 @@ export interface EventTime {
 }
 
 /** The mayor's term in real time, from its election's end, while it lasts. */
-function termOf(mayor: MayorView | undefined, time: number) {
+export function termOf(mayor: MayorView | undefined, time: number) {
   // A copy the API cached before `term` existed has none until it refreshes
   if (mayor?.term === undefined) return;
   const start = skyblockTime({ year: mayor.term, month: 2, day: 27 });

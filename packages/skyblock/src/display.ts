@@ -41,7 +41,7 @@ export {
   TROPHY_TIERS,
   WHISPERS,
 } from "#types";
-export { type EventTime, SKYBLOCK_MONTHS, type SkyBlockDate, type SkyBlockEvent, nextEvents, skyblockDate } from "./calendar.js";
+export { type EventTime, SKYBLOCK_MONTHS, type SkyBlockDate, type SkyBlockEvent, nextEvents, skyblockDate, termOf } from "./calendar.js";
 
 export const RARITY_COLORS: Record<Rarity, string> = {
   COMMON: "§f",

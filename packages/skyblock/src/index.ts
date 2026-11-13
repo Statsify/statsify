@@ -11,7 +11,7 @@ export type * from "./raw.js";
 export { getApiSettings } from "./api-settings.js";
 export { type MayorView, type Perk, toMayorView } from "./election.js";
 export { buildPriceMap, type SeenIndex } from "./auctions.js";
-export { describeKey, parseBazaar, toPriceView } from "./prices.js";
+export { describeKey, labelVariants, parseBazaar, toPriceView } from "./prices.js";
 export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
 export { findProfile, gameModeOf, isMember, toPlayerExtras, toProfileSummary, toProfilesView } from "./profiles.js";
