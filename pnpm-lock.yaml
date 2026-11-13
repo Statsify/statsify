@@ -627,12 +627,18 @@ importers:
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../schemas
+      '@statsify/textures':
+        specifier: workspace:^
+        version: link:../textures
       '@swc/helpers':
         specifier: ^0.5.23
         version: 0.5.23
       axios:
         specifier: 1.11.0
         version: 1.11.0(debug@4.4.3(supports-color@7.2.0))
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
       skia-canvas:
         specifier: 4.0.0
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
