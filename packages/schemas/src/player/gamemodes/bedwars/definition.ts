@@ -11,7 +11,7 @@ import {
   getExpReq,
   getIntendedFormattedLevel,
   getLevel,
-  getPrestigeCosmetic,
+  pickPrestigeCosmetic,
   PRESTIGE_SCHEMES,
   PRESTIGE_STARS,
   SCHEME_MAP,
@@ -101,12 +101,49 @@ const SlumberSchema = s
   })
   .leaderboard({ fieldName: "" });
 
+/** The prestige cosmetics a player picked, with random picks made, or undefined for their level's default */
+const PrestigeSchema = s.object({
+  scheme: s.string<keyof typeof SCHEME_MAP>().optional(),
+  star: s.string<keyof typeof STAR_MAP>().optional(),
+  brackets: s.string<keyof typeof BRACKET_MAP>().optional(),
+  bold: s.boolean(),
+  underline: s.boolean(),
+  strikethrough: s.boolean(),
+});
+
+type Prestige = s.infer<typeof PrestigeSchema>;
+
+// Read back from Mongo, a missing pick is "" rather than undefined
+const formatLevel = (exp: number, prestige: Prestige) => {
+  const level = Math.floor(getLevel(exp));
+  const scheme = SCHEME_MAP[prestige.scheme || findScore(PRESTIGE_SCHEMES, level).scheme];
+
+  return scheme({
+    level,
+    star: STAR_MAP[prestige.star || findScore(PRESTIGE_STARS, level).star],
+    brackets: BRACKET_MAP[prestige.brackets || "none"],
+    bold: prestige.bold,
+    underline: prestige.underline,
+    strikethrough: prestige.strikethrough,
+  });
+};
+
+const levelProgression = (exp: number, level: number) => {
+  const flooredLevel = Math.floor(level);
+
+  let levelExp = exp;
+  for (let i = 0; i < flooredLevel; i++) levelExp -= getExpReq(i);
+
+  return progression(levelExp, getExpReq(flooredLevel));
+};
+
 export const BedWarsSchema = s
   .object({
     tokens: s.number().color("dark_green"),
     selectedScheme: s.string(),
     selectedStar: s.string(),
     selectedBrackets: s.string(),
+    prestige: PrestigeSchema,
     exp() {
       return s
         .number()
@@ -122,11 +159,30 @@ export const BedWarsSchema = s
           additionalFields: [this.overall.wins, this.overall.finalKills, this.overall.fkdr],
         });
     },
-    level: s.number().leaderboard(false),
-    levelFormatted: s.string().default(getIntendedFormattedLevel(0)),
-    progression: ProgressionSchema,
-    naturalLevelFormatted: s.string().default(getIntendedFormattedLevel(0)),
-    nextLevelFormatted: s.string().default(getIntendedFormattedLevel(1)),
+    level() {
+      return s.computed(getLevel, [this.exp]).subtractInSessions().leaderboard(false);
+    },
+    levelFormatted() {
+      return s
+        .string()
+        .computed(formatLevel, [this.exp, this.prestige])
+        .default(getIntendedFormattedLevel(0));
+    },
+    progression() {
+      return ProgressionSchema.computed(levelProgression, [this.exp, this.level]);
+    },
+    naturalLevelFormatted() {
+      return s
+        .string()
+        .computed((level) => getIntendedFormattedLevel(Math.floor(level)), [this.level])
+        .default(getIntendedFormattedLevel(0));
+    },
+    nextLevelFormatted() {
+      return s
+        .string()
+        .computed((level) => getIntendedFormattedLevel(Math.floor(level) + 1), [this.level])
+        .default(getIntendedFormattedLevel(1));
+    },
     overall: BedWarsModeSchema,
     solo: BedWarsModeSchema,
     doubles: BedWarsModeSchema,
@@ -249,38 +305,7 @@ function slumber(data: APIData = {}): s.input<typeof SlumberSchema> {
 }
 
 export function bedWars(data: APIData = {}): s.input<typeof BedWarsSchema> {
-  const exp = data.Experience || 0;
-  const level = getLevel(exp);
-  const flooredLevel = Math.floor(level);
-
   const cosmetics = { packages: data.packages, favorites: data.favorites };
-
-  const scheme = getPrestigeCosmetic({
-    ...cosmetics,
-    cosmetic: data.active_prestige_scheme,
-    getDefault: () => findScore(PRESTIGE_SCHEMES, flooredLevel).scheme,
-    map: SCHEME_MAP,
-    prefix: "prestige_scheme",
-  });
-
-  const star = getPrestigeCosmetic({
-    ...cosmetics,
-    cosmetic: data.active_star,
-    getDefault: () => findScore(PRESTIGE_STARS, flooredLevel).star,
-    map: STAR_MAP,
-    prefix: "star",
-  });
-
-  const brackets = getPrestigeCosmetic({
-    ...cosmetics,
-    cosmetic: data.active_prestige_bracket,
-    getDefault: () => "none",
-    map: BRACKET_MAP,
-    prefix: "prestige_bracket",
-  });
-
-  let levelExp = exp;
-  for (let i = 0; i < flooredLevel; i++) levelExp -= getExpReq(i);
 
   const overall = bedWarsMode(data, "");
   const fourVFour = bedWarsMode(data, "two_four");
@@ -290,19 +315,30 @@ export function bedWars(data: APIData = {}): s.input<typeof BedWarsSchema> {
     selectedScheme: data.active_prestige_scheme,
     selectedStar: data.active_star,
     selectedBrackets: data.active_prestige_bracket,
-    exp,
-    level,
-    levelFormatted: scheme({
-      level: flooredLevel,
-      star,
-      brackets,
+    prestige: {
+      scheme: pickPrestigeCosmetic({
+        ...cosmetics,
+        cosmetic: data.active_prestige_scheme,
+        map: SCHEME_MAP,
+        prefix: "prestige_scheme",
+      }),
+      star: pickPrestigeCosmetic({
+        ...cosmetics,
+        cosmetic: data.active_star,
+        map: STAR_MAP,
+        prefix: "star",
+      }),
+      brackets: pickPrestigeCosmetic({
+        ...cosmetics,
+        cosmetic: data.active_prestige_bracket,
+        map: BRACKET_MAP,
+        prefix: "prestige_bracket",
+      }),
       bold: data.dreamfeast?.toggle_bold_numbers ?? false,
       underline: data.dreamfeast?.toggle_underlined_prestige ?? false,
       strikethrough: data.dreamfeast?.toggle_strikethrough_brackets ?? false,
-    }),
-    progression: progression(levelExp, getExpReq(flooredLevel)),
-    naturalLevelFormatted: getIntendedFormattedLevel(flooredLevel),
-    nextLevelFormatted: getIntendedFormattedLevel(flooredLevel + 1),
+    },
+    exp: data.Experience || 0,
     overall,
     solo: bedWarsMode(data, "eight_one"),
     doubles: bedWarsMode(data, "eight_two"),

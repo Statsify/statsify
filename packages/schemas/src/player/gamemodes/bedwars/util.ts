@@ -382,25 +382,30 @@ export const getIntendedFormattedLevel = (level: number): string => {
   });
 };
 
-export const getPrestigeCosmetic = <M extends Record<string, any>>({
-  cosmetic,
-  packages,
-  favorites,
-  prefix,
-  map,
-  getDefault,
-}: {
+interface PrestigeCosmeticOptions<M> {
   cosmetic?: string;
   packages?: string[];
   prefix: string;
   favorites?: Record<string, string[] | undefined>;
   map: M;
-  getDefault: () => keyof M;
-}): M[keyof M] => {
-  const pickRandom = (items: (keyof M)[]) => {
-    if (items.length === 0) return map[getDefault()];
-    return map[items[Math.floor(Math.random() * items.length)]];
-  };
+}
+
+export const getPrestigeCosmetic = <M extends Record<string, any>>({
+  getDefault,
+  ...options
+}: PrestigeCosmeticOptions<M> & { getDefault: () => keyof M }): M[keyof M] =>
+  options.map[pickPrestigeCosmetic(options) ?? getDefault()];
+
+/** The cosmetic a player picked, with random picks made, or undefined for their level's default */
+export const pickPrestigeCosmetic = <M extends Record<string, any>>({
+  cosmetic,
+  packages,
+  favorites,
+  prefix,
+  map,
+}: PrestigeCosmeticOptions<M>): keyof M | undefined => {
+  const pickRandom = (items: (keyof M)[]) =>
+    items.length === 0 ? undefined : items[Math.floor(Math.random() * items.length)];
 
   const filterValid = (items: string[]) =>
     items.filter((item) => item in map).map((item) => item as keyof M);
@@ -425,12 +430,12 @@ export const getPrestigeCosmetic = <M extends Record<string, any>>({
   const cosmeticWithoutPrefix = cosmetic?.slice(prefix.length + 1);
 
   if (cosmeticWithoutPrefix && cosmeticWithoutPrefix in map) {
-    return map[cosmeticWithoutPrefix];
+    return cosmeticWithoutPrefix;
   }
 
   if (cosmeticWithoutPrefix) {
     console.warn(`Missing BedWars cosmetic: ${cosmetic}`);
   }
 
-  return map[getDefault()];
+  return undefined;
 };
