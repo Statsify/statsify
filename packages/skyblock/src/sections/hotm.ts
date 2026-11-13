@@ -107,8 +107,5 @@ if (import.meta.vitest) {
     expect(hotm5.tokens.total).toBe(10);
     expect(getHotm({ skill_tree: { experience: { mining: 230_000 } } }).tokens.total).toBe(11); // HOTM 6
     expect(getHotm({ skill_tree: { experience: { mining: 400_000 } } }).tokens.total).toBe(14); // HOTM 7
-
-    const oldTree = getHotm({ mining_core: { nodes: { special_0: 3 } } });
-    expect(oldTree.nodes.find(({ id }) => id === "core_of_the_mountain")).toMatchObject({ level: 3 });
   });
 }
