@@ -16,17 +16,23 @@ import {
   type Slots,
 } from "#types";
 import { decodeAttributes, decodeInventory } from "#nbt";
+import { RARITY_COLORS } from "./display.js";
 import { normalizeItemText } from "./lore.js";
 import { removeFormatting } from "@statsify/util";
 import { resourceTexture, skinHash, textureOf } from "#textures";
 import type { RawNbt } from "#raw";
 
-// LEGENJERRY is how Jerry's cosmetics name Legendary (the wiki's Rarity page)
-const RARITY_LINE = new RegExp(`^(?:SHINY )?(${[...RARITIES.map((rarity) => rarity.replace("_", " ")), "LEGENJERRY"].join("|")})\\b`);
+const RARITY_NAMES = new Map<string, Rarity>([
+  ...RARITIES.map((rarity) => [rarity.replace("_", " "), rarity] as const),
+  // How Jerry's cosmetics name Legendary (the wiki's Rarity page)
+  ["LEGENJERRY", "LEGENDARY"],
+]);
+
+const RARITY_LINE = new RegExp(`^(?:SHINY )?(${[...RARITY_NAMES.keys()].join("|")})\\b`);
 
 function rarityOf(lore: readonly string[]): Rarity | undefined {
-  const rarity = RARITY_LINE.exec(removeFormatting(lore.at(-1) ?? "").trim())?.[1].replace("LEGENJERRY", "LEGENDARY");
-  return rarity?.replace(" ", "_") as Rarity | undefined;
+  const name = RARITY_LINE.exec(removeFormatting(lore.at(-1) ?? "").trim())?.[1];
+  return name === undefined ? undefined : RARITY_NAMES.get(name);
 }
 
 /** An NBT long, which the decode leaves as `[high, low]` (low signed), as a number; an int as it is. */
@@ -36,8 +42,7 @@ export function nbtNumber(value: unknown): number | undefined {
   return undefined;
 }
 
-// The API keys of the items' lifetime counters, as the saves have them, kept raw; the levels a stacking enchant's
-// counter unlocks are in STACKING_ENCHANTS
+// The API keys of the items' lifetime counters, as the saves have them, kept raw
 const COUNTERS = [
   "absorb_logs_chopped",
   "blood_god_kills",
@@ -139,12 +144,13 @@ export function toolkitItemView(blob: RawNbt, items: ItemsResource): ItemView | 
   const resource = attributes.id ? items.items[attributes.id] : undefined;
   const texture = resource && resourceTexture(resource);
   if (!attributes.id || !resource || !texture) return null;
+  const rarity = resource.tier && RARITIES[RARITIES.indexOf(resource.tier) + (attributes.rarity_upgrades ? 1 : 0)];
 
   return {
     id: attributes.id,
-    name: resource.name,
+    name: rarity ? `${RARITY_COLORS[rarity]}${resource.name}` : resource.name,
     lore: [],
-    rarity: resource.tier && RARITIES[RARITIES.indexOf(resource.tier) + (attributes.rarity_upgrades ? 1 : 0)],
+    rarity,
     count: 1,
     glint: Object.keys(attributes.enchantments ?? {}).length > 0 || Boolean(resource.glowing),
     texture,

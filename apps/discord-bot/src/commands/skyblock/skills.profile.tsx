@@ -57,7 +57,7 @@ export const SkyBlockSkillsProfile = ({
           (
             <Table.table>
               <Table.ts title={`§7${t("skyblock.highestOnAnyProfile")}`}>
-                {arrayGroup(highest, 4).map((row) => <Table.tr>{row}</Table.tr>)}
+                {arrayGroup(highest, 3).map((row) => <Table.tr>{row}</Table.tr>)}
               </Table.ts>
             </Table.table>
           ) :
