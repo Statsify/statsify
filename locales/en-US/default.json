@@ -875,6 +875,7 @@
     "pricesNotReady": "Some stats are missing while SkyBlock prices load for the first time. They're ready shortly.",
     "purse": "Purse",
     "rabbits": "Rabbits",
+    "recombobulated": "Recombobulated",
     "replacedBy": "Replaced by {{name}}",
     "reputation": {
       "barbarians": "Barbarian Reputation",
@@ -963,6 +964,7 @@
       "novice": "Novice"
     },
     "tuningPoints": "Tuning Points",
+    "unenriched": "Unenriched",
     "uniqueCrafts": "Unique Crafts",
     "uniqueGolds": "Unique Golds",
     "uniqueVisitors": "Unique Visitors",

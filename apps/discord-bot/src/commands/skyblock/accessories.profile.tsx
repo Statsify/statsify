@@ -92,9 +92,11 @@ export const SkyBlockAccessoriesProfile = ({
   const sidebar: SidebarItem[] = [
     [t("skyblock.accessoryPower"), t(accessories.accessoryPower), "§d"],
     [t("skyblock.selectedPower"), accessories.selectedPower ? prettify(accessories.selectedPower) : t("skyblock.none"), "§e"],
-    [t("skyblock.accessories"), t(accessories.active.length), "§a"],
+    [t("skyblock.accessories"), `${t(accessories.unique)}§7/§a${t(accessories.chains)}`, "§a"],
     [t("skyblock.missing"), t(accessories.missing.length), "§c"],
     [t("skyblock.enrichments"), t(accessories.enrichments), "§b"],
+    [t("skyblock.unenriched"), t(accessories.unenriched), "§c"],
+    [t("skyblock.recombobulated"), t(accessories.recombobulated), "§d"],
     [
       t("skyblock.tuningPoints"),
       accessories.tuningTotal === undefined ?

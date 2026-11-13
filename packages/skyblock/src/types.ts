@@ -944,6 +944,8 @@ export interface AccessoriesSection {
   enrichments: number; // on active accessories
   unenriched: number; // active Legendary-and-up accessories without an enrichment, the ones that can take one
   recombobulated: number; // active
+  unique: number; // one per chain: the active accessories, and a consumed Rift Prism
+  chains: number; // an accessory with its higher tiers and variants, over every one the items resource lists
   pricesAsOf: number;
   market: boolean;
   active: ItemView[];

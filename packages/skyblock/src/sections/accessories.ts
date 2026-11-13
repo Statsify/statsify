@@ -160,7 +160,7 @@ export function getAccessories(
   const bag = bagAccessories(member, items);
   if (!bag) return null;
 
-  const { active, inactive, owned, contacts, accessoryPower } = bag;
+  const { active, inactive, owned, counted, contacts, accessoryPower } = bag;
   const storage = member.accessory_bag_storage;
   const tuning = storage?.tuning?.slot_0 ?? {};
   const stone = storage?.selected_power ? POWERS[storage.selected_power] : undefined;
@@ -168,6 +168,7 @@ export function getAccessories(
   const stepOrder = order(accessoryPower, storage?.highest_magical_power);
   const stored = storedAccessories(member, items);
   const tuningPoints = add(...Object.values(tuning));
+  const listed = Object.keys(items.items).filter((id) => isCandidate(id, items.items[id]));
 
   return {
     accessoryPower,
@@ -180,6 +181,8 @@ export function getAccessories(
     enrichments: active.filter((view) => view.enrichment).length,
     unenriched: active.filter((view) => !view.enrichment && RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY")).length,
     recombobulated: active.filter((view) => view.recombobulated).length,
+    unique: counted.size,
+    chains: countChains(listed),
     pricesAsOf: prices.asOf,
     market,
     active,
@@ -197,6 +200,18 @@ function tuningTotal(member: RawMember, accessoryPower: number, spent: number) {
   if (box > 0 && box < levels.length) return undefined;
   const total = Math.floor(accessoryPower / 10) + (box === 0 ? 0 : 13);
   return total < spent ? undefined : total;
+}
+
+/** Chains among `ids` (an accessory, the tiers above it and its variants), however their upgrades link them. */
+function countChains(ids: string[]) {
+  const roots = new Map(ids.map((id) => [id, id]));
+  const root = (id: string): string => (roots.get(id) === id ? id : root(roots.get(id)!));
+
+  for (const id of ids) {
+    for (const by of upgradesOf(id)) if (roots.has(by)) roots.set(root(id), root(by));
+  }
+
+  return new Set(ids.map(root)).size;
 }
 
 /** The bag's accessories that count and those that don't, and their accessory power; null with the inventory API off. */
@@ -234,7 +249,7 @@ export function bagAccessories(member: RawMember, items: ItemsResource) {
   }
 
   const accessoryPower = add(...active.map(power), prism.length * powerOf("RIFT_PRISM", undefined, 0));
-  return { active, inactive, owned, contacts, accessoryPower };
+  return { active, inactive, owned, counted, contacts, accessoryPower };
 }
 
 /** Outside the bag first, since it costs nothing, then coins per point gained; unpriced ones sort last, by points. */
@@ -317,4 +332,18 @@ function getMissing(
   }
 
   return best;
+}
+
+if (import.meta.vitest) {
+  const { test, expect } = import.meta.vitest;
+
+  test("countChains joins an accessory's tiers and variants however their upgrades link them", () => {
+    const power = ["POWER_TALISMAN", "POWER_RING", "POWER_ARTIFACT", "POWER_RELIC"];
+    const hats = ["PARTY_HAT_CRAB", "PARTY_HAT_CRAB_ANIMATED", "PARTY_HAT_SLOTH"];
+
+    expect(countChains([])).toBe(0);
+    expect(countChains(power)).toBe(1);
+    expect(countChains(["POWER_TALISMAN", "POWER_RELIC"])).toBe(1);
+    expect(countChains([...power, ...hats, "RUNEBOOK"])).toBe(3);
+  });
 }
