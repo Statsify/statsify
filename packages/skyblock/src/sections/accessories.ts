@@ -85,21 +85,27 @@ function storedAccessories(member: RawMember, items: ItemsResource) {
 }
 
 /**
- * Accessories in the inventory whose family isn't in the bag, one of each: they give their stats there too, but no
- * accessory power (the wiki's Accessories page, unverified).
+ * Accessories in the inventory and not in the bag, one of each: they give their stats there too, but no accessory power
+ * (the wiki's Accessories page, unverified).
  */
 export function heldAccessories(inventory: Slots, items: ItemsResource, owned: ReadonlySet<string>) {
-  const familyInBag = (id: string) =>
-    owned.has(id) || upgradesOf(id).some((by) => owned.has(by)) || [...owned].some((bagged) => upgradesOf(bagged).includes(id));
   const held = new Map<string, ItemView>();
 
   for (const view of inventory) {
-    if (!view || held.has(view.id) || familyInBag(view.id)) continue;
+    if (!view || held.has(view.id) || owned.has(view.id)) continue;
     const resource = items.items[view.id];
     if (resource && isCandidate(view.id, resource)) held.set(view.id, view);
   }
 
   return [...held.values()];
+}
+
+/** Each family's highest tier, wherever it's kept; of variants that replace each other, the first listed counts. */
+export function highestTiers(accessories: ItemView[]) {
+  const at = new Map(accessories.map(({ id }, index) => [id, index]));
+  return accessories.filter(
+    ({ id }, index) => !upgradesOf(id).some((by) => at.has(by) && (!isMutual(id, by) || at.get(by)! < index))
+  );
 }
 
 type StepOrder = (a: MissingAccessory, b: MissingAccessory) => number;
