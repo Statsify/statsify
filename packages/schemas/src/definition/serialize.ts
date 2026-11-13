@@ -69,6 +69,11 @@ if (import.meta.vitest) {
     double() {
       return s.number().computed((count) => count * 2, [this.count]);
     },
+    tier() {
+      return s
+        .object({ max: s.number().optional() })
+        .computed((count) => (count < 1 ? { max: 1 } : {}), [this.count]);
+    },
   });
 
   it("drops defaults on the way in, and fills them and recomputes on the way out", () => {
@@ -79,6 +84,7 @@ if (import.meta.vitest) {
       cached: true,
       "nested.count": undefined,
       double: 0,
+      "tier.max": undefined,
     });
 
     expect(serialized).toEqual({ title: "title", unranked: 3 });
@@ -90,19 +96,7 @@ if (import.meta.vitest) {
       cached: false,
       nested: { count: 0 },
       double: 2.47,
+      tier: { max: 0 },
     });
-  });
-
-  it("fills defaults for computed values that are missing", () => {
-    const Tiered = s.object({
-      score: s.number(),
-      progression() {
-        return s
-          .object({ current: s.number(), max: s.number().optional() })
-          .computed((score) => (score < 10 ? { current: score, max: 10 } : { current: score }), [this.score]);
-      },
-    });
-
-    expect(deserialize(Tiered, { score: 20 })).toEqual({ score: 20, progression: { current: 20, max: 0 } });
   });
 }
