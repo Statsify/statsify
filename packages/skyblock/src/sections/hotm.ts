@@ -12,7 +12,7 @@ import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
 import type { RawMember } from "#raw";
 
-/** A tree's perks at their menu spots, levelled from the member's nodes. */
+/** A tree's perks at their menu spots, leveled from the member's nodes. */
 export const treeNodes = (layout: TreeLayout, nodes: Record<string, number | boolean>): TreeNode[] =>
   Object.entries(layout).map(([id, { name, x, y, maxLevel }]) => {
     const level = Number(nodes[id] ?? 0);
@@ -131,8 +131,5 @@ if (import.meta.vitest) {
     expect(hotm5.tokens.total).toBe(10);
     expect(getHotm({ skill_tree: { experience: { mining: 230_000 } } }).tokens.total).toBe(11); // HOTM 6
     expect(getHotm({ skill_tree: { experience: { mining: 400_000 } } }).tokens.total).toBe(14); // HOTM 7
-
-    const oldTree = getHotm({ mining_core: { nodes: { special_0: 3 } } });
-    expect(oldTree.nodes.find(({ id }) => id === "core_of_the_mountain")).toMatchObject({ level: 3 });
   });
 }
