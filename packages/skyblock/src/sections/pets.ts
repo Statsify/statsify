@@ -77,12 +77,8 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
 export const petScorePoints = (tier: string) => PET_RARITIES.indexOf(tier as Rarity) + 1;
 
 /**
- * Pet score: one pet per type counts, the one with the best rarity, Tier Boost included (the wiki's Rift Ferret page,
- * unverified), then the highest level. It scores Common 1 … Mythic 6, plus 1 if it's at max level. Special and Very
- * Special pets never count. Pets are sorted active first, then by rarity and XP.
- *
- * Montezuma lives in the Rift's dead_cats, where its active flag means summoned in the Rift. It's listed but doesn't
- * score: counting it would put members above their highest_pet_score.
+ * Pet score: each type's best pet by rarity, Tier Boost included (the wiki's Rift Ferret page, unverified), then level.
+ * Montezuma (the Rift's dead_cats, whose active means summoned there) is listed but doesn't score, as the game doesn't.
  */
 export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
   const views: PetView[] = [];
