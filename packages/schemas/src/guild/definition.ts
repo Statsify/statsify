@@ -9,7 +9,7 @@
 import { type APIData, findScoreIndex } from "@statsify/util";
 import { ColorSchema } from "../color.definition.js";
 import { FormattedGame, type GameCode, GameCodeMapping, type GameId, GameIdMapping } from "#game";
-import { type NumberSchema, s } from "#definition/s";
+import { type NumberSchema, type Ref, s } from "#definition/s";
 import { ProgressionSchema, progression } from "../progression.definition.js";
 import { add } from "@statsify/math";
 import { getLevel } from "./util.js";
@@ -89,52 +89,62 @@ const achievementTier = (tiers: Tiers, score: number) => tiers[findScoreIndex(ti
 const achievementProgression = (tiers: Tiers, score: number) =>
   progression(score, tiers[findScoreIndex(tiers, score) + 1]?.req);
 
-const GuildAchievementsSchema = s
-  .object({
-    onlinePlayers: s.number().leaderboard(false),
-    familyProgression() {
-      return ProgressionSchema.computed(
-        (score) => achievementProgression(FAMILY_REQUIREMENTS, score),
-        [this.onlinePlayers]
-      );
-    },
-    familyTier() {
-      return s
+/** The prestige tiers count the guild's level, so the guild passes it down */
+const guildAchievementsSchema = (level: Ref<NumberSchema>) =>
+  s
+    .object({
+      onlinePlayers: s.number().leaderboard(false),
+      familyProgression() {
+        return ProgressionSchema.computed(
+          (score) => achievementProgression(FAMILY_REQUIREMENTS, score),
+          [this.onlinePlayers]
+        );
+      },
+      familyTier() {
+        return s
+          .string()
+          .computed((score) => achievementTier(FAMILY_REQUIREMENTS, score), [this.onlinePlayers])
+          .default("I");
+      },
+      winners: s.number().leaderboard(false),
+      winnersProgression() {
+        return ProgressionSchema.computed(
+          (score) => achievementProgression(WINNERS_REQUIREMENTS, score),
+          [this.winners]
+        );
+      },
+      winnersTier() {
+        return s
+          .string()
+          .computed((score) => achievementTier(WINNERS_REQUIREMENTS, score), [this.winners])
+          .default("I");
+      },
+      experienceKings: s.number().leaderboard(false),
+      experienceKingsProgression() {
+        return ProgressionSchema.computed(
+          (score) => achievementProgression(EXPERIENCE_KINGS_REQUIREMENTS, score),
+          [this.experienceKings]
+        );
+      },
+      experienceKingsTier() {
+        return s
+          .string()
+          .computed(
+            (score) => achievementTier(EXPERIENCE_KINGS_REQUIREMENTS, score),
+            [this.experienceKings]
+          )
+          .default("I");
+      },
+      prestigeProgression: ProgressionSchema.computed(
+        (level) => achievementProgression(PRESTIGE_REQUIREMENTS, level),
+        [level]
+      ),
+      prestigeTier: s
         .string()
-        .computed((score) => achievementTier(FAMILY_REQUIREMENTS, score), [this.onlinePlayers])
-        .default("I");
-    },
-    winners: s.number().leaderboard(false),
-    winnersProgression() {
-      return ProgressionSchema.computed(
-        (score) => achievementProgression(WINNERS_REQUIREMENTS, score),
-        [this.winners]
-      );
-    },
-    winnersTier() {
-      return s
-        .string()
-        .computed((score) => achievementTier(WINNERS_REQUIREMENTS, score), [this.winners])
-        .default("I");
-    },
-    experienceKings: s.number().leaderboard(false),
-    experienceKingsProgression() {
-      return ProgressionSchema.computed(
-        (score) => achievementProgression(EXPERIENCE_KINGS_REQUIREMENTS, score),
-        [this.experienceKings]
-      );
-    },
-    experienceKingsTier() {
-      return s
-        .string()
-        .computed((score) => achievementTier(EXPERIENCE_KINGS_REQUIREMENTS, score), [this.experienceKings])
-        .default("I");
-    },
-    // Computed fields can only read their own object, so these come from the guild's level while parsing
-    prestigeProgression: ProgressionSchema,
-    prestigeTier: s.string().default("I"),
-  })
-  .leaderboard({ fieldName: "Achievements -" });
+        .computed((level) => achievementTier(PRESTIGE_REQUIREMENTS, level), [level])
+        .default("I"),
+    })
+    .leaderboard({ fieldName: "Achievements -" });
 
 const gexp = (name: string) => s.number().leaderboard({ name, fieldName: "GEXP", limit });
 
@@ -212,7 +222,9 @@ export const GuildSchema = s.model("Guild", {
   },
   members: s.array(GuildMemberSchema),
   ranks: s.array(GuildRankSchema),
-  achievements: GuildAchievementsSchema,
+  achievements() {
+    return guildAchievementsSchema(this.level);
+  },
   preferredGames: s.array(s.string<GameId>()),
   publiclyListed: s.boolean().default(true),
   tag: s.string(),
@@ -265,13 +277,13 @@ function guildRank(data: APIData): s.input<typeof GuildRankSchema> {
   };
 }
 
-function guildAchievements(level: number, data: APIData = {}): s.input<typeof GuildAchievementsSchema> {
+function guildAchievements(
+  data: APIData = {}
+): s.input<ReturnType<typeof guildAchievementsSchema>> {
   return {
     onlinePlayers: data.ONLINE_PLAYERS ?? 0,
     winners: data.WINNERS ?? 0,
     experienceKings: data.EXPERIENCE_KINGS ?? 0,
-    prestigeProgression: achievementProgression(PRESTIGE_REQUIREMENTS, level),
-    prestigeTier: achievementTier(PRESTIGE_REQUIREMENTS, level),
   };
 }
 
@@ -322,7 +334,7 @@ export function guild(data: APIData = {}): s.input<typeof GuildSchema> {
     exp: data.exp,
     members: (data.members ?? []).map(guildMember),
     ranks: [guildMaster, ...(data.ranks ?? []).map(guildRank)].sort((a, b) => b.priority - a.priority),
-    achievements: guildAchievements(getLevel(data.exp).level, data.achievements),
+    achievements: guildAchievements(data.achievements),
     preferredGames: (data.preferredGames ?? [])
       .map((game: GameCode) => GameIdMapping[game])
       .filter(Boolean),
