@@ -33,7 +33,7 @@ export const SkyBlockCalendarProfile = ({ now, mayor, background, logo, user, t,
     ...(mayor.minister ? [{ ...mayor.minister.perk, holder: mayor.minister.name }] : []),
   ];
 
-  const events = nextEvents(now, perks.map(({ name }) => name)).map(({ key, start, end }) => {
+  const events = nextEvents(now, mayor).map(({ key, start, end }) => {
     const on = start <= now;
     const time = formatTime((on ? end : start) - now, { entries: 2 });
     return (
