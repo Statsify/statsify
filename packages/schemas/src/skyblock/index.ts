@@ -129,208 +129,211 @@ for (const [key, name] of boards.bestiary) {
   Field({ type: () => Number, leaderboard: { name, fieldName: "Kills", limit: 1000 } })(SkyBlockBestiaryBoards.prototype, key);
 }
 
-/** One mode's boards for a member of a profile, from `toMemberStats` in `@statsify/skyblock`. */
+/**
+ * One mode's boards for a member of a profile, from `toMemberStats` in `@statsify/skyblock`. Each board sets its 50,000
+ * rows, since the default limits are sized for player boards.
+ */
 export class SkyBlockBoards {
-  @Field({ leaderboard: { fieldName: "Level", hidden: true, additionalFields: ["this.level"] } })
+  @Field({ leaderboard: { fieldName: "Level", hidden: true, additionalFields: ["this.level"], limit: 50_000 } })
   public xp: number;
 
   @Field({ leaderboard: { enabled: false } })
   public level: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public networth: number;
 
-  @Field({ leaderboard: { fieldName: "Non-Cosmetic Networth" } })
+  @Field({ leaderboard: { fieldName: "Non-Cosmetic Networth", limit: 50_000 } })
   public nonCosmeticNetworth: number;
 
   // Maxed members tie on the average, so the board ranks by `skillAverageOrder` (the shown average, then the XP under it)
-  @Field({ leaderboard: { fieldName: "Skill Average", hidden: true, additionalFields: ["this.skillAverage"] } })
+  @Field({ leaderboard: { fieldName: "Skill Average", hidden: true, additionalFields: ["this.skillAverage"], limit: 50_000 } })
   public skillAverageOrder: number;
 
   @Field({ leaderboard: { enabled: false } })
   public skillAverage: number;
 
-  @Field({ leaderboard: { fieldName: "Farming XP", additionalFields: ["this.farmingLevel"] } })
+  @Field({ leaderboard: { fieldName: "Farming XP", additionalFields: ["this.farmingLevel"], limit: 50_000 } })
   public farmingXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public farmingLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Mining XP", additionalFields: ["this.miningLevel"] } })
+  @Field({ leaderboard: { fieldName: "Mining XP", additionalFields: ["this.miningLevel"], limit: 50_000 } })
   public miningXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public miningLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Combat XP", additionalFields: ["this.combatLevel"] } })
+  @Field({ leaderboard: { fieldName: "Combat XP", additionalFields: ["this.combatLevel"], limit: 50_000 } })
   public combatXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public combatLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Foraging XP", additionalFields: ["this.foragingLevel"] } })
+  @Field({ leaderboard: { fieldName: "Foraging XP", additionalFields: ["this.foragingLevel"], limit: 50_000 } })
   public foragingXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public foragingLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Fishing XP", additionalFields: ["this.fishingLevel"] } })
+  @Field({ leaderboard: { fieldName: "Fishing XP", additionalFields: ["this.fishingLevel"], limit: 50_000 } })
   public fishingXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public fishingLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Enchanting XP", additionalFields: ["this.enchantingLevel"] } })
+  @Field({ leaderboard: { fieldName: "Enchanting XP", additionalFields: ["this.enchantingLevel"], limit: 50_000 } })
   public enchantingXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public enchantingLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Alchemy XP", additionalFields: ["this.alchemyLevel"] } })
+  @Field({ leaderboard: { fieldName: "Alchemy XP", additionalFields: ["this.alchemyLevel"], limit: 50_000 } })
   public alchemyXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public alchemyLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Taming XP", additionalFields: ["this.tamingLevel"] } })
+  @Field({ leaderboard: { fieldName: "Taming XP", additionalFields: ["this.tamingLevel"], limit: 50_000 } })
   public tamingXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public tamingLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Carpentry XP", additionalFields: ["this.carpentryLevel"] } })
+  @Field({ leaderboard: { fieldName: "Carpentry XP", additionalFields: ["this.carpentryLevel"], limit: 50_000 } })
   public carpentryXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public carpentryLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Hunting XP", additionalFields: ["this.huntingLevel"] } })
+  @Field({ leaderboard: { fieldName: "Hunting XP", additionalFields: ["this.huntingLevel"], limit: 50_000 } })
   public huntingXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public huntingLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Runecrafting XP", additionalFields: ["this.runecraftingLevel"] } })
+  @Field({ leaderboard: { fieldName: "Runecrafting XP", additionalFields: ["this.runecraftingLevel"], limit: 50_000 } })
   public runecraftingXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public runecraftingLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Social XP" } })
+  @Field({ leaderboard: { fieldName: "Social XP", limit: 50_000 } })
   public socialXp: number;
 
-  @Field({ leaderboard: { fieldName: "Catacombs XP", additionalFields: ["this.catacombsLevel"] } })
+  @Field({ leaderboard: { fieldName: "Catacombs XP", additionalFields: ["this.catacombsLevel"], limit: 50_000 } })
   public catacombsXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public catacombsLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Healer XP", additionalFields: ["this.healerLevel"] } })
+  @Field({ leaderboard: { fieldName: "Healer XP", additionalFields: ["this.healerLevel"], limit: 50_000 } })
   public healerXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public healerLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Mage XP", additionalFields: ["this.mageLevel"] } })
+  @Field({ leaderboard: { fieldName: "Mage XP", additionalFields: ["this.mageLevel"], limit: 50_000 } })
   public mageXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public mageLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Berserk XP", additionalFields: ["this.berserkLevel"] } })
+  @Field({ leaderboard: { fieldName: "Berserk XP", additionalFields: ["this.berserkLevel"], limit: 50_000 } })
   public berserkXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public berserkLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Archer XP", additionalFields: ["this.archerLevel"] } })
+  @Field({ leaderboard: { fieldName: "Archer XP", additionalFields: ["this.archerLevel"], limit: 50_000 } })
   public archerXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public archerLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Tank XP", additionalFields: ["this.tankLevel"] } })
+  @Field({ leaderboard: { fieldName: "Tank XP", additionalFields: ["this.tankLevel"], limit: 50_000 } })
   public tankXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public tankLevel: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public secrets: number;
 
-  @Field({ leaderboard: { fieldName: "Slayer XP" } })
+  @Field({ leaderboard: { fieldName: "Slayer XP", limit: 50_000 } })
   public slayerXp: number;
 
-  @Field({ leaderboard: { fieldName: "Zombie Slayer XP", additionalFields: ["this.zombieLevel"] } })
+  @Field({ leaderboard: { fieldName: "Zombie Slayer XP", additionalFields: ["this.zombieLevel"], limit: 50_000 } })
   public zombieXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public zombieLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Spider Slayer XP", additionalFields: ["this.spiderLevel"] } })
+  @Field({ leaderboard: { fieldName: "Spider Slayer XP", additionalFields: ["this.spiderLevel"], limit: 50_000 } })
   public spiderXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public spiderLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Wolf Slayer XP", additionalFields: ["this.wolfLevel"] } })
+  @Field({ leaderboard: { fieldName: "Wolf Slayer XP", additionalFields: ["this.wolfLevel"], limit: 50_000 } })
   public wolfXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public wolfLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Enderman Slayer XP", additionalFields: ["this.endermanLevel"] } })
+  @Field({ leaderboard: { fieldName: "Enderman Slayer XP", additionalFields: ["this.endermanLevel"], limit: 50_000 } })
   public endermanXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public endermanLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Blaze Slayer XP", additionalFields: ["this.blazeLevel"] } })
+  @Field({ leaderboard: { fieldName: "Blaze Slayer XP", additionalFields: ["this.blazeLevel"], limit: 50_000 } })
   public blazeXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public blazeLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Vampire Slayer XP", additionalFields: ["this.vampireLevel"] } })
+  @Field({ leaderboard: { fieldName: "Vampire Slayer XP", additionalFields: ["this.vampireLevel"], limit: 50_000 } })
   public vampireXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public vampireLevel: number;
 
-  @Field({ leaderboard: { fieldName: "Completions", name: "Basic Kuudra Completions" } })
+  @Field({ leaderboard: { fieldName: "Completions", name: "Basic Kuudra Completions", limit: 50_000 } })
   public kuudraBasic: number;
 
-  @Field({ leaderboard: { fieldName: "Completions", name: "Hot Kuudra Completions" } })
+  @Field({ leaderboard: { fieldName: "Completions", name: "Hot Kuudra Completions", limit: 50_000 } })
   public kuudraHot: number;
 
-  @Field({ leaderboard: { fieldName: "Completions", name: "Burning Kuudra Completions" } })
+  @Field({ leaderboard: { fieldName: "Completions", name: "Burning Kuudra Completions", limit: 50_000 } })
   public kuudraBurning: number;
 
-  @Field({ leaderboard: { fieldName: "Completions", name: "Fiery Kuudra Completions" } })
+  @Field({ leaderboard: { fieldName: "Completions", name: "Fiery Kuudra Completions", limit: 50_000 } })
   public kuudraFiery: number;
 
-  @Field({ leaderboard: { fieldName: "Completions", name: "Infernal Kuudra Completions" } })
+  @Field({ leaderboard: { fieldName: "Completions", name: "Infernal Kuudra Completions", limit: 50_000 } })
   public kuudraInfernal: number;
 
-  @Field({ leaderboard: { fieldName: "HOTM XP", additionalFields: ["this.hotmLevel"] } })
+  @Field({ leaderboard: { fieldName: "HOTM XP", additionalFields: ["this.hotmLevel"], limit: 50_000 } })
   public hotmXp: number;
 
   @Field({ leaderboard: { enabled: false, fieldName: "Level" } })
   public hotmLevel: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public accessoryPower: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public petScore: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public fairySouls: number;
 
-  @Field({ leaderboard: { fieldName: "Trophy Fish Caught" } })
+  @Field({ leaderboard: { fieldName: "Trophy Fish Caught", limit: 50_000 } })
   public trophyFish: number;
 
-  @Field({ leaderboard: { fieldName: "All-Time Chocolate" } })
+  @Field({ leaderboard: { fieldName: "All-Time Chocolate", limit: 50_000 } })
   public chocolate: number;
 
   @Field({ leaderboard: { limit: 50_000 } })

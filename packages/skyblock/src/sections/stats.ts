@@ -31,6 +31,7 @@ import {
   TUNING,
   bagAccessories,
   heldAccessories,
+  highestTiers,
   powerScale,
   stonePowerStats,
 } from "./accessories.js";
@@ -256,8 +257,10 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   const storage = member.accessory_bag_storage;
   const power = bag ? powerStats(storage?.selected_power, bag.accessoryPower) : undefined;
   const tuning = tuningStats(storage?.tuning?.slot_0 ?? {});
-  const hotbar = inventory?.inv_contents ? decodeSlots(inventory.inv_contents).slice(0, 9) : [];
-  const weapon = hotbar.find((item): item is ItemView => item !== null && isWeapon(item));
+  const inventoryItems = inventory?.inv_contents ? decodeSlots(inventory.inv_contents) : [];
+  const weapon = inventoryItems.slice(0, 9).find((item): item is ItemView => item !== null && isWeapon(item));
+  const held = bag ? heldAccessories(inventoryItems, items, bag.owned) : [];
+  const accessories = bag ? highestTiers([...bag.active, ...held]) : [];
 
   const skills = getSkills(profile, member);
   const slayers = getSlayers(member).bosses;
@@ -290,7 +293,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     armor: inventory?.inv_armor ? loreStats(decodeSlots(inventory.inv_armor)) : undefined,
     equipment: inventory?.equipment_contents ? loreStats(decodeSlots(inventory.equipment_contents)) : undefined,
     weapon: weapon && loreStats([weapon]),
-    accessories: bag ? loreStats([...bag.active, ...heldAccessories(member, items, bag.owned)]) : undefined,
+    accessories: bag ? loreStats(accessories) : undefined,
     power,
     tuning,
     skills: skills ? sumStats(SKILLS.map((skill) => upTo(STAT_TABLES.skills[skill], skills.skills[skill].level))) : undefined,
@@ -309,6 +312,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   };
 
   const unverified: StatSource[] = ["wikiBase"];
+  if (accessories.some((view) => held.includes(view))) unverified.push("accessories");
   if (power) unverified.push("power");
   if (Object.keys(tuning).length > 0) unverified.push("tuning");
   unverified.push(...slayerStats.flatMap(({ boss, wiki }) => (Object.keys(wiki).length > 0 ? [boss] : [])));
