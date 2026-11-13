@@ -22,6 +22,7 @@ A Hypixel and Minecraft focused Discord Bot
 ### 🖼️ Assets
 * Public assets for development are included in `assets/public`
 * In addition, you must provide a 1.8.9 texture pack in the `assets/public/minecraft-textures/default`
+* The Discord bot downloads the resource packs SkyBlock's item icons are drawn from into `assets/public/resource-packs`, which git ignores, when it starts and every 6 hours
 
 ### 🚀 Running
 * The codebase is split into apps and packages
@@ -62,6 +63,10 @@ $ pnpm typecheck
 - [`Bot Invite`]
 - [`Discord`]
 - [`Donate`]
+
+## 🙏 Credits
+- SkyBlock's item icons are drawn from Hypixel's [SkyBlock Resource Pack](https://hypixel.net/), under its license, over Mojang's Minecraft 26.3 textures. Neither is part of this repository.
+- Statsify isn't affiliated with or endorsed by Hypixel or Mojang.
 
 ## Showcase
 <div align="center">
