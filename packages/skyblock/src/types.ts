@@ -98,7 +98,7 @@ export interface GearSection {
   equipment: Slots; // necklace, cloak, belt, gloves
   wardrobe: { slot: number; armor: Slots }[]; // sets with anything in them, helmet to boots
   wardrobeSlot?: number; // the set being worn
-  weapons: ItemView[]; // swords, bows and wands in the inventory, in its order
+  weapons: ItemView[]; // swords, bows, gauntlets and wands in the inventory, in its order
 }
 
 export const INVENTORIES = [
@@ -281,7 +281,7 @@ export interface HotfSection {
   level: Level;
   centerLevel: number; // Center of the Forest's
   loadout: { selected: number; total: number };
-  tokensSpent: number;
+  tokens: { spent: number };
   ability?: string;
   whispers: Record<Whisper, { total: number; spent: number }>; // total earned; spent by this loadout
   nodes: TreeNode[];
@@ -341,8 +341,7 @@ export interface JacobSection {
   medals: Record<JacobMedal, number>; // unspent
   contests: number; // entered
   crops: JacobCrop[];
-  // Anita's: double_drops is Hypixel's name for the Extra Farming Fortune tiers, and farmingFortune what they give
-  perks: { doubleDrops: number; farmingFortune: number; farmingLevelCap: number };
+  perks: { farmingFortune: number; farmingLevelCap: number }; // Anita's
 }
 
 export interface JacobCrop {
