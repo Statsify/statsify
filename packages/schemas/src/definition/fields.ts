@@ -74,7 +74,6 @@ export const isStored = (schema: AnySchema) => isRanked(schema) || schema.meta.s
 
 const join = (base: string, path: string) => (base ? `${base}.${path}` : path);
 
-/** `relativeTo` is the object a field is written in, or for an object's own options, the object */
 function getLeaderboard(schema: AnySchema, key: string, relativeTo: string): Leaderboard {
   const options = schema.meta.leaderboard ?? {};
   const fieldName = options.fieldName ?? prettify(key);
