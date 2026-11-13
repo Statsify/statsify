@@ -35,9 +35,8 @@ export const byKey = (blobs: Record<string, RawNbt> = {}) =>
 const hotbarLast = <T>(slots: T[]) => [...slots.slice(9), ...slots.slice(0, 9)];
 
 /**
- * A toolkit's tools, kind by kind, each with whether the toolkit holds it: not while it's taken out into an inventory,
- * nor before the toolkit is unlocked. IN_USE and IS_UNLOCKED aren't tools, nor is HUNTING_TOOLKIT, the item used up to
- * unlock the menu (the wiki's Hunting Toolkit page), and an emptied slot is null.
+ * A toolkit holds a tool unless it's taken out into an inventory or the toolkit isn't unlocked. IN_USE, IS_UNLOCKED and
+ * HUNTING_TOOLKIT (used up to unlock the menu, the wiki's Hunting Toolkit page) aren't tools; an emptied slot is null.
  */
 const toolkitPage = <T>(toolkit: RawToolkit, tool: (blob: RawNbt, held: boolean) => T | null): T[] => {
   const inUse = toolkit.IN_USE as Record<string, Record<string, boolean>> | undefined;
