@@ -198,10 +198,9 @@ export const TNTGamesProfile = ({
       break;
   }
 
-  // A kit's name already ends in "Wizard"
-  const modeTitle = mode.submode && mode.submode.api !== "overall" ?
-    mode.submode.formatted :
-    `${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""}`;
+  const modeTitle = mode.submode?.api === "overall" ?
+    `${mode.formatted} ${mode.submode.formatted}` :
+    mode.submode?.formatted ?? mode.formatted;
 
   return (
     <Container background={background}>
