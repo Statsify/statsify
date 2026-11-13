@@ -11,7 +11,7 @@ import { FormattedGame } from "#game";
 import { type GamePrefix, rainbow } from "#prefixes";
 import type { APIData } from "@statsify/util";
 import { deepAdd } from "@statsify/math";
-import { prefixFields } from "./prefix-fields.js";
+import { prefixFields } from "../prefix-fields.js";
 import { s } from "#definition/s";
 
 const prefixes: GamePrefix[] = [

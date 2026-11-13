@@ -11,7 +11,7 @@ import { FormattedGame } from "#game";
 import type { APIData } from "@statsify/util";
 import type { GamePrefix } from "#prefixes";
 import { add, ratio } from "@statsify/math";
-import { prefixFields } from "../arenabrawl/prefix-fields.js";
+import { prefixFields } from "../prefix-fields.js";
 import { s } from "#definition/s";
 
 const prefixes: GamePrefix[] = [

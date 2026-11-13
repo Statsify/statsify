@@ -14,7 +14,7 @@ import {
   getFormattedPrefix,
 } from "#prefixes";
 import { type NumberSchema, type Ref, s } from "#definition/s";
-import { ProgressionSchema } from "../../../progression.definition.js";
+import { ProgressionSchema } from "../../progression.definition.js";
 
 type Score = Ref<NumberSchema>;
 

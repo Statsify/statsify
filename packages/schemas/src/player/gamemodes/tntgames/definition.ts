@@ -7,19 +7,12 @@
  */
 
 import { AssistsSchema, CoinsSchema, KillsStats, WinsSchema, WinsStats } from "../common.js";
-import {
-  type FormatPrefixOptions,
-  type GamePrefix,
-  createPrefixProgression,
-  cycleColors,
-  defaultPrefix,
-  getFormattedPrefix,
-} from "#prefixes";
+import { type GamePrefix, cycleColors } from "#prefixes";
 import { FormattedGame } from "#game";
-import { type NumberSchema, type Ref, s } from "#definition/s";
-import { ProgressionSchema, progression } from "../../../progression.definition.js";
 import type { APIData } from "@statsify/util";
 import { formats } from "#definition/format";
+import { prefixFields } from "../prefix-fields.js";
+import { s } from "#definition/s";
 
 const tntgamesRainbow = (text: string) => cycleColors(text, ["c", "6", "e", "a", "b", "d", "5"]);
 
@@ -53,32 +46,24 @@ const TAG_PREFIXES: GamePrefix[] = [
   { fmt: (n) => tntgamesRainbow(`[${n}]`), req: 10_000 },
 ];
 
-type PrefixOptions = Omit<FormatPrefixOptions, "score">;
-
-const winsProgression = (prefixes: GamePrefix[], wins: Ref<NumberSchema>) =>
-  ProgressionSchema.computed((score) => {
-    const { current, max } = createPrefixProgression(prefixes, score ?? 0);
-    return progression(current, max ?? 0);
-  }, [wins]);
-
-const winsPrefix = (wins: Ref<NumberSchema>, options: PrefixOptions) =>
-  s.string().computed((score) => getFormattedPrefix({ ...options, score: score ?? 0 }), [wins]);
+const runPrefix = prefixFields(RUN_PREFIXES, { abbreviation: false });
+const tagPrefix = prefixFields(TAG_PREFIXES, { abbreviation: false });
+const wizardsPrefix = prefixFields(TAG_PREFIXES);
 
 const BowSpleefSchema = s.object({
   ...WinsStats,
   hits: s.number().color("§e").leaderboard(false),
   progression() {
-    return winsProgression(RUN_PREFIXES, this.wins);
+    return runPrefix.progression(this.wins);
   },
   currentPrefix() {
-    return winsPrefix(this.wins, { prefixes: RUN_PREFIXES, abbreviation: false });
+    return runPrefix.currentPrefix(this.wins);
   },
   naturalPrefix() {
-    return winsPrefix(this.wins, { prefixes: RUN_PREFIXES, trueScore: true, abbreviation: false })
-      .default(defaultPrefix(RUN_PREFIXES));
+    return runPrefix.naturalPrefix(this.wins);
   },
   nextPrefix() {
-    return winsPrefix(this.wins, { prefixes: RUN_PREFIXES, skip: true, abbreviation: false });
+    return runPrefix.nextPrefix(this.wins);
   },
 });
 
@@ -89,17 +74,16 @@ const PVPRunSchema = s.object({
   ...KillsStats,
   record: s.number().color("§e").format(formats.time),
   progression() {
-    return winsProgression(RUN_PREFIXES, this.wins);
+    return runPrefix.progression(this.wins);
   },
   currentPrefix() {
-    return winsPrefix(this.wins, { prefixes: RUN_PREFIXES, abbreviation: false });
+    return runPrefix.currentPrefix(this.wins);
   },
   naturalPrefix() {
-    return winsPrefix(this.wins, { prefixes: RUN_PREFIXES, trueScore: true, abbreviation: false })
-      .default(defaultPrefix(RUN_PREFIXES));
+    return runPrefix.naturalPrefix(this.wins);
   },
   nextPrefix() {
-    return winsPrefix(this.wins, { prefixes: RUN_PREFIXES, skip: true, abbreviation: false });
+    return runPrefix.nextPrefix(this.wins);
   },
 });
 
@@ -111,17 +95,16 @@ const TNTRunSchema = s.object({
   potionsSplashed: s.number().color("§5"),
   blocksRan: s.number().color("§b"),
   progression() {
-    return winsProgression(RUN_PREFIXES, this.wins);
+    return runPrefix.progression(this.wins);
   },
   currentPrefix() {
-    return winsPrefix(this.wins, { prefixes: RUN_PREFIXES, abbreviation: false });
+    return runPrefix.currentPrefix(this.wins);
   },
   naturalPrefix() {
-    return winsPrefix(this.wins, { prefixes: RUN_PREFIXES, trueScore: true, abbreviation: false })
-      .default(defaultPrefix(RUN_PREFIXES));
+    return runPrefix.naturalPrefix(this.wins);
   },
   nextPrefix() {
-    return winsPrefix(this.wins, { prefixes: RUN_PREFIXES, skip: true, abbreviation: false });
+    return runPrefix.nextPrefix(this.wins);
   },
 });
 
@@ -133,17 +116,16 @@ const TNTTagSchema = s.object({
   tags: s.number().color("§e"),
   powerups: s.number().color("§d").leaderboard({ name: "Power-Ups" }),
   progression() {
-    return winsProgression(TAG_PREFIXES, this.wins);
+    return tagPrefix.progression(this.wins);
   },
   currentPrefix() {
-    return winsPrefix(this.wins, { prefixes: TAG_PREFIXES, abbreviation: false });
+    return tagPrefix.currentPrefix(this.wins);
   },
   naturalPrefix() {
-    return winsPrefix(this.wins, { prefixes: TAG_PREFIXES, trueScore: true, abbreviation: false })
-      .default(defaultPrefix(TAG_PREFIXES));
+    return tagPrefix.naturalPrefix(this.wins);
   },
   nextPrefix() {
-    return winsPrefix(this.wins, { prefixes: TAG_PREFIXES, skip: true, abbreviation: false });
+    return tagPrefix.nextPrefix(this.wins);
   },
 });
 
@@ -165,17 +147,16 @@ const WizardsSchema = s.object({
   airTime: s.number().color("§b").format(formats.time),
   powerOrbs: s.number().color("§a"),
   progression() {
-    return winsProgression(TAG_PREFIXES, this.wins);
+    return wizardsPrefix.progression(this.wins);
   },
   currentPrefix() {
-    return winsPrefix(this.wins, { prefixes: TAG_PREFIXES });
+    return wizardsPrefix.currentPrefix(this.wins);
   },
   naturalPrefix() {
-    return winsPrefix(this.wins, { prefixes: TAG_PREFIXES, trueScore: true })
-      .default(defaultPrefix(TAG_PREFIXES));
+    return wizardsPrefix.naturalPrefix(this.wins);
   },
   nextPrefix() {
-    return winsPrefix(this.wins, { prefixes: TAG_PREFIXES, skip: true });
+    return wizardsPrefix.nextPrefix(this.wins);
   },
   fireWizard: WizardsClassSchema,
   iceWizard: WizardsClassSchema,
