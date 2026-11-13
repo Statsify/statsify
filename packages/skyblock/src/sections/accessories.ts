@@ -167,10 +167,11 @@ export function getAccessories(
 // A tuning point per 10 Accessory Power (the wiki's Maxwell page), and 13 more at Tuning Box X, which every saved
 // player with it fits (an owner exception, unverified). Nothing gives levels I to IX's points, so those have no total.
 function tuningTotal(member: RawMember, accessoryPower: number) {
-  const levels = ATTRIBUTE_SHARDS.levels.LEGENDARY; // the Tuning Box's shard, Hideonbox, is Legendary
+  const { rarity } = ATTRIBUTE_SHARDS.shards.find(({ attribute }) => attribute === "tuning_box")!;
+  const levels = ATTRIBUTE_SHARDS.levels[rarity];
   const box = getLevel(member.attributes?.stacks?.tuning_box ?? 0, levels, levels.length).level;
-  const fromBox = box === 0 ? 0 : box === levels.length ? 13 : undefined;
-  return fromBox === undefined ? undefined : Math.floor(accessoryPower / 10) + fromBox;
+  if (box > 0 && box < levels.length) return undefined;
+  return Math.floor(accessoryPower / 10) + (box === 0 ? 0 : 13);
 }
 
 /** The bag's accessories that count and those that don't, and their accessory power; null with the inventory API off. */
