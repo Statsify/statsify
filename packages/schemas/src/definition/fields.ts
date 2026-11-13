@@ -126,7 +126,7 @@ function flatten(
 
     const path = join(base, key);
     const leaderboard = getLeaderboard(child, key, child.kind === "object" ? path : base);
-    const name = leaderboard.name ? `${baseName ? `${baseName} ` : ""}${leaderboard.name}` : baseName;
+    const name = [baseName, leaderboard.name].filter(Boolean).join(" ");
     const dependencies = child.meta.computed?.dependencies.map(({ scope, path }) =>
       join(scopes.get(scope)!, path)
     );
