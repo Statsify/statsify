@@ -15,7 +15,7 @@ import { humanPrefixes, vampirePrefixes } from "./prefixes.js";
 import { prefixFields } from "../prefix-fields.js";
 import { s } from "#definition/s";
 
-const VampireZLifeSchema = (killsName: string, prefixes: GamePrefix[], scoredBy: "wins" | "kills") => {
+const vampireZLifeSchema = (killsName: string, prefixes: GamePrefix[], scoredBy: "wins" | "kills") => {
   const prefix = prefixFields(prefixes);
 
   return s.object({
@@ -45,8 +45,8 @@ const VampireZLifeSchema = (killsName: string, prefixes: GamePrefix[], scoredBy:
   });
 };
 
-const VampireZHumanSchema = VampireZLifeSchema("Vampires Killed", humanPrefixes, "wins");
-const VampireZVampireSchema = VampireZLifeSchema("Humans Killed", vampirePrefixes, "kills");
+const VampireZHumanSchema = vampireZLifeSchema("Vampires Killed", humanPrefixes, "wins");
+const VampireZVampireSchema = vampireZLifeSchema("Humans Killed", vampirePrefixes, "kills");
 
 export const VampireZSchema = s
   .object({
@@ -68,7 +68,7 @@ export const VampireZSchema = s
 
 export type VampireZ = s.infer<typeof VampireZSchema>;
 
-function life(data: APIData, mode: "human" | "vampire") {
+function life(data: APIData, mode: "human" | "vampire"): s.input<typeof VampireZHumanSchema> {
   return {
     kills: data[`${mode === "human" ? "vampire" : "human"}_kills`],
     deaths: data[`${mode}_deaths`],

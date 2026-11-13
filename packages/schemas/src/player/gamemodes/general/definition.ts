@@ -16,7 +16,7 @@ import { getNetworkLevel } from "./util.js";
 
 const MAX_EVENT_LEVEL = 100;
 
-const EventSchema = (expRequirement: number, color: ColorCode) =>
+const eventSchema = (expRequirement: number, color: ColorCode) =>
   s.object({
     exp: ExpSchema.color(color),
     level() {
@@ -39,10 +39,10 @@ const EventSchema = (expRequirement: number, color: ColorCode) =>
     },
   });
 
-const SummerSchema = EventSchema(25_000, "§e");
-const HalloweenSchema = EventSchema(10_000, "§5");
-const ChristmasSchema = EventSchema(10_000, "§c");
-const EasterSchema = EventSchema(10_000, "§b");
+const SummerSchema = eventSchema(25_000, "§e");
+const HalloweenSchema = eventSchema(10_000, "§5");
+const ChristmasSchema = eventSchema(10_000, "§c");
+const EasterSchema = eventSchema(10_000, "§b");
 
 export type Event = s.infer<typeof SummerSchema>;
 

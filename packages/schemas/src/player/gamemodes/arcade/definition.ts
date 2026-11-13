@@ -426,7 +426,7 @@ const ZombiesMapDifficultySchema = s.object({
   totalRounds: s.number().color("§d"),
 });
 
-type ZombiesMapDifficulty = s.input<typeof ZombiesMapDifficultySchema>;
+type ZombiesMapDifficultyInput = s.input<typeof ZombiesMapDifficultySchema>;
 
 const ZombiesMapSchema = s.object({
   normal: ZombiesMapDifficultySchema,
@@ -818,7 +818,7 @@ function throwOut(data: APIData): s.input<typeof ThrowOutSchema> {
   };
 }
 
-function zombiesMapDifficulty(data: APIData, map?: string, difficulty?: string): ZombiesMapDifficulty {
+function zombiesMapDifficulty(data: APIData, map?: string, difficulty?: string): ZombiesMapDifficultyInput {
   const mode = map ? `_${map}${difficulty ? `_${difficulty}` : ""}` : "";
 
   return {
