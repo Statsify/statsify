@@ -7,7 +7,7 @@
  */
 
 import { prettify } from "@statsify/util";
-import type { AnySchema, ObjectSchema, ResetEvery, s } from "./s.js";
+import type { AnySchema, ObjectSchema, RecordSchema, ResetEvery, s } from "./s.js";
 import type { Format } from "./format.js";
 
 interface BaseLeaderboard {
@@ -43,7 +43,7 @@ export interface Store {
 
 export interface Field {
   path: string;
-  schema: Exclude<AnySchema, ObjectSchema>;
+  schema: Exclude<AnySchema, ObjectSchema | RecordSchema<any>>;
   leaderboard: Leaderboard;
   store: Store;
   /** The stored paths a computed value, or the computed object it's in, is built from */
@@ -124,6 +124,9 @@ function flatten(schema: ObjectSchema, base: string, baseName: string): Field[] 
   const fields: Field[] = [];
 
   for (const [key, child] of Object.entries(schema.definition as Record<string, AnySchema>)) {
+    // Flattening splits a record into its own keys, so like the classes' Mixed fields, it has no field to list
+    if (child.kind === "record") continue;
+
     const path = join(base, key);
     const leaderboard = getLeaderboard(child, key, child.kind === "object" ? path : base);
     const name = leaderboard.name ? `${baseName ? `${baseName} ` : ""}${leaderboard.name}` : baseName;
@@ -237,5 +240,13 @@ if (import.meta.vitest) {
     expect(fields["game.title"].store.default).toBe("none");
     expect(fields["game.overall.tags"].store.default).toBe("");
     expect(fields["game.overall.seen"].store).toMatchObject({ required: false, default: false });
+  });
+
+  it("leaves records out", () => {
+    const Commands = s.object({ name: s.string(), usage: s.record(s.number()) });
+
+    expect(getFields(Commands).map((field) => field.path)).toEqual([
+      "name",
+    ] satisfies s.path<typeof Commands>[]);
   });
 }

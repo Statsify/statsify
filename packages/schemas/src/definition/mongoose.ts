@@ -20,6 +20,8 @@ const getType = (field: AnySchema): unknown => {
       return Boolean;
     case "array":
       return [getType(field.element)];
+    case "record":
+      return Schema.Types.Mixed;
     case "object":
       return toMongoose(field);
   }

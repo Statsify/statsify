@@ -221,6 +221,18 @@ export class ArraySchema<E extends AnySchema> extends Schema<s.infer<E>[], s.inp
   }
 }
 
+/** Any keys, each holding an `element`, stored as Mongo's Mixed type */
+export class RecordSchema<E extends AnySchema> extends Schema<
+  Record<string, s.infer<E>>,
+  Record<string, s.input<E>>
+> {
+  public readonly kind = "record";
+
+  public constructor(public readonly element: E) {
+    super();
+  }
+}
+
 export type Definition = Record<string, AnySchema>;
 
 export class ObjectSchema<D extends Definition = Definition> extends Schema<
@@ -256,6 +268,7 @@ export type AnySchema =
   StringSchema |
   BooleanSchema |
   ArraySchema<any> |
+  RecordSchema<any> |
   ObjectSchema<any>;
 
 type Simplify<T> = { [K in keyof T]: T[K] } & {};
@@ -304,7 +317,9 @@ function resolve<E extends Record<string, any>>(entries: E) {
 }
 
 type PathOf<D extends Definition> = {
-  [K in keyof D & string]: D[K] extends ObjectSchema<infer C> ? `${K}.${PathOf<C>}` : K;
+  [K in keyof D & string]: D[K] extends ObjectSchema<infer C> ? `${K}.${PathOf<C>}` :
+    D[K] extends RecordSchema<any> ? never :
+      K;
 }[keyof D & string];
 
 export namespace s {
@@ -319,6 +334,7 @@ export const s = {
   string: <T extends string = string>() => new StringSchema<T>(),
   boolean: () => new BooleanSchema(),
   array: <E extends AnySchema>(element: E) => new ArraySchema(element),
+  record: <E extends AnySchema>(element: E) => new RecordSchema(element),
 
   object: <E extends Record<string, any>>(entries: Entries<E>) =>
     new ObjectSchema(resolve<E>(entries)),
