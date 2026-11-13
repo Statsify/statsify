@@ -12,6 +12,9 @@ import { RARITY_COLORS } from "@statsify/skyblock/display";
 import { arrayGroup, prettify, romanNumeral } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
+// The employees whose id isn't their name in the factory (the wiki's Chocolate Factory page)
+const EMPLOYEE_NAMES: Record<string, string> = { rabbit_father: "Rabbit Daddy", rabbit_grandma: "Rabbit Granny" };
+
 const COLUMNS = 4;
 
 // Not gridRows: a short last row shares the full width instead of leaving an empty cell
@@ -72,6 +75,3 @@ export const SkyBlockChocolateProfile = ({
     </Container>
   );
 };
-
-// The employees whose id isn't their name in the factory (the wiki's Chocolate Factory page)
-const EMPLOYEE_NAMES: Record<string, string> = { rabbit_father: "Rabbit Daddy", rabbit_grandma: "Rabbit Granny" };
