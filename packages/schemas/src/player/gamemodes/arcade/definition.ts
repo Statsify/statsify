@@ -693,7 +693,7 @@ function hypixelSays(data: APIData): s.input<typeof HypixelSaysSchema> {
     points: add(simonSays.points, santaSays.points),
     roundsWon: add(simonSays.roundsWon, santaSays.roundsWon),
     wins: add(simonSays.wins, santaSays.wins),
-    maxScore: Math.max(simonSays.maxScore, santaSays.maxScore),
+    maxScore: Math.max(simonSays.maxScore ?? 0, santaSays.maxScore ?? 0),
     simonSays,
     santaSays,
   };
@@ -843,7 +843,9 @@ function zombiesMap(data: APIData, map: string): s.input<typeof ZombiesMapSchema
   const hard = zombiesMapDifficulty(data, map, "hard");
   const rip = zombiesMapDifficulty(data, map, "rip");
 
-  const fastestWins = [normal, hard, rip].map(({ fastestWin }) => fastestWin).filter(Boolean);
+  const fastestWins = [normal, hard, rip]
+    .map(({ fastestWin }) => fastestWin)
+    .filter((fastestWin): fastestWin is number => Boolean(fastestWin));
 
   return {
     normal,

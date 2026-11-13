@@ -129,7 +129,7 @@ export function copsAndCrims(data: APIData = {}): s.input<typeof CopsAndCrimsSch
 
   const score = hasScore ?
     data.score :
-    Math.floor(add(overall.kills / 2, add(defusal.bombsDefused, defusal.bombsPlanted) / 3, overall.wins));
+    Math.floor(add((overall.kills ?? 0) / 2, add(defusal.bombsDefused, defusal.bombsPlanted) / 3, overall.wins));
 
   return {
     coins: data.coins,

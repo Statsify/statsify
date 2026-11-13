@@ -17,7 +17,7 @@ export const ProgressionSchema = s.object({
 
 export type Progression = s.infer<typeof ProgressionSchema>;
 
-export function progression(current: number, max: number): s.input<typeof ProgressionSchema> {
+export function progression(current: number, max: number): Progression {
   if (!max) return { current: current || 0, percent: 1 };
   return { current: current || 0, max, percent: ratio(current, max) };
 }

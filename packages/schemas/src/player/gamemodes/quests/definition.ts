@@ -461,7 +461,7 @@ function questCountsDuring<P extends Period>(data: APIData, period: P) {
   return Object.fromEntries(games) as s.input<QuestsDuringSchema<P>>;
 }
 
-const sumTotals = (games: Record<string, { total: number }>) =>
+const sumTotals = (games: Record<string, { total: number | undefined }>) =>
   add(...Object.values(games).map((game) => game.total));
 
 export function quests(data: APIData = {}): s.input<typeof QuestsSchema> {

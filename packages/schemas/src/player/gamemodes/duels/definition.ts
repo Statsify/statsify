@@ -231,9 +231,9 @@ type BaseInput = s.input<typeof BaseSchema>;
 type PVPBaseInput = s.input<typeof PVPBaseSchema>;
 type BowPVPBaseInput = s.input<typeof BowPVPBaseSchema>;
 
-function titles(data: APIData, score: number, mode: string, titleRequirement: TitleRequirement) {
+function titles(data: APIData, score: number | undefined, mode: string, titleRequirement: TitleRequirement) {
   const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted } = getTitleAndProgression({
-    score,
+    score: score ?? 0,
     mode,
     data,
     titleRequirement,
@@ -251,7 +251,7 @@ function baseMode(data: APIData, mode: string): BaseInput {
     wins: data[`${prefix}wins`],
     losses: data[`${prefix}losses`],
     // Only the PVP modes read blocks placed, so the rest leave it unset
-    blocksPlaced: undefined as never,
+    blocksPlaced: undefined,
   };
 }
 
