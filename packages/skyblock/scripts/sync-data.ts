@@ -585,12 +585,15 @@ try {
     Zealot: ["zealot_special_enderman_55"],
   };
   const families = ({ mobs = [] }: NeuPage) =>
-    mobs.map(({ name, mobs: ids, cap, bracket, bracketType }) => ({
-      name: removeFormatting(name),
-      ids: [...ids, ...(missingIds[removeFormatting(name)] ?? [])],
-      cap,
-      bracket: bracketOf(removeFormatting(name), cap, bracketType ? `${bracketType}_${bracket}` : String(bracket)),
-    }));
+    mobs.map(({ name: formatted, mobs: ids, cap, bracket, bracketType }) => {
+      const name = removeFormatting(formatted);
+      return {
+        name,
+        ids: [...ids, ...(missingIds[name] ?? [])],
+        cap,
+        bracket: bracketOf(name, cap, bracketType ? `${bracketType}_${bracket}` : String(bracket)),
+      };
+    });
   const subpages = (page: NeuPage) =>
     Object.values(page).filter((value: unknown): value is NeuPage => typeof value === "object" && value !== null && "mobs" in value);
   await write("bestiary.json", {
