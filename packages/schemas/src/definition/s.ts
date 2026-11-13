@@ -400,7 +400,7 @@ export const s = {
   /** Fields to spread into several objects, with `this` typed like it is inside `s.object` */
   fields: <E extends Record<string, any>>(entries: Entries<E>): E => entries,
 
-  /** A field for each item in a list, named by the item or its `property`, like a schema for each kit */
+  /** An entry for each item in a list, named by the item or its `property`, like each kit's schema or parsed stats */
   keyed: <const T extends Keyed, F>(items: readonly T[], field: (item: T) => F) =>
     Object.fromEntries(
       items.map((item) => [typeof item === "string" ? item : item.property, field(item)])
