@@ -65,6 +65,8 @@ export function getDungeons(member: RawMember): DungeonsSection {
 
   const floors = { normal: floorsOf(types?.catacombs, 0), master: floorsOf(types?.master_catacombs, 1) };
   const secrets = dungeons?.secrets ?? 0;
+  // Fossil Essence was Fossil Dust until 2026-04-21, and the API still sends it under that name, unrounded
+  const fossilDust = member.glacite_player_data?.fossil_dust;
 
   return {
     catacombs: getLevel(types?.catacombs?.experience ?? 0, LEVELING.catacombs, MAX_LEVEL, true),
@@ -84,11 +86,7 @@ export function getDungeons(member: RawMember): DungeonsSection {
     watcherKills: watcherKills(types?.catacombs),
     essence: Object.entries(ESSENCE_SHOPS).map(([type, shop]) => ({
       type,
-      // Fossil Essence was Fossil Dust until 2026-04-21, and the API still sends it under that name, unrounded
-      amount:
-        type === "FOSSIL" ?
-          member.glacite_player_data?.fossil_dust && Math.floor(member.glacite_player_data.fossil_dust) :
-          member.currencies?.essence?.[type]?.current,
+      amount: type === "FOSSIL" ? fossilDust && Math.floor(fossilDust) : member.currencies?.essence?.[type]?.current,
       perks: add(...Object.keys(shop).map((perk) => member.player_data?.perks?.[perk] ?? 0)),
       maxPerks: add(...Object.values(shop)),
     })),
