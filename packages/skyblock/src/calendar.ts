@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { MayorView } from "./election.js";
+
 // The wiki's Time page (unverified): Early Spring 1 of year 1 began on 2019-06-11 at 17:55 UTC, a day lasts 20 minutes
 // and a month 31 days.
 const EPOCH = 1_560_275_700_000;
@@ -65,19 +67,27 @@ export interface EventTime {
   end: number;
 }
 
-// With Finnegan's Grand Feast perk in office, the Harvest Feast runs his whole term, from the election's end (the wiki's
-// Harvest Feast page, unverified)
-const GRAND_FEAST = { key: "harvestFeast", month: 2, day: 27, days: YEAR_DAYS } as const;
+/** The mayor's term in real time, from its election's end, while it lasts. */
+function termOf(mayor: MayorView | undefined, time: number) {
+  // A copy the API cached before `term` existed has none until it refreshes
+  if (mayor?.term === undefined) return;
+  const start = skyblockTime({ year: mayor.term, month: 2, day: 27 });
+  const end = start + YEAR_DAYS * DAY;
+  return end > time ? { start, end } : undefined;
+}
 
-/** Every event's run that hasn't ended at `time`, the ones on now first, then by start; `perks` are those in office. */
-export function nextEvents(time: number, perks: string[] = []): EventTime[] {
+/** Every event's run that hasn't ended at `time`, the ones on now first, then by start; `mayor` is the one in office. */
+export function nextEvents(time: number, mayor?: MayorView): EventTime[] {
   const { year } = skyblockDate(time);
-  const events = perks.includes("Grand Feast") ? EVENTS.map((event) => (event.key === "harvestFeast" ? GRAND_FEAST : event)) : EVENTS;
+  const term = termOf(mayor, time);
+  const perks = mayor ? [...mayor.mayor.perks, ...(mayor.minister ? [mayor.minister.perk] : [])] : [];
+  // With Finnegan's Grand Feast perk in office, the Harvest Feast runs his whole term (the wiki's Harvest Feast page,
+  // unverified)
+  const grandFeast = perks.some(({ name }) => name === "Grand Feast") ? term : undefined;
 
-  return events.map(({ key, month, day, days }) => {
-    const start = [year - 1, year, year + 1]
-      .map((at) => skyblockTime({ year: at, month, day }))
-      .find((start) => start + days * DAY > time)!;
+  return EVENTS.map(({ key, month, day, days }) => {
+    if (key === "harvestFeast" && grandFeast) return { key, ...grandFeast };
+    const start = [year, year + 1].map((at) => skyblockTime({ year: at, month, day })).find((start) => start + days * DAY > time)!;
     return { key, start, end: start + days * DAY };
   }).toSorted((a, b) => a.start - b.start);
 }
@@ -101,8 +111,10 @@ if (import.meta.vitest) {
     expect(nextEvents(zoo).find(({ key }) => key === "electionOver")?.start).toBe(skyblockTime({ year: 11, month: 2, day: 27 }));
   });
 
-  test("nextEvents runs the Harvest Feast through the whole term under Grand Feast", () => {
-    const feast = nextEvents(skyblockTime({ year: 10, month: 0, day: 5 }), ["Grand Feast"]).find(({ key }) => key === "harvestFeast");
-    expect(feast).toEqual({ key: "harvestFeast", start: skyblockTime({ year: 9, month: 2, day: 27 }), end: skyblockTime({ year: 10, month: 2, day: 27 }) });
+  test("nextEvents runs the Harvest Feast through the whole term under Grand Feast, and not past it", () => {
+    const finnegan = { mayor: { name: "Finnegan", perks: [{ name: "Grand Feast", description: "" }] }, term: 9 };
+    const feast = (time: number) => nextEvents(time, finnegan).find(({ key }) => key === "harvestFeast");
+    expect(feast(skyblockTime({ year: 10, month: 0, day: 5 }))).toEqual({ key: "harvestFeast", start: skyblockTime({ year: 9, month: 2, day: 27 }), end: skyblockTime({ year: 10, month: 2, day: 27 }) });
+    expect(feast(skyblockTime({ year: 10, month: 3, day: 1 }))?.start).toBe(skyblockTime({ year: 10, month: 6, day: 1 }));
   });
 }

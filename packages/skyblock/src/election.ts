@@ -19,6 +19,7 @@ export interface Perk {
 export interface MayorView {
   mayor: { name: string; perks: Perk[] };
   minister?: { name: string; perk: Perk };
+  term: number; // the SkyBlock year the term began, the one after its election's
 }
 
 // Perks write stats with the game's private-use glyphs, as lore does
@@ -27,4 +28,5 @@ const toPerk = ({ name, description }: Perk): Perk => ({ name, description: norm
 export const toMayorView = ({ mayor }: RawElection): MayorView => ({
   mayor: { name: mayor.name, perks: mayor.perks.map(toPerk) },
   minister: mayor.minister && { name: mayor.minister.name, perk: toPerk(mayor.minister.perk) },
+  term: mayor.election.year + 1,
 });

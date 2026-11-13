@@ -23,6 +23,7 @@ import type {
   PlayerStat,
   PriceMap,
   Rarity,
+  Slots,
 } from "#types";
 import type { RawMember } from "#raw";
 
@@ -98,23 +99,27 @@ function storedAccessories(member: RawMember, items: ItemsResource) {
 }
 
 /**
- * Accessories in the inventory whose family isn't in the bag, one of each: they give their stats there too, but no
- * accessory power (the wiki's Accessories page, unverified).
+ * Accessories in the inventory and not in the bag, one of each: they give their stats there too, but no accessory power
+ * (the wiki's Accessories page, unverified).
  */
-export function heldAccessories(member: RawMember, items: ItemsResource, owned: ReadonlySet<string>) {
-  const inBag = (id: string) =>
-    owned.has(id) || upgradesOf(id).some((by) => owned.has(by)) || [...owned].some((bagged) => upgradesOf(bagged).includes(id));
-  const blob = member.inventory?.inv_contents;
+export function heldAccessories(inventory: Slots, items: ItemsResource, owned: ReadonlySet<string>) {
   const held = new Map<string, ItemView>();
 
-  for (const item of blob ? decodeInventory(blob) : []) {
-    const id = item?.tag?.ExtraAttributes?.id;
-    if (!item || typeof id !== "string" || held.has(id) || inBag(id)) continue;
-    const resource = items.items[id];
-    if (resource && isCandidate(id, resource)) held.set(id, toItemView(item));
+  for (const view of inventory) {
+    if (!view || held.has(view.id) || owned.has(view.id)) continue;
+    const resource = items.items[view.id];
+    if (resource && isCandidate(view.id, resource)) held.set(view.id, view);
   }
 
   return [...held.values()];
+}
+
+/** Each family's highest tier, wherever it's kept; of variants that replace each other, the first listed counts. */
+export function highestTiers(accessories: ItemView[]) {
+  const at = new Map(accessories.map(({ id }, index) => [id, index]));
+  return accessories.filter(
+    ({ id }, index) => !upgradesOf(id).some((by) => at.has(by) && (!isMutual(id, by) || at.get(by)! < index))
+  );
 }
 
 type StepOrder = (a: MissingAccessory, b: MissingAccessory) => number;
@@ -139,6 +144,7 @@ export function getAccessories(
   const stone = storage?.selected_power ? POWERS[storage.selected_power] : undefined;
   const stepOrder = order(accessoryPower, storage?.highest_magical_power);
   const stored = storedAccessories(member, items);
+  const tuningPoints = add(...Object.values(tuning));
 
   return {
     accessoryPower,
@@ -146,8 +152,8 @@ export function getAccessories(
     selectedPower: storage?.selected_power,
     powerStats: stone && stonePowerStats(stone, accessoryPower),
     tuning,
-    tuningPoints: add(...Object.values(tuning)),
-    tuningTotal: tuningTotal(member, accessoryPower),
+    tuningPoints,
+    tuningTotal: tuningTotal(member, accessoryPower, tuningPoints),
     enrichments: active.filter((view) => view.enrichment).length,
     unenriched: active.filter((view) => !view.enrichment && RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY")).length,
     recombobulated: active.filter((view) => view.recombobulated).length,
@@ -159,13 +165,15 @@ export function getAccessories(
   };
 }
 
-// A tuning point per 10 Accessory Power (the wiki's Maxwell page), and 13 more at Tuning Box X, which every saved
-// player with it fits (an owner exception, unverified). Nothing gives levels I to IX's points, so those have no total.
-function tuningTotal(member: RawMember, accessoryPower: number) {
-  const levels = ATTRIBUTE_SHARDS.levels.LEGENDARY; // the Tuning Box's shard, Hideonbox, is Legendary
+// A tuning point per 10 Accessory Power (the wiki's Maxwell page), and 13 more at Tuning Box X (owner exception,
+// unverified). No total at Box I to IX, whose points nothing lists, or below the points spent (some spent at more AP).
+function tuningTotal(member: RawMember, accessoryPower: number, spent: number) {
+  const { rarity } = ATTRIBUTE_SHARDS.shards.find(({ attribute }) => attribute === "tuning_box")!;
+  const levels = ATTRIBUTE_SHARDS.levels[rarity];
   const box = getLevel(member.attributes?.stacks?.tuning_box ?? 0, levels, levels.length).level;
-  const fromBox = box === 0 ? 0 : box === levels.length ? 13 : undefined;
-  return fromBox === undefined ? undefined : Math.floor(accessoryPower / 10) + fromBox;
+  if (box > 0 && box < levels.length) return undefined;
+  const total = Math.floor(accessoryPower / 10) + (box === 0 ? 0 : 13);
+  return total < spent ? undefined : total;
 }
 
 /** The bag's accessories that count and those that don't, and their accessory power; null with the inventory API off. */
