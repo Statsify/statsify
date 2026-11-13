@@ -12,6 +12,7 @@ import {
   getIntendedFormattedLevel,
   getLevel,
   pickPrestigeCosmetic,
+  pickRandomCosmetic,
   PRESTIGE_SCHEMES,
   PRESTIGE_STARS,
   SCHEME_MAP,
@@ -89,38 +90,78 @@ const BedWarsChallengesSchema = s.object({
   halvedAndDoubled: s.number().leaderboard({ fieldName: "Halved & Doubled" }),
 });
 
+const WALLET_SIZES: Record<string, number> = {
+  MINI_WALLET: 25,
+  LIGHT_SLUMBERS_WALLET: 99,
+  LIGHT_IMPERIAL_WALLET: 500,
+  EXPLORERS_WALLET: 5000,
+  HOTEL_STAFF_WALLET: 10_000,
+  PLATINUM_MEMBERSHIP_WALLET: 100_000,
+};
+
 const SlumberSchema = s
   .object({
     tickets: s.number().color("§b").leaderboard(false),
     totalTickets: s.number().color("§d").leaderboard({ fieldName: "Total Slumber Tickets" }),
-    wallet: s.number().leaderboard(false),
+    bagType: s.string(),
+    wallet() {
+      return s
+        .number()
+        .computed((bagType) => WALLET_SIZES[bagType] ?? 0, [this.bagType])
+        .subtractInSessions()
+        .leaderboard(false);
+    },
   })
   .leaderboard({ fieldName: "" });
 
-/** The prestige cosmetics a player picked, with random picks made, or undefined for their level's default */
+/** Where each random prestige selection landed, which can't be picked again on read, and Hypixel's toggles */
 const PrestigeSchema = s.object({
-  scheme: s.string<keyof typeof SCHEME_MAP>().optional(),
-  star: s.string<keyof typeof STAR_MAP>().optional(),
-  brackets: s.string<keyof typeof BRACKET_MAP>().optional(),
-  bold: s.boolean(),
-  underline: s.boolean(),
-  strikethrough: s.boolean(),
+  randomScheme: s.string<keyof typeof SCHEME_MAP>().optional(),
+  randomStar: s.string<keyof typeof STAR_MAP>().optional(),
+  randomBrackets: s.string<keyof typeof BRACKET_MAP>().optional(),
+  boldNumbers: s.boolean(),
+  underlinedPrestige: s.boolean(),
+  strikethroughBrackets: s.boolean(),
 });
 
 type Prestige = s.infer<typeof PrestigeSchema>;
 
-// Read back from Mongo, a missing pick is "" rather than undefined
-const formatLevel = (exp: number, prestige: Prestige) => {
-  const level = Math.floor(getLevel(exp));
-  const scheme = SCHEME_MAP[prestige.scheme || findScore(PRESTIGE_SCHEMES, level).scheme];
+// Read back from Mongo, a random selection with nothing to pick from has "" rather than undefined
+const selectedCosmetic = <M extends Record<string, any>>(
+  map: M,
+  prefix: string,
+  cosmetic: string,
+  randomPick: keyof M | undefined
+) => randomPick || pickPrestigeCosmetic({ cosmetic, prefix, map });
 
-  return scheme({
+const formatLevel = (
+  exp: number,
+  scheme: string,
+  star: string,
+  brackets: string,
+  prestige: Prestige
+) => {
+  const level = Math.floor(getLevel(exp));
+
+  const format =
+    SCHEME_MAP[
+      selectedCosmetic(SCHEME_MAP, "prestige_scheme", scheme, prestige.randomScheme) ??
+        findScore(PRESTIGE_SCHEMES, level).scheme
+    ];
+
+  return format({
     level,
-    star: STAR_MAP[prestige.star || findScore(PRESTIGE_STARS, level).star],
-    brackets: BRACKET_MAP[prestige.brackets || "none"],
-    bold: prestige.bold,
-    underline: prestige.underline,
-    strikethrough: prestige.strikethrough,
+    star: STAR_MAP[
+      selectedCosmetic(STAR_MAP, "star", star, prestige.randomStar) ??
+        findScore(PRESTIGE_STARS, level).star
+    ],
+    brackets:
+      BRACKET_MAP[
+        selectedCosmetic(BRACKET_MAP, "prestige_bracket", brackets, prestige.randomBrackets) ?? "none"
+      ],
+    bold: prestige.boldNumbers,
+    underline: prestige.underlinedPrestige,
+    strikethrough: prestige.strikethroughBrackets,
   });
 };
 
@@ -160,7 +201,13 @@ export const BedWarsSchema = s
     levelFormatted() {
       return s
         .string()
-        .computed(formatLevel, [this.exp, this.prestige])
+        .computed(formatLevel, [
+          this.exp,
+          this.selectedScheme,
+          this.selectedStar,
+          this.selectedBrackets,
+          this.prestige,
+        ])
         .default(getIntendedFormattedLevel(0));
     },
     progression() {
@@ -282,20 +329,11 @@ function challenges(data: APIData): s.input<typeof BedWarsChallengesSchema> {
   };
 }
 
-const WALLET_SIZES: Record<string, number> = {
-  MINI_WALLET: 25,
-  LIGHT_SLUMBERS_WALLET: 99,
-  LIGHT_IMPERIAL_WALLET: 500,
-  EXPLORERS_WALLET: 5000,
-  HOTEL_STAFF_WALLET: 10_000,
-  PLATINUM_MEMBERSHIP_WALLET: 100_000,
-};
-
 function slumber(data: APIData = {}): s.input<typeof SlumberSchema> {
   return {
     tickets: data.tickets,
     totalTickets: data.total_tickets_earned,
-    wallet: WALLET_SIZES[data.bag_type] ?? 0,
+    bagType: data.bag_type,
   };
 }
 
@@ -311,27 +349,27 @@ export function bedWars(data: APIData = {}): s.input<typeof BedWarsSchema> {
     selectedStar: data.active_star,
     selectedBrackets: data.active_prestige_bracket,
     prestige: {
-      scheme: pickPrestigeCosmetic({
+      randomScheme: pickRandomCosmetic({
         ...cosmetics,
         cosmetic: data.active_prestige_scheme,
         map: SCHEME_MAP,
         prefix: "prestige_scheme",
       }),
-      star: pickPrestigeCosmetic({
+      randomStar: pickRandomCosmetic({
         ...cosmetics,
         cosmetic: data.active_star,
         map: STAR_MAP,
         prefix: "star",
       }),
-      brackets: pickPrestigeCosmetic({
+      randomBrackets: pickRandomCosmetic({
         ...cosmetics,
         cosmetic: data.active_prestige_bracket,
         map: BRACKET_MAP,
         prefix: "prestige_bracket",
       }),
-      bold: data.dreamfeast?.toggle_bold_numbers ?? false,
-      underline: data.dreamfeast?.toggle_underlined_prestige ?? false,
-      strikethrough: data.dreamfeast?.toggle_strikethrough_brackets ?? false,
+      boldNumbers: data.dreamfeast?.toggle_bold_numbers ?? false,
+      underlinedPrestige: data.dreamfeast?.toggle_underlined_prestige ?? false,
+      strikethroughBrackets: data.dreamfeast?.toggle_strikethrough_brackets ?? false,
     },
     exp: data.Experience || 0,
     overall,

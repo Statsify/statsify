@@ -396,6 +396,12 @@ export const getPrestigeCosmetic = <M extends Record<string, any>>({
 }: PrestigeCosmeticOptions<M> & { getDefault: () => keyof M }): M[keyof M] =>
   options.map[pickPrestigeCosmetic(options) ?? getDefault()];
 
+const RANDOM_COSMETICS = new Set(["random_cosmetic", "random_favorite_cosmetic"]);
+
+/** Where a random selection lands, or undefined when the selection isn't random */
+export const pickRandomCosmetic = <M extends Record<string, any>>(options: PrestigeCosmeticOptions<M>) =>
+  options.cosmetic && RANDOM_COSMETICS.has(options.cosmetic) ? pickPrestigeCosmetic(options) : undefined;
+
 /** The cosmetic a player picked, with random picks made, or undefined for their level's default */
 export const pickPrestigeCosmetic = <M extends Record<string, any>>({
   cosmetic,
