@@ -120,7 +120,7 @@ function flatten(
   const fields: Field[] = [];
   const scopes = new Map(around).set(schema.definition, base);
 
-  for (const [key, child] of Object.entries(schema.definition as Record<string, AnySchema>)) {
+  for (const [key, child] of Object.entries(schema.definition)) {
     // Flattening splits a record into its own keys, so like the classes' Mixed fields, it has no field to list
     if (child.kind === "record") continue;
 

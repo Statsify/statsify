@@ -23,14 +23,14 @@ export function compute<S extends ObjectSchema>(
   around: Scopes = new Map()
 ): s.infer<S> {
   const values = input as Values;
-  const entries = Object.entries(schema.definition as Record<string, AnySchema>);
+  const entries = Object.entries(schema.definition);
   const output: Values = Object.fromEntries(entries.map(([key]) => [key, undefined]));
   const done = new Set<string>();
 
   const get = (key: string): unknown => {
     if (done.has(key)) return output[key];
 
-    const field = schema.definition[key] as AnySchema;
+    const field = schema.definition[key];
     const value = values[key];
     const { computed } = field.meta;
 
@@ -85,7 +85,7 @@ export function diff<S extends ObjectSchema>(
 function subtract(schema: ObjectSchema, before: Values, after: Values) {
   const gained: Values = {};
 
-  for (const [key, field] of Object.entries(schema.definition as Record<string, AnySchema>)) {
+  for (const [key, field] of Object.entries(schema.definition)) {
     if (typeof before[key] === "number" || typeof after[key] === "number") {
       gained[key] = sub(after[key], before[key]);
     } else if (typeof after[key] === "string") {
