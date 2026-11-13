@@ -51,9 +51,13 @@ const EMBLEM_MAP: Record<string, string> = {
 
 const formatTitle = (score: number) => getFormattedPrefix({ prefixes: titles, score });
 
+const WHITE = minecraftColors.find((c) => c.id === "WHITE")!;
+
 const formatEmblem = (selectedColor: string, selectedIcon: string) => {
-  const color = selectedColor || "WHITE";
-  const { code } = minecraftColors.find((c) => c.code === color || c.hex === color || c.id === color) ?? {};
+  const { code } =
+    minecraftColors.find((c) => c.code === selectedColor || c.hex === selectedColor || c.id === selectedColor) ??
+    WHITE;
+
   const icon = EMBLEM_MAP[selectedIcon];
 
   return `${code}${icon ?? ""}${icon ? " " : ""}`;
