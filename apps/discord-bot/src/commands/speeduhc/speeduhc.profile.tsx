@@ -41,10 +41,12 @@ export const SpeedUHCProfile = ({
     [t("stats.coins"), t(speeduhc.coins), "§6"],
     [t("stats.score"), t(speeduhc.score), "§b"],
     [t("stats.gamesPlayed"), t(speeduhc.gamesPlayed), "§e"],
-    [t("stats.highestKillstreak"), t(speeduhc.highestKillstreak), "§4"],
     [t("stats.title"), speeduhc.title, "§e"],
     [t("stats.mastery"), prettify(speeduhc.activeMastery), "§a"],
   ];
+
+  if (time === "LIVE")
+    sidebar.push([t("stats.highestKillstreak"), t(speeduhc.highestKillstreak), "§4"]);
 
   return (
     <Container background={background}>
