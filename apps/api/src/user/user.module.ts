@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { MongoModule } from "#mongo";
 import { Module } from "@nestjs/common";
-import { TypegooseModule } from "@m8a/nestjs-typegoose";
-import { User, VerifyCode } from "@statsify/schemas";
+import { UserSchema, VerifyCodeSchema } from "@statsify/schemas";
 import { UserController } from "./user.controller.js";
 import { UserService } from "./user.service.js";
 
 @Module({
-  imports: [TypegooseModule.forFeature([User, VerifyCode])],
+  imports: [MongoModule.forFeature([UserSchema, VerifyCodeSchema])],
   controllers: [UserController],
   providers: [UserService],
 })

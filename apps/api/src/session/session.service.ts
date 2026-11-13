@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { InjectModel, type MongoModel } from "#mongo";
 import {
   CacheLevel,
   PlayerNotFoundException,
@@ -19,27 +20,26 @@ import {
   UnauthorizedException,
   forwardRef,
 } from "@nestjs/common";
-import { InjectModel } from "@m8a/nestjs-typegoose";
 import {
-  Player,
-  User,
-  createHistoricalPlayer,
+  type Player,
+  PlayerSchema,
+  UserSchema,
   deserialize,
+  diff,
   serialize,
 } from "@statsify/schemas";
 import { PlayerService } from "#player";
 import { Session } from "./session.model.js";
-import type { ReturnModelType } from "@typegoose/typegoose";
 
-type PlayerModel = ReturnModelType<typeof Player>;
+type PlayerModel = MongoModel<typeof PlayerSchema>;
 
 @Injectable()
 export class SessionService {
   public constructor(
     @Inject(forwardRef(() => PlayerService))
     private readonly playerService: Circular<PlayerService>,
-    @InjectModel(Session) private readonly sessionModel: PlayerModel,
-    @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>
+    @InjectModel(Session.name) private readonly sessionModel: PlayerModel,
+    @InjectModel(UserSchema) private readonly userModel: MongoModel<typeof UserSchema>
   ) {}
 
   public async getAndReset(tag: string) {
@@ -57,11 +57,11 @@ export class SessionService {
     const flatPlayer = flatten(player);
     flatPlayer.sessionReset = Math.round(DateTime.now().toMillis() / 1000);
 
-    const doc = serialize(Player, flatPlayer);
+    const doc = serialize(PlayerSchema, flatPlayer);
 
     await this.sessionModel.replaceOne({ uuid: doc.uuid }, doc, { upsert: true }).lean().exec();
 
-    return deserialize(Player, flatPlayer);
+    return deserialize(PlayerSchema, flatPlayer);
   }
 
   public async get(
@@ -89,13 +89,13 @@ export class SessionService {
     if (!newPlayer) throw new PlayerNotFoundException();
 
     if (oldPlayer) {
-      oldPlayer = deserialize(Player, flatten(oldPlayer));
+      oldPlayer = deserialize(PlayerSchema, flatten(oldPlayer));
     } else {
       oldPlayer = await this.resetPlayer(newPlayer);
       isNew = true;
     }
 
-    const merged = createHistoricalPlayer(oldPlayer, newPlayer);
+    const merged = diff(PlayerSchema, oldPlayer, newPlayer);
 
     merged.sessionReset = oldPlayer.sessionReset;
     merged.isNew = isNew;

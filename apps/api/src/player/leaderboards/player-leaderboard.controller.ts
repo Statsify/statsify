@@ -20,7 +20,7 @@ import {
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
-import { Player } from "@statsify/schemas";
+import { PlayerSchema } from "@statsify/schemas";
 import { PlayerLeaderboardDto, PlayerRankingsDto } from "#dtos";
 import { PlayerLeaderboardService } from "./player-leaderboard.service.js";
 
@@ -53,7 +53,7 @@ export class PlayerLeaderboardsController {
       type = LeaderboardQuery.PAGE;
     }
 
-    return this.playerLeaderboardService.getLeaderboard(Player, field, input, type);
+    return this.playerLeaderboardService.getLeaderboard(PlayerSchema, field, input, type);
   }
 
   @Post("/rankings")
@@ -62,6 +62,6 @@ export class PlayerLeaderboardsController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 5 })
   public async getPlayerRankings(@Body() { fields, uuid }: PlayerRankingsDto) {
-    return this.playerLeaderboardService.getLeaderboardRankings(Player, fields, uuid);
+    return this.playerLeaderboardService.getLeaderboardRankings(PlayerSchema, fields, uuid);
   }
 }
