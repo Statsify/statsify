@@ -57,7 +57,7 @@ export const TurboKartRacersProfile = ({
     [t("stats.lapsCompleted"), t(turbokartracers.lapsCompleted), "§2"],
     [t("stats.bananaHitsSent"), t(turbokartracers.bananaHitsSent), "§e"],
     [t("stats.bananaHitsReceived"), t(turbokartracers.bananaHitsReceived), "§6"],
-    [t("stats.torpedoHits"), t(turbokartracers.torpedoHits), "§9"],
+    [t("stats.torpedoHitsReceived"), t(turbokartracers.torpedoHitsReceived), "§9"],
   ];
 
   return (

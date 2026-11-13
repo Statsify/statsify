@@ -89,7 +89,7 @@ export class TurboKartRacers {
   public bananaHitsReceived: number;
 
   @Field()
-  public torpedoHits: number;
+  public torpedoHitsReceived: number;
 
   @Field()
   public retro: TurboKartRacersMap;
@@ -142,7 +142,7 @@ export class TurboKartRacers {
     this.coinsPickedUp = data.coins_picked_up;
     this.bananaHitsSent = data.banana_hits_sent;
     this.bananaHitsReceived = data.banana_hits_received;
-    this.torpedoHits = data.blue_torpedo_hit;
+    this.torpedoHitsReceived = data.blue_torpedo_hit;
 
     this.bronze = data.bronze_trophy;
     this.silver = data.silver_trophy;
