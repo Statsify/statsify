@@ -59,6 +59,11 @@ export default {
   verifyServer: {
     hostIp: "localhost",
   },
+  linkedRoles: {
+    clientSecret: "",
+    redirectUri: "http://localhost:3000/linked-roles/callback",
+    tokenKey: "",
+  },
   rankEmojis: {
     botToken: "",
   },

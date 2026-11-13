@@ -198,6 +198,23 @@ export interface Config {
     hostIp: string;
   };
 
+  linkedRoles?: {
+    /**
+     * The Discord Bot's OAuth2 client secret, used to connect Discord users for linked roles
+     */
+    clientSecret?: string;
+    /**
+     * The API's linked roles callback, which must be listed as a redirect in the Discord Bot's OAuth2 settings
+     * @example https://api.statsify.net/linked-roles/callback
+     */
+    redirectUri?: string;
+    /**
+     * A base64 encoded 32 byte key used to encrypt stored Discord tokens
+     * @example openssl rand -base64 32
+     */
+    tokenKey?: string;
+  };
+
   rankEmojis?: {
     /**
      * The Discord Bot token used to create servers for the rank emojis

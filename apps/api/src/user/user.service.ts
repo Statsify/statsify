@@ -8,6 +8,7 @@
 
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { LinkedRolesService } from "#linked-roles";
 import { User, VerifyCode } from "@statsify/schemas";
 import { config, flatten } from "@statsify/util";
 import { getLogoPath } from "@statsify/assets";
@@ -21,7 +22,8 @@ export class UserService {
   public constructor(
     @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>,
     @InjectModel(VerifyCode)
-    private readonly verifyCodeModel: ReturnModelType<typeof VerifyCode>
+    private readonly verifyCodeModel: ReturnModelType<typeof VerifyCode>,
+    private readonly linkedRolesService: LinkedRolesService
   ) {}
 
   public get(idOrUuid: string): Promise<User | null> {
@@ -113,6 +115,8 @@ export class UserService {
       .lean()
       .exec();
 
+    await this.linkedRolesService.onVerify(id, uuid);
+
     return user;
   }
 
@@ -127,6 +131,8 @@ export class UserService {
       )
       .lean()
       .exec();
+
+    if (user) await this.linkedRolesService.onUnverify(user.id);
 
     return user;
   }
