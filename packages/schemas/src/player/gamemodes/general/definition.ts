@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ColorCode, type NumberSchema, type ObjectSchema, s } from "#definition/s";
+import { type ColorCode, type NumberSchema, s } from "#definition/s";
 import { ExpSchema } from "../common.js";
 import { FormattedGame } from "#game";
 import { ProgressionSchema, progression } from "../../../progression.definition.js";
@@ -188,14 +188,10 @@ const CLASSIC_HARD = [
   { property: "soulSiphoner", key: "Arenasoulsiphoner" },
 ] as const satisfies readonly Objective[];
 
-type ObjectivesSchema<O extends readonly Objective[]> = ObjectSchema<
-  Record<O[number]["property"], NumberSchema>
->;
-
 const objectivesSchema = <O extends readonly Objective[]>(objectives: O) =>
-  s.object(
-    Object.fromEntries(objectives.map(({ property }) => [property, s.number().leaderboard(false)]))
-  ) as ObjectivesSchema<O>;
+  s.object(s.keyed(objectives, () => s.number().leaderboard(false)));
+
+type ObjectivesSchema<O extends readonly Objective[]> = ReturnType<typeof objectivesSchema<O>>;
 
 const BingoSchema = s.object({
   easy: s.object({

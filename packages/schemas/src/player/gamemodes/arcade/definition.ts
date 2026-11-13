@@ -7,7 +7,7 @@
  */
 
 import { CoinsSchema, KillsSchema, KillsStats, WinsSchema, WinsStats } from "../common.js";
-import { type NumberSchema, type ObjectSchema, s } from "#definition/s";
+import { type NumberSchema, s } from "#definition/s";
 import { add, deepAdd, deepSub, sub } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 import { FormattedGame } from "#game";
@@ -181,15 +181,9 @@ const DROPPER_MAPS = [
   { property: "western", key: "western", name: "§eWestern§f" },
 ] as const satisfies readonly { property: string; key: string; name: string }[];
 
-type DropperMapsSchema = ObjectSchema<
-  Record<(typeof DROPPER_MAPS)[number]["property"], typeof DropperMapSchema>
->;
-
 const DropperMapsSchema = s.object(
-  Object.fromEntries(
-    DROPPER_MAPS.map(({ property, name }) => [property, DropperMapSchema.leaderboard({ name })])
-  )
-) as DropperMapsSchema;
+  s.keyed(DROPPER_MAPS, ({ name }) => DropperMapSchema.leaderboard({ name }))
+);
 
 const DropperSchema = s.object({
   wins: WinsSchema.color("§a"),
@@ -600,7 +594,7 @@ function dropper(data: APIData = {}): s.input<typeof DropperSchema> {
     bestTime: data.fastest_game,
     maps: Object.fromEntries(
       DROPPER_MAPS.map(({ property, key }) => [property, dropperMap(maps[key])])
-    ) as s.input<DropperMapsSchema>,
+    ) as s.input<typeof DropperMapsSchema>,
   };
 }
 

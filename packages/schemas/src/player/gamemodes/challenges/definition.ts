@@ -251,9 +251,7 @@ const challengeSchema = ({ name }: Challenge) =>
 const gameChallengesSchema = (game: GameChallenges) =>
   s
     .object({
-      ...Object.fromEntries(
-        game.challenges.map((challenge) => [challenge.property, challengeSchema(challenge)])
-      ),
+      ...s.keyed(game.challenges, challengeSchema),
       total: s
         .number()
         .color("§a")

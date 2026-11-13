@@ -369,6 +369,10 @@ function resolve<E extends Record<string, any>>(entries: E) {
   return definition as Resolve<E>;
 }
 
+type Keyed = string | { property: string };
+
+type KeyOf<T extends Keyed> = T extends { property: infer K extends string } ? K : T;
+
 type PathOf<D extends Definition> = {
   [K in keyof D & string]: D[K] extends ObjectSchema<infer C> ? `${K}.${PathOf<C>}` :
     D[K] extends RecordSchema<any> ? never :
@@ -395,6 +399,12 @@ export const s = {
 
   /** Fields to spread into several objects, with `this` typed like it is inside `s.object` */
   fields: <E extends Record<string, any>>(entries: Entries<E>): E => entries,
+
+  /** A field for each item in a list, named by the item or its `property`, like a schema for each kit */
+  keyed: <const T extends Keyed, F>(items: readonly T[], field: (item: T) => F) =>
+    Object.fromEntries(
+      items.map((item) => [typeof item === "string" ? item : item.property, field(item)])
+    ) as { [I in T as KeyOf<I>]: F },
 
   model: <Name extends string, E extends Record<string, any>>(name: Name, entries: Entries<E>) =>
     new ModelSchema(name, resolve<E>(entries)),

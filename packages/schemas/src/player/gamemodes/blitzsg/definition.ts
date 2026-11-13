@@ -101,11 +101,6 @@ const DEFAULT_KITS = [
 const SPECIAL_KITS = ["donkeytamer", "warrior", "ranger", "phoenix", "milkman"];
 const SPECIAL_KIT_LEVELS = [1, 100, 250, 500, 1000, 1500, 2000, 2500, 5000, 10_000].map((req) => ({ req }));
 
-const kitSchemas = Object.fromEntries(KITS.map((kit) => [kit, BlitzSGKitSchema])) as Record<
-  Kit,
-  typeof BlitzSGKitSchema
->;
-
 export const BlitzSGSchema = s
   .object({
     coins: CoinsSchema.color("§6"),
@@ -138,7 +133,7 @@ export const BlitzSGSchema = s
         ]);
     },
     doubles: BlitzSGModeSchema,
-    ...kitSchemas,
+    ...s.keyed(KITS, () => BlitzSGKitSchema),
   })
   .leaderboard((blitzsg) => ({
     fieldName: FormattedGame.BLITZSG,

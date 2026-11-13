@@ -61,10 +61,6 @@ const SmashHeroesModeSchema = s.object({
 
 type SmashHeroesModeInput = s.input<typeof SmashHeroesModeSchema>;
 
-const kitSchemas = Object.fromEntries(
-  Object.keys(KITS).map((kit) => [kit, SmashHeroesModeSchema])
-) as Record<Kit, typeof SmashHeroesModeSchema>;
-
 export const SmashHeroesSchema = s
   .object({
     overall: SmashHeroesModeSchema,
@@ -86,7 +82,7 @@ export const SmashHeroesSchema = s
         .computed((activeClass) => KIT_NAMES[activeClass] ?? "none", [this.activeClass])
         .default("none");
     },
-    ...kitSchemas,
+    ...s.keyed(Object.keys(KITS) as Kit[], () => SmashHeroesModeSchema),
   })
   .leaderboard((smashheroes) => ({
     fieldName: FormattedGame.SMASH_HEROES,

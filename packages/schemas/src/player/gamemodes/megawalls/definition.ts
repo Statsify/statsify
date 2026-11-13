@@ -64,18 +64,13 @@ const KITS = MEGAWALLS_MODES.getApiModes().filter(
 
 type Kit = (typeof KITS)[number];
 
-const kitSchemas = Object.fromEntries(KITS.map((kit) => [kit, MegaWallsKitSchema])) as Record<
-  Kit,
-  typeof MegaWallsKitSchema
->;
-
 export const MegaWallsSchema = s
   .object({
     coins: CoinsSchema.color("§6"),
     mythicFavor: s.number(),
     class: s.string().default("none"),
     overall: MegaWallsOverallSchema,
-    ...kitSchemas,
+    ...s.keyed(KITS, () => MegaWallsKitSchema),
   })
   .leaderboard({ fieldName: FormattedGame.MEGAWALLS });
 

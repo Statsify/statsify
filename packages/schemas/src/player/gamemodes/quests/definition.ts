@@ -416,9 +416,7 @@ const gameQuestsSchema = (quests: GameQuests, period: Period) =>
           fieldName: `${removeFormatting(FormattedGame[quests.game])} Total`,
           name: "Total",
         }),
-      ...Object.fromEntries(
-        questsDuring(quests, period).map((quest) => [quest.property, questSchema(quest, period)])
-      ),
+      ...s.keyed(questsDuring(quests, period), (quest) => questSchema(quest, period)),
     })
     .leaderboard({ fieldName: `${FormattedGame[quests.game]} Quests -` });
 
