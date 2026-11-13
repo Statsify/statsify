@@ -17,11 +17,11 @@ import {
   SCHEME_MAP,
   STAR_MAP,
 } from "./util.js";
-import { FinalKillsStats, KillsStats, WinsStats } from "../common.js";
+import { BedsStats, ExpSchema, FinalKillsStats, KillsStats, WinsStats } from "../common.js";
 import { FormattedGame } from "#game";
 import { ProgressionSchema, progression } from "../../../progression.definition.js";
 import { type APIData, findScore } from "@statsify/util";
-import { deepAdd, deepSub, ratio } from "@statsify/math";
+import { deepAdd, deepSub } from "@statsify/math";
 import { formats } from "#definition/format";
 import { s } from "#definition/s";
 
@@ -38,11 +38,7 @@ export const BedWarsModeSchema = s.object({
   ...WinsStats,
   ...KillsStats,
   ...FinalKillsStats,
-  bedsBroken: s.number().color("green"),
-  bedsLost: s.number().color("red"),
-  bblr() {
-    return s.computed(ratio, [this.bedsBroken, this.bedsLost]).color("gold");
-  },
+  ...BedsStats,
   itemsCollected: ItemsCollectedSchema,
 });
 
@@ -145,8 +141,7 @@ export const BedWarsSchema = s
     selectedBrackets: s.string(),
     prestige: PrestigeSchema,
     exp() {
-      return s
-        .number()
+      return ExpSchema
         .color("aqua")
         .format(
           formats.searchedAs(getLevel, (exp) =>
@@ -160,7 +155,7 @@ export const BedWarsSchema = s
         });
     },
     level() {
-      return s.computed(getLevel, [this.exp]).subtractInSessions().leaderboard(false);
+      return s.number().computed(getLevel, [this.exp]).subtractInSessions().leaderboard(false);
     },
     levelFormatted() {
       return s

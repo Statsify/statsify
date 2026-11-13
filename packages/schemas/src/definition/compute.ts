@@ -93,14 +93,14 @@ if (import.meta.vitest) {
     wins: s.number(),
     losses: s.number(),
     wlr() {
-      return s.computed(ratio, [this.wins, this.losses]);
+      return s.number().computed(ratio, [this.wins, this.losses]);
     },
   });
 
   const Game = s.object({
     exp: s.number(),
     level() {
-      return s.computed((exp) => exp / 100, [this.exp]).subtractInSessions();
+      return s.number().computed((exp) => exp / 100, [this.exp]).subtractInSessions();
     },
     title() {
       return s.string().computed((level) => `[${Math.floor(level)}]`, [this.level]);

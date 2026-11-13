@@ -321,9 +321,4 @@ export const s = {
 
   model: <Name extends string, E extends Record<string, any>>(name: Name, entries: Entries<E>) =>
     new ModelSchema(name, resolve<E>(entries)),
-
-  computed: <const Dependencies extends readonly Ref[]>(
-    compute: (...values: Values<Dependencies>) => number,
-    dependencies: Dependencies
-  ) => new NumberSchema().computed(compute, dependencies),
 };

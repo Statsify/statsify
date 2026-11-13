@@ -60,43 +60,6 @@ const NAMES: Record<string, string> = {
   quakeShotAccuracy: "Shot Accuracy",
 };
 
-const getDefaultLimit = (key: string) => {
-  switch (key) {
-    case "exp":
-      return 1_000_000;
-
-    case "wins":
-    case "wlr":
-    case "kills":
-    case "kdr":
-    case "finalKills":
-    case "fkdr":
-    case "bedsBroken":
-    case "bblr":
-      return 500_000;
-
-    case "losses":
-    case "deaths":
-    case "finalDeaths":
-    case "bedsLost":
-    case "assists":
-    case "coins":
-    case "lootChests":
-      return 100_000;
-
-    default:
-      return 50_000;
-  }
-};
-
-// Each stat in one of these shows the others present beside it as columns
-const RATIO_COLUMNS = [
-  ["wins", "losses", "wlr"],
-  ["kills", "deaths", "kdr"],
-  ["finalKills", "finalDeaths", "fkdr"],
-  ["bedsBroken", "bedsLost", "bblr"],
-];
-
 const getDefault = (schema: AnySchema): unknown => {
   switch (schema.kind) {
     case "number":
@@ -141,7 +104,7 @@ function getLeaderboard(schema: AnySchema, key: string, relativeTo: string): Lea
     ...base,
     enabled: true,
     sort: options.sort ?? "DESC",
-    limit: options.limit ?? getDefaultLimit(key),
+    limit: options.limit ?? 50_000,
     aliases: options.aliases ?? [],
     hidden: options.hidden,
   };
@@ -158,7 +121,6 @@ function getStore(schema: AnySchema): Store {
 }
 
 function flatten(schema: ObjectSchema, base: string, baseName: string): Field[] {
-  const keys = Object.keys(schema.definition);
   const fields: Field[] = [];
 
   for (const [key, child] of Object.entries(schema.definition as Record<string, AnySchema>)) {
@@ -166,12 +128,6 @@ function flatten(schema: ObjectSchema, base: string, baseName: string): Field[] 
     const leaderboard = getLeaderboard(child, key, child.kind === "object" ? path : base);
     const name = leaderboard.name ? `${baseName ? `${baseName} ` : ""}${leaderboard.name}` : baseName;
     const dependencies = child.meta.computed?.dependencies.map((dependency) => join(base, dependency));
-
-    const columns = RATIO_COLUMNS.find((ratio) => ratio.includes(key))
-      ?.filter((other) => other !== key && keys.includes(other))
-      .map((other) => join(base, other));
-
-    if (columns?.length) leaderboard.additionalFields = columns;
 
     if (child.kind !== "object") {
       fields.push({
@@ -186,9 +142,6 @@ function flatten(schema: ObjectSchema, base: string, baseName: string): Field[] 
     }
 
     for (const field of flatten(child, path, name)) {
-      if (field.leaderboard.additionalFields.length === 0)
-        field.leaderboard.additionalFields = leaderboard.additionalFields;
-
       field.leaderboard.extraDisplay ??= leaderboard.extraDisplay;
       field.leaderboard.resetEvery ??= leaderboard.resetEvery;
       if (dependencies) field.dependencies = dependencies;
@@ -228,7 +181,7 @@ if (import.meta.vitest) {
     wins: s.number(),
     losses: s.number(),
     wlr() {
-      return s.computed(ratio, [this.wins, this.losses]);
+      return s.number().computed(ratio, [this.wins, this.losses]);
     },
     coins() {
       return s.number().leaderboard({ fieldName: "Tokens", limit: 10, additionalFields: [this.wins] });
@@ -267,9 +220,9 @@ if (import.meta.vitest) {
         enabled: true,
         fieldName: "WLR",
         name: "Game Overall WLR",
-        additionalFields: ["game.overall.wins", "game.overall.losses"],
+        additionalFields: [],
         extraDisplay: "game.title",
-        limit: 500_000,
+        limit: 50_000,
       },
     });
 

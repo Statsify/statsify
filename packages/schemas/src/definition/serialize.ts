@@ -71,7 +71,7 @@ if (import.meta.vitest) {
     cached: s.boolean().store(false),
     nested: s.object({ count: s.number() }),
     double() {
-      return s.computed((count) => count * 2, [this.count]);
+      return s.number().computed((count) => count * 2, [this.count]);
     },
   });
 
