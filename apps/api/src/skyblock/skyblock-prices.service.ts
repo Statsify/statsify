@@ -16,6 +16,7 @@ import {
   type RawBazaar,
   type RawElection,
   describeKey,
+  labelVariants,
   parseBazaar,
   parseItemsResource,
   toMayorView,
@@ -32,6 +33,7 @@ import { Singleflight } from "./singleflight.js";
 import { Worker } from "node:worker_threads";
 import { arrayGroup, config } from "@statsify/util";
 import { lastValueFrom } from "rxjs";
+import { termOf } from "@statsify/skyblock/display";
 import { unzip, zip } from "./zip.js";
 import type { RebuildRequest, RebuildResult } from "./skyblock-prices.worker.js";
 
@@ -41,6 +43,8 @@ const BAZAAR_KEY = "skyblock:bazaar";
 const ITEMS_KEY = "skyblock:resource:items";
 const ELECTION_KEY = "skyblock:resource:election";
 const AUTOCOMPLETE_KEY = "skyblock:items:autocomplete";
+// Discord's cap on autocomplete choices
+const MAX_MATCHES = 25;
 
 const PRICES_REFRESH = (await config("skyblock.pricesRefreshMinutes", { default: 15 })) * 60_000;
 const BAZAAR_REFRESH = 60_000;
@@ -110,8 +114,13 @@ export class SkyBlockPricesService implements OnModuleDestroy {
 
   /** The mayor in office, from the keyless election resource. */
   public getMayor(): Promise<MayorView | undefined> {
-    return this.getCopy(ELECTION_KEY, ELECTION_REFRESH, async () =>
-      toMayorView(await this.get<RawElection>("/v2/resources/skyblock/election"))
+    return this.getCopy(
+      ELECTION_KEY,
+      ELECTION_REFRESH,
+      async () => toMayorView(await this.get<RawElection>("/v2/resources/skyblock/election")),
+      // Only a copy fetched inside its term goes out of date when the term ends, so one Hypixel sent after the end (the
+      // new mayor not in yet) isn't refetched on every request
+      ({ value, fetchedAt }) => Boolean(termOf(value, fetchedAt)) && !termOf(value, Date.now())
     );
   }
 
@@ -133,11 +142,13 @@ export class SkyBlockPricesService implements OnModuleDestroy {
         query,
         "FUZZY",
         "MAX",
-        "25",
+        String(MAX_MATCHES),
         "WITHPAYLOADS"
       )) as string[] | null;
 
-      return arrayGroup(reply ?? [], 2).map(([name, payload]) => ({ name, ...JSON.parse(payload) }));
+      return arrayGroup(reply ?? [], 2)
+        .flatMap(([name, payload]) => labelVariants(name, JSON.parse(payload)))
+        .slice(0, MAX_MATCHES);
     } catch (error) {
       this.logger.error(error);
       throw new SkyBlockUnavailableException("market");
@@ -199,20 +210,27 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   private async updateAutocomplete(map: PriceMap, items: ItemsResource) {
     const next = `${AUTOCOMPLETE_KEY}:next`;
     const pipeline = this.redis.pipeline().del(next);
+    const described = Object.keys(map.entries).flatMap((key) => describeKey(key, items) ?? []);
 
-    for (const key of Object.keys(map.entries)) {
-      const described = describeKey(key, items);
-      if (!described) continue;
-      const payload = JSON.stringify({ id: key, rarity: described.rarity, texture: described.texture });
-      pipeline.call("FT.SUGADD", next, described.name, "1", "PAYLOAD", payload);
+    // Redis keeps one suggestion per string, so a name's payload lists every key that has it
+    for (const [name, keys] of Map.groupBy(described, ({ name }) => name)) {
+      const payload = JSON.stringify(keys.map(({ id, rarity, texture }) => ({ id, rarity, texture })));
+      pipeline.call("FT.SUGADD", next, name, "1", "PAYLOAD", payload);
     }
 
     await pipeline.rename(next, AUTOCOMPLETE_KEY).exec();
   }
 
-  private async getCopy<T>(key: string, maxAge: number, fetch: () => Promise<T>): Promise<T | undefined> {
+  private async getCopy<T>(
+    key: string,
+    maxAge: number,
+    fetch: () => Promise<T>,
+    outdated?: (copy: Copy<T>) => boolean
+  ): Promise<T | undefined> {
+    const fresh = (candidate: Copy<T>) => Date.now() - candidate.fetchedAt <= maxAge && !outdated?.(candidate);
+
     let copy = this.copies.get(key) as Copy<T> | undefined;
-    if (copy && Date.now() - copy.fetchedAt <= maxAge) return copy.value;
+    if (copy && fresh(copy)) return copy.value;
 
     const [data, storedAt, failedAt] = await this.redis.hmgetBuffer(key, "data", "fetchedAt", "failedAt");
     const fetchedAt = Number(storedAt?.toString());
@@ -221,7 +239,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
       this.copies.set(key, copy);
     }
 
-    if (copy && Date.now() - copy.fetchedAt <= maxAge) return copy.value;
+    if (copy && fresh(copy)) return copy.value;
     if (Date.now() - Number(failedAt?.toString()) < SKYBLOCK_FAILED_FOR) return copy?.value;
 
     const refetch = this.singleflight.run(key, async () => {
@@ -236,7 +254,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     });
 
     // A stale copy answers at once, since waiting out a Hypixel timeout would outlast the bot's request
-    if (copy) {
+    if (copy && !outdated?.(copy)) {
       void refetch.catch((error) => this.logger.error(error));
       return copy.value;
     }
@@ -245,7 +263,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
       return await refetch;
     } catch (error) {
       this.logger.error(error);
-      return undefined;
+      return copy?.value;
     }
   }
 
