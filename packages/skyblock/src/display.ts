@@ -113,9 +113,8 @@ export const DOJO_BELT_COLORS: Record<DojoBelt, string> = {
 export const RIFT_TOTALS = { enigmaSouls: 52, timecharms: 8, catsFound: 9 } as const satisfies Partial<Record<keyof RiftSection, number>>;
 
 /**
- * Each stacking enchant's item counter and what levels I to X need of it: the wiki's Stacking Enchantments page, and
- * Absorb's own page for Absorb (an owner exception, unverified). Take the level from the item, whose stored level can
- * lag its counter by one.
+ * Each stacking enchant's item counter and what levels I to X need of it: the wiki's Stacking Enchantments page and
+ * Absorb's own (an owner exception, unverified). Take the level from the item, since the counter can run a level ahead.
  */
 export const STACKING_ENCHANTS: Record<string, { counter: string; milestones: number[] }> = {
   absorb: {
