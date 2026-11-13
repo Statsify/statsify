@@ -36,10 +36,10 @@ export const SkyBlockHotfProfile = ({
     );
   }
 
-  const { level, centerLevel, loadout, tokensSpent, tokensTotal, ability, whispers, nodes } = hotf;
+  const { level, centerLevel, loadout, tokens, ability, whispers, nodes } = hotf;
 
   const sidebar: SidebarItem[] = [
-    [t("skyblock.tokensSpent"), `${t(tokensSpent)}§7/§a${t(tokensTotal)}`, "§a"],
+    [t("skyblock.tokensSpent"), `${t(tokens.spent)}§7/§a${t(tokens.total)}`, "§a"],
     [t("skyblock.centerOfTheForest"), t(centerLevel), "§6"],
     [t("skyblock.ability"), ability ? prettify(ability) : t("skyblock.none"), "§e"],
   ];
