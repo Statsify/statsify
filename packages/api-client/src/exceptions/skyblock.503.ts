@@ -14,8 +14,7 @@ export type SkyBlockUnavailableReason = (typeof SKYBLOCK_UNAVAILABLE_REASONS)[nu
 
 /**
  * Nothing stored to serve instead. throttled: Hypixel answered 429. hypixel: it errored or timed out. budget: SkyBlock's
- * share of the key is spent. market: no prices, bazaar or items resource have been fetched yet, or the item search
- * failed.
+ * share of the key is spent. market: no prices, bazaar or items resource fetched yet, or the item search failed.
  */
 export class SkyBlockUnavailableException extends ServiceUnavailableException {
   @ApiProperty()
