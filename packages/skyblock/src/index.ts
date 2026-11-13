@@ -14,7 +14,7 @@ export { buildPriceMap, type SeenIndex } from "./auctions.js";
 export { describeKey, parseBazaar, toPriceView } from "./prices.js";
 export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
-export { findProfile, isMember, toPlayerExtras, toProfileSummary, toProfilesView } from "./profiles.js";
+export { findProfile, gameModeOf, isMember, toPlayerExtras, toProfileSummary, toProfilesView } from "./profiles.js";
 export {
   bestiaryBoards,
   collectionBoards,

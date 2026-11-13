@@ -26,17 +26,15 @@ const tableOf = (skill: string) =>
 const foragingCap = (member: RawMember) => {
   const perks = member.player_data?.perks ?? {};
   const shops = 2 * Number((perks.agatha_power ?? 0) >= 4) + 2 * Number((perks.miria_power ?? 0) >= 4);
-  return Math.min(50 + (member.player_data?.experience?.SKILL_FORAGING_extra_level_cap ?? 0) + shops, 57);
+  return 50 + (member.player_data?.experience?.SKILL_FORAGING_extra_level_cap ?? 0) + shops;
 };
 
-// SKILL_FORAGING_extra_level_cap looks like it counts the three log collection unlocks and not the shop's, so a level
-// past 53 can't be confirmed from the API.
+// 50 and the three log unlocks: a level past it rests on the shops
 const FORAGING_VERIFIED = 53;
 
 // Runecrafting stops at 3 without a rank, unchecked in game
 const UNRANKED_RUNECRAFTING_CAP = 3;
 
-// NEU's leveling_caps still says 50 for foraging.
 function capOf(skill: string, member: RawMember, ranked: boolean) {
   if (skill === "runecrafting" && !ranked) return UNRANKED_RUNECRAFTING_CAP;
   const cap = LEVELING.leveling_caps[skill];

@@ -32,7 +32,10 @@ export const petMaxLevel = (type: string) => PETS.custom_pet_leveling[type]?.max
 /** 99 levels from the rarity's offset, plus custom pets' extra levels (Golden Dragon to 200). */
 export function getPetLevel(pet: RawPet, rarity = boostedRarity(pet)): Level {
   const custom = PETS.custom_pet_leveling[pet.type] ?? {};
-  const offset = custom.rarity_offset?.[rarity] ?? PETS.pet_rarity_offset[rarity];
+  const own = custom.rarity_offset ?? {};
+  // Bingo's own offsets stop at Legendary, below the Mythic a Tier Boost gives it, so its highest one carries on
+  const highest = PET_RARITIES.findLast((candidate) => candidate in own);
+  const offset = own[rarity] ?? (highest ? own[highest] : PETS.pet_rarity_offset[rarity]);
   const maxLevel = petMaxLevel(pet.type);
   const table = [...PETS.pet_levels.slice(offset, offset + 99), ...(custom.pet_levels ?? [])];
   const level = getLevel(pet.exp, table, maxLevel - 1);
@@ -75,12 +78,8 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
 export const petScorePoints = (tier: string) => PET_RARITIES.indexOf(tier as Rarity) + 1;
 
 /**
- * Pet score: one pet per type counts, the one with the best rarity, Tier Boost included (the wiki's Rift Ferret page,
- * unverified), then the highest level. It scores Common 1 … Mythic 6, plus 1 if it's at max level. Special and Very
- * Special pets never count. Pets are sorted active first, then by rarity and XP.
- *
- * Montezuma lives in the Rift's dead_cats, where its active flag means summoned in the Rift. It's listed but doesn't
- * score: counting it would put members above their highest_pet_score.
+ * Pet score: each type's best pet by rarity, Tier Boost included (the wiki's Rift Ferret page, unverified), then level.
+ * Montezuma (the Rift's dead_cats, whose active means summoned there) is listed but doesn't score, as the game doesn't.
  */
 export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
   const views: PetView[] = [];
@@ -124,7 +123,7 @@ if (import.meta.vitest) {
       pets_data: {
         pets: [
           { type: "BEE", tier: "EPIC", exp: 20_000_000, heldItem: "PET_ITEM_TIER_BOOST", active: true },
-          { type: "BEE", tier: "EPIC", exp: 20_000_000, active: false },
+          { type: "TIGER", tier: "EPIC", exp: 20_000_000, active: false },
           { type: "GOLDEN_DRAGON", tier: "LEGENDARY", exp: 25_353_230, active: false },
           { type: "PHOENIX", tier: "VERY_SPECIAL", exp: 1e9, active: false },
           { type: "JERRY", tier: "MYTHIC", exp: 1_000_000, active: false },
@@ -134,9 +133,12 @@ if (import.meta.vitest) {
     });
 
     expect(active).toMatchObject({ rarity: "LEGENDARY", level: { level: 96, maxLevel: 100 } });
-    expect(pets.find((pet) => !pet.active && pet.type === "BEE")?.level.level).toBe(100);
+    expect(pets.find((pet) => pet.type === "TIGER")?.level.level).toBe(100);
     expect(pets.find((pet) => pet.type === "GOLDEN_DRAGON")?.level).toMatchObject({ level: 100, maxLevel: 200 });
-    // The boosted Bee scores Legendary, Jerry its Mythic over its maxed Common, and Phoenix never scores
-    expect(score).toBe(5 + 5 + 6);
+    const bingo = { type: "BINGO", tier: "LEGENDARY", exp: 5_624_785, heldItem: "PET_ITEM_TIER_BOOST", active: false };
+    expect(getPetLevel(bingo).level).toBe(100);
+    // The boosted Bee scores Legendary, not Epic, and the maxed Tiger Epic plus one. Jerry scores its Mythic over its
+    // maxed Common, and Phoenix never scores
+    expect(score).toBe(5 + 5 + 5 + 6);
   });
 }
