@@ -95,7 +95,7 @@ export interface GearSection {
   equipment: Slots; // necklace, cloak, belt, gloves
   wardrobe: { slot: number; armor: Slots }[]; // sets with anything in them, helmet to boots
   wardrobeSlot?: number; // the set being worn
-  weapons: ItemView[]; // swords, bows and wands in the inventory, in its order
+  weapons: ItemView[]; // swords, bows, gauntlets and wands in the inventory, in its order
 }
 
 export const INVENTORIES = [
