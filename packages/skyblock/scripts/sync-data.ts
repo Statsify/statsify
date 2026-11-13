@@ -396,18 +396,17 @@ try {
   // player_data.perks, which keeps the levels bought, calls NEU's eagle_advantage eagles_advantage
   const perkIds: Record<string, string> = { eagle_advantage: "eagles_advantage" };
   const shops = await readJson<Record<string, Record<string, { costs: number[] }>>>("constants/essenceshops.json");
-  await write(
-    "essenceshops.json",
-    Object.fromEntries([
-      ...Object.entries(shops).map(([shop, perks]) => [
+  await write("essenceshops.json", {
+    ...Object.fromEntries(
+      Object.entries(shops).map(([shop, perks]) => [
         shop.replace("ESSENCE_", ""),
         Object.fromEntries(Object.entries(perks).map(([id, { costs }]) => [perkIds[id] ?? id, costs.length])),
-      ]),
-      // NEU has no Sun Gecko shop, the Rift's: Blessing of Time's 3 tiers (the wiki's Sun Gecko essence shop page, an
-      // owner exception, unverified)
-      ["SUN_GECKO", { blessing_of_time: 3 }],
-    ])
-  );
+      ])
+    ),
+    // NEU lacks the Rift's Sun Gecko shop: Blessing of Time's 3 tiers (the wiki's Sun Gecko essence shop page, an owner
+    // exception, unverified)
+    SUN_GECKO: { blessing_of_time: 3 },
+  });
 
   // Accessory id → its tier's rank, and NEU's per-variant ids (an Abicase model, a party hat color) → the API's one id.
   const accessoryRanks = new Map<string, number>();
