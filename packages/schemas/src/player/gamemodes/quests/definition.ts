@@ -321,7 +321,7 @@ const QUESTS = [
     ],
     weekly: [
       { property: "vampireWinner", key: "vampirez_weekly_win" },
-      { property: "vampireSlayer", key: "vampirez_vampirez_weekly_kill" },
+      { property: "vampireSlayer", key: "vampirez_weekly_kill" },
       { property: "humanSlayer", key: "vampirez_weekly_human_kill" },
     ],
   },
