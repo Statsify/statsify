@@ -31,7 +31,7 @@ export class ResourcePacksService {
       const update = await updateResourcePacks();
 
       if (update.status === "held") {
-        this.logger.warn(`Hypixel's new pack has a changed license (sha256 ${update.license}), so it waits for a review`);
+        this.logger.warn(`Hypixel's new pack has a changed license (${update.license}), so it waits for a review`);
       }
 
       if (update.status === "activated" && update.failedItems.length > 0) {
