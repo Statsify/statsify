@@ -91,7 +91,7 @@ export class CommandListener extends AbstractCommandListener {
     context.setUser(user);
 
     const preconditions = [
-      CommandListener.tierPrecondition.bind(undefined, command, user),
+      () => CommandListener.tierPrecondition(command, user),
       this.cooldownPrecondition.bind(this, parentCommand, user, id),
     ];
 
