@@ -510,4 +510,13 @@ export const NEU_UNITS = {
       )
     );
   },
+
+  // Every essence item at the pin, not the essence shops' types, which leave some out
+  async essence({ neu, readJson, write }: SyncContext) {
+    const files = (await readdir(join(neu, "items"))).filter((file) => /^ESSENCE_\w+\.json$/.test(file));
+    const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
+    const headless = items.filter(({ nbttag }) => !skullHash(nbttag)).map(({ internalname }) => internalname);
+    if (headless.length > 0) throw new Error(`no essence head for ${headless.join(", ")}`);
+    await write("essence-textures.json", Object.fromEntries(items.map(({ internalname, nbttag }) => [internalname, skullHash(nbttag)])));
+  },
 };

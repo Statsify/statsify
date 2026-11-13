@@ -13,6 +13,7 @@ import attributeShards from "./generated/attribute-shards.json" with { type: "js
 import bestiary from "./generated/bestiary.json" with { type: "json" };
 import collections from "./generated/collections.json" with { type: "json" };
 import essenceShops from "./generated/essenceshops.json" with { type: "json" };
+import essenceTextures from "./generated/essence-textures.json" with { type: "json" };
 import garden from "./generated/garden.json" with { type: "json" };
 import hoppity from "./generated/hoppity.json" with { type: "json" };
 import hotfLayout from "./generated/hotflayout.json" with { type: "json" };
@@ -85,6 +86,9 @@ export const RABBITS = hoppity as Record<string, string[]>;
 
 /** Each Kuudra tier's key head, by the API's tier names (none is the basic tier). */
 export const KUUDRA_KEYS = kuudraKeys as Record<string, string>;
+
+/** Each essence's head, by item id (ESSENCE_WITHER). */
+export const ESSENCE_TEXTURES = essenceTextures as Record<string, string>;
 
 /** Trophy fish id, as the API spells it but uppercased → name. */
 export const TROPHY_FISH = trophyFish as Record<string, string>;
