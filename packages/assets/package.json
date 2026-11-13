@@ -4,6 +4,16 @@
   "main": "dist/index.js",
   "types": "src/index.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./resource-packs": {
+      "types": "./src/resource-packs.ts",
+      "default": "./dist/resource-packs.js"
+    }
+  },
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "typecheck": "tsc --noEmit",
@@ -13,8 +23,10 @@
   "dependencies": {
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
+    "@statsify/textures": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "axios": "1.11.0",
+    "fflate": "^0.8.3",
     "skia-canvas": "4.0.0"
   }
 }
