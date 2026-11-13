@@ -78,7 +78,6 @@ const LEARNED_POWERS: Record<string, Stats> = {
   prepared: { health: 12.4, defense: 11.3, strength: 1.95, crit_chance: 0.4, crit_damage: 0.95 },
 };
 
-/** The selected Power's stats at the bag's accessory power. */
 function powerStats(power: string | undefined, accessoryPower: number): Stats | undefined {
   const stone = power ? POWERS[power] : undefined;
   if (stone) {
