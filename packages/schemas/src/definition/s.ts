@@ -11,6 +11,7 @@ import type { minecraftColors } from "@statsify/util";
 
 declare const TYPES: unique symbol;
 declare const OPTIONAL: unique symbol;
+declare const SET_LATER: unique symbol;
 declare const COMPUTED: unique symbol;
 declare const REF: unique symbol;
 
@@ -122,6 +123,10 @@ interface Computed {
   readonly [COMPUTED]: true;
 }
 
+interface SetLater {
+  readonly [SET_LATER]: true;
+}
+
 export abstract class Schema<Output = unknown, Input = Output> implements Types<Output, Input> {
   declare public readonly [TYPES]: { output: Output; input: Input };
   public abstract readonly kind: string;
@@ -143,6 +148,11 @@ export abstract class Schema<Output = unknown, Input = Output> implements Types<
 
   public optional() {
     return this.with({ optional: true }) as this & Optional;
+  }
+
+  /** Still required, but filled in after parsing, like a guild member's name, so `s.input` can leave it out */
+  public setLater() {
+    return this as this & SetLater;
   }
 
   /** Never written to the database, like `cached` */
@@ -281,13 +291,13 @@ type OutputOf<D extends Definition> = Simplify<
 
 type InputOf<D extends Definition> = Simplify<
   {
-    [K in keyof D as D[K] extends Computed ? never : D[K] extends Optional ? never : K]: s.input<
-      D[K]
-    >;
+    [K in keyof D as D[K] extends Computed ? never :
+      D[K] extends Optional | SetLater ? never :
+        K]: s.input<D[K]>;
   } & {
-    [K in keyof D as D[K] extends Computed ? never : D[K] extends Optional ? K : never]?: s.input<
-      D[K]
-    >;
+    [K in keyof D as D[K] extends Computed ? never :
+      D[K] extends Optional | SetLater ? K :
+        never]?: s.input<D[K]>;
   }
 >;
 
