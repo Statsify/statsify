@@ -29,9 +29,6 @@ export enum QuestTime {
 
 export interface QuestOption<TField extends string> {
   field: string;
-  /**
-   * The quest's full key before Hypixel renamed it, so its old completions still count
-   */
   legacyField?: string;
   propertyKey: TField;
   fieldName?: string;
