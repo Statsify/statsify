@@ -51,7 +51,7 @@ export class ForceVerifyCommand {
       .description((t) =>
         t("embeds.forceVerify.description", {
           id: user.id,
-          displayName: this.apiService.emojiDisplayName(t, player.displayName),
+          displayName: ApiService.emojiDisplayName(t, player.displayName),
         })
       );
 

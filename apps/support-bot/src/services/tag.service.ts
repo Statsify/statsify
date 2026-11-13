@@ -34,16 +34,16 @@ export class TagService {
 
   public async fetch() {
     const tags = await this.tagModel.find().lean().exec();
-    const commands = tags.map(this.createCommand);
+    const commands = tags.map(createCommand);
     return commands;
   }
 
   public async create(name: string, content: string, attachment?: string) {
-    this.validateName(name);
+    validateName(name);
 
     const tag = { name, content, attachment };
 
-    const command = this.createCommand(tag);
+    const command = createCommand(tag);
 
     const listener = CommandListener.getInstance();
     listener.addCommand(command);
@@ -60,38 +60,6 @@ export class TagService {
       .exec();
 
     return command;
-  }
-
-  public createCommand(tag: Omit<Tag, "id">) {
-    const metadata: CommandMetadata = {
-      name: tag.name,
-      description: `Sends the tag "${tag.name}"`,
-      methodName: "run",
-      args: [new UserArgument("user", false)],
-      cooldown: 0,
-    };
-
-    const target = {
-      run(context: CommandContext) {
-        const user = context.option<string | null>("user");
-
-        const embed = new EmbedBuilder()
-          .color(STATUS_COLORS.info)
-          .description(tag.content);
-
-        if (tag.attachment) embed.image(tag.attachment);
-
-        const message: IMessage = {
-          embeds: [embed],
-        };
-
-        if (user) message.content = `<@${user}>`;
-
-        return message;
-      },
-    };
-
-    return new CommandResolvable(metadata, target);
   }
 
   public async delete(name: string) {
@@ -116,7 +84,7 @@ export class TagService {
   }
 
   public async rename(originalName: string, newName: string) {
-    this.validateName(newName);
+    validateName(newName);
 
     const tag = await this.tagModel
       .findOne()
@@ -130,8 +98,40 @@ export class TagService {
     await this.delete(originalName);
     await this.create(newName, tag.content, tag.attachment);
   }
+}
 
-  private validateName(name: string) {
-    if (!TAG_NAME_REGEX.test(name)) throw new ErrorMessage("errors.invalidTagName");
-  }
+function createCommand(tag: Omit<Tag, "id">) {
+  const metadata: CommandMetadata = {
+    name: tag.name,
+    description: `Sends the tag "${tag.name}"`,
+    methodName: "run",
+    args: [new UserArgument("user", false)],
+    cooldown: 0,
+  };
+
+  const target = {
+    run(context: CommandContext) {
+      const user = context.option<string | null>("user");
+
+      const embed = new EmbedBuilder()
+        .color(STATUS_COLORS.info)
+        .description(tag.content);
+
+      if (tag.attachment) embed.image(tag.attachment);
+
+      const message: IMessage = {
+        embeds: [embed],
+      };
+
+      if (user) message.content = `<@${user}>`;
+
+      return message;
+    },
+  };
+
+  return new CommandResolvable(metadata, target);
+}
+
+function validateName(name: string) {
+  if (!TAG_NAME_REGEX.test(name)) throw new ErrorMessage("errors.invalidTagName");
 }

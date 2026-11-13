@@ -18,10 +18,10 @@ export class BlitzSGMode {
   public kills: number;
 
   public constructor(data: APIData, mode: string) {
-    mode = mode ? `_${mode}` : mode;
+    const suffix = mode ? `_${mode}` : mode;
 
-    this.wins = data[`wins${mode || "_solo_normal"}`];
-    this.kills = data[`kills${mode}`];
+    this.wins = data[`wins${suffix || "_solo_normal"}`];
+    this.kills = data[`kills${suffix}`];
   }
 }
 

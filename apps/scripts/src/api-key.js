@@ -14,6 +14,7 @@ import { inquirerConfirmation, inquirerLogger } from "./utils.js";
 
 const redis = new Redis(config("database.redisUrl"));
 
+// oxlint-disable-next-line no-warning-comments -- open question, kept on purpose
 // TODO unify functions (one createKey)
 const createKey = async ({ name, key, role, limit }) => {
   const activeKeys = await getKeyNames();

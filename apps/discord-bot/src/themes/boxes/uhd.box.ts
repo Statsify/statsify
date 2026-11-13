@@ -12,29 +12,26 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx,
   {
     color = Box.DEFAULT_COLOR,
-    border,
+    border: baseBorder,
     shadowDistance,
     shadowOpacity = Box.SHADOW_OPACITY,
     outline,
     outlineSize,
   },
-  { x, y, width, height, padding }
+  { x: startX, y: startY, width: contentWidth, height: contentHeight, padding }
 ) => {
-  const fill = Box.resolveFill(color, ctx, x, y, width, height);
+  const fill = Box.resolveFill(color, ctx, startX, startY, contentWidth, contentHeight);
   ctx.fillStyle = fill;
-
-  width = width + padding.left + padding.right;
-  height = height + padding.top + padding.bottom;
 
   /**
    * Prevent Anti Aliasing
    */
-  x = Math.round(x);
-  y = Math.round(y);
-  width = Math.round(width);
-  height = Math.round(height);
+  const x = Math.round(startX);
+  const y = Math.round(startY);
+  const width = Math.round(contentWidth + padding.left + padding.right);
+  const height = Math.round(contentHeight + padding.top + padding.bottom);
 
-  border = { ...border };
+  const border = { ...baseBorder };
 
   border.bottomLeft *= 2;
   border.bottomRight *= 2;

@@ -204,6 +204,7 @@ const SCHEME_MAP = {
   slimy: createUniformScheme("§a", "§2"),
   holiday: createUniformScheme("§4", "§a"),
   iconic: createUniformScheme("§0", "§0", "§f"),
+  // oxlint-disable-next-line no-warning-comments -- open question, kept on purpose
   // TODO: Figure out name: Level-conic?
   level_conic: createUniformScheme("§0", "§f", "§0"),
   safari: createMultiDigitColorScheme(["§2", "§2", "§2", "§6", "§6", "§6"]),
@@ -432,19 +433,19 @@ const STRIKETHROUGH_LEVEL_REQUIREMENT = 500;
  * Gets a player's formatted level based on what scheme and emblem they should have access to at their level
  */
 export const getIntendedLevelFormatted = (level: number) => {
-  level = Math.floor(level);
+  const wholeLevel = Math.floor(level);
 
-  const { emblem: emblemKey } = findScore(PRESTIGE_EMBLEMS, level);
-  const { scheme: schemeKey } = findScore(PRESTIGE_SCHEMES, level);
+  const { emblem: emblemKey } = findScore(PRESTIGE_EMBLEMS, wholeLevel);
+  const { scheme: schemeKey } = findScore(PRESTIGE_SCHEMES, wholeLevel);
 
   const emblem = EMBLEM_MAP[emblemKey];
   const scheme = SCHEME_MAP[schemeKey];
 
   return scheme(
-    level,
-    level >= BOLD_LEVEL_REQUIREMENT,
-    level >= UNDERLINE_LEVEL_REQUIREMENT,
-    level >= STRIKETHROUGH_LEVEL_REQUIREMENT,
+    wholeLevel,
+    wholeLevel >= BOLD_LEVEL_REQUIREMENT,
+    wholeLevel >= UNDERLINE_LEVEL_REQUIREMENT,
+    wholeLevel >= STRIKETHROUGH_LEVEL_REQUIREMENT,
     emblem
   );
 };
@@ -460,28 +461,28 @@ export function getFormattedLevel(
   underline: boolean,
   strikethrough: boolean
 ) {
-  selectedScheme = selectedScheme?.replace("scheme_", "");
-  selectedEmblem = selectedEmblem?.replace("emblem_", "");
+  const schemeName = selectedScheme?.replace("scheme_", "");
+  const emblemName = selectedEmblem?.replace("emblem_", "");
 
   let schemeKey: keyof typeof SCHEME_MAP;
   let emblemKey: keyof typeof EMBLEM_MAP;
 
-  if (selectedScheme) {
-    if (selectedScheme in SCHEME_MAP) {
-      schemeKey = selectedScheme as keyof typeof SCHEME_MAP;
+  if (schemeName) {
+    if (schemeName in SCHEME_MAP) {
+      schemeKey = schemeName as keyof typeof SCHEME_MAP;
     } else {
-      console.error(`Missing SkyWars Scheme Key ${selectedScheme}`);
+      console.error(`Missing SkyWars Scheme Key ${schemeName}`);
       schemeKey = findScore(PRESTIGE_SCHEMES, level).scheme;
     }
   } else {
     schemeKey = findScore(PRESTIGE_SCHEMES, level).scheme;
   }
 
-  if (selectedEmblem) {
-    if (selectedEmblem in EMBLEM_MAP) {
-      emblemKey = selectedEmblem as keyof typeof EMBLEM_MAP;
+  if (emblemName) {
+    if (emblemName in EMBLEM_MAP) {
+      emblemKey = emblemName as keyof typeof EMBLEM_MAP;
     } else {
-      console.error(`Missing SkyWars Emblem Key ${selectedEmblem}`);
+      console.error(`Missing SkyWars Emblem Key ${emblemName}`);
       emblemKey = findScore(PRESTIGE_EMBLEMS, level).emblem;
     }
   } else {

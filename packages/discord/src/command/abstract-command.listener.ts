@@ -157,7 +157,7 @@ export abstract class AbstractCommandListener {
     }
   }
 
-  protected tierPrecondition(command: CommandResolvable, user: User | null) {
+  protected static tierPrecondition(command: CommandResolvable, user: User | null) {
     if (!command.tier) return;
     if (!user) throw new ErrorMessage("errors.missingSelfVerification");
 

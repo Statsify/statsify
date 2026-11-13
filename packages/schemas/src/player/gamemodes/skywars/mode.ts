@@ -97,17 +97,17 @@ export class SkyWarsMode {
   public kit: string;
 
   public constructor(data: APIData, mode: string) {
-    mode = mode ? `_${mode}` : mode;
+    const suffix = mode ? `_${mode}` : mode;
 
-    this.wins = data[`wins${mode}`];
-    this.losses = data[`losses${mode}`];
-    this.kills = data[`kills${mode}`];
-    this.deaths = data[`deaths${mode}`];
+    this.wins = data[`wins${suffix}`];
+    this.losses = data[`losses${suffix}`];
+    this.kills = data[`kills${suffix}`];
+    this.deaths = data[`deaths${suffix}`];
     this.gamesPlayed = add(this.wins, this.losses);
-    this.assists = data[`assists${mode}`];
+    this.assists = data[`assists${suffix}`];
 
     // Convert to milliseconds
-    this.playtime = (data[`time_played${mode}`] ?? 0) * 1000;
+    this.playtime = (data[`time_played${suffix}`] ?? 0) * 1000;
 
     SkyWarsMode.applyRatios(this);
   }

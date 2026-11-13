@@ -159,8 +159,7 @@ suite("JSX Fragments", () => {
 
 suite("FontRenderer", () => {
   it("resets formatting without inheriting mutated parser state", () => {
-    const renderer = new FontRenderer(false);
-    const nodes = renderer.lex("§l[100]§r Player");
+    const nodes = FontRenderer.lex("§l[100]§r Player");
 
     expect(nodes).toEqual([
       expect.objectContaining({ text: "[100]", bold: true }),

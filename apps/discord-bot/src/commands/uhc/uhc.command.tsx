@@ -21,7 +21,7 @@ export class UHCCommand extends BaseHypixelCommand<UHCModes> {
     super(UHC_MODES);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<UHCModes, never>
   ): JSX.Element {

@@ -27,7 +27,7 @@ export class AuthService {
   public constructor(@InjectRedis() private readonly redis: Redis) {}
 
   public async limited(apiKey: string, weight: number, role: AuthRole) {
-    const hash = this.hash(apiKey);
+    const hash = hashApiKey(apiKey);
 
     const [name, ...keyInfo] = await this.redis.hmget(
       `key:${hash}`,
@@ -87,7 +87,7 @@ export class AuthService {
 
   public async createKey(name: string): Promise<string> {
     const apiKey = randomUUID().replaceAll("-", "");
-    const hash = this.hash(apiKey);
+    const hash = hashApiKey(apiKey);
 
     await this.redis.hmset(
       `key:${hash}`,
@@ -105,7 +105,7 @@ export class AuthService {
   }
 
   public async getKey(apiKey: string): Promise<Key> {
-    const hash = this.hash(apiKey);
+    const hash = hashApiKey(apiKey);
     const key = `ratelimit:${hash}`;
 
     const pipeline = this.redis.pipeline();
@@ -137,8 +137,8 @@ export class AuthService {
       limit: Number(limit),
     };
   }
+}
 
-  private hash(apiKey: string): string {
-    return createHash("sha256").update(apiKey).digest("hex");
-  }
+function hashApiKey(apiKey: string): string {
+  return createHash("sha256").update(apiKey).digest("hex");
 }

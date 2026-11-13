@@ -27,11 +27,11 @@ export class ParkourCommand extends BaseHypixelCommand<ParkourModes, PreProfileD
     super(PARKOUR_MODES);
   }
 
-  public async getPreProfileData(): Promise<PreProfileData> {
+  public override async getPreProfileData(): Promise<PreProfileData> {
     return { gameIcons: await getAllGameIcons() };
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { data }: ProfileData<ParkourModes, PreProfileData>
   ): JSX.Element {

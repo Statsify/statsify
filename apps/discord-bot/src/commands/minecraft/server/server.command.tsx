@@ -61,19 +61,19 @@ export class ServerCommand {
   }
 
   private async getServer(tag: string) {
-    tag = tag.toLowerCase();
-    const [hostname] = tag.split(":");
+    const lowerTag = tag.toLowerCase();
+    const [hostname] = lowerTag.split(":");
 
     const mappedServer = this.mappings.find(
       (s) =>
-        s.name.toLowerCase() === tag ||
+        s.name.toLowerCase() === lowerTag ||
         s.addresses.some(
           (address) => hostname === address || hostname.endsWith(`.${address}`)
         )
     );
 
     const server = await this.axios
-      .get<Server>(mappedServer?.primaryAddress ?? tag)
+      .get<Server>(mappedServer?.primaryAddress ?? lowerTag)
       .then((res) => res.data)
       .catch(() => null);
 

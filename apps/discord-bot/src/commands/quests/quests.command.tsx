@@ -60,10 +60,6 @@ export class QuestsCommand {
     return this.run(context, QuestTime.Daily);
   }
 
-  private getProfile(props: QuestProfileProps): JSX.Element {
-    return <QuestsProfile {...props} />;
-  }
-
   private async run(context: CommandContext, time: QuestTime) {
     const user = context.getUser();
 
@@ -94,7 +90,7 @@ export class QuestsCommand {
         generator: async (t) => {
           const background = await getBackground(...mapBackground(this.modes, mode.api));
 
-          const profile = this.getProfile({
+          const profile = getProfile({
             player,
             skin,
             background,
@@ -114,4 +110,8 @@ export class QuestsCommand {
 
     return paginate(context, pages);
   }
+}
+
+function getProfile(props: QuestProfileProps): JSX.Element {
+  return <QuestsProfile {...props} />;
 }

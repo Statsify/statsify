@@ -22,7 +22,7 @@ export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
     super(BEDWARS_MODES);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<BedWarsModes, never>,
   ): JSX.Element {

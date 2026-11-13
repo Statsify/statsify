@@ -21,7 +21,7 @@ export class WoolGamesCommand extends BaseHypixelCommand<WoolGamesModes> {
     super(WOOLGAMES_MODES);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<WoolGamesModes>
   ): JSX.Element {

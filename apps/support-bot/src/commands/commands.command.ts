@@ -45,7 +45,7 @@ export class CommandsCommand {
       context,
       groups.map(
         (group, index) => () =>
-          this.createTopPage(
+          createTopPage(
             index,
             group,
             totalCommands,
@@ -54,37 +54,37 @@ export class CommandsCommand {
       )
     );
   }
+}
 
-  private createTopPage(
-    page: number,
-    commands: [commandName: string, usage: number][],
-    totalCommands: number,
-    highlight: string
-  ) {
-    const embed = new EmbedBuilder()
-      .title("Commands")
-      .footer(
-        (t) =>
-          `Total: ${t(totalCommands)}${highlight ? ` | Highlighting: ${highlight}` : ""}`
-      )
-      .color(STATUS_COLORS.info)
-      .description((t) =>
-        commands
-          .map(([command, usage], index) => {
-            const position = page * COMMANDS_PER_PAGE + index + 1;
-            const commandName = `${command.includes(highlight) ? "**" : ""}${prettify(
-              command
-            )}${command.includes(highlight) ? "**" : ""}`;
-            const percentage = Math.round((usage / totalCommands) * 100);
+function createTopPage(
+  page: number,
+  commands: [commandName: string, usage: number][],
+  totalCommands: number,
+  highlight: string
+) {
+  const embed = new EmbedBuilder()
+    .title("Commands")
+    .footer(
+      (t) =>
+        `Total: ${t(totalCommands)}${highlight ? ` | Highlighting: ${highlight}` : ""}`
+    )
+    .color(STATUS_COLORS.info)
+    .description((t) =>
+      commands
+        .map(([command, usage], index) => {
+          const position = page * COMMANDS_PER_PAGE + index + 1;
+          const commandName = `${command.includes(highlight) ? "**" : ""}${prettify(
+            command
+          )}${command.includes(highlight) ? "**" : ""}`;
+          const percentage = Math.round((usage / totalCommands) * 100);
 
-            return `\`#${String(position).padStart(
-              String(page * COMMANDS_PER_PAGE + COMMANDS_PER_PAGE).length,
-              "0"
-            )}\` ${commandName}: **${t(usage)}** \`(${t(percentage)}%)\``;
-          })
-          .join("\n")
-      );
+          return `\`#${String(position).padStart(
+            String(page * COMMANDS_PER_PAGE + COMMANDS_PER_PAGE).length,
+            "0"
+          )}\` ${commandName}: **${t(usage)}** \`(${t(percentage)}%)\``;
+        })
+        .join("\n")
+    );
 
-    return embed;
-  }
+  return embed;
 }

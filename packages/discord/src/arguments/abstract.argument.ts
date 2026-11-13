@@ -19,12 +19,6 @@ import type {
 } from "discord-api-types/v10";
 import type { CommandContext } from "#command";
 
-export interface AbstractArgument {
-  autocompleteHandler?(
-    context: CommandContext
-  ): APIApplicationCommandOptionChoice[] | Promise<APIApplicationCommandOptionChoice[]>;
-}
-
 export abstract class AbstractArgument {
   public abstract name: string;
   public abstract description: LocalizationString;
@@ -35,6 +29,10 @@ export abstract class AbstractArgument {
   public min_value?: number;
   public max_value?: number;
   public autocomplete?: boolean;
+
+  public autocompleteHandler?(
+    context: CommandContext
+  ): APIApplicationCommandOptionChoice[] | Promise<APIApplicationCommandOptionChoice[]>;
 
   public toJSON() {
     const description = translateField(getLocalizeFunction("en_US"), this.description);

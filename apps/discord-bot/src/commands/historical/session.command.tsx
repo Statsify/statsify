@@ -387,7 +387,7 @@ export class SessionCommand {
 
     const getContent = (t: LocalizeFunction) => {
       if (player.isNew)
-        return t("historical.newSession", { displayName: this.apiService.emojiDisplayName(t, player.displayName) });
+        return t("historical.newSession", { displayName: ApiService.emojiDisplayName(t, player.displayName) });
 
       return Math.random() < 0.1 ? t("tips.resetSession") : undefined;
     };

@@ -279,6 +279,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
     description: (t) => t("commands.guild-leaderboard"),
     args: [GuildLeaderboardArgument],
   })
+  // oxlint-disable-next-line class-methods-use-this -- @SubCommand handlers are called on the command instance
   public async guild(context: CommandContext) {
     return Container.get(GuildLeaderboardSubCommand).leaderboard(context);
   }

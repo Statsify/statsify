@@ -21,7 +21,7 @@ export class SpeedUHCCommand extends BaseHypixelCommand<SpeedUHCModes> {
     super(SPEED_UHC_MODES);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<SpeedUHCModes, never>
   ): JSX.Element {

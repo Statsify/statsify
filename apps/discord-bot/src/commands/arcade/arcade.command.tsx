@@ -22,18 +22,18 @@ export class ArcadeCommand extends BaseHypixelCommand<ArcadeModes> {
     super(ARCADE_MODES);
   }
 
-  public getModeEmojis(modes: GameModeWithSubModes<ArcadeModes>[]): ModeEmoji[] {
+  public override getModeEmojis(modes: GameModeWithSubModes<ArcadeModes>[]): ModeEmoji[] {
     return getArcadeModeEmojis(modes);
   }
 
-  public getSubModeEmojis<M extends ApiModeFromGameModes<ArcadeModes>>(
+  public override getSubModeEmojis<M extends ApiModeFromGameModes<ArcadeModes>>(
     mode: M,
     submodes: SubModeForMode<ArcadeModes, M>[]
   ): ModeEmoji[] {
     return getArcadeSubModeEmojis(mode, submodes);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<ArcadeModes>
   ): JSX.Element {

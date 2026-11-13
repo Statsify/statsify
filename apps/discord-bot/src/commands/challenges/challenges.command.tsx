@@ -31,15 +31,15 @@ export class ChallengesCommand extends BaseHypixelCommand<
     super(CHALLENGE_MODES);
   }
 
-  public async getPreProfileData(): Promise<PreProfileData> {
+  public override async getPreProfileData(): Promise<PreProfileData> {
     return { gameIcons: await getAllGameIcons() };
   }
 
-  public getModeEmojis(modes: GameModeWithSubModes<ChallengeModes>[]): ModeEmoji[] {
+  public override getModeEmojis(modes: GameModeWithSubModes<ChallengeModes>[]): ModeEmoji[] {
     return modes.map((m) => m.api !== "overall" && ((t) => t(`emojis:games.${m.api}`)));
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { data, mode }: ProfileData<ChallengeModes, PreProfileData>
   ): JSX.Element {

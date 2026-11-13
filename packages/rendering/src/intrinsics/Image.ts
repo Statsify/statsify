@@ -46,9 +46,11 @@ export const component: JSX.RawFC<ImageProps> = ({
 
 export const render: JSX.Render<ImageRenderProps> = (
   ctx,
-  { image, crop },
+  { image, crop: cropOption },
   { x, y, width, height }
 ) => {
+  let crop = cropOption;
+
   if (!crop || crop === "none") {
     crop = [0, 0, image.width, image.height];
   } else if (crop === "height-crop") {

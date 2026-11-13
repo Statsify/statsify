@@ -17,7 +17,7 @@ export class PitCommand extends BaseHypixelCommand<PitModes> {
     super(PIT_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
+  public override getProfile(base: BaseProfileProps): JSX.Element {
     return <PitProfile {...base} />;
   }
 }

@@ -47,14 +47,6 @@ export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
 
 export type ModeEmoji = LocalizationString | false | undefined;
 
-export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
-  getPreProfileData?(player: Player): K | Promise<K>;
-  filterModes?(player: Player, modes: GameModeWithSubModes<T>[]): GameModeWithSubModes<T>[];
-  filterSubmodes?(player: Player, mode: GameModeWithSubModes<T>): GameModeWithSubModes<T>["submodes"];
-  getModeEmojis?(modes: GameModeWithSubModes<T>[]): ModeEmoji[];
-  getSubModeEmojis?<M extends ApiModeFromGameModes<T>>(mode: M, submodes: SubModeForMode<T, M>[]): ModeEmoji[];
-}
-
 @Command({
   description: "",
   args: [PlayerArgument],
@@ -159,6 +151,12 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
 
     return paginate(context, pages);
   }
+
+  public getPreProfileData?(player: Player): K | Promise<K>;
+  public filterModes?(player: Player, modes: GameModeWithSubModes<T>[]): GameModeWithSubModes<T>[];
+  public filterSubmodes?(player: Player, mode: GameModeWithSubModes<T>): GameModeWithSubModes<T>["submodes"];
+  public getModeEmojis?(modes: GameModeWithSubModes<T>[]): ModeEmoji[];
+  public getSubModeEmojis?<M extends ApiModeFromGameModes<T>>(mode: M, submodes: SubModeForMode<T, M>[]): ModeEmoji[];
 
   public abstract getProfile(
     base: BaseProfileProps,

@@ -17,7 +17,7 @@ export class WallsCommand extends BaseHypixelCommand<WallsModes> {
     super(WALLS_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
+  public override getProfile(base: BaseProfileProps): JSX.Element {
     return <WallsProfile {...base} />;
   }
 }

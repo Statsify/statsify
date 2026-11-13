@@ -21,7 +21,7 @@ export class CopsAndCrimsCommand extends BaseHypixelCommand<CopsAndCrimsModes> {
     super(COPS_AND_CRIMS_MODES);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<CopsAndCrimsModes>
   ): JSX.Element {

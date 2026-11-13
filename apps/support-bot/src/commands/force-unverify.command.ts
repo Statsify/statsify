@@ -41,7 +41,7 @@ export class ForceUnverifyCommand {
         (t) => t("errors.missingPlayerVerification.title"),
         (t) =>
           t("errors.missingPlayerVerification.description", {
-            displayName: this.apiService.emojiDisplayName(t, player.displayName),
+            displayName: ApiService.emojiDisplayName(t, player.displayName),
           })
       );
 
@@ -56,7 +56,7 @@ export class ForceUnverifyCommand {
       .description((t) =>
         t("embeds.forceUnverify.description", {
           id: user.id,
-          displayName: this.apiService.emojiDisplayName(t, player.displayName),
+          displayName: ApiService.emojiDisplayName(t, player.displayName),
         })
       );
 
