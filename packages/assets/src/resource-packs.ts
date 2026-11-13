@@ -7,11 +7,11 @@
  */
 
 import { ItemRenderer, PackStack, loadPack, setCanvasBackend } from "@statsify/textures";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { dirname, join } from "node:path";
 import { existsSync } from "node:fs";
 import { getAssetPath } from "./index.js";
-import { mkdir, mkdtemp, open, readFile, readdir, rename, rm, stat, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rename, rm, stat, utimes, writeFile } from "node:fs/promises";
 import { skiaCanvas } from "@statsify/textures/node";
 import { unzipSync } from "fflate";
 
@@ -35,8 +35,9 @@ const PREVIOUS = "previous.json";
 const HELD = "held.json";
 const LOCK = "update.lock";
 
-// An update takes a minute or two, so a lock this old was left by one that crashed
-const STALE_LOCK = 30 * 60 * 1000;
+// The holder touches the lock every minute, so one untouched for five was left by an update that crashed
+const HEARTBEAT = 60 * 1000;
+const STALE_LOCK = 5 * HEARTBEAT;
 
 interface HypixelPacks {
   packs: {
@@ -60,12 +61,17 @@ interface Generation {
   packs: string[];
 }
 
-export type PackUpdate =
-  | { status: "activated"; stack: PackStack }
-  | { status: "unchanged" | "running" }
-  | { status: "held"; license: string };
+export type PackUpdate = { status: "activated" | "unchanged" | "running" } | { status: "held"; license: string };
 
 const hash = (algorithm: "sha1" | "sha256", data: Uint8Array) => createHash(algorithm).update(data).digest("hex");
+
+const generationId = ({ packs }: Generation) => packs.join(" ");
+
+// Unlike Promise.all, this waits for every write or delete before throwing, so none outlives the update's lock
+async function settle(promises: Promise<unknown>[]) {
+  const failed = (await Promise.allSettled(promises)).find((result) => result.status === "rejected");
+  if (failed) throw failed.reason;
+}
 
 async function get(url: string) {
   const response = await fetch(url);
@@ -85,12 +91,12 @@ async function download(url: string, sha1: string, size?: number) {
   return data;
 }
 
-/** Writes a pack's folder beside the cache and renames it into place whole, so a folder that exists is complete */
+/** Renames a staged folder into place whole, so a pack folder that exists is complete */
 async function store(folder: string, files: Record<string, Uint8Array | string>) {
   const staging = await mkdtemp(join(ROOT, ".staging-"));
 
   try {
-    await Promise.all(Object.entries(files).map(([name, data]) => writeFile(join(staging, name), data)));
+    await settle(Object.entries(files).map(([name, data]) => writeFile(join(staging, name), data)));
     await mkdir(dirname(join(ROOT, folder)), { recursive: true });
     await rename(staging, join(ROOT, folder));
   } catch (error) {
@@ -99,7 +105,6 @@ async function store(folder: string, files: Record<string, Uint8Array | string>)
   }
 }
 
-/** A Minecraft version's client jar, through Mojang's version manifest and that version's metadata */
 async function mojangClient(version: string) {
   const cached = existsSync(join(ROOT, "mojang"))
     ? (await readdir(join(ROOT, "mojang"))).find((folder) => folder.startsWith(`${version}-`))
@@ -121,7 +126,6 @@ async function mojangClient(version: string) {
   return `${folder}/client.jar`;
 }
 
-/** Hypixel's pack in the format the renderer reads, with its LICENSE and listing beside it */
 async function hypixelPack() {
   const { packs } = await getJson<HypixelPacks>(HYPIXEL_PACKS);
   const pack = packs.find(({ id }) => id === HYPIXEL_PACK);
@@ -147,7 +151,6 @@ async function readGeneration(name: string): Promise<Generation | undefined> {
   return existsSync(path) ? JSON.parse(await readFile(path, "utf8")) : undefined;
 }
 
-/** Replaces a generation file with one rename, so a reader sees the old one or the new one whole */
 async function writeGeneration(name: string, generation: Generation) {
   const temporary = join(ROOT, `.${name}`);
   await writeFile(temporary, JSON.stringify(generation));
@@ -157,11 +160,11 @@ async function writeGeneration(name: string, generation: Generation) {
 const loadStack = async ({ packs }: Generation) =>
   new PackStack(await Promise.all(packs.map(async (path) => loadPack(await readFile(join(ROOT, path)), path))));
 
-/** Draws every item definition the packs above the first add, so a pack the renderer can't fully draw never goes live */
 async function probe(stack: PackStack) {
   setCanvasBackend(skiaCanvas);
   const renderer = new ItemRenderer(stack);
 
+  // The first pack's own definitions include some the renderer doesn't draw yet, like banners
   const ids = stack.packs.slice(1).flatMap(({ files }) =>
     [...files.keys()].flatMap((path) => {
       const definition = /^assets\/([^/]+)\/items\/(.+)\.json$/.exec(path);
@@ -179,54 +182,91 @@ async function probe(stack: PackStack) {
   }
 }
 
-/** Deletes pack folders no kept generation names */
 async function prune(kept: Generation[]) {
   const folders = new Set(kept.flatMap(({ packs }) => packs.map((path) => dirname(path))));
 
-  await Promise.all(
+  await settle(
     ["mojang", "hypixel"].map(async (source) => {
       if (!existsSync(join(ROOT, source))) return;
 
       const unused = (await readdir(join(ROOT, source))).filter((folder) => !folders.has(`${source}/${folder}`));
-      await Promise.all(unused.map((folder) => rm(join(ROOT, source, folder), { recursive: true, force: true })));
+      await settle(unused.map((folder) => rm(join(ROOT, source, folder), { recursive: true, force: true })));
     }),
   );
 }
 
-async function lock() {
-  const path = join(ROOT, LOCK);
-
+async function createLock(path: string, token: string) {
   try {
-    return await open(path, "wx");
+    await writeFile(path, token, { flag: "wx" });
+    return true;
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
-    if (Date.now() - (await stat(path)).mtimeMs < STALE_LOCK) return;
-
-    await rm(path, { force: true });
-    return open(path, "wx");
+    if ((error as NodeJS.ErrnoException).code === "EEXIST") return false;
+    throw error;
   }
 }
 
-/** The packs icons draw from, or undefined until an update first activates them */
-export async function loadResourcePacks() {
+async function lock() {
+  const path = join(ROOT, LOCK);
+  const token = randomUUID();
+
+  if (!(await createLock(path, token))) {
+    const age = await stat(path).then(({ mtimeMs }) => Date.now() - mtimeMs, () => Infinity);
+    if (age < STALE_LOCK) return;
+
+    await rm(path, { force: true });
+    if (!(await createLock(path, token))) return;
+  }
+
+  const heartbeat = setInterval(() => void utimes(path, new Date(), new Date()).catch(() => undefined), HEARTBEAT);
+  heartbeat.unref();
+
+  // Two updates that find the same stale lock can both take it, so each checks it still holds it before writing
+  const owned = async () => (await readFile(path, "utf8").catch(() => undefined)) === token;
+
+  return {
+    owned,
+    async release() {
+      clearInterval(heartbeat);
+      if (await owned()) await rm(path, { force: true });
+    },
+  };
+}
+
+/** The active packs' id, or undefined until an update first activates some. Another process can activate packs too */
+export async function activeResourcePacks() {
   const active = await readGeneration(ACTIVE);
-  return active && loadStack(active);
+  return active && generationId(active);
+}
+
+/** The active packs, or undefined until an update first activates some */
+export async function loadResourcePacks(): Promise<{ id: string; stack: PackStack } | undefined> {
+  const active = await readGeneration(ACTIVE);
+  if (!active) return;
+
+  try {
+    return { id: generationId(active), stack: await loadStack(active) };
+  } catch (error) {
+    // An update can prune these packs while they load, once it has activated newer ones
+    const replaced = (await activeResourcePacks()) !== generationId(active);
+    if ((error as NodeJS.ErrnoException).code === "ENOENT" && replaced) return loadResourcePacks();
+    throw error;
+  }
 }
 
 /**
  * Downloads Minecraft's client jar and Hypixel's SkyBlock pack, checks them, and activates them. One update runs
- * at a time, and the last working packs stay active when anything fails or a pack's license changes.
+ * at a time, and the active packs stay when anything fails or a pack's license changes.
  */
 export async function updateResourcePacks(): Promise<PackUpdate> {
   await mkdir(ROOT, { recursive: true });
 
-  const handle = await lock();
-  if (!handle) return { status: "running" };
+  const lease = await lock();
+  if (!lease) return { status: "running" };
 
   try {
     const generation = { packs: [await mojangClient(MINECRAFT_VERSION), await hypixelPack()] };
     const active = await readGeneration(ACTIVE);
-    if (active?.packs.join() === generation.packs.join()) return { status: "unchanged" };
+    if (active && generationId(active) === generationId(generation)) return { status: "unchanged" };
 
     const license = join(ROOT, dirname(generation.packs[1]), "LICENSE");
 
@@ -235,19 +275,17 @@ export async function updateResourcePacks(): Promise<PackUpdate> {
       return { status: "held", license };
     }
 
-    const stack = await loadStack(generation);
-    await probe(stack);
-
-    if (active) await writeGeneration(PREVIOUS, active);
-    await writeGeneration(ACTIVE, generation);
-    await rm(join(ROOT, HELD), { force: true });
-
-    // Another process may have loaded the previous packs just before the switch
+    await probe(await loadStack(generation));
     await prune(active ? [generation, active] : [generation]);
+    await rm(join(ROOT, HELD), { force: true });
+    if (active) await writeGeneration(PREVIOUS, active);
 
-    return { status: "activated", stack };
+    // Writing active.json activates the packs, so it comes last
+    if (!(await lease.owned())) throw new Error("Another update took over the lock");
+    await writeGeneration(ACTIVE, generation);
+
+    return { status: "activated" };
   } finally {
-    await handle.close();
-    await rm(join(ROOT, LOCK), { force: true });
+    await lease.release();
   }
 }
