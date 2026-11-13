@@ -49,7 +49,7 @@ type RefOf<E> =
 
 export type Refs<E> = { [K in keyof E]: RefOf<E[K]> };
 
-type Values<Refs extends readonly Ref[]> = { [I in keyof Refs]: Refs[I][typeof TYPES]["output"] };
+type Values<R extends readonly Ref[]> = { [I in keyof R]: R[I][typeof TYPES]["output"] };
 
 const PATH = Symbol("path");
 const SCOPE = Symbol("scope");
