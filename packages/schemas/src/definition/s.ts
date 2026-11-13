@@ -11,6 +11,8 @@ import type { minecraftColors } from "@statsify/util";
 
 declare const TYPES: unique symbol;
 declare const OPTIONAL: unique symbol;
+declare const SET_LATER: unique symbol;
+declare const NULLABLE: unique symbol;
 declare const COMPUTED: unique symbol;
 declare const REF: unique symbol;
 
@@ -112,6 +114,7 @@ export interface Metadata {
   raw?: true;
   index?: IndexOptions;
   lowercase?: true;
+  defaultNow?: true;
 }
 
 interface Optional {
@@ -120,6 +123,14 @@ interface Optional {
 
 interface Computed {
   readonly [COMPUTED]: true;
+}
+
+interface SetLater {
+  readonly [SET_LATER]: true;
+}
+
+interface Nullable {
+  readonly [NULLABLE]: true;
 }
 
 export abstract class Schema<Output = unknown, Input = Output> implements Types<Output, Input> {
@@ -143,6 +154,16 @@ export abstract class Schema<Output = unknown, Input = Output> implements Types<
 
   public optional() {
     return this.with({ optional: true }) as this & Optional;
+  }
+
+  /** Still required, but filled in after parsing, like a guild member's name, so `s.input` can leave it out */
+  public setLater() {
+    return this as this & SetLater;
+  }
+
+  /** Can also be null, which a consumer sets to clear a saved choice, like a user's locale */
+  public nullable() {
+    return this as this & Nullable;
   }
 
   /** Never written to the database, like `cached` */
@@ -213,8 +234,29 @@ export class BooleanSchema extends Schema<boolean> {
   public readonly kind = "boolean";
 }
 
+export class DateSchema extends Schema<Date> {
+  public readonly kind = "date";
+
+  /** Mongo sets it to the time the document is created */
+  public defaultNow() {
+    return this.with({ defaultNow: true }).setLater();
+  }
+}
+
 export class ArraySchema<E extends AnySchema> extends Schema<s.infer<E>[], s.input<E>[]> {
   public readonly kind = "array";
+
+  public constructor(public readonly element: E) {
+    super();
+  }
+}
+
+/** Any keys, each holding an `element`, stored as Mongo's Mixed type */
+export class RecordSchema<E extends AnySchema> extends Schema<
+  Record<string, s.infer<E>>,
+  Record<string, s.input<E>>
+> {
+  public readonly kind = "record";
 
   public constructor(public readonly element: E) {
     super();
@@ -255,26 +297,30 @@ export type AnySchema =
   | NumberSchema |
   StringSchema |
   BooleanSchema |
+  DateSchema |
   ArraySchema<any> |
+  RecordSchema<any> |
   ObjectSchema<any>;
 
 type Simplify<T> = { [K in keyof T]: T[K] } & {};
 
+type Null<S> = S extends Nullable ? null : never;
+
 type OutputOf<D extends Definition> = Simplify<
-  { [K in keyof D as D[K] extends Optional ? never : K]: s.infer<D[K]> } & {
-    [K in keyof D as D[K] extends Optional ? K : never]?: s.infer<D[K]>;
+  { [K in keyof D as D[K] extends Optional ? never : K]: s.infer<D[K]> | Null<D[K]> } & {
+    [K in keyof D as D[K] extends Optional ? K : never]?: s.infer<D[K]> | Null<D[K]>;
   }
 >;
 
 type InputOf<D extends Definition> = Simplify<
   {
-    [K in keyof D as D[K] extends Computed ? never : D[K] extends Optional ? never : K]: s.input<
-      D[K]
-    >;
+    [K in keyof D as D[K] extends Computed ? never :
+      D[K] extends Optional | SetLater ? never :
+        K]: s.input<D[K]> | Null<D[K]>;
   } & {
-    [K in keyof D as D[K] extends Computed ? never : D[K] extends Optional ? K : never]?: s.input<
-      D[K]
-    >;
+    [K in keyof D as D[K] extends Computed ? never :
+      D[K] extends Optional | SetLater ? K :
+        never]?: s.input<D[K]> | Null<D[K]>;
   }
 >;
 
@@ -304,7 +350,9 @@ function resolve<E extends Record<string, any>>(entries: E) {
 }
 
 type PathOf<D extends Definition> = {
-  [K in keyof D & string]: D[K] extends ObjectSchema<infer C> ? `${K}.${PathOf<C>}` : K;
+  [K in keyof D & string]: D[K] extends ObjectSchema<infer C> ? `${K}.${PathOf<C>}` :
+    D[K] extends RecordSchema<any> ? never :
+      K;
 }[keyof D & string];
 
 export namespace s {
@@ -318,7 +366,9 @@ export const s = {
   number: () => new NumberSchema(),
   string: <T extends string = string>() => new StringSchema<T>(),
   boolean: () => new BooleanSchema(),
+  date: () => new DateSchema(),
   array: <E extends AnySchema>(element: E) => new ArraySchema(element),
+  record: <E extends AnySchema>(element: E) => new RecordSchema(element),
 
   object: <E extends Record<string, any>>(entries: Entries<E>) =>
     new ObjectSchema(resolve<E>(entries)),
