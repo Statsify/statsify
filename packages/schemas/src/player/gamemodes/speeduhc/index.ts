@@ -21,6 +21,7 @@ export const SPEED_UHC_MODES = new GameModes([
   { api: "overall" },
   { api: "solo", hypixel: "solo_normal" },
   { api: "teams", hypixel: "team_normal" },
+  { api: "insane" },
   { api: "wildSpecialist" },
   { api: "guardian" },
   { api: "sniper" },
@@ -49,11 +50,20 @@ export class SpeedUHC {
   @Field()
   public teams: SpeedUHCMode;
 
+  @Field()
+  public insane: SpeedUHCMode;
+
   @Field({ historical: { enabled: false } })
   public coins: number;
 
   @Field()
   public score: number;
+
+  @Field()
+  public gamesPlayed: number;
+
+  @Field()
+  public highestKillstreak: number;
 
   @Field({ store: { default: "none" } })
   public activeMastery: string;
@@ -103,11 +113,14 @@ export class SpeedUHC {
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.score = data.score;
+    this.gamesPlayed = data.games;
+    this.highestKillstreak = data.highestKillstreak;
     this.activeMastery = (data.activeMasterPerk ?? "none").replace("mastery_", "");
 
     this.overall = new SpeedUHCMode(data, "");
     this.solo = new SpeedUHCMode(data, "solo");
     this.teams = new SpeedUHCMode(data, "team");
+    this.insane = new SpeedUHCMode(data, "insane");
 
     this.wildSpecialist = new SpeedUHCMastery(data, "wild_specialist");
     this.guardian = new SpeedUHCMastery(data, "guardian");
