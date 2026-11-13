@@ -15,22 +15,7 @@ import {
   formatProgression,
 } from "#components";
 import { FormattedGame } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
-
-interface BuildBattleModeTableProps {
-  title: string;
-  stats: { wins: number };
-  t: LocalizeFunction;
-}
-
-const BuildBattleModeTable = ({ title, stats, t }: BuildBattleModeTableProps) => (
-  <Table.table width="remaining">
-    <Table.ts title={`§e${title}`}>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-    </Table.ts>
-  </Table.table>
-);
 
 export const BuildBattleProfile = ({
   player,
@@ -74,20 +59,18 @@ export const BuildBattleProfile = ({
         time={time}
       />
       <Table.table>
-        <Table.tr>
-          <BuildBattleModeTable title="Overall" stats={buildbattle.overall} t={t} />
-          <BuildBattleModeTable title="Pro" stats={buildbattle.pro} t={t} />
-          <BuildBattleModeTable
-            title="Speed Builders"
-            stats={{ wins: buildbattle.speedBuilders.wins }}
-            t={t}
-          />
-        </Table.tr>
-        <Table.tr>
-          <BuildBattleModeTable title="Solo" stats={buildbattle.solo} t={t} />
-          <BuildBattleModeTable title="Teams" stats={buildbattle.teams} t={t} />
-          <BuildBattleModeTable title="GTB" stats={buildbattle.guessTheBuild} t={t} />
-        </Table.tr>
+        <Table.ts title={`§a${t("stats.wins")}`}>
+          <Table.tr>
+            <Table.td title="Overall" value={t(buildbattle.overall.wins)} color="§a" />
+            <Table.td title="Pro" value={t(buildbattle.pro.wins)} color="§a" />
+            <Table.td title="Speed Builders" value={t(buildbattle.speedBuilders.wins)} color="§a" />
+          </Table.tr>
+          <Table.tr>
+            <Table.td title="Solo" value={t(buildbattle.solo.wins)} color="§a" />
+            <Table.td title="Teams" value={t(buildbattle.teams.wins)} color="§a" />
+            <Table.td title="GTB" value={t(buildbattle.guessTheBuild.wins)} color="§a" />
+          </Table.tr>
+        </Table.ts>
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>
