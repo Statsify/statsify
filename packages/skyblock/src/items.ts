@@ -16,6 +16,7 @@ import {
   type Slots,
 } from "#types";
 import { decodeAttributes, decodeInventory } from "#nbt";
+import { RARITY_COLORS } from "./display.js";
 import { normalizeItemText } from "./lore.js";
 import { removeFormatting } from "@statsify/util";
 import { resourceTexture, skinHash, textureOf } from "#textures";
@@ -143,12 +144,13 @@ export function toolkitItemView(blob: RawNbt, items: ItemsResource): ItemView | 
   const resource = attributes.id ? items.items[attributes.id] : undefined;
   const texture = resource && resourceTexture(resource);
   if (!attributes.id || !resource || !texture) return null;
+  const rarity = resource.tier && RARITIES[RARITIES.indexOf(resource.tier) + (attributes.rarity_upgrades ? 1 : 0)];
 
   return {
     id: attributes.id,
-    name: resource.name,
+    name: rarity ? `${RARITY_COLORS[rarity]}${resource.name}` : resource.name,
     lore: [],
-    rarity: resource.tier && RARITIES[RARITIES.indexOf(resource.tier) + (attributes.rarity_upgrades ? 1 : 0)],
+    rarity,
     count: 1,
     glint: Object.keys(attributes.enchantments ?? {}).length > 0 || Boolean(resource.glowing),
     texture,
