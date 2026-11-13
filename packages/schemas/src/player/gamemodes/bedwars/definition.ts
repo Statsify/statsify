@@ -26,14 +26,14 @@ import { formats } from "#definition/format";
 import { s } from "#definition/s";
 
 const ItemsCollectedSchema = s.object({
-  iron: s.number().color("gray").leaderboard({ limit: 100_000 }),
-  gold: s.number().color("gold").leaderboard({ limit: 100_000 }),
-  diamond: s.number().color("aqua").leaderboard({ limit: 100_000 }),
-  emerald: s.number().color("dark_green").leaderboard({ limit: 100_000 }),
+  iron: s.number().color("§7").leaderboard({ limit: 100_000 }),
+  gold: s.number().color("§6").leaderboard({ limit: 100_000 }),
+  diamond: s.number().color("§b").leaderboard({ limit: 100_000 }),
+  emerald: s.number().color("§2").leaderboard({ limit: 100_000 }),
 });
 
 export const BedWarsModeSchema = s.object({
-  winstreak: s.number().color("green"),
+  winstreak: s.number().color("§a"),
   gamesPlayed: s.number(),
   ...WinsStats,
   ...KillsStats,
@@ -91,8 +91,8 @@ const BedWarsChallengesSchema = s.object({
 
 const SlumberSchema = s
   .object({
-    tickets: s.number().color("aqua").leaderboard(false),
-    totalTickets: s.number().color("light_purple").leaderboard({ fieldName: "Total Slumber Tickets" }),
+    tickets: s.number().color("§b").leaderboard(false),
+    totalTickets: s.number().color("§d").leaderboard({ fieldName: "Total Slumber Tickets" }),
     wallet: s.number().leaderboard(false),
   })
   .leaderboard({ fieldName: "" });
@@ -135,14 +135,14 @@ const levelProgression = (exp: number, level: number) => {
 
 export const BedWarsSchema = s
   .object({
-    tokens: s.number().color("dark_green"),
+    tokens: s.number().color("§2"),
     selectedScheme: s.string(),
     selectedStar: s.string(),
     selectedBrackets: s.string(),
     prestige: PrestigeSchema,
     exp() {
       return ExpSchema
-        .color("aqua")
+        .color("§b")
         .format(
           formats.searchedAs(getLevel, (exp) =>
             getIntendedFormattedLevel(Math.floor(getLevel(exp)))

@@ -14,7 +14,8 @@ declare const OPTIONAL: unique symbol;
 declare const COMPUTED: unique symbol;
 declare const REF: unique symbol;
 
-export type ColorName = Lowercase<(typeof minecraftColors)[number]["id"]>;
+/** A Minecraft color code like `§a`, or `§#` and a hex color like the bot's `§#ffd700` */
+export type ColorCode = (typeof minecraftColors)[number]["code"] | `§#${string}`;
 
 export type ResetEvery =
   | "day" |
@@ -100,7 +101,7 @@ export interface ComputedMetadata {
 }
 
 export interface Metadata {
-  color?: ColorName;
+  color?: ColorCode;
   format?: Format;
   leaderboard?: LeaderboardMetadata;
   computed?: ComputedMetadata;
@@ -178,7 +179,7 @@ export abstract class Schema<Output = unknown, Input = Output> implements Types<
 export class NumberSchema extends Schema<number> {
   public readonly kind = "number";
 
-  public color(color: ColorName) {
+  public color(color: ColorCode) {
     return this.with({ color });
   }
 
