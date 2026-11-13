@@ -61,7 +61,10 @@ interface Generation {
   packs: string[];
 }
 
-export type PackUpdate = { status: "activated" | "unchanged" | "running" } | { status: "held"; license: string };
+export type PackUpdate =
+  | { status: "activated"; failedItems: string[] }
+  | { status: "unchanged" | "running" }
+  | { status: "held"; license: string };
 
 const hash = (algorithm: "sha1" | "sha256", data: Uint8Array) => createHash(algorithm).update(data).digest("hex");
 
@@ -172,14 +175,11 @@ async function probe(stack: PackStack) {
     }),
   );
 
-  if (ids.length === 0) throw new Error(`${stack.hash} adds no item definitions`);
-
   const draws = await Promise.allSettled(ids.map((id) => renderer.render({ id: "minecraft:paper", itemModel: id }, 1)));
   const failed = ids.filter((_, index) => draws[index].status === "rejected");
 
-  if (failed.length > 0) {
-    throw new Error(`${stack.hash} can't draw ${failed.length} of ${ids.length} items: ${failed.slice(0, 10).join(", ")}`);
-  }
+  if (failed.length === ids.length) throw new Error(`${stack.hash} can't draw any of its ${ids.length} items`);
+  return failed;
 }
 
 async function prune(kept: Generation[]) {
@@ -275,7 +275,8 @@ export async function updateResourcePacks(): Promise<PackUpdate> {
       return { status: "held", license };
     }
 
-    await probe(await loadStack(generation));
+    // Items that fail to draw fall back to their 1.8 icons, so they don't hold back the rest
+    const failedItems = await probe(await loadStack(generation));
     await prune(active ? [generation, active] : [generation]);
     await rm(join(ROOT, HELD), { force: true });
     if (active) await writeGeneration(PREVIOUS, active);
@@ -284,7 +285,7 @@ export async function updateResourcePacks(): Promise<PackUpdate> {
     if (!(await lease.owned())) throw new Error("Another update took over the lock");
     await writeGeneration(ACTIVE, generation);
 
-    return { status: "activated" };
+    return { status: "activated", failedItems };
   } finally {
     await lease.release();
   }
