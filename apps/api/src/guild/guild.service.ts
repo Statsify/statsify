@@ -154,10 +154,10 @@ export class GuildService {
     tag: string,
     type: GuildQuery
   ): Promise<[guild: Guild | null, tag: string, displayName?: string]> {
-    tag = tag.toLowerCase();
+    const lowerTag = tag.toLowerCase();
 
     if (type === GuildQuery.PLAYER) {
-      const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, {
+      const player = await this.playerService.get(lowerTag, CacheLevel.CACHE_ONLY, {
         uuid: true,
         displayName: true,
         guildId: true,
@@ -180,11 +180,11 @@ export class GuildService {
     const guild = (await this.guildModel
       .findOne()
       .where(type === GuildQuery.ID ? "id" : "nameToLower")
-      .equals(tag)
+      .equals(lowerTag)
       .lean()
       .exec()) as Guild;
 
-    return [guild, tag];
+    return [guild, lowerTag];
   }
 
   private async handleGuildNotFound(

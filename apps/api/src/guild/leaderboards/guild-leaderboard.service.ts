@@ -26,6 +26,8 @@ export class GuildLeaderboardService extends LeaderboardService {
   }
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
+    let id = input;
+
     if (!GUILD_ID_REGEX.test(input)) {
       const guild = await this.guildModel
         .findOne()
@@ -36,10 +38,10 @@ export class GuildLeaderboardService extends LeaderboardService {
         .exec();
 
       if (!guild) throw new GuildNotFoundException();
-      input = guild.id;
+      id = guild.id;
     }
 
-    const ranking = await this.getLeaderboardRankings(Guild, [field], input);
+    const ranking = await this.getLeaderboardRankings(Guild, [field], id);
 
     if (!ranking || !ranking[0].rank) throw new GuildNotFoundException();
 

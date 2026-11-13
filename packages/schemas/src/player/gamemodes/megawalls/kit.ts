@@ -62,25 +62,25 @@ export class MegaWallsKit {
   public points: number;
 
   public constructor(data: APIData, kit: string) {
-    kit = kit ? `${kit}_` : kit;
+    const prefix = kit ? `${kit}_` : kit;
 
-    this.wins = data[`${kit}wins`];
-    this.losses = data[`${kit}losses`];
+    this.wins = data[`${prefix}wins`];
+    this.losses = data[`${prefix}losses`];
     this.wlr = ratio(this.wins, this.losses);
 
-    this.kills = data[`${kit}kills`];
-    this.assists = data[`${kit}assists`];
-    this.deaths = data[`${kit}deaths`];
+    this.kills = data[`${prefix}kills`];
+    this.assists = data[`${prefix}assists`];
+    this.deaths = data[`${prefix}deaths`];
 
-    this.finalKills = data[`${kit}final_kills`];
-    this.finalAssists = data[`${kit}final_assists`];
-    this.finalDeaths = data[`${kit}final_deaths`];
+    this.finalKills = data[`${prefix}final_kills`];
+    this.finalAssists = data[`${prefix}final_assists`];
+    this.finalDeaths = data[`${prefix}final_deaths`];
 
-    this.playtime = (data[`${kit}time_played`] ?? 0) * 60_000;
-    this.witherDamage = data[`${kit}wither_damage`];
-    this.witherKills = data[`${kit}wither_kills`];
+    this.playtime = (data[`${prefix}time_played`] ?? 0) * 60_000;
+    this.witherDamage = data[`${prefix}wither_damage`];
+    this.witherKills = data[`${prefix}wither_kills`];
 
-    this.points = data[`${kit}class_points`];
+    this.points = data[`${prefix}class_points`];
 
     MegaWallsKit.applyRatios(this);
   }

@@ -78,20 +78,20 @@ export class BedWarsMode {
   public itemsCollected: BedWarsModeItemsCollected;
 
   public constructor(data: APIData, mode: string) {
-    mode = mode ? `${mode}_` : mode;
+    const prefix = mode ? `${mode}_` : mode;
 
-    this.winstreak = data[`${mode}winstreak`];
-    this.gamesPlayed = data[`${mode}games_played_bedwars`];
-    this.kills = data[`${mode}kills_bedwars`];
-    this.deaths = data[`${mode}deaths_bedwars`];
-    this.wins = data[`${mode}wins_bedwars`];
-    this.losses = data[`${mode}losses_bedwars`];
-    this.finalKills = data[`${mode}final_kills_bedwars`];
-    this.finalDeaths = data[`${mode}final_deaths_bedwars`];
-    this.bedsBroken = data[`${mode}beds_broken_bedwars`];
-    this.bedsLost = data[`${mode}beds_lost_bedwars`];
+    this.winstreak = data[`${prefix}winstreak`];
+    this.gamesPlayed = data[`${prefix}games_played_bedwars`];
+    this.kills = data[`${prefix}kills_bedwars`];
+    this.deaths = data[`${prefix}deaths_bedwars`];
+    this.wins = data[`${prefix}wins_bedwars`];
+    this.losses = data[`${prefix}losses_bedwars`];
+    this.finalKills = data[`${prefix}final_kills_bedwars`];
+    this.finalDeaths = data[`${prefix}final_deaths_bedwars`];
+    this.bedsBroken = data[`${prefix}beds_broken_bedwars`];
+    this.bedsLost = data[`${prefix}beds_lost_bedwars`];
 
-    this.itemsCollected = new BedWarsModeItemsCollected(data, mode);
+    this.itemsCollected = new BedWarsModeItemsCollected(data, prefix);
 
     BedWarsMode.applyRatios(this);
   }

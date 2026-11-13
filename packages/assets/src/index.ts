@@ -22,8 +22,8 @@ const inferAssetSource = (file: string): AssetSource =>
   HAS_PRIVATE_ASSETS && existsSync(join(PRIVATE_ASSETS_PATH, file)) ? "private" : "public";
 
 export const getAssetPath = (path: string, source?: AssetSource) => {
-  source ??= inferAssetSource(path);
-  return join(ASSETS_PATH, source, path);
+  const assetSource = source ?? inferAssetSource(path);
+  return join(ASSETS_PATH, assetSource, path);
 }
 
 const getImage = (path: string) => loadImage(getAssetPath(path));

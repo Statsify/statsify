@@ -83,10 +83,11 @@ export class FontRenderer {
   public fillText(
     ctx: CanvasRenderingContext2D,
     nodes: TextNode[],
-    x: number,
+    startX: number,
     y: number
   ) {
     const largestSize = Math.max(...nodes.map((node) => node.size));
+    let x = startX;
 
     for (const {
       text,
@@ -306,8 +307,8 @@ export class FontRenderer {
   private fillFormattedCharacter(
     ctx: CanvasRenderingContext2D,
     imageData: ImageData,
-    x: number,
-    y: number,
+    startX: number,
+    startY: number,
     width: number,
     scale: number,
     size: number,
@@ -319,6 +320,8 @@ export class FontRenderer {
     isAscii: boolean,
     isShadow: boolean
   ) {
+    let x = startX;
+    let y = startY;
     let characterX = x;
     let characterY = y;
 

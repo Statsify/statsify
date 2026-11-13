@@ -11,16 +11,16 @@ export type RGB = [number, number, number];
 export type RGBA = [number, number, number, number];
 
 export const hexToRgb = (hex: string): RGB => {
-  hex = hex.replace("#", "");
+  const digits = hex.replace("#", "");
 
-  const r = Number.parseInt(hex.slice(0, 2), 16);
-  const g = Number.parseInt(hex.slice(2, 4), 16);
-  const b = Number.parseInt(hex.slice(4, 6), 16);
+  const r = Number.parseInt(digits.slice(0, 2), 16);
+  const g = Number.parseInt(digits.slice(2, 4), 16);
+  const b = Number.parseInt(digits.slice(4, 6), 16);
 
   const color = [r, g, b];
 
-  if (hex.length === 8) {
-    const a = Number.parseInt(hex.slice(6, 8), 16);
+  if (digits.length === 8) {
+    const a = Number.parseInt(digits.slice(6, 8), 16);
     color.push(a / 256);
   }
 

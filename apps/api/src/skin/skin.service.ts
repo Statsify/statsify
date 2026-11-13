@@ -52,13 +52,13 @@ export class SkinService {
   }
 
   public async getSkin(tag: string): Promise<Skin> {
-    tag = tag.replaceAll("-", "").toLowerCase();
-    const isUsername = tag.length <= 16;
+    const normalizedTag = tag.replaceAll("-", "").toLowerCase();
+    const isUsername = normalizedTag.length <= 16;
 
     const cachedSkin = await this.skinModel
       .findOne()
       .where(isUsername ? "usernameToLower" : "uuid")
-      .equals(tag)
+      .equals(normalizedTag)
       .lean()
       .exec();
 
@@ -66,7 +66,7 @@ export class SkinService {
       return cachedSkin;
     }
 
-    const uuid = isUsername ? await this.getUuid(tag) : tag;
+    const uuid = isUsername ? await this.getUuid(normalizedTag) : normalizedTag;
 
     const skin = await this.requestSkin(uuid).catch((error) => {
       if (cachedSkin) return cachedSkin;

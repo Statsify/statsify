@@ -33,14 +33,14 @@ export class UHCMode {
   public extraUltimates: number;
 
   public constructor(data: APIData, mode: string) {
-    mode = mode ? `_${mode}` : mode;
+    const suffix = mode ? `_${mode}` : mode;
 
-    this.wins = data[`wins${mode}`];
-    this.kills = data[`kills${mode}`];
-    this.deaths = data[`deaths${mode}`];
-    this.headsEaten = data[`heads_eaten${mode}`];
-    this.extraUltimates = data[`extra_ultimates_crafted${mode}`];
-    this.ultimatesCrafted = data[`ultimates_crafted${mode}`];
+    this.wins = data[`wins${suffix}`];
+    this.kills = data[`kills${suffix}`];
+    this.deaths = data[`deaths${suffix}`];
+    this.headsEaten = data[`heads_eaten${suffix}`];
+    this.extraUltimates = data[`extra_ultimates_crafted${suffix}`];
+    this.ultimatesCrafted = data[`ultimates_crafted${suffix}`];
 
     UHCMode.applyRatios(this);
   }

@@ -12,29 +12,26 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx,
   {
     color = Box.DEFAULT_COLOR,
-    border,
-    shadowDistance,
+    border: baseBorder,
+    shadowDistance: fullShadowDistance,
     shadowOpacity = Box.SHADOW_OPACITY,
     outline,
     outlineSize,
   },
-  { x, y, width, height, padding }
+  { x: startX, y: startY, width: contentWidth, height: contentHeight, padding }
 ) => {
-  const fill = Box.resolveFill(color, ctx, x, y, width, height);
+  const fill = Box.resolveFill(color, ctx, startX, startY, contentWidth, contentHeight);
   ctx.fillStyle = fill;
-
-  width = width + padding.left + padding.right;
-  height = height + padding.top + padding.bottom;
 
   /**
    * Prevent Anti Aliasing
    */
-  x = Math.round(x) - 1;
-  y = Math.round(y) - 1;
-  width = Math.round(width) + 2;
-  height = Math.round(height) + 2;
+  const x = Math.round(startX) - 1;
+  const y = Math.round(startY) - 1;
+  const width = Math.round(contentWidth + padding.left + padding.right) + 2;
+  const height = Math.round(contentHeight + padding.top + padding.bottom) + 2;
 
-  border = { ...border };
+  const border = { ...baseBorder };
 
   border.bottomLeft /= 2;
   border.bottomRight /= 2;
@@ -79,8 +76,8 @@ export const render: Render<Box.BoxRenderProps> = (
   }
 
   const shadowAlpha = shadowOpacity - 0.3;
-  if (!shadowDistance || shadowAlpha <= 0) return;
-  shadowDistance /= 2;
+  if (!fullShadowDistance || shadowAlpha <= 0) return;
+  const shadowDistance = fullShadowDistance / 2;
 
   ctx.globalAlpha = shadowAlpha;
   ctx.fillStyle = fill;

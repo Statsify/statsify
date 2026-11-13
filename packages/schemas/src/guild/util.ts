@@ -20,19 +20,20 @@ export const getLevel = (exp: number) => {
   if (!exp) return { level: 0, current: 0, max: REQUIRED_GEXP[0] };
 
   let level = 0;
+  let remainingExp = exp;
 
   for (let i = 0; i <= 1000; i += 1) {
     const need = i >= REQUIRED_GEXP.length ? REQUIRED_GEXP.at(-1)! : REQUIRED_GEXP[i];
 
-    if (exp - need < 0)
+    if (remainingExp - need < 0)
       return {
-        level: Math.round((level + exp / need) * 100) / 100,
-        current: Math.round(exp),
+        level: Math.round((level + remainingExp / need) * 100) / 100,
+        current: Math.round(remainingExp),
         max: Math.round(need),
       };
 
     level += 1;
-    exp -= need;
+    remainingExp -= need;
   }
 
   return { level: 1000, current: 0, max: 1 };

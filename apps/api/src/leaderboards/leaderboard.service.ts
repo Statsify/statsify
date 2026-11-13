@@ -282,11 +282,11 @@ export abstract class LeaderboardService {
     });
 
     const name = constructor.name.toLowerCase();
-    field = `${name}.${field}`;
+    const key = `${name}.${field}`;
 
     const scores = await (sort === "ASC" ?
-      this.redis.zrange(field, top, bottom, "WITHSCORES") :
-      this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
+      this.redis.zrange(key, top, bottom, "WITHSCORES") :
+      this.redis.zrevrange(key, top, bottom, "WITHSCORES"));
 
     child?.finish();
 

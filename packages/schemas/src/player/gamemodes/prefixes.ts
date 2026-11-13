@@ -91,9 +91,9 @@ export const getFormattedPrefix = <T extends unknown[] = []>({
   abbreviation = true,
   prefixParams = [] as unknown as T,
 }: FormatPrefixOptions<T>) => {
-  score = score ?? 0;
+  const playerScore = score ?? 0;
 
-  let prefixIndex = findScoreIndex(prefixes, score);
+  let prefixIndex = findScoreIndex(prefixes, playerScore);
 
   if (skip) prefixIndex = Math.min(prefixIndex + 1, prefixes.length - 1);
 
@@ -102,13 +102,13 @@ export const getFormattedPrefix = <T extends unknown[] = []>({
   if ("title" in prefix) return prefix.fmt(prefix.title, ...prefixParams);
 
   if (!abbreviation)
-    return prefix.fmt(`${trueScore ? Math.floor(score) : prefix.req}`, ...prefixParams);
+    return prefix.fmt(`${trueScore ? Math.floor(playerScore) : prefix.req}`, ...prefixParams);
 
   const [prefixNumber, prefixSuffix] = abbreviationNumber(prefix.req);
 
   if (!trueScore) return prefix.fmt(`${prefixNumber}${prefixSuffix}`, ...prefixParams);
 
-  let [number, suffix] = abbreviationNumber(score);
+  let [number, suffix] = abbreviationNumber(playerScore);
 
   number = Math.floor(number);
 

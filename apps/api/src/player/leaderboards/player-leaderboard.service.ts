@@ -29,16 +29,18 @@ export class PlayerLeaderboardService extends LeaderboardService {
   }
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
+    let uuid = input;
+
     if (input.length <= 16) {
       const player = await this.playerService.get(input, CacheLevel.CACHE_ONLY, {
         uuid: true,
       });
 
       if (!player) throw new PlayerNotFoundException();
-      input = player.uuid;
+      uuid = player.uuid;
     }
 
-    const ranking = await this.getLeaderboardRankings(Player, [field], input);
+    const ranking = await this.getLeaderboardRankings(Player, [field], uuid);
 
     if (!ranking || !ranking[0] || !ranking[0].rank) throw new PlayerNotFoundException();
 

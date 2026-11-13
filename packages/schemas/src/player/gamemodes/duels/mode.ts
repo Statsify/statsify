@@ -291,8 +291,8 @@ export class SingleBowPVPDuelsGameMode extends SinglePVPDuelsGameMode {
     titleRequirement: TitleRequirement,
   ) {
     super(data, title, mode, titleRequirement);
-    mode = mode ? `${mode}_` : mode;
-    this.shotsFired = data[`${mode}bow_shots`];
+    const prefix = mode ? `${mode}_` : mode;
+    this.shotsFired = data[`${prefix}bow_shots`];
   }
 }
 

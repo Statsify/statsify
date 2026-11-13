@@ -58,9 +58,9 @@ const PRESTIGE_COLORS: { req: number; format: (level: number) => string }[] = [
 ];
 
 export const getFormattedLevel = (star: number): string => {
-  star = Math.floor(star);
+  const wholeStar = Math.floor(star);
 
-  const { format } = findScore(PRESTIGE_COLORS, star);
+  const { format } = findScore(PRESTIGE_COLORS, wholeStar);
 
-  return format(star);
+  return format(wholeStar);
 };
