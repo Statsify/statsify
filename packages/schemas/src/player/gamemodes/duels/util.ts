@@ -71,21 +71,37 @@ export const prefixRequirementScores: Record<TitleRequirement, GamePrefix[]> = {
   half: getPrefixes(halfTitleScores),
 };
 
-export const getTitleAndProgression = ({
-  score,
-  mode,
-  data,
-  titleRequirement,
-}: {
+export interface TitleOptions {
   score: number;
   mode: string;
-  data: APIData;
+  /** Hypixel's `active_prefix_icon` */
+  icon?: string;
+  /** Hypixel's `active_prefix_scheme` */
+  scheme?: string;
   titleRequirement: TitleRequirement;
-}) => {
+}
+
+export const getTitleAndProgression = ({
+  data,
+  ...options
+}: Omit<TitleOptions, "icon" | "scheme"> & { data: APIData }) => ({
+  ...getTitles({ ...options, icon: data.active_prefix_icon, scheme: data.active_prefix_scheme }),
+  progression: createPrefixProgression(
+    prefixRequirementScores[options.titleRequirement],
+    options.score
+  ),
+});
+
+export const getTitles = ({
+  score,
+  mode,
+  icon: activeIcon,
+  scheme: activeScheme,
+  titleRequirement,
+}: TitleOptions) => {
   mode = mode ? `${mode} ` : mode;
 
   const titleScores = titleRequirementScores[titleRequirement];
-  const prefixScores = prefixRequirementScores[titleRequirement];
 
   const index = findScoreIndex(titleScores, score);
   const { req, step, title, max, defaultColor, bold } = titleScores[index];
@@ -93,12 +109,12 @@ export const getTitleAndProgression = ({
   const remaining = score - req;
   const division = Math.min(max, (step ? Math.floor(remaining / step) : step) + 1);
 
-  const iconKey = data.active_prefix_icon?.replace("prefix_icon_", "");
-  const schemeKey = data.active_prefix_scheme?.replace("prefix_scheme_", "");
+  const iconKey = activeIcon?.replace("prefix_icon_", "");
+  const schemeKey = activeScheme?.replace("prefix_scheme_", "");
 
-  const icon = iconKey in ICON_MAP ? ICON_MAP[iconKey as keyof typeof ICON_MAP] : ICON_MAP.none;
+  const icon = iconKey && iconKey in ICON_MAP ? ICON_MAP[iconKey as keyof typeof ICON_MAP] : ICON_MAP.none;
 
-  const scheme = schemeKey in SCHEME_MAP ?
+  const scheme = schemeKey && schemeKey in SCHEME_MAP ?
     SCHEME_MAP[schemeKey as keyof typeof SCHEME_MAP] :
     SCHEME_MAP.default;
 
@@ -114,14 +130,8 @@ export const getTitleAndProgression = ({
   }
 
   const nextTitleLevelFormatted = scheme.level(romanNumeral(nextDivision), bold, nextDefaultColor);
-  const progression = createPrefixProgression(prefixScores, score);
 
-  return {
-    titleFormatted,
-    titleLevelFormatted,
-    nextTitleLevelFormatted,
-    progression,
-  };
+  return { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted };
 };
 
 // removed prefix_icon_ from each icon name

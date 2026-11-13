@@ -9,9 +9,9 @@
 import { BedsStats, FinalKillsStats, KillsStats, WinsStats } from "../common.js";
 import { FormattedGame } from "#game";
 import { createPrefixProgression } from "#prefixes";
-import { type NumberSchema, type Ref, s } from "#definition/s";
+import { type NumberSchema, type Ref, type Refs, type StringSchema, s } from "#definition/s";
 import { ProgressionSchema } from "../../../progression.definition.js";
-import { type TitleRequirement, getTitleAndProgression, prefixRequirementScores } from "./util.js";
+import { type TitleRequirement, getTitles, prefixRequirementScores } from "./util.js";
 import { add, deepAdd } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 import { formats } from "#definition/format";
@@ -35,111 +35,137 @@ export type BaseDuelsGameMode = s.infer<typeof BaseSchema>;
 export type PVPBaseDuelsGameMode = s.infer<typeof PVPBaseSchema>;
 export type BowPVPBaseDuelsGameMode = s.infer<typeof BowPVPBaseSchema>;
 
-// The titles also read the prefix icon and scheme beside the modes, which a computed field can't reach
-const TitleStats = s.fields({
-  titleFormatted: s.string(),
-  titleLevelFormatted: s.string(),
-  nextTitleLevelFormatted: s.string(),
+/** The prefix icon and scheme the player picked, which draw every mode's title */
+interface TitlePrefix {
+  icon: Ref<StringSchema>;
+  scheme: Ref<StringSchema>;
+}
+
+/** Builds a mode's title fields from the wins that earn them */
+const titleFields = (mode: string, titleRequirement: TitleRequirement, { icon, scheme }: TitlePrefix) => {
+  const title = (pick: keyof ReturnType<typeof getTitles>) => (score: Ref<NumberSchema>) =>
+    s
+      .string()
+      .computed(
+        (score, icon, scheme) => getTitles({ score, mode, icon, scheme, titleRequirement })[pick],
+        [score, icon, scheme]
+      );
+
+  return {
+    titleFormatted: title("titleFormatted"),
+    titleLevelFormatted: title("titleLevelFormatted"),
+    nextTitleLevelFormatted: title("nextTitleLevelFormatted"),
+    progression: (score: Ref<NumberSchema>) =>
+      ProgressionSchema.computed(
+        (score) => createPrefixProgression(prefixRequirementScores[titleRequirement], score),
+        [score]
+      ),
+  };
+};
+
+type Titles = ReturnType<typeof titleFields>;
+
+/** A mode's title fields, from the wins `score` picks out of the mode */
+const titleStats = <Mode>(titles: Titles, score: (mode: Mode) => Ref<NumberSchema>) => ({
+  titleFormatted(this: Mode) {
+    return titles.titleFormatted(score(this));
+  },
+  titleLevelFormatted(this: Mode) {
+    return titles.titleLevelFormatted(score(this));
+  },
+  nextTitleLevelFormatted(this: Mode) {
+    return titles.nextTitleLevelFormatted(score(this));
+  },
+  progression(this: Mode) {
+    return titles.progression(score(this));
+  },
 });
 
-const SingleTitleStats = s.fields({ ...TitleStats, titleFormatted: s.string().default("§7None§r") });
+type ModeRefs = Refs<typeof BaseStats>;
 
-const titleProgression = (titleRequirement: TitleRequirement, score: Ref<NumberSchema>) =>
-  ProgressionSchema.computed(
-    (score) => createPrefixProgression(prefixRequirementScores[titleRequirement], score),
-    [score]
-  );
+const overallWins = (mode: Refs<{ overall: typeof BaseSchema }>) => mode.overall.wins;
 
-const singleStats = (titleRequirement: TitleRequirement) =>
-  s.fields({
-    ...BaseStats,
-    ...SingleTitleStats,
-    progression() {
-      return titleProgression(titleRequirement, this.wins);
-    },
-  });
+const singleTitleStats = (titles: Titles) => ({
+  ...titleStats(titles, (mode: ModeRefs) => mode.wins),
+  titleFormatted(this: ModeRefs) {
+    return titles.titleFormatted(this.wins).default("§7None§r");
+  },
+});
 
-const singlePVPStats = (titleRequirement: TitleRequirement) =>
-  s.fields({
-    ...PVPBaseStats,
-    ...SingleTitleStats,
-    progression() {
-      return titleProgression(titleRequirement, this.wins);
-    },
-  });
+const singleStats = (titles: Titles) => s.fields({ ...BaseStats, ...singleTitleStats(titles) });
 
-const singleBowPVPStats = (titleRequirement: TitleRequirement) =>
-  s.fields({ ...singlePVPStats(titleRequirement), shotsFired: s.number().color("§6") });
+const singlePVPStats = (titles: Titles) => s.fields({ ...PVPBaseStats, ...singleTitleStats(titles) });
 
-const singleSchema = (titleRequirement: TitleRequirement) => s.object(singleStats(titleRequirement));
-const singlePVPSchema = (titleRequirement: TitleRequirement) => s.object(singlePVPStats(titleRequirement));
-const singleBowPVPSchema = (titleRequirement: TitleRequirement) =>
-  s.object(singleBowPVPStats(titleRequirement));
+const singleBowPVPStats = (titles: Titles) =>
+  s.fields({ ...singlePVPStats(titles), shotsFired: s.number().color("§6") });
+
+const singleSchema = (titles: Titles) => s.object(singleStats(titles));
+const singlePVPSchema = (titles: Titles) => s.object(singlePVPStats(titles));
+const singleBowPVPSchema = (titles: Titles) => s.object(singleBowPVPStats(titles));
 
 export type SingleDuelsGameMode = s.infer<ReturnType<typeof singleSchema>>;
 export type SinglePVPDuelsGameMode = s.infer<ReturnType<typeof singlePVPSchema>>;
 export type SingleBowPVPDuelsGameMode = s.infer<ReturnType<typeof singleBowPVPSchema>>;
 
-const ArenaSchema = s.object({ ...singleStats("default"), shotsFired: s.number().color("§6") });
+const arenaSchema = (titles: Titles) =>
+  s.object({ ...singleStats(titles), shotsFired: s.number().color("§6") });
 
-const BlitzSGSchema = s.object({ ...singleBowPVPStats("default"), kit: s.string().default("none") });
+const blitzSGSchema = (titles: Titles) =>
+  s.object({ ...singleBowPVPStats(titles), kit: s.string().default("none") });
 
-const QuakeSchema = s.object({
-  ...singlePVPStats("default"),
-  headshots: s.number().color("§3"),
-  shotsFired: s.number().color("§6"),
-});
+const quakeSchema = (titles: Titles) =>
+  s.object({
+    ...singlePVPStats(titles),
+    headshots: s.number().color("§3"),
+    shotsFired: s.number().color("§6"),
+  });
 
-const ParkourSchema = s.object({
-  ...singleStats("half"),
-  checkpoints: s.number().color("§5"),
-  bestTime: s.number().color("§d").format(formats.time).leaderboard({ sort: "ASC" }),
-});
+const parkourSchema = (titles: Titles) =>
+  s.object({
+    ...singleStats(titles),
+    checkpoints: s.number().color("§5"),
+    bestTime: s.number().color("§d").format(formats.time).leaderboard({ sort: "ASC" }),
+  });
 
-const MultiPVPStats = s.fields({
-  ...TitleStats,
-  progression() {
-    return titleProgression("default", this.overall.wins);
-  },
-  overall: BowPVPBaseSchema,
-  solo: BowPVPBaseSchema,
-  doubles: BowPVPBaseSchema,
-});
+const multiPVPStats = (titles: Titles) =>
+  s.fields({
+    ...titleStats(titles, overallWins),
+    overall: BowPVPBaseSchema,
+    solo: BowPVPBaseSchema,
+    doubles: BowPVPBaseSchema,
+  });
 
-const MultiPVPSchema = s.object(MultiPVPStats);
+const multiPVPSchema = (titles: Titles) => s.object(multiPVPStats(titles));
 
-export type MultiPVPDuelsGameMode = s.infer<typeof MultiPVPSchema>;
+export type MultiPVPDuelsGameMode = s.infer<ReturnType<typeof multiPVPSchema>>;
 
-const SkyWarsDuelsSchema = s.object({ ...MultiPVPStats, kit: s.string().default("none") });
+const skyWarsDuelsSchema = (titles: Titles) =>
+  s.object({ ...multiPVPStats(titles), kit: s.string().default("none") });
 
-const UHCDuelsSchema = s.object({
-  ...TitleStats,
-  progression() {
-    return titleProgression("default", this.overall.wins);
-  },
-  overall: BowPVPBaseSchema,
-  solo: BowPVPBaseSchema,
-  doubles: BowPVPBaseSchema,
-  fours: BowPVPBaseSchema,
-  deathmatch: BowPVPBaseSchema,
-  gapplesEaten: s.number(),
-});
+const uhcDuelsSchema = (titles: Titles) =>
+  s.object({
+    ...titleStats(titles, overallWins),
+    overall: BowPVPBaseSchema,
+    solo: BowPVPBaseSchema,
+    doubles: BowPVPBaseSchema,
+    fours: BowPVPBaseSchema,
+    deathmatch: BowPVPBaseSchema,
+    gapplesEaten: s.number(),
+  });
 
 const BridgeModeSchema = s.object({ ...BowPVPBaseStats, goals: s.number().color("§e") });
 
 export type BridgeDuelsMode = s.infer<typeof BridgeModeSchema>;
 
-const BridgeDuelsSchema = s.object({
-  ...TitleStats,
-  progression() {
-    return titleProgression("half", this.overall.wins);
-  },
-  overall: BridgeModeSchema,
-  solo: BridgeModeSchema,
-  doubles: BridgeModeSchema,
-  threes: BridgeModeSchema,
-  fours: BridgeModeSchema,
-});
+const bridgeDuelsSchema = (titles: Titles) =>
+  s.object({
+    ...titleStats(titles, overallWins),
+    overall: BridgeModeSchema,
+    solo: BridgeModeSchema,
+    doubles: BridgeModeSchema,
+    threes: BridgeModeSchema,
+    fours: BridgeModeSchema,
+  });
 
 const BedWarsDuelsOverallSchema = s.object({
   bestWinstreak: s.number().color("§e"),
@@ -153,28 +179,24 @@ const BedWarsDuelsOverallSchema = s.object({
 
 export type BedWarsDuelsOverallMode = s.infer<typeof BedWarsDuelsOverallSchema>;
 
-const BedWarsDuelsSchema = s.object({
-  ...TitleStats,
-  progression() {
-    return titleProgression("default", this.overall.wins);
-  },
-  overall: BedWarsDuelsOverallSchema.leaderboard({ name: "BedWars Overall" }),
-  bedwars: PVPBaseSchema.leaderboard({ name: "BedWars Duel" }),
-  rush: PVPBaseSchema.leaderboard({ name: "Bed Rush" }),
-});
+const bedWarsDuelsSchema = (titles: Titles) =>
+  s.object({
+    ...titleStats(titles, overallWins),
+    overall: BedWarsDuelsOverallSchema.leaderboard({ name: "BedWars Overall" }),
+    bedwars: PVPBaseSchema.leaderboard({ name: "BedWars Duel" }),
+    rush: PVPBaseSchema.leaderboard({ name: "Bed Rush" }),
+  });
 
 const SpleefModeSchema = s.object({ ...BaseStats, blocksBroken: s.number().color("§b") });
 const BowSpleefModeSchema = s.object({ ...BaseStats, shotsFired: s.number().color("§6") });
 
-const SpleefDuelsSchema = s.object({
-  ...TitleStats,
-  progression() {
-    return titleProgression("default", this.overallWins);
-  },
-  overallWins: s.number().leaderboard({ name: "Spleef Overall Wins", fieldName: "Wins" }),
-  spleef: SpleefModeSchema.leaderboard({ fieldName: "Spleef" }),
-  bowSpleef: BowSpleefModeSchema,
-});
+const spleefDuelsSchema = (titles: Titles) =>
+  s.object({
+    ...titleStats(titles, (spleef: Refs<{ overallWins: NumberSchema }>) => spleef.overallWins),
+    overallWins: s.number().leaderboard({ name: "Spleef Overall Wins", fieldName: "Wins" }),
+    spleef: SpleefModeSchema.leaderboard({ fieldName: "Spleef" }),
+    bowSpleef: BowSpleefModeSchema,
+  });
 
 export const DuelsSchema = s
   .object({
@@ -182,44 +204,105 @@ export const DuelsSchema = s
     tokens() {
       return s.number().color("§2").leaderboard({ extraDisplay: this.overall.titleFormatted });
     },
-    overall: singleBowPVPSchema("overall").leaderboard((overall) => ({
-      extraDisplay: overall.titleFormatted,
-    })),
-    arena: ArenaSchema.leaderboard((arena) => ({ extraDisplay: arena.titleFormatted })),
-    blitzsg: BlitzSGSchema.leaderboard((blitzsg) => ({
-      fieldName: "BlitzSG",
-      extraDisplay: blitzsg.titleFormatted,
-    })),
-    bow: singleBowPVPSchema("default").leaderboard((bow) => ({ extraDisplay: bow.titleFormatted })),
-    boxing: singlePVPSchema("half").leaderboard((boxing) => ({ extraDisplay: boxing.titleFormatted })),
-    bridge: BridgeDuelsSchema.leaderboard((bridge) => ({ extraDisplay: bridge.titleFormatted })),
-    bedwars: BedWarsDuelsSchema.leaderboard((bedwars) => ({
-      name: "",
-      extraDisplay: bedwars.titleFormatted,
-    })),
-    classic: MultiPVPSchema.leaderboard((classic) => ({ extraDisplay: classic.titleFormatted })),
-    combo: singlePVPSchema("default").leaderboard((combo) => ({ extraDisplay: combo.titleFormatted })),
-    megawalls: singlePVPSchema("half").leaderboard((megawalls) => ({
-      fieldName: "MegaWalls",
-      extraDisplay: megawalls.titleFormatted,
-    })),
-    nodebuff: singlePVPSchema("half").leaderboard((nodebuff) => ({
-      fieldName: "NoDebuff",
-      extraDisplay: nodebuff.titleFormatted,
-    })),
-    op: MultiPVPSchema.leaderboard((op) => ({ fieldName: "OP", extraDisplay: op.titleFormatted })),
-    parkour: ParkourSchema.leaderboard((parkour) => ({ extraDisplay: parkour.titleFormatted })),
-    quake: QuakeSchema.leaderboard((quake) => ({ extraDisplay: quake.titleFormatted })),
-    skywars: SkyWarsDuelsSchema.leaderboard((skywars) => ({
-      fieldName: "SkyWars",
-      extraDisplay: skywars.titleFormatted,
-    })),
-    spleef: SpleefDuelsSchema.leaderboard((spleef) => ({
-      fieldName: "",
-      extraDisplay: spleef.titleFormatted,
-    })),
-    sumo: singlePVPSchema("default").leaderboard((sumo) => ({ extraDisplay: sumo.titleFormatted })),
-    uhc: UHCDuelsSchema.leaderboard((uhc) => ({ fieldName: "UHC", extraDisplay: uhc.titleFormatted })),
+    // Each mode is built in a method so its titles can read the prefix icon and scheme below
+    overall() {
+      return singleBowPVPSchema(titleFields("", "overall", this)).leaderboard((overall) => ({
+        extraDisplay: overall.titleFormatted,
+      }));
+    },
+    arena() {
+      return arenaSchema(titleFields("Arena", "default", this)).leaderboard((arena) => ({
+        extraDisplay: arena.titleFormatted,
+      }));
+    },
+    blitzsg() {
+      return blitzSGSchema(titleFields("Blitz", "default", this)).leaderboard((blitzsg) => ({
+        fieldName: "BlitzSG",
+        extraDisplay: blitzsg.titleFormatted,
+      }));
+    },
+    bow() {
+      return singleBowPVPSchema(titleFields("Bow", "default", this)).leaderboard((bow) => ({
+        extraDisplay: bow.titleFormatted,
+      }));
+    },
+    boxing() {
+      return singlePVPSchema(titleFields("Boxing", "half", this)).leaderboard((boxing) => ({
+        extraDisplay: boxing.titleFormatted,
+      }));
+    },
+    bridge() {
+      return bridgeDuelsSchema(titleFields("Bridge", "half", this)).leaderboard((bridge) => ({
+        extraDisplay: bridge.titleFormatted,
+      }));
+    },
+    bedwars() {
+      return bedWarsDuelsSchema(titleFields("Bed Wars", "default", this)).leaderboard((bedwars) => ({
+        name: "",
+        extraDisplay: bedwars.titleFormatted,
+      }));
+    },
+    classic() {
+      return multiPVPSchema(titleFields("Classic", "default", this)).leaderboard((classic) => ({
+        extraDisplay: classic.titleFormatted,
+      }));
+    },
+    combo() {
+      return singlePVPSchema(titleFields("Combo", "default", this)).leaderboard((combo) => ({
+        extraDisplay: combo.titleFormatted,
+      }));
+    },
+    megawalls() {
+      return singlePVPSchema(titleFields("Mega Walls", "half", this)).leaderboard((megawalls) => ({
+        fieldName: "MegaWalls",
+        extraDisplay: megawalls.titleFormatted,
+      }));
+    },
+    nodebuff() {
+      return singlePVPSchema(titleFields("NoDebuff", "half", this)).leaderboard((nodebuff) => ({
+        fieldName: "NoDebuff",
+        extraDisplay: nodebuff.titleFormatted,
+      }));
+    },
+    op() {
+      return multiPVPSchema(titleFields("OP", "default", this)).leaderboard((op) => ({
+        fieldName: "OP",
+        extraDisplay: op.titleFormatted,
+      }));
+    },
+    parkour() {
+      return parkourSchema(titleFields("Parkour", "half", this)).leaderboard((parkour) => ({
+        extraDisplay: parkour.titleFormatted,
+      }));
+    },
+    quake() {
+      return quakeSchema(titleFields("Quakecraft", "default", this)).leaderboard((quake) => ({
+        extraDisplay: quake.titleFormatted,
+      }));
+    },
+    skywars() {
+      return skyWarsDuelsSchema(titleFields("SkyWars", "default", this)).leaderboard((skywars) => ({
+        fieldName: "SkyWars",
+        extraDisplay: skywars.titleFormatted,
+      }));
+    },
+    spleef() {
+      return spleefDuelsSchema(titleFields("Spleef", "default", this)).leaderboard((spleef) => ({
+        fieldName: "",
+        extraDisplay: spleef.titleFormatted,
+      }));
+    },
+    sumo() {
+      return singlePVPSchema(titleFields("Sumo", "default", this)).leaderboard((sumo) => ({
+        extraDisplay: sumo.titleFormatted,
+      }));
+    },
+    uhc() {
+      return uhcDuelsSchema(titleFields("UHC", "default", this)).leaderboard((uhc) => ({
+        fieldName: "UHC",
+        extraDisplay: uhc.titleFormatted,
+      }));
+    },
     scheme: s.string(),
     icon: s.string(),
   })
@@ -230,17 +313,6 @@ export type Duels = s.infer<typeof DuelsSchema>;
 type BaseInput = s.input<typeof BaseSchema>;
 type PVPBaseInput = s.input<typeof PVPBaseSchema>;
 type BowPVPBaseInput = s.input<typeof BowPVPBaseSchema>;
-
-function titles(data: APIData, score: number | undefined, mode: string, titleRequirement: TitleRequirement) {
-  const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted } = getTitleAndProgression({
-    score: score ?? 0,
-    mode,
-    data,
-    titleRequirement,
-  });
-
-  return { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted };
-}
 
 function baseMode(data: APIData, mode: string): BaseInput {
   const prefix = mode ? `${mode}_` : mode;
@@ -267,7 +339,8 @@ function pvpBaseMode(data: APIData, mode: string): PVPBaseInput {
 }
 
 function bowPVPBaseMode(data: APIData, mode: string): BowPVPBaseInput {
-  return { ...pvpBaseMode(data, mode), shotsFired: data[`${mode}_bow_shots`] };
+  const prefix = mode ? `${mode}_` : mode;
+  return { ...pvpBaseMode(data, mode), shotsFired: data[`${prefix}bow_shots`] };
 }
 
 function bridgeMode(data: APIData, mode: string): s.input<typeof BridgeModeSchema> {
@@ -279,43 +352,11 @@ function bridgeMode(data: APIData, mode: string): s.input<typeof BridgeModeSchem
   };
 }
 
-function singlePVPMode(
-  data: APIData,
-  title: string,
-  mode: string,
-  titleRequirement: TitleRequirement
-): s.input<ReturnType<typeof singlePVPSchema>> {
-  const stats = pvpBaseMode(data, mode);
-  return { ...stats, ...titles(data, stats.wins, title, titleRequirement) };
-}
-
-function singleBowPVPMode(
-  data: APIData,
-  title: string,
-  mode: string,
-  titleRequirement: TitleRequirement
-): s.input<ReturnType<typeof singleBowPVPSchema>> {
-  const prefix = mode ? `${mode}_` : mode;
-  return { ...singlePVPMode(data, title, mode, titleRequirement), shotsFired: data[`${prefix}bow_shots`] };
-}
-
-function singleMode(
-  data: APIData,
-  title: string,
-  mode: string,
-  titleRequirement: TitleRequirement
-): s.input<ReturnType<typeof singleSchema>> {
-  const stats = baseMode(data, mode);
-  return { ...stats, ...titles(data, stats.wins, title, titleRequirement) };
-}
-
 function multiPVPMode(
   data: APIData,
-  title: string,
   short: string,
-  long: string,
-  titleRequirement: TitleRequirement
-): s.input<typeof MultiPVPSchema> {
+  long: string
+): s.input<ReturnType<typeof multiPVPSchema>> {
   const solo = bowPVPBaseMode(data, `${short}_duel`);
   const doubles = bowPVPBaseMode(data, `${short}_doubles`);
 
@@ -325,10 +366,10 @@ function multiPVPMode(
     winstreak: data[`current_${long}_winstreak`],
   };
 
-  return { ...titles(data, overall.wins, title, titleRequirement), overall, solo, doubles };
+  return { overall, solo, doubles };
 }
 
-function uhcDuels(data: APIData): s.input<typeof UHCDuelsSchema> {
+function uhcDuels(data: APIData): s.input<ReturnType<typeof uhcDuelsSchema>> {
   const solo = bowPVPBaseMode(data, "uhc_duel");
   const doubles = bowPVPBaseMode(data, "uhc_doubles");
   const fours = bowPVPBaseMode(data, "uhc_four");
@@ -341,7 +382,6 @@ function uhcDuels(data: APIData): s.input<typeof UHCDuelsSchema> {
   };
 
   return {
-    ...titles(data, overall.wins, "UHC", "default"),
     overall,
     solo,
     doubles,
@@ -355,7 +395,7 @@ function uhcDuels(data: APIData): s.input<typeof UHCDuelsSchema> {
   };
 }
 
-function bridgeDuels(data: APIData): s.input<typeof BridgeDuelsSchema> {
+function bridgeDuels(data: APIData): s.input<ReturnType<typeof bridgeDuelsSchema>> {
   const solo = bridgeMode(data, "bridge_duel");
   const doubles = bridgeMode(data, "bridge_doubles");
   const threes = bridgeMode(data, "bridge_threes");
@@ -375,10 +415,10 @@ function bridgeDuels(data: APIData): s.input<typeof BridgeDuelsSchema> {
     bestWinstreak: data.best_bridge_winstreak,
   };
 
-  return { ...titles(data, overall.wins, "Bridge", "half"), overall, solo, doubles, threes, fours };
+  return { overall, solo, doubles, threes, fours };
 }
 
-function bedWarsDuels(data: APIData): s.input<typeof BedWarsDuelsSchema> {
+function bedWarsDuels(data: APIData): s.input<ReturnType<typeof bedWarsDuelsSchema>> {
   const overall: s.input<typeof BedWarsDuelsOverallSchema> = {
     bestWinstreak: data.best_bedwars_winstreak,
     winstreak: data.current_bedwars_winstreak,
@@ -394,26 +434,24 @@ function bedWarsDuels(data: APIData): s.input<typeof BedWarsDuelsSchema> {
   };
 
   return {
-    ...titles(data, overall.wins, "Bed Wars", "default"),
     overall,
     bedwars: pvpBaseMode(data, "bedwars_two_one_duels"),
     rush: pvpBaseMode(data, "bedwars_two_one_duels_rush"),
   };
 }
 
-function spleefDuels(data: APIData): s.input<typeof SpleefDuelsSchema> {
+function spleefDuels(data: APIData): s.input<ReturnType<typeof spleefDuelsSchema>> {
   const spleef = { ...baseMode(data, "spleef_duel"), blocksBroken: data.spleef_duel_blocks_broken };
   const bowSpleef = { ...baseMode(data, "bowspleef_duel"), shotsFired: data.bowspleef_duel_bow_shots };
-  const overallWins = add(spleef.wins, bowSpleef.wins);
 
-  return { ...titles(data, overallWins, "Spleef", "default"), overallWins, spleef, bowSpleef };
+  return { overallWins: add(spleef.wins, bowSpleef.wins), spleef, bowSpleef };
 }
 
-function megaWallsDuels(data: APIData): s.input<ReturnType<typeof singlePVPSchema>> {
+function megaWallsDuels(data: APIData): PVPBaseInput {
   const solo = pvpBaseMode(data, "mw_duel");
   const doubles = pvpBaseMode(data, "mw_doubles");
 
-  const stats: PVPBaseInput = {
+  return {
     ...solo,
     wins: add(solo.wins, doubles.wins),
     losses: add(solo.losses, doubles.losses),
@@ -421,40 +459,35 @@ function megaWallsDuels(data: APIData): s.input<ReturnType<typeof singlePVPSchem
     deaths: add(solo.deaths, doubles.deaths),
     blocksPlaced: add(solo.blocksPlaced, doubles.blocksPlaced),
   };
-
-  return { ...stats, ...titles(data, stats.wins, "Mega Walls", "half") };
 }
 
 export function duels(data: APIData = {}): s.input<typeof DuelsSchema> {
-  const overall = singleBowPVPMode(data, "", "", "overall");
-  const skywars = multiPVPMode(data, "SkyWars", "sw", "skywars", "default");
+  const overall = bowPVPBaseMode(data, "");
+  const skywars = multiPVPMode(data, "sw", "skywars");
   const skywarsKit = data.sw_duels_kit_new3 ?? data.sw_duels_kit_new2 ?? data.sw_duels_kit_new ?? "none";
 
   return {
     pingRange: data.pingPreference ?? 300,
     tokens: data.coins,
     overall: { ...overall, winstreak: data.currentStreak ?? overall.winstreak },
-    arena: { ...singleMode(data, "Arena", "duel_arena", "default"), shotsFired: data.duel_arena_bow_shots },
-    blitzsg: {
-      ...singleBowPVPMode(data, "Blitz", "blitz_duel", "default"),
-      kit: data.blitz_duels_kit ?? "none",
-    },
-    bow: singleBowPVPMode(data, "Bow", "bow_duel", "default"),
-    boxing: singlePVPMode(data, "Boxing", "boxing_duel", "half"),
+    arena: { ...baseMode(data, "duel_arena"), shotsFired: data.duel_arena_bow_shots },
+    blitzsg: { ...bowPVPBaseMode(data, "blitz_duel"), kit: data.blitz_duels_kit ?? "none" },
+    bow: bowPVPBaseMode(data, "bow_duel"),
+    boxing: pvpBaseMode(data, "boxing_duel"),
     bridge: bridgeDuels(data),
     bedwars: bedWarsDuels(data),
-    classic: multiPVPMode(data, "Classic", "classic", "classic", "default"),
-    combo: singlePVPMode(data, "Combo", "combo_duel", "default"),
+    classic: multiPVPMode(data, "classic", "classic"),
+    combo: pvpBaseMode(data, "combo_duel"),
     megawalls: megaWallsDuels(data),
-    nodebuff: singlePVPMode(data, "NoDebuff", "potion_duel", "half"),
-    op: multiPVPMode(data, "OP", "op", "op", "default"),
+    nodebuff: pvpBaseMode(data, "potion_duel"),
+    op: multiPVPMode(data, "op", "op"),
     parkour: {
-      ...singleMode(data, "Parkour", "parkour_eight", "half"),
+      ...baseMode(data, "parkour_eight"),
       checkpoints: data.parkour_checkpoints_reached,
       bestTime: data.parkour_personal_best,
     },
     quake: {
-      ...singlePVPMode(data, "Quakecraft", "quake_duel", "default"),
+      ...pvpBaseMode(data, "quake_duel"),
       headshots: data.quake_duel_quake_headshots,
       shotsFired: data.quake_duel_quake_shots_taken,
     },
@@ -467,7 +500,7 @@ export function duels(data: APIData = {}): s.input<typeof DuelsSchema> {
         .replaceAll("defending_team_", ""),
     },
     spleef: spleefDuels(data),
-    sumo: singlePVPMode(data, "Sumo", "sumo_duel", "default"),
+    sumo: pvpBaseMode(data, "sumo_duel"),
     uhc: uhcDuels(data),
     scheme: data.active_prefix_scheme,
     icon: data.active_prefix_icon,
