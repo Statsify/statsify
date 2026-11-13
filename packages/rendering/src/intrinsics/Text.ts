@@ -60,7 +60,7 @@ export const component: JSX.RawFC<
       throw new Error(`Invalid text type: ${typeof children}`);
   }
 
-  // Get a generic instance of font renderer just to lex and measure the text
+  // Get a generic instance of font renderer just to measure the text
   const renderer = Container.get(FontRenderer);
   const nodes = FontRenderer.lex(text, { color, bold, italic, underline, size });
 
