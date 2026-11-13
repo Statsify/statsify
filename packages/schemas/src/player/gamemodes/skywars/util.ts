@@ -452,6 +452,15 @@ export const getIntendedLevelFormatted = (level: number) => {
 /**
  * Gets a player's formatted level based on their preferences
  */
+/** Logs a selected scheme or emblem the maps don't have yet. Call it while parsing, since the formatting also runs on every read */
+export function warnMissingCosmetics(activeScheme: string | undefined, activeEmblem: string | undefined) {
+  const scheme = activeScheme?.replace("scheme_", "");
+  const emblem = activeEmblem?.replace("_icon", "").replace("emblem_", "");
+
+  if (scheme && !(scheme in SCHEME_MAP)) console.error(`Missing SkyWars Scheme Key ${scheme}`);
+  if (emblem && !(emblem in EMBLEM_MAP)) console.error(`Missing SkyWars Emblem Key ${emblem}`);
+}
+
 export function getFormattedLevel(
   level: number,
   selectedScheme: string | undefined,
@@ -466,24 +475,17 @@ export function getFormattedLevel(
   let schemeKey: keyof typeof SCHEME_MAP;
   let emblemKey: keyof typeof EMBLEM_MAP;
 
-  if (selectedScheme) {
-    if (selectedScheme in SCHEME_MAP) {
-      schemeKey = selectedScheme as keyof typeof SCHEME_MAP;
-    } else {
-      console.error(`Missing SkyWars Scheme Key ${selectedScheme}`);
-      schemeKey = findScore(PRESTIGE_SCHEMES, level).scheme;
-    }
+  if (selectedScheme && selectedScheme in SCHEME_MAP) {
+    schemeKey = selectedScheme as keyof typeof SCHEME_MAP;
   } else {
     schemeKey = findScore(PRESTIGE_SCHEMES, level).scheme;
   }
 
   if (selectedEmblem) {
-    if (selectedEmblem in EMBLEM_MAP) {
-      emblemKey = selectedEmblem as keyof typeof EMBLEM_MAP;
-    } else {
-      console.error(`Missing SkyWars Emblem Key ${selectedEmblem}`);
-      emblemKey = findScore(PRESTIGE_EMBLEMS, level).emblem;
-    }
+    emblemKey =
+      selectedEmblem in EMBLEM_MAP ?
+        (selectedEmblem as keyof typeof EMBLEM_MAP) :
+        findScore(PRESTIGE_EMBLEMS, level).emblem;
   } else {
     emblemKey = "default";
   }

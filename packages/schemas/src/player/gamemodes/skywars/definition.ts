@@ -19,6 +19,7 @@ import {
   getLevel,
   getLevelProgress,
   parseKit,
+  warnMissingCosmetics,
 } from "./util.js";
 
 const SkyWarsModeSchema = s.object({
@@ -183,6 +184,8 @@ export function skyWars(data: APIData = {}, ap: APIData = {}): s.input<typeof Sk
   const insaneKit = parseKit(data.activeKit_TEAMS_random ? "random" : data.activeKit_TEAMS);
 
   const chooseKit = (insane = 0, normal = 0) => (insane > normal ? insaneKit : normalKit);
+
+  warnMissingCosmetics(data.active_scheme, data.active_emblem);
 
   return {
     exp: data.skywars_experience ?? 0,

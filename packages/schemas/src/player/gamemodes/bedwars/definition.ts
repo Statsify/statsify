@@ -17,6 +17,7 @@ import {
   PRESTIGE_STARS,
   SCHEME_MAP,
   STAR_MAP,
+  warnMissingCosmetic,
 } from "./util.js";
 import { BedsStats, ExpSchema, FinalKillsStats, KillsStats, WinsStats } from "../common.js";
 import { FormattedGame } from "#game";
@@ -340,6 +341,26 @@ function slumber(data: APIData = {}): s.input<typeof SlumberSchema> {
 export function bedWars(data: APIData = {}): s.input<typeof BedWarsSchema> {
   const cosmetics = { packages: data.packages, favorites: data.favorites };
 
+  const scheme = {
+    ...cosmetics,
+    cosmetic: data.active_prestige_scheme,
+    map: SCHEME_MAP,
+    prefix: "prestige_scheme",
+  };
+
+  const star = { ...cosmetics, cosmetic: data.active_star, map: STAR_MAP, prefix: "star" };
+
+  const brackets = {
+    ...cosmetics,
+    cosmetic: data.active_prestige_bracket,
+    map: BRACKET_MAP,
+    prefix: "prestige_bracket",
+  };
+
+  warnMissingCosmetic(scheme);
+  warnMissingCosmetic(star);
+  warnMissingCosmetic(brackets);
+
   const overall = bedWarsMode(data, "");
   const fourVFour = bedWarsMode(data, "two_four");
 
@@ -349,24 +370,9 @@ export function bedWars(data: APIData = {}): s.input<typeof BedWarsSchema> {
     selectedStar: data.active_star,
     selectedBrackets: data.active_prestige_bracket,
     prestige: {
-      randomScheme: pickRandomCosmetic({
-        ...cosmetics,
-        cosmetic: data.active_prestige_scheme,
-        map: SCHEME_MAP,
-        prefix: "prestige_scheme",
-      }),
-      randomStar: pickRandomCosmetic({
-        ...cosmetics,
-        cosmetic: data.active_star,
-        map: STAR_MAP,
-        prefix: "star",
-      }),
-      randomBrackets: pickRandomCosmetic({
-        ...cosmetics,
-        cosmetic: data.active_prestige_bracket,
-        map: BRACKET_MAP,
-        prefix: "prestige_bracket",
-      }),
+      randomScheme: pickRandomCosmetic(scheme),
+      randomStar: pickRandomCosmetic(star),
+      randomBrackets: pickRandomCosmetic(brackets),
       boldNumbers: data.dreamfeast?.toggle_bold_numbers ?? false,
       underlinedPrestige: data.dreamfeast?.toggle_underlined_prestige ?? false,
       strikethroughBrackets: data.dreamfeast?.toggle_strikethrough_brackets ?? false,

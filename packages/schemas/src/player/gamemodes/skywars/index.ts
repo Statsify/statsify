@@ -11,7 +11,14 @@ import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { add } from "@statsify/math";
-import { getFormattedLevel, getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
+import {
+  getFormattedLevel,
+  getIntendedLevelFormatted,
+  getLevel,
+  getLevelProgress,
+  parseKit,
+  warnMissingCosmetics,
+} from "./util.js";
 import type { APIData } from "@statsify/util";
 
 export const SKYWARS_MODES = new GameModes([
@@ -134,6 +141,7 @@ export class SkyWars {
     const isStrikethrough = data.levelFormattedWithBrackets?.includes("§m") ?? false;
 
     this.emblem = data.active_emblem;
+    warnMissingCosmetics(data.active_scheme, data.active_emblem);
     this.levelFormatted = getFormattedLevel(
       this.level,
       data.active_scheme,
