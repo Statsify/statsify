@@ -7,7 +7,7 @@
  */
 
 import { prettify } from "@statsify/util";
-import type { AnySchema, ObjectSchema, ResetEvery } from "./s.js";
+import type { AnySchema, ObjectSchema, ResetEvery, s } from "./s.js";
 import type { Format } from "./format.js";
 
 interface BaseLeaderboard {
@@ -200,7 +200,7 @@ if (import.meta.vitest) {
       .leaderboard((game) => ({ fieldName: "Game", extraDisplay: game.title })),
   });
 
-  it("flattens names, columns, limits and defaults", () => {
+  it("flattens paths, names, columns, limits and defaults", () => {
     const fields = Object.fromEntries(getFields(Root).map((field) => [field.path, field]));
 
     expect(Object.keys(fields)).toEqual([
@@ -212,7 +212,7 @@ if (import.meta.vitest) {
       "game.overall.tags",
       "game.overall.seen",
       "game.extra.points",
-    ]);
+    ] satisfies s.path<typeof Root>[]);
 
     expect(fields["game.overall.wlr"]).toMatchObject({
       dependencies: ["game.overall.wins", "game.overall.losses"],

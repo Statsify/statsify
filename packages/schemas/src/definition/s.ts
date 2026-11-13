@@ -302,9 +302,15 @@ function resolve<E extends Record<string, any>>(entries: E) {
   ) as Resolve<E>;
 }
 
+type PathOf<D extends Definition> = {
+  [K in keyof D & string]: D[K] extends ObjectSchema<infer C> ? `${K}.${PathOf<C>}` : K;
+}[keyof D & string];
+
 export namespace s {
   export type infer<S extends AnySchema> = S[typeof TYPES]["output"];
   export type input<S extends AnySchema> = S[typeof TYPES]["input"];
+  /** The dotted path of every field that isn't an object, like `"overall.wins"`, as getFields lists them */
+  export type path<S extends ObjectSchema> = S extends ObjectSchema<infer D> ? PathOf<D> : never;
 }
 
 export const s = {
