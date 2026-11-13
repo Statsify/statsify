@@ -33,7 +33,7 @@ has the item model definitions.
 - Block items in 3D, through the model's gui transform with the GUI's lighting. A small software
   rasterizer draws them, so they match the game pixel for pixel and need no WebGL.
 - Player heads (the default skin, or `item.skin`, a textures.minecraft.net URL, which the page
-  can fetch over https), mob heads, chests.
+  can fetch over https, or the renderer's third argument loads), mob heads, chests.
 - The enchantment glint, and animated textures by game tick: `render(item, scale, tick)`.
 - A pack's own items through `item.itemModel` (the item_model component), with `item.customData` and wear
   for the conditions they pick models by. Anything else reads as an item sitting in a slot: not in use,

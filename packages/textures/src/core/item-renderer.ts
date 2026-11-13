@@ -235,6 +235,15 @@ function textureIds({ model, special }: ItemLayer) {
   return [...new Set(faces.map((face) => faceTexture(model, face.texture)))];
 }
 
+/** A player head's skin PNG by its URL; undefined when it has none */
+export type SkinSource = (url: string) => Promise<Uint8Array | undefined>;
+
+const fetchSkin: SkinSource = async (url) => {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
+  return new Uint8Array(await response.arrayBuffer());
+};
+
 export class ItemRenderer {
   private models: ModelResolver;
   private textures: TextureLoader;
@@ -247,6 +256,7 @@ export class ItemRenderer {
   public constructor(
     private stack: PackStack,
     private cache?: IconCache,
+    private loadSkin = fetchSkin,
   ) {
     this.models = new ModelResolver(stack);
     this.textures = new TextureLoader(stack);
@@ -434,10 +444,10 @@ export class ItemRenderer {
   private skin(url: string) {
     return this.skins
       .get(url, async () => {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
+        const file = await this.loadSkin(url);
+        if (!file) throw new Error(`${url} has no skin`);
 
-        const image = await decodePng(new Uint8Array(await response.arrayBuffer()));
+        const image = await decodePng(file);
         return context(image).getImageData(0, 0, image.width, image.height);
       })
       .catch(() => undefined);
