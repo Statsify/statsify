@@ -21,13 +21,8 @@ export function serialize<S extends ObjectSchema>(
 
   for (const { path, store } of getFields(schema)) {
     if (!store.store) continue;
+    if (store.serialize && (flat[path] === undefined || flat[path] === store.default)) continue;
 
-    if (!store.serialize) {
-      serialized[path] = flat[path];
-      continue;
-    }
-
-    if (flat[path] === undefined || flat[path] === store.default) continue;
     serialized[path] = flat[path];
   }
 
