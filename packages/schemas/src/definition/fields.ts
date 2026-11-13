@@ -174,7 +174,7 @@ if (import.meta.vitest) {
     wins: s.number(),
     losses: s.number(),
     wlr() {
-      return s.number().computed(ratio, [this.wins, this.losses]);
+      return s.number().computed(ratio, [this.wins, this.losses]).leaderboard({ fieldName: "WLR" });
     },
     coins() {
       return s.number().leaderboard({ fieldName: "Tokens", limit: 10, additionalFields: [this.wins] });
