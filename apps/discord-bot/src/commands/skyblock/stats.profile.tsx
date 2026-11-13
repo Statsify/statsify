@@ -76,7 +76,7 @@ export const SkyBlockAttributesProfile = ({
   t,
 }: SkyBlockProfileProps) => {
   const attributes = profile.member.attributes!;
-  // A late-game member has 200+ unlocked, so the ones still levelling come first
+  // A late-game member has 200+ unlocked, so the ones still leveling come first
   const shown = attributes.attributes
     .filter(({ level }) => level > 0)
     .toSorted((a, b) => Number(a.level === a.maxLevel) - Number(b.level === b.maxLevel) || b.level - a.level)
