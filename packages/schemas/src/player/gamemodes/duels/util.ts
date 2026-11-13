@@ -65,7 +65,7 @@ const getPrefixes = (titles: Title[]) =>
     return calculatedTitles;
   });
 
-const prefixRequirementScores: Record<TitleRequirement, GamePrefix[]> = {
+export const prefixRequirementScores: Record<TitleRequirement, GamePrefix[]> = {
   default: getPrefixes(defaultTitleScores),
   overall: getPrefixes(overallTitleScores),
   half: getPrefixes(halfTitleScores),
