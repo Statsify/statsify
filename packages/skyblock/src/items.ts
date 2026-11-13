@@ -41,8 +41,7 @@ export function nbtNumber(value: unknown): number | undefined {
   return undefined;
 }
 
-// The API keys of the items' lifetime counters, as the saves have them, kept raw; the levels a stacking enchant's
-// counter unlocks are in STACKING_ENCHANTS
+// The API keys of the items' lifetime counters, as the saves have them, kept raw
 const COUNTERS = [
   "absorb_logs_chopped",
   "blood_god_kills",
