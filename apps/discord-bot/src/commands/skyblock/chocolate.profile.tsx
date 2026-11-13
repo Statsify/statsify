@@ -14,7 +14,7 @@ import { prettify, romanNumeral } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 // The employees whose id isn't their name in the factory (the wiki's Chocolate Factory page)
-const EMPLOYEE_NAMES: Record<string, string> = { rabbit_father: "Rabbit Daddy", rabbit_grandma: "Rabbit Granny" };
+const RENAMED_EMPLOYEES = new Set(["rabbit_father", "rabbit_grandma"]);
 
 const COLUMNS = 4;
 
@@ -59,7 +59,7 @@ export const SkyBlockChocolateProfile = ({
   ));
 
   const employees = chocolate.employees.map(({ employee, level }) => (
-    <Table.td title={EMPLOYEE_NAMES[employee] ?? prettify(employee)} value={t(level)} color="§a" size="small" />
+    <Table.td title={RENAMED_EMPLOYEES.has(employee) ? t(`skyblock.employeeNames.${employee}`) : prettify(employee)} value={t(level)} color="§a" size="small" />
   ));
 
   return (
