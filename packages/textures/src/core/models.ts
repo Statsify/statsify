@@ -26,10 +26,15 @@ export interface ModelFace {
   tintindex?: number;
 }
 
+type ElementRotation = { origin: Vec3 } & (
+  | { axis: "x" | "y" | "z"; angle: number; rescale?: boolean }
+  | { x?: number; y?: number; z?: number }
+);
+
 export interface ModelElement {
   from: Vec3;
   to: Vec3;
-  rotation?: { origin: Vec3; axis: "x" | "y" | "z"; angle: number; rescale?: boolean };
+  rotation?: ElementRotation;
   shade?: boolean;
   faces: Partial<Record<Direction, ModelFace>>;
 }
