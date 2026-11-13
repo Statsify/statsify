@@ -158,7 +158,7 @@ export interface DungeonsSection {
 
 export interface Essence {
   type: string; // WITHER, CRIMSON…
-  amount?: number; // missing for a type Hypixel doesn't send, like Forest and Fossil
+  amount?: number; // 0 when Hypixel sends none; missing for the types in UNSENT_ESSENCE
   perks: number; // shop perk levels bought
   maxPerks: number;
 }
