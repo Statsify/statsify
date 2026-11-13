@@ -13,8 +13,8 @@
   "dependencies": {
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
-    "@swc/helpers": "^0.5.23",
-    "axios": "1.11.0",
+    "@swc/helpers": "^0.5.24",
+    "axios": "1.21.1",
     "skia-canvas": "4.0.0"
   }
 }
