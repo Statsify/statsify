@@ -95,5 +95,5 @@ export function findProfile(profiles: RawProfile[], uuid: string, profile?: stri
   if (profile === undefined) return own.find(({ selected }) => selected) ?? own.toSorted((a, b) => xp(b) - xp(a))[0];
 
   const name = profile.toLowerCase();
-  return own.find(({ profile_id, cute_name }) => profile_id === profile || cute_name.toLowerCase() === name);
+  return own.find(({ profile_id, cute_name }) => profile_id.toLowerCase() === name || cute_name.toLowerCase() === name);
 }
