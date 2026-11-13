@@ -62,20 +62,18 @@ const WitherStats = s.fields({
   witherKills: s.number().color("§6").leaderboard(false),
 });
 
-const MegaWallsKitSchema = s
-  .object({
-    ...KitWinsStats,
-    ...KitKillsStats,
-    finalKills: KitFinalKillsStats.finalKills,
-    finalAssists: s.number().color("§e").leaderboard(false),
-    finalDeaths: KitFinalKillsStats.finalDeaths,
-    fkdr: KitFinalKillsStats.fkdr,
-    assists: s.number().color("§e").leaderboard(false),
-    playtime: s.number().color("§a").format(formats.time).leaderboard({ limit }),
-    ...WitherStats,
-    points: s.number().color("§e").leaderboard({ limit }),
-  })
-  .optional();
+const MegaWallsKitSchema = s.object({
+  ...KitWinsStats,
+  ...KitKillsStats,
+  finalKills: KitFinalKillsStats.finalKills,
+  finalAssists: s.number().color("§e").leaderboard(false),
+  finalDeaths: KitFinalKillsStats.finalDeaths,
+  fkdr: KitFinalKillsStats.fkdr,
+  assists: s.number().color("§e").leaderboard(false),
+  playtime: s.number().color("§a").format(formats.time).leaderboard({ limit }),
+  ...WitherStats,
+  points: s.number().color("§e").leaderboard({ limit }),
+});
 
 const MegaWallsOverallSchema = s.object({
   ...WinsStats,

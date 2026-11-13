@@ -92,24 +92,22 @@ const prefix = prefixFields(prefixes);
 
 const limit = 10_000;
 
-const BlitzSGKitSchema = s
-  .object({
-    gamesPlayed: s.number().color("§b").leaderboard({ limit }),
-    level: s.number().default(1).leaderboard(false),
-    exp: s.number().color("§b").leaderboard({ limit, fieldName: "EXP" }),
-    prestige: s.number().leaderboard(false),
-    ...KitKillsStats,
-    ...KitWinsStats,
-    // Losses aren't ranked, but still show beside wins and WLR
-    losses(): NumberSchema {
-      return s
-        .number()
-        .color("§c")
-        .leaderboard({ enabled: false, additionalFields: [this.wins, this.wlr] });
-    },
-    playtime: s.number().optional().color("§e").format(formats.time),
-  })
-  .optional();
+const BlitzSGKitSchema = s.object({
+  gamesPlayed: s.number().color("§b").leaderboard({ limit }),
+  level: s.number().default(1).leaderboard(false),
+  exp: s.number().color("§b").leaderboard({ limit, fieldName: "EXP" }),
+  prestige: s.number().leaderboard(false),
+  ...KitKillsStats,
+  ...KitWinsStats,
+  // Losses aren't ranked, but still show beside wins and WLR
+  losses(): NumberSchema {
+    return s
+      .number()
+      .color("§c")
+      .leaderboard({ enabled: false, additionalFields: [this.wins, this.wlr] });
+  },
+  playtime: s.number().color("§e").format(formats.time),
+});
 
 const BlitzSGModeSchema = s.object({
   wins: WinsSchema.color("§e"),
@@ -177,6 +175,7 @@ export const BlitzSGSchema = s
   }));
 
 export type BlitzSG = s.infer<typeof BlitzSGSchema>;
+export type BlitzSGKit = s.infer<typeof BlitzSGKitSchema>;
 
 function kitLevel(data: APIData, kit: string, exp: number) {
   if (kit in data) return data[kit] + 1;
