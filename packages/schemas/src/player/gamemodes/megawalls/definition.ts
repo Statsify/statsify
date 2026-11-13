@@ -6,81 +6,24 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AssistsSchema, CoinsSchema, FinalKillsStats, KillsStats, WinsStats } from "../common.js";
+import {
+  AssistsSchema,
+  CoinsSchema,
+  FinalKillsStats,
+  KillsStats,
+  KitFinalKillsStats,
+  KitKillsStats,
+  KitWinsStats,
+  WinsStats,
+} from "../common.js";
 import { FormattedGame } from "#game";
 import { MEGAWALLS_MODES } from "./index.js";
-import { add, ratio } from "@statsify/math";
+import { add } from "@statsify/math";
 import { formats } from "#definition/format";
 import { s } from "#definition/s";
 import type { APIData } from "@statsify/util";
 
 const limit = 10_000;
-
-const KitWinsStats = s.fields({
-  wins() {
-    return s
-      .number()
-      .color("§a")
-      .leaderboard({ limit, additionalFields: [this.losses, this.wlr] });
-  },
-  losses() {
-    return s
-      .number()
-      .color("§c")
-      .leaderboard({ limit, additionalFields: [this.wins, this.wlr] });
-  },
-  wlr() {
-    return s
-      .number()
-      .computed(ratio, [this.wins, this.losses])
-      .color("§6")
-      .leaderboard({ limit, additionalFields: [this.wins, this.losses] });
-  },
-});
-
-const KitKillsStats = s.fields({
-  kills() {
-    return s
-      .number()
-      .color("§a")
-      .leaderboard({ limit, additionalFields: [this.deaths, this.kdr] });
-  },
-  deaths() {
-    return s
-      .number()
-      .color("§c")
-      .leaderboard({ limit, additionalFields: [this.kills, this.kdr] });
-  },
-  kdr() {
-    return s
-      .number()
-      .computed(ratio, [this.kills, this.deaths])
-      .color("§6")
-      .leaderboard({ limit, additionalFields: [this.kills, this.deaths] });
-  },
-});
-
-const KitFinalKillsStats = s.fields({
-  finalKills() {
-    return s
-      .number()
-      .color("§a")
-      .leaderboard({ limit, additionalFields: [this.finalDeaths, this.fkdr] });
-  },
-  finalDeaths() {
-    return s
-      .number()
-      .color("§c")
-      .leaderboard({ limit, additionalFields: [this.finalKills, this.fkdr] });
-  },
-  fkdr() {
-    return s
-      .number()
-      .computed(ratio, [this.finalKills, this.finalDeaths])
-      .color("§6")
-      .leaderboard({ limit, additionalFields: [this.finalKills, this.finalDeaths] });
-  },
-});
 
 const WitherStats = s.fields({
   witherDamage: s.number().color("§c").leaderboard(false),

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CoinsSchema, KillsStats } from "../common.js";
+import { CoinsSchema, KillsStats, WinsSchema } from "../common.js";
 import { FormattedGame } from "#game";
 import {
   type GamePrefix,
@@ -38,7 +38,7 @@ const prefixes: GamePrefix[] = [
 ];
 
 const QuakeModeSchema = s.object({
-  wins: s.number().color("§a").leaderboard({ limit: 500_000 }),
+  wins: WinsSchema.color("§a"),
   ...KillsStats,
   headshots: s.number().color("§c"),
   killstreaks: s.number().color("§6"),

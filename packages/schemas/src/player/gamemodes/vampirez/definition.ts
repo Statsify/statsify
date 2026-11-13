@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CoinsSchema, KillsStats } from "../common.js";
+import { CoinsSchema, KillsStats, WinsSchema } from "../common.js";
 import { FormattedGame } from "#game";
 import {
   type GamePrefix,
@@ -31,7 +31,7 @@ const VampireZLifeSchema = (killsName: string, prefixes: GamePrefix[], scoredBy:
     kills() {
       return KillsStats.kills.call(this).leaderboard({ fieldName: killsName });
     },
-    wins: s.number().color("§e").leaderboard({ limit: 500_000 }),
+    wins: WinsSchema.color("§e"),
     currentPrefix() {
       return s.string().computed((score) => getFormattedPrefix({ prefixes, score }), [this[scoredBy]]);
     },

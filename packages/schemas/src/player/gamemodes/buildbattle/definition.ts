@@ -7,7 +7,7 @@
  */
 
 import { type APIData, minecraftColors } from "@statsify/util";
-import { CoinsSchema } from "../common.js";
+import { CoinsSchema, WinsSchema } from "../common.js";
 import { FormattedGame } from "#game";
 import {
   type GameTitle,
@@ -63,12 +63,12 @@ const formatEmblem = (selectedColor: string, selectedIcon: string) => {
   return `${code}${icon ?? ""}${icon ? " " : ""}`;
 };
 
-const WinsSchema = s.object({
-  wins: s.number().color("§a").leaderboard({ limit: 500_000 }),
+const BuildBattleModeSchema = s.object({
+  wins: WinsSchema.color("§a"),
 });
 
 const BuildBattleSpeedBuildersSchema = s.object({
-  wins: s.number().color("§a").leaderboard({ limit: 500_000 }),
+  wins: WinsSchema.color("§a"),
   perfectBuilds: s.number().color("§e"),
 });
 
@@ -80,11 +80,11 @@ const EmblemSchema = s.object({
 
 export const BuildBattleSchema = s
   .object({
-    overall: WinsSchema,
-    solo: WinsSchema,
-    teams: WinsSchema,
-    pro: WinsSchema,
-    guessTheBuild: WinsSchema,
+    overall: BuildBattleModeSchema,
+    solo: BuildBattleModeSchema,
+    teams: BuildBattleModeSchema,
+    pro: BuildBattleModeSchema,
+    guessTheBuild: BuildBattleModeSchema,
     speedBuilders: BuildBattleSpeedBuildersSchema,
     coins: CoinsSchema.color("§6"),
     score: s.number().color("§a"),

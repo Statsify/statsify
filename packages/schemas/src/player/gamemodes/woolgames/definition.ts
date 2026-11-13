@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AssistsSchema, CoinsSchema, ExpSchema, KillsStats, WinsStats } from "../common.js";
+import { AssistsSchema, CoinsSchema, ExpSchema, KillsStats, WinsSchema, WinsStats } from "../common.js";
 import { FormattedGame } from "#game";
 import { ProgressionSchema, progression } from "../../../progression.definition.js";
 import { add, sub } from "@statsify/math";
@@ -152,7 +152,7 @@ export const WoolGamesSchema = s
       return s.string().computed((level) => getFormattedLevel(Math.floor(level) + 1), [this.level]);
     },
     playtime: s.number().color("§d").format(formats.time),
-    wins: s.number().leaderboard({ limit: 500_000 }),
+    wins: WinsSchema,
     woolwars: WoolWarsSchema.leaderboard({ name: "WoolWars" }),
     sheepwars: SheepWarsSchema.leaderboard({ name: "SheepWars" }),
     captureTheWool: CaptureTheWoolSchema,

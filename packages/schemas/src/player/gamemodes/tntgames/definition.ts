@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AssistsSchema, CoinsSchema, KillsStats, WinsStats } from "../common.js";
+import { AssistsSchema, CoinsSchema, KillsStats, WinsSchema, WinsStats } from "../common.js";
 import {
   type FormatPrefixOptions,
   type GamePrefix,
@@ -53,8 +53,6 @@ const TAG_PREFIXES: GamePrefix[] = [
   { fmt: (n) => tntgamesRainbow(`[${n}]`), req: 10_000 },
 ];
 
-const WinsSchema = s.number().color("§a").leaderboard({ limit: 500_000 });
-
 type PrefixOptions = Omit<FormatPrefixOptions, "score">;
 
 const winsProgression = (prefixes: GamePrefix[], wins: Ref<NumberSchema>) =>
@@ -87,7 +85,7 @@ const BowSpleefSchema = s.object({
 export type BowSpleef = s.infer<typeof BowSpleefSchema>;
 
 const PVPRunSchema = s.object({
-  wins: WinsSchema,
+  wins: WinsSchema.color("§a"),
   ...KillsStats,
   record: s.number().color("§e").format(formats.time),
   progression() {
@@ -130,7 +128,7 @@ const TNTRunSchema = s.object({
 export type TNTRun = s.infer<typeof TNTRunSchema>;
 
 const TNTTagSchema = s.object({
-  wins: WinsSchema,
+  wins: WinsSchema.color("§a"),
   ...KillsStats,
   tags: s.number().color("§e"),
   powerups: s.number().color("§d").leaderboard({ name: "Power-Ups" }),
@@ -160,7 +158,7 @@ export type WizardsClass = s.infer<typeof WizardsClassSchema>;
 
 const WizardsSchema = s.object({
   class: s.string().default("none"),
-  wins: WinsSchema,
+  wins: WinsSchema.color("§a"),
   ...KillsStats,
   assists: AssistsSchema.color("§e"),
   points: s.number().color("§5"),
@@ -196,7 +194,7 @@ export type Wizards = s.infer<typeof WizardsSchema>;
 export const TNTGamesSchema = s
   .object({
     coins: CoinsSchema.color("§6"),
-    wins: s.number().color("§e").leaderboard({ limit: 500_000 }),
+    wins: WinsSchema.color("§e"),
     tntRun: TNTRunSchema.leaderboard((tntRun) => ({
       fieldName: "TNT Run",
       extraDisplay: tntRun.naturalPrefix,

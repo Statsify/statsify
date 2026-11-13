@@ -8,7 +8,7 @@
 
 import { type APIData, abbreviationNumber, prettify } from "@statsify/util";
 import { FormattedGame } from "#game";
-import { KillsStats } from "../common.js";
+import { KillsStats, WinsSchema } from "../common.js";
 import { ProgressionSchema, progression } from "../../../progression.definition.js";
 import { add } from "@statsify/math";
 import { cycleColors } from "#prefixes";
@@ -16,7 +16,7 @@ import { formats } from "#definition/format";
 import { s } from "#definition/s";
 
 const BaseModeStats = s.fields({
-  wins: s.number().color("§a").leaderboard({ limit: 500_000 }),
+  wins: WinsSchema.color("§a"),
   gamesPlayed: s.number().color("§b"),
   ...KillsStats,
   bowKills: s.number().color("§6"),
@@ -59,7 +59,7 @@ const InfectionMurderMysteryModeSchema = s.object({
 
 const AssassinsMurderMysteryModeSchema = s.object({
   ...BaseModeStats,
-  wins: s.number().color("§e").leaderboard({ limit: 500_000 }),
+  wins: WinsSchema.color("§e"),
   trapKills: s.number().color("§c"),
   thrownKnifeKills: s.number().color("§a"),
   knifeKills: s.number(),

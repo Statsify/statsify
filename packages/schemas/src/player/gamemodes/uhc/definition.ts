@@ -7,7 +7,7 @@
  */
 
 import type { APIData } from "@statsify/util";
-import { CoinsSchema, KillsStats } from "../common.js";
+import { CoinsSchema, KillsStats, WinsSchema } from "../common.js";
 import { FormattedGame } from "#game";
 import { ProgressionSchema, progression } from "../../../progression.definition.js";
 import { createPrefixProgression } from "#prefixes";
@@ -18,7 +18,7 @@ import { s } from "#definition/s";
 const formatLevel = (level: number) => `§6[${level}✫]`;
 
 const UHCModeSchema = s.object({
-  wins: s.number().color("§e").leaderboard({ limit: 500_000 }),
+  wins: WinsSchema.color("§e"),
   ...KillsStats,
   headsEaten: s.number().color("§6"),
   ultimatesCrafted: s.number().color("§b"),

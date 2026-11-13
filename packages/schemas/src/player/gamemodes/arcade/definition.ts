@@ -6,16 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CoinsSchema, KillsStats, WinsStats } from "../common.js";
+import { CoinsSchema, KillsSchema, KillsStats, WinsSchema, WinsStats } from "../common.js";
 import { type NumberSchema, type ObjectSchema, s } from "#definition/s";
 import { add, deepAdd, deepSub, sub } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 import { FormattedGame } from "#game";
 import { formats } from "#definition/format";
-
-// Wins and kills without the rest of their ratio beside them
-const WinsSchema = s.number().leaderboard({ limit: 500_000 });
-const KillsSchema = s.number().leaderboard({ limit: 500_000 });
 
 const BlockingDeadSchema = s.object({
   wins: WinsSchema.color("§e"),

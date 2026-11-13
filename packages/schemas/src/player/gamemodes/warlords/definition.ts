@@ -7,7 +7,7 @@
  */
 
 import { type APIData, prettify } from "@statsify/util";
-import { AssistsSchema, CoinsSchema, KillsStats, WinsStats } from "../common.js";
+import { AssistsSchema, CoinsSchema, KillsSchema, KillsStats, WinsSchema, WinsStats } from "../common.js";
 import { FormattedGame } from "#game";
 import {
   type GameTitle,
@@ -48,7 +48,7 @@ const CLASSES = {
 type WarlordsClass = keyof typeof CLASSES;
 
 const SpecificationStats = s.fields({
-  wins: s.number().color("§e").leaderboard({ limit: 500_000 }),
+  wins: WinsSchema.color("§e"),
   damage: s.number().color("§c"),
   prevent: s.number().color("§b"),
   healing: s.number().color("§a"),
@@ -72,21 +72,21 @@ type WarlordsClassSchema = ReturnType<typeof warlordsClassSchema>;
 const WarlordsDominationSchema = s.object({
   capturePoints: s.number().color("§2"),
   defendPoints: s.number().color("§b"),
-  kills: s.number().color("§e").leaderboard({ limit: 500_000 }),
+  kills: KillsSchema.color("§e"),
   score: s.number().color("§6"),
-  wins: s.number().color("§a").leaderboard({ limit: 500_000 }),
+  wins: WinsSchema.color("§a"),
 });
 
 const WarlordsCaptureTheFlagSchema = s.object({
-  wins: s.number().color("§a").leaderboard({ limit: 500_000 }),
-  kills: s.number().color("§e").leaderboard({ limit: 500_000 }),
+  wins: WinsSchema.color("§a"),
+  kills: KillsSchema.color("§e"),
   flagCaptures: s.number().color("§c"),
   flagReturns: s.number().color("§9"),
 });
 
 const WarlordsTeamDeathmatchSchema = s.object({
-  wins: s.number().color("§a").leaderboard({ limit: 500_000 }),
-  kills: s.number().color("§e").leaderboard({ limit: 500_000 }),
+  wins: WinsSchema.color("§a"),
+  kills: KillsSchema.color("§e"),
 });
 
 export const WarlordsSchema = s

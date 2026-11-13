@@ -8,7 +8,14 @@
 
 import { type APIData, findScoreIndex } from "@statsify/util";
 import { BLITZSG_MODES } from "./index.js";
-import { CoinsSchema, KillsStats } from "../common.js";
+import {
+  CoinsSchema,
+  KillsSchema,
+  KillsStats,
+  KitKillsStats,
+  KitWinsStats,
+  WinsSchema,
+} from "../common.js";
 import { FormattedGame } from "#game";
 import {
   type GamePrefix,
@@ -17,9 +24,9 @@ import {
   getFormattedPrefix,
 } from "#prefixes";
 import { ProgressionSchema } from "../../../progression.definition.js";
-import { add, ratio, sub } from "@statsify/math";
+import { add, sub } from "@statsify/math";
 import { formats } from "#definition/format";
-import { s } from "#definition/s";
+import { type NumberSchema, s } from "#definition/s";
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§f[§7${n}§f]`, req: 0 },
@@ -36,51 +43,6 @@ const prefixes: GamePrefix[] = [
 
 const limit = 10_000;
 
-const KitKillsStats = s.fields({
-  kills() {
-    return s
-      .number()
-      .color("§a")
-      .leaderboard({ limit, additionalFields: [this.deaths, this.kdr] });
-  },
-  deaths() {
-    return s
-      .number()
-      .color("§c")
-      .leaderboard({ limit, additionalFields: [this.kills, this.kdr] });
-  },
-  kdr() {
-    return s
-      .number()
-      .computed(ratio, [this.kills, this.deaths])
-      .color("§6")
-      .leaderboard({ limit, additionalFields: [this.kills, this.deaths] });
-  },
-});
-
-// Losses aren't ranked, but still show beside wins and WLR
-const KitWinsStats = s.fields({
-  wins() {
-    return s
-      .number()
-      .color("§a")
-      .leaderboard({ limit, additionalFields: [this.losses, this.wlr] });
-  },
-  losses() {
-    return s
-      .number()
-      .color("§c")
-      .leaderboard({ enabled: false, additionalFields: [this.wins, this.wlr] });
-  },
-  wlr() {
-    return s
-      .number()
-      .computed(ratio, [this.wins, this.losses])
-      .color("§6")
-      .leaderboard({ limit, additionalFields: [this.wins, this.losses] });
-  },
-});
-
 const BlitzSGKitSchema = s
   .object({
     gamesPlayed: s.number().color("§b").leaderboard({ limit }),
@@ -89,17 +51,24 @@ const BlitzSGKitSchema = s
     prestige: s.number().leaderboard(false),
     ...KitKillsStats,
     ...KitWinsStats,
+    // Losses aren't ranked, but still show beside wins and WLR
+    losses(): NumberSchema {
+      return s
+        .number()
+        .color("§c")
+        .leaderboard({ enabled: false, additionalFields: [this.wins, this.wlr] });
+    },
     playtime: s.number().optional().color("§e").format(formats.time),
   })
   .optional();
 
 const BlitzSGModeSchema = s.object({
-  wins: s.number().color("§e").leaderboard({ limit: 500_000 }),
-  kills: s.number().color("§a").leaderboard({ limit: 500_000 }),
+  wins: WinsSchema.color("§e"),
+  kills: KillsSchema.color("§a"),
 });
 
 const BlitzSGOverallSchema = s.object({
-  wins: s.number().color("§e").leaderboard({ limit: 500_000 }),
+  wins: WinsSchema.color("§e"),
   ...KillsStats,
 });
 

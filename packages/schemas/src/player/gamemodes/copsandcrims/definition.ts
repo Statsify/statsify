@@ -7,7 +7,7 @@
  */
 
 import { type APIData, findScoreIndex } from "@statsify/util";
-import { AssistsSchema, CoinsSchema, KillsStats } from "../common.js";
+import { AssistsSchema, CoinsSchema, KillsStats, WinsSchema } from "../common.js";
 import { FormattedGame } from "#game";
 import { LEVEL_REQUIREMENTS, getFormattedLevel, getIntendedLevelFormatted } from "./util.js";
 import { ProgressionSchema } from "../../../progression.definition.js";
@@ -16,7 +16,7 @@ import { createPrefixProgression } from "#prefixes";
 import { s } from "#definition/s";
 
 const ModeStats = s.fields({
-  wins: s.number().color("§a").leaderboard({ limit: 500_000 }),
+  wins: WinsSchema.color("§a"),
   ...KillsStats,
   assists: AssistsSchema.color("§e"),
 });

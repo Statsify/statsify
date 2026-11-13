@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CoinsSchema, KillsStats } from "../common.js";
+import { CoinsSchema, KillsStats, WinsSchema } from "../common.js";
 import { FormattedGame } from "#game";
 import type { APIData } from "@statsify/util";
 import type { GamePrefix } from "#prefixes";
@@ -52,7 +52,7 @@ export const PaintballSchema = s
     killstreaks: s.number().color("§b"),
     shotsFired: s.number().color("§c").leaderboard(false),
     hat: s.string().default("none"),
-    wins: s.number().color("§a").leaderboard({ limit: 500_000 }),
+    wins: WinsSchema.color("§a"),
     kdr: KillsStats.kdr,
     shotAccuracy() {
       return s
