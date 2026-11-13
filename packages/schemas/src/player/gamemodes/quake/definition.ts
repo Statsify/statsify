@@ -8,14 +8,9 @@
 
 import { CoinsSchema, KillsStats, WinsSchema } from "../common.js";
 import { FormattedGame } from "#game";
-import {
-  type GamePrefix,
-  createPrefixProgression,
-  defaultPrefix,
-  getFormattedPrefix,
-} from "#prefixes";
-import { ProgressionSchema } from "../../../progression.definition.js";
+import type { GamePrefix } from "#prefixes";
 import { deepAdd, ratio } from "@statsify/math";
+import { prefixFields } from "../prefix-fields.js";
 import { s } from "#definition/s";
 import type { APIData } from "@statsify/util";
 
@@ -36,6 +31,8 @@ const prefixes: GamePrefix[] = [
   { fmt: (n) => `§6[${n}]`, req: 1_000_000 },
   { fmt: (n) => `§0[${n}]`, req: 2_000_000 },
 ];
+
+const prefix = prefixFields(prefixes);
 
 const QuakeModeSchema = s.object({
   wins: WinsSchema.color("§a"),
@@ -68,29 +65,16 @@ type QuakeModeInput = s.input<typeof QuakeModeSchema>;
 export const QuakeSchema = s
   .object({
     progression() {
-      return ProgressionSchema.computed((kills) => createPrefixProgression(prefixes, kills), [
-        this.overall.kills,
-      ]);
+      return prefix.progression(this.overall.kills);
     },
     currentPrefix() {
-      return s
-        .string()
-        .computed((score) => getFormattedPrefix({ prefixes, score }), [this.overall.kills]);
+      return prefix.currentPrefix(this.overall.kills);
     },
     naturalPrefix() {
-      return s
-        .string()
-        .computed((score) => getFormattedPrefix({ prefixes, score, trueScore: true }), [
-          this.overall.kills,
-        ])
-        .default(defaultPrefix(prefixes));
+      return prefix.naturalPrefix(this.overall.kills);
     },
     nextPrefix() {
-      return s
-        .string()
-        .computed((score) => getFormattedPrefix({ prefixes, score, skip: true }), [
-          this.overall.kills,
-        ]);
+      return prefix.nextPrefix(this.overall.kills);
     },
     overall: QuakeModeSchema,
     solo: QuakeModeSchema,

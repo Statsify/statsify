@@ -17,15 +17,10 @@ import {
   WinsSchema,
 } from "../common.js";
 import { FormattedGame } from "#game";
-import {
-  type GamePrefix,
-  createPrefixProgression,
-  defaultPrefix,
-  getFormattedPrefix,
-} from "#prefixes";
-import { ProgressionSchema } from "../../../progression.definition.js";
+import type { GamePrefix } from "#prefixes";
 import { add, sub } from "@statsify/math";
 import { formats } from "#definition/format";
+import { prefixFields } from "../prefix-fields.js";
 import { type NumberSchema, s } from "#definition/s";
 
 const prefixes: GamePrefix[] = [
@@ -40,6 +35,8 @@ const prefixes: GamePrefix[] = [
   { fmt: (n) => `§9§l[${n}]`, req: 250_000 },
   { fmt: (n) => `§2§l[${n}]`, req: 300_000 },
 ];
+
+const prefix = prefixFields(prefixes);
 
 const limit = 10_000;
 
@@ -108,29 +105,16 @@ export const BlitzSGSchema = s
     overall: BlitzSGOverallSchema,
     solo: BlitzSGModeSchema,
     progression() {
-      return ProgressionSchema.computed((kills) => createPrefixProgression(prefixes, kills), [
-        this.overall.kills,
-      ]);
+      return prefix.progression(this.overall.kills);
     },
     currentPrefix() {
-      return s
-        .string()
-        .computed((score) => getFormattedPrefix({ prefixes, score }), [this.overall.kills]);
+      return prefix.currentPrefix(this.overall.kills);
     },
     naturalPrefix() {
-      return s
-        .string()
-        .computed((score) => getFormattedPrefix({ prefixes, score, trueScore: true }), [
-          this.overall.kills,
-        ])
-        .default(defaultPrefix(prefixes));
+      return prefix.naturalPrefix(this.overall.kills);
     },
     nextPrefix() {
-      return s
-        .string()
-        .computed((score) => getFormattedPrefix({ prefixes, score, skip: true }), [
-          this.overall.kills,
-        ]);
+      return prefix.nextPrefix(this.overall.kills);
     },
     doubles: BlitzSGModeSchema,
     ...s.keyed(KITS, () => BlitzSGKitSchema),

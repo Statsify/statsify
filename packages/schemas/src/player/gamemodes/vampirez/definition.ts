@@ -8,32 +8,27 @@
 
 import { CoinsSchema, KillsStats, WinsSchema } from "../common.js";
 import { FormattedGame } from "#game";
-import {
-  type GamePrefix,
-  createPrefixProgression,
-  defaultPrefix,
-  getFormattedPrefix,
-} from "#prefixes";
-import { ProgressionSchema } from "../../../progression.definition.js";
+import { type GamePrefix, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 import { humanPrefixes, vampirePrefixes } from "./prefixes.js";
+import { prefixFields } from "../prefix-fields.js";
 import { s } from "#definition/s";
 
-const VampireZLifeSchema = (killsName: string, prefixes: GamePrefix[], scoredBy: "wins" | "kills") =>
-  s.object({
+const VampireZLifeSchema = (killsName: string, prefixes: GamePrefix[], scoredBy: "wins" | "kills") => {
+  const prefix = prefixFields(prefixes);
+
+  return s.object({
     ...KillsStats,
     kills() {
       return KillsStats.kills.call(this).leaderboard({ fieldName: killsName });
     },
     wins: WinsSchema.color("§e"),
     currentPrefix() {
-      return s.string().computed((score) => getFormattedPrefix({ prefixes, score }), [this[scoredBy]]);
+      return prefix.currentPrefix(this[scoredBy]);
     },
     nextPrefix() {
-      return s
-        .string()
-        .computed((score) => getFormattedPrefix({ prefixes, score, skip: true }), [this[scoredBy]]);
+      return prefix.nextPrefix(this[scoredBy]);
     },
     naturalPrefix() {
       return s
@@ -45,11 +40,10 @@ const VampireZLifeSchema = (killsName: string, prefixes: GamePrefix[], scoredBy:
         .default(defaultPrefix(humanPrefixes));
     },
     progression() {
-      return ProgressionSchema.computed((score) => createPrefixProgression(prefixes, score), [
-        this[scoredBy],
-      ]);
+      return prefix.progression(this[scoredBy]);
     },
   });
+};
 
 const VampireZHumanSchema = VampireZLifeSchema("Vampires Killed", humanPrefixes, "wins");
 const VampireZVampireSchema = VampireZLifeSchema("Humans Killed", vampirePrefixes, "kills");
