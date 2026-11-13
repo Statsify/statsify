@@ -139,3 +139,20 @@ export function getRenownShopCost(renownUnlocks: RenownUnlock[]) {
 
   return cost;
 }
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("prestige and level", () => {
+    it("finds the prestige for the xp, then counts levels down from 120", () => {
+      expect(getPrestige(17_526_330)).toBe(25);
+      expect(getPrestige(FINAL_PRESTIGE_XP)).toBe(50);
+      expect(getPrestigeReq(-1)).toBe(0);
+
+      expect(getLevel(0, 65_950)).toBe(120);
+      expect(getLevel(0, 64_450)).toBe(119);
+      expect(getLevel(0, 64_449)).toBe(118);
+      expect(getLevel(1, 136_860)).toBe(119);
+    });
+  });
+}

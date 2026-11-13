@@ -256,6 +256,18 @@ if (import.meta.vitest) {
     });
   });
 
+  suite("findScoreIndex", () => {
+    it("finds the index of the last req the score reaches", () => {
+      const scores = [{ req: 5 }, { req: 10 }, { req: 20 }];
+
+      expect(findScoreIndex(scores, 4)).toBe(-1);
+      expect(findScoreIndex(scores)).toBe(-1);
+      expect(findScoreIndex(scores, 5)).toBe(0);
+      expect(findScoreIndex(scores, 20)).toBe(2);
+      expect(findScoreIndex(scores, 1000)).toBe(2);
+    });
+  });
+
   suite("isObject", () => {
     it("returns true for objects", () => {
       expect(isObject({})).toBe(true);
@@ -366,6 +378,68 @@ if (import.meta.vitest) {
           entries: 2,
         })
       ).toBe("2d, 2h");
+    });
+  });
+
+  suite("relativeTime", () => {
+    it("formats the time since a timestamp", () => {
+      expect(relativeTime(Date.now() - 90_000)).toBe("1m, 30s ago");
+    });
+  });
+
+  suite("formatRaceTime", () => {
+    it("formats milliseconds as seconds to three decimals", () => {
+      expect(formatRaceTime(0)).toBe("0.000s");
+      expect(formatRaceTime(65_432)).toBe("65.432s");
+    });
+  });
+
+  suite("formatRecordTime", () => {
+    it("formats the time, or N/A when there is no record", () => {
+      expect(formatRecordTime(0)).toBe("N/A");
+      expect(formatRecordTime(90_000)).toBe("1m, 30s");
+    });
+  });
+
+  suite("abbreviationNumber", () => {
+    it("splits a number into a value and a suffix, rounding down", () => {
+      expect(abbreviationNumber(0)).toEqual([0, ""]);
+      expect(abbreviationNumber(999)).toEqual([999, ""]);
+      expect(abbreviationNumber(1000)).toEqual([1, "K"]);
+      expect(abbreviationNumber(1999)).toEqual([1.99, "K"]);
+      expect(abbreviationNumber(1999, 1)).toEqual([1.9, "K"]);
+      expect(abbreviationNumber(1_000_000_000_000)).toEqual([1, "T"]);
+    });
+  });
+
+  suite("ordinal", () => {
+    it("adds the English ordinal suffix", () => {
+      expect(ordinal(1)).toBe("1st");
+      expect(ordinal(2)).toBe("2nd");
+      expect(ordinal(3)).toBe("3rd");
+      expect(ordinal(4)).toBe("4th");
+      expect(ordinal(11)).toBe("11th");
+      expect(ordinal(12)).toBe("12th");
+      expect(ordinal(13)).toBe("13th");
+      expect(ordinal(21)).toBe("21st");
+      expect(ordinal(111)).toBe("111th");
+    });
+  });
+
+  suite("arrayGroup", () => {
+    it("splits an array or string into groups of a size", () => {
+      expect(arrayGroup([1, 2, 3, 4, 5], 2)).toEqual([[1, 2], [3, 4], [5]]);
+      expect(arrayGroup([1, 2, 3, 4], 2)).toEqual([[1, 2], [3, 4]]);
+      expect(arrayGroup("abcdef", 4)).toEqual(["abcd", "ef"]);
+      expect(arrayGroup([], 3)).toEqual([]);
+    });
+  });
+
+  suite("wordGroup", () => {
+    it("breaks text into lines of about five characters per word", () => {
+      expect(wordGroup("short", 2)).toEqual(["short"]);
+      expect(wordGroup("the quick brown fox", 2)).toEqual(["the quick ", "brown fox"]);
+      expect(wordGroup("abcdefghijkl", 1)).toEqual(["abcde", "fghij", "kl"]);
     });
   });
 }

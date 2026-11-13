@@ -37,3 +37,17 @@ export const getLevel = (exp: number) => {
 
   return { level: 1000, current: 0, max: 1 };
 };
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("getLevel", () => {
+    it("walks the gexp table, then 3M per level up to the cap", () => {
+      expect(getLevel(0)).toEqual({ level: 0, current: 0, max: 100_000 });
+      expect(getLevel(100_000)).toEqual({ level: 1, current: 0, max: 150_000 });
+      expect(getLevel(23_000_000)).toEqual({ level: 15, current: 0, max: 3_000_000 });
+      expect(getLevel(2_978_000_000).level).toBe(1000);
+      expect(getLevel(10_000_000_000).level).toBe(1000);
+    });
+  });
+}
