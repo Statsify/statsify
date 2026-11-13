@@ -47,7 +47,7 @@ const mostDamage = (type: RawDungeonType | undefined) =>
 const watcherKills = (type: RawDungeonType | undefined) =>
   add(...Object.entries(type?.watcher_kills ?? {}).flatMap(([floor, kills]) => (floor === "total" ? [] : [kills])));
 
-/** Catacombs and classes keep levelling past 50. Floor 0 is the Entrance. */
+/** Catacombs and classes keep leveling past 50. Floor 0 is the Entrance. */
 export function getDungeons(member: RawMember): DungeonsSection {
   const dungeons = member.dungeons;
   const types = dungeons?.dungeon_types;

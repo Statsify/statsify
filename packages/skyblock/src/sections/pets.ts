@@ -32,7 +32,10 @@ export const petMaxLevel = (type: string) => PETS.custom_pet_leveling[type]?.max
 /** 99 levels from the rarity's offset, plus custom pets' extra levels (Golden Dragon to 200). */
 export function getPetLevel(pet: RawPet, rarity = boostedRarity(pet)): Level {
   const custom = PETS.custom_pet_leveling[pet.type] ?? {};
-  const offset = custom.rarity_offset?.[rarity] ?? PETS.pet_rarity_offset[rarity];
+  const own = custom.rarity_offset ?? {};
+  // Bingo's own offsets stop at Legendary, below the Mythic a Tier Boost gives it, so its highest one carries on
+  const highest = PET_RARITIES.findLast((candidate) => candidate in own);
+  const offset = own[rarity] ?? (highest ? own[highest] : PETS.pet_rarity_offset[rarity]);
   const maxLevel = petMaxLevel(pet.type);
   const table = [...PETS.pet_levels.slice(offset, offset + 99), ...(custom.pet_levels ?? [])];
   const level = getLevel(pet.exp, table, maxLevel - 1);
@@ -133,6 +136,8 @@ if (import.meta.vitest) {
     expect(active).toMatchObject({ rarity: "LEGENDARY", level: { level: 96, maxLevel: 100 } });
     expect(pets.find((pet) => !pet.active && pet.type === "BEE")?.level.level).toBe(100);
     expect(pets.find((pet) => pet.type === "GOLDEN_DRAGON")?.level).toMatchObject({ level: 100, maxLevel: 200 });
+    const bingo = { type: "BINGO", tier: "LEGENDARY", exp: 5_624_785, heldItem: "PET_ITEM_TIER_BOOST", active: false };
+    expect(getPetLevel(bingo).level).toBe(100);
     // The boosted Bee scores Legendary, Jerry its Mythic over its maxed Common, and Phoenix never scores
     expect(score).toBe(5 + 5 + 6);
   });

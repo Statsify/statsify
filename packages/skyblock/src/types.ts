@@ -173,7 +173,7 @@ export interface HotmSection {
   loadout: { selected: number; total: number };
   tokens: { spent: number; total: number };
   ability?: string;
-  powder: Record<Powder, { available: number; spent: number }>;
+  powder: Record<Powder, { total: number; spent: number }>;
   nodes: { id: string; name: string; level: number; maxLevel: number; x: number; y: number; enabled: boolean }[];
   crystals: { found: number; placed: number }; // over every gem
   nucleusRuns: number;

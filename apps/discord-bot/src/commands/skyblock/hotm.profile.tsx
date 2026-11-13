@@ -83,12 +83,12 @@ export const SkyBlockHotmProfile = ({
 
   const powders = POWDERS.map((type) => {
     const color = POWDER_COLORS[type];
-    const { available, spent } = powder[type];
+    const { total, spent } = powder[type];
 
     return (
       <box direction="column" location="center" width="100%">
         <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`${color}${t(`skyblock.powders.${type}`)}`}</text>
-        <text margin={{ top: 0, bottom: 4, left: 10, right: 10 }}>{`§^3^${color}${t(available)}`}</text>
+        <text margin={{ top: 0, bottom: 4, left: 10, right: 10 }}>{`§^3^${color}${t(total)}`}</text>
         <text margin={{ top: 0, bottom: 8, left: 10, right: 10 }}>{`§7${t("skyblock.spent")}: ${color}${t(spent)}`}</text>
       </box>
     );
