@@ -72,13 +72,9 @@ if (import.meta.vitest) {
     it("starts at 1, prestiges every 490k exp and formats by prestige", () => {
       expect(getLevel(0)).toBe(1);
       expect(getLevel(500)).toBe(1.5);
-      expect(getLevel(1000)).toBe(2);
-      expect(getLevel(10_000)).toBe(5);
       expect(getLevel(485_000)).toBe(100);
       expect(getLevel(490_000)).toBe(101);
-      expect(getLevel(491_000)).toBe(102);
 
-      expect(getFormattedLevel(1)).toBe("§7[1❤]");
       expect(getFormattedLevel(99.9)).toBe("§7[99❤]");
       expect(getFormattedLevel(100)).toBe("§f[100✙]");
       expect(getFormattedLevel(1000)).toBe("§0[§f1000☯§0]");

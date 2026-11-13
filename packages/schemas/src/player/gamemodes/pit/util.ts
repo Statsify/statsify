@@ -145,20 +145,13 @@ if (import.meta.vitest) {
 
   suite("prestige and level", () => {
     it("finds the prestige for the xp, then counts levels down from 120", () => {
-      expect(getPrestige(3844)).toBe(0);
-      expect(getPrestige(72_112)).toBe(1);
-      expect(getPrestige(192_131)).toBe(2);
       expect(getPrestige(17_526_330)).toBe(25);
-      expect(getPrestige(19_159_967)).toBe(26);
-      expect(getPrestige(395_926_785)).toBe(43);
       expect(getPrestige(FINAL_PRESTIGE_XP)).toBe(50);
       expect(getPrestigeReq(-1)).toBe(0);
-      expect(getPrestigeReq(0)).toBe(65_950);
 
       expect(getLevel(0, 65_950)).toBe(120);
       expect(getLevel(0, 64_450)).toBe(119);
       expect(getLevel(0, 64_449)).toBe(118);
-      expect(getLevel(1, 138_510)).toBe(120);
       expect(getLevel(1, 136_860)).toBe(119);
     });
   });

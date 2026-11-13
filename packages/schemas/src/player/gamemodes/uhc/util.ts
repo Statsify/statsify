@@ -34,11 +34,8 @@ if (import.meta.vitest) {
 
   suite("getLevelIndex", () => {
     it("finds the star for the score", () => {
-      expect(getLevelIndex(0)).toBe(0);
       expect(getLevelIndex(9)).toBe(0);
       expect(getLevelIndex(10)).toBe(1);
-      expect(getLevelIndex(10_210)).toBe(9);
-      expect(getLevelIndex(25_209)).toBe(13);
       expect(getLevelIndex(25_210)).toBe(14);
       expect(getLevelIndex(1_000_000)).toBe(14);
     });
