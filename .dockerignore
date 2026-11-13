@@ -1,0 +1,18 @@
+**/.git
+**/node_modules
+**/dist
+**/.turbo
+**/.next
+**/*.node
+**/*.tsbuildinfo
+**/.env
+**/commands.json
+/config.js
+/config.json
+/coverage
+/data
+/target
+assets/private/out
+# Hypixel's and Mojang's packs, which the bot downloads at runtime and no image may carry
+assets/public/resource-packs
+packages/skin-renderer/pkg

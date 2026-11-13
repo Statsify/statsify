@@ -28,16 +28,17 @@ A Hypixel and Minecraft focused Discord Bot
 * Set up a `config.js` file in the root of the project following the `config.schema.js` file (copy paste it over and fill it in)
 * Pull the git submodules (`git submodule update --init`)
 * Use `pnpm build` to build all packages and apps,
+* Use `pnpm scripts blur-backgrounds` after building to make the blurred backgrounds
 * Use `pnpm build:watch` to watch files and build them while you code
 * Use `pnpm {appName} start` to run an app, eg `pnpm api start` to run the API
 
 ### 🤖 Other Important commands
 ```bash
 # Change things in a package/app
-$ pnpm workspace {app or package name} {command}
+$ pnpm --filter {app or package name} {command}
 
 # Example: Adding a dependency
-$ pnpm workspace {app or package name} add {dependency}
+$ pnpm --filter {app or package name} add {dependency}
 
 # Linting
 $ pnpm lint
@@ -47,6 +48,26 @@ $ pnpm test
 
 # Type Testing
 $ pnpm typecheck
+
+# Building an app's Docker image (needs the private assets)
+$ docker build --platform linux/amd64 --build-arg APP={app name} .
+```
+
+## 🚢 Deploying
+* Pushing a `v*` tag builds an image for each production app and runs them on the server with `compose.prod.yml`
+* The apps read the server's `/home/config.js`, mounted read-only, so restart them after changing it
+* Run compose commands from the deploy checkout, where `.env` holds the deployed commit
+
+```bash
+# Building and starting every app
+$ docker compose -f compose.prod.yml up -d --build
+
+# Following an app's logs
+$ docker compose -f compose.prod.yml logs -f {service name}
+
+# Restarting or stopping an app
+$ docker compose -f compose.prod.yml restart {service name}
+$ docker compose -f compose.prod.yml stop {service name}
 ```
 
 ## 💁 Contributing

@@ -6,8 +6,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  checks: write
-  contents: write
+  contents: read
+
+concurrency: deploy
 
 jobs:
   deploy:
@@ -20,18 +21,18 @@ jobs:
         with:
           token: ${{ secrets.REPO_PAT }}
           submodules: recursive
+          persist-credentials: false
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      # Compose reads TAG from here, so manual compose commands on the server use the deployed images
+      - name: Save the deployed commit
+        run: echo "TAG=$GITHUB_SHA" > .env
 
-      - name: Build Code
-        run: pnpm scripts purge-repo --dist && pnpm build --force
+      # Runs before the new containers start, so the running deploy's images stay for a rollback
+      - name: Remove old images
+        run: docker image prune -af --filter "label=org.opencontainers.image.source=https://github.com/Statsify/statsify" --filter "until=336h"
 
-      - name: Prepare Assets
-        run: pnpm scripts blur-backgrounds
+      - name: Build images
+        run: docker compose -f compose.prod.yml build --pull
 
-      - name: Move Config
-        run: cp /home/config.js ./config.js
-
-      - name: Restart PM2
-        run: npx pm2 restart pm2.config.cjs
+      - name: Start containers
+        run: docker compose -f compose.prod.yml up -d --remove-orphans --wait
