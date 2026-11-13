@@ -11,12 +11,17 @@ import { normalizeItemText } from "./lore.js";
 import { removeFormatting } from "@statsify/util";
 import { skinHash, textureOf } from "#textures";
 
-// LEGENJERRY is how Jerry's cosmetics name Legendary (the wiki's Rarity page)
-const RARITY_LINE = new RegExp(`^(?:SHINY )?(${[...RARITIES.map((rarity) => rarity.replace("_", " ")), "LEGENJERRY"].join("|")})\\b`);
+const RARITY_NAMES = new Map<string, Rarity>([
+  ...RARITIES.map((rarity) => [rarity.replace("_", " "), rarity] as const),
+  // How Jerry's cosmetics name Legendary (the wiki's Rarity page)
+  ["LEGENJERRY", "LEGENDARY"],
+]);
+
+const RARITY_LINE = new RegExp(`^(?:SHINY )?(${[...RARITY_NAMES.keys()].join("|")})\\b`);
 
 function rarityOf(lore: readonly string[]): Rarity | undefined {
-  const rarity = RARITY_LINE.exec(removeFormatting(lore.at(-1) ?? "").trim())?.[1].replace("LEGENJERRY", "LEGENDARY");
-  return rarity?.replace(" ", "_") as Rarity | undefined;
+  const name = RARITY_LINE.exec(removeFormatting(lore.at(-1) ?? "").trim())?.[1];
+  return name === undefined ? undefined : RARITY_NAMES.get(name);
 }
 
 export function toItemView(item: RawItem): ItemView {
