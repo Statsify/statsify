@@ -23,10 +23,7 @@ const ModeStats = s.fields({
 
 const DefusalSchema = s.object({
   wins() {
-    return s
-      .number()
-      .color("§a")
-      .leaderboard({ limit: 500_000, additionalFields: [this.roundWins] });
+    return WinsSchema.color("§a").leaderboard({ additionalFields: [this.roundWins] });
   },
   roundWins: s.number().color("§b"),
   ...KillsStats,

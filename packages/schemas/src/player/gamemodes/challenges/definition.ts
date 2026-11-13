@@ -292,9 +292,6 @@ export function challenges(
 
   return {
     ...(games as { [G in Game]: s.input<GameChallengesSchema<G>> }),
-    total: Math.max(
-      Object.values<number>(data).reduce((total, completions) => total + completions, 0),
-      achievements.general_challenger ?? 0
-    ),
+    total: Math.max(add(...Object.values<number>(data)), achievements.general_challenger ?? 0),
   };
 }

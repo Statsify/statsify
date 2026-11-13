@@ -465,10 +465,7 @@ export function quests(data: APIData = {}): s.input<typeof QuestsSchema> {
 
   return {
     // Some quests like SkyClash and Crazy Walls aren't stored by us.
-    total: Object.values<APIData>(data).reduce(
-      (total, quest) => total + (quest?.completions?.length ?? 0),
-      0
-    ),
+    total: add(...Object.values<APIData>(data).map((quest) => quest?.completions?.length)),
     weeklyTotal: sumTotals(weekly),
     dailyTotal: sumTotals(daily),
     overall: questCountsDuring(data, "overall"),
