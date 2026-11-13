@@ -67,8 +67,7 @@ export function getJacob(member: RawMember, items?: ItemsResource): JacobSection
     uniqueGolds: cropViews.filter(({ bracket }) => bracket && JACOB_BRACKETS.indexOf(bracket) >= gold).length,
     crops: cropViews,
     perks: {
-      doubleDrops: jacob.perks?.double_drops ?? 0,
-      // 4 a tier (the wiki's Anita page)
+      // double_drops counts Anita's Extra Farming Fortune tiers, 4 each (the wiki's Anita page)
       farmingFortune: 4 * (jacob.perks?.double_drops ?? 0),
       farmingLevelCap: jacob.perks?.farming_level_cap ?? 0,
     },
