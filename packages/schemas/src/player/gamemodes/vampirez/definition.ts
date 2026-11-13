@@ -14,16 +14,11 @@ import {
   defaultPrefix,
   getFormattedPrefix,
 } from "#prefixes";
-import { ProgressionSchema, progression } from "../../../progression.definition.js";
+import { ProgressionSchema } from "../../../progression.definition.js";
 import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 import { humanPrefixes, vampirePrefixes } from "./prefixes.js";
 import { s } from "#definition/s";
-
-const prefixProgression = (prefixes: GamePrefix[], score: number) => {
-  const { current, max = 0 } = createPrefixProgression(prefixes, score);
-  return progression(current, max);
-};
 
 const VampireZLifeSchema = (killsName: string, prefixes: GamePrefix[], scoredBy: "wins" | "kills") =>
   s.object({
@@ -50,7 +45,9 @@ const VampireZLifeSchema = (killsName: string, prefixes: GamePrefix[], scoredBy:
         .default(defaultPrefix(humanPrefixes));
     },
     progression() {
-      return ProgressionSchema.computed((score) => prefixProgression(prefixes, score), [this[scoredBy]]);
+      return ProgressionSchema.computed((score) => createPrefixProgression(prefixes, score), [
+        this[scoredBy],
+      ]);
     },
   });
 

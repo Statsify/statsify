@@ -10,7 +10,7 @@ import { BedsStats, FinalKillsStats, KillsStats, WinsStats } from "../common.js"
 import { FormattedGame } from "#game";
 import { createPrefixProgression } from "#prefixes";
 import { type NumberSchema, type Ref, s } from "#definition/s";
-import { ProgressionSchema, progression } from "../../../progression.definition.js";
+import { ProgressionSchema } from "../../../progression.definition.js";
 import { type TitleRequirement, getTitleAndProgression, prefixRequirementScores } from "./util.js";
 import { add, deepAdd } from "@statsify/math";
 import type { APIData } from "@statsify/util";
@@ -45,10 +45,10 @@ const TitleStats = s.fields({
 const SingleTitleStats = s.fields({ ...TitleStats, titleFormatted: s.string().default("§7None§r") });
 
 const titleProgression = (titleRequirement: TitleRequirement, score: Ref<NumberSchema>) =>
-  ProgressionSchema.computed((score) => {
-    const { current, max } = createPrefixProgression(prefixRequirementScores[titleRequirement], score);
-    return progression(current, max ?? 0);
-  }, [score]);
+  ProgressionSchema.computed(
+    (score) => createPrefixProgression(prefixRequirementScores[titleRequirement], score),
+    [score]
+  );
 
 const singleStats = (titleRequirement: TitleRequirement) =>
   s.fields({
