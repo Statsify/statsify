@@ -16,8 +16,10 @@ const ITEM_MODELS: Record<string, string | undefined> = itemModels;
 // The ExtraAttributes Hypixel's pack picks models by: a dagger's attunement and a critter capsule's state
 const MODEL_STATE = ["td_attune_mode", "model", "failed", "active"] as const;
 
-function modelOf(attributes: ItemAttributes = {}): Pick<ItemTexture, "model" | "customData"> {
-  const model = attributes.id && ITEM_MODELS[attributes.id];
+// NEU's model comes before an item's own ItemModel tag, which keeps the stand-in the item was made with (a goblin
+// egg's spawn egg) after Hypixel gives it a model of its own
+function modelOf(attributes: ItemAttributes = {}, itemModel?: string): Pick<ItemTexture, "model" | "customData"> {
+  const model = (attributes.id === undefined ? undefined : ITEM_MODELS[attributes.id]) ?? itemModel;
   if (!model) return {};
 
   const state = MODEL_STATE.flatMap((key) => (typeof attributes[key] === "number" ? [[key, attributes[key]] as const] : []));
@@ -34,7 +36,7 @@ export function skinHash(value: string): string | undefined {
 }
 
 export function textureOf(item: RawItem): ItemTexture {
-  const model = modelOf(item.tag?.ExtraAttributes);
+  const model = modelOf(item.tag?.ExtraAttributes, item.tag?.ItemModel);
   const value = item.tag?.SkullOwner?.Properties?.textures?.[0]?.Value;
   const skin = value && skinHash(value);
   if (skin) return { kind: "head", skin, ...model };
@@ -90,5 +92,7 @@ if (import.meta.vitest) {
     expect(textureOf({ ...dagger, tag: { ExtraAttributes: { id: "FIREDUST_DAGGER", td_attune_mode: 1, uuid: "a" } } })).toEqual({ kind: "item", id: 272, damage: 0, model, customData: { td_attune_mode: 1 } });
     expect(textureOf({ ...dagger, tag: { ExtraAttributes: { id: "FIREDUST_DAGGER", model: "SUMSUNG_1" } } })).toEqual({ kind: "item", id: 272, damage: 0, model });
     expect(textureOf({ ...dagger, tag: { ExtraAttributes: { id: "SOMETHING_NEW", td_attune_mode: 1 } } })).toEqual({ kind: "item", id: 272, damage: 0 });
+    expect(textureOf({ ...dagger, tag: { ItemModel: "minecraft:goat_spawn_egg", ExtraAttributes: { id: "SOMETHING_NEW" } } }).model).toBe("minecraft:goat_spawn_egg");
+    expect(textureOf({ ...dagger, tag: { ItemModel: "minecraft:blue_egg", ExtraAttributes: { id: "GOBLIN_EGG" } } }).model).toBe(ITEM_MODELS.GOBLIN_EGG);
   });
 }

@@ -1053,6 +1053,7 @@ export interface RawItem {
     display?: { Name?: string; Lore?: string[]; color?: number };
     ExtraAttributes?: ItemAttributes;
     SkullOwner?: { Properties?: { textures?: { Value: string }[] } };
+    ItemModel?: string;
     ench?: unknown[];
   };
 }
