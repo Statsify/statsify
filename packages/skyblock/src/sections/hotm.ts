@@ -12,7 +12,7 @@ import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
 import type { RawMember } from "#raw";
 
-/** A tree's perks at their menu spots, levelled from the member's nodes. */
+/** A tree's perks at their menu spots, leveled from the member's nodes. */
 export const treeNodes = (layout: TreeLayout, nodes: Record<string, number | boolean>): TreeNode[] =>
   Object.entries(layout).map(([id, { name, x, y, maxLevel }]) => {
     const level = Number(nodes[id] ?? 0);
