@@ -291,9 +291,11 @@ export class PackStack {
 /** A namespaced id with or without its namespace, like "item/stick" or "minecraft:item/stick" */
 export const namespaced = (id: string) => (id.includes(":") ? id : `minecraft:${id}`);
 
-/** A JSON reviver for item model definitions and fonts, where every "type" is an id with an optional namespace */
-export const namespaceTypes = (key: string, value: unknown) =>
-  key === "type" && typeof value === "string" ? namespaced(value) : value;
+const ID_KEYS = new Set(["type", "property", "component", "predicate"]);
+
+/** A JSON reviver for item model definitions and fonts, whose ids may leave off "minecraft:" */
+export const namespaceIds = (key: string, value: unknown) =>
+  ID_KEYS.has(key) && typeof value === "string" ? namespaced(value) : value;
 
 export function assetPath(id: string, folder: string, extension: string) {
   const [namespace, path] = namespaced(id).split(":");

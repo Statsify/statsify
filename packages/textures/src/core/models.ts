@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type PackStack, assetPath, namespaceTypes, namespaced } from "./pack.js";
+import { type PackStack, assetPath, namespaceIds, namespaced } from "./pack.js";
 import type { ItemStack } from "./item-stack.js";
 import type { TintSource } from "./tints.js";
+import { maxDamage } from "./legacy-items.js";
 import { type Transformation, type Vec3, composeTransforms } from "./geometry.js";
 
 export interface Transform {
@@ -82,6 +83,8 @@ type ItemModel =
       type: "minecraft:condition";
       property: string;
       component?: string;
+      predicate?: string;
+      value?: unknown;
       on_true: ItemModel;
       on_false: ItemModel;
     }
@@ -107,11 +110,57 @@ type ItemModel =
   | { type: "minecraft:empty" }
   | { type: "minecraft:bundle/selected_item" };
 
-// Properties are read as they are for an item sitting in an inventory: not in use, not
-// selected, not cast, so every condition without a case here is false
+const SNBT_ENTRY = /\s*([\w.+-]+|"(?:[^"\\]|\\.)*")\s*:\s*("(?:[^"\\]|\\.)*"|[\w.+-]+)\s*(?:,|(?=\}$))/y;
+const SNBT_NUMBER = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?[bdfls]?$/i;
+
+const snbtString = (token: string) => (token.startsWith('"') ? (JSON.parse(token) as string) : token);
+
+function snbtValue(token: string) {
+  if (token === "true" || token === "false") return Number(token === "true");
+  return SNBT_NUMBER.test(token) ? Number.parseFloat(token) : snbtString(token);
+}
+
+/** A compound of plain values, like {td_attune_mode:1}, with booleans as the bytes 1 and 0 */
+function parseSnbt(snbt: string) {
+  const text = snbt.trim();
+  if (!text.startsWith("{") || !text.endsWith("}")) throw new Error(`${snbt} isn't an SNBT compound`);
+
+  const compound: Record<string, number | string> = {};
+
+  for (SNBT_ENTRY.lastIndex = 1; SNBT_ENTRY.lastIndex < text.length - 1; ) {
+    const entry = SNBT_ENTRY.exec(text);
+    if (!entry) throw new Error(`${snbt} holds something other than numbers, booleans and strings`);
+    compound[snbtString(entry[1])] = snbtValue(entry[2]);
+  }
+
+  return compound;
+}
+
+// Properties are read as they are for an item sitting in an inventory: not in use, selected,
+// cast or held by a key, so every condition without a case here is false
 function condition(model: Extract<ItemModel, { type: "minecraft:condition" }>, item: ItemStack) {
-  if (model.property !== "minecraft:has_component") return false;
-  return model.component === "minecraft:dyed_color" && item.color !== undefined;
+  switch (model.property) {
+    case "minecraft:has_component":
+      return model.component === "minecraft:dyed_color" && item.color !== undefined;
+
+    case "minecraft:component": {
+      if (model.predicate !== "minecraft:custom_data") return false;
+      if (typeof model.value !== "string") {
+        throw new TypeError(`${item.itemModel ?? item.id}'s custom_data condition isn't SNBT`);
+      }
+
+      const expected = Object.entries(parseSnbt(model.value));
+      return expected.every(([key, value]) => item.customData?.[key] === value);
+    }
+
+    case "minecraft:broken": {
+      const durability = maxDamage(item.id);
+      return durability !== undefined && !item.unbreakable && (item.damage ?? 0) >= durability - 1;
+    }
+
+    default:
+      return false;
+  }
 }
 
 // Trims, block states, charge types and clock times aren't on Hypixel's items, so those
@@ -131,7 +180,7 @@ export class ModelResolver {
 
   /** The models an item draws in an inventory slot, bottom layer first */
   public resolve(item: ItemStack): ItemLayer[] {
-    return this.layers(this.definition(item.id), item);
+    return this.layers(this.definition(item.itemModel ?? item.id), item);
   }
 
   private definition(id: string) {
@@ -139,7 +188,7 @@ export class ModelResolver {
     const cached = this.definitions.get(path);
     if (cached) return cached;
 
-    const definition = this.stack.json<{ model: ItemModel }>(path, namespaceTypes);
+    const definition = this.stack.json<{ model: ItemModel }>(path, namespaceIds);
     if (!definition) throw new Error(`${id} has no item model definition (${path})`);
 
     this.definitions.set(path, definition.model);
@@ -198,7 +247,7 @@ export class ModelResolver {
   private itemModel(item: ItemStack, selected: string) {
     if (!namespaced(selected).split(":")[1].startsWith("block/")) return selected;
 
-    const [namespace, name] = namespaced(item.id).split(":");
+    const [namespace, name] = namespaced(item.itemModel ?? item.id).split(":");
     const legacy = `${namespace}:item/${name}`;
     const legacyPath = assetPath(legacy, "models", ".json");
     const selectedPath = assetPath(selected, "models", ".json");
@@ -330,5 +379,72 @@ if (import.meta.vitest) {
       });
       expect(layer.model.textures).not.toHaveProperty("layer2");
     });
+
+    it("picks a pack's own item model by the item's custom data and wear", () => {
+      const flat = Object.fromEntries(
+        ["in_hand", "ashen", "auric", "full", "empty"].map((name) => [
+          `assets/pack/models/item/${name}.json`,
+          { parent: "builtin/generated" },
+        ]),
+      );
+
+      const resolver = new ModelResolver(
+        packOf({
+          ...flat,
+          "assets/pack/items/dagger.json": {
+            model: {
+              type: "select",
+              property: "display_context",
+              cases: [
+                {
+                  when: ["gui", "fixed"],
+                  model: {
+                    type: "condition",
+                    property: "component",
+                    predicate: "custom_data",
+                    value: "{mode:1}",
+                    on_true: { type: "model", model: "pack:item/auric" },
+                    on_false: { type: "model", model: "pack:item/ashen" },
+                  },
+                },
+              ],
+              fallback: { type: "model", model: "pack:item/in_hand" },
+            },
+          },
+          "assets/pack/items/can.json": {
+            model: {
+              type: "condition",
+              property: "broken",
+              on_true: { type: "model", model: "pack:item/empty" },
+              on_false: { type: "model", model: "pack:item/full" },
+            },
+          },
+        }),
+      );
+
+      const models = (item: ItemStack) => resolver.resolve(item).map(({ model }) => model.id);
+      const dagger = { id: "minecraft:golden_sword", itemModel: "pack:dagger" };
+      const can = { id: "minecraft:carrot_on_a_stick", itemModel: "pack:can" };
+
+      expect(models(dagger)).toEqual(["pack:item/ashen"]);
+      expect(models({ ...dagger, customData: { id: "DAGGER", mode: 1 } })).toEqual(["pack:item/auric"]);
+      expect(models({ ...dagger, customData: { mode: 3 } })).toEqual(["pack:item/ashen"]);
+      expect(models({ ...can, damage: 23 })).toEqual(["pack:item/full"]);
+      expect(models({ ...can, damage: 24 })).toEqual(["pack:item/empty"]);
+      expect(models({ ...can, damage: 24, unbreakable: true })).toEqual(["pack:item/full"]);
+    });
+  });
+
+  it("reads SNBT compounds of plain values", () => {
+    expect(parseSnbt("{}")).toEqual({});
+    expect(parseSnbt("{td_attune_mode:1}")).toEqual({ td_attune_mode: 1 });
+    expect(parseSnbt('{ active:true, "a key":"b,c", level:2.5f, tier:-3b }')).toEqual({
+      active: 1,
+      "a key": "b,c",
+      level: 2.5,
+      tier: -3,
+    });
+    expect(() => parseSnbt("{nested:{a:1}}")).toThrow();
+    expect(() => parseSnbt("td_attune_mode:1")).toThrow();
   });
 }
