@@ -11,7 +11,6 @@ import { readFile } from "node:fs/promises";
 import { swc } from "./vite.swc.js";
 
 async function getSwcrc() {
-  // Next to this file, not the working directory, so running vitest from a package folder works
   const config = await readFile(new URL(".swcrc", import.meta.url), "utf8").then(JSON.parse);
   delete config["$schema"];
   return config;
