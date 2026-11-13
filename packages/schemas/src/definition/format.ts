@@ -24,7 +24,8 @@ const fail = (key: ParseError["key"], input: string): Result<never, ParseError> 
 });
 
 export interface Format {
-  format(value: number, locale: string): string;
+  /** A number is left for the consumer to localize, like a level shown beside other values */
+  format(value: number, locale: string): string | number;
   /** The value a leaderboard search like `1:23` or `500✫` ranks at */
   parse(input: string, locale: string): Result<number, ParseError>;
 }
@@ -123,7 +124,7 @@ if (import.meta.vitest) {
 
     expect(formats.time.parse("1:23", "en-US")).toEqual(ok(83_000));
     expect(formats.time.parse("1:2x", "en-US")).toEqual(fail("invalidTime", "1:2x"));
-    expect(formats.raceTime.parse(formats.raceTime.format(12_345, "en-US"), "en-US")).toEqual(ok(12_345));
+    expect(formats.raceTime.parse(String(formats.raceTime.format(12_345, "en-US")), "en-US")).toEqual(ok(12_345));
 
     const level = formats.searchedAs((exp) => Math.min(exp / 100, 10), (exp) => `${exp / 100}✫`);
     expect(level.parse("5✫", "en-US")).toEqual(ok(500));

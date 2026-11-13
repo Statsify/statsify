@@ -72,8 +72,7 @@ export const SkyWarsSchema = s
   .object({
     exp() {
       return ExpSchema
-        // The API sends the level as a number, which the bot formats like any other value
-        .format(formats.searchedAs(getLevel, (exp) => getLevel(exp) as unknown as string))
+        .format(formats.searchedAs(getLevel, getLevel))
         .leaderboard({
           fieldName: "Level",
           hidden: true,

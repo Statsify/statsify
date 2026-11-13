@@ -220,11 +220,7 @@ export const GeneralSchema = s
     networkExp(): NumberSchema {
       return s
         .number()
-        .format(
-          formats.searchedAs(getNetworkLevel, (exp, locale) =>
-            getNetworkLevel(exp).toLocaleString(locale)
-          )
-        )
+        .format(formats.searchedAs(getNetworkLevel, getNetworkLevel))
         .leaderboard({
           fieldName: "Network Level",
           hidden: true,
