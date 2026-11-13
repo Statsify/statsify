@@ -206,7 +206,7 @@ export interface HotfSection {
   level: Level;
   centerLevel: number; // Center of the Forest's
   loadout: { selected: number; total: number };
-  tokensSpent: number;
+  tokens: { spent: number };
   ability?: string;
   whispers: Record<Whisper, { total: number; spent: number }>; // total earned; spent by this loadout
   nodes: TreeNode[];
