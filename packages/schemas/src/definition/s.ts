@@ -323,7 +323,8 @@ export type AnySchema =
 
 type Simplify<T> = { [K in keyof T]: T[K] } & {};
 
-type Null<S> = S extends Nullable ? null : never;
+// Any schema could be nullable, so a function taking any object, like toMongoose, takes one with nulls
+type Null<S> = [S] extends [Nullable] ? null : [AnySchema] extends [S] ? null : never;
 
 type OutputOf<D extends Definition> = Simplify<
   { [K in keyof D as D[K] extends Optional ? never : K]: s.infer<D[K]> | Null<D[K]> } & {
