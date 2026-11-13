@@ -47,12 +47,12 @@ export const revokeToken = async (refreshToken: string) => {
   if (!response.ok) throw new Error(`Discord token revoke failed with ${response.status}`);
 };
 
-export const discordRequest = async <T = void>(
+export const discordRequest = async (
   method: "GET" | "PUT" | "DELETE",
   path: string,
   accessToken: string,
   body?: object
-): Promise<T> => {
+) => {
   const response = await fetch(`${DISCORD_API}${path}`, {
     method,
     headers: {
@@ -63,9 +63,8 @@ export const discordRequest = async <T = void>(
   });
 
   if (!response.ok) throw new Error(`Discord ${method} ${path} failed with ${response.status}`);
-  if (response.status === 204) return undefined as T;
 
-  return response.json() as Promise<T>;
+  return response;
 };
 
 const requestTokens = async (grant: Record<string, string>): Promise<DiscordTokens | undefined> => {

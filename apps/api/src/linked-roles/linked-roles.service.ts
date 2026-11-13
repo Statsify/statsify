@@ -55,7 +55,8 @@ export class LinkedRolesService {
    * @returns The stored connection, or null when the Discord user hasn't verified a Minecraft account
    */
   public async connect(tokens: DiscordTokens): Promise<RoleConnection | null> {
-    const { id } = await discordRequest<{ id: string }>("GET", "/users/@me", tokens.access_token);
+    const response = await discordRequest("GET", "/users/@me", tokens.access_token);
+    const { id }: { id: string } = await response.json();
     const user = await this.userModel.findOne({ id }).select({ uuid: true }).lean().exec();
 
     if (!user?.uuid) {
