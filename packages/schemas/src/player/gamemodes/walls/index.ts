@@ -19,9 +19,6 @@ import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
-export const WALLS_MODES = new GameModes([{ api: "overall" }] as const);
-
-export type WallsModes = ExtractGameModes<typeof WALLS_MODES>;
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },

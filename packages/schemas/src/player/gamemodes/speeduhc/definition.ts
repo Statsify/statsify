@@ -7,11 +7,28 @@
  */
 
 import { AssistsSchema, CoinsSchema, KillsStats, WinsStats } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { prefixProgression } from "../prefix-fields.js";
 import { getLevelIndex, titleScores } from "./util.js";
 import { s } from "#definition/s";
 import type { APIData } from "@statsify/util";
+
+export const SPEED_UHC_MODES = new GameModes([
+  { api: "overall" },
+  { api: "solo", hypixel: "solo_normal" },
+  { api: "teams", hypixel: "team_normal" },
+  { api: "wildSpecialist" },
+  { api: "guardian" },
+  { api: "sniper" },
+  { api: "berserk" },
+  { api: "masterBaker" },
+  { api: "invigorate" },
+  { api: "huntsman" },
+  { api: "fortune" },
+  { api: "vampirism" },
+] as const);
+
+export type SpeedUHCModes = ExtractGameModes<typeof SPEED_UHC_MODES>;
 
 const formatLevel = (level: number) => `§d[${level}❋]`;
 

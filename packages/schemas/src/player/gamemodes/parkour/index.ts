@@ -10,9 +10,6 @@ import { type APIData, formatTime } from "@statsify/util";
 import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { Field } from "#metadata";
 
-export const PARKOUR_MODES = new GameModes([{ api: "overall" }] as const);
-
-export type ParkourModes = ExtractGameModes<typeof PARKOUR_MODES>;
 
 const fieldOptions = { sort: "ASC", formatter: formatTime, fieldName: "Time" };
 const historical = { enabled: false };

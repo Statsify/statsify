@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, findScoreIndex, romanNumeral } from "@statsify/util";
-import { GamePrefix, createPrefixProgression, cycleColors } from "#prefixes";
+import { findScoreIndex, romanNumeral } from "@statsify/util";
+import { type GamePrefix, cycleColors } from "#prefixes";
 import type { ColorCode } from "#color";
 
 export interface Title {
@@ -80,17 +80,6 @@ export interface TitleOptions {
   scheme?: string;
   titleRequirement: TitleRequirement;
 }
-
-export const getTitleAndProgression = ({
-  data,
-  ...options
-}: Omit<TitleOptions, "icon" | "scheme"> & { data: APIData }) => ({
-  ...getTitles({ ...options, icon: data.active_prefix_icon, scheme: data.active_prefix_scheme }),
-  progression: createPrefixProgression(
-    prefixRequirementScores[options.titleRequirement],
-    options.score
-  ),
-});
 
 export const getTitles = ({
   score,

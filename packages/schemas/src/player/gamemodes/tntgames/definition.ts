@@ -8,11 +8,38 @@
 
 import { AssistsSchema, CoinsSchema, KillsStats, WinsSchema, WinsStats } from "../common.js";
 import { type GamePrefix, cycleColors } from "#prefixes";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import type { APIData } from "@statsify/util";
 import { formats } from "#definition/format";
 import { prefixFields } from "../prefix-fields.js";
 import { s } from "#definition/s";
+
+export const TNT_GAMES_MODES = new GameModes([
+  { api: "overall" },
+  { api: "tntRun", hypixel: "TNTRUN", formatted: "TNT Run" },
+  { api: "pvpRun", hypixel: "PVPRUN", formatted: "PVP Run" },
+  { api: "bowSpleef", hypixel: "BOWSPLEEF" },
+  { api: "tntTag", hypixel: "TNTAG", formatted: "TNT Tag" },
+  {
+    api: "wizards",
+    hypixel: "CAPTURE",
+    submodes: [
+      { api: "overall" },
+      { api: "fireWizard" },
+      { api: "iceWizard" },
+      { api: "witherWizard" },
+      { api: "kineticWizard" },
+      { api: "bloodWizard" },
+      { api: "toxicWizard" },
+      { api: "hydroWizard" },
+      { api: "ancientWizard" },
+      { api: "stormWizard" },
+      { api: "arcaneWizard" },
+    ],
+  },
+] as const);
+
+export type TNTGamesModes = ExtractGameModes<typeof TNT_GAMES_MODES>;
 
 const tntgamesRainbow = (text: string) => cycleColors(text, ["c", "6", "e", "a", "b", "d", "5"]);
 

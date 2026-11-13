@@ -35,33 +35,6 @@ import { ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { Field } from "#metadata";
 import { QuestTime, createQuestsInstance } from "./util.js";
 
-export const QUEST_MODES = new GameModes([
-  { api: "overall" },
-  { api: "ARCADE", formatted: removeFormatting(FormattedGame.ARCADE) },
-  { api: "ARENA_BRAWL", formatted: removeFormatting(FormattedGame.ARENA_BRAWL) },
-  { api: "BEDWARS", formatted: removeFormatting(FormattedGame.BEDWARS) },
-  { api: "BLITZSG", formatted: removeFormatting(FormattedGame.BLITZSG) },
-  { api: "BUILD_BATTLE", formatted: removeFormatting(FormattedGame.BUILD_BATTLE) },
-  { api: "DUELS", formatted: removeFormatting(FormattedGame.DUELS) },
-  { api: "COPS_AND_CRIMS", formatted: removeFormatting(FormattedGame.COPS_AND_CRIMS) },
-  { api: "MEGAWALLS", formatted: removeFormatting(FormattedGame.MEGAWALLS) },
-  { api: "MURDER_MYSTERY", formatted: removeFormatting(FormattedGame.MURDER_MYSTERY) },
-  { api: "PAINTBALL", formatted: removeFormatting(FormattedGame.PAINTBALL) },
-  { api: "PIT", formatted: removeFormatting(FormattedGame.PIT) },
-  { api: "QUAKE", formatted: removeFormatting(FormattedGame.QUAKE) },
-  { api: "SKYWARS", formatted: removeFormatting(FormattedGame.SKYWARS) },
-  { api: "SMASH_HEROES", formatted: removeFormatting(FormattedGame.SMASH_HEROES) },
-  { api: "SPEED_UHC", formatted: removeFormatting(FormattedGame.SPEED_UHC) },
-  { api: "TNT_GAMES", formatted: removeFormatting(FormattedGame.TNT_GAMES) },
-  { api: "TURBO_KART_RACERS", formatted: removeFormatting(FormattedGame.TURBO_KART_RACERS) },
-  { api: "UHC", formatted: removeFormatting(FormattedGame.UHC) },
-  { api: "VAMPIREZ", formatted: removeFormatting(FormattedGame.VAMPIREZ) },
-  { api: "WALLS", formatted: removeFormatting(FormattedGame.WALLS) },
-  { api: "WARLORDS", formatted: removeFormatting(FormattedGame.WARLORDS) },
-  { api: "WOOLGAMES", formatted: removeFormatting(FormattedGame.WOOLGAMES) },
-] as const);
-
-export type QuestModes = ExtractGameModes<typeof QUEST_MODES>;
 
 const questModes = {
   ARCADE: ArcadeQuests,

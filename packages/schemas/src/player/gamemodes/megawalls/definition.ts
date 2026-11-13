@@ -16,12 +16,44 @@ import {
   KitWinsStats,
   WinsStats,
 } from "../common.js";
-import { FormattedGame } from "#game";
-import { MEGAWALLS_MODES } from "./index.js";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { add } from "@statsify/math";
 import { formats } from "#definition/format";
 import { s } from "#definition/s";
 import type { APIData } from "@statsify/util";
+
+export const MEGAWALLS_MODES = new GameModes([
+  { api: "overall" },
+  { api: "angel" },
+  { api: "arcanist" },
+  { api: "assassin" },
+  { api: "automaton" },
+  { api: "blaze" },
+  { api: "cow" },
+  { api: "creeper" },
+  { api: "dragon" },
+  { api: "dreadlord" },
+  { api: "enderman" },
+  { api: "golem" },
+  { api: "herobrine" },
+  { api: "hunter" },
+  { api: "moleman" },
+  { api: "phoenix" },
+  { api: "pigman" },
+  { api: "pirate" },
+  { api: "renegade" },
+  { api: "shaman" },
+  { api: "shark" },
+  { api: "sheep" },
+  { api: "skeleton" },
+  { api: "snowman" },
+  { api: "spider" },
+  { api: "squid" },
+  { api: "werewolf" },
+  { api: "zombie" },
+] as const);
+
+export type MegaWallsModes = ExtractGameModes<typeof MEGAWALLS_MODES>;
 
 const limit = 10_000;
 

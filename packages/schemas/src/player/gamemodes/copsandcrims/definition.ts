@@ -8,11 +8,21 @@
 
 import { type APIData, findScoreIndex } from "@statsify/util";
 import { AssistsSchema, CoinsSchema, KillsStats, WinsSchema } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { LEVEL_REQUIREMENTS, getFormattedLevel, getIntendedLevelFormatted } from "./util.js";
 import { add } from "@statsify/math";
 import { prefixProgression } from "../prefix-fields.js";
 import { s } from "#definition/s";
+
+export const COPS_AND_CRIMS_MODES = new GameModes([
+  { api: "overall" },
+  { api: "defusal", hypixel: "normal" },
+  { api: "deathmatch", hypixel: "deathmatch" },
+  { api: "gunGame", hypixel: "gungame" },
+  { hypixel: "normal_party", formatted: "Challenge" },
+] as const);
+
+export type CopsAndCrimsModes = ExtractGameModes<typeof COPS_AND_CRIMS_MODES>;
 
 const ModeStats = s.fields({
   wins: WinsSchema.color("§a"),

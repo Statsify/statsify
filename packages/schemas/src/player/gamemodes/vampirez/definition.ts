@@ -7,13 +7,16 @@
  */
 
 import { CoinsSchema, KillsStats, WinsSchema } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { type GamePrefix, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 import { humanPrefixes, vampirePrefixes } from "./prefixes.js";
 import { prefixFields } from "../prefix-fields.js";
 import { s } from "#definition/s";
+
+export const VAMPIREZ_MODES = new GameModes([{ api: "human" }, { api: "vampire" }] as const);
+export type VampireZModes = ExtractGameModes<typeof VAMPIREZ_MODES>;
 
 const vampireZLifeSchema = (killsName: string, prefixes: GamePrefix[], scoredBy: "wins" | "kills") => {
   const prefix = prefixFields(prefixes);

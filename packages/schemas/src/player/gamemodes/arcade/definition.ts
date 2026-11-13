@@ -10,8 +10,65 @@ import { CoinsSchema, KillsSchema, KillsStats, WinsSchema, WinsStats } from "../
 import { type NumberSchema, s } from "#definition/s";
 import { add, deepAdd, deepSub, sub } from "@statsify/math";
 import type { APIData } from "@statsify/util";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { formats } from "#definition/format";
+
+export const ARCADE_MODES = new GameModes([
+  { api: "overall" },
+  { api: "blockingDead", hypixel: "DAYONE" },
+  { api: "bountyHunters", hypixel: "ONEINTHEQUIVER" },
+  { api: "creeperAttack", hypixel: "DEFENDER" },
+  {
+    api: "disasters",
+    hypixel: "DISASTERS",
+    submodes: [{ api: "overall" }, { api: "survivals" }, { api: "deaths" }],
+  },
+  { api: "dragonWars", hypixel: "DRAGONWARS2" },
+  {
+    api: "dropper",
+    hypixel: "DROPPER",
+    submodes: [
+      { api: "overall" },
+      { api: "bestTimes" },
+      { api: "completions" },
+    ],
+  },
+  { api: "enderSpleef", hypixel: "ENDER" },
+  { api: "farmHunt", hypixel: "FARM_HUNT" },
+  { api: "football", hypixel: "SOCCER" },
+  { api: "galaxyWars", hypixel: "STARWARS" },
+  { api: "hideAndSeek" },
+  { api: "holeInTheWall", hypixel: "HOLE_IN_THE_WALL" },
+  { api: "hypixelSays", hypixel: "SIMON_SAYS" },
+  { api: "miniWalls", hypixel: "MINI_WALLS" },
+  {
+    api: "partyGames",
+    hypixel: "PARTY",
+    submodes: [{ api: "overall" }, { api: "roundWins" }],
+  },
+  { api: "pixelPainters", hypixel: "DRAW_THEIR_THING" },
+  { api: "pixelParty", hypixel: "PIXEL_PARTY" },
+  { api: "seasonal" },
+  { api: "throwOut", hypixel: "THROW_OUT" },
+  {
+    api: "zombies",
+    submodes: [
+      { api: "overall" },
+      { api: "deadEnd" },
+      { api: "badBlood" },
+      { api: "alienArcadium" },
+      { api: "prison" },
+    ],
+  },
+
+  {
+    hypixel: "HIDE_AND_SEEK_PARTY_POOPER",
+    formatted: "Hide and Seek Party Pooper",
+  },
+  { hypixel: "HIDE_AND_SEEK_PROP_HUNT", formatted: "Hide and Seek Prop Hunt" },
+] as const);
+
+export type ArcadeModes = ExtractGameModes<typeof ARCADE_MODES>;
 
 const BlockingDeadSchema = s.object({
   wins: WinsSchema.color("§e"),

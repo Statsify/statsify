@@ -17,18 +17,6 @@ import type { APIData } from "@statsify/util";
 
 const formatLevel = (level: number | string) => `§6[${level}✫]`;
 
-export const UHC_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo", hypixel: "SOLO" },
-  { api: "teams", hypixel: "TEAMS" },
-] as const);
-
-const prefixes: GamePrefix[] = titleScores.map((level) => ({
-  fmt: formatLevel,
-  req: level.req,
-}));
-
-export type UHCModes = ExtractGameModes<typeof UHC_MODES>;
 
 export class UHC {
   @Field()

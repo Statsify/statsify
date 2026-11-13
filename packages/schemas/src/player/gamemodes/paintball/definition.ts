@@ -7,12 +7,16 @@
  */
 
 import { CoinsSchema, KillsStats, WinsSchema } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import type { APIData } from "@statsify/util";
 import type { GamePrefix } from "#prefixes";
 import { add, ratio } from "@statsify/math";
 import { prefixFields } from "../prefix-fields.js";
 import { s } from "#definition/s";
+
+export const PAINTBALL_MODES = new GameModes([{ api: "overall" }] as const);
+
+export type PaintballModes = ExtractGameModes<typeof PAINTBALL_MODES>;
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },

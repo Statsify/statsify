@@ -7,12 +7,20 @@
  */
 
 import { CoinsSchema, KillsStats, WinsSchema } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import type { GamePrefix } from "#prefixes";
 import { deepAdd, ratio } from "@statsify/math";
 import { prefixFields } from "../prefix-fields.js";
 import { s } from "#definition/s";
 import type { APIData } from "@statsify/util";
+
+export const QUAKE_MODES = new GameModes([
+  { api: "overall" },
+  { api: "solo", hypixel: "solo" },
+  { api: "teams", hypixel: "teams" },
+] as const);
+
+export type QuakeModes = ExtractGameModes<typeof QUAKE_MODES>;
 
 const indexes = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 

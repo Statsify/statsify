@@ -7,12 +7,16 @@
  */
 
 import { CoinsSchema } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import type { APIData } from "@statsify/util";
 import type { GamePrefix } from "#prefixes";
 import { add, ratio } from "@statsify/math";
 import { prefixFields } from "../prefix-fields.js";
 import { type NumberSchema, s } from "#definition/s";
+
+export const TURBO_KART_RACERS_MODES = new GameModes([{ api: "overall" }] as const);
+
+export type TurboKartRacersModes = ExtractGameModes<typeof TURBO_KART_RACERS_MODES>;
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}✪]`, req: 0 },

@@ -7,12 +7,21 @@
  */
 
 import { CoinsSchema, KillsStats, WinsStats } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { type GamePrefix, rainbow } from "#prefixes";
 import type { APIData } from "@statsify/util";
 import { deepAdd } from "@statsify/math";
 import { prefixFields } from "../prefix-fields.js";
 import { s } from "#definition/s";
+
+export const ARENA_BRAWL_MODES = new GameModes([
+  { api: "overall" },
+  { api: "solo" },
+  { api: "doubles" },
+  { api: "fours" },
+] as const);
+
+export type ArenaBrawlModes = ExtractGameModes<typeof ARENA_BRAWL_MODES>;
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },

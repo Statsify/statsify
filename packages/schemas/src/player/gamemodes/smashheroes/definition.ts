@@ -7,9 +7,37 @@
  */
 
 import { CoinsSchema, KillsStats, WinsStats } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { s } from "#definition/s";
 import type { APIData } from "@statsify/util";
+
+export const SMASH_HEROES_MODES = new GameModes([
+  { api: "overall" },
+  { api: "solo", hypixel: "solo_normal" },
+  { api: "doubles", hypixel: "2v2_normal" },
+  { api: "teams", hypixel: "teams_normal" },
+  { api: "botmon" },
+  { api: "bulk" },
+  { api: "cakeMonster" },
+  { api: "cryomancer" },
+  { api: "generalCluck" },
+  { api: "greenHood" },
+  { api: "karakot" },
+  { api: "marauder" },
+  { api: "pug" },
+  { api: "sanic" },
+  { api: "sergeantShield" },
+  { api: "shoop" },
+  { api: "skullfire" },
+  { api: "spooderman" },
+  { api: "tinman" },
+  { api: "voidCrawler" },
+
+  { hypixel: "1v1_normal", formatted: "1v1" },
+  { hypixel: "friends_normal", formatted: "Friends" },
+] as const);
+
+export type SmashHeroesModes = ExtractGameModes<typeof SMASH_HEROES_MODES>;
 
 const formatLevel = (level: number) => `§b${level}§6✶`;
 

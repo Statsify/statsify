@@ -8,11 +8,14 @@
 
 import { type ColorCode, type NumberSchema, s } from "#definition/s";
 import { ExpSchema } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { ProgressionSchema, progression } from "../../../progression.definition.js";
 import type { APIData } from "@statsify/util";
 import { formats } from "#definition/format";
 import { getNetworkLevel } from "./util.js";
+
+export const GENERAL_MODES = new GameModes([{ api: "overall" }] as const);
+export type GeneralModes = ExtractGameModes<typeof GENERAL_MODES>;
 
 const MAX_EVENT_LEVEL = 100;
 

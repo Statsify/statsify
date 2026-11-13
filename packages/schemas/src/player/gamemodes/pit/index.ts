@@ -22,12 +22,6 @@ import {
 } from "./util.js";
 import { add, ratio } from "@statsify/math";
 
-export const PIT_MODES = new GameModes([
-  { api: "overall" },
-  { hypixel: "PIT", formatted: "Pit" },
-] as const);
-
-export type PitModes = ExtractGameModes<typeof PIT_MODES>;
 
 export class Pit {
   @Field({

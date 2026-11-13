@@ -7,13 +7,28 @@
  */
 
 import { type APIData, abbreviationNumber, prettify } from "@statsify/util";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { KillsStats, WinsSchema } from "../common.js";
 import { ProgressionSchema, progression } from "../../../progression.definition.js";
 import { add } from "@statsify/math";
 import { cycleColors } from "#prefixes";
 import { formats } from "#definition/format";
 import { s } from "#definition/s";
+
+export const MURDER_MYSTERY_MODES = new GameModes([
+  { api: "overall" },
+  { api: "classic" },
+  { api: "doubleUp" },
+  { api: "assassins" },
+  { api: "infection" },
+
+  { hypixel: "MURDER_DOUBLE_UP", formatted: "Double Up" },
+  { hypixel: "MURDER_INFECTION", formatted: "Infection" },
+  { hypixel: "MURDER_ASSASSINS", formatted: "Assassins" },
+  { hypixel: "MURDER_CLASSIC", formatted: "Classic" },
+] as const);
+
+export type MurderMysteryModes = ExtractGameModes<typeof MURDER_MYSTERY_MODES>;
 
 const BaseModeStats = s.fields({
   wins: WinsSchema.color("§a"),

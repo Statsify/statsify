@@ -16,27 +16,6 @@ import { WoolWars } from "./woolwars.js";
 import { add } from "@statsify/math";
 import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
 
-export const WOOLGAMES_MODES = new GameModes([
-  {
-    api: "woolwars",
-    formatted: "Wool Wars",
-    hypixel: "wool_wars_two_four",
-    submodes: [
-      { api: "overall" },
-      { api: "tank" },
-      { api: "archer" },
-      { api: "builder" },
-      { api: "swordsman" },
-      { api: "engineer" },
-      { api: "golem" },
-      { api: "assault" },
-    ],
-  },
-  { api: "sheepwars", formatted: "Sheep Wars", hypixel: "sheep_wars_two_six" },
-  { api: "captureTheWool", hypixel: "capture_the_wool_two_twenty" },
-] as const);
-
-export type WoolGamesModes = ExtractGameModes<typeof WOOLGAMES_MODES>;
 
 export class WoolGames {
   @Field({ historical: { enabled: false } })

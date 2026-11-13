@@ -28,3 +28,9 @@ export const ColorSchema = s.object({
 });
 
 export type Color = s.infer<typeof ColorSchema>;
+
+/** Looks a color up by its code, hex or id, like Hypixel's "RED" */
+export function getColor(value: ColorCode | ColorHex | ColorId): Color {
+  const color = minecraftColors.find(({ code, hex, id }) => [code, hex, id].includes(value));
+  return { code: color?.code, hex: color?.hex, id: color?.id } as Color;
+}

@@ -19,20 +19,6 @@ import { Field } from "#metadata";
 import { add } from "@statsify/math";
 import { cycleColors } from "#prefixes";
 
-export const MURDER_MYSTERY_MODES = new GameModes([
-  { api: "overall" },
-  { api: "classic" },
-  { api: "doubleUp" },
-  { api: "assassins" },
-  { api: "infection" },
-
-  { hypixel: "MURDER_DOUBLE_UP", formatted: "Double Up" },
-  { hypixel: "MURDER_INFECTION", formatted: "Infection" },
-  { hypixel: "MURDER_ASSASSINS", formatted: "Assassins" },
-  { hypixel: "MURDER_CLASSIC", formatted: "Classic" },
-] as const);
-
-export type MurderMysteryModes = ExtractGameModes<typeof MURDER_MYSTERY_MODES>;
 
 export class MurderMystery {
   @Field({ historical: { enabled: false } })

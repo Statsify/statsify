@@ -7,7 +7,6 @@
  */
 
 import { type APIData, findScoreIndex } from "@statsify/util";
-import { BLITZSG_MODES } from "./index.js";
 import {
   CoinsSchema,
   KillsSchema,
@@ -16,12 +15,65 @@ import {
   KitWinsStats,
   WinsSchema,
 } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import type { GamePrefix } from "#prefixes";
 import { add, sub } from "@statsify/math";
 import { formats } from "#definition/format";
 import { prefixFields } from "../prefix-fields.js";
 import { type NumberSchema, s } from "#definition/s";
+
+export const BLITZSG_MODES = new GameModes([
+  { api: "overall" },
+  { api: "arachnologist" },
+  { api: "archer" },
+  { api: "armorer" },
+  { api: "astronaut" },
+  { api: "baker" },
+  { api: "blaze" },
+  { api: "creepertamer" },
+  { api: "diver" },
+  { api: "donkeytamer" },
+  { api: "farmer" },
+  { api: "fisherman" },
+  { api: "florist" },
+  { api: "golem" },
+  { api: "guardian" },
+  { api: "horsetamer" },
+  { api: "hunter" },
+  { api: "hypetrain" },
+  { api: "jockey" },
+  { api: "knight" },
+  { api: "meatmaster" },
+  { api: "milkman" },
+  { api: "necromancer" },
+  { api: "paladin" },
+  { api: "phoenix" },
+  { api: "pigman" },
+  { api: "rambo" },
+  { api: "random" },
+  { api: "ranger" },
+  { api: "reaper" },
+  { api: "reddragon" },
+  { api: "rogue" },
+  { api: "scout" },
+  { api: "shadowknight" },
+  { api: "shark" },
+  { api: "slimeyslime" },
+  { api: "snowman" },
+  { api: "speleologist" },
+  { api: "tim" },
+  { api: "toxicologist" },
+  { api: "troll" },
+  { api: "viking" },
+  { api: "warlock" },
+  { api: "warrior" },
+  { api: "wolftamer" },
+
+  { hypixel: "solo_normal", formatted: "Solo" },
+  { hypixel: "teams_normal", formatted: "Doubles" },
+] as const);
+
+export type BlitzSGModes = ExtractGameModes<typeof BLITZSG_MODES>;
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§f[§7${n}§f]`, req: 0 },

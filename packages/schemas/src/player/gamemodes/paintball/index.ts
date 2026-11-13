@@ -19,9 +19,6 @@ import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
-export const PAINTBALL_MODES = new GameModes([{ api: "overall" }] as const);
-
-export type PaintballModes = ExtractGameModes<typeof PAINTBALL_MODES>;
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },

@@ -6,10 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import type { APIData } from "@statsify/util";
 import { formats } from "#definition/format";
 import { s } from "#definition/s";
+
+export const PARKOUR_MODES = new GameModes([{ api: "overall" }] as const);
+
+export type ParkourModes = ExtractGameModes<typeof PARKOUR_MODES>;
 
 const time = (name: string) =>
   s.number().format(formats.time).leaderboard({ sort: "ASC", fieldName: "Time", name });

@@ -21,29 +21,6 @@ import {
 } from "./util.js";
 import type { APIData } from "@statsify/util";
 
-export const SKYWARS_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo" },
-  { api: "doubles" },
-  { api: "mini", hypixel: "mini_normal" },
-
-  { hypixel: "solo_insane_lucky", formatted: "Lucky Solo" },
-  { hypixel: "teams_insane_lucky", formatted: "Lucky Doubles" },
-  { hypixel: "solo_insane_slime", formatted: "Slime Solo" },
-  { hypixel: "teams_insane_slime", formatted: "Slime Doubles" },
-  { hypixel: "solo_insane_rush", formatted: "Rush Solo" },
-  { hypixel: "teams_insane_rush", formatted: "Rush Doubles" },
-  { hypixel: "solo_normal", formatted: "Solo Normal" },
-  { hypixel: "solo_insane", formatted: "Solo Insane" },
-  { hypixel: "teams_normal", formatted: "Doubles Normal" },
-  { hypixel: "teams_insane", formatted: "Doubles Insane" },
-  { hypixel: "solo_insane_tnt_madness", formatted: "TNT Madness Solo" },
-  { hypixel: "teams_insane_tnt_madness", formatted: "TNT Madness Doubles" },
-  { hypixel: "mega_normal", formatted: "Mega" },
-  { hypixel: "mega_doubles", formatted: "Mega Doubles" },
-] as const);
-
-export type SkyWarsModes = ExtractGameModes<typeof SKYWARS_MODES>;
 
 export class SkyWars {
   @Field({

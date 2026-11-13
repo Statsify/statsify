@@ -8,11 +8,24 @@
 
 import { type APIData, prettify } from "@statsify/util";
 import { AssistsSchema, CoinsSchema, KillsSchema, KillsStats, WinsSchema, WinsStats } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { type GameTitle, cycleColors, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { add, sub } from "@statsify/math";
 import { prefixProgression } from "../prefix-fields.js";
 import { s } from "#definition/s";
+
+export const WARLORDS_MODES = new GameModes([
+  { api: "overall" },
+  { api: "captureTheFlag", hypixel: "ctf_mini", formatted: "Capture the Flag" },
+  { api: "domination", hypixel: "domination", formatted: "Domination" },
+  { api: "teamDeathmatch", hypixel: "team_deathmatch", formatted: "Team Deathmatch" },
+  { api: "mage" },
+  { api: "warrior" },
+  { api: "paladin" },
+  { api: "shaman" },
+] as const);
+
+export type WarlordsModes = ExtractGameModes<typeof WARLORDS_MODES>;
 
 const warlordsRainbow = (text: string) => cycleColors(text, ["c", "6", "e", "a", "2", "b", "d", "9"]);
 

@@ -11,32 +11,6 @@ import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
 
-export const TNT_GAMES_MODES = new GameModes([
-  { api: "overall" },
-  { api: "tntRun", hypixel: "TNTRUN", formatted: "TNT Run" },
-  { api: "pvpRun", hypixel: "PVPRUN", formatted: "PVP Run" },
-  { api: "bowSpleef", hypixel: "BOWSPLEEF" },
-  { api: "tntTag", hypixel: "TNTAG", formatted: "TNT Tag" },
-  {
-    api: "wizards",
-    hypixel: "CAPTURE",
-    submodes: [
-      { api: "overall" },
-      { api: "fireWizard" },
-      { api: "iceWizard" },
-      { api: "witherWizard" },
-      { api: "kineticWizard" },
-      { api: "bloodWizard" },
-      { api: "toxicWizard" },
-      { api: "hydroWizard" },
-      { api: "ancientWizard" },
-      { api: "stormWizard" },
-      { api: "arcaneWizard" },
-    ],
-  },
-] as const);
-
-export type TNTGamesModes = ExtractGameModes<typeof TNT_GAMES_MODES>;
 
 export class TNTGames {
   @Field({ historical: { enabled: false } })

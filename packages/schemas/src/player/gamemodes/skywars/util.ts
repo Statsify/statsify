@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Progression } from "#progression";
+import { type Progression, progression } from "../../../progression.definition.js";
 import { findScore } from "@statsify/util";
 
 const XP_TO_NEXT_LEVEL = [
@@ -44,7 +44,7 @@ export const getLevelProgress = (xp: number, level: number): Progression => {
     current -= CONSTANT_LEVELING_XP;
     current %= CONSTANT_XP_TO_NEXT_LEVEL;
 
-    return new Progression(
+    return progression(
       current,
       // 0 indicates that the level is maxed out
       level >= LEVEL_MAX ? 0 : CONSTANT_XP_TO_NEXT_LEVEL
@@ -56,7 +56,7 @@ export const getLevelProgress = (xp: number, level: number): Progression => {
     current -= element;
   }
 
-  return new Progression(
+  return progression(
     current,
     XP_TO_NEXT_LEVEL[TOTAL_XP.findIndex((x) => x > xp)]
   );

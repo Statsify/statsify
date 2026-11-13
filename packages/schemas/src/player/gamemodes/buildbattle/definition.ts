@@ -8,10 +8,22 @@
 
 import { type APIData, minecraftColors } from "@statsify/util";
 import { CoinsSchema, WinsSchema } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { type GameTitle, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { prefixProgression } from "../prefix-fields.js";
 import { s } from "#definition/s";
+
+export const BUILD_BATTLE_MODES = new GameModes([
+  { api: "overall" },
+
+  { hypixel: "BUILD_BATTLE_SOLO_NORMAL_LATEST", formatted: "1.14" },
+  { hypixel: "BUILD_BATTLE_GUESS_THE_BUILD", formatted: "GTB" },
+  { hypixel: "BUILD_BATTLE_TEAMS_NORMAL", formatted: "Teams" },
+  { hypixel: "BUILD_BATTLE_SOLO_NORMAL", formatted: "Solo" },
+  { hypixel: "BUILD_BATTLE_SOLO_PRO", formatted: "Pro" },
+] as const);
+
+export type BuildBattleModes = ExtractGameModes<typeof BUILD_BATTLE_MODES>;
 
 const titles: GameTitle[] = [
   { req: 0, fmt: (n) => `§f${n}`, title: "Rookie" },

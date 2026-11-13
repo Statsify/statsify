@@ -17,27 +17,6 @@ import type { APIData } from "@statsify/util";
 
 const formatLevel = (level: number | string) => `§d[${level}❋]`;
 
-export const SPEED_UHC_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo", hypixel: "solo_normal" },
-  { api: "teams", hypixel: "team_normal" },
-  { api: "wildSpecialist" },
-  { api: "guardian" },
-  { api: "sniper" },
-  { api: "berserk" },
-  { api: "masterBaker" },
-  { api: "invigorate" },
-  { api: "huntsman" },
-  { api: "fortune" },
-  { api: "vampirism" },
-] as const);
-
-const prefixes: GamePrefix[] = titleScores.map((level) => ({
-  fmt: formatLevel,
-  req: level.req,
-}));
-
-export type SpeedUHCModes = ExtractGameModes<typeof SPEED_UHC_MODES>;
 
 export class SpeedUHC {
   @Field()

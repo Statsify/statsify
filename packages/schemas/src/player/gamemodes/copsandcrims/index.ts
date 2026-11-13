@@ -15,15 +15,6 @@ import { Progression } from "#progression";
 import { add } from "@statsify/math";
 import { createPrefixProgression } from "#prefixes";
 
-export const COPS_AND_CRIMS_MODES = new GameModes([
-  { api: "overall" },
-  { api: "defusal", hypixel: "normal" },
-  { api: "deathmatch", hypixel: "deathmatch" },
-  { api: "gunGame", hypixel: "gungame" },
-  { hypixel: "normal_party", formatted: "Challenge" },
-] as const);
-
-export type CopsAndCrimsModes = ExtractGameModes<typeof COPS_AND_CRIMS_MODES>;
 
 export class CopsAndCrims {
   @Field({ historical: { enabled: false } })

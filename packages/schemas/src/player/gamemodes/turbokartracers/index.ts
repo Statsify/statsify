@@ -18,9 +18,6 @@ import { Progression } from "#progression";
 import { add, ratio } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
-export const TURBO_KART_RACERS_MODES = new GameModes([{ api: "overall" }] as const);
-
-export type TurboKartRacersModes = ExtractGameModes<typeof TURBO_KART_RACERS_MODES>;
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}✪]`, req: 0 },

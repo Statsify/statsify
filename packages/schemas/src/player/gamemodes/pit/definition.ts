@@ -17,12 +17,19 @@ import {
   getRenownShopCost,
 } from "./util.js";
 import { AssistsSchema, ExpSchema, KillsStats } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { ProgressionSchema, progression } from "../../../progression.definition.js";
 import { add } from "@statsify/math";
 import { formats } from "#definition/format";
 import { s } from "#definition/s";
 import type { APIData } from "@statsify/util";
+
+export const PIT_MODES = new GameModes([
+  { api: "overall" },
+  { hypixel: "PIT", formatted: "Pit" },
+] as const);
+
+export type PitModes = ExtractGameModes<typeof PIT_MODES>;
 
 /** The level counting every prestige as 120 levels */
 const getTrueLevel = (exp: number) => {

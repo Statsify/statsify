@@ -8,11 +8,19 @@
 
 import type { APIData } from "@statsify/util";
 import { CoinsSchema, KillsStats, WinsSchema } from "../common.js";
-import { FormattedGame } from "#game";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { prefixProgression } from "../prefix-fields.js";
 import { deepAdd } from "@statsify/math";
 import { getLevelIndex, titleScores } from "./util.js";
 import { s } from "#definition/s";
+
+export const UHC_MODES = new GameModes([
+  { api: "overall" },
+  { api: "solo", hypixel: "SOLO" },
+  { api: "teams", hypixel: "TEAMS" },
+] as const);
+
+export type UHCModes = ExtractGameModes<typeof UHC_MODES>;
 
 const formatLevel = (level: number) => `§6[${level}✫]`;
 

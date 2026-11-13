@@ -15,18 +15,6 @@ import { WarlordsMage, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "
 import { add, ratio, sub } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
-export const WARLORDS_MODES = new GameModes([
-  { api: "overall" },
-  { api: "captureTheFlag", hypixel: "ctf_mini", formatted: "Capture the Flag" },
-  { api: "domination", hypixel: "domination", formatted: "Domination" },
-  { api: "teamDeathmatch", hypixel: "team_deathmatch", formatted: "Team Deathmatch" },
-  { api: "mage" },
-  { api: "warrior" },
-  { api: "paladin" },
-  { api: "shaman" },
-] as const);
-
-export type WarlordsModes = ExtractGameModes<typeof WARLORDS_MODES>;
 
 const warlordsRainbow = (text: string) => cycleColors(text, ["c", "6", "e", "a", "2", "b", "d", "9"]);
 

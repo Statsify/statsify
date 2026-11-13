@@ -12,8 +12,6 @@ import { VampireZHuman, VampireZVampire } from "./life.js";
 import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
-export const VAMPIREZ_MODES = new GameModes([{ api: "human" }, { api: "vampire" }] as const);
-export type VampireZModes = ExtractGameModes<typeof VAMPIREZ_MODES>;
 
 export class VampireZ {
   @Field({ historical: { enabled: false } })

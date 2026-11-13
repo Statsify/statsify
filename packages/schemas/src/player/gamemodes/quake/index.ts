@@ -19,13 +19,6 @@ import { QuakeMode } from "./mode.js";
 import { deepAdd } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
-export const QUAKE_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo", hypixel: "solo" },
-  { api: "teams", hypixel: "teams" },
-] as const);
-
-export type QuakeModes = ExtractGameModes<typeof QUAKE_MODES>;
 
 const indexes = [
   "zero",
