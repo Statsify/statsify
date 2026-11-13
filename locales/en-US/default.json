@@ -674,6 +674,10 @@
     "duplicateRabbits": "Duplicate Rabbits",
     "earned": "Earned",
     "eggLocations": "Egg Locations Found",
+    "employeeNames": {
+      "rabbit_father": "Rabbit Daddy",
+      "rabbit_grandma": "Rabbit Granny"
+    },
     "employees": "Employees",
     "enderChest": "Ender Chest",
     "endsIn": "Ends in {{time}}",
