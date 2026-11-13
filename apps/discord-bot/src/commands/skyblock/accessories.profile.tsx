@@ -10,14 +10,13 @@ import { Container, Footer, Header, type SidebarItem } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
 import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
 import { RARITY_COLORS } from "@statsify/skyblock/display";
-import { arrayGroup, prettify } from "@statsify/util";
-import type { LocalizeFunction } from "@statsify/discord";
-import type { InactiveAccessory, MemberView, PowerStat } from "@statsify/skyblock";
+import { StatLines } from "./components/StatLines.js";
+import { prettify } from "@statsify/util";
+import type { InactiveAccessory, MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const MISSING_SHOWN = 12;
 const INACTIVE_SHOWN = 12;
-const MAX_POWER_STATS_PER_LINE = 3; // more is wider than the card
 
 const topMissing = ({ accessories }: MemberView) => accessories?.missing.slice(0, MISSING_SHOWN) ?? [];
 const baseName = ({ name, reforge }: InactiveAccessory) => {
@@ -48,22 +47,6 @@ export interface SkyBlockAccessoriesProfileProps extends SkyBlockProfileProps {
 
 export const accessoryIcons = (page: SkyBlockAccessoriesProfileProps["page"]) => (member: MemberView) =>
   (page === "missing" ? topMissing(member) : topInactive(member)).map(({ texture }) => texture);
-
-const PowerStats = ({ power, stats, t }: { power: string; stats: PowerStat[]; t: LocalizeFunction }) => {
-  const lineCount = Math.ceil(stats.length / MAX_POWER_STATS_PER_LINE);
-  const lines = arrayGroup(
-    stats.map(({ name, color, value }) => `${color}${value < 0 ? "" : "+"}${t(value)} ${name}`),
-    Math.ceil(stats.length / lineCount)
-  );
-
-  return (
-    <box width="100%" direction="column">
-      {lines.map((line, index) => (
-        <text>{`${index === 0 ? `§7${t("skyblock.powerStats", { power: prettify(power) })}: ` : ""}${line.join(" ")}`}</text>
-      ))}
-    </box>
-  );
-};
 
 export const SkyBlockAccessoriesProfile = ({
   profile,
@@ -155,7 +138,13 @@ export const SkyBlockAccessoriesProfile = ({
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
       {accessories.selectedPower && accessories.powerStats ?
-        <PowerStats power={accessories.selectedPower} stats={accessories.powerStats} t={t} /> :
+        (
+          <StatLines
+            label={t("skyblock.powerStats", { power: prettify(accessories.selectedPower) })}
+            stats={accessories.powerStats}
+            t={t}
+          />
+        ) :
         <></>}
       {missing.length > 0 ?
         (

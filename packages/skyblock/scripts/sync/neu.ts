@@ -373,6 +373,7 @@ export const NEU_UNITS = {
     const petTextures: Record<string, Record<string, string>> = {};
     const petNames: Record<string, string> = {};
     const skinTextures: Record<string, string> = {};
+    const skinColors: Record<string, string> = {};
     const powers: Record<string, { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }> = {};
     const kuudraKeys: Record<string, string> = {};
     const trophyFish = new Set(Object.keys(await readJson<Record<string, number[]>>("constants/trophyfish.json")));
@@ -402,8 +403,11 @@ export const NEU_UNITS = {
       const trophy = /^(\w+)_BRONZE$/.exec(item.internalname);
       if (trophy && trophyFish.has(trophy[1])) trophyNames[trophy[1]] = removeFormatting(item.displayname).replace(/ BRONZE$/, "");
 
+      // A skin's name takes its rarity's color, Ultimate (§4) included, and so does the ✦ after a pet that wears it
       const skin = item.internalname.startsWith("PET_SKIN_") && skullHash(item.nbttag);
       if (skin) skinTextures[item.internalname.slice("PET_SKIN_".length)] = skin;
+      const skinColor = skin && /^§./.exec(item.displayname)?.[0];
+      if (skinColor) skinColors[item.internalname.slice("PET_SKIN_".length)] = skinColor;
 
       // "§a§lUNCOMMON PET ITEM"
       const petItem = removeFormatting(item.lore?.at(-1) ?? "").endsWith("PET ITEM") && petItemEffect(item.lore ?? []);
@@ -437,7 +441,7 @@ export const NEU_UNITS = {
       if (variant) apiIds.set(item.internalname, item.internalname.replace(`_${variant.toUpperCase()}`, ""));
     }
 
-    await write("pet-textures.json", { pets: petTextures, skins: skinTextures });
+    await write("pet-textures.json", { pets: petTextures, skins: skinTextures, skinColors });
     await write("powers.json", powers);
     const keyless = KUUDRA_TIERS.filter((tier) => !kuudraKeys[tier]);
     if (keyless.length > 0) throw new Error(`no Kuudra key head for ${keyless.join(", ")}`);

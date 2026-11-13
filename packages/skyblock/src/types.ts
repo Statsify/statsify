@@ -871,6 +871,7 @@ export interface PetsSection {
   totalXp: number; // every pet's XP ever gained
   skinned: number;
   candyUsed: number; // over every pet
+  activeStats?: Partial<Record<PlayerStat, number>>; // with its held item, as the stat totals count them
 }
 
 export interface PetView {
@@ -883,6 +884,7 @@ export interface PetView {
   heldItem?: string;
   heldItemTexture?: ItemTexture;
   skin?: string;
+  skinColor?: string; // the skin's rarity color, which the game gives the ✦ after a skinned pet's name
   candyUsed: number;
   active: boolean;
   texture: ItemTexture;

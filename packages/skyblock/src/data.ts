@@ -61,6 +61,7 @@ export const SKYBLOCK_XP = sblevels.core_task;
 export const PET_TEXTURES = petTextures as {
   pets: Record<string, Partial<Record<Rarity, string>>>;
   skins: Record<string, string>;
+  skinColors: Record<string, string>;
 };
 
 /** An accessory → the ids that make it inactive: its higher tiers, or the other party hats, which replace each other. */

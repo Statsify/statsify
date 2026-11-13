@@ -98,7 +98,7 @@ const tuningStats = (points: Record<string, number>): Stats =>
   );
 
 /** The active pet's stats at its level, raised by its item's percents, plus the item's own stats. */
-function petStats(pet: PetView | undefined): Stats | undefined {
+export function petStats(pet: PetView | undefined): Stats | undefined {
   if (!pet) return undefined;
 
   const table = PET_STATS[pet.type]?.[pet.rarity];
