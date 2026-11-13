@@ -21,13 +21,9 @@
     "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
-    "@nestjs/swagger": "^11.2.0",
-    "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
-    "@typegoose/typegoose": "^12.6.0",
-    "class-validator": "^0.14.1",
     "luxon": "^3.5.0",
     "mongoose": "^8.5.2"
   },
@@ -35,10 +31,6 @@
     "@types/luxon": "^3.4.2"
   },
   "imports": {
-    "#metadata": {
-      "types": "./src/metadata/index.ts",
-      "default": "./dist/metadata/index.js"
-    },
     "#definition/*": {
       "types": "./src/definition/*.ts",
       "default": "./dist/definition/*.js"
@@ -50,18 +42,6 @@
     "#color": {
       "types": "./src/color.ts",
       "default": "./dist/color.js"
-    },
-    "#progression": {
-      "types": "./src/progression.ts",
-      "default": "./dist/progression.js"
-    },
-    "#player": {
-      "types": "./src/player/index.ts",
-      "default": "./dist/player/index.js"
-    },
-    "#ratios": {
-      "types": "./src/ratios.ts",
-      "default": "./dist/ratios.js"
     },
     "#prefixes": {
       "types": "./src/player/gamemodes/prefixes.ts",
