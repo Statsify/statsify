@@ -13,10 +13,10 @@ import { formatTime } from "@statsify/util";
 import { modelOptions as ModelOptions } from "@typegoose/typegoose";
 
 export class SkyBlockFloorBoards {
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public completions: number;
 
-  @Field({ leaderboard: { fieldName: "Fastest S+", formatter: formatTime, sort: "ASC" } })
+  @Field({ leaderboard: { fieldName: "Fastest S+", formatter: formatTime, sort: "ASC", limit: 50_000 } })
   public fastestSPlus: number;
 }
 
@@ -69,43 +69,43 @@ export class SkyBlockFloorsBoards {
 
 /** Jacob's contest personal best per crop. */
 export class SkyBlockCropBoards {
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public cactus: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public carrot: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public cocoaBeans: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public melon: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public moonflower: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public mushroom: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public netherWart: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public potato: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public pumpkin: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public sugarCane: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public sunflower: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public wheat: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public wildRose: number;
 }
 
@@ -336,22 +336,22 @@ export class SkyBlockBoards {
   @Field({ leaderboard: { fieldName: "All-Time Chocolate", limit: 50_000 } })
   public chocolate: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public unsoulboundNetworth: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public mithrilPowder: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public gemstonePowder: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 50_000 } })
   public glacitePowder: number;
 
-  @Field({ leaderboard: { fieldName: "Mage Reputation" } })
+  @Field({ leaderboard: { fieldName: "Mage Reputation", limit: 50_000 } })
   public magesReputation: number;
 
-  @Field({ leaderboard: { fieldName: "Barbarian Reputation" } })
+  @Field({ leaderboard: { fieldName: "Barbarian Reputation", limit: 50_000 } })
   public barbariansReputation: number;
 
   // A field named kills defaults to 500,000 rows
