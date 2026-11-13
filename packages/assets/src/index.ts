@@ -7,7 +7,7 @@
  */
 
 import { type Image, loadImage } from "skia-canvas";
-import { User, UserLogo } from "@statsify/schemas";
+import { type User, UserLogo, getUserLogo } from "@statsify/schemas";
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
@@ -94,7 +94,7 @@ export function getLogoPath(
       break;
 
     case "object":
-      logo = User.getLogo(userOrLogoOrPath);
+      logo = getUserLogo(userOrLogoOrPath);
       break;
 
     case "number":
