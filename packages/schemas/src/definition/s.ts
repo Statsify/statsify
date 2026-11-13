@@ -12,6 +12,7 @@ import type { minecraftColors } from "@statsify/util";
 declare const TYPES: unique symbol;
 declare const OPTIONAL: unique symbol;
 declare const SET_LATER: unique symbol;
+declare const NULLABLE: unique symbol;
 declare const COMPUTED: unique symbol;
 declare const REF: unique symbol;
 
@@ -128,6 +129,10 @@ interface SetLater {
   readonly [SET_LATER]: true;
 }
 
+interface Nullable {
+  readonly [NULLABLE]: true;
+}
+
 export abstract class Schema<Output = unknown, Input = Output> implements Types<Output, Input> {
   declare public readonly [TYPES]: { output: Output; input: Input };
   public abstract readonly kind: string;
@@ -154,6 +159,11 @@ export abstract class Schema<Output = unknown, Input = Output> implements Types<
   /** Still required, but filled in after parsing, like a guild member's name, so `s.input` can leave it out */
   public setLater() {
     return this as this & SetLater;
+  }
+
+  /** Can also be null, which a consumer sets to clear a saved choice, like a user's locale */
+  public nullable() {
+    return this as this & Nullable;
   }
 
   /** Never written to the database, like `cached` */
@@ -294,9 +304,11 @@ export type AnySchema =
 
 type Simplify<T> = { [K in keyof T]: T[K] } & {};
 
+type Null<S> = S extends Nullable ? null : never;
+
 type OutputOf<D extends Definition> = Simplify<
-  { [K in keyof D as D[K] extends Optional ? never : K]: s.infer<D[K]> } & {
-    [K in keyof D as D[K] extends Optional ? K : never]?: s.infer<D[K]>;
+  { [K in keyof D as D[K] extends Optional ? never : K]: s.infer<D[K]> | Null<D[K]> } & {
+    [K in keyof D as D[K] extends Optional ? K : never]?: s.infer<D[K]> | Null<D[K]>;
   }
 >;
 
@@ -304,11 +316,11 @@ type InputOf<D extends Definition> = Simplify<
   {
     [K in keyof D as D[K] extends Computed ? never :
       D[K] extends Optional | SetLater ? never :
-        K]: s.input<D[K]>;
+        K]: s.input<D[K]> | Null<D[K]>;
   } & {
     [K in keyof D as D[K] extends Computed ? never :
       D[K] extends Optional | SetLater ? K :
-        never]?: s.input<D[K]>;
+        never]?: s.input<D[K]> | Null<D[K]>;
   }
 >;
 
