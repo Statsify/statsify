@@ -7,6 +7,8 @@
  */
 
 import { Field } from "#metadata";
+import { getLevel } from "../player/gamemodes/bedwars/util.js";
+import { getNetworkExp } from "../player/gamemodes/general/util.js";
 import type { Player } from "../player/index.js";
 
 // Discord's ApplicationRoleConnectionMetadataType.IntegerGreaterThanOrEqual
@@ -19,14 +21,19 @@ export const ROLE_CONNECTION_METADATA = [
     name: "Network Level",
     description: "Hypixel network level",
     type: INTEGER_GREATER_THAN_OR_EQUAL,
-    value: (player: Player) => Math.floor(player.stats.general.networkLevel),
+    value: ({ stats: { general } }: Player) => {
+      // networkLevel is rounded to 2 decimals, so 249.996 is stored as 250
+      const level = Math.floor(general.networkLevel);
+      return getNetworkExp(level) > general.networkExp ? level - 1 : level;
+    },
   },
   {
     key: "bedwars_stars",
     name: "BedWars Stars",
     description: "BedWars stars on Hypixel",
     type: INTEGER_GREATER_THAN_OR_EQUAL,
-    value: (player: Player) => Math.floor(player.stats.bedwars.level),
+    // From exp, since a deserialized level is rounded to 2 decimals
+    value: (player: Player) => Math.floor(getLevel(player.stats.bedwars.exp)),
   },
 ] as const;
 
