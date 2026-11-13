@@ -409,7 +409,7 @@ export interface AttributesSection {
     name: string;
     attribute: string;
     rarity: Rarity;
-    families: string[]; // NEU's; a shard can be in two, or none
+    families: string[];
     level: number;
     maxLevel: number;
     owned: number;
