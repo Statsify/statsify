@@ -933,7 +933,10 @@ export interface MissingAccessory {
   coinsPerAccessoryPower?: number;
   replaces?: string;
   texture: ItemTexture;
+  nextTier?: { unit: TierUnit; has: number; at: number }; // one in the bag that rises a rarity in place (unverified)
 }
+
+export type TierUnit = "level" | "milestone" | "charges" | "perfectGems" | "runicKills";
 
 export interface AccessoriesSection {
   accessoryPower: number;

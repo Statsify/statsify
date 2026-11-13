@@ -58,6 +58,7 @@ const COUNTERS = [
   "runic_kills",
   "spider_kills",
   "stats_book",
+  "thunder_charge",
   "toxophilite_combat_xp",
   "zombie_kills",
 ] as const;

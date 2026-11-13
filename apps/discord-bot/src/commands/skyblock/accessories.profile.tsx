@@ -12,13 +12,16 @@ import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
 import { RARITY_COLORS } from "@statsify/skyblock/display";
 import { StatLines } from "./components/StatLines.js";
 import { prettify } from "@statsify/util";
-import type { InactiveAccessory, MemberView } from "@statsify/skyblock";
+import type { InactiveAccessory, MemberView, MissingAccessory } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const MISSING_SHOWN = 12;
 const INACTIVE_SHOWN = 12;
 
-const topMissing = ({ accessories }: MemberView) => accessories?.missing.slice(0, MISSING_SHOWN) ?? [];
+// Steps that rise in place have no price, so the cheapest-first list would bury them; they get a grid of their own
+const topMissing = ({ accessories }: MemberView) =>
+  accessories?.missing.filter(({ nextTier }) => !nextTier).slice(0, MISSING_SHOWN) ?? [];
+const nextTierSteps = ({ accessories }: MemberView) => accessories?.missing.filter(({ nextTier }) => nextTier) ?? [];
 const baseName = ({ name, reforge }: InactiveAccessory) => {
   const plain = name.replaceAll(/§./g, "");
   const prefix = reforge ? `${prettify(reforge)} ` : "";
@@ -46,7 +49,7 @@ export interface SkyBlockAccessoriesProfileProps extends SkyBlockProfileProps {
 }
 
 export const accessoryIcons = (page: SkyBlockAccessoriesProfileProps["page"]) => (member: MemberView) =>
-  (page === "missing" ? topMissing(member) : topInactive(member)).map(({ texture }) => texture);
+  (page === "missing" ? [...nextTierSteps(member), ...topMissing(member)] : topInactive(member)).map(({ texture }) => texture);
 
 export const SkyBlockAccessoriesProfile = ({
   profile,
@@ -114,21 +117,26 @@ export const SkyBlockAccessoriesProfile = ({
   // A price or the outside-bag note beside the name widens the card, so those values go under it
   const stacked = accessories.market || shown.some(({ outsideBag }) => outsideBag);
 
-  const missing = shown.map(
-    ({ name, rarity, accessoryPower, outsideBag, cost, coinsPerAccessoryPower, texture }) => {
-      const ap = t(accessoryPower);
-      const price =
-        cost && coinsPerAccessoryPower !== undefined ?
-          `§6${t(Math.floor(cost.coins))} §7(${t("skyblock.perAp", { coins: t(Math.floor(coinsPerAccessoryPower)) })})` :
-          `§c${t("skyblock.noBinListing")}`;
+  const toEntry = (step: MissingAccessory) => {
+    const { name, rarity, accessoryPower, outsideBag, cost, coinsPerAccessoryPower, texture, nextTier } = step;
+    const ap = t(accessoryPower);
+    const price =
+      cost && coinsPerAccessoryPower !== undefined ?
+        `§6${t(Math.floor(cost.coins))} §7(${t("skyblock.perAp", { coins: t(Math.floor(coinsPerAccessoryPower)) })})` :
+        `§c${t("skyblock.noBinListing")}`;
 
-      let value = `§d${t("skyblock.apGain", { ap })} §8• ${price}`;
-      if (outsideBag) value = `§d${t("skyblock.apOnceInBag", { ap })}`;
-      else if (!accessories.market) value = `§d${t("skyblock.apGain", { ap })}`;
+    let value = `§d${t("skyblock.apGain", { ap })} §8• ${price}`;
+    if (outsideBag) value = `§d${t("skyblock.apOnceInBag", { ap })}`;
+    else if (nextTier) {
+      const progress = t(`skyblock.tierProgress.${nextTier.unit}`, { has: t(nextTier.has), at: t(nextTier.at) });
+      value = `§d${t("skyblock.apGain", { ap })} §8• §7${progress}`;
+    } else if (!accessories.market) value = `§d${t("skyblock.apGain", { ap })}`;
 
-      return { texture, name: `${RARITY_COLORS[rarity]}${name}`, value };
-    }
-  );
+    return { texture, name: `${RARITY_COLORS[rarity]}${name}`, value };
+  };
+
+  const missing = shown.map(toEntry);
+  const nextTiers = nextTierSteps(profile.member).map(toEntry);
 
   const footnote = accessories.market ?
     pricesAsOf(t, accessories.pricesAsOf) :
@@ -144,6 +152,16 @@ export const SkyBlockAccessoriesProfile = ({
             stats={accessories.powerStats}
             t={t}
           />
+        ) :
+        <></>}
+      {nextTiers.length > 0 ?
+        (
+          <>
+            <box width="100%">
+              <text>{`§l${t("skyblock.nextTiers")}`}</text>
+            </box>
+            <ItemGrid items={nextTiers} icons={icons} stacked spreadLastRow />
+          </>
         ) :
         <></>}
       {missing.length > 0 ?

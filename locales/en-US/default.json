@@ -819,6 +819,7 @@
     "museumXp": "Museum XP",
     "networth": "Networth",
     "nextSlot": "Next Slot",
+    "nextTiers": "Next Tiers",
     "no": "No",
     "noAccessories": "No accessories yet.",
     "noAttributes": "No attributes unlocked yet.",
@@ -916,6 +917,13 @@
       "combat": "Combat",
       "gathering": "Gathering",
       "misc": "Misc"
+    },
+    "tierProgress": {
+      "charges": "Charges {{has}}/{{at}}",
+      "level": "Level {{has}}/{{at}}",
+      "milestone": "Milestone {{has}}/{{at}}",
+      "perfectGems": "Perfect Gems {{has}}/{{at}}",
+      "runicKills": "Runic Kills {{has}}/{{at}}"
     },
     "timeTower": "Time Tower",
     "timecharms": "Timecharms",
