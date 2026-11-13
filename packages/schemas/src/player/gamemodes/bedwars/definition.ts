@@ -21,7 +21,7 @@ import { FinalKillsStats, KillsStats, WinsStats } from "../common.js";
 import { FormattedGame } from "#game";
 import { ProgressionSchema, progression } from "../../../progression.definition.js";
 import { type APIData, findScore } from "@statsify/util";
-import { deepAdd, deepSub } from "@statsify/math";
+import { deepAdd, deepSub, ratio } from "@statsify/math";
 import { formats } from "#definition/format";
 import { s } from "#definition/s";
 
@@ -41,7 +41,7 @@ export const BedWarsModeSchema = s.object({
   bedsBroken: s.number().color("green"),
   bedsLost: s.number().color("red"),
   bblr() {
-    return s.ratio(this.bedsBroken, this.bedsLost).color("gold");
+    return s.computed(ratio, [this.bedsBroken, this.bedsLost]).color("gold");
   },
   itemsCollected: ItemsCollectedSchema,
 });
@@ -107,19 +107,21 @@ export const BedWarsSchema = s
     selectedScheme: s.string(),
     selectedStar: s.string(),
     selectedBrackets: s.string(),
-    exp: s
-      .number()
-      .color("aqua")
-      .format(
-        formats.searchedAs(getLevel, (exp) =>
-          getIntendedFormattedLevel(Math.floor(getLevel(exp)))
+    exp() {
+      return s
+        .number()
+        .color("aqua")
+        .format(
+          formats.searchedAs(getLevel, (exp) =>
+            getIntendedFormattedLevel(Math.floor(getLevel(exp)))
+          )
         )
-      )
-      .leaderboard({
-        fieldName: "Level",
-        hidden: true,
-        additionalFields: ["this.overall.wins", "this.overall.finalKills", "this.overall.fkdr"],
-      }),
+        .leaderboard({
+          fieldName: "Level",
+          hidden: true,
+          additionalFields: [this.overall.wins, this.overall.finalKills, this.overall.fkdr],
+        });
+    },
     level: s.number().leaderboard(false),
     levelFormatted: s.string().default(getIntendedFormattedLevel(0)),
     progression: ProgressionSchema,
@@ -144,10 +146,10 @@ export const BedWarsSchema = s
     challenges: BedWarsChallengesSchema,
     slumber: SlumberSchema,
   })
-  .leaderboard({
+  .leaderboard((bedwars) => ({
     fieldName: FormattedGame.BEDWARS,
-    extraDisplay: "this.bedwars.levelFormatted",
-  });
+    extraDisplay: bedwars.levelFormatted,
+  }));
 
 export type BedWars = s.infer<typeof BedWarsSchema>;
 

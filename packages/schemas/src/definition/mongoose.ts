@@ -13,7 +13,6 @@ import type { AnySchema, ObjectSchema } from "./s.js";
 const getType = (field: AnySchema): unknown => {
   switch (field.kind) {
     case "number":
-    case "ratio":
       return Number;
     case "string":
       return String;

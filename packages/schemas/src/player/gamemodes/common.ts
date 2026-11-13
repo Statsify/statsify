@@ -6,28 +6,29 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ratio } from "@statsify/math";
 import { s } from "#definition/s";
 
-export const WinsStats = {
+export const WinsStats = s.fields({
   wins: s.number().color("green"),
   losses: s.number().color("red"),
   wlr() {
-    return s.ratio(this.wins, this.losses).color("gold");
+    return s.computed(ratio, [this.wins, this.losses]).color("gold");
   },
-};
+});
 
-export const KillsStats = {
+export const KillsStats = s.fields({
   kills: s.number().color("green"),
   deaths: s.number().color("red"),
   kdr() {
-    return s.ratio(this.kills, this.deaths).color("gold");
+    return s.computed(ratio, [this.kills, this.deaths]).color("gold");
   },
-};
+});
 
-export const FinalKillsStats = {
+export const FinalKillsStats = s.fields({
   finalKills: s.number().color("green"),
   finalDeaths: s.number().color("red"),
   fkdr() {
-    return s.ratio(this.finalKills, this.finalDeaths).color("gold");
+    return s.computed(ratio, [this.finalKills, this.finalDeaths]).color("gold");
   },
-};
+});

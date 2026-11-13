@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { parseAdditionalFields } from "../util/parse-fields.js";
 import { prettify } from "@statsify/util";
 import type { AnySchema, ObjectSchema, ResetEvery } from "./s.js";
 import type { Format } from "./format.js";
@@ -47,6 +46,8 @@ export interface Field {
   schema: Exclude<AnySchema, ObjectSchema>;
   leaderboard: Leaderboard;
   store: Store;
+  /** The stored paths a computed value, or the computed object it's in, is built from */
+  dependencies?: string[];
 }
 
 const NAMES: Record<string, string> = {
@@ -99,7 +100,6 @@ const RATIO_COLUMNS = [
 const getDefault = (schema: AnySchema): unknown => {
   switch (schema.kind) {
     case "number":
-    case "ratio":
       return 0;
     case "string":
       return "";
@@ -114,20 +114,23 @@ const getDefault = (schema: AnySchema): unknown => {
 };
 
 const isRanked = (schema: AnySchema) =>
-  (schema.kind === "number" || schema.kind === "ratio") && schema.meta.leaderboard?.enabled !== false;
+  schema.kind === "number" && schema.meta.leaderboard?.enabled !== false;
 
 // A ranked stat is always stored, whatever its store option says
 export const isStored = (schema: AnySchema) => isRanked(schema) || schema.meta.store !== false;
 
-function getLeaderboard(schema: AnySchema, key: string): Leaderboard {
+const join = (base: string, path: string) => (base ? `${base}.${path}` : path);
+
+/** `relativeTo` is the object a field is written in, or for an object's own options, the object */
+function getLeaderboard(schema: AnySchema, key: string, relativeTo: string): Leaderboard {
   const options = schema.meta.leaderboard ?? {};
   const fieldName = options.fieldName ?? NAMES[key] ?? prettify(key);
 
   const base: BaseLeaderboard = {
     fieldName,
     name: options.name ?? fieldName,
-    additionalFields: options.additionalFields ?? [],
-    extraDisplay: options.extraDisplay,
+    additionalFields: options.additionalFields?.map((path) => join(relativeTo, path)) ?? [],
+    extraDisplay: options.extraDisplay && join(relativeTo, options.extraDisplay),
     format: schema.meta.format,
     resetEvery: options.resetEvery,
   };
@@ -158,14 +161,15 @@ function flatten(schema: ObjectSchema, base: string, baseName: string): Field[] 
   const keys = Object.keys(schema.definition);
   const fields: Field[] = [];
 
-  for (const [key, child] of Object.entries(schema.definition)) {
-    const path = base ? `${base}.${key}` : key;
-    const leaderboard = getLeaderboard(child, key);
+  for (const [key, child] of Object.entries(schema.definition as Record<string, AnySchema>)) {
+    const path = join(base, key);
+    const leaderboard = getLeaderboard(child, key, child.kind === "object" ? path : base);
     const name = leaderboard.name ? `${baseName ? `${baseName} ` : ""}${leaderboard.name}` : baseName;
+    const dependencies = child.meta.computed?.dependencies.map((dependency) => join(base, dependency));
 
     const columns = RATIO_COLUMNS.find((ratio) => ratio.includes(key))
       ?.filter((other) => other !== key && keys.includes(other))
-      .map((other) => (base ? `${base}.${other}` : other));
+      .map((other) => join(base, other));
 
     if (columns?.length) leaderboard.additionalFields = columns;
 
@@ -175,6 +179,7 @@ function flatten(schema: ObjectSchema, base: string, baseName: string): Field[] 
         schema: child,
         leaderboard: { ...leaderboard, name },
         store: getStore(child),
+        ...(dependencies && { dependencies }),
       });
 
       continue;
@@ -186,6 +191,7 @@ function flatten(schema: ObjectSchema, base: string, baseName: string): Field[] 
 
       field.leaderboard.extraDisplay ??= leaderboard.extraDisplay;
       field.leaderboard.resetEvery ??= leaderboard.resetEvery;
+      if (dependencies) field.dependencies = dependencies;
 
       fields.push(field);
     }
@@ -198,21 +204,12 @@ const cache = new WeakMap<ObjectSchema, Field[]>();
 
 export function getFields(schema: ObjectSchema): Field[] {
   let fields = cache.get(schema);
-  if (fields) return fields;
 
-  fields = flatten(schema, "", "").map((field) => {
-    const { additionalFields, extraDisplay } = field.leaderboard;
+  if (!fields) {
+    fields = flatten(schema, "", "");
+    cache.set(schema, fields);
+  }
 
-    field.leaderboard.additionalFields = additionalFields.map((key) =>
-      parseAdditionalFields(field.path, key)
-    );
-
-    if (extraDisplay) field.leaderboard.extraDisplay = parseAdditionalFields(field.path, extraDisplay);
-
-    return field;
-  });
-
-  cache.set(schema, fields);
   return fields;
 }
 
@@ -225,14 +222,17 @@ export function getLeaderboardFields(schema: ObjectSchema) {
 if (import.meta.vitest) {
   const { it, expect } = import.meta.vitest;
   const { s } = await import("./s.js");
+  const { ratio } = await import("@statsify/math");
 
   const Mode = s.object({
     wins: s.number(),
     losses: s.number(),
     wlr() {
-      return s.ratio(this.wins, this.losses);
+      return s.computed(ratio, [this.wins, this.losses]);
     },
-    coins: s.number().leaderboard({ fieldName: "Tokens", limit: 10 }),
+    coins() {
+      return s.number().leaderboard({ fieldName: "Tokens", limit: 10, additionalFields: [this.wins] });
+    },
     tags: s.array(s.string()),
     seen: s.boolean().optional(),
   });
@@ -244,7 +244,7 @@ if (import.meta.vitest) {
         overall: Mode,
         extra: s.object({ points: s.number() }).leaderboard({ fieldName: "" }),
       })
-      .leaderboard({ fieldName: "Game", extraDisplay: "this.game.title" }),
+      .leaderboard((game) => ({ fieldName: "Game", extraDisplay: game.title })),
   });
 
   it("flattens names, columns, limits and defaults", () => {
@@ -261,18 +261,24 @@ if (import.meta.vitest) {
       "game.extra.points",
     ]);
 
-    expect(fields["game.overall.wlr"].leaderboard).toEqual({
-      enabled: true,
-      fieldName: "WLR",
-      name: "Game Overall WLR",
-      additionalFields: ["game.overall.wins", "game.overall.losses"],
-      extraDisplay: "game.title",
-      sort: "DESC",
-      limit: 500_000,
-      aliases: [],
+    expect(fields["game.overall.wlr"]).toMatchObject({
+      dependencies: ["game.overall.wins", "game.overall.losses"],
+      leaderboard: {
+        enabled: true,
+        fieldName: "WLR",
+        name: "Game Overall WLR",
+        additionalFields: ["game.overall.wins", "game.overall.losses"],
+        extraDisplay: "game.title",
+        limit: 500_000,
+      },
     });
 
-    expect(fields["game.overall.coins"].leaderboard).toMatchObject({ name: "Game Overall Tokens", limit: 10 });
+    expect(fields["game.overall.coins"].leaderboard).toMatchObject({
+      name: "Game Overall Tokens",
+      limit: 10,
+      additionalFields: ["game.overall.wins"],
+    });
+
     expect(fields["game.extra.points"].leaderboard).toMatchObject({ name: "Game Points", limit: 50_000 });
     expect(fields["game.title"].leaderboard.enabled).toBe(false);
     expect(fields["game.title"].store.default).toBe("none");

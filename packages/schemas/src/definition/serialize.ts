@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type Flatten, unflatten } from "@statsify/util";
+import { type Flatten, flatten, unflatten } from "@statsify/util";
+import { compute } from "./compute.js";
 import { getFields } from "./fields.js";
 import { roundTo } from "@statsify/math";
 import type { ObjectSchema, s } from "./s.js";
@@ -38,17 +39,22 @@ export function deserialize<S extends ObjectSchema>(
   schema: S,
   flat: Flatten<s.infer<S>>
 ): s.infer<S> {
+  const fields = getFields(schema);
+  const filled: Record<string, unknown> = {};
+
+  for (const { path, store } of fields) {
+    filled[path] = store.deserialize && flat[path] === undefined ? store.default : flat[path];
+  }
+
+  // Computed values are built again from what was stored, so a changed formula reaches old documents
+  const computed: Record<string, unknown> = flatten(
+    compute(schema, unflatten(filled) as s.input<S>)
+  );
   const deserialized: Record<string, unknown> = {};
 
-  for (const { path, store } of getFields(schema)) {
-    let value = flat[path];
-
-    if (store.deserialize) {
-      if (value === undefined) value = store.default;
-      if (typeof value === "number") value = roundTo(value);
-    }
-
-    deserialized[path] = value;
+  for (const { path, store } of fields) {
+    const value = computed[path];
+    deserialized[path] = store.deserialize && typeof value === "number" ? roundTo(value) : value;
   }
 
   return unflatten(deserialized) as s.infer<S>;
@@ -64,25 +70,30 @@ if (import.meta.vitest) {
     unranked: s.number().leaderboard(false),
     cached: s.boolean().store(false),
     nested: s.object({ count: s.number() }),
+    double() {
+      return s.computed((count) => count * 2, [this.count]);
+    },
   });
 
-  it("drops defaults on the way in and fills them on the way out", () => {
+  it("drops defaults on the way in, and fills them and recomputes on the way out", () => {
     const serialized = serialize(Tester, {
       title: "title",
       count: 0,
       unranked: 3,
       cached: true,
       "nested.count": undefined,
+      double: 0,
     });
 
     expect(serialized).toEqual({ title: "title", unranked: 3 });
 
-    expect(deserialize(Tester, { ...serialized, count: 1.234_56 })).toEqual({
+    expect(deserialize(Tester, { ...serialized, count: 1.234_56, double: 99 })).toEqual({
       title: "title",
       count: 1.23,
       unranked: 3,
       cached: false,
       nested: { count: 0 },
+      double: 2.47,
     });
   });
 }
