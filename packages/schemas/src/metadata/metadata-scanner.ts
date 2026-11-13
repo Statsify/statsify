@@ -66,8 +66,6 @@ function getMetadataEntries(
       if (remainingStats.length === 0) continue;
 
       value.leaderboard.additionalFields = remainingStats;
-      // TODO: Investigate if this is needed or if there is another way
-      // TODO: Does this break anything?
       // ! This is needed for the ratios to work with sub modes
       value.historical.additionalFields = remainingStats;
       break;

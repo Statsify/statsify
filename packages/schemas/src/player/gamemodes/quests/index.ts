@@ -128,8 +128,6 @@ export class Quests {
   })
   public dailyTotal: number;
 
-  // TODO: add monthlyTotal
-
   @Field({ type: () => OverallQuests, leaderboard: { fieldName: "" } })
   public overall: UnwrapConstructor<typeof OverallQuests>;
 

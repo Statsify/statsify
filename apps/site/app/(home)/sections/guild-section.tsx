@@ -165,7 +165,7 @@ function GuildLevelling({ guild }: { guild: Guild }) {
 }
 
 function GuildTop({ guild }: { guild: Guild }) {
-  // TODO: Vercel doesn't support the toSorted function
+  // Vercel's runtime doesn't support toSorted
   const members = [...guild.members]
     .sort((a, b) => b.daily - a.daily)
     .slice(0, 6);

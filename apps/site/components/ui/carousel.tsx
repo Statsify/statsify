@@ -71,7 +71,6 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
   return (
     <div className="flex flex-col gap-10">
       <div className="flex items-center text-white gap-4 lg:gap-8">
-        {/* TODO: investigate why clicking the very edges of the button doesn't work */}
         <Box className="hidden lg:block has-[button:active]:scale-[0.8] transition-transform z-10 content:backdrop-blur-2xl content:relative">
           <Chevron className="rotate-180" />
           <button aria-label="Previous Card" type="button" className="absolute inset-0" onClick={() => paginate(-1)} />
