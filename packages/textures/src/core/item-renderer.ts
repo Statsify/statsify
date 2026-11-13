@@ -56,6 +56,18 @@ const HEADS: Record<string, { texture: string; hat: boolean }> = {
 
 const DEFAULT_SKIN = "entity/player/wide/steve";
 
+// Old 64 × 32 skins from before hats often filled the hat area in, so the game drops it when none of it is see-through
+function withoutFilledHat(skin: ImageData) {
+  if (skin.height !== 32) return skin;
+
+  const hat: number[] = [];
+  for (let y = 0; y < 32; y++) for (let x = 32; x < 64; x++) hat.push((y * skin.width + x) * 4 + 3);
+  if (hat.some((alpha) => skin.data[alpha] < 128)) return skin;
+
+  for (const alpha of hat) skin.data[alpha] = 0;
+  return skin;
+}
+
 const GLINT = "misc/enchanted_glint_item";
 const LEGACY_GLINT = "misc/enchanted_item_glint";
 
@@ -448,7 +460,7 @@ export class ItemRenderer {
         if (!file) throw new Error(`${url} has no skin`);
 
         const image = await decodePng(file);
-        return context(image).getImageData(0, 0, image.width, image.height);
+        return withoutFilledHat(context(image).getImageData(0, 0, image.width, image.height));
       })
       .catch(() => undefined);
   }
@@ -469,5 +481,17 @@ if (import.meta.vitest) {
 
     await cache.get("b", async () => 0);
     expect(await cache.get("1", async () => 4)).toBe(4);
+  });
+
+  it("drops an old 64 × 32 skin's hat only when none of it is see-through", () => {
+    const [hat, face] = [(4 * 64 + 40) * 4 + 3, (12 * 64 + 12) * 4 + 3];
+    const [old, seeThrough, modern] = [32, 32, 64].map(
+      (height) => ({ width: 64, height, data: new Uint8ClampedArray(64 * height * 4).fill(255) }) as ImageData,
+    );
+    seeThrough.data[(20 * 64 + 60) * 4 + 3] = 0;
+
+    expect([withoutFilledHat(old).data[hat], old.data[face]]).toEqual([0, 255]);
+    expect(withoutFilledHat(seeThrough).data[hat]).toBe(255);
+    expect(withoutFilledHat(modern).data[hat]).toBe(255);
   });
 }
