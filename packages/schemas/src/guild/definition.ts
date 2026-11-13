@@ -83,7 +83,6 @@ const FAMILY_REQUIREMENTS: Tiers = [
   { req: 70, tier: "VII" },
 ];
 
-// Below the first requirement the tier is empty, and once every tier is reached there's no next target
 const achievementTier = (tiers: Tiers, score: number) => tiers[findScoreIndex(tiers, score)]?.tier ?? "";
 
 const achievementProgression = (tiers: Tiers, score: number) =>
@@ -199,7 +198,6 @@ export const GuildSchema = s.model("Guild", {
   },
   description: s.string().optional(),
   createdAt: s.number().leaderboard(false),
-  // Annotated because level is computed from it, which TypeScript can't infer in a cycle
   exp(): NumberSchema {
     return s
       .number()

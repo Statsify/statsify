@@ -304,7 +304,6 @@ const MiniWallsSchema = s.object({
 const BestTimeSchema = s.number().color("§a").format(formats.raceTime).leaderboard({ sort: "ASC" });
 
 const PartyGamesSchema = s.object({
-  // Fields that read each other through `this` need return types, or TypeScript can't infer them
   wins(): NumberSchema {
     return WinsSchema.color("§a").leaderboard({ additionalFields: [this.roundsWon, this.starsEarned] });
   },
@@ -404,7 +403,6 @@ const ThrowOutSchema = s.object({
 });
 
 const ZombiesMapDifficultySchema = s.object({
-  // Fields that read each other through `this` need one return type, or TypeScript can't infer either
   wins(): NumberSchema {
     return WinsSchema.color("§a").leaderboard({ additionalFields: [this.fastestWin] });
   },

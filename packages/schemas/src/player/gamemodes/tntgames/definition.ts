@@ -16,7 +16,6 @@ import { s } from "#definition/s";
 
 const tntgamesRainbow = (text: string) => cycleColors(text, ["c", "6", "e", "a", "b", "d", "5"]);
 
-// Prefixes for TNT Run, PVP Run and Bow Spleef
 const RUN_PREFIXES: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },
   { fmt: (n) => `§7[${n}]`, req: 25 },
@@ -31,7 +30,6 @@ const RUN_PREFIXES: GamePrefix[] = [
   { fmt: (n) => tntgamesRainbow(`[${n}]`), req: 15_000 },
 ];
 
-// Prefixes for TNT Tag and Wizards
 const TAG_PREFIXES: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },
   { fmt: (n) => `§7[${n}]`, req: 15 },

@@ -210,7 +210,6 @@ export const GeneralSchema = s
     achievementPoints: s.number().color("§6"),
     giftsSent: s.number().color("§5"),
     karma: s.number().color("§d"),
-    // Two fields that read each other through `this` need one return type, or TypeScript can't infer either
     networkExp(): NumberSchema {
       return s
         .number()

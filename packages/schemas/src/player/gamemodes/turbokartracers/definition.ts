@@ -42,7 +42,6 @@ export const TurboKartRacersSchema = s
     boxesPickedUp: s.number().color("§c").leaderboard(false),
     coinsPickedUp: s.number().leaderboard(false),
     gamesPlayed: s.number().color("§a"),
-    // Annotated because total is computed from them, which TypeScript can't infer in a cycle
     gold(): NumberSchema {
       return s.number().color("§#ffd700").leaderboard({ additionalFields: [this.total] });
     },

@@ -449,9 +449,6 @@ export const getIntendedLevelFormatted = (level: number) => {
   );
 };
 
-/**
- * Gets a player's formatted level based on their preferences
- */
 /** Logs a selected scheme or emblem the maps don't have yet. Call it while parsing, since the formatting also runs on every read */
 export function warnMissingCosmetics(activeScheme: string | undefined, activeEmblem: string | undefined) {
   const scheme = activeScheme?.replace("scheme_", "");
@@ -461,6 +458,9 @@ export function warnMissingCosmetics(activeScheme: string | undefined, activeEmb
   if (emblem && !(emblem in EMBLEM_MAP)) console.error(`Missing SkyWars Emblem Key ${emblem}`);
 }
 
+/**
+ * Gets a player's formatted level based on their preferences
+ */
 export function getFormattedLevel(
   level: number,
   selectedScheme: string | undefined,

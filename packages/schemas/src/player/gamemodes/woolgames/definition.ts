@@ -15,7 +15,6 @@ import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
 import { type NumberSchema, s } from "#definition/s";
 import type { APIData } from "@statsify/util";
 
-// One of two fields that read each other needs its type written out, or both infer as `any`
 const WoolWarsClassStats = s.fields({
   ...KillsStats,
   assists: AssistsSchema.color("§e"),
