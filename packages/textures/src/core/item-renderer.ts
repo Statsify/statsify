@@ -19,7 +19,6 @@ const SIZE = 16;
 
 const CACHE_LIMIT = 2000;
 
-/** Promises by key, keeping the most recently used and dropping any that reject so they're retried */
 class PromiseCache<T> {
   private entries = new Map<string, Promise<T>>();
 

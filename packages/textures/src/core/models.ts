@@ -127,7 +127,7 @@ function parseSnbt(snbt: string) {
 
   const compound: Record<string, number | string> = {};
 
-  for (SNBT_ENTRY.lastIndex = 1; SNBT_ENTRY.lastIndex < text.length - 1; ) {
+  for (SNBT_ENTRY.lastIndex = 1; text.slice(SNBT_ENTRY.lastIndex, -1).trim(); ) {
     const entry = SNBT_ENTRY.exec(text);
     if (!entry) throw new Error(`${snbt} holds something other than numbers, booleans and strings`);
     compound[snbtString(entry[1])] = snbtValue(entry[2]);
@@ -380,63 +380,52 @@ if (import.meta.vitest) {
       expect(layer.model.textures).not.toHaveProperty("layer2");
     });
 
-    it("picks a pack's own item model by the item's custom data and wear", () => {
-      const flat = Object.fromEntries(
-        ["in_hand", "ashen", "auric", "full", "empty"].map((name) => [
-          `assets/pack/models/item/${name}.json`,
-          { parent: "builtin/generated" },
-        ]),
-      );
-
+    it("draws an item's own definition, whose ids may leave off their namespace", () => {
       const resolver = new ModelResolver(
         packOf({
-          ...flat,
           "assets/pack/items/dagger.json": {
             model: {
               type: "select",
               property: "display_context",
-              cases: [
-                {
-                  when: ["gui", "fixed"],
-                  model: {
-                    type: "condition",
-                    property: "component",
-                    predicate: "custom_data",
-                    value: "{mode:1}",
-                    on_true: { type: "model", model: "pack:item/auric" },
-                    on_false: { type: "model", model: "pack:item/ashen" },
-                  },
-                },
-              ],
+              cases: [{ when: "gui", model: { type: "model", model: "pack:item/dagger" } }],
               fallback: { type: "model", model: "pack:item/in_hand" },
             },
           },
-          "assets/pack/items/can.json": {
-            model: {
-              type: "condition",
-              property: "broken",
-              on_true: { type: "model", model: "pack:item/empty" },
-              on_false: { type: "model", model: "pack:item/full" },
-            },
-          },
+          "assets/pack/models/item/dagger.json": { parent: "builtin/generated" },
         }),
       );
 
-      const models = (item: ItemStack) => resolver.resolve(item).map(({ model }) => model.id);
-      const dagger = { id: "minecraft:golden_sword", itemModel: "pack:dagger" };
-      const can = { id: "minecraft:carrot_on_a_stick", itemModel: "pack:can" };
-
-      expect(models(dagger)).toEqual(["pack:item/ashen"]);
-      expect(models({ ...dagger, customData: { id: "DAGGER", mode: 1 } })).toEqual(["pack:item/auric"]);
-      expect(models({ ...dagger, customData: { mode: 3 } })).toEqual(["pack:item/ashen"]);
-      expect(models({ ...can, damage: 23 })).toEqual(["pack:item/full"]);
-      expect(models({ ...can, damage: 24 })).toEqual(["pack:item/empty"]);
-      expect(models({ ...can, damage: 24, unbreakable: true })).toEqual(["pack:item/full"]);
+      const [layer] = resolver.resolve({ id: "minecraft:golden_sword", itemModel: "pack:dagger" });
+      expect(layer.model.id).toBe("pack:item/dagger");
     });
   });
 
+  it("reads conditions from an item's custom data and wear", () => {
+    const when = (property: string, predicate?: Partial<Parameters<typeof condition>[0]>) =>
+      ({
+        type: "minecraft:condition",
+        property,
+        on_true: { type: "minecraft:empty" },
+        on_false: { type: "minecraft:empty" },
+        ...predicate,
+      }) as const;
+
+    const mode = when("minecraft:component", { predicate: "minecraft:custom_data", value: "{mode:1}" });
+    const broken = when("minecraft:broken");
+    const dagger = { id: "minecraft:golden_sword" };
+    const can = { id: "minecraft:carrot_on_a_stick" };
+
+    expect(condition(mode, dagger)).toBe(false);
+    expect(condition(mode, { ...dagger, customData: { id: "DAGGER", mode: 1 } })).toBe(true);
+    expect(condition(mode, { ...dagger, customData: { mode: 3 } })).toBe(false);
+    expect(condition(broken, { ...can, damage: 23 })).toBe(false);
+    expect(condition(broken, { ...can, damage: 24 })).toBe(true);
+    expect(condition(broken, { ...can, damage: 24, unbreakable: true })).toBe(false);
+  });
+
   it("reads SNBT compounds of plain values", () => {
-    expect(parseSnbt("{}")).toEqual({});
+    expect(parseSnbt("{ }")).toEqual({});
+    expect(parseSnbt("{active:true, }")).toEqual({ active: 1 });
     expect(parseSnbt("{td_attune_mode:1}")).toEqual({ td_attune_mode: 1 });
     expect(parseSnbt('{ active:true, "a key":"b,c", level:2.5f, tier:-3b }')).toEqual({
       active: 1,
