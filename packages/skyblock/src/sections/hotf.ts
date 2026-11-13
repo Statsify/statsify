@@ -47,8 +47,10 @@ export function getHotf(member: RawMember): HotfSection | null {
     level,
     centerLevel,
     loadout: { selected: slot, total: Math.max(slot, loadouts) },
-    tokensSpent: tree?.tokens_spent?.[`forest${suffix}`] ?? 0,
-    tokensTotal: add(CENTER_TOKENS[centerLevel], ...TIER_TOKENS.slice(0, level.level)),
+    tokens: {
+      spent: tree?.tokens_spent?.[`forest${suffix}`] ?? 0,
+      total: add(CENTER_TOKENS[centerLevel], ...TIER_TOKENS.slice(0, level.level)),
+    },
     ability: tree?.selected_ability?.[`foraging${suffix}`],
     whispers: { forest: whispers("forest"), desert: whispers("desert") },
     nodes: treeNodes(HOTF_LAYOUT, nodes),

@@ -36,14 +36,17 @@ const hotbarLast = <T>(slots: T[]) => [...slots.slice(9), ...slots.slice(0, 9)];
 
 /**
  * A toolkit's tools, kind by kind, each with whether the toolkit holds it: not while it's taken out into an inventory,
- * nor before the toolkit is unlocked. IN_USE and IS_UNLOCKED aren't tools, and an emptied slot is null.
+ * nor before the toolkit is unlocked. IN_USE and IS_UNLOCKED aren't tools, nor is HUNTING_TOOLKIT, the item used up to
+ * unlock the menu (the wiki's Hunting Toolkit page), and an emptied slot is null.
  */
 const toolkitPage = <T>(toolkit: RawToolkit, tool: (blob: RawNbt, held: boolean) => T | null): T[] => {
   const inUse = toolkit.IN_USE as Record<string, Record<string, boolean>> | undefined;
   const held = (kind: string, slot: number) => Boolean(toolkit.IS_UNLOCKED) && inUse?.[kind]?.[slot] !== true;
   return Object.entries(toolkit)
     .flatMap(([kind, tools]) =>
-      Array.isArray(tools) ? (tools as (RawNbt | null)[]).map((blob, slot) => blob && tool(blob, held(kind, slot))) : []
+      Array.isArray(tools) && kind !== "HUNTING_TOOLKIT" ?
+        (tools as (RawNbt | null)[]).map((blob, slot) => blob && tool(blob, held(kind, slot))) :
+        []
     )
     .filter((item) => item !== null);
 };

@@ -85,7 +85,7 @@ export function getHotm(member: RawMember): HotmSection {
       // Claw, Clubbed, Footprint, Helix, Spine, Tusk, Ugly and Webbed (the wiki's Fossils page, an owner exception,
       // unverified)
       maxFossils: 8,
-      fossilDust: glacite?.fossil_dust ?? 0,
+      fossilDust: Math.floor(glacite?.fossil_dust ?? 0),
       mineshafts: glacite?.mineshafts_entered ?? 0,
     },
   };
