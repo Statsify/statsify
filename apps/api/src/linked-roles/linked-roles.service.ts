@@ -15,8 +15,9 @@ import {
   refreshTokens,
   revokeToken,
 } from "./discord-oauth.js";
+import { CacheLevel } from "@statsify/api-client";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import {
   type Player,
@@ -24,7 +25,8 @@ import {
   User,
   getRoleConnectionMetadata,
 } from "@statsify/schemas";
-import { config } from "@statsify/util";
+import { PlayerService } from "#player";
+import { type Circular, config } from "@statsify/util";
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
@@ -48,7 +50,9 @@ export class LinkedRolesService {
   public constructor(
     @InjectModel(RoleConnection)
     private readonly roleConnectionModel: ReturnModelType<typeof RoleConnection>,
-    @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>
+    @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>,
+    @Inject(forwardRef(() => PlayerService))
+    private readonly playerService: Circular<PlayerService>
   ) {}
 
   /** @returns null when the Discord user hasn't verified a Minecraft account */
@@ -58,7 +62,7 @@ export class LinkedRolesService {
     const user = await this.userModel.findOne({ id }).select({ uuid: true }).lean().exec();
 
     if (!user?.uuid) {
-      await revokeToken(tokens.refresh_token);
+      await revokeToken(tokens.access_token);
       return null;
     }
 
@@ -72,7 +76,27 @@ export class LinkedRolesService {
       .exec();
   }
 
-  public async push(connection: RoleConnection, player: Player) {
+  /** @returns false when nothing was pushed, so the next save retries */
+  public async pushLatest(connection: RoleConnection) {
+    try {
+      const player = await this.playerService.get(connection.uuid, CacheLevel.CACHE);
+
+      if (player) {
+        await this.push(connection, player);
+        return true;
+      }
+    } catch (error) {
+      this.logger.error(error);
+    }
+
+    await this.roleConnectionModel
+      .updateOne({ id: connection.id }, { $set: { pushedAt: 0 } })
+      .exec();
+
+    return false;
+  }
+
+  private async push(connection: RoleConnection, player: Player) {
     const accessToken = await this.getAccessToken(connection);
     if (!accessToken) return;
 
@@ -114,9 +138,12 @@ export class LinkedRolesService {
 
     await Promise.all(others.map((connection) => this.disconnect(connection)));
 
-    await this.roleConnectionModel
-      .updateOne({ id }, { $set: { uuid, pushedAt: 0 } })
+    const connection = await this.roleConnectionModel
+      .findOneAndUpdate({ id }, { $set: { uuid, pushedAt: Date.now() } }, { new: true })
+      .lean()
       .exec();
+
+    if (connection) await this.pushLatest(connection);
   }
 
   public async onUnverify(id: string) {
@@ -132,7 +159,7 @@ export class LinkedRolesService {
 
       if (accessToken) {
         await discordRequest("DELETE", roleConnectionPath, accessToken);
-        await revokeToken(decrypt(connection.refreshToken));
+        await revokeToken(accessToken);
       }
     } catch (error) {
       this.logger.error(error);

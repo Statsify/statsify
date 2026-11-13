@@ -7,24 +7,20 @@
  */
 
 import { ApiExcludeController } from "@nestjs/swagger";
-import { CacheLevel } from "@statsify/api-client";
 import {
   Controller,
   Get,
-  Inject,
   NotFoundException,
   Query,
   Redirect,
   Render,
   Req,
   Res,
-  forwardRef,
 } from "@nestjs/common";
 import { LinkedRolesService } from "./linked-roles.service.js";
+import { Logger } from "@statsify/logger";
 import { exchangeCode, getAuthorizeUrl } from "./discord-oauth.js";
-import { PlayerService } from "#player";
 import { randomBytes } from "node:crypto";
-import type { Circular } from "@statsify/util";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 const STATE_COOKIE = "linked_roles_state";
@@ -39,11 +35,9 @@ const MESSAGES = {
 @Controller("/linked-roles")
 @ApiExcludeController()
 export class LinkedRolesController {
-  public constructor(
-    private readonly linkedRolesService: LinkedRolesService,
-    @Inject(forwardRef(() => PlayerService))
-    private readonly playerService: Circular<PlayerService>
-  ) {}
+  private readonly logger = new Logger("LinkedRolesController");
+
+  public constructor(private readonly linkedRolesService: LinkedRolesService) {}
 
   @Get()
   @Redirect()
@@ -71,16 +65,19 @@ export class LinkedRolesController {
 
     if (!code || !state || state !== expectedState) return { message: MESSAGES.failed };
 
-    const tokens = await exchangeCode(code);
-    if (!tokens) return { message: MESSAGES.failed };
+    try {
+      const tokens = await exchangeCode(code);
+      if (!tokens) return { message: MESSAGES.failed };
 
-    const connection = await this.linkedRolesService.connect(tokens);
-    if (!connection) return { message: MESSAGES.unverified };
+      const connection = await this.linkedRolesService.connect(tokens);
+      if (!connection) return { message: MESSAGES.unverified };
 
-    const player = await this.playerService.get(connection.uuid, CacheLevel.CACHE);
-    if (player) await this.linkedRolesService.push(connection, player);
-
-    return { message: MESSAGES.linked };
+      const pushed = await this.linkedRolesService.pushLatest(connection);
+      return { message: pushed ? MESSAGES.linked : MESSAGES.failed };
+    } catch (error) {
+      this.logger.error(error);
+      return { message: MESSAGES.failed };
+    }
   }
 }
 

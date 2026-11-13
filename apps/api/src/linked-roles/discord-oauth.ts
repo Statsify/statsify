@@ -38,11 +38,9 @@ export const exchangeCode = (code: string) =>
 export const refreshTokens = (refreshToken: string) =>
   requestTokens({ grant_type: "refresh_token", refresh_token: refreshToken });
 
-export const revokeToken = async (refreshToken: string) => {
-  const response = await oauth("/oauth2/token/revoke", {
-    token: refreshToken,
-    token_type_hint: "refresh_token",
-  });
+// Revoking any token revokes the whole authorization, refresh token included
+export const revokeToken = async (token: string) => {
+  const response = await oauth("/oauth2/token/revoke", { token });
 
   if (!response.ok) throw new Error(`Discord token revoke failed with ${response.status}`);
 };
