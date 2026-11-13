@@ -21,7 +21,7 @@ import {
 } from "./util.js";
 import { BedsStats, ExpSchema, FinalKillsStats, KillsStats, WinsStats } from "../common.js";
 import { FormattedGame } from "#game";
-import { ProgressionSchema, progression } from "../../../progression.definition.js";
+import { ProgressionSchema, expProgression } from "../../../progression.definition.js";
 import { type APIData, findScore } from "@statsify/util";
 import { deepAdd, deepSub } from "@statsify/math";
 import { formats } from "#definition/format";
@@ -166,15 +166,6 @@ const formatLevel = (
   });
 };
 
-const levelProgression = (exp: number, level: number) => {
-  const flooredLevel = Math.floor(level);
-
-  let levelExp = exp;
-  for (let i = 0; i < flooredLevel; i++) levelExp -= getExpReq(i);
-
-  return progression(levelExp, getExpReq(flooredLevel));
-};
-
 export const BedWarsSchema = s
   .object({
     tokens: s.number().color("§2"),
@@ -212,7 +203,7 @@ export const BedWarsSchema = s
         .default(getIntendedFormattedLevel(0));
     },
     progression() {
-      return ProgressionSchema.computed(levelProgression, [this.exp, this.level]);
+      return ProgressionSchema.computed(expProgression(getExpReq), [this.exp, this.level]);
     },
     naturalLevelFormatted() {
       return s

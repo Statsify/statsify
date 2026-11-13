@@ -21,3 +21,13 @@ export function progression(current: number, max: number): Progression {
   if (!max) return { current: current || 0, percent: 1 };
   return { current: current || 0, max, percent: ratio(current, max) };
 }
+
+/** Progress through the current level, for games whose level `n` takes `getExpReq(n)` exp */
+export const expProgression = (getExpReq: (level: number) => number) => (exp: number, level: number) => {
+  const flooredLevel = Math.floor(level);
+
+  let levelExp = exp;
+  for (let i = 0; i < flooredLevel; i++) levelExp -= getExpReq(i);
+
+  return progression(levelExp, getExpReq(flooredLevel));
+};

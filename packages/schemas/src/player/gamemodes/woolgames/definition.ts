@@ -8,7 +8,7 @@
 
 import { AssistsSchema, CoinsSchema, ExpSchema, KillsStats, WinsSchema, WinsStats } from "../common.js";
 import { FormattedGame } from "#game";
-import { ProgressionSchema, progression } from "../../../progression.definition.js";
+import { ProgressionSchema, expProgression } from "../../../progression.definition.js";
 import { add, sub } from "@statsify/math";
 import { formats } from "#definition/format";
 import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
@@ -116,15 +116,6 @@ const CaptureTheWoolSchema = s.object({
 
 export type CaptureTheWool = s.infer<typeof CaptureTheWoolSchema>;
 
-const levelProgression = (exp: number, level: number) => {
-  const flooredLevel = Math.floor(level);
-
-  let levelExp = exp;
-  for (let i = 0; i < flooredLevel; i++) levelExp -= getExpReq(i);
-
-  return progression(levelExp, getExpReq(flooredLevel));
-};
-
 export const WoolGamesSchema = s
   .object({
     coins: CoinsSchema.color("§6"),
@@ -145,7 +136,7 @@ export const WoolGamesSchema = s
       return s.string().computed((level) => getFormattedLevel(Math.floor(level)), [this.level]);
     },
     progression() {
-      return ProgressionSchema.computed(levelProgression, [this.exp, this.level]);
+      return ProgressionSchema.computed(expProgression(getExpReq), [this.exp, this.level]);
     },
     nextLevelFormatted() {
       return s.string().computed((level) => getFormattedLevel(Math.floor(level) + 1), [this.level]);
