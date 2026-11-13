@@ -12,6 +12,7 @@
     "limit-redis": "node src/limit-redis.js",
     "purge-repo": "node src/purge-repo.js",
     "rank-emojis": "node src/rank-emojis.js",
+    "regen-quest-targets": "node src/regen-quest-targets.js",
     "timestamp": "node --no-warnings src/timestamp.js",
     "validate-commands": "node --no-warnings src/validate-commands.js",
     "blur-backgrounds": "node src/blur-backgrounds.ts"
