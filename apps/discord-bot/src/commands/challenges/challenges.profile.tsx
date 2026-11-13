@@ -166,11 +166,7 @@ export const ChallengesProfile = ({
   const sidebar: SidebarItem[] = [[t("stats.total"), t(challenges.total), "§b"]];
 
   if (api !== "overall") {
-    sidebar.push([
-      t("stats.game-total", { game: formatted }),
-      t(challenges[api].total),
-      "§a",
-    ]);
+    sidebar.push([t("stats.gameTotal"), t(challenges[api].total), "§a"]);
   }
 
   const title =
