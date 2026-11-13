@@ -58,7 +58,7 @@ export interface CreateLeaderboardOptions {
 }
 
 export class BaseLeaderboardCommand {
-  // oxlint-disable-next-line class-methods-use-this -- subclasses call it through `this`
+  // oxlint-disable-next-line class-methods-use-this -- as a static, no-extraneous-class flags the class
   protected async createLeaderboard({
     context,
     background,
