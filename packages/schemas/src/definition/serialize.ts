@@ -53,7 +53,8 @@ export function deserialize<S extends ObjectSchema>(
   const deserialized: Record<string, unknown> = {};
 
   for (const { path, store } of fields) {
-    const value = computed[path];
+    // A computed value can be missing too, like a progression's max past the last tier
+    const value = store.deserialize && computed[path] === undefined ? store.default : computed[path];
     deserialized[path] = store.deserialize && typeof value === "number" ? roundTo(value) : value;
   }
 
@@ -95,5 +96,18 @@ if (import.meta.vitest) {
       nested: { count: 0 },
       double: 2.47,
     });
+  });
+
+  it("fills defaults for computed values that are missing", () => {
+    const Tiered = s.object({
+      score: s.number(),
+      progression() {
+        return s
+          .object({ current: s.number(), max: s.number().optional() })
+          .computed((score) => (score < 10 ? { current: score, max: 10 } : { current: score }), [this.score]);
+      },
+    });
+
+    expect(deserialize(Tiered, { score: 20 })).toEqual({ score: 20, progression: { current: 20, max: 0 } });
   });
 }
