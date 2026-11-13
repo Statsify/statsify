@@ -471,6 +471,7 @@ export interface TrophyFish {
   id: string;
   name: string;
   tiers: Record<TrophyTier, number>;
+  texture: ItemTexture; // the best tier caught, or bronze
 }
 
 export interface TrophyFrog {
@@ -1038,9 +1039,11 @@ export interface ItemView {
   drillParts?: string[]; // item ids
 }
 
-export type ItemTexture =
+/** model: the item_model a modern client draws in its place, and customData the ExtraAttributes that pick its look. */
+export type ItemTexture = { model?: string; customData?: Record<string, number> } & (
   | { kind: "item"; id: number; damage: number; color?: number } // 1.8 numeric id
-  | { kind: "head"; skin: string }; // skin texture hash
+  | { kind: "head"; skin: string } // skin texture hash
+);
 
 /** prismarine-nbt `simplify()` of one slot. */
 export interface RawItem {
@@ -1085,6 +1088,7 @@ export interface ItemsResource {
       durability?: number;
       skin?: string;
       color?: string;
+      model?: string; // item_model
       category?: string;
       riftOnly?: boolean;
       npcPrice?: number;

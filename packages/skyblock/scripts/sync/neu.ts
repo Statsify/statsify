@@ -13,6 +13,8 @@ import { prettify, removeFormatting } from "@statsify/util";
 import type { SyncContext } from "../sync-data.ts";
 import { bestiaryBoards } from "@statsify/skyblock";
 import { join } from "node:path";
+import { legacyItem } from "@statsify/textures";
+import { minecraftData } from "./textures.ts";
 import { readdir } from "node:fs/promises";
 import { skinHash } from "#textures";
 
@@ -139,6 +141,8 @@ function petItemEffect(lore: string[]) {
 
 interface NeuItem {
   internalname: string;
+  itemid: string; // its 1.8 material ("minecraft:skull"), or a newer item's id
+  damage: number;
   displayname: string;
   lore?: string[];
   nbttag: string;
@@ -379,10 +383,18 @@ export const NEU_UNITS = {
     const trophyFish = new Set(Object.keys(await readJson<Record<string, number[]>>("constants/trophyfish.json")));
     const trophyNames: Record<string, string> = {};
     const petItems: Record<string, NonNullable<ReturnType<typeof petItemEffect>>> = {};
+    const itemModels: Record<string, string> = {};
+    const materials = new Map((await minecraftData("items")).map(({ id, name }) => [`minecraft:${name}`, id]));
     const files = (await readdir(join(neu, "items"))).filter((file) => file.endsWith(".json"));
     const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
 
     for (const item of items) {
+      // The item_model a modern client draws, where it isn't the item its 1.8 material already is (a head's player_head)
+      const model = /ItemModel:"([^"]+)"/.exec(item.nbttag)?.[1];
+      const material = materials.get(item.itemid);
+      const vanilla = material === undefined ? undefined : legacyItem(material, item.damage)?.id;
+      if (model && model !== vanilla) itemModels[item.internalname] = model;
+
       // Pets are "<TYPE>;<tier>" with a petInfo tag, the tier indexing RARITIES (Phoenix only comes as SPECIAL and
       // VERY_SPECIAL); skins are PET_SKIN_<SKIN>
       const pet = item.nbttag.includes("petInfo") ? /^(.+);(\d)$/.exec(item.internalname) : null;
@@ -448,6 +460,7 @@ export const NEU_UNITS = {
     await write("kuudra-keys.json", kuudraKeys);
     await write("trophyfish.json", trophyNames);
     await write("pet-items.json", petItems);
+    await write("item-models.json", itemModels);
 
     const pets = await readJson<Record<string, unknown>>("constants/pets.json");
     const offsets = pets.pet_rarity_offset as Record<string, number>;

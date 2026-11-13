@@ -806,6 +806,9 @@ importers:
       '@statsify/math':
         specifier: workspace:^
         version: link:../math
+      '@statsify/textures':
+        specifier: workspace:^
+        version: link:../textures
       '@statsify/util':
         specifier: workspace:^
         version: link:../util
