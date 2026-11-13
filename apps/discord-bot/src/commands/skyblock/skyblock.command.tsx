@@ -37,7 +37,7 @@ import { SkyBlockChocolateProfile } from "./chocolate.profile.js";
 import { SkyBlockCrimsonProfile, crimsonIcons } from "./crimson.profile.js";
 import { SkyBlockDungeonsProfile, SkyBlockEssenceProfile } from "./dungeons.profile.js";
 import { SkyBlockExperimentsProfile, SkyBlockMiscProfile, SkyBlockRiftProfile, consumableIcons } from "./misc.profile.js";
-import { SkyBlockFishingProfile } from "./fishing.profile.js";
+import { SkyBlockFishingProfile, trophyFishIcons } from "./fishing.profile.js";
 import { SkyBlockGearProfile, SkyBlockMuseumProfile, gearIcons } from "./gear.profile.js";
 import { SkyBlockGardenProfile, gardenIcons } from "./garden.profile.js";
 import { SkyBlockHotfProfile } from "./hotf.profile.js";
@@ -179,7 +179,11 @@ export const SKYBLOCK_CARDS = {
     sections: ["fishing"],
     settings: [],
     profile: [
-      { label: (t) => t("skyblock.trophyFish"), profile: (props) => <SkyBlockFishingProfile {...props} page="trophyFish" /> },
+      {
+        label: (t) => t("skyblock.trophyFish"),
+        profile: (props) => <SkyBlockFishingProfile {...props} page="trophyFish" />,
+        icons: trophyFishIcons,
+      },
       { label: (t) => t("skyblock.trophyFrogs"), profile: (props) => <SkyBlockFishingProfile {...props} page="trophyFrogs" /> },
       { label: (t) => t("skyblock.seaCreatures"), profile: (props) => <SkyBlockFishingProfile {...props} page="seaCreatures" /> },
     ],
