@@ -43,7 +43,7 @@ export const SkyBlockSkillsProfile = ({
   const highestSkills = profile.newProfile ? undefined : profile.player?.highestSkills;
   const highest = SKILLS.flatMap((name) => {
     const level = highestSkills?.[name];
-    return level === undefined ? [] : [<Table.td title={prettify(name)} value={t(level)} color="§7" size="small" />];
+    return level === undefined ? [] : [<Table.td title={prettify(name)} value={t(level)} color={SKILL_COLORS[name]} size="small" />];
   });
 
   return (
