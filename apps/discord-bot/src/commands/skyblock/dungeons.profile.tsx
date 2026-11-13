@@ -104,15 +104,13 @@ export const SkyBlockEssenceProfile = ({
   t,
 }: SkyBlockProfileProps) => {
   const { essence } = profile.member.dungeons!;
-  const amounts = essence.some(({ amount }) => amount !== undefined);
 
   const cells = essence.map(({ type, amount, perks, maxPerks }) => (
     <box direction="column" location="center" width="100%">
       <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`§d${prettify(type)}`}</text>
-      {amount !== undefined ?
-        <text margin={{ top: 0, bottom: 4, left: 10, right: 10 }}>{`§^3^§f${t(amount)}`}</text> :
-        // Among types with an amount, one without keeps the line empty so its Perks line stays level
-        amounts ? <div height={30} margin={{ top: 0, bottom: 4 }} /> : <></>}
+      <text margin={{ top: 0, bottom: 4, left: 10, right: 10 }}>
+        {amount === undefined ? `§^3^§7${t("skyblock.notAvailable")}` : `§^3^§f${t(amount)}`}
+      </text>
       <text margin={{ top: 0, bottom: 8, left: 10, right: 10 }}>
         {`§7${t("skyblock.perksBought", { bought: t(perks), total: t(maxPerks) })}`}
       </text>
