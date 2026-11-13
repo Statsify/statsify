@@ -12,7 +12,7 @@ import type { Player } from "../player/index.js";
 // Discord's ApplicationRoleConnectionMetadataType.IntegerGreaterThanOrEqual
 const INTEGER_GREATER_THAN_OR_EQUAL = 2;
 
-// Discord allows 5 records per app, shared by every server, so each one is a slot
+// Discord allows 5 records per app, shared by every server
 export const ROLE_CONNECTION_METADATA = [
   {
     key: "network_level",

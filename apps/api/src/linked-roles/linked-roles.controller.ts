@@ -35,9 +35,7 @@ const MESSAGES = {
   failed: "Linking didn't work. Go back to Discord and try connecting again.",
 };
 
-/**
- * Discord sends users here from a server's Linked Roles menu, set as the app's Linked Roles Verification URL
- */
+// The app's Linked Roles Verification URL in the Discord Developer Portal points here
 @Controller("/linked-roles")
 @ApiExcludeController()
 export class LinkedRolesController {

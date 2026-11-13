@@ -194,10 +194,7 @@ export class PlayerService {
       promises.push(this.playerSearchService.add(flatPlayer as RedisPlayer));
 
     await Promise.all(promises);
-
-    // Not awaited, so a slow or failing Discord doesn't hold up the save
     void this.linkedRolesService.onPlayerSave(player);
-
     return flatPlayer;
   }
 

@@ -51,9 +51,7 @@ export class LinkedRolesService {
     @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>
   ) {}
 
-  /**
-   * @returns The stored connection, or null when the Discord user hasn't verified a Minecraft account
-   */
+  /** @returns null when the Discord user hasn't verified a Minecraft account */
   public async connect(tokens: DiscordTokens): Promise<RoleConnection | null> {
     const response = await discordRequest("GET", "/users/@me", tokens.access_token);
     const { id }: { id: string } = await response.json();
@@ -106,9 +104,6 @@ export class LinkedRolesService {
     }
   }
 
-  /**
-   * Moves a Discord user's connection to the account they just verified, and removes any other user's connection to it
-   */
   public async onVerify(id: string, uuid: string) {
     if (!this.enabled) return;
 
@@ -119,7 +114,6 @@ export class LinkedRolesService {
 
     await Promise.all(others.map((connection) => this.disconnect(connection)));
 
-    // The next save of the new account pushes its values
     await this.roleConnectionModel
       .updateOne({ id }, { $set: { uuid, pushedAt: 0 } })
       .exec();
@@ -153,13 +147,11 @@ export class LinkedRolesService {
 
     const tokens = await refreshTokens(decrypt(connection.refreshToken));
 
-    // The user removed Statsify from their authorized apps
     if (!tokens) {
       await this.roleConnectionModel.deleteOne({ id: connection.id }).exec();
       return;
     }
 
-    // Discord rotates refresh tokens, so the old one stops working once this one is issued
     await this.roleConnectionModel
       .updateOne({ id: connection.id }, { $set: encryptTokens(tokens) })
       .exec();
