@@ -21,6 +21,7 @@ import {
   forwardRef,
 } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
+import { LinkedRolesService } from "#linked-roles";
 import { Player, deserialize, serialize } from "@statsify/schemas";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
 import {
@@ -38,6 +39,8 @@ export class PlayerService {
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: Circular<PlayerLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
+    @Inject(forwardRef(() => LinkedRolesService))
+    private readonly linkedRolesService: Circular<LinkedRolesService>,
     @InjectModel(Player) private readonly playerModel: PlayerModel
   ) {}
 
@@ -191,6 +194,10 @@ export class PlayerService {
       promises.push(this.playerSearchService.add(flatPlayer as RedisPlayer));
 
     await Promise.all(promises);
+
+    // Not awaited, so a slow or failing Discord doesn't hold up the save
+    void this.linkedRolesService.onPlayerSave(player);
+
     return flatPlayer;
   }
 

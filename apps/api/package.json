@@ -79,6 +79,10 @@
       "types": "./src/hypixel-resources/index.ts",
       "default": "./dist/hypixel-resources/index.js"
     },
+    "#linked-roles": {
+      "types": "./src/linked-roles/index.ts",
+      "default": "./dist/linked-roles/index.js"
+    },
     "#leaderboards": {
       "types": "./src/leaderboards/index.ts",
       "default": "./dist/leaderboards/index.js"
