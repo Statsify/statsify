@@ -30,16 +30,16 @@ import {
 import { CommandListener } from "#lib";
 import { Inject, Service } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
-import { Ticket } from "@statsify/schemas";
+import { type Ticket, TicketSchema } from "@statsify/schemas";
 import { config } from "@statsify/util";
-import type { ReturnModelType } from "@typegoose/typegoose";
+import type { Model } from "mongoose";
 
 @Service()
 export class TicketService {
   public constructor(
     private readonly channelService: ChannelService,
     private readonly messageService: MessageService,
-    @Inject(() => Ticket) private readonly ticketModel: ReturnModelType<typeof Ticket>
+    @Inject(TicketSchema.name) private readonly ticketModel: Model<Ticket>
   ) {}
 
   public async init() {

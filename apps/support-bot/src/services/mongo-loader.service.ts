@@ -7,21 +7,21 @@
  */
 
 import { Container, Service } from "typedi";
-import { Tag, Ticket, User } from "@statsify/schemas";
+import { TagSchema, TicketSchema, UserSchema } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { createConnection } from "mongoose";
-import { getModelForClass } from "@typegoose/typegoose";
+import { toMongoose } from "@statsify/schemas/mongoose";
 
 @Service()
 export class MongoLoaderService {
   public async init() {
     const connection = await createConnection(await config("database.mongoUri")).asPromise();
 
-    const models = [Ticket, Tag, User];
+    const models = [TicketSchema, TagSchema, UserSchema];
 
-    for (const modelClass of models) {
-      const model = getModelForClass(modelClass, { existingConnection: connection });
-      Container.set(modelClass, model);
+    // Services inject each model by its name
+    for (const schema of models) {
+      Container.set(schema.name, connection.model(schema.name, toMongoose(schema)));
     }
   }
 }

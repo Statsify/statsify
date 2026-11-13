@@ -15,7 +15,7 @@ import {
   UserArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
-import { User, UserLogo, UserTier } from "@statsify/schemas";
+import { type User, UserLogo, UserTier, getTierName } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 
 @Command({
@@ -59,7 +59,7 @@ export class UserCommand {
 
     this.addField(embed, "Has Badge", user.hasBadge);
 
-    this.addField(embed, "Tier", user.tier, (v) => `\`${User.getTierName(v)}\``);
+    this.addField(embed, "Tier", user.tier, (v) => `\`${getTierName(v)}\``);
 
     this.addField(embed, "Font", user.theme?.font, (v) => `\`${prettify(v)}\``);
     this.addField(embed, "Boxes", user.theme?.boxes, (v) => `\`${prettify(v)}\``);
