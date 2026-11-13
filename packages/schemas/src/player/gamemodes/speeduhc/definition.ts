@@ -8,18 +8,13 @@
 
 import { AssistsSchema, CoinsSchema, KillsStats, WinsStats } from "../common.js";
 import { FormattedGame } from "#game";
-import { type GamePrefix, createPrefixProgression } from "#prefixes";
+import { createPrefixProgression } from "#prefixes";
 import { ProgressionSchema } from "../../../progression.definition.js";
 import { getLevelIndex, titleScores } from "./util.js";
 import { s } from "#definition/s";
 import type { APIData } from "@statsify/util";
 
-const formatLevel = (level: number | string) => `§d[${level}❋]`;
-
-const prefixes: GamePrefix[] = titleScores.map((level) => ({
-  fmt: formatLevel,
-  req: level.req,
-}));
+const formatLevel = (level: number) => `§d[${level}❋]`;
 
 const SpeedUHCModeSchema = s.object({
   ...WinsStats,
@@ -55,7 +50,7 @@ export const SpeedUHCSchema = s
       return s.string().computed((level) => formatLevel(Math.floor(level) + 1), [this.level]);
     },
     progression() {
-      return ProgressionSchema.computed((score) => createPrefixProgression(prefixes, score), [
+      return ProgressionSchema.computed((score) => createPrefixProgression(titleScores, score), [
         this.score,
       ]);
     },
