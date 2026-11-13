@@ -62,8 +62,6 @@ const KITS = MEGAWALLS_MODES.getApiModes().filter(
   (mode): mode is Exclude<typeof mode, "overall"> => mode !== "overall"
 );
 
-type Kit = (typeof KITS)[number];
-
 export const MegaWallsSchema = s
   .object({
     coins: CoinsSchema.color("§6"),
@@ -96,11 +94,6 @@ function megaWallsKit(data: APIData, kit: string): s.input<typeof MegaWallsKitSc
 }
 
 export function megaWalls(data: APIData = {}): s.input<typeof MegaWallsSchema> {
-  const kits = Object.fromEntries(KITS.map((kit) => [kit, megaWallsKit(data, kit)])) as Record<
-    Kit,
-    s.input<typeof MegaWallsKitSchema>
-  >;
-
   return {
     coins: data.coins,
     mythicFavor: data.mythic_favor,
@@ -110,6 +103,6 @@ export function megaWalls(data: APIData = {}): s.input<typeof MegaWallsSchema> {
       finalDeaths: add(data.final_deaths, data.finalDeaths),
       witherDamage: add(data.wither_damage, data.witherDamage),
     },
-    ...kits,
+    ...s.keyed(KITS, (kit) => megaWallsKit(data, kit)),
   };
 }

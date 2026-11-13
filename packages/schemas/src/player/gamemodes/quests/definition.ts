@@ -446,11 +446,8 @@ export type Quests = s.infer<typeof QuestsSchema>;
 
 function questCountsDuring<P extends Period>(data: APIData, period: P) {
   const games = QUESTS.map((quests) => {
-    const counts = Object.fromEntries(
-      questsDuring(quests, period).map(({ property, key }) => [
-        property,
-        getQuestCountDuring(PERIODS[period], data[key]),
-      ])
+    const counts = s.keyed(questsDuring(quests, period), ({ key }) =>
+      getQuestCountDuring(PERIODS[period], data[key])
     );
 
     return [quests.game, { total: add(...Object.values(counts)), ...counts }];

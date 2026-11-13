@@ -165,10 +165,6 @@ export function blitzSG(data: APIData = {}): s.input<typeof BlitzSGSchema> {
   const solo = blitzSGMode(data, "");
   const doubles = blitzSGMode(data, "teams_normal");
 
-  const kits = Object.fromEntries(
-    KITS.map((kit) => [kit, blitzSGKit(data, KIT_KEYS[kit] ?? kit)])
-  ) as Record<Kit, s.input<typeof BlitzSGKitSchema>>;
-
   return {
     coins: data.coins,
     kit: data.defaultkit || "none",
@@ -179,6 +175,6 @@ export function blitzSG(data: APIData = {}): s.input<typeof BlitzSGSchema> {
     },
     solo: { ...solo, kills: sub(solo.kills, doubles.kills) },
     doubles,
-    ...kits,
+    ...s.keyed(KITS, (kit) => blitzSGKit(data, KIT_KEYS[kit] ?? kit)),
   };
 }

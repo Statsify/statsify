@@ -592,9 +592,7 @@ function dropper(data: APIData = {}): s.input<typeof DropperSchema> {
     gamesFinished: data.games_finished,
     flawlessGames: data.flawless_games,
     bestTime: data.fastest_game,
-    maps: Object.fromEntries(
-      DROPPER_MAPS.map(({ property, key }) => [property, dropperMap(maps[key])])
-    ) as s.input<typeof DropperMapsSchema>,
+    maps: s.keyed(DROPPER_MAPS, ({ key }) => dropperMap(maps[key])),
   };
 }
 

@@ -14,26 +14,24 @@ import type { APIData } from "@statsify/util";
 const formatLevel = (level: number) => `§b${level}§6✶`;
 
 /** Each kit's key in Hypixel's `class_stats` and `active_class` */
-const KITS = {
-  cakeMonster: "CAKE_MONSTER",
-  generalCluck: "GENERAL_CLUCK",
-  tinman: "TINMAN",
-  spooderman: "SPODERMAN",
-  skullfire: "SKULLFIRE",
-  karakot: "GOKU",
-  bulk: "THE_BULK",
-  botmon: "BOTMUN",
-  sanic: "SANIC",
-  marauder: "MARAUDER",
-  voidCrawler: "DUSK_CRAWLER",
-  pug: "PUG",
-  sergeantShield: "SERGEANT_SHIELD",
-  cryomancer: "FROSTY",
-  shoop: "SHOOP_DA_WHOOP",
-  greenHood: "GREEN_HOOD",
-} as const;
-
-type Kit = keyof typeof KITS;
+const KITS = [
+  { property: "cakeMonster", key: "CAKE_MONSTER" },
+  { property: "generalCluck", key: "GENERAL_CLUCK" },
+  { property: "tinman", key: "TINMAN" },
+  { property: "spooderman", key: "SPODERMAN" },
+  { property: "skullfire", key: "SKULLFIRE" },
+  { property: "karakot", key: "GOKU" },
+  { property: "bulk", key: "THE_BULK" },
+  { property: "botmon", key: "BOTMUN" },
+  { property: "sanic", key: "SANIC" },
+  { property: "marauder", key: "MARAUDER" },
+  { property: "voidCrawler", key: "DUSK_CRAWLER" },
+  { property: "pug", key: "PUG" },
+  { property: "sergeantShield", key: "SERGEANT_SHIELD" },
+  { property: "cryomancer", key: "FROSTY" },
+  { property: "shoop", key: "SHOOP_DA_WHOOP" },
+  { property: "greenHood", key: "GREEN_HOOD" },
+] as const;
 
 const KIT_NAMES: Record<string, string> = {
   BOTMUN: "Botmon",
@@ -82,7 +80,7 @@ export const SmashHeroesSchema = s
         .computed((activeClass) => KIT_NAMES[activeClass] ?? "none", [this.activeClass])
         .default("none");
     },
-    ...s.keyed(Object.keys(KITS) as Kit[], () => SmashHeroesModeSchema),
+    ...s.keyed(KITS, () => SmashHeroesModeSchema),
   })
   .leaderboard((smashheroes) => ({
     fieldName: FormattedGame.SMASH_HEROES,
@@ -112,10 +110,6 @@ function smashHeroesKit(data: APIData = {}): SmashHeroesModeInput {
 }
 
 export function smashHeroes(data: APIData = {}): s.input<typeof SmashHeroesSchema> {
-  const kits = Object.fromEntries(
-    Object.entries(KITS).map(([kit, key]) => [kit, smashHeroesKit(data.class_stats?.[key])])
-  ) as Record<Kit, SmashHeroesModeInput>;
-
   return {
     overall: smashHeroesMode(data, ""),
     solo: smashHeroesMode(data, "normal"),
@@ -124,6 +118,6 @@ export function smashHeroes(data: APIData = {}): s.input<typeof SmashHeroesSchem
     coins: data.coins,
     level: data.smashLevel,
     activeClass: data.active_class,
-    ...kits,
+    ...s.keyed(KITS, ({ key }) => smashHeroesKit(data.class_stats?.[key])),
   };
 }

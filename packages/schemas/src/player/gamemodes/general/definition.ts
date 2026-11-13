@@ -191,8 +191,6 @@ const CLASSIC_HARD = [
 const objectivesSchema = <O extends readonly Objective[]>(objectives: O) =>
   s.object(s.keyed(objectives, () => s.number().leaderboard(false)));
 
-type ObjectivesSchema<O extends readonly Objective[]> = ReturnType<typeof objectivesSchema<O>>;
-
 const BingoSchema = s.object({
   easy: s.object({
     casual: objectivesSchema(CASUAL_EASY),
@@ -278,9 +276,7 @@ function events(data: APIData = {}): s.input<typeof EventsSchema> {
 }
 
 const objectives = <O extends readonly Objective[]>(list: O, data: APIData = {}) =>
-  Object.fromEntries(list.map(({ property, key }) => [property, data[key]])) as s.input<
-    ObjectivesSchema<O>
-  >;
+  s.keyed(list, ({ key }) => data[key]);
 
 function bingo(data: APIData = {}): s.input<typeof BingoSchema> {
   const cards = data.easter?.["2026"]?.bingo ?? {};

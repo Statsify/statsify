@@ -279,9 +279,7 @@ export const ChallengesSchema = s
 export type Challenges = s.infer<typeof ChallengesSchema>;
 
 function gameChallenges(data: APIData, game: GameChallenges) {
-  const completions = Object.fromEntries(
-    game.challenges.map(({ property, key }) => [property, data[key] as number])
-  );
+  const completions = s.keyed(game.challenges, ({ key }) => data[key]);
 
   return { ...completions, total: add(...Object.values(completions)) };
 }
