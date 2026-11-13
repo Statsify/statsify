@@ -14,6 +14,9 @@ import type { RawDungeonType, RawMember } from "#raw";
 
 const MAX_LEVEL = LEVELING.leveling_caps.catacombs;
 
+// Hypixel's currencies carry no balance for these shops' essence, only the perks bought in them
+const UNSENT_ESSENCE = new Set(["FOREST", "FOSSIL", "SUN_GECKO"]);
+
 // Each grade by the lowest Dungeon Score that earns it
 const GRADES: [DungeonGrade, number][] = [["S+", 300], ["S", 269.5], ["A", 230], ["B", 160], ["C", 100], ["D", 0]];
 
@@ -74,7 +77,7 @@ export function getDungeons(member: RawMember): DungeonsSection {
     watcherKills: watcherKills(types?.catacombs),
     essence: Object.entries(ESSENCE_SHOPS).map(([type, shop]) => ({
       type,
-      amount: member.currencies?.essence?.[type]?.current,
+      amount: UNSENT_ESSENCE.has(type) ? undefined : (member.currencies?.essence?.[type]?.current ?? 0),
       perks: add(...Object.keys(shop).map((perk) => member.player_data?.perks?.[perk] ?? 0)),
       maxPerks: add(...Object.values(shop)),
     })),
