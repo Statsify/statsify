@@ -167,6 +167,39 @@ export function getFields(schema: ObjectSchema): Field[] {
   return fields;
 }
 
+const fieldsByPath = new WeakMap<ObjectSchema, Map<string, Field>>();
+
+export function getField(schema: ObjectSchema, path: string): Field | undefined {
+  let fields = fieldsByPath.get(schema);
+
+  if (!fields) {
+    fields = new Map(getFields(schema).map((field) => [field.path, field]));
+    fieldsByPath.set(schema, fields);
+  }
+
+  return fields.get(path);
+}
+
+/** The paths to read so the computed fields under them can be built again, as deserialize does */
+export function withDependencies(schema: ObjectSchema, paths: string[]): string[] {
+  const found = new Set<string>();
+
+  const add = (path: string) => {
+    if (found.has(path)) return;
+    found.add(path);
+
+    for (const field of getFields(schema)) {
+      if (field.path !== path && !field.path.startsWith(`${path}.`)) continue;
+      for (const dependency of field.dependencies ?? []) add(dependency);
+    }
+  };
+
+  for (const path of paths) add(path);
+
+  // Mongo can't project a path and a path inside it at once
+  return [...found].filter((path) => ![...found].some((other) => path.startsWith(`${other}.`)));
+}
+
 export function getLeaderboardFields(schema: ObjectSchema) {
   return getFields(schema).filter(
     (field): field is Field & { leaderboard: EnabledLeaderboard } => field.leaderboard.enabled
@@ -238,6 +271,17 @@ if (import.meta.vitest) {
     expect(fields["game.title"].store.default).toBe("none");
     expect(fields["game.overall.tags"].store.default).toBe("");
     expect(fields["game.overall.seen"].store).toMatchObject({ required: false, default: false });
+  });
+
+  it("adds what computed fields are built from to the paths a read selects", () => {
+    expect(withDependencies(Root, ["game.overall.wlr", "game.extra"])).toEqual([
+      "game.overall.wlr",
+      "game.overall.wins",
+      "game.overall.losses",
+      "game.extra",
+    ]);
+
+    expect(withDependencies(Root, ["game", "game.overall.wlr"])).toEqual(["game"]);
   });
 
   it("leaves records out", () => {
