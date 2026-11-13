@@ -41,7 +41,10 @@ export class BlitzSGOverall {
   @Field()
   public gamesPlayed: number;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({
+    leaderboard: { formatter: formatTime, limit: 50_000 },
+    historical: { enabled: false },
+  })
   public playtime: number;
 
   @Field()
