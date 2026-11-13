@@ -8,15 +8,19 @@
 
 import { isObject } from "@statsify/util";
 import { sub } from "@statsify/math";
-import type { AnySchema, ObjectSchema, s } from "./s.js";
+import type { AnySchema, Definition, Dependency, ObjectSchema, s } from "./s.js";
 
 type Values = Record<string, any>;
+
+/** Reads a path in each object around the one being computed, by its definition */
+type Scopes = Map<Definition, (path: string) => unknown>;
 
 /** Fills in every computed field from its dependencies, including ones that depend on other computed fields */
 export function compute<S extends ObjectSchema>(
   schema: S,
   input: s.input<S>,
-  shouldCompute: (field: AnySchema) => boolean = () => true
+  shouldCompute: (field: AnySchema) => boolean = () => true,
+  around: Scopes = new Map()
 ): s.infer<S> {
   const values = input as Values;
   const entries = Object.entries(schema.definition as Record<string, AnySchema>);
@@ -31,11 +35,13 @@ export function compute<S extends ObjectSchema>(
     const { computed } = field.meta;
 
     if (computed && shouldCompute(field)) {
-      output[key] = computed.compute(...computed.dependencies.map(read));
+      output[key] = computed.compute(...computed.dependencies.map(readDependency));
     } else if (field.kind === "object") {
-      output[key] = value === undefined ? value : compute(field, value, shouldCompute);
+      output[key] = value === undefined ? value : compute(field, value, shouldCompute, scopes);
     } else if (field.kind === "array" && field.element.kind === "object") {
-      output[key] = value?.map((element: object) => compute(field.element, element, shouldCompute));
+      output[key] = value?.map((element: object) =>
+        compute(field.element, element, shouldCompute, scopes)
+      );
     } else {
       output[key] = value;
     }
@@ -47,6 +53,14 @@ export function compute<S extends ObjectSchema>(
   const read = (path: string) => {
     const [key, ...rest] = path.split(".");
     return rest.reduce<any>((value, part) => value?.[part], get(key));
+  };
+
+  const scopes: Scopes = new Map(around).set(schema.definition, read);
+
+  const readDependency = ({ scope, path }: Dependency) => {
+    const readScope = scopes.get(scope);
+    if (!readScope) throw new Error(`"${path}" is read from an object that isn't around this one`);
+    return readScope(path);
   };
 
   for (const [key] of entries) get(key);
@@ -135,6 +149,27 @@ if (import.meta.vitest) {
       title: "[4]",
       progression: { current: 50 },
       overall: { wins: 3, losses: 1, wlr: 3 },
+    });
+  });
+
+  it("reads a field of an object around it through refs passed down", () => {
+    const Profile = s.object({
+      icon: s.string(),
+      mode() {
+        const { icon } = this;
+
+        return s.object({
+          wins: s.number(),
+          title() {
+            return s.string().computed((wins, icon) => `${icon} ${wins}`, [this.wins, icon]);
+          },
+        });
+      },
+    });
+
+    expect(compute(Profile, { icon: "✫", mode: { wins: 5 } })).toEqual({
+      icon: "✫",
+      mode: { wins: 5, title: "✫ 5" },
     });
   });
 }

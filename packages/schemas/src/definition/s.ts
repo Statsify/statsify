@@ -33,7 +33,10 @@ interface Types<Output, Input> {
   readonly [TYPES]: { output: Output; input: Input };
 }
 
-/** Another field, read through `this` in an object's methods or given to an object's `.leaderboard()` */
+/**
+ * Another field, read through `this` in an object's methods or given to an object's `.leaderboard()`.
+ * A method can pass its refs on to the objects it builds, but only `.computed()` reads them from there
+ */
 export type Ref<S extends AnySchema = AnySchema> = Types<s.infer<S>, s.input<S>> & {
   readonly [REF]: true;
 };
@@ -49,20 +52,27 @@ export type Refs<E> = { [K in keyof E]: RefOf<E[K]> };
 type Values<Refs extends readonly Ref[]> = { [I in keyof Refs]: Refs[I][typeof TYPES]["output"] };
 
 const PATH = Symbol("path");
+const SCOPE = Symbol("scope");
 
 // Any property of a ref is a ref to that field, so `this.overall.wins` reads as "overall.wins"
-const ref = (path: string): any =>
+const ref = (scope: Definition, path: string): any =>
   new Proxy(
     {},
     {
       get: (_, key) => {
         if (key === PATH) return path;
-        if (typeof key === "string") return ref(path ? `${path}.${key}` : key);
+        if (key === SCOPE) return scope;
+        if (typeof key === "string") return ref(scope, path ? `${path}.${key}` : key);
       },
     }
   );
 
 const pathOf = (field: Ref) => (field as unknown as Record<typeof PATH, string>)[PATH];
+
+const dependencyOf = (field: Ref): Dependency => ({
+  scope: (field as unknown as Record<typeof SCOPE, Definition>)[SCOPE],
+  path: pathOf(field),
+});
 
 export interface LeaderboardOptions {
   enabled?: boolean;
@@ -97,9 +107,15 @@ export interface IndexOptions {
   expires?: number;
 }
 
+/** A field in the object whose definition is `scope`, which is the field's own object or one around it */
+export interface Dependency {
+  scope: Definition;
+  path: string;
+}
+
 export interface ComputedMetadata {
   compute: (...values: any[]) => unknown;
-  dependencies: string[];
+  dependencies: Dependency[];
 }
 
 export interface Metadata {
@@ -144,7 +160,7 @@ export abstract class Schema<Output = unknown, Input = Output> implements Types<
     dependencies: Dependencies
   ) {
     return this.with({
-      computed: { compute, dependencies: dependencies.map(pathOf) },
+      computed: { compute, dependencies: dependencies.map(dependencyOf) },
     }) as this & Computed;
   }
 
@@ -281,7 +297,9 @@ export class ObjectSchema<D extends Definition = Definition> extends Schema<
       | Omit<ObjectLeaderboardOptions, "extraDisplay"> |
       ((fields: Refs<D>) => ObjectLeaderboardOptions)
   ) {
-    return this.withLeaderboard(typeof leaderboard === "function" ? leaderboard(ref("")) : leaderboard);
+    return this.withLeaderboard(
+      typeof leaderboard === "function" ? leaderboard(ref(this.definition, "")) : leaderboard
+    );
   }
 }
 
@@ -339,15 +357,16 @@ type Resolve<E extends Record<string, any>> = {
   [K in keyof E]: E[K] extends (() => infer R extends AnySchema) ? R : Extract<E[K], AnySchema>;
 };
 
+// The definition is the refs' scope, so it's filled in place, and `with()` copies share it
 function resolve<E extends Record<string, any>>(entries: E) {
-  const fields = ref("");
+  const definition: Definition = {};
+  const fields = ref(definition, "");
 
-  return Object.fromEntries(
-    Object.entries(entries).map(([key, entry]) => [
-      key,
-      typeof entry === "function" ? entry.call(fields) : entry,
-    ])
-  ) as Resolve<E>;
+  for (const [key, entry] of Object.entries(entries)) {
+    definition[key] = typeof entry === "function" ? entry.call(fields) : entry;
+  }
+
+  return definition as Resolve<E>;
 }
 
 type PathOf<D extends Definition> = {

@@ -7,7 +7,7 @@
  */
 
 import { prettify } from "@statsify/util";
-import type { AnySchema, ObjectSchema, RecordSchema, ResetEvery, s } from "./s.js";
+import type { AnySchema, Definition, ObjectSchema, RecordSchema, ResetEvery, s } from "./s.js";
 import type { Format } from "./format.js";
 
 interface BaseLeaderboard {
@@ -110,8 +110,15 @@ function getStore(schema: AnySchema): Store {
   };
 }
 
-function flatten(schema: ObjectSchema, base: string, baseName: string): Field[] {
+/** `around` holds the path of each object around this one, by its definition */
+function flatten(
+  schema: ObjectSchema,
+  base: string,
+  baseName: string,
+  around = new Map<Definition, string>()
+): Field[] {
   const fields: Field[] = [];
+  const scopes = new Map(around).set(schema.definition, base);
 
   for (const [key, child] of Object.entries(schema.definition as Record<string, AnySchema>)) {
     // Flattening splits a record into its own keys, so like the classes' Mixed fields, it has no field to list
@@ -120,7 +127,9 @@ function flatten(schema: ObjectSchema, base: string, baseName: string): Field[] 
     const path = join(base, key);
     const leaderboard = getLeaderboard(child, key, child.kind === "object" ? path : base);
     const name = leaderboard.name ? `${baseName ? `${baseName} ` : ""}${leaderboard.name}` : baseName;
-    const dependencies = child.meta.computed?.dependencies.map((dependency) => join(base, dependency));
+    const dependencies = child.meta.computed?.dependencies.map(({ scope, path }) =>
+      join(scopes.get(scope)!, path)
+    );
 
     if (child.kind !== "object") {
       fields.push({
@@ -134,7 +143,7 @@ function flatten(schema: ObjectSchema, base: string, baseName: string): Field[] 
       continue;
     }
 
-    for (const field of flatten(child, path, name)) {
+    for (const field of flatten(child, path, name, scopes)) {
       field.leaderboard.extraDisplay ??= leaderboard.extraDisplay;
       field.leaderboard.resetEvery ??= leaderboard.resetEvery;
       if (dependencies) field.dependencies = dependencies;
