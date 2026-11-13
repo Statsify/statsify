@@ -22,9 +22,8 @@ import type { RawMember } from "#raw";
 // In the Dojo's order
 const DOJO_TESTS = ["mob_kb", "wall_jump", "archer", "sword_swap", "snake", "lock_head", "fireball"] as const;
 
-// Owner exceptions, since no data source has them (unverified). Each rank by the least reputation it takes, from the
-// wiki's Factions page. Of the Dojo grades, the wiki has only S at 1,000 points; A to F have no source. Each belt by the
-// least the tests' points add up to, from the wiki's Dojo page.
+// Owner exceptions (unverified): each rank's least reputation (the wiki's Factions page), the Dojo grades (the wiki has
+// only S at 1,000; A to F have no source) and each belt's least total of the tests' points (the wiki's Dojo page)
 const RANK_FROM: Record<ReputationRank, number> = { neutral: 0, friendly: 1000, trusted: 3000, honored: 7000, hero: 12_000 };
 const DOJO_GRADES: [DojoGrade, number][] = [["S", 1000], ["A", 800], ["B", 600], ["C", 400], ["D", 200], ["F", 0]];
 const DOJO_BELTS: [DojoBelt, number][] = [
