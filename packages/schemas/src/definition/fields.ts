@@ -50,16 +50,6 @@ export interface Field {
   dependencies?: string[];
 }
 
-const NAMES: Record<string, string> = {
-  exp: "EXP",
-  wlr: "WLR",
-  kdr: "KDR",
-  fkdr: "FKDR",
-  bblr: "BBLR",
-  kwr: "KWR",
-  quakeShotAccuracy: "Shot Accuracy",
-};
-
 const getDefault = (schema: AnySchema): unknown => {
   switch (schema.kind) {
     case "number":
@@ -87,7 +77,7 @@ const join = (base: string, path: string) => (base ? `${base}.${path}` : path);
 /** `relativeTo` is the object a field is written in, or for an object's own options, the object */
 function getLeaderboard(schema: AnySchema, key: string, relativeTo: string): Leaderboard {
   const options = schema.meta.leaderboard ?? {};
-  const fieldName = options.fieldName ?? NAMES[key] ?? prettify(key);
+  const fieldName = options.fieldName ?? prettify(key);
 
   const base: BaseLeaderboard = {
     fieldName,

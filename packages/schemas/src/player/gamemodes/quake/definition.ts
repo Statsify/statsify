@@ -45,7 +45,11 @@ const QuakeModeSchema = s.object({
   shotsFired: s.number().color("§a").leaderboard(false),
   postUpdateKills: s.number().leaderboard({ fieldName: "2017+ Kills", name: "2017+ Kills" }),
   kwr() {
-    return s.number().computed(ratio, [this.kills, this.wins]).color("§c").leaderboard(false);
+    return s
+      .number()
+      .computed(ratio, [this.kills, this.wins])
+      .color("§c")
+      .leaderboard({ enabled: false, fieldName: "KWR" });
   },
   quakeShotAccuracy() {
     return s
@@ -55,7 +59,7 @@ const QuakeModeSchema = s.object({
         this.shotsFired,
       ])
       .color("§6")
-      .leaderboard(false);
+      .leaderboard({ enabled: false, fieldName: "Shot Accuracy" });
   },
 });
 
