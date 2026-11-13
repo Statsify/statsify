@@ -279,6 +279,7 @@ interface RawPerk {
 /** /v2/resources/skyblock/election (keyless), with only what the mayor's view reads. */
 export interface RawElection {
   mayor: {
+    election: { year: number };
     name: string;
     perks: RawPerk[];
     minister?: { name: string; perk: RawPerk };
