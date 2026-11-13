@@ -55,6 +55,8 @@ function rotation(axis: "x" | "y" | "z", degrees: number): Mat3 {
   }
 }
 
+const eulerMatrix = ([x, y, z]: Vec3) => multiply(multiply(rotation("x", x), rotation("y", y)), rotation("z", z));
+
 type Quaternion = [x: number, y: number, z: number, w: number];
 
 function quaternion([x, y, z, w]: Quaternion): Mat3 {
@@ -132,7 +134,7 @@ export function elementQuads(
   let matrix = IDENTITY;
   let scale: Vec3 = [1, 1, 1];
 
-  if (element.rotation) {
+  if (element.rotation && "axis" in element.rotation) {
     const { axis, angle, rescale } = element.rotation;
     matrix = rotation(axis, angle);
 
@@ -140,6 +142,9 @@ export function elementQuads(
       const factor = 1 / Math.cos((angle * Math.PI) / 180);
       scale = [axis === "x" ? 1 : factor, axis === "y" ? 1 : factor, axis === "z" ? 1 : factor];
     }
+  } else if (element.rotation) {
+    const { x = 0, y = 0, z = 0 } = element.rotation;
+    matrix = eulerMatrix([x, y, z]);
   }
 
   const origin = element.rotation?.origin ?? [8, 8, 8];
@@ -227,10 +232,7 @@ const LIGHT_1: Vec3 = [-0.1036, 0.9766, 0.1884];
 const brightness = (normal: Vec3) =>
   Math.min(1, 0.4 + 0.6 * (Math.max(0, dot(normal, LIGHT_0)) + Math.max(0, dot(normal, LIGHT_1))));
 
-function displayMatrix(display?: Transform): Mat3 {
-  const [rx, ry, rz] = display?.rotation ?? [0, 0, 0];
-  return multiply(multiply(rotation("x", rx), rotation("y", ry)), rotation("z", rz));
-}
+const displayMatrix = (display?: Transform) => eulerMatrix(display?.rotation ?? [0, 0, 0]);
 
 const degrees = (radians: number) => (radians * 180) / Math.PI;
 
@@ -367,4 +369,26 @@ export function rasterize(quads: Quad[], display: Transform | undefined, light: 
   }
 
   return pixels;
+}
+
+if (import.meta.vitest) {
+  const { expect, it } = import.meta.vitest;
+
+  const corners = (rotation: ModelElement["rotation"]) =>
+    elementQuads({ from: [8, 0, 0], to: [8, 16, 16], rotation, faces: { east: { texture: "#a" } } }, () => ({
+      texture: {} as ImageData,
+    }))[0].corners.map((corner) => corner.map((value) => Math.round(value * 1e6) / 1e6 + 0));
+
+  it("turns an element by x, y and z as by an axis and angle", () => {
+    const origin: Vec3 = [8, 8, 8];
+
+    expect(corners({ origin, x: 0, y: -90, z: 0 })).toEqual(corners({ origin, axis: "y", angle: -90 }));
+    expect(corners({ origin, z: 45 })).toEqual(corners({ origin, axis: "z", angle: 45 }));
+    expect(corners({ origin, y: -90 })).toEqual([
+      [0, 16, 8],
+      [0, 0, 8],
+      [16, 0, 8],
+      [16, 16, 8],
+    ]);
+  });
 }

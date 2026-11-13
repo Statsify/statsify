@@ -17,6 +17,31 @@ import { tintColor } from "./tints.js";
 
 const SIZE = 16;
 
+const CACHE_LIMIT = 2000;
+
+class PromiseCache<T> {
+  private entries = new Map<string, Promise<T>>();
+
+  public get(key: string, load: () => Promise<T>) {
+    let entry = this.entries.get(key);
+
+    if (entry) {
+      this.entries.delete(key);
+    } else {
+      const loading = load();
+      loading.catch(() => {
+        if (this.entries.get(key) === loading) this.entries.delete(key);
+      });
+      entry = loading;
+    }
+
+    this.entries.set(key, entry);
+    if (this.entries.size > CACHE_LIMIT) this.entries.delete(this.entries.keys().next().value!);
+
+    return entry;
+  }
+}
+
 interface TintedLayer extends ItemLayer {
   colors: number[];
 }
@@ -213,8 +238,8 @@ function textureIds({ model, special }: ItemLayer) {
 export class ItemRenderer {
   private models: ModelResolver;
   private textures: TextureLoader;
-  private icons = new Map<string, Promise<OffscreenCanvas>>();
-  private skins = new Map<string, Promise<ImageData | undefined>>();
+  private icons = new PromiseCache<OffscreenCanvas>();
+  private skins = new PromiseCache<ImageData>();
   private legacyGlint: boolean;
   private glint?: Promise<ReturnType<typeof squaredGlint>>;
   private translucentIcons = new WeakMap<OffscreenCanvas, boolean>();
@@ -308,14 +333,7 @@ export class ItemRenderer {
       .filter((part) => part !== undefined)
       .join("/");
 
-    let icon = this.icons.get(key);
-
-    if (!icon) {
-      icon = this.load(key, layers, item, scale, tick);
-      this.icons.set(key, icon);
-    }
-
-    return icon;
+    return this.icons.get(key, () => this.load(key, layers, item, scale, tick));
   }
 
   private async load(key: string, layers: TintedLayer[], item: ItemStack, scale: number, tick: number) {
@@ -414,23 +432,32 @@ export class ItemRenderer {
 
   /** A skin's pixels; failed loads return undefined and are retried */
   private skin(url: string) {
-    let skin = this.skins.get(url);
-
-    if (!skin) {
-      skin = (async () => {
+    return this.skins
+      .get(url, async () => {
         const response = await fetch(url);
         if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
 
         const image = await decodePng(new Uint8Array(await response.arrayBuffer()));
         return context(image).getImageData(0, 0, image.width, image.height);
-      })().catch(() => {
-        this.skins.delete(url);
-        return undefined;
-      });
-
-      this.skins.set(url, skin);
-    }
-
-    return skin;
+      })
+      .catch(() => undefined);
   }
+}
+
+if (import.meta.vitest) {
+  const { expect, it } = import.meta.vitest;
+
+  it("keeps the most recently used promises and retries rejected ones", async () => {
+    const cache = new PromiseCache<number>();
+
+    await expect(cache.get("a", () => Promise.reject(new Error("failed")))).rejects.toThrow();
+    expect(await cache.get("a", async () => 1)).toBe(1);
+    expect(await cache.get("a", async () => 2)).toBe(1);
+
+    await Promise.all(Array.from({ length: CACHE_LIMIT - 1 }, (_, key) => cache.get(`${key + 1}`, async () => key)));
+    expect(await cache.get("a", async () => 3)).toBe(1);
+
+    await cache.get("b", async () => 0);
+    expect(await cache.get("1", async () => 4)).toBe(4);
+  });
 }
