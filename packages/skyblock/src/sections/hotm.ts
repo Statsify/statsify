@@ -59,7 +59,7 @@ export function getHotm(member: RawMember): HotmSection {
       POWDERS.map((type) => [
         type,
         {
-          available: core[`powder_${type}`] ?? 0,
+          total: core[`powder_${type}`] ?? 0,
           spent: add(core[`powder_spent_${type}${suffix}`] ?? 0, core[`powder_spent_non_refundable_${type}${suffix}`] ?? 0),
         },
       ])
@@ -97,7 +97,7 @@ if (import.meta.vitest) {
     expect(hotm.loadout).toEqual({ selected: 2, total: 2 });
     expect(hotm.tokens).toEqual({ spent: 25, total: 25 });
     expect(hotm.ability).toBe("sheer_force");
-    expect(hotm.powder.mithril).toEqual({ available: 10, spent: 2 });
+    expect(hotm.powder.mithril).toEqual({ total: 10, spent: 2 });
     expect(hotm.nodes.find(({ id }) => id === "mining_fortune")).toMatchObject({ level: 3, enabled: false });
     expect(hotm.nodes.find(({ id }) => id === "mining_speed")).toMatchObject({ level: 0, enabled: false });
 
