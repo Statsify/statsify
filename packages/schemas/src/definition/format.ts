@@ -8,10 +8,25 @@
 
 import { formatRaceTime, formatTime } from "@statsify/util";
 
+export type Result<T, E> = { ok: true; value: T } | { ok: false; error: E };
+
+/** `key` names the message in a locale (`errors.parse.<key>`), filled in with `params` */
+export interface ParseError {
+  key: "invalidNumber" | "invalidTime" | "unreachable";
+  params: { input: string };
+}
+
+const ok = <T>(value: T): Result<T, never> => ({ ok: true, value });
+
+const fail = (key: ParseError["key"], input: string): Result<never, ParseError> => ({
+  ok: false,
+  error: { key, params: { input } },
+});
+
 export interface Format {
   format(value: number, locale: string): string;
-  /** The value a leaderboard search like `1:23` or `500✫` ranks at, or NaN if it can't be read */
-  parse(input: string, locale: string): number;
+  /** The value a leaderboard search like `1:23` or `500✫` ranks at */
+  parse(input: string, locale: string): Result<number, ParseError>;
 }
 
 const SUFFIXES: Record<string, number> = { k: 1e3, m: 1e6, b: 1e9 };
@@ -33,15 +48,15 @@ function getSeparators(locale: string) {
   return found;
 }
 
-export function parseNumber(input: string, locale: string) {
+export function parseNumber(input: string, locale: string): Result<number, ParseError> {
   const { group, decimal } = getSeparators(locale);
   const search = input.trim().toLowerCase().replaceAll(group, "").replace(decimal, ".");
 
   const match = /^(\d*\.?\d+)\s*([kmb])?/.exec(search);
-  if (!match) return Number.NaN;
+  if (!match) return fail("invalidNumber", input);
 
   const [, number, suffix] = match;
-  return Number(number) * (suffix ? SUFFIXES[suffix] : 1);
+  return ok(Number(number) * (suffix ? SUFFIXES[suffix] : 1));
 }
 
 const MS_PER_UNIT: Record<string, number> = {
@@ -53,7 +68,7 @@ const MS_PER_UNIT: Record<string, number> = {
 };
 
 // Reads formatTime or formatRaceTime output, or a time like 1:23.45, back into milliseconds
-function parseTime(input: string) {
+function parseTime(input: string): Result<number, ParseError> {
   const units = [...input.matchAll(/(\d*\.?\d+)\s*(ms|[dhms])/g)];
 
   const time =
@@ -61,14 +76,14 @@ function parseTime(input: string) {
       units.reduce((total, [, number, unit]) => total + Number(number) * MS_PER_UNIT[unit], 0) :
       input.split(":").reduce((total, part) => total * 60 + Number(part), 0) * 1000;
 
-  return Math.round(time);
+  return Number.isNaN(time) ? fail("invalidTime", input) : ok(Math.round(time));
 }
 
 function lowestScore(toSearched: (score: number) => number, searched: number) {
   let low = 0;
   let high = Number.MAX_SAFE_INTEGER;
 
-  if (toSearched(high) < searched) return Number.NaN;
+  if (toSearched(high) < searched) return;
 
   while (low < high) {
     const mid = low + Math.floor((high - low) / 2);
@@ -86,7 +101,13 @@ const raceTime: Format = { format: (value) => formatRaceTime(value), parse: pars
 /** A stat ranked by one value and searched by another that never goes down as it goes up, like exp and level */
 const searchedAs = (toSearched: (score: number) => number, format: Format["format"]): Format => ({
   format,
-  parse: (input, locale) => lowestScore(toSearched, parseNumber(input, locale)),
+  parse: (input, locale) => {
+    const searched = parseNumber(input, locale);
+    if (!searched.ok) return searched;
+
+    const score = lowestScore(toSearched, searched.value);
+    return score === undefined ? fail("unreachable", input) : ok(score);
+  },
 });
 
 export const formats = { time, raceTime, searchedAs };
@@ -95,15 +116,17 @@ if (import.meta.vitest) {
   const { it, expect } = import.meta.vitest;
 
   it("parses searches back into the values they format", () => {
-    expect(parseNumber("10k", "en-US")).toBe(10_000);
-    expect(parseNumber("1,234.5", "en-US")).toBe(1234.5);
-    expect(parseNumber("1.234,5", "de")).toBe(1234.5);
-    expect(parseNumber("wins", "en-US")).toBeNaN();
+    expect(parseNumber("10k", "en-US")).toEqual(ok(10_000));
+    expect(parseNumber("1,234.5", "en-US")).toEqual(ok(1234.5));
+    expect(parseNumber("1.234,5", "de")).toEqual(ok(1234.5));
+    expect(parseNumber("wins", "en-US")).toEqual(fail("invalidNumber", "wins"));
 
-    expect(formats.time.parse("1:23", "en-US")).toBe(83_000);
-    expect(formats.raceTime.parse(formats.raceTime.format(12_345, "en-US"), "en-US")).toBe(12_345);
+    expect(formats.time.parse("1:23", "en-US")).toEqual(ok(83_000));
+    expect(formats.time.parse("1:2x", "en-US")).toEqual(fail("invalidTime", "1:2x"));
+    expect(formats.raceTime.parse(formats.raceTime.format(12_345, "en-US"), "en-US")).toEqual(ok(12_345));
 
-    const level = formats.searchedAs((exp) => exp / 100, (exp) => `${exp / 100}✫`);
-    expect(level.parse("5✫", "en-US")).toBe(500);
+    const level = formats.searchedAs((exp) => Math.min(exp / 100, 10), (exp) => `${exp / 100}✫`);
+    expect(level.parse("5✫", "en-US")).toEqual(ok(500));
+    expect(level.parse("11✫", "en-US")).toEqual(fail("unreachable", "11✫"));
   });
 }
