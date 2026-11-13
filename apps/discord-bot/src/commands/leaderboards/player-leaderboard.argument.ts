@@ -12,17 +12,10 @@ import {
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
-import {
-  ClassMetadata,
-  METADATA_KEY,
-  PlayerStats,
-  getLeaderboardFields,
-} from "@statsify/schemas";
+import { type ObjectSchema, type PlayerStats, PlayerStatsSchema, getLeaderboardFields } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
-const entries = Object.entries(
-  Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
-);
+const entries = Object.entries(PlayerStatsSchema.definition);
 
 const FUSE_OPTIONS = {
   keys: ["name", "key"],
@@ -34,8 +27,8 @@ const FUSE_OPTIONS = {
 };
 
 const fields = entries.reduce((acc, [prefix, value]) => {
-  const list = getLeaderboardFields(value.type.type).map(
-    ([key, { leaderboard }]) => ({ value: key, name: removeFormatting(leaderboard.name) })
+  const list = getLeaderboardFields(value as ObjectSchema).map(
+    ({ path, leaderboard }) => ({ value: path, name: removeFormatting(leaderboard.name) })
   );
 
   const fuse = new Fuse(list, FUSE_OPTIONS);

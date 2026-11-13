@@ -18,7 +18,7 @@ import {
 } from "@statsify/discord";
 import { Container } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
-import { User, UserTier } from "@statsify/schemas";
+import { type User, UserTier, hasTier } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { getAssetPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
@@ -117,9 +117,9 @@ export class CommandListener extends AbstractCommandListener {
 
     let reduction = 1;
 
-    if (User.isDiamond(user)) reduction = 0;
-    else if (User.isGold(user)) reduction = 0.25;
-    else if (User.isIron(user)) reduction = 0.5;
+    if (hasTier(user, UserTier.DIAMOND)) reduction = 0;
+    else if (hasTier(user, UserTier.GOLD)) reduction = 0.25;
+    else if (hasTier(user, UserTier.IRON)) reduction = 0.5;
     else if (user?.serverMember) reduction = 0.8;
     else if (user?.uuid) reduction = 0.9;
 
@@ -161,7 +161,7 @@ export class CommandListener extends AbstractCommandListener {
   private getTipResponse(commandName: string, user: User | null): IMessage | undefined {
     const TIP_CHANCE = 0.2;
 
-    if (User.isIron(user) || Math.random() > TIP_CHANCE) return undefined;
+    if (hasTier(user, UserTier.IRON) || Math.random() > TIP_CHANCE) return undefined;
 
     // commandName is the full path, e.g. "session bedwars"
     const [rootName] = commandName.split(" ");

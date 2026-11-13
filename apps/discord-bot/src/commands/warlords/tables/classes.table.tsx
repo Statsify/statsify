@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ClassMetadata, METADATA_KEY, WarlordsClass, WarlordsSpecification } from "@statsify/schemas";
+import { WARLORDS_CLASSES, type WarlordsClass, type WarlordsSpecification } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
-import type { Constructor } from "@statsify/util";
+import { prettify } from "@statsify/util";
 
 interface WarlordsClassColumnProps {
   title: string;
@@ -29,13 +29,13 @@ const WarlordsSpecificationColumn = ({ title, stats, t }: WarlordsClassColumnPro
 
 export interface WarlordsClassTableProps {
   stats: WarlordsClass;
-  constructor: Constructor<WarlordsClass>;
+  warlordsClass: keyof typeof WARLORDS_CLASSES;
   color: string;
   t: LocalizeFunction;
 }
 
-export const WarlordsClassTable = ({ stats, t, constructor, color }: WarlordsClassTableProps) => {
-  const { attack, defense, healer } = getSpecificationNames(constructor);
+export const WarlordsClassTable = ({ stats, t, warlordsClass, color }: WarlordsClassTableProps) => {
+  const [attack, defense, healer] = WARLORDS_CLASSES[warlordsClass].map(prettify);
 
   return (
     <Table.table>
@@ -48,13 +48,3 @@ export const WarlordsClassTable = ({ stats, t, constructor, color }: WarlordsCla
     </Table.table>
   );
 };
-
-function getSpecificationNames(constructor: Constructor<WarlordsClass>) {
-  const metadata = Reflect.getMetadata(METADATA_KEY, constructor.prototype) as ClassMetadata;
-
-  return {
-    attack: metadata.attack.leaderboard.name,
-    defense: metadata.defense.leaderboard.name,
-    healer: metadata.healer.leaderboard.name,
-  };
-}
