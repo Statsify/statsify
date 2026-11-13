@@ -8,8 +8,7 @@
 
 import { AssistsSchema, CoinsSchema, KillsStats, WinsStats } from "../common.js";
 import { FormattedGame } from "#game";
-import { createPrefixProgression } from "#prefixes";
-import { ProgressionSchema } from "../../../progression.definition.js";
+import { prefixProgression } from "../prefix-fields.js";
 import { getLevelIndex, titleScores } from "./util.js";
 import { s } from "#definition/s";
 import type { APIData } from "@statsify/util";
@@ -50,9 +49,7 @@ export const SpeedUHCSchema = s
       return s.string().computed((level) => formatLevel(Math.floor(level) + 1), [this.level]);
     },
     progression() {
-      return ProgressionSchema.computed((score) => createPrefixProgression(titleScores, score), [
-        this.score,
-      ]);
+      return prefixProgression(titleScores, this.score);
     },
     title() {
       return s

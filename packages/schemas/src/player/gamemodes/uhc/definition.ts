@@ -9,8 +9,7 @@
 import type { APIData } from "@statsify/util";
 import { CoinsSchema, KillsStats, WinsSchema } from "../common.js";
 import { FormattedGame } from "#game";
-import { ProgressionSchema } from "../../../progression.definition.js";
-import { createPrefixProgression } from "#prefixes";
+import { prefixProgression } from "../prefix-fields.js";
 import { deepAdd } from "@statsify/math";
 import { getLevelIndex, titleScores } from "./util.js";
 import { s } from "#definition/s";
@@ -49,9 +48,7 @@ export const UHCSchema = s
       return s.string().computed((level) => formatLevel(Math.floor(level) + 1), [this.level]);
     },
     progression() {
-      return ProgressionSchema.computed((score) => createPrefixProgression(titleScores, score), [
-        this.score,
-      ]);
+      return prefixProgression(titleScores, this.score);
     },
     score: s.number().color("§b"),
     kit: s.string().default("none"),

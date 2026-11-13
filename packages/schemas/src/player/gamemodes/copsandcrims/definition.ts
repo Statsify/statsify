@@ -10,9 +10,8 @@ import { type APIData, findScoreIndex } from "@statsify/util";
 import { AssistsSchema, CoinsSchema, KillsStats, WinsSchema } from "../common.js";
 import { FormattedGame } from "#game";
 import { LEVEL_REQUIREMENTS, getFormattedLevel, getIntendedLevelFormatted } from "./util.js";
-import { ProgressionSchema } from "../../../progression.definition.js";
 import { add } from "@statsify/math";
-import { createPrefixProgression } from "#prefixes";
+import { prefixProgression } from "../prefix-fields.js";
 import { s } from "#definition/s";
 
 const ModeStats = s.fields({
@@ -69,9 +68,7 @@ export const CopsAndCrimsSchema = s
       return s.string().computed((level) => getIntendedLevelFormatted(level + 1), [this.level]);
     },
     progression() {
-      return ProgressionSchema.computed((score) => createPrefixProgression(LEVEL_REQUIREMENTS, score), [
-        this.score,
-      ]);
+      return prefixProgression(LEVEL_REQUIREMENTS, this.score);
     },
     overall: CopsAndCrimsOverallSchema,
     defusal: DefusalSchema,

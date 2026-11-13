@@ -9,15 +9,9 @@
 import { type APIData, prettify } from "@statsify/util";
 import { AssistsSchema, CoinsSchema, KillsSchema, KillsStats, WinsSchema, WinsStats } from "../common.js";
 import { FormattedGame } from "#game";
-import {
-  type GameTitle,
-  createPrefixProgression,
-  cycleColors,
-  defaultPrefix,
-  getFormattedPrefix,
-} from "#prefixes";
-import { ProgressionSchema } from "../../../progression.definition.js";
+import { type GameTitle, cycleColors, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { add, sub } from "@statsify/math";
+import { prefixProgression } from "../prefix-fields.js";
 import { s } from "#definition/s";
 
 const warlordsRainbow = (text: string) => cycleColors(text, ["c", "6", "e", "a", "2", "b", "d", "9"]);
@@ -100,7 +94,7 @@ export const WarlordsSchema = s
         .default(defaultPrefix(titles));
     },
     progression() {
-      return ProgressionSchema.computed((wins) => createPrefixProgression(titles, wins), [this.wins]);
+      return prefixProgression(titles, this.wins);
     },
     nextTitleFormatted() {
       return s

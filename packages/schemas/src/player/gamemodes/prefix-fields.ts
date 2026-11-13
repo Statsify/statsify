@@ -18,6 +18,10 @@ import { ProgressionSchema } from "../../progression.definition.js";
 
 type Score = Ref<NumberSchema>;
 
+/** Progress from the requirement the score last reached to the next one */
+export const prefixProgression = (requirements: { req: number }[], score: Score) =>
+  ProgressionSchema.computed((score) => createPrefixProgression(requirements, score), [score]);
+
 /** The fields a game with prefixes computes from the score that earns them */
 export const prefixFields = (
   prefixes: GamePrefix[],
@@ -27,8 +31,7 @@ export const prefixFields = (
     getFormattedPrefix({ prefixes, score, ...options, ...prefix });
 
   return {
-    progression: (score: Score) =>
-      ProgressionSchema.computed((score) => createPrefixProgression(prefixes, score), [score]),
+    progression: (score: Score) => prefixProgression(prefixes, score),
     currentPrefix: (score: Score) => s.string().computed((score) => format(score, {}), [score]),
     naturalPrefix: (score: Score) =>
       s

@@ -9,13 +9,8 @@
 import { type APIData, minecraftColors } from "@statsify/util";
 import { CoinsSchema, WinsSchema } from "../common.js";
 import { FormattedGame } from "#game";
-import {
-  type GameTitle,
-  createPrefixProgression,
-  defaultPrefix,
-  getFormattedPrefix,
-} from "#prefixes";
-import { ProgressionSchema } from "../../../progression.definition.js";
+import { type GameTitle, defaultPrefix, getFormattedPrefix } from "#prefixes";
+import { prefixProgression } from "../prefix-fields.js";
 import { s } from "#definition/s";
 
 const titles: GameTitle[] = [
@@ -113,9 +108,7 @@ export const BuildBattleSchema = s
         ]);
     },
     progression() {
-      return ProgressionSchema.computed((score) => createPrefixProgression(titles, score), [
-        this.score,
-      ]);
+      return prefixProgression(titles, this.score);
     },
   })
   .leaderboard((buildbattle) => ({
