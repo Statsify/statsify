@@ -288,10 +288,18 @@ const HypixelSaysStats = s.fields({
 
 const HypixelSaysModeSchema = s.object(HypixelSaysStats);
 
+// Santa Says is seasonal, so it counts toward Hypixel Says' boards without boards of its own
+const SantaSaysSchema = s.object({
+  points: s.number().color("§e").leaderboard(false),
+  roundsWon: s.number().color("§b").leaderboard(false),
+  wins: WinsSchema.color("§a").leaderboard(false),
+  maxScore: s.number().color("§6").leaderboard(false),
+});
+
 const HypixelSaysSchema = s.object({
   ...HypixelSaysStats,
   simonSays: HypixelSaysModeSchema,
-  santaSays: HypixelSaysModeSchema,
+  santaSays: SantaSaysSchema,
 });
 
 const MiniWallsSchema = s.object({
