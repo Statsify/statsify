@@ -286,7 +286,6 @@ export class BedWarsModeChallenges {
     this.midnight = data.bw_challenge_midnight;
     this.bedsAndBloodlust = data.bw_challenge_beds_and_bloodlust;
     this.begAndBarter = data.bw_challenge_beg_and_barter;
-    // bw_challenge_halved_and_doubled isn't in any saved player yet
     this.halvedAndDoubled = data.bw_challenge_halved_and_doubled;
   }
 }

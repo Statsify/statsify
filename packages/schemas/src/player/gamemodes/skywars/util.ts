@@ -204,6 +204,8 @@ const SCHEME_MAP = {
   slimy: createUniformScheme("§a", "§2"),
   holiday: createUniformScheme("§4", "§a"),
   iconic: createUniformScheme("§0", "§0", "§f"),
+  // oxlint-disable-next-line no-warning-comments -- open question, kept on purpose
+  // TODO: Figure out name: Level-conic?
   level_conic: createUniformScheme("§0", "§f", "§0"),
   safari: createMultiDigitColorScheme(["§2", "§2", "§2", "§6", "§6", "§6"]),
   gummy_worm: createMultiDigitColorScheme(["§c", "§c", "§c", "§b", "§b", "§b"]),

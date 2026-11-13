@@ -165,7 +165,8 @@ function GuildLevelling({ guild }: { guild: Guild }) {
 }
 
 function GuildTop({ guild }: { guild: Guild }) {
-  // Vercel's runtime doesn't support toSorted
+  // oxlint-disable-next-line no-warning-comments -- open question, kept on purpose
+  // TODO: Vercel doesn't support the toSorted function
   const members = [...guild.members]
     .sort((a, b) => b.daily - a.daily)
     .slice(0, 6);

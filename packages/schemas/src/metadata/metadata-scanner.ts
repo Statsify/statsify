@@ -66,6 +66,10 @@ function getMetadataEntries(
       if (remainingStats.length === 0) continue;
 
       value.leaderboard.additionalFields = remainingStats;
+      // oxlint-disable-next-line no-warning-comments -- open question, kept on purpose
+      // TODO: Investigate if this is needed or if there is another way
+      // oxlint-disable-next-line no-warning-comments -- open question, kept on purpose
+      // TODO: Does this break anything?
       // ! This is needed for the ratios to work with sub modes
       value.historical.additionalFields = remainingStats;
       break;
