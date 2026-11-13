@@ -82,7 +82,7 @@ export function getHotm(member: RawMember): HotmSection {
         .map(([type, count]) => ({ type, count }))
         .toSorted((a, b) => b.count - a.count),
       fossils: glacite?.fossils_donated?.length ?? 0,
-      fossilDust: glacite?.fossil_dust ?? 0,
+      fossilDust: Math.floor(glacite?.fossil_dust ?? 0),
       mineshafts: glacite?.mineshafts_entered ?? 0,
     },
   };
