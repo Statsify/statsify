@@ -19,7 +19,7 @@ import {
 } from "discord-api-types/v10";
 import { Logger, STATUS_COLORS } from "@statsify/logger";
 import { Service } from "typedi";
-import { User, UserTier } from "@statsify/schemas";
+import { UserTier, getTierName, hasTier } from "@statsify/schemas";
 import { UserService } from "#services";
 import { config } from "@statsify/util";
 
@@ -187,9 +187,9 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   }
 
   private async handlePremiumRemove(memberId: string, tier: PremiumTier) {
-    if (User.isStaff(await this.userService.getTier(memberId))) return;
+    if (hasTier(await this.userService.getTier(memberId), UserTier.STAFF)) return;
 
-    this.log(`REMOVING \`${User.getTierName(tier)}\` from <@${memberId}>`);
+    this.log(`REMOVING \`${getTierName(tier)}\` from <@${memberId}>`);
     this.tiers[tier].delete(memberId);
 
     await this.userService.removePremium(memberId);
@@ -198,7 +198,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     const { id } = await this.channelService.create(memberId);
 
-    const tierName = User.getTierName(tier);
+    const tierName = getTierName(tier);
     const emoji = `emojis:logos.${tierName.toLowerCase()}`;
 
     const embed = new EmbedBuilder()
@@ -212,9 +212,9 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   }
 
   private async handlePremiumAdd(memberId: string, tier: PremiumTier) {
-    if (User.isStaff(await this.userService.getTier(memberId))) return;
+    if (hasTier(await this.userService.getTier(memberId), UserTier.STAFF)) return;
 
-    this.log(`ADDING \`${User.getTierName(tier)}\` to <@${memberId}>`);
+    this.log(`ADDING \`${getTierName(tier)}\` to <@${memberId}>`);
     for (const premiumTier of PREMIUM_TIERS) this.tiers[premiumTier].delete(memberId);
     this.tiers[tier].add(memberId);
 
@@ -228,13 +228,13 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     await this.roleService.addRole(GUILD_ID, memberId, PREMIUM_ROLE);
 
-    const tierName = User.getTierName(tier);
+    const tierName = getTierName(tier);
     const emoji = `emojis:logos.${tierName.toLowerCase()}`;
 
     const embed = new EmbedBuilder()
       .color(STATUS_COLORS.success)
       .title(
-        (t) => `Thank you for purchasing ${t(emoji)} Statsify ${User.getTierName(tier)}!`
+        (t) => `Thank you for purchasing ${t(emoji)} Statsify ${getTierName(tier)}!`
       )
       .description(
         (t) =>

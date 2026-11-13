@@ -15,7 +15,6 @@ import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify
 import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry/index.js";
-import { Severity, setGlobalOptions } from "@typegoose/typegoose";
 import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
 import { join } from "node:path";
@@ -47,12 +46,6 @@ if (sentryDsn) {
 const mediaRoot = await config("api.mediaRoot");
 
 await mkdir(join(mediaRoot, "badges"), { recursive: true });
-
-// Removes the `_id` fields created from sub classes of documents
-setGlobalOptions({
-  options: { allowMixed: Severity.ALLOW },
-  schemaOptions: { _id: false },
-});
 
 const adapter = new FastifyAdapter({ bodyLimit: 5e6 });
 

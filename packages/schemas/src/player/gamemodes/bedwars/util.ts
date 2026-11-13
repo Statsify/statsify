@@ -382,25 +382,47 @@ export const getIntendedFormattedLevel = (level: number): string => {
   });
 };
 
-export const getPrestigeCosmetic = <M extends Record<string, any>>({
-  cosmetic,
-  packages,
-  favorites,
-  prefix,
-  map,
-  getDefault,
-}: {
+interface PrestigeCosmeticOptions<M> {
   cosmetic?: string;
   packages?: string[];
   prefix: string;
   favorites?: Record<string, string[] | undefined>;
   map: M;
-  getDefault: () => keyof M;
-}): M[keyof M] => {
-  const pickRandom = (items: (keyof M)[]) => {
-    if (items.length === 0) return map[getDefault()];
-    return map[items[Math.floor(Math.random() * items.length)]];
-  };
+}
+
+export const getPrestigeCosmetic = <M extends Record<string, any>>({
+  getDefault,
+  ...options
+}: PrestigeCosmeticOptions<M> & { getDefault: () => keyof M }): M[keyof M] => {
+  warnMissingCosmetic(options);
+  return options.map[pickPrestigeCosmetic(options) ?? getDefault()];
+};
+
+const RANDOM_COSMETICS = new Set(["random_cosmetic", "random_favorite_cosmetic"]);
+
+/** Logs a selected cosmetic the map doesn't have yet. Call it while parsing, since the lookup also runs on every read */
+export const warnMissingCosmetic = <M extends Record<string, any>>({ cosmetic, prefix, map }: PrestigeCosmeticOptions<M>) => {
+  if (!cosmetic || RANDOM_COSMETICS.has(cosmetic)) return;
+
+  // remove the prefix and the following underscore
+  const cosmeticWithoutPrefix = cosmetic.slice(prefix.length + 1);
+  if (cosmeticWithoutPrefix && !(cosmeticWithoutPrefix in map)) console.warn(`Missing BedWars cosmetic: ${cosmetic}`);
+};
+
+/** Where a random selection lands, or undefined when the selection isn't random */
+export const pickRandomCosmetic = <M extends Record<string, any>>(options: PrestigeCosmeticOptions<M>) =>
+  options.cosmetic && RANDOM_COSMETICS.has(options.cosmetic) ? pickPrestigeCosmetic(options) : undefined;
+
+/** The cosmetic a player picked, with random picks made, or undefined for their level's default */
+export const pickPrestigeCosmetic = <M extends Record<string, any>>({
+  cosmetic,
+  packages,
+  favorites,
+  prefix,
+  map,
+}: PrestigeCosmeticOptions<M>): keyof M | undefined => {
+  const pickRandom = (items: (keyof M)[]) =>
+    items.length === 0 ? undefined : items[Math.floor(Math.random() * items.length)];
 
   const filterValid = (items: string[]) =>
     items.filter((item) => item in map).map((item) => item as keyof M);
@@ -423,14 +445,5 @@ export const getPrestigeCosmetic = <M extends Record<string, any>>({
 
   // remove the prefix and the following underscore
   const cosmeticWithoutPrefix = cosmetic?.slice(prefix.length + 1);
-
-  if (cosmeticWithoutPrefix && cosmeticWithoutPrefix in map) {
-    return map[cosmeticWithoutPrefix];
-  }
-
-  if (cosmeticWithoutPrefix) {
-    console.warn(`Missing BedWars cosmetic: ${cosmetic}`);
-  }
-
-  return map[getDefault()];
+  return cosmeticWithoutPrefix && cosmeticWithoutPrefix in map ? cosmeticWithoutPrefix : undefined;
 };

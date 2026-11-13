@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Progression } from "#progression";
 import { abbreviationNumber, findScoreIndex } from "@statsify/util";
+import { progression } from "../../progression.definition.js";
 
 type Requirement = { req: number };
 
@@ -50,7 +50,7 @@ export const createPrefixProgression = (
   const currentRequirement = getPrefixRequirement(prefixes, score);
   const nextRequirement = getPrefixRequirement(prefixes, score, 1);
 
-  return new Progression(
+  return progression(
     Math.abs(score - currentRequirement),
     nextRequirement - currentRequirement
   );

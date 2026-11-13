@@ -44,11 +44,11 @@ export const unroundedRatio = (n1 = 0, n2 = 0, multiply = 1) => {
 export const ratio = (n1 = 0, n2 = 0, multiply = 1) =>
   roundTo(unroundedRatio(n1, n2, multiply));
 
-export const add = (...args: number[]): number =>
-  args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
+export const add = (...args: (number | undefined)[]): number =>
+  args.reduce<number>((a, b) => a + (b ?? 0), 0);
 
-export const sub = (...args: number[]): number =>
-  args.reduce((a, b) => (a ?? 0) - (b ?? 0));
+export const sub = (...args: (number | undefined)[]): number =>
+  args.reduce((a, b) => (a ?? 0) - (b ?? 0)) as number;
 
 /**
  *

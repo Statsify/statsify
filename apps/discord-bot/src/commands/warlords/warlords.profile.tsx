@@ -7,7 +7,7 @@
  */
 
 import { Container, Footer, Header, type SidebarItem, formatProgression } from "#components";
-import { FormattedGame, type GameMode, WarlordsMage, WarlordsModes, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "@statsify/schemas";
+import { FormattedGame, type GameMode, type WarlordsModes } from "@statsify/schemas";
 import { WarlordsCaptureTheFlagTable, WarlordsClassTable, WarlordsDeathmatchTable, WarlordsDominationTable, WarlordsOverallTable } from "./tables/index.js";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -65,19 +65,19 @@ export const WarlordsProfile = ({
       break;
 
     case "mage":
-      table = <WarlordsClassTable stats={warlords.mage} constructor={WarlordsMage} color="§b" t={t} />;
+      table = <WarlordsClassTable stats={warlords.mage} warlordsClass="mage" color="§b" t={t} />;
       break;
 
     case "warrior":
-      table = <WarlordsClassTable stats={warlords.warrior} constructor={WarlordsWarrior} color="§7" t={t} />;
+      table = <WarlordsClassTable stats={warlords.warrior} warlordsClass="warrior" color="§7" t={t} />;
       break;
 
     case "paladin":
-      table = <WarlordsClassTable stats={warlords.paladin} constructor={WarlordsPaladin} color="§e" t={t} />;
+      table = <WarlordsClassTable stats={warlords.paladin} warlordsClass="paladin" color="§e" t={t} />;
       break;
 
     case "shaman":
-      table = <WarlordsClassTable stats={warlords.shaman} constructor={WarlordsShaman} color="§2" t={t} />;
+      table = <WarlordsClassTable stats={warlords.shaman} warlordsClass="shaman" color="§2" t={t} />;
       break;
   }
 

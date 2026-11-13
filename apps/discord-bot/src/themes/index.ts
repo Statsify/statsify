@@ -8,14 +8,14 @@
 
 import { Background } from "#components";
 import { Image, Theme } from "@statsify/rendering";
-import { User, UserBoxes, UserFont, UserPalette } from "@statsify/schemas";
+import { type User, UserBoxes, UserFont, UserPalette, UserTier, hasTier } from "@statsify/schemas";
 import { getBoxRenderer } from "./boxes/index.js";
 import { getColorPalette } from "./palette.js";
 import { getFontRenderer } from "./renderer.js";
 
 export const getTheme = (user: User | null): Theme | undefined => {
   if (!user) return undefined;
-  if (!User.isGold(user)) return undefined;
+  if (!hasTier(user, UserTier.GOLD)) return undefined;
   if (!user.theme) return undefined;
 
   const {
@@ -26,7 +26,7 @@ export const getTheme = (user: User | null): Theme | undefined => {
 
   const renderer = getFontRenderer(font);
   const box = getBoxRenderer(boxes);
-  const colorPalette = User.isDiamond(user) ?
+  const colorPalette = hasTier(user, UserTier.DIAMOND) ?
     getColorPalette(palette) :
     undefined;
 

@@ -6,22 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { InjectModel } from "@m8a/nestjs-typegoose";
+import { InjectModel, type MongoModel } from "#mongo";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { User, VerifyCode } from "@statsify/schemas";
+import { User, UserTier, hasTier, UserSchema, VerifyCodeSchema } from "@statsify/schemas";
 import { config, flatten } from "@statsify/util";
 import { getLogoPath } from "@statsify/assets";
 import { readFile, rm, writeFile } from "node:fs/promises";
-import type { ReturnModelType } from "@typegoose/typegoose";
 
 const mediaRoute = await config("api.mediaRoot");
 
 @Injectable()
 export class UserService {
   public constructor(
-    @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>,
-    @InjectModel(VerifyCode)
-    private readonly verifyCodeModel: ReturnModelType<typeof VerifyCode>
+    @InjectModel(UserSchema) private readonly userModel: MongoModel<typeof UserSchema>,
+    @InjectModel(VerifyCodeSchema)
+    private readonly verifyCodeModel: MongoModel<typeof VerifyCodeSchema>
   ) {}
 
   public get(idOrUuid: string): Promise<User | null> {
@@ -46,7 +45,7 @@ export class UserService {
 
     let badgePath: string | undefined = undefined;
 
-    if (user.hasBadge && User.isGold(user)) {
+    if (user.hasBadge && hasTier(user, UserTier.GOLD)) {
       badgePath = getBadgePath(user.id);
     } else if (user.tier) {
       badgePath = getLogoPath(user);

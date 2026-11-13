@@ -6,15 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ClassMetadata, METADATA_KEY, PlayerStats } from "@statsify/schemas";
-import { removeFormatting } from "@statsify/util";
+import { type PlayerStats, PlayerStatsSchema } from "@statsify/schemas";
+import { prettify, removeFormatting } from "@statsify/util";
 
 export const removeGameDash = (game: string) => game.replace(" -", "");
 
-export const games = Object.entries(
-  Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
-).map(([key, value]) => {
-  const name = value.leaderboard.fieldName ?? value.leaderboard.name;
+export const games = Object.entries(PlayerStatsSchema.definition).map(([key, value]) => {
+  const name = value.meta.leaderboard?.fieldName ?? prettify(key);
 
   return {
     key: key as keyof PlayerStats,

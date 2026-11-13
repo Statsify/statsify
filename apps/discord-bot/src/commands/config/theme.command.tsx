@@ -20,7 +20,7 @@ import {
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
 import { DemoProfile } from "./demo.profile.js";
 import {
-  User,
+  type User,
   UserBoxes,
   UserFont,
   UserFooter,
@@ -28,6 +28,7 @@ import {
   UserPalette,
   UserTheme,
   UserTier,
+  getTierLogo,
 } from "@statsify/schemas";
 import { convertColorCodes } from "#lib/convert-color-codes";
 import { getBackground, getLogo } from "@statsify/assets";
@@ -189,7 +190,7 @@ export class ThemeCommand {
       throw new ErrorMessage("verification.requiredVerification");
 
     user.footer = {
-      icon: User.tierToLogo(user.tier ?? UserTier.NONE),
+      icon: getTierLogo(user.tier ?? UserTier.NONE),
       message: null,
     };
 

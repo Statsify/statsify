@@ -21,7 +21,7 @@ import {
   StatusNotFoundException,
   SuccessResponse,
 } from "@statsify/api-client";
-import { Color, User } from "@statsify/schemas";
+import { type User, UserTier, getColor, hasTier } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
@@ -48,7 +48,7 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super
-      .getCachedPlayer(input, User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE)
+      .getCachedPlayer(input, hasTier(user, UserTier.GOLD) ? CacheLevel.LIVE : CacheLevel.CACHE)
       .catch((err) => {
         if (!err.response || !err.response.data) throw this.unknownError();
         const error = err.response.data as PlayerNotFoundException;
@@ -248,7 +248,7 @@ export class ApiService extends StatsifyApiService {
 
     if (COLORED_RANKS.includes(unformattedRank)) {
       const rankColor = unformattedRank === "MVP++" && rank.startsWith("§b") ? "b" : "";
-      const plusColor = new Color(`§${rank[rank.indexOf("+") - 1]}`);
+      const plusColor = getColor(`§${rank[rank.indexOf("+") - 1]}`);
       emoji = t(`emojis:ranks.${rankColor}${unformattedRank}_${plusColor.id}`);
     } else {
       emoji = t(`emojis:ranks.${unformattedRank}`);

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { User, UserLogo } from "@statsify/schemas";
+import { type User, UserLogo, UserTier, getUserLogo, hasTier } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
 
 export interface FooterProps {
@@ -20,9 +20,9 @@ export const Footer = ({ logo, user, border }: FooterProps) => {
 
   let text: string;
 
-  if (User.isNetherite(user) && user?.footer?.message) text = user.footer.message;
+  if (hasTier(user, UserTier.NETHERITE) && user?.footer?.message) text = user.footer.message;
   else {
-    const logo = User.getLogo(user);
+    const logo = getUserLogo(user);
 
     switch (logo) {
       case UserLogo.RUBY:

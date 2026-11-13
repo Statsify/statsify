@@ -6,20 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { InjectModel, type MongoModel } from "#mongo";
 import { GUILD_ID_REGEX, GuildNotFoundException } from "@statsify/api-client";
-import { Guild } from "@statsify/schemas";
-import { InjectModel } from "@m8a/nestjs-typegoose";
+import { GuildSchema } from "@statsify/schemas";
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
 import { Redis } from "ioredis";
 import { flatten } from "@statsify/util";
-import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class GuildLeaderboardService extends LeaderboardService {
   public constructor(
-    @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>,
+    @InjectModel(GuildSchema) private readonly guildModel: MongoModel<typeof GuildSchema>,
     @InjectRedis() redis: Redis
   ) {
     super(redis);
@@ -39,7 +38,7 @@ export class GuildLeaderboardService extends LeaderboardService {
       input = guild.id;
     }
 
-    const ranking = await this.getLeaderboardRankings(Guild, [field], input);
+    const ranking = await this.getLeaderboardRankings(GuildSchema, [field], input);
 
     if (!ranking || !ranking[0].rank) throw new GuildNotFoundException();
 

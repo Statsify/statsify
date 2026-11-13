@@ -6,16 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Commands } from "@statsify/schemas";
-import { InjectModel } from "@m8a/nestjs-typegoose";
+import { InjectModel, type MongoModel } from "#mongo";
+import { CommandsSchema } from "@statsify/schemas";
 import { Injectable } from "@nestjs/common";
-import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class CommandsService {
   public constructor(
-    @InjectModel(Commands)
-    private readonly commandsModel: ReturnModelType<typeof Commands>
+    @InjectModel(CommandsSchema)
+    private readonly commandsModel: MongoModel<typeof CommandsSchema>
   ) {}
 
   public async incrementCommandRun(command: string) {

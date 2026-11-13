@@ -1,0 +1,231 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import { type APIData, findScoreIndex } from "@statsify/util";
+import {
+  CoinsSchema,
+  KillsSchema,
+  KillsStats,
+  KitKillsStats,
+  KitWinsStats,
+  WinsSchema,
+} from "../common.js";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
+import type { GamePrefix } from "#prefixes";
+import { add, sub } from "@statsify/math";
+import { formats } from "#definition/format";
+import { prefixFields } from "../prefix-fields.js";
+import { type NumberSchema, s } from "#definition/s";
+
+export const BLITZSG_MODES = new GameModes([
+  { api: "overall" },
+  { api: "arachnologist" },
+  { api: "archer" },
+  { api: "armorer" },
+  { api: "astronaut" },
+  { api: "baker" },
+  { api: "blaze" },
+  { api: "creepertamer" },
+  { api: "diver" },
+  { api: "donkeytamer" },
+  { api: "farmer" },
+  { api: "fisherman" },
+  { api: "florist" },
+  { api: "golem" },
+  { api: "guardian" },
+  { api: "horsetamer" },
+  { api: "hunter" },
+  { api: "hypetrain" },
+  { api: "jockey" },
+  { api: "knight" },
+  { api: "meatmaster" },
+  { api: "milkman" },
+  { api: "necromancer" },
+  { api: "paladin" },
+  { api: "phoenix" },
+  { api: "pigman" },
+  { api: "rambo" },
+  { api: "random" },
+  { api: "ranger" },
+  { api: "reaper" },
+  { api: "reddragon" },
+  { api: "rogue" },
+  { api: "scout" },
+  { api: "shadowknight" },
+  { api: "shark" },
+  { api: "slimeyslime" },
+  { api: "snowman" },
+  { api: "speleologist" },
+  { api: "tim" },
+  { api: "toxicologist" },
+  { api: "troll" },
+  { api: "viking" },
+  { api: "warlock" },
+  { api: "warrior" },
+  { api: "wolftamer" },
+
+  { hypixel: "solo_normal", formatted: "Solo" },
+  { hypixel: "teams_normal", formatted: "Doubles" },
+] as const);
+
+export type BlitzSGModes = ExtractGameModes<typeof BLITZSG_MODES>;
+
+const prefixes: GamePrefix[] = [
+  { fmt: (n) => `§f[§7${n}§f]`, req: 0 },
+  { fmt: (n) => `§e[${n}]`, req: 1000 },
+  { fmt: (n) => `§a[${n}]`, req: 25_000 },
+  { fmt: (n) => `§c[${n}]`, req: 50_000 },
+  { fmt: (n) => `§b[${n}]`, req: 75_000 },
+  { fmt: (n) => `§6§l[${n}]`, req: 100_000 },
+  { fmt: (n) => `§5§l[${n}]`, req: 150_000 },
+  { fmt: (n) => `§4§l[${n}]`, req: 200_000 },
+  { fmt: (n) => `§9§l[${n}]`, req: 250_000 },
+  { fmt: (n) => `§2§l[${n}]`, req: 300_000 },
+];
+
+const prefix = prefixFields(prefixes);
+
+const limit = 10_000;
+
+const BlitzSGKitSchema = s.object({
+  gamesPlayed: s.number().color("§b").leaderboard({ limit }),
+  level: s.number().default(1).leaderboard(false),
+  exp: s.number().color("§b").leaderboard({ limit, fieldName: "EXP" }),
+  prestige: s.number().leaderboard(false),
+  ...KitKillsStats,
+  ...KitWinsStats,
+  // Losses aren't ranked, but still show beside wins and WLR
+  losses(): NumberSchema {
+    return s
+      .number()
+      .color("§c")
+      .leaderboard({ enabled: false, additionalFields: [this.wins, this.wlr] });
+  },
+  playtime: s.number().color("§e").format(formats.time),
+});
+
+const BlitzSGModeSchema = s.object({
+  wins: WinsSchema.color("§e"),
+  kills: KillsSchema.color("§a"),
+});
+
+const BlitzSGOverallSchema = s.object({
+  wins: WinsSchema.color("§e"),
+  ...KillsStats,
+});
+
+const KITS = BLITZSG_MODES.getApiModes().filter(
+  (mode): mode is Exclude<typeof mode, "overall"> => mode !== "overall"
+);
+
+type Kit = (typeof KITS)[number];
+
+// Hypixel's keys for these kits have a space
+const KIT_KEYS: Partial<Record<Kit, string>> = {
+  hypetrain: "hype train",
+  shadowknight: "shadow knight",
+};
+
+const DEFAULT_KITS = [
+  "archer",
+  "meatmaster",
+  "speleologist",
+  "baker",
+  "knight",
+  "guardian",
+  "scout",
+  "hunter",
+  "hype train",
+  "fisherman",
+  "armorer",
+];
+
+const SPECIAL_KITS = ["donkeytamer", "warrior", "ranger", "phoenix", "milkman"];
+const SPECIAL_KIT_LEVELS = [1, 100, 250, 500, 1000, 1500, 2000, 2500, 5000, 10_000].map((req) => ({ req }));
+
+export const BlitzSGSchema = s
+  .object({
+    coins: CoinsSchema.color("§6"),
+    kit: s.string().default("none"),
+    overall: BlitzSGOverallSchema,
+    solo: BlitzSGModeSchema,
+    progression() {
+      return prefix.progression(this.overall.kills);
+    },
+    currentPrefix() {
+      return prefix.currentPrefix(this.overall.kills);
+    },
+    naturalPrefix() {
+      return prefix.naturalPrefix(this.overall.kills);
+    },
+    nextPrefix() {
+      return prefix.nextPrefix(this.overall.kills);
+    },
+    doubles: BlitzSGModeSchema,
+    ...s.keyed(KITS, () => BlitzSGKitSchema),
+  })
+  .leaderboard((blitzsg) => ({
+    fieldName: FormattedGame.BLITZSG,
+    extraDisplay: blitzsg.naturalPrefix,
+  }));
+
+export type BlitzSG = s.infer<typeof BlitzSGSchema>;
+export type BlitzSGKit = s.infer<typeof BlitzSGKitSchema>;
+
+function kitLevel(data: APIData, kit: string, exp: number) {
+  if (kit in data) return data[kit] + 1;
+  if (DEFAULT_KITS.includes(kit) && exp > 0) return 1;
+  if (SPECIAL_KITS.includes(kit)) return findScoreIndex(SPECIAL_KIT_LEVELS, exp) + 1;
+  return 1;
+}
+
+function blitzSGKit(data: APIData, kit: string): s.input<typeof BlitzSGKitSchema> {
+  const gamesPlayed = data[`games_played_${kit}`];
+  const exp = data[`exp_${kit}`];
+  const wins = add(data[`wins_${kit}`], data[`wins_teams_${kit}`]);
+  const deaths = sub(gamesPlayed, wins);
+
+  return {
+    gamesPlayed,
+    level: kitLevel(data, kit, exp),
+    exp,
+    prestige: data[`p${kit}`],
+    kills: data[`kills_${kit}`],
+    deaths,
+    wins,
+    losses: deaths,
+    playtime: (data[`time_played_${kit}`] ?? 0) * 1000,
+  };
+}
+
+function blitzSGMode(data: APIData, mode: string): s.input<typeof BlitzSGModeSchema> {
+  const suffix = mode ? `_${mode}` : mode;
+
+  return {
+    wins: data[`wins${suffix || "_solo_normal"}`],
+    kills: data[`kills${suffix}`],
+  };
+}
+
+export function blitzSG(data: APIData = {}): s.input<typeof BlitzSGSchema> {
+  const solo = blitzSGMode(data, "");
+  const doubles = blitzSGMode(data, "teams_normal");
+
+  return {
+    coins: data.coins,
+    kit: data.defaultkit || "none",
+    overall: {
+      wins: add(data.wins_solo_normal, data.wins_teams_normal),
+      kills: data.kills,
+      deaths: data.deaths,
+    },
+    solo: { ...solo, kills: sub(solo.kills, doubles.kills) },
+    doubles,
+    ...s.keyed(KITS, (kit) => blitzSGKit(data, KIT_KEYS[kit] ?? kit)),
+  };
+}

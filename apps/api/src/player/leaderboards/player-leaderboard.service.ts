@@ -6,23 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { InjectModel, type MongoModel } from "#mongo";
 import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
 import { type Circular, flatten } from "@statsify/util";
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
-import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
-import { Player } from "@statsify/schemas";
+import { PlayerSchema } from "@statsify/schemas";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
-import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class PlayerLeaderboardService extends LeaderboardService {
   public constructor(
     @Inject(forwardRef(() => PlayerService))
     private readonly playerService: Circular<PlayerService>,
-    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
+    @InjectModel(PlayerSchema) private readonly playerModel: MongoModel<typeof PlayerSchema>,
     @InjectRedis() redis: Redis
   ) {
     super(redis);
@@ -38,7 +37,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
       input = player.uuid;
     }
 
-    const ranking = await this.getLeaderboardRankings(Player, [field], input);
+    const ranking = await this.getLeaderboardRankings(PlayerSchema, [field], input);
 
     if (!ranking || !ranking[0] || !ranking[0].rank) throw new PlayerNotFoundException();
 

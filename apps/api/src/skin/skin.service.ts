@@ -6,23 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { InjectModel, type MongoModel } from "#mongo";
 import { HttpService } from "@nestjs/axios";
 import type { Image } from "skia-canvas";
-import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
-import { Skin } from "@statsify/schemas";
+import { type Skin, SkinSchema, compute, skin as parseSkin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { renderSkin } from "@statsify/skin-renderer";
-import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class SkinService {
   public constructor(
     private readonly httpService: HttpService,
-    @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
+    @InjectModel(SkinSchema) private readonly skinModel: MongoModel<typeof SkinSchema>
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
@@ -124,7 +123,7 @@ export class SkinService {
           if (response.status !== 200) throw response;
           return response.data;
         }),
-        map((data) => new Skin(data)),
+        map((data) => compute(SkinSchema, parseSkin(data))),
         catchError((error) => {
           // Player not found
           if (error.status === 204) throw new PlayerNotFoundException();

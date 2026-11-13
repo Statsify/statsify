@@ -6,7 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ArcadeModes, type Dropper, DropperMaps, type SubModeForMode, scanMetadata } from "@statsify/schemas";
+import {
+  type ArcadeModes,
+  DROPPER_MAPS,
+  type Dropper,
+  type DropperMaps,
+  type SubModeForMode,
+} from "@statsify/schemas";
 import { Historical, If, Table } from "#components";
 import { arrayGroup, formatRaceTime, formatTime } from "@statsify/util";
 import type { LocalizeFunction } from "@statsify/discord";
@@ -45,18 +51,13 @@ export const DropperTable = ({ stats, submode, t, time }: DropperTableProps) => 
   return <DropperMapsTable dropper={stats} t={t} stat={submode.api} />;
 };
 
-// This will return the leaderboard names for each dropper map, we only want the map names
-const DROPPER_MAPS = scanMetadata(DropperMaps)
-  .filter(([key]) => key.endsWith(".bestTime"))
-  .map(([key, metadata]) => [
-    key.replace(".bestTime", ""),
-    metadata.leaderboard.name.replace(" Best Time", ""),
-  ] as [keyof DropperMaps, string])
+const MAPS = DROPPER_MAPS
+  .map(({ property, name }) => [property, name] as [keyof DropperMaps, string])
   .sort(([a], [b]) => a.localeCompare(b));
 
-const HARD_DROPPER_MAP_GROUPS = arrayGroup(DROPPER_MAPS.filter(([, name]) => name.startsWith("§c")), 4);
-const MEDIUM_DROPPER_MAP_GROUPS = arrayGroup(DROPPER_MAPS.filter(([, name]) => name.startsWith("§e")), 4);
-const EASY_DROPPER_MAP_GROUPS = arrayGroup(DROPPER_MAPS.filter(([, name]) => name.startsWith("§a")), 4);
+const HARD_DROPPER_MAP_GROUPS = arrayGroup(MAPS.filter(([, name]) => name.startsWith("§c")), 4);
+const MEDIUM_DROPPER_MAP_GROUPS = arrayGroup(MAPS.filter(([, name]) => name.startsWith("§e")), 4);
+const EASY_DROPPER_MAP_GROUPS = arrayGroup(MAPS.filter(([, name]) => name.startsWith("§a")), 4);
 
 interface DropperMapsTableProps {
   dropper: Dropper;
