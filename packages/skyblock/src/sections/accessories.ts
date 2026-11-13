@@ -21,6 +21,7 @@ import type {
   MissingAccessory,
   PriceMap,
   Rarity,
+  Slots,
 } from "#types";
 import type { RawMember } from "#raw";
 
@@ -87,17 +88,15 @@ function storedAccessories(member: RawMember, items: ItemsResource) {
  * Accessories in the inventory whose family isn't in the bag, one of each: they give their stats there too, but no
  * accessory power (the wiki's Accessories page, unverified).
  */
-export function heldAccessories(member: RawMember, items: ItemsResource, owned: ReadonlySet<string>) {
-  const inBag = (id: string) =>
+export function heldAccessories(inventory: Slots, items: ItemsResource, owned: ReadonlySet<string>) {
+  const familyInBag = (id: string) =>
     owned.has(id) || upgradesOf(id).some((by) => owned.has(by)) || [...owned].some((bagged) => upgradesOf(bagged).includes(id));
-  const blob = member.inventory?.inv_contents;
   const held = new Map<string, ItemView>();
 
-  for (const item of blob ? decodeInventory(blob) : []) {
-    const id = item?.tag?.ExtraAttributes?.id;
-    if (!item || typeof id !== "string" || held.has(id) || inBag(id)) continue;
-    const resource = items.items[id];
-    if (resource && isCandidate(id, resource)) held.set(id, toItemView(item));
+  for (const view of inventory) {
+    if (!view || held.has(view.id) || familyInBag(view.id)) continue;
+    const resource = items.items[view.id];
+    if (resource && isCandidate(view.id, resource)) held.set(view.id, view);
   }
 
   return [...held.values()];

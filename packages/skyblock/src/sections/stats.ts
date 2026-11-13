@@ -259,8 +259,8 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   const storage = member.accessory_bag_storage;
   const power = bag ? powerStats(storage?.selected_power, bag.accessoryPower) : undefined;
   const tuning = tuningStats(storage?.tuning?.slot_0 ?? {});
-  const hotbar = inventory?.inv_contents ? decodeSlots(inventory.inv_contents).slice(0, 9) : [];
-  const weapon = hotbar.find((item): item is ItemView => item !== null && isWeapon(item));
+  const inventoryItems = inventory?.inv_contents ? decodeSlots(inventory.inv_contents) : [];
+  const weapon = inventoryItems.slice(0, 9).find((item): item is ItemView => item !== null && isWeapon(item));
 
   const skills = getSkills(profile, member);
   const slayers = getSlayers(member).bosses;
@@ -293,7 +293,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     armor: inventory?.inv_armor ? loreStats(decodeSlots(inventory.inv_armor)) : undefined,
     equipment: inventory?.equipment_contents ? loreStats(decodeSlots(inventory.equipment_contents)) : undefined,
     weapon: weapon && loreStats([weapon]),
-    accessories: bag ? loreStats([...bag.active, ...heldAccessories(member, items, bag.owned)]) : undefined,
+    accessories: bag ? loreStats([...bag.active, ...heldAccessories(inventoryItems, items, bag.owned)]) : undefined,
     power,
     tuning,
     skills: skills ? sumStats(SKILLS.map((skill) => upTo(STAT_TABLES.skills[skill], skills.skills[skill].level))) : undefined,
