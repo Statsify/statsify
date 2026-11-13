@@ -113,6 +113,7 @@ export interface Metadata {
   raw?: true;
   index?: IndexOptions;
   lowercase?: true;
+  defaultNow?: true;
 }
 
 interface Optional {
@@ -223,6 +224,15 @@ export class BooleanSchema extends Schema<boolean> {
   public readonly kind = "boolean";
 }
 
+export class DateSchema extends Schema<Date> {
+  public readonly kind = "date";
+
+  /** Mongo sets it to the time the document is created */
+  public defaultNow() {
+    return this.with({ defaultNow: true }).setLater();
+  }
+}
+
 export class ArraySchema<E extends AnySchema> extends Schema<s.infer<E>[], s.input<E>[]> {
   public readonly kind = "array";
 
@@ -277,6 +287,7 @@ export type AnySchema =
   | NumberSchema |
   StringSchema |
   BooleanSchema |
+  DateSchema |
   ArraySchema<any> |
   RecordSchema<any> |
   ObjectSchema<any>;
@@ -343,6 +354,7 @@ export const s = {
   number: () => new NumberSchema(),
   string: <T extends string = string>() => new StringSchema<T>(),
   boolean: () => new BooleanSchema(),
+  date: () => new DateSchema(),
   array: <E extends AnySchema>(element: E) => new ArraySchema(element),
   record: <E extends AnySchema>(element: E) => new RecordSchema(element),
 

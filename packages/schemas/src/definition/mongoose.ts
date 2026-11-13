@@ -18,6 +18,8 @@ const getType = (field: AnySchema): unknown => {
       return String;
     case "boolean":
       return Boolean;
+    case "date":
+      return Date;
     case "array":
       return [getType(field.element)];
     case "record":
@@ -33,13 +35,14 @@ export function toMongoose(schema: ObjectSchema): Schema {
   for (const [key, field] of Object.entries(schema.definition)) {
     if (!isStored(field)) continue;
 
-    const { optional, index, lowercase } = field.meta;
+    const { optional, index, lowercase, defaultNow } = field.meta;
 
     definition[key] = {
       type: getType(field),
       required: !optional,
       ...(index && { index: true, ...index }),
       ...(lowercase && { lowercase }),
+      ...(defaultNow && { default: Date.now }),
     };
   }
 
