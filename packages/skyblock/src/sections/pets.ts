@@ -19,7 +19,7 @@ const rank = (rarity: Rarity) => RARITIES.indexOf(rarity);
 /** A Tier Boost raises the rarity, and with it the XP table the level reads. */
 function boostedRarity(pet: RawPet) {
   const base = pet.tier as Rarity;
-  // A boost never makes a pet Mythic, except the Bingo pet (the wiki's Tier Boost page)
+  // A boost never makes a pet Mythic, except the Bingo pet (the wiki's Tier Boost page, unverified)
   const highest = pet.type === "BINGO" ? "MYTHIC" : "LEGENDARY";
   return pet.heldItem === "PET_ITEM_TIER_BOOST" && rank(base) < rank(highest) ? PET_RARITIES[rank(base) + 1] : base;
 }
