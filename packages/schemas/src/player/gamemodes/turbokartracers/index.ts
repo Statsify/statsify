@@ -100,7 +100,7 @@ export class TurboKartRacers {
   @Field()
   public olympus: TurboKartRacersMap;
 
-  @Field()
+  @Field({ leaderboard: { name: "Hypixel GP" } })
   public hypixelGP: TurboKartRacersMap;
 
   @Field()
