@@ -113,33 +113,6 @@ export const DOJO_BELT_COLORS: Record<DojoBelt, string> = {
 /** How many of each the Rift hides, which no data source has: the wiki's counts (an owner exception, unverified). */
 export const RIFT_TOTALS = { enigmaSouls: 52, timecharms: 8, catsFound: 9 } as const satisfies Partial<Record<keyof RiftSection, number>>;
 
-/**
- * Each stacking enchant's item counter and what levels I to X need of it: the wiki's Stacking Enchantments page, and
- * Absorb's own page for Absorb (an owner exception, unverified). Take the level from the item, whose stored level can
- * lag its counter by one.
- */
-export const STACKING_ENCHANTS: Record<string, { counter: string; milestones: number[] }> = {
-  absorb: {
-    counter: "absorb_logs_chopped",
-    milestones: [0, 1000, 5000, 25_000, 100_000, 250_000, 1_000_000, 2_500_000, 10_000_000, 25_000_000],
-  },
-  champion: {
-    counter: "champion_combat_xp",
-    milestones: [0, 50_000, 100_000, 250_000, 500_000, 1_000_000, 1_500_000, 2_000_000, 2_500_000, 3_000_000],
-  },
-  compact: { counter: "compact_blocks", milestones: [0, 100, 500, 1500, 5000, 15_000, 50_000, 150_000, 500_000, 1_000_000] },
-  cultivating: {
-    counter: "farmed_cultivating",
-    milestones: [0, 1000, 5000, 25_000, 100_000, 250_000, 1_000_000, 2_500_000, 10_000_000, 25_000_000],
-  },
-  expertise: { counter: "expertise_kills", milestones: [0, 50, 100, 250, 500, 1000, 2500, 5500, 10_000, 15_000] },
-  hecatomb: { counter: "hecatomb_s_runs", milestones: [0, 2, 5, 10, 20, 30, 40, 60, 80, 100] },
-  toxophilite: {
-    counter: "toxophilite_combat_xp",
-    milestones: [0, 50_000, 100_000, 250_000, 500_000, 1_000_000, 1_500_000, 2_000_000, 2_500_000, 3_000_000],
-  },
-};
-
 /** Jacob's contest brackets and medals, and the trophy fish tiers, which share four of them. */
 export const MEDAL_COLORS: Record<JacobBracket, string> = {
   bronze: "§c",
@@ -167,6 +140,9 @@ export const GAME_MODE_BADGES: Record<GameMode, string> = {
   stranded: "§a☀",
   bingo: "§6Ⓑ",
 };
+
+/** Bingo and Stranded profiles have no museum. */
+export const hasMuseum = (gameMode: GameMode) => gameMode !== "bingo" && gameMode !== "stranded";
 
 const FORMATTED_PROFILES: Record<string, string | undefined> = {
   Apple: "§cApple",

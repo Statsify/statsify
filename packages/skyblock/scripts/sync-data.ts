@@ -588,12 +588,15 @@ try {
     Zealot: ["zealot_special_enderman_55"],
   };
   const families = ({ mobs = [] }: NeuPage) =>
-    mobs.map(({ name, mobs: ids, cap, bracket, bracketType }) => ({
-      name: removeFormatting(name),
-      ids: [...ids, ...(missingIds[removeFormatting(name)] ?? [])],
-      cap,
-      bracket: bracketOf(removeFormatting(name), cap, bracketType ? `${bracketType}_${bracket}` : String(bracket)),
-    }));
+    mobs.map(({ name: formatted, mobs: ids, cap, bracket, bracketType }) => {
+      const name = removeFormatting(formatted);
+      return {
+        name,
+        ids: [...ids, ...(missingIds[name] ?? [])],
+        cap,
+        bracket: bracketOf(name, cap, bracketType ? `${bracketType}_${bracket}` : String(bracket)),
+      };
+    });
   const subpages = (page: NeuPage) =>
     Object.values(page).filter((value: unknown): value is NeuPage => typeof value === "object" && value !== null && "mobs" in value);
   const bestiaryData = {
@@ -659,18 +662,17 @@ try {
   // player_data.perks, which keeps the levels bought, calls NEU's eagle_advantage eagles_advantage
   const perkIds: Record<string, string> = { eagle_advantage: "eagles_advantage" };
   const shops = await readJson<Record<string, Record<string, { costs: number[] }>>>("constants/essenceshops.json");
-  await write(
-    "essenceshops.json",
-    Object.fromEntries([
-      ...Object.entries(shops).map(([shop, perks]) => [
+  await write("essenceshops.json", {
+    ...Object.fromEntries(
+      Object.entries(shops).map(([shop, perks]) => [
         shop.replace("ESSENCE_", ""),
         Object.fromEntries(Object.entries(perks).map(([id, { costs }]) => [perkIds[id] ?? id, costs.length])),
-      ]),
-      // NEU has no Sun Gecko shop, the Rift's: Blessing of Time's 3 tiers (the wiki's Sun Gecko essence shop page, an
-      // owner exception, unverified)
-      ["SUN_GECKO", { blessing_of_time: 3 }],
-    ])
-  );
+      ])
+    ),
+    // NEU lacks the Rift's Sun Gecko shop: Blessing of Time's 3 tiers (the wiki's Sun Gecko essence shop page, an owner
+    // exception, unverified)
+    SUN_GECKO: { blessing_of_time: 3 },
+  });
 
   // The Garden response keys crops by their collection ids; NEU keys the milestones by crop name
   const gardenCrops: Record<string, string> = {

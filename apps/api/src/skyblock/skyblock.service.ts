@@ -19,6 +19,7 @@ import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Logger } from "@statsify/logger";
 import { NETWORTH, VALUES } from "@statsify/skyblock/networth";
+import { hasMuseum } from "@statsify/skyblock/display";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
 import {
@@ -26,6 +27,7 @@ import {
   SECTIONS,
   type SectionInput,
   findProfile,
+  gameModeOf,
   isMember,
   toMemberStats,
   toMemberView,
@@ -166,9 +168,8 @@ export class SkyBlockService {
     const needs = new Set(sections.flatMap((name) => DEFINITIONS[name].needs));
     const [museum, garden, prices, items] = await Promise.all([
       // The rows ranked when these profiles were stored went without the museum a refetch here stores. A copy served
-      // stale is older than rows a co-op partner's newer copy may have written, so it isn't ranked again. Bingo and
-      // Stranded ("island") profiles have no museum.
-      needs.has("museum") && !["bingo", "island"].includes(profile.game_mode ?? "") ?
+      // stale is older than rows a co-op partner's newer copy may have written, so it isn't ranked again
+      needs.has("museum") && hasMuseum(gameModeOf(profile)) ?
         this.getStoredMuseum(
           profile.profile_id,
           cache,

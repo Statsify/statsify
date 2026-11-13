@@ -16,9 +16,8 @@ import type { RawMember, RawProfile } from "#raw";
 /** The tiers reached at an amount, out of each tier's amount needed. */
 export const collectionTier = (amount: number, tiers: number[]) => tiers.filter((needed) => amount >= needed).length;
 
-// Each boss's tiers are the wiki's, from each boss page's Collection section, and fit every saved member. Owner
-// exceptions, since no source has them (unverified): a Master Mode completion counting twice, and Kuudra's tiers
-// counting 1 to 5, where the wiki gives Basic 1 and Infernal 5 only.
+// Each boss's tiers, from its wiki page's Collection section, fit every saved member. Owner exceptions (unverified):
+// a Master Mode completion counts twice, and Kuudra's tiers count 1 to 5; the wiki gives only Basic 1 and Infernal 5.
 const SHORT_TIERS = [25, 50, 100, 150, 250, 1000];
 const LONG_TIERS = [50, 100, 150, 250, 500, 750, 1000];
 const FLOOR_BOSSES = [
