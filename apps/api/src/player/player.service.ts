@@ -65,7 +65,7 @@ export class PlayerService {
 
     if (
       mongoPlayer &&
-      this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)
+      HypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)
     ) {
       return deserialize(Player, mongoPlayer);
     }

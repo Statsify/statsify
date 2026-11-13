@@ -21,14 +21,14 @@ export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
     super(MEGAWALLS_MODES);
   }
 
-  public filterModes(
+  public override filterModes(
     player: Player,
     modes: GameModeWithSubModes<MegaWallsModes>[]
   ): GameModeWithSubModes<MegaWallsModes>[] {
     return filterMegaWallsKits(player, modes);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<MegaWallsModes, never>
   ): JSX.Element {

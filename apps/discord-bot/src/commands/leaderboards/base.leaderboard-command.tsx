@@ -58,6 +58,7 @@ export interface CreateLeaderboardOptions {
 }
 
 export class BaseLeaderboardCommand {
+  // oxlint-disable-next-line class-methods-use-this -- subclasses call it through `this`
   protected async createLeaderboard({
     context,
     background,
@@ -104,7 +105,7 @@ export class BaseLeaderboardCommand {
 
         const params = fn();
 
-        const [message, page] = await this.getLeaderboardMessage(
+        const [message, page] = await getLeaderboardMessage(
           user,
           cache,
           type,
@@ -130,7 +131,7 @@ export class BaseLeaderboardCommand {
         }
       };
 
-    const [message, page] = await this.getLeaderboardMessage(
+    const [message, page] = await getLeaderboardMessage(
       user,
       cache,
       type,
@@ -245,92 +246,92 @@ export class BaseLeaderboardCommand {
 
     return { ...message, components: [row] };
   }
+}
 
-  private async getLeaderboardMessage(
-    user: User | null,
-    cache: Map<number, IMessage>,
-    type: LeaderboardType,
-    getLeaderboard: GetLeaderboard,
-    field: string,
-    params: LeaderboardParams,
-    props: BaseLeaderboardProps,
-    getLeaderboardDataIcon?: GetLeaderboardDataIcon
-  ): Promise<[message: IMessage, page: number | null]> {
-    if (params.type === LeaderboardQuery.PAGE && cache.has(params.input as number)) {
-      const page = params.input as number;
-      return [cache.get(page)!, page];
-    }
-
-    const [message, page] = await this.renderLeaderboardMessage(
-      user,
-      type,
-      getLeaderboard,
-      field,
-      params,
-      props,
-      getLeaderboardDataIcon
-    );
-
-    if (params.type === LeaderboardQuery.PAGE && page !== null) cache.set(page, message);
-
-    return [message, page];
+async function getLeaderboardMessage(
+  user: User | null,
+  cache: Map<number, IMessage>,
+  type: LeaderboardType,
+  getLeaderboard: GetLeaderboard,
+  field: string,
+  params: LeaderboardParams,
+  props: BaseLeaderboardProps,
+  getLeaderboardDataIcon?: GetLeaderboardDataIcon
+): Promise<[message: IMessage, page: number | null]> {
+  if (params.type === LeaderboardQuery.PAGE && cache.has(params.input as number)) {
+    const page = params.input as number;
+    return [cache.get(page)!, page];
   }
 
-  private async renderLeaderboardMessage(
-    user: User | null,
-    type: LeaderboardType,
-    getLeaderboard: GetLeaderboard,
-    field: string,
-    params: LeaderboardParams,
-    props: BaseLeaderboardProps,
-    getLeaderboardDataIcon?: GetLeaderboardDataIcon
-  ): Promise<[message: IMessage, page: number | null]> {
-    const leaderboard = await getLeaderboard(field, params.input, params.type);
+  const [message, page] = await renderLeaderboardMessage(
+    user,
+    type,
+    getLeaderboard,
+    field,
+    params,
+    props,
+    getLeaderboardDataIcon
+  );
 
-    if (!leaderboard) {
-      const message = {
-        ...new ErrorMessage(`errors.${type}LeaderboardNotFound`),
-        ephemeral: true,
-      };
+  if (params.type === LeaderboardQuery.PAGE && page !== null) cache.set(page, message);
 
-      return [message, null];
-    }
+  return [message, page];
+}
 
-    if (!leaderboard?.data.length) {
-      const message = {
-        ...new ErrorMessage("errors.leaderboardEmpty"),
-        ephemeral: true,
-      };
+async function renderLeaderboardMessage(
+  user: User | null,
+  type: LeaderboardType,
+  getLeaderboard: GetLeaderboard,
+  field: string,
+  params: LeaderboardParams,
+  props: BaseLeaderboardProps,
+  getLeaderboardDataIcon?: GetLeaderboardDataIcon
+): Promise<[message: IMessage, page: number | null]> {
+  const leaderboard = await getLeaderboard(field, params.input, params.type);
 
-      return [message, null];
-    }
-
-    const leaderboardData = getLeaderboardDataIcon ?
-      await Promise.all(
-        leaderboard.data.map(async (d) => ({
-          ...d,
-          icon: await getLeaderboardDataIcon(d.id),
-        }))
-      ) :
-      leaderboard.data;
-
-    const canvas = render(
-      <LeaderboardProfile
-        {...props}
-        name={leaderboard.name}
-        fields={leaderboard.fields}
-        data={leaderboardData}
-      />,
-      getTheme(user)
-    );
-
-    const buffer = await canvas.toBuffer("png");
-
+  if (!leaderboard) {
     const message = {
-      files: [{ name: "leaderboard.png", data: buffer, type: "image/png" }],
-      embeds: [],
+      ...new ErrorMessage(`errors.${type}LeaderboardNotFound`),
+      ephemeral: true,
     };
 
-    return [message, leaderboard.page];
+    return [message, null];
   }
+
+  if (!leaderboard?.data.length) {
+    const message = {
+      ...new ErrorMessage("errors.leaderboardEmpty"),
+      ephemeral: true,
+    };
+
+    return [message, null];
+  }
+
+  const leaderboardData = getLeaderboardDataIcon ?
+    await Promise.all(
+      leaderboard.data.map(async (d) => ({
+        ...d,
+        icon: await getLeaderboardDataIcon(d.id),
+      }))
+    ) :
+    leaderboard.data;
+
+  const canvas = render(
+    <LeaderboardProfile
+      {...props}
+      name={leaderboard.name}
+      fields={leaderboard.fields}
+      data={leaderboardData}
+    />,
+    getTheme(user)
+  );
+
+  const buffer = await canvas.toBuffer("png");
+
+  const message = {
+    files: [{ name: "leaderboard.png", data: buffer, type: "image/png" }],
+    embeds: [],
+  };
+
+  return [message, leaderboard.page];
 }

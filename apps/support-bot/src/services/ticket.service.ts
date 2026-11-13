@@ -94,7 +94,7 @@ export class TicketService {
       );
 
       listener.addHook(
-        this.copyUsernameButtonId(ticket.channel),
+        copyUsernameButtonId(ticket.channel),
         this.copyUsername.bind(this)
       );
     }
@@ -152,7 +152,7 @@ export class TicketService {
     const copyUsernameButton = new ButtonBuilder()
       .label("Copy Username")
       .style(ButtonStyle.Secondary)
-      .customId(this.copyUsernameButtonId(channel.id));
+      .customId(copyUsernameButtonId(channel.id));
 
     const listener = CommandListener.getInstance();
 
@@ -200,7 +200,7 @@ export class TicketService {
 
     const listener = CommandListener.getInstance();
     listener.removeHook(ticket.channel);
-    listener.removeHook(this.copyUsernameButtonId(ticket.channel));
+    listener.removeHook(copyUsernameButtonId(ticket.channel));
 
     // A list of people who talked in the ticket
     const participants: Set<string> = new Set([`<@${ticket.owner}>`]);
@@ -271,10 +271,6 @@ export class TicketService {
     return true;
   }
 
-  private copyUsernameButtonId(channelId: string) {
-    return `${channelId}-copy-username`;
-  }
-
   private async copyUsername(interaction: Interaction) {
     const ticket = await this.ticketModel
       .findOne()
@@ -288,4 +284,8 @@ export class TicketService {
 
     interaction.sendFollowup({ content: ticket.username, ephemeral: true });
   }
+}
+
+function copyUsernameButtonId(channelId: string) {
+  return `${channelId}-copy-username`;
 }

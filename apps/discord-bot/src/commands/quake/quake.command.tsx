@@ -21,7 +21,7 @@ export class QuakeCommand extends BaseHypixelCommand<QuakeModes> {
     super(QUAKE_MODES);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<QuakeModes, never>
   ): JSX.Element {

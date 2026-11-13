@@ -21,7 +21,7 @@ export class SkyWarsCommand extends BaseHypixelCommand<SkyWarsModes> {
     super(SKYWARS_MODES);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<SkyWarsModes, never>
   ): JSX.Element {

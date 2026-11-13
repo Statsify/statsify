@@ -90,7 +90,10 @@
       { "fix": { "imports": "safe-fix", "variables": "safe-fix" } },
     ],
     "eqeqeq": "error",
-    "class-methods-use-this": "warn",
+    "class-methods-use-this": [
+      "warn",
+      { "ignoreOverrideMethods": true, "exceptMethods": ["run", "init", "intercept"] },
+    ],
     "symbol-description": "error",
 
     // Unicorn

@@ -64,7 +64,7 @@ export class VerifyCommand {
     const row = new ActionRowBuilder([VERIFY_BUTTON]);
 
     return {
-      content: (t) => `# [${t("verification.instructions.title")}](${VERIFY_VIDEO}) ${t("emojis:socials.h1.youtube")}\n${this.verificationSteps(t, false)}`,
+      content: (t) => `# [${t("verification.instructions.title")}](${VERIFY_VIDEO}) ${t("emojis:socials.h1.youtube")}\n${verificationSteps(t, false)}`,
       components: [row],
     };
   }
@@ -84,7 +84,7 @@ export class VerifyCommand {
       const code = data.components[0].components[0].value as string;
 
       if (!/^\d{4}$/.test(code)) {
-        const error = this.invalidCodeError();
+        const error = invalidCodeError();
 
         return interaction.sendFollowup({
           ...error,
@@ -96,7 +96,7 @@ export class VerifyCommand {
       const user = await this.apiService.verifyUser(code, userId);
 
       if (!user) {
-        const error = this.invalidCodeError();
+        const error = invalidCodeError();
 
         return interaction.sendFollowup({
           ...error,
@@ -111,7 +111,7 @@ export class VerifyCommand {
 
       const player = await this.apiService.getPlayer(user.uuid as string);
 
-      const displayName = this.apiService.emojiDisplayName(t, player.displayName);
+      const displayName = ApiService.emojiDisplayName(t, player.displayName);
 
       const embed = new EmbedBuilder()
         .description((t) => t("verification.successfulVerification", { displayName }))
@@ -120,32 +120,32 @@ export class VerifyCommand {
       interaction.sendFollowup({ embeds: [embed], ephemeral: true });
     });
   }
+}
 
-  private verificationSteps(t: LocalizeFunction, inEmbed: boolean): string {
-    const minecraft = inEmbed ? t("emojis:socials.embed.minecraft") : t("emojis:socials.minecraft");
-    const check = inEmbed ? t("emojis:socials.embed.check") : t("emojis:socials.check");
-    const discord = inEmbed ? t("emojis:socials.embed.discord") : t("emojis:socials.discord");
+function invalidCodeError() {
+  const button = new ButtonBuilder()
+    .label((t) => t("verification.invalidCode.button"))
+    .style(ButtonStyle.Link)
+    .url(VERIFY_VIDEO)
+    .emoji((t) => t("emojis:socials.button.youtube"));
 
-    return [
-      `${minecraft} ${t("verification.instructions.steps.one")}`,
-      `${check} ${t("verification.instructions.steps.two")}`,
-      `${discord} ${t("verification.instructions.steps.three")}`,
-    ].join("\n");
-  }
+  return new ErrorMessage(
+    (t) => t("verification.invalidCode.title"),
+    (t) => `${t("verification.invalidCode.description")}\n\n${verificationSteps(t, true)}`,
+    { buttons: [button] }
+  );
+}
 
-  private invalidCodeError() {
-    const button = new ButtonBuilder()
-      .label((t) => t("verification.invalidCode.button"))
-      .style(ButtonStyle.Link)
-      .url(VERIFY_VIDEO)
-      .emoji((t) => t("emojis:socials.button.youtube"));
+function verificationSteps(t: LocalizeFunction, inEmbed: boolean): string {
+  const minecraft = inEmbed ? t("emojis:socials.embed.minecraft") : t("emojis:socials.minecraft");
+  const check = inEmbed ? t("emojis:socials.embed.check") : t("emojis:socials.check");
+  const discord = inEmbed ? t("emojis:socials.embed.discord") : t("emojis:socials.discord");
 
-    return new ErrorMessage(
-      (t) => t("verification.invalidCode.title"),
-      (t) => `${t("verification.invalidCode.description")}\n\n${this.verificationSteps(t, true)}`,
-      { buttons: [button] }
-    );
-  }
+  return [
+    `${minecraft} ${t("verification.instructions.steps.one")}`,
+    `${check} ${t("verification.instructions.steps.two")}`,
+    `${discord} ${t("verification.instructions.steps.three")}`,
+  ].join("\n");
 }
 
 @Command({ description: (t) => t("commands.verify"), cooldown: 5 })

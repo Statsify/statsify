@@ -71,7 +71,7 @@ const emojis = [];
  * @returns {Promise<string[]>}
  */
 const drawRank = async (formatted) => {
-  const nodes = renderer.lex(formatted);
+  const nodes = FontRenderer.lex(formatted);
   const { width, height } = renderer.measureText(nodes);
 
   const textCanvas = createCanvas(width, height);

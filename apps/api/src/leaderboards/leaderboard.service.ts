@@ -62,7 +62,7 @@ export abstract class LeaderboardService {
       pipeline.zadd(key, value, id);
 
       if (metadata.leaderboard.enabled && metadata.leaderboard.resetEvery) {
-        const time = this.getLeaderboardExpiryTime(metadata.leaderboard);
+        const time = getLeaderboardExpiryTime(metadata.leaderboard);
         pipeline.expireat(key, time);
       }
     }
@@ -301,21 +301,21 @@ export abstract class LeaderboardService {
 
     return response;
   }
+}
 
-  private getLeaderboardExpiryTime(leaderboard: LeaderboardEnabledMetadata): number {
-    if (!leaderboard.resetEvery)
-      throw new Error("To get a leaderboard expiry time, `resetEvery` must be specified");
+function getLeaderboardExpiryTime(leaderboard: LeaderboardEnabledMetadata): number {
+  if (!leaderboard.resetEvery)
+    throw new Error("To get a leaderboard expiry time, `resetEvery` must be specified");
 
-    if (leaderboard.resetEvery === "day")
-      return Math.ceil(DateTime.now().endOf("day").toSeconds());
+  if (leaderboard.resetEvery === "day")
+    return Math.ceil(DateTime.now().endOf("day").toSeconds());
 
-    const now = new Date();
-    const dayIndex = DAYS_IN_WEEK[leaderboard.resetEvery];
+  const now = new Date();
+  const dayIndex = DAYS_IN_WEEK[leaderboard.resetEvery];
 
-    // Reset at 12:00 AM on the next day
-    now.setDate(now.getDate() + ((dayIndex - now.getDay() + 7) % 7) + 1);
-    now.setHours(0, 0, 0, 0);
+  // Reset at 12:00 AM on the next day
+  now.setDate(now.getDate() + ((dayIndex - now.getDay() + 7) % 7) + 1);
+  now.setHours(0, 0, 0, 0);
 
-    return Math.ceil(now.getTime() / 1000);
-  }
+  return Math.ceil(now.getTime() / 1000);
 }

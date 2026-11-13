@@ -41,7 +41,7 @@ export class GuildService {
   ): Promise<Guild | null> {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
-    if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
+    if (cachedGuild && HypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
       return {
         ...deserialize(Guild, flatten(cachedGuild)),
         cached: true,
@@ -114,7 +114,7 @@ export class GuildService {
 
     // Get scaled gexp
    for (const [index, [day, exp]] of Object.entries(guildExpHistory).toSorted().toReversed().slice(0, 30).entries()) {
-      const scaled = this.scaleGexp(exp);
+      const scaled = scaleGexp(exp);
     
       guild.expHistory[index] = exp;
       guild.expHistoryDays[index] = day;
@@ -245,10 +245,10 @@ export class GuildService {
       member.expiresAt = Date.now() + 600_000;
     }
   }
+}
 
-  private scaleGexp(exp: number) {
-    if (exp <= 200_000) return exp;
-    if (exp <= 700_000) return (exp - 200_000) / 10 + 200_000;
-    return Math.round((exp - 700_000) / 33 + 250_000);
-  }
+function scaleGexp(exp: number) {
+  if (exp <= 200_000) return exp;
+  if (exp <= 700_000) return (exp - 200_000) / 10 + 200_000;
+  return Math.round((exp - 700_000) / 33 + 250_000);
 }

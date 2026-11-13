@@ -116,7 +116,7 @@ export class FontRenderer {
     }
   }
 
-  public lex(text: string, inputState: Partial<TextNode> = {}): TextNode[] {
+  public static lex(text: string, inputState: Partial<TextNode> = {}): TextNode[] {
     const defaultState: Omit<TextNode, "text"> = {
       bold: false,
       italic: false,
@@ -174,19 +174,6 @@ export class FontRenderer {
 
     return nodes;
   }
-
-  private getUnicode(char: string) {
-    const hex = (char.codePointAt(0) ?? 0).toString(16);
-    return `${"0000".slice(0, Math.max(0, 4 - hex.length))}${hex}`;
-  }
-
-  private isAscii(unicode: string) {
-    return unicode.toUpperCase() in sizes.ascii;
-  }
-
-  private getTextureScale(canvas: Canvas) {
-    return canvas.width / 256;
-  }
   
   private getCharacterImage(unicode: string, isAscii: boolean) {
     return isAscii ?
@@ -194,33 +181,16 @@ export class FontRenderer {
       this.images.get(`${unicode[0]}${unicode[1]}`);
   }
 
-  private getCharacterIndexLocation(unicode: string, isAscii: boolean) {
-    if (isAscii) {
-      const y = positions.findIndex((row) => row.includes(unicode));
-      const x = positions[y].indexOf(unicode);
-
-      return {
-        x,
-        y,
-      };
-    }
-
-    return {
-      x: Number.parseInt(unicode[3], 16),
-      y: Number.parseInt(unicode[2], 16),
-    };
-  }
-
   private getCharacterMetadata(char: string, size: number) {
-    const unicode = this.getUnicode(char);
-    const isAscii = this.isAscii(unicode);
+    const unicode = getUnicode(char);
+    const isAscii = isAsciiCharacter(unicode);
     const image = this.getCharacterImage(unicode, isAscii);
 
     if (!image) return null;
 
-    const { x, y } = this.getCharacterIndexLocation(unicode, isAscii);
+    const { x, y } = getCharacterIndexLocation(unicode, isAscii);
 
-    const scale = this.getTextureScale(image);
+    const scale = getTextureScale(image);
 
     const characterSize =
       sizes[isAscii ? "ascii" : "unicode"][unicode.toUpperCase()];
@@ -242,28 +212,6 @@ export class FontRenderer {
     };
   }
 
-  private getCharacterSpacing(
-    char: string,
-    isAscii: boolean,
-    size: number,
-    scale: number,
-    width: number,
-    bold: boolean
-  ) {
-    // Minecraft has weird spacing for the space
-    let gap = size * (width + (char === " " ? -2 : 2) * scale);
-
-    if (bold) {
-      gap += scale * size;
-
-      if (isAscii) {
-        gap += scale * size;
-      }
-    }
-
-    return gap;
-  }
-
   private measureCharacter(
     char: string,
     textSize: number,
@@ -273,7 +221,7 @@ export class FontRenderer {
 
     if (!metadata) return 0;
 
-    return this.getCharacterSpacing(
+    return getCharacterSpacing(
       char,
       metadata.isAscii,
       metadata.size,
@@ -352,7 +300,7 @@ export class FontRenderer {
       false
     );
 
-    return this.getCharacterSpacing(char, isAscii, size, scale, width, bold);
+    return getCharacterSpacing(char, isAscii, size, scale, width, bold);
   }
 
   private fillFormattedCharacter(
@@ -397,7 +345,7 @@ export class FontRenderer {
 
     if (underline) this.fillUnderline(ctx, x, y, width, scale, size, color);
     if (strikethrough)
-      this.fillStrikethrough(ctx, x, y, width, scale, size, color);
+      fillStrikethrough(ctx, x, y, width, scale, size, color);
 
     if (bold) {
       this.fillPlainCharacter(
@@ -430,7 +378,7 @@ export class FontRenderer {
       if (underline)
         this.fillUnderline(ctx, x + boldOffset, y, width, scale, size, color);
       if (strikethrough)
-        this.fillStrikethrough(
+        fillStrikethrough(
           ctx,
           x + boldOffset,
           y,
@@ -537,23 +485,75 @@ export class FontRenderer {
       ctx.globalCompositeOperation = "source-over";
     }
   }
+}
 
-  private fillStrikethrough(
-    ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    width: number,
-    scale: number,
-    size: number,
-    color: Fill
-  ) {
-    ctx.fillStyle = color;
+function getUnicode(char: string) {
+  const hex = (char.codePointAt(0) ?? 0).toString(16);
+  return `${"0000".slice(0, Math.max(0, 4 - hex.length))}${hex}`;
+}
 
-    ctx.fillRect(
+function isAsciiCharacter(unicode: string) {
+  return unicode.toUpperCase() in sizes.ascii;
+}
+
+function getTextureScale(canvas: Canvas) {
+  return canvas.width / 256;
+}
+
+function getCharacterIndexLocation(unicode: string, isAscii: boolean) {
+  if (isAscii) {
+    const y = positions.findIndex((row) => row.includes(unicode));
+    const x = positions[y].indexOf(unicode);
+
+    return {
       x,
-      y + 6 * scale * size,
-      width * size + 2 * scale * size,
-      2 * scale * size
-    );
+      y,
+    };
   }
+
+  return {
+    x: Number.parseInt(unicode[3], 16),
+    y: Number.parseInt(unicode[2], 16),
+  };
+}
+
+function getCharacterSpacing(
+  char: string,
+  isAscii: boolean,
+  size: number,
+  scale: number,
+  width: number,
+  bold: boolean
+) {
+  // Minecraft has weird spacing for the space
+  let gap = size * (width + (char === " " ? -2 : 2) * scale);
+
+  if (bold) {
+    gap += scale * size;
+
+    if (isAscii) {
+      gap += scale * size;
+    }
+  }
+
+  return gap;
+}
+
+function fillStrikethrough(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  scale: number,
+  size: number,
+  color: Fill
+) {
+  ctx.fillStyle = color;
+
+  ctx.fillRect(
+    x,
+    y + 6 * scale * size,
+    width * size + 2 * scale * size,
+    2 * scale * size
+  );
 }

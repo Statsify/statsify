@@ -21,7 +21,7 @@ export class WarlordsCommand extends BaseHypixelCommand<WarlordsModes> {
     super(WARLORDS_MODES);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<WarlordsModes, never>
   ): JSX.Element {

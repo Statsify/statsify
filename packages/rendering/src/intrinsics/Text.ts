@@ -62,7 +62,7 @@ export const component: JSX.RawFC<
 
   // Get a generic instance of font renderer just to lex and measure the text
   const renderer = Container.get(FontRenderer);
-  const nodes = renderer.lex(text, { color, bold, italic, underline, size });
+  const nodes = FontRenderer.lex(text, { color, bold, italic, underline, size });
 
   const { width, height } = renderer.measureText(nodes);
 

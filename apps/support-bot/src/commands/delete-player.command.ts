@@ -45,7 +45,7 @@ export class DeletePlayerCommand {
       .title((t) => t("embeds.deletePlayer.title"))
       .description((t) =>
         t("embeds.deletePlayer.description", {
-          displayName: this.apiService.emojiDisplayName(t, player.displayName),
+          displayName: ApiService.emojiDisplayName(t, player.displayName),
         })
       );
 

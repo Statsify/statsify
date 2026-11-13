@@ -110,7 +110,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
           const mode = modes[state.modeIndex ?? modeIndex];
 
-          const message = await this.getGuildTopPageMessage(
+          const message = await getGuildTopPageMessage(
             cache,
             components,
             props,
@@ -159,7 +159,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       listener.removeHook(dropdown.getCustomId());
     }, 300_000);
 
-    const message = await this.getGuildTopPageMessage(
+    const message = await getGuildTopPageMessage(
       cache,
       components,
       props,
@@ -179,59 +179,59 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
     return this.apiService.getGuild(query, type, user);
   }
+}
 
-  private async getGuildTopPageMessage(
-    cache: Map<string, Buffer>,
-    components: ActionRowBuilder[],
-    props: BaseGuildTopProfileProps,
-    title: string,
-    key: GuildTopKey,
-    page: number,
-    theme?: Theme
-  ): Promise<IMessage> {
-    const cacheKey = `${key}-${page}`;
+async function getGuildTopPageMessage(
+  cache: Map<string, Buffer>,
+  components: ActionRowBuilder[],
+  props: BaseGuildTopProfileProps,
+  title: string,
+  key: GuildTopKey,
+  page: number,
+  theme?: Theme
+): Promise<IMessage> {
+  const cacheKey = `${key}-${page}`;
 
-    let image: Buffer;
+  let image: Buffer;
 
-    if (cache.has(cacheKey)) {
-      image = cache.get(cacheKey)!;
-    } else {
-      image = await this.generateGuildTopPage(props, title, key, page, theme);
-      cache.set(cacheKey, image);
-    }
-
-    return {
-      files: [{ name: "guild-top.png", data: image, type: "image/png" }],
-      attachments: [],
-      components,
-    };
+  if (cache.has(cacheKey)) {
+    image = cache.get(cacheKey)!;
+  } else {
+    image = await generateGuildTopPage(props, title, key, page, theme);
+    cache.set(cacheKey, image);
   }
 
-  private async generateGuildTopPage(
-    props: BaseGuildTopProfileProps,
-    title: string,
-    key: GuildTopKey,
-    page: number,
-    theme?: Theme
-  ) {
-    const members = props.guild.members
-      .map(
-        (m) =>
-          ({
-            name: m.displayName,
-            value: typeof key === "string" ? m[key] : m.expHistory[key],
-          } as GuildTopMember)
-      )
-      .sort((a, b) => b.value - a.value)
-      .slice(page * GUILD_TOP_PAGE_SIZE, (page + 1) * GUILD_TOP_PAGE_SIZE);
+  return {
+    files: [{ name: "guild-top.png", data: image, type: "image/png" }],
+    attachments: [],
+    components,
+  };
+}
 
-    const canvas = render(
-      <GuildTopProfile {...props} members={members} title={title} page={page} />,
-      theme
-    );
+async function generateGuildTopPage(
+  props: BaseGuildTopProfileProps,
+  title: string,
+  key: GuildTopKey,
+  page: number,
+  theme?: Theme
+) {
+  const members = props.guild.members
+    .map(
+      (m) =>
+        ({
+          name: m.displayName,
+          value: typeof key === "string" ? m[key] : m.expHistory[key],
+        } as GuildTopMember)
+    )
+    .sort((a, b) => b.value - a.value)
+    .slice(page * GUILD_TOP_PAGE_SIZE, (page + 1) * GUILD_TOP_PAGE_SIZE);
 
-    const buffer = await canvas.toBuffer("png");
+  const canvas = render(
+    <GuildTopProfile {...props} members={members} title={title} page={page} />,
+    theme
+  );
 
-    return buffer;
-  }
+  const buffer = await canvas.toBuffer("png");
+
+  return buffer;
 }
