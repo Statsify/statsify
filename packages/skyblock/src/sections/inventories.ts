@@ -34,10 +34,13 @@ export const byKey = (blobs: Record<string, RawNbt> = {}) =>
 /** The hotbar comes first in the blob and last on screen. */
 const hotbarLast = (slots: Slots) => [...slots.slice(9), ...slots.slice(0, 9)];
 
-/** A toolkit's tools, kind by kind; IN_USE and IS_UNLOCKED aren't tools, and an emptied slot is null. */
+/**
+ * A toolkit's tools, kind by kind, and an emptied slot is null. IN_USE and IS_UNLOCKED aren't tools, nor is
+ * HUNTING_TOOLKIT, the item used up to unlock the menu (the wiki's Hunting Toolkit page).
+ */
 const toolkitPage = (toolkit: RawToolkit, items: ItemsResource): Slots =>
-  Object.values(toolkit)
-    .flatMap((tools) => (Array.isArray(tools) ? (tools as (RawNbt | null)[]) : []))
+  Object.entries(toolkit)
+    .flatMap(([kind, tools]) => (Array.isArray(tools) && kind !== "HUNTING_TOOLKIT" ? (tools as (RawNbt | null)[]) : []))
     .map((blob) => blob && toolkitItemView(blob, items))
     .filter((item) => item !== null);
 
