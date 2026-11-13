@@ -106,6 +106,9 @@ export const GAME_MODE_BADGES: Record<GameMode, string> = {
   bingo: "§6Ⓑ",
 };
 
+/** Bingo and Stranded profiles have no museum. */
+export const hasMuseum = (gameMode: GameMode) => gameMode !== "bingo" && gameMode !== "stranded";
+
 const FORMATTED_PROFILES: Record<string, string | undefined> = {
   Apple: "§cApple",
   Banana: "§eBanana",
