@@ -43,7 +43,7 @@ import { SkyBlockSkillsProfile } from "./skills.profile.js";
 import { SkyBlockSlayersProfile } from "./slayers.profile.js";
 import { SkyBlockSummaryProfile } from "./summary.profile.js";
 import { config } from "@statsify/util";
-import { formatProfileName } from "@statsify/skyblock/display";
+import { formatProfileName, hasMuseum } from "@statsify/skyblock/display";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getItemIcon } from "@statsify/skyblock/icons";
 import { getTheme } from "#themes";
@@ -227,7 +227,7 @@ function notes(t: LocalizeFunction, view: SkyBlockProfileView, card: SkyBlockCar
       t("skyblock.apiOffNote", { settings: apiOff.map((setting) => t(`skyblock.apiSettings.${setting}`)).join(", ") }) :
       "",
     off.includes("banking") ? t("skyblock.bankingOffNote") : "",
-    !view.newProfile && !["bingo", "stranded"].includes(view.gameMode) && view.member.networth?.museumIncluded === false ?
+    !view.newProfile && hasMuseum(view.gameMode) && view.member.networth?.museumIncluded === false ?
       t("skyblock.museumNotCounted") :
       "",
     view.marketDown ? t("skyblock.pricesNotReady") : "",
