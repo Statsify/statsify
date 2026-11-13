@@ -120,7 +120,7 @@ if (import.meta.vitest) {
       pets_data: {
         pets: [
           { type: "BEE", tier: "EPIC", exp: 20_000_000, heldItem: "PET_ITEM_TIER_BOOST", active: true },
-          { type: "BEE", tier: "EPIC", exp: 20_000_000, active: false },
+          { type: "TIGER", tier: "EPIC", exp: 20_000_000, active: false },
           { type: "GOLDEN_DRAGON", tier: "LEGENDARY", exp: 25_353_230, active: false },
           { type: "PHOENIX", tier: "VERY_SPECIAL", exp: 1e9, active: false },
           { type: "JERRY", tier: "MYTHIC", exp: 1_000_000, active: false },
@@ -130,11 +130,12 @@ if (import.meta.vitest) {
     });
 
     expect(active).toMatchObject({ rarity: "LEGENDARY", level: { level: 96, maxLevel: 100 } });
-    expect(pets.find((pet) => !pet.active && pet.type === "BEE")?.level.level).toBe(100);
+    expect(pets.find((pet) => pet.type === "TIGER")?.level.level).toBe(100);
     expect(pets.find((pet) => pet.type === "GOLDEN_DRAGON")?.level).toMatchObject({ level: 100, maxLevel: 200 });
     const bingo = { type: "BINGO", tier: "LEGENDARY", exp: 5_624_785, heldItem: "PET_ITEM_TIER_BOOST", active: false };
     expect(getPetLevel(bingo).level).toBe(100);
-    // The boosted Bee scores Legendary, Jerry its Mythic over its maxed Common, and Phoenix never scores
-    expect(score).toBe(5 + 5 + 6);
+    // The boosted Bee scores Legendary, not Epic, and the maxed Tiger Epic plus one. Jerry scores its Mythic over its
+    // maxed Common, and Phoenix never scores
+    expect(score).toBe(5 + 5 + 5 + 6);
   });
 }
