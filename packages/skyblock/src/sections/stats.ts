@@ -73,7 +73,6 @@ const upTo = (levels: readonly Stats[], level: number) => sumStats(levels.slice(
 const scaleStats = (stats: Stats, factor: number): Stats =>
   Object.fromEntries(Object.entries(stats).map(([stat, value]) => [stat, value * factor]));
 
-/** The selected Power's stats at the bag's accessory power. */
 function powerStats(power: string | undefined, accessoryPower: number): Stats | undefined {
   const stone = power ? POWERS[power] : undefined;
   if (stone) {
