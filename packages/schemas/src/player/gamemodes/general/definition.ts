@@ -71,6 +71,37 @@ const EventsSchema = s.object({
   silver: s.number().color("§7"),
 });
 
+export type Events = s.infer<typeof EventsSchema>;
+
+export type EventType = {
+  period: EventPeriod;
+  year: number;
+  key: Exclude<keyof Events, "silver">;
+};
+
+export type EventPeriod = "summer" | "halloween" | "christmas" | "easter";
+
+export const EVENT_TYPES: EventType[] = [
+  { period: "halloween", year: 2026, key: "halloween2026" },
+  { period: "summer", year: 2026, key: "summer2026" },
+  { period: "easter", year: 2026, key: "easter2026" },
+  { period: "christmas", year: 2025, key: "christmas2025" },
+  { period: "halloween", year: 2025, key: "halloween2025" },
+  { period: "summer", year: 2025, key: "summer2025" },
+  { period: "easter", year: 2025, key: "easter2025" },
+  { period: "christmas", year: 2024, key: "christmas2024" },
+  { period: "halloween", year: 2024, key: "halloween2024" },
+  { period: "summer", year: 2024, key: "summer2024" },
+  { period: "easter", year: 2024, key: "easter2024" },
+  { period: "christmas", year: 2023, key: "christmas2023" },
+  { period: "halloween", year: 2023, key: "halloween2023" },
+  { period: "summer", year: 2023, key: "summer2023" },
+  { period: "easter", year: 2023, key: "easter2023" },
+  { period: "christmas", year: 2022, key: "christmas2022" },
+  { period: "halloween", year: 2022, key: "halloween2022" },
+  { period: "summer", year: 2022, key: "summer2022" },
+];
+
 interface Objective {
   property: string;
   key: string;
@@ -191,19 +222,18 @@ const CLASSIC_HARD = [
   { property: "soulSiphoner", key: "Arenasoulsiphoner" },
 ] as const satisfies readonly Objective[];
 
-const objectivesSchema = <O extends readonly Objective[]>(objectives: O) =>
-  s.object(s.keyed(objectives, () => s.number().leaderboard(false)));
+const objective = () => s.number().leaderboard(false);
 
 const BingoSchema = s.object({
   easy: s.object({
-    casual: objectivesSchema(CASUAL_EASY),
-    pvp: objectivesSchema(PVP_EASY),
-    classic: objectivesSchema(CLASSIC_EASY),
+    casual: s.object(s.keyed(CASUAL_EASY, objective)),
+    pvp: s.object(s.keyed(PVP_EASY, objective)),
+    classic: s.object(s.keyed(CLASSIC_EASY, objective)),
   }),
   hard: s.object({
-    casual: objectivesSchema(CASUAL_HARD),
-    pvp: objectivesSchema(PVP_HARD),
-    classic: objectivesSchema(CLASSIC_HARD),
+    casual: s.object(s.keyed(CASUAL_HARD, objective)),
+    pvp: s.object(s.keyed(PVP_HARD, objective)),
+    classic: s.object(s.keyed(CLASSIC_HARD, objective)),
   }),
   bucks: s.number(),
 });
@@ -248,6 +278,7 @@ export const GeneralSchema = s
   .leaderboard({ fieldName: `${FormattedGame.GENERAL} -` });
 
 export type General = s.infer<typeof GeneralSchema>;
+export type Bingo = s.infer<typeof BingoSchema>;
 
 const event = (data: APIData = {}): s.input<typeof SummerSchema> => ({
   exp: data.levelling?.experience ?? 0,
@@ -277,22 +308,24 @@ function events(data: APIData = {}): s.input<typeof EventsSchema> {
   };
 }
 
-const objectives = <O extends readonly Objective[]>(list: O, data: APIData = {}) =>
-  s.keyed(list, ({ key }) => data[key]);
+const objectives =
+  (data: APIData = {}) =>
+    ({ key }: Objective) =>
+      data[key];
 
 function bingo(data: APIData = {}): s.input<typeof BingoSchema> {
   const cards = data.easter?.["2026"]?.bingo ?? {};
 
   return {
     easy: {
-      casual: objectives(CASUAL_EASY, cards.casual_easy?.objectives),
-      pvp: objectives(PVP_EASY, cards.pvp_easy?.objectives),
-      classic: objectives(CLASSIC_EASY, cards.classic_easy?.objectives),
+      casual: s.keyed(CASUAL_EASY, objectives(cards.casual_easy?.objectives)),
+      pvp: s.keyed(PVP_EASY, objectives(cards.pvp_easy?.objectives)),
+      classic: s.keyed(CLASSIC_EASY, objectives(cards.classic_easy?.objectives)),
     },
     hard: {
-      casual: objectives(CASUAL_HARD, cards.casual_hard?.objectives),
-      pvp: objectives(PVP_HARD, cards.pvp_hard?.objectives),
-      classic: objectives(CLASSIC_HARD, cards.classic_hard?.objectives),
+      casual: s.keyed(CASUAL_HARD, objectives(cards.casual_hard?.objectives)),
+      pvp: s.keyed(PVP_HARD, objectives(cards.pvp_hard?.objectives)),
+      classic: s.keyed(CLASSIC_HARD, objectives(cards.classic_hard?.objectives)),
     },
     bucks: data.bingo?.bucks,
   };

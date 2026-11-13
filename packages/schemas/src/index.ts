@@ -10,7 +10,7 @@ export * from "./definition/compute.js";
 export * from "./definition/fields.js";
 export * from "./definition/format.js";
 export * from "./definition/serialize.js";
-export { type Ref, s } from "./definition/s.js";
+export { type ModelSchema, type ObjectSchema, type Ref, s } from "./definition/s.js";
 export * from "./color.js";
 export * from "./color.definition.js";
 export * from "./commands/definition.js";

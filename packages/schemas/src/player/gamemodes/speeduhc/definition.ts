@@ -90,6 +90,7 @@ export const SpeedUHCSchema = s
   }));
 
 export type SpeedUHC = s.infer<typeof SpeedUHCSchema>;
+export type SpeedUHCMode = s.infer<typeof SpeedUHCModeSchema>;
 
 function speedUHCMode(data: APIData, mode: string): s.input<typeof SpeedUHCModeSchema> {
   const suffix = mode ? `_${mode}` : mode;

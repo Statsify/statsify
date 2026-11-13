@@ -34,6 +34,8 @@ const GuildMemberSchema = s.object({
 
 export type GuildMember = s.infer<typeof GuildMemberSchema>;
 
+export const isGuildMaster = (member: GuildMember) => /^guild\s*master$/i.test(member.rank);
+
 const GuildRankSchema = s.object({
   name: s.string(),
   tag: s.string().optional(),

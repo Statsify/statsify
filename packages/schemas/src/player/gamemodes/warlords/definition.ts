@@ -45,14 +45,14 @@ const titles: GameTitle[] = [
 ];
 
 /** Each class's attack, defense and healer specifications */
-const CLASSES = {
+export const WARLORDS_CLASSES = {
   mage: ["pyromancer", "cryomancer", "aquamancer"],
   warrior: ["berserker", "defender", "revenant"],
   paladin: ["avenger", "crusader", "protector"],
   shaman: ["thunderlord", "spiritguard", "earthwarden"],
 } as const;
 
-type WarlordsClass = keyof typeof CLASSES;
+type WarlordsClassName = keyof typeof WARLORDS_CLASSES;
 
 const SpecificationStats = s.fields({
   wins: WinsSchema.color("§e"),
@@ -63,6 +63,8 @@ const SpecificationStats = s.fields({
 });
 
 const WarlordsSpecificationSchema = s.object(SpecificationStats);
+
+export type WarlordsSpecification = s.infer<typeof WarlordsSpecificationSchema>;
 
 const warlordsClassSchema = ([attack, defense, healer]: readonly string[]) =>
   s.object({
@@ -75,6 +77,8 @@ const warlordsClassSchema = ([attack, defense, healer]: readonly string[]) =>
   });
 
 type WarlordsClassSchema = ReturnType<typeof warlordsClassSchema>;
+
+export type WarlordsClass = s.infer<WarlordsClassSchema>;
 
 const WarlordsDominationSchema = s.object({
   capturePoints: s.number().color("§2"),
@@ -116,10 +120,10 @@ export const WarlordsSchema = s
           this.wins,
         ]);
     },
-    mage: warlordsClassSchema(CLASSES.mage),
-    warrior: warlordsClassSchema(CLASSES.warrior),
-    paladin: warlordsClassSchema(CLASSES.paladin),
-    shaman: warlordsClassSchema(CLASSES.shaman),
+    mage: warlordsClassSchema(WARLORDS_CLASSES.mage),
+    warrior: warlordsClassSchema(WARLORDS_CLASSES.warrior),
+    paladin: warlordsClassSchema(WARLORDS_CLASSES.paladin),
+    shaman: warlordsClassSchema(WARLORDS_CLASSES.shaman),
     domination: WarlordsDominationSchema,
     captureTheFlag: WarlordsCaptureTheFlagSchema,
     teamDeathmatch: WarlordsTeamDeathmatchSchema,
@@ -165,8 +169,8 @@ const UPGRADES = [
   "skill5",
 ];
 
-function warlordsClass(data: APIData, clazz: WarlordsClass): s.input<WarlordsClassSchema> {
-  const [attack, defense, healer] = CLASSES[clazz];
+function warlordsClass(data: APIData, clazz: WarlordsClassName): s.input<WarlordsClassSchema> {
+  const [attack, defense, healer] = WARLORDS_CLASSES[clazz];
 
   return {
     ...specification(data, clazz),
@@ -179,7 +183,7 @@ function warlordsClass(data: APIData, clazz: WarlordsClass): s.input<WarlordsCla
 }
 
 export function warlords(data: APIData = {}): s.input<typeof WarlordsSchema> {
-  const classes = Object.entries(CLASSES).flatMap(([clazz, specifications]) => [
+  const classes = Object.entries(WARLORDS_CLASSES).flatMap(([clazz, specifications]) => [
     clazz,
     ...specifications,
   ]);

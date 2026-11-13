@@ -11,7 +11,7 @@ import { GameSchema } from "../game/definition.js";
 import { PlayerStatusSchema } from "../player/status.definition.js";
 import { s } from "#definition/s";
 
-const RecentGameSchema = s.object({
+export const RecentGameSchema = s.object({
   startedAt: s.number(),
   game: GameSchema,
   mode: s.string().optional(),

@@ -175,7 +175,7 @@ const DropperMapSchema = s.object({
 });
 
 // Lists rather than objects keyed by property: swc's jsonify writes a large object literal with its keys sorted
-const DROPPER_MAPS = [
+export const DROPPER_MAPS = [
   { property: "atlantis", key: "atlantis", name: "§cAtlantis§f" },
   { property: "balloons", key: "balloons", name: "§aBalloons§f" },
   { property: "bbq", key: "bbq", name: "§aBBQ§f" },
@@ -527,6 +527,30 @@ export const ArcadeSchema = s
   .leaderboard({ fieldName: `${FormattedGame.ARCADE} -` });
 
 export type Arcade = s.infer<typeof ArcadeSchema>;
+export type BlockingDead = s.infer<typeof BlockingDeadSchema>;
+export type BountyHunters = s.infer<typeof BountyHuntersSchema>;
+export type CreeperAttack = s.infer<typeof CreeperAttackSchema>;
+export type DisasterSurvivals = s.infer<typeof DisasterSurvivalsSchema>;
+export type Disasters = s.infer<typeof DisastersSchema>;
+export type DisastersDeaths = s.infer<typeof DisastersDeathsSchema>;
+export type DragonWars = s.infer<typeof DragonWarsSchema>;
+export type Dropper = s.infer<typeof DropperSchema>;
+export type DropperMaps = s.infer<typeof DropperMapsSchema>;
+export type EnderSpleef = s.infer<typeof EnderSpleefSchema>;
+export type FarmHunt = s.infer<typeof FarmHuntSchema>;
+export type Football = s.infer<typeof FootballSchema>;
+export type GalaxyWars = s.infer<typeof GalaxyWarsSchema>;
+export type HideAndSeek = s.infer<typeof HideAndSeekSchema>;
+export type HoleInTheWall = s.infer<typeof HoleInTheWallSchema>;
+export type HypixelSays = s.infer<typeof HypixelSaysSchema>;
+export type MiniWalls = s.infer<typeof MiniWallsSchema>;
+export type PartyGames = s.infer<typeof PartyGamesSchema>;
+export type PixelPainters = s.infer<typeof PixelPaintersSchema>;
+export type PixelParty = s.infer<typeof PixelPartySchema>;
+export type Seasonal = s.infer<typeof SeasonalSchema>;
+export type ThrowOut = s.infer<typeof ThrowOutSchema>;
+export type Zombies = s.infer<typeof ZombiesSchema>;
+export type ZombiesMapDifficulty = s.infer<typeof ZombiesMapDifficultySchema>;
 
 function blockingDead(data: APIData): s.input<typeof BlockingDeadSchema> {
   return {
