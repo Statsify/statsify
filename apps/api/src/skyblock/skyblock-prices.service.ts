@@ -32,6 +32,7 @@ import { Singleflight } from "./singleflight.js";
 import { Worker } from "node:worker_threads";
 import { arrayGroup, config } from "@statsify/util";
 import { lastValueFrom } from "rxjs";
+import { termOf } from "@statsify/skyblock/display";
 import { unzip, zip } from "./zip.js";
 import type { RebuildRequest, RebuildResult } from "./skyblock-prices.worker.js";
 
@@ -110,8 +111,13 @@ export class SkyBlockPricesService implements OnModuleDestroy {
 
   /** The mayor in office, from the keyless election resource. */
   public getMayor(): Promise<MayorView | undefined> {
-    return this.getCopy(ELECTION_KEY, ELECTION_REFRESH, async () =>
-      toMayorView(await this.get<RawElection>("/v2/resources/skyblock/election"))
+    return this.getCopy(
+      ELECTION_KEY,
+      ELECTION_REFRESH,
+      async () => toMayorView(await this.get<RawElection>("/v2/resources/skyblock/election")),
+      // Only a copy fetched inside its term goes out of date when the term ends, so one Hypixel sent after the end (the
+      // new mayor not in yet) isn't refetched on every request
+      ({ value, fetchedAt }) => Boolean(termOf(value, fetchedAt)) && !termOf(value, Date.now())
     );
   }
 
@@ -210,9 +216,16 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     await pipeline.rename(next, AUTOCOMPLETE_KEY).exec();
   }
 
-  private async getCopy<T>(key: string, maxAge: number, fetch: () => Promise<T>): Promise<T | undefined> {
+  private async getCopy<T>(
+    key: string,
+    maxAge: number,
+    fetch: () => Promise<T>,
+    outdated?: (copy: Copy<T>) => boolean
+  ): Promise<T | undefined> {
+    const fresh = (candidate: Copy<T>) => Date.now() - candidate.fetchedAt <= maxAge && !outdated?.(candidate);
+
     let copy = this.copies.get(key) as Copy<T> | undefined;
-    if (copy && Date.now() - copy.fetchedAt <= maxAge) return copy.value;
+    if (copy && fresh(copy)) return copy.value;
 
     const [data, storedAt, failedAt] = await this.redis.hmgetBuffer(key, "data", "fetchedAt", "failedAt");
     const fetchedAt = Number(storedAt?.toString());
@@ -221,7 +234,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
       this.copies.set(key, copy);
     }
 
-    if (copy && Date.now() - copy.fetchedAt <= maxAge) return copy.value;
+    if (copy && fresh(copy)) return copy.value;
     if (Date.now() - Number(failedAt?.toString()) < SKYBLOCK_FAILED_FOR) return copy?.value;
 
     const refetch = this.singleflight.run(key, async () => {
@@ -236,7 +249,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     });
 
     // A stale copy answers at once, since waiting out a Hypixel timeout would outlast the bot's request
-    if (copy) {
+    if (copy && !outdated?.(copy)) {
       void refetch.catch((error) => this.logger.error(error));
       return copy.value;
     }
@@ -245,7 +258,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
       return await refetch;
     } catch (error) {
       this.logger.error(error);
-      return undefined;
+      return copy?.value;
     }
   }
 
