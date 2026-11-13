@@ -29,7 +29,8 @@ const getType = (field: AnySchema): unknown => {
   }
 };
 
-export function toMongoose(schema: ObjectSchema): Schema {
+/** `id` gives the document an `_id` of its own, which `Model.create` needs */
+export function toMongoose(schema: ObjectSchema, { id = false } = {}): Schema {
   const definition: SchemaDefinition = {};
 
   for (const [key, field] of Object.entries(schema.definition)) {
@@ -46,6 +47,6 @@ export function toMongoose(schema: ObjectSchema): Schema {
     };
   }
 
-  // Stored documents and their nested objects have never had an `_id`
-  return new Schema(definition, { _id: false });
+  // Nested objects have never had an `_id`, and documents written with replaceOne get theirs from Mongo
+  return new Schema(definition, { _id: id });
 }
