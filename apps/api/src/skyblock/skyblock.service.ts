@@ -156,8 +156,8 @@ export class SkyBlockService {
 
     const needs = new Set(sections.flatMap((name) => DEFINITIONS[name].needs));
     const [museum, garden, prices, items] = await Promise.all([
-      // The rows ranked when these profiles were stored went without the museum a refetch here stores. A copy served
-      // stale is older than rows a co-op partner's newer copy may have written, so it isn't ranked again
+      // The player's row ranked when these profiles were stored went without the museum a refetch here stores. A copy
+      // served stale is older than the row a co-op partner's newer copy may have written, so it isn't ranked again
       needs.has("museum") && hasMuseum(gameModeOf(profile)) ?
         this.getStoredMuseum(
           profile.profile_id,
@@ -269,8 +269,8 @@ export class SkyBlockService {
   }
 
   /**
-   * Not awaited, so a failed write never fails the lookup. A player's rankings run in order, so one profile's rows
-   * ranked with its new museum land after the whole copy's rows ranked without it.
+   * Not awaited, so a failed write never fails the lookup. A player's rankings run in order, so their row
+   * ranked with a profile's new museum lands after the whole copy's rows ranked without it.
    */
   private rankInBackground(uuid: string, profiles: RawProfile[], fetchedAt: number, profileId?: string) {
     const ranking = (this.rankings.get(uuid) ?? Promise.resolve())
@@ -285,7 +285,7 @@ export class SkyBlockService {
 
   /**
    * The leaderboard rows of a copy just stored, for every current member Statsify has a player record for, with the
-   * stored museums and the prices of the hour; only `profileId`'s when given. It never fetches.
+   * stored museums and the prices of the hour; only the player's row on `profileId` when given. It never fetches.
    */
   private async rankMembers(uuid: string, profiles: RawProfile[], fetchedAt: number, profileId?: string) {
     const ranked = profileId ? profiles.filter((profile) => profile.profile_id === profileId) : profiles;
@@ -309,7 +309,7 @@ export class SkyBlockService {
     const rows = await Promise.all(
       ranked.flatMap((profile, index) =>
         Object.entries(profile.members)
-          .filter(([member]) => isMember(profile, member) && players.has(member))
+          .filter(([member]) => isMember(profile, member) && players.has(member) && (!profileId || member === uuid))
           .map(async ([member, raw]): Promise<SkyBlockStatsRow> => {
             const museum = museums[index]?.value.members?.[member];
             const input: SectionInput = { uuid: member, profile, member: raw, museum, prices, items };
