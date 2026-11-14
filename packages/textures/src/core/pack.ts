@@ -233,14 +233,15 @@ export async function loadPack(source: PackSource, name = sourceName(source)): P
   // Packs are often zipped with their folder, so pack.mcmeta sits one level down. Client jars have
   // none beside their assets, only their data packs'
   const paths = Object.keys(entries);
-  const metaPath = paths
+  const metaRoot = paths
     .filter((path) => path.endsWith("pack.mcmeta"))
-    .filter((path) => paths.some((other) => other.startsWith(`${path.slice(0, -"pack.mcmeta".length)}assets/`)))
+    .map((path) => path.slice(0, -"pack.mcmeta".length))
+    .filter((root) => paths.some((path) => path.startsWith(`${root}assets/`)))
     .toSorted((a, b) => a.length - b.length)
     .at(0);
 
-  const root = metaPath?.slice(0, -"pack.mcmeta".length) ?? "";
-  const meta = metaPath ? parseJson<PackMeta>(entries[metaPath]) : undefined;
+  const root = metaRoot ?? "";
+  const meta = metaRoot === undefined ? undefined : parseJson<PackMeta>(entries[`${root}pack.mcmeta`]);
 
   const directories = [
     "",
