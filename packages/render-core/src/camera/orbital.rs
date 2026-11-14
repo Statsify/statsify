@@ -77,10 +77,15 @@ impl OrbitalCamera {
     self
   }
 
+  pub fn with_phi(mut self, phi: f32) -> Self {
+    self.update_phi(phi);
+    self
+  }
+
   // A fixed render isn't bound by the viewer's zoom limits. It stays at `radius` unless a
   // point would touch the edge at this angle, and then pulls back to leave a small margin.
   pub fn fitted(mut self, points: &[Vector3<f32>], radius: f32) -> Self {
-    let back = self.eye().to_vec().normalize();
+    let back = self.offset().normalize();
     let right = Vector3::unit_y().cross(back).normalize();
     let up = back.cross(right);
     let tan = (Rad::from(Deg(self.fovy)).0 / 2.0).tan();
@@ -93,6 +98,7 @@ impl OrbitalCamera {
       points
         .iter()
         .map(|point| {
+          let point = point - self.target.to_vec();
           let spread = (point.dot(right).abs() / half_width).max(point.dot(up).abs() / half_height);
           point.dot(back) + spread
         })
@@ -106,6 +112,15 @@ impl OrbitalCamera {
     }
 
     self
+  }
+
+  // From the target to the eye
+  fn offset(&self) -> Vector3<f32> {
+    let x = self.radius * self.phi.sin() * self.theta.sin();
+    let y = self.radius * self.phi.cos();
+    let z = self.radius * self.phi.sin() * self.theta.cos();
+
+    Vector3::new(x, y, z)
   }
 
   fn update_radius(&mut self, radius: f32) {
@@ -123,11 +138,7 @@ impl OrbitalCamera {
 
 impl CameraBehavior for OrbitalCamera {
   fn eye(&self) -> Point3<f32> {
-    let x = self.radius * self.phi.sin() * self.theta.sin();
-    let y = self.radius * self.phi.cos();
-    let z = self.radius * self.phi.sin() * self.theta.cos();
-
-    Point3::new(x, y, z)
+    self.target + self.offset()
   }
 
   fn view_projection_matrix(&self) -> Matrix4<f32> {
@@ -156,5 +167,48 @@ impl CameraBehavior for OrbitalCamera {
 
   fn process_mouse_scroll(&mut self, delta: f32) {
     self.update_radius(self.radius - (delta * self.zoom_sensitivity));
+  }
+}
+
+#[cfg(test)]
+mod tests {
+  use cgmath::Vector4;
+
+  use super::*;
+
+  #[test]
+  fn fits_points_around_its_target() {
+    let (width, height) = (300.0, 200.0);
+    let target = Point3::new(40.0, -12.0, 25.0);
+
+    let points: Vec<Vector3<f32>> = [
+      [70.0, -12.0, 25.0],
+      [40.0, 3.0, 20.0],
+      [28.0, -30.0, 41.0],
+      [44.0, -10.0, 9.0],
+    ]
+    .into_iter()
+    .map(Vector3::from)
+    .collect();
+
+    let camera = OrbitalCamera::new(target, width, height)
+      .with_theta(0.7)
+      .with_phi(1.2)
+      .fitted(&points, 0.0);
+
+    assert!(((camera.eye() - target).magnitude() - camera.radius).abs() < 1e-3);
+
+    // Pixels between each point and the nearest edge of the frame
+    let view_projection = camera.view_projection_matrix();
+    let gaps = points.iter().map(|point| {
+      let clip = view_projection * Vector4::new(point.x, point.y, point.z, 1.0);
+      let x = (1.0 - (clip.x / clip.w).abs()) * width / 2.0;
+      let y = (1.0 - (clip.y / clip.w).abs()) * height / 2.0;
+      x.min(y)
+    });
+
+    // Every point is in frame, and the farthest out sits the 4 pixel margin from the edge
+    let nearest = gaps.fold(f32::MAX, f32::min);
+    assert!((nearest - 4.0).abs() < 0.01, "{nearest}");
   }
 }
