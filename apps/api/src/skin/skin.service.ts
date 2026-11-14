@@ -84,12 +84,14 @@ export class SkinService {
   }
 
   public async getKartRender({ uuid, ...options }: KartRenderDto): Promise<Buffer> {
+    const kart = resolveKart(options, uuid !== undefined);
+
     const [library, player] = await Promise.all([
       this.getKartLibrary(),
       uuid ? this.getSkin(uuid).then((skin) => this.resolveSkin(skin.skinUrl, skin.slim)) : undefined,
     ]);
 
-    return renderKart(library, {
+    return renderKart(library, kart, {
       ...options,
       player: player && { skin: imageData(player.skin), slim: player.slim },
     });
@@ -297,26 +299,15 @@ export async function loadKartLibrary(): Promise<ModelLibrary> {
   return new ModelLibrary({ models, textures, mcmeta });
 }
 
-export interface KartRender extends Omit<KartRenderDto, "uuid"> {
-  player?: { skin: Uint8Array; slim: boolean };
+export interface KartScene {
+  models: ModelInstance[];
+  suit: { chestplate?: ArmorPieceDto; leggings?: ArmorPieceDto; boots?: ArmorPieceDto };
 }
 
-export async function renderKart(
-  library: ModelLibrary,
-  {
-    player,
-    kart,
-    helmet,
-    jacket,
-    pants,
-    shoes,
-    extruded = false,
-    width = KART_CAMERA.width,
-    height = KART_CAMERA.height,
-    yaw = KART_CAMERA.yaw,
-    pitch = KART_CAMERA.pitch,
-  }: KartRender
-): Promise<Buffer> {
+export function resolveKart(
+  { kart, helmet, jacket, pants, shoes }: Pick<KartRenderDto, "kart" | "helmet" | "jacket" | "pants" | "shoes">,
+  seated: boolean
+): KartScene {
   const models: ModelInstance[] = [
     { model: getKartModel(kart), bone: "root", display: "head", translation: [0, KART_MOUNT, 0] },
   ];
@@ -330,12 +321,32 @@ export async function renderKart(
     boots: parseSuitPiece(shoes, "SHOES"),
   };
 
+  if (!seated && (helmetModel || Object.values(suit).some(Boolean))) {
+    throw new BadRequestException("A helmet or suit needs a uuid to wear it");
+  }
+
+  return { models, suit };
+}
+
+export interface KartRenderOptions extends Pick<KartRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
+  player?: { skin: Uint8Array; slim: boolean };
+}
+
+export async function renderKart(
+  library: ModelLibrary,
+  { models, suit }: KartScene,
+  {
+    player,
+    extruded = false,
+    width = KART_CAMERA.width,
+    height = KART_CAMERA.height,
+    yaw = KART_CAMERA.yaw,
+    pitch = KART_CAMERA.pitch,
+  }: KartRenderOptions
+): Promise<Buffer> {
   const output = { width, height, yaw, pitch };
 
-  if (!player) {
-    if (helmetModel || Object.values(suit).some(Boolean)) throw new BadRequestException("A helmet or suit needs a uuid to wear it");
-    return renderScene(library, { models }, output);
-  }
+  if (!player) return renderScene(library, { models }, output);
 
   const textures = join(KART_PACK, "textures");
 
