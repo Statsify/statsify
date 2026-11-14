@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { Container, Footer, Header, If, SidebarItem, Table } from "#components";
 import { FormattedGame, type GameMode, MegaWallsModes } from "@statsify/schemas";
 import { formatTime, prettify } from "@statsify/util";
+import { ratio } from "@statsify/math";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface MegaWallsProfileProps extends BaseProfileProps {
@@ -93,6 +94,55 @@ export const MegaWallsProfile = ({
           />
           <Table.td title={t("stats.points")} value={t(stats.points)} color="§e" />
         </Table.tr>
+        <If condition={mode.api === "overall"}>
+          {() => {
+            const { overall } = megawalls;
+
+            return (
+              <>
+                <Table.tr>
+                  <Table.td
+                    title={t("stats.blocksBroken")}
+                    value={t(overall.blocksBroken)}
+                    color="§a"
+                  />
+                  <Table.td
+                    title={t("stats.blocksPlaced")}
+                    value={t(overall.blocksPlaced)}
+                    color="§c"
+                  />
+                  <Table.td
+                    title={t("stats.ironOreBroken")}
+                    value={t(overall.ironOreBroken)}
+                    color="§6"
+                  />
+                  <Table.td
+                    title={t("stats.treasuresFound")}
+                    value={t(overall.treasuresFound)}
+                    color="§e"
+                  />
+                </Table.tr>
+                <Table.tr>
+                  <Table.td
+                    title={t("stats.arrowsFired")}
+                    value={t(overall.arrowsFired)}
+                    color="§a"
+                  />
+                  <Table.td
+                    title={t("stats.arrowsHit")}
+                    value={t(overall.arrowsHit)}
+                    color="§c"
+                  />
+                  <Table.td
+                    title={t("stats.shotAccuracy")}
+                    value={`${t(ratio(overall.arrowsHit, overall.arrowsFired, 100))}%`}
+                    color="§6"
+                  />
+                </Table.tr>
+              </>
+            );
+          }}
+        </If>
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>
