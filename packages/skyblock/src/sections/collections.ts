@@ -10,11 +10,45 @@ import { COLLECTIONS } from "#data";
 import { add } from "@statsify/math";
 import { coopMembers } from "../profiles.js";
 import { resourceTexture } from "#textures";
-import type { CollectionsSection, ItemsResource } from "#types";
+import { type BossCollection, type CollectionsSection, type ItemsResource, KUUDRA_TIERS } from "#types";
 import type { RawMember, RawProfile } from "#raw";
 
 /** The tiers reached at an amount, out of each tier's amount needed. */
 export const collectionTier = (amount: number, tiers: number[]) => tiers.filter((needed) => amount >= needed).length;
+
+// Each boss's tiers, from its wiki page's Collection section, fit every saved member. Owner exceptions (unverified):
+// a Master Mode completion counts twice, and Kuudra's tiers count 1 to 5; the wiki gives only Basic 1 and Infernal 5.
+const SHORT_TIERS = [25, 50, 100, 150, 250, 1000];
+const LONG_TIERS = [50, 100, 150, 250, 500, 750, 1000];
+const FLOOR_BOSSES = [
+  { boss: "bonzo", tiers: SHORT_TIERS },
+  { boss: "scarf", tiers: SHORT_TIERS },
+  { boss: "the_professor", tiers: SHORT_TIERS },
+  { boss: "thorn", tiers: [50, 100, 150, 250, 400, 1000] },
+  { boss: "livid", tiers: LONG_TIERS },
+  { boss: "sadan", tiers: LONG_TIERS },
+  { boss: "necron", tiers: LONG_TIERS },
+];
+const KUUDRA_COLLECTION = [10, 100, 500, 2000, 5000];
+
+const bossCollection = (boss: string, amount: number, tiers: number[]): BossCollection => {
+  const tier = collectionTier(amount, tiers);
+  return { boss, amount, tier, maxTier: tiers.length, next: tiers[tier] };
+};
+
+function getBossCollections(member: RawMember): BossCollection[] {
+  const types = member.dungeons?.dungeon_types;
+  const kuudra = member.nether_island_player_data?.kuudra_completed_tiers ?? {};
+
+  return [
+    ...FLOOR_BOSSES.map(({ boss, tiers }, i) => {
+      const floor = String(i + 1);
+      const amount = (types?.catacombs?.tier_completions?.[floor] ?? 0) + 2 * (types?.master_catacombs?.tier_completions?.[floor] ?? 0);
+      return bossCollection(boss, amount, tiers);
+    }),
+    bossCollection("kuudra", add(...KUUDRA_TIERS.map((tier, i) => (i + 1) * (kuudra[tier] ?? 0))), KUUDRA_COLLECTION),
+  ];
+}
 
 /**
  * Collections count the whole co-op's gathering, and a tier unlocks for every member. Only the resource's collections,
@@ -57,6 +91,7 @@ export function getCollections(profile: RawProfile, member: RawMember, items?: I
     maxed: all.filter(({ tier, maxTier }) => tier === maxTier).length,
     total: all.length,
     hidden: members.filter(([, other]) => !other.collection).map(([uuid]) => uuid),
+    bosses: getBossCollections(member),
   };
 }
 

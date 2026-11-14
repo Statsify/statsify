@@ -82,6 +82,9 @@ export function getHotm(member: RawMember): HotmSection {
         .map(([type, count]) => ({ type, count }))
         .toSorted((a, b) => b.count - a.count),
       fossils: glacite?.fossils_donated?.length ?? 0,
+      // Claw, Clubbed, Footprint, Helix, Spine, Tusk, Ugly and Webbed (the wiki's Fossils page, an owner exception,
+      // unverified)
+      maxFossils: 8,
       fossilDust: Math.floor(glacite?.fossil_dust ?? 0),
       mineshafts: glacite?.mineshafts_entered ?? 0,
     },

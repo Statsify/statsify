@@ -7,10 +7,10 @@
  */
 
 import { arrayGroup, prettify } from "@statsify/util";
-import { decodeSlots } from "#items";
+import { decodeSlots, toolkitItemView } from "#items";
 import { resourceTexture } from "#textures";
 import type { InventoriesSection, InventoryId, ItemsResource, Slots } from "#types";
-import type { RawMember, RawNbt } from "#raw";
+import type { RawMember, RawNbt, RawToolkit } from "#raw";
 
 /** The ender chest's page, and the size the bags are paged at. */
 const PAGE = 45;
@@ -26,19 +26,30 @@ const BAGS = {
 const paged = (slots: Slots) => (slots.length > 0 ? arrayGroup(slots, PAGE) : [[]]);
 
 /** A map's blobs in their numeric key's order, as the game numbers backpacks. */
-const byKey = (blobs: Record<string, RawNbt> = {}) =>
+export const byKey = (blobs: Record<string, RawNbt> = {}) =>
   Object.entries(blobs)
     .toSorted(([a], [b]) => Number(a) - Number(b))
     .map(([, blob]) => blob);
+
+/** The hotbar comes first in the blob and last on screen. */
+const hotbarLast = (slots: Slots) => [...slots.slice(9), ...slots.slice(0, 9)];
+
+/**
+ * A toolkit's tools, kind by kind, and an emptied slot is null. IN_USE and IS_UNLOCKED aren't tools, nor is
+ * HUNTING_TOOLKIT, the item used up to unlock the menu (the wiki's Hunting Toolkit page).
+ */
+const toolkitPage = (toolkit: RawToolkit, items: ItemsResource): Slots =>
+  Object.entries(toolkit)
+    .flatMap(([kind, tools]) => (Array.isArray(tools) && kind !== "HUNTING_TOOLKIT" ? (tools as (RawNbt | null)[]) : []))
+    .map((blob) => blob && toolkitItemView(blob, items))
+    .filter((item) => item !== null);
 
 /** Every inventory as the game pages it, and the sacks. */
 export function getInventories(member: RawMember, items: ItemsResource): InventoriesSection | null {
   const inventory = member.inventory;
   if (!inventory?.inv_contents) return null;
 
-  // The hotbar comes first in the blob and last on screen
-  const main = decodeSlots(inventory.inv_contents);
-  const pages: InventoriesSection["pages"] = { inventory: [[...main.slice(9), ...main.slice(0, 9)]] };
+  const pages: InventoriesSection["pages"] = { inventory: [hotbarLast(decodeSlots(inventory.inv_contents))] };
 
   if (inventory.ender_chest_contents) pages.enderChest = paged(decodeSlots(inventory.ender_chest_contents));
   pages.backpacks = byKey(inventory.backpack_contents).map(decodeSlots);
@@ -48,6 +59,15 @@ export function getInventories(member: RawMember, items: ItemsResource): Invento
     const blob = inventory.bag_contents?.[BAGS[id]];
     if (blob) pages[id] = paged(decodeSlots(blob));
   }
+
+  const farming = member.garden_player_data?.farming_toolkit;
+  if (farming) pages.farmingToolkit = [toolkitPage(farming, items)];
+  const hunting = member.foraging?.hunting_toolkit;
+  if (hunting) pages.huntingToolkit = [toolkitPage(hunting, items)];
+
+  const rift = member.rift?.inventory;
+  if (rift?.inv_contents) pages.riftInventory = [hotbarLast(decodeSlots(rift.inv_contents))];
+  if (rift?.ender_chest_contents) pages.riftEnderChest = paged(decodeSlots(rift.ender_chest_contents));
 
   const sacks = Object.entries(inventory.sacks_counts ?? {})
     .filter(([, count]) => count > 0)

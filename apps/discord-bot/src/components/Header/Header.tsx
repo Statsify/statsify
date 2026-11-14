@@ -13,7 +13,7 @@ import { Historical, type HistoricalTimeData } from "../Historical/index.js";
 import { Image } from "skia-canvas";
 import { Sidebar, SidebarItem } from "../Sidebar.js";
 import { Skin } from "../Skin.js";
-import { useChildren } from "@statsify/rendering";
+import { useChildren, useComponentHeight, useComponentWidth } from "@statsify/rendering";
 
 interface BaseHeaderProps {
   skin: Image;
@@ -45,6 +45,17 @@ export type HeaderProps =
   SidebarHeaderProps |
   CustomHeaderBodyProps;
 
+// Breaking only narrows the header when the title is wider than the nametag
+const fitTitle = (title: string, nameTag: JSX.Element, sidebar: SidebarItem[]) => {
+  if (!title.includes("\n")) return title;
+
+  const line = title.replace("\n", " ");
+  if (sidebar.length === 0 || useComponentWidth(<HeaderBody title={line} />) <= useComponentWidth(nameTag)) return line;
+
+  const height = useComponentHeight(nameTag) + useComponentHeight(<HeaderBody title={title} />);
+  return height <= useComponentHeight(<Sidebar items={sidebar} />) ? title : line;
+};
+
 export const Header = (props: HeaderProps) => {
   const skin = <Skin skin={props.skin} />;
   const nameTag = (
@@ -64,7 +75,7 @@ export const Header = (props: HeaderProps) => {
     const children = useChildren(props.children);
     body = <>{children}</>;
   } else {
-    body = <HeaderBody title={props.title} description={props.description} />;
+    body = <HeaderBody title={fitTitle(props.title, nameTag, "sidebar" in props ? props.sidebar : [])} description={props.description} />;
   }
 
   if (props.time !== "LIVE")

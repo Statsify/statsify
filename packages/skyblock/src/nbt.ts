@@ -8,7 +8,7 @@
 
 import nbt from "prismarine-nbt";
 import { gunzipSync } from "node:zlib";
-import type { RawItem } from "#types";
+import type { ItemAttributes, RawItem } from "#types";
 
 // An empty slot simplifies to {}.
 const isItem = (slot: RawItem | Record<string, never>): slot is RawItem => "id" in slot;
@@ -35,6 +35,11 @@ export function decodeInventory(data: string | { data: string }): (RawItem | nul
 
   return items;
 }
+
+/** A toolkit's tool, which Hypixel keeps as its bare ExtraAttributes compound: no slot, name or lore. */
+export const decodeAttributes = (data: string | { data: string }) =>
+  nbt.simplify(nbt.parseUncompressed(gunzipSync(Buffer.from(typeof data === "string" ? data : data.data, "base64")), "big")) as
+    ItemAttributes;
 
 /** The items inside a nested blob, an ExtraAttributes `*_data` byte array (cake bags, backpacks, pouches). */
 const decodeNested = (bytes: number[]) => parseItems(Buffer.from(Int8Array.from(bytes).buffer));

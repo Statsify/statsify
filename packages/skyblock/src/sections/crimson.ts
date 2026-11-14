@@ -8,11 +8,36 @@
 
 import { KUUDRA_KEYS } from "#data";
 import { add } from "@statsify/math";
-import { type CrimsonSection, KUUDRA_TIERS } from "#types";
+import {
+  type CrimsonSection,
+  type DojoBelt,
+  type DojoGrade,
+  type Faction,
+  KUUDRA_TIERS,
+  REPUTATION_RANKS,
+  type ReputationRank,
+} from "#types";
 import type { RawMember } from "#raw";
 
 // In the Dojo's order
 const DOJO_TESTS = ["mob_kb", "wall_jump", "archer", "sword_swap", "snake", "lock_head", "fireball"] as const;
+
+// Owner exceptions (unverified): each rank's least reputation (the wiki's Factions page), the Dojo grades (the wiki has
+// only S at 1,000; A to F have no source) and each belt's least total of the tests' points (the wiki's Dojo page)
+const RANK_FROM: Record<ReputationRank, number> = { neutral: 0, friendly: 1000, trusted: 3000, honored: 7000, hero: 12_000 };
+const DOJO_GRADES: [DojoGrade, number][] = [["S", 1000], ["A", 800], ["B", 600], ["C", 400], ["D", 200], ["F", 0]];
+const DOJO_BELTS: [DojoBelt, number][] = [
+  ["black", 7000],
+  ["brown", 6000],
+  ["blue", 4000],
+  ["green", 2000],
+  ["yellow", 1000],
+  ["white", 0],
+];
+
+const rankOf = (reputation: number) => REPUTATION_RANKS.findLast((rank) => reputation >= RANK_FROM[rank]) ?? "neutral";
+const dojoGrade = (points: number) => DOJO_GRADES.find(([, lowest]) => points >= lowest)![0];
+const dojoBelt = (points: number) => DOJO_BELTS.find(([, lowest]) => points >= lowest)![0];
 
 // Bestiary ids: player_stats.kills misses most kills
 const MINIBOSSES = {
@@ -32,18 +57,30 @@ export function getCrimson(member: RawMember): CrimsonSection | null {
   const started = island?.selected_faction || island?.mages_reputation || island?.barbarians_reputation;
   if (!island || (!started && Object.keys(tiers).length === 0)) return null;
 
-  const dojo = DOJO_TESTS.map((test) => ({ test, points: island.dojo?.[`dojo_points_${test}`] ?? 0 }));
+  const dojo = DOJO_TESTS.map((test) => {
+    const points = island.dojo?.[`dojo_points_${test}`];
+    const grade = points === undefined ? undefined : dojoGrade(points);
+    return { test, points: points ?? 0, grade, time: island.dojo?.[`dojo_time_${test}`] };
+  });
+  const dojoPoints = add(...dojo.map(({ points }) => points));
+  const reputation: Record<Faction, number> = {
+    mages: island.mages_reputation ?? 0,
+    barbarians: island.barbarians_reputation ?? 0,
+  };
 
   return {
     faction: island.selected_faction,
-    reputation: { mages: island.mages_reputation ?? 0, barbarians: island.barbarians_reputation ?? 0 },
+    reputation,
+    reputationRanks: { mages: rankOf(reputation.mages), barbarians: rankOf(reputation.barbarians) },
     kuudra: KUUDRA_TIERS.map((tier) => ({
       tier,
       completions: tiers[tier] ?? 0,
+      highestWave: tiers[`highest_wave_${tier}`],
       texture: { kind: "head", skin: KUUDRA_KEYS[tier] },
     })),
     dojo,
-    dojoPoints: add(...dojo.map(({ points }) => points)),
+    dojoPoints,
+    dojoBelt: dojoBelt(dojoPoints),
     minibosses: Object.entries(MINIBOSSES).map(([boss, id]) => ({ boss, kills: member.bestiary?.kills?.[id] ?? 0 })),
   };
 }
@@ -54,5 +91,10 @@ if (import.meta.vitest) {
   test("getCrimson is null for the record Hypixel sends before a faction is picked", () => {
     expect(getCrimson({ nether_island_player_data: { kuudra_completed_tiers: {}, dojo: { dojo_points_mob_kb: 0 } } })).toBeNull();
     expect(getCrimson({ nether_island_player_data: { selected_faction: "mages" } })).not.toBeNull();
+  });
+
+  test("rankOf and dojoGrade start each rank and grade at its lowest amount", () => {
+    expect([0, 999, 1000, 6999, 7000, 12_000, 50_000].map(rankOf)).toEqual(["neutral", "neutral", "friendly", "trusted", "honored", "hero", "hero"]);
+    expect([0, 199, 200, 799, 800, 1000, 1400].map(dojoGrade)).toEqual(["F", "F", "D", "B", "A", "S", "S"]);
   });
 }
