@@ -315,10 +315,8 @@ const neuStats = (stats: Record<string, number>) =>
   );
 
 /**
- * A perk's stats, when its lore grants them outright ("Grants +{stat} ⸕ Mining Speed.", "Increase ∮ Sweep by {stat}.",
- * "You gain {stat} Pressure Resistance."), as the value its NEU expression gives at each level, or a one-level perk's
- * fixed amounts ("Increase Sweep by 10 and Foraging Fortune by 50."). Perks that grant one "when mining Gemstones" or
- * "for the first 250 trees cut every day" don't count on the stat sheet.
+ * A perk's stats when its lore grants them outright, from its NEU expression. Perks that grant one "when mining
+ * Gemstones" or "for the first 250 trees cut every day" don't count on the stat sheet.
  */
 function perkStats({ lore = [], stat: expression, maxLevel }: { lore?: unknown[]; stat?: string; maxLevel: number }) {
   const text = removeFormatting(normalizeItemText(lore.filter((line) => typeof line === "string").join(" ")))
@@ -379,9 +377,8 @@ function evaluate(expression: string, level: number): number {
 }
 
 /**
- * A pet item's effect, from the lore NEU keeps: flat stats ("Grants +30❁ Strength and +20✦ Speed."), a pet stat raised
- * by a percent ("Increases the pet's ☠ Crit Damage by 50%"), or every pet stat ("Increases all pet stats by 33.3%").
- * Sentences with a condition ("while mining Titanium Ore", "for each of your Garden Levels") are left out.
+ * A pet item's flat stats and its raises to the pet's stats, from NEU's lore. Sentences with a condition ("while mining
+ * Titanium Ore", "for each of your Garden Levels") are left out.
  */
 function petItemEffect(lore: string[]) {
   const text = removeFormatting(lore.map(normalizeItemText).join(" ")).replaceAll(/\s+/g, " ");
