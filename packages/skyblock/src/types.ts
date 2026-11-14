@@ -45,7 +45,7 @@ export interface ProfileSummary {
   cuteName: string;
   gameMode: GameMode;
   selected: boolean;
-  members: { uuid: string; removed: boolean }[];
+  members: { uuid: string; removed: boolean; username?: string; displayName?: string }[]; // the site adds the names from stored players
   level: number;
   levelColor: string; // the § code of the level's bracket
   xp: number;
@@ -87,6 +87,10 @@ export interface MemberView {
   rift?: RiftSection | null;
   misc?: MiscSection;
   stats?: StatsSection;
+  collections?: CollectionsSection | null;
+  minions?: MinionsSection;
+  bestiary?: BestiarySection;
+  attributes?: AttributesSection;
 }
 
 /** An inventory's slots in the game's order; an empty slot is null. */
@@ -98,7 +102,21 @@ export interface GearSection {
   equipment: Slots; // necklace, cloak, belt, gloves
   wardrobe: { slot: number; armor: Slots }[]; // sets with anything in them, helmet to boots
   wardrobeSlot?: number; // the set being worn
+  equipmentSets: { slot: number; equipment: Slots }[]; // sets with anything in them, necklace to gloves
+  equipmentSlot?: number; // the set being worn
   weapons: ItemView[]; // swords, bows, gauntlets and wands in the inventory, in its order
+  loadouts: Loadout[]; // the ones with anything saved
+}
+
+/** A saved loadout: the sets are wardrobe and equipment set slots, the pet a pet's `uniqueId`. */
+export interface Loadout {
+  id: number;
+  name: string;
+  armorSet?: number;
+  equipmentSet?: number;
+  pet?: string;
+  power?: string;
+  tuning?: Record<string, number>; // the tuning slot's points per stat
 }
 
 export const INVENTORIES = [
@@ -337,6 +355,71 @@ export const JACOB_MEDALS = ["gold", "silver", "bronze"] as const;
 
 export type JacobMedal = (typeof JACOB_MEDALS)[number];
 
+/** null with the member's own Collections API off. */
+export interface CollectionsSection {
+  categories: { id: string; name: string; items: CollectionView[] }[];
+  maxed: number; // collections at their last tier
+  total: number; // every collection the resource lists
+  hidden: string[]; // members Hypixel sends no `collection` for (the Collections API off, or some who left), so their part isn't counted
+}
+
+/** A collection's co-op total: every member who accepted their invite, ex-members included (unverified). */
+export interface CollectionView {
+  id: string;
+  name: string;
+  texture?: ItemTexture;
+  amount: number;
+  tier: number;
+  maxTier: number;
+  next?: number; // the amount the next tier needs
+  members: { uuid: string; amount: number }[]; // each counted member's part, most first
+}
+
+/** The co-op's crafted minions: every member who accepted their invite, ex-members included (unverified). */
+export interface MinionsSection {
+  minions: { id: string; name: string; texture?: ItemTexture; tiers: number[]; maxTier: number }[]; // every minion, by name
+  unique: number; // tiers crafted, each once
+  total: number; // every tier of every minion
+  slots: { total: number; crafts: number; community: number; next?: number }; // from unique crafts (the wiki's table) and the Community Shop; next: the unique crafts the next slot needs
+  members: { uuid: string; amount: number }[]; // each member's own unique crafts, most first
+}
+
+/** The member's bestiary: each family's tier from its kills, by NEU's pages. */
+export interface BestiarySection {
+  milestone: number; // a milestone per 10 family tiers (the wiki's rule), or the last one claimed in game if higher
+  tiers: number;
+  maxTiers: number;
+  maxed: number; // families at their last tier
+  total: number;
+  pages: { category?: string; name: string; families: BestiaryFamilyView[] }[];
+}
+
+export interface BestiaryFamilyView {
+  name: string;
+  kills: number;
+  tier: number;
+  maxTier: number;
+  next?: number; // the kills the next tier needs
+}
+
+/** Every Hunting shard, held and syphoned into its attribute. Chameleon's can't be syphoned, so it has no levels. */
+export interface AttributesSection {
+  attributes: {
+    id: string;
+    name: string;
+    attribute: string;
+    rarity: Rarity;
+    families: string[];
+    level: number;
+    maxLevel: number;
+    owned: number;
+  }[];
+  unlocked: number; // attributes past level 0
+  maxed: number;
+  total: number; // attributes with levels
+  owned: number; // shards held
+}
+
 export interface JacobSection {
   medals: Record<JacobMedal, number>; // unspent
   contests: number; // entered
@@ -557,6 +640,7 @@ export const STAT_SOURCES = [
   "catacombs",
   "level",
   "peppers",
+  "attributes", // only for `unverified`: each attribute is its own line, in `byAttribute`
 ] as const;
 
 export type StatSource = (typeof STAT_SOURCES)[number];
@@ -565,6 +649,7 @@ export interface StatTotal {
   stat: PlayerStat;
   total: number;
   bySource: Partial<Record<StatSource, number>>;
+  byAttribute?: Record<string, number>; // each Hunting attribute's part, by its name
 }
 
 /** The permanent stat sheet; temporary buffs (Booster Cookie, potions, the mayor) aren't in the API. */
@@ -603,6 +688,7 @@ export interface PetsSection {
 
 export interface PetView {
   uuid?: string;
+  uniqueId?: string; // what a saved loadout names its pet by
   type: string;
   name: string;
   rarity: Rarity;
@@ -792,6 +878,8 @@ export interface ItemsResource {
       riftOnly?: boolean;
       npcPrice?: number;
       glowing?: boolean;
+      generator?: string; // a minion's type, on each of its tiers
+      generatorTier?: number;
     }
   >;
 }

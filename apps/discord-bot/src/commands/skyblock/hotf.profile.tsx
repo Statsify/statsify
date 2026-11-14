@@ -63,14 +63,16 @@ export const SkyBlockHotfProfile = ({
         <Table.tr>
           <LevelBar title={t("skyblock.hotfLevel")} level={level} color="§a" t={t} />
         </Table.tr>
-        <Table.tr>
-          <div direction="column" width="100%">
+        {/* Not a Table.tr: its cells keep their own height, and the tree's box should be as tall as the whispers */}
+        <div width="100%">
+          <div direction="column" width="1/2">
             {pools}
           </div>
-          <box width="100%" location="center">
+          <box direction="column" width="1/2" height="remaining" location="center">
+            <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`§a${t("skyblock.perkTree")}`}</text>
             <PerkTree nodes={nodes} />
           </box>
-        </Table.tr>
+        </div>
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>

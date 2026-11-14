@@ -8,7 +8,10 @@
 
 import { getAccessories } from "./accessories.js";
 import { getApiSettings } from "../api-settings.js";
+import { getAttributes } from "./attributes.js";
+import { getBestiary } from "./bestiary.js";
 import { getChocolate } from "./chocolate.js";
+import { getCollections } from "./collections.js";
 import { getCrimson } from "./crimson.js";
 import { gameModeOf } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
@@ -20,6 +23,7 @@ import { getInventories } from "./inventories.js";
 import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
 import { getJacob } from "./jacob.js";
+import { getMinions } from "./minions.js";
 import { getMisc } from "./misc.js";
 import { getSkyBlockLevel } from "./level.js";
 import { getMuseum } from "./museum.js";
@@ -36,7 +40,10 @@ export type SectionNeed = "museum" | "garden" | "prices" | "items";
 /** Every section a lookup can ask for: SECTIONS' and networth, which ./networth computes. */
 export const SKYBLOCK_SECTIONS = [
   "accessories",
+  "attributes",
+  "bestiary",
   "chocolate",
+  "collections",
   "crimson",
   "dungeons",
   "experiments",
@@ -48,6 +55,7 @@ export const SKYBLOCK_SECTIONS = [
   "inventories",
   "jacob",
   "level",
+  "minions",
   "misc",
   "museum",
   "networth",
@@ -89,7 +97,10 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
       return getAccessories(member, items, prices, hasMarket(profile));
     },
   },
+  attributes: { needs: [], compute: async ({ member }) => getAttributes(member) },
+  bestiary: { needs: [], compute: async ({ member }) => getBestiary(member) },
   chocolate: { needs: [], compute: async ({ member }) => getChocolate(member) },
+  collections: { needs: ["items"], compute: async ({ profile, member, items }) => getCollections(profile, member, items) },
   crimson: { needs: [], compute: async ({ member }) => getCrimson(member) },
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
   experiments: { needs: [], compute: async ({ member }) => getExperiments(member) },
@@ -117,6 +128,13 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
     compute: async ({ profile, member, items, prices }) => {
       if (!items || !prices) throw new TypeError("level needs prices and items");
       return getSkyBlockLevel(member, items, prices, hasMarket(profile));
+    },
+  },
+  minions: {
+    needs: ["items"],
+    compute: async ({ profile, items }) => {
+      if (!items) throw new TypeError("minions needs items");
+      return getMinions(profile, items);
     },
   },
   misc: { needs: [], compute: async ({ member }) => getMisc(member) },

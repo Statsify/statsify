@@ -9,6 +9,7 @@
 export * from "./types.js";
 export type * from "./raw.js";
 export { getApiSettings } from "./api-settings.js";
+export { type MayorView, type Perk, toMayorView } from "./election.js";
 export { buildPriceMap, type SeenIndex } from "./auctions.js";
 export { describeKey, labelVariants, parseBazaar, toPriceView } from "./prices.js";
 export { decodeInventory } from "./nbt.js";

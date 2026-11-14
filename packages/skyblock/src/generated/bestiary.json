@@ -1,0 +1,3945 @@
+{
+  "brackets": {
+    "1": [
+      20,
+      40,
+      60,
+      100,
+      200,
+      400,
+      800,
+      1400,
+      2000,
+      3000,
+      6000,
+      12000,
+      20000,
+      30000,
+      40000,
+      50000,
+      60000,
+      72000,
+      86000,
+      100000,
+      200000,
+      400000,
+      600000,
+      800000,
+      1000000
+    ],
+    "2": [
+      5,
+      10,
+      15,
+      25,
+      50,
+      100,
+      200,
+      350,
+      500,
+      750,
+      1500,
+      3000,
+      5000,
+      7500,
+      10000,
+      12500,
+      15000,
+      18000,
+      21500,
+      25000,
+      50000,
+      100000,
+      150000,
+      200000,
+      250000
+    ],
+    "3": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      40,
+      80,
+      140,
+      200,
+      300,
+      600,
+      1200,
+      2000,
+      3000,
+      4000,
+      5000,
+      6000,
+      7200,
+      8600,
+      10000,
+      20000,
+      40000,
+      60000,
+      80000,
+      100000
+    ],
+    "4": [
+      2,
+      4,
+      6,
+      10,
+      15,
+      20,
+      25,
+      35,
+      50,
+      75,
+      150,
+      300,
+      500,
+      750,
+      1000,
+      1350,
+      1650,
+      2000,
+      2500,
+      3000,
+      5000,
+      10000,
+      15000,
+      20000,
+      25000
+    ],
+    "5": [
+      1,
+      2,
+      3,
+      5,
+      7,
+      10,
+      15,
+      20,
+      25,
+      30,
+      60,
+      120,
+      200,
+      300,
+      400,
+      500,
+      600,
+      720,
+      860,
+      1000,
+      2000,
+      4000,
+      6000,
+      8000,
+      10000
+    ],
+    "6": [
+      1,
+      2,
+      3,
+      5,
+      7,
+      9,
+      14,
+      17,
+      21,
+      25,
+      50,
+      80,
+      125,
+      175,
+      250,
+      325,
+      425,
+      525,
+      625,
+      750,
+      1500,
+      3000,
+      4500,
+      6000,
+      7500
+    ],
+    "7": [
+      1,
+      2,
+      3,
+      5,
+      7,
+      9,
+      11,
+      14,
+      17,
+      20,
+      30,
+      40,
+      55,
+      75,
+      100,
+      150,
+      200,
+      275,
+      375,
+      500,
+      1000,
+      1500,
+      2000,
+      2500,
+      3000
+    ],
+    "8": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      8,
+      11,
+      14,
+      17,
+      20,
+      25,
+      30,
+      35,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100,
+      120,
+      140,
+      160,
+      180,
+      200
+    ],
+    "CRITTERS_1": [
+      1,
+      5,
+      10,
+      20,
+      35,
+      50,
+      65,
+      85,
+      105,
+      125
+    ],
+    "CRITTERS_2": [
+      1,
+      5,
+      10,
+      15,
+      25,
+      40,
+      55,
+      70,
+      85,
+      100
+    ],
+    "CRITTERS_3": [
+      1,
+      5,
+      10,
+      15,
+      20,
+      25,
+      35,
+      45,
+      60,
+      75
+    ],
+    "CRITTERS_4": [
+      1,
+      3,
+      6,
+      10,
+      15,
+      20,
+      25,
+      30,
+      40,
+      50
+    ],
+    "CRITTERS_5": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      8,
+      10,
+      15,
+      20,
+      25
+    ]
+  },
+  "pages": [
+    {
+      "families": [
+        {
+          "bracket": "2",
+          "cap": 50,
+          "ids": [
+            "forest_island_bat_3"
+          ],
+          "name": "Bat"
+        },
+        {
+          "bracket": "2",
+          "cap": 50,
+          "ids": [
+            "creeper_1"
+          ],
+          "name": "Creeper"
+        },
+        {
+          "bracket": "2",
+          "cap": 50,
+          "ids": [
+            "enderman_1",
+            "enderman_2",
+            "enderman_3",
+            "enderman_4",
+            "enderman_5",
+            "enderman_6",
+            "enderman_7",
+            "enderman_8",
+            "enderman_9",
+            "enderman_10",
+            "enderman_11",
+            "enderman_12",
+            "enderman_13",
+            "enderman_14",
+            "enderman_15"
+          ],
+          "name": "Enderman"
+        },
+        {
+          "bracket": "2",
+          "cap": 50,
+          "ids": [
+            "skeleton_1",
+            "skeleton_2",
+            "skeleton_3",
+            "skeleton_4",
+            "skeleton_5",
+            "skeleton_6",
+            "skeleton_7",
+            "skeleton_8",
+            "skeleton_9",
+            "skeleton_10",
+            "skeleton_11",
+            "skeleton_12",
+            "skeleton_13",
+            "skeleton_14",
+            "skeleton_15"
+          ],
+          "name": "Skeleton"
+        },
+        {
+          "bracket": "2",
+          "cap": 50,
+          "ids": [
+            "slime_1",
+            "slime_2",
+            "slime_3",
+            "slime_4",
+            "slime_5",
+            "slime_6",
+            "slime_7",
+            "slime_8",
+            "slime_9",
+            "slime_10",
+            "slime_11",
+            "slime_12",
+            "slime_13",
+            "slime_14",
+            "slime_15"
+          ],
+          "name": "Slime"
+        },
+        {
+          "bracket": "2",
+          "cap": 50,
+          "ids": [
+            "spider_1",
+            "spider_2",
+            "spider_3",
+            "spider_4",
+            "spider_5",
+            "spider_6",
+            "spider_7",
+            "spider_8",
+            "spider_9",
+            "spider_10",
+            "spider_11",
+            "spider_12",
+            "spider_13",
+            "spider_14",
+            "spider_15"
+          ],
+          "name": "Spider"
+        },
+        {
+          "bracket": "2",
+          "cap": 50,
+          "ids": [
+            "witch_1",
+            "witch_2",
+            "witch_3",
+            "witch_4",
+            "witch_5",
+            "witch_6",
+            "witch_7",
+            "witch_8",
+            "witch_9",
+            "witch_10",
+            "witch_11",
+            "witch_12",
+            "witch_13",
+            "witch_14",
+            "witch_15"
+          ],
+          "name": "Witch"
+        },
+        {
+          "bracket": "2",
+          "cap": 50,
+          "ids": [
+            "zombie_1",
+            "zombie_2",
+            "zombie_3",
+            "zombie_4",
+            "zombie_5",
+            "zombie_6",
+            "zombie_7",
+            "zombie_8",
+            "zombie_9",
+            "zombie_10",
+            "zombie_11",
+            "zombie_12",
+            "zombie_13",
+            "zombie_14",
+            "zombie_15"
+          ],
+          "name": "Zombie"
+        }
+      ],
+      "name": "Private Island"
+    },
+    {
+      "families": [
+        {
+          "bracket": "2",
+          "cap": 25000,
+          "ids": [
+            "unburried_zombie_30"
+          ],
+          "name": "Crypt Ghoul"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "unburried_zombie_60"
+          ],
+          "name": "Golden Ghoul"
+        },
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "graveyard_zombie_1"
+          ],
+          "name": "Graveyard Zombie"
+        },
+        {
+          "bracket": "5",
+          "cap": 400,
+          "ids": [
+            "old_wolf_50"
+          ],
+          "name": "Old Wolf"
+        },
+        {
+          "bracket": "5",
+          "cap": 400,
+          "ids": [
+            "shiny_pig_1"
+          ],
+          "name": "Shiny Pig"
+        },
+        {
+          "bracket": "3",
+          "cap": 4000,
+          "ids": [
+            "ruin_wolf_15"
+          ],
+          "name": "Wolf"
+        },
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "zombie_villager_1"
+          ],
+          "name": "Zombie Villager"
+        }
+      ],
+      "name": "Hub"
+    },
+    {
+      "families": [
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "farming_chicken_1"
+          ],
+          "name": "Chicken"
+        },
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "farming_cow_1"
+          ],
+          "name": "Cow"
+        },
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "mushroom_cow_1"
+          ],
+          "name": "Mushroom Cow"
+        },
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "farming_pig_1"
+          ],
+          "name": "Pig"
+        },
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "farming_rabbit_1"
+          ],
+          "name": "Rabbit"
+        },
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "farming_sheep_1"
+          ],
+          "name": "Sheep"
+        }
+      ],
+      "name": "The Farming Islands"
+    },
+    {
+      "families": [
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "arachne_500",
+            "arachne_300"
+          ],
+          "name": "Arachne"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "arachne_brood_200",
+            "arachne_brood_100"
+          ],
+          "name": "Arachne's Brood"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "arachne_keeper_100"
+          ],
+          "name": "Arachne's Keeper"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "brood_mother_spider_12"
+          ],
+          "name": "Broodmother"
+        },
+        {
+          "bracket": "2",
+          "cap": 10000,
+          "ids": [
+            "dasher_spider_50",
+            "dasher_spider_45",
+            "dasher_spider_42",
+            "dasher_spider_4",
+            "dasher_spider_6"
+          ],
+          "name": "Dasher Spider"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "respawning_skeleton_2"
+          ],
+          "name": "Flint Skeleton"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "random_slime_8",
+            "random_slime_20",
+            "slimey_slime_50"
+          ],
+          "name": "Rain Slime"
+        },
+        {
+          "bracket": "2",
+          "cap": 10000,
+          "ids": [
+            "jockey_shot_silverfish_3",
+            "splitter_spider_silverfish_2",
+            "splitter_spider_silverfish_45",
+            "splitter_spider_silverfish_42",
+            "splitter_spider_silverfish_50",
+            "jockey_shot_silverfish_42"
+          ],
+          "name": "Silverfish"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "spider_jockey_3",
+            "spider_jockey_42",
+            "spider_jockey_5"
+          ],
+          "name": "Spider Jockey"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "splitter_spider_2",
+            "splitter_spider_45",
+            "splitter_spider_42",
+            "splitter_spider_50",
+            "splitter_spider_4",
+            "splitter_spider_6"
+          ],
+          "name": "Splitter Spider"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "voracious_spider_50",
+            "voracious_spider_42",
+            "voracious_spider_45",
+            "voracious_spider_10"
+          ],
+          "name": "Voracious Spider"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "weaver_spider_3",
+            "weaver_spider_4",
+            "weaver_spider_5",
+            "weaver_spider_6",
+            "weaver_spider_42",
+            "weaver_spider_45",
+            "weaver_spider_50"
+          ],
+          "name": "Weaver Spider"
+        }
+      ],
+      "name": "Spider's Den"
+    },
+    {
+      "families": [
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "protector_dragon_100",
+            "old_dragon_100",
+            "young_dragon_100",
+            "wise_dragon_100",
+            "superior_dragon_100",
+            "strong_dragon_100",
+            "unstable_dragon_100"
+          ],
+          "name": "Dragon"
+        },
+        {
+          "bracket": "7",
+          "cap": 3000,
+          "ids": [
+            "enderman_50",
+            "enderman_45",
+            "enderman_42"
+          ],
+          "name": "Enderman"
+        },
+        {
+          "bracket": "7",
+          "cap": 3000,
+          "ids": [
+            "nest_endermite_50",
+            "endermite_37",
+            "endermite_40"
+          ],
+          "name": "Endermite"
+        },
+        {
+          "bracket": "8",
+          "cap": 100,
+          "ids": [
+            "corrupted_protector_100"
+          ],
+          "name": "End Stone Protector"
+        },
+        {
+          "bracket": "7",
+          "cap": 3000,
+          "ids": [
+            "obsidian_wither_55"
+          ],
+          "name": "Obsidian Defender"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "voidling_extremist_100"
+          ],
+          "name": "Voidling Extremist"
+        },
+        {
+          "bracket": "5",
+          "cap": 10000,
+          "ids": [
+            "voidling_fanatic_85"
+          ],
+          "name": "Voidling Fanatic"
+        },
+        {
+          "bracket": "7",
+          "cap": 3000,
+          "ids": [
+            "watcher_55"
+          ],
+          "name": "Seer"
+        },
+        {
+          "bracket": "5",
+          "cap": 10000,
+          "ids": [
+            "zealot_bruiser_100",
+            "zealot_enderman_55",
+            "zealot_special_enderman_55"
+          ],
+          "name": "Zealot"
+        }
+      ],
+      "name": "The End"
+    },
+    {
+      "families": [
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "ashfang_200"
+          ],
+          "name": "Ashfang"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "barbarian_duke_x_200"
+          ],
+          "name": "Barbarian Duke X"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "bladesoul_200"
+          ],
+          "name": "Bladesoul"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "blaze_25",
+            "blaze_70",
+            "bezal_80",
+            "mutated_blaze_70"
+          ],
+          "name": "Blaze"
+        },
+        {
+          "bracket": "3",
+          "cap": 10000,
+          "ids": [
+            "flaming_spider_80"
+          ],
+          "name": "Flaming Spider"
+        },
+        {
+          "bracket": "3",
+          "cap": 10000,
+          "ids": [
+            "flare_90"
+          ],
+          "name": "Flare"
+        },
+        {
+          "bracket": "5",
+          "cap": 1000,
+          "ids": [
+            "ghast_85",
+            "dive_ghast_90"
+          ],
+          "name": "Ghast"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "kada_knight_90"
+          ],
+          "name": "Kada Knight"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "mage_outlaw_200"
+          ],
+          "name": "Mage Outlaw"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "magma_boss_500"
+          ],
+          "name": "Magma Boss"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "pack_magma_cube_90",
+            "magma_cube_75",
+            "fireball_magma_cube_75"
+          ],
+          "name": "Magma Cube"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "magma_cube_rider_90"
+          ],
+          "name": "Magma Cube Rider"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "matcho_100"
+          ],
+          "name": "Matcho"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "old_blaze_110"
+          ],
+          "name": "Millennia-Aged Blaze"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "charging_mushroom_cow_80"
+          ],
+          "name": "Mushroom Bull"
+        },
+        {
+          "bracket": "3",
+          "cap": 10000,
+          "ids": [
+            "smoldering_blaze_95"
+          ],
+          "name": "Smoldering Blaze"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "hellwisp_100"
+          ],
+          "name": "Tentacle"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "vanquisher_100"
+          ],
+          "name": "Vanquisher"
+        },
+        {
+          "bracket": "5",
+          "cap": 1000,
+          "ids": [
+            "wither_skeleton_70"
+          ],
+          "name": "Wither Skeleton"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "wither_spectre_70"
+          ],
+          "name": "Wither Spectre"
+        }
+      ],
+      "name": "Crimson Isle"
+    },
+    {
+      "families": [
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "emerald_slime_5",
+            "emerald_slime_10",
+            "emerald_slime_15"
+          ],
+          "name": "Emerald Slime"
+        },
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "lapis_zombie_7"
+          ],
+          "name": "Lapis Zombie"
+        },
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "diamond_skeleton_15",
+            "diamond_skeleton_20"
+          ],
+          "name": "Miner Skeleton"
+        },
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "diamond_zombie_15",
+            "diamond_zombie_20"
+          ],
+          "name": "Miner Zombie"
+        },
+        {
+          "bracket": "1",
+          "cap": 200,
+          "ids": [
+            "redstone_pigman_10"
+          ],
+          "name": "Redstone Pigman"
+        },
+        {
+          "bracket": "2",
+          "cap": 50,
+          "ids": [
+            "invisible_creeper_3"
+          ],
+          "name": "Sneaky Creeper"
+        }
+      ],
+      "name": "Deep Caverns"
+    },
+    {
+      "families": [
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "goblin_500"
+          ],
+          "name": "Diamond Goblin"
+        },
+        {
+          "bracket": "2",
+          "cap": 25000,
+          "ids": [
+            "caverns_ghost_250"
+          ],
+          "name": "Ghost"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "glacite_bowman_165"
+          ],
+          "name": "Glacite Bowman"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "glacite_caver_200"
+          ],
+          "name": "Glacite Caver"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "glacite_mage_155"
+          ],
+          "name": "Glacite Mage"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "glacite_mutt_180"
+          ],
+          "name": "Glacite Mutt"
+        },
+        {
+          "bracket": "1",
+          "cap": 3000,
+          "ids": [
+            "ice_walker_45"
+          ],
+          "name": "Glacite Walker"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "goblin_weakling_melee_25",
+            "goblin_weakling_melee_40",
+            "goblin_weakling_bow_25",
+            "goblin_weakling_bow_40",
+            "goblin_creepertamer_100",
+            "goblin_pitfighter_70",
+            "goblin_knife_thrower_25",
+            "goblin_knife_thrower_40",
+            "goblin_flamethrower_100",
+            "goblin_murderlover_200"
+          ],
+          "name": "Goblin"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "goblin_weakling_melee_5",
+            "goblin_weakling_bow_5",
+            "goblin_creepertamer_90",
+            "goblin_creeper_20",
+            "goblin_battler_60",
+            "goblin_murderlover_150",
+            "goblin_golem_150"
+          ],
+          "name": "Goblin Raiders"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "goblin_50"
+          ],
+          "name": "Golden Goblin"
+        },
+        {
+          "bracket": "2",
+          "cap": 50,
+          "ids": [
+            "littlefoot_533"
+          ],
+          "name": "Littlefoot"
+        },
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "powder_ghast_1"
+          ],
+          "name": "Powder Ghast"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "crystal_sentry_50"
+          ],
+          "name": "Star Sentry"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "treasure_hoarder_70"
+          ],
+          "name": "Treasure Hoarder"
+        }
+      ],
+      "name": "Dwarven Mines"
+    },
+    {
+      "families": [
+        {
+          "bracket": "1",
+          "cap": 3000,
+          "ids": [
+            "automaton_100",
+            "automaton_150"
+          ],
+          "name": "Automaton"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "bal_boss_100"
+          ],
+          "name": "Bal"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "team_treasurite_corleone_200"
+          ],
+          "name": "Boss Corleone"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "butterfly_100"
+          ],
+          "name": "Butterfly"
+        },
+        {
+          "bracket": "1",
+          "cap": 3000,
+          "ids": [
+            "team_treasurite_grunt_50",
+            "team_treasurite_viper_100",
+            "team_treasurite_wendy_100",
+            "team_treasurite_sebastian_100"
+          ],
+          "name": "Grunt"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "key_guardian_100"
+          ],
+          "name": "Key Guardian"
+        },
+        {
+          "bracket": "1",
+          "cap": 3000,
+          "ids": [
+            "sludge_5",
+            "sludge_10",
+            "sludge_100"
+          ],
+          "name": "Sludge"
+        },
+        {
+          "bracket": "5",
+          "cap": 400,
+          "ids": [
+            "thyst_20"
+          ],
+          "name": "Thyst"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "worm_5",
+            "scatha_10"
+          ],
+          "name": "Stoneworm"
+        },
+        {
+          "bracket": "1",
+          "cap": 3000,
+          "ids": [
+            "yog_100"
+          ],
+          "name": "Yog"
+        }
+      ],
+      "name": "Crystal Hollows"
+    },
+    {
+      "families": [
+        {
+          "bracket": "3",
+          "cap": 4000,
+          "ids": [
+            "howling_spirit_35"
+          ],
+          "name": "Howling Spirit"
+        },
+        {
+          "bracket": "3",
+          "cap": 4000,
+          "ids": [
+            "pack_spirit_30"
+          ],
+          "name": "Pack Spirit"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "soul_of_the_alpha_55"
+          ],
+          "name": "Soul of the Alpha"
+        }
+      ],
+      "name": "The Park"
+    },
+    {
+      "families": [
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "azure_2"
+          ],
+          "name": "Azure"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "bambuleaf_5"
+          ],
+          "name": "Bambuleaf"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "birries_10"
+          ],
+          "name": "Birries"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "bogged_10"
+          ],
+          "name": "Bogged"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "chillblade_31",
+            "chillshot_31"
+          ],
+          "name": "Chill"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "cod_2"
+          ],
+          "name": "Cod"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "coralot_1"
+          ],
+          "name": "Coralot"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "dreadwing_10"
+          ],
+          "name": "Dreadwing"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "ent_14"
+          ],
+          "name": "Ent"
+        },
+        {
+          "bracket": "CRITTERS_4",
+          "cap": 50,
+          "ids": [
+            "hewver_69"
+          ],
+          "name": "Hewver"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "hideonleaf_12"
+          ],
+          "name": "Hideonleaf"
+        },
+        {
+          "bracket": "1",
+          "cap": 100,
+          "ids": [
+            "honeyhog_32"
+          ],
+          "name": "Honeyhog"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "honeymite_52"
+          ],
+          "name": "Honeymite"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "invisibug_4"
+          ],
+          "name": "Invisibug"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "joydive_5"
+          ],
+          "name": "Joydive"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "lumisquid_10"
+          ],
+          "name": "Lumisquid"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "mochibear_5"
+          ],
+          "name": "Mochibear"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "mossybit_9"
+          ],
+          "name": "Mossybit"
+        },
+        {
+          "bracket": "CRITTERS_4",
+          "cap": 50,
+          "ids": [
+            "murkbat_58"
+          ],
+          "name": "Murkbat"
+        },
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "nessie_302"
+          ],
+          "name": "Nessie"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "phanflare_10"
+          ],
+          "name": "Phanflare"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "phanpyre_10"
+          ],
+          "name": "Phanpyre"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "salmon_2"
+          ],
+          "name": "Salmon"
+        },
+        {
+          "bracket": "CRITTERS_4",
+          "cap": 50,
+          "ids": [
+            "shellwise_10",
+            "shellwise_12",
+            "shellwise_14"
+          ],
+          "name": "Shellwise"
+        },
+        {
+          "bracket": "CRITTERS_5",
+          "cap": 25,
+          "ids": [
+            "spike_pufferfish_5"
+          ],
+          "name": "Spike"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "stag_beetle_29"
+          ],
+          "name": "Stag Beetle"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "strider_20",
+            "strider_21"
+          ],
+          "name": "Stridersurfer"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "tadgang_frog_8",
+            "tadgang_frog_10"
+          ],
+          "name": "Tadgang"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "skeleton_emperor_150",
+            "guardian_emperor_150"
+          ],
+          "name": "The Loch Emperor"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "tidetot_10",
+            "seacurse_15",
+            "hydrospear_25"
+          ],
+          "name": "Tidetot"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "verdant_2"
+          ],
+          "name": "Verdant"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "wetwing_chicken_18"
+          ],
+          "name": "Wetwing"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "woodlouse_1"
+          ],
+          "name": "Woodlouse"
+        }
+      ],
+      "name": "Moonglade Marsh"
+    },
+    {
+      "families": [
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "batty_witch_60"
+          ],
+          "name": "Crazy Witch"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "horseman_horse_100"
+          ],
+          "name": "Headless Horseman"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "phantom_spirit_35"
+          ],
+          "name": "Phantom Spirit"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "scary_jerry_30"
+          ],
+          "name": "Scary Jerry"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "trick_or_treater_30"
+          ],
+          "name": "Trick or Treater"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "wither_gourd_40"
+          ],
+          "name": "Wither Gourd"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "wraith_50"
+          ],
+          "name": "Wraith"
+        }
+      ],
+      "name": "Spooky Festival"
+    },
+    {
+      "families": [
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "gaia_construct_85",
+            "gaia_construct_140",
+            "gaia_construct_260",
+            "gaia_construct_325"
+          ],
+          "name": "Gaia Construct"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "minos_champion_175",
+            "minos_champion_310",
+            "minos_champion_550"
+          ],
+          "name": "Minos Champion"
+        },
+        {
+          "bracket": "5",
+          "cap": 1000,
+          "ids": [
+            "minos_hunter_15",
+            "minos_hunter_60",
+            "minos_hunter_125",
+            "minos_hunter_200",
+            "minos_hunter_25",
+            "minos_hunter_80"
+          ],
+          "name": "Minos Hunter"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "minos_inquisitor_750",
+            "minos_inquisitor_1250"
+          ],
+          "name": "Minos Inquisitor"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "minotaur_45",
+            "minotaur_120",
+            "minotaur_210"
+          ],
+          "name": "Minotaur"
+        },
+        {
+          "bracket": "5",
+          "cap": 1000,
+          "ids": [
+            "siamese_lynx_15",
+            "siamese_lynx_25",
+            "siamese_lynx_85",
+            "siamese_lynx_155",
+            "siamese_lynx_200",
+            "siamese_lynx_55"
+          ],
+          "name": "Siamese Lynx"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "cretan_bull_150",
+            "cretan_bull_250",
+            "cretan_bull_40",
+            "cretan_bull_70",
+            "cretan_bull_95"
+          ],
+          "name": "Cretan Bull"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "harpy_85",
+            "harpy_110",
+            "harpy_175",
+            "harpy_325"
+          ],
+          "name": "Harpy"
+        },
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "king_minos_1750"
+          ],
+          "name": "King Minos"
+        },
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "manticore_1750"
+          ],
+          "name": "Manticore"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "sphinx_750",
+            "sphinx_1250"
+          ],
+          "name": "Sphinx"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "stranded_nymph_150",
+            "stranded_nymph_250",
+            "stranded_nymph_40",
+            "stranded_nymph_70",
+            "stranded_nymph_95"
+          ],
+          "name": "Stranded Nymph"
+        }
+      ],
+      "name": "Mythological Creatures"
+    },
+    {
+      "families": [
+        {
+          "bracket": "5",
+          "cap": 30,
+          "ids": [
+            "mayor_jerry_blue_2"
+          ],
+          "name": "Blue Jerry"
+        },
+        {
+          "bracket": "7",
+          "cap": 20,
+          "ids": [
+            "mayor_jerry_golden_5"
+          ],
+          "name": "Golden Jerry"
+        },
+        {
+          "bracket": "4",
+          "cap": 75,
+          "ids": [
+            "mayor_jerry_green_1"
+          ],
+          "name": "Green Jerry"
+        },
+        {
+          "bracket": "6",
+          "cap": 25,
+          "ids": [
+            "mayor_jerry_purple_3"
+          ],
+          "name": "Purple Jerry"
+        }
+      ],
+      "name": "Jerry"
+    },
+    {
+      "families": [
+        {
+          "bracket": "6",
+          "cap": 25,
+          "ids": [
+            "blazing_golem_100",
+            "blazing_golem_200",
+            "blazing_golem_300",
+            "blazing_golem_400",
+            "blazing_golem_500"
+          ],
+          "name": "Blazing Golem"
+        },
+        {
+          "bracket": "3",
+          "cap": 10000,
+          "ids": [
+            "blight_100",
+            "blight_200",
+            "blight_300",
+            "blight_400",
+            "blight_500"
+          ],
+          "name": "Blight"
+        },
+        {
+          "bracket": "6",
+          "cap": 25,
+          "ids": [
+            "dropship_100",
+            "dropship_200",
+            "dropship_300",
+            "dropship_400",
+            "dropship_500"
+          ],
+          "name": "Dropship"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "explosive_imp_100",
+            "explosive_imp_200",
+            "explosive_imp_300",
+            "explosive_imp_400",
+            "explosive_imp_500"
+          ],
+          "name": "Explosive Imp"
+        },
+        {
+          "bracket": "3",
+          "cap": 10000,
+          "ids": [
+            "inferno_magma_cube_100",
+            "inferno_magma_cube_200",
+            "inferno_magma_cube_300",
+            "inferno_magma_cube_400",
+            "inferno_magma_cube_500"
+          ],
+          "name": "Inferno Magma Cube"
+        },
+        {
+          "bracket": "3",
+          "cap": 10000,
+          "ids": [
+            "kuudra_berserker_100",
+            "kuudra_berserker_200",
+            "kuudra_berserker_300",
+            "kuudra_berserker_400",
+            "kuudra_berserker_500"
+          ],
+          "name": "Kuudra Berserker"
+        },
+        {
+          "bracket": "2",
+          "cap": 25000,
+          "ids": [
+            "kuudra_follower_100",
+            "kuudra_follower_200",
+            "kuudra_follower_300",
+            "kuudra_follower_400",
+            "kuudra_follower_500"
+          ],
+          "name": "Kuudra Follower"
+        },
+        {
+          "bracket": "3",
+          "cap": 10000,
+          "ids": [
+            "kuudra_knocker_100",
+            "kuudra_knocker_200",
+            "kuudra_knocker_300",
+            "kuudra_knocker_400",
+            "kuudra_knocker_500"
+          ],
+          "name": "Kuudra Knocker"
+        },
+        {
+          "bracket": "3",
+          "cap": 10000,
+          "ids": [
+            "kuudra_landmine_100",
+            "kuudra_landmine_200",
+            "kuudra_landmine_300",
+            "kuudra_landmine_400",
+            "kuudra_landmine_500"
+          ],
+          "name": "Kuudra Landmine"
+        },
+        {
+          "bracket": "6",
+          "cap": 25,
+          "ids": [
+            "kuudra_slasher_100",
+            "kuudra_slasher_200",
+            "kuudra_slasher_300",
+            "kuudra_slasher_400",
+            "kuudra_slasher_500"
+          ],
+          "name": "Kuudra Slasher"
+        },
+        {
+          "bracket": "6",
+          "cap": 25,
+          "ids": [
+            "magma_follower_100",
+            "magma_follower_200",
+            "magma_follower_300",
+            "magma_follower_400",
+            "magma_follower_500"
+          ],
+          "name": "Magma Follower"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "wandering_blaze_100",
+            "wandering_blaze_200",
+            "wandering_blaze_300",
+            "wandering_blaze_400",
+            "wandering_blaze_500"
+          ],
+          "name": "Wandering Blaze"
+        },
+        {
+          "bracket": "6",
+          "cap": 25,
+          "ids": [
+            "wither_sentry_100",
+            "wither_sentry_200",
+            "wither_sentry_300",
+            "wither_sentry_400",
+            "wither_sentry_500"
+          ],
+          "name": "Wither Sentry"
+        }
+      ],
+      "name": "Kuudra"
+    },
+    {
+      "category": "Fishing",
+      "families": [
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "zombie_miner_150"
+          ],
+          "name": "Abyssal Miner"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "agarimoo_35"
+          ],
+          "name": "Agarimoo"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "blue_ringed_octopus_275"
+          ],
+          "name": "Blue Ringed Octopus"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "carrot_king_25"
+          ],
+          "name": "Carrot King"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "catfish_23"
+          ],
+          "name": "Catfish"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "deep_sea_protector_60"
+          ],
+          "name": "Deep Sea Protector"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "frog_man_10"
+          ],
+          "name": "Frog Man"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "guardian_defender_45"
+          ],
+          "name": "Guardian Defender"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "manta_ray_124"
+          ],
+          "name": "Manta Ray"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "small_mithril_grubber_15",
+            "medium_mithril_grubber_15",
+            "large_mithril_grubber_15",
+            "bloated_mithril_grubber_15"
+          ],
+          "name": "Mithril Grubber"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "night_squid_6"
+          ],
+          "name": "Inkling"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "oasis_rabbit_10"
+          ],
+          "name": "Oasis Rabbit"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "oasis_sheep_10"
+          ],
+          "name": "Oasis Sheep"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "poisoned_water_worm_25"
+          ],
+          "name": "Poisoned Water Worm"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "zombie_deep_20",
+            "chicken_deep_20"
+          ],
+          "name": "Rider of the Deep"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "sea_archer_15"
+          ],
+          "name": "Sea Archer"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "sea_leech_30"
+          ],
+          "name": "Sea Leech"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "sea_walker_4"
+          ],
+          "name": "Sea Walker"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "sea_witch_15"
+          ],
+          "name": "Sea Witch"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "snapping_turtle_30"
+          ],
+          "name": "Snapping Turtle"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "pond_squid_1"
+          ],
+          "name": "Squid"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "water_hydra_100"
+          ],
+          "name": "Water Hydra"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "water_worm_20"
+          ],
+          "name": "Water Worm"
+        },
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "wiki_tiki_400"
+          ],
+          "name": "Wiki Tiki"
+        }
+      ],
+      "name": "Fishing"
+    },
+    {
+      "category": "Fishing",
+      "families": [
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "fiery_scuttler_475"
+          ],
+          "name": "Fiery Scuttler"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "fire_eel_240"
+          ],
+          "name": "Fire Eel"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "fireproof_witch_75"
+          ],
+          "name": "Fireproof Witch"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "flaming_worm_50"
+          ],
+          "name": "Flaming Worm"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "fried_chicken_30"
+          ],
+          "name": "Fried Chicken"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "lava_blaze_100"
+          ],
+          "name": "Lava Blaze"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "lava_flame_230"
+          ],
+          "name": "Lava Flame"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "lava_leech_220"
+          ],
+          "name": "Lava Leech"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "lava_pigman_100"
+          ],
+          "name": "Lava Pigman"
+        },
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "lord_jawbus_600"
+          ],
+          "name": "Lord Jawbus"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "magma_pillar_220"
+          ],
+          "name": "Magma Pillar"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "magma_slug_200"
+          ],
+          "name": "Magma Slug"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "moogma_210"
+          ],
+          "name": "Moogma"
+        },
+        {
+          "bracket": "7",
+          "cap": 7,
+          "ids": [
+            "pond_squid_300"
+          ],
+          "name": "Plhlegblast"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "pyroclastic_worm_240"
+          ],
+          "name": "Pyroclastic Worm"
+        },
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "ragnarok_666"
+          ],
+          "name": "Ragnarok"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "pig_rider_250"
+          ],
+          "name": "Taurus"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "thunder_400"
+          ],
+          "name": "Thunder"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "volcanic_snail_90"
+          ],
+          "name": "Volcanic Snail"
+        }
+      ],
+      "name": "Lava"
+    },
+    {
+      "category": "Fishing",
+      "families": [
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "grim_reaper_190"
+          ],
+          "name": "Grim Reaper"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "sea_guardian_10"
+          ],
+          "name": "Jumpin' Jack"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "nightmare_24"
+          ],
+          "name": "Nightmare"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "phantom_fisherman_160"
+          ],
+          "name": "Phantom Fisher"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "scarecrow_9"
+          ],
+          "name": "Scarecrow"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "werewolf_50"
+          ],
+          "name": "Werewolf"
+        }
+      ],
+      "name": "Spooky Festival"
+    },
+    {
+      "category": "Fishing",
+      "families": [
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "blue_shark_20"
+          ],
+          "name": "Blue Shark"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "great_white_shark_180"
+          ],
+          "name": "Great White Shark"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "nurse_shark_6"
+          ],
+          "name": "Nurse Shark"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "tiger_shark_50"
+          ],
+          "name": "Tiger Shark"
+        }
+      ],
+      "name": "Fishing Festival"
+    },
+    {
+      "category": "Fishing",
+      "families": [
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "frosty_the_snowman_13"
+          ],
+          "name": "Frosty"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "frozen_steve_7"
+          ],
+          "name": "Frozen Steve"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "grinch_21"
+          ],
+          "name": "Grinch"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "nutcracker_50"
+          ],
+          "name": "Nutcracker"
+        },
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "reindrake_100"
+          ],
+          "name": "Reindrake"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "yeti_175"
+          ],
+          "name": "Yeti"
+        }
+      ],
+      "name": "Winter"
+    },
+    {
+      "category": "Fishing",
+      "families": [
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "alligator_120"
+          ],
+          "name": "Alligator"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "banshee_10"
+          ],
+          "name": "Banshee"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "bayou_sludge_25"
+          ],
+          "name": "Bayou Sludge"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "dumpster_diver_15"
+          ],
+          "name": "Dumpster Diver"
+        },
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "titanoboa_240"
+          ],
+          "name": "Titanoboa"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "trash_gobbler_8"
+          ],
+          "name": "Trash Gobbler"
+        }
+      ],
+      "name": "Backwater Bayou"
+    },
+    {
+      "families": [
+        {
+          "bracket": "5",
+          "cap": 1000,
+          "ids": [
+            "diamond_guy_80",
+            "diamond_guy_90",
+            "diamond_guy_100",
+            "diamond_guy_110",
+            "diamond_guy_120",
+            "diamond_guy_130",
+            "diamond_guy_140",
+            "diamond_guy_150",
+            "diamond_guy_160",
+            "diamond_guy_170",
+            "master_diamond_guy_80",
+            "master_diamond_guy_90",
+            "master_diamond_guy_100",
+            "master_diamond_guy_110",
+            "master_diamond_guy_120",
+            "master_diamond_guy_130",
+            "master_diamond_guy_140",
+            "master_diamond_guy_150",
+            "master_diamond_guy_160",
+            "master_diamond_guy_170"
+          ],
+          "name": "Angry Archaeologist"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "dungeon_secret_bat_1"
+          ],
+          "name": "Bat"
+        },
+        {
+          "bracket": "5",
+          "cap": 400,
+          "ids": [
+            "cellar_spider_45",
+            "cellar_spider_65",
+            "cellar_spider_75",
+            "cellar_spider_85",
+            "cellar_spider_95",
+            "cellar_spider_105",
+            "cellar_spider_115",
+            "cellar_spider_125",
+            "master_cellar_spider_45",
+            "master_cellar_spider_65",
+            "master_cellar_spider_75",
+            "master_cellar_spider_85",
+            "master_cellar_spider_95",
+            "master_cellar_spider_105",
+            "master_cellar_spider_115",
+            "master_cellar_spider_125"
+          ],
+          "name": "Cellar Spider"
+        },
+        {
+          "bracket": "3",
+          "cap": 4000,
+          "ids": [
+            "lonely_spider_35",
+            "lonely_spider_55",
+            "lonely_spider_65",
+            "lonely_spider_75",
+            "lonely_spider_85",
+            "lonely_spider_95",
+            "lonely_spider_105",
+            "lonely_spider_115",
+            "master_lonely_spider_35",
+            "master_lonely_spider_55",
+            "master_lonely_spider_65",
+            "master_lonely_spider_75",
+            "master_lonely_spider_85",
+            "master_lonely_spider_95",
+            "master_lonely_spider_105",
+            "master_lonely_spider_115"
+          ],
+          "name": "Lonely Spider"
+        },
+        {
+          "bracket": "5",
+          "cap": 10000,
+          "ids": [
+            "crypt_dreadlord_47",
+            "crypt_dreadlord_67",
+            "crypt_dreadlord_77",
+            "crypt_dreadlord_87",
+            "crypt_dreadlord_97",
+            "crypt_dreadlord_107",
+            "crypt_dreadlord_117",
+            "crypt_dreadlord_127",
+            "master_crypt_dreadlord_47",
+            "master_crypt_dreadlord_67",
+            "master_crypt_dreadlord_77",
+            "master_crypt_dreadlord_87",
+            "master_crypt_dreadlord_97",
+            "master_crypt_dreadlord_107",
+            "master_crypt_dreadlord_117",
+            "master_crypt_dreadlord_127"
+          ],
+          "name": "Crypt Dreadlord"
+        },
+        {
+          "bracket": "2",
+          "cap": 10000,
+          "ids": [
+            "crypt_lurker_41",
+            "crypt_lurker_61",
+            "crypt_lurker_71",
+            "crypt_lurker_81",
+            "crypt_lurker_91",
+            "crypt_lurker_101",
+            "crypt_lurker_111",
+            "crypt_lurker_121",
+            "master_crypt_lurker_41",
+            "master_crypt_lurker_61",
+            "master_crypt_lurker_71",
+            "master_crypt_lurker_81",
+            "master_crypt_lurker_91",
+            "master_crypt_lurker_101",
+            "master_crypt_lurker_111",
+            "master_crypt_lurker_121"
+          ],
+          "name": "Crypt Lurker"
+        },
+        {
+          "bracket": "5",
+          "cap": 10000,
+          "ids": [
+            "crypt_souleater_45",
+            "crypt_souleater_65",
+            "crypt_souleater_75",
+            "crypt_souleater_85",
+            "crypt_souleater_95",
+            "crypt_souleater_105",
+            "crypt_souleater_115",
+            "crypt_souleater_125",
+            "master_crypt_souleater_45",
+            "master_crypt_souleater_65",
+            "master_crypt_souleater_75",
+            "master_crypt_souleater_85",
+            "master_crypt_souleater_95",
+            "master_crypt_souleater_105",
+            "master_crypt_souleater_115",
+            "master_crypt_souleater_125"
+          ],
+          "name": "Crypt Souleater"
+        },
+        {
+          "bracket": "3",
+          "cap": 4000,
+          "ids": [
+            "tentaclees_90",
+            "tentaclees_100",
+            "tentaclees_110",
+            "master_tentaclees_90",
+            "master_tentaclees_100",
+            "master_tentaclees_110"
+          ],
+          "name": "Fels"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "sadan_golem_1",
+            "master_sadan_golem_1"
+          ],
+          "name": "Golem"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "king_midas_130",
+            "king_midas_140",
+            "king_midas_150",
+            "king_midas_160",
+            "king_midas_170",
+            "master_king_midas_130",
+            "master_king_midas_140",
+            "master_king_midas_150",
+            "master_king_midas_160",
+            "master_king_midas_170"
+          ],
+          "name": "King Midas"
+        },
+        {
+          "bracket": "7",
+          "cap": 3000,
+          "ids": [
+            "lost_adventurer_80",
+            "lost_adventurer_81",
+            "lost_adventurer_82",
+            "lost_adventurer_83",
+            "lost_adventurer_85",
+            "lost_adventurer_86",
+            "lost_adventurer_87",
+            "lost_adventurer_88",
+            "lost_adventurer_90",
+            "lost_adventurer_91",
+            "lost_adventurer_92",
+            "lost_adventurer_93",
+            "lost_adventurer_100",
+            "lost_adventurer_101",
+            "lost_adventurer_102",
+            "lost_adventurer_103",
+            "lost_adventurer_110",
+            "lost_adventurer_111",
+            "lost_adventurer_112",
+            "lost_adventurer_113",
+            "lost_adventurer_120",
+            "lost_adventurer_121",
+            "lost_adventurer_122",
+            "lost_adventurer_123",
+            "lost_adventurer_130",
+            "lost_adventurer_131",
+            "lost_adventurer_132",
+            "lost_adventurer_133",
+            "lost_adventurer_134",
+            "lost_adventurer_135",
+            "lost_adventurer_140",
+            "lost_adventurer_141",
+            "lost_adventurer_142",
+            "lost_adventurer_143",
+            "lost_adventurer_144",
+            "lost_adventurer_150",
+            "lost_adventurer_151",
+            "lost_adventurer_152",
+            "lost_adventurer_153",
+            "lost_adventurer_154",
+            "lost_adventurer_160",
+            "lost_adventurer_161",
+            "lost_adventurer_162",
+            "lost_adventurer_163",
+            "lost_adventurer_164",
+            "master_lost_adventurer_80",
+            "master_lost_adventurer_81",
+            "master_lost_adventurer_82",
+            "master_lost_adventurer_83",
+            "master_lost_adventurer_85",
+            "master_lost_adventurer_86",
+            "master_lost_adventurer_87",
+            "master_lost_adventurer_88",
+            "master_lost_adventurer_90",
+            "master_lost_adventurer_91",
+            "master_lost_adventurer_92",
+            "master_lost_adventurer_93",
+            "master_lost_adventurer_100",
+            "master_lost_adventurer_101",
+            "master_lost_adventurer_102",
+            "master_lost_adventurer_103",
+            "master_lost_adventurer_110",
+            "master_lost_adventurer_111",
+            "master_lost_adventurer_112",
+            "master_lost_adventurer_113",
+            "master_lost_adventurer_120",
+            "master_lost_adventurer_121",
+            "master_lost_adventurer_122",
+            "master_lost_adventurer_123",
+            "master_lost_adventurer_130",
+            "master_lost_adventurer_131",
+            "master_lost_adventurer_132",
+            "master_lost_adventurer_133",
+            "master_lost_adventurer_134",
+            "master_lost_adventurer_135",
+            "master_lost_adventurer_140",
+            "master_lost_adventurer_141",
+            "master_lost_adventurer_142",
+            "master_lost_adventurer_143",
+            "master_lost_adventurer_144",
+            "master_lost_adventurer_150",
+            "master_lost_adventurer_151",
+            "master_lost_adventurer_152",
+            "master_lost_adventurer_153",
+            "master_lost_adventurer_154",
+            "master_lost_adventurer_160",
+            "master_lost_adventurer_161",
+            "master_lost_adventurer_162",
+            "master_lost_adventurer_163",
+            "master_lost_adventurer_164"
+          ],
+          "name": "Lost Adventurer"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "mimic_115",
+            "mimic_125",
+            "master_mimic_115",
+            "master_mimic_125"
+          ],
+          "name": "Mimic"
+        },
+        {
+          "bracket": "5",
+          "cap": 1000,
+          "ids": [
+            "scared_skeleton_42",
+            "scared_skeleton_62",
+            "scared_skeleton_72",
+            "master_scared_skeleton_42",
+            "master_scared_skeleton_62",
+            "master_scared_skeleton_72"
+          ],
+          "name": "Scared Skeleton"
+        },
+        {
+          "bracket": "7",
+          "cap": 3000,
+          "ids": [
+            "shadow_assassin_120",
+            "shadow_assassin_130",
+            "shadow_assassin_140",
+            "shadow_assassin_150",
+            "shadow_assassin_160",
+            "shadow_assassin_170",
+            "shadow_assassin_171",
+            "master_shadow_assassin_120",
+            "master_shadow_assassin_130",
+            "master_shadow_assassin_140",
+            "master_shadow_assassin_150",
+            "master_shadow_assassin_160",
+            "master_shadow_assassin_170",
+            "master_shadow_assassin_171"
+          ],
+          "name": "Shadow Assassin"
+        },
+        {
+          "bracket": "3",
+          "cap": 4000,
+          "ids": [
+            "skeleton_grunt_40",
+            "skeleton_grunt_60",
+            "skeleton_grunt_70",
+            "skeleton_grunt_80",
+            "master_skeleton_grunt_40",
+            "master_skeleton_grunt_60",
+            "master_skeleton_grunt_70",
+            "master_skeleton_grunt_80"
+          ],
+          "name": "Skeleton Grunt"
+        },
+        {
+          "bracket": "5",
+          "cap": 1000,
+          "ids": [
+            "skeleton_lord_150",
+            "master_skeleton_lord_150"
+          ],
+          "name": "Skeleton Lord"
+        },
+        {
+          "bracket": "5",
+          "cap": 10000,
+          "ids": [
+            "skeleton_master_48",
+            "skeleton_master_68",
+            "skeleton_master_78",
+            "skeleton_master_88",
+            "skeleton_master_98",
+            "skeleton_master_108",
+            "skeleton_master_118",
+            "skeleton_master_128",
+            "master_skeleton_master_48",
+            "master_skeleton_master_68",
+            "master_skeleton_master_78",
+            "master_skeleton_master_88",
+            "master_skeleton_master_98",
+            "master_skeleton_master_108",
+            "master_skeleton_master_118",
+            "master_skeleton_master_128"
+          ],
+          "name": "Skeleton Master"
+        },
+        {
+          "bracket": "3",
+          "cap": 10000,
+          "ids": [
+            "skeleton_soldier_46",
+            "skeleton_soldier_66",
+            "skeleton_soldier_76",
+            "skeleton_soldier_86",
+            "skeleton_soldier_96",
+            "skeleton_soldier_106",
+            "skeleton_soldier_116",
+            "skeleton_soldier_126",
+            "master_skeleton_soldier_46",
+            "master_skeleton_soldier_66",
+            "master_skeleton_soldier_76",
+            "master_skeleton_soldier_86",
+            "master_skeleton_soldier_96",
+            "master_skeleton_soldier_106",
+            "master_skeleton_soldier_116",
+            "master_skeleton_soldier_126"
+          ],
+          "name": "Skeleton Soldier"
+        },
+        {
+          "bracket": "3",
+          "cap": 4000,
+          "ids": [
+            "skeletor_80",
+            "skeletor_90",
+            "skeletor_100",
+            "skeletor_101",
+            "skeletor_110",
+            "skeletor_120",
+            "skeletor_prime_100",
+            "skeletor_prime_110",
+            "skeletor_prime_120",
+            "master_skeletor_80",
+            "master_skeletor_90",
+            "master_skeletor_100",
+            "master_skeletor_101",
+            "master_skeletor_110",
+            "master_skeletor_120",
+            "master_skeletor_prime_100",
+            "master_skeletor_prime_110",
+            "master_skeletor_prime_120"
+          ],
+          "name": "Skeletor"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "sniper_skeleton_43",
+            "sniper_skeleton_63",
+            "sniper_skeleton_73",
+            "sniper_skeleton_83",
+            "sniper_skeleton_93",
+            "sniper_skeleton_103",
+            "sniper_skeleton_113",
+            "sniper_skeleton_123",
+            "master_sniper_skeleton_43",
+            "master_sniper_skeleton_63",
+            "master_sniper_skeleton_73",
+            "master_sniper_skeleton_83",
+            "master_sniper_skeleton_93",
+            "master_sniper_skeleton_103",
+            "master_sniper_skeleton_113",
+            "master_sniper_skeleton_123"
+          ],
+          "name": "Sniper"
+        },
+        {
+          "bracket": "3",
+          "cap": 4000,
+          "ids": [
+            "super_archer_90",
+            "super_archer_100",
+            "super_archer_110",
+            "super_archer_120",
+            "master_super_archer_90",
+            "master_super_archer_100",
+            "master_super_archer_110",
+            "master_super_archer_120"
+          ],
+          "name": "Super Archer"
+        },
+        {
+          "bracket": "2",
+          "cap": 10000,
+          "ids": [
+            "super_tank_zombie_90",
+            "super_tank_zombie_100",
+            "super_tank_zombie_110",
+            "super_tank_zombie_120",
+            "master_super_tank_zombie_90",
+            "master_super_tank_zombie_100",
+            "master_super_tank_zombie_110",
+            "master_super_tank_zombie_120"
+          ],
+          "name": "Super Tank Zombie"
+        },
+        {
+          "bracket": "3",
+          "cap": 4000,
+          "ids": [
+            "crypt_tank_zombie_40",
+            "crypt_tank_zombie_60",
+            "crypt_tank_zombie_70",
+            "crypt_tank_zombie_80",
+            "crypt_tank_zombie_90",
+            "master_crypt_tank_zombie_40",
+            "master_crypt_tank_zombie_60",
+            "master_crypt_tank_zombie_70",
+            "master_crypt_tank_zombie_80",
+            "master_crypt_tank_zombie_90"
+          ],
+          "name": "Tank Zombie"
+        },
+        {
+          "bracket": "2",
+          "cap": 10000,
+          "ids": [
+            "sadan_statue_1",
+            "master_sadan_statue_1"
+          ],
+          "name": "Terracotta"
+        },
+        {
+          "bracket": "2",
+          "cap": 10000,
+          "ids": [
+            "watcher_summon_undead_1",
+            "watcher_summon_undead_2",
+            "watcher_summon_undead_3",
+            "watcher_summon_undead_4",
+            "watcher_summon_undead_5",
+            "watcher_summon_undead_6",
+            "watcher_summon_undead_7",
+            "watcher_summon_undead_8",
+            "master_watcher_summon_undead_1",
+            "master_watcher_summon_undead_2",
+            "master_watcher_summon_undead_3",
+            "master_watcher_summon_undead_4",
+            "master_watcher_summon_undead_5",
+            "master_watcher_summon_undead_6",
+            "master_watcher_summon_undead_7",
+            "master_watcher_summon_undead_8"
+          ],
+          "name": "Undead"
+        },
+        {
+          "bracket": "5",
+          "cap": 10000,
+          "ids": [
+            "dungeon_respawning_skeleton_40",
+            "dungeon_respawning_skeleton_skull_40",
+            "dungeon_respawning_skeleton_60",
+            "dungeon_respawning_skeleton_70",
+            "dungeon_respawning_skeleton_80",
+            "dungeon_respawning_skeleton_90",
+            "dungeon_respawning_skeleton_100",
+            "dungeon_respawning_skeleton_110",
+            "dungeon_respawning_skeleton_120",
+            "master_dungeon_respawning_skeleton_40",
+            "master_dungeon_respawning_skeleton_60",
+            "master_dungeon_respawning_skeleton_70",
+            "master_dungeon_respawning_skeleton_80",
+            "master_dungeon_respawning_skeleton_90",
+            "master_dungeon_respawning_skeleton_100",
+            "master_dungeon_respawning_skeleton_110",
+            "master_dungeon_respawning_skeleton_120"
+          ],
+          "name": "Undead Skeleton"
+        },
+        {
+          "bracket": "5",
+          "cap": 10000,
+          "ids": [
+            "wither_guard_100",
+            "master_wither_guard_100"
+          ],
+          "name": "Wither Guard"
+        },
+        {
+          "bracket": "5",
+          "cap": 10000,
+          "ids": [
+            "master_wither_husk_100"
+          ],
+          "name": "Wither Husk"
+        },
+        {
+          "bracket": "4",
+          "cap": 25000,
+          "ids": [
+            "wither_miner_100",
+            "master_wither_miner_100"
+          ],
+          "name": "Wither Miner"
+        },
+        {
+          "bracket": "5",
+          "cap": 10000,
+          "ids": [
+            "crypt_witherskeleton_90",
+            "crypt_witherskeleton_100",
+            "crypt_witherskeleton_110",
+            "crypt_witherskeleton_120",
+            "master_crypt_witherskeleton_90",
+            "master_crypt_witherskeleton_100",
+            "master_crypt_witherskeleton_110",
+            "master_crypt_witherskeleton_120"
+          ],
+          "name": "Withermancer"
+        },
+        {
+          "bracket": "4",
+          "cap": 3000,
+          "ids": [
+            "zombie_commander_110",
+            "zombie_commander_120",
+            "master_zombie_commander_110",
+            "master_zombie_commander_120"
+          ],
+          "name": "Zombie Commander"
+        },
+        {
+          "bracket": "3",
+          "cap": 4000,
+          "ids": [
+            "zombie_grunt_40",
+            "zombie_grunt_60",
+            "zombie_grunt_70",
+            "zombie_grunt_80",
+            "master_zombie_grunt_40",
+            "master_zombie_grunt_60",
+            "master_zombie_grunt_70",
+            "master_zombie_grunt_80"
+          ],
+          "name": "Zombie Grunt"
+        },
+        {
+          "bracket": "3",
+          "cap": 4000,
+          "ids": [
+            "zombie_knight_86",
+            "zombie_knight_96",
+            "zombie_knight_106",
+            "zombie_knight_116",
+            "zombie_knight_126",
+            "master_zombie_knight_86",
+            "master_zombie_knight_96",
+            "master_zombie_knight_106",
+            "master_zombie_knight_116",
+            "master_zombie_knight_126"
+          ],
+          "name": "Zombie Knight"
+        },
+        {
+          "bracket": "5",
+          "cap": 1000,
+          "ids": [
+            "zombie_lord_150",
+            "master_zombie_lord_150"
+          ],
+          "name": "Zombie Lord"
+        },
+        {
+          "bracket": "3",
+          "cap": 10000,
+          "ids": [
+            "zombie_soldier_83",
+            "zombie_soldier_93",
+            "zombie_soldier_103",
+            "zombie_soldier_113",
+            "zombie_soldier_123",
+            "master_zombie_soldier_83",
+            "master_zombie_soldier_93",
+            "master_zombie_soldier_103",
+            "master_zombie_soldier_113",
+            "master_zombie_soldier_123"
+          ],
+          "name": "Zombie Soldier"
+        }
+      ],
+      "name": "Catacombs"
+    },
+    {
+      "families": [
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_beetle_1"
+          ],
+          "name": "Beetle"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_cricket_1"
+          ],
+          "name": "Cricket"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_worm_1"
+          ],
+          "name": "Earthworm"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_dragonfly_1"
+          ],
+          "name": "Dragonfly"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "pest_mouse_1"
+          ],
+          "name": "Field Mouse"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_fly_1"
+          ],
+          "name": "Fly"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_locust_1"
+          ],
+          "name": "Locust"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "pest_lunar_moth_1"
+          ],
+          "name": "Lunar Moth"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_mite_1"
+          ],
+          "name": "Mite"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_mosquito_1"
+          ],
+          "name": "Mosquito"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_moth_1"
+          ],
+          "name": "Moth"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_praying_mantis_1"
+          ],
+          "name": "Praying Mantis"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_firefly_1"
+          ],
+          "name": "Firefly"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_rat_1"
+          ],
+          "name": "Rat"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "pest_slug_1"
+          ],
+          "name": "Slug"
+        },
+        {
+          "bracket": "7",
+          "cap": 20,
+          "ids": [
+            "timestalk_clone_100"
+          ],
+          "name": "Timestalk Clone"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "zombuddy_1"
+          ],
+          "name": "Zombuddy"
+        }
+      ],
+      "name": "Garden"
+    },
+    {
+      "families": [
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "atoll_croaker_45"
+          ],
+          "name": "Atoll Croaker"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "drowned_captain_74"
+          ],
+          "name": "Drowned Captain"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "flip_flopper_10"
+          ],
+          "name": "Flipflopper"
+        },
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "frog_prince_132"
+          ],
+          "name": "Frog Prince"
+        },
+        {
+          "bracket": "7",
+          "cap": 100,
+          "ids": [
+            "lotus_jumping_frog_5"
+          ],
+          "name": "Lotum"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "lotus_guardian_55"
+          ],
+          "name": "Lotus Guardian"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "lotus_fish_1"
+          ],
+          "name": "Lotusfish"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "puddle_jumper_85"
+          ],
+          "name": "Puddle Jumper"
+        },
+        {
+          "bracket": "2",
+          "cap": 50,
+          "ids": [
+            "sea_shine_12"
+          ],
+          "name": "Seashine"
+        },
+        {
+          "bracket": "2",
+          "cap": 50,
+          "ids": [
+            "tewtil_10"
+          ],
+          "name": "Tewtil"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "gorf_65"
+          ],
+          "name": "gorF"
+        }
+      ],
+      "name": "Lotus Atoll"
+    },
+    {
+      "families": [
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "ant_32"
+          ],
+          "name": "Ant"
+        },
+        {
+          "bracket": "CRITTERS_5",
+          "cap": 25,
+          "ids": [
+            "beeheemoth_158"
+          ],
+          "name": "Beeheemoth"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "blue_jay_9"
+          ],
+          "name": "Blue Jay"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "brineling_58"
+          ],
+          "name": "Brineling"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "bunbun_4"
+          ],
+          "name": "Bunbun"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "drybark_80"
+          ],
+          "name": "Drybark"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "dustybit_9"
+          ],
+          "name": "Dustybit"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "ember_4"
+          ],
+          "name": "Ember"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "firefox_32"
+          ],
+          "name": "Firefox"
+        },
+        {
+          "bracket": "8",
+          "cap": 50,
+          "ids": [
+            "giant_isopod_186"
+          ],
+          "name": "Giant Isopod"
+        },
+        {
+          "bracket": "5",
+          "cap": 25,
+          "ids": [
+            "grizzly_bear_101"
+          ],
+          "name": "Grizzly Bear"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "groundhog_42"
+          ],
+          "name": "Groundhog"
+        },
+        {
+          "bracket": "4",
+          "cap": 1000,
+          "ids": [
+            "haggard_44"
+          ],
+          "name": "Haggard"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "hideonsun_24"
+          ],
+          "name": "Hideonsun"
+        },
+        {
+          "bracket": "CRITTERS_4",
+          "cap": 50,
+          "ids": [
+            "hivethief_80"
+          ],
+          "name": "Hivethief"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "honeybuzz_9"
+          ],
+          "name": "Honeybuzz"
+        },
+        {
+          "bracket": "CRITTERS_4",
+          "cap": 50,
+          "ids": [
+            "mountain_goat_55"
+          ],
+          "name": "Mountain Goat"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "pangolin_14"
+          ],
+          "name": "Pangolin"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "parched_58"
+          ],
+          "name": "Parched"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "pollendart_24"
+          ],
+          "name": "Pollendart"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "puck_58"
+          ],
+          "name": "Puck"
+        },
+        {
+          "bracket": "4",
+          "cap": 50,
+          "ids": [
+            "queen_ant_69"
+          ],
+          "name": "Queen Ant"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "sepialot_9",
+            "goldolot_13"
+          ],
+          "name": "Sepialot"
+        },
+        {
+          "bracket": "6",
+          "cap": 250,
+          "ids": [
+            "silkbreeze_105"
+          ],
+          "name": "Silkbreeze"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "solar_2"
+          ],
+          "name": "Solar"
+        },
+        {
+          "bracket": "6",
+          "cap": 750,
+          "ids": [
+            "sprawl_71"
+          ],
+          "name": "Sprawl"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "sneaky_tiki_71",
+            "shrieky_tiki_71",
+            "cheeky_tiki_71"
+          ],
+          "name": "Tiki"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "timil_1"
+          ],
+          "name": "Timil"
+        },
+        {
+          "bracket": "7",
+          "cap": 500,
+          "ids": [
+            "torrid_85"
+          ],
+          "name": "Torrid"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "water_snake_35"
+          ],
+          "name": "Water Snake"
+        }
+      ],
+      "name": "Torrhus Canyon"
+    },
+    {
+      "category": "Critter Safari",
+      "families": [
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "cavernfish_1"
+          ],
+          "name": "Cavernfish"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "chuckwalla_1"
+          ],
+          "name": "Chuckwalla"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "driftling_1"
+          ],
+          "name": "Driftling"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "flitter_1"
+          ],
+          "name": "Flitter"
+        },
+        {
+          "bracket": "CRITTERS_4",
+          "cap": 50,
+          "ids": [
+            "gemzie_1"
+          ],
+          "name": "Gemzie"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "rockmite_1"
+          ],
+          "name": "Rockmite"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "scrappy_1"
+          ],
+          "name": "Scrappy"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "shyworm_1"
+          ],
+          "name": "Shyworm"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "snoozle_1"
+          ],
+          "name": "Snoozle"
+        }
+      ],
+      "name": "Cavern Biome"
+    },
+    {
+      "category": "Critter Safari",
+      "families": [
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "bluebird_1"
+          ],
+          "name": "Bluebird"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "fluffling_1"
+          ],
+          "name": "Fluffling"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "foxtrot_1"
+          ],
+          "name": "Foxtrot"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "hideonfloor_1"
+          ],
+          "name": "Hideonfloor"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "honeybug_1"
+          ],
+          "name": "Honeybug"
+        },
+        {
+          "bracket": "CRITTERS_5",
+          "cap": 25,
+          "ids": [
+            "macaw_1"
+          ],
+          "name": "Macaw"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "parakeet_1"
+          ],
+          "name": "Parakeet"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "treefrog_1"
+          ],
+          "name": "Treefrog"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "woodchucker_1"
+          ],
+          "name": "Woodchucker"
+        }
+      ],
+      "name": "Forest Biome"
+    },
+    {
+      "category": "Critter Safari",
+      "families": [
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "areita_1"
+          ],
+          "name": "Areita"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "bloodbat_1"
+          ],
+          "name": "Bloodbat"
+        },
+        {
+          "bracket": "CRITTERS_5",
+          "cap": 25,
+          "ids": [
+            "doomspiral_1"
+          ],
+          "name": "Doomspiral"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "duplico_1"
+          ],
+          "name": "Duplico"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "gazer_1"
+          ],
+          "name": "Gazer"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "gimmiegold_1"
+          ],
+          "name": "Gimmiegold"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "hideonwall_1"
+          ],
+          "name": "Hideonwall"
+        },
+        {
+          "bracket": "CRITTERS_4",
+          "cap": 50,
+          "ids": [
+            "hideyho_1"
+          ],
+          "name": "Hideyho"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "litterbug_1"
+          ],
+          "name": "Litterbug"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "solsnatcher_1"
+          ],
+          "name": "Solsnatcher"
+        }
+      ],
+      "name": "Haunted Biome"
+    },
+    {
+      "category": "Critter Safari",
+      "families": [
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "billygoat_1"
+          ],
+          "name": "Billygoat"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "mantis_shrimp_1"
+          ],
+          "name": "Mantis Shrimp"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "nozzlenose_1"
+          ],
+          "name": "Nozzlenose"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "polaris_1"
+          ],
+          "name": "Polaris"
+        },
+        {
+          "bracket": "CRITTERS_2",
+          "cap": 100,
+          "ids": [
+            "shuddersquid_1"
+          ],
+          "name": "Shuddersquid"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "strongarm_1"
+          ],
+          "name": "Strongarm"
+        },
+        {
+          "bracket": "CRITTERS_1",
+          "cap": 125,
+          "ids": [
+            "tepid_1"
+          ],
+          "name": "Tepid"
+        },
+        {
+          "bracket": "CRITTERS_3",
+          "cap": 75,
+          "ids": [
+            "troodon_1"
+          ],
+          "name": "Troodon"
+        },
+        {
+          "bracket": "CRITTERS_5",
+          "cap": 25,
+          "ids": [
+            "wumpa_1"
+          ],
+          "name": "Wumpa"
+        }
+      ],
+      "name": "Icy Biome"
+    }
+  ]
+}

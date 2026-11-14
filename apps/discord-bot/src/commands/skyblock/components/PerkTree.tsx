@@ -27,7 +27,7 @@ export const PerkTree = ({ nodes }: { nodes: TreeNode[] }) => {
   const height = Math.max(...nodes.map(({ y }) => y)) + 1;
 
   return (
-    <div direction="column" margin={{ top: 8, bottom: 8, left: 6, right: 6 }}>
+    <div direction="column" align="center" margin={{ top: 8, bottom: 8, left: 6, right: 6 }}>
       {Array.from({ length: height }, (_, y) => (
         <div>
           {Array.from({ length: TREE_WIDTH }, (_, x) => {

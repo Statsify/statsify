@@ -9,6 +9,7 @@
 import { LEVELING } from "#data";
 import { SKILLS, type SkillLevel, type SkillsSection } from "#types";
 import { add } from "@statsify/math";
+import { coopMembers } from "../profiles.js";
 import { fractionalLevel, getLevel } from "#leveling";
 import type { RawMember, RawProfile } from "#raw";
 
@@ -47,10 +48,10 @@ function capOf(skill: string, member: RawMember) {
 export function getSkills(profile: RawProfile, member: RawMember): SkillsSection | null {
   if (!member.player_data?.experience) return null;
 
-  const accepted = Object.values(profile.members).filter((other) => other.profile?.coop_invitation?.confirmed !== false);
+  const accepted = coopMembers(profile);
   const skills = Object.fromEntries(
     SKILLS.map((skill): [string, SkillLevel] => {
-      const xp = skill === "social" ? add(...accepted.map((other) => xpOf(other, skill))) : xpOf(member, skill);
+      const xp = skill === "social" ? add(...accepted.map(([, other]) => xpOf(other, skill))) : xpOf(member, skill);
       const level = getLevel(xp, tableOf(skill), capOf(skill, member));
       return [skill, { ...level, unverified: skill === "foraging" && level.level > FORAGING_VERIFIED }];
     })
