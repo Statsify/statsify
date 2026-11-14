@@ -41,7 +41,7 @@ export interface RenderOptions {
    * Defaults to -0.3.
    */
   yaw?: number
-  pose?: 'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly'
+  pose?: 'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly' | 'sit'
 }
 
 export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: boolean, options?: RenderOptions | undefined | null): Promise<Buffer>
