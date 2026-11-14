@@ -9,7 +9,7 @@ pub enum Error {
   #[error("Failed to render skin")]
   RenderFailure,
 
-  #[error("The output must be between 1 and {0} pixels wide and high")]
+  #[error("The output's width and height must be whole numbers from 1 to {0}")]
   OutputSize(u32),
 
   #[error(transparent)]

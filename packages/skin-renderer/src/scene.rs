@@ -80,8 +80,9 @@ pub struct Scene {
 
 #[napi(object)]
 pub struct SceneOutput {
-  pub width: u32,
-  pub height: u32,
+  // Taken as numbers and checked here, since napi wraps or truncates a number into a u32
+  pub width: f64,
+  pub height: f64,
   /// Camera angle around the scene in radians: 0 faces the player's front, π the back.
   pub yaw: f64,
   /// Camera angle above the horizon in radians.
@@ -230,6 +231,9 @@ pub async fn render_scene(
 ) -> Result<Buffer> {
   let renderer = SKIN_RENDERER.get().await;
 
+  let limit = renderer.device().limits().max_texture_dimension_2d;
+  let (width, height) = (pixels(output.width, limit)?, pixels(output.height, limit)?);
+
   // Checked after narrowing, since a huge f64 becomes an f32 infinity
   let (yaw, pitch) = (output.yaw as f32, output.pitch as f32);
 
@@ -351,24 +355,24 @@ pub async fn render_scene(
 
   let middle = points.iter().sum::<Vector3<f32>>() / points.len() as f32;
 
-  let camera = OrbitalCamera::new(
-    Point3::from_vec(middle),
-    output.width as f32,
-    output.height as f32,
-  )
-  .with_theta(yaw)
-  .with_phi(FRAC_PI_2 - pitch)
-  .framed(&points, MARGIN * output.width.min(output.height) as f32);
+  let camera = OrbitalCamera::new(Point3::from_vec(middle), width as f32, height as f32)
+    .with_theta(yaw)
+    .with_phi(FRAC_PI_2 - pitch)
+    .framed(&points, MARGIN * width.min(height) as f32);
 
   let buffer = renderer
-    .render_sized(
-      &items,
-      &Camera::Orbital(camera),
-      output.width,
-      output.height,
-    )
+    .render_sized(&items, &Camera::Orbital(camera), width, height)
     .await
     .map_err(Error::from)?;
 
   Ok(buffer.into())
+}
+
+// A side of the output, which must be a whole number of pixels the device can render
+fn pixels(side: f64, limit: u32) -> crate::error::Result<u32> {
+  if side.fract() == 0.0 && (1.0..=f64::from(limit)).contains(&side) {
+    Ok(side as u32)
+  } else {
+    Err(statsify_render_core::Error::OutputSize(limit).into())
+  }
 }
