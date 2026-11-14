@@ -268,7 +268,10 @@ export async function updateResourcePacks(): Promise<PackUpdate> {
   try {
     const generation = { packs: [await minecraftClient(MINECRAFT_VERSION), await hypixelPack()] };
     const active = await readGeneration(ACTIVE);
-    if (active && generationId(active) === generationId(generation)) return { status: "unchanged" };
+    if (active && generationId(active) === generationId(generation)) {
+      await rm(join(ROOT, HELD), { force: true });
+      return { status: "unchanged" };
+    }
 
     const license = join(ROOT, dirname(generation.packs[1]), "LICENSE");
 
@@ -279,12 +282,13 @@ export async function updateResourcePacks(): Promise<PackUpdate> {
 
     // Items that fail to draw fall back to their 1.8 icons, so they don't hold back the rest
     const failedItems = await probe(await loadStack(generation));
+
+    if (!(await lease.owned())) throw new Error("Another update took over the lock");
     await prune(active ? [generation, active] : [generation]);
     await rm(join(ROOT, HELD), { force: true });
     if (active) await writeGeneration(PREVIOUS, active);
 
     // Writing active.json activates the packs, so it comes last
-    if (!(await lease.owned())) throw new Error("Another update took over the lock");
     await writeGeneration(ACTIVE, generation);
 
     return { status: "activated", failedItems };
