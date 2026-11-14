@@ -29,7 +29,7 @@ if (cluster.isPrimary) {
   console.log("Generating backgrounds...");
 
   cluster.on("exit", (worker, code, signal) => {
-    if (code === 0 && signal === null) return;
+    if (code === 0) return;
 
     console.error(`Cluster ${worker.id - 1} failed (code ${code}, signal ${signal})`);
     process.exitCode = 1;
