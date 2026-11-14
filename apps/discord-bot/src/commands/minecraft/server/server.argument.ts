@@ -13,6 +13,7 @@ import {
 } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import { type ServerMappingsServer, getServerMappings } from "./server.util.js";
+import { setTimeout } from "node:timers/promises";
 
 export class ServerArgument extends AbstractArgument {
   public name = "server";
@@ -21,38 +22,38 @@ export class ServerArgument extends AbstractArgument {
   public required = true;
   public autocomplete = true;
 
-  private servers: ServerMappingsServer[];
-  private fuse: Fuse<ServerMappingsServer>;
+  private fuse?: Fuse<ServerMappingsServer>;
 
   public constructor() {
     super();
     this.description = (t) => t("arguments.server");
 
-    getServerMappings().then((servers) => {
-      this.servers = servers;
-      this.fuse = new Fuse(this.servers, {
-        keys: ["id", "name", "addresses", "primaryAddress"],
-        includeScore: false,
-        shouldSort: true,
-        isCaseSensitive: false,
-        threshold: 0.3,
-        ignoreLocation: true,
-      });
-      
-      return undefined;
-    });
+    getServerMappings().catch(() => undefined);
   }
 
-  public autocompleteHandler(
+  public async autocompleteHandler(
     context: CommandContext
-  ): APIApplicationCommandOptionChoice[] {
+  ): Promise<APIApplicationCommandOptionChoice[]> {
+    // Discord drops autocomplete answers after 3 seconds, so don't wait long for the mappings
+    const servers = await Promise.race([getServerMappings(), setTimeout(250)]).catch(() => undefined);
+    if (!servers) return [];
+
     const currentValue = context.option<string>(this.name, "").toLowerCase();
 
     if (!currentValue) {
-      return this.servers
+      return servers
         .map((result) => ({ name: result.name, value: result.primaryAddress }))
         .slice(0, 25);
     }
+
+    this.fuse ??= new Fuse(servers, {
+      keys: ["id", "name", "addresses", "primaryAddress"],
+      includeScore: false,
+      shouldSort: true,
+      isCaseSensitive: false,
+      threshold: 0.3,
+      ignoreLocation: true,
+    });
 
     return this.fuse
       .search(currentValue)
