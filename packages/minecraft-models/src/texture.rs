@@ -70,7 +70,7 @@ fn animation_frame(mcmeta: &str, frame_count: u32, tick: u64) -> Result<Option<u
 
   let frametime = match animation.get("frametime") {
     None => 1,
-    Some(value) => duration(value).ok_or("frametime is not a whole number from 1 to 2147483647")?,
+    Some(value) => duration(value).ok_or("frametime is not a number from 1 to 2147483647")?,
   };
 
   let listed: &[Value] = match animation.get("frames") {
@@ -90,15 +90,15 @@ fn animation_frame(mcmeta: &str, frame_count: u32, tick: u64) -> Result<Option<u
 
         let time = match frame.get("time") {
           None => frametime,
-          Some(time) => {
-            duration(time).ok_or("frame time is not a whole number from 1 to 2147483647")?
-          }
+          Some(time) => duration(time).ok_or("frame time is not a number from 1 to 2147483647")?,
         };
 
         (index, time)
       }
+      // 1.8 skips a frame that's neither an object nor a Gson primitive (a number, string or bool)
+      Value::Null | Value::Array(_) => continue,
       _ => (
-        whole(frame).ok_or("frame is not a whole number")?,
+        whole(frame).ok_or("frame is negative or not a number")?,
         frametime,
       ),
     };
@@ -139,9 +139,10 @@ fn animation_frame(mcmeta: &str, frame_count: u32, tick: u64) -> Result<Option<u
   unreachable!("the remainder is below the cycle length")
 }
 
+// 1.8 reads these numbers with Gson's getAsInt, which drops a fraction: a frametime of 1.5 is 1
 fn whole(value: &Value) -> Option<u64> {
-  let number = value.as_f64()?;
-  (number >= 0.0 && number.fract() == 0.0).then_some(number as u64)
+  let number = value.as_f64()?.trunc();
+  (number >= 0.0).then_some(number as u64)
 }
 
 // 1.8 takes frame times from 1 to i32::MAX; 0 would never advance
@@ -214,10 +215,21 @@ mod tests {
     );
     assert_eq!(shown(&pack, 2147483647), (1, false, 1));
 
+    // Fractions are dropped, and empty slots, nulls and arrays skipped: frame 3 for a tick, then 2
+    // for two
+    let lenient = r#"{ "animation": { "frametime": 1.5, "frames": [3,, null, [0], { "index": 2.9,
+      "time": 2.2 },] } }"#;
+    pack.mcmeta.insert("blocks/strip".into(), lenient.into());
+    assert_eq!(shown(&pack, 0), (3, false, 1));
+    assert_eq!(shown(&pack, 2), (2, true, 1));
+    assert_eq!(shown(&pack, 3), (3, false, 1));
+
     for invalid in [
       r#"{ "animation": { "frames": [4] } }"#,
       r#"{ "animation": { "frametime": 9223372036854775808 } }"#,
+      r#"{ "animation": { "frametime": 0.5 } }"#,
       r#"{ "animation": { "frames": [{ "index": 0, "time": 2147483648 }] } }"#,
+      r#"{ "animation": { "frames": [0, "1"] } }"#,
       r#"{ "animation": [] }"#,
     ] {
       pack.mcmeta.insert("blocks/strip".into(), invalid.into());
