@@ -158,17 +158,22 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
       return [{ ...board, ...pick }];
     });
 
-    const counts = this.redis.pipeline();
-    for (const { field, sort, score } of best) {
+    const places = this.redis.pipeline();
+    for (const { field, sort, score, id } of best) {
       const key = `skyblockstats.${field}`;
-      if (sort === "ASC") counts.zcount(key, "-inf", `(${score}`);
-      else counts.zcount(key, `(${score}`, "+inf");
+      if (sort === "ASC") places.zcount(key, "-inf", `(${score}`).zrank(key, id);
+      else places.zcount(key, `(${score}`, "+inf").zrevrank(key, id);
     }
-    const ahead = (await counts.exec()) ?? [];
+    const replies = (await places.exec()) ?? [];
 
+    // The rank is shared with ties, but the board holds its first `limit` positions, so a tie past them isn't on it
     return best
-      .map((board, index) => ({ ...board, rank: Number(ahead[index][1]) + 1 }))
-      .filter(({ rank, limit }) => rank <= limit)
+      .map((board, index) => ({
+        ...board,
+        rank: Number(replies[2 * index][1]) + 1,
+        position: Number(replies[2 * index + 1][1]),
+      }))
+      .filter(({ position, limit }) => position < limit)
       .toSorted((a, b) => a.rank - b.rank)
       .map((board) => {
         const { field, name, id, rank, formatter, score } = board;

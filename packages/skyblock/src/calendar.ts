@@ -123,20 +123,25 @@ export function termOf(mayor: MayorView | undefined, time: number) {
  */
 export function nextEvents(time: number, mayor?: MayorView): EventTime[] {
   const now = (time - EPOCH) / DAY;
+  const term = termOf(mayor, time);
   // A perk brings its events only while its term lasts
   const perks =
-    mayor && termOf(mayor, time) ?
+    mayor && term ?
       [...mayor.mayor.perks, ...(mayor.minister ? [mayor.minister.perk] : [])].map(({ name }) => name) :
       [];
   // With Finnegan's Grand Feast perk in office, the Harvest Feast runs his whole term (the wiki's Harvest Feast page,
   // unverified)
   const grandFeast = perks.includes("Grand Feast");
+  const perkEvents = perks.flatMap((perk) =>
+    Object.hasOwn(PERK_EVENTS, perk) ? [PERK_EVENTS[perk as keyof typeof PERK_EVENTS]] : []
+  );
+  const perkKeys = new Set<SkyBlockEvent>(perkEvents.map(({ key }) => key));
   const cycles: (Cycle & { key: SkyBlockEvent })[] = [
     ...EVENTS.map(({ key, month, day, days }) =>
       key === "harvestFeast" && grandFeast ? { key, ...TERM } : { key, every: YEAR_DAYS, at: [dayOfYear(month, day)], days }
     ),
     ...CYCLES,
-    ...perks.flatMap((perk) => (Object.hasOwn(PERK_EVENTS, perk) ? [PERK_EVENTS[perk as keyof typeof PERK_EVENTS]] : [])),
+    ...perkEvents,
   ];
 
   return cycles
@@ -144,7 +149,7 @@ export function nextEvents(time: number, mayor?: MayorView): EventTime[] {
       const start = Math.min(...at.map((offset) => offset + every * (Math.floor((now - offset - days) / every) + 1)));
       return { key, start: EPOCH + start * DAY, end: EPOCH + (start + days) * DAY };
     })
-    .filter(({ start }) => start < time + YEAR_DAYS * DAY)
+    .filter(({ key, start }) => start < (term && perkKeys.has(key) ? term.end : time + YEAR_DAYS * DAY))
     .toSorted((a, b) => a.start - b.start);
 }
 
@@ -182,6 +187,7 @@ if (import.meta.vitest) {
     expect(startOf("cult", spring8)).toBe(skyblockTime({ year: 10, month: 0, day: 14 }));
     const marina = { mayor: { name: "Marina", perks: [{ name: "Fishing Festival", description: "" }] }, term: 9 };
     expect(startOf("fishingFestival", spring8, marina)).toBe(skyblockTime({ year: 10, month: 1, day: 1 }));
+    expect(startOf("fishingFestival", skyblockTime({ year: 10, month: 2, day: 5 }), marina)).toBeUndefined();
     expect(startOf("yearOfTheSeal", skyblockTime({ year: 401, month: 1, day: 1 }))).toBe(skyblockTime({ year: 402, month: 0, day: 1 }));
     expect(startOf("yearOfTheSeal", skyblockTime({ year: 400, month: 11, day: 31 }))).toBeUndefined();
   });

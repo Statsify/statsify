@@ -56,7 +56,6 @@ export const SkyBlockHotfProfile = ({
     />
   ));
 
-  // The tree's row isn't a Table.tr: its cells keep their own height, and the tree's box should be as tall as the whispers
   return (
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
@@ -64,6 +63,7 @@ export const SkyBlockHotfProfile = ({
         <Table.tr>
           <LevelBar title={t("skyblock.hotfLevel")} level={level} color="§a" t={t} />
         </Table.tr>
+        {/* Not a Table.tr: its cells keep their own height, and the tree's box should be as tall as the whispers */}
         <div width="100%">
           <div direction="column" width="1/2">
             {pools}

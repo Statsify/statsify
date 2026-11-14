@@ -11,7 +11,7 @@ import { EmptySection } from "./components/EmptySection.js";
 import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
 import { RARITY_COLORS } from "@statsify/skyblock/display";
 import { StatLines } from "./components/StatLines.js";
-import { prettify } from "@statsify/util";
+import { prettify, removeFormatting } from "@statsify/util";
 import type { InactiveAccessory, MemberView, MissingAccessory } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -23,7 +23,7 @@ const topMissing = ({ accessories }: MemberView) =>
   accessories?.missing.filter(({ nextTier }) => !nextTier).slice(0, MISSING_SHOWN) ?? [];
 const nextTierSteps = ({ accessories }: MemberView) => accessories?.missing.filter(({ nextTier }) => nextTier) ?? [];
 const baseName = ({ name, reforge }: InactiveAccessory) => {
-  const plain = name.replaceAll(/§./g, "");
+  const plain = removeFormatting(name);
   const prefix = reforge ? `${prettify(reforge)} ` : "";
   return prefix && plain.startsWith(prefix) ? plain.slice(prefix.length) : plain;
 };
@@ -31,8 +31,7 @@ const baseName = ({ name, reforge }: InactiveAccessory) => {
 // One row per accessory, so a stack of duplicates doesn't fill the page. Copies with different names (Abicase colors)
 // share the name they have in common, or the item's.
 function topInactive({ accessories }: MemberView) {
-  const copies = new Map<string, InactiveAccessory[]>();
-  for (const view of accessories?.inactive ?? []) copies.set(view.id, [...(copies.get(view.id) ?? []), view]);
+  const copies = Map.groupBy(accessories?.inactive ?? [], (view) => view.id);
 
   return [...copies].slice(0, INACTIVE_SHOWN).map(([id, [first, ...rest]]) => {
     const bases = new Set([first, ...rest].map(baseName));
@@ -79,7 +78,7 @@ export const SkyBlockAccessoriesProfile = ({
     [t("skyblock.accessoryPower"), t(accessories.accessoryPower), "§d"],
     [t("skyblock.selectedPower"), accessories.selectedPower ? prettify(accessories.selectedPower) : t("skyblock.none"), "§e"],
     [t("skyblock.accessories"), `${t(accessories.unique)}§7/§a${t(accessories.chains)}`, "§a"],
-    [t("skyblock.missing"), t(accessories.missing.length), "§c"],
+    [t("skyblock.missing"), t(accessories.missing.filter(({ nextTier }) => !nextTier).length), "§c"],
     [t("skyblock.enrichments"), t(accessories.enrichments), "§b"],
     [t("skyblock.unenriched"), t(accessories.unenriched), "§c"],
     [t("skyblock.recombobulated"), t(accessories.recombobulated), "§d"],

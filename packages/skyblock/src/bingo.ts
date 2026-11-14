@@ -13,7 +13,7 @@ export interface BingoGoal {
   id: string;
   name: string;
   /** With the game's § codes. */
-  lore: string;
+  lore?: string;
   /** A community goal's tier the network has reached, of how many; a personal goal has none. */
   community?: { tier: number; tiers: number };
   completed: boolean;
@@ -40,7 +40,7 @@ export function toBingoView({ id, name, start, end, goals }: RawBingoResource, p
     goals: goals.map(({ id, name, lore, tiers, progress = 0 }) => ({
       id,
       name,
-      lore: normalizeItemText(lore),
+      lore: lore && normalizeItemText(lore),
       community: tiers && { tier: tiers.filter((amount) => progress >= amount).length, tiers: tiers.length },
       completed: completed.has(id),
     })),

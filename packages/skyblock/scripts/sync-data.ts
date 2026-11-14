@@ -50,7 +50,7 @@ const picked = new Set(
     names.flatMap((name) => {
       if (Object.hasOwn(SOURCES, name)) return Object.keys(SOURCES[name]);
       if (Object.hasOwn(UNITS, name)) return [name];
-      throw new Error(`no unit or source "${name}": ${Object.keys(SOURCES).join(", ")}, ${Object.keys(UNITS).join(", ")}`);
+      throw new Error(`no unit or source "${name}": ${[...new Set([...Object.keys(SOURCES), ...Object.keys(UNITS)])].join(", ")}`);
     })
 );
 const full = picked.size === Object.keys(UNITS).length;
@@ -72,8 +72,12 @@ const sorted = (value: unknown): unknown => {
   );
 };
 
-const write = (file: string, data: unknown) =>
-  writeFile(new URL(file, out), `${JSON.stringify(sorted(data), null, 2)}\n`);
+// Held until every unit has run, so a failed run leaves src/generated/ as it was
+const pending = new Map<string, string>();
+const write = (file: string, data: unknown) => {
+  pending.set(file, `${JSON.stringify(sorted(data), null, 2)}\n`);
+  return Promise.resolve();
+};
 
 const notice = ({ minecraftData, repo, sha, skills, collections }: Source, license: string) =>
   `textures-1.8.json takes 1.8's block and item ids, names and variants from minecraft-data (${minecraftData.repo}) at ${minecraftData.sha}, which its README licenses as MIT.\n\nThe skill XP tables in leveling.json and the skill stats in stats.json come from Hypixel's SkyBlock skills resource (${skills.url}), version ${skills.version}. collections.json comes from Hypixel's SkyBlock collections resource (${collections.url}), version ${collections.version}.\n\nThe other JSON files here, and the base, slayer and pet score tables in stats.json, are derived from NEU-REPO (${repo}) at ${sha}, under its MIT license:\n\n${license}`;
@@ -114,8 +118,10 @@ try {
       { ...recorded, ...versions };
 
     await write("source.json", source);
-    await writeFile(new URL("NOTICE.md", out), notice(source, await readFile(join(dir, "LICENSE"), "utf8")));
+    pending.set("NOTICE.md", notice(source, await readFile(join(dir, "LICENSE"), "utf8")));
   }
+
+  await Promise.all(Array.from(pending, ([file, text]) => writeFile(new URL(file, out), text)));
 
   console.log(`synced ${sha}: ${[...picked].join(", ")}`);
 } finally {
