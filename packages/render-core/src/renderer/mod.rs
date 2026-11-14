@@ -7,7 +7,7 @@ pub mod wasm;
 use std::mem::size_of;
 
 use bytemuck::cast_slice;
-use cgmath::{Matrix4, MetricSpace, Point3, SquareMatrix, Transform};
+use cgmath::{Matrix4, Point3, SquareMatrix, Transform};
 use wgpu::util::DeviceExt;
 #[cfg(target_arch = "wasm32")]
 use winit::dpi::PhysicalSize;
@@ -336,7 +336,7 @@ impl<T: Backend> Renderer<T> {
   fn render_sync(
     &self,
     items: &[DrawItem<'_>],
-    eye: Point3<f32>,
+    camera: &Camera,
     camera_bind_group: &wgpu::BindGroup,
     light_bind_group: &wgpu::BindGroup,
     view: &wgpu::TextureView,
@@ -389,10 +389,14 @@ impl<T: Backend> Renderer<T> {
           Pipeline::Cutout | Pipeline::Translucent => (index, &pipelines.cutout, None),
         }
       })
-      .chain(back_to_front(eye, &centers).into_iter().map(|order| {
-        let index = translucent[order];
-        (index, &self.pipelines_for(&items[index]).blended, None)
-      }));
+      .chain(
+        back_to_front(camera.view_projection_matrix(), &centers)
+          .into_iter()
+          .map(|order| {
+            let index = translucent[order];
+            (index, &self.pipelines_for(&items[index]).blended, None)
+          }),
+      );
 
     {
       let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
@@ -479,7 +483,7 @@ impl Renderer<wasm::WasmBackend> {
 
     let encoder = self.render_sync(
       items,
-      self.camera.eye(),
+      &self.camera,
       &self.camera_bind_group,
       &self.light_bind_group,
       &wasm::WasmBackend::create_view(&output_texture),
@@ -622,7 +626,7 @@ impl Renderer<native::NativeBackend> {
 
     let encoder = self.render_sync(
       items,
-      camera.eye(),
+      camera,
       &camera_bind_group,
       &light_bind_group,
       &native::NativeBackend::create_view(&output_texture),
@@ -655,32 +659,39 @@ impl Renderer<native::NativeBackend> {
   }
 }
 
-// Indices of the points from farthest to nearest
-fn back_to_front(eye: Point3<f32>, points: &[Point3<f32>]) -> Vec<usize> {
+// Indices of the points from farthest to nearest along the view, which a perspective
+// projection carries as w
+fn back_to_front(view_projection: Matrix4<f32>, points: &[Point3<f32>]) -> Vec<usize> {
+  let depth = |index: usize| (view_projection * points[index].to_homogeneous()).w;
   let mut order: Vec<usize> = (0..points.len()).collect();
-  order.sort_by(|&a, &b| {
-    eye
-      .distance2(points[b])
-      .total_cmp(&eye.distance2(points[a]))
-  });
+  order.sort_by(|&a, &b| depth(b).total_cmp(&depth(a)));
   order
 }
 
 #[cfg(test)]
 mod tests {
+  use cgmath::{perspective, Deg, Vector3};
+
   use super::*;
 
   #[test]
   fn orders_points_farthest_first() {
-    let eye = Point3::new(10.0, 4.0, -2.0);
-    let points = [
-      Point3::new(10.0, 4.0, 1.0),
-      Point3::new(-30.0, 4.0, -2.0),
+    let view = Matrix4::look_at_rh(
       Point3::new(10.0, 4.0, -2.0),
-      Point3::new(10.0, -6.0, -2.0),
+      Point3::new(10.0, 4.0, -12.0),
+      Vector3::unit_y(),
+    );
+    let view_projection = perspective(Deg(40.0), 1.5, 0.1, 100.0) * view;
+
+    // The first is farther from the eye than the second but nearer along the view
+    let points = [
+      Point3::new(19.0, 4.0, -11.0),
+      Point3::new(10.0, 4.0, -12.0),
+      Point3::new(10.0, 7.0, -4.0),
+      Point3::new(9.0, 4.0, -11.5),
     ];
 
-    assert_eq!(back_to_front(eye, &points), [1, 3, 0, 2]);
-    assert_eq!(back_to_front(eye, &[]), Vec::<usize>::new());
+    assert_eq!(back_to_front(view_projection, &points), [1, 3, 0, 2]);
+    assert_eq!(back_to_front(view_projection, &[]), Vec::<usize>::new());
   }
 }
