@@ -26,18 +26,17 @@ const OBJECTIVE_TARGETS: Record<string, number> = objectiveTargets;
 
 export const QUEST_TARGETS: Record<string, Record<string, number>> = {};
 
-export enum QuestTime {
-  Daily,
-  Weekly,
-  Monthly,
-  Overall
-}
+export const QuestTime = {
+  Daily: 0,
+  Weekly: 1,
+  Monthly: 2,
+  Overall: 3,
+} as const;
+
+export type QuestTime = (typeof QuestTime)[keyof typeof QuestTime];
 
 export interface QuestOption<TField extends string> {
   field: string;
-  /**
-   * The quest's full key before Hypixel renamed it, so its old completions still count
-   */
   legacyField?: string;
   propertyKey: TField;
   fieldName?: string;
