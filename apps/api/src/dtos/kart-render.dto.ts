@@ -13,7 +13,7 @@ import { Transform } from "class-transformer";
 export const KART_CAMERA = { width: 600, height: 450, yaw: -Math.PI / 6, pitch: Math.PI / 10 };
 
 const MIN_SIZE = 64;
-const MAX_SIZE = 2048;
+const MAX_SIZE = 1024;
 
 export class KartRenderDto {
   @IsString()
