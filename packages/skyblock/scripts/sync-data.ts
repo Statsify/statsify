@@ -557,12 +557,30 @@ try {
   >("constants/bestiary.json");
   const allBrackets: Record<string, number[]> = {
     ...brackets,
+    // The wiki's bestiary table has 12, 16 and 20 kills for bracket 6's tiers 7–9, against NEU's 14, 17 and 21, and its
+    // own bracket and cap for the families in wikiFamilies (an owner exception, unverified)
+    6: [...brackets[6].slice(0, 6), 12, 16, 20, ...brackets[6].slice(9)],
     ...Object.fromEntries(
       Object.entries(bracketSets).flatMap(([set, tiers]) => Object.entries(tiers).map(([n, kills]) => [`${set}_${n}`, kills]))
     ),
   };
+  const wikiFamilies: Record<string, { bracket: string; cap: number }> = {
+    Beeheemoth: { bracket: "CRITTERS_4", cap: 50 },
+    Bogged: { bracket: "4", cap: 1000 },
+    "Cretan Bull": { bracket: "5", cap: 1000 },
+    Flipflopper: { bracket: "CRITTERS_2", cap: 100 },
+    "Grizzly Bear": { bracket: "CRITTERS_5", cap: 25 },
+    Honeyhog: { bracket: "CRITTERS_2", cap: 100 },
+    Lotum: { bracket: "CRITTERS_2", cap: 100 },
+    "Mithril Grubber": { bracket: "3", cap: 300 },
+    "Oasis Rabbit": { bracket: "3", cap: 300 },
+    "Oasis Sheep": { bracket: "3", cap: 300 },
+    "Queen Ant": { bracket: "2", cap: 50 },
+    "Stranded Nymph": { bracket: "5", cap: 1000 },
+    Tidetot: { bracket: "CRITTERS_4", cap: 50 },
+  };
   // NEU gives a few families (Parched, Lotusfish, some critters) a bracket that never reaches their cap. The game ranks
-  // them on the critter bracket that ends at it (the wiki's tiers for three of them; unverified for the rest).
+  // them on the critter bracket that ends at it (the wiki's tiers for each).
   const bracketOf = (name: string, cap: number, given: string) => {
     if (allBrackets[given].includes(cap)) return given;
     const ending = Object.keys(allBrackets).filter((key) => key.startsWith("CRITTERS_") && allBrackets[key].at(-1) === cap);
@@ -583,11 +601,12 @@ try {
   const families = ({ mobs = [] }: NeuPage) =>
     mobs.map(({ name: formatted, mobs: ids, cap, bracket, bracketType }) => {
       const name = removeFormatting(formatted);
+      const wiki = wikiFamilies[name];
       return {
         name,
         ids: [...ids, ...(missingIds[name] ?? [])],
-        cap,
-        bracket: bracketOf(name, cap, bracketType ? `${bracketType}_${bracket}` : String(bracket)),
+        cap: wiki?.cap ?? cap,
+        bracket: wiki?.bracket ?? bracketOf(name, cap, bracketType ? `${bracketType}_${bracket}` : String(bracket)),
       };
     });
   const subpages = (page: NeuPage) =>
