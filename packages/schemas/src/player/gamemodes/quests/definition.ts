@@ -40,12 +40,14 @@ export const QUEST_MODES = new GameModes([
 
 export type QuestModes = ExtractGameModes<typeof QUEST_MODES>;
 
-export enum QuestTime {
-  Daily,
-  Weekly,
-  Monthly,
-  Overall
-}
+export const QuestTime = {
+  Daily: 0,
+  Weekly: 1,
+  Monthly: 2,
+  Overall: 3,
+} as const;
+
+export type QuestTime = (typeof QuestTime)[keyof typeof QuestTime];
 
 const getQuestCountDuring = (time: QuestTime, quest?: { completions?: { time: number }[] }) => {
   if (!quest?.completions) return 0;

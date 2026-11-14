@@ -9,49 +9,59 @@
 import { prettify } from "@statsify/util";
 import { s } from "#definition/s";
 
-export enum UserTier {
-  NONE = 0,
-  IRON = 101,
-  GOLD = 202,
-  DIAMOND = 303,
-  EMERALD = 404,
-  NETHERITE = 505,
-  STAFF = 666,
-  CORE = 999
-}
+export const UserTier = {
+  NONE: 0,
+  IRON: 101,
+  GOLD: 202,
+  DIAMOND: 303,
+  EMERALD: 404,
+  NETHERITE: 505,
+  STAFF: 666,
+  CORE: 999,
+} as const;
 
-export enum UserLogo {
-  DEFAULT = 0,
-  IRON = 100,
-  GOLD = 200,
-  DIAMOND = 300,
-  EMERALD = 400,
-  VENOM = 401,
-  PINK = 402,
-  AMETHYST = 420,
-  SCULK = 421,
-  NETHERITE = 422,
-  RUBY = 423
-}
+export type UserTier = (typeof UserTier)[keyof typeof UserTier];
 
-export enum UserFont {
-  DEFAULT = "default",
-  HD = "hd",
-  FPACK = "fpack"
-}
+export const UserLogo = {
+  DEFAULT: 0,
+  IRON: 100,
+  GOLD: 200,
+  DIAMOND: 300,
+  EMERALD: 400,
+  VENOM: 401,
+  PINK: 402,
+  AMETHYST: 420,
+  SCULK: 421,
+  NETHERITE: 422,
+  RUBY: 423,
+} as const;
 
-export enum UserPalette {
-  DEFAULT = "default",
-  LIGHT = "light",
-  DARK = "dark",
-  NO_BACKGROUNDS = "no-backgrounds"
-}
+export type UserLogo = (typeof UserLogo)[keyof typeof UserLogo];
 
-export enum UserBoxes {
-  DEFAULT = "default",
-  HD = "hd",
-  UHD = "uhd"
-}
+export const UserFont = {
+  DEFAULT: "default",
+  HD: "hd",
+  FPACK: "fpack",
+} as const;
+
+export type UserFont = (typeof UserFont)[keyof typeof UserFont];
+
+export const UserPalette = {
+  DEFAULT: "default",
+  LIGHT: "light",
+  DARK: "dark",
+  NO_BACKGROUNDS: "no-backgrounds",
+} as const;
+
+export type UserPalette = (typeof UserPalette)[keyof typeof UserPalette];
+
+export const UserBoxes = {
+  DEFAULT: "default",
+  HD: "hd",
+  UHD: "uhd",
+} as const;
+
+export type UserBoxes = (typeof UserBoxes)[keyof typeof UserBoxes];
 
 const UserThemeSchema = s.object({
   font: s.string<UserFont>().optional(),
@@ -63,7 +73,7 @@ export type UserTheme = s.infer<typeof UserThemeSchema>;
 
 const UserFooterSchema = s.object({
   message: s.string().optional().nullable(),
-  icon: s.number().optional(),
+  icon: s.number<UserLogo>().optional(),
 });
 
 export type UserFooter = s.infer<typeof UserFooterSchema>;
@@ -76,7 +86,7 @@ export const UserSchema = s.model("User", {
   serverMember: s.boolean().optional(),
   serverBooster: s.boolean().optional(),
   patreon: s.boolean().optional(),
-  tier: s.number().optional(),
+  tier: s.number<UserTier>().optional(),
   hasBadge: s.boolean().optional(),
   extrudedSkins: s.boolean().optional(),
   theme: UserThemeSchema.optional(),
@@ -112,5 +122,5 @@ export function getUserLogo(user: User | null): UserLogo {
 
 export function getTierName(userOrTier: User | null | UserTier): string {
   const tier = typeof userOrTier === "number" ? userOrTier : userOrTier?.tier ?? UserTier.NONE;
-  return prettify(UserTier[tier] ?? "NONE");
+  return prettify(Object.entries(UserTier).find(([, value]) => value === tier)?.[0] ?? "NONE");
 }

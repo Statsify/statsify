@@ -214,7 +214,7 @@ export abstract class Schema<Output = unknown, Input = Output> implements Types<
 }
 
 // Hypixel leaves out stats a player never earned, so an input can be undefined and reads back as 0
-export class NumberSchema extends Schema<number, number | undefined> {
+export class NumberSchema<T extends number = number> extends Schema<T, T | undefined> {
   public readonly kind = "number";
 
   public color(color: ColorCode) {
@@ -388,7 +388,7 @@ export namespace s {
 }
 
 export const s = {
-  number: () => new NumberSchema(),
+  number: <T extends number = number>() => new NumberSchema<T>(),
   string: <T extends string = string>() => new StringSchema<T>(),
   boolean: () => new BooleanSchema(),
   date: () => new DateSchema(),
