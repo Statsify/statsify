@@ -73,11 +73,7 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
 /** A tier's pet score points: Common 1 … Mythic 6, and 0 for the tiers that never count. */
 export const petScorePoints = (tier: string) => PET_RARITIES.indexOf(tier as Rarity) + 1;
 
-/**
- * Pet score: one pet per type counts, the one with the best rarity from the API's tier (which leaves out Tier Boost),
- * then the highest level. It scores Common 1 … Mythic 6, plus 1 if it's at max level. Special and Very Special pets
- * never count. Pets are sorted active first, then by rarity and XP.
- */
+/** Pet score: each type's best pet by the API's tier (which leaves out Tier Boost), then level, plus 1 at max level. */
 export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
   const raw = member.pets_data?.pets ?? [];
   const views = raw.map((pet) => toPetView(pet, items));
