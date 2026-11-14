@@ -229,6 +229,19 @@ function notes(t: LocalizeFunction, view: SkyBlockProfileView, card: SkyBlockCar
     .join("\n");
 }
 
+function oncePerProfile<T>(load: (id: string) => Promise<T>) {
+  const loaded = new Map<string, Promise<T>>();
+  return (id: string) => {
+    if (!loaded.has(id)) {
+      const result = load(id);
+      result.catch(() => loaded.delete(id));
+      loaded.set(id, result);
+    }
+
+    return loaded.get(id)!;
+  };
+}
+
 @Command({ description: (t) => t("commands.skyblock"), cooldown: 10 })
 export class SkyBlockCommand {
   public constructor(private readonly apiService: ApiService) {}
@@ -332,27 +345,27 @@ export class SkyBlockCommand {
     const summaries = player.profiles.toSorted((a, b) => Number(b.selected) - Number(a.selected));
     if (summaries.length === 0) throw new ErrorMessage("errors.skyblockNoProfiles");
 
-    const views = new Map<string, Promise<SkyBlockProfileView>>();
-    const getView = (id: string) => {
-      if (!views.has(id)) {
-        const view = this.apiService.getSkyBlockProfile(player.uuid, card.sections, user, id);
-        view.catch(() => views.delete(id));
-        views.set(id, view);
-      }
+    const getView = oncePerProfile((id) => this.apiService.getSkyBlockProfile(player.uuid, card.sections, user, id));
 
-      return views.get(id)!;
-    };
+    // Its own request: armor never waits on prices, so asking for it with a card's sections would hide the market 503
+    const getSkin = oncePerProfile(async (id) => {
+      const armor = await this.apiService
+        .getSkyBlockProfile(player.uuid, ["armor"], user, id)
+        .then(({ member }) => member.armor ?? undefined, () => undefined);
 
-    const [logo, skin, badge, background] = await Promise.all([
+      return this.apiService.getPlayerSkin(player.uuid, user, armor);
+    });
+
+    const [logo, badge, background] = await Promise.all([
       getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid, user),
       this.apiService.getUserBadge(player.uuid),
       getSkyBlockBackground(),
       getView(summaries[0].id),
+      getSkin(summaries[0].id),
     ]);
 
     const generator = (id: string, Profile: SkyBlockProfile, iconsOf = card.icons) => async (t: LocalizeFunction) => {
-      const view = await getView(id);
+      const [view, skin] = await Promise.all([getView(id), getSkin(id)]);
       const icons = await loadItemIcons(iconsOf?.(view.member) ?? []);
       const title = skyBlockTitle(t, view, name);
 

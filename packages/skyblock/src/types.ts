@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { SkinArmor } from "./sections/gear.js";
+
 // On a section, `undefined` means it wasn't requested and `null` means the player's API setting hides it.
 
 export const RARITIES = [
@@ -66,6 +68,7 @@ export interface SkyBlockProfileView extends PlayerRef, Freshness, ProfileSummar
 export interface MemberView {
   apiSettings: ApiSettings;
   accessories?: AccessoriesSection | null;
+  armor?: SkinArmor | null;
   skills?: SkillsSection | null;
   pets?: PetsSection;
   hotm?: HotmSection;

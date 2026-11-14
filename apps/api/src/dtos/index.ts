@@ -25,3 +25,4 @@ export * from "./player-rankings.dto.js";
 export * from "./player-leaderboard.dto.js";
 export * from "./session.dto.js";
 export * from "./skyblock.dto.js";
+export * from "./skin-render.dto.js";
