@@ -129,7 +129,7 @@ export class ApiService extends StatsifyApiService {
     tag: string,
     type?: GuildQuery,
     user: User | null = null,
-    cache = CacheLevel.CACHE
+    cache: CacheLevel = CacheLevel.CACHE
   ) {
     let input: string;
     let playerType: PlayerTag;
