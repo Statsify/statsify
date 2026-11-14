@@ -570,7 +570,7 @@ export interface StatTotal {
 /** The permanent stat sheet; temporary buffs (Booster Cookie, potions, the mayor) aren't in the API. */
 export interface StatsSection {
   stats: StatTotal[]; // in PLAYER_STATS' order, only stats something gives
-  weapon?: string; // the counted weapon's name
+  weapon?: string;
   unverified: StatSource[]; // sources whose numbers here aren't checked in game
 }
 
