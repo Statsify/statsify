@@ -357,7 +357,7 @@ export interface RawBingoResource {
   goals: {
     id: string;
     name: string;
-    lore: string;
+    lore?: string; // Hypixel's docs require only the id and name
     // Community goals only: the whole network's progress and the amounts each tier needs
     tiers?: number[];
     progress?: number;
