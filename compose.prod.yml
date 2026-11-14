@@ -42,7 +42,6 @@ services:
         APP: discord-bot
     volumes:
       - /home/config.js:/app/config.js:ro
-      # The packs item icons draw from, kept across deploys instead of downloaded again
       - resource-packs:/app/assets/public/resource-packs
 
   support-bot:
