@@ -16,7 +16,7 @@ use winit::window::{Window, WindowBuilder, WindowId};
 use crate::armor::Armor;
 use crate::error::{Error, Result};
 use crate::model::{Model, ModelKind, ModelOuterLayer};
-use crate::pose::Pose;
+use crate::pose::{Held, Pose};
 
 // Since the winit EventLoop consumes self, we need a static variable to
 // communicate with JavaScript
@@ -152,6 +152,7 @@ impl JsSkinRenderer {
               None,
               None,
               Pose::default(),
+              Held::default(),
             ) {
               models.insert(*window_id, model);
             }
@@ -181,6 +182,7 @@ impl JsSkinRenderer {
               None,
               None,
               Pose::default(),
+              Held::default(),
             )
             .ok()
           }) {
