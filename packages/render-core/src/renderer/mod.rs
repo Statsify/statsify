@@ -4,7 +4,10 @@ pub mod native;
 #[cfg(target_arch = "wasm32")]
 pub mod wasm;
 
+use std::mem::size_of;
+
 use bytemuck::cast_slice;
+use cgmath::{Matrix4, SquareMatrix};
 use wgpu::util::DeviceExt;
 #[cfg(target_arch = "wasm32")]
 use winit::dpi::PhysicalSize;
@@ -33,6 +36,13 @@ pub struct DrawItem<'a> {
   pub mesh: &'a Mesh,
   pub material: &'a Material,
   pub pipeline: Pipeline<'a>,
+  pub transform: Matrix4<f32>,
+}
+
+struct Pipelines {
+  main: wgpu::RenderPipeline,
+  attachment: wgpu::RenderPipeline,
+  enchanted: wgpu::RenderPipeline,
 }
 
 pub struct Renderer<T: Backend> {
@@ -52,10 +62,9 @@ pub struct Renderer<T: Backend> {
   light_bind_group_layout: wgpu::BindGroupLayout,
   camera_bind_group: wgpu::BindGroup,
   light_bind_group: wgpu::BindGroup,
-  render_pipeline: wgpu::RenderPipeline,
-  attachment_pipeline: wgpu::RenderPipeline,
-  enchanted_pipeline: wgpu::RenderPipeline,
-  instance_buffer: wgpu::Buffer,
+  pipelines: Pipelines,
+  // A transform that mirrors a mesh turns its triangles around, so these cull the other side
+  mirrored_pipelines: Pipelines,
 
   depth_texture: Texture,
 }
@@ -88,17 +97,16 @@ impl<T: Backend> Renderer<T> {
         label: Some("texture_bind_group_layout"),
       });
 
-    let instance_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-      label: Some("Instance Buffer"),
-      contents: cast_slice(&[InstanceRaw::identity()]),
-      usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
-    });
-
     let (camera, camera_uniform, camera_buffer, camera_bind_group_layout, camera_bind_group) =
       Self::create_camera(device, &config);
 
     let (light_uniform, light_buffer, light_bind_group_layout, light_bind_group) =
       Self::create_light(device, &camera);
+
+    let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+      label: Some("shader.wgsl"),
+      source: wgpu::ShaderSource::Wgsl(include_str!("shader.wgsl").into()),
+    });
 
     let bind_group_layouts = [
       &texture_bind_group_layout,
@@ -106,23 +114,34 @@ impl<T: Backend> Renderer<T> {
       &light_bind_group_layout,
     ];
 
-    let render_pipeline =
-      Self::create_render_pipeline(device, &bind_group_layouts, &config, "fs_main");
+    let enchanted_bind_group_layouts = [
+      &texture_bind_group_layout,
+      &camera_bind_group_layout,
+      &light_bind_group_layout,
+      &texture_bind_group_layout,
+    ];
 
-    let attachment_pipeline =
-      Self::create_render_pipeline(device, &bind_group_layouts, &config, "fs_attachment");
+    let create_pipelines = |cull_mode| {
+      let create = |layouts: &[&wgpu::BindGroupLayout], fragment_entry_point| {
+        Self::create_render_pipeline(
+          device,
+          &shader,
+          layouts,
+          &config,
+          fragment_entry_point,
+          cull_mode,
+        )
+      };
 
-    let enchanted_pipeline = Self::create_render_pipeline(
-      device,
-      &[
-        &texture_bind_group_layout,
-        &camera_bind_group_layout,
-        &light_bind_group_layout,
-        &texture_bind_group_layout,
-      ],
-      &config,
-      "fs_enchanted",
-    );
+      Pipelines {
+        main: create(&bind_group_layouts, "fs_main"),
+        attachment: create(&bind_group_layouts, "fs_attachment"),
+        enchanted: create(&enchanted_bind_group_layouts, "fs_enchanted"),
+      }
+    };
+
+    let pipelines = create_pipelines(wgpu::Face::Back);
+    let mirrored_pipelines = create_pipelines(wgpu::Face::Front);
 
     let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
 
@@ -143,10 +162,8 @@ impl<T: Backend> Renderer<T> {
       light_bind_group_layout,
       camera_bind_group,
       light_bind_group,
-      render_pipeline,
-      attachment_pipeline,
-      enchanted_pipeline,
-      instance_buffer,
+      pipelines,
+      mirrored_pipelines,
 
       depth_texture,
     })
@@ -247,15 +264,12 @@ impl<T: Backend> Renderer<T> {
 
   fn create_render_pipeline(
     device: &wgpu::Device,
+    shader: &wgpu::ShaderModule,
     bind_group_layouts: &[&wgpu::BindGroupLayout],
     config: &wgpu::SurfaceConfiguration,
     fragment_entry_point: &str,
+    cull_mode: wgpu::Face,
   ) -> wgpu::RenderPipeline {
-    let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
-      label: Some("shader.wgsl"),
-      source: wgpu::ShaderSource::Wgsl(include_str!("shader.wgsl").into()),
-    });
-
     let layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
       label: Some("Render Pipeline Layout"),
       bind_group_layouts,
@@ -266,13 +280,13 @@ impl<T: Backend> Renderer<T> {
       label: Some("Render Pipeline"),
       layout: Some(&layout),
       vertex: wgpu::VertexState {
-        module: &shader,
+        module: shader,
         entry_point: Some("vs_main"),
         buffers: &[Vertex::descriptor(), InstanceRaw::descriptor()],
         compilation_options: wgpu::PipelineCompilationOptions::default(),
       },
       fragment: Some(wgpu::FragmentState {
-        module: &shader,
+        module: shader,
         entry_point: Some(fragment_entry_point),
         targets: &[Some(wgpu::ColorTargetState {
           format: config.format,
@@ -285,7 +299,7 @@ impl<T: Backend> Renderer<T> {
         topology: wgpu::PrimitiveTopology::TriangleList,
         strip_index_format: None,
         front_face: wgpu::FrontFace::Ccw,
-        cull_mode: Some(wgpu::Face::Back),
+        cull_mode: Some(cull_mode),
         polygon_mode: wgpu::PolygonMode::Fill,
         unclipped_depth: false,
         conservative: false,
@@ -321,6 +335,19 @@ impl<T: Backend> Renderer<T> {
       label: Some("Render Encoder"),
     });
 
+    let instances: Vec<InstanceRaw> = items
+      .iter()
+      .map(|item| InstanceRaw::new(item.transform))
+      .collect();
+
+    let instance_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+      label: Some("Instance Buffer"),
+      contents: cast_slice(&instances),
+      usage: wgpu::BufferUsages::VERTEX,
+    });
+
+    let instance_size = size_of::<InstanceRaw>() as wgpu::BufferAddress;
+
     {
       let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
         label: Some("Render Pass"),
@@ -345,17 +372,24 @@ impl<T: Backend> Renderer<T> {
         timestamp_writes: None,
       });
 
-      render_pass.set_vertex_buffer(1, self.instance_buffer.slice(..));
+      for (index, item) in items.iter().enumerate() {
+        let pipelines = if item.transform.determinant() < 0.0 {
+          &self.mirrored_pipelines
+        } else {
+          &self.pipelines
+        };
 
-      for item in items {
         match item.pipeline {
-          Pipeline::Main => render_pass.set_pipeline(&self.render_pipeline),
-          Pipeline::Attachment => render_pass.set_pipeline(&self.attachment_pipeline),
+          Pipeline::Main => render_pass.set_pipeline(&pipelines.main),
+          Pipeline::Attachment => render_pass.set_pipeline(&pipelines.attachment),
           Pipeline::Enchanted(glint) => {
-            render_pass.set_pipeline(&self.enchanted_pipeline);
+            render_pass.set_pipeline(&pipelines.enchanted);
             render_pass.set_bind_group(3, &glint.bind_group, &[]);
           }
         }
+
+        let offset = index as wgpu::BufferAddress * instance_size;
+        render_pass.set_vertex_buffer(1, instance_buffer.slice(offset..offset + instance_size));
 
         render_pass.draw_mesh(
           item.mesh,

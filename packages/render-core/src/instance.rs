@@ -1,5 +1,5 @@
 use bytemuck::{Pod, Zeroable};
-use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation3, Vector3};
+use cgmath::{Matrix, Matrix3, Matrix4, SquareMatrix, Zero};
 
 use crate::geometry::vertex::VertexDescriptor;
 
@@ -11,13 +11,19 @@ pub struct InstanceRaw {
 }
 
 impl InstanceRaw {
-  pub fn identity() -> Self {
-    let position = Vector3::new(0.0, 0.0, 0.0);
-    let rotation = Quaternion::from_axis_angle(Vector3::unit_y(), Deg(0.0));
+  pub fn new(model: Matrix4<f32>) -> Self {
+    let linear = Matrix3::from_cols(model.x.truncate(), model.y.truncate(), model.z.truncate());
+
+    // The inverse transpose keeps normals square to their faces under any scale, and the lighting
+    // reads their length, so the scale is divided back out
+    let scale = linear.determinant().abs().cbrt();
+    let normal = linear
+      .invert()
+      .map_or(Matrix3::zero(), |inverse| inverse.transpose() * scale);
 
     Self {
-      model: (Matrix4::from_translation(position) * Matrix4::from(rotation)).into(),
-      normal: Matrix3::from(rotation).into(),
+      model: model.into(),
+      normal: normal.into(),
     }
   }
 }
