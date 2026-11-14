@@ -6,7 +6,7 @@ use cgmath::{Array, EuclideanSpace, Point3, SquareMatrix, Transform as _, Vector
 use image::{DynamicImage, RgbaImage};
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
-use statsify_minecraft_models::{bake_model, load_texture, Display, Frame, Pack};
+use statsify_minecraft_models::{bake_model, load_texture, Display, Frame, Pack, ALPHA_CUTOFF};
 use statsify_render_core::camera::{Camera, OrbitalCamera};
 use statsify_render_core::geometry::vertex::Vertex;
 use statsify_render_core::geometry::Geometry;
@@ -92,6 +92,35 @@ pub struct SceneOutput {
 struct LoadedTexture {
   material: Material,
   translucent: bool,
+  /// The frame drawn, kept to tell which faces show.
+  image: RgbaImage,
+}
+
+impl LoadedTexture {
+  /// Whether a face over these texture coordinates has a texel that passes the alpha test.
+  fn shows(&self, uvs: impl Iterator<Item = [f32; 2]>) -> bool {
+    let (min, max) = uvs.fold(([f32::MAX; 2], [f32::MIN; 2]), |(min, max), [u, v]| {
+      (
+        [min[0].min(u), min[1].min(v)],
+        [max[0].max(u), max[1].max(v)],
+      )
+    });
+
+    // At least the texel under a face too thin to cover one
+    let texels = |min: f32, max: f32, size: u32| {
+      let start = ((min * size as f32).floor() as u32).min(size - 1);
+      start..((max * size as f32).ceil() as u32).clamp(start + 1, size)
+    };
+
+    let (width, height) = self.image.dimensions();
+    let columns = texels(min[0], max[0], width);
+
+    texels(min[1], max[1], height).any(|y| {
+      columns
+        .clone()
+        .any(|x| self.image.get_pixel(x, y)[3] > ALPHA_CUTOFF)
+    })
+  }
 }
 
 struct LoadedPart {
@@ -167,10 +196,27 @@ impl ModelLibrary {
         }
       };
 
+      // A face whose texels all fail the alpha test never shows, so the camera doesn't frame it
+      let mut shown = vec![false; submesh.vertices.len()];
+
+      for triangle in submesh.indices.chunks_exact(3) {
+        let uvs = triangle
+          .iter()
+          .map(|&index| submesh.vertices[index as usize].uv);
+
+        if texture.shows(uvs) {
+          for &index in triangle {
+            shown[index as usize] = true;
+          }
+        }
+      }
+
       let points = submesh
         .vertices
         .iter()
-        .map(|vertex| Point3::from(vertex.position))
+        .zip(shown)
+        .filter(|(_, shown)| *shown)
+        .map(|(vertex, _)| Point3::from(vertex.position))
         .collect();
 
       let vertices = submesh
@@ -202,14 +248,12 @@ impl ModelLibrary {
   ) -> crate::error::Result<LoadedTexture> {
     let texture = load_texture(&self.pack, name, Frame::Resting)?;
 
-    let image = RgbaImage::from_raw(texture.width, texture.height, texture.rgba)
-      .expect("a loaded texture holds every texel");
+    let image = DynamicImage::ImageRgba8(
+      RgbaImage::from_raw(texture.width, texture.height, texture.rgba)
+        .expect("a loaded texture holds every texel"),
+    );
 
-    let texture_view = Texture::from_image(
-      renderer.device(),
-      renderer.queue(),
-      &DynamicImage::ImageRgba8(image),
-    )?;
+    let texture_view = Texture::from_image(renderer.device(), renderer.queue(), &image)?;
 
     Ok(LoadedTexture {
       material: Material::new(
@@ -218,6 +262,7 @@ impl ModelLibrary {
         renderer.texture_bind_group_layout(),
       ),
       translucent: texture.translucent,
+      image: image.into_rgba8(),
     })
   }
 }
