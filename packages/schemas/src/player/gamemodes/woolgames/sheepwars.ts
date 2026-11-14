@@ -45,6 +45,21 @@ export class SheepWars {
   public meleeKills: number;
 
   @Field()
+  public explosiveDeaths: number;
+
+  @Field()
+  public voidDeaths: number;
+
+  @Field()
+  public bowDeaths: number;
+
+  @Field()
+  public meleeDeaths: number;
+
+  @Field()
+  public damageDealt: number;
+
+  @Field()
   public sheepThrown: number;
 
   @Field()
@@ -70,6 +85,12 @@ export class SheepWars {
     this.voidKills = data.stats?.kills_void;
     this.bowKills = data.stats?.kills_bow;
     this.meleeKills = data.stats?.kills_melee;
+
+    this.explosiveDeaths = data.stats?.deaths_explosive;
+    this.voidDeaths = data.stats?.deaths_void;
+    this.bowDeaths = data.stats?.deaths_bow;
+    this.meleeDeaths = data.stats?.deaths_melee;
+    this.damageDealt = data.stats?.damage_dealt;
 
     this.sheepThrown = data.stats?.sheep_thrown;
     this.sheepKilled = ap?.woolgames_sheep_wars_sheep_slayer;

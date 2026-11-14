@@ -32,7 +32,18 @@ export const SheepWarsTable = ({ sheepwars, t }: SheepWarsTableProps) => {
         <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
       </Table.tr>
       <Table.tr>
+        <Table.td title={t("stats.voidDeaths")} value={t(stats.voidDeaths)} color="§c" />
+        <Table.td
+          title={t("stats.explosiveDeaths")}
+          value={t(stats.explosiveDeaths)}
+          color="§c"
+        />
+        <Table.td title={t("stats.meleeDeaths")} value={t(stats.meleeDeaths)} color="§c" />
+        <Table.td title={t("stats.bowDeaths")} value={t(stats.bowDeaths)} color="§c" />
+      </Table.tr>
+      <Table.tr>
         <Table.td title={t("stats.gamesPlayed")} value={t(stats.gamesPlayed)} color="§e" />
+        <Table.td title={t("stats.damage")} value={t(stats.damageDealt)} color="§6" />
         <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color="§b" />
       </Table.tr>
     </>
