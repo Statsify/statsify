@@ -353,21 +353,16 @@ pub async fn render_scene(
     }
   }
 
-  // The player comes after the models so its partly transparent texels blend over them. Its
-  // fully transparent ones are cut out like armor's, or they would hide models behind them.
+  // The player's partly transparent texels blend after the opaque ones instead of writing depth,
+  // which would hide a translucent model behind them
   if let Some((model, _)) = &player {
-    items.extend(
-      model
-        .draw_items()
-        .into_iter()
-        .map(|item| match item.pipeline {
-          Pipeline::Main => DrawItem {
-            pipeline: Pipeline::Attachment,
-            ..item
-          },
-          _ => item,
-        }),
-    );
+    items.extend(model.draw_items().into_iter().map(|item| DrawItem {
+      pipeline: Pipeline::Worn(match item.pipeline {
+        Pipeline::Enchanted(glint) => Some(glint),
+        _ => None,
+      }),
+      ..item
+    }));
 
     points.extend_from_slice(model.points());
   }

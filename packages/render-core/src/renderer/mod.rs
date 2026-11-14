@@ -35,6 +35,10 @@ pub enum Pipeline<'a> {
   Cutout,
   // Cutout's texels, then the partly transparent ones over everything else
   Translucent,
+  // Translucent for a layer worn on an opaque body, such as a skin's outer layer or armor, with
+  // Enchanted's glint if any. Its partly transparent texels go before Translucent's, since what
+  // lies behind them is the body.
+  Worn(Option<&'a Material>),
 }
 
 pub struct DrawItem<'a> {
@@ -50,6 +54,8 @@ struct Pipelines {
   enchanted: wgpu::RenderPipeline,
   cutout: wgpu::RenderPipeline,
   blended: wgpu::RenderPipeline,
+  enchanted_cutout: wgpu::RenderPipeline,
+  enchanted_blended: wgpu::RenderPipeline,
 }
 
 pub struct Renderer<T: Backend> {
@@ -148,6 +154,8 @@ impl<T: Backend> Renderer<T> {
         cutout: create(&bind_group_layouts, "fs_cutout", true),
         // Blended texels leave the depth alone, so nothing drawn behind them later is hidden
         blended: create(&bind_group_layouts, "fs_blended", false),
+        enchanted_cutout: create(&enchanted_bind_group_layouts, "fs_enchanted_cutout", true),
+        enchanted_blended: create(&enchanted_bind_group_layouts, "fs_enchanted_blended", false),
       }
     };
 
@@ -374,8 +382,19 @@ impl<T: Backend> Renderer<T> {
       })
       .collect();
 
-    // Every item in order, then the partly transparent texels farthest first, so each blends over
-    // whatever lies behind it
+    let worn = (0..items.len()).filter(|&index| matches!(items[index].pipeline, Pipeline::Worn(_)));
+
+    let blended = |index: usize| {
+      let pipelines = self.pipelines_for(&items[index]);
+
+      match items[index].pipeline {
+        Pipeline::Worn(Some(glint)) => (index, &pipelines.enchanted_blended, Some(glint)),
+        _ => (index, &pipelines.blended, None),
+      }
+    };
+
+    // Every item in order, then the partly transparent texels: worn ones, then the rest farthest
+    // first, so each blends over whatever lies behind it
     let draws = items
       .iter()
       .enumerate()
@@ -386,16 +405,17 @@ impl<T: Backend> Renderer<T> {
           Pipeline::Main => (index, &pipelines.main, None),
           Pipeline::Attachment => (index, &pipelines.attachment, None),
           Pipeline::Enchanted(glint) => (index, &pipelines.enchanted, Some(glint)),
-          Pipeline::Cutout | Pipeline::Translucent => (index, &pipelines.cutout, None),
+          Pipeline::Cutout | Pipeline::Translucent | Pipeline::Worn(None) => {
+            (index, &pipelines.cutout, None)
+          }
+          Pipeline::Worn(Some(glint)) => (index, &pipelines.enchanted_cutout, Some(glint)),
         }
       })
+      .chain(worn.map(&blended))
       .chain(
         back_to_front(camera.view_projection_matrix(), &centers)
           .into_iter()
-          .map(|order| {
-            let index = translucent[order];
-            (index, &self.pipelines_for(&items[index]).blended, None)
-          }),
+          .map(|order| blended(translucent[order])),
       );
 
     {

@@ -106,6 +106,10 @@ fn attachment_color(in: VertexOutput) -> vec4<f32> {
 
 @fragment
 fn fs_cutout(in: VertexOutput) -> @location(0) vec4<f32> {
+    return cutout_color(in);
+}
+
+fn cutout_color(in: VertexOutput) -> vec4<f32> {
     let object_color: vec4<f32> = textureSample(t_diffuse, s_diffuse, in.texture_coordinates);
 
     if object_color.a < 1.0 {
@@ -115,9 +119,13 @@ fn fs_cutout(in: VertexOutput) -> @location(0) vec4<f32> {
     return shade(in, object_color);
 }
 
-// The texels fs_cutout leaves out, less those under the game's 0.1 alpha test for items
 @fragment
 fn fs_blended(in: VertexOutput) -> @location(0) vec4<f32> {
+    return blended_color(in);
+}
+
+// The texels cutout_color leaves out, less those under the game's 0.1 alpha test
+fn blended_color(in: VertexOutput) -> vec4<f32> {
     let object_color: vec4<f32> = textureSample(t_diffuse, s_diffuse, in.texture_coordinates);
 
     if object_color.a <= 0.1 || object_color.a == 1.0 {
@@ -141,10 +149,25 @@ fn shade(in: VertexOutput, object_color: vec4<f32>) -> vec4<f32> {
     return vec4<f32>(result, object_color.a);
 }
 
-// The game adds the glint to the gamma-encoded color, which blending in linear space
-// would wash out. Gamma 2 stands in for sRGB, since pow is slow on software renderers
 @fragment
 fn fs_enchanted(in: VertexOutput) -> @location(0) vec4<f32> {
+    let glint = glint_color(in);
+    return enchant(attachment_color(in), glint);
+}
+
+@fragment
+fn fs_enchanted_cutout(in: VertexOutput) -> @location(0) vec4<f32> {
+    let glint = glint_color(in);
+    return enchant(cutout_color(in), glint);
+}
+
+@fragment
+fn fs_enchanted_blended(in: VertexOutput) -> @location(0) vec4<f32> {
+    let glint = glint_color(in);
+    return enchant(blended_color(in), glint);
+}
+
+fn glint_color(in: VertexOutput) -> vec3<f32> {
     let tint = vec3<f32>(0.38, 0.19, 0.608);
     var glint = vec3<f32>(0.0);
 
@@ -155,7 +178,12 @@ fn fs_enchanted(in: VertexOutput) -> @location(0) vec4<f32> {
         glint += textureSample(t_glint, s_glint, uv).rgb * tint * tint;
     }
 
-    let armor = attachment_color(in);
+    return glint;
+}
+
+// The game adds the glint to the gamma-encoded color, which blending in linear space
+// would wash out. Gamma 2 stands in for sRGB, since pow is slow on software renderers
+fn enchant(armor: vec4<f32>, glint: vec3<f32>) -> vec4<f32> {
     let color = min(sqrt(armor.rgb) + glint, vec3<f32>(1.0));
 
     return vec4<f32>(color * color, armor.a);
