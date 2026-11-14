@@ -29,6 +29,8 @@ struct InstanceInput {
     @location(9) normal_matrix_0: vec3<f32>,
     @location(10) normal_matrix_1: vec3<f32>,
     @location(11) normal_matrix_2: vec3<f32>,
+
+    @location(12) uneven_scale: u32,
 }
 
 struct VertexOutput {
@@ -58,7 +60,8 @@ fn vs_main(
 
     var out: VertexOutput;
     out.texture_coordinates = model.texture_coordinates;
-    out.world_normal = normal_matrix * model.normal;
+    let normal = normal_matrix * model.normal;
+    out.world_normal = select(normal, normalize(normal), instance.uneven_scale != 0u);
 
     var world_position: vec4<f32> = model_matrix * vec4<f32>(model.position, 1.0);
     out.world_position = world_position.xyz;

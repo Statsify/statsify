@@ -1,5 +1,5 @@
 use bytemuck::{Pod, Zeroable};
-use cgmath::{Matrix, Matrix3, Matrix4, SquareMatrix, Zero};
+use cgmath::{AbsDiffEq, Matrix, Matrix3, Matrix4, SquareMatrix, Zero};
 
 use crate::geometry::vertex::VertexDescriptor;
 
@@ -8,6 +8,7 @@ use crate::geometry::vertex::VertexDescriptor;
 pub struct InstanceRaw {
   pub model: [[f32; 4]; 4],
   pub normal: [[f32; 3]; 3],
+  pub uneven_scale: u32,
 }
 
 impl InstanceRaw {
@@ -17,13 +18,22 @@ impl InstanceRaw {
     // The inverse transpose keeps normals square to their faces under any scale, and the lighting
     // reads their length, so the scale is divided back out
     let scale = linear.determinant().abs().cbrt();
-    let normal = linear
-      .invert()
-      .map_or(Matrix3::zero(), |inverse| inverse.transpose() * scale);
+
+    // An uneven scale stretches some normals more than others, so the shader normalizes those.
+    // Only those, since the skin's own normals aren't all unit length.
+    let (normal, uneven_scale) = match linear.invert() {
+      Some(inverse) => {
+        let normal = inverse.transpose() * scale;
+        let even = (normal.transpose() * normal).abs_diff_eq(&Matrix3::identity(), 1e-4);
+        (normal, !even)
+      }
+      None => (Matrix3::zero(), false),
+    };
 
     Self {
       model: model.into(),
       normal: normal.into(),
+      uneven_scale: uneven_scale.into(),
     }
   }
 }
@@ -40,7 +50,8 @@ impl VertexDescriptor for InstanceRaw {
     // Normal Matrix
     9 => Float32x3,
     10 => Float32x3,
-    11 => Float32x3
+    11 => Float32x3,
+    12 => Uint32
   ];
   const STEP_MODE: wgpu::VertexStepMode = wgpu::VertexStepMode::Instance;
 }
