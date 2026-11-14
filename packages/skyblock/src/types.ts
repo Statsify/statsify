@@ -738,7 +738,7 @@ export interface StatValue {
   value: number;
 }
 
-/** Where a stat comes from; the weapon is the first sword, bow or wand in the hotbar, since the API has no held slot. */
+/** Where a stat comes from; gear counts the first weapon in the hotbar, since the API has no held slot. */
 export const STAT_SOURCES = [
   "base",
   "wikiBase",
@@ -780,7 +780,7 @@ export interface StatTotal {
 /** The permanent stat sheet; temporary buffs (Booster Cookie, potions, the mayor) aren't in the API. */
 export interface StatsSection {
   stats: StatTotal[]; // in PLAYER_STATS' order, only stats something gives
-  weapon?: string; // the counted weapon's name
+  weapon?: string;
   unverified: StatSource[]; // sources whose numbers here aren't checked in game
 }
 
@@ -819,7 +819,7 @@ export interface Dragons {
   summoningEyes: number; // collected from Zealots
 }
 
-/** An item whose permanent bonus can only be taken so many times; the maximums are the wiki's (unverified). */
+/** An item whose permanent bonus can only be taken so many times; the maximums are the wiki's. */
 export interface Consumable {
   id: string;
   name: string;
@@ -860,8 +860,6 @@ export type PriceEntry =
 
 export interface PriceMap {
   asOf: number;
-  auctionsUpdated: number;
-  bazaarUpdated: number;
   entries: Record<string, PriceEntry>;
 }
 
@@ -904,7 +902,7 @@ export interface AccessoriesSection {
   powerStats?: PowerStat[]; // at this Accessory Power, plus the stone's Unique Power Bonus; only for stone Powers
   tuning: Record<string, number>;
   tuningPoints: number; // spent
-  tuningTotal?: number; // missing below Tuning Box X but above 0, whose points nothing gives
+  tuningTotal?: number; // missing below Tuning Box X but above 0, whose points nothing gives, and below the points spent
   enrichments: number; // on active accessories
   unenriched: number; // active Legendary-and-up accessories without an enrichment, the ones that can take one
   recombobulated: number; // active

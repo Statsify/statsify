@@ -9,16 +9,14 @@
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { RARITY_COLORS } from "@statsify/skyblock/display";
-import { arrayGroup, prettify, romanNumeral } from "@statsify/util";
+import { gridRows } from "./components/ItemGrid.js";
+import { prettify, romanNumeral } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 // The employees whose id isn't their name in the factory (the wiki's Chocolate Factory page)
 const RENAMED_EMPLOYEES = new Set(["rabbit_father", "rabbit_grandma"]);
 
 const COLUMNS = 4;
-
-// Not gridRows: a short last row shares the full width instead of leaving an empty cell
-const rows = (cells: JSX.Element[]) => arrayGroup(cells, COLUMNS).map((row) => <Table.tr>{row}</Table.tr>);
 
 export const SkyBlockChocolateProfile = ({
   profile,
@@ -63,15 +61,20 @@ export const SkyBlockChocolateProfile = ({
   ));
 
   const employees = chocolate.employees.map(({ employee, level }) => (
-    <Table.td title={RENAMED_EMPLOYEES.has(employee) ? t(`skyblock.employeeNames.${employee}`) : prettify(employee)} value={t(level)} color="§a" size="small" />
+    <Table.td
+      title={RENAMED_EMPLOYEES.has(employee) ? t(`skyblock.employeeNames.${employee}`) : prettify(employee)}
+      value={t(level)}
+      color="§a"
+      size="small"
+    />
   ));
 
   return (
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
       <Table.table>
-        <Table.ts title={`§a${t("skyblock.rabbits")}`}>{rows(rabbits)}</Table.ts>
-        <Table.ts title={`§a${t("skyblock.employees")}`}>{rows(employees)}</Table.ts>
+        <Table.ts title={`§a${t("skyblock.rabbits")}`}>{gridRows(rabbits, COLUMNS, true)}</Table.ts>
+        <Table.ts title={`§a${t("skyblock.employees")}`}>{gridRows(employees, COLUMNS, true)}</Table.ts>
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>
