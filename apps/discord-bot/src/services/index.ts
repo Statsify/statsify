@@ -7,3 +7,4 @@
  */
 
 export * from "./font-loader.service.js";
+export * from "./resource-packs.service.js";

@@ -639,12 +639,18 @@ importers:
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../schemas
+      '@statsify/textures':
+        specifier: workspace:^
+        version: link:../textures
       '@swc/helpers':
         specifier: ^0.5.23
         version: 0.5.23
       axios:
         specifier: 1.11.0
         version: 1.11.0(debug@4.4.3(supports-color@7.2.0))
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
       skia-canvas:
         specifier: 4.0.0
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -800,6 +806,9 @@ importers:
       '@statsify/math':
         specifier: workspace:^
         version: link:../math
+      '@statsify/textures':
+        specifier: workspace:^
+        version: link:../textures
       '@statsify/util':
         specifier: workspace:^
         version: link:../util
@@ -815,6 +824,19 @@ importers:
       skyhelper-networth:
         specifier: 2.11.1
         version: 2.11.1(patch_hash=2253d70cab34b0a5f5d369d4e7a64dda4a5eb51900278e37fd94df6c2183dfb7)(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+
+  packages/textures:
+    dependencies:
+      '@swc/helpers':
+        specifier: ^0.5.23
+        version: 0.5.23
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
+    devDependencies:
+      skia-canvas:
+        specifier: 4.0.0
+        version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
 
   packages/util:
     dependencies:

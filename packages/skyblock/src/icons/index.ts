@@ -9,13 +9,15 @@
 // Its own entry, so importing @statsify/skyblock doesn't load skia-canvas.
 import textures from "../generated/textures-1.8.json" with { type: "json" };
 import { Canvas, type CanvasRenderingContext2D, type Image, loadImage } from "skia-canvas";
+import { ItemRenderer, type ItemStack, type PackStack, legacyItem, setCanvasBackend } from "@statsify/textures";
 import { getMinecraftTexturePath } from "@statsify/assets";
+import { skiaCanvas } from "@statsify/textures/node";
 import type { ItemTexture } from "#types";
 
 export interface IconOptions {
-  /** Width and height in pixels; 16 is the game's own size. */
+  /** Width and height in pixels, a multiple of 16, the game's own size. */
   size?: number;
-  /** The enchantment glint, as 1.8 draws it in an inventory at its first frame. */
+  /** The enchantment glint, as an inventory draws it at its first frame. */
   glint?: boolean;
 }
 
@@ -24,6 +26,7 @@ export type HeadSource = (hash: string) => Promise<Buffer | undefined>;
 
 const TEXTURES: Record<string, string | undefined> = textures.textures;
 const BASE_SIZE = 16;
+const SKIN_URL = "https://textures.minecraft.net/texture/";
 const GLINT = "misc/enchanted_item_glint";
 // 1.8 tints its gray glint 0x8040CC and draws it twice, at -50° and 10°, each pass an eighth of the texture per icon
 const GLINT_TINT = [0x80 / 255, 0x40 / 255, 0xcc / 255];
@@ -176,7 +179,7 @@ const hasHat = (skin: Image) => {
 };
 
 let headSource: HeadSource = async (hash) => {
-  const response = await fetch(`https://textures.minecraft.net/texture/${hash}`, { signal: AbortSignal.timeout(HEAD_TIMEOUT) });
+  const response = await fetch(`${SKIN_URL}${hash}`, { signal: AbortSignal.timeout(HEAD_TIMEOUT) });
   if (!response.ok) throw new Error(`textures.minecraft.net answered ${response.status} for ${hash}`);
   return Buffer.from(await response.arrayBuffer());
 };
@@ -304,8 +307,7 @@ async function drawIcon(texture: ItemTexture, size: number, glint: boolean, key:
   return canvas;
 }
 
-/** undefined when the 1.8 pack has no texture for the item (a barrier). */
-export function getItemIcon(texture: ItemTexture, { size = BASE_SIZE, glint = false }: IconOptions = {}): Promise<Canvas | undefined> {
+function legacyIcon(texture: ItemTexture, size: number, glint: boolean) {
   const key = cacheKey(texture, size, glint);
   let icon = icons.get(key);
 
@@ -319,4 +321,33 @@ export function getItemIcon(texture: ItemTexture, { size = BASE_SIZE, glint = fa
   icons.set(key, icon);
   if (icons.size > CACHE_SIZE) icons.delete(icons.keys().next().value!);
   return icon;
+}
+
+let packs: ItemRenderer | undefined;
+
+/** Draws every icon from these resource packs, or from the 1.8 textures again when undefined. */
+export function setResourcePacks(stack: PackStack | undefined) {
+  setCanvasBackend(skiaCanvas);
+  packs = stack && new ItemRenderer(stack, undefined, (url) => headSource(url.slice(SKIN_URL.length)));
+}
+
+function packItem(texture: ItemTexture, glint: boolean): ItemStack | undefined {
+  const { model: itemModel, customData } = texture;
+  if (texture.kind === "head") return { id: "minecraft:player_head", itemModel, skin: `${SKIN_URL}${texture.skin}`, enchanted: glint };
+
+  const item = legacyItem(texture.id, texture.damage);
+  return item && { ...item, itemModel, customData, color: texture.color, enchanted: glint };
+}
+
+/** undefined when neither the resource packs nor the 1.8 textures have the item (a barrier). */
+export function getItemIcon(texture: ItemTexture, { size = BASE_SIZE, glint = false }: IconOptions = {}): Promise<Canvas | undefined> {
+  const renderer = packs;
+  const item = packItem(texture, glint);
+  if (!renderer || !item) return legacyIcon(texture, size, glint);
+
+  // The 1.8 icon stands in for an item the packs can't draw yet, like a banner. Node's canvas backend is skia-canvas.
+  return renderer.render(item, size / BASE_SIZE).then(
+    (icon) => icon as unknown as Canvas,
+    () => legacyIcon(texture, size, glint)
+  );
 }

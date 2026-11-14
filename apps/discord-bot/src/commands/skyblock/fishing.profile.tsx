@@ -9,13 +9,16 @@
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { CATCHES, MEDAL_COLORS, TROPHY_TIERS } from "@statsify/skyblock/display";
-import { gridRows } from "./components/ItemGrid.js";
+import { ItemCell, gridRows } from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
-import type { FishingSection } from "@statsify/skyblock";
+import type { FishingSection, MemberView } from "@statsify/skyblock";
+import type { ItemIcons } from "./components/ItemSlot.js";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const SEA_CREATURES_SHOWN = 24;
+
+export const trophyFishIcons = ({ fishing }: MemberView) => fishing?.trophyFish.map(({ texture }) => texture) ?? [];
 
 export interface SkyBlockFishingProfileProps extends SkyBlockProfileProps {
   page: keyof typeof TABLES;
@@ -30,6 +33,7 @@ export const SkyBlockFishingProfile = ({
   logo,
   user,
   t,
+  icons,
   page,
 }: SkyBlockFishingProfileProps) => {
   const fishing = profile.member.fishing;
@@ -60,7 +64,7 @@ export const SkyBlockFishingProfile = ({
   return (
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
-      <PageTable fishing={fishing} t={t} />
+      <PageTable fishing={fishing} t={t} icons={icons} />
       <Footer logo={logo} user={user} />
     </Container>
   );
@@ -69,6 +73,7 @@ export const SkyBlockFishingProfile = ({
 interface FishingTableProps {
   fishing: FishingSection;
   t: LocalizeFunction;
+  icons: ItemIcons;
 }
 
 const Cell = ({ name, value }: { name: string; value: string }) => (
@@ -90,11 +95,14 @@ const StackedCell = ({ name, value }: { name: string; value: string }) => (
   </box>
 );
 
-const TrophyFishTable = ({ fishing, t }: FishingTableProps) => {
-  const fish = fishing.trophyFish.map(({ name, tiers }) => (
-    <StackedCell
+const TrophyFishTable = ({ fishing, t, icons }: FishingTableProps) => {
+  const fish = fishing.trophyFish.map(({ name, tiers, texture }) => (
+    <ItemCell
+      texture={texture}
       name={`${TROPHY_TIERS.some((tier) => tiers[tier] > 0) ? "§f" : "§8"}${name}`}
       value={TROPHY_TIERS.map((tier) => `${MEDAL_COLORS[tier]}${t(tiers[tier])}`).join(" §8• ")}
+      icons={icons}
+      stacked
     />
   ));
 
