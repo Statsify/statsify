@@ -35,7 +35,7 @@ const HEAD_CACHE_SIZE = 500;
 @Injectable()
 export class SkinService {
   private readonly heads = new Map<string, Buffer>();
-  private kartLibrary?: Promise<ModelLibrary>;
+  private readonly libraries = new Map<ResourcePack, Promise<ModelLibrary>>();
 
   public constructor(
     private readonly httpService: HttpService,
@@ -86,18 +86,14 @@ export class SkinService {
     const kart = resolveKart(options, uuid !== undefined);
 
     const [library, player] = await Promise.all([
-      this.getKartLibrary(),
+      this.getLibrary(KART_PACK),
       uuid ? this.getSkin(uuid).then((skin) => this.resolveSkin(skin.skinUrl, skin.slim)) : undefined,
     ]);
 
-    return renderKart(library, kart, {
+    return this.reloadIfUnavailable(KART_PACK, renderKart(library, kart, {
       ...options,
       player: player && { skin: imageData(player.skin), slim: player.slim },
-    }).catch((error) => {
-      // The library only finds a missing file when a scene bakes it, so a pack completed after startup needs a reload
-      if (error instanceof ServiceUnavailableException) this.kartLibrary = undefined;
-      throw error;
-    });
+    }));
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -188,13 +184,27 @@ export class SkinService {
   }
 
   // Forgets a failed load, so a pack copied in after startup is picked up without a restart
-  private getKartLibrary() {
-    this.kartLibrary ??= loadKartLibrary().catch((error) => {
-      this.kartLibrary = undefined;
+  private getLibrary(pack: ResourcePack) {
+    let library = this.libraries.get(pack);
+
+    if (!library) {
+      library = loadPackLibrary(pack).catch((error) => {
+        this.libraries.delete(pack);
+        throw error;
+      });
+
+      this.libraries.set(pack, library);
+    }
+
+    return library;
+  }
+
+  // The library only finds a missing file when a scene bakes it, so a pack completed after startup needs a reload
+  private reloadIfUnavailable(pack: ResourcePack, render: Promise<Buffer>) {
+    return render.catch((error) => {
+      if (error instanceof ServiceUnavailableException) this.libraries.delete(pack);
       throw error;
     });
-
-    return this.kartLibrary;
   }
 
   private getUuid(username: string): Promise<string> {
@@ -277,37 +287,50 @@ async function resolveArmorPiece(
   return { texture: await canvas.toBuffer("png"), enchanted };
 }
 
-// Hypixel's pack listing doesn't carry the Turbo Kart Racers pack, so it's copied in by hand
-const KART_PACK = join(getAssetPath("resource-packs/turbo-kart-racers", "public"), "assets/minecraft");
+interface ResourcePack {
+  name: string;
+  /** The pack's assets/minecraft folder */
+  path: string;
+}
+
+// Hypixel's pack listing only carries SkyBlock's pack, so game packs are copied in by hand
+const resourcePack = (name: string, folder: string): ResourcePack => ({
+  name,
+  path: join(getAssetPath(`resource-packs/${folder}`, "public"), "assets/minecraft"),
+});
+
+export const KART_PACK = resourcePack("Turbo Kart Racers", "turbo-kart-racers");
 
 // The kart is worn by an armor stand the rider sits on: the stand's mounted offset (1.975 × 0.75 blocks)
 // less the player's riding offset (0.35), in pixels
 const KART_MOUNT = -(1.975 * 0.75 - 0.35) * 16;
 
-async function readPackFiles<T>(folder: string, extension: string, read: (path: string) => Promise<T>) {
-  const files = (await readdir(join(KART_PACK, folder), { recursive: true })).filter((file) => file.endsWith(extension));
-  const contents = await Promise.all(files.map((file) => read(join(KART_PACK, folder, file))));
+async function readPackFiles<T>(pack: ResourcePack, folder: string, extension: string, read: (path: string) => Promise<T>) {
+  const files = (await readdir(join(pack.path, folder), { recursive: true })).filter((file) => file.endsWith(extension));
+  const contents = await Promise.all(files.map((file) => read(join(pack.path, folder, file))));
   return Object.fromEntries(files.map((file, index) => [file.slice(0, -extension.length), contents[index]]));
 }
 
-const throwPackUnavailable = (): never => {
-  throw new ServiceUnavailableException("The Turbo Kart Racers pack isn't installed");
+const packUnavailable = ({ name }: ResourcePack) => new ServiceUnavailableException(`The ${name} pack isn't installed`);
+
+const throwPackUnavailable = (pack: ResourcePack) => (): never => {
+  throw packUnavailable(pack);
 };
 
 // The renderer's errors carry only a message
 const MISSING_PACK_FILE = /^SkinRendererError: The pack has no (model|texture) named /;
 
-const rethrowPackError = (error: unknown): never => {
-  if (error instanceof Error && MISSING_PACK_FILE.test(error.message)) throwPackUnavailable();
+const rethrowPackError = (pack: ResourcePack) => (error: unknown): never => {
+  if (error instanceof Error && MISSING_PACK_FILE.test(error.message)) throw packUnavailable(pack);
   throw error;
 };
 
-export async function loadKartLibrary(): Promise<ModelLibrary> {
+export async function loadPackLibrary(pack: ResourcePack): Promise<ModelLibrary> {
   const [models, textures, mcmeta] = await Promise.all([
-    readPackFiles("models", ".json", (path) => readFile(path, "utf8")),
-    readPackFiles("textures", ".png", (path) => readFile(path)),
-    readPackFiles("textures", ".png.mcmeta", (path) => readFile(path, "utf8")),
-  ]).catch(throwPackUnavailable);
+    readPackFiles(pack, "models", ".json", (path) => readFile(path, "utf8")),
+    readPackFiles(pack, "textures", ".png", (path) => readFile(path)),
+    readPackFiles(pack, "textures", ".png.mcmeta", (path) => readFile(path, "utf8")),
+  ]).catch(throwPackUnavailable(pack));
 
   return new ModelLibrary({ models, textures, mcmeta });
 }
@@ -359,18 +382,18 @@ export async function renderKart(
 ): Promise<Buffer> {
   const output = { width, height, yaw, pitch };
 
-  if (!player) return renderScene(library, { models }, output).catch(rethrowPackError);
+  if (!player) return renderScene(library, { models }, output).catch(rethrowPackError(KART_PACK));
 
-  const textures = join(KART_PACK, "textures");
+  const textures = join(KART_PACK.path, "textures");
 
   const [chestplate, leggings, boots] = await Promise.all([
     suit.chestplate && resolveArmorPiece(suit.chestplate, 1, textures),
     suit.leggings && resolveArmorPiece(suit.leggings, 2, textures),
     suit.boots && resolveArmorPiece(suit.boots, 1, textures),
-  ]).catch(throwPackUnavailable);
+  ]).catch(throwPackUnavailable(KART_PACK));
 
   return renderScene(library, { player: { ...player, extruded, armor: { chestplate, leggings, boots }, pose: "sit" }, models }, output)
-    .catch(rethrowPackError);
+    .catch(rethrowPackError(KART_PACK));
 }
 
 interface MojangProfile {
