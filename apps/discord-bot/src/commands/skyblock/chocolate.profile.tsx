@@ -58,7 +58,12 @@ export const SkyBlockChocolateProfile = ({
   ));
 
   const employees = chocolate.employees.map(({ employee, level }) => (
-    <Table.td title={RENAMED_EMPLOYEES.has(employee) ? t(`skyblock.employeeNames.${employee}`) : prettify(employee)} value={t(level)} color="§a" size="small" />
+    <Table.td
+      title={RENAMED_EMPLOYEES.has(employee) ? t(`skyblock.employeeNames.${employee}`) : prettify(employee)}
+      value={t(level)}
+      color="§a"
+      size="small"
+    />
   ));
 
   return (
