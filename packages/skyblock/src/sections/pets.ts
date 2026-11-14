@@ -57,8 +57,10 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
   };
 }
 
-/** A tier's pet score points: Common 1 … Mythic 6, and 0 for the tiers that never count. */
-export const petScorePoints = (tier: string) => PET_RARITIES.indexOf(tier as Rarity) + 1;
+/** A tier's pet score points: Common 1 … Mythic 6, Very Special as Mythic, and 0 for Special. */
+// Against the wiki: 12 of 28 saved Very Special Phoenix owners sit exactly 7 under highest_pet_score (unverified)
+export const petScorePoints = (tier: string) =>
+  tier === "VERY_SPECIAL" ? 6 : PET_RARITIES.indexOf(tier as Rarity) + 1;
 
 /** Pet score: each type's best pet by the API's tier (which leaves out Tier Boost), then level, plus 1 at max level. */
 export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
@@ -107,7 +109,7 @@ if (import.meta.vitest) {
     expect(active).toMatchObject({ rarity: "LEGENDARY", level: { level: 96, maxLevel: 100 } });
     expect(pets.find((pet) => !pet.active && pet.type === "BEE")?.level.level).toBe(100);
     expect(pets.find((pet) => pet.type === "GOLDEN_DRAGON")?.level).toMatchObject({ level: 100, maxLevel: 200 });
-    // Jerry scores its Mythic over its maxed Common, and Phoenix never scores
-    expect(score).toBe(4 + 1 + 5 + 6);
+    // Jerry scores its Mythic over its maxed Common, and the maxed Very Special Phoenix scores as a maxed Mythic
+    expect(score).toBe(4 + 1 + 5 + 6 + 6 + 1);
   });
 }
