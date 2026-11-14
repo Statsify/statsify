@@ -46,7 +46,7 @@ export function leaderboardRoute(listener: AbstractCommandListener): ComponentRo
   };
 }
 
-function getSearchModal(type: LeaderboardType, search: LeaderboardQuery.INPUT | LeaderboardQuery.POSITION) {
+function getSearchModal(type: LeaderboardType, search: typeof LeaderboardQuery.INPUT | typeof LeaderboardQuery.POSITION) {
   const input =
     search === LeaderboardQuery.INPUT ?
       new TextInputBuilder()
