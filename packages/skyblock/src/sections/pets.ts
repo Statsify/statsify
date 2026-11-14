@@ -73,10 +73,8 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
   };
 }
 
-/** A tier's pet score points: Common 1 … Mythic 6, Very Special as Mythic, and 0 for Special. */
-// Against the wiki: 12 of 28 saved Very Special Phoenix owners sit exactly 7 under highest_pet_score (unverified)
-export const petScorePoints = (tier: string) =>
-  tier === "VERY_SPECIAL" ? 6 : PET_RARITIES.indexOf(tier as Rarity) + 1;
+/** A tier's pet score points: Common 1 … Mythic 6, and 0 for the tiers that never count. */
+export const petScorePoints = (tier: string) => PET_RARITIES.indexOf(tier as Rarity) + 1;
 
 /**
  * Pet score: each type's best pet by rarity, Tier Boost included (the wiki's Rift Ferret page, unverified), then level.
@@ -139,7 +137,7 @@ if (import.meta.vitest) {
     const bingo = { type: "BINGO", tier: "LEGENDARY", exp: 5_624_785, heldItem: "PET_ITEM_TIER_BOOST", active: false };
     expect(getPetLevel(bingo).level).toBe(100);
     // The boosted Bee scores Legendary, not Epic, and the maxed Tiger Epic plus one. Jerry scores its Mythic over its
-    // maxed Common, and the maxed Very Special Phoenix as a maxed Mythic
-    expect(score).toBe(5 + 5 + 5 + 6 + 6 + 1);
+    // maxed Common, and Phoenix never scores
+    expect(score).toBe(5 + 5 + 5 + 6);
   });
 }
