@@ -190,6 +190,19 @@ export class ApiService {
     });
   }
 
+  // The class, selections and weapon material are the player's stored Warlords values; without a uuid, only the weapon is drawn
+  public getWarlordsRender(
+    uuid: string | undefined,
+    user: User | null,
+    cosmetics: { class?: string; helmet?: number; armor?: number; team?: "blue" | "red"; weapon?: string }
+  ) {
+    return this.requestImage(isProduction ? "https://api.statsify.net/skin/warlords" : "/skin/warlords", {
+      uuid,
+      ...cosmetics,
+      extruded: User.hasExtrudedSkins(user),
+    });
+  }
+
   public getPlayerSkinTextures(tag: string) {
     return this.requestKey<GetSkinTexturesResponse, "skin">("/skin/textures", "skin", {
       player: tag,
