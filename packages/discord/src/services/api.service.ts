@@ -47,7 +47,7 @@ export class ApiService extends StatsifyApiService {
   public async getPlayer(
     tag: string,
     user: User | null = null,
-    cache = User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE
+    cache: CacheLevel = User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE
   ) {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
