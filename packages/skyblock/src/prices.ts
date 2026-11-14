@@ -10,6 +10,7 @@ import {
   RARITIES,
   type Bazaar,
   type ItemCost,
+  type ItemMatch,
   type ItemsResource,
   type PriceEntry,
   type PriceMap,
@@ -75,6 +76,23 @@ export function describeKey(key: string, items: ItemsResource): Omit<PriceView, 
   return pet && { id: key, name: pet.name, rarity: pet.rarity, texture: petTexture(pet.type, pet.rarity) };
 }
 
+/** One search result per key that has `name`, each labeled apart: "Salmon Helmet (Rare)", "Apple (Builder)". */
+export function labelVariants(name: string, keys: Omit<ItemMatch, "name">[]): ItemMatch[] {
+  if (keys.length === 1) return [{ ...keys[0], name }];
+
+  const rarities = new Set(keys.map(({ rarity }) => rarity));
+  if (rarities.size === keys.length && !rarities.has(undefined)) {
+    return keys.map((key) => ({ ...key, name: `${name} (${prettify(key.rarity!)})` }));
+  }
+
+  const words = keys.map(({ id }) => id.split("_"));
+  const shared = words[0].filter((word) => words.every((other) => other.includes(word)));
+  return keys.map((key, index) => {
+    const differs = words[index].filter((word) => !shared.includes(word));
+    return { ...key, name: differs.length === 0 ? name : `${name} (${prettify(differs.join("_"))})` };
+  });
+}
+
 export function parsePetKey(key: string) {
   const [, level, tier, type] = PET_KEY.exec(key) ?? [];
   const rarity = RARITIES.find((candidate) => candidate === tier);
@@ -91,7 +109,8 @@ export function toPriceView(id: string, map: PriceMap, bazaar: Bazaar, items: It
   const npc = own(items.items, id)?.npcPrice;
   if (!described || !(product || lowestBin || npc)) return;
 
-  return { ...described, bazaar: product, lowestBin, npc, asOf: map.asOf };
+  const current = entry && { coins: entry.coins, source: entry.source };
+  return { ...described, current, bazaar: product, lowestBin, npc, asOf: map.asOf };
 }
 
 /** An NPC sell price is what an NPC pays for an item, so one priced only by that has no cost. */
@@ -99,4 +118,21 @@ export function costOf(entry?: PriceEntry): ItemCost | undefined {
   if (entry?.source === "bin") return { coins: entry.coins, source: "bin" };
   if (entry?.source === "bazaar" && entry.buy > 0) return { coins: entry.buy, source: "bazaar" };
   return undefined;
+}
+
+if (import.meta.vitest) {
+  const { test, expect } = import.meta.vitest;
+  const labels = (name: string, keys: Omit<ItemMatch, "name">[]) => labelVariants(name, keys).map((match) => match.name);
+
+  test("labelVariants tells a shared name's keys apart by rarity, else by the words their ids don't share", () => {
+    expect(labels("Salmon Helmet", [{ id: "SALMON_HELMET_NEW", rarity: "RARE" }, { id: "SALMON_HELMET", rarity: "EPIC" }])).toEqual([
+      "Salmon Helmet (Rare)",
+      "Salmon Helmet (Epic)",
+    ]);
+    expect(labels("Melon", [{ id: "MELON_BLOCK", rarity: "COMMON" }, { id: "BUILDER_MELON", rarity: "COMMON" }])).toEqual([
+      "Melon (Block)",
+      "Melon (Builder)",
+    ]);
+    expect(labels("Apple", [{ id: "APPLE", rarity: "COMMON" }])).toEqual(["Apple"]);
+  });
 }

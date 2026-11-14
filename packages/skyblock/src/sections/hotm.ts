@@ -42,7 +42,7 @@ export function getHotm(member: RawMember): HotmSection {
   // The old mining_core tree names it special_0
   const coreLevel = Number(nodes.core_of_the_mountain ?? nodes.special_0 ?? 0);
   const loadouts = Object.keys(tree?.tokens_spent ?? {}).filter((key) => /^mountain(_\d+)?$/.test(key)).length;
-  const crystals = Object.values(core.crystals ?? {});
+  const crystals = Object.entries(core.crystals ?? {});
   const glacite = member.glacite_player_data;
 
   return {
@@ -54,7 +54,8 @@ export function getHotm(member: RawMember): HotmSection {
       total: add(CORE_TOKENS[coreLevel], ...TIER_TOKENS.slice(0, level.level)),
     },
     ability: tree?.selected_ability?.[`mining${suffix}`] ?? core.selected_pickaxe_ability,
-    // Core of the Mountain's powder is kept apart in powder_spent_non_refundable_*, since a reset never refunds it
+    // powder_<type> is all the powder ever earned. Core of the Mountain's cost is kept apart in
+    // powder_spent_non_refundable_*, since a reset never refunds it
     powder: Object.fromEntries(
       POWDERS.map((type) => [
         type,
@@ -66,13 +67,22 @@ export function getHotm(member: RawMember): HotmSection {
     ) as HotmSection["powder"],
     nodes: treeNodes(HOTM_LAYOUT, { ...nodes, core_of_the_mountain: coreLevel }),
     crystals: {
-      found: add(...crystals.map((crystal) => crystal.total_found ?? 0)),
-      placed: add(...crystals.map((crystal) => crystal.total_placed ?? 0)),
+      found: add(...crystals.map(([, crystal]) => crystal.total_found ?? 0)),
+      placed: add(...crystals.map(([, crystal]) => crystal.total_placed ?? 0)),
+      gems: crystals
+        .filter(([, crystal]) => (crystal.total_found ?? 0) > 0)
+        .map(([key, crystal]) => ({ gem: key.replace(/_crystal$/, ""), found: crystal.total_found!, placed: crystal.total_placed }))
+        .toSorted((a, b) => b.found - a.found),
     },
     nucleusRuns: Math.min(...NUCLEUS_CRYSTALS.map((gem) => core.crystals?.[`${gem}_crystal`]?.total_placed ?? 0)),
+    kingQuests: core.biomes?.goblin?.king_quests_completed ?? 0,
     glacite: {
       corpses: add(...Object.values(glacite?.corpses_looted ?? {})),
+      corpsesByType: Object.entries(glacite?.corpses_looted ?? {})
+        .map(([type, count]) => ({ type, count }))
+        .toSorted((a, b) => b.count - a.count),
       fossils: glacite?.fossils_donated?.length ?? 0,
+      fossilDust: Math.floor(glacite?.fossil_dust ?? 0),
       mineshafts: glacite?.mineshafts_entered ?? 0,
     },
   };
@@ -90,16 +100,30 @@ if (import.meta.vitest) {
         tokens_spent: { mountain: 1, mountain_2: 25 },
         selected_ability: { mining: "pickobulus", mining_2: "sheer_force" },
       },
-      mining_core: { powder_mithril: 10, powder_spent_mithril: 1, powder_spent_mithril_2: 2 },
+      mining_core: {
+        powder_mithril: 200_000,
+        powder_spent_mithril: 1,
+        powder_spent_mithril_2: 2,
+        powder_spent_non_refundable_mithril_2: 150_000,
+        crystals: { jade_crystal: { total_found: 3, total_placed: 2 }, ruby_crystal: { total_found: 5 }, opal_crystal: {} },
+      },
     });
 
     expect(hotm.level).toMatchObject({ level: 10, xp: 2_000_000, xpForNext: undefined });
     expect(hotm.loadout).toEqual({ selected: 2, total: 2 });
     expect(hotm.tokens).toEqual({ spent: 25, total: 25 });
     expect(hotm.ability).toBe("sheer_force");
-    expect(hotm.powder.mithril).toEqual({ total: 10, spent: 2 });
+    expect(hotm.powder.mithril).toEqual({ total: 200_000, spent: 150_002 });
     expect(hotm.nodes.find(({ id }) => id === "mining_fortune")).toMatchObject({ level: 3, enabled: false });
     expect(hotm.nodes.find(({ id }) => id === "mining_speed")).toMatchObject({ level: 0, enabled: false });
+    expect(hotm.crystals).toEqual({
+      found: 8,
+      placed: 2,
+      gems: [
+        { gem: "ruby", found: 5, placed: undefined },
+        { gem: "jade", found: 3, placed: 2 },
+      ],
+    });
 
     // Tier 6 gives two tokens, and Core of the Mountain's first level one
     const hotm5 = getHotm({ skill_tree: { experience: { mining: 110_000 }, nodes: { mining: { core_of_the_mountain: 1 } } } });

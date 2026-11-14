@@ -60,6 +60,11 @@ export interface Config {
      * @example 15
      */
     pricesRefreshMinutes: number;
+    /**
+     * The site's origin, for the /skyblock cards' Full Profile link to the profile's page; empty hides the link
+     * @example "https://statsify.net"
+     */
+    siteUrl?: string;
   };
 
   api: {

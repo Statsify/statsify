@@ -14,6 +14,7 @@ import {
   type PriceView,
   type RawBazaar,
   describeKey,
+  labelVariants,
   parseBazaar,
   parseItemsResource,
   toPriceView,
@@ -37,6 +38,8 @@ const LOCK_KEY = "skyblock:prices:lock";
 const BAZAAR_KEY = "skyblock:bazaar";
 const ITEMS_KEY = "skyblock:resource:items";
 const AUTOCOMPLETE_KEY = "skyblock:items:autocomplete";
+// Discord's cap on autocomplete choices
+const MAX_MATCHES = 25;
 
 const PRICES_REFRESH = (await config("skyblock.pricesRefreshMinutes", { default: 15 })) * 60_000;
 const BAZAAR_REFRESH = 60_000;
@@ -119,11 +122,13 @@ export class SkyBlockPricesService implements OnModuleDestroy {
         query,
         "FUZZY",
         "MAX",
-        "25",
+        String(MAX_MATCHES),
         "WITHPAYLOADS"
       )) as string[] | null;
 
-      return arrayGroup(reply ?? [], 2).map(([name, payload]) => ({ name, ...JSON.parse(payload) }));
+      return arrayGroup(reply ?? [], 2)
+        .flatMap(([name, payload]) => labelVariants(name, JSON.parse(payload)))
+        .slice(0, MAX_MATCHES);
     } catch (error) {
       this.logger.error(error);
       throw new SkyBlockUnavailableException("market");
@@ -185,12 +190,12 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   private async updateAutocomplete(map: PriceMap, items: ItemsResource) {
     const next = `${AUTOCOMPLETE_KEY}:next`;
     const pipeline = this.redis.pipeline().del(next);
+    const described = Object.keys(map.entries).flatMap((key) => describeKey(key, items) ?? []);
 
-    for (const key of Object.keys(map.entries)) {
-      const described = describeKey(key, items);
-      if (!described) continue;
-      const payload = JSON.stringify({ id: key, rarity: described.rarity });
-      pipeline.call("FT.SUGADD", next, described.name, "1", "PAYLOAD", payload);
+    // Redis keeps one suggestion per string, so a name's payload lists every key that has it
+    for (const [name, keys] of Map.groupBy(described, ({ name }) => name)) {
+      const payload = JSON.stringify(keys.map(({ id, rarity, texture }) => ({ id, rarity, texture })));
+      pipeline.call("FT.SUGADD", next, name, "1", "PAYLOAD", payload);
     }
 
     await pipeline.rename(next, AUTOCOMPLETE_KEY).exec();

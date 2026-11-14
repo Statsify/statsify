@@ -41,13 +41,32 @@ function toNetworthPrices(map: PriceMap): Record<string, number> {
 }
 
 function pricedTexture({ id, item, petData }: Priced, items: ItemsResource): ItemTexture | undefined {
-  if (item) return textureOf(item);
+  // A toolkit's items are bare ExtraAttributes, with no id to draw
+  if (item?.id !== undefined) return textureOf(item);
   if (petData) return petTexture(petData.type, boostedRarity(petData), petData.skin, items);
 
   // Essence and runes of one tier (RUNE_LIGHTNING_1) have no items-resource id.
   if (id.startsWith("ESSENCE_")) return { kind: "head", skin: ESSENCE_HEAD };
   const resource = items.items[id] ?? (id.startsWith("RUNE_") ? items.items.RUNE : undefined);
   return resource && resourceTexture(resource);
+}
+
+// These handlers replace an item's base price rather than add to it, and their entry repeats the new base
+const BASE_PRICE_TYPES = new Set(["SHENS_AUCTION", "ENCHANT", "CROWN_OF_AVARICE"]);
+const setsBasePrice = (type: string) => BASE_PRICE_TYPES.has(type) || type.includes("MIDAS_");
+
+/**
+ * The library's calculation summed per kind, so every enchantment is one line. A kind can take value off (pet candy),
+ * so only kinds worth nothing either way are left out.
+ */
+function modifiersOf(calculation: Item["calculation"] = []): NetworthItem["modifiers"] {
+  const sums = new Map<string, number>();
+  for (const { type, price } of calculation) if (!setsBasePrice(type)) sums.set(type, (sums.get(type) ?? 0) + price);
+
+  return [...sums]
+    .filter(([, price]) => price !== 0)
+    .map(([type, price]) => ({ type, price }))
+    .toSorted((a, b) => b.price - a.price);
 }
 
 const toNetworthItem = (priced: Priced, items: ItemsResource): NetworthItem => ({
@@ -58,6 +77,9 @@ const toNetworthItem = (priced: Priced, items: ItemsResource): NetworthItem => (
   soulbound: priced.soulbound,
   cosmetic: priced.cosmetic ?? false,
   texture: pricedTexture(priced, items),
+  basePrice: priced.basePrice,
+  // A stack's base and calculation don't scale to its price alike (arrows, sacks, candy), so only single items add up
+  modifiers: (priced.count ?? 1) > 1 ? [] : modifiersOf(priced.calculation),
 });
 
 /** The base keys the map doesn't have, by how many items and pets need each, and how many items and pets that is. */
@@ -127,7 +149,32 @@ export const NETWORTH = {
           },
         ])
       ),
+      petPrices: Object.fromEntries(
+        ((total.types.pets?.items ?? []) as Priced[]).flatMap(({ petData, price }) => (petData?.uuid ? [[petData.uuid, price]] : []))
+      ),
       ...getUnpriced(parsed, prices, items),
     };
   },
 };
+
+if (import.meta.vitest) {
+  const { test, expect } = import.meta.vitest;
+
+  test("modifiersOf sums each kind, keeps what takes value off, and leaves out what replaces the base", () => {
+    const calculation = (
+      [
+        ["ENCHANT", 5_000_000],
+        ["MIDAS_SWORD_50M", 50_000_000],
+        ["ENCHANTMENT", 2],
+        ["PET_CANDY", -4],
+        ["ENCHANTMENT", 3],
+        ["REFORGE", 0],
+      ] as const
+    ).map(([type, price]) => ({ id: type, type, price, count: 1 }));
+
+    expect(modifiersOf(calculation)).toEqual([
+      { type: "ENCHANTMENT", price: 5 },
+      { type: "PET_CANDY", price: -4 },
+    ]);
+  });
+}

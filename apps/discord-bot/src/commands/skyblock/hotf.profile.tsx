@@ -10,14 +10,9 @@ import { Container, Footer, Header, type SidebarItem, Table } from "#components"
 import { Empty } from "./components/Empty.js";
 import { LevelBar } from "./components/LevelBar.js";
 import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
-import { WHISPERS, type Whisper } from "@statsify/skyblock";
+import { WHISPERS, WHISPER_COLORS } from "@statsify/skyblock/display";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
-
-const WHISPER_COLORS: Record<Whisper, string> = {
-  forest: "§a",
-  desert: "§e",
-};
 
 export const SkyBlockHotfProfile = ({
   profile,

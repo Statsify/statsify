@@ -8,8 +8,9 @@
 
 import { Container, Footer, Header, type SidebarItem } from "#components";
 import { Empty } from "./components/Empty.js";
-import { ItemGrid, MEDAL_COLORS } from "./components/ItemGrid.js";
-import { JACOB_MEDALS, type MemberView } from "@statsify/skyblock";
+import { ItemGrid } from "./components/ItemGrid.js";
+import { JACOB_MEDALS, MEDAL_COLORS } from "@statsify/skyblock/display";
+import type { MemberView } from "@statsify/skyblock";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 

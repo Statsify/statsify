@@ -11,25 +11,8 @@ import { Empty } from "./components/Empty.js";
 import { LevelBar } from "./components/LevelBar.js";
 import { arrayGroup, formatTime, prettify } from "@statsify/util";
 import { gridRows } from "./components/ItemGrid.js";
-import { DUNGEON_CLASSES, type DungeonClass, type DungeonGrade } from "@statsify/skyblock";
+import { CLASS_COLORS, DUNGEON_CLASSES, GRADE_COLORS } from "@statsify/skyblock/display";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
-
-const CLASS_COLORS: Record<DungeonClass, string> = {
-  healer: "§d",
-  mage: "§b",
-  berserk: "§c",
-  archer: "§6",
-  tank: "§7",
-};
-
-const GRADE_COLORS: Record<DungeonGrade, string> = {
-  "S+": "§6",
-  "S": "§e",
-  "A": "§5",
-  "B": "§a",
-  "C": "§9",
-  "D": "§c",
-};
 
 export interface SkyBlockDungeonsProfileProps extends SkyBlockProfileProps {
   mode: "normal" | "master";

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { Faction, JacobMedal, Whisper } from "#types";
+import type { Experiment, Faction, JacobMedal, Whisper } from "#types";
 
 // The parts of Hypixel's /v2/skyblock responses this package reads. Everything is optional, since Hypixel leaves out
 // whatever a player never touched or an API setting hides.
@@ -29,6 +29,11 @@ export interface RawPet {
   skin?: string | null;
 }
 
+export interface RawExperiment {
+  [tier: `${"attempts" | "claims" | "best_score"}_${number}`]: number | undefined;
+  bonus_clicks?: number;
+}
+
 export interface RawDungeonType {
   experience?: number;
   times_played?: Record<string, number>;
@@ -39,6 +44,11 @@ export interface RawDungeonType {
   fastest_time_s?: Record<string, number>;
   fastest_time_s_plus?: Record<string, number>;
   watcher_kills?: Record<string, number>; // per floor, plus "total"
+  // Per floor, beside a "total" or "best" that doesn't match the floors
+  mobs_killed?: Record<string, number>;
+  most_mobs_killed?: Record<string, number>;
+  most_healing?: Record<string, number>;
+  milestone_completions?: Record<string, number>;
   [damage: `most_damage_${string}`]: Record<string, number> | undefined; // per floor, plus "best"
 }
 
@@ -56,12 +66,23 @@ export interface RawMember {
     first_join?: number;
   };
   leveling?: { experience?: number; highest_pet_score?: number };
-  currencies?: { coin_purse?: number; essence?: Record<string, { current?: number }> };
+  currencies?: { coin_purse?: number; motes_purse?: number; essence?: Record<string, { current?: number }> };
+  item_data?: { soulflow?: number };
+  experimentation?: Partial<Record<Experiment, RawExperiment>> & { serums_drank?: number };
   fairy_soul?: { total_collected?: number };
   player_stats?: {
     pets?: { total_exp_gained?: number };
     items_fished?: Record<string, number>;
     sea_creature_kills?: number;
+    kills?: Record<string, number>; // by mob id, plus "total"
+    deaths?: Record<string, number>; // by cause, plus "total"
+    highest_damage?: number;
+    highest_critical_damage?: number;
+    auctions?: Partial<Record<"created" | "completed" | "won" | "bids" | "highest_bid" | "gold_spent" | "gold_earned" | "fees", number>>;
+    gifts?: { total_given?: number; total_received?: number };
+    mythos?: { kills?: number; burrows_chains_complete?: { total?: number } };
+    candy_collected?: { total?: number };
+    rift?: { visits?: number; lifetime_motes_earned?: number };
   };
   bestiary?: { kills?: Record<string, number> };
   trophy_fish?: Record<string, unknown>; // <fish> and <fish>_<tier> counts, plus total_caught, rewards…
@@ -76,8 +97,15 @@ export interface RawMember {
     wardrobe_contents?: RawNbt;
     wardrobe_equipped_slot?: number;
     backpack_contents?: Record<string, RawNbt>;
+    backpack_icons?: Record<string, RawNbt>;
     bag_contents?: Partial<Record<"talisman_bag" | "potion_bag" | "fishing_bag" | "quiver" | "sacks_bag", RawNbt>>;
     sacks_counts?: Record<string, number>;
+  };
+  // Where the wardrobe moved from inventory.wardrobe_contents: each set by its slot number, one blob per piece
+  loadout?: {
+    armor?: Record<`${number}`, Partial<Record<"HELMET" | "CHESTPLATE" | "LEGGINGS" | "BOOTS", RawNbt>> & { id?: number }> & {
+      equipped_set?: number;
+    };
   };
   jacobs_contest?: {
     perks?: { farming_level_cap?: number; double_drops?: number };
@@ -123,15 +151,26 @@ export interface RawMember {
     tokens_spent?: number;
     selected_pickaxe_ability?: string;
     crystals?: Record<string, { total_found?: number; total_placed?: number }>;
+    biomes?: { goblin?: { king_quests_completed?: number } };
     [powder: `powder_${string}`]: number | undefined;
   };
-  glacite_player_data?: { corpses_looted?: Record<string, number>; fossils_donated?: string[]; mineshafts_entered?: number };
+  glacite_player_data?: {
+    corpses_looted?: Record<string, number>;
+    fossils_donated?: string[];
+    fossil_dust?: number;
+    mineshafts_entered?: number;
+  };
   accessory_bag_storage?: {
     tuning?: Record<string, unknown> & { slot_0?: Record<string, number> };
     selected_power?: string;
     highest_magical_power?: number;
   };
-  rift?: { access?: { consumed_prism?: boolean }; dead_cats?: { montezuma?: RawPet } };
+  rift?: {
+    access?: { consumed_prism?: boolean };
+    dead_cats?: { montezuma?: RawPet; found_cats?: string[] };
+    enigma?: { found_souls?: string[] };
+    gallery?: { secured_trophies?: unknown[] };
+  };
   nether_island_player_data?: {
     abiphone?: { active_contacts?: string[] };
     selected_faction?: Faction;
