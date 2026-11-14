@@ -11,7 +11,7 @@ use crate::model::{Model, ModelKind, ModelOuterLayer};
 use crate::pose::Pose;
 
 lazy_static! {
-  static ref SKIN_RENDERER: AsyncOnce<Renderer<NativeBackend>> = AsyncOnce::new(async {
+  pub(crate) static ref SKIN_RENDERER: AsyncOnce<Renderer<NativeBackend>> = AsyncOnce::new(async {
     Renderer::new(460, 800)
       .await
       .expect("skin renderer initialized")

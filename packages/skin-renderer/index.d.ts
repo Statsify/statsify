@@ -9,6 +9,11 @@
  */
 export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-wasip1'
 
+/** A resource pack's models and textures, baked and uploaded the first time a scene uses them. */
+export declare class ModelLibrary {
+  constructor(assets: PackAssets)
+}
+
 export interface Armor {
   helmet?: ArmorPiece
   chestplate?: ArmorPiece
@@ -30,6 +35,36 @@ export interface ArmorPiece {
   skull?: boolean
 }
 
+export interface ModelInstance {
+  /** Model name in the library, such as `block/furnace`. */
+  model: string
+  /**
+   * What the model hangs from. On `root`, a display context wears it as the game does on an
+   * invisible standing entity where the player stands, such as an armor stand.
+   */
+  bone: 'root' | 'head' | 'rightHand' | 'leftHand'
+  /**
+   * Which of the model's `display` transforms places it, with the game's chain for a worn
+   * (`head`) or held (`thirdperson`) item. Without one, the model is centered on the bone, a block
+   * to 16 pixels.
+   */
+  display?: 'head' | 'thirdperson'
+  /** Moves the placed model in its bone's frame, in pixels (sixteenths of a block). */
+  translation?: [number, number, number]
+  /** Degrees about the bone's x, y and z axes, turned in the order a display transform turns. */
+  rotation?: [number, number, number]
+  scale?: [number, number, number]
+}
+
+export interface PackAssets {
+  /** Model JSON by name under `models`, such as `block/furnace`. */
+  models: Record<string, string>
+  /** Texture PNGs by name under `textures`, such as `items/hypixel_kart_red`. */
+  textures: Record<string, Uint8Array>
+  /** Animation metadata (`.png.mcmeta`) by the name of its texture. */
+  mcmeta: Record<string, string>
+}
+
 export interface RenderOptions {
   armor?: Armor
   /** Enchantment glint texture (PNG), needed when an armor piece is enchanted. */
@@ -44,4 +79,32 @@ export interface RenderOptions {
   pose?: 'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly' | 'sit'
 }
 
+export declare function renderScene(library: ModelLibrary, scene: Scene, output: SceneOutput): Promise<Buffer>
+
 export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: boolean, options?: RenderOptions | undefined | null): Promise<Buffer>
+
+export interface Scene {
+  player?: ScenePlayer
+  models: Array<ModelInstance>
+}
+
+export interface SceneOutput {
+  width: number
+  height: number
+  /** Camera angle around the scene in radians: 0 faces the player's front, π the back. */
+  yaw: number
+  /** Camera angle above the horizon in radians. */
+  pitch: number
+}
+
+export interface ScenePlayer {
+  skin: Uint8Array
+  slim: boolean
+  extruded: boolean
+  armor?: Armor
+  /** Enchantment glint texture (PNG), needed when an armor piece is enchanted. */
+  glint?: Uint8Array
+  /** Cape texture (PNG). */
+  cape?: Uint8Array
+  pose?: 'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly' | 'sit'
+}
