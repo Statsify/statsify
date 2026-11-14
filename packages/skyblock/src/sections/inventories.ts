@@ -44,8 +44,8 @@ export function getInventories(member: RawMember, items: ItemsResource): Invento
   pages.backpacks = byKey(inventory.backpack_contents).map(decodeSlots);
   if (inventory.personal_vault_contents) pages.personalVault = [decodeSlots(inventory.personal_vault_contents)];
 
-  for (const [id, bag] of Object.entries(BAGS) as [keyof typeof BAGS, (typeof BAGS)[keyof typeof BAGS]][]) {
-    const blob = inventory.bag_contents?.[bag];
+  for (const id of Object.keys(BAGS) as (keyof typeof BAGS)[]) {
+    const blob = inventory.bag_contents?.[BAGS[id]];
     if (blob) pages[id] = paged(decodeSlots(blob));
   }
 

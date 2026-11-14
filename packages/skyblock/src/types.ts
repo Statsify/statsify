@@ -530,7 +530,7 @@ export interface StatValue {
   value: number;
 }
 
-/** Where a stat comes from; the weapon is the first sword, bow or wand in the hotbar, since the API has no held slot. */
+/** Where a stat comes from; gear counts the first weapon in the hotbar, since the API has no held slot. */
 export const STAT_SOURCES = [
   "base",
   "wikiBase",
@@ -570,7 +570,7 @@ export interface StatTotal {
 /** The permanent stat sheet; temporary buffs (Booster Cookie, potions, the mayor) aren't in the API. */
 export interface StatsSection {
   stats: StatTotal[]; // in PLAYER_STATS' order, only stats something gives
-  weapon?: string; // the counted weapon's name
+  weapon?: string;
   unverified: StatSource[]; // sources whose numbers here aren't checked in game
 }
 
@@ -623,8 +623,6 @@ export type PriceEntry =
 
 export interface PriceMap {
   asOf: number;
-  auctionsUpdated: number;
-  bazaarUpdated: number;
   entries: Record<string, PriceEntry>;
 }
 

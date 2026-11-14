@@ -120,9 +120,10 @@ function petStats(pet: PetView | undefined): Stats | undefined {
   const table = PET_STATS[pet.type]?.[pet.rarity];
   const item = pet.heldItem ? PET_ITEMS[pet.heldItem] : undefined;
   const [from, to] = table?.levels ?? [1, 100];
-  const progress = (Math.min(Math.max(pet.level.level, from), to) - from) / (to - from);
+  const progress = (Math.min(pet.level.level, to) - from) / (to - from);
 
-  const own = Object.keys({ ...table?.first, ...table?.last }).map((key) => {
+  // A dragon below its table's first level is still an egg, with no stats of its own
+  const own = (pet.level.level < from ? [] : Object.keys({ ...table?.first, ...table?.last })).map((key) => {
     const stat = key as PlayerStat;
     const first = table?.first[stat] ?? 0;
     const boost = 1 + ((item?.allPetStats ?? 0) + (item?.petStats?.[stat] ?? 0)) / 100;
