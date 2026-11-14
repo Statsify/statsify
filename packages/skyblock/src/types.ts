@@ -796,7 +796,7 @@ export interface Dragons {
   summoningEyes: number; // collected from Zealots
 }
 
-/** An item whose permanent bonus can only be taken so many times; the maximums are the wiki's (unverified). */
+/** An item whose permanent bonus can only be taken so many times; the maximums are the wiki's. */
 export interface Consumable {
   id: string;
   name: string;

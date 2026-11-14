@@ -109,7 +109,7 @@ export const DOJO_BELT_COLORS: Record<DojoBelt, string> = {
   black: "§8",
 };
 
-/** How many of each the Rift hides, which no data source has: the wiki's counts (an owner exception, unverified). */
+/** How many of each the Rift hides, which no data source has: the wiki's counts (an owner exception). */
 export const RIFT_TOTALS = { enigmaSouls: 52, timecharms: 8, catsFound: 9 } as const satisfies Partial<Record<keyof RiftSection, number>>;
 
 /** Jacob's contest brackets and medals, and the trophy fish tiers, which share four of them. */
