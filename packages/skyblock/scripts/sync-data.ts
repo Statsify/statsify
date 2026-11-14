@@ -559,12 +559,30 @@ try {
   >("constants/bestiary.json");
   const allBrackets: Record<string, number[]> = {
     ...brackets,
+    // The wiki's bestiary table has 12, 16 and 20 kills for bracket 6's tiers 7–9, against NEU's 14, 17 and 21, and its
+    // own bracket and cap for the families in wikiFamilies (an owner exception, unverified)
+    6: [...brackets[6].slice(0, 6), 12, 16, 20, ...brackets[6].slice(9)],
     ...Object.fromEntries(
       Object.entries(bracketSets).flatMap(([set, tiers]) => Object.entries(tiers).map(([n, kills]) => [`${set}_${n}`, kills]))
     ),
   };
+  const wikiFamilies: Record<string, { bracket: string; cap: number }> = {
+    Beeheemoth: { bracket: "CRITTERS_4", cap: 50 },
+    Bogged: { bracket: "4", cap: 1000 },
+    "Cretan Bull": { bracket: "5", cap: 1000 },
+    Flipflopper: { bracket: "CRITTERS_2", cap: 100 },
+    "Grizzly Bear": { bracket: "CRITTERS_5", cap: 25 },
+    Honeyhog: { bracket: "CRITTERS_2", cap: 100 },
+    Lotum: { bracket: "CRITTERS_2", cap: 100 },
+    "Mithril Grubber": { bracket: "3", cap: 300 },
+    "Oasis Rabbit": { bracket: "3", cap: 300 },
+    "Oasis Sheep": { bracket: "3", cap: 300 },
+    "Queen Ant": { bracket: "2", cap: 50 },
+    "Stranded Nymph": { bracket: "5", cap: 1000 },
+    Tidetot: { bracket: "CRITTERS_4", cap: 50 },
+  };
   // NEU gives a few families (Parched, Lotusfish, some critters) a bracket that never reaches their cap. The game ranks
-  // them on the critter bracket that ends at it (the wiki's tiers for three of them; unverified for the rest).
+  // them on the critter bracket that ends at it (the wiki's tiers for each).
   const bracketOf = (name: string, cap: number, given: string) => {
     if (allBrackets[given].includes(cap)) return given;
     const ending = Object.keys(allBrackets).filter((key) => key.startsWith("CRITTERS_") && allBrackets[key].at(-1) === cap);
@@ -585,11 +603,12 @@ try {
   const families = ({ mobs = [] }: NeuPage) =>
     mobs.map(({ name: formatted, mobs: ids, cap, bracket, bracketType }) => {
       const name = removeFormatting(formatted);
+      const wiki = wikiFamilies[name];
       return {
         name,
         ids: [...ids, ...(missingIds[name] ?? [])],
-        cap,
-        bracket: bracketOf(name, cap, bracketType ? `${bracketType}_${bracket}` : String(bracket)),
+        cap: wiki?.cap ?? cap,
+        bracket: wiki?.bracket ?? bracketOf(name, cap, bracketType ? `${bracketType}_${bracket}` : String(bracket)),
       };
     });
   const subpages = (page: NeuPage) =>
@@ -685,12 +704,28 @@ try {
     crop_upgrades: number[];
     composter_upgrades: Record<string, Record<string, unknown>>;
   }>("constants/garden.json");
+  // NEU's milestones for 11 crops and two visitors' rarities differ from the wiki's Garden pages, whose numbers these
+  // are (tier → amount; an owner exception, unverified)
+  const wheatTiers = { 21: 325_000, 23: 500_000 };
+  const caneTiers = { 21: 650_000, 23: 1_000_000 };
+  const cocoaTiers = {
+    3: 250, 4: 500, 5: 1000, 6: 2000, 7: 4000, 9: 10_000, 11: 20_000, 12: 25_000, 14: 50_000, 15: 100_000,
+    17: 200_000, 19: 500_000, 21: 1_000_000, 22: 1_300_000, 23: 1_600_000, 24: 2_000_000,
+  };
+  const milestoneFixes: Record<string, Record<number, number>> = {
+    WHEAT: wheatTiers, PUMPKIN: wheatTiers, MUSHROOM: wheatTiers, SUNFLOWER: wheatTiers, MOONFLOWER: wheatTiers,
+    SUGAR_CANE: caneTiers, CACTUS: caneTiers, WILD_ROSE: caneTiers, COCOA_BEANS: cocoaTiers, NETHER_WART: cocoaTiers,
+    MELON: { 5: 1800, 20: 1_200_000, 21: 1_600_000, 23: 2_500_000, 24: 3_200_000 },
+  };
   await write("garden.json", {
     garden_exp: garden.garden_exp,
     crop_milestones: Object.fromEntries(
-      Object.entries(garden.crop_milestones).map(([crop, tiers]) => [gardenCrops[crop] ?? crop, tiers])
+      Object.entries(garden.crop_milestones).map(([crop, tiers]) => [
+        gardenCrops[crop] ?? crop,
+        tiers.map((amount, i) => milestoneFixes[crop]?.[i + 1] ?? amount),
+      ])
     ),
-    visitors: garden.visitors,
+    visitors: { ...garden.visitors, bednom: "UNCOMMON", farm_merchant: "UNCOMMON" },
     plots: Object.keys(garden.plots).toSorted(),
     crop_upgrades: garden.crop_upgrades.length,
     composter_upgrades: Object.fromEntries(
