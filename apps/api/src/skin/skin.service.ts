@@ -14,7 +14,6 @@ import { PlayerNotFoundException } from "@statsify/api-client";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
-import { existsSync } from "node:fs";
 import { getAssetPath, getMinecraftTexturePath } from "@statsify/assets";
 import { getHelmetModel, getKartModel, parseSuitPiece } from "./kart-cosmetics.js";
 import { join } from "node:path";
@@ -94,6 +93,10 @@ export class SkinService {
     return renderKart(library, kart, {
       ...options,
       player: player && { skin: imageData(player.skin), slim: player.slim },
+    }).catch((error) => {
+      // The library only finds a missing file when a scene bakes it, so a pack completed after startup needs a reload
+      if (error instanceof ServiceUnavailableException) this.kartLibrary = undefined;
+      throw error;
     });
   }
 
@@ -287,14 +290,24 @@ async function readPackFiles<T>(folder: string, extension: string, read: (path: 
   return Object.fromEntries(files.map((file, index) => [file.slice(0, -extension.length), contents[index]]));
 }
 
-export async function loadKartLibrary(): Promise<ModelLibrary> {
-  if (!existsSync(KART_PACK)) throw new ServiceUnavailableException("The Turbo Kart Racers pack isn't installed");
+const throwPackUnavailable = (): never => {
+  throw new ServiceUnavailableException("The Turbo Kart Racers pack isn't installed");
+};
 
+// The renderer's errors carry only a message
+const MISSING_PACK_FILE = /^SkinRendererError: The pack has no (model|texture) named /;
+
+const rethrowPackError = (error: unknown): never => {
+  if (error instanceof Error && MISSING_PACK_FILE.test(error.message)) throwPackUnavailable();
+  throw error;
+};
+
+export async function loadKartLibrary(): Promise<ModelLibrary> {
   const [models, textures, mcmeta] = await Promise.all([
     readPackFiles("models", ".json", (path) => readFile(path, "utf8")),
     readPackFiles("textures", ".png", (path) => readFile(path)),
     readPackFiles("textures", ".png.mcmeta", (path) => readFile(path, "utf8")),
-  ]);
+  ]).catch(throwPackUnavailable);
 
   return new ModelLibrary({ models, textures, mcmeta });
 }
@@ -346,7 +359,7 @@ export async function renderKart(
 ): Promise<Buffer> {
   const output = { width, height, yaw, pitch };
 
-  if (!player) return renderScene(library, { models }, output);
+  if (!player) return renderScene(library, { models }, output).catch(rethrowPackError);
 
   const textures = join(KART_PACK, "textures");
 
@@ -354,9 +367,10 @@ export async function renderKart(
     suit.chestplate && resolveArmorPiece(suit.chestplate, 1, textures),
     suit.leggings && resolveArmorPiece(suit.leggings, 2, textures),
     suit.boots && resolveArmorPiece(suit.boots, 1, textures),
-  ]);
+  ]).catch(throwPackUnavailable);
 
-  return renderScene(library, { player: { ...player, extruded, armor: { chestplate, leggings, boots }, pose: "sit" }, models }, output);
+  return renderScene(library, { player: { ...player, extruded, armor: { chestplate, leggings, boots }, pose: "sit" }, models }, output)
+    .catch(rethrowPackError);
 }
 
 interface MojangProfile {
