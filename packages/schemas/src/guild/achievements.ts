@@ -110,3 +110,28 @@ export class GuildAchievements {
     this.prestigeTier = prestige.tier;
   }
 }
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("getAchievementProgress", () => {
+    it("gives the tier reached and the progress toward the next one", () => {
+      expect(getAchievementProgress(FAMILY_REQUIREMENTS, 4)).toEqual({
+        tier: "",
+        progression: { current: 4, max: 5, percent: 0.8 },
+      });
+      expect(getAchievementProgress(FAMILY_REQUIREMENTS, 5)).toEqual({
+        tier: "I",
+        progression: { current: 5, max: 15, percent: 0.33 },
+      });
+      expect(getAchievementProgress(FAMILY_REQUIREMENTS, 69)).toEqual({
+        tier: "VI",
+        progression: { current: 69, max: 70, percent: 0.99 },
+      });
+      expect(getAchievementProgress(FAMILY_REQUIREMENTS, 70)).toEqual({
+        tier: "VII",
+        progression: { current: 70, percent: 1 },
+      });
+    });
+  });
+}
