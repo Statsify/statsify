@@ -8,7 +8,7 @@ use statsify_render_core::renderer::Renderer;
 
 use crate::armor::Armor;
 use crate::model::{Model, ModelKind, ModelOuterLayer};
-use crate::pose::Pose;
+use crate::pose::{Held, Pose};
 
 lazy_static! {
   pub(crate) static ref SKIN_RENDERER: AsyncOnce<Renderer<NativeBackend>> = AsyncOnce::new(async {
@@ -73,6 +73,7 @@ pub async fn render_skin(
     options.glint.as_deref(),
     options.cape.as_deref(),
     options.pose.unwrap_or_default(),
+    Held::default(),
   )?;
 
   let camera = match yaw {

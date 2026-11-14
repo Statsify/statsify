@@ -23,7 +23,7 @@ use crate::attachment::{
 use crate::error::Error;
 use crate::model::{Model, ModelKind, ModelOuterLayer};
 use crate::native::SKIN_RENDERER;
-use crate::pose::Pose;
+use crate::pose::{Held, Pose};
 
 // Of the output's shorter side, left clear on each side of the scene
 const MARGIN: f32 = 0.04;
@@ -258,9 +258,15 @@ pub async fn render_scene(
         ModelOuterLayer::D2
       };
 
+      let holds = |bone: Bone| scene.models.iter().any(|instance| instance.bone == bone);
+
       let wearer = Wearer {
         arm_width: kind.arm_width(),
         pose: player.pose.unwrap_or_default(),
+        held: Held {
+          right: holds(Bone::RightHand),
+          left: holds(Bone::LeftHand),
+        },
       };
 
       let model = Model::load(
@@ -272,6 +278,7 @@ pub async fn render_scene(
         player.glint.as_deref(),
         player.cape.as_deref(),
         wearer.pose,
+        wearer.held,
       )?;
 
       Some((model, wearer))

@@ -25,6 +25,23 @@ pub enum Pose {
   Sit,
 }
 
+/// Which of the player's hands hold an item.
+#[derive(Clone, Copy, Default)]
+pub struct Held {
+  pub right: bool,
+  pub left: bool,
+}
+
+impl Held {
+  pub fn holds(self, part: Part) -> bool {
+    match part {
+      Part::RightArm => self.right,
+      Part::LeftArm => self.left,
+      _ => false,
+    }
+  }
+}
+
 pub struct PartPose {
   // Degrees, added to the resting angles
   pub rotation: Vector3<f32>,
@@ -73,6 +90,23 @@ impl Pose {
       _ => return None,
     };
 
+    Some(pose)
+  }
+
+  // ModelBiped halves the swing a holding arm has so far (walking or riding) and pitches it π/10
+  // forward, before the attack swing and sneaking add theirs. Swimming and flying aren't 1.8 poses.
+  pub fn holding(self, part: Part) -> Option<PartPose> {
+    let mut pose = self
+      .part(part)
+      .unwrap_or_else(|| part_pose([0.0; 3], [0.0; 3]));
+
+    let swing = match self {
+      Pose::Jump | Pose::Sit => pose.rotation.x,
+      Pose::Standing | Pose::Punch | Pose::Sneak => 0.0,
+      Pose::Swim | Pose::Fly => return self.part(part),
+    };
+
+    pose.rotation.x -= swing / 2.0 + 18.0;
     Some(pose)
   }
 
