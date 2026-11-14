@@ -8,11 +8,12 @@
 mod bake;
 mod display;
 mod error;
-mod json;
 mod model;
 mod texture;
 
 use std::collections::HashMap;
+
+use serde_json::Value;
 
 pub use bake::{bake_model, BakedModel, Submesh, Vertex};
 pub use display::{Display, Transform};
@@ -27,4 +28,65 @@ pub struct Pack {
   pub models: HashMap<String, String>,
   pub textures: HashMap<String, Vec<u8>>,
   pub mcmeta: HashMap<String, String>,
+}
+
+fn parse_json(text: &str) -> Result<Value, String> {
+  serde_json::from_str(&strip_trailing_commas(text)).map_err(|error| error.to_string())
+}
+
+/// 1.8 reads pack JSON with Gson's lenient mode, and packs rely on it for trailing commas in
+/// `.mcmeta` frame lists. Drops a comma that only whitespace separates from the next `]` or `}`.
+fn strip_trailing_commas(text: &str) -> String {
+  let mut out = String::with_capacity(text.len());
+  let mut in_string = false;
+  let mut escaped = false;
+
+  for (at, c) in text.char_indices() {
+    if in_string {
+      match c {
+        _ if escaped => escaped = false,
+        '\\' => escaped = true,
+        '"' => in_string = false,
+        _ => {}
+      }
+    } else if c == '"' {
+      in_string = true;
+    } else if c == ','
+      && text[at + 1..]
+        .trim_start_matches([' ', '\t', '\n', '\r'])
+        .starts_with([']', '}'])
+    {
+      continue;
+    }
+
+    out.push(c);
+  }
+
+  out
+}
+
+#[cfg(test)]
+mod tests {
+  use serde_json::json;
+
+  use super::*;
+
+  #[test]
+  fn drops_trailing_commas_outside_strings() {
+    let text = r#"{ "frames": [0, 1, 2,
+      ], "name": "a,]\",}\\", "b": { "c": [], }, }"#;
+
+    assert_eq!(
+      parse_json(text),
+      Ok(json!({ "frames": [0, 1, 2], "name": "a,]\",}\\", "b": { "c": [] } }))
+    );
+
+    for invalid in [
+      r#"{ "a": [1,, 2] }"#,
+      r#"{ "a": [1,,] }"#,
+      r#"{ "a": 1 } 2"#,
+    ] {
+      assert!(parse_json(invalid).is_err(), "{invalid} should not parse");
+    }
+  }
 }

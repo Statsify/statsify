@@ -1,6 +1,6 @@
 use image::ImageFormat;
+use serde_json::Value;
 
-use crate::json::{self, Value};
 use crate::{Error, Pack};
 
 /// 1.8 draws items with an alpha test at 0.1, so a texel with this alpha or less never shows.
@@ -57,7 +57,7 @@ pub fn load_texture(pack: &Pack, name: &str, tick: u64) -> Result<Texture, Error
 
 /// The strip frame shown at `tick`, or None when the metadata has no animation section.
 fn animation_frame(mcmeta: &str, frame_count: u32, tick: u64) -> Result<Option<usize>, String> {
-  let root = json::parse(mcmeta)?;
+  let root = crate::parse_json(mcmeta)?;
 
   let Some(animation) = root.get("animation") else {
     return Ok(None);
@@ -68,7 +68,7 @@ fn animation_frame(mcmeta: &str, frame_count: u32, tick: u64) -> Result<Option<u
     Some(value) => duration(value).ok_or("frametime is not a positive whole number")?,
   };
 
-  let listed = match animation.get("frames") {
+  let listed: &[Value] = match animation.get("frames") {
     None => &[][..],
     Some(frames) => frames.as_array().ok_or("frames is not an array")?,
   };

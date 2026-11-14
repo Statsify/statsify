@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 
+use serde_json::Value;
+
 use crate::display::{Display, Transform};
-use crate::json::{self, Value};
 use crate::{Error, Pack};
 
 /// Face directions in 1.8's `EnumFacing` order.
@@ -155,7 +156,7 @@ fn strip_namespace(name: &str) -> &str {
 }
 
 fn parse_model(text: &str) -> Result<ModelFile, String> {
-  let root = json::parse(text)?;
+  let root = crate::parse_json(text)?;
 
   let parent =
     optional(&root, "parent", Value::as_str)?.map(|parent| strip_namespace(parent).to_string());
@@ -256,6 +257,9 @@ fn parse_element(element: &Value) -> Result<Element, String> {
       quarter_turns,
     });
   }
+
+  // 1.8 keeps faces in an EnumMap, so they bake in direction order whatever order the file uses
+  faces.sort_by_key(|face| face.direction as usize);
 
   Ok(Element {
     from,
