@@ -35,6 +35,9 @@ const codeCreatedMessage = (code: string, time: Date) => {
   )}§r§7.`;
 };
 
+const verificationFailedMessage =
+  "§9§lStatsify Verification Server\n\n§r§7Verification is temporarily unavailable. Please try again.";
+
 const sentryDsn = await config("sentry.verifyServerDsn", { required: false });
 
 if (sentryDsn) {
@@ -94,5 +97,6 @@ server.on("login", async (client) => {
     logger.verbose(`${client.username} has been assigned to the code ${verifyCode.code}`);
   } catch (error) {
     logger.error(error);
+    client.end(verificationFailedMessage);
   }
 });
