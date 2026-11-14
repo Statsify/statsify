@@ -29,6 +29,7 @@ import {
   findProfile,
   gameModeOf,
   isMember,
+  toBingoView,
   toMemberStats,
   toMemberView,
   toPlayerExtras,
@@ -42,6 +43,7 @@ import { SkyBlockGarden, SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.mod
 import { SKYBLOCK_FAILED_FOR, SkyBlockPricesService } from "./skyblock-prices.service.js";
 import { unzip, zip } from "./zip.js";
 import type {
+  BingoView,
   MemberView,
   PlayerExtras,
   PlayerRef,
@@ -61,7 +63,7 @@ export const SKYBLOCK_FRESH_FOR = 300_000;
 const LIVE_FLOOR = 60_000;
 const SECTION_SECONDS = 300;
 // Bump it when a section's shape changes, so a deploy never serves a section that older code cached
-const SECTION_VERSION = 7;
+const SECTION_VERSION = 8;
 const MAX_DOCUMENT = 15 * 1024 * 1024;
 
 const DEFINITIONS = { ...SECTIONS, networth: NETWORTH, values: VALUES } satisfies Record<SkyBlockSection, { needs: readonly SectionNeed[] }>;
@@ -213,6 +215,26 @@ export class SkyBlockService {
       gardenFetchedAt: garden?.fetchedAt,
       ...(marketDown.length > 0 && { marketDown }),
     };
+  }
+
+  /** This month's Bingo card with the player's part: one keyed call per lookup, from the SkyBlock budget. */
+  public async getBingo(tag: string): Promise<PlayerRef & BingoView> {
+    const { uuid, username, displayName } = await this.getPlayer(tag);
+
+    const [resource, bingo] = await Promise.all([
+      this.pricesService.getBingo(),
+      this.singleflight
+        .run(`bingo:${uuid}`, async () => {
+          await this.budgetService.take();
+          return this.hypixelService.getSkyBlockBingo(uuid);
+        })
+        .catch((error) => {
+          throw isUnavailable(error) ? toUnavailable(error) : error;
+        }),
+    ]);
+
+    if (!resource) throw new SkyBlockUnavailableException("hypixel");
+    return { uuid, username, displayName, ...toBingoView(resource, bingo) };
   }
 
   /** When a lookup at `CACHE` can next call Hypixel for the player's profiles, or undefined when it would now. */
