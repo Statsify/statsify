@@ -385,7 +385,8 @@ pub async fn render_scene(
   let camera = OrbitalCamera::new(Point3::from_vec(middle), width as f32, height as f32)
     .with_theta(yaw)
     .with_phi(FRAC_PI_2 - pitch)
-    .framed(&points, MARGIN * width.min(height) as f32);
+    .framed(&points, MARGIN * width.min(height) as f32)
+    .ok_or(Error::SceneOutOfRange)?;
 
   let buffer = renderer
     .render_sized(&items, &Camera::Orbital(camera), width, height)

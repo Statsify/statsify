@@ -124,8 +124,9 @@ impl OrbitalCamera {
   }
 
   // Slides the camera across and along its view, keeping the angle, until the points span one
-  // axis of the frame less `margin` pixels on each side and sit about centered on the other
-  pub fn framed(mut self, points: &[Vector3<f32>], margin: f32) -> Self {
+  // axis of the frame less `margin` pixels on each side and sit about centered on the other.
+  // None when the points are too small or too far out to project.
+  pub fn framed(mut self, points: &[Vector3<f32>], margin: f32) -> Option<Self> {
     let back = self.offset().normalize();
     let right = Vector3::unit_y().cross(back).normalize();
     let up = back.cross(right);
@@ -155,7 +156,16 @@ impl OrbitalCamera {
     // The target keeps its depth, so the radius stays a distance into the scene
     self.radius = (eye - self.target.to_vec()).dot(back);
     self.target = Point3::from_vec(eye - back * self.radius);
-    self
+
+    // Points can sit at any scale, so the clipping planes leave room around their own depths
+    // instead of the fixed ones, which cut off scenes much larger or smaller than a player
+    let depths = points.iter().map(|point| (eye - point).dot(back));
+    self.znear = depths.clone().fold(f32::MAX, f32::min) / 2.0;
+    self.zfar = depths.fold(f32::MIN, f32::max) * 2.0;
+
+    // cgmath's projection panics on planes closer together than its epsilon
+    let apart = self.znear > 0.0 && self.zfar - self.znear > f32::EPSILON;
+    (apart && self.view_projection_matrix().is_finite()).then_some(self)
   }
 
   fn update_radius(&mut self, radius: f32) {
@@ -258,12 +268,34 @@ mod tests {
 
   #[test]
   fn frames_points_centered() {
-    let camera = camera().framed(&points(), 10.0);
+    let camera = camera().framed(&points(), 10.0).unwrap();
     let [left, right, bottom, top] = gaps(&camera);
 
     // These points are taller than the frame for their width, so the top and bottom touch it
     let close = |a: f32, b: f32| (a - b).abs() < 0.01;
     assert!(close(bottom, 10.0) && close(top, 10.0), "{bottom} {top}");
     assert!(left > 10.0 && right > 10.0, "{left} {right}");
+  }
+
+  #[test]
+  fn keeps_framed_points_between_the_clipping_planes() {
+    for scale in [1e-4, 1.0, 100.0] {
+      let points: Vec<_> = points().into_iter().map(|point| point * scale).collect();
+      let target = Point3::new(40.0, -12.0, 25.0) * scale;
+      let camera = OrbitalCamera::new(target, WIDTH, HEIGHT)
+        .with_theta(0.7)
+        .with_phi(1.2)
+        .framed(&points, 10.0)
+        .unwrap();
+      let view_projection = camera.view_projection_matrix();
+
+      for point in &points {
+        let clip = view_projection * point.extend(1.0);
+        assert!(clip.z.abs() < clip.w, "{scale}: {clip:?}");
+      }
+    }
+
+    let distant: Vec<_> = points().into_iter().map(|point| point * 1e30).collect();
+    assert!(camera().framed(&distant, 10.0).is_none());
   }
 }
