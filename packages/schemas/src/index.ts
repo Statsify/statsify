@@ -21,6 +21,7 @@ export * from "./player/index.js";
 export * from "./progression.js";
 export * from "./ratios.js";
 export * from "./skin/index.js";
+export * from "./skyblock/index.js";
 export * from "./status/index.js";
 export * from "./tags/index.js";
 export * from "./ticket/index.js";
