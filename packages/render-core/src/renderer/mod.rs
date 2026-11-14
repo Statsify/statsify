@@ -15,8 +15,9 @@ use winit::dpi::PhysicalSize;
 use winit::event::{ElementState, MouseScrollDelta};
 
 pub use self::backend::Backend;
-use self::backend::OutputTexture;
 use crate::camera::{Camera, CameraUniform, OrbitalCamera};
+#[cfg(not(target_arch = "wasm32"))]
+use crate::error::Error;
 use crate::error::Result;
 use crate::geometry::vertex::{Vertex, VertexDescriptor};
 use crate::instance::InstanceRaw;
@@ -338,10 +339,10 @@ impl<T: Backend> Renderer<T> {
     eye: Point3<f32>,
     camera_bind_group: &wgpu::BindGroup,
     light_bind_group: &wgpu::BindGroup,
-  ) -> (wgpu::CommandEncoder, OutputTexture<'_>) {
+    view: &wgpu::TextureView,
+    depth_view: &wgpu::TextureView,
+  ) -> wgpu::CommandEncoder {
     let device = self.backend.device();
-    let output_texture = self.backend.get_output_texture();
-    let view = T::create_view(&output_texture);
 
     let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
       label: Some("Render Encoder"),
@@ -397,7 +398,7 @@ impl<T: Backend> Renderer<T> {
       let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
         label: Some("Render Pass"),
         color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-          view: &view,
+          view,
           resolve_target: None,
           depth_slice: None,
           ops: wgpu::Operations {
@@ -406,7 +407,7 @@ impl<T: Backend> Renderer<T> {
           },
         })],
         depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
-          view: &self.depth_texture.view,
+          view: depth_view,
           depth_ops: Some(wgpu::Operations {
             load: wgpu::LoadOp::Clear(1.0),
             store: wgpu::StoreOp::Store,
@@ -437,7 +438,7 @@ impl<T: Backend> Renderer<T> {
       }
     };
 
-    (encoder, output_texture)
+    encoder
   }
 
   fn pipelines_for(&self, item: &DrawItem<'_>) -> &Pipelines {
@@ -474,11 +475,15 @@ impl Renderer<wasm::WasmBackend> {
   }
 
   pub fn render(&self, items: &[DrawItem<'_>]) {
-    let (encoder, output_texture) = self.render_sync(
+    let output_texture = self.backend.get_output_texture();
+
+    let encoder = self.render_sync(
       items,
       self.camera.eye(),
       &self.camera_bind_group,
       &self.light_bind_group,
+      &wasm::WasmBackend::create_view(&output_texture),
+      &self.depth_texture.view,
     );
 
     self
@@ -553,9 +558,56 @@ impl Renderer<native::NativeBackend> {
     )
   }
 
+  pub async fn render(&self, items: &[DrawItem<'_>], camera: &Camera) -> Result<Vec<u8>> {
+    self
+      .render_into(
+        items,
+        camera,
+        self.backend.get_output_texture(),
+        &self.depth_texture,
+      )
+      .await
+  }
+
+  // Renders into textures of its own, at any size the device allows
+  pub async fn render_sized(
+    &self,
+    items: &[DrawItem<'_>],
+    camera: &Camera,
+    width: u32,
+    height: u32,
+  ) -> Result<Vec<u8>> {
+    let device = self.backend.device();
+    let limit = device.limits().max_texture_dimension_2d;
+
+    if !(1..=limit).contains(&width) || !(1..=limit).contains(&height) {
+      return Err(Error::OutputSize(limit));
+    }
+
+    let output_texture = native::NativeBackend::create_texture(device, width, height);
+
+    let config = wgpu::SurfaceConfiguration {
+      width,
+      height,
+      ..self.config.clone()
+    };
+
+    let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
+
+    self
+      .render_into(items, camera, &output_texture, &depth_texture)
+      .await
+  }
+
   // Renders run on several threads at once, so each gets its own camera and light
   // instead of rewriting the shared ones
-  pub async fn render(&self, items: &[DrawItem<'_>], camera: &Camera) -> Result<Vec<u8>> {
+  async fn render_into(
+    &self,
+    items: &[DrawItem<'_>],
+    camera: &Camera,
+    output_texture: &wgpu::Texture,
+    depth_texture: &Texture,
+  ) -> Result<Vec<u8>> {
     let camera_bind_group = self.uniform_bind_group(
       &self.camera_bind_group_layout,
       cast_slice(&[CameraUniform::new(camera)]),
@@ -565,8 +617,19 @@ impl Renderer<native::NativeBackend> {
       cast_slice(&[LightUniform::from(camera)]),
     );
 
-    let (encoder, _) = self.render_sync(items, camera.eye(), &camera_bind_group, &light_bind_group);
-    self.backend.handle_encoder_after_render(encoder).await
+    let encoder = self.render_sync(
+      items,
+      camera.eye(),
+      &camera_bind_group,
+      &light_bind_group,
+      &native::NativeBackend::create_view(&output_texture),
+      &depth_texture.view,
+    );
+
+    self
+      .backend
+      .handle_encoder_after_render(encoder, output_texture)
+      .await
   }
 
   fn uniform_bind_group(&self, layout: &wgpu::BindGroupLayout, contents: &[u8]) -> wgpu::BindGroup {

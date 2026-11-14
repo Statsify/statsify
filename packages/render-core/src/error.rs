@@ -9,6 +9,9 @@ pub enum Error {
   #[error("Failed to render skin")]
   RenderFailure,
 
+  #[error("The output must be between 1 and {0} pixels wide and high")]
+  OutputSize(u32),
+
   #[error(transparent)]
   RequestDevice(#[from] wgpu::RequestDeviceError),
 
