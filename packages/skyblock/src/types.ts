@@ -879,7 +879,7 @@ export interface AccessoriesSection {
   powerStats?: PowerStat[]; // at this Accessory Power, plus the stone's Unique Power Bonus; only for stone Powers
   tuning: Record<string, number>;
   tuningPoints: number; // spent
-  tuningTotal?: number; // missing below Tuning Box X but above 0, whose points nothing gives
+  tuningTotal?: number; // missing below Tuning Box X but above 0, whose points nothing gives, and below the points spent
   enrichments: number; // on active accessories
   unenriched: number; // active Legendary-and-up accessories without an enrichment, the ones that can take one
   recombobulated: number; // active
