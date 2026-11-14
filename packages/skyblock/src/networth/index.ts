@@ -273,7 +273,6 @@ async function getInventoryValues(member: SectionInput["member"], map: PriceMap,
     Promise.all(equipment.map(price)),
   ]);
 
-  // As in networth, a unique modifier counts once per profile, on the first item that has it
   const counted = new Set<string>();
   const worth = (result: Item | null) => {
     if (!result) return null;

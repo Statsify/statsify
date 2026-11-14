@@ -203,15 +203,11 @@ export function toMemberStats(
 
     stats.secrets = dungeons.secrets;
 
-    const floor = (mode: "normal" | "master", number: number) => {
-      const found = dungeons.floors[mode].find((candidate) => candidate.floor === number);
-      return { completions: found?.completions ?? 0, fastestSPlus: found?.fastestSPlus ?? 0 };
-    };
-
+    const floors = [...dungeons.floors.normal, ...dungeons.floors.master];
     stats.floors = Object.fromEntries(
-      FLOOR_BOARDS.map((board) => [
+      FLOOR_BOARDS.map((board, index) => [
         board,
-        board === "entrance" ? floor("normal", 0) : floor(board.startsWith("master") ? "master" : "normal", Number(board.at(-1))),
+        { completions: floors[index].completions, fastestSPlus: floors[index].fastestSPlus ?? 0 },
       ])
     ) as MemberStats["floors"];
   }

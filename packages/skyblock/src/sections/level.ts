@@ -64,11 +64,13 @@ export function getSkyBlockLevel(
   const petXp = (tier: string, maxed = false) =>
     gainOver(score, member.leveling?.highest_pet_score, petScorePoints(tier) + Number(maxed)) * SKYBLOCK_XP.pet_score_xp;
 
-  const sources: Source[] = (accessories?.missing ?? []).flatMap(({ id, name, accessoryPower, outsideBag, cost, texture, nextTier }) => {
-    const xp = accessoryXp(accessories?.accessoryPower ?? 0, accessories?.highestAccessoryPower, accessoryPower);
-    if (xp === 0 || nextTier || (market && !outsideBag && !cost)) return [];
-    return [{ kind: "accessory", id, name, xp, outsideBag, cost, coinsPerXp: cost && cost.coins / xp, texture }];
-  });
+  const sources: Source[] = !accessories
+    ? []
+    : accessories.missing.flatMap(({ id, name, accessoryPower, outsideBag, cost, texture, nextTier }) => {
+        const xp = accessoryXp(accessories.accessoryPower, accessories.highestAccessoryPower, accessoryPower);
+        if (xp === 0 || nextTier || (market && !outsideBag && !cost)) return [];
+        return [{ kind: "accessory", id, name, xp, outsideBag, cost, coinsPerXp: cost && cost.coins / xp, texture }];
+      });
 
   const best = new Map<string, Source>();
   if (market) {
