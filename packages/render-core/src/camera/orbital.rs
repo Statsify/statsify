@@ -123,6 +123,41 @@ impl OrbitalCamera {
     Vector3::new(x, y, z)
   }
 
+  // Slides the camera across and along its view, keeping the angle, until the points span one
+  // axis of the frame less `margin` pixels on each side and sit about centered on the other
+  pub fn framed(mut self, points: &[Vector3<f32>], margin: f32) -> Self {
+    let back = self.offset().normalize();
+    let right = Vector3::unit_y().cross(back).normalize();
+    let up = back.cross(right);
+    let tan = (Rad::from(Deg(self.fovy)).0 / 2.0).tan();
+
+    let tan_y = tan * (1.0 - 2.0 * margin / self.height);
+    let tan_x = tan * self.width / self.height * (1.0 - 2.0 * margin / self.width);
+
+    // How far one side of the view has to move out along `side` to take in every point
+    let reach = |side: Vector3<f32>, tan: f32| {
+      points
+        .iter()
+        .map(|point| point.dot(side) + tan * point.dot(back))
+        .fold(f32::MIN, f32::max)
+    };
+
+    let (right_reach, left_reach) = (reach(right, tan_x), reach(-right, tan_x));
+    let (top_reach, bottom_reach) = (reach(up, tan_y), reach(-up, tan_y));
+
+    let distance =
+      ((right_reach + left_reach) / (2.0 * tan_x)).max((top_reach + bottom_reach) / (2.0 * tan_y));
+
+    let eye = right * (right_reach - left_reach) / 2.0
+      + up * (top_reach - bottom_reach) / 2.0
+      + back * distance;
+
+    // The target keeps its depth, so the radius stays a distance into the scene
+    self.radius = (eye - self.target.to_vec()).dot(back);
+    self.target = Point3::from_vec(eye - back * self.radius);
+    self
+  }
+
   fn update_radius(&mut self, radius: f32) {
     self.radius = radius.clamp(self.min_radius, self.max_radius);
   }
@@ -176,12 +211,11 @@ mod tests {
 
   use super::*;
 
-  #[test]
-  fn fits_points_around_its_target() {
-    let (width, height) = (300.0, 200.0);
-    let target = Point3::new(40.0, -12.0, 25.0);
+  const WIDTH: f32 = 300.0;
+  const HEIGHT: f32 = 200.0;
 
-    let points: Vec<Vector3<f32>> = [
+  fn points() -> Vec<Vector3<f32>> {
+    [
       [70.0, -12.0, 25.0],
       [40.0, 3.0, 20.0],
       [28.0, -30.0, 41.0],
@@ -189,26 +223,47 @@ mod tests {
     ]
     .into_iter()
     .map(Vector3::from)
-    .collect();
+    .collect()
+  }
 
-    let camera = OrbitalCamera::new(target, width, height)
+  // Pixels from the points to the left, right, bottom and top edges of the frame
+  fn gaps(camera: &OrbitalCamera) -> [f32; 4] {
+    let view_projection = camera.view_projection_matrix();
+
+    points().iter().fold([f32::MAX; 4], |gaps, point| {
+      let clip = view_projection * Vector4::new(point.x, point.y, point.z, 1.0);
+      let (x, y) = (clip.x / clip.w, clip.y / clip.w);
+      let edges = [x + 1.0, 1.0 - x, y + 1.0, 1.0 - y];
+      let sizes = [WIDTH, WIDTH, HEIGHT, HEIGHT];
+      std::array::from_fn(|side| gaps[side].min(edges[side] * sizes[side] / 2.0))
+    })
+  }
+
+  fn camera() -> OrbitalCamera {
+    OrbitalCamera::new(Point3::new(40.0, -12.0, 25.0), WIDTH, HEIGHT)
       .with_theta(0.7)
       .with_phi(1.2)
-      .fitted(&points, 0.0);
+  }
 
+  #[test]
+  fn fits_points_around_its_target() {
+    let camera = camera().fitted(&points(), 0.0);
+    let target = Point3::new(40.0, -12.0, 25.0);
     assert!(((camera.eye() - target).magnitude() - camera.radius).abs() < 1e-3);
 
-    // Pixels between each point and the nearest edge of the frame
-    let view_projection = camera.view_projection_matrix();
-    let gaps = points.iter().map(|point| {
-      let clip = view_projection * Vector4::new(point.x, point.y, point.z, 1.0);
-      let x = (1.0 - (clip.x / clip.w).abs()) * width / 2.0;
-      let y = (1.0 - (clip.y / clip.w).abs()) * height / 2.0;
-      x.min(y)
-    });
-
     // Every point is in frame, and the farthest out sits the 4 pixel margin from the edge
-    let nearest = gaps.fold(f32::MAX, f32::min);
+    let nearest = gaps(&camera).into_iter().fold(f32::MAX, f32::min);
     assert!((nearest - 4.0).abs() < 0.01, "{nearest}");
+  }
+
+  #[test]
+  fn frames_points_centered() {
+    let camera = camera().framed(&points(), 10.0);
+    let [left, right, bottom, top] = gaps(&camera);
+
+    // These points are taller than the frame for their width, so the top and bottom touch it
+    let close = |a: f32, b: f32| (a - b).abs() < 0.01;
+    assert!(close(bottom, 10.0) && close(top, 10.0), "{bottom} {top}");
+    assert!(left > 10.0 && right > 10.0, "{left} {right}");
   }
 }
