@@ -13,16 +13,20 @@ import { getLevel } from "#leveling";
 import { prettify } from "@statsify/util";
 import type { RawMember, RawPet } from "#raw";
 
-const PET_RARITIES = RARITIES.slice(0, 6);
+export const PET_RARITIES = RARITIES.slice(0, 6);
 const rank = (rarity: Rarity) => RARITIES.indexOf(rarity);
 
+export const petName = (type: string) => PETS.id_to_display_name[type] ?? prettify(type);
+
 /** A Tier Boost raises the rarity, and with it the XP table the level reads. */
-function boostedRarity(pet: RawPet) {
+export function boostedRarity(pet: RawPet) {
   const base = pet.tier as Rarity;
   // A boost never makes a pet Mythic, except the Bingo pet (the wiki's Tier Boost page, unverified)
   const highest = pet.type === "BINGO" ? "MYTHIC" : "LEGENDARY";
   return pet.heldItem === "PET_ITEM_TIER_BOOST" && rank(base) < rank(highest) ? PET_RARITIES[rank(base) + 1] : base;
 }
+
+export const petMaxLevel = (type: string) => PETS.custom_pet_leveling[type]?.max_level ?? 100;
 
 /** 99 levels from the rarity's offset, plus custom pets' extra levels (Golden Dragon to 200). */
 export function getPetLevel(pet: RawPet, rarity = boostedRarity(pet)): Level {
@@ -31,18 +35,18 @@ export function getPetLevel(pet: RawPet, rarity = boostedRarity(pet)): Level {
   // Bingo's own offsets stop at Legendary, below the Mythic a Tier Boost gives it, so its highest one carries on
   const highest = PET_RARITIES.findLast((candidate) => candidate in own);
   const offset = own[rarity] ?? (highest ? own[highest] : PETS.pet_rarity_offset[rarity]);
-  const maxLevel = custom.max_level ?? 100;
+  const maxLevel = petMaxLevel(pet.type);
   const table = [...PETS.pet_levels.slice(offset, offset + 99), ...(custom.pet_levels ?? [])];
   const level = getLevel(pet.exp, table, maxLevel - 1);
   return { ...level, level: level.level + 1, maxLevel };
 }
 
 /** The items resource covers skins newer than the NEU pin; a type falls back to its nearest rarity's head. */
-function petTexture(pet: RawPet, rarity: Rarity, items: ItemsResource | undefined): ItemTexture {
-  const skin = pet.skin && (PET_TEXTURES.skins[pet.skin] ?? items?.items[`PET_SKIN_${pet.skin}`]?.skin);
-  if (skin) return { kind: "head", skin };
+export function petTexture(type: string, rarity: Rarity, skin?: string | null, items?: ItemsResource): ItemTexture {
+  const skinned = skin && (PET_TEXTURES.skins[skin] ?? items?.items[`PET_SKIN_${skin}`]?.skin);
+  if (skinned) return { kind: "head", skin: skinned };
 
-  const textures = PET_TEXTURES.pets[pet.type] ?? {};
+  const textures = PET_TEXTURES.pets[type] ?? {};
   const nearest = RARITIES.toSorted((a, b) => Math.abs(rank(a) - rank(rarity)) - Math.abs(rank(b) - rank(rarity)));
   const hash = nearest.map((candidate) => textures[candidate]).find(Boolean);
   // A type newer than the pin has no head: show the bare skull item.
@@ -55,14 +59,14 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
   return {
     uuid: pet.uuid ?? undefined,
     type: pet.type,
-    name: PETS.id_to_display_name[pet.type] ?? prettify(pet.type),
+    name: petName(pet.type),
     rarity,
     level: getPetLevel(pet, rarity),
     heldItem: pet.heldItem ?? undefined,
     skin: pet.skin ?? undefined,
     candyUsed: pet.candyUsed ?? 0,
     active: pet.active,
-    texture: petTexture(pet, rarity, items),
+    texture: petTexture(pet.type, rarity, pet.skin, items),
   };
 }
 

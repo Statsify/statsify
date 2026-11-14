@@ -4,6 +4,16 @@
   "main": "dist/index.js",
   "types": "src/index.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./networth": {
+      "types": "./src/networth/index.ts",
+      "default": "./dist/networth/index.js"
+    }
+  },
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths --copy-files",
     "typecheck": "tsc --noEmit",
@@ -15,7 +25,8 @@
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
-    "prismarine-nbt": "2.8.0"
+    "prismarine-nbt": "2.8.0",
+    "skyhelper-networth": "2.11.1"
   },
   "imports": {
     "#types": {
@@ -41,6 +52,14 @@
     "#nbt": {
       "types": "./src/nbt.ts",
       "default": "./dist/nbt.js"
+    },
+    "#auctions": {
+      "types": "./src/auctions.ts",
+      "default": "./dist/auctions.js"
+    },
+    "#prices": {
+      "types": "./src/prices.ts",
+      "default": "./dist/prices.js"
     },
     "#textures": {
       "types": "./src/textures.ts",

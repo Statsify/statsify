@@ -348,6 +348,7 @@ if (import.meta.vitest) {
 
   const items: ItemsResource = {
     lastUpdated: 1,
+    raw: [],
     items: {
       ARROW: { name: "Arrow", material: "ARROW", npcPrice: 2 },
       ENCHANTED_DIAMOND: { name: "Enchanted Diamond", material: "DIAMOND", npcPrice: 1280 },
