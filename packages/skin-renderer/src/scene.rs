@@ -6,7 +6,7 @@ use cgmath::{Array, EuclideanSpace, Point3, SquareMatrix, Transform as _, Vector
 use image::{DynamicImage, RgbaImage};
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
-use statsify_minecraft_models::{bake_model, load_texture, Display, Pack};
+use statsify_minecraft_models::{bake_model, load_texture, Display, Frame, Pack};
 use statsify_render_core::camera::{Camera, OrbitalCamera};
 use statsify_render_core::geometry::vertex::Vertex;
 use statsify_render_core::geometry::Geometry;
@@ -201,7 +201,7 @@ impl ModelLibrary {
     renderer: &Renderer<NativeBackend>,
     name: &str,
   ) -> crate::error::Result<LoadedTexture> {
-    let texture = load_texture(&self.pack, name, 0)?;
+    let texture = load_texture(&self.pack, name, Frame::Tick(0))?;
 
     let image = RgbaImage::from_raw(texture.width, texture.height, texture.rgba)
       .expect("a loaded texture holds every texel");

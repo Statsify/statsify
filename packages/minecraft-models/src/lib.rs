@@ -18,7 +18,7 @@ use serde_json::Value;
 pub use bake::{bake_model, BakedModel, Submesh, Vertex};
 pub use display::{Display, Transform};
 pub use error::Error;
-pub use texture::{load_texture, Texture, ALPHA_CUTOFF};
+pub use texture::{load_texture, Frame, Texture, ALPHA_CUTOFF};
 
 /// The parts of a resource pack a caller has read, keyed by path under `assets/minecraft/models` or
 /// `assets/minecraft/textures` without the extension (`block/furnace`, `blocks/stone`). A texture's
