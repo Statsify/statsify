@@ -107,6 +107,7 @@ export interface RawMember {
       equipped_set?: number;
     };
   };
+  garden_player_data?: { copper?: number; discovered_greenhouse_crops?: string[]; analyzed_greenhouse_crops?: string[] };
   jacobs_contest?: {
     perks?: { farming_level_cap?: number; double_drops?: number };
     medals_inv?: Partial<Record<JacobMedal, number>>;
@@ -200,6 +201,23 @@ export interface RawMuseumMember {
 /** /v2/skyblock/museum: one entry per member whose museum API is on. */
 export interface RawMuseum {
   members?: Record<string, RawMuseumMember>;
+}
+
+/** /v2/skyblock/garden's `garden`: the profile's, so its members share it. */
+export interface RawGarden {
+  garden_experience?: number;
+  resources_collected?: Record<string, number>; // by the crop's item id
+  crop_upgrade_levels?: Record<string, number>;
+  unlocked_plots_ids?: string[];
+  composter_data?: { upgrades?: Record<string, number> };
+  commission_data?: {
+    visits?: Record<string, number>; // by visitor id
+    completed?: Record<string, number>;
+    total_completed?: number;
+    unique_npcs_served?: number;
+  };
+  selected_barn_skin?: string;
+  unlocked_barn_skins?: string[];
 }
 
 /** One /v2/skyblock/auctions entry, with only the fields the price builder reads. `bin` isn't in docs.json. */

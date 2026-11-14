@@ -34,3 +34,16 @@ export class SkyBlockMuseum {
   @prop({ required: true })
   public data: Buffer;
 }
+
+@ModelOptions({ schemaOptions: { collection: "skyblockgarden", versionKey: false } })
+export class SkyBlockGarden {
+  @prop({ required: true, unique: true })
+  public profileId: string;
+
+  @prop({ required: true })
+  public fetchedAt: number;
+
+  // gzip(JSON.stringify(res.garden)), which is "null" for a profile without a Garden
+  @prop({ required: true })
+  public data: Buffer;
+}

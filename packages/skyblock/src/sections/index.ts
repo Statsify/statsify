@@ -14,6 +14,7 @@ import { gameModeOf } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
 import { getExperiments } from "./experiments.js";
 import { getFishing } from "./fishing.js";
+import { getGarden } from "./garden.js";
 import { getGear } from "./gear.js";
 import { getInventories } from "./inventories.js";
 import { getHotf } from "./hotf.js";
@@ -27,9 +28,9 @@ import { getRift } from "./rift.js";
 import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
 import type { ItemsResource, MemberView, PriceMap } from "#types";
-import type { RawMember, RawMuseum, RawMuseumMember, RawProfile } from "#raw";
+import type { RawGarden, RawMember, RawMuseum, RawMuseumMember, RawProfile } from "#raw";
 
-export type SectionNeed = "museum" | "prices" | "items";
+export type SectionNeed = "museum" | "garden" | "prices" | "items";
 
 /** Every section a lookup can ask for: SECTIONS' and networth, which ./networth computes. */
 export const SKYBLOCK_SECTIONS = [
@@ -39,6 +40,7 @@ export const SKYBLOCK_SECTIONS = [
   "dungeons",
   "experiments",
   "fishing",
+  "garden",
   "gear",
   "hotf",
   "hotm",
@@ -61,6 +63,7 @@ export interface SectionInput {
   profile: RawProfile;
   member: RawMember;
   museum?: RawMuseumMember;
+  garden?: RawGarden | null; // null: Hypixel has no Garden for the profile
   prices?: PriceMap;
   items?: ItemsResource;
 }
@@ -89,6 +92,13 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
   experiments: { needs: [], compute: async ({ member }) => getExperiments(member) },
   fishing: { needs: [], compute: async ({ member }) => getFishing(member) },
+  garden: {
+    needs: ["garden", "items"],
+    compute: async ({ member, garden, items }) => {
+      if (!items) throw new TypeError("garden needs items");
+      return getGarden(member, garden, items);
+    },
+  },
   gear: { needs: [], compute: async ({ member }) => getGear(member) },
   hotf: { needs: [], compute: async ({ member }) => getHotf(member) },
   hotm: { needs: [], compute: async ({ member }) => getHotm(member) },
