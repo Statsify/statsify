@@ -32,7 +32,7 @@ const foragingCap = (member: RawMember) => {
 // 50 and the three log unlocks: a level past it rests on the shops
 const FORAGING_VERIFIED = 53;
 
-// Runecrafting stops at 3 without a rank, unchecked in game
+// Runecrafting stops at 3 without a rank
 const UNRANKED_RUNECRAFTING_CAP = 3;
 
 function capOf(skill: string, member: RawMember, ranked: boolean) {

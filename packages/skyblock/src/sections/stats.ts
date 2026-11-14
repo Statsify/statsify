@@ -25,7 +25,7 @@ import {
 } from "#types";
 import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
 import { add, roundTo } from "@statsify/math";
-import { getLevel } from "#leveling";
+import { attributeLevel } from "./attributes.js";
 import { TUNING, bagAccessories, heldAccessories, highestTiers, powerScale, stonePowerStats } from "./accessories.js";
 import { decodeSlots } from "#items";
 import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
@@ -109,9 +109,10 @@ function petStats(pet: PetView | undefined): Stats | undefined {
   const table = PET_STATS[pet.type]?.[pet.rarity];
   const item = pet.heldItem ? PET_ITEMS[pet.heldItem] : undefined;
   const [from, to] = table?.levels ?? [1, 100];
-  const progress = (Math.min(Math.max(pet.level.level, from), to) - from) / (to - from);
+  const progress = (Math.min(pet.level.level, to) - from) / (to - from);
 
-  const own = Object.keys({ ...table?.first, ...table?.last }).map((key) => {
+  // A dragon below its table's first level is still an egg, with no stats of its own
+  const own = (pet.level.level < from ? [] : Object.keys({ ...table?.first, ...table?.last })).map((key) => {
     const stat = key as PlayerStat;
     const first = table?.first[stat] ?? 0;
     const boost = 1 + ((item?.allPetStats ?? 0) + (item?.petStats?.[stat] ?? 0)) / 100;
@@ -225,13 +226,12 @@ type AttributeStat = { stat: PlayerStat; name: string; value: number };
 
 /**
  * The Hunting attributes whose level I grants stats outright, at the wiki's scaling: level I's amounts times the level
- * (unverified). Chameleon's shard can't be syphoned, so it has none.
+ * (unverified).
  */
 function attributeStats(member: RawMember): AttributeStat[] {
-  const stacks = member.attributes?.stacks ?? {};
-  return ATTRIBUTE_SHARDS.shards.flatMap(({ attribute, attributeName, rarity, grants = [], unconsumable }) => {
-    const levels = ATTRIBUTE_SHARDS.levels[rarity];
-    const level = grants.length > 0 && !unconsumable ? getLevel(stacks[attribute] ?? 0, levels, levels.length).level : 0;
+  return ATTRIBUTE_SHARDS.shards.flatMap((shard) => {
+    const { attributeName, grants = [] } = shard;
+    const level = grants.length > 0 ? attributeLevel(shard, member) : 0;
     return level > 0 ? grants.map(({ stat, value }) => ({ stat, name: attributeName, value: value * level })) : [];
   });
 }

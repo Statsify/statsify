@@ -21,7 +21,7 @@ const topOf = (counts: Record<string, number> = {}) =>
     .slice(0, TOP)
     .map(([id, count]) => ({ id, count }));
 
-// Each permanent consumable's count, and how many the game takes: the wiki's maximums (an owner exception, unverified)
+// Each permanent consumable's count, and how many the game takes: the wiki's maximums (an owner exception)
 const CONSUMABLES: { id: string; max: number; used: (member: RawMember) => number | undefined }[] = [
   { id: "METAPHYSICAL_SERUM", max: 3, used: (member) => member.experimentation?.serums_drank },
   { id: "REAPER_PEPPER", max: 5, used: (member) => member.player_data?.reaper_peppers_eaten },
