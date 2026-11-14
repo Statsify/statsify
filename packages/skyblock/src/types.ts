@@ -209,8 +209,6 @@ export type PriceEntry =
 
 export interface PriceMap {
   asOf: number;
-  auctionsUpdated: number;
-  bazaarUpdated: number;
   entries: Record<string, PriceEntry>;
 }
 
