@@ -21,6 +21,8 @@ import { Redis } from "ioredis";
 import { setRequestAttributes } from "@statsify/logger";
 import { createHash, randomUUID } from "node:crypto";
 
+const AUTH_ROLE_NAMES = Object.fromEntries(Object.entries(AuthRole).map(([name, role]) => [role, name]));
+
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger("AuthGuard");
@@ -41,7 +43,7 @@ export class AuthService {
 
     const [apiKeyRole, apiKeyLimit] = keyInfo.map(Number);
 
-    setRequestAttributes({ "statsify.api.role": AuthRole[apiKeyRole] });
+    setRequestAttributes({ "statsify.api.role": AUTH_ROLE_NAMES[apiKeyRole] });
 
     if (apiKeyRole < role) throw new ForbiddenException();
 
