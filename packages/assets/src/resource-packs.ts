@@ -18,7 +18,7 @@ import { unzipSync } from "fflate";
 const ROOT = getAssetPath("resource-packs", "public");
 
 const HYPIXEL_PACKS = "https://api.hypixel.net/v2/resources/packs";
-const MOJANG_VERSIONS = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
+const VERSION_MANIFEST = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
 
 // The client and pack format @statsify/textures draws
 const MINECRAFT_VERSION = "26.3";
@@ -108,16 +108,16 @@ async function store(folder: string, files: Record<string, Uint8Array | string>)
   }
 }
 
-async function mojangClient(version: string) {
+async function minecraftClient(version: string) {
   const cached = existsSync(join(ROOT, "mojang"))
     ? (await readdir(join(ROOT, "mojang"))).find((folder) => folder.startsWith(`${version}-`))
     : undefined;
 
   if (cached) return `mojang/${cached}/client.jar`;
 
-  const manifest = await getJson<VersionManifest>(MOJANG_VERSIONS);
+  const manifest = await getJson<VersionManifest>(VERSION_MANIFEST);
   const listed = manifest.versions.find(({ id }) => id === version);
-  if (!listed) throw new Error(`Minecraft ${version} isn't in Mojang's version manifest`);
+  if (!listed) throw new Error(`Minecraft ${version} isn't in Minecraft's version manifest`);
 
   const metadata = await download(listed.url, listed.sha1);
   const { client } = (JSON.parse(Buffer.from(metadata).toString()) as VersionMetadata).downloads;
@@ -264,7 +264,7 @@ export async function updateResourcePacks(): Promise<PackUpdate> {
   if (!lease) return { status: "running" };
 
   try {
-    const generation = { packs: [await mojangClient(MINECRAFT_VERSION), await hypixelPack()] };
+    const generation = { packs: [await minecraftClient(MINECRAFT_VERSION), await hypixelPack()] };
     const active = await readGeneration(ACTIVE);
     if (active && generationId(active) === generationId(generation)) return { status: "unchanged" };
 
