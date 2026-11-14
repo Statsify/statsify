@@ -401,13 +401,13 @@ if (import.meta.vitest) {
   });
 
   it("reads conditions from an item's custom data and wear", () => {
-    const when = (property: string, predicate?: Partial<Parameters<typeof condition>[0]>) =>
+    const when = (property: string, fields?: Partial<Parameters<typeof condition>[0]>) =>
       ({
         type: "minecraft:condition",
         property,
         on_true: { type: "minecraft:empty" },
         on_false: { type: "minecraft:empty" },
-        ...predicate,
+        ...fields,
       }) as const;
 
     const mode = when("minecraft:component", { predicate: "minecraft:custom_data", value: "{mode:1}" });
