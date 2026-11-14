@@ -12,21 +12,28 @@ import { getLevel } from "#leveling";
 import type { AttributesSection } from "#types";
 import type { RawMember } from "#raw";
 
+type AttributeShard = (typeof ATTRIBUTE_SHARDS.shards)[number];
+
+/** The level of the attribute a shard levels, from the shards syphoned into it; Chameleon's can't be syphoned. */
+export function attributeLevel({ attribute, rarity, unconsumable }: AttributeShard, member: RawMember) {
+  const levels = ATTRIBUTE_SHARDS.levels[rarity];
+  return unconsumable ? 0 : getLevel(member.attributes?.stacks?.[attribute] ?? 0, levels, levels.length).level;
+}
+
 /** Every Hunting shard: the shards held, and the level of the attribute it levels, in NEU's order. */
 export function getAttributes(member: RawMember): AttributesSection {
-  const stacks = member.attributes?.stacks ?? {};
   const owned = new Map((member.shards?.owned ?? []).map(({ type, amount_owned }) => [type, amount_owned ?? 0]));
 
-  const attributes = ATTRIBUTE_SHARDS.shards.map(({ id, name, attribute, attributeName, rarity, families = [], unconsumable }) => {
-    const levels = ATTRIBUTE_SHARDS.levels[rarity];
+  const attributes = ATTRIBUTE_SHARDS.shards.map((shard) => {
+    const { id, name, attributeName, rarity, families = [], unconsumable } = shard;
     return {
       id,
       name,
       attribute: attributeName,
       rarity,
       families,
-      level: unconsumable ? 0 : getLevel(stacks[attribute] ?? 0, levels, levels.length).level,
-      maxLevel: unconsumable ? 0 : levels.length,
+      level: attributeLevel(shard, member),
+      maxLevel: unconsumable ? 0 : ATTRIBUTE_SHARDS.levels[rarity].length,
       owned: owned.get(id) ?? 0,
     };
   });

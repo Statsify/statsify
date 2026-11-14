@@ -63,8 +63,11 @@ function itemOf(items: ItemsResource, id: string) {
 const ITEMLESS_GREENHOUSE_SKINS = new Set(["dante", "shipwreck"]);
 const ITEMLESS_SKIN_NAMES: Record<string, string> = { dante: "Dante's Uprising", end: "The End" };
 
-const skinItemName = (items: ItemsResource, id: string, kind: "Barn" | "Greenhouse") =>
-  items.items[`${id.toUpperCase()}_${kind.toUpperCase()}_SKIN`]?.name.replace(` ${kind} Skin`, "");
+// spring_barn's item is "Spring Barn Skin", so a skin named for its kind keeps it
+const skinItemName = (items: ItemsResource, id: string, kind: "Barn" | "Greenhouse") => {
+  const suffix = id.endsWith(`_${kind.toLowerCase()}`) ? " Skin" : ` ${kind} Skin`;
+  return items.items[`${id.toUpperCase()}_${kind.toUpperCase()}_SKIN`]?.name.replace(suffix, "");
+};
 
 const isGreenhouseSkin = (items: ItemsResource, id: string) =>
   ITEMLESS_GREENHOUSE_SKINS.has(id) || skinItemName(items, id, "Greenhouse") !== undefined;
