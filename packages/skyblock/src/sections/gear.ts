@@ -16,7 +16,7 @@ const ARMOR_PIECES = ["HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"] as const;
 // The item type ends an item's rarity line: "LEGENDARY DUNGEON SWORD", "EPIC BOW"
 const WEAPON_LINE = /\b(?:SWORD|LONGSWORD|BOW|GAUNTLET|WAND)$/;
 
-const isWeapon = (item: ItemView) => WEAPON_LINE.test(removeFormatting(item.lore.at(-1) ?? "").trim());
+export const isWeapon = (item: ItemView) => WEAPON_LINE.test(removeFormatting(item.lore.at(-1) ?? "").trim());
 
 /**
  * Each set with anything in it, by slot, and the worn set's slot. Old saves keep pages of 36 (four rows of nine, a set

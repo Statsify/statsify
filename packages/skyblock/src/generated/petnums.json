@@ -1,0 +1,3659 @@
+{
+  "AMMONITE": {
+    "LEGENDARY": {
+      "first": {
+        "sea_creature_chance": 0.06
+      },
+      "last": {
+        "sea_creature_chance": 6
+      }
+    }
+  },
+  "ANKYLOSAURUS": {
+    "LEGENDARY": {
+      "first": {
+        "defense": 0.5,
+        "health": 1.5,
+        "true_defense": 0.15
+      },
+      "last": {
+        "defense": 50,
+        "health": 150,
+        "true_defense": 15
+      }
+    }
+  },
+  "ARMADILLO": {
+    "COMMON": {
+      "first": {
+        "defense": 2
+      },
+      "last": {
+        "defense": 200
+      }
+    },
+    "EPIC": {
+      "first": {
+        "defense": 2
+      },
+      "last": {
+        "defense": 200
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "defense": 2
+      },
+      "last": {
+        "defense": 200
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "defense": 2
+      },
+      "last": {
+        "defense": 200
+      }
+    },
+    "RARE": {
+      "first": {
+        "defense": 2
+      },
+      "last": {
+        "defense": 200
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "defense": 2
+      },
+      "last": {
+        "defense": 200
+      }
+    }
+  },
+  "BABY_YETI": {
+    "COMMON": {
+      "first": {
+        "fishing_speed": 0.5,
+        "sea_creature_chance": 0.05,
+        "strength": 0.5
+      },
+      "last": {
+        "fishing_speed": 50,
+        "sea_creature_chance": 5,
+        "strength": 50
+      }
+    },
+    "EPIC": {
+      "first": {
+        "fishing_speed": 0.5,
+        "sea_creature_chance": 0.05,
+        "strength": 0.75
+      },
+      "last": {
+        "fishing_speed": 50,
+        "sea_creature_chance": 5,
+        "strength": 75
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "fishing_speed": 0.5,
+        "sea_creature_chance": 0.05,
+        "strength": 0.75
+      },
+      "last": {
+        "fishing_speed": 50,
+        "sea_creature_chance": 5,
+        "strength": 75
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "fishing_speed": 0.5,
+        "sea_creature_chance": 0.05,
+        "strength": 0.75
+      },
+      "last": {
+        "cold_resistance": 10,
+        "fishing_speed": 50,
+        "sea_creature_chance": 5,
+        "strength": 75
+      }
+    },
+    "RARE": {
+      "first": {
+        "fishing_speed": 0.5,
+        "sea_creature_chance": 0.05,
+        "strength": 0.5
+      },
+      "last": {
+        "fishing_speed": 50,
+        "sea_creature_chance": 5,
+        "strength": 50
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "fishing_speed": 0.5,
+        "sea_creature_chance": 0.05,
+        "strength": 0.5
+      },
+      "last": {
+        "fishing_speed": 50,
+        "sea_creature_chance": 5,
+        "strength": 50
+      }
+    }
+  },
+  "BAL": {
+    "EPIC": {
+      "first": {
+        "heat_resistance": 1.5,
+        "mining_fortune": 1
+      },
+      "last": {
+        "heat_resistance": 150,
+        "mining_fortune": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "heat_resistance": 1.5,
+        "mining_fortune": 1
+      },
+      "last": {
+        "heat_resistance": 150,
+        "mining_fortune": 100
+      }
+    }
+  },
+  "BAT": {
+    "COMMON": {
+      "first": {
+        "intelligence": 1,
+        "speed": 0.05
+      },
+      "last": {
+        "intelligence": 100,
+        "speed": 5
+      }
+    },
+    "EPIC": {
+      "first": {
+        "intelligence": 1,
+        "speed": 0.05
+      },
+      "last": {
+        "intelligence": 100,
+        "speed": 5
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "intelligence": 1,
+        "speed": 0.05
+      },
+      "last": {
+        "intelligence": 100,
+        "speed": 5
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "intelligence": 1,
+        "sea_creature_chance": 0.05,
+        "speed": 0.05
+      },
+      "last": {
+        "intelligence": 100,
+        "sea_creature_chance": 5,
+        "speed": 5
+      }
+    },
+    "RARE": {
+      "first": {
+        "intelligence": 1,
+        "speed": 0.05
+      },
+      "last": {
+        "intelligence": 100,
+        "speed": 5
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "intelligence": 1,
+        "speed": 0.05
+      },
+      "last": {
+        "intelligence": 100,
+        "speed": 5
+      }
+    }
+  },
+  "BEE": {
+    "COMMON": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 0.1,
+        "strength": 5.25
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 10,
+        "strength": 30
+      }
+    },
+    "EPIC": {
+      "first": {
+        "farming_fortune": 0.3,
+        "foraging_fortune": 0.3,
+        "intelligence": 0.5,
+        "mining_fortune": 0.3,
+        "speed": 0.1,
+        "strength": 5.25
+      },
+      "last": {
+        "farming_fortune": 30,
+        "foraging_fortune": 30,
+        "intelligence": 50,
+        "mining_fortune": 30,
+        "speed": 10,
+        "strength": 30
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "farming_fortune": 0.3,
+        "foraging_fortune": 0.3,
+        "intelligence": 0.5,
+        "mining_fortune": 0.3,
+        "speed": 0.1,
+        "strength": 5.25
+      },
+      "last": {
+        "farming_fortune": 30,
+        "foraging_fortune": 30,
+        "intelligence": 50,
+        "mining_fortune": 30,
+        "speed": 10,
+        "strength": 30
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "farming_fortune": 0.4,
+        "foraging_fortune": 0.4,
+        "intelligence": 0.5,
+        "mining_fortune": 0.4,
+        "speed": 0.1,
+        "strength": 5.25
+      },
+      "last": {
+        "farming_fortune": 40,
+        "foraging_fortune": 40,
+        "intelligence": 50,
+        "mining_fortune": 40,
+        "speed": 10,
+        "strength": 30
+      }
+    },
+    "RARE": {
+      "first": {
+        "farming_fortune": 0.2,
+        "foraging_fortune": 0.2,
+        "intelligence": 0.5,
+        "mining_fortune": 0.2,
+        "speed": 0.1,
+        "strength": 5.25
+      },
+      "last": {
+        "farming_fortune": 20,
+        "foraging_fortune": 20,
+        "intelligence": 50,
+        "mining_fortune": 20,
+        "speed": 10,
+        "strength": 30
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 0.1,
+        "strength": 5.25
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 10,
+        "strength": 30
+      }
+    }
+  },
+  "BINGO": {
+    "COMMON": {
+      "first": {
+        "health": 1,
+        "speed": 0.75,
+        "strength": 0.25
+      },
+      "last": {
+        "health": 100,
+        "speed": 75,
+        "strength": 25
+      }
+    },
+    "EPIC": {
+      "first": {
+        "health": 1,
+        "speed": 0.75,
+        "strength": 0.25
+      },
+      "last": {
+        "health": 100,
+        "speed": 75,
+        "strength": 35
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "health": 1,
+        "speed": 0.75,
+        "strength": 0.25
+      },
+      "last": {
+        "health": 100,
+        "speed": 75,
+        "strength": 35
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "health": 1,
+        "speed": 0.75,
+        "strength": 0.25
+      },
+      "last": {
+        "health": 100,
+        "speed": 75,
+        "strength": 35
+      }
+    },
+    "RARE": {
+      "first": {
+        "health": 1,
+        "speed": 0.75,
+        "strength": 0.25
+      },
+      "last": {
+        "health": 100,
+        "speed": 75,
+        "strength": 35
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "health": 1,
+        "speed": 0.75,
+        "strength": 0.25
+      },
+      "last": {
+        "health": 100,
+        "speed": 75,
+        "strength": 25
+      }
+    }
+  },
+  "BLACK_CAT": {
+    "LEGENDARY": {
+      "first": {
+        "intelligence": 1,
+        "magic_find": 0.15,
+        "pet_luck": 0.15,
+        "speed": 1.25
+      },
+      "last": {
+        "intelligence": 100,
+        "magic_find": 15,
+        "pet_luck": 15,
+        "speed": 125
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "intelligence": 1,
+        "magic_find": 0.15,
+        "pet_luck": 0.15,
+        "speed": 1.25
+      },
+      "last": {
+        "intelligence": 100,
+        "magic_find": 15,
+        "pet_luck": 15,
+        "speed": 125
+      }
+    }
+  },
+  "BLAZE": {
+    "COMMON": {
+      "first": {
+        "defense": 0.3,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 30,
+        "intelligence": 100
+      }
+    },
+    "EPIC": {
+      "first": {
+        "defense": 0.3,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 30,
+        "intelligence": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "defense": 0.3,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 30,
+        "intelligence": 100
+      }
+    },
+    "RARE": {
+      "first": {
+        "defense": 0.3,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 30,
+        "intelligence": 100
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "defense": 0.3,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 30,
+        "intelligence": 100
+      }
+    }
+  },
+  "BLUE_WHALE": {
+    "COMMON": {
+      "first": {
+        "health": 2
+      },
+      "last": {
+        "health": 200
+      }
+    },
+    "EPIC": {
+      "first": {
+        "health": 2
+      },
+      "last": {
+        "health": 200
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "health": 2
+      },
+      "last": {
+        "health": 200
+      }
+    },
+    "RARE": {
+      "first": {
+        "health": 2
+      },
+      "last": {
+        "health": 200
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "health": 2
+      },
+      "last": {
+        "health": 200
+      }
+    }
+  },
+  "CHICKEN": {
+    "COMMON": {
+      "first": {
+        "farming_fortune": 0.5,
+        "speed": 0.5
+      },
+      "last": {
+        "farming_fortune": 50,
+        "speed": 50
+      }
+    },
+    "EPIC": {
+      "first": {
+        "farming_fortune": 0.5,
+        "speed": 0.5
+      },
+      "last": {
+        "farming_fortune": 50,
+        "speed": 50
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "farming_fortune": 0.5,
+        "speed": 0.5
+      },
+      "last": {
+        "farming_fortune": 50,
+        "speed": 50
+      }
+    },
+    "RARE": {
+      "first": {
+        "farming_fortune": 0.5,
+        "speed": 0.5
+      },
+      "last": {
+        "farming_fortune": 50,
+        "speed": 50
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "farming_fortune": 0.5,
+        "speed": 0.5
+      },
+      "last": {
+        "farming_fortune": 50,
+        "speed": 50
+      }
+    }
+  },
+  "CROW": {
+    "COMMON": {
+      "first": {
+        "ability_damage": 0.2,
+        "intelligence": 1.5
+      },
+      "last": {
+        "ability_damage": 20,
+        "intelligence": 150
+      }
+    },
+    "EPIC": {
+      "first": {
+        "ability_damage": 0.2,
+        "intelligence": 1.5
+      },
+      "last": {
+        "ability_damage": 20,
+        "intelligence": 150
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "ability_damage": 0.2,
+        "intelligence": 1.5
+      },
+      "last": {
+        "ability_damage": 20,
+        "intelligence": 150
+      }
+    },
+    "RARE": {
+      "first": {
+        "ability_damage": 0.2,
+        "intelligence": 1.5
+      },
+      "last": {
+        "ability_damage": 20,
+        "intelligence": 150
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "ability_damage": 0.2,
+        "intelligence": 1.5
+      },
+      "last": {
+        "ability_damage": 20,
+        "intelligence": 150
+      }
+    }
+  },
+  "DOLPHIN": {
+    "COMMON": {
+      "first": {
+        "intelligence": 1,
+        "sea_creature_chance": 0.05
+      },
+      "last": {
+        "intelligence": 100,
+        "sea_creature_chance": 5
+      }
+    },
+    "EPIC": {
+      "first": {
+        "intelligence": 1,
+        "sea_creature_chance": 0.05
+      },
+      "last": {
+        "intelligence": 100,
+        "sea_creature_chance": 5
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "intelligence": 1,
+        "sea_creature_chance": 0.05
+      },
+      "last": {
+        "intelligence": 100,
+        "sea_creature_chance": 5
+      }
+    },
+    "RARE": {
+      "first": {
+        "intelligence": 1,
+        "sea_creature_chance": 0.05
+      },
+      "last": {
+        "intelligence": 100,
+        "sea_creature_chance": 5
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "intelligence": 1,
+        "sea_creature_chance": 0.05
+      },
+      "last": {
+        "intelligence": 100,
+        "sea_creature_chance": 5
+      }
+    }
+  },
+  "DROPLET_WISP": {
+    "UNCOMMON": {
+      "first": {
+        "health": 1
+      },
+      "last": {
+        "health": 100
+      }
+    }
+  },
+  "EERIE": {
+    "COMMON": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 0.1
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 10
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 0.1
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 10
+      }
+    },
+    "RARE": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 0.1
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 10
+      }
+    }
+  },
+  "ELEPHANT": {
+    "COMMON": {
+      "first": {
+        "health": 1,
+        "intelligence": 0.75
+      },
+      "last": {
+        "health": 100,
+        "intelligence": 75
+      }
+    },
+    "EPIC": {
+      "first": {
+        "health": 1,
+        "intelligence": 0.75
+      },
+      "last": {
+        "health": 100,
+        "intelligence": 75
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "health": 1,
+        "intelligence": 0.75
+      },
+      "last": {
+        "health": 100,
+        "intelligence": 75
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "farming_fortune": 0.5,
+        "health": 1,
+        "intelligence": 0.75
+      },
+      "last": {
+        "farming_fortune": 50,
+        "health": 100,
+        "intelligence": 75
+      }
+    },
+    "RARE": {
+      "first": {
+        "health": 1,
+        "intelligence": 0.75
+      },
+      "last": {
+        "health": 100,
+        "intelligence": 75
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "health": 1,
+        "intelligence": 0.75
+      },
+      "last": {
+        "health": 100,
+        "intelligence": 75
+      }
+    }
+  },
+  "ENDER_DRAGON": {
+    "EPIC": {
+      "first": {
+        "crit_chance": 0.1,
+        "crit_damage": 0.5,
+        "strength": 0.5
+      },
+      "last": {
+        "crit_chance": 10,
+        "crit_damage": 50,
+        "strength": 50
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "crit_chance": 0.1,
+        "crit_damage": 0.5,
+        "strength": 0.5
+      },
+      "last": {
+        "crit_chance": 10,
+        "crit_damage": 50,
+        "strength": 50
+      }
+    }
+  },
+  "ENDERMAN": {
+    "COMMON": {
+      "first": {
+        "crit_damage": 0.75
+      },
+      "last": {
+        "crit_damage": 75
+      }
+    },
+    "EPIC": {
+      "first": {
+        "crit_damage": 0.75
+      },
+      "last": {
+        "crit_damage": 75
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "crit_damage": 0.75
+      },
+      "last": {
+        "crit_damage": 75
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "crit_damage": 0.75
+      },
+      "last": {
+        "crit_damage": 75
+      }
+    },
+    "RARE": {
+      "first": {
+        "crit_damage": 0.75
+      },
+      "last": {
+        "crit_damage": 75
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "crit_damage": 0.75
+      },
+      "last": {
+        "crit_damage": 75
+      }
+    }
+  },
+  "ENDERMITE": {
+    "COMMON": {
+      "first": {
+        "intelligence": 1.5,
+        "pet_luck": 0.1
+      },
+      "last": {
+        "intelligence": 100,
+        "pet_luck": 10
+      }
+    },
+    "EPIC": {
+      "first": {
+        "intelligence": 1.5,
+        "pet_luck": 0.1
+      },
+      "last": {
+        "intelligence": 150,
+        "pet_luck": 10
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "intelligence": 1.5,
+        "pet_luck": 0.1
+      },
+      "last": {
+        "intelligence": 150,
+        "pet_luck": 10
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "intelligence": 1.5,
+        "pet_luck": 0.1
+      },
+      "last": {
+        "intelligence": 150,
+        "pet_luck": 10
+      }
+    },
+    "RARE": {
+      "first": {
+        "intelligence": 1.5,
+        "pet_luck": 0.1
+      },
+      "last": {
+        "intelligence": 150,
+        "pet_luck": 10
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "intelligence": 1.5,
+        "pet_luck": 0.1
+      },
+      "last": {
+        "intelligence": 150,
+        "pet_luck": 10
+      }
+    }
+  },
+  "FLYING_FISH": {
+    "EPIC": {
+      "first": {
+        "defense": 0.5,
+        "strength": 0.5
+      },
+      "last": {
+        "defense": 50,
+        "strength": 50
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "defense": 0.5,
+        "strength": 0.5
+      },
+      "last": {
+        "defense": 50,
+        "strength": 50
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "defense": 0.5,
+        "strength": 0.5
+      },
+      "last": {
+        "defense": 50,
+        "strength": 50
+      }
+    },
+    "RARE": {
+      "first": {
+        "defense": 0.5,
+        "strength": 0.5
+      },
+      "last": {
+        "defense": 50,
+        "strength": 50
+      }
+    }
+  },
+  "FROG": {
+    "COMMON": {
+      "first": {
+        "fishing_speed": 0.4,
+        "respiration": 0.1,
+        "speed": 0.5,
+        "sweep": 0.1
+      },
+      "last": {
+        "fishing_speed": 40,
+        "respiration": 10,
+        "speed": 50,
+        "sweep": 10
+      }
+    },
+    "EPIC": {
+      "first": {
+        "fishing_speed": 0.4,
+        "respiration": 0.1,
+        "speed": 0.5,
+        "sweep": 0.1
+      },
+      "last": {
+        "fishing_speed": 40,
+        "respiration": 10,
+        "speed": 50,
+        "sweep": 10
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "fishing_speed": 0.4,
+        "respiration": 0.1,
+        "speed": 0.5,
+        "sweep": 0.1
+      },
+      "last": {
+        "fishing_speed": 40,
+        "respiration": 10,
+        "speed": 50,
+        "sweep": 10
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "fishing_speed": 0.4,
+        "respiration": 0.1,
+        "speed": 0.5,
+        "sweep": 0.1,
+        "trophy_chance": 0.05
+      },
+      "last": {
+        "fishing_speed": 40,
+        "respiration": 10,
+        "speed": 50,
+        "sweep": 10,
+        "trophy_chance": 5
+      }
+    },
+    "RARE": {
+      "first": {
+        "fishing_speed": 0.4,
+        "respiration": 0.1,
+        "speed": 0.5,
+        "sweep": 0.1
+      },
+      "last": {
+        "fishing_speed": 40,
+        "respiration": 10,
+        "speed": 50,
+        "sweep": 10
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "fishing_speed": 0.4,
+        "respiration": 0.1,
+        "speed": 0.5,
+        "sweep": 0.1
+      },
+      "last": {
+        "fishing_speed": 40,
+        "respiration": 10,
+        "speed": 50,
+        "sweep": 10
+      }
+    }
+  },
+  "FROST_WISP": {
+    "RARE": {
+      "first": {
+        "health": 2.5,
+        "intelligence": 0.5,
+        "true_defense": 0.15
+      },
+      "last": {
+        "health": 250,
+        "intelligence": 50,
+        "true_defense": 15
+      }
+    }
+  },
+  "GHOUL": {
+    "EPIC": {
+      "first": {
+        "ferocity": 0.05,
+        "health": 1,
+        "intelligence": 0.75,
+        "mending": 0.25,
+        "vitality": 0.15
+      },
+      "last": {
+        "ferocity": 5,
+        "health": 100,
+        "intelligence": 75,
+        "mending": 25,
+        "vitality": 15
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "ferocity": 0.05,
+        "health": 1,
+        "intelligence": 0.75,
+        "mending": 0.25,
+        "vitality": 0.15
+      },
+      "last": {
+        "ferocity": 5,
+        "health": 100,
+        "intelligence": 75,
+        "mending": 25,
+        "vitality": 15
+      }
+    }
+  },
+  "GIRAFFE": {
+    "COMMON": {
+      "first": {
+        "crit_chance": 0.05,
+        "health": 1,
+        "swing_range": 0.01
+      },
+      "last": {
+        "crit_chance": 5,
+        "health": 100,
+        "swing_range": 1
+      }
+    },
+    "EPIC": {
+      "first": {
+        "crit_chance": 0.05,
+        "health": 1,
+        "swing_range": 0.01
+      },
+      "last": {
+        "crit_chance": 5,
+        "health": 100,
+        "swing_range": 1
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "crit_chance": 0.05,
+        "health": 1,
+        "swing_range": 0.01
+      },
+      "last": {
+        "crit_chance": 5,
+        "health": 100,
+        "swing_range": 1
+      }
+    },
+    "RARE": {
+      "first": {
+        "crit_chance": 0.05,
+        "health": 1,
+        "swing_range": 0.01
+      },
+      "last": {
+        "crit_chance": 5,
+        "health": 100,
+        "swing_range": 1
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "crit_chance": 0.05,
+        "health": 1,
+        "swing_range": 0.01
+      },
+      "last": {
+        "crit_chance": 5,
+        "health": 100,
+        "swing_range": 1
+      }
+    }
+  },
+  "GLACIAL_WISP": {
+    "EPIC": {
+      "first": {
+        "health": 4,
+        "intelligence": 1.25,
+        "true_defense": 0.3
+      },
+      "last": {
+        "health": 400,
+        "intelligence": 125,
+        "true_defense": 30
+      }
+    }
+  },
+  "GLACITE_GOLEM": {
+    "COMMON": {
+      "first": {
+        "cold_resistance": 0.1,
+        "mining_speed": 1.25
+      },
+      "last": {
+        "cold_resistance": 10,
+        "mining_speed": 125
+      }
+    },
+    "EPIC": {
+      "first": {
+        "cold_resistance": 0.1,
+        "mining_speed": 1.25
+      },
+      "last": {
+        "cold_resistance": 10,
+        "mining_speed": 125
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "cold_resistance": 0.1,
+        "mining_speed": 1.25
+      },
+      "last": {
+        "cold_resistance": 10,
+        "mining_speed": 125
+      }
+    },
+    "RARE": {
+      "first": {
+        "cold_resistance": 0.1,
+        "mining_speed": 1.25
+      },
+      "last": {
+        "cold_resistance": 10,
+        "mining_speed": 125
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "cold_resistance": 0.1,
+        "mining_speed": 1.25
+      },
+      "last": {
+        "cold_resistance": 10,
+        "mining_speed": 125
+      }
+    }
+  },
+  "GOBLIN": {
+    "LEGENDARY": {
+      "first": {
+        "magic_find": 0.07,
+        "ore_fortune": 1
+      },
+      "last": {
+        "magic_find": 7,
+        "ore_fortune": 100
+      }
+    }
+  },
+  "GOLDEN_DRAGON": {
+    "LEGENDARY": {
+      "first": {
+        "attack_speed": 25,
+        "magic_find": 5,
+        "strength": 25
+      },
+      "last": {
+        "attack_speed": 50,
+        "magic_find": 10,
+        "strength": 50
+      },
+      "levels": [
+        101,
+        200
+      ]
+    }
+  },
+  "GOLEM": {
+    "EPIC": {
+      "first": {
+        "health": 1,
+        "strength": 0.05,
+        "swing_range": 0.01
+      },
+      "last": {
+        "health": 150,
+        "strength": 50,
+        "swing_range": 1
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "health": 1,
+        "strength": 0.05,
+        "swing_range": 0.01
+      },
+      "last": {
+        "health": 150,
+        "strength": 50,
+        "swing_range": 1
+      }
+    }
+  },
+  "GRANDMA_WOLF": {
+    "COMMON": {
+      "first": {
+        "health": 1,
+        "strength": 0.25
+      },
+      "last": {
+        "health": 100,
+        "strength": 25
+      }
+    },
+    "EPIC": {
+      "first": {
+        "health": 1,
+        "strength": 0.25
+      },
+      "last": {
+        "health": 100,
+        "strength": 25
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "health": 1,
+        "strength": 0.25
+      },
+      "last": {
+        "health": 100,
+        "strength": 25
+      }
+    },
+    "RARE": {
+      "first": {
+        "health": 1,
+        "strength": 0.25
+      },
+      "last": {
+        "health": 100,
+        "strength": 25
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "health": 1,
+        "strength": 0.25
+      },
+      "last": {
+        "health": 100,
+        "strength": 25
+      }
+    }
+  },
+  "GRIFFIN": {
+    "COMMON": {
+      "first": {
+        "attack_speed": 0.25,
+        "crit_chance": 0.1,
+        "crit_damage": 0.5,
+        "strength": 0.5
+      },
+      "last": {
+        "attack_speed": 25,
+        "crit_chance": 10,
+        "crit_damage": 50,
+        "strength": 50
+      }
+    },
+    "EPIC": {
+      "first": {
+        "attack_speed": 0.25,
+        "crit_chance": 0.1,
+        "crit_damage": 0.5,
+        "strength": 0.5
+      },
+      "last": {
+        "attack_speed": 25,
+        "crit_chance": 10,
+        "crit_damage": 50,
+        "strength": 50
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "attack_speed": 0.25,
+        "crit_chance": 0.1,
+        "crit_damage": 0.5,
+        "strength": 0.5
+      },
+      "last": {
+        "attack_speed": 25,
+        "crit_chance": 10,
+        "crit_damage": 50,
+        "strength": 50
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "attack_speed": 0.25,
+        "crit_chance": 0.1,
+        "crit_damage": 0.5,
+        "strength": 0.5
+      },
+      "last": {
+        "attack_speed": 25,
+        "crit_chance": 10,
+        "crit_damage": 50,
+        "strength": 50
+      }
+    },
+    "RARE": {
+      "first": {
+        "attack_speed": 0.25,
+        "crit_chance": 0.1,
+        "crit_damage": 0.5,
+        "strength": 0.5
+      },
+      "last": {
+        "attack_speed": 25,
+        "crit_chance": 10,
+        "crit_damage": 50,
+        "strength": 50
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "attack_speed": 0.25,
+        "crit_chance": 0.1,
+        "crit_damage": 0.5,
+        "strength": 0.5
+      },
+      "last": {
+        "attack_speed": 25,
+        "crit_chance": 10,
+        "crit_damage": 50,
+        "strength": 50
+      }
+    }
+  },
+  "GUARDIAN": {
+    "COMMON": {
+      "first": {
+        "defense": 0.5,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 50,
+        "intelligence": 100
+      }
+    },
+    "EPIC": {
+      "first": {
+        "defense": 0.5,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 50,
+        "intelligence": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "defense": 0.5,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 50,
+        "intelligence": 100
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "defense": 0.5,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 50,
+        "intelligence": 100
+      }
+    },
+    "RARE": {
+      "first": {
+        "defense": 0.5,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 50,
+        "intelligence": 100
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "defense": 0.5,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 50,
+        "intelligence": 100
+      }
+    }
+  },
+  "HEDGEHOG": {
+    "LEGENDARY": {
+      "first": {
+        "speed": 0.15
+      },
+      "last": {
+        "speed": 15
+      }
+    }
+  },
+  "HERMIT_CRAB": {
+    "COMMON": {
+      "first": {
+        "defense": 0.2,
+        "fishing_speed": 0.2,
+        "sea_creature_chance": 0.02
+      },
+      "last": {
+        "defense": 20,
+        "fishing_speed": 20,
+        "sea_creature_chance": 2
+      }
+    },
+    "EPIC": {
+      "first": {
+        "defense": 0.2,
+        "fishing_speed": 0.2,
+        "sea_creature_chance": 0.02
+      },
+      "last": {
+        "defense": 20,
+        "fishing_speed": 20,
+        "sea_creature_chance": 2
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "defense": 0.2,
+        "fishing_speed": 0.2,
+        "sea_creature_chance": 0.02
+      },
+      "last": {
+        "defense": 20,
+        "fishing_speed": 20,
+        "sea_creature_chance": 2
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "defense": 0.2,
+        "fishing_speed": 0.2,
+        "sea_creature_chance": 0.02
+      },
+      "last": {
+        "defense": 20,
+        "fishing_speed": 20,
+        "sea_creature_chance": 2
+      }
+    },
+    "RARE": {
+      "first": {
+        "defense": 0.2,
+        "fishing_speed": 0.2,
+        "sea_creature_chance": 0.02
+      },
+      "last": {
+        "defense": 20,
+        "fishing_speed": 20,
+        "sea_creature_chance": 2
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "defense": 0.2,
+        "fishing_speed": 0.2,
+        "sea_creature_chance": 0.02
+      },
+      "last": {
+        "defense": 20,
+        "fishing_speed": 20,
+        "sea_creature_chance": 2
+      }
+    }
+  },
+  "HORSE": {
+    "COMMON": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 1
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 100
+      }
+    },
+    "EPIC": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 1
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 1
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 100
+      }
+    },
+    "RARE": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 1
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 100
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 1
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 100
+      }
+    }
+  },
+  "HOUND": {
+    "EPIC": {
+      "first": {
+        "attack_speed": 0.25,
+        "ferocity": 0.05,
+        "speed": 0.1,
+        "strength": 0.4
+      },
+      "last": {
+        "attack_speed": 25,
+        "ferocity": 5,
+        "speed": 10,
+        "strength": 40
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "attack_speed": 0.25,
+        "ferocity": 0.05,
+        "speed": 0.1,
+        "strength": 0.4
+      },
+      "last": {
+        "attack_speed": 25,
+        "ferocity": 5,
+        "speed": 10,
+        "strength": 40
+      }
+    }
+  },
+  "JADE_DRAGON": {
+    "LEGENDARY": {
+      "first": {
+        "foraging_fortune": 25,
+        "magic_find": 5,
+        "strength": 25
+      },
+      "last": {
+        "foraging_fortune": 50,
+        "magic_find": 10,
+        "strength": 50
+      },
+      "levels": [
+        101,
+        200
+      ]
+    }
+  },
+  "JELLYFISH": {
+    "EPIC": {
+      "first": {
+        "health": 2,
+        "health_regen": 1
+      },
+      "last": {
+        "health": 200,
+        "health_regen": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "health": 2,
+        "health_regen": 1
+      },
+      "last": {
+        "health": 200,
+        "health_regen": 100
+      }
+    }
+  },
+  "JERRY": {
+    "COMMON": {
+      "first": {
+        "intelligence": 1
+      },
+      "last": {
+        "intelligence": 100
+      }
+    },
+    "EPIC": {
+      "first": {
+        "intelligence": 1
+      },
+      "last": {
+        "intelligence": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "intelligence": 1
+      },
+      "last": {
+        "intelligence": 100
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "intelligence": 1
+      },
+      "last": {
+        "intelligence": 100
+      }
+    },
+    "RARE": {
+      "first": {
+        "intelligence": 1
+      },
+      "last": {
+        "intelligence": 100
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "intelligence": 1
+      },
+      "last": {
+        "intelligence": 100
+      }
+    }
+  },
+  "KUUDRA": {
+    "COMMON": {
+      "first": {
+        "health": 4,
+        "strength": 0.4
+      },
+      "last": {
+        "health": 400,
+        "strength": 40
+      }
+    },
+    "EPIC": {
+      "first": {
+        "health": 4,
+        "strength": 0.4
+      },
+      "last": {
+        "health": 400,
+        "strength": 40
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "health": 4,
+        "strength": 0.4
+      },
+      "last": {
+        "health": 400,
+        "strength": 40
+      }
+    },
+    "RARE": {
+      "first": {
+        "health": 4,
+        "strength": 0.4
+      },
+      "last": {
+        "health": 400,
+        "strength": 40
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "health": 4,
+        "strength": 0.4
+      },
+      "last": {
+        "health": 400,
+        "strength": 40
+      }
+    }
+  },
+  "LION": {
+    "COMMON": {
+      "first": {
+        "ferocity": 0.05,
+        "speed": 0.25,
+        "strength": 0.5
+      },
+      "last": {
+        "ferocity": 5,
+        "speed": 25,
+        "strength": 50
+      }
+    },
+    "EPIC": {
+      "first": {
+        "ferocity": 0.05,
+        "speed": 0.25,
+        "strength": 0.5
+      },
+      "last": {
+        "ferocity": 5,
+        "speed": 25,
+        "strength": 50
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "ferocity": 0.05,
+        "speed": 0.25,
+        "strength": 0.5
+      },
+      "last": {
+        "ferocity": 5,
+        "speed": 25,
+        "strength": 50
+      }
+    },
+    "RARE": {
+      "first": {
+        "ferocity": 0.05,
+        "speed": 0.25,
+        "strength": 0.5
+      },
+      "last": {
+        "ferocity": 5,
+        "speed": 25,
+        "strength": 50
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "ferocity": 0.05,
+        "speed": 0.25,
+        "strength": 0.5
+      },
+      "last": {
+        "ferocity": 5,
+        "speed": 25,
+        "strength": 50
+      }
+    }
+  },
+  "MAGMA_CUBE": {
+    "COMMON": {
+      "first": {
+        "defense": 0.33,
+        "health": 0.5,
+        "strength": 0.2
+      },
+      "last": {
+        "defense": 33.3,
+        "health": 50,
+        "strength": 20
+      }
+    },
+    "EPIC": {
+      "first": {
+        "defense": 0.33,
+        "health": 0.5,
+        "strength": 0.2
+      },
+      "last": {
+        "defense": 33.33,
+        "health": 50,
+        "strength": 20
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "defense": 0.33,
+        "health": 0.5,
+        "strength": 0.2
+      },
+      "last": {
+        "defense": 33.33,
+        "health": 50,
+        "strength": 20
+      }
+    },
+    "RARE": {
+      "first": {
+        "defense": 0.33,
+        "health": 0.5,
+        "strength": 0.2
+      },
+      "last": {
+        "defense": 33.33,
+        "health": 50,
+        "strength": 20
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "defense": 0.33,
+        "health": 0.5,
+        "strength": 0.2
+      },
+      "last": {
+        "defense": 33.33,
+        "health": 50,
+        "strength": 20
+      }
+    }
+  },
+  "MAMMOTH": {
+    "LEGENDARY": {
+      "first": {
+        "cold_resistance": 0.1,
+        "defense": 0.5
+      },
+      "last": {
+        "cold_resistance": 10,
+        "defense": 50
+      }
+    }
+  },
+  "MEGALODON": {
+    "EPIC": {
+      "first": {
+        "ferocity": 5.05,
+        "fishing_speed": 10.3,
+        "magic_find": 0.1,
+        "sea_creature_chance": 5.05,
+        "strength": 0.5
+      },
+      "last": {
+        "ferocity": 10,
+        "fishing_speed": 40,
+        "magic_find": 10,
+        "sea_creature_chance": 10,
+        "strength": 50
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "ferocity": 5.05,
+        "fishing_speed": 10.3,
+        "magic_find": 0.1,
+        "sea_creature_chance": 5.05,
+        "strength": 0.5
+      },
+      "last": {
+        "ferocity": 10,
+        "fishing_speed": 40,
+        "magic_find": 10,
+        "sea_creature_chance": 10,
+        "strength": 50
+      }
+    }
+  },
+  "MITHRIL_GOLEM": {
+    "COMMON": {
+      "first": {
+        "mining_fortune": 0.25,
+        "true_defense": 0.5
+      },
+      "last": {
+        "mining_fortune": 25,
+        "true_defense": 50
+      }
+    },
+    "EPIC": {
+      "first": {
+        "mining_fortune": 0.25,
+        "true_defense": 0.5
+      },
+      "last": {
+        "mining_fortune": 25,
+        "true_defense": 50
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "mining_fortune": 0.25,
+        "true_defense": 0.5
+      },
+      "last": {
+        "mining_fortune": 25,
+        "true_defense": 50
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "mining_fortune": 0.25,
+        "true_defense": 0.5
+      },
+      "last": {
+        "mining_fortune": 25,
+        "true_defense": 50
+      }
+    },
+    "RARE": {
+      "first": {
+        "mining_fortune": 0.25,
+        "true_defense": 0.5
+      },
+      "last": {
+        "mining_fortune": 25,
+        "true_defense": 50
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "mining_fortune": 0.25,
+        "true_defense": 0.5
+      },
+      "last": {
+        "mining_fortune": 25,
+        "true_defense": 50
+      }
+    }
+  },
+  "MOLE": {
+    "LEGENDARY": {
+      "first": {
+        "intelligence": 1,
+        "magic_find": 0.05,
+        "mining_speed": 1.5
+      },
+      "last": {
+        "intelligence": 100,
+        "magic_find": 5,
+        "mining_speed": 150
+      }
+    }
+  },
+  "MONKEY": {
+    "COMMON": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 0.2
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 20
+      }
+    },
+    "EPIC": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 0.2
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 20
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 0.2
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 20
+      }
+    },
+    "RARE": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 0.2
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 20
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "intelligence": 0.5,
+        "speed": 0.2
+      },
+      "last": {
+        "intelligence": 50,
+        "speed": 20
+      }
+    }
+  },
+  "MOOSHROOM_COW": {
+    "COMMON": {
+      "first": {
+        "farming_fortune": 1,
+        "health": 1
+      },
+      "last": {
+        "farming_fortune": 100,
+        "health": 100
+      }
+    },
+    "EPIC": {
+      "first": {
+        "farming_fortune": 1,
+        "health": 1
+      },
+      "last": {
+        "farming_fortune": 100,
+        "health": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "farming_fortune": 1,
+        "health": 1
+      },
+      "last": {
+        "farming_fortune": 100,
+        "health": 100
+      }
+    },
+    "RARE": {
+      "first": {
+        "farming_fortune": 1,
+        "health": 1
+      },
+      "last": {
+        "farming_fortune": 100,
+        "health": 100
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "farming_fortune": 1,
+        "health": 1
+      },
+      "last": {
+        "farming_fortune": 100,
+        "health": 100
+      }
+    }
+  },
+  "MOSQUITO": {
+    "COMMON": {
+      "first": {
+        "bonus_pest_chance": 0.5,
+        "speed": 0.2
+      },
+      "last": {
+        "bonus_pest_chance": 50,
+        "speed": 20
+      }
+    },
+    "EPIC": {
+      "first": {
+        "bonus_pest_chance": 0.5,
+        "speed": 0.2
+      },
+      "last": {
+        "bonus_pest_chance": 50,
+        "speed": 20
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "bonus_pest_chance": 0.5,
+        "speed": 0.2
+      },
+      "last": {
+        "bonus_pest_chance": 50,
+        "speed": 20
+      }
+    },
+    "RARE": {
+      "first": {
+        "bonus_pest_chance": 0.5,
+        "speed": 0.2
+      },
+      "last": {
+        "bonus_pest_chance": 50,
+        "speed": 20
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "bonus_pest_chance": 0.5,
+        "speed": 0.2
+      },
+      "last": {
+        "bonus_pest_chance": 50,
+        "speed": 20
+      }
+    }
+  },
+  "OCELOT": {
+    "COMMON": {
+      "first": {
+        "ferocity": 0.1,
+        "speed": 0.5
+      },
+      "last": {
+        "ferocity": 10,
+        "speed": 50
+      }
+    },
+    "EPIC": {
+      "first": {
+        "ferocity": 0.1,
+        "speed": 0.5
+      },
+      "last": {
+        "ferocity": 10,
+        "speed": 50
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "ferocity": 0.1,
+        "speed": 0.5
+      },
+      "last": {
+        "ferocity": 10,
+        "speed": 50
+      }
+    },
+    "RARE": {
+      "first": {
+        "ferocity": 0.1,
+        "speed": 0.5
+      },
+      "last": {
+        "ferocity": 10,
+        "speed": 50
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "ferocity": 0.1,
+        "speed": 0.5
+      },
+      "last": {
+        "ferocity": 10,
+        "speed": 50
+      }
+    }
+  },
+  "ORCHID_MANTIS": {
+    "COMMON": {
+      "first": {
+        "overbloom": 0.15,
+        "speed": 0.3
+      },
+      "last": {
+        "overbloom": 15,
+        "speed": 30
+      }
+    },
+    "EPIC": {
+      "first": {
+        "overbloom": 0.15,
+        "speed": 0.3
+      },
+      "last": {
+        "overbloom": 15,
+        "speed": 30
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "overbloom": 0.15,
+        "speed": 0.3
+      },
+      "last": {
+        "overbloom": 15,
+        "speed": 30
+      }
+    },
+    "RARE": {
+      "first": {
+        "overbloom": 0.15,
+        "speed": 0.3
+      },
+      "last": {
+        "overbloom": 15,
+        "speed": 30
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "overbloom": 0.15,
+        "speed": 0.3
+      },
+      "last": {
+        "overbloom": 15,
+        "speed": 30
+      }
+    }
+  },
+  "OWL": {
+    "LEGENDARY": {
+      "first": {},
+      "last": {}
+    }
+  },
+  "PARROT": {
+    "EPIC": {
+      "first": {
+        "crit_damage": 0.1,
+        "intelligence": 1
+      },
+      "last": {
+        "crit_damage": 10,
+        "intelligence": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "crit_damage": 0.1,
+        "intelligence": 1
+      },
+      "last": {
+        "crit_damage": 10,
+        "intelligence": 100
+      }
+    }
+  },
+  "PENGUIN": {
+    "LEGENDARY": {
+      "first": {
+        "cold_resistance": 0.15,
+        "sea_creature_chance": 0.1
+      },
+      "last": {
+        "cold_resistance": 15,
+        "sea_creature_chance": 10
+      }
+    }
+  },
+  "PHOENIX": {
+    "SPECIAL": {
+      "first": {
+        "intelligence": 51,
+        "strength": 10.5
+      },
+      "last": {
+        "intelligence": 150,
+        "strength": 60
+      }
+    },
+    "VERY_SPECIAL": {
+      "first": {
+        "intelligence": 51,
+        "strength": 10.5
+      },
+      "last": {
+        "intelligence": 150,
+        "strength": 60
+      }
+    }
+  },
+  "PIG": {
+    "COMMON": {
+      "first": {
+        "potato_fortune": 0.2,
+        "speed": 0.15
+      },
+      "last": {
+        "potato_fortune": 20,
+        "speed": 15
+      }
+    },
+    "EPIC": {
+      "first": {
+        "potato_fortune": 0.2,
+        "speed": 0.15
+      },
+      "last": {
+        "potato_fortune": 20,
+        "speed": 15
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "potato_fortune": 0.2,
+        "speed": 0.15
+      },
+      "last": {
+        "potato_fortune": 20,
+        "speed": 15
+      }
+    },
+    "RARE": {
+      "first": {
+        "potato_fortune": 0.2,
+        "speed": 0.15
+      },
+      "last": {
+        "potato_fortune": 20,
+        "speed": 15
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "potato_fortune": 0.2,
+        "speed": 0.15
+      },
+      "last": {
+        "potato_fortune": 20,
+        "speed": 15
+      }
+    }
+  },
+  "PIGMAN": {
+    "COMMON": {
+      "first": {
+        "defense": 0.5,
+        "ferocity": 0.05,
+        "strength": 0.5
+      },
+      "last": {
+        "defense": 50,
+        "ferocity": 5,
+        "strength": 50
+      }
+    },
+    "EPIC": {
+      "first": {
+        "defense": 0.5,
+        "ferocity": 0.05,
+        "strength": 0.5
+      },
+      "last": {
+        "defense": 50,
+        "ferocity": 5,
+        "strength": 50
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "defense": 0.5,
+        "ferocity": 0.05,
+        "strength": 0.5
+      },
+      "last": {
+        "defense": 50,
+        "ferocity": 5,
+        "strength": 50
+      }
+    },
+    "RARE": {
+      "first": {
+        "defense": 0.5,
+        "ferocity": 0.05,
+        "strength": 0.5
+      },
+      "last": {
+        "defense": 50,
+        "ferocity": 5,
+        "strength": 50
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "defense": 0.5,
+        "ferocity": 0.05,
+        "strength": 0.5
+      },
+      "last": {
+        "defense": 50,
+        "ferocity": 5,
+        "strength": 50
+      }
+    }
+  },
+  "PRECURSOR_DRONE": {
+    "LEGENDARY": {
+      "first": {
+        "speed": 0.05
+      },
+      "last": {
+        "speed": 25
+      }
+    }
+  },
+  "RABBIT": {
+    "COMMON": {
+      "first": {
+        "health": 1,
+        "speed": 0.2
+      },
+      "last": {
+        "health": 100,
+        "speed": 20
+      }
+    },
+    "EPIC": {
+      "first": {
+        "health": 1,
+        "speed": 0.2
+      },
+      "last": {
+        "health": 100,
+        "speed": 20
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "health": 1,
+        "speed": 0.2
+      },
+      "last": {
+        "health": 100,
+        "speed": 20
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "health": 1,
+        "speed": 0.2
+      },
+      "last": {
+        "health": 100,
+        "speed": 20
+      }
+    },
+    "RARE": {
+      "first": {
+        "health": 1,
+        "speed": 0.2
+      },
+      "last": {
+        "health": 100,
+        "speed": 20
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "health": 1,
+        "speed": 0.2
+      },
+      "last": {
+        "health": 100,
+        "speed": 20
+      }
+    }
+  },
+  "RAT": {
+    "LEGENDARY": {
+      "first": {
+        "crit_damage": 0.25,
+        "health": 1.25,
+        "strength": 0.6
+      },
+      "last": {
+        "crit_damage": 25,
+        "health": 125,
+        "strength": 60
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "crit_damage": 0.25,
+        "health": 1.25,
+        "strength": 0.6
+      },
+      "last": {
+        "crit_damage": 25,
+        "health": 125,
+        "strength": 60
+      }
+    }
+  },
+  "REINDEER": {
+    "LEGENDARY": {
+      "first": {
+        "fishing_speed": 0.25,
+        "health": 1,
+        "sea_creature_chance": 0.05
+      },
+      "last": {
+        "fishing_speed": 25,
+        "health": 100,
+        "sea_creature_chance": 5
+      }
+    }
+  },
+  "RIFT_FERRET": {
+    "EPIC": {
+      "first": {
+        "intelligence": 0.02,
+        "speed": 0.5
+      },
+      "last": {
+        "intelligence": 2,
+        "speed": 50
+      }
+    }
+  },
+  "ROCK": {
+    "COMMON": {
+      "first": {
+        "defense": 2,
+        "true_defense": 0.1
+      },
+      "last": {
+        "defense": 200,
+        "true_defense": 10
+      }
+    },
+    "EPIC": {
+      "first": {
+        "defense": 2,
+        "true_defense": 0.1
+      },
+      "last": {
+        "defense": 200,
+        "true_defense": 10
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "defense": 2,
+        "true_defense": 0.1
+      },
+      "last": {
+        "defense": 200,
+        "true_defense": 10
+      }
+    },
+    "RARE": {
+      "first": {
+        "defense": 2,
+        "true_defense": 0.1
+      },
+      "last": {
+        "defense": 200,
+        "true_defense": 10
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "defense": 2,
+        "true_defense": 0.1
+      },
+      "last": {
+        "defense": 200,
+        "true_defense": 10
+      }
+    }
+  },
+  "ROSE_DRAGON": {
+    "LEGENDARY": {
+      "first": {
+        "farming_fortune": 20.4,
+        "speed": 51
+      },
+      "last": {
+        "farming_fortune": 40,
+        "speed": 100
+      },
+      "levels": [
+        101,
+        200
+      ]
+    }
+  },
+  "SCATHA": {
+    "EPIC": {
+      "first": {
+        "mining_fortune": 1.25,
+        "mining_speed": 1
+      },
+      "last": {
+        "mining_fortune": 125,
+        "mining_speed": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "mining_fortune": 1.25,
+        "mining_speed": 1
+      },
+      "last": {
+        "mining_fortune": 125,
+        "mining_speed": 100
+      }
+    },
+    "RARE": {
+      "first": {
+        "mining_fortune": 1.25,
+        "mining_speed": 1
+      },
+      "last": {
+        "mining_fortune": 125,
+        "mining_speed": 100
+      }
+    }
+  },
+  "SEAL": {
+    "COMMON": {
+      "first": {
+        "fishing_speed": 0.35,
+        "sea_creature_chance": 0.05,
+        "treasure_chance": 0.01
+      },
+      "last": {
+        "fishing_speed": 35,
+        "sea_creature_chance": 5,
+        "treasure_chance": 1
+      }
+    },
+    "EPIC": {
+      "first": {
+        "fishing_speed": 0.35,
+        "sea_creature_chance": 0.05,
+        "treasure_chance": 0.01
+      },
+      "last": {
+        "fishing_speed": 35,
+        "sea_creature_chance": 5,
+        "treasure_chance": 1
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "fishing_speed": 0.35,
+        "sea_creature_chance": 0.05,
+        "treasure_chance": 0.01
+      },
+      "last": {
+        "fishing_speed": 35,
+        "sea_creature_chance": 5,
+        "treasure_chance": 1
+      }
+    },
+    "RARE": {
+      "first": {
+        "fishing_speed": 0.35,
+        "sea_creature_chance": 0.05,
+        "treasure_chance": 0.01
+      },
+      "last": {
+        "fishing_speed": 35,
+        "sea_creature_chance": 5,
+        "treasure_chance": 1
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "fishing_speed": 0.35,
+        "sea_creature_chance": 0.05,
+        "treasure_chance": 0.01
+      },
+      "last": {
+        "fishing_speed": 35,
+        "sea_creature_chance": 5,
+        "treasure_chance": 1
+      }
+    }
+  },
+  "SHEEP": {
+    "COMMON": {
+      "first": {
+        "ability_damage": 0.2,
+        "intelligence": 1
+      },
+      "last": {
+        "ability_damage": 20,
+        "intelligence": 100
+      }
+    },
+    "EPIC": {
+      "first": {
+        "ability_damage": 0.2,
+        "intelligence": 1
+      },
+      "last": {
+        "ability_damage": 20,
+        "intelligence": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "ability_damage": 0.2,
+        "intelligence": 1
+      },
+      "last": {
+        "ability_damage": 20,
+        "intelligence": 100
+      }
+    },
+    "RARE": {
+      "first": {
+        "ability_damage": 0.2,
+        "intelligence": 1
+      },
+      "last": {
+        "ability_damage": 20,
+        "intelligence": 100
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "ability_damage": 0.2,
+        "intelligence": 1
+      },
+      "last": {
+        "ability_damage": 20,
+        "intelligence": 100
+      }
+    }
+  },
+  "SILVERFISH": {
+    "COMMON": {
+      "first": {
+        "defense": 1,
+        "mining_fortune": 0.2
+      },
+      "last": {
+        "defense": 100,
+        "mining_fortune": 20
+      }
+    },
+    "EPIC": {
+      "first": {
+        "defense": 1,
+        "mining_fortune": 0.2
+      },
+      "last": {
+        "defense": 100,
+        "mining_fortune": 20
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "defense": 1,
+        "mining_fortune": 0.2
+      },
+      "last": {
+        "defense": 100,
+        "mining_fortune": 20
+      }
+    },
+    "RARE": {
+      "first": {
+        "defense": 1,
+        "mining_fortune": 0.2
+      },
+      "last": {
+        "defense": 100,
+        "mining_fortune": 20
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "defense": 1,
+        "mining_fortune": 0.2
+      },
+      "last": {
+        "defense": 100,
+        "mining_fortune": 20
+      }
+    }
+  },
+  "SKELETON": {
+    "COMMON": {
+      "first": {
+        "crit_chance": 0.15,
+        "crit_damage": 0.3
+      },
+      "last": {
+        "crit_chance": 15,
+        "crit_damage": 30
+      }
+    },
+    "EPIC": {
+      "first": {
+        "crit_chance": 0.15,
+        "crit_damage": 0.3
+      },
+      "last": {
+        "crit_chance": 15,
+        "crit_damage": 30
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "crit_chance": 0.15,
+        "crit_damage": 0.3
+      },
+      "last": {
+        "crit_chance": 15,
+        "crit_damage": 30
+      }
+    },
+    "RARE": {
+      "first": {
+        "crit_chance": 0.15,
+        "crit_damage": 0.3
+      },
+      "last": {
+        "crit_chance": 15,
+        "crit_damage": 30
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "crit_chance": 0.15,
+        "crit_damage": 0.3
+      },
+      "last": {
+        "crit_chance": 15,
+        "crit_damage": 30
+      }
+    }
+  },
+  "SKELETON_HORSE": {
+    "LEGENDARY": {
+      "first": {
+        "intelligence": 0.75,
+        "speed": 1.5
+      },
+      "last": {
+        "intelligence": 75,
+        "speed": 150
+      }
+    }
+  },
+  "SLOTH": {
+    "COMMON": {
+      "first": {
+        "foraging_fortune": 0.25,
+        "sweep": 0.25
+      },
+      "last": {
+        "foraging_fortune": 25,
+        "sweep": 25
+      }
+    },
+    "EPIC": {
+      "first": {
+        "foraging_fortune": 0.25,
+        "sweep": 0.25
+      },
+      "last": {
+        "foraging_fortune": 25,
+        "sweep": 25
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "foraging_fortune": 0.25,
+        "sweep": 0.25
+      },
+      "last": {
+        "foraging_fortune": 25,
+        "sweep": 25
+      }
+    },
+    "RARE": {
+      "first": {
+        "foraging_fortune": 0.25,
+        "sweep": 0.25
+      },
+      "last": {
+        "foraging_fortune": 25,
+        "sweep": 25
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "foraging_fortune": 0.25,
+        "sweep": 0.25
+      },
+      "last": {
+        "foraging_fortune": 25,
+        "sweep": 25
+      }
+    }
+  },
+  "SLUG": {
+    "EPIC": {
+      "first": {
+        "defense": 0.2,
+        "intelligence": 0.25
+      },
+      "last": {
+        "defense": 20,
+        "intelligence": 25
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "defense": 0.2,
+        "intelligence": 0.25
+      },
+      "last": {
+        "defense": 20,
+        "intelligence": 25
+      }
+    }
+  },
+  "SNAIL": {
+    "COMMON": {
+      "first": {
+        "defense": 1,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 100,
+        "intelligence": 100
+      }
+    },
+    "EPIC": {
+      "first": {
+        "defense": 1,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 100,
+        "intelligence": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "defense": 1,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 100,
+        "intelligence": 100
+      }
+    },
+    "RARE": {
+      "first": {
+        "defense": 1,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 100,
+        "intelligence": 100
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "defense": 1,
+        "intelligence": 1
+      },
+      "last": {
+        "defense": 100,
+        "intelligence": 100
+      }
+    }
+  },
+  "SNOWMAN": {
+    "LEGENDARY": {
+      "first": {
+        "crit_damage": 0.25,
+        "strength": 0.25
+      },
+      "last": {
+        "crit_damage": 25,
+        "strength": 25
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "crit_damage": 0.25,
+        "strength": 0.25
+      },
+      "last": {
+        "crit_damage": 25,
+        "strength": 25
+      }
+    }
+  },
+  "SPIDER": {
+    "COMMON": {
+      "first": {
+        "crit_chance": 0.5,
+        "strength": 0.1
+      },
+      "last": {
+        "crit_chance": 10,
+        "strength": 50
+      }
+    },
+    "EPIC": {
+      "first": {
+        "crit_chance": 0.5,
+        "strength": 0.1
+      },
+      "last": {
+        "crit_chance": 10,
+        "strength": 50
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "crit_chance": 0.5,
+        "strength": 0.1
+      },
+      "last": {
+        "crit_chance": 10,
+        "strength": 50
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "crit_chance": 0.5,
+        "strength": 0.1
+      },
+      "last": {
+        "crit_chance": 10,
+        "strength": 50
+      }
+    },
+    "RARE": {
+      "first": {
+        "crit_chance": 0.5,
+        "strength": 0.1
+      },
+      "last": {
+        "crit_chance": 10,
+        "strength": 50
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "crit_chance": 0.5,
+        "strength": 0.1
+      },
+      "last": {
+        "crit_chance": 10,
+        "strength": 50
+      }
+    }
+  },
+  "SPINOSAURUS": {
+    "LEGENDARY": {
+      "first": {
+        "fishing_speed": 0.5,
+        "sea_creature_chance": 0.05,
+        "trophy_chance": 0.05
+      },
+      "last": {
+        "fishing_speed": 50,
+        "sea_creature_chance": 5,
+        "trophy_chance": 5
+      }
+    }
+  },
+  "SPIRIT": {
+    "EPIC": {
+      "first": {
+        "intelligence": 1,
+        "speed": 0.3
+      },
+      "last": {
+        "intelligence": 100,
+        "speed": 30
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "intelligence": 1,
+        "speed": 0.3
+      },
+      "last": {
+        "intelligence": 100,
+        "speed": 30
+      }
+    }
+  },
+  "SQUID": {
+    "COMMON": {
+      "first": {
+        "health": 0.5,
+        "intelligence": 0.5
+      },
+      "last": {
+        "health": 50,
+        "intelligence": 50
+      }
+    },
+    "EPIC": {
+      "first": {
+        "health": 0.5,
+        "intelligence": 0.5
+      },
+      "last": {
+        "health": 50,
+        "intelligence": 50
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "health": 0.5,
+        "intelligence": 0.5
+      },
+      "last": {
+        "health": 50,
+        "intelligence": 50
+      }
+    },
+    "RARE": {
+      "first": {
+        "health": 0.5,
+        "intelligence": 0.5
+      },
+      "last": {
+        "health": 50,
+        "intelligence": 50
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "health": 0.5,
+        "intelligence": 0.5
+      },
+      "last": {
+        "health": 50,
+        "intelligence": 50
+      }
+    }
+  },
+  "SUBZERO_WISP": {
+    "LEGENDARY": {
+      "first": {
+        "health": 6,
+        "intelligence": 2.5,
+        "true_defense": 0.35
+      },
+      "last": {
+        "health": 600,
+        "intelligence": 250,
+        "true_defense": 35
+      }
+    }
+  },
+  "TARANTULA": {
+    "EPIC": {
+      "first": {
+        "crit_chance": 0.1,
+        "crit_damage": 0.3,
+        "strength": 0.1
+      },
+      "last": {
+        "crit_chance": 10,
+        "crit_damage": 30,
+        "strength": 10
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "crit_chance": 0.1,
+        "crit_damage": 0.3,
+        "strength": 0.1
+      },
+      "last": {
+        "crit_chance": 10,
+        "crit_damage": 30,
+        "strength": 10
+      }
+    },
+    "MYTHIC": {
+      "first": {
+        "crit_chance": 0.1,
+        "crit_damage": 0.3,
+        "strength": 0.1
+      },
+      "last": {
+        "crit_chance": 10,
+        "crit_damage": 30,
+        "strength": 10
+      }
+    }
+  },
+  "TIGER": {
+    "COMMON": {
+      "first": {
+        "crit_chance": 0.05,
+        "crit_damage": 0.5,
+        "ferocity": 0.25,
+        "strength": 5.1
+      },
+      "last": {
+        "crit_chance": 5,
+        "crit_damage": 50,
+        "ferocity": 25,
+        "strength": 15
+      }
+    },
+    "EPIC": {
+      "first": {
+        "crit_chance": 0.05,
+        "crit_damage": 0.5,
+        "ferocity": 0.25,
+        "strength": 5.1
+      },
+      "last": {
+        "crit_chance": 5,
+        "crit_damage": 50,
+        "ferocity": 25,
+        "strength": 15
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "crit_chance": 0.05,
+        "crit_damage": 0.5,
+        "ferocity": 0.25,
+        "strength": 5.1
+      },
+      "last": {
+        "crit_chance": 5,
+        "crit_damage": 50,
+        "ferocity": 25,
+        "strength": 15
+      }
+    },
+    "RARE": {
+      "first": {
+        "crit_chance": 0.05,
+        "crit_damage": 0.5,
+        "ferocity": 0.25,
+        "strength": 5.1
+      },
+      "last": {
+        "crit_chance": 5,
+        "crit_damage": 50,
+        "ferocity": 25,
+        "strength": 15
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "crit_chance": 0.05,
+        "crit_damage": 0.5,
+        "ferocity": 0.25,
+        "strength": 5.1
+      },
+      "last": {
+        "crit_chance": 5,
+        "crit_damage": 50,
+        "ferocity": 25,
+        "strength": 15
+      }
+    }
+  },
+  "TURTLE": {
+    "EPIC": {
+      "first": {
+        "defense": 100.5,
+        "health": 50.25,
+        "true_defense": 0.15
+      },
+      "last": {
+        "defense": 150,
+        "health": 75,
+        "true_defense": 15
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "defense": 100.5,
+        "health": 50.25,
+        "true_defense": 0.15
+      },
+      "last": {
+        "defense": 150,
+        "health": 75,
+        "true_defense": 15
+      }
+    }
+  },
+  "TYRANNOSAURUS": {
+    "LEGENDARY": {
+      "first": {
+        "crit_chance": 0.05,
+        "ferocity": 0.25,
+        "strength": 0.75
+      },
+      "last": {
+        "crit_chance": 5,
+        "ferocity": 25,
+        "strength": 75
+      }
+    }
+  },
+  "WITCH": {
+    "COMMON": {
+      "first": {
+        "alchemy_wisdom": 0.05,
+        "intelligence": 1
+      },
+      "last": {
+        "alchemy_wisdom": 5,
+        "intelligence": 100
+      }
+    },
+    "EPIC": {
+      "first": {
+        "alchemy_wisdom": 0.05,
+        "intelligence": 1
+      },
+      "last": {
+        "alchemy_wisdom": 5,
+        "intelligence": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "alchemy_wisdom": 0.05,
+        "intelligence": 1
+      },
+      "last": {
+        "alchemy_wisdom": 5,
+        "intelligence": 100
+      }
+    },
+    "RARE": {
+      "first": {
+        "alchemy_wisdom": 0.05,
+        "intelligence": 1
+      },
+      "last": {
+        "alchemy_wisdom": 5,
+        "intelligence": 100
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "alchemy_wisdom": 0.05,
+        "intelligence": 1
+      },
+      "last": {
+        "alchemy_wisdom": 5,
+        "intelligence": 100
+      }
+    }
+  },
+  "WITHER_SKELETON": {
+    "COMMON": {
+      "first": {
+        "crit_chance": 0.05,
+        "crit_damage": 0.25,
+        "defense": 0.25,
+        "intelligence": 0.25,
+        "strength": 0.25
+      },
+      "last": {
+        "crit_chance": 5,
+        "crit_damage": 25,
+        "defense": 25,
+        "intelligence": 25,
+        "strength": 25
+      }
+    },
+    "EPIC": {
+      "first": {
+        "crit_chance": 0.05,
+        "crit_damage": 0.25,
+        "defense": 0.25,
+        "intelligence": 0.25,
+        "strength": 0.25
+      },
+      "last": {
+        "crit_chance": 5,
+        "crit_damage": 25,
+        "defense": 25,
+        "intelligence": 25,
+        "strength": 25
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "crit_chance": 0.05,
+        "crit_damage": 0.25,
+        "defense": 0.25,
+        "intelligence": 0.25,
+        "strength": 0.25
+      },
+      "last": {
+        "crit_chance": 5,
+        "crit_damage": 25,
+        "defense": 25,
+        "intelligence": 25,
+        "strength": 25
+      }
+    },
+    "RARE": {
+      "first": {
+        "crit_chance": 0.05,
+        "crit_damage": 0.25,
+        "defense": 0.25,
+        "intelligence": 0.25,
+        "strength": 0.25
+      },
+      "last": {
+        "crit_chance": 5,
+        "crit_damage": 25,
+        "defense": 25,
+        "intelligence": 25,
+        "strength": 25
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "crit_chance": 0.05,
+        "crit_damage": 0.25,
+        "defense": 0.25,
+        "intelligence": 0.25,
+        "strength": 0.25
+      },
+      "last": {
+        "crit_chance": 5,
+        "crit_damage": 25,
+        "defense": 25,
+        "intelligence": 25,
+        "strength": 25
+      }
+    }
+  },
+  "WOLF": {
+    "COMMON": {
+      "first": {
+        "crit_damage": 0.1,
+        "health": 0.5,
+        "speed": 0.2,
+        "true_defense": 0.1
+      },
+      "last": {
+        "crit_damage": 10,
+        "health": 50,
+        "speed": 20,
+        "true_defense": 10
+      }
+    },
+    "EPIC": {
+      "first": {
+        "crit_damage": 0.1,
+        "health": 0.5,
+        "speed": 0.2,
+        "true_defense": 0.1
+      },
+      "last": {
+        "crit_damage": 10,
+        "health": 50,
+        "speed": 20,
+        "true_defense": 10
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "crit_damage": 0.1,
+        "health": 0.5,
+        "speed": 0.2,
+        "true_defense": 0.1
+      },
+      "last": {
+        "crit_damage": 10,
+        "health": 50,
+        "speed": 20,
+        "true_defense": 10
+      }
+    },
+    "RARE": {
+      "first": {
+        "crit_damage": 0.1,
+        "health": 0.5,
+        "speed": 0.2,
+        "true_defense": 0.1
+      },
+      "last": {
+        "crit_damage": 10,
+        "health": 50,
+        "speed": 20,
+        "true_defense": 10
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "crit_damage": 0.1,
+        "health": 0.5,
+        "speed": 0.2,
+        "true_defense": 0.1
+      },
+      "last": {
+        "crit_damage": 10,
+        "health": 50,
+        "speed": 20,
+        "true_defense": 10
+      }
+    }
+  },
+  "ZOMBIE": {
+    "COMMON": {
+      "first": {
+        "crit_damage": 0.3,
+        "health": 1
+      },
+      "last": {
+        "crit_damage": 30,
+        "health": 100
+      }
+    },
+    "EPIC": {
+      "first": {
+        "crit_damage": 0.3,
+        "health": 1
+      },
+      "last": {
+        "crit_damage": 30,
+        "health": 100
+      }
+    },
+    "LEGENDARY": {
+      "first": {
+        "crit_damage": 0.3,
+        "health": 1
+      },
+      "last": {
+        "crit_damage": 30,
+        "health": 100
+      }
+    },
+    "RARE": {
+      "first": {
+        "crit_damage": 0.3,
+        "health": 1
+      },
+      "last": {
+        "crit_damage": 30,
+        "health": 100
+      }
+    },
+    "UNCOMMON": {
+      "first": {
+        "crit_damage": 0.3,
+        "health": 1
+      },
+      "last": {
+        "crit_damage": 30,
+        "health": 100
+      }
+    }
+  }
+}

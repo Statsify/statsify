@@ -12,7 +12,9 @@ import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { KUUDRA_TIERS, type PowerStat, RARITIES } from "#types";
+import { KUUDRA_TIERS, type PlayerStat, type PowerStat, RARITIES, type StatValue } from "#types";
+import { normalizeItemText, statNamed, statRewards } from "#lore";
+import { add, roundTo } from "@statsify/math";
 import { prettify, removeFormatting } from "@statsify/util";
 import { skinHash } from "#textures";
 import { tmpdir } from "node:os";
@@ -291,7 +293,123 @@ const dir = await mkdtemp(join(tmpdir(), "neu-repo-"));
 
 interface HypixelSkill {
   maxLevel: number;
-  levels: { totalExpRequired: number }[];
+  levels: { totalExpRequired: number; unlocks?: string[] }[];
+}
+
+/** Stat values summed by stat, rounded off the float noise of running totals, zeros left out. */
+const statTotals = (values: StatValue[]) => {
+  const totals: Partial<Record<PlayerStat, number>> = {};
+  for (const { stat, value } of values) totals[stat] = add(totals[stat] ?? 0, value);
+  return Object.fromEntries(
+    Object.entries(totals).flatMap(([stat, value]) => (value === 0 ? [] : [[stat, roundTo(value, 4)]]))
+  );
+};
+
+/** NEU's stat ids (crit_damage, BONUS_ATTACK_SPEED) as stats; ids that aren't a player stat (damage) are left out. */
+const neuStats = (stats: Record<string, number>) =>
+  statTotals(
+    Object.entries(stats).flatMap(([id, value]) => {
+      const stat = statNamed(prettify(id));
+      return stat ? [{ stat, value }] : [];
+    })
+  );
+
+/**
+ * A perk's stats when its lore grants them outright, from its NEU expression. Perks that grant one "when mining
+ * Gemstones" or "for the first 250 trees cut every day" don't count on the stat sheet.
+ */
+function perkStats({ lore = [], stat: expression, maxLevel }: { lore?: unknown[]; stat?: string; maxLevel: number }) {
+  const text = removeFormatting(normalizeItemText(lore.filter((line) => typeof line === "string").join(" ")))
+    .replaceAll(/[^\w{}+.' ]/g, "")
+    .replaceAll(/\s+/g, " ")
+    .trim();
+
+  const fixed = /^Increase (.+) by ([\d.]+) and (.+) by ([\d.]+)\.$/.exec(text);
+  if (fixed) {
+    const stats = [
+      [fixed[1], fixed[2]],
+      [fixed[3], fixed[4]],
+    ].flatMap(([name, value]) => {
+      const id = statNamed(name);
+      return id ? [{ id, base: Number(value), perLevel: 0 }] : [];
+    });
+    return stats.length > 0 ? stats : undefined;
+  }
+
+  const name =
+    /^Grants \+?\{stats?\} (.+)\.$/.exec(text)?.[1] ??
+    /^Increase (.+) by \{stat\}\.$/.exec(text)?.[1] ??
+    /^You gain \{stat\} (.+)\.$/.exec(text)?.[1];
+  const id = name && statNamed(name);
+  if (!id || !expression) return undefined;
+
+  const at = (level: number) => evaluate(expression, level);
+  const perLevel = roundTo(at(2) - at(1), 6);
+  const base = roundTo(at(1) - perLevel, 6);
+  if (Math.abs(base + perLevel * maxLevel - at(maxLevel)) > 1e-6) throw new Error(`${expression} isn't linear in level`);
+  return [{ id, base, perLevel }];
+}
+
+/** One of NEU's perk stat expressions, "(round-decimals (+ 5 (* level 0.1)) 1)", at a level. */
+function evaluate(expression: string, level: number): number {
+  const tokens = expression.replaceAll("(", " ( ").replaceAll(")", " ) ").trim().split(/\s+/);
+  const read = (): unknown => {
+    const token = tokens.shift()!;
+    if (token !== "(") return token;
+    const list: unknown[] = [];
+    while (tokens[0] !== ")") list.push(read());
+    tokens.shift();
+    return list;
+  };
+
+  const run = (node: unknown): number => {
+    if (!Array.isArray(node)) return node === "level" ? level : Number(node);
+    const [op, ...args] = node;
+    const [a, b] = args.map(run);
+    if (op === "+") return a + b;
+    if (op === "*") return a * b;
+    if (op === "id") return a;
+    if (op === "round-decimals") return roundTo(a, b);
+    throw new Error(`unknown perk expression ${op}`);
+  };
+
+  return run(read());
+}
+
+/**
+ * A pet item's flat stats and its raises to the pet's stats, from NEU's lore. Sentences with a condition ("while mining
+ * Titanium Ore", "for each of your Garden Levels") are left out.
+ */
+function petItemEffect(lore: string[]) {
+  const text = removeFormatting(lore.map(normalizeItemText).join(" ")).replaceAll(/\s+/g, " ");
+  const sentences = text.split(/(?<=[.!]) /);
+
+  const flat = sentences
+    .filter((sentence) => sentence.startsWith("Grants ") && !/\b(?:when|while|for each|for every|per)\b/.test(sentence))
+    .flatMap((sentence) => {
+      const reduced = [...sentence.matchAll(/reduces your \W*([A-Z][\w ]+?) by ([\d.]+)/g)].flatMap(([, name, value]) => {
+        const stat = statNamed(name);
+        return stat ? [{ stat, value: -Number(value) }] : [];
+      });
+      return [...statRewards(sentence), ...reduced];
+    });
+
+  const raised = sentences.flatMap((sentence) => {
+    const list = /^Increases (?:the|this) pet's (.+)\.$/.exec(sentence)?.[1] ?? "";
+    return [...list.matchAll(/\W*([A-Z][\w ]+?) by ([\d.]+)%/g)].flatMap(([, name, value]) => {
+      const stat = statNamed(name);
+      return stat ? [{ stat, value: Number(value) }] : [];
+    });
+  });
+
+  const everyStat = /Increases all pet stats by ([\d.]+)%/.exec(text)?.[1];
+
+  const effect = {
+    stats: flat.length > 0 ? statTotals(flat) : undefined,
+    petStats: raised.length > 0 ? statTotals(raised) : undefined,
+    allPetStats: everyStat ? Number(everyStat) : undefined,
+  };
+  return effect.stats || effect.petStats || effect.allPetStats ? effect : undefined;
 }
 
 interface NeuItem {
@@ -365,21 +483,20 @@ try {
     },
   });
 
-  const hotm = await readJson<{ hotm: { perks: Record<string, Record<string, unknown>> } }>("constants/hotmlayout.json");
-  await write(
-    "hotmlayout.json",
+  type NeuPerk = { name: string; x: number; y: number; maxLevel: number; stat?: string; lore?: unknown[] };
+  const layout = (perks: Record<string, NeuPerk>) =>
     Object.fromEntries(
-      Object.entries(hotm.hotm.perks).map(([id, { name, x, y, maxLevel }]) => [id, { name, x, y, maxLevel }])
-    )
-  );
+      Object.entries(perks).map(([id, perk]) => [
+        id,
+        { name: perk.name, x: perk.x, y: perk.y, maxLevel: perk.maxLevel, stats: perkStats(perk) },
+      ])
+    );
 
-  const hotf = await readJson<{ hotf: { perks: Record<string, { name: string; x: number; y: number; maxLevel: number }> } }>(
-    "constants/hotflayout.json"
-  );
-  await write(
-    "hotflayout.json",
-    Object.fromEntries(Object.entries(hotf.hotf.perks).map(([id, { name, x, y, maxLevel }]) => [id, { name, x, y, maxLevel }]))
-  );
+  const hotm = await readJson<{ hotm: { perks: Record<string, NeuPerk> } }>("constants/hotmlayout.json");
+  await write("hotmlayout.json", layout(hotm.hotm.perks));
+
+  const hotf = await readJson<{ hotf: { perks: Record<string, NeuPerk> } }>("constants/hotflayout.json");
+  await write("hotflayout.json", layout(hotf.hotf.perks));
 
   const { hoppity } = await readJson<{ hoppity: { rarities: Record<string, { rabbits: string[] }> } }>("constants/hoppity.json");
   await write("hoppity.json", Object.fromEntries(Object.entries(hoppity.rarities).map(([rarity, { rabbits }]) => [rarity, rabbits])));
@@ -447,6 +564,7 @@ try {
   const kuudraKeys: Record<string, string> = {};
   const trophyFish = new Set(Object.keys(await readJson<Record<string, number[]>>("constants/trophyfish.json")));
   const trophyNames: Record<string, string> = {};
+  const petItems: Record<string, NonNullable<ReturnType<typeof petItemEffect>>> = {};
   const files = (await readdir(join(dir, "items"))).filter((file) => file.endsWith(".json"));
   const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
 
@@ -473,6 +591,10 @@ try {
 
     const skin = item.internalname.startsWith("PET_SKIN_") && skullHash(item.nbttag);
     if (skin) skinTextures[item.internalname.slice("PET_SKIN_".length)] = skin;
+
+    // "§a§lUNCOMMON PET ITEM"
+    const petItem = removeFormatting(item.lore?.at(-1) ?? "").endsWith("PET ITEM") && petItemEffect(item.lore ?? []);
+    if (petItem) petItems[item.internalname] = petItem;
 
     // A power stone lists its Power's stats, some negative, at a set Accessory Power: "§7At §6250 Accessory Power§7:",
     // then lines like "§c+80.99<glyph> Strength". Most then list a "Unique Power Bonus:", which doesn't scale.
@@ -508,6 +630,7 @@ try {
   if (keyless.length > 0) throw new Error(`no Kuudra key head for ${keyless.join(", ")}`);
   await write("kuudra-keys.json", kuudraKeys);
   await write("trophyfish.json", trophyNames);
+  await write("pet-items.json", petItems);
 
   const pets = await readJson<Record<string, unknown>>("constants/pets.json");
   const offsets = pets.pet_rarity_offset as Record<string, number>;
@@ -527,9 +650,11 @@ try {
     upgrades.set(api(id), (upgrades.get(api(id)) ?? new Set()).add(api(by)));
   };
 
-  const misc = await readJson<{ ignored_talisman: string[]; talisman_upgrades: Record<string, string[]> }>(
-    "constants/misc.json"
-  );
+  const misc = await readJson<{
+    base_stats: Record<string, number>;
+    ignored_talisman: string[];
+    talisman_upgrades: Record<string, string[]>;
+  }>("constants/misc.json");
   for (const [id, list] of Object.entries(misc.talisman_upgrades)) for (const by of list) supersede(id, by);
 
   // talisman_upgrades misses some steps (Pesthunter Artifact to Relic): in a family, each tier also gives way to every higher one.
@@ -545,6 +670,58 @@ try {
     ignored: [...new Set(misc.ignored_talisman.map(api))].toSorted(),
     upgrades: Object.fromEntries([...upgrades].map(([id, by]) => [id, [...by].toSorted()])),
   });
+
+  // NEU's bonus tables: a slayer level gives the stats of the highest level key at or under it
+  const bonuses = await readJson<{
+    bonus_stats: Record<string, Record<string, Record<string, number>>>;
+    pet_rewards: Record<string, { magic_find: number }>;
+  }>("constants/bonuses.json");
+  const perLevel = (table: Record<string, Record<string, number>>, levels: number) => {
+    let current: Record<string, number> = {};
+    return Array.from({ length: levels }, (_, i) => (current = table[i + 1] ? neuStats(table[i + 1]) : current));
+  };
+
+  await write("stats.json", {
+    base: neuStats(misc.base_stats),
+    // Each level's unlocks, as lore lines: "+2<glyph> Health", "Farmhand XV   Grants +56➜60 <glyph> Farming Fortune, …"
+    skills: Object.fromEntries(
+      Object.entries(skills).map(([id, { levels }]) => [
+        id.toLowerCase(),
+        levels.map(({ unlocks = [] }) => statTotals(unlocks.flatMap((line) => statRewards(normalizeItemText(line))))),
+      ])
+    ),
+    slayers: Object.fromEntries(
+      Object.entries(bonuses.bonus_stats)
+        .filter(([id]) => id.startsWith("slayer_"))
+        .map(([id, table]) => [id.slice("slayer_".length), perLevel(table, slayerXp[id.slice("slayer_".length)].length)])
+    ),
+    pet_score: Object.fromEntries(
+      Object.entries(bonuses.pet_rewards).flatMap(([score, { magic_find }]) => (magic_find ? [[score, magic_find]] : []))
+    ),
+  });
+
+  // Each pet's stats at its first and last stat level by rarity; the 200-level dragons' stats run from 101 to 200
+  const petnums = await readJson<
+    Record<string, Record<string, Record<string, { statNums: Record<string, number> }> & { stats_levelling_curve?: string }>>
+  >("constants/petnums.json");
+  await write(
+    "petnums.json",
+    Object.fromEntries(
+      Object.entries(petnums).map(([type, rarities]) => [
+        type,
+        Object.fromEntries(
+          Object.entries(rarities).map(([rarity, { 1: first, 100: last, stats_levelling_curve: curve }]) => [
+            rarity,
+            {
+              first: neuStats(first.statNums),
+              last: neuStats(last.statNums),
+              levels: curve?.split(":").slice(0, 2).map(Number),
+            },
+          ])
+        ),
+      ])
+    )
+  );
 
   const minecraftData = async (file: "blocks" | "items") => {
     const url = `https://raw.githubusercontent.com/${MINECRAFT_DATA}/${MINECRAFT_DATA_SHA}/data/pc/1.8/${file}.json`;
@@ -593,7 +770,7 @@ try {
   const license = await readFile(join(dir, "LICENSE"), "utf8");
   await writeFile(
     new URL("NOTICE.md", out),
-    `textures-1.8.json takes 1.8's block and item ids, names and variants from minecraft-data (https://github.com/${MINECRAFT_DATA}) at ${MINECRAFT_DATA_SHA}, which its README licenses as MIT.\n\nThe skill XP tables in leveling.json come from Hypixel's SkyBlock skills resource (${HYPIXEL_SKILLS}), version ${skillsVersion}.\n\nThe other JSON files here are derived from NEU-REPO (https://github.com/${REPO}) at ${sha}, under its MIT license:\n\n${license}`
+    `textures-1.8.json takes 1.8's block and item ids, names and variants from minecraft-data (https://github.com/${MINECRAFT_DATA}) at ${MINECRAFT_DATA_SHA}, which its README licenses as MIT.\n\nThe skill XP tables in leveling.json and the skill stats in stats.json come from Hypixel's SkyBlock skills resource (${HYPIXEL_SKILLS}), version ${skillsVersion}.\n\nThe other JSON files here, and the base, slayer and pet score tables in stats.json, are derived from NEU-REPO (https://github.com/${REPO}) at ${sha}, under its MIT license:\n\n${license}`
   );
 
   console.log(

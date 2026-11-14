@@ -1,0 +1,172 @@
+{
+  "ANTIQUE_REMEDIES": {
+    "petStats": {
+      "strength": 80
+    }
+  },
+  "BEJEWELED_COLLAR": {
+    "stats": {
+      "mining_fortune": 10,
+      "mining_speed": 25
+    }
+  },
+  "BIGGER_TEETH": {
+    "stats": {
+      "crit_chance": 10
+    }
+  },
+  "BURNT_TEXTS": {
+    "stats": {
+      "double_hook_chance": 5,
+      "fishing_speed": -50
+    }
+  },
+  "CRETAN_URN": {
+    "stats": {
+      "pet_luck": 5
+    }
+  },
+  "CROCHET_TIGER_PLUSHIE": {
+    "stats": {
+      "attack_speed": 35
+    }
+  },
+  "DWARF_TURTLE_SHELMET": {
+    "stats": {
+      "true_defense": 10
+    }
+  },
+  "EDIBLE_SEAWEED": {
+    "stats": {
+      "fishing_speed": 10
+    }
+  },
+  "FOUR_EYED_FISH": {
+    "stats": {
+      "defense": 55,
+      "magic_find": 13
+    }
+  },
+  "GOLD_CLAWS": {
+    "petStats": {
+      "crit_chance": 50,
+      "crit_damage": 50
+    }
+  },
+  "HEPHAESTUS_PLUSHIE": {
+    "stats": {
+      "attack_speed": 50
+    }
+  },
+  "HEPHAESTUS_RELIC": {
+    "allPetStats": 50
+  },
+  "HEPHAESTUS_REMEDIES": {
+    "petStats": {
+      "strength": 100
+    }
+  },
+  "HEPHAESTUS_SHELMET": {
+    "stats": {
+      "true_defense": 20
+    }
+  },
+  "HEPHAESTUS_SOUVENIR": {
+    "stats": {
+      "sea_creature_chance": 10
+    }
+  },
+  "HEPHAESTUS_URN": {
+    "stats": {
+      "pet_luck": 10
+    }
+  },
+  "MINOS_RELIC": {
+    "allPetStats": 33.3
+  },
+  "PET_ITEM_BIG_TEETH_COMMON": {
+    "stats": {
+      "crit_chance": 5
+    }
+  },
+  "PET_ITEM_FLYING_PIG": {
+    "stats": {
+      "potato_fortune": 40,
+      "speed": 20
+    }
+  },
+  "PET_ITEM_HARDENED_SCALES_UNCOMMON": {
+    "stats": {
+      "defense": 25
+    }
+  },
+  "PET_ITEM_IRON_CLAWS_COMMON": {
+    "petStats": {
+      "crit_chance": 40,
+      "crit_damage": 40
+    }
+  },
+  "PET_ITEM_LUCKY_CLOVER": {
+    "stats": {
+      "magic_find": 7,
+      "overbloom": 7
+    }
+  },
+  "PET_ITEM_SADDLE": {
+    "stats": {
+      "speed": 30
+    }
+  },
+  "PET_ITEM_SHARPENED_CLAWS_UNCOMMON": {
+    "stats": {
+      "crit_damage": 15
+    }
+  },
+  "PET_ITEM_SPOOKY_CUPCAKE": {
+    "stats": {
+      "speed": 20,
+      "strength": 30
+    }
+  },
+  "PET_ITEM_TEXTBOOK": {
+    "petStats": {
+      "intelligence": 100
+    }
+  },
+  "POIGNANT_LUCKY_CLOVER": {
+    "stats": {
+      "magic_find": 13,
+      "overbloom": 13
+    }
+  },
+  "REINFORCED_SCALES": {
+    "stats": {
+      "defense": 40
+    }
+  },
+  "SERRATED_CLAWS": {
+    "stats": {
+      "crit_damage": 25
+    }
+  },
+  "SNAKE_EYES": {
+    "stats": {
+      "treasure_chance": 1.1
+    }
+  },
+  "WASHED_UP_SOUVENIR": {
+    "stats": {
+      "sea_creature_chance": 5
+    }
+  },
+  "WINDING_IVY": {
+    "stats": {
+      "sweep": 10
+    }
+  },
+  "YELLOW_BANDANA": {
+    "stats": {
+      "farming_fortune": 30
+    }
+  }
+}
