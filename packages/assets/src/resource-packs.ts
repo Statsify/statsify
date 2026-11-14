@@ -111,11 +111,11 @@ async function store(folder: string, files: Record<string, Uint8Array | string>)
 }
 
 async function minecraftClient(version: string) {
-  const cached = existsSync(join(ROOT, "mojang"))
-    ? (await readdir(join(ROOT, "mojang"))).find((folder) => folder.startsWith(`${version}-`))
+  const cached = existsSync(join(ROOT, "minecraft"))
+    ? (await readdir(join(ROOT, "minecraft"))).find((folder) => folder.startsWith(`${version}-`))
     : undefined;
 
-  if (cached) return `mojang/${cached}/client.jar`;
+  if (cached) return `minecraft/${cached}/client.jar`;
 
   const manifest = await getJson<VersionManifest>(VERSION_MANIFEST);
   const listed = manifest.versions.find(({ id }) => id === version);
@@ -125,7 +125,7 @@ async function minecraftClient(version: string) {
   const { client } = parseJson<VersionMetadata>(metadata).downloads;
   const jar = await download(client.url, client.sha1);
 
-  const folder = `mojang/${version}-${client.sha1}`;
+  const folder = `minecraft/${version}-${client.sha1}`;
   await store(folder, { "client.jar": jar, "version.json": metadata });
 
   return `${folder}/client.jar`;
@@ -188,7 +188,7 @@ async function prune(kept: Generation[]) {
   const folders = new Set(kept.flatMap(({ packs }) => packs.map((path) => dirname(path))));
 
   await settle(
-    ["mojang", "hypixel"].map(async (source) => {
+    ["minecraft", "hypixel"].map(async (source) => {
       if (!existsSync(join(ROOT, source))) return;
 
       const unused = (await readdir(join(ROOT, source))).filter((folder) => !folders.has(`${source}/${folder}`));
