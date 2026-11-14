@@ -8,8 +8,14 @@ use crate::pose::{Held, Pose};
 
 const PIXELS_PER_BLOCK: f32 = 16.0;
 
-// Where the game draws a held item from: below the shoulder joint, at the hand
+// Where the game draws a held item from: below the shoulder joint, at the hand. LayerHeldItem
+// starts a pixel out from the arm's pivot, which is the middle of a classic arm.
 const HAND: Vector3<f32> = Vector3::new(0.0, -7.0, -1.0);
+
+// ModelPlayer hangs a slim arm half a pixel in and down from this renderer's joint, and
+// postRenderArm turns its held item from a pixel further in. For the right arm.
+const SLIM_HAND_PIVOT: Vector3<f32> = Vector3::new(1.5, -0.5, 0.0);
+const SLIM_HAND: Vector3<f32> = Vector3::new(-1.0, -7.0, -1.0);
 
 // The game moves a sneaking player's held item 0.203125 blocks down the hand
 const SNEAKING_HAND_DROP: Vector3<f32> = Vector3::new(0.0, -3.25, 0.0);
@@ -59,13 +65,24 @@ pub fn bone_transform(bone: Bone, wearer: &Wearer) -> Matrix4<f32> {
   let pose = wearer.pose;
   let joint = |part: Part| part.joint(wearer.arm_width, pose, wearer.held);
 
-  // A sneaking player's held item misses the body's drop, which the game makes up for down the
-  // hand instead
-  let hand = |arm: Part| match pose {
-    Pose::Sneak => {
-      joint(arm) * Matrix4::from_translation(HAND) * Matrix4::from_translation(SNEAKING_HAND_DROP)
+  let hand = |arm: Part| {
+    let shift = |offset: Vector3<f32>| match arm {
+      Part::RightArm => Matrix4::from_translation(offset),
+      _ => Matrix4::from_translation(Vector3::new(-offset.x, offset.y, offset.z)),
+    };
+
+    let held = if wearer.arm_width == ModelKind::Slim.arm_width() {
+      shift(SLIM_HAND_PIVOT) * joint(arm) * shift(SLIM_HAND)
+    } else {
+      joint(arm) * shift(HAND)
+    };
+
+    // A sneaking player's held item misses the body's drop, which the game makes up for down the
+    // hand instead
+    match pose {
+      Pose::Sneak => held * Matrix4::from_translation(SNEAKING_HAND_DROP),
+      _ => pose.placement() * held,
     }
-    _ => pose.placement() * joint(arm) * Matrix4::from_translation(HAND),
   };
 
   match bone {
@@ -239,6 +256,22 @@ mod tests {
     assert_close(
       bone_transform(Bone::LeftHand, &standing).transform_point(origin.into()),
       [6.853, -1.948, -1.0],
+    );
+
+    // A slim arm turns its item about (-4, 4.5, 0) and steps (-1, -7, -1) from there
+    let slim = Wearer {
+      arm_width: 3.0,
+      ..standing
+    };
+
+    assert_close(
+      bone_transform(Bone::RightHand, &slim).transform_point(origin.into()),
+      [-5.842, -2.293, 1.212],
+    );
+
+    assert_close(
+      bone_transform(Bone::LeftHand, &slim).transform_point(origin.into()),
+      [5.846, -2.326, -1.0],
     );
 
     let sneaking = Wearer {
