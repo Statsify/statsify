@@ -58,7 +58,6 @@ export class ServerCommand {
     tag = tag.toLowerCase();
     const [hostname] = tag.split(":");
 
-    // Without the mappings, the lookup still works as an unmapped server
     const mappings = await getServerMappings().catch(() => []);
 
     const mappedServer = mappings.find(

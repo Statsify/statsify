@@ -34,7 +34,7 @@ export class ServerArgument extends AbstractArgument {
   public async autocompleteHandler(
     context: CommandContext
   ): Promise<APIApplicationCommandOptionChoice[]> {
-    // Discord drops autocomplete answers after 3 seconds, so don't wait long for the mappings
+    // Discord drops autocomplete answers after 3 seconds
     const servers = await Promise.race([getServerMappings(), setTimeout(250)]).catch(() => undefined);
     if (!servers) return [];
 
