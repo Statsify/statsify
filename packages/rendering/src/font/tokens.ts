@@ -28,30 +28,30 @@ export interface Token {
   ) => Partial<TextNode>;
 }
 
-const bold: Token = { regex: /^l/, effect: () => ({ bold: true }) };
+const bold: Token = { regex: /^l/i, effect: () => ({ bold: true }) };
 
 const italic: Token = {
-  regex: /^o/,
+  regex: /^o/i,
   effect: () => ({ italic: true }),
 };
 
 const underline: Token = {
-  regex: /^n|^u/,
+  regex: /^n|^u/i,
   effect: () => ({ underline: true }),
 };
 
 const strikethrough: Token = {
-  regex: /^m/,
+  regex: /^m/i,
   effect: () => ({ strikethrough: true }),
 };
 
 const obfuscated: Token = {
-  regex: /^k/,
+  regex: /^k/i,
   effect: () => ({}),
 };
 
 const reset: Token = {
-  regex: /^r/,
+  regex: /^r/i,
   effect: (_, __, defaultState) => defaultState,
 };
 
@@ -63,13 +63,14 @@ const minecraftColorList = minecraftColors.map((color) => [
 const textColors = Object.fromEntries(minecraftColorList);
 
 const colorRegex = new RegExp(
-  `^${Object.keys(textColors).join("|^")}|^#([A-Fa-f0-9]{6})`
+  `^${Object.keys(textColors).join("|^")}|^#([A-Fa-f0-9]{6})`,
+  "i"
 );
 
 const color: Token = {
   regex: colorRegex,
   effect: (part) => ({
-    color: part.startsWith("#") ? part.slice(0, 7) : textColors[part[0]],
+    color: part.startsWith("#") ? part.slice(0, 7) : textColors[part[0].toLowerCase()],
   }),
 };
 
