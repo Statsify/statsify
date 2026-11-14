@@ -723,6 +723,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
 
+  packages/minecraft-models: {}
+
   packages/render-core: {}
 
   packages/rendering:
