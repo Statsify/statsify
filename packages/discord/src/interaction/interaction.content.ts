@@ -18,7 +18,6 @@ export interface InteractionAttachment {
   name: string;
   data: Buffer;
   type?: string;
-  /** Alt text */
   description?: LocalizationString;
 }
 

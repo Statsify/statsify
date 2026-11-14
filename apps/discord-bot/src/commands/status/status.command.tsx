@@ -15,9 +15,9 @@ import {
 } from "@statsify/discord";
 import { StatusProfile } from "./status.profile.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
+import { getAltText } from "#lib/alt-text";
 import { getTheme } from "#themes";
 import { mapGameIdToBackground } from "#constants";
-import { removeFormatting } from "@statsify/util";
 import { render } from "@statsify/rendering";
 
 @Command({
@@ -42,7 +42,7 @@ export class StatusCommand {
       getAllGameIcons(),
     ]);
 
-    const canvas = render(
+    const profile = (
       <StatusProfile
         status={status}
         gameIcons={gameIcons}
@@ -52,21 +52,15 @@ export class StatusCommand {
         background={background}
         t={t}
         user={user}
-      />,
-      getTheme(user)
+      />
     );
 
+    const description = getAltText(profile);
+    const canvas = render(profile, getTheme(user));
     const buffer = await canvas.toBuffer("png");
 
     return {
-      files: [
-        {
-          name: "status.png",
-          data: buffer,
-          type: "image/png",
-          description: t("altText.status", { player: removeFormatting(status.displayName) }),
-        },
-      ],
+      files: [{ name: "status.png", data: buffer, type: "image/png", description }],
     };
   }
 }

@@ -18,8 +18,8 @@ import { EventsProfile } from "./events.profile.js";
 import { arrayGroup } from "@statsify/util";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
+import { renderWithAltText } from "#lib/alt-text";
 import { mapBackground } from "#constants";
-import { render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.events"), args: [PlayerArgument] })
 export class EventsCommand {
@@ -44,7 +44,7 @@ export class EventsCommand {
           ...mapBackground(GENERAL_MODES, GENERAL_MODES.getApiModes()[0])
         );
 
-        return render(
+        return renderWithAltText(
           <EventsProfile
             player={player}
             skin={skin}

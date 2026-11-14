@@ -59,8 +59,7 @@ import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
 import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile.js";
-import { type GamesWithBackgrounds, MODES_TO_FORMATTED, mapBackground } from "#constants";
-import { removeFormatting } from "@statsify/util";
+import { type GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
 import { HistoricalTimes } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
@@ -84,6 +83,7 @@ import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "../arcade/arcade.command.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getDuelsModeEmojis } from "../duels/duels.command.js";
+import { getAltText } from "#lib/alt-text";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 import type { BaseProfileProps, ModeEmoji } from "#commands/base.hypixel-command";
@@ -382,7 +382,6 @@ export class SessionCommand {
       this.apiService.getUserBadge(player.uuid),
     ]);
 
-    const game = removeFormatting(MODES_TO_FORMATTED.get(modes)!);
     const allModes = modes.getModes();
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
     const modeEmojis = getModeEmojis ? getModeEmojis(displayedModes) : [];
@@ -422,19 +421,13 @@ export class SessionCommand {
             { ...mode, submode: undefined } as unknown as GameMode<T>
           );
 
+          const description = getAltText(profile);
           const canvas = render(profile, getTheme(user));
           const buffer = await canvas.toBuffer("png");
 
           return {
             content: getContent(t),
-            files: [
-              {
-                name: "session.png",
-                data: buffer,
-                type: "image/png",
-                description: t("altText.session", { game, player: player.username, mode: mode.formatted }),
-              },
-            ],
+            files: [{ name: "session.png", data: buffer, type: "image/png", description }],
             attachments: [],
           };
         },
@@ -467,23 +460,13 @@ export class SessionCommand {
             { api: mode.api, formatted: mode.formatted, hypixel: mode.hypixel, submode } as GameMode<T>
           );
 
+          const description = getAltText(profile);
           const canvas = render(profile, getTheme(user));
           const buffer = await canvas.toBuffer("png");
 
           return {
             content: getContent(t),
-            files: [
-              {
-                name: "session.png",
-                data: buffer,
-                type: "image/png",
-                description: t("altText.session", {
-                  game,
-                  player: player.username,
-                  mode: `${mode.formatted} ${submode.formatted}`,
-                }),
-              },
-            ],
+            files: [{ name: "session.png", data: buffer, type: "image/png", description }],
             attachments: [],
           };
         },

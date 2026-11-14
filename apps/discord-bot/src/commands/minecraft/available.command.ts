@@ -50,7 +50,7 @@ export class AvailableCommand {
       .catch(() => undefined);
 
     if (uuid) {
-      const head = await minecraftHeadAttachment(this.apiService, uuid, name);
+      const head = await minecraftHeadAttachment(this.apiService, uuid);
 
       base
         .field((t) => t("minecraft.uuid"), `\`${uuid}\``)

@@ -58,7 +58,7 @@ import { arrayGroup } from "@statsify/util";
 import { games } from "./games.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
-import { render } from "@statsify/rendering";
+import { renderWithAltText } from "#lib/alt-text";
 
 const fields = getLeaderboardFields(Player).map(([key]) => key);
 
@@ -348,7 +348,7 @@ export class RankingsCommand {
       context,
       groups.map(
         (group) => () =>
-          render(
+          renderWithAltText(
             <RankingsProfile
               background={background}
               data={group}

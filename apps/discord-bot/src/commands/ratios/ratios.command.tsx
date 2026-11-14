@@ -43,7 +43,7 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { Constructor, prettify, removeFormatting } from "@statsify/util";
+import { Constructor, prettify } from "@statsify/util";
 import {
   GamesWithBackgrounds,
   MODES_TO_API,
@@ -53,6 +53,7 @@ import {
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getBackground, getLogo } from "@statsify/assets";
+import { getAltText } from "#lib/alt-text";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
@@ -232,22 +233,13 @@ export class RatiosCommand {
           ]),
         };
 
-        const canvas = render(<RatiosProfile {...props} />, getTheme(user));
+        const profile = <RatiosProfile {...props} />;
+        const description = getAltText(profile);
+        const canvas = render(profile, getTheme(user));
         const buffer = await canvas.toBuffer("png");
 
         return {
-          files: [
-            {
-              name: "ratios.png",
-              data: buffer,
-              type: "image/png",
-              description: t("altText.ratios", {
-                game: removeFormatting(props.gameName),
-                player: player.username,
-                mode: mode.formatted,
-              }),
-            },
-          ],
+          files: [{ name: "ratios.png", data: buffer, type: "image/png", description }],
           attachments: [],
         };
       },
