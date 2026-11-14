@@ -49,7 +49,7 @@ export const discordRequest = async (
   method: "GET" | "PUT" | "DELETE",
   path: string,
   accessToken: string,
-  body?: object
+  body?: string
 ) => {
   const response = await fetch(`${DISCORD_API}${path}`, {
     method,
@@ -57,7 +57,7 @@ export const discordRequest = async (
       Authorization: `Bearer ${accessToken}`,
       ...(body && { "Content-Type": "application/json" }),
     },
-    ...(body && { body: JSON.stringify(body) }),
+    ...(body && { body }),
   });
 
   if (!response.ok) throw new Error(`Discord ${method} ${path} failed with ${response.status}`);

@@ -87,4 +87,7 @@ export class RoleConnection {
 
   @Field()
   public pushedAt: number;
+
+  @Field()
+  public pushedBody: string;
 }

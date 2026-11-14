@@ -69,7 +69,7 @@ export class LinkedRolesService {
     return this.roleConnectionModel
       .findOneAndUpdate(
         { id },
-        { id, uuid: user.uuid, pushedAt: Date.now(), ...encryptTokens(tokens) },
+        { id, uuid: user.uuid, pushedAt: Date.now(), pushedBody: "", ...encryptTokens(tokens) },
         { upsert: true, new: true }
       )
       .lean()
@@ -81,10 +81,7 @@ export class LinkedRolesService {
     try {
       const player = await this.playerService.get(connection.uuid, CacheLevel.CACHE);
 
-      if (player) {
-        await this.push(connection, player);
-        return true;
-      }
+      if (player && (await this.push(connection, getPushBody(player)))) return true;
     } catch (error) {
       this.logger.error(error);
     }
@@ -96,15 +93,17 @@ export class LinkedRolesService {
     return false;
   }
 
-  private async push(connection: RoleConnection, player: Player) {
+  private async push(connection: RoleConnection, body: string) {
     const accessToken = await this.getAccessToken(connection);
-    if (!accessToken) return;
+    if (!accessToken) return false;
 
-    await discordRequest("PUT", roleConnectionPath, accessToken, {
-      platform_name: "Hypixel",
-      platform_username: player.username,
-      metadata: getRoleConnectionMetadata(player),
-    });
+    await discordRequest("PUT", roleConnectionPath, accessToken, body);
+
+    await this.roleConnectionModel
+      .updateOne({ id: connection.id }, { $set: { pushedBody: body } })
+      .exec();
+
+    return true;
   }
 
   public async onPlayerSave(player: Player) {
@@ -112,17 +111,23 @@ export class LinkedRolesService {
 
     try {
       const now = Date.now();
+      const body = getPushBody(player);
 
-      // Claiming the push in the same query keeps concurrent saves from pushing twice
+      // Claiming the push in the same query keeps concurrent saves from pushing twice,
+      // and matching on the body skips the many saves that change nothing Discord shows
       const connection = await this.roleConnectionModel
         .findOneAndUpdate(
-          { uuid: player.uuid, pushedAt: { $lte: now - PUSH_INTERVAL } },
+          {
+            uuid: player.uuid,
+            pushedAt: { $lte: now - PUSH_INTERVAL },
+            pushedBody: { $ne: body },
+          },
           { $set: { pushedAt: now } }
         )
         .lean()
         .exec();
 
-      if (connection) await this.push(connection, player);
+      if (connection) await this.push(connection, body);
     } catch (error) {
       this.logger.error(error);
     }
@@ -186,6 +191,13 @@ export class LinkedRolesService {
     return tokens.access_token;
   }
 }
+
+const getPushBody = (player: Player) =>
+  JSON.stringify({
+    platform_name: "Hypixel",
+    platform_username: player.username,
+    metadata: getRoleConnectionMetadata(player),
+  });
 
 const encryptTokens = (tokens: DiscordTokens) => ({
   accessToken: encrypt(tokens.access_token),
