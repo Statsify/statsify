@@ -195,13 +195,12 @@ impl ModelLibrary {
     Ok(model)
   }
 
-  // Animated strips show their first frame
   fn upload_texture(
     &self,
     renderer: &Renderer<NativeBackend>,
     name: &str,
   ) -> crate::error::Result<LoadedTexture> {
-    let texture = load_texture(&self.pack, name, Frame::Tick(0))?;
+    let texture = load_texture(&self.pack, name, Frame::Resting)?;
 
     let image = RgbaImage::from_raw(texture.width, texture.height, texture.rgba)
       .expect("a loaded texture holds every texel");
