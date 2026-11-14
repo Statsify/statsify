@@ -119,7 +119,7 @@ const assignQuestMetadata = (
 };
 
 const createQuestProgress = (
-  time: Exclude<QuestTime, QuestTime.Overall>,
+  time: Exclude<QuestTime, typeof QuestTime.Overall>,
   options: QuestOption<string>[],
   targets: Record<string, number>,
   fieldPrefix?: string
@@ -315,7 +315,7 @@ export function createQuestsInstance<
   return QuestInstance as unknown as IQuestInstance<Time, GamesWithQuests>;
 }
 
-const getPeriodStart = (time: Exclude<QuestTime, QuestTime.Overall>) => {
+const getPeriodStart = (time: Exclude<QuestTime, typeof QuestTime.Overall>) => {
   let t: DateTime = DateTime.now().setZone("America/New_York");
 
   switch (time) {
