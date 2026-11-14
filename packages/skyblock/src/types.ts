@@ -530,7 +530,7 @@ export interface StatValue {
   value: number;
 }
 
-/** Where a stat comes from; the weapon is the first sword, bow or wand in the hotbar, since the API has no held slot. */
+/** Where a stat comes from; gear counts the first weapon in the hotbar, since the API has no held slot. */
 export const STAT_SOURCES = [
   "base",
   "wikiBase",
