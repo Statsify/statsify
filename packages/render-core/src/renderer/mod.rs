@@ -565,11 +565,13 @@ impl Renderer<native::NativeBackend> {
         camera,
         self.backend.get_output_texture(),
         &self.depth_texture,
+        false,
       )
       .await
   }
 
-  // Renders into textures of its own, at any size the device allows
+  // Renders into textures of its own, at any size the device allows. Unlike `render`, whose skin
+  // renders have always kept them premultiplied, partly transparent pixels keep their own color.
   pub async fn render_sized(
     &self,
     items: &[DrawItem<'_>],
@@ -595,7 +597,7 @@ impl Renderer<native::NativeBackend> {
     let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
 
     self
-      .render_into(items, camera, &output_texture, &depth_texture)
+      .render_into(items, camera, &output_texture, &depth_texture, true)
       .await
   }
 
@@ -607,6 +609,7 @@ impl Renderer<native::NativeBackend> {
     camera: &Camera,
     output_texture: &wgpu::Texture,
     depth_texture: &Texture,
+    unpremultiply: bool,
   ) -> Result<Vec<u8>> {
     let camera_bind_group = self.uniform_bind_group(
       &self.camera_bind_group_layout,
@@ -628,7 +631,7 @@ impl Renderer<native::NativeBackend> {
 
     self
       .backend
-      .handle_encoder_after_render(encoder, output_texture)
+      .handle_encoder_after_render(encoder, output_texture, unpremultiply)
       .await
   }
 

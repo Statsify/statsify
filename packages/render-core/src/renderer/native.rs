@@ -95,6 +95,7 @@ impl Backend for NativeBackend {
     &self,
     mut encoder: wgpu::CommandEncoder,
     output_texture: OutputTexture<'_>,
+    unpremultiply: bool,
   ) -> RenderResult<Vec<u8>> {
     let dimensions = BufferDimensions::new(output_texture.width(), output_texture.height());
 
@@ -131,12 +132,16 @@ impl Backend for NativeBackend {
     if let Some(Ok(())) = receiver.receive().await {
       let padded_buffer = buffer_slice.get_mapped_range();
 
-      let buffer = padded_buffer
+      let mut buffer = padded_buffer
         .chunks(dimensions.padded_bytes_per_row as usize)
         .take(dimensions.height as usize)
         .flat_map(|row| &row[..dimensions.unpadded_bytes_per_row as usize])
         .copied()
         .collect::<Vec<u8>>();
+
+      if unpremultiply {
+        unpremultiply_pixels(&mut buffer);
+      }
 
       let image = ImageBuffer::<Rgba<u8>, _>::from_vec(dimensions.width, dimensions.height, buffer)
         .expect("Failed to create image buffer");
@@ -151,5 +156,38 @@ impl Backend for NativeBackend {
     } else {
       Err(Error::RenderFailure)
     }
+  }
+}
+
+// Blending over the transparent clear color leaves partly covered pixels premultiplied, in
+// linear light. Dividing the coverage back out shows them in their own color over any background.
+fn unpremultiply_pixels(rgba: &mut [u8]) {
+  for pixel in rgba.chunks_exact_mut(4) {
+    let alpha = pixel[3];
+
+    if alpha == 0 || alpha == u8::MAX {
+      continue;
+    }
+
+    for channel in &mut pixel[..3] {
+      let linear = srgb_to_linear(*channel as f32 / 255.0) / (alpha as f32 / 255.0);
+      *channel = (linear_to_srgb(linear.min(1.0)) * 255.0).round() as u8;
+    }
+  }
+}
+
+fn srgb_to_linear(value: f32) -> f32 {
+  if value <= 0.04045 {
+    value / 12.92
+  } else {
+    ((value + 0.055) / 1.055).powf(2.4)
+  }
+}
+
+fn linear_to_srgb(value: f32) -> f32 {
+  if value <= 0.0031308 {
+    value * 12.92
+  } else {
+    1.055 * value.powf(1.0 / 2.4) - 0.055
   }
 }
