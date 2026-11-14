@@ -1,0 +1,50 @@
+{
+  "name": "@statsify/skyblock",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths --copy-files",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint",
+    "lint:ci": "oxlint --format=github",
+    "sync-data": "node scripts/sync-data.ts"
+  },
+  "dependencies": {
+    "@statsify/math": "workspace:^",
+    "@statsify/util": "workspace:^",
+    "@swc/helpers": "^0.5.23",
+    "prismarine-nbt": "2.8.0"
+  },
+  "imports": {
+    "#types": {
+      "types": "./src/types.ts",
+      "default": "./dist/types.js"
+    },
+    "#raw": {
+      "types": "./src/raw.ts",
+      "default": "./dist/raw.js"
+    },
+    "#data": {
+      "types": "./src/data.ts",
+      "default": "./dist/data.js"
+    },
+    "#leveling": {
+      "types": "./src/leveling.ts",
+      "default": "./dist/leveling.js"
+    },
+    "#items": {
+      "types": "./src/items.ts",
+      "default": "./dist/items.js"
+    },
+    "#nbt": {
+      "types": "./src/nbt.ts",
+      "default": "./dist/nbt.js"
+    },
+    "#textures": {
+      "types": "./src/textures.ts",
+      "default": "./dist/textures.js"
+    }
+  }
+}
