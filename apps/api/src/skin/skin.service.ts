@@ -16,6 +16,7 @@ import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getAssetPath, getMinecraftTexturePath } from "@statsify/assets";
 import { getHelmetModel, getKartModel, parseSuitPiece } from "./kart-cosmetics.js";
+import { getWarlordsArmor, getWarlordsHelmetModel, getWarlordsWeaponModel } from "./warlords-cosmetics.js";
 import { join } from "node:path";
 import {
   type Armor,
@@ -25,7 +26,16 @@ import {
   renderScene,
   renderSkin,
 } from "@statsify/skin-renderer";
-import { type ArmorDto, type ArmorPieceDto, KART_CAMERA, type KartRenderDto, type SKULLS, type SkinRenderDto } from "#dtos";
+import {
+  type ArmorDto,
+  type ArmorPieceDto,
+  KART_CAMERA,
+  type KartRenderDto,
+  type SKULLS,
+  type SkinRenderDto,
+  WARLORDS_CAMERA,
+  type WarlordsRenderDto,
+} from "#dtos";
 import type { ReturnModelType } from "@typegoose/typegoose";
 import { readFile, readdir } from "node:fs/promises";
 
@@ -87,13 +97,21 @@ export class SkinService {
 
     const [library, player] = await Promise.all([
       this.getLibrary(KART_PACK),
-      uuid ? this.getSkin(uuid).then((skin) => this.resolveSkin(skin.skinUrl, skin.slim)) : undefined,
+      uuid ? this.getScenePlayer(uuid) : undefined,
     ]);
 
-    return this.reloadIfUnavailable(KART_PACK, renderKart(library, kart, {
-      ...options,
-      player: player && { skin: imageData(player.skin), slim: player.slim },
-    }));
+    return this.reloadIfUnavailable(KART_PACK, renderKart(library, kart, { ...options, player }));
+  }
+
+  public async getWarlordsRender({ uuid, ...options }: WarlordsRenderDto): Promise<Buffer> {
+    const warlords = resolveWarlords(options, uuid !== undefined);
+
+    const [library, player] = await Promise.all([
+      this.getLibrary(WARLORDS_PACK),
+      uuid ? this.getScenePlayer(uuid) : undefined,
+    ]);
+
+    return this.reloadIfUnavailable(WARLORDS_PACK, renderWarlords(library, warlords, { ...options, player }));
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -181,6 +199,12 @@ export class SkinService {
     if (this.heads.size > HEAD_CACHE_SIZE) this.heads.delete(this.heads.keys().next().value!);
 
     return { texture: head, enchanted: false, skull: true };
+  }
+
+  private async getScenePlayer(uuid: string): Promise<PlayerSkin> {
+    const { skinUrl, slim } = await this.getSkin(uuid);
+    const player = await this.resolveSkin(skinUrl, slim);
+    return { skin: imageData(player.skin), slim: player.slim };
   }
 
   // Forgets a failed load, so a pack copied in after startup is picked up without a restart
@@ -300,6 +324,7 @@ const resourcePack = (name: string, folder: string): ResourcePack => ({
 });
 
 export const KART_PACK = resourcePack("Turbo Kart Racers", "turbo-kart-racers");
+export const WARLORDS_PACK = resourcePack("Warlords", "warlords");
 
 // The kart is worn by an armor stand the rider sits on: the stand's mounted offset (1.975 × 0.75 blocks)
 // less the player's riding offset (0.35), in pixels
@@ -364,8 +389,13 @@ export function resolveKart(
   return { models, suit };
 }
 
+interface PlayerSkin {
+  skin: Uint8Array;
+  slim: boolean;
+}
+
 export interface KartRenderOptions extends Pick<KartRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
-  player?: { skin: Uint8Array; slim: boolean };
+  player?: PlayerSkin;
 }
 
 export async function renderKart(
@@ -394,6 +424,70 @@ export async function renderKart(
 
   return renderScene(library, { player: { ...player, extruded, armor: { chestplate, leggings, boots }, pose: "sit" }, models }, output)
     .catch(rethrowPackError(KART_PACK));
+}
+
+export interface WarlordsScene {
+  models: ModelInstance[];
+  armor?: ArmorPieceDto;
+}
+
+export function resolveWarlords(
+  cosmetics: Pick<WarlordsRenderDto, "class" | "helmet" | "armor" | "team" | "weapon">,
+  standing: boolean
+): WarlordsScene {
+  const { class: playerClass, helmet = 0, armor = 0, team = "blue", weapon } = cosmetics;
+  const weaponModel = weapon === undefined ? undefined : getWarlordsWeaponModel(weapon);
+
+  if (!standing) {
+    const worn = [cosmetics.class, cosmetics.helmet, cosmetics.armor, cosmetics.team];
+    if (worn.some((value) => value !== undefined)) throw new BadRequestException("A class, helmet, armor or team needs a uuid to wear it");
+    if (!weaponModel) throw new BadRequestException("A render without a uuid needs a weapon");
+
+    return { models: [{ model: weaponModel, bone: "root" }] };
+  }
+
+  if (playerClass === undefined) throw new BadRequestException("A player render needs the player's class");
+
+  const models: ModelInstance[] = [
+    { model: getWarlordsHelmetModel(playerClass, helmet, team), bone: "head", display: "head" },
+  ];
+
+  if (weaponModel) models.push({ model: weaponModel, bone: "rightHand", display: "thirdperson" });
+
+  return { models, armor: getWarlordsArmor(armor, team) };
+}
+
+export interface WarlordsRenderOptions extends Pick<WarlordsRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
+  player?: PlayerSkin;
+}
+
+export async function renderWarlords(
+  library: ModelLibrary,
+  { models, armor }: WarlordsScene,
+  { player, extruded = false, ...camera }: WarlordsRenderOptions
+): Promise<Buffer> {
+  const defaults = player ? WARLORDS_CAMERA.player : WARLORDS_CAMERA.weapon;
+
+  const output = {
+    width: camera.width ?? defaults.width,
+    height: camera.height ?? defaults.height,
+    yaw: camera.yaw ?? defaults.yaw,
+    pitch: camera.pitch ?? defaults.pitch,
+  };
+
+  if (!player) return renderScene(library, { models }, output).catch(rethrowPackError(WARLORDS_PACK));
+
+  const textures = join(WARLORDS_PACK.path, "textures");
+
+  const [layer1, layer2] = await Promise.all([
+    armor && resolveArmorPiece(armor, 1, textures),
+    armor && resolveArmorPiece(armor, 2, textures),
+  ]).catch(throwPackUnavailable(WARLORDS_PACK));
+
+  const worn = { chestplate: layer1, leggings: layer2, boots: layer1 };
+
+  return renderScene(library, { player: { ...player, extruded, armor: worn, pose: "standing" }, models }, output)
+    .catch(rethrowPackError(WARLORDS_PACK));
 }
 
 interface MojangProfile {
