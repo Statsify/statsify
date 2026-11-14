@@ -53,13 +53,19 @@ export interface ServerMappingsServer {
 
 const SERVER_MAPPINGS_CDN_URL = "https://servermappings.lunarclientcdn.com";
 
-export async function getServerMappings() {
-  const servers = await axios
-    .get<ServerMappingsServer[]>(`${SERVER_MAPPINGS_CDN_URL}/servers.json`)
-    .then((res) => res.data)
-    .catch(() => []);
+let serverMappings: Promise<ServerMappingsServer[]> | undefined;
 
-  return servers.filter((s) => !s.inactive && s.enriched);
+export function getServerMappings() {
+  serverMappings ??= axios
+    .get<ServerMappingsServer[]>(`${SERVER_MAPPINGS_CDN_URL}/servers.json`, { timeout: 5_000 })
+    .then((res) => res.data.filter((s) => !s.inactive && s.enriched))
+    .catch((error) => {
+      // Don't keep a failure as an empty list: the next caller starts a new request
+      serverMappings = undefined;
+      throw error;
+    });
+
+  return serverMappings;
 }
 
 export async function getServerBackground(server?: ServerMappingsServer) {

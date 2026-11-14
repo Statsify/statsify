@@ -8,7 +8,7 @@
 
 import axios, { AxiosInstance } from "axios";
 import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
-import { type Server, type ServerMappingsServer, getServerBackground, getServerMappings } from "./server.util.js";
+import { type Server, getServerBackground, getServerMappings } from "./server.util.js";
 import { ServerArgument } from "./server.argument.js";
 import { ServerProfile } from "./server.profile.js";
 import { getTheme } from "#themes";
@@ -21,16 +21,10 @@ import { render } from "@statsify/rendering";
 })
 export class ServerCommand {
   private readonly axios: AxiosInstance;
-  private mappings: ServerMappingsServer[];
 
   public constructor() {
     this.axios = axios.create({
       baseURL: "https://api.mcsrvstat.us/2/",
-    });
-
-    getServerMappings().then((mappings) => {
-      this.mappings = mappings;
-      return undefined;
     });
   }
 
@@ -64,7 +58,10 @@ export class ServerCommand {
     tag = tag.toLowerCase();
     const [hostname] = tag.split(":");
 
-    const mappedServer = this.mappings.find(
+    // Without the mappings, the lookup still works as an unmapped server
+    const mappings = await getServerMappings().catch(() => []);
+
+    const mappedServer = mappings.find(
       (s) =>
         s.name.toLowerCase() === tag ||
         s.addresses.some(
