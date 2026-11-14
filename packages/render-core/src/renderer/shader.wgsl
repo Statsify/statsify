@@ -101,6 +101,29 @@ fn attachment_color(in: VertexOutput) -> vec4<f32> {
     return shade(in, object_color);
 }
 
+@fragment
+fn fs_cutout(in: VertexOutput) -> @location(0) vec4<f32> {
+    let object_color: vec4<f32> = textureSample(t_diffuse, s_diffuse, in.texture_coordinates);
+
+    if object_color.a < 1.0 {
+        discard;
+    }
+
+    return shade(in, object_color);
+}
+
+// The texels fs_cutout leaves out, less those under the game's 0.1 alpha test for items
+@fragment
+fn fs_blended(in: VertexOutput) -> @location(0) vec4<f32> {
+    let object_color: vec4<f32> = textureSample(t_diffuse, s_diffuse, in.texture_coordinates);
+
+    if object_color.a <= 0.1 || object_color.a == 1.0 {
+        discard;
+    }
+
+    return shade(in, object_color);
+}
+
 fn shade(in: VertexOutput, object_color: vec4<f32>) -> vec4<f32> {
     let ambient_strength = 0.2;
     let ambient_color = light.color * ambient_strength;
