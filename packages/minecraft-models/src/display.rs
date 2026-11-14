@@ -12,15 +12,21 @@ pub struct Display {
 }
 
 impl Display {
-  /// 1.8 takes each context from the nearest model in the parent chain that sets it.
+  /// 1.8 takes each context from the nearest model in the parent chain that sets it to something
+  /// other than the identity, compared after clamping.
   pub(crate) fn or(self, parent: Display) -> Display {
+    let pick = |child: Option<Transform>, parent: Option<Transform>| match child {
+      Some(transform) if !transform.is_identity() => child,
+      _ => parent.or(child),
+    };
+
     Display {
-      thirdperson: self.thirdperson.or(parent.thirdperson),
-      firstperson: self.firstperson.or(parent.firstperson),
-      head: self.head.or(parent.head),
-      gui: self.gui.or(parent.gui),
-      ground: self.ground.or(parent.ground),
-      fixed: self.fixed.or(parent.fixed),
+      thirdperson: pick(self.thirdperson, parent.thirdperson),
+      firstperson: pick(self.firstperson, parent.firstperson),
+      head: pick(self.head, parent.head),
+      gui: pick(self.gui, parent.gui),
+      ground: pick(self.ground, parent.ground),
+      fixed: pick(self.fixed, parent.fixed),
     }
   }
 }
@@ -51,8 +57,7 @@ impl Transform {
   /// 1.8 halves the centered model before this matrix and doubles 3D items worn on a head after it.
   pub fn matrix(&self) -> [[f32; 4]; 4] {
     let [x, y, z] = self.rotation;
-    let translation = self.translation.map(|t| (t / 16.0).clamp(-1.5, 1.5));
-    let [sx, sy, sz] = self.scale.map(|s| s.clamp(-4.0, 4.0));
+    let (translation, [sx, sy, sz]) = self.clamped();
 
     let matrix = Matrix4::from_translation(Vector3::from(translation))
       * Matrix4::from_angle_y(Deg(y))
@@ -61,6 +66,18 @@ impl Transform {
       * Matrix4::from_nonuniform_scale(sx, sy, sz);
 
     matrix.into()
+  }
+
+  /// Translation in blocks and scale, clamped as 1.8 clamps them when it reads a model.
+  fn clamped(&self) -> ([f32; 3], [f32; 3]) {
+    let translation = self.translation.map(|t| (t / 16.0).clamp(-1.5, 1.5));
+    let scale = self.scale.map(|s| s.clamp(-4.0, 4.0));
+    (translation, scale)
+  }
+
+  fn is_identity(&self) -> bool {
+    let (translation, scale) = self.clamped();
+    self.rotation == [0.0; 3] && translation == [0.0; 3] && scale == [1.0; 3]
   }
 }
 

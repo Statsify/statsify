@@ -158,8 +158,10 @@ fn strip_namespace(name: &str) -> &str {
 fn parse_model(text: &str) -> Result<ModelFile, String> {
   let root = crate::parse_json(text)?;
 
-  let parent =
-    optional(&root, "parent", Value::as_str)?.map(|parent| strip_namespace(parent).to_string());
+  // 1.8 reads an empty parent as none
+  let parent = optional(&root, "parent", Value::as_str)?
+    .filter(|parent| !parent.is_empty())
+    .map(|parent| strip_namespace(parent).to_string());
 
   let textures = match root.get("textures") {
     None => HashMap::new(),
@@ -186,6 +188,13 @@ fn parse_model(text: &str) -> Result<ModelFile, String> {
       .collect::<Result<_, String>>()?,
   };
 
+  // 1.8 counts an empty list as no elements
+  match (parent.is_some(), elements.is_empty()) {
+    (false, true) => return Err("it has neither a parent nor elements".to_string()),
+    (true, false) => return Err("it has both a parent and elements".to_string()),
+    _ => {}
+  }
+
   let mut display = Display::default();
 
   if let Some(contexts) = root.get("display") {
@@ -199,6 +208,10 @@ fn parse_model(text: &str) -> Result<ModelFile, String> {
         "fixed" => &mut display.fixed,
         _ => continue,
       };
+
+      if !value.is_object() {
+        return Err(format!("display {context} is not an object"));
+      }
 
       let defaults = Transform::default();
 
@@ -232,7 +245,10 @@ fn parse_element(element: &Value) -> Result<Element, String> {
         "z" => Axis::Z,
         axis => return Err(format!("unknown rotation axis {axis}")),
       },
-      angle: required(rotation, "angle", Value::as_f64)? as f32,
+      angle: match required(rotation, "angle", float)? {
+        angle if [0.0, 22.5, 45.0].contains(&angle.abs()) => angle,
+        angle => return Err(format!("angle {angle} is not -45, -22.5, 0, 22.5 or 45")),
+      },
       rescale: optional(rotation, "rescale", Value::as_bool)?.unwrap_or(false),
     }),
   };
@@ -280,10 +296,16 @@ fn floats<const N: usize>(value: &Value) -> Option<[f32; N]> {
   let mut out = [0.0; N];
 
   for (slot, item) in out.iter_mut().zip(items) {
-    *slot = item.as_f64()? as f32;
+    *slot = float(item)?;
   }
 
   Some(out)
+}
+
+fn float(value: &Value) -> Option<f32> {
+  // serde_json rejects numbers past f64's range, but one past f32's turns into infinity here
+  let number = value.as_f64()? as f32;
+  number.is_finite().then_some(number)
 }
 
 fn optional<'a, T>(
@@ -293,7 +315,7 @@ fn optional<'a, T>(
 ) -> Result<Option<T>, String> {
   object
     .get(key)
-    .map(|value| read(value).ok_or_else(|| format!("{key} has the wrong type")))
+    .map(|value| read(value).ok_or_else(|| format!("{key} is invalid")))
     .transpose()
 }
 

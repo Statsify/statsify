@@ -35,7 +35,8 @@ pub fn load_texture(pack: &Pack, name: &str, tick: u64) -> Result<Texture, Error
         reason,
       })?;
 
-    // 1.8 cuts strips into squares as wide as the image, top to bottom
+    // 1.8 cuts strips into squares as wide as the image, top to bottom, and drops a partial square
+    // at the bottom; it ignores the metadata's width and height
     if let Some(frame) = frame {
       let frame_bytes = width as usize * width as usize * 4;
       rgba = rgba[frame * frame_bytes..][..frame_bytes].to_vec();
@@ -63,9 +64,13 @@ fn animation_frame(mcmeta: &str, frame_count: u32, tick: u64) -> Result<Option<u
     return Ok(None);
   };
 
+  if !animation.is_object() {
+    return Err("animation is not an object".to_string());
+  }
+
   let frametime = match animation.get("frametime") {
     None => 1,
-    Some(value) => duration(value).ok_or("frametime is not a positive whole number")?,
+    Some(value) => duration(value).ok_or("frametime is not a whole number from 1 to 2147483647")?,
   };
 
   let listed: &[Value] = match animation.get("frames") {
@@ -85,7 +90,9 @@ fn animation_frame(mcmeta: &str, frame_count: u32, tick: u64) -> Result<Option<u
 
         let time = match frame.get("time") {
           None => frametime,
-          Some(time) => duration(time).ok_or("frame time is not a positive whole number")?,
+          Some(time) => {
+            duration(time).ok_or("frame time is not a whole number from 1 to 2147483647")?
+          }
         };
 
         (index, time)
@@ -115,7 +122,10 @@ fn animation_frame(mcmeta: &str, frame_count: u32, tick: u64) -> Result<Option<u
     ));
   }
 
-  let cycle = frames.iter().map(|(_, time)| time).sum::<u64>();
+  let cycle = frames
+    .iter()
+    .try_fold(0u64, |sum, (_, time)| sum.checked_add(*time))
+    .ok_or("the frame times overflow")?;
   let mut remaining = tick.checked_rem(cycle).ok_or("the strip has no frames")?;
 
   for (index, time) in frames {
@@ -134,9 +144,9 @@ fn whole(value: &Value) -> Option<u64> {
   (number >= 0.0 && number.fract() == 0.0).then_some(number as u64)
 }
 
-// 1.8 rejects a frame time of 0, which would never advance
+// 1.8 takes frame times from 1 to i32::MAX; 0 would never advance
 fn duration(value: &Value) -> Option<u64> {
-  whole(value).filter(|&ticks| ticks > 0)
+  whole(value).filter(|ticks| (1..=i32::MAX as u64).contains(ticks))
 }
 
 #[cfg(test)]
@@ -153,18 +163,27 @@ mod tests {
     (texture.rgba[0], texture.translucent, texture.height)
   }
 
+  fn rejected(pack: &Pack) -> bool {
+    let texture = load_texture(pack, "blocks/strip", 0);
+    matches!(texture, Err(Error::InvalidAnimation { .. }))
+  }
+
+  fn png(image: &RgbaImage) -> Vec<u8> {
+    let mut png = Vec::new();
+    image
+      .write_to(&mut Cursor::new(&mut png), ImageFormat::Png)
+      .unwrap();
+    png
+  }
+
   #[test]
   fn picks_strip_frames_by_tick() {
     // Four 1x1 frames, each red with its own index; alpha 25 is cut by the alpha test, 26 isn't
     let alphas = [255, 25, 26, 255];
     let strip = RgbaImage::from_fn(1, 4, |_, y| Rgba([y as u8, 0, 0, alphas[y as usize]]));
-    let mut png = Vec::new();
-    strip
-      .write_to(&mut Cursor::new(&mut png), ImageFormat::Png)
-      .unwrap();
 
     let mut pack = Pack::default();
-    pack.textures.insert("blocks/strip".into(), png);
+    pack.textures.insert("blocks/strip".into(), png(&strip));
 
     let listed =
       r#"{ "animation": { "frametime": 2, "frames": [1, { "index": 2, "time": 3 }, 0,], } }"#;
@@ -191,9 +210,32 @@ mod tests {
 
     pack.mcmeta.insert(
       "blocks/strip".into(),
-      r#"{ "animation": { "frames": [4] } }"#.into(),
+      r#"{ "animation": { "frametime": 2147483647 } }"#.into(),
     );
-    let outside = load_texture(&pack, "blocks/strip", 0);
-    assert!(matches!(outside, Err(Error::InvalidAnimation { .. })));
+    assert_eq!(shown(&pack, 2147483647), (1, false, 1));
+
+    for invalid in [
+      r#"{ "animation": { "frames": [4] } }"#,
+      r#"{ "animation": { "frametime": 9223372036854775808 } }"#,
+      r#"{ "animation": { "frames": [{ "index": 0, "time": 2147483648 }] } }"#,
+      r#"{ "animation": [] }"#,
+    ] {
+      pack.mcmeta.insert("blocks/strip".into(), invalid.into());
+      assert!(rejected(&pack), "{invalid}");
+    }
+
+    // Two 2x2 frames over a 2x5 image: the last row is dropped, so the cycle is two ticks
+    let ragged = RgbaImage::from_fn(2, 5, |_, y| Rgba([y as u8, 0, 0, 255]));
+    pack.textures.insert("blocks/strip".into(), png(&ragged));
+    pack
+      .mcmeta
+      .insert("blocks/strip".into(), r#"{ "animation": {} }"#.into());
+    assert_eq!(shown(&pack, 1), (2, false, 2));
+    assert_eq!(shown(&pack, 2), (0, false, 2));
+
+    pack
+      .textures
+      .insert("blocks/strip".into(), png(&RgbaImage::new(2, 1)));
+    assert!(rejected(&pack));
   }
 }

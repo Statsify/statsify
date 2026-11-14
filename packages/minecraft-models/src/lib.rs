@@ -30,8 +30,16 @@ pub struct Pack {
   pub mcmeta: HashMap<String, String>,
 }
 
+/// Parses a model or `.mcmeta` file, which 1.8 requires to be an object.
 fn parse_json(text: &str) -> Result<Value, String> {
-  serde_json::from_str(&strip_trailing_commas(text)).map_err(|error| error.to_string())
+  let value: Value =
+    serde_json::from_str(&strip_trailing_commas(text)).map_err(|error| error.to_string())?;
+
+  if !value.is_object() {
+    return Err("the file is not a JSON object".to_string());
+  }
+
+  Ok(value)
 }
 
 /// 1.8 reads pack JSON with Gson's lenient mode, and packs rely on it for trailing commas in
@@ -85,6 +93,7 @@ mod tests {
       r#"{ "a": [1,, 2] }"#,
       r#"{ "a": [1,,] }"#,
       r#"{ "a": 1 } 2"#,
+      "[1, 2,]",
     ] {
       assert!(parse_json(invalid).is_err(), "{invalid} should not parse");
     }

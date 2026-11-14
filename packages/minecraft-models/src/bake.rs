@@ -204,11 +204,19 @@ mod tests {
     }
   }
 
-  /// Bakes one element and returns its vertices with positions and uvs back in model units.
-  fn bake_element(element: &str) -> Vec<Vertex> {
+  fn bake_one(element: &str) -> Result<BakedModel, Error> {
     let json =
       format!(r##"{{ "textures": {{ "all": "blocks/test" }}, "elements": [{element}] }}"##);
-    let model = bake_model(&pack(&[("block/test", &json)]), "block/test").unwrap();
+    bake_model(&pack(&[("block/test", &json)]), "block/test")
+  }
+
+  fn rejects(element: &str) -> bool {
+    matches!(bake_one(element), Err(Error::InvalidModel { .. }))
+  }
+
+  /// Bakes one element and returns its vertices with positions and uvs back in model units.
+  fn bake_element(element: &str) -> Vec<Vertex> {
+    let model = bake_one(element).unwrap();
 
     model.submeshes[0]
       .vertices
@@ -229,17 +237,19 @@ mod tests {
     assert!(close, "{actual:?} != {expected:?}");
   }
 
-  /// The last corner of a down face, (16, 8, 16), turned about (8, 8, 8).
-  fn turned_corner(axis: &str, angle: f32, rescale: bool) -> Vertex {
-    let vertices = bake_element(&format!(
+  fn turned_element(axis: &str, angle: f32, rescale: bool) -> String {
+    format!(
       r##"{{
         "from": [8, 8, 8], "to": [16, 16, 16],
         "rotation": {{ "origin": [8, 8, 8], "axis": "{axis}", "angle": {angle}, "rescale": {rescale} }},
         "faces": {{ "down": {{ "texture": "#all" }} }}
       }}"##
-    ));
+    )
+  }
 
-    vertices[3]
+  /// The last corner of a down face, (16, 8, 16), turned about (8, 8, 8).
+  fn turned_corner(axis: &str, angle: f32, rescale: bool) -> Vertex {
+    bake_element(&turned_element(axis, angle, rescale))[3]
   }
 
   #[test]
@@ -265,6 +275,8 @@ mod tests {
       turned_corner("x", -22.5, false).normal,
       [0.0, -0.924, 0.383],
     );
+
+    assert!(rejects(&turned_element("y", 90.0, false)));
   }
 
   #[test]
@@ -352,6 +364,11 @@ mod tests {
     assert_close(up[0].position, [-1.26, -0.375, 0.75]);
     assert_close(up[2].position, [1.5, -0.375, 1.49625]);
     assert_eq!(model.submeshes[0].indices, [0, 1, 2, 0, 2, 3]);
+
+    // 1e100 is past f32's range
+    assert!(rejects(
+      r##"{ "from": [1e100, 0, 0], "to": [16, 16, 16], "faces": { "up": { "texture": "#all" } } }"##
+    ));
   }
 
   #[test]
@@ -360,7 +377,6 @@ mod tests {
       (
         "block/base",
         r##"{
-          "parent": "block/cube",
           "textures": { "particle": "#side", "side": "blocks/base_side", "top": "blocks/base_top" },
           "elements": [{
             "from": [0, 0, 0], "to": [16, 16, 16],
@@ -379,11 +395,25 @@ mod tests {
         r##"{
           "parent": "minecraft:block/base",
           "textures": { "side": "minecraft:items/child_side" },
-          "display": { "gui": { "translation": [0, 1, 0] } }
+          "display": { "head": {}, "gui": { "translation": [0, 1, 0] } }
         }"##,
       ),
+      ("item/flat", r#"{ "parent": "builtin/generated" }"#),
       ("block/loop_a", r#"{ "parent": "block/loop_b" }"#),
       ("block/loop_b", r#"{ "parent": "block/loop_a" }"#),
+      ("block/array", "[]"),
+      ("block/neither", r#"{ "elements": [] }"#),
+      (
+        "block/both",
+        r##"{
+          "parent": "block/base",
+          "elements": [{ "from": [0, 0, 0], "to": [16, 16, 16], "faces": { "up": { "texture": "#top" } } }]
+        }"##,
+      ),
+      (
+        "item/listed_display",
+        r#"{ "parent": "block/base", "display": { "head": [] } }"#,
+      ),
     ]);
 
     let model = bake_model(&pack, "item/child").unwrap();
@@ -395,7 +425,7 @@ mod tests {
       .collect();
 
     // `particle` resolves `#side` from the child, the undefined variable's face is dropped, and the
-    // chain ends at block/cube, which the pack doesn't supply
+    // child's identity `head` leaves the parent's in place
     assert_eq!(faces, [("blocks/base_top", 1), ("items/child_side", 2)]);
     assert_eq!(model.display.head.unwrap().scale, [2.0; 3]);
 
@@ -405,13 +435,26 @@ mod tests {
     };
 
     assert_eq!(model.display.gui, Some(gui));
+
+    // A parent the pack doesn't supply ends the chain
+    assert!(bake_model(&pack, "item/flat").unwrap().submeshes.is_empty());
     assert!(matches!(
       bake_model(&pack, "block/missing"),
       Err(Error::MissingModel(_))
     ));
-    assert!(matches!(
-      bake_model(&pack, "block/loop_a"),
-      Err(Error::InvalidModel { .. })
-    ));
+
+    for invalid in [
+      "block/loop_a",
+      "block/array",
+      "block/neither",
+      "block/both",
+      "item/listed_display",
+    ] {
+      let model = bake_model(&pack, invalid);
+      assert!(
+        matches!(model, Err(Error::InvalidModel { .. })),
+        "{invalid}"
+      );
+    }
   }
 }
