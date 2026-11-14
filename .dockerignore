@@ -13,6 +13,6 @@
 /data
 /target
 assets/private/out
-# Hypixel's and Mojang's packs, which the bot downloads at runtime and no image may carry
+# The bot downloads these at runtime, and no image may carry them
 assets/public/resource-packs
 packages/skin-renderer/pkg
