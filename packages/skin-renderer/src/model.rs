@@ -18,7 +18,7 @@ pub enum ModelKind {
 }
 
 impl ModelKind {
-  fn arm_width(&self) -> f32 {
+  pub(crate) fn arm_width(&self) -> f32 {
     match self {
       ModelKind::Classic => 4.0,
       ModelKind::Slim => 3.0,
@@ -142,6 +142,17 @@ impl Part {
       }),
       posed: part_pose.is_some(),
     }
+  }
+
+  // The frame the part turns in, with its origin on the joint
+  #[cfg(not(target_arch = "wasm32"))]
+  pub(crate) fn joint(self, arm_width: f32, pose: Pose) -> Matrix4<f32> {
+    let (_, rotation) = self.placement(arm_width, pose).resolve();
+    let rotation = rotation.expect("only an unposed body has no joint");
+
+    pose.placement()
+      * Matrix4::from_translation(rotation.pivot)
+      * Matrix4::from(rotation.quaternion)
   }
 
   fn skin_layer_locations(self) -> (Coordinate<u32>, Coordinate<u32>) {

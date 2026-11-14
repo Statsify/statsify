@@ -1,5 +1,7 @@
 use cgmath::{Deg, Quaternion, Rotation3, Vector3, Zero};
 #[cfg(not(target_arch = "wasm32"))]
+use cgmath::{Matrix4, SquareMatrix};
+#[cfg(not(target_arch = "wasm32"))]
 use napi_derive::napi;
 
 use crate::geometry::{Geometry, Rotation};
@@ -99,6 +101,16 @@ impl Pose {
         pivot: Vector3::zero(),
       }),
       Pose::Standing | Pose::Punch | Pose::Jump | Pose::Sit => {}
+    }
+  }
+
+  // `place` as a matrix, for the bones models attach to
+  #[cfg(not(target_arch = "wasm32"))]
+  pub fn placement(self) -> Matrix4<f32> {
+    match self {
+      Pose::Sneak => Matrix4::from_translation(Vector3::new(0.0, -SNEAK_DROP, 0.0)),
+      Pose::Swim | Pose::Fly => Matrix4::from_angle_x(Deg(90.0)),
+      Pose::Standing | Pose::Punch | Pose::Jump | Pose::Sit => Matrix4::identity(),
     }
   }
 }

@@ -1,4 +1,6 @@
 mod armor;
+#[cfg(not(target_arch = "wasm32"))]
+mod attachment;
 mod error;
 mod geometry;
 mod model;
