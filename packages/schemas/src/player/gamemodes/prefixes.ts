@@ -135,3 +135,46 @@ export const rainbow = (text: string) => cycleColors(
 export const cycleColors = (text: string, colors: string[]) => [...text]
   .map((l, i) => `§${colors[i % colors.length]}${l}`)
   .join("");
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  const prefixes: GamePrefix[] = [
+    { fmt: (n) => `§7[${n}]`, req: 0 },
+    { fmt: (n) => `§f[${n}]`, req: 100 },
+    { fmt: (n) => `§e[${n}]`, req: 1000 },
+    { fmt: (n) => `§6[${n}]`, req: 10_000 },
+  ];
+
+  suite("createPrefixProgression", () => {
+    it("measures progress from the current requirement to the next", () => {
+      expect(createPrefixProgression(prefixes, 0)).toEqual({ current: 0, max: 100, percent: 0 });
+      expect(createPrefixProgression(prefixes, 100)).toEqual({ current: 0, max: 900, percent: 0 });
+      expect(createPrefixProgression(prefixes, 550)).toEqual({ current: 450, max: 900, percent: 0.5 });
+      expect(createPrefixProgression(prefixes, 10_000)).toEqual({ current: 0, percent: 1 });
+      expect(createPrefixProgression(prefixes, 12_345)).toEqual({ current: 2345, percent: 1 });
+    });
+  });
+
+  suite("getFormattedPrefix", () => {
+    it("picks the prefix for the score and formats its number", () => {
+      expect(getFormattedPrefix({ prefixes, score: 100 })).toBe("§f[100]");
+      expect(getFormattedPrefix({ prefixes, score: 550 })).toBe("§f[100]");
+      expect(getFormattedPrefix({ prefixes, score: 12_345 })).toBe("§6[10K]");
+
+      expect(getFormattedPrefix({ prefixes, score: 550, skip: true })).toBe("§e[1K]");
+      expect(getFormattedPrefix({ prefixes, score: 12_345, skip: true })).toBe("§6[10K]");
+
+      expect(getFormattedPrefix({ prefixes, score: 12_345, trueScore: true })).toBe("§6[12K]");
+      expect(getFormattedPrefix({ prefixes, score: 12_345, abbreviation: false })).toBe("§6[10000]");
+      expect(getFormattedPrefix({ prefixes, score: 12_345.7, abbreviation: false, trueScore: true })).toBe("§6[12345]");
+
+      const titles: GameTitle<[string]>[] = [
+        { fmt: (n, icon) => `§7${icon} ${n}`, req: 0, title: "Rookie" },
+        { fmt: (n, icon) => `§f${icon} ${n}`, req: 100, title: "Iron" },
+      ];
+
+      expect(getFormattedPrefix({ prefixes: titles, score: 150, prefixParams: ["✫"] })).toBe("§f✫ Iron");
+    });
+  });
+}
