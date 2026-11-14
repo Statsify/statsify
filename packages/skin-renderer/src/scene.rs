@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::f32::consts::FRAC_PI_2;
 use std::sync::{Arc, Mutex, PoisonError};
 
-use cgmath::{EuclideanSpace, Point3, Transform as _, Vector3};
+use cgmath::{Array, EuclideanSpace, Point3, SquareMatrix, Transform as _, Vector3};
 use image::{DynamicImage, RgbaImage};
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
@@ -281,6 +281,7 @@ pub async fn render_scene(
   };
 
   let mut models = Vec::with_capacity(scene.models.len());
+  let mut points = Vec::new();
 
   for instance in &scene.models {
     let bone = match (instance.bone, &player) {
@@ -293,20 +294,49 @@ pub async fn render_scene(
       value.map_or([default; 3], |(x, y, z)| [x as f32, y as f32, z as f32])
     };
 
-    let local = local_transform(
+    let (translation, rotation, scale) = (
       triple(instance.translation, 0.0),
       triple(instance.rotation, 0.0),
       triple(instance.scale, 1.0),
     );
 
+    let invalid = || Error::InvalidTransform(instance.model.clone());
+
+    // Checked after narrowing, since a huge f64 becomes an f32 infinity
+    let finite = [translation, rotation, scale]
+      .iter()
+      .flatten()
+      .all(|value| value.is_finite());
+
+    if !finite || scale.contains(&0.0) {
+      return Err(invalid().into());
+    }
+
     let model = library.model(renderer, &instance.model)?;
-    let transform = bone * local * item_transform(instance.display, &model.display);
+    let transform = bone
+      * local_transform(translation, rotation, scale)
+      * item_transform(instance.display, &model.display);
+
+    let start = points.len();
+
+    points.extend(
+      model
+        .parts
+        .iter()
+        .flat_map(|part| &part.points)
+        .map(|&point| transform.transform_point(point).to_vec()),
+    );
+
+    // Finite values can still overflow once multiplied through the chain, and the normals need
+    // an inverse that neither overflows nor underflows
+    if !transform.determinant().is_normal() || !points[start..].iter().all(Array::is_finite) {
+      return Err(invalid().into());
+    }
 
     models.push((model, transform));
   }
 
   let mut items = Vec::new();
-  let mut points = Vec::new();
 
   for (model, transform) in &models {
     for part in &model.parts {
@@ -320,13 +350,6 @@ pub async fn render_scene(
         },
         transform: *transform,
       });
-
-      points.extend(
-        part
-          .points
-          .iter()
-          .map(|&point| transform.transform_point(point).to_vec()),
-      );
     }
   }
 
@@ -351,6 +374,10 @@ pub async fn render_scene(
 
   if points.is_empty() {
     return Err(Error::EmptyScene.into());
+  }
+
+  if points.iter().all(|point| *point == points[0]) {
+    return Err(Error::SceneOutOfRange.into());
   }
 
   let middle = points.iter().sum::<Vector3<f32>>() / points.len() as f32;

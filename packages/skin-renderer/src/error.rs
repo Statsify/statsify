@@ -25,6 +25,14 @@ pub enum Error {
   #[error("The scene has nothing to draw")]
   EmptyScene,
 
+  #[cfg(not(target_arch = "wasm32"))]
+  #[error("The translation, rotation or scale of {0} is not finite, or scales it too small or too large to render")]
+  InvalidTransform(String),
+
+  #[cfg(not(target_arch = "wasm32"))]
+  #[error("The scene is too small or too large to frame")]
+  SceneOutOfRange,
+
   #[error("Enchanted armor needs a glint texture")]
   MissingGlint,
 
