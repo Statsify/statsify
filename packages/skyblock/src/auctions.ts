@@ -211,10 +211,10 @@ export async function buildPriceMap(
 ): Promise<{ map: PriceMap; seen: SeenIndex }> {
   const next: SeenIndex = new Map();
   const bins = new Map<string, Bins>();
-  let auctionsUpdated: number | undefined;
+  let asOf: number | undefined;
 
   for await (const page of pages) {
-    auctionsUpdated ??= page.lastUpdated;
+    asOf ??= page.lastUpdated;
 
     // Pages shift during a pull, so one auction can show up on two of them.
     for (const auction of page.auctions) {
@@ -225,7 +225,7 @@ export async function buildPriceMap(
     }
   }
 
-  if (auctionsUpdated === undefined) throw new Error("the auction pull had no pages");
+  if (asOf === undefined) throw new Error("the auction pull had no pages");
 
   const entries: Record<string, PriceEntry> = {};
   for (const [key, bin] of bins) entries[key] = { coins: binPrice(bin), source: "bin", listings: bin.listings };
@@ -240,7 +240,7 @@ export async function buildPriceMap(
     if (npcPrice && !entries[id]) entries[id] = { coins: npcPrice, source: "npc" };
   }
 
-  return { map: { asOf: auctionsUpdated, auctionsUpdated, bazaarUpdated: bazaar.lastUpdated, entries }, seen: next };
+  return { map: { asOf, entries }, seen: next };
 }
 
 if (import.meta.vitest) {
@@ -285,8 +285,6 @@ if (import.meta.vitest) {
     const entries = { HELMET: 10, HELMET_SKINNED_GOLD: 20, BONZO_STAFF: 5, ARMOR_SHINY: 9, MIDAS_SWORD_50M: 99 };
     const map: PriceMap = {
       asOf: 1,
-      auctionsUpdated: 1,
-      bazaarUpdated: 1,
       entries: Object.fromEntries(Object.entries(entries).map(([key, coins]) => [key, { coins, source: "bin", listings: 2 }])),
     };
     const keys = (item: Parameters<typeof rawItem>[0]) => lookupKeys(rawItem(item), map);
@@ -362,7 +360,7 @@ if (import.meta.vitest) {
   test("buildPriceMap keeps the lowest BIN per unit behind the outlier guard, the bazaar wins, and NPC prices fill in", async () => {
     const { map, seen } = await buildPriceMap(Readable.from(pages), bazaar, items);
 
-    expect(map).toMatchObject({ asOf: 1000, auctionsUpdated: 1000, bazaarUpdated: 990 });
+    expect(map.asOf).toBe(1000);
     expect(map.entries).toEqual({
       // 1 coin is under half of the 900M listing, so the guard skips it.
       HYPERION: { coins: 900_000_000, source: "bin", listings: 3 },
