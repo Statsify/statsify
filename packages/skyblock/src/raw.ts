@@ -83,7 +83,7 @@ export interface RawMember {
     bank_account?: number;
     first_join?: number;
   };
-  leveling?: { experience?: number; highest_pet_score?: number };
+  leveling?: { experience?: number; highest_pet_score?: number; completed_tasks?: string[] };
   currencies?: { coin_purse?: number; motes_purse?: number; essence?: Record<string, { current?: number }> };
   item_data?: { soulflow?: number };
   experimentation?: Partial<Record<Experiment, RawExperiment>> & { serums_drank?: number };
@@ -121,6 +121,7 @@ export interface RawMember {
   player_data?: {
     experience?: Record<string, number>;
     perks?: Record<string, number>;
+    unlocked_coll_tiers?: string[]; // <collection>_<tier>, with -1 for one found at no tier yet
     reaper_peppers_eaten?: number;
     bee_saliva_eaten?: number;
     isopod_husks_eaten?: number;
@@ -242,6 +243,7 @@ export interface RawMember {
   };
   rift?: {
     access?: { consumed_prism?: boolean };
+    castle?: { grubber_stacks?: number };
     dead_cats?: { montezuma?: RawPet; found_cats?: string[] };
     enigma?: { found_souls?: string[] };
     gallery?: { secured_trophies?: unknown[] };

@@ -58,6 +58,7 @@ const COUNTERS = [
   "runic_kills",
   "spider_kills",
   "stats_book",
+  "thunder_charge",
   "toxophilite_combat_xp",
   "zombie_kills",
 ] as const;
@@ -174,7 +175,12 @@ interface RawResourceItem {
   glowing?: boolean;
   generator?: string;
   generator_tier?: number;
-  museum_data?: { category?: string; donation_xp?: number; armor_set_donation_xp?: Record<string, number> };
+  museum_data?: {
+    category?: string;
+    donation_xp?: number;
+    armor_set_donation_xp?: Record<string, number>;
+    parent?: Record<string, string>; // the museum key → its upgrade
+  };
 }
 
 // The resource leaves COMMON out and still calls DIVINE by its old name. UNOBTAINABLE isn't a rarity.
@@ -182,11 +188,17 @@ const tierOf = (tier = "COMMON") => (tier === "SUPREME" ? "DIVINE" : RARITIES.fi
 
 export function parseItemsResource(raw: { lastUpdated: number; items: RawResourceItem[] }): ItemsResource {
   // The museum keeps an armor set under the set's key, which each of its pieces names
-  const museum: Record<string, string> = {};
+  const museum: ItemsResource["museum"] = {};
   for (const { id, museum_data: data } of raw.items) {
     if (!data?.category) continue;
-    if (data.donation_xp !== undefined) museum[id] = data.category;
-    for (const set of Object.keys(data.armor_set_donation_xp ?? {})) museum[set] = data.category;
+    const { category, parent } = data;
+    if (data.donation_xp !== undefined) museum[id] = { category, xp: data.donation_xp, upgrade: parent?.[id] };
+    // A set's pieces can disagree (Sponge's equipment gives a point less and names no upgrade), so the set keeps the
+    // most XP and any upgrade a piece names
+    for (const [set, xp] of Object.entries(data.armor_set_donation_xp ?? {})) {
+      const seen = museum[set];
+      museum[set] = { category, xp: Math.max(xp, seen?.xp ?? 0), upgrade: parent?.[set] ?? seen?.upgrade };
+    }
   }
 
   return {
@@ -251,5 +263,17 @@ if (import.meta.vitest) {
     expect(nbtNumber([0, -1])).toBe(2 ** 32 - 1);
     expect(nbtNumber([406, -2_051_689_472])).toBe(1_746_000_000_000);
     expect(nbtNumber("5")).toBeUndefined();
+  });
+
+  test("parseItemsResource keeps an armor set's most XP and its upgrade, in either order", () => {
+    const belt = { id: "SPONGE_BELT", name: "", material: "", museum_data: { category: "FISHING", armor_set_donation_xp: { SPONGE: 5 } } };
+    const helmet = {
+      id: "SPONGE_HELMET",
+      name: "",
+      material: "",
+      museum_data: { category: "FISHING", armor_set_donation_xp: { SPONGE: 6 }, parent: { SPONGE: "SHARK_SCALE" } },
+    };
+    for (const items of [[belt, helmet], [helmet, belt]])
+      expect(parseItemsResource({ lastUpdated: 0, items }).museum.SPONGE).toEqual({ category: "FISHING", xp: 6, upgrade: "SHARK_SCALE" });
   });
 }

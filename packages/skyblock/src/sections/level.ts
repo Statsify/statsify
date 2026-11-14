@@ -50,12 +50,13 @@ export function getSkyBlockLevel(
   prices: PriceMap,
   market: boolean
 ): SkyBlockLevelSection {
-  // Each chain keeps its cheapest step per XP: under the highest, the cheapest per accessory power can pay none, and a
-  // step that pays none goes last even when it's free.
+  // Each chain keeps its cheapest step per XP, since under the highest the cheapest per accessory power can pay none. A
+  // step that pays none goes last, and so does a tier reached in place, so its chain keeps a step this list can show.
   const accessories = getAccessories(member, items, prices, market, (power, highest) => {
     const xp = (step: MissingAccessory) => accessoryXp(power, highest, step.accessoryPower);
     const cheapest = cheapestFirst<MissingAccessory>((step) => step.cost && step.cost.coins / xp(step), xp);
-    return (a, b) => Number(xp(a) === 0) - Number(xp(b) === 0) || cheapest(a, b);
+    const last = (step: MissingAccessory) => Number(xp(step) === 0 || step.nextTier !== undefined);
+    return (a, b) => last(a) - last(b) || cheapest(a, b);
   });
   const { score, pets } = getPets(member);
   const owned = new Set(pets.map((pet) => pet.type));
@@ -65,9 +66,9 @@ export function getSkyBlockLevel(
 
   const sources: Source[] = !accessories
     ? []
-    : accessories.missing.flatMap(({ id, name, accessoryPower, outsideBag, cost, texture }) => {
+    : accessories.missing.flatMap(({ id, name, accessoryPower, outsideBag, cost, texture, nextTier }) => {
         const xp = accessoryXp(accessories.accessoryPower, accessories.highestAccessoryPower, accessoryPower);
-        if (xp === 0 || (market && !outsideBag && !cost)) return [];
+        if (xp === 0 || nextTier || (market && !outsideBag && !cost)) return [];
         return [{ kind: "accessory", id, name, xp, outsideBag, cost, coinsPerXp: cost && cost.coins / xp, texture }];
       });
 

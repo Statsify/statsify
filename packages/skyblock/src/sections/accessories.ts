@@ -7,8 +7,10 @@
  */
 
 import { ACCESSORY_UPGRADES, ATTRIBUTE_SHARDS, IGNORED_ACCESSORIES, POWERS } from "#data";
+import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
 import { add } from "@statsify/math";
-import { RARITIES } from "#types";
+import { prettify } from "@statsify/util";
+import { PLAYER_STATS, RARITIES } from "#types";
 import { costOf } from "#prices";
 import { decodeInventory } from "#nbt";
 import { getLevel } from "#leveling";
@@ -21,9 +23,11 @@ import type {
   ItemsResource,
   MissingAccessory,
   PlayerStat,
+  PowerStat,
   PriceMap,
   Rarity,
   Slots,
+  TierUnit,
 } from "#types";
 import type { RawMember } from "#raw";
 
@@ -67,6 +71,26 @@ export function stonePowerStats({ accessoryPower: listedAt, stats, bonus }: (typ
   return scaled;
 }
 
+// Learned Powers' stats per unit of powerScale (wiki: Powers); stone Powers list theirs on the stone
+export const LEARNED_POWERS: Record<string, Partial<Record<PlayerStat, number>>> = {
+  fortuitous: { health: 3.35, defense: 1.2, strength: 4.8, crit_chance: 4.35, crit_damage: 4.8 },
+  pretty: { health: 1.65, defense: 1.2, speed: 0.65, strength: 4.8, intelligence: 10.8, crit_chance: 0.475, crit_damage: 1.2 },
+  protected: { health: 11.75, defense: 10.8, strength: 2.4, crit_chance: 0.475, crit_damage: 1.2 },
+  simple: { health: 5.02, defense: 3.6, speed: 1.2, strength: 3.6, intelligence: 5.4, crit_chance: 1.45, crit_damage: 3.6 },
+  warrior: { health: 3.35, defense: 1.2, strength: 8.4, crit_chance: 2.4, crit_damage: 6 },
+  commando: { health: 5.02, defense: 2.4, strength: 8.4, crit_chance: 0.475, crit_damage: 8.4 },
+  disciplined: { health: 5.02, defense: 2.4, strength: 7.2, crit_chance: 1.45, crit_damage: 7.2 },
+  inspired: { health: 1.65, defense: 1.2, strength: 4.8, intelligence: 16.2, crit_chance: 0.95, crit_damage: 3.6 },
+  ominous: { health: 5.02, speed: 0.95, strength: 3.6, intelligence: 6.1, crit_chance: 1.45, crit_damage: 3.6, attack_speed: 0.9 },
+  prepared: { health: 12.4, defense: 11.3, strength: 1.95, crit_chance: 0.4, crit_damage: 0.95 },
+};
+
+const learnedPowerStats = (perUnit: Partial<Record<PlayerStat, number>>, accessoryPower: number): PowerStat[] =>
+  PLAYER_STATS.flatMap(({ id, color }) => {
+    const value = perUnit[id];
+    return value === undefined ? [] : [{ name: prettify(id), color, value: value * powerScale(accessoryPower) }];
+  });
+
 /** Variants that replace each other (party hats) list each other; a higher tier doesn't list its lower one. */
 const isMutual = (a: string, b: string) => upgradesOf(b).includes(a);
 
@@ -84,6 +108,73 @@ function powerOf(id: string, rarity: Rarity | undefined, contacts: number) {
 /** Rift-only accessories never go in the bag, and ignored ones can't be obtained any more. */
 const isCandidate = (id: string, item: ItemsResource["items"][string]) =>
   item.category === "ACCESSORY" && !item.riftOnly && !IGNORED_ACCESSORIES.has(id);
+
+const perfectGems = ({ gems }: ItemView) => gems?.filter(({ quality }) => quality === "PERFECT").length ?? 0;
+
+interface InPlaceUpgrade {
+  unit: TierUnit;
+  tiers: Partial<Record<Rarity, number>>; // the progress each rarity needs, before a recombobulator
+  progress: (view: ItemView, member: RawMember) => number;
+  recombobulates?: boolean; // the others go back to their own rarity when recombobulated
+}
+
+// Accessories that rise a rarity under the same id (the wiki's page for each; owner exceptions, unverified). A counter
+// starts with the first charge or kill, so an item without one is at 0.
+const IN_PLACE: Record<string, InPlaceUpgrade> = {
+  BOOK_OF_PROGRESSION: {
+    unit: "level",
+    tiers: { UNCOMMON: 75, RARE: 150, EPIC: 225, LEGENDARY: 300, MYTHIC: 400 },
+    progress: (_, member) => Math.floor((member.leveling?.experience ?? 0) / SKYBLOCK_XP_PER_LEVEL),
+  },
+  // Every saved Codex fits the milestone claimed, which can lag the bestiary's
+  BEASTSLAYERS_CODEX: {
+    unit: "milestone",
+    tiers: { UNCOMMON: 100, RARE: 150, EPIC: 200, LEGENDARY: 250, MYTHIC: 300 },
+    progress: (_, member) => member.bestiary?.milestone?.last_claimed_milestone ?? 0,
+  },
+  PULSE_RING: {
+    unit: "charges",
+    tiers: { RARE: 150_000, EPIC: 1_000_000, LEGENDARY: 5_000_000 },
+    progress: ({ counters }) => counters?.thunder_charge ?? 0,
+    recombobulates: true,
+  },
+  POWER_ARTIFACT: { unit: "perfectGems", tiers: { EPIC: 7 }, progress: perfectGems, recombobulates: true },
+  POWER_RELIC: { unit: "perfectGems", tiers: { LEGENDARY: 12 }, progress: perfectGems, recombobulates: true },
+  RUNEBOOK: {
+    unit: "runicKills",
+    tiers: { UNCOMMON: 1, RARE: 10, EPIC: 100, LEGENDARY: 1000 },
+    progress: ({ counters }) => counters?.runic_kills ?? 0,
+  },
+};
+
+/** The next tier of each active accessory that rises in place, worth its accessory power over the tier it's at. */
+function inPlaceSteps(active: ItemView[], member: RawMember, contacts: number, items: ItemsResource): MissingAccessory[] {
+  return active.flatMap((view) => {
+    const upgrade = IN_PLACE[view.id];
+    const item = items.items[view.id];
+    const texture = item && resourceTexture(item);
+    if (!upgrade || !view.rarity || !texture) return [];
+
+    const recombobulated = Number(Boolean(upgrade.recombobulates && view.recombobulated));
+    const base = RARITIES.indexOf(view.rarity) - recombobulated;
+    const next = Object.entries(upgrade.tiers).find(([tier]) => RARITIES.indexOf(tier as Rarity) > base);
+    if (!next) return [];
+
+    const rarity = RARITIES[RARITIES.indexOf(next[0] as Rarity) + recombobulated];
+    return [
+      {
+        id: view.id,
+        name: item.name,
+        rarity,
+        accessoryPower: powerOf(view.id, rarity, contacts) - powerOf(view.id, view.rarity, contacts),
+        outsideBag: false,
+        replaces: view.id,
+        texture,
+        nextTier: { unit: upgrade.unit, has: upgrade.progress(view, member), at: next[1] },
+      },
+    ];
+  });
+}
 
 /** Accessories in the inventory, ender chest, backpacks and vault: owned, but no accessory power until they're in the bag. */
 function storedAccessories(member: RawMember, items: ItemsResource) {
@@ -138,30 +229,43 @@ export function getAccessories(
   const bag = bagAccessories(member, items);
   if (!bag) return null;
 
-  const { active, inactive, owned, contacts, accessoryPower } = bag;
+  const { active, inactive, owned, counted, contacts, accessoryPower } = bag;
   const storage = member.accessory_bag_storage;
   const tuning = storage?.tuning?.slot_0 ?? {};
   const stone = storage?.selected_power ? POWERS[storage.selected_power] : undefined;
+  const learned = storage?.selected_power ? LEARNED_POWERS[storage.selected_power] : undefined;
   const stepOrder = order(accessoryPower, storage?.highest_magical_power);
   const stored = storedAccessories(member, items);
   const tuningPoints = add(...Object.values(tuning));
+  const listed = Object.keys(items.items).filter((id) => isCandidate(id, items.items[id]));
 
   return {
     accessoryPower,
     highestAccessoryPower: storage?.highest_magical_power,
     selectedPower: storage?.selected_power,
-    powerStats: stone && stonePowerStats(stone, accessoryPower),
+    powerStats: stone ? stonePowerStats(stone, accessoryPower) : learned && learnedPowerStats(learned, accessoryPower),
     tuning,
     tuningPoints,
     tuningTotal: tuningTotal(member, accessoryPower, tuningPoints),
     enrichments: active.filter((view) => view.enrichment).length,
     unenriched: active.filter((view) => !view.enrichment && RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY")).length,
     recombobulated: active.filter((view) => view.recombobulated).length,
+    unique: counted.size,
+    chains: countChains(listed),
     pricesAsOf: prices.asOf,
     market,
     active,
     inactive,
-    missing: getMissing(owned, stored, active, contacts, items, stepOrder, market ? prices : undefined),
+    missing: getMissing(
+      owned,
+      stored,
+      active,
+      contacts,
+      items,
+      stepOrder,
+      inPlaceSteps(active, member, contacts, items),
+      market ? prices : undefined
+    ),
   };
 }
 
@@ -174,6 +278,18 @@ function tuningTotal(member: RawMember, accessoryPower: number, spent: number) {
   if (box > 0 && box < levels.length) return undefined;
   const total = Math.floor(accessoryPower / 10) + (box === 0 ? 0 : 13);
   return total < spent ? undefined : total;
+}
+
+/** Chains among `ids` (an accessory, the tiers above it and its variants), however their upgrades link them. */
+function countChains(ids: string[]) {
+  const roots = new Map(ids.map((id) => [id, id]));
+  const root = (id: string): string => (roots.get(id) === id ? id : root(roots.get(id)!));
+
+  for (const id of ids) {
+    for (const by of upgradesOf(id)) if (roots.has(by)) roots.set(root(id), root(by));
+  }
+
+  return new Set(ids.map(root)).size;
 }
 
 /** The bag's accessories that count and those that don't, and their accessory power; null with the inventory API off. */
@@ -211,7 +327,7 @@ export function bagAccessories(member: RawMember, items: ItemsResource) {
   }
 
   const accessoryPower = add(...active.map(power), prism.length * powerOf("RIFT_PRISM", undefined, 0));
-  return { active, inactive, owned, contacts, accessoryPower };
+  return { active, inactive, owned, counted, contacts, accessoryPower };
 }
 
 /** Outside the bag first, since it costs nothing, then coins per point gained; unpriced ones sort last, by points. */
@@ -239,6 +355,7 @@ function getMissing(
   contacts: number,
   items: ItemsResource,
   order: StepOrder,
+  inPlace: MissingAccessory[],
   prices?: PriceMap
 ) {
   const byId = new Map<string, ItemView>();
@@ -254,7 +371,7 @@ function getMissing(
     )
   );
 
-  const steps = Object.entries(items.items)
+  const chainSteps = Object.entries(items.items)
     .flatMap(([id, item]): MissingAccessory[] => {
       if (!item.tier || !isCandidate(id, item) || owned.has(id)) return [];
       if (upgradesOf(id).some((by) => owned.has(by) || outside.has(by))) return [];
@@ -284,8 +401,9 @@ function getMissing(
           texture,
         },
       ];
-    })
-    .toSorted(order);
+    });
+
+  const steps = [...chainSteps, ...inPlace].toSorted(order);
 
   // A tier lists every tier above it as an upgrade, so the first step of each chain in that order is its best.
   const best: MissingAccessory[] = [];
@@ -294,4 +412,18 @@ function getMissing(
   }
 
   return best;
+}
+
+if (import.meta.vitest) {
+  const { test, expect } = import.meta.vitest;
+
+  test("countChains joins an accessory's tiers and variants however their upgrades link them", () => {
+    const power = ["POWER_TALISMAN", "POWER_RING", "POWER_ARTIFACT", "POWER_RELIC"];
+    const hats = ["PARTY_HAT_CRAB", "PARTY_HAT_CRAB_ANIMATED", "PARTY_HAT_SLOTH"];
+
+    expect(countChains([])).toBe(0);
+    expect(countChains(power)).toBe(1);
+    expect(countChains(["POWER_TALISMAN", "POWER_RELIC"])).toBe(1);
+    expect(countChains([...power, ...hats, "RUNEBOOK"])).toBe(3);
+  });
 }

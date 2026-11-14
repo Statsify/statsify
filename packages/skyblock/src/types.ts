@@ -68,6 +68,10 @@ export interface SkyBlockProfilesView extends PlayerRef, Freshness {
   profiles: ProfileSummary[];
 }
 
+export const BANK_TIERS = ["STARTER", "GOLD", "DELUXE", "SUPER_DELUXE", "PREMIER", "LUXURIOUS", "PALATIAL"] as const;
+
+export type BankTier = (typeof BANK_TIERS)[number];
+
 export interface ProfileSummary {
   id: string;
   cuteName: string;
@@ -81,7 +85,11 @@ export interface ProfileSummary {
   newProfile: boolean; // brand new, so missing data is empty rather than hidden by an API setting
   purse: number;
   bank?: number;
+  bankTier: BankTier; // the highest BANK_UPGRADE_* task any member has
+  bankLimit: number;
+  bankInterest?: number; // a season's, on the co-op and personal balances, without Museum milestones' boost
   personalBank?: number;
+  personalBankLimit?: number;
   firstJoin?: number;
   fairySouls: number;
   maxFairySouls?: number; // missing on Stranded and Bingo, whose islands hold fewer
@@ -203,7 +211,22 @@ export interface MuseumView {
   appraisal: boolean;
   items: { id: string; category?: string; donatedAt?: number; items: Slots }[]; // id: the museum's key (an item, or an armor set)
   special: { donatedAt?: number; items: Slots }[];
-  donated: { category: string; count: number }[]; // keys donated per museum_data category, most first
+  donated: MuseumCategory[]; // every museum_data category, most donated first
+  xp: number;
+  maxXp: number; // what every key in the items resource pays
+  milestone: number; // of MUSEUM_MILESTONES
+}
+
+// The wiki's Museum/Milestones page (an owner exception, unverified)
+export const MUSEUM_MILESTONES = 25;
+
+/** An item counts as donated once it, or an upgrade up its parent chain, is; so does its XP (unverified). */
+export interface MuseumCategory {
+  category: string;
+  count: number;
+  total: number;
+  xp: number;
+  maxXp: number;
 }
 
 export interface ApiSettings {
@@ -428,6 +451,8 @@ export type Catch = (typeof CATCHES)[number];
 export interface FishingSection {
   trophyFish: TrophyFish[];
   trophyFishCaught: number;
+  trophyFrogs: TrophyFrog[];
+  trophyFrogsCaught?: number; // missing on some saves with frogs caught
   itemsFished: Record<"total" | Catch, number>;
   seaCreatureKills: number;
   seaCreatures: { name: string; kills: number }[]; // bestiary kills, the most killed first, none at 0
@@ -446,6 +471,12 @@ export interface TrophyFish {
   id: string;
   name: string;
   tiers: Record<TrophyTier, number>;
+}
+
+export interface TrophyFrog {
+  id: string;
+  name: string;
+  tiers: Record<TrophyTier, boolean>; // caught at least once
 }
 
 export const JACOB_BRACKETS = ["bronze", "silver", "gold", "platinum", "diamond"] as const;
@@ -483,7 +514,7 @@ export interface CollectionView {
   id: string;
   name: string;
   texture?: ItemTexture;
-  amount: number;
+  amount?: number; // missing with the member's Collections API off, when only the tier comes
   tier: number;
   maxTier: number;
   next?: number; // the amount the next tier needs
@@ -839,6 +870,7 @@ export interface PetsSection {
   totalXp: number; // every pet's XP ever gained
   skinned: number;
   candyUsed: number; // over every pet
+  activeStats?: Partial<Record<PlayerStat, number>>; // with its held item, as the stat totals count them
 }
 
 export interface PetView {
@@ -851,6 +883,7 @@ export interface PetView {
   heldItem?: string;
   heldItemTexture?: ItemTexture;
   skin?: string;
+  skinColor?: string; // the skin's rarity color, which the game gives the ✦ after a skinned pet's name
   candyUsed: number;
   active: boolean;
   texture: ItemTexture;
@@ -897,19 +930,24 @@ export interface MissingAccessory {
   coinsPerAccessoryPower?: number;
   replaces?: string;
   texture: ItemTexture;
+  nextTier?: { unit: TierUnit; has: number; at: number }; // one in the bag that rises a rarity in place (unverified)
 }
+
+export type TierUnit = "level" | "milestone" | "charges" | "perfectGems" | "runicKills";
 
 export interface AccessoriesSection {
   accessoryPower: number;
   highestAccessoryPower?: number;
   selectedPower?: string;
-  powerStats?: PowerStat[]; // at this Accessory Power, plus the stone's Unique Power Bonus; only for stone Powers
+  powerStats?: PowerStat[]; // at this Accessory Power, plus a stone's Unique Power Bonus
   tuning: Record<string, number>;
   tuningPoints: number; // spent
   tuningTotal?: number; // missing below Tuning Box X but above 0, whose points nothing gives, and below the points spent
   enrichments: number; // on active accessories
   unenriched: number; // active Legendary-and-up accessories without an enrichment, the ones that can take one
   recombobulated: number; // active
+  unique: number; // one per chain: the active accessories, and a consumed Rift Prism
+  chains: number; // an accessory with its higher tiers and variants, over every one the items resource lists
   pricesAsOf: number;
   market: boolean;
   active: ItemView[];
@@ -1034,7 +1072,7 @@ export interface ItemsResource {
   // API-internal, never sent to clients
   lastUpdated: number;
   raw: object[]; // as Hypixel sent it, for the networth library
-  museum: Record<string, string>; // a museum key (an item, or an armor set) → its museum category
+  museum: Record<string, { category: string; xp: number; upgrade?: string }>; // by museum key (an item, or an armor set)
   items: Record<
     string,
     {

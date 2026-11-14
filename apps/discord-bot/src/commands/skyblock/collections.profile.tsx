@@ -44,6 +44,7 @@ export const SkyBlockCollectionsProfile = ({
 }: SkyBlockCollectionsProfileProps) => {
   const { collections } = profile.member;
   const items = categoryItems(collections, category);
+  const tiersOnly = items.some(({ amount }) => amount === undefined);
 
   const sidebar: SidebarItem[] = collections ?
     [
@@ -55,13 +56,20 @@ export const SkyBlockCollectionsProfile = ({
   return (
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+      {tiersOnly ?
+        (
+          <box width="100%">
+            <text>{`§7${t("skyblock.collectionTiersOnly")}`}</text>
+          </box>
+        ) :
+        <></>}
       {collections ?
         (
           <ItemGrid
             items={items.map(({ texture, name, amount, tier, maxTier }) => ({
               texture,
               name: `§f${name}`,
-              value: `§b${t(amount)} ${tierText(t, tier, maxTier)}`,
+              value: amount === undefined ? tierText(t, tier, maxTier) : `§b${t(amount)} ${tierText(t, tier, maxTier)}`,
             }))}
             icons={icons}
             columns={3}
