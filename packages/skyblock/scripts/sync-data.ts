@@ -702,12 +702,28 @@ try {
     crop_upgrades: number[];
     composter_upgrades: Record<string, Record<string, unknown>>;
   }>("constants/garden.json");
+  // NEU's milestones for 11 crops and two visitors' rarities differ from the wiki's Garden pages, whose numbers these
+  // are (tier → amount; an owner exception, unverified)
+  const wheatTiers = { 21: 325_000, 23: 500_000 };
+  const caneTiers = { 21: 650_000, 23: 1_000_000 };
+  const cocoaTiers = {
+    3: 250, 4: 500, 5: 1000, 6: 2000, 7: 4000, 9: 10_000, 11: 20_000, 12: 25_000, 14: 50_000, 15: 100_000,
+    17: 200_000, 19: 500_000, 21: 1_000_000, 22: 1_300_000, 23: 1_600_000, 24: 2_000_000,
+  };
+  const milestoneFixes: Record<string, Record<number, number>> = {
+    WHEAT: wheatTiers, PUMPKIN: wheatTiers, MUSHROOM: wheatTiers, SUNFLOWER: wheatTiers, MOONFLOWER: wheatTiers,
+    SUGAR_CANE: caneTiers, CACTUS: caneTiers, WILD_ROSE: caneTiers, COCOA_BEANS: cocoaTiers, NETHER_WART: cocoaTiers,
+    MELON: { 5: 1800, 20: 1_200_000, 21: 1_600_000, 23: 2_500_000, 24: 3_200_000 },
+  };
   await write("garden.json", {
     garden_exp: garden.garden_exp,
     crop_milestones: Object.fromEntries(
-      Object.entries(garden.crop_milestones).map(([crop, tiers]) => [gardenCrops[crop] ?? crop, tiers])
+      Object.entries(garden.crop_milestones).map(([crop, tiers]) => [
+        gardenCrops[crop] ?? crop,
+        tiers.map((amount, i) => milestoneFixes[crop]?.[i + 1] ?? amount),
+      ])
     ),
-    visitors: garden.visitors,
+    visitors: { ...garden.visitors, bednom: "UNCOMMON", farm_merchant: "UNCOMMON" },
     plots: Object.keys(garden.plots).toSorted(),
     crop_upgrades: garden.crop_upgrades.length,
     composter_upgrades: Object.fromEntries(
