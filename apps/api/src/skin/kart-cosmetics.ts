@@ -182,14 +182,12 @@ if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
 
   suite("parseSuitPiece", () => {
-    it("should read stored suit pieces", () => {
+    it("should read stored suit pieces and reject values that aren't a piece of that slot", () => {
       expect(parseSuitPiece("NO_JACKET", "JACKET")).toBeUndefined();
       expect(parseSuitPiece("CHAIN_PANTS", "PANTS")).toEqual({ material: "chainmail" });
       expect(parseSuitPiece("LEATHER_SHOES", "SHOES")).toEqual({ material: "leather" });
       expect(parseSuitPiece("LEATHER_JACKET:LIGHT_BLUE", "JACKET")).toEqual({ material: "leather", color: 0x66_99_D8 });
-    });
 
-    it("should reject values that aren't a piece of that slot", () => {
       expect(() => parseSuitPiece("GOLD_PANTS", "JACKET")).toThrow(BadRequestException);
       expect(() => parseSuitPiece("GOLD_JACKET:RED", "JACKET")).toThrow(BadRequestException);
       expect(() => parseSuitPiece("LEATHER_JACKET:TEAL", "JACKET")).toThrow(BadRequestException);
