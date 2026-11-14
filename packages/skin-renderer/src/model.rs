@@ -144,15 +144,13 @@ impl Part {
     }
   }
 
-  // The frame the part turns in, with its origin on the joint
+  // The frame the part turns in, with its origin on the joint, before the pose places the model
   #[cfg(not(target_arch = "wasm32"))]
   pub(crate) fn joint(self, arm_width: f32, pose: Pose) -> Matrix4<f32> {
     let (_, rotation) = self.placement(arm_width, pose).resolve();
     let rotation = rotation.expect("only an unposed body has no joint");
 
-    pose.placement()
-      * Matrix4::from_translation(rotation.pivot)
-      * Matrix4::from(rotation.quaternion)
+    Matrix4::from_translation(rotation.pivot) * Matrix4::from(rotation.quaternion)
   }
 
   fn skin_layer_locations(self) -> (Coordinate<u32>, Coordinate<u32>) {

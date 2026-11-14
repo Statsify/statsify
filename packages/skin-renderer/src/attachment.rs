@@ -10,6 +10,9 @@ const PIXELS_PER_BLOCK: f32 = 16.0;
 // Where the game draws a held item from: below the shoulder joint, at the hand
 const HAND: Vector3<f32> = Vector3::new(0.0, -7.0, -1.0);
 
+// LayerHeldItem moves a sneaking player's item 0.203125 blocks down the hand
+const SNEAKING_HAND_DROP: Vector3<f32> = Vector3::new(0.0, -3.25, 0.0);
+
 #[napi(string_enum = "camelCase", skip_typescript)]
 #[derive(Clone, Copy)]
 pub enum Bone {
@@ -32,13 +35,24 @@ pub struct Wearer {
 }
 
 pub fn bone_transform(bone: Bone, wearer: &Wearer) -> Matrix4<f32> {
-  let joint = |part: Part| part.joint(wearer.arm_width, wearer.pose);
+  let pose = wearer.pose;
+  let joint = |part: Part| part.joint(wearer.arm_width, pose);
+
+  // A sneaking player's held item misses the body's drop, which LayerHeldItem makes up for down
+  // the hand instead
+  let hand = |arm: Part| match pose {
+    Pose::Sneak => {
+      joint(arm) * Matrix4::from_translation(HAND) * Matrix4::from_translation(SNEAKING_HAND_DROP)
+    }
+    _ => pose.placement() * joint(arm) * Matrix4::from_translation(HAND),
+  };
 
   match bone {
     Bone::Root => Matrix4::identity(),
-    Bone::Head => joint(Part::Head),
-    Bone::RightHand => joint(Part::RightArm) * Matrix4::from_translation(HAND),
-    Bone::LeftHand => joint(Part::LeftArm) * Matrix4::from_translation(HAND),
+    // LayerCustomHead drops a sneaking player's head item with the body, before the head's joint
+    Bone::Head => pose.placement() * joint(Part::Head),
+    Bone::RightHand => hand(Part::RightArm),
+    Bone::LeftHand => hand(Part::LeftArm),
   }
 }
 
@@ -143,7 +157,7 @@ mod tests {
   }
 
   #[test]
-  fn puts_bones_where_a_seated_player_holds_them() {
+  fn puts_bones_where_a_posed_player_holds_them() {
     let seated = Wearer {
       arm_width: 4.0,
       pose: Pose::Sit,
@@ -165,6 +179,23 @@ mod tests {
     assert_close(
       bone_transform(Bone::LeftHand, &seated).transform_point(origin.into()),
       [6.762, -1.204, 3.305],
+    );
+
+    let sneaking = Wearer {
+      arm_width: 4.0,
+      pose: Pose::Sneak,
+    };
+
+    // The head item drops 3.2 with the body, and the head's joint one more
+    assert_close(
+      bone_transform(Bone::Head, &sneaking).transform_point(origin.into()),
+      [0.0, 2.8, 0.0],
+    );
+
+    // A held item skips the body's drop for 3.25 down the hand, which swings 22.9 degrees back
+    assert_close(
+      bone_transform(Bone::RightHand, &sneaking).transform_point(origin.into()),
+      [-7.103, -3.986, -4.910],
     );
   }
 }
