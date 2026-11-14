@@ -149,3 +149,38 @@ function replaceRank(rank: string) {
     .replace("YOUTUBER", "YOUTUBE")
     .replace("NONE", "");
 }
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("getPlayerRank", () => {
+    it("prefers the prefix, then the staff rank, then MVP++, then the newest package", () => {
+      expect(getPlayerRank({})).toBe("DEFAULT");
+      expect(getPlayerRank({ packageRank: "NONE", newPackageRank: "NONE" })).toBe("DEFAULT");
+      expect(getPlayerRank({ packageRank: "VIP_PLUS" })).toBe("VIP+");
+      expect(getPlayerRank({ packageRank: "VIP", newPackageRank: "MVP_PLUS" })).toBe("MVP+");
+      expect(getPlayerRank({ monthlyPackageRank: "NONE", newPackageRank: "MVP" })).toBe("MVP");
+
+      expect(getPlayerRank({ monthlyPackageRank: "SUPERSTAR", newPackageRank: "MVP_PLUS" })).toBe("MVP++");
+      expect(getPlayerRank({ monthlyPackageRank: "SUPERSTAR", monthlyRankColor: "GOLD" })).toBe("MVP++");
+      expect(getPlayerRank({ monthlyPackageRank: "SUPERSTAR", monthlyRankColor: "AQUA" })).toBe("bMVP++");
+
+      expect(getPlayerRank({ rank: "NORMAL", newPackageRank: "MVP_PLUS" })).toBe("MVP+");
+      expect(getPlayerRank({ rank: "YOUTUBER", monthlyPackageRank: "SUPERSTAR" })).toBe("YOUTUBE");
+      expect(getPlayerRank({ rank: "GAME_MASTER" })).toBe("GM");
+      expect(getPlayerRank({ rank: "ADMIN", prefix: "§c[OWNER]" })).toBe("OWNER");
+      expect(getPlayerRank({ prefix: "§d[PIG§b+++§d]" })).toBe("PIG+++");
+    });
+  });
+
+  suite("getDisplayName", () => {
+    it("formats the rank with its plus color and adds no space for default players", () => {
+      expect(getDisplayName("Steve", "MVP+", "§c")).toBe("§b[MVP§c+§b] Steve");
+      expect(getDisplayName("Steve", "MVP++", "§0")).toBe("§6[MVP§0++§6] Steve");
+      expect(getDisplayName("Steve", "bMVP++", "§c")).toBe("§b[MVP§c++§b] Steve");
+      expect(getDisplayName("Steve", "VIP+", "§c")).toBe("§a[VIP§6+§a] Steve");
+      expect(getDisplayName("Steve", "STAFF", "§c")).toBe("§c[§6ዞ§c] Steve");
+      expect(getDisplayName("Steve", "DEFAULT", "§c")).toBe("§7Steve");
+    });
+  });
+}
