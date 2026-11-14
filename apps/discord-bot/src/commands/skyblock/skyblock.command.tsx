@@ -349,8 +349,11 @@ export class SkyBlockCommand {
 
     // Its own request: armor never waits on prices, so asking for it with a card's sections would hide the market 503
     const getSkin = oncePerProfile(async (id) => {
-      const { armor } = (await this.apiService.getSkyBlockProfile(player.uuid, ["armor"], user, id)).member;
-      return this.apiService.getPlayerSkin(player.uuid, user, armor ?? undefined);
+      const armor = await this.apiService
+        .getSkyBlockProfile(player.uuid, ["armor"], user, id)
+        .then(({ member }) => member.armor ?? undefined, () => undefined);
+
+      return this.apiService.getPlayerSkin(player.uuid, user, armor);
     });
 
     const [logo, badge, background] = await Promise.all([
