@@ -9,8 +9,13 @@
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Auth, AuthRole } from "#auth";
 import { Body, Controller, Post } from "@nestjs/common";
-import { ErrorResponse, LeaderboardQuery, PostLeaderboardResponse } from "@statsify/api-client";
-import { SkyBlockLeaderboardDto } from "#dtos";
+import {
+  ErrorResponse,
+  LeaderboardQuery,
+  PostLeaderboardRankingsResponse,
+  PostLeaderboardResponse,
+} from "@statsify/api-client";
+import { PlayerDto, SkyBlockLeaderboardDto } from "#dtos";
 import { SkyBlockLeaderboardService } from "./skyblock-leaderboard.service.js";
 import { SkyBlockStats } from "@statsify/schemas";
 
@@ -40,5 +45,17 @@ export class SkyBlockLeaderboardController {
     }
 
     return this.skyblockLeaderboardService.getLeaderboard(SkyBlockStats, field, input, type);
+  }
+
+  @Post("/rankings")
+  @ApiOperation({
+    summary: "Get a Player's SkyBlock Rankings",
+    description: "Every board the player is on, best rank first, each at the player's best profile on it.",
+  })
+  @ApiOkResponse({ type: [PostLeaderboardRankingsResponse] })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @Auth({ weight: 5 })
+  public getSkyBlockRankings(@Body() { player }: PlayerDto) {
+    return this.skyblockLeaderboardService.getPlayerRankings(player);
   }
 }

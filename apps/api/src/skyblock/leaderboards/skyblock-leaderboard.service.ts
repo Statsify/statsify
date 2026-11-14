@@ -11,7 +11,14 @@ import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
-import { Player, SkyBlockStats, type SkyBlockStatsRow, getLeaderboardField, serialize } from "@statsify/schemas";
+import {
+  Player,
+  SkyBlockStats,
+  type SkyBlockStatsRow,
+  getLeaderboardField,
+  getLeaderboardFields,
+  serialize,
+} from "@statsify/schemas";
 import { type LeaderboardQuery, PlayerNotFoundException } from "@statsify/api-client";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
@@ -114,6 +121,69 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     const ranks = await Promise.all(rows.map(({ id }) => (ascending ? this.redis.zrank(key, id) : this.redis.zrevrank(key, id))));
     const ranked = ranks.filter((rank) => rank !== null);
     return ranked.length > 0 ? Math.min(...ranked) : undefined;
+  }
+
+  /**
+   * Where the player ranks on every board they're on within its depth, best rank first. Each board counts once, at the
+   * player's best profile on it, and ties share a rank as on the boards.
+   */
+  public async getPlayerRankings(tag: string) {
+    const player = await this.playerService.findMongoDocument(tag, { uuid: true });
+    if (!player) throw new PlayerNotFoundException();
+
+    const fields = getLeaderboardFields(SkyBlockStats).map(([field]) => ({ field, ...getLeaderboardField(SkyBlockStats, field) }));
+
+    // A hidden board ranks by a sort key and shows its first additional field instead, as its page does
+    const shownOf = ({ hidden, additionalFields }: (typeof fields)[number]) => (hidden ? additionalFields?.[0] : undefined);
+    const shown = fields.flatMap((board) => shownOf(board) ?? []);
+
+    const rows = await this.statsModel
+      .find({ uuid: player.uuid })
+      .select({ id: true, ...Object.fromEntries(shown.map((path) => [path, true])) })
+      .lean()
+      .exec();
+    const flatRows = new Map(rows.map((row) => [row.id, flatten(row) as LeaderboardAdditionalStats]));
+
+    const scores = this.redis.pipeline();
+    for (const { field } of fields) for (const { id } of rows) scores.zscore(`skyblockstats.${field}`, id);
+    const scored = (await scores.exec()) ?? [];
+
+    const best = fields.flatMap((board, index) => {
+      const own = scored
+        .slice(index * rows.length, (index + 1) * rows.length)
+        .flatMap(([, score], row) => (score === null ? [] : [{ id: rows[row].id, score: Number(score) }]));
+      if (own.length === 0) return [];
+
+      const pick = own.reduce((a, b) => ((board.sort === "ASC" ? b.score < a.score : b.score > a.score) ? b : a));
+      return [{ ...board, ...pick }];
+    });
+
+    const places = this.redis.pipeline();
+    for (const { field, sort, score, id } of best) {
+      const key = `skyblockstats.${field}`;
+      if (sort === "ASC") places.zcount(key, "-inf", `(${score}`).zrank(key, id);
+      else places.zcount(key, `(${score}`, "+inf").zrevrank(key, id);
+    }
+    const replies = (await places.exec()) ?? [];
+
+    // The rank is shared with ties, but the board holds its first `limit` positions, so a tie past them isn't on it
+    return best
+      .map((board, index) => ({
+        ...board,
+        rank: Number(replies[2 * index][1]) + 1,
+        position: Number(replies[2 * index + 1][1]),
+      }))
+      .filter(({ position, limit }) => position < limit)
+      .toSorted((a, b) => a.rank - b.rank)
+      .map((board) => {
+        const { field, name, id, rank, formatter, score } = board;
+        const path = shownOf(board);
+        if (!path) return { field, name, id, rank, value: formatter ? formatter(score) : score };
+
+        const metadata = getLeaderboardField(SkyBlockStats, path, false);
+        const value = flatRows.get(id)?.[path] ?? metadata.default;
+        return { field, name, id, rank, value: metadata.formatter ? metadata.formatter(value) : value };
+      });
   }
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
