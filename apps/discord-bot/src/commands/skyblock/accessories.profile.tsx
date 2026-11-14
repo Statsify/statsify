@@ -10,7 +10,7 @@ import { Container, Footer, Header, type SidebarItem } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
 import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
 import { RARITY_COLORS } from "@statsify/skyblock/display";
-import { arrayGroup, prettify } from "@statsify/util";
+import { arrayGroup, prettify, removeFormatting } from "@statsify/util";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { InactiveAccessory, MemberView, PowerStat } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
@@ -21,7 +21,7 @@ const MAX_POWER_STATS_PER_LINE = 3; // more is wider than the card
 
 const topMissing = ({ accessories }: MemberView) => accessories?.missing.slice(0, MISSING_SHOWN) ?? [];
 const baseName = ({ name, reforge }: InactiveAccessory) => {
-  const plain = name.replaceAll(/§./g, "");
+  const plain = removeFormatting(name);
   const prefix = reforge ? `${prettify(reforge)} ` : "";
   return prefix && plain.startsWith(prefix) ? plain.slice(prefix.length) : plain;
 };
@@ -29,8 +29,7 @@ const baseName = ({ name, reforge }: InactiveAccessory) => {
 // One row per accessory, so a stack of duplicates doesn't fill the page. Copies with different names (Abicase colors)
 // share the name they have in common, or the item's.
 function topInactive({ accessories }: MemberView) {
-  const copies = new Map<string, InactiveAccessory[]>();
-  for (const view of accessories?.inactive ?? []) copies.set(view.id, [...(copies.get(view.id) ?? []), view]);
+  const copies = Map.groupBy(accessories?.inactive ?? [], (view) => view.id);
 
   return [...copies].slice(0, INACTIVE_SHOWN).map(([id, [first, ...rest]]) => {
     const bases = new Set([first, ...rest].map(baseName));

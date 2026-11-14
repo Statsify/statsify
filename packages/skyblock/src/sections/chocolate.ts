@@ -24,13 +24,15 @@ export function getChocolate(member: RawMember): ChocolateSection | null {
   // Hypixel sends the record, holding only the egg objects, before the factory makes any chocolate
   if (!easter || (!easter.total_chocolate && found.size === 0)) return null;
 
+  // Hypixel leaves chocolate_level out until the first prestige
+  const level = easter.chocolate_level ?? 1;
+
   return {
-    // Hypixel leaves chocolate_level out until the first prestige
-    level: easter.chocolate_level ?? 1,
+    level,
     chocolate: easter.chocolate ?? 0,
     total: easter.total_chocolate ?? 0,
     sincePrestige: easter.chocolate_since_prestige ?? 0,
-    nextPrestige: PRESTIGE_CHOCOLATE[(easter.chocolate_level ?? 1) - 1],
+    nextPrestige: PRESTIGE_CHOCOLATE[level - 1],
     rabbits: RARITIES.flatMap((rarity) => {
       const rabbits = RABBITS[rarity.toLowerCase()];
       return rabbits ? [{ rarity, found: rabbits.filter((rabbit) => found.has(rabbit)).length, total: rabbits.length }] : [];
