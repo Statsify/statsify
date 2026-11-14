@@ -14,6 +14,22 @@ import type { Player } from "../player/index.js";
 // Discord's ApplicationRoleConnectionMetadataType.IntegerGreaterThanOrEqual
 const INTEGER_GREATER_THAN_OR_EQUAL = 2;
 
+// Ordered so Discord's "at least" check reads as "this rank or higher"
+const RANK_TIERS = [
+  ["None", ["DEFAULT"]],
+  ["VIP", ["VIP"]],
+  ["VIP+", ["VIP+"]],
+  ["MVP", ["MVP"]],
+  ["MVP+", ["MVP+"]],
+  ["MVP++", ["MVP++", "bMVP++"]],
+  ["YouTube", ["YOUTUBE"]],
+  ["Staff", ["HELPER", "MOD", "GM", "ADMIN", "OWNER", "STAFF"]],
+] as const;
+
+const RANK_TIER = new Map<string, number>(
+  RANK_TIERS.flatMap(([, ranks], tier) => ranks.map((rank) => [rank, tier] as const))
+);
+
 // Discord allows 5 records per app, shared by every server
 export const ROLE_CONNECTION_METADATA = [
   {
@@ -35,11 +51,22 @@ export const ROLE_CONNECTION_METADATA = [
     // From exp, since a deserialized level is rounded to 2 decimals
     value: (player: Player) => Math.floor(getLevel(player.stats.bedwars.exp)),
   },
+  {
+    key: "hypixel_rank",
+    name: "Hypixel Rank",
+    description: `Rank by number: ${RANK_TIERS.map(([name], tier) => `${tier} ${name}`).join(", ")}`,
+    type: INTEGER_GREATER_THAN_OR_EQUAL,
+    // Other ranks are one-off prefixes like PIG+++, which don't place on the ladder
+    value: (player: Player) => RANK_TIER.get(player.rank),
+  },
 ] as const;
 
 export const getRoleConnectionMetadata = (player: Player) =>
   Object.fromEntries(
-    ROLE_CONNECTION_METADATA.map(({ key, value }) => [key, `${value(player)}`])
+    ROLE_CONNECTION_METADATA.flatMap(({ key, value }) => {
+      const result = value(player);
+      return result === undefined ? [] : [[key, `${result}`]];
+    })
   );
 
 export class RoleConnection {
