@@ -53,7 +53,7 @@ interface VersionManifest {
 }
 
 interface VersionMetadata {
-  downloads: { client: { url: string; sha1: string; size: number } };
+  downloads: { client: { url: string; sha1: string } };
 }
 
 /** Pack archives under the cache folder, lowest priority first */
@@ -82,12 +82,14 @@ async function get(url: string) {
   return new Uint8Array(await response.arrayBuffer());
 }
 
-const getJson = async <T>(url: string) => JSON.parse(Buffer.from(await get(url)).toString()) as T;
+const parseJson = <T>(data: Uint8Array) => JSON.parse(Buffer.from(data).toString()) as T;
 
-async function download(url: string, sha1: string, size?: number) {
+const getJson = async <T>(url: string) => parseJson<T>(await get(url));
+
+async function download(url: string, sha1: string) {
   const data = await get(url);
 
-  if (hash("sha1", data) !== sha1 || (size !== undefined && data.length !== size)) {
+  if (hash("sha1", data) !== sha1) {
     throw new Error(`${url} doesn't match the sha1 it's listed with, ${sha1}`);
   }
 
@@ -117,11 +119,11 @@ async function minecraftClient(version: string) {
 
   const manifest = await getJson<VersionManifest>(VERSION_MANIFEST);
   const listed = manifest.versions.find(({ id }) => id === version);
-  if (!listed) throw new Error(`Minecraft ${version} isn't in Minecraft's version manifest`);
+  if (!listed) throw new Error(`${version} isn't in Minecraft's version manifest`);
 
   const metadata = await download(listed.url, listed.sha1);
-  const { client } = (JSON.parse(Buffer.from(metadata).toString()) as VersionMetadata).downloads;
-  const jar = await download(client.url, client.sha1, client.size);
+  const { client } = parseJson<VersionMetadata>(metadata).downloads;
+  const jar = await download(client.url, client.sha1);
 
   const folder = `mojang/${version}-${client.sha1}`;
   await store(folder, { "client.jar": jar, "version.json": metadata });
