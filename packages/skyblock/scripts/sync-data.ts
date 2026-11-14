@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Pulls NEU-REPO at one commit and writes the parts @statsify/skyblock reads to src/generated/, plus
-// textures-1.8.json from minecraft-data and the 1.8 pack in assets/public. Builds and the runtime never fetch these,
-// so run it by hand and commit the output: node scripts/sync-data.ts <full commit sha>
+// Writes what @statsify/skyblock reads from NEU-REPO, minecraft-data and the 1.8 pack to src/generated/. Builds and the
+// runtime never fetch these, so run it by hand and commit the output: node scripts/sync-data.ts <full commit sha>
 import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";

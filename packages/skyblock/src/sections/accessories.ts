@@ -12,14 +12,7 @@ import { costOf } from "#prices";
 import { decodeInventory } from "#nbt";
 import { resourceTexture } from "#textures";
 import { toItemView } from "#items";
-import type {
-  AccessoriesSection,
-  ItemView,
-  ItemsResource,
-  MissingAccessory,
-  PriceMap,
-  Rarity,
-} from "#types";
+import type { AccessoriesSection, ItemView, ItemsResource, MissingAccessory, PriceMap, Rarity } from "#types";
 import type { RawMember } from "#raw";
 
 const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
