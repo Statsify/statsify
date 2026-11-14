@@ -142,9 +142,9 @@
       5,
       7,
       9,
-      14,
-      17,
-      21,
+      12,
+      16,
+      20,
       25,
       50,
       80,
@@ -1273,7 +1273,7 @@
         },
         {
           "bracket": "4",
-          "cap": 3000,
+          "cap": 1000,
           "ids": [
             "bogged_10"
           ],
@@ -1337,7 +1337,7 @@
           "name": "Hideonleaf"
         },
         {
-          "bracket": "1",
+          "bracket": "CRITTERS_2",
           "cap": 100,
           "ids": [
             "honeyhog_32"
@@ -1486,8 +1486,8 @@
           "name": "The Loch Emperor"
         },
         {
-          "bracket": "4",
-          "cap": 1000,
+          "bracket": "CRITTERS_4",
+          "cap": 50,
           "ids": [
             "tidetot_10",
             "seacurse_15",
@@ -1652,7 +1652,7 @@
           "name": "Siamese Lynx"
         },
         {
-          "bracket": "4",
+          "bracket": "5",
           "cap": 1000,
           "ids": [
             "cretan_bull_150",
@@ -1700,7 +1700,7 @@
           "name": "Sphinx"
         },
         {
-          "bracket": "4",
+          "bracket": "5",
           "cap": 1000,
           "ids": [
             "stranded_nymph_150",
@@ -1988,8 +1988,8 @@
           "name": "Manta Ray"
         },
         {
-          "bracket": "CRITTERS_1",
-          "cap": 125,
+          "bracket": "3",
+          "cap": 300,
           "ids": [
             "small_mithril_grubber_15",
             "medium_mithril_grubber_15",
@@ -2007,16 +2007,16 @@
           "name": "Inkling"
         },
         {
-          "bracket": "CRITTERS_1",
-          "cap": 125,
+          "bracket": "3",
+          "cap": 300,
           "ids": [
             "oasis_rabbit_10"
           ],
           "name": "Oasis Rabbit"
         },
         {
-          "bracket": "CRITTERS_1",
-          "cap": 125,
+          "bracket": "3",
+          "cap": 300,
           "ids": [
             "oasis_sheep_10"
           ],
@@ -3299,7 +3299,7 @@
           "name": "Drowned Captain"
         },
         {
-          "bracket": "7",
+          "bracket": "CRITTERS_2",
           "cap": 100,
           "ids": [
             "flip_flopper_10"
@@ -3315,7 +3315,7 @@
           "name": "Frog Prince"
         },
         {
-          "bracket": "7",
+          "bracket": "CRITTERS_2",
           "cap": 100,
           "ids": [
             "lotus_jumping_frog_5"
@@ -3384,8 +3384,8 @@
           "name": "Ant"
         },
         {
-          "bracket": "CRITTERS_5",
-          "cap": 25,
+          "bracket": "CRITTERS_4",
+          "cap": 50,
           "ids": [
             "beeheemoth_158"
           ],
@@ -3456,7 +3456,7 @@
           "name": "Giant Isopod"
         },
         {
-          "bracket": "5",
+          "bracket": "CRITTERS_5",
           "cap": 25,
           "ids": [
             "grizzly_bear_101"
@@ -3544,7 +3544,7 @@
           "name": "Puck"
         },
         {
-          "bracket": "4",
+          "bracket": "2",
           "cap": 50,
           "ids": [
             "queen_ant_69"
