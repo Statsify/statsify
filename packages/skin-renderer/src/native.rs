@@ -2,16 +2,17 @@ use async_once::AsyncOnce;
 use lazy_static::lazy_static;
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
+use statsify_render_core::camera::Camera;
+use statsify_render_core::renderer::native::NativeBackend;
+use statsify_render_core::renderer::Renderer;
 
 use crate::armor::Armor;
-use crate::model::{ModelKind, ModelOuterLayer};
+use crate::model::{Model, ModelKind, ModelOuterLayer};
 use crate::pose::Pose;
-use crate::renderer::native::NativeBackend;
-use crate::renderer::SkinRenderer;
 
 lazy_static! {
-  static ref SKIN_RENDERER: AsyncOnce<SkinRenderer<NativeBackend>> = AsyncOnce::new(async {
-    SkinRenderer::new(460, 800)
+  static ref SKIN_RENDERER: AsyncOnce<Renderer<NativeBackend>> = AsyncOnce::new(async {
+    Renderer::new(460, 800)
       .await
       .expect("skin renderer initialized")
   });
@@ -63,7 +64,8 @@ pub async fn render_skin(
     return Err(crate::error::Error::InvalidYaw.into());
   }
 
-  let model = renderer.load_skin(
+  let model = Model::load(
+    renderer,
     skin,
     model_kind,
     model_outer_layer,
@@ -72,7 +74,18 @@ pub async fn render_skin(
     options.cape.as_deref(),
     options.pose.unwrap_or_default(),
   )?;
-  let buffer = renderer.render(&model, yaw).await?;
+
+  let camera = match yaw {
+    Some(yaw) => renderer.camera().with_theta(yaw),
+    None => renderer.camera(),
+  };
+
+  let camera = Camera::Orbital(camera.fitted(model.points(), model.camera_radius()));
+
+  let buffer = renderer
+    .render(&model.draw_items(), &camera)
+    .await
+    .map_err(crate::error::Error::from)?;
 
   Ok(buffer.into())
 }

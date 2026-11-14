@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use futures_channel::oneshot;
 use once_cell::sync::Lazy;
+use statsify_render_core::renderer::wasm::WasmBackend;
+use statsify_render_core::renderer::Renderer;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::{spawn_local, wasm_bindgen};
@@ -15,8 +17,6 @@ use crate::armor::Armor;
 use crate::error::{Error, Result};
 use crate::model::{Model, ModelKind, ModelOuterLayer};
 use crate::pose::Pose;
-use crate::renderer::wasm::WasmBackend;
-use crate::renderer::SkinRenderer;
 
 // Since the winit EventLoop consumes self, we need a static variable to
 // communicate with JavaScript
@@ -95,8 +95,8 @@ impl JsSkinRenderer {
   }
 
   pub fn run(self) {
-    let mut receivers = HashMap::<WindowId, oneshot::Receiver<SkinRenderer<WasmBackend>>>::new();
-    let mut renderers = HashMap::<WindowId, SkinRenderer<WasmBackend>>::new();
+    let mut receivers = HashMap::<WindowId, oneshot::Receiver<Renderer<WasmBackend>>>::new();
+    let mut renderers = HashMap::<WindowId, Renderer<WasmBackend>>::new();
     let mut window_ids = HashMap::<String, WindowId>::new();
     let mut staged_models = HashMap::<WindowId, JsModel>::new();
     let mut models = HashMap::<WindowId, Model>::new();
@@ -143,7 +143,8 @@ impl JsSkinRenderer {
               continue;
             };
 
-            if let Ok(model) = renderer.load_skin(
+            if let Ok(model) = Model::load(
+              renderer,
               &model.bytes,
               model.model_kind,
               model.model_outer_layer,
@@ -171,17 +172,17 @@ impl JsSkinRenderer {
       receivers.retain(|window_id, rx| match rx.try_recv() {
         Ok(Some(renderer)) => {
           if let Some(model) = staged_models.remove(window_id).and_then(|model| {
-            renderer
-              .load_skin(
-                &model.bytes,
-                model.model_kind,
-                model.model_outer_layer,
-                &Armor::default(),
-                None,
-                None,
-                Pose::default(),
-              )
-              .ok()
+            Model::load(
+              &renderer,
+              &model.bytes,
+              model.model_kind,
+              model.model_outer_layer,
+              &Armor::default(),
+              None,
+              None,
+              Pose::default(),
+            )
+            .ok()
           }) {
             models.insert(*window_id, model);
           }
@@ -226,7 +227,7 @@ impl JsSkinRenderer {
                 renderers.get_mut(&window_id).zip(models.get(&window_id))
               {
                 renderer.update();
-                renderer.render(model);
+                renderer.render(&model.draw_items());
               }
             }
             _ => {}
@@ -272,9 +273,9 @@ fn create_window(canvas_id: &str, window_target: &EventLoopWindowTarget<()>) -> 
   Ok(window)
 }
 
-fn send_renderer(window: Window, tx: oneshot::Sender<SkinRenderer<WasmBackend>>) {
+fn send_renderer(window: Window, tx: oneshot::Sender<Renderer<WasmBackend>>) {
   spawn_local(async move {
-    if let Ok(renderer) = SkinRenderer::new(window).await {
+    if let Ok(renderer) = Renderer::new(window).await {
       let _ = tx.send(renderer);
     };
   });

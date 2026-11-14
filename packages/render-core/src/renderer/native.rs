@@ -4,9 +4,8 @@ use futures_intrusive::channel;
 use image::{ImageBuffer, Rgba};
 
 use super::backend::{Backend, OutputTexture};
-use super::SkinRender;
 use crate::buffer_dimensions::BufferDimensions;
-use crate::error::{Error, Result as SkinRendererResult};
+use crate::error::{Error, Result as RenderResult};
 
 pub struct NativeBackend {
   device: wgpu::Device,
@@ -19,7 +18,7 @@ pub struct NativeBackend {
 }
 
 impl NativeBackend {
-  pub async fn new(width: u32, height: u32) -> SkinRendererResult<Self> {
+  pub async fn new(width: u32, height: u32) -> RenderResult<Self> {
     let instance = Self::create_instance();
     let adapter = Self::request_adapter(instance).await?;
     let (device, queue) = Self::request_device(&adapter).await?;
@@ -100,7 +99,7 @@ impl Backend for NativeBackend {
   async fn handle_encoder_after_render(
     &self,
     mut encoder: wgpu::CommandEncoder,
-  ) -> SkinRendererResult<SkinRender> {
+  ) -> RenderResult<Vec<u8>> {
     let output_buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
       label: None,
       size: (self.dimensions.padded_bytes_per_row * self.dimensions.height) as u64,

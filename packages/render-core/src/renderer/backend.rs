@@ -1,6 +1,4 @@
-#[cfg(not(target_arch = "wasm32"))]
-use super::SkinRender;
-use crate::error::{Error, Result as SkinRendererResult};
+use crate::error::{Error, Result as RenderResult};
 
 #[cfg(target_arch = "wasm32")]
 pub type OutputTexture<'a> = wgpu::SurfaceTexture;
@@ -8,6 +6,9 @@ pub type OutputTexture<'a> = wgpu::SurfaceTexture;
 #[cfg(not(target_arch = "wasm32"))]
 pub type OutputTexture<'a> = &'a wgpu::Texture;
 
+// The futures' Send bounds can't be named here, but every render awaits them on a concrete
+// backend, where the compiler checks them
+#[allow(async_fn_in_trait)]
 pub trait Backend {
   fn device(&self) -> &wgpu::Device;
   fn queue(&self) -> &wgpu::Queue;
@@ -19,7 +20,7 @@ pub trait Backend {
     })
   }
 
-  async fn request_adapter(instance: wgpu::Instance) -> SkinRendererResult<wgpu::Adapter> {
+  async fn request_adapter(instance: wgpu::Instance) -> RenderResult<wgpu::Adapter> {
     instance
       .request_adapter(&wgpu::RequestAdapterOptions::default())
       .await
@@ -40,7 +41,7 @@ pub trait Backend {
   async fn handle_encoder_after_render(
     &self,
     encoder: wgpu::CommandEncoder,
-  ) -> SkinRendererResult<SkinRender>;
+  ) -> RenderResult<Vec<u8>>;
 
   #[cfg(target_arch = "wasm32")]
   fn handle_encoder_after_render(
