@@ -29,6 +29,7 @@ export const MegaWallsProfile = ({
 }: MegaWallsProfileProps) => {
   const { megawalls } = player.stats;
   const stats = megawalls[mode.api];
+  const { overall } = megawalls;
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(megawalls.coins), "§6"],
@@ -95,53 +96,45 @@ export const MegaWallsProfile = ({
           <Table.td title={t("stats.points")} value={t(stats.points)} color="§e" />
         </Table.tr>
         <If condition={mode.api === "overall"}>
-          {() => {
-            const { overall } = megawalls;
-
-            return (
-              <>
-                <Table.tr>
-                  <Table.td
-                    title={t("stats.blocksBroken")}
-                    value={t(overall.blocksBroken)}
-                    color="§a"
-                  />
-                  <Table.td
-                    title={t("stats.blocksPlaced")}
-                    value={t(overall.blocksPlaced)}
-                    color="§c"
-                  />
-                  <Table.td
-                    title={t("stats.ironOreBroken")}
-                    value={t(overall.ironOreBroken)}
-                    color="§6"
-                  />
-                  <Table.td
-                    title={t("stats.treasuresFound")}
-                    value={t(overall.treasuresFound)}
-                    color="§e"
-                  />
-                </Table.tr>
-                <Table.tr>
-                  <Table.td
-                    title={t("stats.arrowsFired")}
-                    value={t(overall.arrowsFired)}
-                    color="§a"
-                  />
-                  <Table.td
-                    title={t("stats.arrowsHit")}
-                    value={t(overall.arrowsHit)}
-                    color="§c"
-                  />
-                  <Table.td
-                    title={t("stats.shotAccuracy")}
-                    value={`${t(ratio(overall.arrowsHit, overall.arrowsFired, 100))}%`}
-                    color="§6"
-                  />
-                </Table.tr>
-              </>
-            );
-          }}
+          <Table.tr>
+            <Table.td
+              title={t("stats.blocksBroken")}
+              value={t(overall.blocksBroken)}
+              color="§a"
+            />
+            <Table.td
+              title={t("stats.blocksPlaced")}
+              value={t(overall.blocksPlaced)}
+              color="§c"
+            />
+            <Table.td
+              title={t("stats.ironOreBroken")}
+              value={t(overall.ironOreBroken)}
+              color="§6"
+            />
+            <Table.td
+              title={t("stats.treasuresFound")}
+              value={t(overall.treasuresFound)}
+              color="§e"
+            />
+          </Table.tr>
+          <Table.tr>
+            <Table.td
+              title={t("stats.arrowsFired")}
+              value={t(overall.arrowsFired)}
+              color="§a"
+            />
+            <Table.td
+              title={t("stats.arrowsHit")}
+              value={t(overall.arrowsHit)}
+              color="§c"
+            />
+            <Table.td
+              title={t("stats.shotAccuracy")}
+              value={`${t(ratio(overall.arrowsHit, overall.arrowsFired, 100))}%`}
+              color="§6"
+            />
+          </Table.tr>
         </If>
       </Table.table>
       <Footer logo={logo} user={user} />
