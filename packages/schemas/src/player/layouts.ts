@@ -79,20 +79,20 @@ export const ITEM_LAYOUT: LayoutShape<Record<string, string | number[]>> = {
 const MIN_SKIP = 4;
 
 function packSlots(slots: Slots) {
-  const filled = Array.from(slots, (slot) => slot ?? "");
-  while (filled.length > 0 && !filled.at(-1)) filled.pop();
+  const tokens = Array.from(slots, (slot) => slot ?? "");
+  while (tokens.length > 0 && !tokens.at(-1)) tokens.pop();
 
   const packed: string[] = [];
 
-  for (let slot = 0; slot < filled.length; slot++) {
+  for (let slot = 0; slot < tokens.length; slot++) {
     let end = slot;
-    while (!filled[end]) end++;
+    while (!tokens[end]) end++;
 
     if (end - slot >= MIN_SKIP) {
       packed.push(`*${end - slot}`);
       slot = end - 1;
     } else {
-      packed.push(filled[slot]);
+      packed.push(tokens[slot]);
     }
   }
 
@@ -107,10 +107,10 @@ function encodeLayouts(layouts: [name: string, slots: Slots][]) {
     .join(";");
 }
 
-function collectLayouts<T>(data: APIData, key: RegExp, shape: LayoutShape<T>) {
+function collectLayouts<T>(data: APIData, pattern: RegExp, shape: LayoutShape<T>) {
   return encodeLayouts(
-    Object.entries(data).flatMap(([name, layout]): [string, Slots][] => {
-      const match = key.exec(name);
+    Object.entries(data).flatMap(([key, layout]): [string, Slots][] => {
+      const match = pattern.exec(key);
       return match ? [[match[1], shape.slots(layout)]] : [];
     }),
   );
