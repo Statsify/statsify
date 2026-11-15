@@ -206,6 +206,8 @@ export class McInventory extends HTMLElement {
     const tick = this.tick;
     const resources = resourcesFor(this.packStack);
     const renderer = await resources.renderer;
+    if (drawing !== this.drawing) return;
+
     const shown = this.items.slice(0, size.rows * size.cols);
     const frozen = this.hasAttribute("freeze");
     const moving = shown.flatMap((item, slot) => (item && !frozen && renderer.animates(item) ? [slot] : []));
