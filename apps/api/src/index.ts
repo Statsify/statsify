@@ -64,6 +64,8 @@ adapter
 
 // A Nest interceptor would miss requests the guards reject
 adapter.getInstance().addHook("onRequest", (request, reply, done) => {
+  // reply.elapsedTime stays 0 unless something registers an onResponse hook
+  const start = performance.now();
   const { player, uuid, guild, cache } = request.query as Record<string, string | undefined>;
 
   setRequestAttributes({
@@ -90,7 +92,7 @@ adapter.getInstance().addHook("onRequest", (request, reply, done) => {
 
       emitRequestEvent({
         message: [request.method, request.routeOptions.url].filter(Boolean).join(" "),
-        durationMs: reply.elapsedTime,
+        durationMs: performance.now() - start,
         slowMs: SLOW_REQUEST_MS,
       });
     })
