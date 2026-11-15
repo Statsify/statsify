@@ -45,6 +45,7 @@ const STYLE = `
   .text > span { position: absolute; line-height: 0.5em; text-box: trim-both cap alphabetic; }
   [part="title"] { color: #404040; }
   [part="count"] { color: #ffffff; text-shadow: var(--gui-pixel) var(--gui-pixel) 0 #3f3f3f; }
+  .highlight { position: absolute; display: none; pointer-events: none; background: rgba(255, 255, 255, 0.5); }
 `;
 
 interface Resources {
@@ -93,6 +94,7 @@ export class McInventory extends HTMLElement {
 
   private canvas = document.createElement("canvas");
   private text = document.createElement("div");
+  private highlight = document.createElement("div");
   private packStack?: PackStack | Atlas;
   private items: (ItemStack | undefined)[] = [];
   private hovered = -1;
@@ -130,7 +132,8 @@ export class McInventory extends HTMLElement {
     const frame = document.createElement("div");
     frame.className = "frame";
     this.text.className = "text";
-    frame.append(this.canvas, this.text);
+    this.highlight.className = "highlight";
+    frame.append(this.canvas, this.text, this.highlight);
     root.append(style, frame);
 
     this.canvas.addEventListener("pointermove", (event) => this.hover(event));
@@ -267,9 +270,10 @@ export class McInventory extends HTMLElement {
           }
         : null;
 
-    const change = new CustomEvent("mc-tooltip-change", { detail, bubbles: true, composed: true });
-    // A removed element's events no longer reach the page, so its last close goes to the document
-    (this.isConnected ? this : document).dispatchEvent(change);
+    const change = () => new CustomEvent("mc-tooltip-change", { detail, bubbles: true, composed: true });
+    this.dispatchEvent(change());
+    // A removed element's events no longer reach the page, so its last close goes to the document too
+    if (!this.isConnected) document.dispatchEvent(change());
   }
 
   private placeText(size: InventorySize, shown: (ItemStack | undefined)[], width: number, atlas: boolean) {
@@ -354,7 +358,7 @@ export class McInventory extends HTMLElement {
   private show() {
     if (!this.view) return;
 
-    const { renderer, size, still, composed } = this.view;
+    const { renderer, size, atlas, still, composed } = this.view;
     const ctx = context(composed);
     ctx.clearRect(0, 0, composed.width, composed.height);
     ctx.drawImage(still, 0, 0);
@@ -363,10 +367,19 @@ export class McInventory extends HTMLElement {
       renderer.drawSlot(ctx, size, slot, this.items[slot], this.movingIcons[index]);
     }
 
-    if (this.hovered >= 0) {
-      const [x, y] = slotOrigin(size, this.hovered);
-      ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-      ctx.fillRect((x + 1) * size.scale, (y + 1) * size.scale, 16 * size.scale, 16 * size.scale);
+    const origin = this.hovered >= 0 ? slotOrigin(size, this.hovered) : undefined;
+    this.highlight.style.display = atlas && origin ? "block" : "none";
+
+    if (origin) {
+      const [left, top, side] = [(origin[0] + 1) * size.scale, (origin[1] + 1) * size.scale, 16 * size.scale];
+
+      // An atlas's counts are HTML over the canvas, so its highlight has to be too, to dim them as 1.8 does
+      if (atlas) {
+        Object.assign(this.highlight.style, { left: `${left}px`, top: `${top}px`, width: `${side}px`, height: `${side}px` });
+      } else {
+        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.fillRect(left, top, side, side);
+      }
     }
 
     const screen = this.canvas.getContext("2d")!;
