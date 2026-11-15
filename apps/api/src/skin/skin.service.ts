@@ -188,6 +188,7 @@ export class SkinService {
     return { texture: head, enchanted: false, skull: true };
   }
 
+  // Forgets a failed load, so a pack copied in after startup is picked up without a restart
   private getKartLibrary() {
     this.kartLibrary ??= loadKartLibrary().catch((error) => {
       this.kartLibrary = undefined;
