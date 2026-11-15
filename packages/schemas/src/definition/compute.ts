@@ -16,13 +16,16 @@ type Values = Record<string, any>;
 type Scopes = Map<Definition, (path: string) => unknown>;
 
 /** Fills in every computed field from its dependencies, including ones that depend on other computed fields */
-export function compute<S extends ObjectSchema>(
-  schema: S,
-  input: s.input<S>,
-  shouldCompute: (field: AnySchema) => boolean = () => true,
-  around: Scopes = new Map()
-): s.infer<S> {
-  const values = input as Values;
+export function compute<S extends ObjectSchema>(schema: S, input: s.input<S>): s.infer<S> {
+  return computeWhere(schema, input, () => true, new Map()) as s.infer<S>;
+}
+
+function computeWhere(
+  schema: ObjectSchema,
+  values: Values,
+  shouldCompute: (field: AnySchema) => boolean,
+  around: Scopes
+): Values {
   const entries = Object.entries(schema.definition);
   const output: Values = Object.fromEntries(entries.map(([key]) => [key, undefined]));
   const done = new Set<string>();
@@ -37,10 +40,10 @@ export function compute<S extends ObjectSchema>(
     if (computed && shouldCompute(field)) {
       output[key] = computed.compute(...computed.dependencies.map(readDependency));
     } else if (field.kind === "object") {
-      output[key] = value === undefined ? value : compute(field, value, shouldCompute, scopes);
+      output[key] = value === undefined ? value : computeWhere(field, value, shouldCompute, scopes);
     } else if (field.kind === "array" && field.element.kind === "object") {
-      output[key] = value?.map((element: object) =>
-        compute(field.element, element, shouldCompute, scopes)
+      output[key] = value?.map((element: Values) =>
+        computeWhere(field.element, element, shouldCompute, scopes)
       );
     } else {
       output[key] = value;
@@ -65,7 +68,7 @@ export function compute<S extends ObjectSchema>(
 
   for (const [key] of entries) get(key);
 
-  return output as s.infer<S>;
+  return output;
 }
 
 /** The stats gained between two copies, as `/session` shows them */
@@ -75,11 +78,12 @@ export function diff<S extends ObjectSchema>(
   after: s.infer<S>
 ): s.infer<S> {
   // A ratio of what was gained is the session's ratio, while a level is shown as levels gained
-  return compute(
+  return computeWhere(
     schema,
-    subtract(schema, before, after) as s.input<S>,
-    (field) => field.kind === "number" && !field.meta.subtractInSessions
-  );
+    subtract(schema, before, after),
+    (field) => field.kind === "number" && !field.meta.subtractInSessions,
+    new Map()
+  ) as s.infer<S>;
 }
 
 function subtract(schema: ObjectSchema, before: Values, after: Values) {
