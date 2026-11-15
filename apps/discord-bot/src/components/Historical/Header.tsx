@@ -57,20 +57,20 @@ const RELATIVE_TIME_UNITS = [
   ["second", differenceInSeconds, addSeconds],
 ] as const;
 
-// Counted by hand since differenceInMonths makes Jan 29 6pm to Feb 28 noon a month instead of 29
-// days, because Feb 28 ends its month
+const relativeTimeFormat = new Intl.RelativeTimeFormat();
+
+// Counted by hand: differenceInMonths makes Jan 29 6pm to Feb 28 noon a month, since Feb 28 ends its month
 const formatRelativeTime = (date: Date) => {
   const now = new Date();
   const [earlier, later, sign] = date < now ? [date, now, -1] : [now, date, 1];
-  const formatter = new Intl.RelativeTimeFormat();
 
   for (const [unit, difference, add] of RELATIVE_TIME_UNITS) {
     let count = difference(later, earlier);
     if (add(earlier, count) > later) count--;
-    if (count > 0) return formatter.format(sign * count, unit);
+    if (count > 0) return relativeTimeFormat.format(sign * count, unit);
   }
 
-  return formatter.format(sign * 0, "second");
+  return relativeTimeFormat.format(sign * 0, "second");
 };
 
 export const HistoricalHeader = ({
