@@ -169,9 +169,11 @@ export class LinkedRolesService {
     try {
       const accessToken = await this.getAccessToken(connection);
 
+      // Revoking invalidates the token, so it has to come after the delete
       if (accessToken) {
-        await discordRequest("DELETE", roleConnectionPath, accessToken);
-        await revokeToken(accessToken);
+        await discordRequest("DELETE", roleConnectionPath, accessToken).finally(() =>
+          revokeToken(accessToken)
+        );
       }
     } catch (error) {
       this.logger.error(error);
