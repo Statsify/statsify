@@ -21,7 +21,7 @@ import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { ProgressionSchema, progression } from "../../../progression.definition.js";
 import { add } from "@statsify/math";
 import { formats } from "#definition/format";
-import { s } from "#definition/s";
+import { type NumberSchema, s } from "#definition/s";
 import type { APIData } from "@statsify/util";
 
 export const PIT_MODES = new GameModes([
@@ -62,21 +62,6 @@ const levelProgression = (exp: number) => {
 const mysticsEnchanted = (name: string) =>
   s.number().leaderboard({ name: `${name} Mystics Enchanted`, fieldName: "Mystics Enchanted" });
 
-const GoldStats = s.fields({
-  gold() {
-    return s
-      .number()
-      .color("§6")
-      .leaderboard({ additionalFields: [this.goldEarned] });
-  },
-  goldEarned() {
-    return s
-      .number()
-      .color("§6")
-      .leaderboard({ additionalFields: [this.gold] });
-  },
-});
-
 export const PitSchema = s
   .object({
     exp() {
@@ -98,7 +83,12 @@ export const PitSchema = s
     progression() {
       return ProgressionSchema.computed(levelProgression, [this.exp]);
     },
-    ...GoldStats,
+    gold(): NumberSchema {
+      return s.number().color("§6").leaderboard({ additionalFields: [this.goldEarned] });
+    },
+    goldEarned() {
+      return s.number().color("§6").leaderboard({ additionalFields: [this.gold] });
+    },
     renown: s.number().color("§e"),
     lifetimeRenown: s.number().color("§b"),
     bounty: s.number().color("§6"),
