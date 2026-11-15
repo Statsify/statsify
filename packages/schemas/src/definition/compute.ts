@@ -77,7 +77,6 @@ export function diff<S extends ObjectSchema>(
   before: s.infer<S>,
   after: s.infer<S>
 ): s.infer<S> {
-  // A ratio of what was gained is the session's ratio, while a level is shown as levels gained
   return computeWhere(
     schema,
     subtract(schema, before, after),

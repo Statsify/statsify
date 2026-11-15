@@ -14,7 +14,7 @@ import type { ObjectSchema, s } from "./s.js";
 
 type Values = Record<string, any>;
 
-// Every API read deserializes a whole player, and unflatten splitting each path again was most of its time
+// Every API read deserializes a whole player, so each path is split once
 const splitFields = new WeakMap<ObjectSchema, [Field, string[]][]>();
 
 function getSplitFields(schema: ObjectSchema) {
@@ -57,7 +57,7 @@ export function serialize<S extends ObjectSchema>(
   return serialized as Flatten<s.infer<S>>;
 }
 
-/** Reads flattened values back with every default filled in and numbers rounded to two places */
+/** Reads flattened values back with defaults filled in, computed fields rebuilt and numbers rounded to two places */
 export function deserialize<S extends ObjectSchema>(
   schema: S,
   flat: Flatten<s.infer<S>>
@@ -70,7 +70,6 @@ export function deserialize<S extends ObjectSchema>(
     setPath(filled, keys, store.deserialize && value === undefined ? store.default : value);
   }
 
-  // Computed values are built again from what was stored, so a changed formula reaches old documents
   const computed = compute(schema, filled as s.input<S>);
   const deserialized: Values = {};
 

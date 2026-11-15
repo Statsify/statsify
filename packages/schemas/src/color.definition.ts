@@ -15,8 +15,6 @@ const COLORS = Object.fromEntries(minecraftColors.map((color) => [color.id, colo
   (typeof minecraftColors)[number]
 >;
 
-// Stored by id, Hypixel's name for a color. An id that isn't a Minecraft color leaves the
-// code and hex undefined, like the Color class did
 export const ColorSchema = s.object({
   code() {
     return s.string<ColorCode>().computed((id) => COLORS[id]?.code, [this.id]);
