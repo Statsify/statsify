@@ -68,7 +68,8 @@ export function filterKits<T extends Mode[]>(
 
   if (!kit) return [overall, ...kits.slice(0, MAX_OPTIONS - 1)];
 
-  const selected = kits.find((mode) => mode.api === kit.toLowerCase());
+  const search = kit.toLowerCase().replaceAll(/\s/g, "");
+  const selected = kits.find((mode) => mode.api === search);
   if (!selected) throw new ErrorMessage("errors.invalidKit");
 
   const others = kits.filter((mode) => mode !== selected);
