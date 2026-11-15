@@ -66,7 +66,7 @@ pub fn load_texture(pack: &Pack, name: &str, frame: Frame) -> Result<Texture, Er
 }
 
 /// The strip frame to draw, or None when the metadata has no animation section.
-fn animation_frame(mcmeta: &str, frame_count: u32, frame: Frame) -> Result<Option<usize>, String> {
+fn animation_frame(mcmeta: &str, frame_count: u32, wanted: Frame) -> Result<Option<usize>, String> {
   let root = crate::parse_json(mcmeta)?;
 
   let Some(animation) = root.get("animation") else {
@@ -140,13 +140,10 @@ fn animation_frame(mcmeta: &str, frame_count: u32, frame: Frame) -> Result<Optio
     return Err("the strip has no frames".to_string());
   }
 
-  let tick = match frame {
-    Frame::Tick(tick) => tick,
+  let Frame::Tick(tick) = wanted else {
     // Reversed, since max_by_key keeps the last of equal holds
-    Frame::Resting => {
-      let resting = frames.iter().rev().max_by_key(|(_, time)| time);
-      return Ok(resting.map(|(index, _)| *index as usize));
-    }
+    let resting = frames.iter().rev().max_by_key(|(_, time)| time);
+    return Ok(resting.map(|(index, _)| *index as usize));
   };
 
   let mut remaining = tick % cycle;
