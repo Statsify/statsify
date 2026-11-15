@@ -533,20 +533,14 @@ export async function renderSmash(
     pitch = SMASH_CAMERA.pitch,
   }: Pick<SmashRenderDto, "width" | "height" | "yaw" | "pitch">
 ): Promise<Buffer> {
-  const textures = join(SMASH_PACK.path, "textures");
-
-  const [chestplate, leggings, boots] = await Promise.all([
-    resolveArmorPiece(worn.chestplate, 1, textures),
-    resolveArmorPiece(worn.leggings, 2, textures),
-    resolveArmorPiece(worn.boots, 1, textures),
-  ]).catch(throwPackUnavailable(SMASH_PACK));
+  const armor = await resolvePackArmor(SMASH_PACK, worn);
 
   const player = {
     skin: await drawHeroSkin(skinColor),
     // Every lobby stand's skin uses the classic arms
     slim: false,
     extruded: false,
-    armor: { chestplate, leggings, boots },
+    armor,
     pose: "standing",
   } as const;
 
