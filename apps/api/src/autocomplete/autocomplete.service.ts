@@ -83,7 +83,7 @@ export class AutocompleteService {
     const recorded = { name: stored, lookups: [now, ...previous].slice(0, LOOKUPS_PER_ENTRY) };
     const others = sortByFrecency(entries.filter((e) => e.name !== stored), now);
 
-    // A new name scores below a full history's names, so it goes in ahead of the cut
+    // A new name can score below a full history's names, so it goes in ahead of the cut
     const kept = [recorded, ...others.slice(0, MAX_CHOICES - 1)];
     await this.redis.set(this.historyKey(type, id), JSON.stringify(kept), "PX", HISTORY_MS);
   }
