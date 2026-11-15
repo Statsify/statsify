@@ -273,7 +273,6 @@ export class RatiosCommand {
   private getRatios(modeClass: Constructor<any> | undefined, stats: any): RatioWithStats[] {
     if (!modeClass) return [];
 
-    // Modes like Duels Classic and the Zombies maps keep their stats under overall
     const overallClass = Reflect.getMetadata("design:type", modeClass.prototype, "overall");
     if (overallClass) return this.getRatios(overallClass, stats.overall);
 
