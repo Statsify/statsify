@@ -29,10 +29,7 @@ export interface ItemStack {
   /** § codes or a JSON text component */
   name?: TextComponent;
   lore?: TextComponent[];
-  /**
-   * The lines under the name as the game drew them, enchantments and attributes included, like
-   * a dumped kit's. Replaces lore and Unbreakable
-   */
+  /** The lines under the name as the game drew them, which replace lore and Unbreakable */
   tooltip?: TextComponent[];
   unbreakable?: boolean;
   hideFlags?: number;

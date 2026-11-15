@@ -14,17 +14,14 @@ import dumped from "../data/skywars-kits.json" with { type: "json" };
 export interface SkyWarsKit {
   /** As the lobby's kit menus name it, menu first, like Normal Scout */
   name: string;
-  /**
-   * The items its menu lists, each by how a kit layout stores it (DIAMOND_AXE:0:16) and, when
-   * every listed item is known, the slot a player who never saved a layout gets it in
-   */
+  /** The items its menu lists by layout key (DIAMOND_AXE:0:16), with default slots when every one is known */
   items: { slot?: number; token: string; item: ItemStack }[];
 }
 
 // Built by scripts/import-dump.ts from the lobby's kit menus and Kit Customizers
 const KITS = dumped as Record<string, SkyWarsKit>;
 
-const hasDefault = ({ items }: SkyWarsKit) => items.every(({ slot }) => slot !== undefined);
+const hasDefault = ({ items }: SkyWarsKit) => items.length > 0 && items.every(({ slot }) => slot !== undefined);
 
 /** Every SkyWars kit with a default layout, by the key fromSkyWarsKit takes (normal_scout) and its menu's name */
 export const SKYWARS_KITS = Object.entries(KITS).flatMap(([key, kit]) => (hasDefault(kit) ? [{ key, name: kit.name }] : []));
@@ -56,19 +53,15 @@ export function skyWarsKitArmor(kit: string) {
 }
 
 /** A layout key with its enchantment ids in order, as tokens have them */
-function token(key: string) {
+function withSortedEnchantments(key: string) {
   const [material, damage, enchantments] = key.split(":");
   const ids = enchantments?.split(",").map(Number).toSorted((a, b) => a - b);
   return [material, damage, ...(ids ? [ids.join(",")] : [])].join(":");
 }
 
 /**
- * A SkyWars kit layout (kit_<type>_<mode>_<kit>_inventory): a Bukkit material, Damage and, on
- * enchanted items, the enchantment ids, mapped to their slot, like
- * { "IRON_PICKAXE:0:32,34": "0", "GOLD_HELMET:0": [39] }, as 40 player inventory slots. `kit` is
- * the kit's id (kit_basic_solo_scout, as activeKit_SOLO holds it) or its key in SKYWARS_KITS.
- * Items its menu lists get the game's counts, names and tooltips; the rest are plain. Without a
- * layout, it's the kit's default.
+ * A SkyWars kit_…_inventory ({ "IRON_PICKAXE:0:32,34": "0", "GOLD_HELMET:0": [39] }), or the kit's default.
+ * `kit` is its id (kit_basic_solo_scout, as activeKit_SOLO holds it) or a SKYWARS_KITS key
  */
 export function fromSkyWarsKit(
   stored: Readonly<Record<string, string | readonly number[]>> | null | undefined,
@@ -84,11 +77,18 @@ export function fromSkyWarsKit(
   }
 
   const listed = new Map(dumpedKit?.items.map(({ token, item }) => [token, item]));
+  const byMaterial = Map.groupBy(dumpedKit?.items ?? [], ({ token }) => token.split(":").slice(0, 2).join(":"));
+
+  // Many layouts (all of Ranked's) store a listed item without its enchantment ids
+  const findListed = (key: string) => {
+    const sameMaterial = byMaterial.get(key);
+    return listed.get(withSortedEnchantments(key)) ?? (sameMaterial?.length === 1 ? sameMaterial[0].item : undefined);
+  };
 
   // Older versions of a kit leave their items in a layout, so a slot can hold two: the kit's
   // current item wins, then the first
   const entries = Object.entries(stored)
-    .map(([key, value]) => ({ key, value, listedItem: listed.get(token(key)) }))
+    .map(([key, value]) => ({ key, value, listedItem: findListed(key) }))
     .toSorted((a, b) => Number(b.listedItem !== undefined) - Number(a.listedItem !== undefined));
 
   for (const { key, value, listedItem } of entries) {

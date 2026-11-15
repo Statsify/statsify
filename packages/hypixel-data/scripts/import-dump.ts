@@ -6,9 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Builds every data/*.json from StatsifyDump exports of the games' layout
-// editors, kit menus and shop menus, so each item has the count, name and tooltip the game gives it. Each dump session writes its own exports, so pass the last export
-// of every session needed:
+// Builds every data/*.json from StatsifyDump exports, given the last export of each dump session:
 //   pnpm --filter @statsify/hypixel-data build
 //   node scripts/import-dump.ts <dump.json> [<dump.json> …]
 
@@ -19,11 +17,12 @@ import {
   type KitItem,
   type LegacyKit,
   type SkyWarsKit,
+  type TntGamesMode,
   kitKey,
   leatherColor,
   skinUrl,
 } from "@statsify/hypixel-data";
-import { type ItemStack, legacyItem } from "@statsify/textures";
+import { type ItemStack, legacyItem, legacyMaterialId } from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
 import data from "@statsify/textures/data/minecraft-data.json" with { type: "json" };
 
@@ -156,10 +155,8 @@ const legacyItems = await fetchJson<(LegacyName & { name: string })[]>("1.8/item
 const legacyIds = new Map(legacyItems.map(({ id, name }) => [name, id]));
 const materials = new Map(Object.entries(data.materials).map(([name, id]) => [id, name.toLowerCase()]));
 
-// Menus that list items by name use 1.8's own, Damage variants included (Blue Wool), or the
-// item's Bukkit material ("Gold Helmet"); the rest are Hypixel's ("Awkward Potion"). minecraft-data
-// gives some block items their item's name (Nether Quartz), so blocks' names count too, and a
-// name two items share matches neither
+// 1.8's names, Damage variants included (Blue Wool), for menus that list items by name. minecraft-data
+// gives some block items their item's name (Nether Quartz), so blocks count; a name two share matches neither
 const legacyNames = new Map<string, { id: number; damage: number } | undefined>();
 for (const { id, displayName, variations = [] } of [...legacyItems, ...(await fetchJson<LegacyName[]>("1.8/blocks.json"))]) {
   for (const { metadata: damage, displayName: name } of [{ metadata: 0, displayName }, ...variations]) {
@@ -169,10 +166,8 @@ for (const { id, displayName, variations = [] } of [...legacyItems, ...(await fe
   }
 }
 
-const bukkitIds: Record<string, number | undefined> = data.materials;
-
 function namedItem(name: string) {
-  const material = bukkitIds[name.toUpperCase().replaceAll(" ", "_")];
+  const material = legacyMaterialId(name.toUpperCase().replaceAll(" ", "_"));
   return legacyNames.get(name) ?? (material === undefined ? undefined : { id: material, damage: 0 });
 }
 
@@ -283,7 +278,7 @@ for (const [title, { mode, tokens }] of Object.entries(SINGLE_KIT_EDITORS)) {
   output.defaults[mode] = found.layout;
 }
 
-const tntGames: Record<string, { name: string; tokens: Tokens; default: Record<string, string> }> = {};
+const tntGames: Record<string, TntGamesMode> = {};
 
 for (const [name, { mode, tokens }] of Object.entries(TNT_GAMES_EDITORS)) {
   const found = singleKit(name, tokens);
@@ -479,12 +474,12 @@ interface Listed {
 }
 
 /**
- * A kit menu item's list: its §7§7 lore lines up to the first blank one, each with the enchantments
- * under it. Lore lines start with §5§o, which leaves out the client's lines above them (a potion
- * icon's effects, "Dyed"), and notes like "Spawns a 4th chest" are a single §7
+ * A kit menu item's list: its §7§7 lore lines up to the first blank one, with the enchantments under each.
+ * Lines without §5§o are the client's (a potion's effects, "Dyed"), and a note's single §7 isn't listed
  */
 function listedItems(lore: string[]) {
   const listed: Listed[] = [];
+  let wrapped = false;
 
   for (const line of lore.filter((shown) => shown.startsWith("§5§o"))) {
     if (blank(line)) break;
@@ -497,6 +492,11 @@ function listedItems(lore: string[]) {
       // An enchanted book's count follows its enchantment
       if (enchantment[2]) last.count = Number(enchantment[2]);
     } else if (text) {
+      // A §7§7 note that wraps ends its first line with a comma ("You spawn with a tamed wolf (20HP,")
+      const note = wrapped || text.endsWith(",");
+      wrapped = text.endsWith(",");
+      if (note) continue;
+
       const [, name, count] = /^(.+?)(?: x(\d+))?$/.exec(text)!;
       listed.push({ text: name, count: count ? Number(count) : undefined, enchantments: [] });
     }
@@ -766,9 +766,8 @@ const MENU_STATUS =
   /^(Click to (select|purchase|view)!|> Click to activate! <|>>> ACTIVE <<<|SELECTED!|Equipped!|Missing parts!|Cost: .+|Unlocked in .+|[✖✔] .+|Choose an? .+!|Collect all the hats!)$/;
 
 /**
- * A menu item as a loadout shows it: without the account's status lines, and, where the menu
- * colors names by whether the account owns or picked them, named in the selected item's green.
- * The selected item's glint is the menu's too, so only real enchantments glint
+ * A menu item without the account's status lines, `recolor`ed in the selected item's green where the menu
+ * colors names by ownership. Only real enchantments glint, since the menu glints the selected item
  */
 function menuItem(dumped: DumpItem, recolor: boolean): ItemStack {
   const item = kitItem(dumped);
@@ -866,9 +865,8 @@ for (const [slot, title] of Object.entries(ARENA_SKILLS)) {
   );
 }
 
-// Each rune's row starts with the rune and goes on with its upgrades (Rune of Speed II). Its
-// description gives the first level's chance, and the stored rune_level_<rune> isn't known to
-// count from it, so the rune keeps only its name
+// Each rune's row starts with the rune, then its upgrades (Rune of Speed II). Its tooltip gives the first
+// level's chance, which the stored rune_level_<rune> may not count from, so the rune keeps only its name
 arena.active_rune = byKey(
   menu("Runes").flatMap((item): [string, ItemStack][] => {
     const rune = /^Rune of ([A-Za-z]+)$/.exec(plain(item.name))?.[1];

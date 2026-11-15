@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { LegacyTexture } from "../src/core/pack.js";
 import { readFile, writeFile } from "node:fs/promises";
 import { unzipSync } from "fflate";
 
@@ -17,8 +18,7 @@ const fetchJson = async <T>(path: string): Promise<T> => {
   return response.json() as Promise<T>;
 };
 
-// Bukkit's 1.8 Material enum (from a Spigot 1.8 source mirror), since SkyWars' kit layouts name
-// items by it, like GOLD_CHESTPLATE or MONSTER_EGG
+// Bukkit's 1.8 Material enum, which Hypixel's kit layouts name items by, like GOLD_CHESTPLATE
 const BUKKIT_MATERIALS =
   "https://raw.githubusercontent.com/Attano/Spigot-1.8/9db48bc15e203179554b8d992ca6b0a528c8d300/org/bukkit/Material.java";
 
@@ -59,9 +59,6 @@ const DYES: Record<string, string> = {
 };
 
 const RECORDS = ["11", "13", "blocks", "cat", "chirp", "far", "mall", "mellohi", "stal", "strad", "wait", "ward"] as const;
-
-/** A texture's 26.3 name, null where 26.3 draws it another way, or one frame of a 1.8 strip, by how far along it sits */
-type LegacyTexture = string | null | { texture: string; position: number };
 
 // 1.8.9 textures whose models were renamed too, so no same-named model pairs them with 26.3's
 const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
@@ -466,13 +463,18 @@ output.legacyModels["builtin/clock"] = "builtin/generated";
 output.legacyModels["builtin/compass"] = "builtin/generated";
 
 // Block items draw 1.8.9's item model of the same name, and these 1.8 names are other 26.3 items:
-// 1.8's snow is the block, its stone slab and stairs are smooth stone and cobblestone's
+// 1.8's snow and nether_brick are the blocks, tall_grass is short grass, and its stone slab and
+// stairs are smooth stone and cobblestone's
 Object.assign(output.legacyModels, {
+  "item/double_grass": "item/tall_grass",
+  "item/nether_brick": "legacy/item/nether_brick",
+  "item/netherbrick": "item/nether_brick",
   "item/smooth_red_sandstone": "item/cut_red_sandstone",
   "item/smooth_sandstone": "item/cut_sandstone",
   "item/snow": "item/snow_block",
   "item/stone_slab": "item/smooth_stone_slab",
   "item/stone_stairs": "item/cobblestone_stairs",
+  "item/tall_grass": "item/short_grass",
 });
 
 if (missing.length > 0) {
