@@ -422,7 +422,7 @@ export class SkyWarsDuels extends MultiPVPDuelsGameMode {
   @Field({ store: { default: "none" } })
   public kit: string;
 
-  // kit drops the menu, and Insane and Mini both have an Armorer
+  // kit doesn't say whether it's an Insane or Mini kit, and both have an Armorer
   @Field({ store: { required: false } })
   public kitId?: string;
 

@@ -99,7 +99,7 @@ export class SkyWarsMode {
   @Field({ store: { default: "default" } })
   public kit: string;
 
-  // kit drops the menu, and Normal and Insane both have a Scout
+  // kit doesn't say whether it's a Normal or Insane kit, and both have a Scout
   @Field({ store: { required: false } })
   public kitId?: string;
 
