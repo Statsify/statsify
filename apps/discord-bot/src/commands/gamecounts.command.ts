@@ -90,8 +90,9 @@ export class GameCountsCommand {
     const game = context.option<string | null>("game");
 
     if (game) {
-      if (!this.isGameCountGameId(game)) throw new ErrorMessage("errors.invalidGame");
-      return { embeds: [this.createGameCountsEmbed(game, gamecounts[game], true)] };
+      const id = this.findGameCountGameId(game);
+      if (!id) throw new ErrorMessage("errors.invalidGame");
+      return { embeds: [this.createGameCountsEmbed(id, gamecounts[id], true)] };
     }
 
     const gamecountEntries = Object.entries(gamecounts) as [keyof GameCounts, GamePlayers][];
@@ -164,7 +165,11 @@ export class GameCountsCommand {
       });
   }
 
-  private isGameCountGameId(id: string): id is keyof GameCounts {
-    return GAMECOUNT_GAME_IDS.includes(id as keyof GameCounts);
+  private findGameCountGameId(input: string) {
+    const query = input.toLowerCase();
+
+    return GAMECOUNT_GAME_CHOICES.find(
+      ({ name, value }) => value.toLowerCase() === query || name.toLowerCase() === query
+    )?.value;
   }
 }
