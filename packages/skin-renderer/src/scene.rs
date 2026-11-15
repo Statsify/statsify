@@ -302,6 +302,7 @@ pub async fn render_scene(
 
     let invalid = || Error::InvalidTransform(instance.model.clone());
 
+    // Checked after narrowing, since a huge f64 becomes an f32 infinity
     let finite = [translation, rotation, scale]
       .iter()
       .flatten()
