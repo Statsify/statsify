@@ -529,7 +529,7 @@ export async function renderWarlords(
     .catch(rethrowPackError(WARLORDS_PACK));
 }
 
-export interface SmashScene extends Pick<SmashHero, "skin" | "chestplate" | "leggings" | "boots"> {
+export interface SmashScene extends Pick<SmashHero, "skinColor" | "chestplate" | "leggings" | "boots"> {
   models: ModelInstance[];
 }
 
@@ -545,27 +545,17 @@ export function resolveSmash(hero: string, master = false): SmashScene {
   };
 }
 
-const heroSkins = new Map<number, Promise<Buffer>>();
-
-function getHeroSkin(color: number) {
-  let skin = heroSkins.get(color);
-
-  if (!skin) {
-    const canvas = createCanvas(64, 64);
-    const ctx = canvas.getContext("2d");
-    ctx.fillStyle = `#${color.toString(16).padStart(6, "0")}`;
-    ctx.fillRect(0, 0, 64, 64);
-
-    skin = canvas.toBuffer("png");
-    heroSkins.set(color, skin);
-  }
-
-  return skin;
+function drawHeroSkin(color: number) {
+  const canvas = createCanvas(64, 64);
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = `#${color.toString(16).padStart(6, "0")}`;
+  ctx.fillRect(0, 0, 64, 64);
+  return canvas.toBuffer("png");
 }
 
 export async function renderSmash(
   library: ModelLibrary,
-  { models, skin, ...worn }: SmashScene,
+  { models, skinColor, ...worn }: SmashScene,
   {
     width = SMASH_CAMERA.width,
     height = SMASH_CAMERA.height,
@@ -582,7 +572,7 @@ export async function renderSmash(
   ]).catch(throwPackUnavailable(SMASH_PACK));
 
   const player = {
-    skin: await getHeroSkin(skin),
+    skin: await drawHeroSkin(skinColor),
     // Every lobby stand's skin uses the classic arms
     slim: false,
     extruded: false,
