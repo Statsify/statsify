@@ -166,7 +166,9 @@ impl RenderTarget {
 
     let buffer_slice = output_buffer.slice(..);
     let (sender, receiver) = channel::shared::oneshot_channel();
-    buffer_slice.map_async(wgpu::MapMode::Read, move |v| sender.send(v).unwrap());
+    buffer_slice.map_async(wgpu::MapMode::Read, move |v| {
+      let _ = sender.send(v);
+    });
 
     // Waiting on the GPU blocks the thread, so it runs off napi's async workers
     let device = device.clone();
