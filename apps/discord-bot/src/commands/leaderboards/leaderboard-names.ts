@@ -12,21 +12,19 @@ import { flatten, removeFormatting } from "@statsify/util";
 import type { APIApplicationCommandOptionChoice } from "discord-api-types/v10";
 import type { LeaderboardMetadata, MetadataEntry } from "@statsify/schemas";
 
-let statKeys: Map<string, string> | undefined;
+let statKeysByEnglishName: Map<string, string> | undefined;
 
-// Schema metadata names leaderboards in English, so a stat is translated only when that exact text is a stats.* string
 export function translateStat(t: LocalizeFunction, name: string) {
-  statKeys ??= new Map(
+  statKeysByEnglishName ??= new Map(
     Object.entries(
       flatten(getLocalizeFunction("en-US")("stats", { returnObjects: true }) as unknown as object, "stats")
     ).map(([key, text]) => [text, key])
   );
 
-  const key = statKeys.get(name);
+  const key = statKeysByEnglishName.get(name);
   return key ? t(key) : name;
 }
 
-// Game and mode names stay in English, so only the stat that ends the name is translated
 export function translateLeaderboardName(
   t: LocalizeFunction,
   { name, fieldName = "" }: Pick<LeaderboardMetadata, "name" | "fieldName">
@@ -70,7 +68,6 @@ export class LeaderboardChoices {
 
     search = [
       new Fuse(list, {
-        // People type Hypixel's English stat names whatever their Discord language is
         keys: ["name", { name: "english", getFn: (choice) => englishNames.get(choice.value) }],
         includeScore: false,
         shouldSort: true,
