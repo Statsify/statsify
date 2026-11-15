@@ -220,7 +220,7 @@ impl MountEntity {
 fn placement(scale: f32) -> Matrix4<f32> {
   // The game seats every rider at a horse's height, above a smaller mount's saddle, so a smaller
   // mount stands higher to meet it
-  let seat = SEAT * PIXELS_PER_BLOCK -(1.0 - scale) * (MODEL_HEIGHT - SADDLE_TOP);
+  let seat = SEAT * PIXELS_PER_BLOCK - (1.0 - scale) * (MODEL_HEIGHT - SADDLE_TOP);
   let feet = FEET.y - seat / PLAYER_SCALE;
   let size = scale / PLAYER_SCALE;
 
