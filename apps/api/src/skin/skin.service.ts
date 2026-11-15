@@ -208,7 +208,6 @@ export class SkinService {
     return { skin: imageData(player.skin), slim: player.slim };
   }
 
-  // Forgets a failed load, so a pack copied in after startup is picked up without a restart
   private getLibrary(pack: ResourcePack) {
     let library = this.libraries.get(pack);
 
@@ -363,7 +362,7 @@ export async function loadPackLibrary(pack: ResourcePack): Promise<ModelLibrary>
 
 export interface KartScene {
   models: ModelInstance[];
-  suit: { chestplate?: ArmorPieceDto; leggings?: ArmorPieceDto; boots?: ArmorPieceDto };
+  suit: Omit<ArmorDto, "helmet">;
 }
 
 export function resolveKart(
