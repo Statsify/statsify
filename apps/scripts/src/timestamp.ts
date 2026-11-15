@@ -101,3 +101,4 @@ await setTimestamps("weekly");
 await setTimestamps("monthly");
 
 console.log(`Done! Took ${DateTime.now().diff(now).as("seconds")} seconds.`);
+process.exit(0);
