@@ -12,6 +12,7 @@ use statsify_render_core::mesh::Mesh;
 use statsify_render_core::renderer::{Backend, DrawItem, Pipeline, Renderer};
 use statsify_render_core::texture::Texture;
 
+use crate::attachment::{FEET, MODEL_HEIGHT, PLAYER_SCALE};
 use crate::error::{Error, Result};
 use crate::geometry::{BoxGeometry, Geometry, Rotation, TextureRegion};
 
@@ -32,16 +33,6 @@ pub struct SceneMount {
   /// coat, markings and armor.
   pub textures: Vec<Uint8Array>,
 }
-
-// The game draws a player at 0.9375 of the size it draws other entities, and this renderer draws
-// the player at a pixel per model unit, so other entities grow by the inverse
-const PLAYER_SCALE: f32 = 0.9375;
-
-// The game draws an entity's model origin 1.5078125 blocks above its feet, times its scale
-const MODEL_HEIGHT: f32 = 1.5078125 * 16.0;
-
-// This renderer's player has the game's model origin at its neck
-const PLAYER_NECK: f32 = 7.0;
 
 // In blocks: three quarters of a horse's 1.6 block height, less the 0.35 a player rides below that
 const SEAT: f32 = 1.6 * 0.75 - 0.35;
@@ -230,7 +221,7 @@ impl MountEntity {
 fn placement(scale: f32) -> Matrix4<f32> {
   // The game seats every rider at a horse's height, floating it above a smaller mount's saddle
   let seat = SEAT * 16.0 - (1.0 - scale) * (MODEL_HEIGHT - SADDLE_TOP);
-  let feet = PLAYER_NECK - MODEL_HEIGHT - seat / PLAYER_SCALE;
+  let feet = FEET.y - seat / PLAYER_SCALE;
   let size = scale / PLAYER_SCALE;
 
   Matrix4::from_translation(Vector3::unit_y() * (feet + MODEL_HEIGHT * size))
