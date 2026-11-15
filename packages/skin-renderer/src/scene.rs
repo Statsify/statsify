@@ -313,6 +313,16 @@ pub async fn render_scene(
     }
 
     let model = library.model(renderer, &instance.model)?;
+    let display = match instance.display {
+      Some(DisplayContext::Head) => model.display.head,
+      Some(DisplayContext::Thirdperson) => model.display.thirdperson,
+      None => None,
+    };
+
+    if display.is_some_and(|entry| entry.scale.contains(&0.0)) {
+      continue;
+    }
+
     let transform = bone
       * local_transform(translation, rotation, scale)
       * item_transform(instance.display, &model.display);
