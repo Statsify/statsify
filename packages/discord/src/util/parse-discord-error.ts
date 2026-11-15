@@ -24,7 +24,10 @@ export const parseDiscordResponse = <T>(response: RestClient.RequestResult): T =
     message += ` | ${error}`;
   }
 
-  throw new Error(message);
+  throw Object.assign(new Error(message), {
+    code: typeof body.code === "number" ? body.code : undefined,
+    retryable: response.status === undefined ? undefined : response.status === 429 || response.status >= 500,
+  });
 };
 
 export const parseDiscordError = (error: any = {}, errorKey = ""): string => {

@@ -6,5 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./logger.js";
+export { type LogLevel, Logger, STATUS_COLORS } from "./logger.js";
+export * from "./event.js";
 export * from "./nest-logger.js";

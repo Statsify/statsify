@@ -125,6 +125,8 @@ export async function paginate(
       });
     }
 
+    context.setActorTier(interaction);
+
     if (index !== currentIndex) {
       subController?.unregister(listener);
       mainController.switchPage(index);
@@ -239,6 +241,7 @@ export async function scrollingPagination(
       const message = await getMessage(page);
 
       if (interaction.getUserId() === userId) {
+        context.setActorTier(interaction);
         currentIndex = page;
         message.components = [new ActionRowBuilder(controller)];
         return context.reply(message);

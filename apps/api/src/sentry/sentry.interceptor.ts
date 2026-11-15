@@ -16,6 +16,7 @@ import {
   NestInterceptor,
 } from "@nestjs/common";
 import { Observable, catchError } from "rxjs";
+import { setRequestError } from "@statsify/logger";
 import { URL } from "node:url";
 import type { FastifyRequest } from "fastify";
 
@@ -42,7 +43,7 @@ export class SentryInterceptor implements NestInterceptor {
 
         if (isHttpException && !isInternalError) throw err;
 
-        Sentry.captureException(err);
+        setRequestError(err);
 
         throw err;
       })
