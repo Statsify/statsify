@@ -30,6 +30,7 @@ import {
 import {
   getRequestAttributes,
   incrementRequestAttributes,
+  isRetryableStatus,
   setRequestAttributes,
   setRequestError,
 } from "@statsify/logger";
@@ -41,7 +42,7 @@ const recover = <T, F>(fallback: F): OperatorFunction<T, T | F> =>
 
     setRequestError(error, {
       code: status,
-      retryable: error.cause !== undefined && (status === undefined || status === 429 || status >= 500),
+      retryable: error.cause !== undefined && isRetryableStatus(status),
     });
 
     return of(fallback);

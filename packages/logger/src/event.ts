@@ -111,6 +111,9 @@ export const incrementRequestAttributes = (counts: Partial<Record<CountAttribute
 
 type ErrorDetails = { code?: string | number; retryable?: boolean };
 
+export const isRetryableStatus = (status: number | undefined) =>
+  status === undefined || status === 429 || status >= 500;
+
 export const setUncapturedRequestError = (error: unknown, details: ErrorDetails = {}) => {
   const code = details.code ?? (
     error instanceof Error && "code" in error && (typeof error.code === "number" || typeof error.code === "string") ?

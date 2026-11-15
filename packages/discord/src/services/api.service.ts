@@ -25,7 +25,7 @@ import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
-import { setUncapturedRequestError } from "@statsify/logger";
+import { isRetryableStatus, setUncapturedRequestError } from "@statsify/logger";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
@@ -312,7 +312,10 @@ export class ApiService extends StatsifyApiService {
   }
 
   public unknownError(error: unknown) {
-    setUncapturedRequestError(error);
+    const isHttpError = error instanceof AxiosError;
+    const status = isHttpError ? error.response?.status : undefined;
+
+    setUncapturedRequestError(error, { code: status, retryable: isHttpError && isRetryableStatus(status) });
     return new ErrorMessage("errors.unknown");
   }
 
