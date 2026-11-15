@@ -308,10 +308,7 @@ function events(data: APIData = {}): s.input<typeof EventsSchema> {
   };
 }
 
-const objectives =
-  (data: APIData = {}) =>
-    ({ key }: Objective) =>
-      data[key];
+const objectives = (data: APIData = {}) => ({ key }: Objective) => data[key];
 
 function bingo(data: APIData = {}): s.input<typeof BingoSchema> {
   const cards = data.easter?.["2026"]?.bingo ?? {};
