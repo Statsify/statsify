@@ -7,6 +7,7 @@
  */
 
 import {
+  DiscordRequestError,
   type DiscordTokens,
   applicationId,
   clientSecret,
@@ -156,7 +157,17 @@ export class LinkedRolesService {
     const accessToken = await this.getAccessToken(connection);
     if (!accessToken) return false;
 
-    await discordRequest("PUT", roleConnectionPath, accessToken, body);
+    try {
+      await discordRequest("PUT", roleConnectionPath, accessToken, body);
+    } catch (error) {
+      // The user removed Statsify from their authorized apps
+      if (error instanceof DiscordRequestError && error.status === 401) {
+        await this.roleConnectionModel.deleteOne({ id: connection.id }).exec();
+        return false;
+      }
+
+      throw error;
+    }
 
     await this.roleConnectionModel
       .updateOne({ id: connection.id }, { $set: { pushedBody: body } })

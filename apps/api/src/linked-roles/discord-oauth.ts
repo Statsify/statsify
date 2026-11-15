@@ -60,10 +60,16 @@ export const discordRequest = async (
     ...(body && { body }),
   });
 
-  if (!response.ok) throw new Error(`Discord ${method} ${path} failed with ${response.status}`);
+  if (!response.ok) throw new DiscordRequestError(method, path, response.status);
 
   return response;
 };
+
+export class DiscordRequestError extends Error {
+  public constructor(method: string, path: string, public readonly status: number) {
+    super(`Discord ${method} ${path} failed with ${status}`);
+  }
+}
 
 const requestTokens = async (grant: Record<string, string>): Promise<DiscordTokens | undefined> => {
   const response = await oauthRequest("/oauth2/token", grant);
