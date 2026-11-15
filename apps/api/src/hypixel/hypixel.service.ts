@@ -28,8 +28,8 @@ import {
   throwError,
 } from "rxjs";
 import {
-  addRequestAttributes,
   getRequestAttributes,
+  incrementRequestAttributes,
   setRequestAttributes,
   setRequestError,
 } from "@statsify/logger";
@@ -165,7 +165,7 @@ export class HypixelService {
   }
 
   private recordRequest(start: number, status?: number, rateLimitRemaining?: string) {
-    addRequestAttributes({
+    incrementRequestAttributes({
       "hypixel.request.count": 1,
       "hypixel.request.duration_ms": Math.round(performance.now() - start),
     });

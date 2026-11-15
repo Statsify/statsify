@@ -99,7 +99,7 @@ export const setRequestAttributes = (attributes: RequestAttributes) => {
 export const getRequestAttributes = () =>
   Sentry.getIsolationScope().getScopeData().attributes as RequestAttributes;
 
-export const addRequestAttributes = (counts: Partial<Record<CountAttribute, number>>) => {
+export const incrementRequestAttributes = (counts: Partial<Record<CountAttribute, number>>) => {
   const attributes = getRequestAttributes();
 
   setRequestAttributes(
