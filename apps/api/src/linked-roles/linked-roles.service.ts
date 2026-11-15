@@ -122,26 +122,34 @@ export class LinkedRolesService {
   public async onVerify(id: string, uuid: string) {
     if (!this.enabled) return;
 
-    const others = await this.roleConnectionModel
-      .find({ uuid, id: { $ne: id } })
-      .lean()
-      .exec();
+    try {
+      const others = await this.roleConnectionModel
+        .find({ uuid, id: { $ne: id } })
+        .lean()
+        .exec();
 
-    await Promise.all(others.map((connection) => this.disconnect(connection)));
+      await Promise.all(others.map((connection) => this.disconnect(connection)));
 
-    const connection = await this.roleConnectionModel
-      .findOneAndUpdate({ id }, { $set: { uuid, pushedAt: Date.now() } }, { new: true })
-      .lean()
-      .exec();
+      const connection = await this.roleConnectionModel
+        .findOneAndUpdate({ id }, { $set: { uuid, pushedAt: Date.now() } }, { new: true })
+        .lean()
+        .exec();
 
-    if (connection) await this.pushLatest(connection);
+      if (connection) await this.pushLatest(connection);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   public async onUnverify(id: string) {
     if (!this.enabled) return;
 
-    const connection = await this.roleConnectionModel.findOne({ id }).lean().exec();
-    if (connection) await this.disconnect(connection);
+    try {
+      const connection = await this.roleConnectionModel.findOne({ id }).lean().exec();
+      if (connection) await this.disconnect(connection);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   private async push(connection: RoleConnection, body: string) {

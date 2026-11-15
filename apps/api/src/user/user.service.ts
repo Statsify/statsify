@@ -115,7 +115,7 @@ export class UserService {
       .lean()
       .exec();
 
-    await this.linkedRolesService.onVerify(id, uuid);
+    void this.linkedRolesService.onVerify(id, uuid);
 
     return user;
   }
@@ -132,7 +132,7 @@ export class UserService {
       .lean()
       .exec();
 
-    if (user) await this.linkedRolesService.onUnverify(user.id);
+    if (user) void this.linkedRolesService.onUnverify(user.id);
 
     return user;
   }
