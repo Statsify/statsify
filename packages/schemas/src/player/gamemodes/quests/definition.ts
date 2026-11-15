@@ -456,7 +456,6 @@ function questsDuring({ daily, weekly, monthly = [] }: GameQuests, period: Perio
   return period === "overall" ? [...daily, ...weekly, ...monthly] : { daily, weekly, monthly }[period];
 }
 
-// Only overall counts are ranked, under their overall names where a quest has them
 const questSchema = (quest: Quest, period: Period) =>
   function (this: Refs<{ total: NumberSchema }>) {
     const names = period === "overall" && quest.overall ? quest.overall : quest;
