@@ -16,7 +16,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 @Module({
   imports: [
     TypegooseModule.forFeature([Skin]),
-    HttpModule.register({ timeout: 3000 }),
+    HttpModule.register({}),
   ],
   controllers: [SkinController],
   providers: [SkinService],
