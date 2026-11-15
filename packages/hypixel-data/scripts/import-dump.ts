@@ -23,7 +23,7 @@ import {
   leatherColor,
   skinUrl,
 } from "@statsify/hypixel-data";
-import { type ItemStack, legacyItem } from "@statsify/textures";
+import { type ItemStack, legacyItem, legacyMaterialId } from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
 import data from "@statsify/textures/data/minecraft-data.json" with { type: "json" };
 
@@ -169,10 +169,8 @@ for (const { id, displayName, variations = [] } of [...legacyItems, ...(await fe
   }
 }
 
-const bukkitIds: Record<string, number | undefined> = data.materials;
-
 function namedItem(name: string) {
-  const material = bukkitIds[name.toUpperCase().replaceAll(" ", "_")];
+  const material = legacyMaterialId(name.toUpperCase().replaceAll(" ", "_"));
   return legacyNames.get(name) ?? (material === undefined ? undefined : { id: material, damage: 0 });
 }
 

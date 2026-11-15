@@ -6,10 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ItemStack, legacyItem } from "@statsify/textures";
+import { type ItemStack, legacyItem, legacyMaterialId } from "@statsify/textures";
 import { SLOTS, inRange, kitKey } from "./kits.js";
 import { armorOf } from "./armor.js";
-import data from "@statsify/textures/data/minecraft-data.json" with { type: "json" };
 import dumped from "../data/legacy-kits.json" with { type: "json" };
 
 export interface LegacyKit {
@@ -35,8 +34,6 @@ const KITS = dumped as Record<Game, Record<string, LegacyKit>>;
 
 // Each Blitz kit's armor by level, I to X, from its Upgrades page
 const BLITZ_ARMOR = dumped.blitzArmor as Record<string, Record<string, ItemStack>[]>;
-
-const materials: Record<string, number | undefined> = data.materials;
 
 const withDefaults = (game: Game) =>
   Object.values(KITS[game]).flatMap(({ name, level, saved }) => (saved ? [] : [{ name, level }]));
@@ -83,7 +80,7 @@ function fromDumpedKit(
       : undefined);
   if (!layout) throw new Error(`No default ${game} layout for ${name} at level ${level}`);
 
-  const renamed = new Map(Object.entries(renames).map(([material, rename]) => [materials[material.toUpperCase()], rename]));
+  const renamed = new Map(Object.entries(renames).map(([material, rename]) => [legacyMaterialId(material.toUpperCase()), rename]));
   const slots = fromLegacyKit(layout);
 
   for (const [slot, token] of Object.entries(layout)) {
