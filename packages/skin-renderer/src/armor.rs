@@ -55,8 +55,7 @@ impl ArmorLayer {
 }
 
 impl Armor {
-  // An extruded outer layer would poke through leggings or a worn skull, so parts under
-  // them get the flat one, which the game draws under armor anyway
+  // An extruded outer layer would poke through leggings or a worn skull
   pub fn flattens(&self, part: Part) -> bool {
     self.pieces().any(|(piece, layer, parts)| {
       (matches!(layer, ArmorLayer::Inner) || piece.is_skull()) && parts.contains(&part)
