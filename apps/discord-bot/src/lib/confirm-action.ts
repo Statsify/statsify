@@ -16,7 +16,7 @@ import {
   type LocalizationString,
   Message,
 } from "@statsify/discord";
-import { ButtonStyle } from "discord-api-types/v10";
+import { ButtonStyle, InteractionResponseType } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
 
 const logger = new Logger("ConfirmAction");
@@ -57,19 +57,26 @@ export function confirmAction(
     listener.removeHook(cancelButton.getCustomId());
   }
 
-  const ownerOnly = (run: () => Promise<IMessage>) => async (interaction: Interaction) => {
+  const ownerOnly = (run: () => Promise<IMessage>) => (interaction: Interaction) => {
+    // Discord rejects a follow-up sent before the click is acknowledged, so reply in the click's response
     if (interaction.getUserId() !== userId)
-      return interaction.sendFollowup({ ...new ErrorMessage("errors.notCommandOwner"), ephemeral: true });
+      return {
+        type: InteractionResponseType.ChannelMessageWithSource,
+        data: interaction.convertToApiData({
+          ...new ErrorMessage("errors.notCommandOwner"),
+          ephemeral: true,
+        }),
+      };
 
     close();
 
-    const message = await run().catch((error): IMessage => {
-      if (!(error instanceof Message)) logger.error(error);
-      const errorMessage = error instanceof Message ? error : new ErrorMessage("errors.unknown");
-      return { ...errorMessage, content: "", attachments: [] };
-    });
-
-    return context.reply({ ...message, components: [] });
+    return run()
+      .catch((error): IMessage => {
+        if (!(error instanceof Message)) logger.error(error);
+        const errorMessage = error instanceof Message ? error : new ErrorMessage("errors.unknown");
+        return { ...errorMessage, content: "", attachments: [] };
+      })
+      .then((message) => context.reply({ ...message, components: [] }));
   };
 
   listener.addHook(confirmButton.getCustomId(), ownerOnly(onConfirm));
