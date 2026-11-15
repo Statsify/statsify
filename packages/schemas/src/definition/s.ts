@@ -74,7 +74,7 @@ const dependencyOf = (field: Ref): Dependency => ({
   path: pathOf(field),
 });
 
-export interface LeaderboardOptions {
+interface LeaderboardOptions {
   enabled?: boolean;
   /** The stat's own name, `Wins` */
   fieldName?: string;
@@ -90,18 +90,18 @@ export interface LeaderboardOptions {
 }
 
 /** On an object, the names join the path and the rest passes down to leaderboards that don't set their own */
-export type ObjectLeaderboardOptions = Pick<
+type ObjectLeaderboardOptions = Pick<
   LeaderboardOptions,
   "fieldName" | "name" | "extraDisplay" | "resetEvery"
 >;
 
 /** Paths relative to the object a field is written in, or for an object's own options, to the object */
-export type LeaderboardMetadata = Omit<LeaderboardOptions, "additionalFields" | "extraDisplay"> & {
+type LeaderboardMetadata = Omit<LeaderboardOptions, "additionalFields" | "extraDisplay"> & {
   additionalFields?: string[];
   extraDisplay?: string;
 };
 
-export interface IndexOptions {
+interface IndexOptions {
   unique?: boolean;
   sparse?: boolean;
   expires?: number;
@@ -113,12 +113,12 @@ export interface Dependency {
   path: string;
 }
 
-export interface ComputedMetadata {
+interface ComputedMetadata {
   compute: (...values: any[]) => unknown;
   dependencies: Dependency[];
 }
 
-export interface Metadata {
+interface Metadata {
   color?: ColorCode;
   format?: Format;
   leaderboard?: LeaderboardMetadata;
