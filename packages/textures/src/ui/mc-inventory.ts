@@ -17,7 +17,6 @@ const MS_PER_TICK = 50;
 
 interface Resources {
   renderer: Promise<InventoryRenderer>;
-  /** Each item's tooltip, drawn on its first hover */
   tooltips: WeakMap<ItemStack, { scale: number; canvas: OffscreenCanvas }>;
 }
 
