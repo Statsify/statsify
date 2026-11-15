@@ -12,7 +12,7 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store --mount=type=cache,id=pn
 
 FROM base AS build
 ENV PATH="/root/.cargo/bin:$PATH"
-# Before ARG APP and the package files, so every app shares this layer and dependency changes don't reinstall Rust
+# Before ARG APP and the package files, so every app shares this layer
 COPY rust-toolchain.toml ./
 RUN curl -fsSL https://sh.rustup.rs | sh -s -- -y --default-toolchain none \
   && rustup toolchain install \
