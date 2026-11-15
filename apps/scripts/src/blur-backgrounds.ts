@@ -66,5 +66,5 @@ if (cluster.isPrimary) {
   }
 
   console.log(`Cluster ${clusterId} finished`);
-  process.exit(0);
+  worker.kill();
 }
