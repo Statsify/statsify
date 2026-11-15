@@ -105,12 +105,9 @@ export class AuthService {
     pipeline.hmget(`key:${hash}`, "name", "requests", "limit");
     pipeline.zrange(key, 0, -1, "WITHSCORES");
 
-    const [keydata, requests] = pipelineValues(await pipeline.exec()) as [
-      [string, number, number],
-      string[],
-    ];
-
-    const [name, lifetimeRequests, limit] = keydata;
+    const [[name, lifetimeRequests, limit], requests] = pipelineValues(
+      await pipeline.exec()
+    ) as [[string, number, number], string[]];
 
     const recentRequests = requests
       .filter((_, i) => i % 2 === 0)
