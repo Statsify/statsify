@@ -26,7 +26,6 @@ use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
 use crate::texture::Texture;
 
-// Draws with fs_main, fs_attachment, or fs_enchanted and its glint texture
 pub enum Pipeline<'a> {
   Main,
   Attachment,
