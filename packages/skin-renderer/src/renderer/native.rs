@@ -62,7 +62,7 @@ impl NativeBackend {
     let (short, long) = (width.min(height), width.max(height));
 
     if short < MIN_SIZE || long > limit || long > short * MAX_ASPECT_RATIO {
-      return Err(Error::InvalidSize(limit));
+      return Err(Error::InvalidSize { max: limit });
     }
 
     Ok(Arc::new(RenderTarget::new(
