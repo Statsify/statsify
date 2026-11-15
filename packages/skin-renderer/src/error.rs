@@ -33,6 +33,9 @@ pub enum Error {
   #[error("The scene is too small or too large to frame")]
   SceneOutOfRange,
 
+  #[error("The provided image is empty")]
+  EmptyTexture,
+
   #[error("Enchanted armor needs a glint texture")]
   MissingGlint,
 
