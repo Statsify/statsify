@@ -190,11 +190,11 @@ export class ApiService {
     });
   }
 
-  // The class, selections and weapon material are the player's stored Warlords values; without a uuid, only the weapon is drawn
+  // The class, selections, weapon material and mount are the player's stored Warlords values; without a uuid, only the weapon or mount is drawn
   public getWarlordsRender(
     uuid: string | undefined,
     user: User | null,
-    cosmetics: { class?: string; helmet?: number; armor?: number; team?: "blue" | "red"; weapon?: string }
+    cosmetics: { class?: string; helmet?: number; armor?: number; team?: "blue" | "red"; weapon?: string; mount?: string }
   ) {
     return this.requestImage(isProduction ? "https://api.statsify.net/skin/warlords" : "/skin/warlords", {
       uuid,
