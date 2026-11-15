@@ -675,11 +675,19 @@ export class ParkourDuels extends SingleDuelsGameMode {
 }
 
 export class MegaWallsDuels extends SinglePVPDuelsGameMode {
+  @Field()
+  public shotsFired: number;
+
+  @Field()
+  public shotsHit: number;
+
   public constructor(data: APIData) {
     super(data, "Mega Walls", "mw_duel", "half");
 
     // add back doubles stats
-    const doubles = new PVPBaseDuelsGameMode(data, "mw_doubles");
+    const doubles = new BowPVPBaseDuelsGameMode(data, "mw_doubles");
+    this.shotsFired = add(data.mw_duel_bow_shots, doubles.shotsFired);
+    this.shotsHit = add(data.mw_duel_bow_hits, doubles.shotsHit);
     this.wins = add(this.wins, doubles.wins);
     this.losses = add(this.losses, doubles.losses);
     this.kills = add(this.kills, doubles.kills);

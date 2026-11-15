@@ -99,6 +99,7 @@ export const DuelsProfile = <T extends ProfileTime>({
 
     case "spleef":
       if (mode.submode.api === "spleef") sidebar.push([t("stats.blocksBroken"), t(duels.spleef.spleef.blocksBroken), "§b"]);
+      else sidebar.push([t("stats.bowShots"), t(duels.spleef.bowSpleef.shotsFired), "§6"]);
       table = <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
       break;
 
