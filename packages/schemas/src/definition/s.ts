@@ -347,8 +347,8 @@ type InputOf<D extends Definition> = Simplify<
 /** Each entry is a schema, or a method that builds one with the other fields on `this` */
 type Entry = AnySchema | (() => AnySchema);
 
-// better-all's pattern: constraining E to Entry would make TypeScript type `this` as the
-// constraint, so E stays loose and a bad entry instead becomes a missing key named after it
+// Constraining E to Entry would make TypeScript type `this` as the constraint, so E stays
+// loose and a bad entry instead becomes a missing key named after it
 type Entries<E extends Record<string, any>> = E &
   ThisType<Refs<E>> & {
     [K in keyof E as E[K] extends Entry ? K : `Error: "${K & string}" is not a schema`]-?: E[K];
