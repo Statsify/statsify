@@ -216,10 +216,10 @@ impl MountEntity {
   }
 }
 
-// From the entity's model space, turned into this renderer's axes, to where its rider sits on
-// the player
+// Scales the entity's model and stands it under its rider
 fn placement(scale: f32) -> Matrix4<f32> {
-  // The game seats every rider at a horse's height, floating it above a smaller mount's saddle
+  // The game seats every rider at a horse's height, above a smaller mount's saddle, so a smaller
+  // mount stands higher to meet it
   let seat = SEAT * 16.0 - (1.0 - scale) * (MODEL_HEIGHT - SADDLE_TOP);
   let feet = FEET.y - seat / PLAYER_SCALE;
   let size = scale / PLAYER_SCALE;
