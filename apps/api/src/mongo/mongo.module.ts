@@ -24,8 +24,7 @@ export type MongoModel<S extends ModelSchema> = Model<s.infer<S>>;
 
 const getModelToken = (name: string) => `${name}Model`;
 
-export const InjectModel = (model: ModelSchema | string) =>
-  Inject(getModelToken(typeof model === "string" ? model : model.name));
+export const InjectModel = (model: ModelSchema | NamedModel) => Inject(getModelToken(model.name));
 
 @Global()
 @Module({})

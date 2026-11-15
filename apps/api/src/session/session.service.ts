@@ -38,7 +38,7 @@ export class SessionService {
   public constructor(
     @Inject(forwardRef(() => PlayerService))
     private readonly playerService: Circular<PlayerService>,
-    @InjectModel(Session.name) private readonly sessionModel: PlayerModel,
+    @InjectModel(Session) private readonly sessionModel: PlayerModel,
     @InjectModel(UserSchema) private readonly userModel: MongoModel<typeof UserSchema>
   ) {}
 
