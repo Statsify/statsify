@@ -327,10 +327,20 @@ const Environments = ({ t, fishing }: PageProps) => (
   </Table.table>
 );
 
-const CatchTypeRow = ({ t, stats, types }: { t: LocalizeFunction; stats: FishingEnvironmentStats[]; types: readonly (keyof typeof CATCH_TYPE_COLORS)[] }) => (
+interface CatchTypeRowProps {
+  t: LocalizeFunction;
+  stats: FishingEnvironmentStats[];
+  types: readonly (keyof typeof CATCH_TYPE_COLORS)[];
+}
+
+const CatchTypeRow = ({ t, stats, types }: CatchTypeRowProps) => (
   <Table.tr>
     {types.map((type) => (
-      <Table.td title={t(`stats.fishing.catchTypes.${type}`)} value={t(add(...stats.map((environment) => environment[type])))} color={CATCH_TYPE_COLORS[type]} />
+      <Table.td
+        title={t(`stats.fishing.catchTypes.${type}`)}
+        value={t(add(...stats.map((environment) => environment[type])))}
+        color={CATCH_TYPE_COLORS[type]}
+      />
     ))}
   </Table.tr>
 );
