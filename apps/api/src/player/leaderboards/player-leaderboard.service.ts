@@ -93,7 +93,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
       highlight
     );
 
-    return { ...page, name: `${page.name} - ${guild.nameFormatted ?? guild.name}` };
+    return { ...page, name: `${page.name} - ${guild.nameFormatted}` };
   }
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
@@ -142,7 +142,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
       .findOne()
       .where(isGuildId ? "id" : "nameToLower")
       .equals(isGuildId ? input : input.toLowerCase())
-      .select({ "id": true, "members.uuid": true, "name": true, "nameFormatted": true })
+      .select({ "members.uuid": true, "nameFormatted": true })
       .lean()
       .exec();
 
