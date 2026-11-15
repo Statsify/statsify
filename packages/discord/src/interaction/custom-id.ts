@@ -8,7 +8,6 @@
 
 const MAX_CUSTOM_ID_LENGTH = 100;
 
-/** A custom id that keeps working after a restart, unlike a hook's */
 export interface CustomId {
   route: string;
   ownerId: string;
