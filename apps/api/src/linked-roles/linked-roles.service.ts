@@ -93,19 +93,6 @@ export class LinkedRolesService {
     return false;
   }
 
-  private async push(connection: RoleConnection, body: string) {
-    const accessToken = await this.getAccessToken(connection);
-    if (!accessToken) return false;
-
-    await discordRequest("PUT", roleConnectionPath, accessToken, body);
-
-    await this.roleConnectionModel
-      .updateOne({ id: connection.id }, { $set: { pushedBody: body } })
-      .exec();
-
-    return true;
-  }
-
   public async onPlayerSave(player: Player) {
     if (!this.enabled) return;
 
@@ -155,6 +142,19 @@ export class LinkedRolesService {
 
     const connection = await this.roleConnectionModel.findOne({ id }).lean().exec();
     if (connection) await this.disconnect(connection);
+  }
+
+  private async push(connection: RoleConnection, body: string) {
+    const accessToken = await this.getAccessToken(connection);
+    if (!accessToken) return false;
+
+    await discordRequest("PUT", roleConnectionPath, accessToken, body);
+
+    await this.roleConnectionModel
+      .updateOne({ id: connection.id }, { $set: { pushedBody: body } })
+      .exec();
+
+    return true;
   }
 
   private async disconnect(connection: RoleConnection) {
