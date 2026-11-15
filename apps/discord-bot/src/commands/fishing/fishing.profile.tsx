@@ -93,7 +93,7 @@ const ENCHANTS = [
 
 const DEFAULT_ROD: FishingRod = "fishing_rod_3000";
 
-const rodName = (id: string) => prettify(id.replace("fishing_rod_", ""));
+const rodName = (id: string) => prettify(id.replace(/^fishing_rod_|_fishing_rod$/, ""));
 const hookTrailName = (id: string) => prettify(id.replace("mainlobby_fishing_", ""));
 const isRodUnlocked = (fishing: Fishing, id: FishingRod) => id === DEFAULT_ROD || fishing.rods[id];
 

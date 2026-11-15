@@ -109,7 +109,7 @@ export type FishingSpecialFishId = (typeof FISHING_SPECIAL_FISH)[number]["id"];
 
 export const FISHING_RODS = [
   "fishing_rod_3000",
-  "fishing_rod_inaugural_ice",
+  "inaugural_ice_fishing_rod",
   "fishing_rod_springtime",
   "fishing_rod_haunted",
   "fishing_rod_festive",
@@ -434,7 +434,7 @@ export class Fishing {
 
     // Hypixel only lists event rewards in packages, so the rest are inferred from their requirements
     const unlockedRods: Partial<Record<FishingRod, boolean>> = {
-      fishing_rod_inaugural_ice: this.seasonal.some((year) => year.year === "2022" && year.christmas.ice.total > 0),
+      inaugural_ice_fishing_rod: this.seasonal.some((year) => year.year === "2022" && year.christmas.ice.total > 0),
       fishing_rod_overgrown:
         this.specialFish.poisonous_potato && this.specialFish.golden_apple && this.specialFish.burnt_plant,
       fishing_rod_zoologist: this.catches.creature.squid > 0,
