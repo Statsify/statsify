@@ -52,7 +52,6 @@ export class ChannelService {
     parseDiscordResponse(response);
   }
 
-  /** Every message in the channel, newest first */
   public async getMessages(channelId: string): Promise<APIMessage[]> {
     // 100 is the most messages Discord returns in one request
     const limit = 100;
