@@ -254,7 +254,7 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
     data: APIData,
     title: DuelsTitle,
     mode: string,
-    titleScore?: number,
+    titleStat: "wins" | "kills" = "wins",
   ) {
     super(data, mode);
 
@@ -264,7 +264,7 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
       nextTitleLevelFormatted,
       progression,
     } = getTitleAndProgression({
-      score: titleScore ?? this.wins,
+      score: this[titleStat],
       data,
       ...DUELS_TITLES[title],
     });
@@ -334,7 +334,7 @@ export class ArenaDuels extends SinglePVPDuelsGameMode {
   public shotsFired: number;
 
   public constructor(data: APIData) {
-    super(data, "arena", "duel_arena", data.duel_arena_kills ?? 0);
+    super(data, "arena", "duel_arena", "kills");
     this.shotsFired = data[`duel_arena_bow_shots`];
   }
 }
