@@ -302,7 +302,6 @@ pub async fn render_scene(
 
     let invalid = || Error::InvalidTransform(instance.model.clone());
 
-    // Checked after narrowing, since a huge f64 becomes an f32 infinity
     let finite = [translation, rotation, scale]
       .iter()
       .flatten()
@@ -391,7 +390,6 @@ pub async fn render_scene(
   Ok(buffer.into())
 }
 
-// A side of the output, which must be a whole number of pixels the device can render
 fn pixels(side: f64, limit: u32) -> crate::error::Result<u32> {
   if side.fract() == 0.0 && (1.0..=f64::from(limit)).contains(&side) {
     Ok(side as u32)
