@@ -17,8 +17,7 @@ const fetchJson = async <T>(path: string): Promise<T> => {
   return response.json() as Promise<T>;
 };
 
-// Bukkit's 1.8 Material enum (from a Spigot 1.8 source mirror), since SkyWars' kit layouts name
-// items by it, like GOLD_CHESTPLATE or MONSTER_EGG
+// Bukkit's 1.8 Material enum, which Hypixel's kit layouts name items by, like GOLD_CHESTPLATE
 const BUKKIT_MATERIALS =
   "https://raw.githubusercontent.com/Attano/Spigot-1.8/9db48bc15e203179554b8d992ca6b0a528c8d300/org/bukkit/Material.java";
 

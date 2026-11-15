@@ -22,9 +22,8 @@ const MENUS = dumped as Record<ArenaSlot, Record<string, ItemStack>>;
 const RENAMED: Record<string, string | undefined> = { bersek: "berserk", polymorph: "petrify", tank: "defence" };
 
 /**
- * An Arena loadout from the Arena stats ({ offensive: "falcon_punch", active_rune: "damage" }) as a
- * row of the shop's items: the offensive, utility, support and ultimate skills, then the rune. A
- * skill that isn't picked, or that the menus don't list, leaves its slot empty.
+ * An Arena loadout ({ offensive: "falcon_punch", active_rune: "damage" }) as the shop's items in LOADOUT's order.
+ * A pick the menus don't list leaves its slot empty
  */
 export function fromArenaLoadout(arena: Readonly<Partial<Record<ArenaSlot, string | null>>>): (ItemStack | undefined)[] {
   return LOADOUT.map((slot) => {

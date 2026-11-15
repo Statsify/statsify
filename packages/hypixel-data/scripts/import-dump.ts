@@ -6,9 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Builds every data/*.json from StatsifyDump exports of the games' layout
-// editors, kit menus and shop menus, so each item has the count, name and tooltip the game gives it. Each dump session writes its own exports, so pass the last export
-// of every session needed:
+// Builds every data/*.json from StatsifyDump exports, given the last export of each dump session:
 //   pnpm --filter @statsify/hypixel-data build
 //   node scripts/import-dump.ts <dump.json> [<dump.json> …]
 
@@ -156,10 +154,8 @@ const legacyItems = await fetchJson<(LegacyName & { name: string })[]>("1.8/item
 const legacyIds = new Map(legacyItems.map(({ id, name }) => [name, id]));
 const materials = new Map(Object.entries(data.materials).map(([name, id]) => [id, name.toLowerCase()]));
 
-// Menus that list items by name use 1.8's own, Damage variants included (Blue Wool), or the
-// item's Bukkit material ("Gold Helmet"); the rest are Hypixel's ("Awkward Potion"). minecraft-data
-// gives some block items their item's name (Nether Quartz), so blocks' names count too, and a
-// name two items share matches neither
+// 1.8's names, Damage variants included (Blue Wool), for menus that list items by name. minecraft-data
+// gives some block items their item's name (Nether Quartz), so blocks count; a name two share matches neither
 const legacyNames = new Map<string, { id: number; damage: number } | undefined>();
 for (const { id, displayName, variations = [] } of [...legacyItems, ...(await fetchJson<LegacyName[]>("1.8/blocks.json"))]) {
   for (const { metadata: damage, displayName: name } of [{ metadata: 0, displayName }, ...variations]) {
@@ -477,9 +473,8 @@ interface Listed {
 }
 
 /**
- * A kit menu item's list: its §7§7 lore lines up to the first blank one, each with the enchantments
- * under it. Lore lines start with §5§o, which leaves out the client's lines above them (a potion
- * icon's effects, "Dyed"), and notes like "Spawns a 4th chest" are a single §7
+ * A kit menu item's list: its §7§7 lore lines up to the first blank one, with the enchantments under each.
+ * Lines without §5§o are the client's (a potion's effects, "Dyed"), and a note's single §7 isn't listed
  */
 function listedItems(lore: string[]) {
   const listed: Listed[] = [];
@@ -764,9 +759,8 @@ const MENU_STATUS =
   /^(Click to (select|purchase|view)!|> Click to activate! <|>>> ACTIVE <<<|SELECTED!|Equipped!|Missing parts!|Cost: .+|Unlocked in .+|[✖✔] .+|Choose an? .+!|Collect all the hats!)$/;
 
 /**
- * A menu item as a loadout shows it: without the account's status lines, and, where the menu
- * colors names by whether the account owns or picked them, named in the selected item's green.
- * The selected item's glint is the menu's too, so only real enchantments glint
+ * A menu item without the account's status lines, `recolor`ed in the selected item's green where the menu
+ * colors names by ownership. Only real enchantments glint, since the menu glints the selected item
  */
 function menuItem(dumped: DumpItem, recolor: boolean): ItemStack {
   const item = kitItem(dumped);
@@ -864,9 +858,8 @@ for (const [slot, title] of Object.entries(ARENA_SKILLS)) {
   );
 }
 
-// Each rune's row starts with the rune and goes on with its upgrades (Rune of Speed II). Its
-// description gives the first level's chance, and the stored rune_level_<rune> isn't known to
-// count from it, so the rune keeps only its name
+// Each rune's row starts with the rune, then its upgrades (Rune of Speed II). Its tooltip gives the first
+// level's chance, which the stored rune_level_<rune> may not count from, so the rune keeps only its name
 arena.active_rune = byKey(
   menu("Runes").flatMap((item): [string, ItemStack][] => {
     const rune = /^Rune of ([A-Za-z]+)$/.exec(plain(item.name))?.[1];

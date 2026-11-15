@@ -14,10 +14,7 @@ import dumped from "../data/skywars-kits.json" with { type: "json" };
 export interface SkyWarsKit {
   /** As the lobby's kit menus name it, menu first, like Normal Scout */
   name: string;
-  /**
-   * The items its menu lists, each by how a kit layout stores it (DIAMOND_AXE:0:16) and, when
-   * every listed item is known, the slot a player who never saved a layout gets it in
-   */
+  /** The items its menu lists by layout key (DIAMOND_AXE:0:16), with default slots when every one is known */
   items: { slot?: number; token: string; item: ItemStack }[];
 }
 
@@ -63,12 +60,8 @@ function withSortedEnchantments(key: string) {
 }
 
 /**
- * A SkyWars kit layout (kit_<type>_<mode>_<kit>_inventory): a Bukkit material, Damage and, on
- * enchanted items, the enchantment ids, mapped to their slot, like
- * { "IRON_PICKAXE:0:32,34": "0", "GOLD_HELMET:0": [39] }, as 40 player inventory slots. `kit` is
- * the kit's id (kit_basic_solo_scout, as activeKit_SOLO holds it) or its key in SKYWARS_KITS.
- * Items its menu lists get the game's counts, names and tooltips; the rest are plain. Without a
- * layout, it's the kit's default.
+ * A SkyWars kit_…_inventory ({ "IRON_PICKAXE:0:32,34": "0", "GOLD_HELMET:0": [39] }), or the kit's default.
+ * `kit` is its id (kit_basic_solo_scout, as activeKit_SOLO holds it) or a SKYWARS_KITS key
  */
 export function fromSkyWarsKit(
   stored: Readonly<Record<string, string | readonly number[]>> | null | undefined,
