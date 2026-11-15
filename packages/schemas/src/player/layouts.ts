@@ -45,8 +45,8 @@ export const LEGACY_LAYOUT: LayoutShape<Record<string, string>> = {
 };
 
 /**
- * `{ "ITEM:damage:enchantments": slot | slot[] }`, as SkyWars sends kit layouts, stored without a
- * damage of 0 and with the enchantment ids joined by `/`, since commas separate slots
+ * `{ "ITEM:damage:enchantments": slot | slot[] }`, as SkyWars sends kit layouts, stored with the
+ * enchantment ids joined by `/`, since commas separate slots
  */
 export const ITEM_LAYOUT: LayoutShape<Record<string, string | number[]>> = {
   slots(layout) {
