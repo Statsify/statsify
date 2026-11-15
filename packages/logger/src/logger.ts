@@ -70,7 +70,7 @@ export const setRequestAttributes = (attributes: RequestAttributes) => {
 
 const format = (message: unknown) => {
   if (typeof message === "string") return message;
-  if (message instanceof Error) return message.stack ?? `${message.name}: ${message.message}`;
+  if (message instanceof Error) return message.stack ?? String(message);
   return inspect(message, { depth: 3, breakLength: Infinity, compact: true });
 };
 
