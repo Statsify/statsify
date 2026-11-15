@@ -25,8 +25,7 @@ interface CapeFront {
   height: number;
 }
 
-// Like OptiFine, read every texture (its 46x22 and HD capes too) as the vanilla 64x32
-// layout scaled up by the smallest power of two that fits
+// 46x22 and HD capes use the 64x32 layout scaled by the smallest power of two that fits
 function getCapeFront(cape: Image): CapeFront | undefined {
   let scale = 1;
   while (64 * scale < cape.width || 32 * scale < cape.height) scale *= 2;
