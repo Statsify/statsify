@@ -99,7 +99,7 @@ export class AutocompleteService {
     const [history, guild, global] = await Promise.all([
       this.orEmpty(this.getHistory(AutocompleteType.PLAYER, id), []),
       this.orEmpty(this.getLinkedGuild(id), null),
-      query ? this.playerSearchService.get(query) : [],
+      query ? this.orEmpty(this.playerSearchService.get(query), []) : [],
     ]);
 
     // Guild members whose name couldn't be found are stored as `ERROR <uuid>`.
@@ -115,7 +115,7 @@ export class AutocompleteService {
     const [history, guild, stored] = await Promise.all([
       this.orEmpty(this.getHistory(AutocompleteType.GUILD, id), []),
       this.orEmpty(this.getLinkedGuild(id), null),
-      this.guildService.search(query),
+      this.orEmpty(this.guildService.search(query), []),
     ]);
 
     return blend(query, guild ? [...history, guild.name] : history, stored.map((g) => g.name));
