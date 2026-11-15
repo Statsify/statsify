@@ -105,7 +105,6 @@ pub struct RenderTarget {
   dimensions: BufferDimensions,
 
   texture: wgpu::Texture,
-  texture_extent: wgpu::Extent3d,
   pub view: wgpu::TextureView,
   pub depth_texture: Texture,
 }
@@ -114,15 +113,13 @@ impl RenderTarget {
   fn new(device: &wgpu::Device, config: &wgpu::SurfaceConfiguration) -> Self {
     let dimensions = BufferDimensions::new(config.width, config.height);
 
-    let texture_extent = wgpu::Extent3d {
-      width: dimensions.width,
-      height: dimensions.height,
-      depth_or_array_layers: 1,
-    };
-
     let texture = device.create_texture(&wgpu::TextureDescriptor {
       label: None,
-      size: texture_extent,
+      size: wgpu::Extent3d {
+        width: dimensions.width,
+        height: dimensions.height,
+        depth_or_array_layers: 1,
+      },
       mip_level_count: 1,
       sample_count: 1,
       dimension: wgpu::TextureDimension::D2,
@@ -135,7 +132,6 @@ impl RenderTarget {
       dimensions,
       view: texture.create_view(&wgpu::TextureViewDescriptor::default()),
       texture,
-      texture_extent,
       depth_texture: Texture::create_depth_texture(device, config, "depth_texture"),
     }
   }
@@ -163,7 +159,7 @@ impl RenderTarget {
           rows_per_image: Some(self.dimensions.height),
         },
       },
-      self.texture_extent,
+      self.texture.size(),
     );
 
     let index = queue.submit(Some(encoder.finish()));
