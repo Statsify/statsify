@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import { ButtonStyle } from "discord-api-types/v10";
 import { Canvas } from "skia-canvas";
 
@@ -278,7 +279,7 @@ async function contentToMessage(
       files: [
         {
           name: "image.png",
-          data: await content.toBuffer("png"),
+          data: await Sentry.startSpan({ op: "image.encode", name: "Encode PNG" }, () => content.toBuffer("png")),
           type: "image/png",
         },
       ],

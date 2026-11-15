@@ -19,6 +19,7 @@ if (sentryDsn) {
     dsn: sentryDsn,
     // Sentry 11 collects all of these by default
     dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
+    tracePropagationTargets: [await config("apiClient.route")],
     beforeSendSpan: (span) => {
       for (const key of ["url.full", "url.path"]) {
         const value = span.attributes[key];

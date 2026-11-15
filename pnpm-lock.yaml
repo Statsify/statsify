@@ -636,6 +636,9 @@ importers:
 
   packages/discord:
     dependencies:
+      '@sentry/node':
+        specifier: ^11.8.0
+        version: 11.8.0
       '@statsify/api-client':
         specifier: workspace:^
         version: link:../api-client

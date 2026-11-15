@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/nestjs";
 import { HttpService } from "@nestjs/axios";
 import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
@@ -48,7 +49,9 @@ export class SkinService {
     const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
     // This field is set by loadImage from `@statsify/rendering`
     const { _data: buffer } = image as unknown as { _data: Buffer };
-    return renderSkin(buffer, skin.slim ?? false, extruded);
+    return Sentry.startSpan({ op: "skin.render", name: "Render skin" }, () =>
+      renderSkin(buffer, skin.slim ?? false, extruded)
+    );
   }
 
   public async getSkin(tag: string): Promise<Skin> {

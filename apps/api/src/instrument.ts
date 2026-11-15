@@ -24,6 +24,8 @@ if (sentryDsn) {
       databaseQueryData: false,
       httpHeaders: { request: { deny: ["ip", "forwarded"] } },
     },
+    tracePropagationTargets: [],
+    strictTraceContinuation: true,
     normalizeDepth: 3,
     tracesSampleRate: await config("sentry.tracesSampleRate"),
     environment: await config("environment"),
