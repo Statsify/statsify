@@ -19,7 +19,6 @@ export class MongoLoaderService {
 
     const models = [TicketSchema, TagSchema, UserSchema];
 
-    // Services inject each model by its name
     for (const schema of models) {
       Container.set(schema.name, connection.model(schema.name, toMongoose(schema)));
     }
