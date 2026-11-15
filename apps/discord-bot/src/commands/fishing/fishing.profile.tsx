@@ -91,11 +91,11 @@ const ENCHANTS = [
   ["herbivore", "§2"],
 ] as const satisfies [keyof Fishing["enchants"], string][];
 
-const rodName = (id: string) => prettify(id.replace("fishing_rod_", ""));
+const DEFAULT_ROD: FishingRod = "fishing_rod_3000";
 
-// Everyone has the default rod, so the schema doesn't store it
-const isRodUnlocked = (fishing: Fishing, id: FishingRod) => id === "fishing_rod_3000" || fishing.rods[id];
+const rodName = (id: string) => prettify(id.replace("fishing_rod_", ""));
 const hookTrailName = (id: string) => prettify(id.replace("mainlobby_fishing_", ""));
+const isRodUnlocked = (fishing: Fishing, id: FishingRod) => id === DEFAULT_ROD || fishing.rods[id];
 
 interface FishingProfileProps extends BaseProfileProps {
   page: FishingPage;
