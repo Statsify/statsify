@@ -59,9 +59,6 @@ export class EventsCommand {
           getTheme(user)
         );
       }),
-      undefined,
-      undefined,
-      false,
       getProfileCustomId(context, player.uuid)
     );
   }
