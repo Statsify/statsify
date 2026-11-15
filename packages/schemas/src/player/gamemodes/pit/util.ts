@@ -144,7 +144,7 @@ if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
 
   suite("prestige and level", () => {
-    it("finds the prestige for the xp, then counts levels down from 120", () => {
+    it("finds the prestige for the xp and the level within it", () => {
       expect(getPrestige(17_526_330)).toBe(25);
       expect(getPrestige(FINAL_PRESTIGE_XP)).toBe(50);
       expect(getPrestigeReq(-1)).toBe(0);

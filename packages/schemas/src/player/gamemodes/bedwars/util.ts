@@ -441,7 +441,7 @@ if (import.meta.vitest) {
   suite("getLevel", () => {
     it("matches the star Hypixel shows for the exp", () => {
       expect(getLevel(0)).toBe(0);
-      expect(Math.floor(getLevel(500))).toBe(1);
+      expect(getLevel(500)).toBe(1);
       expect(Math.floor(getLevel(486_999))).toBe(99);
       expect(getLevel(487_000)).toBe(100);
       expect(Math.floor(getLevel(5_172_353))).toBe(1063);
