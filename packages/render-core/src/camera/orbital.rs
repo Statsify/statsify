@@ -122,11 +122,8 @@ impl OrbitalCamera {
     Vector3::new(x, y, z)
   }
 
-  // Slides the camera across and along its view, keeping the angle, until the points span one
-  // axis of the frame less `margin` pixels on each side and sit about centered on the other.
-  // `unframed` points don't move the camera but stay between the clipping planes, so only the
-  // frame's edges cut them. None when the points are too small or too far out to project, or an
-  // unframed one is behind the eye.
+  // `unframed` points affect clipping but not framing, so only the frame's edges cut them.
+  // Returns None when points cannot be projected or an unframed point is behind the eye.
   pub fn framed(
     mut self,
     points: &[Vector3<f32>],
