@@ -532,12 +532,9 @@ function megaWallsDuels(data: APIData): PVPBaseInput {
   const doubles = pvpBaseMode(data, "mw_doubles");
 
   return {
-    ...solo,
-    wins: add(solo.wins, doubles.wins),
-    losses: add(solo.losses, doubles.losses),
-    kills: add(solo.kills, doubles.kills),
-    deaths: add(solo.deaths, doubles.deaths),
-    blocksPlaced: add(solo.blocksPlaced, doubles.blocksPlaced),
+    ...deepAdd(solo, doubles),
+    bestWinstreak: solo.bestWinstreak,
+    winstreak: solo.winstreak,
   };
 }
 
