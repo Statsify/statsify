@@ -62,7 +62,7 @@ export interface RequestEvent {
 
 const SAMPLE_RATE = isProduction ? 0.05 : 1;
 
-// Discord fails the interaction when the acknowledgement takes over 3 seconds
+// Discord fails the interaction when the acknowledgment takes over 3 seconds
 const SLOW_ACK_MS = 1500;
 
 // Error events only get tags, and Sentry drops tag keys over 32 characters
