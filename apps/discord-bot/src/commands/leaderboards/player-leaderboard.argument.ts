@@ -12,7 +12,7 @@ import {
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
-import { type ObjectSchema, type PlayerStats, PlayerStatsSchema, getLeaderboardFields } from "@statsify/schemas";
+import { type PlayerStats, PlayerStatsSchema, getLeaderboardFields } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
 const entries = Object.entries(PlayerStatsSchema.definition);
@@ -27,7 +27,7 @@ const FUSE_OPTIONS = {
 };
 
 const fields = entries.reduce((acc, [prefix, value]) => {
-  const list = getLeaderboardFields(value as ObjectSchema).map(
+  const list = getLeaderboardFields(value).map(
     ({ path, leaderboard }) => ({ value: path, name: removeFormatting(leaderboard.name) })
   );
 
