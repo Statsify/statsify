@@ -36,14 +36,13 @@ export class ArmorPieceDto {
   public enchanted?: boolean;
 }
 
-// The hex after textures.minecraft.net/texture/, which older textures write with fewer than 64 digits
+// Older textures have hashes with fewer than 64 digits
 const TEXTURE_HASH = /^[\da-f]{1,64}$/;
 
 class PlayerHeadDto {
   @Matches(TEXTURE_HASH)
   public head: string;
 
-  // A helmet is exactly one of a material, a head or a skull
   @IsEmpty()
   public material?: undefined;
 
