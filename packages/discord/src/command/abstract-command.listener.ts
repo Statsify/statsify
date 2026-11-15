@@ -356,6 +356,8 @@ export abstract class AbstractCommandListener {
   }
 
   private cacheRerun(key: string, message: IMessage | Message, locale: string) {
+    this.rerunCache.delete(key);
+
     if (this.rerunCache.size >= RERUN_CACHE_SIZE) {
       const [oldest] = this.rerunCache.keys();
       this.rerunCache.delete(oldest);
