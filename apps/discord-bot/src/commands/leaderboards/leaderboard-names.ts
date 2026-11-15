@@ -37,8 +37,13 @@ export function translateLeaderboardName(
 
 type Choice = APIApplicationCommandOptionChoice<string>;
 
+interface SearchName {
+  name: string;
+  choice: Choice;
+}
+
 export class LeaderboardChoices {
-  private searches = new Map<string, [Fuse<Choice>, Choice[]]>();
+  private searches = new Map<string, [Fuse<SearchName>, Choice[]]>();
 
   public constructor(private readonly fields: MetadataEntry[]) {}
 
@@ -47,10 +52,8 @@ export class LeaderboardChoices {
 
     if (!query) return list.slice(0, 25);
 
-    return fuse
-      .search(query)
-      .map((result) => result.item)
-      .slice(0, 25);
+    const choices = new Set(fuse.search(query).map((result) => result.item.choice));
+    return [...choices].slice(0, 25);
   }
 
   private getSearch(t: LocalizeFunction) {
@@ -62,13 +65,15 @@ export class LeaderboardChoices {
       name: removeFormatting(translateLeaderboardName(t, leaderboard)),
     }));
 
-    const englishNames = new Map(
-      this.fields.map(([value, { leaderboard }]) => [value, removeFormatting(leaderboard.name)])
-    );
+    // One entry per language, since Fuse ranks a match on two keys above a match on one
+    const names = list.flatMap((choice, index) => [
+      { name: choice.name, choice },
+      { name: removeFormatting(this.fields[index][1].leaderboard.name), choice },
+    ]);
 
     search = [
-      new Fuse(list, {
-        keys: ["name", { name: "english", getFn: (choice) => englishNames.get(choice.value) }],
+      new Fuse(names, {
+        keys: ["name"],
         includeScore: false,
         shouldSort: true,
         isCaseSensitive: false,
