@@ -390,12 +390,16 @@ export class SessionCommand {
     };
 
     const pages: Page[] = displayedModes.map((mode, index) => {
-      const submodes = filterSubmodes?.(player, mode) ?? mode.submodes;
-
-      if (submodes.length === 0) return {
+      const pageInput = {
         label: mode.formatted,
         description: localizeKey(mode.description),
         emoji: modeEmojis[index] ?? localizeKey(mode.emoji),
+      };
+
+      const submodes = filterSubmodes?.(player, mode) ?? mode.submodes;
+
+      if (submodes.length === 0) return {
+        ...pageInput,
         generator: async (t) => {
           const background = await getBackground(...mapBackground(modes, mode.api));
 
@@ -468,12 +472,7 @@ export class SessionCommand {
         },
       }));
 
-      return {
-        label: mode.formatted,
-        description: localizeKey(mode.description),
-        emoji: modeEmojis[index] ?? localizeKey(mode.emoji),
-        subPages,
-      };
+      return { ...pageInput, subPages };
     });
 
     return paginate(context, pages);
