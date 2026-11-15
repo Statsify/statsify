@@ -17,6 +17,7 @@ import {
   type KitItem,
   type LegacyKit,
   type SkyWarsKit,
+  type TntGamesMode,
   kitKey,
   leatherColor,
   skinUrl,
@@ -277,7 +278,7 @@ for (const [title, { mode, tokens }] of Object.entries(SINGLE_KIT_EDITORS)) {
   output.defaults[mode] = found.layout;
 }
 
-const tntGames: Record<string, { name: string; tokens: Tokens; default: Record<string, string> }> = {};
+const tntGames: Record<string, TntGamesMode> = {};
 
 for (const [name, { mode, tokens }] of Object.entries(TNT_GAMES_EDITORS)) {
   const found = singleKit(name, tokens);
