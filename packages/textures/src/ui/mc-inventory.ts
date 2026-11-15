@@ -17,7 +17,6 @@ const MS_PER_TICK = 50;
 
 interface Resources {
   renderer: Promise<InventoryRenderer>;
-  /** Each item's tooltip, drawn on its first hover */
   tooltips: WeakMap<ItemStack, { scale: number; canvas: OffscreenCanvas }>;
 }
 
@@ -133,6 +132,7 @@ export class McInventory extends HTMLElement {
 
   public disconnectedCallback() {
     this.observer.unobserve(this.canvas);
+    this.unhover();
     this.onScreen = false;
     this.play();
   }
@@ -206,6 +206,8 @@ export class McInventory extends HTMLElement {
     const tick = this.tick;
     const resources = resourcesFor(this.packStack);
     const renderer = await resources.renderer;
+    if (drawing !== this.drawing) return;
+
     const shown = this.items.slice(0, size.rows * size.cols);
     const frozen = this.hasAttribute("freeze");
     const moving = shown.flatMap((item, slot) => (item && !frozen && renderer.animates(item) ? [slot] : []));
