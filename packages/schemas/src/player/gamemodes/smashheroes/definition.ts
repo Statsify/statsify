@@ -9,7 +9,7 @@
 import { CoinsSchema, KillsStats, WinsStats } from "../common.js";
 import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { s } from "#definition/s";
-import type { APIData } from "@statsify/util";
+import { type APIData, prettify } from "@statsify/util";
 
 export const SMASH_HEROES_MODES = new GameModes([
   { api: "overall" },
@@ -55,30 +55,15 @@ const KITS = [
   { property: "marauder", key: "MARAUDER" },
   { property: "voidCrawler", key: "DUSK_CRAWLER" },
   { property: "pug", key: "PUG" },
-  { property: "sergeantShield", key: "SERGEANT_SHIELD" },
+  { property: "sergeantShield", key: "SERGEANT_SHIELD", name: "Sgt. Shield" },
   { property: "cryomancer", key: "FROSTY" },
   { property: "shoop", key: "SHOOP_DA_WHOOP" },
   { property: "greenHood", key: "GREEN_HOOD" },
 ] as const;
 
-const KIT_NAMES: Record<string, string> = {
-  BOTMUN: "Botmon",
-  CAKE_MONSTER: "Cake Monster",
-  DUSK_CRAWLER: "Void Crawler",
-  FROSTY: "Cryomancer",
-  GENERAL_CLUCK: "General Cluck",
-  GOKU: "Karakot",
-  GREEN_HOOD: "Green Hood",
-  MARAUDER: "Marauder",
-  PUG: "Pug",
-  SANIC: "Sanic",
-  SERGEANT_SHIELD: "Sgt. Shield",
-  SHOOP_DA_WHOOP: "Shoop",
-  SKULLFIRE: "Skullfire",
-  SPODERMAN: "Spooderman",
-  THE_BULK: "Bulk",
-  TINMAN: "Tinman",
-};
+const KIT_NAMES = new Map<string, string>(
+  KITS.map((kit) => [kit.key, "name" in kit ? kit.name : prettify(kit.property)])
+);
 
 const SmashHeroesModeSchema = s.object({
   ...WinsStats,
@@ -105,7 +90,7 @@ export const SmashHeroesSchema = s
     kit() {
       return s
         .string()
-        .computed((activeClass) => KIT_NAMES[activeClass] ?? "none", [this.activeClass])
+        .computed((activeClass) => KIT_NAMES.get(activeClass) ?? "none", [this.activeClass])
         .default("none");
     },
     ...s.keyed(KITS, () => SmashHeroesModeSchema),
