@@ -49,7 +49,7 @@ pub fn load_skin_from_memory(skin: &[u8]) -> Result<DynamicImage> {
 // Capes use a 64x32 layout or a doubling of it. Smaller canvases (often 46x22) are
 // padded from the top left to the next size up, as the game does.
 pub fn load_cape_from_memory(cape: &[u8]) -> Result<DynamicImage> {
-  let cape = image::load_from_memory(cape)?;
+  let cape = load_texture_from_memory(cape)?;
 
   // The padded texture has to fit the device's 2048 texture limit
   if cape.width() > 2048 || cape.height() > 1024 {
