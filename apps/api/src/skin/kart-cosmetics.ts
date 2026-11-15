@@ -122,7 +122,7 @@ export const HELMETS = {
   HELMET_11_2: "item/birch_slab",
 } as const;
 
-// Leather suits are dyed with Bukkit's DyeColor names and colors
+// Leather suits are dyed with 1.8's dye names and colors
 export const SUIT_DYES = {
   WHITE: 0xFF_FF_FF,
   ORANGE: 0xD8_7F_33,
