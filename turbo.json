@@ -5,12 +5,11 @@
   "tasks": {
     "build": {
       "env": ["API_URL", "API_KEY"],
-      "outputs": ["dist/**", ".next/**", "pkg/**"],
+      "outputs": ["dist/**", ".next/**"],
       "dependsOn": ["^build"]
     },
     "@statsify/skin-renderer#build": {
-      "outputs": ["pkg/**", "*.node"],
-      "dependsOn": ["^build"]
+      "outputs": ["pkg/**", "*.node"]
     },
     "typecheck": {
       "outputs": [],
