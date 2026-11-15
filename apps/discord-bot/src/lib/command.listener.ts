@@ -97,7 +97,7 @@ export class CommandListener extends AbstractCommandListener {
 
     this.apiService.incrementCommand(commandName);
 
-    await this.executeCommand({
+    const ran = await this.executeCommand({
       commandName,
       command,
       context,
@@ -105,7 +105,7 @@ export class CommandListener extends AbstractCommandListener {
       message: this.getTipResponse(commandName, user),
     });
 
-    this.recordLookups(command, context, id);
+    if (ran) this.recordLookups(command, context, id);
   }
 
   private recordLookups(command: CommandResolvable, context: CommandContext, userId: string) {
