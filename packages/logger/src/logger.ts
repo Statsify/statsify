@@ -13,7 +13,9 @@ import { config } from "@statsify/util";
 import { inspect } from "node:util";
 import type { RequestAttributes } from "./event.js";
 
-export type LogLevel = "log" | "error" | "warn" | "debug" | "verbose" | "fatal";
+const LOG_LEVELS = ["log", "error", "warn", "debug", "verbose", "fatal"] as const;
+
+export type LogLevel = (typeof LOG_LEVELS)[number];
 
 export const STATUS_COLORS = {
   debug: 0xC700E7,
@@ -46,7 +48,7 @@ export const isProduction = await config("environment") === "prod";
 
 const format = (message: unknown) => {
   if (typeof message === "string") return message;
-  if (message instanceof Error) return message.stack ?? `${message.name}: ${message.message}`;
+  if (message instanceof Error) return message.stack ?? String(message);
   return inspect(message, { depth: 3, breakLength: Infinity, compact: true });
 };
 
@@ -142,9 +144,7 @@ export class Logger {
 if (import.meta.vitest) {
   const { suite, it, expect, vi } = import.meta.vitest;
 
-  const levels: LogLevel[] = ["log", "error", "warn", "debug", "verbose", "fatal"];
-
-  for (const logLevel of levels) {
+  for (const logLevel of LOG_LEVELS) {
     suite(`logging of ${logLevel}`, () => {
       it(`should ${logLevel}`, () => {
         const logger = new Logger(logLevel);
