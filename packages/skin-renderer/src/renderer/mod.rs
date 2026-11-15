@@ -19,7 +19,7 @@ use crate::geometry::vertex::{Vertex, VertexDescriptor};
 use crate::instance::InstanceRaw;
 use crate::light::LightUniform;
 use crate::model::{DrawModel, Model, ModelKind, ModelOuterLayer};
-use crate::skin_loader::{load_cape_from_memory, load_skin_from_memory};
+use crate::skin_loader::{load_cape_from_memory, load_skin_from_memory, load_texture_from_memory};
 use crate::texture::Texture;
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -375,7 +375,7 @@ impl<T: Backend> SkinRenderer<T> {
     )?;
 
     if armor.pieces().any(|(piece, ..)| piece.enchanted) {
-      let glint = image::load_from_memory(glint.ok_or(Error::MissingGlint)?)?;
+      let glint = load_texture_from_memory(glint.ok_or(Error::MissingGlint)?)?;
       model.attach_glint(device, queue, &self.texture_bind_group_layout, &glint)?;
     }
 

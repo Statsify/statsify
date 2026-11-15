@@ -8,7 +8,7 @@ use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, Textu
 use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
-use crate::skin_loader::load_skull_from_memory;
+use crate::skin_loader::{load_skull_from_memory, load_texture_from_memory};
 use crate::texture::Texture;
 
 pub enum ModelKind {
@@ -354,7 +354,7 @@ impl Model {
       let texture = if skull {
         load_skull_from_memory(&piece.texture)?
       } else {
-        image::load_from_memory(&piece.texture)?
+        load_texture_from_memory(&piece.texture)?
       };
       // Packs draw the 64 wide layout at any resolution, and skins are square where armor is 2:1
       let texture_size = (64, 64 * texture.height() / texture.width());
