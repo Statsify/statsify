@@ -72,16 +72,25 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
   public autocompleteHandler(
     context: CommandContext
   ): APIApplicationCommandOptionChoice[] {
-    const currentValue = context.option<string>(this.name, "").toLowerCase();
+    const words = context.option<string>(this.name, "").toLowerCase().split(/\s+/).filter(Boolean);
+    let choices = this.list;
 
-    if (!currentValue) return this.toChoices(this.list.slice(0, 25));
+    while (words.length > 0) {
+      const aliased = choices.filter((choice) => choice.aliases?.some((alias) => alias.toLowerCase() === words[0]));
+      if (aliased.length === 0) break;
 
-    return this.toChoices(
-      this.fuse
-        .search(currentValue)
-        .map((result) => result.item)
-        .slice(0, 25)
-    );
+      choices = aliased;
+      words.shift();
+    }
+
+    const query = words.join(" ");
+
+    if (query) {
+      const fuse = choices === this.list ? this.fuse : new Fuse(choices, FUSE_OPTIONS);
+      choices = fuse.search(query).map((result) => result.item);
+    }
+
+    return this.toChoices(choices.slice(0, 25));
   }
 
   private getAliases(key: string, modes: GameModes<any>): string[] {
