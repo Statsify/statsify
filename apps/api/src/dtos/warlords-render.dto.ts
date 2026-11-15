@@ -7,8 +7,8 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength } from "class-validator";
-import { MAX_SIZE, MIN_SIZE } from "./kart-render.dto.js";
+import { IsBoolean, IsInt, IsOptional, IsString, MaxLength, Min, MinLength } from "class-validator";
+import { SceneCameraDto } from "./scene-camera.dto.js";
 import { Transform } from "class-transformer";
 
 export const WARLORDS_CAMERA = {
@@ -16,7 +16,9 @@ export const WARLORDS_CAMERA = {
   weapon: { width: 600, height: 600, yaw: -Math.PI / 6, pitch: Math.PI / 18 },
 };
 
-export class WarlordsRenderDto {
+export class WarlordsRenderDto extends SceneCameraDto(WARLORDS_CAMERA.player, {
+  height: `${WARLORDS_CAMERA.weapon.height} for a weapon alone`,
+}) {
   @IsOptional()
   @IsString()
   @MaxLength(36)
@@ -58,37 +60,4 @@ export class WarlordsRenderDto {
   @IsBoolean()
   @ApiProperty({ required: false, default: false, description: "Draw the skin's outer layer in 3D" })
   public extruded?: boolean;
-
-  // An empty ?yaw= keeps the default angle, where +"" would turn it to the front
-  @IsOptional()
-  @Transform(({ value }) => (value === "" ? undefined : +value))
-  @IsNumber()
-  @Min(-Math.PI * 2)
-  @Max(Math.PI * 2)
-  @ApiProperty({ required: false, default: WARLORDS_CAMERA.player.yaw, description: "Camera angle around the player or weapon in radians: 0 faces the front, π the back" })
-  public yaw?: number;
-
-  @IsOptional()
-  @Transform(({ value }) => (value === "" ? undefined : +value))
-  @IsNumber()
-  @Min(-Math.PI / 2)
-  @Max(Math.PI / 2)
-  @ApiProperty({ required: false, default: WARLORDS_CAMERA.player.pitch, description: "Camera angle above the horizon in radians" })
-  public pitch?: number;
-
-  @IsOptional()
-  @Transform(({ value }) => +value)
-  @IsInt()
-  @Min(MIN_SIZE)
-  @Max(MAX_SIZE)
-  @ApiProperty({ required: false, default: WARLORDS_CAMERA.player.width, minimum: MIN_SIZE, maximum: MAX_SIZE })
-  public width?: number;
-
-  @IsOptional()
-  @Transform(({ value }) => +value)
-  @IsInt()
-  @Min(MIN_SIZE)
-  @Max(MAX_SIZE)
-  @ApiProperty({ required: false, default: WARLORDS_CAMERA.player.height, minimum: MIN_SIZE, maximum: MAX_SIZE, description: `${WARLORDS_CAMERA.weapon.height} for a weapon alone` })
-  public height?: number;
 }

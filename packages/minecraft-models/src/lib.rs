@@ -42,9 +42,8 @@ fn parse_json(text: &str) -> Result<Value, String> {
   Ok(value)
 }
 
-/// 1.8 reads pack JSON with Gson's lenient mode, which reads an empty slot in an array (`[,1]`,
-/// `[1,,2]`, `[1,]`) as null, then skips the null in a `.mcmeta` frame list; packs rely on both.
-/// Drops a comma that only whitespace separates from the `[` before it or the next `,`, `]` or `}`.
+/// 1.8 reads empty array slots (`[,1]`, `[1,,2]`, `[1,]`) as null and skips them in `.mcmeta` frame lists.
+/// Packs rely on these stray commas and on trailing commas in objects.
 fn strip_stray_commas(text: &str) -> String {
   const WHITESPACE: [char; 4] = [' ', '\t', '\n', '\r'];
 

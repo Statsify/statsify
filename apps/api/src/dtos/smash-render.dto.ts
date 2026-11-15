@@ -8,7 +8,7 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Max, Min } from "class-validator";
-import { MAX_SIZE, MIN_SIZE } from "./kart-render.dto.js";
+import { MAX_SIZE, MIN_SIZE } from "./scene-camera.dto.js";
 import { Transform } from "class-transformer";
 import { WARLORDS_CAMERA } from "./warlords-render.dto.js";
 
