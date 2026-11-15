@@ -39,8 +39,8 @@ export interface ModelInstance {
   /** Model name in the library, such as `block/furnace`. */
   model: string
   /**
-   * What the model hangs from. On `root`, a display context wears it as the game does on an
-   * invisible standing entity where the player stands, such as an armor stand.
+   * What the model hangs from. On `root`, a display context wears it on an invisible armor stand
+   * where the player stands, which the game draws at 16/15 the player's size.
    */
   bone: 'root' | 'head' | 'rightHand' | 'leftHand'
   /**
