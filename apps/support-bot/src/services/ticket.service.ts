@@ -36,6 +36,8 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Service()
 export class TicketService {
+  private readonly closingChannels = new Set<string>();
+
   public constructor(
     private readonly channelService: ChannelService,
     private readonly messageService: MessageService,
@@ -186,67 +188,74 @@ export class TicketService {
     reason = "N/A"
   ) {
     const ticket = await this.ticketModel
-      .findOneAndDelete()
+      .findOne()
       .where(type)
       .equals(channelIdOrOwnerId)
       .lean()
       .exec();
 
-    if (!ticket) return false;
+    if (!ticket || this.closingChannels.has(ticket.channel)) return false;
+    this.closingChannels.add(ticket.channel);
 
-    // Discord returns the newest messages first, so reverse them to log the ticket in order
-    const messages = (await this.channelService.getMessages(ticket.channel)).toReversed();
-    await this.channelService.delete(ticket.channel);
+    try {
+      // Discord returns the newest messages first, so reverse them to log the ticket in order
+      const messages = (await this.channelService.getMessages(ticket.channel)).toReversed();
 
-    const listener = CommandListener.getInstance();
-    listener.removeHook(ticket.channel);
-    listener.removeHook(this.copyUsernameButtonId(ticket.channel));
+      // A list of people who talked in the ticket
+      const participants: Set<string> = new Set([`<@${ticket.owner}>`]);
 
-    // A list of people who talked in the ticket
-    const participants: Set<string> = new Set([`<@${ticket.owner}>`]);
+      const logs: string[] = [];
 
-    const logs: string[] = [];
+      for (const m of messages) {
+        if (!m.author.bot) participants.add(`<@${m.author.id}>`);
 
-    for (const m of messages) {
-      if (!m.author.bot) participants.add(`<@${m.author.id}>`);
+        const message = [
+          `${m.author.username}#${m.author.discriminator}: ${m.content}`,
+          ...m.attachments.map((a) => a.url),
+        ].join("\n");
 
-      const message = [
-        `${m.author.username}#${m.author.discriminator}: ${m.content}`,
-        ...m.attachments.map((a) => a.url),
-      ].join("\n");
+        logs.push(message);
+      }
 
-      logs.push(message);
+      const embed = new EmbedBuilder()
+        .title("Ticket Resolved")
+        .color(STATUS_COLORS.info)
+        .description(
+          [
+            `Owner: <@${ticket.owner}>`,
+            `Closer: <@${userId}>`,
+            `Participants: ${[...participants].join(", ")}`,
+            `Reason: ${reason}`,
+          ]
+            .map((m) => `\`•\` ${m}`)
+            .join("\n")
+        );
+
+      const message: IMessage = {
+        embeds: [embed],
+        files: [
+          {
+            name: `${ticket.owner}.txt`,
+            data: Buffer.from(logs.join("\n"), "utf8"),
+            type: "text/plain",
+          },
+        ],
+      };
+
+      await this.messageService.send(await config("supportBot.ticketLogsChannel"), message);
+      await this.channelService.delete(ticket.channel);
+
+      const listener = CommandListener.getInstance();
+      listener.removeHook(ticket.channel);
+      listener.removeHook(this.copyUsernameButtonId(ticket.channel));
+
+      await this.ticketModel.deleteOne().where("channel").equals(ticket.channel).exec();
+
+      const dm = await this.channelService.create(ticket.owner);
+      await this.messageService.send(dm.id, message).catch(() => null);
+    } finally {
+      this.closingChannels.delete(ticket.channel);
     }
-
-    const embed = new EmbedBuilder()
-      .title("Ticket Resolved")
-      .color(STATUS_COLORS.info)
-      .description(
-        [
-          `Owner: <@${ticket.owner}>`,
-          `Closer: <@${userId}>`,
-          `Participants: ${[...participants].join(", ")}`,
-          `Reason: ${reason}`,
-        ]
-          .map((m) => `\`•\` ${m}`)
-          .join("\n")
-      );
-
-    const message: IMessage = {
-      embeds: [embed],
-      files: [
-        {
-          name: `${ticket.owner}.txt`,
-          data: Buffer.from(logs.join("\n"), "utf8"),
-          type: "text/plain",
-        },
-      ],
-    };
-
-    await this.messageService.send(await config("supportBot.ticketLogsChannel"), message);
-
-    const dm = await this.channelService.create(ticket.owner);
-    await this.messageService.send(dm.id, message).catch(() => null);
 
     return true;
   }
