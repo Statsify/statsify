@@ -113,8 +113,7 @@ export class LinkedRolesService {
       const now = Date.now();
       const body = getPushBody(player);
 
-      // Claiming the push in the same query keeps concurrent saves from pushing twice,
-      // and matching on the body skips the many saves that change nothing Discord shows
+      // Claiming the push in the same query keeps concurrent saves from pushing twice
       const connection = await this.roleConnectionModel
         .findOneAndUpdate(
           {
