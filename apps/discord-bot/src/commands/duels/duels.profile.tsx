@@ -47,12 +47,12 @@ export const DuelsProfile = <T extends ProfileTime>({
 
   const stats = duels[mode.api];
 
-  const bow = "overall" in stats ? stats.overall : stats;
+  const bowStats = "overall" in stats ? stats.overall : stats;
 
-  if ("shotsHit" in bow) {
+  if ("shotsHit" in bowStats) {
     sidebar.push(
-      [t("stats.bowShots"), t(bow.shotsFired), "§6"],
-      [t("stats.bowHits"), t(bow.shotsHit), "§c"]
+      [t("stats.bowShots"), t(bowStats.shotsFired), "§6"],
+      [t("stats.bowHits"), t(bowStats.shotsHit), "§c"]
     );
   }
 
