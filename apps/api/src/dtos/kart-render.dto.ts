@@ -7,15 +7,13 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength } from "class-validator";
+import { IsBoolean, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { SceneCameraDto } from "./scene-camera.dto.js";
 import { Transform } from "class-transformer";
 
 export const KART_CAMERA = { width: 600, height: 450, yaw: -Math.PI / 6, pitch: Math.PI / 10 };
 
-const MIN_SIZE = 64;
-const MAX_SIZE = 1024;
-
-export class KartRenderDto {
+export class KartRenderDto extends SceneCameraDto(KART_CAMERA) {
   @IsString()
   @ApiProperty({ description: "The player's stored skin_active, such as YELLOW_KART;DRAGON_TAMER" })
   public kart: string;
@@ -52,37 +50,4 @@ export class KartRenderDto {
   @IsBoolean()
   @ApiProperty({ required: false, default: false, description: "Draw the skin's outer layer in 3D" })
   public extruded?: boolean;
-
-  // An empty ?yaw= keeps the default angle, where +"" would turn it to the front
-  @IsOptional()
-  @Transform(({ value }) => (value === "" ? undefined : +value))
-  @IsNumber()
-  @Min(-Math.PI * 2)
-  @Max(Math.PI * 2)
-  @ApiProperty({ required: false, default: KART_CAMERA.yaw, description: "Camera angle around the kart in radians: 0 faces the front, π the back" })
-  public yaw?: number;
-
-  @IsOptional()
-  @Transform(({ value }) => (value === "" ? undefined : +value))
-  @IsNumber()
-  @Min(-Math.PI / 2)
-  @Max(Math.PI / 2)
-  @ApiProperty({ required: false, default: KART_CAMERA.pitch, description: "Camera angle above the horizon in radians" })
-  public pitch?: number;
-
-  @IsOptional()
-  @Transform(({ value }) => +value)
-  @IsInt()
-  @Min(MIN_SIZE)
-  @Max(MAX_SIZE)
-  @ApiProperty({ required: false, default: KART_CAMERA.width, minimum: MIN_SIZE, maximum: MAX_SIZE })
-  public width?: number;
-
-  @IsOptional()
-  @Transform(({ value }) => +value)
-  @IsInt()
-  @Min(MIN_SIZE)
-  @Max(MAX_SIZE)
-  @ApiProperty({ required: false, default: KART_CAMERA.height, minimum: MIN_SIZE, maximum: MAX_SIZE })
-  public height?: number;
 }

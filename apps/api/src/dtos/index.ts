@@ -26,3 +26,4 @@ export * from "./player-leaderboard.dto.js";
 export * from "./session.dto.js";
 export * from "./skin-render.dto.js";
 export * from "./kart-render.dto.js";
+export * from "./scene-camera.dto.js";
