@@ -5,7 +5,7 @@ use statsify_minecraft_models::{Display, Transform};
 use crate::model::{ModelKind, Part};
 use crate::pose::{Held, Pose};
 
-const PIXELS_PER_BLOCK: f32 = 16.0;
+pub(crate) const PIXELS_PER_BLOCK: f32 = 16.0;
 
 // Where the game draws a held item from: below the shoulder joint, at the hand. LayerHeldItem
 // starts a pixel out from the arm's pivot, which is the middle of a classic arm.
