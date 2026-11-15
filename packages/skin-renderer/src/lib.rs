@@ -4,7 +4,6 @@ mod buffer_dimensions;
 mod camera;
 mod error;
 mod geometry;
-mod instance;
 mod light;
 mod material;
 mod mesh;
