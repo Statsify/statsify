@@ -51,10 +51,7 @@ export class GuildService {
       type !== GuildQuery.PLAYER || cachedGuild?.members.some((member) => member.uuid === tag);
 
     if (cachedGuild && listsPlayer && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
-      return {
-        ...deserialize(Guild, flatten(cachedGuild)),
-        cached: true,
-      };
+      return this.fromCache(cachedGuild);
     }
 
     if (
@@ -74,13 +71,7 @@ export class GuildService {
         type.toLowerCase() as Lowercase<GuildQuery>
       );
     } catch {
-      if (cachedGuild && listsPlayer) {
-        return {
-          ...deserialize(Guild, flatten(cachedGuild)),
-          cached: true,
-        };
-      }
-
+      if (cachedGuild && listsPlayer) return this.fromCache(cachedGuild);
       throw new ServiceUnavailableException();
     }
 
@@ -166,7 +157,6 @@ export class GuildService {
       guild.scaledMonthly += scaled;
     }
 
-    // Cache guilds responses for 10 minutes
     guild.expiresAt = Date.now() + GUILD_CACHE_TIME_MS;
 
     const flatGuild = flatten(guild);
@@ -180,6 +170,10 @@ export class GuildService {
     await this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, "id");
 
     return deserialize(Guild, flatGuild);
+  }
+
+  private fromCache(cachedGuild: Guild): Guild {
+    return { ...deserialize(Guild, flatten(cachedGuild)), cached: true };
   }
 
   private async getCachedGuild(
