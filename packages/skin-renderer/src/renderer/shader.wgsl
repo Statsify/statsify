@@ -73,10 +73,35 @@ var t_diffuse: texture_2d<f32>;
 @group(0)@binding(1)
 var s_diffuse: sampler;
 
+@group(3) @binding(0)
+var t_glint: texture_2d<f32>;
+
+@group(3) @binding(1)
+var s_glint: sampler;
+
 @fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
+    return shade(in, textureSample(t_diffuse, s_diffuse, in.texture_coordinates));
+}
+
+// Armor has see-through gaps, which must not hide what's drawn behind them later.
+// The skin keeps fs_main, since a discard turns off early depth testing on software renderers
+@fragment
+fn fs_attachment(in: VertexOutput) -> @location(0) vec4<f32> {
+    return attachment_color(in);
+}
+
+fn attachment_color(in: VertexOutput) -> vec4<f32> {
     let object_color: vec4<f32> = textureSample(t_diffuse, s_diffuse, in.texture_coordinates);
 
+    if object_color.a == 0.0 {
+        discard;
+    }
+
+    return shade(in, object_color);
+}
+
+fn shade(in: VertexOutput, object_color: vec4<f32>) -> vec4<f32> {
     let ambient_strength = 0.2;
     let ambient_color = light.color * ambient_strength;
 
@@ -88,4 +113,24 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     let result = (ambient_color + diffuse_color) * object_color.xyz;
 
     return vec4<f32>(result, object_color.a);
+}
+
+// The game adds the glint to the gamma-encoded color, which blending in linear space
+// would wash out. Gamma 2 stands in for sRGB, since pow is slow on software renderers
+@fragment
+fn fs_enchanted(in: VertexOutput) -> @location(0) vec4<f32> {
+    let tint = vec3<f32>(0.38, 0.19, 0.608);
+    var glint = vec3<f32>(0.0);
+
+    for (var i = 0; i < 2; i++) {
+        let angle = radians(30.0 - f32(i) * 60.0);
+        let rotation = mat2x2<f32>(cos(angle), sin(angle), -sin(angle), cos(angle));
+        let uv = rotation * in.texture_coordinates / 3.0;
+        glint += textureSample(t_glint, s_glint, uv).rgb * tint * tint;
+    }
+
+    let armor = attachment_color(in);
+    let color = min(sqrt(armor.rgb) + glint, vec3<f32>(1.0));
+
+    return vec4<f32>(color * color, armor.a);
 }

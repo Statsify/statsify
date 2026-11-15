@@ -29,11 +29,59 @@ impl SkinFormat {
   }
 }
 
+pub fn load_texture_from_memory(texture: &[u8]) -> Result<DynamicImage> {
+  let texture = image::load_from_memory(texture)?;
+
+  if texture.width() == 0 || texture.height() == 0 {
+    return Err(Error::EmptyTexture);
+  }
+
+  Ok(texture)
+}
+
 pub fn load_skin_from_memory(skin: &[u8]) -> Result<DynamicImage> {
-  let skin = image::load_from_memory(skin)?;
+  let skin = load_texture_from_memory(skin)?;
   let skin = process_skin(skin)?;
 
   Ok(skin)
+}
+
+// Capes use a 64x32 layout or a doubling of it. Smaller canvases (often 46x22) are
+// padded from the top left to the next size up, as the game does.
+pub fn load_cape_from_memory(cape: &[u8]) -> Result<DynamicImage> {
+  let cape = load_texture_from_memory(cape)?;
+
+  // The padded texture has to fit the device's 2048 texture limit
+  if cape.width() > 2048 || cape.height() > 1024 {
+    return Err(Error::CapeTooLarge);
+  }
+
+  let (mut width, mut height) = (64, 32);
+
+  while width < cape.width() || height < cape.height() {
+    width *= 2;
+    height *= 2;
+  }
+
+  if cape.dimensions() == (width, height) {
+    return Ok(cape);
+  }
+
+  let mut padded = DynamicImage::new_rgba8(width, height);
+  padded.copy_from(&cape, 0, 0)?;
+
+  Ok(padded)
+}
+
+// A worn player head is a skin, so it gets the cleanup the game gives the wearer's own.
+// Of the vanilla mob skulls, only the skeletons' open bottom changes, and the neck covers it.
+pub fn load_skull_from_memory(skull: &[u8]) -> Result<DynamicImage> {
+  let skull = load_texture_from_memory(skull)?;
+
+  match SkinFormat::try_from_image(&skull) {
+    Some(_) if skull.width() == 64 => process_skin(skull),
+    _ => Ok(skull),
+  }
 }
 
 fn process_skin(skin: DynamicImage) -> Result<DynamicImage> {

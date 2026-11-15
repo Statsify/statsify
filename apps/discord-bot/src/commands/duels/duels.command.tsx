@@ -11,6 +11,7 @@ import {
   DUELS_MODES,
   DuelsModes,
   GameModeWithSubModes,
+  Player,
 } from "@statsify/schemas";
 import {
   BaseHypixelCommand,
@@ -20,6 +21,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { DuelsProfile } from "./duels.profile.js";
+import { duelsKitArmor } from "@statsify/hypixel-data";
 import { getAssetPath } from "@statsify/assets";
 import { loadImage } from "@statsify/rendering";
 import { readdir } from "node:fs/promises";
@@ -65,6 +67,13 @@ export class DuelsCommand extends BaseHypixelCommand<
 
   public getModeEmojis(modes: GameModeWithSubModes<DuelsModes>[]): ModeEmoji[] {
     return getDuelsModeEmojis(modes);
+  }
+
+  public getArmor(player: Player, api: ApiModeFromGameModes<DuelsModes>) {
+    const { blitzsg, skywars } = player.stats.duels;
+    if (api === "blitzsg") return duelsKitArmor(`layout_blitz_duel_${blitzsg.kit}`);
+    if (api === "skywars" && skywars.kitId) return duelsKitArmor(`layout_sw_duel_${skywars.kitId}`);
+    return undefined;
   }
 
   public getProfile(
