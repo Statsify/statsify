@@ -54,7 +54,7 @@ export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   filterSubmodes?(player: Player, mode: GameModeWithSubModes<T>): GameModeWithSubModes<T>["submodes"];
   getModeEmojis?(modes: GameModeWithSubModes<T>[]): ModeEmoji[];
   getSubModeEmojis?<M extends ApiModeFromGameModes<T>>(mode: M, submodes: SubModeForMode<T, M>[]): ModeEmoji[];
-  getArmor?(player: Player, mode: GameMode<T>): Armor | undefined;
+  getArmor?(player: Player, mode: ApiModeFromGameModes<T>): Armor | undefined;
 }
 
 @Command({
@@ -74,7 +74,6 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
-    // One render per armor set, since modes often share a kit; a failed armored render falls back to the plain skin
     const skins = new Map<string, Promise<Image>>();
     const skinFor = (armor: Armor): Promise<Image> => {
       const key = JSON.stringify(armor);
@@ -87,7 +86,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
       return skins.get(key)!;
     };
 
-    const getSkin = (mode: GameMode<T>) => skinFor(this.getArmor?.(player, mode) ?? {});
+    const getSkin = (mode: ApiModeFromGameModes<T>) => skinFor(this.getArmor?.(player, mode) ?? {});
 
     const allModes = this.modes.getModes();
     const filteredModes = this.filterModes?.(player, allModes) ?? allModes;
@@ -96,7 +95,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     const [logo, badge] = await Promise.all([
       getLogo(user),
       this.apiService.getUserBadge(player.uuid),
-      getSkin(filteredModes[0] as unknown as GameMode<T>),
+      getSkin(filteredModes[0].api),
     ]);
 
     const data: K = (await this.getPreProfileData?.(player)) ?? noop();
@@ -124,7 +123,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
             const profile = this.getProfile(
               {
                 player,
-                skin: await getSkin(gameMode),
+                skin: await getSkin(mode.api),
                 background,
                 logo,
                 t,
@@ -156,7 +155,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
           const profile = this.getProfile(
             {
               player,
-              skin: await getSkin(gameMode),
+              skin: await getSkin(mode.api),
               background,
               logo,
               t,

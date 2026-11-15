@@ -12,7 +12,7 @@ import {
   ProfileData,
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
-import { GameMode, Player, SKYWARS_MODES, SkyWarsModes } from "@statsify/schemas";
+import { ApiModeFromGameModes, Player, SKYWARS_MODES, SkyWarsModes } from "@statsify/schemas";
 import { skyWarsKitArmor } from "@statsify/hypixel-data";
 import { SkyWarsProfile } from "./skywars.profile.js";
 
@@ -22,7 +22,7 @@ export class SkyWarsCommand extends BaseHypixelCommand<SkyWarsModes> {
     super(SKYWARS_MODES);
   }
 
-  public getArmor(player: Player, { api }: GameMode<SkyWarsModes>) {
+  public getArmor(player: Player, api: ApiModeFromGameModes<SkyWarsModes>) {
     const { kitId } = player.stats.skywars[api];
     return kitId ? skyWarsKitArmor(kitId) : undefined;
   }

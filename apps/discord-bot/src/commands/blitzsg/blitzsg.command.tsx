@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiModeFromGameModes, BLITZSG_MODES, BlitzSGKit, BlitzSGModes, GameMode, GameModeWithSubModes, Player } from "@statsify/schemas";
+import { ApiModeFromGameModes, BLITZSG_MODES, BlitzSGKit, BlitzSGModes, GameModeWithSubModes, Player } from "@statsify/schemas";
 import {
   BaseHypixelCommand,
   BaseProfileProps,
@@ -29,7 +29,7 @@ export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
     return filterBlitzKits(player, modes);
   }
 
-  public getArmor(player: Player, { api }: GameMode<BlitzSGModes>) {
+  public getArmor(player: Player, api: ApiModeFromGameModes<BlitzSGModes>) {
     const { blitzsg } = player.stats;
     const kit = (api === "overall" ? kitKey(blitzsg.kit) : api) as ApiModeFromGameModes<BlitzSGModes>;
     const level = (blitzsg[kit] as BlitzSGKit | undefined)?.level;

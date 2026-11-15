@@ -10,7 +10,6 @@ import {
   ApiModeFromGameModes,
   DUELS_MODES,
   DuelsModes,
-  GameMode,
   GameModeWithSubModes,
   Player,
 } from "@statsify/schemas";
@@ -70,7 +69,7 @@ export class DuelsCommand extends BaseHypixelCommand<
     return getDuelsModeEmojis(modes);
   }
 
-  public getArmor(player: Player, { api }: GameMode<DuelsModes>) {
+  public getArmor(player: Player, api: ApiModeFromGameModes<DuelsModes>) {
     const { blitzsg, skywars } = player.stats.duels;
     if (api === "blitzsg") return duelsKitArmor(`layout_blitz_duel_${blitzsg.kit}`);
     if (api === "skywars" && skywars.kitId) return duelsKitArmor(`layout_sw_duel_${skywars.kitId}`);
