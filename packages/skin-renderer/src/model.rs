@@ -245,7 +245,7 @@ impl<'a> BodyPart<'a> {
         }
         .create();
 
-        // A posed part grows around where its turn left its center. Standing parts keep
+        // A posed part scales around where its turn left its center. Unposed parts keep
         // the unturned center they've always used, so bare renders don't move.
         let center = match rotation {
           Some(rotation) if self.placement.posed => {
