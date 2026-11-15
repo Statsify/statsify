@@ -106,7 +106,6 @@ fn animation_frame(mcmeta: &str, frame_count: u32, tick: u64) -> Result<Option<u
     frames.push(entry);
   }
 
-  // An empty or missing list plays every frame in the strip in order
   if frames.is_empty() {
     frames = (0..u64::from(frame_count))
       .map(|index| (index, frametime))
