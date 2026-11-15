@@ -18,15 +18,15 @@ interface TitlesTableProps {
   modeIcons: DuelsModeIcons;
 }
 
-interface TitleMode {
+interface ModeScore {
   mode: DuelsTitle;
   score: number;
 }
 
-const defaultColorTitle = ({ mode, score }: TitleMode) =>
+const defaultColorTitle = ({ mode, score }: ModeScore) =>
   getTitleAndProgression({ score, data: {}, ...DUELS_TITLES[mode] }).titleFormatted;
 
-const normalizedScore = ({ mode, score }: TitleMode) =>
+const normalizedScore = ({ mode, score }: ModeScore) =>
   DUELS_TITLES[mode].titleRequirement === "half" ? score * 2 : score;
 
 function ModeTitle({ icon, title, score, t }: { icon: Image; title: string; score: number; t: LocalizeFunction }) {
@@ -43,9 +43,9 @@ function ModeTitle({ icon, title, score, t }: { icon: Image; title: string; scor
 }
 
 export const TitlesTable = ({ duels, t, modeIcons }: TitlesTableProps) => {
-  const overall: TitleMode = { mode: "overall", score: duels.overall.wins };
+  const overall: ModeScore = { mode: "overall", score: duels.overall.wins };
 
-  const games: TitleMode[] = [
+  const games: ModeScore[] = [
     { mode: "arena", score: duels.arena.kills },
     { mode: "bedwars", score: duels.bedwars.overall.wins },
     { mode: "blitzsg", score: duels.blitzsg.wins },
