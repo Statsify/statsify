@@ -218,6 +218,9 @@ export class GuildService {
         .exec();
     }
 
+    // A renamed guild isn't found by its old name, so only a miss by id means it's gone
+    if (type === GuildQuery.NAME) return;
+
     return await this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec();
   }
 
