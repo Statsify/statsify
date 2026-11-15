@@ -40,7 +40,7 @@ const limit = async () => {
 
       memberCount += limit;
 
-      // Both ends of the range are removed, so these keep exactly `limit` members
+      // Rank ranges are inclusive, so both keep exactly `limit` members
       if (sort === "DESC") {
         limitLeaderboardPipeline.zremrangebyrank(path, 0, -(limit + 1));
       } else {
