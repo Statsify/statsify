@@ -61,7 +61,11 @@ export class MegaWallsKit {
   @Field({ leaderboard: { limit } })
   public points: number;
 
-  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+  @Field({
+    leaderboard: { enabled: false },
+    historical: { enabled: false },
+    store: { default: 1 },
+  })
   public kitLevel: number;
 
   public constructor(data: APIData, kit: string) {
