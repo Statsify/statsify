@@ -36,6 +36,10 @@ pub enum Error {
   #[error("Enchanted armor needs a glint texture")]
   MissingGlint,
 
+  #[cfg(not(target_arch = "wasm32"))]
+  #[error("A mount needs a texture")]
+  MissingMountTexture,
+
   #[error(transparent)]
   Image(#[from] image::ImageError),
 
