@@ -26,6 +26,7 @@ import { getAssetPath, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { readFile } from "node:fs/promises";
 
+const BADGE_SIZE = 32;
 const BADGE_IMAGE_TYPES = ["image/png", "image/jpeg", "image/gif", "image/webp"];
 const CUSTOM_EMOJI_REGEX = /^<a?:\w+:(\d+)>$/;
 
@@ -170,7 +171,7 @@ export class BadgeCommand {
   }
 
   private async getCustomEmojiBadge(id: string) {
-    const image = await loadImage(`https://cdn.discordapp.com/emojis/${id}.png?size=32`).catch(() => {
+    const image = await loadImage(`https://cdn.discordapp.com/emojis/${id}.png?size=${BADGE_SIZE}`).catch(() => {
       throw new ErrorMessage("errors.invalidBadgeEmoji");
     });
 
@@ -242,12 +243,12 @@ export class BadgeCommand {
   }
 
   private fitBadge(image: Image) {
-    const canvas = createCanvas(32, 32);
+    const canvas = createCanvas(BADGE_SIZE, BADGE_SIZE);
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
     const ratio = Math.min(canvas.width / image.width, canvas.height / image.height);
-    const scaled = image.width > 32 || image.height > 32;
+    const scaled = image.width > BADGE_SIZE || image.height > BADGE_SIZE;
 
     const width = scaled ? image.width * ratio : image.width;
     const height = scaled ? image.height * ratio : image.height;
