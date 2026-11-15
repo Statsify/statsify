@@ -22,7 +22,6 @@ interface TintedLayer extends ItemLayer {
   colors: number[];
 }
 
-// Mob heads by their special model kind. Zombies have a hat layer, like players
 const HEADS: Record<string, { texture: string; hat: boolean }> = {
   skeleton: { texture: "entity/skeleton/skeleton", hat: false },
   wither_skeleton: { texture: "entity/skeleton/wither_skeleton", hat: false },

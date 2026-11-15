@@ -19,7 +19,7 @@ const settled = <T>(request: IDBRequest<T>) =>
     request.addEventListener("error", () => reject(request.error));
   });
 
-async function open(name: string) {
+async function open(name: string, onClose: () => void) {
   const opening = indexedDB.open(name, VERSION);
 
   opening.addEventListener("upgradeneeded", () => {
@@ -31,24 +31,33 @@ async function open(name: string) {
   const db = await settled(opening);
 
   // A tab with newer code can't upgrade the database until every other tab lets go of it
-  db.addEventListener("versionchange", () => db.close());
+  db.addEventListener("versionchange", () => {
+    db.close();
+    onClose();
+  });
+  db.addEventListener("close", onClose);
 
   return db;
 }
 
-/** Rendered icons as PNGs in IndexedDB, so the next page load skips drawing them */
+/** Rendered icons as PNGs in IndexedDB, so the next page load skips drawing them. A failed read is a miss */
 export class IconCache {
-  private db = open("statsify-textures");
+  private db?: Promise<IDBDatabase>;
+
+  private async store(mode: IDBTransactionMode) {
+    this.db ??= open("statsify-textures", () => (this.db = undefined));
+    return (await this.db).transaction(STORE, mode).objectStore(STORE);
+  }
 
   public async get(key: string) {
-    const store = (await this.db).transaction(STORE).objectStore(STORE);
-    const png = await settled<Blob | undefined>(store.get(key));
+    const png = await this.store("readonly")
+      .then((store) => settled<Blob | undefined>(store.get(key)))
+      .catch(() => undefined);
     return png && decodePng(new Uint8Array(await png.arrayBuffer()));
   }
 
   public async set(key: string, icon: OffscreenCanvas) {
     const png = await icon.convertToBlob();
-    const store = (await this.db).transaction(STORE, "readwrite").objectStore(STORE);
-    await settled(store.put(png, key));
+    await settled((await this.store("readwrite")).put(png, key));
   }
 }

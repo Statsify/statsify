@@ -42,9 +42,8 @@ function kartPart(stored: string) {
 }
 
 /**
- * A Turbo Kart Racers kart from the GingerBread stats (engine_active, booster_active,
- * frame_active) as a row of the selectors' items: engine, turbocharger, frame. A part no
- * selector showed with the same rarity and attribute levels leaves its slot empty.
+ * A Turbo Kart Racers kart from the GingerBread stats as its engine, turbocharger and frame. A part no
+ * selector showed with its rarity and attribute levels leaves its slot empty
  */
 export function fromTurboKartRacersKart(
   stats: Readonly<Partial<Record<(typeof KART)[number], string | null>>>,

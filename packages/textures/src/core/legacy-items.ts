@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { DYES } from "./tints.js";
 import data from "../../data/minecraft-data.json" with { type: "json" };
 import type { ItemStack } from "./item-stack.js";
 
@@ -23,11 +24,62 @@ const POTION_EFFECTS = [0, 10, 1, 12, 19, 6, 16, 0, 18, 5, 2, 8, 7, 13, 14, 0];
 const LEVEL_II = 0x20;
 const SPLASH = 0x40_00;
 
+const BANNER_PATTERNS: Record<string, string | undefined> = {
+  b: "base",
+  bl: "square_bottom_left",
+  br: "square_bottom_right",
+  tl: "square_top_left",
+  tr: "square_top_right",
+  bs: "stripe_bottom",
+  ts: "stripe_top",
+  ls: "stripe_left",
+  rs: "stripe_right",
+  cs: "stripe_center",
+  ms: "stripe_middle",
+  drs: "stripe_downright",
+  dls: "stripe_downleft",
+  ss: "small_stripes",
+  cr: "cross",
+  sc: "straight_cross",
+  bt: "triangle_bottom",
+  tt: "triangle_top",
+  bts: "triangles_bottom",
+  tts: "triangles_top",
+  ld: "diagonal_left",
+  rd: "diagonal_up_right",
+  lud: "diagonal_up_left",
+  rud: "diagonal_right",
+  mc: "circle",
+  mr: "rhombus",
+  vh: "half_vertical",
+  hh: "half_horizontal",
+  vhr: "half_vertical_right",
+  hhb: "half_horizontal_bottom",
+  bo: "border",
+  cbo: "curly_border",
+  cre: "creeper",
+  gra: "gradient",
+  gru: "gradient_up",
+  bri: "bricks",
+  sku: "skull",
+  flo: "flower",
+  moj: "mojang",
+};
+
 /** A 26.3 effect id for a 1.8 numeric effect id */
 export function legacyEffect(id: number) {
   const name = effects[id];
   return name ? `minecraft:${name}` : undefined;
 }
+
+/** A 26.3 banner pattern id for a 1.8 pattern code, like "bo" */
+export function legacyBannerPattern(code: string) {
+  const name = BANNER_PATTERNS[code];
+  return name ? `minecraft:${name}` : undefined;
+}
+
+/** A dye color for a 1.8 banner's dye Damage value, which runs the other way to wool's */
+export const legacyDye = (damage: number) => DYES[15 - damage];
 
 /**
  * The 26.3 item for a 1.8 numeric id and Damage value, as Hypixel sends them.
@@ -49,9 +101,12 @@ export function legacyItem(id: number, damage = 0): ItemStack | undefined {
   return { id: `minecraft:${name}`, damage: durability[name] && damage > 0 ? damage : undefined };
 }
 
-/** The 26.3 item for a 1.8 Bukkit material name, like GOLD_CHESTPLATE, and Damage value */
+/** The 1.8 numeric id of a Bukkit material name, like GOLD_CHESTPLATE */
+export const legacyMaterialId = (name: string) => materials[name];
+
+/** The 26.3 item for a 1.8 Bukkit material name and Damage value */
 export function legacyMaterial(name: string, damage = 0) {
-  const id = materials[name];
+  const id = legacyMaterialId(name);
   return id === undefined ? undefined : legacyItem(id, damage);
 }
 

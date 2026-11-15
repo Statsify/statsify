@@ -35,7 +35,6 @@ function frameSize(width: number, height: number, animation: Animation) {
   };
 }
 
-/** A frame's place in the texture */
 function frameRect(width: number, height: number, animation: Animation | undefined, index: number) {
   if (!animation) return { x: 0, y: 0, width, height };
 

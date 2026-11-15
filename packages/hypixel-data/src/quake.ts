@@ -18,10 +18,9 @@ type QuakePart = (typeof LOADOUT)[number];
 // Built by scripts/import-dump.ts from the Quakecraft Shop's menus
 const PARTS = dumped as Record<QuakePart, Record<string, ItemStack>>;
 
-// Ids are the menu's name without its last word, some with words of their own: LARGE_BALL is
-// the Large Barrel, lantern and discohat the Lantern and Disco Hats, snowkit_boots the Snow Boots,
-// and exodiakit the Quakezodia Kit
-const RENAMED: Record<string, string | undefined> = { exodia: "quakezodia" };
+// Keys are the menu's name less its last word, which stored ids drop or swap for their own
+// (LARGE_BALL is the Large Barrel, snowkit_boots the Snow Boots, NONE the No Muzzle), and exodiakit is the Quakezodia Kit
+const RENAMED: Record<string, string | undefined> = { exodia: "quakezodia", gold: "golden", none: "no", wood: "wooden" };
 
 const partKey = (id: string) => {
   const key = kitKey(id).replace(/(ball|hat|kit|leggings|boots)+$/, "");
@@ -29,9 +28,8 @@ const partKey = (id: string) => {
 };
 
 /**
- * A Quake loadout from the Quake stats ({ case: "SHINY_DIAMOND_HOE", barrel: "LARGE_BALL" }) as a
- * row of the shop's items: case, barrel, trigger, muzzle, laser, hat, chestplate, leggings, boots.
- * A part that isn't picked, or that the shop's menus don't match, leaves its slot empty.
+ * A Quake loadout ({ case: "SHINY_DIAMOND_HOE", barrel: "LARGE_BALL" }) as the shop's items in LOADOUT's order.
+ * A part the menus don't match leaves its slot empty
  */
 export function fromQuakeLoadout(quake: Readonly<Partial<Record<QuakePart, string | null>>>): (ItemStack | undefined)[] {
   return LOADOUT.map((part) => {

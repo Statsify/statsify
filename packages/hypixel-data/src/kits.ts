@@ -6,8 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ItemStack, legacyItem } from "@statsify/textures";
-
 // A player inventory and its armor: the hotbar is slots 0 to 8, the main rows 9 to 35, then
 // boots, leggings, chestplate and helmet in 36 to 39
 export const HOTBAR = 9;
@@ -21,22 +19,3 @@ export const inRange = (slot: number, length: number) => slot >= 0 && slot < len
 
 /** Kit names as keys: "Hype Train" and hype_train are both hypetrain */
 export const kitKey = (name: string) => name.toLowerCase().replaceAll(/[^a-z]/g, "");
-
-/**
- * A kit layout of 1.8 "id,damage" values by slot, as Mega Walls' <class>Inventory, Blitz's
- * <Kit>Inventory and classic Walls' InventoryLayout send it: { "0": "267,0", "5": "373,2" }.
- * Walls' InventoryLayout2 adds the item's name, or NONAME, which keeps items of one material
- * apart (Starter Arrow and Arrow): { "12": "273,0,§bSpeedy Spade", "17": "262,0,NONAME" }.
- */
-export function fromLegacyKit(layout: Readonly<Record<string, string>>): (ItemStack | undefined)[] {
-  const slots: (ItemStack | undefined)[] = Array.from({ length: SLOTS });
-
-  for (const [slot, value] of Object.entries(layout)) {
-    const [id, damage, ...rest] = value.split(",");
-    const item = legacyItem(Number(id), Number(damage));
-    const name = rest.join(",");
-    if (inRange(Number(slot), SLOTS)) slots[Number(slot)] = item && name && name !== "NONAME" ? { ...item, name } : item;
-  }
-
-  return slots;
-}

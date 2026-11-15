@@ -12,7 +12,6 @@ import type { PackStack } from "./pack.js";
 import { context, createCanvas } from "./canvas.js";
 import { legacyName } from "./legacy-items.js";
 
-// The HideFlags bit that hides Unbreakable
 const HIDE_UNBREAKABLE = 4;
 
 const NAMES = "assets/minecraft/lang/en_us.json";
@@ -44,11 +43,7 @@ function plainName(item: ItemStack, names: Record<string, string>) {
   return `${item.enchanted ? "§b" : ""}${names[key] ?? key}`;
 }
 
-/**
- * An item's tooltip lines in 1.8's order: the name, the lore in dark purple italics, then
- * Unbreakable unless HideFlags hides it. Renamed items start italic, which a color code at
- * the start of the name clears, as in game.
- */
+/** An item's tooltip lines in 1.8's order. Renamed items start italic, which a color code at the start of the name clears */
 export function tooltipLines(item: ItemStack, names: Record<string, string>): TextComponent[] {
   const lines: TextComponent[] = [
     item.name === undefined ? plainName(item, names) : prefixed(item.name, "§o", { italic: true }),
