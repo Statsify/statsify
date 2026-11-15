@@ -70,7 +70,8 @@ export class GuildCommand extends GuildTopSubCommand {
     return paginate(context, [
       {
         label: "Overall",
-        generator: () => renderWithAltText(<GuildProfile {...props} page="overall" />, getTheme(user)),
+        generator: () =>
+          renderWithAltText(<GuildProfile {...props} page="overall" />, getTheme(user)),
       },
       {
         label: "GEXP",
@@ -78,7 +79,8 @@ export class GuildCommand extends GuildTopSubCommand {
       },
       {
         label: "GEXP Per Game",
-        generator: () => renderWithAltText(<GuildProfile {...props} page="expPerGame" />, getTheme(user)),
+        generator: () =>
+          renderWithAltText(<GuildProfile {...props} page="expPerGame" />, getTheme(user)),
       },
       {
         label: "Misc",

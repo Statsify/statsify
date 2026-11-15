@@ -39,7 +39,9 @@ const getAltText = (card: JSX.Element): string => {
       header.push(getText(node).at(-1)!);
     } else if (node.component === List.name) {
       // List lays its items out column by column, so read each row across the columns
-      const columns = node.children!.map((column) => column.children!.map((cell) => join(getText(cell))));
+      const columns = node.children!.map((column) =>
+        column.children!.map((cell) => join(getText(cell)))
+      );
       cells.push(...columns[0].map((_, row) => join(columns.map((column) => column[row]))));
     } else if (isHeader && node.type === "text") {
       header.push(...getText(node));
