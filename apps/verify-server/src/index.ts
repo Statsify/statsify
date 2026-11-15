@@ -75,9 +75,8 @@ const server = createServer({
     response.favicon = `data:image/png;base64,${serverLogo}`;
   },
   beforeLogin: (client) => {
-    // Mojang has verified the player by now, so their code is sent in a login disconnect.
-    // The configuration and play states need registry data for the client's version,
-    // so every packet but compress is dropped and the client never receives login success.
+    // Mojang has verified the player by now. Later states need registry data for the client's version,
+    // so every packet but compress is dropped and the code is sent in a login disconnect instead.
     const { write, end } = client;
 
     client.write = (name, params) => {
