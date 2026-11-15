@@ -16,9 +16,8 @@ import {
   paginate,
   PlayerArgument,
   SubCommand,
-  createCustomId,
 } from "@statsify/discord";
-import { GUILD_ROUTE } from "./guild.route.js";
+import { getGuildCustomId } from "./guild.route.js";
 import { GuildListProfile, GuildListProfileProps } from "./guild-list.profile.js";
 import { GuildMember } from "@statsify/schemas";
 import { GuildMemberProfile } from "./guild-member.profile.js";
@@ -87,9 +86,7 @@ export class GuildCommand extends GuildTopSubCommand {
         label: "Misc",
         generator: () => render(<GuildProfile {...props} page="misc" />, getTheme(user)),
       },
-    ], (page) =>
-      createCustomId(GUILD_ROUTE, context.getInteraction().getUserId(), context.getCommandName(), guild.id, page)
-    );
+    ], getGuildCustomId(context, guild.id));
   }
 
   @SubCommand({ description: (t) => t("commands.guild-list"), args: GuildArgument })
