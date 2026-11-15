@@ -62,6 +62,9 @@ const COLORS: Record<string, number> = {
 
 const CODE_COLORS = Object.values(COLORS);
 
+// 1.8 brightens gold's red after working out its shadow, so gold's shadow isn't a quarter of it
+const shadowColor = (color: number) => (color === COLORS.gold ? 0x2a_2a_00 : (color & 0xfc_fc_fc) >> 2);
+
 const FORMATS: Record<string, keyof Omit<TextStyle, "color">> = {
   k: "obfuscated",
   l: "bold",
@@ -428,7 +431,7 @@ export class TextRenderer {
     let seed = tick * 7919 + 1;
 
     for (const { text, style } of runs) {
-      const color = shadow ? ((style.color & 0xfc_fc_fc) >> 2) : style.color;
+      const color = shadow ? shadowColor(style.color) : style.color;
 
       for (let char of text) {
         if (style.obfuscated && char !== " ") {
@@ -450,7 +453,7 @@ export class TextRenderer {
         const width = this.advance(char, style.bold, glyph) * scale;
         const line = shadow ? scale : 0;
         ctx.fillStyle = hex(color);
-        if (style.strikethrough) ctx.fillRect(cursor + line, y + 3.5 * scale + line, width, scale);
+        if (style.strikethrough) ctx.fillRect(cursor + line, y + 3 * scale + line, width, scale);
         if (style.underlined) ctx.fillRect(cursor - scale + line, y + 8 * scale + line, width + scale, scale);
 
         cursor += width;
