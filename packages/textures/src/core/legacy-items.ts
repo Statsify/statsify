@@ -63,6 +63,7 @@ const BANNER_PATTERNS: Record<string, string | undefined> = {
   bri: "bricks",
   sku: "skull",
   flo: "flower",
+  moj: "mojang",
 };
 
 /** A 26.3 effect id for a 1.8 numeric effect id */
