@@ -26,7 +26,7 @@ const RANK_TIERS = [
   ["Staff", ["HELPER", "MOD", "GM", "ADMIN", "OWNER", "STAFF"]],
 ] as const;
 
-const RANK_TIER = new Map<string, number>(
+const RANK_TO_TIER = new Map<string, number>(
   RANK_TIERS.flatMap(([, ranks], tier) => ranks.map((rank) => [rank, tier] as const))
 );
 
@@ -57,7 +57,7 @@ export const ROLE_CONNECTION_METADATA = [
     description: `Rank by number: ${RANK_TIERS.map(([name], tier) => `${tier} ${name}`).join(", ")}`,
     type: INTEGER_GREATER_THAN_OR_EQUAL,
     // Other ranks are one-off prefixes like PIG+++, which don't place on the ladder
-    value: (player: Player) => RANK_TIER.get(player.rank),
+    value: (player: Player) => RANK_TO_TIER.get(player.rank),
   },
 ] as const;
 
