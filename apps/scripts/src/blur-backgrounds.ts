@@ -13,7 +13,7 @@ import { existsSync } from "node:fs";
 import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-// Not from @statsify/assets, which loads @statsify/schemas: the Docker build runs this script without building them
+// Not from @statsify/assets: the Docker build runs this script without building the packages
 const ASSETS_PATH = "../../assets";
 const assetsSource = existsSync(join(ASSETS_PATH, "private", "LICENSE")) ? "private" : "public";
 const BACKGROUNDS_PATH = join(ASSETS_PATH, assetsSource, "backgrounds");
