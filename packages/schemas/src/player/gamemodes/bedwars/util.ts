@@ -390,21 +390,12 @@ interface PrestigeCosmeticOptions<M> {
   map: M;
 }
 
-export const getPrestigeCosmetic = <M extends Record<string, any>>({
-  getDefault,
-  ...options
-}: PrestigeCosmeticOptions<M> & { getDefault: () => keyof M }): M[keyof M] => {
-  warnMissingCosmetic(options);
-  return options.map[pickPrestigeCosmetic(options) ?? getDefault()];
-};
-
 const RANDOM_COSMETICS = new Set(["random_cosmetic", "random_favorite_cosmetic"]);
 
 /** Logs a selected cosmetic the map doesn't have yet. Call it while parsing, since the lookup also runs on every read */
 export const warnMissingCosmetic = <M extends Record<string, any>>({ cosmetic, prefix, map }: PrestigeCosmeticOptions<M>) => {
   if (!cosmetic || RANDOM_COSMETICS.has(cosmetic)) return;
 
-  // remove the prefix and the following underscore
   const cosmeticWithoutPrefix = cosmetic.slice(prefix.length + 1);
   if (cosmeticWithoutPrefix && !(cosmeticWithoutPrefix in map)) console.warn(`Missing BedWars cosmetic: ${cosmetic}`);
 };
