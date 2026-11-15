@@ -346,6 +346,17 @@ export interface KartRenderOptions extends Pick<KartRenderDto, "extruded" | "wid
   player?: { skin: Uint8Array; slim: boolean };
 }
 
+async function resolvePackArmor(pack: string, pieces: Omit<ArmorDto, "helmet">): Promise<Armor> {
+  const textures = join(pack, "textures");
+  const [chestplate, leggings, boots] = await Promise.all([
+    pieces.chestplate && resolveArmorPiece(pieces.chestplate, 1, textures),
+    pieces.leggings && resolveArmorPiece(pieces.leggings, 2, textures),
+    pieces.boots && resolveArmorPiece(pieces.boots, 1, textures),
+  ]).catch(throwPackUnavailable);
+
+  return { chestplate, leggings, boots };
+}
+
 export async function renderKart(
   library: ModelLibrary,
   { models, suit }: KartScene,
@@ -362,15 +373,9 @@ export async function renderKart(
 
   if (!player) return renderScene(library, { models }, output).catch(rethrowPackError);
 
-  const textures = join(KART_PACK, "textures");
+  const armor = await resolvePackArmor(KART_PACK, suit);
 
-  const [chestplate, leggings, boots] = await Promise.all([
-    suit.chestplate && resolveArmorPiece(suit.chestplate, 1, textures),
-    suit.leggings && resolveArmorPiece(suit.leggings, 2, textures),
-    suit.boots && resolveArmorPiece(suit.boots, 1, textures),
-  ]).catch(throwPackUnavailable);
-
-  return renderScene(library, { player: { ...player, extruded, armor: { chestplate, leggings, boots }, pose: "sit" }, models }, output)
+  return renderScene(library, { player: { ...player, extruded, armor, pose: "sit" }, models }, output)
     .catch(rethrowPackError);
 }
 
