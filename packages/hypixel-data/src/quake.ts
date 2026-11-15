@@ -19,8 +19,8 @@ type QuakePart = (typeof LOADOUT)[number];
 const PARTS = dumped as Record<QuakePart, Record<string, ItemStack>>;
 
 // Keys are the menu's name less its last word, which stored ids drop or swap for their own
-// (LARGE_BALL is the Large Barrel, snowkit_boots the Snow Boots), and exodiakit is the Quakezodia Kit
-const RENAMED: Record<string, string | undefined> = { exodia: "quakezodia" };
+// (LARGE_BALL is the Large Barrel, snowkit_boots the Snow Boots, NONE the No Muzzle), and exodiakit is the Quakezodia Kit
+const RENAMED: Record<string, string | undefined> = { exodia: "quakezodia", gold: "golden", none: "no", wood: "wooden" };
 
 const partKey = (id: string) => {
   const key = kitKey(id).replace(/(ball|hat|kit|leggings|boots)+$/, "");
