@@ -34,6 +34,7 @@ import {
 import { add, ratio } from "@statsify/math";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { EVENT_COLORS } from "#commands/events/event-colors";
 import type { LocalizeFunction } from "@statsify/discord";
 
 export const FISHING_PAGES = [
@@ -72,13 +73,6 @@ const CATCH_TYPE_COLORS = {
   creature: "§b",
   mythical: "§6",
 } as const;
-
-const EVENT_COLORS: Record<FishingEvent, string> = {
-  halloween: "§5",
-  christmas: "§c",
-  easter: "§b",
-  summer: "§e",
-};
 
 const ENVIRONMENT_COLORS = {
   water: "§9",
