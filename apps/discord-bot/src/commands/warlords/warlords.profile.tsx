@@ -7,7 +7,7 @@
  */
 
 import { Container, Footer, Header, type SidebarItem, formatProgression } from "#components";
-import { FormattedGame, type GameMode, WarlordsMage, WarlordsModes, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "@statsify/schemas";
+import { FormattedGame, type GameMode, type WarlordsClass, WarlordsMage, WarlordsModes, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "@statsify/schemas";
 import { WarlordsCaptureTheFlagTable, WarlordsClassTable, WarlordsDeathmatchTable, WarlordsDominationTable, WarlordsOverallTable } from "./tables/index.js";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -33,21 +33,22 @@ export const WarlordsProfile = ({
     [t("stats.coins"), t(warlords.coins), "§6"],
   ];
 
+  let classStats: WarlordsClass | undefined;
+
   if (mode.api !== "overall" && mode.api !== "captureTheFlag" && mode.api !== "domination" && mode.api !== "teamDeathmatch") {
-    sidebar.push(
-      [t("stats.spec"), prettify(warlords[mode.api].specification), "§a"],
-      [t("stats.level"), t(warlords[mode.api].level), "§a"]
-    );
+    classStats = warlords[mode.api];
   } else {
     sidebar.push([t("stats.class"), prettify(warlords.class), "§e"]);
     const clazz = warlords.class as "mage" | "warrior" | "paladin" | "shaman";
     // Verify that the cast is correct and the class is a valid class
-    if (clazz in warlords && typeof warlords[clazz] === "object")
-      sidebar.push(
-        [t("stats.spec"), prettify(warlords[clazz].specification), "§a"],
-        [t("stats.level"), t(warlords[clazz].level), "§a"]
-      );
+    if (clazz in warlords && typeof warlords[clazz] === "object") classStats = warlords[clazz];
   }
+
+  if (classStats)
+    sidebar.push(
+      [t("stats.spec"), prettify(classStats.specification), "§a"],
+      [t("stats.level"), t(classStats.level), "§a"]
+    );
 
   let table: JSX.Element;
 
