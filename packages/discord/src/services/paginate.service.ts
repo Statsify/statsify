@@ -199,19 +199,19 @@ export async function paginate(
  *
  * @param context The context of the command
  * @param pages The array of pages to paginate against
+ * @param getCustomId Returns a custom id ending with `page`, whose route re-runs the command.
+ * Without it, the buttons stop after 5 minutes
  * @param forwardButton The button to use for forward pagination
  * @param backwardButton The button to use for back pagination
  * @param invertButtons Whether to invert the buttons (backward becomes forward, forward becomes backward)
- * @param getCustomId Returns a custom id ending with `page`, whose route re-runs the command.
- * Without it, the buttons stop after 5 minutes
  */
 export async function scrollingPagination(
   context: CommandContext,
   pages: PaginateInteractionContentGenerator[],
+  getCustomId?: (page: string) => string,
   forwardButton?: ButtonBuilder,
   backwardButton?: ButtonBuilder,
   invertButtons = false,
-  getCustomId?: (page: string) => string,
 ) {
   let currentIndex = 0;
   const cache = new Map<number, Message>();

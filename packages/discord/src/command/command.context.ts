@@ -39,7 +39,7 @@ export class CommandContext {
     return this.data.name;
   }
 
-  /** A button re-runs its command, so a click reads cached stats and never asks Hypixel */
+  /** A button re-runs its command, so a click reads the stats the command just cached */
   public getCacheLevel() {
     return this.interaction.isCommandInteraction() ? undefined : CacheLevel.CACHE_ONLY;
   }

@@ -364,10 +364,10 @@ export class RankingsCommand {
             getTheme(user)
           )
       ),
+      getProfileCustomId(context, player.uuid, `rankings.${context.getCommandName()}`),
       new ButtonBuilder().emoji(t("emojis:up")).style(ButtonStyle.Success),
       new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger),
-      true,
-      getProfileCustomId(context, player.uuid, `rankings.${context.getCommandName()}`)
+      true
     );
   }
 }
