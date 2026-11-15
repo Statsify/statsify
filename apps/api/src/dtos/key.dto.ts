@@ -13,5 +13,4 @@ export class AddKeyDto extends createZodDto(z.object({ name: z.string() })) {}
 
 export class KeyParamDto extends createZodDto(z.object({ key: z.string().optional() })) {}
 
-// The auth guard also takes the key from `?key=`, so the header can be missing
 export class KeyHeaderDto extends createZodDto(z.object({ "x-api-key": z.string().optional() })) {}
