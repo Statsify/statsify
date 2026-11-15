@@ -12,7 +12,9 @@ import { DateTime } from "luxon";
 import { config } from "@statsify/util";
 import { inspect } from "node:util";
 
-export type LogLevel = "log" | "error" | "warn" | "debug" | "verbose" | "fatal";
+const LOG_LEVELS = ["log", "error", "warn", "debug", "verbose", "fatal"] as const;
+
+export type LogLevel = (typeof LOG_LEVELS)[number];
 
 export const STATUS_COLORS = {
   debug: 0xC700E7,
@@ -151,9 +153,7 @@ export class Logger {
 if (import.meta.vitest) {
   const { suite, it, expect, vi } = import.meta.vitest;
 
-  const levels: LogLevel[] = ["log", "error", "warn", "debug", "verbose", "fatal"];
-
-  for (const logLevel of levels) {
+  for (const logLevel of LOG_LEVELS) {
     suite(`logging of ${logLevel}`, () => {
       it(`should ${logLevel}`, () => {
         const logger = new Logger(logLevel);
