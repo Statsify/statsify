@@ -56,7 +56,7 @@ export function skyWarsKitArmor(kit: string) {
 }
 
 /** A layout key with its enchantment ids in order, as tokens have them */
-function token(key: string) {
+function withSortedEnchantments(key: string) {
   const [material, damage, enchantments] = key.split(":");
   const ids = enchantments?.split(",").map(Number).toSorted((a, b) => a - b);
   return [material, damage, ...(ids ? [ids.join(",")] : [])].join(":");
@@ -88,7 +88,7 @@ export function fromSkyWarsKit(
   // Older versions of a kit leave their items in a layout, so a slot can hold two: the kit's
   // current item wins, then the first
   const entries = Object.entries(stored)
-    .map(([key, value]) => ({ key, value, listedItem: listed.get(token(key)) }))
+    .map(([key, value]) => ({ key, value, listedItem: listed.get(withSortedEnchantments(key)) }))
     .toSorted((a, b) => Number(b.listedItem !== undefined) - Number(a.listedItem !== undefined));
 
   for (const { key, value, listedItem } of entries) {
