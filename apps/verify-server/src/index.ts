@@ -18,10 +18,8 @@ import { readFileSync } from "node:fs";
 
 const logger = new Logger("verify-server");
 
-const handleError = logger.error.bind(logger);
-
-process.on("uncaughtException", handleError);
-process.on("unhandledRejection", handleError);
+process.on("uncaughtException", (error) => logger.error(error));
+process.on("unhandledRejection", (reason) => logger.error(reason));
 
 const codeCreatedMessage = (code: string, time: Date) => {
   // Add on the expirey time to the time provided by mongo
