@@ -82,7 +82,7 @@ const formatLevel = (
   getFormattedLevel(
     level,
     scheme,
-    emblem?.replace("_icon", "")?.replace("emblem_", ""),
+    emblem?.replace("_icon", "").replace("emblem_", ""),
     levelFormattedWithBrackets?.includes("§l") ?? false,
     levelFormattedWithBrackets?.includes("§n") ?? false,
     levelFormattedWithBrackets?.includes("§m") ?? false
