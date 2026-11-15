@@ -24,19 +24,20 @@ const handleError = logger.error.bind(logger);
 process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
 
+const messageTitle = "§9§lStatsify Verification Server\n\n§r§7";
+
 const codeCreatedMessage = (code: string, time: Date) => {
   // Add on the expirey time to the time provided by mongo
   let expireTime = time.getTime() + 300 * 1000;
   expireTime -= Date.now();
 
-  return `§9§lStatsify Verification Server\n\n§r§7Your verification code is §c§l${code}§r§7\n\nHead back over to §5Discord §r§7and run §f§l/verify§r§7\nYour code will expire in §8${formatTime(
+  return `${messageTitle}Your verification code is §c§l${code}§r§7\n\nHead back over to §5Discord §r§7and run §f§l/verify§r§7\nYour code will expire in §8${formatTime(
     expireTime,
     { short: false }
   )}§r§7.`;
 };
 
-const verificationFailedMessage =
-  "§9§lStatsify Verification Server\n\n§r§7Verification is temporarily unavailable. Please try again.";
+const verificationFailedMessage = `${messageTitle}Verification is temporarily unavailable. Please try again.`;
 
 const sentryDsn = await config("sentry.verifyServerDsn", { required: false });
 
