@@ -12,7 +12,7 @@ import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import type { APIData } from "@statsify/util";
 import { formats } from "#definition/format";
 import { prefixFields } from "../prefix-fields.js";
-import { s } from "#definition/s";
+import { type NumberSchema, type Refs, s } from "#definition/s";
 
 export const TNT_GAMES_MODES = new GameModes([
   { api: "overall" },
@@ -71,25 +71,31 @@ const TAG_PREFIXES: GamePrefix[] = [
   { fmt: (n) => tntgamesRainbow(`[${n}]`), req: 10_000 },
 ];
 
-const runPrefix = prefixFields(RUN_PREFIXES, { abbreviation: false });
-const tagPrefix = prefixFields(TAG_PREFIXES, { abbreviation: false });
-const wizardsPrefix = prefixFields(TAG_PREFIXES);
+type WinsRefs = Refs<{ wins: NumberSchema }>;
+
+const prefixStats = (prefix: ReturnType<typeof prefixFields>) => ({
+  progression(this: WinsRefs) {
+    return prefix.progression(this.wins);
+  },
+  currentPrefix(this: WinsRefs) {
+    return prefix.currentPrefix(this.wins);
+  },
+  naturalPrefix(this: WinsRefs) {
+    return prefix.naturalPrefix(this.wins);
+  },
+  nextPrefix(this: WinsRefs) {
+    return prefix.nextPrefix(this.wins);
+  },
+});
+
+const runPrefix = prefixStats(prefixFields(RUN_PREFIXES, { abbreviation: false }));
+const tagPrefix = prefixStats(prefixFields(TAG_PREFIXES, { abbreviation: false }));
+const wizardsPrefix = prefixStats(prefixFields(TAG_PREFIXES));
 
 const BowSpleefSchema = s.object({
   ...WinsStats,
   hits: s.number().color("§e").leaderboard(false),
-  progression() {
-    return runPrefix.progression(this.wins);
-  },
-  currentPrefix() {
-    return runPrefix.currentPrefix(this.wins);
-  },
-  naturalPrefix() {
-    return runPrefix.naturalPrefix(this.wins);
-  },
-  nextPrefix() {
-    return runPrefix.nextPrefix(this.wins);
-  },
+  ...runPrefix,
 });
 
 export type BowSpleef = s.infer<typeof BowSpleefSchema>;
@@ -98,18 +104,7 @@ const PVPRunSchema = s.object({
   wins: WinsSchema.color("§a"),
   ...KillsStats,
   record: s.number().color("§e").format(formats.time),
-  progression() {
-    return runPrefix.progression(this.wins);
-  },
-  currentPrefix() {
-    return runPrefix.currentPrefix(this.wins);
-  },
-  naturalPrefix() {
-    return runPrefix.naturalPrefix(this.wins);
-  },
-  nextPrefix() {
-    return runPrefix.nextPrefix(this.wins);
-  },
+  ...runPrefix,
 });
 
 export type PVPRun = s.infer<typeof PVPRunSchema>;
@@ -119,18 +114,7 @@ const TNTRunSchema = s.object({
   record: s.number().color("§e").format(formats.time),
   potionsSplashed: s.number().color("§5"),
   blocksRan: s.number().color("§b"),
-  progression() {
-    return runPrefix.progression(this.wins);
-  },
-  currentPrefix() {
-    return runPrefix.currentPrefix(this.wins);
-  },
-  naturalPrefix() {
-    return runPrefix.naturalPrefix(this.wins);
-  },
-  nextPrefix() {
-    return runPrefix.nextPrefix(this.wins);
-  },
+  ...runPrefix,
 });
 
 export type TNTRun = s.infer<typeof TNTRunSchema>;
@@ -140,18 +124,7 @@ const TNTTagSchema = s.object({
   ...KillsStats,
   tags: s.number().color("§e"),
   powerups: s.number().color("§d").leaderboard({ name: "Power-Ups" }),
-  progression() {
-    return tagPrefix.progression(this.wins);
-  },
-  currentPrefix() {
-    return tagPrefix.currentPrefix(this.wins);
-  },
-  naturalPrefix() {
-    return tagPrefix.naturalPrefix(this.wins);
-  },
-  nextPrefix() {
-    return tagPrefix.nextPrefix(this.wins);
-  },
+  ...tagPrefix,
 });
 
 export type TNTTag = s.infer<typeof TNTTagSchema>;
@@ -171,18 +144,7 @@ const WizardsSchema = s.object({
   points: s.number().color("§5"),
   airTime: s.number().color("§b").format(formats.time),
   powerOrbs: s.number().color("§a"),
-  progression() {
-    return wizardsPrefix.progression(this.wins);
-  },
-  currentPrefix() {
-    return wizardsPrefix.currentPrefix(this.wins);
-  },
-  naturalPrefix() {
-    return wizardsPrefix.naturalPrefix(this.wins);
-  },
-  nextPrefix() {
-    return wizardsPrefix.nextPrefix(this.wins);
-  },
+  ...wizardsPrefix,
   fireWizard: WizardsClassSchema,
   iceWizard: WizardsClassSchema,
   witherWizard: WizardsClassSchema,
