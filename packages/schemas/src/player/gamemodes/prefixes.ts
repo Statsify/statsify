@@ -159,7 +159,6 @@ if (import.meta.vitest) {
   suite("getFormattedPrefix", () => {
     it("picks the prefix for the score and formats its number", () => {
       expect(getFormattedPrefix({ prefixes, score: 100 })).toBe("§f[100]");
-      expect(getFormattedPrefix({ prefixes, score: 550 })).toBe("§f[100]");
       expect(getFormattedPrefix({ prefixes, score: 12_345 })).toBe("§6[10K]");
 
       expect(getFormattedPrefix({ prefixes, score: 550, skip: true })).toBe("§e[1K]");

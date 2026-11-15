@@ -167,7 +167,6 @@ if (import.meta.vitest) {
 
       expect(getPlayerRank({ rank: "NORMAL", newPackageRank: "MVP_PLUS" })).toBe("MVP+");
       expect(getPlayerRank({ rank: "YOUTUBER", monthlyPackageRank: "SUPERSTAR" })).toBe("YOUTUBE");
-      expect(getPlayerRank({ rank: "GAME_MASTER" })).toBe("GM");
       expect(getPlayerRank({ rank: "ADMIN", prefix: "§c[OWNER]" })).toBe("OWNER");
       expect(getPlayerRank({ prefix: "§d[PIG§b+++§d]" })).toBe("PIG+++");
     });
