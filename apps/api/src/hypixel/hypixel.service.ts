@@ -168,7 +168,6 @@ export class HypixelService {
   }
 
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
-    // Resource endpoints don't need an API key
     const isKeyed = !url.startsWith("/resources/");
 
     if (isKeyed && Date.now() < this.rateLimitedUntil) {
