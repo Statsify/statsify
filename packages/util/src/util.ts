@@ -177,8 +177,8 @@ export const formatTime = (
     .join(", ");
 };
 
-export const formatPreciseTime = (time: number) =>
-  formatTime(time, { entries: 3 });
+export const formatPreciseTime = (timeMs: number) =>
+  formatTime(timeMs, { entries: 3 });
 
 export const relativeTime = (time: number) =>
   `${formatTime(Date.now() - time)} ago`;
