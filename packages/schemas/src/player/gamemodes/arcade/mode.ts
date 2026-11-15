@@ -1437,7 +1437,7 @@ export class ZombiesMap {
 }
 
 export class ZombiesOverall {
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: 500_000 }, historical: { enabled: false } })
   public wins: number;
 
   @Field({ leaderboard: { enabled: false } })
