@@ -21,6 +21,9 @@ pub enum Error {
   #[error("The provided image is too large for a texture")]
   TextureTooLarge,
 
+  #[error("The provided image is empty")]
+  EmptyTexture,
+
   #[error("Enchanted armor needs a glint texture")]
   MissingGlint,
 
