@@ -27,6 +27,24 @@ function getLowestScore(searchBy: (score: number) => number, value: number) {
   return low;
 }
 
+function normalizeNumber(input: string) {
+  const number = input.replaceAll(/[\s'’]/g, "");
+  const lastSeparatorIndex = Math.max(number.lastIndexOf("."), number.lastIndexOf(","));
+  if (lastSeparatorIndex === -1) return number;
+
+  const separator = number[lastSeparatorIndex];
+  const isOnlySeparatorKind = !number.includes(separator === "." ? "," : ".");
+  const isRepeated = number.indexOf(separator) !== lastSeparatorIndex;
+
+  // A lone separator before exactly three digits groups thousands, since no leaderboard shows three decimals
+  const isThousands = /^\d{3}(?!\d)/.test(number.slice(lastSeparatorIndex + 1));
+
+  if (isOnlySeparatorKind && (isRepeated || isThousands)) return number.replaceAll(separator, "");
+
+  const integer = number.slice(0, lastSeparatorIndex).replaceAll(/[.,]/g, "");
+  return `${integer}.${number.slice(lastSeparatorIndex + 1)}`;
+}
+
 /**
  * @returns The score a search like `10k`, `500✫` or `1:23.45` sorts at, or NaN if it can't be read
  */
@@ -36,11 +54,11 @@ export function parseLeaderboardValue(
   input: string,
 ) {
   const { parser, searchBy } = getLeaderboardField(constructor, key);
-  const search = input.replaceAll(",", "").trim().toLowerCase();
+  const search = input.trim().toLowerCase();
 
-  if (parser) return parser(search);
+  if (parser) return parser(search.replaceAll(",", ""));
 
-  const match = /^(\d*\.?\d+)\s*([kmb])?/.exec(search);
+  const match = /^(\d*\.?\d+)([kmb])?/.exec(normalizeNumber(search));
   if (!match) return Number.NaN;
 
   const [, number, suffix] = match;
@@ -62,5 +80,19 @@ if (import.meta.vitest) {
     expect(parseLeaderboardValue(Player, "stats.pit.playtime", "5d, 3h")).toBe(442_800_000);
     expect(parseLeaderboardValue(Player, "stats.bedwars.exp", "500✫")).toBe(2_435_000);
     expect(parseLeaderboardValue(Player, "stats.skywars.exp", "20000")).toBeNaN();
+  });
+
+  it("reads numbers the way every locale prints them", () => {
+    const wins = "stats.bedwars.overall.wins";
+    const fkdr = "stats.bedwars.overall.fkdr";
+
+    expect(parseLeaderboardValue(Player, wins, "10,000")).toBe(10_000);
+    expect(parseLeaderboardValue(Player, wins, "10.000")).toBe(10_000);
+    expect(parseLeaderboardValue(Player, wins, "10 000")).toBe(10_000);
+    expect(parseLeaderboardValue(Player, wins, "1.234.567")).toBe(1_234_567);
+    expect(parseLeaderboardValue(Player, wins, "1,50M")).toBe(1_500_000);
+    expect(parseLeaderboardValue(Player, fkdr, "2,50")).toBe(2.5);
+    expect(parseLeaderboardValue(Player, fkdr, "1.234,5")).toBe(1234.5);
+    expect(parseLeaderboardValue(Player, fkdr, "1,234.5")).toBe(1234.5);
   });
 }
