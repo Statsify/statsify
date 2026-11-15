@@ -17,7 +17,7 @@ import {
 import { Auth } from "#auth";
 import { Controller, Get, Query, StreamableFile } from "@nestjs/common";
 import { ErrorResponse, GetSkinTexturesResponse, PlayerNotFoundException } from "@statsify/api-client";
-import { HeadDto, KartRenderDto, PlayerDto, SkinRenderDto, WarlordsRenderDto } from "#dtos";
+import { HeadDto, KartRenderDto, PlayerDto, SkinRenderDto, SmashRenderDto, WarlordsRenderDto } from "#dtos";
 import { SkinService } from "./skin.service.js";
 
 @Controller("/skin")
@@ -70,6 +70,16 @@ export class SkinController {
   @ApiServiceUnavailableResponse({ type: ErrorResponse })
   public async getWarlordsRender(@Query() options: WarlordsRenderDto) {
     const render = await this.skinService.getWarlordsRender(options);
+    return new StreamableFile(render, { type: "image/png" });
+  }
+
+  @Get("/smash")
+  @Auth()
+  @ApiOperation({ summary: "Get a Smash Heroes Render of a Hero as Its Lobby Stand Shows It" })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiServiceUnavailableResponse({ type: ErrorResponse })
+  public async getSmashRender(@Query() options: SmashRenderDto) {
+    const render = await this.skinService.getSmashRender(options);
     return new StreamableFile(render, { type: "image/png" });
   }
 
