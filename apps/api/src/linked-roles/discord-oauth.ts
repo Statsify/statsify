@@ -40,7 +40,7 @@ export const refreshTokens = (refreshToken: string) =>
 
 // Revoking any token revokes the whole authorization, refresh token included
 export const revokeToken = async (token: string) => {
-  const response = await oauth("/oauth2/token/revoke", { token });
+  const response = await oauthRequest("/oauth2/token/revoke", { token });
 
   if (!response.ok) throw new Error(`Discord token revoke failed with ${response.status}`);
 };
@@ -66,7 +66,7 @@ export const discordRequest = async (
 };
 
 const requestTokens = async (grant: Record<string, string>): Promise<DiscordTokens | undefined> => {
-  const response = await oauth("/oauth2/token", grant);
+  const response = await oauthRequest("/oauth2/token", grant);
 
   // Discord answers invalid_grant for a used or expired code and a revoked refresh token
   if (response.status === 400) return;
@@ -76,7 +76,7 @@ const requestTokens = async (grant: Record<string, string>): Promise<DiscordToke
 };
 
 // Discord's OAuth2 endpoints only accept form bodies
-const oauth = (path: string, params: Record<string, string>) =>
+const oauthRequest = (path: string, params: Record<string, string>) =>
   fetch(`${DISCORD_API}${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
