@@ -20,7 +20,7 @@ pub struct NativeBackend {
   device: wgpu::Device,
   queue: wgpu::Queue,
 
-  target: Arc<RenderTarget>,
+  default_target: Arc<RenderTarget>,
 }
 
 impl NativeBackend {
@@ -29,12 +29,12 @@ impl NativeBackend {
     let adapter = Self::request_adapter(instance).await?;
     let (device, queue) = Self::request_device(&adapter).await?;
 
-    let target = Arc::new(RenderTarget::new(&device, &Self::config(width, height)));
+    let default_target = Arc::new(RenderTarget::new(&device, &Self::config(width, height)));
 
     Ok(Self {
       device,
       queue,
-      target,
+      default_target,
     })
   }
 
@@ -52,10 +52,10 @@ impl NativeBackend {
   }
 
   pub fn render_target(&self, width: u32, height: u32) -> SkinRendererResult<Arc<RenderTarget>> {
-    let dimensions = &self.target.dimensions;
+    let dimensions = &self.default_target.dimensions;
 
     if width == dimensions.width && height == dimensions.height {
-      return Ok(Arc::clone(&self.target));
+      return Ok(Arc::clone(&self.default_target));
     }
 
     let limit = self.device.limits().max_texture_dimension_2d;
@@ -96,7 +96,7 @@ impl Backend for NativeBackend {
   }
 
   fn create_config(&self) -> wgpu::SurfaceConfiguration {
-    let dimensions = &self.target.dimensions;
+    let dimensions = &self.default_target.dimensions;
     Self::config(dimensions.width, dimensions.height)
   }
 }
