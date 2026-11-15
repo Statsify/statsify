@@ -197,10 +197,10 @@ export class ApiService extends StatsifyApiService {
     return super.getPlayerLeaderboard(field, input, type).catch((err: AxiosError) => {
       if (!err.response || !err.response.data) throw this.unknownError();
 
-      const error = err.response.data as HypixelUnavailableException;
+      const error = err.response.data as PlayerNotFoundException | HypixelUnavailableException;
       if (error.message === "hypixel") throw this.hypixelUnavailable();
+      if (error.statusCode === 404) return null;
 
-      if ((err.response.data as PlayerNotFoundException).statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
     });
   }
