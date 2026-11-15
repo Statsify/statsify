@@ -98,8 +98,8 @@ export function fromBedwarsQuickBuy(favorites: string | null | undefined): (Item
 }
 
 /** A BedWars hotbar as the Hotbar Manager shows it, from favorite_slots ("Melee,null,…") or else the default */
-export function fromBedwarsHotbar(favorites: string | null | undefined): (ItemStack | undefined)[] {
-  const categories = (favorites ?? DEFAULT_HOTBAR).split(",");
+export function fromBedwarsHotbar(favoriteSlots: string | null | undefined): (ItemStack | undefined)[] {
+  const categories = (favoriteSlots ?? DEFAULT_HOTBAR).split(",");
 
   return Array.from({ length: HOTBAR }, (_, slot) => {
     const category = categories[slot];

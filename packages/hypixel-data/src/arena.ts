@@ -19,7 +19,7 @@ const MENUS = dumped as Record<ArenaSlot, Record<string, ItemStack>>;
 
 // Hypixel stores berserk as bersek, Petrify as polymorph, and the Rune of Defence as tank, as its
 // rune_level_tank key does
-const RENAMED: Record<string, string> = { bersek: "berserk", polymorph: "petrify", tank: "defence" };
+const RENAMED: Record<string, string | undefined> = { bersek: "berserk", polymorph: "petrify", tank: "defence" };
 
 /**
  * An Arena loadout from the Arena stats ({ offensive: "falcon_punch", active_rune: "damage" }) as a
