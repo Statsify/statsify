@@ -50,11 +50,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
     const guild = await this.getGuild(guildInput);
     const memberIds = guild.members.map(({ uuid }) => uuid);
 
-    const scores = await this.redis.call(
-      "ZMSCORE",
-      `player.${field}`,
-      ...memberIds
-    ) as (string | null)[];
+    const scores = await this.redis.zmscore(`player.${field}`, ...memberIds);
 
     const leaderboard = scores
       .flatMap((score, index) =>
