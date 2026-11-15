@@ -71,7 +71,7 @@ const fn model_box(
 }
 
 impl ModelBox {
-  fn geometry(&self, texture_size: (u32, u32)) -> Geometry {
+  fn geometry(&self) -> Geometry {
     let axes = |[x, y, z]: [f32; 3]| Vector3::new(x, -y, -z);
     let [width, height, depth] = self.size;
     let [x, y, z] = self.angles;
@@ -82,7 +82,7 @@ impl ModelBox {
       dimensions: Vector3::new(width, height, depth),
       texture_region: TextureRegion {
         location: self.uv,
-        texture_size,
+        texture_size: HORSE_TEXTURE_SIZE,
         mirror: false,
       },
       rotation: Some(Rotation {
@@ -267,7 +267,7 @@ impl Mount {
     let mut geometry = Geometry::new(vec![], vec![]);
 
     for model_box in mount.entity.boxes(ridden) {
-      geometry.combine(model_box.geometry(HORSE_TEXTURE_SIZE));
+      geometry.combine(model_box.geometry());
     }
 
     let transform = placement(mount.entity.scale());
