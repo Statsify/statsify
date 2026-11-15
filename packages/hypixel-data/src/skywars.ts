@@ -21,7 +21,7 @@ export interface SkyWarsKit {
 // Built by scripts/import-dump.ts from the lobby's kit menus and Kit Customizers
 const KITS = dumped as Record<string, SkyWarsKit>;
 
-const hasDefault = ({ items }: SkyWarsKit) => items.every(({ slot }) => slot !== undefined);
+const hasDefault = ({ items }: SkyWarsKit) => items.length > 0 && items.every(({ slot }) => slot !== undefined);
 
 /** Every SkyWars kit with a default layout, by the key fromSkyWarsKit takes (normal_scout) and its menu's name */
 export const SKYWARS_KITS = Object.entries(KITS).flatMap(([key, kit]) => (hasDefault(kit) ? [{ key, name: kit.name }] : []));
@@ -77,11 +77,18 @@ export function fromSkyWarsKit(
   }
 
   const listed = new Map(dumpedKit?.items.map(({ token, item }) => [token, item]));
+  const byMaterial = Map.groupBy(dumpedKit?.items ?? [], ({ token }) => token.split(":").slice(0, 2).join(":"));
+
+  // Many layouts (all of Ranked's) store a listed item without its enchantment ids
+  const findListed = (key: string) => {
+    const sameMaterial = byMaterial.get(key);
+    return listed.get(withSortedEnchantments(key)) ?? (sameMaterial?.length === 1 ? sameMaterial[0].item : undefined);
+  };
 
   // Older versions of a kit leave their items in a layout, so a slot can hold two: the kit's
   // current item wins, then the first
   const entries = Object.entries(stored)
-    .map(([key, value]) => ({ key, value, listedItem: listed.get(withSortedEnchantments(key)) }))
+    .map(([key, value]) => ({ key, value, listedItem: findListed(key) }))
     .toSorted((a, b) => Number(b.listedItem !== undefined) - Number(a.listedItem !== undefined));
 
   for (const { key, value, listedItem } of entries) {

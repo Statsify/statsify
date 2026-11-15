@@ -479,6 +479,7 @@ interface Listed {
  */
 function listedItems(lore: string[]) {
   const listed: Listed[] = [];
+  let wrapped = false;
 
   for (const line of lore.filter((shown) => shown.startsWith("§5§o"))) {
     if (blank(line)) break;
@@ -491,6 +492,11 @@ function listedItems(lore: string[]) {
       // An enchanted book's count follows its enchantment
       if (enchantment[2]) last.count = Number(enchantment[2]);
     } else if (text) {
+      // A §7§7 note that wraps ends its first line with a comma ("You spawn with a tamed wolf (20HP,")
+      const note = wrapped || text.endsWith(",");
+      wrapped = text.endsWith(",");
+      if (note) continue;
+
       const [, name, count] = /^(.+?)(?: x(\d+))?$/.exec(text)!;
       listed.push({ text: name, count: count ? Number(count) : undefined, enchantments: [] });
     }
