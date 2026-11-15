@@ -517,22 +517,12 @@ export function resolveSmash(hero: string, master = false): SmashScene {
   };
 }
 
-const heroSkins = new Map<number, Promise<Buffer>>();
-
-function getHeroSkin(color: number) {
-  let skin = heroSkins.get(color);
-
-  if (!skin) {
-    const canvas = createCanvas(64, 64);
-    const ctx = canvas.getContext("2d");
-    ctx.fillStyle = `#${color.toString(16).padStart(6, "0")}`;
-    ctx.fillRect(0, 0, 64, 64);
-
-    skin = canvas.toBuffer("png");
-    heroSkins.set(color, skin);
-  }
-
-  return skin;
+function drawHeroSkin(color: number) {
+  const canvas = createCanvas(64, 64);
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = `#${color.toString(16).padStart(6, "0")}`;
+  ctx.fillRect(0, 0, 64, 64);
+  return canvas.toBuffer("png");
 }
 
 export async function renderSmash(
@@ -554,7 +544,7 @@ export async function renderSmash(
   ]).catch(throwPackUnavailable(SMASH_PACK));
 
   const player = {
-    skin: await getHeroSkin(skinColor),
+    skin: await drawHeroSkin(skinColor),
     // Every lobby stand's skin uses the classic arms
     slim: false,
     extruded: false,
