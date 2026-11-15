@@ -104,7 +104,7 @@ fn animation_frame(mcmeta: &str, frame_count: u32, frame: Frame) -> Result<Optio
 
         (index, time)
       }
-      // 1.8 skips a frame that's neither an object nor a Gson primitive (a number, string or bool)
+      // 1.8 skips a frame that isn't an object, number, string or bool
       Value::Null | Value::Array(_) => continue,
       _ => (
         whole(frame).ok_or("frame is negative or not a number")?,
@@ -162,7 +162,7 @@ fn animation_frame(mcmeta: &str, frame_count: u32, frame: Frame) -> Result<Optio
   unreachable!("the remainder is below the cycle length")
 }
 
-// 1.8 reads these numbers with Gson's getAsInt, which drops a fraction: a frametime of 1.5 is 1
+// 1.8 drops a fraction from these numbers: a frametime of 1.5 is 1
 fn whole(value: &Value) -> Option<u64> {
   let number = value.as_f64()?.trunc();
   (number >= 0.0).then_some(number as u64)
