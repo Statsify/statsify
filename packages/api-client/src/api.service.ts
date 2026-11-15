@@ -90,7 +90,9 @@ export class ApiService {
     type: LeaderboardQuery,
     guild?: string
   ): Promise<PostLeaderboardResponse | null> {
-    return this.request<PostLeaderboardResponse>("/player/leaderboards", {}, "POST", {
+    const path = guild ? "/guild/leaderboards/members" : "/player/leaderboards";
+
+    return this.request<PostLeaderboardResponse>(path, {}, "POST", {
       body: {
         field,
         guild,

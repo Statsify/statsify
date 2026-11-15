@@ -6,16 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  CacheLevel,
-  GUILD_ID_REGEX,
-  GuildNotFoundException,
-  LeaderboardQuery,
-  PlayerNotFoundException,
-} from "@statsify/api-client";
+import { CacheLevel, LeaderboardQuery, PlayerNotFoundException } from "@statsify/api-client";
 import { type Circular, flatten } from "@statsify/util";
-import { Guild, Player, getLeaderboardField, serialize } from "@statsify/schemas";
-import { HypixelService } from "#hypixel";
+import { type Guild, Player, getLeaderboardField } from "@statsify/schemas";
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
@@ -29,16 +22,14 @@ export class PlayerLeaderboardService extends LeaderboardService {
   public constructor(
     @Inject(forwardRef(() => PlayerService))
     private readonly playerService: Circular<PlayerService>,
-    private readonly hypixelService: HypixelService,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
-    @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>,
     @InjectRedis() redis: Redis
   ) {
     super(redis);
   }
 
-  public async getGuildScopedLeaderboard(
-    guildInput: string,
+  public async getMemberLeaderboard(
+    guild: Guild,
     field: string,
     input: number | string,
     type: LeaderboardQuery
@@ -47,7 +38,6 @@ export class PlayerLeaderboardService extends LeaderboardService {
 
     const { sort } = getLeaderboardField(Player, field);
 
-    const guild = await this.getGuild(guildInput);
     const memberIds = guild.members.map(({ uuid }) => uuid);
 
     const scores = await this.redis.zmscore(`player.${field}`, ...memberIds);
@@ -133,53 +123,6 @@ export class PlayerLeaderboardService extends LeaderboardService {
         return additionalStats;
       })
     );
-  }
-
-  private async getGuild(input: string) {
-    const isGuildId = GUILD_ID_REGEX.test(input);
-
-    const guild = await this.guildModel
-      .findOne()
-      .where(isGuildId ? "id" : "nameToLower")
-      .equals(isGuildId ? input : input.toLowerCase())
-      .select({ "members.uuid": true, "nameFormatted": true })
-      .lean()
-      .exec();
-
-    if (guild) return guild;
-
-    const fetchedGuild = await this.hypixelService.getGuild(
-      input,
-      isGuildId ? "id" : "name"
-    );
-
-    if (!fetchedGuild) throw new GuildNotFoundException();
-
-    const memberIds = fetchedGuild.members.map(({ uuid }) => uuid);
-
-    await Promise.all([
-      this.playerModel
-        .updateMany({ uuid: { $in: memberIds } }, { guildId: fetchedGuild.id })
-        .lean()
-        .exec(),
-      this.guildModel
-        .replaceOne({ id: fetchedGuild.id }, serialize(Guild, flatten(fetchedGuild)), {
-          upsert: true,
-        })
-        .lean()
-        .exec(),
-      this.addGuildAutocomplete(fetchedGuild.name),
-    ]);
-
-    return fetchedGuild;
-  }
-
-  private async addGuildAutocomplete(name: string) {
-    if (name.length < 3 || name.length > 32) return;
-
-    await this.redis
-      .call("FT.SUGADD", "guild:autocomplete", name, "1", "INCR")
-      .catch(() => undefined);
   }
 
   private async getPlayerId(input: string) {
