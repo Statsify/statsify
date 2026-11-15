@@ -67,7 +67,7 @@ export class Atlas {
   }
 
   /** Whether the item is drawn from its models rather than its icon, since its stack changes how it looks */
-  public drawsInClient(id: string) {
+  public drawsFromModels(id: string) {
     return id in this.data.layers;
   }
 

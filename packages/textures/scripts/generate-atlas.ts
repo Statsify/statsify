@@ -71,7 +71,7 @@ const ids = files
   .map(([, namespace, path]) => `${namespace}:${path}`)
   .toSorted();
 
-const drawsInClient = (resolved: ItemLayer[]) =>
+const drawsFromModels = (resolved: ItemLayer[]) =>
   resolved.some(
     ({ tints, special }) =>
       tints.some(({ type }) => STACK_TINTS.has(type)) || (special !== undefined && STACK_MODELS.has(special.type)),
@@ -106,7 +106,7 @@ for (const result of drawn) {
   const { id, resolved, drawnAt } = result;
   icons.set(id, drawnAt);
 
-  if (!drawsInClient(resolved)) continue;
+  if (!drawsFromModels(resolved)) continue;
   layers[id] = resolved;
 
   for (const { model, special } of resolved) {

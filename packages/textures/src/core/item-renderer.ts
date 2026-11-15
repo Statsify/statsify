@@ -293,7 +293,7 @@ export class ItemRenderer {
   }
 
   private async base(requested: ItemStack, scale: number, tick: number): Promise<OffscreenCanvas> {
-    if (this.atlas && !this.atlas.drawsInClient(requested.id)) return this.atlas.icon(requested.id, scale);
+    if (this.atlas && !this.atlas.drawsFromModels(requested.id)) return this.atlas.icon(requested.id, scale);
 
     // Failed skins share the default head's cache entry
     const item =
