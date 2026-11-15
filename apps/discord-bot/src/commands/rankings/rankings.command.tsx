@@ -322,8 +322,9 @@ export class RankingsCommand {
 
     const { player, rankings, skin, badge, logo, background } = await all({
       player: () => apiService.getPlayer(tag, user),
+      // Rankings come from the leaderboards the player lookup saves, so they wait on it even for yourself
       async rankings() {
-        return apiService.getPlayerRankings(filteredFields, selfUuid ?? (await this.$.player).uuid);
+        return apiService.getPlayerRankings(filteredFields, (await this.$.player).uuid);
       },
       async skin() {
         return apiService.getPlayerSkin(selfUuid ?? (await this.$.player).uuid, user);
