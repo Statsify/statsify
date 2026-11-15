@@ -8,7 +8,7 @@
 
 import { Footer, Header, HeaderBody, List, Sidebar } from "#components";
 import { render } from "@statsify/rendering";
-import type { IMessage } from "@statsify/discord";
+import type { IMessage, InteractionAttachment } from "@statsify/discord";
 import type { TextNode, Theme } from "@statsify/rendering";
 
 const MAX_LENGTH = 1024;
@@ -26,7 +26,7 @@ const getText = (node: JSX.Element): string[] => {
 const join = (texts: string[]) => texts.filter(Boolean).join(" ");
 
 // Call before render(), which copies each component's name onto its unnamed children
-export const getAltText = (card: JSX.Element): string => {
+const getAltText = (card: JSX.Element): string => {
   const header: string[] = [];
   const cells: string[] = [];
 
@@ -64,12 +64,18 @@ export const getAltText = (card: JSX.Element): string => {
   return altText;
 };
 
-export const renderWithAltText = async (card: JSX.Element, theme?: Theme): Promise<IMessage> => {
+export const renderAttachment = async (
+  card: JSX.Element,
+  name: string,
+  theme?: Theme
+): Promise<InteractionAttachment> => {
   const description = getAltText(card);
   const canvas = render(card, theme);
 
-  return {
-    files: [{ name: "image.png", data: await canvas.toBuffer("png"), type: "image/png", description }],
-    attachments: [],
-  };
+  return { name, data: await canvas.toBuffer("png"), type: "image/png", description };
 };
+
+export const renderWithAltText = async (card: JSX.Element, theme?: Theme): Promise<IMessage> => ({
+  files: [await renderAttachment(card, "image.png", theme)],
+  attachments: [],
+});

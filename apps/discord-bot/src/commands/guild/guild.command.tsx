@@ -24,9 +24,9 @@ import { GuildProfile, GuildProfileProps } from "./guild.profile.js";
 import { GuildQuery } from "@statsify/api-client";
 import { GuildTopSubCommand } from "./guild-top.subcommand.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
-import { getAltText, renderWithAltText } from "#lib/alt-text";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
+import { renderAttachment, renderWithAltText } from "#lib/alt-text";
 
 @Command({ description: (t) => t("commands.guild") })
 export class GuildCommand extends GuildTopSubCommand {
@@ -154,12 +154,8 @@ export class GuildCommand extends GuildTopSubCommand {
       />
     );
 
-    const description = getAltText(profile);
-    const canvas = render(profile, getTheme(user));
-    const buffer = await canvas.toBuffer("png");
-
     return {
-      files: [{ name: "guild-member.png", data: buffer, type: "image/png", description }],
+      files: [await renderAttachment(profile, "guild-member.png", getTheme(user))],
     };
   }
 }

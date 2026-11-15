@@ -15,10 +15,9 @@ import {
 } from "@statsify/discord";
 import { StatusProfile } from "./status.profile.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
-import { getAltText } from "#lib/alt-text";
 import { getTheme } from "#themes";
 import { mapGameIdToBackground } from "#constants";
-import { render } from "@statsify/rendering";
+import { renderAttachment } from "#lib/alt-text";
 
 @Command({
   description: (t) => t("commands.status"),
@@ -55,12 +54,8 @@ export class StatusCommand {
       />
     );
 
-    const description = getAltText(profile);
-    const canvas = render(profile, getTheme(user));
-    const buffer = await canvas.toBuffer("png");
-
     return {
-      files: [{ name: "status.png", data: buffer, type: "image/png", description }],
+      files: [await renderAttachment(profile, "status.png", getTheme(user))],
     };
   }
 }
