@@ -117,7 +117,7 @@ export abstract class LeaderboardService {
         bottom = top + PAGE_SIZE;
         break;
       }
-      case LeaderboardQuery.VALUE: {
+      case LeaderboardQuery.VALUE:
         highlight = await this.searchLeaderboardValue(
           constructor,
           field,
@@ -127,7 +127,6 @@ export abstract class LeaderboardService {
         top = highlight - (highlight % PAGE_SIZE);
         bottom = top + PAGE_SIZE;
         break;
-      }
     }
 
     const leaderboard = await this.getLeaderboardFromRedis(
