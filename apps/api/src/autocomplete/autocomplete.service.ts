@@ -33,7 +33,7 @@ const frecency = (lookups: number[], now: number) =>
 const sortByFrecency = (entries: HistoryEntry[], now: number) =>
   entries.sort((a, b) => frecency(b.lookups, now) - frecency(a.lookups, now));
 
-const blend = (query: string, personal: string[][], global: string[]) => {
+const blend = (query: string, personal: string[], global: string[]) => {
   const prefix = query.toLowerCase();
   const seen = new Set<string>();
   const names: string[] = [];
@@ -45,9 +45,7 @@ const blend = (query: string, personal: string[][], global: string[]) => {
     names.push(name);
   };
 
-  for (const tier of personal)
-    for (const name of tier) if (name.toLowerCase().startsWith(prefix)) push(name);
-
+  for (const name of personal) if (name.toLowerCase().startsWith(prefix)) push(name);
   for (const name of global) push(name);
 
   const exact = names.findIndex((name) => name.toLowerCase() === prefix);
@@ -110,7 +108,7 @@ export class AutocompleteService {
       .filter((username): username is string => !!username && !username.startsWith("ERROR "))
       .sort((a, b) => a.localeCompare(b));
 
-    return blend(query, [history, guildmates], global);
+    return blend(query, [...history, ...guildmates], global);
   }
 
   private async suggestGuilds(id: string, query: string) {
@@ -120,7 +118,7 @@ export class AutocompleteService {
       this.guildService.search(query),
     ]);
 
-    return blend(query, [history, guild ? [guild.name] : []], stored.map((g) => g.name));
+    return blend(query, guild ? [...history, guild.name] : history, stored.map((g) => g.name));
   }
 
   private orEmpty<T>(read: Promise<T>, empty: T) {
