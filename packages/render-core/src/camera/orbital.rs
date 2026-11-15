@@ -128,8 +128,15 @@ impl OrbitalCamera {
 
   // Slides the camera across and along its view, keeping the angle, until the points span one
   // axis of the frame less `margin` pixels on each side and sit about centered on the other.
-  // None when the points are too small or too far out to project.
-  pub fn framed(mut self, points: &[Vector3<f32>], margin: f32) -> Option<Self> {
+  // `unframed` points don't move the camera but stay between the clipping planes, so only the
+  // frame's edges cut them. None when the points are too small or too far out to project, or an
+  // unframed one is behind the eye.
+  pub fn framed(
+    mut self,
+    points: &[Vector3<f32>],
+    unframed: &[Vector3<f32>],
+    margin: f32,
+  ) -> Option<Self> {
     let back = self.offset().normalize();
     let right = Vector3::unit_y().cross(back).normalize();
     let up = back.cross(right);
@@ -160,9 +167,12 @@ impl OrbitalCamera {
     self.radius = (eye - self.target.to_vec()).dot(back);
     self.target = Point3::from_vec(eye - back * self.radius);
 
-    // Points can sit at any scale, so the clipping planes leave room around their own depths
-    // instead of the fixed ones, which cut off scenes much larger or smaller than a player
-    let depths = points.iter().map(|point| (eye - point).dot(back));
+    // Points can sit at any scale, so the clipping planes leave room around the depths of every
+    // point drawn instead of the fixed ones, which cut off scenes much larger or smaller than a player
+    let depths = points
+      .iter()
+      .chain(unframed)
+      .map(|point| (eye - point).dot(back));
     self.znear = depths.clone().fold(f32::MAX, f32::min) / 2.0;
     self.zfar = depths.fold(f32::MIN, f32::max) * 2.0;
 
@@ -276,7 +286,7 @@ mod tests {
 
   #[test]
   fn frames_points_centered() {
-    let camera = camera().framed(&points(), 10.0).unwrap();
+    let camera = camera().framed(&points(), &[], 10.0).unwrap();
     let [left, right, bottom, top] = gaps(&camera);
 
     // These points are taller than the frame for their width, so the top and bottom touch it
@@ -293,7 +303,7 @@ mod tests {
       let camera = OrbitalCamera::new(target, WIDTH, HEIGHT)
         .with_theta(0.7)
         .with_phi(1.2)
-        .framed(&points, 10.0)
+        .framed(&points, &[], 10.0)
         .unwrap();
       let view_projection = camera.view_projection_matrix();
 
@@ -304,6 +314,32 @@ mod tests {
     }
 
     let distant: Vec<_> = points().into_iter().map(|point| point * 1e30).collect();
-    assert!(camera().framed(&distant, 10.0).is_none());
+    assert!(camera().framed(&distant, &[], 10.0).is_none());
+  }
+
+  #[test]
+  fn keeps_unframed_points_out_of_the_framing_but_between_the_clipping_planes() {
+    let framed = camera().framed(&points(), &[], 10.0).unwrap();
+    let (eye, back) = (framed.eye().to_vec(), framed.offset().normalize());
+    let depth = |point: &Vector3<f32>| (eye - point).dot(back);
+    let nearest = points().iter().map(depth).fold(f32::MAX, f32::min);
+    let farthest = points().iter().map(depth).fold(f32::MIN, f32::max);
+
+    // Nearer the eye than the framed points' near plane, past their far plane, and off to the side
+    let unframed = [
+      eye - back * nearest / 4.0,
+      eye - back * farthest * 3.0,
+      points()[0] + Vector3::unit_y().cross(back).normalize() * 100.0,
+    ];
+
+    let camera = camera().framed(&points(), &unframed, 10.0).unwrap();
+    assert_eq!((camera.eye(), camera.target), (framed.eye(), framed.target));
+
+    let view_projection = camera.view_projection_matrix();
+
+    for point in unframed {
+      let clip = view_projection * point.extend(1.0);
+      assert!(clip.z.abs() < clip.w, "{clip:?}");
+    }
   }
 }
