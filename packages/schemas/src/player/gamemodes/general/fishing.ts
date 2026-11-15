@@ -386,7 +386,6 @@ export class Fishing {
   @Field()
   public activeHookTrail: string;
 
-  // Players saved before this field existed come back from Mongo without it
   @Field({ type: () => [FishingSeasonalYear], store: { default: [] } })
   public seasonal: FishingSeasonalYear[];
 
