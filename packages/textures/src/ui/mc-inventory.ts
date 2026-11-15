@@ -132,6 +132,7 @@ export class McInventory extends HTMLElement {
 
   public disconnectedCallback() {
     this.observer.unobserve(this.canvas);
+    this.unhover();
     this.onScreen = false;
     this.play();
   }
