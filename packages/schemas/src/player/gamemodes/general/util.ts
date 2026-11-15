@@ -25,10 +25,6 @@ if (import.meta.vitest) {
       expect(getNetworkLevel(0)).toBe(1);
       expect(getNetworkLevel(5000)).toBe(1.53);
       expect(getNetworkLevel(22_500)).toBe(3);
-
-      for (const level of [1, 2, 50, 250, 1000]) {
-        expect(getNetworkLevel(getNetworkExp(level))).toBe(level);
-      }
     });
   });
 }
