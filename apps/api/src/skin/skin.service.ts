@@ -483,14 +483,7 @@ export async function renderWarlords(
 
   if (!player) return renderScene(library, { models }, output).catch(rethrowPackError(WARLORDS_PACK));
 
-  const textures = join(WARLORDS_PACK.path, "textures");
-
-  const [layer1, layer2] = await Promise.all([
-    armor && resolveArmorPiece(armor, 1, textures),
-    armor && resolveArmorPiece(armor, 2, textures),
-  ]).catch(throwPackUnavailable(WARLORDS_PACK));
-
-  const worn = { chestplate: layer1, leggings: layer2, boots: layer1 };
+  const worn = await resolvePackArmor(WARLORDS_PACK, { chestplate: armor, leggings: armor, boots: armor });
 
   return renderScene(library, { player: { ...player, extruded, armor: worn, pose: "standing" }, models }, output)
     .catch(rethrowPackError(WARLORDS_PACK));
