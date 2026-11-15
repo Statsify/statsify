@@ -130,14 +130,11 @@ const createQuestProgress = (
     [key: string]: number;
 
     public constructor(quests: APIData) {
-      const start = getPeriodStart(time);
-
       for (const quest of tracked) {
         const active: Quest["active"] = quests[getQuestField(quest, fieldPrefix)]?.active;
+        const [progress] = Object.values(active?.objectives ?? {});
 
-        // Hypixel keeps a quest's objectives after it resets, so only count this period's
-        if (active?.objectives && active.started >= start)
-          this[quest.propertyKey] = Object.values(active.objectives)[0];
+        if (typeof progress === "number") this[quest.propertyKey] = progress;
       }
     }
   }
@@ -315,7 +312,10 @@ export function createQuestsInstance<
   return QuestInstance as unknown as IQuestInstance<Time, GamesWithQuests>;
 }
 
-const getPeriodStart = (time: Exclude<QuestTime, typeof QuestTime.Overall>) => {
+export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) => {
+  if (!quest?.completions) return 0;
+  if (time === QuestTime.Overall) return quest.completions.length;
+
   let t: DateTime = DateTime.now().setZone("America/New_York");
 
   switch (time) {
@@ -335,14 +335,7 @@ const getPeriodStart = (time: Exclude<QuestTime, typeof QuestTime.Overall>) => {
       break;
   }
 
-  return t.toMillis();
-};
-
-export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) => {
-  if (!quest?.completions) return 0;
-  if (time === QuestTime.Overall) return quest.completions.length;
-
-  const millis = getPeriodStart(time);
+  const millis = t.toMillis();
 
   return quest.completions.filter((ms) => ms.time >= millis).length;
 };
