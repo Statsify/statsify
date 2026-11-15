@@ -8,7 +8,7 @@
 
 import { CoinsSchema, KillsStats, WinsSchema } from "../common.js";
 import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
-import { type GamePrefix, defaultPrefix, getFormattedPrefix } from "#prefixes";
+import type { GamePrefix } from "#prefixes";
 import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 import { humanPrefixes, vampirePrefixes } from "./prefixes.js";
@@ -20,6 +20,7 @@ export type VampireZModes = ExtractGameModes<typeof VAMPIREZ_MODES>;
 
 const vampireZLifeSchema = (killsName: string, prefixes: GamePrefix[], scoredBy: "wins" | "kills") => {
   const prefix = prefixFields(prefixes);
+  const unabbreviated = prefixFields(prefixes, { abbreviation: false });
 
   return s.object({
     ...KillsStats,
@@ -34,13 +35,7 @@ const vampireZLifeSchema = (killsName: string, prefixes: GamePrefix[], scoredBy:
       return prefix.nextPrefix(this[scoredBy]);
     },
     naturalPrefix() {
-      return s
-        .string()
-        .computed(
-          (score) => getFormattedPrefix({ prefixes, score, trueScore: true, abbreviation: false }),
-          [this[scoredBy]]
-        )
-        .default(defaultPrefix(humanPrefixes));
+      return unabbreviated.naturalPrefix(this[scoredBy]);
     },
     progression() {
       return prefix.progression(this[scoredBy]);
