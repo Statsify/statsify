@@ -69,12 +69,15 @@ export class SkinService {
       .lean()
       .exec();
 
-    if (cachedSkin) {
-      if (Date.now() >= cachedSkin.expiresAt) this.refresh(cachedSkin.uuid);
+    if (cachedSkin && Date.now() < cachedSkin.expiresAt) return cachedSkin;
+
+    const uuid = isUsername ? await this.getUuid(tag) : tag;
+
+    if (cachedSkin?.uuid === uuid) {
+      this.refresh(uuid);
       return cachedSkin;
     }
 
-    const uuid = isUsername ? await this.getUuid(tag) : tag;
     const skin = await this.requestSkin(uuid);
 
     return this.save(skin);
@@ -86,7 +89,10 @@ export class SkinService {
 
     this.requestSkin(uuid)
       .then((skin) => this.save(skin))
-      .catch(() => this.skinModel.updateOne({ uuid }, { expiresAt: Date.now() + RETRY_AFTER }).exec())
+      .catch(async (error) => {
+        if (error instanceof PlayerNotFoundException) await this.skinModel.deleteOne({ uuid }).exec();
+        else await this.skinModel.updateOne({ uuid }, { expiresAt: Date.now() + RETRY_AFTER }).exec();
+      })
       .catch(() => undefined)
       .finally(() => this.refreshing.delete(uuid));
   }
