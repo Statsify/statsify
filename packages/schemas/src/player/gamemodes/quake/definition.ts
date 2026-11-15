@@ -48,7 +48,7 @@ const QuakeModeSchema = s.object({
   headshots: s.number().color("§c"),
   killstreaks: s.number().color("§6"),
   shotsFired: s.number().color("§a").leaderboard(false),
-  postUpdateKills: s.number().leaderboard({ fieldName: "2017+ Kills", name: "2017+ Kills" }),
+  postUpdateKills: s.number().leaderboard({ fieldName: "2017+ Kills" }),
   kwr() {
     return s
       .number()

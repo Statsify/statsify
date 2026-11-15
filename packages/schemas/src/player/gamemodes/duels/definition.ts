@@ -274,7 +274,7 @@ const spleefDuelsSchema = (titles: Titles) =>
   s.object({
     ...titleStats(titles, (spleef: Refs<{ overallWins: NumberSchema }>) => spleef.overallWins),
     overallWins: s.number().leaderboard({ name: "Spleef Overall Wins", fieldName: "Wins" }),
-    spleef: SpleefModeSchema.leaderboard({ fieldName: "Spleef" }),
+    spleef: SpleefModeSchema,
     bowSpleef: BowSpleefModeSchema,
   });
 
