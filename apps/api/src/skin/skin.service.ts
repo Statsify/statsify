@@ -208,6 +208,7 @@ export class SkinService {
     return { skin: imageData(player.skin), slim: player.slim };
   }
 
+  // Forgets a failed load, so a pack copied in after startup is picked up without a restart
   private getLibrary(pack: ResourcePack) {
     let library = this.libraries.get(pack);
 
@@ -398,6 +399,17 @@ export interface KartRenderOptions extends Pick<KartRenderDto, "extruded" | "wid
   player?: PlayerSkin;
 }
 
+async function resolvePackArmor(pack: ResourcePack, pieces: Omit<ArmorDto, "helmet">): Promise<Armor> {
+  const textures = join(pack.path, "textures");
+  const [chestplate, leggings, boots] = await Promise.all([
+    pieces.chestplate && resolveArmorPiece(pieces.chestplate, 1, textures),
+    pieces.leggings && resolveArmorPiece(pieces.leggings, 2, textures),
+    pieces.boots && resolveArmorPiece(pieces.boots, 1, textures),
+  ]).catch(throwPackUnavailable(pack));
+
+  return { chestplate, leggings, boots };
+}
+
 export async function renderKart(
   library: ModelLibrary,
   { models, suit }: KartScene,
@@ -414,15 +426,9 @@ export async function renderKart(
 
   if (!player) return renderScene(library, { models }, output).catch(rethrowPackError(KART_PACK));
 
-  const textures = join(KART_PACK.path, "textures");
+  const armor = await resolvePackArmor(KART_PACK, suit);
 
-  const [chestplate, leggings, boots] = await Promise.all([
-    suit.chestplate && resolveArmorPiece(suit.chestplate, 1, textures),
-    suit.leggings && resolveArmorPiece(suit.leggings, 2, textures),
-    suit.boots && resolveArmorPiece(suit.boots, 1, textures),
-  ]).catch(throwPackUnavailable(KART_PACK));
-
-  return renderScene(library, { player: { ...player, extruded, armor: { chestplate, leggings, boots }, pose: "sit" }, models }, output)
+  return renderScene(library, { player: { ...player, extruded, armor, pose: "sit" }, models }, output)
     .catch(rethrowPackError(KART_PACK));
 }
 
