@@ -65,7 +65,7 @@ export class SkinController {
 
   @Get("/warlords")
   @Auth()
-  @ApiOperation({ summary: "Get a Warlords Render of the Player in Their Class's Helmet and Armor, Holding a Weapon, or the Weapon Alone" })
+  @ApiOperation({ summary: "Get a Warlords Render of the Player in Their Class's Helmet and Armor, Holding a Weapon and Riding a Mount, or the Weapon or Mount Alone" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiServiceUnavailableResponse({ type: ErrorResponse })
   public async getWarlordsRender(@Query() options: WarlordsRenderDto) {

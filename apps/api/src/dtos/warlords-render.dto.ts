@@ -14,6 +14,7 @@ import { Transform } from "class-transformer";
 export const WARLORDS_CAMERA = {
   player: { width: 600, height: 800, yaw: -Math.PI / 6, pitch: Math.PI / 18 },
   weapon: { width: 600, height: 600, yaw: -Math.PI / 6, pitch: Math.PI / 18 },
+  mount: { width: 600, height: 800, yaw: (-2 * Math.PI) / 9, pitch: (5 * Math.PI) / 72 },
 };
 
 export class WarlordsRenderDto {
@@ -21,7 +22,7 @@ export class WarlordsRenderDto {
   @IsString()
   @MaxLength(36)
   @MinLength(32)
-  @ApiProperty({ required: false, description: "The player standing in their class's helmet and armor. Without one, only the weapon is drawn" })
+  @ApiProperty({ required: false, description: "The player in their class's helmet and armor. Without one, only the weapon or mount is drawn" })
   public uuid?: string;
 
   @IsOptional()
@@ -54,6 +55,11 @@ export class WarlordsRenderDto {
   public weapon?: string;
 
   @IsOptional()
+  @IsString()
+  @ApiProperty({ required: false, description: "The player's stored selected_mount, such as noble_steed, which the player rides. Without a uuid, the mount is drawn alone" })
+  public mount?: string;
+
+  @IsOptional()
   @Transform(({ value }) => (value === "true" || value === "false" ? value === "true" : value))
   @IsBoolean()
   @ApiProperty({ required: false, default: false, description: "Draw the skin's outer layer in 3D" })
@@ -65,7 +71,7 @@ export class WarlordsRenderDto {
   @IsNumber()
   @Min(-Math.PI * 2)
   @Max(Math.PI * 2)
-  @ApiProperty({ required: false, default: WARLORDS_CAMERA.player.yaw, description: "Camera angle around the player or weapon in radians: 0 faces the front, π the back" })
+  @ApiProperty({ required: false, default: WARLORDS_CAMERA.player.yaw, description: `Camera angle around the player, weapon or mount in radians: 0 faces the front, π the back. ${WARLORDS_CAMERA.mount.yaw.toFixed(2)} with a mount` })
   public yaw?: number;
 
   @IsOptional()
@@ -73,7 +79,7 @@ export class WarlordsRenderDto {
   @IsNumber()
   @Min(-Math.PI / 2)
   @Max(Math.PI / 2)
-  @ApiProperty({ required: false, default: WARLORDS_CAMERA.player.pitch, description: "Camera angle above the horizon in radians" })
+  @ApiProperty({ required: false, default: WARLORDS_CAMERA.player.pitch, description: `Camera angle above the horizon in radians. ${WARLORDS_CAMERA.mount.pitch.toFixed(2)} with a mount` })
   public pitch?: number;
 
   @IsOptional()
