@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { SLOTS, fromLegacyKit, inRange, kitKey } from "./kits.js";
-import type { ItemStack } from "@statsify/textures";
+import { type ItemStack, legacyItem } from "@statsify/textures";
+import { SLOTS, inRange, kitKey } from "./kits.js";
 import { armorOf } from "./armor.js";
 import data from "@statsify/textures/data/minecraft-data.json" with { type: "json" };
 import dumped from "../data/legacy-kits.json" with { type: "json" };
@@ -46,6 +46,25 @@ export const BLITZ_KITS = withDefaults("blitz");
 
 /** Every Mega Walls class with a default layout, and the Kit upgrade it's for */
 export const MEGA_WALLS_KITS = withDefaults("megawalls");
+
+/**
+ * A kit layout of 1.8 "id,damage" values by slot, as Mega Walls' <class>Inventory, Blitz's
+ * <Kit>Inventory and classic Walls' InventoryLayout send it: { "0": "267,0", "5": "373,2" }.
+ * Walls' InventoryLayout2 adds the item's name, or NONAME, which keeps items of one material
+ * apart (Starter Arrow and Arrow): { "12": "273,0,§bSpeedy Spade", "17": "262,0,NONAME" }.
+ */
+export function fromLegacyKit(layout: Readonly<Record<string, string>>): (ItemStack | undefined)[] {
+  const slots: (ItemStack | undefined)[] = Array.from({ length: SLOTS });
+
+  for (const [slot, value] of Object.entries(layout)) {
+    const [id, damage, ...rest] = value.split(",");
+    const item = legacyItem(Number(id), Number(damage));
+    const name = rest.join(",");
+    if (inRange(Number(slot), SLOTS)) slots[Number(slot)] = item && name && name !== "NONAME" ? { ...item, name } : item;
+  }
+
+  return slots;
+}
 
 function fromDumpedKit(
   game: Game,
