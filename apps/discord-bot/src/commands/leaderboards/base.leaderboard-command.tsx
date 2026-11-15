@@ -29,7 +29,6 @@ import {
 } from "@statsify/api-client";
 import { User } from "@statsify/schemas";
 import { getLogo } from "@statsify/assets";
-import { setRequestAttributes } from "@statsify/logger";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
@@ -99,14 +98,9 @@ export class BaseLeaderboardCommand {
 
     let currentPage = 0;
 
-    const setActorTier = (interaction: Interaction) => {
-      if (interaction.getUserId() === userId)
-        setRequestAttributes({ "statsify.user.tier": User.getTierName(user) });
-    };
-
     const changePage =
       (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
-        setActorTier(interaction);
+        context.setActorTier(interaction);
         if (user?.locale) interaction.setLocale(user.locale);
 
         const params = fn();
@@ -195,12 +189,12 @@ export class BaseLeaderboardCommand {
       );
 
     listener.addHook(searchDocument.getCustomId(), (interaction) => {
-      setActorTier(interaction);
+      context.setActorTier(interaction);
       return { type: InteractionResponseType.Modal, data: documentModal.build(t) };
     });
 
     listener.addHook(searchPosition.getCustomId(), (interaction) => {
-      setActorTier(interaction);
+      context.setActorTier(interaction);
       return { type: InteractionResponseType.Modal, data: positionModal.build(t) };
     });
 
@@ -218,7 +212,7 @@ export class BaseLeaderboardCommand {
 
       const position = Number(positionInput);
 
-      setActorTier(interaction);
+      context.setActorTier(interaction);
       if (user?.locale) interaction.setLocale(user.locale);
 
       if (!/^\d+$/.test(positionInput) || position < 1) {

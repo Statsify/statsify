@@ -44,6 +44,11 @@ export class CommandContext {
     });
   }
 
+  public setActorTier(interaction: Interaction) {
+    if (interaction.getUserId() === this.interaction.getUserId())
+      setRequestAttributes({ "statsify.user.tier": User.getTierName(this.user) });
+  }
+
   public option<T>(name: string, defaultValue?: T): T {
     const data = (
       this.data.options as APIApplicationCommandInteractionDataBasicOption[]
