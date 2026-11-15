@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { LegacyTexture } from "../src/core/pack.js";
 import { readFile, writeFile } from "node:fs/promises";
 import { unzipSync } from "fflate";
 
@@ -54,9 +55,6 @@ const DYES: Record<string, string> = {
 };
 
 const RECORDS = ["11", "13", "blocks", "cat", "chirp", "far", "mall", "mellohi", "stal", "strad", "wait", "ward"] as const;
-
-/** A texture's 26.3 name, null where 26.3 draws it another way, or one frame of a 1.8 strip, by how far along it sits */
-type LegacyTexture = string | null | { texture: string; position: number };
 
 // 1.8.9 textures whose models were renamed too, so no same-named model pairs them with 26.3's
 const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
