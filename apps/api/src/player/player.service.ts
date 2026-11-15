@@ -182,8 +182,7 @@ export class PlayerService {
       skipId: true,
     }).toObject();
 
-    // Only guild refreshes write guildId, so keep the stored one in case a
-    // refresh landed after this player was read
+    // Only guild refreshes write guildId, so keep the stored one
     delete document.guildId;
 
     const promises = [
