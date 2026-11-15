@@ -188,7 +188,6 @@ export class SkinService {
     return { texture: head, enchanted: false, skull: true };
   }
 
-  // Forgets a failed load, so a pack copied in after startup is picked up without a restart
   private getKartLibrary() {
     this.kartLibrary ??= loadKartLibrary().catch((error) => {
       this.kartLibrary = undefined;
@@ -315,7 +314,7 @@ export async function loadKartLibrary(): Promise<ModelLibrary> {
 
 export interface KartScene {
   models: ModelInstance[];
-  suit: { chestplate?: ArmorPieceDto; leggings?: ArmorPieceDto; boots?: ArmorPieceDto };
+  suit: Omit<ArmorDto, "helmet">;
 }
 
 export function resolveKart(
