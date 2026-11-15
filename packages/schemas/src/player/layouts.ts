@@ -29,7 +29,7 @@ export const LIST_LAYOUT: LayoutShape<string> = {
 export const SLOT_LAYOUT: LayoutShape<Record<string, string>> = {
   slots(layout) {
     const slots: Slots = [];
-    for (const [slot, token] of Object.entries(layout)) slots[Number(slot)] = token;
+    for (const [slot, token] of Object.entries(layout)) slots[Number(slot)] = String(token);
     return slots;
   },
   layout: (slots) => Object.fromEntries(slots.flatMap((token, slot) => (token ? [[slot, token]] : []))),
@@ -63,16 +63,26 @@ export const ITEM_LAYOUT: LayoutShape<Record<string, string | number[]>> = {
     return slots;
   },
   layout(slots) {
+    const stacks = slots.map((tokens) =>
+      tokens ? tokens.split("+").map((token) => (token.includes(":") ? token : `${token}:0`).replaceAll("/", ",")) : [],
+    );
     const layout: Record<string, number[]> = {};
 
-    for (const [slot, tokens] of slots.entries()) {
-      for (const token of tokens ? tokens.split("+") : []) {
-        const item = (token.includes(":") ? token : `${token}:0`).replaceAll("/", ",");
-        (layout[item] ??= []).push(slot);
+    // A shared slot keeps its items in Hypixel's key order, which decides the one the game shows,
+    // so an item goes in once it's first in every slot it shares
+    for (;;) {
+      const item = stacks
+        .map((stack) => stack[0])
+        .find((first) => first && stacks.every((stack) => stack[0] === first || !stack.includes(first)));
+      if (!item) return layout;
+
+      layout[item] = [];
+      for (const [slot, stack] of stacks.entries()) {
+        if (stack[0] !== item) continue;
+        layout[item].push(slot);
+        stack.shift();
       }
     }
-
-    return layout;
   },
 };
 
@@ -99,19 +109,16 @@ function packSlots(slots: Slots) {
   return packed.join(",");
 }
 
+// A saved layout with every slot emptied is kept as `name=`, since a missing one means the default
 function encodeLayouts(layouts: [name: string, slots: Slots][]) {
-  return layouts
-    .map(([name, slots]) => [name, packSlots(slots)])
-    .filter(([, slots]) => slots)
-    .map(([name, slots]) => `${name}=${slots}`)
-    .join(";");
+  return layouts.map(([name, slots]) => `${name}=${packSlots(slots)}`).join(";");
 }
 
 function collectLayouts<T>(data: APIData, pattern: RegExp, shape: LayoutShape<T>) {
   return encodeLayouts(
     Object.entries(data).flatMap(([key, layout]): [string, Slots][] => {
       const match = pattern.exec(key);
-      return match ? [[match[1], shape.slots(layout)]] : [];
+      return match && typeof layout === "object" && layout !== null ? [[match[1], shape.slots(layout)]] : [];
     }),
   );
 }
@@ -132,7 +139,7 @@ export function decodeLayouts<T>(layouts: string, shape: LayoutShape<T>) {
 }
 
 // Pit inventories arrive as `{ type: 0, data: [signed bytes] }` of gzipped NBT
-const encodeNbt = (nbt?: { data: number[] }) => (nbt ? Buffer.from(nbt.data).toString("base64") : "");
+const encodeNbt = (nbt?: { data?: number[] }) => (Array.isArray(nbt?.data) ? Buffer.from(nbt.data).toString("base64") : "");
 
 export class PlayerLayouts {
   @Field()
@@ -157,10 +164,12 @@ export class PlayerLayouts {
   public pitArmor: string;
 
   public constructor(stats: APIData) {
-    this.bedwars = encodeLayouts([
-      ["quickBuy", LIST_LAYOUT.slots(stats.Bedwars?.favourites_2 ?? "")],
-      ["hotbar", LIST_LAYOUT.slots(stats.Bedwars?.favorite_slots ?? "")],
-    ]);
+    const { favourites_2: quickBuy, favorite_slots: hotbar } = stats.Bedwars ?? {};
+    this.bedwars = encodeLayouts(
+      Object.entries({ quickBuy, hotbar }).flatMap(([name, list]): [string, Slots][] =>
+        typeof list === "string" ? [[name, LIST_LAYOUT.slots(list)]] : [],
+      ),
+    );
 
     this.duels = collectLayouts(stats.Duels ?? {}, /^layout_(.+)$/, SLOT_LAYOUT);
     this.skywars = collectLayouts(stats.SkyWars ?? {}, /^kit_(.+)_inventory$/, ITEM_LAYOUT);
