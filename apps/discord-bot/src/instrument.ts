@@ -12,6 +12,9 @@ import { nodeProfilingIntegration } from "@sentry/profiling-node";
 
 const sentryDsn = await config("sentry.discordBotDsn", { required: false });
 
+// Discord's callback and webhook paths carry the interaction token, which can reply as the bot
+const INTERACTION_TOKEN = /(?<=\/(?:interactions|webhooks)\/\d+\/)[^/?]+/;
+
 if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
@@ -21,6 +24,14 @@ if (sentryDsn) {
     profileSessionSampleRate: 1,
     // Sentry 11 collects all of these by default
     dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
+    beforeSendSpan: (span) => {
+      for (const key of ["url.full", "url.path"]) {
+        const value = span.attributes[key];
+        if (typeof value === "string") span.attributes[key] = value.replace(INTERACTION_TOKEN, "[token]");
+      }
+
+      return span;
+    },
     normalizeDepth: 3,
     tracesSampleRate: await config("sentry.tracesSampleRate"),
     environment: await config("environment"),

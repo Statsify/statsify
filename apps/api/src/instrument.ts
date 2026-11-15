@@ -23,8 +23,14 @@ if (sentryDsn) {
     // Only sampled traces get profiled, so tracesSampleRate still sets the volume
     profileLifecycle: "trace",
     profileSessionSampleRate: 1,
-    // Sentry 11 collects all of these by default
-    dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
+    // Sentry 11 collects all of these by default, and userInfo doesn't cover the client IP headers
+    dataCollection: {
+      userInfo: false,
+      cookies: false,
+      httpBodies: [],
+      databaseQueryData: false,
+      httpHeaders: { request: { deny: ["ip", "forwarded"] } },
+    },
     normalizeDepth: 3,
     tracesSampleRate: await config("sentry.tracesSampleRate"),
     environment: await config("environment"),
