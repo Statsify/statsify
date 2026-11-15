@@ -41,22 +41,7 @@
         "pixelParty": "Pixel Party stats",
         "seasonal": "Seasonal Arcade stats",
         "throwOut": "Throw Out stats",
-        "zombies": "Zombies stats",
-        "submodes": {
-          "overall": "Overall stats",
-          "survivals": "Survivals stats",
-          "deaths": "Deaths stats",
-          "bestTimes": "Best time stats",
-          "completions": "Completion stats",
-          "roundWins": "Round win stats",
-          "zombies": {
-            "overall": "Overall Zombies stats",
-            "deadEnd": "Dead End stats",
-            "badBlood": "Bad Blood stats",
-            "alienArcadium": "Alien Arcadium stats",
-            "prison": "Prison stats"
-          }
-        }
+        "zombies": "Zombies stats"
       }
     },
     "arenabrawl": "$t(commands.hypixel-command, { \"name\": \"Arena Brawl\" })",

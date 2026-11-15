@@ -65,21 +65,7 @@ export const ARCADE_MODES = new GameModes([
     hypixel: "DISASTERS",
     description: "commands.options.arcade.disasters",
     emoji: "emojis:arcade.disasters",
-    submodes: [
-      {
-        api: "overall",
-        description: "commands.options.arcade.submodes.overall",
-      },
-      {
-        api: "survivals",
-        aliases: ["surv"],
-        description: "commands.options.arcade.submodes.survivals",
-      },
-      {
-        api: "deaths",
-        description: "commands.options.arcade.submodes.deaths",
-      },
-    ],
+    submodes: [{ api: "overall" }, { api: "survivals", aliases: ["surv"] }, { api: "deaths" }],
   },
   {
     api: "dragonWars",
@@ -94,18 +80,9 @@ export const ARCADE_MODES = new GameModes([
     description: "commands.options.arcade.dropper",
     emoji: "emojis:arcade.dropper",
     submodes: [
-      {
-        api: "overall",
-        description: "commands.options.arcade.submodes.overall",
-      },
-      {
-        api: "bestTimes",
-        description: "commands.options.arcade.submodes.bestTimes",
-      },
-      {
-        api: "completions",
-        description: "commands.options.arcade.submodes.completions",
-      },
+      { api: "overall" },
+      { api: "bestTimes" },
+      { api: "completions" },
     ],
   },
   {
@@ -169,16 +146,7 @@ export const ARCADE_MODES = new GameModes([
     aliases: ["pg"],
     description: "commands.options.arcade.partyGames",
     emoji: "emojis:arcade.partyGames",
-    submodes: [
-      {
-        api: "overall",
-        description: "commands.options.arcade.submodes.overall",
-      },
-      {
-        api: "roundWins",
-        description: "commands.options.arcade.submodes.roundWins",
-      },
-    ],
+    submodes: [{ api: "overall" }, { api: "roundWins" }],
   },
   {
     api: "pixelPainters",
@@ -212,34 +180,11 @@ export const ARCADE_MODES = new GameModes([
     description: "commands.options.arcade.zombies",
     emoji: "emojis:arcade.zombies",
     submodes: [
-      {
-        api: "overall",
-        description: "commands.options.arcade.submodes.zombies.overall",
-        emoji: "emojis:zombies.overall",
-      },
-      {
-        api: "deadEnd",
-        aliases: ["de"],
-        description: "commands.options.arcade.submodes.zombies.deadEnd",
-        emoji: "emojis:zombies.deadEnd",
-      },
-      {
-        api: "badBlood",
-        aliases: ["bb"],
-        description: "commands.options.arcade.submodes.zombies.badBlood",
-        emoji: "emojis:zombies.badBlood",
-      },
-      {
-        api: "alienArcadium",
-        aliases: ["aa"],
-        description: "commands.options.arcade.submodes.zombies.alienArcadium",
-        emoji: "emojis:zombies.alienArcadium",
-      },
-      {
-        api: "prison",
-        description: "commands.options.arcade.submodes.zombies.prison",
-        emoji: "emojis:zombies.prison",
-      },
+      { api: "overall", emoji: "emojis:zombies.overall" },
+      { api: "deadEnd", aliases: ["de"], emoji: "emojis:zombies.deadEnd" },
+      { api: "badBlood", aliases: ["bb"], emoji: "emojis:zombies.badBlood" },
+      { api: "alienArcadium", aliases: ["aa"], emoji: "emojis:zombies.alienArcadium" },
+      { api: "prison", emoji: "emojis:zombies.prison" },
     ],
   },
 
