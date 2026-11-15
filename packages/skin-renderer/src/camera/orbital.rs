@@ -77,8 +77,7 @@ impl OrbitalCamera {
     self
   }
 
-  // A fixed render isn't bound by the viewer's zoom limits. It stays at `radius` unless a
-  // point would touch the edge at this angle, and then pulls back to leave a small margin.
+  // A fixed render isn't bound by the viewer's zoom limits
   pub fn fitted(mut self, points: &[Vector3<f32>], radius: f32) -> Self {
     let back = self.eye().to_vec().normalize();
     let right = Vector3::unit_y().cross(back).normalize();
@@ -99,11 +98,11 @@ impl OrbitalCamera {
         .fold(f32::MIN, f32::max)
     };
 
-    if radius_for(1.0) > radius {
-      self.radius = radius_for(4.0);
+    self.radius = if radius_for(1.0) > radius {
+      radius_for(4.0)
     } else {
-      self.radius = radius;
-    }
+      radius
+    };
 
     self
   }
