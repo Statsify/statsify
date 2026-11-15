@@ -245,7 +245,7 @@ export function createQuestsInstance<
   return QuestInstance as unknown as IQuestInstance<Time, GamesWithQuests>;
 }
 
-type QuestResets = Record<Exclude<QuestTime, QuestTime.Overall>, number> & {
+type QuestResets = Record<Exclude<QuestTime, typeof QuestTime.Overall>, number> & {
   expiresAt: number;
 };
 
