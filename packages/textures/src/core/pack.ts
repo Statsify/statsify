@@ -120,8 +120,8 @@ const parseJson = <T>(file: Uint8Array, reviver?: (key: string, value: unknown) 
 
 const encoder = new TextEncoder();
 
-/** A texture's 26.3 name, null where 26.3 draws it another way, or how far along a strip the frame a slot shows sits */
-type LegacyTexture = string | null | { texture: string; position: number };
+/** A texture's 26.3 name, null where 26.3 draws it another way, or one frame of a 1.8 strip, by how far along it sits */
+export type LegacyTexture = string | null | { texture: string; position: number };
 
 interface Upgrade {
   textures: Record<string, LegacyTexture>;

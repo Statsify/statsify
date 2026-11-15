@@ -15,9 +15,8 @@ import { kitKey } from "./kits.js";
 const KITS = dumped as Record<string, Record<string, (ItemStack | null)[]>>;
 
 /**
- * A Speed UHC kit by its activeKit_<MODE> id, like kit_basic_normal_logger, as a row of its items
- * in the Kits page's order, with their counts and enchantments. An item the page names in
- * Hypixel's words (Pig Egg, Awkward Potion) leaves its slot empty.
+ * A Speed UHC activeKit_<MODE> kit (kit_basic_normal_logger) as its items in the Kits page's order. An item
+ * the page names in Hypixel's words (Pig Egg, Awkward Potion) leaves its slot empty
  */
 export function fromSpeedUhcKit(id: string): (ItemStack | undefined)[] {
   const [, mode, name] = /^kit_basic_([a-z]+)_(.+)$/.exec(id) ?? [];

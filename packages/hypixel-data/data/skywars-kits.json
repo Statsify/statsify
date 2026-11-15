@@ -393,6 +393,7 @@
     "name": "Mini Hound",
     "items": [
       {
+        "slot": 0,
         "token": "COOKED_BEEF:0",
         "item": {
           "id": "minecraft:cooked_beef",
@@ -400,6 +401,7 @@
         }
       },
       {
+        "slot": 36,
         "token": "DIAMOND_BOOTS:0:0",
         "item": {
           "id": "minecraft:diamond_boots",
@@ -410,6 +412,7 @@
         }
       },
       {
+        "slot": 1,
         "token": "DIAMOND_SWORD:0",
         "item": {
           "id": "minecraft:diamond_sword",
@@ -420,12 +423,14 @@
         }
       },
       {
+        "slot": 2,
         "token": "IRON_PICKAXE:0",
         "item": {
           "id": "minecraft:iron_pickaxe"
         }
       },
       {
+        "slot": 3,
         "token": "IRON_AXE:0",
         "item": {
           "id": "minecraft:iron_axe",
@@ -436,18 +441,21 @@
         }
       },
       {
+        "slot": 39,
         "token": "IRON_HELMET:0",
         "item": {
           "id": "minecraft:iron_helmet"
         }
       },
       {
+        "slot": 38,
         "token": "IRON_CHESTPLATE:0",
         "item": {
           "id": "minecraft:iron_chestplate"
         }
       },
       {
+        "slot": 37,
         "token": "IRON_LEGGINGS:0",
         "item": {
           "id": "minecraft:iron_leggings"

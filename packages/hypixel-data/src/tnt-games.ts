@@ -10,8 +10,14 @@ import { ARMOR, inRange } from "./kits.js";
 import type { ItemStack } from "@statsify/textures";
 import dumped from "../data/tnt-games.json" with { type: "json" };
 
+export interface TntGamesMode {
+  name: string;
+  tokens: Record<string, ItemStack>;
+  default: Record<string, string>;
+}
+
 // Built by scripts/import-dump.ts from the game's layout editors
-const MODES = dumped as Record<string, { name: string; tokens: Record<string, ItemStack>; default: Record<string, string> }>;
+const MODES = dumped as Record<string, TntGamesMode>;
 
 /** TNT Games' modes as the TNTGames stats key each layout (tntrun, spleef), and their names */
 export const TNT_GAMES_LAYOUTS = Object.entries(MODES).map(([key, { name }]) => ({ key, name }));

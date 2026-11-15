@@ -49,9 +49,12 @@ export function legacyItem(id: number, damage = 0): ItemStack | undefined {
   return { id: `minecraft:${name}`, damage: durability[name] && damage > 0 ? damage : undefined };
 }
 
-/** The 26.3 item for a 1.8 Bukkit material name, like GOLD_CHESTPLATE, and Damage value */
+/** The 1.8 numeric id of a Bukkit material name, like GOLD_CHESTPLATE */
+export const legacyMaterialId = (name: string) => materials[name];
+
+/** The 26.3 item for a 1.8 Bukkit material name and Damage value */
 export function legacyMaterial(name: string, damage = 0) {
-  const id = materials[name];
+  const id = legacyMaterialId(name);
   return id === undefined ? undefined : legacyItem(id, damage);
 }
 

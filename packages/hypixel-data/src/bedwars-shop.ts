@@ -167,7 +167,6 @@ export const SHOP_ITEMS: Record<string, ShopItem> = {
     description: ["Place a pop-up defence!"],
   },
 
-  // Rotating Items, which come and go
   rotation_item_proximity_mine: {
     id: "stone_pressure_plate",
     name: "Proximity Mine",

@@ -6,19 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { SLOTS, fromLegacyKit, inRange, kitKey } from "./kits.js";
-import type { ItemStack } from "@statsify/textures";
+import { type ItemStack, legacyItem, legacyMaterialId } from "@statsify/textures";
+import { SLOTS, inRange, kitKey } from "./kits.js";
 import { armorOf } from "./armor.js";
-import data from "@statsify/textures/data/minecraft-data.json" with { type: "json" };
 import dumped from "../data/legacy-kits.json" with { type: "json" };
 
 export interface LegacyKit {
   /** As its editor's title names it, like Hype Train */
   name: string;
-  /**
-   * The level the editor was dumped at: a Blitz kit's (1 to 10) or a Mega Walls class's Kit
-   * upgrade (1 to 5). Counts, names, enchantments and wear change with it
-   */
+  /** The level the editor was dumped at: a Blitz kit's (1 to 10) or a Mega Walls Kit upgrade (1 to 5) */
   level: number;
   /** Each item by its "id,damage" token, in the slot the editor showed it */
   items: { slot: number; token: string; item: ItemStack }[];
@@ -36,8 +32,6 @@ const KITS = dumped as Record<Game, Record<string, LegacyKit>>;
 // Each Blitz kit's armor by level, I to X, from its Upgrades page
 const BLITZ_ARMOR = dumped.blitzArmor as Record<string, Record<string, ItemStack>[]>;
 
-const materials: Record<string, number | undefined> = data.materials;
-
 const withDefaults = (game: Game) =>
   Object.values(KITS[game]).flatMap(({ name, level, saved }) => (saved ? [] : [{ name, level }]));
 
@@ -46,6 +40,23 @@ export const BLITZ_KITS = withDefaults("blitz");
 
 /** Every Mega Walls class with a default layout, and the Kit upgrade it's for */
 export const MEGA_WALLS_KITS = withDefaults("megawalls");
+
+/**
+ * A layout of 1.8 "id,damage" values by slot ({ "0": "267,0" }), as Blitz, Mega Walls and Walls store kits.
+ * Walls' InventoryLayout2 adds each item's name, or NONAME ({ "12": "273,0,§bSpeedy Spade" })
+ */
+export function fromLegacyKit(layout: Readonly<Record<string, string>>): (ItemStack | undefined)[] {
+  const slots: (ItemStack | undefined)[] = Array.from({ length: SLOTS });
+
+  for (const [slot, value] of Object.entries(layout)) {
+    const [id, damage, ...rest] = value.split(",");
+    const item = legacyItem(Number(id), Number(damage));
+    const name = rest.join(",");
+    if (inRange(Number(slot), SLOTS)) slots[Number(slot)] = item && name && name !== "NONAME" ? { ...item, name } : item;
+  }
+
+  return slots;
+}
 
 function fromDumpedKit(
   game: Game,
@@ -64,7 +75,7 @@ function fromDumpedKit(
       : undefined);
   if (!layout) throw new Error(`No default ${game} layout for ${name} at level ${level}`);
 
-  const renamed = new Map(Object.entries(renames).map(([material, rename]) => [materials[material.toUpperCase()], rename]));
+  const renamed = new Map(Object.entries(renames).map(([material, rename]) => [legacyMaterialId(material.toUpperCase()), rename]));
   const slots = fromLegacyKit(layout);
 
   for (const [slot, token] of Object.entries(layout)) {
@@ -95,10 +106,8 @@ export function megaWallsKitArmor(kit: string, level: number) {
 }
 
 /**
- * A Blitz <Kit>Inventory ({ "0": "345,0", "1": "261,0" }) as 40 player inventory slots, or
- * without one the kit's default. At the level the kit's editor was dumped at, items get the
- * game's counts, names and tooltips; at others they're plain. `renames` holds the player's
- * kit_item_rename_<Kit>_<material> names by material, like { gold_sword: "§9Excalibur" }.
+ * A Blitz <Kit>Inventory, or the kit's default, with the dumped counts, names and tooltips only at its editor's
+ * level. `renames` holds the player's kit_item_rename_<Kit>_<material> by material ({ gold_sword: "§9Excalibur" })
  */
 export const fromBlitzKit = (
   stored: Readonly<Record<string, string>> | null | undefined,
@@ -107,11 +116,7 @@ export const fromBlitzKit = (
   renames?: Readonly<Record<string, string>>,
 ) => fromDumpedKit("blitz", stored, kit, level, renames);
 
-/**
- * A Mega Walls <class>Inventory as 40 player inventory slots, or without one the class's
- * default, by the class's Kit upgrade level. At the level its editor was dumped at, items get
- * the game's counts, names and tooltips, and the class's armor is put on; at others they're plain.
- */
+/** A Mega Walls <class>Inventory by Kit upgrade level, as fromBlitzKit, with the class's armor at its editor's level */
 export const fromMegaWallsKit = (
   stored: Readonly<Record<string, string>> | null | undefined,
   kit: string,
