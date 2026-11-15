@@ -10,6 +10,7 @@ import {
   type APIApplicationCommandInteractionDataBasicOption,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
+import { CacheLevel } from "@statsify/api-client";
 import { User } from "@statsify/schemas";
 import { noop } from "@statsify/util";
 import type { AbstractCommandListener } from "./abstract-command.listener.js";
@@ -36,6 +37,11 @@ export class CommandContext {
   /** The name of the command or subcommand being run, without its parents */
   public getCommandName(): string {
     return this.data.name;
+  }
+
+  /** A button re-runs its command, so a click reads cached stats and never asks Hypixel */
+  public getCacheLevel() {
+    return this.interaction.isCommandInteraction() ? undefined : CacheLevel.CACHE_ONLY;
   }
 
   public setUser(user: User | null) {
