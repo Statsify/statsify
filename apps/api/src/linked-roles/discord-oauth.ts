@@ -72,7 +72,7 @@ const requestTokens = async (grant: Record<string, string>): Promise<DiscordToke
   if (response.status === 400) return;
   if (!response.ok) throw new Error(`Discord token request failed with ${response.status}`);
 
-  return response.json() as Promise<DiscordTokens>;
+  return response.json();
 };
 
 // Discord's OAuth2 endpoints only accept form bodies
