@@ -36,8 +36,8 @@ const U: usize = 1;
 const N: usize = 0;
 const S: usize = 1;
 
-// FaceBakery's corner order for each face, in `Direction` order. Every face winds counter-clockwise
-// seen from outside, starting at the top left of its texture.
+// 1.8's corner order for each face, in `Direction` order. Every face winds counter-clockwise seen
+// from outside, starting at the top left of its texture.
 const CORNERS: [[[usize; 3]; 4]; 6] = [
   [[W, D, S], [W, D, N], [E, D, N], [E, D, S]],
   [[W, U, N], [W, U, S], [E, U, S], [E, U, N]],
@@ -100,8 +100,6 @@ pub fn bake_model(pack: &Pack, name: &str) -> Result<BakedModel, Error> {
         let point = Vector3::from(std::array::from_fn(|axis| bounds[sides[axis]][axis]));
         let position = rotation.apply(point) / 16.0 - Vector3::new(0.5, 0.5, 0.5);
 
-        // BlockFaceUV: corners 0 to 3 take (u0, v0), (u0, v1), (u1, v1) and (u1, v0), shifted
-        // by the face rotation
         let uv = match (corner + face.quarter_turns) % 4 {
           0 => [u0, v0],
           1 => [u0, v1],
@@ -126,7 +124,7 @@ pub fn bake_model(pack: &Pack, name: &str) -> Result<BakedModel, Error> {
   })
 }
 
-/// 1.8's `BlockPart` default uv, in model units. Later versions changed down, north and east.
+/// 1.8's default uv for a face, in model units. Later versions changed down, north and east.
 fn default_uv(direction: Direction, element: &Element) -> [f32; 4] {
   let [x0, y0, z0] = element.from;
   let [x1, y1, z1] = element.to;
@@ -138,7 +136,6 @@ fn default_uv(direction: Direction, element: &Element) -> [f32; 4] {
   }
 }
 
-/// FaceBakery's `rotatePart` for one element.
 struct PartRotation {
   matrix: Matrix3<f32>,
   origin: Vector3<f32>,

@@ -5,7 +5,7 @@ use serde_json::Value;
 use crate::display::{Display, Transform};
 use crate::{Error, Pack};
 
-/// Face directions in 1.8's `EnumFacing` order.
+/// Face directions in the order 1.8 bakes them.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum Direction {
   Down,
@@ -274,7 +274,7 @@ fn parse_element(element: &Value) -> Result<Element, String> {
     });
   }
 
-  // 1.8 keeps faces in an EnumMap, so they bake in direction order whatever order the file uses
+  // 1.8 bakes faces in direction order, whatever order the file lists them in
   faces.sort_by_key(|face| face.direction as usize);
 
   Ok(Element {
