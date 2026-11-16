@@ -28,3 +28,4 @@ export * from "./skin-render.dto.js";
 export * from "./kart-render.dto.js";
 export * from "./warlords-render.dto.js";
 export * from "./smash-render.dto.js";
+export * from "./scene-camera.dto.js";

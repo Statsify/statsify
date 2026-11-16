@@ -93,8 +93,8 @@ impl Pose {
     Some(pose)
   }
 
-  // ModelBiped halves the swing a holding arm has so far (walking or riding) and pitches it π/10
-  // forward, before the attack swing and sneaking add theirs. Swimming and flying aren't 1.8 poses.
+  // 1.8 halves the swing a holding arm has so far (walking or riding) and pitches it π/10 forward,
+  // before the attack swing and sneaking add theirs. Swimming and flying aren't 1.8 poses.
   pub fn holding(self, part: Part) -> Option<PartPose> {
     let mut pose = self
       .part(part)

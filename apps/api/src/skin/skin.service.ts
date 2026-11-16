@@ -386,7 +386,7 @@ export async function loadPackLibrary(pack: ResourcePack): Promise<ModelLibrary>
 
 export interface KartScene {
   models: ModelInstance[];
-  suit: { chestplate?: ArmorPieceDto; leggings?: ArmorPieceDto; boots?: ArmorPieceDto };
+  suit: Omit<ArmorDto, "helmet">;
 }
 
 export function resolveKart(
@@ -422,6 +422,17 @@ export interface KartRenderOptions extends Pick<KartRenderDto, "extruded" | "wid
   player?: PlayerSkin;
 }
 
+async function resolvePackArmor(pack: ResourcePack, pieces: Omit<ArmorDto, "helmet">): Promise<Armor> {
+  const textures = join(pack.path, "textures");
+  const [chestplate, leggings, boots] = await Promise.all([
+    pieces.chestplate && resolveArmorPiece(pieces.chestplate, 1, textures),
+    pieces.leggings && resolveArmorPiece(pieces.leggings, 2, textures),
+    pieces.boots && resolveArmorPiece(pieces.boots, 1, textures),
+  ]).catch(throwPackUnavailable(pack));
+
+  return { chestplate, leggings, boots };
+}
+
 export async function renderKart(
   library: ModelLibrary,
   { models, suit }: KartScene,
@@ -438,15 +449,9 @@ export async function renderKart(
 
   if (!player) return renderScene(library, { models }, output).catch(rethrowPackError(KART_PACK));
 
-  const textures = join(KART_PACK.path, "textures");
+  const armor = await resolvePackArmor(KART_PACK, suit);
 
-  const [chestplate, leggings, boots] = await Promise.all([
-    suit.chestplate && resolveArmorPiece(suit.chestplate, 1, textures),
-    suit.leggings && resolveArmorPiece(suit.leggings, 2, textures),
-    suit.boots && resolveArmorPiece(suit.boots, 1, textures),
-  ]).catch(throwPackUnavailable(KART_PACK));
-
-  return renderScene(library, { player: { ...player, extruded, armor: { chestplate, leggings, boots }, pose: "sit" }, models }, output)
+  return renderScene(library, { player: { ...player, extruded, armor, pose: "sit" }, models }, output)
     .catch(rethrowPackError(KART_PACK));
 }
 
@@ -516,14 +521,7 @@ export async function renderWarlords(
 
   if (!player) return renderScene(library, scene, output).catch(rethrowPackError(WARLORDS_PACK));
 
-  const textures = join(WARLORDS_PACK.path, "textures");
-
-  const [layer1, layer2] = await Promise.all([
-    armor && resolveArmorPiece(armor, 1, textures),
-    armor && resolveArmorPiece(armor, 2, textures),
-  ]).catch(throwPackUnavailable(WARLORDS_PACK));
-
-  const worn = { chestplate: layer1, leggings: layer2, boots: layer1 };
+  const worn = await resolvePackArmor(WARLORDS_PACK, { chestplate: armor, leggings: armor, boots: armor });
 
   return renderScene(library, { ...scene, player: { ...player, extruded, armor: worn } }, output)
     .catch(rethrowPackError(WARLORDS_PACK));
@@ -563,20 +561,14 @@ export async function renderSmash(
     pitch = SMASH_CAMERA.pitch,
   }: Pick<SmashRenderDto, "width" | "height" | "yaw" | "pitch">
 ): Promise<Buffer> {
-  const textures = join(SMASH_PACK.path, "textures");
-
-  const [chestplate, leggings, boots] = await Promise.all([
-    resolveArmorPiece(worn.chestplate, 1, textures),
-    resolveArmorPiece(worn.leggings, 2, textures),
-    resolveArmorPiece(worn.boots, 1, textures),
-  ]).catch(throwPackUnavailable(SMASH_PACK));
+  const armor = await resolvePackArmor(SMASH_PACK, worn);
 
   const player = {
     skin: await drawHeroSkin(skinColor),
     // Every lobby stand's skin uses the classic arms
     slim: false,
     extruded: false,
-    armor: { chestplate, leggings, boots },
+    armor,
     pose: "standing",
   } as const;
 
