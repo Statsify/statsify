@@ -15,7 +15,7 @@ export const MAX_SIZE = 1024;
 
 export function SceneCameraDto(
   camera: { yaw: number; pitch: number; width: number; height: number },
-  descriptions: { height?: string } = {}
+  descriptions: { yaw?: string; pitch?: string; height?: string } = {}
 ) {
   class SceneCamera {
     // An empty ?yaw= keeps the default angle, where +"" would turn it to the front
@@ -24,7 +24,7 @@ export function SceneCameraDto(
     @IsNumber()
     @Min(-Math.PI * 2)
     @Max(Math.PI * 2)
-    @ApiProperty({ required: false, default: camera.yaw, description: "Camera angle around the scene in radians: 0 faces the front, π the back" })
+    @ApiProperty({ required: false, default: camera.yaw, description: descriptions.yaw ?? "Camera angle around the scene in radians: 0 faces the front, π the back" })
     public yaw?: number;
 
     @IsOptional()
@@ -32,7 +32,7 @@ export function SceneCameraDto(
     @IsNumber()
     @Min(-Math.PI / 2)
     @Max(Math.PI / 2)
-    @ApiProperty({ required: false, default: camera.pitch, description: "Camera angle above the horizon in radians" })
+    @ApiProperty({ required: false, default: camera.pitch, description: descriptions.pitch ?? "Camera angle above the horizon in radians" })
     public pitch?: number;
 
     @IsOptional()
