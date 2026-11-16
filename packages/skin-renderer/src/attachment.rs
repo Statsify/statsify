@@ -10,7 +10,7 @@ const PIXELS_PER_BLOCK: f32 = 16.0;
 // Where the game draws a held item from: below the shoulder joint, at the hand
 const HAND: Vector3<f32> = Vector3::new(0.0, -7.0, -1.0);
 
-// LayerHeldItem moves a sneaking player's item 0.203125 blocks down the hand
+// The game moves a sneaking player's held item 0.203125 blocks down the hand
 const SNEAKING_HAND_DROP: Vector3<f32> = Vector3::new(0.0, -3.25, 0.0);
 
 // The game draws a player at 0.9375 of the size it draws other entities, and this renderer draws
@@ -48,8 +48,8 @@ pub fn bone_transform(bone: Bone, wearer: &Wearer) -> Matrix4<f32> {
   let pose = wearer.pose;
   let joint = |part: Part| part.joint(wearer.arm_width, pose);
 
-  // A sneaking player's held item misses the body's drop, which LayerHeldItem makes up for down
-  // the hand instead
+  // A sneaking player's held item misses the body's drop, which the game makes up for down the
+  // hand instead
   let hand = |arm: Part| match pose {
     Pose::Sneak => {
       joint(arm) * Matrix4::from_translation(HAND) * Matrix4::from_translation(SNEAKING_HAND_DROP)
@@ -59,7 +59,7 @@ pub fn bone_transform(bone: Bone, wearer: &Wearer) -> Matrix4<f32> {
 
   match bone {
     Bone::Root => Matrix4::identity(),
-    // LayerCustomHead drops a sneaking player's head item with the body, before the head's joint
+    // The game drops a sneaking player's head item with the body, before the head's joint
     Bone::Head => pose.placement() * joint(Part::Head),
     Bone::RightHand => hand(Part::RightArm),
     Bone::LeftHand => hand(Part::LeftArm),
@@ -99,7 +99,7 @@ pub fn item_transform(display: Option<DisplayContext>, model: &Display) -> Matri
 
   match display {
     None => Matrix4::from_scale(PIXELS_PER_BLOCK),
-    // LayerCustomHead moves from the neck to the middle of the head, turns the item to face
+    // The game moves a worn item from the neck to the middle of the head, turns it to face
     // forward and draws a block 0.625 blocks wide
     Some(DisplayContext::Head) => {
       Matrix4::from_translation(Vector3::new(0.0, 4.0, 0.0))

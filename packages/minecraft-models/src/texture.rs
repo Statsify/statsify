@@ -1,3 +1,5 @@
+use std::io::Cursor;
+
 use image::ImageFormat;
 use serde_json::Value;
 
@@ -5,6 +7,8 @@ use crate::{Error, Pack};
 
 /// 1.8 draws items with an alpha test at 0.1, so a texel with this alpha or less never shows.
 pub const ALPHA_CUTOFF: u8 = 25;
+
+const MAX_TEXTURE_PIXELS: u64 = 4096 * 4096;
 
 pub struct Texture {
   pub width: u32,
@@ -23,6 +27,13 @@ pub fn load_texture(pack: &Pack, name: &str, tick: u64) -> Result<Texture, Error
     .textures
     .get(name)
     .ok_or_else(|| Error::MissingTexture(name.to_string()))?;
+
+  let (width, height) =
+    image::ImageReader::with_format(Cursor::new(bytes), ImageFormat::Png).into_dimensions()?;
+
+  if u64::from(width) * u64::from(height) > MAX_TEXTURE_PIXELS {
+    return Err(Error::TextureTooLarge(name.to_string()));
+  }
 
   let image = image::load_from_memory_with_format(bytes, ImageFormat::Png)?.into_rgba8();
   let (width, mut height) = image.dimensions();
@@ -106,7 +117,6 @@ fn animation_frame(mcmeta: &str, frame_count: u32, tick: u64) -> Result<Option<u
     frames.push(entry);
   }
 
-  // An empty or missing list plays every frame in the strip in order
   if frames.is_empty() {
     frames = (0..u64::from(frame_count))
       .map(|index| (index, frametime))

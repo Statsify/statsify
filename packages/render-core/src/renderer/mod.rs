@@ -26,7 +26,6 @@ use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
 use crate::texture::Texture;
 
-// Draws with fs_main, fs_attachment, or fs_enchanted and its glint texture
 pub enum Pipeline<'a> {
   Main,
   Attachment,
@@ -35,9 +34,8 @@ pub enum Pipeline<'a> {
   Cutout,
   // Cutout's texels, then the partly transparent ones over everything else
   Translucent,
-  // Translucent for a layer worn on an opaque body, such as a skin's outer layer or armor, with
-  // Enchanted's glint if any. Its partly transparent texels go before Translucent's, since what
-  // lies behind them is the body.
+  // Translucent for a layer on an opaque body, such as a skin's outer layer or armor, with
+  // Enchanted's glint if any. It blends before Translucent, since the body lies behind it.
   Worn(Option<&'a Material>),
 }
 
