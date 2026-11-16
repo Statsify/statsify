@@ -17,6 +17,10 @@ export interface PotionEffect {
 export interface ItemStack {
   /** A namespaced 26.3 item id, like "minecraft:stone_sword" */
   id: string;
+  /** The item_model component, an item model definition to draw instead of the id's */
+  itemModel?: string;
+  /** The custom_data component, which Hypixel's 1.8.9 items carry as ExtraAttributes */
+  customData?: Record<string, unknown>;
   count?: number;
   /** Durability used up, for tools and armor */
   damage?: number;
