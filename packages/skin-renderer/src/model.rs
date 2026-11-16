@@ -610,8 +610,7 @@ impl Model {
     Ok(())
   }
 
-  // Every pipeline blends and writes depth, so this order (skin, plain attachments, then
-  // enchanted ones) shows in the render
+  // Every pipeline blends and writes depth, so this order shows in the render
   pub fn draw_items(&self) -> Vec<DrawItem<'_>> {
     let skin = self.meshes.iter().map(|mesh| DrawItem {
       mesh,

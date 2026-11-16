@@ -52,9 +52,8 @@ impl Default for Transform {
 }
 
 impl Transform {
-  /// The column-major matrix 1.8's item renderer applies, in block units: scale, then rotate about
-  /// z, x and y in that order, then translate. 1.8 clamps translation to 1.5 blocks and scale to 4.
-  /// 1.8 halves the centered model before this matrix and doubles 3D items worn on a head after it.
+  /// The column-major matrix 1.8's item renderer applies, in block units. 1.8 halves the centered
+  /// model before this matrix and doubles 3D items worn on a head after it.
   pub fn matrix(&self) -> [[f32; 4]; 4] {
     let [x, y, z] = self.rotation;
     let (translation, [sx, sy, sz]) = self.clamped();
