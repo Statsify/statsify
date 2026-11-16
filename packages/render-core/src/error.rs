@@ -6,7 +6,7 @@ pub enum Error {
   #[error(transparent)]
   Image(#[from] image::ImageError),
 
-  #[error("Failed to render skin")]
+  #[error("Failed to render")]
   RenderFailure,
 
   #[error("The output's width and height must be whole numbers from 1 to {0}")]

@@ -6,6 +6,9 @@ pub enum Error {
   #[error("The pack has no texture named {0}")]
   MissingTexture(String),
 
+  #[error("The texture {0} is too large")]
+  TextureTooLarge(String),
+
   #[error("The model {name} is invalid: {reason}")]
   InvalidModel { name: String, reason: String },
 

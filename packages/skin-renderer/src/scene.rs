@@ -368,6 +368,16 @@ pub async fn render_scene(
     }
 
     let model = library.model(renderer, &instance.model)?;
+    let display = match instance.display {
+      Some(DisplayContext::Head) => model.display.head,
+      Some(DisplayContext::Thirdperson) => model.display.thirdperson,
+      None => None,
+    };
+
+    if display.is_some_and(|entry| entry.scale.contains(&0.0)) {
+      continue;
+    }
+
     let transform = bone
       * local_transform(translation, rotation, scale)
       * item_transform(instance.display, &model.display);
@@ -452,7 +462,6 @@ pub async fn render_scene(
   Ok(buffer.into())
 }
 
-// A side of the output, which must be a whole number of pixels the device can render
 fn pixels(side: f64, limit: u32) -> crate::error::Result<u32> {
   if side.fract() == 0.0 && (1.0..=f64::from(limit)).contains(&side) {
     Ok(side as u32)
