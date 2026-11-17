@@ -57,7 +57,10 @@ export interface RawMember {
   currencies?: { coin_purse?: number; essence?: Record<string, { current?: number }> };
   fairy_soul?: { total_collected?: number };
   player_stats?: { pets?: { total_exp_gained?: number } };
-  player_data?: { experience?: Record<string, number>; perks?: Record<string, number> };
+  player_data?: {
+    experience?: Record<string, number>;
+    perks?: Record<string, number> & { fairies_refund_processed?: boolean };
+  };
   collection?: Record<string, number>;
   inventory?: {
     inv_contents?: RawNbt;
