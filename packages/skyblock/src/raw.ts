@@ -120,7 +120,7 @@ export interface RawMember {
   trophy_fish?: Record<string, unknown> & { rewards?: number[] }; // <fish> and <fish>_<tier> counts, total_caught, rewards…
   player_data?: {
     experience?: Record<string, number>;
-    perks?: Record<string, number>;
+    perks?: Record<string, number> & { fairies_refund_processed?: boolean };
     unlocked_coll_tiers?: string[]; // <collection>_<tier>, with -1 for one found at no tier yet
     reaper_peppers_eaten?: number;
     bee_saliva_eaten?: number;
