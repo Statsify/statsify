@@ -88,7 +88,7 @@ export interface RawMember {
   trophy_fish?: Record<string, unknown>; // <fish> and <fish>_<tier> counts, plus total_caught, rewards…
   player_data?: {
     experience?: Record<string, number>;
-    perks?: Record<string, number>;
+    perks?: Record<string, number> & { fairies_refund_processed?: boolean };
     reaper_peppers_eaten?: number;
     crafted_generators?: string[]; // "WHEAT_11": each minion tier crafted
   };
