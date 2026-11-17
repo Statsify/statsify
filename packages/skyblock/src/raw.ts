@@ -86,7 +86,11 @@ export interface RawMember {
   };
   bestiary?: { kills?: Record<string, number>; milestone?: { last_claimed_milestone?: number } };
   trophy_fish?: Record<string, unknown>; // <fish> and <fish>_<tier> counts, plus total_caught, rewards…
-  player_data?: { experience?: Record<string, number>; perks?: Record<string, number>; reaper_peppers_eaten?: number };
+  player_data?: {
+    experience?: Record<string, number>;
+    perks?: Record<string, number> & { fairies_refund_processed?: boolean };
+    reaper_peppers_eaten?: number;
+  };
   collection?: Record<string, number>;
   inventory?: {
     inv_contents?: RawNbt;
