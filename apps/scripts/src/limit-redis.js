@@ -23,7 +23,7 @@ const limit = async () => {
     const fields = scanMetadata(constructor);
 
     for (const [key, value] of fields) {
-      if (!value.leaderboard.enabled) oldLeaderboardPipeline.del(`${name}.${key}`);
+      if (!value.leaderboard.enabled) oldLeaderboardPipeline.unlink(`${name}.${key}`);
     }
 
     // oxlint-disable-next-line no-await-in-loop
