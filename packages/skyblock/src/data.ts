@@ -64,7 +64,7 @@ export const PET_TEXTURES = petTextures as {
   skinColors: Record<string, string>;
 };
 
-/** An accessory → the ids that make it inactive: its higher tiers, or the other party hats, which replace each other. */
+/** An accessory → the ids that make it inactive: its higher tiers, or a variant (Dante's Talisman and Ring). */
 export const ACCESSORY_UPGRADES = accessories.upgrades as Record<string, string[]>;
 
 export const IGNORED_ACCESSORIES: ReadonlySet<string> = new Set(accessories.ignored);
