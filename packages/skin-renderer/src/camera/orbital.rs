@@ -1,4 +1,4 @@
-use cgmath::{perspective, Deg, Matrix4, Point3, Vector3};
+use cgmath::{perspective, Deg, EuclideanSpace, InnerSpace, Matrix4, Point3, Rad, Vector3};
 
 use super::CameraBehavior;
 use crate::geometry::coordinate::Coordinate;
@@ -70,6 +70,41 @@ impl OrbitalCamera {
       sensitivity: 1.0,
       zoom_sensitivity: 0.1,
     }
+  }
+
+  pub fn with_theta(mut self, theta: f32) -> Self {
+    self.update_theta(theta);
+    self
+  }
+
+  // A fixed render isn't bound by the viewer's zoom limits
+  pub fn fitted(mut self, points: &[Vector3<f32>], radius: f32) -> Self {
+    let back = self.eye().to_vec().normalize();
+    let right = Vector3::unit_y().cross(back).normalize();
+    let up = back.cross(right);
+    let tan = (Rad::from(Deg(self.fovy)).0 / 2.0).tan();
+
+    // The radius at which the farthest-out point sits `margin` pixels inside the frame
+    let radius_for = |margin: f32| {
+      let half_height = tan * (1.0 - 2.0 * margin / self.height);
+      let half_width = tan * self.width / self.height * (1.0 - 2.0 * margin / self.width);
+
+      points
+        .iter()
+        .map(|point| {
+          let spread = (point.dot(right).abs() / half_width).max(point.dot(up).abs() / half_height);
+          point.dot(back) + spread
+        })
+        .fold(f32::MIN, f32::max)
+    };
+
+    self.radius = if radius_for(1.0) > radius {
+      radius_for(4.0)
+    } else {
+      radius
+    };
+
+    self
   }
 
   fn update_radius(&mut self, radius: f32) {

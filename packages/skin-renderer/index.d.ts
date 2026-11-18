@@ -34,6 +34,13 @@ export interface RenderOptions {
   armor?: Armor
   /** Enchantment glint texture (PNG), needed when an armor piece is enchanted. */
   glint?: Uint8Array
+  /** Cape texture (PNG). */
+  cape?: Uint8Array
+  /**
+   * Camera angle around the player in radians: 0 faces the front, π the back.
+   * Defaults to -0.3.
+   */
+  yaw?: number
 }
 
 export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: boolean, options?: RenderOptions | undefined | null): Promise<Buffer>

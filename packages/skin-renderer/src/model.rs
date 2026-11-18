@@ -183,7 +183,7 @@ struct BodyPart<'a> {
 }
 
 impl<'a> BodyPart<'a> {
-  fn create(self, scale: f32, device: &wgpu::Device) -> (Mesh, Mesh) {
+  fn create(self, scale: f32) -> (Geometry, Geometry) {
     let texture_size = (64, 64);
 
     let (position, rotation) = self.placement.resolve();
@@ -239,10 +239,7 @@ impl<'a> BodyPart<'a> {
     inner_geometry.scale_around(scale, position);
     outer_geometry.scale_around(scale, position);
 
-    (
-      Mesh::from_geometry(device, inner_geometry),
-      Mesh::from_geometry(device, outer_geometry),
-    )
+    (inner_geometry, outer_geometry)
   }
 }
 
@@ -257,6 +254,23 @@ pub struct Model {
   meshes: Vec<Mesh>,
   attachments: Vec<Attachment>,
   glint: Option<Material>,
+  wears_armor: bool,
+  points: Vec<Vector3<f32>>,
+}
+
+// Keeps where every vertex ends up, so a render can fit the camera to them
+fn mesh_with_points(
+  device: &wgpu::Device,
+  geometry: Geometry,
+  points: &mut Vec<Vector3<f32>>,
+) -> Mesh {
+  points.extend(
+    geometry
+      .vertices
+      .iter()
+      .map(|vertex| Vector3::from(vertex.position)),
+  );
+  Mesh::from_geometry(device, geometry)
 }
 
 impl Model {
@@ -271,7 +285,7 @@ impl Model {
   ) -> Result<Self> {
     let arm_width = kind.arm_width();
 
-    let (inner_meshes, outer_meshes): (Vec<Mesh>, Vec<Mesh>) = Part::ALL
+    let (inner_geometries, outer_geometries): (Vec<Geometry>, Vec<Geometry>) = Part::ALL
       .iter()
       .map(|&part| {
         let (layer1_location, layer2_location) = part.skin_layer_locations();
@@ -287,22 +301,45 @@ impl Model {
             outer_layer
           },
         }
-        .create(part.z_fighting_scale(), device)
+        .create(part.z_fighting_scale())
       })
       .unzip();
+
+    let mut points = vec![];
+    let meshes = inner_geometries
+      .into_iter()
+      .chain(outer_geometries)
+      .map(|geometry| mesh_with_points(device, geometry, &mut points))
+      .collect();
 
     let texture = Texture::from_image(device, queue, &image)?;
     let material = Material::new(device, texture, layout);
 
     let mut model = Self {
       material,
-      meshes: inner_meshes.into_iter().chain(outer_meshes).collect(),
+      meshes,
       attachments: vec![],
       glint: None,
+      wears_armor: armor.pieces().next().is_some(),
+      points,
     };
 
     model.attach_armor(device, queue, layout, armor)?;
     Ok(model)
+  }
+
+  // Boots and a player head reach past the frame that fits a bare player, and every
+  // armored render pulls back with them so they share one scale
+  pub fn camera_radius(&self) -> f32 {
+    if self.wears_armor {
+      53.0
+    } else {
+      50.0
+    }
+  }
+
+  pub fn points(&self) -> &[Vector3<f32>] {
+    &self.points
   }
 
   fn attach_armor(
@@ -402,6 +439,52 @@ impl Model {
     self.glint.as_ref()
   }
 
+  pub fn attach_cape(
+    &mut self,
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    layout: &wgpu::BindGroupLayout,
+    cape: &DynamicImage,
+    chestplate: bool,
+  ) -> Result<()> {
+    let body = Part::Body.placement(ModelKind::Classic.arm_width());
+    let (body_position, _) = body.resolve();
+
+    // Over a chestplate the cape moves out and up so it doesn't cut through it, as
+    // newer versions of the game do
+    let (lift, gap) = if chestplate { (0.85, 1.1) } else { (0.0, 0.0) };
+    let top = body_position.y + body.dimensions.y / 2.0 + lift;
+    let back = body_position.z - body.dimensions.z / 2.0 - gap;
+
+    let dimensions = Vector3::new(10.0, 16.0, 1.0);
+    let position = Vector3::new(0.0, top - dimensions.y / 2.0, back - dimensions.z / 2.0);
+
+    // Turned around so the outside of the cape shows its front texture
+    let mut geometry = BoxGeometry {
+      position,
+      dimensions,
+      texture_region: TextureRegion {
+        location: (0, 0),
+        texture_size: (64, 32),
+        mirror: false,
+      },
+      rotation: Some(Rotation {
+        quaternion: Quaternion::from_angle_y(Deg(180.0)),
+        pivot: position,
+      }),
+      inflation: 0.0,
+    }
+    .create();
+
+    // A standing player's cape swings 6 degrees out from the back
+    geometry.rotate_around(Rotation {
+      quaternion: Quaternion::from_angle_x(Deg(6.0)),
+      pivot: Vector3::new(0.0, top, back),
+    });
+
+    self.attach(device, queue, layout, cape, geometry, false)
+  }
+
   fn attach(
     &mut self,
     device: &wgpu::Device,
@@ -415,7 +498,7 @@ impl Model {
 
     self.attachments.push(Attachment {
       material: Material::new(device, texture, layout),
-      mesh: Mesh::from_geometry(device, geometry),
+      mesh: mesh_with_points(device, geometry, &mut self.points),
       enchanted,
     });
 
