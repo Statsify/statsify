@@ -62,7 +62,14 @@ export class TextCommand {
     const buffer = await canvas.toBuffer("png");
 
     return {
-      files: [{ data: buffer, name: "text.png", type: "image/png" }],
+      files: [
+        {
+          data: buffer,
+          name: "text.png",
+          type: "image/png",
+          description: (t) => t("altText.text"),
+        },
+      ],
     };
   }
 }

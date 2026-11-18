@@ -84,7 +84,7 @@ import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "../arcade/arcade.co
 import { getBackground, getLogo } from "@statsify/assets";
 import { getDuelsModeEmojis } from "../duels/duels.command.js";
 import { getTheme } from "#themes";
-import { render } from "@statsify/rendering";
+import { renderAttachment } from "#lib/alt-text";
 import type { BaseProfileProps, ModeEmoji } from "#commands/base.hypixel-command";
 import type { HistoricalTimeData } from "#components";
 
@@ -420,12 +420,9 @@ export class SessionCommand {
             { ...mode, submode: undefined } as unknown as GameMode<T>
           );
 
-          const canvas = render(profile, getTheme(user));
-          const buffer = await canvas.toBuffer("png");
-
           return {
             content: getContent(t),
-            files: [{ name: "session.png", data: buffer, type: "image/png" }],
+            files: [await renderAttachment(profile, "session.png", getTheme(user))],
             attachments: [],
           };
         },
@@ -458,12 +455,9 @@ export class SessionCommand {
             { api: mode.api, formatted: mode.formatted, hypixel: mode.hypixel, submode } as GameMode<T>
           );
 
-          const canvas = render(profile, getTheme(user));
-          const buffer = await canvas.toBuffer("png");
-
           return {
             content: getContent(t),
-            files: [{ name: "session.png", data: buffer, type: "image/png" }],
+            files: [await renderAttachment(profile, "session.png", getTheme(user))],
             attachments: [],
           };
         },

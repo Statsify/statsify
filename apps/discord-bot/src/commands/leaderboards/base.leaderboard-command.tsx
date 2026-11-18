@@ -31,6 +31,7 @@ import { User } from "@statsify/schemas";
 import { getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
+import { removeFormatting } from "@statsify/util";
 import type { Image } from "skia-canvas";
 
 type BaseLeaderboardProps = Omit<LeaderboardProfileProps, "fields" | "name" | "data">;
@@ -327,7 +328,14 @@ export class BaseLeaderboardCommand {
     const buffer = await canvas.toBuffer("png");
 
     const message = {
-      files: [{ name: "leaderboard.png", data: buffer, type: "image/png" }],
+      files: [
+        {
+          name: "leaderboard.png",
+          data: buffer,
+          type: "image/png",
+          description: props.t("altText.leaderboard", { name: removeFormatting(leaderboard.name) }),
+        },
+      ],
       embeds: [],
     };
 

@@ -77,7 +77,7 @@ export class BadgeCommand {
 
         return {
           content: t("config.badge.view") as string,
-          files: [{ name: "badge.png", data: profile, type: "image/png" }],
+          files: [profile],
         };
       }
 
@@ -123,7 +123,7 @@ export class BadgeCommand {
 
         return {
           content: t("config.badge.set") as string,
-          files: [{ name: "badge.png", data: profile, type: "image/png" }],
+          files: [profile],
         };
       }
 
@@ -135,7 +135,7 @@ export class BadgeCommand {
 
         return {
           content: t("config.badge.reset") as string,
-          files: [{ name: "badge.png", data: profile, type: "image/png" }],
+          files: [profile],
         };
       }
     }
@@ -164,6 +164,11 @@ export class BadgeCommand {
       getTheme(user)
     );
 
-    return canvas.toBuffer("png");
+    return {
+      name: "badge.png",
+      data: await canvas.toBuffer("png"),
+      type: "image/png",
+      description: t("altText.badge"),
+    };
   }
 }

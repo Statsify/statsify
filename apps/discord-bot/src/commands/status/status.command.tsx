@@ -17,7 +17,7 @@ import { StatusProfile } from "./status.profile.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { mapGameIdToBackground } from "#constants";
-import { render } from "@statsify/rendering";
+import { renderAttachment } from "#lib/alt-text";
 
 @Command({
   description: (t) => t("commands.status"),
@@ -41,7 +41,7 @@ export class StatusCommand {
       getAllGameIcons(),
     ]);
 
-    const canvas = render(
+    const profile = (
       <StatusProfile
         status={status}
         gameIcons={gameIcons}
@@ -51,14 +51,11 @@ export class StatusCommand {
         background={background}
         t={t}
         user={user}
-      />,
-      getTheme(user)
+      />
     );
 
-    const buffer = await canvas.toBuffer("png");
-
     return {
-      files: [{ name: "status.png", data: buffer, type: "image/png" }],
+      files: [await renderAttachment(profile, "status.png", getTheme(user))],
     };
   }
 }

@@ -19,8 +19,8 @@ import { QUEST_MODES, QuestTime } from "@statsify/schemas";
 import { QuestProfileProps, QuestsProfile } from "./quests.profile.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
+import { renderWithAltText } from "#lib/alt-text";
 import { mapBackground } from "#constants";
-import { render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.quests") })
 export class QuestsCommand {
@@ -108,7 +108,7 @@ export class QuestsCommand {
             logos: [crossLogo, verifiedLogo],
           });
 
-          return render(profile, getTheme(user));
+          return renderWithAltText(profile, getTheme(user));
         },
       }));
 
