@@ -28,6 +28,13 @@ if (cluster.isPrimary) {
 
   console.log("Generating backgrounds...");
 
+  cluster.on("exit", (worker, code, signal) => {
+    if (code === 0) return;
+
+    console.error(`Cluster ${worker.id - 1} failed (code ${code}, signal ${signal})`);
+    process.exitCode = 1;
+  });
+
   for (let i = 0; i < NUM_CLUSTERS; i++) cluster.fork();
 } else if (cluster.isWorker) {
   const worker = cluster.worker!;
