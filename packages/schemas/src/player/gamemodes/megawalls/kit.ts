@@ -128,8 +128,33 @@ export class MegaWallsOverall extends MegaWallsKit {
   @Field({ leaderboard: { formatter: formatTime } })
   public declare playtime: number;
 
+  @Field()
+  public blocksBroken: number;
+
+  @Field()
+  public blocksPlaced: number;
+
+  @Field()
+  public ironOreBroken: number;
+
+  @Field()
+  public treasuresFound: number;
+
+  @Field()
+  public arrowsFired: number;
+
+  @Field()
+  public arrowsHit: number;
+
   public constructor(data: APIData) {
     super(data, "");
+
+    this.blocksBroken = data.blocks_broken;
+    this.blocksPlaced = data.blocks_placed;
+    this.ironOreBroken = data.iron_ore_broken;
+    this.treasuresFound = data.treasures_found;
+    this.arrowsFired = data.arrows_fired;
+    this.arrowsHit = data.arrows_hit;
 
     this.finalDeaths = add(data.final_deaths, data.finalDeaths);
     this.witherDamage = add(data.wither_damage, data.witherDamage);
