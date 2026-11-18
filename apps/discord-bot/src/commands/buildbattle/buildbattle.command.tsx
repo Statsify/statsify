@@ -17,7 +17,7 @@ export class BuildBattleCommand extends BaseHypixelCommand<BuildBattleModes> {
     super(BUILD_BATTLE_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
+  public override getProfile(base: BaseProfileProps): JSX.Element {
     return <BuildBattleProfile {...base} />;
   }
 }

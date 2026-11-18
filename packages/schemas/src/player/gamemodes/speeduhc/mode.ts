@@ -33,13 +33,13 @@ export class SpeedUHCMode {
   public assists: number;
 
   public constructor(data: APIData, mode: string) {
-    mode = mode ? `_${mode}` : mode;
+    const suffix = mode ? `_${mode}` : mode;
 
-    this.wins = data[`wins${mode}`];
-    this.losses = data[`losses${mode}`];
-    this.kills = data[`kills${mode}`];
-    this.deaths = data[`deaths${mode}`];
-    this.assists = data[`assists${mode}`];
+    this.wins = data[`wins${suffix}`];
+    this.losses = data[`losses${suffix}`];
+    this.kills = data[`kills${suffix}`];
+    this.deaths = data[`deaths${suffix}`];
+    this.assists = data[`assists${suffix}`];
 
     this.wlr = ratio(this.wins, this.losses);
     this.kdr = ratio(this.kills, this.deaths);

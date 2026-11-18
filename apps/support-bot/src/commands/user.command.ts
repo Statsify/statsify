@@ -38,37 +38,37 @@ export class UserCommand {
 
     const embed = new EmbedBuilder().title("User").color(STATUS_COLORS.info);
 
-    this.addField(embed, "Id", user.id);
-    this.addField(embed, "UUID", user.uuid);
+    addField(embed, "Id", user.id);
+    addField(embed, "UUID", user.uuid);
 
-    this.addField(
+    addField(
       embed,
       "Verified",
       user.verifiedAt,
       (v) => `<t:${Math.round(v / 1000)}:R>`
     );
 
-    this.addField(
+    addField(
       embed,
       "Unverified",
       user.unverifiedAt,
       (v) => `<t:${Math.round(v / 1000)}:R>`
     );
 
-    this.addField(embed, "Server Member", user.serverMember);
+    addField(embed, "Server Member", user.serverMember);
 
-    this.addField(embed, "Has Badge", user.hasBadge);
+    addField(embed, "Has Badge", user.hasBadge);
 
-    this.addField(embed, "Tier", user.tier, (v) => `\`${User.getTierName(v)}\``);
+    addField(embed, "Tier", user.tier, (v) => `\`${User.getTierName(v)}\``);
 
-    this.addField(embed, "Font", user.theme?.font, (v) => `\`${prettify(v)}\``);
-    this.addField(embed, "Boxes", user.theme?.boxes, (v) => `\`${prettify(v)}\``);
-    this.addField(embed, "Palette", user.theme?.palette, (v) => `\`${prettify(v)}\``);
-    this.addField(embed, "Footer Message", user.footer?.message);
+    addField(embed, "Font", user.theme?.font, (v) => `\`${prettify(v)}\``);
+    addField(embed, "Boxes", user.theme?.boxes, (v) => `\`${prettify(v)}\``);
+    addField(embed, "Palette", user.theme?.palette, (v) => `\`${prettify(v)}\``);
+    addField(embed, "Footer Message", user.footer?.message);
 
     const logos = Object.entries(UserLogo);
 
-    this.addField(
+    addField(
       embed,
       "Footer Icon",
       user.footer?.icon,
@@ -87,15 +87,15 @@ export class UserCommand {
 
     return [await this.apiService.getUser(userId), userId];
   }
+}
 
-  private addField<T>(
-    embed: EmbedBuilder,
-    title: string,
-    value: T,
-    fmt: (value: T extends undefined ? never : T) => string = (v) => `\`${v}\``
-  ) {
-    if (value === undefined) return;
+function addField<T>(
+  embed: EmbedBuilder,
+  title: string,
+  value: T,
+  fmt: (value: T extends undefined ? never : T) => string = (v) => `\`${v}\``
+) {
+  if (value === undefined) return;
 
-    embed.field(title, fmt(value as any));
-  }
+  embed.field(title, fmt(value as any));
 }

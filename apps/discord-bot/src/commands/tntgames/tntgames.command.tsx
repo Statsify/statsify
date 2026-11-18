@@ -17,7 +17,7 @@ export class TNTGamesCommand extends BaseHypixelCommand<TNTGamesModes> {
     super(TNT_GAMES_MODES);
   }
 
-  public getProfile(base: BaseProfileProps, { mode }: ProfileData<TNTGamesModes>): JSX.Element {
+  public override getProfile(base: BaseProfileProps, { mode }: ProfileData<TNTGamesModes>): JSX.Element {
     return <TNTGamesProfile {...base} mode={mode} />;
   }
 }

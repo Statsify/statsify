@@ -158,10 +158,10 @@ export function getFormattedLevel(
   selectedScheme: string | undefined,
   selectedEmblem: string | undefined
 ) {
-  selectedScheme ??= DEFAULT_SCHEME;
-  selectedEmblem ??= DEFAULT_EMBLEM;
+  const schemeKey = selectedScheme ?? DEFAULT_SCHEME;
+  const emblemKey = selectedEmblem ?? DEFAULT_EMBLEM;
   // add a default in case hypixel adds a new scheme or emblem that isn't added to the schema yet
-  const schemeFormatter = SCHEME_MAP[selectedScheme.replace("scheme_", "")] ?? SCHEME_MAP[DEFAULT_SCHEME];
-  const emblem = EMBLEM_MAP[selectedEmblem.replace("emblem_", "")] ?? EMBLEM_MAP[DEFAULT_EMBLEM];
+  const schemeFormatter = SCHEME_MAP[schemeKey.replace("scheme_", "")] ?? SCHEME_MAP[DEFAULT_SCHEME];
+  const emblem = EMBLEM_MAP[emblemKey.replace("emblem_", "")] ?? EMBLEM_MAP[DEFAULT_EMBLEM];
   return schemeFormatter(level, emblem);
 }

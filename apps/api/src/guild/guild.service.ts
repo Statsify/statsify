@@ -41,7 +41,7 @@ export class GuildService {
   ): Promise<Guild | null> {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
-    if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
+    if (cachedGuild && HypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
       return {
         ...deserialize(Guild, flatten(cachedGuild)),
         cached: true,
@@ -114,7 +114,7 @@ export class GuildService {
 
     // Get scaled gexp
    for (const [index, [day, exp]] of Object.entries(guildExpHistory).toSorted().toReversed().slice(0, 30).entries()) {
-      const scaled = this.scaleGexp(exp);
+      const scaled = scaleGexp(exp);
     
       guild.expHistory[index] = exp;
       guild.expHistoryDays[index] = day;
@@ -154,10 +154,10 @@ export class GuildService {
     tag: string,
     type: GuildQuery
   ): Promise<[guild: Guild | null, tag: string, displayName?: string]> {
-    tag = tag.toLowerCase();
+    const lowerTag = tag.toLowerCase();
 
     if (type === GuildQuery.PLAYER) {
-      const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, {
+      const player = await this.playerService.get(lowerTag, CacheLevel.CACHE_ONLY, {
         uuid: true,
         displayName: true,
         guildId: true,
@@ -180,11 +180,11 @@ export class GuildService {
     const guild = (await this.guildModel
       .findOne()
       .where(type === GuildQuery.ID ? "id" : "nameToLower")
-      .equals(tag)
+      .equals(lowerTag)
       .lean()
       .exec()) as Guild;
 
-    return [guild, tag];
+    return [guild, lowerTag];
   }
 
   private async handleGuildNotFound(
@@ -245,10 +245,10 @@ export class GuildService {
       member.expiresAt = Date.now() + 600_000;
     }
   }
+}
 
-  private scaleGexp(exp: number) {
-    if (exp <= 200_000) return exp;
-    if (exp <= 700_000) return (exp - 200_000) / 10 + 200_000;
-    return Math.round((exp - 700_000) / 33 + 250_000);
-  }
+function scaleGexp(exp: number) {
+  if (exp <= 200_000) return exp;
+  if (exp <= 700_000) return (exp - 200_000) / 10 + 200_000;
+  return Math.round((exp - 700_000) / 33 + 250_000);
 }

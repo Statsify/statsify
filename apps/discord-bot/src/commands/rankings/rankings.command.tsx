@@ -324,7 +324,7 @@ export class RankingsCommand {
         (t) => t("errors.noRankings.title"),
         (t) =>
           t("errors.noRankings.description", {
-            displayName: this.apiService.emojiDisplayName(t, player.displayName),
+            displayName: ApiService.emojiDisplayName(t, player.displayName),
           })
       );
 

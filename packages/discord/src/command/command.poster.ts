@@ -41,7 +41,7 @@ export class CommandPoster {
 
   public async delete(id: string, applicationId: string, guildId?: string) {
     const response = await this.rest.delete(
-      `/applications/${applicationId}/${this.getGuildRoute(guildId)}/commands/${id}`
+      `/applications/${applicationId}/${getGuildRoute(guildId)}/commands/${id}`
     );
 
     parseDiscordResponse(response);
@@ -54,13 +54,13 @@ export class CommandPoster {
   ): Promise<APIApplicationCommand[] | null> {
     const commandsToPost = [...commands.values()];
 
-    if (!(await this.shouldPost(commands, guildId))) {
+    if (!(await shouldPost(commands, guildId))) {
       this.logger.log("No changes to commands, skipping");
       return null;
     }
 
     const response = await this.rest.put(
-      `/applications/${applicationId}/${this.getGuildRoute(guildId)}/commands`,
+      `/applications/${applicationId}/${getGuildRoute(guildId)}/commands`,
       commandsToPost
     );
 
@@ -94,31 +94,31 @@ export class CommandPoster {
     guildId?: string
   ): Promise<APIApplicationCommand> {
     const response = await this.rest.post(
-      `/applications/${applicationId}/${this.getGuildRoute(guildId)}/commands/`,
+      `/applications/${applicationId}/${getGuildRoute(guildId)}/commands/`,
       command.toJSON()
     );
 
     return parseDiscordResponse(response);
   }
+}
 
-  private async shouldPost(commands: Map<string, CommandResolvable>, guildId?: string) {
-    const file = await readFile("./commands.json", "utf8").catch(() => null);
+async function shouldPost(commands: Map<string, CommandResolvable>, guildId?: string) {
+  const file = await readFile("./commands.json", "utf8").catch(() => null);
 
-    if (!file) return true;
+  if (!file) return true;
 
-    const parsed = JSON.parse(file);
+  const parsed = JSON.parse(file);
 
-    if (parsed.guildId !== guildId) return true;
+  if (parsed.guildId !== guildId) return true;
 
-    for (const [key, value] of commands) {
-      if (!parsed.commands[key]) return true;
-      if (!value.equals(parsed.commands[key])) return true;
-    }
-
-    return false;
+  for (const [key, value] of commands) {
+    if (!parsed.commands[key]) return true;
+    if (!value.equals(parsed.commands[key])) return true;
   }
 
-  private getGuildRoute(guildId?: string) {
-    return guildId ? `guilds/${guildId}` : "";
-  }
+  return false;
+}
+
+function getGuildRoute(guildId?: string) {
+  return guildId ? `guilds/${guildId}` : "";
 }

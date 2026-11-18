@@ -199,7 +199,7 @@ export class RatiosCommand {
 
     if (!key) throw new Error("Add mode to MODES_TO_API");
 
-    const ratiosPerMode = this.getRatiosPerMode(key, modes);
+    const ratiosPerMode = getRatiosPerMode(key, modes);
 
     const allModes = ratiosPerMode.map(([mode]) => mode);
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
@@ -210,7 +210,7 @@ export class RatiosCommand {
         const background = await getBackground(...mapBackground(modes, mode.api));
 
         const game = player.stats[key];
-        const stats = this.getModeStats(game, mode);
+        const stats = getModeStats(game, mode);
 
         const ratios = ratiosPerMode[index][1];
 
@@ -244,64 +244,64 @@ export class RatiosCommand {
 
     return paginate(context, pages);
   }
+}
 
-  private getModeStats(game: PlayerStats[keyof PlayerStats], mode: GameModeWithSubModes<any>) {
-    if (mode.submodes.length > 0) {
-      const modeStats = game[mode.api as keyof typeof game];
-      return modeStats[mode.submodes[0].api as keyof typeof game] ?? modeStats;
-    }
+function getRatiosPerMode<T extends GamesWithBackgrounds>(
+  key: keyof PlayerStats,
+  modes: GameModes<T>
+) {
+  const gameClass = Reflect.getMetadata("design:type", PlayerStats.prototype, key);
 
-    const stats = game[mode.api as keyof typeof game];
-    return mode.api === "overall" ? stats || game : stats;
+  const ratioModes: [mode: GameModeWithSubModes<T>, ratios: Ratio[]][] = [];
+  const gameModes = modes.getModes();
+
+  for (const mode of gameModes) {
+    if (!mode.api) continue;
+
+    const modeClass = getModeClass(mode, gameClass);
+    if (!modeClass) continue;
+
+    const ratios = LEADERBOARD_RATIOS.filter(([numerator, denominator]) => {
+      const numeratorType = Reflect.getMetadata(
+        "design:type",
+        modeClass.prototype,
+        numerator
+      );
+
+      const denominatorType = Reflect.getMetadata(
+        "design:type",
+        modeClass.prototype,
+        denominator
+      );
+
+      return numeratorType === Number && denominatorType === Number;
+    });
+
+    if (ratios.length === 0) continue;
+
+    ratioModes.push([mode, ratios]);
   }
 
-  private getRatiosPerMode<T extends GamesWithBackgrounds>(
-    key: keyof PlayerStats,
-    modes: GameModes<T>
-  ) {
-    const gameClass = Reflect.getMetadata("design:type", PlayerStats.prototype, key);
+  return ratioModes;
+}
 
-    const ratioModes: [mode: GameModeWithSubModes<T>, ratios: Ratio[]][] = [];
-    const gameModes = modes.getModes();
-
-    for (const mode of gameModes) {
-      if (!mode.api) continue;
-
-      const modeClass = this.getModeClass(mode, gameClass);
-      if (!modeClass) continue;
-
-      const ratios = LEADERBOARD_RATIOS.filter(([numerator, denominator]) => {
-        const numeratorType = Reflect.getMetadata(
-          "design:type",
-          modeClass.prototype,
-          numerator
-        );
-
-        const denominatorType = Reflect.getMetadata(
-          "design:type",
-          modeClass.prototype,
-          denominator
-        );
-
-        return numeratorType === Number && denominatorType === Number;
-      });
-
-      if (ratios.length === 0) continue;
-
-      ratioModes.push([mode, ratios]);
-    }
-
-    return ratioModes;
+function getModeStats(game: PlayerStats[keyof PlayerStats], mode: GameModeWithSubModes<any>) {
+  if (mode.submodes.length > 0) {
+    const modeStats = game[mode.api as keyof typeof game];
+    return modeStats[mode.submodes[0].api as keyof typeof game] ?? modeStats;
   }
 
-  private getModeClass<T extends GamesWithBackgrounds>(mode: GameModeWithSubModes<T>, gameClass: Constructor<any>) {
-    const apiType = Reflect.getMetadata("design:type", gameClass.prototype, mode.api);
-    const modeType = mode.api === "overall" ? apiType || gameClass : apiType;
+  const stats = game[mode.api as keyof typeof game];
+  return mode.api === "overall" ? stats || game : stats;
+}
 
-    if (mode.submodes.length === 0) return modeType;
+function getModeClass<T extends GamesWithBackgrounds>(mode: GameModeWithSubModes<T>, gameClass: Constructor<any>) {
+  const apiType = Reflect.getMetadata("design:type", gameClass.prototype, mode.api);
+  const modeType = mode.api === "overall" ? apiType || gameClass : apiType;
 
-    const submode = mode.submodes[0].api;
-    const submodeType = Reflect.getMetadata("design:type", modeType.prototype, submode);
-    return submodeType ?? modeType;
-  }
+  if (mode.submodes.length === 0) return modeType;
+
+  const submode = mode.submodes[0].api;
+  const submodeType = Reflect.getMetadata("design:type", modeType.prototype, submode);
+  return submodeType ?? modeType;
 }

@@ -60,6 +60,7 @@
       },
     ],
     "typescript/no-unsafe-function-type": "error",
+    "typescript/no-unsafe-declaration-merging": "error",
 
     // Eslint
     "no-unneeded-ternary": "error",
@@ -70,7 +71,8 @@
     "no-extend-native": "error",
     "no-var": "error",
     "no-proto": "error",
-    "no-param-reassign": "warn",
+    "no-unsafe-optional-chaining": "error",
+    "no-param-reassign": "error",
     "no-empty": "error",
     "no-useless-call": "error",
     "no-await-in-loop": "error",
@@ -84,13 +86,16 @@
     "no-promise-executor-return": "error",
     "no-prototype-builtins": "error",
     "no-useless-return": "error",
-    "no-warning-comments": "warn",
+    "no-warning-comments": "error",
     "no-unused-vars": [
       "error",
       { "fix": { "imports": "safe-fix", "variables": "safe-fix" } },
     ],
     "eqeqeq": "error",
-    "class-methods-use-this": "warn",
+    "class-methods-use-this": [
+      "error",
+      { "ignoreOverrideMethods": true, "exceptMethods": ["run", "init", "intercept"] },
+    ],
     "symbol-description": "error",
 
     // Unicorn

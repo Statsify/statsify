@@ -32,49 +32,49 @@ export class SocialsCommand {
     const head = await minecraftHeadAttachment(this.apiService, uuid);
 
     const embed = new EmbedBuilder()
-      .title((t) => this.apiService.emojiDisplayName(t, displayName))
+      .title((t) => ApiService.emojiDisplayName(t, displayName))
       .author("Player Socials")
       .thumbnail(`attachment://${head.name}`)
       .color(STATUS_COLORS.info)
       .field(
         (t) => `${t("emojis:socials.embed.discord")} Discord`,
-        this.formatSocial(socials.discord, false)
+        formatSocial(socials.discord, false)
       )
       .field(
         (t) => `${t("emojis:socials.embed.forums")} Forums`,
-        this.formatSocial(socials.forums)
+        formatSocial(socials.forums)
       )
       .field(
         (t) => `${t("emojis:socials.embed.instagram")} Instagram`,
-        this.formatSocial(socials.instagram)
+        formatSocial(socials.instagram)
       )
       .field(
         (t) => `${t("emojis:socials.embed.tiktok")} TikTok`,
-        this.formatSocial(socials.tiktok)
+        formatSocial(socials.tiktok)
       )
       .field(
         (t) => `${t("emojis:socials.embed.twitch")} Twitch`,
-        this.formatSocial(socials.twitch)
+        formatSocial(socials.twitch)
       )
       .field(
         (t) => `${t("emojis:socials.embed.twitter")} X`,
-        this.formatSocial(socials.twitter)
+        formatSocial(socials.twitter)
       )
       .field(
         (t) => `${t("emojis:socials.embed.youtube")} YouTube`,
-        this.formatSocial(socials.youtube)
+        formatSocial(socials.youtube)
       );
 
     return { embeds: [embed], files: [head] };
   }
+}
 
-  private formatSocial(social?: string, link = true) {
-    const url = link && social ? parseSocialLink(social) : undefined;
-    if (url) return `[\`Here\`](${url})`;
+function formatSocial(social?: string, link = true) {
+  const url = link && social ? parseSocialLink(social) : undefined;
+  if (url) return `[\`Here\`](${url})`;
 
-    const text = social?.replaceAll("`", "").trim();
-    return `\`${text || "N/A"}\``;
-  }
+  const text = social?.replaceAll("`", "").trim();
+  return `\`${text || "N/A"}\``;
 }
 
 /**

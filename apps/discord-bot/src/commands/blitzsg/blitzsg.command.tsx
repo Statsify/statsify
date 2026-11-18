@@ -21,14 +21,14 @@ export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
     super(BLITZSG_MODES);
   }
 
-  public filterModes(
+  public override filterModes(
     player: Player,
     modes: GameModeWithSubModes<BlitzSGModes>[]
   ): GameModeWithSubModes<BlitzSGModes>[] {
     return filterBlitzKits(player, modes);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<BlitzSGModes, never>
   ): JSX.Element {

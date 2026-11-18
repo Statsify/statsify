@@ -17,14 +17,14 @@ export class SkyWarsChallengesCommand extends BaseHypixelCommand<SkyWarsModes> {
     super(SKYWARS_MODES);
   }
 
-  public filterModes(
+  public override filterModes(
     player: Player,
     modes: GameModeWithSubModes<SkyWarsModes>[]
   ): GameModeWithSubModes<SkyWarsModes>[] {
     return [modes[0]];
   }
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
+  public override getProfile(base: BaseProfileProps): JSX.Element {
     return <SkyWarsChallengesProfile {...base} />;
   }
 }

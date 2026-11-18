@@ -42,15 +42,15 @@ export class QuakeMode {
   public quakeShotAccuracy: number;
 
   public constructor(data: APIData, mode: string) {
-    mode = mode ? `_${mode}` : mode;
+    const suffix = mode ? `_${mode}` : mode;
 
-    this.wins = data[`wins${mode}`];
-    this.kills = data[`kills${mode}`];
-    this.deaths = data[`deaths${mode}`];
-    this.headshots = data[`headshots${mode}`];
-    this.killstreaks = data[`killstreaks${mode}`];
-    this.shotsFired = data[`shots_fired${mode}`];
-    this.postUpdateKills = data[`kills_since_update_feb_2017${mode}`];
+    this.wins = data[`wins${suffix}`];
+    this.kills = data[`kills${suffix}`];
+    this.deaths = data[`deaths${suffix}`];
+    this.headshots = data[`headshots${suffix}`];
+    this.killstreaks = data[`killstreaks${suffix}`];
+    this.shotsFired = data[`shots_fired${suffix}`];
+    this.postUpdateKills = data[`kills_since_update_feb_2017${suffix}`];
     QuakeMode.applyRatios(this);
   }
 

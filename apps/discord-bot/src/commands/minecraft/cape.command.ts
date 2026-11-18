@@ -31,15 +31,15 @@ export class CapeCommand {
     );
 
     const capes = await Promise.all([
-      this.getOptifineCape(player.username),
-      this.getMojangCape(player),
+      getOptifineCape(player.username),
+      getMojangCape(player),
     ]);
 
     const pages = capes
       .filter((c) => !!c.image)
       .map((c) => ({
         label: c.label,
-        generator: () => this.renderCape(c.image as Image),
+        generator: () => renderCape(c.image as Image),
       }));
 
     if (pages.length === 0)
@@ -50,80 +50,80 @@ export class CapeCommand {
 
     return paginate(context, pages);
   }
+}
 
-  private async getOptifineCape(username: string) {
-    return {
-      label: "Optifine",
-      image: await loadImage(`http://s.optifine.net/capes/${username}.png`).catch(
-        () => null
-      ),
-    };
+async function getOptifineCape(username: string) {
+  return {
+    label: "Optifine",
+    image: await loadImage(`http://s.optifine.net/capes/${username}.png`).catch(
+      () => null
+    ),
+  };
+}
+
+async function getMojangCape(player: Skin) {
+  const image = player.capeUrl ?
+    await loadImage(player.capeUrl).catch(() => null) :
+    null;
+
+  return { label: "Mojang", image };
+}
+
+function renderCape(cape: Image) {
+  const canvas = createCanvas(636, 1024);
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+
+  let height: number;
+  let width: number;
+  let start: number;
+
+  switch (cape.width) {
+    case 92:
+      height = 32;
+      width = 20;
+      start = 2;
+      break;
+
+    case 184:
+      height = 64;
+      width = 40;
+      start = 4;
+      break;
+
+    case 1024:
+      height = 256;
+      width = 160;
+      start = 16;
+      break;
+
+    case 2048:
+      height = 512;
+      width = 318;
+      start = 12;
+      break;
+
+    default:
+    case 46:
+      height = 16;
+      width = 10;
+      start = 1;
+      break;
   }
 
-  private async getMojangCape(player: Skin) {
-    const image = player.capeUrl ?
-      await loadImage(player.capeUrl).catch(() => null) :
-      null;
+  const ratio = Math.round(Math.min(canvas.width / width, canvas.height / height));
 
-    return { label: "Mojang", image };
-  }
+  ctx.drawImage(
+    cape,
+    start,
+    start,
+    cape.width,
+    cape.height,
+    0,
+    0,
+    cape.width * ratio,
+    cape.height * ratio
+  );
 
-  private renderCape(cape: Image) {
-    const canvas = createCanvas(636, 1024);
-    const ctx = canvas.getContext("2d");
-    ctx.imageSmoothingEnabled = false;
-
-    let height: number;
-    let width: number;
-    let start: number;
-
-    switch (cape.width) {
-      case 92:
-        height = 32;
-        width = 20;
-        start = 2;
-        break;
-
-      case 184:
-        height = 64;
-        width = 40;
-        start = 4;
-        break;
-
-      case 1024:
-        height = 256;
-        width = 160;
-        start = 16;
-        break;
-
-      case 2048:
-        height = 512;
-        width = 318;
-        start = 12;
-        break;
-
-      default:
-      case 46:
-        height = 16;
-        width = 10;
-        start = 1;
-        break;
-    }
-
-    const ratio = Math.round(Math.min(canvas.width / width, canvas.height / height));
-
-    ctx.drawImage(
-      cape,
-      start,
-      start,
-      cape.width,
-      cape.height,
-      0,
-      0,
-      cape.width * ratio,
-      cape.height * ratio
-    );
-
-    return canvas;
-  }
+  return canvas;
 }
