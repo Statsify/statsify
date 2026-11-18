@@ -90,8 +90,11 @@ export interface RawMember {
     experience?: Record<string, number>;
     perks?: Record<string, number> & { fairies_refund_processed?: boolean };
     reaper_peppers_eaten?: number;
+    crafted_generators?: string[]; // "WHEAT_11": each minion tier crafted
   };
   collection?: Record<string, number>;
+  attributes?: { stacks?: Record<string, number> }; // Hunting shards syphoned, by attribute
+  shards?: { owned?: { type: string; amount_owned?: number }[] }; // Hunting shards held, by shard
   inventory?: {
     inv_contents?: RawNbt;
     inv_armor?: RawNbt;
@@ -110,6 +113,22 @@ export interface RawMember {
     armor?: Record<`${number}`, Partial<Record<"HELMET" | "CHESTPLATE" | "LEGGINGS" | "BOOTS", RawNbt>> & { id?: number }> & {
       equipped_set?: number;
     };
+    equipment?: Record<`${number}`, Partial<Record<`EQUIPMENT_SLOT_${1 | 2 | 3 | 4}`, RawNbt>> & { id?: number }> & {
+      equipped_set?: number;
+    };
+    // Saved loadouts, by id: a wardrobe set, an equipment set, a pet (its uniqueId, not its uuid), a Power and a tuning slot
+    loadouts?: Record<
+      string,
+      {
+        id: number;
+        name: string;
+        armor_set_id?: number;
+        equipment_set_id?: number;
+        pet?: string;
+        power_stone?: string;
+        tuning_points_slot?: number;
+      }
+    >;
   };
   garden_player_data?: { copper?: number; discovered_greenhouse_crops?: string[]; analyzed_greenhouse_crops?: string[] };
   jacobs_contest?: {
@@ -192,6 +211,7 @@ export interface RawProfile {
   selected?: boolean;
   game_mode?: string;
   banking?: { balance?: number };
+  community_upgrades?: { upgrade_states?: { upgrade: string; tier: number }[] }; // one entry per tier bought
   members: Record<string, RawMember>;
 }
 
@@ -249,4 +269,19 @@ export interface RawBazaar {
       quick_status: { sellPrice: number; sellMovingWeek: number; buyPrice: number; buyMovingWeek: number };
     }
   >;
+}
+
+interface RawPerk {
+  name: string;
+  description: string;
+}
+
+/** /v2/resources/skyblock/election (keyless), with only what the mayor's view reads. */
+export interface RawElection {
+  mayor: {
+    election: { year: number };
+    name: string;
+    perks: RawPerk[];
+    minister?: { name: string; perk: RawPerk };
+  };
 }

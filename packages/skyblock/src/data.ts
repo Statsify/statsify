@@ -7,8 +7,11 @@
  */
 
 // Typed views of the data scripts/sync-data.ts writes to src/generated/: NEU-REPO's (MIT, see src/generated/NOTICE.md),
-// plus the skill tables and max levels from Hypixel's skills resource.
+// plus the skill tables and max levels from Hypixel's skills resource and the tiers from its collections resource.
 import accessories from "./generated/accessories.json" with { type: "json" };
+import attributeShards from "./generated/attribute-shards.json" with { type: "json" };
+import bestiary from "./generated/bestiary.json" with { type: "json" };
+import collections from "./generated/collections.json" with { type: "json" };
 import essenceShops from "./generated/essenceshops.json" with { type: "json" };
 import garden from "./generated/garden.json" with { type: "json" };
 import hoppity from "./generated/hoppity.json" with { type: "json" };
@@ -22,7 +25,6 @@ import petTextures from "./generated/pet-textures.json" with { type: "json" };
 import pets from "./generated/pets.json" with { type: "json" };
 import powers from "./generated/powers.json" with { type: "json" };
 import sblevels from "./generated/sblevels.json" with { type: "json" };
-import seaCreatures from "./generated/sea-creatures.json" with { type: "json" };
 import stats from "./generated/stats.json" with { type: "json" };
 import trophyFish from "./generated/trophyfish.json" with { type: "json" };
 import type { PlayerStat, PowerStat, Rarity, Skill, TreeLayout } from "#types";
@@ -86,8 +88,52 @@ export const KUUDRA_KEYS = kuudraKeys as Record<string, string>;
 /** Trophy fish id, as the API spells it but uppercased → name. */
 export const TROPHY_FISH = trophyFish as Record<string, string>;
 
-/** Every sea creature, with its bestiary kill ids (one per level it spawns at). */
-export const SEA_CREATURES = seaCreatures as { name: string; ids: string[] }[];
+/** A bestiary family: its kill ids (one per level it spawns at), the kills past which none count, and its bracket. */
+export interface BestiaryFamily {
+  name: string;
+  ids: string[];
+  cap: number;
+  bracket: string;
+}
+
+/** Each bracket's kills per tier, and every bestiary page; the Fishing and Critter Safari pages are subpages. */
+export const BESTIARY = bestiary as {
+  brackets: Record<string, number[]>;
+  pages: { category?: string; name: string; families: BestiaryFamily[] }[];
+};
+
+// The sea creatures NEU files under their island's page (the wiki's list of sea creatures, an owner exception, unverified)
+const ISLAND_SEA_CREATURES: Record<string, string[]> = {
+  "Lotus Atoll": ["Atoll Croaker", "Drowned Captain", "Frog Prince", "Lotus Guardian", "Puddle Jumper", "gorF"],
+  "Moonglade Marsh": ["Bogged", "Ent", "Nessie", "Stridersurfer", "Tadgang", "The Loch Emperor", "Wetwing"],
+  "Torrhus Canyon": ["Brineling", "Giant Isopod", "Haggard", "Silkbreeze", "Sprawl", "Torrid"],
+};
+
+/** Every sea creature: the Fishing category's families and the islands' ones. */
+export const SEA_CREATURES = BESTIARY.pages.flatMap(({ name, category, families }) =>
+  category === "Fishing" ? families : families.filter((family) => ISLAND_SEA_CREATURES[name]?.includes(family.name))
+);
+
+/** Hypixel's collections by category, each item's tiers as the amount each needs, in the resource's order. */
+export const COLLECTIONS = collections as { id: string; name: string; items: { id: string; name: string; tiers: number[] }[] }[];
+
+/**
+ * Hunting's shards, each with the attribute it levels and, when level I grants stats outright, those stats; Chameleon's
+ * can't be consumed. An attribute's levels cost its rarity's `levels` in shards, one count per level.
+ */
+export const ATTRIBUTE_SHARDS = attributeShards as {
+  levels: Record<Rarity, number[]>;
+  shards: {
+    id: string;
+    name: string;
+    attribute: string;
+    attributeName: string;
+    rarity: Rarity;
+    grants?: { stat: PlayerStat; value: number }[];
+    families?: string[];
+    unconsumable?: boolean;
+  }[];
+};
 
 /** NEU's Garden tables, with the crop milestones by the API's crop id and each upgrade's level count. */
 export const GARDEN = garden as {

@@ -8,7 +8,7 @@
 
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { LevelBar } from "./components/LevelBar.js";
+import { LevelBar, type LevelBarProps, levelBarRows } from "./components/LevelBar.js";
 import { arrayGroup, formatTime, prettify } from "@statsify/util";
 import { gridRows } from "./components/ItemGrid.js";
 import { CLASS_COLORS, DUNGEON_CLASSES, GRADE_COLORS } from "@statsify/skyblock/display";
@@ -45,11 +45,11 @@ export const SkyBlockDungeonsProfile = ({
 
   if (mode === "normal") sidebar.push([t("skyblock.watcherKills"), t(dungeons.watcherKills), "§4"]);
 
-  const classes = DUNGEON_CLASSES.map((name) => {
+  const classes = DUNGEON_CLASSES.map((name): LevelBarProps => {
     const color = CLASS_COLORS[name];
     const damage = dungeons.mostDamage[mode][name];
-    const note = damage > 0 ? `§7${t("skyblock.mostDamage")}: ${color}${t(Math.floor(damage))}` : undefined;
-    return <LevelBar title={prettify(name)} level={dungeons.classes[name]} color={color} t={t} note={note} />;
+    const notes = damage > 0 ? [`§7${t("skyblock.mostDamage")}: ${color}${t(Math.floor(damage))}`] : [];
+    return { title: prettify(name), level: dungeons.classes[name], color, t, notes };
   });
 
   const time = (ms?: number) => (ms === undefined ? none : formatTime(ms));
@@ -77,7 +77,8 @@ export const SkyBlockDungeonsProfile = ({
           <Table.tr>
             <LevelBar title={t("skyblock.catacombs")} level={dungeons.catacombs} color="§c" t={t} />
           </Table.tr>,
-          <Table.tr>{classes}</Table.tr>,
+          // Five classes in one row set the card's width, so they wrap three and two
+          ...levelBarRows(classes, 3),
           ...(floors.length > 0 ?
             arrayGroup(floors, 4).map((row) => <Table.tr>{row}</Table.tr>) :
             [

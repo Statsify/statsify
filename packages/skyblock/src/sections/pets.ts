@@ -60,6 +60,7 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
 
   return {
     uuid: pet.uuid ?? undefined,
+    uniqueId: pet.uniqueId ?? undefined,
     type: pet.type,
     name: petName(pet.type),
     rarity,

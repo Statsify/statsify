@@ -37,7 +37,7 @@ import {
 import { Singleflight } from "./singleflight.js";
 import { SkyBlockLeaderboardService } from "./leaderboards/skyblock-leaderboard.service.js";
 import { SkyBlockGarden, SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
-import { SkyBlockPricesService } from "./skyblock-prices.service.js";
+import { SKYBLOCK_FAILED_FOR, SkyBlockPricesService } from "./skyblock-prices.service.js";
 import { unzip, zip } from "./zip.js";
 import type {
   MemberView,
@@ -56,11 +56,9 @@ import type { SkyBlockStatsRow } from "@statsify/schemas";
 /** How long a stored copy is new enough that a lookup at `CACHE` doesn't fetch it again. */
 export const SKYBLOCK_FRESH_FOR = 300_000;
 const LIVE_FLOOR = 60_000;
-/** How long a failed refetch serves the stored copy before Hypixel is tried again. */
-export const SKYBLOCK_FAILED_FOR = 60_000;
 const SECTION_SECONDS = 300;
 // Bump it when a section's shape changes, so a deploy never serves a section that older code cached
-const SECTION_VERSION = 4;
+const SECTION_VERSION = 5;
 const MAX_DOCUMENT = 15 * 1024 * 1024;
 
 const DEFINITIONS = { ...SECTIONS, networth: NETWORTH } satisfies Record<SkyBlockSection, { needs: readonly SectionNeed[] }>;

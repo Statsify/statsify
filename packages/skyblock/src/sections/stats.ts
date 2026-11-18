@@ -23,9 +23,10 @@ import {
   type TreeLayout,
   type TreeNode,
 } from "#types";
-import { HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
+import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
 import { add, roundTo } from "@statsify/math";
-import { bagAccessories, heldAccessories, highestTiers, powerScale, stonePowerStats } from "./accessories.js";
+import { attributeLevel } from "./attributes.js";
+import { TUNING, bagAccessories, heldAccessories, highestTiers, powerScale, stonePowerStats } from "./accessories.js";
 import { decodeSlots } from "#items";
 import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
@@ -92,18 +93,6 @@ function powerStats(power: string | undefined, accessoryPower: number): Stats | 
   const learned = power ? LEARNED_POWERS[power] : undefined;
   return learned && scaleStats(learned, powerScale(accessoryPower));
 }
-
-// What a tuning point gives, by the API's tuning keys (wiki: each stat's page)
-const TUNING: Record<string, [PlayerStat, number]> = {
-  health: ["health", 5],
-  defense: ["defense", 1],
-  walk_speed: ["speed", 1.5],
-  strength: ["strength", 1],
-  critical_damage: ["crit_damage", 1],
-  critical_chance: ["crit_chance", 0.2],
-  attack_speed: ["attack_speed", 0.3],
-  intelligence: ["intelligence", 2],
-};
 
 const tuningStats = (points: Record<string, number>): Stats =>
   sumStats(
@@ -233,8 +222,22 @@ const UNVERIFIED_PET_SCORE = 375;
 const petScoreMagicFind = (score: number) =>
   Math.max(0, ...Object.entries(PET_SCORE_STEPS).flatMap(([at, magicFind]) => (score >= Number(at) ? [magicFind] : [])));
 
-/** Each stat with a source, by source; rounded to two places, as lore shows them. */
-function toTotals(sources: Partial<Record<StatSource, Stats>>): StatTotal[] {
+type AttributeStat = { stat: PlayerStat; name: string; value: number };
+
+/**
+ * The Hunting attributes whose level I grants stats outright, at the wiki's scaling: level I's amounts times the level
+ * (unverified).
+ */
+function attributeStats(member: RawMember): AttributeStat[] {
+  return ATTRIBUTE_SHARDS.shards.flatMap((shard) => {
+    const { attributeName, grants = [] } = shard;
+    const level = grants.length > 0 ? attributeLevel(shard, member) : 0;
+    return level > 0 ? grants.map(({ stat, value }) => ({ stat, name: attributeName, value: value * level })) : [];
+  });
+}
+
+/** Each stat with a source, by source and by attribute; rounded to two places, as lore shows them. */
+function toTotals(sources: Partial<Record<StatSource, Stats>>, attributes: AttributeStat[]): StatTotal[] {
   return PLAYER_STATS.flatMap(({ id: stat }) => {
     const bySource = Object.fromEntries(
       STAT_SOURCES.flatMap((source) => {
@@ -242,8 +245,10 @@ function toTotals(sources: Partial<Record<StatSource, Stats>>): StatTotal[] {
         return value === 0 ? [] : [[source, value]];
       })
     );
-    const values = Object.values(bySource);
-    return values.length === 0 ? [] : [{ stat, total: roundTo(add(...values)), bySource }];
+    const byAttribute = Object.fromEntries(attributes.filter((attribute) => attribute.stat === stat).map(({ name, value }) => [name, roundTo(value)]));
+    const values = [...Object.values(bySource), ...Object.values(byAttribute)];
+    if (values.length === 0) return [];
+    return [{ stat, total: roundTo(add(...values)), bySource, ...(Object.keys(byAttribute).length > 0 && { byAttribute }) }];
   });
 }
 
@@ -324,6 +329,8 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   if (level > 0) unverified.push("level");
   if (peppers > 0) unverified.push("peppers");
   if (Object.values(fortuneUpgrades).some((value) => value > 0)) unverified.push("fortuneUpgrades");
+  const attributes = attributeStats(member);
+  if (attributes.length > 0) unverified.push("attributes");
 
-  return { stats: toTotals(sources), weapon: weapon?.name, unverified };
+  return { stats: toTotals(sources, attributes), weapon: weapon?.name, unverified };
 }

@@ -17,7 +17,7 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const MISSING_SHOWN = 12;
 const INACTIVE_SHOWN = 12;
-const MAX_POWER_STATS_PER_LINE = 5; // more is wider than the card
+const MAX_POWER_STATS_PER_LINE = 3; // more is wider than the card
 
 const topMissing = ({ accessories }: MemberView) => accessories?.missing.slice(0, MISSING_SHOWN) ?? [];
 const baseName = ({ name, reforge }: InactiveAccessory) => {
@@ -118,7 +118,11 @@ export const SkyBlockAccessoriesProfile = ({
     );
   }
 
-  const missing = topMissing(profile.member).map(
+  const shown = topMissing(profile.member);
+  // A price or the outside-bag note beside the name widens the card, so those values go under it
+  const stacked = accessories.market || shown.some(({ outsideBag }) => outsideBag);
+
+  const missing = shown.map(
     ({ name, rarity, accessoryPower, outsideBag, cost, coinsPerAccessoryPower, texture }) => {
       const ap = t(accessoryPower);
       const price =
@@ -150,7 +154,7 @@ export const SkyBlockAccessoriesProfile = ({
             <box width="100%">
               <text>{`§l${t(accessories.market ? "skyblock.cheapestAccessoryPower" : "skyblock.mostAccessoryPower")}`}</text>
             </box>
-            <ItemGrid items={missing} icons={icons} />
+            <ItemGrid items={missing} icons={icons} stacked={stacked} />
           </>
         ) :
         (

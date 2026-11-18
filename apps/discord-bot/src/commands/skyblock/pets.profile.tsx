@@ -55,7 +55,7 @@ export const SkyBlockPetsProfile = ({
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
       {items.length > 0 ?
-        <ItemGrid items={items} icons={icons} columns={3} /> :
+        <ItemGrid items={items} icons={icons} columns={3} stacked /> :
         <Empty text={t("skyblock.noPets")} />}
       <Footer logo={logo} user={user} />
     </Container>

@@ -71,8 +71,8 @@ export const SkyBlockChocolateProfile = ({
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
       <Table.table>
-        <Table.ts title={`§a${t("skyblock.rabbits")}`}>{gridRows(rabbits, COLUMNS)}</Table.ts>
-        <Table.ts title={`§a${t("skyblock.employees")}`}>{gridRows(employees, COLUMNS)}</Table.ts>
+        <Table.ts title={`§a${t("skyblock.rabbits")}`}>{gridRows(rabbits, COLUMNS, true)}</Table.ts>
+        <Table.ts title={`§a${t("skyblock.employees")}`}>{gridRows(employees, COLUMNS, true)}</Table.ts>
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>

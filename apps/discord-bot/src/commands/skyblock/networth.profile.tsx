@@ -55,6 +55,7 @@ export const SkyBlockNetworthProfile = ({
       />
     ));
 
+  // Laid out two to a row: three long names like Carnival Mask Inventory in one row set the card's width
   const cells = [
     <Table.td title={t("stats.coins")} value={t(Math.floor(networth.coins))} color="§6" size="inline" />,
     ...categories,
@@ -73,11 +74,11 @@ export const SkyBlockNetworthProfile = ({
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
       <Table.table>
-        {arrayGroup(cells, 3).map((row) => (
+        {arrayGroup(cells, 2).map((row) => (
           <Table.tr>{row}</Table.tr>
         ))}
       </Table.table>
-      {items.length > 0 ? <ItemGrid items={items} icons={icons} /> : <></>}
+      {items.length > 0 ? <ItemGrid items={items} icons={icons} stacked /> : <></>}
       <box width="100%">
         <text>{`§7${unpriced}${pricesAsOf(t, networth.pricesAsOf)}`}</text>
       </box>
