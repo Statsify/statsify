@@ -1,17 +1,17 @@
 {
   "collections": {
     "url": "https://api.hypixel.net/v2/resources/skyblock/collections",
-    "version": "0.27.2.25"
+    "version": "0.27.3.2"
   },
   "minecraftData": {
     "repo": "https://github.com/PrismarineJS/minecraft-data",
     "sha": "15411f050f040e4c5df09352a75a9912ad8c3eeb"
   },
   "repo": "https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO",
-  "sha": "5a5e9866a8578c8a36891acc508fc1e46e41eb31",
+  "sha": "16435f41b927b60943773454b8d52ec3d85ac6e7",
   "skills": {
     "url": "https://api.hypixel.net/v2/resources/skyblock/skills",
-    "version": "0.27.2.25"
+    "version": "0.27.3.3"
   },
-  "syncedAt": "2026-11-08T02:13:34.930Z"
+  "syncedAt": "2026-11-18T23:04:43.729Z"
 }

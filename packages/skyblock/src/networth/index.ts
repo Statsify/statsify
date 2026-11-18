@@ -14,7 +14,7 @@ import {
   parseItems,
   setItems,
 } from "skyhelper-networth";
-import { PET_STATS } from "#data";
+import { ESSENCE_TEXTURES, PET_STATS } from "#data";
 import { RARITIES } from "#types";
 import { boostedRarity, petName, petScorePoints, petTexture } from "../sections/pets.js";
 import { decodeAttributes, decodeInventory } from "#nbt";
@@ -48,9 +48,6 @@ type Priced = Omit<Item, "item"> & { item?: RawItem; petData?: RawPet };
 
 type Parsed = RawItem | RawPet | { id: string; amount: number };
 
-/** Wither Essence's head, which every essence type draws. */
-const ESSENCE_HEAD = "c4db4adfa9bf48ff5d41707ae34ea78bd2371659fcd8cd8934749af4cce9b";
-
 let networthPrices: { asOf: number; prices: Record<string, number> } | undefined;
 
 /** The plain key → coins map the networth library takes, built once per map. */
@@ -69,7 +66,7 @@ function pricedTexture({ id, item, petData }: Priced, items: ItemsResource): Ite
   if (petData) return petTexture(petData.type, boostedRarity(petData), petData.skin, items);
 
   // Essence and runes of one tier (RUNE_LIGHTNING_1) have no items-resource id.
-  if (id.startsWith("ESSENCE_")) return { kind: "head", skin: ESSENCE_HEAD };
+  if (Object.hasOwn(ESSENCE_TEXTURES, id)) return { kind: "head", skin: ESSENCE_TEXTURES[id] };
   const resource = items.items[id] ?? (id.startsWith("RUNE_") ? items.items.RUNE : undefined);
   return resource && resourceTexture(resource);
 }

@@ -180,6 +180,7 @@ export const SKYBLOCK_CARDS = {
     settings: [],
     profile: [
       { label: (t) => t("skyblock.trophyFish"), profile: (props) => <SkyBlockFishingProfile {...props} page="trophyFish" /> },
+      { label: (t) => t("skyblock.trophyFrogs"), profile: (props) => <SkyBlockFishingProfile {...props} page="trophyFrogs" /> },
       { label: (t) => t("skyblock.seaCreatures"), profile: (props) => <SkyBlockFishingProfile {...props} page="seaCreatures" /> },
     ],
   },

@@ -7,6 +7,7 @@
  */
 
 import { PETS, PET_TEXTURES } from "#data";
+import { RARITY_COLORS } from "../display.js";
 import { RARITIES, type ItemTexture, type ItemsResource, type Level, type PetView, type PetsSection, type Rarity } from "#types";
 import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
@@ -57,6 +58,7 @@ export function petTexture(type: string, rarity: Rarity, skin?: string | null, i
 function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
   const rarity = boostedRarity(pet);
   const heldResource = pet.heldItem ? items?.items[pet.heldItem] : undefined;
+  const skinTier = pet.skin ? items?.items[`PET_SKIN_${pet.skin}`]?.tier : undefined;
 
   return {
     uuid: pet.uuid ?? undefined,
@@ -68,6 +70,7 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
     heldItem: pet.heldItem ?? undefined,
     heldItemTexture: heldResource && resourceTexture(heldResource),
     skin: pet.skin ?? undefined,
+    skinColor: pet.skin ? (PET_TEXTURES.skinColors[pet.skin] ?? (skinTier && RARITY_COLORS[skinTier])) : undefined,
     candyUsed: pet.candyUsed ?? 0,
     active: pet.active,
     texture: petTexture(pet.type, rarity, pet.skin, items),
