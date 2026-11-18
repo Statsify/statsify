@@ -48,6 +48,7 @@ export const LeaderboardQuery = {
   PAGE: "page",
   INPUT: "input",
   POSITION: "position",
+  VALUE: "value",
 } as const;
 
 export type LeaderboardQuery = (typeof LeaderboardQuery)[keyof typeof LeaderboardQuery];

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, findScoreIndex, formatTime } from "@statsify/util";
+import { type APIData, findScoreIndex, formatTime, parseTime } from "@statsify/util";
 import { Field } from "#metadata";
 import { add, ratio, sub } from "@statsify/math";
 
@@ -45,7 +45,7 @@ export class BlitzSGKit {
 
   @Field({
     store: { required: false },
-    leaderboard: { formatter: formatTime },
+    leaderboard: { formatter: formatTime, parser: parseTime },
     historical: { enabled: false },
   })
   public playtime: number;

@@ -105,6 +105,8 @@ export const getLeaderboardMetadata = (
       limit:
         leaderboardOptions?.limit ?? getDefaultLeaderboardLimit(propertyKey),
       resetEvery: leaderboardOptions?.resetEvery,
+      parser: leaderboardOptions?.parser,
+      searchBy: leaderboardOptions?.searchBy,
     };
   }
 

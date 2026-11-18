@@ -11,6 +11,7 @@ import { Guild, getLeaderboardFields } from "@statsify/schemas";
 import {
   IsEnum,
   IsInt,
+  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
@@ -38,6 +39,12 @@ export class GuildLeaderboardDto {
   @Min(1)
   @ApiProperty({ minimum: 1, type: () => Number, required: false })
   public position?: number;
+
+  @Transform((params) => +params.value)
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty({ type: () => Number, required: false })
+  public value?: number;
 
   @IsOptional()
   @IsString()

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatRaceTime, formatTime } from "@statsify/util";
+import { type APIData, formatRaceTime, formatTime, parseTime } from "@statsify/util";
 import {
   EasterSimulator,
   GrinchSimulator,
@@ -415,7 +415,7 @@ export class Disasters {
   @Field()
   public wlr: number;
 
-  @Field({ leaderboard: { formatter: formatTime } })
+  @Field({ leaderboard: { formatter: formatTime, parser: parseTime } })
   public playtime: number;
 
   @Field({ leaderboard: { name: "" } })
@@ -460,7 +460,7 @@ export class DropperMap {
   @Field()
   public completions: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatRaceTime, parser: parseTime, sort: "ASC" } })
   public bestTime: number;
 
   public constructor(map: APIData = {}) {
@@ -733,7 +733,7 @@ export class Dropper {
   @Field()
   public flawlessGames: number;
 
-  @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatTime, parser: parseTime, sort: "ASC" } })
   public bestTime: number;
 
   @Field({ leaderboard: { name: "Maps:" } })
@@ -1147,32 +1147,32 @@ export class PartyGames {
   public workshopWins: number;
 
   // The goal of anvil spleef is to live the longest not the shortest so we sort in descending order
-  @Field({ leaderboard: { formatter: formatRaceTime } })
+  @Field({ leaderboard: { formatter: formatRaceTime, parser: parseTime } })
   public anvilSpleefBestTime: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatRaceTime, parser: parseTime, sort: "ASC" } })
   public labEscapeBestTime: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatRaceTime, parser: parseTime, sort: "ASC" } })
   public jigsawRushBestTime: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatRaceTime, parser: parseTime, sort: "ASC" } })
   public theFloorIsLavaBestTime: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatRaceTime, parser: parseTime, sort: "ASC" } })
   public chickenRingsBestTime: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatRaceTime, parser: parseTime, sort: "ASC" } })
   public jungleJumpBestTime: number;
 
   // The goal of bombardment is to live the longest not the shortest so we sort in descending order
-  @Field({ leaderboard: { formatter: formatRaceTime } })
+  @Field({ leaderboard: { formatter: formatRaceTime, parser: parseTime } })
   public bombardmentBestTime: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatRaceTime, parser: parseTime, sort: "ASC" } })
   public minecartRacingBestTime: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatRaceTime, parser: parseTime, sort: "ASC" } })
   public spiderMazeBestTime: number;
 
   @Field()
@@ -1371,6 +1371,7 @@ export class ZombiesMapDifficulty {
     leaderboard: {
       sort: "ASC",
       formatter: formatTime,
+      parser: parseTime,
       additionalFields: ["this.wins"],
     },
     historical: { enabled: false },

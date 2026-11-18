@@ -183,6 +183,27 @@ export const relativeTime = (time: number) =>
 export const formatRaceTime = (timeMs: number) =>
   `${(timeMs / 1000).toFixed(3)}s`;
 
+const TIME_UNITS: Record<string, number> = {
+  ms: 1,
+  s: MS,
+  m: MS * SECONDS,
+  h: MS * SECONDS * MINUTES,
+  d: MS * SECONDS * MINUTES * HOURS,
+  mo: MS * SECONDS * MINUTES * HOURS * MONTHS,
+  y: MS * SECONDS * MINUTES * HOURS * MONTHS * YEARS,
+};
+
+// Reads formatTime or formatRaceTime output, or a time like 1:23.45, back into milliseconds
+export const parseTime = (input: string) => {
+  const units = [...input.matchAll(/(\d*\.?\d+)\s*(mo|ms|[ydhms])/g)];
+
+  const time = units.length > 0 ?
+    units.reduce((total, [, number, unit]) => total + Number(number) * TIME_UNITS[unit], 0) :
+    input.split(":").reduce((total, part) => total * 60 + Number(part), 0) * MS;
+
+  return Math.round(time);
+};
+
 export const formatRecordTime = (timeMs: number) =>
   timeMs ? formatTime(timeMs) : "N/A";
 
