@@ -16,7 +16,13 @@ import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getAssetPath, getMinecraftTexturePath } from "@statsify/assets";
 import { getHelmetModel, getKartModel, parseSuitPiece } from "./kart-cosmetics.js";
-import { getWarlordsArmor, getWarlordsHelmetModel, getWarlordsWeaponModel } from "./warlords-cosmetics.js";
+import {
+  type WarlordsMount,
+  getWarlordsArmor,
+  getWarlordsHelmetModel,
+  getWarlordsMount,
+  getWarlordsWeaponModel,
+} from "./warlords-cosmetics.js";
 import { join } from "node:path";
 import { type SmashHero, getSmashHero } from "./smash-cosmetics.js";
 import {
@@ -24,6 +30,7 @@ import {
   type ArmorPiece,
   type ModelInstance,
   ModelLibrary,
+  type SceneMount,
   renderScene,
   renderSkin,
 } from "@statsify/skin-renderer";
@@ -104,7 +111,7 @@ export class SkinService {
       uuid ? this.getScenePlayer(uuid) : undefined,
     ]);
 
-    return this.reloadIfUnavailable(KART_PACK, renderKart(library, kart, { ...options, player }));
+    return this.reloadIfUnavailable(renderKart(library, kart, { ...options, player }));
   }
 
   public async getWarlordsRender({ uuid, ...options }: WarlordsRenderDto): Promise<Buffer> {
@@ -115,13 +122,13 @@ export class SkinService {
       uuid ? this.getScenePlayer(uuid) : undefined,
     ]);
 
-    return this.reloadIfUnavailable(WARLORDS_PACK, renderWarlords(library, warlords, { ...options, player }));
+    return this.reloadIfUnavailable(renderWarlords(library, warlords, { ...options, player }));
   }
 
   public async getSmashRender({ hero, master, ...options }: SmashRenderDto): Promise<Buffer> {
     const smash = resolveSmash(hero, master);
     const library = await this.getLibrary(SMASH_PACK);
-    return this.reloadIfUnavailable(SMASH_PACK, renderSmash(library, smash, options));
+    return this.reloadIfUnavailable(renderSmash(library, smash, options));
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -234,9 +241,9 @@ export class SkinService {
   }
 
   // The library only finds a missing file when a scene bakes it, so a pack completed after startup needs a reload
-  private reloadIfUnavailable(pack: ResourcePack, render: Promise<Buffer>) {
+  private reloadIfUnavailable(render: Promise<Buffer>) {
     return render.catch((error) => {
-      if (error instanceof ServiceUnavailableException) this.libraries.delete(pack);
+      if (error instanceof PackUnavailableException) this.libraries.delete(error.pack);
       throw error;
     });
   }
@@ -336,6 +343,8 @@ const resourcePack = (name: string, folder: string): ResourcePack => ({
 export const KART_PACK = resourcePack("Turbo Kart Racers", "turbo-kart-racers");
 export const WARLORDS_PACK = resourcePack("Warlords", "warlords");
 export const SMASH_PACK = resourcePack("Smash Heroes", "smash");
+// The 1.8.9 client's own textures for what no game pack draws, such as mounts
+export const VANILLA_PACK = resourcePack("Minecraft 1.8.9", "vanilla-1.8.9");
 
 // The kart is worn by an armor stand the rider sits on: the stand's mounted offset (1.975 × 0.75 blocks)
 // less the player's riding offset (0.35), in pixels
@@ -347,17 +356,21 @@ async function readPackFiles<T>(pack: ResourcePack, folder: string, extension: s
   return Object.fromEntries(files.map((file, index) => [file.slice(0, -extension.length), contents[index]]));
 }
 
-const packUnavailable = ({ name }: ResourcePack) => new ServiceUnavailableException(`The ${name} pack isn't installed`);
+class PackUnavailableException extends ServiceUnavailableException {
+  public constructor(public readonly pack: ResourcePack) {
+    super(`The ${pack.name} pack isn't installed`);
+  }
+}
 
 const throwPackUnavailable = (pack: ResourcePack) => (): never => {
-  throw packUnavailable(pack);
+  throw new PackUnavailableException(pack);
 };
 
 // The renderer's errors carry only a message
 const MISSING_PACK_FILE = /^SkinRendererError: The pack has no (model|texture) named /;
 
 const rethrowPackError = (pack: ResourcePack) => (error: unknown): never => {
-  if (error instanceof Error && MISSING_PACK_FILE.test(error.message)) throw packUnavailable(pack);
+  if (error instanceof Error && MISSING_PACK_FILE.test(error.message)) throw new PackUnavailableException(pack);
   throw error;
 };
 
@@ -445,19 +458,23 @@ export async function renderKart(
 export interface WarlordsScene {
   models: ModelInstance[];
   armor?: ArmorPieceDto;
+  mount?: WarlordsMount;
 }
 
 export function resolveWarlords(
-  cosmetics: Pick<WarlordsRenderDto, "class" | "helmet" | "armor" | "team" | "weapon">,
-  standing: boolean
+  cosmetics: Pick<WarlordsRenderDto, "class" | "helmet" | "armor" | "team" | "weapon" | "mount">,
+  withPlayer: boolean
 ): WarlordsScene {
   const { class: playerClass, helmet = 0, armor = 0, team = "blue", weapon } = cosmetics;
   const weaponModel = weapon === undefined ? undefined : getWarlordsWeaponModel(weapon);
+  const mount = cosmetics.mount === undefined ? undefined : getWarlordsMount(cosmetics.mount);
 
-  if (!standing) {
+  if (!withPlayer) {
     const worn = [cosmetics.class, cosmetics.helmet, cosmetics.armor, cosmetics.team];
     if (worn.some((value) => value !== undefined)) throw new BadRequestException("A class, helmet, armor or team needs a uuid to wear it");
-    if (!weaponModel) throw new BadRequestException("A render without a uuid needs a weapon");
+    if (weaponModel && mount) throw new BadRequestException("A weapon needs a uuid to hold it on a mount");
+    if (mount) return { models: [], mount };
+    if (!weaponModel) throw new BadRequestException("A render without a uuid needs a weapon or a mount");
 
     return { models: [{ model: weaponModel, bone: "root" }] };
   }
@@ -470,19 +487,28 @@ export function resolveWarlords(
 
   if (weaponModel) models.push({ model: weaponModel, bone: "rightHand", display: "thirdperson" });
 
-  return { models, armor: getWarlordsArmor(armor, team) };
+  return { models, armor: getWarlordsArmor(armor, team), mount };
 }
 
 export interface WarlordsRenderOptions extends Pick<WarlordsRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
   player?: PlayerSkin;
 }
 
+async function loadMount({ entity, textures }: WarlordsMount): Promise<SceneMount> {
+  const horse = join(VANILLA_PACK.path, "textures/entity/horse");
+
+  const layers = await Promise.all(textures.map((texture) => readFile(join(horse, `${texture}.png`))))
+    .catch(throwPackUnavailable(VANILLA_PACK));
+
+  return { entity, textures: layers };
+}
+
 export async function renderWarlords(
   library: ModelLibrary,
-  { models, armor }: WarlordsScene,
+  { models, armor, mount }: WarlordsScene,
   { player, extruded = false, ...camera }: WarlordsRenderOptions
 ): Promise<Buffer> {
-  const defaults = player ? WARLORDS_CAMERA.player : WARLORDS_CAMERA.weapon;
+  const defaults = mount ? WARLORDS_CAMERA.mount : player ? WARLORDS_CAMERA.player : WARLORDS_CAMERA.weapon;
 
   const output = {
     width: camera.width ?? defaults.width,
@@ -491,11 +517,13 @@ export async function renderWarlords(
     pitch: camera.pitch ?? defaults.pitch,
   };
 
-  if (!player) return renderScene(library, { models }, output).catch(rethrowPackError(WARLORDS_PACK));
+  const scene = { models, mount: mount && await loadMount(mount) };
+
+  if (!player) return renderScene(library, scene, output).catch(rethrowPackError(WARLORDS_PACK));
 
   const worn = await resolvePackArmor(WARLORDS_PACK, { chestplate: armor, leggings: armor, boots: armor });
 
-  return renderScene(library, { player: { ...player, extruded, armor: worn, pose: "standing" }, models }, output)
+  return renderScene(library, { ...scene, player: { ...player, extruded, armor: worn } }, output)
     .catch(rethrowPackError(WARLORDS_PACK));
 }
 

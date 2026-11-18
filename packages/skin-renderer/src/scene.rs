@@ -22,6 +22,7 @@ use crate::attachment::{
 };
 use crate::error::Error;
 use crate::model::{Model, ModelKind, ModelOuterLayer};
+use crate::mount::{Mount, SceneMount};
 use crate::native::SKIN_RENDERER;
 use crate::pose::{Held, Pose};
 
@@ -48,6 +49,7 @@ pub struct ScenePlayer {
   pub glint: Option<Uint8Array>,
   /// Cape texture (PNG).
   pub cape: Option<Uint8Array>,
+  /// Sits on the scene's mount when there is one, stands otherwise.
   #[napi(ts_type = "'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly' | 'sit'")]
   pub pose: Option<Pose>,
 }
@@ -79,6 +81,8 @@ pub struct ModelInstance {
 #[napi(object)]
 pub struct Scene {
   pub player: Option<ScenePlayer>,
+  /// What the player rides, seated on its saddle, or drawn alone without one.
+  pub mount: Option<SceneMount>,
   pub models: Vec<ModelInstance>,
 }
 
@@ -311,7 +315,11 @@ pub async fn render_scene(
 
       let wearer = Wearer {
         arm_width: kind.arm_width(),
-        pose: player.pose.unwrap_or_default(),
+        pose: player.pose.unwrap_or(if scene.mount.is_some() {
+          Pose::Sit
+        } else {
+          Pose::Standing
+        }),
         held: Held {
           right: holds(Bone::RightHand),
           left: holds(Bone::LeftHand),
@@ -407,7 +415,18 @@ pub async fn render_scene(
     models.push((model, transform));
   }
 
+  let mount = scene
+    .mount
+    .as_ref()
+    .map(|mount| Mount::load(renderer, mount, player.is_some()))
+    .transpose()?;
+
   let mut items = Vec::new();
+
+  if let Some(mount) = &mount {
+    items.push(mount.draw_item());
+    points.extend_from_slice(mount.points());
+  }
 
   for (model, transform) in &models {
     for part in &model.parts {

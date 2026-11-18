@@ -91,7 +91,22 @@ export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: bo
 
 export interface Scene {
   player?: ScenePlayer
+  /** What the player rides, seated on its saddle, or drawn alone without one. */
+  mount?: SceneMount
   models: Array<ModelInstance>
+}
+
+export interface SceneMount {
+  /**
+   * The 1.8 entity, saddled and standing still. Zombie and skeleton horses are horses with
+   * their own texture.
+   */
+  entity: 'horse' | 'donkey'
+  /**
+   * Texture layers (PNG) drawn over each other into one texture, as the game layers a horse's
+   * coat, markings and armor.
+   */
+  textures: Array<Uint8Array>
 }
 
 export interface SceneOutput {
@@ -112,5 +127,6 @@ export interface ScenePlayer {
   glint?: Uint8Array
   /** Cape texture (PNG). */
   cape?: Uint8Array
+  /** Sits on the scene's mount when there is one, stands otherwise. */
   pose?: 'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly' | 'sit'
 }
