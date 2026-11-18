@@ -31,6 +31,7 @@ import type { PlayerStat, PowerStat, Rarity, Skill, TreeLayout } from "#types";
 
 export const LEVELING = leveling as {
   catacombs: number[];
+  fairy_souls: number; // the most a profile can collect
   HOTF: number[];
   HOTM: number[];
   leveling_caps: Record<string, number>;

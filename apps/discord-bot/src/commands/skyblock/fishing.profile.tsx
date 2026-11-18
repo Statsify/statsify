@@ -48,6 +48,11 @@ export const SkyBlockFishingProfile = ({
     [t("skyblock.itemsFished"), t(fishing.itemsFished.total), "§b"],
     [t("skyblock.trophyFishCaught"), t(fishing.trophyFishCaught), "§6"],
     [t("skyblock.seaCreatureKills"), t(fishing.seaCreatureKills), "§3"],
+    [
+      t("skyblock.trophyHunter"),
+      fishing.trophyHunter ? t(`skyblock.trophyHunterRanks.${fishing.trophyHunter}`) : t("skyblock.none"),
+      "§6",
+    ],
   ];
 
   return (

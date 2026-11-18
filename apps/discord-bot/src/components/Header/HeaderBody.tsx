@@ -16,8 +16,8 @@ export interface HeaderBodyProps {
 export const HeaderBody = ({ description, title }: HeaderBodyProps) => {
   if (!description) {
     return (
-      <box width="remaining" height="remaining">
-        <text>{title}</text>
+      <box width="remaining" height="remaining" direction="column">
+        {title.includes("\n") ? <Multiline>{title}</Multiline> : <text>{title}</text>}
       </box>
     );
   }

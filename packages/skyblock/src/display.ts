@@ -7,7 +7,21 @@
  */
 
 // Its own entry, with no data, so the bot's cards and the site's pages draw names and rarities alike.
-import type { DungeonClass, DungeonGrade, Faction, GameMode, JacobBracket, Powder, Rarity, Skill, SlayerBoss, Whisper } from "#types";
+import type {
+  DojoBelt,
+  DojoGrade,
+  DungeonClass,
+  DungeonGrade,
+  Faction,
+  GameMode,
+  JacobBracket,
+  Powder,
+  Rarity,
+  RiftSection,
+  Skill,
+  SlayerBoss,
+  Whisper,
+} from "#types";
 
 // The registries a page lists, from here rather than the root, whose NBT decoding would ride along into the browser.
 export {
@@ -19,9 +33,11 @@ export {
   PLAYER_STATS,
   POWDERS,
   RARITIES,
+  REPUTATION_RANKS,
   SKILLS,
   SLAYER_BOSSES,
   STAT_GROUPS,
+  TROPHY_HUNTER_RANKS,
   TROPHY_TIERS,
   WHISPERS,
 } from "#types";
@@ -80,6 +96,21 @@ export const POWDER_COLORS: Record<Powder, string> = {
 };
 
 export const FACTION_COLORS: Record<Faction, string> = { mages: "§5", barbarians: "§c" };
+
+export const DOJO_GRADE_COLORS: Record<DojoGrade, string> = { S: "§6", A: "§5", B: "§a", C: "§9", D: "§e", F: "§c" };
+
+// Black as dark gray, which reads on the cards' dark backgrounds
+export const DOJO_BELT_COLORS: Record<DojoBelt, string> = {
+  white: "§f",
+  yellow: "§e",
+  green: "§a",
+  blue: "§9",
+  brown: "§6",
+  black: "§8",
+};
+
+/** How many of each the Rift hides, which no data source has: the wiki's counts (an owner exception). */
+export const RIFT_TOTALS = { enigmaSouls: 52, timecharms: 8, catsFound: 9 } as const satisfies Partial<Record<keyof RiftSection, number>>;
 
 /** Jacob's contest brackets and medals, and the trophy fish tiers, which share four of them. */
 export const MEDAL_COLORS: Record<JacobBracket, string> = {

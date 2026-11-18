@@ -589,6 +589,7 @@
     "bankingOffNote": "The bank balance is missing because the Banking API is off. It's under Settings → Island Settings, on your island.",
     "bazaarBuy": "Bazaar Buy",
     "bazaarSell": "Bazaar Sell",
+    "bestRun": "Best Run",
     "bestScore": "Best Score",
     "candyUsed": "{{candy}} Candy",
     "catacombs": "Catacombs",
@@ -606,6 +607,7 @@
     "completions": "Completions",
     "composter": "Composter",
     "contests": "Contests",
+    "coopMembers": "Co-op Members",
     "copper": "Copper",
     "coreOfTheMountain": "Core of the Mountain",
     "corpsesLooted": "Corpses Looted",
@@ -613,6 +615,7 @@
     "crystalsFound": "Crystals Found",
     "crystalsPlaced": "Crystals Placed",
     "dojo": "Dojo",
+    "dojoBelt": "Dojo Belt",
     "dojoPoints": "Dojo Points",
     "dojoTests": {
       "archer": "Mastery",
@@ -624,7 +627,9 @@
       "wall_jump": "Stamina"
     },
     "duplicate": "Duplicate",
+    "duplicateRabbits": "Duplicate Rabbits",
     "earned": "Earned",
+    "eggLocations": "Egg Locations Found",
     "employeeNames": {
       "rabbit_father": "Rabbit Daddy",
       "rabbit_grandma": "Rabbit Granny"
@@ -641,6 +646,7 @@
     "fastest": "Fastest",
     "fastestS": "S",
     "fastestSPlus": "S+",
+    "firstJoin": "Joined",
     "floor": "F{{floor}}",
     "fossilsDonated": "Fossils Donated",
     "fullProfile": "Full Profile",
@@ -648,6 +654,8 @@
     "gardenNotLoaded": "Couldn't load this profile's Garden.",
     "greenhouseCrops": "Greenhouse Crops",
     "highestFloor": "Highest Floor",
+    "highestOnAnyProfile": "Highest Level on Any Profile",
+    "highestWave": "Highest Wave: {{wave}}",
     "hotfLevel": "HOTF Level",
     "hotmLevel": "HOTM Level",
     "inactive": "Inactive",
@@ -661,6 +669,7 @@
       "none": "Basic"
     },
     "level": "SkyBlock Level",
+    "lifetimeCommissions": "Lifetime Commissions",
     "listings": "BIN Listings",
     "loadout": "Loadout",
     "loadoutOf": "{{selected}} of {{total}}",
@@ -672,6 +681,8 @@
       "gold": "Gold Medals",
       "silver": "Silver Medals"
     },
+    "membersInvited": "{{count}} Invited",
+    "membersLeft": "{{count}} Left",
     "milestoneTier": "Tier {{tier}}",
     "mineshafts": "Mineshafts Entered",
     "minibosses": "Minibosses",
@@ -732,6 +743,13 @@
       "barbarians": "Barbarian Reputation",
       "mages": "Mage Reputation"
     },
+    "reputationRanks": {
+      "friendly": "Friendly",
+      "hero": "Hero",
+      "honored": "Honored",
+      "neutral": "Neutral",
+      "trusted": "Trusted"
+    },
     "seaCreatureKills": "Sea Creature Kills",
     "seaCreatures": "Sea Creatures",
     "secrets": "Secrets",
@@ -763,7 +781,15 @@
     "totalPetXp": "Total Pet XP",
     "trophyFish": "Trophy Fish",
     "trophyFishCaught": "Trophy Fish Caught",
+    "trophyHunter": "Trophy Hunter",
+    "trophyHunterRanks": {
+      "adept": "Adept",
+      "expert": "Expert",
+      "master": "Master",
+      "novice": "Novice"
+    },
     "tuningPoints": "Tuning Points",
+    "uniqueGolds": "Unique Golds",
     "uniqueVisitors": "Unique Visitors",
     "unpriced": "Items with no price: {{count}}",
     "unsoulbound": "Unsoulbound",

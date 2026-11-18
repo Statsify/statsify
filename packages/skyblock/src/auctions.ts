@@ -41,7 +41,7 @@ function bookKey(attributes: Attributes) {
 }
 
 function runeKey(attributes: Attributes) {
-  const [rune] = Object.entries((attributes.runes ?? {}) as Record<string, number>);
+  const [rune] = Object.entries(attributes.runes ?? {});
   return rune && upper(`RUNE_${rune[0]}_${rune[1]}`);
 }
 

@@ -6,10 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type FishingSection, TROPHY_TIERS, type TrophyFish } from "#types";
+import { type FishingSection, TROPHY_HUNTER_RANKS, TROPHY_TIERS, type TrophyFish } from "#types";
 import { SEA_CREATURES, TROPHY_FISH } from "#data";
 import { add } from "@statsify/math";
 import type { RawMember } from "#raw";
+
+// `rewards` lists the ranks claimed from Odger, read as 1 (Novice) to 4 (Master), the wiki's order (an owner exception,
+// unverified). One save also has a 99, left out.
+const trophyHunter = (rewards: number[] = []) => TROPHY_HUNTER_RANKS[Math.max(0, ...rewards.filter((rank) => rank <= 4)) - 1];
 
 /** null before the member's first catch. */
 export function getFishing(member: RawMember): FishingSection | null {
@@ -42,6 +46,7 @@ export function getFishing(member: RawMember): FishingSection | null {
     seaCreatures: SEA_CREATURES.map(({ name, ids }) => ({ name, kills: add(...ids.map((id) => kills[id] ?? 0)) }))
       .filter(({ kills }) => kills > 0)
       .toSorted((a, b) => b.kills - a.kills),
+    trophyHunter: trophyHunter(member.trophy_fish?.rewards),
   };
 }
 
@@ -57,6 +62,16 @@ if (import.meta.vitest) {
     expect(fishing?.seaCreatures).toEqual([
       { name: "Great White Shark", kills: 7 },
       { name: "Abyssal Miner", kills: 3 },
+    ]);
+  });
+
+  test("trophyHunter takes the highest rank claimed", () => {
+    expect([undefined, [], [1], [1, 2, 3, 99, 4], [2, 1]].map((rewards) => trophyHunter(rewards))).toEqual([
+      undefined,
+      undefined,
+      "novice",
+      "master",
+      "adept",
     ]);
   });
 }

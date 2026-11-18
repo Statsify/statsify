@@ -10,7 +10,7 @@ import { Container, Footer, Header, type SidebarItem, Table } from "#components"
 import { EmptySection } from "./components/EmptySection.js";
 import { type LevelBarProps, levelBarRows } from "./components/LevelBar.js";
 import { SKILLS, SKILL_COLORS } from "@statsify/skyblock/display";
-import { prettify } from "@statsify/util";
+import { arrayGroup, prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 export const SkyBlockSkillsProfile = ({
@@ -39,6 +39,13 @@ export const SkyBlockSkillsProfile = ({
     }) :
     [];
 
+  // A new profile has no skills of its own yet
+  const highestSkills = profile.newProfile ? undefined : profile.player?.highestSkills;
+  const highest = SKILLS.flatMap((name) => {
+    const level = highestSkills?.[name];
+    return level === undefined ? [] : [<Table.td title={prettify(name)} value={t(level)} color={SKILL_COLORS[name]} size="small" />];
+  });
+
   return (
     <Container background={background}>
       <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
@@ -46,7 +53,15 @@ export const SkyBlockSkillsProfile = ({
         (
           <Table.table>{levelBarRows(bars, 3)}</Table.table>
         ) :
-        <EmptySection setting="skills" newProfile={profile.newProfile} empty={t("skyblock.noSkills")} t={t} />}
+        highest.length > 0 ?
+          (
+            <Table.table>
+              <Table.ts title={`§7${t("skyblock.highestOnAnyProfile")}`}>
+                {arrayGroup(highest, 3).map((row) => <Table.tr>{row}</Table.tr>)}
+              </Table.ts>
+            </Table.table>
+          ) :
+          <EmptySection setting="skills" newProfile={profile.newProfile} empty={t("skyblock.noSkills")} t={t} />}
       <Footer logo={logo} user={user} />
     </Container>
   );

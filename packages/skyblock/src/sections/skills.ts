@@ -32,7 +32,11 @@ const foragingCap = (member: RawMember) => {
 // 50 and the three log unlocks: a level past it rests on the shops
 const FORAGING_VERIFIED = 53;
 
-function capOf(skill: string, member: RawMember) {
+// Runecrafting stops at 3 without a rank
+const UNRANKED_RUNECRAFTING_CAP = 3;
+
+function capOf(skill: string, member: RawMember, ranked: boolean) {
+  if (skill === "runecrafting" && !ranked) return UNRANKED_RUNECRAFTING_CAP;
   const cap = LEVELING.leveling_caps[skill];
   const max = LEVELING.max_levels[skill];
   if (skill === "farming") return Math.min(cap + (member.jacobs_contest?.perks?.farming_level_cap ?? 0), max);
@@ -45,14 +49,14 @@ function capOf(skill: string, member: RawMember) {
  * null when the skills API is off. Social sums the XP of every member who accepted their invite, since the profile
  * shares it.
  */
-export function getSkills(profile: RawProfile, member: RawMember): SkillsSection | null {
+export function getSkills(profile: RawProfile, member: RawMember, ranked = true): SkillsSection | null {
   if (!member.player_data?.experience) return null;
 
   const accepted = coopMembers(profile);
   const skills = Object.fromEntries(
     SKILLS.map((skill): [string, SkillLevel] => {
       const xp = skill === "social" ? add(...accepted.map(([, other]) => xpOf(other, skill))) : xpOf(member, skill);
-      const level = getLevel(xp, tableOf(skill), capOf(skill, member));
+      const level = getLevel(xp, tableOf(skill), capOf(skill, member, ranked));
       return [skill, { ...level, unverified: skill === "foraging" && level.level > FORAGING_VERIFIED }];
     })
   ) as SkillsSection["skills"];
@@ -92,6 +96,7 @@ if (import.meta.vitest) {
     expect(skills?.taming).toMatchObject({ level: 53, maxLevel: 53, unverified: false });
     expect(skills?.foraging).toMatchObject({ level: 55, maxLevel: 55, unverified: true });
     expect(skills?.runecrafting.level).toBe(14);
+    expect(getSkills(profile, member, false)?.skills.runecrafting).toMatchObject({ level: 3, maxLevel: 3 });
     expect(skills?.social).toMatchObject({ level: 2, xp: 150 });
 
     const forager = { player_data: { experience: { SKILL_FORAGING: 55_172_425 } } };

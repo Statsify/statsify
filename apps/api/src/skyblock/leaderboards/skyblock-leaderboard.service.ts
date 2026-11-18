@@ -34,10 +34,10 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     super(redis);
   }
 
-  /** The members a row can name, since a name only comes from a player record. */
-  public async knownPlayers(uuids: string[]): Promise<Set<string>> {
-    const players = await this.playerModel.find({ uuid: { $in: uuids } }).select({ uuid: true }).lean().exec();
-    return new Set(players.map(({ uuid }) => uuid));
+  /** The members a row can name, since a name only comes from a player record, with each one's rank. */
+  public async knownPlayers(uuids: string[]): Promise<Map<string, string | undefined>> {
+    const players = await this.playerModel.find({ uuid: { $in: uuids } }).select({ uuid: true, rank: true }).lean().exec();
+    return new Map(players.map(({ uuid, rank }) => [uuid, rank]));
   }
 
   /**
