@@ -23,3 +23,16 @@ export const titleScores = [
 
 export const getLevelIndex = (score: number): number =>
   findScoreIndex(titleScores, score);
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("getLevelIndex", () => {
+    it("finds the title for the score", () => {
+      expect(getLevelIndex(49)).toBe(0);
+      expect(getLevelIndex(50)).toBe(1);
+      expect(getLevelIndex(85_550)).toBe(9);
+      expect(getLevelIndex(1_000_000)).toBe(9);
+    });
+  });
+}

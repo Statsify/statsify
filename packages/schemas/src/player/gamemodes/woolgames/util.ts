@@ -64,3 +64,20 @@ export const getFormattedLevel = (star: number): string => {
 
   return format(star);
 };
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("level and prestige", () => {
+    it("starts at 1, prestiges every 490k exp and formats by prestige", () => {
+      expect(getLevel(0)).toBe(1);
+      expect(getLevel(500)).toBe(1.5);
+      expect(getLevel(485_000)).toBe(100);
+      expect(getLevel(490_000)).toBe(101);
+
+      expect(getFormattedLevel(99.9)).toBe("§7[99❤]");
+      expect(getFormattedLevel(100)).toBe("§f[100✙]");
+      expect(getFormattedLevel(1000)).toBe("§0[§f1000☯§0]");
+    });
+  });
+}
