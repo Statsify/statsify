@@ -18,8 +18,13 @@ import { getMinecraftTexturePath } from "@statsify/assets";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
+const REFRESH_AFTER = 1000 * 60 * 60 * 24;
+const RETRY_AFTER = 1000 * 60 * 60;
+
 @Injectable()
 export class SkinService {
+  private readonly refreshing = new Set<string>();
+
   public constructor(
     private readonly httpService: HttpService,
     @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
@@ -64,22 +69,37 @@ export class SkinService {
       .lean()
       .exec();
 
-    if (cachedSkin && Date.now() < cachedSkin.expiresAt) {
-      return cachedSkin;
-    }
+    if (cachedSkin && Date.now() < cachedSkin.expiresAt) return cachedSkin;
 
     const uuid = isUsername ? await this.getUuid(tag) : tag;
 
-    const skin = await this.requestSkin(uuid).catch((error) => {
-      if (cachedSkin?.uuid === uuid) return cachedSkin;
-      throw error;
-    });
+    if (cachedSkin?.uuid === uuid) {
+      this.refresh(uuid);
+      return cachedSkin;
+    }
 
-    // Cache for 3 hours
-    skin.expiresAt = Date.now() + (1000 * 60 * 60 * 3);
+    const skin = await this.requestSkin(uuid);
 
-    await this.skinModel.replaceOne({ uuid }, skin, { upsert: true }).lean().exec();
+    return this.save(skin);
+  }
 
+  private refresh(uuid: string) {
+    if (this.refreshing.has(uuid)) return;
+    this.refreshing.add(uuid);
+
+    this.requestSkin(uuid)
+      .then((skin) => this.save(skin))
+      .catch(async (error) => {
+        if (error instanceof PlayerNotFoundException) await this.skinModel.deleteOne({ uuid }).exec();
+        else await this.skinModel.updateOne({ uuid }, { expiresAt: Date.now() + RETRY_AFTER }).exec();
+      })
+      .catch(() => undefined)
+      .finally(() => this.refreshing.delete(uuid));
+  }
+
+  private async save(skin: Skin): Promise<Skin> {
+    skin.expiresAt = Date.now() + REFRESH_AFTER;
+    await this.skinModel.replaceOne({ uuid: skin.uuid }, skin, { upsert: true }).lean().exec();
     return skin;
   }
 
