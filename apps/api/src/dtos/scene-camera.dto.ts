@@ -10,10 +10,13 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsNumber, IsOptional, Max, Min } from "class-validator";
 import { Transform } from "class-transformer";
 
-const MIN_SIZE = 64;
-const MAX_SIZE = 1024;
+export const MIN_SIZE = 64;
+export const MAX_SIZE = 1024;
 
-export function SceneCameraDto(camera: { yaw: number; pitch: number; width: number; height: number }) {
+export function SceneCameraDto(
+  camera: { yaw: number; pitch: number; width: number; height: number },
+  descriptions: { height?: string } = {}
+) {
   class SceneCamera {
     // An empty ?yaw= keeps the default angle, where +"" would turn it to the front
     @IsOptional()
@@ -45,7 +48,7 @@ export function SceneCameraDto(camera: { yaw: number; pitch: number; width: numb
     @IsInt()
     @Min(MIN_SIZE)
     @Max(MAX_SIZE)
-    @ApiProperty({ required: false, default: camera.height, minimum: MIN_SIZE, maximum: MAX_SIZE })
+    @ApiProperty({ required: false, default: camera.height, minimum: MIN_SIZE, maximum: MAX_SIZE, description: descriptions.height })
     public height?: number;
   }
 

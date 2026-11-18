@@ -153,7 +153,7 @@ const SUIT_MATERIALS = {
 type SuitPiece = "JACKET" | "PANTS" | "SHOES";
 
 // Object.hasOwn, since an index would also find keys like "constructor" on the prototype
-function lookup<T extends object>(registry: T, key: string, error: string): T[keyof T] {
+export function lookup<T extends object>(registry: T, key: string, error: string): T[keyof T] {
   if (!Object.hasOwn(registry, key)) throw new BadRequestException(error);
   return registry[key as keyof T];
 }

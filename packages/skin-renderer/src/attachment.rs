@@ -3,12 +3,18 @@ use napi_derive::napi;
 use statsify_minecraft_models::{Display, Transform};
 
 use crate::model::{ModelKind, Part};
-use crate::pose::Pose;
+use crate::pose::{Held, Pose};
 
 const PIXELS_PER_BLOCK: f32 = 16.0;
 
-// Where the game draws a held item from: below the shoulder joint, at the hand
+// Where the game draws a held item from: below the shoulder joint, at the hand. It starts a pixel
+// out from the arm's pivot, which is the middle of a classic arm.
 const HAND: Vector3<f32> = Vector3::new(0.0, -7.0, -1.0);
+
+// 1.8 hangs a slim arm half a pixel in and down from this renderer's joint, and turns its held
+// item from a pixel further in. For the right arm.
+const SLIM_HAND_PIVOT: Vector3<f32> = Vector3::new(1.5, -0.5, 0.0);
+const SLIM_HAND: Vector3<f32> = Vector3::new(-1.0, -7.0, -1.0);
 
 // The game moves a sneaking player's held item 0.203125 blocks down the hand
 const SNEAKING_HAND_DROP: Vector3<f32> = Vector3::new(0.0, -3.25, 0.0);
@@ -24,7 +30,7 @@ const FEET: Vector3<f32> = Vector3::new(0.0, 7.0 - 1.5078125 * PIXELS_PER_BLOCK,
 const STAND_HEAD_DROP: Vector3<f32> = Vector3::new(0.0, -1.0, 0.0);
 
 #[napi(string_enum = "camelCase", skip_typescript)]
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum Bone {
   Root,
   Head,
@@ -42,19 +48,31 @@ pub enum DisplayContext {
 pub struct Wearer {
   pub arm_width: f32,
   pub pose: Pose,
+  pub held: Held,
 }
 
 pub fn bone_transform(bone: Bone, wearer: &Wearer) -> Matrix4<f32> {
   let pose = wearer.pose;
-  let joint = |part: Part| part.joint(wearer.arm_width, pose);
+  let joint = |part: Part| part.joint(wearer.arm_width, pose, wearer.held);
 
-  // A sneaking player's held item misses the body's drop, which the game makes up for down the
-  // hand instead
-  let hand = |arm: Part| match pose {
-    Pose::Sneak => {
-      joint(arm) * Matrix4::from_translation(HAND) * Matrix4::from_translation(SNEAKING_HAND_DROP)
+  let hand = |arm: Part| {
+    let shift = |offset: Vector3<f32>| match arm {
+      Part::RightArm => Matrix4::from_translation(offset),
+      _ => Matrix4::from_translation(Vector3::new(-offset.x, offset.y, offset.z)),
+    };
+
+    let held = if wearer.arm_width == ModelKind::Slim.arm_width() {
+      shift(SLIM_HAND_PIVOT) * joint(arm) * shift(SLIM_HAND)
+    } else {
+      joint(arm) * shift(HAND)
+    };
+
+    // A sneaking player's held item misses the body's drop, which the game makes up for down the
+    // hand instead
+    match pose {
+      Pose::Sneak => held * Matrix4::from_translation(SNEAKING_HAND_DROP),
+      _ => pose.placement() * held,
     }
-    _ => pose.placement() * joint(arm) * Matrix4::from_translation(HAND),
   };
 
   match bone {
@@ -72,6 +90,7 @@ pub fn root_transform(display: Option<DisplayContext>) -> Matrix4<f32> {
   let standing = Wearer {
     arm_width: ModelKind::Classic.arm_width(),
     pose: Pose::Standing,
+    held: Held::default(),
   };
 
   let stand = Matrix4::from_translation(FEET)
@@ -146,6 +165,7 @@ mod tests {
     let standing = Wearer {
       arm_width: 4.0,
       pose: Pose::Standing,
+      held: Held::default(),
     };
 
     let head = bone_transform(Bone::Head, &standing);
@@ -176,9 +196,15 @@ mod tests {
 
   #[test]
   fn puts_bones_where_a_posed_player_holds_them() {
+    let right = Held {
+      right: true,
+      left: false,
+    };
+
     let seated = Wearer {
       arm_width: 4.0,
       pose: Pose::Sit,
+      held: right,
     };
 
     let origin = [0.0; 3];
@@ -188,7 +214,8 @@ mod tests {
       [0.0, 7.0, 0.0],
     );
 
-    // The arms reach 36 degrees forward and lean 7 degrees out from the shoulders at (±6, 5, 0)
+    // The arms reach 36 degrees forward and lean 7 degrees out from the shoulders at (±6, 5, 0).
+    // Holding halves the rider's 36 before adding its own 18, so both arms match.
     assert_close(
       bone_transform(Bone::RightHand, &seated).transform_point(origin.into()),
       [-6.762, -1.204, 3.305],
@@ -199,9 +226,43 @@ mod tests {
       [6.762, -1.204, 3.305],
     );
 
+    let standing = Wearer {
+      arm_width: 4.0,
+      pose: Pose::Standing,
+      held: right,
+    };
+
+    // A holding arm pitches 18 degrees forward
+    assert_close(
+      bone_transform(Bone::RightHand, &standing).transform_point(origin.into()),
+      [-6.849, -1.914, 1.212],
+    );
+
+    assert_close(
+      bone_transform(Bone::LeftHand, &standing).transform_point(origin.into()),
+      [6.853, -1.948, -1.0],
+    );
+
+    // A slim arm turns its item about (-4, 4.5, 0) and steps (-1, -7, -1) from there
+    let slim = Wearer {
+      arm_width: 3.0,
+      ..standing
+    };
+
+    assert_close(
+      bone_transform(Bone::RightHand, &slim).transform_point(origin.into()),
+      [-5.842, -2.293, 1.212],
+    );
+
+    assert_close(
+      bone_transform(Bone::LeftHand, &slim).transform_point(origin.into()),
+      [5.846, -2.326, -1.0],
+    );
+
     let sneaking = Wearer {
       arm_width: 4.0,
       pose: Pose::Sneak,
+      held: right,
     };
 
     // The head item drops 3.2 with the body, and the head's joint one more
@@ -210,10 +271,11 @@ mod tests {
       [0.0, 2.8, 0.0],
     );
 
-    // A held item skips the body's drop for 3.25 down the hand, which swings 22.9 degrees back
+    // A held item skips the body's drop for 3.25 down the hand, which sneaking swings 22.9
+    // degrees back and holding 18 forward
     assert_close(
       bone_transform(Bone::RightHand, &sneaking).transform_point(origin.into()),
-      [-7.103, -3.986, -4.910],
+      [-7.234, -5.052, -1.872],
     );
   }
 }

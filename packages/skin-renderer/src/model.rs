@@ -9,7 +9,7 @@ use crate::armor::Armor;
 use crate::error::{Error, Result};
 use crate::geometry::coordinate::Coordinate;
 use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, TextureRegion};
-use crate::pose::{PartPose, Pose};
+use crate::pose::{Held, PartPose, Pose};
 use crate::skin_loader::{
   load_cape_from_memory, load_skin_from_memory, load_skull_from_memory, load_texture_from_memory,
 };
@@ -86,7 +86,7 @@ impl Part {
     Part::LeftLeg,
   ];
 
-  fn placement(self, arm_width: f32, pose: Pose) -> Placement {
+  fn placement(self, arm_width: f32, pose: Pose, held: Held) -> Placement {
     let side = match self {
       Part::RightArm | Part::RightLeg => -1.0,
       _ => 1.0,
@@ -119,7 +119,11 @@ impl Part {
       ),
     };
 
-    let part_pose = pose.part(self);
+    let part_pose = if held.holds(self) {
+      pose.holding(self)
+    } else {
+      pose.part(self)
+    };
     let quaternion = match part_pose {
       // Even a turn by nothing would round the body's vertices and shift every render
       None if self == Part::Body => None,
@@ -148,8 +152,8 @@ impl Part {
 
   // The frame the part turns in, with its origin on the joint, before the pose places the model
   #[cfg(not(target_arch = "wasm32"))]
-  pub(crate) fn joint(self, arm_width: f32, pose: Pose) -> Matrix4<f32> {
-    let (_, rotation) = self.placement(arm_width, pose).resolve();
+  pub(crate) fn joint(self, arm_width: f32, pose: Pose, held: Held) -> Matrix4<f32> {
+    let (_, rotation) = self.placement(arm_width, pose, held).resolve();
     let rotation = rotation.expect("only an unposed body has no joint");
 
     Matrix4::from_translation(rotation.pivot) * Matrix4::from(rotation.quaternion)
@@ -293,6 +297,7 @@ pub struct Model {
   attachments: Vec<Attachment>,
   glint: Option<Material>,
   pose: Pose,
+  held: Held,
   wears_armor: bool,
   points: Vec<Vector3<f32>>,
 }
@@ -324,6 +329,7 @@ impl Model {
     glint: Option<&[u8]>,
     cape: Option<&[u8]>,
     pose: Pose,
+    held: Held,
   ) -> Result<Self> {
     let device = renderer.device();
     let queue = renderer.queue();
@@ -337,6 +343,7 @@ impl Model {
       model_kind,
       model_outer_layer,
       pose,
+      held,
       armor,
     )?;
 
@@ -358,7 +365,7 @@ impl Model {
     Ok(model)
   }
 
-  // Armor and the pose shape the body's own meshes, so neither can be attached later
+  // Armor, the pose and held items shape the body's own meshes, so none can be attached later
   #[allow(clippy::too_many_arguments)]
   pub fn new(
     device: &wgpu::Device,
@@ -368,6 +375,7 @@ impl Model {
     kind: ModelKind,
     outer_layer: ModelOuterLayer,
     pose: Pose,
+    held: Held,
     armor: &Armor,
   ) -> Result<Self> {
     let arm_width = kind.arm_width();
@@ -378,7 +386,7 @@ impl Model {
         let (layer1_location, layer2_location) = part.skin_layer_locations();
 
         BodyPart {
-          placement: part.placement(arm_width, pose),
+          placement: part.placement(arm_width, pose, held),
           image: &image,
           layer1_location,
           layer2_location,
@@ -409,6 +417,7 @@ impl Model {
       attachments: vec![],
       glint: None,
       pose,
+      held,
       wears_armor: armor.pieces().next().is_some(),
       points,
     };
@@ -460,7 +469,7 @@ impl Model {
 
       for &part in parts {
         // Armor is shaped for classic arms on every skin
-        let placement = part.placement(ModelKind::Classic.arm_width(), self.pose);
+        let placement = part.placement(ModelKind::Classic.arm_width(), self.pose, self.held);
         let (position, rotation) = placement.resolve();
         let neck = position - Vector3::unit_y() * placement.dimensions.y / 2.0;
 
@@ -534,7 +543,11 @@ impl Model {
     cape: &DynamicImage,
     chestplate: bool,
   ) -> Result<()> {
-    let body = Part::Body.placement(ModelKind::Classic.arm_width(), Pose::Standing);
+    let body = Part::Body.placement(
+      ModelKind::Classic.arm_width(),
+      Pose::Standing,
+      Held::default(),
+    );
     let (body_position, _) = body.resolve();
 
     // Over a chestplate the cape moves out and up so it doesn't cut through it, as
