@@ -102,6 +102,14 @@ try {
     pet_rarity_offset: { ...offsets, SPECIAL: offsets.LEGENDARY },
   });
 
+  const sblevels = await readJson<{ core_task: Record<string, unknown> }>("constants/sblevels.json");
+  await write("sblevels.json", {
+    core_task: {
+      accessory_bag_xp: sblevels.core_task.accessory_bag_xp,
+      pet_score_xp: sblevels.core_task.pet_score_xp,
+    },
+  });
+
   const hotm = await readJson<{ hotm: { perks: Record<string, Record<string, unknown>> } }>("constants/hotmlayout.json");
   await write(
     "hotmlayout.json",

@@ -11,3 +11,7 @@ allowBuilds:
   sharp: true
   skia-canvas: true
   unrs-resolver: true
+
+patchedDependencies:
+  # Stops skyhelper-networth fetching (npm update check, prices, the items resource) and reading or writing its items backup
+  skyhelper-networth@2.11.1: patches/skyhelper-networth@2.11.1.patch

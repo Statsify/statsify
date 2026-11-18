@@ -10,7 +10,7 @@ export * from "./types.js";
 export type * from "./raw.js";
 export { getApiSettings } from "./api-settings.js";
 export { buildPriceMap, type SeenIndex } from "./auctions.js";
-export { parseBazaar } from "./prices.js";
+export { describeKey, parseBazaar, toPriceView } from "./prices.js";
 export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
 export { findProfile, toProfileSummary, toProfilesView } from "./profiles.js";
@@ -20,6 +20,7 @@ export { SECTIONS, toMemberView, type SectionInput, type SectionKey, type Sectio
 export { getAccessories } from "./sections/accessories.js";
 export { getDungeons } from "./sections/dungeons.js";
 export { getHotm } from "./sections/hotm.js";
+export { getSkyBlockLevel } from "./sections/level.js";
 export { getPets } from "./sections/pets.js";
 export { getSkills } from "./sections/skills.js";
 export { getSlayers } from "./sections/slayers.js";
