@@ -306,16 +306,15 @@ export abstract class LeaderboardService {
     if (!leaderboard.resetEvery)
       throw new Error("To get a leaderboard expiry time, `resetEvery` must be specified");
 
+    // Hypixel resets quests at midnight in New York
+    const now = DateTime.now().setZone("America/New_York");
+
     if (leaderboard.resetEvery === "day")
-      return Math.ceil(DateTime.now().endOf("day").toSeconds());
+      return Math.ceil(now.endOf("day").toSeconds());
 
-    const now = new Date();
-    const dayIndex = DAYS_IN_WEEK[leaderboard.resetEvery];
+    let reset = now.startOf("week").plus({ days: DAYS_IN_WEEK[leaderboard.resetEvery] });
+    if (reset <= now) reset = reset.plus({ weeks: 1 });
 
-    // Reset at 12:00 AM on the next day
-    now.setDate(now.getDate() + ((dayIndex - now.getDay() + 7) % 7) + 1);
-    now.setHours(0, 0, 0, 0);
-
-    return Math.ceil(now.getTime() / 1000);
+    return Math.ceil(reset.toSeconds());
   }
 }
