@@ -10,7 +10,7 @@ import axios from "axios";
 import { Image } from "skia-canvas";
 import { readFile } from "node:fs/promises";
 
-const IMAGE_DOWNLOAD_TIMEOUT = 5_000;
+export const IMAGE_DOWNLOAD_TIMEOUT = 5_000;
 
 const bufferToImage = (buffer: Buffer): Image => {
   const image = new Image(buffer);
