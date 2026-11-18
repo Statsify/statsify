@@ -412,7 +412,7 @@
       "title": "No Leaderboard Data At This Position"
     },
     "leaderboardInvalidPosition": {
-      "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
+      "description": "The leaderboard position you entered is invalid. Enter a whole number of 1 or more.",
       "title": "Invalid Position"
     },
     "leaderboardNotFound": {
