@@ -106,6 +106,10 @@ export class CommandListener extends AbstractCommandListener {
     });
   }
 
+  protected getUser(id: string) {
+    return this.apiService.getUser(id);
+  }
+
   private cooldownPrecondition(
     command: CommandResolvable,
     user: User | null,

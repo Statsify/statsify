@@ -21,6 +21,10 @@ import type {
 
 export class Interaction {
   private locale: string | null = null;
+  private readonly ack = Promise.withResolvers<void>();
+
+  /** Resolves once the initial response is sent, which webhook edits and follow-ups need first */
+  public readonly acknowledged = this.ack.promise;
 
   public constructor(
     private readonly rest: RestClient,
@@ -103,11 +107,19 @@ export class Interaction {
   }
 
   public async reply(data: InteractionServer.InteractionReply) {
-    await this.request({
-      method: "post",
-      path: `/interactions/${this.data.id}/${this.data.token}/callback`,
-      body: data,
-    });
+    try {
+      await this.request({
+        method: "post",
+        path: `/interactions/${this.data.id}/${this.data.token}/callback`,
+        body: data,
+      });
+    } catch (err) {
+      this.ack.promise.catch(() => {});
+      this.ack.reject(err);
+      throw err;
+    }
+
+    this.ack.resolve();
   }
 
   public async editReply(data: Message | IMessage) {
