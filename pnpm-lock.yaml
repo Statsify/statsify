@@ -268,12 +268,6 @@ importers:
       '@typegoose/typegoose':
         specifier: ^12.6.0
         version: 12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
-      class-transformer:
-        specifier: 0.5.1
-        version: 0.5.1
-      class-validator:
-        specifier: ^0.14.1
-        version: 0.14.4
       fastify:
         specifier: ^5.5.0
         version: 5.12.7
@@ -289,6 +283,9 @@ importers:
       mongoose:
         specifier: ^8.5.2
         version: 8.24.7(socks@2.8.10)(supports-color@7.2.0)
+      nestjs-zod:
+        specifier: ^5.6.0
+        version: 5.6.0(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/swagger@11.4.7(@fastify/static@8.3.0)(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2))(rxjs@7.8.2)(zod@4.6.7)
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -301,6 +298,9 @@ importers:
       toad-scheduler:
         specifier: ^3.0.1
         version: 3.1.0
+      zod:
+        specifier: ^4.1.5
+        version: 4.6.7
     devDependencies:
       '@nestjs/testing':
         specifier: ^11.1.24
@@ -767,9 +767,6 @@ importers:
       '@typegoose/typegoose':
         specifier: ^12.6.0
         version: 12.21.1(mongoose@8.21.1(socks@2.8.10)(supports-color@7.2.0))
-      class-validator:
-        specifier: ^0.14.1
-        version: 0.14.4
       luxon:
         specifier: ^3.5.0
         version: 3.7.2
@@ -4800,6 +4797,17 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
+  nestjs-zod@5.6.0:
+    resolution: {integrity: sha512-ey4zmL08KQ6APzzMxJAFLi41I4454532wdSWTykAHJnO4ST26PpdtQSUL7xZUMoZ/ax2/R8EXQYHfumtxeyXpg==}
+    peerDependencies:
+      '@nestjs/common': ^10.0.0 || ^11.0.0
+      '@nestjs/swagger': ^7.4.2 || ^8.0.0 || ^11.0.0
+      rxjs: ^7.0.0
+      zod: ^3.25.0 || ^4.0.0
+    peerDependenciesMeta:
+      '@nestjs/swagger':
+        optional: true
+
   netmask@2.1.1:
     resolution: {integrity: sha512-eonl3sLUha+S1GzTPxychyhnUzKyeQkZ7jLjKrBagJgPla13F+uQ71HgpFefyHgqrjEbCPkDArxYsjY8/+gLKA==}
     engines: {node: '>= 0.4.0'}
@@ -7705,7 +7713,8 @@ snapshots:
     dependencies:
       '@types/node': 26.6.6
 
-  '@types/validator@13.15.10': {}
+  '@types/validator@13.15.10':
+    optional: true
 
   '@types/webidl-conversions@7.0.3': {}
 
@@ -8183,13 +8192,15 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  class-transformer@0.5.1: {}
+  class-transformer@0.5.1:
+    optional: true
 
   class-validator@0.14.4:
     dependencies:
       '@types/validator': 13.15.10
       libphonenumber-js: 1.13.15
       validator: 13.15.35
+    optional: true
 
   cli-tableau@2.0.1:
     dependencies:
@@ -9015,7 +9026,8 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  libphonenumber-js@1.13.15: {}
+  libphonenumber-js@1.13.15:
+    optional: true
 
   lie@3.1.1:
     dependencies:
@@ -9382,6 +9394,14 @@ snapshots:
       - supports-color
 
   neo-async@2.6.2: {}
+
+  nestjs-zod@5.6.0(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/swagger@11.4.7(@fastify/static@8.3.0)(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2))(rxjs@7.8.2)(zod@4.6.7):
+    dependencies:
+      '@nestjs/common': 11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0)
+      rxjs: 7.8.2
+      zod: 4.6.7
+    optionalDependencies:
+      '@nestjs/swagger': 11.4.7(@fastify/static@8.3.0)(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
 
   netmask@2.1.1: {}
 
@@ -10330,7 +10350,8 @@ snapshots:
 
   uuid@8.3.2: {}
 
-  validator@13.15.35: {}
+  validator@13.15.35:
+    optional: true
 
   vite@8.3.5(@types/node@25.9.9)(jiti@2.7.0):
     dependencies:
