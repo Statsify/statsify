@@ -6,22 +6,37 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+} from "@nestjs/swagger";
 import { Auth } from "#auth";
 import { Body, Controller, Post } from "@nestjs/common";
 import {
+  CacheLevel,
   ErrorResponse,
+  GUILD_ID_REGEX,
+  GuildNotFoundException,
+  GuildQuery,
   LeaderboardQuery,
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
 import { Guild } from "@statsify/schemas";
-import { GuildLeaderboardDto, GuildRankingDto } from "#dtos";
+import { GuildLeaderboardDto, GuildMemberLeaderboardDto, GuildRankingDto } from "#dtos";
 import { GuildLeaderboardService } from "./guild-leaderboard.service.js";
+import { GuildService } from "../guild.service.js";
+import { PlayerLeaderboardService } from "#player";
 
 @Controller("/guild/leaderboards")
 export class GuildLeaderboardController {
-  public constructor(private readonly guildLeaderboardService: GuildLeaderboardService) {}
+  public constructor(
+    private readonly guildLeaderboardService: GuildLeaderboardService,
+    private readonly guildService: GuildService,
+    private readonly playerLeaderboardService: PlayerLeaderboardService
+  ) {}
 
   @Post()
   @ApiOperation({ summary: "Get a Guild Leaderboard", tags: ["Guild Leaderboards"] })
@@ -53,6 +68,40 @@ export class GuildLeaderboardController {
     );
 
     return leaderboard;
+  }
+
+  @Post("/members")
+  @ApiOperation({ summary: "Get a Player Leaderboard of a Guild's Members", tags: ["Guild Leaderboards"] })
+  @ApiOkResponse({ type: PostLeaderboardResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: GuildNotFoundException })
+  @Auth({ weight: 3 })
+  public async getMemberLeaderboard(
+    @Body() { field, guild: tag, page, player, position }: GuildMemberLeaderboardDto
+  ) {
+    let input: number | string;
+    let type: LeaderboardQuery;
+
+    if (player) {
+      input = player;
+      type = LeaderboardQuery.INPUT;
+    } else if (position) {
+      input = position;
+      type = LeaderboardQuery.POSITION;
+    } else {
+      input = page;
+      type = LeaderboardQuery.PAGE;
+    }
+
+    const guild = await this.guildService.get(
+      tag,
+      GUILD_ID_REGEX.test(tag) ? GuildQuery.ID : GuildQuery.NAME,
+      CacheLevel.CACHE
+    );
+
+    if (!guild) throw new GuildNotFoundException();
+
+    return this.playerLeaderboardService.getMemberLeaderboard(guild, field, input, type);
   }
 
   @Post("/rankings")

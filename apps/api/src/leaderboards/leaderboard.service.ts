@@ -80,18 +80,7 @@ export abstract class LeaderboardService {
   ) {
     const PAGE_SIZE = 10;
 
-    const {
-      fieldName,
-      additionalFields = [],
-      extraDisplay,
-      formatter,
-      sort,
-      name,
-      hidden,
-    } = getLeaderboardField(
-      constructor,
-      field
-    ) as LeaderboardEnabledMetadata;
+    const { sort } = getLeaderboardField(constructor, field);
 
     let top: number;
     let bottom: number;
@@ -126,6 +115,31 @@ export abstract class LeaderboardService {
       bottom - 1,
       sort
     );
+
+    return this.formatLeaderboard(
+      constructor,
+      field,
+      leaderboard,
+      top / PAGE_SIZE,
+      highlight
+    );
+  }
+
+  protected async formatLeaderboard<T>(
+    constructor: Constructor<T>,
+    field: string,
+    leaderboard: { id: string; score: number; index: number }[],
+    page: number,
+    highlight?: number
+  ) {
+    const {
+      fieldName,
+      additionalFields = [],
+      extraDisplay,
+      formatter,
+      name,
+      hidden,
+    } = getLeaderboardField(constructor, field);
 
     const additionalFieldMetadata = additionalFields.map((k) =>
       getLeaderboardField(constructor, k, false)
@@ -185,7 +199,7 @@ export abstract class LeaderboardService {
       name,
       fields,
       data,
-      page: top / PAGE_SIZE,
+      page,
     };
   }
 

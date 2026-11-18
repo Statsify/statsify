@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+export * from "./leaderboards/player-leaderboard.service.js";
 export * from "./player.controller.js";
 export * from "./player.module.js";
 export * from "./player.service.js";

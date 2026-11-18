@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
+import { CacheLevel, LeaderboardQuery, PlayerNotFoundException } from "@statsify/api-client";
 import { type Circular, flatten } from "@statsify/util";
+import { type Guild, Player, getLeaderboardField } from "@statsify/schemas";
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
-import { Player } from "@statsify/schemas";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -28,15 +28,66 @@ export class PlayerLeaderboardService extends LeaderboardService {
     super(redis);
   }
 
-  protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
-    if (input.length <= 16) {
-      const player = await this.playerService.get(input, CacheLevel.CACHE_ONLY, {
-        uuid: true,
-      });
+  public async getMemberLeaderboard(
+    guild: Guild,
+    field: string,
+    input: number | string,
+    type: LeaderboardQuery
+  ) {
+    const PAGE_SIZE = 10;
 
-      if (!player) throw new PlayerNotFoundException();
-      input = player.uuid;
+    const { sort } = getLeaderboardField(Player, field);
+
+    const memberIds = guild.members.map(({ uuid }) => uuid);
+
+    const scores = await this.redis.zmscore(`player.${field}`, ...memberIds);
+
+    const leaderboard = scores
+      .flatMap((score, index) =>
+        score === null ? [] : [{ id: memberIds[index], score: Number(score) }]
+      )
+      .sort((a, b) => sort === "ASC" ? a.score - b.score : b.score - a.score)
+      .map((doc, index) => ({ ...doc, index }));
+
+    let top: number;
+    let highlight: number | undefined = undefined;
+
+    switch (type) {
+      case LeaderboardQuery.PAGE:
+        top = (input as number) * PAGE_SIZE;
+        break;
+
+      case LeaderboardQuery.INPUT: {
+        const playerId = await this.getPlayerId(input as string);
+        highlight = leaderboard.findIndex(({ id }) => id === playerId);
+
+        if (highlight === -1) throw new PlayerNotFoundException();
+
+        top = highlight - (highlight % PAGE_SIZE);
+        break;
+      }
+
+      case LeaderboardQuery.POSITION: {
+        const position = (input as number) - 1;
+        highlight = position;
+        top = position - (position % PAGE_SIZE);
+        break;
+      }
     }
+
+    const page = await this.formatLeaderboard(
+      Player,
+      field,
+      leaderboard.slice(top, top + PAGE_SIZE),
+      top / PAGE_SIZE,
+      highlight
+    );
+
+    return { ...page, name: `${page.name} - ${guild.nameFormatted}` };
+  }
+
+  protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
+    input = await this.getPlayerId(input);
 
     const ranking = await this.getLeaderboardRankings(Player, [field], input);
 
@@ -72,5 +123,17 @@ export class PlayerLeaderboardService extends LeaderboardService {
         return additionalStats;
       })
     );
+  }
+
+  private async getPlayerId(input: string) {
+    if (input.length > 16) return input;
+
+    const player = await this.playerService.get(input, CacheLevel.CACHE_ONLY, {
+      uuid: true,
+    });
+
+    if (!player) throw new PlayerNotFoundException();
+
+    return player.uuid;
   }
 }
