@@ -165,3 +165,18 @@ export function getFormattedLevel(
   const emblem = EMBLEM_MAP[selectedEmblem.replace("emblem_", "")] ?? EMBLEM_MAP[DEFAULT_EMBLEM];
   return schemeFormatter(level, emblem);
 }
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("getIntendedLevelFormatted and getFormattedLevel", () => {
+    it("format a level with the best unlocked or the selected scheme and emblem", () => {
+      expect(getIntendedLevelFormatted(0)).toBe("§7[0▶]");
+      expect(getIntendedLevelFormatted(19)).toBe("§7[19✌]");
+      expect(getIntendedLevelFormatted(20)).toBe("§2[20✌]");
+      expect(getFormattedLevel(12, undefined, undefined)).toBe("§7[12▶]");
+      expect(getFormattedLevel(12, "scheme_red", "emblem_star")).toBe("§c[12✰]");
+      expect(getFormattedLevel(12, "scheme_unknown", "emblem_unknown")).toBe("§7[12▶]");
+    });
+  });
+}
