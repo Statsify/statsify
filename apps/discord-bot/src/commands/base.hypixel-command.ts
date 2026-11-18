@@ -50,17 +50,17 @@ export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
 
 export type ModeEmoji = LocalizationString | false | undefined;
 
-/** Page buttons re-run the command: `p:<user id>:<command>:<player uuid>:<page>` */
+/** Page buttons re-run the command: `p:<user id>:<command path joined by dots>:<player uuid>:<page>` */
 export const PROFILE_ROUTE = "p";
 
 export function profileRoute(listener: AbstractCommandListener): ComponentRoute {
   return (interaction, { ownerId, values: [command, uuid] }) =>
-    listener.rerunCommand(interaction, ownerId, [command], { player: uuid });
+    listener.rerunCommand(interaction, ownerId, command.split("."), { player: uuid });
 }
 
-export function getProfileCustomId(context: CommandContext, uuid: string) {
+export function getProfileCustomId(context: CommandContext, uuid: string, command = context.getCommandName()) {
   return (page: string) =>
-    createCustomId(PROFILE_ROUTE, context.getInteraction().getUserId(), context.getCommandName(), uuid, page);
+    createCustomId(PROFILE_ROUTE, context.getInteraction().getUserId(), command, uuid, page);
 }
 
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
