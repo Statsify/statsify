@@ -15,6 +15,7 @@ import {
   paginate
 } from "@statsify/discord";
 import { Image, loadImage } from "skia-canvas";
+import { getProfileCustomId } from "#commands/base.hypixel-command";
 import { createCanvas } from "@statsify/rendering";
 import type { Skin } from "@statsify/schemas";
 
@@ -48,7 +49,7 @@ export class CapeCommand {
         (t) => t("errors.noCape.description", { username: player.username })
       );
 
-    return paginate(context, pages);
+    return paginate(context, pages, getProfileCustomId(context, player.uuid));
   }
 
   private async getOptifineCape(username: string) {

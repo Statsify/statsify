@@ -15,6 +15,7 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
+import { getProfileCustomId } from "#commands/base.hypixel-command";
 import { QUEST_MODES, QuestTime } from "@statsify/schemas";
 import { QuestProfileProps, QuestsProfile } from "./quests.profile.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
@@ -67,7 +68,7 @@ export class QuestsCommand {
   private async run(context: CommandContext, time: QuestTime) {
     const user = context.getUser();
 
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    const player = await this.apiService.getPlayer(context.option("player"), user, context.getCacheLevel());
 
     const [logo, skin, badge, gameIcons, verifiedLogo, crossLogo] = await Promise.all([
       getLogo(user),
@@ -112,6 +113,6 @@ export class QuestsCommand {
         },
       }));
 
-    return paginate(context, pages);
+    return paginate(context, pages, getProfileCustomId(context, player.uuid, `quests.${context.getCommandName()}`));
   }
 }
