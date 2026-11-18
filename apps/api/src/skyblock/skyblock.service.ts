@@ -19,17 +19,23 @@ import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Logger } from "@statsify/logger";
 import { NETWORTH } from "@statsify/skyblock/networth";
+import { hasMuseum } from "@statsify/skyblock/display";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
 import {
+  MEMBER_STATS_SECTIONS,
   SECTIONS,
   type SectionInput,
   findProfile,
+  gameModeOf,
+  isMember,
+  toMemberStats,
   toMemberView,
   toProfileSummary,
   toProfilesView,
 } from "@statsify/skyblock";
 import { Singleflight } from "./singleflight.js";
+import { SkyBlockLeaderboardService } from "./leaderboards/skyblock-leaderboard.service.js";
 import { SkyBlockGarden, SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
 import { unzip, zip } from "./zip.js";
@@ -45,6 +51,7 @@ import type {
   SkyBlockSection,
 } from "@statsify/skyblock";
 import type { ReturnModelType } from "@typegoose/typegoose";
+import type { SkyBlockStatsRow } from "@statsify/schemas";
 
 /** How long a stored copy is new enough that a lookup at `CACHE` doesn't fetch it again. */
 export const SKYBLOCK_FRESH_FOR = 300_000;
@@ -57,6 +64,8 @@ const SECTION_VERSION = 4;
 const MAX_DOCUMENT = 15 * 1024 * 1024;
 
 const DEFINITIONS = { ...SECTIONS, networth: NETWORTH } satisfies Record<SkyBlockSection, { needs: readonly SectionNeed[] }>;
+
+const isReady = (name: SkyBlockSection, built: Record<SectionNeed, boolean>) => DEFINITIONS[name].needs.every((need) => built[need]);
 
 interface Stored<T> {
   value: T;
@@ -98,12 +107,14 @@ const failedKey = (key: string) => `skyblock:failed:${key}`;
 export class SkyBlockService {
   private readonly logger = new Logger("SkyBlockService");
   private readonly singleflight = new Singleflight();
+  private readonly rankings = new Map<string, Promise<void>>();
 
   public constructor(
     private readonly playerService: PlayerService,
     private readonly hypixelService: HypixelService,
     private readonly budgetService: SkyBlockBudgetService,
     private readonly pricesService: SkyBlockPricesService,
+    private readonly leaderboardService: SkyBlockLeaderboardService,
     @InjectModel(SkyBlockProfiles) private readonly profilesModel: ReturnModelType<typeof SkyBlockProfiles>,
     @InjectModel(SkyBlockMuseum) private readonly museumModel: ReturnModelType<typeof SkyBlockMuseum>,
     @InjectModel(SkyBlockGarden) private readonly gardenModel: ReturnModelType<typeof SkyBlockGarden>,
@@ -145,14 +156,22 @@ export class SkyBlockService {
 
     const needs = new Set(sections.flatMap((name) => DEFINITIONS[name].needs));
     const [museum, garden, prices, items] = await Promise.all([
-      needs.has("museum") ? this.getStoredMuseum(profile.profile_id, cache) : undefined,
+      // The player's row ranked when these profiles were stored went without the museum a refetch here stores. A copy
+      // served stale is older than the row a co-op partner's newer copy may have written, so it isn't ranked again
+      needs.has("museum") && hasMuseum(gameModeOf(profile)) ?
+        this.getStoredMuseum(
+          profile.profile_id,
+          cache,
+          stale ? undefined : () => this.rankInBackground(player.uuid, profiles, fetchedAt, profile.profile_id)
+        ) :
+        undefined,
       needs.has("garden") ? this.getStoredGarden(profile.profile_id, cache, requireGarden) : undefined,
       needs.has("prices") ? this.pricesService.getPriceMap() : undefined,
       needs.has("items") ? this.pricesService.getItems() : undefined,
     ]);
 
     const built = { museum: true, garden: true, prices: !!prices, items: !!items };
-    const ready = sections.filter((name) => DEFINITIONS[name].needs.every((need) => built[need]));
+    const ready = sections.filter((name) => isReady(name, built));
     const marketDown = sections.filter((name) => !ready.includes(name));
     if (ready.length === 0 && marketDown.length > 0) throw new SkyBlockUnavailableException("market");
 
@@ -240,14 +259,82 @@ export class SkyBlockService {
       const fetchedAt = Date.now();
 
       const data = await this.compress(profiles, uuid);
-      if (data) await this.profilesModel.replaceOne({ uuid }, { uuid, fetchedAt, data }, { upsert: true });
+      if (data) {
+        await this.profilesModel.replaceOne({ uuid }, { uuid, fetchedAt, data }, { upsert: true });
+        this.rankInBackground(uuid, profiles ?? [], fetchedAt);
+      }
 
       return { value: profiles, fetchedAt };
     });
   }
 
+  /**
+   * Not awaited, so a failed write never fails the lookup. A player's rankings run in order, so their row
+   * ranked with a profile's new museum lands after the whole copy's rows ranked without it.
+   */
+  private rankInBackground(uuid: string, profiles: RawProfile[], fetchedAt: number, profileId?: string) {
+    const ranking = (this.rankings.get(uuid) ?? Promise.resolve())
+      .then(() => this.rankMembers(uuid, profiles, fetchedAt, profileId))
+      .catch((error) => this.logger.error(error));
+
+    this.rankings.set(uuid, ranking);
+    void ranking.finally(() => {
+      if (this.rankings.get(uuid) === ranking) this.rankings.delete(uuid);
+    });
+  }
+
+  /**
+   * The leaderboard rows of a copy just stored, for every current member Statsify has a player record for, with the
+   * stored museums and the prices of the hour; only the player's row on `profileId` when given. It never fetches.
+   */
+  private async rankMembers(uuid: string, profiles: RawProfile[], fetchedAt: number, profileId?: string) {
+    const ranked = profileId ? profiles.filter((profile) => profile.profile_id === profileId) : profiles;
+
+    const [players, prices, items, museums] = await Promise.all([
+      this.leaderboardService.knownPlayers(ranked.flatMap((profile) => Object.keys(profile.members))),
+      this.pricesService.getPriceMap(),
+      this.pricesService.getItems(),
+      Promise.all(ranked.map((profile) => this.getStoredMuseum(profile.profile_id, CacheLevel.CACHE_ONLY))),
+    ]);
+
+    const built = { museum: true, garden: true, prices: !!prices, items: !!items };
+    const ready = MEMBER_STATS_SECTIONS.filter((name) => isReady(name, built));
+
+    const removed = ranked.flatMap((profile) =>
+      Object.keys(profile.members)
+        .filter((member) => !isMember(profile, member))
+        .map((member) => `${member}:${profile.profile_id}`)
+    );
+
+    const rows = await Promise.all(
+      ranked.flatMap((profile, index) =>
+        Object.entries(profile.members)
+          .filter(([member]) => isMember(profile, member) && players.has(member) && (!profileId || member === uuid))
+          .map(async ([member, raw]): Promise<SkyBlockStatsRow> => {
+            const museum = museums[index]?.value.members?.[member];
+            const input: SectionInput = { uuid: member, profile, member: raw, museum, prices, items };
+            const view = await toMemberView(input, ready, (name) => DEFINITIONS[name].compute(input));
+            const summary = toProfileSummary(profile, member);
+
+            return {
+              uuid: member,
+              profileId: profile.profile_id,
+              cuteName: summary.cuteName,
+              gameMode: summary.gameMode,
+              fetchedAt,
+              networthAsOf: view.networth?.pricesAsOf,
+              boards: toMemberStats(input, view),
+            };
+          })
+      )
+    );
+
+    // Every profile's id, not only the ranked ones: addMembers drops the player's rows on profiles it isn't given
+    await this.leaderboardService.addMembers(uuid, profiles.map((profile) => profile.profile_id), rows, removed);
+  }
+
   /** The museum is optional, so a lookup goes on without it when Hypixel or the budget refuses. */
-  private async getStoredMuseum(profileId: string, cache: CacheLevel): Promise<Stored<RawMuseum> | undefined> {
+  private async getStoredMuseum(profileId: string, cache: CacheLevel, onStored?: () => void): Promise<Stored<RawMuseum> | undefined> {
     const document = await this.museumModel.findOne({ profileId }).exec();
     const stored = document && {
       fetchedAt: document.fetchedAt,
@@ -262,7 +349,10 @@ export class SkyBlockService {
       const fetchedAt = Date.now();
 
       const data = await this.compress(museum.members, profileId);
-      if (data) await this.museumModel.replaceOne({ profileId }, { profileId, fetchedAt, data }, { upsert: true });
+      if (data) {
+        await this.museumModel.replaceOne({ profileId }, { profileId, fetchedAt, data }, { upsert: true });
+        onStored?.();
+      }
 
       return { value: museum, fetchedAt };
     }).catch((error) => {

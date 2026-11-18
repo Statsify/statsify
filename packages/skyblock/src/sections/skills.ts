@@ -13,9 +13,9 @@ import { fractionalLevel, getLevel } from "#leveling";
 import type { RawMember, RawProfile } from "#raw";
 
 // Runecrafting and social are cosmetic skills, so the average leaves them out; hunting counts.
-const AVERAGED = SKILLS.filter((skill) => skill !== "runecrafting" && skill !== "social");
+export const AVERAGED = SKILLS.filter((skill) => skill !== "runecrafting" && skill !== "social");
 
-const xpOf = (member: RawMember, skill: string) => member.player_data?.experience?.[`SKILL_${skill.toUpperCase()}`] ?? 0;
+export const xpOf = (member: RawMember, skill: string) => member.player_data?.experience?.[`SKILL_${skill.toUpperCase()}`] ?? 0;
 
 const tableOf = (skill: string) =>
   skill === "runecrafting" ? LEVELING.runecrafting_xp : skill === "social" ? LEVELING.social : LEVELING.leveling_xp;

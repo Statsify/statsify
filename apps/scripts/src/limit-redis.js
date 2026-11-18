@@ -8,7 +8,7 @@
 
 import Redis from "ioredis";
 import { CurrentHistoricalType } from "@statsify/api-client";
-import { Guild, scanMetadata, Player } from "@statsify/schemas";
+import { Guild, scanMetadata, Player, SkyBlockStats } from "@statsify/schemas";
 import { Logger } from "@statsify/logger";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
 
@@ -70,7 +70,7 @@ const runLimit = async (constructors, prefixes) => {
 
 const limit = async () => {
   await Promise.all([
-    runLimit([Player, Guild]),
+    runLimit([Player, Guild, SkyBlockStats]),
     runLimit(
       [Player, Player, Player],
       [
