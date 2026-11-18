@@ -136,8 +136,9 @@ const byCoinsPerAccessoryPower = cheapestFirst<MissingAccessory>(
 );
 
 /**
- * Every tier above the bag's best in a chain is a step, worth its accessory power over that tier. Each chain (and the party
- * hats) keeps its first step in `order`. One the player keeps outside the bag is free, and nothing below it is offered.
+ * Every tier above the bag's best in a chain is a step, worth its accessory power over that tier. Each chain (and each
+ * pair of variants) keeps its first step in `order`. One the player keeps outside the bag is free, and nothing below it
+ * is offered.
  */
 function getMissing(
   owned: ReadonlySet<string>,
