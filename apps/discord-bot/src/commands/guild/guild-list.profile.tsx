@@ -28,7 +28,7 @@ export const GuildListProfile = ({
   t,
 }: GuildListProfileProps) => {
   // The width of each member row
-  const WIDTH = 1600;
+  const WIDTH = 900;
 
   const header = (
     <box width="100%">
