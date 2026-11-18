@@ -2,6 +2,7 @@
   "arguments": {
     "choice": "Choose an option",
     "file": "Upload a file",
+    "game": "Choose a game",
     "gtbhelper": "The current hint",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "A guild name or guild member",
@@ -369,6 +370,10 @@
     "higherTierRequiredForIcon": {
       "description": "You need to purchase a higher premium tier to unlock this icon!",
       "title": "Higher Tier Required"
+    },
+    "invalidGame": {
+      "description": "That game couldn't be found! Pick one from the list.",
+      "title": "Invalid Game"
     },
     "invalidGuild": {
       "description_id": "A guild with the id of `{{tag}}` could not be found!",
