@@ -723,6 +723,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
 
+  packages/render-core: {}
+
   packages/rendering:
     dependencies:
       '@sentry/node':
@@ -778,7 +780,11 @@ importers:
         specifier: ^3.4.2
         version: 3.7.6
 
-  packages/skin-renderer: {}
+  packages/skin-renderer:
+    devDependencies:
+      '@statsify/render-core':
+        specifier: workspace:^
+        version: link:../render-core
 
   packages/util:
     dependencies:

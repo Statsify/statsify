@@ -4,7 +4,7 @@ mod uniform;
 use cgmath::{Matrix4, Point3};
 
 pub use self::orbital::OrbitalCamera;
-pub use self::uniform::CameraUniform;
+pub(crate) use self::uniform::CameraUniform;
 use super::geometry::coordinate::Coordinate;
 
 pub enum Camera {

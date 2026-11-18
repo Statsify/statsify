@@ -13,9 +13,6 @@ pub enum Error {
   #[error("The camera yaw must be a finite number")]
   InvalidYaw,
 
-  #[error("The provided image is too large for a texture")]
-  TextureTooLarge,
-
   #[error("The provided image is empty")]
   EmptyTexture,
 
@@ -25,20 +22,8 @@ pub enum Error {
   #[error(transparent)]
   Image(#[from] image::ImageError),
 
-  #[error("Failed to render skin")]
-  RenderFailure,
-
   #[error(transparent)]
-  RequestDevice(#[from] wgpu::RequestDeviceError),
-
-  #[error(transparent)]
-  Poll(#[from] wgpu::PollError),
-
-  #[error("Instance did not provide any adapters")]
-  MissingAdapter,
-
-  #[error(transparent)]
-  CreateSurface(#[from] wgpu::CreateSurfaceError),
+  Render(#[from] statsify_render_core::Error),
 
   #[cfg(target_arch = "wasm32")]
   #[error("Failed to access canvas")]

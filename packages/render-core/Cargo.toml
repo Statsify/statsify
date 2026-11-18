@@ -1,0 +1,19 @@
+[package]
+name = "statsify-render-core"
+authors = ["Jacob Koshy <jababakoshy@gmail.com>"]
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bytemuck = { version = "1.23.0", features = ["derive"] }
+cgmath = "0.18.0"
+futures-intrusive = "0.5.0"
+image = "0.25.6"
+thiserror = "2.0.12"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wgpu = { version = "26.0.1", features = ["webgl"] }
+winit = "0.29"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+wgpu = "26.0.1"

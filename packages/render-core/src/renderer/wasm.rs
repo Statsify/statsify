@@ -4,22 +4,22 @@ use winit::dpi::PhysicalSize;
 use winit::window::Window;
 
 use super::backend::{Backend, OutputTexture};
-use crate::error::Result as SkinRendererResult;
+use crate::error::Result as RenderResult;
 
 pub struct WasmBackend {
   device: wgpu::Device,
   queue: wgpu::Queue,
   adapter: wgpu::Adapter,
-  pub surface: wgpu::Surface<'static>,
+  pub(crate) surface: wgpu::Surface<'static>,
 
   window: Arc<Window>,
-  pub size: PhysicalSize<u32>,
+  pub(crate) size: PhysicalSize<u32>,
 
-  pub mouse_pressed: bool,
+  pub(crate) mouse_pressed: bool,
 }
 
 impl WasmBackend {
-  pub async fn new(window: Window) -> SkinRendererResult<Self> {
+  pub async fn new(window: Window) -> RenderResult<Self> {
     let instance = Self::create_instance();
     let window = Arc::new(window);
     let surface = instance.create_surface(Arc::clone(&window))?;

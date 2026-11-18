@@ -22,6 +22,9 @@
     "lint": "cargo fmt && cargo clippy --fix --allow-dirty",
     "lint:ci": "cargo fmt && cargo clippy --fix --allow-dirty"
   },
+  "devDependencies": {
+    "@statsify/render-core": "workspace:^"
+  },
   "napi": {
     "binaryName": "skin-renderer",
     "targets": [
