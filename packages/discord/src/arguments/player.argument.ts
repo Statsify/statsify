@@ -35,6 +35,8 @@ export class PlayerArgument extends AbstractArgument {
 
     const searched = { name: query, value: query };
 
+    // Discord rejects the whole list when a choice is over 100 characters
+    if (query.length > 100) return [];
     if (query.length > 16) return [searched];
 
     const players = await apiClient.getPlayerAutocomplete(query);
