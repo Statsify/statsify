@@ -48,6 +48,29 @@ const halfTitleScores = defaultTitleScores.map((data) => ({
 
 export type TitleRequirement = "overall" | "default" | "half";
 
+export const DUELS_TITLES = {
+  overall: { mode: "", titleRequirement: "overall" },
+  arena: { mode: "Arena", titleRequirement: "default" },
+  bedwars: { mode: "Bed Wars", titleRequirement: "default" },
+  blitzsg: { mode: "Blitz", titleRequirement: "default" },
+  bow: { mode: "Bow", titleRequirement: "default" },
+  boxing: { mode: "Boxing", titleRequirement: "half" },
+  bridge: { mode: "Bridge", titleRequirement: "half" },
+  classic: { mode: "Classic", titleRequirement: "default" },
+  combo: { mode: "Combo", titleRequirement: "default" },
+  megawalls: { mode: "Mega Walls", titleRequirement: "half" },
+  nodebuff: { mode: "NoDebuff", titleRequirement: "half" },
+  op: { mode: "OP", titleRequirement: "default" },
+  quake: { mode: "Quakecraft", titleRequirement: "default" },
+  parkour: { mode: "Parkour", titleRequirement: "half" },
+  skywars: { mode: "SkyWars", titleRequirement: "default" },
+  spleef: { mode: "Spleef", titleRequirement: "default" },
+  sumo: { mode: "Sumo", titleRequirement: "default" },
+  uhc: { mode: "UHC", titleRequirement: "default" },
+} as const satisfies Record<string, { mode: string; titleRequirement: TitleRequirement }>;
+
+export type DuelsTitle = keyof typeof DUELS_TITLES;
+
 const titleRequirementScores: Record<TitleRequirement, Title[]> = {
   default: defaultTitleScores,
   overall: overallTitleScores,
