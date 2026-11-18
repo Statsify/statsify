@@ -134,12 +134,13 @@ export class CommandResolvable {
       return false;
     }
 
-    if (this.options?.length && other.options?.length) {
-      if (this.options.length !== other.options.length) return false;
+    const options = this.options ?? [];
+    const otherOptions = other.options ?? [];
 
-      for (let i = 0; i < this.options.length; i++)
-        if (!this.options[i].equals(other.options[i])) return false;
-    }
+    if (options.length !== otherOptions.length) return false;
+
+    for (let i = 0; i < options.length; i++)
+      if (!options[i].equals(otherOptions[i])) return false;
 
     if (d.description_localizations && other.description_localizations) {
       for (const key in this.description_localizations)
