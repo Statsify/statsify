@@ -31,9 +31,10 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
   EPIC: 12,
   LEGENDARY: 16,
   MYTHIC: 22,
-  SPECIAL: 3,
-  VERY_SPECIAL: 5,
 };
+
+// The anniversary hats, the only SPECIAL and VERY_SPECIAL accessories, are helmets since 0.27.3
+const isHat = ({ rarity }: ItemView) => rarity === "SPECIAL" || rarity === "VERY_SPECIAL";
 
 const upgradesOf = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
 
@@ -52,15 +53,14 @@ function stonePowerStats({ accessoryPower: listedAt, stats, bonus }: (typeof POW
   return scaled;
 }
 
-/** Variants that replace each other (party hats) list each other; a higher tier doesn't list its lower one. */
+/** Variants list each other (Dante's Talisman and Ring); a higher tier doesn't list its lower one. */
 const isMutual = (a: string, b: string) => upgradesOf(b).includes(a);
 
-/** Of two party hats, the one with the most AP counts, then the first id. */
+/** Of two variants, the one with the most AP counts, then the first id. */
 const outranks = (by: string, id: string, power: (id: string) => number) =>
   power(by) > power(id) || (power(by) === power(id) && by < id);
 
 function powerOf(id: string, rarity: Rarity | undefined, contacts: number) {
-  if (id === "RIFT_PRISM") return 11;
   const power = (rarity && ACCESSORY_POWER[rarity]) ?? 0;
   if (id === "HEGEMONY_ARTIFACT") return power * 2;
   return id === "ABICASE" ? power + Math.floor(contacts / 2) : power;
@@ -86,8 +86,8 @@ function storedAccessories(member: RawMember, items: ItemsResource) {
 type StepOrder = (a: MissingAccessory, b: MissingAccessory) => number;
 
 /**
- * null when the inventory API is off. Only the best of each upgrade chain counts, one of each duplicate and one party
- * hat, and a consumed Rift Prism counts as one in the bag. Each chain's missing step is the first in `order`.
+ * null when the inventory API is off. Only the best of each upgrade chain counts, one of each duplicate and one of two
+ * variants, and a consumed Rift Prism counts as one in the bag. Each chain's missing step is the first in `order`.
  */
 export function getAccessories(
   member: RawMember,
@@ -104,6 +104,7 @@ export function getAccessories(
 
   const views = decodeInventory(bag)
     .flatMap((item) => (item ? [toItemView(item)] : []))
+    .filter((view) => !isHat(view))
     .toSorted((a, b) => power(b) - power(a));
 
   const prism = member.rift?.access?.consumed_prism ? ["RIFT_PRISM"] : [];
@@ -130,7 +131,8 @@ export function getAccessories(
 
   const storage = member.accessory_bag_storage;
   const tuning = storage?.tuning?.slot_0 ?? {};
-  const accessoryPower = add(...active.map(power), prism.length * powerOf("RIFT_PRISM", undefined, 0));
+  // 0.27.3 returns a prism consumed at Erihann to the bag as a Rare one
+  const accessoryPower = add(...active.map(power), prism.length * powerOf("RIFT_PRISM", "RARE", 0));
   const stone = storage?.selected_power ? POWERS[storage.selected_power] : undefined;
   const stepOrder = order(accessoryPower, storage?.highest_magical_power);
   const stored = storedAccessories(member, items);
@@ -168,8 +170,9 @@ const byCoinsPerAccessoryPower = cheapestFirst<MissingAccessory>(
 );
 
 /**
- * Every tier above the bag's best in a chain is a step, worth its accessory power over that tier. Each chain (and the party
- * hats) keeps its first step in `order`. One the player keeps outside the bag is free, and nothing below it is offered.
+ * Every tier above the bag's best in a chain is a step, worth its accessory power over that tier. Each chain (and each
+ * pair of variants) keeps its first step in `order`. One the player keeps outside the bag is free, and nothing below it
+ * is offered.
  */
 function getMissing(
   owned: ReadonlySet<string>,
