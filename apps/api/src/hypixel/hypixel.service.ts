@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import { CacheLevel } from "@statsify/api-client";
 import {
   GameCounts,
@@ -19,7 +18,7 @@ import {
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
-import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
+import { Observable, catchError, lastValueFrom, map, of, throwError } from "rxjs";
 import type { APIData } from "@statsify/util";
 
 @Injectable()
@@ -142,18 +141,7 @@ export class HypixelService {
   }
 
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "http.client",
-      description: `GET ${this.httpService.axiosRef.getUri({ url })}`,
-    });
-
     return this.httpService.get(url, { params }).pipe(
-      tap((res) => {
-        child?.setHttpStatus(res.status);
-        child?.finish();
-      }),
       map((res) => res.data),
       catchError((err) =>
         throwError(
