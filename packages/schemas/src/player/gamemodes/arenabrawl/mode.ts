@@ -29,11 +29,23 @@ export class ArenaBrawlMode {
   @Field()
   public kdr: number;
 
+  @Field()
+  public gamesPlayed: number;
+
+  @Field()
+  public damage: number;
+
+  @Field()
+  public healing: number;
+
   public constructor(data: APIData, mode: string) {
     this.kills = data[`kills_${mode}`];
     this.deaths = data[`deaths_${mode}`];
     this.wins = data[`wins_${mode}`];
     this.losses = data[`losses_${mode}`];
+    this.gamesPlayed = data[`games_${mode}`];
+    this.damage = data[`damage_${mode}`];
+    this.healing = data[`healed_${mode}`];
 
     ArenaBrawlMode.applyRatios(this);
   }
