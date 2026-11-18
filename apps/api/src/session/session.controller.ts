@@ -10,6 +10,7 @@ import {
   ApiBadRequestResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiServiceUnavailableResponse,
   ApiTags,
 } from "@nestjs/swagger";
 import { Auth, AuthRole } from "#auth";
@@ -18,6 +19,7 @@ import {
   ErrorResponse,
   GetPlayerResponse,
   GetSessionResponse,
+  HypixelUnavailableException,
   SuccessResponse,
 } from "@statsify/api-client";
 import { PlayerDto, SessionDto, UserIdDto } from "#dtos";
@@ -31,20 +33,23 @@ export class SessionController {
   @ApiOperation({ summary: "Get the Session stats of a Player" })
   @ApiOkResponse({ type: GetSessionResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiServiceUnavailableResponse({ type: HypixelUnavailableException })
   @Get()
   @Auth({ weight: 2 })
   public async getSession(@Query() { player: tag, userUuid }: SessionDto) {
-    const player = await this.sessionService.get(tag, userUuid);
+    const { player, hypixelUnavailable } = await this.sessionService.get(tag, userUuid);
 
     return {
       success: !!player,
       player,
+      hypixelUnavailable,
     };
   }
 
   @ApiOperation({ summary: "Reset the Session stats of a Player" })
   @ApiOkResponse({ type: GetPlayerResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiServiceUnavailableResponse({ type: HypixelUnavailableException })
   @Patch()
   @Auth({ role: AuthRole.MEMBER })
   public async resetSession(

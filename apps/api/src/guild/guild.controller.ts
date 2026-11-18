@@ -11,6 +11,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiServiceUnavailableResponse,
   ApiTags,
 } from "@nestjs/swagger";
 import { Auth } from "#auth";
@@ -19,6 +20,7 @@ import {
   ErrorResponse,
   GetGuildResponse,
   GuildNotFoundException,
+  HypixelUnavailableException,
   PlayerNotFoundException,
 } from "@statsify/api-client";
 import { GuildDto } from "#dtos";
@@ -34,14 +36,16 @@ export class GuildController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiNotFoundResponse({ type: PlayerNotFoundException })
   @ApiNotFoundResponse({ type: GuildNotFoundException })
+  @ApiServiceUnavailableResponse({ type: HypixelUnavailableException })
   @Get()
   @Auth({ weight: 120 })
   public async getGuild(@Query() { guild: tag, type, cache }: GuildDto) {
-    const guild = await this.guildService.get(tag, type, cache);
+    const { guild, hypixelUnavailable } = await this.guildService.get(tag, type, cache);
 
     return {
       success: !!guild,
       guild,
+      hypixelUnavailable,
     };
   }
 }
