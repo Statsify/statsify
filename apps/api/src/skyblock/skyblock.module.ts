@@ -13,7 +13,7 @@ import { PlayerModule } from "#player";
 import { SkyBlockBudgetService } from "./skyblock-budget.service.js";
 import { SkyBlockController } from "./skyblock.controller.js";
 import { SkyBlockIconsService } from "./skyblock-icons.service.js";
-import { SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
+import { SkyBlockGarden, SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
 import { SkyBlockService } from "./skyblock.service.js";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
@@ -22,7 +22,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
   imports: [
     HypixelModule,
     PlayerModule,
-    TypegooseModule.forFeature([SkyBlockProfiles, SkyBlockMuseum]),
+    TypegooseModule.forFeature([SkyBlockProfiles, SkyBlockMuseum, SkyBlockGarden]),
     // HypixelModule's client sends the key on every request; the bazaar and items resource take none.
     HttpModule.register({
       baseURL: "https://api.hypixel.net/",

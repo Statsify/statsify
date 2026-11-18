@@ -60,6 +60,7 @@ export interface ProfileSummary {
 export interface SkyBlockProfileView extends PlayerRef, Freshness, ProfileSummary {
   member: MemberView;
   museumFetchedAt?: number;
+  gardenFetchedAt?: number;
   marketDown?: Exclude<keyof MemberView, "apiSettings">[]; // asked for, but left out until the price map and items resource are built
 }
 
@@ -76,6 +77,7 @@ export interface MemberView {
   crimson?: CrimsonSection | null;
   fishing?: FishingSection | null;
   jacob?: JacobSection | null;
+  garden?: GardenSection;
   chocolate?: ChocolateSection | null;
   hotf?: HotfSection | null;
   gear?: GearSection | null;
@@ -343,6 +345,47 @@ export interface JacobCrop {
   texture?: ItemTexture;
   bracket?: JacobBracket; // the best one reached
   personalBest?: number;
+}
+
+/** The member's copper and greenhouse crops, which need no Garden call, and the profile's Garden. */
+export interface GardenSection {
+  copper: number;
+  greenhouse: GreenhouseCrop[]; // the discovered ones, by name
+  garden: GardenView | null; // null: nothing to show (the profile's gardenFetchedAt says whether it was fetched)
+}
+
+export interface GreenhouseCrop {
+  id: string;
+  name: string;
+  analyzed: boolean;
+}
+
+/** Shared by the profile's members. */
+export interface GardenView {
+  level: Level;
+  plots: { unlocked: number; total: number };
+  crops: GardenCrop[]; // every crop with milestones, by name
+  composter: { id: string; name: string; level: number; maxLevel: number }[];
+  visitors: { unique: number; served: number; list: GardenVisitor[] };
+  barnSkins: { selected?: string; unlocked: string[] }; // names; unlocked: the ones from items
+  greenhouseSkins: string[]; // names
+}
+
+export interface GardenCrop {
+  id: string; // the item id the API uses, as JacobCrop's
+  name: string;
+  texture?: ItemTexture;
+  collected: number;
+  milestone: Level;
+  upgrade: { level: number; maxLevel: number };
+}
+
+export interface GardenVisitor {
+  id: string;
+  name: string;
+  rarity?: Rarity; // missing for a visitor NEU-REPO doesn't list
+  visits: number;
+  completed: number;
 }
 
 export interface ChocolateSection {

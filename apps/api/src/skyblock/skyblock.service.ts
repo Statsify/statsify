@@ -30,12 +30,13 @@ import {
   toProfilesView,
 } from "@statsify/skyblock";
 import { Singleflight } from "./singleflight.js";
-import { SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
+import { SkyBlockGarden, SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
 import { unzip, zip } from "./zip.js";
 import type {
   MemberView,
   PlayerRef,
+  RawGarden,
   RawMuseum,
   RawProfile,
   SectionNeed,
@@ -105,6 +106,7 @@ export class SkyBlockService {
     private readonly pricesService: SkyBlockPricesService,
     @InjectModel(SkyBlockProfiles) private readonly profilesModel: ReturnModelType<typeof SkyBlockProfiles>,
     @InjectModel(SkyBlockMuseum) private readonly museumModel: ReturnModelType<typeof SkyBlockMuseum>,
+    @InjectModel(SkyBlockGarden) private readonly gardenModel: ReturnModelType<typeof SkyBlockGarden>,
     @InjectRedis() private readonly redis: Redis
   ) {}
 
@@ -127,11 +129,13 @@ export class SkyBlockService {
     return this.getProfileOf(await this.getPlayer(tag), sections, cache, profileName);
   }
 
+  /** With `requireGarden`, a Garden Hypixel or the budget refuses throws, as the profiles do, instead of being left out. */
   public async getProfileOf(
     player: PlayerRef,
     sections: SkyBlockSection[],
     cache: CacheLevel,
-    profileName?: string
+    profileName?: string,
+    { requireGarden = false } = {}
   ): Promise<SkyBlockProfileView> {
     const { profiles, fetchedAt, stale } = await this.getPlayerProfiles(player, cache);
 
@@ -140,13 +144,14 @@ export class SkyBlockService {
     const member = profile.members[player.uuid];
 
     const needs = new Set(sections.flatMap((name) => DEFINITIONS[name].needs));
-    const [museum, prices, items] = await Promise.all([
+    const [museum, garden, prices, items] = await Promise.all([
       needs.has("museum") ? this.getStoredMuseum(profile.profile_id, cache) : undefined,
+      needs.has("garden") ? this.getStoredGarden(profile.profile_id, cache, requireGarden) : undefined,
       needs.has("prices") ? this.pricesService.getPriceMap() : undefined,
       needs.has("items") ? this.pricesService.getItems() : undefined,
     ]);
 
-    const built = { museum: true, prices: !!prices, items: !!items };
+    const built = { museum: true, garden: true, prices: !!prices, items: !!items };
     const ready = sections.filter((name) => DEFINITIONS[name].needs.every((need) => built[need]));
     const marketDown = sections.filter((name) => !ready.includes(name));
     if (ready.length === 0 && marketDown.length > 0) throw new SkyBlockUnavailableException("market");
@@ -156,6 +161,7 @@ export class SkyBlockService {
       profile,
       member,
       museum: museum?.value.members?.[player.uuid],
+      garden: garden?.value,
       prices,
       items,
     };
@@ -168,10 +174,11 @@ export class SkyBlockService {
       member: await toMemberView(
         input,
         ready,
-        (name) => this.getSection(name, input, fetchedAt, museum?.fetchedAt),
+        (name) => this.getSection(name, input, fetchedAt, { museum: museum?.fetchedAt, garden: garden?.fetchedAt }),
         museum?.value
       ),
       museumFetchedAt: museum?.fetchedAt,
+      gardenFetchedAt: garden?.fetchedAt,
       ...(marketDown.length > 0 && { marketDown }),
     };
   }
@@ -179,10 +186,20 @@ export class SkyBlockService {
   /** When a lookup at `CACHE` can next call Hypixel for the player's profiles, or undefined when it would now. */
   public async nextRefetchAt(uuid: string): Promise<number | undefined> {
     const document = await this.profilesModel.findOne({ uuid }, { fetchedAt: true }).exec();
-    if (!document) return undefined;
-    if (isFresh(document.fetchedAt, CacheLevel.CACHE)) return document.fetchedAt + SKYBLOCK_FRESH_FOR;
+    return this.nextRefetchOf(`profiles:${uuid}`, document?.fetchedAt);
+  }
 
-    const failedFor = await this.redis.pttl(failedKey(`profiles:${uuid}`));
+  /** The same for a profile's Garden, which only a lookup that needs it fetches. */
+  public async nextGardenRefetchAt(profileId: string): Promise<number | undefined> {
+    const document = await this.gardenModel.findOne({ profileId }, { fetchedAt: true }).exec();
+    return this.nextRefetchOf(`garden:${profileId}`, document?.fetchedAt);
+  }
+
+  private async nextRefetchOf(key: string, fetchedAt?: number) {
+    if (fetchedAt === undefined) return undefined;
+    if (isFresh(fetchedAt, CacheLevel.CACHE)) return fetchedAt + SKYBLOCK_FRESH_FOR;
+
+    const failedFor = await this.redis.pttl(failedKey(key));
     return failedFor > 0 ? Date.now() + failedFor : undefined;
   }
 
@@ -254,6 +271,32 @@ export class SkyBlockService {
     });
   }
 
+  /** A stored null is Hypixel's 404: the profile has no Garden, until a refetch finds one. */
+  private async getStoredGarden(
+    profileId: string,
+    cache: CacheLevel,
+    required: boolean
+  ): Promise<Stored<RawGarden | null> | undefined> {
+    const document = await this.gardenModel.findOne({ profileId }).exec();
+    const stored = document && { fetchedAt: document.fetchedAt, read: () => unzip<RawGarden | null>(document.data) };
+
+    if (stored && isFresh(stored.fetchedAt, cache)) return serve(stored, false);
+    if (cache === CacheLevel.CACHE_ONLY) return undefined;
+
+    return this.refetch(`garden:${profileId}`, stored, async () => {
+      const garden = await this.hypixelService.getSkyBlockGarden(profileId);
+      const fetchedAt = Date.now();
+
+      const data = await this.compress(garden, profileId);
+      if (data) await this.gardenModel.replaceOne({ profileId }, { profileId, fetchedAt, data }, { upsert: true });
+
+      return { value: garden, fetchedAt };
+    }).catch((error) => {
+      if (!required && error instanceof SkyBlockUnavailableException) return undefined;
+      throw error;
+    });
+  }
+
   private async refetch<T>(
     key: string,
     stored: StoredCopy<T> | null,
@@ -294,10 +337,17 @@ export class SkyBlockService {
     return data;
   }
 
-  /** A museum section is also keyed by the museum's copy, so one computed without it isn't served once it loads. */
-  private async getSection(name: SkyBlockSection, input: SectionInput, fetchedAt: number, museumFetchedAt = 0) {
+  /** A section that needs the museum or the Garden is also keyed by that copy, so one computed without it isn't served once it loads. */
+  private async getSection(
+    name: SkyBlockSection,
+    input: SectionInput,
+    fetchedAt: number,
+    copies: Partial<Record<"museum" | "garden", number>>
+  ) {
     const definition = DEFINITIONS[name];
-    const version = definition.needs.includes("museum") ? `${fetchedAt}:${museumFetchedAt}` : fetchedAt;
+    const needs: readonly SectionNeed[] = definition.needs;
+    const keyedBy = (["museum", "garden"] as const).filter((need) => needs.includes(need));
+    const version = [fetchedAt, ...keyedBy.map((need) => copies[need] ?? 0)].join(":");
     const key = `skyblock:section:v${SECTION_VERSION}:${input.uuid}:${input.profile.profile_id}:${name}:${version}`;
     const cached = await this.redis.getBuffer(key);
     if (cached) return unzip<MemberView[SkyBlockSection]>(cached);

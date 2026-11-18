@@ -32,6 +32,7 @@ import { SkyBlockChocolateProfile } from "./chocolate.profile.js";
 import { SkyBlockCrimsonProfile, crimsonIcons } from "./crimson.profile.js";
 import { SkyBlockDungeonsProfile, SkyBlockEssenceProfile } from "./dungeons.profile.js";
 import { SkyBlockFishingProfile } from "./fishing.profile.js";
+import { SkyBlockGardenProfile, gardenIcons } from "./garden.profile.js";
 import { SkyBlockHotfProfile } from "./hotf.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
 import { SkyBlockJacobProfile, jacobIcons } from "./jacob.profile.js";
@@ -178,6 +179,12 @@ export const SKYBLOCK_CARDS = {
     icons: jacobIcons,
     profile: SkyBlockJacobProfile,
   },
+  garden: {
+    sections: ["garden"],
+    settings: [],
+    icons: gardenIcons,
+    profile: SkyBlockGardenProfile,
+  },
   chocolate: {
     sections: ["chocolate"],
     settings: [],
@@ -291,6 +298,11 @@ export class SkyBlockCommand {
   @SubCommand({ description: (t) => t("commands.skyblock-jacob"), args: [PlayerArgument] })
   public jacob(context: CommandContext) {
     return this.run(context, "jacob");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-garden"), args: [PlayerArgument] })
+  public garden(context: CommandContext) {
+    return this.run(context, "garden");
   }
 
   @SubCommand({ description: (t) => t("commands.skyblock-chocolate"), args: [PlayerArgument] })

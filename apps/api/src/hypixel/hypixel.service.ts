@@ -23,7 +23,7 @@ import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
 import { Redis } from "ioredis";
 import { type APIData, config } from "@statsify/util";
-import type { RawMuseum, RawProfile } from "@statsify/skyblock";
+import type { RawGarden, RawMuseum, RawProfile } from "@statsify/skyblock";
 import type { Span } from "@sentry/node";
 
 const RATE_LIMIT_KEY = "hypixel:ratelimit";
@@ -202,6 +202,19 @@ export class HypixelService {
       this.request<RawMuseum>("/v2/skyblock/museum", { profile: profileId }, SKYBLOCK_TIMEOUT).pipe(
         map(({ members }) => ({ members })),
         catchError((error) => throwError(() => toSkyBlockError(error)))
+      )
+    );
+  }
+
+  /** null when the profile has no Garden, which Hypixel answers with a 404 ("No result was found"). */
+  public getSkyBlockGarden(profileId: string): Promise<RawGarden | null> {
+    return lastValueFrom(
+      this.request<{ garden: RawGarden }>("/v2/skyblock/garden", { profile: profileId }, SKYBLOCK_TIMEOUT).pipe(
+        map(({ garden }) => garden),
+        catchError((error: Error) => {
+          const { response } = (error.cause ?? {}) as { response?: { status: number } };
+          return response?.status === 404 ? of(null) : throwError(() => toSkyBlockError(error));
+        })
       )
     );
   }
