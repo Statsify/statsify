@@ -177,6 +177,19 @@ export class ApiService {
     });
   }
 
+  // The cosmetics are the player's stored Turbo Kart Racers values, passed through as is
+  public getKartRender(
+    uuid: string | undefined,
+    user: User | null,
+    cosmetics: { kart: string; helmet?: string; jacket?: string; pants?: string; shoes?: string }
+  ) {
+    return this.requestImage(isProduction ? "https://api.statsify.net/skin/kart" : "/skin/kart", {
+      uuid,
+      ...cosmetics,
+      extruded: User.hasExtrudedSkins(user),
+    });
+  }
+
   public getPlayerSkinTextures(tag: string) {
     return this.requestKey<GetSkinTexturesResponse, "skin">("/skin/textures", "skin", {
       player: tag,

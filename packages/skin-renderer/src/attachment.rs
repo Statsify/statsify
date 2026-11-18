@@ -13,6 +13,16 @@ const HAND: Vector3<f32> = Vector3::new(0.0, -7.0, -1.0);
 // The game moves a sneaking player's held item 0.203125 blocks down the hand
 const SNEAKING_HAND_DROP: Vector3<f32> = Vector3::new(0.0, -3.25, 0.0);
 
+// The game draws a player at 0.9375 of the size it draws other entities, and this renderer draws
+// the player at a pixel per model unit, so other entities grow by the inverse around the feet
+const PLAYER_SCALE: f32 = 0.9375;
+
+// An entity's model origin, this renderer's neck, is drawn 1.5078125 blocks above its feet
+const FEET: Vector3<f32> = Vector3::new(0.0, 7.0 - 1.5078125 * PIXELS_PER_BLOCK, 0.0);
+
+// An armor stand hangs its head a pixel below a player's
+const STAND_HEAD_DROP: Vector3<f32> = Vector3::new(0.0, -1.0, 0.0);
+
 #[napi(string_enum = "camelCase", skip_typescript)]
 #[derive(Clone, Copy)]
 pub enum Bone {
@@ -57,17 +67,23 @@ pub fn bone_transform(bone: Bone, wearer: &Wearer) -> Matrix4<f32> {
 }
 
 // The game only wears items on entities, so a root model with a display context is worn by an
-// invisible, unposed one standing where the player stands, as on an armor stand
+// invisible, unposed armor stand standing where the player stands
 pub fn root_transform(display: Option<DisplayContext>) -> Matrix4<f32> {
   let standing = Wearer {
     arm_width: ModelKind::Classic.arm_width(),
     pose: Pose::Standing,
   };
 
+  let stand = Matrix4::from_translation(FEET)
+    * Matrix4::from_scale(1.0 / PLAYER_SCALE)
+    * Matrix4::from_translation(-FEET);
+
   match display {
     None => Matrix4::identity(),
-    Some(DisplayContext::Head) => bone_transform(Bone::Head, &standing),
-    Some(DisplayContext::Thirdperson) => bone_transform(Bone::RightHand, &standing),
+    Some(DisplayContext::Head) => {
+      stand * Matrix4::from_translation(STAND_HEAD_DROP) * bone_transform(Bone::Head, &standing)
+    }
+    Some(DisplayContext::Thirdperson) => stand * bone_transform(Bone::RightHand, &standing),
   }
 }
 
@@ -152,8 +168,10 @@ mod tests {
     let kart = item_transform(Some(DisplayContext::Head), &display);
     let root = root_transform(Some(DisplayContext::Head));
 
-    assert_close(place(root, kart, [0.0; 3]), [0.0, 12.25, 3.125]);
-    assert_close(place(root, kart, [0.5, 0.5, -0.5]), [-9.0, 21.25, 12.125]);
+    // On the player's head that's (0, 12.25, 3.125). A stand's head is a pixel lower, and the
+    // stand is 16/15 the player's size around the feet at -17.125.
+    assert_close(place(root, kart, [0.0; 3]), [0.0, 13.142, 3.333]);
+    assert_close(place(root, kart, [0.5, 0.5, -0.5]), [-9.6, 22.742, 12.933]);
   }
 
   #[test]

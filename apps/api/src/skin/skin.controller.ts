@@ -6,11 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiServiceUnavailableResponse,
+  ApiTags,
+} from "@nestjs/swagger";
 import { Auth } from "#auth";
 import { Controller, Get, Query, StreamableFile } from "@nestjs/common";
 import { ErrorResponse, GetSkinTexturesResponse, PlayerNotFoundException } from "@statsify/api-client";
-import { HeadDto, PlayerDto, SkinRenderDto } from "#dtos";
+import { HeadDto, KartRenderDto, PlayerDto, SkinRenderDto } from "#dtos";
 import { SkinService } from "./skin.service.js";
 
 @Controller("/skin")
@@ -43,6 +50,16 @@ export class SkinController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getExtrudedRender(@Query() { uuid, ...options }: SkinRenderDto) {
     const render = await this.skinService.getRender(uuid, true, options);
+    return new StreamableFile(render, { type: "image/png" });
+  }
+
+  @Get("/kart")
+  @Auth()
+  @ApiOperation({ summary: "Get a Turbo Kart Racers Kart Render, with the Player Seated in It" })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiServiceUnavailableResponse({ type: ErrorResponse })
+  public async getKartRender(@Query() options: KartRenderDto) {
+    const render = await this.skinService.getKartRender(options);
     return new StreamableFile(render, { type: "image/png" });
   }
 
