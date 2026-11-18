@@ -50,9 +50,10 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
   EPIC: 12,
   LEGENDARY: 16,
   MYTHIC: 22,
-  SPECIAL: 3,
-  VERY_SPECIAL: 5,
 };
+
+// The anniversary hats, the only SPECIAL and VERY_SPECIAL accessories, are helmets since 0.27.3
+const isHat = ({ rarity }: ItemView) => rarity === "SPECIAL" || rarity === "VERY_SPECIAL";
 
 const upgradesOf = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
 
@@ -99,7 +100,6 @@ const outranks = (by: string, id: string, power: (id: string) => number) =>
   power(by) > power(id) || (power(by) === power(id) && by < id);
 
 function powerOf(id: string, rarity: Rarity | undefined, contacts: number) {
-  if (id === "RIFT_PRISM") return 11;
   const power = (rarity && ACCESSORY_POWER[rarity]) ?? 0;
   if (id === "HEGEMONY_ARTIFACT") return power * 2;
   return id === "ABICASE" ? power + Math.floor(contacts / 2) : power;
@@ -123,7 +123,7 @@ interface InPlaceUpgrade {
 const IN_PLACE: Record<string, InPlaceUpgrade> = {
   BOOK_OF_PROGRESSION: {
     unit: "level",
-    tiers: { UNCOMMON: 75, RARE: 150, EPIC: 225, LEGENDARY: 300, MYTHIC: 400 },
+    tiers: { UNCOMMON: 100, RARE: 200, EPIC: 300, LEGENDARY: 400, MYTHIC: 500 },
     progress: (_, member) => Math.floor((member.leveling?.experience ?? 0) / SKYBLOCK_XP_PER_LEVEL),
   },
   // Every saved Codex fits the milestone claimed, which can lag the bestiary's
@@ -138,7 +138,6 @@ const IN_PLACE: Record<string, InPlaceUpgrade> = {
     progress: ({ counters }) => counters?.thunder_charge ?? 0,
     recombobulates: true,
   },
-  POWER_ARTIFACT: { unit: "perfectGems", tiers: { EPIC: 7 }, progress: perfectGems, recombobulates: true },
   POWER_RELIC: { unit: "perfectGems", tiers: { LEGENDARY: 12 }, progress: perfectGems, recombobulates: true },
   RUNEBOOK: {
     unit: "runicKills",
@@ -237,6 +236,7 @@ export function getAccessories(
   const stepOrder = order(accessoryPower, storage?.highest_magical_power);
   const stored = storedAccessories(member, items);
   const tuningPoints = add(...Object.values(tuning));
+  const enrichments = active.filter((view) => view.enrichment).length;
   const listed = Object.keys(items.items).filter((id) => isCandidate(id, items.items[id]));
 
   return {
@@ -246,8 +246,8 @@ export function getAccessories(
     powerStats: stone ? stonePowerStats(stone, accessoryPower) : learned && learnedPowerStats(learned, accessoryPower),
     tuning,
     tuningPoints,
-    tuningTotal: tuningTotal(member, accessoryPower, tuningPoints),
-    enrichments: active.filter((view) => view.enrichment).length,
+    tuningTotal: tuningTotal(member, accessoryPower, enrichments, tuningPoints),
+    enrichments,
     unenriched: active.filter((view) => !view.enrichment && RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY")).length,
     recombobulated: active.filter((view) => view.recombobulated).length,
     unique: counted.size,
@@ -269,14 +269,14 @@ export function getAccessories(
   };
 }
 
-// A tuning point per 10 Accessory Power (the wiki's Maxwell page), and 13 more at Tuning Box X (owner exception,
-// unverified). No total at Box I to IX, whose points nothing lists, or below the points spent (some spent at more AP).
-function tuningTotal(member: RawMember, accessoryPower: number, spent: number) {
+// A tuning point per 10 Accessory Power (the wiki's Maxwell page) and per enrichment (its lore), 13 more at Tuning Box X
+// (owner exception, unverified). No total at Box I to IX, whose points nothing lists, or below the points spent.
+function tuningTotal(member: RawMember, accessoryPower: number, enrichments: number, spent: number) {
   const { rarity } = ATTRIBUTE_SHARDS.shards.find(({ attribute }) => attribute === "tuning_box")!;
   const levels = ATTRIBUTE_SHARDS.levels[rarity];
   const box = getLevel(member.attributes?.stacks?.tuning_box ?? 0, levels, levels.length).level;
   if (box > 0 && box < levels.length) return undefined;
-  const total = Math.floor(accessoryPower / 10) + (box === 0 ? 0 : 13);
+  const total = Math.floor(accessoryPower / 10) + enrichments + (box === 0 ? 0 : 13);
   return total < spent ? undefined : total;
 }
 
@@ -302,6 +302,7 @@ export function bagAccessories(member: RawMember, items: ItemsResource) {
 
   const views = decodeInventory(bag)
     .flatMap((item) => (item ? [toItemView(item)] : []))
+    .filter((view) => !isHat(view))
     .toSorted((a, b) => power(b) - power(a));
 
   const prism = member.rift?.access?.consumed_prism ? ["RIFT_PRISM"] : [];
@@ -326,7 +327,8 @@ export function bagAccessories(member: RawMember, items: ItemsResource) {
     }
   }
 
-  const accessoryPower = add(...active.map(power), prism.length * powerOf("RIFT_PRISM", undefined, 0));
+  // 0.27.3 returns a prism consumed at Erihann to the bag as a Rare one
+  const accessoryPower = add(...active.map(power), prism.length * powerOf("RIFT_PRISM", "RARE", 0));
   return { active, inactive, owned, counted, contacts, accessoryPower };
 }
 
@@ -419,11 +421,11 @@ if (import.meta.vitest) {
 
   test("countChains joins an accessory's tiers and variants however their upgrades link them", () => {
     const power = ["POWER_TALISMAN", "POWER_RING", "POWER_ARTIFACT", "POWER_RELIC"];
-    const hats = ["PARTY_HAT_CRAB", "PARTY_HAT_CRAB_ANIMATED", "PARTY_HAT_SLOTH"];
+    const dante = ["DANTE_TALISMAN", "DANTE_RING"];
 
     expect(countChains([])).toBe(0);
     expect(countChains(power)).toBe(1);
     expect(countChains(["POWER_TALISMAN", "POWER_RELIC"])).toBe(1);
-    expect(countChains([...power, ...hats, "RUNEBOOK"])).toBe(3);
+    expect(countChains([...power, ...dante, "RUNEBOOK"])).toBe(3);
   });
 }

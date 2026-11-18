@@ -41,12 +41,6 @@
       "fishing_speed": 10
     }
   },
-  "FOUR_EYED_FISH": {
-    "stats": {
-      "defense": 55,
-      "magic_find": 13
-    }
-  },
   "GOLD_CLAWS": {
     "petStats": {
       "crit_chance": 50,
@@ -108,7 +102,6 @@
   },
   "PET_ITEM_LUCKY_CLOVER": {
     "stats": {
-      "magic_find": 7,
       "overbloom": 7
     }
   },
@@ -135,7 +128,6 @@
   },
   "POIGNANT_LUCKY_CLOVER": {
     "stats": {
-      "magic_find": 13,
       "overbloom": 13
     }
   },

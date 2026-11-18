@@ -10,7 +10,7 @@
 // hypixel, textures) after the sha resync only those: node scripts/sync-data.ts <full NEU-REPO commit sha> [unit…]
 import { HYPIXEL_UNITS } from "./sync/hypixel.ts";
 import { MINECRAFT_DATA, MINECRAFT_DATA_SHA, TEXTURE_UNITS } from "./sync/textures.ts";
-import { NEU_REPO, NEU_UNITS } from "./sync/neu.ts";
+import { NEU_BEFORE_REMOVAL, NEU_REPO, NEU_UNITS } from "./sync/neu.ts";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
@@ -80,7 +80,7 @@ const write = (file: string, data: unknown) => {
 };
 
 const notice = ({ minecraftData, repo, sha, skills, collections }: Source, license: string) =>
-  `textures-1.8.json takes 1.8's block and item ids, names and variants from minecraft-data (${minecraftData.repo}) at ${minecraftData.sha}, which its README licenses as MIT.\n\nThe skill XP tables in leveling.json and the skill stats in stats.json come from Hypixel's SkyBlock skills resource (${skills.url}), version ${skills.version}. collections.json comes from Hypixel's SkyBlock collections resource (${collections.url}), version ${collections.version}.\n\nThe other JSON files here, and the base, slayer and pet score tables in stats.json, are derived from NEU-REPO (${repo}) at ${sha}, under its MIT license:\n\n${license}`;
+  `textures-1.8.json takes 1.8's block and item ids, names and variants from minecraft-data (${minecraftData.repo}) at ${minecraftData.sha}, which its README licenses as MIT.\n\nThe skill XP tables in leveling.json and the skill stats in stats.json come from Hypixel's SkyBlock skills resource (${skills.url}), version ${skills.version}. collections.json comes from Hypixel's SkyBlock collections resource (${collections.url}), version ${collections.version}.\n\nThe other JSON files here, and the slayer and pet score tables in stats.json, are derived from NEU-REPO (${repo}) at ${sha}. sblevels.json, the level colors in leveling.json and the base table in stats.json are derived from it at ${NEU_BEFORE_REMOVAL}, before it removed their files. All of it is under NEU-REPO's MIT license:\n\n${license}`;
 
 const dir = await mkdtemp(join(tmpdir(), "neu-repo-"));
 
