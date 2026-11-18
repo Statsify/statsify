@@ -87,14 +87,14 @@ function findLastAction(data: APIData): { action: string; time: number } {
     if (swHeads.recent) {
       actions.push({
         action: "SW_HEAD_RECENT",
-        time: swHeads.recent?.[swHeads.recent.length - 1]?.time ?? 0,
+        time: Math.max(0, ...swHeads.recent.map((head: { timestamp: number }) => head.timestamp)),
       });
     }
 
     if (swHeads.prestigious) {
       actions.push({
         action: "SW_HEAD_PRESTIGIOUS",
-        time: swHeads.prestigious?.[swHeads.prestigious.length - 1]?.time ?? 0,
+        time: Math.max(0, ...swHeads.prestigious.map((head: { timestamp: number }) => head.timestamp)),
       });
     }
   }
