@@ -51,6 +51,7 @@ import {
   mapBackground,
 } from "#constants";
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
+import { all } from "better-all";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -187,13 +188,21 @@ export class RatiosCommand {
     filterModes?: (player: Player, modes: GameModeWithSubModes<T>[]) => GameModeWithSubModes<T>[]
   ) {
     const user = context.getUser();
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    const tag = context.option<string>("player");
 
-    const [logo, skin, badge] = await Promise.all([
-      getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid, user),
-      this.apiService.getUserBadge(player.uuid),
-    ]);
+    const { apiService } = this;
+    const selfUuid = apiService.selfUuid(tag, user);
+
+    const { player, logo, skin, badge } = await all({
+      player: () => apiService.getPlayer(tag, user),
+      logo: () => getLogo(user),
+      async skin() {
+        return apiService.getPlayerSkin(selfUuid ?? (await this.$.player).uuid, user);
+      },
+      async badge() {
+        return apiService.getUserBadge(selfUuid ?? (await this.$.player).uuid);
+      },
+    });
 
     const key = MODES_TO_API.get(modes);
 

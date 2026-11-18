@@ -347,6 +347,9 @@ importers:
       axios:
         specifier: 1.11.0
         version: 1.11.0(debug@4.4.3(supports-color@7.2.0))
+      better-all:
+        specifier: ^0.0.9
+        version: 0.0.9
       discord-api-types:
         specifier: ^0.38.22
         version: 0.38.57
@@ -3476,6 +3479,9 @@ packages:
 
   before-after-hook@4.0.0:
     resolution: {integrity: sha512-q6tR3RPqIB1pMiTRMFcZwuG5T8vwp+vUvEG0vuI6B+Rikh5BfPp2fQ82c925FOs+b0lcFQ8CFrL+KbilfZFhOQ==}
+
+  better-all@0.0.9:
+    resolution: {integrity: sha512-RTddaak6W8VR6/SBVTzyCGEQBCkm0uMSRfQ+AvMAHxoYlZISjr1bKelXK+lFmde6GFlAFdl78XU9LYYCKw0eyg==}
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -8079,6 +8085,8 @@ snapshots:
   basic-ftp@5.3.1: {}
 
   before-after-hook@4.0.0: {}
+
+  better-all@0.0.9: {}
 
   binary-extensions@2.3.0: {}
 

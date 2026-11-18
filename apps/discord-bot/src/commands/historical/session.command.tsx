@@ -78,6 +78,7 @@ import { VampireZProfile } from "../vampirez/vampirez.profile.js";
 import { WallsProfile } from "../walls/walls.profile.js";
 import { WarlordsProfile } from "../warlords/warlords.profile.js";
 import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
+import { all } from "better-all";
 import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "../arcade/arcade.command.js";
@@ -368,18 +369,21 @@ export class SessionCommand {
     getSubModeEmojis?<M extends ApiModeFromGameModes<T>>(mode: M, submodes: SubModeForMode<T, M>[]): ModeEmoji[];
   }) {
     const user = context.getUser();
+    const tag = context.option<string>("player");
 
-    const player = await this.apiService.getPlayerSession(
-      context.option("player"),
-      user?.uuid,
-      user
-    );
+    const { apiService } = this;
+    const selfUuid = apiService.selfUuid(tag, user);
 
-    const [logo, skin, badge] = await Promise.all([
-      getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid, user),
-      this.apiService.getUserBadge(player.uuid),
-    ]);
+    const { player, logo, skin, badge } = await all({
+      player: () => apiService.getPlayerSession(tag, user?.uuid, user),
+      logo: () => getLogo(user),
+      async skin() {
+        return apiService.getPlayerSkin(selfUuid ?? (await this.$.player).uuid, user);
+      },
+      async badge() {
+        return apiService.getUserBadge(selfUuid ?? (await this.$.player).uuid);
+      },
+    });
 
     const allModes = modes.getModes();
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;

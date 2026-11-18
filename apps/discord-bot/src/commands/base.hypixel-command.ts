@@ -18,6 +18,7 @@ import {
   SubPage,
 } from "@statsify/discord";
 import { Container } from "typedi";
+import { all } from "better-all";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalTimeData } from "#components";
 import { getBackground, getLogo } from "@statsify/assets";
@@ -69,16 +70,25 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
 
   public async run(context: CommandContext) {
     const user = context.getUser();
+    const tag = context.option<string>("player");
 
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    const { apiService } = this;
+    const selfUuid = apiService.selfUuid(tag, user);
+    const getPreProfileData = this.getPreProfileData?.bind(this);
 
-    const [logo, skin, badge] = await Promise.all([
-      getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid, user),
-      this.apiService.getUserBadge(player.uuid),
-    ]);
-
-    const data: K = (await this.getPreProfileData?.(player)) ?? noop();
+    const { player, logo, skin, badge, data } = await all({
+      player: () => apiService.getPlayer(tag, user),
+      logo: () => getLogo(user),
+      async skin() {
+        return apiService.getPlayerSkin(selfUuid ?? (await this.$.player).uuid, user);
+      },
+      async badge() {
+        return apiService.getUserBadge(selfUuid ?? (await this.$.player).uuid);
+      },
+      async data() {
+        return (await getPreProfileData?.(await this.$.player)) ?? noop<K>();
+      },
+    });
 
     const allModes = this.modes.getModes();
     const filteredModes = this.filterModes?.(player, allModes) ?? allModes;

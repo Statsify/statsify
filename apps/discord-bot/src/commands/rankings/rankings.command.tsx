@@ -54,6 +54,7 @@ import {
 import { ButtonStyle } from "discord-api-types/v10";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
 import { RankingsProfile } from "./rankings.profile.js";
+import { all } from "better-all";
 import { arrayGroup } from "@statsify/util";
 import { games } from "./games.js";
 import { getBackground, getLogo } from "@statsify/assets";
@@ -308,8 +309,7 @@ export class RankingsCommand {
   ) {
     const user = context.getUser();
     const t = context.t();
-
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    const tag = context.option<string>("player");
 
     const isGameNotAll = game !== "all";
 
@@ -317,7 +317,24 @@ export class RankingsCommand {
       fields.filter((f) => f.startsWith(`stats.${game}`)) :
       fields;
 
-    const rankings = await this.apiService.getPlayerRankings(filteredFields, player.uuid);
+    const { apiService } = this;
+    const selfUuid = apiService.selfUuid(tag, user);
+
+    const { player, rankings, skin, badge, logo, background } = await all({
+      player: () => apiService.getPlayer(tag, user),
+      // Rankings come from the leaderboards the player lookup saves, so they wait on it even for yourself
+      async rankings() {
+        return apiService.getPlayerRankings(filteredFields, (await this.$.player).uuid);
+      },
+      async skin() {
+        return apiService.getPlayerSkin(selfUuid ?? (await this.$.player).uuid, user);
+      },
+      async badge() {
+        return apiService.getUserBadge(selfUuid ?? (await this.$.player).uuid);
+      },
+      logo: () => getLogo(user),
+      background: () => getBackground(...mapBackground(modes, modes.getApiModes()[0])),
+    });
 
     if (rankings.length === 0)
       throw new ErrorMessage(
@@ -327,13 +344,6 @@ export class RankingsCommand {
             displayName: this.apiService.emojiDisplayName(t, player.displayName),
           })
       );
-
-    const [skin, badge, logo, background] = await Promise.all([
-      this.apiService.getPlayerSkin(player.uuid, user),
-      this.apiService.getUserBadge(player.uuid),
-      getLogo(user),
-      getBackground(...mapBackground(modes, modes.getApiModes()[0])),
-    ]);
 
     const groups = arrayGroup(
       rankings.sort((a, b) => a.rank - b.rank),

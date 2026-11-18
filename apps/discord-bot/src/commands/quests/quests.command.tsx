@@ -17,6 +17,7 @@ import {
 } from "@statsify/discord";
 import { QUEST_MODES, QuestTime } from "@statsify/schemas";
 import { QuestProfileProps, QuestsProfile } from "./quests.profile.js";
+import { all } from "better-all";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { mapBackground } from "#constants";
@@ -66,17 +67,24 @@ export class QuestsCommand {
 
   private async run(context: CommandContext, time: QuestTime) {
     const user = context.getUser();
+    const tag = context.option<string>("player");
 
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    const { apiService } = this;
+    const selfUuid = apiService.selfUuid(tag, user);
 
-    const [logo, skin, badge, gameIcons, verifiedLogo, crossLogo] = await Promise.all([
-      getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid, user),
-      this.apiService.getUserBadge(player.uuid),
-      getAllGameIcons(),
-      getLogo("verified", 28),
-      getLogo("cross", 28),
-    ]);
+    const { player, logo, skin, badge, gameIcons, verifiedLogo, crossLogo } = await all({
+      player: () => apiService.getPlayer(tag, user),
+      logo: () => getLogo(user),
+      async skin() {
+        return apiService.getPlayerSkin(selfUuid ?? (await this.$.player).uuid, user);
+      },
+      async badge() {
+        return apiService.getUserBadge(selfUuid ?? (await this.$.player).uuid);
+      },
+      gameIcons: () => getAllGameIcons(),
+      verifiedLogo: () => getLogo("verified", 28),
+      crossLogo: () => getLogo("cross", 28),
+    });
 
     const { quests } = player.stats;
     let modes = this.modes.getModes();
