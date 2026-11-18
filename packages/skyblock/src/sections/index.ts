@@ -8,9 +8,14 @@
 
 import { getAccessories } from "./accessories.js";
 import { getApiSettings } from "../api-settings.js";
+import { getChocolate } from "./chocolate.js";
+import { getCrimson } from "./crimson.js";
 import { gameModeOf } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
+import { getFishing } from "./fishing.js";
+import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
+import { getJacob } from "./jacob.js";
 import { getSkyBlockLevel } from "./level.js";
 import { getPets } from "./pets.js";
 import { getSkills } from "./skills.js";
@@ -23,8 +28,13 @@ export type SectionNeed = "museum" | "prices" | "items";
 /** Every section a lookup can ask for: SECTIONS' and networth, which ./networth computes. */
 export const SKYBLOCK_SECTIONS = [
   "accessories",
+  "chocolate",
+  "crimson",
   "dungeons",
+  "fishing",
+  "hotf",
   "hotm",
+  "jacob",
   "level",
   "networth",
   "pets",
@@ -51,7 +61,7 @@ interface Section<K extends keyof MemberView> {
 /** Ironman, stranded and bingo profiles can't use the Auction House or the Bazaar. */
 const hasMarket = (profile: RawProfile) => gameModeOf(profile) === "normal";
 
-export type SectionKey = "accessories" | "dungeons" | "hotm" | "level" | "pets" | "skills" | "slayers";
+export type SectionKey = Exclude<keyof MemberView, "apiSettings" | "networth">;
 
 /** The caller fetches each section's needs before compute(). */
 export const SECTIONS: { [K in SectionKey]: Section<K> } = {
@@ -62,8 +72,13 @@ export const SECTIONS: { [K in SectionKey]: Section<K> } = {
       return getAccessories(member, items, prices, hasMarket(profile));
     },
   },
+  chocolate: { needs: [], compute: async ({ member }) => getChocolate(member) },
+  crimson: { needs: [], compute: async ({ member }) => getCrimson(member) },
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
+  fishing: { needs: [], compute: async ({ member }) => getFishing(member) },
+  hotf: { needs: [], compute: async ({ member }) => getHotf(member) },
   hotm: { needs: [], compute: async ({ member }) => getHotm(member) },
+  jacob: { needs: ["items"], compute: async ({ member, items }) => getJacob(member, items) },
   level: {
     needs: ["prices", "items"],
     compute: async ({ profile, member, items, prices }) => {

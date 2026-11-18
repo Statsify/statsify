@@ -26,8 +26,13 @@ export {
   type SkyBlockSection,
 } from "./sections/index.js";
 export { getAccessories } from "./sections/accessories.js";
+export { getChocolate } from "./sections/chocolate.js";
+export { getCrimson } from "./sections/crimson.js";
 export { getDungeons } from "./sections/dungeons.js";
+export { getFishing } from "./sections/fishing.js";
+export { getHotf } from "./sections/hotf.js";
 export { getHotm } from "./sections/hotm.js";
+export { getJacob } from "./sections/jacob.js";
 export { getSkyBlockLevel } from "./sections/level.js";
 export { getPets } from "./sections/pets.js";
 export { getSkills } from "./sections/skills.js";
