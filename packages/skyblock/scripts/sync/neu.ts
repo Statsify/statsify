@@ -18,6 +18,16 @@ import { skinHash } from "#textures";
 
 export const NEU_REPO = "NotEnoughUpdates/NotEnoughUpdates-REPO";
 
+// NEU-REPO's #3221 removed sblevels.json and misc.json's base_stats; this is the commit before it
+export const NEU_BEFORE_REMOVAL = "5a5e9866a8578c8a36891acc508fc1e46e41eb31";
+
+/** A NEU-REPO file as it was before #3221. */
+export async function neuBeforeRemoval<T>(path: string) {
+  const response = await fetch(`https://raw.githubusercontent.com/${NEU_REPO}/${NEU_BEFORE_REMOVAL}/${path}`);
+  if (!response.ok) throw new Error(`${path} at ${NEU_BEFORE_REMOVAL} answered ${response.status}`);
+  return (await response.json()) as T;
+}
+
 /** Stat values summed by stat, rounded off the float noise of running totals, zeros left out. */
 export const statTotals = (values: StatValue[]) => {
   const totals: Partial<Record<PlayerStat, number>> = {};
@@ -169,10 +179,8 @@ const skullHash = (nbt: string) => {
 
 /** Every generated table that comes from NEU-REPO alone. */
 export const NEU_UNITS = {
-  async sblevels({ readJson, write }: SyncContext) {
-    const sblevels = await readJson<{ sblevel_colours: Record<string, string>; core_task: Record<string, unknown> }>(
-      "constants/sblevels.json"
-    );
+  async sblevels({ write }: SyncContext) {
+    const sblevels = await neuBeforeRemoval<{ core_task: Record<string, unknown> }>("constants/sblevels.json");
     await write("sblevels.json", {
       core_task: {
         accessory_bag_xp: sblevels.core_task.accessory_bag_xp,
@@ -498,7 +506,6 @@ export const NEU_UNITS = {
     };
 
     const misc = await readJson<{
-      base_stats: Record<string, number>;
       ignored_talisman: string[];
       talisman_upgrades: Record<string, string[]>;
     }>("constants/misc.json");

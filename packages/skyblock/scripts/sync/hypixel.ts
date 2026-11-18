@@ -7,7 +7,7 @@
  */
 
 import { collectionBoards } from "@statsify/skyblock";
-import { neuStats, statTotals } from "./neu.ts";
+import { neuBeforeRemoval, neuStats, statTotals } from "./neu.ts";
 import { normalizeItemText, statRewards } from "#lore";
 import type { SyncContext } from "../sync-data.ts";
 import { toLevelCosts } from "#leveling";
@@ -62,9 +62,7 @@ export const HYPIXEL_UNITS = {
 
     const leveling = await readJson<Record<string, unknown>>("constants/leveling.json");
     const slayerXp = leveling.slayer_xp as Record<string, number[]>;
-    const sblevels = await readJson<{ sblevel_colours: Record<string, string>; core_task: Record<string, unknown> }>(
-      "constants/sblevels.json"
-    );
+    const sblevels = await neuBeforeRemoval<{ sblevel_colours: Record<string, string> }>("constants/sblevels.json");
     const fairySouls = await readJson<{ "Max Souls": number }>("constants/fairy_souls.json");
     await write("leveling.json", {
       catacombs: leveling.catacombs,
@@ -82,7 +80,7 @@ export const HYPIXEL_UNITS = {
       social: xpTable("SOCIAL"),
     });
 
-    const misc = await readJson<{ base_stats: Record<string, number> }>("constants/misc.json");
+    const misc = await neuBeforeRemoval<{ base_stats: Record<string, number> }>("constants/misc.json");
 
     const bonuses = await readJson<{
       bonus_stats: Record<string, Record<string, Record<string, number>>>;
