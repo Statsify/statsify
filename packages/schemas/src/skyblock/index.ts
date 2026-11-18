@@ -6,9 +6,128 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import boards from "./boards.json" with { type: "json" };
 import { Field } from "#metadata";
 import { FormattedGame } from "#game";
+import { formatTime } from "@statsify/util";
 import { modelOptions as ModelOptions } from "@typegoose/typegoose";
+
+export class SkyBlockFloorBoards {
+  @Field({ leaderboard: { limit: 50_000 } })
+  public completions: number;
+
+  @Field({ leaderboard: { fieldName: "Fastest S+", formatter: formatTime, sort: "ASC", limit: 50_000 } })
+  public fastestSPlus: number;
+}
+
+export class SkyBlockFloorsBoards {
+  @Field()
+  public entrance: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Floor 1" } })
+  public floor1: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Floor 2" } })
+  public floor2: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Floor 3" } })
+  public floor3: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Floor 4" } })
+  public floor4: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Floor 5" } })
+  public floor5: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Floor 6" } })
+  public floor6: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Floor 7" } })
+  public floor7: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Master Mode Floor 1" } })
+  public master1: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Master Mode Floor 2" } })
+  public master2: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Master Mode Floor 3" } })
+  public master3: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Master Mode Floor 4" } })
+  public master4: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Master Mode Floor 5" } })
+  public master5: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Master Mode Floor 6" } })
+  public master6: SkyBlockFloorBoards;
+
+  @Field({ leaderboard: { name: "Master Mode Floor 7" } })
+  public master7: SkyBlockFloorBoards;
+}
+
+/** Jacob's contest personal best per crop. */
+export class SkyBlockCropBoards {
+  @Field({ leaderboard: { limit: 50_000 } })
+  public cactus: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public carrot: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public cocoaBeans: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public melon: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public moonflower: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public mushroom: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public netherWart: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public potato: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public pumpkin: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public sugarCane: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public sunflower: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public wheat: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public wildRose: number;
+}
+
+/**
+ * Keyed as `boards.json` lists them, which @statsify/skyblock's sync-data writes since schemas can't import it. Hundreds
+ * of boards, so each keeps a shallower depth than the main ones.
+ */
+export class SkyBlockCollectionBoards {
+  [key: string]: number;
+}
+
+export class SkyBlockBestiaryBoards {
+  [key: string]: number;
+}
+
+for (const [key, name] of boards.collections) {
+  Field({ type: () => Number, leaderboard: { name, fieldName: "Collected", limit: 5000 } })(SkyBlockCollectionBoards.prototype, key);
+}
+
+for (const [key, name] of boards.bestiary) {
+  Field({ type: () => Number, leaderboard: { name, fieldName: "Kills", limit: 1000 } })(SkyBlockBestiaryBoards.prototype, key);
+}
 
 /**
  * One mode's boards for a member of a profile, from `toMemberStats` in `@statsify/skyblock`. Each board sets its 50,000
@@ -216,6 +335,39 @@ export class SkyBlockBoards {
 
   @Field({ leaderboard: { fieldName: "All-Time Chocolate", limit: 50_000 } })
   public chocolate: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public unsoulboundNetworth: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public mithrilPowder: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public gemstonePowder: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public glacitePowder: number;
+
+  @Field({ leaderboard: { fieldName: "Mage Reputation", limit: 50_000 } })
+  public magesReputation: number;
+
+  @Field({ leaderboard: { fieldName: "Barbarian Reputation", limit: 50_000 } })
+  public barbariansReputation: number;
+
+  @Field({ leaderboard: { limit: 50_000 } })
+  public kills: number;
+
+  @Field({ leaderboard: { name: "" } })
+  public floors: SkyBlockFloorsBoards;
+
+  @Field({ leaderboard: { name: "Contest Best" } })
+  public crops: SkyBlockCropBoards;
+
+  @Field({ leaderboard: { name: "Collection" } })
+  public collections: SkyBlockCollectionBoards;
+
+  @Field()
+  public bestiary: SkyBlockBestiaryBoards;
 }
 
 export const SKYBLOCK_BOARD_MODES = ["overall", "ironman", "stranded", "bingo"] as const;
