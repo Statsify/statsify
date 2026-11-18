@@ -6,6 +6,15 @@ pub enum Error {
   #[error("The provided image is not a valid skin texture")]
   InvalidSkinTexture,
 
+  #[error("The provided image is too large for a texture")]
+  TextureTooLarge,
+
+  #[error("The provided image is empty")]
+  EmptyTexture,
+
+  #[error("Enchanted armor needs a glint texture")]
+  MissingGlint,
+
   #[error(transparent)]
   Image(#[from] image::ImageError),
 
