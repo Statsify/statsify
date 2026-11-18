@@ -12,8 +12,8 @@ import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { RARITIES } from "#types";
-import { removeFormatting } from "@statsify/util";
+import { type PowerStat, RARITIES } from "#types";
+import { prettify, removeFormatting } from "@statsify/util";
 import { skinHash } from "#textures";
 import { tmpdir } from "node:os";
 import { toLevelCosts } from "#leveling";
@@ -340,7 +340,9 @@ try {
 
   const leveling = await readJson<Record<string, unknown>>("constants/leveling.json");
   const slayerXp = leveling.slayer_xp as Record<string, number[]>;
-  const { sblevel_colours } = await readJson<{ sblevel_colours: Record<string, string> }>("constants/sblevels.json");
+  const sblevels = await readJson<{ sblevel_colours: Record<string, string>; core_task: Record<string, unknown> }>(
+    "constants/sblevels.json"
+  );
   await write("leveling.json", {
     catacombs: leveling.catacombs,
     HOTM: leveling.HOTM,
@@ -348,24 +350,13 @@ try {
     leveling_xp: xpTable("COMBAT"),
     max_levels: Object.fromEntries(Object.entries(skills).map(([id, { maxLevel }]) => [id.toLowerCase(), maxLevel])),
     runecrafting_xp: xpTable("RUNECRAFTING"),
-    sblevel_colours,
+    sblevel_colours: sblevels.sblevel_colours,
     // NEU copies Revenant's 15 XP for Tarantula level 2; the game asks 25.
     slayer_xp: { ...slayerXp, spider: slayerXp.spider.with(1, 25) },
     slayer_to_highest_tier: leveling.slayer_to_highest_tier,
     social: xpTable("SOCIAL"),
   });
 
-  const pets = await readJson<Record<string, unknown>>("constants/pets.json");
-  const offsets = pets.pet_rarity_offset as Record<string, number>;
-  await write("pets.json", {
-    custom_pet_leveling: pets.custom_pet_leveling,
-    id_to_display_name: pets.id_to_display_name,
-    pet_levels: pets.pet_levels,
-    // NEU levels SPECIAL pets on Epic's table; the game uses Legendary's.
-    pet_rarity_offset: { ...offsets, SPECIAL: offsets.LEGENDARY },
-  });
-
-  const sblevels = await readJson<{ core_task: Record<string, unknown> }>("constants/sblevels.json");
   await write("sblevels.json", {
     core_task: {
       accessory_bag_xp: sblevels.core_task.accessory_bag_xp,
@@ -381,11 +372,28 @@ try {
     )
   );
 
+  // player_data.perks, which keeps the levels bought, calls NEU's eagle_advantage eagles_advantage
+  const perkIds: Record<string, string> = { eagle_advantage: "eagles_advantage" };
+  const shops = await readJson<Record<string, Record<string, { costs: number[] }>>>("constants/essenceshops.json");
+  await write("essenceshops.json", {
+    ...Object.fromEntries(
+      Object.entries(shops).map(([shop, perks]) => [
+        shop.replace("ESSENCE_", ""),
+        Object.fromEntries(Object.entries(perks).map(([id, { costs }]) => [perkIds[id] ?? id, costs.length])),
+      ])
+    ),
+    // NEU lacks the Rift's Sun Gecko shop: Blessing of Time's 3 tiers (the wiki's Sun Gecko essence shop page, an owner
+    // exception, unverified)
+    SUN_GECKO: { blessing_of_time: 3 },
+  });
+
   // Accessory id → its tier's rank, and NEU's per-variant ids (an Abicase model, a party hat color) → the API's one id.
   const accessoryRanks = new Map<string, number>();
   const apiIds = new Map<string, string>();
   const petTextures: Record<string, Record<string, string>> = {};
+  const petNames: Record<string, string> = {};
   const skinTextures: Record<string, string> = {};
+  const powers: Record<string, { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }> = {};
   const files = (await readdir(join(dir, "items"))).filter((file) => file.endsWith(".json"));
   const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
 
@@ -395,9 +403,33 @@ try {
     const pet = item.nbttag.includes("petInfo") ? /^(.+);(\d)$/.exec(item.internalname) : null;
     const hash = pet && skullHash(item.nbttag);
     if (pet && hash) (petTextures[pet[1]] ??= {})[RARITIES[Number(pet[2])]] = hash;
+    // "§7[Lvl {LVL}] §6Bee"; only the names prettify gets wrong (FRACTURED_MONTEZUMA_SOUL is Montezuma)
+    if (pet) {
+      const name = removeFormatting(item.displayname).replace(/^\[Lvl [^\]]+\] /, "");
+      if (name !== prettify(pet[1])) petNames[pet[1]] ??= name;
+    }
 
     const skin = item.internalname.startsWith("PET_SKIN_") && skullHash(item.nbttag);
     if (skin) skinTextures[item.internalname.slice("PET_SKIN_".length)] = skin;
+
+    // A power stone lists its Power's stats, some negative, at a set Accessory Power: "§7At §6250 Accessory Power§7:",
+    // then lines like "§c+80.99<glyph> Strength". Most then list a "Unique Power Bonus:", which doesn't scale.
+    const lore = item.lore ?? [];
+    const unlocks = /unlock the (.+?) power\./.exec(lore.map(removeFormatting).join(" "))?.[1];
+    const statsAt = lore.findIndex((line) => /^At \d+ Accessory Power:$/.test(removeFormatting(line)));
+    const bonusAt = lore.findIndex((line) => removeFormatting(line) === "Unique Power Bonus:");
+    const statsFrom = (at: number) =>
+      lore.slice(at + 1, lore.indexOf("", at)).map((line) => {
+        const [, color, value, name] = /^(§.)([+-][\d.]+)\S* (.+)$/.exec(line)!;
+        return { name, color, value: Number(value) };
+      });
+    if (unlocks && statsAt !== -1) {
+      powers[unlocks.toLowerCase().replaceAll(" ", "_")] = {
+        accessoryPower: Number(/\d+/.exec(removeFormatting(lore[statsAt]))![0]),
+        stats: statsFrom(statsAt),
+        bonus: bonusAt === -1 ? [] : statsFrom(bonusAt),
+      };
+    }
 
     // "§6§lLEGENDARY ACCESSORY", "§9§lRARE DUNGEON ACCESSORY", "§5§lEPIC HATCESSORY"
     const kind = /^(.+?)(?: DUNGEON)? (?:ACCESSORY|HATCESSORY)$/.exec(removeFormatting(item.lore?.at(-1) ?? "").trim());
@@ -409,6 +441,17 @@ try {
   }
 
   await write("pet-textures.json", { pets: petTextures, skins: skinTextures });
+  await write("powers.json", powers);
+
+  const pets = await readJson<Record<string, unknown>>("constants/pets.json");
+  const offsets = pets.pet_rarity_offset as Record<string, number>;
+  await write("pets.json", {
+    custom_pet_leveling: pets.custom_pet_leveling,
+    id_to_display_name: { ...petNames, ...(pets.id_to_display_name as Record<string, string>) },
+    pet_levels: pets.pet_levels,
+    // NEU levels SPECIAL pets on Epic's table; the game uses Legendary's.
+    pet_rarity_offset: { ...offsets, SPECIAL: offsets.LEGENDARY },
+  });
 
   const api = (id: string) => apiIds.get(id) ?? id;
   const upgrades = new Map<string, Set<string>>();

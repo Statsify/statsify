@@ -43,9 +43,14 @@ export const SkyBlockSkillsProfile = ({
   const sidebar: SidebarItem[] = skills ? [[t("skyblock.skillAverage"), t(skills.average), "§a"]] : [];
 
   const cells = skills ?
-    SKILLS.map((name) => (
-      <LevelBar title={prettify(name)} level={skills.skills[name]} color={SKILL_COLORS[name]} t={t} />
-    )) :
+    SKILLS.map((name) => {
+      const level = skills.skills[name];
+      const pastMax = level.xpForNext === undefined && level.xpCurrent > 0 && !level.unverified ?
+        `§7${t("skyblock.xpPastMax", { xp: t(Math.floor(level.xpCurrent)) })}` :
+        undefined;
+
+      return <LevelBar title={prettify(name)} level={level} color={SKILL_COLORS[name]} t={t} note={pastMax} />;
+    }) :
     [];
 
   return (

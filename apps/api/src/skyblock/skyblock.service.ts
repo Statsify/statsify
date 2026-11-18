@@ -50,7 +50,7 @@ const LIVE_FLOOR = 60_000;
 const FAILED_FOR = 60_000;
 const SECTION_SECONDS = 300;
 // Bump it when a section's shape changes, so a deploy never serves a section that older code cached
-const SECTION_VERSION = 1;
+const SECTION_VERSION = 2;
 const MAX_DOCUMENT = 15 * 1024 * 1024;
 
 const DEFINITIONS = { ...SECTIONS, networth: NETWORTH } satisfies Record<SkyBlockSection, { needs: readonly SectionNeed[] }>;

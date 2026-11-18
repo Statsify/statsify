@@ -17,6 +17,9 @@ import type { RawMember } from "#raw";
 const TIER_TOKENS = [1, 2, 2, 2, 2, 2, 3, 2, 2, 2];
 const CORE_TOKENS = [0, 1, 1, 1, 1, 2, 2, 3, 3, 3, 5];
 
+// A Crystal Nucleus run places each of these once. leveling.completions.NUCLEUS_RUNS stops counting at 50.
+const NUCLEUS_CRYSTALS = ["amber", "amethyst", "jade", "sapphire", "topaz"] as const;
+
 /**
  * The selected loadout of the Heart of the Mountain: slot 1's keys have no suffix and slot n's end in _n. A loadout
  * counts once it has a tokens_spent entry. Members from before loadouts keep their tree in mining_core.
@@ -32,9 +35,12 @@ export function getHotm(member: RawMember): HotmSection {
   // The old mining_core tree names it special_0
   const coreLevel = Number(nodes.core_of_the_mountain ?? nodes.special_0 ?? 0);
   const loadouts = Object.keys(tree?.tokens_spent ?? {}).filter((key) => /^mountain(_\d+)?$/.test(key)).length;
+  const crystals = Object.values(core.crystals ?? {});
+  const glacite = member.glacite_player_data;
 
   return {
     level,
+    coreLevel,
     loadout: { selected: slot, total: Math.max(slot, loadouts) },
     tokens: {
       spent: tree?.tokens_spent?.[`mountain${suffix}`] ?? core.tokens_spent ?? 0,
@@ -55,6 +61,16 @@ export function getHotm(member: RawMember): HotmSection {
       const nodeLevel = Number(nodes[id] ?? 0);
       return { id, name, level: nodeLevel, maxLevel, x, y, enabled: nodeLevel > 0 && nodes[`toggle_${id}`] !== false };
     }),
+    crystals: {
+      found: add(...crystals.map((crystal) => crystal.total_found ?? 0)),
+      placed: add(...crystals.map((crystal) => crystal.total_placed ?? 0)),
+    },
+    nucleusRuns: Math.min(...NUCLEUS_CRYSTALS.map((gem) => core.crystals?.[`${gem}_crystal`]?.total_placed ?? 0)),
+    glacite: {
+      corpses: add(...Object.values(glacite?.corpses_looted ?? {})),
+      fossils: glacite?.fossils_donated?.length ?? 0,
+      mineshafts: glacite?.mineshafts_entered ?? 0,
+    },
   };
 }
 
