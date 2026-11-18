@@ -23,7 +23,7 @@ const list = getLeaderboardFields(Guild).map(
 );
 
 const fuse = new Fuse(list, {
-  keys: ["name", "key"],
+  keys: ["name", "value"],
   includeScore: false,
   shouldSort: true,
   isCaseSensitive: false,
