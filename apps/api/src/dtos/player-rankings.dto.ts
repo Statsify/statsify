@@ -7,7 +7,8 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum } from "class-validator";
+import { IsArray } from "class-validator";
+import { IsLeaderboardField } from "./leaderboard-field.decorator.js";
 import { Player, getLeaderboardFields } from "@statsify/schemas";
 import { UuidDto } from "./uuid.dto.js";
 
@@ -15,6 +16,7 @@ const fields = getLeaderboardFields(Player).map(([key]) => key);
 
 export class PlayerRankingsDto extends UuidDto {
   @ApiProperty({ enum: fields, type: [String] })
-  @IsEnum(fields, { each: true })
+  @IsArray()
+  @IsLeaderboardField(fields, { each: true })
   public fields: string[];
 }
