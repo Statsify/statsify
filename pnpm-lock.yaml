@@ -586,8 +586,8 @@ importers:
         specifier: ^12.6.0
         version: 12.21.1(mongoose@8.24.7(socks@2.8.10)(supports-color@7.2.0))
       minecraft-protocol:
-        specifier: 1.61.0
-        version: 1.61.0(supports-color@7.2.0)
+        specifier: 1.68.0
+        version: 1.68.0(supports-color@7.2.0)
       mongoose:
         specifier: ^8.5.2
         version: 8.24.7(socks@2.8.10)(supports-color@7.2.0)
@@ -3268,11 +3268,9 @@ packages:
   '@vitest/utils@5.0.5':
     resolution: {integrity: sha512-/rBu7gzLDQI/SC79Tn98b5DwOgaHU/Gt4I9OVeP3YofzNaYtbImRCOJQmT1S6vOJg9gEIlWC+r3QxKkjuSa1nQ==}
 
-  '@xboxreplay/errors@0.1.0':
-    resolution: {integrity: sha512-Tgz1d/OIPDWPeyOvuL5+aai5VCcqObhPnlI3skQuf80GVF3k1I0lPCnGC+8Cm5PV9aLBT5m8qPcJoIUQ2U4y9g==}
-
-  '@xboxreplay/xboxlive-auth@3.3.3':
-    resolution: {integrity: sha512-j0AU8pW10LM8O68CTZ5QHnvOjSsnPICy0oQcP7zyM7eWkDQ/InkiQiirQKsPn1XRYDl4ccNu0WM582s3UKwcBg==}
+  '@xboxreplay/xboxlive-auth@5.1.0':
+    resolution: {integrity: sha512-UngHHsehZbiTjyyNmo8HvdoUDKMID1U9uVfrpFWUK/2UxPuVTKy5n+CzZQ3S488sW5vOhgh0lHqqynT8ouwgvw==}
+    engines: {node: '>=16.0.0'}
 
   '@xhmikosr/archive-type@8.1.0':
     resolution: {integrity: sha512-EXOjEbnZFE5c/nFMf4FOrEURVanzHpnkPYmnmr78u02/8hAhE0FMq8p9TK1IM0/bFr5VcyBUY0gfLm8f7dKy+Q==}
@@ -3429,9 +3427,6 @@ packages:
 
   avvio@9.3.1:
     resolution: {integrity: sha512-QyTKW61/qlba+cUQBm/sT9X8lri4UdomqSDwCnrnj1IvLVDRRiXRkz4CgBRWB+/cmfC7SK5WQc8T1vSdGvaUcQ==}
-
-  axios@0.21.4:
-    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
 
   axios@1.11.0:
     resolution: {integrity: sha512-1Lx3WLFQWm3ooKDYZD1eXmoGO9fxYQjrycfHFC8P0sCfQVXyROp0p9PFWBehewBOdCwHc+f/b8I0fMto5eSfwA==}
@@ -4659,8 +4654,8 @@ packages:
   minecraft-folder-path@1.2.0:
     resolution: {integrity: sha512-qaUSbKWoOsH9brn0JQuBhxNAzTDMwrOXorwuRxdJKKKDYvZhtml+6GVCUrY5HRiEsieBEjCUnhVpDuQiKsiFaw==}
 
-  minecraft-protocol@1.61.0:
-    resolution: {integrity: sha512-LZgcsdC88HZtuEYve7YENYvO6Xhe80Mf1rYLgz1frkMWAHWSSXfrplWoNKkKYcdVGM4Azc99NvbFjZdSDu4yKg==}
+  minecraft-protocol@1.68.0:
+    resolution: {integrity: sha512-atAGg/fhIVqyK6voWvED5QA+4ah65PNwpoDnkHawWhVzQbwFii77KcF6OpsU/Xlbi0o9GpihHiPdORSxXEA+Ug==}
     engines: {node: '>=22'}
 
   minimatch@10.2.6:
@@ -5024,8 +5019,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prismarine-auth@2.7.0:
-    resolution: {integrity: sha512-L8wTF6sdtnN6hViPNy+Nx39a8iQBwR5iO92AWCiym5cSXp/92pmnuwnTdcmNDWyqq6zY4hbibVGYhgLA1Ox8sQ==}
+  prismarine-auth@3.1.1:
+    resolution: {integrity: sha512-NuNrMGZdoigFKsvi1ZZgAEvNYNuE5qe6lo/tw+bqeNbkhpjHC0u1JNxLEujnfqduXI18e19PvUtWNMDl/gH7yw==}
 
   prismarine-biome@1.4.0:
     resolution: {integrity: sha512-fD2WmjN8Zr/xA/jeMInReLgaDlznwA5xlaK529PzWuGzgjpc5ijVu1Lp1oqHyZn3WxOG/bRVtW1bU+tmgCurWA==}
@@ -7834,14 +7829,7 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.2.0
 
-  '@xboxreplay/errors@0.1.0': {}
-
-  '@xboxreplay/xboxlive-auth@3.3.3(debug@4.4.3(supports-color@7.2.0))':
-    dependencies:
-      '@xboxreplay/errors': 0.1.0
-      axios: 0.21.4(debug@4.4.3(supports-color@7.2.0))
-    transitivePeerDependencies:
-      - debug
+  '@xboxreplay/xboxlive-auth@5.1.0': {}
 
   '@xhmikosr/archive-type@8.1.0(supports-color@7.2.0)':
     dependencies:
@@ -8039,12 +8027,6 @@ snapshots:
     dependencies:
       '@fastify/error': 4.2.1
       fastq: 1.20.3
-
-  axios@0.21.4(debug@4.4.3(supports-color@7.2.0)):
-    dependencies:
-      follow-redirects: 1.16.2(debug@4.4.3(supports-color@7.2.0))
-    transitivePeerDependencies:
-      - debug
 
   axios@1.11.0(debug@4.4.3(supports-color@7.2.0)):
     dependencies:
@@ -9226,7 +9208,7 @@ snapshots:
 
   minecraft-folder-path@1.2.0: {}
 
-  minecraft-protocol@1.61.0(supports-color@7.2.0):
+  minecraft-protocol@1.68.0(supports-color@7.2.0):
     dependencies:
       '@types/node-rsa': 1.1.4
       '@types/readable-stream': 4.0.25
@@ -9239,7 +9221,7 @@ snapshots:
       minecraft-folder-path: 1.2.0
       node-fetch: 2.7.0
       node-rsa: 0.4.2
-      prismarine-auth: 2.7.0(supports-color@7.2.0)
+      prismarine-auth: 3.1.1(supports-color@7.2.0)
       prismarine-chat: 1.13.0(supports-color@7.2.0)
       prismarine-nbt: 2.8.0
       prismarine-realms: 1.6.0(supports-color@7.2.0)
@@ -9674,10 +9656,10 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prismarine-auth@2.7.0(supports-color@7.2.0):
+  prismarine-auth@3.1.1(supports-color@7.2.0):
     dependencies:
       '@azure/msal-node': 2.16.3
-      '@xboxreplay/xboxlive-auth': 3.3.3(debug@4.4.3(supports-color@7.2.0))
+      '@xboxreplay/xboxlive-auth': 5.1.0
       debug: 4.4.3(supports-color@7.2.0)
       smart-buffer: 4.2.0
       uuid-1345: 1.0.2
