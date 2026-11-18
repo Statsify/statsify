@@ -126,8 +126,8 @@ export class SessionCommand {
     return this.run({
       context,
       modes: BEDWARS_MODES,
-      getProfile: (base, mode) => <BedWarsProfile {...base} mode={mode as Exclude<GameMode<BedWarsModes>, { api:"challenges" }>} />,
-      filterModes: (_, modes) => modes.filter((mode) => mode.api !== "challenges")
+      getProfile: (base, mode) => <BedWarsProfile {...base} mode={mode as Exclude<GameMode<BedWarsModes>, { api: "challenges" | "practice" }>} />,
+      filterModes: (_, modes) => modes.filter((mode) => mode.api !== "challenges" && mode.api !== "practice")
     });
   }
 
