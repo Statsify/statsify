@@ -14,6 +14,7 @@ use winit::window::{Window, WindowBuilder, WindowId};
 use crate::armor::Armor;
 use crate::error::{Error, Result};
 use crate::model::{Model, ModelKind, ModelOuterLayer};
+use crate::pose::Pose;
 use crate::renderer::wasm::WasmBackend;
 use crate::renderer::SkinRenderer;
 
@@ -149,6 +150,7 @@ impl JsSkinRenderer {
               &Armor::default(),
               None,
               None,
+              Pose::default(),
             ) {
               models.insert(*window_id, model);
             }
@@ -177,6 +179,7 @@ impl JsSkinRenderer {
                 &Armor::default(),
                 None,
                 None,
+                Pose::default(),
               )
               .ok()
           }) {

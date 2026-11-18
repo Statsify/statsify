@@ -45,6 +45,12 @@ impl Geometry {
       .for_each(|vertex| vertex.rotate_around(rotation));
   }
 
+  pub fn translate(&mut self, offset: Vector3<f32>) {
+    self.vertices.iter_mut().for_each(|vertex| {
+      vertex.position = (Vector3::from(vertex.position) + offset).into();
+    });
+  }
+
   pub fn scale_around(&mut self, scale: f32, origin: Vector3<f32>) {
     self
       .vertices
