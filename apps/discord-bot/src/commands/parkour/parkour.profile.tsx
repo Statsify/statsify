@@ -6,15 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, GameList, Header } from "#components";
-import { FormattedGame, GameId } from "@statsify/schemas";
-import { formatRecordTime } from "@statsify/util";
+import { Container, Footer, type GameEntry, GameList, Header } from "#components";
+import { FormattedGame, GameId, Parkour, scanMetadata } from "@statsify/schemas";
+import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { Image } from "skia-canvas";
 
 interface ParkourProfileProps extends BaseProfileProps {
   gameIcons: Record<GameId, Image>;
 }
+
+const LOBBIES = scanMetadata(Parkour).map(([lobby]) => lobby as keyof Parkour);
 
 export const ParkourProfile = ({
   skin,
@@ -27,9 +29,10 @@ export const ParkourProfile = ({
 }: ParkourProfileProps) => {
   const { parkour } = player.stats;
 
-  const times: [GameId, any][] = Object.entries(parkour)
-    .sort((a, b) => (a[1] || Number.MAX_VALUE) - (b[1] || Number.MAX_VALUE))
-    .map(([field, time]) => [field as GameId, formatRecordTime(time)]);
+  const times: GameEntry[] = LOBBIES
+    .map((lobby) => [lobby, parkour[lobby]] as const)
+    .sort((a, b) => (a[1] ?? Number.MAX_VALUE) - (b[1] ?? Number.MAX_VALUE))
+    .map(([lobby, time]) => [lobby, time === undefined ? "N/A" : formatTime(time)]);
 
   return (
     <Container background={background}>
