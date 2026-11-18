@@ -10,7 +10,7 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 import { join } from "node:path";
 import { readdir } from "node:fs/promises";
-export const inquirerLogger = (title, message, newLine = true) => {
+export const inquirerLogger = (title: string, message: string, newLine = true) => {
   console.log(
     `${newLine ? "\n" : ""}${chalk.magenta("!")} ${chalk.bold(title)} ${chalk.magenta(
       message
@@ -34,12 +34,7 @@ export const ROOT = "../../";
 export const FILE_ENDINGS = [".tsx", ".mts", ".cts", ".ts"];
 export const FILE_ENDING_REGEX = new RegExp(/\.tsx|\.mts|\.cts|\.ts/);
 
-/**
- *
- * @param {string} path
- * @param {string} ignoredWorkspaces
- */
-export async function fetchWorkspaces(path, ignoredWorkspaces = []) {
+export async function fetchWorkspaces(path: string, ignoredWorkspaces: string[] = []) {
   const workspaces = await readdir(join(ROOT, path));
 
   return workspaces

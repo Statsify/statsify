@@ -7,13 +7,11 @@
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "lint:ci": "oxlint --format=github",
-    "api-key": "node src/api-key.js",
-    "delete-sessions": "node src/delete-sessions.js",
-    "limit-redis": "node src/limit-redis.js",
-    "purge-repo": "node src/purge-repo.js",
-    "rank-emojis": "node src/rank-emojis.js",
-    "timestamp": "node --no-warnings src/timestamp.js",
-    "validate-commands": "node --no-warnings src/validate-commands.js",
+    "api-key": "node src/api-key.ts",
+    "limit-redis": "node src/limit-redis.ts",
+    "purge-repo": "node src/purge-repo.ts",
+    "rank-emojis": "node src/rank-emojis.ts",
+    "validate-commands": "node --no-warnings src/validate-commands.ts",
     "blur-backgrounds": "node src/blur-backgrounds.ts"
   },
   "dependencies": {
