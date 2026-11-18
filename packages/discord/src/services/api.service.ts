@@ -28,6 +28,9 @@ import { config, removeFormatting } from "@statsify/util";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
+const PLAYER_UUID_REGEX =
+  /^(?:[0-9a-f]{32}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
+
 const apiClientRoute = await config("apiClient.route");
 const apiClientKey = await config("apiClient.key");
 
@@ -132,7 +135,7 @@ export class ApiService extends StatsifyApiService {
 
     if (type) {
       resolvedType = type;
-    } else if (!tag || this.isDiscordId(tag)) {
+    } else if (!tag || this.isDiscordId(tag) || PLAYER_UUID_REGEX.test(tag)) {
       resolvedType = GuildQuery.PLAYER;
     } else if (GUILD_ID_REGEX.test(tag)) {
       resolvedType = GuildQuery.ID;
