@@ -9,19 +9,19 @@
 import * as Sentry from "@sentry/node";
 import axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
+  AutocompleteType,
   CacheLevel,
   GuildQuery,
   LeaderboardQuery,
 } from "./constants.js";
 import {
   DeletePlayerResponse,
+  GetAutocompleteResponse,
   GetCommandUsageResponse,
   GetGamecountsResponse,
   GetGuildResponse,
-  GetGuildSearchResponse,
   GetKeyResponse,
   GetPlayerResponse,
-  GetPlayerSearchResponse,
   GetSessionResponse,
   GetSkinTexturesResponse,
   GetStatusResponse,
@@ -106,14 +106,6 @@ export class ApiService {
     );
   }
 
-  public getPlayerAutocomplete(query: string) {
-    return this.requestKey<GetPlayerSearchResponse, "players">(
-      "/player/search",
-      "players",
-      { query }
-    );
-  }
-
   public getGuild(tag: string, type: GuildQuery) {
     return this.requestKey<GetGuildResponse, "guild">("/guild", "guild", {
       guild: tag,
@@ -121,12 +113,22 @@ export class ApiService {
     });
   }
 
-  public getGuildAutocomplete(query: string) {
-    return this.requestKey<GetGuildSearchResponse, "guilds">(
-      "/guild/search",
-      "guilds",
-      { query }
-    );
+  public getAutocomplete(type: AutocompleteType, id: string, query: string) {
+    return this.requestKey<GetAutocompleteResponse, "names">("/autocomplete", "names", {
+      type,
+      id,
+      query,
+    });
+  }
+
+  public addAutocompleteHistory(type: AutocompleteType, id: string, name: string) {
+    return this.request<SuccessResponse>("/autocomplete/history", {}, "POST", {
+      body: { type, id, name },
+    });
+  }
+
+  public clearAutocompleteHistory(id: string) {
+    return this.request<SuccessResponse>("/autocomplete/history", { id }, "DELETE");
   }
 
   public getGuildLeaderboard(

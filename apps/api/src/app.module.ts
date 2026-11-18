@@ -8,6 +8,7 @@
 
 import { AppController } from "./app.controller.js";
 import { AuthModule } from "#auth";
+import { AutocompleteModule } from "#autocomplete";
 import { CommandsModule } from "#commands";
 import { GuildModule } from "#guild";
 import { HypixelResourcesModule } from "#hypixel-resources";
@@ -45,6 +46,7 @@ const redisUrl = await config("database.redisUrl");
     AuthModule,
     UserModule,
     CommandsModule,
+    AutocompleteModule,
   ],
   controllers: [AppController],
 })

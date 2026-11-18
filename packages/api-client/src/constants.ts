@@ -51,3 +51,10 @@ export const LeaderboardQuery = {
 } as const;
 
 export type LeaderboardQuery = (typeof LeaderboardQuery)[keyof typeof LeaderboardQuery];
+
+export const AutocompleteType = {
+  PLAYER: "player",
+  GUILD: "guild",
+} as const;
+
+export type AutocompleteType = (typeof AutocompleteType)[keyof typeof AutocompleteType];
