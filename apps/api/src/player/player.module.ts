@@ -7,7 +7,8 @@
  */
 
 import { HypixelModule } from "#hypixel";
-import { Module } from "@nestjs/common";
+import { LinkedRolesModule } from "#linked-roles";
+import { Module, forwardRef } from "@nestjs/common";
 import { Player } from "@statsify/schemas";
 import { PlayerController } from "./player.controller.js";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
@@ -20,6 +21,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 @Module({
   imports: [
     HypixelModule,
+    forwardRef(() => LinkedRolesModule),
     TypegooseModule.forFeature([Player]),
   ],
   controllers: [PlayerController, PlayerLeaderboardsController, PlayerSearchController],
