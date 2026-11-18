@@ -45,6 +45,7 @@
     "#textures": {
       "types": "./src/textures.ts",
       "default": "./dist/textures.js"
-    }
+    },
+    "#fixtures": "./fixtures/load.ts"
   }
 }
