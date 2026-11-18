@@ -20,6 +20,20 @@ import type { RawMember, RawMuseum, RawMuseumMember, RawProfile } from "#raw";
 
 export type SectionNeed = "museum" | "prices" | "items";
 
+/** Every section a lookup can ask for: SECTIONS' and networth, which ./networth computes. */
+export const SKYBLOCK_SECTIONS = [
+  "accessories",
+  "dungeons",
+  "hotm",
+  "level",
+  "networth",
+  "pets",
+  "skills",
+  "slayers",
+] as const;
+
+export type SkyBlockSection = (typeof SKYBLOCK_SECTIONS)[number];
+
 export interface SectionInput {
   uuid: string;
   profile: RawProfile;
