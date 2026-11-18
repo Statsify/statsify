@@ -19,11 +19,18 @@ export class HypixelUnavailableException extends ServiceUnavailableException {
   @ApiProperty()
   public error: string;
 
-  public constructor() {
+  @ApiProperty({
+    required: false,
+    description: "Seconds until Hypixel stops rate limiting Statsify, only set when it is",
+  })
+  public retryAfter?: number;
+
+  public constructor(retryAfter?: number) {
     super({
       statusCode: 503,
       error: "Service Unavailable",
       message: "hypixel",
+      retryAfter,
     });
   }
 }
