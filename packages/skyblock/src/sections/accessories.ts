@@ -21,8 +21,7 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
   EPIC: 12,
   LEGENDARY: 16,
   MYTHIC: 22,
-  SPECIAL: 3,
-  VERY_SPECIAL: 5,
+  // SPECIAL and VERY_SPECIAL give none: those were the anniversary hats, which 0.27.3 made helmets
 };
 
 const upgradesOf = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
@@ -35,7 +34,6 @@ const outranks = (by: string, id: string, power: (id: string) => number) =>
   power(by) > power(id) || (power(by) === power(id) && by < id);
 
 function powerOf(id: string, rarity: Rarity | undefined, contacts: number) {
-  if (id === "RIFT_PRISM") return 11;
   const power = (rarity && ACCESSORY_POWER[rarity]) ?? 0;
   if (id === "HEGEMONY_ARTIFACT") return power * 2;
   return id === "ABICASE" ? power + Math.floor(contacts / 2) : power;
@@ -99,7 +97,8 @@ export function getAccessories(
   const storage = member.accessory_bag_storage;
 
   return {
-    accessoryPower: add(...active.map(power), prism.length * powerOf("RIFT_PRISM", undefined, 0)),
+    // 0.27.3 returns a prism consumed at Erihann to the bag as a Rare one
+    accessoryPower: add(...active.map(power), prism.length * powerOf("RIFT_PRISM", "RARE", 0)),
     highestAccessoryPower: storage?.highest_magical_power,
     selectedPower: storage?.selected_power,
     tuning: storage?.tuning?.slot_0 ?? {},
