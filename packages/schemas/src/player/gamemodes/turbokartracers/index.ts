@@ -15,6 +15,7 @@ import {
   getFormattedPrefix,
 } from "#prefixes";
 import { Progression } from "#progression";
+import { TurboKartRacersMap } from "./map.js";
 import { add, ratio } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
@@ -82,6 +83,30 @@ export class TurboKartRacers {
   public goldRate: number;
 
   @Field()
+  public bananaHitsSent: number;
+
+  @Field()
+  public bananaHitsReceived: number;
+
+  @Field()
+  public torpedoHitsReceived: number;
+
+  @Field()
+  public retro: TurboKartRacersMap;
+
+  @Field()
+  public canyon: TurboKartRacersMap;
+
+  @Field()
+  public olympus: TurboKartRacersMap;
+
+  @Field({ leaderboard: { name: "Hypixel GP" } })
+  public hypixelGP: TurboKartRacersMap;
+
+  @Field()
+  public jungleRush: TurboKartRacersMap;
+
+  @Field()
   public progression: Progression;
 
   @Field()
@@ -97,18 +122,27 @@ export class TurboKartRacers {
     this.coins = data.coins;
     this.tokens = legacy.gingerbread_tokens;
 
+    this.retro = new TurboKartRacersMap(data, "retro");
+    this.canyon = new TurboKartRacersMap(data, "canyon");
+    this.olympus = new TurboKartRacersMap(data, "olympus");
+    this.hypixelGP = new TurboKartRacersMap(data, "hypixelgp");
+    this.jungleRush = new TurboKartRacersMap(data, "junglerush");
+
     this.gamesPlayed = add(
-      data.retro_plays,
-      data.olympus_plays,
-      data.canyon_plays,
-      data.hypixelgp_plays,
-      data.junglerush_plays
+      this.retro.gamesPlayed,
+      this.olympus.gamesPlayed,
+      this.canyon.gamesPlayed,
+      this.hypixelGP.gamesPlayed,
+      this.jungleRush.gamesPlayed
     );
 
     this.grandPrixTokens = data.grand_prix_tokens;
     this.lapsCompleted = data.laps_completed;
     this.boxesPickedUp = data.box_pickups;
     this.coinsPickedUp = data.coins_picked_up;
+    this.bananaHitsSent = data.banana_hits_sent;
+    this.bananaHitsReceived = data.banana_hits_received;
+    this.torpedoHitsReceived = data.blue_torpedo_hit;
 
     this.bronze = data.bronze_trophy;
     this.silver = data.silver_trophy;
@@ -137,3 +171,5 @@ export class TurboKartRacers {
     this.trophyRate = ratio(this.total, this.gamesPlayed, 100);
   }
 }
+
+export * from "./map.js";
