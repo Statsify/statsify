@@ -55,6 +55,28 @@ const OverallBlitzSGTable = ({ blitzsg, t }: OverallBlitzSGTableProps) => (
           color="§6"
         />
       </Table.tr>
+      <Table.tr>
+        <Table.td
+          title={t("stats.gamesPlayed")}
+          value={t(blitzsg.overall.gamesPlayed)}
+          color="§b"
+        />
+        <Table.td
+          title={t("stats.playtime")}
+          value={formatTime(blitzsg.overall.playtime)}
+          color="§e"
+        />
+        <Table.td
+          title={t("stats.damage")}
+          value={t(blitzsg.overall.damage)}
+          color="§a"
+        />
+        <Table.td
+          title={t("stats.damageTaken")}
+          value={t(blitzsg.overall.damageTaken)}
+          color="§c"
+        />
+      </Table.tr>
     </Table.ts>
     <Table.tr>
       <Table.ts title="§6Solo">
@@ -150,7 +172,13 @@ export const BlitzSGProfile = ({
     case "overall":
       table = <OverallBlitzSGTable blitzsg={blitzsg} t={t} />;
 
-      sidebar.push([t("stats.kit"), prettify(blitzsg.kit), "§e"]);
+      sidebar.push(
+        [t("stats.kit"), prettify(blitzsg.kit), "§e"],
+        [t("stats.blitzStarUses"), t(blitzsg.overall.blitzStarUses), "§6"],
+        [t("stats.tauntKills"), t(blitzsg.overall.tauntKills), "§c"],
+        [t("stats.chestsOpened"), t(blitzsg.overall.chestsOpened), "§a"],
+        [t("stats.potionsDrunk"), t(blitzsg.overall.potionsDrunk), "§d"]
+      );
       break;
 
     default: {
