@@ -37,5 +37,8 @@
 "@statsify/schemas":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/schemas"
 
+"@statsify/skyblock":
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/skyblock"
+
 "@statsify/util":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/util"
