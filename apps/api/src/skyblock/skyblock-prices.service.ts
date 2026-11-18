@@ -14,6 +14,7 @@ import {
   type PriceMap,
   type PriceView,
   type RawBazaar,
+  type RawBingoResource,
   type RawElection,
   describeKey,
   labelVariants,
@@ -42,6 +43,7 @@ const LOCK_KEY = "skyblock:prices:lock";
 const BAZAAR_KEY = "skyblock:bazaar";
 const ITEMS_KEY = "skyblock:resource:items";
 const ELECTION_KEY = "skyblock:resource:election";
+const BINGO_KEY = "skyblock:resource:bingo";
 const AUTOCOMPLETE_KEY = "skyblock:items:autocomplete";
 // Discord's cap on autocomplete choices
 const MAX_MATCHES = 25;
@@ -50,6 +52,7 @@ const PRICES_REFRESH = (await config("skyblock.pricesRefreshMinutes", { default:
 const BAZAAR_REFRESH = 60_000;
 const ITEMS_REFRESH = 12 * 60 * 60_000;
 const ELECTION_REFRESH = 30 * 60_000;
+const BINGO_REFRESH = 30 * 60_000;
 /** How long a failed refetch serves the stored copy, or nothing, before Hypixel is tried again. */
 export const SKYBLOCK_FAILED_FOR = 60_000;
 // Outlives the slowest rebuild, and holds the next pull back as long after each one, so a feed whose lastUpdated
@@ -122,6 +125,11 @@ export class SkyBlockPricesService implements OnModuleDestroy {
       // new mayor not in yet) isn't refetched on every request
       ({ value, fetchedAt }) => Boolean(termOf(value, fetchedAt)) && !termOf(value, Date.now())
     );
+  }
+
+  /** This month's Bingo card, from the keyless bingo resource. */
+  public getBingo(): Promise<RawBingoResource | undefined> {
+    return this.getCopy(BINGO_KEY, BINGO_REFRESH, () => this.get<RawBingoResource>("/v2/resources/skyblock/bingo"));
   }
 
   public async getPrice(id: string): Promise<PriceView> {

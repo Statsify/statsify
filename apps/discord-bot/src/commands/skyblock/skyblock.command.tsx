@@ -29,10 +29,16 @@ import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
 import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
 import { SkyBlockAccessoriesProfile, accessoryIcons } from "./accessories.profile.js";
+import { SkyBlockAttributesProfile, SkyBlockStatsProfile } from "./stats.profile.js";
+import { SkyBlockBestiaryProfile, SkyBlockCollectionsProfile, SkyBlockMinionsProfile, collectionIcons, minionIcons } from "./collections.profile.js";
+import { SkyBlockBingoProfile } from "./bingo.profile.js";
+import { SkyBlockCalendarProfile } from "./calendar.profile.js";
 import { SkyBlockChocolateProfile } from "./chocolate.profile.js";
 import { SkyBlockCrimsonProfile, crimsonIcons } from "./crimson.profile.js";
 import { SkyBlockDungeonsProfile, SkyBlockEssenceProfile } from "./dungeons.profile.js";
+import { SkyBlockExperimentsProfile, SkyBlockMiscProfile, SkyBlockRiftProfile, consumableIcons } from "./misc.profile.js";
 import { SkyBlockFishingProfile } from "./fishing.profile.js";
+import { SkyBlockGearProfile, SkyBlockMuseumProfile, gearIcons } from "./gear.profile.js";
 import { SkyBlockGardenProfile, gardenIcons } from "./garden.profile.js";
 import { SkyBlockHotfProfile } from "./hotf.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
@@ -42,11 +48,12 @@ import { SkyBlockLeaderboardSubCommand } from "#commands/leaderboards/skyblock-l
 import { SkyBlockLevelProfile, levelIcons } from "./level.profile.js";
 import { SkyBlockNetworthProfile, networthIcons } from "./networth.profile.js";
 import { SkyBlockPetsProfile, petIcons } from "./pets.profile.js";
+import { SkyBlockRanksProfile, SkyBlockValuesProfile, missingPetIcons } from "./values.profile.js";
 import { SkyBlockSkillsProfile } from "./skills.profile.js";
 import { SkyBlockSlayersProfile } from "./slayers.profile.js";
 import { SkyBlockSummaryProfile } from "./summary.profile.js";
-import { config } from "@statsify/util";
-import { formatProfileName, hasMuseum } from "@statsify/skyblock/display";
+import { config, prettify } from "@statsify/util";
+import { COLLECTION_CATEGORIES, formatProfileName, hasMuseum } from "@statsify/skyblock/display";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getItemIcon } from "@statsify/skyblock/icons";
 import { getTheme } from "#themes";
@@ -198,6 +205,73 @@ export const SKYBLOCK_CARDS = {
     settings: [],
     profile: SkyBlockHotfProfile,
   },
+  collections: {
+    sections: ["collections"],
+    settings: ["collections"],
+    profile: COLLECTION_CATEGORIES.map((category) => ({
+      label: () => prettify(category),
+      profile: (props: SkyBlockProfileProps) => <SkyBlockCollectionsProfile {...props} category={category} />,
+      icons: collectionIcons(category),
+    })),
+  },
+  minions: {
+    sections: ["minions"],
+    settings: [],
+    icons: minionIcons,
+    profile: SkyBlockMinionsProfile,
+  },
+  bestiary: {
+    sections: ["bestiary"],
+    settings: [],
+    profile: SkyBlockBestiaryProfile,
+  },
+  stats: {
+    sections: ["stats"],
+    settings: ["skills", "inventory"],
+    profile: [
+      { label: (t) => t("skyblock.statPages.combat"), profile: (props) => <SkyBlockStatsProfile {...props} page="combat" /> },
+      { label: (t) => t("skyblock.statPages.gathering"), profile: (props) => <SkyBlockStatsProfile {...props} page="gathering" /> },
+      { label: (t) => t("skyblock.statPages.misc"), profile: (props) => <SkyBlockStatsProfile {...props} page="misc" /> },
+    ],
+  },
+  attributes: {
+    sections: ["attributes"],
+    settings: [],
+    profile: SkyBlockAttributesProfile,
+  },
+  gear: {
+    sections: ["gear"],
+    settings: ["inventory"],
+    icons: gearIcons,
+    profile: SkyBlockGearProfile,
+  },
+  museum: {
+    sections: ["museum"],
+    settings: [],
+    profile: SkyBlockMuseumProfile,
+  },
+  rift: {
+    sections: ["rift"],
+    settings: [],
+    profile: SkyBlockRiftProfile,
+  },
+  experiments: {
+    sections: ["experiments"],
+    settings: [],
+    profile: SkyBlockExperimentsProfile,
+  },
+  misc: {
+    sections: ["misc"],
+    settings: [],
+    icons: consumableIcons,
+    profile: SkyBlockMiscProfile,
+  },
+  values: {
+    sections: ["values"],
+    settings: ["inventory"],
+    icons: missingPetIcons,
+    profile: SkyBlockValuesProfile,
+  },
 } satisfies Record<string, SkyBlockCard>;
 
 type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
@@ -317,6 +391,156 @@ export class SkyBlockCommand {
   @SubCommand({ description: (t) => t("commands.skyblock-hotf"), args: [PlayerArgument] })
   public hotf(context: CommandContext) {
     return this.run(context, "hotf");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-collections"), args: [PlayerArgument], group: "more" })
+  public collections(context: CommandContext) {
+    return this.run(context, "collections");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-minions"), args: [PlayerArgument], group: "more" })
+  public minions(context: CommandContext) {
+    return this.run(context, "minions");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-bestiary"), args: [PlayerArgument], group: "more" })
+  public bestiary(context: CommandContext) {
+    return this.run(context, "bestiary");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-stats"), args: [PlayerArgument], group: "more" })
+  public stats(context: CommandContext) {
+    return this.run(context, "stats");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-attributes"), args: [PlayerArgument], group: "more" })
+  public attributes(context: CommandContext) {
+    return this.run(context, "attributes");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-gear"), args: [PlayerArgument], group: "more" })
+  public gear(context: CommandContext) {
+    return this.run(context, "gear");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-museum"), args: [PlayerArgument], group: "more" })
+  public museum(context: CommandContext) {
+    return this.run(context, "museum");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-rift"), args: [PlayerArgument], group: "more" })
+  public rift(context: CommandContext) {
+    return this.run(context, "rift");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-experiments"), args: [PlayerArgument], group: "more" })
+  public experiments(context: CommandContext) {
+    return this.run(context, "experiments");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-misc"), args: [PlayerArgument], group: "more" })
+  public misc(context: CommandContext) {
+    return this.run(context, "misc");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-values"), args: [PlayerArgument], group: "more" })
+  public values(context: CommandContext) {
+    return this.run(context, "values");
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-ranks"), args: [PlayerArgument], group: "more" })
+  public async ranks(context: CommandContext): Promise<IMessage> {
+    const user = context.getUser();
+    const t = context.t();
+    const player = await this.apiService.getSkyBlockProfiles(context.option("player"), user);
+
+    const [rankings, logo, skin, badge, background] = await Promise.all([
+      this.apiService.getSkyBlockRankings(player.uuid).catch(() => {
+        throw new ErrorMessage("errors.skyblockUnavailable");
+      }),
+      getLogo(user),
+      this.apiService.getPlayerSkin(player.uuid, user),
+      this.apiService.getUserBadge(player.uuid),
+      getSkyBlockBackground(),
+    ]);
+
+    const canvas = render(
+      <SkyBlockRanksProfile
+        rankings={rankings}
+        profiles={player.profiles}
+        displayName={player.displayName}
+        skin={skin}
+        badge={badge}
+        background={background}
+        logo={logo}
+        user={user}
+        t={t}
+        title={`§l${FormattedGame.SKYBLOCK} §f${t("skyblock.titles.ranks")}`}
+      />,
+      getTheme(user)
+    );
+
+    return { files: [{ name: "skyblock.png", data: await canvas.toBuffer("png"), type: "image/png" }] };
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-calendar"), group: "more" })
+  public async calendar(context: CommandContext): Promise<IMessage> {
+    const user = context.getUser();
+    const t = context.t();
+
+    const [mayor, logo, background] = await Promise.all([
+      this.apiService.getSkyBlockMayor().catch(() => {
+        throw new ErrorMessage("errors.skyblockUnavailable");
+      }),
+      getLogo(user),
+      getSkyBlockBackground(),
+    ]);
+
+    const canvas = render(
+      <SkyBlockCalendarProfile
+        now={Date.now()}
+        mayor={mayor}
+        background={background}
+        logo={logo}
+        user={user}
+        t={t}
+        title={`§l${FormattedGame.SKYBLOCK} §f${t("skyblock.titles.calendar")}`}
+      />,
+      getTheme(user)
+    );
+
+    return { files: [{ name: "skyblock.png", data: await canvas.toBuffer("png"), type: "image/png" }] };
+  }
+
+  @SubCommand({ description: (t) => t("commands.skyblock-bingo"), args: [PlayerArgument], group: "more" })
+  public async bingo(context: CommandContext): Promise<IMessage> {
+    const user = context.getUser();
+    const t = context.t();
+    const bingo = await this.apiService.getSkyBlockBingo(context.option("player"), user);
+
+    const [logo, skin, badge, background] = await Promise.all([
+      getLogo(user),
+      this.apiService.getPlayerSkin(bingo.uuid, user),
+      this.apiService.getUserBadge(bingo.uuid),
+      getSkyBlockBackground(),
+    ]);
+
+    const canvas = render(
+      <SkyBlockBingoProfile
+        bingo={bingo}
+        now={Date.now()}
+        skin={skin}
+        badge={badge}
+        background={background}
+        logo={logo}
+        user={user}
+        t={t}
+        title={`§l${FormattedGame.SKYBLOCK} §f${t("skyblock.titles.bingo")} §r(§e${bingo.name}§r)`}
+      />,
+      getTheme(user)
+    );
+
+    return { files: [{ name: "skyblock.png", data: await canvas.toBuffer("png"), type: "image/png" }] };
   }
 
   @SubCommand({ description: (t) => t("commands.skyblock-leaderboard"), args: [SkyBlockLeaderboardArgument] })
