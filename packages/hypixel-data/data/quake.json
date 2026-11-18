@@ -1,0 +1,1201 @@
+{
+  "case": {
+    "woodhoe": {
+      "id": "minecraft:wooden_hoe",
+      "name": "§aWooden Case"
+    },
+    "stonehoe": {
+      "id": "minecraft:stone_hoe",
+      "name": "§aMarbled Case",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oThe Worm",
+        "§5§o§7§oUsed to make §a§oThe Harvester"
+      ]
+    },
+    "shinywoodhoe": {
+      "id": "minecraft:wooden_hoe",
+      "name": "§aVarnished Wood Case",
+      "tooltip": [
+        "Power X",
+        "§5§o",
+        "§5§o§7§oUsed to make §a§oRedstoner"
+      ],
+      "enchanted": true
+    },
+    "shinystonehoe": {
+      "id": "minecraft:stone_hoe",
+      "name": "§aPolished Marbled Case",
+      "tooltip": [
+        "Power X",
+        "§5§o",
+        "§5§o§7§oUsed to make §a§oBFG",
+        "§5§o§7§oUsed to make §a§oRailgun of Darkness"
+      ],
+      "enchanted": true
+    },
+    "ironhoe": {
+      "id": "minecraft:iron_hoe",
+      "name": "§aReinforced Case",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oSuperior Railgun",
+        "§5§o§7§oUsed to make §a§oThe Turtle"
+      ]
+    },
+    "goldhoe": {
+      "id": "minecraft:golden_hoe",
+      "name": "§aPlated Case",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oHyper Beam Railgun",
+        "§5§o§7§oUsed to make §a§oCookie Cannon"
+      ]
+    },
+    "diamondhoe": {
+      "id": "minecraft:diamond_hoe",
+      "name": "§aBling Case",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oCreeper Railgun",
+        "§5§o§7§oUsed to make §a§oBlue Lagoon"
+      ]
+    },
+    "shinygoldhoe": {
+      "id": "minecraft:golden_hoe",
+      "name": "§aPolished Plated Case",
+      "tooltip": [
+        "Power X",
+        "§5§o",
+        "§5§o§7§oUsed to make §a§oBudder Slapper",
+        "§5§o§7§oUsed to make §a§oLovegun"
+      ],
+      "enchanted": true
+    },
+    "ironpickaxe": {
+      "id": "minecraft:iron_pickaxe",
+      "name": "§aExtended Barrel Case",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oFrozen Fright",
+        "§5§o",
+        "§9+4 Attack Damage"
+      ]
+    },
+    "shinydiamondhoe": {
+      "id": "minecraft:diamond_hoe",
+      "name": "§aPolished Bling Case",
+      "tooltip": [
+        "Power X",
+        "§5§o",
+        "§5§o§7§oUsed to make §a§oBling Bling Thing",
+        "§5§o§7§oUsed to make §a§oLe Bizarre",
+        "§5§o§7§oUsed to make §a§oFabled Railgun",
+        "§5§o§7§oUsed to make §a§oThe Reaper"
+      ],
+      "enchanted": true
+    },
+    "shinyironhoe": {
+      "id": "minecraft:iron_hoe",
+      "name": "§aPolished Reinforced Case",
+      "tooltip": [
+        "Power X",
+        "§5§o",
+        "§5§o§7§oUsed to make §a§oApple Corer",
+        "§5§o§7§oUsed to make §a§oPlatinum Smelter"
+      ],
+      "enchanted": true
+    }
+  },
+  "barrel": {
+    "small": {
+      "id": "minecraft:firework_rocket",
+      "name": "§aSmall Barrel",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oBasic Railgun",
+        "§5§o§7§oUsed to make §a§oBudder Slapper",
+        "§5§o§7§oUsed to make §a§oThe Worm",
+        "§5§o§7§oUsed to make §a§oThe Harvester",
+        "§5§o§7§oUsed to make §a§oLe Bizarre"
+      ]
+    },
+    "large": {
+      "id": "minecraft:fire_charge",
+      "name": "§aLarge Barrel",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oBFG",
+        "§5§o§7§oUsed to make §a§oBling Bling Thing",
+        "§5§o§7§oUsed to make §a§oThe Turtle",
+        "§5§o§7§oUsed to make §a§oRailgun of Darkness",
+        "§5§o§7§oUsed to make §a§oThe Reaper",
+        "§5§o§7§oUsed to make §a§oButter Slatherer"
+      ]
+    },
+    "creeper": {
+      "id": "minecraft:creeper_head",
+      "name": "§aCreeper Barrel",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oCreeper Railgun",
+        "§5§o§7§oUsed to make §a§oThe Snail",
+        "§5§o§7§oUsed to make §a§oJumpscare"
+      ]
+    },
+    "burst": {
+      "id": "minecraft:feather",
+      "name": "§aBurst Barrel",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oSuperior Railgun",
+        "§5§o§7§oUsed to make §a§oRedstoner",
+        "§5§o§7§oUsed to make §a§oCookie Cannon",
+        "§5§o§7§oUsed to make §a§oPlatinum Smelter",
+        "§5§o§7§oUsed to make §a§oBlue Lagoon",
+        "§5§o§7§oUsed to make §a§oDruid's Shotgun"
+      ]
+    },
+    "star": {
+      "id": "minecraft:gold_nugget",
+      "name": "§aStar Barrel",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oHyper Beam Railgun",
+        "§5§o§7§oUsed to make §a§oApple Corer",
+        "§5§o§7§oUsed to make §a§oLovegun",
+        "§5§o§7§oUsed to make §a§oFabled Railgun",
+        "§5§o§7§oUsed to make §a§oFrozen Fright"
+      ]
+    }
+  },
+  "trigger": {
+    "onepointfive": {
+      "id": "minecraft:oak_button",
+      "count": 15,
+      "name": "§a1.5s"
+    },
+    "ninepointzero": {
+      "id": "minecraft:oak_button",
+      "count": 64,
+      "name": "§a9.0s VERY SLOW"
+    },
+    "fivepointzero": {
+      "id": "minecraft:oak_button",
+      "count": 50,
+      "name": "§a5.0s"
+    },
+    "twopointfive": {
+      "id": "minecraft:oak_button",
+      "count": 25,
+      "name": "§a2.5s"
+    },
+    "onepointfour": {
+      "id": "minecraft:oak_button",
+      "count": 14,
+      "name": "§a1.4s"
+    },
+    "onepointthree": {
+      "id": "minecraft:oak_button",
+      "count": 13,
+      "name": "§a1.3s"
+    },
+    "onepointtwo": {
+      "id": "minecraft:oak_button",
+      "count": 12,
+      "name": "§a1.2s"
+    },
+    "onepointone": {
+      "id": "minecraft:oak_button",
+      "count": 11,
+      "name": "§a1.1s"
+    },
+    "onepointzero": {
+      "id": "minecraft:oak_button",
+      "count": 10,
+      "name": "§a1.0s"
+    },
+    "zeropointnine": {
+      "id": "minecraft:oak_button",
+      "count": 9,
+      "name": "§a0.9s"
+    },
+    "zeropointeightfive": {
+      "id": "minecraft:oak_button",
+      "count": 8,
+      "name": "§a0.85s"
+    }
+  },
+  "muzzle": {
+    "no": {
+      "id": "minecraft:glass",
+      "name": "§aNo Muzzle"
+    },
+    "leaf": {
+      "id": "minecraft:oak_leaves",
+      "name": "§aLeaf Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oDruid's Shotgun",
+        "§5§o§7§oUsed to make §a§oJumpscare"
+      ]
+    },
+    "clay": {
+      "id": "minecraft:clay",
+      "name": "§aClay Muzzle"
+    },
+    "wooden": {
+      "id": "minecraft:oak_planks",
+      "name": "§aWooden Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oThe Snail",
+        "§5§o",
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "golden": {
+      "id": "minecraft:gold_block",
+      "name": "§aGolden Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oBudder Slapper"
+      ]
+    },
+    "redstone": {
+      "id": "minecraft:redstone_block",
+      "name": "§aRedstone Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oRedstoner",
+        "§5§o§7§oUsed to make §a§oLovegun"
+      ]
+    },
+    "iron": {
+      "id": "minecraft:iron_block",
+      "name": "§aIron Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oThe Turtle",
+        "§5§o§7§oUsed to make §a§oPlatinum Smelter"
+      ]
+    },
+    "enderstone": {
+      "id": "minecraft:end_stone",
+      "name": "§aEnder Stone Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oButter Slatherer",
+        "§5§o",
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "diamond": {
+      "id": "minecraft:diamond_block",
+      "name": "§aDiamond Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oBling Bling Thing"
+      ]
+    },
+    "quartz": {
+      "id": "minecraft:nether_quartz_ore",
+      "name": "§aQuartz Muzzle"
+    },
+    "emerald": {
+      "id": "minecraft:emerald_block",
+      "name": "§aEmerald Muzzle",
+      "tooltip": [
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "lapis": {
+      "id": "minecraft:lapis_block",
+      "name": "§aLapis Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oLe Bizarre"
+      ]
+    },
+    "obsidian": {
+      "id": "minecraft:obsidian",
+      "name": "§aObsidian Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oApple Corer",
+        "§5§o§7§oUsed to make §a§oRailgun of Darkness"
+      ]
+    },
+    "sponge": {
+      "id": "minecraft:sponge",
+      "name": "§aSponge Muzzle",
+      "tooltip": [
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "sealantern": {
+      "id": "minecraft:sea_lantern",
+      "name": "§aSea Lantern Muzzle"
+    },
+    "commandblock": {
+      "id": "minecraft:command_block",
+      "name": "§aCommand Block Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oCookie Cannon",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "prismarine": {
+      "id": "minecraft:prismarine",
+      "name": "§aPrismarine Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oBlue Lagoon",
+        "§5§o§7§oUsed to make §a§oFabled Railgun"
+      ]
+    },
+    "melon": {
+      "id": "minecraft:melon",
+      "name": "§aMelon Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oThe Harvester"
+      ]
+    },
+    "pumpkin": {
+      "id": "minecraft:carved_pumpkin",
+      "name": "§aPumpkin Muzzle",
+      "tooltip": [
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "soulsand": {
+      "id": "minecraft:soul_sand",
+      "name": "§aSoul Sand Muzzle",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oThe Reaper"
+      ]
+    },
+    "frosted": {
+      "id": "minecraft:ice",
+      "name": "§aFrosted Muzzle"
+    }
+  },
+  "sight": {
+    "yellow": {
+      "id": "minecraft:yellow_dye",
+      "name": "§aYellow Laser",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oBasic Railgun",
+        "§5§o§7§oUsed to make §a§oHyper Beam Railgun",
+        "§5§o§7§oUsed to make §a§oBudder Slapper"
+      ]
+    },
+    "green": {
+      "id": "minecraft:green_dye",
+      "name": "§aGreen Laser",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oCreeper Railgun",
+        "§5§o§7§oUsed to make §a§oThe Turtle",
+        "§5§o§7§oUsed to make §a§oThe Worm",
+        "§5§o§7§oUsed to make §a§oThe Harvester",
+        "§5§o§7§oUsed to make §a§oDruid's Shotgun"
+      ]
+    },
+    "white": {
+      "id": "minecraft:bone_meal",
+      "name": "§aWhite Laser",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oJumpscare"
+      ]
+    },
+    "red": {
+      "id": "minecraft:red_dye",
+      "name": "§aRed Laser",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oSuperior Railgun",
+        "§5§o§7§oUsed to make §a§oRedstoner",
+        "§5§o§7§oUsed to make §a§oThe Snail",
+        "§5§o§7§oUsed to make §a§oLovegun"
+      ]
+    },
+    "blue": {
+      "id": "minecraft:lapis_lazuli",
+      "name": "§aBlue Laser",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oBFG",
+        "§5§o§7§oUsed to make §a§oBlue Lagoon"
+      ]
+    },
+    "purple": {
+      "id": "minecraft:purple_dye",
+      "name": "§aPurple Laser",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oBling Bling Thing"
+      ]
+    },
+    "pink": {
+      "id": "minecraft:pink_dye",
+      "name": "§aPink Laser",
+      "tooltip": [
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "gold": {
+      "id": "minecraft:gold_ingot",
+      "name": "§aGold Laser",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oApple Corer",
+        "§5§o§7§oUsed to make §a§oButter Slatherer"
+      ]
+    },
+    "emerald": {
+      "id": "minecraft:emerald",
+      "name": "§aEmerald Laser",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oCookie Cannon",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "diamond": {
+      "id": "minecraft:diamond",
+      "name": "§aDiamond Laser",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oFabled Railgun"
+      ]
+    },
+    "gray": {
+      "id": "minecraft:gray_dye",
+      "name": "§aGray Laser",
+      "tooltip": [
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "orange": {
+      "id": "minecraft:orange_dye",
+      "name": "§aOrange Laser",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oLe Bizarre"
+      ]
+    },
+    "silver": {
+      "id": "minecraft:light_gray_dye",
+      "name": "§aSilver Laser",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oPlatinum Smelter"
+      ]
+    },
+    "black": {
+      "id": "minecraft:ink_sac",
+      "name": "§aBlack Laser",
+      "tooltip": [
+        "§5§o§7§oUsed to make §a§oRailgun of Darkness",
+        "§5§o§7§oUsed to make §a§oThe Reaper"
+      ]
+    },
+    "glacial": {
+      "id": "minecraft:prismarine_shard",
+      "name": "§aGlacial Laser"
+    }
+  },
+  "hat": {
+    "showoff": {
+      "id": "minecraft:white_stained_glass",
+      "name": "§aShowoff Hat"
+    },
+    "cactus": {
+      "id": "minecraft:cactus",
+      "name": "§aCactus Hat"
+    },
+    "melon": {
+      "id": "minecraft:melon",
+      "name": "§aMelon Hat"
+    },
+    "spaceman": {
+      "id": "minecraft:glass",
+      "name": "§aSpaceman Hat"
+    },
+    "lantern": {
+      "id": "minecraft:jack_o_lantern",
+      "name": "§aLantern Hat"
+    },
+    "redstone": {
+      "id": "minecraft:redstone_block",
+      "name": "§aRedstone Hat",
+      "tooltip": [
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "diamond": {
+      "id": "minecraft:diamond_block",
+      "name": "§aDiamond Hat",
+      "tooltip": [
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "dispenser": {
+      "id": "minecraft:dispenser",
+      "name": "§aDispenser Hat",
+      "tooltip": [
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "miner": {
+      "id": "minecraft:redstone_ore",
+      "name": "§aMiner Hat",
+      "tooltip": [
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "majestic": {
+      "id": "minecraft:golden_helmet",
+      "name": "§aMajestic Hat",
+      "tooltip": [
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "hipster": {
+      "id": "minecraft:grass_block",
+      "name": "§aHipster Hat",
+      "tooltip": [
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "caveman": {
+      "id": "minecraft:bedrock",
+      "name": "§aCaveman Hat"
+    },
+    "controlfreak": {
+      "id": "minecraft:command_block",
+      "name": "§aControl Freak Hat",
+      "tooltip": [
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "walkingdead": {
+      "id": "minecraft:zombie_head",
+      "name": "§aWalking Dead Hat",
+      "tooltip": [
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "jeeperscreepers": {
+      "id": "minecraft:creeper_head",
+      "name": "§aJeepers Creepers Hat",
+      "tooltip": [
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "richyrich": {
+      "id": "minecraft:gold_ore",
+      "name": "§aRichy Rich Hat",
+      "tooltip": [
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "engineering": {
+      "id": "minecraft:piston",
+      "name": "§aEngineering Hat",
+      "tooltip": [
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "light": {
+      "id": "minecraft:glowstone",
+      "name": "§aLight Hat",
+      "tooltip": [
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "ecology": {
+      "id": "minecraft:oak_leaves",
+      "name": "§aEcology Hat",
+      "tooltip": [
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "bob": {
+      "id": "minecraft:sponge",
+      "name": "§aBob Hat",
+      "tooltip": [
+        "§5§o§bMVP§7 Exclusive"
+      ]
+    },
+    "hypixel": {
+      "id": "minecraft:player_head",
+      "name": "§aHypixel Hat",
+      "tooltip": [
+        "§5§o§bMVP§c+§7 Exclusive"
+      ],
+      "skin": "https://textures.minecraft.net/texture/3faabe9f5b56afcff47170a0997087f146a91b2f471a278d1ea3bc874de5156"
+    },
+    "librarian": {
+      "id": "minecraft:bookshelf",
+      "name": "§aLibrarian Hat",
+      "tooltip": [
+        "§5§o§bMVP§7 Exclusive"
+      ]
+    },
+    "explosive": {
+      "id": "minecraft:tnt",
+      "name": "§aExplosive Hat"
+    },
+    "crafter": {
+      "id": "minecraft:crafting_table",
+      "name": "§aCrafter Hat"
+    },
+    "bouncy": {
+      "id": "minecraft:slime_block",
+      "name": "§aBouncy Hat",
+      "tooltip": [
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "radiant": {
+      "id": "minecraft:beacon",
+      "name": "§aRadiant Hat",
+      "tooltip": [
+        "§5§o§bMVP§7 Exclusive"
+      ]
+    },
+    "disco": {
+      "id": "minecraft:leather_helmet",
+      "color": 8388608,
+      "name": "§aDisco Hat",
+      "tooltip": [
+        "§oDyed"
+      ]
+    },
+    "quakezodia": {
+      "id": "minecraft:chainmail_helmet",
+      "name": "§aQuakezodia Hat"
+    },
+    "snow": {
+      "id": "minecraft:snow_block",
+      "name": "§aSnow Hat"
+    },
+    "forested": {
+      "id": "minecraft:birch_log",
+      "name": "§aForested Hat"
+    }
+  },
+  "armor": {
+    "soldier": {
+      "id": "minecraft:leather_chestplate",
+      "name": "§aSoldier Kit",
+      "tooltip": [
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "elite": {
+      "id": "minecraft:leather_chestplate",
+      "color": 255,
+      "name": "§aElite Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "majestic": {
+      "id": "minecraft:leather_chestplate",
+      "color": 16776960,
+      "name": "§aMajestic Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "commander": {
+      "id": "minecraft:leather_chestplate",
+      "color": 0,
+      "name": "§aCommander Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "marine": {
+      "id": "minecraft:leather_chestplate",
+      "color": 32768,
+      "name": "§aMarine Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "swat": {
+      "id": "minecraft:leather_chestplate",
+      "color": 8421504,
+      "name": "§aSWAT Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "specops": {
+      "id": "minecraft:leather_chestplate",
+      "color": 16711680,
+      "name": "§aSpec Ops Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "invader": {
+      "id": "minecraft:leather_chestplate",
+      "color": 16753920,
+      "name": "§aInvader Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "revenge": {
+      "id": "minecraft:leather_chestplate",
+      "color": 8388736,
+      "name": "§aRevenge Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "space": {
+      "id": "minecraft:leather_chestplate",
+      "color": 65535,
+      "name": "§aSpace Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "slime": {
+      "id": "minecraft:leather_chestplate",
+      "color": 65280,
+      "name": "§aSlime Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "snow": {
+      "id": "minecraft:leather_chestplate",
+      "color": 16777215,
+      "name": "§aSnow Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "fashionista": {
+      "id": "minecraft:leather_chestplate",
+      "color": 16711935,
+      "name": "§aFashionista Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "medieval": {
+      "id": "minecraft:chainmail_chestplate",
+      "name": "§aMedieval Kit",
+      "tooltip": [
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§bMVP§7 Exclusive"
+      ]
+    },
+    "budder": {
+      "id": "minecraft:golden_chestplate",
+      "name": "§aBudder Kit",
+      "tooltip": [
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§bMVP§7 Exclusive"
+      ]
+    },
+    "sweg": {
+      "id": "minecraft:diamond_chestplate",
+      "name": "§aSweg Kit",
+      "tooltip": [
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§bMVP§c+§7 Exclusive"
+      ]
+    },
+    "disco": {
+      "id": "minecraft:leather_chestplate",
+      "color": 8388608,
+      "name": "§aDisco Kit",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "quakezodia": {
+      "id": "minecraft:chainmail_chestplate",
+      "name": "§aQuakezodia Kit",
+      "tooltip": [
+        "§5§o§7Cosmetic armor"
+      ]
+    }
+  },
+  "leggings": {
+    "soldier": {
+      "id": "minecraft:leather_leggings",
+      "name": "§aSoldier Pants",
+      "tooltip": [
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "elite": {
+      "id": "minecraft:leather_leggings",
+      "color": 255,
+      "name": "§aElite Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "majestic": {
+      "id": "minecraft:leather_leggings",
+      "color": 16776960,
+      "name": "§aMajestic Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "commander": {
+      "id": "minecraft:leather_leggings",
+      "color": 0,
+      "name": "§aCommander Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "marine": {
+      "id": "minecraft:leather_leggings",
+      "color": 32768,
+      "name": "§aMarine Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "swat": {
+      "id": "minecraft:leather_leggings",
+      "color": 8421504,
+      "name": "§aSWAT Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "specops": {
+      "id": "minecraft:leather_leggings",
+      "color": 16711680,
+      "name": "§aSpec Ops Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "invader": {
+      "id": "minecraft:leather_leggings",
+      "color": 16753920,
+      "name": "§aInvader Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "revenge": {
+      "id": "minecraft:leather_leggings",
+      "color": 8388736,
+      "name": "§aRevenge Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "space": {
+      "id": "minecraft:leather_leggings",
+      "color": 65535,
+      "name": "§aSpace Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "slime": {
+      "id": "minecraft:leather_leggings",
+      "color": 65280,
+      "name": "§aSlime Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "snow": {
+      "id": "minecraft:leather_leggings",
+      "color": 16777215,
+      "name": "§aSnow Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "fashionista": {
+      "id": "minecraft:leather_leggings",
+      "color": 16711935,
+      "name": "§aFashionista Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "medieval": {
+      "id": "minecraft:chainmail_leggings",
+      "name": "§aMedieval Pants",
+      "tooltip": [
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§bMVP§7 Exclusive"
+      ]
+    },
+    "budder": {
+      "id": "minecraft:golden_leggings",
+      "name": "§aBudder Pants",
+      "tooltip": [
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§bMVP§7 Exclusive"
+      ]
+    },
+    "sweg": {
+      "id": "minecraft:diamond_leggings",
+      "name": "§aSweg Pants",
+      "tooltip": [
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§bMVP§c+§7 Exclusive"
+      ]
+    },
+    "disco": {
+      "id": "minecraft:leather_leggings",
+      "color": 8388608,
+      "name": "§aDisco Pants",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "quakezodia": {
+      "id": "minecraft:chainmail_leggings",
+      "name": "§aQuakezodia Pants",
+      "tooltip": [
+        "§5§o§7Cosmetic armor"
+      ]
+    }
+  },
+  "boots": {
+    "soldier": {
+      "id": "minecraft:leather_boots",
+      "name": "§aSoldier Boots",
+      "tooltip": [
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "elite": {
+      "id": "minecraft:leather_boots",
+      "color": 255,
+      "name": "§aElite Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "majestic": {
+      "id": "minecraft:leather_boots",
+      "color": 16776960,
+      "name": "§aMajestic Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "commander": {
+      "id": "minecraft:leather_boots",
+      "color": 0,
+      "name": "§aCommander Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "marine": {
+      "id": "minecraft:leather_boots",
+      "color": 32768,
+      "name": "§aMarine Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§7 Exclusive"
+      ]
+    },
+    "swat": {
+      "id": "minecraft:leather_boots",
+      "color": 8421504,
+      "name": "§aSWAT Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "specops": {
+      "id": "minecraft:leather_boots",
+      "color": 16711680,
+      "name": "§aSpec Ops Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "invader": {
+      "id": "minecraft:leather_boots",
+      "color": 16753920,
+      "name": "§aInvader Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "revenge": {
+      "id": "minecraft:leather_boots",
+      "color": 8388736,
+      "name": "§aRevenge Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "space": {
+      "id": "minecraft:leather_boots",
+      "color": 65535,
+      "name": "§aSpace Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "slime": {
+      "id": "minecraft:leather_boots",
+      "color": 65280,
+      "name": "§aSlime Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "snow": {
+      "id": "minecraft:leather_boots",
+      "color": 16777215,
+      "name": "§aSnow Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "fashionista": {
+      "id": "minecraft:leather_boots",
+      "color": 16711935,
+      "name": "§aFashionista Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§aVIP§6+§7 Exclusive"
+      ]
+    },
+    "medieval": {
+      "id": "minecraft:chainmail_boots",
+      "name": "§aMedieval Boots",
+      "tooltip": [
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§bMVP§7 Exclusive"
+      ]
+    },
+    "budder": {
+      "id": "minecraft:golden_boots",
+      "name": "§aBudder Boots",
+      "tooltip": [
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§bMVP§7 Exclusive"
+      ]
+    },
+    "sweg": {
+      "id": "minecraft:diamond_boots",
+      "name": "§aSweg Boots",
+      "tooltip": [
+        "§5§o§7Cosmetic armor",
+        "§5§o",
+        "§5§o§bMVP§c+§7 Exclusive"
+      ]
+    },
+    "disco": {
+      "id": "minecraft:leather_boots",
+      "color": 8388608,
+      "name": "§aDisco Boots",
+      "tooltip": [
+        "§oDyed",
+        "§5§o§7Cosmetic armor"
+      ]
+    },
+    "quakezodia": {
+      "id": "minecraft:chainmail_boots",
+      "name": "§aQuakezodia Boots",
+      "tooltip": [
+        "§5§o§7Cosmetic armor"
+      ]
+    }
+  }
+}

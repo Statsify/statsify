@@ -51,7 +51,8 @@ non-Latin sheets, and unifont for everything else. It draws § codes and JSON te
 26.3 ships unifont (GNU Unifont) with the launcher's assets, not the jar, so a pack only has it
 when it carries `font/include/unifont.json` and `font/unifont.zip`. Without them, a CSS font is the
 fallback for those characters. `drawTooltip` draws 1.8's tooltip box, and
-`tooltipLines` gives an item's name, lore and Unbreakable line, minding HideFlags.
+`tooltipLines` gives an item's name, lore and Unbreakable line, minding HideFlags, or its `tooltip`
+lines in their place.
 
 ## Inventories
 
