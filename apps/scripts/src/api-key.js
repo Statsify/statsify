@@ -12,7 +12,7 @@ import { config } from "@statsify/util";
 import { createHash, randomUUID } from "node:crypto";
 import { inquirerConfirmation, inquirerLogger } from "./utils.js";
 
-const redis = new Redis(config("database.redisUrl"));
+const redis = new Redis(await config("database.redisUrl"));
 
 // TODO unify functions (one createKey)
 const createKey = async ({ name, key, role, limit }) => {
