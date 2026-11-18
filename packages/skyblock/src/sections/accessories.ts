@@ -46,8 +46,10 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
   EPIC: 12,
   LEGENDARY: 16,
   MYTHIC: 22,
-  // SPECIAL and VERY_SPECIAL give none: those were the anniversary hats, which 0.27.3 made helmets
 };
+
+// The anniversary hats, the only SPECIAL and VERY_SPECIAL accessories, are helmets since 0.27.3
+const isHat = ({ rarity }: ItemView) => rarity === "SPECIAL" || rarity === "VERY_SPECIAL";
 
 const upgradesOf = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
 
@@ -185,6 +187,7 @@ export function bagAccessories(member: RawMember, items: ItemsResource) {
 
   const views = decodeInventory(bag)
     .flatMap((item) => (item ? [toItemView(item)] : []))
+    .filter((view) => !isHat(view))
     .toSorted((a, b) => power(b) - power(a));
 
   const prism = member.rift?.access?.consumed_prism ? ["RIFT_PRISM"] : [];
