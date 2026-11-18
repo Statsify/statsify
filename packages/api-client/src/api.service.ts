@@ -168,10 +168,12 @@ export class ApiService {
     );
   }
 
-  public getPlayerSkin(uuid: string, user: User | null) {
+  // `armor` is the /skin route's armor JSON, like @statsify/hypixel-data's armorOf gives
+  public getPlayerSkin(uuid: string, user: User | null, armor?: object) {
     const route = User.hasExtrudedSkins(user) ? "skin/extruded" : "skin";
     return this.requestImage(isProduction ? `https://api.statsify.net/${route}` : `/${route}`, {
       uuid,
+      armor: armor && JSON.stringify(armor),
     });
   }
 
