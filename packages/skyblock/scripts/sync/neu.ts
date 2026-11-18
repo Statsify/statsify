@@ -501,6 +501,8 @@ export const NEU_UNITS = {
     const upgrades = new Map<string, Set<string>>();
     const supersede = (id: string, by: string) => {
       // NEU lists a few lower tiers as upgrades (Powder of the Many for Powder of the People); an upgrade is never lower.
+      // It still lists the anniversary hats, helmets since 0.27.3.
+      if (!accessoryRanks.has(id) || !accessoryRanks.has(by)) return;
       if (api(id) === api(by) || accessoryRanks.get(by)! < accessoryRanks.get(id)!) return;
       upgrades.set(api(id), (upgrades.get(api(id)) ?? new Set()).add(api(by)));
     };
