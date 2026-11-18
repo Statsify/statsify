@@ -274,6 +274,9 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.4
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.4.0
       fastify:
         specifier: ^5.5.0
         version: 5.12.7
@@ -283,9 +286,6 @@ importers:
       ioredis:
         specifier: 5.7.0
         version: 5.7.0(supports-color@7.2.0)
-      luxon:
-        specifier: ^3.5.0
-        version: 3.7.2
       mongoose:
         specifier: ^8.5.2
         version: 8.24.7(socks@2.8.10)(supports-color@7.2.0)
@@ -305,9 +305,6 @@ importers:
       '@nestjs/testing':
         specifier: ^11.1.24
         version: 11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))
-      '@types/luxon':
-        specifier: ^3.4.2
-        version: 3.7.6
 
   apps/discord-bot:
     dependencies:
@@ -347,15 +344,15 @@ importers:
       axios:
         specifier: 1.11.0
         version: 1.11.0(debug@4.4.3(supports-color@7.2.0))
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.4.0
       discord-api-types:
         specifier: ^0.38.22
         version: 0.38.57
       fuse.js:
         specifier: ^7.0.0
         version: 7.5.0
-      luxon:
-        specifier: ^3.5.0
-        version: 3.7.2
       mongoose:
         specifier: ^8.5.2
         version: 8.24.7(socks@2.8.10)(supports-color@7.2.0)
@@ -371,10 +368,6 @@ importers:
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
-    devDependencies:
-      '@types/luxon':
-        specifier: ^3.4.2
-        version: 3.7.6
 
   apps/scripts:
     dependencies:
@@ -402,6 +395,9 @@ importers:
       chalk:
         specifier: ^5.6.0
         version: 5.6.2
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.4.0
       discord-bot:
         specifier: workspace:^
         version: link:../discord-bot
@@ -536,9 +532,6 @@ importers:
       discord-api-types:
         specifier: ^0.38.22
         version: 0.38.57
-      luxon:
-        specifier: ^3.5.0
-        version: 3.7.2
       mongoose:
         specifier: ^8.5.2
         version: 8.24.7(socks@2.8.10)(supports-color@7.2.0)
@@ -557,10 +550,6 @@ importers:
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
-    devDependencies:
-      '@types/luxon':
-        specifier: ^3.4.2
-        version: 3.7.6
 
   apps/verify-server:
     dependencies:
@@ -703,16 +692,13 @@ importers:
       chalk:
         specifier: 5.6.0
         version: 5.6.0
-      luxon:
-        specifier: ^3.5.0
-        version: 3.7.2
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.4.0
     devDependencies:
       '@nestjs/common':
         specifier: ^11.1.6
         version: 11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0)
-      '@types/luxon':
-        specifier: ^3.4.2
-        version: 3.7.6
 
   packages/math:
     dependencies:
@@ -749,6 +735,9 @@ importers:
 
   packages/schemas:
     dependencies:
+      '@date-fns/tz':
+        specifier: ^1.5.0
+        version: 1.5.0
       '@nestjs/swagger':
         specifier: ^11.2.0
         version: 11.4.7(@fastify/static@8.3.0)(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
@@ -770,13 +759,9 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.4
-      luxon:
-        specifier: ^3.5.0
-        version: 3.7.2
-    devDependencies:
-      '@types/luxon':
-        specifier: ^3.4.2
-        version: 3.7.6
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.4.0
 
   packages/skin-renderer: {}
 
@@ -833,6 +818,9 @@ packages:
 
   '@cacheable/utils@2.5.0':
     resolution: {integrity: sha512-buipgOVDkkPXNR5+xBpDw7Zk2n1EvU7qBJCNUcL7rhQ//kfpOXPAvQ511Os0vpLYJ1pZnvudNytkQt2hst3wqA==}
+
+  '@date-fns/tz@1.5.0':
+    resolution: {integrity: sha512-lwYN/vDPeNRULcepoE/LO2Pgx+7/RV+S9ARfbc9lr2DtGkOD7pAiruHvbR1RX3Qyf6ja47EWJDMsNK5vK08DJg==}
 
   '@emnapi/core@1.11.2':
     resolution: {integrity: sha512-TC8MkTuZUtcTSiFeuC0ksCh9QIJ5+F21MvZ4Wn4ORfYaFJ/0dsiudv5tVkejgwZlwQ39jL9WWDe2lz8x0WglOA==}
@@ -3007,9 +2995,6 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/luxon@3.7.6':
-    resolution: {integrity: sha512-6KSjliQAXK8ZLgFQO4B7iE4Rpf/B3rItzCFuXezBY/XIAGxOdLd7vRNK9/StRPwiS/yJsVbB7HKpW46B8tcEuQ==}
-
   '@types/mute-stream@0.0.4':
     resolution: {integrity: sha512-CPM9nzrCPPJHQNA9keH9CVkVI+WR5kMa+7XEs5jcGQ0VoAGnLv242w8lIVgwAEfmE4oufJRaTc9PNLQl0ioAow==}
 
@@ -4598,10 +4583,6 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
 
-  luxon@3.7.2:
-    resolution: {integrity: sha512-vtEhXh/gNjI9Yg1u4jX/0YVPMvxzHuGgCm6tC5kZyb08yjGWGnqAjGJvcXbqQR2P3MyMEFnRbpcdFS6PBcLqew==}
-    engines: {node: '>=12'}
-
   macaddress@0.5.4:
     resolution: {integrity: sha512-i8xVWoUjj2woYU8kbpQby86Kq7uF7xl2brtKREXUBWpfgqx1fKXEeYzDiVMVxA/IufC1d3xxwJRHtFCX+9IspA==}
 
@@ -5912,6 +5893,8 @@ snapshots:
     dependencies:
       hashery: 1.5.1
       keyv: 5.6.0
+
+  '@date-fns/tz@1.5.0': {}
 
   '@emnapi/core@1.11.2':
     dependencies:
@@ -7667,8 +7650,6 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/luxon@3.7.6': {}
-
   '@types/mute-stream@0.0.4':
     dependencies:
       '@types/node': 26.6.6
@@ -9177,8 +9158,6 @@ snapshots:
       yallist: 4.0.0
 
   lru-cache@7.18.3: {}
-
-  luxon@3.7.2: {}
 
   macaddress@0.5.4: {}
 

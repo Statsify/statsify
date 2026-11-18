@@ -8,8 +8,8 @@
 
 import * as Sentry from "@sentry/node";
 import chalk from "chalk";
-import { DateTime } from "luxon";
 import { config } from "@statsify/util";
+import { format } from "date-fns";
 import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/common";
 
 const DEFAULT_LOG_LEVELS: LogLevel[] = ["log", "error", "warn", "debug", "verbose", "fatal"];
@@ -201,7 +201,7 @@ export class Logger implements LoggerService {
   }
 
   private static getTimeStamp() {
-    if (isProduction) return DateTime.now().toFormat("h:mma");
+    if (isProduction) return format(new Date(), "h:mma");
 
     const now = Date.now();
 

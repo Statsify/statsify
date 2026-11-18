@@ -12,7 +12,6 @@ import {
   SessionNotFoundException,
 } from "@statsify/api-client";
 import { type Circular, flatten } from "@statsify/util";
-import { DateTime } from "luxon";
 import {
   Inject,
   Injectable,
@@ -55,7 +54,7 @@ export class SessionService {
    */
   public async resetPlayer(player: Player) {
     const flatPlayer = flatten(player);
-    flatPlayer.sessionReset = Math.round(DateTime.now().toMillis() / 1000);
+    flatPlayer.sessionReset = Math.round(Date.now() / 1000);
 
     const doc = serialize(Player, flatPlayer);
 

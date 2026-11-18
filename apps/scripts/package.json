@@ -25,6 +25,7 @@
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "chalk": "^5.6.0",
+    "date-fns": "^4.1.0",
     "discord-bot": "workspace:^",
     "inquirer": "^10.1.8",
     "ioredis": "^5.7.0",

@@ -8,12 +8,12 @@
 
 import * as Sentry from "@sentry/node";
 import { Constructor, Flatten } from "@statsify/util";
-import { DateTime } from "luxon";
 import { InjectRedis } from "#redis";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { type LeaderboardEnabledMetadata, getLeaderboardField, getLeaderboardFields } from "@statsify/schemas";
 import { LeaderboardQuery } from "@statsify/api-client";
 import { Redis } from "ioredis";
+import { endOfDay } from "date-fns";
 
 const DAYS_IN_WEEK = {
   monday: 0,
@@ -307,7 +307,7 @@ export abstract class LeaderboardService {
       throw new Error("To get a leaderboard expiry time, `resetEvery` must be specified");
 
     if (leaderboard.resetEvery === "day")
-      return Math.ceil(DateTime.now().endOf("day").toSeconds());
+      return Math.ceil(endOfDay(new Date()).getTime() / 1000);
 
     const now = new Date();
     const dayIndex = DAYS_IN_WEEK[leaderboard.resetEvery];
