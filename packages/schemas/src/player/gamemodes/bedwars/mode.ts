@@ -17,10 +17,10 @@ export class BedWarsModeItemsCollected {
   @Field({ leaderboard: { limit: 100_000 } })
   public gold: number;
 
-  @Field({ leaderboard: { limit: 100_000 } })
+  @Field({ leaderboard: { fieldName: "Diamonds", limit: 100_000 } })
   public diamond: number;
 
-  @Field({ leaderboard: { limit: 100_000 } })
+  @Field({ leaderboard: { fieldName: "Emeralds", limit: 100_000 } })
   public emerald: number;
 
   public constructor(data: APIData, mode: string) {
