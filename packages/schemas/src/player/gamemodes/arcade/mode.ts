@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatRaceTime, formatTime } from "@statsify/util";
+import { type APIData, formatPreciseTime, formatRaceTime, formatTime } from "@statsify/util";
 import {
   EasterSimulator,
   GrinchSimulator,
@@ -733,7 +733,7 @@ export class Dropper {
   @Field()
   public flawlessGames: number;
 
-  @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatPreciseTime, sort: "ASC" } })
   public bestTime: number;
 
   @Field({ leaderboard: { name: "Maps:" } })
@@ -863,6 +863,9 @@ export class GalaxyWars {
   @Field()
   public rebelKills: number;
 
+  @Field()
+  public shotsFired: number;
+
   public constructor(data: APIData) {
     this.wins = data.sw_game_wins;
     this.kills = data.sw_kills;
@@ -870,6 +873,7 @@ export class GalaxyWars {
     this.kdr = ratio(this.kills, this.deaths);
     this.empireKills = data.sw_empire_kills;
     this.rebelKills = data.sw_rebel_kills;
+    this.shotsFired = data.sw_shots_fired;
   }
 }
 
@@ -1370,7 +1374,7 @@ export class ZombiesMapDifficulty {
   @Field({
     leaderboard: {
       sort: "ASC",
-      formatter: formatTime,
+      formatter: formatPreciseTime,
       additionalFields: ["this.wins"],
     },
     historical: { enabled: false },
@@ -1402,6 +1406,19 @@ export class ZombiesMapDifficulty {
     this.bestRound = data[`best_round_zombies${mode}`];
     this.doorsOpened = data[`doors_opened_zombies${mode}`];
     this.totalRounds = data[`total_rounds_survived_zombies${mode}`];
+  }
+}
+
+export class ZombiesOverall extends ZombiesMapDifficulty {
+  @Field()
+  public declare kills: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public kdr: number;
+
+  public constructor(data: APIData) {
+    super(data);
+    this.kdr = ratio(this.kills, this.deaths);
   }
 }
 
@@ -1438,7 +1455,7 @@ export class ZombiesMap {
 
 export class Zombies {
   @Field()
-  public overall: ZombiesMapDifficulty;
+  public overall: ZombiesOverall;
 
   @Field()
   public deadEnd: ZombiesMap;
@@ -1453,7 +1470,7 @@ export class Zombies {
   public prison: ZombiesMap;
 
   public constructor(data: APIData) {
-    this.overall = new ZombiesMapDifficulty(data);
+    this.overall = new ZombiesOverall(data);
     this.deadEnd = new ZombiesMap(data, "deadend");
     this.badBlood = new ZombiesMap(data, "badblood");
 

@@ -27,5 +27,8 @@ export const GalaxyWarsTable = ({ stats, t }: GalaxyWarsTableProps) => (
       <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
       <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
     </Table.tr>
+    <Table.tr>
+      <Table.td title={t("stats.shotsFired")} value={t(stats.shotsFired)} color="§b" />
+    </Table.tr>
   </Table.table>
 );

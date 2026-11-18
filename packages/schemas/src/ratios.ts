@@ -29,6 +29,7 @@ const EXTRA_RATIOS: Ratio[] = [
   ["kills", "wins", "kwr", "KWR"],
   ["kills", "shotsFired", "shotAccuracy", "Shot Accuracy", 100],
   ["postUpdateKills", "shotsFired", "quakeShotAccuracy", "Shot Accuracy", 100],
+  ["headshots", "postUpdateKills", "headshotAccuracy", "Headshot Accuracy", 100],
   ["gold", "gamesPlayed", "goldRate", "Gold Rate", 100],
   ["total", "gamesPlayed", "trophyRate", "Trophy Rate", 100],
 ];

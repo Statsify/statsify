@@ -55,7 +55,7 @@ export function createHistoricalPlayer<T>(oldOne: T, newOne: T): T {
     } else if (newOneType === "string") {
       merged[key] = newOne[key];
     } else if (isObject(newOne[key])) {
-      if (key === "progression") {
+      if (/progression$/i.test(untypedKey)) {
         merged[key] = newOne[key];
         continue;
       }
