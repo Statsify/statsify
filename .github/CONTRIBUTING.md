@@ -1,5 +1,6 @@
 # Contributing
 * If you wish to contribute to the Statsify project, simply fork the repository and submit a pull request
+* Contributions are accepted under the project's license, AGPL-3.0-or-later (see `LICENSE`)
 * If you wish to report a bug/suggestion simply create an issue
 * If you are unsure of anything join our [`Discord`] and then message, `jacob#5432` OR create a ticket in the `#create-ticket` channel
 

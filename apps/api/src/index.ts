@@ -1,7 +1,7 @@
 /**
  * Copyright (c) Statsify
  *
- * This source code is licensed under the GNU GPL v3 license found in the
+ * This source code is licensed under the GNU AGPL v3 or later license found in the
  * LICENSE file in the root directory of this source tree.
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
@@ -77,6 +77,7 @@ app.useGlobalInterceptors(new SentryInterceptor());
 const redoc = new DocumentBuilder()
   .setTitle("Statsify API")
   .setVersion(packageJson.version)
+  .setLicense("AGPL-3.0-or-later", "https://github.com/Statsify/statsify/blob/main/LICENSE")
   .setDescription(
     "# Introduction\nThis is the official Statsify API documentation. [Website](https://statsify.net/) - [GitHub](https://github.com/Statsify/statsify)\n# Authentication\n\n<!-- ReDoc-Inject: <security-definitions> -->"
   )
