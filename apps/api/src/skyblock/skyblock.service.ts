@@ -18,7 +18,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Logger } from "@statsify/logger";
-import { NETWORTH } from "@statsify/skyblock/networth";
+import { NETWORTH, VALUES } from "@statsify/skyblock/networth";
 import { hasMuseum } from "@statsify/skyblock/display";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
@@ -64,7 +64,7 @@ const SECTION_SECONDS = 300;
 const SECTION_VERSION = 7;
 const MAX_DOCUMENT = 15 * 1024 * 1024;
 
-const DEFINITIONS = { ...SECTIONS, networth: NETWORTH } satisfies Record<SkyBlockSection, { needs: readonly SectionNeed[] }>;
+const DEFINITIONS = { ...SECTIONS, networth: NETWORTH, values: VALUES } satisfies Record<SkyBlockSection, { needs: readonly SectionNeed[] }>;
 
 const isReady = (name: SkyBlockSection, built: Record<SectionNeed, boolean>) => DEFINITIONS[name].needs.every((need) => built[need]);
 

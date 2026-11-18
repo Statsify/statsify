@@ -14,7 +14,7 @@ import type { GearSection, ItemView, Loadout, Slots } from "#types";
 import type { RawMember, RawNbt } from "#raw";
 
 const ARMOR_PIECES = ["HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"] as const;
-const EQUIPMENT_PIECES = ["EQUIPMENT_SLOT_1", "EQUIPMENT_SLOT_2", "EQUIPMENT_SLOT_3", "EQUIPMENT_SLOT_4"] as const;
+export const EQUIPMENT_PIECES = ["EQUIPMENT_SLOT_1", "EQUIPMENT_SLOT_2", "EQUIPMENT_SLOT_3", "EQUIPMENT_SLOT_4"] as const;
 
 // The item type ends an item's rarity line: "LEGENDARY DUNGEON SWORD", "EPIC BOW"
 const WEAPON_LINE = /\b(?:SWORD|LONGSWORD|BOW|GAUNTLET|WAND)$/;

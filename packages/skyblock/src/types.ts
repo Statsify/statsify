@@ -104,6 +104,7 @@ export interface MemberView {
   dungeons?: DungeonsSection;
   slayers?: SlayersSection;
   networth?: NetworthSection;
+  values?: ValuesSection;
   level?: SkyBlockLevelSection;
   crimson?: CrimsonSection | null;
   fishing?: FishingSection | null;
@@ -173,6 +174,28 @@ export interface InventoriesSection {
   pages: Partial<Record<InventoryId, Slots[]>>; // personalVault is missing with its own setting off
   backpackIcons: (ItemView | null)[]; // by backpack, as `pages.backpacks`
   sacks: { id: string; name: string; count: number; rarity?: Rarity; glint: boolean; texture?: ItemTexture }[]; // largest first
+}
+
+/** What the inventories are worth, laid out as InventoriesSection, and the pets not owned yet. */
+export interface ValuesSection {
+  pricesAsOf: number;
+  inventories: {
+    pages: Partial<Record<InventoryId, (number | null)[][]>>; // each slot's worth as networth prices it; null: empty or unpriced
+    backpackIcons: (number | null)[]; // each backpack item's worth, as the inventories section's backpackIcons
+    totals: Partial<Record<InventoryId, number>>; // backpacks with the backpack items, as networth's storage
+    sacks: Record<string, number>; // each sack item's whole count, by id; only priced ones
+  } | null; // null with the inventory API off
+  missingPets: MissingPet[]; // cheapest first, only types with a price; without the market, every type unpriced by name
+}
+
+/** A pet type the member has none of, at its cheapest level 1 rarity on the market, or its lowest that scores without one. */
+export interface MissingPet {
+  type: string;
+  name: string;
+  rarity: Rarity;
+  price?: number;
+  points: number; // the pet score it would add
+  texture: ItemTexture;
 }
 
 export interface MuseumView {
