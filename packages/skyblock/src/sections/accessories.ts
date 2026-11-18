@@ -121,7 +121,7 @@ interface InPlaceUpgrade {
 const IN_PLACE: Record<string, InPlaceUpgrade> = {
   BOOK_OF_PROGRESSION: {
     unit: "level",
-    tiers: { UNCOMMON: 75, RARE: 150, EPIC: 225, LEGENDARY: 300, MYTHIC: 400 },
+    tiers: { UNCOMMON: 100, RARE: 200, EPIC: 300, LEGENDARY: 400, MYTHIC: 500 },
     progress: (_, member) => Math.floor((member.leveling?.experience ?? 0) / SKYBLOCK_XP_PER_LEVEL),
   },
   // Every saved Codex fits the milestone claimed, which can lag the bestiary's
@@ -136,7 +136,6 @@ const IN_PLACE: Record<string, InPlaceUpgrade> = {
     progress: ({ counters }) => counters?.thunder_charge ?? 0,
     recombobulates: true,
   },
-  POWER_ARTIFACT: { unit: "perfectGems", tiers: { EPIC: 7 }, progress: perfectGems, recombobulates: true },
   POWER_RELIC: { unit: "perfectGems", tiers: { LEGENDARY: 12 }, progress: perfectGems, recombobulates: true },
   RUNEBOOK: {
     unit: "runicKills",
