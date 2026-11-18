@@ -41,6 +41,10 @@
       "types": "./src/components/index.ts",
       "default": "./dist/components/index.js"
     },
+    "#commands/*.profile": {
+      "types": "./src/commands/*.profile.tsx",
+      "default": "./dist/commands/*.profile.js"
+    },
     "#commands/*": {
       "types": "./src/commands/*.ts",
       "default": "./dist/commands/*.js"
