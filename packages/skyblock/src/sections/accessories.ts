@@ -143,6 +143,7 @@ export function getAccessories(
   const stepOrder = order(accessoryPower, storage?.highest_magical_power);
   const stored = storedAccessories(member, items);
   const tuningPoints = add(...Object.values(tuning));
+  const enrichments = active.filter((view) => view.enrichment).length;
 
   return {
     accessoryPower,
@@ -151,8 +152,8 @@ export function getAccessories(
     powerStats: stone && stonePowerStats(stone, accessoryPower),
     tuning,
     tuningPoints,
-    tuningTotal: tuningTotal(member, accessoryPower, tuningPoints),
-    enrichments: active.filter((view) => view.enrichment).length,
+    tuningTotal: tuningTotal(member, accessoryPower, enrichments, tuningPoints),
+    enrichments,
     unenriched: active.filter((view) => !view.enrichment && RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY")).length,
     recombobulated: active.filter((view) => view.recombobulated).length,
     pricesAsOf: prices.asOf,
@@ -163,14 +164,14 @@ export function getAccessories(
   };
 }
 
-// A tuning point per 10 Accessory Power (the wiki's Maxwell page), and 13 more at Tuning Box X (owner exception,
-// unverified). No total at Box I to IX, whose points nothing lists, or below the points spent (some spent at more AP).
-function tuningTotal(member: RawMember, accessoryPower: number, spent: number) {
+// A tuning point per 10 Accessory Power (the wiki's Maxwell page) and per enrichment (its lore), 13 more at Tuning Box X
+// (owner exception, unverified). No total at Box I to IX, whose points nothing lists, or below the points spent.
+function tuningTotal(member: RawMember, accessoryPower: number, enrichments: number, spent: number) {
   const { rarity } = ATTRIBUTE_SHARDS.shards.find(({ attribute }) => attribute === "tuning_box")!;
   const levels = ATTRIBUTE_SHARDS.levels[rarity];
   const box = getLevel(member.attributes?.stacks?.tuning_box ?? 0, levels, levels.length).level;
   if (box > 0 && box < levels.length) return undefined;
-  const total = Math.floor(accessoryPower / 10) + (box === 0 ? 0 : 13);
+  const total = Math.floor(accessoryPower / 10) + enrichments + (box === 0 ? 0 : 13);
   return total < spent ? undefined : total;
 }
 
