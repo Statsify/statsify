@@ -271,7 +271,7 @@ const texturePath = (name: string, damage: number) => {
   return path && inPack(path) ? path : undefined;
 };
 
-const minecraftData = async (file: "blocks" | "items") => {
+export const minecraftData = async (file: "blocks" | "items") => {
   const url = `https://raw.githubusercontent.com/${MINECRAFT_DATA}/${MINECRAFT_DATA_SHA}/data/pc/1.8/${file}.json`;
   const response = await fetch(url);
   if (!response.ok) throw new Error(`${url} answered ${response.status}`);

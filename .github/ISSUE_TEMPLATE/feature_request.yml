@@ -28,6 +28,7 @@ body:
         - "@statsify/schemas"
         - "@statsify/skin-renderer"
         - "@statsify/skyblock"
+        - "@statsify/textures"
         - "@statsify/util"
     validations:
       required: true

@@ -169,6 +169,7 @@ interface RawResourceItem {
   category?: string;
   color?: string;
   skin?: { value: string };
+  item_model?: string;
   origin?: string;
   rift_transferrable?: boolean;
   npc_sell_price?: number;
@@ -206,7 +207,7 @@ export function parseItemsResource(raw: { lastUpdated: number; items: RawResourc
     raw: raw.items,
     museum,
     items: Object.fromEntries(
-      raw.items.map(({ id, name, material, durability, tier, category, color, skin, origin, rift_transferrable, npc_sell_price, glowing, generator, generator_tier }) => [
+      raw.items.map(({ id, name, material, durability, tier, category, color, skin, item_model, origin, rift_transferrable, npc_sell_price, glowing, generator, generator_tier }) => [
         id,
         {
           name,
@@ -216,6 +217,7 @@ export function parseItemsResource(raw: { lastUpdated: number; items: RawResourc
           category,
           color,
           skin: skin && skinHash(skin.value),
+          model: item_model,
           riftOnly: origin === "RIFT" && !rift_transferrable ? true : undefined,
           npcPrice: npc_sell_price,
           glowing,

@@ -11,6 +11,7 @@ import { SEA_CREATURES, TROPHY_FISH } from "#data";
 import { add } from "@statsify/math";
 import { prettify } from "@statsify/util";
 import type { RawMember } from "#raw";
+import { trophyFishTexture } from "#textures";
 
 // The wiki's Trophy Frogs list, in its order; every id is in the saves. Hypixel keeps each tier's first catch only, as a
 // TROPHY_<FROG>_<TIER> task.
@@ -45,13 +46,14 @@ export function getFishing(member: RawMember): FishingSection | null {
   if (!fished.total && !caught("total_caught")) return null;
 
   return {
-    trophyFish: Object.entries(TROPHY_FISH).map(([id, name]) => ({
-      id,
-      name,
-      tiers: Object.fromEntries(
+    trophyFish: Object.entries(TROPHY_FISH).map(([id, name]) => {
+      const tiers = Object.fromEntries(
         TROPHY_TIERS.map((tier) => [tier, caught(`${id.toLowerCase()}_${tier}`)])
-      ) as TrophyFish["tiers"],
-    })),
+      ) as TrophyFish["tiers"];
+      const best = TROPHY_TIERS.findLast((tier) => tiers[tier] > 0) ?? "bronze";
+
+      return { id, name, tiers, texture: trophyFishTexture(id, best) };
+    }),
     trophyFishCaught: caught("total_caught"),
     trophyFrogs: TROPHY_FROGS.map((id) => ({
       id,

@@ -41,30 +41,33 @@ export interface ItemGridProps {
   spreadLastRow?: boolean;
 }
 
-export const ItemGrid = ({ items, icons, columns = 2, stacked = false, spreadLastRow = false }: ItemGridProps) => {
-  const cells = items.map(({ texture, badge, name, value }) => (
-    <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
-      <ItemSlot icon={texture && icons.get(texture)} />
-      {badge && icons.has(badge) ? <img image={icons.get(badge)!} width={16} height={16} margin={{ left: -14, top: 18 }} /> : <></>}
-      {stacked ?
-        (
-          <>
-            <div direction="column" margin={{ left: 8, right: 4 }}>
-              <text align="left" margin={{ top: 0, bottom: 2 }}>{name}</text>
-              <text align="left" margin={{ top: 0, bottom: 0 }}>{value}</text>
-            </div>
-            <div width="remaining" />
-          </>
-        ) :
-        (
-          <>
-            <text margin={{ left: 8, right: 4, top: 6, bottom: 6 }}>{name}</text>
-            <div width="remaining" margin={{ left: 4, right: 4 }} />
-            <text>{value}</text>
-          </>
-        )}
-    </box>
-  ));
+export interface ItemCellProps extends ItemGridEntry, Pick<ItemGridProps, "icons" | "stacked"> {}
 
+export const ItemCell = ({ texture, badge, name, value, icons, stacked = false }: ItemCellProps) => (
+  <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
+    <ItemSlot icon={texture && icons.get(texture)} />
+    {badge && icons.has(badge) ? <img image={icons.get(badge)!} width={16} height={16} margin={{ left: -14, top: 18 }} /> : <></>}
+    {stacked ?
+      (
+        <>
+          <div direction="column" margin={{ left: 8, right: 4 }}>
+            <text align="left" margin={{ top: 0, bottom: 2 }}>{name}</text>
+            <text align="left" margin={{ top: 0, bottom: 0 }}>{value}</text>
+          </div>
+          <div width="remaining" />
+        </>
+      ) :
+      (
+        <>
+          <text margin={{ left: 8, right: 4, top: 6, bottom: 6 }}>{name}</text>
+          <div width="remaining" margin={{ left: 4, right: 4 }} />
+          <text>{value}</text>
+        </>
+      )}
+  </box>
+);
+
+export const ItemGrid = ({ items, icons, columns = 2, stacked = false, spreadLastRow = false }: ItemGridProps) => {
+  const cells = items.map((item) => <ItemCell {...item} icons={icons} stacked={stacked} />);
   return <Table.table>{gridRows(cells, columns, spreadLastRow)}</Table.table>;
 };
