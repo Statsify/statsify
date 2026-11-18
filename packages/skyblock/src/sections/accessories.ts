@@ -34,9 +34,9 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
   MYTHIC: 22,
 };
 
-// 0.27.3 leaves in the bag what it made helmets (the anniversary hats, the only SPECIAL and VERY_SPECIAL accessories) and
-// legacy items (the old Personal Compactors, which the items resource now files under another category)
-const isLeftover = ({ id, rarity }: ItemView, items: ItemsResource) => {
+// The bag keeps items that stopped being accessories, which the items resource files elsewhere (the old Personal
+// Compactors). Not every anniversary hat is in the resource, so their SPECIAL and VERY_SPECIAL rarities mark them.
+const isFormerAccessory = ({ id, rarity }: ItemView, items: ItemsResource) => {
   const category = items.items[id]?.category;
   return rarity === "SPECIAL" || rarity === "VERY_SPECIAL" || (category !== undefined && category !== "ACCESSORY");
 };
@@ -163,7 +163,7 @@ export function bagAccessories(member: RawMember, items: ItemsResource) {
 
   const views = decodeInventory(bag)
     .flatMap((item) => (item ? [toItemView(item)] : []))
-    .filter((view) => !isLeftover(view, items))
+    .filter((view) => !isFormerAccessory(view, items))
     .toSorted((a, b) => power(b) - power(a));
 
   const prism = member.rift?.access?.consumed_prism ? ["RIFT_PRISM"] : [];
@@ -188,7 +188,7 @@ export function bagAccessories(member: RawMember, items: ItemsResource) {
     }
   }
 
-  // 0.27.3 returns a prism consumed at Erihann to the bag as a Rare one
+  // A prism consumed at Erihann is refunded to the bag as a Rare the next time the player joins
   const accessoryPower = add(...active.map(power), prism.length * powerOf("RIFT_PRISM", "RARE", 0));
   return { active, inactive, owned, contacts, accessoryPower };
 }
@@ -208,9 +208,8 @@ const byCoinsPerAccessoryPower = cheapestFirst<MissingAccessory>(
 );
 
 /**
- * Every tier above the bag's best in a chain is a step, worth its accessory power over that tier. Each chain (and each
- * pair of variants) keeps its first step in `order`. One the player keeps outside the bag is free, and nothing below it
- * is offered.
+ * Every tier above the bag's best in a chain is a step, worth its accessory power over that tier. Each chain or variant
+ * pair keeps its first step in `order`. One the player keeps outside the bag is free, and nothing below it is offered.
  */
 function getMissing(
   owned: ReadonlySet<string>,
