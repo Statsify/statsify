@@ -203,6 +203,11 @@ export class ApiService {
     });
   }
 
+  // The hero is the player's stored Smash Heroes active_class, and master their stored masterArmor_<hero>
+  public getSmashRender(hero: string, { master }: { master?: boolean } = {}) {
+    return this.requestImage(isProduction ? "https://api.statsify.net/skin/smash" : "/skin/smash", { hero, master });
+  }
+
   public getPlayerSkinTextures(tag: string) {
     return this.requestKey<GetSkinTexturesResponse, "skin">("/skin/textures", "skin", {
       player: tag,

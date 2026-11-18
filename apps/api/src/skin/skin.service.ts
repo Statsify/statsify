@@ -18,6 +18,7 @@ import { getAssetPath, getMinecraftTexturePath } from "@statsify/assets";
 import { getHelmetModel, getKartModel, parseSuitPiece } from "./kart-cosmetics.js";
 import { getWarlordsArmor, getWarlordsHelmetModel, getWarlordsWeaponModel } from "./warlords-cosmetics.js";
 import { join } from "node:path";
+import { type SmashHero, getSmashHero } from "./smash-cosmetics.js";
 import {
   type Armor,
   type ArmorPiece,
@@ -31,8 +32,10 @@ import {
   type ArmorPieceDto,
   KART_CAMERA,
   type KartRenderDto,
+  SMASH_CAMERA,
   type SKULLS,
   type SkinRenderDto,
+  type SmashRenderDto,
   WARLORDS_CAMERA,
   type WarlordsRenderDto,
 } from "#dtos";
@@ -113,6 +116,12 @@ export class SkinService {
     ]);
 
     return this.reloadIfUnavailable(WARLORDS_PACK, renderWarlords(library, warlords, { ...options, player }));
+  }
+
+  public async getSmashRender({ hero, master, ...options }: SmashRenderDto): Promise<Buffer> {
+    const smash = resolveSmash(hero, master);
+    const library = await this.getLibrary(SMASH_PACK);
+    return this.reloadIfUnavailable(SMASH_PACK, renderSmash(library, smash, options));
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -326,6 +335,7 @@ const resourcePack = (name: string, folder: string): ResourcePack => ({
 
 export const KART_PACK = resourcePack("Turbo Kart Racers", "turbo-kart-racers");
 export const WARLORDS_PACK = resourcePack("Warlords", "warlords");
+export const SMASH_PACK = resourcePack("Smash Heroes", "smash");
 
 // The kart is worn by an armor stand the rider sits on: the stand's mounted offset (1.975 × 0.75 blocks)
 // less the player's riding offset (0.35), in pixels
@@ -487,6 +497,54 @@ export async function renderWarlords(
 
   return renderScene(library, { player: { ...player, extruded, armor: worn, pose: "standing" }, models }, output)
     .catch(rethrowPackError(WARLORDS_PACK));
+}
+
+export interface SmashScene extends Pick<SmashHero, "skinColor" | "chestplate" | "leggings" | "boots"> {
+  models: ModelInstance[];
+}
+
+export function resolveSmash(hero: string, master = false): SmashScene {
+  const { head, held, framesHeld, ...worn } = getSmashHero(hero, master);
+
+  return {
+    ...worn,
+    models: [
+      { model: head, bone: "head", display: "head" },
+      { model: held, bone: "rightHand", display: "thirdperson", framed: framesHeld },
+    ],
+  };
+}
+
+function drawHeroSkin(color: number) {
+  const canvas = createCanvas(64, 64);
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = `#${color.toString(16).padStart(6, "0")}`;
+  ctx.fillRect(0, 0, 64, 64);
+  return canvas.toBuffer("png");
+}
+
+export async function renderSmash(
+  library: ModelLibrary,
+  { models, skinColor, ...worn }: SmashScene,
+  {
+    width = SMASH_CAMERA.width,
+    height = SMASH_CAMERA.height,
+    yaw = SMASH_CAMERA.yaw,
+    pitch = SMASH_CAMERA.pitch,
+  }: Pick<SmashRenderDto, "width" | "height" | "yaw" | "pitch">
+): Promise<Buffer> {
+  const armor = await resolvePackArmor(SMASH_PACK, worn);
+
+  const player = {
+    skin: await drawHeroSkin(skinColor),
+    // Every lobby stand's skin uses the classic arms
+    slim: false,
+    extruded: false,
+    armor,
+    pose: "standing",
+  } as const;
+
+  return renderScene(library, { player, models }, { width, height, yaw, pitch }).catch(rethrowPackError(SMASH_PACK));
 }
 
 interface MojangProfile {

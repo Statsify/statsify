@@ -54,6 +54,12 @@ export interface ModelInstance {
   /** Degrees about the bone's x, y and z axes, turned in the order a display transform turns. */
   rotation?: [number, number, number]
   scale?: [number, number, number]
+  /**
+   * Whether the camera fits the model in the frame, true by default. A model left out still
+   * draws, cut off where it reaches past the frame's edges.
+   * One reaching or passing the camera fails with "The scene is too small or too large to frame".
+   */
+  framed?: boolean
 }
 
 export interface PackAssets {
