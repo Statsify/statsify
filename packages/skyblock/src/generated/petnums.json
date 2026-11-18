@@ -173,64 +173,74 @@
   "BAT": {
     "COMMON": {
       "first": {
-        "intelligence": 1,
-        "speed": 0.05
+        "fishing_speed": 0.4,
+        "sea_creature_chance": 0.05,
+        "speed": 0.4
       },
       "last": {
-        "intelligence": 100,
-        "speed": 5
+        "fishing_speed": 40,
+        "sea_creature_chance": 5,
+        "speed": 40
       }
     },
     "EPIC": {
       "first": {
-        "intelligence": 1,
-        "speed": 0.05
+        "fishing_speed": 0.4,
+        "sea_creature_chance": 0.05,
+        "speed": 0.4
       },
       "last": {
-        "intelligence": 100,
-        "speed": 5
+        "fishing_speed": 40,
+        "sea_creature_chance": 5,
+        "speed": 40
       }
     },
     "LEGENDARY": {
       "first": {
-        "intelligence": 1,
-        "speed": 0.05
+        "fishing_speed": 0.4,
+        "sea_creature_chance": 0.05,
+        "speed": 0.4
       },
       "last": {
-        "intelligence": 100,
-        "speed": 5
+        "fishing_speed": 40,
+        "sea_creature_chance": 5,
+        "speed": 40
       }
     },
     "MYTHIC": {
       "first": {
-        "intelligence": 1,
+        "fishing_speed": 0.4,
         "sea_creature_chance": 0.05,
-        "speed": 0.05
+        "speed": 0.4
       },
       "last": {
-        "intelligence": 100,
+        "fishing_speed": 40,
         "sea_creature_chance": 5,
-        "speed": 5
+        "speed": 40
       }
     },
     "RARE": {
       "first": {
-        "intelligence": 1,
-        "speed": 0.05
+        "fishing_speed": 0.4,
+        "sea_creature_chance": 0.05,
+        "speed": 0.4
       },
       "last": {
-        "intelligence": 100,
-        "speed": 5
+        "fishing_speed": 40,
+        "sea_creature_chance": 5,
+        "speed": 40
       }
     },
     "UNCOMMON": {
       "first": {
-        "intelligence": 1,
-        "speed": 0.05
+        "fishing_speed": 0.4,
+        "sea_creature_chance": 0.05,
+        "speed": 0.4
       },
       "last": {
-        "intelligence": 100,
-        "speed": 5
+        "fishing_speed": 40,
+        "sea_creature_chance": 5,
+        "speed": 40
       }
     }
   },
@@ -409,30 +419,22 @@
   "BLACK_CAT": {
     "LEGENDARY": {
       "first": {
-        "intelligence": 1,
-        "magic_find": 0.15,
-        "pet_luck": 0.15,
-        "speed": 1.25
+        "attack_speed": 0.4,
+        "speed": 0.75
       },
       "last": {
-        "intelligence": 100,
-        "magic_find": 15,
-        "pet_luck": 15,
-        "speed": 125
+        "attack_speed": 40,
+        "speed": 75
       }
     },
     "MYTHIC": {
       "first": {
-        "intelligence": 1,
-        "magic_find": 0.15,
-        "pet_luck": 0.15,
-        "speed": 1.25
+        "attack_speed": 0.4,
+        "speed": 0.75
       },
       "last": {
-        "intelligence": 100,
-        "magic_find": 15,
-        "pet_luck": 15,
-        "speed": 125
+        "attack_speed": 40,
+        "speed": 75
       }
     }
   },
@@ -1239,11 +1241,9 @@
   "GOBLIN": {
     "LEGENDARY": {
       "first": {
-        "magic_find": 0.07,
         "ore_fortune": 1
       },
       "last": {
-        "magic_find": 7,
         "ore_fortune": 100
       }
     }
@@ -1252,12 +1252,10 @@
     "LEGENDARY": {
       "first": {
         "attack_speed": 25,
-        "magic_find": 5,
         "strength": 25
       },
       "last": {
         "attack_speed": 50,
-        "magic_find": 10,
         "strength": 50
       },
       "levels": [
@@ -1662,12 +1660,10 @@
     "LEGENDARY": {
       "first": {
         "foraging_fortune": 25,
-        "magic_find": 5,
         "strength": 25
       },
       "last": {
         "foraging_fortune": 50,
-        "magic_find": 10,
         "strength": 50
       },
       "levels": [
@@ -1941,14 +1937,12 @@
       "first": {
         "ferocity": 5.05,
         "fishing_speed": 10.3,
-        "magic_find": 0.1,
         "sea_creature_chance": 5.05,
         "strength": 0.5
       },
       "last": {
         "ferocity": 10,
         "fishing_speed": 40,
-        "magic_find": 10,
         "sea_creature_chance": 10,
         "strength": 50
       }
@@ -1957,14 +1951,12 @@
       "first": {
         "ferocity": 5.05,
         "fishing_speed": 10.3,
-        "magic_find": 0.1,
         "sea_creature_chance": 5.05,
         "strength": 0.5
       },
       "last": {
         "ferocity": 10,
         "fishing_speed": 40,
-        "magic_find": 10,
         "sea_creature_chance": 10,
         "strength": 50
       }
@@ -2036,12 +2028,10 @@
     "LEGENDARY": {
       "first": {
         "intelligence": 1,
-        "magic_find": 0.05,
         "mining_speed": 1.5
       },
       "last": {
         "intelligence": 100,
-        "magic_find": 5,
         "mining_speed": 150
       }
     }

@@ -46,6 +46,11 @@ export const neuStats = (stats: Record<string, number>) =>
     })
   );
 
+// No pet has base Magic Find since 0.27.3 (the wiki's pet pages). NEU still lists Jade Dragon's old stat and
+// Megalodon's Blood Scent, which only counts on Sharks.
+const petBaseStats = (statNums: Record<string, number>) =>
+  Object.fromEntries(Object.entries(neuStats(statNums)).filter(([stat]) => stat !== "magic_find"));
+
 /**
  * A perk's stats when its lore grants them outright, from its NEU expression. Perks that grant one "when mining
  * Gemstones" or "for the first 250 trees cut every day" don't count on the stat sheet.
@@ -117,7 +122,7 @@ function petItemEffect(lore: string[]) {
   const sentences = text.split(/(?<=[.!]) /);
 
   const flat = sentences
-    .filter((sentence) => sentence.startsWith("Grants ") && !/\b(?:when|while|for each|for every|per)\b/.test(sentence))
+    .filter((sentence) => sentence.startsWith("Grants ") && !/\b(?:when|while|for each|for every|per|against|mobs)\b/.test(sentence))
     .flatMap((sentence) => {
       const reduced = [...sentence.matchAll(/reduces your \W*([A-Z][\w ]+?) by ([\d.]+)/g)].flatMap(([, name, value]) => {
         const stat = statNamed(name);
@@ -221,27 +226,9 @@ export const NEU_UNITS = {
     >("constants/bestiary.json");
     const allBrackets: Record<string, number[]> = {
       ...brackets,
-      // The wiki's bestiary table has 12, 16 and 20 kills for bracket 6's tiers 7–9, against NEU's 14, 17 and 21, and its
-      // own bracket and cap for the families in wikiFamilies (an owner exception, unverified)
-      6: [...brackets[6].slice(0, 6), 12, 16, 20, ...brackets[6].slice(9)],
       ...Object.fromEntries(
         Object.entries(bracketSets).flatMap(([set, tiers]) => Object.entries(tiers).map(([n, kills]) => [`${set}_${n}`, kills]))
       ),
-    };
-    const wikiFamilies: Record<string, { bracket: string; cap: number }> = {
-      Beeheemoth: { bracket: "CRITTERS_4", cap: 50 },
-      Bogged: { bracket: "4", cap: 1000 },
-      "Cretan Bull": { bracket: "5", cap: 1000 },
-      Flipflopper: { bracket: "CRITTERS_2", cap: 100 },
-      "Grizzly Bear": { bracket: "CRITTERS_5", cap: 25 },
-      Honeyhog: { bracket: "CRITTERS_2", cap: 100 },
-      Lotum: { bracket: "CRITTERS_2", cap: 100 },
-      "Mithril Grubber": { bracket: "3", cap: 300 },
-      "Oasis Rabbit": { bracket: "3", cap: 300 },
-      "Oasis Sheep": { bracket: "3", cap: 300 },
-      "Queen Ant": { bracket: "2", cap: 50 },
-      "Stranded Nymph": { bracket: "5", cap: 1000 },
-      Tidetot: { bracket: "CRITTERS_4", cap: 50 },
     };
     // NEU gives a few families (Parched, Lotusfish, some critters) a bracket that never reaches their cap. The game ranks
     // them on the critter bracket that ends at it (the wiki's tiers for each).
@@ -251,26 +238,22 @@ export const NEU_UNITS = {
       if (ending.length !== 1) throw new Error(`bestiary: ${name}'s cap ${cap} isn't a step of ${given} or the end of one critter bracket`);
       return ending[0];
     };
-    // Kill ids NEU's families leave out, each seen in the saves: older level variants, the Special Zealot and the Slimey
-    // Rain Slime (each mob's page on the wiki, an owner exception, unverified)
+    // Older level variants NEU's families leave out, each seen in the saves (each mob's page on the wiki, an owner
+    // exception, unverified)
     const missingIds: Record<string, string[]> = {
-      "Cretan Bull": ["cretan_bull_40", "cretan_bull_70", "cretan_bull_95"],
+      "Cretan Bull": ["cretan_bull_95"],
       "Emerald Slime": ["emerald_slime_15"],
-      "Minos Hunter": ["minos_hunter_25", "minos_hunter_80"],
-      "Rain Slime": ["slimey_slime_50"],
-      "Siamese Lynx": ["siamese_lynx_55"],
-      "Stranded Nymph": ["stranded_nymph_40", "stranded_nymph_70", "stranded_nymph_95"],
-      Zealot: ["zealot_special_enderman_55"],
+      "Minos Hunter": ["minos_hunter_80"],
+      "Stranded Nymph": ["stranded_nymph_95"],
     };
     const families = ({ mobs = [] }: NeuPage) =>
       mobs.map(({ name: formatted, mobs: ids, cap, bracket, bracketType }) => {
         const name = removeFormatting(formatted);
-        const wiki = wikiFamilies[name];
         return {
           name,
           ids: [...ids, ...(missingIds[name] ?? [])],
-          cap: wiki?.cap ?? cap,
-          bracket: wiki?.bracket ?? bracketOf(name, cap, bracketType ? `${bracketType}_${bracket}` : String(bracket)),
+          cap,
+          bracket: bracketOf(name, cap, bracketType ? `${bracketType}_${bracket}` : String(bracket)),
         };
       });
     const subpages = (page: NeuPage) =>
@@ -543,8 +526,8 @@ export const NEU_UNITS = {
             Object.entries(rarities).map(([rarity, { 1: first, 100: last, stats_levelling_curve: curve }]) => [
               rarity,
               {
-                first: neuStats(first.statNums),
-                last: neuStats(last.statNums),
+                first: petBaseStats(first.statNums),
+                last: petBaseStats(last.statNums),
                 levels: curve?.split(":").slice(0, 2).map(Number),
               },
             ])

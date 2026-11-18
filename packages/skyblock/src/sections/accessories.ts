@@ -418,11 +418,11 @@ if (import.meta.vitest) {
 
   test("countChains joins an accessory's tiers and variants however their upgrades link them", () => {
     const power = ["POWER_TALISMAN", "POWER_RING", "POWER_ARTIFACT", "POWER_RELIC"];
-    const hats = ["PARTY_HAT_CRAB", "PARTY_HAT_CRAB_ANIMATED", "PARTY_HAT_SLOTH"];
+    const dante = ["DANTE_TALISMAN", "DANTE_RING"];
 
     expect(countChains([])).toBe(0);
     expect(countChains(power)).toBe(1);
     expect(countChains(["POWER_TALISMAN", "POWER_RELIC"])).toBe(1);
-    expect(countChains([...power, ...hats, "RUNEBOOK"])).toBe(3);
+    expect(countChains([...power, ...dante, "RUNEBOOK"])).toBe(3);
   });
 }
