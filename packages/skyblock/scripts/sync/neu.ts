@@ -23,7 +23,6 @@ export const NEU_REPO = "NotEnoughUpdates/NotEnoughUpdates-REPO";
 // NEU-REPO's #3221 removed sblevels.json and misc.json's base_stats; this is the commit before it
 export const NEU_BEFORE_REMOVAL = "5a5e9866a8578c8a36891acc508fc1e46e41eb31";
 
-/** A NEU-REPO file as it was before #3221. */
 export async function neuBeforeRemoval<T>(path: string) {
   const response = await fetch(`https://raw.githubusercontent.com/${NEU_REPO}/${NEU_BEFORE_REMOVAL}/${path}`);
   if (!response.ok) throw new Error(`${path} at ${NEU_BEFORE_REMOVAL} answered ${response.status}`);
@@ -48,8 +47,7 @@ export const neuStats = (stats: Record<string, number>) =>
     })
   );
 
-// No pet has base Magic Find since 0.27.3 (the wiki's pet pages). NEU still lists Jade Dragon's old stat and
-// Megalodon's Blood Scent, which only counts on Sharks.
+// No pet has base Magic Find since 0.27.3 (the wiki), though NEU still lists Jade Dragon's and Megalodon's
 const petBaseStats = (statNums: Record<string, number>) =>
   Object.fromEntries(Object.entries(neuStats(statNums)).filter(([stat]) => stat !== "magic_find"));
 
