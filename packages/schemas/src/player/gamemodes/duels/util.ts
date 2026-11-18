@@ -108,7 +108,7 @@ export const getTitleAndProgression = ({
   let nextDivision = division + 1;
   let nextDefaultColor = defaultColor;
 
-  if (nextDivision > max) {
+  if (nextDivision > max || !step) {
     nextDivision = 1;
     if (index < titleScores.length - 1) nextDefaultColor = titleScores[index + 1].defaultColor;
   }
