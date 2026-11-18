@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Agent } from "node:https";
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
 import { Skin } from "@statsify/schemas";
@@ -16,7 +17,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 @Module({
   imports: [
     TypegooseModule.forFeature([Skin]),
-    HttpModule.register({}),
+    HttpModule.register({ httpsAgent: new Agent({ keepAlive: true, timeout: 30_000 }) }),
   ],
   controllers: [SkinController],
   providers: [SkinService],
