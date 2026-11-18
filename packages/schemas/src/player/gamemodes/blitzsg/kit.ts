@@ -10,7 +10,7 @@ import { type APIData, findScoreIndex, formatTime } from "@statsify/util";
 import { Field } from "#metadata";
 import { add, ratio, sub } from "@statsify/math";
 
-const limit = 10_000;
+const limit = 1_000;
 
 export class BlitzSGKit {
   @Field({ leaderboard: { limit } })
@@ -45,8 +45,7 @@ export class BlitzSGKit {
 
   @Field({
     store: { required: false },
-    leaderboard: { formatter: formatTime },
-    historical: { enabled: false },
+    leaderboard: { formatter: formatTime, limit: 50_000 },
   })
   public playtime: number;
 

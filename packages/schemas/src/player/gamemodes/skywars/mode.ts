@@ -35,7 +35,7 @@ export class SkyWarsMini implements SkyWarsMode {
   @Field()
   public assists: number;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTime, limit: 50_000 } })
   public playtime: number;
 
   // Kit gets applied in the main class
@@ -89,7 +89,7 @@ export class SkyWarsMode {
   @Field()
   public assists: number;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTime, limit: 50_000 } })
   public playtime: number;
 
   // Kit gets applied in the main class

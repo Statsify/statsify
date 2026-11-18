@@ -35,7 +35,7 @@ export const MURDER_MYSTERY_MODES = new GameModes([
 export type MurderMysteryModes = ExtractGameModes<typeof MURDER_MYSTERY_MODES>;
 
 export class MurderMystery {
-  @Field({ historical: { enabled: false } })
+  @Field()
   public tokens: number;
 
   @Field({ store: { default: "§7✪" } })

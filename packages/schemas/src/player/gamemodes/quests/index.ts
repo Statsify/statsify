@@ -103,8 +103,7 @@ export type GenericQuestInstance = {
 
 export class Quests {
   @Field({
-    leaderboard: { name: "Total Quests", fieldName: "Quests" },
-    historical: { enabled: false },
+    leaderboard: { name: "Total Quests", fieldName: "Quests", limit: 50_000 },
   })
   public total: number;
 
@@ -113,8 +112,8 @@ export class Quests {
       name: "Weekly Quests",
       fieldName: "Quests",
       resetEvery: "friday",
+      limit: 50_000,
     },
-    historical: { enabled: false },
   })
   public weeklyTotal: number;
 
@@ -123,8 +122,8 @@ export class Quests {
       name: "Daily Quests",
       fieldName: "Quests",
       resetEvery: "day",
+      limit: 50_000,
     },
-    historical: { enabled: false },
   })
   public dailyTotal: number;
 

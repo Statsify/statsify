@@ -26,7 +26,7 @@ export const COPS_AND_CRIMS_MODES = new GameModes([
 export type CopsAndCrimsModes = ExtractGameModes<typeof COPS_AND_CRIMS_MODES>;
 
 export class CopsAndCrims {
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
   @Field()

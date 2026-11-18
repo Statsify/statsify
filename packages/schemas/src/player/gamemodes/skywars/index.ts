@@ -55,25 +55,23 @@ export class SkyWars {
   })
   public exp: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
   @Field({
-    leaderboard: { additionalFields: ["this.opals"] },
-    historical: { enabled: false },
+    leaderboard: { additionalFields: ["this.opals"], limit: 50_000 },
   })
   public souls: number;
 
   @Field({
-    leaderboard: { additionalFields: ["this.souls"] },
-    historical: { enabled: false },
+    leaderboard: { additionalFields: ["this.souls"], limit: 50_000 },
   })
   public opals: number;
 
   @Field()
   public heads: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public tokens: number;
 
   @Field()

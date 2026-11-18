@@ -50,26 +50,29 @@ export class General {
   public networkLevel: number;
 
   @Field({
-    leaderboard: { additionalFields: ["this.highestRewardStreak"] },
-    historical: { enabled: false },
+    leaderboard: {
+      additionalFields: ["this.highestRewardStreak"],
+      limit: 50_000,
+    },
   })
   public currentRewardStreak: number;
 
   @Field({
-    leaderboard: { additionalFields: ["this.currentRewardStreak"] },
-    historical: { enabled: false },
+    leaderboard: {
+      additionalFields: ["this.currentRewardStreak"],
+      limit: 50_000,
+    },
   })
   public highestRewardStreak: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: 50_000 } })
   public tournamentTributes: number;
 
   @Field()
   public ranksGifted: number;
 
   @Field({
-    leaderboard: { fieldName: "Tokens", name: "Classic Tokens" },
-    historical: { enabled: false },
+    leaderboard: { fieldName: "Tokens", name: "Classic Tokens", limit: 50_000 },
   })
   public classicTokens: number;
 

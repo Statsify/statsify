@@ -39,7 +39,7 @@ export const WOOLGAMES_MODES = new GameModes([
 export type WoolGamesModes = ExtractGameModes<typeof WOOLGAMES_MODES>;
 
 export class WoolGames {
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
   @Field({ leaderboard: { enabled: false } })
@@ -73,7 +73,7 @@ export class WoolGames {
   @Field()
   public nextLevelFormatted: string;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTime, limit: 50_000 } })
   public playtime: number;
 
   @Field()

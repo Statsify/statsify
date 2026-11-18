@@ -78,7 +78,7 @@ export class BuildBattle {
   @Field()
   public speedBuilders: BuildBattleSpeedBuilders;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
   @Field()
@@ -90,7 +90,7 @@ export class BuildBattle {
   @Field()
   public votes: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: 50_000 } })
   public superVotes: number;
 
   @Field({ store: { default: defaultPrefix(titles) } })

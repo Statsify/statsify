@@ -46,8 +46,8 @@ export class CaptureTheWool {
       sort: "ASC",
       formatter: formatTime,
       additionalFields: ["this.wins"],
+      limit: 50_000,
     },
-    historical: { enabled: false },
   })
   public fastestWin: number;
 
@@ -56,15 +56,12 @@ export class CaptureTheWool {
       sort: "ASC",
       formatter: formatTime,
       additionalFields: ["this.woolCaptured"],
+      limit: 50_000,
     },
-    historical: { enabled: false },
   })
   public fastestWoolCapture: number;
 
-  @Field({
-    leaderboard: { formatter: formatTime },
-    historical: { enabled: false },
-  })
+  @Field({ leaderboard: { formatter: formatTime, limit: 50_000 } })
   public longestGame: number;
 
   @Field({ leaderboard: { additionalFields: ["this.goldSpent"] } })

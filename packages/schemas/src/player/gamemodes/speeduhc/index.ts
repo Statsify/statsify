@@ -49,7 +49,7 @@ export class SpeedUHC {
   @Field()
   public teams: SpeedUHCMode;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
   @Field()
