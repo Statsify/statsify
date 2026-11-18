@@ -37,6 +37,12 @@ export interface CommandOptions {
    * @example badge.png
    */
   preview?: string;
+
+  /**
+   * Whether only the user who ran the command can see its reply.
+   * @default false
+   */
+  ephemeral?: boolean;
 }
 
 export interface SubCommandOptions extends Omit<CommandOptions, "cooldown"> {
