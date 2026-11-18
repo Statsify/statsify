@@ -48,8 +48,12 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
   MYTHIC: 22,
 };
 
-// The anniversary hats, the only SPECIAL and VERY_SPECIAL accessories, are helmets since 0.27.3
-const isHat = ({ rarity }: ItemView) => rarity === "SPECIAL" || rarity === "VERY_SPECIAL";
+// 0.27.3 leaves in the bag what it made helmets (the anniversary hats, the only SPECIAL and VERY_SPECIAL accessories) and
+// legacy items (the old Personal Compactors, which the items resource now files under another category)
+const isLeftover = ({ id, rarity }: ItemView, items: ItemsResource) => {
+  const category = items.items[id]?.category;
+  return rarity === "SPECIAL" || rarity === "VERY_SPECIAL" || (category !== undefined && category !== "ACCESSORY");
+};
 
 const upgradesOf = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
 
@@ -187,7 +191,7 @@ export function bagAccessories(member: RawMember, items: ItemsResource) {
 
   const views = decodeInventory(bag)
     .flatMap((item) => (item ? [toItemView(item)] : []))
-    .filter((view) => !isHat(view))
+    .filter((view) => !isLeftover(view, items))
     .toSorted((a, b) => power(b) - power(a));
 
   const prism = member.rift?.access?.consumed_prism ? ["RIFT_PRISM"] : [];
