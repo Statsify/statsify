@@ -29,10 +29,10 @@ const isHat = ({ rarity }: ItemView) => rarity === "SPECIAL" || rarity === "VERY
 
 const upgradesOf = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
 
-/** Variants that replace each other (party hats) list each other; a higher tier doesn't list its lower one. */
+/** Variants list each other (Dante's Talisman and Ring); a higher tier doesn't list its lower one. */
 const isMutual = (a: string, b: string) => upgradesOf(b).includes(a);
 
-/** Of two party hats, the one with the most AP counts, then the first id. */
+/** Of two variants, the one with the most AP counts, then the first id. */
 const outranks = (by: string, id: string, power: (id: string) => number) =>
   power(by) > power(id) || (power(by) === power(id) && by < id);
 
@@ -62,8 +62,8 @@ function storedAccessories(member: RawMember, items: ItemsResource) {
 type StepOrder = (a: MissingAccessory, b: MissingAccessory) => number;
 
 /**
- * null when the inventory API is off. Only the best of each upgrade chain counts, one of each duplicate and one party
- * hat, and a consumed Rift Prism counts as one in the bag. Each chain's missing step is the first in `order`.
+ * null when the inventory API is off. Only the best of each upgrade chain counts, one of each duplicate and one of two
+ * variants, and a consumed Rift Prism counts as one in the bag. Each chain's missing step is the first in `order`.
  */
 export function getAccessories(
   member: RawMember,
