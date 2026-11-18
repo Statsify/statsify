@@ -1,5 +1,5 @@
 use bytemuck::{Pod, Zeroable};
-use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation3, Vector3};
+use cgmath::{AbsDiffEq, Matrix, Matrix3, Matrix4, SquareMatrix, Zero};
 
 use crate::geometry::vertex::VertexDescriptor;
 
@@ -8,16 +8,32 @@ use crate::geometry::vertex::VertexDescriptor;
 pub struct InstanceRaw {
   pub model: [[f32; 4]; 4],
   pub normal: [[f32; 3]; 3],
+  pub uneven_scale: u32,
 }
 
 impl InstanceRaw {
-  pub fn identity() -> Self {
-    let position = Vector3::new(0.0, 0.0, 0.0);
-    let rotation = Quaternion::from_axis_angle(Vector3::unit_y(), Deg(0.0));
+  pub fn new(model: Matrix4<f32>) -> Self {
+    let linear = Matrix3::from_cols(model.x.truncate(), model.y.truncate(), model.z.truncate());
+
+    // The inverse transpose keeps normals square to their faces under any scale, and the lighting
+    // reads their length, so the scale is divided back out
+    let scale = linear.determinant().abs().cbrt();
+
+    // An uneven scale stretches some normals more than others, so the shader normalizes those.
+    // Only those, since the skin's own normals aren't all unit length.
+    let (normal, uneven_scale) = match linear.invert() {
+      Some(inverse) => {
+        let normal = inverse.transpose() * scale;
+        let even = (normal.transpose() * normal).abs_diff_eq(&Matrix3::identity(), 1e-4);
+        (normal, !even)
+      }
+      None => (Matrix3::zero(), false),
+    };
 
     Self {
-      model: (Matrix4::from_translation(position) * Matrix4::from(rotation)).into(),
-      normal: Matrix3::from(rotation).into(),
+      model: model.into(),
+      normal: normal.into(),
+      uneven_scale: uneven_scale.into(),
     }
   }
 }
@@ -34,7 +50,8 @@ impl VertexDescriptor for InstanceRaw {
     // Normal Matrix
     9 => Float32x3,
     10 => Float32x3,
-    11 => Float32x3
+    11 => Float32x3,
+    12 => Uint32
   ];
   const STEP_MODE: wgpu::VertexStepMode = wgpu::VertexStepMode::Instance;
 }

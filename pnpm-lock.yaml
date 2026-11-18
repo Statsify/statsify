@@ -784,6 +784,9 @@ importers:
 
   packages/skin-renderer:
     devDependencies:
+      '@statsify/minecraft-models':
+        specifier: workspace:^
+        version: link:../minecraft-models
       '@statsify/render-core':
         specifier: workspace:^
         version: link:../render-core

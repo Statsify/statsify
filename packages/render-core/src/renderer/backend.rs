@@ -41,6 +41,8 @@ pub trait Backend {
   async fn handle_encoder_after_render(
     &self,
     encoder: wgpu::CommandEncoder,
+    output_texture: OutputTexture<'_>,
+    unpremultiply: bool,
   ) -> RenderResult<Vec<u8>>;
 
   #[cfg(target_arch = "wasm32")]

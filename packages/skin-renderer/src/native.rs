@@ -11,7 +11,7 @@ use crate::model::{Model, ModelKind, ModelOuterLayer};
 use crate::pose::Pose;
 
 lazy_static! {
-  static ref SKIN_RENDERER: AsyncOnce<Renderer<NativeBackend>> = AsyncOnce::new(async {
+  pub(crate) static ref SKIN_RENDERER: AsyncOnce<Renderer<NativeBackend>> = AsyncOnce::new(async {
     Renderer::new(460, 800)
       .await
       .expect("skin renderer initialized")
@@ -29,7 +29,7 @@ pub struct RenderOptions {
   /// Camera angle around the player in radians: 0 faces the front, π the back.
   /// Defaults to -0.3.
   pub yaw: Option<f64>,
-  #[napi(ts_type = "'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly'")]
+  #[napi(ts_type = "'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly' | 'sit'")]
   pub pose: Option<Pose>,
 }
 

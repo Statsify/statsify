@@ -1,4 +1,4 @@
-use cgmath::{Deg, Quaternion, Rotation as _, Rotation3, Vector3};
+use cgmath::{Deg, Matrix4, Quaternion, Rotation as _, Rotation3, SquareMatrix, Vector3};
 use image::DynamicImage;
 use statsify_render_core::material::Material;
 use statsify_render_core::mesh::Mesh;
@@ -20,7 +20,7 @@ pub enum ModelKind {
 }
 
 impl ModelKind {
-  fn arm_width(&self) -> f32 {
+  pub(crate) fn arm_width(&self) -> f32 {
     match self {
       ModelKind::Classic => 4.0,
       ModelKind::Slim => 3.0,
@@ -144,6 +144,15 @@ impl Part {
       }),
       posed: part_pose.is_some(),
     }
+  }
+
+  // The frame the part turns in, with its origin on the joint, before the pose places the model
+  #[cfg(not(target_arch = "wasm32"))]
+  pub(crate) fn joint(self, arm_width: f32, pose: Pose) -> Matrix4<f32> {
+    let (_, rotation) = self.placement(arm_width, pose).resolve();
+    let rotation = rotation.expect("only an unposed body has no joint");
+
+    Matrix4::from_translation(rotation.pivot) * Matrix4::from(rotation.quaternion)
   }
 
   fn skin_layer_locations(self) -> (Coordinate<u32>, Coordinate<u32>) {
@@ -594,6 +603,7 @@ impl Model {
       mesh,
       material: &self.material,
       pipeline: Pipeline::Main,
+      transform: Matrix4::identity(),
     });
 
     let attachments = self
@@ -604,6 +614,7 @@ impl Model {
         mesh: &attachment.mesh,
         material: &attachment.material,
         pipeline: Pipeline::Attachment,
+        transform: Matrix4::identity(),
       });
 
     let enchanted = self.glint.iter().flat_map(|glint| {
@@ -615,6 +626,7 @@ impl Model {
           mesh: &attachment.mesh,
           material: &attachment.material,
           pipeline: Pipeline::Enchanted(glint),
+          transform: Matrix4::identity(),
         })
     });
 

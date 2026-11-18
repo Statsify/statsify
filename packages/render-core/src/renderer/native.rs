@@ -11,10 +11,7 @@ pub struct NativeBackend {
   device: wgpu::Device,
   queue: wgpu::Queue,
 
-  dimensions: BufferDimensions,
-
   texture: wgpu::Texture,
-  texture_extent: wgpu::Extent3d,
 }
 
 impl NativeBackend {
@@ -23,31 +20,29 @@ impl NativeBackend {
     let adapter = Self::request_adapter(instance).await?;
     let (device, queue) = Self::request_device(&adapter).await?;
 
-    let dimensions = BufferDimensions::new(width, height);
+    let texture = Self::create_texture(&device, width, height);
 
-    let texture_extent = wgpu::Extent3d {
-      width: dimensions.width,
-      height: dimensions.height,
-      depth_or_array_layers: 1,
-    };
+    Ok(Self {
+      device,
+      queue,
+      texture,
+    })
+  }
 
-    let texture = device.create_texture(&wgpu::TextureDescriptor {
+  pub(crate) fn create_texture(device: &wgpu::Device, width: u32, height: u32) -> wgpu::Texture {
+    device.create_texture(&wgpu::TextureDescriptor {
       label: None,
-      size: texture_extent,
+      size: wgpu::Extent3d {
+        width,
+        height,
+        depth_or_array_layers: 1,
+      },
       mip_level_count: 1,
       sample_count: 1,
       dimension: wgpu::TextureDimension::D2,
       format: wgpu::TextureFormat::Rgba8UnormSrgb,
       usage: wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
       view_formats: &[],
-    });
-
-    Ok(Self {
-      device,
-      queue,
-      dimensions,
-      texture,
-      texture_extent,
     })
   }
 }
@@ -79,8 +74,8 @@ impl Backend for NativeBackend {
     wgpu::SurfaceConfiguration {
       usage: wgpu::TextureUsages::empty(),
       format: self.texture.format(),
-      width: self.dimensions.width,
-      height: self.dimensions.height,
+      width: self.texture.width(),
+      height: self.texture.height(),
       present_mode: wgpu::PresentMode::default(),
       alpha_mode: wgpu::CompositeAlphaMode::default(),
       view_formats: vec![],
@@ -99,25 +94,29 @@ impl Backend for NativeBackend {
   async fn handle_encoder_after_render(
     &self,
     mut encoder: wgpu::CommandEncoder,
+    output_texture: OutputTexture<'_>,
+    unpremultiply: bool,
   ) -> RenderResult<Vec<u8>> {
+    let dimensions = BufferDimensions::new(output_texture.width(), output_texture.height());
+
     let output_buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
       label: None,
-      size: (self.dimensions.padded_bytes_per_row * self.dimensions.height) as u64,
+      size: (dimensions.padded_bytes_per_row * dimensions.height) as u64,
       usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
       mapped_at_creation: false,
     });
 
     encoder.copy_texture_to_buffer(
-      self.texture.as_image_copy(),
+      output_texture.as_image_copy(),
       wgpu::TexelCopyBufferInfo {
         buffer: &output_buffer,
         layout: wgpu::TexelCopyBufferLayout {
           offset: 0,
-          bytes_per_row: Some(self.dimensions.padded_bytes_per_row),
-          rows_per_image: Some(self.dimensions.height),
+          bytes_per_row: Some(dimensions.padded_bytes_per_row),
+          rows_per_image: Some(dimensions.height),
         },
       },
-      self.texture_extent,
+      output_texture.size(),
     );
 
     let index = self.queue.submit(Some(encoder.finish()));
@@ -133,16 +132,19 @@ impl Backend for NativeBackend {
     if let Some(Ok(())) = receiver.receive().await {
       let padded_buffer = buffer_slice.get_mapped_range();
 
-      let buffer = padded_buffer
-        .chunks(self.dimensions.padded_bytes_per_row as usize)
-        .take(self.dimensions.height as usize)
-        .flat_map(|row| &row[..self.dimensions.unpadded_bytes_per_row as usize])
+      let mut buffer = padded_buffer
+        .chunks(dimensions.padded_bytes_per_row as usize)
+        .take(dimensions.height as usize)
+        .flat_map(|row| &row[..dimensions.unpadded_bytes_per_row as usize])
         .copied()
         .collect::<Vec<u8>>();
 
-      let image =
-        ImageBuffer::<Rgba<u8>, _>::from_vec(self.dimensions.width, self.dimensions.height, buffer)
-          .expect("Failed to create image buffer");
+      if unpremultiply {
+        unpremultiply_pixels(&mut buffer);
+      }
+
+      let image = ImageBuffer::<Rgba<u8>, _>::from_vec(dimensions.width, dimensions.height, buffer)
+        .expect("Failed to create image buffer");
 
       let mut writer = BufWriter::new(Cursor::new(Vec::new()));
 
@@ -154,5 +156,38 @@ impl Backend for NativeBackend {
     } else {
       Err(Error::RenderFailure)
     }
+  }
+}
+
+// Blending over the transparent clear color leaves partly covered pixels premultiplied, in
+// linear light. Dividing the coverage back out shows them in their own color over any background.
+fn unpremultiply_pixels(rgba: &mut [u8]) {
+  for pixel in rgba.chunks_exact_mut(4) {
+    let alpha = pixel[3];
+
+    if alpha == 0 || alpha == u8::MAX {
+      continue;
+    }
+
+    for channel in &mut pixel[..3] {
+      let linear = srgb_to_linear(*channel as f32 / 255.0) / (alpha as f32 / 255.0);
+      *channel = (linear_to_srgb(linear.min(1.0)) * 255.0).round() as u8;
+    }
+  }
+}
+
+fn srgb_to_linear(value: f32) -> f32 {
+  if value <= 0.04045 {
+    value / 12.92
+  } else {
+    ((value + 0.055) / 1.055).powf(2.4)
+  }
+}
+
+fn linear_to_srgb(value: f32) -> f32 {
+  if value <= 0.0031308 {
+    value * 12.92
+  } else {
+    1.055 * value.powf(1.0 / 2.4) - 0.055
   }
 }

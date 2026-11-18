@@ -1,5 +1,7 @@
 use cgmath::{Deg, Quaternion, Rotation3, Vector3, Zero};
 #[cfg(not(target_arch = "wasm32"))]
+use cgmath::{Matrix4, SquareMatrix};
+#[cfg(not(target_arch = "wasm32"))]
 use napi_derive::napi;
 
 use crate::geometry::{Geometry, Rotation};
@@ -20,6 +22,7 @@ pub enum Pose {
   Jump,
   Swim,
   Fly,
+  Sit,
 }
 
 pub struct PartPose {
@@ -62,6 +65,11 @@ impl Pose {
       (Pose::Fly, Part::RightArm) => part_pose([0.0, 0.0, -10.0], [0.0; 3]),
       (Pose::Fly, Part::LeftArm) => part_pose([0.0, 0.0, 10.0], [0.0; 3]),
 
+      // Riding. The body stays put: the game seats a rider by moving the whole player
+      (Pose::Sit, Part::RightArm | Part::LeftArm) => part_pose([-36.0, 0.0, 0.0], [0.0; 3]),
+      (Pose::Sit, Part::RightLeg) => part_pose([-72.0, -18.0, 0.0], [0.0; 3]),
+      (Pose::Sit, Part::LeftLeg) => part_pose([-72.0, 18.0, 0.0], [0.0; 3]),
+
       _ => return None,
     };
 
@@ -92,7 +100,17 @@ impl Pose {
         quaternion: Quaternion::from_angle_x(Deg(90.0)),
         pivot: Vector3::zero(),
       }),
-      Pose::Standing | Pose::Punch | Pose::Jump => {}
+      Pose::Standing | Pose::Punch | Pose::Jump | Pose::Sit => {}
+    }
+  }
+
+  // `place` as a matrix, for the bones models attach to
+  #[cfg(not(target_arch = "wasm32"))]
+  pub fn placement(self) -> Matrix4<f32> {
+    match self {
+      Pose::Sneak => Matrix4::from_translation(Vector3::new(0.0, -SNEAK_DROP, 0.0)),
+      Pose::Swim | Pose::Fly => Matrix4::from_angle_x(Deg(90.0)),
+      Pose::Standing | Pose::Punch | Pose::Jump | Pose::Sit => Matrix4::identity(),
     }
   }
 }
