@@ -109,6 +109,7 @@ export class CommandPoster {
     const parsed = JSON.parse(file);
 
     if (parsed.guildId !== guildId) return true;
+    if (Object.keys(parsed.commands).length !== commands.size) return true;
 
     for (const [key, value] of commands) {
       if (!parsed.commands[key]) return true;
