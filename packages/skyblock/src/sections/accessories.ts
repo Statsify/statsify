@@ -23,9 +23,9 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
   MYTHIC: 22,
 };
 
-// 0.27.3 leaves in the bag what it made helmets (the anniversary hats, the only SPECIAL and VERY_SPECIAL accessories) and
-// legacy items (the old Personal Compactors, which the items resource now files under another category)
-const isLeftover = ({ id, rarity }: ItemView, items: ItemsResource) => {
+// The bag keeps items that stopped being accessories, which the items resource files elsewhere (the old Personal
+// Compactors). Not every anniversary hat is in the resource, so their SPECIAL and VERY_SPECIAL rarities mark them.
+const isFormerAccessory = ({ id, rarity }: ItemView, items: ItemsResource) => {
   const category = items.items[id]?.category;
   return rarity === "SPECIAL" || rarity === "VERY_SPECIAL" || (category !== undefined && category !== "ACCESSORY");
 };
@@ -79,7 +79,7 @@ export function getAccessories(
 
   const views = decodeInventory(bag)
     .flatMap((item) => (item ? [toItemView(item)] : []))
-    .filter((view) => !isLeftover(view, items))
+    .filter((view) => !isFormerAccessory(view, items))
     .toSorted((a, b) => power(b) - power(a));
 
   const prism = member.rift?.access?.consumed_prism ? ["RIFT_PRISM"] : [];
@@ -104,7 +104,7 @@ export function getAccessories(
   const storage = member.accessory_bag_storage;
 
   return {
-    // 0.27.3 returns a prism consumed at Erihann to the bag as a Rare one
+    // A prism consumed at Erihann is refunded to the bag as a Rare the next time the player joins
     accessoryPower: add(...active.map(power), prism.length * powerOf("RIFT_PRISM", "RARE", 0)),
     highestAccessoryPower: storage?.highest_magical_power,
     selectedPower: storage?.selected_power,
