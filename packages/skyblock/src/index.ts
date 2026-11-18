@@ -40,3 +40,4 @@ export { getMuseum } from "./sections/museum.js";
 export { getPets } from "./sections/pets.js";
 export { getSkills } from "./sections/skills.js";
 export { getSlayers } from "./sections/slayers.js";
+export { getStats } from "./sections/stats.js";
