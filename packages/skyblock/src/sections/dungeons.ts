@@ -8,14 +8,14 @@
 
 import { DUNGEON_CLASSES, type DungeonFloor, type DungeonGrade, type DungeonsSection } from "#types";
 import { ESSENCE_SHOPS, LEVELING } from "#data";
-import { add } from "@statsify/math";
+import { add, ratio } from "@statsify/math";
 import { fractionalLevel, getLevel } from "#leveling";
 import type { RawDungeonType, RawMember } from "#raw";
 
 const MAX_LEVEL = LEVELING.leveling_caps.catacombs;
 
 // Hypixel's currencies carry no balance for these shops' essence, only the perks bought in them
-const UNSENT_ESSENCE = new Set(["FOREST", "FOSSIL", "SUN_GECKO"]);
+const UNSENT_ESSENCE = new Set(["FOREST", "SUN_GECKO"]);
 
 // Each grade by the lowest Dungeon Score that earns it
 const GRADES: [DungeonGrade, number][] = [["S+", 300], ["S", 269.5], ["A", 230], ["B", 160], ["C", 100], ["D", 0]];
@@ -36,6 +36,10 @@ function floorsOf(type: RawDungeonType | undefined, first: number): DungeonFloor
       fastest: type?.fastest_time?.[key],
       fastestS: type?.fastest_time_s?.[key],
       fastestSPlus: type?.fastest_time_s_plus?.[key],
+      mobsKilled: type?.mobs_killed?.[key] ?? 0,
+      mostMobsKilled: type?.most_mobs_killed?.[key],
+      mostHealing: type?.most_healing?.[key],
+      milestoneCompletions: type?.milestone_completions?.[key] ?? 0,
     };
   });
 }
@@ -62,13 +66,21 @@ export function getDungeons(member: RawMember): DungeonsSection {
     ])
   ) as DungeonsSection["classes"];
 
+  const floors = { normal: floorsOf(types?.catacombs, 0), master: floorsOf(types?.master_catacombs, 1) };
+  const secrets = dungeons?.secrets ?? 0;
+  // Fossil Essence was Fossil Dust until 2026-04-21, and the API still sends it under that name, unrounded
+  const fossilDust = member.glacite_player_data?.fossil_dust;
+
   return {
     catacombs: getLevel(types?.catacombs?.experience ?? 0, LEVELING.catacombs, MAX_LEVEL, true),
     classes,
     classAverage: add(...Object.values(classes).map(fractionalLevel)) / DUNGEON_CLASSES.length,
+    classXp: add(...Object.values(classes).map(({ xp }) => xp)),
     selectedClass: dungeons?.selected_dungeon_class,
-    secrets: dungeons?.secrets ?? 0,
-    floors: { normal: floorsOf(types?.catacombs, 0), master: floorsOf(types?.master_catacombs, 1) },
+    secrets,
+    // The floors' own completions: the raw "total" counts only some of them
+    secretsPerRun: ratio(secrets, add(...[...floors.normal, ...floors.master].map(({ completions }) => completions))),
+    floors,
     highestFloor: {
       normal: types?.catacombs?.highest_tier_completed,
       master: types?.master_catacombs?.highest_tier_completed,
@@ -77,7 +89,10 @@ export function getDungeons(member: RawMember): DungeonsSection {
     watcherKills: watcherKills(types?.catacombs),
     essence: Object.entries(ESSENCE_SHOPS).map(([type, shop]) => ({
       type,
-      amount: UNSENT_ESSENCE.has(type) ? undefined : (member.currencies?.essence?.[type]?.current ?? 0),
+      amount:
+        type === "FOSSIL" ? Math.floor(fossilDust ?? 0) :
+        UNSENT_ESSENCE.has(type) ? undefined :
+        (member.currencies?.essence?.[type]?.current ?? 0),
       perks: add(...Object.keys(shop).map((perk) => member.player_data?.perks?.[perk] ?? 0)),
       maxPerks: add(...Object.values(shop)),
     })),

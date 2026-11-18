@@ -23,6 +23,7 @@ export default {
     reserve: 100,
     timeout: 10000,
     pricesRefreshMinutes: 15,
+    siteUrl: "",
   },
   api: {
     port: 3000,

@@ -8,7 +8,8 @@
 
 import { Container, Footer, Header, type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { RARITY_COLORS, gridRows } from "./components/ItemGrid.js";
+import { RARITY_COLORS } from "@statsify/skyblock/display";
+import { gridRows } from "./components/ItemGrid.js";
 import { prettify, romanNumeral } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 

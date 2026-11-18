@@ -8,6 +8,7 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { CachedPlayerDto } from "./cached-player.dto.js";
+import { ICON_SIZES, type IconSize } from "@statsify/skyblock/icon-key";
 import { IsArray, IsIn, IsOptional, IsString, MaxLength } from "class-validator";
 import { SKYBLOCK_SECTIONS, type SkyBlockSection } from "@statsify/skyblock";
 import { Transform } from "class-transformer";
@@ -39,6 +40,24 @@ export class SkyBlockPriceDto {
   @MaxLength(100)
   @ApiProperty({ example: "HYPERION", description: "A price key from /skyblock/items" })
   public item: string;
+}
+
+export class SkyBlockIconDto {
+  @IsString()
+  @MaxLength(70)
+  @ApiProperty({ example: "item-276-0", description: "item-<id>-<damage>[-<color hex>] or head-<skin hash>" })
+  public texture: string;
+
+  @Transform(({ value }) => +value)
+  @IsIn(ICON_SIZES)
+  @ApiProperty({ enum: ICON_SIZES })
+  public size: IconSize;
+
+  @IsOptional()
+  @Transform(({ value }) => +value)
+  @IsIn([0, 1])
+  @ApiProperty({ required: false, enum: [0, 1], default: 0 })
+  public glint: 0 | 1 = 0;
 }
 
 export class SkyBlockItemsDto {

@@ -60,6 +60,7 @@ export interface ProfileSummary {
 export interface SkyBlockProfileView extends PlayerRef, Freshness, ProfileSummary {
   member: MemberView;
   museumFetchedAt?: number;
+  marketDown?: Exclude<keyof MemberView, "apiSettings">[]; // asked for, but left out until the price map and items resource are built
 }
 
 export interface MemberView {
@@ -77,6 +78,53 @@ export interface MemberView {
   jacob?: JacobSection | null;
   chocolate?: ChocolateSection | null;
   hotf?: HotfSection | null;
+  gear?: GearSection | null;
+  inventories?: InventoriesSection | null;
+  museum?: MuseumView | null; // null: nothing to show (the profile's museumFetchedAt says whether it was fetched)
+  experiments?: ExperimentsSection | null;
+  rift?: RiftSection | null;
+  misc?: MiscSection;
+}
+
+/** An inventory's slots in the game's order; an empty slot is null. */
+export type Slots = (ItemView | null)[];
+
+/** Worn and saved gear. null with the inventory API off. */
+export interface GearSection {
+  armor: Slots; // helmet to boots
+  equipment: Slots; // necklace, cloak, belt, gloves
+  wardrobe: { slot: number; armor: Slots }[]; // sets with anything in them, helmet to boots
+  wardrobeSlot?: number; // the set being worn
+  weapons: ItemView[]; // swords, bows, gauntlets and wands in the inventory, in its order
+}
+
+export const INVENTORIES = [
+  "inventory",
+  "enderChest",
+  "backpacks",
+  "personalVault",
+  "accessoryBag",
+  "potionBag",
+  "fishingBag",
+  "quiver",
+  "sacksBag",
+] as const;
+
+export type InventoryId = (typeof INVENTORIES)[number];
+
+/** Every inventory as pages of slots (the ender chest's pages, one per backpack), and the sacks. null with the inventory API off. */
+export interface InventoriesSection {
+  pages: Partial<Record<InventoryId, Slots[]>>; // personalVault is missing with its own setting off
+  backpackIcons: (ItemView | null)[]; // by backpack, as `pages.backpacks`
+  sacks: { id: string; name: string; count: number; rarity?: Rarity; glint: boolean; texture?: ItemTexture }[]; // largest first
+}
+
+export interface MuseumView {
+  value: number;
+  appraisal: boolean;
+  items: { id: string; category?: string; donatedAt?: number; items: Slots }[]; // id: the museum's key (an item, or an armor set)
+  special: { donatedAt?: number; items: Slots }[];
+  donated: { category: string; count: number }[]; // keys donated per museum_data category, most first
 }
 
 export interface ApiSettings {
@@ -142,6 +190,10 @@ export interface DungeonFloor {
   fastest?: number;
   fastestS?: number;
   fastestSPlus?: number;
+  mobsKilled: number;
+  mostMobsKilled?: number; // in one run
+  mostHealing?: number; // in one run
+  milestoneCompletions: number;
 }
 
 export const DUNGEON_CLASSES = ["healer", "mage", "berserk", "archer", "tank"] as const;
@@ -152,8 +204,10 @@ export interface DungeonsSection {
   catacombs: Level;
   classes: Record<DungeonClass, Level>;
   classAverage: number;
+  classXp: number; // the five classes' XP summed
   selectedClass?: string;
   secrets: number;
+  secretsPerRun: number; // over every completion in both modes
   floors: Record<"normal" | "master", DungeonFloor[]>;
   highestFloor: Partial<Record<"normal" | "master", number>>;
   mostDamage: Record<"normal" | "master", Record<DungeonClass, number>>; // 0 for a class never played
@@ -178,11 +232,25 @@ export interface HotmSection {
   loadout: { selected: number; total: number };
   tokens: { spent: number; total: number };
   ability?: string;
-  powder: Record<Powder, { total: number; spent: number }>;
+  powder: Record<Powder, { total: number; spent: number }>; // total earned; spent by this loadout
   nodes: TreeNode[];
-  crystals: { found: number; placed: number }; // over every gem
+  crystals: { found: number; placed: number; gems: Crystal[] }; // found and placed over every gem, then each gem found
   nucleusRuns: number;
-  glacite: { corpses: number; fossils: number; mineshafts: number }; // corpses looted, fossils donated
+  kingQuests: number; // the Goblin King's, in the Crystal Hollows
+  glacite: {
+    corpses: number; // looted, of every type
+    corpsesByType: { type: string; count: number }[];
+    fossils: number; // donated
+    fossilDust: number;
+    mineshafts: number;
+  };
+}
+
+/** A gem's crystal the member has found. Only the Crystal Nucleus's five count placed ones. */
+export interface Crystal {
+  gem: string;
+  found: number;
+  placed?: number;
 }
 
 /** A perk in the Heart of the Mountain's or the Forest's tree, at its spot in the menu. */
@@ -232,10 +300,14 @@ export interface KuudraTier {
   texture: ItemTexture; // its key
 }
 
+export const CATCHES = ["normal", "treasure", "largeTreasure", "outstanding"] as const;
+
+export type Catch = (typeof CATCHES)[number];
+
 export interface FishingSection {
   trophyFish: TrophyFish[];
   trophyFishCaught: number;
-  itemsFished: Record<"total" | "normal" | "treasure" | "largeTreasure" | "outstanding", number>;
+  itemsFished: Record<"total" | Catch, number>;
   seaCreatureKills: number;
   seaCreatures: { name: string; kills: number }[]; // bestiary kills, the most killed first, none at 0
 }
@@ -284,11 +356,57 @@ export interface ChocolateSection {
   timeTower: number;
 }
 
+// The API's names for Superpairs, Chronomatron and Ultrasequencer
+export const EXPERIMENTS = ["pairings", "simon", "numbers"] as const;
+
+export type Experiment = (typeof EXPERIMENTS)[number];
+
+export interface ExperimentsSection {
+  games: { game: Experiment; bonusClicks: number; tiers: ExperimentTier[] }[];
+  serums: number; // drunk
+}
+
+export interface ExperimentTier {
+  tier: number; // the API's index, which each game numbers its own way (Ultrasequencer's start at 1)
+  attempts?: number; // not kept for every game
+  claims: number;
+  bestScore?: number;
+}
+
+export interface RiftSection {
+  motes: number;
+  lifetimeMotes: number;
+  visits: number;
+  enigmaSouls: number; // found
+  timecharms: number; // secured
+  catsFound: number;
+}
+
+export const AUCTION_STATS = ["created", "completed", "won", "bids", "highestBid", "goldSpent", "goldEarned", "fees"] as const;
+
+export type AuctionStat = (typeof AUCTION_STATS)[number];
+
+export interface MiscSection {
+  kills: number;
+  deaths: number;
+  topKills: { id: string; count: number }[]; // the 20 most, by mob id
+  topDeaths: { id: string; count: number }[]; // by cause
+  highestDamage?: number;
+  highestCriticalDamage?: number;
+  auctions: Record<AuctionStat, number>;
+  gifts: { given: number; received: number };
+  mythological: { kills: number; chains: number }; // burrow chains completed
+  candy: number; // collected at Spooky Festivals
+  soulflow: number;
+}
+
 export interface PetsSection {
   score: number;
   active?: PetView;
   pets: PetView[];
   totalXp: number; // every pet's XP ever gained
+  skinned: number;
+  candyUsed: number; // over every pet
 }
 
 export interface PetView {
@@ -356,6 +474,8 @@ export interface AccessoriesSection {
   tuning: Record<string, number>;
   tuningPoints: number; // spent
   enrichments: number; // on active accessories
+  unenriched: number; // active Legendary-and-up accessories without an enrichment, the ones that can take one
+  recombobulated: number; // active
   pricesAsOf: number;
   market: boolean;
   active: ItemView[];
@@ -385,6 +505,7 @@ export interface NetworthSection {
   museumIncluded: boolean;
   pricesAsOf: number;
   categories: Record<string, { total: number; unsoulbound: number; top: NetworthItem[] }>;
+  petPrices: Record<string, number>; // by the pet's uuid, for every pet the pets category priced
   unpriced: { key: string; name: string; count: number }[];
   unpricedCount: number;
 }
@@ -397,6 +518,8 @@ export interface NetworthItem {
   soulbound: boolean;
   cosmetic: boolean;
   texture?: ItemTexture;
+  basePrice: number; // the item's (or the whole stack's) before what's applied to it
+  modifiers: { type: string; price: number }[]; // a single item's, summed per kind (ENCHANTMENT, REFORGE…), priciest first; pet candy is negative
 }
 
 export interface SkyBlockLevelSection {
@@ -415,9 +538,9 @@ export interface SkyBlockLevelSection {
   }[];
 }
 
+// No item uuid: nothing reads it, and its random bytes were a fifth of a full inventories payload gzipped
 export interface ItemView {
   id: string; // vanilla items: "minecraft:<id>:<damage>"
-  uuid?: string;
   name: string;
   lore: string[]; // § codes kept, as 1.8 draws them (normalizeItemText)
   rarity?: Rarity;
@@ -429,6 +552,8 @@ export interface ItemView {
   recombobulated: boolean;
   enchantments?: Record<string, number>;
   enrichment?: string; // an accessory's, as its stat id
+  hotPotato?: number; // hot potato books applied
+  obtainedAt?: number; // ms
 }
 
 export type ItemTexture =
@@ -444,7 +569,6 @@ export interface RawItem {
     display?: { Name?: string; Lore?: string[]; color?: number };
     ExtraAttributes?: {
       id?: string;
-      uuid?: string;
       modifier?: string;
       upgrade_level?: number;
       dungeon_item_level?: number;
@@ -462,6 +586,7 @@ export interface ItemsResource {
   // API-internal, never sent to clients
   lastUpdated: number;
   raw: object[]; // as Hypixel sent it, for the networth library
+  museum: Record<string, string>; // a museum key (an item, or an armor set) → its museum category
   items: Record<
     string,
     {
@@ -474,6 +599,7 @@ export interface ItemsResource {
       category?: string;
       riftOnly?: boolean;
       npcPrice?: number;
+      glowing?: boolean;
     }
   >;
 }
@@ -484,6 +610,7 @@ export interface PriceView {
   name: string;
   rarity?: Rarity;
   texture?: ItemTexture;
+  current?: { coins: number; source: PriceEntry["source"] }; // the price map's, which networth counts
   bazaar?: BazaarProduct;
   lowestBin?: { coins: number; listings: number };
   npc?: number;
@@ -495,4 +622,5 @@ export interface ItemMatch {
   id: string;
   name: string;
   rarity?: Rarity;
+  texture?: ItemTexture;
 }
