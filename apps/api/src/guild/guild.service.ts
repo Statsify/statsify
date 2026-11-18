@@ -41,7 +41,11 @@ export class GuildService {
   ): Promise<Guild | null> {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
-    if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
+    // A player's saved guild id isn't cleared when they leave
+    const listsPlayer =
+      type !== GuildQuery.PLAYER || cachedGuild?.members.some((member) => member.uuid === tag);
+
+    if (cachedGuild && listsPlayer && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
       return this.fromCache(cachedGuild);
     }
 
@@ -53,7 +57,7 @@ export class GuildService {
         type.toLowerCase() as Lowercase<GuildQuery>
       );
     } catch {
-      if (cachedGuild) return this.fromCache(cachedGuild);
+      if (cachedGuild && listsPlayer) return this.fromCache(cachedGuild);
       throw new ServiceUnavailableException();
     }
 
