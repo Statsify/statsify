@@ -15,11 +15,18 @@ import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
-import { renderSkin } from "@statsify/skin-renderer";
+import { type Armor, type ArmorPiece, renderSkin } from "@statsify/skin-renderer";
+import type { ArmorDto, ArmorPieceDto, SKULLS, SkinRenderDto } from "#dtos";
 import type { ReturnModelType } from "@typegoose/typegoose";
+import { readFile } from "node:fs/promises";
+
+// A texture hash always serves the same image, so heads never need refetching
+const HEAD_CACHE_SIZE = 500;
 
 @Injectable()
 export class SkinService {
+  private readonly heads = new Map<string, Buffer>();
+
   public constructor(
     private readonly httpService: HttpService,
     @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
@@ -43,12 +50,26 @@ export class SkinService {
     return canvas.toBuffer("png");
   }
 
-  public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {
-    const skin = await this.getSkin(uuid);
-    const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
-    // This field is set by loadImage from `@statsify/rendering`
-    const { _data: buffer } = image as unknown as { _data: Buffer };
-    return renderSkin(buffer, skin.slim ?? false, extruded);
+  public async getRender(
+    uuid: string,
+    extruded: boolean,
+    { cape, armor = {}, ...options }: Omit<SkinRenderDto, "uuid">
+  ): Promise<Buffer> {
+    const [skin, resolvedArmor] = await Promise.all([this.getSkin(uuid), this.resolveArmor(armor)]);
+
+    const [{ skin: image }, capeImage] = await Promise.all([
+      this.resolveSkin(skin.skinUrl, skin.slim),
+      cape && skin.capeUrl ? loadImage(skin.capeUrl).catch(() => undefined) : undefined,
+    ]);
+
+    const enchanted = Object.values(resolvedArmor).some((piece) => piece?.enchanted);
+
+    return renderSkin(imageData(image), skin.slim ?? false, extruded, {
+      ...options,
+      armor: resolvedArmor,
+      glint: enchanted ? await readFile(getMinecraftTexturePath("textures/misc/enchanted_item_glint.png")) : undefined,
+      cape: capeImage && imageData(capeImage),
+    });
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -100,6 +121,44 @@ export class SkinService {
     };
   }
 
+  private async resolveArmor(armor: ArmorDto): Promise<Armor> {
+    const [helmet, chestplate, leggings, boots] = await Promise.all([
+      this.resolveHelmet(armor.helmet),
+      armor.chestplate && resolveArmorPiece(armor.chestplate, 1),
+      armor.leggings && resolveArmorPiece(armor.leggings, 2),
+      armor.boots && resolveArmorPiece(armor.boots, 1),
+    ]);
+
+    return { helmet, chestplate, leggings, boots };
+  }
+
+  private async resolveHelmet(helmet: ArmorDto["helmet"]): Promise<ArmorPiece | undefined> {
+    if (!helmet) return;
+    if ("head" in helmet) return this.resolveHead(helmet.head);
+
+    // 1.8 draws no glint on a worn skull or player head
+    if ("skull" in helmet) {
+      const texture = await readFile(getMinecraftTexturePath(`textures/entity/${SKULL_TEXTURES[helmet.skull]}.png`));
+      return { texture, enchanted: false, skull: true };
+    }
+
+    return resolveArmorPiece(helmet, 1);
+  }
+
+  private async resolveHead(hash: string): Promise<ArmorPiece | undefined> {
+    const head = this.heads.get(hash) ??
+      await loadImage(`https://textures.minecraft.net/texture/${hash}`).then(imageData).catch(() => undefined);
+
+    if (!head) return;
+
+    // Re-inserting keeps the least recently used head first in the Map, where it's evicted from
+    this.heads.delete(hash);
+    this.heads.set(hash, head);
+    if (this.heads.size > HEAD_CACHE_SIZE) this.heads.delete(this.heads.keys().next().value!);
+
+    return { texture: head, enchanted: false, skull: true };
+  }
+
   private getUuid(username: string): Promise<string> {
     return lastValueFrom(
       this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
@@ -133,6 +192,47 @@ export class SkinService {
       )
     );
   }
+}
+
+// This field is set by loadImage from `@statsify/rendering`
+const imageData = (image: Image) => {
+  const { _data: data } = image as unknown as { _data: Buffer };
+  return data;
+};
+
+const SKULL_TEXTURES: Record<(typeof SKULLS)[number], string> = {
+  skeleton: "skeleton/skeleton",
+  wither_skeleton: "skeleton/wither_skeleton",
+  zombie: "zombie/zombie",
+  creeper: "creeper/creeper",
+};
+
+const UNDYED_LEATHER = 0xA0_65_40;
+
+async function resolveArmorPiece({ material, color = UNDYED_LEATHER, enchanted = false }: ArmorPieceDto, layer: 1 | 2): Promise<ArmorPiece> {
+  const path = getMinecraftTexturePath(`textures/models/armor/${material}_layer_${layer}`);
+  if (material !== "leather") return { texture: await readFile(`${path}.png`), enchanted };
+
+  // The dye tints the base, then the overlay adds the undyed details
+  const [base, overlay] = await Promise.all([loadImage(`${path}.png`), loadImage(`${path}_overlay.png`)]);
+  const canvas = createCanvas(base.width, base.height);
+  const ctx = canvas.getContext("2d");
+
+  ctx.drawImage(base, 0, 0);
+
+  const pixels = ctx.getImageData(0, 0, base.width, base.height);
+  const dye = [(color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF];
+
+  for (let i = 0; i < pixels.data.length; i += 4) {
+    for (let channel = 0; channel < 3; channel++) {
+      pixels.data[i + channel] = Math.floor((pixels.data[i + channel] * dye[channel]) / 255);
+    }
+  }
+
+  ctx.putImageData(pixels, 0, 0);
+  ctx.drawImage(overlay, 0, 0);
+
+  return { texture: await canvas.toBuffer("png"), enchanted };
 }
 
 interface MojangProfile {

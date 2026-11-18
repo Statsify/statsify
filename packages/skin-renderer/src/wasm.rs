@@ -11,8 +11,10 @@ use winit::event_loop::{ControlFlow, EventLoop, EventLoopWindowTarget};
 use winit::platform::web::{EventLoopExtWebSys, WindowBuilderExtWebSys};
 use winit::window::{Window, WindowBuilder, WindowId};
 
+use crate::armor::Armor;
 use crate::error::{Error, Result};
 use crate::model::{Model, ModelKind, ModelOuterLayer};
+use crate::pose::Pose;
 use crate::renderer::wasm::WasmBackend;
 use crate::renderer::SkinRenderer;
 
@@ -141,9 +143,15 @@ impl JsSkinRenderer {
               continue;
             };
 
-            if let Ok(model) =
-              renderer.load_skin(&model.bytes, model.model_kind, model.model_outer_layer)
-            {
+            if let Ok(model) = renderer.load_skin(
+              &model.bytes,
+              model.model_kind,
+              model.model_outer_layer,
+              &Armor::default(),
+              None,
+              None,
+              Pose::default(),
+            ) {
               models.insert(*window_id, model);
             }
           }
@@ -164,7 +172,15 @@ impl JsSkinRenderer {
         Ok(Some(renderer)) => {
           if let Some(model) = staged_models.remove(window_id).and_then(|model| {
             renderer
-              .load_skin(&model.bytes, model.model_kind, model.model_outer_layer)
+              .load_skin(
+                &model.bytes,
+                model.model_kind,
+                model.model_outer_layer,
+                &Armor::default(),
+                None,
+                None,
+                Pose::default(),
+              )
               .ok()
           }) {
             models.insert(*window_id, model);
