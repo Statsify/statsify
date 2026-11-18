@@ -115,6 +115,12 @@ export class SkyWars {
   @Field()
   public emblem: string;
 
+  @Field({ store: { default: "default" } })
+  public normalKit: string;
+
+  @Field({ store: { default: "default" } })
+  public insaneKit: string;
+
   public constructor(data: APIData, ap: APIData) {
     this.exp = data.skywars_experience ?? 0;
     this.coins = data.coins;
@@ -145,10 +151,11 @@ export class SkyWars {
 
     this.progression = getLevelProgress(this.exp, this.level);
 
-    const normalKit = parseKit(
+    // Hypixel stores the Normal kit as the solo kit and the Insane kit as the teams kit
+    this.normalKit = parseKit(
       data.activeKit_SOLO_random ? "random" : data.activeKit_SOLO
     );
-    const insaneKit = parseKit(
+    this.insaneKit = parseKit(
       data.activeKit_TEAMS_random ? "random" : data.activeKit_TEAMS
     );
 
@@ -158,7 +165,7 @@ export class SkyWars {
     const doublesNormalWins = data.wins_team_normal;
 
     const chooseKit = (insane = 0, normal = 0) =>
-      insane > normal ? insaneKit : normalKit;
+      insane > normal ? this.insaneKit : this.normalKit;
 
     this.overall = new SkyWarsMode(data, "");
 
