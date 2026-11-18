@@ -1,0 +1,31 @@
+{
+  "home": {
+    "copied": "Copied to Clipboard!",
+    "stats": "Stats"
+  },
+  "nav": {
+    "label": "Main",
+    "premium": "Premium",
+    "discord": "Discord",
+    "bot": "Bot"
+  },
+  "footer": {
+    "copyright": "© {{year}} Statsify. All Rights Reserved.",
+    "affiliation": "Statsify is not affiliated with or endorsed by Hypixel Inc. or Mojang.",
+    "mojang": "Not an official Minecraft service. Not approved by or associated with Mojang or Microsoft.",
+    "operator": "Run by statsify.net.",
+    "email": "contact@statsify.net",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "notFound": {
+    "title": "OOPS!",
+    "description": "Looks like the page you're trying to reach does not exist"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "Try again in a moment.",
+    "tryAgain": "Try Again",
+    "home": "Home"
+  }
+}

@@ -1,0 +1,199 @@
+@import "tailwindcss";
+@import "@statsify/tokens/tokens.css";
+@import "./fonts.css";
+
+@theme {
+  --drop-shadow-mc-1: 1px 1px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-2: 2px 2px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-3: 3px 3px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-4: 4px 4px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-5: 5px 5px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-6: 6px 6px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-7: 7px 7px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-8: 8px 8px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-9: 9px 9px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-10: 10px 10px color-mix(in srgb, currentColor 25%, #000 75%);
+
+  @keyframes slide-in-up-and-fade {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes slide-out-down-and-fade {
+    from {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+
+  @keyframes slide-in-down-and-fade {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes slide-out-up-and-fade {
+    from {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+
+  @keyframes slide-in-left-and-fade {
+    from {
+      opacity: 0;
+      transform: translateX(4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes slide-out-right-and-fade {
+    from {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateX(4px);
+    }
+  }
+
+  @keyframes slide-in-right-and-fade {
+    from {
+      opacity: 0;
+      transform: translateX(-4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes slide-out-left-and-fade {
+    from {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateX(-4px);
+    }
+  }
+
+  @keyframes gradient-loading-slide {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(50%);
+    }
+  }
+
+  --animate-slide-in-up-and-fade: slide-in-up-and-fade 150ms ease-in;
+  --animate-slide-in-down-and-fade: slide-in-down-and-fade 150ms ease-in;
+  --animate-slide-in-left-and-fade: slide-in-left-and-fade 150ms ease-in;
+  --animate-slide-in-right-and-fade: slide-in-right-and-fade 150ms ease-in;
+
+  --animate-slide-out-up-and-fade: slide-out-up-and-fade 150ms ease-out;
+  --animate-slide-out-down-and-fade: slide-out-down-and-fade 150ms ease-out;
+  --animate-slide-out-left-and-fade: slide-out-left-and-fade 150ms ease-out;
+  --animate-slide-out-right-and-fade: slide-out-right-and-fade 150ms ease-out;
+
+  --animate-gradient-loading-slide: 6000ms cubic-bezier(0.5, 0, 0.3, 1) infinite normal both running gradient-loading-slide;
+}
+
+/* Minecraft text: 16px × N with an N px hard shadow. Use only N ∈ {1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 7} (the pixel grid). */
+@utility text-mc-* {
+  font-family: var(--font-minecraft);
+  font-size: calc(16px * --value(number));
+  text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
+}
+
+/* Mona Sans at 90% width for phone labels that would otherwise wrap. */
+@utility font-narrow {
+  font-stretch: 90%;
+}
+
+@utility grid-areas-stack {
+  grid-template-areas: "stack";
+}
+
+@utility grid-area-stack {
+  grid-area: stack;
+}
+
+@utility grid-cols-fluid-* {
+  grid-template-columns: repeat(--value(integer), minmax(min-content, 1fr));
+}
+
+@utility grid-cols-content-* {
+  grid-template-columns: repeat(--value(integer),
+      minmax(min-content, max-content));
+}
+
+@utility grid-cols-balanced {
+  grid-template-columns: minmax(min-content, max-content) 1fr minmax(min-content,
+      max-content);
+}
+
+@utility mask-feather-* {
+  mask: linear-gradient(90deg,
+      rgb(0 0 0 / 0) 0%,
+      rgb(0 0 0 / 1) --value(integer) %,
+      rgb(0 0 0 / 1) calc(100% - --value(integer) %),
+      rgb(0 0 0 / 0) 100%);
+}
+
+@utility w-container {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+}
+
+@custom-variant content {
+  &>[data-slot="content"] {
+    @slot;
+  }
+}
+
+@layer base {
+  button {
+    cursor: pointer;
+  }
+
+  /* Mona Sans numbers line up in tables; stat values are Minecraft anyway. */
+  html {
+    font-variant-numeric: tabular-nums;
+  }
+}

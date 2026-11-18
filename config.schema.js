@@ -62,11 +62,15 @@ export default {
   rankEmojis: {
     botToken: "",
   },
+  site: {
+    apiKey: "",
+  },
   sentry: {
     discordBotDsn: "",
     apiDsn: "",
     verifyServerDsn: "",
     supportBotDsn: "",
+    siteDsn: "",
     tracesSampleRate: 1,
   },
   environment: "dev",

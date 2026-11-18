@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["vitest/importMeta", "node"],
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "src",
+    "scripts"
+  ]
+}

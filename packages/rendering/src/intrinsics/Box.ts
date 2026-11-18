@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { DEFAULT_COLOR, SHADOW_OPACITY } from "#colors";
 import type { CanvasRenderingContext2D } from "skia-canvas";
 import type * as JSX from "#jsx";
 import type { DeferredGradient } from "#hooks";
@@ -53,8 +54,7 @@ export const resolveFill = (
   return fill(ctx, x, y, width, height);
 };
 
-export const DEFAULT_COLOR = "rgba(0, 10, 5, 0.5)";
-export const SHADOW_OPACITY = 0.84;
+export { DEFAULT_COLOR, SHADOW_OPACITY };
 
 export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   children,
