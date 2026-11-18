@@ -98,6 +98,7 @@ export class SessionCommand {
       context,
       modes: ARCADE_MODES,
       getProfile: (base, mode) => <ArcadeProfile {...base} mode={mode} />,
+      filterModes: (_, modes) => modes.filter((mode) => mode.api !== "creeperAttack"),
       filterSubmodes: (_, mode) => {
         if (mode.api === "dropper") return mode.submodes.filter((submode) => submode.api !== "bestTimes");
         if (mode.api === "partyGames") return mode.submodes.filter((submode) => submode.api !== "roundWins");
