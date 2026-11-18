@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type PackStack, assetPath } from "./pack.js";
 import { context, createCanvas, decodePng } from "./canvas.js";
 import { drawTooltip, loadNames, tooltipLines } from "./tooltip.js";
+import { Atlas } from "./atlas.js";
 import type { IconCache } from "./icon-cache.js";
 import { ItemRenderer } from "./item-renderer.js";
 import type { ItemStack } from "./item-stack.js";
-import type { PackStack } from "./pack.js";
 import { TextRenderer } from "./text.js";
 import { maxDamage } from "./legacy-items.js";
 
@@ -37,7 +38,7 @@ const SLOT = 18;
 const EDGE = 7;
 const TITLE_HEIGHT = 17;
 
-const CHEST_SCREEN = "assets/minecraft/textures/gui/container/generic_54.png";
+export const CHEST_SCREEN = "minecraft:gui/container/generic_54";
 
 // GUI pixels across the chest screen texture, which HD packs draw larger
 const CHEST_SCREEN_SIZE = 256;
@@ -50,6 +51,15 @@ const slotsTop = (title?: string) => (title ? TITLE_HEIGHT : EDGE);
 /** A slot's top left, in GUI pixels */
 export const slotOrigin = ({ cols, title }: InventorySize, slot: number) =>
   [EDGE + (slot % cols) * SLOT, slotsTop(title) + Math.floor(slot / cols) * SLOT] as const;
+
+/** Where the title's text starts, in GUI pixels */
+export const TITLE_ORIGIN = [8, 6] as const;
+
+/** Where a slot's count ends on the right and starts at the top, in GUI pixels */
+export function countOrigin(size: InventorySize, slot: number) {
+  const [x, y] = slotOrigin(size, slot);
+  return [x + 18, y + 10] as const;
+}
 
 /** The slot under a point, in GUI pixels from the inventory's top left, or -1 */
 export function slotAt({ rows, cols, title }: InventorySize, x: number, y: number) {
@@ -71,13 +81,17 @@ export class InventoryRenderer {
 
   private constructor(
     private itemRenderer: ItemRenderer,
-    private text: TextRenderer,
+    private text: TextRenderer | undefined,
     private names: Record<string, string>,
     private chestScreen?: OffscreenCanvas,
   ) {}
 
-  public static async load(pack: PackStack, cache?: IconCache) {
-    const chestScreen = pack.get(CHEST_SCREEN);
+  public static async load(pack: PackStack | Atlas, cache?: IconCache) {
+    if (pack instanceof Atlas) {
+      return new InventoryRenderer(new ItemRenderer(pack, cache), undefined, pack.names, pack.texture(CHEST_SCREEN));
+    }
+
+    const chestScreen = pack.get(assetPath(CHEST_SCREEN, "textures", ".png"));
 
     const [text, panel] = await Promise.all([
       TextRenderer.load(pack),
@@ -99,7 +113,13 @@ export class InventoryRenderer {
   }
 
   public tooltip(item: ItemStack, scale: number, tick: number) {
-    return drawTooltip(this.text, tooltipLines(item, this.names), scale, tick);
+    if (!this.text) throw new Error("An atlas has no font, so the page draws its tooltips from lines()");
+    return drawTooltip(this.text, this.lines(item), scale, tick);
+  }
+
+  /** An item's tooltip text, for pages that draw tooltips themselves */
+  public lines(item: ItemStack) {
+    return tooltipLines(item, this.names);
   }
 
   /** Whether an item's icon changes from tick to tick, or false when the pack can't draw it */
@@ -141,9 +161,10 @@ export class InventoryRenderer {
 
     if (icon) ctx.drawImage(icon, (x + 1) * scale, (y + 1) * scale);
 
-    if (item?.count !== undefined && item.count > 1) {
+    if (this.text && item?.count !== undefined && item.count > 1) {
       const count = `${item.count}`;
-      this.text.draw(ctx, count, (x + 1 + 17 - this.text.width(count)) * scale, (y + 1 + 9) * scale, { scale });
+      const [right, top] = countOrigin(size, slot);
+      this.text.draw(ctx, count, (right - this.text.width(count)) * scale, top * scale, { scale });
     }
 
     // 1.8.9 colors the worn strip separately from the remaining durability
@@ -194,7 +215,10 @@ export class InventoryRenderer {
       }
     }
 
-    if (title) this.text.draw(ctx, title, 8 * scale, 6 * scale, { scale, shadow: false, color: 0x40_40_40 });
+    if (title && this.text) {
+      const [x, y] = TITLE_ORIGIN;
+      this.text.draw(ctx, title, x * scale, y * scale, { scale, shadow: false, color: 0x40_40_40 });
+    }
 
     return canvas;
   }

@@ -57,6 +57,9 @@ $ pnpm typecheck
 ## 😕 Help
 * If you require support join our [`Discord`] and create a ticket in the `#create-ticket` channel
 
+## 🙏 Credits
+* The item and block icons in [`packages/textures/atlas`](packages/textures/atlas) are drawn from Minecraft's textures, © Mojang. Statsify isn't an official Minecraft product and isn't approved by or associated with Mojang or Microsoft.
+
 ## 🔗 Links
 - [`Website`]
 - [`Bot Invite`]
