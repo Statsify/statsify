@@ -63,6 +63,7 @@ export function toProfileSummary(profile: RawProfile, uuid: string): ProfileSumm
     bank: profile.banking?.balance,
     personalBank: member.profile?.bank_account,
     firstJoin: member.profile?.first_join,
+    fairySouls: member.fairy_soul?.total_collected ?? 0,
   };
 }
 

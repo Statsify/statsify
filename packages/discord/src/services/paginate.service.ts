@@ -49,16 +49,22 @@ interface PageInput {
 
 type PageId = `${number}|${number}`;
 
+export interface PaginateOptions {
+  /** When to stop the pagination (ms), defaults to 300000 */
+  timeout?: number;
+  /** Pick pages from a select menu even when there are five or fewer */
+  menu?: boolean;
+}
+
 /**
  *
  * @param context The context of the command
  * @param pages The array of pages to paginate against
- * @param timeout When to stop the pagination (ms), defaults to 300000
  */
 export async function paginate(
   context: CommandContext,
   pages: Page[],
-  timeout = 300_000,
+  { timeout = 300_000, menu = false }: PaginateOptions = {},
 ) {
   const cache = new Map<PageId, Message>();
   const t = context.t();
@@ -83,6 +89,13 @@ export async function paginate(
     return message;
   };
 
+  // A page that fails when picked shows its error in its place
+  const getPickedMessage = (index: number, subIndex: number) =>
+    getMessage(index, subIndex).catch((error) => {
+      if (!(error instanceof Message)) throw error;
+      return new Message({ ...error, content: error.content ?? "", attachments: [] });
+    });
+
   // If there is only one page with no sub pages, return the message immediately without pagination
   if (pages.length === 1 && "generator" in pages[0]) return getMessage(0, 0);
 
@@ -92,7 +105,10 @@ export async function paginate(
   let currentIndex = 0;
   let currentSubIndex = 0;
 
-  const mainController = new PageController(pages, currentIndex);
+  const mainController =
+    pages.length > 1
+      ? new PageController(pages, currentIndex, menu)
+      : undefined;
 
   const page = pages[currentIndex];
   let subController =
@@ -100,7 +116,7 @@ export async function paginate(
       ? new PageController(page.subPages, currentSubIndex)
       : undefined;
 
-  mainController.register(listener, (interaction, index) =>
+  mainController?.register(listener, (interaction, index) =>
     handler(interaction, index, 0),
   );
   subController?.register(listener, (interaction, subIndex) =>
@@ -116,7 +132,7 @@ export async function paginate(
 
     // Send an ephemeral preview if the user is not the one who initiated the interaction
     if (interaction.getUserId() !== userId) {
-      const message = await getMessage(index, subIndex);
+      const message = await getPickedMessage(index, subIndex);
       return interaction.sendFollowup({
         ...message,
         components: [],
@@ -126,7 +142,7 @@ export async function paginate(
 
     if (index !== currentIndex) {
       subController?.unregister(listener);
-      mainController.switchPage(index);
+      mainController?.switchPage(index);
 
       currentIndex = index;
       currentSubIndex = 0;
@@ -147,10 +163,13 @@ export async function paginate(
       currentSubIndex = subIndex;
     }
 
-    const message = await getMessage(index, subIndex);
+    const message = await getPickedMessage(index, subIndex);
+
+    // A slower lookup for an earlier pick mustn't replace the newer pick's page
+    if (index !== currentIndex || subIndex !== currentSubIndex) return;
 
     message.components = [
-      mainController.getActionRow(),
+      mainController?.getActionRow(),
       subController?.getActionRow(),
     ].filter((row) => row !== undefined);
 
@@ -158,7 +177,7 @@ export async function paginate(
   }
 
   function onTimeout() {
-    mainController.unregister(listener);
+    mainController?.unregister(listener);
     subController?.unregister(listener);
     cache.clear();
     return context.reply({ components: [] });
@@ -168,7 +187,7 @@ export async function paginate(
 
   const message = await getMessage(currentIndex, currentSubIndex);
   message.components = [
-    mainController.getActionRow(),
+    mainController?.getActionRow(),
     subController?.getActionRow(),
   ].filter((row) => row !== undefined);
 
@@ -291,8 +310,8 @@ async function contentToMessage(
 class PageController {
   #menu: SelectMenuBuilder | ButtonBuilder[];
 
-  public constructor(pages: PageInput[], selected: number) {
-    if (pages.length > 5) {
+  public constructor(pages: PageInput[], selected: number, forceMenu = false) {
+    if (forceMenu || pages.length > 5) {
       const menu = new SelectMenuBuilder();
 
       for (const [index, page] of pages.entries()) {

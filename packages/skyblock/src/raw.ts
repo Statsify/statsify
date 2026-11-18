@@ -53,6 +53,7 @@ export interface RawMember {
   };
   leveling?: { experience?: number; highest_pet_score?: number };
   currencies?: { coin_purse?: number };
+  fairy_soul?: { total_collected?: number };
   player_data?: { experience?: Record<string, number> };
   collection?: Record<string, number>;
   inventory?: {

@@ -17,6 +17,9 @@ import {
   LeaderboardQuery,
   PlayerNotFoundException,
   SessionNotFoundException,
+  SkyBlockNotFoundException,
+  type SkyBlockSection,
+  SkyBlockUnavailableException,
   ApiService as StatsifyApiService,
   StatusNotFoundException,
   SuccessResponse,
@@ -27,6 +30,20 @@ import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
+
+const cacheLevelFor = (user: User | null) => (User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE);
+
+const SKYBLOCK_NOT_FOUND: Record<string, string | undefined> = {
+  skyblock: "errors.skyblockNoProfiles",
+  profile: "errors.skyblockProfileNotFound",
+  item: "errors.skyblockItemNotFound",
+  price: "errors.skyblockNoPrice",
+};
+
+function skyBlockNotFound(message: string, tag: string) {
+  const key = SKYBLOCK_NOT_FOUND[message];
+  return new ErrorMessage((t) => t(`${key}.title`), (t) => t(`${key}.description`, { tag }));
+}
 
 const apiClientRoute = await config("apiClient.route");
 const apiClientKey = await config("apiClient.key");
@@ -48,7 +65,7 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super
-      .getCachedPlayer(input, User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE)
+      .getCachedPlayer(input, cacheLevelFor(user))
       .catch((err) => {
         if (!err.response || !err.response.data) throw this.unknownError();
         const error = err.response.data as PlayerNotFoundException;
@@ -226,6 +243,55 @@ export class ApiService extends StatsifyApiService {
     });
   }
 
+  /**
+   *
+   * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
+   * @param user User to use if no tag is provided.
+   * @returns The player's SkyBlock profiles, without any sections
+   */
+  public async getSkyBlockProfiles(tag: string, user: User | null = null) {
+    const [formattedTag, type] = this.parseTag(tag);
+    const input = await this.resolveTag(formattedTag, type, user);
+
+    return super.getCachedSkyBlockProfiles(input, cacheLevelFor(user)).catch((err) => {
+      throw this.skyBlockError(err, type, tag);
+    });
+  }
+
+  public getSkyBlockProfile(
+    uuid: string,
+    sections: SkyBlockSection[],
+    user: User | null = null,
+    profileId?: string
+  ) {
+    return super.getCachedSkyBlockProfile(uuid, sections, cacheLevelFor(user), profileId).catch((err) => {
+      throw this.skyBlockError(err, "uuid", uuid);
+    });
+  }
+
+  /**
+   * @param item A price key, as autocomplete suggests, or the name typed without picking one
+   * @returns The price of the key, or of the closest item to the name
+   */
+  public override async getSkyBlockPrice(item: string) {
+    const price = await super.getSkyBlockPrice(item).catch((err) => {
+      if ((err.response?.data as SkyBlockNotFoundException | undefined)?.message === "item") return;
+      throw this.skyBlockError(err, undefined, item);
+    });
+
+    if (price) return price;
+
+    const [match] = await super.getSkyBlockItems(item).catch((err) => {
+      throw this.skyBlockError(err);
+    });
+
+    if (!match) throw skyBlockNotFound("item", item);
+
+    return super.getSkyBlockPrice(match.id).catch((err) => {
+      throw this.skyBlockError(err, undefined, match.name);
+    });
+  }
+
   public override async deletePlayerSession(id: string): Promise<SuccessResponse> {
     return super.deletePlayerSession(id).catch(() => {
       throw new ErrorMessage("verification.requiredVerification");
@@ -312,6 +378,37 @@ export class ApiService extends StatsifyApiService {
 
   public unknownError() {
     return new ErrorMessage("errors.unknown");
+  }
+
+  private skyBlockError(err: AxiosError, type?: PlayerTag, tag = "") {
+    if (!err.response?.data) return this.unknownError();
+
+    const error = err.response.data as
+      | PlayerNotFoundException |
+      SkyBlockNotFoundException |
+      SkyBlockUnavailableException;
+
+    if (error.statusCode === 503) {
+      const { reason, retryAfter } = error as SkyBlockUnavailableException;
+
+      return new ErrorMessage(
+        (t) => t("errors.skyblockUnavailable.title"),
+        (t) => {
+          const description = t("errors.skyblockUnavailable.description", { context: reason });
+          if (retryAfter === undefined) return description;
+
+          const time = Math.ceil((Date.now() + retryAfter) / 1000);
+          return `${description} ${t("errors.skyblockUnavailable.retry", { time })}`;
+        }
+      );
+    }
+
+    if (error.message === "player" && type) return this.missingPlayer(type, tag);
+    if (SKYBLOCK_NOT_FOUND[error.message]) {
+      return skyBlockNotFound(error.message, (error as SkyBlockNotFoundException).itemName ?? tag);
+    }
+
+    return this.unknownError();
   }
 
   private isDiscordId(tag: string) {
