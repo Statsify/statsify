@@ -298,6 +298,7 @@
       "title": "Possible GTB Solutions"
     },
     "help": {
+      "description": "Need Support? Join our $t(socials.discord) and create a ticket to directly contact us.",
       "games": {
         "description": "Statsify supports the majority of games offered on Hypixel. To check your stats in a game run `/[game]`. For example you can run `/bedwars` to check your BedWars stats.",
         "title": "Games"
@@ -326,6 +327,9 @@
       "pong": "Pong!",
       "title": "Statsify Credits",
       "translators": "Translators"
+    },
+    "socials": {
+      "author": "Player Socials"
     },
     "tags": {
       "deleted": {
@@ -487,6 +491,7 @@
       "title": "Unsupported File Type"
     }
   },
+  "here": "Here",
   "historical": {
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
     "setSessionReset": "Successfully reset your session stats.",
@@ -521,6 +526,7 @@
     "uuid": "UUID"
   },
   "number": "{{value, number}}",
+  "overall": "Overall",
   "players": "Players",
   "socials": {
     "discord": "[Discord](<https://discord.com/invite/5VgxMQY>)",
@@ -613,11 +619,13 @@
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
       "date": "Date",
       "gexp": "GEXP",
+      "gexpPerGame": "GEXP Per Game",
       "guild": "Guild",
       "guildMaster": "Guild Master",
       "joinedAt": "Joined At",
       "level": "Guild Level",
       "members": "Guild Members",
+      "misc": "Misc",
       "monthly": "Monthly",
       "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
       "quests": "Guild Quests",
