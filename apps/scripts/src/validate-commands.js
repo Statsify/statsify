@@ -43,14 +43,24 @@ const optionSchema = z.object({
   autocomplete: z.optional(z.boolean()),
 });
 
-const commandSchema = z.object({
+const chatInputCommandSchema = z.object({
   name,
   name_localizations,
   description,
   description_localizations,
   options: z.optional(z.array(optionSchema)),
-  type: z.optional(toEnum(1, 2, 3)),
+  type: z.optional(z.literal(1)),
 });
+
+const contextMenuCommandSchema = z.strictObject({
+  name,
+  name_localizations,
+  type: toEnum(2, 3),
+  integration_types: z.optional(z.array(z.number())),
+  contexts: z.optional(z.array(z.number())),
+});
+
+const commandSchema = z.union([chatInputCommandSchema, contextMenuCommandSchema]);
 
 for (const [commandName, command] of Object.entries(commands.commands)) {
   try {
@@ -87,7 +97,7 @@ const findOptionsLength = (options = []) =>
     .reduce((a, b) => a + b, 0);
 
 const findTotalCommandChars = (command) => {
-  const topCommandOptions = command.flatMap((option) => option.options);
+  const topCommandOptions = command.flatMap((option) => option.options ?? []);
   const subCommandOptions = topCommandOptions.flatMap((option) => option.options ?? []);
   const subsubCommandOptions = subCommandOptions.flatMap(
     (option) => option.options ?? []

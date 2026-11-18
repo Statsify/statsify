@@ -25,6 +25,12 @@ export interface CommandOptions {
    */
   guildCommand?: boolean;
 
+  /**
+   * Also adds a user command with this name, shown when you right-click a user. It runs this
+   * command with no options, and the user is the interaction's `target_id`.
+   */
+  contextMenu?: LocalizationString;
+
   cooldown?: number;
 
   /**
@@ -39,7 +45,7 @@ export interface CommandOptions {
   preview?: string;
 }
 
-export interface SubCommandOptions extends Omit<CommandOptions, "cooldown"> {
+export interface SubCommandOptions extends Omit<CommandOptions, "cooldown" | "contextMenu"> {
   group?: string;
 }
 

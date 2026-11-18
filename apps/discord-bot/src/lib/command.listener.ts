@@ -62,7 +62,8 @@ export class CommandListener extends AbstractCommandListener {
 
     const [command, data, commandName] = this.getCommandAndData(
       parentCommand,
-      parentData
+      parentData,
+      parentCommand.slashCommandName
     );
 
     const transaction = Sentry.startTransaction({ name: commandName, op: "command" });
@@ -113,7 +114,7 @@ export class CommandListener extends AbstractCommandListener {
   ) {
     if (isDevelopment) return true;
 
-    const cooldownForCommand = this.cooldowns.get(command.name);
+    const cooldownForCommand = this.cooldowns.get(command.slashCommandName);
 
     let reduction = 1;
 
@@ -128,7 +129,7 @@ export class CommandListener extends AbstractCommandListener {
 
     if (!cooldownForCommand) {
       const cooldownForCommand = new Map([[userId, newCooldown]]);
-      this.cooldowns.set(command.name, cooldownForCommand);
+      this.cooldowns.set(command.slashCommandName, cooldownForCommand);
 
       return;
     }
