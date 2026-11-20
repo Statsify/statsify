@@ -17,7 +17,7 @@ import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
 import { ValidationPipe } from "@nestjs/common";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
 

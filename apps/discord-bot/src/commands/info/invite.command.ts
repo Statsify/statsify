@@ -9,7 +9,7 @@
 import { Command, EmbedBuilder, IMessage } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserLogo } from "@statsify/schemas";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 import { getLogoPath } from "@statsify/assets";
 import { readFile } from "node:fs/promises";
 

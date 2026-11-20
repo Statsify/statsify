@@ -32,7 +32,7 @@ import {
   SuccessResponse,
 } from "#responses";
 import { User, UserFooter, UserTheme } from "@statsify/schemas";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 import { loadImage } from "@statsify/rendering";
 
 interface ExtraData {

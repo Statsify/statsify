@@ -14,9 +14,9 @@
     "@nestjs/common": "^11.1.6",
     "@nestjs/swagger": "^11.2.0",
     "@sentry/node": "^7.118.0",
+    "@statsify/config": "workspace:^",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
-    "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "axios": "^1.11.0"
   },

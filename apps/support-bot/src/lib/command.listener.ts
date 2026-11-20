@@ -14,7 +14,7 @@ import {
 } from "@statsify/discord";
 import { ApiService } from "@statsify/api-client";
 import { RestClient, WebsocketShard } from "tiny-discord";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 
 const applicationId = await config("supportBot.applicationId");
 const apiClientRoute = await config("apiClient.route");

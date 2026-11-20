@@ -8,7 +8,7 @@
 
 import Redis from "ioredis";
 import inquirer from "inquirer";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 import { createHash, randomUUID } from "node:crypto";
 import { inquirerConfirmation, inquirerLogger } from "./utils.js";
 

@@ -15,7 +15,7 @@ import {
 import { Logger } from "@statsify/logger";
 import { Service } from "typedi";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 
 const GUILD_ID = await config("supportBot.guild");
 const MEMBER_ROLE = await config("supportBot.memberRole");

@@ -8,7 +8,7 @@
 
 import { join } from "node:path";
 import { existsSync } from "node:fs";
-import type { DeepFlatten } from "./flatten.js";
+import type { DeepFlatten } from "@statsify/util";
 import { pathToFileURL } from "node:url";
 
 const directory = import.meta.dirname;

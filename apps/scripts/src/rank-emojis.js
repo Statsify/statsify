@@ -9,7 +9,8 @@
 import { FontRenderer, createCanvas } from "@statsify/rendering";
 import { Logger } from "@statsify/logger";
 import { RestClient } from "tiny-discord";
-import { config, minecraftColors } from "@statsify/util";
+import { minecraftColors } from "@statsify/util";
+import { config } from "@statsify/config";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { rankMap } from "@statsify/schemas";
 import { writeFileSync } from "node:fs";

@@ -21,7 +21,7 @@ import { Logger, STATUS_COLORS } from "@statsify/logger";
 import { Service } from "typedi";
 import { User, UserTier } from "@statsify/schemas";
 import { UserService } from "#services";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 
 // Highest tier first, so findTier and findRoleTier pick the highest one a member has
 const PREMIUM_TIERS = [

@@ -31,7 +31,7 @@ import { CommandListener } from "#lib";
 import { Inject, Service } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
 import { Ticket } from "@statsify/schemas";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Service()
