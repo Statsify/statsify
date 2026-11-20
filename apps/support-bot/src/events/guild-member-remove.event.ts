@@ -13,7 +13,7 @@ import {
 } from "discord-api-types/v10";
 import { Service } from "typedi";
 import { TicketService, UserService } from "#services";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 
 const GUILD_ID = await config("supportBot.guild");
 

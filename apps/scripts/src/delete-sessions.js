@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 import { connect } from "mongoose";
 
 const mongo = await connect(config("database.mongoUri"));

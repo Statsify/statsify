@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@sentry/node": "^7.118.0",
-    "@statsify/util": "workspace:^",
+    "@statsify/config": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "chalk": "5.6.0",
     "luxon": "^3.5.0"

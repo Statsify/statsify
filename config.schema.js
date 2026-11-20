@@ -7,7 +7,7 @@
  */
 
 /**
- * @type {import("@statsify/util").Config}
+ * @type {import("@statsify/config").Config}
  */
 export default {
   database: {

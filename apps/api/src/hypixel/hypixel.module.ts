@@ -9,7 +9,7 @@
 import { HttpModule } from "@nestjs/axios";
 import { HypixelService } from "./hypixel.service.js";
 import { Module } from "@nestjs/common";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 
 @Module({
   imports: [

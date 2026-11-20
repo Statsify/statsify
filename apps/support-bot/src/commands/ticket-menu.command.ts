@@ -17,7 +17,7 @@ import {
 import { ButtonStyle } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 
 @Command({ description: (t) => t("commands.ticket-menu"), tier: UserTier.CORE, userCommand: false })
 export class TicketMenuCommand {

@@ -26,7 +26,7 @@ import {
   TextInputStyle,
 } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 
 const SUPPORT_BOT_GUILD_ID = await config("supportBot.guild");
 const SUPPORT_BOT_MEMBER_ROLE_ID = await config("supportBot.memberRole");

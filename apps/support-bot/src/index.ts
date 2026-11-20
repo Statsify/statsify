@@ -24,7 +24,7 @@ import {
 import { GatewayIntentBits } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
 import { RestClient, WebsocketShard } from "tiny-discord";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 import { join } from "node:path";
 import { setGlobalOptions } from "@typegoose/typegoose";
 import "reflect-metadata";

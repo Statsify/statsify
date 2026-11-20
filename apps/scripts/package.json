@@ -19,6 +19,7 @@
   "dependencies": {
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
+    "@statsify/config": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",

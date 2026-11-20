@@ -24,7 +24,8 @@ import {
 import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
-import { config, removeFormatting } from "@statsify/util";
+import { removeFormatting } from "@statsify/util";
+import { config } from "@statsify/config";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 

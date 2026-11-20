@@ -9,6 +9,5 @@
 export * from "./flatten.js";
 export * from "./unflatten.js";
 export * from "./minecraft-colors.js";
-export * from "./config.js";
 export * from "./util.js";
 export * from "./types.js";

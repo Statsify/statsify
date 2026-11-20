@@ -18,7 +18,7 @@ import {
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 
 @Command({
   description: (t) => t("commands.force-verify"),

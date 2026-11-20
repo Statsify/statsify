@@ -19,7 +19,8 @@ import {
 import { Container } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
-import { config, formatTime } from "@statsify/util";
+import { formatTime } from "@statsify/util";
+import { config } from "@statsify/config";
 import { getAssetPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
 import { tips } from "../tips.js";
