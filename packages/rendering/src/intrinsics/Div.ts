@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { noop } from "@statsify/util";
 import type * as JSX from "#jsx";
 
 export interface DivProps {
@@ -32,7 +31,6 @@ export const component: JSX.RawFC<DivProps, DivRenderProps> = ({
   padding,
 }) => ({
   name: "Div",
-  render: noop,
   dimension: {
     margin,
     padding,
@@ -44,4 +42,4 @@ export const component: JSX.RawFC<DivProps, DivRenderProps> = ({
   children,
 });
 
-export const render: JSX.Render<DivRenderProps> = noop;
+export const render: JSX.Render<DivRenderProps> = () => {};

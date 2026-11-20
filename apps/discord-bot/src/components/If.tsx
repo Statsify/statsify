@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { noop } from "@statsify/util";
 import { useChildren } from "@statsify/rendering";
 
 export interface IfProps<T> {
@@ -24,5 +23,5 @@ export function If<T>({
     return <>{typeof children[0] === "function" ? children[0](condition) : children}</>;
   }
 
-  return noop();
+  return null;
 }
