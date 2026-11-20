@@ -22,7 +22,6 @@ import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalTimeData } from "#components";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
-import { noop } from "@statsify/util";
 import { render } from "@statsify/rendering";
 import type { ApiModeFromGameModes, ApiSubModeForMode, GameMode, GameModeWithSubModes, GameModes, Player, SubModeForMode, User } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
@@ -78,7 +77,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
       this.apiService.getUserBadge(player.uuid),
     ]);
 
-    const data: K = (await this.getPreProfileData?.(player)) ?? noop();
+    const data = (await this.getPreProfileData?.(player)) as K;
 
     const allModes = this.modes.getModes();
     const filteredModes = this.filterModes?.(player, allModes) ?? allModes;

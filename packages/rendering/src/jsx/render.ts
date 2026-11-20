@@ -14,7 +14,6 @@ import { IntrinsicRenders, intrinsicRenders } from "./instrinsics.js";
 import { createCanvas } from "../canvas.js";
 import { createInstructions } from "./create-instructions.js";
 import { getPositionalDelta, getTotalSize } from "./util.js";
-import { noop } from "@statsify/util";
 import type {
   ComputedThemeContext,
   ElementNode,
@@ -143,13 +142,11 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
   ctx.imageSmoothingEnabled = false;
 
   const context: ComputedThemeContext = {
-    renderer: noop(),
     ...theme?.context,
+    renderer: theme?.context.renderer ?? Container.get(FontRenderer),
     canvasWidth: width,
     canvasHeight: height,
   };
-
-  if (!context.renderer) context.renderer = Container.get(FontRenderer);
 
   renderRecursive(
     ctx,

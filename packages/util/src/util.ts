@@ -6,8 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export const noop = <T>() => null as unknown as T;
-
 /**
  * @description Finds the element in the array where the `score` value is is greater than the `req` value but less than the next `req`.
  * @param data An array of objects with a `req` property

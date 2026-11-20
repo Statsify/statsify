@@ -68,7 +68,7 @@ import {
   WarlordsModes,
   WoolGamesModes,
 } from "@statsify/schemas";
-import { noop, prettify } from "@statsify/util";
+import { prettify } from "@statsify/util";
 
 const getDefaultApiMode = <T extends Mode[]>(modes: GameModes<T>) =>
   modes.getApiModes()[0];
@@ -395,19 +395,19 @@ const GAME_ID_TO_MODES: Record<GameId, GameModes<any> | null> = {
   WARLORDS: WARLORDS_MODES,
   WOOLGAMES: WOOLGAMES_MODES,
   PIT: PIT_MODES,
-  HOUSING: noop(),
-  PROTOTYPE: noop(),
-  SKYBLOCK: noop(),
-  SKYCLASH: noop(),
-  TOURNAMENT_LOBBY: noop(),
-  MAIN_LOBBY: noop(),
-  CLASSIC: noop(),
-  CRAZY_WALLS: noop(),
-  QUEUE: noop(),
-  REPLAY: noop(),
-  LIMBO: noop(),
-  IDLE: noop(),
-  SMP: noop(),
+  HOUSING: null,
+  PROTOTYPE: null,
+  SKYBLOCK: null,
+  SKYCLASH: null,
+  TOURNAMENT_LOBBY: null,
+  MAIN_LOBBY: null,
+  CLASSIC: null,
+  CRAZY_WALLS: null,
+  QUEUE: null,
+  REPLAY: null,
+  LIMBO: null,
+  IDLE: null,
+  SMP: null,
 };
 
 export const MODES_TO_API = new Map<GameModes<GamesWithBackgrounds>, keyof PlayerStats>([

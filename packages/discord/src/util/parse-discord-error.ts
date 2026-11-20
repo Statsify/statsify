@@ -6,11 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { noop } from "@statsify/util";
 import type { RestClient } from "tiny-discord";
 
 export const parseDiscordResponse = <T>(response: RestClient.RequestResult): T => {
-  if (response.headers["content-type"] !== "application/json") return noop();
+  if (response.headers["content-type"] !== "application/json") return null as T;
 
   // @ts-expect-error tiny-discord doesn't have a proper types yet
   if (response.status >= 200 && response.status < 300) return response.body.json as T;
