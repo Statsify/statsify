@@ -6,25 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import i18next, {
-  StringMap,
-  TFunction,
-  TFunctionKeys,
-  TFunctionResult,
-  TOptions,
-} from "i18next";
+import i18next, { type TFunction, type TOptions } from "i18next";
 
 interface ILocalizeFunction {
-  <TKeys extends TFunctionKeys = string>(key: TKeys | TKeys[]): string;
-  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
-    key: TKeys | TKeys[],
-    options?: TOptions<TInterpolationMap> & { returnDetails?: true; returnObjects?: true } | string
+  (key: string | string[]): string;
+  (
+    key: string | string[],
+    options?: TOptions & { returnDetails?: true; returnObjects?: true } | string
   ): string;
-  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
-    key: TKeys | TKeys[],
-    defaultValue?: string,
-    options?: TOptions<TInterpolationMap> | string
-  ): string;
+  (key: string | string[], defaultValue?: string, options?: TOptions | string): string;
   (key: number): string;
 }
 
@@ -46,7 +36,7 @@ export const getLocalizeFunction = (locale: string): LocalizeFunction => {
 export type LocalizationString =
   | string |
   number |
-  ((t: LocalizeFunction) => TFunctionResult);
+  ((t: LocalizeFunction) => string);
 
 const shouldTranslate = (str: LocalizationString): boolean => {
   const type = typeof str;
@@ -80,7 +70,7 @@ export const translateObject = <T extends Record<string, LocalizationString | an
 export const translateToAllLanguages = (
   key: LocalizationString
 ): Record<string, string> => {
-  const { options } = i18next as unknown as i18next.i18n;
+  const { options } = i18next;
 
   if (!Array.isArray(options.preload)) return {};
 
