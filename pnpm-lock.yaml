@@ -400,8 +400,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
       chalk:
-        specifier: ^5.6.0
-        version: 5.6.2
+        specifier: ^6.0.1
+        version: 6.0.1
       discord-bot:
         specifier: workspace:^
         version: link:../discord-bot
@@ -701,8 +701,8 @@ importers:
         specifier: ^0.5.23
         version: 0.5.23
       chalk:
-        specifier: 5.6.0
-        version: 5.6.0
+        specifier: 6.0.1
+        version: 6.0.1
       luxon:
         specifier: ^3.5.0
         version: 3.7.2
@@ -3553,13 +3553,9 @@ packages:
     resolution: {integrity: sha512-4D3B6Wf41KOYRFdszmDqMCGq5VV/uMAB273JILmO+3jAlh8X4qDtdtgCR3fxtbLEMzSx22QdhnDcJvu2u1fVwg==}
     engines: {node: '>=8'}
 
-  chalk@5.6.0:
-    resolution: {integrity: sha512-46QrSQFyVSEyYAgQ22hQ+zDa60YHA4fBstHmtSApj1Y5vKtG27fWowW03jCk5KcbXEWPZUIR894aARCA/G1kfQ==}
-    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
-
-  chalk@5.6.2:
-    resolution: {integrity: sha512-7NzBL0rN6fMUW+f7A6Io4h40qQlG+xGmtMxfbnH/K7TAtt8JQWVQK+6g0UXKMeVJoyV5EkkNsErQ8pVD3bLHbA==}
-    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+  chalk@6.0.1:
+    resolution: {integrity: sha512-/Ce6KNm3vIbWdMlNna6RVIZ/ICQxnJxCicet5LBKK9ZffBkqzDw0xh9EiKSljdRtiIQ1S1z4YgcscUUGzNCWrA==}
+    engines: {node: '>=22'}
 
   chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
@@ -8161,9 +8157,7 @@ snapshots:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
-  chalk@5.6.0: {}
-
-  chalk@5.6.2: {}
+  chalk@6.0.1: {}
 
   chardet@0.7.0: {}
 
