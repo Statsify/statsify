@@ -8,41 +8,29 @@
 
 import { APIMessage } from "discord-api-types/v10";
 import { IMessage, Message, getLocalizeFunction } from "#messages";
-import { RestClient } from "tiny-discord";
+import { API } from "@discordjs/core/http-only";
 import { Service } from "typedi";
-import { parseDiscordResponse } from "#util/parse-discord-error";
 
 @Service()
 export class MessageService {
-  public constructor(private readonly rest: RestClient) {}
+  public constructor(private readonly api: API) {}
 
   public async send(channelId: string, message: Message | IMessage): Promise<APIMessage> {
     const data = message instanceof Message ? message : new Message(message);
-
-    const response = await this.rest.post(
-      `/channels/${channelId}/messages`,
-      data.toAPI(getLocalizeFunction("en-US"))
-    );
-
-    return parseDiscordResponse(response);
+    return this.api.channels.createMessage(channelId, data.toAPI(getLocalizeFunction("en-US")));
   }
 
   public async edit(channelId: string, messageId: string, message: Message | IMessage) {
     const data = message instanceof Message ? message : new Message(message);
 
-    const response = await this.rest.patch(
-      `/channels/${channelId}/messages/${messageId}`,
+    return this.api.channels.editMessage(
+      channelId,
+      messageId,
       data.toAPI(getLocalizeFunction("en-US"))
     );
-
-    return parseDiscordResponse(response);
   }
 
   public async delete(channelId: string, messageId: string) {
-    const response = await this.rest.delete(
-      `/channels/${channelId}/messages/${messageId}`
-    );
-
-    return parseDiscordResponse(response);
+    return this.api.channels.deleteMessage(channelId, messageId);
   }
 }

@@ -7,6 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
+import { API } from "@discordjs/core/http-only";
 import { CommandListener } from "#lib";
 import {
   CommandPoster,
@@ -23,7 +24,8 @@ import {
 } from "#services";
 import { GatewayIntentBits } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
-import { RestClient, WebsocketShard } from "tiny-discord";
+import { REST } from "@discordjs/rest";
+import { WebSocketManager } from "@discordjs/ws";
 import { config } from "@statsify/util";
 import { join } from "node:path";
 import { setGlobalOptions } from "@typegoose/typegoose";
@@ -51,8 +53,9 @@ if (sentryDsn) {
   });
 }
 
-const rest = new RestClient({ token: await config("supportBot.token") });
-Container.set(RestClient, rest);
+const token = await config("supportBot.token");
+const api = new API(new REST().setToken(token));
+Container.set(API, api);
 
 await Promise.all(
   [I18nLoaderService, FontLoaderService, MongoLoaderService].map((service) =>
@@ -75,16 +78,17 @@ await poster.post(
   await config("supportBot.guild")
 );
 
-const websocket = new WebsocketShard({
-  token: await config("supportBot.token"),
+const websocket = new WebSocketManager({
+  token,
   intents:
     GatewayIntentBits.Guilds |
     GatewayIntentBits.GuildMessages |
     GatewayIntentBits.GuildMembers,
+  rest: api.rest,
 });
 
 await loadEvents(websocket, join(directory, "./events"));
-const listener = CommandListener.create(websocket, rest, commands);
+const listener = CommandListener.create(websocket, api, commands);
 Container.get(TicketService).init();
 
 await listener.listen();

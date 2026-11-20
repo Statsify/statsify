@@ -7,12 +7,20 @@
  */
 
 import * as Sentry from "@sentry/node";
+import { API } from "@discordjs/core/http-only";
 import { CommandListener } from "#lib/command.listener";
-import { CommandPoster, I18nLoaderService, loadCommands } from "@statsify/discord";
+import {
+  CommandPoster,
+  I18nLoaderService,
+  InteractionServer,
+  loadCommands,
+} from "@statsify/discord";
 import { Container } from "typedi";
 import { FontLoaderService } from "#services";
-import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
+import { GatewayIntentBits } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
+import { REST } from "@discordjs/rest";
+import { WebSocketManager } from "@discordjs/ws";
 import { VerifyCommand } from "#commands/verify.command";
 import { config } from "@statsify/util";
 import { join } from "node:path";
@@ -41,8 +49,9 @@ await Promise.all(
   [I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init())
 );
 
-const rest = new RestClient({ token: await config("discordBot.token"), timeout: 60 * 1000 });
-Container.set(RestClient, rest);
+const token = await config("discordBot.token");
+const api = new API(new REST({ timeout: 60 * 1000 }).setToken(token));
+Container.set(API, api);
 
 const commands = await loadCommands(join(directory, "./commands"));
 
@@ -58,9 +67,9 @@ const port = await config("discordBot.port", { required: false });
 
 const listener = CommandListener.create(
   port ?
-    new InteractionServer({ key: await config("discordBot.publicKey")! }) :
-    new WebsocketShard({ token: await config("discordBot.token"), intents: 1 }),
-  rest,
+    new InteractionServer(await config("discordBot.publicKey")) :
+    new WebSocketManager({ token, intents: GatewayIntentBits.Guilds, rest: api.rest }),
+  api,
   commands
 );
 
