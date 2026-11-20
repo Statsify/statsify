@@ -13,7 +13,8 @@ import {
   Interaction,
 } from "@statsify/discord";
 import { ApiService } from "@statsify/api-client";
-import { RestClient, WebsocketShard } from "tiny-discord";
+import type { API } from "@discordjs/core/http-only";
+import type { WebSocketManager } from "@discordjs/ws";
 import { config } from "@statsify/util";
 
 const applicationId = await config("supportBot.applicationId");
@@ -25,11 +26,11 @@ export class CommandListener extends AbstractCommandListener {
   private static instance: CommandListener;
 
   private constructor(
-    client: WebsocketShard,
-    rest: RestClient,
+    client: WebSocketManager,
+    api: API,
     commands: Map<string, CommandResolvable>
   ) {
-    super(client, rest, commands, applicationId);
+    super(client, api, commands, applicationId);
 
     this.apiService = new ApiService(apiClientRoute, apiClientKey);
   }
@@ -68,11 +69,11 @@ export class CommandListener extends AbstractCommandListener {
   }
 
   public static create(
-    client: WebsocketShard,
-    rest: RestClient,
+    client: WebSocketManager,
+    api: API,
     commands: Map<string, CommandResolvable>
   ) {
-    this.instance = new CommandListener(client, rest, commands);
+    this.instance = new CommandListener(client, api, commands);
     return this.instance;
   }
 

@@ -10,7 +10,7 @@ import { AbstractEventListener } from "./abstract-event.listener.js";
 import { Container } from "typedi";
 import { GatewayDispatchEvents } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
-import { WebsocketShard } from "tiny-discord";
+import { type WebSocketManager, WebSocketShardEvents } from "@discordjs/ws";
 import { readdir } from "node:fs/promises";
 import { statSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -18,15 +18,15 @@ import { join } from "node:path";
 
 const logger = new Logger("EventLoader");
 
-export async function loadEvents(websocket: WebsocketShard, dir: string) {
+export async function loadEvents(websocket: WebSocketManager, dir: string) {
   const files = await getEventFileUrls(dir);
   const events = await Promise.all(files.map(importEvent));
   const eventsMap = new Map<GatewayDispatchEvents, AbstractEventListener<any>>(
     events.flat().map((event) => [event.event, event]),
   );
 
-  websocket.on("event", (event) => {
-    const listener = eventsMap.get(event.t as GatewayDispatchEvents);
+  websocket.on(WebSocketShardEvents.Dispatch, (event) => {
+    const listener = eventsMap.get(event.t);
     if (listener) listener.onEvent(event.d);
   });
 }

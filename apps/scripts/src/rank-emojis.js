@@ -8,7 +8,7 @@
 
 import { FontRenderer, createCanvas } from "@statsify/rendering";
 import { Logger } from "@statsify/logger";
-import { RestClient } from "tiny-discord";
+import { REST } from "@discordjs/rest";
 import { config, minecraftColors } from "@statsify/util";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { rankMap } from "@statsify/schemas";
@@ -171,21 +171,17 @@ logger.debug(`Creating ${emojis.length} emojis`);
 
 const json = {};
 
-const client = new RestClient({ token });
+const client = new REST().setToken(token);
 
 // For ratelimiting purposes it is better to run these requests serially
 for (let i = 0; i < serverCount; i++) {
   // oxlint-disable-next-line no-await-in-loop
-  const guild = await client
-    .post("/guilds", { name: `Statsify Ranks ${i + 1}` })
-    .then((res) => res.body.json);
+  const guild = await client.post("/guilds", { body: { name: `Statsify Ranks ${i + 1}` } });
 
   const channel = guild.system_channel_id;
 
   // oxlint-disable-next-line no-await-in-loop
-  const invite = await client
-    .post(`/channels/${channel}/invites`, { type: 1 })
-    .then((res) => res.body.json);
+  const invite = await client.post(`/channels/${channel}/invites`, { body: { type: 1 } });
 
   logger.log(`Created guild ${guild.id} with invite: discord.gg/${invite.code}`);
 
@@ -196,13 +192,13 @@ for (let i = 0; i < serverCount; i++) {
     const emoji = emojis[index];
 
     // oxlint-disable-next-line no-await-in-loop
-    const emojiResolved = await client
-      .post(`/guilds/${guild.id}/emojis`, {
+    const emojiResolved = await client.post(`/guilds/${guild.id}/emojis`, {
+      body: {
         name: emoji.name,
         image: emoji.buffer,
         roles: [],
-      })
-      .then((res) => res.body.json);
+      },
+    });
 
     const isColorChanger = COLOR_CHANGERS.includes(emoji.rank);
 

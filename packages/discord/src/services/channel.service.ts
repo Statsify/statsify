@@ -12,13 +12,12 @@ import {
   APIGuildCreatePartialChannel,
   APIMessage,
 } from "discord-api-types/v10";
-import { RestClient } from "tiny-discord";
+import { API } from "@discordjs/core/http-only";
 import { Service } from "typedi";
-import { parseDiscordResponse } from "#util/parse-discord-error";
 
 @Service()
 export class ChannelService {
-  public constructor(private readonly rest: RestClient) {}
+  public constructor(private readonly api: API) {}
 
   public async create(userId: string): Promise<APIDMChannel>;
   public async create(
@@ -29,38 +28,20 @@ export class ChannelService {
     guildIdOrUserId: string,
     channel?: APIGuildCreatePartialChannel
   ): Promise<APIChannel | APIDMChannel> {
-    if (channel) {
-      const response = await this.rest.post(
-        `/guilds/${guildIdOrUserId}/channels`,
-        channel
-      );
-
-      return parseDiscordResponse(response);
-    }
-
-    const response = await this.rest.post("/users/@me/channels", {
-      recipient_id: guildIdOrUserId,
-    });
-
-    return parseDiscordResponse(response);
+    if (channel) return this.api.guilds.createChannel(guildIdOrUserId, channel);
+    return this.api.users.createDM(guildIdOrUserId);
   }
 
   public async delete(channelId: string): Promise<void> {
-    const response = await this.rest.delete(`/channels/${channelId}`);
-    parseDiscordResponse(response);
+    await this.api.channels.delete(channelId);
   }
 
   public async getMessages(channelId: string): Promise<APIMessage[]> {
     // 100 is the most messages Discord returns in one request
-    const response = await this.rest.get(`/channels/${channelId}/messages?limit=100`);
-    return parseDiscordResponse(response);
+    return this.api.channels.getMessages(channelId, { limit: 100 });
   }
 
   public async bulkDelete(channelId: string, messages: string[]) {
-    const response = await this.rest.post(`/channels/${channelId}/messages/bulk-delete`, {
-      messages,
-    });
-
-    return parseDiscordResponse(response);
+    return this.api.channels.bulkDeleteMessages(channelId, messages);
   }
 }

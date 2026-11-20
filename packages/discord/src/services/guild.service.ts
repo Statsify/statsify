@@ -6,17 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { API } from "@discordjs/core/http-only";
 import { APIGuild } from "discord-api-types/v10";
-import { RestClient } from "tiny-discord";
 import { Service } from "typedi";
-import { parseDiscordResponse } from "#util/parse-discord-error";
 
 @Service()
 export class GuildService {
-  public constructor(private readonly rest: RestClient) {}
+  public constructor(private readonly api: API) {}
 
   public async get(guildId: string): Promise<APIGuild> {
-    const response = await this.rest.get(`/guilds/${guildId}?with_counts=true`);
-    return parseDiscordResponse(response);
+    return this.api.guilds.get(guildId, { with_counts: true });
   }
 }

@@ -6,32 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { RestClient } from "tiny-discord";
+import { API } from "@discordjs/core/http-only";
 import { Service } from "typedi";
-import { parseDiscordResponse } from "#util/parse-discord-error";
 
 @Service()
 export class MemberService {
-  public constructor(private readonly rest: RestClient) {}
+  public constructor(private readonly api: API) {}
 
   public async addRole(guildId: string, userId: string, roleId: string) {
-    const response = await this.rest.put(`/guilds/${guildId}/members/${userId}/roles/${roleId}`, {});
-    return parseDiscordResponse(response);
+    return this.api.guilds.addRoleToMember(guildId, userId, roleId);
   }
 
   public async removeRole(guildId: string, userId: string, roleId: string) {
-    const response = await this.rest.delete(
-      `/guilds/${guildId}/members/${userId}/roles/${roleId}`
-    );
-
-    return parseDiscordResponse(response);
+    return this.api.guilds.removeRoleFromMember(guildId, userId, roleId);
   }
 
   public async changeNickname(guildId: string, userId: string, nick: string) {
-    const response = await this.rest.patch(`/guilds/${guildId}/members/${userId}`, {
-      nick,
-    });
-
-    return parseDiscordResponse(response);
+    return this.api.guilds.editMember(guildId, userId, { nick });
   }
 }
