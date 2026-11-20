@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIAllowedMentions, APIAttachment } from "discord-api-types/v10";
-import { ActionRowBuilder } from "./components/index.js";
+import { APIAllowedMentions, APIAttachment, MessageFlags } from "discord-api-types/v10";
+import { ActionRowBuilder, type ContainerBuilder, type ContainerComponent } from "./components/index.js";
 import { EmbedBuilder } from "./embed.js";
 import { InteractionAttachment, InteractionContent } from "#interaction";
 import { LocalizationString, LocalizeFunction, translateField } from "./localize.js";
@@ -15,9 +15,20 @@ import type { RemoveMethods } from "@statsify/util";
 
 export type IMessage = RemoveMethods<Message>;
 
+export type MessageComponent = ContainerBuilder | ContainerComponent;
+
+/**
+ * A message with any component besides action rows is sent with the IS_COMPONENTS_V2 flag,
+ * which rejects `content` and `embeds` and can't be removed from the message afterwards
+ */
+export const isComponentsV2 = (
+  message: IMessage
+): message is IMessage & { components: MessageComponent[] } =>
+  message.components?.some((component) => !(component instanceof ActionRowBuilder)) ?? false;
+
 export class Message {
   public attachments?: APIAttachment[];
-  public components?: ActionRowBuilder[];
+  public components?: MessageComponent[];
   public content?: LocalizationString;
   public embeds?: EmbedBuilder[];
   public ephemeral?: boolean;
@@ -45,10 +56,14 @@ export class Message {
   public toAPI(locale: LocalizeFunction) {
     const data = this.build(locale);
 
+    let flags = 0;
+    if (data.ephemeral) flags |= MessageFlags.Ephemeral;
+    if (isComponentsV2(this)) flags |= MessageFlags.IsComponentsV2;
+
     return {
       content: data.content,
       tts: data.tts,
-      flags: data.ephemeral ? 1 << 6 : undefined,
+      flags: flags || undefined,
       allowed_mentions: data.mentions,
       embeds: data.embeds,
       attachments: data.attachments,

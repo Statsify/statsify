@@ -130,7 +130,7 @@ export class Interaction {
 
   public async editReply(data: Message | IMessage) {
     await this.acknowledged.promise;
-    await this.api.interactions.editReply(this.applicationId, this.data.token, this.convertToApiData(data));
+    await this.api.interactions.editReply(this.applicationId, this.data.token, this.convertToEditData(data));
   }
 
   public async deleteReply() {
@@ -148,7 +148,7 @@ export class Interaction {
     await this.api.interactions.editReply(
       this.applicationId,
       this.data.token,
-      this.convertToApiData(data),
+      this.convertToEditData(data),
       messageId
     );
   }
@@ -161,5 +161,10 @@ export class Interaction {
   public convertToApiData(m: Message | IMessage) {
     const message = m instanceof Message ? m : new Message(m);
     return message.toAPI(getLocalizeFunction(this.getLocale()));
+  }
+
+  // An edit can't change whether a message is ephemeral, and its flags only accept SUPPRESS_EMBEDS and IS_COMPONENTS_V2
+  private convertToEditData(data: Message | IMessage) {
+    return this.convertToApiData({ ...data, ephemeral: undefined });
   }
 }

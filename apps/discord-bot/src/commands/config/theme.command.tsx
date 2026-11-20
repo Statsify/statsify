@@ -30,6 +30,7 @@ import {
   UserTier,
 } from "@statsify/schemas";
 import { convertColorCodes } from "#lib/convert-color-codes";
+import { previewMessage } from "#lib/preview-message";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { removeFormatting } from "@statsify/util";
@@ -113,10 +114,7 @@ export class ThemeCommand {
 
     const profile = await this.getProfile(t, "theme", user);
 
-    return {
-      content: t("config.theme.view"),
-      files: [{ name: "theme.png", data: profile, type: "image/png" }],
-    };
+    return previewMessage(t("config.theme.view"), "theme.png", profile);
   }
 
   @SubCommand({
@@ -197,10 +195,7 @@ export class ThemeCommand {
 
     const profile = await this.getProfile(t, "footer", user);
 
-    return {
-      content: t("config.footer.reset"),
-      files: [{ name: "footer.png", data: profile, type: "image/png" }],
-    };
+    return previewMessage(t("config.footer.reset"), "footer.png", profile);
   }
 
   private async updateField<
@@ -224,11 +219,11 @@ export class ThemeCommand {
 
     const profile = await this.getProfile(t, mode, user);
 
-    return {
-      content:
-        mode === "theme" ? t("config.theme.set") : t("config.footer.set"),
-      files: [{ name: `${mode}.png`, data: profile, type: "image/png" }],
-    };
+    return previewMessage(
+      mode === "theme" ? t("config.theme.set") : t("config.footer.set"),
+      `${mode}.png`,
+      profile
+    );
   }
 
   private async getProfile(

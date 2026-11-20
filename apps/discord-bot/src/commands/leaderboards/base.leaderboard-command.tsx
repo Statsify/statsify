@@ -13,6 +13,7 @@ import {
   ErrorMessage,
   IMessage,
   Interaction,
+  MediaGalleryBuilder,
   ModalBuilder,
   TextInputBuilder,
 } from "@statsify/discord";
@@ -97,6 +98,7 @@ export class BaseLeaderboardCommand {
       .style(ButtonStyle.Primary);
 
     let currentPage = 0;
+    let currentMessage: IMessage;
 
     const changePage =
       (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
@@ -118,12 +120,12 @@ export class BaseLeaderboardCommand {
         if (interaction.getUserId() === userId && !message.ephemeral) {
           up.disable(page === 0);
           currentPage = page || currentPage;
+          currentMessage = message;
           const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
 
           context.reply({
             ...message,
-            components: [row],
-            attachments: [],
+            components: [...(message.components ?? []), row],
           });
         } else {
           interaction.sendFollowup({ ...message, ephemeral: true });
@@ -237,13 +239,14 @@ export class BaseLeaderboardCommand {
       listener.removeHook(documentModal.getCustomId());
       listener.removeHook(positionModal.getCustomId());
 
-      context.reply({ embeds: [], components: [] });
+      context.reply(currentMessage);
       cache.clear();
     }, 300_000);
 
     currentPage = page ?? currentPage;
+    currentMessage = message;
 
-    return { ...message, components: [row] };
+    return { ...message, components: [...(message.components ?? []), row] };
   }
 
   private async getLeaderboardMessage(
@@ -327,8 +330,9 @@ export class BaseLeaderboardCommand {
     const buffer = await canvas.toBuffer("png");
 
     const message = {
+      components: [new MediaGalleryBuilder(["attachment://leaderboard.png"])],
       files: [{ name: "leaderboard.png", data: buffer, type: "image/png" }],
-      embeds: [],
+      attachments: [],
     };
 
     return [message, leaderboard.page];

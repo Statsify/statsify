@@ -19,12 +19,15 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ChannelService,
-  EmbedBuilder,
+  ContainerBuilder,
   ErrorMessage,
+  FileBuilder,
   IMessage,
   Interaction,
   MessageService,
   ModalBuilder,
+  SectionBuilder,
+  TextDisplayBuilder,
   TextInputBuilder,
 } from "@statsify/discord";
 import { CommandListener } from "#lib";
@@ -61,6 +64,7 @@ export class TicketService {
           new TextInputBuilder()
             .label("Briefly describe the issue you are facing?")
             .placeholder("I am experience an issue where...")
+            .maxLength(1024)
             .required(true)
             .style(TextInputStyle.Paragraph)
         )
@@ -135,15 +139,6 @@ export class TicketService {
       { upsert: true }
     );
 
-    const embed = new EmbedBuilder()
-      .color(STATUS_COLORS.info)
-      .title("Support")
-      .description(
-        "Thank you for reaching out for support! Staff will be with you shortly."
-      )
-      .field("Username", `\`${username}\``)
-      .field("Issue", issue);
-
     const closeTicketButton = new ButtonBuilder()
       .label("Close Ticket")
       .style(ButtonStyle.Success)
@@ -162,12 +157,17 @@ export class TicketService {
 
     listener.addHook(copyUsernameButton.getCustomId(), this.copyUsername.bind(this));
 
+    const container = new ContainerBuilder([
+      new TextDisplayBuilder(
+        "## Support\nThank you for reaching out for support! Staff will be with you shortly."
+      ),
+      new SectionBuilder([`**Username**\n\`${username}\``], copyUsernameButton),
+      new TextDisplayBuilder(`**Issue**\n${issue}`),
+      new ActionRowBuilder([closeTicketButton]),
+    ]).accentColor(STATUS_COLORS.info);
+
     await this.messageService.send(channel.id, {
-      content: `<@${user.id}>`,
-      embeds: [embed],
-      components: [
-        new ActionRowBuilder().component(closeTicketButton).component(copyUsernameButton),
-      ],
+      components: [new TextDisplayBuilder(`<@${user.id}>`), container],
     });
   }
 
@@ -222,29 +222,27 @@ export class TicketService {
       logs.push(message);
     }
 
-    const embed = new EmbedBuilder()
-      .title("Ticket Resolved")
-      .color(STATUS_COLORS.info)
-      .description(
-        [
-          `Owner: <@${ticket.owner}>`,
-          `Closer: <@${userId}>`,
-          `Participants: ${[...participants].join(", ")}`,
-          `Reason: ${reason}`,
-        ]
-          .map((m) => `\`•\` ${m}`)
-          .join("\n")
-      );
+    const transcript = `${ticket.owner}.txt`;
 
+    const details = [
+      `Owner: <@${ticket.owner}>`,
+      `Closer: <@${userId}>`,
+      `Participants: ${[...participants].join(", ")}`,
+      `Reason: ${reason}`,
+    ]
+      .map((m) => `\`•\` ${m}`)
+      .join("\n");
+
+    const container = new ContainerBuilder([
+      new TextDisplayBuilder(`## Ticket Resolved\n${details}`),
+      new FileBuilder(transcript),
+    ]).accentColor(STATUS_COLORS.info);
+
+    // Unlike in an embed, mentions in a text display ping
     const message: IMessage = {
-      embeds: [embed],
-      files: [
-        {
-          name: `${ticket.owner}.txt`,
-          data: Buffer.from(logs.join("\n"), "utf8"),
-          type: "text/plain",
-        },
-      ],
+      components: [container],
+      files: [{ name: transcript, data: Buffer.from(logs.join("\n"), "utf8"), type: "text/plain" }],
+      mentions: { parse: [] },
     };
 
     await this.messageService.send(await config("supportBot.ticketLogsChannel"), message);
@@ -268,8 +266,8 @@ export class TicketService {
     const error = new ErrorMessage("errors.ticketAlreadyExists");
 
     await this.messageService.send(ticket.channel, {
-      content: `<@${userId}>`,
       ...error,
+      components: [new TextDisplayBuilder(`<@${userId}>`), ...(error.components ?? [])],
     });
 
     return true;

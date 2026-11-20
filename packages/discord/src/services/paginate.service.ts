@@ -16,9 +16,11 @@ import {
   type IMessage,
   type LocalizationString,
   type LocalizeFunction,
+  MediaGalleryBuilder,
   Message,
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
+  isComponentsV2,
 } from "#messages";
 import { Interaction } from "#interaction";
 import type {
@@ -117,11 +119,7 @@ export async function paginate(
     // Send an ephemeral preview if the user is not the one who initiated the interaction
     if (interaction.getUserId() !== userId) {
       const message = await getMessage(index, subIndex);
-      return interaction.sendFollowup({
-        ...message,
-        components: [],
-        ephemeral: true,
-      });
+      return interaction.sendFollowup({ ...message, ephemeral: true });
     }
 
     if (index !== currentIndex) {
@@ -148,31 +146,27 @@ export async function paginate(
     }
 
     const message = await getMessage(index, subIndex);
-
-    message.components = [
-      mainController.getActionRow(),
-      subController?.getActionRow(),
-    ].filter((row) => row !== undefined);
-
-    return context.reply(message);
+    return context.reply(withControls(message, getActionRows()));
   }
 
-  function onTimeout() {
+  function getActionRows() {
+    return [mainController.getActionRow(), subController?.getActionRow()].filter(
+      (row) => row !== undefined
+    );
+  }
+
+  async function onTimeout() {
     mainController.unregister(listener);
     subController?.unregister(listener);
+    const message = await getMessage(currentIndex, currentSubIndex);
     cache.clear();
-    return context.reply({ components: [] });
+    return context.reply(withoutControls(message));
   }
 
   setTimeout(onTimeout, timeout);
 
   const message = await getMessage(currentIndex, currentSubIndex);
-  message.components = [
-    mainController.getActionRow(),
-    subController?.getActionRow(),
-  ].filter((row) => row !== undefined);
-
-  return message;
+  return withControls(message, getActionRows());
 }
 
 /**
@@ -239,32 +233,35 @@ export async function scrollingPagination(
 
       if (interaction.getUserId() === userId) {
         currentIndex = page;
-        message.components = [new ActionRowBuilder(controller)];
-        return context.reply(message);
+        return context.reply(withControls(message, [new ActionRowBuilder(controller)]));
       }
 
-      return interaction.sendFollowup({
-        ...message,
-        components: [],
-        ephemeral: true,
-      });
+      return interaction.sendFollowup({ ...message, ephemeral: true });
     });
   }
 
-  function onTimeout() {
+  async function onTimeout() {
     for (const component of controller) {
       listener.removeHook(component.getCustomId());
     }
-    context.reply({ components: [] });
+    const message = await getMessage(currentIndex);
     cache.clear();
+    return context.reply(withoutControls(message));
   }
 
   setTimeout(onTimeout, timeout);
 
   const message = await getMessage(currentIndex);
-  message.components = [new ActionRowBuilder(controller)];
+  return withControls(message, [new ActionRowBuilder(controller)]);
+}
 
-  return message;
+function withControls(message: Message, rows: ActionRowBuilder[]) {
+  return new Message({ ...message, components: [...(message.components ?? []), ...rows] });
+}
+
+// A v2 message is all components, so clearing them would also remove the page itself
+function withoutControls(message: Message): IMessage {
+  return isComponentsV2(message) ? message : { components: [] };
 }
 
 async function contentToMessage(
@@ -275,6 +272,7 @@ async function contentToMessage(
     return new Message({ embeds: [content] });
   if (content instanceof Canvas)
     return new Message({
+      components: [new MediaGalleryBuilder(["attachment://image.png"])],
       files: [
         {
           name: "image.png",

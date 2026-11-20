@@ -10,9 +10,10 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   Command,
-  EmbedBuilder,
+  ContainerBuilder,
   IMessage,
   MessageService,
+  TextDisplayBuilder,
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
@@ -29,23 +30,22 @@ export class TicketMenuCommand {
       "Abuse of the ticket system will lead to **punishment(s)**",
     ];
 
-    const embed = new EmbedBuilder()
-      .title("Create Ticket")
-      .color(STATUS_COLORS.info)
-      .description(
-        `Click the create ticket button below to open a support channel.\n\n__**Ticket Information**__\n${rules
-          .map((r) => `\`•\` ${r}`)
-          .join("\n")}`
-      );
-
     const button = new ButtonBuilder()
       .label("Create Ticket")
       .style(ButtonStyle.Primary)
       .customId("create-ticket");
 
+    const container = new ContainerBuilder([
+      new TextDisplayBuilder(
+        `## Create Ticket\nClick the create ticket button below to open a support channel.\n\n__**Ticket Information**__\n${rules
+          .map((r) => `\`•\` ${r}`)
+          .join("\n")}`
+      ),
+      new ActionRowBuilder([button]),
+    ]).accentColor(STATUS_COLORS.info);
+
     await this.messageService.send(await config("supportBot.createTicketChannel"), {
-      embeds: [embed],
-      components: [new ActionRowBuilder().component(button)],
+      components: [container],
     });
 
     return {
