@@ -12,12 +12,14 @@ import {
   ApiService,
   ButtonBuilder,
   Command,
+  ContainerBuilder,
   EmbedBuilder,
   ErrorMessage,
   IMessage,
   LocalizeFunction,
   MemberService,
   ModalBuilder,
+  SectionBuilder,
   TextInputBuilder,
 } from "@statsify/discord";
 import {
@@ -53,6 +55,12 @@ const VERIFY_BUTTON = new ButtonBuilder()
   .style(ButtonStyle.Primary)
   .emoji((t) => t("emojis:text-select"));
 
+const TUTORIAL_BUTTON = new ButtonBuilder()
+  .label((t) => t("verification.invalidCode.button"))
+  .style(ButtonStyle.Link)
+  .url(VERIFY_VIDEO)
+  .emoji((t) => t("emojis:socials.button.youtube"));
+
 @Command({ description: (t) => t("commands.verify"), cooldown: 5 })
 export class VerifyCommand {
   public constructor(
@@ -61,12 +69,15 @@ export class VerifyCommand {
   ) {}
 
   public async run(): Promise<IMessage> {
-    const row = new ActionRowBuilder([VERIFY_BUTTON]);
+    const container = new ContainerBuilder([
+      new SectionBuilder(
+        [(t) => `## ${t("verification.instructions.title")}`, (t) => this.verificationSteps(t)],
+        TUTORIAL_BUTTON
+      ),
+      new ActionRowBuilder([VERIFY_BUTTON]),
+    ]).accentColor(STATUS_COLORS.info);
 
-    return {
-      content: (t) => `# [${t("verification.instructions.title")}](${VERIFY_VIDEO}) ${t("emojis:socials.h1.youtube")}\n${this.verificationSteps(t, false)}`,
-      components: [row],
-    };
+    return { components: [container] };
   }
 
   public registerComponentListeners(listener: AbstractCommandListener) {
@@ -121,29 +132,19 @@ export class VerifyCommand {
     });
   }
 
-  private verificationSteps(t: LocalizeFunction, inEmbed: boolean): string {
-    const minecraft = inEmbed ? t("emojis:socials.embed.minecraft") : t("emojis:socials.minecraft");
-    const check = inEmbed ? t("emojis:socials.embed.check") : t("emojis:socials.check");
-    const discord = inEmbed ? t("emojis:socials.embed.discord") : t("emojis:socials.discord");
-
+  private verificationSteps(t: LocalizeFunction): string {
     return [
-      `${minecraft} ${t("verification.instructions.steps.one")}`,
-      `${check} ${t("verification.instructions.steps.two")}`,
-      `${discord} ${t("verification.instructions.steps.three")}`,
+      `${t("emojis:socials.minecraft")} ${t("verification.instructions.steps.one")}`,
+      `${t("emojis:socials.check")} ${t("verification.instructions.steps.two")}`,
+      `${t("emojis:socials.discord")} ${t("verification.instructions.steps.three")}`,
     ].join("\n");
   }
 
   private invalidCodeError() {
-    const button = new ButtonBuilder()
-      .label((t) => t("verification.invalidCode.button"))
-      .style(ButtonStyle.Link)
-      .url(VERIFY_VIDEO)
-      .emoji((t) => t("emojis:socials.button.youtube"));
-
     return new ErrorMessage(
       (t) => t("verification.invalidCode.title"),
-      (t) => `${t("verification.invalidCode.description")}\n\n${this.verificationSteps(t, true)}`,
-      { buttons: [button] }
+      (t) => `${t("verification.invalidCode.description")}\n\n${this.verificationSteps(t)}`,
+      { buttons: [TUTORIAL_BUTTON] }
     );
   }
 }

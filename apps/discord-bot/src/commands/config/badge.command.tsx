@@ -23,6 +23,7 @@ import { User, UserTier } from "@statsify/schemas";
 import { createCanvas, loadImage, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
+import { previewMessage } from "#lib/preview-message";
 
 @Command({ description: (t) => t("commands.badge") })
 export class BadgeCommand {
@@ -75,10 +76,7 @@ export class BadgeCommand {
 
         const profile = await this.getProfile(t, user, badge);
 
-        return {
-          content: t("config.badge.view") as string,
-          files: [{ name: "badge.png", data: profile, type: "image/png" }],
-        };
+        return previewMessage(t("config.badge.view"), "badge.png", profile);
       }
 
       case "set": {
@@ -121,10 +119,7 @@ export class BadgeCommand {
         await this.apiService.updateUserBadge(userId, await canvas.toBuffer("png"));
         const profile = await this.getProfile(t, user, canvas);
 
-        return {
-          content: t("config.badge.set") as string,
-          files: [{ name: "badge.png", data: profile, type: "image/png" }],
-        };
+        return previewMessage(t("config.badge.set"), "badge.png", profile);
       }
 
       case "reset": {
@@ -133,10 +128,7 @@ export class BadgeCommand {
 
         const profile = await this.getProfile(t, user, badge);
 
-        return {
-          content: t("config.badge.reset") as string,
-          files: [{ name: "badge.png", data: profile, type: "image/png" }],
-        };
+        return previewMessage(t("config.badge.reset"), "badge.png", profile);
       }
     }
   }

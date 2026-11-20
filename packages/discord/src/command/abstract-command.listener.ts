@@ -9,12 +9,20 @@
 import * as Sentry from "@sentry/node";
 import {
   ApplicationCommandOptionType,
+  ButtonStyle,
   GatewayDispatchEvents,
   InteractionResponseType,
 } from "discord-api-types/v10";
 import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
-import { type IMessage, Message } from "#messages";
+import {
+  ButtonBuilder,
+  type IMessage,
+  Message,
+  TextDisplayBuilder,
+  isComponentsV2,
+  translateField,
+} from "#messages";
 import {
   Interaction,
   type InteractionAttachment,
@@ -142,10 +150,16 @@ export abstract class AbstractCommandListener {
       if (typeof response !== "object") return;
       transaction?.finish();
 
-      context.reply({
-        ...message,
-        ...response,
-      });
+      const tip = message?.content;
+
+      context.reply(
+        tip !== undefined && isComponentsV2(response) ?
+          {
+            ...response,
+            components: [...response.components, new TextDisplayBuilder((t) => `-# ${translateField(t, tip)}`)],
+          } :
+          { ...message, ...response }
+      );
     } catch (err) {
       if (err instanceof Message) {
         transaction?.finish();
@@ -204,24 +218,30 @@ export abstract class AbstractCommandListener {
 
       const hasPreview = Boolean(command.preview);
 
-      const tierError = new ErrorMessage(
-        (t) => t(`errors.${tierName}Only.title`),
-        (t) => t(`errors.${tierName}Only.${hasPreview ? "preview" : "description"}`),
-        { color, thumbnail }
-      );
-
-      if (hasPreview) {
-        const preview = {
+      const image = hasPreview ?
+        {
           name: "preview.png",
           data: readFileSync(getAssetPath(`previews/${command.preview}`)),
           type: "image/png",
-        };
+        } :
+        undefined;
 
-        tierError.files?.push(preview);
-        tierError.embeds?.[0]?.image(`attachment://${preview.name}`);
-      }
+      const buttons =
+        command.tier < UserTier.STAFF ?
+          [
+            new ButtonBuilder()
+              .label((t) => t("errors.premiumRequired.button"))
+              .emoji((t) => t(`emojis:logos.${tierName}`))
+              .style(ButtonStyle.Link)
+              .url("https://statsify.net/premium"),
+          ] :
+          [];
 
-      throw tierError;
+      throw new ErrorMessage(
+        (t) => t(`errors.${tierName}Only.title`),
+        (t) => t(`errors.${tierName}Only.${hasPreview ? "preview" : "description"}`),
+        { color, thumbnail, image, buttons }
+      );
     }
   }
 
