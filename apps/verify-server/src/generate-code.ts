@@ -8,9 +8,9 @@
 
 import type { Model } from "mongoose";
 import type { VerifyCode } from "@statsify/schemas";
+import { randomInt } from "node:crypto";
 
-const createCode = () =>
-  Math.floor(Math.random() * (9999 - 1000 + 1) + 1000).toString();
+const createCode = () => randomInt(1000, 10_000).toString();
 
 export const generateCode = async (
   verifyCodesModel: Model<VerifyCode>,
