@@ -15,7 +15,7 @@ import {
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
-import { Guild } from "@statsify/schemas";
+import { GuildSchema } from "@statsify/schemas";
 import { GuildLeaderboardDto, GuildRankingDto } from "#dtos";
 import { GuildLeaderboardService } from "./guild-leaderboard.service.js";
 
@@ -46,7 +46,7 @@ export class GuildLeaderboardController {
     }
 
     const leaderboard = await this.guildLeaderboardService.getLeaderboard(
-      Guild,
+      GuildSchema,
       field,
       input,
       type
@@ -61,6 +61,6 @@ export class GuildLeaderboardController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
   public async getGuildRanking(@Body() { fields, id }: GuildRankingDto) {
-    return this.guildLeaderboardService.getLeaderboardRankings(Guild, fields, id);
+    return this.guildLeaderboardService.getLeaderboardRankings(GuildSchema, fields, id);
   }
 }

@@ -7,11 +7,16 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { Constructor, Flatten } from "@statsify/util";
+import type { Flatten } from "@statsify/util";
 import { DateTime } from "luxon";
 import { InjectRedis } from "#redis";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { type LeaderboardEnabledMetadata, getLeaderboardField, getLeaderboardFields } from "@statsify/schemas";
+import {
+  type EnabledLeaderboard,
+  type ModelSchema,
+  getField,
+  getLeaderboardFields,
+} from "@statsify/schemas";
 import { LeaderboardQuery } from "@statsify/api-client";
 import { Redis } from "ioredis";
 
@@ -27,32 +32,47 @@ const DAYS_IN_WEEK = {
 
 export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
+// The API formats leaderboard values in English until the bot localizes them
+const LOCALE = "en-US";
+
+const getLeaderboardField = (schema: ModelSchema, path: string) => {
+  const field = getField(schema, path);
+  if (!field) throw new Error(`${path} is not a field for ${schema.name}`);
+  return field;
+};
+
+const getEnabledLeaderboard = (schema: ModelSchema, path: string) => {
+  const { leaderboard } = getLeaderboardField(schema, path);
+  if (!leaderboard.enabled) throw new Error(`${path} is not a leaderboard field for ${schema.name}`);
+  return leaderboard;
+};
+
 @Injectable()
 export abstract class LeaderboardService {
   public constructor(@InjectRedis() protected readonly redis: Redis) {}
 
   public async addLeaderboards<T>(
-    constructor: Constructor<T>,
+    schema: ModelSchema,
     instance: Flatten<T>,
     idField: keyof T,
     remove = false
   ) {
-    const fields = getLeaderboardFields(constructor);
+    const fields = getLeaderboardFields(schema);
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     const child = transaction?.startChild({
       op: "redis",
-      description: `add ${constructor.name} leaderboards`,
+      description: `add ${schema.name} leaderboards`,
     });
 
     const pipeline = this.redis.pipeline();
-    const name = constructor.name.toLowerCase();
+    const name = schema.name.toLowerCase();
 
     const id = instance[idField] as unknown as string;
 
-    for (const [field, metadata] of fields) {
-      const value = instance[field] as unknown as number;
-      const key = `${name}.${String(field)}`;
+    for (const { path, leaderboard } of fields) {
+      const value = (instance as Record<string, unknown>)[path];
+      const key = `${name}.${path}`;
 
       if (remove || value === 0 || Number.isNaN(value) || typeof value !== "number") {
         pipeline.zrem(key, id);
@@ -61,8 +81,8 @@ export abstract class LeaderboardService {
 
       pipeline.zadd(key, value, id);
 
-      if (metadata.leaderboard.enabled && metadata.leaderboard.resetEvery) {
-        const time = this.getLeaderboardExpiryTime(metadata.leaderboard);
+      if (leaderboard.resetEvery) {
+        const time = this.getLeaderboardExpiryTime(leaderboard);
         pipeline.expireat(key, time);
       }
     }
@@ -72,26 +92,16 @@ export abstract class LeaderboardService {
     child?.finish();
   }
 
-  public async getLeaderboard<T>(
-    constructor: Constructor<T>,
+  public async getLeaderboard(
+    schema: ModelSchema,
     field: string,
     input: number | string,
     type: LeaderboardQuery
   ) {
     const PAGE_SIZE = 10;
 
-    const {
-      fieldName,
-      additionalFields = [],
-      extraDisplay,
-      formatter,
-      sort,
-      name,
-      hidden,
-    } = getLeaderboardField(
-      constructor,
-      field
-    ) as LeaderboardEnabledMetadata;
+    const { fieldName, additionalFields, extraDisplay, format, sort, name, hidden } =
+      getEnabledLeaderboard(schema, field);
 
     let top: number;
     let bottom: number;
@@ -120,20 +130,16 @@ export abstract class LeaderboardService {
     }
 
     const leaderboard = await this.getLeaderboardFromRedis(
-      constructor,
+      schema,
       field,
       top,
       bottom - 1,
       sort
     );
 
-    const additionalFieldMetadata = additionalFields.map((k) =>
-      getLeaderboardField(constructor, k, false)
-    );
+    const additionalFieldMetadata = additionalFields.map((k) => getLeaderboardField(schema, k));
 
-    const extraDisplayMetadata = extraDisplay ?
-      getLeaderboardField(constructor, extraDisplay, false) :
-      undefined;
+    const extraDisplayMetadata = extraDisplay ? getLeaderboardField(schema, extraDisplay) : undefined;
 
     const additionalStats = await this.getAdditionalStats(
       leaderboard.map(({ id }) => id),
@@ -147,18 +153,18 @@ export abstract class LeaderboardService {
       const stats = additionalStats[index];
 
       if (extraDisplay) {
-        const extraDisplayValue = stats[extraDisplay] ?? extraDisplayMetadata?.default;
+        const extraDisplayValue = stats[extraDisplay] ?? extraDisplayMetadata?.store.default;
         // Only add the extra display if it exists
         stats.name = extraDisplayValue ? `${extraDisplayValue}§r ${stats.name}` : stats.name;
       }
 
-      const field = formatter ? formatter(doc.score) : doc.score;
+      const field = format ? format.format(doc.score, LOCALE) : doc.score;
 
       const additionalValues = additionalFields.map((key, index) => {
-        const value = stats[key] ?? additionalFieldMetadata[index].default;
+        const { leaderboard, store } = additionalFieldMetadata[index];
+        const value = stats[key] ?? store.default;
 
-        if (additionalFieldMetadata[index].formatter)
-          return additionalFieldMetadata[index].formatter?.(value);
+        if (leaderboard.format) return leaderboard.format.format(value, LOCALE);
 
         return value;
       });
@@ -179,7 +185,7 @@ export abstract class LeaderboardService {
 
     const fields = [];
     if (!hidden) fields.push(fieldName);
-    fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
+    fields.push(...additionalFieldMetadata.map(({ leaderboard }) => leaderboard.fieldName));
 
     return {
       name,
@@ -189,8 +195,8 @@ export abstract class LeaderboardService {
     };
   }
 
-  public async getLeaderboardRankings<T>(
-    constructor: Constructor<T>,
+  public async getLeaderboardRankings(
+    schema: ModelSchema,
     fields: string[],
     id: string
   ) {
@@ -198,19 +204,19 @@ export abstract class LeaderboardService {
 
     const child = transaction?.startChild({
       op: "redis",
-      description: `get ${constructor.name} rankings`,
+      description: `get ${schema.name} rankings`,
     });
 
     const pipeline = this.redis.pipeline();
-    const constructorName = constructor.name.toLowerCase();
+    const schemaName = schema.name.toLowerCase();
 
-    const leaderboardFields: LeaderboardEnabledMetadata[] = [];
+    const leaderboardFields: EnabledLeaderboard[] = [];
 
     for (const field of fields) {
-      const metadata = getLeaderboardField(constructor, field);
+      const metadata = getEnabledLeaderboard(schema, field);
       leaderboardFields.push(metadata);
 
-      const key = `${constructorName}.${field}`;
+      const key = `${schemaName}.${field}`;
 
       pipeline.zscore(key, id);
 
@@ -242,8 +248,8 @@ export abstract class LeaderboardService {
 
       const numberValue = Number(value);
 
-      const formattedValue = metadata.formatter ?
-        metadata.formatter(numberValue) :
+      const formattedValue = metadata.format ?
+        metadata.format.format(numberValue, LOCALE) :
         numberValue;
 
       rankings.push({
@@ -267,8 +273,8 @@ export abstract class LeaderboardService {
     fields: string[]
   ): Promise<LeaderboardAdditionalStats[]>;
 
-  private async getLeaderboardFromRedis<T>(
-    constructor: Constructor<T>,
+  private async getLeaderboardFromRedis(
+    schema: ModelSchema,
     field: string,
     top: number,
     bottom: number,
@@ -278,10 +284,10 @@ export abstract class LeaderboardService {
 
     const child = transaction?.startChild({
       op: "redis",
-      description: `get ${constructor.name} leaderboards`,
+      description: `get ${schema.name} leaderboards`,
     });
 
-    const name = constructor.name.toLowerCase();
+    const name = schema.name.toLowerCase();
     field = `${name}.${field}`;
 
     const scores = await (sort === "ASC" ?
@@ -302,7 +308,7 @@ export abstract class LeaderboardService {
     return response;
   }
 
-  private getLeaderboardExpiryTime(leaderboard: LeaderboardEnabledMetadata): number {
+  private getLeaderboardExpiryTime(leaderboard: EnabledLeaderboard): number {
     if (!leaderboard.resetEvery)
       throw new Error("To get a leaderboard expiry time, `resetEvery` must be specified");
 

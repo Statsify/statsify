@@ -18,7 +18,7 @@ import { ErrorMessage } from "#util/error.message";
 import { type IMessage, Message } from "#messages";
 import { Interaction, type InteractionAttachment } from "#interaction";
 import { Logger } from "@statsify/logger";
-import { User, UserTier } from "@statsify/schemas";
+import { type User, UserTier, getTierLogo, getTierName } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
 import type { CommandResolvable } from "./command.resolvable.js";
@@ -162,12 +162,12 @@ export abstract class AbstractCommandListener {
     if (!user) throw new ErrorMessage("errors.missingSelfVerification");
 
     if ((user.tier ?? UserTier.NONE) < command.tier) {
-      const tierName = User.getTierName(command.tier).toLowerCase();
+      const tierName = getTierName(command.tier).toLowerCase();
       let color = 0xb5b5b5;
 
       const thumbnail: InteractionAttachment = {
         name: "logo.png",
-        data: readFileSync(getLogoPath(User.tierToLogo(command.tier), 52)),
+        data: readFileSync(getLogoPath(getTierLogo(command.tier), 52)),
         type: "image/png",
       };
 

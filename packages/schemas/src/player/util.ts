@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Color, type ColorCode, type ColorId } from "#color";
+import type { ColorCode, ColorId } from "../color.js";
+import { type Color, getColor } from "../color.definition.js";
 import type { APIData } from "@statsify/util";
 
 export const RANK_MAP: Record<string, (color: string) => string> = {
@@ -59,27 +60,27 @@ export function getPlayerRank(data: APIData) {
 }
 
 const RANK_COLOR_MAP: Record<string, Color> = {
-  "MVP+": new Color("RED"),
-  "MVP++": new Color("RED"),
-  "bMVP++": new Color("RED"),
-  MVP: new Color("AQUA"),
-  VIP: new Color("GREEN"),
-  "VIP+": new Color("GOLD"),
-  "PIG+++": new Color("AQUA"),
+  "MVP+": getColor("RED"),
+  "MVP++": getColor("RED"),
+  "bMVP++": getColor("RED"),
+  MVP: getColor("AQUA"),
+  VIP: getColor("GREEN"),
+  "VIP+": getColor("GOLD"),
+  "PIG+++": getColor("AQUA"),
 };
 
 export function getPlusColor(rank: string, plusColor?: ColorId): Color {
   if (plusColor === undefined || rank === "PIG+++" || rank === "VIP") {
     const rankColor: Color = RANK_COLOR_MAP[rank];
 
-    if (!rankColor) return new Color("GRAY");
+    if (!rankColor) return getColor("GRAY");
 
     return rankColor;
   }
 
-  const rankColor = new Color(plusColor);
+  const rankColor = getColor(plusColor);
 
-  if (!rankColor) return new Color("GRAY");
+  if (!rankColor) return getColor("GRAY");
 
   return rankColor;
 }
@@ -93,39 +94,39 @@ export function getRankColor(rank: string): Color {
     case "SLOTH":
     case "MCP":
     case "MINISTER":
-      return new Color("RED");
+      return getColor("RED");
 
     case "PIG+++":
     case "INNIT":
-      return new Color("LIGHT_PURPLE");
+      return getColor("LIGHT_PURPLE");
 
     case "MOD":
     case "GM":
-      return new Color("DARK_GREEN");
+      return getColor("DARK_GREEN");
 
     case "HELPER":
-      return new Color("BLUE");
+      return getColor("BLUE");
 
     case "BUILD TEAM":
-      return new Color("DARK_AQUA");
+      return getColor("DARK_AQUA");
 
     case "MVP++":
     case "APPLE":
     case "MOJANG":
     case "EVENTS":
-      return new Color("GOLD");
+      return getColor("GOLD");
 
     case "MVP":
     case "MVP+":
     case "bMVP++":
-      return new Color("AQUA");
+      return getColor("AQUA");
 
     case "VIP":
     case "VIP+":
-      return new Color("GREEN");
+      return getColor("GREEN");
 
     default:
-      return new Color("GRAY");
+      return getColor("GRAY");
   }
 }
 

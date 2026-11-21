@@ -6,21 +6,27 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { InjectModel, type MongoModel } from "#mongo";
 import {
   CacheLevel,
   GuildNotFoundException,
   GuildQuery,
   PlayerNotFoundException,
 } from "@statsify/api-client";
-import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
+import {
+  Guild,
+  GuildMember,
+  deserialize,
+  serialize,
+  GuildSchema,
+  PlayerSchema,
+} from "@statsify/schemas";
 import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
 import { HypixelService } from "#hypixel";
-import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { PlayerService } from "#player";
 import { flatten } from "@statsify/util";
-import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class GuildService {
@@ -30,8 +36,8 @@ export class GuildService {
     private readonly hypixelService: HypixelService,
     private readonly playerService: PlayerService,
     private readonly guildLeaderboardService: GuildLeaderboardService,
-    @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>,
-    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>
+    @InjectModel(GuildSchema) private readonly guildModel: MongoModel<typeof GuildSchema>,
+    @InjectModel(PlayerSchema) private readonly playerModel: MongoModel<typeof PlayerSchema>
   ) {}
 
   public async get(
@@ -43,7 +49,7 @@ export class GuildService {
 
     if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
       return {
-        ...deserialize(Guild, flatten(cachedGuild)),
+        ...deserialize(GuildSchema, flatten(cachedGuild)),
         cached: true,
       };
     }
@@ -138,16 +144,16 @@ export class GuildService {
     guild.expiresAt = Date.now() + 600_000;
 
     const flatGuild = flatten(guild);
-    const serializedGuild = serialize(Guild, flatGuild);
+    const serializedGuild = serialize(GuildSchema, flatGuild);
 
     await this.guildModel
       .replaceOne({ id: guild.id }, serializedGuild, { upsert: true })
       .lean()
       .exec();
 
-    await this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, "id");
+    await this.guildLeaderboardService.addLeaderboards(GuildSchema, serializedGuild, "id");
 
-    return deserialize(Guild, flatGuild);
+    return deserialize(GuildSchema, flatGuild);
   }
 
   private async getCachedGuild(
@@ -228,7 +234,7 @@ export class GuildService {
     if (player) {
       member.username = player.username;
       member.displayName = player.displayName;
-      member.guildId = player.guildId;
+      if (player.guildId) member.guildId = player.guildId;
 
       // Cache names for a day
       member.expiresAt = Date.now() + 86_400_000;

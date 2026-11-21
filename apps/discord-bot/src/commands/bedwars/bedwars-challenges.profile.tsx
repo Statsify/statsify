@@ -7,21 +7,13 @@
  */
 
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
-import {
-  BedWarsModeChallenges,
-  type FieldMetadata,
-  FormattedGame,
-  getLeaderboardFields,
-} from "@statsify/schemas";
-import { arrayGroup, prettify } from "@statsify/util";
+import { type BedWars, BedWarsSchema, FormattedGame, getLeaderboardFields } from "@statsify/schemas";
+import { arrayGroup } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
-const challengeFields = getLeaderboardFields(BedWarsModeChallenges).filter(
-  ([field]) => field !== "totalChallenges" && field !== "uniqueChallenges",
-) as [
-  Exclude<keyof BedWarsModeChallenges, "totalChallenges" | "uniqueChallenges">,
-  FieldMetadata,
-][];
+const challengeFields = getLeaderboardFields(BedWarsSchema.definition.challenges).filter(
+  ({ path }) => path !== "totalChallenges" && path !== "uniqueChallenges",
+);
 
 const rows = arrayGroup(challengeFields, 3);
 
@@ -55,8 +47,8 @@ export const BedWarsChallengesProfile = ({
       <Table.table>
         {rows.map((row) => (
           <Table.tr>
-            {row.map(([field, metadata]) => {
-              const completions = challenges[field];
+            {row.map(({ path, leaderboard }) => {
+              const completions = challenges[path as keyof BedWars["challenges"]];
 
               return (
                 <box
@@ -65,7 +57,7 @@ export const BedWarsChallengesProfile = ({
                 >
                   <text>
                     §l{completions > 0 ? "§a" : "§c"}
-                    {metadata.leaderboard.fieldName ?? prettify(field)}
+                    {leaderboard.fieldName}
                   </text>
                   <div width="remaining" margin={{ left: 4, right: 4 }} />
                   <text>

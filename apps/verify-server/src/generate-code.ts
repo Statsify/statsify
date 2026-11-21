@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { ReturnModelType } from "@typegoose/typegoose";
+import type { Model } from "mongoose";
 import type { VerifyCode } from "@statsify/schemas";
 import { randomInt } from "node:crypto";
 
 const createCode = () => randomInt(1000, 10_000).toString();
 
 export const generateCode = async (
-  verifyCodesModel: ReturnModelType<typeof VerifyCode>,
+  verifyCodesModel: Model<VerifyCode>,
 ) => {
   let code = createCode();
 

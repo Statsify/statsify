@@ -8,14 +8,19 @@
 
 import * as Sentry from "@sentry/node";
 import { Logger } from "@statsify/logger";
-import { UserLogo, VerifyCode } from "@statsify/schemas";
+import {
+  UserLogo,
+  type VerifyCode,
+  VerifyCodeSchema,
+  verifyCode as createVerifyCode,
+} from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
-import { connect } from "mongoose";
+import { connect, model } from "mongoose";
 import { createServer } from "minecraft-protocol";
 import { generateCode } from "./generate-code.js";
 import { getLogoPath } from "@statsify/assets";
-import { getModelForClass } from "@typegoose/typegoose";
 import { readFileSync } from "node:fs";
+import { toMongoose } from "@statsify/schemas/mongoose";
 
 const logger = new Logger("verify-server");
 
@@ -49,7 +54,10 @@ if (sentryDsn) {
 
 await connect(await config("database.mongoUri"));
 
-const verifyCodesModel = getModelForClass(VerifyCode);
+const verifyCodesModel = model<VerifyCode>(
+  VerifyCodeSchema.name,
+  toMongoose(VerifyCodeSchema, { id: true })
+);
 
 const serverLogo = readFileSync(getLogoPath(UserLogo.DEFAULT, 64), {
   encoding: "base64",
@@ -88,7 +96,7 @@ server.on("login", async (client) => {
       );
 
     const code = await generateCode(verifyCodesModel);
-    const verifyCode = await verifyCodesModel.create(new VerifyCode(uuid, code));
+    const verifyCode = await verifyCodesModel.create(createVerifyCode(uuid, code));
 
     client.end(codeCreatedMessage(verifyCode.code, verifyCode.expireAt));
     logger.verbose(`${client.username} has been assigned to the code ${verifyCode.code}`);

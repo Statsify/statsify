@@ -12,11 +12,11 @@ import { CommandsModule } from "#commands";
 import { GuildModule } from "#guild";
 import { HypixelResourcesModule } from "#hypixel-resources";
 import { Module } from "@nestjs/common";
+import { MongoModule } from "#mongo";
 import { PlayerModule } from "#player";
 import { RedisModule } from "#redis";
 import { SessionModule } from "#session";
 import { SkinModule } from "#skin";
-import { TypegooseModule } from "@m8a/nestjs-typegoose";
 import { UserModule } from "#user";
 import { config } from "@statsify/util";
 
@@ -25,13 +25,7 @@ const redisUrl = await config("database.redisUrl");
 
 @Module({
   imports: [
-    TypegooseModule.forRootAsync({
-      useFactory: () => ({
-        uri: mongoUri,
-        maxPoolSize: 200,
-        minPoolSize: 20,
-      }),
-    }),
+    MongoModule.forRoot(mongoUri, { maxPoolSize: 200, minPoolSize: 20 }),
     RedisModule.forRoot({
       config: {
         url: redisUrl,

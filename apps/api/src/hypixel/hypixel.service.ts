@@ -9,12 +9,20 @@
 import * as Sentry from "@sentry/node";
 import { CacheLevel } from "@statsify/api-client";
 import {
-  GameCounts,
-  Guild,
-  Player,
-  RecentGame,
-  Status,
-  Watchdog,
+  GameCountsSchema,
+  GuildSchema,
+  PlayerSchema,
+  type RecentGame,
+  RecentGameSchema,
+  StatusSchema,
+  WatchdogSchema,
+  compute,
+  gameCounts,
+  guild,
+  player,
+  recentGame,
+  status,
+  watchdog,
 } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
@@ -40,7 +48,7 @@ export class HypixelService {
     return lastValueFrom(
       this.request<APIData>("/player", { [tag.length > 16 ? "uuid" : "name"]: tag }).pipe(
         map((data) => {
-          if (data.player) return new Player(data.player);
+          if (data.player) return compute(PlayerSchema, player(data.player));
           return null;
         }),
         catchError((err) => {
@@ -55,7 +63,7 @@ export class HypixelService {
     return lastValueFrom(
       this.request<APIData>("/guild", { [type]: tag }).pipe(
         map((data) => {
-          if (data.guild) return new Guild(data.guild);
+          if (data.guild) return compute(GuildSchema, guild(data.guild));
           return null;
         }),
         catchError((err) => {
@@ -70,7 +78,8 @@ export class HypixelService {
     return lastValueFrom(
       this.request<APIData>("/recentgames", { uuid }).pipe(
         map((data) => {
-          if (data.games) return data.games.map((game: APIData) => new RecentGame(game));
+          if (data.games)
+            return data.games.map((game: APIData) => compute(RecentGameSchema, recentGame(game)));
           return [];
         }),
         catchError((err) => {
@@ -85,7 +94,7 @@ export class HypixelService {
     return lastValueFrom(
       this.request<APIData>("/status", { uuid }).pipe(
         map((data) => {
-          if (data.session) return new Status(data.session);
+          if (data.session) return compute(StatusSchema, status(data.session));
           return null;
         }),
         catchError((err) => {
@@ -99,7 +108,7 @@ export class HypixelService {
   public getWatchdog() {
     return lastValueFrom(
       this.request<APIData>("/watchdogstats").pipe(
-        map((data) => new Watchdog(data)),
+        map((data) => compute(WatchdogSchema, watchdog(data))),
         catchError((err) => {
           this.logger.error(err);
           return of(null);
@@ -112,7 +121,7 @@ export class HypixelService {
     return lastValueFrom(
       this.request<APIData>("/gamecounts").pipe(
         map((data) => {
-          if (data.games) return new GameCounts(data.games);
+          if (data.games) return compute(GameCountsSchema, gameCounts(data.games));
           return null;
         }),
         catchError((err) => {

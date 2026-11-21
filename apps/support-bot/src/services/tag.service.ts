@@ -19,9 +19,9 @@ import {
 import { CommandListener } from "#lib";
 import { Inject, Service } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
-import { Tag } from "@statsify/schemas";
+import { type Tag, TagSchema } from "@statsify/schemas";
 import { config } from "@statsify/util";
-import type { ReturnModelType } from "@typegoose/typegoose";
+import type { Model } from "mongoose";
 
 const TAG_NAME_REGEX = /^[\w-]{1,32}$/;
 
@@ -29,7 +29,7 @@ const TAG_NAME_REGEX = /^[\w-]{1,32}$/;
 export class TagService {
   public constructor(
     private readonly commandPoster: CommandPoster,
-    @Inject(() => Tag) private readonly tagModel: ReturnModelType<typeof Tag>
+    @Inject(TagSchema.name) private readonly tagModel: Model<Tag>
   ) {}
 
   public async fetch() {

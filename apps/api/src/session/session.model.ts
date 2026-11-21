@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { modelOptions as ModelOptions } from "@typegoose/typegoose";
-import { Player } from "@statsify/schemas";
+import { PlayerSchema } from "@statsify/schemas";
 
-@ModelOptions({ schemaOptions: { collection: "session" } })
-export class Session extends Player {}
+/** The player as it was when the session started, saved apart from the live one */
+export const Session = { name: "Session", schema: PlayerSchema, collection: "session" };

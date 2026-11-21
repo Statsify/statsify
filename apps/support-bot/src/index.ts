@@ -26,7 +26,6 @@ import { Logger } from "@statsify/logger";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { config } from "@statsify/util";
 import { join } from "node:path";
-import { setGlobalOptions } from "@typegoose/typegoose";
 import "reflect-metadata";
 
 const directory = import.meta.dirname;
@@ -36,8 +35,6 @@ const handleError = logger.error.bind(logger);
 
 process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
-
-setGlobalOptions({ schemaOptions: { _id: false } });
 
 const sentryDsn = await config("sentry.supportBotDsn", { required: false });
 

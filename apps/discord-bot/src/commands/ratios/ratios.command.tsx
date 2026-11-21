@@ -11,7 +11,7 @@ import {
   ARENA_BRAWL_MODES,
   BEDWARS_MODES,
   BLITZSG_MODES,
-  BlitzSGKit,
+  type BlitzSGKit,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   type GameModeWithSubModes,
@@ -20,11 +20,13 @@ import {
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
+  type ObjectSchema,
   PIT_MODES,
-  Player,
-  PlayerStats,
+  type Player,
+  type PlayerStats,
+  PlayerStatsSchema,
   QUAKE_MODES,
-  Ratio,
+  type Ratio,
   SKYWARS_MODES,
   SMASH_HEROES_MODES,
   SPEED_UHC_MODES,
@@ -43,7 +45,7 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { Constructor, prettify } from "@statsify/util";
+import { prettify } from "@statsify/util";
 import {
   GamesWithBackgrounds,
   MODES_TO_API,
@@ -57,6 +59,10 @@ import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
 const args = [PlayerArgument];
+
+// A mode's stats are an object, while a key that isn't a mode can name a single stat
+const asObject = (schema: ObjectSchema["definition"][string] | undefined) =>
+  schema?.kind === "object" ? schema : undefined;
 
 @Command({ description: (t) => t("commands.ratios") })
 export class RatiosCommand {
@@ -259,7 +265,7 @@ export class RatiosCommand {
     key: keyof PlayerStats,
     modes: GameModes<T>
   ) {
-    const gameClass = Reflect.getMetadata("design:type", PlayerStats.prototype, key);
+    const gameSchema = PlayerStatsSchema.definition[key];
 
     const ratioModes: [mode: GameModeWithSubModes<T>, ratios: Ratio[]][] = [];
     const gameModes = modes.getModes();
@@ -267,24 +273,14 @@ export class RatiosCommand {
     for (const mode of gameModes) {
       if (!mode.api) continue;
 
-      const modeClass = this.getModeClass(mode, gameClass);
-      if (!modeClass) continue;
+      const modeSchema = this.getModeSchema(mode, gameSchema);
+      if (!modeSchema) continue;
 
-      const ratios = LEADERBOARD_RATIOS.filter(([numerator, denominator]) => {
-        const numeratorType = Reflect.getMetadata(
-          "design:type",
-          modeClass.prototype,
-          numerator
-        );
-
-        const denominatorType = Reflect.getMetadata(
-          "design:type",
-          modeClass.prototype,
-          denominator
-        );
-
-        return numeratorType === Number && denominatorType === Number;
-      });
+      const ratios = LEADERBOARD_RATIOS.filter(
+        ([numerator, denominator]) =>
+          modeSchema.definition[numerator]?.kind === "number" &&
+          modeSchema.definition[denominator]?.kind === "number"
+      );
 
       if (ratios.length === 0) continue;
 
@@ -294,14 +290,13 @@ export class RatiosCommand {
     return ratioModes;
   }
 
-  private getModeClass<T extends GamesWithBackgrounds>(mode: GameModeWithSubModes<T>, gameClass: Constructor<any>) {
-    const apiType = Reflect.getMetadata("design:type", gameClass.prototype, mode.api);
-    const modeType = mode.api === "overall" ? apiType || gameClass : apiType;
+  private getModeSchema<T extends GamesWithBackgrounds>(mode: GameModeWithSubModes<T>, gameSchema: ObjectSchema) {
+    const apiSchema = asObject(gameSchema.definition[mode.api]);
+    const modeSchema = mode.api === "overall" ? apiSchema || gameSchema : apiSchema;
 
-    if (mode.submodes.length === 0) return modeType;
+    if (!modeSchema || mode.submodes.length === 0) return modeSchema;
 
     const submode = mode.submodes[0].api;
-    const submodeType = Reflect.getMetadata("design:type", modeType.prototype, submode);
-    return submodeType ?? modeType;
+    return asObject(modeSchema.definition[submode]) ?? modeSchema;
   }
 }
