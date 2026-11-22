@@ -54,7 +54,8 @@ const BASE_SIZE = 2;
 
 /**
  * Renders Minecraft-formatted text the way the bot's cards do: `§0`–`§f` and `§#rrggbb` colors, `§l` bold,
- * `§o` italic, `§n` and `§u` underline, `§m` strikethrough, `§k` ignored, `§r` reset and the renderer's `§^N^` size codes.
+ * `§o` italic, `§n` and `§u` underline, `§m` strikethrough, `§r` reset and the renderer's `§^N^` size codes, upper or
+ * lower case. `§k` and unknown codes are dropped and the text after them kept.
  */
 export function MinecraftText({ children, className }: { children: string | string[]; className?: string }) {
   const input = Array.isArray(children) ? children.join("") : children;
@@ -98,7 +99,7 @@ export function MinecraftText({ children, className }: { children: string | stri
   push(plain, 0);
 
   for (const [index, part] of coded.entries()) {
-    const code = part[0];
+    const code = part[0]?.toLowerCase();
     const hexMatch = HEX_COLOR.exec(part);
     const sizeMatch = SIZE.exec(part);
     let text: string;
@@ -118,9 +119,6 @@ export function MinecraftText({ children, className }: { children: string | stri
     } else if (code === "n" || code === "u") {
       underline = true;
       text = part.slice(1);
-    } else if (code === "k") {
-      // The bot's renderer draws obfuscated text as it is.
-      text = part.slice(1);
     } else if (code === "m") {
       strike = true;
       text = part.slice(1);
@@ -137,7 +135,7 @@ export function MinecraftText({ children, className }: { children: string | stri
       hex = undefined;
       text = part.slice(1);
     } else {
-      text = `§${part}`;
+      text = part.slice(1);
     }
 
     push(text, index + 1);
