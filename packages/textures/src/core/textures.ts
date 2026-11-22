@@ -79,6 +79,13 @@ function frameAt(width: number, height: number, animation: Animation, tick: numb
   return { index: frames[0].index, next: frames[0].index, blend: 0, start: tick, end: tick };
 }
 
+/** Mixes next into pixels value by value, by an amount from 0 to 1 */
+export function mixPixels(pixels: ImageData, next: ImageData, amount: number) {
+  for (let i = 0; i < pixels.data.length; i++) {
+    pixels.data[i] = pixels.data[i] * (1 - amount) + next.data[i] * amount;
+  }
+}
+
 /** Sprites from a pack stack as pixels, decoded once each */
 export class TextureLoader {
   private textures = new Map<string, Promise<ImageData>>();
@@ -134,14 +141,7 @@ export class TextureLoader {
     };
 
     const pixels = read(frame?.index ?? 0);
-
-    // Interpolated animations mix each frame into the next over its time
-    if (frame?.blend) {
-      const next = read(frame.next);
-      for (let i = 0; i < pixels.data.length; i++) {
-        pixels.data[i] = pixels.data[i] * (1 - frame.blend) + next.data[i] * frame.blend;
-      }
-    }
+    if (frame?.blend) mixPixels(pixels, read(frame.next), frame.blend);
 
     return pixels;
   }
