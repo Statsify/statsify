@@ -1389,11 +1389,15 @@
     "item/speckled_melon": "item/glistering_melon_slice",
     "builtin/clock": "builtin/generated",
     "builtin/compass": "builtin/generated",
+    "item/double_grass": "item/tall_grass",
+    "item/nether_brick": "legacy/item/nether_brick",
+    "item/netherbrick": "item/nether_brick",
     "item/smooth_red_sandstone": "item/cut_red_sandstone",
     "item/smooth_sandstone": "item/cut_sandstone",
     "item/snow": "item/snow_block",
     "item/stone_slab": "item/smooth_stone_slab",
-    "item/stone_stairs": "item/cobblestone_stairs"
+    "item/stone_stairs": "item/cobblestone_stairs",
+    "item/tall_grass": "item/short_grass"
   },
   "legacyNames": {
     "stone": "§fStone",

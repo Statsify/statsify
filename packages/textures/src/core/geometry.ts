@@ -260,11 +260,7 @@ export function composeTransforms(outer: Transform, inner: Transform): Transform
   };
 }
 
-/**
- * Draws quads the way Minecraft draws a 3D item in a slot: through the model's gui display
- * transform, with an orthographic camera, back faces culled, nearest-texel sampling, cutout
- * below 10% alpha and the GUI's side lighting. The result is 16 × scale pixels square.
- */
+/** Draws quads as a 3D item in a slot: orthographic, back faces culled, nearest texels, cut out below 10% alpha */
 export function rasterize(quads: Quad[], display: Transform | undefined, light: Model["guiLight"], scale: number) {
   const size = 16 * scale;
   const pixels = createImageData(size, size);
