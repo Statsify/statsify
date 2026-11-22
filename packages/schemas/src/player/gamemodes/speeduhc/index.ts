@@ -62,7 +62,7 @@ export class SpeedUHC {
   @Field()
   public gamesPlayed: number;
 
-  @Field()
+  @Field({ historical: { enabled: false } })
   public highestKillstreak: number;
 
   @Field({ store: { default: "none" } })
