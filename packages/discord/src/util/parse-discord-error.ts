@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { isRetryableStatus } from "@statsify/logger";
 import { noop } from "@statsify/util";
 import type { RestClient } from "tiny-discord";
 
@@ -26,7 +27,7 @@ export const parseDiscordResponse = <T>(response: RestClient.RequestResult): T =
 
   throw Object.assign(new Error(message), {
     code: typeof body.code === "number" ? body.code : undefined,
-    retryable: response.status === undefined ? undefined : response.status === 429 || response.status >= 500,
+    retryable: response.status === undefined ? undefined : isRetryableStatus(response.status),
   });
 };
 
