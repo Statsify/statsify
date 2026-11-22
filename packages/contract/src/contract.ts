@@ -89,7 +89,7 @@ export const PlayerPageSchema = z.object({
     current: Count,
     max: Count,
     percent: z.number().min(0).max(1),
-    /** Coin multiplier derived from the level (see `levelMultiplier`). */
+    /** Coin multiplier derived from the level (see the API's `LEVEL_MULTIPLIERS`). */
     multiplier: z.number(),
   }),
   status: z.object({

@@ -30,7 +30,6 @@ export function readNamespace(locale: string, namespace: string): Promise<Namesp
 
   if (!parsed) {
     parsed = parseNamespace(key);
-    // A failed read is tried again on the next request.
     parsed.catch(() => namespaces.delete(key));
     namespaces.set(key, parsed);
   }

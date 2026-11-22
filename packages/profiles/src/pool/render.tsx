@@ -16,7 +16,6 @@ import { getTheme } from "../themes/index.js";
 import { render } from "@statsify/rendering";
 import type { Guild, Player } from "@statsify/schemas";
 
-/** How far the `card` variant's stamp sits from the bottom-right corner, inside the card's footer. */
 const STAMP_INSET = 18;
 
 /**
@@ -82,9 +81,8 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
 
   let image = draw(request.variant === "og" ? canvas : background);
 
-  // `og` hands the card the canvas's background, so its boxes blend with the pixels around them as on the bot's
-  // card. The card crops what it's given to its own size, so one smaller than the canvas is drawn again on exactly
-  // the part of the background it covers, which keeps its edge seamless.
+  // The card crops its background to its own size, so one smaller than the canvas is drawn again on exactly the part
+  // of the canvas it covers, which keeps its edge seamless.
   const x = Math.round((width - image.width) / 2);
   const y = Math.round((height - image.height) / 2);
   if (request.variant === "og" && x >= 0 && y >= 0 && (x > 0 || y > 0)) {

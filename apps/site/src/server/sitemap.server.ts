@@ -27,11 +27,7 @@ const EDGE_CACHE = "max-age=86400";
 const XML_ESCAPES: Record<string, string> = { "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" };
 const escapeXml = (text: string) => text.replaceAll(/[<>&'"]/g, (char) => XML_ESCAPES[char]);
 
-/**
- * `/sitemap.xml` (no `name`) or one of its children. Nothing here touches Hypixel: the static list is
- * fixed and the leaderboard list is schema metadata from the API. A 404 for an unknown name, or while
- * `site.indexable` is off.
- */
+/** `/sitemap.xml` without a `name`, or one of its children. */
 export async function sitemapResponse(name?: string): Promise<Response> {
   const { publicUrl, indexable } = await siteConfig();
   if (!indexable || (name !== undefined && !isSitemapName(name))) {

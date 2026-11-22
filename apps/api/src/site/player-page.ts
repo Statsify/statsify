@@ -7,7 +7,32 @@
  */
 
 import { FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
-import { type GameSummary, type PlayerPage, levelMultiplier } from "@statsify/contract";
+import type { GameSummary, PlayerPage } from "@statsify/contract";
+import { findScore } from "@statsify/util";
+
+/**
+ * Hypixel's network-level coin multiplier from each first level, ascending.
+ *
+ * Source: the Hypixel wiki's "Coin Multipliers" table (Level → Coin Multiplier) as captured on
+ * 2026-10-19. It ends at level 250 and lists levels only, so this is the level multiplier; whether
+ * a rank raises it is not covered.
+ */
+const LEVEL_MULTIPLIERS = [
+  { req: 0, multiplier: 1 },
+  { req: 5, multiplier: 1.5 },
+  { req: 10, multiplier: 2 },
+  { req: 15, multiplier: 2.5 },
+  { req: 20, multiplier: 3 },
+  { req: 25, multiplier: 3.5 },
+  { req: 30, multiplier: 4 },
+  { req: 40, multiplier: 4.5 },
+  { req: 50, multiplier: 5 },
+  { req: 100, multiplier: 5.5 },
+  { req: 125, multiplier: 6 },
+  { req: 150, multiplier: 6.5 },
+  { req: 200, multiplier: 7 },
+  { req: 250, multiplier: 8 },
+];
 
 /** The guild fields the page reads, deserialized: its name and tag plus each member's quest and GEXP rows. */
 export interface PlayerGuild {
@@ -307,7 +332,7 @@ export function buildPlayerPage(player: Player, guild: PlayerGuild | null): Play
       current,
       max,
       percent: max > 0 ? Math.min(1, current / max) : 1,
-      multiplier: levelMultiplier(Math.floor(level)),
+      multiplier: findScore(LEVEL_MULTIPLIERS, Math.floor(level)).multiplier,
     },
     status: {
       online: status.online,

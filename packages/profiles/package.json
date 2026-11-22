@@ -43,6 +43,7 @@
     "@swc/helpers": "^0.5.23",
     "i18next": "^21.10.0",
     "luxon": "^3.5.0",
+    "piscina": "4.9.4",
     "skia-canvas": "4.0.0",
     "typedi": "^0.10.0"
   },

@@ -30,12 +30,3 @@ export interface RenderRequest {
   /** The full-body skin render as PNG bytes; the worker never talks to the API. */
   skin: Uint8Array;
 }
-
-export interface WorkerRequest extends RenderRequest {
-  id: number;
-}
-
-export type WorkerMessage =
-  | { type: "ready" }
-  | { type: "done"; id: number; png: Uint8Array<ArrayBuffer> }
-  | { type: "error"; id: number; message: string };
