@@ -20,7 +20,7 @@ import { HttpService } from "@nestjs/axios";
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
-import { Observable, catchError, defer, lastValueFrom, map, mergeMap, of, tap, throwError } from "rxjs";
+import { type Observable, catchError, defer, lastValueFrom, map, mergeMap, of, tap, throwError } from "rxjs";
 import type { APIData } from "@statsify/util";
 import type { Redis } from "ioredis";
 
