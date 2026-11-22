@@ -463,9 +463,8 @@ for (const [name, models] of modelNames) {
 output.legacyModels["builtin/clock"] = "builtin/generated";
 output.legacyModels["builtin/compass"] = "builtin/generated";
 
-// Block items draw 1.8.9's item model of the same name, and these 1.8 names are other 26.3 items:
-// 1.8's snow and nether_brick are the blocks, tall_grass is short grass, and its stone slab and
-// stairs are smooth stone and cobblestone's
+// Block items draw 1.8.9's item model of the same name, but these 1.8 names are other 26.3 items
+// (1.8's nether_brick is the block, and its netherbrick the item)
 Object.assign(output.legacyModels, {
   "item/double_grass": "item/tall_grass",
   "item/nether_brick": "legacy/item/nether_brick",
