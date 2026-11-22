@@ -7,8 +7,7 @@
  */
 
 import { Container, Footer, Header, Table } from "#components";
-import { EVENT_COLORS } from "#commands/events/event-colors";
-import { EVENT_TYPES, FormattedGame } from "@statsify/schemas";
+import { EVENT_COLORS, EVENT_TYPES, FormattedGame } from "@statsify/schemas";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 const latestEvent = EVENT_TYPES[0];

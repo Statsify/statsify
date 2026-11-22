@@ -39,8 +39,8 @@ export class GuildService {
 
   /**
    * With `namesFromHypixel: false` a member is named from their stored player only, so a fetch is one Hypixel call;
-   * the rest are saved as `ERROR <uuid>` and named on a fetch past their 10 minutes. With `throwOnHypixelError` a
-   * failed request rejects with `HypixelUnavailableError` rather than reading as no such guild.
+   * the rest are saved as `ERROR <uuid>` until the next fetch that names from Hypixel, cached guild or not. With
+   * `throwOnHypixelError` a failed request rejects with `HypixelUnavailableError` rather than reading as no such guild.
    */
   public async get(
     inputtedTag: string,
@@ -49,8 +49,9 @@ export class GuildService {
     { namesFromHypixel = true, throwOnHypixelError = false }: { namesFromHypixel?: boolean; throwOnHypixelError?: boolean } = {}
   ): Promise<Guild | null> {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
+    const unnamed = namesFromHypixel && cachedGuild?.members.some((member) => !member.expiresAt);
 
-    if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
+    if (cachedGuild && this.hypixelService.shouldCache(unnamed ? 0 : cachedGuild.expiresAt, cache)) {
       return {
         ...deserialize(Guild, flatten(cachedGuild)),
         cached: true,
@@ -249,8 +250,8 @@ export class GuildService {
       member.username = `ERROR ${member.uuid}`;
       member.displayName = member.username;
 
-      // Try again in 10 minutes
-      member.expiresAt = Date.now() + 600_000;
+      // Try again in 10 minutes, or on the next fetch that names from Hypixel
+      member.expiresAt = namesFromHypixel ? Date.now() + 600_000 : 0;
     }
   }
 
