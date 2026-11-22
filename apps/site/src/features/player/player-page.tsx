@@ -185,7 +185,7 @@ function NetworkLevelPanel({ level }: { level: PlayerPage["level"] }) {
         <span className={cn(VALUE, "text-mc-green")}>{n(level.max)}</span>
       </p>
       <MinecraftText className={cn(VALUE, "lg:text-mc-1.5")}>
-        {`§6${current} ${minigameXpBar(level.percent)} §6${current + 1}`}
+        {`§6${n(current)} ${minigameXpBar(level.percent)} §6${n(current + 1)}`}
       </MinecraftText>
     </Box>
   );
