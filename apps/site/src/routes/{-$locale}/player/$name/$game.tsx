@@ -13,6 +13,7 @@ import { NotFound } from "~/components/not-found";
 import { ORPCError } from "@orpc/client";
 import { PlayerNotFound } from "~/features/player/player-not-found";
 import { SANS_PRELOAD } from "~/lib/fonts";
+import { possessive } from "~/lib/player-route";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
@@ -27,8 +28,6 @@ import { z } from "zod";
 /** As the player page: fresh for a minute, stale for ten, and served stale for a day if the API is down. */
 const EDGE_CACHE = "max-age=60, stale-while-revalidate=600, stale-if-error=86400";
 const REDIRECT_HEADERS = { "Cache-Control": "public, max-age=3600", "CDN-Cache-Control": "max-age=3600" };
-
-const possessive = (username: string) => `${username}'${username.endsWith("s") ? "" : "s"}`;
 
 /** A search parameter as typed (the router reads `?mode=4v4` as a string and `?mode=123` as a number); the API checks it. */
 const param = z
