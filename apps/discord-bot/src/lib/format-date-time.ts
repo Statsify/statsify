@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LocalizeFunction } from "@statsify/discord";
 import { format } from "date-fns";
+import type { LocalizeFunction } from "@statsify/discord";
 
 export const formatDateTime = (t: LocalizeFunction, time: number): string => {
   // Intl's AM/PM, since date-fns locales spell it differently (de "nachm.")

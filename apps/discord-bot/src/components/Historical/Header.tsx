@@ -70,7 +70,7 @@ const formatRelativeTime = (date: Date) => {
     if (count > 0) return relativeTimeFormat.format(sign * count, unit);
   }
 
-  return relativeTimeFormat.format(sign * 0, "second");
+  return relativeTimeFormat.format(sign < 0 ? -0 : 0, "second");
 };
 
 export const HistoricalHeader = ({
