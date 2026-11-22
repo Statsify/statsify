@@ -410,6 +410,7 @@
     "24:2": "cut_sandstone",
     "31:1": "short_grass",
     "31:2": "fern",
+    "31:0": "dead_bush",
     "35:0": "white_wool",
     "35:1": "orange_wool",
     "35:2": "magenta_wool",
