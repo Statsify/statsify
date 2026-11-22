@@ -20,7 +20,7 @@ import { InjectRedis } from "#redis";
 import { Injectable, ServiceUnavailableException } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { PlayerService } from "#player";
-import { Redis } from "ioredis";
+import type { Redis } from "ioredis";
 import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
