@@ -20,7 +20,7 @@ import { DateTime } from "luxon";
 import { GameId, Guild, GuildMember, Progression, User } from "@statsify/schemas";
 import { GexpTable } from "./gexp.table.js";
 import { LocalizeFunction } from "@statsify/discord";
-import { StyleLocation, useComponentWidth } from "@statsify/rendering";
+import { type StyleLocation, useComponentWidth } from "@statsify/rendering";
 import { arrayGroup, wordGroup } from "@statsify/util";
 import { ratio } from "@statsify/math";
 import type { Image } from "skia-canvas";
