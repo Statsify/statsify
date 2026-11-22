@@ -14,7 +14,7 @@ import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { PlayerSearchService } from "#player";
-import { Redis } from "ioredis";
+import type { Redis } from "ioredis";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 const HISTORY_MS = 14 * 86_400_000;
@@ -54,6 +54,8 @@ const blend = (query: string, personal: string[], global: string[]) => {
   return names.slice(0, MAX_CHOICES);
 };
 
+const historyKey = (type: AutocompleteType, id: string) => `autocomplete:history:${type}:${id}`;
+
 @Injectable()
 export class AutocompleteService {
   private readonly logger = new Logger("AutocompleteService");
@@ -85,13 +87,13 @@ export class AutocompleteService {
 
     // A new name can score below a full history's names, so it goes in ahead of the cut
     const kept = [recorded, ...others.slice(0, MAX_CHOICES - 1)];
-    await this.redis.set(this.historyKey(type, id), JSON.stringify(kept), "PX", HISTORY_MS);
+    await this.redis.set(historyKey(type, id), JSON.stringify(kept), "PX", HISTORY_MS);
   }
 
   public async clear(id: string) {
     await this.redis.del(
-      this.historyKey(AutocompleteType.PLAYER, id),
-      this.historyKey(AutocompleteType.GUILD, id)
+      historyKey(AutocompleteType.PLAYER, id),
+      historyKey(AutocompleteType.GUILD, id)
     );
   }
 
@@ -135,7 +137,7 @@ export class AutocompleteService {
   }
 
   private async readHistory(type: AutocompleteType, id: string, now: number) {
-    const raw = await this.redis.get(this.historyKey(type, id));
+    const raw = await this.redis.get(historyKey(type, id));
     if (!raw) return [];
 
     return (JSON.parse(raw) as HistoryEntry[])
@@ -185,9 +187,5 @@ export class AutocompleteService {
       .select({ name: true, "members.username": true })
       .lean()
       .exec();
-  }
-
-  private historyKey(type: AutocompleteType, id: string) {
-    return `autocomplete:history:${type}:${id}`;
   }
 }
