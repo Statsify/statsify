@@ -69,7 +69,9 @@ export class SkinService {
       .lean()
       .exec();
 
-    if (cachedSkin && Date.now() < cachedSkin.expiresAt) return cachedSkin;
+    if (cachedSkin && Date.now() < cachedSkin.expiresAt) {
+      return cachedSkin;
+    }
 
     const uuid = isUsername ? await this.getUuid(tag) : tag;
 
