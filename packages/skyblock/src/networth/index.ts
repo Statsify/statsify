@@ -247,7 +247,7 @@ const networthOrder = (id: string) => (NETWORTH_ORDER.includes(id) ? NETWORTH_OR
 async function getInventoryValues(member: SectionInput["member"], map: PriceMap, items: ItemsResource): Promise<InventoryValues | null> {
   // Networth leaves out a tool its toolkit doesn't hold; one taken out is priced where it sits
   const unheld = new Set<RawItem>();
-  const itemPages = inventoryPages(member, decodeInventory, (blob, held) => {
+  const itemPages = await inventoryPages(member, decodeInventory, (blob, held) => {
     const item = toolkitItem(blob, items);
     if (item && !held) unheld.add(item);
     return item;
@@ -262,7 +262,9 @@ async function getInventoryValues(member: SectionInput["member"], map: PriceMap,
   ].flatMap((blob) => (blob ? decodeInventory(blob) : []));
 
   const options = { prices: toNetworthPrices(map) };
-  const price = async (item: RawItem | null) => (item && !unheld.has(item) ? new ItemNetworthCalculator(item).getNetworth(options) : null);
+  // ItemNetworthCalculator throws on an item without ExtraAttributes (a menu button, a vanilla block); networth skips it
+  const price = async (item: RawItem | null) =>
+    item?.tag?.ExtraAttributes && !unheld.has(item) ? new ItemNetworthCalculator(item).getNetworth(options) : null;
   const [priced, pricedBackpacks, pricedEquipment] = await Promise.all([
     Promise.all(
       Object.entries(itemPages).map(
