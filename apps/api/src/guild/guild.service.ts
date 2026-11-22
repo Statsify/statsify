@@ -53,7 +53,8 @@ export class GuildService {
     const unnamed = namesFromHypixel && cachedGuild?.members.some((member) => !member.expiresAt);
     const cachedResponse = (guild: Guild) => ({ ...deserialize(Guild, flatten(guild)), cached: true });
 
-    if (cachedGuild && fresh && !unnamed) return cachedResponse(cachedGuild);
+    if (cachedGuild && this.hypixelService.shouldCache(unnamed ? 0 : cachedGuild.expiresAt, cache))
+      return cachedResponse(cachedGuild);
 
     let guild: Guild | null;
 
