@@ -11,7 +11,7 @@
     "limit-redis": "node src/limit-redis.ts",
     "purge-repo": "node src/purge-repo.ts",
     "rank-emojis": "node src/rank-emojis.ts",
-    "validate-commands": "node --no-warnings src/validate-commands.ts",
+    "validate-commands": "node src/validate-commands.ts",
     "blur-backgrounds": "node src/blur-backgrounds.ts"
   },
   "dependencies": {
