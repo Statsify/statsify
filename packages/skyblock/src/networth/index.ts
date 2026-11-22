@@ -265,7 +265,9 @@ async function getInventoryValues(member: SectionInput["member"], map: PriceMap,
   ].flatMap((blob) => (blob ? decodeInventory(blob) : []));
 
   const options = { prices: toNetworthPrices(map) };
-  const price = async (item: RawItem | null) => (item && !unheld.has(item) ? new ItemNetworthCalculator(item).getNetworth(options) : null);
+  // ItemNetworthCalculator throws on an item without ExtraAttributes (a menu button, a vanilla block); networth skips it
+  const price = async (item: RawItem | null) =>
+    item?.tag?.ExtraAttributes && !unheld.has(item) ? new ItemNetworthCalculator(item).getNetworth(options) : null;
   const [priced, pricedBackpacks, pricedEquipment] = await Promise.all([
     Promise.all(
       Object.entries(itemPages).map(
