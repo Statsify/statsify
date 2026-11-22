@@ -6,10 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export enum AuthRole {
-  MEMBER = 0,
+export const AuthRole = {
+  MEMBER: 0,
   /** The website's own key: the only one the `/rpc` procedures accept below WORKER. */
-  SITE = 100,
-  WORKER = 300,
-  ADMIN = 999
-}
+  SITE: 100,
+  WORKER: 300,
+  ADMIN: 999,
+} as const;
+
+export type AuthRole = (typeof AuthRole)[keyof typeof AuthRole];

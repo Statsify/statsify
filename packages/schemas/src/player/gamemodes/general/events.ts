@@ -9,6 +9,7 @@
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import type { APIData } from "@statsify/util";
+import type { ColorCode } from "#color";
 
 const MAX_LEVEL = 100;
 
@@ -39,6 +40,13 @@ export type EventType = {
   key: Exclude<keyof Events, "silver">;
 };
 export type EventPeriod = "summer" | "halloween" | "christmas" | "easter";
+
+export const EVENT_COLORS: Record<EventPeriod, ColorCode> = {
+  summer: "§e",
+  halloween: "§5",
+  christmas: "§c",
+  easter: "§b",
+};
 
 export const EVENT_TYPES: EventType[] = [
   { period: "halloween", year: 2026, key: "halloween2026" },
