@@ -107,7 +107,7 @@ export class AuthService {
 
     const [[name, lifetimeRequests, limit], requests] = pipelineValues(
       await pipeline.exec()
-    ) as [[string, number, number], string[]];
+    ) as [[string, string, string], string[]];
 
     const recentRequests = requests
       .filter((_, i) => i % 2 === 0)
