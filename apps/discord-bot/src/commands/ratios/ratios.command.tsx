@@ -50,8 +50,8 @@ import {
   mapBackground,
 } from "#constants";
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
-import { filterBlitzKits } from "#commands/blitzsg/blitzsg.command";
-import { filterMegaWallsKits } from "#commands/megawalls/megawalls.command";
+import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";
+import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
