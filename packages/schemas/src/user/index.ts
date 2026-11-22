@@ -96,6 +96,10 @@ export class User {
     return this.isTier(user, UserTier.GOLD) && (user?.extrudedSkins ?? false);
   }
 
+  public static hasCustomBadge(user: User | null): boolean {
+    return this.isTier(user, UserTier.GOLD) && (user?.hasBadge ?? false);
+  }
+
   public static getLogo(user: User | null) {
     if (!user) return this.tierToLogo(UserTier.NONE);
     if (user.footer?.icon && (user.tier ?? 0) >= user.footer.icon)

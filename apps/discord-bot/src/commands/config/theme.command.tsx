@@ -242,7 +242,7 @@ export class ThemeCommand {
     if (!user?.uuid) throw new ErrorMessage("errors.unknown");
 
     // Without a custom badge the API serves the saved footer logo, so draw the previewed one instead
-    const logoIsBadge = user.tier && !(user.hasBadge && User.isGold(user));
+    const logoIsBadge = user.tier && !User.hasCustomBadge(user);
 
     const [player, skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayer(user.uuid),
