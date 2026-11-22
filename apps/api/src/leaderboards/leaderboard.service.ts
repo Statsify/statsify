@@ -327,7 +327,6 @@ export abstract class LeaderboardService {
       this.redis.zcard(key),
     ]);
 
-    // Leaderboards are trimmed to their limit, so a value past the end has no known position
     if (position >= size) throw new NotFoundException("value");
 
     return position;
