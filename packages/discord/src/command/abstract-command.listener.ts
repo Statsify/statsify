@@ -72,7 +72,7 @@ export abstract class AbstractCommandListener {
     if (port) {
       this.handleInteractionServer(this.client as InteractionServer);
     } else {
-      this.handleWebsocketShard(this.client as WebSocketManager);
+      this.handleWebSocketManager(this.client as WebSocketManager);
     }
   }
 
@@ -291,7 +291,7 @@ export abstract class AbstractCommandListener {
     });
   }
 
-  private handleWebsocketShard(client: WebSocketManager) {
+  private handleWebSocketManager(client: WebSocketManager) {
     client.on(WebSocketShardEvents.Ready, ({ user }) => {
       this.logger.log(`Connected to gateway with WebSocketManager on ${user.username}`);
     });
