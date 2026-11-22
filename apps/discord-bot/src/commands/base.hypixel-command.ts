@@ -7,11 +7,11 @@
  */
 
 import {
-  AbstractCommandListener,
+  type AbstractCommandListener,
   ApiService,
   Command,
   CommandContext,
-  ComponentRoute,
+  type ComponentRoute,
   LocalizationString,
   LocalizeFunction,
   Page,

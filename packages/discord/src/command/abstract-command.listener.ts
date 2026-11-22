@@ -17,6 +17,7 @@ import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
 import { type IMessage, Message } from "#messages";
 import { type CustomId, Interaction, type InteractionAttachment, parseCustomId } from "#interaction";
+import { LRUCache } from "lru-cache";
 import { Logger } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
@@ -47,19 +48,13 @@ export interface ExecuteCommandOptions {
   message?: IMessage | Message;
 }
 
-const RERUN_CACHE_SIZE = 50;
-const RERUN_CACHE_TTL = 300_000;
-
-interface RerunCacheEntry {
-  message: IMessage | Message;
-  locale: string;
-  expiresAt: number;
-}
-
 export abstract class AbstractCommandListener {
   protected hooks: Map<string, InteractionHook>;
   protected routes = new Map<string, ComponentRoute>();
-  private rerunCache = new Map<string, RerunCacheEntry>();
+  private rerunCache = new LRUCache<string, { message: IMessage | Message; locale: string }>({
+    max: 50,
+    ttl: 300_000,
+  });
   protected readonly logger = new Logger("CommandListener");
 
   protected constructor(
@@ -110,21 +105,26 @@ export abstract class AbstractCommandListener {
     path: string[],
     options: Record<string, string>
   ) {
-    const command = this.findCommand(path);
-    if (!command) return;
-
     const isOwner = interaction.getUserId() === ownerId;
 
     // Modal input isn't part of the key, so only button and select replies are cached
     const cacheKey = interaction.isMessageComponentInteraction() ?
-      [interaction.getCustomId(), interaction.getData().values?.[0], interaction.getLocale()].join("|") :
+      [
+        interaction.getMessageId(),
+        interaction.getCustomId(),
+        interaction.getData().values?.[0],
+        interaction.getLocale(),
+      ].join("|") :
       undefined;
 
     try {
+      const command = this.findCommand(path);
+      if (!command) throw new Error(`No command at "${path.join(" ")}"`);
+
       const cached = cacheKey ? this.rerunCache.get(cacheKey) : undefined;
       let message: IMessage | Message;
 
-      if (cached && cached.expiresAt > Date.now()) {
+      if (cached) {
         if (command.tier) this.tierPrecondition(command, await this.getUser(ownerId));
 
         message = cached.message;
@@ -149,7 +149,7 @@ export abstract class AbstractCommandListener {
 
         // A preview's buttons are made with the clicker's id, so only the owner's reply is kept
         if (cacheKey && isOwner && !message.ephemeral)
-          this.cacheRerun(cacheKey, message, interaction.getLocale());
+          this.rerunCache.set(cacheKey, { message, locale: interaction.getLocale() });
       }
 
       await interaction.acknowledged;
@@ -165,6 +165,9 @@ export abstract class AbstractCommandListener {
 
       this.logger.error(`An error occurred when re-running "${path.join(" ")}"`);
       this.logger.error(err);
+
+      await interaction.acknowledged;
+      return interaction.sendFollowup({ ...new ErrorMessage("errors.unknown"), ephemeral: true });
     }
   }
 
@@ -353,17 +356,6 @@ export abstract class AbstractCommandListener {
       type: InteractionResponseType.ApplicationCommandAutocompleteResult,
       data: { choices: response },
     };
-  }
-
-  private cacheRerun(key: string, message: IMessage | Message, locale: string) {
-    this.rerunCache.delete(key);
-
-    if (this.rerunCache.size >= RERUN_CACHE_SIZE) {
-      const [oldest] = this.rerunCache.keys();
-      this.rerunCache.delete(oldest);
-    }
-
-    this.rerunCache.set(key, { message, locale, expiresAt: Date.now() + RERUN_CACHE_TTL });
   }
 
   /** Subcommand names are unique within a command, so groups stay out of the path */
