@@ -15,23 +15,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { loadLeaderboardPage } from "~/features/leaderboards/leaderboard-data";
 import { z } from "zod";
 
-/**
- * A page from `?page=`, counted from 1 as the page shows it (a number or a string, depending on how it was typed);
- * garbage is the first page.
- */
+/** Counted from 1, as the page shows it; anything else is the first page. */
 const pageNumber = (raw: unknown) => {
   const page = Number(raw);
   return Number.isSafeInteger(page) && page > 1 ? page : undefined;
 };
 
-/**
- * A name or UUID from `?around=`; the router parses `?around=123` to a number, and anything longer than a dashed UUID
- * is cut.
- */
+/** The router parses `?around=123` to a number. */
 const aroundName = (raw: unknown) =>
   (typeof raw === "string" || typeof raw === "number" ? String(raw).trim().slice(0, 36) : "") || undefined;
 
-/** `?page=` is left out of URLs for the first page; `?around=<name or UUID>` anchors on a player. */
 const SearchSchema = z.object({
   page: z.unknown().transform(pageNumber).optional(),
   around: z.unknown().transform(aroundName).optional(),

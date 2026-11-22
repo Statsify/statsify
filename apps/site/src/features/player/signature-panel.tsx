@@ -23,11 +23,7 @@ const localeRoute = getRouteApi("/{-$locale}");
 
 const { width, height } = IMAGE_VARIANTS.sig;
 
-/**
- * "Get signature": the live `/sig` image and the snippets that embed it, each with a copy
- * button. URLs are absolute from `site.publicUrl` (the locale loader), never from the request, so a
- * pasted snippet works anywhere.
- */
+/** URLs are absolute from `site.publicUrl`, never from the request, so a pasted snippet works anywhere. */
 export function SignaturePanel({ page }: { page: PlayerPage }) {
   const { t } = useTranslation();
   const { origin } = localeRoute.useLoaderData();

@@ -61,8 +61,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
       meta: [
         { title },
         { name: "description", content: description },
-        // The Discord unfurl: the bot's general card at its UUID URL; `?v=` changes when the player is
-        // refreshed, so Discord fetches the new render.
+        // `?v=` changes when the player is refreshed, so Discord fetches the new render.
         ...(origin ?
           socialMeta({
             origin,
