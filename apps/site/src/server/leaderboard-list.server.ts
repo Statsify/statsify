@@ -8,7 +8,7 @@
 
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { type ListGroup, withoutGroupPrefix } from "~/features/leaderboards/leaderboard-list";
-import { cacheHeaders } from "~/lib/cache";
+import { IMMUTABLE_HEADERS, cacheHeaders } from "~/lib/cache";
 import { createHash } from "node:crypto";
 import { readNamespace } from "~/i18n/i18n.server";
 import { rpcServerClient } from "./rpc.server";
@@ -86,10 +86,6 @@ async function build(): Promise<BuiltList> {
  */
 export async function leaderboardListResponse(hash: string): Promise<Response> {
   const list = await leaderboardList();
-  const cache =
-    hash === list.hash ?
-      { "Cache-Control": "public, max-age=31536000, immutable", "CDN-Cache-Control": "max-age=31536000" } :
-      cacheHeaders("max-age=60");
-
+  const cache = hash === list.hash ? IMMUTABLE_HEADERS : cacheHeaders("max-age=60");
   return new Response(list.json, { headers: { "Content-Type": "application/json; charset=utf-8", ...cache } });
 }

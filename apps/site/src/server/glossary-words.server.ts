@@ -7,7 +7,7 @@
  */
 
 import { DEFAULT_LOCALE, type Locale, SUPPORTED_LOCALES } from "~/i18n/locales";
-import { cacheHeaders } from "~/lib/cache";
+import { IMMUTABLE_HEADERS, cacheHeaders } from "~/lib/cache";
 import { createHash } from "node:crypto";
 import { readGlossary } from "~/i18n/i18n.server";
 
@@ -44,11 +44,9 @@ export function glossaryWords(locale: Locale): Promise<BuiltWords> {
  */
 export async function glossaryWordsResponse(hash: string): Promise<Response> {
   const words = (await Promise.all(SUPPORTED_LOCALES.map(glossaryWords))).find((locale) => locale.hash === hash);
-  if (words) return wordsResponse(words.json, FOREVER);
+  if (words) return wordsResponse(words.json, IMMUTABLE_HEADERS);
   return wordsResponse((await glossaryWords(DEFAULT_LOCALE)).json, cacheHeaders("max-age=60"));
 }
-
-const FOREVER = { "Cache-Control": "public, max-age=31536000, immutable", "CDN-Cache-Control": "max-age=31536000" };
 
 const wordsResponse = (json: string, cache: Record<string, string>) =>
   new Response(json, { headers: { "Content-Type": "application/json; charset=utf-8", ...cache } });
