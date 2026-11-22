@@ -154,6 +154,16 @@ const DROPPER_MAP_SHAPES: Shape[] = DROPPER_MAPS.map(([key, name]) => ({
   stats: { completions: { color: "§f", name }, bestTime: { color: "§f", name, unset: "§7N/A" } },
 }));
 
+/** Zombies' maps and difficulties under the cards' titles for them. */
+export const ZOMBIES_MAPS = {
+  deadEnd: "§#813781Dead End",
+  badBlood: "§#8f1721Bad Blood",
+  alienArcadium: "§#75ae00Alien Arcadium",
+  prison: "§#aaa5c2Prison",
+} as const;
+
+export const ZOMBIES_DIFFICULTIES = { overall: "§6Overall", normal: "§aNormal", hard: "§cHard", rip: "§4RIP" } as const;
+
 // A map's block on the Zombies cards (`zombies.tsx`); Zombies › Overall draws a map's Fastest Win and Best Round in §e.
 const ZOMBIES: Record<string, StatEntry> = {
   wins: { color: "§a" },
@@ -184,10 +194,7 @@ const PIXEL_PARTY: Record<string, StatEntry> = {
   gamesPlayed: { color: "§b" },
 };
 
-/**
- * The colors and labels of the bot's Arcade cards (`apps/discord-bot/src/commands/arcade`). A mode's Wins is in its
- * own card's color here; Overall colors them by rank.
- */
+/** A mode's Wins is in its own card's color here; Overall's card colors them by rank. */
 export const ARCADE: Game<ArcadeModes> = {
   key: "arcade",
   id: "ARCADE",
