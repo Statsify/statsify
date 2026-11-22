@@ -183,7 +183,7 @@ export function createGameModeQuests<
 
   for (const quest of [...daily, ...weekly, ...monthly]) {
     const target = OBJECTIVE_TARGETS[getQuestField(quest, fieldPrefix)];
-    if (target) targets[quest.propertyKey] = target;
+    if (target !== undefined) targets[quest.propertyKey] = target;
   }
 
   QUEST_TARGETS[game] = targets;
