@@ -7,7 +7,7 @@
  */
 
 import { type ColorCode, GAMES, type Game, cardColors, catalogPaths, statAt } from "@statsify/catalog";
-import { EVENT_TYPES, FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
+import { EVENT_COLORS, EVENT_TYPES, FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
 import type { GamePage, GameSummary, PlayerPage, StatRow, StatSection } from "@statsify/contract";
 import { findScore, formatTime } from "@statsify/util";
 import { freshness } from "./cooldown.js";
@@ -318,7 +318,7 @@ export function sessionOverview({ stats: { general, quests, challenges } }: Play
       [
         { key: "networkLevel", label: "stats.levelsGained", value: general.networkLevel, color: "§b", leaderboard: null },
         { key: "achievementPoints", label: "stats.achievementPoints", value: general.achievementPoints, color: "§6", leaderboard: null },
-        { key: "eventExp", label: "stats.event-exp", value: general.events[EVENT_TYPES[0].key].exp, color: "§b", leaderboard: null },
+        { key: "eventExp", label: "stats.event-exp", value: general.events[EVENT_TYPES[0].key].exp, color: EVENT_COLORS[EVENT_TYPES[0].period], leaderboard: null },
       ],
       [
         { key: "quests", label: "stats.quests", value: quests.total, color: "§e", leaderboard: null },
