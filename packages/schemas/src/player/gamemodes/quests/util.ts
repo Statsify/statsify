@@ -22,7 +22,7 @@ interface Quest {
   completions?: { time: number }[];
 }
 
-const OBJECTIVE_TARGETS: Record<string, number> = objectiveTargets;
+const OBJECTIVE_TARGETS: Record<string, { objective: string; target: number }> = objectiveTargets;
 
 export const QUEST_TARGETS: Record<string, Record<string, number>> = {};
 
@@ -131,8 +131,9 @@ const createQuestProgress = (
 
     public constructor(quests: APIData) {
       for (const quest of tracked) {
-        const active: Quest["active"] = quests[getQuestField(quest, fieldPrefix)]?.active;
-        const [progress] = Object.values(active?.objectives ?? {});
+        const field = getQuestField(quest, fieldPrefix);
+        const active: Quest["active"] = quests[field]?.active;
+        const progress = active?.objectives?.[OBJECTIVE_TARGETS[field].objective];
 
         if (progress !== undefined) this[quest.propertyKey] = progress;
       }
@@ -182,7 +183,7 @@ export function createGameModeQuests<
   const targets: Record<string, number> = {};
 
   for (const quest of [...daily, ...weekly, ...monthly]) {
-    const target = OBJECTIVE_TARGETS[getQuestField(quest, fieldPrefix)];
+    const target = OBJECTIVE_TARGETS[getQuestField(quest, fieldPrefix)]?.target;
     if (target !== undefined) targets[quest.propertyKey] = target;
   }
 
@@ -339,3 +340,22 @@ export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) =
 
   return quest.completions.filter((ms) => ms.time >= millis).length;
 };
+
+if (import.meta.vitest) {
+  const { it, expect } = import.meta.vitest;
+
+  it("reads progress from the quest's own objective", () => {
+    const [Daily] = createGameModeQuests({
+      game: FormattedGame.UHC,
+      fieldPrefix: "uhc",
+      daily: [{ field: "solo", propertyKey: "solo" }],
+      weekly: [],
+    });
+
+    const progress = (objectives: Record<string, number>) =>
+      new Daily({ uhc_solo: { active: { objectives } } }).progress.solo;
+
+    expect(progress({ uhc_games: 1 })).toBeUndefined();
+    expect(progress({ uhc_games: 1, uhc_kills: 0 })).toBe(0);
+  });
+}

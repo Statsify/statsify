@@ -16,7 +16,7 @@ const { quests } = await response.json();
 const targets = Object.values(quests)
   .flat()
   .filter(({ objectives }) => objectives.length === 1 && objectives[0].type === "IntegerObjective")
-  .map(({ id, objectives: [objective] }) => [id, objective.integer])
+  .map(({ id, objectives: [objective] }) => [id, { objective: objective.id, target: objective.integer }])
   .sort(([a], [b]) => a.localeCompare(b));
 
 writeFileSync(
