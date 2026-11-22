@@ -45,6 +45,7 @@ const RENDER_QUEUE_LIMIT = 48;
 
 const NO_STORE = { "Cache-Control": "no-store" };
 
+/** How an image route caches. */
 export interface ImagePolicy {
   image: Record<string, string>;
   /** Discord and forums cache whatever they get, so a placeholder expires quickly. */
