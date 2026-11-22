@@ -7,7 +7,7 @@
  */
 
 import { ARCADE, DROPPER_DIFFICULTIES, modeName, shapeKeys } from "@statsify/catalog";
-import type { CellSpec, GameLayout, PageSpec, SectionSpec } from "./layout.js";
+import { type CellSpec, type GameLayout, type PageSpec, type SectionSpec, submodeOptions } from "./layout.js";
 import type { PlayerStats } from "@statsify/schemas";
 
 /** Keys stored somewhere other than the page's place. */
@@ -247,7 +247,7 @@ export const ARCADE_PAGE: GameLayout = {
   game: ARCADE,
   // Zombies' maps split its games, so they get a switcher; the other cards' sub-pages are sections.
   modes: ARCADE.modes.getModes().map(({ api, submodes }) =>
-    api === "zombies" ? { key: api, submodes: submodes.map(({ api: key, formatted: name }) => ({ key, name })) } : { key: api }),
+    api === "zombies" ? { key: api, submodes: submodeOptions(submodes) } : { key: api }),
   overview: ["coins", "coinConversions", "wins"],
   page: (mode, submode) => {
     if (mode === "overall") return OVERALL;

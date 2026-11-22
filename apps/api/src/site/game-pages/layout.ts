@@ -12,37 +12,25 @@ import { freshness } from "../cooldown.js";
 import { arrayGroup } from "@statsify/util";
 import type { GamePage, StatCell, StatSection } from "@statsify/contract";
 
-/**
- * A stat on the page by its catalog key, below the page's place in the game (its mode, or mode and submode) unless
- * `at` says where: `""` for a game stat, or another mode's place (Arcade's Overall reads each mode's wins).
- */
+/** A stat by its catalog key, at the page's place unless `at` gives another (`""` for a game stat). */
 export type CellSpec =
   | string
   | {
     key: string;
     at?: string;
-    /** The page's color, where the card draws the stat here in another color than the catalog's. */
     color?: ColorCode;
-    /** The page's heading for the stat, in place of the catalog's label or name. */
     label?: string;
-    /** A shorter heading under the row's title, where the title says the rest (`stats.kills` under Final). */
     short?: string;
     name?: string | ((stats: PlayerStats) => string);
     params?: Record<string, string>;
-    /** A `GameId` whose icon goes before the name. */
     icon?: string;
-    /** A selection (kit, trail): a `Label: value` line. */
     inline?: boolean;
-    /** Shows the cell only when this allows it (a winstreak that isn't 0), given the stored object the stat is in. */
+    /** Leaves the cell out when false (a winstreak of 0). */
     when?: (cell: StatCell, stats: PlayerStats, parent: Record<string, unknown>) => boolean;
-    /** Whether the player hides the stat from Hypixel's API (winstreaks): the cell says so and doesn't link. */
     hidden?: (stats: PlayerStats) => boolean;
   };
 
-/**
- * A value the page works out from stored ones where the schema stores none (Quests' Monthly Total, every game's monthly
- * quests added up). It has no leaderboard, as there's no field to rank.
- */
+/** A value worked out from stored ones where the schema stores none (Quests' Monthly Total), with no leaderboard. */
 export interface ComputedSpec {
   key: string;
   label: string;
@@ -50,48 +38,33 @@ export interface ComputedSpec {
   compute: (stats: PlayerStats) => number;
 }
 
-/** An overview cell: a stat, or a value worked out from stats. */
 export type OverviewSpec = CellSpec | ComputedSpec;
 
 const isComputed = (spec: OverviewSpec): spec is ComputedSpec => typeof spec !== "string" && "compute" in spec;
 
-/** A group of stats: the card's rows, or cells ordered and grouped as the card does. */
+/** A `StatSectionSchema` section, from rows of cells or from `cells` to order and group. */
 export interface SectionSpec {
-  /** A `game.sections.*` key or the card's `stats.*` heading; none for the headline table. */
   title?: string;
-  /** The card's own heading where it doesn't translate one (`§6Solo`). */
   name?: string;
-  /** The card's color for the translated `title`. */
   color?: ColorCode;
   rows?: CellSpec[][];
-  /** A `site.json` heading over each of `rows`, by index, or null for none (BedWars' Final and Normal). */
   rowTitles?: (string | null)[];
-  /** The card's own heading over each of a list's `rows`, by index (Dropper's §cHard, §eMedium and §aEasy). */
   rowNames?: string[];
   /** Cells to order (`sort`) and group into rows (`ranks`); one row if neither is set. */
   cells?: CellSpec[];
-  /**
-   * By value: most first, or least first with unset values last (fastest times), or by the share of its cap, best first
-   * (a period's quests done out of the game's). Ties keep the given order.
-   */
+  /** `asc` puts unset values last, and `share` orders by the share of each cap. Ties keep the given order. */
   sort?: "desc" | "asc" | "share";
   /** Rows of `size` cells, the n-th in the n-th color (the last color repeats), as the card colors by rank. */
   ranks?: { size: number; colors?: ColorCode[] };
-  /** One of the card's boxes drawn side by side, as Classic Duels draws Overall, Solo and Doubles. */
   box?: boolean;
-  /** Name and value lines rather than table cells. */
   list?: boolean;
-  /** List names in the card's own formatting rather than bold (Duels titles). */
   plain?: boolean;
-  /** Folded behind its heading and count until opened. */
   collapsed?: boolean;
-  /** Searched by the page's filter box, for a list too long to scan. */
   search?: boolean;
-  /** Values as a tick or a cross, for whether each was done (a period's quests). */
   ticks?: boolean;
 }
 
-/** The level header: the stat its leaderboard ranks, what the card calls the level and its bar, and the level. */
+/** The level header, linked to the leaderboard of the stat `key` names. */
 export interface LevelSpec {
   key: string;
   /** Where that stat is stored below the game; a game stat by default. */
@@ -100,9 +73,7 @@ export interface LevelSpec {
   label?: string;
   /** `stats.progression.exp` by default. */
   progress?: string;
-  /** The word at the last level: MAXED by default, PRESTIGED where reaching it prestiges (Murder Mystery's knife). */
   maxedWord?: "maxed" | "prestiged";
-  /** The card's colors for the progress, where they aren't the panel's (Murder Mystery's knife). */
   colors?: { current: ColorCode; slash: ColorCode; max: ColorCode; maxed: ColorCode };
   read: (stats: PlayerStats) => Omit<
     NonNullable<GamePage["level"]>,
@@ -110,10 +81,7 @@ export interface LevelSpec {
   >;
 }
 
-/**
- * A formatted level as most games store it (BedWars' stars, The Pit's prestige and level): the level as the player
- * wears it, and the bar from the level in its standard colors, where the game stores that too, else from the level.
- */
+/** A level as most games store it (BedWars' stars), its bar from the natural level where the game stores one. */
 export const formattedLevel = (stored: {
   levelFormatted: string;
   naturalLevelFormatted?: string;
@@ -126,10 +94,7 @@ export const formattedLevel = (stored: {
   progression: { ...stored.progression },
 });
 
-/**
- * A prefix earned by a count (BlitzSG's kills, Walls' wins): the prefix with the player's own count as the level, and
- * the bar from the prefix they have reached to the next.
- */
+/** A prefix earned by a count (Walls' wins), with the player's own count as the level. */
 export const prefixLevel = (stored: {
   naturalPrefix: string;
   currentPrefix: string;
@@ -143,9 +108,8 @@ export const prefixLevel = (stored: {
 });
 
 /**
- * The mode of the kit or class a player has selected, as the schema stores it: the mode's key in another case or with
- * underscores (`wild_specialist`, `Zombie`), or its name with spaces (`Void Crawler`). None where no mode matches.
- * `among` names the submodes to look in instead, where a mode's submodes are its classes (TNT's Wizards).
+ * The mode of the kit or class the schema stores as selected, in any case, with underscores (`wild_specialist`) or
+ * spaces (`Void Crawler`). `among` looks in a mode's submodes instead, where they're its classes (TNT's Wizards).
  */
 export const selectedMode = (game: Game, stored: string, among: readonly string[] = game.modes.getApiModes()): string | undefined => {
   const squashed = stored.toLowerCase().replaceAll(/[^a-z]/g, "");
@@ -154,38 +118,25 @@ export const selectedMode = (game: Game, stored: string, among: readonly string[
 
 /** One page: a mode, or a mode's submode. */
 export interface PageSpec {
-  /**
-   * Where the page's cells are stored when not at its mode (or mode and submode): `""` for a game that stores every
-   * stat once for the game (Paintball, Walls).
-   */
+  /** Where the cells are stored when not at the mode (or submode): `""` for a game that stores them once (Walls). */
   place?: string;
-  /** The card's title after the game's name; `game.stats` and the mode's name by default. */
+  /** `game.stats` and the mode's name by default. */
   heading?: Partial<GamePage["heading"]>;
-  /** The page's own level header, or null for none; the game's otherwise. */
+  /** Null for none; the game's by default. */
   level?: LevelSpec | null;
-  /** The page's own overview; the game's otherwise. */
+  /** The game's by default. */
   overview?: OverviewSpec[];
   sections: SectionSpec[];
 }
 
-/**
- * Which modes the switcher weighs for the one the player has played most. Overall and the other modes that add up
- * others never count, nor does a mode that stores none of games played, wins and losses, or wins.
- */
+/** Which modes the switcher weighs for the one played most; Overall never counts. */
 export interface MostPlayedSpec {
   /** Modes besides Overall that add up others (BedWars' Core). */
   skip?: string[];
-  /** The modes that compete, where only some of the rest do; every mode not skipped by default. */
   among?: string[];
-  /**
-   * Where a mode stores its stats, when not at the mode itself (Duels' Bridge at `bridge.overall`), or the places it adds
-   * up (Duels' Spleef, at `spleef.spleef` and `spleef.bowSpleef`).
-   */
+  /** Where a mode stores its stats (Duels' Bridge at `bridge.overall`), or the places it adds up (Duels' Spleef). */
   place?: (mode: string) => string | string[];
-  /**
-   * The count to weigh by, where the usual order would pick one that only a few modes store (Arcade counts wins, since
-   * only three of its games count games played).
-   */
+  /** The count to weigh by, where the usual order would pick one few modes store (Arcade counts wins). */
   by?: Counted;
 }
 
@@ -195,43 +146,35 @@ export interface ModeSpec {
   submodes?: { key: string; name: string }[];
   /** The submode of the class the player has selected, where the submodes are classes (TNT's Wizards). */
   selected?: (stats: PlayerStats) => string | undefined;
-  /** Marks the submode the player has played most, weighed as a game's modes are, each at `<mode>.<submode>` by default. */
+  /** Weighs the submodes as a game's modes are, each at `<mode>.<submode>` by default. */
   mostPlayed?: MostPlayedSpec;
 }
 
-/**
- * The site's page for one game: which of the catalog's stats it shows, in what groups and order. The bot's card for the
- * game has its own layout; both take labels, colors and leaderboards from the catalog.
- */
+export const submodeOptions = (submodes: readonly { api: string; formatted: string }[]) =>
+  submodes.map(({ api, formatted }) => ({ key: api, name: formatted }));
+
+/** The site's page for one game: which of the catalog's stats it shows, in what groups and order. */
 export interface GameLayout {
   game: Game;
   /** The page's name where it isn't a game's (Challenges), Minecraft-formatted. */
   name?: string;
-  /** The modes, in order; every registry mode by default, without submodes. */
+  /** Every registry mode by default, without submodes. */
   modes?: ModeSpec[];
-  /** The mode of the kit or class the player has selected, when Hypixel sends one. */
+  /** The mode of the kit or class the player has selected. */
   selected?: (stats: PlayerStats) => string | undefined;
   /** The site's name for a mode whose registry name, shared with the bot, runs Hypixel's words together. */
   modeNames?: Record<string, string>;
   level?: LevelSpec;
-  /** Game-wide stats and selections, game stats unless `at` says otherwise. */
   overview: OverviewSpec[];
-  /**
-   * The periods a mode's page covers, where the stats are counted over periods (Quests' all time, daily, weekly and
-   * monthly); the first is the default. None by default.
-   */
+  /** The periods a mode's stats are counted over (Quests'), the first the default. */
   periods?: (mode: string) => readonly string[];
-  /** When a period's counts began, for counts taken at `at` (ms), for the page's dates; none for all time. */
+  /** When a period's counts began, for counts taken at `at` (ms); none for all time. */
   periodStart?: (period: string, at: number) => number | undefined;
   page: (mode: string, submode: string | undefined, period: string | undefined) => PageSpec;
-  /** Marks the mode the player has played most in the switcher. */
   mostPlayed?: MostPlayedSpec;
   /** Whether the player has played the game, for a page that isn't a game's; a game's comes from its overview panel. */
   played?: (stats: PlayerStats) => boolean;
-  /**
-   * Stats with a leaderboard the pages leave out, by path below the game, each with why: the site shows every other one
-   * (a test checks), and leaves a stat off while its stored value is wrong.
-   */
+  /** Stats with a leaderboard the pages leave out, by path below the game, each with why; a test checks the rest show. */
   omit?: Record<string, string>;
 }
 
@@ -249,13 +192,9 @@ const parentOf = (player: Player, path: string) => (read(player, path.slice(0, p
 type Spec = Exclude<CellSpec, string>;
 const specOf = (cell: CellSpec): Spec => (typeof cell === "string" ? { key: cell } : cell);
 
-/**
- * A number the schema couldn't work out (NaN, or an Infinity) as 0. The contract's numbers reject both, so one would
- * turn the player's page into an error rather than an empty value.
- */
+// The contract's numbers reject NaN and Infinity, so one would turn the player's page into an error.
 const finite = (value: number) => (Number.isFinite(value) ? value : 0);
 
-/** A stat's cell as the card shows it, with the page's color, heading or icon where its layout gives one. */
 function cell(player: Player, stat: Stat, spec: Spec): StatCell {
   const stored = read(player, stat.path);
   // A value the schema couldn't work out shows as one never set: 0, or the stat's own empty text.
@@ -286,10 +225,8 @@ function cell(player: Player, stat: Stat, spec: Spec): StatCell {
   };
 }
 
-/** The raw number behind a cell, for ordering; an unset or NaN value counts as 0. */
 const numberOf = (player: Player, stat: Stat) => Number(read(player, stat.path)) || 0;
 
-/** Resolves a page's specs into cells, dropping those whose `when` refuses them. */
 function cells(player: Player, game: Game, place: string, specs: CellSpec[]) {
   return specs.flatMap((entry) => {
     const spec = specOf(entry);
@@ -349,7 +286,6 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
   };
 }
 
-/** The overview's cells: its stats, and the values it works out (with no leaderboard). */
 function overview(player: Player, game: Game, specs: OverviewSpec[]): StatCell[] {
   return specs.flatMap((spec) =>
     isComputed(spec) ?
@@ -367,9 +303,8 @@ const COUNTS: [by: Counted, keys: string[]][] = [
 ];
 
 /**
- * The mode (or a mode's submode) the player has played most, counted the first way any competing one stores (games
- * played, else wins and losses, else wins alone) unless the game names one, so each is weighed by the same count and
- * one that doesn't store it counts 0. A tie goes to the first, and nothing played marks nothing.
+ * The mode (or submode) played most, every one weighed by the first count any of them stores (a mode without it counts
+ * 0) unless the game names one. A tie goes to the first, and nothing played marks nothing.
  */
 function mostPlayed(player: Player, game: Game, modes: { key: string }[], spec: MostPlayedSpec) {
   const skip = ["overall", ...(spec.skip ?? [])];
@@ -397,10 +332,8 @@ function mostPlayed(player: Player, game: Game, modes: { key: string }[], spec: 
 type Progression = NonNullable<GamePage["level"]>["progression"];
 
 /**
- * A level's progression as the panel draws it. The last level has no next step: the schema leaves `max` out, and a
- * stored player reads it back as 0. Hypixel also keeps counting past a max (a Murder Mystery knife at 942 of 500).
- * Either way the panel says MAXED, as the card does, rather than "/0" or a bar past its end. Otherwise the percent
- * stays within the bar.
+ * MAXED, as on the card, at the last level (no `max`, which a stored player reads back as 0) and past a max, which
+ * Hypixel keeps counting beyond (a Murder Mystery knife at 942 of 500).
  */
 export function levelProgression(progression: Progression): Progression {
   const current = finite(progression.current);
@@ -424,17 +357,13 @@ function level(player: Player, game: Game, spec: LevelSpec): NonNullable<GamePag
   };
 }
 
-/** A page's name: its own, or its game's. */
 export function pageName(layout: GameLayout): string {
   if (layout.name) return layout.name;
   if (!layout.game.id) throw new Error(`${layout.game.key} has neither a name nor a game id`);
   return FormattedGame[layout.game.id];
 }
 
-/**
- * The `player.game` view model, but for the nav to the player's other games: one page of one game, in one of its
- * mode's periods where it has them (the first by default).
- */
+/** The `player.game` view model, without the nav to the player's other games. */
 export function buildGamePage(
   player: Player,
   layout: GameLayout,
@@ -499,7 +428,6 @@ export function buildGamePage(
   };
 }
 
-/** Every page of a layout: each mode, each of its submodes, and each of its periods. */
 export function pagesOf(layout: GameLayout): { mode: string; submode?: string; period?: string }[] {
   return pageModes(layout).flatMap(({ key: mode, submodes }) => {
     const pages = submodes?.length ? submodes.map(({ key: submode }) => ({ mode, submode })) : [{ mode }];
@@ -508,13 +436,12 @@ export function pagesOf(layout: GameLayout): { mode: string; submode?: string; p
   });
 }
 
-/** Every stat a layout can show, by path, whatever its `when`s decide: for the tests. Throws for a key not in the catalog. */
+/** Every stat a layout can show, by path, whatever its `when`s decide. Throws for a key not in the catalog. */
 export function shownPaths(layout: GameLayout): Set<string> {
   const { game } = layout;
   const shown = new Set<string>();
   const add = (place: string, specs: OverviewSpec[]) => {
     for (const entry of specs) {
-      // A worked-out value has no field.
       if (isComputed(entry)) continue;
       const spec = specOf(entry);
       shown.add(statAt(game, spec.at ?? place, spec.key).path);

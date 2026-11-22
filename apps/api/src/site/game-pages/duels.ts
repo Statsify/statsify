@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { CellSpec, GameLayout, LevelSpec, PageSpec, SectionSpec } from "./layout.js";
+import { type CellSpec, type GameLayout, type LevelSpec, type PageSpec, type SectionSpec, submodeOptions } from "./layout.js";
 import { DUELS, shapeAt, shapeKeys } from "@statsify/catalog";
 import { type ApiModeFromGameModes, DUELS_MODES, type DuelsModes, type PlayerStats } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
@@ -34,14 +34,10 @@ const RECORD = ["wins", "losses", "wlr"];
 const KILLS = ["kills", "deaths", "kdr"];
 const WINSTREAK_KEYS = ["winstreak", "bestWinstreak"];
 
-/**
- * Hypixel leaves every winstreak out for a player who hides them, and a missing count reads back as 0 (the save drops
- * zeros too, so the stored document can't tell). One win is a streak of one, so Duels wins with no best winstreak
- * mean they're hidden. The player page's Duels panel says so too.
- */
+// Hypixel leaves winstreaks out for a player who hides them, which reads back as 0. One win is a streak of one, so
+// wins with no best winstreak mean they're hidden.
 export const winstreaksHidden = ({ duels }: PlayerStats) => duels.overall.wins > 0 && !duels.overall.bestWinstreak;
 
-/** A winstreak cell, which says "Hidden" for a player who hides them. */
 const streak = (key: string, at?: string): CellSpec => ({ key, ...(at && { at }), hidden: winstreaksHidden });
 
 /** The modes on Overall's Titles, as the card lists them (every mode but Arena), each with its title and wins. */
@@ -50,10 +46,7 @@ const TITLES: CellSpec[] = [
   "skywars", "sumo", "uhc",
 ].map((mode) => ({ ...winsOf(mode), name: (stats: PlayerStats) => titled(stats, mode).titleFormatted, color: "§f" }));
 
-/**
- * The Bridge and UHC submodes whose card shows the mode's overall Shots Fired in place of their own. Their Shots Fired
- * stays off the site until the card shows the right one.
- */
+/** The Bridge and UHC submodes whose card shows the mode's overall Shots Fired in place of their own. */
 const SHOTS_FIRED_OFF = ["bridge.solo", "bridge.doubles", "bridge.threes", "bridge.fours", "uhc.solo", "uhc.doubles", "uhc.fours", "uhc.deathmatch"];
 
 /** The card's sidebar rows that belong to the mode (the game's go in the overview), where the mode stores them. */
@@ -76,11 +69,11 @@ const boxes = (mode: string): SectionSpec[] =>
       row.map((key) => (WINSTREAK_KEYS.includes(key) ? streak(key, `${mode}.${box}`) : { key, at: `${mode}.${box}` }))),
   }));
 
-/** A mode's submodes as the registry names them. Overall's Titles are a section of its page: every mode's title, not a subset of its games. */
+/** A mode's submodes as the registry names them. Overall's Titles are a section of its page, not a submode. */
 const submodesOf = (mode: string) =>
   mode === "overall" ?
     [] :
-    DUELS_MODES.getModes().find(({ api }) => api === mode)?.submodes.map(({ api, formatted }) => ({ key: api, name: formatted })) ?? [];
+    submodeOptions(DUELS_MODES.getModes().find(({ api }) => api === mode)?.submodes ?? []);
 
 function page(mode: string, submode: string | undefined): PageSpec {
   const place = submode ? `${mode}.${submode}` : mode;
