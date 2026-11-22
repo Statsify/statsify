@@ -247,13 +247,13 @@ impl<'a> BodyPart<'a> {
         }
         .create();
 
-        // In Minecraft the outer layer is scaled up 12.5%. A posed part grows around where its
-        // turn left its center; unposed parts keep scale_around, so bare renders don't move.
+        // In Minecraft the outer layer is scaled up 12.5%. Unposed parts keep scale_around, so
+        // standing renders stay the same.
         match rotation {
           Some(rotation) if self.placement.posed => {
-            let center =
+            let turned_center =
               rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot;
-            layer.grow_around(1.125, center);
+            layer.grow_around(1.125, turned_center);
           }
           _ => layer.scale_around(1.125, position),
         }
