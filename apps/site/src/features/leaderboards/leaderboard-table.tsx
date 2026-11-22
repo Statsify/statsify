@@ -120,10 +120,7 @@ export function PageNav({ field, page, last = page, pages }: { field: string; pa
   );
 }
 
-/**
- * The `around=<name>` entry, the shared search box submitting into this leaderboard's query string, and beside it (below
- * on phones) the `position=<n>` one.
- */
+/** The `around=<name>` and `position=<n>` entries. */
 export function FindPlayer({ field, pages, miss }: { field: string; pages: number; miss?: AroundMiss }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -157,10 +154,7 @@ export function FindPlayer({ field, pages, miss }: { field: string; pages: numbe
   );
 }
 
-/**
- * Opens the page holding a position, with its row marked: rank 5,000 in one step rather than 200 Nexts. A plain GET
- * form (`?position=`), so it works without scripts; with them it navigates in place.
- */
+/** Opens the page holding a position, its row marked. A plain GET form (`?position=`), so it works without scripts. */
 function JumpTo({ field, pages }: { field: string; pages: number }) {
   const { t } = useTranslation();
   const navigate = useNavigate();

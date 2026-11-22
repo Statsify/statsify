@@ -83,28 +83,21 @@ const boxVariants = {
 };
 
 /**
- * A box drawn as one of the bot's cells (a leaderboard cell, a stat, a heading): its content centered, at least a tap
- * target tall. The Box sets its content's size, so the text and whatever wraps it carry their own; a wrapper at the
- * Box's size would sit the text on its baseline, low. Grids of them keep the bot's 4 px gap (`BOX_GAP`).
+ * A box drawn as one of the bot's cells. The text inside carries its own size: a wrapper at the Box's size would sit
+ * the text low, on its baseline.
  */
 export const CELL = "content:flex content:min-h-11 content:items-center content:justify-center content:px-3 content:py-1";
 
 /** The bot's gap between boxes, for a grid of them; a `grid-cols-snap-*` grid sizes its columns by it. */
 export const BOX_GAP = "gap-1 [--snap-gap:4px]";
 
-/**
- * For a Box that is itself the link, button or summary: its keyboard ring inside the box's edge, on the content, which
- * paints last. A ring outside the edge would sit under the box's own shadow on the right and at the foot.
- */
+/** For a Box that is itself the link, button or summary: a ring outside its edge would sit under its own shadow. */
 export const BOX_RING = "focus-ring-none focus-visible:content:focus-ring-inset";
 
 /** A heading's box across its panel or row, slimmer than a stat's, as the card's are. */
 export const HEADING_BOX = cn(CELL, "col-span-full content:min-h-0 content:py-1.5");
 
-/**
- * A stat's box: the value at its foot, so the values in a row line up whatever their labels do, and narrow sides, so a
- * phone's three across still fit a long value.
- */
+/** A stat's box: the value at its foot, so the values in a row line up whatever their labels do. */
 export const STAT_BOX = cn(CELL, "content:items-stretch content:px-1 content:py-2");
 
 /** A stat in its own box, as the card draws each one: the `<dl>` sits inside, since a `<dl>` can't hold the Box's wrappers. */
@@ -152,8 +145,6 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
   const borderRadius = toBorderRadius(partialBorderRadius);
   const Component: ElementType = as ?? "div";
 
-  // The `box` utility (app.css) draws the default card: its bevels, shadow and colors. A Box's style carries only
-  // what differs from it, so most carry none.
   const vars: Record<string, string> = {};
   if (variant !== "default") {
     vars["--box-fill"] = boxVariants[variant].background;

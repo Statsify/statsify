@@ -65,11 +65,7 @@ export function useRevealOnOpen(id: string) {
   }, [id]);
 }
 
-/**
- * Share and save: the page's own link and its card (the image Discord unfurls) to copy and download, or on phones to
- * send through the share sheet, and on the player page the UUID, dashed and undashed. Rendered only while open, so the
- * card loads only then.
- */
+/** The page's link and its card (the image Discord unfurls) to copy, save or share, and the player's UUID where given. */
 export function SharePanel({
   id,
   name,
@@ -88,7 +84,6 @@ export function SharePanel({
   const { t } = useTranslation();
   const { origin } = localeRoute.useLoaderData();
   useRevealOnOpen(id);
-  // The page as it's open, mode and all.
   const href = useLocation({ select: (location) => location.href });
   const link = `${origin}${href}`;
   const shareable = useShareableCard(card.src, file);
@@ -134,9 +129,8 @@ export function SharePanel({
 }
 
 /**
- * The card as a file for the OS share sheet, on touch screens whose browser can share files (phones and tablets, not
- * desktops). Fetched when the panel opens, since a share sheet opened after a fetch in the click would lose the tap's
- * user activation in Safari. `null` elsewhere, until it loads, and if it fails.
+ * The card as a file for a touch screen's share sheet, or `null`. Fetched when the panel opens: a share sheet opened
+ * after a fetch in the click would lose the tap's user activation in Safari.
  */
 function useShareableCard(src: string, file: string) {
   const [shareable, setShareable] = useState<File | null>(null);
