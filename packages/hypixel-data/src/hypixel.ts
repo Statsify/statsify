@@ -8,7 +8,7 @@
 
 import { ARMOR, HOTBAR } from "./kits.js";
 import { type Compound, readNbt } from "./nbt.js";
-import { type BannerLayer, type ItemStack, legacyBannerPattern, legacyDye, legacyEffect, legacyItem } from "@statsify/textures";
+import { type ItemStack, legacyBannerPattern, legacyDye, legacyEffect, legacyItem } from "@statsify/textures";
 import { gunzipSync } from "fflate";
 
 const base64Bytes = (base64: string) => Uint8Array.from(atob(base64), (char) => char.codePointAt(0)!);
@@ -53,7 +53,7 @@ function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefine
   });
 
   const banner = tag?.BlockEntityTag;
-  const patterns = banner?.Patterns?.flatMap(({ Pattern, Color }): BannerLayer[] => {
+  const patterns = banner?.Patterns?.flatMap(({ Pattern, Color }) => {
     const pattern = legacyBannerPattern(Pattern);
     return pattern ? [{ pattern, color: legacyDye(Color) }] : [];
   });
