@@ -17,12 +17,15 @@ import {
   Watchdog,
 } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
+import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
-import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
+import { Observable, catchError, defer, lastValueFrom, map, mergeMap, of, tap, throwError } from "rxjs";
 import type { APIData } from "@statsify/util";
+import type { Redis } from "ioredis";
 
 const DEFAULT_RATE_LIMIT_SECONDS = 60;
+const RATE_LIMIT_KEY = "hypixel:rate-limited";
 
 const parseHeader = (value: unknown) => {
   const parsed = Number.parseInt(String(value), 10);
@@ -33,9 +36,11 @@ const parseHeader = (value: unknown) => {
 export class HypixelService {
   private readonly logger = new Logger("HypixelService");
   private resources = new Map<string, APIData>();
-  private rateLimitedUntil = 0;
 
-  public constructor(private readonly httpService: HttpService) {}
+  public constructor(
+    private readonly httpService: HttpService,
+    @InjectRedis() private readonly redis: Redis
+  ) {}
 
   public shouldCache(expirey: number, cache: CacheLevel): boolean {
     return (
@@ -149,31 +154,36 @@ export class HypixelService {
     return throwError(() => new HypixelUnavailableException());
   }
 
-  private startRateLimit(headers: Record<string, unknown>) {
-    const seconds =
+  private async startRateLimit(headers: Record<string, unknown>) {
+    const resetSeconds =
       parseHeader(headers["ratelimit-reset"]) ??
       parseHeader(headers["retry-after"]) ??
       DEFAULT_RATE_LIMIT_SECONDS;
 
-    if (Date.now() >= this.rateLimitedUntil) {
-      this.logger.warn(`Hypixel is rate limiting requests for the next ${seconds} seconds`);
-    }
+    const seconds = Math.max(1, resetSeconds);
 
-    this.rateLimitedUntil = Math.max(this.rateLimitedUntil, Date.now() + seconds * 1000);
-  }
+    const started = await this.redis.set(RATE_LIMIT_KEY, 1, "PX", seconds * 1000, "NX");
+    if (started) this.logger.warn(`Hypixel is rate limiting requests for the next ${seconds} seconds`);
 
-  private rateLimitError() {
-    const seconds = Math.ceil((this.rateLimitedUntil - Date.now()) / 1000);
-    return new HypixelUnavailableException(Math.max(1, seconds));
+    return seconds;
   }
 
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
     const isKeyed = !url.startsWith("/resources/");
+    const pausedMs$ = isKeyed ? defer(() => this.redis.pttl(RATE_LIMIT_KEY)) : of(0);
 
-    if (isKeyed && Date.now() < this.rateLimitedUntil) {
-      return throwError(() => this.rateLimitError());
-    }
+    return pausedMs$.pipe(
+      mergeMap((pausedMs) => {
+        if (pausedMs > 0) {
+          return throwError(() => new HypixelUnavailableException(Math.ceil(pausedMs / 1000)));
+        }
 
+        return this.fetch<T>(url, isKeyed, params);
+      })
+    );
+  }
+
+  private fetch<T>(url: string, isKeyed: boolean, params?: Record<string, unknown>): Observable<T> {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     const child = transaction?.startChild({
@@ -185,28 +195,26 @@ export class HypixelService {
       tap((res) => {
         child?.setHttpStatus(res.status);
         child?.finish();
-
-        if (isKeyed && parseHeader(res.headers["ratelimit-remaining"]) === 0) {
-          this.startRateLimit(res.headers);
-        }
       }),
-      map((res) => res.data),
-      catchError((err) => {
+      catchError(async (err) => {
         const outOfRequests =
           err.response?.status === 429 &&
           (parseHeader(err.response.headers["ratelimit-remaining"]) ?? 0) === 0;
 
         if (isKeyed && outOfRequests) {
-          this.startRateLimit(err.response.headers);
-          return throwError(() => this.rateLimitError());
+          throw new HypixelUnavailableException(await this.startRateLimit(err.response.headers));
         }
 
-        return throwError(
-          () =>
-            new Error(`Fetching ${url} failed with reason: ${err.message}`, {
-              cause: err,
-            })
-        );
+        throw new Error(`Fetching ${url} failed with reason: ${err.message}`, {
+          cause: err,
+        });
+      }),
+      mergeMap(async (res) => {
+        if (isKeyed && parseHeader(res.headers["ratelimit-remaining"]) === 0) {
+          await this.startRateLimit(res.headers);
+        }
+
+        return res.data;
       })
     );
   }
