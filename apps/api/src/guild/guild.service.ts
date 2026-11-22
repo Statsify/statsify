@@ -25,6 +25,8 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 /** `GuildService.get` refreshes a guild from Hypixel at most once per this cooldown. */
 export const GUILD_COOLDOWN_MS = 600_000;
 
+const cachedResponse = (guild: Guild) => ({ ...deserialize(Guild, flatten(guild)), cached: true });
+
 @Injectable()
 export class GuildService {
   private readonly logger = new Logger("GuildService");
@@ -49,20 +51,25 @@ export class GuildService {
     { namesFromHypixel = true, throwOnHypixelError = false }: { namesFromHypixel?: boolean; throwOnHypixelError?: boolean } = {}
   ): Promise<Guild | null> {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
+    const fresh = !!cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache);
     const unnamed = namesFromHypixel && cachedGuild?.members.some((member) => !member.expiresAt);
 
-    if (cachedGuild && this.hypixelService.shouldCache(unnamed ? 0 : cachedGuild.expiresAt, cache)) {
-      return {
-        ...deserialize(Guild, flatten(cachedGuild)),
-        cached: true,
-      };
-    }
+    if (cachedGuild && this.hypixelService.shouldCache(unnamed ? 0 : cachedGuild.expiresAt, cache))
+      return cachedResponse(cachedGuild);
 
-    const guild = await this.hypixelService.getGuild(
-      tag,
-      type.toLowerCase() as Lowercase<GuildQuery>,
-      { throwOnError: throwOnHypixelError }
-    );
+    let guild: Guild | null;
+
+    try {
+      guild = await this.hypixelService.getGuild(
+        tag,
+        type.toLowerCase() as Lowercase<GuildQuery>,
+        { throwOnError: throwOnHypixelError || fresh }
+      );
+    } catch (error) {
+      // A fresh guild refetched only to name its members keeps its cached copy, rather than reading as not found.
+      if (cachedGuild && fresh) return cachedResponse(cachedGuild);
+      throw error;
+    }
 
     if (!guild) {
       await this.handleGuildNotFound(cachedGuild, tag, type);
