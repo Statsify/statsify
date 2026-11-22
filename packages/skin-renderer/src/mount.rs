@@ -228,8 +228,7 @@ fn placement(scale: f32) -> Matrix4<f32> {
     * Matrix4::from_scale(size)
 }
 
-// The game draws entities unblended through its 0.1 alpha test, so a texel shows whole or not at
-// all
+// The game draws entities unblended, so a texel that passes its alpha test shows whole
 fn compose(layers: &[Uint8Array]) -> Result<RgbaImage> {
   let (base, layers) = layers.split_first().ok_or(Error::MissingMountTexture)?;
   let mut texture = image::load_from_memory(base)?.into_rgba8();
@@ -330,8 +329,8 @@ mod tests {
 
   #[test]
   fn seats_the_rider_on_the_saddle_at_any_scale() {
-    // The rider's feet are at -17.125, and a horse's hooves' bottoms stand 0.85 blocks below
-    // them, plus the 0.025 the game's model leaves between hoof and ground
+    // The rider's feet are at -17.125, 0.85 blocks above the ground, and the game's model leaves
+    // a horse's hooves 0.025 above it
     assert_close(height(MountEntity::Horse, 24.1), -31.605);
 
     // The seat's top boards sit just under the seated thighs at -6.9 on every mount, and a
