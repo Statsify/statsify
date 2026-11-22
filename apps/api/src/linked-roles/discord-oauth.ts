@@ -57,7 +57,7 @@ export const discordRequest = async (
       Authorization: `Bearer ${accessToken}`,
       ...(body && { "Content-Type": "application/json" }),
     },
-    ...(body && { body }),
+    body,
   });
 
   if (!response.ok) throw new DiscordRequestError(method, path, response.status);
