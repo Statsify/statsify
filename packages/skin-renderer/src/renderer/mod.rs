@@ -412,16 +412,18 @@ impl SkinRenderer<wasm::WasmBackend> {
     Self::create(backend).await
   }
 
-  // Browsers drop the canvas's frames on tab switches and resizes.
+  // Browsers drop the canvas's frames on tab switches and resizes. Frames are only drawn on request, so a dropped
+  // one asks for the next.
   pub fn render(&self, model: &Model) {
     let surface = &self.backend.surface;
 
     let output_texture = match surface.get_current_texture() {
       Ok(texture) => texture,
       Err(wgpu::SurfaceError::Lost | wgpu::SurfaceError::Outdated) => {
-        return surface.configure(self.backend.device(), &self.config)
+        surface.configure(self.backend.device(), &self.config);
+        return self.window().request_redraw();
       }
-      Err(_) => return,
+      Err(_) => return self.window().request_redraw(),
     };
 
     let (encoder, output_texture) = self.render_sync(

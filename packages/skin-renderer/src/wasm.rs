@@ -186,6 +186,7 @@ impl JsModel {
     }
 
     renderer.frame(&model);
+    renderer.window().request_redraw();
 
     Ok(model)
   }
@@ -297,6 +298,7 @@ impl JsSkinRenderer {
 
             if let Some(renderer) = renderers.get_mut(window_id) {
               renderer.set_yaw(yaw);
+              renderer.window().request_redraw();
             } else if let Some((model, _)) = staged_models.get_mut(window_id) {
               model.yaw = Some(yaw);
             }
@@ -351,9 +353,6 @@ impl JsSkinRenderer {
       });
 
       match event {
-        Event::AboutToWait => renderers
-          .iter()
-          .for_each(|(_, renderer)| renderer.window().request_redraw()),
         Event::WindowEvent {
           ref event,
           window_id,
@@ -378,6 +377,7 @@ impl JsSkinRenderer {
 
               if let Some(model) = models.get(&window_id) {
                 renderer.frame(model);
+                renderer.window().request_redraw();
               }
             }
             WindowEvent::RedrawRequested => {
