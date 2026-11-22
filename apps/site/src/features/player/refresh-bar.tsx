@@ -74,9 +74,8 @@ export function RefreshBar({
   expiresAt: number;
   refresh: (deadline: AbortSignal, auto: boolean, token: string | undefined) => Promise<ActionResult<unknown>>;
   /**
-   * Once the page opens, update a save older than 15 minutes (past its cooldown when the search opened the page) by
-   * itself, once per page view. It fails quietly: a refusal counts down without the message, and anything else leaves
-   * the button as it was.
+   * Once per page view, update a save older than 15 minutes (or past its cooldown, when the search opened the page) by
+   * itself. It fails quietly: a refusal counts down without the message, and anything else leaves the button as it was.
    */
   auto?: boolean;
   /** One row on phones too, the time beside a smaller button: a game page, whose tables should start near the top. */

@@ -36,7 +36,7 @@ export function RecentPlayers({ onClear }: { onClear: () => void }) {
     <div className="recent-hold w-full" style={recent ? ({ "--recent": players.length } as CSSProperties) : undefined}>
       {players.length > 0 && (
         <section aria-labelledby={headingId} className={cn("flex flex-col", BOX_GAP)}>
-          {/* The heading in a box over the cards, as a game page's are; Clear's ring sits inside, as the box clips. */}
+          {/* Clear's ring sits inside, as the box clips. */}
           <Box className={cn(CELL, "content:justify-between content:gap-4 content:py-0")}>
             <h2 id={headingId} className="text-mc-1.5 font-bold">{t("search.recent.title")}</h2>
             <button

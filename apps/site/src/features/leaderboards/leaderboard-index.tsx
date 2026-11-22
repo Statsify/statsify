@@ -24,8 +24,7 @@ import type { IndexData } from "./leaderboard-data";
 
 const localeRoute = getRouteApi("/{-$locale}");
 
-// One class on each list instead of one per link: there are thousands of them. Each link is a box drawn by CSS
-// (`box-item`), 4 px apart, as a game page's list draws its lines.
+// One class on each list instead of one per link: there are thousands of them.
 const LIST = cn(
   "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&>li]:box-item [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:text-mc-1.5 [&_a:hover]:brightness-125 [&_a:hover]:underline [&_a:active]:brightness-125",
   BOX_GAP
@@ -40,11 +39,7 @@ function useBoardLinks() {
   return { prefix, delegation: useLinkDelegation(locale === DEFAULT_LOCALE ? undefined : locale) };
 }
 
-/**
- * One group: its 44 px summary in a box, then its links each in a 44 px box under it, one column on phones and up to
- * four on desktop, as a game page's folded lists. With `icons`, every summary keeps a slot for its game's icon, so the
- * names line up whether a group has one or not.
- */
+/** One folded group. With `icons`, every summary keeps a slot for its game's icon, so the names line up. */
 function IndexPanel({ group, open, icons, children }: { group: Omit<GroupSummary, "count">; open: boolean; icons?: boolean; children: ReactNode }) {
   return (
     // The group's id is its key, so `#<key>` lands on it.

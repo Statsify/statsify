@@ -165,9 +165,7 @@ export function useLeaderboardStream(view: LeaderboardView) {
   const baseline = useRef(Infinity);
   const anchor = useRef<{ uuid: string; top: number }>(undefined);
   const refocus = useRef(false);
-  // How the reader last moved, and when. End (or ⌘↓) heads for the footer: nothing loads by itself, or lands, until
-  // they move some other way. Scrolling onto the controls (a wheel, swipe or scroll key) means they got there before
-  // the page.
+  // After End (or ⌘↓), nothing loads by itself, or lands, until the reader moves some other way.
   const input = useRef<{ kind: "end" | "scroll" | "touch"; at: number }>(undefined);
   const touchY = useRef<number>(undefined);
   const moved = (kind?: "end" | "scroll" | "touch") => {
@@ -252,9 +250,8 @@ export function useLeaderboardStream(view: LeaderboardView) {
     if (intoRoom) loadIntoRoom();
   }, [intoRoom]);
 
-  // Auto-loading waits for the reader: near the end and scrolled on since the last page landed, or scrolling on the
-  // controls, which they reached before the page did. Not after a jump there (End, the scrollbar), and not on the
-  // controls or the footer by keyboard, so the footer can be reached.
+  // Not after a jump to the end (End, the scrollbar), and not with keyboard focus on the controls or the footer, so the
+  // footer can be reached.
   const loadByScroll = useEffectEvent(() => {
     if (!mayLoadByItself()) return;
     if (atControls() ? !scrolling() : !near.current || scrollY <= baseline.current) return;

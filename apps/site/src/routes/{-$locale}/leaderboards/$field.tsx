@@ -50,11 +50,7 @@ const positionNumber = (raw: unknown) => {
 /** `?mode=`, the mode a game's index opens at; a mode the game has no leaderboards under opens the first group. */
 const modeKey = (raw: unknown) => (typeof raw === "string" && raw.length <= 32 ? raw : undefined);
 
-/**
- * `?page=` is left out of URLs for the first page; `?around=<name or UUID>` anchors on a player, and `?position=<n>` on
- * a position. `?mode=` is a game index's. A plain function, not a zod schema: every page's first load carries the
- * routes' search parsing.
- */
+/** A plain function, not a zod schema: every page's first load carries the routes' search parsing. */
 const validateSearch = (
   search: Record<string, unknown>
 ): { page?: number; around?: string; position?: number; mode?: string } => ({

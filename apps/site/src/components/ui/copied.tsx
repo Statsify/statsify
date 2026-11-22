@@ -9,12 +9,11 @@
 import { Floating } from "./hint";
 import { useEffect, useState } from "react";
 
-/** How long "Copied!" shows. */
 const COPIED_MS = 1500;
 
 /**
- * Copies text and keeps `mark` (the caller's own: a flag, or where to show "Copied!") for a moment once it worked.
- * `copy` resolves whether it did: pages served over plain HTTP have no clipboard, and a browser can refuse.
+ * Copies text and keeps `mark` (a flag, or where to show "Copied!") for a moment once it worked. `copy` resolves
+ * whether it did: pages served over plain HTTP have no clipboard, and a browser can refuse.
  */
 export function useCopy<T>() {
   const [copied, setCopied] = useState<T>();

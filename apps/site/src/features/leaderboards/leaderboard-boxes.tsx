@@ -29,12 +29,8 @@ const TEXT = "text-mc-1.5 lg:text-mc-2";
 const TONE = "forced-colors:outline-2 forced-colors:outline-[color:Highlight]";
 
 /**
- * The leaderboard as the bot draws it (`leaderboard.profile.tsx`): every cell is its own card Box on the page's
- * background, with no panel around them, and the highlighted (`around`) row's boxes white as on the bot. Both widths
- * are rendered and CSS shows one, so neither shifts when the page hydrates. Two markups rather than one: a row's name
- * is one box on a phone and three of the table's columns from `md`, and a Box draws its own fill, so one element can't
- * be both. It also keeps the rows' players, so opening one is a single request. `chunks` are the pages a stream has
- * loaded, each its own group of rows under its page's heading.
+ * The leaderboard as the bot draws it, every cell its own box. Both widths are rendered and CSS shows one: a row's name
+ * is one box on a phone and three columns from `md`, and a Box draws its own fill, so one element can't be both.
  */
 export function LeaderboardBoxes({ page, chunks: loaded, busy }: { page: LeaderboardPage; chunks?: LeaderboardPage[]; busy?: boolean }) {
   const { t } = useTranslation();
@@ -62,10 +58,7 @@ export function LeaderboardBoxes({ page, chunks: loaded, busy }: { page: Leaderb
   );
 }
 
-/**
- * From `md` up: a header row of boxes (position, player, the board's columns), then one row per player: position,
- * head, name and each value.
- */
+/** From `md` up. */
 function BoxTable({ page, chunks }: { page: LeaderboardPage; chunks: LeaderboardPage[] }) {
   const { t } = useTranslation();
 
@@ -163,11 +156,7 @@ function ChunkHeading({ page }: { page: LeaderboardPage }) {
   );
 }
 
-/**
- * Below `md`: a row's position, head and name in a box across the page, which links to the player, and its stats in
- * boxes under it, each label over its value, three across for three and otherwise two. A board with one stat keeps it
- * beside the name, so each row is one line. A long name wraps rather than being cut. The home page's preview uses it too.
- */
+/** Below `md`: a row's name in a box across the page, its stats under it. The home page's preview uses it too. */
 export function PhoneRows({ page, chunks }: { page: LeaderboardPage; chunks?: LeaderboardPage[] }) {
   return (
     <div role="table" data-layout aria-label={plainText(page.formatted)} className="flex flex-col gap-2 md:hidden">

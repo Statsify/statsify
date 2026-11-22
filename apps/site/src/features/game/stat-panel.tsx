@@ -67,12 +67,7 @@ function SectionTitle({ section }: { section: StatSection }) {
 /** A heading over one of a panel's rows, at the section heading's size in a taller box, as the card draws it. */
 const ROW_HEADING_BOX = cn(HEADING_BOX, "content:py-3");
 
-/**
- * A panel of stats as the card draws it: the section's heading in a box across it when it has one, then the card's
- * rows, every stat its own box with the card's gaps between them. A list (maps, challenges) is name and value lines in
- * columns of boxes instead, and a long one starts folded behind its heading and count. A list the page's filter
- * searches keeps the lines whose name matches, and opens while it filters.
- */
+/** A panel of stats as the card draws it, every stat its own box; a list (maps, challenges) is name and value lines. */
 export function StatPanel({
   section,
   username,
@@ -220,11 +215,7 @@ export function useLabelText(): (cell: Stat) => string {
   return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainName(cell.name));
 }
 
-/**
- * A stat's value as the card prints it: a number in the locale's format (with its cap or unit), or the API's text. A
- * number the format shortens carries the exact one, as a `Hint`, or under a link only for screen readers, since the
- * link shows it.
- */
+/** A stat's value as the card prints it; a linked one's exact number is for screen readers, as the link shows it. */
 function useStatValue(cell: Stat, linked = false): ReactNode {
   const n = useNumberFormat(cell.trim);
   const exact = useExactNumber();
