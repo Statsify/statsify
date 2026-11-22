@@ -70,8 +70,7 @@ pub struct ModelInstance {
   pub rotation: Option<(f64, f64, f64)>,
   pub scale: Option<(f64, f64, f64)>,
   /// Whether the camera fits the model in the frame, true by default. A model left out still
-  /// draws, cut off where it reaches past the frame's edges.
-  /// One reaching or passing the camera fails with "The scene is too small or too large to frame".
+  /// draws, cut off at the frame's edges, and fails the render if it reaches the camera.
   pub framed: Option<bool>,
 }
 
