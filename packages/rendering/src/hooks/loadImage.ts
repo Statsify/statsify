@@ -22,7 +22,7 @@ export const loadImage = async (url: string | Buffer): Promise<Image> => {
 
   if (url.startsWith("http")) {
     const data = await axios
-      .get(url, { responseType: "arraybuffer" })
+      .get(url, { responseType: "arraybuffer", timeout: 5000 })
       .then((res) => res.data);
 
     const buffer = Buffer.from(data);
