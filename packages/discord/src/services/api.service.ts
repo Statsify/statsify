@@ -7,7 +7,7 @@
  */
 
 import { AxiosError } from "axios";
-import { ButtonBuilder, type IMessage, LocalizeFunction } from "#messages";
+import { ButtonBuilder, type IMessage, type LocalizeFunction } from "#messages";
 import { ButtonStyle } from "discord-api-types/v10";
 import {
   CacheLevel,
