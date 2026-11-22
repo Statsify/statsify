@@ -18,7 +18,7 @@ import {
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
-import { Observable, catchError, lastValueFrom, map, of, throwError } from "rxjs";
+import { type Observable, catchError, lastValueFrom, map, of, throwError } from "rxjs";
 import type { APIData } from "@statsify/util";
 
 @Injectable()
