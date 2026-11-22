@@ -52,8 +52,7 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
   MYTHIC: 22,
 };
 
-// The bag keeps items that stopped being accessories, which the items resource files elsewhere (the old Personal
-// Compactors). Not every anniversary hat is in the resource, so their SPECIAL and VERY_SPECIAL rarities mark them.
+// Some anniversary hats aren't in the items resource, so their rarity marks them.
 const isFormerAccessory = ({ id, rarity }: ItemView, items: ItemsResource) => {
   const category = items.items[id]?.category;
   return rarity === "SPECIAL" || rarity === "VERY_SPECIAL" || (category !== undefined && category !== "ACCESSORY");
