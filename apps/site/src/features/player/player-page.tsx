@@ -514,8 +514,9 @@ function loginText(ms: number): string {
 }
 
 /**
- * A login date in the visitor's zone, with how long ago and the card's UTC on hover, focus or tap once mounted. The
- * server's UTC is in the HTML until `ClockScript` replaces it before first paint.
+ * A login date in the visitor's zone. Once the page has mounted, how long ago it was and the card's UTC show on hover,
+ * focus or tap. The HTML has UTC, as the server can't know the zone; `ClockScript` puts the browser's in its place
+ * before first paint.
  */
 function LoginDate({ ms }: { ms: number }) {
   const { t, i18n } = useTranslation();

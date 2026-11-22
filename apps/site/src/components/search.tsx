@@ -93,7 +93,7 @@ const SIZES = {
   },
 } as const;
 
-/** A suggested or recent name, with its rank's color code where known. */
+/** A row of the sheet: a suggested or recent name, in the color the player's rank gives it where known. */
 type SearchedPlayer = { name: string; color?: string };
 
 /** `skipEmpty`: an empty box asks for nothing (the API suggests nothing for it), as one that lists recent players. */
