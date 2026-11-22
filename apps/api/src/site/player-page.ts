@@ -51,11 +51,8 @@ export interface PlayerGuild {
 type Value = (stats: PlayerStats) => number | string | undefined;
 
 /**
- * A panel row: a catalog stat by its key, stored below the summary's `at` unless the row says where (`""` for a game
- * stat), in the catalog's color and unit and linked to its leaderboard, under `stats.<label>` (its key by default).
- * `value` is the panel's own text for it (a time, Layers out of 100), nothing leaving the row out; `hidden` says when
- * the player hides it from Hypixel's API (winstreaks), which the row then says instead of linking. `name` is a
- * formatted title shown in place of the label, and `color` replaces the catalog's (Parkour's Main Lobby).
+ * A catalog stat by its key, below the summary's `at` unless the row gives one, under `stats.<label>` (its key by
+ * default). `value` is the panel's own text for it (a time), and undefined leaves the row out.
  */
 type RowSpec =
   | string
