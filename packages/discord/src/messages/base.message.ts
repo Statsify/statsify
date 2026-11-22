@@ -53,15 +53,18 @@ export class Message {
   public toAPI(locale: LocalizeFunction) {
     const data = this.build(locale);
 
+    const v2 = isComponentsV2(this);
+
     let flags = 0;
     if (data.ephemeral) flags |= MessageFlags.Ephemeral;
-    if (isComponentsV2(this)) flags |= MessageFlags.IsComponentsV2;
+    if (v2) flags |= MessageFlags.IsComponentsV2;
 
     return {
       content: data.content,
       tts: data.tts,
       flags: flags || undefined,
-      allowed_mentions: data.mentions,
+      // Unlike embeds, text displays ping what they mention, and some show user input
+      allowed_mentions: data.mentions ?? (v2 ? { parse: [] } : undefined),
       embeds: data.embeds,
       attachments: data.attachments,
       components: data.components,

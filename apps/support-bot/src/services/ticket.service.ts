@@ -168,6 +168,7 @@ export class TicketService {
 
     await this.messageService.send(channel.id, {
       components: [new TextDisplayBuilder(`<@${user.id}>`), container],
+      mentions: { users: [user.id] },
     });
   }
 
@@ -238,11 +239,9 @@ export class TicketService {
       new FileBuilder(transcript),
     ]).accentColor(STATUS_COLORS.info);
 
-    // Unlike in an embed, mentions in a text display ping
     const message: IMessage = {
       components: [container],
       files: [{ name: transcript, data: Buffer.from(logs.join("\n"), "utf8"), type: "text/plain" }],
-      mentions: { parse: [] },
     };
 
     await this.messageService.send(await config("supportBot.ticketLogsChannel"), message);
