@@ -61,7 +61,7 @@ export const DuelsProfile = <T extends ProfileTime>({
 
   if (mode.api === "parkour") {
     if (time === "LIVE")
-      sidebar.push([t("stats.bestTime"), formatRecordTime(duels.parkour.bestTime), "§d"]);
+      sidebar.push([t("stats.bestTime"), formatRecordTime(duels.parkour.bestTime, t("stats.notAvailable")), "§d"]);
 
     sidebar.push([t("stats.checkpoints"), t(duels.parkour.checkpoints), "§5"]);
   }

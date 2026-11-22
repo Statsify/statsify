@@ -197,12 +197,12 @@ export const MurderMysteryProfile = ({
             <Table.tr>
               <Table.td
                 title={t("stats.fastestMurdererWin")}
-                value={formatRecordTime(stats.fastestMurdererWin)}
+                value={formatRecordTime(stats.fastestMurdererWin, t("stats.notAvailable"))}
                 color="§c"
               />
               <Table.td
                 title={t("stats.fastestDetectiveWin")}
-                value={formatRecordTime(stats.fastestDetectiveWin)}
+                value={formatRecordTime(stats.fastestDetectiveWin, t("stats.notAvailable"))}
                 color="§b"
               />
             </Table.tr>

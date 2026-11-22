@@ -32,14 +32,14 @@ const GeneralProfileHeaderBody = ({
 
   const lastLogin = status.lastLogin ?
     DateTime.fromMillis(status.lastLogin).toFormat(format, { locale: t.locale }) :
-    "N/A";
+    t("stats.notAvailable");
 
   return (
     <div height="remaining" width="remaining" direction="row">
       <div width="remaining" height="100%" direction="column">
         <box width="100%" height="50%">
           <text>
-            §7{t("stats.guild.guild")}: §2{guild?.name ?? "N/A"}
+            §7{t("stats.guild.guild")}: §2{guild?.name ?? t("stats.notAvailable")}
           </text>
         </box>
         <box width="100%" height="50%">

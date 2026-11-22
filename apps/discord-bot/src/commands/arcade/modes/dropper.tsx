@@ -91,7 +91,7 @@ const DropperMapGroup = ({ dropper, group, stat, t }: DropperMapGroupProps) => (
 
         switch (stat) {
           case "bestTimes":
-            value = map.bestTime === 0 ? "§7N/A" : formatRaceTime(map.bestTime);
+            value = map.bestTime === 0 ? `§7${t("stats.notAvailable")}` : formatRaceTime(map.bestTime);
             break;
           case "completions":
             value = t(map.completions);
