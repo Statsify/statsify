@@ -10,6 +10,7 @@ import {
   CacheLevel,
   GuildNotFoundException,
   GuildQuery,
+  HypixelUnavailableException,
   PlayerNotFoundException,
 } from "@statsify/api-client";
 import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
@@ -20,7 +21,7 @@ import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { PlayerService } from "#player";
-import { Redis } from "ioredis";
+import type { Redis } from "ioredis";
 import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
@@ -71,7 +72,7 @@ export class GuildService {
         type.toLowerCase() as Lowercase<GuildQuery>
       );
     } catch (error) {
-      if (!cachedGuild || !listsPlayer) throw error;
+      if (!cachedGuild || !listsPlayer || !(error instanceof HypixelUnavailableException)) throw error;
       return { guild: this.fromCache(cachedGuild), hypixelUnavailable: true };
     }
 

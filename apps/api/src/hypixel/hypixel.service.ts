@@ -138,7 +138,7 @@ export class HypixelService {
   }
 
   private handleFailure<T>(err: any, notFound: T): Observable<T> {
-    if (err instanceof HypixelUnavailableException) return throwError(() => err);
+    if (!err.cause?.isAxiosError) return throwError(() => err);
 
     this.logger.error(err);
 
