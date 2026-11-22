@@ -41,7 +41,6 @@ export function SignaturePanel({ page }: { page: PlayerPage }) {
   const profile = `${origin}/player/${page.username}`;
   const alt = t("player.signature.alt", { name: page.username });
 
-  // The forum snippet is what most people want; the rest wait under "More Formats".
   const forum = `[URL=${profile}][IMG]${image}[/IMG][/URL]`;
   const more: [label: string, text: string][] = [
     [t("player.signature.url"), image],
