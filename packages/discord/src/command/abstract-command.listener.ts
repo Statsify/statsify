@@ -155,6 +155,7 @@ export abstract class AbstractCommandListener {
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
       transaction?.finish();
+      return context.reply(new ErrorMessage("errors.unknown"));
     }
   }
 
