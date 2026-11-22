@@ -163,7 +163,7 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  skyhelper-networth@2.11.1: 2253d70cab34b0a5f5d369d4e7a64dda4a5eb51900278e37fd94df6c2183dfb7
+  skyhelper-networth@2.11.1: dc25262c9ccc8304dbc9e7a01451acff1fd15e6f1465cb576298167ae5274698
 
 importers:
 
@@ -817,7 +817,7 @@ importers:
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
       skyhelper-networth:
         specifier: 2.11.1
-        version: 2.11.1(patch_hash=2253d70cab34b0a5f5d369d4e7a64dda4a5eb51900278e37fd94df6c2183dfb7)(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        version: 2.11.1(patch_hash=dc25262c9ccc8304dbc9e7a01451acff1fd15e6f1465cb576298167ae5274698)(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
 
   packages/util:
     dependencies:
@@ -10064,7 +10064,7 @@ snapshots:
       - kerberos
       - supports-color
 
-  skyhelper-networth@2.11.1(patch_hash=2253d70cab34b0a5f5d369d4e7a64dda4a5eb51900278e37fd94df6c2183dfb7)(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0):
+  skyhelper-networth@2.11.1(patch_hash=dc25262c9ccc8304dbc9e7a01451acff1fd15e6f1465cb576298167ae5274698)(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0):
     dependencies:
       axios: 1.21.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
       prismarine-nbt: 2.8.0
