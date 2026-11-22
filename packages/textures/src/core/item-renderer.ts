@@ -9,7 +9,7 @@
 import { type ItemLayer, type Model, ModelResolver, type SpecialModel } from "./models.js";
 import { type Quad, type Transformation, boxQuads, elementQuads, rasterize, transformQuads } from "./geometry.js";
 import { context, createCanvas, createImageData, decodePng, hex } from "./canvas.js";
-import { TextureLoader } from "./textures.js";
+import { TextureLoader, mixPixels } from "./textures.js";
 import type { IconCache } from "./icon-cache.js";
 import type { BannerLayer, ItemStack } from "./item-stack.js";
 import { type PackStack, assetPath, namespaced } from "./pack.js";
@@ -192,11 +192,7 @@ function drawGlint(ctx: OffscreenCanvasRenderingContext2D, glint: OffscreenCanva
 // linear blend: two identical translucent icons would come out more opaque
 function crossFade(from: OffscreenCanvas, to: OffscreenCanvas, blend: number) {
   const pixels = context(from).getImageData(0, 0, from.width, from.height);
-  const next = context(to).getImageData(0, 0, to.width, to.height);
-
-  for (let i = 0; i < pixels.data.length; i++) {
-    pixels.data[i] = pixels.data[i] * (1 - blend) + next.data[i] * blend;
-  }
+  mixPixels(pixels, context(to).getImageData(0, 0, to.width, to.height), blend);
 
   const canvas = createCanvas(from.width, from.height);
   context(canvas).putImageData(pixels, 0, 0);
