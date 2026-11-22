@@ -32,7 +32,8 @@
     "reflect-metadata": "^0.2.2",
     "skia-canvas": "4.0.0",
     "toad-scheduler": "^3.0.1",
-    "typedi": "^0.10.0"
+    "typedi": "^0.10.0",
+    "undici": "^6.29.1"
   },
   "devDependencies": {
     "@types/luxon": "^3.4.2"

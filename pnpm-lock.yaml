@@ -377,6 +377,9 @@ importers:
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
+      undici:
+        specifier: ^6.29.1
+        version: 6.29.1
     devDependencies:
       '@types/luxon':
         specifier: ^3.4.2
@@ -569,6 +572,9 @@ importers:
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
+      undici:
+        specifier: ^6.29.1
+        version: 6.29.1
     devDependencies:
       '@types/luxon':
         specifier: ^3.4.2
