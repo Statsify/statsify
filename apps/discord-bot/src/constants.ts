@@ -72,7 +72,7 @@ import { ButtonBuilder } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { noop, prettify } from "@statsify/util";
 
-export const STATSIFY_LINKS = {
+const STATSIFY_LINKS = {
   invite: "https://statsify.net/invite",
   discord: "https://discord.com/invite/5VgxMQY",
   premium: "https://statsify.net/premium",
