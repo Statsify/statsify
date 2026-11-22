@@ -97,7 +97,8 @@ fn fs_enchanted(in: VertexOutput) -> @location(0) vec4<f32> {
         let angle = radians(30.0 - f32(i) * 60.0);
         let rotation = mat2x2<f32>(cos(angle), sin(angle), -sin(angle), cos(angle));
         let uv = rotation * in.texture_coordinates / 3.0;
-        glint += textureSample(t_glint, s_glint, uv).rgb * tint * tint;
+        let sample = textureSample(t_glint, s_glint, uv).rgb * tint;
+        glint += sample * sample;
     }
 
     let armor = attachment_color(in);
