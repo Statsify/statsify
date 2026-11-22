@@ -80,14 +80,6 @@ const IP_WINDOW_SECONDS = BUDGET_WINDOW_SECONDS;
 
 const IDENTITY_FIELDS = { uuid: true, username: true, expiresAt: true };
 const GUILD_FIELDS = { id: true, name: true, tag: true, tagFormatted: true };
-/** What the player page and the general card read from the guild: its name and tag plus each member's quest and GEXP rows. */
-const CARD_GUILD_FIELDS = {
-  ...GUILD_FIELDS,
-  "members.uuid": true,
-  "members.questParticipation": true,
-  "members.daily": true,
-  "members.weekly": true,
-};
 const CARD_FIELDS = {
   uuid: true,
   username: true,
@@ -563,7 +555,13 @@ export class SiteService implements OnApplicationBootstrap {
       .findOne()
       .where("id")
       .equals(id)
-      .select(CARD_GUILD_FIELDS)
+      .select({
+        ...GUILD_FIELDS,
+        "members.uuid": true,
+        "members.questParticipation": true,
+        "members.daily": true,
+        "members.weekly": true,
+      })
       .lean()
       .exec();
 
