@@ -207,7 +207,7 @@ impl ModelLibrary {
       // A face whose texels all fail the alpha test never shows, so the camera doesn't frame it
       let mut shown = vec![false; submesh.vertices.len()];
 
-      for triangle in submesh.indices.chunks_exact(3) {
+      for triangle in submesh.indices.as_chunks::<3>().0 {
         let uvs = triangle
           .iter()
           .map(|&index| submesh.vertices[index as usize].uv);

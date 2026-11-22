@@ -148,7 +148,7 @@ fn animation_frame(mcmeta: &str, frame_count: u32, wanted: Frame) -> Result<Opti
     .try_fold(0u64, |sum, (_, time)| sum.checked_add(*time))
     .ok_or("the frame times overflow")?;
 
-  if cycle == 0 {
+  if frames.is_empty() {
     return Err("the strip has no frames".to_string());
   }
 
