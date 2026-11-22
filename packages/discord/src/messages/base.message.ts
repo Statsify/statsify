@@ -17,10 +17,7 @@ export type IMessage = RemoveMethods<Message>;
 
 export type MessageComponent = ContainerBuilder | ContainerComponent;
 
-/**
- * A message with any component besides action rows is sent with the IS_COMPONENTS_V2 flag,
- * which rejects `content` and `embeds` and can't be removed from the message afterwards
- */
+// IS_COMPONENTS_V2 rejects `content` and `embeds`, and a message can't drop the flag once sent
 export const isComponentsV2 = (
   message: IMessage
 ): message is IMessage & { components: MessageComponent[] } =>
