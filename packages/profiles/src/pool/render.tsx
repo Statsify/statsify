@@ -190,10 +190,8 @@ const backgrounds = new Map<string, Canvas | Image>();
 const MAX_BACKGROUNDS = 16;
 
 /**
- * A background as a canvas holding its decoded pixels. skia-canvas's CPU renderer decodes an `Image` again each time
- * it's drawn, and decoding the 1920×1080 PNG was most of a render; pixels put into a canvas stay decoded. The GPU
- * renderer draws translucent pixels put into a canvas a shade off from the image's own, so a background with any
- * stays an image.
+ * skia-canvas decodes an `Image` again each time it's drawn, but pixels put into a canvas stay decoded. Its GPU
+ * renderer draws translucent canvas pixels a shade off, so a background with any stays an image.
  */
 async function loadBackground(path: string) {
   let background = backgrounds.get(path);
