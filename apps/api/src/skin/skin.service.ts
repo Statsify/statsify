@@ -53,7 +53,7 @@ export class SkinService {
   public async getRender(
     uuid: string,
     extruded: boolean,
-    { cape, armor = {}, ...options }: Omit<SkinRenderDto, "uuid">
+    { yaw, pose, cape, armor = {} }: Omit<SkinRenderDto, "uuid">
   ): Promise<Buffer> {
     const [skin, resolvedArmor] = await Promise.all([this.getSkin(uuid), this.resolveArmor(armor)]);
 
@@ -65,7 +65,8 @@ export class SkinService {
     const enchanted = Object.values(resolvedArmor).some((piece) => piece?.enchanted);
 
     return renderSkin(imageData(image), skin.slim ?? false, extruded, {
-      ...options,
+      yaw,
+      pose,
       armor: resolvedArmor,
       glint: enchanted ? await readFile(getMinecraftTexturePath("textures/misc/enchanted_item_glint.png")) : undefined,
       cape: capeImage && imageData(capeImage),

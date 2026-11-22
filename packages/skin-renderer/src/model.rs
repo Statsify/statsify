@@ -9,7 +9,7 @@ use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
 use crate::pose::{PartPose, Pose};
-use crate::skin_loader::load_skull_from_memory;
+use crate::skin_loader::{load_skull_from_memory, load_texture_from_memory};
 use crate::texture::Texture;
 
 pub enum ModelKind {
@@ -245,17 +245,17 @@ impl<'a> BodyPart<'a> {
         }
         .create();
 
-        // A posed part grows around where its turn left its center. Standing parts keep
-        // the unturned center they've always used, so bare renders don't move.
-        let center = match rotation {
+        // In Minecraft the outer layer is scaled up 12.5%. Unposed parts keep scale_around, so
+        // standing renders stay the same.
+        match rotation {
           Some(rotation) if self.placement.posed => {
-            rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot
+            let turned_center =
+              rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot;
+            layer.grow_around(1.125, turned_center);
           }
-          _ => position,
-        };
+          _ => layer.scale_around(1.125, position),
+        }
 
-        // In Minecraft the outer layer is scaled up 12.5%
-        layer.scale_around(1.125, center);
         layer
       }
     };
@@ -389,7 +389,7 @@ impl Model {
       let texture = if skull {
         load_skull_from_memory(&piece.texture)?
       } else {
-        image::load_from_memory(&piece.texture)?
+        load_texture_from_memory(&piece.texture)?
       };
       // Packs draw the 64 wide layout at any resolution, and skins are square where armor is 2:1
       let texture_size = (64, 64 * texture.height() / texture.width());
