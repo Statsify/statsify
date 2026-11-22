@@ -11,12 +11,11 @@ import { config } from "@statsify/util";
 
 const sentryDsn = await config("sentry.apiDsn", { required: false });
 
-if (sentryDsn) {
-  Sentry.init({
-    dsn: sentryDsn,
-    // Sentry 11 collects all of these by default
-    dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
-    tracePropagationTargets: [],
-    environment: await config("environment"),
-  });
-}
+// Init even without a DSN: nothing gets sent, but withIsolationScope then forks instead of sharing one scope
+Sentry.init({
+  dsn: sentryDsn,
+  // Sentry 11 collects all of these by default
+  dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
+  tracePropagationTargets: [],
+  environment: await config("environment"),
+});

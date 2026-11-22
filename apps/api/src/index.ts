@@ -64,41 +64,44 @@ adapter
 
 // A Nest interceptor would miss requests the guards reject
 adapter.getInstance().addHook("onRequest", (request, reply, done) => {
-  // reply.elapsedTime stays 0 unless something registers an onResponse hook
-  const start = performance.now();
-  const { player, uuid, guild, cache } = request.query as Record<string, string | undefined>;
+  // Sentry's http integration gives each request its own scope, but only when a DSN is set
+  const scope = Sentry.isEnabled() ? Sentry.getIsolationScope() : Sentry.getIsolationScope().clone();
 
-  setRequestAttributes({
-    "http.request.method": request.method,
-    "http.route": request.routeOptions.url,
-    "statsify.player.tag": player ?? uuid,
-    "statsify.guild.tag": guild,
-    "statsify.cache.level": cache,
+  Sentry.withIsolationScope(scope, () => {
+    // reply.elapsedTime stays 0 unless something registers an onResponse hook
+    const start = performance.now();
+    const { player, uuid, guild, cache } = request.query as Record<string, string | undefined>;
+
+    setRequestAttributes({
+      "http.request.method": request.method,
+      "http.route": request.routeOptions.url,
+      "statsify.player.tag": player ?? uuid,
+      "statsify.guild.tag": guild,
+      "statsify.cache.level": cache,
+    });
+
+    // Unlike onResponse, close fires for aborted requests, but it can run in another request's async context
+    reply.raw.once("close", () =>
+      Sentry.withIsolationScope(scope, () => {
+        const status = reply.statusCode;
+        const { "statsify.outcome": outcome } = getRequestAttributes();
+
+        setRequestAttributes(
+          reply.raw.writableFinished ?
+            { "http.response.status_code": status, "statsify.outcome": outcome ?? getOutcome(status) } :
+            { "statsify.outcome": "error", "error.type": "RequestAborted" }
+        );
+
+        emitRequestEvent({
+          message: [request.method, request.routeOptions.url].filter(Boolean).join(" "),
+          durationMs: performance.now() - start,
+          slowMs: SLOW_REQUEST_MS,
+        });
+      })
+    );
+
+    done();
   });
-
-  // Unlike onResponse, close fires for aborted requests, but it can run in another request's async context
-  const scope = Sentry.getIsolationScope();
-
-  reply.raw.once("close", () =>
-    Sentry.withIsolationScope(scope, () => {
-      const status = reply.statusCode;
-      const { "statsify.outcome": outcome } = getRequestAttributes();
-
-      setRequestAttributes(
-        reply.raw.writableFinished ?
-          { "http.response.status_code": status, "statsify.outcome": outcome ?? getOutcome(status) } :
-          { "statsify.outcome": "error", "error.type": "RequestAborted" }
-      );
-
-      emitRequestEvent({
-        message: [request.method, request.routeOptions.url].filter(Boolean).join(" "),
-        durationMs: performance.now() - start,
-        slowMs: SLOW_REQUEST_MS,
-      });
-    })
-  );
-
-  done();
 });
 
 const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
