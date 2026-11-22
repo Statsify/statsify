@@ -39,6 +39,7 @@ export class RenderPool {
   private readonly timeoutMs: number;
   /** Set once a worker fails to start; every render rejects with it. */
   private broken?: Error;
+  private rendered = false;
 
   public constructor(options: RenderPoolOptions = {}) {
     const size = options.size ?? 2;
@@ -51,10 +52,10 @@ export class RenderPool {
       maxThreads: size,
     });
 
-    // Piscina emits `error` for a worker that fails outside a task, which here means one that couldn't start (missing
-    // fonts, say). Unhandled, the event would crash the site.
+    // Piscina emits `error` for a worker that fails outside a task, and replaces it. Before any render has worked, that
+    // means workers can't start (missing fonts, say). Unhandled, the event would crash the site.
     this.pool.on("error", (error: Error) => {
-      this.broken = error;
+      if (!this.rendered) this.broken = error;
     });
   }
 
@@ -68,7 +69,10 @@ export class RenderPool {
     // Piscina's own `maxQueue` rejects with a plain `Error`, which the site couldn't tell apart from a failed render.
     if (this.pool.queueSize >= this.queueLimit) return Promise.reject(new PoolBusyError());
 
-    return this.pool.run(request, { signal: AbortSignal.timeout(this.timeoutMs) });
+    return this.pool.run(request, { signal: AbortSignal.timeout(this.timeoutMs) }).then((image) => {
+      this.rendered = true;
+      return image;
+    });
   }
 
   public close(): Promise<void> {
