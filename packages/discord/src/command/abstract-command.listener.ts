@@ -112,7 +112,12 @@ export abstract class AbstractCommandListener {
 
     // Modal input isn't part of the key, so only button and select replies are cached
     const cacheKey = interaction.isMessageComponentInteraction() ?
-      [interaction.getCustomId(), interaction.getData().values?.[0], interaction.getLocale()].join("|") :
+      [
+        interaction.getMessageId(),
+        interaction.getCustomId(),
+        interaction.getData().values?.[0],
+        interaction.getLocale(),
+      ].join("|") :
       undefined;
 
     try {
