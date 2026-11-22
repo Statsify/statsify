@@ -342,8 +342,7 @@
     --mc-plain-shadow: var(--mc-text-shadow);
   }
 
-  /* The scrollbar's room is kept on short pages too, so with classic scrollbars a page that grows past the fold
-     (a game page loading in, search results) doesn't shift sideways. */
+  /* The scrollbar's room stays on short pages, so a page that grows past the fold doesn't shift sideways. */
   html {
     scrollbar-gutter: stable;
   }

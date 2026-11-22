@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type CellSpec, type GameLayout, type LevelSpec, type PageSpec, prefixLevel, selectedMode } from "./layout.js";
+import { type CellSpec, type GameLayout, type LevelSpec, type PageSpec, prefixLevel, selectedMode, submodeOptions } from "./layout.js";
 import { type ColorCode, TNT_GAMES, TNT_WIZARDS_CLASSES, modeName } from "@statsify/catalog";
 
 type Prefixed = "tntRun" | "pvpRun" | "bowSpleef" | "tntTag" | "wizards";
@@ -68,7 +68,7 @@ export const TNT_GAMES_PAGE: GameLayout = {
     api === "wizards" ?
       {
         key: api,
-        submodes: submodes.map(({ api: key, formatted: name }) => ({ key, name })),
+        submodes: submodeOptions(submodes),
         selected: ({ tntgames }) => selectedMode(TNT_GAMES, tntgames.wizards.class, TNT_WIZARDS_CLASSES),
       } :
       { key: api }),

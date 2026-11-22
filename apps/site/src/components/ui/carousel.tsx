@@ -70,8 +70,7 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
 
-  // With reduced motion there's no autoplay: the first card waits for the arrows. Otherwise it holds while
-  // the carousel is off-screen, in a hidden tab, or under the pointer or focus, so a card can be read.
+  // `useReducedMotion` is `null` until the preference is known, so autoplay waits for `false`.
   useEffect(() => {
     if (reduceMotion !== false || !inView || hovered || focused) return;
     const interval = setInterval(() => {
@@ -90,7 +89,7 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
       onBlur={(event) => setFocused(event.currentTarget.contains(event.relatedTarget))}
     >
       <div className="flex items-center text-white gap-4 lg:gap-8">
-        {/* The button wraps the panel: a button inside it would lose the bevelled corners to the panel's clip, and
+        {/* The button wraps the panel: a button inside it would lose the beveled corners to the panel's clip, and
             one that shrinks on press would lose a click that ends past its new edge. */}
         <button aria-label={t("carousel.previous")} type="button" className="group z-10 hidden lg:block" onClick={() => paginate(-1)}>
           <Box className="group-active:scale-[0.8] transition-transform content:backdrop-blur-2xl">
@@ -134,7 +133,7 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
           </Box>
         </button>
       </div>
-      {/* 44 px targets around 16 px squares. Plain buttons, not tabs: there are no panels to own. */}
+      {/* Plain buttons, not tabs: there are no tab panels. */}
       <div className="flex items-center justify-center gap-1">
         {cards.map((_, index) => (
           <button

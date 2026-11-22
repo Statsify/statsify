@@ -13,10 +13,7 @@ import { siteConfig } from "./config.server";
 
 let client: Redis | undefined;
 
-/**
- * One connection per process to the API's Redis (`database.redisUrl`), opened on first use so builds
- * and tests never connect. The site keeps only its unfurl image cache and render locks there.
- */
+/** Opened on first use, so builds and tests never connect. */
 export async function redis(): Promise<Redis> {
   if (shuttingDown()) throw new Error("The site is shutting down");
 
@@ -34,7 +31,6 @@ function connect(redisUrl: string): Redis {
   return connection;
 }
 
-/** `QUIT`, or drops the socket if Redis hasn't answered within half a second. The wait never holds the process. */
 async function disconnect(connection: Redis) {
   await Promise.race([connection.quit(), sleep(500, undefined, { ref: false })]).catch(() => undefined);
   connection.disconnect();

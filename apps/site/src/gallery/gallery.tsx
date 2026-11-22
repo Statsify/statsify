@@ -457,20 +457,20 @@ function GameSection() {
           <StatPanel section={{ title: null, rows: [[TOKENS]] }} username={username} />
         </Demo>
       </div>
-      <Demo label="Games: the player's game pages in the registry's order, links from md up, a Games button on phones, one never played dimmed">
+      <Demo label="Games: a button over the player's game pages in the registry's order, one never played dimmed">
         <div className="relative">
           <GameNav games={GAME_PAGE.games} scope={scope} current={GAME_PAGE.game.key} />
         </div>
       </Demo>
-      <Demo label="The Games button open on phones: a grid of the pages, the current one marked">
+      <Demo label="The Games button open: a grid of the pages, the current one marked">
         {/* The open grid lies over what follows, so the demo keeps room for it. */}
-        <div className="max-md:min-h-56">
+        <div className="min-h-56">
           <div className="relative">
             <GameNav games={GAME_PAGE.games} scope={scope} current={GAME_PAGE.game.key} open />
           </div>
         </div>
       </Demo>
-      <Demo label="24 pages, open: past 10, the Games button at every width">
+      <Demo label="24 pages, open: the grid at every width">
         <div className="min-h-[41rem] sm:min-h-[29rem] lg:min-h-[23rem] xl:min-h-[20rem]">
           <div className="relative">
             <GameNav games={GAME_NAV_ALL} scope={scope} current={GAME_PAGE.game.key} open />

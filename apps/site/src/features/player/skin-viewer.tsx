@@ -34,9 +34,8 @@ interface Texture {
 type Cuboid = [u: number, v: number, w: number, h: number, d: number];
 
 /**
- * One part of the model: a cuboid's six faces, each a window onto the texture, placed at `at` (skin pixels from the
- * model's center). `inflate` grows an outer layer past the part under it, as the game does; `mirror` draws a legacy
- * skin's left limb from the right one.
+ * One part of the model: a cuboid's six faces, each a window onto the texture, `at` skin pixels from the model's
+ * center. `inflate` grows an outer layer past the part under it; `mirror` draws a legacy skin's left limb.
  */
 function Part({ cuboid, at, texture, inflate = 0, mirror = false }: { cuboid: Cuboid; at: [number, number, number]; texture: Texture; inflate?: number; mirror?: boolean }) {
   const [u, v, w, h, d] = cuboid;
@@ -111,9 +110,8 @@ function Model({ texture }: { texture: Texture }) {
 }
 
 /**
- * The skin panel: the skin in 3D, turned by dragging (only sideways on a touch screen, so a vertical swipe still
- * scrolls) or with the arrow keys, its texture as uploaded, and a download. The player page loads this module, and the
- * texture, only when the panel opens.
+ * The skin in 3D, turned by dragging (only sideways on a touch screen, so a vertical swipe still scrolls) or with the
+ * arrow keys, with its texture as uploaded and a download.
  */
 export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: string }) {
   const { t } = useTranslation();
@@ -159,7 +157,6 @@ export function SkinPanel({ id, uuid, name }: { id: string; uuid: string; name: 
     turn(dx * DRAG, event.pointerType === "mouse" ? -dy * DRAG : 0);
   };
 
-  // A slider's keys: Right and Up turn it one way, Left and Down the other.
   const keys: Record<string, number> = { ArrowRight: STEP, ArrowUp: STEP, ArrowLeft: -STEP, ArrowDown: -STEP };
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const step = keys[event.key];

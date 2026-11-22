@@ -49,7 +49,6 @@ export function Bingo({ player, refresh }: { player: BingoPlayer; refresh?: Reac
   return (
     <>
       <div className="w-full lg:w-[80%] flex items-stretch flex-col gap-4">
-        {/* The nametag over each category's heading and counts, every one its own box, as the bot's cards draw them. */}
         <div className={cn("flex flex-col", BOX_GAP)}>
           <Box className="content:flex content:flex-col content:items-center content:gap-1">
             <div className="flex items-center justify-center gap-4 text-center text-mc-3">

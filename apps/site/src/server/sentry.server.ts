@@ -12,10 +12,6 @@ import { siteConfig } from "./config.server";
 
 let ready: Promise<void> | undefined;
 
-/**
- * Initializes the server SDK once, on the first request, with the DSN from `config.js`.
- * Nothing happens when `sentry.siteDsn` is empty.
- */
 export function ensureServerSentry(): Promise<void> {
   ready ??= init();
   return ready;
@@ -31,6 +27,5 @@ async function init() {
   const { sentryDsn, environment, tracesSampleRate } = await siteConfig();
   if (!sentryDsn) return;
   Sentry.init({ dsn: sentryDsn, environment, tracesSampleRate, release: import.meta.env.VITE_SENTRY_RELEASE });
-  // Sends what's still queued, for up to a second, before the process exits.
   onShutdown(() => Sentry.close(1000));
 }

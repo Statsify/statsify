@@ -234,8 +234,6 @@
       "continue": "Continue to Page {{page}}",
       "open": "Open Page {{page}}",
       "retry": "Try Again",
-      "pause": "Pause loading",
-      "resume": "Resume loading",
       "skip": "Skip to the footer",
       "notice": "Ranks can change while you scroll.",
       "loaded": "{{players}} more players loaded.",

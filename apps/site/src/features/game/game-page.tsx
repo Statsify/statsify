@@ -133,8 +133,7 @@ export function GameView({ page }: { page: GamePage }) {
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} game={`${page.game.name}${page.heading.mode ? ` §r(${page.heading.mode}§r)` : ""}`} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         {/* From `md` the nametag is as wide as its content (up to half the row) and the level sits beside it, the
-            overview under both; from `lg` the overview goes under the level. An overview with no level sits beside the
-            nametag at its own height, and a nametag with neither (Parkour) is as wide as its content. */}
+            overview under both; from `lg` the overview goes under the level. */}
         <div className={cn("grid grid-cols-1 md:grid-cols-[fit-content(50%)_minmax(0,1fr)]", BOX_GAP)}>
           {/* A session's page has nothing to share or compare, and Update would refresh the totals, not the session. */}
           <GameHeader
@@ -214,10 +213,7 @@ export function GameView({ page }: { page: GamePage }) {
   );
 }
 
-/**
- * The bot's command for the page's game and player, `/bedwars player:anrie`. Only Quests' pages have periods, and its
- * command takes the period as a subcommand: `/quests daily player:anrie`.
- */
+/** Only Quests' pages have periods, and its command takes the period as a subcommand: `/quests daily player:anrie`. */
 function botCommand({ game, period, username }: GamePage) {
   return `/${game.key}${period === undefined ? "" : ` ${period}`} player:${username}`;
 }
@@ -304,7 +300,7 @@ export function LevelPanel({ level, username }: { level: Level; username: string
         <StatCell
           label={level.leaderboard ? <Spoken full={full}>{label}</Spoken> : <Hint full={full}>{label}</Hint>}
           value={level.leaderboard ?
-            <LeaderboardLink field={level.leaderboard} username={username} stat={full ?? label} hint={full}>{value}</LeaderboardLink> :
+            <LeaderboardLink field={level.leaderboard} username={username} stat={label} full={full}>{value}</LeaderboardLink> :
             value}
           color={leadingColorClass(level.current)}
           className="relative wrap-break-word"

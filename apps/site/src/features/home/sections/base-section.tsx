@@ -11,8 +11,7 @@ import { cn } from "~/lib/util";
 import type { ComponentProps, ReactNode } from "react";
 
 export function BaseSection({ children, background, className }: Pick<ComponentProps<typeof Background>, "background"> & { children: ReactNode; className?: string }) {
-  // `minmax(0, 1fr)`: the column never grows past the viewport for no-wrap content. Sections are 64 px apart
-  // on phones and 128 px on desktop.
+  // `minmax(0, 1fr)`: the column never grows past the viewport for no-wrap content.
   return (
     <section className="w-full relative grid grid-cols-[minmax(0,1fr)]">
       <Background className="w-full h-full" background={background} />
