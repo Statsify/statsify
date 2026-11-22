@@ -9,7 +9,7 @@
 import { Piscina } from "piscina";
 import type { RenderRequest } from "./protocol.js";
 
-/** The queue is full; answer 503 with `Retry-After`. */
+/** No render can start now (the queue is full, or another request holds the image's lock); answer 503 with `Retry-After`. */
 export class PoolBusyError extends Error {
   public readonly retryAfter = 2;
 
