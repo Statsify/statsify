@@ -108,21 +108,21 @@ export class Logger {
   }
 
   private write(level: LogLevel, message: unknown) {
-    const isError = level === "error" || level === "fatal";
+    const isErrorLevel = level === "error" || level === "fatal";
     const output = format(message);
 
-    if (isError && message instanceof Error) {
+    if (isErrorLevel && message instanceof Error) {
       const span = Sentry.getActiveSpan();
       if (span) Sentry.getRootSpan(span).setStatus({ code: 2, message: "internal_error" });
 
       Sentry.captureException(message);
     }
 
-    const icon = chalk.bold(isError ? "📉" : "📈");
+    const icon = chalk.bold(isErrorLevel ? "📉" : "📈");
     const context = chalk.hex(ColorByLogLevel[level].toString(16))(this.context);
     const time = chalk.gray(`${Logger.getTimeStamp()}${isProduction ? "" : "ms"}`);
 
-    process[isError ? "stderr" : "stdout"].write(`${icon} ${context} ${time} ${output}\n`);
+    process[isErrorLevel ? "stderr" : "stdout"].write(`${icon} ${context} ${time} ${output}\n`);
 
     SentryLogByLogLevel[level](message instanceof Error ? message.message : output, {
       context: this.context,
