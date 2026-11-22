@@ -49,6 +49,8 @@ const GUILD_TOP_MODES: GuildTopMode[] = [
   [6, "6 days ago"],
 ];
 
+const findModeIndex = (key: string) => GUILD_TOP_MODES.findIndex(([mode]) => `${mode}` === key);
+
 export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
   @SubCommand({ description: (t) => t("commands.guild-top"), args: GuildArgument })
   public async top(context: CommandContext) {
@@ -132,12 +134,11 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     if (!interaction.isMessageComponentInteraction()) return [0, 0];
 
     const [, , key, target] = parseCustomId(interaction.getCustomId()).values;
-    const findMode = (value: string) => GUILD_TOP_MODES.findIndex(([mode]) => `${mode}` === value);
 
     if (interaction.isSelectMenuInteraction())
-      return [findMode(interaction.getData().values[0]), Number(target)];
+      return [findModeIndex(interaction.getData().values[0]), Number(target)];
 
-    return [findMode(key), getScrolledPage(target, pageCount)];
+    return [findModeIndex(key), getScrolledPage(target, pageCount)];
   }
 
   private async generateGuildTopPage(
