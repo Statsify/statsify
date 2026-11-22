@@ -20,7 +20,7 @@ export const Route = createFileRoute("/{-$locale}/prestiges/bedwars")({
   loader: () => getPrestiges(),
   staleTime: Infinity,
   head: ({ matches }) =>
-    textPageHead({ meta: "prestiges", path: "/prestiges/bedwars", matches }),
+    textPageHead({ key: "prestiges", path: "/prestiges/bedwars", matches }),
   headers: () => cacheHeaders(TEXT_PAGE_CACHE),
   component: PrestigesRoute,
 });

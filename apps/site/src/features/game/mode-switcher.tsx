@@ -15,11 +15,7 @@ import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { GamePage } from "@statsify/contract";
 
-/**
- * The mode switcher goes by how many modes there are, not the screen's width, so the server's render and the hydrated
- * page agree. Up to `PHONE_TABS` it's tabs at every width; past that, a select below `md`. Up to `DESKTOP_TABS` it's
- * links from `md` up; past that, the select at every width.
- */
+/** Tabs or a select by the option count, not the screen's width, so the server's render and the hydrated page agree. */
 const PHONE_TABS = 4;
 const DESKTOP_TABS = 10;
 
@@ -35,11 +31,8 @@ const SWITCHER_WORDS = {
 } as const;
 
 /**
- * The mode switcher, or the submode or period one: tabs, as joined segments on phones and links from `md` up, or a
- * native select, by how many there are (`PHONE_TABS`, `DESKTOP_TABS`). Both keep the scroll position, and every target
- * is 44 px tall. The player's kit or class is marked, and so is the mode they've played most: in a select's options by its words, on a tab by a
- * gold square, with the words for screen readers and what counted on hover, and a line under the tabs saying what the
- * square means. The words say "most wins" where the game counts wins alone.
+ * The mode, submode or period switcher. The mode played most is marked by its words in a select's options, and on a
+ * tab by a gold square that a line under the tabs explains.
  */
 export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: keyof typeof SWITCHER_WORDS }) {
   const { t } = useTranslation();
@@ -89,9 +82,7 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
       className={kind === "mode" ? cn(phoneTabs ? "min-w-0 grow basis-0" : "min-w-0 grow basis-48", desktopTabs && "md:basis-full") : undefined}
     >
       {!phoneTabs && (
-        // A form, so the select works without the page's scripts: its button, shown only then, sends the pick with the
-        // rest of the page's search it keeps (a submode's mode, the period), which the route reads. With them, a pick
-        // navigates in place.
+        // A form, so the select works without the page's scripts.
         <form method="get" className={cn("flex items-center gap-3", desktopTabs && "md:hidden")}>
           {Object.entries(search(current ?? "")).map(([key, value]) =>
             key !== kind && value !== undefined && <input key={key} type="hidden" name={key} value={value} />)}
@@ -162,8 +153,7 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
           ))}
         </ul>
       )}
-      {/* What the gold square means, wherever the tabs show it; a select's option says it in words. Each marked tab
-          has the words for screen readers. */}
+      {/* Hidden from screen readers: each marked tab has the words already. */}
       {marked && desktopTabs && (
         <p aria-hidden className={cn("mt-2 flex items-center gap-2 text-mc-1 text-mc-gray", !phoneTabs && "hidden md:flex")}>
           <span className="size-2 shrink-0 bg-mc-gold forced-color-adjust-none" />

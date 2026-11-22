@@ -25,9 +25,8 @@ export interface ContentsItem {
 const NO_CONTENTS: ContentsItem[] = [];
 
 /**
- * The layout of the site's text pages (about, the glossary, prestiges, privacy, terms): the title and a meta line over
- * one reading column, with the page's contents in a rail beside it from `lg` and folded into a panel above it on
- * phones. A page brings only its content.
+ * The layout of the site's text pages: the title and a meta line over one reading column, with the page's contents in a
+ * rail beside it from `lg` and folded into a panel above it on phones.
  */
 export function TextPage({
   title,

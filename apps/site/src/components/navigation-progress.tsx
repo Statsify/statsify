@@ -38,10 +38,6 @@ export function NavigationProgress() {
   return pending && slow ? <ProgressBar label={t("nav.loading")} /> : null;
 }
 
-/**
- * A 4 px white bar along the top of the window with a segment sliding across it; under reduced motion the whole bar
- * shows, still.
- */
 export function ProgressBar({ label, className }: { label: string; className?: string }) {
   return (
     <div className={cn("fixed inset-x-0 top-0 z-200 h-1 overflow-hidden bg-white/20", className)}>

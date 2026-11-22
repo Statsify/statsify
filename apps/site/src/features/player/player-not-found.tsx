@@ -35,10 +35,8 @@ export function PlayerNotFound() {
 }
 
 /**
- * The player-not-found page with the Turnstile-gated "Look up on Hypixel" action. The header already has
- * the search, so the page has none of its own. On phones the skin is 160 px, so the button lands
- * mid-screen even when the 24 px copy takes three lines. Bingo, whose header has no search, passes its own
- * `search` (above the page, under it on phones) and its own action as `children`.
+ * The player-not-found page with the Turnstile-gated "Look up on Hypixel" action, or Bingo's own `search` and action
+ * (`children`), since its header has no search.
  */
 export function PlayerNotFoundView({
   name,

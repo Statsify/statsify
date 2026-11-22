@@ -48,7 +48,6 @@ export function Bingo({ player }: { player: BingoPlayer }) {
   return (
     <>
       <div className="w-full lg:w-[80%] flex items-stretch flex-col gap-4">
-        {/* The nametag over each category's heading and counts, every one its own box, as the bot's cards draw them. */}
         <div className={cn("flex flex-col", BOX_GAP)}>
           <Box className="content:text-center content:text-mc-3 content:flex content:items-center content:justify-center content:gap-4">
             <SkinHead uuid={player.uuid} className="drop-shadow-mc-4 text-mc-black " />

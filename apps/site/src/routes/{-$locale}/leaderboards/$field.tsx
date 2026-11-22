@@ -25,19 +25,13 @@ import type { LeaderboardGame } from "@statsify/contract";
 import type { GlossaryWords } from "~/i18n/i18n.server";
 import type { QueryClient } from "@tanstack/react-query";
 
-/**
- * A page from `?page=`, counted from 1 as the page shows it (a number or a string, depending on how it was typed);
- * garbage is the first page.
- */
+/** Counted from 1, as the page shows it; anything else is the first page. */
 const pageNumber = (raw: unknown) => {
   const page = Number(raw);
   return Number.isSafeInteger(page) && page > 1 ? page : undefined;
 };
 
-/**
- * A name or UUID from `?around=`; the router parses `?around=123` to a number, and anything longer than a dashed UUID
- * is cut.
- */
+/** The router parses `?around=123` to a number. */
 const aroundName = (raw: unknown) =>
   (typeof raw === "string" || typeof raw === "number" ? String(raw).trim().slice(0, 36) : "") || undefined;
 
@@ -50,11 +44,7 @@ const positionNumber = (raw: unknown) => {
 /** `?mode=`, the mode a game's index opens at; a mode the game has no leaderboards under opens the first group. */
 const modeKey = (raw: unknown) => (typeof raw === "string" && raw.length <= 32 ? raw : undefined);
 
-/**
- * `?page=` is left out of URLs for the first page; `?around=<name or UUID>` anchors on a player, and `?position=<n>` on
- * a position. `?mode=` is a game index's. A plain function, not a zod schema: every page's first load carries the
- * routes' search parsing.
- */
+/** A plain function, not a zod schema: every page's first load carries the routes' search parsing. */
 const validateSearch = (
   search: Record<string, unknown>
 ): { page?: number; around?: string; position?: number; mode?: string } => ({
@@ -110,7 +100,6 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
       preloadBackground(backgroundFor(params.field));
       return { kind: "game", game: await loadLeaderboardGame(params.field) };
     }
-    // The locale's words, by the hash in the layout's data.
     const words = parentMatchPromise.then(({ loaderData }) =>
       loadGlossaryWords({ queryClient: context.queryClient, locale: context.locale, hash: loaderData?.glossaryHash ?? "" }));
     return loadBoard(context.queryClient, params.field, deps, words, location.state);
@@ -238,7 +227,6 @@ function LeaderboardPage({ view }: { view: LeaderboardView & { explanation?: Exp
           <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">
             <MinecraftText>{page.formatted}</MinecraftText>
           </h1>
-          {/* The game's index, opened and scrolled to the board's mode. */}
           {page.index && (
             <Link
               to="/{-$locale}/leaderboards/$field"

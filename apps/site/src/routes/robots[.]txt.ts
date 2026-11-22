@@ -9,10 +9,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { siteConfig } from "~/server/config.server";
 
-/**
- * Paged and "around" leaderboard variants carry `noindex` too; the sitemap index lists what may be
- * crawled (no player pages yet).
- */
 const robots = (sitemap: string) => `User-agent: *
 Disallow: /api/
 Disallow: /_serverFn/
@@ -24,11 +20,7 @@ Disallow: /*?*&around=
 Sitemap: ${sitemap}
 `;
 
-/**
- * `site.indexable` off (a staging deploy): crawling stays open so crawlers see the `X-Robots-Tag: noindex` every
- * response carries (`start.ts`) and drop the pages. `Disallow: /` would hide that header, and URLs linked from
- * elsewhere could then be indexed without their content. No sitemap: they 404 here.
- */
+/** Not `Disallow: /`: crawlers have to fetch the pages to see their `X-Robots-Tag: noindex` and drop them. */
 const NOT_INDEXABLE = `User-agent: *
 Disallow: /api/
 Disallow: /_serverFn/

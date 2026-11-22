@@ -66,8 +66,7 @@ interface GameTarget {
 
 // Rows are at least 44 px tall, an easy tap target; `item` must match `itemHeight` for the keyboard scrolling. The
 // sheet is 300 px tall from `sm`, and a row shorter on phones, so the on-screen keyboard doesn't cover its last name.
-// `rows` is how many rows the 300 px sheet can show at once, counting one cut off at each edge. Heads are a whole
-// multiple of the 8×8 face, so its pixels stay square.
+// `rows` must match how many rows the sheet can show at once, counting one cut off at each edge.
 const SIZES = {
   regular: {
     itemHeight: 56,

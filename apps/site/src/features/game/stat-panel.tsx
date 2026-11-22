@@ -14,8 +14,8 @@ import { wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hint, Spoken } from "~/components/ui/hint";
-import { Hidden, InlineStat, LeaderboardLink, StatCell, glossaryKey, linkHint, useStatName } from "~/components/ui/stat";
-import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
+import { Hidden, InlineStat, LeaderboardLink, StatCell, glossaryKey, useStatName } from "~/components/ui/stat";
+import { MinecraftText, colorOf, plainText } from "~/components/ui/minecraft-text";
 import { StatInfo } from "./stat-info";
 import { cn } from "~/lib/util";
 import { LABEL_NAMESPACES } from "~/i18n/i18n";
@@ -67,12 +67,7 @@ function SectionTitle({ section }: { section: StatSection }) {
 /** A heading over one of a panel's rows, at the section heading's size in a taller box, as the card draws it. */
 const ROW_HEADING_BOX = cn(HEADING_BOX, "content:py-3");
 
-/**
- * A panel of stats as the card draws it: the section's heading in a box across it when it has one, then the card's
- * rows, every stat its own box with the card's gaps between them. A list (maps, challenges) is name and value lines in
- * columns of boxes instead, and a long one starts folded behind its heading and count. A list the page's filter
- * searches keeps the lines whose name matches, and opens while it filters.
- */
+/** A panel of stats as the card draws it, every stat its own box; a list (maps, challenges) is name and value lines. */
 export function StatPanel({
   section,
   username,
@@ -212,12 +207,10 @@ function useStatLabel(cell: Stat): { text: string; node: ReactNode; full?: strin
   return { text, node: text, full };
 }
 
-const plainName = (name: string) => name.replaceAll(/§#[\dA-Fa-f]{6}|§./g, "");
-
 /** A stat's heading as plain text, for its link and the filter: the card's own name, or the label's words. */
 export function useLabelText(): (cell: Stat) => string {
   const { t } = useTranslation();
-  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainName(cell.name));
+  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainText(cell.name));
 }
 
 /**
@@ -270,8 +263,9 @@ function GameStat({ cell, username }: { cell: Stat; username: string }) {
           <LeaderboardLink
             field={cell.leaderboard}
             username={username}
-            stat={label.full ?? label.text}
-            hint={linkHint(label.full, typeof cell.value === "number" ? exact(cell.value) : undefined)}
+            stat={label.text}
+            full={label.full}
+            exact={typeof cell.value === "number" ? exact(cell.value) : undefined}
           >
             {value}
           </LeaderboardLink>
@@ -311,8 +305,9 @@ function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat
             <LeaderboardLink
               field={cell.leaderboard}
               username={username}
-              stat={label.full ?? label.text}
-              hint={linkHint(label.full, !ticks && typeof cell.value === "number" ? exact(cell.value) : undefined)}
+              stat={label.text}
+              full={label.full}
+              exact={!ticks && typeof cell.value === "number" ? exact(cell.value) : undefined}
             >
               {value}
             </LeaderboardLink>

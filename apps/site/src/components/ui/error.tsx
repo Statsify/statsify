@@ -11,7 +11,7 @@ import { Background } from "~/components/ui/background";
 import { cn } from "~/lib/util";
 import type { ReactNode } from "react";
 
-/** An error page's heading and its explanation, each in its own box, 4 px apart, as the bot's cards draw a title box. */
+/** An error page's heading and its explanation, each in its own box, as the bot's cards draw a title box. */
 export function ErrorText({ heading, children }: { heading: ReactNode; children: ReactNode }) {
   return (
     <div className={cn("flex w-full max-w-160 flex-col", BOX_GAP)}>

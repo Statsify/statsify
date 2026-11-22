@@ -124,8 +124,7 @@ export function GameView({ page }: { page: GamePage }) {
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} game={`${page.game.name}${page.heading.mode ? ` §r(${page.heading.mode}§r)` : ""}`} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         {/* From `md` the nametag is as wide as its content (up to half the row) and the level sits beside it, the
-            overview under both; from `lg` the overview goes under the level. An overview with no level sits beside the
-            nametag at its own height, and a nametag with neither (Parkour) is as wide as its content. */}
+            overview under both; from `lg` the overview goes under the level. */}
         <div className={cn("grid grid-cols-1 md:grid-cols-[fit-content(50%)_minmax(0,1fr)]", BOX_GAP)}>
           <GameHeader
             ref={nametag}
@@ -159,9 +158,7 @@ export function GameView({ page }: { page: GamePage }) {
             file={`${[page.username, page.game.key, mode, submode, period].filter(Boolean).join("-")}.png`}
           />
         )}
-        {/* The Games button and the mode select share a row (on phones, so the tables start nearer the top); the open
-            Games grid lies over the page below it. On phones the tabs share it too; from `md` links and tabs take rows
-            of their own. */}
+        {/* The Games button shares a row with the mode select, and with a phone's tabs, so the tables start nearer the top. */}
         <div className="relative flex flex-wrap items-start gap-x-2 gap-y-4 empty:hidden">
           {page.games.length > 1 && <GameNav games={page.games} username={page.username} current={page.game.key} className="shrink-0" />}
           {page.modes.length > 1 && <ModeSwitcher page={page} />}
@@ -174,7 +171,6 @@ export function GameView({ page }: { page: GamePage }) {
         )}
         <p className="text-mc-1 text-mc-gray">
           <PointerText mouse={t("game.hint", { name: page.username })} touch={t("game.hintTouch", { name: page.username })} />{" "}
-          {/* The game's index of leaderboards, opened and scrolled to this mode's. */}
           <Link
             to="/{-$locale}/leaderboards/$field"
             params={{ field: page.game.key }}
@@ -213,10 +209,7 @@ export function GameView({ page }: { page: GamePage }) {
   );
 }
 
-/**
- * The bot's command for the page's game and player, `/bedwars player:anrie`. Only Quests' pages have periods, and its
- * command takes the period as a subcommand: `/quests daily player:anrie`.
- */
+/** Only Quests' pages have periods, and its command takes the period as a subcommand: `/quests daily player:anrie`. */
 function botCommand({ game, period, username }: GamePage) {
   return `/${game.key}${period === undefined ? "" : ` ${period}`} player:${username}`;
 }
@@ -299,7 +292,7 @@ export function LevelPanel({ level, username }: { level: Level; username: string
         <StatCell
           label={level.leaderboard ? <Spoken full={full}>{label}</Spoken> : <Hint full={full}>{label}</Hint>}
           value={level.leaderboard ?
-            <LeaderboardLink field={level.leaderboard} username={username} stat={full ?? label} hint={full}>{value}</LeaderboardLink> :
+            <LeaderboardLink field={level.leaderboard} username={username} stat={label} full={full}>{value}</LeaderboardLink> :
             value}
           color={leadingColorClass(level.current)}
           className="relative wrap-break-word"

@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, DROPPER_DIFFICULTIES, modeName, shapeKeys } from "@statsify/catalog";
-import type { CellSpec, GameLayout, PageSpec, SectionSpec } from "./layout.js";
+import { ARCADE, DROPPER_DIFFICULTIES, ZOMBIES_DIFFICULTIES, ZOMBIES_MAPS, modeName, shapeKeys } from "@statsify/catalog";
+import { type CellSpec, type GameLayout, type PageSpec, type SectionSpec, submodeOptions } from "./layout.js";
 import type { PlayerStats } from "@statsify/schemas";
 
 /** Keys stored somewhere other than the page's place. */
@@ -50,20 +50,6 @@ const OVERALL: PageSpec = {
   ],
 };
 
-const ZOMBIES_MAPS: [map: string, name: string][] = [
-  ["deadEnd", "§#813781Dead End"],
-  ["badBlood", "§#8f1721Bad Blood"],
-  ["alienArcadium", "§#75ae00Alien Arcadium"],
-  ["prison", "§#aaa5c2Prison"],
-];
-
-const DIFFICULTIES: [difficulty: string, name: string][] = [
-  ["overall", "§6Overall"],
-  ["normal", "§aNormal"],
-  ["hard", "§cHard"],
-  ["rip", "§4RIP"],
-];
-
 /** Whether a cell's map or difficulty has a win, after which the card shows Wins or Fastest Win over Best Round. */
 const won = (_: unknown, __: unknown, { wins }: Record<string, unknown>) => Number(wins) > 0;
 const unwon: typeof won = (...args) => !won(...args);
@@ -80,7 +66,7 @@ function zombies(submode: string): PageSpec {
       sections: [
         { name: "§6Overall", rows: [["wins", "kills", "deaths"], ["totalRounds", "doorsOpened"]] },
         // Each map's Overall as Zombies › Overall shows it: Wins, then Fastest Win once won, else Best Round, in §e.
-        ...ZOMBIES_MAPS.map(([map, name]): SectionSpec => {
+        ...Object.entries(ZOMBIES_MAPS).map(([map, name]): SectionSpec => {
           const place = map === "alienArcadium" ? "zombies.alienArcadium" : `zombies.${map}.overall`;
           const color = "§e" as const;
           return {
@@ -102,7 +88,7 @@ function zombies(submode: string): PageSpec {
   if (submode === "alienArcadium") return { sections: [{ rows: zombiesBlock("zombies.alienArcadium") }] };
 
   return {
-    sections: DIFFICULTIES.map(([difficulty, name]) => ({ name, box: true, rows: zombiesBlock(`zombies.${submode}.${difficulty}`) })),
+    sections: Object.entries(ZOMBIES_DIFFICULTIES).map(([difficulty, name]) => ({ name, box: true, rows: zombiesBlock(`zombies.${submode}.${difficulty}`) })),
   };
 }
 
@@ -247,7 +233,7 @@ export const ARCADE_PAGE: GameLayout = {
   game: ARCADE,
   // Zombies' maps split its games, so they get a switcher; the other cards' sub-pages are sections.
   modes: ARCADE.modes.getModes().map(({ api, submodes }) =>
-    api === "zombies" ? { key: api, submodes: submodes.map(({ api: key, formatted: name }) => ({ key, name })) } : { key: api }),
+    api === "zombies" ? { key: api, submodes: submodeOptions(submodes) } : { key: api }),
   overview: ["coins", "coinConversions", "wins"],
   page: (mode, submode) => {
     if (mode === "overall") return OVERALL;

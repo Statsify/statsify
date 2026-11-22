@@ -152,7 +152,7 @@ const GAME_NAV: GamePage["games"] = [
   { key: "challenges", id: null, name: "§aChallenges", played: true },
 ];
 
-/** Every game with a page, as the nav will list them once all are built: past 10, the Games button at every width. */
+/** Every game with a page: past 10, the Games button at every width. */
 export const GAME_NAV_ALL: GamePage["games"] = [
   { key: "arcade", id: "ARCADE", name: "§cA§6r§ec§aa§bd§de§f", played: false },
   { key: "arenabrawl", id: "ARENA_BRAWL", name: "§3Arena §6Brawl§f", played: true },

@@ -45,10 +45,8 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 /**
- * The page's one tab icon: the deepest route's `tabIcon`, else the logo. Only the root adds an icon link, so a page
- * never has two, and a new icon replaces the old one's link rather than joining it: browsers disagree on which of two
- * icons they show, and read the icons when a link is added, not when one is removed, so an icon link left behind kept
- * the last player's head in the tab.
+ * The page's one tab icon: the deepest route's `tabIcon`, else the logo. Only the root adds an icon link, since browsers
+ * disagree on which of two icons they show and don't drop one when its link is removed.
  */
 function tabIcon(matches: { staticData: StaticDataRouteOption; loaderData?: unknown }[]) {
   const href = matches.map((match) => match.staticData.tabIcon?.(match.loaderData)).findLast(Boolean);
