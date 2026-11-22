@@ -34,6 +34,7 @@ import { createHash } from "node:crypto";
 import { parseArgs } from "node:util";
 import { mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
 import { Canvas } from "skia-canvas";
+import potpack from "potpack";
 import { skiaCanvas } from "@statsify/textures/node";
 
 const { values, positionals } = parseArgs({ allowPositionals: true, options: { scales: { type: "string", default: "2,3" } } });
@@ -133,51 +134,24 @@ const textures = new Map(
   ),
 );
 
-/** Shelf-packs the sprites into a roughly square atlas, returning each one's rect in order */
-function packSprites(sprites: OffscreenCanvas[]) {
-  const area = sprites.reduce((total, { width, height }) => total + width * height, 0);
-  const width = Math.max(...sprites.map((sprite) => sprite.width), Math.ceil(Math.sqrt(area) / 16) * 16);
-  const order = sprites
-    .map((_, index) => index)
-    .toSorted((a, b) => sprites[b].height - sprites[a].height || sprites[b].width - sprites[a].width);
+const sprite = (id: string, canvas: OffscreenCanvas) => ({ id, canvas, x: 0, y: 0, w: canvas.width, h: canvas.height });
+const rectOf = ({ x, y, w, h }: ReturnType<typeof sprite>): AtlasRect => [x, y, w, h];
 
-  const rects: AtlasRect[] = [];
-  const shelf = { y: 0, height: 0, x: width };
-  const column = { x: 0, y: 0, width: 0 };
-
-  for (const index of order) {
-    const { width: w, height: h } = sprites[index];
-
-    if (w > column.width || column.y + h > shelf.y + shelf.height) {
-      if (shelf.x + w > width) Object.assign(shelf, { y: shelf.y + shelf.height, height: h, x: 0 });
-      Object.assign(column, { x: shelf.x, y: shelf.y, width: w });
-      shelf.x += w;
-    }
-
-    rects[index] = [column.x, column.y, w, h];
-    column.y += h;
-  }
-
-  return { width, height: shelf.y + shelf.height, rects };
-}
-
-const iconSprites = [...icons].flatMap(([id, drawnAt]) => drawnAt.map((canvas) => ({ id, canvas })));
-const textureSprites = [...textures].map(([id, canvas]) => ({ id, canvas }));
+const iconSprites = [...icons].flatMap(([id, drawnAt]) => drawnAt.map((canvas) => sprite(id, canvas)));
+const textureSprites = [...textures].map(([id, canvas]) => sprite(id, canvas));
 const sprites = [...iconSprites, ...textureSprites];
 
-const size = packSprites(sprites.map(({ canvas }) => canvas));
-const image = new Canvas(size.width, size.height);
+// Sets each sprite's x and y
+const size = potpack(sprites);
+const image = new Canvas(size.w, size.h);
 const ctx = image.getContext("2d");
 
-for (const [index, { canvas }] of sprites.entries()) {
-  const [x, y] = size.rects[index];
-  ctx.drawImage(canvas as unknown as Canvas, x, y);
-}
+for (const { canvas, x, y } of sprites) ctx.drawImage(canvas as unknown as Canvas, x, y);
 
 const iconRects: Record<string, AtlasRect[]> = {};
-for (const [index, { id }] of iconSprites.entries()) (iconRects[id] ??= []).push(size.rects[index]);
+for (const icon of iconSprites) (iconRects[icon.id] ??= []).push(rectOf(icon));
 
-const textureRects = Object.fromEntries(textureSprites.map(({ id }, index) => [id, size.rects[iconSprites.length + index]]));
+const textureRects = Object.fromEntries(textureSprites.map((texture) => [texture.id, rectOf(texture)]));
 
 const png = await image.toBuffer("png");
 const hash = createHash("sha256").update(png).digest("hex").slice(0, 16);
@@ -237,7 +211,7 @@ await writeFile(new URL(data.image, OUT), png);
 await writeFile(new URL(`${name}.json`, OUT), `${JSON.stringify(data)}\n`);
 
 console.log(
-  `${data.image}: ${size.width} × ${size.height}, ${png.length} bytes, ${icons.size} icons, ` +
+  `${data.image}: ${size.w} × ${size.h}, ${png.length} bytes, ${icons.size} icons, ` +
     `${Object.keys(layers).length} drawn from models, ${textures.size} textures`,
 );
 if (skipped.length > 0) console.log(`Skipped ${skipped.length}:\n${skipped.join("\n")}`);
