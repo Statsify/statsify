@@ -133,7 +133,7 @@ impl OrbitalCamera {
     let back = self.offset().normalize();
     let right = Vector3::unit_y().cross(back).normalize();
     let up = back.cross(right);
-    let tan = (Rad::from(Deg(self.fovy)).0 / 2.0).tan();
+    let tan = Deg(self.fovy / 2.0).tan();
 
     let tan_y = tan * (1.0 - 2.0 * margin / self.height);
     let tan_x = tan * self.width / self.height * (1.0 - 2.0 * margin / self.width);
