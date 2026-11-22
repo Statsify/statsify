@@ -352,10 +352,10 @@ if (import.meta.vitest) {
       weekly: [],
     });
 
-    const progress = (objectives: Record<string, number>) =>
-      new Daily({ uhc_solo: { active: { objectives } } }).progress.solo;
+    const daily = (objectives: Record<string, number>) =>
+      new Daily({ uhc_solo: { active: { objectives } } });
 
-    expect(progress({ uhc_games: 1 })).toBeUndefined();
-    expect(progress({ uhc_games: 1, uhc_kills: 0 })).toBe(0);
+    expect(daily({ uhc_games: 1 })).not.toHaveProperty("progress.solo");
+    expect(daily({ uhc_games: 1, uhc_kills: 0 })).toHaveProperty("progress.solo", 0);
   });
 }
