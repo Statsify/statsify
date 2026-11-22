@@ -20,7 +20,7 @@ export interface Title {
 }
 
 export const defaultTitleScores: Title[] = [
-  { req: 0, step: 0, max: 5, title: "None", defaultColor: "§7", bold: false },
+  { req: 0, step: 0, max: 1, title: "None", defaultColor: "§7", bold: false },
   { req: 50, step: 10, max: 5, title: "Rookie", defaultColor: "§7", bold: false },
   { req: 100, step: 30, max: 5, title: "Iron", defaultColor: "§f", bold: false },
   { req: 250, step: 50, max: 5, title: "Gold", defaultColor: "§6", bold: false },
@@ -108,7 +108,7 @@ export const getTitleAndProgression = ({
   let nextDivision = division + 1;
   let nextDefaultColor = defaultColor;
 
-  if (nextDivision > max || !step) {
+  if (nextDivision > max) {
     nextDivision = 1;
     if (index < titleScores.length - 1) nextDefaultColor = titleScores[index + 1].defaultColor;
   }
