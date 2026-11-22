@@ -51,7 +51,7 @@ import {
   MODES_TO_FORMATTED,
   mapBackground,
 } from "#constants";
-import { RatiosProfile, RatiosProfileProps, type RatioWithStats } from "./ratios.profile.js";
+import { RatiosProfile, type RatiosProfileProps, type RatioWithStats } from "./ratios.profile.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
