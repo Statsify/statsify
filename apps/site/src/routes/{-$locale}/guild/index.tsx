@@ -10,13 +10,13 @@ import { PageBackground } from "~/components/ui/background";
 import { Search } from "~/components/search";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
-import { searchPageMeta } from "~/lib/social-meta";
+import { pageMeta } from "~/lib/social-meta";
 import { useTranslation } from "react-i18next";
 
 /** A guild's name opens its page, with the guilds Statsify has stored suggested as it's typed. */
 export const Route = createFileRoute("/{-$locale}/guild/")({
   head: ({ matches }) => ({
-    meta: searchPageMeta(matches, { key: "guilds", nav: "guilds", path: "/guild", image: "/images/og-home.png" }),
+    meta: pageMeta(matches, { key: "guilds", trail: "nav.guilds", path: "/guild", image: "/images/og-home.png" }),
   }),
   headers: () => cacheHeaders("max-age=600, stale-while-revalidate=86400"),
   component: GuildSearchPage,

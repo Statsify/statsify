@@ -21,7 +21,6 @@ export function SessionLine({ start, updatedAt, className }: { start: number; up
     <p className={cn("text-mc-1.5 text-mc-gray", className)}>
       {t("session.started")} <LoginDate ms={start} />
       {now !== undefined && (
-        // Its own line below `md`, where the two don't fit on one and the dot would end the first.
         <span className="max-md:block">
           <span className="max-md:hidden"> · </span>
           {t("player.updated", { time: relativeTime(updatedAt, now, i18n.language) })}

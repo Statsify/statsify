@@ -98,10 +98,7 @@ const responseHeaders = createMiddleware({ type: "request" }).server(async ({ ne
 /** `/player/<name>.png` → the UUID image URL; the router would hand these to the player page's `$name`. */
 const PLAYER_IMAGE = /^\/player\/([^/]+)\.png$/;
 
-/**
- * Starts the unfurl render workers (fonts load once) on the first request rather than the first image, and
- * answers the by-name image URLs (see `playerImageByName`).
- */
+/** Starts the render workers on the first request rather than the first image. */
 const unfurlImages = createMiddleware({ type: "request" }).server(async ({ request, next }) => {
   const { playerImageByName, warmRenderPool } = await import("~/server/images.server");
   warmRenderPool();

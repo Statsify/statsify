@@ -15,17 +15,11 @@ import { repoRoot } from "./repo-root.server";
 export interface SiteConfig {
   /** `apiClient.route` */
   apiRoute: string;
-  /** `database.redisUrl`: the API's Redis, which also holds rendered unfurl images and their render locks. */
+  /** `database.redisUrl` */
   redisUrl: string;
-  /**
-   * `site.publicUrl`: the origin the site is served from, e.g. `https://statsify.net`. Absolute URLs
-   * (Open Graph, oEmbed) are built from it and never from `Host` or forwarded headers. Required outside `dev`.
-   */
+  /** `site.publicUrl`: absolute URLs are built from it, never from `Host` or forwarded headers. */
   publicUrl: string;
-  /**
-   * `site.indexable` (default true). False for a staging deploy: every response carries `X-Robots-Tag: noindex`, the
-   * sitemaps 404 and robots.txt lists no sitemap. Crawling stays open so crawlers see the header.
-   */
+  /** `site.indexable`, true when unset; false for a staging deploy. */
   indexable: boolean;
   /** `site.apiKey`: the site's own Statsify API key, never the bot's. */
   apiKey: string;
@@ -41,7 +35,7 @@ export interface SiteConfig {
   tracesSampleRate: number;
   /** `environment`; only an explicit `"dev"` relaxes anything, so a missing value counts as production. */
   environment: string;
-  /** `site.renderWorkers`: threads in the unfurl render pool, 1 to 3; 2 when unset. */
+  /** `site.renderWorkers`, 2 when unset */
   renderWorkers: number;
 }
 
@@ -110,10 +104,6 @@ async function load(): Promise<SiteConfig> {
 
 const DEFAULT_RENDER_WORKERS = 2;
 
-/**
- * Without `site.publicUrl`, a local run (`environment: "dev"`) uses the dev server's address, so Open Graph tags
- * resolve there. In production every unfurl and oEmbed URL would point at localhost, so the site doesn't start.
- */
 function publicUrlOf(raw: RawConfig): string {
   const url = raw.site?.publicUrl;
   if (url) return url.replace(/\/$/, "");
@@ -121,7 +111,6 @@ function publicUrlOf(raw: RawConfig): string {
   return "http://localhost:7828";
 }
 
-/** 1, 2 or 3; anything else is a mistake in `config.js`, and the site doesn't start. */
 function renderWorkersOf(value: unknown): number {
   if (value === undefined) return DEFAULT_RENDER_WORKERS;
   if (value === 1 || value === 2 || value === 3) return value;

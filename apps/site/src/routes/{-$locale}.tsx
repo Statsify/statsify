@@ -48,7 +48,6 @@ export const Route = createFileRoute("/{-$locale}")({
   // canonical link, so a page never has two.
   head: ({ loaderData, matches, match }) => {
     if (!loaderData) {
-      // An unknown prefix's 404, which carries the English layout's data (see `LocaleNotFound`).
       const data = isNotFound(match.error) ? (match.error.data as LocaleData | undefined) : undefined;
       if (!data) return {};
       const words = createI18n(DEFAULT_LOCALE, data.resources);
@@ -87,9 +86,8 @@ function LocaleLayout() {
 }
 
 /**
- * A 404 thrown by this route (an unknown locale prefix) replaces the layout, so it draws the layout itself from the
- * data the 404 carries. Unmatched paths under a known locale render inside the layout's outlet with no data, and the
- * child routes that throw `notFound()` have their own `notFoundComponent`, so both keep the header and footer.
+ * An unknown locale prefix's 404 replaces the layout, so it draws the layout from the data the 404 carries. Every
+ * other 404 renders inside the layout, with no data.
  */
 function LocaleNotFound({ data }: NotFoundRouteProps) {
   if (!data || typeof data !== "object" || !("resources" in data)) return <NotFound />;

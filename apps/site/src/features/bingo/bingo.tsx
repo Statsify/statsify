@@ -49,7 +49,6 @@ export function Bingo({ player, refresh }: { player: BingoPlayer; refresh?: Reac
   return (
     <>
       <div className="w-full lg:w-[80%] flex items-stretch flex-col gap-4">
-        {/* The nametag over each category's heading and counts, every one its own box, as the bot's cards draw them. */}
         <div className={cn("flex flex-col", BOX_GAP)}>
           <Box className="content:flex content:flex-col content:items-center content:gap-1">
             <div className="flex items-center justify-center gap-4 text-center text-mc-3">
@@ -90,7 +89,7 @@ export function Bingo({ player, refresh }: { player: BingoPlayer; refresh?: Reac
   );
 }
 
-function completetionColor(completion: number) {
+function completionColor(completion: number) {
   if (completion === 0) return "text-mc-red";
   if (completion === 16) return "text-mc-green font-bold";
   return "text-mc-yellow";
@@ -122,12 +121,12 @@ function CategoryOverview({ player, category }: { player: BingoPlayer; category:
       </Box>
       <CountBox board={{ category, difficulty: "easy" }}>
         <span className="text-mc-green">{t("bingo.easy")}</span>:{" "}
-        <span className={completetionColor(easyCompletion)}>{easyCompletion}</span>
+        <span className={completionColor(easyCompletion)}>{easyCompletion}</span>
         <span className="text-mc-gray">/16</span> {t("bingo.completed")}
       </CountBox>
       <CountBox board={{ category, difficulty: "hard" }}>
         <span className="text-mc-red">{t("bingo.hard")}</span>:{" "}
-        <span className={completetionColor(hardCompletion)}>{hardCompletion}</span>
+        <span className={completionColor(hardCompletion)}>{hardCompletion}</span>
         <span className="text-mc-gray">/16</span> {t("bingo.completed")}
       </CountBox>
     </div>

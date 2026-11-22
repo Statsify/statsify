@@ -8,11 +8,7 @@
 
 export const DEFAULT_LOCALE = "en-US";
 
-/**
- * Locales the site serves. English is unprefixed; any other locale lives under `/{locale}/`.
- * The other 28 bot locales wait for a pixel web font with the letters the Minecraft font lacks (Latin Extended
- * and every non-Latin script).
- */
+// The bot's other locales wait for a pixel font with the letters the Minecraft font lacks.
 export const SUPPORTED_LOCALES = [DEFAULT_LOCALE] as const;
 
 export type Locale = (typeof SUPPORTED_LOCALES)[number];

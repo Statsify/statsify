@@ -18,7 +18,6 @@ export function AnimatedNumber({ value, trim = false }: { value: number; trim?: 
   const displayText = useTransform(spring, (current) => n(Number.isInteger(value) ? Math.round(current) : current));
   const reduceMotion = useReducedMotion();
 
-  // With reduced motion the number jumps straight to its value.
   useEffect(() => {
     if (reduceMotion) spring.jump(value);
     else spring.set(value);
