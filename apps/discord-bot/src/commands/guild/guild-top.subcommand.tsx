@@ -26,7 +26,7 @@ import {
   GuildTopProfileProps,
 } from "./guild-top.profile.js";
 import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.subcommand.js";
-import { GUILD_CACHE_TIME_MS, GuildQuery } from "@statsify/api-client";
+import { GUILD_CACHE_TIME_MS, type GuildQuery } from "@statsify/api-client";
 import { Theme, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
