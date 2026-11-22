@@ -6,76 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Fuse from "fuse.js";
 import {
-  APIApplicationCommandOptionChoice,
-  ApplicationCommandOptionType,
-} from "discord-api-types/v10";
-import {
-  AbstractArgument,
   ApiService,
   Command,
   CommandContext,
   EmbedBuilder,
   ErrorMessage,
-  LocalizationString,
   Page,
   paginate,
 } from "@statsify/discord";
-import {
-  ClassMetadata,
-  FormattedGame,
-  GameCounts,
-  GamePlayers,
-  METADATA_KEY,
-} from "@statsify/schemas";
+import { FormattedGame, type GameCounts, type GamePlayers } from "@statsify/schemas";
+import { GameArgument, findGameId } from "./gamecounts.argument.js";
 import { STATUS_COLORS } from "@statsify/logger";
 import { mapGame } from "#constants";
 import { removeFormatting } from "@statsify/util";
-
-const GAMECOUNT_GAME_IDS = Object.keys(
-  Reflect.getMetadata(METADATA_KEY, GameCounts.prototype) as ClassMetadata
-) as (keyof GameCounts)[];
-
-const GAMECOUNT_GAME_CHOICES = GAMECOUNT_GAME_IDS.map((id) => ({
-  name: removeFormatting(FormattedGame[id]),
-  value: id,
-}));
-
-const GAMECOUNT_GAME_FUSE = new Fuse(GAMECOUNT_GAME_CHOICES, {
-  keys: ["name", "value"],
-  includeScore: false,
-  shouldSort: true,
-  isCaseSensitive: false,
-  threshold: 0.3,
-  ignoreLocation: true,
-});
-
-class GameArgument extends AbstractArgument {
-  public name = "game";
-  public description: LocalizationString;
-  public type = ApplicationCommandOptionType.String;
-  public required = false;
-  public autocomplete = true;
-
-  public constructor() {
-    super();
-    this.description = (t) => t("arguments.game");
-  }
-
-  public autocompleteHandler(
-    context: CommandContext
-  ): APIApplicationCommandOptionChoice[] {
-    const currentValue = context.option<string>(this.name, "").toLowerCase();
-
-    if (!currentValue) return GAMECOUNT_GAME_CHOICES.slice(0, 25);
-
-    return GAMECOUNT_GAME_FUSE
-      .search(currentValue)
-      .map((result) => result.item)
-      .slice(0, 25);
-  }
-}
 
 @Command({
   description: (t) => t("commands.game-counts"),
@@ -90,7 +34,7 @@ export class GameCountsCommand {
     const game = context.option<string | null>("game");
 
     if (game) {
-      const id = this.findGameCountGameId(game);
+      const id = findGameId(game);
       if (!id) throw new ErrorMessage("errors.invalidGame");
       return { embeds: [this.createGameCountsEmbed(id, gamecounts[id], true)] };
     }
@@ -163,13 +107,5 @@ export class GameCountsCommand {
           .filter(Boolean)
           .join("\n\n");
       });
-  }
-
-  private findGameCountGameId(input: string) {
-    const query = input.toLowerCase();
-
-    return GAMECOUNT_GAME_CHOICES.find(
-      ({ name, value }) => value.toLowerCase() === query || name.toLowerCase() === query
-    )?.value;
   }
 }
