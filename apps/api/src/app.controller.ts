@@ -11,7 +11,7 @@ import { type Connection, ConnectionStates } from "mongoose";
 import { Controller, Get, Header, Render, ServiceUnavailableException } from "@nestjs/common";
 import { InjectConnection } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
-import { Redis } from "ioredis";
+import type { Redis } from "ioredis";
 
 @Controller("/")
 export class AppController {
