@@ -24,7 +24,7 @@ import { ButtonStyle } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
 import { minecraftHeadAttachment } from "#lib/minecraft-head";
 
-const LINKED_SOCIALS = [
+const SOCIALS = [
   ["forums", "Forums"],
   ["instagram", "Instagram"],
   ["tiktok", "TikTok"],
@@ -63,7 +63,7 @@ export class SocialsCommand {
 
     const unlinked: string[] = [];
 
-    for (const [key, name] of LINKED_SOCIALS) {
+    for (const [key, name] of SOCIALS) {
       const handle = formatHandle(socials[key]);
 
       if (!handle) {
