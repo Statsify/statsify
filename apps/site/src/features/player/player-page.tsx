@@ -12,7 +12,7 @@ import { Discord } from "~/components/icons/discord";
 import { GameNav } from "~/features/game/game-nav";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
-import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
+import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
@@ -356,7 +356,7 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
               ) :
               link ?
                 (
-                  <LeaderboardLink field={`stats.general.${link.board}`} username={username} stat={label} hint={exact(value)}>
+                  <LeaderboardLink field={`stats.general.${link.board}`} username={username} stat={label} exact={exact(value)}>
                     <Spoken full={exact(value)}>{n(value)}</Spoken>
                   </LeaderboardLink>
                 ) :
@@ -540,7 +540,7 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
               label={row.name === undefined ? <Spoken full={full}>{label}</Spoken> : <MinecraftText>{`${row.color}${row.name}`}</MinecraftText>}
               value={row.leaderboard ?
                 (
-                  <LeaderboardLink field={row.leaderboard} username={username} stat={full ?? label} hint={linkHint(full, exactValue)}>
+                  <LeaderboardLink field={row.leaderboard} username={username} stat={label} full={full} exact={exactValue}>
                     {value}
                   </LeaderboardLink>
                 ) :

@@ -136,35 +136,38 @@ export function InlineStat({
   );
 }
 
-/** What a stat link shows on hover and keyboard focus: the label's full name and the exact number, where shortened. */
-export const linkHint = (full?: string, exact?: string) => [full, exact].filter(Boolean).join(": ") || undefined;
-
 /**
  * The stat's leaderboard, opened at the player's row. The link covers the whole (`relative`) stat cell; its name says
- * where it goes. A tap follows it, so what the cell shortens (`hint`) shows on hover and keyboard focus instead.
+ * where it goes. A tap follows it, so what the cell shortens (the label's `full` name, the `exact` number) shows on hover
+ * and keyboard focus instead.
  */
 export function LeaderboardLink({
   field,
   username,
   stat,
-  hint,
+  full,
+  exact,
   children,
 }: {
   field: string;
   username: string;
   stat: string;
-  hint?: string;
+  full?: string;
+  exact?: string;
   children: ReactNode;
 }) {
   const { t } = useTranslation();
   // Over the whole cell the link covers, not just its text.
-  const { props, tooltip } = useHint(hint, (link) => link.closest(".relative") ?? link);
+  const { props, tooltip } = useHint(
+    [full, exact].filter(Boolean).join(": ") || undefined,
+    (link) => link.closest(".relative") ?? link
+  );
 
   return (
     <>
       <Link to="/{-$locale}/leaderboards/$field" params={{ field }} search={{ around: username }} className={STAT_LINK} {...props}>
         {children}
-        <span className="sr-only"> {t("game.leaderboard", { stat })}</span>
+        <span className="sr-only"> {t("game.leaderboard", { stat: full ?? stat })}</span>
       </Link>
       {tooltip}
     </>

@@ -17,7 +17,7 @@ import { Fragment, type ReactNode, type Ref, useEffect, useId, useRef, useState 
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { GameNav } from "./game-nav";
 import { Hint, Spoken } from "~/components/ui/hint";
-import { Hidden, InlineStat, LeaderboardLink, StatCell, StatNumber, glossaryKey, linkHint, useStatName } from "~/components/ui/stat";
+import { Hidden, InlineStat, LeaderboardLink, StatCell, StatNumber, glossaryKey, useStatName } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { MinecraftText, colorClass, colorOf, leadingColorClass, plainText } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "~/features/player/mini-header";
@@ -347,7 +347,7 @@ export function LevelPanel({ level, username, className }: { level: Level; usern
         <StatCell
           label={level.leaderboard ? <Spoken full={full}>{label}</Spoken> : <Hint full={full}>{label}</Hint>}
           value={level.leaderboard ?
-            <LeaderboardLink field={level.leaderboard} username={username} stat={full ?? label} hint={full}>{value}</LeaderboardLink> :
+            <LeaderboardLink field={level.leaderboard} username={username} stat={label} full={full}>{value}</LeaderboardLink> :
             value}
           color={leadingColorClass(level.current)}
           className="relative wrap-break-word"
@@ -573,8 +573,9 @@ function GameStat({ cell, username }: { cell: Stat; username: string }) {
           <LeaderboardLink
             field={cell.leaderboard}
             username={username}
-            stat={label.full ?? label.text}
-            hint={linkHint(label.full, typeof cell.value === "number" ? exact(cell.value) : undefined)}
+            stat={label.text}
+            full={label.full}
+            exact={typeof cell.value === "number" ? exact(cell.value) : undefined}
           >
             {value}
           </LeaderboardLink>
@@ -610,8 +611,9 @@ function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat
             <LeaderboardLink
               field={cell.leaderboard}
               username={username}
-              stat={label.full ?? label.text}
-              hint={linkHint(label.full, !ticks && typeof cell.value === "number" ? exact(cell.value) : undefined)}
+              stat={label.text}
+              full={label.full}
+              exact={!ticks && typeof cell.value === "number" ? exact(cell.value) : undefined}
             >
               {value}
             </LeaderboardLink>
