@@ -86,7 +86,7 @@ export const pageSubmodes = (layout: GameLayout, mode: string): string[] | undef
 
 /**
  * The game page a leaderboard's rows open (`stats.duels.bridge.doubles.wins` is Duels at Bridge, Doubles), or none
- * where the game has no page. The first mode goes unnamed, as the page's own URL has it.
+ * where the game has no page. The first mode and submode go unnamed, as the page's own URL has them.
  */
 export function boardGamePage(field: string): { game: string; mode?: string; submode?: string } | undefined {
   const [, game = "", ...below] = field.split(".");
@@ -97,8 +97,13 @@ export function boardGamePage(field: string): { game: string; mode?: string; sub
   // Quests keep each game's boards below the period (`stats.quests.overall.ARCADE.total`).
   const [mode = "", submode = ""] = below[0] === "overall" && isMode(below[1]) ? below.slice(1) : below;
   if (!isMode(mode)) return { game: layout.game.key };
-  if (pageSubmodes(layout, mode)?.includes(submode)) return { game: layout.game.key, mode, submode };
-  return mode === modes[0].key ? { game: layout.game.key } : { game: layout.game.key, mode };
+  const submodes = pageSubmodes(layout, mode) ?? [];
+
+  return {
+    game: layout.game.key,
+    ...(mode !== modes[0].key && { mode }),
+    ...(submodes.includes(submode) && submode !== submodes[0] && { submode }),
+  };
 }
 
 /** Every period any of a page's modes covers, or none for a page without periods. */
@@ -160,6 +165,12 @@ if (import.meta.vitest) {
       player.stats.duels.spleef.spleef.wins = 3;
       player.stats.duels.spleef.bowSpleef.losses = 2;
       expect(marked()?.key).toBe("spleef");
+    });
+
+    it("links a board's rows without the first mode or submode, as the game page's URL has them", () => {
+      expect(boardGamePage("stats.duels.overall.wins")).toEqual({ game: "duels" });
+      expect(boardGamePage("stats.duels.bridge.overall.wins")).toEqual({ game: "duels", mode: "bridge" });
+      expect(boardGamePage("stats.duels.bridge.doubles.wins")).toEqual({ game: "duels", mode: "bridge", submode: "doubles" });
     });
 
     for (const layout of GAME_PAGES) {
