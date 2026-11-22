@@ -7,9 +7,9 @@
  */
 
 import {
-  AbstractCommandListener,
+  type AbstractCommandListener,
   ActionRowBuilder,
-  ComponentRoute,
+  type ComponentRoute,
   ModalBuilder,
   TextInputBuilder,
 } from "@statsify/discord";
