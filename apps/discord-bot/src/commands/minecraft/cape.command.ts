@@ -18,23 +18,12 @@ import { Image, loadImage } from "skia-canvas";
 import { createCanvas } from "@statsify/rendering";
 import type { Skin } from "@statsify/schemas";
 
-interface CapeFront {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
 // 46x22 and HD capes use the 64x32 layout scaled by the smallest power of two that fits
-function getCapeFront(cape: Image): CapeFront | undefined {
+function getCapeFront(cape: Image) {
   let scale = 1;
   while (64 * scale < cape.width || 32 * scale < cape.height) scale *= 2;
 
-  const front = { x: scale, y: scale, width: 10 * scale, height: 16 * scale };
-
-  if (front.x + front.width > cape.width || front.y + front.height > cape.height) return;
-
-  return front;
+  return { x: scale, y: scale, width: 10 * scale, height: 16 * scale };
 }
 
 @Command({ description: (t) => t("commands.cape"), args: [MojangPlayerArgument] })
@@ -54,14 +43,9 @@ export class CapeCommand {
       this.getMojangCape(player),
     ]);
 
-    const pages = capes.flatMap(({ label, image }) => {
-      if (!image) return [];
-
-      const front = getCapeFront(image);
-      if (!front) return [];
-
-      return [{ label, generator: () => this.renderCape(image, front) }];
-    });
+    const pages = capes.flatMap(({ label, image }) =>
+      image ? [{ label, generator: () => this.renderCape(image) }] : []
+    );
 
     if (pages.length === 0)
       return new ErrorMessage(
@@ -89,7 +73,8 @@ export class CapeCommand {
     return { label: "Mojang", image };
   }
 
-  private renderCape(cape: Image, front: CapeFront) {
+  private renderCape(cape: Image) {
+    const front = getCapeFront(cape);
     const canvas = createCanvas(640, 1024);
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
