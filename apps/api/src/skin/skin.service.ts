@@ -9,9 +9,10 @@
 import { HttpService } from "@nestjs/axios";
 import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { LRUCache } from "lru-cache";
+import { InjectRedis } from "#redis";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
+import { Redis } from "ioredis";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
@@ -21,16 +22,12 @@ import type { ArmorDto, ArmorPieceDto, SKULLS, SkinRenderDto } from "#dtos";
 import type { ReturnModelType } from "@typegoose/typegoose";
 import { readFile } from "node:fs/promises";
 
-// A texture hash always serves the same image, so heads never need refetching
-const HEAD_CACHE_SIZE = 500;
-
 @Injectable()
 export class SkinService {
-  private readonly heads = new LRUCache<string, Buffer>({ max: HEAD_CACHE_SIZE });
-
   public constructor(
     private readonly httpService: HttpService,
-    @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
+    @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>,
+    @InjectRedis() private readonly redis: Redis
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
@@ -60,7 +57,7 @@ export class SkinService {
 
     const [{ skin: image }, capeImage] = await Promise.all([
       this.resolveSkin(skin.skinUrl, skin.slim),
-      cape && skin.capeUrl ? loadImage(skin.capeUrl).catch(() => undefined) : undefined,
+      cape && skin.capeUrl ? loadTexture(skin.capeUrl) : undefined,
     ]);
 
     const enchanted = Object.values(resolvedArmor).some((piece) => piece?.enchanted);
@@ -147,13 +144,16 @@ export class SkinService {
     return resolveArmorPiece(helmet, 1);
   }
 
-  private async resolveHead(hash: string): Promise<ArmorPiece | undefined> {
-    const head = this.heads.get(hash) ??
-      await loadImage(`https://textures.minecraft.net/texture/${hash}`).then(imageData).catch(() => undefined);
+  private async resolveHead(hash: string): Promise<ArmorPiece> {
+    const key = `head:${hash}`;
+    let head = await this.redis.getBuffer(key);
 
-    if (!head) return;
+    if (!head) {
+      head = imageData(await loadTexture(`https://textures.minecraft.net/texture/${hash}`));
 
-    this.heads.set(hash, head);
+      // A texture hash always serves the same image, so a cached head never expires
+      await this.redis.set(key, head);
+    }
 
     return { texture: head, enchanted: false, skull: true };
   }
@@ -198,6 +198,12 @@ const imageData = (image: Image) => {
   const { _data: data } = image as unknown as { _data: Buffer };
   return data;
 };
+
+const loadTexture = (url: string) =>
+  loadImage(url).catch((error) => {
+    if (error.response?.status === 404) throw new NotFoundException("texture");
+    throw error;
+  });
 
 const SKULL_TEXTURES: Record<(typeof SKULLS)[number], string> = {
   skeleton: "skeleton/skeleton",
