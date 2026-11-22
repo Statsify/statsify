@@ -78,7 +78,6 @@ export class PlayerService {
     if (selector && Object.keys(selector).length > 0) {
       selector.uuid = true;
       selector.username = true;
-      selector.usernameToLower = true;
       selector.guildId = true;
       selector.sessionReset = true;
       selector.expiresAt = true;
@@ -120,7 +119,7 @@ export class PlayerService {
       if (
         tag.length <= 16 &&
         mongoPlayer &&
-        mongoPlayer.usernameToLower !== player.usernameToLower
+        player.usernameToLower !== tag.toLowerCase()
       ) {
         return this.getWithFallback(tag, cacheLevel, selector);
       }
