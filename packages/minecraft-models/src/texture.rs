@@ -134,10 +134,7 @@ fn animation_frame(mcmeta: &str, frame_count: u32, tick: u64) -> Result<Option<u
     ));
   }
 
-  let cycle = frames
-    .iter()
-    .try_fold(0u64, |sum, (_, time)| sum.checked_add(*time))
-    .ok_or("the frame times overflow")?;
+  let cycle: u64 = frames.iter().map(|(_, time)| time).sum();
   let mut remaining = tick.checked_rem(cycle).ok_or("the strip has no frames")?;
 
   for (index, time) in frames {
