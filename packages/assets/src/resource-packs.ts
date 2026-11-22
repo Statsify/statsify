@@ -35,6 +35,7 @@ const ACTIVE = "active.json";
 const PREVIOUS = "previous.json";
 const HELD = "held.json";
 const LOCK = "update.lock";
+const STAGING = ".staging-";
 
 // The holder touches the lock every minute, so one untouched for five was left by an update that crashed
 const HEARTBEAT = 60 * 1000;
@@ -99,7 +100,7 @@ async function download(url: string, sha1: string) {
 
 /** Renames a staged folder into place whole, so a pack folder that exists is complete */
 async function store(folder: string, files: Record<string, Uint8Array | string>) {
-  const staging = await mkdtemp(join(ROOT, ".staging-"));
+  const staging = await mkdtemp(join(ROOT, STAGING));
 
   try {
     await settle(Object.entries(files).map(([name, data]) => writeFile(join(staging, name), data)));
@@ -196,6 +197,10 @@ async function prune(kept: Generation[]) {
       await settle(unused.map((folder) => rm(join(ROOT, source, folder), { recursive: true, force: true })));
     }),
   );
+
+  // An update that died mid-write leaves its staging folder behind
+  const staging = (await readdir(ROOT)).filter((folder) => folder.startsWith(STAGING));
+  await settle(staging.map((folder) => rm(join(ROOT, folder), { recursive: true, force: true })));
 }
 
 async function lock() {
