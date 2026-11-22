@@ -13,5 +13,6 @@ allowBuilds:
   unrs-resolver: true
 
 patchedDependencies:
-  # Stops skyhelper-networth fetching (npm update check, prices, the items resource) and reading or writing its items backup
+  # Stops skyhelper-networth fetching (npm update check, prices, the items resource) and reading or writing its items backup,
+  # and pricing the used-up Hunting Toolkit as a tool
   skyhelper-networth@2.11.1: patches/skyhelper-networth@2.11.1.patch
