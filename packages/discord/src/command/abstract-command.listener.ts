@@ -105,9 +105,6 @@ export abstract class AbstractCommandListener {
     path: string[],
     options: Record<string, string>
   ) {
-    const command = this.findCommand(path);
-    if (!command) return;
-
     const isOwner = interaction.getUserId() === ownerId;
 
     // Modal input isn't part of the key, so only button and select replies are cached
@@ -121,6 +118,9 @@ export abstract class AbstractCommandListener {
       undefined;
 
     try {
+      const command = this.findCommand(path);
+      if (!command) throw new Error(`No command at "${path.join(" ")}"`);
+
       const cached = cacheKey ? this.rerunCache.get(cacheKey) : undefined;
       let message: IMessage | Message;
 
@@ -165,6 +165,9 @@ export abstract class AbstractCommandListener {
 
       this.logger.error(`An error occurred when re-running "${path.join(" ")}"`);
       this.logger.error(err);
+
+      await interaction.acknowledged;
+      return interaction.sendFollowup({ ...new ErrorMessage("errors.unknown"), ephemeral: true });
     }
   }
 
