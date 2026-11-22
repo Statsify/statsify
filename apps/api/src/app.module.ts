@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { APP_FILTER } from "@nestjs/core";
 import { AppController } from "./app.controller.js";
 import { AuthModule } from "#auth";
 import { CommandsModule } from "#commands";
@@ -14,7 +15,7 @@ import { HypixelResourcesModule } from "#hypixel-resources";
 import { Module } from "@nestjs/common";
 import { PlayerModule } from "#player";
 import { RedisModule } from "#redis";
-import { SentryModule } from "@sentry/nestjs/setup";
+import { SentryGlobalFilter, SentryModule } from "@sentry/nestjs/setup";
 import { SessionModule } from "#session";
 import { SkinModule } from "#skin";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
@@ -49,5 +50,6 @@ const redisUrl = await config("database.redisUrl");
     CommandsModule,
   ],
   controllers: [AppController],
+  providers: [{ provide: APP_FILTER, useClass: SentryGlobalFilter }],
 })
 export class AppModule {}
