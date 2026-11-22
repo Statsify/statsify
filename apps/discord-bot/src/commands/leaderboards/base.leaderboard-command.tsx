@@ -95,10 +95,10 @@ export class BaseLeaderboardCommand {
 
     // /guild leaderboard re-runs as /leaderboard guild, since the route only re-runs /leaderboard
     const subcommand = type === "guild" ? "guild" : context.getCommandName();
-    const leaderboard = `${subcommand}.${context.option<string>("leaderboard")}`;
+    const leaderboard = context.option<string>("leaderboard");
 
     const getCustomId = (action: string | number) =>
-      createCustomId(LEADERBOARD_ROUTE, interaction.getUserId(), action, leaderboard);
+      createCustomId(LEADERBOARD_ROUTE, interaction.getUserId(), action, subcommand, leaderboard);
 
     const row = new ActionRowBuilder([
       new ButtonBuilder()
