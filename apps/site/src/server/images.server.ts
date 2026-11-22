@@ -11,9 +11,9 @@ import {
   type ImageVariant,
   PoolBusyError,
   RenderPool,
-  isGameCard,
 } from "@statsify/profiles/pool";
 import { ORPCError } from "@orpc/client";
+import { unfurlCard } from "~/features/game/game-data";
 import { cacheHeaders } from "~/lib/cache";
 import { compactUuid } from "~/lib/uuid";
 import { createRequire } from "node:module";
@@ -334,10 +334,7 @@ async function waitForImage(
   return held ? waitForImage(client, key, lock, deadline) : null;
 }
 
-/**
- * The game page's card: the API checks the game and mode (the page's own rules, so an unfurl exists exactly when the
- * page does), and a game whose card the pool can't draw yet gets the general one.
- */
+/** The game page's card. The API checks the game and mode, so an unfurl exists exactly when the page does. */
 async function gameCard(uuid: string, { game, mode, submode, period }: GameImage): Promise<CardChoice> {
   const page = await rpcServerClient.player.game({ uuid, game, mode: mode ?? undefined, submode: submode ?? undefined, period: period ?? undefined }).catch((error: unknown) => {
     if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) {
@@ -347,15 +344,7 @@ async function gameCard(uuid: string, { game, mode, submode, period }: GameImage
     throw error;
   });
 
-  if (!isGameCard(page.game.key, page.mode, page.period)) return { card: "general" };
-
-  return {
-    card: page.game.key,
-    mode: page.mode,
-    ...(page.submode !== null && { submode: page.submode }),
-    ...(page.period !== undefined && { period: page.period }),
-    ...(page.window && { window: page.window }),
-  };
+  return unfurlCard(page);
 }
 
 /** One of the bot's cards for a stored player, as PNG bytes. Throws `PoolBusyError` when the queue is full. */

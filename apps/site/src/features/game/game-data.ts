@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type CardChoice, isGameCard } from "@statsify/profiles/protocol";
 import { orpc } from "~/lib/orpc";
 import type { GamePage } from "@statsify/contract";
 
@@ -32,3 +33,15 @@ export const submodeSearch = (page: Pick<GamePage, "submodes">, submode: string 
 /** The `&period=` of a page: none for its first period (all time), or a page without periods. */
 export const periodSearch = (page: Pick<GamePage, "periods">, period: string | undefined): string | undefined =>
   period === undefined || period === page.periods?.[0] ? undefined : period;
+
+/** The card a page unfurls with: its game's, where the pool draws one for the page, else the general card. */
+export const unfurlCard = (page: GamePage): CardChoice =>
+  isGameCard(page.game.key, page.mode, page.period) ?
+    {
+      card: page.game.key,
+      mode: page.mode,
+      ...(page.submode !== null && { submode: page.submode }),
+      ...(page.period !== undefined && { period: page.period }),
+      ...(page.window && { window: page.window }),
+    } :
+    { card: "general" };
