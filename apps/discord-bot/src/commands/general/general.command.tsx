@@ -12,7 +12,7 @@ import {
   ProfileData,
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
-import { GENERAL_MODES, GeneralModes, Guild, Player } from "@statsify/schemas";
+import { GENERAL_MODES, GeneralModes, Guild } from "@statsify/schemas";
 import { GeneralProfile } from "./general.profile.js";
 import { GuildQuery } from "@statsify/api-client";
 
@@ -26,9 +26,9 @@ export class GeneralCommand extends BaseHypixelCommand<GeneralModes, PreProfileD
     super(GENERAL_MODES);
   }
 
-  public async getPreProfileData(player: Player): Promise<PreProfileData> {
+  public async getPreProfileData(uuid: string): Promise<PreProfileData> {
     const guild = await this.apiService
-      .getGuild(player.uuid, GuildQuery.PLAYER)
+      .getGuild(uuid, GuildQuery.PLAYER)
       .catch(() => undefined);
 
     return {

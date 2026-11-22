@@ -49,7 +49,7 @@ export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
 export type ModeEmoji = LocalizationString | false | undefined;
 
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
-  getPreProfileData?(player: Player): K | Promise<K>;
+  getPreProfileData?(uuid: string): K | Promise<K>;
   filterModes?(player: Player, modes: GameModeWithSubModes<T>[]): GameModeWithSubModes<T>[];
   filterSubmodes?(player: Player, mode: GameModeWithSubModes<T>): GameModeWithSubModes<T>["submodes"];
   getModeEmojis?(modes: GameModeWithSubModes<T>[]): ModeEmoji[];
@@ -86,7 +86,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
         return apiService.getUserBadge(selfUuid ?? (await this.$.player).uuid);
       },
       async data() {
-        return (await getPreProfileData?.(await this.$.player)) ?? noop<K>();
+        return (await getPreProfileData?.(selfUuid ?? (await this.$.player).uuid)) ?? noop<K>();
       },
     });
 
