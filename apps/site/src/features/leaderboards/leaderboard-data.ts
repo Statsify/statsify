@@ -97,8 +97,6 @@ export interface LeaderboardView {
 export interface StreamState {
   key: string;
   field: string;
-  around?: string;
-  position?: number;
 }
 
 /** A page of a stream: its rows less the players a page loaded before it already shows. */
@@ -120,15 +118,11 @@ export type EntryState = HistoryState & { __TSR_key?: string };
  * The stream of the visit a history entry is. An entry without one hasn't left the page it opened, so its URL is that
  * page's and its own key names the stream.
  */
-export const streamOf = (
-  state: EntryState,
-  field: string,
-  { around, position }: { around?: string; position?: number }
-): StreamState =>
+export const streamOf = (state: EntryState, field: string): StreamState =>
   state.leaderboardStream?.field === field
     ? state.leaderboardStream
     // eslint-disable-next-line no-underscore-dangle -- the history entry's key, under TanStack's name
-    : { key: state.__TSR_key ?? "", field, around, position };
+    : { key: state.__TSR_key ?? "", field };
 
 /** A page as the stream asks for it: no `around`, and the input in one order, so the edge caches one copy. */
 export const fetchStreamPage = (field: string, page: number, signal?: AbortSignal) =>
@@ -144,11 +138,9 @@ export function streamView(
   state: EntryState,
   { page, around, position }: { page: number; around?: string; position?: number }
 ): LeaderboardView | undefined {
-  const stream = streamOf(state, field, { around, position });
+  // The stream only writes `?page=`, so a URL with `around` or `position` is still on the page the stream opened.
   const selector = around !== undefined || position !== undefined;
-  if (selector && (around !== stream.around || position !== stream.position)) return;
-
-  const chunks = queryClient.getQueryData<InfiniteData<StreamChunk, number>>(streamKey(field, stream.key))?.pages;
+  const chunks = queryClient.getQueryData<InfiniteData<StreamChunk, number>>(streamKey(field, streamOf(state, field).key))?.pages;
   const chunk = chunks?.find((chunk) => (selector ? chunk.seed : chunk.page.page === page));
   return chunk && { page: chunk.page, miss: chunk.miss, noindex: chunk.page.page > 0 || selector };
 }
