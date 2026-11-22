@@ -30,6 +30,11 @@ const sameAttributes = (a: Record<string, number>, b: Record<string, number>) =>
 function kartPart(stored: string) {
   const type = /PartType:(\w+)/.exec(stored)?.[1];
   const rarity = /PartRarity:(\w+)/.exec(stored)?.[1];
+  if (type === undefined || rarity === undefined) throw new Error(`No PartType or PartRarity in ${stored}`);
+
+  const parts = PARTS[type];
+  if (!parts) throw new Error(`No Kart Customizer parts for ${type}`);
+
   const attributes = Object.fromEntries(
     stored.matchAll(/KartAttributeType:(\w+),Level:(\d+)/g).map(([, attribute, level]) => [attribute, Number(level)]),
   );
@@ -38,7 +43,7 @@ function kartPart(stored: string) {
   const matches = (part: KartPart) =>
     part.rarity === rarity && (Object.keys(attributes).length === 0 || sameAttributes(part.attributes, attributes));
 
-  return type === undefined ? undefined : PARTS[type]?.find(matches)?.item;
+  return parts.find(matches)?.item;
 }
 
 /**
