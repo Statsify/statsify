@@ -208,9 +208,9 @@ export class PlayerService {
         map((response) => response.data as AccountProfile),
         map((data) => data.id),
         catchError((error) => {
-          if (error.response.status === 404) throw new PlayerNotFoundException();
+          if (error.response?.status === 404) throw new PlayerNotFoundException();
           // Ratelimited
-          if (error.response.status === 429) throw new InternalServerErrorException();
+          if (error.response?.status === 429) throw new InternalServerErrorException();
 
           // Unknown
           throw new InternalServerErrorException();
