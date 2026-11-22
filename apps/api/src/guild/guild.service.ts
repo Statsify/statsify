@@ -49,20 +49,25 @@ export class GuildService {
     { namesFromHypixel = true, throwOnHypixelError = false }: { namesFromHypixel?: boolean; throwOnHypixelError?: boolean } = {}
   ): Promise<Guild | null> {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
+    const fresh = !!cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache);
     const unnamed = namesFromHypixel && cachedGuild?.members.some((member) => !member.expiresAt);
+    const cachedResponse = (guild: Guild) => ({ ...deserialize(Guild, flatten(guild)), cached: true });
 
-    if (cachedGuild && this.hypixelService.shouldCache(unnamed ? 0 : cachedGuild.expiresAt, cache)) {
-      return {
-        ...deserialize(Guild, flatten(cachedGuild)),
-        cached: true,
-      };
+    if (cachedGuild && fresh && !unnamed) return cachedResponse(cachedGuild);
+
+    let guild: Guild | null;
+
+    try {
+      guild = await this.hypixelService.getGuild(
+        tag,
+        type.toLowerCase() as Lowercase<GuildQuery>,
+        { throwOnError: throwOnHypixelError || fresh }
+      );
+    } catch (error) {
+      // A fresh guild refetched only to name its members keeps its cached copy, rather than reading as not found.
+      if (cachedGuild && fresh) return cachedResponse(cachedGuild);
+      throw error;
     }
-
-    const guild = await this.hypixelService.getGuild(
-      tag,
-      type.toLowerCase() as Lowercase<GuildQuery>,
-      { throwOnError: throwOnHypixelError }
-    );
 
     if (!guild) {
       await this.handleGuildNotFound(cachedGuild, tag, type);
