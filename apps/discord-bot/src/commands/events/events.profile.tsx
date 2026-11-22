@@ -16,10 +16,9 @@ import {
   formatProgression,
   lineXpBar,
 } from "#components";
-import { EVENT_COLORS } from "./event-colors.js";
+import { EVENT_COLORS, type Event, type EventPeriod, type EventType } from "@statsify/schemas";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
-import type { Event, EventPeriod, EventType } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
 
 interface EventTableProps {
