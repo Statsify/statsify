@@ -15,13 +15,7 @@ import { winstreaksHidden } from "./game-pages/duels.js";
 import { GAME_PAGES, gamePageOf, pageName } from "./game-pages/index.js";
 import { read } from "./game-pages/layout.js";
 
-/**
- * Hypixel's network-level coin multiplier from each first level, ascending.
- *
- * Source: the Hypixel wiki's "Coin Multipliers" table (Level → Coin Multiplier) as captured on
- * 2026-10-19. It ends at level 250 and lists levels only, so this is the level multiplier; whether
- * a rank raises it is not covered.
- */
+/** Hypixel's network-level coin multiplier from each first level, ascending, without any rank bonus. */
 const LEVEL_MULTIPLIERS = [
   { req: 0, multiplier: 1 },
   { req: 5, multiplier: 1.5 },
