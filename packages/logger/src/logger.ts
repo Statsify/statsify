@@ -46,6 +46,8 @@ const SentryLogByLogLevel: Record<LogLevel, typeof Sentry.logger.info> = {
 
 export const isProduction = await config("environment") === "prod";
 
+const isErrorLevel = (level: LogLevel) => level === "error" || level === "fatal";
+
 const format = (message: unknown) => {
   if (typeof message === "string") return message;
   if (message instanceof Error) return message.stack ?? String(message);
@@ -96,9 +98,7 @@ export class Logger {
    * Prints to stdout or stderr without sending to Sentry Logs.
    */
   public print(level: LogLevel, message: unknown, attributes: RequestAttributes = {}) {
-    const isErrorLevel = level === "error" || level === "fatal";
-
-    const icon = chalk.bold(isErrorLevel ? "📉" : "📈");
+    const icon = chalk.bold(isErrorLevel(level) ? "📉" : "📈");
     const context = chalk.hex(ColorByLogLevel[level].toString(16))(this.context);
     const time = chalk.gray(`${Logger.getTimeStamp()}${isProduction ? "" : "ms"}`);
 
@@ -107,13 +107,13 @@ export class Logger {
       .map(([key, value]) => ` ${key}=${value}`)
       .join("");
 
-    process[isErrorLevel ? "stderr" : "stdout"].write(
+    process[isErrorLevel(level) ? "stderr" : "stdout"].write(
       `${icon} ${context} ${time} ${format(message)}${chalk.gray(fields)}\n`
     );
   }
 
   private write(level: LogLevel, message: unknown, attributes?: RequestAttributes) {
-    if ((level === "error" || level === "fatal") && message instanceof Error) captureError(message);
+    if (isErrorLevel(level) && message instanceof Error) captureError(message);
 
     this.print(level, message, attributes);
 
