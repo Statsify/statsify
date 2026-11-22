@@ -84,17 +84,20 @@ function findLastAction(data: APIData): { action: string; time: number } {
     // relatively accurate times if they play skywars.
     const swHeads = data?.stats?.SkyWars?.head_collection ?? {};
 
+    const lastHeadTime = (heads: { timestamp: number }[]) =>
+      Math.max(0, ...heads.map((head) => head.timestamp));
+
     if (swHeads.recent) {
       actions.push({
         action: "SW_HEAD_RECENT",
-        time: Math.max(0, ...swHeads.recent.map((head: { timestamp: number }) => head.timestamp)),
+        time: lastHeadTime(swHeads.recent),
       });
     }
 
     if (swHeads.prestigious) {
       actions.push({
         action: "SW_HEAD_PRESTIGIOUS",
-        time: Math.max(0, ...swHeads.prestigious.map((head: { timestamp: number }) => head.timestamp)),
+        time: lastHeadTime(swHeads.prestigious),
       });
     }
   }
