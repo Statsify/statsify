@@ -9,7 +9,7 @@
 import { HttpService } from "@nestjs/axios";
 import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { LRUCache } from "lru-cache";
 import { PlayerNotFoundException } from "@statsify/api-client";
 import { Skin } from "@statsify/schemas";
@@ -60,7 +60,7 @@ export class SkinService {
 
     const [{ skin: image }, capeImage] = await Promise.all([
       this.resolveSkin(skin.skinUrl, skin.slim),
-      cape && skin.capeUrl ? loadImage(skin.capeUrl).catch(() => undefined) : undefined,
+      cape && skin.capeUrl ? loadTexture(skin.capeUrl) : undefined,
     ]);
 
     const enchanted = Object.values(resolvedArmor).some((piece) => piece?.enchanted);
@@ -147,11 +147,9 @@ export class SkinService {
     return resolveArmorPiece(helmet, 1);
   }
 
-  private async resolveHead(hash: string): Promise<ArmorPiece | undefined> {
+  private async resolveHead(hash: string): Promise<ArmorPiece> {
     const head = this.heads.get(hash) ??
-      await loadImage(`https://textures.minecraft.net/texture/${hash}`).then(imageData).catch(() => undefined);
-
-    if (!head) return;
+      imageData(await loadTexture(`https://textures.minecraft.net/texture/${hash}`));
 
     this.heads.set(hash, head);
 
@@ -198,6 +196,12 @@ const imageData = (image: Image) => {
   const { _data: data } = image as unknown as { _data: Buffer };
   return data;
 };
+
+const loadTexture = (url: string) =>
+  loadImage(url).catch((error) => {
+    if (error.response?.status === 404) throw new NotFoundException("texture");
+    throw error;
+  });
 
 const SKULL_TEXTURES: Record<(typeof SKULLS)[number], string> = {
   skeleton: "skeleton/skeleton",
