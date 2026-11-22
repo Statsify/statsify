@@ -74,7 +74,10 @@ export class ApiService {
   public deletePlayer(tag: string) {
     return this.request<DeletePlayerResponse>("/player", { player: tag }, "DELETE")
       .then(() => true)
-      .catch(() => false);
+      .catch((err) => {
+        if (axios.isAxiosError(err)) throw err;
+        return false;
+      });
   }
 
   public getStatus(tag: string) {
