@@ -12,10 +12,6 @@ import { siteConfig } from "./config.server";
 
 let ready: Promise<void> | undefined;
 
-/**
- * Initializes the server SDK once, on the first request, with the DSN from `config.js`.
- * Nothing happens when `sentry.siteDsn` is empty.
- */
 export function ensureServerSentry(): Promise<void> {
   ready ??= init();
   return ready;

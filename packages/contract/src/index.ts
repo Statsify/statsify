@@ -7,4 +7,3 @@
  */
 
 export * from "./contract.js";
-export * from "./multiplier.js";

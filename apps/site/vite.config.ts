@@ -73,8 +73,6 @@ export default defineConfig({
           if (!IGNORED_LOGS.has(log.code ?? "")) handler(level, log);
         },
       },
-      // A `.br` and a `.gz` beside each text file in the public output (scripts, styles, fonts), which Nitro serves by the
-      // request's Accept-Encoding.
       compressPublicAssets: { brotli: true, gzip: true },
       // Piscina starts its workers from its own `dist/worker.js`, which bundling it would leave behind.
       traceDeps: ["piscina"],
