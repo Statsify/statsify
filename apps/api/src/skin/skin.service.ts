@@ -559,10 +559,10 @@ export async function renderSmash(
     pitch = SMASH_CAMERA.pitch,
   }: Pick<SmashRenderDto, "width" | "height" | "yaw" | "pitch">
 ): Promise<Buffer> {
-  const armor = await resolvePackArmor(SMASH_PACK, worn);
+  const [skin, armor] = await Promise.all([drawHeroSkin(skinColor), resolvePackArmor(SMASH_PACK, worn)]);
 
   const player = {
-    skin: await drawHeroSkin(skinColor),
+    skin,
     // Every lobby stand's skin uses the classic arms
     slim: false,
     extruded: false,
