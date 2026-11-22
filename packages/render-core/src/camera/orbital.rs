@@ -1,4 +1,4 @@
-use cgmath::{perspective, Deg, EuclideanSpace, InnerSpace, Matrix4, Point3, Rad, Vector3};
+use cgmath::{perspective, Angle, Deg, EuclideanSpace, InnerSpace, Matrix4, Point3, Vector3};
 
 use super::CameraBehavior;
 use crate::geometry::coordinate::Coordinate;
@@ -87,7 +87,7 @@ impl OrbitalCamera {
     let back = self.offset().normalize();
     let right = Vector3::unit_y().cross(back).normalize();
     let up = back.cross(right);
-    let tan = (Rad::from(Deg(self.fovy)).0 / 2.0).tan();
+    let tan = Deg(self.fovy / 2.0).tan();
 
     // The radius at which the farthest-out point sits `margin` pixels inside the frame
     let radius_for = |margin: f32| {
