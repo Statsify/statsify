@@ -16,7 +16,7 @@ import {
   paginate,
 } from "@statsify/discord";
 import { FormattedGame, type GameCounts, type GamePlayers } from "@statsify/schemas";
-import { GameArgument, findGameId } from "./gamecounts.argument.js";
+import { GameArgument, findGameId } from "#commands/gamecounts.argument";
 import { STATUS_COLORS } from "@statsify/logger";
 import { mapGame } from "#constants";
 import { removeFormatting } from "@statsify/util";
