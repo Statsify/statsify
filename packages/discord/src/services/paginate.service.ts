@@ -260,9 +260,10 @@ function withControls(message: Message, rows: ActionRowBuilder[]) {
   return new Message({ ...message, components: [...(message.components ?? []), ...rows] });
 }
 
-// A v2 message is all components, so clearing them would also remove the page itself
-function withoutControls(message: Message): IMessage {
-  return isComponentsV2(message) ? message : { components: [] };
+// A v2 message is all components, so clearing them would also remove the page itself.
+// Leaving out files and attachments keeps the image already on the message instead of uploading it again
+export function withoutControls(message: IMessage): IMessage {
+  return isComponentsV2(message) ? { components: message.components } : { components: [] };
 }
 
 async function contentToMessage(

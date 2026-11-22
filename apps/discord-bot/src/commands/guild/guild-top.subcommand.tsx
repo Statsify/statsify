@@ -17,6 +17,7 @@ import {
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
   SubCommand,
+  withoutControls,
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { CommandListener } from "#lib/command.listener";
@@ -153,7 +154,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     );
 
     setTimeout(() => {
-      context.reply(currentMessage);
+      context.reply(withoutControls(currentMessage));
       cache.clear();
 
       listener.removeHook(up.getCustomId());

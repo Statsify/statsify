@@ -16,6 +16,7 @@ import {
   MediaGalleryBuilder,
   ModalBuilder,
   TextInputBuilder,
+  withoutControls,
 } from "@statsify/discord";
 import { ButtonStyle, InteractionResponseType } from "discord-api-types/v10";
 import { CommandListener } from "#lib/command.listener";
@@ -239,7 +240,7 @@ export class BaseLeaderboardCommand {
       listener.removeHook(documentModal.getCustomId());
       listener.removeHook(positionModal.getCustomId());
 
-      context.reply(currentMessage);
+      context.reply(withoutControls(currentMessage));
       cache.clear();
     }, 300_000);
 
