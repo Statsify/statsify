@@ -10,6 +10,10 @@ import { Field } from "#metadata";
 import { Game } from "#game";
 import type { APIData } from "@statsify/util";
 
+function lastHeadTime(heads: { timestamp: number }[]) {
+  return Math.max(0, ...heads.map((head) => head.timestamp));
+}
+
 function findLastAction(data: APIData): { action: string; time: number } {
   const actions: { action: string; time: number }[] = [];
 
@@ -83,9 +87,6 @@ function findLastAction(data: APIData): { action: string; time: number } {
     // this means that high level players with status off will show
     // relatively accurate times if they play skywars.
     const swHeads = data?.stats?.SkyWars?.head_collection ?? {};
-
-    const lastHeadTime = (heads: { timestamp: number }[]) =>
-      Math.max(0, ...heads.map((head) => head.timestamp));
 
     if (swHeads.recent) {
       actions.push({
