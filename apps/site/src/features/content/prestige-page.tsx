@@ -84,7 +84,6 @@ export function PrestigePage({ sheet }: { sheet: PrestigeSheet }) {
   );
 }
 
-/** A heading in its own box over a grid of cells, two across on phones and `className`'s columns from `md`, 4 px apart. */
 function Panel({ id, heading, count, className, children }: { id: string; heading: string; count?: number; className: string; children: ReactNode }) {
   return (
     <section id={id} aria-labelledby={`${id}-heading`} className={cn("grid scroll-mt-6 grid-cols-2", BOX_GAP, className)}>
@@ -104,7 +103,6 @@ function PrestigeCell({ prestige: { name, formatted, exp } }: { prestige: Presti
   return <Cell name={name} level={formatted} exp={t("prestiges.exp", { exp: n(exp) })} />;
 }
 
-/** A cell in its own box like the card's stat cells: the name over the level as the game draws it. */
 function Cell({ name, level, exp }: { name: string; level: string; exp?: string }) {
   return (
     <Box className={cn(CELL, "content:flex-col content:gap-1 content:px-2 content:py-3 content:text-center")}>

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE, cardColors } from "@statsify/catalog";
+import { ARCADE, ZOMBIES_DIFFICULTIES, ZOMBIES_MAPS, cardColors } from "@statsify/catalog";
 import { ApiSubModeForMode, ArcadeModes, Zombies, ZombiesMapDifficulty } from "@statsify/schemas";
 import { Historical, Table } from "../../../components/index.js";
 import { formatRecordTime } from "@statsify/util";
@@ -65,28 +65,28 @@ export const ZombiesTable = ({ stats, t, time }: ZombiesTableProps) => {
       </Table.ts>
       <Table.tr>
         <ZombiesMapColumn
-          title="§#813781Dead End"
+          title={ZOMBIES_MAPS.deadEnd}
           stats={deadEnd.overall}
           color={cardColors(ARCADE, "zombies.deadEnd.overall")}
           t={t}
           time={time}
         />
         <ZombiesMapColumn
-          title="§#8f1721Bad Blood"
+          title={ZOMBIES_MAPS.badBlood}
           stats={badBlood.overall}
           color={cardColors(ARCADE, "zombies.badBlood.overall")}
           t={t}
           time={time}
         />
         <ZombiesMapColumn
-          title="§#75ae00Alien Arcadium"
+          title={ZOMBIES_MAPS.alienArcadium}
           stats={alienArcadium}
           color={cardColors(ARCADE, "zombies.alienArcadium")}
           t={t}
           time={time}
         />
         <ZombiesMapColumn
-          title="§#aaa5c2Prison"
+          title={ZOMBIES_MAPS.prison}
           stats={prison.overall}
           color={cardColors(ARCADE, "zombies.prison.overall")}
           t={t}
@@ -135,7 +135,7 @@ export const ZombiesMapTable = ({ stats, t, time, map }: ZombiesMapTableProps) =
   (
     <Table.table>
       <Table.tr>
-        <Table.ts title="§6Overall">
+        <Table.ts title={ZOMBIES_DIFFICULTIES.overall}>
           <ZombiesMapDifficultyTable
             stats={stats[map].overall}
             color={cardColors(ARCADE, `zombies.${map}.overall`)}
@@ -143,7 +143,7 @@ export const ZombiesMapTable = ({ stats, t, time, map }: ZombiesMapTableProps) =
             time={time}
           />
         </Table.ts>
-        <Table.ts title="§aNormal">
+        <Table.ts title={ZOMBIES_DIFFICULTIES.normal}>
           <ZombiesMapDifficultyTable
             stats={stats[map].normal}
             color={cardColors(ARCADE, `zombies.${map}.normal`)}
@@ -153,7 +153,7 @@ export const ZombiesMapTable = ({ stats, t, time, map }: ZombiesMapTableProps) =
         </Table.ts>
       </Table.tr>
       <Table.tr>
-        <Table.ts title="§cHard">
+        <Table.ts title={ZOMBIES_DIFFICULTIES.hard}>
           <ZombiesMapDifficultyTable
             stats={stats[map].hard}
             color={cardColors(ARCADE, `zombies.${map}.hard`)}
@@ -161,7 +161,7 @@ export const ZombiesMapTable = ({ stats, t, time, map }: ZombiesMapTableProps) =
             time={time}
           />
         </Table.ts>
-        <Table.ts title="§4RIP">
+        <Table.ts title={ZOMBIES_DIFFICULTIES.rip}>
           <ZombiesMapDifficultyTable
             stats={stats[map].rip}
             color={cardColors(ARCADE, `zombies.${map}.rip`)}

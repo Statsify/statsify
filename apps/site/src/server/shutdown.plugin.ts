@@ -10,11 +10,8 @@ import { definePlugin } from "nitro";
 import { shutdown } from "./shutdown.server";
 
 /**
- * On SIGINT (what pm2 sends) or SIGTERM, Nitro's server stops listening and waits for open connections to end.
- * A keep-alive connection that is serving a request at that moment would stay open after the response (nginx keeps
- * its upstream connections for a minute) until Nitro's graceful window runs out, so from the signal on every
- * response says `Connection: close`. Once the last one is done, the `close` hook closes the app's own resources
- * (see `shutdown.server.ts`) and the process exits.
+ * After the signal, Nitro waits for open connections to end, and a keep-alive one would hold out until its graceful
+ * window runs out, so every response from then on says `Connection: close`.
  */
 export default definePlugin((nitroApp) => {
   let draining = false;

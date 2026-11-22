@@ -21,11 +21,7 @@ Container.set(FontRenderer, renderers[UserFont.DEFAULT]);
 Container.set("HDFontRenderer", renderers[UserFont.HD]);
 Container.set("FPackFontRenderer", renderers[UserFont.FPACK]);
 
-/**
- * Reads the bitmap font pages into the renderers `getTheme` picks from. The texture pack
- * directories are named after the `UserFont` values; without the private assets every font
- * falls back to the default pack.
- */
+/** The texture pack directories are named after the `UserFont` values. */
 export async function loadFonts(fonts: readonly UserFont[] = Object.values(UserFont)): Promise<void> {
   await Promise.all(
     fonts.map((font) => renderers[font].loadImages(getMinecraftTexturePath("textures/font", font)))

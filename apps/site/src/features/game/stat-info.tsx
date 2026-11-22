@@ -22,11 +22,8 @@ import { useTranslation } from "react-i18next";
 const localeRoute = getRouteApi("/{-$locale}");
 
 /**
- * A stat cell's "?": what the stat is, for an abbreviation (FKDR) or a stat that means something else in this game. It
- * sits over the cell's top corner, beside its leaderboard link rather than in it, with a 44 px target, and opens on a
- * tap, a click or the keyboard, never on hover: the full name, the glossary's line (fetched the first time it opens,
- * since only the glossary and leaderboard pages carry the explanations) and a link to the entry. Escape, a tap
- * elsewhere, a scroll or Tab closes it, and Tab carries on from the "?".
+ * A stat cell's "?" beside its leaderboard link, never on hover, for an abbreviation (FKDR) or a stat that means
+ * something else in this game: the full name, the glossary's line (fetched on first open) and a link to the entry.
  */
 export function StatInfo({ glossary, label }: { glossary: string; label: string }) {
   const { t } = useTranslation();

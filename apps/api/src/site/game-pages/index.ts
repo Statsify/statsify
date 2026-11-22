@@ -41,10 +41,7 @@ export type { GameLayout } from "./layout.js";
 const REGISTRY = [...new Set(Object.values(GameIdMapping))];
 const registryIndex = ({ game }: GameLayout) => (game.id ? REGISTRY.indexOf(game.id) : REGISTRY.length);
 
-/**
- * The pages the site has, each at `/player/<name>/<its game's PlayerStats key>`, in the registry's order (the game
- * nav's).
- */
+/** The site's game pages, each at `/player/<name>/<game key>`, in the registry's order (the game nav's). */
 export const GAME_PAGES: GameLayout[] = [
   ARCADE_PAGE,
   ARENA_BRAWL_PAGE,
@@ -88,9 +85,8 @@ export const pageSubmodes = (layout: GameLayout, mode: string): string[] | undef
   pageModes(layout).find(({ key }) => key === mode)?.submodes?.map(({ key }) => key);
 
 /**
- * The game page a leaderboard's rows open: `stats.bedwars.solo.wins` is BedWars at Solo, with the submode where the
- * mode has it (`stats.duels.bridge.doubles.wins`). A board below no mode the page has opens its first mode, and a
- * board whose game has no page opens none. The first mode goes unnamed, as the page's own URL has it.
+ * The game page a leaderboard's rows open (`stats.duels.bridge.doubles.wins` is Duels at Bridge, Doubles), or none
+ * where the game has no page. The first mode goes unnamed, as the page's own URL has it.
  */
 export function boardGamePage(field: string): { game: string; mode?: string; submode?: string } | undefined {
   const [, game = "", ...below] = field.split(".");

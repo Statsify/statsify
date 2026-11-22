@@ -16,7 +16,7 @@ import { gameLink } from "~/features/game/game-data";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { Instagram } from "~/components/icons/instagram";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
-import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
+import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText, colorOf, nameColor } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
@@ -62,11 +62,7 @@ const SOCIAL_ICONS: Record<SocialKey, ComponentType<{ className?: string }>> = {
   youtube: YouTube,
 };
 
-/**
- * The player page in the general card's order: nametag and logins, then Network Level and the overview cells, then
- * one panel per game. Phones stack them with the refresh row under the nametag. From `md` the level and overview share
- * a row; from `xl` nametag, level and overview are one row.
- */
+/** The player page in the general card's order: nametag and logins, Network Level and the overview, then the games. */
 export function PlayerView({ page }: { page: PlayerPage }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -209,9 +205,8 @@ function NametagPanel({
   className?: string;
   ref?: Ref<HTMLDivElement>;
 }) {
-  // The card's header split into its boxes: the skin down the side, the name with the socials and buttons beside it,
-  // and under that a box per fact. On phones the facts take the whole width under the skin and name; from `xl`, a row
-  // of their own under the panels (`PlayerView`), so the skin spans one row there, or the name's box would end halfway.
+  // From `xl` the facts move to a row of their own (`PlayerView`), so the skin spans one row there, or the name's box
+  // would end halfway.
   return (
     <div ref={ref} className={cn("grid grid-cols-[auto_minmax(0,1fr)]", BOX_GAP, className)}>
       <Box className="md:row-span-2 xl:row-span-1 content:flex content:items-center content:justify-center content:p-3">
@@ -363,9 +358,8 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
     );
   }
 
-  // Every cell its own box, as the card draws them. Two wide beside the level from `xl`, unless the guild row's three
-  // cells need the four columns. Columns never get narrower than their values, so the row takes its room from the
-  // nametag rather than run values together.
+  // Two wide beside the level from `xl`, unless the guild row's three cells need the four columns. Columns never get
+  // narrower than their values, so the row takes its room from the nametag rather than run values together.
   return (
     <div
       className={cn(
@@ -388,7 +382,7 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
               ) :
               link ?
                 (
-                  <LeaderboardLink field={`stats.general.${link.board}`} username={username} stat={label} hint={exact(value)}>
+                  <LeaderboardLink field={`stats.general.${link.board}`} username={username} stat={label} exact={exact(value)}>
                     <Spoken full={exact(value)}>{n(value)}</Spoken>
                   </LeaderboardLink>
                 ) :
@@ -597,7 +591,7 @@ function GamePanel({ game, username, session }: { game: GameSummary; username: s
               label={row.name === undefined ? <Short full={full}>{label}</Short> : <MinecraftText>{`${row.color}${row.name}`}</MinecraftText>}
               value={row.leaderboard ?
                 (
-                  <LeaderboardLink field={row.leaderboard} username={username} stat={full ?? label} hint={linkHint(full, exactValue)}>
+                  <LeaderboardLink field={row.leaderboard} username={username} stat={label} full={full} exact={exactValue}>
                     {value}
                   </LeaderboardLink>
                 ) :

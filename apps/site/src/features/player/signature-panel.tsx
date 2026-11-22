@@ -10,7 +10,6 @@ import { Box } from "~/components/ui/box";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { LABEL, Snippet } from "./share-panel";
 import { cn } from "~/lib/util";
-import { compactUuid } from "~/lib/uuid";
 import { getRouteApi } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import type { PlayerPage } from "@statsify/contract";
@@ -21,28 +20,21 @@ const localeRoute = getRouteApi("/{-$locale}");
 
 const { width, height } = IMAGE_VARIANTS.sig;
 
-/**
- * "Get signature": the live `/sig` image and the snippets that embed it, each with a copy
- * button. URLs are absolute from `site.publicUrl` (the locale loader), never from the request, so a
- * pasted snippet works anywhere.
- */
+/** URLs are absolute from `site.publicUrl`, never from the request, so a pasted snippet works anywhere. */
 export function SignaturePanel({ page }: { page: PlayerPage }) {
   const { t } = useTranslation();
   const { origin } = localeRoute.useLoaderData();
 
-  // The undashed UUID, so every snippet names the same URL (and one edge cache entry).
-  const uuid = compactUuid(page.uuid)!;
-  const image = `${origin}/sig/${uuid}.png`;
+  const image = `${origin}/sig/${page.uuid}.png`;
   const profile = `${origin}/player/${page.username}`;
   const alt = t("player.signature.alt", { name: page.username });
 
-  // The forum snippet is what most people want; the rest wait under "More Formats".
   const forum = `[URL=${profile}][IMG]${image}[/IMG][/URL]`;
   const more: [label: string, text: string][] = [
     [t("player.signature.url"), image],
     [t("player.signature.markdown"), `[![${alt}](${image})](${profile})`],
     [t("player.signature.html"), `<a href="${profile}"><img src="${image}" alt="${alt}" width="${width}" height="${height}"></a>`],
-    [t("player.signature.card"), `${origin}/card/${uuid}.png`],
+    [t("player.signature.card"), `${origin}/card/${page.uuid}.png`],
   ];
 
   return (
@@ -52,7 +44,7 @@ export function SignaturePanel({ page }: { page: PlayerPage }) {
     >
       <p className={HELP}>{t("player.signature.description")}</p>
       <img
-        src={`/sig/${uuid}.png`}
+        src={`/sig/${page.uuid}.png`}
         alt={alt}
         width={width}
         height={height}

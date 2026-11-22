@@ -20,25 +20,11 @@ export const IMAGE_VARIANTS = {
 
 export type ImageVariant = keyof typeof IMAGE_VARIANTS;
 
-/** The games whose bot card the pool draws for a site page's unfurl, by their `PlayerStats` key. */
-export const GAME_CARDS = ["bedwars", "uhc", "speeduhc", "walls", "vampirez", "paintball", "quake", "turbokartracers", "buildbattle", "arenabrawl", "pit", "parkour", "skywars", "murdermystery", "copsandcrims", "arcade", "tntgames", "warlords", "woolgames", "megawalls", "blitzsg", "smashheroes", "duels", "quests", "challenges"] as const;
-
-export type GameCard = (typeof GAME_CARDS)[number];
-
 /**
- * Whether the pool draws a page's own card: a game in `GAME_CARDS`, but not a game's all-time Quests (`period` is
- * Quests', all time when absent), which the card fails on as the bot's `/quests overall` does.
+ * Each game card's unfurl size, by its `PlayerStats` key: the largest the card came out at, since its size depends on
+ * what it shows. A smaller card gets more background around it, and a larger one shrinks to fit.
  */
-export const isGameCard = (game: string, mode: string, period?: string): game is GameCard =>
-  (GAME_CARDS as readonly string[]).includes(game) &&
-  !(game === "quests" && mode !== "overall" && (period ?? "overall") === "overall");
-
-/**
- * A game card's unfurl size. The card's own size depends on what it shows (BedWars is 847 to 870 px wide with the
- * numbers, and 25 px taller with a winstreak row), so this is the largest seen: a smaller card gets more of its
- * background around it, and a larger one shrinks to fit.
- */
-export const GAME_CARD_SIZES: Record<GameCard, { width: number; height: number }> = {
+export const GAME_CARD_SIZES = {
   bedwars: { width: 870, height: 623 },
   uhc: { width: 773, height: 414 },
   speeduhc: { width: 812, height: 414 },
@@ -64,18 +50,21 @@ export const GAME_CARD_SIZES: Record<GameCard, { width: number; height: number }
   duels: { width: 1126, height: 687 },
   quests: { width: 722, height: 732 },
   challenges: { width: 971, height: 691 },
-};
+} satisfies Record<string, { width: number; height: number }>;
 
-/** Modes the bot draws on a card of their own, at that card's size: BedWars' challenges. */
+export type GameCard = keyof typeof GAME_CARD_SIZES;
+
+/** Whether the pool draws a page's own card. A game's all-time Quests has none, as the bot's `/quests overall` fails. */
+export const isGameCard = (game: string, mode: string, period?: string): game is GameCard =>
+  Object.hasOwn(GAME_CARD_SIZES, game) &&
+  !(game === "quests" && mode !== "overall" && (period ?? "overall") === "overall");
+
+/** Modes the bot draws on a card of their own, at that card's size. */
 const MODE_CARD_SIZES: Partial<Record<GameCard, Record<string, { width: number; height: number }>>> = {
   bedwars: { challenges: { width: 1033, height: 790 } },
 };
 
-/**
- * The bot's general card, or a game's card in one of its api modes, and in one of the mode's submodes where the site
- * has the bot's (a mode the bot splits and the site doesn't shows its first, as the bot opens it), and for Quests in
- * the page's period (all time when absent), over the dates the page gives its counts (`window`, ms).
- */
+/** A submode the bot splits and the site doesn't shows its first; `window` is the dates a Quests period covers (ms). */
 export type CardChoice =
   | { card: "general" }
   | { card: GameCard; mode: string; submode?: string; period?: string; window?: { start: number; end: number } };
@@ -114,10 +103,3 @@ export type RenderRequest = CardChoice & {
   /** The full-body skin render as PNG bytes; the worker never talks to the API. */
   skin: Uint8Array;
 };
-
-export type WorkerRequest = RenderRequest & { id: number };
-
-export type WorkerMessage =
-  | { type: "ready" }
-  | { type: "done"; id: number; png: Uint8Array<ArrayBuffer> }
-  | { type: "error"; id: number; message: string };

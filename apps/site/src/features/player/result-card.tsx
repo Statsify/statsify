@@ -23,10 +23,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { ResultCard } from "@statsify/contract";
 
-/**
- * The `/player?q=` result grid: one column on phones, two from tablets up, three on wide screens. One or two cards don't
- * fill a wide row, so they sit under the search box at its width instead of at the page's left edge.
- */
+/** The `/player?q=` result grid. One or two cards sit under the search box at its width, not at the left edge. */
 export function ResultCards({ cards, query }: { cards: ResultCard[]; query: string }) {
   const { t } = useTranslation();
 
@@ -76,7 +73,6 @@ export function ResultCardView({ card }: { card: ResultCard }) {
       <Box className="transition group-hover:brightness-110 content:flex content:items-center content:gap-4 content:p-3">
         <SkinBust uuid={card.uuid} className="h-24 w-16 shrink-0 sm:h-32 sm:w-20" />
         <div className="flex min-w-0 grow flex-col gap-2">
-          {/* Rank, name and guild tag on one line, as on the card. */}
           <p className="truncate text-mc-1.5">
             <MinecraftText>{card.displayName}</MinecraftText>
             {card.guildTag && (
