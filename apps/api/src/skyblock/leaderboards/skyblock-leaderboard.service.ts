@@ -29,6 +29,16 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 export const memberName = (displayName: string, row: Pick<SkyBlockStatsRow, "cuteName" | "gameMode">) =>
   `${displayName}§r §7(${formatProfileName(row)}§7)`;
 
+const BOARDS = getLeaderboardFields(SkyBlockStats).map(([field]) => ({
+  field,
+  mode: field.split(".")[0],
+  ...getLeaderboardField(SkyBlockStats, field),
+}));
+
+// A hidden board ranks by a sort key and shows its first additional field instead, as its page does
+const shownOf = ({ hidden, additionalFields }: (typeof BOARDS)[number]) => (hidden ? additionalFields?.[0] : undefined);
+const SHOWN_PATHS = Object.fromEntries(BOARDS.flatMap((board) => shownOf(board) ?? []).map((path) => [path, true]));
+
 @Injectable()
 export class SkyBlockLeaderboardService extends LeaderboardService {
   // The first parameter needs its own injection decorator, or it inherits LeaderboardService's Redis
@@ -131,27 +141,28 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     const player = await this.playerService.findMongoDocument(tag, { uuid: true });
     if (!player) throw new PlayerNotFoundException();
 
-    const fields = getLeaderboardFields(SkyBlockStats).map(([field]) => ({ field, ...getLeaderboardField(SkyBlockStats, field) }));
-
-    // A hidden board ranks by a sort key and shows its first additional field instead, as its page does
-    const shownOf = ({ hidden, additionalFields }: (typeof fields)[number]) => (hidden ? additionalFields?.[0] : undefined);
-    const shown = fields.flatMap((board) => shownOf(board) ?? []);
-
     const rows = await this.statsModel
       .find({ uuid: player.uuid })
-      .select({ id: true, ...Object.fromEntries(shown.map((path) => [path, true])) })
+      .select({ id: true, gameMode: true, ...SHOWN_PATHS })
       .lean()
       .exec();
     const flatRows = new Map(rows.map((row) => [row.id, flatten(row) as LeaderboardAdditionalStats]));
 
+    // A row is only on `overall` and its own mode's boards, as SkyBlockStats writes them
+    const boards = BOARDS.flatMap((board) => {
+      const ids = rows.filter((row) => board.mode === "overall" || row.gameMode === board.mode).map(({ id }) => id);
+      return ids.length > 0 ? [{ board, ids }] : [];
+    });
+
     const scores = this.redis.pipeline();
-    for (const { field } of fields) for (const { id } of rows) scores.zscore(`skyblockstats.${field}`, id);
+    for (const { board, ids } of boards) scores.zmscore(`skyblockstats.${board.field}`, ids);
     const scored = (await scores.exec()) ?? [];
 
-    const best = fields.flatMap((board, index) => {
-      const own = scored
-        .slice(index * rows.length, (index + 1) * rows.length)
-        .flatMap(([, score], row) => (score === null ? [] : [{ id: rows[row].id, score: Number(score) }]));
+    const best = boards.flatMap(({ board, ids }, index) => {
+      const [, replies] = scored[index];
+      const own = (replies as (string | null)[]).flatMap((score, row) =>
+        score === null ? [] : [{ id: ids[row], score: Number(score) }]
+      );
       if (own.length === 0) return [];
 
       const pick = own.reduce((a, b) => ((board.sort === "ASC" ? b.score < a.score : b.score > a.score) ? b : a));
