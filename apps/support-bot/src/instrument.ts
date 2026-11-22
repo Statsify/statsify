@@ -27,6 +27,11 @@ if (sentryDsn) {
 
       return span;
     },
+    beforeBreadcrumb: (breadcrumb) => {
+      const { data } = breadcrumb;
+      if (typeof data?.url === "string") data.url = data.url.replace(INTERACTION_TOKEN, "[token]");
+      return breadcrumb;
+    },
     normalizeDepth: 3,
     tracesSampleRate: await config("sentry.tracesSampleRate"),
     environment: await config("environment"),
