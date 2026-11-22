@@ -27,10 +27,7 @@ const SEARCH_CACHE_TIME_MS = 5 * 60 * 1000;
 /** Safari ignores `replaceState` past 100 calls in 30 seconds, so a draft is saved once typing pauses. */
 const DRAFT_DEBOUNCE_MS = 500;
 
-/**
- * The search's text in the tab's history entry, for a reload, Back and Forward, with no history entry per keystroke.
- * Past TanStack's patched `replaceState`, which would run a navigation.
- */
+/** Through the browser's own `replaceState`: TanStack's patched one would run a navigation. */
 function saveDraft(draft: string | undefined) {
   History.prototype.replaceState.call(history, { ...history.state, searchDraft: draft }, "");
 }
@@ -96,7 +93,7 @@ const SIZES = {
   },
 } as const;
 
-/** A row of the sheet: a suggested or recent name, in the color the player's rank gives it where known. */
+/** A suggested or recent name, with its rank's color code where known. */
 type SearchedPlayer = { name: string; color?: string };
 
 /** `skipEmpty`: an empty box asks for nothing (the API suggests nothing for it), as one that lists recent players. */
@@ -204,9 +201,8 @@ export function Search({
       (recentPlayers ?? undefined) :
       suggestions.data?.map(({ name, displayName }) => ({ name, color: displayName === null ? undefined : nameColor(displayName) }));
   const [selected, setSelected] = useState<number | undefined>(undefined);
-  // Typing on a keyboard completes the name in place from the first suggestion that starts with it, the rest selected,
-  // so Enter opens it and typing on replaces it; none when a suggestion is the name typed. Only while typing at the end:
-  // a deletion or a paste stops it, and moving the caret takes it.
+  // Typing at the end on a keyboard fills in the first suggestion that starts with the text, the rest selected, so Enter
+  // opens it and typing on replaces it. A deletion or a paste stops it; moving the caret takes it.
   const [completing, setCompleting] = useState(false);
   const typed = query.toLowerCase();
   const match =

@@ -11,10 +11,8 @@ import { ComponentProps } from "react";
 import { cn } from "~/lib/util";
 
 /**
- * Marks each skin image `data-loaded` once it loads, so it fades in (`app.css`) rather than popping in; one that fails
- * (a head by a name with no stored player) stays hidden rather than showing a broken image. From the head, as images
- * the server rendered can load before React hydrates; captured on the document, as an image's `load` doesn't bubble
- * and never reaches the window.
+ * Marks a skin image `data-loaded` once it loads, so it fades in (`app.css`); one that fails stays hidden. In the head,
+ * since server-rendered images can load before hydration, and captured, since `load` doesn't bubble.
  */
 export const SKIN_FADE_SCRIPT = `document.addEventListener("load", (event) => {
   if (event.target instanceof HTMLImageElement && "skin" in event.target.dataset) event.target.dataset.loaded = "";
