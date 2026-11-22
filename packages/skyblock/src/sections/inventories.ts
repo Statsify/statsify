@@ -9,6 +9,7 @@
 import { arrayGroup, prettify } from "@statsify/util";
 import { decodeSlots, toolkitItemView } from "#items";
 import { resourceTexture } from "#textures";
+import { setImmediate } from "node:timers/promises";
 import type { InventoriesSection, InventoryId, ItemsResource } from "#types";
 import type { RawMember, RawNbt, RawToolkit } from "#raw";
 
@@ -53,23 +54,30 @@ const toolkitPage = <T>(toolkit: RawToolkit, tool: (blob: RawNbt, held: boolean)
 type Pages<T> = Partial<Record<InventoryId, (T | null)[][]>>;
 
 /** Every inventory as the game pages it, each slot from `slots` and each toolkit tool from `tool`; a null tool is dropped. */
-export function inventoryPages<T>(
+export async function inventoryPages<T>(
   member: RawMember,
   slots: (blob: RawNbt) => (T | null)[],
   tool: (blob: RawNbt, held: boolean) => T | null
-): Pages<T> | null {
+): Promise<Pages<T> | null> {
   const inventory = member.inventory;
   if (!inventory?.inv_contents) return null;
 
-  const pages: Pages<T> = { inventory: [hotbarLast(slots(inventory.inv_contents))] };
+  // Each blob is a synchronous gunzip and NBT parse, so other requests run between them
+  const decode = async (blob: RawNbt) => {
+    await setImmediate();
+    return slots(blob);
+  };
 
-  if (inventory.ender_chest_contents) pages.enderChest = paged(slots(inventory.ender_chest_contents));
-  pages.backpacks = byKey(inventory.backpack_contents).map(slots);
-  if (inventory.personal_vault_contents) pages.personalVault = [slots(inventory.personal_vault_contents)];
+  const pages: Pages<T> = { inventory: [hotbarLast(await decode(inventory.inv_contents))] };
+
+  if (inventory.ender_chest_contents) pages.enderChest = paged(await decode(inventory.ender_chest_contents));
+  pages.backpacks = await Array.fromAsync(byKey(inventory.backpack_contents), decode);
+  if (inventory.personal_vault_contents) pages.personalVault = [await decode(inventory.personal_vault_contents)];
 
   for (const id of Object.keys(BAGS) as (keyof typeof BAGS)[]) {
     const blob = inventory.bag_contents?.[BAGS[id]];
-    if (blob) pages[id] = paged(slots(blob));
+    // oxlint-disable-next-line no-await-in-loop -- one bag per turn
+    if (blob) pages[id] = paged(await decode(blob));
   }
 
   const farming = member.garden_player_data?.farming_toolkit;
@@ -78,16 +86,16 @@ export function inventoryPages<T>(
   if (hunting) pages.huntingToolkit = [toolkitPage(hunting, tool)];
 
   const rift = member.rift?.inventory;
-  if (rift?.inv_contents) pages.riftInventory = [hotbarLast(slots(rift.inv_contents))];
-  if (rift?.ender_chest_contents) pages.riftEnderChest = paged(slots(rift.ender_chest_contents));
+  if (rift?.inv_contents) pages.riftInventory = [hotbarLast(await decode(rift.inv_contents))];
+  if (rift?.ender_chest_contents) pages.riftEnderChest = paged(await decode(rift.ender_chest_contents));
 
   return pages;
 }
 
 /** Every inventory as the game pages it, and the sacks. */
-export function getInventories(member: RawMember, items: ItemsResource): InventoriesSection | null {
+export async function getInventories(member: RawMember, items: ItemsResource): Promise<InventoriesSection | null> {
   const inventory = member.inventory;
-  const pages = inventoryPages(member, decodeSlots, (blob) => toolkitItemView(blob, items));
+  const pages = await inventoryPages(member, decodeSlots, (blob) => toolkitItemView(blob, items));
   if (!inventory || !pages) return null;
 
   const sacks = Object.entries(inventory.sacks_counts ?? {})

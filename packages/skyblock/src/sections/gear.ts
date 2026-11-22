@@ -8,9 +8,11 @@
 
 import { TUNING } from "./accessories.js";
 import { byKey } from "./inventories.js";
-import { decodeSlots } from "#items";
+import { decodeInventory } from "#nbt";
+import { decodeSlots, toItemView } from "#items";
+import { normalizeItemText } from "#lore";
 import { removeFormatting } from "@statsify/util";
-import type { GearSection, ItemView, Loadout, Slots } from "#types";
+import type { GearSection, ItemView, Loadout, RawItem, Slots } from "#types";
 import type { RawMember, RawNbt } from "#raw";
 
 const ARMOR_PIECES = ["HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"] as const;
@@ -19,7 +21,9 @@ export const EQUIPMENT_PIECES = ["EQUIPMENT_SLOT_1", "EQUIPMENT_SLOT_2", "EQUIPM
 // The item type ends an item's rarity line: "LEGENDARY DUNGEON SWORD", "EPIC BOW"
 const WEAPON_LINE = /\b(?:SWORD|LONGSWORD|BOW|GAUNTLET|WAND)$/;
 
-export const isWeapon = (item: ItemView) => WEAPON_LINE.test(removeFormatting(item.lore.at(-1) ?? "").trim());
+const isWeaponLine = (line: string) => WEAPON_LINE.test(removeFormatting(line).trim());
+
+export const isWeapon = (item: ItemView) => isWeaponLine(item.lore.at(-1) ?? "");
 
 type SavedSets<Piece extends string> = Record<`${number}`, Partial<Record<Piece, RawNbt>>> & { equipped_set?: number };
 
@@ -109,8 +113,11 @@ function getWeapons({ inventory }: RawMember): ItemView[] {
     inventory?.personal_vault_contents,
   ];
   return blobs
-    .flatMap((blob) => (blob ? decodeSlots(blob) : []))
-    .filter((item): item is ItemView => item !== null && isWeapon(item));
+    .flatMap((blob) => (blob ? decodeInventory(blob) : []))
+    .filter(
+      (item): item is RawItem => item !== null && isWeaponLine(normalizeItemText(item.tag?.display?.Lore?.at(-1) ?? ""))
+    )
+    .map(toItemView);
 }
 
 /** What the member wears and keeps in the wardrobe, and their weapons. */
