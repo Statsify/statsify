@@ -97,11 +97,11 @@ export class PlayerService {
     try {
       player = await this.hypixelService.getPlayer(mongoPlayer?.uuid ?? tag);
     } catch (error) {
-      if (!mongoPlayer) throw error;
+      if (!mongoPlayer || !(error instanceof HypixelUnavailableException)) throw error;
 
       return {
         player: deserialize(Player, mongoPlayer),
-        hypixelError: error as HypixelUnavailableException,
+        hypixelError: error,
       };
     }
 
@@ -172,7 +172,10 @@ export class PlayerService {
 
     const [status, games] = await Promise.all([
       this.hypixelService.getStatus(player.uuid),
-      this.hypixelService.getRecentGames(player.uuid).catch(() => []),
+      this.hypixelService.getRecentGames(player.uuid).catch((error) => {
+        if (error instanceof HypixelUnavailableException) return [];
+        throw error;
+      }),
     ]);
 
     if (!status) throw new StatusNotFoundException(player);
