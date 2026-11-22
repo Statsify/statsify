@@ -44,6 +44,11 @@ export default defineConfig({
   build: {
     sourcemap: "hidden",
   },
+  // The SSR build would inline piscina, which only `@statsify/profiles` depends on. Left to Nitro's build, the package's
+  // piscina import can stay out of the bundle (`traceDeps` below).
+  ssr: {
+    external: ["@statsify/profiles"],
+  },
   plugins: [
     tailwindcss(),
     tanstackStart({
@@ -71,6 +76,8 @@ export default defineConfig({
       // A `.br` and a `.gz` beside each text file in the public output (scripts, styles, fonts), which Nitro serves by the
       // request's Accept-Encoding.
       compressPublicAssets: { brotli: true, gzip: true },
+      // Piscina starts its workers from its own `dist/worker.js`, which bundling it would leave behind.
+      traceDeps: ["piscina"],
     }),
   ],
 });
