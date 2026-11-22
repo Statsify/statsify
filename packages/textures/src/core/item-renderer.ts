@@ -12,6 +12,7 @@ import { context, createCanvas, createImageData, decodePng, hex } from "./canvas
 import { TextureLoader, mixPixels } from "./textures.js";
 import type { IconCache } from "./icon-cache.js";
 import type { ItemStack } from "./item-stack.js";
+import { LRUCache } from "lru-cache";
 import { type PackStack, assetPath, namespaced } from "./pack.js";
 import { tintColor } from "./tints.js";
 
@@ -19,27 +20,11 @@ const SIZE = 16;
 
 const CACHE_LIMIT = 2000;
 
-class PromiseCache<T> {
-  private entries = new Map<string, Promise<T>>();
-
-  public get(key: string, load: () => Promise<T>) {
-    let entry = this.entries.get(key);
-
-    if (entry) {
-      this.entries.delete(key);
-    } else {
-      const loading = load();
-      loading.catch(() => {
-        if (this.entries.get(key) === loading) this.entries.delete(key);
-      });
-      entry = loading;
-    }
-
-    this.entries.set(key, entry);
-    if (this.entries.size > CACHE_LIMIT) this.entries.delete(this.entries.keys().next().value!);
-
-    return entry;
-  }
+function promiseCache<T extends NonNullable<unknown>>() {
+  return new LRUCache<string, T, () => Promise<T>>({
+    max: CACHE_LIMIT,
+    fetchMethod: (_key, _stale, { context }) => context(),
+  });
 }
 
 interface TintedLayer extends ItemLayer {
@@ -233,8 +218,8 @@ function textureIds({ model, special }: ItemLayer) {
 export class ItemRenderer {
   private models: ModelResolver;
   private textures: TextureLoader;
-  private icons = new PromiseCache<OffscreenCanvas>();
-  private skins = new PromiseCache<ImageData>();
+  private icons = promiseCache<OffscreenCanvas>();
+  private skins = promiseCache<ImageData>();
   private legacyGlint: boolean;
   private glint?: Promise<ReturnType<typeof squaredGlint>>;
   private translucentIcons = new WeakMap<OffscreenCanvas, boolean>();
@@ -328,7 +313,7 @@ export class ItemRenderer {
       .filter((part) => part !== undefined)
       .join("/");
 
-    return this.icons.get(key, () => this.load(key, layers, item, scale, tick));
+    return this.icons.forceFetch(key, { context: () => this.load(key, layers, item, scale, tick) });
   }
 
   private async load(key: string, layers: TintedLayer[], item: ItemStack, scale: number, tick: number) {
@@ -428,12 +413,14 @@ export class ItemRenderer {
   /** A skin's pixels; failed loads return undefined and are retried */
   private skin(url: string) {
     return this.skins
-      .get(url, async () => {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
+      .forceFetch(url, {
+        context: async () => {
+          const response = await fetch(url);
+          if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
 
-        const image = await decodePng(new Uint8Array(await response.arrayBuffer()));
-        return context(image).getImageData(0, 0, image.width, image.height);
+          const image = await decodePng(new Uint8Array(await response.arrayBuffer()));
+          return context(image).getImageData(0, 0, image.width, image.height);
+        },
       })
       .catch(() => undefined);
   }
@@ -443,16 +430,17 @@ if (import.meta.vitest) {
   const { expect, it } = import.meta.vitest;
 
   it("keeps the most recently used promises and retries rejected ones", async () => {
-    const cache = new PromiseCache<number>();
+    const cache = promiseCache<number>();
+    const get = (key: string, load: () => Promise<number>) => cache.forceFetch(key, { context: load });
 
-    await expect(cache.get("a", () => Promise.reject(new Error("failed")))).rejects.toThrow();
-    expect(await cache.get("a", async () => 1)).toBe(1);
-    expect(await cache.get("a", async () => 2)).toBe(1);
+    await expect(get("a", () => Promise.reject(new Error("failed")))).rejects.toThrow();
+    expect(await Promise.all([get("a", async () => 1), get("a", async () => 2)])).toEqual([1, 1]);
+    expect(await get("a", async () => 3)).toBe(1);
 
-    await Promise.all(Array.from({ length: CACHE_LIMIT - 1 }, (_, key) => cache.get(`${key + 1}`, async () => key)));
-    expect(await cache.get("a", async () => 3)).toBe(1);
+    await Promise.all(Array.from({ length: CACHE_LIMIT - 1 }, (_, key) => get(`${key + 1}`, async () => key)));
+    expect(await get("a", async () => 4)).toBe(1);
 
-    await cache.get("b", async () => 0);
-    expect(await cache.get("1", async () => 4)).toBe(4);
+    await get("b", async () => 0);
+    expect(await get("1", async () => 5)).toBe(5);
   });
 }

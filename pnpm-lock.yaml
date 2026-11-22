@@ -791,6 +791,9 @@ importers:
       idb:
         specifier: ^8.0.4
         version: 8.0.4
+      lru-cache:
+        specifier: ^11.5.3
+        version: 11.5.3
     devDependencies:
       skia-canvas:
         specifier: 4.0.0
