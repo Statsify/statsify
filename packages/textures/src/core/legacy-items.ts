@@ -78,7 +78,7 @@ export function legacyBannerPattern(code: string) {
   return name ? `minecraft:${name}` : undefined;
 }
 
-/** A dye color for a 1.8 banner's dye Damage value, which runs the other way to wool's */
+/** A dye color for a 1.8 banner's dye Damage value, the reverse of wool's */
 export const legacyDye = (damage: number) => DYES[15 - damage];
 
 /**
