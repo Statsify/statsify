@@ -267,6 +267,7 @@ export class TicketService {
     await this.messageService.send(ticket.channel, {
       ...error,
       components: [new TextDisplayBuilder(`<@${userId}>`), ...(error.components ?? [])],
+      mentions: { users: [userId] },
     });
 
     return true;
