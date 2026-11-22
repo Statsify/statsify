@@ -18,7 +18,7 @@ import { FormattedGame } from "#game";
 import objectiveTargets from "./objective-targets.json" with { type: "json" };
 
 interface Quest {
-  active?: { started: number; objectives?: Record<string, number> };
+  active?: { objectives?: Record<string, number> };
   completions?: { time: number }[];
 }
 
@@ -134,7 +134,7 @@ const createQuestProgress = (
         const active: Quest["active"] = quests[getQuestField(quest, fieldPrefix)]?.active;
         const [progress] = Object.values(active?.objectives ?? {});
 
-        if (typeof progress === "number") this[quest.propertyKey] = progress;
+        if (progress !== undefined) this[quest.propertyKey] = progress;
       }
     }
   }
@@ -183,7 +183,7 @@ export function createGameModeQuests<
 
   for (const quest of [...daily, ...weekly, ...monthly]) {
     const target = OBJECTIVE_TARGETS[getQuestField(quest, fieldPrefix)];
-    if (target) targets[quest.propertyKey] = target;
+    if (target !== undefined) targets[quest.propertyKey] = target;
   }
 
   QUEST_TARGETS[game] = targets;
