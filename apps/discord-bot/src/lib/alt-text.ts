@@ -55,12 +55,13 @@ const getAltText = (card: JSX.Element): string => {
   walk(card);
 
   let altText = header.filter(Boolean).join(", ");
+  let separator = altText ? ": " : "";
 
-  for (const [index, cell] of cells.filter(Boolean).entries()) {
-    const separator = index === 0 ? (altText ? ": " : "") : ", ";
+  for (const cell of cells.filter(Boolean)) {
     const next = `${altText}${separator}${cell}`;
     if (next.length > MAX_LENGTH) break;
     altText = next;
+    separator = ", ";
   }
 
   return altText;
