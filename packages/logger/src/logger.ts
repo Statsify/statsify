@@ -96,19 +96,19 @@ export class Logger {
    * Prints to stdout or stderr without sending to Sentry Logs.
    */
   public print(level: LogLevel, message: unknown, attributes: RequestAttributes = {}) {
-    const isError = level === "error" || level === "fatal";
-    const color = ColorByLogLevel[level];
-    const timeStamp = Logger.getTimeStamp();
+    const isErrorLevel = level === "error" || level === "fatal";
+
+    const icon = chalk.bold(isErrorLevel ? "📉" : "📈");
+    const context = chalk.hex(ColorByLogLevel[level].toString(16))(this.context);
+    const time = chalk.gray(`${Logger.getTimeStamp()}${isProduction ? "" : "ms"}`);
 
     const fields = Object.entries(attributes)
       .filter(([, value]) => value !== undefined)
       .map(([key, value]) => ` ${key}=${value}`)
       .join("");
 
-    process[isError ? "stderr" : "stdout"].write(
-      `${chalk.bold(isError ? "📉" : "📈")} ${chalk.hex(color.toString(16))(this.context)} ${chalk.gray(
-        `${timeStamp}${isProduction ? "" : "ms"}`
-      )} ${format(message)}${chalk.gray(fields)}\n`
+    process[isErrorLevel ? "stderr" : "stdout"].write(
+      `${icon} ${context} ${time} ${format(message)}${chalk.gray(fields)}\n`
     );
   }
 
