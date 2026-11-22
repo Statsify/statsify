@@ -8,8 +8,8 @@ use crate::pose::{Held, Pose};
 
 const PIXELS_PER_BLOCK: f32 = 16.0;
 
-// Where the game draws a held item from: below the shoulder joint, at the hand. It starts a pixel
-// out from the arm's pivot, which is the middle of a classic arm.
+// Where the game draws a held item from: below the shoulder joint, at the hand. 1.8 starts a pixel
+// out from its arm pivot, at the middle of a classic arm, where this renderer's joint is.
 const HAND: Vector3<f32> = Vector3::new(0.0, -7.0, -1.0);
 
 // 1.8 hangs a slim arm half a pixel in and down from this renderer's joint, and turns its held
