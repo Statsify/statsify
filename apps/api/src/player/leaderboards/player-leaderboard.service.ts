@@ -42,7 +42,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
 
     const scores = await this.redis.zmscore(`player.${field}`, ...memberIds);
 
-    const leaderboard = scores
+    const members = scores
       .flatMap((score, index) =>
         score === null ? [] : [{ id: memberIds[index], score: Number(score) }]
       )
@@ -59,7 +59,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
 
       case LeaderboardQuery.INPUT: {
         const playerId = await this.getPlayerId(input as string);
-        highlight = leaderboard.findIndex(({ id }) => id === playerId);
+        highlight = members.findIndex(({ id }) => id === playerId);
 
         if (highlight === -1) throw new PlayerNotFoundException();
 
@@ -75,15 +75,15 @@ export class PlayerLeaderboardService extends LeaderboardService {
       }
     }
 
-    const page = await this.formatLeaderboard(
+    const leaderboard = await this.formatLeaderboard(
       Player,
       field,
-      leaderboard.slice(top, top + PAGE_SIZE),
+      members.slice(top, top + PAGE_SIZE),
       top / PAGE_SIZE,
       highlight
     );
 
-    return { ...page, name: `${page.name} - ${guild.nameFormatted}` };
+    return { ...leaderboard, name: `${leaderboard.name} - ${guild.nameFormatted}` };
   }
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
