@@ -29,6 +29,15 @@ pub enum DisplayContext {
   Thirdperson,
 }
 
+impl DisplayContext {
+  pub fn entry(self, display: &Display) -> Option<Transform> {
+    match self {
+      DisplayContext::Head => display.head,
+      DisplayContext::Thirdperson => display.thirdperson,
+    }
+  }
+}
+
 pub struct Wearer {
   pub arm_width: f32,
   pub pose: Pose,
@@ -74,27 +83,28 @@ pub fn root_transform(display: Option<DisplayContext>) -> Matrix4<f32> {
 // The game's chain from a bone to a worn or held item baked in blocks. Its entity models have
 // y down and z back, so each chain is turned into this renderer's axes.
 pub fn item_transform(display: Option<DisplayContext>, model: &Display) -> Matrix4<f32> {
-  // The item renderer doubles every worn or held item, applies its display entry, then
-  // halves it around its center
-  let worn = |entry: Option<Transform>| {
-    let entry = entry.map_or(Matrix4::identity(), |entry| Matrix4::from(entry.matrix()));
-    Matrix4::from_scale(2.0) * entry * Matrix4::from_scale(0.5)
+  let Some(context) = display else {
+    return Matrix4::from_scale(PIXELS_PER_BLOCK);
   };
 
-  match display {
-    None => Matrix4::from_scale(PIXELS_PER_BLOCK),
+  // The item renderer doubles every worn or held item, applies its display entry, then
+  // halves it around its center
+  let entry = context
+    .entry(model)
+    .map_or(Matrix4::identity(), |entry| Matrix4::from(entry.matrix()));
+  let worn = Matrix4::from_scale(2.0) * entry * Matrix4::from_scale(0.5);
+
+  match context {
     // The game moves a worn item from the neck to the middle of the head, turns it to face
     // forward and draws a block 0.625 blocks wide
-    Some(DisplayContext::Head) => {
+    DisplayContext::Head => {
       Matrix4::from_translation(Vector3::new(0.0, 4.0, 0.0))
         * Matrix4::from_angle_y(Deg(180.0))
         * Matrix4::from_scale(0.625 * PIXELS_PER_BLOCK)
-        * worn(model.head)
+        * worn
     }
-    Some(DisplayContext::Thirdperson) => {
-      Matrix4::from_angle_x(Deg(180.0))
-        * Matrix4::from_scale(PIXELS_PER_BLOCK)
-        * worn(model.thirdperson)
+    DisplayContext::Thirdperson => {
+      Matrix4::from_angle_x(Deg(180.0)) * Matrix4::from_scale(PIXELS_PER_BLOCK) * worn
     }
   }
 }
