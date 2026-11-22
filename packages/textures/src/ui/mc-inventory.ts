@@ -109,7 +109,7 @@ export class McInventory extends HTMLElement {
 
   private observer = new IntersectionObserver((entries) => {
     this.onScreen = entries.at(-1)!.isIntersecting;
-    this.play();
+    this.updatePlaying();
   });
 
   private static run(time: number) {
@@ -179,7 +179,7 @@ export class McInventory extends HTMLElement {
     this.observer.unobserve(this.canvas);
     this.unhover();
     this.onScreen = false;
-    this.play();
+    this.updatePlaying();
   }
 
   public attributeChangedCallback() {
@@ -334,7 +334,7 @@ export class McInventory extends HTMLElement {
     this.show();
 
     this.drawn = drawing;
-    this.play();
+    this.updatePlaying();
   }
 
   /** Draws the moving slots' icons for the clock's tick */
@@ -388,7 +388,7 @@ export class McInventory extends HTMLElement {
     screen.drawImage(composed, 0, 0);
   }
 
-  private play() {
+  private updatePlaying() {
     if (this.onScreen && this.moving.length > 0) McInventory.playing.add(this);
     else McInventory.playing.delete(this);
 
