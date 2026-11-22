@@ -80,7 +80,10 @@ function useRenderer(canvasId: string, texture: Texture | undefined, yaw: number
           .renderSkin(canvasId, texture.bytes, texture.slim, true, { yaw: cameraYaw(latestYaw.current) })
           .then(() => active && setDrawn(true));
       })
-      .catch(() => undefined);
+      .catch((error: unknown) => {
+        // Unmounting unregisters the canvas, which fails a render still on its way.
+        if (active) throw error;
+      });
 
     return () => {
       active = false;
