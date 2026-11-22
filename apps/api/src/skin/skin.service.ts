@@ -9,9 +9,10 @@
 import { HttpService } from "@nestjs/axios";
 import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
+import { InjectRedis } from "#redis";
 import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { LRUCache } from "lru-cache";
 import { PlayerNotFoundException } from "@statsify/api-client";
+import { Redis } from "ioredis";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
@@ -21,16 +22,12 @@ import type { ArmorDto, ArmorPieceDto, SKULLS, SkinRenderDto } from "#dtos";
 import type { ReturnModelType } from "@typegoose/typegoose";
 import { readFile } from "node:fs/promises";
 
-// A texture hash always serves the same image, so heads never need refetching
-const HEAD_CACHE_SIZE = 500;
-
 @Injectable()
 export class SkinService {
-  private readonly heads = new LRUCache<string, Buffer>({ max: HEAD_CACHE_SIZE });
-
   public constructor(
     private readonly httpService: HttpService,
-    @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
+    @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>,
+    @InjectRedis() private readonly redis: Redis
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
@@ -148,10 +145,15 @@ export class SkinService {
   }
 
   private async resolveHead(hash: string): Promise<ArmorPiece> {
-    const head = this.heads.get(hash) ??
-      imageData(await loadTexture(`https://textures.minecraft.net/texture/${hash}`));
+    const key = `head:${hash}`;
+    let head = await this.redis.getBuffer(key);
 
-    this.heads.set(hash, head);
+    if (!head) {
+      head = imageData(await loadTexture(`https://textures.minecraft.net/texture/${hash}`));
+
+      // A texture hash always serves the same image, so a cached head never expires
+      await this.redis.set(key, head);
+    }
 
     return { texture: head, enchanted: false, skull: true };
   }
