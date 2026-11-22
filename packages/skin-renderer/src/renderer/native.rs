@@ -1,6 +1,5 @@
-use std::sync::Arc;
+use std::sync::{mpsc, Arc};
 
-use futures_intrusive::channel;
 use image::codecs::png::PngEncoder;
 use image::{ExtendedColorType, ImageEncoder};
 use napi::bindgen_prelude::spawn_blocking;
@@ -137,7 +136,7 @@ impl RenderTarget {
   }
 
   pub async fn read(
-    &self,
+    self: Arc<Self>,
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     mut encoder: wgpu::CommandEncoder,
@@ -162,21 +161,27 @@ impl RenderTarget {
       self.texture.size(),
     );
 
-    let index = queue.submit(Some(encoder.finish()));
-
-    let buffer_slice = output_buffer.slice(..);
-    let (sender, receiver) = channel::shared::oneshot_channel();
-    buffer_slice.map_async(wgpu::MapMode::Read, move |v| {
-      let _ = sender.send(v);
-    });
-
-    // Waiting on the GPU blocks the thread, so it runs off napi's async workers
+    // Waiting on the GPU blocks the thread, so it runs off napi's async workers. submit goes
+    // with it: it waits on the device lock a running poll holds until its GPU work finishes
     let device = device.clone();
-    spawn_blocking(move || device.poll(wgpu::PollType::WaitForSubmissionIndex(index)))
-      .await
-      .map_err(|_| Error::RenderFailure)??;
+    let queue = queue.clone();
+    let command_buffer = encoder.finish();
 
-    if let Some(Ok(())) = receiver.receive().await {
+    spawn_blocking(move || {
+      let index = queue.submit(Some(command_buffer));
+
+      let buffer_slice = output_buffer.slice(..);
+      let (sender, receiver) = mpsc::channel();
+      buffer_slice.map_async(wgpu::MapMode::Read, move |v| {
+        let _ = sender.send(v);
+      });
+
+      device.poll(wgpu::PollType::WaitForSubmissionIndex(index))?;
+
+      let Ok(Ok(())) = receiver.recv() else {
+        return Err(Error::RenderFailure);
+      };
+
       let padded_buffer = buffer_slice.get_mapped_range();
 
       let buffer = padded_buffer
@@ -196,8 +201,8 @@ impl RenderTarget {
       )?;
 
       Ok(png)
-    } else {
-      Err(Error::RenderFailure)
-    }
+    })
+    .await
+    .map_err(|_| Error::RenderFailure)?
   }
 }
