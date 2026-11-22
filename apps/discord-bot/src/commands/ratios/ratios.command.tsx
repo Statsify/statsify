@@ -11,7 +11,6 @@ import {
   ARENA_BRAWL_MODES,
   BEDWARS_MODES,
   BLITZSG_MODES,
-  BlitzSGKit,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   type GameModeWithSubModes,
@@ -51,7 +50,8 @@ import {
   mapBackground,
 } from "#constants";
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
-import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
+import { filterBlitzKits } from "#commands/blitzsg/blitzsg.command";
+import { filterMegaWallsKits } from "#commands/megawalls/megawalls.command";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
@@ -83,19 +83,7 @@ export class RatiosCommand {
 
   @SubCommand({ description: (t) => t("commands.ratios-blitzsg"), args })
   public blitzsg(context: CommandContext) {
-    return this.run(context, BLITZSG_MODES, (player, modes) => {
-      const { blitzsg } = player.stats;
-      const [overall, ...kits] = modes;
-
-      const filteredKits = kits
-        .sort(
-          (a, b) =>
-            (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp
-        )
-        .slice(0, 24);
-
-      return [overall, ...filteredKits];
-    });
+    return this.run(context, BLITZSG_MODES, filterBlitzKits);
   }
 
   @SubCommand({ description: (t) => t("commands.ratios-copsandcrims"), args })
