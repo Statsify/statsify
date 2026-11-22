@@ -42,22 +42,18 @@ const OWN_SEARCH = /^\/player\/?$|^\/bingo\/?$|^\/player\/[^/]+\/bingo\/?$/;
 /** A player's board sits under Players' path but belongs to Bingo in the nav. */
 const BINGO_BOARD = /^\/player\/[^/]+\/bingo\/?$/;
 
-const withoutLocale = (pathname: string) => {
+function pathWithoutLocale(pathname: string) {
   const [, first = "", ...rest] = pathname.split("/");
   return isSupportedLocale(first) ? `/${rest.join("/")}` : pathname;
-};
-
-function hasOwnSearch(pathname: string) {
-  return OWN_SEARCH.test(withoutLocale(pathname));
 }
 
 export function Header() {
   const { t } = useTranslation();
-  // The page on screen, not the one loading, so the header's search and the page's own never show at once. The matches
-  // change once a page renders, or once a player's page puts up its shell.
+  // The page on screen, not the one loading, so the header's search and the page's own never show at once.
   const pathname = useRouterState({ select: ({ matches, location }) => matches.at(-1)?.pathname ?? location.pathname });
-  const showSearch = !hasOwnSearch(pathname);
-  const bingoBoard = BINGO_BOARD.test(withoutLocale(pathname));
+  const path = pathWithoutLocale(pathname);
+  const showSearch = !OWN_SEARCH.test(path);
+  const bingoBoard = BINGO_BOARD.test(path);
   // On a game page a picked name opens the same game, mode and period, to compare; the profile is a tap away from there.
   const gameTarget = useMatch({
     from: "/{-$locale}/player/$name/$game",
