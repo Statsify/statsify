@@ -102,7 +102,7 @@ function GuildOverall({ guild, className }: { guild: GuildPreview; className?: s
           GEXP: <span className="text-mc-white">{n(guild.exp)}</span>
         </p>
         <p className="text-mc-yellow">
-          Guild Level: <span className="text-mc-white">{guild.level}</span>
+          Guild Level: <span className="text-mc-white">{n(guild.level)}</span>
         </p>
       </Box>
       <Box className="hidden xl:block xl:row-start-3 xl:max-w-120 leading-[24px] text-ellipsis">
