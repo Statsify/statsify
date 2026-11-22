@@ -84,16 +84,18 @@ export function localeData(matches: ReadonlyArray<{ routeId: string; loaderData?
   return match?.loaderData as LocaleData | undefined;
 }
 
-/** A search page's tags (`/bingo`, `/player`): `meta.<key>`'s title and description, then its preview's. */
-export function searchPageMeta(
+/** A page's `meta.*` key in `site.json`, or its own words where they stay English in the code (privacy, terms). */
+export type PageText = { key: string } | { title: string; description: string };
+
+/** A page's tags: its title and description (in English, from the server's `site.json`), then its preview's. */
+export function pageMeta(
   matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>,
-  { key, path, image, noindex = false }: { key: string; path: string; image: string; noindex?: boolean }
+  { path, image, noindex = false, ...text }: { path: string; image: string; noindex?: boolean } & PageText
 ) {
   const locale = localeData(matches);
-  // In English, from the server's `site.json`.
   const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
-  const title = words.t(`meta.${key}.title`);
-  const description = words.t(`meta.${key}.description`);
+  const title = "key" in text ? words.t(`meta.${text.key}.title`) : `${text.title} | ${SITE_NAME}`;
+  const description = "key" in text ? words.t(`meta.${text.key}.description`) : text.description;
   const origin = locale?.origin;
 
   return [
