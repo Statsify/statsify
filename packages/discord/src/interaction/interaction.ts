@@ -106,6 +106,10 @@ export class Interaction {
     return this.getData().custom_id;
   }
 
+  public getMessageId() {
+    return this.data.message?.id;
+  }
+
   public async reply(data: InteractionServer.InteractionReply) {
     try {
       await this.request({
