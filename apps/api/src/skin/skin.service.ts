@@ -23,8 +23,6 @@ const RETRY_AFTER = 1000 * 60 * 60;
 
 @Injectable()
 export class SkinService {
-  private readonly refreshing = new Set<string>();
-
   public constructor(
     private readonly httpService: HttpService,
     @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
@@ -76,7 +74,7 @@ export class SkinService {
     const uuid = isUsername ? await this.getUuid(tag) : tag;
 
     if (cachedSkin?.uuid === uuid) {
-      this.refresh(uuid);
+      this.refresh(cachedSkin);
       return cachedSkin;
     }
 
@@ -85,18 +83,18 @@ export class SkinService {
     return this.save(skin);
   }
 
-  private refresh(uuid: string) {
-    if (this.refreshing.has(uuid)) return;
-    this.refreshing.add(uuid);
+  private async refresh({ uuid, expiresAt }: Skin) {
+    const { modifiedCount } = await this.skinModel
+      .updateOne({ uuid, expiresAt }, { expiresAt: Date.now() + RETRY_AFTER })
+      .exec();
 
-    this.requestSkin(uuid)
+    if (modifiedCount !== 1) return;
+
+    await this.requestSkin(uuid)
       .then((skin) => this.save(skin))
       .catch(async (error) => {
         if (error instanceof PlayerNotFoundException) await this.skinModel.deleteOne({ uuid }).exec();
-        else await this.skinModel.updateOne({ uuid }, { expiresAt: Date.now() + RETRY_AFTER }).exec();
-      })
-      .catch(() => undefined)
-      .finally(() => this.refreshing.delete(uuid));
+      });
   }
 
   private async save(skin: Skin): Promise<Skin> {
