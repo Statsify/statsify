@@ -226,6 +226,12 @@ export class ApiService extends StatsifyApiService {
     });
   }
 
+  public override getPlayerSkin(uuid: string, user: User | null) {
+    return super.getPlayerSkin(uuid, user).catch(() => {
+      throw this.unknownError();
+    });
+  }
+
   public override async deletePlayerSession(id: string): Promise<SuccessResponse> {
     return super.deletePlayerSession(id).catch(() => {
       throw new ErrorMessage("verification.requiredVerification");
