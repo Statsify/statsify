@@ -276,7 +276,7 @@ export class McInventory extends HTMLElement {
     if (!this.isConnected) document.dispatchEvent(change());
   }
 
-  private placeText(size: InventorySize, shown: (ItemStack | undefined)[], width: number, atlas: boolean) {
+  private placeText(size: InventorySize, shown: (ItemStack | undefined)[], width: number) {
     const labels: HTMLSpanElement[] = [];
 
     const place = (part: string, text: string, top: number, side: "left" | "right", offset: number) => {
@@ -288,15 +288,13 @@ export class McInventory extends HTMLElement {
       labels.push(label);
     };
 
-    if (atlas) {
-      const [titleX, titleY] = TITLE_ORIGIN;
-      if (size.title) place("title", size.title, titleY, "left", titleX);
+    const [titleX, titleY] = TITLE_ORIGIN;
+    if (size.title) place("title", size.title, titleY, "left", titleX);
 
-      for (const [slot, item] of shown.entries()) {
-        if (!item?.count || item.count <= 1) continue;
-        const [right, top] = countOrigin(size, slot);
-        place("count", `${item.count}`, top, "right", width - right);
-      }
+    for (const [slot, item] of shown.entries()) {
+      if (!item?.count || item.count <= 1) continue;
+      const [right, top] = countOrigin(size, slot);
+      place("count", `${item.count}`, top, "right", width - right);
     }
 
     this.text.style.fontSize = `${16 * size.scale}px`;
@@ -331,7 +329,8 @@ export class McInventory extends HTMLElement {
     this.movingIcons = icons;
     this.canvas.width = still.width;
     this.canvas.height = still.height;
-    this.placeText(size, shown, still.width / size.scale, atlas);
+    if (atlas) this.placeText(size, shown, still.width / size.scale);
+    else this.text.replaceChildren();
     this.show();
 
     this.drawn = drawing;
