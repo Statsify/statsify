@@ -53,10 +53,10 @@ function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefine
   });
 
   const banner = tag?.BlockEntityTag;
-  const patterns = banner?.Patterns?.flatMap(({ Pattern, Color }) => {
-    const pattern = legacyBannerPattern(Pattern);
-    return pattern ? [{ pattern, color: legacyDye(Color) }] : [];
-  });
+  const patterns = banner?.Patterns?.map(({ Pattern, Color }) => ({
+    pattern: legacyBannerPattern(Pattern),
+    color: legacyDye(Color),
+  }));
 
   return {
     ...item,
