@@ -135,8 +135,10 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
     const [, , key, target] = parseCustomId(interaction.getCustomId()).values;
 
-    if (interaction.isSelectMenuInteraction())
-      return [findModeIndex(interaction.getData().values[0]), Number(target)];
+    if (interaction.isSelectMenuInteraction()) {
+      const page = Number(target);
+      return [findModeIndex(interaction.getData().values[0]), page < pageCount ? page : 0];
+    }
 
     return [findModeIndex(key), getScrolledPage(target, pageCount)];
   }
