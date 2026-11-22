@@ -24,9 +24,8 @@ const PAGE_SIZE = 25;
 export const MAX_QUERY_LENGTH = 64;
 
 /**
- * What `/leaderboards` carries in its hydration data: each group without its leaderboards and the list's hash. With
- * `?q=`, also the groups with a match and how many. The links themselves are in the server's HTML, and the filter
- * fetches the list by its hash.
+ * What `/leaderboards` carries in its hydration data: the groups without their leaderboards (whose links are in the
+ * server's HTML), the list's hash, and with `?q=` the groups that match.
  */
 export interface IndexData {
   groups: GroupSummary[];

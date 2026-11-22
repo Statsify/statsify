@@ -38,8 +38,7 @@ export function StatNumber({ value }: { value: number }) {
 
 /**
  * For a link that makes a whole stat (or panel) clickable: it stretches over its nearest `relative` ancestor, and 6 px
- * past its top and bottom so a stat cell is a 44 px target, which lightens on hover and while pressed and shows the
- * keyboard focus. The text keeps its color and gets no underline.
+ * past its top and bottom so a stat cell is a 44 px target. The text keeps its color and gets no underline.
  */
 export const STAT_LINK =
   "focus-ring-none after:absolute after:-inset-x-1 after:-inset-y-1.5 hover:after:bg-white/10 active:after:bg-white/10 focus-visible:after:focus-ring";
@@ -51,10 +50,8 @@ export function Hidden() {
 }
 
 /**
- * For `large`: a Minecraft 24 pixel is 1.5 px, so text at 24 and 48 can end on a half pixel, and whatever is centered on
- * it or follows it lands on one, blurred on 1× screens. Where `calc-size()` works, its boxes round their width up to an
- * even number of pixels with the text at the start, so centering them lands on whole pixels (as `grid-cols-snap-*` does
- * for the cells).
+ * For `large`: a Minecraft 24 pixel is 1.5 px, so centered text at 24 or 48 can land on a half pixel and blur on 1×
+ * screens. Where `calc-size()` works, this rounds the box's width up to an even number of pixels.
  */
 export const SNAP_LARGE = "lg:w-[calc-size(fit-content,round(up,size,2px))] lg:text-start";
 

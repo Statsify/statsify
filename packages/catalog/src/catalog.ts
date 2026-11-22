@@ -34,10 +34,7 @@ export interface StatEntry {
    * to `stats.<the field's name>`; set where the bot uses another key (`itemsCollected.diamond` is `stats.diamonds`).
    */
   label?: string;
-  /**
-   * The key of the stat's `glossary.*` entry in the locale files, where the label's own entry doesn't say what this stat
-   * is: Quests' Total counts quests and Challenges' counts challenges. Defaults to the label's key (`fkdr`).
-   */
+  /** The stat's `glossary.*` key where the label's doesn't fit it (Quests' Total counts quests). Defaults to the label's. */
   glossary?: string;
   /**
    * The card's own title where it doesn't translate one: a map, challenge or disaster name, Minecraft-formatted, taken

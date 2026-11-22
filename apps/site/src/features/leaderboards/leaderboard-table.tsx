@@ -20,9 +20,8 @@ import type { AroundMiss } from "./leaderboard-data";
 import type { ReactNode } from "react";
 import type { LeaderboardColumn, LeaderboardPage } from "@statsify/contract";
 
-// The table's rows from `md` up (`LeaderboardCards`): one 48 px row per player, with the column labels once in a
-// Minecraft 16 §7 header. A row's position, head and name share one element across their three columns, and its
-// values another; a row's stripe or highlight is on both.
+// From `md` up (`LeaderboardCards`) a row's position, head and name share one element across their three columns, and
+// its values another.
 export const HEADER = "flex h-10 items-center border-b-2 border-black/30 bg-blackify-800 px-2 text-mc-1 text-mc-gray md:text-mc-1.5";
 export const PLAYER = "sticky col-span-3 grid grid-cols-subgrid";
 export const VALUES = "col-span-(--columns) grid grid-cols-subgrid";

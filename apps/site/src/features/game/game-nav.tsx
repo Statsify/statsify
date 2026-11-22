@@ -36,11 +36,8 @@ function GameName({ game }: { game: NavGame }) {
 }
 
 /**
- * The player's game pages, in the game registry's order. On phones, and from `md` up past `DESKTOP_GAMES`, a Games
- * button opens a grid of them over the page; up to it, a link each from `md` up. The button is a `<details>`, so it
- * opens before the page hydrates; after, Escape, a pick, a tap outside or tabbing out closes it. The `current` game is
- * marked, and a game the player has never played is dimmed and says so. The grid takes the width of the nearest
- * positioned ancestor. Its own file, so the profile can show it without the game page's code.
+ * The player's game pages: a Games button over a grid of them, or from `md` up a link each while they fit. The button is
+ * a `<details>`, so it opens before the page hydrates. The grid takes the width of the nearest positioned ancestor.
  */
 export function GameNav({
   games,

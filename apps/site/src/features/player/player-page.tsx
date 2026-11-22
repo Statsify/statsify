@@ -419,9 +419,8 @@ function LoginList({ page: { uuid, status, games, username, updatedAt, expiresAt
 }
 
 /**
- * "Online" while the save is fresh (until Refresh unlocks); after that, how long ago the save saw them online, with its
- * full date on hover, focus or tap. Until mount the clock is when the server fetched the page, which the browser gets
- * with the page's data, so a cached page hydrates to the server's text; the browser's own clock takes over after.
+ * "Online" while the save is fresh, then how long ago the save saw them online. Until mount the clock is when the
+ * server fetched the page, so a cached page hydrates to the server's text.
  */
 function OnlineStatus({ uuid, updatedAt, expiresAt }: { uuid: string; updatedAt: number; expiresAt: number }) {
   const { t, i18n } = useTranslation();

@@ -19,10 +19,8 @@ import type { CSSProperties } from "react";
 const STALE_MS = 60_000;
 
 /**
- * `/player`'s recently viewed players, newest first, as result cards, with a Clear that empties the list (`onClear`
- * then moves focus to the search). Drawn after hydration from the browser's storage, in space held from first paint.
- * Each card loads by name on its own, the same request (and edge cache entry) as anyone's search for that name; a card
- * whose name no longer finds its player is asked for by UUID, and takes the new name or leaves the list.
+ * `/player`'s recently viewed players as result cards, drawn after hydration from the browser's storage. A card whose
+ * name no longer finds its player is asked for by UUID, and takes the new name or leaves the list.
  */
 export function RecentPlayers({ onClear }: { onClear: () => void }) {
   const { t } = useTranslation();

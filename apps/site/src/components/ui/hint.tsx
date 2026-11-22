@@ -68,9 +68,8 @@ function Tooltip({ text, anchor, ...props }: { text: string; anchor: DOMRect } &
 const LEAVE_MS = 150;
 
 /**
- * Shows `text` over an element (or the box `anchor` picks for it) while a mouse is on it or on the tooltip, or it has
- * the keyboard's focus, and on `toggle`. Spread `props` on the element and render `tooltip` beside it. It closes when
- * the page scrolls under it, on Escape, and on a tap elsewhere. Without `text` it does nothing.
+ * Shows `text` over an element (or the box `anchor` picks for it) on hover, keyboard focus and `toggle`. Spread `props`
+ * on the element and render `tooltip` beside it. Without `text` it does nothing.
  */
 export function useHint(text: string | undefined, anchor: (element: HTMLElement) => Element = (element) => element) {
   const [shown, setShown] = useState<{ element: Element; anchor: DOMRect } | null>(null);

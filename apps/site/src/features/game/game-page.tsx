@@ -172,8 +172,7 @@ export function GameView({ page }: { page: GamePage }) {
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} game={`${page.game.name}${page.heading.mode ? ` §r(${page.heading.mode}§r)` : ""}`} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         {/* From `md` the nametag is as wide as its content (up to half the row) and the level sits beside it, the
-            overview under both; from `lg` the overview goes under the level. An overview with no level sits beside the
-            nametag at its own height, and a nametag with neither (Parkour) is as wide as its content. */}
+            overview under both; from `lg` the overview goes under the level. */}
         <div className="grid grid-cols-1 gap-2 md:grid-cols-[fit-content(50%)_minmax(0,1fr)]">
           <GameHeader
             ref={nametag}
@@ -222,7 +221,6 @@ export function GameView({ page }: { page: GamePage }) {
         )}
         <p className="text-mc-1 text-mc-gray">
           {t("game.hint", { name: page.username })}{" "}
-          {/* The game's index of leaderboards, opened and scrolled to this mode's. */}
           <Link
             to="/{-$locale}/leaderboards/$field"
             params={{ field: page.game.key }}
@@ -525,8 +523,7 @@ function useLabelText(): (cell: Stat) => string {
 
 /**
  * A stat's value as the card prints it: a number in the locale's format (with its cap or unit), or the API's text. A
- * number the format shortens carries the exact one, as a `Hint`, or under a link only for screen readers, since the
- * link shows it.
+ * shortened number carries the exact one, under a link (which shows it) for screen readers only.
  */
 function useStatValue(cell: Stat, linked = false): ReactNode {
   const n = useNumberFormat(cell.trim);

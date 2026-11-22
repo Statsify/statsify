@@ -21,19 +21,11 @@ import { useTranslation } from "react-i18next";
 import type { CSSProperties } from "react";
 import type { LeaderboardPage } from "@statsify/contract";
 
-// The table's cell, from `md` up only.
 const CELL = "md:flex md:h-12 md:items-center md:px-2";
 
 /**
- * The 25 rows of one page, in one markup: a table from `md` up and a card per player below it. Each position cell
- * carries the row's UUID as its id, so `#<uuid>` links land on the row.
- *
- * From `md` up each card is `display: contents`, so its player and value halves sit in the table's grid: position,
- * head, name and the leaderboard's value columns, under a header row that sticks to the top of the page. Below `md` a
- * card has the position and the full name, wrapping rather than cut, then the board's stats in equal columns across
- * the card, each label over its value, so values line up down the page and nothing scrolls sideways. The whole card
- * links to the player. Minecraft 16 throughout. Labels share a row per card (a subgrid), so a label that wraps keeps
- * its row's values level.
+ * The 25 rows of one page in one markup: a table from `md` up, where each card is `display: contents`, and a card per
+ * player below it, its stats in equal columns. Each position cell's id is the row's UUID, so `#<uuid>` lands on it.
  */
 export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
   const { t } = useTranslation();
@@ -53,9 +45,7 @@ export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
   return (
     <Box>
       <section aria-label={page.name}>
-        {/* A table to screen readers: each card holds its row's cells, and the halves and the line that lay them out
-            are layout only (`role="none"`). The head is decoration, so a row's cells line up with the header's:
-            position, player, values. Below `md` the header row is hidden and each value carries its label. */}
+        {/* A table to screen readers. The head is decoration, so a row's cells line up with the header's. */}
         <div
           role="table"
           aria-label={page.name}
@@ -77,9 +67,8 @@ export function LeaderboardCards({ page }: { page: LeaderboardPage }) {
             const tone = row.highlight ? HIGHLIGHT : index % 2 === 1 ? STRIPE : "";
 
             return (
-              // A card below `md`. From `md` up it has no box, so its tone doesn't show, and it sets nothing the cells
-              // inherit. Its lines are the Minecraft font's own height, fixed rather than `normal`, so a level symbol
-              // drawn from a fallback font doesn't make its card taller.
+              // The line height is fixed rather than `normal`, so a level symbol drawn from a fallback font doesn't make
+              // its card taller.
               <div
                 key={row.uuid}
                 role="row"

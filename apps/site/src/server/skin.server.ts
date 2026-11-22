@@ -54,7 +54,6 @@ export async function proxySkin(
     headers: {
       "Content-Type": upstream.headers.get("content-type") ?? "image/png",
       "Cache-Control": "public, max-age=3600",
-      // The texture's arm width, which the skin viewer reads.
       ...(model && { "X-Skin-Model": model }),
     },
   });

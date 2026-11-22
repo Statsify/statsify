@@ -85,7 +85,6 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
       preloadBackground(backgroundFor(params.field));
       return { kind: "game", game: await loadLeaderboardGame(params.field) };
     }
-    // The locale's words, by the hash in the layout's data.
     const words = parentMatchPromise.then(({ loaderData }) =>
       loadGlossaryWords({ queryClient: context.queryClient, locale: context.locale, hash: loaderData?.glossaryHash ?? "" }));
     return loadBoard(context.queryClient, params.field, deps, words);
@@ -182,7 +181,6 @@ function LeaderboardPage({ view: { page, miss, explanation } }: { view: Leaderbo
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-center text-mc-2 lg:text-mc-3 font-bold">{page.name}</h1>
-          {/* The game's index, opened and scrolled to the board's mode. */}
           {page.index && (
             <Link
               to="/{-$locale}/leaderboards/$field"
@@ -207,7 +205,6 @@ function LeaderboardPage({ view: { page, miss, explanation } }: { view: Leaderbo
               </Link>
             </p>
           )}
-          {/* Who is ranked, in what order and as of when. */}
           <p className="max-w-200 text-center text-mc-1 text-mc-gray">
             {t(page.sort === "ASC" ? "leaderboards.aboutLowest" : "leaderboards.aboutHighest")}
           </p>

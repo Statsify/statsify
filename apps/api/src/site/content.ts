@@ -33,9 +33,8 @@ const RATIOS = new Map(
 const RATIO_ORDER = [...RATIOS.keys()];
 
 /**
- * Every stat the site shows under a label, one entry for each `glossary.*` key: the ratios first, then the stats two or
- * more games show, then each game's own. A stat shown under its card's name (a map, a challenge) is a name, not a stat
- * to explain. Built from the catalog and the leaderboard list's game names; the words are in the locale files.
+ * One entry for each `glossary.*` key the site shows under a label: the ratios, then the stats two or more games show,
+ * then each game's own. The words are in the locale files.
  */
 export function buildGlossary(groups: LeaderboardGroup[]): Glossary {
   const shown = [...catalogStats().values()].filter((stat) => stat.name === undefined);
@@ -117,7 +116,6 @@ function formula(stats: Stat[], ratio: string | undefined): GlossaryEntry["formu
 /** Prestige names where the scheme's key, prettified, isn't the game's name for it. */
 const PRESTIGE_NAMES: Record<string, string> = { none: "Stone", x_ray: "X-Ray" };
 
-/** A prestige is 100 levels. */
 const PRESTIGE_LEVELS = 100;
 
 /**

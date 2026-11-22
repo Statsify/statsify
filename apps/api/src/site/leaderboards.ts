@@ -63,11 +63,8 @@ function withoutPrefix(name: string, prefix: string): string {
 }
 
 /**
- * One game's leaderboards by mode. A leaderboard below a mode in the game's registry (`stats.bedwars.solo.wins`) is
- * that mode's, and the rest (`stats.bedwars.tokens`) are the game's own, which come first; modes keep the registry's
- * order. Quests keep each game's below the period (`stats.quests.overall.ARCADE.total`), so there the game below an
- * `overall` is the mode. A name loses the game and mode it's listed under: "BedWars Solo Wins" is Wins under Solo, and
- * "Arcade Challenges - Farm Hunt" is Farm Hunt under Challenges' Arcade.
+ * One game's leaderboards by mode, the game's own first, then the registry's modes in order. A name loses the game and
+ * mode it's listed under: "BedWars Solo Wins" is Wins under Solo.
  */
 export function leaderboardGame({ leaderboards, ...group }: LeaderboardGroup): LeaderboardGame {
   const game = GAMES[group.key];
@@ -86,8 +83,9 @@ export function leaderboardGame({ leaderboards, ...group }: LeaderboardGroup): L
   return { ...group, modes: [...modes.values()].filter((mode) => mode.leaderboards.length > 0) };
 }
 
-/** The key of the mode `field` is listed under in its game's index, as `leaderboardGame` places it; "" is the game's own. */
+/** The mode `field` is listed under in its game's index; "" is the game's own. */
 function modeKey(field: string, isMode: (key: string) => boolean): string {
+  // Quests keep each game's boards below the period (`stats.quests.overall.ARCADE.total`).
   const [first, second] = field.split(".").slice(2, -1);
   const key = first === "overall" && second && isMode(second) ? second : first;
   return key && isMode(key) ? key : "";

@@ -38,9 +38,8 @@ export function glossaryWords(locale: Locale): Promise<BuiltWords> {
 }
 
 /**
- * `/glossary-<hash>.json`: a locale's glossary words, cached for good under their own hash, for the line under a
- * leaderboard's title and a stat's "?". A page from before a deploy asks for its old hash and gets today's English
- * words, cached for a minute only.
+ * `/glossary-<hash>.json`, cached for good under its hash. A page from before a deploy asks for its old hash and gets
+ * today's English words, cached for a minute only.
  */
 export async function glossaryWordsResponse(hash: string): Promise<Response> {
   const words = (await Promise.all(SUPPORTED_LOCALES.map(glossaryWords))).find((locale) => locale.hash === hash);

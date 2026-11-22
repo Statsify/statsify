@@ -19,10 +19,8 @@ export const SANS_PRELOAD = {
 } as const;
 
 /**
- * The root's head: the page stays transparent over the dark background until both preloaded Minecraft faces load, at
- * most 500 ms, so a first visit usually lays its text out once, in Minecraft. On a slower connection it shows in the
- * fallback after that and swaps when the faces land. The script runs after the stylesheets, which declare the faces;
- * without scripts the page shows at once.
+ * The page stays transparent until both Minecraft faces load, at most 500 ms, so a first visit lays its text out once.
+ * The script must run after the stylesheets, which declare the faces.
  */
 export const FONT_HOLD = {
   style: ".fonts-wait body{opacity:0}",
