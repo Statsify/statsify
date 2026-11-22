@@ -55,7 +55,6 @@ pub(crate) struct Element {
   pub from: [f32; 3],
   pub to: [f32; 3],
   pub rotation: Option<ElementRotation>,
-  pub shade: bool,
   pub faces: Vec<Face>,
 }
 
@@ -277,11 +276,13 @@ fn parse_element(element: &Value) -> Result<Element, String> {
   // 1.8 bakes faces in direction order, whatever order the file lists them in
   faces.sort_by_key(|face| face.direction as usize);
 
+  // Items ignore shade, but 1.8 still rejects a model whose shade isn't a boolean
+  optional(element, "shade", Value::as_bool)?;
+
   Ok(Element {
     from,
     to,
     rotation,
-    shade: optional(element, "shade", Value::as_bool)?.unwrap_or(true),
     faces,
   })
 }

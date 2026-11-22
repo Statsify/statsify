@@ -53,7 +53,7 @@ impl Default for Transform {
 
 impl Transform {
   /// The column-major matrix 1.8's item renderer applies, in block units. 1.8 halves the centered
-  /// model before this matrix and doubles 3D items worn on a head after it.
+  /// model before this matrix and doubles 3D items worn or held after it.
   pub fn matrix(&self) -> [[f32; 4]; 4] {
     let [x, y, z] = self.rotation;
     let (translation, [sx, sy, sz]) = self.clamped();
