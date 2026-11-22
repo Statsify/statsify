@@ -72,6 +72,20 @@ index 39946617a674a186d5a691c2918adaffa2c3ddbb..ca0d77f0795c51be615a791d5d4cc865
  }
  
  module.exports = { getPrices };
+diff --git a/helper/toolkits.js b/helper/toolkits.js
+index 8e3a70d63db41ea6c8c9451ef921825a3ee5a5f2..8f171f9f593d2e4817db80ba68c09bfe929b6d8f 100644
+--- a/helper/toolkits.js
++++ b/helper/toolkits.js
+@@ -2,7 +2,8 @@ const { getHypixelItemInformationFromId } = require('../constants/itemsMap');
+ const { decodeNbtData } = require('./decode');
+ const { titleCase } = require('./functions');
+ 
+-const TOOLKIT_METADATA_KEYS = new Set(['IN_USE', 'IS_UNLOCKED']);
++// HUNTING_TOOLKIT holds the Hunting Toolkit used up to unlock the menu (the wiki's Hunting Toolkit page), not a tool
++const TOOLKIT_METADATA_KEYS = new Set(['IN_USE', 'IS_UNLOCKED', 'HUNTING_TOOLKIT']);
+ 
+ function isObject(value) {
+     return value !== null && typeof value === 'object';
 diff --git a/index.d.ts b/index.d.ts
 index 58930719c3bb7324896225515c342180d65bed21..04d5ce72a81ae408a5fe22b399425570a6a65aeb 100644
 --- a/index.d.ts
