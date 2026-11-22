@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box } from "~/components/ui/box";
 import { Chevron } from "~/components/icons/chevron";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Link } from "@tanstack/react-router";
@@ -16,9 +15,6 @@ import { cn } from "~/lib/util";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import type { GamePage } from "@statsify/contract";
-
-/** From `md` up, the game nav lists up to this many pages as links; past it, the Games button, as on phones. */
-const DESKTOP_GAMES = 10;
 
 type NavGame = GamePage["games"][number];
 
@@ -36,8 +32,8 @@ function GameName({ game }: { game: NavGame }) {
 }
 
 /**
- * The player's game pages: a Games button over a grid of them, or from `md` up a link each while they fit. The button is
- * a `<details>`, so it opens before the page hydrates. The grid takes the width of the nearest positioned ancestor.
+ * The player's game pages: a Games button over a grid of them. The button is a `<details>`, so it opens before the page
+ * hydrates. The grid takes the width of the nearest positioned ancestor.
  */
 export function GameNav({
   games,
@@ -58,7 +54,6 @@ export function GameNav({
 }) {
   const { t } = useTranslation();
   const details = useRef<HTMLDetailsElement>(null);
-  const links = games.length <= DESKTOP_GAMES;
   const close = () => {
     if (details.current) details.current.open = false;
   };
@@ -95,8 +90,8 @@ export function GameNav({
   const ariaCurrent = (game: NavGame) => (game.key === current ? "page" : undefined);
 
   return (
-    <nav aria-label={t("game.games")} className={cn(links && "md:basis-full", className)}>
-      <details ref={details} open={open} className={cn("group/games", wide ? "w-full" : "w-fit", links && "md:hidden")}>
+    <nav aria-label={t("game.games")} className={className}>
+      <details ref={details} open={open} className={cn("group/games", wide ? "w-full" : "w-fit")}>
         <summary
           className={cn(
             "flex h-11 cursor-pointer list-none items-center gap-2 bg-blackify-800 ps-3 pe-2 text-mc-1.5 text-white select-none focus-visible:focus-ring-inset [&::-webkit-details-marker]:hidden",
@@ -130,29 +125,6 @@ export function GameNav({
           </ul>
         </div>
       </details>
-      {links && (
-        <ul className="hidden flex-wrap gap-x-1 gap-y-2 md:flex">
-          {games.map((game) => (
-            <li key={game.key}>
-              <Link
-                to="/{-$locale}/player/$name/$game"
-                params={{ name: username, game: game.key }}
-                aria-current={ariaCurrent(game)}
-                className="group block"
-              >
-                <Box
-                  className={cn(
-                    "group-hover:brightness-125 content:flex content:min-h-11 content:items-center content:gap-2 content:px-3 content:py-0 content:text-mc-1 group-aria-[current=page]:font-bold",
-                    !game.played && "opacity-50"
-                  )}
-                >
-                  <GameName game={game} />
-                </Box>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
     </nav>
   );
 }
