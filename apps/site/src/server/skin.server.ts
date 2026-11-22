@@ -8,6 +8,7 @@
 
 import { PLACEHOLDER_UUID, UUID_PATTERN } from "~/lib/uuid";
 import { resolvePlayer } from "~/features/player/resolve";
+import { API_TIMEOUT_MS } from "./rpc.server";
 import { siteConfig } from "./config.server";
 
 /**
@@ -32,7 +33,7 @@ export async function proxySkin(
   url.searchParams.set("uuid", uuid);
   for (const [key, value] of Object.entries(fixed)) url.searchParams.set(key, value);
 
-  const upstream = await fetch(url, { headers: { "x-api-key": apiKey } }).catch(() => null);
+  const upstream = await fetch(url, { headers: { "x-api-key": apiKey }, signal: AbortSignal.timeout(API_TIMEOUT_MS) }).catch(() => null);
 
   // The API refusing (429), failing (5xx) or not answering is a 503 with `Retry-After`, so it's never cached and
   // browsers back off.

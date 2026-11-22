@@ -7,7 +7,7 @@
  */
 
 import { cacheHeaders } from "~/lib/cache";
-import { rpcHeaders, rpcUrl } from "./rpc.server";
+import { API_TIMEOUT_MS, rpcHeaders, rpcUrl } from "./rpc.server";
 
 /**
  * Each GET procedure the browser may call through `/api/rpc/<procedure>`: its edge TTL in seconds and
@@ -72,7 +72,10 @@ export async function proxyRpc(procedure: string, search: string): Promise<Respo
   const query = upstreamSearch(search, entry.params);
   if (query === null) return json(400, { code: "BAD_REQUEST", message: "Unknown query parameter" });
 
-  const upstream = await fetch(`${await rpcUrl()}/${procedure}${query}`, { headers: await rpcHeaders() }).catch(() => null);
+  const upstream = await fetch(`${await rpcUrl()}/${procedure}${query}`, {
+    headers: await rpcHeaders(),
+    signal: AbortSignal.timeout(API_TIMEOUT_MS),
+  }).catch(() => null);
 
   if (!upstream || upstream.status === 429 || upstream.status >= 500) {
     await upstream?.body?.cancel();
