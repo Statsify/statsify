@@ -11,6 +11,7 @@ import { PlayerSkeleton } from "~/features/player/player-skeleton";
 import { PlayerView } from "~/features/player/player-page";
 import { cacheHeaders } from "~/lib/cache";
 import { SANS_PRELOAD } from "~/lib/fonts";
+import { possessive } from "~/lib/player-route";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createFileRoute, notFound, redirect, useParams } from "@tanstack/react-router";
 import { playerPageQuery, resolvePlayer } from "~/features/player/resolve";
@@ -18,8 +19,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 /** Fresh for a minute, stale for ten, and served stale for a day if the API is down. */
 const EDGE_CACHE = "max-age=60, stale-while-revalidate=600, stale-if-error=86400";
-
-const possessive = (username: string) => `${username}'${username.endsWith("s") ? "" : "s"}`;
 
 export const Route = createFileRoute("/{-$locale}/player/$name/")({
   loader: async ({ params, context }) => {
