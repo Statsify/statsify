@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Packs go lowest priority first. Writes atlas/<name>.json and atlas/<name>.<hash>.png, and removes
-// that name's older images
+// Packs go lowest priority first
 
 import {
   Atlas,

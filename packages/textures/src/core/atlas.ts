@@ -11,7 +11,6 @@ import type { ItemLayer } from "./models.js";
 import type { ItemStack } from "./item-stack.js";
 import { namespaced } from "./pack.js";
 
-/** Where a sprite sits on the atlas image */
 export type AtlasRect = [x: number, y: number, width: number, height: number];
 
 /** The map `pnpm atlas` writes beside its image */
@@ -22,7 +21,6 @@ export interface AtlasData {
   hash: string;
   /** Screen pixels per GUI pixel that 3D icons are drawn at, each once. Flat icons are 16 pixels */
   scales: number[];
-  /** Whether the glint moves the way 1.8's does */
   legacyGlint: boolean;
   /** Every item's icon as a plain stack, unenchanted, at its first animation frame, smallest first */
   icons: Record<string, AtlasRect[]>;
