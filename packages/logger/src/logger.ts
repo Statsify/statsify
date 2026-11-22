@@ -118,14 +118,11 @@ export class Logger {
       Sentry.captureException(message);
     }
 
-    const color = ColorByLogLevel[level];
-    const timeStamp = Logger.getTimeStamp();
+    const icon = chalk.bold(isError ? "📉" : "📈");
+    const context = chalk.hex(ColorByLogLevel[level].toString(16))(this.context);
+    const time = chalk.gray(`${Logger.getTimeStamp()}${isProduction ? "" : "ms"}`);
 
-    process[isError ? "stderr" : "stdout"].write(
-      `${chalk.bold(isError ? "📉" : "📈")} ${chalk.hex(color.toString(16))(this.context)} ${chalk.gray(
-        `${timeStamp}${isProduction ? "" : "ms"}`
-      )} ${output}\n`
-    );
+    process[isError ? "stderr" : "stdout"].write(`${icon} ${context} ${time} ${output}\n`);
 
     SentryLogByLogLevel[level](message instanceof Error ? message.message : output, {
       context: this.context,
