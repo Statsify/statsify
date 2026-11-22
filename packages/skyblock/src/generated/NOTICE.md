@@ -2,7 +2,7 @@ textures-1.8.json takes 1.8's block and item ids, names and variants from minecr
 
 The skill XP tables in leveling.json and the skill stats in stats.json come from Hypixel's SkyBlock skills resource (https://api.hypixel.net/v2/resources/skyblock/skills), version 0.27.3.3. collections.json comes from Hypixel's SkyBlock collections resource (https://api.hypixel.net/v2/resources/skyblock/collections), version 0.27.3.2.
 
-The other JSON files here, and the slayer and pet score tables in stats.json, are derived from NEU-REPO (https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO) at 16435f41b927b60943773454b8d52ec3d85ac6e7. sblevels.json, the level colors in leveling.json and the base table in stats.json are derived from it at 5a5e9866a8578c8a36891acc508fc1e46e41eb31, before it removed their files. All of it is under NEU-REPO's MIT license:
+The other JSON files here, and the slayer and pet score tables in stats.json, are derived from NEU-REPO (https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO) at 16435f41b927b60943773454b8d52ec3d85ac6e7. sblevels.json, the level colors in leveling.json and the base table in stats.json are derived from it at 5a5e9866a8578c8a36891acc508fc1e46e41eb31, before it removed them. All of it is under NEU-REPO's MIT license:
 
 MIT License
 
