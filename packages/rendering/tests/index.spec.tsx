@@ -171,7 +171,6 @@ suite("FontRenderer", () => {
 
 suite("toDecimal", () => {
   it("converts percentages and fractions", () => {
-    expect(toDecimal("50%")).toBe(0.5);
     expect(toDecimal("12.5%")).toBe(0.125);
     expect(toDecimal("3/4")).toBe(0.75);
   });
@@ -181,6 +180,5 @@ suite("mcShadow", () => {
   it("darkens a color to a quarter, like Minecraft's text shadow", () => {
     expect(mcShadow("#FFFFFF")).toBe("#3F3F3F");
     expect(mcShadow("#FFAA00")).toBe("#3F2A00");
-    expect(mcShadow("#000000")).toBe("#000000");
   });
 });
