@@ -162,7 +162,7 @@ impl Backend for NativeBackend {
 // Blending over the transparent clear color leaves partly covered pixels premultiplied, in
 // linear light. Dividing the coverage back out shows them in their own color over any background.
 fn unpremultiply_pixels(rgba: &mut [u8]) {
-  for pixel in rgba.chunks_exact_mut(4) {
+  for pixel in rgba.as_chunks_mut::<4>().0 {
     let alpha = pixel[3];
 
     if alpha == 0 || alpha == u8::MAX {

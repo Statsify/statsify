@@ -313,13 +313,13 @@ pub async fn render_scene(
     }
 
     let model = library.model(renderer, &instance.model)?;
-    let display = match instance.display {
-      Some(DisplayContext::Head) => model.display.head,
-      Some(DisplayContext::Thirdperson) => model.display.thirdperson,
-      None => None,
-    };
 
-    if display.is_some_and(|entry| entry.scale.contains(&0.0)) {
+    let hidden = instance
+      .display
+      .and_then(|context| context.entry(&model.display))
+      .is_some_and(|entry| entry.scale.contains(&0.0));
+
+    if hidden {
       continue;
     }
 
