@@ -78,11 +78,7 @@ import { render } from "@statsify/rendering";
 /** How far the `card` variant's stamp sits from the bottom-right corner, inside the card's footer. */
 const STAMP_INSET = 18;
 
-/**
- * A game's card as its bot command draws it: the game's mode registry, what the command loads before it draws (its
- * `getPreProfileData`), and its `getProfile`, given the props every card takes, the mode, that data and, for Quests,
- * the period and its dates.
- */
+/** A game's card as its bot command draws it: `data` is its `getPreProfileData`, `draw` its `getProfile`. */
 interface CardSpec<T extends GamesWithBackgrounds, D> {
   modes: GameModes<T>;
   data?: () => Promise<D>;
@@ -96,7 +92,6 @@ interface CardSpec<T extends GamesWithBackgrounds, D> {
 const card = <T extends GamesWithBackgrounds, D = undefined>(spec: CardSpec<T, D>) =>
   spec as unknown as CardSpec<GamesWithBackgrounds, unknown>;
 
-/** Loads on the first call and keeps it for the worker's life, for what every render draws the same. */
 const once = <T,>(load: () => Promise<T>) => {
   let loaded: Promise<T> | undefined;
   return () => (loaded ??= load());
@@ -106,7 +101,6 @@ const getGameIcons = once(getAllGameIcons);
 
 const getQuestLogos = once(() => Promise.all([getLogo("cross", 28), getLogo("verified", 28)]));
 
-/** The cards `GAME_CARDS` names. */
 const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
   bedwars: card({
     modes: BEDWARS_MODES,
@@ -161,10 +155,7 @@ const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
   }),
 };
 
-/**
- * The mode a request names as the bot's command hands it to the card, and the background the command draws it on. A
- * mode with submodes shows the one named, else its first, as the bot opens it.
- */
+/** The mode as the bot's command hands it to the card, and its background. A submode defaults to the mode's first. */
 function cardMode(modes: GameModes<GamesWithBackgrounds>, api: string, submode?: string) {
   const mode = modes.getModes().find((candidate) => candidate.api === api);
   if (!mode) throw new Error(`There is no ${api} mode`);
