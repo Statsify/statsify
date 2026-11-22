@@ -36,6 +36,20 @@ type BaseGuildTopProfileProps = Omit<GuildTopProfileProps, "page" | "members" | 
 type GuildTopKey = "daily" | "weekly" | "monthly" | number;
 type GuildTopMode = [key: GuildTopKey, title: string];
 
+const GUILD_TOP_MODES: GuildTopMode[] = [
+  ["daily", "Today"],
+  ["weekly", "This Week"],
+  ["monthly", "This Month"],
+  [1, "Yesterday"],
+  [2, "2 days ago"],
+  [3, "3 days ago"],
+  [4, "4 days ago"],
+  [5, "5 days ago"],
+  [6, "6 days ago"],
+];
+
+const findModeIndex = (key: string) => GUILD_TOP_MODES.findIndex(([mode]) => `${mode}` === key);
+
 export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
   @SubCommand({ description: (t) => t("commands.guild-top"), args: GuildArgument })
   public async top(context: CommandContext) {
@@ -58,31 +72,19 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       t,
     };
 
-    const modes: GuildTopMode[] = [
-      ["daily", "Today"],
-      ["weekly", "This Week"],
-      ["monthly", "This Month"],
-      [1, "Yesterday"],
-      [2, "2 days ago"],
-      [3, "3 days ago"],
-      [4, "4 days ago"],
-      [5, "5 days ago"],
-      [6, "6 days ago"],
-    ];
-
     const pageCount = Math.ceil(guild.members.length / GUILD_TOP_PAGE_SIZE);
-    const [modeIndex, page] = this.getRequestedPage(interaction, modes, pageCount);
-    const [key, title] = modes[modeIndex];
+    const [modeIndex, page] = this.getRequestedPage(interaction, pageCount);
+    const [key, title] = GUILD_TOP_MODES[modeIndex];
 
     const getCustomId = getGuildCustomId(context, guild.id);
 
     const dropdown = new SelectMenuBuilder().customId(getCustomId("menu", page));
 
-    for (const [index, [key, title]] of modes.entries()) {
+    for (const [index, [value, label]] of GUILD_TOP_MODES.entries()) {
       dropdown.option(
         new SelectMenuOptionBuilder()
-          .label(title)
-          .value(`${key}`)
+          .label(label)
+          .value(`${value}`)
           .default(index === modeIndex)
       );
     }
@@ -125,18 +127,16 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
   private getRequestedPage(
     interaction: Interaction,
-    modes: GuildTopMode[],
     pageCount: number
   ): [modeIndex: number, page: number] {
     if (!interaction.isMessageComponentInteraction()) return [0, 0];
 
     const [, , key, target] = parseCustomId(interaction.getCustomId()).values;
-    const findMode = (key: string) => modes.findIndex(([mode]) => `${mode}` === key);
 
     if (interaction.isSelectMenuInteraction())
-      return [findMode(interaction.getData().values[0]), Number(target)];
+      return [findModeIndex(interaction.getData().values[0]), Number(target)];
 
-    return [findMode(key), getScrolledPage(target, pageCount)];
+    return [findModeIndex(key), getScrolledPage(target, pageCount)];
   }
 
   private async generateGuildTopPage(
