@@ -112,13 +112,13 @@ export class AutocompleteService {
   }
 
   private async suggestGuilds(id: string, query: string) {
-    const [history, guild, stored] = await Promise.all([
+    const [history, guild, global] = await Promise.all([
       this.orEmpty(this.getHistory(AutocompleteType.GUILD, id), []),
       this.orEmpty(this.getLinkedGuild(id), null),
       this.orEmpty(this.guildService.search(query), []),
     ]);
 
-    return blend(query, guild ? [...history, guild.name] : history, stored.map((g) => g.name));
+    return blend(query, guild ? [...history, guild.name] : history, global.map((g) => g.name));
   }
 
   private orEmpty<T>(read: Promise<T>, empty: T) {
