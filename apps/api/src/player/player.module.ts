@@ -22,7 +22,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
   imports: [
     HypixelModule,
     TypegooseModule.forFeature([Player]),
-    HttpModule.register({}),
+    HttpModule.register({ timeout: 5000 }),
   ],
   controllers: [PlayerController, PlayerLeaderboardsController, PlayerSearchController],
   providers: [PlayerService, PlayerLeaderboardService, PlayerSearchService],
