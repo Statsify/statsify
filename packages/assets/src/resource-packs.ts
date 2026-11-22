@@ -7,13 +7,14 @@
  */
 
 import { ItemRenderer, PackStack, loadPack, setCanvasBackend } from "@statsify/textures";
-import { createHash, randomUUID } from "node:crypto";
+import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
 import { existsSync } from "node:fs";
 import { getAssetPath } from "./index.js";
-import { mkdir, mkdtemp, readFile, readdir, rename, rm, stat, utimes, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
 import { skiaCanvas } from "@statsify/textures/node";
 import { unzipSync } from "fflate";
+import lockfile from "proper-lockfile";
 
 const ROOT = getAssetPath("resource-packs", "public");
 
@@ -197,41 +198,24 @@ async function prune(kept: Generation[]) {
   );
 }
 
-async function createLock(path: string, token: string) {
+async function lock() {
+  let lost = false;
+
   try {
-    await writeFile(path, token, { flag: "wx" });
-    return true;
+    const release = await lockfile.lock(ROOT, {
+      lockfilePath: join(ROOT, LOCK),
+      realpath: false,
+      stale: STALE_LOCK,
+      update: HEARTBEAT,
+      // The default throws from a timer and would crash the process
+      onCompromised: () => (lost = true),
+    });
+
+    return { owned: () => !lost, release: () => (lost ? undefined : release()) };
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "EEXIST") return false;
+    if ((error as NodeJS.ErrnoException).code === "ELOCKED") return;
     throw error;
   }
-}
-
-async function lock() {
-  const path = join(ROOT, LOCK);
-  const token = randomUUID();
-
-  if (!(await createLock(path, token))) {
-    const age = await stat(path).then(({ mtimeMs }) => Date.now() - mtimeMs, () => Infinity);
-    if (age < STALE_LOCK) return;
-
-    await rm(path, { force: true });
-    if (!(await createLock(path, token))) return;
-  }
-
-  const heartbeat = setInterval(() => void utimes(path, new Date(), new Date()).catch(() => undefined), HEARTBEAT);
-  heartbeat.unref();
-
-  // Two updates that find the same stale lock can both take it, so each checks it still holds it before writing
-  const owned = async () => (await readFile(path, "utf8").catch(() => undefined)) === token;
-
-  return {
-    owned,
-    async release() {
-      clearInterval(heartbeat);
-      if (await owned()) await rm(path, { force: true });
-    },
-  };
 }
 
 /** The active packs' id, or undefined until an update first activates some. Another process can activate packs too */
@@ -283,7 +267,7 @@ export async function updateResourcePacks(): Promise<PackUpdate> {
     // Items that fail to draw fall back to their 1.8 icons, so they don't hold back the rest
     const failedItems = await probe(await loadStack(generation));
 
-    if (!(await lease.owned())) throw new Error("Another update took over the lock");
+    if (!lease.owned()) throw new Error("Another update took over the lock");
     await prune(active ? [generation, active] : [generation]);
     await rm(join(ROOT, HELD), { force: true });
     if (active) await writeGeneration(PREVIOUS, active);
