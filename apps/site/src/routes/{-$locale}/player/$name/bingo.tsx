@@ -13,6 +13,7 @@ import { BingoLayout } from "~/features/bingo/bingo-layout";
 import { PlayerNotFound } from "~/features/bingo/player-not-found";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SANS_PRELOAD } from "~/lib/fonts";
+import { possessive } from "~/lib/player-route";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createFileRoute, notFound } from "@tanstack/react-router";
@@ -24,8 +25,6 @@ import { createI18n } from "~/i18n/i18n";
 import type { BingoPlayer } from "@statsify/contract";
 
 const EDGE_TTL_SECONDS = 300;
-
-const possessive = (username: string) => `${username}'${username.endsWith("s") ? "" : "s"}`;
 
 export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
   validateSearch: BoardSearchSchema,

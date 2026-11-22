@@ -57,11 +57,7 @@ export async function proxySkin(
   });
 }
 
-/**
- * Whether a skin request is one the pages make: the UUID as the API stores it (undashed, lower case) and no other
- * parameter than the route's own `fixed` ones, at their values. Any other spelling would be one more edge cache key for
- * the same player, each reaching the API.
- */
+/** Only the query the pages send: any other spelling would be one more edge cache key reaching the API. */
 function isPageQuery(uuid: string, search: URLSearchParams, fixed: Record<string, string>): boolean {
   const keys = [...search.keys()];
   return (

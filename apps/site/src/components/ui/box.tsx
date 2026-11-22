@@ -114,8 +114,6 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
   const borderRadius = toBorderRadius(partialBorderRadius);
   const Component: ElementType = as ?? "div";
 
-  // The `box` utility (app.css) draws the default card: its bevels, shadow and colors. A Box's style carries only
-  // what differs from it, so most carry none.
   const vars: Record<string, string> = {};
   if (variant !== "default") {
     vars["--box-fill"] = boxVariants[variant].background;

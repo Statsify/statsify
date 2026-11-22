@@ -11,6 +11,7 @@ import { PlayerNotFound } from "~/features/player/player-not-found";
 import { PlayerView } from "~/features/player/player-page";
 import { cacheHeaders } from "~/lib/cache";
 import { SANS_PRELOAD } from "~/lib/fonts";
+import { possessive } from "~/lib/player-route";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { localeData, socialMeta } from "~/lib/social-meta";
@@ -19,8 +20,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 /** Fresh for a minute, stale for ten, and served stale for a day if the API is down. */
 const EDGE_CACHE = "max-age=60, stale-while-revalidate=600, stale-if-error=86400";
-
-const possessive = (username: string) => `${username}'${username.endsWith("s") ? "" : "s"}`;
 
 export const Route = createFileRoute("/{-$locale}/player/$name/")({
   loader: async ({ params, context }) => {
@@ -60,8 +59,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
       meta: [
         { title },
         { name: "description", content: description },
-        // The Discord unfurl: the bot's general card at its UUID URL; `?v=` changes when the player is
-        // refreshed, so Discord fetches the new render.
+        // `?v=` changes when the player is refreshed, so Discord fetches the new render.
         ...(origin ?
           socialMeta({
             origin,

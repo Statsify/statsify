@@ -20,7 +20,6 @@ export function AnimatedNumber({ value }: { value: number }) {
   const displayText = useTransform(spring, numberFormat.format.bind(numberFormat));
   const reduceMotion = useReducedMotion();
 
-  // With reduced motion the number jumps straight to its value.
   useEffect(() => {
     if (reduceMotion) spring.jump(value);
     else spring.set(value);

@@ -21,10 +21,7 @@ interface PageQuery {
   around?: string;
 }
 
-/**
- * Why `?around=` could not anchor the page: the name is unknown, the player has no entry, or they moved off the page
- * between the API finding their rank and reading it.
- */
+/** Why `?around=` could not anchor the page. */
 export interface AroundMiss {
   kind: "unknown" | "unranked" | "moved";
   name: string;
@@ -33,7 +30,6 @@ export interface AroundMiss {
 export interface LeaderboardView {
   page: LeaderboardPage;
   miss?: AroundMiss;
-  /** Paged and `around` variants are not indexed (robots.txt and `noindex`). */
   noindex: boolean;
 }
 
@@ -81,10 +77,7 @@ async function requirePage(input: PageQuery): Promise<LeaderboardPage> {
   return page;
 }
 
-/**
- * `null` when the API answers `NOT_FOUND`: no such leaderboard, or the player is not on it. A page number the API
- * refuses (`BAD_REQUEST`, past 2^53) is no such page either, rather than an error page.
- */
+/** `null` for no such leaderboard, a player not on it, or a page number the API refuses (past 2^53). */
 async function fetchPage(input: PageQuery): Promise<LeaderboardPage | null> {
   try {
     return await rpc.leaderboard.page({ ...input, size: PAGE_SIZE });

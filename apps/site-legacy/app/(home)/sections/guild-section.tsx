@@ -31,7 +31,7 @@ export function GuildSection({ guild }: { guild: Guild }) {
       <div className="hidden md:block">
         <Carousel className="backdrop-blur-2xl bg-black/40">
           <GuildOverall guild={guild} />
-          <GuildLeveling guild={guild} />
+          <GuildLevelling guild={guild} />
           <GuildTop guild={guild} />
           <GuildMember guild={guild} />
         </Carousel>
@@ -116,7 +116,7 @@ function GuildOverall({ guild, className }: { guild: Guild; className?: string }
   );
 }
 
-function GuildLeveling({ guild }: { guild: Guild }) {
+function GuildLevelling({ guild }: { guild: Guild }) {
   const color = guild.tagColor.code;
 
   return (
