@@ -47,16 +47,17 @@ function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefine
   if (!item) return;
 
   const texture = tag?.SkullOwner?.Properties?.textures?.[0]?.Value;
-  const effects = tag?.CustomPotionEffects?.flatMap(({ Id, Amplifier = 0 }) => {
+  const effects = tag?.CustomPotionEffects?.map(({ Id, Amplifier = 0 }) => {
     const effect = legacyEffect(Id);
-    return effect ? [{ id: effect, amplifier: Amplifier }] : [];
+    if (!effect) throw new Error(`No 1.8 effect ${Id}`);
+    return { id: effect, amplifier: Amplifier };
   });
 
   const banner = tag?.BlockEntityTag;
-  const patterns = banner?.Patterns?.flatMap(({ Pattern, Color }) => {
-    const pattern = legacyBannerPattern(Pattern);
-    return pattern ? [{ pattern, color: legacyDye(Color) }] : [];
-  });
+  const patterns = banner?.Patterns?.map(({ Pattern, Color }) => ({
+    pattern: legacyBannerPattern(Pattern),
+    color: legacyDye(Color),
+  }));
 
   return {
     ...item,

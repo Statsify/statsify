@@ -75,7 +75,8 @@ export function legacyEffect(id: number) {
 /** A 26.3 banner pattern id for a 1.8 pattern code, like "bo" */
 export function legacyBannerPattern(code: string) {
   const name = BANNER_PATTERNS[code];
-  return name ? `minecraft:${name}` : undefined;
+  if (!name) throw new Error(`No banner pattern ${code}`);
+  return `minecraft:${name}`;
 }
 
 /** A dye color for a 1.8 banner's dye Damage value, the reverse of wool's */
