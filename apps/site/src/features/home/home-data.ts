@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { reportRouteError } from "~/lib/sentry";
 import { rpc } from "~/lib/orpc";
 import type { HomePreviews } from "@statsify/contract";
 
@@ -26,4 +27,8 @@ const NO_PREVIEWS: HomeData = {
  * The home page's previews through the contract: strict cache-only, trimmed view models rather
  * than whole player documents. Each preview is `null` when its data is missing, and its section hides.
  */
-export const getHomeData = (): Promise<HomeData> => rpc.home.previews().catch(() => NO_PREVIEWS);
+export const getHomeData = (): Promise<HomeData> =>
+  rpc.home.previews().catch((error: unknown) => {
+    reportRouteError(error);
+    return NO_PREVIEWS;
+  });
