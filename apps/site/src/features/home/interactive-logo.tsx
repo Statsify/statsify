@@ -55,7 +55,6 @@ export function InteractiveLogo() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref);
 
-  // With reduced motion the numbers hold still, and they wait while the logo is off-screen or the tab is hidden.
   useEffect(() => {
     if (reduceMotion !== false || !inView) return;
 

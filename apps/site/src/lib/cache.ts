@@ -29,3 +29,6 @@ export const NO_STORE_EDGE = { "Cache-Control": "no-store", "CDN-Cache-Control":
 
 /** How long a visitor should wait after the API or a server route failed. */
 export const RETRY_AFTER_SECONDS = 30;
+
+/** For a file served under its content's hash, which never changes. */
+export const IMMUTABLE_HEADERS = { "Cache-Control": "public, max-age=31536000, immutable", "CDN-Cache-Control": "max-age=31536000" };

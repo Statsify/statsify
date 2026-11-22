@@ -27,10 +27,7 @@ const SEARCH_CACHE_TIME_MS = 5 * 60 * 1000;
 /** Safari ignores `replaceState` past 100 calls in 30 seconds, so a draft is saved once typing pauses. */
 const DRAFT_DEBOUNCE_MS = 500;
 
-/**
- * The search's text in the tab's history entry, for a reload, Back and Forward, with no history entry per keystroke.
- * Past TanStack's patched `replaceState`, which would run a navigation.
- */
+/** Through the browser's own `replaceState`: TanStack's patched one would run a navigation. */
 function saveDraft(draft: string | undefined) {
   History.prototype.replaceState.call(history, { ...history.state, searchDraft: draft }, "");
 }
@@ -70,8 +67,7 @@ interface GameTarget {
 
 // Rows are at least 44 px tall, an easy tap target; `item` must match `itemHeight` for the keyboard scrolling. The
 // sheet is 300 px tall from `sm`, and a row shorter on phones, so the on-screen keyboard doesn't cover its last name.
-// `rows` is how many rows the 300 px sheet can show at once, counting one cut off at each edge. Heads are a whole
-// multiple of the 8×8 face, so its pixels stay square.
+// `rows` must match how many rows the sheet can show at once, counting one cut off at each edge.
 const SIZES = {
   regular: {
     itemHeight: 56,

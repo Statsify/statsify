@@ -159,4 +159,12 @@ if (import.meta.vitest) {
       expect(plainText("§^1.5^half")).toBe("half");
     });
   });
+
+  describe("nameColor", () => {
+    it("takes the last color code, the one on the name", () => {
+      expect(nameColor("§b[MVP§c+§b] anrie")).toBe("§b");
+      expect(nameColor("§7AnnaBanana")).toBe("§7");
+      expect(nameColor("anrie")).toBeUndefined();
+    });
+  });
 }

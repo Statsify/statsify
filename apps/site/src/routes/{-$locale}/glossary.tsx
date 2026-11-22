@@ -17,7 +17,7 @@ export const Route = createFileRoute("/{-$locale}/glossary")({
   loader: ({ context }) => getGlossary({ data: { locale: context.locale } }),
   staleTime: Infinity,
   head: ({ matches }) =>
-    textPageHead({ meta: "glossary", path: "/glossary", matches }),
+    textPageHead({ key: "glossary", path: "/glossary", matches }),
   headers: () => cacheHeaders(TEXT_PAGE_CACHE),
   component: GlossaryRoute,
 });
