@@ -72,12 +72,9 @@ export class ApiService {
   }
 
   public deletePlayer(tag: string) {
-    return this.request<DeletePlayerResponse>("/player", { player: tag }, "DELETE")
-      .then(() => true)
-      .catch((err) => {
-        if (axios.isAxiosError(err)) throw err;
-        return false;
-      });
+    return this.request<DeletePlayerResponse>("/player", { player: tag }, "DELETE").then(
+      ({ success }) => success
+    );
   }
 
   public getStatus(tag: string) {
