@@ -76,7 +76,7 @@ export const ITEM_LAYOUT: LayoutShape<Record<string, string | number[]>> = {
         .find((first) => first && stacks.every((stack) => stack[0] === first || !stack.includes(first)));
       if (!item) return layout;
 
-      layout[item] = [];
+      layout[item] ??= [];
       for (const [slot, stack] of stacks.entries()) {
         if (stack[0] !== item) continue;
         layout[item].push(slot);
