@@ -237,6 +237,7 @@ export class McInventory extends HTMLElement {
 
     const item = this.items[slot];
     if (!item) {
+      overlay.claim(this);
       overlay.hide();
       return;
     }
