@@ -28,7 +28,10 @@ export function withoutGroupPrefix(groups: LeaderboardGroup[]): LeaderboardGroup
   }));
 }
 
-/** Each game is a closed `<details>`, so its links cost no layout until opened. */
+/**
+ * Every leaderboard grouped by game, each group a closed `<details>` so the 2,700 links cost no layout until
+ * opened. The filter matches every word of the query against "<game> <leaderboard>" and opens what's left.
+ */
 export function LeaderboardIndex({ groups }: { groups: LeaderboardGroup[] }) {
   const { t } = useTranslation();
   const { locale } = localeRoute.useRouteContext();

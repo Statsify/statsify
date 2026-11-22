@@ -25,6 +25,7 @@ const pageNumber = (raw: unknown) => {
 const aroundName = (raw: unknown) =>
   (typeof raw === "string" || typeof raw === "number" ? String(raw).trim().slice(0, 36) : "") || undefined;
 
+/** `?page=` is left out of URLs for the first page; `?around=<name or UUID>` anchors on a player. */
 const SearchSchema = z.object({
   page: z.unknown().transform(pageNumber).optional(),
   around: z.unknown().transform(aroundName).optional(),

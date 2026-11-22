@@ -33,7 +33,11 @@ export interface LeaderboardView {
   noindex: boolean;
 }
 
-/** An unknown or unranked `around` player falls back to the requested page with a notice. */
+/**
+ * The page to render for `/leaderboards/$field?page=&around=`. `around=<name>` resolves the player
+ * and asks the API for the page they are on; an unknown or unranked player falls back to the
+ * requested page with a notice. An unknown leaderboard is a 404.
+ */
 export async function loadLeaderboardPage(field: string, { page, around }: { page: number; around?: string }): Promise<LeaderboardView> {
   if (!around) {
     const shown = await requirePage({ field, page });

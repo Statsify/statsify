@@ -22,7 +22,10 @@ import { onShutdown, shuttingDown } from "./shutdown.server";
 import { siteConfig } from "./config.server";
 import type { Redis } from "ioredis";
 
-/** What a player the API has never seen gets, under `public/images`. */
+/**
+ * What an untracked player gets per variant, under `public/images`: the site's own Open Graph image for
+ * the unfurl, and a "player not found" card in each signature size.
+ */
 const PLACEHOLDERS: Record<ImageVariant, string> = {
   og: "og-home.png",
   sig: "sig-placeholder.png",
@@ -31,9 +34,13 @@ const PLACEHOLDERS: Record<ImageVariant, string> = {
 
 /** Only long enough for the requests waiting on a render: each PNG is about 300 KB in the leaderboard Redis. */
 const CACHE_TTL_SECONDS = 20;
+/** The first request for a missing image renders it under this lock; the others wait for its PNG. */
 const LOCK_TTL_MS = 15_000;
 const LOCK_POLL_MS = 100;
-/** Image misses still loading plus renders waiting for a worker, before the pool answers busy. */
+/**
+ * Image misses still loading plus renders waiting for a worker, before the pool answers busy: about a second of
+ * backlog at the cold render rate, so a forum thread's signatures or a Discord unfurl's burst render whole.
+ */
 const RENDER_QUEUE_LIMIT = 48;
 
 const NO_STORE = { "Cache-Control": "no-store" };
@@ -73,12 +80,18 @@ let pool: Promise<RenderPool> | undefined;
 let loading = 0;
 const placeholders = new Map<ImageVariant, Promise<Uint8Array<ArrayBuffer>>>();
 
+/** The `ETag` of a player image: its `updatedAt`, which only the player page's refresh action changes. */
 const etagOf = (updatedAt: number) => `"${updatedAt}"`;
 
 const matchesEtag = (ifNoneMatch: string, etag: string) =>
   ifNoneMatch.split(",").some((candidate) => candidate.trim().replace(/^W\//, "") === etag);
 
-/** Every UUID spelling gets the image itself, not a redirect: some forum image proxies don't follow redirects. */
+/**
+ * The handler behind `/og`, `/sig` and `/card`: reads the UUID in any spelling (dashed or not, any case),
+ * renders through `renderPlayerImage` and turns its outcomes into responses under the route's `policy`. Every
+ * spelling gets the image itself, not a redirect, because some forum image proxies don't follow redirects; the
+ * pages always link the undashed form. Never calls Hypixel.
+ */
 export async function playerImageResponse(
   request: Request,
   uuidParam: string,
@@ -215,8 +228,10 @@ async function waitForImage(
   return (await client.exists(lock)) ? waitForImage(client, key, lock, deadline) : null;
 }
 
+/** The bot's general card for a stored player, as PNG bytes. Throws `PoolBusyError` when the queue is full. */
 async function renderCard(uuid: string, variant: ImageVariant, updatedAt: number): Promise<Uint8Array<ArrayBuffer>> {
-  // Answers busy before loading the player and skin, which can reach Minecraft's session server, for a full queue.
+  // A miss reads the player and renders the skin (asking Minecraft's session server for it, if it's old) before it
+  // can queue, so a queue with no room left, counting the misses still loading, answers busy first.
   const renders = await renderPool();
   if (renders.pending + loading >= RENDER_QUEUE_LIMIT) throw new PoolBusyError();
 

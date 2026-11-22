@@ -18,7 +18,14 @@ import type { Guild, Player } from "@statsify/schemas";
 
 const STAMP_INSET = 18;
 
-/** Site visitors have no premium user, so every card gets the default theme and logo. */
+/**
+ * Renders a player image for a site visitor (no premium user, so default theme and logo): the signature
+ * laid out at its canvas size, or the bot's general card, on the variant's canvas. The result is drawn centered at
+ * 1:1, which keeps the bitmap font sharp, over the same background; only an image that outgrew the canvas (a long
+ * name, the guild row) shrinks to fit. `og` draws the card on the canvas's own background, so around a card smaller
+ * than the canvas the background carries on rather than showing the card's edge. `card` gets the "Updated" stamp
+ * in its footer's corner.
+ */
 export async function renderCard(request: RenderRequest): Promise<Uint8Array<ArrayBuffer>> {
   const { width, height } = IMAGE_VARIANTS[request.variant];
 

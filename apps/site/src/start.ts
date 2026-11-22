@@ -48,7 +48,10 @@ const redirects = createMiddleware({ type: "request" }).server(({ request, next 
   });
 });
 
-/** Static files skip this middleware, so the proxy in front adds the header for them. */
+/**
+ * `site.indexable` off (a staging deploy): every response the app sends carries `X-Robots-Tag: noindex`. Static
+ * files skip this middleware, so the proxy in front adds the header for them.
+ */
 const robotsTag = createMiddleware({ type: "request" }).server(async ({ next }) => {
   const { indexable } = await siteConfig();
   const result = await next();
