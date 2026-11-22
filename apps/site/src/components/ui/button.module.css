@@ -37,7 +37,6 @@
   );
 }
 
-/* The 8 px hard shadow of the bevelled shape. */
 .shadow {
   background-color: rgb(0 0 0 / 0.5);
   transform: translate(var(--border), var(--border));

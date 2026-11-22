@@ -14,7 +14,7 @@ import { wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hint, Spoken } from "~/components/ui/hint";
-import { Hidden, InlineStat, LeaderboardLink, StatCell, glossaryKey, linkHint, useStatName } from "~/components/ui/stat";
+import { Hidden, InlineStat, LeaderboardLink, StatCell, glossaryKey, useStatName } from "~/components/ui/stat";
 import { MinecraftText, colorOf, plainText } from "~/components/ui/minecraft-text";
 import { StatInfo } from "./stat-info";
 import { cn } from "~/lib/util";
@@ -263,8 +263,9 @@ function GameStat({ cell, username }: { cell: Stat; username: string }) {
           <LeaderboardLink
             field={cell.leaderboard}
             username={username}
-            stat={label.full ?? label.text}
-            hint={linkHint(label.full, typeof cell.value === "number" ? exact(cell.value) : undefined)}
+            stat={label.text}
+            full={label.full}
+            exact={typeof cell.value === "number" ? exact(cell.value) : undefined}
           >
             {value}
           </LeaderboardLink>
@@ -304,8 +305,9 @@ function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat
             <LeaderboardLink
               field={cell.leaderboard}
               username={username}
-              stat={label.full ?? label.text}
-              hint={linkHint(label.full, !ticks && typeof cell.value === "number" ? exact(cell.value) : undefined)}
+              stat={label.text}
+              full={label.full}
+              exact={!ticks && typeof cell.value === "number" ? exact(cell.value) : undefined}
             >
               {value}
             </LeaderboardLink>

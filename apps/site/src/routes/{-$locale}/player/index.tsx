@@ -14,7 +14,7 @@ import { Search } from "~/components/search";
 import { UUID_PATTERN } from "~/lib/uuid";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { searchPageMeta } from "~/lib/social-meta";
+import { pageMeta } from "~/lib/social-meta";
 import { rpc } from "~/lib/orpc";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -46,7 +46,7 @@ export const Route = createFileRoute("/{-$locale}/player/")({
   },
   staleTime: 60_000,
   head: ({ loaderData, matches }) => ({
-    meta: searchPageMeta(matches, { key: "search", nav: "players", path: "/player", image: "/images/og-home.png", noindex: Boolean(loaderData?.q) }),
+    meta: pageMeta(matches, { key: "search", trail: "nav.players", path: "/player", image: "/images/og-home.png", noindex: Boolean(loaderData?.q) }),
     scripts: loaderData?.q ? [] : [{ children: HOLD_SCRIPT }],
   }),
   headers: ({ loaderData }) =>

@@ -100,27 +100,23 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       throw notFound({ data: { player: false } satisfies Missing });
     }
 
-    // The first mode lives at the URL without `?mode=`, and a mode's first submode without `&submode=`. So does its
-    // first period, and one the mode doesn't have (Monthly, kept from another mode) lands there too. A key in another
-    // case (`?mode=SOLO`) lands on the page's own.
-    const canonical = deps.mode === modeSearch(page, page.mode) &&
-      deps.submode === submodeSearch(page, page.submode) &&
-      deps.period === periodSearch(page, page.period);
+    // The first mode, submode and period live at the URL without them. A period the mode doesn't have (Monthly, kept
+    // from another mode) and a key in another case (`?mode=SOLO`) land on the page's own.
+    const mode = modeSearch(page, page.mode);
+    const submode = submodeSearch(page, page.submode);
+    const period = periodSearch(page, page.period);
 
-    if (!canonical) {
+    if (deps.mode !== mode || deps.submode !== submode || deps.period !== period) {
       throw redirect({
         to: "/{-$locale}/player/$name/$game",
         params: { name: identity.username, game },
-        search: { mode: modeSearch(page, page.mode), submode: submodeSearch(page, page.submode), period: periodSearch(page, page.period) },
+        search: { mode, submode, period },
         state: true,
         statusCode: 301,
         headers: REDIRECT_HEADERS,
       });
     }
 
-    const mode = modeSearch(page, page.mode);
-    const submode = submodeSearch(page, page.submode);
-    const period = periodSearch(page, page.period);
     // The card's title in plain text, without the mode on the game's first page.
     const titled = mode || submode ? page : { ...page, heading: { ...page.heading, mode: null } };
     // For the unfurl's text: the level and the first numbers of the headline table, or of the game-wide row on a page
@@ -138,8 +134,6 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       gameName: plainText(page.game.name),
       modeName: titled.heading.mode ? plainText(titled.heading.mode) : undefined,
       updatedAt: page.updatedAt,
-      // The unfurl's size: the game's card when the pool draws one for this mode (and period), as `/og` picks it, else the
-      // general.
       unfurl: imageSize(pageCard(page), "og"),
       headline: {
         level: page.level && { label: page.level.label, value: page.level.current },
@@ -171,8 +165,6 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const query = new URLSearchParams({ ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }) });
     const path = `/player/${username}/${game}${query.size > 0 ? `?${query}` : ""}`;
 
-    // The unfurl: the bot's card for this game, mode, submode and period (`/og` falls back to the general card for a game
-    // without one).
     const unfurlQuery = new URLSearchParams({ game, ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }), v: String(updatedAt) });
     const image = `/og/${uuid}.png?${unfurlQuery}`;
 

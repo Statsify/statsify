@@ -1,6 +1,5 @@
-/* Minecraft: everything a card could show (titles, labels, values, nav, buttons, inputs), at pixel-grid sizes only.
-   The font's descent is empty, so every Minecraft face moves 0.05em of it above the baseline: the letters and their
-   shadow sit in the middle of the line, which stays as tall, and the whole-pixel rounding keeps them sharp. */
+/* Minecraft: everything a card could show, at pixel-grid sizes only. Its descent is empty, so each face moves 0.05em of
+   it above the baseline, which centers the letters and their shadow on the line. */
 @font-face {
   font-family: "Minecraft";
   ascent-override: 54.45%;
@@ -42,14 +41,9 @@
 }
 
 /*
- * GNU Unifont 15.0.06 (OFL): the characters Minecraft.ttf lacks (the newer emblems and title symbols, Latin
- * Extended, Cyrillic, Greek, Thai, and the CJK and Hangul the locales use), drawn on its grid the way it draws the
- * Unifont glyphs it has: a Unifont pixel is 64 units (half a letter pixel), the box is the ink plus one letter pixel,
- * and bold and italic are the game's (a copy half a letter pixel to the right; rows sheared by a quarter pixel).
- * Built outside the repo with fontTools; no slice overlaps Minecraft.ttf, and each downloads only when a page uses
- * a character in its range. The CJK, Hangul and Latin Extended slices claim whole blocks, less the characters
- * Minecraft.ttf or the symbols slice draws, which keeps this file small; a character a slice lacks falls through to
- * the sans fonts.
+ * GNU Unifont 15.0.06 (OFL): the characters Minecraft.ttf lacks, built outside the repo with fontTools on the game's
+ * grid: a Unifont pixel is 64 units (half a letter pixel), the box is the ink plus one letter pixel, bold is a copy half
+ * a letter pixel to the right and italic shears rows by a quarter pixel. No slice overlaps Minecraft.ttf.
  */
 @font-face {
   font-family: "Minecraft";

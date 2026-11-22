@@ -18,11 +18,7 @@ export interface UpdatedStampProps {
   t: LocalizeFunction;
 }
 
-/**
- * "Updated" over `2026-10-20 01:12 UTC`, small and gray: the lines that tell a forum reader how old the
- * stats are, since a signature's URL never changes. Two lines, so it fits beside the footer, from a key each, since
- * another language may order or space the words differently.
- */
+/** A signature's URL never changes, so the image says how old its stats are. */
 export const UpdatedStamp = ({ updatedAt, t }: UpdatedStampProps) => {
   const date = DateTime.fromMillis(updatedAt, { zone: "utc" }).toFormat("yyyy-LL-dd HH:mm");
 
@@ -60,10 +56,6 @@ export interface SignatureProfileProps {
   t: LocalizeFunction;
 }
 
-/**
- * The forum signature: the general card's skin, nametag and four of its stats laid out on a
- * `width`×`height` canvas, with the Statsify footer and the "Updated" stamp along the bottom.
- */
 export const SignatureProfile = ({
   width,
   height,

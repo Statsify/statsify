@@ -12,7 +12,7 @@ import { Discord } from "~/components/icons/discord";
 import { GameNav } from "~/features/game/game-nav";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
-import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, linkHint, useStatName } from "~/components/ui/stat";
+import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "./mini-header";
@@ -342,7 +342,7 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
               ) :
               link ?
                 (
-                  <LeaderboardLink field={`stats.general.${link.board}`} username={username} stat={label} hint={exact(value)}>
+                  <LeaderboardLink field={`stats.general.${link.board}`} username={username} stat={label} exact={exact(value)}>
                     <Spoken full={exact(value)}>{n(value)}</Spoken>
                   </LeaderboardLink>
                 ) :
@@ -429,9 +429,8 @@ function Fact({ children }: { children: ReactNode }) {
 }
 
 /**
- * "Online" while the save is fresh (until Refresh unlocks); after that, how long ago the save saw them online, with its
- * full date on hover, focus or tap. Until mount the clock is when the server fetched the page, which the browser gets
- * with the page's data, so a cached page hydrates to the server's text; the browser's own clock takes over after.
+ * "Online" while the save is fresh, then how long ago the save saw them online. Until mount the clock is when the
+ * server fetched the page, so a cached page hydrates to the server's text.
  */
 function OnlineStatus({ uuid, updatedAt, expiresAt }: { uuid: string; updatedAt: number; expiresAt: number }) {
   const { t, i18n } = useTranslation();
@@ -547,7 +546,7 @@ function GamePanel({ game, username }: { game: GameSummary; username: string }) 
               label={row.name === undefined ? <Short full={full}>{label}</Short> : <MinecraftText>{`${row.color}${row.name}`}</MinecraftText>}
               value={row.leaderboard ?
                 (
-                  <LeaderboardLink field={row.leaderboard} username={username} stat={full ?? label} hint={linkHint(full, exactValue)}>
+                  <LeaderboardLink field={row.leaderboard} username={username} stat={label} full={full} exact={exactValue}>
                     {value}
                   </LeaderboardLink>
                 ) :

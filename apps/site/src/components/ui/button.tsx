@@ -10,8 +10,7 @@ import styles from "./button.module.css";
 import { Slot, SlotProps, Slottable } from "@radix-ui/react-slot";
 import { cn } from "~/lib/util";
 
-// The fills: green for a screen's one primary action, §8 for everything else.
-// Callers can still pass their own fill (`content:bg-…`), like the home page's Discord button.
+// `primary` is for a screen's one primary action.
 const VARIANTS = {
   primary: "content:bg-green-500",
   secondary: "content:bg-mc-dark-gray",

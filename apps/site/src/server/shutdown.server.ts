@@ -15,32 +15,22 @@ interface ShutdownState {
 
 const KEY = Symbol.for("statsify.site.shutdown");
 
-/**
- * What keeps the server process running after the HTTP server has closed: the render pool's workers, the Redis
- * connection and Sentry's queue. Each registers its close function here when it's created, and
- * `shutdown.plugin.ts` runs them from Nitro's `close` hook, which fires once in-flight requests are done after a
- * SIGINT (what pm2 sends) or a SIGTERM.
- *
- * Nitro bundles its plugins apart from the app's server code, so each side gets its own copy of this module. The
- * state lives on `globalThis` so both see the same.
- */
+/** Nitro bundles its plugins apart from the app's server code, so each gets its own copy of this module. */
 function state(): ShutdownState {
   const global = globalThis as typeof globalThis & { [KEY]?: ShutdownState };
   global[KEY] ??= { closing: false, closers: new Set() };
   return global[KEY];
 }
 
-/** Runs `close` when the server shuts down. */
 export function onShutdown(close: Close): void {
   state().closers.add(close);
 }
 
-/** True once shutdown has begun. Nothing that would keep the process running may be opened after that. */
+/** Nothing that would keep the process running may be opened once this is true. */
 export function shuttingDown(): boolean {
   return state().closing;
 }
 
-/** Closes everything registered, each on its own, so one that fails doesn't keep the others open. */
 export async function shutdown(): Promise<void> {
   const current = state();
   current.closing = true;

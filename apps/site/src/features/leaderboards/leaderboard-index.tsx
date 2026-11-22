@@ -121,14 +121,8 @@ const serverList = createIsomorphicFn()
   .client((): ListGroup[] | undefined => undefined);
 
 /**
- * Every leaderboard grouped by game, each group a closed `<details>` so the 2,700 links cost no layout until opened, each
- * with a link to its game's index first.
- *
- * The list isn't in the page's data: the server renders the links into the HTML and hydration keeps them as they are.
- * The filter fetches the list (one file, cached for good under its hash) when the box is first pressed or focused, then
- * matches every word of the query against "<game> <leaderboard>", abbreviations ("bw fk") and the stat's word on the
- * bot's cards, and opens what's left. Without scripts the box submits `?q=`, which the server filters the same way.
- * A client-side visit brings the list along (`list`).
+ * Every leaderboard grouped by game, each group a closed `<details>` so the 2,700 links cost no layout until opened. The
+ * links are in the server's HTML, not the page's data; the filter fetches the list when the box is first used.
  */
 export function AllLeaderboards({ data, list: loaded, query = "" }: { data: IndexData; list?: ListGroup[]; query?: string }) {
   const { t } = useTranslation();
@@ -221,9 +215,8 @@ export function AllLeaderboards({ data, list: loaded, query = "" }: { data: Inde
 }
 
 /**
- * A group's links as markup, set as HTML rather than one element each. Without the list (hydrating the server's render,
- * or before the first fetch), the server's markup is kept as it is: read back from the page while hydrating, so it
- * matches and React leaves it alone.
+ * A group's links set as HTML rather than one element each. Without the list, the server's markup is read back from the
+ * page while hydrating, so it matches and React leaves it alone.
  */
 function BoardLinks({ id, html }: { id: string; html?: string }) {
   const hydrated = useHydrated();
@@ -238,10 +231,8 @@ function BoardLinks({ id, html }: { id: string; html?: string }) {
 const PRELOAD_DELAY_MS = 50;
 
 /**
- * What a router Link does, for a list of plain leaderboard links: hovering, focusing or touching one preloads its
- * leaderboard, and a plain left click (or Enter) navigates in the app, so the index stays on screen until the
- * leaderboard's data is ready. Modified clicks fall through to the browser (new tab, new window). The field is the
- * link's last path segment, so the thousands of links carry no attribute for it.
+ * What a router Link does (preload on intent, navigate on a plain click), for a list of plain leaderboard links. The
+ * field is the link's last path segment, so the thousands of links carry no attribute for it.
  */
 function useLinkDelegation(locale: string | undefined) {
   const router = useRouter();
