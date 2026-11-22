@@ -10,6 +10,7 @@ import { HttpService } from "@nestjs/axios";
 import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { BadRequestException, Injectable, InternalServerErrorException, ServiceUnavailableException } from "@nestjs/common";
+import { LRUCache } from "lru-cache";
 import { PlayerNotFoundException } from "@statsify/api-client";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
@@ -34,7 +35,7 @@ const HEAD_CACHE_SIZE = 500;
 
 @Injectable()
 export class SkinService {
-  private readonly heads = new Map<string, Buffer>();
+  private readonly heads = new LRUCache<string, Buffer>({ max: HEAD_CACHE_SIZE });
   private kartLibrary?: Promise<ModelLibrary>;
 
   public constructor(
@@ -180,10 +181,7 @@ export class SkinService {
 
     if (!head) return;
 
-    // Re-inserting keeps the least recently used head first in the Map, where it's evicted from
-    this.heads.delete(hash);
     this.heads.set(hash, head);
-    if (this.heads.size > HEAD_CACHE_SIZE) this.heads.delete(this.heads.keys().next().value!);
 
     return { texture: head, enchanted: false, skull: true };
   }
