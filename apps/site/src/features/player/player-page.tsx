@@ -254,7 +254,7 @@ function NetworkLevelPanel({ level, username, className }: { level: PlayerPage["
   const n = useNumberFormat();
   const statName = useStatName();
   const current = Math.floor(level.level);
-  const bar = <MinecraftText className="text-mc-1.5">{`§6${current} ${minigameXpBar(level.percent)} §6${current + 1}`}</MinecraftText>;
+  const bar = <MinecraftText className="text-mc-1.5">{`§6${n(current)} ${minigameXpBar(level.percent)} §6${n(current + 1)}`}</MinecraftText>;
 
   return (
     <Box className={cn("content:flex content:h-full content:flex-col content:items-center content:justify-center content:gap-3", className)}>

@@ -92,7 +92,7 @@ const responseHeaders = createMiddleware({ type: "request" }).server(async ({ ne
 });
 
 /** `/player/<name>.png` → the UUID image URL; the router would hand these to the player page's `$name`. */
-const PLAYER_IMAGE = /^\/player\/([^/]+)\.png$/;
+const PLAYER_IMAGE = /^\/player\/([\w-]+)\.png$/;
 
 /** Starts the render workers on the first request rather than the first image. */
 const unfurlImages = createMiddleware({ type: "request" }).server(async ({ request, next }) => {
@@ -100,7 +100,7 @@ const unfurlImages = createMiddleware({ type: "request" }).server(async ({ reque
   warmRenderPool();
 
   const match = PLAYER_IMAGE.exec(new URL(request.url).pathname);
-  return match ? playerImageByName(decodeURIComponent(match[1])) : next();
+  return match ? playerImageByName(match[1]) : next();
 });
 
 export const startInstance = createStart(() => {
