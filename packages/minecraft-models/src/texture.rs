@@ -65,8 +65,10 @@ pub fn load_texture(pack: &Pack, name: &str, frame: Frame) -> Result<Texture, Er
   }
 
   let translucent = rgba
-    .chunks_exact(4)
-    .any(|texel| texel[3] > ALPHA_CUTOFF && texel[3] < u8::MAX);
+    .as_chunks::<4>()
+    .0
+    .iter()
+    .any(|&[.., alpha]| alpha > ALPHA_CUTOFF && alpha < u8::MAX);
 
   Ok(Texture {
     width,

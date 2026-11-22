@@ -62,7 +62,7 @@ pub fn bake_model(pack: &Pack, name: &str) -> Result<BakedModel, Error> {
   let mut submeshes: Vec<Submesh> = Vec::new();
 
   for element in model.elements() {
-    let rotation = PartRotation::new(element.rotation.as_ref());
+    let rotation = BakedRotation::new(element.rotation.as_ref());
     let bounds = [element.from, element.to];
 
     for face in &element.faces {
@@ -136,13 +136,13 @@ fn default_uv(direction: Direction, element: &Element) -> [f32; 4] {
   }
 }
 
-struct PartRotation {
+struct BakedRotation {
   matrix: Matrix3<f32>,
   origin: Vector3<f32>,
   scale: Vector3<f32>,
 }
 
-impl PartRotation {
+impl BakedRotation {
   fn new(rotation: Option<&ElementRotation>) -> Self {
     let Some(rotation) = rotation else {
       return Self {
