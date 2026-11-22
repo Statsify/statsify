@@ -10,7 +10,7 @@ import {
   ActionRowBuilder,
   Command,
   ContainerBuilder,
-  IMessage,
+  type IMessage,
   SectionBuilder,
   ThumbnailBuilder,
 } from "@statsify/discord";
