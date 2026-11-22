@@ -92,10 +92,7 @@ const drawRank = async (formatted: string) => {
   return images;
 };
 
-/**
- * @param prefixIndex the first letter of the emoji on discord
- */
-const drawColorChanger = async (rank: string, prefixIndex: string) => {
+const drawColorChanger = async (rank: string, emojiPrefix: string) => {
   const color0 = await drawRank(rankMap[rank](minecraftColors[0].code));
   const color1 = await drawRank(rankMap[rank](minecraftColors[1].code));
 
@@ -122,7 +119,7 @@ const drawColorChanger = async (rank: string, prefixIndex: string) => {
       rank,
       category: "SHARED",
       index,
-      name: `${prefixIndex}${index}`,
+      name: `${emojiPrefix}${index}`,
     });
   }
 
@@ -139,30 +136,27 @@ const drawColorChanger = async (rank: string, prefixIndex: string) => {
         rank,
         category: color.id,
         index: i,
-        name: `${prefixIndex}${color.code[1]}${i}`,
+        name: `${emojiPrefix}${color.code[1]}${i}`,
       });
     }
   }
 };
 
-/**
- * @param prefixIndex the first letter of the emoji on discord
- */
-const drawNonColorChanger = async (rank: string, prefixIndex: string) => {
+const drawNonColorChanger = async (rank: string, emojiPrefix: string) => {
   const images = await drawRank(rankMap[rank](""));
 
   for (const [index, image] of images.entries()) {
-    emojis.push({ buffer: image, rank, index, name: `${prefixIndex}${index}` });
+    emojis.push({ buffer: image, rank, index, name: `${emojiPrefix}${index}` });
   }
 };
 
 // Create all the emojis
 await Promise.all(
   RANKS.map(async (rank, index) => {
-    const prefixIndex = ALPHABET[index];
+    const emojiPrefix = ALPHABET[index];
 
-    if (COLOR_CHANGERS.includes(rank)) return drawColorChanger(rank, prefixIndex);
-    return drawNonColorChanger(rank, prefixIndex);
+    if (COLOR_CHANGERS.includes(rank)) return drawColorChanger(rank, emojiPrefix);
+    return drawNonColorChanger(rank, emojiPrefix);
   })
 );
 
