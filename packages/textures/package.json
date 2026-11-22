@@ -23,7 +23,9 @@
   "dependencies": {
     "@swc/helpers": "^0.5.23",
     "fflate": "^0.8.3",
-    "idb": "^8.0.4"
+    "idb": "^8.0.4",
+    "lru-cache": "^11.5.3",
+    "mojangson": "^2.1.0"
   },
   "devDependencies": {
     "skia-canvas": "4.0.0"
