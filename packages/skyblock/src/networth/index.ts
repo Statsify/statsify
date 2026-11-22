@@ -250,7 +250,7 @@ const networthOrder = (id: string) => (NETWORTH_ORDER.includes(id) ? NETWORTH_OR
 async function getInventoryValues(member: SectionInput["member"], map: PriceMap, items: ItemsResource): Promise<InventoryValues | null> {
   // Networth leaves out a tool its toolkit doesn't hold; one taken out is priced where it sits
   const unheld = new Set<RawItem>();
-  const itemPages = inventoryPages(member, decodeInventory, (blob, held) => {
+  const itemPages = await inventoryPages(member, decodeInventory, (blob, held) => {
     const item = toolkitItem(blob, items);
     if (item && !held) unheld.add(item);
     return item;
