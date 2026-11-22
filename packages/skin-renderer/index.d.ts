@@ -90,7 +90,7 @@ export declare function renderSkin(skin: Uint8Array, slim: boolean, extruded: bo
 
 export interface Scene {
   player?: ScenePlayer
-  /** What the player rides, seated on its saddle, or drawn alone without one. */
+  /** What the player rides, seated on its saddle. Without a player, it's drawn alone. */
   mount?: SceneMount
   models: Array<ModelInstance>
 }
