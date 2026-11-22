@@ -19,14 +19,12 @@ import type { LeaderboardType } from "./leaderboard.profile.js";
 
 /**
  * Leaderboard buttons and search modals re-run `/leaderboard <subcommand>`:
- * `lb:<user id>:<page, input or position>:<subcommand>.<leaderboard>`
+ * `lb:<user id>:<page, input or position>:<subcommand>:<leaderboard>`
  */
 export const LEADERBOARD_ROUTE = "lb";
 
 export function leaderboardRoute(listener: AbstractCommandListener): ComponentRoute {
-  return (interaction, { ownerId, values: [action, leaderboard] }) => {
-    const [subcommand, ...key] = leaderboard.split(".");
-
+  return (interaction, { ownerId, values: [action, subcommand, leaderboard] }) => {
     // The modal takes the button's custom id, so submitting it comes back here to search
     if (
       interaction.isButtonInteraction() &&
@@ -40,9 +38,7 @@ export function leaderboardRoute(listener: AbstractCommandListener): ComponentRo
       };
     }
 
-    return listener.rerunCommand(interaction, ownerId, ["leaderboard", subcommand], {
-      leaderboard: key.join("."),
-    });
+    return listener.rerunCommand(interaction, ownerId, ["leaderboard", subcommand], { leaderboard });
   };
 }
 
