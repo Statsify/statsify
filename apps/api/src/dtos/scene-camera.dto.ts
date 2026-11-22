@@ -10,8 +10,8 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsNumber, IsOptional, Max, Min } from "class-validator";
 import { Transform } from "class-transformer";
 
-export const MIN_SIZE = 64;
-export const MAX_SIZE = 1024;
+const MIN_SIZE = 64;
+const MAX_SIZE = 1024;
 
 export function SceneCameraDto(
   camera: { yaw: number; pitch: number; width: number; height: number },
