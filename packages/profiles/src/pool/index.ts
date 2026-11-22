@@ -9,7 +9,7 @@
 import { Piscina } from "piscina";
 import type { RenderRequest } from "./protocol.js";
 
-/** No worker took the job in time, or the queue is full; answer 503 with `Retry-After`. */
+/** The queue is full; answer 503 with `Retry-After`. */
 export class PoolBusyError extends Error {
   public readonly retryAfter = 2;
 
