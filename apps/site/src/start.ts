@@ -51,12 +51,12 @@ const redirects = createMiddleware({ type: "request" }).server(({ request, next 
 const publicOrigin = createServerOnlyFn(async () => new URL((await siteConfig()).publicUrl).origin);
 
 /**
- * Server functions and the logout form take requests from the site's own pages only. Browsers that send
+ * Server functions and POST requests are taken from the site's own pages only. Browsers that send
  * `Sec-Fetch-Site` are judged on that; for the rest, `Origin` may also be `site.publicUrl`'s, because behind a proxy or
  * tunnel that ends TLS the request reaches the app as `http://` while the page was `https://`.
  */
 const csrf = createCsrfMiddleware({
-  filter: (ctx) => ctx.handlerType === "serverFn" || new URL(ctx.request.url).pathname === "/auth/logout",
+  filter: (ctx) => ctx.handlerType === "serverFn" || ctx.request.method === "POST",
   origin: async (origin, { request }) => origin === new URL(request.url).origin || origin === (await publicOrigin()),
 });
 
