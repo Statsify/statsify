@@ -15,7 +15,7 @@ import { Fragment, type ReactNode } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { Hidden, InlineStat, LeaderboardLink, StatCell, glossaryKey, linkHint, useStatName } from "~/components/ui/stat";
-import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorOf, plainText } from "~/components/ui/minecraft-text";
 import { StatInfo } from "./stat-info";
 import { cn } from "~/lib/util";
 import { LABEL_NAMESPACES } from "~/i18n/i18n";
@@ -207,12 +207,10 @@ function useStatLabel(cell: Stat): { text: string; node: ReactNode; full?: strin
   return { text, node: text, full };
 }
 
-const plainName = (name: string) => name.replaceAll(/§#[\dA-Fa-f]{6}|§./g, "");
-
 /** A stat's heading as plain text, for its link and the filter: the card's own name, or the label's words. */
 export function useLabelText(): (cell: Stat) => string {
   const { t } = useTranslation();
-  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainName(cell.name));
+  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainText(cell.name));
 }
 
 /** A stat's value as the card prints it; a linked one's exact number is for screen readers, as the link shows it. */
