@@ -128,8 +128,7 @@ export function ModeSwitcher({ page, scope, kind = "mode" }: { page: GamePage; s
         <ul
           className={cn(
             "flex-wrap gap-1 md:gap-y-2",
-            // On phones a tab that doesn't fit beside the others moves to the next row whole, and each row's tabs grow
-            // to fill it; a name only wraps between words, when its tab is wider than a row.
+            // On phones a tab that doesn't fit moves to the next row whole, and each row's tabs grow to fill it.
             phoneTabs ? "flex" : "hidden md:flex"
           )}
         >
