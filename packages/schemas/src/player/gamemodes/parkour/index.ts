@@ -14,7 +14,12 @@ export const PARKOUR_MODES = new GameModes([{ api: "overall" }] as const);
 
 export type ParkourModes = ExtractGameModes<typeof PARKOUR_MODES>;
 
-const fieldOptions = { sort: "ASC", formatter: formatTime, fieldName: "Time", limit: 50_000 };
+const fieldOptions = {
+  sort: "ASC",
+  formatter: formatTime,
+  fieldName: "Time",
+  limit: 50_000,
+};
 
 export class Parkour {
   @Field({
