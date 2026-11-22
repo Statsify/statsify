@@ -41,7 +41,7 @@ export class GuildLeaderboardService extends LeaderboardService {
 
     const ranking = await this.getLeaderboardRankings(Guild, [field], input);
 
-    if (!ranking || !ranking[0].rank) throw new GuildNotFoundException();
+    if (!ranking || !ranking[0] || !ranking[0].rank) throw new GuildNotFoundException();
 
     return ranking[0].rank;
   }
