@@ -9,12 +9,7 @@
 import { cn } from "~/lib/util";
 import type { ReactNode } from "react";
 
-/**
- * A card table cell (`Table.td`): a Minecraft 16 title over a Minecraft 32 value, both in the stat's color and centered
- * (the number is the hero). A long title wraps to two lines; the value keeps to the bottom of the cell, so the values
- * in a row line up whatever their titles do. Renders a `<div>` holding a `<dt>` and a `<dd>`, so a list of cells goes
- * inside a `<dl>`.
- */
+/** A card table cell (`Table.td`): a title over its value, in the stat's color. Cells go inside a `<dl>`. */
 export function StatCell({
   label,
   value,

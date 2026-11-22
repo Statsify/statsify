@@ -35,8 +35,7 @@ export function SessionAnimation() {
   useEffect(() => {
     if (!searchRef.current || !profileRef.current) return;
 
-    // Reduced motion: the finished state, with no typing and no wait for the block to scroll into view. The
-    // `motion-reduce:` classes below already show it before hydration.
+    // The `motion-reduce:` classes below show this finished state before hydration.
     if (reduceMotion) {
       daysBack.jump(7);
       return;
