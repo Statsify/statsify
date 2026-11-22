@@ -93,6 +93,7 @@ export async function paginate(
 
   let currentIndex = 0;
   let currentSubIndex = 0;
+  let shown: Message | undefined;
 
   const mainController = new PageController(pages, currentIndex);
 
@@ -145,8 +146,8 @@ export async function paginate(
       currentSubIndex = subIndex;
     }
 
-    const message = await getMessage(index, subIndex);
-    return context.reply(withControls(message, getActionRows()));
+    shown = await getMessage(index, subIndex);
+    return context.reply(withControls(shown, getActionRows()));
   }
 
   function getActionRows() {
@@ -155,18 +156,17 @@ export async function paginate(
     );
   }
 
-  async function onTimeout() {
+  function onTimeout() {
     mainController.unregister(listener);
     subController?.unregister(listener);
-    const message = await getMessage(currentIndex, currentSubIndex);
     cache.clear();
-    return context.reply(withoutControls(message));
+    if (shown) context.reply(withoutControls(shown));
   }
 
   setTimeout(onTimeout, timeout);
 
-  const message = await getMessage(currentIndex, currentSubIndex);
-  return withControls(message, getActionRows());
+  shown = await getMessage(currentIndex, currentSubIndex);
+  return withControls(shown, getActionRows());
 }
 
 /**
@@ -189,6 +189,7 @@ export async function scrollingPagination(
   timeout = 300_000,
 ) {
   let currentIndex = startingIndex;
+  let shown: Message | undefined;
   const cache = new Map<number, Message>();
   const t = context.t();
 
@@ -233,6 +234,7 @@ export async function scrollingPagination(
 
       if (interaction.getUserId() === userId) {
         currentIndex = page;
+        shown = message;
         return context.reply(withControls(message, [new ActionRowBuilder(controller)]));
       }
 
@@ -240,19 +242,18 @@ export async function scrollingPagination(
     });
   }
 
-  async function onTimeout() {
+  function onTimeout() {
     for (const component of controller) {
       listener.removeHook(component.getCustomId());
     }
-    const message = await getMessage(currentIndex);
     cache.clear();
-    return context.reply(withoutControls(message));
+    if (shown) context.reply(withoutControls(shown));
   }
 
   setTimeout(onTimeout, timeout);
 
-  const message = await getMessage(currentIndex);
-  return withControls(message, [new ActionRowBuilder(controller)]);
+  shown = await getMessage(currentIndex);
+  return withControls(shown, [new ActionRowBuilder(controller)]);
 }
 
 function withControls(message: Message, rows: ActionRowBuilder[]) {
