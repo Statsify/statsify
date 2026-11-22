@@ -15,7 +15,7 @@ import {
   InternalServerErrorException,
   NestInterceptor,
 } from "@nestjs/common";
-import { Observable, catchError } from "rxjs";
+import { type Observable, catchError } from "rxjs";
 import { setRequestError } from "@statsify/logger";
 import { URL } from "node:url";
 import type { FastifyRequest } from "fastify";

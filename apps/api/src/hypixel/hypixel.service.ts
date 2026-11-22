@@ -18,7 +18,7 @@ import {
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 import {
-  Observable,
+  type Observable,
   type OperatorFunction,
   catchError,
   lastValueFrom,
