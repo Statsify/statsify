@@ -39,6 +39,8 @@ interface View {
   renderer: InventoryRenderer;
   tooltips: Resources["tooltips"];
   size: InventorySize;
+  /** The slots it drew, which can trail `slots` until the next draw finishes */
+  items: (ItemStack | undefined)[];
   /** The inventory without its moving slots' contents */
   still: OffscreenCanvas;
   composed: OffscreenCanvas;
@@ -59,7 +61,6 @@ export class McInventory extends HTMLElement {
   private items: (ItemStack | undefined)[] = [];
   private hovered = -1;
   private drawing = 0;
-  private drawn = 0;
   private view?: View;
   /** Slots whose icons change from tick to tick, and their icons at the current tick */
   private moving: number[] = [];
@@ -165,7 +166,7 @@ export class McInventory extends HTMLElement {
   private hover(event: PointerEvent) {
     if (!this.view) return;
 
-    const { renderer, tooltips, size } = this.view;
+    const { renderer, tooltips, size, items } = this.view;
     const bounds = this.canvas.getBoundingClientRect();
     const slot = slotAt(
       size,
@@ -182,7 +183,7 @@ export class McInventory extends HTMLElement {
     this.hovered = slot;
     this.show();
 
-    const item = this.items[slot];
+    const item = items[slot];
     if (!item) {
       overlay.claim(this);
       overlay.hide();
@@ -220,30 +221,34 @@ export class McInventory extends HTMLElement {
 
     if (drawing !== this.drawing) return;
 
-    this.view = { renderer, tooltips: resources.tooltips, size, still, composed: createCanvas(still.width, still.height) };
+    this.view = {
+      renderer,
+      tooltips: resources.tooltips,
+      size,
+      items: shown,
+      still,
+      composed: createCanvas(still.width, still.height),
+    };
     this.moving = moving;
     this.movingIcons = icons;
     this.canvas.width = still.width;
     this.canvas.height = still.height;
     this.show();
-
-    this.drawn = drawing;
     this.updatePlaying();
   }
 
   /** Draws the moving slots' icons for the clock's tick */
   private async step() {
-    // Until the latest full draw finishes, moving can list slots that have since changed
-    if (this.stepping || this.drawn !== this.drawing || !this.view) return;
+    const view = this.view;
+    if (this.stepping || !view) return;
     this.stepping = true;
 
-    const drawing = this.drawing;
-    const { renderer, size } = this.view;
+    const { renderer, size, items } = view;
 
-    const icons = await Promise.all(this.moving.map((slot) => renderer.icon(this.items[slot]!, size.scale, this.tick)));
+    const icons = await Promise.all(this.moving.map((slot) => renderer.icon(items[slot]!, size.scale, this.tick)));
     this.stepping = false;
 
-    if (drawing === this.drawing) {
+    if (view === this.view) {
       this.movingIcons = icons;
       this.show();
     }
@@ -253,13 +258,13 @@ export class McInventory extends HTMLElement {
   private show() {
     if (!this.view) return;
 
-    const { renderer, size, still, composed } = this.view;
+    const { renderer, size, items, still, composed } = this.view;
     const ctx = context(composed);
     ctx.clearRect(0, 0, composed.width, composed.height);
     ctx.drawImage(still, 0, 0);
 
     for (const [index, slot] of this.moving.entries()) {
-      renderer.drawSlot(ctx, size, slot, this.items[slot], this.movingIcons[index]);
+      renderer.drawSlot(ctx, size, slot, items[slot], this.movingIcons[index]);
     }
 
     if (this.hovered >= 0) {
