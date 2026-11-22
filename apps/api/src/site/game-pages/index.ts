@@ -41,10 +41,7 @@ export type { GameLayout } from "./layout.js";
 const REGISTRY = [...new Set(Object.values(GameIdMapping))];
 const registryIndex = ({ game }: GameLayout) => (game.id ? REGISTRY.indexOf(game.id) : REGISTRY.length);
 
-/**
- * The pages the site has, each at `/player/<name>/<its game's PlayerStats key>`, in the registry's order (the game
- * nav's).
- */
+/** The site's game pages, each at `/player/<name>/<game key>`, in the registry's order (the game nav's). */
 export const GAME_PAGES: GameLayout[] = [
   ARCADE_PAGE,
   ARENA_BRAWL_PAGE,

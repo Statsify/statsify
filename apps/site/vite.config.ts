@@ -27,8 +27,7 @@ const LICENSE_HEADER = [
   "// @ts-nocheck",
 ];
 
-// Files in `public/` are not hashed, so they get a day at the edge and in browsers. (`/og/` is the
-// dynamic unfurl image route, so the static Open Graph images live under `/images/`.)
+// Files in `public/` are not hashed, so they get a day at the edge and in browsers.
 // Vite's hashed assets under `/assets/` are already served as immutable by Nitro.
 const STATIC_ASSETS = { headers: { "cache-control": "public, max-age=86400" } };
 // After the day, a browser uses its copy of a font while it revalidates it, so the root's font hold (`FONT_HOLD`)
@@ -47,6 +46,11 @@ export default defineConfig({
   // Sourcemaps for Sentry, which the deploy uploads, without the comment that would point browsers at them.
   build: {
     sourcemap: "hidden",
+  },
+  // The SSR build would inline piscina, which only `@statsify/profiles` depends on. Left to Nitro's build, the package's
+  // piscina import can stay out of the bundle (`traceDeps` below).
+  ssr: {
+    external: ["@statsify/profiles"],
   },
   plugins: [
     tailwindcss(),
@@ -74,9 +78,9 @@ export default defineConfig({
           if (!IGNORED_LOGS.has(log.code ?? "")) handler(level, log);
         },
       },
-      // A `.br` and a `.gz` beside each text file in the public output (scripts, styles, fonts), which Nitro serves by the
-      // request's Accept-Encoding.
       compressPublicAssets: { brotli: true, gzip: true },
+      // Piscina starts its workers from its own `dist/worker.js`, which bundling it would leave behind.
+      traceDeps: ["piscina"],
     }),
   ],
 });

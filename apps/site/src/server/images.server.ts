@@ -11,9 +11,9 @@ import {
   type ImageVariant,
   PoolBusyError,
   RenderPool,
-  isGameCard,
 } from "@statsify/profiles/pool";
 import { ORPCError } from "@orpc/client";
+import { unfurlCard } from "~/features/game/game-data";
 import { cacheHeaders } from "~/lib/cache";
 import { compactUuid } from "~/lib/uuid";
 import { createRequire } from "node:module";
@@ -76,21 +76,16 @@ const PLACEHOLDERS: Record<ImageVariant, string> = {
   card: "card-placeholder.png",
 };
 
-/**
- * Rendered PNGs stay in Redis only long enough for the requests waiting on the render to read them: they're about
- * 300 KB each, in the leaderboard Redis, and a crawl of distinct image URLs writes one per render. Cloudflare holds
- * them for an hour anyway.
- */
+/** Only long enough for the requests waiting on a render: each PNG is about 300 KB in the leaderboard Redis. */
 const CACHE_TTL_SECONDS = 20;
-/** How long the pool lets a render wait for a worker, and then run. */
-const RENDER_QUEUE_TIMEOUT_MS = 6000;
-const RENDER_TIMEOUT_MS = 8000;
+/** How long the pool lets a render wait for a worker and run. */
+const RENDER_TIMEOUT_MS = 14_000;
 /**
  * The first request for a missing image renders it under this lock; the others wait for its PNG. It outlasts the
  * owner's slowest path: 5 s to load the player and skin (the skin may come from Minecraft's session server), the
  * queue, the render and 1 s for the cache write. An owner slower than that only costs a second render.
  */
-const LOCK_TTL_MS = 5000 + RENDER_QUEUE_TIMEOUT_MS + RENDER_TIMEOUT_MS + 1000;
+const LOCK_TTL_MS = 5000 + RENDER_TIMEOUT_MS + 1000;
 const LOCK_POLL_MS = 100;
 /** Frees the lock only while it holds the owner's token, so an owner that outlived its lock can't free the next one's. */
 const RELEASE_LOCK = `if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) end return 0`;
@@ -104,32 +99,23 @@ const NO_STORE = { "Cache-Control": "no-store" };
 
 /** How an image route caches. */
 export interface ImagePolicy {
-  /** Headers on a rendered image. */
   image: Record<string, string>;
-  /** Headers on the placeholder: Discord and forums cache whatever they get, so it expires quickly. */
+  /** Discord and forums cache whatever they get, so a placeholder expires quickly. */
   placeholder: Record<string, string>;
 }
 
-/**
- * `/og`: longer than the page, because its `og:image` carries `?v=<updatedAt>` and a refresh busts it. `ETag` turns
- * revalidations of an unchanged player into 304s; each game and mode has its own URL, so the tag needs no more.
- */
+/** Longer than the page, since its `og:image` carries `?v=<updatedAt>` and a refresh changes the URL. */
 export const UNFURL_POLICY: ImagePolicy = {
   image: cacheHeaders("max-age=600, stale-while-revalidate=3600"),
   placeholder: cacheHeaders("max-age=60"),
 };
 
-/**
- * `/sig` and `/card`: the URL never changes, so the edge keeps the image for an hour and refreshes it in
- * the background for a day after that. Browsers keep it ten minutes, because a forum thread shows many
- * at once (the one place the browser policy is not `max-age=0`), and `ETag` turns revalidations into 304s.
- */
+/** The URL never changes. Browsers keep it ten minutes, because a forum thread shows many at once. */
 export const SIGNATURE_POLICY: ImagePolicy = {
   image: { "Cache-Control": "public, max-age=600", "CDN-Cache-Control": "max-age=3600, stale-while-revalidate=86400" },
   placeholder: { "Cache-Control": "public, max-age=60", "CDN-Cache-Control": "max-age=60" },
 };
 
-/** The API could not render the player's skin; the card cannot be drawn without it. */
 class SkinUnavailableError extends Error {
   public constructor(public readonly status: number) {
     super(`Skin render responded with ${status}`);
@@ -138,15 +124,12 @@ class SkinUnavailableError extends Error {
 }
 
 type PlayerImage =
-  /** The player's card, cached by UUID, `updatedAt` and variant. */
   | { kind: "card"; png: Uint8Array<ArrayBuffer>; updatedAt: number }
-  /** The caller's `If-None-Match` names the current `updatedAt`, so the copy it holds is still right. */
   | { kind: "unchanged"; updatedAt: number }
-  /** The static placeholder for a player the API has never seen. */
   | { kind: "placeholder"; png: Uint8Array<ArrayBuffer> };
 
 let pool: Promise<RenderPool> | undefined;
-/** Image misses loading their player, skin and game check, each about to join the render queue. */
+/** Image misses still loading their data, about to join the render queue. */
 let loading = 0;
 const placeholders = new Map<ImageVariant, Promise<Uint8Array<ArrayBuffer>>>();
 
@@ -155,7 +138,6 @@ const NOT_FOUND_HEADERS = cacheHeaders("max-age=300");
 /** The `ETag` of a player image: its `updatedAt`, which only the player page's refresh action changes. */
 const etagOf = (updatedAt: number) => `"${updatedAt}"`;
 
-/** Whether an `If-None-Match` header lists `etag`, strong or weak, alone or among others. */
 const matchesEtag = (ifNoneMatch: string, etag: string) =>
   ifNoneMatch.split(",").some((candidate) => candidate.trim().replace(/^W\//, "") === etag);
 
@@ -204,11 +186,7 @@ export async function playerImageResponse(
   }
 }
 
-/**
- * Every player image goes through here: resolve the player, answer from the Redis cache, or
- * render once under a lock so concurrent misses cost one render. The worker pool does the drawing
- * today; the API could take its place behind this one function. Nothing here calls Hypixel.
- */
+/** Renders once under a Redis lock, so concurrent misses cost one render. */
 async function renderPlayerImage({
   uuid,
   variant,
@@ -257,11 +235,7 @@ async function renderPlayerImage({
   }
 }
 
-/**
- * `/player/<name>.png`: a 301 to the UUID URL the pages use, so a renamed player keeps one cached
- * image, or the short-lived placeholder for an untracked name, because Discord caches error responses.
- * Served from a request middleware (`start.ts`): as a route, `/{-$locale}/player/$name` would win the match.
- */
+/** `/player/<name>.png`. An unknown name gets the placeholder, not an error, because Discord caches error responses. */
 export async function playerImageByName(name: string): Promise<Response> {
   const identity = await resolvePlayer(name);
 
@@ -273,7 +247,6 @@ export async function playerImageByName(name: string): Promise<Response> {
   });
 }
 
-/** The static image for `variant`, read once from `public/images`. */
 function placeholderImage(variant: ImageVariant): Promise<Uint8Array<ArrayBuffer>> {
   let image = placeholders.get(variant);
 
@@ -285,7 +258,6 @@ function placeholderImage(variant: ImageVariant): Promise<Uint8Array<ArrayBuffer
   return image;
 }
 
-/** Starts the worker pool, which loads the fonts once, so the first unfurl does not pay for it. */
 export function warmRenderPool(): void {
   renderPool().catch(() => undefined);
 }
@@ -293,20 +265,15 @@ export function warmRenderPool(): void {
 const png = (bytes: Uint8Array<ArrayBuffer>, headers: Record<string, string>) =>
   new Response(bytes, { headers: { "Content-Type": "image/png", ...headers } });
 
-/**
- * One worker pool per process, `site.renderWorkers` threads, closed on shutdown. The worker script is
- * `@statsify/profiles`' own `dist`, resolved from the site's `node_modules` because Nitro bundles this file away
- * from its original location.
- */
 function renderPool(): Promise<RenderPool> {
   if (shuttingDown()) return Promise.reject(new Error("The site is shutting down"));
 
   pool ??= siteConfig().then(({ renderWorkers }) => {
     const created = new RenderPool({
+      // Resolved from `node_modules`, since Nitro bundles this file away from the package's own `worker.js`.
       worker: createRequire(import.meta.url).resolve("@statsify/profiles/worker"),
       size: renderWorkers,
       queueLimit: RENDER_QUEUE_LIMIT,
-      queueTimeoutMs: RENDER_QUEUE_TIMEOUT_MS,
       timeoutMs: RENDER_TIMEOUT_MS,
     });
     onShutdown(() => created.close());
@@ -316,7 +283,6 @@ function renderPool(): Promise<RenderPool> {
   return pool;
 }
 
-/** Another request holds the lock: poll for its PNG until it appears or the lock is gone. */
 async function waitForImage(
   client: Redis,
   key: string,
@@ -334,10 +300,7 @@ async function waitForImage(
   return held ? waitForImage(client, key, lock, deadline) : null;
 }
 
-/**
- * The game page's card: the API checks the game and mode (the page's own rules, so an unfurl exists exactly when the
- * page does), and a game whose card the pool can't draw yet gets the general one.
- */
+/** The game page's card. The API checks the game and mode, so an unfurl exists exactly when the page does. */
 async function gameCard(uuid: string, { game, mode, submode, period }: GameImage): Promise<CardChoice> {
   const page = await rpcServerClient.player.game({ uuid, game, mode: mode ?? undefined, submode: submode ?? undefined, period: period ?? undefined }).catch((error: unknown) => {
     if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) {
@@ -347,15 +310,7 @@ async function gameCard(uuid: string, { game, mode, submode, period }: GameImage
     throw error;
   });
 
-  if (!isGameCard(page.game.key, page.mode, page.period)) return { card: "general" };
-
-  return {
-    card: page.game.key,
-    mode: page.mode,
-    ...(page.submode !== null && { submode: page.submode }),
-    ...(page.period !== undefined && { period: page.period }),
-    ...(page.window && { window: page.window }),
-  };
+  return unfurlCard(page);
 }
 
 /** One of the bot's cards for a stored player, as PNG bytes. Throws `PoolBusyError` when the queue is full. */

@@ -20,19 +20,13 @@ import type { LeaderboardGame } from "@statsify/contract";
 import type { GlossaryWords } from "~/i18n/i18n.server";
 import type { QueryClient } from "@tanstack/react-query";
 
-/**
- * A page from `?page=`, counted from 1 as the page shows it (a number or a string, depending on how it was typed);
- * garbage is the first page.
- */
+/** Counted from 1, as the page shows it; anything else is the first page. */
 const pageNumber = (raw: unknown) => {
   const page = Number(raw);
   return Number.isSafeInteger(page) && page > 1 ? page : undefined;
 };
 
-/**
- * A name or UUID from `?around=`; the router parses `?around=123` to a number, and anything longer than a dashed UUID
- * is cut.
- */
+/** The router parses `?around=123` to a number. */
 const aroundName = (raw: unknown) =>
   (typeof raw === "string" || typeof raw === "number" ? String(raw).trim().slice(0, 36) : "") || undefined;
 

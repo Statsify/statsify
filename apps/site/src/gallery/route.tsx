@@ -21,9 +21,8 @@ const galleryRoute = createRoute({
 });
 
 /**
- * Adds the gallery under the locale layout, so it renders with the real header, footer and translations. It is a
- * code route, not a file in `routes/`, so the generated route tree (and with it the sitemap and every production
- * build) never knows about it; only the dev server calls this, from `router.tsx`.
+ * Adds the gallery under the locale layout, with the real header, footer and translations. A code route, not a file in
+ * `routes/`, so the generated route tree, the sitemap and production builds never see it.
  */
 export function addGalleryRoute(): void {
   const children = (LocaleRoute.children ?? []) as AnyRoute[];

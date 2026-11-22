@@ -74,11 +74,8 @@ const sectionColumns = (rows: Stat[][]) =>
 
 const cellsOf = (sections: StatSection[]) => sections.flatMap(({ rows }) => rows.flat());
 
-/**
- * The mode switcher goes by how many modes there are, not the screen's width, so the server's render and the hydrated
- * page agree. Up to `PHONE_TABS` it's tabs at every width; past that, a select below `md`. Up to `DESKTOP_TABS` it's
- * links from `md` up; past that, the select at every width.
- */
+// The switcher goes by how many options there are, not the screen's width, so the server's render and the hydrated
+// page agree: tabs up to `PHONE_TABS` at every width, links from `md` up to `DESKTOP_TABS`, else a select.
 const PHONE_TABS = 4;
 const DESKTOP_TABS = 10;
 
@@ -206,9 +203,7 @@ export function GameView({ page }: { page: GamePage }) {
             file={`${[page.username, page.game.key, mode, submode, period].filter(Boolean).join("-")}.png`}
           />
         )}
-        {/* The Games button and the mode select share a row (on phones, so the tables start nearer the top); the open
-            Games grid lies over the page below it. On phones the tabs share it too; from `md` links and tabs take rows
-            of their own. */}
+        {/* The Games button shares a row with the mode select, and with a phone's tabs, so the tables start nearer the top. */}
         <div className="relative flex flex-wrap items-start gap-x-2 gap-y-4 empty:hidden">
           {page.games.length > 1 && <GameNav games={page.games} username={page.username} current={page.game.key} className="shrink-0" />}
           {page.modes.length > 1 && <ModeSwitcher page={page} />}
@@ -259,10 +254,7 @@ export function GameView({ page }: { page: GamePage }) {
   );
 }
 
-/**
- * The bot's command for the page's game and player, `/bedwars player:anrie`. Only Quests' pages have periods, and its
- * command takes the period as a subcommand: `/quests daily player:anrie`.
- */
+/** Only Quests' pages have periods, and its command takes the period as a subcommand: `/quests daily player:anrie`. */
 function botCommand({ game, period, username }: GamePage) {
   return `/${game.key}${period === undefined ? "" : ` ${period}`} player:${username}`;
 }
@@ -392,11 +384,7 @@ function SectionTitle({ section }: { section: StatSection }) {
 const ROW_HEADING =
   "flex items-center gap-3 text-mc-1 text-mc-gray before:h-0.5 before:grow before:bg-white/10 after:h-0.5 after:grow after:bg-white/10";
 
-/**
- * A panel of stats in the card's rows, under the section's heading when it has one. A list (maps, challenges) is
- * name and value lines in columns instead, and a long one starts folded behind its heading and count. A list the
- * page's filter searches keeps the lines whose name matches, and opens while it filters.
- */
+/** A list the page's filter searches keeps the lines whose name matches, and opens while it filters. */
 export function StatPanel({
   section,
   username,
@@ -513,12 +501,10 @@ function useStatLabel(cell: Stat): { text: string; node: ReactNode; full?: strin
   return { text, node: text, full };
 }
 
-const plainName = (name: string) => name.replaceAll(/§#[\dA-Fa-f]{6}|§./g, "");
-
 /** A stat's heading as plain text, for its link and the filter: the card's own name, or the label's words. */
 function useLabelText(): (cell: Stat) => string {
   const { t } = useTranslation();
-  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainName(cell.name));
+  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainText(cell.name));
 }
 
 /**
@@ -653,13 +639,7 @@ const SWITCHER_WORDS = {
   period: { nav: "game.periods", select: "game.period" },
 } as const;
 
-/**
- * The mode switcher, or the submode or period one: tabs, as joined segments on phones and links from `md` up, or a
- * native select, by how many there are (`PHONE_TABS`, `DESKTOP_TABS`). Both keep the scroll position, and every target
- * is 44 px tall. The player's kit or class is marked, and so is the mode they've played most: in a select's options by its words, on a tab by a
- * gold square, with the words for screen readers and what counted on hover, and a line under the tabs saying what the
- * square means. The words say "most wins" where the game counts wins alone.
- */
+/** The mode, submode or period switcher. The mode played most is marked in a select's words, or a tab's gold square. */
 export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: keyof typeof SWITCHER_WORDS }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -709,8 +689,7 @@ export function ModeSwitcher({ page, kind = "mode" }: { page: GamePage; kind?: k
     >
       {!phoneTabs && (
         // A form, so the select works without the page's scripts: its button, shown only then, sends the pick with the
-        // rest of the page's search it keeps (a submode's mode, the period), which the route reads. With them, a pick
-        // navigates in place.
+        // rest of the page's search.
         <form method="get" className={cn("flex items-center gap-3", desktopTabs && "md:hidden")}>
           {Object.entries(search(current ?? "")).map(([key, value]) =>
             key !== kind && value !== undefined && <input key={key} type="hidden" name={key} value={value} />)}

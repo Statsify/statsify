@@ -22,11 +22,7 @@ const localeRoute = getRouteApi("/{-$locale}");
 
 const { width, height } = IMAGE_VARIANTS.sig;
 
-/**
- * "Get signature": the live `/sig` image and the snippets that embed it, each with a copy
- * button. URLs are absolute from `site.publicUrl` (the locale loader), never from the request, so a
- * pasted snippet works anywhere.
- */
+/** URLs are absolute from `site.publicUrl`, never from the request, so a pasted snippet works anywhere. */
 export function SignaturePanel({ page }: { page: PlayerPage }) {
   const { t } = useTranslation();
   const { origin } = localeRoute.useLoaderData();
@@ -37,7 +33,6 @@ export function SignaturePanel({ page }: { page: PlayerPage }) {
   const profile = `${origin}/player/${page.username}`;
   const alt = t("player.signature.alt", { name: page.username });
 
-  // The forum snippet is what most people want; the rest wait under "More Formats".
   const forum = `[URL=${profile}][IMG]${image}[/IMG][/URL]`;
   const more: [label: string, text: string][] = [
     [t("player.signature.url"), image],

@@ -246,15 +246,9 @@ const ProgressionSchema = z.object({ current: z.number(), max: z.number().option
 export const StatCellSchema = z.object({
   /** The stat's path below the game, unique on the page, e.g. `solo.wins` or `tokens`. */
   key: z.string(),
-  /**
-   * A `stats.*` key: the bot's word for the stat, abbreviation included, in `locales/<lng>/default.json`, or the
-   * site's own in `site.json` for a stat the bot doesn't show.
-   */
+  /** A `stats.*` key in `locales/<lng>/default.json`, or in `site.json` for a stat the bot doesn't show. */
   label: z.string(),
-  /**
-   * A shorter `stats.*` label shown under its row's heading, where the heading says the rest (Kills under Final);
-   * `label` stays the whole name, for the leaderboard link.
-   */
+  /** A shorter label under its row's heading (Kills under Final); `label` stays the leaderboard link's name. */
   short: z.string().optional(),
   /** The card's own title where it doesn't translate one (a map's or a challenge's name), Minecraft-formatted. */
   name: z.string().optional(),
@@ -313,12 +307,7 @@ export const StatSectionSchema = z.object({
   ticks: z.boolean().optional(),
 });
 
-/**
- * A mode or submode a switcher offers. `selected` marks the player's kit or class. `mostPlayed` marks the one the player
- * has played most, saying what counted: games played, else wins and losses, else wins alone, the first of those the
- * competing ones store (`wins` reads "most wins" on the page). Those that add up others (Overall, BedWars' Core) never
- * count, a tie goes to the first, and none is marked when nothing was played.
- */
+/** A switcher's option. `selected` marks the player's kit or class, and `mostPlayed` the one played most, by what counted. */
 const ModeOptionSchema = z.object({
   key: z.string(),
   name: z.string(),
@@ -336,41 +325,21 @@ export const GamePageSchema = z.object({
     /** The Minecraft-formatted name. */
     name: z.string(),
   }),
-  /**
-   * The card's title after the name: a `site.json` word (`game.stats`), or null where the card has none, and the
-   * mode as the card names it (`Bridge Doubles`, Minecraft-formatted), or null on a game with one mode.
-   */
+  /** The card's title after the name: a `site.json` word (`game.stats`) and the mode, each null where the card has none. */
   heading: z.object({ word: z.string().nullable(), mode: z.string().nullable() }),
-  /** The modes the page offers, in order; the first is the default and has no `?mode=`. */
+  /** The first is the default and has no `?mode=`. */
   modes: z.array(ModeOptionSchema),
-  /** The mode shown. */
   mode: z.string(),
-  /**
-   * The mode's submodes, where they split its games (Duels' Bridge); the first is the default and has no `&submode=`.
-   * Marked as modes are, among the submodes, where they're classes (TNT's Wizards).
-   */
+  /** Where they split the mode's games (Duels' Bridge); the first is the default and has no `&submode=`. */
   submodes: z.array(ModeOptionSchema),
-  /** The submode shown, or null for a mode without submodes. */
+  /** Null for a mode without submodes. */
   submode: z.string().nullable(),
-  /**
-   * The periods the mode's stats are counted over, where they are (Quests: `overall`, all time, then `daily`, `weekly`
-   * and, on a mode with monthly quests, `monthly`); the first is the default and has no `&period=`. Absent elsewhere.
-   */
+  /** Quests' periods, all time first; the first is the default and has no `&period=`. */
   periods: z.array(z.string()).optional(),
-  /** The period shown, on a page with periods. */
   period: z.string().optional(),
-  /**
-   * The dates the shown period's counts cover, on a page with a period other than all time: from the period's start to
-   * when the API last fetched the player (ms), as the card's header prints them.
-   */
+  /** The dates a period other than all time covers (ms), up to when the API last fetched the player. */
   window: z.object({ start: z.number(), end: z.number() }).optional(),
-  /**
-   * The level, the level the bar starts at and the next one, when the page shows one, with the leaderboard that ranks
-   * it (as on `StatCellSchema`). `label` is what the card calls it (`stats.level`, `stats.prefix`, `stats.title`)
-   * and `progress` what the bar counts (`stats.progression.exp`, `.kill`, `.win`). `progression.max` is absent at the
-   * last level, which shows `maxedWord` in place of the bar: MAXED by default, or PRESTIGED where reaching it
-   * prestiges (Murder Mystery's knife).
-   */
+  /** `progression.max` is absent at the last level, which shows `maxedWord` in place of the bar. */
   level: z
     .object({
       label: z.string(),
@@ -380,10 +349,7 @@ export const GamePageSchema = z.object({
       progression: ProgressionSchema,
       progress: z.string(),
       maxedWord: z.enum(["maxed", "prestiged"]).optional(),
-      /**
-       * The card's colors for the progress where they aren't the panel's own (Murder Mystery's knife): the count, the
-       * slash and the max, and the maxed word, which stays bold.
-       */
+      /** The card's colors for the progress where they aren't the panel's own (Murder Mystery's knife). */
       colors: z.object({ current: z.string(), slash: z.string(), max: z.string(), maxed: z.string() }).optional(),
       leaderboard: z.string().nullable(),
     })
@@ -392,10 +358,7 @@ export const GamePageSchema = z.object({
   overview: z.array(StatCellSchema),
   /** The mode's stats in groups; the first is the headline table. */
   sections: z.array(StatSectionSchema),
-  /**
-   * The site's game pages for the player, in the game registry's order (a page that isn't a game's last), for the
-   * nav between them. `played` is false for a game the player has never played.
-   */
+  /** The site's game pages for the nav between them, in the game registry's order. */
   games: z.array(z.object({ key: z.string(), id: z.string().nullable(), name: z.string(), played: z.boolean() })),
   ...Freshness,
 });

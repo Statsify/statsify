@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type CellSpec, type GameLayout, type PageSpec, formattedLevel, selectedMode } from "./layout.js";
+import { type CellSpec, type GameLayout, type PageSpec, formattedLevel, selectedMode, submodeOptions } from "./layout.js";
 import { WOOL_GAMES, WOOL_WARS_CLASSES } from "@statsify/catalog";
 import type { PlayerStats } from "@statsify/schemas";
 
@@ -69,7 +69,7 @@ export const WOOL_GAMES_PAGE: GameLayout = {
     api === "woolwars" ?
       {
         key: api,
-        submodes: submodes.map(({ api: key, formatted: name }) => ({ key, name })),
+        submodes: submodeOptions(submodes),
         // Unset before the player is first saved, for one who never picked a class (saved, it reads "none").
         selected: ({ woolgames }) => selectedMode(WOOL_GAMES, woolgames.woolwars.class ?? "", WOOL_WARS_CLASSES),
       } :

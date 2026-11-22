@@ -216,7 +216,7 @@ export interface Config {
      */
     publicUrl?: string;
     /**
-     * Whether search engines may index the site; false for a staging deploy, where every response carries X-Robots-Tag: noindex, the sitemaps 404 and robots.txt lists no sitemap. Defaults to true
+     * Whether search engines may index the site; false for a staging deploy. Defaults to true
      */
     indexable?: boolean;
     /**
@@ -235,7 +235,7 @@ export interface Config {
       secretKey?: string;
     };
     /**
-     * Threads in the site's unfurl render pool, 1 to 3. Defaults to 2; the site won't start with any other value
+     * Threads in the site's unfurl render pool, 1 to 3. Defaults to 2
      * @example 2
      */
     renderWorkers?: number;
