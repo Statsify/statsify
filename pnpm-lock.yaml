@@ -672,6 +672,9 @@ importers:
       i18next-fs-backend:
         specifier: ^2.3.2
         version: 2.6.9
+      lru-cache:
+        specifier: ^11.5.3
+        version: 11.5.3
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
