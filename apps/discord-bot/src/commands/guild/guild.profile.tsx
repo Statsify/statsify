@@ -393,12 +393,12 @@ const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
     />
   ));
 
-  const rankNames = guild.ranks.map((rank) => `${rank.name}${rank.tag ? ` [${rank.tag}]` : ""}`);
-  const rankWidth = Math.max(...rankNames.map((name) => useComponentWidth(<box><text>{name}</text></box>)));
+  const rankLabels = guild.ranks.map((rank) => `${rank.name}${rank.tag ? ` [${rank.tag}]` : ""}`);
+  const rankWidth = Math.max(...rankLabels.map((label) => useComponentWidth(<box><text>{label}</text></box>)));
   const achievementWidth = Math.max(...achievementCells.map((cell) => useComponentWidth(cell)));
   const nameWidth = useComponentWidth(<box><text>§^4^{guild.nameFormatted}</text></box>);
   const widthWithoutRanks = Math.max(2 * achievementWidth, nameWidth);
-  const ranksGroups = arrayGroup(rankNames, 3 * rankWidth > widthWithoutRanks ? 2 : 3);
+  const rankRows = arrayGroup(rankLabels, 3 * rankWidth > widthWithoutRanks ? 2 : 3);
 
   return (
     <>
@@ -421,11 +421,11 @@ const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
         </Table.table>
       </GuildBlock>
       <GuildBlock width="100%" title="Guild Ranks">
-        {ranksGroups.map((ranks) => (
+        {rankRows.map((row) => (
           <div width="100%">
-            {ranks.map((rank) => (
-              <box width={`1/${ranks.length}`}>
-                <text>{`${guild.tagColor.code}${rank}`}</text>
+            {row.map((label) => (
+              <box width={`1/${row.length}`}>
+                <text>{`${guild.tagColor.code}${label}`}</text>
               </box>
             ))}
           </div>
