@@ -99,8 +99,8 @@ draws exactly. At another scale, a 3D icon is resized from its largest. Rerun it
 draws icons differently, as with the icon cache's `VERSION`. It lists the items it can't draw.
 
 Items whose look depends on their stack are still drawn in the browser, from models and textures
-the atlas carries: dyed leather, potions, banners, shields and player heads with skins, and the glint
-on anything. Atlas icons don't animate.
+the atlas carries: dyed leather and wolf armor, potions, banners, shields and player heads with skins,
+and the glint on anything. Atlas icons don't animate.
 
 `loadAtlas(url)` loads one, and it goes wherever a `PackStack` does: `ItemRenderer`,
 `InventoryRenderer.load` and `<mc-inventory>`'s `pack`. An atlas has no font, so `<mc-inventory>`

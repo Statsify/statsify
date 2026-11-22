@@ -7,7 +7,7 @@
  */
 
 import { context, createCanvas, decodePng } from "./canvas.js";
-import type { ItemLayer } from "./models.js";
+import { type ComponentBranches, type ItemLayer, hasComponent } from "./models.js";
 import type { ItemStack } from "./item-stack.js";
 import { namespaced } from "./pack.js";
 
@@ -24,8 +24,8 @@ export interface AtlasData {
   legacyGlint: boolean;
   /** Every item's icon as a plain stack, unenchanted, at its first animation frame, smallest first */
   icons: Record<string, AtlasRect[]>;
-  /** The models of items whose look depends on their stack: dyes, potions, banners, shields and heads */
-  layers: Record<string, ItemLayer[]>;
+  /** The models of items whose look depends on their stack (dyes, potions, banners, shields, heads), both branches of a component check */
+  layers: Record<string, ItemLayer[] | ComponentBranches>;
   /** Their sprites, the glint and the chest screen, by namespaced texture id */
   textures: Record<string, AtlasRect>;
   /** The pack's English names for its items, keyed as `tooltipLines` reads them */
@@ -44,7 +44,11 @@ export class Atlas {
   };
 
   public readonly models = {
-    resolve: (item: ItemStack) => this.data.layers[item.id] ?? [],
+    resolve: (item: ItemStack) => {
+      const layers = this.data.layers[item.id] ?? [];
+      if (Array.isArray(layers)) return layers;
+      return hasComponent(item, layers.component) ? layers.on_true : layers.on_false;
+    },
   };
 
   public constructor(

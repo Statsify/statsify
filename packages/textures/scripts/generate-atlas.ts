@@ -84,7 +84,7 @@ const drawn = await Promise.all(
       // A flat icon is its 16-pixel textures, which any whole scale draws exactly
       const flat = resolved.every(({ model, special }) => model.generated && !special);
       const drawnAt = await Promise.all((flat ? [1] : scales).map((scale) => renderer.render({ id }, scale)));
-      return { id, resolved, drawnAt };
+      return { id, resolved, branches: models.branches(id), drawnAt };
     } catch (error) {
       return { id, error: (error as Error).message };
     }
@@ -92,7 +92,7 @@ const drawn = await Promise.all(
 );
 
 const icons = new Map<string, OffscreenCanvas[]>();
-const layers: Record<string, ItemLayer[]> = {};
+const layers: AtlasData["layers"] = {};
 const textureIds = new Set([CHEST_SCREEN, renderer.legacyGlint ? LEGACY_GLINT : GLINT, DEFAULT_SKIN].map(namespaced));
 const skipped: string[] = [];
 
@@ -102,13 +102,14 @@ for (const result of drawn) {
     continue;
   }
 
-  const { id, resolved, drawnAt } = result;
+  const { id, resolved, branches, drawnAt } = result;
   icons.set(id, drawnAt);
 
-  if (!drawsFromModels(resolved)) continue;
-  layers[id] = resolved;
+  const variants = branches ? [branches.on_true, branches.on_false] : [resolved];
+  if (!variants.some(drawsFromModels)) continue;
+  layers[id] = branches ?? resolved;
 
-  for (const { model, special } of resolved) {
+  for (const { model, special } of variants.flat()) {
     if (!special) for (const texture of Object.values(model.textures)) textureIds.add(namespaced(texture));
 
     const folder = special && PATTERN_FOLDERS[special.type];

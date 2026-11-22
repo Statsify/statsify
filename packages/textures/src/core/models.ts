@@ -70,6 +70,13 @@ export interface ItemLayer {
   special?: SpecialModel;
 }
 
+/** The layers on each side of a definition's check for a component, like wolf armor's dye */
+export interface ComponentBranches {
+  component: string;
+  on_true: ItemLayer[];
+  on_false: ItemLayer[];
+}
+
 // https://minecraft.wiki/w/Items_model_definition
 type ItemModel =
   | { type: "minecraft:model"; model: string; tints?: TintSource[] }
@@ -104,11 +111,15 @@ type ItemModel =
   | { type: "minecraft:empty" }
   | { type: "minecraft:bundle/selected_item" };
 
+/** Whether the stack has the component, for the components an item stack carries */
+export const hasComponent = (item: ItemStack, component: string | undefined) =>
+  component === "minecraft:dyed_color" && item.color !== undefined;
+
 // Properties are read as they are for an item sitting in an inventory: not in use, not
 // selected, not cast, so every condition without a case here is false
 function condition(model: Extract<ItemModel, { type: "minecraft:condition" }>, item: ItemStack) {
   if (model.property !== "minecraft:has_component") return false;
-  return model.component === "minecraft:dyed_color" && item.color !== undefined;
+  return hasComponent(item, model.component);
 }
 
 // Trims, block states, charge types and clock times aren't on Hypixel's items, so those
@@ -129,6 +140,20 @@ export class ModelResolver {
   /** The models an item draws in an inventory slot, bottom layer first */
   public resolve(item: ItemStack): ItemLayer[] {
     return this.layers(this.definition(item.id), item);
+  }
+
+  /** Both branches of an item's definition when it starts with a check for a component */
+  public branches(id: string): ComponentBranches | undefined {
+    const model = this.definition(id);
+    if (model.type !== "minecraft:condition" || model.property !== "minecraft:has_component" || !model.component) return;
+
+    const item = { id };
+
+    return {
+      component: model.component,
+      on_true: this.layers(model.on_true, item, model.transformation),
+      on_false: this.layers(model.on_false, item, model.transformation),
+    };
   }
 
   private definition(id: string) {
