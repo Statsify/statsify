@@ -54,6 +54,9 @@ const DYES: Record<string, string> = {
   black: "ink_sac",
 };
 
+// 1.8 ids minecraft-data's legacy table skips: 31:0 is the shrub, which the game draws as a dead bush
+const LEGACY_ITEMS: Record<string, string> = { "31:0": "minecraft:dead_bush" };
+
 const RECORDS = ["11", "13", "blocks", "cat", "chirp", "far", "mall", "mellohi", "stal", "strad", "wait", "ward"] as const;
 
 // 1.8.9 textures whose models were renamed too, so no same-named model pairs them with 26.3's
@@ -278,10 +281,10 @@ const mobs = new Map(
   entities.filter((entity) => entity.type === "mob").map((entity) => [entity.id, entity]),
 );
 
-// The legacy table has every id:damage pair an item had, so an id with only :0 is keyed by
+// With LEGACY_ITEMS, the legacy table has every id:damage pair an item had, so an id with only :0 is keyed by
 // its id alone, and any Damage on it (tool wear) still finds it
 const variants = Map.groupBy(
-  Object.entries(legacy.items).map(([key, name]) => {
+  Object.entries({ ...legacy.items, ...LEGACY_ITEMS }).map(([key, name]) => {
     const [id, damage] = key.split(":").map(Number);
     return { id, damage, name };
   }),
