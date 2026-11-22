@@ -32,9 +32,14 @@ class TooltipOverlay {
     });
   }
 
-  public show(tooltip: OffscreenCanvas, scale: number, event: PointerEvent, owner: McInventory) {
+  /** Makes `owner` the inventory whose tooltip is open, closing any other's */
+  public claim(owner: McInventory) {
     if (owner !== this.owner) this.owner?.unhover();
     this.owner = owner;
+  }
+
+  public show(tooltip: OffscreenCanvas, scale: number, event: PointerEvent, owner: McInventory) {
+    this.claim(owner);
 
     this.canvas.width = tooltip.width;
     this.canvas.height = tooltip.height;
