@@ -6,8 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export enum AuthRole {
-  MEMBER = 0,
-  WORKER = 300,
-  ADMIN = 999
-}
+export const AuthRole = {
+  MEMBER: 0,
+  WORKER: 300,
+  ADMIN: 999,
+} as const;
+
+export type AuthRole = (typeof AuthRole)[keyof typeof AuthRole];
