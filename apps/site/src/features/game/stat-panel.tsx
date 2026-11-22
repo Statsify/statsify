@@ -213,7 +213,11 @@ export function useLabelText(): (cell: Stat) => string {
   return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainText(cell.name));
 }
 
-/** A stat's value as the card prints it; a linked one's exact number is for screen readers, as the link shows it. */
+/**
+ * A stat's value as the card prints it: a number in the locale's format (with its cap or unit), or the API's text. A
+ * number the format shortens carries the exact one, as a `Hint`, or under a link only for screen readers, since the
+ * link shows it.
+ */
 function useStatValue(cell: Stat, linked = false): ReactNode {
   const n = useNumberFormat(cell.trim);
   const exact = useExactNumber();

@@ -358,7 +358,10 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
   );
 }
 
-/** The guild, status and logins the card's header lists, each in its own box. */
+/**
+ * The guild, status and logins the card's header lists, each in its own box, two across from `sm`; a player with no
+ * guild has five, so the last takes the row. The last game links to its page where the player has one for it.
+ */
 function PlayerFacts({
   page: { uuid, guild, status, games, username, updatedAt, expiresAt },
   className,
@@ -499,7 +502,11 @@ export function GameGrid({ games, username }: { games: GameSummary[]; username: 
   );
 }
 
-/** A game's title linking to its page, over its numbers, each linking to its leaderboard at the player's row. */
+/**
+ * A game's title in a box linking to the game's page, over its headline numbers, each its own box linking to its
+ * leaderboard at the player's row. A linked number shows its label's full name and exact number on hover and keyboard
+ * focus, as on the game page; an unlinked one shows them on a tap too.
+ */
 function GamePanel({ game, username }: { game: GameSummary; username: string }) {
   const { t } = useTranslation();
   const n = useNumberFormat();

@@ -58,7 +58,10 @@ export function LeaderboardBoxes({ page, chunks: loaded, busy }: { page: Leaderb
   );
 }
 
-/** From `md` up. */
+/**
+ * From `md` up: a header row of boxes (position, player, the board's columns), then one row per player: position,
+ * head, name and each value.
+ */
 function BoxTable({ page, chunks }: { page: LeaderboardPage; chunks: LeaderboardPage[] }) {
   const { t } = useTranslation();
 

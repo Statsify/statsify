@@ -207,8 +207,9 @@ export function LegalPage({
 }
 
 /**
- * A panel of reading text in Mona Sans, or Minecraft with `short` (one-sentence paragraphs). `lang` marks text that
- * stays in one language whatever the page's locale (the legal pages are English only).
+ * A panel of reading text: Mona Sans at 16, 20 from `lg`, lines kept to 68 characters. `short` sets one-sentence
+ * paragraphs (about, prestiges) in Minecraft instead, at 16, 24 from `lg`. `lang` marks text that stays in one
+ * language whatever the page's locale (the legal pages are English only).
  */
 export function Article({
   children,
@@ -237,7 +238,10 @@ export function Article({
   );
 }
 
-/** A section of a text page: its heading in a box of its own over an `Article`, as the bot's cards draw a title box. */
+/**
+ * A section of a text page: the heading the contents link to in a box of its own, then its paragraphs in an `Article`
+ * under it, 4 px apart, as the bot's cards draw a title box over its panel. `short` and `lang` are as for `Article`.
+ */
 export function Section({
   id,
   title,
