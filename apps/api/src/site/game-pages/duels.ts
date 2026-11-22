@@ -49,13 +49,13 @@ const TITLES: CellSpec[] = [
 /** The Bridge and UHC submodes whose card shows the mode's overall Shots Fired in place of their own. */
 const SHOTS_FIRED_OFF = ["bridge.solo", "bridge.doubles", "bridge.threes", "bridge.fours", "uhc.solo", "uhc.doubles", "uhc.fours", "uhc.deathmatch"];
 
-/** The card's sidebar rows that belong to the mode (the game's go in the overview), where the mode stores them. */
+/** The card's sidebar rows that belong to the mode (the game's go in the overview), and UHC's golden apples on its Overall. */
 function more(place: string): SectionSpec {
   const stored = shapeKeys(DUELS, place);
   const keys = ["shotsFired", "headshots", "bestTime", "checkpoints", "itemsPurchased", "blocksBroken"]
     .filter((key) => stored.includes(key))
     .filter((key) => key !== "shotsFired" || !SHOTS_FIRED_OFF.includes(place));
-  const rows: CellSpec[][] = [keys];
+  const rows: CellSpec[][] = [place === "uhc.overall" ? [...keys, { key: "gapplesEaten", at: "uhc" }] : keys];
   if (stored.includes("kit")) rows.push([{ key: "kit", inline: true }]);
   return { title: "game.sections.more", rows };
 }
@@ -118,7 +118,6 @@ export const DUELS_PAGE: GameLayout = {
     },
   },
   omit: {
-    "uhc.gapplesEaten": "Its sum reads uhc_meetu_golden_apples_eaten, probably a typo for uhc_meetup_, so it may miss UHC Deathmatch's.",
     ...Object.fromEntries(
       SHOTS_FIRED_OFF.map((place) => [`${place}.shotsFired`, "The card shows the mode's overall Shots Fired here, not this submode's."])
     ),

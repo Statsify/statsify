@@ -167,6 +167,7 @@
     "count": "{{shown}} of {{total}}"
   },
   "stats": {
+    "gapplesEaten": "Golden Apples Eaten",
     "doorsOpened": "Doors Opened",
     "swordKills": "Sword Kills",
     "zombiesWins": "Zombies Wins",
