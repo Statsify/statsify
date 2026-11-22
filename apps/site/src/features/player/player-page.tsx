@@ -183,7 +183,7 @@ function NetworkLevelPanel({ level, username, className }: { level: PlayerPage["
           className="relative"
         />
       </dl>
-      <MinecraftText className="text-mc-1.5">{`§6${current} ${minigameXpBar(level.percent)} §6${current + 1}`}</MinecraftText>
+      <MinecraftText className="text-mc-1.5">{`§6${n(current)} ${minigameXpBar(level.percent)} §6${n(current + 1)}`}</MinecraftText>
       <dl className="flex flex-wrap justify-center gap-x-6 gap-y-1">
         <InlineStat
           label={t("default:stats.exp")}
