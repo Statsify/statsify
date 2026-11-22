@@ -38,7 +38,7 @@ function kartPart(stored: string) {
   const matches = (part: KartPart) =>
     part.rarity === rarity && (Object.keys(attributes).length === 0 || sameAttributes(part.attributes, attributes));
 
-  return PARTS[type ?? ""]?.find(matches)?.item;
+  return type === undefined ? undefined : PARTS[type]?.find(matches)?.item;
 }
 
 /**
