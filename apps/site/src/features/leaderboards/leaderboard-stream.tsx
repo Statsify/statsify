@@ -51,11 +51,11 @@ export function LeaderboardStream({ view }: { view: LeaderboardView }) {
     if (error) {
       return (
         <>
-          <p className="text-mc-1.5 text-mc-yellow text-center">{t(`leaderboards.stream.${error.kind}`, { page: n(target + 1) })}</p>
+          <p className="text-mc-1.5 text-mc-yellow text-center">{t(`leaderboards.stream.${error}`, { page: n(target + 1) })}</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-            {error.kind !== "gone" && (
+            {error !== "gone" && (
               <Button asChild size="small" className="min-w-40">
-                <button type="button" disabled={error.waiting} onClick={() => void stream.load(direction)}>
+                <button type="button" onClick={() => void stream.load(direction)}>
                   {t("leaderboards.stream.retry")}
                 </button>
               </Button>
@@ -100,10 +100,7 @@ export function LeaderboardStream({ view }: { view: LeaderboardView }) {
         {hydrated && stream.hasNext && (
           <button
             type="button"
-            onClick={() => {
-              stream.setPaused(true);
-              document.querySelector("footer")?.querySelector<HTMLElement>("a, button")?.focus();
-            }}
+            onClick={() => document.querySelector("footer")?.querySelector<HTMLElement>("a, button")?.focus()}
             className="sr-only bg-blackify-800 text-mc-1.5 text-mc-white focus:not-sr-only focus:absolute focus:start-0 focus:top-0 focus:z-10 focus:px-4 focus:py-3"
           >
             {t("leaderboards.stream.skip")}
@@ -111,21 +108,10 @@ export function LeaderboardStream({ view }: { view: LeaderboardView }) {
         )}
         {stream.hasPrevious && <div data-stream-edge className="flex flex-col items-center gap-2">{edge("previous")}</div>}
         <LeaderboardBoxes page={board} chunks={pageChunks} busy={stream.loading !== undefined} />
-        {stream.reserve > 0 && (
-          // A new room for each page, so its "Loading..." starts below the rows rather than moving there.
-          <div key={last} data-reserve aria-hidden style={{ height: stream.reserve }}>
-            <p className="text-mc-1.5 text-mc-gray text-center">{t("leaderboards.loading")}</p>
-          </div>
-        )}
         <div ref={stream.bottomRef} data-stream-edge className="flex flex-col gap-4">
           {(stream.hasNext || (hydrated && browsing)) && (
             <div className="flex flex-col items-center gap-2">
               {stream.hasNext && edge("next")}
-              {hydrated && stream.auto && !errors.next && !errors.previous && (
-                <button type="button" onClick={() => stream.setPaused(!stream.paused)} className={TEXT_BUTTON}>
-                  {t(stream.paused ? "leaderboards.stream.resume" : "leaderboards.stream.pause")}
-                </button>
-              )}
               {hydrated && browsing && <p className="text-mc-1 text-mc-gray text-center">{t("leaderboards.stream.notice")}</p>}
             </div>
           )}

@@ -33,7 +33,7 @@ import { WALLS } from "./walls.js";
 import { WARLORDS } from "./warlords.js";
 import { WOOL_GAMES } from "./woolgames.js";
 
-export { ARCADE, DROPPER_DIFFICULTIES } from "./arcade.js";
+export { ARCADE, DROPPER_DIFFICULTIES, ZOMBIES_DIFFICULTIES, ZOMBIES_MAPS } from "./arcade.js";
 export { ARENA_BRAWL } from "./arenabrawl.js";
 export { BEDWARS } from "./bedwars.js";
 export { BLITZSG } from "./blitzsg.js";

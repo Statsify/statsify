@@ -19,7 +19,6 @@
     "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
-    "@statsify/rendering": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23"
   }

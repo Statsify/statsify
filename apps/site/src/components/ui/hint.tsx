@@ -74,10 +74,7 @@ function Tooltip({
   );
 }
 
-/**
- * While `open` is set, closes a floating box when the page scrolls under it or resizes, on Escape, and on a press
- * outside what `inside` accepts.
- */
+/** Closes an open floating box on scroll, resize, Escape, or a press outside it. */
 export function useDismiss(open: unknown, inside: (target: Node) => boolean, close: () => void) {
   const onClose = useEffectEvent(close);
   const onPress = useEffectEvent((event: globalThis.PointerEvent) => {
@@ -170,10 +167,7 @@ export function useHint(text: string | undefined, anchor: (element: HTMLElement)
   };
 }
 
-/**
- * Text that says "Tap" on a touch screen and "Click" with a mouse. Both are in the HTML, so the server's render and the
- * browser's agree; the pointer media query shows one.
- */
+/** Mouse or touch wording by the pointer media query; both are in the HTML, so the server's render agrees. */
 export function PointerText({ mouse, touch }: { mouse: ReactNode; touch: ReactNode }) {
   return (
     <>
@@ -222,9 +216,8 @@ export function Hint({
     <>
       <button
         type="button"
-        // Browsers drop a button's text shadow; the Minecraft text keeps its own. The tap area reaches past the text, so
-        // a finger can hit a 10 px abbreviation, and is at least 44 px either way. It reaches 18 px over a 10 px line and
-        // 17 under: a box clips 16 or 17 px from its line, so 44 px of it stay inside either way.
+        // Browsers drop a button's text shadow; the Minecraft text keeps its own. The tap area's offsets keep 44 px of
+        // it inside a box, which clips 16 or 17 px from the line.
         className="relative cursor-help [text-shadow:inherit] after:absolute after:-inset-x-2 after:-top-4.5 after:-bottom-4.25 after:min-h-11 after:min-w-11"
         {...props}
         onPointerDown={(event) => (pointer.current = event.pointerType)}

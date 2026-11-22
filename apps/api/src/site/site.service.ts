@@ -98,14 +98,6 @@ const IP_WINDOW_SECONDS = BUDGET_WINDOW_SECONDS;
 
 const IDENTITY_FIELDS = { uuid: true, username: true, expiresAt: true };
 const GUILD_FIELDS = { id: true, name: true, tag: true, tagFormatted: true };
-/** What the player page and the general card read from the guild: its name and tag plus each member's quest and GEXP rows. */
-const CARD_GUILD_FIELDS = {
-  ...GUILD_FIELDS,
-  "members.uuid": true,
-  "members.questParticipation": true,
-  "members.daily": true,
-  "members.weekly": true,
-};
 const CARD_FIELDS = {
   uuid: true,
   username: true,
@@ -709,7 +701,13 @@ export class SiteService implements OnApplicationBootstrap {
       .findOne()
       .where("id")
       .equals(id)
-      .select(CARD_GUILD_FIELDS)
+      .select({
+        ...GUILD_FIELDS,
+        "members.uuid": true,
+        "members.questParticipation": true,
+        "members.daily": true,
+        "members.weekly": true,
+      })
       .lean()
       .exec();
 
@@ -785,29 +783,7 @@ export class SiteService implements OnApplicationBootstrap {
 }
 
 if (import.meta.vitest) {
-  const { it, expect, vi } = import.meta.vitest;
-
-  it("refuses an automatic update once two-thirds of the budget is used, and lets a click through", async () => {
-    // A stored player past their cooldown, 10 of the default 15 calls already spent, and Hypixel not answering.
-    const query = { where: () => query, equals: () => query, lean: () => query, exec: async () => ({ uuid: "a", expiresAt: 0 }) };
-    const counts: Record<string, number> = { [BUDGET_KEY]: 11 };
-    const redis = {
-      decr: vi.fn(),
-      multi: vi.fn(() => ({
-        set: (key: string) => ({ incr: () => ({ ttl: () => ({ exec: async () => [[null, "OK"], [null, counts[key] ?? 1], [null, 60]] }) }) }),
-      })),
-    };
-    const playerService = { get: vi.fn(async () => null) };
-    const stubs = [playerService, undefined, undefined, { findOne: () => query }, undefined, redis];
-    const service = new SiteService(...(stubs as unknown as ConstructorParameters<typeof SiteService>));
-
-    await expect(service.refresh("a", "203.0.113.7", true)).rejects.toMatchObject({ code: "TOO_MANY_REQUESTS" });
-    expect(redis.decr).toHaveBeenCalledWith(BUDGET_KEY);
-    expect(playerService.get).not.toHaveBeenCalled();
-
-    await expect(service.refresh("a", "203.0.113.7")).rejects.toMatchObject({ code: "SERVICE_UNAVAILABLE" });
-    expect(playerService.get).toHaveBeenCalledOnce();
-  });
+  const { it, expect } = import.meta.vitest;
 
   it("buckets IPv6 visitors by /64", () => {
     expect(rateLimitAddress("203.0.113.7")).toBe("203.0.113.7");

@@ -27,8 +27,7 @@ jobs:
       - name: Build Code
         run: pnpm scripts purge-repo --dist && pnpm build --force
         env:
-          # The site's Sentry release (apps/site/turbo.json passes it to the site's build), so its errors match the
-          # sourcemaps uploaded below.
+          # So the site's errors match the sourcemaps below; apps/site/turbo.json passes it to the build.
           VITE_SENTRY_RELEASE: ${{ github.ref_name }}
 
       - name: Upload Site Sourcemaps
@@ -44,7 +43,7 @@ jobs:
           npx --yes @sentry/cli@2 sourcemaps upload --release "${{ github.ref_name }}" --url-prefix "~/assets" apps/site/.output/public/assets
 
       - name: Remove Site Sourcemaps
-        # Once they're uploaded, or the upload is skipped, so the site doesn't serve them.
+        # So the site doesn't serve them.
         run: rm -f apps/site/.output/public/assets/*.map
 
       - name: Prepare Assets

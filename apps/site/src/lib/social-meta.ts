@@ -156,25 +156,28 @@ export function localeData(matches: ReadonlyArray<{ routeId: string; loaderData?
   return match?.loaderData as LocaleData | undefined;
 }
 
+/** A page's `meta.*` key in `site.json`, or its own words where they stay English in the code (privacy, terms). */
+export type PageText = { key: string } | { title: string; description: string };
+
 /**
- * A search page's tags (`/bingo`, `/player`): `meta.<key>`'s title and description, then its preview's, and its trail
- * under its name in the header (`nav.<nav>`).
+ * A page's tags: its title and description (in English, from the server's `site.json`), then its preview's, and its
+ * trail under its heading (`<key>.title`) or the `site.json` key `trail`.
  */
-export function searchPageMeta(
+export function pageMeta(
   matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>,
-  { key, nav, path, image, noindex = false }: { key: string; nav: string; path: string; image: string; noindex?: boolean }
+  { path, image, trail, noindex = false, ...text }: { path: string; image: string; trail?: string; noindex?: boolean } & PageText
 ) {
   const locale = localeData(matches);
-  // In English, from the server's `site.json`.
   const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
-  const title = words.t(`meta.${key}.title`);
-  const description = words.t(`meta.${key}.description`);
+  const title = "key" in text ? words.t(`meta.${text.key}.title`) : `${text.title} | ${SITE_NAME}`;
+  const description = "key" in text ? words.t(`meta.${text.key}.description`) : text.description;
+  const name = trail ? words.t(trail) : "key" in text ? words.t(`${text.key}.title`) : text.title;
   const origin = locale?.origin;
 
   return [
     { title },
     { name: "description", content: description },
     ...(noindex ? [{ name: "robots", content: "noindex" }] : []),
-    ...(origin ? socialMeta({ origin, path, title, description, image, trail: { name: words.t(`nav.${nav}`) } }) : []),
+    ...(origin ? socialMeta({ origin, path, title, description, image, trail: { name } }) : []),
   ];
 }
