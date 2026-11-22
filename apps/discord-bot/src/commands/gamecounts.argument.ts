@@ -8,11 +8,11 @@
 
 import Fuse from "fuse.js";
 import {
-  APIApplicationCommandOptionChoice,
+  type APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
-import { ClassMetadata, FormattedGame, GameCounts, METADATA_KEY } from "@statsify/schemas";
+import { AbstractArgument, type CommandContext, type LocalizationString } from "@statsify/discord";
+import { type ClassMetadata, FormattedGame, GameCounts, METADATA_KEY } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
 const GAME_CHOICES = (
