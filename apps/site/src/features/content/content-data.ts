@@ -38,11 +38,7 @@ export interface GlossaryGroup {
   items: GlossaryItem[];
 }
 
-/**
- * Every stat's glossary words in the page's locale, for the line under a leaderboard's title and a stat cell's info:
- * the full name where a label shortens one, and what the stat is. The browser fetches them once a deploy, by the hash
- * the locale data carries (`/glossary-<hash>.json`), and keeps them for the visit.
- */
+/** Every stat's glossary words in the page's locale, fetched by the hash the locale data carries and kept for the visit. */
 export const glossaryWordsQuery = (hash: string) =>
   queryOptions({
     queryKey: ["glossary-words", hash],

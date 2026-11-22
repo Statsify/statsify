@@ -60,7 +60,6 @@ export function GlossaryPage({ groups }: { groups: GlossaryGroup[] }) {
         count={t("filter.count", { shown: n(count), total: n(total) })}
       />
       {count === 0 && <p className="text-mc-1.5 text-mc-gray text-center">{t("glossary.noMatches", { query: filter.trim() })}</p>}
-      {/* Each group's heading in a box of its own, then each stat in its own box, 4 px apart, as the bot's cards. */}
       {shown.map((group) => (
         <section
           key={group.key}

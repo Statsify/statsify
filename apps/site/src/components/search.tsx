@@ -27,10 +27,7 @@ const SEARCH_CACHE_TIME_MS = 5 * 60 * 1000;
 /** Safari ignores `replaceState` past 100 calls in 30 seconds, so a draft is saved once typing pauses. */
 const DRAFT_DEBOUNCE_MS = 500;
 
-/**
- * The search's text in the tab's history entry, for a reload, Back and Forward, with no history entry per keystroke.
- * Past TanStack's patched `replaceState`, which would run a navigation.
- */
+/** Through the browser's own `replaceState`: TanStack's patched one would run a navigation. */
 function saveDraft(draft: string | undefined) {
   History.prototype.replaceState.call(history, { ...history.state, searchDraft: draft }, "");
 }
@@ -70,8 +67,7 @@ interface GameTarget {
 
 // Rows are at least 44 px tall, an easy tap target; `item` must match `itemHeight` for the keyboard scrolling. The
 // sheet is 300 px tall from `sm`, and a row shorter on phones, so the on-screen keyboard doesn't cover its last name.
-// `rows` is how many rows the 300 px sheet can show at once, counting one cut off at each edge. Heads are a whole
-// multiple of the 8×8 face, so its pixels stay square.
+// `rows` must match how many rows the sheet can show at once, counting one cut off at each edge.
 const SIZES = {
   regular: {
     itemHeight: 56,
@@ -231,9 +227,8 @@ export function Search({
   // `query` is the typed text; the arrows put a row's name in the box without leaving the recent players.
   const rows = recent && query.trim() === "" ? (recentPlayers ?? undefined) : suggested;
   const [selected, setSelected] = useState<number | undefined>(undefined);
-  // Typing on a keyboard completes the name in place from the first suggestion that starts with it, the rest selected,
-  // so Enter opens it and typing on replaces it; none when a suggestion is the name typed. Only while typing at the end:
-  // a deletion or a paste stops it, and moving the caret takes it.
+  // Typing at the end on a keyboard fills in the first suggestion that starts with the text, the rest selected, so Enter
+  // opens it and typing on replaces it. A deletion or a paste stops it; moving the caret takes it.
   const [completing, setCompleting] = useState(false);
   const typed = query.toLowerCase();
   const match =

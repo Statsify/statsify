@@ -79,9 +79,8 @@ export function RefreshBar({
   expiresAt: number;
   refresh: (deadline: AbortSignal, auto: boolean, token: string | undefined) => Promise<ActionResult<unknown>>;
   /**
-   * Once the page opens, update a save older than 15 minutes (past its cooldown when the search opened the page) by
-   * itself, once per page view. It fails quietly: a refusal counts down without the message, and anything else leaves
-   * the button as it was.
+   * Once per page view, update a save older than 15 minutes (or past its cooldown, when the search opened the page) by
+   * itself. It fails quietly: a refusal counts down without the message, and anything else leaves the button as it was.
    */
   auto?: boolean;
   /** One row on phones too, the time beside a smaller button: a game page, whose tables should start near the top. */
@@ -167,8 +166,7 @@ export function RefreshBar({
   else if (state.status === "unavailable") message = t("player.refreshFailed");
   else if (state.status === "error") message = t("player.refreshError");
 
-  // A minimum width, so the countdown's changing digits don't move the button; beside other controls it's at the end
-  // of the row, where they don't move either.
+  // A minimum width, so the countdown's changing digits don't move the button.
   // `aria-disabled`, not `disabled`, so the button keeps focus while it refreshes and counts down.
   const button = (
     <Button
@@ -193,41 +191,20 @@ export function RefreshBar({
     </Button>
   );
 
-  // Phones: the time over a full-width button, unless `row`; wider screens: one row. Beside other controls, the time
-  // over them and the button.
+  // Phones: the time over a full-width button, unless `row`; wider screens: one row.
   return (
-    <>
-      <div ref={bar} className={cn("flex flex-col gap-2", className)}>
-        <div
-          className={cn(
-            "flex flex-col gap-2",
-            beside === undefined && "sm:flex-row sm:items-center sm:justify-between sm:gap-4",
-            row && "flex-row items-center justify-between gap-4"
-          )}
-        >
-          <p data-clock="updated" className={cn(META, "min-w-0")} suppressHydrationWarning>
-            {now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}
-          </p>
-          {beside === undefined ? button : <div className="flex items-center justify-between gap-3">{beside}{button}</div>}
-        </div>
-        {verifying && (
-          <Turnstile
-            siteKey={turnstileSiteKey}
-            onToken={(token) => {
-              if (token) return void run(false, token);
-              // The widget failed or its token expired: the button comes back for another try.
-              setVerifying(false);
-              setState({ status: "error" });
-            }}
-            onLoadError={() => setWidgetFailed(true)}
-            className="w-full"
-          />
+    <div ref={bar} className={cn("flex flex-col gap-2", className)}>
+      <div
+        className={cn(
+          "flex flex-col gap-2",
+          beside === undefined && "sm:flex-row sm:items-center sm:justify-between sm:gap-4",
+          row && "flex-row items-center justify-between gap-4"
         )}
-        <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>
-        <output className="sr-only">
-          {state.status === "pending" && !state.auto && t("player.refreshing")}
-          {state.status === "done" && t("player.updated", { time: relativeTime(updatedAt, updatedAt, i18n.language) })}
-        </output>
+      >
+        <p data-clock="updated" className={cn(META, "min-w-0")} suppressHydrationWarning>
+          {now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}
+        </p>
+        {beside === undefined ? button : <div className="flex items-center justify-between gap-3">{beside}{button}</div>}
       </div>
       <ClockScript
         args={{
@@ -239,7 +216,25 @@ export function RefreshBar({
           refreshIn: t("player.refreshIn", { time: TIME_SLOT }),
         }}
       />
-    </>
+      {verifying && (
+        <Turnstile
+          siteKey={turnstileSiteKey}
+          onToken={(token) => {
+            if (token) return void run(false, token);
+            // The widget failed or its token expired: the button comes back for another try.
+            setVerifying(false);
+            setState({ status: "error" });
+          }}
+          onLoadError={() => setWidgetFailed(true)}
+          className="w-full"
+        />
+      )}
+      <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>
+      <output className="sr-only">
+        {state.status === "pending" && !state.auto && t("player.refreshing")}
+        {state.status === "done" && t("player.updated", { time: relativeTime(updatedAt, updatedAt, i18n.language) })}
+      </output>
+    </div>
   );
 }
 

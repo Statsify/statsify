@@ -7,10 +7,9 @@
  */
 
 /**
- * Runs after `vite build` and fails the build if the output holds something that must never ship:
- * - the dev-only component gallery (`src/gallery`), found by its route path anywhere in the server or browser output;
- * - a file byte-identical to one in the private assets submodule (the 380 blurred backgrounds, textures, …). Private
- *   files are only hashed when their size matches an output file, so the check stays fast.
+ * Fails the build if the output holds the dev-only component gallery (`src/gallery`) or a file byte-identical to one in
+ * the private assets submodule (the 380 blurred backgrounds, textures, …). Runs after `vite build`. Private files are
+ * only hashed when their size matches an output file, so the check stays fast.
  */
 
 import { createHash } from "node:crypto";

@@ -26,7 +26,6 @@ import type { HomeData } from "./home-data";
 /** Each section shows only when its preview loaded; the API hands back `null` otherwise. */
 export function Home({ players, guild, leaderboard }: HomeData) {
   return (
-    // With reduced motion, Motion skips the transform animations (the carousel slide, drags snapping back);
     // `overflow-x-clip`: the draggable stat boxes around the logo may never widen the page.
     <MotionConfig reducedMotion="user">
       <div className="relative overflow-x-clip">
@@ -39,7 +38,6 @@ export function Home({ players, guild, leaderboard }: HomeData) {
               background: "linear-gradient(180deg, transparent 80%, var(--color-blackify-950) calc(100% - (var(--spacing) * 6)))",
             }}
           />
-          {/* Left-aligned copy at every width, inside the page padding. */}
           <div className="w-container flex flex-col-reverse lg:flex-row gap-4 lg:gap-12 lg:justify-between items-center text-mc-white px-4 md:px-8 py-15 pb-21 lg:py-30 lg:pb-36">
             <div className="flex w-full flex-col gap-10 lg:gap-6 md:max-w-[500px] xl:max-w-[600px]">
               <div className="flex flex-col gap-3">
@@ -105,8 +103,7 @@ export function Home({ players, guild, leaderboard }: HomeData) {
   );
 }
 
-// The home page's one primary action. `/invite` is answered by the server with a
-// 301, so it is a plain anchor rather than a router link.
+// `/invite` is answered by the server with a 301, so it is a plain anchor rather than a router link.
 function DiscordInvite({ className = "" }: { className?: string }) {
   return (
     <Button variant="primary" className={`content:bg-discord-500 ${className}`} asChild>

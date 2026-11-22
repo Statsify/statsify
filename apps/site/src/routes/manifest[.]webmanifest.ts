@@ -13,12 +13,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createI18n } from "~/i18n/i18n";
 import { loadResources } from "~/i18n/i18n.server";
 
-/**
- * What a phone uses when the site is added to its home screen. `minimal-ui` keeps a back button: iOS's standalone
- * mode has none, and a page reached from a link would be a dead end. The maskable icon's logo fills the middle half of
- * the page's background, so every shape Android crops it to keeps all of it. The description is the pages' own, from
- * `site.json`.
- */
+/** `minimal-ui` keeps a back button: iOS's standalone mode has none, so a page reached from a link would be a dead end. */
 const manifest = (description: string) => JSON.stringify({
   name: SITE_NAME,
   short_name: SITE_NAME,

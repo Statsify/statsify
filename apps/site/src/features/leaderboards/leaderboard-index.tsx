@@ -24,8 +24,7 @@ import type { IndexData } from "./leaderboard-data";
 
 const localeRoute = getRouteApi("/{-$locale}");
 
-// One class on each list instead of one per link: there are thousands of them. Each link is a box drawn by CSS
-// (`box-item`), 4 px apart, as a game page's list draws its lines.
+// One class on each list instead of one per link: there are thousands of them.
 const LIST = cn(
   "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&>li]:box-item [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:text-mc-1.5 [&_a:hover]:brightness-125 [&_a:hover]:underline [&_a:active]:brightness-125",
   BOX_GAP
@@ -39,11 +38,7 @@ function useBoardLinks() {
   return { prefix: localePrefix(locale), delegation: useLinkDelegation(locale === DEFAULT_LOCALE ? undefined : locale) };
 }
 
-/**
- * One group: its 44 px summary in a box, then its links each in a 44 px box under it, one column on phones and up to
- * four on desktop, as a game page's folded lists. With `icons`, every summary keeps a slot for its game's icon, so the
- * names line up whether a group has one or not.
- */
+/** One folded group. With `icons`, every summary keeps a slot for its game's icon, so the names line up. */
 function IndexPanel({ group, open, icons, children }: { group: Omit<GroupSummary, "count">; open: boolean; icons?: boolean; children: ReactNode }) {
   return (
     // The group's id is its key, so `#<key>` lands on it.
@@ -125,14 +120,8 @@ const serverList = createIsomorphicFn()
   .client((): ListGroup[] | undefined => undefined);
 
 /**
- * Every leaderboard grouped by game, each group a closed `<details>` so the 2,700 links cost no layout until opened, each
- * with a link to its game's index first.
- *
- * The list isn't in the page's data: the server renders the links into the HTML and hydration keeps them as they are.
- * The filter fetches the list (one file, cached for good under its hash) when the box is first pressed or focused, then
- * matches every word of the query against "<game> <leaderboard>", abbreviations ("bw fk") and the stat's word on the
- * bot's cards, and opens what's left. Without scripts the box submits `?q=`, which the server filters the same way.
- * A client-side visit brings the list along (`list`).
+ * Every leaderboard grouped by game, each group a closed `<details>` so the 2,700 links cost no layout until opened. The
+ * links are in the server's HTML, not the page's data; the filter fetches the list when the box is first used.
  */
 export function AllLeaderboards({ data, list: loaded, query = "" }: { data: IndexData; list?: ListGroup[]; query?: string }) {
   const { t } = useTranslation();
@@ -225,9 +214,8 @@ export function AllLeaderboards({ data, list: loaded, query = "" }: { data: Inde
 }
 
 /**
- * A group's links as markup, set as HTML rather than one element each. Without the list (hydrating the server's render,
- * or before the first fetch), the server's markup is kept as it is: read back from the page while hydrating, so it
- * matches and React leaves it alone.
+ * A group's links set as HTML rather than one element each. Without the list, the server's markup is read back from the
+ * page while hydrating, so it matches and React leaves it alone.
  */
 function BoardLinks({ id, html }: { id: string; html?: string }) {
   const hydrated = useHydrated();
@@ -242,10 +230,8 @@ function BoardLinks({ id, html }: { id: string; html?: string }) {
 const PRELOAD_DELAY_MS = 50;
 
 /**
- * What a router Link does, for a list of plain leaderboard links: hovering, focusing or touching one preloads its
- * leaderboard, and a plain left click (or Enter) navigates in the app, so the index stays on screen until the
- * leaderboard's data is ready. Modified clicks fall through to the browser (new tab, new window). The field is the
- * link's last path segment, so the thousands of links carry no attribute for it.
+ * What a router Link does (preload on intent, navigate on a plain click), for a list of plain leaderboard links. The
+ * field is the link's last path segment, so the thousands of links carry no attribute for it.
  */
 function useLinkDelegation(locale: string | undefined) {
   const router = useRouter();

@@ -11,11 +11,7 @@ import { dirname, join } from "node:path";
 
 let root: string | undefined;
 
-/**
- * The monorepo root, found by walking up from the working directory like the bot
- * resolves `../../locales` and `../../assets`. Works from `apps/site` (pm2, `pnpm site start`)
- * and from the repo root (vitest).
- */
+/** From the working directory, which is `apps/site` when the site runs and the repo root under vitest. */
 export function repoRoot(): string {
   if (root) return root;
 

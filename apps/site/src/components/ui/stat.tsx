@@ -65,10 +65,8 @@ export function Hidden() {
 }
 
 /**
- * For `large`: a Minecraft 24 pixel is 1.5 px, so text at 24 and 48 can end on a half pixel, and whatever is centered on
- * it or follows it lands on one, blurred on 1× screens. Where `calc-size()` works, its boxes round their width up to an
- * even number of pixels with the text at the start, so centering them lands on whole pixels (as `grid-cols-snap-*` does
- * for the cells).
+ * For `large`: a Minecraft 24 pixel is 1.5 px, so centered text at 24 or 48 can land on a half pixel and blur on 1×
+ * screens. Where `calc-size()` works, this rounds the box's width up to an even number of pixels.
  */
 export const SNAP_LARGE = "lg:w-[calc-size(fit-content,round(up,size,2px))] lg:text-start";
 
@@ -81,12 +79,7 @@ const snapWords = (label: ReactNode) =>
     label.split(" ").flatMap((word, index) => [index > 0 && " ", <span key={index} className={cn("lg:inline-block", SNAP_LARGE)}>{word}</span>]) :
     label;
 
-/**
- * A card table cell (`Table.td`): a Minecraft 16 title over a Minecraft 32 value, both in the stat's color and centered
- * (the number is the hero). A long title wraps to two lines; the value keeps to the bottom of the cell, so the values
- * in a row line up whatever their titles do. Renders a `<div>` holding a `<dt>` and a `<dd>`, so a list of cells goes
- * inside a `<dl>`.
- */
+/** A card table cell (`Table.td`): a title over its value, in the stat's color. Cells go inside a `<dl>`. */
 export function StatCell({
   label,
   value,
@@ -151,35 +144,38 @@ export function InlineStat({
   );
 }
 
-/** What a stat link shows on hover and keyboard focus: the label's full name and the exact number, where shortened. */
-export const linkHint = (full?: string, exact?: string) => [full, exact].filter(Boolean).join(": ") || undefined;
-
 /**
  * The stat's leaderboard, opened at the player's row. The link covers the whole (`relative`) stat cell; its name says
- * where it goes. A tap follows it, so what the cell shortens (`hint`) shows on hover and keyboard focus instead.
+ * where it goes. A tap follows it, so what the cell shortens (the label's `full` name, the `exact` number) shows on hover
+ * and keyboard focus instead.
  */
 export function LeaderboardLink({
   field,
   username,
   stat,
-  hint,
+  full,
+  exact,
   children,
 }: {
   field: string;
   username: string;
   stat: string;
-  hint?: string;
+  full?: string;
+  exact?: string;
   children: ReactNode;
 }) {
   const { t } = useTranslation();
   // Over the whole cell the link covers, not just its text.
-  const { props, tooltip } = useHint(hint, (link) => link.closest(".relative") ?? link);
+  const { props, tooltip } = useHint(
+    [full, exact].filter(Boolean).join(": ") || undefined,
+    (link) => link.closest(".relative") ?? link
+  );
 
   return (
     <>
       <Link to="/{-$locale}/leaderboards/$field" params={{ field }} search={{ around: username }} className={STAT_LINK} {...props}>
         {children}
-        <span className="sr-only"> {t("game.leaderboard", { stat })}</span>
+        <span className="sr-only"> {t("game.leaderboard", { stat: full ?? stat })}</span>
       </Link>
       {tooltip}
     </>
