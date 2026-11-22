@@ -34,16 +34,12 @@ export interface RenderPoolOptions {
   /** The worker script; this package's `worker.js` unless the caller is bundled elsewhere. */
   worker?: string | URL;
   workerOptions?: WorkerOptions;
-  /** Threads, 2 by default. The site sets it from `site.renderWorkers`. */
   size?: number;
   /** Waiting jobs before `render` rejects with `PoolBusyError`. */
   queueLimit?: number;
   /** A job running longer has its worker terminated and replaced. */
   timeoutMs?: number;
-  /**
-   * A job still waiting after this long is rejected with `PoolBusyError`. The site's render lock outlasts this plus
-   * the render limit, so a second request never draws the same card.
-   */
+  /** The site's render lock has to outlast this plus `timeoutMs`, or a second request draws the same card. */
   queueTimeoutMs?: number;
   /** First delay before replacing a worker that died before it was ready; it doubles each time, up to 30 s. */
   respawnDelayMs?: number;
@@ -69,11 +65,7 @@ const closedError = () => new Error("The render pool is closed");
 
 const MAX_RESPAWN_DELAY_MS = 30_000;
 
-/**
- * A `node:worker_threads` pool that owns skia-canvas and the fonts, so a render never shares the
- * server's event loop. A worker announces `ready` once its fonts are loaded; one that
- * fails, exits or hangs is replaced and its job rejected.
- */
+/** Renders in worker threads, so a render never blocks the server's event loop. */
 export class RenderPool {
   private readonly worker: string | URL;
   private readonly workerOptions: WorkerOptions;

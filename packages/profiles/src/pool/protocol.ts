@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/**
- * The image sizes the site serves. `og` is the unfurl: the general card at its own size with the guild row, as the
- * bot sends it, rather than framed. `sig` is a forum signature (the Hypixel Forums cut signatures off at 200 px tall)
- * and `card` the general card at its native size. The variant is part of every request and cache key.
- */
+/** `sig` is 200 px tall because the Hypixel Forums cut signatures off there. */
 export const IMAGE_VARIANTS = {
   og: { width: 808, height: 540 },
   sig: { width: 600, height: 200 },
