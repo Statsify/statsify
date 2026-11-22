@@ -11,16 +11,18 @@ import { UserFooter, UserLogo } from "./footer.js";
 import { UserTheme } from "./theme.js";
 import { prettify } from "@statsify/util";
 
-export enum UserTier {
-  NONE = 0,
-  IRON = 101,
-  GOLD = 202,
-  DIAMOND = 303,
-  EMERALD = 404,
-  NETHERITE = 505,
-  STAFF = 666,
-  CORE = 999
-}
+export const UserTier = {
+  NONE: 0,
+  IRON: 101,
+  GOLD: 202,
+  DIAMOND: 303,
+  EMERALD: 404,
+  NETHERITE: 505,
+  STAFF: 666,
+  CORE: 999,
+} as const;
+
+export type UserTier = (typeof UserTier)[keyof typeof UserTier];
 
 const tiers = Object.entries(UserTier);
 
