@@ -47,9 +47,10 @@ function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefine
   if (!item) return;
 
   const texture = tag?.SkullOwner?.Properties?.textures?.[0]?.Value;
-  const effects = tag?.CustomPotionEffects?.flatMap(({ Id, Amplifier = 0 }) => {
+  const effects = tag?.CustomPotionEffects?.map(({ Id, Amplifier = 0 }) => {
     const effect = legacyEffect(Id);
-    return effect ? [{ id: effect, amplifier: Amplifier }] : [];
+    if (!effect) throw new Error(`No 1.8 effect ${Id}`);
+    return { id: effect, amplifier: Amplifier };
   });
 
   const banner = tag?.BlockEntityTag;
