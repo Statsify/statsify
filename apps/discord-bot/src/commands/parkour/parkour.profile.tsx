@@ -7,7 +7,7 @@
  */
 
 import { Container, Footer, type GameEntry, GameList, Header } from "#components";
-import { FormattedGame, GameId, Parkour, scanMetadata } from "@statsify/schemas";
+import { FormattedGame, type GameId, Parkour, scanMetadata } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { Image } from "skia-canvas";
