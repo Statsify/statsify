@@ -6,10 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+// oxlint-disable-next-line typescript/triple-slash-reference -- importers don't load our tsconfig
+/// <reference path="./mojangson.d.ts" />
+
 import { type PackStack, assetPath, namespaceIds, namespaced } from "./pack.js";
 import type { ItemStack } from "./item-stack.js";
 import type { TintSource } from "./tints.js";
 import { maxDamage } from "./legacy-items.js";
+import mojangson from "mojangson";
 import { type Transformation, type Vec3, composeTransforms } from "./geometry.js";
 
 export interface Transform {
@@ -110,30 +114,17 @@ type ItemModel =
   | { type: "minecraft:empty" }
   | { type: "minecraft:bundle/selected_item" };
 
-const SNBT_ENTRY = /\s*([\w.+-]+|"(?:[^"\\]|\\.)*")\s*:\s*("(?:[^"\\]|\\.)*"|[\w.+-]+)\s*(?:,|(?=\}$))/y;
-const SNBT_NUMBER = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?[bdfls]?$/i;
-
-const snbtString = (token: string) => (token.startsWith('"') ? (JSON.parse(token) as string) : token);
-
-function snbtValue(token: string) {
-  if (token === "true" || token === "false") return Number(token === "true");
-  return SNBT_NUMBER.test(token) ? Number.parseFloat(token) : snbtString(token);
-}
-
-/** A compound of plain values, like {td_attune_mode:1}, with booleans as the bytes 1 and 0 */
+/** An SNBT compound, like {td_attune_mode:1}, with booleans as the bytes 1 and 0 */
 function parseSnbt(snbt: string) {
-  const text = snbt.trim();
-  if (!text.startsWith("{") || !text.endsWith("}")) throw new Error(`${snbt} isn't an SNBT compound`);
+  const tag = mojangson.parse(snbt);
+  if (tag.type !== "compound") throw new Error(`${snbt} isn't an SNBT compound`);
 
-  const compound: Record<string, number | string> = {};
-
-  for (SNBT_ENTRY.lastIndex = 1; text.slice(SNBT_ENTRY.lastIndex, -1).trim(); ) {
-    const entry = SNBT_ENTRY.exec(text);
-    if (!entry) throw new Error(`${snbt} holds something other than numbers, booleans and strings`);
-    compound[snbtString(entry[1])] = snbtValue(entry[2]);
-  }
-
-  return compound;
+  return Object.fromEntries(
+    Object.entries(mojangson.simplify(tag)).map(([key, value]) => [
+      key,
+      typeof value === "boolean" ? Number(value) : value,
+    ]),
+  );
 }
 
 // Properties are read as they are for an item sitting in an inventory: not in use, selected
@@ -433,7 +424,7 @@ if (import.meta.vitest) {
       level: 2.5,
       tier: -3,
     });
-    expect(() => parseSnbt("{nested:{a:1}}")).toThrow();
+    expect(parseSnbt("{nested:{a:1}}")).toEqual({ nested: { a: 1 } });
     expect(() => parseSnbt("td_attune_mode:1")).toThrow();
   });
 }
