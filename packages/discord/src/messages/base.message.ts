@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIAllowedMentions, APIAttachment, MessageFlags } from "discord-api-types/v10";
+import { type APIAllowedMentions, type APIAttachment, MessageFlags } from "discord-api-types/v10";
 import { ActionRowBuilder, type ContainerBuilder, type ContainerComponent } from "./components/index.js";
 import { EmbedBuilder } from "./embed.js";
 import { InteractionAttachment, InteractionContent } from "#interaction";
