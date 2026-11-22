@@ -12,6 +12,9 @@ import { type SiteClient, contract } from "@statsify/contract";
 import { createORPCClient } from "@orpc/client";
 import { siteConfig } from "./config.server";
 
+/** How long any call to the API may take. Past it the API counts as down, so a stalled one can't hang the page. */
+const API_TIMEOUT_MS = 10_000;
+
 export async function rpcUrl() {
   const { apiRoute } = await siteConfig();
   return `${apiRoute.replace(/\/$/, "")}/rpc`;
@@ -27,7 +30,7 @@ async function rpcHeaders() {
  * answer, which they pass on as `unavailable()`.
  */
 export async function fetchApi(url: string | URL): Promise<Response | null> {
-  const upstream = await fetch(url, { headers: await rpcHeaders() }).catch(() => null);
+  const upstream = await fetch(url, { headers: await rpcHeaders(), signal: AbortSignal.timeout(API_TIMEOUT_MS) }).catch(() => null);
   if (upstream && upstream.status !== 429 && upstream.status < 500) return upstream;
   await upstream?.body?.cancel();
   return null;
@@ -44,5 +47,9 @@ export function unavailable(body?: Record<string, unknown>): Response {
  * it during SSR and server functions use it for refresh and lookup; browsers go through `/api/rpc/$`.
  */
 export const rpcServerClient: SiteClient = createORPCClient(
-  new OpenAPILink(contract, { url: rpcUrl, headers: rpcHeaders })
+  new OpenAPILink(contract, {
+    url: rpcUrl,
+    headers: rpcHeaders,
+    fetch: (request, init) => fetch(request, { ...init, signal: AbortSignal.any([request.signal, AbortSignal.timeout(API_TIMEOUT_MS)]) }),
+  })
 );
