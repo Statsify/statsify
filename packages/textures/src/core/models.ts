@@ -136,8 +136,8 @@ function parseSnbt(snbt: string) {
   return compound;
 }
 
-// Properties are read as they are for an item sitting in an inventory: not in use, selected,
-// cast or held by a key, so every condition without a case here is false
+// Properties are read as they are for an item sitting in an inventory: not in use, selected
+// or cast, with no key held down, so every condition without a case here is false
 function condition(model: Extract<ItemModel, { type: "minecraft:condition" }>, item: ItemStack) {
   switch (model.property) {
     case "minecraft:has_component":
