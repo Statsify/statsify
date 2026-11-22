@@ -9,6 +9,8 @@
 import { type APIInteraction, InteractionResponseType, InteractionType } from "discord-api-types/v10";
 import { type IncomingMessage, type ServerResponse, createServer } from "node:http";
 import { type KeyObject, createPublicKey, verify } from "node:crypto";
+import { Logger } from "@statsify/logger";
+import { finished } from "node:stream/promises";
 import type { InteractionReply, InteractionResponder } from "./interaction.js";
 import type { RawFile } from "@discordjs/rest";
 
@@ -21,12 +23,15 @@ export class InteractionServer {
   private readonly key: KeyObject;
   private readonly server = createServer((req, res) => this.onRequest(req, res));
   private handler?: InteractionRequestHandler;
+  private readonly logger = new Logger("InteractionServer");
 
   public constructor(publicKey: string) {
     this.key = createPublicKey({
       key: { kty: "OKP", crv: "Ed25519", x: Buffer.from(publicKey, "hex").toString("base64url") },
       format: "jwk",
     });
+
+    this.server.on("error", (error) => this.logger.error(error));
   }
 
   public onInteraction(handler: InteractionRequestHandler) {
@@ -81,9 +86,9 @@ async function respond(res: ServerResponse, { files, ...response }: InteractionR
 
   res.writeHead(200, { "Content-Type": contentType });
 
-  await new Promise<void>((resolve) => {
-    res.end(payload, resolve);
-  });
+  res.end(payload);
+  // end's callback never runs when Discord already closed the request; finished() settles either way
+  await finished(res);
 }
 
 async function toMultipart(json: string, files: RawFile[]): Promise<[contentType: string, payload: Buffer]> {

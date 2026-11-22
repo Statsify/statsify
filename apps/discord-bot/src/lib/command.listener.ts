@@ -15,6 +15,7 @@ import {
   ErrorMessage,
   IMessage,
   Interaction,
+  type InteractionServer,
 } from "@statsify/discord";
 import { Container } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
@@ -24,7 +25,6 @@ import { getAssetPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
 import { tips } from "../tips.js";
 import type { API } from "@discordjs/core/http-only";
-import type { InteractionServer } from "@statsify/discord";
 import type { WebSocketManager } from "@discordjs/ws";
 
 const isDevelopment = await config("environment") === "dev";
