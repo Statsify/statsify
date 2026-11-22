@@ -16,8 +16,6 @@ pub struct Vertex {
 pub struct Submesh {
   /// Texture name as the pack keys it, such as `blocks/stone`.
   pub texture: String,
-  /// Whether the faces take directional shading; elements opt out with `"shade": false`.
-  pub shade: bool,
   pub vertices: Vec<Vertex>,
   pub indices: Vec<u32>,
 }
@@ -56,7 +54,7 @@ const NORMALS: [[f32; 3]; 6] = [
   [1.0, 0.0, 0.0],
 ];
 
-/// Bakes a model and its supplied parents into one submesh per texture and shade flag.
+/// Bakes a model and its supplied parents into one submesh per texture.
 pub fn bake_model(pack: &Pack, name: &str) -> Result<BakedModel, Error> {
   let model = Model::load(pack, name)?;
   let mut submeshes: Vec<Submesh> = Vec::new();
@@ -71,15 +69,11 @@ pub fn bake_model(pack: &Pack, name: &str) -> Result<BakedModel, Error> {
         continue;
       };
 
-      let shade = element.shade;
-      let existing = submeshes
-        .iter()
-        .position(|s| s.texture == texture && s.shade == shade);
+      let existing = submeshes.iter().position(|s| s.texture == texture);
 
       let index = existing.unwrap_or_else(|| {
         submeshes.push(Submesh {
           texture,
-          shade,
           vertices: Vec::new(),
           indices: Vec::new(),
         });
