@@ -70,7 +70,9 @@ const colorRegex = new RegExp(
 const color: Token = {
   regex: colorRegex,
   effect: (part) => ({
-    color: part.startsWith("#") ? part.slice(0, 7) : textColors[part[0].toLowerCase()],
+    color: part.startsWith("#")
+      ? part.slice(0, 7)
+      : textColors[part[0].toLowerCase()],
   }),
 };
 
