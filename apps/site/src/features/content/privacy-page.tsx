@@ -69,6 +69,31 @@ const sections = (mail: ReactNode): LegalSection[] => [
     ),
   },
   {
+    id: "accounts",
+    title: "Site Accounts",
+    body: (
+      <>
+        <Paragraph>
+          When you log in to statsify.net with Discord, Statsify keeps your Discord user ID and when your account was made.
+          Discord also sends your username and avatar, which Statsify doesn't keep. It never sees your email or password.
+        </Paragraph>
+        <Paragraph>
+          Your account keeps the Minecraft profiles you link, by UUID, with when each was linked. Logging in links the profile
+          you verified with the bot's verify command, and making a profile your primary one verifies it with the bot too. If
+          someone else verifies one of your profiles with the bot, it leaves your account, which keeps a note of which profile
+          left and when until you dismiss it.
+        </Paragraph>
+        <Paragraph>
+          Logging in sets three cookies. statsify_session holds a random token that keeps you logged in for 30 days. Statsify
+          keeps only a hash of it, deleted when you log out or the 30 days end. statsify_account holds your primary profile's
+          UUID for 30 days, so the header can show it, and only your browser reads it. statsify_login_state lasts up to 10
+          minutes while you log in, to check that the login coming back from Discord is the one you started.
+        </Paragraph>
+        <Paragraph>You can unlink a profile on your account page at any time. To delete your account, email {mail}.</Paragraph>
+      </>
+    ),
+  },
+  {
     id: "site",
     title: "Visiting statsify.net",
     body: (
@@ -76,9 +101,9 @@ const sections = (mail: ReactNode): LegalSection[] => [
         <Subheading>Your IP Address</Subheading>
         <Paragraph>
           Statsify uses your IP address to limit how often you can update or look up players, so no one can use up its share of
-          Hypixel's API. Opening a profile can update it from Hypixel, which counts toward the same limit. The count is kept
-          for 5 minutes, then deleted. Each of those updates and lookups also sends your IP address to Cloudflare Turnstile,
-          which checks that you're a person.
+          Hypixel's API, and how often you can log in. Opening a profile can update it from Hypixel, which counts toward the same limit. The count is kept
+          for 5 minutes, then deleted. Each of those updates and lookups, and each login, also sends your IP address to
+          Cloudflare Turnstile, which checks that you're a person.
         </Paragraph>
         <Subheading>Logs</Subheading>
         <Paragraph>
@@ -98,7 +123,7 @@ const sections = (mail: ReactNode): LegalSection[] => [
         </Paragraph>
         <Subheading>Cookies</Subheading>
         <Paragraph>
-          Statsify sets no cookies. Cloudflare may set its own security cookies to tell people from bots, such as __cf_bm, which
+          Statsify sets cookies only when you log in, as Site Accounts describes. Cloudflare may set its own security cookies to tell people from bots, such as __cf_bm, which
           expires after 30 minutes. They're used for security, not tracking.
         </Paragraph>
       </>
@@ -123,7 +148,7 @@ const sections = (mail: ReactNode): LegalSection[] => [
         <List>
           <li>Cloudflare, which carries the site's traffic, protects it and runs Turnstile.</li>
           <li>Sentry, which keeps error reports.</li>
-          <li>Discord, which carries the bot's commands under its own privacy policy.</li>
+          <li>Discord, which carries the bot's commands and the site's logins under its own privacy policy.</li>
           <li>Hypixel and Minecraft's account servers, where stats, names and skins come from. Statsify sends them the names and UUIDs it looks up.</li>
           <li>Patreon, if you support Statsify there, under its own privacy policy.</li>
         </List>
@@ -146,6 +171,8 @@ const sections = (mail: ReactNode): LegalSection[] => [
           ["Request logs", "14 days"],
           ["Error reports", "90 days"],
           ["Linked accounts and settings", "Until you unlink them with the unverify command"],
+          ["Site accounts and their profiles", "Until you unlink a profile, or ask for the account to be deleted"],
+          ["Login sessions", "30 days, or until you log out"],
           ["Hypixel players' stats", "Until the player asks for them to be removed"],
           ["Recently viewed players", "On your device, until you clear them"],
         ]}

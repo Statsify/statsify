@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { AccountLink } from "~/components/account-link";
 import { Link, useMatch, useRouterState } from "@tanstack/react-router";
 import { Logo, Wordmark } from "~/components/icons/logo";
 import { Search } from "~/components/search";
@@ -113,15 +114,16 @@ export function Header() {
           </ul>
         </nav>
         {showSearch && (
-          // Below lg the search has the last row to itself.
+          // Below lg the search has the last row to itself, and on phones the account link beside it.
           <div
             ref={searchRow}
             className={cn(
-              "order-last basis-full lg:order-none lg:max-w-96 lg:min-w-0 lg:flex-1",
+              "order-last flex basis-full items-center gap-4 lg:order-none lg:max-w-96 lg:min-w-0 lg:flex-1",
               !searching && "max-md:hidden"
             )}
           >
-            <Search compact shortcut recent target={gameTarget} />
+            <Search compact shortcut recent target={gameTarget} className="min-w-0 flex-1" />
+            <AccountLink className={cn(NAV_LINK, "md:hidden")} />
           </div>
         )}
         <nav aria-label={t("nav.external")} className="ms-auto">
@@ -136,20 +138,22 @@ export function Header() {
             ))}
           </ul>
         </nav>
-        {/* Held, unseen, on pages with a search of their own, so the links before it don't move. */}
-        <button
-          ref={searchButton}
-          type="button"
-          aria-label={t("search.label")}
-          aria-expanded={searching}
-          onClick={toggleSearch}
-          className={cn(
-            "flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden",
-            !showSearch && "invisible"
-          )}
-        >
-          <SearchIcon className="size-5" />
-        </button>
+        {/* A phone's logo row has the search button and no room for it, so there it sits in the opened search row. */}
+        <AccountLink className={cn(NAV_LINK, showSearch && "max-md:hidden")} />
+        {/* Not held unseen on pages with a search of their own: the account link takes its place there, and a phone's
+            logo row has no room for both. */}
+        {showSearch && (
+          <button
+            ref={searchButton}
+            type="button"
+            aria-label={t("search.label")}
+            aria-expanded={searching}
+            onClick={toggleSearch}
+            className="flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden"
+          >
+            <SearchIcon className="size-5" />
+          </button>
+        )}
       </div>
     </header>
   );

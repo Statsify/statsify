@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { AccountService } from "#site";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { User, VerifyCode } from "@statsify/schemas";
@@ -21,7 +22,8 @@ export class UserService {
   public constructor(
     @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>,
     @InjectModel(VerifyCode)
-    private readonly verifyCodeModel: ReturnModelType<typeof VerifyCode>
+    private readonly verifyCodeModel: ReturnModelType<typeof VerifyCode>,
+    private readonly accountService: AccountService
   ) {}
 
   public get(idOrUuid: string): Promise<User | null> {
@@ -113,11 +115,13 @@ export class UserService {
       .lean()
       .exec();
 
+    await this.accountService.botVerified(id, uuid);
     return user;
   }
 
   public async unverifyUser(idOrUuid: string): Promise<User | null> {
     const [tag, type] = parseTag(idOrUuid);
+    const verified = await this.userModel.findOne({ [type]: tag }, { id: true, uuid: true }).lean().exec();
 
     const user = await this.userModel
       .findOneAndUpdate(
@@ -128,6 +132,7 @@ export class UserService {
       .lean()
       .exec();
 
+    if (verified?.uuid) await this.accountService.botUnverified(verified.id, verified.uuid);
     return user;
   }
 

@@ -8,6 +8,8 @@
 
 import * as Sentry from "@sentry/node";
 import { Guild, Player } from "@statsify/schemas";
+import { AccountController } from "./account.controller.js";
+import { AccountModule } from "./account.module.js";
 import { GuildModule } from "#guild";
 import { Module } from "@nestjs/common";
 import { ORPCError, ORPCModule, onError } from "@orpc/nest";
@@ -22,6 +24,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
   imports: [
     GuildModule,
     PlayerModule,
+    AccountModule,
     SkinModule,
     SessionModule,
     TypegooseModule.forFeature([Player, Guild]),
@@ -36,7 +39,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
       ],
     }),
   ],
-  controllers: [SiteController],
+  controllers: [SiteController, AccountController],
   providers: [SiteService],
 })
 export class SiteModule {}

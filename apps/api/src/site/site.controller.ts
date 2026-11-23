@@ -14,7 +14,7 @@ import { SiteService } from "./site.service.js";
 import { contract } from "@statsify/contract";
 
 /** Every procedure; `refresh` and the lookups weigh 2. */
-const SITE_ONLY = { role: AuthRole.SITE, siteUnlimited: true };
+export const SITE_ONLY = { role: AuthRole.SITE, siteUnlimited: true };
 
 /**
  * The site's oRPC procedures under `/rpc`. They need a key with `AuthRole.SITE` or above, so a developer

@@ -263,7 +263,7 @@ export class SiteService implements OnApplicationBootstrap {
     // When Hypixel doesn't answer, `PlayerService` hands back the stored player, still past its cooldown: say the
     // refresh failed rather than show the old stats as new.
     if (!player || player.expiresAt <= Date.now()) {
-      await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
+      await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
       throw hypixelUnavailable();
     }
 
@@ -303,7 +303,7 @@ export class SiteService implements OnApplicationBootstrap {
     } catch (error) {
       // Not an answer about the name, so nothing is remembered and the visitor can try again.
       if (error instanceof HypixelUnavailableError) {
-        await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
+        await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
         throw hypixelUnavailable();
       }
 
@@ -312,7 +312,7 @@ export class SiteService implements OnApplicationBootstrap {
 
     if (!player) {
       await this.rememberMiss(key);
-      await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
+      await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
       throw notFound();
     }
 
@@ -641,8 +641,8 @@ export class SiteService implements OnApplicationBootstrap {
       throw error;
     });
 
-    // Through `hit`, not `decr`: a window that closed during the fetches would come back without an expiry.
-    if (guild?.cached) await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
+    // Through `hitWindow`, not `decr`: a window that closed during the fetches would come back without an expiry.
+    if (guild?.cached) await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
     return guild;
   }
 
@@ -689,28 +689,28 @@ export class SiteService implements OnApplicationBootstrap {
    * spends. An automatic update (`auto`) stops at two-thirds of the budget, so a third stays for clicks and new names.
    */
   private async consumeBudget(clientIp: string, { auto = false, calls = 1 } = {}): Promise<void> {
-    const [attempts, ipTtl] = await this.hit(ipKey(clientIp), IP_WINDOW_SECONDS);
+    const [attempts, ipTtl] = await hitWindow(this.redis, ipKey(clientIp), IP_WINDOW_SECONDS);
     if (attempts > IP_LIMIT) throw tooManyRequests(ipTtl);
 
     const budget = (await this.hypixelBudget) ?? DEFAULT_HYPIXEL_BUDGET;
     const limit = auto ? Math.floor((budget * 2) / 3) : budget;
-    const [spent, budgetTtl] = await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, calls);
+    const [spent, budgetTtl] = await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, calls);
 
     if (spent > limit) {
-      await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -calls);
+      await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, -calls);
       throw tooManyRequests(budgetTtl);
     }
   }
+}
 
-  /**
-   * Counts `by` hits (a negative `by` hands them back) in a fixed window that opens on the first; returns the count and
-   * the seconds left. The key gets its expiry in the same transaction as the count, so it can never be left without one.
-   */
-  private async hit(key: string, windowSeconds: number, by = 1): Promise<[count: number, ttl: number]> {
-    const results = await this.redis.multi().set(key, 0, "EX", windowSeconds, "NX").incrby(key, by).ttl(key).exec();
-    if (!results || results.some(([error]) => error)) throw new InternalServerErrorException();
-    return [Number(results[1][1]), Number(results[2][1])];
-  }
+/**
+ * Counts `by` hits (a negative `by` hands them back) in a fixed window that opens on the first; returns the count and
+ * the seconds left. The key gets its expiry in the same transaction as the count, so it can never be left without one.
+ */
+export async function hitWindow(redis: Redis, key: string, windowSeconds: number, by = 1): Promise<[count: number, ttl: number]> {
+  const results = await redis.multi().set(key, 0, "EX", windowSeconds, "NX").incrby(key, by).ttl(key).exec();
+  if (!results || results.some(([error]) => error)) throw new InternalServerErrorException();
+  return [Number(results[1][1]), Number(results[2][1])];
 }
 
 if (import.meta.vitest) {

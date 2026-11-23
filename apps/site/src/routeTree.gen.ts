@@ -23,11 +23,13 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapChar123nameChar125DotxmlRouteImport } from './routes/sitemap-{$name}[.]xml'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as Char123LocaleChar125RouteImport } from './routes/{-$locale}'
+import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
 import { Route as CardChar123uuidChar125DotpngRouteImport } from './routes/card/{$uuid}[.]png'
 import { Route as OgChar123uuidChar125DotpngRouteImport } from './routes/og/{$uuid}[.]png'
 import { Route as SigChar123uuidChar125DotpngRouteImport } from './routes/sig/{$uuid}[.]png'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
 import { Route as Char123LocaleChar125AboutRouteImport } from './routes/{-$locale}/about'
+import { Route as Char123LocaleChar125AccountRouteImport } from './routes/{-$locale}/account'
 import { Route as Char123LocaleChar125BingoRouteImport } from './routes/{-$locale}/bingo'
 import { Route as Char123LocaleChar125GlossaryRouteImport } from './routes/{-$locale}/glossary'
 import { Route as Char123LocaleChar125PrivacyRouteImport } from './routes/{-$locale}/privacy'
@@ -36,6 +38,8 @@ import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as ApiSkinHeadRouteImport } from './routes/api/skin/head'
 import { Route as ApiSkinRenderRouteImport } from './routes/api/skin/render'
 import { Route as ApiSkinTextureRouteImport } from './routes/api/skin/texture'
+import { Route as AuthDiscordIndexRouteImport } from './routes/auth/discord/index'
+import { Route as AuthDiscordCallbackRouteImport } from './routes/auth/discord/callback'
 import { Route as Char123LocaleChar125CompareIndexRouteImport } from './routes/{-$locale}/compare/index'
 import { Route as Char123LocaleChar125GuildIndexRouteImport } from './routes/{-$locale}/guild/index'
 import { Route as Char123LocaleChar125LeaderboardsIndexRouteImport } from './routes/{-$locale}/leaderboards/index'
@@ -96,6 +100,11 @@ const Char123LocaleChar125Route = Char123LocaleChar125RouteImport.update({
   path: '/{-$locale}',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthLogoutRoute = AuthLogoutRouteImport.update({
+  id: '/auth/logout',
+  path: '/auth/logout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CardChar123uuidChar125DotpngRoute =
   CardChar123uuidChar125DotpngRouteImport.update({
     id: '/card/{$uuid}.png',
@@ -124,6 +133,12 @@ const Char123LocaleChar125AboutRoute =
   Char123LocaleChar125AboutRouteImport.update({
     id: '/about',
     path: '/about',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125AccountRoute =
+  Char123LocaleChar125AccountRouteImport.update({
+    id: '/account',
+    path: '/account',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
 const Char123LocaleChar125BingoRoute =
@@ -168,6 +183,16 @@ const ApiSkinRenderRoute = ApiSkinRenderRouteImport.update({
 const ApiSkinTextureRoute = ApiSkinTextureRouteImport.update({
   id: '/api/skin/texture',
   path: '/api/skin/texture',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthDiscordIndexRoute = AuthDiscordIndexRouteImport.update({
+  id: '/auth/discord/',
+  path: '/auth/discord/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthDiscordCallbackRoute = AuthDiscordCallbackRouteImport.update({
+  id: '/auth/discord/callback',
+  path: '/auth/discord/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Char123LocaleChar125CompareIndexRoute =
@@ -276,10 +301,12 @@ export interface FileRoutesByFullPath {
   '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
+  '/auth/logout': typeof AuthLogoutRoute
   '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
   '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
   '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
+  '/{-$locale}/account': typeof Char123LocaleChar125AccountRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}/glossary': typeof Char123LocaleChar125GlossaryRoute
   '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
@@ -289,9 +316,11 @@ export interface FileRoutesByFullPath {
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
   '/api/skin/texture': typeof ApiSkinTextureRoute
+  '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameRouteWithChildren
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
+  '/auth/discord/': typeof AuthDiscordIndexRoute
   '/{-$locale}/compare/': typeof Char123LocaleChar125CompareIndexRoute
   '/{-$locale}/guild/': typeof Char123LocaleChar125GuildIndexRoute
   '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
@@ -314,10 +343,12 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/auth/logout': typeof AuthLogoutRoute
   '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
   '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
   '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
+  '/{-$locale}/account': typeof Char123LocaleChar125AccountRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}/glossary': typeof Char123LocaleChar125GlossaryRoute
   '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
@@ -327,8 +358,10 @@ export interface FileRoutesByTo {
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
   '/api/skin/texture': typeof ApiSkinTextureRoute
+  '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
+  '/auth/discord': typeof AuthDiscordIndexRoute
   '/{-$locale}/compare': typeof Char123LocaleChar125CompareIndexRoute
   '/{-$locale}/guild': typeof Char123LocaleChar125GuildIndexRoute
   '/{-$locale}/leaderboards': typeof Char123LocaleChar125LeaderboardsIndexRoute
@@ -353,10 +386,12 @@ export interface FileRoutesById {
   '/sitemap-{$name}.xml': typeof SitemapChar123nameChar125DotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
+  '/auth/logout': typeof AuthLogoutRoute
   '/card/{$uuid}.png': typeof CardChar123uuidChar125DotpngRoute
   '/og/{$uuid}.png': typeof OgChar123uuidChar125DotpngRoute
   '/sig/{$uuid}.png': typeof SigChar123uuidChar125DotpngRoute
   '/{-$locale}/about': typeof Char123LocaleChar125AboutRoute
+  '/{-$locale}/account': typeof Char123LocaleChar125AccountRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}/glossary': typeof Char123LocaleChar125GlossaryRoute
   '/{-$locale}/privacy': typeof Char123LocaleChar125PrivacyRoute
@@ -366,9 +401,11 @@ export interface FileRoutesById {
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
   '/api/skin/texture': typeof ApiSkinTextureRoute
+  '/auth/discord/callback': typeof AuthDiscordCallbackRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
   '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameRouteWithChildren
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
+  '/auth/discord/': typeof AuthDiscordIndexRoute
   '/{-$locale}/compare/': typeof Char123LocaleChar125CompareIndexRoute
   '/{-$locale}/guild/': typeof Char123LocaleChar125GuildIndexRoute
   '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
@@ -394,10 +431,12 @@ export interface FileRouteTypes {
     | '/sitemap-{$name}.xml'
     | '/sitemap.xml'
     | '/{-$locale}'
+    | '/auth/logout'
     | '/card/{$uuid}.png'
     | '/og/{$uuid}.png'
     | '/sig/{$uuid}.png'
     | '/{-$locale}/about'
+    | '/{-$locale}/account'
     | '/{-$locale}/bingo'
     | '/{-$locale}/glossary'
     | '/{-$locale}/privacy'
@@ -407,9 +446,11 @@ export interface FileRouteTypes {
     | '/api/skin/head'
     | '/api/skin/render'
     | '/api/skin/texture'
+    | '/auth/discord/callback'
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/player/$name'
     | '/{-$locale}/prestiges/bedwars'
+    | '/auth/discord/'
     | '/{-$locale}/compare/'
     | '/{-$locale}/guild/'
     | '/{-$locale}/leaderboards/'
@@ -432,10 +473,12 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap-{$name}.xml'
     | '/sitemap.xml'
+    | '/auth/logout'
     | '/card/{$uuid}.png'
     | '/og/{$uuid}.png'
     | '/sig/{$uuid}.png'
     | '/{-$locale}/about'
+    | '/{-$locale}/account'
     | '/{-$locale}/bingo'
     | '/{-$locale}/glossary'
     | '/{-$locale}/privacy'
@@ -445,8 +488,10 @@ export interface FileRouteTypes {
     | '/api/skin/head'
     | '/api/skin/render'
     | '/api/skin/texture'
+    | '/auth/discord/callback'
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/prestiges/bedwars'
+    | '/auth/discord'
     | '/{-$locale}/compare'
     | '/{-$locale}/guild'
     | '/{-$locale}/leaderboards'
@@ -470,10 +515,12 @@ export interface FileRouteTypes {
     | '/sitemap-{$name}.xml'
     | '/sitemap.xml'
     | '/{-$locale}'
+    | '/auth/logout'
     | '/card/{$uuid}.png'
     | '/og/{$uuid}.png'
     | '/sig/{$uuid}.png'
     | '/{-$locale}/about'
+    | '/{-$locale}/account'
     | '/{-$locale}/bingo'
     | '/{-$locale}/glossary'
     | '/{-$locale}/privacy'
@@ -483,9 +530,11 @@ export interface FileRouteTypes {
     | '/api/skin/head'
     | '/api/skin/render'
     | '/api/skin/texture'
+    | '/auth/discord/callback'
     | '/{-$locale}/leaderboards/$field'
     | '/{-$locale}/player/$name'
     | '/{-$locale}/prestiges/bedwars'
+    | '/auth/discord/'
     | '/{-$locale}/compare/'
     | '/{-$locale}/guild/'
     | '/{-$locale}/leaderboards/'
@@ -510,6 +559,7 @@ export interface RootRouteChildren {
   SitemapChar123nameChar125DotxmlRoute: typeof SitemapChar123nameChar125DotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char123LocaleChar125Route: typeof Char123LocaleChar125RouteWithChildren
+  AuthLogoutRoute: typeof AuthLogoutRoute
   CardChar123uuidChar125DotpngRoute: typeof CardChar123uuidChar125DotpngRoute
   OgChar123uuidChar125DotpngRoute: typeof OgChar123uuidChar125DotpngRoute
   SigChar123uuidChar125DotpngRoute: typeof SigChar123uuidChar125DotpngRoute
@@ -517,6 +567,8 @@ export interface RootRouteChildren {
   ApiSkinHeadRoute: typeof ApiSkinHeadRoute
   ApiSkinRenderRoute: typeof ApiSkinRenderRoute
   ApiSkinTextureRoute: typeof ApiSkinTextureRoute
+  AuthDiscordCallbackRoute: typeof AuthDiscordCallbackRoute
+  AuthDiscordIndexRoute: typeof AuthDiscordIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -577,6 +629,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/logout': {
+      id: '/auth/logout'
+      path: '/auth/logout'
+      fullPath: '/auth/logout'
+      preLoaderRoute: typeof AuthLogoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/card/{$uuid}.png': {
       id: '/card/{$uuid}.png'
       path: '/card/{$uuid}.png'
@@ -610,6 +669,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/{-$locale}/about'
       preLoaderRoute: typeof Char123LocaleChar125AboutRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/account': {
+      id: '/{-$locale}/account'
+      path: '/account'
+      fullPath: '/{-$locale}/account'
+      preLoaderRoute: typeof Char123LocaleChar125AccountRouteImport
       parentRoute: typeof Char123LocaleChar125Route
     }
     '/{-$locale}/bingo': {
@@ -666,6 +732,20 @@ declare module '@tanstack/react-router' {
       path: '/api/skin/texture'
       fullPath: '/api/skin/texture'
       preLoaderRoute: typeof ApiSkinTextureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/discord/': {
+      id: '/auth/discord/'
+      path: '/auth/discord'
+      fullPath: '/auth/discord/'
+      preLoaderRoute: typeof AuthDiscordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/discord/callback': {
+      id: '/auth/discord/callback'
+      path: '/auth/discord/callback'
+      fullPath: '/auth/discord/callback'
+      preLoaderRoute: typeof AuthDiscordCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/{-$locale}/compare/': {
@@ -809,6 +889,7 @@ const Char123LocaleChar125PlayerNameRouteWithChildren =
 
 interface Char123LocaleChar125RouteChildren {
   Char123LocaleChar125AboutRoute: typeof Char123LocaleChar125AboutRoute
+  Char123LocaleChar125AccountRoute: typeof Char123LocaleChar125AccountRoute
   Char123LocaleChar125BingoRoute: typeof Char123LocaleChar125BingoRoute
   Char123LocaleChar125GlossaryRoute: typeof Char123LocaleChar125GlossaryRoute
   Char123LocaleChar125PrivacyRoute: typeof Char123LocaleChar125PrivacyRoute
@@ -830,6 +911,7 @@ interface Char123LocaleChar125RouteChildren {
 
 const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
   Char123LocaleChar125AboutRoute: Char123LocaleChar125AboutRoute,
+  Char123LocaleChar125AccountRoute: Char123LocaleChar125AccountRoute,
   Char123LocaleChar125BingoRoute: Char123LocaleChar125BingoRoute,
   Char123LocaleChar125GlossaryRoute: Char123LocaleChar125GlossaryRoute,
   Char123LocaleChar125PrivacyRoute: Char123LocaleChar125PrivacyRoute,
@@ -872,6 +954,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapChar123nameChar125DotxmlRoute: SitemapChar123nameChar125DotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   Char123LocaleChar125Route: Char123LocaleChar125RouteWithChildren,
+  AuthLogoutRoute: AuthLogoutRoute,
   CardChar123uuidChar125DotpngRoute: CardChar123uuidChar125DotpngRoute,
   OgChar123uuidChar125DotpngRoute: OgChar123uuidChar125DotpngRoute,
   SigChar123uuidChar125DotpngRoute: SigChar123uuidChar125DotpngRoute,
@@ -879,6 +962,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSkinHeadRoute: ApiSkinHeadRoute,
   ApiSkinRenderRoute: ApiSkinRenderRoute,
   ApiSkinTextureRoute: ApiSkinTextureRoute,
+  AuthDiscordCallbackRoute: AuthDiscordCallbackRoute,
+  AuthDiscordIndexRoute: AuthDiscordIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -6,5 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+export * from "./account.module.js";
+export * from "./account.service.js";
 export * from "./site.module.js";
 export * from "./site.service.js";
