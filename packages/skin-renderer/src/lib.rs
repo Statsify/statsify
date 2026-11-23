@@ -1,3 +1,5 @@
+#![deny(clippy::disallowed_methods)]
+
 mod armor;
 mod error;
 mod geometry;

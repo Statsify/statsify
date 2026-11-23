@@ -200,11 +200,7 @@ fn parse_model(text: &str) -> Result<ModelFile, String> {
     for (context, value) in contexts.as_object().ok_or("display is not an object")? {
       let slot = match context.as_str() {
         "thirdperson" => &mut display.thirdperson,
-        "firstperson" => &mut display.firstperson,
         "head" => &mut display.head,
-        "gui" => &mut display.gui,
-        "ground" => &mut display.ground,
-        "fixed" => &mut display.fixed,
         _ => continue,
       };
 
