@@ -104,14 +104,13 @@ export function PlayerView({ page }: { page: PlayerPage }) {
             page={page}
             actions={(
               <>
-                <PanelToggle open={sharing} controls={shareId} onToggle={() => setSharing(!sharing)} size="text-mc-1.5">
+                <PanelToggle open={sharing} controls={shareId} onToggle={() => setSharing(!sharing)}>
                   {t("player.share.open")}
                 </PanelToggle>
                 <PanelToggle
                   open={skin}
                   controls={skinId}
                   onToggle={() => setSkin(!skin)}
-                  size="text-mc-1.5"
                   // A chunk that fails here fails again when the panel opens, which shows the error.
                   onIntent={() => loadSkinPanel().catch(() => undefined)}
                 >
