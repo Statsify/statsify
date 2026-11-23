@@ -55,8 +55,9 @@ interface PackMeta {
   };
 }
 
-const toFormat = (value: FormatValue): Format =>
-  typeof value === "number" ? [value, 0] : [value[0], value[1] ?? 0];
+// The game reads a format without its minor as minor 0 for a lower bound and any minor for an upper one
+const toFormat = (value: FormatValue, minor = 0): Format =>
+  typeof value === "number" ? [value, minor] : [value[0], value[1] ?? minor];
 
 const compareFormats = (a: Format, b: Format) => a[0] - b[0] || a[1] - b[1];
 
@@ -68,9 +69,10 @@ function overlayApplies(entry: OverlayEntry) {
 
   if (entry.min_format !== undefined && entry.max_format !== undefined) {
     min = toFormat(entry.min_format);
-    max = toFormat(entry.max_format);
+    max = toFormat(entry.max_format, Infinity);
   } else if (typeof entry.formats === "number") {
-    min = max = [entry.formats, 0];
+    min = [entry.formats, 0];
+    max = [entry.formats, Infinity];
   } else if (Array.isArray(entry.formats)) {
     min = [entry.formats[0], 0];
     max = [entry.formats[1] ?? entry.formats[0], Infinity];
@@ -326,5 +328,15 @@ if (import.meta.vitest) {
     );
     expect(jar).toMatchObject({ layout: "modern" });
     expect([...jar.files.keys()]).toEqual(["assets/minecraft/items/stone.json"]);
+  });
+
+  const applies = (format: Omit<OverlayEntry, "directory">) => overlayApplies({ directory: "overlay", ...format });
+
+  it("applies an overlay whose upper format leaves off the minor to every minor", () => {
+    expect(applies({ formats: 97 })).toBe(true);
+    expect(applies({ min_format: 97, max_format: 97 })).toBe(true);
+    expect(applies({ min_format: [97], max_format: [97] })).toBe(true);
+    expect(applies({ min_format: 96, max_format: [97, 0] })).toBe(false);
+    expect(applies({ min_format: [97, 2], max_format: 98 })).toBe(false);
   });
 }

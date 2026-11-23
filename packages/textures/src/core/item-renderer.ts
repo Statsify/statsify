@@ -217,11 +217,16 @@ function textureIds({ model, special }: ItemLayer) {
   return [...new Set(faces.map((face) => faceTexture(model, face.texture)))];
 }
 
+/**
+ * A player head's skin texture as PNG bytes, by its URL. The renderer never fetches skins itself, so the caller
+ * picks where they come from and how long they're kept, and a failed load throws
+ */
+export type SkinLoader = (url: string) => Promise<Uint8Array>;
+
 export class ItemRenderer {
   private models: ModelResolver;
   private textures: TextureLoader;
   private icons = promiseCache<OffscreenCanvas>();
-  private skins = promiseCache<ImageData>();
   private legacyGlint: boolean;
   private glint?: Promise<ReturnType<typeof squaredGlint>>;
   private translucentIcons = new WeakMap<OffscreenCanvas, boolean>();
@@ -229,6 +234,7 @@ export class ItemRenderer {
   public constructor(
     private stack: PackStack,
     private cache?: IconCache,
+    private loadSkin?: SkinLoader,
   ) {
     this.models = new ModelResolver(stack);
     this.textures = new TextureLoader(stack);
@@ -260,11 +266,7 @@ export class ItemRenderer {
     return canvas;
   }
 
-  private async base(requested: ItemStack, scale: number, tick: number): Promise<OffscreenCanvas> {
-    // Failed skins share the default head's cache entry
-    const item =
-      requested.skin && !(await this.skin(requested.skin)) ? { ...requested, skin: undefined } : requested;
-
+  private async base(item: ItemStack, scale: number, tick: number): Promise<OffscreenCanvas> {
     const resolved = this.models.resolve(item);
 
     const animated = resolved
@@ -319,11 +321,11 @@ export class ItemRenderer {
   }
 
   private async load(key: string, layers: TintedLayer[], item: ItemStack, scale: number, tick: number) {
-    const cached = await this.cache?.get(key);
+    const cached = await this.cache?.get(this.stack.hash, key);
     if (cached) return cached;
 
     const icon = await this.draw(layers, item, scale, tick);
-    void this.cache?.set(key, icon).catch(console.error);
+    void this.cache?.set(this.stack.hash, key, icon).catch(console.error);
 
     return icon;
   }
@@ -403,8 +405,8 @@ export class ItemRenderer {
       throw new Error(`${item.id} uses a ${name} model, which isn't supported yet`);
     }
 
-    const skin = !head.texture && item.skin ? await this.skin(item.skin) : undefined;
-    const texture = skin ?? (await this.textures.get(head.texture ?? DEFAULT_SKIN));
+    const texture =
+      !head.texture && item.skin ? await this.skin(item.skin) : await this.textures.get(head.texture ?? DEFAULT_SKIN);
 
     const quads = boxQuads([-4, -8, -4], [8, 8, 8], [0, 0], texture);
     if (head.hat) quads.push(...boxQuads([-4, -8, -4], [8, 8, 8], [32, 0], texture, 0.25));
@@ -412,19 +414,11 @@ export class ItemRenderer {
     return transformQuads(quads, special.transformation);
   }
 
-  /** A skin's pixels; failed loads return undefined and are retried */
-  private skin(url: string) {
-    return this.skins
-      .forceFetch(url, {
-        context: async () => {
-          const response = await fetch(url);
-          if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
+  private async skin(url: string) {
+    if (!this.loadSkin) throw new Error(`Drawing ${url} needs the ItemRenderer to have a skin loader`);
 
-          const image = await decodePng(new Uint8Array(await response.arrayBuffer()));
-          return context(image).getImageData(0, 0, image.width, image.height);
-        },
-      })
-      .catch(() => undefined);
+    const image = await decodePng(await this.loadSkin(url));
+    return context(image).getImageData(0, 0, image.width, image.height);
   }
 }
 
