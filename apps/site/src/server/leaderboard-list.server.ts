@@ -11,6 +11,7 @@ import { type ListGroup, withoutGroupPrefix } from "~/features/leaderboards/lead
 import { IMMUTABLE_HEADERS, cacheHeaders } from "~/lib/cache";
 import { createHash } from "node:crypto";
 import { readNamespace } from "~/i18n/i18n.server";
+import { removeFormatting } from "@statsify/util/util";
 import { rpcServerClient } from "./rpc.server";
 
 interface BuiltList {
@@ -57,10 +58,12 @@ async function build(): Promise<BuiltList> {
     return typeof text === "string" && !text.includes("{{") ? text : undefined;
   };
 
-  const list = withoutGroupPrefix(groups).map(({ key, game, name, leaderboards }) => ({
+  const named = groups.map((group) => ({ ...group, name: removeFormatting(group.formatted) }));
+  const list = withoutGroupPrefix(named).map(({ key, game, name, formatted, leaderboards }) => ({
     key,
     game,
     name,
+    formatted,
     leaderboards: leaderboards.map(({ field, name: board, label, aliases }) => {
       const extra = [label && word(label), ...(aliases ?? [])].filter(
         (term): term is string => Boolean(term) && !board.toLowerCase().includes(term!.toLowerCase())

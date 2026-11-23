@@ -7,7 +7,7 @@
  */
 
 import { Chevron } from "~/components/icons/chevron";
-import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
+import { GameIcon, pageIcon } from "~/components/ui/game-icon";
 import { Link } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
 import { MinecraftText } from "~/components/ui/minecraft-text";
@@ -21,10 +21,11 @@ type NavGame = GamePage["games"][number];
 /** A game's icon, its name, and words for screen readers when the player has never played it. */
 function GameName({ game }: { game: NavGame }) {
   const { t } = useTranslation();
+  const icon = pageIcon(game.id, game.key);
 
   return (
     <>
-      {game.id && hasGameIcon(game.id) && <span aria-hidden className="size-6 shrink-0"><GameIcon game={game.id} /></span>}
+      {icon && <span aria-hidden className="size-6 shrink-0"><GameIcon game={icon} /></span>}
       <MinecraftText className="min-w-0">{game.name}</MinecraftText>
       {!game.played && <span className="sr-only"> {t("game.unplayed")}</span>}
     </>

@@ -6,72 +6,59 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Article, CHIP, Callout, KeyTable, Paragraph, Section, Strong, Subheading, TextLink, TextPage } from "./text-page";
+import { CHIP, Callout, Paragraph, Section, Subheading, TAP_AREA, TextEmail, TextLink, TextPage } from "./text-page";
 import { Link } from "@tanstack/react-router";
+import { PointerText } from "~/components/ui/hint";
+import type { ReactNode } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useNumberFormat } from "~/i18n/use-number-format";
 
-/** Who runs Statsify, how to reach them, and where its stats come from. */
+/** What Statsify is, how to reach us, and where its stats come from. */
 export function AboutPage() {
   const { t } = useTranslation();
+  const links = { chip: <SampleChip />, glossary: <TextLink to="/{-$locale}/glossary" /> };
   const email = t("footer.email");
-  const mail = <TextLink href={`mailto:${email}`}>{email}</TextLink>;
-
-  const contents = [
-    { id: "what", label: t("about.what") },
-    { id: "operator", label: t("about.operator") },
-    { id: "contact", label: t("about.contact") },
-    { id: "stats", label: t("about.stats") },
-    { id: "source", label: t("about.source") },
+  const mail = <TextEmail email={email} className={TAP_AREA} />;
+  const contacts: [label: string, where: ReactNode][] = [
+    [t("about.help"), <Trans key="help" i18nKey="about.helpWhere" components={{ discord: <TextLink href="/support" className={TAP_AREA} /> }} />],
+    [t("about.privacy"), mail],
+    [t("about.legal"), mail],
+    [t("about.security"), mail],
   ];
 
   return (
-    <TextPage title={t("about.title")} contents={contents}>
-      <Article>
-        <Section id="what" title={t("about.what")}>
-          <Paragraph>{t("about.whatText")}</Paragraph>
-          <Paragraph>
-            <Trans
-              i18nKey="about.linksText"
-              components={{ chip: <SampleChip />, glossary: <TextLink to="/{-$locale}/glossary" /> }}
-            />
-          </Paragraph>
-        </Section>
-        <Section id="operator" title={t("about.operator")}>
-          <Paragraph>{t("about.operatorText")}</Paragraph>
-          <Callout label={t("about.notOfficial")} tone="legal">
-            <p>{t("footer.mojang")}</p>
-            <p>{t("footer.affiliation")}</p>
-          </Callout>
-        </Section>
-        <Section id="contact" title={t("about.contact")}>
-          <Paragraph>{t("about.contactText")}</Paragraph>
-          <KeyTable
-            head={[t("about.topic"), t("about.where")]}
-            rows={[
-              [t("about.help"), <Trans key="help" i18nKey="about.helpWhere" components={{ discord: <TextLink href="/support" /> }} />],
-              [t("about.privacy"), mail],
-              [t("about.legal"), mail],
-              [t("about.security"), mail],
-            ]}
+    <TextPage title={t("about.title")}>
+      <Section id="what" title={t("about.what")} short>
+        <Paragraph>{t("about.whatText")}</Paragraph>
+        <Paragraph>
+          <PointerText
+            mouse={<Trans i18nKey="about.linksText" components={links} />}
+            touch={<Trans i18nKey="about.linksTextTouch" components={links} />}
           />
-        </Section>
-        <Section id="stats" title={t("about.stats")}>
-          <Paragraph>
-            <Trans i18nKey="about.statsText" components={{ strong: <Strong /> }} />
-          </Paragraph>
-          <Callout label={t("about.note")}>
-            <p>{t("about.leaderboardsNote")}</p>
-          </Callout>
-          <Subheading>{t("about.names")}</Subheading>
-          <Paragraph>{t("about.namesText")}</Paragraph>
-        </Section>
-        <Section id="source" title={t("about.source")}>
-          <Paragraph>
-            <Trans i18nKey="about.sourceText" components={{ github: <TextLink href="/github" /> }} />
-          </Paragraph>
-        </Section>
-      </Article>
+        </Paragraph>
+      </Section>
+      <Section id="contact" title={t("about.contact")} short>
+        <dl className="flex flex-col gap-3">
+          {contacts.map(([label, where]) => (
+            <div key={label}>
+              <dt className="inline">{label}:</dt> <dd className="inline">{where}</dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
+      <Section id="stats" title={t("about.stats")} short>
+        <Paragraph>{t("about.statsText")}</Paragraph>
+        <Callout label={t("about.note")}>
+          <p>{t("about.leaderboardsNote")}</p>
+        </Callout>
+        <Subheading>{t("about.names")}</Subheading>
+        <Paragraph>{t("about.namesText")}</Paragraph>
+      </Section>
+      <Section id="source" title={t("about.source")} short>
+        <Paragraph>
+          <Trans i18nKey="about.sourceText" components={{ github: <TextLink href="/github" /> }} />
+        </Paragraph>
+      </Section>
     </TextPage>
   );
 }

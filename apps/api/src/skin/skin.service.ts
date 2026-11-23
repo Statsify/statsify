@@ -20,6 +20,23 @@ import { isUuid, normalizeUuid } from "@statsify/util";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
+/**
+ * Whether a player without a skin gets Alex rather than Steve, by the rule before 1.19.3 added seven more defaults:
+ * `UUID.hashCode() & 1`, the XOR of the last hex digit of each of the UUID's four 32-bit words.
+ */
+const isAlex = (uuid: string) =>
+  ((Number.parseInt(uuid[7], 16) ^ Number.parseInt(uuid[15], 16) ^ Number.parseInt(uuid[23], 16) ^ Number.parseInt(uuid[31], 16)) & 1) === 1;
+
+const defaultTexture = (alex: boolean) => getMinecraftTexturePath(`textures/entity/${alex ? "alex" : "steve"}.png`);
+
+/** The skin at `skinUrl`, or Steve or Alex (slim) for a player without one. */
+async function resolveSkin(uuid: string, skinUrl?: string, slim = false): Promise<{ skin: Image; slim: boolean }> {
+  if (skinUrl) return { skin: await loadImage(skinUrl), slim };
+
+  const alex = isAlex(normalizeUuid(uuid));
+  return { skin: await loadImage(defaultTexture(alex)), slim: alex };
+}
+
 /** A skin's face with its hat layer, `size` px square, unsmoothed. */
 function drawHead(skin: Image, size: number): Promise<Buffer> {
   const canvas = createCanvas(size, size);
@@ -35,6 +52,19 @@ function drawHead(skin: Image, size: number): Promise<Buffer> {
   return canvas.toBuffer("png");
 }
 
+/** A skin's texture as uploaded, or Steve's or Alex's, and whether its arms are slim, as the bot's render draws them. */
+async function textureOf(uuid: string, skin: Skin | null): Promise<{ texture: Buffer; slim: boolean }> {
+  const { skin: image, slim } = await resolveSkin(uuid, skin?.skinUrl, skin?.slim);
+  // This field is set by loadImage from `@statsify/rendering`
+  const { _data: texture } = image as unknown as { _data: Buffer };
+  return { texture, slim };
+}
+
+async function renderOf(uuid: string, skin: Skin | null, extruded: boolean): Promise<Buffer> {
+  const { texture, slim } = await textureOf(uuid, skin);
+  return renderSkin(texture, slim, extruded);
+}
+
 @Injectable()
 export class SkinService {
   public constructor(
@@ -45,53 +75,34 @@ export class SkinService {
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
     const { skin } = await this.getSkin(uuid)
-      .then((skin) => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false))
-      .catch(() => this.resolveSkin(undefined, false));
+      .then((skin) => resolveSkin(uuid, skin?.skinUrl, skin?.slim))
+      .catch(() => resolveSkin(uuid));
 
     return drawHead(skin, size);
   }
 
   /**
-   * The face of the skin stored for a player however old it is, or Steve's: never asks Minecraft's session server, so
-   * the site's traffic doesn't spend its rate limit.
+   * The face of the skin stored for a player however old it is, or Steve's or Alex's: never asks Minecraft's session
+   * server, so the site's traffic doesn't spend its rate limit.
    */
   public async getStoredHead(uuid: string, size: number): Promise<Buffer> {
     const stored = await this.getStoredSkin(uuid);
-    const { skin } = await this.resolveSkin(stored?.skinUrl, stored?.slim);
+    const { skin } = await resolveSkin(uuid, stored?.skinUrl, stored?.slim);
     return drawHead(skin, size);
   }
 
   public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {
-    return this.render(await this.getSkin(uuid), extruded);
+    return renderOf(uuid, await this.getSkin(uuid), extruded);
   }
 
   /** A render of the stored skin, like `getStoredHead`. */
   public async getStoredRender(uuid: string): Promise<Buffer> {
-    return this.render(await this.getStoredSkin(uuid), false);
+    return renderOf(uuid, await this.getStoredSkin(uuid), false);
   }
 
-  /**
-   * The stored skin's texture as uploaded (Steve's for a player without one), for the site's skin viewer to draw, and
-   * whether its arms are slim, as the bot's render draws them.
-   */
+  /** The stored skin's texture, like `getStoredHead`, for the site's skin viewer to draw. */
   public async getStoredTexture(uuid: string): Promise<{ texture: Buffer; slim: boolean }> {
-    return this.texture(await this.getStoredSkin(uuid));
-  }
-
-  private async render(skin: Skin | null, extruded: boolean): Promise<Buffer> {
-    const { texture, slim } = await this.texture(skin);
-    return renderSkin(texture, slim, extruded);
-  }
-
-  private async texture(skin: Skin | null): Promise<{ texture: Buffer; slim: boolean }> {
-    const { skin: image, slim } = await this.resolveSkin(skin?.skinUrl, skin?.slim);
-    // This field is set by loadImage from `@statsify/rendering`
-    const { _data: texture } = image as unknown as { _data: Buffer };
-    return { texture, slim };
-  }
-
-  private getStoredSkin(uuid: string): Promise<Skin | null> {
-    return this.skinModel.findOne().where("uuid").equals(normalizeUuid(uuid)).lean().exec();
+    return textureOf(uuid, await this.getStoredSkin(uuid));
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -124,23 +135,8 @@ export class SkinService {
     return skin;
   }
 
-  private async resolveSkin(
-    skinUrl?: string,
-    slim?: boolean
-  ): Promise<{ skin: Image; slim: boolean }> {
-    if (!skinUrl) {
-      return this.resolveSkin(
-        getMinecraftTexturePath("textures/entity/steve.png"),
-        false
-      );
-    }
-
-    const skin = await loadImage(skinUrl);
-
-    return {
-      skin,
-      slim: slim ?? false,
-    };
+  private getStoredSkin(uuid: string): Promise<Skin | null> {
+    return this.skinModel.findOne().where("uuid").equals(normalizeUuid(uuid)).lean().exec();
   }
 
   private requestSkin(uuid: string) {
@@ -159,4 +155,16 @@ export class SkinService {
       )
     );
   }
+}
+
+if (import.meta.vitest) {
+  const { describe, expect, it } = import.meta.vitest;
+
+  describe("isAlex", () => {
+    it("matches the parity of Java's UUID.hashCode()", () => {
+      expect(isAlex("069a79f444e94726a5befca90e38aaf5")).toBe(false);
+      expect(isAlex("853c80ef3c3749fdaa49938b674adae6")).toBe(true);
+      expect(isAlex("00000001000000010000000000000000")).toBe(false);
+    });
+  });
 }

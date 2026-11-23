@@ -28,6 +28,7 @@ import {
   CHALLENGE_MODES,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
+  GENERAL_MODES,
   type GameMode,
   type GameModes,
   type Guild,
@@ -56,7 +57,7 @@ import type { BaseProfileProps } from "../types.js";
 import { BedWarsChallengesProfile } from "../profiles/bedwars-challenges.profile.js";
 import { BedWarsProfile } from "../profiles/bedwars.profile.js";
 import { BuildBattleProfile } from "../profiles/buildbattle.profile.js";
-import { Canvas, type CanvasRenderingContext2D, type Image, loadImage } from "skia-canvas";
+import { Canvas, type CanvasRenderingContext2D, type Image, ImageData, loadImage } from "skia-canvas";
 import { type GameCard, type RenderRequest, imageSize } from "./protocol.js";
 import { type GamesWithBackgrounds, mapBackground } from "../backgrounds.js";
 import { GeneralProfile } from "../profiles/general.profile.js";
@@ -70,9 +71,8 @@ import { TurboKartRacersProfile } from "../profiles/turbokartracers.profile.js";
 import { UHCProfile } from "../profiles/uhc.profile.js";
 import { VampireZProfile } from "../profiles/vampirez.profile.js";
 import { WallsProfile } from "../profiles/walls.profile.js";
-import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
+import { getAllGameIcons, getBackgroundPath, getLogo } from "@statsify/assets";
 import { getLocalizeFunction } from "./localize.js";
-import { getTheme } from "../themes/index.js";
 import { render } from "@statsify/rendering";
 
 const STAMP_INSET = 18;
@@ -99,6 +99,8 @@ const once = <T,>(load: () => Promise<T>) => {
 const getGameIcons = once(getAllGameIcons);
 
 const getQuestLogos = once(() => Promise.all([getLogo("cross", 28), getLogo("verified", 28)]));
+
+const getDefaultLogo = once(() => getLogo(null));
 
 const CARDS: Record<GameCard, CardSpec<GamesWithBackgrounds, unknown>> = {
   bedwars: card({
@@ -172,6 +174,44 @@ function cardMode(modes: GameModes<GamesWithBackgrounds>, api: string, submode?:
   };
 }
 
+/** The backgrounds this worker last drew, by file, the least recently drawn first. */
+const backgrounds = new Map<string, Canvas | Image>();
+
+const MAX_BACKGROUNDS = 16;
+
+/**
+ * skia-canvas decodes an `Image` again each time it's drawn, but pixels put into a canvas stay decoded. Its GPU
+ * renderer draws translucent canvas pixels a shade off, so a background with any stays an image.
+ */
+async function loadBackground(path: string) {
+  let background = backgrounds.get(path);
+
+  if (background) {
+    backgrounds.delete(path);
+  } else {
+    const image = await loadImage(path);
+    const pixels = new ImageData(image);
+
+    if (isOpaque(pixels)) {
+      background = new Canvas(image.width, image.height);
+      background.getContext("2d").putImageData(pixels, 0, 0);
+    } else {
+      background = image;
+    }
+
+    const [oldest] = backgrounds.keys();
+    if (backgrounds.size >= MAX_BACKGROUNDS) backgrounds.delete(oldest);
+  }
+
+  backgrounds.set(path, background);
+  return background;
+}
+
+function isOpaque({ data }: ImageData) {
+  for (let alpha = 3; alpha < data.length; alpha += 4) if (data[alpha] < 255) return false;
+  return true;
+}
+
 /**
  * Renders a player image for a site visitor (no premium user, so default theme and logo): the signature
  * laid out at its canvas size, or one of the bot's cards (the general card, or a game's in one mode), on the canvas
@@ -195,17 +235,16 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
 
   const [t, background, logo, skin, data] = await Promise.all([
     getLocalizeFunction(),
-    // The backgrounds the bot draws the card on (`/general`'s are `mapBackground(GENERAL_MODES, "overall")`), one per
-    // player: the UUID picks it, so a re-render for the same `updatedAt` gives the same bytes.
-    game ? getBackground(...game.background, uuid) : getBackground("hypixel", "overall", uuid),
-    getLogo(null),
+    // The backgrounds the bot draws the card on (`/general`'s for the general card), one per player: the UUID picks it, so
+    // a re-render for the same `updatedAt` gives the same bytes.
+    loadBackground(getBackgroundPath(...(game ? game.background : mapBackground(GENERAL_MODES, "overall")), uuid)),
+    getDefaultLogo(),
     loadImage(Buffer.from(request.skin)),
     game?.spec.data?.(),
   ]);
 
   const player = request.player as unknown as Player;
   const guild = (request.guild as unknown as Guild | null) ?? undefined;
-  const theme = getTheme(null);
 
   // A card's `Background` draws a canvas as it draws an image; the profiles' props only name the image type.
   const draw = (cardBackground: Image | Canvas) =>
@@ -215,7 +254,7 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
           <SignatureProfile
             width={width}
             height={height}
-            background={background}
+            background={cardBackground as Image}
             logo={logo}
             skin={skin}
             player={player}
@@ -240,8 +279,7 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
               t={t}
               time="LIVE"
             />
-          ),
-      theme
+          )
     );
 
   const canvas = new Canvas(width, height);
@@ -270,7 +308,7 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
   ctx.drawImage(image, Math.round((width - imageWidth) / 2), Math.round((height - imageHeight) / 2), imageWidth, imageHeight);
 
   if (request.variant === "card") {
-    const stamp = render(<UpdatedStamp updatedAt={request.updatedAt} t={t} />, theme);
+    const stamp = render(<UpdatedStamp updatedAt={request.updatedAt} t={t} />);
     ctx.drawImage(stamp, width - stamp.width - STAMP_INSET, height - stamp.height - STAMP_INSET);
   }
 
@@ -278,7 +316,7 @@ export async function renderCard(request: RenderRequest): Promise<Uint8Array<Arr
 }
 
 /** Draws `image` scaled to cover the canvas, centered. */
-function drawCover(ctx: CanvasRenderingContext2D, image: Image, width: number, height: number) {
+function drawCover(ctx: CanvasRenderingContext2D, image: Canvas | Image, width: number, height: number) {
   const cover = Math.max(width / image.width, height / image.height);
   const coverWidth = image.width * cover;
   const coverHeight = image.height * cover;

@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { AUTO_UPDATES } from "@statsify/contract/refresh";
 import { ORPCError } from "@orpc/client";
 import { UUID_PATTERN } from "@statsify/util/util";
 import { createServerFn } from "@tanstack/react-start";
@@ -38,6 +39,8 @@ const ACTION_TIMEOUT_MS = 10_000;
  */
 export const BROWSER_TIMEOUT_MS = 12_000;
 
+const RETRY_MARGIN_S = 5;
+
 /** The visitor's address: nginx passes Cloudflare's `CF-Connecting-IP` through. */
 function clientIp(): string {
   return getRequest().headers.get("cf-connecting-ip") ?? getRequestIP() ?? "unknown";
@@ -52,8 +55,9 @@ function failure(error: unknown, deadline: AbortSignal): ActionResult<never> {
     if (error.code === "SERVICE_UNAVAILABLE") return { ok: false, code: "UNAVAILABLE" };
 
     if (error.code === "TOO_MANY_REQUESTS") {
+      // A few seconds past the API's own wait, so a refresh or lookup the moment the countdown ends isn't refused again.
       const { retryAfter } = error.data as { retryAfter: number };
-      return { ok: false, code: "TOO_MANY_REQUESTS", retryAfter };
+      return { ok: false, code: "TOO_MANY_REQUESTS", retryAfter: retryAfter + RETRY_MARGIN_S };
     }
   }
 
@@ -65,7 +69,7 @@ function failure(error: unknown, deadline: AbortSignal): ActionResult<never> {
  * global budgets. `auto`: the page's own update once it opened, which the API refuses sooner.
  */
 export const refreshPlayer = createServerFn({ method: "POST" })
-  .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.boolean().optional(), token: z.string().max(4096).optional() }))
+  .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.enum(AUTO_UPDATES).optional(), token: z.string().max(4096).optional() }))
   .handler(async ({ data }): Promise<ActionResult<PlayerPage>> => {
     const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
     const ip = clientIp();
@@ -81,7 +85,7 @@ export const refreshPlayer = createServerFn({ method: "POST" })
 
 /** Refreshes a known player like `refreshPlayer`, then hands back their Bingo boards. */
 export const refreshBingo = createServerFn({ method: "POST" })
-  .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.boolean().optional(), token: z.string().max(4096).optional() }))
+  .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.enum(AUTO_UPDATES).optional(), token: z.string().max(4096).optional() }))
   .handler(async ({ data }): Promise<ActionResult<BingoPlayer>> => {
     const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
     const ip = clientIp();
@@ -105,7 +109,7 @@ export const refreshGame = createServerFn({ method: "POST" })
       mode: z.string().min(1).max(32).optional(),
       submode: z.string().min(1).max(32).optional(),
       period: z.string().min(1).max(32).optional(),
-      auto: z.boolean().optional(),
+      auto: z.enum(AUTO_UPDATES).optional(),
       token: z.string().max(4096).optional(),
     })
   )

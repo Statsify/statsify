@@ -8,10 +8,44 @@
 
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { createI18n } from "~/i18n/i18n";
+import { formatNumber } from "~/i18n/format";
+import { removeFormatting } from "@statsify/util/util";
 import type { AnyRouteMatch } from "@tanstack/react-router";
 import type { LocaleData } from "~/i18n/locale-data";
 
 export const SITE_NAME = "Statsify";
+
+/** The size of the site's own unfurl images, `/images/og-*.png`. */
+const STATIC_IMAGE_SIZE = { width: 1200, height: 630 };
+
+/** Where Twitter's cards stop a description. */
+const DESCRIPTION_MAX = 200;
+
+/** About where search results cut a page's plain description. */
+export const SEARCH_DESCRIPTION_MAX = 155;
+
+/** A value in a preview: a number in the bot's format, or the API's formatted text without its codes. */
+export const valueText = (value: number | string) =>
+  typeof value === "number" ? formatNumber(value, DEFAULT_LOCALE) : removeFormatting(value);
+
+/** A stat in a description, "Wins 2,304". */
+export const statText = (label: string, value: number | string, suffix = "") => `${label} ${valueText(value)}${suffix}`;
+
+/**
+ * A description of stats for previews that show text without the image: `lead` ("anrie's BedWars stats:") and the parts
+ * joined with " · ", as many whole parts as fit in `max`, so it never ends mid-number. Empty when not one part fits.
+ */
+export function statsDescription(parts: string[], { lead, max = DESCRIPTION_MAX }: { lead?: string; max?: number } = {}): string {
+  let text = "";
+
+  for (const part of parts) {
+    const next = text ? `${text} · ${part}` : part;
+    if ((lead ? `${lead} ${next}` : next).length > max) break;
+    text = next;
+  }
+
+  return lead && text ? `${lead} ${text}` : text;
+}
 
 export interface SocialMetaOptions {
   /** `https://statsify.net`; Open Graph URLs must be absolute. */
@@ -25,6 +59,8 @@ export interface SocialMetaOptions {
   /** The image's size in pixels, for `og:image:width` and `og:image:height`. */
   imageSize?: { width: number; height: number };
   type?: "website" | "profile";
+  /** The page's name in its search-result trail, and the pages above it (`breadcrumbs`). */
+  trail?: { above?: Crumb[]; name: string };
 }
 
 type Meta = NonNullable<AnyRouteMatch["meta"]>;
@@ -36,8 +72,9 @@ export function socialMeta({
   title = SITE_NAME,
   description,
   image,
-  imageSize,
+  imageSize = image.startsWith("/images/og-") ? STATIC_IMAGE_SIZE : undefined,
   type = "website",
+  trail,
 }: SocialMetaOptions): Meta {
   const url = new URL(path, origin).href;
   const imageUrl = new URL(image, origin).href;
@@ -59,8 +96,16 @@ export function socialMeta({
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
     { name: "twitter:image", content: imageUrl },
+    ...(trail ? [breadcrumbs(origin, [...(trail.above ?? []), { name: trail.name, path }])] : []),
   ];
 }
+
+/** The tags of a page that isn't there: its title, and its link preview titled as its tab is. */
+export const notFoundMeta = (title: string): Meta => [
+  { title },
+  { property: "og:title", content: title },
+  { name: "twitter:title", content: title },
+];
 
 /** oEmbed discovery, which gives Discord the "Statsify" provider line above the title. */
 export function oembedLink(origin: string, path: string) {
@@ -78,6 +123,33 @@ export function canonicalLink(origin: string, path: string) {
   return { rel: "canonical", href: new URL(path, origin).href };
 }
 
+/** A page in a trail: its own name and its path, as its `og:url` has it. */
+export interface Crumb {
+  name: string;
+  path: string;
+}
+
+/**
+ * The trail search results show over a page's title ("Statsify › anrie › BedWars"), as a `BreadcrumbList`: the
+ * home page, then `trail`, which ends with the page itself.
+ */
+function breadcrumbs(origin: string, trail: Crumb[]): Meta[number] {
+  // The router writes this entry as an escaped `<script type="application/ld+json">`, but the type of `head()`'s meta
+  // has only `<meta>`'s attributes.
+  return {
+    "script:ld+json": {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [{ name: SITE_NAME, path: "/" }, ...trail].map(({ name, path }, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name,
+        item: new URL(path, origin).href,
+      })),
+    },
+  } as Meta[number];
+}
+
 /** The locale layout's loader data from a `head()` context's `matches`, once the layout has loaded. */
 export function localeData(matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>): LocaleData | undefined {
   const match = matches.find((candidate) => candidate.routeId === "/{-$locale}");
@@ -87,21 +159,25 @@ export function localeData(matches: ReadonlyArray<{ routeId: string; loaderData?
 /** A page's `meta.*` key in `site.json`, or its own words where they stay English in the code (privacy, terms). */
 export type PageText = { key: string } | { title: string; description: string };
 
-/** A page's tags: its title and description (in English, from the server's `site.json`), then its preview's. */
+/**
+ * A page's tags: its title and description (in English, from the server's `site.json`), then its preview's, and its
+ * trail under its heading (`<key>.title`) or the `site.json` key `trail`.
+ */
 export function pageMeta(
   matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>,
-  { path, image, noindex = false, ...text }: { path: string; image: string; noindex?: boolean } & PageText
+  { path, image, trail, noindex = false, ...text }: { path: string; image: string; trail?: string; noindex?: boolean } & PageText
 ) {
   const locale = localeData(matches);
   const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
   const title = "key" in text ? words.t(`meta.${text.key}.title`) : `${text.title} | ${SITE_NAME}`;
   const description = "key" in text ? words.t(`meta.${text.key}.description`) : text.description;
+  const name = trail ? words.t(trail) : "key" in text ? words.t(`${text.key}.title`) : text.title;
   const origin = locale?.origin;
 
   return [
     { title },
     { name: "description", content: description },
     ...(noindex ? [{ name: "robots", content: "noindex" }] : []),
-    ...(origin ? socialMeta({ origin, path, title, description, image }) : []),
+    ...(origin ? socialMeta({ origin, path, title, description, image, trail: { name } }) : []),
   ];
 }

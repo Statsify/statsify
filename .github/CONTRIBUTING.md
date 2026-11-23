@@ -23,6 +23,12 @@
 * Apps should have a pnpm workspace script in the root `package.json`
 * Apps can use import paths to simplify imports in the project
 
+### Adding a stat
+A stat added to a game the site has a page for fails the tests until it is in three places:
+* `packages/catalog/src/games/<game>.ts`: its entry (label, format, leaderboard)
+* `locales/en-US/default.json`: a `glossary.<key>.text` line explaining it, unless its entry has its own name
+* `apps/api/src/site/game-pages/<game>.ts`: for a stat with a leaderboard, where the game page shows it, or an `omit` entry saying why it stays off
+
 ## Running
 * Follow the steps in the `README.md`
 

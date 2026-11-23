@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type Game, catalogPaths, gameStats, modeStats, numberFields, playerFields } from "../catalog.js";
+import { type Game, allStats, catalogPaths, gameStats, modeStats, numberFields, playerFields } from "../catalog.js";
 import { ARCADE } from "./arcade.js";
 import { ARENA_BRAWL } from "./arenabrawl.js";
 import { BEDWARS } from "./bedwars.js";
@@ -151,8 +151,8 @@ if (import.meta.vitest) {
       const { readFile } = await import("node:fs/promises");
       const english = JSON.parse(await readFile(new URL("../../../../locales/en-US/default.json", import.meta.url), "utf8"));
       const unexplained = Object.values(GAMES)
-        .flatMap((game) => [...gameStats(game), ...game.shapes.flatMap(({ modes }) => modes.flatMap((at) => modeStats(game, at)))])
-        .filter((stat) => stat.name === undefined && !english.glossary?.[stat.glossary]?.text)
+        .flatMap((game) => allStats(game))
+        .filter((stat) => stat.glossary !== undefined && !english.glossary?.[stat.glossary]?.text)
         .map(({ path, glossary }) => `${path}: glossary.${glossary}`);
 
       expect(unexplained).toEqual([]);

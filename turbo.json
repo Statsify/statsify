@@ -4,7 +4,7 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "outputs": ["dist/**", ".output/**", "pkg/**"],
+      "outputs": ["dist/**", ".output/**", "pkg/**", "*.node"],
       "dependsOn": ["^build"]
     },
     "typecheck": {

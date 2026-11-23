@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box } from "~/components/ui/box";
+import { BOX_RING, Box } from "~/components/ui/box";
 import { type ComponentProps, createContext, use, useState, useMemo, useCallback } from "react";
 import { cn } from "~/lib/util";
 
@@ -74,7 +74,7 @@ export function Tab({ tab, onClick, className = "", ...props }: TabProps) {
         onClick?.(event);
       }}
       borderRadius={{ bottom: 0 }}
-      className={`group text-mc-white/50 aria-pressed:font-bold aria-pressed:text-mc-white transition-colors content:flex content:items-center content:justify-center content:gap-2 ${className}`}
+      className={`group text-mc-white/50 aria-pressed:font-bold aria-pressed:text-mc-white transition-colors content:flex content:items-center content:justify-center content:gap-2 ${BOX_RING} ${className}`}
     />
   );
 }

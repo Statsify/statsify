@@ -7,8 +7,24 @@
  */
 
 import { formatNumber } from "@statsify/util";
-import type { LocalizeFunction } from "./types.js";
-import type { TFunction } from "i18next";
+import type { StringMap, TFunction, TFunctionKeys, TOptions } from "i18next";
+
+interface ILocalizeFunction {
+  <TKeys extends TFunctionKeys = string>(key: TKeys | TKeys[]): string;
+  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
+    key: TKeys | TKeys[],
+    options?: TOptions<TInterpolationMap> & { returnDetails?: true; returnObjects?: true } | string
+  ): string;
+  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
+    key: TKeys | TKeys[],
+    defaultValue?: string,
+    options?: TOptions<TInterpolationMap> | string
+  ): string;
+  (key: number): string;
+}
+
+/** The bot's translator: an i18next `t` that also formats bare numbers, tagged with its locale. */
+export type LocalizeFunction = ILocalizeFunction & { locale: string };
 
 /** Wraps an i18next `t` so that `t(1234)` formats through the `number` key, as the profiles expect. */
 export function createLocalizeFunction(fixedT: TFunction, locale: string): LocalizeFunction {

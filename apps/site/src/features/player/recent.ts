@@ -98,7 +98,7 @@ function subscribe(listener: () => void) {
 export const useRecentPlayers = () => useSyncExternalStore<RecentPlayer[] | null>(subscribe, read, () => null);
 
 /**
- * Before first paint on `/player`: the number of recent players as `--recent` on the root, so the section's space is
+ * Before first paint on `/player` and a player's not-found page: the number of recent players as `--recent` on the root, so the section's space is
  * held before React draws it (`recent-hold` in app.css).
  */
 export const HOLD_SCRIPT = `try{var v=JSON.parse(localStorage.getItem(${JSON.stringify(VIEWER_KEY)}));var n=v&&v.v===1&&Array.isArray(v.recent)?Math.min(v.recent.length,${RECENT_LIMIT}):0;if(n)document.documentElement.style.setProperty("--recent",n)}catch(e){}`;

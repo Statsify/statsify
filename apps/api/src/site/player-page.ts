@@ -11,6 +11,7 @@ import { FormattedGame, type GameId, type Player, type PlayerStats, getNetworkEx
 import type { GamePage, GameSummary, PlayerPage, StatRow } from "@statsify/contract";
 import { findScore, formatTime } from "@statsify/util";
 import { freshness } from "./cooldown.js";
+import { gameName } from "./names.js";
 import { winstreaksHidden } from "./game-pages/duels.js";
 import { GAME_PAGES, gamePageOf, pageName } from "./game-pages/index.js";
 import { read } from "./game-pages/layout.js";
@@ -318,7 +319,7 @@ function summarize(stats: PlayerStats, summary: Summary): GameSummary | undefine
   const game = catalogGame(summary.id);
   const rows = summary.rows.flatMap((row) => panelRow(stats, game, summary.at ?? "", row) ?? []);
 
-  return { id: summary.id, name: FormattedGame[summary.id], level: summary.level?.(stats), rows, page: gamePageOf(summary.id) };
+  return { id: summary.id, name: gameName(summary.id), level: summary.level?.(stats), rows, page: gamePageOf(summary.id) };
 }
 
 /** The site's game pages for the nav between them, each marked when the player has never played the game. */
@@ -387,7 +388,7 @@ export function buildPlayerPage(player: Player, guild: PlayerGuild | null): Play
       firstLogin: status.firstLogin,
       lastLogin: status.lastLogin,
       lastLogout: status.lastLogout,
-      lastGame: lastGame ? { id: lastGame, name: FormattedGame[lastGame] } : null,
+      lastGame: lastGame ? { id: lastGame, name: gameName(lastGame) } : null,
     },
     socials: {
       discord: socials.discord,

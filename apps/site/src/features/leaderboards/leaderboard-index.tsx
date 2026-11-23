@@ -6,25 +6,30 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box } from "~/components/ui/box";
+import { BOX_GAP, BOX_RING, Box, CELL } from "~/components/ui/box";
 import { Chevron } from "~/components/icons/chevron";
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { FilterBox } from "~/components/filter-box";
-import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
-import { type GroupSummary, type ListGroup, boardLinksHtml, fetchLeaderboardList, filterGroups } from "./leaderboard-list";
+import { GameIcon, pageIcon } from "~/components/ui/game-icon";
+import { type GroupSummary, type ListGroup, boardLinksHtml, filterGroups, leaderboardListQuery } from "./leaderboard-list";
+import { MinecraftText } from "~/components/ui/minecraft-text";
 import { type MouseEvent, type ReactNode, type SyntheticEvent, useMemo, useRef, useState } from "react";
 import { builtLeaderboardList } from "~/server/leaderboard-list.server";
+import { cn } from "~/lib/util";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRouteApi, useHydrated, useRouter } from "@tanstack/react-router";
 import { useNumberFormat } from "~/i18n/use-number-format";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { IndexData } from "./leaderboard-data";
 
 const localeRoute = getRouteApi("/{-$locale}");
 
 // One class on each list instead of one per link: there are thousands of them.
-const LIST =
-  "grid grid-cols-1 pt-2 pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:text-mc-1.5 [&_a:hover]:bg-white/10 [&_a:hover]:underline [&_a:active]:bg-white/10";
+const LIST = cn(
+  "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&>li]:box-item [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:text-mc-1.5 [&_a:hover]:brightness-125 [&_a:hover]:underline [&_a:active]:brightness-125",
+  BOX_GAP
+);
 
 const boardHref = (prefix: string, field: string) => `${prefix}/leaderboards/${encodeURIComponent(field)}`;
 
@@ -36,25 +41,33 @@ function useBoardLinks() {
 }
 
 /**
- * One group's panel: a 44 px summary, then its links in plain 44 px rows, one column on phones and up to four on desktop.
- * With `icons`, every summary keeps a slot for its game's icon, so the names line up whether a group has one or not.
+ * One folded group: a `<details>` holding only its summary, and the group's leaderboards in the panel after it, which
+ * shows while the details is open. With `icons`, every summary keeps a slot for its game's icon, so the names line up.
  */
 function IndexPanel({ group, open, icons, children }: { group: Omit<GroupSummary, "count">; open: boolean; icons?: boolean; children: ReactNode }) {
+  const icon = pageIcon(group.game, group.key);
+
   return (
-    <Box className="content:py-2">
+    <>
+      {/* The group's id is its key, so `#<key>` lands on it. */}
       <details open={open} id={group.key || undefined} className="group scroll-mt-4">
-        <summary className="flex min-h-11 cursor-pointer list-none items-center gap-3 text-mc-1.5 font-bold select-none [&::-webkit-details-marker]:hidden">
+        <Box
+          as="summary"
+          className={cn(CELL, BOX_RING, "cursor-pointer list-none select-none content:justify-start content:gap-3 [&::-webkit-details-marker]:hidden")}
+        >
           {icons && (
             <span aria-hidden className="size-8 shrink-0">
-              {group.game && hasGameIcon(group.game) && <GameIcon game={group.game} />}
+              {icon && <GameIcon game={icon} />}
             </span>
           )}
-          <span className="grow">{group.name}</span>
+          <span className="grow text-mc-1.5 font-bold">
+            <MinecraftText>{group.formatted}</MinecraftText>
+          </span>
           <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
-        </summary>
-        {children}
+        </Box>
       </details>
-    </Box>
+      <div className="col-span-full hidden [details[open]+&]:block">{children}</div>
+    </>
   );
 }
 
@@ -93,10 +106,10 @@ export function LeaderboardIndex({ groups, open }: { groups: ListGroup[]; open?:
         className="max-w-200 self-center"
       />
       {filtering && visible.length === 0 && <NoMatches query={filter} />}
-      <div className="flex flex-col gap-2">
+      <div className={cn("flex flex-col", BOX_GAP)}>
         {visible.map((group) => (
           <IndexPanel key={group.key} group={group} open={filtering || group.key === open}>
-            <ul {...delegation} className={LIST}>
+            <ul {...delegation} className={cn(LIST, "ps-8")}>
               {group.leaderboards.map(({ field, name }) => (
                 <li key={field}>
                   <a href={boardHref(prefix, field)}>{name}</a>
@@ -116,13 +129,14 @@ const serverList = createIsomorphicFn()
   .client((): ListGroup[] | undefined => undefined);
 
 /**
- * Every leaderboard grouped by game, each group a closed `<details>` so the 2,700 links cost no layout until opened. The
+ * Every leaderboard grouped by game, each group's panel hidden until its game opens, so the 2,700 links cost no layout. The
  * links are in the server's HTML, not the page's data; the filter fetches the list when the box is first used.
  */
 export function AllLeaderboards({ data, list: loaded, query = "" }: { data: IndexData; list?: ListGroup[]; query?: string }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
   const { prefix, delegation } = useBoardLinks();
+  const queryClient = useQueryClient();
   const [list, setList] = useState(() => loaded ?? serverList());
   const [failed, setFailed] = useState(false);
   const [filter, setFilter] = useState(query);
@@ -130,7 +144,7 @@ export function AllLeaderboards({ data, list: loaded, query = "" }: { data: Inde
   const loadList = () => {
     if (list) return;
     setFailed(false);
-    fetchLeaderboardList(data.hash).then(setList, () => setFailed(true));
+    queryClient.fetchQuery(leaderboardListQuery(data.hash)).then(setList, () => setFailed(true));
   };
 
   // Until the list is here, the server's render stands, for the query it rendered.
@@ -186,17 +200,21 @@ export function AllLeaderboards({ data, list: loaded, query = "" }: { data: Inde
       </form>
       {failed && <ListFailed />}
       {filtering && shown.length === 0 && <NoMatches query={rendered} />}
-      <div className="flex flex-col gap-2">
+      {/* An open game's panel spans the row under it, and `dense` fills the row above from the game's row-mates, so they
+          stay put. A filter opens every game, so its results stay one column, each game over its own boards. */}
+      <div className={cn("flex flex-col", !filtering && "md:grid md:grid-flow-row-dense md:grid-cols-2 xl:grid-cols-3", BOX_GAP)}>
         {shown.map(({ group, html }) => (
           <IndexPanel key={group.key} group={group} open={filtering} icons>
-            <div {...delegation}>
+            <div {...delegation} className={cn("flex flex-col", BOX_GAP)}>
+              {/* In line with the game's name: the summary's padding, icon slot and gap come to 56 px. */}
               {!filtering && (
-                <a
+                <Box
+                  as="a"
                   href={boardHref(prefix, group.key)}
-                  className="flex min-h-11 items-center px-3 pt-2 text-mc-1.5 text-mc-yellow hover:bg-white/10 hover:underline active:bg-white/10"
+                  className={cn(CELL, BOX_RING, "text-mc-yellow hover:brightness-125 hover:underline content:justify-start content:ps-14 content:text-mc-1.5")}
                 >
                   {t("leaderboards.gameTitle", { game: group.name })}
-                </a>
+                </Box>
               )}
               <BoardLinks id={`boards-${group.key}`} html={html} />
             </div>

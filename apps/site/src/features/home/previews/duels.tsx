@@ -11,7 +11,7 @@ import { Link } from "@tanstack/react-router";
 import { Nametag } from "~/components/ui/nametag";
 import { Progression } from "~/components/ui/progression";
 import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
-import { Skin } from "~/components/ui/skin";
+import { Skin, SkinHead } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
 import { useTranslation } from "react-i18next";
@@ -30,7 +30,7 @@ export function DuelsPreview({ className }: { className?: string }) {
       <div className="col-span-3 grid grid-cols-1 xl:grid-cols-balanced gap-2 text-center">
         <Skin uuid={duels.uuid} className="xl:row-start-1 xl:row-end-4 hidden xl:block" />
         <Link to="/{-$locale}/player/$name" params={{ name: duels.uuid }} className="row-start-1 xl:col-start-2 hover:underline">
-          <Nametag prefixName={duels.prefixName} />
+          <Nametag prefixName={duels.prefixName} head={<SkinHead uuid={duels.uuid} className="shrink-0 lg:size-10 xl:hidden" />} />
         </Link>
         <Progression
           className="row-start-2 xl:col-start-2"

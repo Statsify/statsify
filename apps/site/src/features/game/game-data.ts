@@ -6,14 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type CardChoice, isGameCard } from "@statsify/profiles/protocol";
+import { PAGE_STALE_MS } from "~/lib/player-route";
 import { orpc } from "~/lib/orpc";
 import type { GamePage } from "@statsify/contract";
 
 export type { GamePage };
-
-/** How long a loaded game page stays fresh in the query cache; matches the page's edge TTL. */
-const PAGE_STALE_MS = 60_000;
 
 /**
  * One page of a player's game: a mode, or a mode's submode, in one of its periods. Each is left out when it is the
@@ -43,15 +40,3 @@ export function headingText(page: Pick<GamePage, "game" | "heading">, word: (key
   const { word: key, mode } = page.heading;
   return `§l${name}${key ? ` §f${word(key)}` : ""}${mode ? ` §r(${mode}§r)` : ""}`;
 }
-
-/** The card a page unfurls with: its game's, where the pool draws one for the page, else the general card. */
-export const unfurlCard = (page: GamePage): CardChoice =>
-  isGameCard(page.game.key, page.mode, page.period) ?
-    {
-      card: page.game.key,
-      mode: page.mode,
-      ...(page.submode !== null && { submode: page.submode }),
-      ...(page.period !== undefined && { period: page.period }),
-      ...(page.window && { window: page.window }),
-    } :
-    { card: "general" };

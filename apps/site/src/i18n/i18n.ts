@@ -13,6 +13,9 @@ import { formatNumber } from "./format";
 /** The namespaces the site reads: its own strings and the bot's `stats.*` labels. */
 const NAMESPACES = ["site", "default"] as const;
 
+/** A stat's label: the bot's word in `default.json`, or the site's own for a stat the bot doesn't show. */
+export const LABEL_NAMESPACES = ["default", "site"] as const;
+
 /**
  * One i18next instance per request on the server and one per page load in the browser,
  * initialized synchronously from the resources the route loader provides.

@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { queryOptions } from "@tanstack/react-query";
+
 /**
  * A leaderboard in the list `/leaderboards` filters: its field, its name under its game, and the words it also matches
  * that its name lacks (the stat's word on the bot's cards, the board's aliases).
@@ -22,6 +24,8 @@ export interface ListGroup {
   /** The `GameId` for the icon, or `null` for groups without a game (quests, challenges). */
   game: string | null;
   name: string;
+  /** The name in the game's colors, Minecraft-formatted. */
+  formatted: string;
   leaderboards: ListBoard[];
 }
 
@@ -30,6 +34,7 @@ export interface GroupSummary {
   key: string;
   game: string | null;
   name: string;
+  formatted: string;
   count: number;
 }
 
@@ -49,13 +54,15 @@ export function withoutGroupPrefix<G extends { name: string; leaderboards: { nam
 
 /**
  * Words people shorten, each also matching the words it stands for: a game ("bw", BedWars) or a stat ("fk", final
- * kills). Kept here because no leaderboard sets the schema's aliases yet.
+ * kills). The bot's joined spellings ("megawalls") stand for the site's spaced names. Kept here because no leaderboard
+ * sets the schema's aliases yet. The game URLs read the same table (`gameKeysFor`).
  */
 const ABBREVIATIONS: Record<string, string[]> = {
   ab: ["arena brawl"],
   bb: ["build battle", "beds broken"],
   bl: ["beds lost"],
-  bsg: ["blitzsg"],
+  blitzsg: ["blitz sg"],
+  bsg: ["blitz sg"],
   bw: ["bedwars"],
   cac: ["cops and crims"],
   cvc: ["cops and crims"],
@@ -65,18 +72,28 @@ const ABBREVIATIONS: Record<string, string[]> = {
   hns: ["hide and seek"],
   ks: ["killstreak"],
   lvl: ["level"],
+  megawalls: ["mega walls"],
   mm: ["murder mystery"],
-  mw: ["megawalls"],
+  mw: ["mega walls"],
   pb: ["paintball"],
   sh: ["smash heroes"],
-  suhc: ["speeduhc"],
+  sheepwars: ["sheep wars"],
+  speeduhc: ["speed uhc"],
+  suhc: ["speed uhc"],
   sw: ["skywars"],
   tkr: ["turbo kart racers"],
+  tnt: ["tnt games"],
   vz: ["vampirez"],
+  woolgames: ["wool games"],
+  woolwars: ["wool wars", "wool games"],
   ws: ["winstreak"],
-  ww: ["wool wars", "woolwars"],
+  ww: ["wool wars", "wool games"],
   xp: ["exp"],
 };
+
+/** What a short name might be a game page's key for, as typed in a URL: "bw" is `bedwars`, "mm" `murdermystery`. */
+export const gameKeysFor = (segment: string): string[] =>
+  Object.hasOwn(ABBREVIATIONS, segment) ? [...new Set(ABBREVIATIONS[segment].map((full) => full.replaceAll(" ", "")))] : [];
 
 /**
  * Every word of the query must appear in the text, as typed or, for an abbreviation, as the words it stands for:
@@ -112,23 +129,18 @@ export const boardLinksHtml = (boards: ListBoard[], href: (field: string) => str
     .map(({ field, name }) => `<li><a href="${escapeHtml(href(field))}">${escapeHtml(name)}</a></li>`)
     .join("");
 
-const fetched = new Map<string, Promise<ListGroup[]>>();
-
-/** The list, fetched once per hash and kept for the page's life; a failed fetch is forgotten, so the next try refetches. */
-export function fetchLeaderboardList(hash: string): Promise<ListGroup[]> {
-  let list = fetched.get(hash);
-
-  if (!list) {
-    list = fetch(listUrl(hash)).then((response) => {
+/** The list, fetched once per hash and kept for the page's life; a failed fetch leaves no data, so the next try refetches. */
+export const leaderboardListQuery = (hash: string) =>
+  queryOptions({
+    queryKey: ["leaderboard-list", hash],
+    queryFn: async (): Promise<ListGroup[]> => {
+      const response = await fetch(listUrl(hash));
       if (!response.ok) throw new Error(`The leaderboard list answered ${response.status}`);
       return response.json() as Promise<ListGroup[]>;
-    });
-    list.catch(() => fetched.delete(hash));
-    fetched.set(hash, list);
-  }
-
-  return list;
-}
+    },
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
 
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;

@@ -7,7 +7,7 @@
  */
 
 import { BLITZSG } from "@statsify/catalog";
-import { type GameLayout, type PageSpec, prefixLevel } from "./layout.js";
+import { type GameLayout, type PageSpec, prefixLevel, selectedMode } from "./layout.js";
 import type { ApiModeFromGameModes, BlitzSGModes, PlayerStats } from "@statsify/schemas";
 
 /** Overall's table, then Solo and Doubles side by side, as on the card. */
@@ -35,7 +35,7 @@ const kit = (mode: string): PageSpec => {
 export const BLITZSG_PAGE: GameLayout = {
   game: BLITZSG,
   // Every kit in the registry's order, so a kit's place doesn't move from player to player.
-  selected: ({ blitzsg }) => blitzsg.kit.toLowerCase().replaceAll(/[^a-z]/g, ""),
+  selected: ({ blitzsg }) => selectedMode(BLITZSG, blitzsg.kit),
   // Two words in Hypixel's own stat keys ("shadow knight", "hype train"), one in the registry's.
   modeNames: { shadowknight: "Shadow Knight", hypetrain: "Hype Train" },
   level: {

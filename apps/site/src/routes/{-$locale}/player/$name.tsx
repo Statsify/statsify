@@ -6,12 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { PlayerNotFound } from "~/features/player/player-not-found";
-import { REDIRECT_HEADERS } from "~/lib/player-route";
-import { SANS_PRELOAD } from "~/lib/fonts";
+import { REDIRECT_HEADERS, notFoundHead } from "~/lib/player-route";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
-import { missingPlayerResponse } from "~/lib/response";
+import { createI18n } from "~/i18n/i18n";
 import { ensurePlayer } from "~/features/player/resolve";
+import { localeData } from "~/lib/social-meta";
+import { missingPlayerResponse } from "~/lib/response";
 
 /** A player's pages, which resolve the URL's name or UUID here once for whichever page is below. */
 export const Route = createFileRoute("/{-$locale}/player/$name")({
@@ -30,6 +32,8 @@ export const Route = createFileRoute("/{-$locale}/player/$name")({
         to: ".",
         params: ({ game, ...current }) => ({ ...current, name: player.username, ...(game && { game: game.toLowerCase() }) }),
         search: true,
+        // A search's history state goes along, so a typed name in another casing still updates as a bot command would.
+        state: true,
         statusCode: 301,
         headers: REDIRECT_HEADERS,
       });
@@ -37,6 +41,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name")({
 
     return { player };
   },
-  head: ({ match }) => (match.status === "notFound" ? { meta: [{ title: "Player Not Found | Statsify" }], links: [SANS_PRELOAD] } : {}),
+  head: ({ match, matches }) =>
+    match.status === "notFound" ? notFoundHead(createI18n(DEFAULT_LOCALE, localeData(matches)?.resources ?? {}).t("meta.notFound.player")) : {},
   notFoundComponent: PlayerNotFound,
 });

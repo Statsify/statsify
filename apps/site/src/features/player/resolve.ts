@@ -6,24 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ORPCError } from "@orpc/client";
-import { orpc, rpc } from "~/lib/orpc";
+import { PAGE_STALE_MS } from "~/lib/player-route";
+import { isPlayerTag } from "~/lib/uuid";
+import { orNull, orpc, rpc } from "~/lib/orpc";
 import { type QueryClient, queryOptions } from "@tanstack/react-query";
 import { isUuid } from "@statsify/util/util";
 import type { PlayerIdentity } from "@statsify/contract";
 
-/** How long a loaded player page stays fresh in the query cache; matches the page's edge TTL. */
-const PAGE_STALE_MS = 60_000;
-
 /** Resolves a URL name or UUID to the stored identity, or `null` when the API has never seen it. */
 export async function resolvePlayer(name: string): Promise<PlayerIdentity | null> {
-  try {
-    return await rpc.player.resolve(isUuid(name) ? { uuid: name } : { name });
-  } catch (error) {
-    // A name the contract rejects (over 16 characters, say) can't be a player either.
-    if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) return null;
-    throw error;
-  }
+  if (!isPlayerTag(name)) return null;
+  return orNull(rpc.player.resolve(isUuid(name) ? { uuid: name } : { name }), ["NOT_FOUND", "BAD_REQUEST"]);
 }
 
 export const playerPageQuery = (uuid: string) => orpc.player.page.queryOptions({ input: { uuid }, staleTime: PAGE_STALE_MS });

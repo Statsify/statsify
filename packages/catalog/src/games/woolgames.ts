@@ -9,7 +9,7 @@
 import { type Game, type StatEntry, classesOf, selection } from "../catalog.js";
 import { WOOLGAMES_MODES, type WoolGamesModes } from "@statsify/schemas";
 
-/** Wool Wars' seven classes, its submodes after Overall, each storing the games played as it. */
+/** Wool Wars' seven classes, its submodes after Overall, each storing its kills, deaths, assists and wool stats. */
 export const WOOL_WARS_CLASSES = classesOf(WOOLGAMES_MODES, "woolwars");
 
 /** What Wool Wars' Overall and each class store: the card's kills row and its sidebar's wool, blocks and power-ups. */

@@ -10,10 +10,10 @@ import { Bingo } from "~/features/bingo/bingo";
 import { validateBoardSearch } from "~/features/bingo/board-search";
 import { loadBingoPlayer } from "~/features/bingo/bingo-data";
 import { BingoLayout } from "~/features/bingo/bingo-layout";
-import { PlayerNotFound } from "~/features/bingo/player-not-found";
+import { BingoPlayerNotFound } from "~/features/bingo/player-not-found";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SANS_PRELOAD } from "~/lib/fonts";
-import { REDIRECT_HEADERS, possessive } from "~/lib/player-route";
+import { REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/player-route";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { cacheHeaders } from "~/lib/cache";
 import { missingPlayerResponse } from "~/lib/response";
@@ -24,6 +24,7 @@ import { useState } from "react";
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { createI18n } from "~/i18n/i18n";
 import type { BingoPlayer } from "@statsify/contract";
+import type { AutoUpdate } from "@statsify/contract/refresh";
 
 const EDGE_TTL_SECONDS = 300;
 
@@ -44,6 +45,8 @@ export const Route = createFileRoute("/{-$locale}/player/$name_/bingo")({
         to: "/{-$locale}/player/$name/bingo",
         params: { name: player.username },
         search: true,
+        // A search's history state goes along, as on the player page.
+        state: true,
         statusCode: 301,
         headers: REDIRECT_HEADERS,
       });
@@ -57,24 +60,34 @@ export const Route = createFileRoute("/{-$locale}/player/$name_/bingo")({
     const locale = localeData(matches);
     // In English, from the server's `site.json`.
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
-    if (!loaderData) return { meta: [{ title: words.t("meta.notFound.player") }], links: [SANS_PRELOAD] };
+    if (!loaderData) return { ...notFoundHead(words.t("meta.notFound.player")), links: [SANS_PRELOAD] };
 
     const { username } = loaderData;
     const name = possessive(username);
     const title = words.t("meta.bingo.playerTitle", { name });
     const description = words.t("meta.bingo.playerDescription", { name });
     const origin = locale?.origin;
+    const profile = `/player/${username}`;
 
     return {
       meta: [
         { title },
         { name: "description", content: description },
-        ...(origin ? socialMeta({ origin, path: `/player/${username}/bingo`, title, description, image: "/images/og-bingo.png" }) : []),
+        ...(origin ?
+          socialMeta({
+            origin,
+            path: `${profile}/bingo`,
+            title,
+            description,
+            image: "/images/og-bingo.png",
+            trail: { above: [{ name: username, path: profile }], name: words.t("nav.bingo") },
+          }) :
+          []),
       ],
     };
   },
   headers: () => cacheHeaders(`max-age=${EDGE_TTL_SECONDS}, stale-while-revalidate=3600`),
-  notFoundComponent: PlayerNotFound,
+  notFoundComponent: () => <BingoPlayerNotFound />,
   component: BingoPage,
 });
 
@@ -88,7 +101,7 @@ function BingoPage() {
 function BingoBoards({ initial }: { initial: BingoPlayer }) {
   const [player, setPlayer] = useState(initial);
 
-  const refresh = async (deadline: AbortSignal, auto: boolean, token: string | undefined) => {
+  const refresh = async (deadline: AbortSignal, auto: AutoUpdate | undefined, token: string | undefined) => {
     const result = await refreshBingo({ data: { uuid: player.uuid, auto, token }, signal: deadline });
     if (result.ok) setPlayer(result.data);
     return result;

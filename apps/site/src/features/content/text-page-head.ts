@@ -19,7 +19,7 @@ export const TEXT_PAGE_CACHE = "max-age=3600, stale-while-revalidate=86400, stal
 export const textPageHead = ({
   matches,
   ...page
-}: { matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>; path: string } & PageText) => ({
+}: { matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>; path: string; trail?: string } & PageText) => ({
   meta: pageMeta(matches, { ...page, image: "/images/og-home.png" }),
   links: [SANS_PRELOAD],
 });

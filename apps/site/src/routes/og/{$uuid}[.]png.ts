@@ -7,7 +7,7 @@
  */
 
 import { UNFURL_POLICY, gameImageOf, playerImageResponse } from "~/server/images.server";
-import { cacheHeaders } from "~/lib/cache";
+import { NOT_FOUND_EDGE, cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
 
 /**
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/og/{$uuid}.png")({
     handlers: {
       GET: ({ params, request }) => {
         const game = gameImageOf(new URL(request.url).searchParams);
-        if (game === null) return new Response(null, { status: 404, headers: cacheHeaders("max-age=300") });
+        if (game === null) return new Response(null, { status: 404, headers: cacheHeaders(NOT_FOUND_EDGE) });
         return playerImageResponse(request, params.uuid, "og", UNFURL_POLICY, game);
       },
     },

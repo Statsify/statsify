@@ -10,7 +10,7 @@ import { OpenAPILink } from "@orpc/openapi-client/fetch";
 import minifiedContract from "@statsify/contract/minified";
 import type { SiteClient } from "@statsify/contract";
 import { createIsomorphicFn } from "@tanstack/react-start";
-import { createORPCClient } from "@orpc/client";
+import { ORPCError, createORPCClient } from "@orpc/client";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { rpcServerClient } from "~/server/rpc.server";
 
@@ -29,3 +29,10 @@ export const rpc = getClient();
 
 /** TanStack Query helpers, e.g. `orpc.search.suggest.queryOptions({ input })`. */
 export const orpc = createTanstackQueryUtils(rpc);
+
+/** The call's result, or `null` when the API answers with one of `codes`. */
+export const orNull = <T>(call: Promise<T>, codes: readonly string[] = ["NOT_FOUND"]): Promise<T | null> =>
+  call.catch((error: unknown) => {
+    if (error instanceof ORPCError && codes.includes(error.code)) return null;
+    throw error;
+  });

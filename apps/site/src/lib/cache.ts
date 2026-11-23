@@ -19,5 +19,16 @@ export function cacheHeaders(edge: string): Record<string, string> {
   };
 }
 
+/** The edge keeps a 404 for five minutes. */
+export const NOT_FOUND_EDGE = "max-age=300";
+
+export const NO_STORE = { "Cache-Control": "no-store" };
+
+/** For a response whose route would otherwise set an edge TTL. */
+export const NO_STORE_EDGE = { "Cache-Control": "no-store", "CDN-Cache-Control": "no-store" };
+
+/** How long a visitor should wait after the API or a server route failed. */
+export const RETRY_AFTER_SECONDS = 30;
+
 /** For a file served under its content's hash, which never changes. */
 export const IMMUTABLE_HEADERS = { "Cache-Control": "public, max-age=31536000, immutable", "CDN-Cache-Control": "max-age=31536000" };

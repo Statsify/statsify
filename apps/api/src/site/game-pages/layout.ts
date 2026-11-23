@@ -7,9 +7,10 @@
  */
 
 import { type ColorCode, type Game, type Stat, modeName, shapeKeys, statAt } from "@statsify/catalog";
-import { FormattedGame, type Player, type PlayerStats } from "@statsify/schemas";
 import { freshness } from "../cooldown.js";
+import { gameName, siteName } from "../names.js";
 import { arrayGroup } from "@statsify/util";
+import type { GameId, Player, PlayerStats } from "@statsify/schemas";
 import type { GamePage, StatCell, StatSection } from "@statsify/contract";
 
 /** A stat by its catalog key, at the page's place unless `at` gives another (`""` for a game stat). */
@@ -61,6 +62,8 @@ export interface SectionSpec {
   plain?: boolean;
   collapsed?: boolean;
   search?: boolean;
+  /** Two lines across on a phone, for a list whose every line fits half its width at the widest values. */
+  pairs?: boolean;
   ticks?: boolean;
 }
 
@@ -115,6 +118,24 @@ export const selectedMode = (game: Game, stored: string, among: readonly string[
   const squashed = stored.toLowerCase().replaceAll(/[^a-z]/g, "");
   return among.find((mode) => mode.toLowerCase() === squashed);
 };
+
+/** The games of a page with a mode per game (Quests, Challenges): its modes after Overall. */
+export const gamesOf = (game: Game): GameId[] => game.modes.getApiModes().filter((mode) => mode !== "overall") as GameId[];
+
+/** Overall on a page with a mode per game: each game's total (at `at`) under its name and icon, as a sorted list. */
+export const rankingPage = (
+  games: GameId[],
+  { at, sort, color }: { at: (game: GameId) => string; sort: "desc" | "share"; color?: ColorCode }
+): PageSpec => ({
+  heading: { word: null },
+  sections: [
+    {
+      cells: games.map((game) => ({ key: "total", at: at(game), name: gameName(game), icon: game, ...(color && { color }) })),
+      sort,
+      list: true,
+    },
+  ],
+});
 
 /** One page: a mode, or a mode's submode. */
 export interface PageSpec {
@@ -211,7 +232,7 @@ function cell(player: Player, stat: Stat, spec: Spec): StatCell {
     key: stat.path.slice(stat.path.indexOf(".", "stats.".length) + 1),
     label: spec.label ?? stat.label,
     ...(spec.short && { short: spec.short }),
-    ...(name !== undefined && { name }),
+    ...(name !== undefined && { name: siteName(name) }),
     ...(spec.params && { params: spec.params }),
     value,
     ...(hidden && { hidden }),
@@ -222,8 +243,11 @@ function cell(player: Player, stat: Stat, spec: Spec): StatCell {
     leaderboard: stat.leaderboard && !unset && !hidden && !spec.inline ? stat.path : null,
     ...(spec.icon && { icon: spec.icon }),
     ...(spec.inline && { inline: true }),
-    // The catalog's own entry for what the stat means in this game; a card's name isn't a stat to explain.
-    ...(name === undefined && stat.glossary !== stat.label.slice(stat.label.lastIndexOf(".") + 1) && { glossary: stat.glossary }),
+    // The catalog's own entry for what the stat means in this game, where it isn't the label's; the site derives that
+    // one. A card's name, the stat's or the page's, isn't a stat to explain.
+    ...(name === undefined && stat.glossary !== undefined && stat.glossary !== stat.label.slice(stat.label.lastIndexOf(".") + 1) && {
+      glossary: stat.glossary,
+    }),
   };
 }
 
@@ -284,6 +308,7 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
     ...(spec.plain && { plain: true }),
     ...(spec.collapsed && { collapsed: true }),
     ...(spec.search && { search: true }),
+    ...(spec.pairs && { pairs: true }),
     ...(spec.ticks && { ticks: true }),
   };
 }
@@ -362,7 +387,7 @@ function level(player: Player, game: Game, spec: LevelSpec): NonNullable<GamePag
 export function pageName(layout: GameLayout): string {
   if (layout.name) return layout.name;
   if (!layout.game.id) throw new Error(`${layout.game.key} has neither a name nor a game id`);
-  return FormattedGame[layout.game.id];
+  return gameName(layout.game.id);
 }
 
 /** The `player.game` view model, without the nav to the player's other games. */
@@ -378,7 +403,7 @@ export function buildGamePage(
   const modeSpec = modes.find(({ key }) => key === mode);
   if (!modeSpec) throw new Error(`${game.key} has no ${mode} page`);
 
-  const name = (key: string) => layout.modeNames?.[key] ?? modeName(game, key);
+  const name = (key: string) => layout.modeNames?.[key] ?? siteName(modeName(game, key));
   const submodes = modeSpec.submodes ?? [];
   const sub = submodes.length > 0 ? submode ?? submodes[0].key : undefined;
   const periods = layout.periods?.(mode) ?? [];

@@ -6,7 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { BOX_GAP, Box, CELL } from "~/components/ui/box";
 import { ResultCardView } from "./result-card";
+import { cn } from "~/lib/util";
 import { type RecentPlayer, clearPlayers, updatePlayer, useRecentPlayers } from "./recent";
 import { orpc } from "~/lib/orpc";
 import { resolveQuery } from "./resolve";
@@ -19,33 +21,34 @@ import type { CSSProperties } from "react";
 const STALE_MS = 60_000;
 
 /**
- * `/player`'s recently viewed players as result cards, drawn after hydration from the browser's storage. A card whose
- * name no longer finds its player is asked for by UUID, and takes the new name or leaves the list.
+ * The recently viewed players (`/player`, a player not found) as result cards, drawn after hydration from the browser's
+ * storage. A card whose name no longer finds its player is asked for by UUID, and takes the new name or leaves the list.
  */
-export function RecentPlayers({ onClear }: { onClear: () => void }) {
+export function RecentPlayers({ onClear }: { onClear?: () => void }) {
   const { t } = useTranslation();
   const headingId = useId();
   const recent = useRecentPlayers();
   const players = recent ?? [];
 
   return (
-    <div className="recent-hold w-full" style={recent ? ({ "--recent": players.length } as CSSProperties) : undefined}>
+    <div className="recent-hold w-full max-w-200 text-start" style={recent ? ({ "--recent": players.length } as CSSProperties) : undefined}>
       {players.length > 0 && (
-        <section aria-labelledby={headingId} className="flex flex-col gap-2">
-          <div className="flex min-h-11 items-center justify-between gap-4">
+        <section aria-labelledby={headingId} className={cn("flex flex-col", BOX_GAP)}>
+          {/* Clear's ring sits inside, as the box clips. */}
+          <Box className={cn(CELL, "content:justify-between content:gap-4 content:py-0")}>
             <h2 id={headingId} className="text-mc-1.5 font-bold">{t("search.recent.title")}</h2>
             <button
               type="button"
               onClick={() => {
                 clearPlayers();
-                onClear();
+                onClear?.();
               }}
-              className="min-h-11 text-mc-1 text-mc-gray underline hover:text-mc-white"
+              className="min-h-11 min-w-11 text-end text-mc-1 text-mc-gray underline hover:text-mc-white focus-visible:focus-ring-inset"
             >
               {t("search.recent.clear")}
             </button>
-          </div>
-          <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
+          </Box>
+          <ul className={cn("grid grid-cols-1 md:grid-cols-2", BOX_GAP)}>
             {players.map((player) => <RecentCard key={player.uuid} player={player} />)}
           </ul>
         </section>

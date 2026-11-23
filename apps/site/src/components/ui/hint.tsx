@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ComponentProps, type FocusEvent, type PointerEvent, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { type ComponentProps, type FocusEvent, type PointerEvent, type ReactNode, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "~/lib/util";
 import { createPortal } from "react-dom";
 
@@ -64,6 +64,34 @@ function Tooltip({ text, anchor, ...props }: { text: string; anchor: DOMRect } &
   );
 }
 
+/** Closes an open floating box on scroll, resize, Escape, or a press outside it. */
+export function useDismiss(open: unknown, inside: (target: Node) => boolean, close: () => void) {
+  const onClose = useEffectEvent(close);
+  const onPress = useEffectEvent((event: globalThis.PointerEvent) => {
+    if (!inside(event.target as Node)) close();
+  });
+
+  useEffect(() => {
+    if (!open) return;
+
+    const dismiss = () => onClose();
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    addEventListener("scroll", dismiss, { capture: true, passive: true });
+    addEventListener("resize", dismiss);
+    document.addEventListener("pointerdown", onPress);
+    document.addEventListener("keydown", escape);
+    return () => {
+      removeEventListener("scroll", dismiss, { capture: true });
+      removeEventListener("resize", dismiss);
+      document.removeEventListener("pointerdown", onPress);
+      document.removeEventListener("keydown", escape);
+    };
+  }, [open]);
+}
+
 /** How long a tooltip stays after the mouse leaves its element: long enough to cross the gap onto the tooltip. */
 const LEAVE_MS = 150;
 
@@ -90,28 +118,7 @@ export function useHint(text: string | undefined, anchor: (element: HTMLElement)
 
   useEffect(() => () => clearTimeout(leaving.current), []);
 
-  useEffect(() => {
-    if (!shown) return;
-
-    const close = () => setShown(null);
-    const outside = (event: globalThis.PointerEvent) => {
-      if (!shown.element.contains(event.target as Node)) close();
-    };
-    const escape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") close();
-    };
-
-    addEventListener("scroll", close, { capture: true, passive: true });
-    addEventListener("resize", close);
-    document.addEventListener("pointerdown", outside);
-    document.addEventListener("keydown", escape);
-    return () => {
-      removeEventListener("scroll", close, { capture: true });
-      removeEventListener("resize", close);
-      document.removeEventListener("pointerdown", outside);
-      document.removeEventListener("keydown", escape);
-    };
-  }, [shown]);
+  useDismiss(shown, (target) => !!shown?.element.contains(target), () => setShown(null));
 
   return {
     props: text === undefined ?
@@ -127,6 +134,16 @@ export function useHint(text: string | undefined, anchor: (element: HTMLElement)
     ),
     toggle: (element: HTMLElement) => (shown ? hide() : show(element)),
   };
+}
+
+/** Mouse or touch wording by the pointer media query; both are in the HTML, so the server's render agrees. */
+export function PointerText({ mouse, touch }: { mouse: ReactNode; touch: ReactNode }) {
+  return (
+    <>
+      <span className="pointer-coarse:hidden">{mouse}</span>
+      <span className="hidden pointer-coarse:inline">{touch}</span>
+    </>
+  );
 }
 
 /**
@@ -168,9 +185,9 @@ export function Hint({
     <>
       <button
         type="button"
-        // Browsers drop a button's text shadow; the Minecraft text keeps its own. The tap area reaches past the text, so
-        // a finger can hit a 10 px abbreviation.
-        className="relative cursor-help [text-shadow:inherit] after:absolute after:-inset-x-2 after:-inset-y-4"
+        // Browsers drop a button's text shadow; the Minecraft text keeps its own. The tap area's offsets keep 44 px of
+        // it inside a box, which clips 16 or 17 px from the line.
+        className="relative cursor-help [text-shadow:inherit] after:absolute after:-inset-x-2 after:-top-4.5 after:-bottom-4.25 after:min-h-11 after:min-w-11"
         {...props}
         onPointerDown={(event) => (pointer.current = event.pointerType)}
         onClick={(event) => {

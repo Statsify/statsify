@@ -7,7 +7,7 @@
  */
 
 import { Button } from "~/components/ui/button";
-import { Error } from "~/components/ui/error";
+import { Error, ErrorText } from "~/components/ui/error";
 import { Link } from "@tanstack/react-router";
 import { LogoError } from "~/components/icons/logo-error";
 import { useTranslation } from "react-i18next";
@@ -28,11 +28,12 @@ export function NotFound({
   return (
     <Error>
       <LogoError className="size-40 sm:size-64" />
-      <div className="flex flex-col items-center gap-4">
-        <h1 className="text-mc-3 sm:text-mc-4 font-bold text-mc-red">{t("notFound.title", "OOPS!")}</h1>
-        <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray text-center">
-          {t("notFound.description", "This page doesn't exist. Check the address, or go back home.")}
-        </p>
+      <div className="flex w-full flex-col items-center gap-4">
+        <ErrorText heading={<h1 className="text-mc-3 sm:text-mc-4 font-bold text-mc-red">{t("notFound.title", "OOPS!")}</h1>}>
+          <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray text-center">
+            {t("notFound.description", "This page doesn't exist. Check the address, or go back home.")}
+          </p>
+        </ErrorText>
         {back ?
           (
             <div className="flex flex-col items-center gap-2 pt-2">

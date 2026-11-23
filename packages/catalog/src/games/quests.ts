@@ -32,9 +32,7 @@ export const QUEST_TIMES: Record<string, QuestTime> = {
 
 const PERIOD_CLASSES = { overall: OverallQuests, daily: DailyQuests, weekly: WeeklyQuests, monthly: MonthlyQuests };
 
-/** Each game's class for a period, whose own metadata holds the quest names the card shows (the player's are prefixed). */
-const gameClasses = (period: QuestPeriod) => childClasses(PERIOD_CLASSES[period]);
-
+/** A quest under the card's name for it. */
 const quest = (name: string): StatEntry => ({ color: doneColor, name });
 
 /** A period's total, out of the game's quests for the period: green when all are done, gold when some are, red when none. */
@@ -48,8 +46,9 @@ export const QUESTS: Game<QuestModes> = {
   id: null,
   modes: QUEST_MODES,
   game: { total: { color: "§b", glossary: "questsTotal" }, dailyTotal: { color: "§b" }, weeklyTotal: { color: "§b" } },
+  // Each game's class for a period, whose own metadata holds the quest names the card shows (the player's are prefixed).
   shapes: QUEST_PERIODS.flatMap((period) =>
-    gameClasses(period).map(([game, type]): Shape => {
+    childClasses(PERIOD_CLASSES[period]).map(([game, type]): Shape => {
       const quests = scanMetadata(type).filter(([key]) => key !== "total");
 
       return {

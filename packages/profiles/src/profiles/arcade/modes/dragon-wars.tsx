@@ -8,7 +8,7 @@
 
 import { ARCADE, cardColors } from "@statsify/catalog";
 import { DragonWars } from "@statsify/schemas";
-import { LocalizeFunction } from "../../../types.js";
+import type { LocalizeFunction } from "../../../types.js";
 import { Table } from "../../../components/index.js";
 
 const color = cardColors(ARCADE, "dragonWars");

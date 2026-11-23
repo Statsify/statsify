@@ -22,9 +22,8 @@ import {
   Table,
   formatProgression,
 } from "../components/index.js";
-import { LocalizeFunction } from "../types.js";
 import { formatTime, prettify, romanNumeral } from "@statsify/util";
-import type { BaseProfileProps } from "../types.js";
+import type { BaseProfileProps, LocalizeFunction } from "../types.js";
 
 const color = cardColors(BLITZSG);
 
@@ -98,14 +97,12 @@ const OverallBlitzSGTable = ({ blitzsg, t }: OverallBlitzSGTableProps) => (
 
 interface KitBlitzSGTableProps {
   stats: BlitzSGKit;
-  /** The kit's mode, where the table's colors are. */
-  kit: string;
+  /** The kit's colors, from its mode. */
+  color: ReturnType<typeof cardColors>;
   t: LocalizeFunction;
 }
 
-const KitBlitzSGTable = ({ stats, kit, t }: KitBlitzSGTableProps) => {
-  const color = cardColors(BLITZSG, kit);
-
+const KitBlitzSGTable = ({ stats, color, t }: KitBlitzSGTableProps) => {
   return (
     <Table.table>
       <Table.tr>
@@ -179,7 +176,7 @@ export const BlitzSGProfile = ({
         );
       }
 
-      table = <KitBlitzSGTable stats={stats} kit={mode.api} t={t} />;
+      table = <KitBlitzSGTable stats={stats} color={kitColor} t={t} />;
       break;
     }
   }

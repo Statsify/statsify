@@ -7,7 +7,7 @@
  */
 
 import { Home } from "~/features/home/home";
-import { cacheHeaders } from "~/lib/cache";
+import { NO_STORE_EDGE, cacheHeaders } from "~/lib/cache";
 import { createFileRoute } from "@tanstack/react-router";
 import { getHomeData } from "~/features/home/home-data";
 
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/{-$locale}/")({
   staleTime: EDGE_TTL_SECONDS * 1000,
   headers: ({ loaderData }) =>
     loaderData?.unavailable ?
-      { "Cache-Control": "no-store", "CDN-Cache-Control": "no-store" } :
+      NO_STORE_EDGE :
       cacheHeaders(`max-age=${EDGE_TTL_SECONDS}, stale-while-revalidate=86400, stale-if-error=86400`),
   component: HomePage,
 });

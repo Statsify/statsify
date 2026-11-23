@@ -11,3 +11,11 @@
  * without loading zod.
  */
 export const AUTO_UPDATE_AGE_MS = 15 * 60_000;
+
+/**
+ * Why a page updates a profile by itself: `stale`, its save is `AUTO_UPDATE_AGE_MS` old; `searched`, the search opened
+ * it, so it updates once past the cooldown, as a bot command does.
+ */
+export const AUTO_UPDATES = ["stale", "searched"] as const;
+
+export type AutoUpdate = (typeof AUTO_UPDATES)[number];

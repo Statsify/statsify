@@ -8,7 +8,7 @@
 
 import { useEffect, useRef } from "react";
 
-export function useOutisdeClick<T extends HTMLElement>(fn: () => void) {
+export function useOutsideClick<T extends HTMLElement>(fn: () => void) {
   const ref = useRef<T>(null);
 
   useEffect(() => {

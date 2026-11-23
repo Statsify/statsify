@@ -8,14 +8,17 @@
 
 import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
-import { Error } from "~/components/ui/error";
-import { PLACEHOLDER_UUID } from "~/lib/uuid";
+import { Error, ErrorText } from "~/components/ui/error";
 import { Skin } from "~/components/ui/skin";
 import { Turnstile } from "~/components/turnstile";
 import { formatCountdown } from "~/i18n/format";
-import { getRouteApi, useNavigate, useParams } from "@tanstack/react-router";
+import { PLACEHOLDER_UUID, isPlayerTag } from "~/lib/uuid";
+import { HOLD_SCRIPT } from "./recent";
+import { RecentPlayers } from "./recent-players";
+import { cn } from "~/lib/util";
+import { getRouteApi, useHydrated, useNavigate, useParams } from "@tanstack/react-router";
 import { type ActionResult, BROWSER_TIMEOUT_MS, lookupPlayer } from "./player-actions";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { rememberPlayer } from "./resolve";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -28,22 +31,33 @@ type Lookup = (name: string, token: string | undefined, deadline: AbortSignal) =
 
 const lookupOnHypixel: Lookup = (name, token, deadline) => lookupPlayer({ data: { name, token }, signal: deadline });
 
-/** The player-not-found page for the route's name. */
+/** The player-not-found page for the route's name, with the players this browser viewed as a way back. */
 export function PlayerNotFound() {
   const { name = "" } = useParams({ strict: false });
-  return <PlayerNotFoundView name={name} />;
+  return <PlayerNotFoundView name={name} recent />;
 }
 
 /**
- * The player-not-found page with the Turnstile-gated "Look up on Hypixel" action. The header already has
- * the search, so the page has none of its own. On phones the skin is 160 px, so the button lands
- * mid-screen even when the 24 px copy takes three lines.
+ * The player-not-found page with the Turnstile-gated "Look up on Hypixel" action, or Bingo's own `search` and action
+ * (`children`), since its header has no search. With `recent`, the recently viewed players follow.
  */
-export function PlayerNotFoundView({ name, lookup, turnstileSiteKey }: { name: string; lookup?: Lookup; turnstileSiteKey?: string }) {
+export function PlayerNotFoundView({
+  name,
+  lookup,
+  turnstileSiteKey,
+  search,
+  recent = false,
+  children,
+}: { name: string; lookup?: Lookup; turnstileSiteKey?: string; search?: ReactNode; recent?: boolean; children?: ReactNode }) {
   const { t } = useTranslation();
+  // A name no account can have has nothing to look up.
+  const valid = isPlayerTag(name);
 
+  // `gap-8` is the gap `RecentPlayers` takes back while it holds nothing.
   return (
-    <Error>
+    <Error className={cn(search && "flex-col-reverse md:flex-col", recent && "gap-8")}>
+      {recent && <HoldScript />}
+      {search}
       <div className="flex w-full max-w-160 flex-col items-center gap-4 self-center">
         <div className="flex max-w-full flex-col items-center gap-4">
           <Skin uuid={PLACEHOLDER_UUID} className="h-40 sm:h-64" />
@@ -53,12 +67,22 @@ export function PlayerNotFoundView({ name, lookup, turnstileSiteKey }: { name: s
             <span className="text-mc-dark-red">]</span> {name}
           </Box>
         </div>
-        <h1 className="text-mc-3 lg:text-mc-4 text-mc-red font-bold">{t("player.notFound.title")}</h1>
-        <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray text-center">{t("player.notFound.description", { name })}</p>
-        {name && <LookupButton name={name} lookup={lookup} turnstileSiteKey={turnstileSiteKey} />}
+        <ErrorText heading={<h1 className="text-mc-3 lg:text-mc-4 text-mc-red font-bold">{t("player.notFound.title")}</h1>}>
+          <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray text-center">
+            {t(valid ? "player.notFound.description" : "player.notFound.invalid", { name })}
+          </p>
+        </ErrorText>
+        {valid && (children ?? <LookupButton name={name} lookup={lookup} turnstileSiteKey={turnstileSiteKey} />)}
       </div>
+      {recent && <RecentPlayers />}
     </Error>
   );
+}
+
+/** `HOLD_SCRIPT` in the page, for each route it shows on. Rendered only while hydrating, as `ClockScript`. */
+function HoldScript() {
+  const hydrated = useHydrated();
+  return !hydrated && <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: HOLD_SCRIPT }} />;
 }
 
 type LookupState =
