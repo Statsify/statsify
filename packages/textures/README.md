@@ -1,8 +1,8 @@
 # @statsify/textures
 
 Draws Minecraft items, text, tooltips and inventories from a resource pack, in the browser or in
-Node. Nothing is pre-rendered and no game assets ship with it: drop in a 26.3 pack
-(or the 26.3 client jar) and every icon is drawn from it, then cached.
+Node. Nothing is pre-rendered and no game assets ship with it: drop in a 26.3 pack and every icon
+is drawn from it, then cached.
 
 ## Packs
 
