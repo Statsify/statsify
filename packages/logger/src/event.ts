@@ -89,7 +89,12 @@ type CountAttribute = {
 
 const logger = new Logger("Event");
 
+// Outside a request this is the process-wide scope, and every later request's scope starts as a copy of it
+const defaultScope = Sentry.getIsolationScope();
+
 export const setRequestAttributes = (attributes: RequestAttributes) => {
+  if (Sentry.getIsolationScope() === defaultScope) return;
+
   const entries = Object.entries(attributes).filter(([, value]) => value !== undefined);
 
   Sentry.setAttributes(Object.fromEntries(entries));
