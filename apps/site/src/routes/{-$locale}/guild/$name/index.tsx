@@ -11,7 +11,7 @@ import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead } from "~/lib/player-route";
 import { GuildNotFoundView, GuildView } from "~/features/guild/guild-page";
 import { guildPageQuery } from "~/features/guild/guild-data";
 import { cacheHeaders } from "~/lib/cache";
-import { cacheNotFoundResponse } from "~/lib/response";
+import { missingGuildResponse } from "~/lib/response";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
@@ -25,8 +25,7 @@ export const Route = createFileRoute("/{-$locale}/guild/$name/")({
     const guild = await orNull(context.queryClient.ensureQueryData(guildPageQuery(params.name)), ["NOT_FOUND", "BAD_REQUEST"]);
 
     if (!guild) {
-      // As for a player: a lookup that finds the guild navigates in the browser, so it never sees this page.
-      cacheNotFoundResponse();
+      missingGuildResponse();
       throw notFound();
     }
 

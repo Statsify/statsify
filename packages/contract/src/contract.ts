@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { AUTO_UPDATES } from "./refresh.js";
 import { type ContractRouterClient, oc } from "@orpc/contract";
 import { UUID_PATTERN } from "@statsify/util/util";
 import { z } from "zod";
@@ -604,8 +605,8 @@ const SessionGameInputSchema = GameInputSchema.omit({ period: true });
 const RefreshInputSchema = z.object({
   uuid: UuidSchema,
   clientIp: ClientIpSchema,
-  /** A page updating a stale profile by itself once it opened, which stops at two-thirds of the global budget. */
-  auto: z.boolean().optional(),
+  /** A page updating a profile by itself once it opened, which stops at two-thirds of the global budget. */
+  auto: z.enum(AUTO_UPDATES).optional(),
 });
 const LookupInputSchema = z.object({
   /** A username, or the UUID of a player URL that isn't stored. */

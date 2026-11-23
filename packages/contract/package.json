@@ -10,6 +10,10 @@
       "types": "./src/index.ts",
       "default": "./dist/index.js"
     },
+    "./refresh": {
+      "types": "./src/refresh.ts",
+      "default": "./dist/refresh.js"
+    },
     "./minified": {
       "types": "./minified.d.ts",
       "default": "./dist/contract.min.json"

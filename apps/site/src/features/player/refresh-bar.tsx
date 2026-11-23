@@ -6,24 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { AUTO_UPDATE_AGE_MS, type AutoUpdate } from "@statsify/contract/refresh";
 import { ClockScript, TIME_SLOT } from "~/lib/clock";
 import { Hint, useHint } from "~/components/ui/hint";
 import { RefreshIcon } from "~/components/icons/refresh";
 import { Turnstile } from "~/components/turnstile";
 import { cn } from "~/lib/util";
 import { formatCountdown, fullDate, relativeTime } from "~/i18n/format";
-import { type ComponentProps, useEffect, useEffectEvent, useId, useState } from "react";
+import { type ComponentProps, useCallback, useEffect, useEffectEvent, useId, useState, useSyncExternalStore } from "react";
 import { type ActionResult, BROWSER_TIMEOUT_MS } from "./player-actions";
 import { useRevealOnOpen } from "./share-panel";
-import { getRouteApi, useHydrated, useRouterState } from "@tanstack/react-router";
+import { getRouteApi, useRouterState } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 const localeRoute = getRouteApi("/{-$locale}");
 
 const META = "text-mc-1 text-mc-gray";
-
-/** How old a save is before its page updates it by itself once it opens. */
-const AUTO_UPDATE_AGE_MS = 15 * 60_000;
 
 /** Crawlers that run scripts would spend the Hypixel budget just by loading pages, so they never update by themselves. */
 const BOT_AGENT = /bot|crawl|spider|slurp|headless|lighthouse|preview/i;
@@ -43,28 +41,48 @@ type RefreshState =
   | { status: "unavailable" }
   | { status: "error" };
 
+let clockNow: number | undefined;
+let clockTimer: ReturnType<typeof setTimeout> | undefined;
+/** Each `useNow` on the page, with the end of its countdown (0 for none). */
+const clockListeners = new Map<() => void, number>();
+
+function scheduleTick() {
+  clearTimeout(clockTimer);
+  const counting = [...clockListeners.values()].some((until) => until > Date.now());
+  clockTimer = setTimeout(() => {
+    clockNow = Date.now();
+    for (const listener of clockListeners.keys()) listener();
+    scheduleTick();
+  }, counting ? 1000 : 60_000);
+}
+
+function subscribeClock(listener: () => void, until: number) {
+  clockListeners.set(listener, until);
+  clockNow ??= Date.now();
+  scheduleTick();
+
+  return () => {
+    clockListeners.delete(listener);
+    if (clockListeners.size > 0) return;
+    clearTimeout(clockTimer);
+    clockNow = undefined;
+  };
+}
+
 /**
- * Ticks once a second. `undefined` on the server and while the page hydrates, so the first render matches the HTML,
+ * The time from the page's one clock, which ticks each second while a caller's countdown runs to `countdownUntil` and
+ * each minute otherwise. `undefined` on the server and while the page hydrates, so the first render matches the HTML,
  * whose time text `ClockScript` writes; a component mounted after that (a client navigation) starts on the clock.
  */
-export function useNow(): number | undefined {
-  const hydrated = useHydrated();
-  const [now, setNow] = useState(() => (hydrated ? Date.now() : undefined));
-
-  useEffect(() => {
-    const tick = () => setNow(Date.now());
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  return now;
+export function useNow(countdownUntil = 0): number | undefined {
+  const subscribe = useCallback((listener: () => void) => subscribeClock(listener, countdownUntil), [countdownUntil]);
+  return useSyncExternalStore(subscribe, () => (clockNow ??= Date.now()), () => undefined);
 }
 
 export interface RefreshOptions {
   updatedAt: number;
   expiresAt: number;
-  refresh: (deadline: AbortSignal, auto: boolean, token: string | undefined) => Promise<ActionResult<unknown>>;
+  refresh: (deadline: AbortSignal, auto: AutoUpdate | undefined, token: string | undefined) => Promise<ActionResult<unknown>>;
   /**
    * Once per page view, update a save older than 15 minutes (or past its cooldown, when the search opened the page) by
    * itself. It fails quietly: a refusal counts down without the message, and anything else leaves the button as it was.
@@ -81,10 +99,9 @@ export type Refresh = ReturnType<typeof useRefresh>;
 export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: RefreshOptions) {
   const { t } = useTranslation();
   const { turnstileSiteKey } = localeRoute.useLoaderData();
-  const now = useNow();
   const [state, setState] = useState<RefreshState>({ status: "idle" });
   const [verifying, setVerifying] = useState(false);
-  const [autoVerifying, setAutoVerifying] = useState(false);
+  const [autoVerifying, setAutoVerifying] = useState<AutoUpdate>();
   const [widgetFailed, setWidgetFailed] = useState(false);
   // The location once its page has rendered: during a navigation `location` is already the next page's.
   // eslint-disable-next-line no-underscore-dangle -- the history entry's key, under TanStack's name
@@ -92,11 +109,13 @@ export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: Refr
   const searchedAt = useRouterState({ select: ({ resolvedLocation }) => resolvedLocation?.state.searchedAt });
 
   const lockedUntil = state.status === "limited" ? state.until : expiresAt;
+  const now = useNow(lockedUntil);
   const remaining = now === undefined ? undefined : Math.max(0, Math.ceil((lockedUntil - now) / 1000));
   // A widget whose script didn't load stays broken until the page reloads, so the button does too.
   const disabled = verifying || widgetFailed || state.status === "pending" || remaining === undefined || remaining > 0;
 
-  async function run(auto: boolean, token?: string) {
+  async function run(update: AutoUpdate | undefined, token?: string) {
+    const auto = update !== undefined;
     setVerifying(false);
     setState({ status: "pending", auto });
 
@@ -104,7 +123,7 @@ export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: Refr
     let result: ActionResult<unknown>;
 
     try {
-      result = await refresh(deadline, auto, token);
+      result = await refresh(deadline, update, token);
     } catch {
       // A 500, a Cloudflare 429 or a dropped connection: say so and let the visitor try again. A hung one reads as
       // Hypixel not answering, as when the server's own deadline runs out.
@@ -129,12 +148,13 @@ export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: Refr
     const now = Date.now();
     // Opened from the search, any save past its cooldown updates, as for a bot command. A reload keeps history state,
     // so only a search made since this document loaded counts.
-    const age = searchedAt !== undefined && searchedAt > performance.timeOrigin ? 0 : AUTO_UPDATE_AGE_MS;
+    const update: AutoUpdate = searchedAt !== undefined && searchedAt > performance.timeOrigin ? "searched" : "stale";
+    const age = update === "searched" ? 0 : AUTO_UPDATE_AGE_MS;
     if (state.status === "pending" || now < lockedUntil || now - updatedAt < age) return;
     if (navigator.webdriver || BOT_AGENT.test(navigator.userAgent)) return;
-    if (!turnstileSiteKey) return void run(true);
+    if (!turnstileSiteKey) return void run(update);
     setState({ status: "pending", auto: true });
-    setAutoVerifying(true);
+    setAutoVerifying(update);
   });
 
   // After mount only, so never on the server.
@@ -175,7 +195,7 @@ export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: Refr
       {
         siteKey: turnstileSiteKey,
         onToken: (token: string | undefined) => {
-          if (token) return void run(false, token);
+          if (token) return void run(undefined, token);
           // The widget failed or its token expired: the button comes back for another try.
           setVerifying(false);
           setState({ status: "error" });
@@ -188,8 +208,8 @@ export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: Refr
       {
         siteKey: turnstileSiteKey,
         onToken: (token: string | undefined) => {
-          setAutoVerifying(false);
-          if (token) void run(true, token);
+          setAutoVerifying(undefined);
+          if (token) void run(autoVerifying, token);
           else setState({ status: "idle" });
         },
       } :
@@ -197,7 +217,7 @@ export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: Refr
     start() {
       if (disabled) return;
       if (turnstileSiteKey) setVerifying(true);
-      else void run(false);
+      else void run(undefined);
     },
   };
 }
