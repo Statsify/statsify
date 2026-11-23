@@ -14,7 +14,6 @@ use statsify_render_core::material::Material;
 use statsify_render_core::mesh::Mesh;
 use statsify_render_core::renderer::native::NativeBackend;
 use statsify_render_core::renderer::{DrawItem, Pipeline, Renderer};
-use statsify_render_core::texture::Texture;
 
 use crate::armor::Armor;
 use crate::attachment::{
@@ -22,7 +21,7 @@ use crate::attachment::{
 };
 use crate::error::Error;
 use crate::model::{Model, ModelKind, ModelOuterLayer};
-use crate::native::SKIN_RENDERER;
+use crate::native::renderer;
 use crate::pose::Pose;
 
 // Of the output's shorter side, left clear on each side of the scene
@@ -113,9 +112,10 @@ struct Cache {
 
 /// A resource pack's models and textures, baked and uploaded the first time a scene uses them.
 #[napi]
+#[derive(Clone)]
 pub struct ModelLibrary {
-  pack: Pack,
-  cache: Mutex<Cache>,
+  pack: Arc<Pack>,
+  cache: Arc<Mutex<Cache>>,
 }
 
 #[napi]
@@ -133,8 +133,8 @@ impl ModelLibrary {
     };
 
     Self {
-      pack,
-      cache: Mutex::default(),
+      pack: Arc::new(pack),
+      cache: Arc::default(),
     }
   }
 }
@@ -206,18 +206,14 @@ impl ModelLibrary {
     let image = RgbaImage::from_raw(texture.width, texture.height, texture.rgba)
       .expect("a loaded texture holds every texel");
 
-    let texture_view = Texture::from_image(
-      renderer.device(),
-      renderer.queue(),
-      &DynamicImage::ImageRgba8(image),
-    )?;
-
     Ok(LoadedTexture {
       material: Material::new(
         renderer.device(),
-        texture_view,
+        renderer.queue(),
         renderer.texture_bind_group_layout(),
-      ),
+        renderer.sampler(),
+        &DynamicImage::ImageRgba8(image),
+      )?,
       translucent: texture.translucent,
     })
   }
@@ -229,8 +225,23 @@ pub async fn render_scene(
   scene: Scene,
   output: SceneOutput,
 ) -> Result<Buffer> {
-  let renderer = SKIN_RENDERER.get().await;
+  let renderer = renderer().await?;
+  let library = library.clone();
 
+  // Baking, loading and rendering block the thread, so they run off napi's async workers
+  let buffer = spawn_blocking(move || draw_scene(renderer, &library, scene, output))
+    .await
+    .map_err(|_| Error::from(statsify_render_core::Error::RenderFailure))??;
+
+  Ok(buffer.into())
+}
+
+fn draw_scene(
+  renderer: &Renderer<NativeBackend>,
+  library: &ModelLibrary,
+  scene: Scene,
+  output: SceneOutput,
+) -> Result<Vec<u8>> {
   let limit = renderer.device().limits().max_texture_dimension_2d;
   let (width, height) = (pixels(output.width, limit)?, pixels(output.height, limit)?);
 
@@ -395,10 +406,9 @@ pub async fn render_scene(
 
   let buffer = renderer
     .render_sized(&items, &Camera::Orbital(camera), width, height)
-    .await
     .map_err(Error::from)?;
 
-  Ok(buffer.into())
+  Ok(buffer)
 }
 
 fn pixels(side: f64, limit: u32) -> crate::error::Result<u32> {
