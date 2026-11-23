@@ -7,6 +7,7 @@
  */
 
 import { Container, Footer, Table } from "#components";
+import { Empty } from "./components/Empty.js";
 import { ItemSlot } from "./components/ItemSlot.js";
 import { RARITY_COLORS, pricesAsOf } from "./components/ItemGrid.js";
 import type { Canvas, Image } from "skia-canvas";
@@ -70,9 +71,7 @@ export const SkyBlockPriceProfile = ({ price, icon, background, logo, user, t }:
             </Table.tr>
           )}
       </Table.table>
-      <box width="100%">
-        <text>{`§7${pricesAsOf(t, price.asOf)}`}</text>
-      </box>
+      <Empty text={pricesAsOf(t, price.asOf)} />
       <Footer logo={logo} user={user} />
     </Container>
   );
