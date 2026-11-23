@@ -8,7 +8,6 @@ use statsify_minecraft_models::ALPHA_CUTOFF;
 use statsify_render_core::material::Material;
 use statsify_render_core::mesh::Mesh;
 use statsify_render_core::renderer::{Backend, DrawItem, Pipeline, Renderer};
-use statsify_render_core::texture::Texture;
 
 use crate::attachment::{FEET, MODEL_HEIGHT, PIXELS_PER_BLOCK, PLAYER_SCALE};
 use crate::error::{Error, Result};
@@ -279,19 +278,15 @@ impl Mount {
       })
       .collect();
 
-    let texture = Texture::from_image(
-      renderer.device(),
-      renderer.queue(),
-      &DynamicImage::ImageRgba8(texture),
-    )?;
-
     Ok(Self {
       mesh: Mesh::from_geometry(renderer.device(), geometry),
       material: Material::new(
         renderer.device(),
-        texture,
+        renderer.queue(),
         renderer.texture_bind_group_layout(),
-      ),
+        renderer.sampler(),
+        &DynamicImage::ImageRgba8(texture),
+      )?,
       transform,
       points,
     })

@@ -6,7 +6,7 @@ pub type OutputTexture<'a> = wgpu::SurfaceTexture;
 #[cfg(not(target_arch = "wasm32"))]
 pub type OutputTexture<'a> = &'a wgpu::Texture;
 
-// The futures' Send bounds can't be named here, but every render awaits them on a concrete
+// The futures' Send bounds can't be named here, but they're only awaited on a concrete
 // backend, where the compiler checks them
 #[allow(async_fn_in_trait)]
 pub trait Backend {
@@ -38,7 +38,7 @@ pub trait Backend {
   fn create_view(output_texture: &OutputTexture) -> wgpu::TextureView;
 
   #[cfg(not(target_arch = "wasm32"))]
-  async fn handle_encoder_after_render(
+  fn handle_encoder_after_render(
     &self,
     encoder: wgpu::CommandEncoder,
     output_texture: OutputTexture<'_>,
