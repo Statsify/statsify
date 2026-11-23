@@ -12,8 +12,9 @@ import { RefreshIcon } from "~/components/icons/refresh";
 import { Turnstile } from "~/components/turnstile";
 import { cn } from "~/lib/util";
 import { formatCountdown, fullDate, relativeTime } from "~/i18n/format";
-import { useEffect, useEffectEvent, useState } from "react";
+import { type ComponentProps, useEffect, useEffectEvent, useId, useState } from "react";
 import { type ActionResult, BROWSER_TIMEOUT_MS } from "./player-actions";
+import { useRevealOnOpen } from "./share-panel";
 import { getRouteApi, useHydrated, useRouterState } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
@@ -60,21 +61,7 @@ export function useNow(): number | undefined {
   return now;
 }
 
-/**
- * "Updated N minutes ago" and a small refresh button after it, for a player's card beside its other actions: the
- * button names itself in a tooltip and counts down until `expiresAt`. A failure, and the Turnstile widget a click shows
- * first, sit on a line of their own, so the bar's parent wraps (`flex-wrap`). `refresh` runs the page's refresh action
- * with the bar's deadline and the visitor's Turnstile token, and applies its data itself; the bar shows the outcome.
- * Each refresh spends the site's shared Hypixel budget; the automatic update gets its token from an invisible widget,
- * and doesn't run where Turnstile would ask the visitor to interact.
- */
-export function RefreshBar({
-  updatedAt,
-  expiresAt,
-  refresh,
-  auto = false,
-  className,
-}: {
+export interface RefreshOptions {
   updatedAt: number;
   expiresAt: number;
   refresh: (deadline: AbortSignal, auto: boolean, token: string | undefined) => Promise<ActionResult<unknown>>;
@@ -83,9 +70,16 @@ export function RefreshBar({
    * itself. It fails quietly: a refusal counts down without the message, and anything else leaves the button as it was.
    */
   auto?: boolean;
-  className?: string;
-}) {
-  const { t, i18n } = useTranslation();
+}
+
+export type Refresh = ReturnType<typeof useRefresh>;
+
+/**
+ * A page's refresh, shared by `RefreshBar` and any `RefreshButton`: `refresh` runs the page's action with a Turnstile
+ * token and applies its data. The automatic update's token comes from an invisible widget, so it never asks the visitor.
+ */
+export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: RefreshOptions) {
+  const { t } = useTranslation();
   const { turnstileSiteKey } = localeRoute.useLoaderData();
   const now = useNow();
   const [state, setState] = useState<RefreshState>({ status: "idle" });
@@ -151,10 +145,15 @@ export function RefreshBar({
     autoUpdate();
   }, [auto, view]);
 
-  let label = t("player.refresh");
-  if (state.status === "pending") label = t("player.refreshing");
-  else if (remaining) label = t("player.refreshIn", { time: formatCountdown(remaining) });
-  const { props: hint, tooltip } = useHint(label);
+  let text = t("player.refresh");
+  let label = text;
+  if (state.status === "pending") {
+    text = t("player.refreshing");
+    label = text;
+  } else if (remaining) {
+    text = formatCountdown(remaining);
+    label = t("player.refreshIn", { time: text });
+  }
 
   let message: string | undefined;
   if (widgetFailed) message = t("player.notFound.verifyFailed");
@@ -162,62 +161,71 @@ export function RefreshBar({
   else if (state.status === "unavailable") message = t("player.refreshFailed");
   else if (state.status === "error") message = t("player.refreshError");
 
-  // `aria-disabled`, not `disabled`, so the button keeps focus while it refreshes and counts down. Its tap area reaches
-  // past its 32 px box to 44 px.
+  return {
+    updatedAt,
+    lockedUntil,
+    now,
+    state,
+    disabled,
+    text,
+    label,
+    message,
+    /** The Turnstile widget's props while a click waits on it. */
+    verification: verifying ?
+      {
+        siteKey: turnstileSiteKey,
+        onToken: (token: string | undefined) => {
+          if (token) return void run(false, token);
+          // The widget failed or its token expired: the button comes back for another try.
+          setVerifying(false);
+          setState({ status: "error" });
+        },
+        onLoadError: () => setWidgetFailed(true),
+      } :
+      undefined,
+    /** The invisible widget's props while the automatic update waits on its token. */
+    autoVerification: autoVerifying ?
+      {
+        siteKey: turnstileSiteKey,
+        onToken: (token: string | undefined) => {
+          setAutoVerifying(false);
+          if (token) void run(true, token);
+          else setState({ status: "idle" });
+        },
+      } :
+      undefined,
+    start() {
+      if (disabled) return;
+      if (turnstileSiteKey) setVerifying(true);
+      else void run(false);
+    },
+  };
+}
+
+/**
+ * "Updated N minutes ago" and the Update stats button, for a player's card. A failure, and the Turnstile widget a click
+ * shows first, take a line of their own, so the bar's parent wraps (`flex-wrap`).
+ */
+export function RefreshBar({ className, ...options }: RefreshOptions & { className?: string }) {
+  const refresh = useRefresh(options);
+  return <SharedRefreshBar refresh={refresh} className={className} />;
+}
+
+/** `RefreshBar` for a refresh a `RefreshButton` elsewhere on the page shares. */
+export function SharedRefreshBar({ refresh, className }: { refresh: Refresh; className?: string }) {
+  const { t, i18n } = useTranslation();
+  const { updatedAt, lockedUntil, now, state, message, verification, autoVerification } = refresh;
+
   return (
     <>
       <div className={cn("flex items-center gap-2", className)}>
         <p data-clock="updated" className={cn(META, "min-w-0")} suppressHydrationWarning>
-          {state.status === "pending" ? label : now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}
+          {now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}
         </p>
-        <button
-          type="button"
-          data-clock="refresh"
-          aria-label={label}
-          aria-disabled={disabled}
-          suppressHydrationWarning
-          {...hint}
-          onClick={() => {
-            if (disabled) return;
-            if (turnstileSiteKey) setVerifying(true);
-            else void run(false);
-          }}
-          className="relative flex h-8 min-w-8 shrink-0 items-center justify-center gap-1 bg-blackify-800 px-2 text-mc-1 text-mc-green after:absolute after:-inset-1.5 hover:bg-blackify-700 focus-visible:focus-ring-inset aria-disabled:text-mc-gray aria-disabled:hover:bg-blackify-800"
-        >
-          <RefreshIcon className="size-4 shrink-0" />
-          <span data-clock="countdown" className="empty:hidden" suppressHydrationWarning>
-            {state.status !== "pending" && remaining ? formatCountdown(remaining) : ""}
-          </span>
-        </button>
-        {tooltip}
+        <RefreshButton refresh={refresh} />
       </div>
-      {verifying && (
-        <Turnstile
-          siteKey={turnstileSiteKey}
-          onToken={(token) => {
-            if (token) return void run(false, token);
-            // The widget failed or its token expired: the button comes back for another try.
-            setVerifying(false);
-            setState({ status: "error" });
-          }}
-          onLoadError={() => setWidgetFailed(true)}
-          // The bar sits in the profile card, narrower than the flexible widget's 300 px.
-          size="compact"
-          className="flex basis-full justify-center"
-        />
-      )}
-      {autoVerifying && (
-        <Turnstile
-          siteKey={turnstileSiteKey}
-          invisible
-          onToken={(token) => {
-            setAutoVerifying(false);
-            if (token) void run(true, token);
-            else setState({ status: "idle" });
-          }}
-          className="absolute"
-        />
-      )}
+      {verification && <Verification {...verification} />}
+      {autoVerification && <Turnstile {...autoVerification} invisible className="absolute" />}
       <ClockScript
         args={{
           updatedAt,
@@ -234,6 +242,50 @@ export function RefreshBar({
         {state.status === "done" && t("player.updated", { time: relativeTime(updatedAt, updatedAt, i18n.language) })}
       </output>
     </>
+  );
+}
+
+/**
+ * Update stats, or the time until it can, with the full wording in a tooltip then. `aria-disabled`, not `disabled`, so
+ * the button keeps focus while it refreshes and counts down. Its tap area reaches past its 32 px box to 44 px.
+ */
+export function RefreshButton({ refresh: { text, label, disabled, start }, className }: { refresh: Refresh; className?: string }) {
+  const { props: hint, tooltip } = useHint(text === label ? undefined : label);
+
+  return (
+    <>
+      <button
+        type="button"
+        data-clock="refresh"
+        aria-label={label}
+        aria-disabled={disabled}
+        suppressHydrationWarning
+        {...hint}
+        onClick={start}
+        className={cn(
+          "relative flex h-8 min-w-8 shrink-0 items-center justify-center gap-2 bg-blackify-800 px-2 text-mc-1 text-mc-green after:absolute after:-inset-1.5 hover:bg-blackify-700 focus-visible:focus-ring-inset aria-disabled:text-mc-gray aria-disabled:hover:bg-blackify-800",
+          className
+        )}
+      >
+        <RefreshIcon className="size-4 shrink-0" />
+        <span data-clock="countdown" suppressHydrationWarning>{text}</span>
+      </button>
+      {tooltip}
+    </>
+  );
+}
+
+/** The Turnstile widget, brought into view: a click in the pinned mini header shows it in the nametag, off screen. */
+function Verification(props: ComponentProps<typeof Turnstile>) {
+  const id = useId();
+  useRevealOnOpen(id);
+
+  // The bar sits in the profile card, narrower than the flexible widget's 300 px. The margin keeps it below the mini
+  // header.
+  return (
+    <div id={id} className="flex basis-full scroll-mt-14 justify-center">
+      <Turnstile {...props} size="compact" />
+    </div>
   );
 }
 

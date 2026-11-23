@@ -45,7 +45,7 @@ export const CLOCK_SCRIPT = `window.__clock = (element, args) => {
   const fill = (template, time) => template.replace(${JSON.stringify(TIME_SLOT)}, time);
   element.querySelector("[data-clock=updated]").textContent = fill(args.updated, relativeTime(args.updatedAt, now, args.locale));
   const refresh = element.querySelector("[data-clock=refresh]");
-  refresh.querySelector("[data-clock=countdown]").textContent = remaining ? formatCountdown(remaining) : "";
+  refresh.querySelector("[data-clock=countdown]").textContent = remaining ? formatCountdown(remaining) : args.refresh;
   refresh.setAttribute("aria-label", remaining ? fill(args.refreshIn, formatCountdown(remaining)) : args.refresh);
   refresh.setAttribute("aria-disabled", String(remaining > 0));
 };`;
