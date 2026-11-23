@@ -310,6 +310,7 @@ export class ItemRenderer {
     if (!icon) {
       icon = this.load(key, layers, item, scale, tick);
       this.icons.set(key, icon);
+      void icon.catch(() => this.icons.delete(key));
     }
 
     return icon;
