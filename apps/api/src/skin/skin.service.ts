@@ -502,8 +502,7 @@ export interface WarlordsRenderOptions extends Pick<WarlordsRenderDto, "extruded
 async function loadMount({ entity, textures }: WarlordsMount): Promise<SceneMount> {
   const horse = join(VANILLA_PACK.path, "textures/entity/horse");
 
-  const layers = await Promise.all(textures.map((texture) => readFile(join(horse, `${texture}.png`))))
-    .catch(throwPackUnavailable(VANILLA_PACK));
+  const layers = await Promise.all(textures.map((texture) => readFile(join(horse, `${texture}.png`))));
 
   return { entity, textures: layers };
 }
