@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARMOR, HOTBAR } from "./kits.js";
+import { ARMOR, HOTBAR, hypixelItem } from "./kits.js";
 import { type Compound, readNbt } from "./nbt.js";
-import { type ItemStack, legacyEffect, legacyItem } from "@statsify/textures";
+import { type ItemStack, legacyEffect } from "@statsify/textures";
 import { gunzipSync } from "fflate";
 
 const base64Bytes = (base64: string) => Uint8Array.from(atob(base64), (char) => char.codePointAt(0)!);
@@ -38,11 +38,11 @@ export function skinUrl(value: string) {
   return profile.textures?.SKIN?.url?.replace(/^http:/, "https:");
 }
 
-/** One 1.8 item compound as an ItemStack, or undefined for an empty slot or an unknown id */
+/** One 1.8 item compound as an ItemStack, or undefined for an empty slot or a spawn egg 26.3 has no item for */
 function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefined {
   if (id === undefined) return;
 
-  const item = legacyItem(id, Damage);
+  const item = hypixelItem(id, Damage);
   if (!item) return;
 
   const texture = tag?.SkullOwner?.Properties?.textures?.[0]?.Value;

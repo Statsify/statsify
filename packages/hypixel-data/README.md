@@ -41,9 +41,15 @@ Data taken from Hypixel's menus, and the adapters that turn what Hypixel stores 
 - `fromSpeedUhcKit(id)`: an `activeKit_<MODE>` kit, like `kit_basic_normal_logger`. Only Normal's
   Kits page and the Default kit are dumped.
 
-The last four give a row of the shop's items, and a pick the dumped menus don't have leaves its slot
-empty. Kits come back as 40 slots: the hotbar, the three main rows, then boots to helmet in 36 to 39.
-`ARMOR_SLOTS` lists the armor slots helmet first, as the inventory screen shows them.
+The last four give a row of the shop's items. Kits come back as 40 slots: the hotbar, the three main
+rows, then boots to helmet in 36 to 39. `ARMOR_SLOTS` lists the armor slots helmet first, as the
+inventory screen shows them.
+
+Tables meant to be complete throw on what they lack: the BedWars shop and hotbar categories, TNT
+Games' and Arena's items, and 1.8's ids, Bukkit materials and potion effects. The dumps are partial
+for the rest: a Quake or Turbo Kart Racers part they lack leaves its slot empty, and a default kit,
+level or Speed UHC kit they lack comes back undefined. 1.8's untyped spawn egg (Damage 0, like
+SkyWars' Mystery Egg) has no 26.3 item, so it's left out.
 
 ## Armor
 

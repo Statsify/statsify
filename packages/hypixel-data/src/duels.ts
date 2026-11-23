@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARMOR, SLOTS, inRange, kitKey } from "./kits.js";
-import { type ItemStack, legacyMaterial } from "@statsify/textures";
+import { ARMOR, SLOTS, hypixelItem, inRange, kitKey } from "./kits.js";
+import { type ItemStack, legacyMaterialId } from "@statsify/textures";
 import { armorOf } from "./armor.js";
 import dumped from "../data/duels-modes.json" with { type: "json" };
 
@@ -99,23 +99,24 @@ const armorSlot = (material: string) =>
     : Object.entries(ARMOR).find(([piece]) => material.endsWith(`_${piece}`))?.[1];
 
 // Kit tokens end in a Bukkit material and a number, like hype_train_redstone_torch_on_10
-function bukkitItem(token: string) {
+function endingMaterial(token: string) {
   const words = withoutCopy(token).split("_");
-
-  for (let start = 0; start < words.length; start++) {
-    const material = words.slice(start).join("_");
-    const item = legacyMaterial(material.toUpperCase());
-    if (item) return DAMAGE_DEPENDENT.has(material) ? undefined : item;
-  }
-
-  return undefined;
+  return words
+    .map((_, start) => words.slice(start).join("_"))
+    .find((material) => DAMAGE_DEPENDENT.has(material) || legacyMaterialId(material.toUpperCase()) !== undefined);
 }
 
-/** A Duels layout_* object ({ "0": "diamond_sword" }) as 40 player inventory slots, or without one its key's default */
+const bukkitItem = (material: string) =>
+  DAMAGE_DEPENDENT.has(material) ? undefined : hypixelItem(legacyMaterialId(material.toUpperCase())!);
+
+/**
+ * A Duels layout_* object ({ "0": "diamond_sword" }) as 40 player inventory slots, or without one its key's default,
+ * which is undefined for a key DUELS_DEFAULT_KEYS and DUELS_KITS don't list
+ */
 export function fromDuelsKit(
   stored: Readonly<Record<string, string>> | null | undefined,
   key: string,
-): (ItemStack | undefined)[] {
+): (ItemStack | undefined)[] | undefined {
   const slots: (ItemStack | undefined)[] = Array.from({ length: SLOTS });
   const { mode, kit: name } = duelsMode(key);
   const kit = name ? duelsKit(mode, name) : undefined;
@@ -129,7 +130,7 @@ export function fromDuelsKit(
   }
 
   const layout = stored ?? DEFAULTS[mode];
-  if (!layout) throw new Error(`No Duels layout for ${key}`);
+  if (!layout) return;
 
   const entries = Object.entries(layout).flatMap(([slot, token]) =>
     token && inRange(Number(slot), ARMOR.boots) ? [[Number(slot), token] as const] : [],
@@ -142,10 +143,12 @@ export function fromDuelsKit(
   for (const [slot, token] of entries) {
     const tokenMaterial = material(token);
 
-    // Layouts saved before the editor hid armor still hold it, but the game equips it instead
+    // Layouts saved before the editor hid armor still hold it, but the game equips it instead. Combo's
+    // (combo_helmet) names no material, so it's left out
     const worn = armorSlot(tokenMaterial);
     if (worn !== undefined && !kit?.items.some((candidate) => candidate.material === tokenMaterial)) {
-      slots[worn] ??= bukkitItem(token);
+      const ending = endingMaterial(token);
+      if (ending) slots[worn] ??= bukkitItem(ending);
       continue;
     }
 
@@ -166,7 +169,13 @@ export function fromDuelsKit(
 
     // A kit the dump doesn't have still shares the mode's items, like SkyWars' iron sword
     item ??= SHARED[mode]?.get(tokenMaterial);
-    item ??= bukkitItem(token);
+
+    if (!item) {
+      const ending = endingMaterial(token);
+      if (ending === undefined) throw new Error(`No Duels item or Bukkit material for ${token}`);
+      item = bukkitItem(ending);
+    }
+
     if (item) slots[slot] = item;
   }
 

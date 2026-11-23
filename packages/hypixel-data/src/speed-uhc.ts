@@ -15,12 +15,12 @@ import { kitKey } from "./kits.js";
 const KITS = dumped as Record<string, Record<string, (ItemStack | null)[]>>;
 
 /**
- * A Speed UHC activeKit_<MODE> kit (kit_basic_normal_logger) as its items in the Kits page's order. An item
- * the page names in Hypixel's words (Pig Egg, Awkward Potion) leaves its slot empty
+ * A Speed UHC activeKit_<MODE> kit (kit_basic_normal_logger) as its items in the Kits page's order, or undefined
+ * for a kit the dump doesn't have. An item the page names in Hypixel's words (Pig Egg, Awkward Potion) leaves its
+ * slot empty
  */
-export function fromSpeedUhcKit(id: string): (ItemStack | undefined)[] {
+export function fromSpeedUhcKit(id: string): (ItemStack | undefined)[] | undefined {
   const [, mode, name] = /^kit_basic_([a-z]+)_(.+)$/.exec(id) ?? [];
-  const kit = mode && name ? KITS[mode]?.[kitKey(name)] : undefined;
-  if (!kit) throw new Error(`No Speed UHC kit ${id}`);
-  return kit.map((item) => item ?? undefined);
+  if (!mode || !name) throw new Error(`${id} isn't a Speed UHC kit id`);
+  return KITS[mode]?.[kitKey(name)]?.map((item) => item ?? undefined);
 }
