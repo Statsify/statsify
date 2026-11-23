@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { AUTO_UPDATES } from "@statsify/contract/refresh";
 import { ORPCError } from "@orpc/client";
 import { UUID_PATTERN } from "@statsify/util/util";
 import { createServerFn } from "@tanstack/react-start";
@@ -68,7 +69,7 @@ function failure(error: unknown, deadline: AbortSignal): ActionResult<never> {
  * global budgets. `auto`: the page's own update once it opened, which the API refuses sooner.
  */
 export const refreshPlayer = createServerFn({ method: "POST" })
-  .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.boolean().optional(), token: z.string().max(4096).optional() }))
+  .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.enum(AUTO_UPDATES).optional(), token: z.string().max(4096).optional() }))
   .handler(async ({ data }): Promise<ActionResult<PlayerPage>> => {
     const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
     const ip = clientIp();
@@ -84,7 +85,7 @@ export const refreshPlayer = createServerFn({ method: "POST" })
 
 /** Refreshes a known player like `refreshPlayer`, then hands back their Bingo boards. */
 export const refreshBingo = createServerFn({ method: "POST" })
-  .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.boolean().optional(), token: z.string().max(4096).optional() }))
+  .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.enum(AUTO_UPDATES).optional(), token: z.string().max(4096).optional() }))
   .handler(async ({ data }): Promise<ActionResult<BingoPlayer>> => {
     const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
     const ip = clientIp();
@@ -108,7 +109,7 @@ export const refreshGame = createServerFn({ method: "POST" })
       mode: z.string().min(1).max(32).optional(),
       submode: z.string().min(1).max(32).optional(),
       period: z.string().min(1).max(32).optional(),
-      auto: z.boolean().optional(),
+      auto: z.enum(AUTO_UPDATES).optional(),
       token: z.string().max(4096).optional(),
     })
   )

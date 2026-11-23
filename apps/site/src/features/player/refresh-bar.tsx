@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AUTO_UPDATE_AGE_MS } from "@statsify/contract/refresh";
+import { AUTO_UPDATE_AGE_MS, type AutoUpdate } from "@statsify/contract/refresh";
 import { Button } from "~/components/ui/button";
 import { Hint } from "~/components/ui/hint";
 import { Turnstile } from "~/components/turnstile";
@@ -94,7 +94,7 @@ export function RefreshBar({
 }: {
   updatedAt: number;
   expiresAt: number;
-  refresh: (deadline: AbortSignal, auto: boolean, token: string | undefined) => Promise<ActionResult<unknown>>;
+  refresh: (deadline: AbortSignal, auto: AutoUpdate | undefined, token: string | undefined) => Promise<ActionResult<unknown>>;
   /**
    * Once per page view, update a save older than 15 minutes (or past its cooldown, when the search opened the page) by
    * itself. It fails quietly: a refusal counts down without the message, and anything else leaves the button as it was.
@@ -113,7 +113,7 @@ export function RefreshBar({
   const { turnstileSiteKey } = localeRoute.useLoaderData();
   const [state, setState] = useState<RefreshState>({ status: "idle" });
   const [verifying, setVerifying] = useState(false);
-  const [autoVerifying, setAutoVerifying] = useState(false);
+  const [autoVerifying, setAutoVerifying] = useState<AutoUpdate>();
   const [widgetFailed, setWidgetFailed] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
   // The location once its page has rendered: during a navigation `location` is already the next page's.
@@ -127,7 +127,8 @@ export function RefreshBar({
   // A widget whose script didn't load stays broken until the page reloads, so the button does too.
   const disabled = verifying || widgetFailed || state.status === "pending" || remaining === undefined || remaining > 0;
 
-  async function run(auto: boolean, token?: string) {
+  async function run(update: AutoUpdate | undefined, token?: string) {
+    const auto = update !== undefined;
     setVerifying(false);
     setState({ status: "pending", auto });
 
@@ -135,7 +136,7 @@ export function RefreshBar({
     let result: ActionResult<unknown>;
 
     try {
-      result = await refresh(deadline, auto, token);
+      result = await refresh(deadline, update, token);
     } catch {
       // A 500, a Cloudflare 429 or a dropped connection: say so and let the visitor try again. A hung one reads as
       // Hypixel not answering, as when the server's own deadline runs out.
@@ -160,12 +161,13 @@ export function RefreshBar({
     const now = Date.now();
     // Opened from the search, any save past its cooldown updates, as for a bot command. A reload keeps history state,
     // so only a search made since this document loaded counts.
-    const age = searchedAt !== undefined && searchedAt > performance.timeOrigin ? 0 : AUTO_UPDATE_AGE_MS;
+    const update: AutoUpdate = searchedAt !== undefined && searchedAt > performance.timeOrigin ? "searched" : "stale";
+    const age = update === "searched" ? 0 : AUTO_UPDATE_AGE_MS;
     if (state.status === "pending" || now < lockedUntil || now - updatedAt < age) return;
     if (navigator.webdriver || BOT_AGENT.test(navigator.userAgent)) return;
-    if (!turnstileSiteKey) return void run(true);
+    if (!turnstileSiteKey) return void run(update);
     setState({ status: "pending", auto: true });
-    setAutoVerifying(true);
+    setAutoVerifying(update);
   });
 
   // After mount only, so never on the server. A game page draws a bar for each layout, and the one on screen decides
@@ -198,7 +200,7 @@ export function RefreshBar({
       <button type="button" aria-disabled={disabled} onClick={() => {
           if (disabled) return;
           if (turnstileSiteKey) setVerifying(true);
-          else void run(false);
+          else void run(undefined);
         }}
       >
         {label}
@@ -223,7 +225,7 @@ export function RefreshBar({
         <Turnstile
           siteKey={turnstileSiteKey}
           onToken={(token) => {
-            if (token) return void run(false, token);
+            if (token) return void run(undefined, token);
             // The widget failed or its token expired: the button comes back for another try.
             setVerifying(false);
             setState({ status: "error" });
@@ -237,8 +239,8 @@ export function RefreshBar({
           siteKey={turnstileSiteKey}
           invisible
           onToken={(token) => {
-            setAutoVerifying(false);
-            if (token) void run(true, token);
+            setAutoVerifying(undefined);
+            if (token) void run(autoVerifying, token);
             else setState({ status: "idle" });
           }}
           className="absolute"

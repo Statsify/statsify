@@ -36,6 +36,7 @@ import { useTranslation } from "react-i18next";
 import { LABEL_NAMESPACES } from "~/i18n/i18n";
 import type { ComponentType, ReactNode, Ref } from "react";
 import type { GameSummary, PlayerPage } from "@statsify/contract";
+import type { AutoUpdate } from "@statsify/contract/refresh";
 
 // Its own chunk, fetched when a pointer or the keyboard reaches the Skin button, or else when the panel opens.
 const loadSkinPanel = () => import("./skin-viewer");
@@ -65,7 +66,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
 
   // The refreshed page replaces the cached query, so every panel re-renders with the new numbers. The player's game
   // pages predate the refresh: they reload the next time they're shown.
-  const refresh = async (deadline: AbortSignal, auto: boolean, token: string | undefined) => {
+  const refresh = async (deadline: AbortSignal, auto: AutoUpdate | undefined, token: string | undefined) => {
     const result = await refreshPlayer({ data: { uuid: page.uuid, auto, token }, signal: deadline });
 
     if (result.ok) {
