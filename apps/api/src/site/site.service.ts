@@ -49,6 +49,7 @@ import { ORPCError } from "@orpc/nest";
 import { PLAYER_COOLDOWN_MS, type PlayerGuild, buildPlayerPage } from "./player-page.js";
 import { PlayerLeaderboardService, PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
+import { SkinService } from "#skin";
 import { config, flatten, isUuid, normalizeUuid, removeFormatting } from "@statsify/util";
 import { isIPv6 } from "node:net";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -207,6 +208,7 @@ export class SiteService implements OnApplicationBootstrap {
     private readonly playerLeaderboardService: PlayerLeaderboardService,
     private readonly playerSearchService: PlayerSearchService,
     private readonly guildService: GuildService,
+    private readonly skinService: SkinService,
     @InjectModel(Player) private readonly playerModel: PlayerModel,
     @InjectModel(Guild) private readonly guildModel: GuildModel,
     @InjectRedis() private readonly redis: Redis
@@ -254,7 +256,7 @@ export class SiteService implements OnApplicationBootstrap {
     if (Date.now() < cached.expiresAt) return this.toPage(cached);
 
     await this.consumeBudget(clientIp);
-    const player = await this.playerService.get(tag, CacheLevel.CACHE);
+    const [player] = await Promise.all([this.playerService.get(tag, CacheLevel.CACHE), this.refreshSkin(tag)]);
 
     // When Hypixel doesn't answer, `PlayerService` hands back the stored player, still past its cooldown: say the
     // refresh failed rather than show the old stats as new.
@@ -289,7 +291,10 @@ export class SiteService implements OnApplicationBootstrap {
     let player: Player | null;
 
     try {
-      player = await this.playerService.get(uuid, CacheLevel.CACHE, undefined, { throwOnHypixelError: true });
+      [player] = await Promise.all([
+        this.playerService.get(uuid, CacheLevel.CACHE, undefined, { throwOnHypixelError: true }),
+        this.refreshSkin(uuid),
+      ]);
     } catch (error) {
       // Not an answer about the name, so nothing is remembered and the visitor can try again.
       if (error instanceof HypixelUnavailableError) throw hypixelUnavailable();
@@ -500,6 +505,14 @@ export class SiteService implements OnApplicationBootstrap {
 
   private rememberMiss(nameLower: string) {
     return this.redis.set(missKey(nameLower), "absent", "EX", MISS_TTL_SECONDS);
+  }
+
+  /**
+   * The site's skins come from Minecraft's session server only here, within a refresh or lookup's budget slot; its skin
+   * routes serve the stored one. A failed fetch leaves the stored skin, or Steve's, until the next refresh.
+   */
+  private async refreshSkin(uuid: string): Promise<void> {
+    await this.skinService.getSkin(uuid).catch(() => undefined);
   }
 
   /**

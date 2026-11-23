@@ -22,5 +22,6 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
   ],
   controllers: [SkinController],
   providers: [SkinService],
+  exports: [SkinService],
 })
 export class SkinModule {}
