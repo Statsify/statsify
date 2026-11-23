@@ -81,6 +81,8 @@ export function formatCountdown(seconds: number): string {
   return hours > 0 ? `${hours}:${String(minutes).padStart(2, "0")}:${rest}` : `${minutes}:${rest}`;
 }
 
+const relativeFormats = new Map<string, Intl.RelativeTimeFormat>();
+
 /**
  * How long ago `then` was, in the locale's words ("3 hours ago", "last month", "11 years ago"; "3h ago" with `style`
  * narrow). Days up to 25, months up to 10, then years, so it never says "12 months ago".
@@ -91,7 +93,9 @@ export function relativeTime(
   locale?: string,
   { style = "long" }: { style?: Intl.RelativeTimeFormatStyle } = {}
 ): string {
-  const format = new Intl.RelativeTimeFormat(locale, { numeric: "auto", style });
+  const key = `${locale}|${style}`;
+  let format = relativeFormats.get(key);
+  if (!format) relativeFormats.set(key, (format = new Intl.RelativeTimeFormat(locale, { numeric: "auto", style })));
   // A visitor's clock behind the server's would put `then` ahead of `now` ("in 8 seconds").
   const seconds = Math.round(Math.min(0, then - now) / 1000);
   const magnitude = Math.abs(seconds);
