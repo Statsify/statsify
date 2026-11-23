@@ -44,9 +44,11 @@ export function CompareView({ a, b }: { a: GamePage; b: GamePage }) {
     <div className="relative grow">
       <PageBackground background={backgroundFor(a.game.key)} viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
-        <div className={cn("grid grid-cols-2", BOX_GAP)}>
-          <CompareNametag page={a} />
-          <CompareNametag page={b} end />
+        <div className={cn("grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]", BOX_GAP)}>
+          <CompareNametag page={a} headEnd />
+          {/* The heading says it to screen readers; its box's margin keeps it between the two boxes' faces. */}
+          <span aria-hidden className="me-2 mb-2 self-center text-mc-2 text-mc-gray">{t("compare.vs")}</span>
+          <CompareNametag page={b} />
           <Box as="h1" className={cn(HEADING_BOX, "content:text-mc-2")}>
             <span className="sr-only">{t("compare.versus", { a: a.username, b: b.username })} · </span>
             <MinecraftText>{headingText(a, (key) => t(key))}</MinecraftText>
@@ -66,16 +68,19 @@ export function CompareView({ a, b }: { a: GamePage; b: GamePage }) {
   );
 }
 
-/** A player's head, name and level in the game; the name links to their own page of it, in the mode shown. */
-function CompareNametag({ page, end = false }: { page: GamePage; end?: boolean }) {
+/**
+ * A player's head, name and level in the game, the head toward the other player's; the name links to their own page of
+ * it, in the mode shown.
+ */
+function CompareNametag({ page, headEnd = false }: { page: GamePage; headEnd?: boolean }) {
   return (
-    <Box className={cn("content:flex content:items-center content:gap-3", end && "content:flex-row-reverse content:text-end")}>
-      <SkinHead uuid={page.uuid} className="size-8 shrink-0 sm:size-12" />
+    <Box className={cn("content:flex content:items-center content:gap-3 sm:content:gap-4", headEnd && "content:flex-row-reverse content:text-end")}>
+      <SkinHead uuid={page.uuid} className="size-8 shrink-0 sm:size-16" />
       <div className="flex min-w-0 flex-col gap-1">
-        <Link {...gameLink({ kind: "player", name: page.username }, page.game.key)} search={pageSearch(page)} className="wrap-break-word text-mc-1.5 hover:underline">
+        <Link {...gameLink({ kind: "player", name: page.username }, page.game.key)} search={pageSearch(page)} className="wrap-break-word text-mc-1.5 hover:underline sm:text-mc-2">
           <MinecraftText>{page.displayName}</MinecraftText>
         </Link>
-        {page.level && <MinecraftText className="text-mc-1.5">{page.level.current}</MinecraftText>}
+        {page.level && <MinecraftText className="text-mc-1.5 sm:text-mc-2">{page.level.current}</MinecraftText>}
       </div>
     </Box>
   );

@@ -206,7 +206,8 @@
     "title": "Compare With Another Player",
     "player": "Player",
     "submit": "Compare",
-    "versus": "{{a}} vs {{b}}"
+    "versus": "{{a}} vs {{b}}",
+    "vs": "vs"
   },
   "leaderboards": {
     "title": "Leaderboards",
