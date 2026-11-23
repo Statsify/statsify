@@ -42,7 +42,7 @@ export function CompareView({ a, b }: { a: GamePage; b: GamePage }) {
 
   return (
     <div className="relative grow">
-      <PageBackground background={backgroundFor(a.game.key)} viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background={backgroundFor(a.game.key)} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className={cn("grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]", BOX_GAP)}>
           <CompareNametag page={a} headEnd />

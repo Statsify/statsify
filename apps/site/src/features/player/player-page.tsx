@@ -10,9 +10,12 @@ import { PageBackground } from "~/components/ui/background";
 import { BOX_GAP, Box, CELL, HEADING_BOX, StatBox } from "~/components/ui/box";
 import { ClockScript } from "~/lib/clock";
 import { Discord } from "~/components/icons/discord";
+import { Forums } from "~/components/icons/forums";
+import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { GameNav } from "~/features/game/game-nav";
 import { gameLink } from "~/features/game/game-data";
 import { Hint, Spoken } from "~/components/ui/hint";
+import { Instagram } from "~/components/icons/instagram";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { Hidden, InlineStat, LeaderboardLink, SNAP_LARGE, STAT_LINK, StatCell, StatNumber, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
@@ -20,9 +23,11 @@ import { MinecraftText, colorOf, nameColor } from "~/components/ui/minecraft-tex
 import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
 import { LoginDate } from "./login-date";
-import { RefreshBar, savedDate, useNow } from "./refresh-bar";
+import { RefreshButton, SharedRefreshBar, savedDate, useNow, useRefresh } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust, SkinHead } from "~/components/ui/skin";
+import { TikTok } from "~/components/icons/tiktok";
+import { Twitch } from "~/components/icons/twitch";
 import { Twitter } from "~/components/icons/twitter";
 import { YouTube } from "~/components/icons/youtube";
 import { cn } from "~/lib/util";
@@ -49,8 +54,12 @@ const SkinPanel = lazy(() => loadSkinPanel().then(({ SkinPanel }) => ({ default:
 type Socials = PlayerPage["socials"];
 type SocialKey = keyof Socials;
 
-const SOCIAL_ICONS: Partial<Record<SocialKey, ComponentType<{ className?: string }>>> = {
+const SOCIAL_ICONS: Record<SocialKey, ComponentType<{ className?: string }>> = {
   discord: Discord,
+  forums: Forums,
+  instagram: Instagram,
+  tiktok: TikTok,
+  twitch: Twitch,
   twitter: Twitter,
   youtube: YouTube,
 };
@@ -83,11 +92,12 @@ export function PlayerView({ page }: { page: PlayerPage }) {
 
     return result;
   };
+  const refreshing = useRefresh({ updatedAt: page.updatedAt, expiresAt: page.expiresAt, refresh, auto: true });
 
   return (
     <div className="relative grow">
-      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
-      <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} />
+      <PageBackground background="general" />
+      <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} action={<RefreshButton refresh={refreshing} />} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className={cn("grid grid-cols-1 md:grid-cols-[auto_1fr] xl:grid-cols-[fit-content(50%)_1fr]", BOX_GAP)}>
           <NametagPanel
@@ -110,14 +120,9 @@ export function PlayerView({ page }: { page: PlayerPage }) {
                 </PanelToggle>
               </>
             )}
-            className="md:col-span-full md:row-start-1 xl:col-span-1"
-          />
-          <RefreshBar
-            updatedAt={page.updatedAt}
-            expiresAt={page.expiresAt}
-            refresh={refresh}
-            auto
-            className="mb-2 md:col-span-full md:row-start-3 md:mt-2 md:mb-0 xl:row-start-4"
+            refresh={<SharedRefreshBar refresh={refreshing} className="justify-center" />}
+            // Wide enough for the refresh row's longest state, so the column keeps its width when the countdown ends.
+            className="md:col-span-full md:row-start-1 xl:col-span-1 xl:min-w-104"
           />
           {/* From `xl` the nametag sits over the level, beside the overview, too narrow for the facts' values, so they get
               a row of their own, three across, the last row filled; below that `NametagPanel` draws them. */}
@@ -163,7 +168,7 @@ export function PlayerShell({ name }: { name: string }) {
 
   return (
     <div className="relative grow" aria-busy>
-      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background="general" />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className={cn("grid grid-cols-[auto_minmax(0,1fr)] md:w-fit md:min-w-sm", BOX_GAP)}>
           <Box className="content:flex content:items-center content:justify-center content:p-3">
@@ -195,12 +200,15 @@ function SkinPanelFrame({ id }: { id: string }) {
 function NametagPanel({
   page,
   actions,
+  refresh,
   className,
   ref,
 }: {
   page: PlayerPage;
   /** Buttons after the socials that open panels under the header. */
   actions: ReactNode;
+  /** The refresh bar, on a row of its own under them. */
+  refresh: ReactNode;
   className?: string;
   ref?: Ref<HTMLDivElement>;
 }) {
@@ -229,6 +237,7 @@ function NametagPanel({
           {/* One item, so the buttons wrap under the socials together rather than one at a time */}
           <div className="flex max-w-full flex-wrap items-center justify-center gap-x-4">{actions}</div>
         </div>
+        <div className="flex max-w-full flex-wrap items-center justify-center">{refresh}</div>
       </Box>
       <PlayerFacts page={page} className="col-span-full md:col-span-1 md:col-start-2 xl:hidden" />
     </div>
@@ -249,13 +258,14 @@ function socialHref(value: string): string | undefined {
 }
 
 function SocialLinks({ socials }: { socials: Socials }) {
+  const { t } = useTranslation();
   const entries = (Object.entries(socials) as [SocialKey, string | undefined][]).filter(
     (entry): entry is [SocialKey, string] => !!entry[1]
   );
 
   if (entries.length === 0) return null;
 
-  // An icon (or the network's name) and the handle, never the raw URL; links are 44 px tall.
+  // The network's icon and the handle, never the raw URL; links are 44 px tall. The icon's name is for screen readers.
   return (
     <ul className="flex min-w-0 max-w-full flex-wrap justify-center gap-x-4">
       {entries.map(([key, value]) => {
@@ -263,8 +273,9 @@ function SocialLinks({ socials }: { socials: Socials }) {
         const href = socialHref(value);
         const content = (
           <>
-            {Icon ? <Icon className="size-5 shrink-0" /> : <span className="text-mc-1 text-mc-gray capitalize">{key}</span>}
-            <span className="max-w-40 truncate">{socialHandle(value)}</span>
+            <Icon className="size-5 shrink-0" />
+            <span className="sr-only">{t(`player.socials.${key}`)}</span>
+            <span className="mc-crisp max-w-40 truncate">{socialHandle(value)}</span>
           </>
         );
 
@@ -372,7 +383,7 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
             value={link && "page" in link ?
               (
                 <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: link.page }} className={STAT_LINK}>
-                  <Spoken full={exact(value)}>{n(value)}</Spoken>
+                  <span className="mc-crisp"><Spoken full={exact(value)}>{n(value)}</Spoken></span>
                   <span className="sr-only"> {t("player.page", { name: label })}</span>
                 </Link>
               ) :
@@ -418,7 +429,7 @@ function PlayerFacts({
             label={t("default:stats.guild.guild")}
             value={(
               <Link to="/{-$locale}/guild/$name" params={{ name: guild.name }} className={cn(STAT_LINK, "after:inset-0")}>
-                {guild.name}
+                <span className="mc-crisp">{guild.name}</span>
               </Link>
             )}
             color="text-mc-dark-green"
@@ -454,7 +465,7 @@ function PlayerFacts({
             (
               // Over the whole box: the box, not the value's clip, holds its ::after.
               <Link to="/{-$locale}/player/$name/$game" params={{ name: username, game: lastGamePage }} className={cn(STAT_LINK, "after:inset-0")}>
-                {lastGame}
+                <span className="mc-crisp">{lastGame}</span>
               </Link>
             ) :
             (lastGame ?? t("player.na"))}
@@ -467,7 +478,7 @@ function PlayerFacts({
             label={t("session.title")}
             value={(
               <Link to="/{-$locale}/player/$name/session" params={{ name: username }} className={cn(STAT_LINK, "after:inset-0")}>
-                <LoginDate ms={session.start} linked />
+                <span className="mc-crisp"><LoginDate ms={session.start} linked /></span>
               </Link>
             )}
             color="text-mc-dark-aqua"
@@ -565,6 +576,7 @@ function GamePanel({ game, username, session }: { game: GameSummary; username: s
         <h2>
           {/* The whole box is the link, its ring on the box's edge: the box clips anything past it. */}
           <Link {...gameLink({ kind: session ? "session" : "player", name: username }, game.page)} className={cn(STAT_LINK, "after:inset-0")}>
+            {hasGameIcon(game.id) && <span aria-hidden className="me-2 inline-block size-6 align-middle"><GameIcon game={game.id} /></span>}
             {title}
             {/* Text, not an icon, so the title's box keeps the height of every other panel's. */}
             <span aria-hidden className="text-mc-1.5 text-mc-gray"> »</span>

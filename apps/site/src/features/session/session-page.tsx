@@ -23,7 +23,7 @@ export function SessionView({ page }: { page: SessionPage }) {
 
   return (
     <div className="relative grow">
-      <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
+      <PageBackground background="general" />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-[fit-content(50%)_minmax(0,1fr)] xl:gap-1">
           <Box className="content:flex content:items-center content:gap-4">

@@ -37,12 +37,7 @@ export function BingoLayout({ name, children }: { name: string; children: ReactN
   return (
     <div className="grow">
       <div className="relative h-full mb-8">
-        <PageBackground
-          background="bingo"
-          viewport
-          className="h-full aspect-auto"
-          mask="linear-gradient(rgb(255 255 255) 50%, rgb(0 0 0 / 0) calc(100% - 32px))"
-        />
+        <PageBackground background="bingo" />
         <div className="w-full max-w-[1800px] mx-auto flex justify-center items-center flex-col gap-4 px-4 pt-8 md:px-8">
           <BingoHeading />
           <div className="w-full lg:w-[80%] flex items-stretch flex-col gap-4">

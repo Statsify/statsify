@@ -55,6 +55,20 @@ module.exports = {
       env,
     },
     {
+      name: "site",
+      args: `site start ${with_color}`,
+      script,
+      // Five minutes after the API's restart, so the site's first requests find the API up.
+      cron_restart: "5 20 * * *",
+      exp_backoff_restart_delay,
+      interpreter,
+      // On pm2's SIGINT the site finishes the requests it is serving, for at most SERVER_SHUTDOWN_TIMEOUT seconds,
+      // then closes its render workers and Redis and exits, about a second after the last response. pm2's default
+      // 1.6 s before SIGKILL would cut that short.
+      kill_timeout: 5000,
+      env: { ...env, PORT: 3100, HOST: "127.0.0.1", SERVER_SHUTDOWN_TIMEOUT: 3 },
+    },
+    {
       name: "leaderboard-limiting",
       args: `scripts limit-redis start ${with_color}`,
       script,

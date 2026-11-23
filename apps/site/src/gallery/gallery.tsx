@@ -11,12 +11,14 @@ import {
   GAME_LEVEL,
   GAME_NAV_ALL,
   GAME_PAGE,
+  GUILD_SUGGESTIONS,
   LEADERBOARD_PAGE,
   LIST_SECTION,
   MANY_MODES,
   OJAKEY_UUID,
   PLAYER_PAGE,
   PROGRESSION,
+  RECENT_PLAYERS,
   RESULT_CARDS,
   SELECTION_SECTION,
   SUBMODE_PAGE,
@@ -31,19 +33,25 @@ import { Brand, Logo, Wordmark } from "~/components/icons/logo";
 import { Button } from "~/components/ui/button";
 import { Caret } from "~/components/icons/caret";
 import { Carousel } from "~/components/ui/carousel";
+import { Check } from "~/components/icons/check";
 import { Chevron } from "~/components/icons/chevron";
 import { Command } from "~/components/ui/command";
+import { Copied, useCopy } from "~/components/ui/copied";
+import { Cross } from "~/components/icons/cross";
 import { Discord } from "~/components/icons/discord";
 import { Divider } from "~/components/ui/divider";
 import { ErrorPage } from "~/components/error-page";
 import { FilterBox } from "~/components/filter-box";
 import { FindPlayer, PageNav } from "~/features/leaderboards/leaderboard-table";
+import { Forums } from "~/components/icons/forums";
 import { GAME_ICONS, GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { GameGrid } from "~/features/player/player-page";
 import { GameHeader, LevelPanel, NeverPlayed, NoStatMatches } from "~/features/game/game-page";
 import { GameNav } from "~/features/game/game-nav";
 import { GitHub } from "~/components/icons/github";
+import { Hint } from "~/components/ui/hint";
 import { InlineStat, StatCell } from "~/components/ui/stat";
+import { Instagram } from "~/components/icons/instagram";
 import { LeaderboardBoxes } from "~/features/leaderboards/leaderboard-boxes";
 import { ListFailed, NoMatches } from "~/features/leaderboards/leaderboard-index";
 import { LogoError } from "~/components/icons/logo-error";
@@ -53,12 +61,14 @@ import { MinecraftText } from "~/components/ui/minecraft-text";
 import { ModeSwitcher } from "~/features/game/mode-switcher";
 import { Nametag } from "~/components/ui/nametag";
 import { NotFound } from "~/components/not-found";
+import { PanelToggle } from "~/features/player/share-panel";
 import { Patreon } from "~/components/icons/patreon";
 import { ProgressBar } from "~/components/navigation-progress";
 import { Progression } from "~/components/ui/progression";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { RefreshBar } from "~/features/player/refresh-bar";
+import { RefreshIcon } from "~/components/icons/refresh";
 import { ResultCards } from "~/features/player/result-card";
 import { Search } from "~/components/search";
 import { SearchIcon } from "~/components/icons/search";
@@ -68,8 +78,12 @@ import { Skin, SkinBust, SkinHead } from "~/components/ui/skin";
 import { StatPanel } from "~/features/game/stat-panel";
 import { Tab, Tabs } from "~/components/ui/tabs";
 import { TableData } from "~/components/ui/table";
+import { TextLink } from "~/features/content/text-page";
+import { TikTok } from "~/components/icons/tiktok";
+import { Twitch } from "~/components/icons/twitch";
 import { Twitter } from "~/components/icons/twitter";
 import { YouTube } from "~/components/icons/youtube";
+import { addRecentPlayer } from "~/features/player/recent";
 import { colors } from "@statsify/tokens";
 import { orpc } from "~/lib/orpc";
 import { useHydrated } from "@tanstack/react-router";
@@ -82,6 +96,7 @@ const SECTIONS = [
   ["colors", "Colors and codes"],
   ["panels", "Panels"],
   ["buttons", "Buttons"],
+  ["controls", "Links, toggles and popups"],
   ["stats", "Stat cells"],
   ["games", "Game pages"],
   ["search", "Search"],
@@ -103,13 +118,12 @@ const CAPTION = "text-mc-1 text-mc-gray";
 
 const MINECRAFT_SIZES = [
   ["text-mc-1", "16"],
+  ["text-mc-snap-1.25", "20"],
   ["text-mc-1.5", "24"],
   ["text-mc-2", "32"],
   ["text-mc-3", "48"],
   ["text-mc-4", "64"],
 ] as const;
-
-const SANS_SIZES = ["text-16", "text-20", "text-24"] as const;
 
 /** The § codes, in the order `colors.minecraft` lists their colors. */
 const CODES = "0123456789abcdef";
@@ -120,6 +134,7 @@ function useFixtureSearchClient() {
   const [client] = useState(() => {
     const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: Infinity, retry: false } } });
     queryClient.setQueryData(orpc.search.suggest.queryKey({ input: { query: "an" } }), SUGGESTIONS);
+    queryClient.setQueryData(orpc.search.guilds.queryKey({ input: { query: "st" } }), GUILD_SUGGESTIONS);
     return queryClient;
   });
 
@@ -151,6 +166,7 @@ export function Gallery() {
         <ColorSection />
         <PanelSection />
         <ButtonSection />
+        <ControlSection />
         <StatSection />
         <GameSection />
         <SearchSection />
@@ -253,14 +269,6 @@ function TypeSection() {
         {/* Glyphs the pixel font lacks come from its Unifont slices, and anything they lack from the sans stack. */}
         <p className="text-mc-1">Fallback: Łódź, Ğ, Привет, Ελλάδα, ไทย, 你好</p>
       </div>
-      <div className="flex flex-col gap-2">
-        {SANS_SIZES.map((size) => (
-          <p key={size} className={`font-sans ${size} font-medium`}>
-            Mona Sans {size.slice(5)} medium <span className="font-semibold">semibold</span>{" "}
-            <span className="tabular-nums">0123456789</span>
-          </p>
-        ))}
-      </div>
     </Section>
   );
 }
@@ -311,6 +319,9 @@ function PanelSection() {
         </Demo>
         <Demo label="Pink">
           <Box variant="pink">A pink panel</Box>
+        </Demo>
+        <Demo label="Highlight (your row on a leaderboard)">
+          <Box variant="highlight">A highlighted panel</Box>
         </Demo>
       </div>
       <Demo label="Dividers">
@@ -372,6 +383,69 @@ function ButtonSection() {
           <div className="w-40">
             <Button>Look up on Hypixel</Button>
           </div>
+        </Demo>
+      </div>
+    </Section>
+  );
+}
+
+const WLR = GAME_PAGE.sections[0]?.rows.flat().find(({ label }) => label === "stats.wlr");
+
+/** "Copied!" over the button once the copy worked, as the share and signature panels show it. */
+function CopyDemo() {
+  const [copied, copy] = useCopy<DOMRect>();
+
+  return (
+    <>
+      <Button size="small" onClick={(event) => copy("/bedwars anrie", event.currentTarget.getBoundingClientRect())}>Copy</Button>
+      {copied && <Copied anchor={copied}>Copied!</Copied>}
+    </>
+  );
+}
+
+function ControlSection() {
+  const { t } = useTranslation();
+
+  return (
+    <Section id="controls">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Demo label="Text link">
+          <p className="text-mc-1.5"><TextLink to="/{-$locale}/leaderboards">Leaderboards</TextLink></p>
+        </Demo>
+        <Demo label="Text link, hover" force="hover">
+          <p className="text-mc-1.5"><TextLink to="/{-$locale}/leaderboards">Leaderboards</TextLink></p>
+        </Demo>
+        <Demo label="Text link, keyboard focus" force="focus-visible">
+          <p className="text-mc-1.5"><TextLink to="/{-$locale}/leaderboards">Leaderboards</TextLink></p>
+        </Demo>
+        <Demo label="A link the server redirects elsewhere">
+          <p className="text-mc-1.5"><TextLink href="/discord">Discord</TextLink></p>
+        </Demo>
+        <Demo label="Panel toggles: Share closed, Skin open">
+          <div className="flex gap-4">
+            <PanelToggle open={false} controls="gallery-share" onToggle={() => {}}>Share</PanelToggle>
+            <PanelToggle open controls="gallery-skin" onToggle={() => {}}>Skin</PanelToggle>
+          </div>
+        </Demo>
+        <Demo label="Bingo difficulty: Easy picked, Hard in its dimmed color" className="sm:col-span-2 lg:col-span-1">
+          <Tabs defaultTab="easy">
+            <Tab tab="easy" className="min-w-0 text-mc-green/50 aria-pressed:text-mc-green">Easy</Tab>
+            <Tab tab="hard" className="min-w-0 text-mc-red/80 aria-pressed:text-mc-red">Hard</Tab>
+          </Tabs>
+        </Demo>
+        <Demo label="Tooltip: hover, tap or Tab to the shortened text">
+          <p className="text-mc-1.5"><Hint full="Final Kill/Death Ratio">FKDR</Hint></p>
+        </Demo>
+        <Demo label="Copied: press Copy">
+          <CopyDemo />
+        </Demo>
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Demo label="Stat explainer: press the ?">
+          {WLR && <StatPanel section={{ title: null, rows: [[WLR]] }} username={GAME_PAGE.username} />}
+        </Demo>
+        <Demo label="Filter box with its count">
+          <FilterBox value="kills" onChange={() => {}} label={t("game.filter")} count={t("filter.count", { shown: "12", total: "340" })} />
         </Demo>
       </div>
     </Section>
@@ -543,6 +617,7 @@ function GameSection() {
 
 function SearchSection() {
   const client = useFixtureSearchClient();
+  const [sheet, setSheet] = useState<"players" | "guilds" | "recent">("players");
 
   return (
     <QueryClientProvider client={client}>
@@ -566,10 +641,26 @@ function SearchSection() {
           <Demo label="Keyboard focus" force="focus-visible">
             <Search compact />
           </Demo>
-          <Demo label="Open, with suggestions" className="min-h-96 lg:col-span-2">
-            <Focused>
-              <Search compact defaultValue="an" className="max-w-96" />
-            </Focused>
+          <Demo label="Open: players, guilds, or recently viewed in an empty box" className="min-h-96 lg:col-span-2">
+            <div className="flex flex-col gap-4">
+              <Tabs
+                tab={sheet}
+                onTabChange={(next) => {
+                  // The recent sheet reads this browser's storage, so the fixtures go there first.
+                  if (next === "recent") for (const player of RECENT_PLAYERS.toReversed()) addRecentPlayer(player);
+                  setSheet(next);
+                }}
+              >
+                <Tab tab="players" className="min-w-0">Players</Tab>
+                <Tab tab="guilds" className="min-w-0">Guilds</Tab>
+                <Tab tab="recent" className="min-w-0">Recent</Tab>
+              </Tabs>
+              <Focused key={sheet}>
+                {sheet === "players" && <Search compact defaultValue="an" className="max-w-96" />}
+                {sheet === "guilds" && <Search compact target="guild" defaultValue="st" className="max-w-96" />}
+                {sheet === "recent" && <Search compact recent className="max-w-96" />}
+              </Focused>
+            </div>
           </Demo>
         </div>
       </Section>
@@ -720,7 +811,9 @@ function HomeSection() {
   );
 }
 
-const ICONS = [Logo, LogoError, Board, Caret, Chevron, Discord, GitHub, Menu, Patreon, SearchIcon, Twitter, YouTube];
+const ICONS = [Logo, LogoError, Board, Caret, Check, Chevron, Cross, Menu, RefreshIcon, SearchIcon];
+const SOCIAL_ICONS = [Discord, GitHub, Patreon, Twitter, YouTube];
+const PLACEHOLDER_ICONS = [Forums, Instagram, TikTok, Twitch];
 
 function MediaSection() {
   return (
@@ -755,15 +848,19 @@ function MediaSection() {
           ))}
         </ul>
       </Demo>
-      <Demo label="Icons">
-        <ul className="flex flex-wrap items-center gap-4">
-          {ICONS.map((Icon) => (
-            <li key={Icon.name}>
-              <Icon className="size-8" />
-            </li>
-          ))}
-        </ul>
-      </Demo>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {([["Icons", ICONS], ["Social", SOCIAL_ICONS], ["Social, placeholders", PLACEHOLDER_ICONS]] as const).map(([label, icons]) => (
+          <Demo key={label} label={label}>
+            <ul className="flex flex-wrap items-center gap-4">
+              {icons.map((Icon) => (
+                <li key={Icon.name}>
+                  <Icon className="size-8" />
+                </li>
+              ))}
+            </ul>
+          </Demo>
+        ))}
+      </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {(["general", "bedwars", "bingo"] as const).map((background) => (
           <Demo key={background} label={`Background: ${background}`}>

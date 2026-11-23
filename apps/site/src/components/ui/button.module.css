@@ -10,7 +10,7 @@
   initial-value: 2;
 }
 
-/* The bevel and shadow size; the small button (44 px tall) uses the panels' 4 px. */
+/* The bevel and shadow size, the panels' 8 px; the small button (44 px tall) keeps 4 px, which leaves its label room. */
 .root {
   --border: 8px;
 }

@@ -16,7 +16,7 @@ import { Link } from "@tanstack/react-router";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
 import { rememberPlayer } from "~/features/player/resolve";
-import { memo, useEffect, useMemo, useRef } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { removeFormatting } from "@statsify/util/util";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
@@ -59,12 +59,33 @@ export function LeaderboardBoxes({ page, chunks: loaded, busy }: { page: Leaderb
   );
 }
 
+/** Whether a `sticky top-0` element is stuck to the top of the window: it then sits less than wholly inside it. */
+function useStuck<T extends Element>() {
+  const ref = useRef<T>(null);
+  const [stuck, setStuck] = useState(false);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setStuck(entry.intersectionRatio < 1 && entry.boundingClientRect.top < 1),
+      { rootMargin: "-1px 0px 0px 0px", threshold: 1 }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, stuck] as const;
+}
+
 /**
  * From `md` up: a header row of boxes (position, player, the board's columns), then one row per player: position,
- * head, name and each value.
+ * head, name and each value. The header row stays at the window's top while the table scrolls under it, on a band of the
+ * page's color then, since its boxes are see-through: the band runs the window's width, reaches over the gap under the
+ * row, and casts the panels' 4 px shadow.
  */
 function BoxTable({ page, chunks }: { page: LeaderboardPage; chunks: LeaderboardPage[] }) {
   const { t } = useTranslation();
+  const [header, stuck] = useStuck<HTMLDivElement>();
 
   return (
     <div
@@ -74,7 +95,15 @@ function BoxTable({ page, chunks }: { page: LeaderboardPage; chunks: Leaderboard
       className={cn("grid grid-cols-[max-content_max-content_minmax(0,1fr)_repeat(var(--columns),max-content)] max-md:hidden", BOX_GAP)}
       style={{ "--columns": page.columns.length } as CSSProperties}
     >
-      <div role="row" className="contents">
+      <div
+        ref={header}
+        role="row"
+        data-stuck={stuck || undefined}
+        className={cn(
+          "sticky top-0 z-10 col-span-full -mb-1 grid grid-cols-subgrid pb-1 data-stuck:[border-image:linear-gradient(var(--color-blackify-950)_calc(100%_-_4px),rgb(0_0_0/0.84)_0)_fill_0//0_100vmax_4px]",
+          BOX_GAP
+        )}
+      >
         <Box role="columnheader" className={CELL}>
           <span className={cn(TEXT, "font-bold")}>{t("leaderboards.position")}</span>
         </Box>

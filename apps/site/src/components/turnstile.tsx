@@ -64,6 +64,7 @@ export function Turnstile({
   siteKey,
   onToken,
   onLoadError,
+  size = "flexible",
   invisible = false,
   className,
 }: {
@@ -71,6 +72,8 @@ export function Turnstile({
   onToken: (token: string | undefined) => void;
   /** Cloudflare's script didn't load (blocked, offline), so there's no widget to complete. */
   onLoadError?: () => void;
+  /** `flexible` fills its box but needs at least 300 px; `compact` is 150 px wide. */
+  size?: "flexible" | "compact";
   /** Never shown: where Turnstile would ask the visitor to interact, `onToken` gets `undefined` instead. */
   invisible?: boolean;
   className?: string;
@@ -99,7 +102,7 @@ export function Turnstile({
         widgetId = turnstile.render(target, {
           sitekey: siteKey,
           theme: "dark",
-          size: "flexible",
+          size,
           ...(invisible && {
             appearance: "interaction-only",
             "before-interactive-callback": () => callback.current(undefined),
@@ -120,7 +123,7 @@ export function Turnstile({
       canceled = true;
       if (widgetId) window.turnstile?.remove(widgetId);
     };
-  }, [siteKey, invisible]);
+  }, [siteKey, size, invisible]);
 
   return <div ref={container} className={className} />;
 }

@@ -23,8 +23,8 @@ const SECTIONS: LegalSection[] = [
     body: (
       <>
         <Callout label="Notice" tone="legal">
-          <p>NOT AN OFFICIAL MINECRAFT SERVICE. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.</p>
-          <p>Statsify is not affiliated with or endorsed by Hypixel Inc.</p>
+          <Paragraph>NOT AN OFFICIAL MINECRAFT SERVICE. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.</Paragraph>
+          <Paragraph>Statsify is not affiliated with or endorsed by Hypixel Inc.</Paragraph>
         </Callout>
         <Paragraph>Minecraft is a trademark of Mojang. Other names and logos belong to their owners.</Paragraph>
       </>

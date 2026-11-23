@@ -21,6 +21,13 @@ const SIZES = {
   small: { root: cn(styles.root, styles.small), text: "text-mc-1.5" },
 } as const;
 
+/**
+ * A flat dark button without the bevel, for a card's own actions: 32 px, with a tap area reaching past it to 44 px. It
+ * sits above the text beside it, so a tooltip's taller tap area (`Hint`) never takes taps meant for its box.
+ */
+export const FLAT_BUTTON =
+  "relative z-1 flex h-8 min-w-8 shrink-0 items-center justify-center bg-blackify-800 text-mc-1 after:absolute after:-inset-1.5 hover:bg-blackify-700 focus-visible:focus-ring-inset";
+
 export function Button({
   children,
   className,
@@ -55,7 +62,8 @@ export function Button({
       >
         <div className={`absolute top-0 left-0 w-full ${styles.topShadow}`} />
         <div className={`absolute inset-0 ${styles.buttonOverlay}`} />
-        <Slottable>{children}</Slottable>
+        {/* The label on its own, so it's drawn crisp (`mc-crisp`) without the bevel's shading around it. */}
+        <Slottable child={children}>{(label) => <span className="mc-crisp flex items-center gap-1">{label}</span>}</Slottable>
         <div className={`absolute bottom-0 left-0 w-full ${styles.bottomShadow}`} />
       </Component>
     </div>

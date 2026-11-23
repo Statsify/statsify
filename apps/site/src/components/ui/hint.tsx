@@ -14,8 +14,8 @@ import { createPortal } from "react-dom";
 const GAP = 8;
 
 /**
- * A box on the opaque panel color with the panels' hard shadow, centered over `anchor` (under it when the window's top
- * leaves no room for it) and kept inside the window, in a portal so no panel's clipped corners cut it off.
+ * A box in the game's item tooltip look, centered over `anchor` (under it when the window's top leaves no room) and kept
+ * inside the window, in a portal so no panel's clipped corners cut it off.
  */
 export function Floating({ anchor, className, style, ref: outer, ...props }: { anchor: DOMRect } & ComponentProps<"div">) {
   const ref = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ export function Floating({ anchor, className, style, ref: outer, ...props }: { a
         if (typeof outer === "function") outer(element);
         else if (outer) outer.current = element;
       }}
-      className={cn("fixed z-100 bg-blackify-800 shadow-[4px_4px_0_rgb(0_0_0/0.84)]", className)}
+      className={cn("fixed z-100 px-3 bg-[rgb(16_0_16/0.94)] shadow-[inset_0_0_0_2px_rgb(16_0_16),inset_0_0_0_4px_rgb(80_0_255/0.5)]", className)}
       style={{
         ...style,
         left: place?.left,
@@ -58,7 +58,7 @@ export function Floating({ anchor, className, style, ref: outer, ...props }: { a
  */
 function Tooltip({ text, anchor, ...props }: { text: string; anchor: DOMRect } & Pick<ComponentProps<"div">, "onPointerEnter" | "onPointerLeave">) {
   return (
-    <Floating anchor={anchor} aria-hidden {...props} className="px-2 py-1 text-mc-1 whitespace-nowrap text-mc-white">
+    <Floating anchor={anchor} aria-hidden {...props} className="py-1.5 text-mc-1 whitespace-nowrap text-mc-white">
       {text}
     </Floating>
   );
@@ -95,30 +95,37 @@ export function useDismiss(open: unknown, inside: (target: Node) => boolean, clo
 /** How long a tooltip stays after the mouse leaves its element: long enough to cross the gap onto the tooltip. */
 const LEAVE_MS = 150;
 
+/** Closes the tooltip on screen, so the next one replaces it at once instead of both showing through its leave delay. */
+let closeCurrent: (() => void) | undefined;
+
 /**
- * Shows `text` over an element (or the box `anchor` picks for it) on hover, keyboard focus and `toggle`. Spread `props`
- * on the element and render `tooltip` beside it. Without `text` it does nothing.
+ * Shows `text` over an element (or the box `anchor` picks for it) while a mouse is on it or on the tooltip, or it has
+ * the keyboard's focus, and on `toggle`. Spread `props` on the element and render `tooltip` beside it. It closes when
+ * the page scrolls under it, on Escape, on a tap elsewhere, and when another opens. Without `text` it does nothing.
  */
 export function useHint(text: string | undefined, anchor: (element: HTMLElement) => Element = (element) => element) {
   const [shown, setShown] = useState<{ element: Element; anchor: DOMRect } | null>(null);
   const leaving = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const [close] = useState(() => function close() {
+    clearTimeout(leaving.current);
+    if (closeCurrent === close) closeCurrent = undefined;
+    setShown(null);
+  });
   const show = (target: HTMLElement) => {
     clearTimeout(leaving.current);
+    if (closeCurrent !== close) closeCurrent?.();
+    closeCurrent = close;
     const element = anchor(target);
     setShown({ element, anchor: element.getBoundingClientRect() });
   };
-  const hide = () => {
-    clearTimeout(leaving.current);
-    setShown(null);
-  };
   const leave = () => {
     clearTimeout(leaving.current);
-    leaving.current = setTimeout(() => setShown(null), LEAVE_MS);
+    leaving.current = setTimeout(close, LEAVE_MS);
   };
 
-  useEffect(() => () => clearTimeout(leaving.current), []);
+  useEffect(() => close, [close]);
 
-  useDismiss(shown, (target) => !!shown?.element.contains(target), () => setShown(null));
+  useDismiss(shown, (target) => !!shown?.element.contains(target), close);
 
   return {
     props: text === undefined ?
@@ -127,12 +134,17 @@ export function useHint(text: string | undefined, anchor: (element: HTMLElement)
         onPointerEnter: (event: PointerEvent<HTMLElement>) => event.pointerType === "mouse" && show(event.currentTarget),
         onPointerLeave: (event: PointerEvent<HTMLElement>) => event.pointerType === "mouse" && leave(),
         onFocus: (event: FocusEvent<HTMLElement>) => event.currentTarget.matches(":focus-visible") && show(event.currentTarget),
-        onBlur: hide,
+        onBlur: close,
       },
     tooltip: text !== undefined && shown && (
-      <Tooltip text={text} anchor={shown.anchor} onPointerEnter={() => clearTimeout(leaving.current)} onPointerLeave={leave} />
+      <Tooltip
+        text={text}
+        anchor={shown.anchor}
+        onPointerEnter={() => clearTimeout(leaving.current)}
+        onPointerLeave={leave}
+      />
     ),
-    toggle: (element: HTMLElement) => (shown ? hide() : show(element)),
+    toggle: (element: HTMLElement) => (shown ? close() : show(element)),
   };
 }
 

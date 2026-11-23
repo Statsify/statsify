@@ -27,6 +27,7 @@ for (const size of type.scale) theme.push(`--text-${size}: ${size}px;`);
 // The card panel's look, for the site's boxes: plain variables, not theme ones, since no utility is made from them.
 const root = [
   `--panel-background: ${panel.background};`,
+  `--panel-bevel: ${panel.bevel}px;`,
   `--panel-shadow: rgb(0 0 0 / ${panel.shadowOpacity});`,
   `--panel-overlay: linear-gradient(180deg, ${panel.overlay.from} 0%, ${panel.overlay.to} 100%);`,
 ];

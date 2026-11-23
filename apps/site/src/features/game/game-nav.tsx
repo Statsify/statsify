@@ -27,7 +27,7 @@ function GameName({ game }: { game: NavGame }) {
   return (
     <>
       {icon && <span aria-hidden className="size-6 shrink-0"><GameIcon game={icon} /></span>}
-      <MinecraftText className="min-w-0">{game.name}</MinecraftText>
+      <MinecraftText className="mc-crisp min-w-0">{game.name}</MinecraftText>
       {!game.played && <span className="sr-only"> {t("game.unplayed")}</span>}
     </>
   );
@@ -101,7 +101,7 @@ export function GameNav({
           )}
         >
           {/* A square on phones, so it fits beside the mode tabs. */}
-          <span className={cn(!wide && "max-md:sr-only")}>{t("game.games")}</span>
+          <span className={cn("mc-crisp", !wide && "max-md:sr-only")}>{t("game.games")}</span>
           {!wide && <Menu className="size-6 text-mc-gray md:hidden" />}
           <Chevron className={cn("size-6 rotate-90 text-mc-gray group-open/games:-rotate-90", !wide && "max-md:hidden")} />
         </summary>
