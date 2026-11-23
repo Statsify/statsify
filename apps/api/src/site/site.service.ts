@@ -56,9 +56,10 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 type PlayerModel = ReturnModelType<typeof Player>;
 type GuildModel = ReturnModelType<typeof Guild>;
 
-/** How long the home previews are kept, or with a section missing, how soon they're built again. */
-const HOME_PREVIEWS_TTL_MS = 60_000;
-const HOME_PREVIEWS_RETRY_MS = 5000;
+/** How long the home previews are kept in Redis, or with a section missing, how soon they're built again. */
+const HOME_PREVIEWS_KEY = "site:home:previews";
+const HOME_PREVIEWS_TTL_SECONDS = 60;
+const HOME_PREVIEWS_RETRY_SECONDS = 5;
 
 /**
  * Usernames Minecraft's account servers or Hypixel answered have no such player, so a lookup doesn't ask again for a
@@ -188,6 +189,8 @@ function buildLeaderboardGroups(): LeaderboardGroup[] {
   return [...groups.values()];
 }
 
+const LEADERBOARD_LIST = buildLeaderboardGroups();
+
 /**
  * Strict cache-only reads for the site. Nothing here calls Hypixel except `refresh` and
  * `lookup`, which first pass the per-address and global budgets kept in Redis.
@@ -198,10 +201,6 @@ export class SiteService implements OnApplicationBootstrap {
     required: false,
     default: DEFAULT_HYPIXEL_BUDGET,
   });
-
-  private homeBuild?: Promise<HomePreviews>;
-  private homeExpiresAt = 0;
-  private leaderboardGroups?: LeaderboardGroup[];
 
   public constructor(
     private readonly playerService: PlayerService,
@@ -388,24 +387,16 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   /** The home page's previews, each loaded on its own so one missing player hides one section. */
-  public homePreviews(): Promise<HomePreviews> {
-    if (this.homeBuild && Date.now() < this.homeExpiresAt) return this.homeBuild;
+  public async homePreviews(): Promise<HomePreviews> {
+    const cached = await this.redis.get(HOME_PREVIEWS_KEY);
+    if (cached) return JSON.parse(cached) as HomePreviews;
 
-    // Callers share the build in flight; a failed one isn't kept, so the next call builds again.
-    this.homeExpiresAt = Number.POSITIVE_INFINITY;
-    this.homeBuild = this.buildHomePreviews().then(
-      (previews) => {
-        const complete = [...Object.values(previews.players), previews.guild, previews.leaderboard].every(Boolean);
-        this.homeExpiresAt = Date.now() + (complete ? HOME_PREVIEWS_TTL_MS : HOME_PREVIEWS_RETRY_MS);
-        return previews;
-      },
-      (error: unknown) => {
-        this.homeBuild = undefined;
-        throw error;
-      }
-    );
+    const previews = await this.buildHomePreviews();
+    const complete = [...Object.values(previews.players), previews.guild, previews.leaderboard].every(Boolean);
+    const ttl = complete ? HOME_PREVIEWS_TTL_SECONDS : HOME_PREVIEWS_RETRY_SECONDS;
+    await this.redis.set(HOME_PREVIEWS_KEY, JSON.stringify(previews), "EX", ttl);
 
-    return this.homeBuild;
+    return previews;
   }
 
   private async buildHomePreviews(): Promise<HomePreviews> {
@@ -423,8 +414,7 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   public leaderboardList(): LeaderboardGroup[] {
-    this.leaderboardGroups ??= buildLeaderboardGroups();
-    return this.leaderboardGroups;
+    return LEADERBOARD_LIST;
   }
 
   public async leaderboardPage(input: LeaderboardPageInput): Promise<LeaderboardPage> {
