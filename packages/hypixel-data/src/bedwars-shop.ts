@@ -60,6 +60,7 @@ export const SHOP_ITEMS: Record<string, ShopItem> = {
     description: ["Good block to defend your bed.", "Strong against pickaxes."],
   },
   obsidian: { name: "Obsidian", count: 4, cost: [4, "emerald"], description: ["Extreme protection for your bed."] },
+  packed_ice: { name: "Packed Ice", count: 8, cost: [8, "iron"], description: ["Just normal ice. Good way to make a", "speedway."] },
 
   stone_sword: { name: "Stone Sword", cost: [10, "iron"] },
   iron_sword: { name: "Iron Sword", cost: [7, "gold"] },
@@ -247,10 +248,15 @@ export const DEFAULT_QUICK_BUY =
 /** The favorite_slots a player who never saved a hotbar gets, from the Hotbar Manager */
 export const DEFAULT_HOTBAR = "Melee,null,null,null,null,null,null,null,Compass";
 
-/** favorite_slots' categories as the Hotbar Manager shows them */
+/**
+ * favorite_slots' categories as the Hotbar Manager shows them. Some saves hold Tools and Beds, which today's Hotbar
+ * Manager doesn't list: Tools is the shop's Tools category icon, and Beds 1.8's bed
+ */
 export const HOTBAR_CATEGORIES: Record<string, string> = {
   Blocks: "minecraft:terracotta",
   Melee: "minecraft:golden_sword",
+  Tools: "minecraft:stone_pickaxe",
+  Beds: "minecraft:red_bed",
   Pickaxe: "minecraft:iron_pickaxe",
   Axe: "minecraft:iron_axe",
   Shears: "minecraft:shears",

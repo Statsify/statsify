@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ItemStack, legacyItem, legacyMaterialId } from "@statsify/textures";
-import { SLOTS, inRange, kitKey } from "./kits.js";
+import { type ItemStack, legacyMaterialId } from "@statsify/textures";
+import { SLOTS, hypixelItem, inRange, kitKey } from "./kits.js";
 import { armorOf } from "./armor.js";
 import dumped from "../data/legacy-kits.json" with { type: "json" };
 
@@ -50,7 +50,7 @@ export function fromLegacyKit(layout: Readonly<Record<string, string>>): (ItemSt
 
   for (const [slot, value] of Object.entries(layout)) {
     const [id, damage, ...rest] = value.split(",");
-    const item = legacyItem(Number(id), Number(damage));
+    const item = hypixelItem(Number(id), Number(damage));
     const name = rest.join(",");
     if (inRange(Number(slot), SLOTS)) slots[Number(slot)] = item && name && name !== "NONAME" ? { ...item, name } : item;
   }
@@ -64,7 +64,7 @@ function fromDumpedKit(
   name: string,
   level: number,
   renames: Readonly<Record<string, string>> = {},
-): (ItemStack | undefined)[] {
+): (ItemStack | undefined)[] | undefined {
   const kit = KITS[game][kitKey(name)];
   const dumpedAtLevel = kit?.level === level ? kit : undefined;
 
@@ -73,7 +73,7 @@ function fromDumpedKit(
     (dumpedAtLevel && !dumpedAtLevel.saved
       ? Object.fromEntries(dumpedAtLevel.items.map(({ slot, token }) => [slot, token]))
       : undefined);
-  if (!layout) throw new Error(`No default ${game} layout for ${name} at level ${level}`);
+  if (!layout) return;
 
   const renamed = new Map(Object.entries(renames).map(([material, rename]) => [legacyMaterialId(material.toUpperCase()), rename]));
   const slots = fromLegacyKit(layout);
@@ -107,7 +107,8 @@ export function megaWallsKitArmor(kit: string, level: number) {
 
 /**
  * A Blitz <Kit>Inventory, or the kit's default, with the dumped counts, names and tooltips only at its editor's
- * level. `renames` holds the player's kit_item_rename_<Kit>_<material> by material ({ gold_sword: "§9Excalibur" })
+ * level. Undefined without a layout for a kit or level BLITZ_KITS doesn't list. `renames` holds the player's
+ * kit_item_rename_<Kit>_<material> by material ({ gold_sword: "§9Excalibur" })
  */
 export const fromBlitzKit = (
   stored: Readonly<Record<string, string>> | null | undefined,

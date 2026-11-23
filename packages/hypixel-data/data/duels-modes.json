@@ -11543,18 +11543,6 @@
               ],
               "enchanted": true
             }
-          },
-          {
-            "slot": 2,
-            "material": "monster_egg",
-            "item": {
-              "id": "minecraft:pig_spawn_egg",
-              "count": 5,
-              "name": "§dMystery Egg",
-              "tooltip": [
-                "§5§oSpawns a random monster."
-              ]
-            }
           }
         ]
       },

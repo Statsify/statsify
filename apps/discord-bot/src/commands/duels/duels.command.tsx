@@ -71,8 +71,8 @@ export class DuelsCommand extends BaseHypixelCommand<
 
   public getArmor(player: Player, api: ApiModeFromGameModes<DuelsModes>) {
     const { blitzsg, skywars } = player.stats.duels;
-    if (api === "blitzsg") return duelsKitArmor(`layout_blitz_duel_${blitzsg.kit}`);
-    if (api === "skywars" && skywars.kitId) return duelsKitArmor(`layout_sw_duel_${skywars.kitId}`);
+    if (api === "blitzsg") return duelsKitArmor("blitz_duel", blitzsg.kit);
+    if (api === "skywars" && skywars.kitId) return duelsKitArmor("sw_duel", skywars.kitId);
     return undefined;
   }
 
