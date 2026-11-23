@@ -39,7 +39,7 @@ export function Floating({ anchor, className, style, ref: outer, ...props }: { a
         if (typeof outer === "function") outer(element);
         else if (outer) outer.current = element;
       }}
-      className={cn("fixed z-100 bg-[rgb(16_0_16/0.94)] shadow-[inset_0_0_0_2px_rgb(16_0_16),inset_0_0_0_4px_rgb(80_0_255/0.5)]", className)}
+      className={cn("fixed z-100 px-3 bg-[rgb(16_0_16/0.94)] shadow-[inset_0_0_0_2px_rgb(16_0_16),inset_0_0_0_4px_rgb(80_0_255/0.5)]", className)}
       style={{
         ...style,
         left: place?.left,
@@ -58,7 +58,7 @@ export function Floating({ anchor, className, style, ref: outer, ...props }: { a
  */
 function Tooltip({ text, anchor, ...props }: { text: string; anchor: DOMRect } & Pick<ComponentProps<"div">, "onPointerEnter" | "onPointerLeave">) {
   return (
-    <Floating anchor={anchor} aria-hidden {...props} className="px-2.5 py-1.5 text-mc-1 whitespace-nowrap text-mc-white">
+    <Floating anchor={anchor} aria-hidden {...props} className="py-1.5 text-mc-1 whitespace-nowrap text-mc-white">
       {text}
     </Floating>
   );
