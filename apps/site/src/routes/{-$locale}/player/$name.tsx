@@ -11,12 +11,12 @@ import { REDIRECT_HEADERS } from "~/lib/player-route";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { missingPlayerResponse } from "~/lib/response";
-import { resolvePlayer } from "~/features/player/resolve";
+import { ensurePlayer } from "~/features/player/resolve";
 
 /** A player's pages, which resolve the URL's name or UUID here once for whichever page is below. */
 export const Route = createFileRoute("/{-$locale}/player/$name")({
-  beforeLoad: async ({ params }) => {
-    const player = await resolvePlayer(params.name);
+  beforeLoad: async ({ params, context }) => {
+    const player = await ensurePlayer(context.queryClient, params.name);
 
     if (!player) {
       missingPlayerResponse();

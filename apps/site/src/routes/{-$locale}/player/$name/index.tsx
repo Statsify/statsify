@@ -11,6 +11,7 @@ import { PlayerView } from "~/features/player/player-page";
 import { cacheHeaders } from "~/lib/cache";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { possessive } from "~/lib/player-route";
+import { playerTabIcon } from "~/lib/tab-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { playerPageQuery } from "~/features/player/resolve";
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
     return { ...player, updatedAt: page.updatedAt };
   },
   staleTime: 60_000,
+  staticData: { tabIcon: playerTabIcon },
   head: ({ loaderData, matches }) => {
     if (!loaderData) return { links: [SANS_PRELOAD] };
 
@@ -51,7 +53,6 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
           }) :
           []),
       ],
-      links: [{ rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),

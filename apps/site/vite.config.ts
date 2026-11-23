@@ -30,6 +30,9 @@ const LICENSE_HEADER = [
 // Files in `public/` are not hashed, so they get a day at the edge and in browsers.
 // Vite's hashed assets under `/assets/` are already served as immutable by Nitro.
 const STATIC_ASSETS = { headers: { "cache-control": "public, max-age=86400" } };
+// After the day, a browser uses its copy of a font while it revalidates it, so the root's font hold (`FONT_HOLD`)
+// doesn't wait on a 304 on a return visit.
+const FONTS = { headers: { "cache-control": "public, max-age=86400, stale-while-revalidate=604800" } };
 
 // Logs the server bundle can't act on. Its libraries (motion, Radix, TanStack Router) start files with "use client",
 // which only means something to React Server Components, and the site doesn't use them. Nitro names its library chunks
@@ -61,12 +64,14 @@ export default defineConfig({
       // the process.
       plugins: ["./src/server/config.plugin.ts", "./src/server/shutdown.plugin.ts"],
       routeRules: {
-        "/fonts/**": STATIC_ASSETS,
+        "/fonts/**": FONTS,
         "/backgrounds/**": STATIC_ASSETS,
         "/games/**": STATIC_ASSETS,
         "/icons/**": STATIC_ASSETS,
         "/logos/**": STATIC_ASSETS,
         "/images/**": STATIC_ASSETS,
+        "/favicon.ico": STATIC_ASSETS,
+        "/apple-touch-icon.png": STATIC_ASSETS,
       },
       rolldownConfig: {
         onLog(level, log, handler) {

@@ -262,3 +262,12 @@ export class BedWars {
 
 export * from "./mode.js";
 export * from "./slumber.js";
+// By name: the util's `getLevel` and `getExpReq` share their names with other games'.
+export {
+  BRACKET_MAP,
+  getExpReq as getBedWarsExpReq,
+  getIntendedFormattedLevel,
+  PRESTIGE_SCHEMES,
+  PRESTIGE_STARS,
+  STAR_MAP,
+} from "./util.js";

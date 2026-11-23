@@ -35,6 +35,8 @@ export interface StatEntry {
    * to `stats.<the field's name>`; set where the bot uses another key (`itemsCollected.diamond` is `stats.diamonds`).
    */
   label?: string;
+  /** The stat's `glossary.*` key where the label's doesn't fit it (Quests' Total counts quests). Defaults to the label's. */
+  glossary?: string;
   /**
    * The card's own title where it doesn't translate one: a map, challenge or disaster name, Minecraft-formatted, taken
    * from the schema where the card takes it from there. Shown in place of `label`.
@@ -83,6 +85,8 @@ export interface Stat {
   /** The field in the player document, `stats.bedwars.solo.wins`, which is also its leaderboard's key. */
   path: string;
   label: string;
+  /** The key of the `glossary.*` entry that explains it. */
+  glossary: string;
   name?: string;
   color: StatEntry["color"];
   /** The field it is shown out of (`12/25`) by path, or its fixed cap, when it has one. */
@@ -125,11 +129,13 @@ function resolve(key: string, base: string, entry: StatEntry): Stat {
   const of = typeof entry.of === "string" ? `${base}.${entry.of}` : entry.of;
   if (typeof of === "string") field(of);
   const formatter = leaderboard.formatter as ((value: unknown) => string) | undefined;
+  const label = entry.label ?? `stats.${key.slice(key.lastIndexOf(".") + 1)}`;
 
   return {
     key,
     path,
-    label: entry.label ?? `stats.${key.slice(key.lastIndexOf(".") + 1)}`,
+    label,
+    glossary: entry.glossary ?? label.slice(label.lastIndexOf(".") + 1),
     name: entry.name,
     color: entry.color,
     of,

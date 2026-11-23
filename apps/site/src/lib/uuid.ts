@@ -8,3 +8,6 @@
 
 /** The account whose skin stands in for players we have nothing to show yet. */
 export const PLACEHOLDER_UUID = "76a56ac7fcf649fca0531cb5c77cd9ae";
+
+/** An undashed UUID with its four dashes, as Minecraft's servers print it. */
+export const dashedUuid = (compact: string): string => compact.replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");

@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { DEFAULT_LOCALE } from "~/i18n/locales";
+import { createI18n } from "~/i18n/i18n";
 import type { AnyRouteMatch } from "@tanstack/react-router";
 import type { LocaleData } from "~/i18n/locale-data";
 
@@ -80,4 +82,26 @@ export function canonicalLink(origin: string, path: string) {
 export function localeData(matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>): LocaleData | undefined {
   const match = matches.find((candidate) => candidate.routeId === "/{-$locale}");
   return match?.loaderData as LocaleData | undefined;
+}
+
+/** A page's `meta.*` key in `site.json`, or its own words where they stay English in the code (privacy, terms). */
+export type PageText = { key: string } | { title: string; description: string };
+
+/** A page's tags: its title and description (in English, from the server's `site.json`), then its preview's. */
+export function pageMeta(
+  matches: ReadonlyArray<{ routeId: string; loaderData?: unknown }>,
+  { path, image, noindex = false, ...text }: { path: string; image: string; noindex?: boolean } & PageText
+) {
+  const locale = localeData(matches);
+  const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
+  const title = "key" in text ? words.t(`meta.${text.key}.title`) : `${text.title} | ${SITE_NAME}`;
+  const description = "key" in text ? words.t(`meta.${text.key}.description`) : text.description;
+  const origin = locale?.origin;
+
+  return [
+    { title },
+    { name: "description", content: description },
+    ...(noindex ? [{ name: "robots", content: "noindex" }] : []),
+    ...(origin ? socialMeta({ origin, path, title, description, image }) : []),
+  ];
 }

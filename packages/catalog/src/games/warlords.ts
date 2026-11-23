@@ -23,7 +23,7 @@ const COLUMN: Record<string, StatEntry> = {
   damage: { color: "§c" },
   healing: { color: "§a" },
   prevent: { color: "§b" },
-  total: { color: "§6" },
+  total: { color: "§6", glossary: "warlordsTotal" },
 };
 
 /** The colors and labels of the bot's Warlords card (`warlords.profile.tsx` and its tables): one table a mode. */

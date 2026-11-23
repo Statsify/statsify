@@ -7,13 +7,14 @@
  */
 
 import { Bingo } from "~/features/bingo/bingo";
-import { BoardSearchSchema } from "~/features/bingo/board-search";
+import { validateBoardSearch } from "~/features/bingo/board-search";
 import { loadBingoPlayer } from "~/features/bingo/bingo-data";
 import { BingoLayout } from "~/features/bingo/bingo-layout";
 import { PlayerNotFound } from "~/features/bingo/player-not-found";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { REDIRECT_HEADERS, possessive } from "~/lib/player-route";
+import { playerTabIcon } from "~/lib/tab-icon";
 import { cacheHeaders } from "~/lib/cache";
 import { missingPlayerResponse } from "~/lib/response";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
@@ -28,9 +29,9 @@ const EDGE_TTL_SECONDS = 300;
 
 // Outside the player's layout, so an unknown name gets Bingo's own not-found page.
 export const Route = createFileRoute("/{-$locale}/player/$name_/bingo")({
-  validateSearch: BoardSearchSchema,
-  loader: async ({ params }) => {
-    const player = await loadBingoPlayer(params.name);
+  validateSearch: validateBoardSearch,
+  loader: async ({ params, context }) => {
+    const player = await loadBingoPlayer(context.queryClient, params.name);
 
     if (!player) {
       missingPlayerResponse();
@@ -51,13 +52,14 @@ export const Route = createFileRoute("/{-$locale}/player/$name_/bingo")({
     return player;
   },
   staleTime: EDGE_TTL_SECONDS * 1000,
+  staticData: { tabIcon: playerTabIcon },
   head: ({ loaderData, matches }) => {
     const locale = localeData(matches);
     // In English, from the server's `site.json`.
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
     if (!loaderData) return { meta: [{ title: words.t("meta.notFound.player") }], links: [SANS_PRELOAD] };
 
-    const { username, uuid } = loaderData;
+    const { username } = loaderData;
     const name = possessive(username);
     const title = words.t("meta.bingo.playerTitle", { name });
     const description = words.t("meta.bingo.playerDescription", { name });
@@ -69,7 +71,6 @@ export const Route = createFileRoute("/{-$locale}/player/$name_/bingo")({
         { name: "description", content: description },
         ...(origin ? socialMeta({ origin, path: `/player/${username}/bingo`, title, description, image: "/images/og-bingo.png" }) : []),
       ],
-      links: [{ rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
     };
   },
   headers: () => cacheHeaders(`max-age=${EDGE_TTL_SECONDS}, stale-while-revalidate=3600`),
@@ -87,8 +88,8 @@ function BingoPage() {
 function BingoBoards({ initial }: { initial: BingoPlayer }) {
   const [player, setPlayer] = useState(initial);
 
-  const refresh = async (token: string | undefined) => {
-    const result = await refreshBingo({ data: { uuid: player.uuid, token } });
+  const refresh = async (deadline: AbortSignal, auto: boolean, token: string | undefined) => {
+    const result = await refreshBingo({ data: { uuid: player.uuid, auto, token }, signal: deadline });
     if (result.ok) setPlayer(result.data);
     return result;
   };
@@ -96,7 +97,7 @@ function BingoBoards({ initial }: { initial: BingoPlayer }) {
   return (
     <BingoLayout name={player.username}>
       <div className="w-full lg:w-[80%]">
-        <RefreshBar updatedAt={player.updatedAt} expiresAt={player.expiresAt} refresh={refresh} />
+        <RefreshBar updatedAt={player.updatedAt} expiresAt={player.expiresAt} refresh={refresh} auto />
       </div>
       <Bingo player={player} />
     </BingoLayout>

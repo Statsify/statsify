@@ -255,7 +255,7 @@ export const ARCADE: Game<ArcadeModes> = {
         trail: selection("§6"),
         bigShot: { color: "§a" },
         tripleShot: { color: "§c" },
-        powerupActivations: { color: "§6", label: "stats.total" },
+        powerupActivations: { color: "§6", label: "stats.total", glossary: "powerupActivations" },
       },
     },
     {

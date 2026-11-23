@@ -34,6 +34,16 @@ export const submodeSearch = (page: Pick<GamePage, "submodes">, submode: string 
 export const periodSearch = (page: Pick<GamePage, "periods">, period: string | undefined): string | undefined =>
   period === undefined || period === page.periods?.[0] ? undefined : period;
 
+/**
+ * The card's title: the game, the word after it ("Stats") and the mode as the card names it. It lives here, not with
+ * the game view, because the route's `head()` uses it, and every page's first load carries what `head()` imports.
+ */
+export function headingText(page: Pick<GamePage, "game" | "heading">, word: (key: string) => string): string {
+  const { name } = page.game;
+  const { word: key, mode } = page.heading;
+  return `§l${name}${key ? ` §f${word(key)}` : ""}${mode ? ` §r(${mode}§r)` : ""}`;
+}
+
 /** The card a page unfurls with: its game's, where the pool draws one for the page, else the general card. */
 export const unfurlCard = (page: GamePage): CardChoice =>
   isGameCard(page.game.key, page.mode, page.period) ?

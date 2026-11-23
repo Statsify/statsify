@@ -28,6 +28,8 @@ export function FilterBox({
   label,
   count,
   className,
+  name,
+  onIntent,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -35,11 +37,15 @@ export function FilterBox({
   /** "3 of 44", shown while the box filters. */
   count?: string;
   className?: string;
+  /** The input's name, where the box sits in a form that works without scripts. */
+  name?: string;
+  /** Called on the first sign the box is about to be used (pressed or focused), to start loading what it filters. */
+  onIntent?: () => void;
 }) {
   return (
     <label
       className={cn(
-        "flex h-11 w-full items-center gap-3 bg-blackify-800 px-3 -outline-offset-2 focus-within:outline-2 focus-within:outline-white/60",
+        "flex h-11 w-full items-center gap-3 bg-blackify-800 px-3 focus-within:focus-ring-inset",
         className
       )}
     >
@@ -48,9 +54,12 @@ export function FilterBox({
         type="search"
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        onPointerDown={onIntent}
+        onFocus={onIntent}
+        name={name}
         placeholder={label}
         aria-label={label}
-        className="h-full w-full min-w-0 bg-transparent text-mc-1.5 text-white text-ellipsis outline-none placeholder:text-mc-gray selection:bg-white/50"
+        className="h-full w-full min-w-0 bg-transparent text-mc-1.5 text-white text-ellipsis focus-ring-none placeholder:text-mc-gray selection:bg-white/50"
       />
       <span aria-live="polite" className="shrink-0 text-mc-1 text-mc-gray">{value.trim() ? count : undefined}</span>
     </label>

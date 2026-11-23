@@ -19,7 +19,7 @@ type SitemapName = (typeof SITEMAPS)[number];
 const isSitemapName = (name: string): name is SitemapName => (SITEMAPS as readonly string[]).includes(name);
 
 /** The parameterless indexable pages. Player pages are not listed yet. */
-const STATIC_PATHS = ["/", "/bingo", "/leaderboards"] as const;
+const STATIC_PATHS = ["/", "/bingo", "/leaderboards", "/glossary", "/prestiges/bedwars", "/about", "/privacy", "/terms"] as const;
 
 /** Sitemaps only change with the schema or the site, so a day at the edge. */
 const EDGE_CACHE = "max-age=86400";

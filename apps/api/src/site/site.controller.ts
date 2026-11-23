@@ -60,7 +60,7 @@ export class SiteController {
   @Implement(contract.player.refresh)
   public refreshPlayer() {
     return implement(contract.player.refresh).handler(({ input }) =>
-      this.siteService.refresh(input.uuid, input.clientIp)
+      this.siteService.refresh(input.uuid, input.clientIp, input.auto)
     );
   }
 
@@ -91,6 +91,12 @@ export class SiteController {
   }
 
   @Auth(SITE_ONLY)
+  @Implement(contract.leaderboard.game)
+  public leaderboardGame() {
+    return implement(contract.leaderboard.game).handler(({ input }) => this.siteService.leaderboardGame(input));
+  }
+
+  @Auth(SITE_ONLY)
   @Implement(contract.leaderboard.page)
   public leaderboardPage() {
     return implement(contract.leaderboard.page).handler(({ input }) => this.siteService.leaderboardPage(input));
@@ -100,5 +106,17 @@ export class SiteController {
   @Implement(contract.home.previews)
   public homePreviews() {
     return implement(contract.home.previews).handler(() => this.siteService.homePreviews());
+  }
+
+  @Auth(SITE_ONLY)
+  @Implement(contract.content.glossary)
+  public glossary() {
+    return implement(contract.content.glossary).handler(() => this.siteService.glossary());
+  }
+
+  @Auth(SITE_ONLY)
+  @Implement(contract.content.prestiges)
+  public prestiges() {
+    return implement(contract.content.prestiges).handler(() => this.siteService.prestiges());
   }
 }

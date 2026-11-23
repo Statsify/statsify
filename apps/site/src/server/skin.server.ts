@@ -17,7 +17,7 @@ import { siteConfig } from "./config.server";
  * forwarded, with the route's own fixed parameters.
  */
 export async function proxySkin(
-  path: "/skin/stored" | "/skin/head/stored",
+  path: "/skin/stored" | "/skin/head/stored" | "/skin/texture",
   search: URLSearchParams,
   fixed: Record<string, string> = {}
 ): Promise<Response> {
@@ -49,11 +49,13 @@ export async function proxySkin(
     return new Response(null, { status: upstream.status === 404 ? 404 : 502, headers: { "Cache-Control": "no-store" } });
   }
 
+  const model = upstream.headers.get("X-Skin-Model");
   return new Response(upstream.body, {
     status: 200,
     headers: {
       "Content-Type": upstream.headers.get("content-type") ?? "image/png",
       "Cache-Control": "public, max-age=3600",
+      ...(model && { "X-Skin-Model": model }),
     },
   });
 }

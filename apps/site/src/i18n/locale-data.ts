@@ -8,6 +8,7 @@
 
 import { SUPPORTED_LOCALES } from "./locales";
 import { createServerFn } from "@tanstack/react-start";
+import { glossaryWords } from "~/server/glossary-words.server";
 import { loadResources } from "./i18n.server";
 import { siteConfig } from "~/server/config.server";
 import { z } from "zod";
@@ -18,10 +19,12 @@ const Input = z.object({ locale: z.enum(SUPPORTED_LOCALES) });
 export const getLocaleData = createServerFn({ method: "GET" })
   .validator(Input)
   .handler(async ({ data }) => {
-    const [resources, config] = await Promise.all([loadResources(data.locale), siteConfig()]);
+    const [resources, config, glossary] = await Promise.all([loadResources(data.locale), siteConfig(), glossaryWords(data.locale)]);
 
     return {
       resources,
+      /** The hash in `/glossary-<hash>.json`, the locale's glossary words. */
+      glossaryHash: glossary.hash,
       /** `site.publicUrl`; Open Graph URLs must be absolute and never come from request headers. */
       origin: config.publicUrl,
       turnstileSiteKey: config.turnstileSiteKey,

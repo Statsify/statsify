@@ -14,19 +14,32 @@ import { Skin } from "~/components/ui/skin";
 import { Turnstile } from "~/components/turnstile";
 import { formatCountdown } from "~/i18n/format";
 import { getRouteApi, useNavigate, useParams } from "@tanstack/react-router";
-import { lookupPlayer } from "./player-actions";
+import { type ActionResult, BROWSER_TIMEOUT_MS, lookupPlayer } from "./player-actions";
 import { useEffect, useState } from "react";
+import { rememberPlayer } from "./resolve";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import type { PlayerIdentity } from "@statsify/contract";
 
 const localeRoute = getRouteApi("/{-$locale}");
+
+/** Looks a name up on Hypixel. The gallery passes its own outcomes, as it does for `RefreshBar`'s refresh. */
+type Lookup = (name: string, token: string | undefined, deadline: AbortSignal) => Promise<ActionResult<PlayerIdentity>>;
+
+const lookupOnHypixel: Lookup = (name, token, deadline) => lookupPlayer({ data: { name, token }, signal: deadline });
+
+/** The player-not-found page for the route's name. */
+export function PlayerNotFound() {
+  const { name = "" } = useParams({ strict: false });
+  return <PlayerNotFoundView name={name} />;
+}
 
 /**
  * The player-not-found page with the Turnstile-gated "Look up on Hypixel" action. The header already has
  * the search, so the page has none of its own. On phones the skin is 160 px, so the button lands
- * mid-screen, and the copy is 16 px, so it stays within two lines.
+ * mid-screen even when the 24 px copy takes three lines.
  */
-export function PlayerNotFound() {
-  const { name = "" } = useParams({ strict: false });
+export function PlayerNotFoundView({ name, lookup, turnstileSiteKey }: { name: string; lookup?: Lookup; turnstileSiteKey?: string }) {
   const { t } = useTranslation();
 
   return (
@@ -41,8 +54,8 @@ export function PlayerNotFound() {
           </Box>
         </div>
         <h1 className="text-mc-3 lg:text-mc-4 text-mc-red font-bold">{t("player.notFound.title")}</h1>
-        <p className="text-mc-1 sm:text-mc-1.5 text-mc-gray text-center">{t("player.notFound.description", { name })}</p>
-        {name && <LookupButton name={name} />}
+        <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray text-center">{t("player.notFound.description", { name })}</p>
+        {name && <LookupButton name={name} lookup={lookup} turnstileSiteKey={turnstileSiteKey} />}
       </div>
     </Error>
   );
@@ -57,12 +70,28 @@ type LookupState =
   | { status: "error" }
   | { status: "limited"; until: number };
 
-function LookupButton({ name }: { name: string }) {
-  const { turnstileSiteKey } = localeRoute.useLoaderData();
+/** `turnstileSiteKey` overrides config's (the gallery passes "" for no widget). */
+export function LookupButton({
+  name,
+  lookup = lookupOnHypixel,
+  turnstileSiteKey: siteKey,
+}: {
+  name: string;
+  lookup?: Lookup;
+  turnstileSiteKey?: string;
+}) {
+  const configured = localeRoute.useLoaderData().turnstileSiteKey;
+  const turnstileSiteKey = siteKey ?? configured;
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [token, setToken] = useState<string>();
   const [widgetKey, setWidgetKey] = useState(0);
+  const [widgetFailed, setWidgetFailed] = useState(false);
+  // The widget's script loads on the first touch, hover or focus of the button, so a visitor who only reads the page
+  // doesn't fetch it.
+  const [wanted, setWanted] = useState(false);
+  const want = () => setWanted(true);
   const [state, setState] = useState<LookupState>({ status: "idle" });
   const [now, setNow] = useState<number>();
 
@@ -83,24 +112,28 @@ function LookupButton({ name }: { name: string }) {
   const remaining =
     state.status === "limited" && now !== undefined ? Math.max(0, Math.ceil((state.until - now) / 1000)) : 0;
   const needsToken = turnstileSiteKey !== "" && token === undefined;
-  const disabled = state.status === "pending" || needsToken || remaining > 0;
+  // Until the widget is wanted the button takes focus and presses, which load it.
+  const disabled = state.status === "pending" || (wanted && needsToken) || remaining > 0;
 
-  async function lookup() {
+  async function run() {
     setState({ status: "pending" });
 
-    const result = await lookupPlayer({ data: { name, token } }).catch(() => undefined);
+    const deadline = AbortSignal.timeout(BROWSER_TIMEOUT_MS);
+    const result = await lookup(name, token, deadline).catch(() => undefined);
 
     // Turnstile tokens are single-use: a fresh widget for the next attempt.
     setToken(undefined);
     setWidgetKey((key) => key + 1);
 
-    // A 500, a Cloudflare 429 or a dropped connection.
+    // A 500, a Cloudflare 429 or a dropped connection; a hung one reads as Hypixel not answering.
     if (!result) {
-      setState({ status: "error" });
+      setState({ status: deadline.aborted ? "unavailable" : "error" });
       return;
     }
 
     if (result.ok) {
+      // The page it opens would otherwise find the "not found" it remembers for the name.
+      rememberPlayer(queryClient, result.data);
       // The page that was asked for (a game page keeps its game and mode) under the name Hypixel gave.
       await navigate({ to: ".", params: (previous) => ({ ...previous, name: result.data.username }), search: true });
       return;
@@ -117,7 +150,9 @@ function LookupButton({ name }: { name: string }) {
   }
 
   let message: string | undefined;
-  if (state.status === "unknown") message = t("player.notFound.unknown", { name });
+  // Without Cloudflare's script there's no token, so the button can't be pressed at all.
+  if (widgetFailed) message = t("player.notFound.verifyFailed");
+  else if (state.status === "unknown") message = t("player.notFound.unknown", { name });
   else if (state.status === "unavailable") message = t("player.notFound.unavailable");
   else if (state.status === "verification") message = t("player.notFound.verify");
   else if (state.status === "error") message = t("player.notFound.error");
@@ -125,9 +160,21 @@ function LookupButton({ name }: { name: string }) {
 
   return (
     <div className="flex w-full max-w-100 flex-col items-center gap-3 self-center">
-      {turnstileSiteKey && <Turnstile key={widgetKey} siteKey={turnstileSiteKey} onToken={setToken} className="w-full" />}
+      {turnstileSiteKey && wanted && (
+        <Turnstile key={widgetKey} siteKey={turnstileSiteKey} onToken={setToken} onLoadError={() => setWidgetFailed(true)} className="w-full" />
+      )}
       <Button asChild variant="primary" className="w-full">
-        <button type="button" disabled={disabled} onClick={() => void lookup()}>
+        <button
+          type="button"
+          disabled={disabled}
+          onPointerEnter={want}
+          onPointerDown={want}
+          onFocus={want}
+          onClick={() => {
+            if (needsToken) want();
+            else void run();
+          }}
+        >
           {state.status === "pending" ? t("player.notFound.lookingUp") : t("player.notFound.lookup")}
         </button>
       </Button>

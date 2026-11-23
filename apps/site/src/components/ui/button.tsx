@@ -37,7 +37,7 @@ export function Button({
     // own element rather than a drop-shadow filter, which also copied the label 8 px down as a ghost.
     <div
       className={cn(
-        "relative text-mc-white has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-mc-white",
+        "relative text-mc-white has-focus-visible:focus-ring",
         root,
         VARIANTS[variant],
         className
@@ -48,7 +48,7 @@ export function Button({
         {...props}
         data-slot="content"
         className={cn(
-          "w-full min-h-11 relative flex justify-center items-center gap-1 whitespace-nowrap select-none outline-none",
+          "w-full min-h-11 relative flex justify-center items-center gap-1 whitespace-nowrap select-none focus-ring-none",
           text,
           styles.button
         )}

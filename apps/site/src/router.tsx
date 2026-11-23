@@ -29,7 +29,7 @@ export function getRouter() {
     routeTree,
     context: { queryClient },
     defaultPreload: "intent",
-    defaultNotFoundComponent: NotFound,
+    defaultNotFoundComponent: () => <NotFound />,
     defaultErrorComponent: ErrorPage,
     // The browser's caught errors; on the server the error page reports a failed loader itself.
     defaultOnCatch: reportRouteError,
@@ -44,5 +44,10 @@ export function getRouter() {
 declare module "@tanstack/react-router" {
   interface Register {
     router: ReturnType<typeof getRouter>;
+  }
+
+  interface StaticDataRouteOption {
+    /** The URL of the route's tab icon (a player's head, a game's icon) from its loader's data; nothing for the logo. */
+    tabIcon?: (loaderData: unknown) => string | undefined;
   }
 }

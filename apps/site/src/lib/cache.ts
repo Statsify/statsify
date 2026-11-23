@@ -18,3 +18,6 @@ export function cacheHeaders(edge: string): Record<string, string> {
     "CDN-Cache-Control": edge,
   };
 }
+
+/** For a file served under its content's hash, which never changes. */
+export const IMMUTABLE_HEADERS = { "Cache-Control": "public, max-age=31536000, immutable", "CDN-Cache-Control": "max-age=31536000" };

@@ -17,3 +17,12 @@ export const SANS_PRELOAD = {
   type: "font/woff2",
   crossOrigin: "anonymous",
 } as const;
+
+/**
+ * The page stays transparent until both Minecraft faces load, at most 500 ms, so a first visit lays its text out once.
+ * The script must run after the stylesheets, which declare the faces.
+ */
+export const FONT_HOLD = {
+  style: ".fonts-wait body{opacity:0}",
+  script: `(function(){var d=document.documentElement,f=document.fonts;if(!f||!f.load)return;d.classList.add("fonts-wait");var show=function(){d.classList.remove("fonts-wait")};Promise.all([f.load("16px Minecraft"),f.load("bold 16px Minecraft")]).then(show,show);setTimeout(show,500)})()`,
+};

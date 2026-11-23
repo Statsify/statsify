@@ -80,6 +80,28 @@ export const gamePageOf = (id: GameId): string | undefined => GAME_PAGES.find((l
 export const pageSubmodes = (layout: GameLayout, mode: string): string[] | undefined =>
   pageModes(layout).find(({ key }) => key === mode)?.submodes?.map(({ key }) => key);
 
+/**
+ * The game page a leaderboard's rows open (`stats.duels.bridge.doubles.wins` is Duels at Bridge, Doubles), or none
+ * where the game has no page. The first mode and submode go unnamed, as the page's own URL has them.
+ */
+export function boardGamePage(field: string): { game: string; mode?: string; submode?: string } | undefined {
+  const [, game = "", ...below] = field.split(".");
+  const layout = findGamePage(game);
+  if (!layout) return undefined;
+  const modes = pageModes(layout);
+  const isMode = (key = "") => modes.some((spec) => spec.key === key);
+  // Quests keep each game's boards below the period (`stats.quests.overall.ARCADE.total`).
+  const [mode = "", submode = ""] = below[0] === "overall" && isMode(below[1]) ? below.slice(1) : below;
+  if (!isMode(mode)) return { game: layout.game.key };
+  const submodes = pageSubmodes(layout, mode) ?? [];
+
+  return {
+    game: layout.game.key,
+    ...(mode !== modes[0].key && { mode }),
+    ...(submodes.includes(submode) && submode !== submodes[0] && { submode }),
+  };
+}
+
 /** Every period any of a page's modes covers, or none for a page without periods. */
 export const pagePeriods = (layout: GameLayout): string[] => [
   ...new Set(pageModes(layout).flatMap(({ key }) => layout.periods?.(key) ?? [])),
@@ -139,6 +161,12 @@ if (import.meta.vitest) {
       player.stats.duels.spleef.spleef.wins = 3;
       player.stats.duels.spleef.bowSpleef.losses = 2;
       expect(marked()?.key).toBe("spleef");
+    });
+
+    it("links a board's rows without the first mode or submode, as the game page's URL has them", () => {
+      expect(boardGamePage("stats.duels.overall.wins")).toEqual({ game: "duels" });
+      expect(boardGamePage("stats.duels.bridge.overall.wins")).toEqual({ game: "duels", mode: "bridge" });
+      expect(boardGamePage("stats.duels.bridge.doubles.wins")).toEqual({ game: "duels", mode: "bridge", submode: "doubles" });
     });
 
     for (const layout of GAME_PAGES) {

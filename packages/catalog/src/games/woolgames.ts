@@ -31,7 +31,7 @@ export const WOOL_GAMES: Game<WoolGamesModes> = {
   game: {
     coins: { color: "§6", label: "stats.wool" },
     layers: { color: "§a", of: 100 },
-    exp: { color: "§b" },
+    exp: { color: "§b", glossary: "level" },
     playtime: { color: "§d" },
     wins: { color: "§a", label: "stats.overallWins" },
   },

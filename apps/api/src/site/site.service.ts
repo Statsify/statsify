@@ -36,8 +36,11 @@ import type {
   BingoPlayer,
   GameInput,
   GamePage,
+  Glossary,
   GuildPreview,
   HomePreviews,
+  LeaderboardGame,
+  LeaderboardGameInput,
   LeaderboardGroup,
   LeaderboardPage,
   LeaderboardPageInput,
@@ -45,13 +48,17 @@ import type {
   PlayerFull,
   PlayerIdentity,
   PlayerPage,
+  PrestigeSheet,
   ResolveInput,
   ResultCard,
 } from "@statsify/contract";
+import { AUTO_UPDATE_AGE_MS } from "@statsify/contract/refresh";
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
+import { buildGlossary, buildPrestigeSheet } from "./content.js";
+import { catalogGlossary, catalogLabel, leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
-import { buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
+import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
 import { PlayerLeaderboardService, PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
 import { SkinService } from "#skin";
@@ -187,17 +194,25 @@ function buildLeaderboardGroups(): LeaderboardGroup[] {
     let group = groups.get(statsKey);
 
     if (!group) {
-      group = { ...(LEADERBOARD_GROUPS[statsKey] ?? { game: null, name: statsKey }), leaderboards: [] };
+      group = { key: statsKey, ...(LEADERBOARD_GROUPS[statsKey] ?? { game: null, name: statsKey }), leaderboards: [] };
       groups.set(statsKey, group);
     }
 
-    group.leaderboards.push({ field, name: removeFormatting(leaderboard.name) });
+    const label = catalogLabel(field);
+    group.leaderboards.push({
+      field,
+      name: removeFormatting(leaderboard.name),
+      ...(label && { label }),
+      ...(leaderboard.enabled && leaderboard.aliases.length > 0 && { aliases: leaderboard.aliases }),
+    });
   }
 
   return [...groups.values()];
 }
 
 const LEADERBOARD_LIST = buildLeaderboardGroups();
+const GLOSSARY = buildGlossary(LEADERBOARD_LIST);
+const PRESTIGE_SHEET = buildPrestigeSheet();
 
 /**
  * Strict cache-only reads for the site. Nothing here calls Hypixel except `refresh` and
@@ -258,15 +273,17 @@ export class SiteService implements OnApplicationBootstrap {
     return { player: { ...player }, guild };
   }
 
-  public async refresh(uuid: string, clientIp: string): Promise<PlayerPage> {
+  public async refresh(uuid: string, clientIp: string, auto = false): Promise<PlayerPage> {
     const tag = normalizeUuid(uuid);
     const cached = await this.playerService.getStored(tag);
     if (!cached) throw notFound();
 
-    // Inside the API's own cooldown `CACHE` would not call Hypixel anyway, so it costs no budget.
+    // Inside the API's own cooldown `CACHE` would not call Hypixel anyway, so it costs no budget. An automatic update
+    // can come from an edge copy of a page older than the stored save, so the stored save's age decides it.
     if (Date.now() < cached.expiresAt) return this.toPage(cached);
+    if (auto && Date.now() - freshness(cached).updatedAt < AUTO_UPDATE_AGE_MS) return this.toPage(cached);
 
-    await this.consumeBudget(clientIp);
+    await this.consumeBudget(clientIp, auto);
     const [player] = await Promise.all([this.playerService.get(tag, CacheLevel.CACHE), this.refreshSkin(tag)]);
 
     // When Hypixel doesn't answer, `PlayerService` hands back the stored player, still past its cooldown: say the
@@ -458,6 +475,20 @@ export class SiteService implements OnApplicationBootstrap {
     return LEADERBOARD_LIST;
   }
 
+  public glossary(): Glossary {
+    return GLOSSARY;
+  }
+
+  public prestiges(): PrestigeSheet {
+    return PRESTIGE_SHEET;
+  }
+
+  public leaderboardGame({ key }: LeaderboardGameInput): LeaderboardGame {
+    const group = this.leaderboardList().find((group) => group.key === key);
+    if (!group) throw notFound("Leaderboard not found");
+    return leaderboardGame(group);
+  }
+
   public async leaderboardPage(input: LeaderboardPageInput): Promise<LeaderboardPage> {
     const metadata = this.leaderboardMetadata(input.field);
 
@@ -474,13 +505,22 @@ export class SiteService implements OnApplicationBootstrap {
       username === undefined ? [] : [{ uuid: id, username, position, name, highlight, values: fields }]
     );
 
+    // `fields` holds the columns' names, the board's own first unless it's hidden.
+    const columnFields = [...(metadata.hidden ? [] : [input.field]), ...leaderboard.additionalFields];
+    const columns = columnFields.map((field, i) => leaderboardColumn(field, leaderboard.fields[i] ?? ""));
+    const index = leaderboardIndex(input.field);
+
     return {
       field: input.field,
       name: removeFormatting(metadata.name),
-      fields: leaderboard.fields.map((name) => name ?? ""),
+      glossary: catalogGlossary(input.field),
+      columns,
+      sort: metadata.sort,
       page: leaderboard.page,
       pages: leaderboard.pages,
       rows,
+      gamePage: boardGamePage(input.field),
+      index: index && { ...index, name: this.leaderboardList().find(({ key }) => key === index.key)!.name },
     };
   }
 
@@ -553,16 +593,18 @@ export class SiteService implements OnApplicationBootstrap {
 
   /**
    * Per-address, then global budget. A rejected call never eats into the global budget. With
-   * `site.hypixelBudget: 0` every call is rejected here, before `PlayerService` runs.
+   * `site.hypixelBudget: 0` every call is rejected here, before `PlayerService` runs. An automatic update (`auto`)
+   * stops at two-thirds of the budget, so a third stays for clicks and for names the site has never stored.
    */
-  private async consumeBudget(clientIp: string): Promise<void> {
+  private async consumeBudget(clientIp: string, auto = false): Promise<void> {
     const [attempts, ipTtl] = await this.hit(ipKey(clientIp), IP_WINDOW_SECONDS);
     if (attempts > IP_LIMIT) throw tooManyRequests(ipTtl);
 
     const budget = (await this.hypixelBudget) ?? DEFAULT_HYPIXEL_BUDGET;
+    const limit = auto ? Math.floor((budget * 2) / 3) : budget;
     const [calls, budgetTtl] = await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS);
 
-    if (calls > budget) {
+    if (calls > limit) {
       await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
       throw tooManyRequests(budgetTtl);
     }
