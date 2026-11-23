@@ -94,24 +94,21 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     if (leaderboard.data.length === 0) return leaderboard;
 
     const scores = await this.redis.zmscore(`skyblockstats.${field}`, leaderboard.data.map(({ id }) => id));
-    const ranks = await this.sharedRanks(field, scores.map(Number), leaderboard.data.map(({ position }) => position));
+    const ranks = await this.sharedRanks(field, scores.map(Number));
     return { ...leaderboard, data: leaderboard.data.map((row, index) => ({ ...row, position: ranks[index] })) };
   }
 
-  /** The ranks of a page of rows at `positions`, where tied rows share one (1, 2, 2, 4) in the board's order. */
-  public async sharedRanks(field: string, scores: number[], positions: number[]): Promise<number[]> {
-    if (scores.length === 0) return [];
-
+  /** Each score's rank, 1 plus the members ahead of it on the board, so tied rows share one (1, 2, 2, 4). */
+  public async sharedRanks(field: string, scores: number[]): Promise<number[]> {
     const key = `skyblockstats.${field}`;
     const ascending = getLeaderboardField(SkyBlockStats, field).sort === "ASC";
-    const ahead = await (ascending ? this.redis.zcount(key, "-inf", `(${scores[0]}`) : this.redis.zcount(key, `(${scores[0]}`, "+inf"));
+    const distinct = [...new Set(scores)];
 
-    const ranks = [ahead + 1];
-    for (let index = 1; index < scores.length; index++) {
-      ranks.push(scores[index] === scores[index - 1] ? ranks[index - 1] : positions[index]);
-    }
+    const ahead = await Promise.all(
+      distinct.map((score) => (ascending ? this.redis.zcount(key, "-inf", `(${score}`) : this.redis.zcount(key, `(${score}`, "+inf")))
+    );
 
-    return ranks;
+    return scores.map((score) => ahead[distinct.indexOf(score)] + 1);
   }
 
   /** The player's best rank on a board over their profiles, counted from 0, or undefined when none is on it. */
