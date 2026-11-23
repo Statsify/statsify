@@ -4,8 +4,7 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "env": ["API_URL", "API_KEY"],
-      "outputs": ["dist/**", ".next/**", "pkg/**"],
+      "outputs": ["dist/**", ".output/**", "pkg/**"],
       "dependsOn": ["^build"]
     },
     "typecheck": {

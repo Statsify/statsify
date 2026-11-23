@@ -2,6 +2,7 @@ packages:
   - apps/**
   - packages/**
   - '!packages/skin-renderer/pkg'
+  - '!**/.output/**'
 
 allowBuilds:
   '@nestjs/core': true

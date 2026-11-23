@@ -1,0 +1,9 @@
+node_modules
+.output
+.nitro
+.tanstack
+.vite
+coverage
+*.tsbuildinfo
+.DS_Store
+.env*
