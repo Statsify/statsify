@@ -2,6 +2,7 @@ use cgmath::{Deg, Matrix4, SquareMatrix, Vector3};
 use napi_derive::napi;
 use statsify_minecraft_models::{Display, Transform};
 
+use crate::geometry::axis_angle;
 use crate::model::{ModelKind, Part};
 use crate::pose::{Held, Pose};
 
@@ -134,12 +135,14 @@ pub fn item_transform(display: Option<DisplayContext>, model: &Display) -> Matri
     // forward and draws a block 0.625 blocks wide
     DisplayContext::Head => {
       Matrix4::from_translation(Vector3::new(0.0, 4.0, 0.0))
-        * Matrix4::from_angle_y(Deg(180.0))
+        * Matrix4::from(axis_angle(Vector3::unit_y(), Deg(180.0)))
         * Matrix4::from_scale(0.625 * PIXELS_PER_BLOCK)
         * worn
     }
     DisplayContext::Thirdperson => {
-      Matrix4::from_angle_x(Deg(180.0)) * Matrix4::from_scale(PIXELS_PER_BLOCK) * worn
+      Matrix4::from(axis_angle(Vector3::unit_x(), Deg(180.0)))
+        * Matrix4::from_scale(PIXELS_PER_BLOCK)
+        * worn
     }
   }
 }
@@ -149,9 +152,11 @@ pub fn local_transform(translation: [f32; 3], rotation: [f32; 3], scale: [f32; 3
   let [x, y, z] = rotation;
 
   Matrix4::from_translation(Vector3::from(translation))
-    * Matrix4::from_angle_y(Deg(y))
-    * Matrix4::from_angle_x(Deg(x))
-    * Matrix4::from_angle_z(Deg(z))
+    * Matrix4::from(
+      axis_angle(Vector3::unit_y(), Deg(y))
+        * axis_angle(Vector3::unit_x(), Deg(x))
+        * axis_angle(Vector3::unit_z(), Deg(z)),
+    )
     * Matrix4::from_nonuniform_scale(scale[0], scale[1], scale[2])
 }
 
