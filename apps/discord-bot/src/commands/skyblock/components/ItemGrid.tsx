@@ -15,6 +15,9 @@ import type { LocalizeFunction } from "@statsify/discord";
 export const pricesAsOf = (t: LocalizeFunction, asOf: number) =>
   t("skyblock.pricesAsOf", { time: formatTime(Date.now() - asOf, { entries: 1 }) });
 
+export const progressText = (t: LocalizeFunction, value: number, max: number) =>
+  `${value >= max ? "§6" : "§e"}${t(value)}§7/${t(max)}`;
+
 // Table.tr splits its width by its cells, so a short last row is padded to keep the columns unless it spreads
 export const gridRows = (cells: JSX.Element[], columns: number, spreadLastRow = false) =>
   arrayGroup(cells, columns).map((row) => (

@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Card } from "./components/Card.js";
+import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
-import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
 import { ItemGrid, gridRows } from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
@@ -56,11 +55,7 @@ export const SkyBlockMuseumProfile = ({ profile, t, ...card }: SkyBlockProfilePr
   const { museum } = profile.member;
 
   if (!museum) {
-    return (
-      <Card {...card} name={profile.displayName}>
-        <Empty text={t("skyblock.noMuseum")} />
-      </Card>
-    );
+    return <EmptyCard {...card} name={profile.displayName} text={t("skyblock.noMuseum")} />;
   }
 
   const sidebar: SidebarItem[] = [
