@@ -16,7 +16,7 @@ import { SANS_PRELOAD } from "~/lib/fonts";
 import { possessive } from "~/lib/player-route";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { cacheHeaders } from "~/lib/cache";
-import { cacheNotFoundResponse } from "~/lib/response";
+import { missingPlayerResponse } from "~/lib/response";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { refreshBingo } from "~/features/player/player-actions";
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
     const player = await loadBingoPlayer(context.queryClient, params.name);
 
     if (!player) {
-      cacheNotFoundResponse("max-age=300");
+      missingPlayerResponse();
       throw notFound();
     }
 

@@ -16,7 +16,7 @@ import { PlayerNotFound } from "~/features/player/player-not-found";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { possessive } from "~/lib/player-route";
 import { cacheHeaders } from "~/lib/cache";
-import { cacheNotFoundResponse } from "~/lib/response";
+import { cacheNotFoundResponse, missingPlayerResponse } from "~/lib/response";
 import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { createI18n } from "~/i18n/i18n";
 import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch, unfurlCard } from "~/features/game/game-data";
@@ -51,7 +51,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const identity = await ensurePlayer(context.queryClient, params.name);
 
     if (!identity) {
-      cacheNotFoundResponse("max-age=300");
+      missingPlayerResponse();
       throw notFound({ data: { player: true } satisfies Missing });
     }
 

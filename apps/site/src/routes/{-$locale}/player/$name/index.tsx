@@ -12,7 +12,7 @@ import { PlayerView } from "~/features/player/player-page";
 import { cacheHeaders } from "~/lib/cache";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { possessive } from "~/lib/player-route";
-import { cacheNotFoundResponse } from "~/lib/response";
+import { missingPlayerResponse } from "~/lib/response";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { localeData, socialMeta } from "~/lib/social-meta";
@@ -27,8 +27,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
     const identity = await ensurePlayer(context.queryClient, params.name);
 
     if (!identity) {
-      // Five minutes at the edge. A lookup that finds the player navigates in the browser, so it never sees this page.
-      cacheNotFoundResponse("max-age=300");
+      missingPlayerResponse();
       throw notFound();
     }
 
