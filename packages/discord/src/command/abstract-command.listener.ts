@@ -238,6 +238,16 @@ export abstract class AbstractCommandListener {
 
     if (res && !(res instanceof Promise)) return res;
 
+    res?.catch(async (err) => {
+      if (err instanceof Message) return interaction.sendFollowup({ ...err, ephemeral: true });
+
+      await Promise.allSettled([
+        interaction.sendFollowup({ ...new ErrorMessage("errors.unknown"), ephemeral: true }),
+      ]);
+
+      throw err;
+    });
+
     return { type: InteractionResponseType.DeferredMessageUpdate };
   }
 
@@ -279,7 +289,11 @@ export abstract class AbstractCommandListener {
     if (interaction.isCommandInteraction()) {
       const parentData = interaction.getData();
       const parentCommand = this.commands.get(parentData.name);
-      if (!parentCommand) return { type: InteractionResponseType.DeferredChannelMessageWithSource };
+
+      if (!parentCommand) {
+        interaction.editReply(new ErrorMessage("errors.unknown")).catch((err) => this.logger.error(err));
+        return { type: InteractionResponseType.DeferredChannelMessageWithSource };
+      }
 
       const [command, data, commandName] = this.getCommandAndData(parentCommand, parentData);
       this.onCommand(interaction, command, data, commandName, parentCommand).catch((err) => {

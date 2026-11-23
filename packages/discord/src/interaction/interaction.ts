@@ -21,6 +21,7 @@ import type {
 
 export class Interaction {
   private locale: string | null = null;
+  private readonly acknowledged = Promise.withResolvers<void>();
 
   public constructor(
     private readonly rest: RestClient,
@@ -103,11 +104,19 @@ export class Interaction {
   }
 
   public async reply(data: InteractionServer.InteractionReply) {
-    await this.request({
-      method: "post",
-      path: `/interactions/${this.data.id}/${this.data.token}/callback`,
-      body: data,
-    });
+    try {
+      await this.send({
+        method: "post",
+        path: `/interactions/${this.data.id}/${this.data.token}/callback`,
+        body: data,
+      });
+    } catch (err) {
+      this.acknowledged.promise.catch(() => {});
+      this.acknowledged.reject(err);
+      throw err;
+    }
+
+    this.acknowledged.resolve();
   }
 
   public async editReply(data: Message | IMessage) {
@@ -154,6 +163,12 @@ export class Interaction {
   }
 
   private async request(options: RestClient.RequestOptions) {
+    // Webhook edits and followups fail with 10008 or 10015 if they reach Discord before the reply
+    await this.acknowledged.promise;
+    return this.send(options);
+  }
+
+  private async send(options: RestClient.RequestOptions) {
     const response = await this.rest.request(options);
     return parseDiscordResponse(response);
   }
