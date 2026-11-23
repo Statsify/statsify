@@ -9,4 +9,5 @@
 export * from "./player.controller.js";
 export * from "./player.module.js";
 export * from "./player.service.js";
+export * from "./leaderboards/player-leaderboard.service.js";
 export * from "./search/player-search.service.js";

@@ -7,7 +7,7 @@
  */
 
 import { ORPCError } from "@orpc/client";
-import { UUID_PATTERN } from "~/lib/uuid";
+import { UUID_PATTERN } from "@statsify/util/util";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest, getRequestIP } from "@tanstack/react-start/server";
 import { rpcServerClient } from "~/server/rpc.server";
@@ -65,7 +65,7 @@ function failure(error: unknown, deadline: AbortSignal): ActionResult<never> {
 
 /**
  * Asks the API to refresh a known player from Hypixel once the visitor has passed Turnstile, within the per-address and
- * global budgets. `auto`: the page's own update once it opened, which needs no token since the API refuses it sooner.
+ * global budgets. `auto`: the page's own update once it opened, which the API refuses sooner.
  */
 export const refreshPlayer = createServerFn({ method: "POST" })
   .validator(z.object({ uuid: z.string().regex(UUID_PATTERN), auto: z.boolean().optional(), token: z.string().max(4096).optional() }))
@@ -73,7 +73,7 @@ export const refreshPlayer = createServerFn({ method: "POST" })
     const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
     const ip = clientIp();
 
-    if (!data.auto && !(await verifyTurnstile(data.token, ip))) return { ok: false, code: "VERIFICATION" };
+    if (!(await verifyTurnstile(data.token, ip))) return { ok: false, code: "VERIFICATION" };
 
     try {
       return { ok: true, data: await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: ip, auto: data.auto }, { signal }) };
@@ -89,7 +89,7 @@ export const refreshBingo = createServerFn({ method: "POST" })
     const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
     const ip = clientIp();
 
-    if (!data.auto && !(await verifyTurnstile(data.token, ip))) return { ok: false, code: "VERIFICATION" };
+    if (!(await verifyTurnstile(data.token, ip))) return { ok: false, code: "VERIFICATION" };
 
     try {
       await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: ip, auto: data.auto }, { signal });
@@ -116,7 +116,7 @@ export const refreshGame = createServerFn({ method: "POST" })
     const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
     const ip = clientIp();
 
-    if (!data.auto && !(await verifyTurnstile(data.token, ip))) return { ok: false, code: "VERIFICATION" };
+    if (!(await verifyTurnstile(data.token, ip))) return { ok: false, code: "VERIFICATION" };
 
     try {
       await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: ip, auto: data.auto }, { signal });

@@ -10,12 +10,13 @@ import { BOX_GAP, BOX_RING, Box, CELL, HEADING_BOX, StatBox } from "~/components
 import { Check } from "~/components/icons/check";
 import { Chevron } from "~/components/icons/chevron";
 import { Cross } from "~/components/icons/cross";
+import { removeFormatting } from "@statsify/util/util";
 import { wordMatcher } from "~/components/filter-box";
 import { Fragment, type ReactNode } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { Hidden, InlineStat, LeaderboardLink, StatCell, glossaryKey, useStatName } from "~/components/ui/stat";
-import { MinecraftText, colorOf, plainText } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorOf } from "~/components/ui/minecraft-text";
 import { StatInfo } from "./stat-info";
 import { cn } from "~/lib/util";
 import { LABEL_NAMESPACES } from "~/i18n/i18n";
@@ -210,7 +211,7 @@ export function useStatLabel(cell: Stat): { text: string; node: ReactNode; full?
 /** A stat's heading as plain text, for its link and the filter: the card's own name, or the label's words. */
 export function useLabelText(): (cell: Stat) => string {
   const { t } = useTranslation();
-  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainText(cell.name));
+  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : removeFormatting(cell.name));
 }
 
 /**

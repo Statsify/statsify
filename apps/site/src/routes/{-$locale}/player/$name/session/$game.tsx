@@ -22,8 +22,8 @@ import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
 import { headingText, pageSearch, searchParam } from "~/features/game/game-data";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { orNull } from "~/lib/orpc";
-import { plainText } from "~/components/ui/minecraft-text";
 import { playerTabIcon } from "~/lib/tab-icon";
+import { removeFormatting } from "@statsify/util/util";
 import { sessionGameQuery, sessionPageQuery } from "~/features/session/session-data";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -115,7 +115,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/session/$game")({
       mode,
       submode,
       heading: { game: page.game, heading: titled.heading },
-      gameName: plainText(page.game.name),
+      gameName: removeFormatting(page.game.name),
     };
   },
   staleTime: 60_000,
@@ -130,7 +130,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/session/$game")({
 
     const { username, game, mode, submode, heading, gameName } = loaderData;
     const name = possessive(username);
-    const card = plainText(headingText(heading, (key) => words.t(key))).replaceAll(/\s+/g, " ").trim();
+    const card = removeFormatting(headingText(heading, (key) => words.t(key))).replaceAll(/\s+/g, " ").trim();
     const title = words.t("meta.game.title", { name, page: card });
     const description = words.t("meta.session.gameDescription", { name, game: gameName });
     const query = new URLSearchParams({ ...(mode && { mode }), ...(submode && { submode }) });

@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { queryOptions } from "@tanstack/react-query";
+
 /**
  * A leaderboard in the list `/leaderboards` filters: its field, its name under its game, and the words it also matches
  * that its name lacks (the stat's word on the bot's cards, the board's aliases).
@@ -127,23 +129,18 @@ export const boardLinksHtml = (boards: ListBoard[], href: (field: string) => str
     .map(({ field, name }) => `<li><a href="${escapeHtml(href(field))}">${escapeHtml(name)}</a></li>`)
     .join("");
 
-const fetched = new Map<string, Promise<ListGroup[]>>();
-
-/** The list, fetched once per hash and kept for the page's life; a failed fetch is forgotten, so the next try refetches. */
-export function fetchLeaderboardList(hash: string): Promise<ListGroup[]> {
-  let list = fetched.get(hash);
-
-  if (!list) {
-    list = fetch(listUrl(hash)).then((response) => {
+/** The list, fetched once per hash and kept for the page's life; a failed fetch leaves no data, so the next try refetches. */
+export const leaderboardListQuery = (hash: string) =>
+  queryOptions({
+    queryKey: ["leaderboard-list", hash],
+    queryFn: async (): Promise<ListGroup[]> => {
+      const response = await fetch(listUrl(hash));
       if (!response.ok) throw new Error(`The leaderboard list answered ${response.status}`);
       return response.json() as Promise<ListGroup[]>;
-    });
-    list.catch(() => fetched.delete(hash));
-    fetched.set(hash, list);
-  }
-
-  return list;
-}
+    },
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
 
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;

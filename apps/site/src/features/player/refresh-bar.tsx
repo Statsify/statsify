@@ -64,9 +64,9 @@ export function useNow(): number | undefined {
  * "Updated N minutes ago" and a small refresh button after it, for a player's card beside its other actions: the
  * button names itself in a tooltip and counts down until `expiresAt`. A failure, and the Turnstile widget a click shows
  * first, sit on a line of their own, so the bar's parent wraps (`flex-wrap`). `refresh` runs the page's refresh action
- * with the bar's deadline and, for a click, the visitor's Turnstile token, and applies its data itself; the bar shows
- * the outcome. Each refresh spends the site's shared Hypixel budget; the automatic update needs no token, as the API
- * caps those sooner.
+ * with the bar's deadline and the visitor's Turnstile token, and applies its data itself; the bar shows the outcome.
+ * Each refresh spends the site's shared Hypixel budget; the automatic update gets its token from an invisible widget,
+ * and doesn't run where Turnstile would ask the visitor to interact.
  */
 export function RefreshBar({
   updatedAt,
@@ -90,6 +90,7 @@ export function RefreshBar({
   const now = useNow();
   const [state, setState] = useState<RefreshState>({ status: "idle" });
   const [verifying, setVerifying] = useState(false);
+  const [autoVerifying, setAutoVerifying] = useState(false);
   const [widgetFailed, setWidgetFailed] = useState(false);
   // The location once its page has rendered: during a navigation `location` is already the next page's.
   // eslint-disable-next-line no-underscore-dangle -- the history entry's key, under TanStack's name
@@ -137,7 +138,9 @@ export function RefreshBar({
     const age = searchedAt !== undefined && searchedAt > performance.timeOrigin ? 0 : AUTO_UPDATE_AGE_MS;
     if (state.status === "pending" || now < lockedUntil || now - updatedAt < age) return;
     if (navigator.webdriver || BOT_AGENT.test(navigator.userAgent)) return;
-    void run(true);
+    if (!turnstileSiteKey) return void run(true);
+    setState({ status: "pending", auto: true });
+    setAutoVerifying(true);
   });
 
   // After mount only, so never on the server.
@@ -201,6 +204,18 @@ export function RefreshBar({
           // The bar sits in the profile card, narrower than the flexible widget's 300 px.
           size="compact"
           className="flex basis-full justify-center"
+        />
+      )}
+      {autoVerifying && (
+        <Turnstile
+          siteKey={turnstileSiteKey}
+          invisible
+          onToken={(token) => {
+            setAutoVerifying(false);
+            if (token) void run(true, token);
+            else setState({ status: "idle" });
+          }}
+          className="absolute"
         />
       )}
       <ClockScript

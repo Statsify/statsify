@@ -13,12 +13,11 @@ export const Route = createFileRoute("/api/skin/head")({
   server: {
     handlers: {
       // Pages get the 8×8 face and `SkinHead` scales it, so a player's head is one cached image at every size. Tab
-      // icons ask for 32, because browsers smooth a favicon when they scale it. `?name=` is a search suggestion's and
-      // `&stored` a guild member's, from stored skins only.
+      // icons ask for 32, because browsers smooth a favicon when they scale it. `?name=` is a search suggestion's.
       GET: ({ request }) => {
         const search = new URL(request.url).searchParams;
-        if (search.has("name") || search.has("stored")) return proxyStoredHead(search);
-        return proxySkin("/skin/head", search, { size: search.get("size") === "32" ? "32" : "8" });
+        if (search.has("name")) return proxyStoredHead(search);
+        return proxySkin("/skin/head/stored", search, { size: search.get("size") === "32" ? "32" : "8" });
       },
     },
   },
