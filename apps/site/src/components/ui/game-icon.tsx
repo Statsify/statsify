@@ -59,8 +59,11 @@ export const GAME_ICONS = new Set<string>([
 /** Whether `public/games/` has an icon for the code. */
 export const hasGameIcon = (game: string): game is IconName => GAME_ICONS.has(game);
 
-/** A game page's or leaderboard group's icon: its game's code, or the page's own where it has no game (Quests). */
-export const pageIcon = (game: string | null, key: string): string | undefined => game ?? PAGE_ICONS.get(key);
+/** A game page's or leaderboard group's icon: its game's, or the page's own where it has no game (Quests). */
+export function pageIcon(game: string | null, key: string): IconName | undefined {
+  const icon = game ?? PAGE_ICONS.get(key);
+  return icon && hasGameIcon(icon) ? icon : undefined;
+}
 
 /** `alt` names the game where the icon stands alone; beside the game's printed name it stays empty. */
 export function GameIcon({ game, alt = "" }: { game: IconName; alt?: string }) {

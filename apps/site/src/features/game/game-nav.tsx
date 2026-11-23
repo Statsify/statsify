@@ -7,7 +7,7 @@
  */
 
 import { Chevron } from "~/components/icons/chevron";
-import { GameIcon, hasGameIcon, pageIcon } from "~/components/ui/game-icon";
+import { GameIcon, pageIcon } from "~/components/ui/game-icon";
 import { Link } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
 import { MinecraftText } from "~/components/ui/minecraft-text";
@@ -25,7 +25,7 @@ function GameName({ game }: { game: NavGame }) {
 
   return (
     <>
-      {icon && hasGameIcon(icon) && <span aria-hidden className="size-6 shrink-0"><GameIcon game={icon} /></span>}
+      {icon && <span aria-hidden className="size-6 shrink-0"><GameIcon game={icon} /></span>}
       <MinecraftText className="min-w-0">{game.name}</MinecraftText>
       {!game.played && <span className="sr-only"> {t("game.unplayed")}</span>}
     </>

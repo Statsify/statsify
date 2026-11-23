@@ -10,7 +10,7 @@ import { BOX_GAP, BOX_RING, Box, CELL } from "~/components/ui/box";
 import { Chevron } from "~/components/icons/chevron";
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { FilterBox } from "~/components/filter-box";
-import { GameIcon, hasGameIcon, pageIcon } from "~/components/ui/game-icon";
+import { GameIcon, pageIcon } from "~/components/ui/game-icon";
 import { type GroupSummary, type ListGroup, boardLinksHtml, filterGroups, leaderboardListQuery } from "./leaderboard-list";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { type MouseEvent, type ReactNode, type SyntheticEvent, useMemo, useRef, useState } from "react";
@@ -53,7 +53,7 @@ function IndexPanel({ group, open, icons, children }: { group: Omit<GroupSummary
       >
         {icons && (
           <span aria-hidden className="size-8 shrink-0">
-            {icon && hasGameIcon(icon) && <GameIcon game={icon} />}
+            {icon && <GameIcon game={icon} />}
           </span>
         )}
         <span className="grow text-mc-1.5 font-bold">
