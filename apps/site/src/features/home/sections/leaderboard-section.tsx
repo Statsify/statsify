@@ -21,7 +21,7 @@ export function LeaderboardSection({
       background="uhc"
       className="flex-col-reverse lg:flex-row justify-between items-center"
     >
-      <div className="relative w-full lg:w-fit h-full flex flex-col justify-center items-center gap-8 p-4 lg:p-8 before:absolute before:bg-gradient-to-b before:from-white/20 before:to-white/50 before:mix-blend-overlay before:w-full before:h-full before:-z-20">
+      <div className="relative w-full lg:w-fit h-full flex flex-col justify-center items-center gap-8 p-4 lg:p-8 before:absolute before:bg-linear-to-b before:from-white/20 before:to-white/50 before:mix-blend-overlay before:w-full before:h-full before:-z-20">
         <LeaderboardPreview leaderboard={leaderboard} />
       </div>
       <div className="flex flex-col gap-4 max-w-100 xl:max-w-150 text-mc-white">
