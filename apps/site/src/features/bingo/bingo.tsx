@@ -229,10 +229,10 @@ function RewardCard({
   return (
     <Box
       {...props}
-      className={`min-w-0 grow content:flex content:flex-col content:gap-2 ${className}`}
+      className={`min-w-0 grow content:flex content:flex-col content:gap-2 content:text-center ${className}`}
       variant={completed ? "pink" : "default"}
     >
-      <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
+      <p className={cn("font-bold text-mc-pink", variant === "blackout" && "text-mc-dark-purple")}>
         {t("bingo.reward", { name: reward.name })}
       </p>
       {typeof reward.description === "string" ?
