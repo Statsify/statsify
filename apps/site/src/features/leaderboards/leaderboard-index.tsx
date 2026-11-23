@@ -40,29 +40,34 @@ function useBoardLinks() {
   return { prefix, delegation: useLinkDelegation(locale === DEFAULT_LOCALE ? undefined : locale) };
 }
 
-/** One folded group. With `icons`, every summary keeps a slot for its game's icon, so the names line up. */
+/**
+ * One folded group: a `<details>` holding only its summary, and the group's leaderboards in the panel after it, which
+ * shows while the details is open. With `icons`, every summary keeps a slot for its game's icon, so the names line up.
+ */
 function IndexPanel({ group, open, icons, children }: { group: Omit<GroupSummary, "count">; open: boolean; icons?: boolean; children: ReactNode }) {
   const icon = pageIcon(group.game, group.key);
 
   return (
-    // The group's id is its key, so `#<key>` lands on it.
-    <details open={open} id={group.key || undefined} className="group scroll-mt-4">
-      <Box
-        as="summary"
-        className={cn(CELL, BOX_RING, "cursor-pointer list-none select-none content:justify-start content:gap-3 [&::-webkit-details-marker]:hidden")}
-      >
-        {icons && (
-          <span aria-hidden className="size-8 shrink-0">
-            {icon && <GameIcon game={icon} />}
+    <>
+      {/* The group's id is its key, so `#<key>` lands on it. */}
+      <details open={open} id={group.key || undefined} className="group scroll-mt-4">
+        <Box
+          as="summary"
+          className={cn(CELL, BOX_RING, "cursor-pointer list-none select-none content:justify-start content:gap-3 [&::-webkit-details-marker]:hidden")}
+        >
+          {icons && (
+            <span aria-hidden className="size-8 shrink-0">
+              {icon && <GameIcon game={icon} />}
+            </span>
+          )}
+          <span className="grow text-mc-1.5 font-bold">
+            <MinecraftText>{group.formatted}</MinecraftText>
           </span>
-        )}
-        <span className="grow text-mc-1.5 font-bold">
-          <MinecraftText>{group.formatted}</MinecraftText>
-        </span>
-        <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
-      </Box>
-      <div className="pt-1">{children}</div>
-    </details>
+          <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
+        </Box>
+      </details>
+      <div className="col-span-full hidden [details[open]+&]:block">{children}</div>
+    </>
   );
 }
 
@@ -124,7 +129,7 @@ const serverList = createIsomorphicFn()
   .client((): ListGroup[] | undefined => undefined);
 
 /**
- * Every leaderboard grouped by game, each group a closed `<details>` so the 2,700 links cost no layout until opened. The
+ * Every leaderboard grouped by game, each group's panel hidden until its game opens, so the 2,700 links cost no layout. The
  * links are in the server's HTML, not the page's data; the filter fetches the list when the box is first used.
  */
 export function AllLeaderboards({ data, list: loaded, query = "" }: { data: IndexData; list?: ListGroup[]; query?: string }) {
@@ -195,7 +200,9 @@ export function AllLeaderboards({ data, list: loaded, query = "" }: { data: Inde
       </form>
       {failed && <ListFailed />}
       {filtering && shown.length === 0 && <NoMatches query={rendered} />}
-      <div className={cn("flex flex-col", BOX_GAP)}>
+      {/* An open game's panel spans the row under it, and `dense` fills the row above from the game's row-mates, so they
+          stay put. A filter opens every game, so its results stay one column, each game over its own boards. */}
+      <div className={cn("flex flex-col", !filtering && "md:grid md:grid-flow-row-dense md:grid-cols-2 xl:grid-cols-3", BOX_GAP)}>
         {shown.map(({ group, html }) => (
           <IndexPanel key={group.key} group={group} open={filtering} icons>
             <div {...delegation} className={cn("flex flex-col", BOX_GAP)}>
