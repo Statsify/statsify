@@ -9,7 +9,7 @@
 import { type CardChoice, type ImageVariant, pageCard } from "@statsify/profiles/protocol";
 import { PoolBusyError, RenderPool } from "@statsify/profiles/pool";
 import { NOT_FOUND_EDGE, NO_STORE, cacheHeaders } from "~/lib/cache";
-import { compactUuid } from "~/lib/uuid";
+import { isUuid, normalizeUuid } from "@statsify/util/util";
 import { orNull } from "~/lib/orpc";
 import { createRequire } from "node:module";
 import { join } from "node:path";
@@ -148,8 +148,8 @@ export async function playerImageResponse(
   policy: ImagePolicy,
   game?: GameImage
 ): Promise<Response> {
-  const uuid = compactUuid(uuidParam);
-  if (!uuid) return new Response(null, { status: 404, headers: NOT_FOUND_HEADERS });
+  if (!isUuid(uuidParam)) return new Response(null, { status: 404, headers: NOT_FOUND_HEADERS });
+  const uuid = normalizeUuid(uuidParam);
 
   try {
     const image = await renderPlayerImage({
@@ -314,8 +314,8 @@ async function renderCard(
   updatedAt: number,
   game?: GameImage
 ): Promise<Uint8Array<ArrayBuffer>> {
-  // A miss reads the player and renders the skin (asking Minecraft's session server for it, if it's old) before it
-  // can queue, so a queue with no room left, counting the misses still loading, answers busy first.
+  // A miss reads the player and renders the stored skin before it can queue, so a queue with no room left, counting
+  // the misses still loading, answers busy first.
   const renders = await renderPool();
   if (renders.pending + loading >= RENDER_QUEUE_LIMIT) throw new PoolBusyError();
 
@@ -342,7 +342,7 @@ async function renderCard(
 }
 
 async function fetchSkin(uuid: string): Promise<Uint8Array> {
-  const response = await proxySkin("/skin", new URLSearchParams({ uuid }));
+  const response = await proxySkin("/skin/stored", new URLSearchParams({ uuid }));
   if (!response.ok) throw new SkinUnavailableError(response.status);
   return new Uint8Array(await response.arrayBuffer());
 }

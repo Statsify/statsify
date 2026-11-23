@@ -17,8 +17,8 @@ import { playerTabIcon } from "~/lib/tab-icon";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
-import { plainText } from "~/components/ui/minecraft-text";
 import { ensurePlayer, playerPageQuery } from "~/features/player/resolve";
+import { removeFormatting } from "@statsify/util/util";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/{-$locale}/player/$name/")({
@@ -71,7 +71,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
     const parts = [
       statText(label("networkLevel"), headline.level),
       ...headline.games.map(({ name, level, rows }) => {
-        const game = plainText(level ? `${name} ${level}` : name);
+        const game = removeFormatting(level ? `${name} ${level}` : name);
         return `${game}: ${rows.map((row) => statText(label(row.key), row.hidden ? words.t("default:stats.hidden") : row.value)).join(", ")}`;
       }),
     ];

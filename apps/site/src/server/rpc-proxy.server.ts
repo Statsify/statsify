@@ -6,27 +6,33 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type AnyContractProcedure, type AnyContractRouter, isContractProcedure } from "@orpc/contract";
 import { NOT_FOUND_EDGE, NO_STORE, cacheHeaders } from "~/lib/cache";
 import { fetchApi, rpcUrl, unavailable } from "./rpc.server";
+import { contract } from "@statsify/contract";
+import { z } from "zod";
+
+const procedures = (router: AnyContractRouter): AnyContractProcedure[] =>
+  isContractProcedure(router) ? [router] : Object.values(router).flatMap(procedures);
+
+/** The query parameters an input takes: its object's keys, or every option's for a union (`player/resolve`). */
+function inputKeys(schema: unknown): string[] {
+  if (schema instanceof z.ZodObject) return Object.keys(schema.shape);
+  if (schema instanceof z.ZodUnion) return [...new Set(schema.options.flatMap(inputKeys))];
+  return [];
+}
 
 /**
- * Each GET procedure the browser may call through `/api/rpc/<procedure>`: its edge TTL in seconds and
- * the query parameters it takes (`names` arrives as `names[0]`, `names[1]`, …). `player.full`, `player.refresh`
- * and `player.lookup` are deliberately absent: they stay server-only.
+ * Each GET procedure the browser may call through `/api/rpc/<procedure>`, those the contract gives an edge TTL in
+ * seconds, with the query parameters it takes (`names` arrives as `names[0]`, `names[1]`, …).
  */
-const RPC_PROCEDURES = new Map<string, { ttl: number; params: readonly string[] }>([
-  ["player/resolve", { ttl: 60, params: ["name", "uuid"] }],
-  ["player/page", { ttl: 60, params: ["uuid"] }],
-  ["player/bingo", { ttl: 300, params: ["uuid"] }],
-  ["player/game", { ttl: 60, params: ["uuid", "game", "mode", "submode", "period"] }],
-  ["search/suggest", { ttl: 30, params: ["query"] }],
-  ["search/cards", { ttl: 60, params: ["names"] }],
-  ["leaderboard/list", { ttl: 3600, params: [] }],
-  ["leaderboard/game", { ttl: 3600, params: ["key"] }],
-  ["leaderboard/page", { ttl: 60, params: ["field", "page", "size", "around"] }],
-  ["home/previews", { ttl: 600, params: [] }],
-  ["content/prestiges", { ttl: 3600, params: [] }],
-]);
+const RPC_PROCEDURES = new Map(
+  procedures(contract).flatMap(({ "~orpc": { route, meta, inputSchema } }) =>
+    route.method === "GET" && route.path && typeof meta.edgeTtl === "number" ?
+      [[route.path.slice(1), { ttl: meta.edgeTtl, params: inputKeys(inputSchema) }] as const] :
+      []
+  )
+);
 
 const json = (status: number, body: Record<string, unknown>, headers: Record<string, string> = {}) =>
   Response.json({ status, ...body }, { status, headers: { ...NO_STORE, ...headers } });
@@ -91,6 +97,16 @@ if (import.meta.vitest) {
       expect(upstreamSearch("?names[1]=b&names[0]=a", ["names"])).toBe("?names%5B0%5D=a&names%5B1%5D=b");
       expect(upstreamSearch("?field=wins&cb=1", ["field", "page"])).toBeNull();
       expect(upstreamSearch("", ["field"])).toBe("");
+    });
+  });
+
+  describe("RPC_PROCEDURES", () => {
+    it("opens the contract's GET procedures that have an edge TTL, with their input's parameters", () => {
+      expect(RPC_PROCEDURES.get("player/resolve")).toEqual({ ttl: 60, params: ["name", "uuid"] });
+      expect(RPC_PROCEDURES.get("leaderboard/page")).toEqual({ ttl: 60, params: ["field", "page", "size", "around"] });
+      expect(RPC_PROCEDURES.get("leaderboard/list")).toEqual({ ttl: 3600, params: [] });
+      expect(RPC_PROCEDURES.has("player/full")).toBe(false);
+      expect(RPC_PROCEDURES.has("player/refresh")).toBe(false);
     });
   });
 }

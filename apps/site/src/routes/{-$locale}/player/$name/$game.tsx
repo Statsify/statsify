@@ -22,9 +22,9 @@ import { formatNumber } from "~/i18n/format";
 import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
 import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "~/features/game/game-data";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
-import { plainText } from "~/components/ui/minecraft-text";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { ensurePlayer } from "~/features/player/resolve";
+import { removeFormatting } from "@statsify/util/util";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
@@ -131,8 +131,8 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       submode,
       period,
       heading: { game: page.game, heading: titled.heading },
-      gameName: plainText(page.game.name),
-      modeName: titled.heading.mode ? plainText(titled.heading.mode) : undefined,
+      gameName: removeFormatting(page.game.name),
+      modeName: titled.heading.mode ? removeFormatting(titled.heading.mode) : undefined,
       updatedAt: page.updatedAt,
       unfurl: imageSize(pageCard(page), "og"),
       headline: {
@@ -150,7 +150,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const locale = localeData(matches);
     // The card's title in plain text, its words (`game.stats`) in English like the rest, from the server's `site.json`.
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
-    const card = plainText(headingText(heading, (key) => words.t(key))).replaceAll(/\s+/g, " ").trim();
+    const card = removeFormatting(headingText(heading, (key) => words.t(key))).replaceAll(/\s+/g, " ").trim();
     // The card names no period (the switcher does), so the title does: "Daily Quests (SkyWars)".
     const when = period ? `${words.t(`game.periodNames.${period}`)} ` : "";
     const name = possessive(username);
@@ -158,7 +158,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     // The game's own level or prefix first, as its card formats it: "[223✫] anrie's BedWars Stats". Not a title (Duels'
     // "Bridge Legend III"), which reads as part of the name.
     const level = headline.level?.label === "stats.title" ? undefined : headline.level?.value;
-    const title = level ? words.t("meta.levelFirst", { level: plainText(level), title: gameTitle }) : gameTitle;
+    const title = level ? words.t("meta.levelFirst", { level: removeFormatting(level), title: gameTitle }) : gameTitle;
     const gameAndMode = `${gameName}${modeName ? ` ${modeName}` : ""}`;
     const fallback = words.t("meta.game.description", { name, game: gameAndMode });
     const origin = locale?.origin;
@@ -174,7 +174,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       ...(headline.level ? [statText(label(headline.level.label), headline.level.value)] : []),
       ...headline.cells.map((cell) =>
         statText(
-          cell.name === undefined ? label(cell.label, cell.params) : plainText(cell.name),
+          cell.name === undefined ? label(cell.label, cell.params) : removeFormatting(cell.name),
           cell.hidden ? words.t("default:stats.hidden") : cell.value,
           `${cell.suffix ?? ""}${cell.of === undefined ? "" : `/${formatNumber(cell.of, DEFAULT_LOCALE)}`}`
         )

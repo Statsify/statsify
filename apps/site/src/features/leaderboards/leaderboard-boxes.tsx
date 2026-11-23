@@ -11,12 +11,13 @@
 
 import { BOX_GAP, Box, CELL, STAT_BOX } from "~/components/ui/box";
 import { ColumnLabel, PlayerLink, Position, Value } from "./leaderboard-table";
-import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
+import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Link } from "@tanstack/react-router";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
 import { rememberPlayer } from "~/features/player/resolve";
 import { memo, useEffect, useMemo, useRef } from "react";
+import { removeFormatting } from "@statsify/util/util";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -51,7 +52,7 @@ export function LeaderboardBoxes({ page, chunks: loaded, busy }: { page: Leaderb
   }
 
   return (
-    <section aria-label={plainText(page.formatted)} aria-busy={busy || undefined}>
+    <section aria-label={removeFormatting(page.formatted)} aria-busy={busy || undefined}>
       <BoxTable page={page} chunks={chunks} />
       <PhoneRows page={page} chunks={chunks} />
     </section>
@@ -69,7 +70,7 @@ function BoxTable({ page, chunks }: { page: LeaderboardPage; chunks: Leaderboard
     <div
       role="table"
       data-layout
-      aria-label={plainText(page.formatted)}
+      aria-label={removeFormatting(page.formatted)}
       className={cn("grid grid-cols-[max-content_max-content_minmax(0,1fr)_repeat(var(--columns),max-content)] max-md:hidden", BOX_GAP)}
       style={{ "--columns": page.columns.length } as CSSProperties}
     >
@@ -162,7 +163,7 @@ function ChunkHeading({ page }: { page: LeaderboardPage }) {
 /** Below `md`: a row's name in a box across the page, its stats under it. The home page's preview uses it too. */
 export function PhoneRows({ page, chunks }: { page: LeaderboardPage; chunks?: LeaderboardPage[] }) {
   return (
-    <div role="table" data-layout aria-label={plainText(page.formatted)} className="flex flex-col gap-2 md:hidden">
+    <div role="table" data-layout aria-label={removeFormatting(page.formatted)} className="flex flex-col gap-2 md:hidden">
       {(chunks ?? [page]).map((chunk, index) => <PhoneChunk key={chunk.page} page={chunk} heading={index > 0} />)}
     </div>
   );

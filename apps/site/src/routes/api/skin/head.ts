@@ -17,7 +17,7 @@ export const Route = createFileRoute("/api/skin/head")({
       GET: ({ request }) => {
         const search = new URL(request.url).searchParams;
         if (search.has("name")) return proxyStoredHead(search);
-        return proxySkin("/skin/head", search, { size: search.get("size") === "32" ? "32" : "8" });
+        return proxySkin("/skin/head/stored", search, { size: search.get("size") === "32" ? "32" : "8" });
       },
     },
   },

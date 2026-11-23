@@ -7,7 +7,7 @@
  */
 
 import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
-import { type Circular, flatten } from "@statsify/util";
+import { type Circular, flatten, isUuid, normalizeUuid } from "@statsify/util";
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
@@ -29,16 +29,13 @@ export class PlayerLeaderboardService extends LeaderboardService {
   }
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
-    if (input.length <= 16) {
-      const player = await this.playerService.get(input, CacheLevel.CACHE_ONLY, {
-        uuid: true,
-      });
+    const uuid = isUuid(input) ?
+      normalizeUuid(input) :
+      (await this.playerService.get(input, CacheLevel.CACHE_ONLY, { uuid: true }))?.uuid;
 
-      if (!player) throw new PlayerNotFoundException();
-      input = player.uuid;
-    }
+    if (!uuid) throw new PlayerNotFoundException();
 
-    const ranking = await this.getLeaderboardRankings(Player, [field], input);
+    const ranking = await this.getLeaderboardRankings(Player, [field], uuid);
 
     if (!ranking || !ranking[0] || !ranking[0].rank) throw new PlayerNotFoundException();
 
