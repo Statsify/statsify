@@ -69,6 +69,9 @@ pub struct ModelInstance {
   /// Degrees about the bone's x, y and z axes, turned in the order a display transform turns.
   pub rotation: Option<(f64, f64, f64)>,
   pub scale: Option<(f64, f64, f64)>,
+  /// Whether the camera fits the model in the frame, true by default. A model left out still
+  /// draws, cut off at the frame's edges, and fails the render if it reaches the camera.
+  pub framed: Option<bool>,
 }
 
 #[napi(object)]
@@ -347,7 +350,7 @@ fn draw_scene(
   };
 
   let mut models = Vec::with_capacity(scene.models.len());
-  let mut points = Vec::new();
+  let (mut points, mut unframed) = (Vec::new(), Vec::new());
 
   for instance in &scene.models {
     let bone = match (instance.bone, &player) {
@@ -393,9 +396,15 @@ fn draw_scene(
       * local_transform(translation, rotation, scale)
       * item_transform(instance.display, &model.display);
 
-    let start = points.len();
+    let placed = if instance.framed.unwrap_or(true) {
+      &mut points
+    } else {
+      &mut unframed
+    };
 
-    points.extend(
+    let start = placed.len();
+
+    placed.extend(
       model
         .parts
         .iter()
@@ -405,7 +414,7 @@ fn draw_scene(
 
     // Finite values can still overflow once multiplied through the chain, and the normals need
     // an inverse that neither overflows nor underflows
-    if !transform.determinant().is_normal() || !points[start..].iter().all(Array::is_finite) {
+    if !transform.determinant().is_normal() || !placed[start..].iter().all(Array::is_finite) {
       return Err(invalid().into());
     }
 
@@ -456,7 +465,7 @@ fn draw_scene(
   let camera = OrbitalCamera::new(Point3::from_vec(middle), width as f32, height as f32)
     .with_theta(yaw)
     .with_phi(FRAC_PI_2 - pitch)
-    .framed(&points, MARGIN * width.min(height) as f32)
+    .framed(&points, &unframed, MARGIN * width.min(height) as f32)
     .ok_or(Error::SceneOutOfRange)?;
 
   let buffer = renderer
