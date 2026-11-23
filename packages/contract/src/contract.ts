@@ -7,12 +7,11 @@
  */
 
 import { type ContractRouterClient, oc } from "@orpc/contract";
+import { UUID_PATTERN } from "@statsify/util/util";
 import { z } from "zod";
 
 /** A Minecraft UUID, dashed or not; the API normalizes it before querying. */
-export const UuidSchema = z
-  .string()
-  .regex(/^[\da-f]{32}$|^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i, "Expected a Minecraft UUID");
+export const UuidSchema = z.string().regex(UUID_PATTERN, "Expected a Minecraft UUID");
 
 export const UsernameSchema = z.string().trim().min(1).max(16);
 
@@ -636,7 +635,10 @@ const LeaderboardGameInputSchema = z.object({
   key: z.string().min(1).max(32),
 });
 
-const errors = oc.errors({
+/** `edgeTtl`: the seconds the edge keeps a GET procedure's answer. Only procedures with one are open to browsers. */
+const site = oc.$meta<{ edgeTtl?: number }>({});
+
+const errors = site.errors({
   NOT_FOUND: { message: "Player not found" },
   /** The lookups and `refresh`: Hypixel didn't answer, so nothing new is known yet. */
   SERVICE_UNAVAILABLE: { message: "Hypixel didn't answer, try again shortly" },
@@ -657,10 +659,12 @@ export const contract = {
   player: {
     resolve: errors
       .route({ method: "GET", path: "/player/resolve", summary: "Resolve a username or UUID" })
+      .meta({ edgeTtl: 60 })
       .input(ResolveInputSchema)
       .output(PlayerIdentitySchema),
     page: errors
       .route({ method: "GET", path: "/player/page", summary: "The player page view model" })
+      .meta({ edgeTtl: 60 })
       .input(PlayerInputSchema)
       .output(PlayerPageSchema),
     full: errors
@@ -677,24 +681,29 @@ export const contract = {
       .output(PlayerIdentitySchema),
     bingo: errors
       .route({ method: "GET", path: "/player/bingo", summary: "The player's Bingo boards" })
+      .meta({ edgeTtl: 300 })
       .input(PlayerInputSchema)
       .output(BingoPlayerSchema),
     game: errors
       .route({ method: "GET", path: "/player/game", summary: "One game's page for a player, in one mode" })
+      .meta({ edgeTtl: 60 })
       .input(GameInputSchema)
       .output(GamePageSchema),
     session: errors
       .route({ method: "GET", path: "/player/session", summary: "The games a player's session covers" })
+      .meta({ edgeTtl: 60 })
       .input(PlayerInputSchema)
       .output(SessionPageSchema),
     sessionGame: errors
       .route({ method: "GET", path: "/player/session/game", summary: "One game's page for a player's session, in one mode" })
+      .meta({ edgeTtl: 60 })
       .input(SessionGameInputSchema)
       .output(GamePageSchema),
   },
   guild: {
     page: errors
       .route({ method: "GET", path: "/guild/page", summary: "The guild page view model" })
+      .meta({ edgeTtl: 60 })
       .input(GuildInputSchema)
       .output(GuildPageSchema),
     lookup: errors
@@ -703,43 +712,51 @@ export const contract = {
       .output(z.object({ name: z.string() })),
   },
   search: {
-    suggest: oc
+    suggest: site
       .route({ method: "GET", path: "/search/suggest", summary: "Username autocomplete" })
+      .meta({ edgeTtl: 30 })
       .input(SuggestInputSchema)
       .output(z.array(SuggestionSchema).max(25)),
-    guilds: oc
+    guilds: site
       .route({ method: "GET", path: "/search/guilds", summary: "Guild name autocomplete" })
+      .meta({ edgeTtl: 30 })
       .input(GuildSuggestInputSchema)
       .output(z.array(GuildSuggestionSchema).max(25)),
-    cards: oc
+    cards: site
       .route({ method: "GET", path: "/search/cards", summary: "Result cards for a list of usernames" })
+      .meta({ edgeTtl: 60 })
       .input(CardsInputSchema)
       .output(z.array(ResultCardSchema)),
   },
   leaderboard: {
-    list: oc
+    list: site
       .route({ method: "GET", path: "/leaderboard/list", summary: "Every player leaderboard, grouped by game" })
+      .meta({ edgeTtl: 3600 })
       .output(z.array(LeaderboardGroupSchema)),
     game: errors
       .route({ method: "GET", path: "/leaderboard/game", summary: "One game's player leaderboards, grouped by mode" })
+      .meta({ edgeTtl: 3600 })
       .input(LeaderboardGameInputSchema)
       .output(LeaderboardGameSchema),
     page: errors
       .route({ method: "GET", path: "/leaderboard/page", summary: "One page of a player leaderboard" })
+      .meta({ edgeTtl: 60 })
       .input(LeaderboardPageInputSchema)
       .output(LeaderboardPageSchema),
   },
   home: {
-    previews: oc
+    previews: site
       .route({ method: "GET", path: "/home/previews", summary: "The sample players, guild and leaderboard on the home page" })
+      .meta({ edgeTtl: 600 })
       .output(HomePreviewsSchema),
   },
   content: {
-    glossary: oc
+    glossary: site
       .route({ method: "GET", path: "/content/glossary", summary: "Every stat the site shows under a label, grouped for the glossary" })
       .output(GlossarySchema),
-    prestiges: oc
+    prestiges: site
       .route({ method: "GET", path: "/content/prestiges", summary: "Every BedWars prestige, star and bracket" })
+      .meta({ edgeTtl: 3600 })
       .output(PrestigeSheetSchema),
   },
 };

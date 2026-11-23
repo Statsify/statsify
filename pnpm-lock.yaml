@@ -775,6 +775,9 @@ importers:
       '@orpc/contract':
         specifier: 1.15.7
         version: 1.15.7(@opentelemetry/api@1.9.1)
+      '@statsify/util':
+        specifier: workspace:^
+        version: link:../util
       '@swc/helpers':
         specifier: ^0.5.23
         version: 0.5.23
