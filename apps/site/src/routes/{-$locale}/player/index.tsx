@@ -9,7 +9,7 @@
 import { Background } from "~/components/ui/background";
 import { ResultCards } from "~/features/player/result-card";
 import { Search } from "~/components/search";
-import { UUID_PATTERN } from "~/lib/uuid";
+import { isUuid } from "@statsify/util/util";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { rpc } from "~/lib/orpc";
@@ -27,7 +27,7 @@ const SearchSchema = z.object({
     .unknown()
     .transform((q) => {
       const query = typeof q === "string" || typeof q === "number" ? String(q).trim() : "";
-      return (UUID_PATTERN.test(query) ? query : query.slice(0, 16)) || undefined;
+      return (isUuid(query) ? query : query.slice(0, 16)) || undefined;
     }),
 });
 
@@ -36,7 +36,7 @@ export const Route = createFileRoute("/{-$locale}/player/")({
   loaderDeps: ({ search }) => ({ q: search.q }),
   loader: async ({ deps }): Promise<{ q: string | undefined; cards: ResultCard[] }> => {
     if (!deps.q) return { q: undefined, cards: [] };
-    if (UUID_PATTERN.test(deps.q)) throw redirect({ to: "/{-$locale}/player/$name", params: { name: deps.q } });
+    if (isUuid(deps.q)) throw redirect({ to: "/{-$locale}/player/$name", params: { name: deps.q } });
 
     const names = await rpc.search.suggest({ query: deps.q });
     const cards = names.length > 0 ? await rpc.search.cards({ names }) : [];

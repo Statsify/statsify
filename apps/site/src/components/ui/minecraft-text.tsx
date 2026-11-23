@@ -7,8 +7,10 @@
  */
 
 import { cn } from "~/lib/util";
+import { parseFormatting } from "@statsify/util/format-codes";
 import type { CSSProperties, ReactNode } from "react";
 
+// Written out, not built from `minecraftColors`: Tailwind only generates the classes it finds in the source.
 const COLOR_CLASSES: Record<string, string> = {
   0: "text-mc-black",
   1: "text-mc-dark-blue",
@@ -46,9 +48,6 @@ export const leadingColorClass = (text: string): string => colorClass(/§([\da-f
 /** The text without its `§` codes, for a page title or an alt text. */
 export const plainText = (text: string): string => text.replaceAll(/§#[\dA-Fa-f]{6}|§\^\d+(?:\.\d+)?\^|§./g, "");
 
-const HEX_COLOR = /^#[\dA-Fa-f]{6}/;
-const SIZE = /^\^(\d+(?:\.\d+)?)\^/;
-
 /** The renderer's default text size; `§^N^` is relative to it. */
 const BASE_SIZE = 2;
 
@@ -59,7 +58,6 @@ const BASE_SIZE = 2;
  */
 export function MinecraftText({ children, className }: { children: string | string[]; className?: string }) {
   const input = Array.isArray(children) ? children.join("") : children;
-  const [plain = "", ...coded] = input.split("§");
 
   let bold = false;
   let italic = false;
@@ -96,49 +94,48 @@ export function MinecraftText({ children, className }: { children: string | stri
     );
   };
 
-  push(plain, 0);
+  for (const [index, { code, text }] of parseFormatting(input).entries()) {
+    switch (code?.kind) {
+      case "hex":
+        hex = code.hex;
+        break;
 
-  for (const [index, part] of coded.entries()) {
-    const code = part[0]?.toLowerCase();
-    const hexMatch = HEX_COLOR.exec(part);
-    const sizeMatch = SIZE.exec(part);
-    let text: string;
+      case "size":
+        size = code.size;
+        break;
 
-    if (hexMatch) {
-      hex = hexMatch[0];
-      text = part.slice(hexMatch[0].length);
-    } else if (sizeMatch) {
-      size = Number(sizeMatch[1]);
-      text = part.slice(sizeMatch[0].length);
-    } else if (code === "l") {
-      bold = true;
-      text = part.slice(1);
-    } else if (code === "o") {
-      italic = true;
-      text = part.slice(1);
-    } else if (code === "n" || code === "u") {
-      underline = true;
-      text = part.slice(1);
-    } else if (code === "m") {
-      strike = true;
-      text = part.slice(1);
-    } else if (code === "r") {
-      bold = false;
-      italic = false;
-      underline = false;
-      strike = false;
-      hex = undefined;
-      colorClass = "text-mc-white";
-      text = part.slice(1);
-    } else if (code !== undefined && code in COLOR_CLASSES) {
-      colorClass = COLOR_CLASSES[code];
-      hex = undefined;
-      text = part.slice(1);
-    } else {
-      text = part.slice(1);
+      case "color":
+        colorClass = COLOR_CLASSES[code.code];
+        hex = undefined;
+        break;
+
+      case "bold":
+        bold = true;
+        break;
+
+      case "italic":
+        italic = true;
+        break;
+
+      case "underline":
+        underline = true;
+        break;
+
+      case "strikethrough":
+        strike = true;
+        break;
+
+      case "reset":
+        bold = false;
+        italic = false;
+        underline = false;
+        strike = false;
+        hex = undefined;
+        colorClass = "text-mc-white";
+        break;
     }
 
-    push(text, index + 1);
+    push(text, index);
   }
 
   return <span>{elements}</span>;
