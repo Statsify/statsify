@@ -62,9 +62,8 @@ export function Header() {
     shouldThrow: false,
     select: (match) => ({ game: match.params.game, search: match.search }),
   });
-  // On a game page's phone layout the search is a button in the logo row, so the stats start higher; it opens the box
-  // in the search's row, focused, until a tap elsewhere or the next page.
-  const compact = gameTarget !== undefined;
+  // On phones the search is a button at the logo row's end, so the page starts higher; it opens the box in the search's
+  // row, focused, until a tap elsewhere or the next page.
   const [searchedOn, setSearchedOn] = useState<string>();
   const searching = searchedOn === pathname;
   const hide = useCallback(() => setSearchedOn(undefined), []);
@@ -83,18 +82,6 @@ export function Header() {
           <Logo className="size-8 shrink-0" />
           <Wordmark className="hidden text-mc-1.5 sm:block md:hidden xl:block" />
         </Link>
-        {/* Beside the logo, so the links at the row's end stay put on every page. */}
-        {showSearch && compact && (
-          <button
-            type="button"
-            aria-label={t("search.label")}
-            aria-expanded={searching}
-            onClick={openSearch}
-            className="flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden"
-          >
-            <SearchIcon className="size-5" />
-          </button>
-        )}
         {/* Below md the pages get a row of their own under the logo; from md they sit beside it. */}
         <nav aria-label={t("nav.label")} className="order-last basis-full md:order-none md:basis-auto">
           <ul className="flex items-center gap-4 sm:gap-6">
@@ -123,7 +110,7 @@ export function Header() {
             ref={searchRow}
             className={cn(
               "order-last basis-full lg:order-none lg:max-w-96 lg:min-w-0 lg:flex-1",
-              compact && !searching && "max-md:hidden"
+              !searching && "max-md:hidden"
             )}
           >
             <Search compact shortcut recent target={gameTarget} />
@@ -141,8 +128,19 @@ export function Header() {
             ))}
           </ul>
         </nav>
-        {/* A game page's phone logo row has the search button and no room for it, so the row stays one line. */}
-        <AccountLink className={cn(NAV_LINK, compact && "max-md:hidden")} />
+        {/* A phone's logo row has the search button and no room for it, so the row stays one line. */}
+        <AccountLink className={cn(NAV_LINK, showSearch && "max-md:hidden")} />
+        {showSearch && (
+          <button
+            type="button"
+            aria-label={t("search.label")}
+            aria-expanded={searching}
+            onClick={openSearch}
+            className="flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden"
+          >
+            <SearchIcon className="size-5" />
+          </button>
+        )}
       </div>
     </header>
   );

@@ -16,7 +16,7 @@ export function ErrorText({ heading, children }: { heading: ReactNode; children:
   return (
     <div className={cn("flex w-full max-w-160 flex-col", BOX_GAP)}>
       <Box className={HEADING_BOX}>{heading}</Box>
-      <Box className={cn(CELL, "content:py-3")}>{children}</Box>
+      <Box className={cn(CELL, "content:py-3 content:text-balance")}>{children}</Box>
     </div>
   );
 }

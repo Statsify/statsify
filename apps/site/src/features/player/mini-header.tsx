@@ -9,22 +9,25 @@
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
-import { type RefObject, useEffect, useState } from "react";
+import { type ReactNode, type RefObject, useEffect, useState } from "react";
 
 /**
  * On phones, once the nametag (`watch`) has scrolled off the top, a bar pinned there with the head, rank and name, and
- * the game on a game page. It repeats the page's heading, so screen readers skip it.
+ * the game on a game page or an `action` on the right. The name and game repeat the page's heading, so screen readers
+ * skip them.
  */
 export function MiniHeader({
   watch,
   uuid,
   name,
   game,
+  action,
 }: {
   watch: RefObject<HTMLElement | null>;
   uuid: string;
   name: string;
   game?: string;
+  action?: ReactNode;
 }) {
   const [shown, setShown] = useState(false);
 
@@ -39,23 +42,23 @@ export function MiniHeader({
 
   return (
     <div
-      aria-hidden
       className={cn(
         "fixed inset-x-0 top-0 z-50 flex h-11 items-center gap-4 bg-blackify-800 px-4 text-mc-1 text-mc-white shadow-[0_4px_0_rgb(0_0_0/0.84)] md:hidden",
         !shown && "hidden"
       )}
     >
-      <span className="flex min-w-0 items-center gap-2">
+      <span aria-hidden className="flex min-w-0 items-center gap-2">
         <SkinHead uuid={uuid} size={24} className="shrink-0" />
         <span className="min-w-0 truncate">
           <MinecraftText>{name}</MinecraftText>
         </span>
       </span>
       {game && (
-        <span className="ms-auto shrink-0">
+        <span aria-hidden className="ms-auto shrink-0">
           <MinecraftText>{game}</MinecraftText>
         </span>
       )}
+      {action && <div className="ms-auto shrink-0">{action}</div>}
     </div>
   );
 }

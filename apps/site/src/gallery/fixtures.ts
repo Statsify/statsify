@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { GamePage, LeaderboardPage, PlayerPage, ResultCard, StatCell, StatSection, Suggestion } from "@statsify/contract";
+import type { GamePage, GuildSuggestion, LeaderboardPage, PlayerPage, ResultCard, StatCell, StatSection, Suggestion } from "@statsify/contract";
+import type { RecentPlayer } from "~/features/player/recent";
 
 // The local run's two fixture players, so skins and the signature image resolve against a seeded API.
 export const ANRIE_UUID = "3abe2f6bd45a4e2282d4f9014569db25";
@@ -22,6 +23,17 @@ export const SUGGESTIONS: Suggestion[] = [
   { name: "AnnaBanana", displayName: "§7AnnaBanana" },
   { name: "annoyingorange", displayName: null },
   { name: "Antlers", displayName: "§b[MVP] Antlers" },
+];
+
+export const GUILD_SUGGESTIONS: GuildSuggestion[] = [
+  { name: "Statsify", nameFormatted: "§6Statsify §6[STAT§6]" },
+  { name: "Stardust", nameFormatted: "§eStardust §e[STAR§e]" },
+  { name: LONG_NAME.repeat(2), nameFormatted: `§3${LONG_NAME.repeat(2)} §3[WWWWWW§3]` },
+];
+
+export const RECENT_PLAYERS: RecentPlayer[] = [
+  { uuid: ANRIE_UUID, name: "anrie", color: "§b" },
+  { uuid: OJAKEY_UUID, name: "oJakey", color: "§6" },
 ];
 
 export const RESULT_CARDS: ResultCard[] = [
