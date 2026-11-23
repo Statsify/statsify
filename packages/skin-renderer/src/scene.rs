@@ -371,15 +371,6 @@ fn draw_scene(
 
     let model = library.model(renderer, &instance.model)?;
 
-    let hidden = instance
-      .display
-      .and_then(|context| context.entry(&model.display))
-      .is_some_and(|entry| entry.scale.contains(&0.0));
-
-    if hidden {
-      continue;
-    }
-
     let transform = bone
       * Matrix4::from_translation(translation)
       * item_transform(instance.display, &model.display);
