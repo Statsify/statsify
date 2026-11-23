@@ -391,9 +391,14 @@ fn draw_scene(
         .map(|&point| transform.transform_point(point).to_vec()),
     );
 
-    // Finite values can still overflow once multiplied through the chain, and the normals need
-    // an inverse that neither overflows nor underflows
-    if !transform.determinant().is_normal() || !placed[start..].iter().all(Array::is_finite) {
+    // Finite values can still overflow through the chain, the normals need an inverse that
+    // neither overflows nor underflows, and a mirrored model would draw inside out
+    let determinant = transform.determinant();
+
+    if !determinant.is_normal()
+      || determinant < 0.0
+      || !placed[start..].iter().all(Array::is_finite)
+    {
       return Err(invalid().into());
     }
 
