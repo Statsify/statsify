@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CHIP, Callout, KeyTable, Paragraph, Section, Subheading, TextEmail, TextLink, TextPage } from "./text-page";
+import { CHIP, Callout, Paragraph, Section, Subheading, TAP_AREA, TextEmail, TextLink, TextPage } from "./text-page";
 import { Link } from "@tanstack/react-router";
 import { PointerText } from "~/components/ui/hint";
+import type { ReactNode } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useNumberFormat } from "~/i18n/use-number-format";
 
@@ -17,7 +18,13 @@ export function AboutPage() {
   const { t } = useTranslation();
   const links = { chip: <SampleChip />, glossary: <TextLink to="/{-$locale}/glossary" /> };
   const email = t("footer.email");
-  const mail = <TextEmail email={email} />;
+  const mail = <TextEmail email={email} className={TAP_AREA} />;
+  const contacts: [label: string, where: ReactNode][] = [
+    [t("about.help"), <Trans key="help" i18nKey="about.helpWhere" components={{ discord: <TextLink href="/support" className={TAP_AREA} /> }} />],
+    [t("about.privacy"), mail],
+    [t("about.legal"), mail],
+    [t("about.security"), mail],
+  ];
 
   return (
     <TextPage title={t("about.title")}>
@@ -31,15 +38,13 @@ export function AboutPage() {
         </Paragraph>
       </Section>
       <Section id="contact" title={t("about.contact")} short>
-        <KeyTable
-          head={[t("about.topic"), t("about.where")]}
-          rows={[
-            [t("about.help"), <Trans key="help" i18nKey="about.helpWhere" components={{ discord: <TextLink href="/support" /> }} />],
-            [t("about.privacy"), mail],
-            [t("about.legal"), mail],
-            [t("about.security"), mail],
-          ]}
-        />
+        <dl className="flex flex-col gap-3">
+          {contacts.map(([label, where]) => (
+            <div key={label}>
+              <dt className="inline">{label}:</dt> <dd className="inline">{where}</dd>
+            </div>
+          ))}
+        </dl>
       </Section>
       <Section id="stats" title={t("about.stats")} short>
         <Paragraph>{t("about.statsText")}</Paragraph>

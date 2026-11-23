@@ -291,23 +291,30 @@ export const TAP_AREA = "relative after:absolute after:-inset-x-2 after:-inset-y
 const TEXT_LINK = "font-semibold text-white underline decoration-2 underline-offset-3 hover:text-mc-aqua";
 
 /** An email address in reading text, styled as a link: a click copies it. */
-export const TextEmail = ({ email }: { email: string }) => <EmailLink email={email} className={TEXT_LINK} />;
+export const TextEmail = ({ email, className }: { email: string; className?: string }) => (
+  <EmailLink email={email} className={cn(TEXT_LINK, className)} />
+);
 
 /**
  * A link in reading text: to a page of the site, or anywhere by `href` (vanity links the server redirects). `children`
  * is optional so translated text can place it (`<Trans components={…}>`).
  */
-export function TextLink({ children, href, ...link }: { children?: ReactNode } & ({ href: string } | (LinkProps & { href?: never }))) {
+export function TextLink({
+  children,
+  href,
+  className,
+  ...link
+}: { children?: ReactNode; className?: string } & ({ href: string } | (LinkProps & { href?: never }))) {
   if (href !== undefined) {
     return (
-      <a href={href} className={TEXT_LINK}>
+      <a href={href} className={cn(TEXT_LINK, className)}>
         {children}
       </a>
     );
   }
 
   return (
-    <Link {...link} className={TEXT_LINK}>
+    <Link {...link} className={cn(TEXT_LINK, className)}>
       {children}
     </Link>
   );
