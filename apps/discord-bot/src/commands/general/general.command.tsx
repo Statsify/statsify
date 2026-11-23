@@ -13,7 +13,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { GENERAL_MODES, GeneralModes, Guild, Player } from "@statsify/schemas";
-import { GeneralProfile } from "./general.profile.js";
+import { GeneralProfile } from "@statsify/profiles";
 import { GuildQuery } from "@statsify/api-client";
 
 interface PreProfileData {

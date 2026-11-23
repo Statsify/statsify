@@ -20,7 +20,7 @@ const NAV = [
 ] as const;
 
 /** Inner pages carry a compact search in the header; the search pages have their own. */
-const SEARCH_PAGES = /^\/player\/[^/]+$/;
+const SEARCH_PAGES = /^\/player\/[^/]+$|^\/leaderboards(?:\/|$)/;
 
 function pathWithoutLocale(pathname: string) {
   const [, first = "", ...rest] = pathname.split("/");

@@ -13,16 +13,12 @@ import { localeFromPath } from "~/i18n/locales";
 import type { ReactNode } from "react";
 import type { RouterContext } from "~/router";
 
-const DESCRIPTION =
-  "Statsify is the largest Hypixel Discord bot for viewing your Hypixel Network stats, leaderboards, sessions, and more. Easily track stats in BedWars, SkyWars, Duels, and all other minigames to see your progression and improvement over time.";
-
 export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Statsify" },
-      { name: "description", content: DESCRIPTION },
       { name: "theme-color", content: colors.blueify[500] },
       { name: "color-scheme", content: "dark" },
     ],

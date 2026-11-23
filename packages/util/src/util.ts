@@ -209,6 +209,40 @@ export const abbreviationNumber = (
   ];
 };
 
+const numberFormats = new Map<string, Intl.NumberFormat>();
+
+const getNumberFormat = (locale: string | undefined, digits: number) => {
+  const key = `${locale}|${digits}`;
+  let numberFormat = numberFormats.get(key);
+
+  if (!numberFormat) {
+    numberFormat = Intl.NumberFormat(locale, {
+      maximumFractionDigits: digits,
+      minimumFractionDigits: digits,
+    });
+
+    numberFormats.set(key, numberFormat);
+  }
+
+  return numberFormat;
+};
+
+/**
+ * The bot's number format: thousands separators for the locale, two decimals for fractions,
+ * and an abbreviated form (`1.23M`) from a million up.
+ */
+export const formatNumber = (value: number, locale?: string): string => {
+  const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
+  const numberFormat = getNumberFormat(locale, hasDecimals ? 2 : 0);
+
+  if (value >= 1_000_000) {
+    const [number, suffix] = abbreviationNumber(value);
+    return `${numberFormat.format(number)}${suffix}`;
+  }
+
+  return numberFormat.format(value);
+};
+
 export const ordinal = (n: number) => {
   const s = ["th", "st", "nd", "rd"];
   const v = n % 100;
@@ -327,6 +361,7 @@ if (import.meta.vitest) {
       expect(isUuid("069a79f444e94726a5befca90e38aaf5")).toBe(true);
       expect(isUuid("069A79F4-44E9-4726-A5BE-FCA90E38AAF5")).toBe(true);
       expect(isUuid("069a79f444e94726a5befca90e38aaf")).toBe(false);
+      expect(isUuid("069a79f4-44e94726-a5be-fca90e38aaf5")).toBe(false);
       expect(isUuid("Notch_Is_A_Long_Name")).toBe(false);
       expect(normalizeUuid("069A79F4-44E9-4726-A5BE-FCA90E38AAF5")).toBe("069a79f444e94726a5befca90e38aaf5");
     });

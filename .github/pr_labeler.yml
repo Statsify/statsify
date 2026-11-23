@@ -46,6 +46,10 @@
   - changed-files:
     - any-glob-to-any-file: packages/math/**/*
 
+"@statsify/profiles":
+  - changed-files:
+    - any-glob-to-any-file: packages/profiles/**/*
+
 "@statsify/rendering":
   - changed-files:
     - any-glob-to-any-file: packages/rendering/**/*

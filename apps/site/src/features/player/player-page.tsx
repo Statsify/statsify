@@ -12,6 +12,7 @@ import { Discord } from "~/components/icons/discord";
 import { GuildTag } from "./result-card";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { RefreshBar } from "./refresh-bar";
+import { SignaturePanel } from "./signature-panel";
 import { SkinBust } from "~/components/ui/skin";
 import { Twitter } from "~/components/icons/twitter";
 import { YouTube } from "~/components/icons/youtube";
@@ -73,6 +74,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
         </div>
         <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} />
         <GameGrid games={page.games} />
+        <SignaturePanel page={page} />
       </div>
     </div>
   );

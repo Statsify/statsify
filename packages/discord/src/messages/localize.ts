@@ -6,42 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import i18next, {
-  StringMap,
-  TFunction,
-  TFunctionKeys,
-  TFunctionResult,
-  TOptions,
-} from "i18next";
+import i18next, { TFunctionResult } from "i18next";
+// The `localize` entry has no side effects: the package index registers font renderers when it's imported,
+// which would race the support bot's own (it imports this through `#lib` before its services).
+import { createLocalizeFunction } from "@statsify/profiles/localize";
+import type { LocalizeFunction } from "@statsify/profiles";
 
-interface ILocalizeFunction {
-  <TKeys extends TFunctionKeys = string>(key: TKeys | TKeys[]): string;
-  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
-    key: TKeys | TKeys[],
-    options?: TOptions<TInterpolationMap> & { returnDetails?: true; returnObjects?: true } | string
-  ): string;
-  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
-    key: TKeys | TKeys[],
-    defaultValue?: string,
-    options?: TOptions<TInterpolationMap> | string
-  ): string;
-  (key: number): string;
-}
+export type { LocalizeFunction };
 
-export type LocalizeFunction = ILocalizeFunction & { locale: string };
-
-export const getLocalizeFunction = (locale: string): LocalizeFunction => {
-  const fixedT = i18next.getFixedT(locale);
-
-  const t = (...args: Parameters<LocalizeFunction>) => {
-    if (typeof args[0] === "number") return fixedT("number", { value: args[0] });
-    return fixedT(...(args as unknown as Parameters<TFunction>));
-  };
-
-  Object.defineProperty(t, "locale", { value: locale });
-
-  return t as LocalizeFunction;
-};
+export const getLocalizeFunction = (locale: string): LocalizeFunction =>
+  createLocalizeFunction(i18next.getFixedT(locale), locale);
 
 export type LocalizationString =
   | string |

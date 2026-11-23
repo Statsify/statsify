@@ -6,12 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background } from "#components";
+import { Background } from "../components/index.js";
 import { Image, Theme } from "@statsify/rendering";
 import { User, UserBoxes, UserFont, UserPalette } from "@statsify/schemas";
 import { getBoxRenderer } from "./boxes/index.js";
 import { getColorPalette } from "./palette.js";
 import { getFontRenderer } from "./renderer.js";
+
+export * from "./palette.js";
 
 export const getTheme = (user: User | null): Theme | undefined => {
   if (!user) return undefined;

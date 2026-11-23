@@ -6,12 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
 import { PlayerSkeleton } from "~/features/player/player-skeleton";
 import { PlayerView } from "~/features/player/player-page";
 import { cacheHeaders } from "~/lib/cache";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { possessive } from "~/lib/player-route";
 import { createFileRoute, useParams } from "@tanstack/react-router";
+import { localeData, socialMeta } from "~/lib/social-meta";
 import { playerPageQuery } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -20,20 +22,39 @@ const EDGE_CACHE = "max-age=60, stale-while-revalidate=600, stale-if-error=86400
 
 export const Route = createFileRoute("/{-$locale}/player/$name/")({
   loader: async ({ context: { player, queryClient } }) => {
-    await queryClient.ensureQueryData(playerPageQuery(player.uuid));
-    return player;
+    const page = await queryClient.ensureQueryData(playerPageQuery(player.uuid));
+
+    return { ...player, updatedAt: page.updatedAt };
   },
   staleTime: 60_000,
-  head: ({ loaderData }) =>
-    loaderData ?
-      {
-        meta: [
-          { title: `${possessive(loaderData.username)} Hypixel Stats | Statsify` },
-          { name: "description", content: `View ${possessive(loaderData.username)} Hypixel stats on Statsify.` },
-        ],
-        links: [SANS_PRELOAD, { rel: "icon", href: `/api/skin/head?uuid=${loaderData.uuid}&size=32` }],
-      } :
-      { links: [SANS_PRELOAD] },
+  head: ({ loaderData, matches }) => {
+    if (!loaderData) return { links: [SANS_PRELOAD] };
+
+    const { username, uuid, updatedAt } = loaderData;
+    const title = `${possessive(username)} Hypixel Stats | Statsify`;
+    const description = `View ${possessive(username)} Hypixel stats on Statsify.`;
+    const origin = localeData(matches)?.origin;
+
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        // `?v=` changes when the player is refreshed, so Discord fetches the new render.
+        ...(origin ?
+          socialMeta({
+            origin,
+            path: `/player/${username}`,
+            title,
+            description,
+            image: `/og/${uuid}.png?v=${updatedAt}`,
+            imageSize: IMAGE_VARIANTS.og,
+            type: "profile",
+          }) :
+          []),
+      ],
+      links: [SANS_PRELOAD, { rel: "icon", href: `/api/skin/head?uuid=${uuid}&size=32` }],
+    };
+  },
   headers: () => cacheHeaders(EDGE_CACHE),
   pendingComponent: PlayerPending,
   component: PlayerPage,

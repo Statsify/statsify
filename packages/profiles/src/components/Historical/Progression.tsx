@@ -8,7 +8,7 @@
 
 import { HistoricalTimeData } from "./Header.js";
 import { If } from "../If.js";
-import { LocalizeFunction } from "@statsify/discord";
+import type { LocalizeFunction } from "../../types.js";
 import { Progression } from "@statsify/schemas";
 import { Table } from "../Table/index.js";
 import { formatProgression } from "../Header/progression.js";

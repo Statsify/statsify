@@ -44,6 +44,11 @@ export default defineConfig({
   build: {
     sourcemap: "hidden",
   },
+  // The SSR build would inline piscina, which only `@statsify/profiles` depends on. Left to Nitro's build, the package's
+  // piscina import can stay out of the bundle (`traceDeps` below).
+  ssr: {
+    external: ["@statsify/profiles"],
+  },
   plugins: [
     tailwindcss(),
     tanstackStart({
@@ -52,12 +57,16 @@ export default defineConfig({
     }),
     viteReact(),
     nitro({
+      // Checks the config at startup, and closes the render pool, Redis and Sentry on shutdown, so SIGINT and SIGTERM end
+      // the process.
+      plugins: ["./src/server/config.plugin.ts", "./src/server/shutdown.plugin.ts"],
       routeRules: {
         "/fonts/**": STATIC_ASSETS,
         "/backgrounds/**": STATIC_ASSETS,
         "/games/**": STATIC_ASSETS,
         "/icons/**": STATIC_ASSETS,
         "/logos/**": STATIC_ASSETS,
+        "/images/**": STATIC_ASSETS,
       },
       rolldownConfig: {
         onLog(level, log, handler) {
@@ -65,6 +74,8 @@ export default defineConfig({
         },
       },
       compressPublicAssets: { brotli: true, gzip: true },
+      // Piscina starts its workers from its own `dist/worker.js`, which bundling it would leave behind.
+      traceDeps: ["piscina"],
     }),
   ],
 });

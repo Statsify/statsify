@@ -6,11 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, If, Table } from "#components";
+import { Container, Footer, Header, If, Table } from "../components/index.js";
 import { DateTime } from "luxon";
 import { FormattedGame, Guild, PlayerStatus } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { BaseProfileProps, LocalizeFunction } from "../types.js";
 
 interface GeneralProfileHeaderBodyProps {
   guild?: Guild;

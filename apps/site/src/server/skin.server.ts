@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { isUuid, normalizeUuid } from "@statsify/util/util";
 import { PLACEHOLDER_UUID } from "~/lib/uuid";
-import { isUuid } from "@statsify/util/util";
 import { resolvePlayer } from "~/features/player/resolve";
 import { API_TIMEOUT_MS } from "./rpc.server";
 import { siteConfig } from "./config.server";
@@ -22,7 +22,9 @@ export async function proxySkin(
   fixed: Record<string, string> = {}
 ): Promise<Response> {
   const uuid = search.get("uuid");
-  if (!uuid || !isUuid(uuid)) return new Response("uuid is required", { status: 400 });
+  if (!uuid || !isPageQuery(uuid, search, fixed)) {
+    return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
+  }
   // Only a stored player's UUID, or the not-found pages' one fixed stand-in, gets an image drawn for it.
   if (uuid !== PLACEHOLDER_UUID && !(await resolvePlayer(uuid))) return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
 
@@ -54,4 +56,15 @@ export async function proxySkin(
       "Cache-Control": "public, max-age=3600",
     },
   });
+}
+
+/** Only the query the pages send: any other spelling would be one more edge cache key reaching the API. */
+function isPageQuery(uuid: string, search: URLSearchParams, fixed: Record<string, string>): boolean {
+  const keys = [...search.keys()];
+  return (
+    isUuid(uuid) &&
+    normalizeUuid(uuid) === uuid &&
+    new Set(keys).size === keys.length &&
+    keys.every((key) => key === "uuid" || search.get(key) === fixed[key])
+  );
 }
