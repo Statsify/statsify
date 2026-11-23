@@ -71,11 +71,11 @@ export class SkinService {
   }
 
   /**
-   * The skin's texture as uploaded (Steve's for a player without one), for the site's skin viewer to draw, and whether
-   * its arms are slim, as the bot's render draws them.
+   * The stored skin's texture as uploaded (Steve's for a player without one), for the site's skin viewer to draw, and
+   * whether its arms are slim, as the bot's render draws them.
    */
-  public async getTexture(uuid: string): Promise<{ texture: Buffer; slim: boolean }> {
-    return this.texture(await this.getSkin(uuid));
+  public async getStoredTexture(uuid: string): Promise<{ texture: Buffer; slim: boolean }> {
+    return this.texture(await this.getStoredSkin(uuid));
   }
 
   private async render(skin: Skin | null, extruded: boolean): Promise<Buffer> {
