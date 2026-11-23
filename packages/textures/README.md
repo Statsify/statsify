@@ -58,7 +58,9 @@ fallback for those characters. `drawTooltip` draws 1.8's tooltip box, and
 
 `InventoryRenderer` draws a whole container: the pack's chest screen (or a plain panel for other
 sizes), the title, and each slot's icon, count and 1.8.9 durability bar. An item the pack can't
-draw makes `draw` throw, rather than leave its slot empty.
+draw makes `draw` throw, rather than leave its slot empty. Icons come from an `ItemRenderer` over the
+same stack, or from the `IconSource` given as `load`'s second argument, like an `ItemRenderer` with
+an `IconCache`.
 
 ```ts
 const renderer = await InventoryRenderer.load(stack);
