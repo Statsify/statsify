@@ -51,9 +51,13 @@ impl Vertex {
       .into();
   }
 
-  pub fn scale_around(&mut self, scale: f32, origin: Vector3<f32>) {
+  pub fn grow_around(&mut self, scale: f32, origin: Vector3<f32>) {
     let position: Vector3<f32> = self.position.into();
     self.position = (scale * position - (scale - 1.0) * origin).into();
+  }
+
+  pub fn scale_around(&mut self, scale: f32, origin: Vector3<f32>) {
+    self.grow_around(scale, origin);
 
     let normals: Vector3<f32> = self.normals.into();
     self.normals = (scale * normals - (scale - 1.0) * origin).into();

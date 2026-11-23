@@ -6,6 +6,18 @@ pub enum Error {
   #[error("The provided image is not a valid skin texture")]
   InvalidSkinTexture,
 
+  #[error("The provided image is too large for a cape texture")]
+  CapeTooLarge,
+
+  #[error("The camera yaw must be a finite number")]
+  InvalidYaw,
+
+  #[error("The provided image is too large for a texture")]
+  TextureTooLarge,
+
+  #[error("Enchanted armor needs a glint texture")]
+  MissingGlint,
+
   #[error(transparent)]
   Image(#[from] image::ImageError),
 
@@ -34,6 +46,17 @@ pub enum Error {
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
+
+// Checked after narrowing, since a huge f64 becomes an f32 infinity
+pub(crate) fn finite_yaw(yaw: f64) -> Result<f32> {
+  let yaw = yaw as f32;
+
+  if yaw.is_finite() {
+    Ok(yaw)
+  } else {
+    Err(Error::InvalidYaw)
+  }
+}
 
 #[cfg(not(target_arch = "wasm32"))]
 impl From<Error> for napi::Error {

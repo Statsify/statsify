@@ -45,10 +45,25 @@ impl Geometry {
       .for_each(|vertex| vertex.rotate_around(rotation));
   }
 
+  pub fn translate(&mut self, offset: Vector3<f32>) {
+    self.vertices.iter_mut().for_each(|vertex| {
+      vertex.position = (Vector3::from(vertex.position) + offset).into();
+    });
+  }
+
   pub fn scale_around(&mut self, scale: f32, origin: Vector3<f32>) {
     self
       .vertices
       .iter_mut()
       .for_each(|vertex| vertex.scale_around(scale, origin));
+  }
+
+  // scale_around moves the normals too, which tints the lighting. The skin's flat outer
+  // layer has always been drawn that way, so only new shapes use this.
+  pub fn grow_around(&mut self, scale: f32, origin: Vector3<f32>) {
+    self
+      .vertices
+      .iter_mut()
+      .for_each(|vertex| vertex.grow_around(scale, origin));
   }
 }

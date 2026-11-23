@@ -475,6 +475,9 @@ importers:
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../../packages/schemas
+      '@statsify/skin-renderer':
+        specifier: workspace:^
+        version: link:../../packages/skin-renderer
       '@statsify/tokens':
         specifier: workspace:^
         version: link:../../packages/tokens
