@@ -152,21 +152,17 @@ export abstract class AbstractCommandListener {
           this.rerunCache.set(cacheKey, { message, locale: interaction.getLocale() });
       }
 
-      await interaction.acknowledged;
-
       if (isOwner && !message.ephemeral) return await interaction.editReply(message);
 
       return await interaction.sendFollowup({ ...message, components: [], ephemeral: true });
     } catch (err) {
       if (err instanceof Message) {
-        await interaction.acknowledged;
         return interaction.sendFollowup({ ...err, ephemeral: true });
       }
 
       this.logger.error(`An error occurred when re-running "${path.join(" ")}"`);
       this.logger.error(err);
 
-      await interaction.acknowledged;
       return interaction.sendFollowup({ ...new ErrorMessage("errors.unknown"), ephemeral: true });
     }
   }
