@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type GameId, Player, getLeaderboardFields } from "@statsify/schemas";
+import { type GameId, Player, getLeaderboardFields, getLeaderboardNames } from "@statsify/schemas";
 import { GAMES, type Stat, allStats, modeName } from "@statsify/catalog";
 import { gameName, siteName } from "./names.js";
 import { prettify, removeFormatting } from "@statsify/util";
@@ -40,22 +40,13 @@ const catalogLabel = (field: string): string | undefined => catalogStats().get(f
 /** The `glossary.*` key that explains a stat, where the glossary has it: not one shown under its card's name. */
 export const catalogGlossary = (field: string): string | null => catalogStats().get(field)?.glossary ?? null;
 
-/**
- * A name past a leading prefix and the " - " or space after it, the prefix matched ignoring case and spaces ("WoolWars"
- * is the mode "Wool Wars"), or the whole name where it doesn't start with the prefix or is nothing more.
- */
-function withoutPrefix(name: string, prefix: string): string {
-  const wanted = prefix.replaceAll(" ", "").toLowerCase();
-  if (!wanted) return name;
-  let at = 0;
-
-  for (const char of wanted) {
-    while (name[at] === " ") at++;
-    if (name[at]?.toLowerCase() !== char) return name;
-    at++;
-  }
-
-  return /^ ?-? (.+)$/.exec(name.slice(at))?.[1] ?? name;
+/** A board's name from the levels of its path below `level`, the one it's listed under, and that level's name. */
+function nameBelow(field: string, level: number, levelName: string | null): string {
+  const names = getLeaderboardNames(Player, field);
+  const below = removeFormatting(siteName(names.slice(level + 1).filter(Boolean).join(" ")));
+  // Duels leave BedWars and Spleef unnamed so Bed Rush and Bow Spleef don't repeat them, and name the levels below
+  // for them instead ("BedWars Overall").
+  return !names[level] && levelName && below.startsWith(`${levelName} `) ? below.slice(levelName.length + 1) : below;
 }
 
 /**
@@ -72,12 +63,10 @@ export function leaderboardGame({ leaderboards, ...group }: LeaderboardGroup): L
 
   for (const { api, name } of DATED_GROUPS[group.key] ?? []) modes.set(api, { key: api, name, leaderboards: [] });
 
-  const groupName = removeFormatting(group.formatted);
-
-  for (const { field, name } of leaderboards) {
+  for (const { field } of leaderboards) {
     const mode = modes.get(modeKey(field, (key) => modes.has(key)))!;
-    const short = withoutPrefix(withoutPrefix(withoutPrefix(name, groupName), mode.name ?? ""), groupName);
-    mode.leaderboards.push({ field, name: short });
+    const level = mode.key ? field.split(".").indexOf(mode.key, 2) : 1;
+    mode.leaderboards.push({ field, name: nameBelow(field, level, mode.name) });
   }
 
   for (const { api } of DATED_GROUPS[group.key] ?? []) modes.get(api)!.leaderboards.reverse();
@@ -147,18 +136,4 @@ export function buildLeaderboardGroups(): LeaderboardGroup[] {
   }
 
   return [...groups.values()];
-}
-
-if (import.meta.vitest) {
-  const { describe, expect, it } = import.meta.vitest;
-
-  describe("withoutPrefix", () => {
-    it("drops a leading prefix and the separator after it, ignoring case and spaces", () => {
-      expect(withoutPrefix("BedWars Solo Wins", "BedWars")).toBe("Solo Wins");
-      expect(withoutPrefix("Arcade Challenges - Farm Hunt", "Arcade Challenges")).toBe("Farm Hunt");
-      expect(withoutPrefix("Wool Wars Kills", "WoolWars")).toBe("Kills");
-      expect(withoutPrefix("BedWars", "BedWars")).toBe("BedWars");
-      expect(withoutPrefix("Bed Wars", "BedWarsSolo")).toBe("Bed Wars");
-    });
-  });
 }
