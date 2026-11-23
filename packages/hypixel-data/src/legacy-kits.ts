@@ -106,9 +106,8 @@ export function megaWallsKitArmor(kit: string, level: number) {
 }
 
 /**
- * A Blitz <Kit>Inventory, or the kit's default, with the dumped counts, names and tooltips only at its editor's
- * level. Undefined without a layout for a kit or level BLITZ_KITS doesn't list. `renames` holds the player's
- * kit_item_rename_<Kit>_<material> by material ({ gold_sword: "§9Excalibur" })
+ * A Blitz <Kit>Inventory, or the kit's default (undefined for a kit or level the dump lacks), with the dumped counts,
+ * names and tooltips only at its editor's level. `renames` holds kit_item_rename_<Kit>_<material> ({ gold_sword: "§9Excalibur" })
  */
 export const fromBlitzKit = (
   stored: Readonly<Record<string, string>> | null | undefined,
