@@ -75,7 +75,7 @@ export function Bingo({ player }: { player: BingoPlayer }) {
           </Tabs>
         </div>
       </div>
-      <div className="flex flex-col justify-evenly w-full">
+      <div className="flex flex-col justify-evenly w-full lg:w-[80%]">
         <BingoBoard player={player} category={category} difficulty={difficulty} />
       </div>
     </>
