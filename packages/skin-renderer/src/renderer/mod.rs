@@ -16,6 +16,7 @@ use crate::armor::Armor;
 use crate::camera::{Camera, CameraUniform, OrbitalCamera};
 use crate::error::{Error, Result};
 use crate::geometry::vertex::{Vertex, VertexDescriptor};
+use crate::instance::InstanceRaw;
 use crate::light::LightUniform;
 use crate::model::{DrawModel, Model, ModelKind, ModelOuterLayer};
 use crate::pose::Pose;
@@ -47,6 +48,7 @@ pub struct SkinRenderer<T: Backend> {
   render_pipeline: wgpu::RenderPipeline,
   attachment_pipeline: wgpu::RenderPipeline,
   enchanted_pipeline: wgpu::RenderPipeline,
+  instance_buffer: wgpu::Buffer,
 
   #[cfg(target_arch = "wasm32")]
   depth_texture: Texture,
@@ -79,6 +81,12 @@ impl<T: Backend> SkinRenderer<T> {
         ],
         label: Some("texture_bind_group_layout"),
       });
+
+    let instance_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+      label: Some("Instance Buffer"),
+      contents: cast_slice(&[Model::to_raw()]),
+      usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
+    });
 
     let sampler = device.create_sampler(&wgpu::SamplerDescriptor {
       address_mode_u: wgpu::AddressMode::ClampToEdge,
@@ -153,6 +161,7 @@ impl<T: Backend> SkinRenderer<T> {
       render_pipeline,
       attachment_pipeline,
       enchanted_pipeline,
+      instance_buffer,
 
       #[cfg(target_arch = "wasm32")]
       depth_texture,
@@ -275,7 +284,7 @@ impl<T: Backend> SkinRenderer<T> {
       vertex: wgpu::VertexState {
         module: &shader,
         entry_point: Some("vs_main"),
-        buffers: &[Vertex::descriptor()],
+        buffers: &[Vertex::descriptor(), InstanceRaw::descriptor()],
         compilation_options: wgpu::PipelineCompilationOptions::default(),
       },
       fragment: Some(wgpu::FragmentState {
@@ -352,6 +361,7 @@ impl<T: Backend> SkinRenderer<T> {
         timestamp_writes: None,
       });
 
+      render_pass.set_vertex_buffer(1, self.instance_buffer.slice(..));
       render_pass.set_pipeline(&self.render_pipeline);
       render_pass.draw_model(model, camera_bind_group, light_bind_group);
 
