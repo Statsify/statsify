@@ -16,7 +16,7 @@ export interface SentryPublicConfig {
   tracesSampleRate: number;
 }
 
-let sdk: Promise<typeof import("@sentry/tanstackstart-react")> | undefined;
+let sdk: Promise<typeof import("./sentry-browser")> | undefined;
 
 // Safari has no `requestIdleCallback`.
 const whenIdle = (callback: () => void) =>
@@ -33,7 +33,7 @@ export function startClientSentry(router: AnyRouter, { dsn, environment, tracesS
   if (sdk || !dsn) return;
 
   sdk = afterLoadAndIdle()
-    .then(() => import("@sentry/tanstackstart-react"))
+    .then(() => import("./sentry-browser"))
     .then((Sentry) => {
       Sentry.init({
         dsn,

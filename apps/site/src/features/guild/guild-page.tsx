@@ -12,20 +12,16 @@ import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hint } from "~/components/ui/hint";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
-import { PAGE_STALE_MS } from "~/lib/player-route";
 import { PageBackground } from "~/components/ui/background";
 import { SkinHead } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { UpdatedAt, useNow } from "~/features/player/refresh-bar";
 import { cn } from "~/lib/util";
 import { guildXpBar } from "~/components/ui/progression";
-import { orpc } from "~/lib/orpc";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { GuildMemberRow, GuildPage } from "@statsify/contract";
-
-export const guildPageQuery = (name: string) => orpc.guild.page.queryOptions({ input: { name }, staleTime: PAGE_STALE_MS });
 
 /** Hypixel's dates in UTC, so the server and the browser print the same day whatever the visitor's zone. */
 const dateFormat = (locale: string) => new Intl.DateTimeFormat(locale, { timeZone: "UTC", year: "numeric", month: "short", day: "numeric" });
@@ -222,7 +218,7 @@ function MemberTable({ members, total }: { members: GuildMemberRow[]; total: num
                       params={{ name: member.uuid }}
                       className="flex items-center gap-2 whitespace-nowrap hover:underline"
                     >
-                      <SkinHead uuid={member.uuid} stored size={20} className="shrink-0" />
+                      <SkinHead uuid={member.uuid} size={20} className="shrink-0" />
                       <MinecraftText className="mc-crisp">{member.displayName}</MinecraftText>
                     </Link>
                   </th>

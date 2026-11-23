@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type GroupSummary, type ListGroup, fetchLeaderboardList, filterGroups, gameKeysFor } from "./leaderboard-list";
+import { type GroupSummary, type ListGroup, filterGroups, gameKeysFor, leaderboardListQuery } from "./leaderboard-list";
 import { REDIRECT_HEADERS } from "~/lib/player-route";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createServerFn } from "@tanstack/react-start";
@@ -49,8 +49,8 @@ export const getLeaderboardIndex = createServerFn({ method: "GET" })
  * The list for a client-side visit to `/leaderboards`, so its links and filter are ready at once; the server's render
  * has its own copy and leaves it out of the page's data. A failed fetch leaves it to the filter to try again.
  */
-export const listForClient = (hash: string): Promise<ListGroup[] | undefined> =>
-  import.meta.env.SSR ? Promise.resolve(undefined) : fetchLeaderboardList(hash).catch(() => undefined);
+export const listForClient = (queryClient: QueryClient, hash: string): Promise<ListGroup[] | undefined> =>
+  import.meta.env.SSR ? Promise.resolve(undefined) : queryClient.fetchQuery(leaderboardListQuery(hash)).catch(() => undefined);
 
 /** `/leaderboards/<key>` is a game's index rather than a leaderboard: every leaderboard's field has a dot. */
 export const isGameKey = (field: string): boolean => !field.includes(".");

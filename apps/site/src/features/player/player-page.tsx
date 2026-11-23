@@ -41,7 +41,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Suspense, lazy, useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LABEL_NAMESPACES } from "~/i18n/i18n";
-import { UUID_PATTERN } from "~/lib/uuid";
+import { isUuid } from "@statsify/util/util";
 import type { ComponentType, ReactNode, Ref } from "react";
 import type { GameSummary, PlayerPage } from "@statsify/contract";
 
@@ -160,7 +160,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
  */
 export function PlayerShell({ name }: { name: string }) {
   const { t } = useTranslation();
-  const known = !UUID_PATTERN.test(name);
+  const known = !isUuid(name);
 
   return (
     <div className="relative grow" aria-busy>

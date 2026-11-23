@@ -15,9 +15,11 @@ interface TurnstileApi {
       sitekey: string;
       theme?: "light" | "dark" | "auto";
       size?: "normal" | "flexible" | "compact";
+      appearance?: "always" | "execute" | "interaction-only";
       callback: (token: string) => void;
       "expired-callback"?: () => void;
       "error-callback"?: () => void;
+      "before-interactive-callback"?: () => void;
     }
   ): string;
   remove(widgetId: string): void;
@@ -63,6 +65,7 @@ export function Turnstile({
   onToken,
   onLoadError,
   size = "flexible",
+  invisible = false,
   className,
 }: {
   siteKey: string;
@@ -71,6 +74,8 @@ export function Turnstile({
   onLoadError?: () => void;
   /** `flexible` fills its box but needs at least 300 px; `compact` is 150 px wide. */
   size?: "flexible" | "compact";
+  /** Never shown: where Turnstile would ask the visitor to interact, `onToken` gets `undefined` instead. */
+  invisible?: boolean;
   className?: string;
 }) {
   const container = useRef<HTMLDivElement>(null);
@@ -98,6 +103,10 @@ export function Turnstile({
           sitekey: siteKey,
           theme: "dark",
           size,
+          ...(invisible && {
+            appearance: "interaction-only",
+            "before-interactive-callback": () => callback.current(undefined),
+          }),
           callback: (token) => callback.current(token),
           "expired-callback": () => callback.current(undefined),
           "error-callback": () => callback.current(undefined),
@@ -114,7 +123,7 @@ export function Turnstile({
       canceled = true;
       if (widgetId) window.turnstile?.remove(widgetId);
     };
-  }, [siteKey, size]);
+  }, [siteKey, size, invisible]);
 
   return <div ref={container} className={className} />;
 }
