@@ -353,12 +353,16 @@ async function readPackFiles<T>(pack: ResourcePack, folder: string, extension: s
   return Object.fromEntries(files.map((file, index) => [file.slice(0, -extension.length), contents[index]]));
 }
 
-export async function loadPackLibrary(pack: ResourcePack): Promise<ModelLibrary> {
-  // Only a missing pack is a 503. Anything else is broken state, and Sentry skips 503s.
+// Only a missing pack is a 503. Anything else is broken state, and Sentry skips 503s.
+async function assertInstalled(pack: ResourcePack) {
   await access(pack.path).catch((error: NodeJS.ErrnoException) => {
     if (error.code === "ENOENT") throw new ServiceUnavailableException(`The ${pack.name} pack isn't installed`);
     throw error;
   });
+}
+
+export async function loadPackLibrary(pack: ResourcePack): Promise<ModelLibrary> {
+  await assertInstalled(pack);
 
   const [models, textures, mcmeta] = await Promise.all([
     readPackFiles(pack, "models", ".json", (path) => readFile(path, "utf8")),
@@ -479,6 +483,8 @@ export interface WarlordsRenderOptions extends Pick<WarlordsRenderDto, "extruded
 }
 
 async function loadMount({ entity, textures }: WarlordsMount): Promise<SceneMount> {
+  await assertInstalled(VANILLA_PACK);
+
   const horse = join(VANILLA_PACK.path, "textures/entity/horse");
 
   const layers = await Promise.all(textures.map((texture) => readFile(join(horse, `${texture}.png`))));
