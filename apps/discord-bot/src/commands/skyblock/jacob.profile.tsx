@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem } from "#components";
+import { Card } from "./components/Card.js";
+import type { SidebarItem } from "#components";
 import { Empty } from "./components/Empty.js";
 import { ItemGrid, MEDAL_COLORS } from "./components/ItemGrid.js";
 import { JACOB_MEDALS, type MemberView } from "@statsify/skyblock";
@@ -16,26 +17,14 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 export const jacobIcons = ({ jacob }: MemberView) =>
   jacob?.crops.flatMap(({ texture }) => (texture ? [texture] : [])) ?? [];
 
-export const SkyBlockJacobProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-}: SkyBlockProfileProps) => {
+export const SkyBlockJacobProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
   const jacob = profile.member.jacob;
 
   if (!jacob) {
     return (
-      <Container background={background}>
-        <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
+      <Card {...card} name={profile.displayName}>
         <Empty text={t("skyblock.noJacob")} />
-        <Footer logo={logo} user={user} />
-      </Container>
+      </Card>
     );
   }
 
@@ -56,12 +45,10 @@ export const SkyBlockJacobProfile = ({
   }));
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {items.length > 0 ?
         <ItemGrid items={items} icons={icons} columns={2} /> :
         <Empty text={t("skyblock.noJacobCrops")} />}
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };

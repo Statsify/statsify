@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { MEDAL_COLORS, gridRows } from "./components/ItemGrid.js";
 import { type FishingSection, TROPHY_TIERS } from "@statsify/skyblock";
@@ -22,26 +23,14 @@ export interface SkyBlockFishingProfileProps extends SkyBlockProfileProps {
   page: "trophyFish" | "seaCreatures";
 }
 
-export const SkyBlockFishingProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  page,
-}: SkyBlockFishingProfileProps) => {
+export const SkyBlockFishingProfile = ({ profile, t, page, ...card }: SkyBlockFishingProfileProps) => {
   const fishing = profile.member.fishing;
 
   if (!fishing) {
     return (
-      <Container background={background}>
-        <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
+      <Card {...card} name={profile.displayName}>
         <Empty text={t("skyblock.noFishing")} />
-        <Footer logo={logo} user={user} />
-      </Container>
+      </Card>
     );
   }
 
@@ -52,11 +41,9 @@ export const SkyBlockFishingProfile = ({
   ];
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {page === "trophyFish" ? <TrophyFishTable fishing={fishing} t={t} /> : <SeaCreatureTable fishing={fishing} t={t} />}
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
 

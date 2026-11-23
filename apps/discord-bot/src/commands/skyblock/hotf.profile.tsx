@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { LevelBar } from "./components/LevelBar.js";
 import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
@@ -19,25 +20,14 @@ const WHISPER_COLORS: Record<Whisper, string> = {
   desert: "§e",
 };
 
-export const SkyBlockHotfProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockHotfProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const hotf = profile.member.hotf;
 
   if (!hotf) {
     return (
-      <Container background={background}>
-        <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
+      <Card {...card} name={profile.displayName}>
         <Empty text={t("skyblock.noHotf")} />
-        <Footer logo={logo} user={user} />
-      </Container>
+      </Card>
     );
   }
 
@@ -62,8 +52,7 @@ export const SkyBlockHotfProfile = ({
   ));
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.tr>
           <LevelBar title={t("skyblock.hotfLevel")} level={level} color="§a" t={t} />
@@ -77,7 +66,6 @@ export const SkyBlockHotfProfile = ({
           </box>
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
