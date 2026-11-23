@@ -22,7 +22,7 @@ import { MinecraftText, colorOf, nameColor } from "~/components/ui/minecraft-tex
 import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
 import { LoginDate } from "./login-date";
-import { RefreshBar, savedDate, useNow } from "./refresh-bar";
+import { SharedRefreshBar, savedDate, useNow, useRefresh } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust, SkinHead } from "~/components/ui/skin";
 import { TikTok } from "~/components/icons/tiktok";
@@ -90,6 +90,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
 
     return result;
   };
+  const refreshing = useRefresh({ updatedAt: page.updatedAt, expiresAt: page.expiresAt, refresh, auto: true });
 
   return (
     <div className="relative grow">
@@ -115,9 +116,9 @@ export function PlayerView({ page }: { page: PlayerPage }) {
                 >
                   {t("player.skin.open")}
                 </PanelToggle>
-                <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto />
               </>
             )}
+            refresh={<SharedRefreshBar refresh={refreshing} />}
             className="md:col-span-full md:row-start-1 xl:col-span-1"
           />
           {/* From `xl` the nametag sits over the level, beside the overview, too narrow for the facts' values, so they get
@@ -196,12 +197,15 @@ function SkinPanelFrame({ id }: { id: string }) {
 function NametagPanel({
   page,
   actions,
+  refresh,
   className,
   ref,
 }: {
   page: PlayerPage;
   /** Buttons after the socials that open panels under the header. */
   actions: ReactNode;
+  /** The refresh bar, on a row of its own under them. */
+  refresh: ReactNode;
   className?: string;
   ref?: Ref<HTMLDivElement>;
 }) {
@@ -230,6 +234,7 @@ function NametagPanel({
           {/* One item, so the buttons wrap under the socials together rather than one at a time */}
           <div className="flex max-w-full flex-wrap items-center justify-center gap-x-4">{actions}</div>
         </div>
+        <div className="flex max-w-full flex-wrap items-center justify-center">{refresh}</div>
       </Box>
       <PlayerFacts page={page} className="col-span-full md:col-span-1 md:col-start-2 xl:hidden" />
     </div>
