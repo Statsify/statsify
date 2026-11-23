@@ -7,18 +7,17 @@
  */
 
 import { LoginDate } from "~/features/player/login-date";
-import { cn } from "~/lib/util";
 import { relativeTime } from "~/i18n/format";
 import { useNow } from "~/features/player/refresh-bar";
 import { useTranslation } from "react-i18next";
 
 /** When the session started, and how old the stored player its numbers run to is. */
-export function SessionLine({ start, updatedAt, className }: { start: number; updatedAt: number; className?: string }) {
+export function SessionLine({ start, updatedAt }: { start: number; updatedAt: number }) {
   const { t, i18n } = useTranslation();
   const now = useNow();
 
   return (
-    <p className={cn("text-mc-1.5 text-mc-gray", className)}>
+    <p className="text-mc-1.5 text-mc-gray">
       {t("session.started")} <LoginDate ms={start} />
       {now !== undefined && ` · ${t("player.updated", { time: relativeTime(updatedAt, now, i18n.language) })}`}
     </p>
