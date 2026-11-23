@@ -104,6 +104,12 @@ export class PlayerService {
     return null;
   }
 
+  /** A stored player, never one from Hypixel: `get` with `CacheLevel.CACHE_ONLY` still asks Hypixel for one that isn't stored. */
+  public async getStored(tag: string, selector?: Record<string, boolean>): Promise<Player | null> {
+    const player = await this.findMongoDocument(tag, selector);
+    return player && deserialize(Player, player);
+  }
+
   public async update(data: APIData) {
     const player = new Player(data);
 

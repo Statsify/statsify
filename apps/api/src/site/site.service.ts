@@ -7,7 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
+import { CacheLevel, GuildQuery, PlayerNotFoundException } from "@statsify/api-client";
 import {
   FormattedGame,
   type GameId,
@@ -27,6 +27,7 @@ import {
   previewIdentity,
   skywarsPreview,
 } from "./home-previews.js";
+import { GuildService } from "#guild";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { HypixelUnavailableError } from "#hypixel";
@@ -78,7 +79,16 @@ const IP_LIMIT = 10;
 const IP_WINDOW_SECONDS = BUDGET_WINDOW_SECONDS;
 
 const IDENTITY_FIELDS = { uuid: true, username: true };
-const GUILD_FIELDS = { id: true, name: true, tag: true, tagFormatted: true };
+const GUILD_FIELDS = {
+  id: true,
+  name: true,
+  tag: true,
+  tagFormatted: true,
+  "members.uuid": true,
+  "members.questParticipation": true,
+  "members.daily": true,
+  "members.weekly": true,
+};
 const CARD_FIELDS = {
   uuid: true,
   username: true,
@@ -196,6 +206,7 @@ export class SiteService implements OnApplicationBootstrap {
   public constructor(
     private readonly playerService: PlayerService,
     private readonly playerSearchService: PlayerSearchService,
+    private readonly guildService: GuildService,
     @InjectModel(Player) private readonly playerModel: PlayerModel,
     @InjectModel(Guild) private readonly guildModel: GuildModel,
     @InjectRedis() private readonly redis: Redis
@@ -223,20 +234,20 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   public async page(uuid: string): Promise<PlayerPage> {
-    const player = await this.loadPlayer(normalizeUuid(uuid));
+    const player = await this.playerService.getStored(uuid);
     if (!player) throw notFound();
     return this.toPage(player);
   }
 
   public async full(uuid: string): Promise<PlayerDocument> {
-    const player = await this.loadPlayer(normalizeUuid(uuid));
+    const player = await this.playerService.getStored(uuid);
     if (!player) throw notFound();
     return { ...player };
   }
 
   public async refresh(uuid: string, clientIp: string): Promise<PlayerPage> {
     const tag = normalizeUuid(uuid);
-    const cached = await this.loadPlayer(tag);
+    const cached = await this.playerService.getStored(tag);
     if (!cached) throw notFound();
 
     // Inside the API's own cooldown `CACHE` would not call Hypixel anyway, so it costs no budget.
@@ -357,7 +368,7 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   public async bingo(uuid: string): Promise<BingoPlayer> {
-    const player = await this.loadPlayer(normalizeUuid(uuid));
+    const player = await this.playerService.getStored(uuid);
     if (!player) throw notFound();
 
     const { easy, hard } = player.stats.general.bingo;
@@ -532,57 +543,29 @@ export class SiteService implements OnApplicationBootstrap {
     return player && { uuid: player.uuid, username: player.username };
   }
 
-  /** The stored document, flattened for `deserialize` like `PlayerService` does, so defaults and ratios are filled in. */
-  private async loadPlayer(uuid: string): Promise<Player | null> {
-    const document: Player | null = await this.playerModel.findOne().where("uuid").equals(uuid).lean().exec();
-    return document ? deserialize(Player, flatten(document)) : null;
-  }
-
   private async toPage(player: Player): Promise<PlayerPage> {
     const guild = player.guildId ? await this.findGuild(player.guildId) : null;
     return buildPlayerPage(player, guild);
   }
 
-  private async findGuild(id: string): Promise<PlayerGuild | null> {
-    const document: Guild | null = await this.guildModel
-      .findOne()
-      .where("id")
-      .equals(id)
-      .select({
-        ...GUILD_FIELDS,
-        "members.uuid": true,
-        "members.questParticipation": true,
-        "members.daily": true,
-        "members.weekly": true,
-      })
-      .lean()
-      .exec();
-
-    // Flattened for `deserialize` like `GuildService` does, so stored defaults come back as values.
-    return document && deserialize(Guild, flatten(document));
+  private findGuild(id: string): Promise<PlayerGuild | null> {
+    return this.guildService.getStored(id, GuildQuery.ID, GUILD_FIELDS);
   }
 
   private preview<T>(uuid: string, build: (player: Player) => T): Promise<T | null> {
     return this.attempt(async () => {
-      const player = await this.loadPlayer(uuid);
+      const player = await this.playerService.getStored(uuid);
       if (!player) throw new Error(`Home preview player ${uuid} is not stored`);
       return build(player);
     });
   }
 
   private async guildPreview(memberUuid: string): Promise<GuildPreview | null> {
-    const member: Pick<Player, "guildId"> | null = await this.playerModel
-      .findOne()
-      .where("uuid")
-      .equals(memberUuid)
-      .select({ guildId: true })
-      .lean()
-      .exec();
-
+    const member = await this.playerService.getStored(memberUuid, { guildId: true });
     if (!member?.guildId) return null;
 
-    const document: Guild | null = await this.guildModel.findOne().where("id").equals(member.guildId).lean().exec();
-    return document && guildPreview(deserialize(Guild, flatten(document)), memberUuid);
+    const guild = await this.guildService.getStored(member.guildId, GuildQuery.ID);
+    return guild && guildPreview(guild, memberUuid);
   }
 
   /** A preview that fails to load is reported and hidden, instead of taking the whole home page down. */
