@@ -16,11 +16,13 @@ const HIDE_UNBREAKABLE = 4;
 
 const NAMES = "assets/minecraft/lang/en_us.json";
 
-/** The pack's English names, for items without a custom name */
+const decoder = new TextDecoder();
+
+/** The stack's English names, for items without a custom name, merged across its packs as the game merges them */
 export function loadNames(stack: PackStack) {
-  const names = stack.json<Record<string, string>>(NAMES);
-  if (!names) throw new Error(`${NAMES} isn't in the pack`);
-  return names;
+  const files = stack.packs.map(({ files }) => files.get(NAMES)).filter((file) => file !== undefined);
+  if (files.length === 0) throw new Error(`${NAMES} isn't in the pack`);
+  return Object.assign({}, ...files.map((file) => JSON.parse(decoder.decode(file)))) as Record<string, string>;
 }
 
 // Legacy text takes the default style as § codes; a component gets it as a parent to inherit
@@ -34,8 +36,9 @@ function plainName(item: ItemStack, names: Record<string, string>) {
   if (legacy) return item.enchanted && legacy.startsWith("§f") ? `§b${legacy.slice(2)}` : legacy;
 
   const path = item.id.replace(/^minecraft:/, "");
-  const key = names[`item.minecraft.${path}`] ? `item.minecraft.${path}` : `block.minecraft.${path}`;
-  return `${item.enchanted ? "§b" : ""}${names[key] ?? key}`;
+  const name = names[`item.minecraft.${path}`] ?? names[`block.minecraft.${path}`];
+  if (name === undefined) throw new Error(`The pack has no English name for ${item.id}`);
+  return `${item.enchanted ? "§b" : ""}${name}`;
 }
 
 /** An item's tooltip lines in 1.8's order. Renamed items start italic, which a color code at the start of the name clears */

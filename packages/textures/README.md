@@ -1,8 +1,8 @@
 # @statsify/textures
 
 Draws Minecraft items, text, tooltips and inventories from a resource pack, in the browser or in
-Node. Nothing is pre-rendered and no game assets ship with it: drop in a 26.3 pack
-(or the 26.3 client jar) and every icon is drawn from it, then cached.
+Node. Nothing is pre-rendered and no game assets ship with it: drop in a 26.3 pack and every icon
+is drawn from it, then cached.
 
 ## Packs
 
@@ -32,8 +32,10 @@ has the item model definitions.
 - Flat items with tints: leather dye, potion colors, spawn eggs.
 - Block items in 3D, through the model's gui transform with the GUI's lighting. A small software
   rasterizer draws them, so they match the game pixel for pixel and need no WebGL.
-- Player heads (the default skin, or `item.skin`, a textures.minecraft.net URL, which the page
-  can fetch over https), mob heads, chests.
+- Player heads (the default skin, or `item.skin`, a textures.minecraft.net URL), mob heads, chests.
+  The renderer never fetches a skin: `new ItemRenderer(stack, cache, loadSkin)` takes a function
+  that gives a skin URL's PNG, so the caller picks where skins come from and how long they're kept,
+  and a skin that fails to load throws.
 - The enchantment glint, and animated textures by game tick: `render(item, scale, tick)`.
 
 `legacyItem(id, damage)` turns a 1.8 id and Damage value into a 26.3 item. Its table comes from
@@ -42,7 +44,8 @@ ids to 26.3 names and checks them against the 26.3 pack. The same run pairs 1.8.
 with 26.3's through the two versions' models, and reads 1.8.9's English item names, which tooltips
 use for unnamed items, from StatsifyDump's `/sdump names`.
 
-Icons are cached in IndexedDB. Bump `VERSION` in `src/core/icon-cache.ts` whenever a change draws
+Icons are cached in IndexedDB, for one pack stack at a time: the first stack to use the cache after a
+page load drops the others' icons. Bump `VERSION` in `src/core/icon-cache.ts` whenever a change draws
 icons differently, so browsers drop the old ones.
 
 ## Text and tooltips
@@ -59,7 +62,9 @@ lines in their place.
 
 `InventoryRenderer` draws a whole container: the pack's chest screen (or a plain panel for other
 sizes), the title, and each slot's icon, count and 1.8.9 durability bar. An item the pack can't
-draw leaves its slot empty and logs the error once.
+draw makes `draw` throw, rather than leave its slot empty. Icons come from an `ItemRenderer` over the
+same stack, or from the `IconSource` given as `load`'s second argument, like an `ItemRenderer` with
+an `IconCache`.
 
 ```ts
 const renderer = await InventoryRenderer.load(stack);
