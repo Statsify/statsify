@@ -29,6 +29,7 @@ import {
   PlayerNotFoundException,
   StatusNotFoundException,
 } from "@statsify/api-client";
+import { setRequestAttributes } from "@statsify/logger";
 
 import { PlayerService } from "./player.service.js";
 
@@ -44,7 +45,9 @@ export class PlayerController {
   @Auth()
   @Get()
   public async getPlayer(@Query() { player: tag, cache }: CachedPlayerDto) {
-    const player = await this.playerService.get(tag, cache);
+    const { player, cached } = await this.playerService.lookup(tag, cache);
+
+    if (cached) setRequestAttributes({ "statsify.cache.hit": true });
 
     if (!player) throw new PlayerNotFoundException();
 
