@@ -70,7 +70,7 @@ export const getGlossary = createServerFn({ method: "GET" })
   .validator(z.object({ locale: z.string().max(16) }))
   .handler(async ({ data }): Promise<GlossaryGroup[]> => {
     const locale = isSupportedLocale(data.locale) ? data.locale : DEFAULT_LOCALE;
-    const [{ games, groups }, words] = await Promise.all([glossary(), readGlossary(locale)]);
+    const [{ games, groups }, words] = await Promise.all([rpc.content.glossary(), readGlossary(locale)]);
 
     return groups.map(({ key, entries }) => ({
       key,
@@ -97,24 +97,5 @@ export const getGlossary = createServerFn({ method: "GET" })
     }));
   });
 
-/**
- * `load`, or its last answer when it fails. The glossary and the prestige sheet change only with a deploy, so their
- * pages keep answering through an API outage once the site has loaded them.
- */
-function keepLast<T>(load: () => Promise<T>): () => Promise<T> {
-  let last: T | undefined;
-
-  return () =>
-    load().then(
-      (value) => (last = value),
-      (error: unknown) => {
-        if (last === undefined) throw error;
-        return last;
-      }
-    );
-}
-
-const glossary = keepLast(() => rpc.content.glossary());
-
 /** Every BedWars prestige, its star and bracket, for `/prestiges/bedwars`. */
-export const getPrestiges = keepLast(() => rpc.content.prestiges());
+export const getPrestiges = () => rpc.content.prestiges();
