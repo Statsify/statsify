@@ -239,11 +239,12 @@ export class PlayerService {
 
   public getUuid(username: string): Promise<string> {
     return lastValueFrom(
-      this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
+      this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${encodeURIComponent(username)}`).pipe(
         map((response) => response.data as AccountProfile),
         map((data) => data.id),
         catchError((error) => {
-          if (error.response?.status === 404) throw new PlayerNotFoundException();
+          // A name with characters Minecraft doesn't allow answers 400
+          if ([400, 404].includes(error.response?.status)) throw new PlayerNotFoundException();
           // Ratelimited
           if (error.response?.status === 429) throw new InternalServerErrorException();
 
