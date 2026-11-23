@@ -65,6 +65,10 @@ jobs:
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: pnpm build
 
+      - name: Check generated files
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: git diff --exit-code -- packages/skin-renderer/index.d.ts packages/skin-renderer/index.cjs Cargo.lock
+
       - name: Test
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: pnpm test:coverage --changed=$TURBO_SCM_BASE
