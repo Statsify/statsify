@@ -8,6 +8,7 @@
 
 import { AUTO_UPDATE_AGE_MS, type AutoUpdate } from "@statsify/contract/refresh";
 import { ClockScript, TIME_SLOT } from "~/lib/clock";
+import { FLAT_BUTTON } from "~/components/ui/button";
 import { Hint, useHint } from "~/components/ui/hint";
 import { RefreshIcon } from "~/components/icons/refresh";
 import { Turnstile } from "~/components/turnstile";
@@ -283,7 +284,7 @@ export function SharedRefreshBar({ refresh, className }: { refresh: Refresh; cla
 
 /**
  * Update stats, or the time until it can, with the full wording in a tooltip then. `aria-disabled`, not `disabled`, so
- * the button keeps focus while it refreshes and counts down. Its tap area reaches past its 32 px box to 44 px.
+ * the button keeps focus while it refreshes and counts down.
  */
 export function RefreshButton({ refresh, className, ref }: { refresh: Refresh; className?: string; ref?: Ref<HTMLButtonElement> }) {
   const { text, label, disabled } = useRefreshClock(refresh);
@@ -301,7 +302,8 @@ export function RefreshButton({ refresh, className, ref }: { refresh: Refresh; c
         {...hint}
         onClick={refresh.start}
         className={cn(
-          "relative flex h-8 min-w-8 shrink-0 items-center justify-center gap-2 bg-blackify-800 px-2 text-mc-1 text-mc-green after:absolute after:-inset-1.5 hover:bg-blackify-700 focus-visible:focus-ring-inset aria-disabled:text-mc-gray aria-disabled:hover:bg-blackify-800",
+          FLAT_BUTTON,
+          "gap-2 px-2 text-mc-green aria-disabled:text-mc-gray aria-disabled:hover:bg-blackify-800",
           className
         )}
       >
