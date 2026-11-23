@@ -1,3 +1,5 @@
+#![deny(clippy::disallowed_methods)]
+
 mod armor;
 #[cfg(not(target_arch = "wasm32"))]
 mod buffer_dimensions;
