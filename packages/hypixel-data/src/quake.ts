@@ -20,11 +20,20 @@ const PARTS = dumped as Record<QuakePart, Record<string, ItemStack>>;
 
 // Keys are the menu's name less its last word, which stored ids drop or swap for their own
 // (LARGE_BALL is the Large Barrel, snowkit_boots the Snow Boots, NONE the No Muzzle), and exodiakit is the Quakezodia Kit
-const RENAMED: Record<string, string | undefined> = { exodia: "quakezodia", gold: "golden", none: "no", wood: "wooden" };
+const QUAKEZODIA = { exodia: "quakezodia" };
 
-const partKey = (id: string) => {
+// By part, since the laser keeps GOLD where the muzzle's is the Golden Muzzle
+const RENAMED: Partial<Record<QuakePart, Record<string, string | undefined>>> = {
+  muzzle: { gold: "golden", none: "no", wood: "wooden" },
+  hat: QUAKEZODIA,
+  armor: QUAKEZODIA,
+  leggings: QUAKEZODIA,
+  boots: QUAKEZODIA,
+};
+
+const partKey = (part: QuakePart, id: string) => {
   const key = kitKey(id).replace(/(ball|hat|kit|leggings|boots)+$/, "");
-  return RENAMED[key] ?? key;
+  return RENAMED[part]?.[key] ?? key;
 };
 
 /**
@@ -34,6 +43,6 @@ const partKey = (id: string) => {
 export function fromQuakeLoadout(quake: Readonly<Partial<Record<QuakePart, string | null>>>): (ItemStack | undefined)[] {
   return LOADOUT.map((part) => {
     const id = quake[part];
-    return id ? PARTS[part][partKey(id)] : undefined;
+    return id ? PARTS[part][partKey(part, id)] : undefined;
   });
 }
