@@ -11,7 +11,7 @@ import { Check } from "~/components/icons/check";
 import { Chevron } from "~/components/icons/chevron";
 import { Cross } from "~/components/icons/cross";
 import { wordMatcher } from "~/components/filter-box";
-import { Fragment, type ReactNode } from "react";
+import { Children, Fragment, type ReactNode, createContext, isValidElement, use } from "react";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { Hidden, InlineStat, LeaderboardLink, StatCell, glossaryKey, useStatName } from "~/components/ui/stat";
@@ -55,8 +55,10 @@ const columnsOf = (count: number, headline: boolean) => {
 const sectionColumns = (rows: Stat[][]) =>
   Math.max(0, ...rows.filter((row) => !row.every((cell) => cell.inline)).map((row) => row.length));
 
+type Heading = Pick<StatSection, "title" | "name" | "color">;
+
 /** A section's heading: the site's or the card's word for it, or the card's own Minecraft-formatted heading. */
-export function SectionTitle({ section }: { section: StatSection }) {
+export function SectionTitle({ section }: { section: Heading }) {
   const { t } = useTranslation();
   if (section.name) return <MinecraftText>{section.name}</MinecraftText>;
   if (section.title === null) return null;
@@ -64,8 +66,104 @@ export function SectionTitle({ section }: { section: StatSection }) {
   return <span className={className} style={style}>{t(section.title, { ns: LABEL_NAMESPACES })}</span>;
 }
 
+/** A panel's heading, for its heading box. */
+export const PanelHeading = ({ section }: { section: Heading }) => <h2 className="text-mc-1.5 font-bold"><SectionTitle section={section} /></h2>;
+
 /** A heading over one of a panel's rows, at the section heading's size in a taller box, as the card draws it. */
 const ROW_HEADING_BOX = cn(HEADING_BOX, "content:py-3");
+
+/** What a panel's rows take from it: whether it has a heading over theirs, and whether a phone pairs up their cells. */
+const UnderHeading = createContext(false);
+const PairedCells = createContext(false);
+
+/**
+ * A panel's grid of cells: its heading, then its rows (`StatGridRow`s), in as many columns as its widest row has cells.
+ * One grid for the whole panel, so the headings' boxes end where the cells' columns do; each row starts a new line.
+ */
+export function StatGrid({
+  heading,
+  columns,
+  headline = false,
+  className,
+  children,
+}: {
+  heading?: ReactNode;
+  columns: number;
+  /** The page's first table, whose rows of three keep three columns on a phone, as on the card. */
+  headline?: boolean;
+  className?: string;
+  children: ReactNode;
+}) {
+  const layout = columnsOf(columns, headline);
+
+  return (
+    <div className={cn("grid", BOX_GAP, layout.columns, className)}>
+      {heading && <Box className={HEADING_BOX}>{heading}</Box>}
+      <UnderHeading value={heading !== undefined}>
+        <PairedCells value={layout.pairs}>{children}</PairedCells>
+      </UnderHeading>
+    </div>
+  );
+}
+
+/**
+ * A row of a panel's cells, each child its own box, under a heading where it has one (Final, Normal). The card's
+ * selections (kit, class) are lines in one box instead, as on its sidebar.
+ */
+export function StatGridRow({ title, selections = false, children }: { title?: string | null; selections?: boolean; children: ReactNode }) {
+  const { t } = useTranslation();
+  // A row's heading sits under the panel's, or takes its level where the panel has none (the headline table).
+  const RowHeading = use(UnderHeading) ? "h3" : "h2";
+  const pairs = use(PairedCells);
+  const cells = Children.toArray(children);
+
+  return (
+    <>
+      {/* A row under a heading (Final, Normal) whose cells drop the word it says. */}
+      {title && <Box className={ROW_HEADING_BOX}><RowHeading className="text-mc-2">{t(title)}</RowHeading></Box>}
+      {selections ?
+        (
+          <Box className={cn(CELL, "col-span-full content:justify-start content:py-2")}>
+            <dl className="flex flex-col gap-2">{cells}</dl>
+          </Box>
+        ) :
+        cells.map((cell, column) => (
+          <StatBox
+            key={isValidElement(cell) ? cell.key : column}
+            className={cn(column === 0 && "col-start-1", pairs && cells.length % 2 === 1 && column === cells.length - 1 && ODD_LAST)}
+          >
+            {cell}
+          </StatBox>
+        ))}
+    </>
+  );
+}
+
+/**
+ * A list's lines, each its own box holding a `<dl>` of that line: a `<dl>` can't hold the box's own wrappers. A list
+ * whose lines pair up on a phone takes narrower sides there, which "Floating Islands 10.008s" needs at 375.
+ */
+export function ListLines({ pairs = false, children }: { pairs?: boolean; children: ReactNode }) {
+  return (
+    <div className={cn("grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4", pairs ? "grid-cols-2" : "grid-cols-1", BOX_GAP)}>
+      {Children.toArray(children).map((line, index) => (
+        <Box key={isValidElement(line) ? line.key : index} className={cn(CELL, "content:py-1.5", pairs && "max-sm:content:px-2")}>
+          <dl className="min-w-0 grow">{line}</dl>
+        </Box>
+      ))}
+    </div>
+  );
+}
+
+/** A list's lines under its heading, where it has one. */
+export function ListPanel({ heading, className, children }: { heading?: ReactNode; className?: string; children: ReactNode }) {
+  return (
+    <div className={cn("flex flex-col", BOX_GAP, className)}>
+      {heading && <Box className={HEADING_BOX}>{heading}</Box>}
+      {children}
+    </div>
+  );
+}
 
 /** A panel of stats as the card draws it, every stat its own box; a list (maps, challenges) is name and value lines. */
 export function StatPanel({
@@ -86,9 +184,7 @@ export function StatPanel({
   const { t } = useTranslation();
   const n = useNumberFormat();
   const labelText = useLabelText();
-  const heading = section.title === null && !section.name ?
-    undefined :
-    <h2 className="text-mc-1.5 font-bold"><SectionTitle section={section} /></h2>;
+  const heading = section.title === null && !section.name ? undefined : <PanelHeading section={section} />;
 
   if (section.list) {
     const all = section.rows.flat();
@@ -96,18 +192,10 @@ export function StatPanel({
     const matches = wordMatcher(filter ?? "");
     const shown = (cells: Stat[]) => (filtering ? cells.filter((cell) => matches(labelText(cell))) : cells);
     const cells = shown(all);
-    // Each line its own box, holding a `<dl>` of that line: a `<dl>` can't hold the box's own wrappers. A list whose
-    // lines pair up on a phone takes narrower sides there, which "Floating Islands 10.008s" needs at 375.
     const lines = (cells: Stat[]) => (
-      <div className={cn("grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4", section.pairs ? "grid-cols-2" : "grid-cols-1", BOX_GAP)}>
-        {cells.map((cell) => (
-          <Box key={cell.key} className={cn(CELL, "content:py-1.5", section.pairs && "max-sm:content:px-2")}>
-            <dl className="min-w-0 grow">
-              <ListStat cell={cell} username={username} plain={section.plain} ticks={section.ticks} />
-            </dl>
-          </Box>
-        ))}
-      </div>
+      <ListLines pairs={section.pairs}>
+        {cells.map((cell) => <ListStat key={cell.key} cell={cell} username={username} plain={section.plain} ticks={section.ticks} />)}
+      </ListLines>
     );
     const { rowNames } = section;
     // Under the card's own headings (Dropper's difficulties), a row at a time; one the filter empties goes with its heading.
@@ -128,12 +216,7 @@ export function StatPanel({
       lines(cells);
 
     if (!section.collapsed) {
-      return (
-        <div className={cn("flex flex-col", BOX_GAP, className)}>
-          {heading && <Box className={HEADING_BOX}>{heading}</Box>}
-          {list}
-        </div>
-      );
+      return <ListPanel heading={heading} className={className}>{list}</ListPanel>;
     }
 
     return (
@@ -143,7 +226,7 @@ export function StatPanel({
           className={cn(CELL, BOX_RING, "cursor-pointer list-none content:justify-start content:gap-2 [&::-webkit-details-marker]:hidden")}
         >
           <Chevron className="size-6 shrink-0 text-mc-gray transition-transform group-open:rotate-90" />
-          <h2 className="text-mc-1.5 font-bold"><SectionTitle section={section} /></h2>
+          <PanelHeading section={section} />
           <span className="text-mc-1.5 text-mc-gray">
             ({filtering ? t("filter.count", { shown: n(cells.length), total: n(all.length) }) : n(all.length)})
           </span>
@@ -153,46 +236,17 @@ export function StatPanel({
     );
   }
 
-  // A row's heading sits under the panel's, or takes its level where the panel has none (the headline table).
-  const RowHeading = heading ? "h3" : "h2";
-
-  const { columns, pairs } = columnsOf(sectionColumns(section.rows), headline);
-
-  // One grid for the whole panel, so the headings' boxes end where the cells' columns do; each row starts a new line.
   return (
-    <div className={cn("grid", BOX_GAP, columns, className)}>
-      {heading && <Box className={HEADING_BOX}>{heading}</Box>}
+    <StatGrid heading={heading} columns={sectionColumns(section.rows)} headline={headline} className={className}>
       {section.rows.map((row, index) => {
-        const title = section.rowTitles?.[index];
-
+        const selections = row.every((cell) => cell.inline);
         return (
-          <Fragment key={index}>
-            {/* A row under a heading (Final, Normal) whose cells drop the word it says. */}
-            {title && <Box className={ROW_HEADING_BOX}><RowHeading className="text-mc-2">{t(title)}</RowHeading></Box>}
-            {row.every((cell) => cell.inline) ?
-              // The card's selections (kit, class) are lines in one box, as on its sidebar.
-              (
-                <Box className={cn(CELL, "col-span-full content:justify-start content:py-2")}>
-                  <dl className="flex flex-col gap-2">
-                    {row.map((cell) => <SelectionStat key={cell.key} cell={cell} />)}
-                  </dl>
-                </Box>
-              ) :
-              row.map((cell, column) => (
-                <StatBox
-                  key={cell.key}
-                  className={cn(
-                    column === 0 && "col-start-1",
-                    pairs && row.length % 2 === 1 && column === row.length - 1 && ODD_LAST
-                  )}
-                >
-                  <GameStat cell={cell} username={username} />
-                </StatBox>
-              ))}
-          </Fragment>
+          <StatGridRow key={index} title={section.rowTitles?.[index]} selections={selections}>
+            {row.map((cell) => (selections ? <SelectionStat key={cell.key} cell={cell} /> : <GameStat key={cell.key} cell={cell} username={username} />))}
+          </StatGridRow>
         );
       })}
-    </div>
+    </StatGrid>
   );
 }
 
@@ -243,7 +297,7 @@ export function useStatValue(cell: Stat, linked = false): ReactNode {
  * One stat as the card draws it, in its color, with the bot's label. A capped stat shows its cap after it (`12/25`) in
  * §7 like the card, at the label's size so the pair fits a phone's cell.
  */
-function GameStat({ cell, username }: { cell: Stat; username: string }) {
+export function GameStat({ cell, username }: { cell: Stat; username: string }) {
   const { t } = useTranslation();
   const exact = useExactNumber();
   const label = useStatLabel(cell);
@@ -282,7 +336,7 @@ function GameStat({ cell, username }: { cell: Stat; username: string }) {
  * A name and its value on one line, as the card's lists draw them: the name on the left, bold unless the list keeps the
  * card's own formatting, and the value on the right, or a tick or a cross in a list of things done or not.
  */
-function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat; username: string; plain?: boolean; ticks?: boolean }) {
+export function ListStat({ cell, username, plain = false, ticks = false }: { cell: Stat; username: string; plain?: boolean; ticks?: boolean }) {
   const exact = useExactNumber();
   const label = useStatLabel(cell);
   const count = useStatValue(cell, cell.leaderboard !== undefined);
@@ -332,7 +386,7 @@ function Tick({ done }: { done: boolean }) {
 }
 
 /** A selection the card shows (a kit, a trail) as `§7Label: value`, never a link. */
-function SelectionStat({ cell }: { cell: Stat }) {
+export function SelectionStat({ cell }: { cell: Stat }) {
   const label = useStatLabel(cell);
   const value = useStatValue(cell);
   const { className, style } = colorOf(cell.color);
