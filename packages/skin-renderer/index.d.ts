@@ -51,9 +51,6 @@ export interface ModelInstance {
   display?: 'head' | 'thirdperson'
   /** Moves the placed model in its bone's frame, in pixels (sixteenths of a block). */
   translation?: [number, number, number]
-  /** Degrees about the bone's x, y and z axes, turned in the order a display transform turns. */
-  rotation?: [number, number, number]
-  scale?: [number, number, number]
   /**
    * Whether the camera fits the model in the frame, true by default. A model left out still
    * draws, cut off at the frame's edges, and fails the render if it reaches the camera.

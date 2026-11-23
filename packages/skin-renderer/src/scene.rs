@@ -2,11 +2,11 @@ use std::collections::HashMap;
 use std::f32::consts::FRAC_PI_2;
 use std::sync::{Arc, Mutex, PoisonError};
 
-use cgmath::{Array, EuclideanSpace, Point3, SquareMatrix, Transform as _, Vector3};
+use cgmath::{Array, EuclideanSpace, Matrix4, Point3, SquareMatrix, Transform as _, Vector3};
 use image::{DynamicImage, RgbaImage};
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
-use statsify_minecraft_models::{bake_model, load_texture, Display, Frame, Pack, ALPHA_CUTOFF};
+use statsify_minecraft_models::{bake_model, load_texture, Display, Pack, ALPHA_CUTOFF};
 use statsify_render_core::camera::{Camera, OrbitalCamera};
 use statsify_render_core::geometry::vertex::Vertex;
 use statsify_render_core::geometry::Geometry;
@@ -17,7 +17,7 @@ use statsify_render_core::renderer::{DrawItem, Pipeline, Renderer};
 
 use crate::armor::Armor;
 use crate::attachment::{
-  bone_transform, item_transform, local_transform, root_transform, Bone, DisplayContext, Wearer,
+  bone_transform, item_transform, root_transform, Bone, DisplayContext, Wearer,
 };
 use crate::error::Error;
 use crate::model::{Model, ModelKind, ModelOuterLayer};
@@ -66,9 +66,6 @@ pub struct ModelInstance {
   pub display: Option<DisplayContext>,
   /// Moves the placed model in its bone's frame, in pixels (sixteenths of a block).
   pub translation: Option<(f64, f64, f64)>,
-  /// Degrees about the bone's x, y and z axes, turned in the order a display transform turns.
-  pub rotation: Option<(f64, f64, f64)>,
-  pub scale: Option<(f64, f64, f64)>,
   /// Whether the camera fits the model in the frame, true by default. A model left out still
   /// draws, cut off at the frame's edges, and fails the render if it reaches the camera.
   pub framed: Option<bool>,
@@ -249,7 +246,7 @@ impl ModelLibrary {
     renderer: &Renderer<NativeBackend>,
     name: &str,
   ) -> crate::error::Result<LoadedTexture> {
-    let texture = load_texture(&self.pack, name, Frame::Resting)?;
+    let texture = load_texture(&self.pack, name)?;
 
     let image = DynamicImage::ImageRgba8(
       RgbaImage::from_raw(texture.width, texture.height, texture.rgba)
@@ -359,41 +356,23 @@ fn draw_scene(
       (_, None) => return Err(Error::MissingPlayer.into()),
     };
 
-    let triple = |value: Option<(f64, f64, f64)>, default: f32| {
-      value.map_or([default; 3], |(x, y, z)| [x as f32, y as f32, z as f32])
-    };
-
-    let (translation, rotation, scale) = (
-      triple(instance.translation, 0.0),
-      triple(instance.rotation, 0.0),
-      triple(instance.scale, 1.0),
-    );
+    let translation = instance
+      .translation
+      .map_or(Vector3::new(0.0, 0.0, 0.0), |(x, y, z)| {
+        Vector3::new(x as f32, y as f32, z as f32)
+      });
 
     let invalid = || Error::InvalidTransform(instance.model.clone());
 
     // Checked after narrowing, since a huge f64 becomes an f32 infinity
-    let finite = [translation, rotation, scale]
-      .iter()
-      .flatten()
-      .all(|value| value.is_finite());
-
-    if !finite || scale.contains(&0.0) {
+    if !translation.is_finite() {
       return Err(invalid().into());
     }
 
     let model = library.model(renderer, &instance.model)?;
 
-    let hidden = instance
-      .display
-      .and_then(|context| context.entry(&model.display))
-      .is_some_and(|entry| entry.scale.contains(&0.0));
-
-    if hidden {
-      continue;
-    }
-
     let transform = bone
-      * local_transform(translation, rotation, scale)
+      * Matrix4::from_translation(translation)
       * item_transform(instance.display, &model.display);
 
     let placed = if instance.framed.unwrap_or(true) {
@@ -412,9 +391,14 @@ fn draw_scene(
         .map(|&point| transform.transform_point(point).to_vec()),
     );
 
-    // Finite values can still overflow once multiplied through the chain, and the normals need
-    // an inverse that neither overflows nor underflows
-    if !transform.determinant().is_normal() || !placed[start..].iter().all(Array::is_finite) {
+    // Finite values can still overflow through the chain, the normals need an inverse that
+    // neither overflows nor underflows, and a mirrored model would draw inside out
+    let determinant = transform.determinant();
+
+    if !determinant.is_normal()
+      || determinant < 0.0
+      || !placed[start..].iter().all(Array::is_finite)
+    {
       return Err(invalid().into());
     }
 

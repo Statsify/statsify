@@ -20,18 +20,10 @@ pub struct Texture {
   pub translucent: bool,
 }
 
-/// Which frame of an animated strip to draw.
-#[derive(Clone, Copy, Debug)]
-pub enum Frame {
-  /// The frame shown this many game ticks into the animation, so tick 0 is the first.
-  Tick(u64),
-  /// The frame the animation holds longest at once, the first of equal holds: the look a strip
-  /// rests on between bursts of motion, and tick 0's frame when every frame lasts as long.
-  Resting,
-}
-
-/// Decodes a texture, cut to one frame when it's an animated strip.
-pub fn load_texture(pack: &Pack, name: &str, frame: Frame) -> Result<Texture, Error> {
+/// Decodes a texture. An animated strip is cut to the frame it holds longest at once, the first
+/// of equal holds: the look it rests on between bursts of motion, and its first frame when every
+/// frame lasts as long.
+pub fn load_texture(pack: &Pack, name: &str) -> Result<Texture, Error> {
   let bytes = pack
     .textures
     .get(name)
@@ -50,7 +42,7 @@ pub fn load_texture(pack: &Pack, name: &str, frame: Frame) -> Result<Texture, Er
 
   if let Some(mcmeta) = pack.mcmeta.get(name) {
     let shown =
-      animation_frame(mcmeta, height / width, frame).map_err(|reason| Error::InvalidAnimation {
+      animation_frame(mcmeta, height / width).map_err(|reason| Error::InvalidAnimation {
         name: name.to_string(),
         reason,
       })?;
@@ -79,7 +71,7 @@ pub fn load_texture(pack: &Pack, name: &str, frame: Frame) -> Result<Texture, Er
 }
 
 /// The strip frame to draw, or None when the metadata has no animation section.
-fn animation_frame(mcmeta: &str, frame_count: u32, wanted: Frame) -> Result<Option<usize>, String> {
+fn animation_frame(mcmeta: &str, frame_count: u32) -> Result<Option<usize>, String> {
   let root = crate::parse_json(mcmeta)?;
 
   let Some(animation) = root.get("animation") else {
@@ -143,29 +135,13 @@ fn animation_frame(mcmeta: &str, frame_count: u32, wanted: Frame) -> Result<Opti
     ));
   }
 
-  let cycle: u64 = frames.iter().map(|(_, time)| time).sum();
+  // Reversed, since max_by_key keeps the last of equal holds
+  let resting = frames.iter().rev().max_by_key(|(_, time)| time);
 
-  if frames.is_empty() {
-    return Err("the strip has no frames".to_string());
+  match resting {
+    Some((index, _)) => Ok(Some(*index as usize)),
+    None => Err("the strip has no frames".to_string()),
   }
-
-  let Frame::Tick(tick) = wanted else {
-    // Reversed, since max_by_key keeps the last of equal holds
-    let resting = frames.iter().rev().max_by_key(|(_, time)| time);
-    return Ok(resting.map(|(index, _)| *index as usize));
-  };
-
-  let mut remaining = tick % cycle;
-
-  for (index, time) in frames {
-    if remaining < time {
-      return Ok(Some(index as usize));
-    }
-
-    remaining -= time;
-  }
-
-  unreachable!("the remainder is below the cycle length")
 }
 
 // 1.8 drops a fraction from these numbers: a frametime of 1.5 is 1
@@ -187,14 +163,14 @@ mod tests {
 
   use super::*;
 
-  /// The red channel of the frame shown at `tick`, whether it's translucent, and its height.
-  fn shown(pack: &Pack, tick: u64) -> (u8, bool, u32) {
-    let texture = load_texture(pack, "blocks/strip", Frame::Tick(tick)).unwrap();
+  /// The red channel of the frame drawn, whether it's translucent, and its height.
+  fn shown(pack: &Pack) -> (u8, bool, u32) {
+    let texture = load_texture(pack, "blocks/strip").unwrap();
     (texture.rgba[0], texture.translucent, texture.height)
   }
 
   fn rejected(pack: &Pack) -> bool {
-    let texture = load_texture(pack, "blocks/strip", Frame::Tick(0));
+    let texture = load_texture(pack, "blocks/strip");
     matches!(texture, Err(Error::InvalidAnimation { .. }))
   }
 
@@ -207,7 +183,7 @@ mod tests {
   }
 
   #[test]
-  fn picks_strip_frames_by_tick() {
+  fn reads_strip_frames_like_1_8() {
     // Four 1x1 frames, each red with its own index; alpha 25 is cut by the alpha test, 26 isn't
     let alphas = [255, 25, 26, 255];
     let strip = RgbaImage::from_fn(1, 4, |_, y| Rgba([y as u8, 0, 0, alphas[y as usize]]));
@@ -218,40 +194,26 @@ mod tests {
     let listed =
       r#"{ "animation": { "frametime": 2, "frames": [1, { "index": 2, "time": 3 }, 0,], } }"#;
     pack.mcmeta.insert("blocks/strip".into(), listed.into());
-
-    // Frame 1 for ticks 0 and 1, frame 2 for 2 to 4, frame 0 for 5 and 6, then around again
-    assert_eq!(shown(&pack, 0), (1, false, 1));
-    assert_eq!(shown(&pack, 2), (2, true, 1));
-    assert_eq!(shown(&pack, 4), (2, true, 1));
-    assert_eq!(shown(&pack, 6), (0, false, 1));
-    assert_eq!(shown(&pack, 7), (1, false, 1));
-
-    pack
-      .mcmeta
-      .insert("blocks/strip".into(), r#"{ "animation": {} }"#.into());
-    assert_eq!(shown(&pack, 3), (3, false, 1));
-    assert_eq!(shown(&pack, 5), (1, false, 1));
+    assert_eq!(shown(&pack), (2, true, 1));
 
     pack.mcmeta.insert(
       "blocks/strip".into(),
       r#"{ "texture": { "blur": true } }"#.into(),
     );
-    assert_eq!(shown(&pack, 0), (0, true, 4));
+    assert_eq!(shown(&pack), (0, true, 4));
 
     pack.mcmeta.insert(
       "blocks/strip".into(),
       r#"{ "animation": { "frametime": 2147483647 } }"#.into(),
     );
-    assert_eq!(shown(&pack, 2147483647), (1, false, 1));
+    assert_eq!(shown(&pack), (0, false, 1));
 
     // Fractions are dropped, and empty slots, nulls and arrays skipped: frame 3 for a tick, then 2
     // for two
     let lenient = r#"{ "animation": { "frametime": 1.5, "frames": [3,, null, [0], { "index": 2.9,
       "time": 2.2 },] } }"#;
     pack.mcmeta.insert("blocks/strip".into(), lenient.into());
-    assert_eq!(shown(&pack, 0), (3, false, 1));
-    assert_eq!(shown(&pack, 2), (2, true, 1));
-    assert_eq!(shown(&pack, 3), (3, false, 1));
+    assert_eq!(shown(&pack), (2, true, 1));
 
     for invalid in [
       r#"{ "animation": { "frames": [4] } }"#,
@@ -265,14 +227,20 @@ mod tests {
       assert!(rejected(&pack), "{invalid}");
     }
 
-    // Two 2x2 frames over a 2x5 image: the last row is dropped, so the cycle is two ticks
+    // Two 2x2 frames over a 2x5 image: the last row is dropped
     let ragged = RgbaImage::from_fn(2, 5, |_, y| Rgba([y as u8, 0, 0, 255]));
     pack.textures.insert("blocks/strip".into(), png(&ragged));
-    pack
-      .mcmeta
-      .insert("blocks/strip".into(), r#"{ "animation": {} }"#.into());
-    assert_eq!(shown(&pack, 1), (2, false, 2));
-    assert_eq!(shown(&pack, 2), (0, false, 2));
+    pack.mcmeta.insert(
+      "blocks/strip".into(),
+      r#"{ "animation": { "frames": [0, { "index": 1, "time": 2 }] } }"#.into(),
+    );
+    assert_eq!(shown(&pack), (2, false, 2));
+
+    pack.mcmeta.insert(
+      "blocks/strip".into(),
+      r#"{ "animation": { "frames": [2] } }"#.into(),
+    );
+    assert!(rejected(&pack));
 
     pack
       .textures
@@ -288,9 +256,7 @@ mod tests {
 
     let mut resting = |mcmeta: &str| {
       pack.mcmeta.insert("blocks/strip".into(), mcmeta.into());
-      load_texture(&pack, "blocks/strip", Frame::Resting)
-        .unwrap()
-        .rgba[0]
+      load_texture(&pack, "blocks/strip").unwrap().rgba[0]
     };
 
     assert_eq!(
