@@ -50,6 +50,7 @@ import type {
   ResultCard,
   Suggestion,
 } from "@statsify/contract";
+import { AUTO_UPDATE_AGE_MS, type AutoUpdate } from "@statsify/contract/refresh";
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
 import { siteName } from "./names.js";
@@ -212,15 +213,17 @@ export class SiteService implements OnApplicationBootstrap {
     return { player: { ...player }, guild };
   }
 
-  public async refresh(uuid: string, clientIp: string, auto = false): Promise<PlayerPage> {
+  public async refresh(uuid: string, clientIp: string, auto?: AutoUpdate): Promise<PlayerPage> {
     const tag = normalizeUuid(uuid);
     const cached = await this.playerService.getStored(tag);
     if (!cached) throw notFound();
 
-    // Inside the API's own cooldown `CACHE` would not call Hypixel anyway, so it costs no budget.
+    // Inside the API's own cooldown `CACHE` would not call Hypixel anyway, so it costs no budget. A stale page's update
+    // can come from an edge copy of a page older than the stored save, so the stored save's age decides it.
     if (Date.now() < cached.expiresAt) return this.toPage(cached);
+    if (auto === "stale" && Date.now() - freshness(cached).updatedAt < AUTO_UPDATE_AGE_MS) return this.toPage(cached);
 
-    await this.consumeBudget(clientIp, auto);
+    await this.consumeBudget(clientIp, auto !== undefined);
     const [player] = await Promise.all([this.playerService.get(tag, CacheLevel.CACHE), this.refreshSkin(tag)]);
 
     // When Hypixel doesn't answer, `PlayerService` hands back the stored player, still past its cooldown: say the

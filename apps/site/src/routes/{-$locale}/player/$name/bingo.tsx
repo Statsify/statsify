@@ -16,7 +16,7 @@ import { SANS_PRELOAD } from "~/lib/fonts";
 import { REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/player-route";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { cacheHeaders } from "~/lib/cache";
-import { cacheNotFoundResponse } from "~/lib/response";
+import { missingPlayerResponse } from "~/lib/response";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { refreshBingo } from "~/features/player/player-actions";
@@ -24,6 +24,7 @@ import { useState } from "react";
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { createI18n } from "~/i18n/i18n";
 import type { BingoPlayer } from "@statsify/contract";
+import type { AutoUpdate } from "@statsify/contract/refresh";
 
 const EDGE_TTL_SECONDS = 300;
 
@@ -33,7 +34,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
     const player = await loadBingoPlayer(context.queryClient, params.name);
 
     if (!player) {
-      cacheNotFoundResponse();
+      missingPlayerResponse();
       throw notFound();
     }
 
@@ -99,7 +100,7 @@ function BingoPage() {
 function BingoBoards({ initial }: { initial: BingoPlayer }) {
   const [player, setPlayer] = useState(initial);
 
-  const refresh = async (deadline: AbortSignal, auto: boolean, token: string | undefined) => {
+  const refresh = async (deadline: AbortSignal, auto: AutoUpdate | undefined, token: string | undefined) => {
     const result = await refreshBingo({ data: { uuid: player.uuid, auto, token }, signal: deadline });
     if (result.ok) setPlayer(result.data);
     return result;

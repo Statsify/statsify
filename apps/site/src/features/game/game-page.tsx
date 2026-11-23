@@ -34,6 +34,7 @@ import { useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { GamePage, StatCell as Stat, StatSection } from "@statsify/contract";
+import type { AutoUpdate } from "@statsify/contract/refresh";
 
 type Level = NonNullable<GamePage["level"]>;
 
@@ -102,7 +103,7 @@ export function GameView({ page }: { page: GamePage }) {
   );
 
   // Everything cached for this player predates the refresh: it reloads the next time it's shown.
-  const refresh = async (deadline: AbortSignal, auto: boolean, token: string | undefined) => {
+  const refresh = async (deadline: AbortSignal, auto: AutoUpdate | undefined, token: string | undefined) => {
     const result = await refreshGame({ data: { uuid: page.uuid, game: page.game.key, mode, submode, period, auto, token }, signal: deadline });
 
     if (result.ok) {
