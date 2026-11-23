@@ -8,6 +8,7 @@
 
 import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
+import { Empty } from "./components/Empty.js";
 import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { MemberView, NetworthSection } from "@statsify/skyblock";
@@ -69,9 +70,7 @@ export const SkyBlockNetworthProfile = ({ profile, t, icons, ...card }: SkyBlock
         ))}
       </Table.table>
       {items.length > 0 ? <ItemGrid items={items} icons={icons} stacked /> : <></>}
-      <box width="100%">
-        <text>{`§7${unpriced}${pricesAsOf(t, networth.pricesAsOf)}`}</text>
-      </box>
+      <Empty text={`${unpriced}${pricesAsOf(t, networth.pricesAsOf)}`} />
     </Card>
   );
 };

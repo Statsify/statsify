@@ -10,7 +10,7 @@ import { AUCTION_STATS, RIFT_TOTALS } from "@statsify/skyblock/display";
 import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { ItemGrid, gridRows } from "./components/ItemGrid.js";
+import { ItemGrid, gridRows, progressText } from "./components/ItemGrid.js";
 import { add } from "@statsify/math";
 import { formatTime } from "@statsify/util";
 import type { MemberView } from "@statsify/skyblock";
@@ -60,7 +60,7 @@ export const SkyBlockMiscProfile = ({ profile, t, icons, ...card }: SkyBlockProf
             items={misc.consumables.map(({ texture, name, used, max }) => ({
               texture,
               name: `§f${name}`,
-              value: `${used >= max ? "§6" : "§e"}${t(used)}§7/${t(max)}`,
+              value: progressText(t, used, max),
             }))}
             icons={icons}
             columns={2}
@@ -74,7 +74,6 @@ export const SkyBlockMiscProfile = ({ profile, t, icons, ...card }: SkyBlockProf
 
 export const SkyBlockRiftProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const rift = profile.member.rift;
-  const of = (found: number, total: number) => `${found >= total ? "§6" : "§e"}${t(found)}§7/${t(total)}`;
 
   return (
     <Card {...card} name={profile.displayName}>
@@ -87,9 +86,9 @@ export const SkyBlockRiftProfile = ({ profile, t, ...card }: SkyBlockProfileProp
               <Table.td title={t("skyblock.visits")} value={t(rift.visits)} color="§a" />
             </Table.tr>
             <Table.tr>
-              <Table.td title={t("skyblock.enigmaSouls")} value={of(rift.enigmaSouls, RIFT_TOTALS.enigmaSouls)} color="§5" />
-              <Table.td title={t("skyblock.timecharms")} value={of(rift.timecharms, RIFT_TOTALS.timecharms)} color="§a" />
-              <Table.td title={t("skyblock.catsFound")} value={of(rift.catsFound, RIFT_TOTALS.catsFound)} color="§6" />
+              <Table.td title={t("skyblock.enigmaSouls")} value={progressText(t, rift.enigmaSouls, RIFT_TOTALS.enigmaSouls)} color="§5" />
+              <Table.td title={t("skyblock.timecharms")} value={progressText(t, rift.timecharms, RIFT_TOTALS.timecharms)} color="§a" />
+              <Table.td title={t("skyblock.catsFound")} value={progressText(t, rift.catsFound, RIFT_TOTALS.catsFound)} color="§6" />
             </Table.tr>
           </Table.table>
         ) :
