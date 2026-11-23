@@ -214,12 +214,12 @@ export class GuildService {
     }
 
     if (type === GuildQuery.NAME) {
-      // A renamed guild isn't found by its old name either, so only its id confirms a disband
-      try {
-        if (await this.hypixelService.getGuild(cachedGuild.id, "id")) return;
-      } catch {
-        return;
-      }
+      // A renamed guild isn't found by its old name either, so a refresh by id stores the new name or drops a disband
+      await this.get(cachedGuild.id, GuildQuery.ID, CacheLevel.LIVE).catch((error) => {
+        if (!(error instanceof GuildNotFoundException)) throw error;
+      });
+
+      return;
     }
 
     return await Promise.all([
