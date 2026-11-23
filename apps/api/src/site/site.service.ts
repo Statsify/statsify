@@ -7,7 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { CacheLevel, GuildQuery, PlayerNotFoundException } from "@statsify/api-client";
+import { CacheLevel, GuildQuery, LeaderboardQuery, PlayerNotFoundException } from "@statsify/api-client";
 import {
   FormattedGame,
   type GameId,
@@ -47,7 +47,7 @@ import type {
 } from "@statsify/contract";
 import { ORPCError } from "@orpc/nest";
 import { PLAYER_COOLDOWN_MS, type PlayerGuild, buildPlayerPage } from "./player-page.js";
-import { PlayerSearchService, PlayerService } from "#player";
+import { PlayerLeaderboardService, PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
 import { config, flatten, isUuid, normalizeUuid, removeFormatting } from "@statsify/util";
 import { isIPv6 } from "node:net";
@@ -205,6 +205,7 @@ export class SiteService implements OnApplicationBootstrap {
 
   public constructor(
     private readonly playerService: PlayerService,
+    private readonly playerLeaderboardService: PlayerLeaderboardService,
     private readonly playerSearchService: PlayerSearchService,
     private readonly guildService: GuildService,
     @InjectModel(Player) private readonly playerModel: PlayerModel,
@@ -428,81 +429,26 @@ export class SiteService implements OnApplicationBootstrap {
 
   public async leaderboardPage(input: LeaderboardPageInput): Promise<LeaderboardPage> {
     const metadata = this.leaderboardMetadata(input.field);
-    const key = `player.${input.field}`;
-    const { size } = input;
 
-    let { page } = input;
-    let highlight: number | undefined;
-
-    if (input.around) {
-      const uuid = normalizeUuid(input.around);
-      const rank = await (metadata.sort === "ASC" ? this.redis.zrank(key, uuid) : this.redis.zrevrank(key, uuid));
-
-      if (rank === null || rank >= metadata.limit) throw notFound("Player is not on this leaderboard");
-
-      highlight = rank;
-      page = Math.floor(rank / size);
-    }
-
-    const top = page * size;
-    const bottom = Math.min(top + size, metadata.limit) - 1;
-
-    const [total, entries] = await Promise.all([
-      this.redis.zcard(key),
-      bottom < top ?
-        [] :
-        (metadata.sort === "ASC" ?
-          this.redis.zrange(key, top, bottom, "WITHSCORES") :
-          this.redis.zrevrange(key, top, bottom, "WITHSCORES")),
-    ]);
-
-    const uuids: string[] = [];
-    const scores: number[] = [];
-
-    for (let i = 0; i < entries.length; i += 2) {
-      uuids.push(entries[i]);
-      scores.push(Number(entries[i + 1]));
-    }
-
-    const additionalFields = (metadata.additionalFields ?? []).filter((field) => field !== input.field);
-    const additionalMetadata = additionalFields.map((field) => getLeaderboardField(Player, field, false));
-    const { extraDisplay } = metadata;
-    const extraDisplayMetadata = extraDisplay ? getLeaderboardField(Player, extraDisplay, false) : undefined;
-
-    const stats = await this.additionalStats(uuids, [...additionalFields, ...(extraDisplay ? [extraDisplay] : [])]);
-
-    const rows = uuids.map((uuid, index) => {
-      const flat = stats.get(uuid) ?? {};
-      let name = String(flat.displayName ?? uuid);
-
-      if (extraDisplay) {
-        const extra = flat[extraDisplay] ?? extraDisplayMetadata?.default;
-        if (extra) name = `${String(extra)}§r ${name}`;
-      }
-
-      const values: (string | number)[] = [];
-      if (!metadata.hidden) values.push(metadata.formatter ? metadata.formatter(scores[index]) : scores[index]);
-
-      for (const [i, field] of additionalFields.entries()) {
-        const fieldMetadata = additionalMetadata[i];
-        const value = flat[field] ?? fieldMetadata.default;
-        values.push(fieldMetadata.formatter ? fieldMetadata.formatter(value) : (value as string | number));
-      }
-
-      const username = String(flat.username ?? uuid);
-      return { uuid, username, position: top + index + 1, name, highlight: top + index === highlight, values };
+    const leaderboard = await (input.around ?
+      this.playerLeaderboardService.getLeaderboard(Player, input.field, input.around, LeaderboardQuery.INPUT, input.size) :
+      this.playerLeaderboardService.getLeaderboard(Player, input.field, input.page, LeaderboardQuery.PAGE, input.size)
+    ).catch((error: unknown) => {
+      if (error instanceof PlayerNotFoundException) throw notFound("Player is not on this leaderboard");
+      throw error;
     });
 
-    const fields: string[] = [];
-    if (!metadata.hidden) fields.push(metadata.fieldName ?? "");
-    fields.push(...additionalMetadata.map((fieldMetadata) => fieldMetadata.fieldName ?? ""));
+    // A row whose player document is gone has no name to show or link to.
+    const rows = leaderboard.data.flatMap(({ id, username, fields, name, position, highlight }) =>
+      username === undefined ? [] : [{ uuid: id, username, position, name, highlight, values: fields }]
+    );
 
     return {
       field: input.field,
       name: removeFormatting(metadata.name),
-      fields,
-      page,
-      pages: Math.ceil(Math.min(total, metadata.limit) / size),
+      fields: leaderboard.fields.map((name) => name ?? ""),
+      page: leaderboard.page,
+      pages: leaderboard.pages,
       rows,
     };
   }
@@ -513,22 +459,6 @@ export class SiteService implements OnApplicationBootstrap {
     } catch {
       throw notFound("Leaderboard not found");
     }
-  }
-
-  /** One `$in` query for a whole leaderboard page, flattened for dotted field access. */
-  private async additionalStats(uuids: string[], fields: string[]): Promise<Map<string, Record<string, unknown>>> {
-    if (uuids.length === 0) return new Map();
-
-    const selector: Record<string, boolean> = { uuid: true, username: true, displayName: true };
-    for (const field of fields) selector[field] = true;
-
-    const documents: { uuid: string }[] = await this.playerModel
-      .find({ uuid: { $in: uuids } })
-      .select(selector)
-      .lean()
-      .exec();
-
-    return new Map(documents.map((document) => [document.uuid, flatten(document) as Record<string, unknown>]));
   }
 
   private async findIdentity(field: "uuid" | "usernameToLower", value: string): Promise<PlayerIdentity | null> {
