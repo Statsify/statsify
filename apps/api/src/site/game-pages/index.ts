@@ -32,17 +32,17 @@ import { WALLS_PAGE } from "./walls.js";
 import { WARLORDS_PAGE } from "./warlords.js";
 import { WOOL_GAMES_PAGE } from "./woolgames.js";
 import { type GameId, GameIdMapping } from "@statsify/schemas";
-import { type GameLayout, pageModes } from "./layout.js";
+import { type PageEntry, isLayout, pageModes } from "./layout.js";
 
-export { buildGamePage, pageModes, pageName } from "./layout.js";
-export type { GameLayout } from "./layout.js";
+export { buildGamePage, buildStatsPage, isLayout, pageModes, pageName } from "./layout.js";
+export type { GameLayout, PageEntry } from "./layout.js";
 
 /** Where a game comes in the game registry; a page that isn't a game's comes after every game. */
 const REGISTRY = [...new Set(Object.values(GameIdMapping))];
-const registryIndex = ({ game }: GameLayout) => (game.id ? REGISTRY.indexOf(game.id) : REGISTRY.length);
+const registryIndex = ({ game }: PageEntry) => (game.id ? REGISTRY.indexOf(game.id) : REGISTRY.length);
 
 /** The site's game pages, each at `/player/<name>/<game key>`, in the registry's order (the game nav's). */
-export const GAME_PAGES: GameLayout[] = [
+export const GAME_PAGES: PageEntry[] = [
   ARCADE_PAGE,
   ARENA_BRAWL_PAGE,
   BEDWARS_PAGE,
@@ -70,7 +70,7 @@ export const GAME_PAGES: GameLayout[] = [
   WOOL_GAMES_PAGE,
 ].toSorted((a, b) => registryIndex(a) - registryIndex(b));
 
-export const findGamePage = (segment: string): GameLayout | undefined =>
+export const findGamePage = (segment: string): PageEntry | undefined =>
   GAME_PAGES.find((layout) => layout.game.key === segment);
 
 /** The URL segment of a game's page, for a game with a panel on the player page; each has a page. */
@@ -81,7 +81,7 @@ export const gamePageOf = (id: GameId): string => {
 };
 
 /** The submodes a page's mode offers, or none; the first is the default. */
-export const pageSubmodes = (layout: GameLayout, mode: string): string[] | undefined =>
+export const pageSubmodes = (layout: PageEntry, mode: string): string[] | undefined =>
   pageModes(layout).find(({ key }) => key === mode)?.submodes?.map(({ key }) => key);
 
 /**
@@ -107,7 +107,7 @@ export function boardGamePage(field: string): { game: string; mode?: string; sub
 }
 
 /** Every period any of a page's modes covers, or none for a page without periods. */
-export const pagePeriods = (layout: GameLayout): string[] => [
+export const pagePeriods = (layout: PageEntry): string[] => [
   ...new Set(pageModes(layout).flatMap(({ key }) => layout.periods?.(key) ?? [])),
 ];
 
@@ -115,9 +115,9 @@ if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
   const { Player } = await import("@statsify/schemas");
   const { catalogPaths, playerFields } = await import("@statsify/catalog");
-  const { GamePageSchema } = await import("@statsify/contract");
+  const { GamePageSchema, GameStatsPageSchema } = await import("@statsify/contract");
   const { readFile } = await import("node:fs/promises");
-  const { buildGamePage, levelProgression, pagesOf, shownPaths } = await import("./layout.js");
+  const { buildGamePage, buildStatsPage, levelProgression, pagesOf, shownPaths } = await import("./layout.js");
 
   /** Every key in one of the en-US locale files, dotted. */
   const localeKeys = async (file: string) => {
@@ -154,7 +154,7 @@ if (import.meta.vitest) {
 
     it("marks no mode when nothing was played, the first of a tie, and a mode by where it's stored", () => {
       const player = new Player({ uuid: "0", displayname: "test" });
-      const marked = () => buildGamePage(player, DUELS_PAGE, "overall").modes.find(({ mostPlayed }) => mostPlayed);
+      const marked = () => buildStatsPage(player, DUELS_PAGE, "overall").modes.find(({ mostPlayed }) => mostPlayed);
       expect(marked()).toBeUndefined();
       player.stats.duels.sumo.wins = 3;
       player.stats.duels.bow.losses = 3;
@@ -173,7 +173,18 @@ if (import.meta.vitest) {
       expect(boardGamePage("stats.duels.bridge.doubles.wins")).toEqual({ game: "duels", mode: "bridge", submode: "doubles" });
     });
 
-    for (const layout of GAME_PAGES) {
+    for (const entry of GAME_PAGES.filter((entry) => !isLayout(entry))) {
+      it(`${entry.game.key}: every mode's stats page fits the contract, for a player who never played`, () => {
+        const player = new Player({ uuid: "0", displayname: "test" });
+        for (const { key: mode, submodes } of pageModes(entry)) {
+          for (const submode of submodes?.map(({ key }) => key) ?? [undefined]) {
+            expect(() => GameStatsPageSchema.parse({ ...buildStatsPage(player, entry, mode, submode), games: [] }), mode).not.toThrow();
+          }
+        }
+      });
+    }
+
+    for (const layout of GAME_PAGES.filter(isLayout)) {
       it(`${layout.game.key}: every page builds from the catalog, for a player who never played`, () => {
         const player = new Player({ uuid: "0", displayname: "test" });
         expect(() => shownPaths(layout)).not.toThrow();

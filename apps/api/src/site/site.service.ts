@@ -35,6 +35,7 @@ import type {
   BingoPlayer,
   GameInput,
   GamePage,
+  GameStatsPage,
   Glossary,
   GuildPage,
   GuildPreview,
@@ -63,7 +64,16 @@ import { siteName } from "./names.js";
 import { buildGlossary, buildPrestigeSheet } from "./content.js";
 import { LEADERBOARD_GROUPS, buildLeaderboardGroups, catalogGlossary, leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
 import { type PlayerGuild, buildPlayerPage, gameNav, gamePanels, sessionOverview } from "./player-page.js";
-import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
+import {
+  boardGamePage,
+  buildGamePage,
+  buildStatsPage,
+  findGamePage,
+  isLayout,
+  pageModes,
+  pagePeriods,
+  pageSubmodes,
+} from "./game-pages/index.js";
 import { PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
 import { config, flatten, removeFormatting } from "@statsify/util";
@@ -434,13 +444,17 @@ export class SiteService implements OnApplicationBootstrap {
     };
   }
 
-  /** One mode (or submode) of a game's page; an unknown game, mode or submode is NOT_FOUND, like an unknown player. */
-  public async game(input: GameInput): Promise<GamePage> {
+  /**
+   * One mode (or submode) of a game's page, or for a game the site lays out itself, the player's stats for it; an
+   * unknown game, mode or submode is NOT_FOUND, like an unknown player.
+   */
+  public async game(input: GameInput): Promise<GamePage | GameStatsPage> {
     const { layout, mode, submode, period } = pageOf(input);
     const player = await this.loadPlayer(normalizeUuid(input.uuid));
     if (!player) throw notFound();
 
-    return { ...buildGamePage(player, layout, mode, submode, period), games: gameNav(player.stats) };
+    const page = isLayout(layout) ? buildGamePage(player, layout, mode, submode, period) : buildStatsPage(player, layout, mode, submode);
+    return { ...page, games: gameNav(player.stats) };
   }
 
   /** The games a player's session covers, as the player page's panels. */
@@ -458,12 +472,14 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   /** One mode of a game's page over a player's session: what they gained in it since the session started. */
-  public async sessionGame(input: SessionGameInput): Promise<GamePage> {
+  public async sessionGame(input: SessionGameInput): Promise<GamePage | GameStatsPage> {
     const { layout, mode, submode } = pageOf(input, true);
     const { player, gains, start } = await this.loadSession(input.uuid);
 
     return {
-      ...buildGamePage(gains, layout, mode, submode, undefined, { session: true }),
+      ...(isLayout(layout) ?
+        buildGamePage(gains, layout, mode, submode, undefined, { session: true }) :
+        buildStatsPage(gains, layout, mode, submode, { session: true })),
       games: gameNav(gains.stats, true),
       session: { start },
       // The gains' own `expiresAt` is a difference too.

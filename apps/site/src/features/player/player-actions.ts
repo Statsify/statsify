@@ -13,7 +13,7 @@ import { getRequest, getRequestIP } from "@tanstack/react-start/server";
 import { rpcServerClient } from "~/server/rpc.server";
 import { verifyTurnstile } from "~/server/turnstile.server";
 import { z } from "zod";
-import type { BingoPlayer, GamePage, PlayerIdentity, PlayerPage } from "@statsify/contract";
+import type { BingoPlayer, GamePage, GameStatsPage, PlayerIdentity, PlayerPage } from "@statsify/contract";
 
 /**
  * What the refresh and lookup actions hand back. Contract errors travel as values so the page can show a
@@ -112,7 +112,7 @@ export const refreshGame = createServerFn({ method: "POST" })
       token: z.string().max(4096).optional(),
     })
   )
-  .handler(async ({ data }): Promise<ActionResult<GamePage>> => {
+  .handler(async ({ data }): Promise<ActionResult<GamePage | GameStatsPage>> => {
     const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
     const ip = clientIp();
 

@@ -706,7 +706,7 @@ export const contract = {
     game: errors
       .route({ method: "GET", path: "/player/game", summary: "One game's page for a player, in one mode" })
       .input(GameInputSchema)
-      .output(GamePageSchema),
+      .output(z.union([GamePageSchema, GameStatsPageSchema])),
     session: errors
       .route({ method: "GET", path: "/player/session", summary: "The games a player's session covers" })
       .input(PlayerInputSchema)
@@ -714,7 +714,7 @@ export const contract = {
     sessionGame: errors
       .route({ method: "GET", path: "/player/session/game", summary: "One game's page for a player's session, in one mode" })
       .input(SessionGameInputSchema)
-      .output(GamePageSchema),
+      .output(z.union([GamePageSchema, GameStatsPageSchema])),
   },
   guild: {
     page: errors

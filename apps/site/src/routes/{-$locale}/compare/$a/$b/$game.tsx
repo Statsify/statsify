@@ -18,7 +18,8 @@ import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createFileRoute, isNotFound, notFound, redirect } from "@tanstack/react-router";
 import { ensurePlayer } from "~/features/player/resolve";
-import { gamePageQuery, gameSearch, headingText, pageSearch } from "~/features/game/game-data";
+import { type GamePage, type GameStatsPage, gamePageQuery, gameSearch, headingText, isStatsPage, pageSearch } from "~/features/game/game-data";
+import { StatsCompareView, statsHeading, statsHeadlinePairs } from "~/features/game/stats";
 import { orNull } from "~/lib/orpc";
 import { plainText } from "~/components/ui/minecraft-text";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -73,9 +74,11 @@ export const Route = createFileRoute("/{-$locale}/compare/$a/$b/$game")({
     }
 
     // For the unfurl's text: the first numbers of the headline table, as on the game page, else of the game-wide row.
-    const groups = comparePairs(first, second);
-    const table = groups.find(({ section }) => section?.title === null) ?? groups[0];
-    const pairs = (table?.pairs ?? []).filter(({ a, b }) => !a.hidden && !b.hidden).slice(0, 4);
+    const pages = pairOf(first, second);
+    const groups = pages.stats ? [] : comparePairs(pages.a, pages.b);
+    const table = pages.stats ? statsHeadlinePairs(pages.a, pages.b) : (groups.find(({ section }) => section?.title === null) ?? groups[0])?.pairs;
+    const pairs = (table ?? []).filter(({ a, b }) => !a.hidden && !b.hidden).slice(0, 4);
+    const heading = pages.stats ? statsHeading(pages.a) : pages.a.heading;
 
     return {
       a,
@@ -84,7 +87,7 @@ export const Route = createFileRoute("/{-$locale}/compare/$a/$b/$game")({
       mode,
       submode,
       period,
-      heading: { game: first.game, heading: mode || submode ? first.heading : { ...first.heading, mode: null } },
+      heading: { game: first.game, heading: mode || submode ? heading : { ...heading, mode: null } },
       gameName: plainText(first.game.name),
       headline: pairs.map(({ a, b }) => ({ label: a.label, name: a.name, params: a.params, values: [a.value, b.value], suffix: a.suffix })),
     };
@@ -144,5 +147,13 @@ function ComparePage() {
   const { data: first } = useSuspenseQuery(gamePageQuery(a.uuid, game, mode, submode, period));
   const { data: second } = useSuspenseQuery(gamePageQuery(b.uuid, game, mode, submode, period));
 
-  return <CompareView a={first} b={second} />;
+  const pages = pairOf(first, second);
+  return pages.stats ? <StatsCompareView a={pages.a} b={pages.b} /> : <CompareView a={pages.a} b={pages.b} />;
+}
+
+/** The two players' pages, both laid out by the API or both by the site, as two pages of one game are. */
+function pairOf(first: GamePage | GameStatsPage, second: GamePage | GameStatsPage) {
+  if (isStatsPage(first) && isStatsPage(second)) return { stats: true, a: first, b: second } as const;
+  if (!isStatsPage(first) && !isStatsPage(second)) return { stats: false, a: first, b: second } as const;
+  throw new Error(`${first.game.key}'s pages came back laid out two ways`);
 }

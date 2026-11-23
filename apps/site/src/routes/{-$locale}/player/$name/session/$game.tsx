@@ -19,7 +19,8 @@ import { cacheNotFoundResponse } from "~/lib/response";
 import { createI18n } from "~/i18n/i18n";
 import { ensurePlayer } from "~/features/player/resolve";
 import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
-import { headingText, pageSearch, searchParam } from "~/features/game/game-data";
+import { headingText, isStatsPage, pageSearch, searchParam } from "~/features/game/game-data";
+import { StatsView, statsHeading } from "~/features/game/stats";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { orNull } from "~/lib/orpc";
 import { plainText } from "~/components/ui/minecraft-text";
@@ -107,14 +108,14 @@ export const Route = createFileRoute("/{-$locale}/player/$name/session/$game")({
       });
     }
 
-    const titled = mode || submode ? page : { ...page, heading: { ...page.heading, mode: null } };
+    const heading = isStatsPage(page) ? statsHeading(page) : page.heading;
 
     return {
       ...identity,
       game,
       mode,
       submode,
-      heading: { game: page.game, heading: titled.heading },
+      heading: { game: page.game, heading: mode || submode ? heading : { ...heading, mode: null } },
       gameName: plainText(page.game.name),
     };
   },
@@ -179,5 +180,5 @@ function SessionGamePage() {
   const { mode, submode } = Route.useSearch();
   const { data: page } = useSuspenseQuery(sessionGameQuery(uuid, game, mode, submode));
 
-  return <GameView page={page} />;
+  return isStatsPage(page) ? <StatsView page={page} /> : <GameView page={page} />;
 }

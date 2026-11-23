@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ColorCode, type Game, type Stat, modeName, shapeKeys, statAt } from "@statsify/catalog";
+import { type ColorCode, type Game, type Stat, allStats, modeName, playerFields, shapeKeys, statAt } from "@statsify/catalog";
 import { freshness } from "../cooldown.js";
 import { gameName, siteName } from "../names.js";
 import { arrayGroup } from "@statsify/util";
 import type { GameId, Player, PlayerStats } from "@statsify/schemas";
-import type { GamePage, StatCell, StatSection } from "@statsify/contract";
+import type { GamePage, GameStats, GameStatsPage, StatCell, StatSection } from "@statsify/contract";
 
 /** A stat by its catalog key, at the page's place unless `at` gives another (`""` for a game stat). */
 export type CellSpec =
@@ -185,8 +185,11 @@ export interface ModeSpec {
 export const submodeOptions = (submodes: readonly { api: string; formatted: string }[]) =>
   submodes.map(({ api, formatted }) => ({ key: api, name: formatted }));
 
-/** The site's page for one game: which of the catalog's stats it shows, in what groups and order. */
-export interface GameLayout {
+/**
+ * One game's page on the site: its game, name and modes. A page the site lays out itself (BedWars) is only this, and
+ * gets the player's stats for the game; the others are a `GameLayout`.
+ */
+export interface PageEntry {
   game: Game;
   /** The page's name where it isn't a game's (Challenges), Minecraft-formatted. */
   name?: string;
@@ -196,22 +199,28 @@ export interface GameLayout {
   selected?: (stats: PlayerStats) => string | undefined;
   /** The site's name for a mode whose registry name, shared with the bot, runs Hypixel's words together. */
   modeNames?: Record<string, string>;
-  level?: LevelSpec;
-  overview: OverviewSpec[];
   /** The periods a mode's stats are counted over (Quests'), the first the default. */
   periods?: (mode: string) => readonly string[];
-  /** When a period's counts began, for counts taken at `at` (ms); none for all time. */
-  periodStart?: (period: string, at: number) => number | undefined;
-  page: (mode: string, submode: string | undefined, period: string | undefined) => PageSpec;
   mostPlayed?: MostPlayedSpec;
   /** Whether the player has played the game, for a page that isn't a game's; a game's comes from its overview panel. */
   played?: (stats: PlayerStats) => boolean;
+}
+
+/** The site's page for one game: which of the catalog's stats it shows, in what groups and order. */
+export interface GameLayout extends PageEntry {
+  level?: LevelSpec;
+  overview: OverviewSpec[];
+  /** When a period's counts began, for counts taken at `at` (ms); none for all time. */
+  periodStart?: (period: string, at: number) => number | undefined;
+  page: (mode: string, submode: string | undefined, period: string | undefined) => PageSpec;
   /** Stats with a leaderboard the pages leave out, by path below the game, each with why; a test checks the rest show. */
   omit?: Record<string, string>;
 }
 
+export const isLayout = (entry: PageEntry): entry is GameLayout => "page" in entry;
+
 /** The modes a game page offers, with any submodes; the first of each is its default. */
-export function pageModes(layout: GameLayout, session = false): ModeSpec[] {
+export function pageModes(layout: PageEntry, session = false): ModeSpec[] {
   const modes: ModeSpec[] = layout.modes ?? layout.game.modes.getApiModes().map((key) => ({ key }));
   return session ? modes.filter((spec) => spec.session !== false) : modes;
 }
@@ -402,10 +411,47 @@ function level(player: Player, game: Game, spec: LevelSpec): NonNullable<GamePag
   };
 }
 
-export function pageName(layout: GameLayout): string {
+export function pageName(layout: PageEntry): string {
   if (layout.name) return layout.name;
   if (!layout.game.id) throw new Error(`${layout.game.key} has neither a name nor a game id`);
   return gameName(layout.game.id);
+}
+
+/** What every page of a game has, whoever lays it out: the player, the game, and the mode and submode switchers. */
+function pageFrame(player: Player, entry: PageEntry, mode: string, submode: string | undefined, session: boolean) {
+  const { game } = entry;
+  const modes = pageModes(entry, session);
+  const modeSpec = modes.find(({ key }) => key === mode);
+  if (!modeSpec) throw new Error(`${game.key} has no ${mode} page`);
+
+  const name = (key: string) => entry.modeNames?.[key] ?? siteName(modeName(game, key));
+  const submodes = modeSpec.submodes ?? [];
+  const sub = submodes.length > 0 ? submode ?? submodes[0].key : undefined;
+  const selected = entry.selected?.(player.stats);
+  const selectedSub = modeSpec.selected?.(player.stats);
+  const most = entry.mostPlayed && mostPlayed(player, game, modes, entry.mostPlayed);
+  const subMost = modeSpec.mostPlayed && mostPlayed(player, game, submodes, { place: (key) => `${mode}.${key}`, ...modeSpec.mostPlayed });
+
+  return {
+    uuid: player.uuid,
+    username: player.username,
+    displayName: player.displayName,
+    game: { key: game.key, id: game.id, name: pageName(entry) },
+    modes: modes.map(({ key }) => ({
+      key,
+      name: name(key),
+      ...(key === selected && { selected: true }),
+      ...(key === most?.mode && { mostPlayed: most.by }),
+    })),
+    mode,
+    submodes: submodes.map((submode) => ({
+      ...submode,
+      ...(submode.key === selectedSub && { selected: true }),
+      ...(submode.key === subMost?.mode && { mostPlayed: subMost.by }),
+    })),
+    submode: sub ?? null,
+    ...freshness(player),
+  };
 }
 
 /**
@@ -421,51 +467,28 @@ export function buildGamePage(
   { session = false }: { session?: boolean } = {}
 ): Omit<GamePage, "games"> {
   const { game } = layout;
-  const modes = pageModes(layout, session);
-  const modeSpec = modes.find(({ key }) => key === mode);
-  if (!modeSpec) throw new Error(`${game.key} has no ${mode} page`);
-
-  const name = (key: string) => layout.modeNames?.[key] ?? siteName(modeName(game, key));
-  const submodes = modeSpec.submodes ?? [];
-  const sub = submodes.length > 0 ? submode ?? submodes[0].key : undefined;
+  const frame = pageFrame(player, layout, mode, submode, session);
+  const sub = frame.submode ?? undefined;
   const periods = layout.periods?.(mode) ?? [];
   const shownPeriod = periods.length > 0 ? period ?? periods[0] : undefined;
   if (shownPeriod !== undefined && !periods.includes(shownPeriod)) throw new Error(`${game.key} has no ${mode} ${shownPeriod} page`);
   const page = layout.page(mode, sub, shownPeriod);
-  const { updatedAt } = freshness(player);
+  const { updatedAt } = frame;
   const start = shownPeriod === undefined ? undefined : layout.periodStart?.(shownPeriod, updatedAt);
   const place = page.place ?? (sub ? `${mode}.${sub}` : mode);
-  const selected = layout.selected?.(player.stats);
-  const selectedSub = modeSpec.selected?.(player.stats);
   const levelSpec = page.level === undefined ? layout.level : page.level;
-  const most = layout.mostPlayed && mostPlayed(player, game, modes, layout.mostPlayed);
-  const subMost = modeSpec.mostPlayed && mostPlayed(player, game, submodes, { place: (key) => `${mode}.${key}`, ...modeSpec.mostPlayed });
+  const shownMode = frame.modes.find(({ key }) => key === mode)?.name;
+  const shownSubmode = frame.submodes.find(({ key }) => key === sub)?.name;
 
   return {
-    uuid: player.uuid,
-    username: player.username,
-    displayName: player.displayName,
-    game: { key: game.key, id: game.id, name: pageName(layout) },
+    ...frame,
     heading: {
       word: "game.stats",
       // A game with one mode leaves it out of the title, as its card does.
-      mode: modes.length > 1 ? `${name(mode)}${sub ? ` ${submodes.find(({ key }) => key === sub)?.name}` : ""}` : null,
+      mode: frame.modes.length > 1 ? `${shownMode}${shownSubmode ? ` ${shownSubmode}` : ""}` : null,
       ...page.heading,
       ...(session && { word: "game.session" }),
     },
-    modes: modes.map(({ key }) => ({
-      key,
-      name: name(key),
-      ...(key === selected && { selected: true }),
-      ...(key === most?.mode && { mostPlayed: most.by }),
-    })),
-    mode,
-    submodes: submodes.map((submode) => ({
-      ...submode,
-      ...(submode.key === selectedSub && { selected: true }),
-      ...(submode.key === subMost?.mode && { mostPlayed: subMost.by }),
-    })),
-    submode: sub ?? null,
     ...(!session && shownPeriod !== undefined && { periods: [...periods], period: shownPeriod }),
     ...(!session && start !== undefined && { window: { start, end: updatedAt } }),
     level: levelSpec && !session ? level(player, game, levelSpec) : null,
@@ -474,9 +497,46 @@ export function buildGamePage(
       .filter((spec) => !session || spec.session !== false)
       .map((spec) => section(player, game, place, spec, session))
       .filter(({ rows }) => rows.length > 0),
-    updatedAt,
-    expiresAt: player.expiresAt,
   };
+}
+
+const rankedPaths = new Map<string, string[]>();
+const catalogNames = new Map<string, Record<string, string>>();
+
+/** The game's stats with a leaderboard, by path below the game, in the schema's order. */
+function rankedOf(game: Game): string[] {
+  const prefix = `stats.${game.key}.`;
+  let ranked = rankedPaths.get(game.key);
+  if (!ranked) {
+    ranked = [...playerFields()].filter(([path, { leaderboard }]) => path.startsWith(prefix) && leaderboard.enabled).map(([path]) => path.slice(prefix.length));
+    rankedPaths.set(game.key, ranked);
+  }
+  return ranked;
+}
+
+/** The card's own names for the game's stats that have one (a challenge's), by path below the game. */
+function namesOf(game: Game): Record<string, string> {
+  const prefix = `stats.${game.key}.`;
+  let names = catalogNames.get(game.key);
+  if (!names) {
+    names = Object.fromEntries(allStats(game).flatMap(({ path, name }) => (name === undefined ? [] : [[path.slice(prefix.length), name]])));
+    catalogNames.set(game.key, names);
+  }
+  return names;
+}
+
+/** One page of a game the site lays out itself: the frame, and the player's stats for the game to lay out. */
+export function buildStatsPage(
+  player: Player,
+  entry: PageEntry,
+  mode: string,
+  submode?: string,
+  { session = false }: { session?: boolean } = {}
+): Omit<GameStatsPage, "games"> {
+  const { game } = entry;
+  // The schema's classes declare no index signature, but every value in them is JSON.
+  const stats = { ...player.stats[game.key] } as unknown as GameStats;
+  return { ...pageFrame(player, entry, mode, submode, session), stats, ranked: rankedOf(game), names: namesOf(game) };
 }
 
 export function pagesOf(layout: GameLayout): { mode: string; submode?: string; period?: string }[] {

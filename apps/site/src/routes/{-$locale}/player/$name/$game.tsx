@@ -20,7 +20,8 @@ import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-route
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { formatNumber } from "~/i18n/format";
 import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
-import { gamePageQuery, gameSearch, headingText, pageSearch } from "~/features/game/game-data";
+import { type GamePage, gamePageQuery, gameSearch, headingText, isStatsPage, pageSearch } from "~/features/game/game-data";
+import { StatsView, statsHeading, statsHeadline } from "~/features/game/stats";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
 import { playerTabIcon } from "~/lib/tab-icon";
@@ -106,11 +107,9 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     }
 
     // The card's title in plain text, without the mode on the game's first page.
-    const titled = mode || submode ? page : { ...page, heading: { ...page.heading, mode: null } };
-    // For the unfurl's text: the level and the first numbers of the headline table, or of the game-wide row on a page
-    // that has none (a list of maps, a period's quests).
-    const table = page.sections.find((section) => section.title === null && !section.list && !section.ticks);
-    const cells = (table?.rows.flat() ?? page.overview).filter((cell) => !cell.inline).slice(0, 6);
+    const heading = isStatsPage(page) ? statsHeading(page) : page.heading;
+    const titled = mode || submode ? heading : { ...heading, mode: null };
+    const { level, cells } = isStatsPage(page) ? statsHeadline(page) : layoutHeadline(page);
 
     return {
       ...identity,
@@ -118,13 +117,13 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       mode,
       submode,
       period,
-      heading: { game: page.game, heading: titled.heading },
+      heading: { game: page.game, heading: titled },
       gameName: plainText(page.game.name),
-      modeName: titled.heading.mode ? plainText(titled.heading.mode) : undefined,
+      modeName: titled.mode ? plainText(titled.mode) : undefined,
       updatedAt: page.updatedAt,
       unfurl: imageSize(pageCard(page), "og"),
       headline: {
-        level: page.level && { label: page.level.label, value: page.level.current },
+        level,
         cells: cells.map(({ label, name, params, value, hidden, suffix, of }) => ({ label, name, params, value, hidden, suffix, of })),
       },
     };
@@ -197,6 +196,16 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
   component: GamePage,
 });
 
+/**
+ * For the unfurl's text: the level and the first numbers of the headline table, or of the game-wide row on a page that
+ * has none (a list of maps, a period's quests).
+ */
+function layoutHeadline(page: GamePage) {
+  const table = page.sections.find((section) => section.title === null && !section.list && !section.ticks);
+  const cells = (table?.rows.flat() ?? page.overview).filter((cell) => !cell.inline).slice(0, 6);
+  return { level: page.level && { label: page.level.label, value: page.level.current }, cells };
+}
+
 /** A game or mode the player has no page for, with the way back to their profile (the name is canonical by now). */
 function GameNotFound() {
   const { t } = useTranslation();
@@ -209,5 +218,5 @@ function GamePage() {
   const { mode, submode, period } = Route.useSearch();
   const { data: page } = useSuspenseQuery(gamePageQuery(uuid, game, mode, submode, period));
 
-  return <GameView page={page} />;
+  return isStatsPage(page) ? <StatsView page={page} /> : <GameView page={page} />;
 }
