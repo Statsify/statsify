@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { MemberView, NetworthSection } from "@statsify/skyblock";
@@ -23,17 +24,7 @@ const topItems = ({ categories }: NetworthSection) =>
 export const networthIcons = ({ networth }: MemberView) =>
   topItems(networth!).flatMap(({ texture }) => (texture ? [texture] : []));
 
-export const SkyBlockNetworthProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-}: SkyBlockProfileProps) => {
+export const SkyBlockNetworthProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
   const networth = profile.member.networth!;
 
   const sidebar: SidebarItem[] = [
@@ -70,8 +61,7 @@ export const SkyBlockNetworthProfile = ({
     networth.unpricedCount > 0 ? `${t("skyblock.unpriced", { count: networth.unpricedCount })} • ` : "";
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         {arrayGroup(cells, 3).map((row) => (
           <Table.tr>{row}</Table.tr>
@@ -81,7 +71,6 @@ export const SkyBlockNetworthProfile = ({
       <box width="100%">
         <text>{`§7${unpriced}${pricesAsOf(t, networth.pricesAsOf)}`}</text>
       </box>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };

@@ -6,23 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { LevelBar } from "./components/LevelBar.js";
 import { POWDERS, POWDER_COLORS } from "@statsify/skyblock/display";
 import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const SkyBlockHotmProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const { level, coreLevel, loadout, tokens, ability, powder, nodes, crystals, nucleusRuns, glacite } =
     profile.member.hotm!;
 
@@ -54,8 +46,7 @@ export const SkyBlockHotmProfile = ({
   ];
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.tr>
           <LevelBar title={t("skyblock.hotmLevel")} level={level} color="§5" t={t} />
@@ -72,7 +63,6 @@ export const SkyBlockHotmProfile = ({
           </box>
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
