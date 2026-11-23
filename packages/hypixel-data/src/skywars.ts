@@ -60,9 +60,8 @@ function withSortedEnchantments(key: string) {
 }
 
 /**
- * A SkyWars kit_…_inventory ({ "IRON_PICKAXE:0:32,34": "0", "GOLD_HELMET:0": [39] }), or the kit's default, which is
- * undefined for a kit SKYWARS_KITS doesn't list. `kit` is its id (kit_basic_solo_scout, as activeKit_SOLO holds it)
- * or a SKYWARS_KITS key
+ * A SkyWars kit_…_inventory ({ "IRON_PICKAXE:0:32,34": "0", "GOLD_HELMET:0": [39] }), or the kit's default (undefined
+ * for a kit the dump lacks). `kit` is its id (kit_basic_solo_scout, as activeKit_SOLO holds it) or a SKYWARS_KITS key
  */
 export function fromSkyWarsKit(
   stored: Readonly<Record<string, string | readonly number[]>> | null | undefined,
