@@ -141,6 +141,10 @@ function condition(model: Extract<ItemModel, { type: "minecraft:condition" }>, i
       }
 
       const expected = Object.entries(parseSnbt(model.value));
+      if (expected.some(([, value]) => typeof value === "object")) {
+        throw new TypeError(`${item.itemModel ?? item.id}'s custom_data condition compares a nested value`);
+      }
+
       return expected.every(([key, value]) => item.customData?.[key] === value);
     }
 
