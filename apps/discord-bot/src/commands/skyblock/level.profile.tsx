@@ -56,9 +56,7 @@ export const SkyBlockLevelProfile = ({ profile, t, icons, ...card }: SkyBlockPro
           </>
         ) :
         <Empty text={t("skyblock.noXpSources")} />}
-      <box width="100%">
-        <text>{`§7${footnote}`}</text>
-      </box>
+      <Empty text={footnote} />
     </Card>
   );
 };
