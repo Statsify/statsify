@@ -40,6 +40,10 @@ pub enum Error {
   #[error("A mount needs a texture")]
   MissingMountTexture,
 
+  #[cfg(not(target_arch = "wasm32"))]
+  #[error("Failed to render: {0}")]
+  RenderPanicked(String),
+
   #[error(transparent)]
   Image(#[from] image::ImageError),
 
