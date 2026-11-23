@@ -6,7 +6,7 @@ use cgmath::{Array, EuclideanSpace, Point3, SquareMatrix, Transform as _, Vector
 use image::{DynamicImage, RgbaImage};
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
-use statsify_minecraft_models::{bake_model, load_texture, Display, Pack};
+use statsify_minecraft_models::{bake_model, load_texture, Display, Frame, Pack, ALPHA_CUTOFF};
 use statsify_render_core::camera::{Camera, OrbitalCamera};
 use statsify_render_core::geometry::vertex::Vertex;
 use statsify_render_core::geometry::Geometry;
@@ -22,7 +22,7 @@ use crate::attachment::{
 use crate::error::Error;
 use crate::model::{Model, ModelKind, ModelOuterLayer};
 use crate::native::renderer;
-use crate::pose::Pose;
+use crate::pose::{Held, Pose};
 
 // Of the output's shorter side, left clear on each side of the scene
 const MARGIN: f32 = 0.04;
@@ -69,6 +69,9 @@ pub struct ModelInstance {
   /// Degrees about the bone's x, y and z axes, turned in the order a display transform turns.
   pub rotation: Option<(f64, f64, f64)>,
   pub scale: Option<(f64, f64, f64)>,
+  /// Whether the camera fits the model in the frame, true by default. A model left out still
+  /// draws, cut off at the frame's edges, and fails the render if it reaches the camera.
+  pub framed: Option<bool>,
 }
 
 #[napi(object)]
@@ -91,6 +94,35 @@ pub struct SceneOutput {
 struct LoadedTexture {
   material: Material,
   translucent: bool,
+  /// The frame drawn, kept to tell which faces show.
+  image: RgbaImage,
+}
+
+impl LoadedTexture {
+  /// Whether a face over these texture coordinates has a texel that passes the alpha test.
+  fn shows(&self, uvs: impl Iterator<Item = [f32; 2]>) -> bool {
+    let (min, max) = uvs.fold(([f32::MAX; 2], [f32::MIN; 2]), |(min, max), [u, v]| {
+      (
+        [min[0].min(u), min[1].min(v)],
+        [max[0].max(u), max[1].max(v)],
+      )
+    });
+
+    // At least the texel under a face too thin to cover one
+    let texels = |min: f32, max: f32, size: u32| {
+      let start = ((min * size as f32).floor() as u32).min(size - 1);
+      start..((max * size as f32).ceil() as u32).clamp(start + 1, size)
+    };
+
+    let (width, height) = self.image.dimensions();
+    let columns = texels(min[0], max[0], width);
+
+    texels(min[1], max[1], height).any(|y| {
+      columns
+        .clone()
+        .any(|x| self.image.get_pixel(x, y)[3] > ALPHA_CUTOFF)
+    })
+  }
 }
 
 struct LoadedPart {
@@ -167,10 +199,27 @@ impl ModelLibrary {
         }
       };
 
+      // A face whose texels all fail the alpha test never shows, so the camera doesn't frame it
+      let mut shown = vec![false; submesh.vertices.len()];
+
+      for triangle in submesh.indices.as_chunks::<3>().0 {
+        let uvs = triangle
+          .iter()
+          .map(|&index| submesh.vertices[index as usize].uv);
+
+        if texture.shows(uvs) {
+          for &index in triangle {
+            shown[index as usize] = true;
+          }
+        }
+      }
+
       let points = submesh
         .vertices
         .iter()
-        .map(|vertex| Point3::from(vertex.position))
+        .zip(shown)
+        .filter(|(_, shown)| *shown)
+        .map(|(vertex, _)| Point3::from(vertex.position))
         .collect();
 
       let vertices = submesh
@@ -195,16 +244,17 @@ impl ModelLibrary {
     Ok(model)
   }
 
-  // Animated strips show their first frame
   fn upload_texture(
     &self,
     renderer: &Renderer<NativeBackend>,
     name: &str,
   ) -> crate::error::Result<LoadedTexture> {
-    let texture = load_texture(&self.pack, name, 0)?;
+    let texture = load_texture(&self.pack, name, Frame::Resting)?;
 
-    let image = RgbaImage::from_raw(texture.width, texture.height, texture.rgba)
-      .expect("a loaded texture holds every texel");
+    let image = DynamicImage::ImageRgba8(
+      RgbaImage::from_raw(texture.width, texture.height, texture.rgba)
+        .expect("a loaded texture holds every texel"),
+    );
 
     Ok(LoadedTexture {
       material: Material::new(
@@ -212,9 +262,10 @@ impl ModelLibrary {
         renderer.queue(),
         renderer.texture_bind_group_layout(),
         renderer.sampler(),
-        &DynamicImage::ImageRgba8(image),
+        &image,
       )?,
       translucent: texture.translucent,
+      image: image.into_rgba8(),
     })
   }
 }
@@ -270,9 +321,15 @@ fn draw_scene(
         ModelOuterLayer::D2
       };
 
+      let holds = |bone: Bone| scene.models.iter().any(|instance| instance.bone == bone);
+
       let wearer = Wearer {
         arm_width: kind.arm_width(),
         pose: player.pose.unwrap_or_default(),
+        held: Held {
+          right: holds(Bone::RightHand),
+          left: holds(Bone::LeftHand),
+        },
       };
 
       let model = Model::load(
@@ -284,6 +341,7 @@ fn draw_scene(
         player.glint.as_deref(),
         player.cape.as_deref(),
         wearer.pose,
+        wearer.held,
       )?;
 
       Some((model, wearer))
@@ -292,7 +350,7 @@ fn draw_scene(
   };
 
   let mut models = Vec::with_capacity(scene.models.len());
-  let mut points = Vec::new();
+  let (mut points, mut unframed) = (Vec::new(), Vec::new());
 
   for instance in &scene.models {
     let bone = match (instance.bone, &player) {
@@ -338,9 +396,15 @@ fn draw_scene(
       * local_transform(translation, rotation, scale)
       * item_transform(instance.display, &model.display);
 
-    let start = points.len();
+    let placed = if instance.framed.unwrap_or(true) {
+      &mut points
+    } else {
+      &mut unframed
+    };
 
-    points.extend(
+    let start = placed.len();
+
+    placed.extend(
       model
         .parts
         .iter()
@@ -350,7 +414,7 @@ fn draw_scene(
 
     // Finite values can still overflow once multiplied through the chain, and the normals need
     // an inverse that neither overflows nor underflows
-    if !transform.determinant().is_normal() || !points[start..].iter().all(Array::is_finite) {
+    if !transform.determinant().is_normal() || !placed[start..].iter().all(Array::is_finite) {
       return Err(invalid().into());
     }
 
@@ -401,7 +465,7 @@ fn draw_scene(
   let camera = OrbitalCamera::new(Point3::from_vec(middle), width as f32, height as f32)
     .with_theta(yaw)
     .with_phi(FRAC_PI_2 - pitch)
-    .framed(&points, MARGIN * width.min(height) as f32)
+    .framed(&points, &unframed, MARGIN * width.min(height) as f32)
     .ok_or(Error::SceneOutOfRange)?;
 
   let buffer = renderer

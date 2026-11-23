@@ -7,7 +7,7 @@ use tokio::sync::OnceCell;
 
 use crate::armor::Armor;
 use crate::model::{Model, ModelKind, ModelOuterLayer};
-use crate::pose::Pose;
+use crate::pose::{Held, Pose};
 
 static SKIN_RENDERER: OnceCell<Renderer<NativeBackend>> = OnceCell::const_new();
 
@@ -89,6 +89,7 @@ fn draw_skin(
     options.glint.as_deref(),
     options.cape.as_deref(),
     options.pose.unwrap_or_default(),
+    Held::default(),
   )?;
 
   let camera = match yaw {

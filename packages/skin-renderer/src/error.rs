@@ -19,7 +19,7 @@ pub enum Error {
   MissingPlayer,
 
   #[cfg(not(target_arch = "wasm32"))]
-  #[error("The scene has nothing to draw")]
+  #[error("The scene has nothing to frame")]
   EmptyScene,
 
   #[cfg(not(target_arch = "wasm32"))]
