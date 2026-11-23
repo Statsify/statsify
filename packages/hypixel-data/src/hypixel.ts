@@ -28,14 +28,23 @@ interface LegacyItem {
   };
 }
 
-/** A skin's URL from a head's SkullOwner textures value, which is base64 JSON */
+const SKIN_HOST = "textures.minecraft.net";
+
+/** A skin's textures.minecraft.net URL from a head's SkullOwner textures value, which is base64 JSON */
 export function skinUrl(value: string) {
   const profile = JSON.parse(new TextDecoder().decode(base64Bytes(value))) as {
     textures?: { SKIN?: { url?: string } };
   };
 
+  const url = profile.textures?.SKIN?.url;
+  if (url === undefined) return undefined;
+
+  const skin = new URL(url);
+  if (skin.hostname !== SKIN_HOST) throw new Error(`${url} isn't on ${SKIN_HOST}`);
+
   // The texture server allows cross-origin reads, but an https page can't fetch an http URL
-  return profile.textures?.SKIN?.url?.replace(/^http:/, "https:");
+  skin.protocol = "https:";
+  return skin.href;
 }
 
 /** One 1.8 item compound as an ItemStack, or undefined for an empty slot or a spawn egg 26.3 has no item for */
