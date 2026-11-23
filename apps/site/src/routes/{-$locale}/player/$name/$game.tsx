@@ -11,11 +11,10 @@ import { backgroundFor, preloadBackground } from "~/components/ui/background";
 import { GameView } from "~/features/game/game-page";
 import { imageSize, pageCard } from "@statsify/profiles/protocol";
 import { NotFound } from "~/components/not-found";
-import { PlayerNotFound } from "~/features/player/player-not-found";
 import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/player-route";
 import { orNull } from "~/lib/orpc";
 import { cacheHeaders } from "~/lib/cache";
-import { cacheNotFoundResponse, missingPlayerResponse } from "~/lib/response";
+import { cacheNotFoundResponse } from "~/lib/response";
 import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { formatNumber } from "~/i18n/format";
@@ -23,29 +22,18 @@ import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
 import { gamePageQuery, gameSearch, headingText, pageSearch } from "~/features/game/game-data";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
 import { playerTabIcon } from "~/lib/tab-icon";
-import { ensurePlayer } from "~/features/player/resolve";
 import { removeFormatting } from "@statsify/util/util";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-/** Which not-found page to show: the player one, with its lookup, or the plain 404 for a game or mode we don't have. */
-type Missing = { player: boolean };
-
 export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
   validateSearch: gameSearch,
   loaderDeps: ({ search }) => ({ mode: search.mode, submode: search.submode, period: search.period }),
-  loader: async ({ params, deps, context }) => {
-    const identity = await ensurePlayer(context.queryClient, params.name);
-
-    if (!identity) {
-      missingPlayerResponse();
-      throw notFound({ data: { player: true } satisfies Missing });
-    }
-
-    // As on the player page, UUIDs, old names and other casings land on the current name, and the game on its key.
+  loader: async ({ params, deps, context: { player: identity, queryClient } }) => {
+    // Another casing of the game lands on its key, as the layout lands the name on the current one.
     const game = params.game.toLowerCase();
 
-    if (identity.username !== params.name || game !== params.game) {
+    if (game !== params.game) {
       throw redirect({
         to: "/{-$locale}/player/$name/$game",
         params: { name: identity.username, game },
@@ -65,7 +53,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     preloadBackground(backgroundFor(game));
     const load = (key: string) =>
       // A game without a page, a mode or submode it doesn't have, or a name too long to be either.
-      orNull(context.queryClient.ensureQueryData(gamePageQuery(identity.uuid, key, deps.mode, deps.submode, deps.period)), ["NOT_FOUND", "BAD_REQUEST"]);
+      orNull(queryClient.ensureQueryData(gamePageQuery(identity.uuid, key, deps.mode, deps.submode, deps.period)), ["NOT_FOUND", "BAD_REQUEST"]);
     const page = await load(game);
 
     if (!page) {
@@ -87,7 +75,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       }
 
       cacheNotFoundResponse();
-      throw notFound({ data: { player: false } satisfies Missing });
+      throw notFound();
     }
 
     // The first mode, submode and period live at the URL without them. A period the mode doesn't have (Monthly, kept
@@ -193,7 +181,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),
-  notFoundComponent: ({ data }) => ((data as Missing | undefined)?.player === false ? <GameNotFound /> : <PlayerNotFound />),
+  notFoundComponent: GameNotFound,
   component: GamePage,
 });
 

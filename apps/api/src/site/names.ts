@@ -9,13 +9,24 @@
 import { FormattedGame, type GameId } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
-/** The site's spelling of the games the bot joins into one word ("MegaWalls"): spaced, like "Arena Brawl". */
-const SPACED_GAMES = new Map<GameId, string>([
-  ["BLITZSG", "§2Blitz §6SG§f"],
-  ["MEGAWALLS", "§7Mega Walls§f"],
-  ["SPEED_UHC", "§bSpeed §6UHC§f"],
-  ["WOOLGAMES", "§cWool §9Games§f"],
-]);
+/** The second word of each game the bot joins into one ("MegaWalls"), which the site spaces like "Arena Brawl". */
+const SECOND_WORDS: [GameId, string][] = [
+  ["BLITZSG", "SG"],
+  ["MEGAWALLS", "Walls"],
+  ["SPEED_UHC", "UHC"],
+  ["WOOLGAMES", "Games"],
+];
+
+/** A joined name with a space before its second word, and before the color code that starts that word. */
+function spaceBefore(joined: string, word: string): string {
+  const at = joined.indexOf(word);
+  if (at <= 0) throw new Error(`${joined} has no second word ${word}`);
+  const start = joined[at - 2] === "§" ? at - 2 : at;
+  return `${joined.slice(0, start)} ${joined.slice(start)}`;
+}
+
+/** The site's spelling of those games, colored as `FormattedGame` colors them. */
+const SPACED_GAMES = new Map<GameId, string>(SECOND_WORDS.map(([game, word]) => [game, spaceBefore(FormattedGame[game], word)]));
 
 /**
  * Each joined spelling the schemas build names from, with the site's: a game's colored and plain name, and the

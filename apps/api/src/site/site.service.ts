@@ -92,7 +92,7 @@ const BUDGET_WINDOW_SECONDS = 5 * 60;
 const BUDGET_KEY = "site:hypixel:budget";
 
 /**
- * Site-initiated Hypixel calls per visitor address in the same 5 minutes, enough for a school or mobile network whose
+ * Refreshes and lookups per visitor address in the same 5 minutes, enough for a school or mobile network whose
  * visitors share one address.
  */
 const IP_LIMIT = 10;
@@ -234,14 +234,14 @@ export class SiteService implements OnApplicationBootstrap {
   public async page(uuid: string): Promise<PlayerPage> {
     const player = await this.playerService.getStored(uuid);
     if (!player) throw notFound();
-    return this.toPage(player);
+    return this.toPage(player, this.findGuild(player.guildId));
   }
 
   public async full(uuid: string): Promise<PlayerFull> {
     const player = await this.playerService.getStored(uuid);
     if (!player) throw notFound();
 
-    const document = player.guildId ? await this.findGuild(player.guildId) : null;
+    const document = await this.findGuild(player.guildId);
     const guild: GuildDocument | null = document && { ...document };
 
     return { player: { ...player }, guild };
@@ -254,17 +254,17 @@ export class SiteService implements OnApplicationBootstrap {
 
     // Inside the API's own cooldown `CACHE` would not call Hypixel anyway, so it costs no budget. A stale page's update
     // can come from an edge copy of a page older than the stored save, so the stored save's age decides it.
-    if (Date.now() < cached.expiresAt) return this.toPage(cached);
-    if (auto === "stale" && Date.now() - freshness(cached).updatedAt < AUTO_UPDATE_AGE_MS) return this.toPage(cached);
+    const upToDate = Date.now() < cached.expiresAt || (auto === "stale" && Date.now() - freshness(cached).updatedAt < AUTO_UPDATE_AGE_MS);
+    if (upToDate) return this.toPage(cached, this.findGuild(cached.guildId));
 
-    await this.consumeBudget(clientIp, auto !== undefined);
+    await this.consumeBudget(clientIp, { auto: auto !== undefined, calls: 2 });
     const [player] = await Promise.all([this.playerService.get(tag, CacheLevel.CACHE), this.refreshSkin(tag)]);
 
     // When Hypixel doesn't answer, `PlayerService` hands back the stored player, still past its cooldown: say the
     // refresh failed rather than show the old stats as new.
     if (!player || player.expiresAt <= Date.now()) throw hypixelUnavailable();
 
-    return this.toPage(player);
+    return this.toPage(player, this.fetchPlayerGuild(tag));
   }
 
   public async lookup(name: string, clientIp: string): Promise<PlayerIdentity> {
@@ -288,7 +288,7 @@ export class SiteService implements OnApplicationBootstrap {
       throw notFound();
     }
 
-    await this.consumeBudget(clientIp);
+    await this.consumeBudget(clientIp, { calls: 2 });
 
     let player: Player | null;
 
@@ -308,6 +308,7 @@ export class SiteService implements OnApplicationBootstrap {
       throw notFound();
     }
 
+    await this.fetchPlayerGuild(uuid);
     await this.redis.del(missKey(key));
 
     return { uuid: player.uuid, username: player.username, updatedAt: freshness(player).updatedAt };
@@ -606,19 +607,35 @@ export class SiteService implements OnApplicationBootstrap {
     return player && { uuid: player.uuid, username: player.username, updatedAt: freshness(player).updatedAt };
   }
 
-  private async toPage(player: Player): Promise<PlayerPage> {
-    const [guild, session] = await Promise.all([
-      player.guildId ? this.findGuild(player.guildId) : null,
-      this.sessionService.getStored(player.uuid, { sessionReset: true }),
-    ]);
+  /** The stored guild, or after a refresh the one fetched with the player, whose own `guildId` is still the old one. */
+  private async toPage(player: Player, playerGuild: Promise<PlayerGuild | null>): Promise<PlayerPage> {
+    const [guild, session] = await Promise.all([playerGuild, this.sessionService.getStored(player.uuid, { sessionReset: true })]);
 
     // `sessionReset` is in seconds.
     const start = session?.sessionReset;
     return { ...buildPlayerPage(player, guild), session: start === undefined ? null : { start: start * 1000 } };
   }
 
-  private findGuild(id: string): Promise<PlayerGuild | null> {
-    return this.guildService.getStored(id, GuildQuery.ID, GUILD_FIELDS);
+  private async findGuild(guildId: string | undefined): Promise<PlayerGuild | null> {
+    return guildId ? this.guildService.getStored(guildId, GuildQuery.ID, GUILD_FIELDS) : null;
+  }
+
+  /**
+   * The player's guild from Hypixel, after the player's fetch, which saves the old `guildId` back over any the guild sets.
+   * A guild inside its own cooldown is the stored one, so its share of the refresh or lookup's budget goes back.
+   */
+  private async fetchPlayerGuild(uuid: string): Promise<Guild | null> {
+    const lookup = this.guildService.get(uuid, GuildQuery.PLAYER, CacheLevel.CACHE, { namesFromHypixel: false, throwOnHypixelError: true });
+
+    const guild = await lookup.catch((error: unknown) => {
+      if (error instanceof GuildNotFoundException) return null;
+      if (error instanceof HypixelUnavailableError) throw hypixelUnavailable();
+      throw error;
+    });
+
+    // Through `hitWindow`, not `decr`: a window that closed during the fetches would come back without an expiry.
+    if (guild?.cached) await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
+    return guild;
   }
 
   private preview<T>(uuid: string, build: (player: Player) => T): Promise<T | null> {
@@ -660,31 +677,32 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   /**
-   * Per-address, then global budget. A rejected call never eats into the global budget. With
-   * `site.hypixelBudget: 0` every call is rejected here, before `PlayerService` runs. An automatic update (`auto`)
-   * stops at two-thirds of the budget, so a third stays for clicks and for names the site has never stored.
+   * One slot from the visitor's address, then its Hypixel `calls` from the global budget, which a rejected slot never
+   * eats into. With `site.hypixelBudget: 0` every slot is rejected here, before `PlayerService` runs. An automatic update
+   * (`auto`) stops at two-thirds of the budget, so a third stays for clicks and for names the site has never stored.
    */
-  private async consumeBudget(clientIp: string, auto = false): Promise<void> {
+  private async consumeBudget(clientIp: string, { auto = false, calls = 1 } = {}): Promise<void> {
     const [attempts, ipTtl] = await hitWindow(this.redis, ipKey(clientIp), IP_WINDOW_SECONDS);
     if (attempts > IP_LIMIT) throw tooManyRequests(ipTtl);
 
     const budget = (await this.hypixelBudget) ?? DEFAULT_HYPIXEL_BUDGET;
     const limit = auto ? Math.floor((budget * 2) / 3) : budget;
-    const [calls, budgetTtl] = await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS);
+    const [spent, budgetTtl] = await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, calls);
 
-    if (calls > limit) {
-      await this.redis.decr(BUDGET_KEY);
+    if (spent > limit) {
+      await this.redis.decrby(BUDGET_KEY, calls);
       throw tooManyRequests(budgetTtl);
     }
   }
 }
 
 /**
- * Counts a hit in a fixed window that opens on the first hit; returns the count and the seconds left. The window's
- * key is created with its expiry in the same transaction as the count, so it can never be left without one.
+ * Counts `by` hits (a negative `by` hands them back) in a fixed window that opens on the first; returns the count and
+ * the seconds left. The window's key is created with its expiry in the same transaction as the count, so it can never
+ * be left without one.
  */
-export async function hitWindow(redis: Redis, key: string, windowSeconds: number): Promise<[count: number, ttl: number]> {
-  const results = await redis.multi().set(key, 0, "EX", windowSeconds, "NX").incr(key).ttl(key).exec();
+export async function hitWindow(redis: Redis, key: string, windowSeconds: number, by = 1): Promise<[count: number, ttl: number]> {
+  const results = await redis.multi().set(key, 0, "EX", windowSeconds, "NX").incrby(key, by).ttl(key).exec();
   if (!results || results.some(([error]) => error)) throw new InternalServerErrorException();
   return [Number(results[1][1]), Number(results[2][1])];
 }
