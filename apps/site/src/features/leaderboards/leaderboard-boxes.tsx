@@ -100,7 +100,7 @@ function BoxTable({ page, chunks }: { page: LeaderboardPage; chunks: Leaderboard
         role="row"
         data-stuck={stuck || undefined}
         className={cn(
-          "sticky top-0 z-10 col-span-full -mb-1 grid grid-cols-subgrid pb-1 data-stuck:bg-blackify-950 data-stuck:shadow-[0_0_0_100vmax_var(--color-blackify-950),0_4px_0_100vmax_rgb(0_0_0/0.84)] data-stuck:[clip-path:inset(0_-100vmax_-4px)]",
+          "sticky top-0 z-10 col-span-full -mb-1 grid grid-cols-subgrid pb-1 data-stuck:[border-image:linear-gradient(var(--color-blackify-950)_calc(100%_-_4px),rgb(0_0_0/0.84)_0)_fill_0//0_100vmax_4px]",
           BOX_GAP
         )}
       >

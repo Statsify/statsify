@@ -119,8 +119,9 @@ export function PlayerView({ page }: { page: PlayerPage }) {
                 </PanelToggle>
               </>
             )}
-            refresh={<SharedRefreshBar refresh={refreshing} />}
-            className="md:col-span-full md:row-start-1 xl:col-span-1"
+            refresh={<SharedRefreshBar refresh={refreshing} className="justify-center" />}
+            // Wide enough for the refresh row's longest state, so the column keeps its width when the countdown ends.
+            className="md:col-span-full md:row-start-1 xl:col-span-1 xl:min-w-104"
           />
           {/* From `xl` the nametag sits over the level, beside the overview, too narrow for the facts' values, so they get
               a row of their own, three across, the last row filled; below that `NametagPanel` draws them. */}
@@ -531,6 +532,12 @@ function HiddenStatus() {
   return <Hint full={hint} spoken={`${hidden}. ${hint}`}>{hidden}</Hint>;
 }
 
+// Two 32 px cells side by side need about 300 px, so columns are added only when every panel keeps that width.
+const GAME_COLUMNS = "md:grid-cols-snap-2 lg:grid-cols-snap-3 xl:grid-cols-snap-4";
+
+/** A session's few games fill their row: a column each, but never fewer than two, so a lone game takes half. */
+const SESSION_COLUMNS = ["", "md:grid-cols-snap-2", "md:grid-cols-snap-2", "md:grid-cols-snap-2 lg:grid-cols-snap-3", GAME_COLUMNS];
+
 /** The games' panels; on a session's page, with the session's numbers and linking to its game pages. */
 export function GameGrid({ games, username, session = false }: { games: GameSummary[]; username: string; session?: boolean }) {
   const { t } = useTranslation();
@@ -539,9 +546,8 @@ export function GameGrid({ games, username, session = false }: { games: GameSumm
     return <p className="text-mc-1.5 text-mc-gray text-center">{t(session ? "session.noGames" : "player.noGames", { name: username })}</p>;
   }
 
-  // Two 32 px cells side by side need about 300 px, so columns are added only when every panel keeps that width.
   return (
-    <ul className={cn("grid grid-cols-1 md:grid-cols-snap-2 lg:grid-cols-snap-3 xl:grid-cols-snap-4", BOX_GAP)}>
+    <ul className={cn("grid grid-cols-1", session ? SESSION_COLUMNS[Math.min(games.length, SESSION_COLUMNS.length - 1)] : GAME_COLUMNS, BOX_GAP)}>
       {games.map((game) => (
         <li key={game.id}>
           <GamePanel game={game} username={username} session={session} />

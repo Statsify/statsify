@@ -8,12 +8,24 @@
 
 import { AUTO_UPDATE_AGE_MS, type AutoUpdate } from "@statsify/contract/refresh";
 import { ClockScript, TIME_SLOT } from "~/lib/clock";
+import { FLAT_BUTTON } from "~/components/ui/button";
 import { Hint, useHint } from "~/components/ui/hint";
 import { RefreshIcon } from "~/components/icons/refresh";
 import { Turnstile } from "~/components/turnstile";
 import { cn } from "~/lib/util";
 import { formatCountdown, fullDate, relativeTime } from "~/i18n/format";
-import { type ComponentProps, useCallback, useEffect, useEffectEvent, useId, useState, useSyncExternalStore } from "react";
+import {
+  type ComponentProps,
+  type Ref,
+  type RefObject,
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { type ActionResult, BROWSER_TIMEOUT_MS } from "./player-actions";
 import { useRevealOnOpen } from "./share-panel";
 import { getRouteApi, useRouterState } from "@tanstack/react-router";
@@ -96,7 +108,6 @@ export type Refresh = ReturnType<typeof useRefresh>;
  * token and applies its data. The automatic update's token comes from an invisible widget, so it never asks the visitor.
  */
 export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: RefreshOptions) {
-  const { t } = useTranslation();
   const { turnstileSiteKey } = localeRoute.useLoaderData();
   const [state, setState] = useState<RefreshState>({ status: "idle" });
   const [verifying, setVerifying] = useState(false);
@@ -108,10 +119,8 @@ export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: Refr
   const searchedAt = useRouterState({ select: ({ resolvedLocation }) => resolvedLocation?.state.searchedAt });
 
   const lockedUntil = state.status === "limited" ? state.until : expiresAt;
-  const now = useNow(lockedUntil);
-  const remaining = now === undefined ? undefined : Math.max(0, Math.ceil((lockedUntil - now) / 1000));
   // A widget whose script didn't load stays broken until the page reloads, so the button does too.
-  const disabled = verifying || widgetFailed || state.status === "pending" || remaining === undefined || remaining > 0;
+  const busy = verifying || widgetFailed || state.status === "pending";
 
   async function run(update: AutoUpdate | undefined, token?: string) {
     const auto = update !== undefined;
@@ -164,31 +173,12 @@ export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: Refr
     autoUpdate();
   }, [auto, view]);
 
-  let text = t("player.refresh");
-  let label = text;
-  if (state.status === "pending") {
-    text = t("player.refreshing");
-    label = text;
-  } else if (remaining) {
-    text = formatCountdown(remaining);
-    label = t("player.refreshIn", { time: text });
-  }
-
-  let message: string | undefined;
-  if (widgetFailed) message = t("player.notFound.verifyFailed");
-  else if (state.status === "limited" && !state.auto && remaining) message = t("player.refreshLimited");
-  else if (state.status === "unavailable") message = t("player.refreshFailed");
-  else if (state.status === "error") message = t("player.refreshError");
-
   return {
     updatedAt,
     lockedUntil,
-    now,
     state,
-    disabled,
-    text,
-    label,
-    message,
+    busy,
+    widgetFailed,
     /** The Turnstile widget's props while a click waits on it. */
     verification: verifying ?
       {
@@ -214,11 +204,37 @@ export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: Refr
       } :
       undefined,
     start() {
-      if (disabled) return;
+      if (busy || Date.now() < lockedUntil) return;
       if (turnstileSiteKey) setVerifying(true);
       else void run(undefined);
     },
   };
+}
+
+/** The refresh's clock-driven text, in the components that show it, so the clock's tick re-renders them and not the page. */
+function useRefreshClock({ lockedUntil, state, busy, widgetFailed }: Refresh) {
+  const { t } = useTranslation();
+  const now = useNow(lockedUntil);
+  const remaining = now === undefined ? undefined : Math.max(0, Math.ceil((lockedUntil - now) / 1000));
+  const disabled = busy || remaining === undefined || remaining > 0;
+
+  let text = t("player.refresh");
+  let label = text;
+  if (state.status === "pending") {
+    text = t("player.refreshing");
+    label = text;
+  } else if (remaining) {
+    text = formatCountdown(remaining);
+    label = t("player.refreshIn", { time: text });
+  }
+
+  let message: string | undefined;
+  if (widgetFailed) message = t("player.notFound.verifyFailed");
+  else if (state.status === "limited" && !state.auto && remaining) message = t("player.refreshLimited");
+  else if (state.status === "unavailable") message = t("player.refreshFailed");
+  else if (state.status === "error") message = t("player.refreshError");
+
+  return { now, disabled, text, label, message };
 }
 
 /**
@@ -233,17 +249,19 @@ export function RefreshBar({ className, ...options }: RefreshOptions & { classNa
 /** `RefreshBar` for a refresh a `RefreshButton` elsewhere on the page shares. */
 export function SharedRefreshBar({ refresh, className }: { refresh: Refresh; className?: string }) {
   const { t, i18n } = useTranslation();
-  const { updatedAt, lockedUntil, now, state, message, verification, autoVerification } = refresh;
+  const { updatedAt, lockedUntil, state, verification, autoVerification } = refresh;
+  const { now, message } = useRefreshClock(refresh);
+  const button = useRef<HTMLButtonElement>(null);
 
   return (
     <>
-      <div className={cn("flex items-center gap-2", className)}>
+      <div className={cn("flex flex-wrap items-center gap-x-2 gap-y-3", className)}>
         <p data-clock="updated" className={cn(META, "min-w-0")} suppressHydrationWarning>
           {now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}
         </p>
-        <RefreshButton refresh={refresh} />
+        <RefreshButton ref={button} refresh={refresh} />
       </div>
-      {verification && <Verification {...verification} />}
+      {verification && <Verification {...verification} button={button} />}
       {autoVerification && <Turnstile {...autoVerification} invisible className="absolute" />}
       <ClockScript
         args={{
@@ -266,23 +284,26 @@ export function SharedRefreshBar({ refresh, className }: { refresh: Refresh; cla
 
 /**
  * Update stats, or the time until it can, with the full wording in a tooltip then. `aria-disabled`, not `disabled`, so
- * the button keeps focus while it refreshes and counts down. Its tap area reaches past its 32 px box to 44 px.
+ * the button keeps focus while it refreshes and counts down.
  */
-export function RefreshButton({ refresh: { text, label, disabled, start }, className }: { refresh: Refresh; className?: string }) {
+export function RefreshButton({ refresh, className, ref }: { refresh: Refresh; className?: string; ref?: Ref<HTMLButtonElement> }) {
+  const { text, label, disabled } = useRefreshClock(refresh);
   const { props: hint, tooltip } = useHint(text === label ? undefined : label);
 
   return (
     <>
       <button
+        ref={ref}
         type="button"
         data-clock="refresh"
         aria-label={label}
         aria-disabled={disabled}
         suppressHydrationWarning
         {...hint}
-        onClick={start}
+        onClick={refresh.start}
         className={cn(
-          "relative flex h-8 min-w-8 shrink-0 items-center justify-center gap-2 bg-blackify-800 px-2 text-mc-1 text-mc-green after:absolute after:-inset-1.5 hover:bg-blackify-700 focus-visible:focus-ring-inset aria-disabled:text-mc-gray aria-disabled:hover:bg-blackify-800",
+          FLAT_BUTTON,
+          "gap-2 px-2 text-mc-green aria-disabled:text-mc-gray aria-disabled:hover:bg-blackify-800",
           className
         )}
       >
@@ -294,15 +315,20 @@ export function RefreshButton({ refresh: { text, label, disabled, start }, class
   );
 }
 
-/** The Turnstile widget, brought into view: a click in the pinned mini header shows it in the nametag, off screen. */
-function Verification(props: ComponentProps<typeof Turnstile>) {
+/**
+ * The Turnstile widget, brought into view: a click in the pinned mini header shows it in the nametag, off screen. Focus
+ * moves to the bar's own button, since the mini header hides once the nametag shows and would take its focus with it.
+ */
+function Verification({ button, ...props }: ComponentProps<typeof Turnstile> & { button: RefObject<HTMLButtonElement | null> }) {
   const id = useId();
+  useEffect(() => {
+    button.current?.focus({ preventScroll: true });
+  }, [button]);
   useRevealOnOpen(id);
 
-  // The bar sits in the profile card, narrower than the flexible widget's 300 px. The margin keeps it below the mini
-  // header.
+  // The bar sits in the profile card, narrower than the flexible widget's 300 px.
   return (
-    <div id={id} className="flex basis-full scroll-mt-14 justify-center">
+    <div id={id} className="flex basis-full justify-center">
       <Turnstile {...props} size="compact" />
     </div>
   );

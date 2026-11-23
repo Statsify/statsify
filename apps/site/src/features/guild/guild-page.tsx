@@ -217,7 +217,7 @@ function MemberTable({ members, total }: { members: GuildMemberRow[]; total: num
       {members.length > 0 && <p className="mb-2 text-mc-1 text-mc-gray lg:hidden">{t("guild.scrollHint")}</p>}
       {members.length > 0 && (
         // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Focus lets keyboard users scroll to columns off-screen.
-        <section aria-label={t("guild.members")} tabIndex={0} className="overflow-x-auto focus-visible:focus-ring-inset">
+        <section aria-label={t("guild.members")} tabIndex={0} className="-mx-2 overflow-x-auto focus-visible:focus-ring-inset">
           <table className="w-full text-mc-1.5">
             <caption className="sr-only">{t("guild.members")}</caption>
             <thead>

@@ -76,7 +76,7 @@ export function StatInfo({ glossary, label }: { glossary: string; label: string 
             setAnchor(null);
             button.current?.focus();
           }}
-          className="flex w-72 max-w-[calc(100vw-16px)] flex-col gap-2 p-3 text-start outline-none"
+          className="flex w-72 max-w-[calc(100vw-16px)] flex-col gap-2 py-3 text-start outline-none"
         >
           <p className="text-mc-1 font-bold text-mc-white">{name}</p>
           {words.data?.text && <p className={cn("text-mc-1 text-mc-gray", READING_LEADING)}>{words.data.text}</p>}
