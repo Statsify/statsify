@@ -20,11 +20,12 @@ const xpOf = (member: RawMember, skill: string) => member.player_data?.experienc
 const tableOf = (skill: string) =>
   skill === "runecrafting" ? LEVELING.runecrafting_xp : skill === "social" ? LEVELING.social : LEVELING.leveling_xp;
 
-// 50, the log unlocks, then two levels each from Agatha's and Miria's shops (unverified). Hypixel's highest foraging
-// level achievement fits it on every saved player: 57 with all three log unlocks, 54 with two and no Miria Power.
+// 50, the log unlocks, then Agatha's two cap raises at her Milestone IV and Miria's at IV and V (unverified). Hypixel's
+// highest foraging level achievement fits it on every saved player with a cap past 50, 56 at Miria IV included.
 const foragingCap = (member: RawMember) => {
   const perks = member.player_data?.perks ?? {};
-  const shops = 2 * Number((perks.agatha_power ?? 0) >= 4) + 2 * Number((perks.miria_power ?? 0) >= 4);
+  const miria = perks.miria_power ?? 0;
+  const shops = 2 * Number((perks.agatha_power ?? 0) >= 4) + Number(miria >= 4) + Number(miria >= 5);
   return 50 + (member.player_data?.experience?.SKILL_FORAGING_extra_level_cap ?? 0) + shops;
 };
 
@@ -95,6 +96,11 @@ if (import.meta.vitest) {
 
     const forager = { player_data: { experience: { SKILL_FORAGING: 55_172_425 } } };
     expect(getSkills(profile, forager)?.skills.foraging).toMatchObject({ level: 50, unverified: false });
+
+    const foragingCap = (miria_power: number) =>
+      getSkills(profile, { player_data: { ...member.player_data, perks: { agatha_power: 4, miria_power } } })?.skills
+        .foraging.maxLevel;
+    expect([3, 4, 5].map(foragingCap)).toEqual([55, 56, 57]);
     expect(getSkills({ profile_id: "p", cute_name: "Apple", members: {} }, {})).toBeNull();
   });
 }

@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { LevelBar } from "./components/LevelBar.js";
 import { arrayGroup, formatTime, prettify } from "@statsify/util";
@@ -35,17 +36,7 @@ export interface SkyBlockDungeonsProfileProps extends SkyBlockProfileProps {
   mode: "normal" | "master";
 }
 
-export const SkyBlockDungeonsProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  mode,
-}: SkyBlockDungeonsProfileProps) => {
+export const SkyBlockDungeonsProfile = ({ profile, t, mode, ...card }: SkyBlockDungeonsProfileProps) => {
   const dungeons = profile.member.dungeons!;
   const none = t("skyblock.none");
 
@@ -87,8 +78,7 @@ export const SkyBlockDungeonsProfile = ({
     ));
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         {[
           <Table.tr>
@@ -104,21 +94,11 @@ export const SkyBlockDungeonsProfile = ({
             ]),
         ]}
       </Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
 
-export const SkyBlockEssenceProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockEssenceProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const { essence } = profile.member.dungeons!;
 
   const cells = essence.map(({ type, amount, perks, maxPerks }) => (
@@ -134,10 +114,8 @@ export const SkyBlockEssenceProfile = ({
   ));
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName}>
       <Table.table>{gridRows(cells, 4)}</Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
