@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { LevelBar } from "./components/LevelBar.js";
 import { POWDERS, type Powder } from "@statsify/skyblock";
 import { prettify } from "@statsify/util";
@@ -18,16 +19,7 @@ const POWDER_COLORS: Record<Powder, string> = {
   glacite: "§b",
 };
 
-export const SkyBlockHotmProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const { level, loadout, tokens, ability, powder } = profile.member.hotm!;
 
   const sidebar: SidebarItem[] = [
@@ -51,15 +43,13 @@ export const SkyBlockHotmProfile = ({
   });
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.tr>
           <LevelBar title={t("skyblock.hotmLevel")} level={level} color="§5" t={t} />
         </Table.tr>
         <Table.tr>{powders}</Table.tr>
       </Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };

@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem } from "#components";
+import { Card } from "./components/Card.js";
+import type { SidebarItem } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
 import { ItemGrid, RARITY_COLORS, pricesAsOf } from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
@@ -18,26 +19,14 @@ const MISSING_SHOWN = 12;
 export const accessoryIcons = ({ accessories }: MemberView) =>
   accessories?.missing.slice(0, MISSING_SHOWN).map(({ texture }) => texture) ?? [];
 
-export const SkyBlockAccessoriesProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-}: SkyBlockProfileProps) => {
+export const SkyBlockAccessoriesProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
   const { accessories } = profile.member;
 
   if (!accessories) {
     return (
-      <Container background={background}>
-        <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
+      <Card {...card} name={profile.displayName}>
         <EmptySection setting="inventory" newProfile={profile.newProfile} empty={t("skyblock.noAccessories")} t={t} />
-        <Footer logo={logo} user={user} />
-      </Container>
+      </Card>
     );
   }
 
@@ -69,8 +58,7 @@ export const SkyBlockAccessoriesProfile = ({
     t("skyblock.noMarket", { mode: prettify(profile.gameMode) });
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {missing.length > 0 ?
         (
           <>
@@ -88,7 +76,6 @@ export const SkyBlockAccessoriesProfile = ({
       <box width="100%">
         <text>{`§7${footnote}`}</text>
       </box>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
