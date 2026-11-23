@@ -75,7 +75,7 @@ export class BedWarsPractice {
   @Field()
   public fireballJumping: BedWarsPracticeMode;
 
-  @Field()
+  @Field({ leaderboard: { name: "MLG" } })
   public mlg: BedWarsPracticeMode;
 
   @Field()
