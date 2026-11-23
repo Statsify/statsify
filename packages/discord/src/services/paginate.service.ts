@@ -110,6 +110,7 @@ export async function paginate(
 
   let currentIndex = 0;
   let currentSubIndex = 0;
+  let closed = false;
 
   const mainController =
     pages.length > 1
@@ -174,7 +175,8 @@ export async function paginate(
     // A slower lookup for an earlier pick mustn't replace the newer pick's page
     if (index !== currentIndex || subIndex !== currentSubIndex) return;
 
-    message.components = components(index);
+    // A pick that lands after the timeout has no hooks left, so it gets no pickers
+    message.components = closed ? [] : components(index);
 
     return context.reply(message);
   }
@@ -188,6 +190,7 @@ export async function paginate(
   }
 
   function onTimeout() {
+    closed = true;
     mainController?.unregister(listener);
     subController?.unregister(listener);
     cache.clear();

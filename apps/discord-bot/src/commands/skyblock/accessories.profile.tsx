@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem } from "#components";
+import { Card } from "./components/Card.js";
+import type { SidebarItem } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
 import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
 import { RARITY_COLORS } from "@statsify/skyblock/display";
@@ -64,27 +65,14 @@ const PowerStats = ({ power, stats, t }: { power: string; stats: PowerStat[]; t:
   );
 };
 
-export const SkyBlockAccessoriesProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-  page,
-}: SkyBlockAccessoriesProfileProps) => {
+export const SkyBlockAccessoriesProfile = ({ profile, t, icons, page, ...card }: SkyBlockAccessoriesProfileProps) => {
   const { accessories } = profile.member;
 
   if (!accessories) {
     return (
-      <Container background={background}>
-        <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
+      <Card {...card} name={profile.displayName}>
         <EmptySection setting="inventory" newProfile={profile.newProfile} empty={t("skyblock.noAccessories")} t={t} />
-        <Footer logo={logo} user={user} />
-      </Container>
+      </Card>
     );
   }
 
@@ -104,8 +92,7 @@ export const SkyBlockAccessoriesProfile = ({
     });
 
     return (
-      <Container background={background}>
-        <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+      <Card {...card} name={profile.displayName} sidebar={sidebar}>
         {inactive.length > 0 ?
           <ItemGrid items={inactive} icons={icons} columns={1} /> :
           (
@@ -113,8 +100,7 @@ export const SkyBlockAccessoriesProfile = ({
               <text>{`§a${t("skyblock.noInactiveAccessories")}`}</text>
             </box>
           )}
-        <Footer logo={logo} user={user} />
-      </Container>
+      </Card>
     );
   }
 
@@ -139,8 +125,7 @@ export const SkyBlockAccessoriesProfile = ({
     t("skyblock.noMarket", { mode: prettify(profile.gameMode) });
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {accessories.selectedPower && accessories.powerStats ?
         <PowerStats power={accessories.selectedPower} stats={accessories.powerStats} t={t} /> :
         <></>}
@@ -161,7 +146,6 @@ export const SkyBlockAccessoriesProfile = ({
       <box width="100%">
         <text>{`§7${footnote}`}</text>
       </box>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
