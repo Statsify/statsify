@@ -316,7 +316,7 @@ export class ApiService {
 
   private async requestImage(url: string, params?: Record<string, unknown>) {
     const uri = this.axios.getUri({ url, params: { key: this.apiKey, ...params } });
-    const image = await loadImage(uri);
+    const image = await loadImage(uri, this.axios.defaults.timeout);
 
     return image;
   }
