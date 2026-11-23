@@ -54,7 +54,7 @@ export function TextPage({
         <div className="grid items-start gap-6 lg:grid-cols-[280px_minmax(0,768px)] lg:justify-center lg:gap-8">
           <Rail contents={contents} current={current} />
           <div className="flex min-w-0 flex-col gap-6">
-            <header className="flex flex-col gap-2">
+            <header className="flex flex-col items-center gap-2 text-center">
               <h1 className="text-mc-2 lg:text-mc-3 font-bold">{title}</h1>
               {meta && <p className="text-mc-1 text-mc-gray">{meta}</p>}
             </header>
