@@ -16,7 +16,7 @@ import { PlayerNotFoundView } from "~/features/player/player-not-found";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
 import { backgroundFor, preloadBackground } from "~/components/ui/background";
 import { cacheHeaders } from "~/lib/cache";
-import { cacheNotFoundResponse } from "~/lib/response";
+import { cacheNotFoundResponse, missingPlayerResponse } from "~/lib/response";
 import { createFileRoute, isNotFound, notFound, redirect } from "@tanstack/react-router";
 import { ensurePlayer } from "~/features/player/resolve";
 import { gamePageQuery, gameSearch, headingText, pageSearch } from "~/features/game/game-data";
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/{-$locale}/compare/$a/$b/$game")({
     const [a, b] = await Promise.all([ensurePlayer(context.queryClient, params.a), ensurePlayer(context.queryClient, params.b)]);
 
     if (!a || !b) {
-      cacheNotFoundResponse();
+      missingPlayerResponse();
       throw notFound({ data: { player: a ? params.b : params.a } satisfies Missing });
     }
 
