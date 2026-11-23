@@ -26,8 +26,8 @@ export function Footer() {
   const email = t("footer.email");
 
   return (
-    <footer className="text-white flex justify-center bg-blackify-950 p-8">
-      <div className="w-container flex flex-col gap-8 md:gap-4 pb-8">
+    <footer className="text-white flex justify-center bg-blackify-950 px-8 py-4">
+      <div className="w-container flex flex-col gap-3">
         <Divider className="opacity-10" />
         <div className="flex flex-col gap-4 md:flex-row md:justify-between items-center">
           <Link to="/{-$locale}" aria-label="Statsify">
@@ -51,13 +51,11 @@ export function Footer() {
             </IconContainer>
           </div>
         </div>
-        <div className="flex flex-col gap-4 md:flex-row md:justify-between text-mc-1.5 text-mc-gray items-center text-center md:text-start">
-          <div className="flex flex-col gap-1 text-balance">
+        <div className="flex flex-col gap-4 md:flex-row md:justify-between text-mc-1 text-mc-gray items-center text-center md:text-start">
+          <div className="flex flex-col text-balance">
             {/* The year comes from the clock, which can differ between the server and the browser on New Year. */}
-            <p suppressHydrationWarning>{t("footer.copyright", { year })}</p>
-            <p>{t("footer.affiliation")}</p>
-            <p>{t("footer.mojang")}</p>
-            <p>{t("footer.mojangApproval")}</p>
+            <p suppressHydrationWarning>{t("footer.copyright", { year })} {t("footer.affiliation")}</p>
+            <p>{t("footer.mojang")} {t("footer.mojangApproval")}</p>
           </div>
           <div className="flex flex-wrap justify-center gap-x-4">
             <Link to="/{-$locale}/about" className={LINK}>{t("footer.about")}</Link>
