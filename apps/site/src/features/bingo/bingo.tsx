@@ -26,7 +26,7 @@ const CATEGORY_ICONS: Record<Category, string> = {
   classic: "/icons/snowball.png",
 };
 
-const route = getRouteApi("/{-$locale}/player/$name/bingo");
+const route = getRouteApi("/{-$locale}/player/$name_/bingo");
 
 /** The selected board, kept in the URL so links to a board can be shared. */
 function useBoardState() {
