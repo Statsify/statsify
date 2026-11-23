@@ -23,6 +23,7 @@ import {
 } from "@statsify/api-client";
 import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
+import { Logger } from "@statsify/logger";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
 import { loadImage, renderHead } from "@statsify/rendering";
@@ -35,6 +36,8 @@ const apiClientKey = await config("apiClient.key");
 
 @Service()
 export class ApiService extends StatsifyApiService {
+  private readonly logger = new Logger("ApiService");
+
   public constructor() {
     super(apiClientRoute, apiClientKey);
   }
@@ -209,11 +212,15 @@ export class ApiService extends StatsifyApiService {
   }
 
   public override getPlayerSkin(uuid: string, user: User | null) {
-    return super.getPlayerSkin(uuid, user).catch(() => loadImage(getDefaultSkin(uuid).render));
+    return super.getPlayerSkin(uuid, user).catch((err) => {
+      this.logger.error(err);
+      return loadImage(getDefaultSkin(uuid).render);
+    });
   }
 
   public override getPlayerHead(uuid: string, size = 160) {
-    return super.getPlayerHead(uuid, size).catch(async () => {
+    return super.getPlayerHead(uuid, size).catch(async (err) => {
+      this.logger.error(err);
       const skin = await loadImage(getDefaultSkin(uuid).texture);
       return loadImage(await renderHead(skin, size));
     });
