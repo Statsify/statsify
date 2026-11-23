@@ -505,7 +505,7 @@
     }
   },
   "hypixelBusy": {
-    "age": "Hypixel is busy right now, so these stats are from {{time}} ago.",
+    "age": "Hypixel is busy right now, so these stats are from {{time, duration}} ago.",
     "noAge": "Hypixel is busy right now, so these stats may be out of date."
   },
   "leaderboard": {
