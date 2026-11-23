@@ -11,6 +11,10 @@ const SNEAK_DROP: f32 = 3.2;
   not(target_arch = "wasm32"),
   napi(string_enum = "lowercase", skip_typescript)
 )]
+#[cfg_attr(
+  target_arch = "wasm32",
+  expect(dead_code, reason = "the viewer draws only the standing pose")
+)]
 #[derive(Clone, Copy, Default)]
 pub enum Pose {
   #[default]
@@ -77,6 +81,7 @@ impl Pose {
     }
   }
 
+  #[cfg(not(target_arch = "wasm32"))]
   pub fn camera_radius(self) -> f32 {
     match self {
       Pose::Swim | Pose::Fly => 100.0,
