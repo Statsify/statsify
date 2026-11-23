@@ -25,7 +25,7 @@ const DAYS_IN_WEEK = {
   sunday: 6,
 };
 
-export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
+export type LeaderboardAdditionalStats = Record<string, any> & { name: string; username?: string };
 
 @Injectable()
 export abstract class LeaderboardService {
@@ -72,60 +72,58 @@ export abstract class LeaderboardService {
     child?.finish();
   }
 
+  /** One page of `pageSize` rows, none past the leaderboard's `limit`. */
   public async getLeaderboard<T>(
     constructor: Constructor<T>,
     field: string,
     input: number | string,
-    type: LeaderboardQuery
+    type: LeaderboardQuery,
+    pageSize = 10
   ) {
-    const PAGE_SIZE = 10;
-
     const {
       fieldName,
-      additionalFields = [],
+      additionalFields: allAdditionalFields = [],
       extraDisplay,
       formatter,
       sort,
       name,
       hidden,
+      limit,
     } = getLeaderboardField(
       constructor,
       field
     ) as LeaderboardEnabledMetadata;
 
+    const additionalFields = allAdditionalFields.filter((k) => k !== field);
+
     let top: number;
-    let bottom: number;
     let highlight: number | undefined = undefined;
 
     switch (type) {
       case LeaderboardQuery.PAGE:
-        top = (input as number) * PAGE_SIZE;
-        bottom = top + PAGE_SIZE;
+        top = (input as number) * pageSize;
         break;
 
       case LeaderboardQuery.INPUT: {
         const ranking = await this.searchLeaderboardInput(input as string, field);
         highlight = ranking - 1;
-        top = highlight - (highlight % 10);
-        bottom = top + PAGE_SIZE;
+        top = highlight - (highlight % pageSize);
         break;
       }
       case LeaderboardQuery.POSITION: {
         const position = (input as number) - 1;
         highlight = position;
-        top = position - (position % 10);
-        bottom = top + PAGE_SIZE;
+        top = position - (position % pageSize);
         break;
       }
     }
 
-    const leaderboard = await this.getLeaderboardFromRedis(
-      constructor,
-      field,
-      top,
-      bottom - 1,
-      sort
-    );
+    const bottom = Math.min(top + pageSize, limit);
+
+    const [total, leaderboard] = await Promise.all([
+      this.redis.zcard(`${constructor.name.toLowerCase()}.${field}`),
+      bottom > top ? this.getLeaderboardFromRedis(constructor, field, top, bottom - 1, sort) : [],
+    ]);
 
     const additionalFieldMetadata = additionalFields.map((k) =>
       getLeaderboardField(constructor, k, false)
@@ -138,7 +136,7 @@ export abstract class LeaderboardService {
     const additionalStats = await this.getAdditionalStats(
       leaderboard.map(({ id }) => id),
       [
-        ...additionalFields.filter((k) => k !== field),
+        ...additionalFields,
         ...(extraDisplay ? [extraDisplay] : []),
       ]
     );
@@ -170,6 +168,7 @@ export abstract class LeaderboardService {
 
       return {
         id: doc.id,
+        username: stats.username,
         fields,
         name: stats.name,
         position: doc.index + 1,
@@ -184,8 +183,10 @@ export abstract class LeaderboardService {
     return {
       name,
       fields,
+      additionalFields,
       data,
-      page: top / PAGE_SIZE,
+      page: top / pageSize,
+      pages: Math.ceil(Math.min(total, limit) / pageSize),
     };
   }
 
@@ -238,7 +239,7 @@ export abstract class LeaderboardService {
       const index = i / 2;
       const metadata = leaderboardFields[index];
 
-      if (Number(rank) > metadata.limit) continue;
+      if (Number(rank) >= metadata.limit) continue;
 
       const numberValue = Number(value);
 

@@ -111,6 +111,14 @@ export const prettify = (s: string): string => {
 export const removeFormatting = (s: string): string =>
   s.replaceAll(/§#([A-Fa-f0-9]{6})|§./gm, "");
 
+/** A Minecraft UUID: 32 hex digits, with or without the four dashes, in any case. */
+export const UUID_PATTERN = /^[\da-f]{32}$|^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i;
+
+export const isUuid = (tag: string): boolean => UUID_PATTERN.test(tag);
+
+/** A UUID as it's stored: 32 lowercase hex digits without dashes. */
+export const normalizeUuid = (uuid: string): string => uuid.replaceAll("-", "").toLowerCase();
+
 export interface FormatTimeOptions {
   /**
    * Whether or not to use `s`, `m`, `h`, `d` or `seconds`, `minutes`, `hours`, `days`
@@ -345,6 +353,16 @@ if (import.meta.vitest) {
     it("should remove formatting", () => {
       expect(removeFormatting("§ahello§r world")).toBe("hello world");
       expect(removeFormatting("hello world")).toBe("hello world");
+    });
+  });
+
+  suite("isUuid", () => {
+    it("takes 32 hex digits, dashed or not, in any case, and nothing else", () => {
+      expect(isUuid("069a79f444e94726a5befca90e38aaf5")).toBe(true);
+      expect(isUuid("069A79F4-44E9-4726-A5BE-FCA90E38AAF5")).toBe(true);
+      expect(isUuid("069a79f444e94726a5befca90e38aaf")).toBe(false);
+      expect(isUuid("Notch_Is_A_Long_Name")).toBe(false);
+      expect(normalizeUuid("069A79F4-44E9-4726-A5BE-FCA90E38AAF5")).toBe("069a79f444e94726a5befca90e38aaf5");
     });
   });
 

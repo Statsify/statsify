@@ -250,7 +250,7 @@ async function renderCard(uuid: string, variant: ImageVariant, updatedAt: number
 }
 
 async function fetchSkin(uuid: string): Promise<Uint8Array> {
-  const response = await proxySkin("/skin", new URLSearchParams({ uuid }));
+  const response = await proxySkin("/skin/stored", new URLSearchParams({ uuid }));
   if (!response.ok) throw new SkinUnavailableError(response.status);
   return new Uint8Array(await response.arrayBuffer());
 }

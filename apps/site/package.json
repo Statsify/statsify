@@ -24,6 +24,7 @@
     "@statsify/profiles": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/tokens": "workspace:^",
+    "@statsify/util": "workspace:^",
     "@tanstack/react-query": "5.104.5",
     "@tanstack/react-router": "1.170.45",
     "@tanstack/react-router-ssr-query": "1.167.3",

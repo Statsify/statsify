@@ -7,7 +7,7 @@
  */
 
 import { ORPCError } from "@orpc/client";
-import { UUID_PATTERN } from "~/lib/uuid";
+import { UUID_PATTERN } from "@statsify/util/util";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest, getRequestIP } from "@tanstack/react-start/server";
 import { rpcServerClient } from "~/server/rpc.server";

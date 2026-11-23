@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/** A Minecraft UUID in a URL: 32 hex digits, with or without the four dashes, in any case. */
-export const UUID_PATTERN = /^[\da-f]{32}$|^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i;
+import { isUuid, normalizeUuid } from "@statsify/util/util";
 
 /** The account whose skin stands in for players we have nothing to show yet. */
 export const PLACEHOLDER_UUID = "76a56ac7fcf649fca0531cb5c77cd9ae";
@@ -17,7 +16,7 @@ export const PLACEHOLDER_UUID = "76a56ac7fcf649fca0531cb5c77cd9ae";
  * The image routes read every spelling through this, so they serve one image under one cache key.
  */
 export function compactUuid(value: string): string | null {
-  return UUID_PATTERN.test(value) ? value.replaceAll("-", "").toLowerCase() : null;
+  return isUuid(value) ? normalizeUuid(value) : null;
 }
 
 if (import.meta.vitest) {
