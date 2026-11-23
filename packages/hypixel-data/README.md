@@ -56,9 +56,9 @@ SkyWars' Mystery Egg) has no 26.3 item, so it's left out.
 For a skin render, `armorOf(items)` turns items (Pit's `inv_armor`, slots 36 to 39) into
 `{ helmet, chestplate, leggings, boots }`, each `{ material, color, enchanted }`, a player head's
 `{ head, enchanted }` texture hash or a mob skull's `{ skull }`; other things on the head are left
-out. `duelsKitArmor(key)`, `skyWarsKitArmor(kit)`, `blitzKitArmor(kit, level)` and
-`megaWallsKitArmor(kit, level)` give a kit's armor by the keys the adapters take; Blitz's covers
-every level. Leather is dyed by the color its picker names (White Leather Chestplate), else by the
+out. `duelsKitArmor(mode, kit)`, `skyWarsKitArmor(kit)`, `blitzKitArmor(kit, level)` and
+`megaWallsKitArmor(kit, level)` give a kit's armor by the names the adapters' keys hold; Blitz's
+covers every level. Leather is dyed by the color its picker names (White Leather Chestplate), else by the
 picker icon, else (Blitz) by the color its editor shows. Mega Walls Duel's picker lists no armor, so
 its classes come back undefined.
 
