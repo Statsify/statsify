@@ -52,6 +52,7 @@ import type {
   ResolveInput,
   ResultCard,
 } from "@statsify/contract";
+import { AUTO_UPDATE_AGE_MS } from "@statsify/contract/refresh";
 import { ORPCError } from "@orpc/nest";
 import { freshness } from "./cooldown.js";
 import { buildGlossary, buildPrestigeSheet } from "./content.js";
@@ -277,8 +278,10 @@ export class SiteService implements OnApplicationBootstrap {
     const cached = await this.playerService.getStored(tag);
     if (!cached) throw notFound();
 
-    // Inside the API's own cooldown `CACHE` would not call Hypixel anyway, so it costs no budget.
+    // Inside the API's own cooldown `CACHE` would not call Hypixel anyway, so it costs no budget. An automatic update
+    // can come from an edge copy of a page older than the stored save, so the stored save's age decides it.
     if (Date.now() < cached.expiresAt) return this.toPage(cached);
+    if (auto && Date.now() - freshness(cached).updatedAt < AUTO_UPDATE_AGE_MS) return this.toPage(cached);
 
     await this.consumeBudget(clientIp, auto);
     const [player] = await Promise.all([this.playerService.get(tag, CacheLevel.CACHE), this.refreshSkin(tag)]);

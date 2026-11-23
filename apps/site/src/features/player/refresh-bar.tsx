@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { AUTO_UPDATE_AGE_MS } from "@statsify/contract/refresh";
 import { Button } from "~/components/ui/button";
 import { Hint } from "~/components/ui/hint";
 import { Turnstile } from "~/components/turnstile";
@@ -19,9 +20,6 @@ import { useTranslation } from "react-i18next";
 const localeRoute = getRouteApi("/{-$locale}");
 
 const META = "text-mc-1 text-mc-gray";
-
-/** How old a save is before its page updates it by itself once it opens. */
-const AUTO_UPDATE_AGE_MS = 15 * 60_000;
 
 /** Crawlers that run scripts would spend the Hypixel budget just by loading pages, so they never update by themselves. */
 const BOT_AGENT = /bot|crawl|spider|slurp|headless|lighthouse|preview/i;
