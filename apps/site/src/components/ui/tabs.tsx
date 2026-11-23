@@ -8,7 +8,6 @@
 
 import { Box } from "~/components/ui/box";
 import { type ComponentProps, createContext, use, useState, useMemo, useCallback } from "react";
-import { SkeletonBox } from "./skeleton-box";
 import { cn } from "~/lib/util";
 
 const TabsContext = createContext<{ tab: string | number; onTabChange: (tab: string | number) => void }>({
@@ -77,18 +76,5 @@ export function Tab({ tab, onClick, className = "", ...props }: TabProps) {
       borderRadius={{ bottom: 0 }}
       className={`group text-mc-white/50 aria-pressed:font-bold aria-pressed:text-mc-white transition-colors content:flex content:items-center content:justify-center content:gap-2 ${className}`}
     />
-  );
-}
-
-export function SkeletonTab({ className = "", children, ...props }: TabProps) {
-  return (
-    <SkeletonBox
-      {...props}
-      as="button"
-      disabled
-      borderRadius={{ bottom: 0 }}
-      className={`group text-mc-gray aria-pressed:font-bold aria-pressed:text-mc-white transition-colors content:flex content:items-center content:justify-center content:gap-2 disabled:cursor-not-allowed ${className}`}
-    ><span>{children}</span>
-    </SkeletonBox>
   );
 }

@@ -77,25 +77,30 @@ export const panel = {
   outline: 4,
 } as const;
 
-/** Type: Minecraft for the wordmark, headings and stat values; Mona Sans for everything else. */
+const SANS = [
+  // Mona Sans, instanced and subset for the site; renamed because "Mona" is an OFL Reserved Font Name.
+  "\"Statsify Sans\"",
+  "\"Noto Sans\"",
+  "\"Noto Sans Thai\"",
+  "system-ui",
+  "\"Hiragino Sans\"",
+  "\"PingFang SC\"",
+  "\"PingFang TC\"",
+  "\"Microsoft YaHei\"",
+  "\"Apple SD Gothic Neo\"",
+  "\"Malgun Gothic\"",
+  "sans-serif",
+];
+
+/**
+ * Type: Minecraft for everything a card could show (titles, labels, values, names, nav, buttons, tabs, inputs and
+ * one-line messages); Mona Sans for reading text (paragraphs, help text, long tooltips, legal).
+ */
 export const type = {
   families: {
-    // Monospace until the TTF arrives: closer to the pixel font's width than the browser's serif.
-    minecraft: "\"Minecraft\", ui-monospace, monospace",
-    sans: [
-      // Mona Sans, instanced and subset for the site; renamed because "Mona" is an OFL Reserved Font Name.
-      "\"Statsify Sans\"",
-      "\"Noto Sans\"",
-      "\"Noto Sans Thai\"",
-      "system-ui",
-      "\"Hiragino Sans\"",
-      "\"PingFang SC\"",
-      "\"PingFang TC\"",
-      "\"Microsoft YaHei\"",
-      "\"Apple SD Gothic Neo\"",
-      "\"Malgun Gothic\"",
-      "sans-serif",
-    ].join(", "),
+    // A glyph neither the pixel font nor its Unifont slices have comes from the sans stack.
+    minecraft: ["\"Minecraft\"", ...SANS].join(", "),
+    sans: SANS.join(", "),
   },
   /** The shared size scale in px; 112 is the hero wordmark only. */
   scale: [16, 20, 24, 32, 48, 64, 112],
@@ -103,6 +108,4 @@ export const type = {
   minecraftSizes: [16, 24, 32, 48, 64, 112],
   /** Mona Sans weights: 500 on glass, 600 for emphasis, nothing lighter. */
   weights: { regular: 500, emphasis: 600 },
-  /** Mona Sans widths in %: 100 on desktop, 90 for phone labels that would wrap. */
-  widths: { normal: 100, narrow: 90 },
 } as const;

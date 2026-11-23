@@ -9,7 +9,7 @@
 import type { GameCode } from "@statsify/schemas";
 
 // One PNG per code in `public/games/`.
-const GAME_ICONS = new Set<string>([
+export const GAME_ICONS = new Set<string>([
   "ARCADE",
   "ARENA_BRAWL",
   "BEDWARS",

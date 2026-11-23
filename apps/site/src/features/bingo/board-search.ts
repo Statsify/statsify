@@ -11,20 +11,6 @@ import { z } from "zod";
 export const CategorySchema = z.enum(["casual", "pvp", "classic"]);
 export const DifficultySchema = z.enum(["easy", "hard"]);
 
-// The category names and icons for the overview and its skeleton. They live here rather than in `bingo.tsx` so the
-// skeleton, which ships in the route's eager chunk, doesn't pull in the board data.
-export const FormattedCategories: Record<z.infer<typeof CategorySchema>, string> = {
-  casual: "Casual",
-  classic: "Classic",
-  pvp: "PvP",
-};
-
-export const CATEGORY_ICONS: Record<z.infer<typeof CategorySchema>, string> = {
-  casual: "/icons/slime-ball.png",
-  pvp: "/icons/ender-eye.png",
-  classic: "/icons/snowball.png",
-};
-
 // eslint-disable-next-line unicorn/prefer-top-level-await -- zod's fallback value, not a promise
 const knownOrUndefined = <T extends z.ZodType>(schema: T) => schema.optional().catch(undefined);
 

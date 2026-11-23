@@ -30,23 +30,20 @@ export function ErrorPage({ error, reset }: ErrorComponentProps) {
 
   return (
     <Error>
-      <LogoError className="size-64 lg:size-80" />
+      <LogoError className="size-40 sm:size-64" />
       <div className="flex flex-col items-center gap-4">
-        <h1 className="text-mc-3 lg:text-mc-4 font-bold text-redify-200">
-          {t("error.title", "Something went wrong")}
-        </h1>
-        <p className="text-20 font-medium text-mc-gray text-center">
-          {t("error.description", "Try again in a moment.")}
-        </p>
-        <div className="flex flex-wrap justify-center gap-4 pt-2">
-          <Button asChild className="w-48">
+        <h1 className="text-mc-2 sm:text-mc-3 font-bold text-mc-red">{t("error.title", "Something Went Wrong")}</h1>
+        <p className="text-mc-1 sm:text-mc-1.5 text-mc-gray text-center">{t("error.description", "Try again in a moment.")}</p>
+        {/* One primary action; home is a plain link. */}
+        <div className="flex flex-col items-center gap-2 pt-2">
+          <Button asChild variant="primary" className="min-w-48">
             <button type="button" onClick={retry}>
               {t("error.tryAgain", "Try Again")}
             </button>
           </Button>
-          <Button asChild className="w-48">
-            <a href="/">{t("error.home", "Home")}</a>
-          </Button>
+          <a href="/" className="flex min-h-11 items-center text-mc-1 text-mc-white underline">
+            {t("error.home", "Home")}
+          </a>
         </div>
       </div>
     </Error>

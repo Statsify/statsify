@@ -42,6 +42,15 @@ export function formatNumber(value: number, locale?: string): string {
   return format.format(value);
 }
 
+/** A countdown as `m:ss`, or `h:mm:ss` from an hour up. */
+export function formatCountdown(seconds: number): string {
+  const total = Math.max(0, Math.ceil(seconds));
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const rest = String(total % 60).padStart(2, "0");
+  return hours > 0 ? `${hours}:${String(minutes).padStart(2, "0")}:${rest}` : `${minutes}:${rest}`;
+}
+
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
 
@@ -53,6 +62,15 @@ if (import.meta.vitest) {
       expect(formatNumber(1_234_567, "en-US")).toBe("1.23M");
       expect(formatNumber(2_500_000_000, "en-US")).toBe("2.50B");
       expect(formatNumber(1234, "de")).toBe("1.234");
+    });
+  });
+
+  describe("formatCountdown", () => {
+    it("shows m:ss, and hours once there are any", () => {
+      expect(formatCountdown(0)).toBe("0:00");
+      expect(formatCountdown(59.2)).toBe("1:00");
+      expect(formatCountdown(3599)).toBe("59:59");
+      expect(formatCountdown(21_536)).toBe("5:58:56");
     });
   });
 }

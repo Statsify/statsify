@@ -39,6 +39,7 @@ function LeaderboardsPage() {
       <Background
         background="general"
         priority
+        viewport
         className="h-full"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />
