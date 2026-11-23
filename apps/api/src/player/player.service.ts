@@ -11,6 +11,8 @@ import {
   type Circular,
   type Flatten,
   flatten,
+  isUuid,
+  normalizeUuid,
 } from "@statsify/util";
 import { CacheLevel, PlayerNotFoundException, StatusNotFoundException } from "@statsify/api-client";
 import { HttpService } from "@nestjs/axios";
@@ -100,6 +102,12 @@ export class PlayerService {
     }
 
     return null;
+  }
+
+  /** A stored player, never one from Hypixel: `get` with `CacheLevel.CACHE_ONLY` still asks Hypixel for one that isn't stored. */
+  public async getStored(tag: string, selector?: Record<string, boolean>): Promise<Player | null> {
+    const player = await this.findMongoDocument(tag, selector);
+    return player && deserialize(Player, player);
   }
 
   public async update(data: APIData) {
@@ -223,12 +231,12 @@ export class PlayerService {
     tag: string,
     selector: Record<string, boolean> = {}
   ): Promise<Flatten<Player> | null> {
-    const type = tag.length > 16 ? "uuid" : "usernameToLower";
+    const byUuid = isUuid(tag);
 
     const mongoPlayer: Player | null = await this.playerModel
       .findOne()
-      .where(type)
-      .equals(tag.replaceAll("-", "").toLowerCase())
+      .where(byUuid ? "uuid" : "usernameToLower")
+      .equals(byUuid ? normalizeUuid(tag) : tag.toLowerCase())
       .select(selector)
       .lean()
       .exec();

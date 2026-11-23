@@ -16,7 +16,7 @@ export const Route = createFileRoute("/api/skin/head")({
       // icons ask for 32, because browsers smooth a favicon when they scale it.
       GET: ({ request }) => {
         const search = new URL(request.url).searchParams;
-        return proxySkin("/skin/head", search, { size: search.get("size") === "32" ? "32" : "8" });
+        return proxySkin("/skin/head/stored", search, { size: search.get("size") === "32" ? "32" : "8" });
       },
     },
   },

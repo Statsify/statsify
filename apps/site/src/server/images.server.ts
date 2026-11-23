@@ -8,7 +8,7 @@
 
 import { type ImageVariant, PoolBusyError, RenderPool } from "@statsify/profiles/pool";
 import { cacheHeaders } from "~/lib/cache";
-import { compactUuid } from "~/lib/uuid";
+import { isUuid, normalizeUuid } from "@statsify/util/util";
 import { createRequire } from "node:module";
 import { join } from "node:path";
 import { proxySkin } from "./skin.server";
@@ -99,8 +99,8 @@ export async function playerImageResponse(
   variant: ImageVariant,
   policy: ImagePolicy
 ): Promise<Response> {
-  const uuid = compactUuid(uuidParam);
-  if (!uuid) return new Response(null, { status: 404, headers: cacheHeaders("max-age=300") });
+  if (!isUuid(uuidParam)) return new Response(null, { status: 404, headers: cacheHeaders("max-age=300") });
+  const uuid = normalizeUuid(uuidParam);
 
   try {
     const image = await renderPlayerImage({
@@ -231,8 +231,8 @@ async function waitForImage(
 
 /** The bot's general card for a stored player, as PNG bytes. Throws `PoolBusyError` when the queue is full. */
 async function renderCard(uuid: string, variant: ImageVariant, updatedAt: number): Promise<Uint8Array<ArrayBuffer>> {
-  // A miss reads the player and renders the skin (asking Minecraft's session server for it, if it's old) before it
-  // can queue, so a queue with no room left, counting the misses still loading, answers busy first.
+  // A miss reads the player and renders the stored skin before it can queue, so a queue with no room left, counting
+  // the misses still loading, answers busy first.
   const renders = await renderPool();
   if (renders.pending + loading >= RENDER_QUEUE_LIMIT) throw new PoolBusyError();
 
@@ -250,7 +250,7 @@ async function renderCard(uuid: string, variant: ImageVariant, updatedAt: number
 }
 
 async function fetchSkin(uuid: string): Promise<Uint8Array> {
-  const response = await proxySkin("/skin", new URLSearchParams({ uuid }));
+  const response = await proxySkin("/skin/stored", new URLSearchParams({ uuid }));
   if (!response.ok) throw new SkinUnavailableError(response.status);
   return new Uint8Array(await response.arrayBuffer());
 }
