@@ -52,6 +52,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
     }, {} as Record<string, boolean>);
 
     selector.displayName = true;
+    selector.username = true;
     selector.uuid = true;
 
     // One query for the whole page instead of one per row. `$in` returns documents in no
