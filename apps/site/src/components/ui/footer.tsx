@@ -22,7 +22,7 @@ const LINK = "flex min-h-11 items-center hover:text-mc-white hover:underline";
 
 export function Footer() {
   const { t, i18n } = useTranslation();
-  const year = new Intl.DateTimeFormat(i18n.language, { year: "numeric" }).format(new Date());
+  const year = new Intl.DateTimeFormat(i18n.language, { year: "numeric", timeZone: "UTC" }).format(new Date());
   const email = t("footer.email");
 
   return (
