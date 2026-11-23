@@ -208,7 +208,7 @@ function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade)
 
 async function readSource(source: PackSource): Promise<Uint8Array> {
   if (typeof source === "string") {
-    const response = await fetch(source);
+    const response = await fetch(source, { signal: AbortSignal.timeout(60_000) });
     if (!response.ok) throw new Error(`${source}: ${response.status} ${response.statusText}`);
     return new Uint8Array(await response.arrayBuffer());
   }
