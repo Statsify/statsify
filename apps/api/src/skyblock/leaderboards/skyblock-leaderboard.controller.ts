@@ -54,7 +54,7 @@ export class SkyBlockLeaderboardController {
   })
   @ApiOkResponse({ type: [PostLeaderboardRankingsResponse] })
   @ApiBadRequestResponse({ type: ErrorResponse })
-  @Auth({ weight: 5 })
+  @Auth({ role: AuthRole.WORKER, weight: 5 })
   public getSkyBlockRankings(@Body() { player }: PlayerDto) {
     return this.skyblockLeaderboardService.getPlayerRankings(player);
   }
