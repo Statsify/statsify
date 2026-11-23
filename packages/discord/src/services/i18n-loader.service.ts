@@ -9,7 +9,7 @@
 import Backend from "i18next-fs-backend";
 import i18next from "i18next";
 import { Service } from "typedi";
-import { abbreviationNumber } from "@statsify/util";
+import { abbreviationNumber, splitTime } from "@statsify/util";
 import { readdir } from "node:fs/promises";
 
 const DEFAULT_LANGUAGE = "en-US";
@@ -72,6 +72,20 @@ function getNumberFormat(lng: string | undefined, digits: number) {
   return numberFormat;
 }
 
+const unitFormats = new Map<string, Intl.NumberFormat>();
+
+function getUnitFormat(lng: string | undefined, unit: string) {
+  const key = `${lng}|${unit}`;
+  let unitFormat = unitFormats.get(key);
+
+  if (!unitFormat) {
+    unitFormat = Intl.NumberFormat(lng, { style: "unit", unit, unitDisplay: "long" });
+    unitFormats.set(key, unitFormat);
+  }
+
+  return unitFormat;
+}
+
 function format(value: any, format?: string | undefined, lng?: string): string {
   switch (format) {
     case "number": {
@@ -85,7 +99,25 @@ function format(value: any, format?: string | undefined, lng?: string): string {
 
       return numberFormat.format(value as number);
     }
+
+    case "duration": {
+      const { value: amount, long: unit } = splitTime(value).find((unit) => unit.value > 0)!;
+      return getUnitFormat(lng, unit).format(amount);
+    }
   }
 
   return value;
+}
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("format", () => {
+    it("should format a duration in its largest unit for the locale", () => {
+      expect(format(500, "duration", "en-US")).toBe("500 milliseconds");
+      expect(format(60_000, "duration", "en-US")).toBe("1 minute");
+      expect(format(150_000, "duration", "en-US")).toBe("2 minutes");
+      expect(format(7_200_000, "duration", "de")).toBe("2 Stunden");
+    });
+  });
 }
