@@ -1,5 +1,4 @@
 use std::sync::Arc;
-use wgpu::TextureFormat;
 use winit::dpi::PhysicalSize;
 use winit::window::Window;
 
@@ -91,7 +90,7 @@ impl Backend for WasmBackend {
     config
   }
 
-  fn get_output_texture(&self) -> OutputTexture {
+  fn get_output_texture(&self) -> OutputTexture<'_> {
     self.surface.get_current_texture().unwrap()
   }
 

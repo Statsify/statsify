@@ -29,8 +29,6 @@ struct InstanceInput {
     @location(9) normal_matrix_0: vec3<f32>,
     @location(10) normal_matrix_1: vec3<f32>,
     @location(11) normal_matrix_2: vec3<f32>,
-
-    @location(12) uneven_scale: u32,
 }
 
 struct VertexOutput {
@@ -60,8 +58,7 @@ fn vs_main(
 
     var out: VertexOutput;
     out.texture_coordinates = model.texture_coordinates;
-    let normal = normal_matrix * model.normal;
-    out.world_normal = select(normal, normalize(normal), instance.uneven_scale != 0u);
+    out.world_normal = normalize(normal_matrix * model.normal);
 
     var world_position: vec4<f32> = model_matrix * vec4<f32>(model.position, 1.0);
     out.world_position = world_position.xyz;
@@ -81,28 +78,6 @@ var t_glint: texture_2d<f32>;
 
 @group(3) @binding(1)
 var s_glint: sampler;
-
-@fragment
-fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
-    return shade(in, textureSample(t_diffuse, s_diffuse, in.texture_coordinates));
-}
-
-// Armor has see-through gaps, which must not hide what's drawn behind them later.
-// The skin keeps fs_main, since a discard turns off early depth testing on software renderers
-@fragment
-fn fs_attachment(in: VertexOutput) -> @location(0) vec4<f32> {
-    return attachment_color(in);
-}
-
-fn attachment_color(in: VertexOutput) -> vec4<f32> {
-    let object_color: vec4<f32> = textureSample(t_diffuse, s_diffuse, in.texture_coordinates);
-
-    if object_color.a == 0.0 {
-        discard;
-    }
-
-    return shade(in, object_color);
-}
 
 @fragment
 fn fs_cutout(in: VertexOutput) -> @location(0) vec4<f32> {
@@ -147,12 +122,6 @@ fn shade(in: VertexOutput, object_color: vec4<f32>) -> vec4<f32> {
     let result = (ambient_color + diffuse_color) * object_color.xyz;
 
     return vec4<f32>(result, object_color.a);
-}
-
-@fragment
-fn fs_enchanted(in: VertexOutput) -> @location(0) vec4<f32> {
-    let glint = glint_color(in);
-    return enchant(attachment_color(in), glint);
 }
 
 @fragment
