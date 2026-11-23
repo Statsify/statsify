@@ -1,25 +1,22 @@
-use std::sync::{mpsc, Arc};
+use std::sync::mpsc;
 
 use image::codecs::png::PngEncoder;
 use image::{ExtendedColorType, ImageEncoder};
 use napi::bindgen_prelude::spawn_blocking;
 
-use super::backend::Backend;
+use super::backend::{Backend, OutputTexture};
 use super::PngBytes;
 use crate::buffer_dimensions::BufferDimensions;
 use crate::error::{Error, Result as SkinRendererResult};
-use crate::texture::Texture;
-
-// Smaller sizes leave no room inside the camera's pixel margins, and narrower ones pull the
-// camera back until its far plane clips the player
-pub const MIN_SIZE: u32 = 16;
-pub const MAX_ASPECT_RATIO: u32 = 4;
 
 pub struct NativeBackend {
   device: wgpu::Device,
   queue: wgpu::Queue,
 
-  default_target: Arc<RenderTarget>,
+  dimensions: BufferDimensions,
+
+  texture: wgpu::Texture,
+  texture_extent: wgpu::Extent3d,
 }
 
 impl NativeBackend {
@@ -28,46 +25,32 @@ impl NativeBackend {
     let adapter = Self::request_adapter(instance).await?;
     let (device, queue) = Self::request_device(&adapter).await?;
 
-    let default_target = Arc::new(RenderTarget::new(&device, &Self::config(width, height)));
+    let dimensions = BufferDimensions::new(width, height);
+
+    let texture_extent = wgpu::Extent3d {
+      width: dimensions.width,
+      height: dimensions.height,
+      depth_or_array_layers: 1,
+    };
+
+    let texture = device.create_texture(&wgpu::TextureDescriptor {
+      label: None,
+      size: texture_extent,
+      mip_level_count: 1,
+      sample_count: 1,
+      dimension: wgpu::TextureDimension::D2,
+      format: wgpu::TextureFormat::Rgba8UnormSrgb,
+      usage: wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
+      view_formats: &[],
+    });
 
     Ok(Self {
       device,
       queue,
-      default_target,
+      dimensions,
+      texture,
+      texture_extent,
     })
-  }
-
-  fn config(width: u32, height: u32) -> wgpu::SurfaceConfiguration {
-    wgpu::SurfaceConfiguration {
-      usage: wgpu::TextureUsages::empty(),
-      format: wgpu::TextureFormat::Rgba8UnormSrgb,
-      width,
-      height,
-      present_mode: wgpu::PresentMode::default(),
-      alpha_mode: wgpu::CompositeAlphaMode::default(),
-      view_formats: vec![],
-      desired_maximum_frame_latency: 2,
-    }
-  }
-
-  pub fn render_target(&self, width: u32, height: u32) -> SkinRendererResult<Arc<RenderTarget>> {
-    let dimensions = &self.default_target.dimensions;
-
-    if width == dimensions.width && height == dimensions.height {
-      return Ok(Arc::clone(&self.default_target));
-    }
-
-    let limit = self.device.limits().max_texture_dimension_2d;
-    let (short, long) = (width.min(height), width.max(height));
-
-    if short < MIN_SIZE || long > limit || long > short * MAX_ASPECT_RATIO {
-      return Err(Error::InvalidSize { max: limit });
-    }
-
-    Ok(Arc::new(RenderTarget::new(
-      &self.device,
-      &Self::config(width, height),
-    )))
   }
 }
 
@@ -95,55 +78,35 @@ impl Backend for NativeBackend {
   }
 
   fn create_config(&self) -> wgpu::SurfaceConfiguration {
-    let dimensions = &self.default_target.dimensions;
-    Self::config(dimensions.width, dimensions.height)
-  }
-}
-
-pub struct RenderTarget {
-  dimensions: BufferDimensions,
-
-  texture: wgpu::Texture,
-  pub view: wgpu::TextureView,
-  pub depth_texture: Texture,
-}
-
-impl RenderTarget {
-  fn new(device: &wgpu::Device, config: &wgpu::SurfaceConfiguration) -> Self {
-    let dimensions = BufferDimensions::new(config.width, config.height);
-
-    let texture = device.create_texture(&wgpu::TextureDescriptor {
-      label: None,
-      size: wgpu::Extent3d {
-        width: dimensions.width,
-        height: dimensions.height,
-        depth_or_array_layers: 1,
-      },
-      mip_level_count: 1,
-      sample_count: 1,
-      dimension: wgpu::TextureDimension::D2,
-      format: config.format,
-      usage: wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
-      view_formats: &[],
-    });
-
-    Self {
-      dimensions,
-      view: texture.create_view(&wgpu::TextureViewDescriptor::default()),
-      texture,
-      depth_texture: Texture::create_depth_texture(device, config, "depth_texture"),
+    wgpu::SurfaceConfiguration {
+      usage: wgpu::TextureUsages::empty(),
+      format: self.texture.format(),
+      width: self.dimensions.width,
+      height: self.dimensions.height,
+      present_mode: wgpu::PresentMode::default(),
+      alpha_mode: wgpu::CompositeAlphaMode::default(),
+      view_formats: vec![],
+      desired_maximum_frame_latency: 2,
     }
   }
 
-  pub async fn read(
-    self: Arc<Self>,
-    device: &wgpu::Device,
-    queue: &wgpu::Queue,
+  fn get_output_texture(&self) -> OutputTexture<'_> {
+    &self.texture
+  }
+
+  fn create_view(output_texture: &OutputTexture) -> wgpu::TextureView {
+    output_texture.create_view(&wgpu::TextureViewDescriptor::default())
+  }
+
+  async fn handle_encoder_after_render(
+    &self,
     mut encoder: wgpu::CommandEncoder,
   ) -> SkinRendererResult<PngBytes> {
-    let output_buffer = device.create_buffer(&wgpu::BufferDescriptor {
+    let dimensions = self.dimensions;
+
+    let output_buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
       label: None,
-      size: (self.dimensions.padded_bytes_per_row * self.dimensions.height) as u64,
+      size: (dimensions.padded_bytes_per_row * dimensions.height) as u64,
       usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
       mapped_at_creation: false,
     });
@@ -154,17 +117,17 @@ impl RenderTarget {
         buffer: &output_buffer,
         layout: wgpu::TexelCopyBufferLayout {
           offset: 0,
-          bytes_per_row: Some(self.dimensions.padded_bytes_per_row),
-          rows_per_image: Some(self.dimensions.height),
+          bytes_per_row: Some(dimensions.padded_bytes_per_row),
+          rows_per_image: Some(dimensions.height),
         },
       },
-      self.texture.size(),
+      self.texture_extent,
     );
 
     // Waiting on the GPU blocks the thread, so it runs off napi's async workers. submit goes
     // with it: it waits on the device lock a running poll holds until its GPU work finishes
-    let device = device.clone();
-    let queue = queue.clone();
+    let device = self.device.clone();
+    let queue = self.queue.clone();
     let command_buffer = encoder.finish();
 
     spawn_blocking(move || {
@@ -185,9 +148,9 @@ impl RenderTarget {
       let padded_buffer = buffer_slice.get_mapped_range();
 
       let buffer = padded_buffer
-        .chunks(self.dimensions.padded_bytes_per_row as usize)
-        .take(self.dimensions.height as usize)
-        .flat_map(|row| &row[..self.dimensions.unpadded_bytes_per_row as usize])
+        .chunks(dimensions.padded_bytes_per_row as usize)
+        .take(dimensions.height as usize)
+        .flat_map(|row| &row[..dimensions.unpadded_bytes_per_row as usize])
         .copied()
         .collect::<Vec<u8>>();
 
@@ -195,8 +158,8 @@ impl RenderTarget {
 
       PngEncoder::new(&mut png).write_image(
         &buffer,
-        self.dimensions.width,
-        self.dimensions.height,
+        dimensions.width,
+        dimensions.height,
         ExtendedColorType::Rgba8,
       )?;
 
