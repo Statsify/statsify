@@ -8,43 +8,21 @@
 
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
-import { PlayerNotFound } from "~/features/player/player-not-found";
 import { DELAY_MS } from "~/components/navigation-progress";
 import { PlayerShell, PlayerView } from "~/features/player/player-page";
 import { cacheHeaders } from "~/lib/cache";
-import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/player-route";
-import { missingPlayerResponse } from "~/lib/response";
+import { EDGE_CACHE, possessive } from "~/lib/player-route";
 import { playerTabIcon } from "~/lib/tab-icon";
-import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
-import { ensurePlayer, playerPageQuery } from "~/features/player/resolve";
+import { playerPageQuery } from "~/features/player/resolve";
 import { removeFormatting } from "@statsify/util/util";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/{-$locale}/player/$name/")({
-  loader: async ({ params, context }) => {
-    const identity = await ensurePlayer(context.queryClient, params.name);
-
-    if (!identity) {
-      missingPlayerResponse();
-      throw notFound();
-    }
-
-    // UUIDs, old names and other casings all land on the current name. Names change hands, so
-    // browsers and the edge keep the redirect for an hour rather than forever.
-    if (identity.username !== params.name) {
-      throw redirect({
-        to: "/{-$locale}/player/$name",
-        params: { name: identity.username },
-        // A search's history state goes along, so a typed name in another casing still updates as a bot command would.
-        state: true,
-        statusCode: 301,
-        headers: REDIRECT_HEADERS,
-      });
-    }
-
-    const page = await context.queryClient.ensureQueryData(playerPageQuery(identity.uuid));
+  loader: async ({ context: { player: identity, queryClient } }) => {
+    const page = await queryClient.ensureQueryData(playerPageQuery(identity.uuid));
     // For the unfurl's text: the network level and the first numbers of the first games the page shows.
     const headline = {
       level: page.level.level,
@@ -59,7 +37,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
     const locale = localeData(matches);
     // The title, the description and a link preview's numbers, in English, from the server's `site.json`.
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
-    if (!loaderData) return notFoundHead(words.t("meta.notFound.player"));
+    if (!loaderData) return {};
 
     const { username, uuid, updatedAt, headline } = loaderData;
     const origin = locale?.origin;
@@ -99,7 +77,6 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),
-  notFoundComponent: PlayerNotFound,
   // Shown at least a moment once up, so a page that lands just after doesn't flash it.
   pendingComponent: PlayerPending,
   pendingMs: DELAY_MS,

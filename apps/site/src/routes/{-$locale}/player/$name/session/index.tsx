@@ -7,61 +7,36 @@
  */
 
 import { DEFAULT_LOCALE } from "~/i18n/locales";
-import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/player-route";
-import { PlayerNotFound } from "~/features/player/player-not-found";
+import { EDGE_CACHE, notFoundHead, possessive } from "~/lib/player-route";
 import { SessionNotFound } from "~/features/session/session-not-found";
 import { SessionView } from "~/features/session/session-page";
 import { cacheHeaders } from "~/lib/cache";
-import { cacheNotFoundResponse, missingPlayerResponse } from "~/lib/response";
-import { createFileRoute, isNotFound, notFound, redirect } from "@tanstack/react-router";
+import { cacheNotFoundResponse } from "~/lib/response";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { createI18n } from "~/i18n/i18n";
-import { ensurePlayer } from "~/features/player/resolve";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { orNull } from "~/lib/orpc";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { sessionPageQuery } from "~/features/session/session-data";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-/** Which not-found page to show: the player one, with its lookup, or the one for a player without a session. */
-type Missing = { player: boolean };
-
 export const Route = createFileRoute("/{-$locale}/player/$name/session/")({
-  loader: async ({ params, context }) => {
-    const identity = await ensurePlayer(context.queryClient, params.name);
-
-    if (!identity) {
-      missingPlayerResponse();
-      throw notFound({ data: { player: true } satisfies Missing });
-    }
-
-    if (identity.username !== params.name) {
-      throw redirect({
-        to: "/{-$locale}/player/$name/session",
-        params: { name: identity.username },
-        state: true,
-        statusCode: 301,
-        headers: REDIRECT_HEADERS,
-      });
-    }
-
-    const page = await orNull(context.queryClient.ensureQueryData(sessionPageQuery(identity.uuid)), ["NOT_FOUND"]);
+  loader: async ({ context: { player: identity, queryClient } }) => {
+    const page = await orNull(queryClient.ensureQueryData(sessionPageQuery(identity.uuid)), ["NOT_FOUND"]);
 
     if (!page) {
       cacheNotFoundResponse();
-      throw notFound({ data: { player: false } satisfies Missing });
+      throw notFound();
     }
 
     return identity;
   },
   staleTime: 60_000,
   staticData: { tabIcon: playerTabIcon },
-  head: ({ loaderData, matches, match }) => {
+  head: ({ loaderData, matches }) => {
     const locale = localeData(matches);
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
-    if (!loaderData) {
-      const missing = isNotFound(match.error) ? match.error.data as Missing | undefined : undefined;
-      return notFoundHead(words.t(missing?.player === false ? "meta.notFound.session" : "meta.notFound.player"));
-    }
+    if (!loaderData) return notFoundHead(words.t("meta.notFound.session"));
 
     const { username } = loaderData;
     const name = possessive(username);
@@ -89,7 +64,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/session/")({
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),
-  notFoundComponent: ({ data }) => ((data as Missing | undefined)?.player === false ? <SessionNotFound /> : <PlayerNotFound />),
+  notFoundComponent: SessionNotFound,
   component: SessionPage,
 });
 
