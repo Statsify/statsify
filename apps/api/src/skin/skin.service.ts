@@ -42,7 +42,7 @@ import {
   type WarlordsRenderDto,
 } from "#dtos";
 import type { ReturnModelType } from "@typegoose/typegoose";
-import { readFile, readdir } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 
 @Injectable()
 export class SkinService {
@@ -103,7 +103,7 @@ export class SkinService {
       uuid ? this.getScenePlayer(uuid) : undefined,
     ]);
 
-    return this.reloadIfUnavailable(KART_PACK, renderKart(library, kart, { ...options, player }));
+    return renderKart(library, kart, { ...options, player });
   }
 
   public async getWarlordsRender({ uuid, ...options }: WarlordsRenderDto): Promise<Buffer> {
@@ -114,7 +114,7 @@ export class SkinService {
       uuid ? this.getScenePlayer(uuid) : undefined,
     ]);
 
-    return this.reloadIfUnavailable(WARLORDS_PACK, renderWarlords(library, warlords, { ...options, player }));
+    return renderWarlords(library, warlords, { ...options, player });
   }
 
   public async getSmashRender({ hero, master, ...options }: SmashRenderDto): Promise<Buffer> {
@@ -232,14 +232,6 @@ export class SkinService {
     return library;
   }
 
-  // The library only finds a missing file when a scene bakes it, so a pack completed after startup needs a reload
-  private reloadIfUnavailable(pack: ResourcePack, render: Promise<Buffer>) {
-    return render.catch((error) => {
-      if (error instanceof ServiceUnavailableException) this.libraries.delete(pack);
-      throw error;
-    });
-  }
-
   private getUuid(username: string): Promise<string> {
     return lastValueFrom(
       this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
@@ -352,26 +344,18 @@ async function readPackFiles<T>(pack: ResourcePack, folder: string, extension: s
   return Object.fromEntries(files.map((file, index) => [file.slice(0, -extension.length), contents[index]]));
 }
 
-const packUnavailable = ({ name }: ResourcePack) => new ServiceUnavailableException(`The ${name} pack isn't installed`);
-
-const throwPackUnavailable = (pack: ResourcePack) => (): never => {
-  throw packUnavailable(pack);
-};
-
-// The renderer's errors carry only a message
-const MISSING_PACK_FILE = /^SkinRendererError: The pack has no (model|texture) named /;
-
-const rethrowPackError = (pack: ResourcePack) => (error: unknown): never => {
-  if (error instanceof Error && MISSING_PACK_FILE.test(error.message)) throw packUnavailable(pack);
-  throw error;
-};
-
 export async function loadPackLibrary(pack: ResourcePack): Promise<ModelLibrary> {
+  // Only a missing pack is a 503. Anything else is broken state, and Sentry skips 503s.
+  await access(pack.path).catch((error: NodeJS.ErrnoException) => {
+    if (error.code === "ENOENT") throw new ServiceUnavailableException(`The ${pack.name} pack isn't installed`);
+    throw error;
+  });
+
   const [models, textures, mcmeta] = await Promise.all([
     readPackFiles(pack, "models", ".json", (path) => readFile(path, "utf8")),
     readPackFiles(pack, "textures", ".png", (path) => readFile(path)),
     readPackFiles(pack, "textures", ".png.mcmeta", (path) => readFile(path, "utf8")),
-  ]).catch(throwPackUnavailable(pack));
+  ]);
 
   return new ModelLibrary({ models, textures, mcmeta });
 }
@@ -420,7 +404,7 @@ async function resolvePackArmor(pack: ResourcePack, pieces: Omit<ArmorDto, "helm
     pieces.chestplate && resolveArmorPiece(pieces.chestplate, 1, textures),
     pieces.leggings && resolveArmorPiece(pieces.leggings, 2, textures),
     pieces.boots && resolveArmorPiece(pieces.boots, 1, textures),
-  ]).catch(throwPackUnavailable(pack));
+  ]);
 
   return { chestplate, leggings, boots };
 }
@@ -439,12 +423,11 @@ export async function renderKart(
 ): Promise<Buffer> {
   const output = { width, height, yaw, pitch };
 
-  if (!player) return renderScene(library, { models }, output).catch(rethrowPackError(KART_PACK));
+  if (!player) return renderScene(library, { models }, output);
 
   const armor = await resolvePackArmor(KART_PACK, suit);
 
-  return renderScene(library, { player: { ...player, extruded, armor, pose: "sit" }, models }, output)
-    .catch(rethrowPackError(KART_PACK));
+  return renderScene(library, { player: { ...player, extruded, armor, pose: "sit" }, models }, output);
 }
 
 export interface WarlordsScene {
@@ -496,12 +479,11 @@ export async function renderWarlords(
     pitch: camera.pitch ?? defaults.pitch,
   };
 
-  if (!player) return renderScene(library, { models }, output).catch(rethrowPackError(WARLORDS_PACK));
+  if (!player) return renderScene(library, { models }, output);
 
   const worn = await resolvePackArmor(WARLORDS_PACK, { chestplate: armor, leggings: armor, boots: armor });
 
-  return renderScene(library, { player: { ...player, extruded, armor: worn, pose: "standing" }, models }, output)
-    .catch(rethrowPackError(WARLORDS_PACK));
+  return renderScene(library, { player: { ...player, extruded, armor: worn, pose: "standing" }, models }, output);
 }
 
 export interface SmashScene extends Pick<SmashHero, "skinColor" | "chestplate" | "leggings" | "boots"> {
