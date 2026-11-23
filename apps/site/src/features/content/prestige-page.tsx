@@ -104,7 +104,7 @@ function Panel({ id, heading, count, children }: { id: string; heading: string; 
       aria-labelledby={`${id}-heading`}
       className="scroll-mt-6"
       title={
-        <h2 id={`${id}-heading`} className="text-mc-1.5 font-bold">
+        <h2 id={`${id}-heading`} className="text-mc-1.5 lg:text-mc-2 font-bold">
           {heading} {count !== undefined && <span className="font-normal text-mc-gray">{count}</span>}
         </h2>
       }

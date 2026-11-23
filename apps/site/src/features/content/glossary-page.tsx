@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Article, CHIP, Paragraph, TextLink, TextPage } from "./text-page";
+import { Article, CHIP, Paragraph, TAP_AREA, TextLink, TextPage } from "./text-page";
 import { Box } from "~/components/ui/box";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Trans, useTranslation } from "react-i18next";
 import { type ReactNode, useState } from "react";
+import { cn } from "~/lib/util";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import type { GlossaryGroup, GlossaryItem } from "./content-data";
 
@@ -67,7 +68,7 @@ export function GlossaryPage({ groups }: { groups: GlossaryGroup[] }) {
           aria-labelledby={`${group.key}-heading`}
           className="scroll-mt-6"
           title={
-            <h2 id={`${group.key}-heading`} className="text-mc-1.5 font-bold">
+            <h2 id={`${group.key}-heading`} className="text-mc-1.5 lg:text-mc-2 font-bold">
               {groupName(group)} <span className="font-normal text-mc-gray">{group.items.length}</span>
             </h2>
           }
@@ -98,11 +99,9 @@ function Entry({ item, label, own }: { item: GlossaryItem; label: string; own: b
       </div>
       <p className="mt-2 max-w-[68ch] font-sans text-16 leading-[1.6] font-medium text-mc-gray lg:text-20">{item.text}</p>
       {item.formula && <Formula formula={item.formula} label={label} color={color} />}
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 text-mc-1 text-mc-gray empty:hidden lg:text-mc-1.5">
+      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-3 text-mc-1 text-mc-gray empty:hidden lg:text-mc-1.5">
         {!own && (
-          <span className="inline-flex min-h-11 items-center">
-            {item.more > 0 ? t("glossary.usedInMore", { games, more: n(item.more) }) : t("glossary.usedIn", { games })}
-          </span>
+          <span>{item.more > 0 ? t("glossary.usedInMore", { games, more: n(item.more) }) : t("glossary.usedIn", { games })}</span>
         )}
         {item.link && (
           <BoardLink link={item.link} label={label}>
@@ -115,7 +114,7 @@ function Entry({ item, label, own }: { item: GlossaryItem; label: string; own: b
   );
 }
 
-const BOARD_LINK = "inline-flex min-h-11 items-center text-white hover:underline";
+const BOARD_LINK = cn(TAP_AREA, "text-white hover:underline");
 
 function BoardLink({ link, label, children }: { link: NonNullable<GlossaryItem["link"]>; label: string; children: ReactNode }) {
   if ("search" in link) {

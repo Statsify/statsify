@@ -250,6 +250,9 @@ export function Strong({ children }: { children?: ReactNode }) {
   return <strong className="font-semibold text-white">{children}</strong>;
 }
 
+/** A link's tap area grown past its line of text to at least 44 px, as a line of links sits closer than that. */
+export const TAP_AREA = "relative after:absolute after:-inset-x-2 after:-inset-y-4 after:min-h-11 after:min-w-11";
+
 const TEXT_LINK = "font-semibold text-white underline decoration-2 underline-offset-3 hover:text-mc-aqua";
 
 /** A link in reading text: to a page of the site, or anywhere by `href` (mail, vanity links the server redirects). */
