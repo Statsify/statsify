@@ -108,16 +108,15 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
   /** Tied rows share a rank, unlike on the player and guild boards. */
   public async getLeaderboard<T>(constructor: Constructor<T>, field: string, input: number | string, type: LeaderboardQuery) {
     const leaderboard = await super.getLeaderboard(constructor, field, input, type);
-    const [first] = leaderboard.data;
-    if (!first) return leaderboard;
+    if (leaderboard.data.length === 0) return leaderboard;
 
     const scores = await this.redis.zmscore(`skyblockstats.${field}`, leaderboard.data.map(({ id }) => id));
-    const ranks = await this.sharedRanks(field, scores.map(Number), first.position - 1);
+    const ranks = await this.sharedRanks(field, scores.map(Number), leaderboard.data.map(({ position }) => position));
     return { ...leaderboard, data: leaderboard.data.map((row, index) => ({ ...row, position: ranks[index] })) };
   }
 
-  /** The ranks of a page of scores starting at `top`, where tied rows share one (1, 2, 2, 4) in the board's order. */
-  public async sharedRanks(field: string, scores: number[], top: number): Promise<number[]> {
+  /** The ranks of a page of rows at `positions`, where tied rows share one (1, 2, 2, 4) in the board's order. */
+  public async sharedRanks(field: string, scores: number[], positions: number[]): Promise<number[]> {
     if (scores.length === 0) return [];
 
     const key = `skyblockstats.${field}`;
@@ -126,7 +125,7 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
 
     const ranks = [ahead + 1];
     for (let index = 1; index < scores.length; index++) {
-      ranks.push(scores[index] === scores[index - 1] ? ranks[index - 1] : top + index + 1);
+      ranks.push(scores[index] === scores[index - 1] ? ranks[index - 1] : positions[index]);
     }
 
     return ranks;
@@ -234,7 +233,8 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     return ids.map((id) => {
       const row = rowsById.get(id);
       const stats = flatten(row ?? null) as LeaderboardAdditionalStats;
-      if (row) stats.name = memberName(namesByUuid.get(row.uuid) ?? row.uuid, row);
+      const displayName = row && namesByUuid.get(row.uuid);
+      if (displayName) stats.name = memberName(displayName, row);
       return stats;
     });
   }
