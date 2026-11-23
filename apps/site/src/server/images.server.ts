@@ -8,7 +8,7 @@
 
 import { type ImageVariant, PoolBusyError, RenderPool } from "@statsify/profiles/pool";
 import { cacheHeaders } from "~/lib/cache";
-import { compactUuid } from "~/lib/uuid";
+import { isUuid, normalizeUuid } from "@statsify/util/util";
 import { createRequire } from "node:module";
 import { join } from "node:path";
 import { proxySkin } from "./skin.server";
@@ -99,8 +99,8 @@ export async function playerImageResponse(
   variant: ImageVariant,
   policy: ImagePolicy
 ): Promise<Response> {
-  const uuid = compactUuid(uuidParam);
-  if (!uuid) return new Response(null, { status: 404, headers: cacheHeaders("max-age=300") });
+  if (!isUuid(uuidParam)) return new Response(null, { status: 404, headers: cacheHeaders("max-age=300") });
+  const uuid = normalizeUuid(uuidParam);
 
   try {
     const image = await renderPlayerImage({

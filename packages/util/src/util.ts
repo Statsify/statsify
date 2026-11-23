@@ -361,6 +361,7 @@ if (import.meta.vitest) {
       expect(isUuid("069a79f444e94726a5befca90e38aaf5")).toBe(true);
       expect(isUuid("069A79F4-44E9-4726-A5BE-FCA90E38AAF5")).toBe(true);
       expect(isUuid("069a79f444e94726a5befca90e38aaf")).toBe(false);
+      expect(isUuid("069a79f4-44e94726-a5be-fca90e38aaf5")).toBe(false);
       expect(isUuid("Notch_Is_A_Long_Name")).toBe(false);
       expect(normalizeUuid("069A79F4-44E9-4726-A5BE-FCA90E38AAF5")).toBe("069a79f444e94726a5befca90e38aaf5");
     });

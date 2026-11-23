@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PLACEHOLDER_UUID, compactUuid } from "~/lib/uuid";
+import { isUuid, normalizeUuid } from "@statsify/util/util";
+import { PLACEHOLDER_UUID } from "~/lib/uuid";
 import { resolvePlayer } from "~/features/player/resolve";
 import { API_TIMEOUT_MS } from "./rpc.server";
 import { siteConfig } from "./config.server";
@@ -61,7 +62,8 @@ export async function proxySkin(
 function isPageQuery(uuid: string, search: URLSearchParams, fixed: Record<string, string>): boolean {
   const keys = [...search.keys()];
   return (
-    compactUuid(uuid) === uuid &&
+    isUuid(uuid) &&
+    normalizeUuid(uuid) === uuid &&
     new Set(keys).size === keys.length &&
     keys.every((key) => key === "uuid" || search.get(key) === fixed[key])
   );
