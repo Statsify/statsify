@@ -15,14 +15,12 @@ import { createServer } from "minecraft-protocol";
 import { generateCode } from "./generate-code.js";
 import { getLogoPath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
+import { once } from "node:events";
 import { readFileSync } from "node:fs";
 
 const logger = new Logger("verify-server");
 
 const handleError = logger.error.bind(logger);
-
-process.on("uncaughtException", handleError);
-process.on("unhandledRejection", handleError);
 
 const codeCreatedMessage = (code: string, time: Date) => {
   // Add on the expirey time to the time provided by mongo
@@ -71,6 +69,12 @@ const server = createServer({
     response.favicon = `data:image/png;base64,${serverLogo}`;
   },
 });
+
+await once(server, "listening");
+
+// Only after startup, so a failed start exits and the process gets restarted
+process.on("uncaughtException", handleError);
+process.on("unhandledRejection", handleError);
 
 logger.log("Server Started");
 

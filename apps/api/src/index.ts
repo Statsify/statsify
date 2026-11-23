@@ -26,9 +26,6 @@ const directory = import.meta.dirname;
 const logger = new Logger("api");
 const handleError = logger.error.bind(logger);
 
-process.on("uncaughtException", handleError);
-process.on("unhandledRejection", handleError);
-
 const sentryDsn = await config("sentry.apiDsn", { required: false });
 
 if (sentryDsn) {
@@ -98,3 +95,7 @@ const document = SwaggerModule.createDocument(app, redoc);
 SwaggerModule.setup("swagger", app, document);
 
 await app.listen(await config("api.port"));
+
+// Only after startup, so a failed start exits and the process gets restarted
+process.on("uncaughtException", handleError);
+process.on("unhandledRejection", handleError);

@@ -22,9 +22,6 @@ const directory = import.meta.dirname;
 const logger = new Logger("discord-bot");
 const handleError = logger.error.bind(logger);
 
-process.on("uncaughtException", handleError);
-process.on("unhandledRejection", handleError);
-
 const sentryDsn = await config("sentry.discordBotDsn", { required: false });
 
 if (sentryDsn) {
@@ -69,3 +66,7 @@ const verifyCommand = Container.get(VerifyCommand);
 verifyCommand.registerComponentListeners(listener);
 
 await listener.listen();
+
+// Only after startup, so a failed start exits and the process gets restarted
+process.on("uncaughtException", handleError);
+process.on("unhandledRejection", handleError);
