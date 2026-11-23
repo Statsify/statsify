@@ -113,7 +113,7 @@ export function GuildView({ guild }: { guild: GuildPage }) {
   );
 }
 
-/** Its own component, so the clock's tick each second re-renders the line and not the page. */
+/** Its own component, so the clock's tick re-renders the line and not the page. */
 function Updated({ updatedAt }: { updatedAt: number }) {
   const now = useNow();
   return <p className="text-mc-1.5 text-mc-gray empty:hidden">{now !== undefined && <UpdatedAt updatedAt={updatedAt} now={now} />}</p>;
