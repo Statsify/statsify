@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { ItemGrid } from "./components/ItemGrid.js";
 import { LevelBar } from "./components/LevelBar.js";
@@ -17,17 +18,7 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 export const gardenIcons = ({ garden }: MemberView) =>
   garden?.garden?.crops.flatMap(({ texture }) => (texture ? [texture] : [])) ?? [];
 
-export const SkyBlockGardenProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-}: SkyBlockProfileProps) => {
+export const SkyBlockGardenProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
   const section = profile.member.garden;
   const garden = section?.garden;
 
@@ -41,11 +32,9 @@ export const SkyBlockGardenProfile = ({
 
   if (!garden) {
     return (
-      <Container background={background}>
-        <Header skin={skin} name={profile.displayName} badge={badge} sidebar={memberSidebar} title={title} time="LIVE" />
+      <Card {...card} name={profile.displayName} sidebar={memberSidebar}>
         <Empty text={t(profile.gardenFetchedAt === undefined ? "skyblock.gardenNotLoaded" : "skyblock.noGarden")} />
-        <Footer logo={logo} user={user} />
-      </Container>
+      </Card>
     );
   }
 
@@ -77,8 +66,7 @@ export const SkyBlockGardenProfile = ({
   ));
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.tr>
           <LevelBar title={t("skyblock.gardenLevel")} level={level} color="§a" t={t} notes={pastMax} />
@@ -91,7 +79,6 @@ export const SkyBlockGardenProfile = ({
           {arrayGroup(composter, 3).map((row) => <Table.tr>{row}</Table.tr>)}
         </Table.ts>
       </Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
