@@ -29,7 +29,7 @@ export function Footer() {
       <div className="w-container flex flex-col gap-8 md:gap-4 pb-8">
         <Divider className="opacity-10" />
         <div className="flex flex-col gap-4 md:flex-row md:justify-between items-center">
-          <Link to="/{-$locale}" aria-label="Statsify">
+          <Link to="/{-$locale}" aria-label="Statsify" className="flex min-h-11 items-center">
             <Brand />
           </Link>
           <div className="flex gap-4">
