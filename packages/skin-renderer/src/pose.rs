@@ -109,7 +109,7 @@ impl Pose {
   pub fn placement(self) -> Matrix4<f32> {
     match self {
       Pose::Sneak => Matrix4::from_translation(Vector3::new(0.0, -SNEAK_DROP, 0.0)),
-      Pose::Swim | Pose::Fly => Matrix4::from_angle_x(Deg(90.0)),
+      Pose::Swim | Pose::Fly => Matrix4::from(axis_angle(Vector3::unit_x(), Deg(90.0))),
       Pose::Standing | Pose::Punch | Pose::Jump | Pose::Sit => Matrix4::identity(),
     }
   }
