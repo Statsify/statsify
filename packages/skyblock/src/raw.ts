@@ -84,7 +84,7 @@ export interface RawMember {
     candy_collected?: { total?: number };
     rift?: { visits?: number; lifetime_motes_earned?: number };
   };
-  bestiary?: { kills?: Record<string, number>; milestone?: { last_claimed_milestone?: number } };
+  bestiary?: { kills?: Record<string, number>; deaths?: Record<string, number>; milestone?: { last_claimed_milestone?: number } };
   trophy_fish?: Record<string, unknown>; // <fish> and <fish>_<tier> counts, plus total_caught, rewards…
   player_data?: {
     experience?: Record<string, number>;
