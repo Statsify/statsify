@@ -20,33 +20,26 @@ interface BuiltList {
   hash: string;
 }
 
-/** The list is schema metadata, so an hour is fresh enough, like `/leaderboards`' edge cache. */
-const TTL_MS = 3_600_000;
-
 let current: BuiltList | undefined;
-let builtAt = 0;
 let building: Promise<BuiltList> | undefined;
 
-/** The list, built from the API's at most an hour ago. A failed rebuild keeps the last one while there is one. */
-export async function leaderboardList(): Promise<BuiltList> {
-  if (current && Date.now() - builtAt < TTL_MS) return current;
-
-  building ??= build()
-    .then((list) => {
+/**
+ * The list, built from the API's once: it's schema metadata, which changes only with a deploy. A failed build is
+ * tried again on the next call.
+ */
+export function leaderboardList(): Promise<BuiltList> {
+  building ??= build().then(
+    (list) => {
       current = list;
-      builtAt = Date.now();
       return list;
-    })
-    .finally(() => {
+    },
+    (error: unknown) => {
       building = undefined;
-    });
+      throw error;
+    }
+  );
 
-  try {
-    return await building;
-  } catch (error) {
-    if (current) return current;
-    throw error;
-  }
+  return building;
 }
 
 /** The list as last built, for the server's render of `/leaderboards`, whose loader has awaited it. */
