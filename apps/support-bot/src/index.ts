@@ -34,9 +34,6 @@ const directory = import.meta.dirname;
 const logger = new Logger("support-bot");
 const handleError = logger.error.bind(logger);
 
-process.on("uncaughtException", handleError);
-process.on("unhandledRejection", handleError);
-
 setGlobalOptions({ schemaOptions: { _id: false } });
 
 const sentryDsn = await config("sentry.supportBotDsn", { required: false });
@@ -88,3 +85,7 @@ const listener = CommandListener.create(websocket, rest, commands);
 Container.get(TicketService).init();
 
 await listener.listen();
+
+// Only after startup, so a failed start exits and the process gets restarted
+process.on("uncaughtException", handleError);
+process.on("unhandledRejection", handleError);
