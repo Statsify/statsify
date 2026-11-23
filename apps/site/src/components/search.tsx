@@ -71,7 +71,7 @@ const SIZES = {
   regular: {
     itemHeight: 56,
     rows: 7,
-    item: "h-14 px-4",
+    item: "h-14 px-4 gap-4",
     bar: "h-16 px-4 gap-4",
     icon: "size-8",
     head: 32,
@@ -82,9 +82,9 @@ const SIZES = {
   compact: {
     itemHeight: 44,
     rows: 8,
-    item: "h-11 px-3",
+    item: "h-11 px-3 gap-3",
     bar: "h-11 px-3 gap-3",
-    icon: "size-5",
+    icon: "size-6",
     head: 24,
     headSlot: "size-6",
     text: "text-mc-1.5",
@@ -449,7 +449,7 @@ function SearchPlayer({
 }) {
   const size = SIZES[compact ? "compact" : "regular"];
   const className = cn(
-    "relative flex items-center gap-4 w-full hover:bg-white/10 active:bg-white/5 aria-selected:bg-white/10 aria-selected:before:content-[''] aria-selected:before:absolute aria-selected:before:bg-blueify-500 aria-selected:before:h-full aria-selected:before:w-1 aria-selected:before:left-0",
+    "relative flex items-center w-full hover:bg-white/10 active:bg-white/5 aria-selected:bg-white/10 aria-selected:before:content-[''] aria-selected:before:absolute aria-selected:before:bg-blueify-500 aria-selected:before:h-full aria-selected:before:w-1 aria-selected:before:left-0",
     size.item
   );
   const content = (
