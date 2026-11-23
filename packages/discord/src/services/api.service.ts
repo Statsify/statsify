@@ -48,7 +48,8 @@ function skyBlockNotFound(message: string, tag: string) {
 /** A 404 is a player or guild the board doesn't rank, which the board shows as null. */
 const leaderboardOrNull = <T>(request: Promise<T>) =>
   request.catch((err: AxiosError) => {
-    if ((err.response?.data as PlayerNotFoundException | GuildNotFoundException).statusCode === 404) return null;
+    if (!err.response) throw err;
+    if ((err.response.data as PlayerNotFoundException | GuildNotFoundException).statusCode === 404) return null;
     throw new ErrorMessage("errors.leaderboardNotFound");
   });
 
