@@ -15,7 +15,7 @@ import {
 } from "discord-api-types/v10";
 import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
-import { type IMessage, Message } from "#messages";
+import { type IMessage, Message, type ModalBuilder } from "#messages";
 import { type CustomId, Interaction, type InteractionAttachment, parseCustomId } from "#interaction";
 import { LRUCache } from "lru-cache";
 import { Logger } from "@statsify/logger";
@@ -33,10 +33,14 @@ export type InteractionHook = (
   interaction: Interaction
 ) => InteractionServer.InteractionReply | undefined | Promise<any>;
 
+export class PendingReply {
+  public constructor(public readonly reply: Promise<InteractionServer.InteractionReply>) {}
+}
+
 export type ComponentRoute = (
   interaction: Interaction,
   customId: CustomId
-) => ReturnType<InteractionHook>;
+) => ReturnType<InteractionHook> | PendingReply;
 
 export type CommandPrecondition = () => void;
 
@@ -96,6 +100,16 @@ export abstract class AbstractCommandListener {
 
   public addRoute(route: string, handler: ComponentRoute) {
     this.routes.set(route, handler);
+  }
+
+  /** A modal can't follow a defer, so the click's reply waits for the owner's language */
+  public showModal(interaction: Interaction, ownerId: string, modal: ModalBuilder) {
+    return new PendingReply(
+      this.getUser(ownerId).then((user) => {
+        if (user?.locale) interaction.setLocale(user.locale);
+        return { type: InteractionResponseType.Modal, data: modal.build(interaction.t()) };
+      })
+    );
   }
 
   /** Re-runs the command as its owner: their message is edited, anyone else gets an ephemeral preview */
@@ -308,19 +322,24 @@ export abstract class AbstractCommandListener {
     }
   }
 
-  protected onMessageComponent(interaction: Interaction): InteractionServer.InteractionReply {
+  protected onMessageComponent(
+    interaction: Interaction
+  ): InteractionServer.InteractionReply | Promise<InteractionServer.InteractionReply> {
     const customId = interaction.getCustomId();
     const hook = this.hooks.get(customId);
     const parsed = parseCustomId(customId);
 
     const res = hook ? hook(interaction) : this.routes.get(parsed.route)?.(interaction, parsed);
 
+    if (res instanceof PendingReply) return res.reply;
     if (res && !(res instanceof Promise)) return res;
 
     return { type: InteractionResponseType.DeferredMessageUpdate };
   }
 
-  protected onModal(interaction: Interaction): InteractionServer.InteractionReply {
+  protected onModal(
+    interaction: Interaction
+  ): InteractionServer.InteractionReply | Promise<InteractionServer.InteractionReply> {
     // Currently the message component handler is the same implementation as the modal handler
     return this.onMessageComponent(interaction);
   }

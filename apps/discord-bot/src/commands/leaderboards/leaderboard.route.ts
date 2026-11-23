@@ -13,7 +13,6 @@ import {
   ModalBuilder,
   TextInputBuilder,
 } from "@statsify/discord";
-import { InteractionResponseType } from "discord-api-types/v10";
 import { LeaderboardQuery } from "@statsify/api-client";
 import type { LeaderboardType } from "./leaderboard.profile.js";
 
@@ -30,12 +29,11 @@ export function leaderboardRoute(listener: AbstractCommandListener): ComponentRo
       interaction.isButtonInteraction() &&
       (action === LeaderboardQuery.INPUT || action === LeaderboardQuery.POSITION)
     ) {
-      return {
-        type: InteractionResponseType.Modal,
-        data: getSearchModal(subcommand === "guild" ? "guild" : "player", action)
-          .customId(interaction.getCustomId())
-          .build(interaction.t()),
-      };
+      return listener.showModal(
+        interaction,
+        ownerId,
+        getSearchModal(subcommand === "guild" ? "guild" : "player", action).customId(interaction.getCustomId())
+      );
     }
 
     return listener.rerunCommand(interaction, ownerId, ["leaderboard", subcommand], { leaderboard });
