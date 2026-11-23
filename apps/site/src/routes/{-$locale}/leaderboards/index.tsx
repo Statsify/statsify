@@ -30,9 +30,9 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/")({
   validateSearch,
   loaderDeps: ({ search }) => ({ q: search.q }),
   // The page's data is the groups and the list's hash; the links are in the server's HTML.
-  loader: async ({ deps }) => {
+  loader: async ({ context, deps }) => {
     const data = await getLeaderboardIndex({ data: { q: deps.q } });
-    return { data, list: await listForClient(data.hash) };
+    return { data, list: await listForClient(context.queryClient, data.hash) };
   },
   staleTime: EDGE_TTL_SECONDS * 1000,
   head: ({ match, matches }) => {

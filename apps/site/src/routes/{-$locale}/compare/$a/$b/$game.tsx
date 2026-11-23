@@ -7,7 +7,8 @@
  */
 
 import { DEFAULT_LOCALE } from "~/i18n/locales";
-import { CompareView, comparePairs } from "~/features/compare/compare-page";
+import { CompareView } from "~/features/compare/compare-page";
+import { comparePairs } from "~/features/compare/compare-data";
 import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead } from "~/lib/player-route";
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { NotFound } from "~/components/not-found";
@@ -20,7 +21,7 @@ import { createFileRoute, isNotFound, notFound, redirect } from "@tanstack/react
 import { ensurePlayer } from "~/features/player/resolve";
 import { gamePageQuery, gameSearch, headingText, pageSearch } from "~/features/game/game-data";
 import { orNull } from "~/lib/orpc";
-import { plainText } from "~/components/ui/minecraft-text";
+import { removeFormatting } from "@statsify/util/util";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 /** Which not-found page to show: the player one for a name we don't know, else the plain 404 (a game or mode we lack). */
@@ -85,7 +86,7 @@ export const Route = createFileRoute("/{-$locale}/compare/$a/$b/$game")({
       submode,
       period,
       heading: { game: first.game, heading: mode || submode ? first.heading : { ...first.heading, mode: null } },
-      gameName: plainText(first.game.name),
+      gameName: removeFormatting(first.game.name),
       headline: pairs.map(({ a, b }) => ({ label: a.label, name: a.name, params: a.params, values: [a.value, b.value], suffix: a.suffix })),
     };
   },
@@ -99,13 +100,13 @@ export const Route = createFileRoute("/{-$locale}/compare/$a/$b/$game")({
     }
 
     const { a, b, game, mode, submode, period, heading, gameName, headline } = loaderData;
-    const card = plainText(headingText(heading, (key) => words.t(key))).replaceAll(/\s+/g, " ").trim();
+    const card = removeFormatting(headingText(heading, (key) => words.t(key))).replaceAll(/\s+/g, " ").trim();
     // As on the game page, the card names no period, so the title does.
     const when = period ? `${words.t(`game.periodNames.${period}`)} ` : "";
     const title = words.t("meta.compare.title", { a: a.username, b: b.username, page: `${when}${card}` });
     const label = (key: string, params?: Record<string, string>) => words.t(key, { ns: LABEL_NAMESPACES, ...params });
     const parts = headline.map(({ label: key, name, params, values, suffix = "" }) =>
-      `${name === undefined ? label(key, params) : plainText(name)} ${values.map((value) => `${valueText(value)}${suffix}`).join(" / ")}`);
+      `${name === undefined ? label(key, params) : removeFormatting(name)} ${values.map((value) => `${valueText(value)}${suffix}`).join(" / ")}`);
     const lead = words.t("meta.compare.lead", { a: a.username, b: b.username, game: gameName });
     const fallback = words.t("meta.compare.description", { a: a.username, b: b.username, game: gameName });
     const description = statsDescription(parts, { lead, max: SEARCH_DESCRIPTION_MAX }) || fallback;

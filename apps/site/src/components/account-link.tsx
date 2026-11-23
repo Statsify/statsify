@@ -31,7 +31,7 @@ export function AccountLink({ className }: { className?: string }) {
         <span aria-hidden className={cn(CELL, "invisible")}>{t("nav.account")}</span>
         {hint !== undefined && (
           hint && hint !== NO_PROFILE ?
-            <SkinHead uuid={hint} stored size={24} className={CELL} /> :
+            <SkinHead uuid={hint} size={24} className={CELL} /> :
             <span aria-hidden className={CELL}>{label}</span>
         )}
       </span>

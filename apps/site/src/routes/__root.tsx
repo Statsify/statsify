@@ -62,7 +62,7 @@ function RootDocument({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="antialiased leading-[normal] min-h-screen flex flex-col bg-blackify-950">
+      <body className="antialiased leading-[normal] min-h-dvh flex flex-col bg-blackify-950">
         <CrispTextFilters />
         {children}
         <Scripts />

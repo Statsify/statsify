@@ -167,6 +167,23 @@ export class GuildService {
     return deserialize(Guild, flatGuild);
   }
 
+  /** A stored guild by its id or its name in any case, never one from Hypixel. */
+  public async getStored(
+    tag: string,
+    type: Exclude<GuildQuery, typeof GuildQuery.PLAYER>,
+    selector: Record<string, boolean> = {}
+  ): Promise<Guild | null> {
+    const guild: Guild | null = await this.guildModel
+      .findOne()
+      .where(type === GuildQuery.ID ? "id" : "nameToLower")
+      .equals(tag.toLowerCase())
+      .select(selector)
+      .lean()
+      .exec();
+
+    return guild && deserialize(Guild, flatten(guild));
+  }
+
   private async getCachedGuild(
     tag: string,
     type: GuildQuery

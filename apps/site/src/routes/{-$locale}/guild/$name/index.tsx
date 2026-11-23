@@ -8,7 +8,8 @@
 
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead } from "~/lib/player-route";
-import { GuildNotFoundView, GuildView, guildPageQuery } from "~/features/guild/guild-page";
+import { GuildNotFoundView, GuildView } from "~/features/guild/guild-page";
+import { guildPageQuery } from "~/features/guild/guild-data";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";

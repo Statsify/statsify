@@ -8,8 +8,8 @@
 
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
-import { Player, Skin } from "@statsify/schemas";
 import { PlayerModule } from "#player";
+import { Skin } from "@statsify/schemas";
 import { SkinController } from "./skin.controller.js";
 import { SkinService } from "./skin.service.js";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
@@ -17,10 +17,11 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 @Module({
   imports: [
     PlayerModule,
-    TypegooseModule.forFeature([Skin, Player]),
+    TypegooseModule.forFeature([Skin]),
     HttpModule.register({ timeout: 5000 }),
   ],
   controllers: [SkinController],
   providers: [SkinService],
+  exports: [SkinService],
 })
 export class SkinModule {}

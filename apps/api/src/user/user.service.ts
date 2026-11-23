@@ -10,7 +10,7 @@ import { AccountService } from "#site";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { User, VerifyCode } from "@statsify/schemas";
-import { config, flatten } from "@statsify/util";
+import { config, flatten, isUuid, normalizeUuid } from "@statsify/util";
 import { getLogoPath } from "@statsify/assets";
 import { readFile, rm, writeFile } from "node:fs/promises";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -95,8 +95,8 @@ export class UserService {
     id: string,
   ): Promise<User | null> {
     const uuid =
-      uuidOrCode.length >= 32 ?
-        uuidOrCode.replaceAll("-", "") :
+      isUuid(uuidOrCode) ?
+        normalizeUuid(uuidOrCode) :
         await this.getUuidFromCode(uuidOrCode);
 
     // Unverify anyone previously linked to this UUID
@@ -150,11 +150,7 @@ export class UserService {
   }
 }
 
-const parseTag = (tag: string): [tag: string, type: string] => {
-  const normalizedTag = tag.replaceAll("-", "");
-  const type = normalizedTag.length >= 32 ? "uuid" : "id";
-
-  return [normalizedTag, type];
-};
+const parseTag = (tag: string): [tag: string, type: string] =>
+  isUuid(tag) ? [normalizeUuid(tag), "uuid"] : [tag, "id"];
 
 const getBadgePath = (id: string) => `${mediaRoute}/badges/${id}.png`;

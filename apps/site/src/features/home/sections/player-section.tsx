@@ -76,7 +76,7 @@ export function PlayerSection({ players }: { players: HomePreviews["players"] })
           easier and faster, and explore the rest of the provided features.
         </p>
       </div>
-      <div className="relative w-full lg:w-fit h-full flex flex-col justify-center items-center p-4 lg:p-8 before:absolute before:bg-gradient-to-b before:from-white/20 before:to-white/50 before:mix-blend-overlay before:w-full before:h-full before:-z-20">
+      <div className="relative w-full lg:w-fit h-full flex flex-col justify-center items-center p-4 lg:p-8 before:absolute before:bg-linear-to-b before:from-white/20 before:to-white/50 before:mix-blend-overlay before:w-full before:h-full before:-z-20">
         <div className="w-fit flex flex-col gap-4">
           <Tabs
             tab={gameIndex}

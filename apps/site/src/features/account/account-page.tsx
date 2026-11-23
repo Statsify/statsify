@@ -205,7 +205,7 @@ function ProfileSwitcher({
           onClick={() => onSelect(profile.uuid)}
           className="flex min-h-11 items-center gap-2 bg-black/20 px-3 text-mc-1.5 hover:bg-white/10 focus-visible:focus-ring-inset aria-pressed:bg-white/15 aria-pressed:font-bold"
         >
-          <SkinHead uuid={profile.uuid} stored size={20} className="shrink-0" />
+          <SkinHead uuid={profile.uuid} size={20} className="shrink-0" />
           <span className="mc-crisp">{profile.username ?? dashedUuid(profile.uuid)}</span>
         </button>
       ))}
