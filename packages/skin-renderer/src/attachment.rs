@@ -147,19 +147,6 @@ pub fn item_transform(display: Option<DisplayContext>, model: &Display) -> Matri
   }
 }
 
-// In pixels, applied like a display entry: scale, then turn about z, x and y, then move
-pub fn local_transform(translation: [f32; 3], rotation: [f32; 3], scale: [f32; 3]) -> Matrix4<f32> {
-  let [x, y, z] = rotation;
-
-  Matrix4::from_translation(Vector3::from(translation))
-    * Matrix4::from(
-      axis_angle(Vector3::unit_y(), Deg(y))
-        * axis_angle(Vector3::unit_x(), Deg(x))
-        * axis_angle(Vector3::unit_z(), Deg(z)),
-    )
-    * Matrix4::from_nonuniform_scale(scale[0], scale[1], scale[2])
-}
-
 #[cfg(test)]
 mod tests {
   use cgmath::{Point3, Transform as _};
