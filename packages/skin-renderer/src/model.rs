@@ -48,7 +48,6 @@ struct Placement {
   position: Vector3<f32>,
   dimensions: Vector3<f32>,
   rotation: Option<CenterRotation>,
-  posed: bool,
 }
 
 impl Placement {
@@ -142,7 +141,6 @@ impl Part {
         quaternion,
         pivot_delta: Vector3::unit_y() * pivot_height,
       }),
-      posed: part_pose.is_some(),
     }
   }
 
