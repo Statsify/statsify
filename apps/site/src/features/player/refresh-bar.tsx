@@ -64,7 +64,8 @@ export function useNow(): number | undefined {
  * "Updated N minutes ago" and the refresh button, disabled with a countdown until `expiresAt`.
  * `refresh` runs the page's refresh action with the bar's deadline and, for a click, the visitor's Turnstile token, and
  * applies its data itself; the bar shows the outcome. A click shows the Turnstile widget first, since each refresh
- * spends the site's shared Hypixel budget; the automatic update needs no token, as the API caps those sooner.
+ * spends the site's shared Hypixel budget; the automatic update gets its token from an invisible one, and doesn't run
+ * where Turnstile would ask the visitor to interact.
  */
 export function RefreshBar({
   updatedAt,
@@ -97,6 +98,7 @@ export function RefreshBar({
   const now = useNow();
   const [state, setState] = useState<RefreshState>({ status: "idle" });
   const [verifying, setVerifying] = useState(false);
+  const [autoVerifying, setAutoVerifying] = useState(false);
   const [widgetFailed, setWidgetFailed] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
   // The location once its page has rendered: during a navigation `location` is already the next page's.
@@ -145,7 +147,9 @@ export function RefreshBar({
     const age = searchedAt !== undefined && searchedAt > performance.timeOrigin ? 0 : AUTO_UPDATE_AGE_MS;
     if (state.status === "pending" || now < lockedUntil || now - updatedAt < age) return;
     if (navigator.webdriver || BOT_AGENT.test(navigator.userAgent)) return;
-    void run(true);
+    if (!turnstileSiteKey) return void run(true);
+    setState({ status: "pending", auto: true });
+    setAutoVerifying(true);
   });
 
   // After mount only, so never on the server. A game page draws a bar for each layout, and the one on screen decides
@@ -227,6 +231,18 @@ export function RefreshBar({
           }}
           onLoadError={() => setWidgetFailed(true)}
           className="w-full"
+        />
+      )}
+      {autoVerifying && (
+        <Turnstile
+          siteKey={turnstileSiteKey}
+          invisible
+          onToken={(token) => {
+            setAutoVerifying(false);
+            if (token) void run(true, token);
+            else setState({ status: "idle" });
+          }}
+          className="absolute"
         />
       )}
       <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>

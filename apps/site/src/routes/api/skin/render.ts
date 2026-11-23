@@ -12,7 +12,7 @@ import { proxySkin } from "~/server/skin.server";
 export const Route = createFileRoute("/api/skin/render")({
   server: {
     handlers: {
-      GET: ({ request }) => proxySkin("/skin", new URL(request.url).searchParams),
+      GET: ({ request }) => proxySkin("/skin/stored", new URL(request.url).searchParams),
     },
   },
 });

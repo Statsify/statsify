@@ -7,18 +7,19 @@
  */
 
 import { fetchApi, unavailable } from "./rpc.server";
+import { isUuid, normalizeUuid } from "@statsify/util/util";
 import { NO_STORE } from "~/lib/cache";
-import { PLACEHOLDER_UUID, compactUuid } from "~/lib/uuid";
+import { PLACEHOLDER_UUID } from "~/lib/uuid";
 import { UsernameSchema } from "@statsify/contract";
 import { resolvePlayer } from "~/features/player/resolve";
 import { siteConfig } from "./config.server";
 
 /**
- * Proxies a skin image from the Statsify API with the site's key. Only the UUID is forwarded, with the route's own
- * fixed parameters.
+ * Proxies a skin image the Statsify API draws from the skin it has stored, with the site's key. Only the UUID is
+ * forwarded, with the route's own fixed parameters.
  */
 export async function proxySkin(
-  path: "/skin" | "/skin/head" | "/skin/texture",
+  path: "/skin/stored" | "/skin/head/stored" | "/skin/texture",
   search: URLSearchParams,
   fixed: Record<string, string> = {}
 ): Promise<Response> {
@@ -26,19 +27,21 @@ export async function proxySkin(
   if (!uuid || !isPageQuery(uuid, search, fixed)) {
     return new Response(null, { status: 404, headers: NO_STORE });
   }
-  // The API doesn't limit the site's key on skins, so only a stored player's UUID, or the not-found pages' one fixed
-  // stand-in, may reach Minecraft's session server.
+  // Only a stored player's UUID, or the not-found pages' one fixed stand-in, gets an image drawn for it.
   if (uuid !== PLACEHOLDER_UUID && !(await resolvePlayer(uuid))) return new Response(null, { status: 404, headers: NO_STORE });
 
   return proxy(path, { uuid, ...fixed });
 }
 
-/** A search suggestion's head, by the suggested name: only the skin the API has stored, never a fresh lookup. */
+/** A search suggestion's head, by the suggested name: the stored player's 8×8 face, as `proxySkin` draws it. */
 export async function proxyStoredHead(search: URLSearchParams): Promise<Response> {
   const name = UsernameSchema.safeParse(search.get("name"));
   if (!name.success) return new Response("name is required", { status: 400 });
 
-  return proxy("/skin/head/stored", { player: name.data });
+  const player = await resolvePlayer(name.data);
+  if (!player) return new Response(null, { status: 404, headers: NO_STORE });
+
+  return proxy("/skin/head/stored", { uuid: player.uuid, size: "8" });
 }
 
 async function proxy(path: string, params: Record<string, string>): Promise<Response> {
@@ -71,7 +74,8 @@ async function proxy(path: string, params: Record<string, string>): Promise<Resp
 function isPageQuery(uuid: string, search: URLSearchParams, fixed: Record<string, string>): boolean {
   const keys = [...search.keys()];
   return (
-    compactUuid(uuid) === uuid &&
+    isUuid(uuid) &&
+    normalizeUuid(uuid) === uuid &&
     new Set(keys).size === keys.length &&
     keys.every((key) => key === "uuid" || search.get(key) === fixed[key])
   );
