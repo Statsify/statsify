@@ -126,12 +126,12 @@ function rectOf<T>(rects: Record<string, T>, id: string) {
 
 /** Loads an atlas from its map's URL, with the image beside it */
 export async function loadAtlas(url: string | URL) {
-  const response = await fetch(url);
+  const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
   if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
   const data = (await response.json()) as AtlasData;
 
   const imageUrl = new URL(data.image, response.url);
-  const image = await fetch(imageUrl);
+  const image = await fetch(imageUrl, { signal: AbortSignal.timeout(60_000) });
   if (!image.ok) throw new Error(`${imageUrl}: ${image.status} ${image.statusText}`);
 
   return new Atlas(data, await decodePng(new Uint8Array(await image.arrayBuffer())));
