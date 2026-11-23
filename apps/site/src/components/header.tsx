@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Link, useLocation, useMatch } from "@tanstack/react-router";
+import { Link, useMatch, useRouterState } from "@tanstack/react-router";
 import { Logo, Wordmark } from "~/components/icons/logo";
 import { Search } from "~/components/search";
 import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
 import { flushSync } from "react-dom";
 import { isSupportedLocale } from "~/i18n/locales";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useOutsideClick } from "~/hooks/use-outside-click";
 import { useTranslation } from "react-i18next";
 
@@ -39,6 +39,9 @@ const NAV_LINK = "flex min-h-11 min-w-11 items-center justify-center opacity-80 
  */
 const OWN_SEARCH = /^\/player\/?$|^\/bingo\/?$|^\/player\/[^/]+\/bingo\/?$/;
 
+/** A player's board sits under Players' path but belongs to Bingo in the nav. */
+const BINGO_BOARD = /^\/player\/[^/]+\/bingo\/?$/;
+
 function pathWithoutLocale(pathname: string) {
   const [, first = "", ...rest] = pathname.split("/");
   return isSupportedLocale(first) ? `/${rest.join("/")}` : pathname;
@@ -46,23 +49,32 @@ function pathWithoutLocale(pathname: string) {
 
 export function Header() {
   const { t } = useTranslation();
-  const pathname = useLocation({ select: (location) => location.pathname });
-  const showSearch = !OWN_SEARCH.test(pathWithoutLocale(pathname));
+  // The page on screen, not the one loading, so the header's search and the page's own never show at once.
+  const pathname = useRouterState({ select: ({ matches, location }) => matches.at(-1)?.pathname ?? location.pathname });
+  const path = pathWithoutLocale(pathname);
+  const showSearch = !OWN_SEARCH.test(path);
+  const bingoBoard = BINGO_BOARD.test(path);
   // On a game page a picked name opens the same game, mode and period, to compare; the profile is a tap away from there.
   const gameTarget = useMatch({
     from: "/{-$locale}/player/$name/$game",
     shouldThrow: false,
     select: (match) => ({ game: match.params.game, search: match.search }),
   });
-  // On a game page's phone layout the search is a button in the logo row, so the stats start higher; it opens the box
-  // in the search's row, focused, until a tap elsewhere or the next page.
-  const compact = gameTarget !== undefined;
+  // On phones the search is a button at the logo row's end, so the page starts higher; it opens the box in the search's
+  // row, focused, until a tap elsewhere, the button again or the next page.
   const [searchedOn, setSearchedOn] = useState<string>();
   const searching = searchedOn === pathname;
-  const hide = useCallback(() => setSearchedOn(undefined), []);
+  const searchButton = useRef<HTMLButtonElement>(null);
+  const hide = useCallback((event: PointerEvent) => {
+    if (!searchButton.current?.contains(event.target as Node)) setSearchedOn(undefined);
+  }, []);
   const searchRow = useOutsideClick<HTMLDivElement>(hide);
 
-  const openSearch = () => {
+  const toggleSearch = () => {
+    if (searching) {
+      setSearchedOn(undefined);
+      return;
+    }
     // Shown and focused in the tap itself, so a phone opens its keyboard.
     flushSync(() => setSearchedOn(pathname));
     searchRow.current?.querySelector("input")?.focus();
@@ -80,8 +92,18 @@ export function Header() {
           <ul className="flex items-center gap-4 text-mc-1.5 sm:gap-6">
             {PAGES.map(({ key, to }) => (
               <li key={key}>
-                <Link to={to} className={cn(NAV_LINK, "data-[status=active]:font-bold data-[status=active]:underline data-[status=active]:opacity-100")}>
-                  {t(`nav.${key}`)}
+                <Link
+                  to={to}
+                  activeOptions={{ exact: key === "players" && bingoBoard }}
+                  data-status={key === "bingo" && bingoBoard ? "active" : undefined}
+                  aria-current={key === "bingo" && bingoBoard ? "page" : undefined}
+                  className={cn(NAV_LINK, "data-[status=active]:font-bold data-[status=active]:underline data-[status=active]:opacity-100")}
+                >
+                  {/* Each name holds its bold width, so the links after it don't move when it becomes the page's. */}
+                  <span className="grid justify-items-center">
+                    <span className="col-start-1 row-start-1">{t(`nav.${key}`)}</span>
+                    <span aria-hidden className="invisible col-start-1 row-start-1 font-bold">{t(`nav.${key}`)}</span>
+                  </span>
                 </Link>
               </li>
             ))}
@@ -93,7 +115,7 @@ export function Header() {
             ref={searchRow}
             className={cn(
               "order-last basis-full lg:order-none lg:max-w-96 lg:min-w-0 lg:flex-1",
-              compact && !searching && "max-md:hidden"
+              !searching && "max-md:hidden"
             )}
           >
             <Search compact shortcut recent target={gameTarget} />
@@ -111,17 +133,20 @@ export function Header() {
             ))}
           </ul>
         </nav>
-        {showSearch && compact && (
-          <button
-            type="button"
-            aria-label={t("search.label")}
-            aria-expanded={searching}
-            onClick={openSearch}
-            className="flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden"
-          >
-            <SearchIcon className="size-5" />
-          </button>
-        )}
+        {/* Held, unseen, on pages with a search of their own, so the links before it don't move. */}
+        <button
+          ref={searchButton}
+          type="button"
+          aria-label={t("search.label")}
+          aria-expanded={searching}
+          onClick={toggleSearch}
+          className={cn(
+            "flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden",
+            !showSearch && "invisible"
+          )}
+        >
+          <SearchIcon className="size-5" />
+        </button>
       </div>
     </header>
   );

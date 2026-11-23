@@ -8,6 +8,7 @@
 
 import { AUTO_UPDATE_AGE_MS, type AutoUpdate } from "@statsify/contract/refresh";
 import { Button } from "~/components/ui/button";
+import { ClockScript, TIME_SLOT } from "~/lib/clock";
 import { Hint } from "~/components/ui/hint";
 import { Turnstile } from "~/components/turnstile";
 import { cn } from "~/lib/util";
@@ -80,12 +81,12 @@ function subscribeClock(listener: () => void, until: number) {
 }
 
 /**
- * The time from the page's one clock, which ticks each second while a caller's countdown runs to `countdownUntil` and
- * each minute otherwise. `undefined` during SSR and hydration, so the HTML never carries a clock value.
+ * The page's one clock: each second while a caller's countdown to `countdownUntil` runs, else each minute. `undefined`
+ * while hydrating, to match the HTML `ClockScript` writes; a later mount (a client navigation) starts on the clock.
  */
 export function useNow(countdownUntil = 0): number | undefined {
   const subscribe = useCallback((listener: () => void) => subscribeClock(listener, countdownUntil), [countdownUntil]);
-  return useSyncExternalStore(subscribe, () => clockNow, () => undefined);
+  return useSyncExternalStore(subscribe, () => (clockNow ??= Date.now()), () => undefined);
 }
 
 /**
@@ -209,7 +210,12 @@ export function RefreshBar({
       size="small"
       className={cn("w-full sm:w-auto sm:min-w-48", row && "w-auto min-w-36 shrink-0", beside !== undefined && "w-auto shrink-0 sm:min-w-0")}
     >
-      <button type="button" aria-disabled={disabled} onClick={() => {
+      <button
+        type="button"
+        data-clock="refresh"
+        aria-disabled={disabled}
+        suppressHydrationWarning
+        onClick={() => {
           if (disabled) return;
           if (turnstileSiteKey) setVerifying(true);
           else void run(undefined);
@@ -230,9 +236,21 @@ export function RefreshBar({
           row && "flex-row items-center justify-between gap-4"
         )}
       >
-        <p className={cn(META, "min-w-0")}>{now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}</p>
+        <p data-clock="updated" className={cn(META, "min-w-0")} suppressHydrationWarning>
+          {now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}
+        </p>
         {beside === undefined ? button : <div className="flex items-center justify-between gap-3">{beside}{button}</div>}
       </div>
+      <ClockScript
+        args={{
+          updatedAt,
+          lockedUntil,
+          locale: i18n.language,
+          updated: t("player.updated", { time: TIME_SLOT }),
+          refresh: t("player.refresh"),
+          refreshIn: t("player.refreshIn", { time: TIME_SLOT }),
+        }}
+      />
       {verifying && (
         <Turnstile
           siteKey={turnstileSiteKey}
@@ -271,8 +289,8 @@ export function RefreshBar({
 export const savedDate = (updatedAt: number, locale: string) => fullDate(updatedAt, locale, matchMedia("(width < 48rem)").matches);
 
 /**
- * "Updated 17 minutes ago", with the save's full date on hover, focus or tap. Rendered only after mount, so the server's
- * HTML carries neither clock nor zone.
+ * "Updated 17 minutes ago", with the save's full date on hover, focus or tap. Not while hydrating, so the server's HTML
+ * carries neither clock nor zone; `ClockScript` writes the text until then.
  */
 function UpdatedAt({ updatedAt, now }: { updatedAt: number; now: number }) {
   const { t, i18n } = useTranslation();

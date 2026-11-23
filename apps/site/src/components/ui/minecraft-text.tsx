@@ -48,6 +48,12 @@ export const leadingColorClass = (text: string): string => {
   return "text-mc-white";
 };
 
+/** The color a display name gives the name itself, its last code: `§b[MVP§c+§b] anrie` is `§b`. */
+export const nameColor = (displayName: string): string | undefined => {
+  const color = parseFormatting(displayName).findLast(({ code }) => code?.kind === "color")?.code;
+  return color?.kind === "color" ? `§${color.code}` : undefined;
+};
+
 /** The renderer's default text size; `§^N^` is relative to it. */
 const BASE_SIZE = 2;
 
@@ -139,4 +145,17 @@ export function MinecraftText({ children, className }: { children: string | stri
   }
 
   return <span>{elements}</span>;
+}
+
+if (import.meta.vitest) {
+  const { describe, expect, it } = import.meta.vitest;
+
+  describe("nameColor", () => {
+    it("takes the last color code, the one on the name", () => {
+      expect(nameColor("§b[MVP§c+§b] anrie")).toBe("§b");
+      expect(nameColor("§7AnnaBanana")).toBe("§7");
+      expect(nameColor("§B[MVP§C+§B] anrie")).toBe("§b");
+      expect(nameColor("anrie")).toBeUndefined();
+    });
+  });
 }

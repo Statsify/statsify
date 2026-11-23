@@ -8,7 +8,7 @@
 
 import { Color } from "#color";
 import { Field } from "#metadata";
-import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
+import { index as Index, modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
 import { PlayerSocials } from "./socials.js";
 import { PlayerStats } from "./stats.js";
 import { PlayerStatus } from "./status.js";
@@ -21,6 +21,8 @@ import {
 import type { APIData } from "@statsify/util";
 
 @ModelOptions({ options: { allowMixed: Severity.ALLOW } })
+// Answers the site's search suggestions from the index alone, without loading each player.
+@Index({ usernameToLower: 1, displayName: 1 })
 export class Player {
   @Field({ mongo: { unique: true, index: true }, store: { required: true } })
   public uuid: string;

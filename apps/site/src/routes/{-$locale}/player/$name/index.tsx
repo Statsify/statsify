@@ -8,7 +8,8 @@
 
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { IMAGE_VARIANTS } from "@statsify/profiles/protocol";
-import { PlayerView } from "~/features/player/player-page";
+import { DELAY_MS } from "~/components/navigation-progress";
+import { PlayerShell, PlayerView } from "~/features/player/player-page";
 import { cacheHeaders } from "~/lib/cache";
 import { EDGE_CACHE, possessive } from "~/lib/player-route";
 import { playerTabIcon } from "~/lib/tab-icon";
@@ -76,8 +77,16 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),
+  // Shown at least a moment once up, so a page that lands just after doesn't flash it.
+  pendingComponent: PlayerPending,
+  pendingMs: DELAY_MS,
+  pendingMinMs: 200,
   component: PlayerPage,
 });
+
+function PlayerPending() {
+  return <PlayerShell name={Route.useParams().name} />;
+}
 
 function PlayerPage() {
   const { uuid } = Route.useLoaderData();

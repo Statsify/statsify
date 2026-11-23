@@ -11,12 +11,15 @@ import { useEffect, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
-/** How long a navigation may take before the bar shows; a quicker one just swaps the page. */
-const DELAY_MS = 300;
+/**
+ * How long a navigation may take before the bar shows; a quicker one just swaps the page. A player's page shows its
+ * shell after as long.
+ */
+export const DELAY_MS = 300;
 
 /**
- * No route has a pending component, so the current page stays up until the next one's data is ready, and this bar is
- * the only sign of a slow navigation: it appears once one has taken longer than `DELAY_MS`.
+ * The current page stays up until the next one's data is ready (a player's page puts up its shell instead), so this
+ * bar is the sign of a slow navigation: it appears once one has taken longer than `DELAY_MS`.
  */
 export function NavigationProgress() {
   const { t } = useTranslation();

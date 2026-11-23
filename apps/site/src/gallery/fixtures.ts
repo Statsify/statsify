@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { GamePage, LeaderboardPage, PlayerPage, ResultCard, StatCell, StatSection } from "@statsify/contract";
+import type { GamePage, LeaderboardPage, PlayerPage, ResultCard, StatCell, StatSection, Suggestion } from "@statsify/contract";
 
 // The local run's two fixture players, so skins and the signature image resolve against a seeded API.
 export const ANRIE_UUID = "3abe2f6bd45a4e2282d4f9014569db25";
@@ -15,7 +15,14 @@ export const OJAKEY_UUID = "41825ee5f46b406b9bb74aea7eb2742b";
 /** Every name the stress test asks for: the longest name, guild tag and nine-digit numbers. */
 const LONG_NAME = "WWWWWWWWWWWWWWWW";
 
-export const SUGGESTIONS = ["anrie", "anrieTheSecond", "Andromeda", "AnnaBanana", "annoyingorange", "Antlers"];
+export const SUGGESTIONS: Suggestion[] = [
+  { name: "anrie", displayName: "§b[MVP§c+§b] anrie" },
+  { name: "anrieTheSecond", displayName: "§a[VIP] anrieTheSecond" },
+  { name: "Andromeda", displayName: "§6[MVP§2++§6] Andromeda" },
+  { name: "AnnaBanana", displayName: "§7AnnaBanana" },
+  { name: "annoyingorange", displayName: null },
+  { name: "Antlers", displayName: "§b[MVP] Antlers" },
+];
 
 export const RESULT_CARDS: ResultCard[] = [
   {
