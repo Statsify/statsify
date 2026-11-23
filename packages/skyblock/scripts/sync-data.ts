@@ -473,6 +473,18 @@ const write = (file: string, data: unknown) =>
 
 const boards = (list: { key: string; name: string }[]) => list.map(({ key, name }) => [key, name]);
 
+// A shared key merges two boards, and a dropped one restarts its board empty with the old scores left behind
+function checkBoards(kind: string, old: string[][], next: string[][]) {
+  const keys = next.map(([key]) => key);
+  const shared = [...new Set(keys.filter((key, index) => keys.indexOf(key) !== index))];
+  if (shared.length > 0) throw new Error(`${kind} boards share keys: ${shared.join(", ")}`);
+
+  const removed = old.map(([key]) => key).filter((key) => !keys.includes(key));
+  if (removed.length > 0 && process.env.ALLOW_REMOVED_BOARDS !== "1") {
+    throw new Error(`${kind} boards removed: ${removed.join(", ")}. Rerun with ALLOW_REMOVED_BOARDS=1 to drop them anyway.`);
+  }
+}
+
 /** The texture hash in an item's SkullOwner, from its SNBT. */
 const skullHash = (nbt: string) => {
   const value = /Value:"([\w+/=]+)"/.exec(nbt)?.[1];
@@ -951,14 +963,12 @@ try {
   });
 
   // Each key is a Mongo path and a Redis key, so one that changes here leaves its old board behind
-  await writeFile(
-    new URL("../../schemas/src/skyblock/boards.json", import.meta.url),
-    `${JSON.stringify(
-      { collections: boards(collectionBoards(collectionData)), bestiary: boards(bestiaryBoards(bestiaryData)) },
-      null,
-      2
-    )}\n`
-  );
+  const boardsFile = new URL("../../schemas/src/skyblock/boards.json", import.meta.url);
+  const oldBoards = JSON.parse(await readFile(boardsFile, "utf8"));
+  const newBoards = { collections: boards(collectionBoards(collectionData)), bestiary: boards(bestiaryBoards(bestiaryData)) };
+  checkBoards("collections", oldBoards.collections, newBoards.collections);
+  checkBoards("bestiary", oldBoards.bestiary, newBoards.bestiary);
+  await writeFile(boardsFile, `${JSON.stringify(newBoards, null, 2)}\n`);
   const license = await readFile(join(dir, "LICENSE"), "utf8");
   await writeFile(
     new URL("NOTICE.md", out),
