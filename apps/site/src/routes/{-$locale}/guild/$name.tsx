@@ -9,7 +9,8 @@
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead } from "~/lib/player-route";
 import { Error, ErrorText } from "~/components/ui/error";
-import { GuildView, guildPageQuery } from "~/features/guild/guild-page";
+import { GuildView } from "~/features/guild/guild-page";
+import { guildPageQuery } from "~/features/guild/guild-data";
 import { HypixelLookup } from "~/features/player/player-not-found";
 import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";

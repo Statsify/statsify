@@ -26,6 +26,6 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
   ],
   controllers: [PlayerController, PlayerLeaderboardsController, PlayerSearchController],
   providers: [PlayerService, PlayerLeaderboardService, PlayerSearchService],
-  exports: [PlayerService, PlayerSearchService],
+  exports: [PlayerService, PlayerLeaderboardService, PlayerSearchService],
 })
 export class PlayerModule {}

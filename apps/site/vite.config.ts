@@ -56,7 +56,11 @@ export default defineConfig({
     tailwindcss(),
     tanstackStart({
       srcDirectory: "src",
-      router: { routeTreeFileHeader: LICENSE_HEADER },
+      router: {
+        routeTreeFileHeader: LICENSE_HEADER,
+        // The default leaves `pendingComponent` in the route file, so what it renders would load on every page.
+        codeSplittingOptions: { defaultBehavior: [["component"], ["pendingComponent"], ["errorComponent"], ["notFoundComponent"]] },
+      },
     }),
     viteReact(),
     nitro({

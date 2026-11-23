@@ -11,11 +11,12 @@ import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
-import { Player, Skin } from "@statsify/schemas";
 import { PlayerService } from "#player";
+import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
+import { isUuid, normalizeUuid } from "@statsify/util";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
@@ -32,7 +33,7 @@ const defaultTexture = (alex: boolean) => getMinecraftTexturePath(`textures/enti
 async function resolveSkin(uuid: string, skinUrl?: string, slim = false): Promise<{ skin: Image; slim: boolean }> {
   if (skinUrl) return { skin: await loadImage(skinUrl), slim };
 
-  const alex = isAlex(uuid.replaceAll("-", "").toLowerCase());
+  const alex = isAlex(normalizeUuid(uuid));
   return { skin: await loadImage(defaultTexture(alex)), slim: alex };
 }
 
@@ -51,13 +52,25 @@ function drawHead(skin: Image, size: number): Promise<Buffer> {
   return canvas.toBuffer("png");
 }
 
+/** A skin's texture as uploaded, or Steve's or Alex's, and whether its arms are slim, as the bot's render draws them. */
+async function textureOf(uuid: string, skin: Skin | null): Promise<{ texture: Buffer; slim: boolean }> {
+  const { skin: image, slim } = await resolveSkin(uuid, skin?.skinUrl, skin?.slim);
+  // This field is set by loadImage from `@statsify/rendering`
+  const { _data: texture } = image as unknown as { _data: Buffer };
+  return { texture, slim };
+}
+
+async function renderOf(uuid: string, skin: Skin | null, extruded: boolean): Promise<Buffer> {
+  const { texture, slim } = await textureOf(uuid, skin);
+  return renderSkin(texture, slim, extruded);
+}
+
 @Injectable()
 export class SkinService {
   public constructor(
     private readonly httpService: HttpService,
     private readonly playerService: PlayerService,
-    @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>,
-    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>
+    @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
@@ -69,45 +82,37 @@ export class SkinService {
   }
 
   /**
-   * A skin face from the skin stored for a player, by a stored player's name or by UUID (Steve or Alex if none is
-   * stored). Never asks Minecraft's session server, so lists of heads (search suggestions, a guild's members) don't
-   * spend its rate limit.
+   * The face of the skin stored for a player however old it is, or Steve's or Alex's: never asks Minecraft's session
+   * server, so the site's traffic doesn't spend its rate limit.
    */
-  public async getStoredHead(tag: string): Promise<Buffer> {
-    const uuid = tag.length > 16 ? tag.replaceAll("-", "").toLowerCase() : await this.storedUuid(tag);
-    const stored = await this.skinModel.findOne({ uuid }).select({ skinUrl: true }).lean().exec();
-    const { skin } = await resolveSkin(uuid, stored?.skinUrl);
-    return drawHead(skin, 8);
-  }
-
-  private async storedUuid(name: string): Promise<string> {
-    const player = await this.playerModel.findOne({ usernameToLower: name.toLowerCase() }).select({ uuid: true }).lean().exec();
-    if (!player) throw new PlayerNotFoundException();
-    return player.uuid;
+  public async getStoredHead(uuid: string, size: number): Promise<Buffer> {
+    const stored = await this.getStoredSkin(uuid);
+    const { skin } = await resolveSkin(uuid, stored?.skinUrl, stored?.slim);
+    return drawHead(skin, size);
   }
 
   public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {
-    const { texture, slim } = await this.getTexture(uuid);
-    return renderSkin(texture, slim, extruded);
+    return renderOf(uuid, await this.getSkin(uuid), extruded);
   }
 
-  /** The skin's texture as uploaded, for the site's skin viewer to draw, and whether its arms are slim. */
-  public async getTexture(uuid: string): Promise<{ texture: Buffer; slim: boolean }> {
-    const skin = await this.getSkin(uuid);
-    const { skin: image, slim } = await resolveSkin(uuid, skin.skinUrl, skin.slim);
-    // This field is set by loadImage from `@statsify/rendering`
-    const { _data: texture } = image as unknown as { _data: Buffer };
-    return { texture, slim };
+  /** A render of the stored skin, like `getStoredHead`. */
+  public async getStoredRender(uuid: string): Promise<Buffer> {
+    return renderOf(uuid, await this.getStoredSkin(uuid), false);
+  }
+
+  /** The stored skin's texture, like `getStoredHead`, for the site's skin viewer to draw. */
+  public async getStoredTexture(uuid: string): Promise<{ texture: Buffer; slim: boolean }> {
+    return textureOf(uuid, await this.getStoredSkin(uuid));
   }
 
   public async getSkin(tag: string): Promise<Skin> {
-    tag = tag.replaceAll("-", "").toLowerCase();
-    const isUsername = tag.length <= 16;
+    const isUsername = !isUuid(tag);
+    const key = isUsername ? tag.toLowerCase() : normalizeUuid(tag);
 
     const cachedSkin = await this.skinModel
       .findOne()
       .where(isUsername ? "usernameToLower" : "uuid")
-      .equals(tag)
+      .equals(key)
       .lean()
       .exec();
 
@@ -115,7 +120,7 @@ export class SkinService {
       return cachedSkin;
     }
 
-    const uuid = isUsername ? await this.playerService.getUuid(tag) : tag;
+    const uuid = isUsername ? await this.playerService.getUuid(key) : key;
 
     const skin = await this.requestSkin(uuid).catch((error) => {
       if (cachedSkin) return cachedSkin;
@@ -128,6 +133,10 @@ export class SkinService {
     await this.skinModel.replaceOne({ uuid }, skin, { upsert: true }).lean().exec();
 
     return skin;
+  }
+
+  private getStoredSkin(uuid: string): Promise<Skin | null> {
+    return this.skinModel.findOne().where("uuid").equals(normalizeUuid(uuid)).lean().exec();
   }
 
   private requestSkin(uuid: string) {

@@ -9,7 +9,7 @@
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { createI18n } from "~/i18n/i18n";
 import { formatNumber } from "~/i18n/format";
-import { plainText } from "~/components/ui/minecraft-text";
+import { removeFormatting } from "@statsify/util/util";
 import type { AnyRouteMatch } from "@tanstack/react-router";
 import type { LocaleData } from "~/i18n/locale-data";
 
@@ -26,7 +26,7 @@ export const SEARCH_DESCRIPTION_MAX = 155;
 
 /** A value in a preview: a number in the bot's format, or the API's formatted text without its codes. */
 export const valueText = (value: number | string) =>
-  typeof value === "number" ? formatNumber(value, DEFAULT_LOCALE) : plainText(value);
+  typeof value === "number" ? formatNumber(value, DEFAULT_LOCALE) : removeFormatting(value);
 
 /** A stat in a description, "Wins 2,304". */
 export const statText = (label: string, value: number | string, suffix = "") => `${label} ${valueText(value)}${suffix}`;

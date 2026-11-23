@@ -7,15 +7,16 @@
  */
 
 import { PAGE_STALE_MS } from "~/lib/player-route";
-import { UUID_PATTERN, isPlayerTag } from "~/lib/uuid";
+import { isPlayerTag } from "~/lib/uuid";
 import { orNull, orpc, rpc } from "~/lib/orpc";
 import { type QueryClient, queryOptions } from "@tanstack/react-query";
+import { isUuid } from "@statsify/util/util";
 import type { PlayerIdentity } from "@statsify/contract";
 
 /** Resolves a URL name or UUID to the stored identity, or `null` when the API has never seen it. */
 export async function resolvePlayer(name: string): Promise<PlayerIdentity | null> {
   if (!isPlayerTag(name)) return null;
-  return orNull(rpc.player.resolve(UUID_PATTERN.test(name) ? { uuid: name } : { name }), ["NOT_FOUND", "BAD_REQUEST"]);
+  return orNull(rpc.player.resolve(isUuid(name) ? { uuid: name } : { name }), ["NOT_FOUND", "BAD_REQUEST"]);
 }
 
 export const playerPageQuery = (uuid: string) => orpc.player.page.queryOptions({ input: { uuid }, staleTime: PAGE_STALE_MS });
@@ -38,7 +39,7 @@ export const resolveQuery = (name: string) =>
 
       const player = { uuid: identity.uuid, username: identity.username };
       // The answer by name is the answer by UUID too, and the other way round.
-      client.setQueryData(resolveKey(UUID_PATTERN.test(name) ? player.username : player.uuid), player);
+      client.setQueryData(resolveKey(isUuid(name) ? player.username : player.uuid), player);
       return player;
     },
     staleTime: RESOLVE_STALE_MS,
