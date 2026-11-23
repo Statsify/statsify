@@ -19,7 +19,8 @@ import { loadGlossaryWords } from "~/features/content/content-data";
 import { hasGameIcon } from "~/components/ui/game-icon";
 import { type EntryState, isGameKey, loadLeaderboardGame, loadLeaderboardPage, streamView, type LeaderboardView } from "~/features/leaderboards/leaderboard-data";
 import { type Crumb, SEARCH_DESCRIPTION_MAX, localeData, notFoundMeta, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
-import { MinecraftText, plainText } from "~/components/ui/minecraft-text";
+import { MinecraftText } from "~/components/ui/minecraft-text";
+import { removeFormatting } from "@statsify/util/util";
 import { useTranslation } from "react-i18next";
 import type { LeaderboardGame } from "@statsify/contract";
 import type { GlossaryWords } from "~/i18n/i18n.server";
@@ -119,7 +120,7 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
       origin ? socialMeta({ origin, path, title, description, image: "/images/og-home.png", trail: { above: [boards, ...above], name } }) : [];
 
     if (loaderData.kind === "game") {
-      const name = plainText(loaderData.game.formatted);
+      const name = removeFormatting(loaderData.game.formatted);
       const title = words.t("meta.leaderboard.gameTitle", { game: name });
       const description = words.t("meta.leaderboard.gameDescription", { game: name });
       const path = `/leaderboards/${match.params.field}`;
@@ -135,7 +136,7 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
     }
 
     const { page } = loaderData;
-    const name = plainText(page.formatted);
+    const name = removeFormatting(page.formatted);
     const title = words.t("meta.leaderboard.title", { name });
     const fallback = words.t("meta.leaderboard.description", { name });
     // A link preview shows the rows the link opens on: the player it's around, else the page's first three. A board
@@ -143,7 +144,7 @@ export const Route = createFileRoute("/{-$locale}/leaderboards/$field")({
     const highlighted = page.rows.filter((row) => row.highlight);
     const ownValue = page.columns[0]?.field === page.field;
     const parts = (highlighted.length > 0 ? highlighted : page.rows.slice(0, 3)).map(
-      (row) => `#${formatNumber(row.position, DEFAULT_LOCALE)} ${plainText(row.name)}${ownValue ? ` ${valueText(row.values[0])}` : ""}`
+      (row) => `#${formatNumber(row.position, DEFAULT_LOCALE)} ${removeFormatting(row.name)}${ownValue ? ` ${valueText(row.values[0])}` : ""}`
     );
     const rows = statsDescription(parts);
     const lead = words.t("meta.leaderboard.lead", { name });

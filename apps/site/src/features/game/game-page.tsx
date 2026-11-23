@@ -15,7 +15,7 @@ import { Fragment, type ReactNode, type Ref, useEffect, useId, useRef, useState 
 import { Hint, PointerText, Spoken } from "~/components/ui/hint";
 import { InlineStat, LeaderboardLink, StatCell, StatNumber, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
-import { MinecraftText, colorClass, leadingColorClass, nameColor, plainText } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorClass, leadingColorClass, nameColor } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "~/features/player/mini-header";
 import { GameSwitchers } from "./mode-switcher";
 import { PanelToggle, SharePanel } from "~/features/player/share-panel";
@@ -30,6 +30,7 @@ import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { refreshGame } from "~/features/player/player-actions";
 import { addRecentPlayer } from "~/features/player/recent";
+import { removeFormatting } from "@statsify/util/util";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -178,7 +179,7 @@ export function GameView({ page }: { page: GamePage }) {
         <GameSwitchers page={page} scope={scope} />
         {page.window && <PeriodDates {...page.window} />}
         {page.games.find(({ key }) => key === page.game.key)?.played === false && (
-          <NeverPlayed name={page.username} game={plainText(page.game.name)} session={session !== undefined} />
+          <NeverPlayed name={page.username} game={removeFormatting(page.game.name)} session={session !== undefined} />
         )}
         {/* A session's stats rank nowhere, and the bot's `/session` takes some games under a group. */}
         {!session && (
@@ -193,7 +194,7 @@ export function GameView({ page }: { page: GamePage }) {
                 hash={page.mode}
                 className="text-mc-yellow underline underline-offset-2"
               >
-                {t("leaderboards.gameTitle", { game: plainText(page.game.name) })}
+                {t("leaderboards.gameTitle", { game: removeFormatting(page.game.name) })}
               </Link>
             </p>
             <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-mc-1 text-mc-gray">

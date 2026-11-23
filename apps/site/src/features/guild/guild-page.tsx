@@ -220,7 +220,7 @@ function MemberTable({ members, total }: { members: GuildMemberRow[]; total: num
                       params={{ name: member.uuid }}
                       className="flex items-center gap-2 whitespace-nowrap hover:underline"
                     >
-                      <SkinHead uuid={member.uuid} stored size={20} className="shrink-0" />
+                      <SkinHead uuid={member.uuid} size={20} className="shrink-0" />
                       <MinecraftText>{member.displayName}</MinecraftText>
                     </Link>
                   </th>
