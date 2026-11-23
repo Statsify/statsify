@@ -316,11 +316,11 @@ export class ItemRenderer {
   }
 
   private async load(key: string, layers: TintedLayer[], item: ItemStack, scale: number, tick: number) {
-    const cached = await this.cache?.get(key);
+    const cached = await this.cache?.get(this.stack.hash, key);
     if (cached) return cached;
 
     const icon = await this.draw(layers, item, scale, tick);
-    void this.cache?.set(key, icon).catch(console.error);
+    void this.cache?.set(this.stack.hash, key, icon).catch(console.error);
 
     return icon;
   }

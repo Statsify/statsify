@@ -44,7 +44,8 @@ ids to 26.3 names and checks them against the 26.3 pack. The same run pairs 1.8.
 with 26.3's through the two versions' models, and reads 1.8.9's English item names, which tooltips
 use for unnamed items, from StatsifyDump's `/sdump names`.
 
-Icons are cached in IndexedDB. Bump `VERSION` in `src/core/icon-cache.ts` whenever a change draws
+Icons are cached in IndexedDB, for one pack stack at a time: the first stack to use the cache after a
+page load drops the others' icons. Bump `VERSION` in `src/core/icon-cache.ts` whenever a change draws
 icons differently, so browsers drop the old ones.
 
 ## Text and tooltips
