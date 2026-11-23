@@ -1,7 +1,7 @@
-use std::io::{BufWriter, Cursor};
+use std::sync::mpsc;
 
-use futures_intrusive::channel;
-use image::{ImageBuffer, Rgba};
+use image::codecs::png::PngEncoder;
+use image::{ExtendedColorType, ImageEncoder};
 
 use super::backend::{Backend, OutputTexture};
 use crate::buffer_dimensions::BufferDimensions;
@@ -91,7 +91,7 @@ impl Backend for NativeBackend {
     output_texture.create_view(&wgpu::TextureViewDescriptor::default())
   }
 
-  async fn handle_encoder_after_render(
+  fn handle_encoder_after_render(
     &self,
     mut encoder: wgpu::CommandEncoder,
     output_texture: OutputTexture<'_>,
@@ -122,40 +122,42 @@ impl Backend for NativeBackend {
     let index = self.queue.submit(Some(encoder.finish()));
 
     let buffer_slice = output_buffer.slice(..);
-    let (sender, receiver) = channel::shared::oneshot_channel();
-    buffer_slice.map_async(wgpu::MapMode::Read, move |v| sender.send(v).unwrap());
+    let (sender, receiver) = mpsc::channel();
+    buffer_slice.map_async(wgpu::MapMode::Read, move |v| {
+      let _ = sender.send(v);
+    });
 
     self
       .device
       .poll(wgpu::PollType::WaitForSubmissionIndex(index))?;
 
-    if let Some(Ok(())) = receiver.receive().await {
-      let padded_buffer = buffer_slice.get_mapped_range();
+    let Ok(Ok(())) = receiver.recv() else {
+      return Err(Error::RenderFailure);
+    };
 
-      let mut buffer = padded_buffer
-        .chunks(dimensions.padded_bytes_per_row as usize)
-        .take(dimensions.height as usize)
-        .flat_map(|row| &row[..dimensions.unpadded_bytes_per_row as usize])
-        .copied()
-        .collect::<Vec<u8>>();
+    let padded_buffer = buffer_slice.get_mapped_range();
 
-      if unpremultiply {
-        unpremultiply_pixels(&mut buffer);
-      }
+    let mut buffer = padded_buffer
+      .chunks(dimensions.padded_bytes_per_row as usize)
+      .take(dimensions.height as usize)
+      .flat_map(|row| &row[..dimensions.unpadded_bytes_per_row as usize])
+      .copied()
+      .collect::<Vec<u8>>();
 
-      let image = ImageBuffer::<Rgba<u8>, _>::from_vec(dimensions.width, dimensions.height, buffer)
-        .expect("Failed to create image buffer");
-
-      let mut writer = BufWriter::new(Cursor::new(Vec::new()));
-
-      image.write_to(&mut writer, image::ImageFormat::Png)?;
-
-      let bytes = writer.into_inner().unwrap().into_inner();
-
-      Ok(bytes)
-    } else {
-      Err(Error::RenderFailure)
+    if unpremultiply {
+      unpremultiply_pixels(&mut buffer);
     }
+
+    let mut png = Vec::new();
+
+    PngEncoder::new(&mut png).write_image(
+      &buffer,
+      dimensions.width,
+      dimensions.height,
+      ExtendedColorType::Rgba8,
+    )?;
+
+    Ok(png)
   }
 }
 
