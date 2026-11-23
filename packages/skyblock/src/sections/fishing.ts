@@ -25,6 +25,10 @@ export function getFishing(member: RawMember): FishingSection | null {
   // Hypixel can send both with every count at 0
   if (!fished.total && !caught("total_caught")) return null;
 
+  const seaCreatures = SEA_CREATURES.map(({ name, ids }) => ({ name, kills: add(...ids.map((id) => kills[id] ?? 0)) }))
+    .filter(({ kills }) => kills > 0)
+    .toSorted((a, b) => b.kills - a.kills);
+
   return {
     trophyFish: Object.entries(TROPHY_FISH).map(([id, name]) => ({
       id,
@@ -41,11 +45,9 @@ export function getFishing(member: RawMember): FishingSection | null {
       largeTreasure: fished.large_treasure ?? 0,
       outstanding: fished.outstanding ?? 0,
     },
-    // Hypixel's own counter, which neither matches nor bounds the bestiary's kills
-    seaCreatureKills: member.player_stats?.sea_creature_kills ?? 0,
-    seaCreatures: SEA_CREATURES.map(({ name, ids }) => ({ name, kills: add(...ids.map((id) => kills[id] ?? 0)) }))
-      .filter(({ kills }) => kills > 0)
-      .toSorted((a, b) => b.kills - a.kills),
+    // From the bestiary rows, not Hypixel's sea_creature_kills, which neither matches nor bounds them
+    seaCreatureKills: add(...seaCreatures.map(({ kills }) => kills)),
+    seaCreatures,
     trophyHunter: trophyHunter(member.trophy_fish?.rewards),
   };
 }
@@ -57,12 +59,14 @@ if (import.meta.vitest) {
     const fishing = getFishing({
       trophy_fish: { total_caught: 5, rewards: [] },
       bestiary: { kills: { zombie_miner_150: 3, great_white_shark_180: 7, zombie: 1000 } },
+      player_stats: { sea_creature_kills: 162 },
     });
 
     expect(fishing?.seaCreatures).toEqual([
       { name: "Great White Shark", kills: 7 },
       { name: "Abyssal Miner", kills: 3 },
     ]);
+    expect(fishing?.seaCreatureKills).toBe(10);
   });
 
   test("trophyHunter takes the highest rank claimed", () => {

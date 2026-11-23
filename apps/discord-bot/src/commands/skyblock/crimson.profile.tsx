@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { ItemSlot } from "./components/ItemSlot.js";
 import { DOJO_BELT_COLORS, DOJO_GRADE_COLORS, FACTION_COLORS } from "@statsify/skyblock/display";
@@ -16,26 +17,14 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 export const crimsonIcons = ({ crimson }: MemberView) => crimson?.kuudra.map(({ texture }) => texture) ?? [];
 
-export const SkyBlockCrimsonProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-}: SkyBlockProfileProps) => {
+export const SkyBlockCrimsonProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
   const crimson = profile.member.crimson;
 
   if (!crimson) {
     return (
-      <Container background={background}>
-        <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
+      <Card {...card} name={profile.displayName}>
         <Empty text={t("skyblock.noCrimson")} />
-        <Footer logo={logo} user={user} />
-      </Container>
+      </Card>
     );
   }
 
@@ -74,8 +63,7 @@ export const SkyBlockCrimsonProfile = ({
   ));
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.ts title={`§c${t("skyblock.kuudra")}`}>
           <Table.tr>{kuudra}</Table.tr>
@@ -94,7 +82,6 @@ export const SkyBlockCrimsonProfile = ({
           ))}
         </Table.ts>
       </Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };

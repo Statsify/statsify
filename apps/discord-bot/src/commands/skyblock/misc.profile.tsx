@@ -11,7 +11,7 @@ import { Container, Footer, Header, type SidebarItem, Table } from "#components"
 import { Empty } from "./components/Empty.js";
 import { ItemGrid, gridRows } from "./components/ItemGrid.js";
 import { add } from "@statsify/math";
-import { formatTime, prettify } from "@statsify/util";
+import { formatTime } from "@statsify/util";
 import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -40,8 +40,8 @@ export const SkyBlockMiscProfile = ({
     [t("skyblock.giftsGiven"), t(misc.gifts.given), "§d"],
   ];
 
-  const top = (list: { id: string; count: number }[], color: string) =>
-    list.slice(0, TOP).map(({ id, count }) => <Table.td title={prettify(id)} value={t(count)} color={color} size="small" />);
+  const top = (list: { name: string; count: number }[], color: string) =>
+    list.slice(0, TOP).map(({ name, count }) => <Table.td title={name} value={t(count)} color={color} size="small" />);
 
   const auctions = AUCTION_STATS.map((stat) => (
     <Table.td title={t(`skyblock.auctionStats.${stat}`)} value={t(Math.floor(misc.auctions[stat]))} color="§6" size="small" />
