@@ -73,7 +73,7 @@ export function GlossaryPage({ groups }: { groups: GlossaryGroup[] }) {
             </h2>
           </Box>
           {group.key === "ratios" && (
-            <Box className="content:py-4">
+            <Box className="content:py-4 lg:content:px-6">
               <p className={TEXT}>{t("glossary.ratiosNote")}</p>
             </Box>
           )}
