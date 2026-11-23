@@ -695,6 +695,10 @@ mod tests {
   use super::*;
 
   #[test]
+  #[allow(
+    clippy::disallowed_methods,
+    reason = "the expected order doesn't hang on rounding"
+  )]
   fn orders_points_farthest_first() {
     let view = Matrix4::look_at_rh(
       Point3::new(10.0, 4.0, -2.0),
