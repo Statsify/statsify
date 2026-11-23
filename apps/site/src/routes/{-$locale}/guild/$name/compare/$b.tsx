@@ -14,7 +14,7 @@ import { guildPageQuery } from "~/features/guild/guild-data";
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
 import { cacheHeaders } from "~/lib/cache";
-import { cacheNotFoundResponse } from "~/lib/response";
+import { missingGuildResponse } from "~/lib/response";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { orNull } from "~/lib/orpc";
 import { preloadBackground } from "~/components/ui/background";
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/{-$locale}/guild/$name/compare/$b")({
     const [a, b] = await Promise.all([load(params.name), load(params.b)]);
 
     if (!a || !b) {
-      cacheNotFoundResponse();
+      missingGuildResponse();
       throw notFound({ data: (a ? { name: params.b, first: params.name } : { name: params.name }) satisfies Missing });
     }
 

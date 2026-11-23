@@ -26,3 +26,6 @@ export const missingPlayerResponse = createIsomorphicFn()
     setResponseHeaders(new Headers(NO_STORE_EDGE));
   })
   .client(() => undefined);
+
+/** `missingPlayerResponse` for a guild, which a Hypixel lookup can add a moment later too. */
+export const missingGuildResponse = missingPlayerResponse;
