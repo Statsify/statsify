@@ -194,8 +194,8 @@ export class SkinService {
     if (!head) {
       head = imageData(await loadTexture(`https://textures.minecraft.net/texture/${hash}`));
 
-      // A texture hash always serves the same image, so a cached head never expires
-      await this.redis.set(key, head);
+      // The hash pins the image, so this expiry only bounds how many heads Redis keeps
+      await this.redis.set(key, head, "EX", 60 * 60 * 24 * 30);
     }
 
     return { texture: head, enchanted: false, skull: true };
