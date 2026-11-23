@@ -61,6 +61,8 @@ pub struct Renderer<T: Backend> {
   config: wgpu::SurfaceConfiguration,
 
   texture_bind_group_layout: wgpu::BindGroupLayout,
+  sampler: wgpu::Sampler,
+  glint_sampler: wgpu::Sampler,
 
   camera: Camera,
   camera_uniform: CameraUniform,
@@ -107,6 +109,24 @@ impl<T: Backend> Renderer<T> {
         ],
         label: Some("texture_bind_group_layout"),
       });
+
+    let sampler = device.create_sampler(&wgpu::SamplerDescriptor {
+      address_mode_u: wgpu::AddressMode::ClampToEdge,
+      address_mode_v: wgpu::AddressMode::ClampToEdge,
+      address_mode_w: wgpu::AddressMode::ClampToEdge,
+      mag_filter: wgpu::FilterMode::Nearest,
+      min_filter: wgpu::FilterMode::Nearest,
+      mipmap_filter: wgpu::FilterMode::Nearest,
+      ..Default::default()
+    });
+
+    let glint_sampler = device.create_sampler(&wgpu::SamplerDescriptor {
+      address_mode_u: wgpu::AddressMode::Repeat,
+      address_mode_v: wgpu::AddressMode::Repeat,
+      mag_filter: wgpu::FilterMode::Linear,
+      min_filter: wgpu::FilterMode::Linear,
+      ..Default::default()
+    });
 
     let (camera, camera_uniform, camera_buffer, camera_bind_group_layout, camera_bind_group) =
       Self::create_camera(device, &config);
@@ -167,6 +187,8 @@ impl<T: Backend> Renderer<T> {
       config,
 
       texture_bind_group_layout,
+      sampler,
+      glint_sampler,
 
       camera,
       camera_uniform,
@@ -482,6 +504,14 @@ impl<T: Backend> Renderer<T> {
   pub fn texture_bind_group_layout(&self) -> &wgpu::BindGroupLayout {
     &self.texture_bind_group_layout
   }
+
+  pub fn sampler(&self) -> &wgpu::Sampler {
+    &self.sampler
+  }
+
+  pub fn glint_sampler(&self) -> &wgpu::Sampler {
+    &self.glint_sampler
+  }
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -580,21 +610,20 @@ impl Renderer<native::NativeBackend> {
     )
   }
 
-  pub async fn render(&self, items: &[DrawItem<'_>], camera: &Camera) -> Result<Vec<u8>> {
-    self
-      .render_into(
-        items,
-        camera,
-        self.backend.get_output_texture(),
-        &self.depth_texture,
-        false,
-      )
-      .await
+  // This and render_sized wait on the GPU, so async callers run them on a blocking thread
+  pub fn render(&self, items: &[DrawItem<'_>], camera: &Camera) -> Result<Vec<u8>> {
+    self.render_into(
+      items,
+      camera,
+      self.backend.get_output_texture(),
+      &self.depth_texture,
+      false,
+    )
   }
 
   // Renders into textures of its own, at any size the device allows. Unlike `render`, whose skin
   // renders have always kept them premultiplied, partly transparent pixels keep their own color.
-  pub async fn render_sized(
+  pub fn render_sized(
     &self,
     items: &[DrawItem<'_>],
     camera: &Camera,
@@ -618,14 +647,12 @@ impl Renderer<native::NativeBackend> {
 
     let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
 
-    self
-      .render_into(items, camera, &output_texture, &depth_texture, true)
-      .await
+    self.render_into(items, camera, &output_texture, &depth_texture, true)
   }
 
   // Renders run on several threads at once, so each gets its own camera and light
   // instead of rewriting the shared ones
-  async fn render_into(
+  fn render_into(
     &self,
     items: &[DrawItem<'_>],
     camera: &Camera,
@@ -654,7 +681,6 @@ impl Renderer<native::NativeBackend> {
     self
       .backend
       .handle_encoder_after_render(encoder, output_texture, unpremultiply)
-      .await
   }
 
   fn uniform_bind_group(&self, layout: &wgpu::BindGroupLayout, contents: &[u8]) -> wgpu::BindGroup {
