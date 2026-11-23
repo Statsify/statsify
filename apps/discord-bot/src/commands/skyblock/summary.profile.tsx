@@ -6,19 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const SkyBlockSummaryProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockSummaryProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const { skills, dungeons, slayers, accessories, networth } = profile.member;
 
   const missing = (color: string) => (profile.newProfile ? { value: t(0), color } : { value: t("skyblock.apiOff"), color: "§c" });
@@ -34,8 +26,7 @@ export const SkyBlockSummaryProfile = ({
     sidebar.push([t("skyblock.personalBank"), t(Math.floor(profile.personalBank)), "§6"]);
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.tr>
           <Table.td title={t("skyblock.networth")} value={t(Math.floor(networth!.total))} color="§6" />
@@ -62,7 +53,6 @@ export const SkyBlockSummaryProfile = ({
           <Table.td title={t("skyblock.fairySouls")} value={t(profile.fairySouls)} color="§d" />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
