@@ -11,6 +11,7 @@ import { BOX_GAP, Box, CELL, HEADING_BOX, StatBox } from "~/components/ui/box";
 import { ClockScript } from "~/lib/clock";
 import { Discord } from "~/components/icons/discord";
 import { Forums } from "~/components/icons/forums";
+import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { GameNav } from "~/features/game/game-nav";
 import { gameLink } from "~/features/game/game-data";
 import { Hint, Spoken } from "~/components/ui/hint";
@@ -568,6 +569,7 @@ function GamePanel({ game, username, session }: { game: GameSummary; username: s
         <h2>
           {/* The whole box is the link, its ring on the box's edge: the box clips anything past it. */}
           <Link {...gameLink({ kind: session ? "session" : "player", name: username }, game.page)} className={cn(STAT_LINK, "after:inset-0")}>
+            {hasGameIcon(game.id) && <span aria-hidden className="me-2 inline-block size-6 align-middle"><GameIcon game={game.id} /></span>}
             {title}
             {/* Text, not an icon, so the title's box keeps the height of every other panel's. */}
             <span aria-hidden className="text-mc-1.5 text-mc-gray"> »</span>
