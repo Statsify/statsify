@@ -13,7 +13,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { QUAKE_MODES, QuakeModes } from "@statsify/schemas";
-import { QuakeProfile } from "./quake.profile.js";
+import { QuakeProfile } from "@statsify/profiles";
 
 @Command({ description: (t) => t("commands.quake") })
 export class QuakeCommand extends BaseHypixelCommand<QuakeModes> {

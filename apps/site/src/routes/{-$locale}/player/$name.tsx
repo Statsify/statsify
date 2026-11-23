@@ -23,11 +23,12 @@ export const Route = createFileRoute("/{-$locale}/player/$name")({
       throw notFound();
     }
 
-    // UUIDs, old names and other casings all land on the current name, on the same page.
+    // UUIDs, old names and other casings all land on the current name, on the same page. A game page's key is lowered
+    // here too, so an old name with an upper-case game redirects once.
     if (player.username !== params.name) {
       throw redirect({
         to: ".",
-        params: (current) => ({ ...current, name: player.username }),
+        params: ({ game, ...current }) => ({ ...current, name: player.username, ...(game && { game: game.toLowerCase() }) }),
         search: true,
         statusCode: 301,
         headers: REDIRECT_HEADERS,

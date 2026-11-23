@@ -13,7 +13,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { GameId, PARKOUR_MODES, ParkourModes } from "@statsify/schemas";
-import { ParkourProfile } from "./parkour.profile.js";
+import { ParkourProfile } from "@statsify/profiles";
 import { getAllGameIcons } from "@statsify/assets";
 import type { Image } from "skia-canvas";
 

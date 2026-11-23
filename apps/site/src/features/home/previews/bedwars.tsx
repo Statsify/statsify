@@ -7,6 +7,7 @@
  */
 
 import { Box } from "~/components/ui/box";
+import { Link } from "@tanstack/react-router";
 import { Nametag } from "~/components/ui/nametag";
 import { Progression } from "~/components/ui/progression";
 import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
@@ -28,7 +29,9 @@ export function BedWarsPreview({ className }: { className?: string }) {
     <div className={cn("grid grid-cols-3 gap-2 sm:whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-1 xl:grid-cols-balanced gap-2 text-center">
         <Skin uuid={bedwars.uuid} className="xl:row-start-1 xl:row-end-4 hidden xl:block" />
-        <Nametag prefixName={bedwars.prefixName} className="row-start-1 xl:col-start-2" />
+        <Link to="/{-$locale}/player/$name" params={{ name: bedwars.uuid }} className="row-start-1 xl:col-start-2 hover:underline">
+          <Nametag prefixName={bedwars.prefixName} />
+        </Link>
         <Progression
           // A smaller size on phones keeps "[281✫] [■■■■■■■■■■] [282✫]" on one line, the card's three lines in proportion.
           className="row-start-2 xl:col-start-2 max-sm:content:text-mc-1.5"
@@ -39,10 +42,12 @@ export function BedWarsPreview({ className }: { className?: string }) {
           nextLevel={bedwars.nextLevelFormatted}
         />
         <Box className="row-start-4 xl:row-start-3 xl:col-start-2">
-          <span className="font-bold">
-            <span className="text-mc-red">Bed</span>Wars Stats
-          </span>{" "}
-          (Overall)
+          <Link to="/{-$locale}/player/$name/$game" params={{ name: bedwars.uuid, game: "bedwars" }} className="hover:underline">
+            <span className="font-bold">
+              <span className="text-mc-red">Bed</span>Wars {t("home.stats")}
+            </span>{" "}
+            (Overall)
+          </Link>
         </Box>
         <Sidebar className="row-start-3 xl:row-start-1 xl:row-end-4">
           <SidebarItem color="text-mc-dark-green" name="Tokens" value={n(bedwars.tokens)} />

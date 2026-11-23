@@ -158,9 +158,9 @@ export class Quests {
     this.dailyTotal = Quests.getTotal(this.daily);
   }
 
-  private static getTotal<T extends GenericQuestInstance>(quests: T): number {
+  public static getTotal<T extends GenericQuestInstance>(quests: T): number {
     return Object.values(quests).reduce((total, game) => total + game.total, 0);
   }
 }
 
-export { QuestTime } from "./util.js";
+export { QuestTime, questPeriodStart } from "./util.js";

@@ -9,7 +9,7 @@
 import { BaseHypixelCommand, BaseProfileProps } from "#commands/base.hypixel-command";
 import { Command, PlayerArgument } from "@statsify/discord";
 import { PIT_MODES, PitModes } from "@statsify/schemas";
-import { PitProfile } from "./pit.profile.js";
+import { PitProfile } from "@statsify/profiles";
 
 @Command({ description: (t) => t("commands.pit"), args: [PlayerArgument] })
 export class PitCommand extends BaseHypixelCommand<PitModes> {

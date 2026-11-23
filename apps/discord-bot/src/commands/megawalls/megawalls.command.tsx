@@ -13,7 +13,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { GameModeWithSubModes, MEGAWALLS_MODES, MegaWallsModes, Player } from "@statsify/schemas";
-import { MegaWallsProfile } from "./megawalls.profile.js";
+import { MegaWallsProfile } from "@statsify/profiles";
 
 @Command({ description: (t) => t("commands.megawalls") })
 export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {

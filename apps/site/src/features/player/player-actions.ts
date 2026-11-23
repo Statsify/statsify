@@ -13,7 +13,7 @@ import { getRequest, getRequestIP } from "@tanstack/react-start/server";
 import { rpcServerClient } from "~/server/rpc.server";
 import { verifyTurnstile } from "~/server/turnstile.server";
 import { z } from "zod";
-import type { BingoPlayer, PlayerIdentity, PlayerPage } from "@statsify/contract";
+import type { BingoPlayer, GamePage, PlayerIdentity, PlayerPage } from "@statsify/contract";
 
 /**
  * What the refresh and lookup actions hand back. Contract errors travel as values so the page can show a
@@ -85,6 +85,33 @@ export const refreshBingo = createServerFn({ method: "POST" })
     try {
       await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: ip }, { signal });
       return { ok: true, data: await rpcServerClient.player.bingo({ uuid: data.uuid }, { signal }) };
+    } catch (error) {
+      return failure(error, signal);
+    }
+  });
+
+/** Refreshes a known player like `refreshPlayer`, then hands back the page of the game they're on. */
+export const refreshGame = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      uuid: z.string().regex(UUID_PATTERN),
+      game: z.string().min(1).max(32),
+      mode: z.string().min(1).max(32).optional(),
+      submode: z.string().min(1).max(32).optional(),
+      period: z.string().min(1).max(32).optional(),
+      token: z.string().max(4096).optional(),
+    })
+  )
+  .handler(async ({ data }): Promise<ActionResult<GamePage>> => {
+    const signal = AbortSignal.timeout(ACTION_TIMEOUT_MS);
+    const ip = clientIp();
+
+    if (!(await verifyTurnstile(data.token, ip))) return { ok: false, code: "VERIFICATION" };
+
+    try {
+      await rpcServerClient.player.refresh({ uuid: data.uuid, clientIp: ip }, { signal });
+      const { uuid, game, mode, submode, period } = data;
+      return { ok: true, data: await rpcServerClient.player.game({ uuid, game, mode, submode, period }, { signal }) };
     } catch (error) {
       return failure(error, signal);
     }

@@ -22,6 +22,8 @@ const META = "text-mc-1 text-mc-gray";
 type RefreshState =
   | { status: "idle" }
   | { status: "pending" }
+  /** The last refresh worked: said once to screen readers, otherwise the same as idle. */
+  | { status: "done" }
   | { status: "limited"; until: number }
   /** Hypixel didn't answer in time; the page still shows the stored stats. */
   | { status: "unavailable" }
@@ -61,11 +63,14 @@ export function RefreshBar({
   updatedAt,
   expiresAt,
   refresh,
+  row = false,
   className,
 }: {
   updatedAt: number;
   expiresAt: number;
   refresh: (token: string | undefined) => Promise<ActionResult<unknown>>;
+  /** One row on phones too, the time beside a smaller button: a game page, whose tables should start near the top. */
+  row?: boolean;
   className?: string;
 }) {
   const { t, i18n } = useTranslation();
@@ -93,7 +98,7 @@ export function RefreshBar({
     }
 
     if (result.ok) {
-      setState({ status: "idle" });
+      setState({ status: "done" });
       return;
     }
 
@@ -114,13 +119,25 @@ export function RefreshBar({
   else if (state.status === "unavailable") message = t("player.refreshFailed");
   else if (state.status === "error") message = t("error.description");
 
-  // Phones: the time over a full-width button; wider screens: one row.
+  // Phones: the time over a full-width button, unless `row`; wider screens: one row.
   return (
     <div className={cn("flex flex-col gap-2", className)}>
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-        <p className={META}>{now === undefined ? " " : t("player.updated", { time: relativeTime(updatedAt, now, i18n.language) })}</p>
-        <Button asChild variant="primary" size="small" className="w-full sm:w-auto sm:min-w-48">
-          <button type="button" disabled={disabled} onClick={() => (turnstileSiteKey ? setVerifying(true) : void run())}>
+      <div
+        className={cn(
+          "flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4",
+          row && "flex-row items-center justify-between gap-4"
+        )}
+      >
+        <p className={cn(META, "min-w-0")}>{now === undefined ? " " : t("player.updated", { time: relativeTime(updatedAt, now, i18n.language) })}</p>
+        {/* A minimum width, so the countdown's changing digits don't move the button. */}
+        {/* `aria-disabled`, not `disabled`, so the button keeps focus while it refreshes and counts down. */}
+        <Button asChild variant="primary" size="small" className={cn("w-full sm:w-auto sm:min-w-48", row && "w-auto min-w-36 shrink-0")}>
+          <button type="button" aria-disabled={disabled} onClick={() => {
+              if (disabled) return;
+              if (turnstileSiteKey) setVerifying(true);
+              else void run();
+            }}
+          >
             {label}
           </button>
         </Button>
@@ -138,6 +155,10 @@ export function RefreshBar({
         />
       )}
       <output className="block text-mc-1 text-mc-red empty:hidden">{message}</output>
+      <output className="sr-only">
+        {state.status === "pending" && t("player.refreshing")}
+        {state.status === "done" && t("player.updated", { time: relativeTime(updatedAt, updatedAt, i18n.language) })}
+      </output>
     </div>
   );
 }

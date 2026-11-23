@@ -10,7 +10,7 @@ import { Piscina } from "piscina";
 import type { RenderRequest } from "./protocol.js";
 
 export { IMAGE_VARIANTS } from "./protocol.js";
-export type { ImageVariant, RenderRequest } from "./protocol.js";
+export type { CardChoice, ImageVariant, RenderRequest } from "./protocol.js";
 
 /** Every worker is busy and the queue is full; answer 503 with `Retry-After`. */
 export class PoolBusyError extends Error {

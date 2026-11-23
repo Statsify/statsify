@@ -51,33 +51,35 @@ import {
   SubCommand,
   SubPage,
 } from "@statsify/discord";
-import { ArcadeProfile } from "../arcade/arcade.profile.js";
-import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile.js";
-import { BedWarsProfile } from "../bedwars/bedwars.profile.js";
-import { BlitzSGProfile } from "../blitzsg/blitzsg.profile.js";
-import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
-import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
+import {
+  ArcadeProfile,
+  ArenaBrawlProfile,
+  BedWarsProfile,
+  BlitzSGProfile,
+  BuildBattleProfile,
+  CopsAndCrimsProfile,
+  DuelsProfile,
+  MegaWallsProfile,
+  MurderMysteryProfile,
+  PaintballProfile,
+  PitProfile,
+  QuakeProfile,
+  SkyWarsProfile,
+  SmashHeroesProfile,
+  SpeedUHCProfile,
+  TNTGamesProfile,
+  TurboKartRacersProfile,
+  UHCProfile,
+  VampireZProfile,
+  WallsProfile,
+  WarlordsProfile,
+  WoolGamesProfile,
+} from "@statsify/profiles";
 import { DateTime } from "luxon";
-import { DuelsProfile } from "../duels/duels.profile.js";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
 import { HistoricalTimes } from "@statsify/api-client";
-import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
-import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile.js";
-import { PaintballProfile } from "../paintball/paintball.profile.js";
-import { PitProfile } from "../pit/pit.profile.js";
-import { QuakeProfile } from "../quake/quake.profile.js";
 import { STATUS_COLORS } from "@statsify/logger";
-import { SkyWarsProfile } from "../skywars/skywars.profile.js";
-import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
-import { SpeedUHCProfile } from "../speeduhc/speeduhc.profile.js";
-import { TNTGamesProfile } from "../tntgames/tntgames.profile.js";
-import { TurboKartRacersProfile } from "../turbokartracers/turbokartracers.profile.js";
-import { UHCProfile } from "../uhc/uhc.profile.js";
-import { VampireZProfile } from "../vampirez/vampirez.profile.js";
-import { WallsProfile } from "../walls/walls.profile.js";
-import { WarlordsProfile } from "../warlords/warlords.profile.js";
-import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
 import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
 import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "../arcade/arcade.command.js";

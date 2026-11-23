@@ -6,9 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ColorCode, GAMES, type Game, cardColors, statAt } from "@statsify/catalog";
 import { FormattedGame, type GameId, type Player, type PlayerStats, getNetworkExp } from "@statsify/schemas";
-import type { GameSummary, PlayerPage } from "@statsify/contract";
-import { findScore } from "@statsify/util";
+import type { GamePage, GameSummary, PlayerPage, StatRow } from "@statsify/contract";
+import { findScore, formatTime } from "@statsify/util";
+import { freshness } from "./cooldown.js";
+import { winstreaksHidden } from "./game-pages/duels.js";
+import { GAME_PAGES, gamePageOf, pageName } from "./game-pages/index.js";
+import { read } from "./game-pages/layout.js";
 
 /** Hypixel's network-level coin multiplier from each first level, ascending, without any rank bonus. */
 const LEVEL_MULTIPLIERS = [
@@ -37,58 +42,78 @@ export interface PlayerGuild {
   members: { uuid: string; questParticipation: number; daily: number; weekly: number }[];
 }
 
-/** `PlayerService.get` refreshes a player from Hypixel at most once per this cooldown. */
-export const PLAYER_COOLDOWN_MS = 120_000;
-
 type Value = (stats: PlayerStats) => number | string | undefined;
+
+/**
+ * A catalog stat by its key, below the summary's `at` unless the row gives one, under `stats.<label>` (its key by
+ * default). `value` is the panel's own text for it (a time), and undefined leaves the row out.
+ */
+type RowSpec =
+  | string
+  | {
+    key: string;
+    at?: string;
+    label?: string;
+    name?: string;
+    color?: ColorCode;
+    value?: Value;
+    hidden?: (stats: PlayerStats) => boolean;
+  };
+
+/** A row the panel works out from other stats, in its own color, with no leaderboard. */
+interface ComputedRow {
+  label: string;
+  color: ColorCode;
+  compute: Value;
+}
+
+const isComputed = (row: RowSpec | ComputedRow): row is ComputedRow => typeof row !== "string" && "compute" in row;
 
 interface Summary {
   id: GameId;
   /** Minecraft-formatted level or prefix for the panel title. */
   level?: (stats: PlayerStats) => string | undefined;
+  /** Where the rows' stats are stored below the game: a mode (`overall`), or the game itself by default. */
+  at?: string;
   /** From the game's own play counts: games played where it stores them, else its wins, losses, kills and deaths. */
   played: (stats: PlayerStats) => boolean;
-  /** Up to four `[stats.* locale key, value]` rows. */
-  rows: [key: string, value: Value, suffix?: string][];
+  /** Four rows, so the panel's two columns come out even. */
+  rows: (RowSpec | ComputedRow)[];
 }
 
 const anyCount = (...counts: number[]) => counts.some((count) => count > 0);
 
+/** A duration as the panel's text (it formats only numbers); nothing for one never set. */
+const time = (ms: number | undefined) => (ms ? formatTime(ms) : undefined);
+
+/** The player's best time on each lobby course they have finished. */
+const courseTimes = ({ parkour }: PlayerStats) =>
+  Object.values(parkour).filter((ms): ms is number => typeof ms === "number" && ms > 0);
+
 /**
- * What each game panel shows: four headline numbers from the overall mode, picked by hand.
+ * What each game panel shows: four headline numbers from the overall mode, picked by hand. A game without overall
+ * kills (Arcade, TNT Games) fills the rest from one or two of its modes.
  */
 const GAME_SUMMARIES: Summary[] = [
   {
     id: "BEDWARS",
     level: (s) => s.bedwars.levelFormatted,
+    at: "overall",
     played: ({ bedwars }) => bedwars.overall.gamesPlayed > 0,
-    rows: [
-      ["wins", (s) => s.bedwars.overall.wins],
-      ["finalKills", (s) => s.bedwars.overall.finalKills],
-      ["fkdr", (s) => s.bedwars.overall.fkdr],
-      ["bedsBroken", (s) => s.bedwars.overall.bedsBroken],
-    ],
+    rows: ["wins", "finalKills", "fkdr", "bedsBroken"],
   },
   {
     id: "SKYWARS",
     level: (s) => s.skywars.levelFormatted,
+    at: "overall",
     played: ({ skywars }) => skywars.overall.gamesPlayed > 0,
-    rows: [
-      ["wins", (s) => s.skywars.overall.wins],
-      ["kills", (s) => s.skywars.overall.kills],
-      ["kdr", (s) => s.skywars.overall.kdr],
-      ["wlr", (s) => s.skywars.overall.wlr],
-    ],
+    rows: ["wins", "kills", "kdr", "wlr"],
   },
   {
     id: "DUELS",
+    at: "overall",
     played: ({ duels: { overall } }) => anyCount(overall.wins, overall.losses, overall.kills, overall.deaths),
-    rows: [
-      ["wins", (s) => s.duels.overall.wins],
-      ["kills", (s) => s.duels.overall.kills],
-      ["wlr", (s) => s.duels.overall.wlr],
-      ["bestWinstreak", (s) => s.duels.overall.bestWinstreak],
-    ],
+    rows: ["wins", "kills", "wlr", { key: "bestWinstreak", hidden: winstreaksHidden }],
   },
   {
     id: "ARCADE",
@@ -105,130 +130,91 @@ const GAME_SUMMARIES: Summary[] = [
         arcade.throwOut.deaths,
         arcade.zombies.overall.deaths
       ),
-    rows: [
-      ["wins", (s) => s.arcade.wins],
-      ["coins", (s) => s.arcade.coins],
-    ],
+    rows: ["wins", "coins", "coinConversions", { key: "wins", at: "zombies.overall", label: "zombiesWins" }],
   },
   {
     id: "ARENA_BRAWL",
     level: (s) => s.arenabrawl.naturalPrefix,
+    at: "overall",
     played: ({ arenabrawl: { overall } }) => anyCount(overall.wins, overall.losses, overall.kills, overall.deaths),
-    rows: [
-      ["wins", (s) => s.arenabrawl.overall.wins],
-      ["kills", (s) => s.arenabrawl.overall.kills],
-      ["kdr", (s) => s.arenabrawl.overall.kdr],
-      ["wlr", (s) => s.arenabrawl.overall.wlr],
-    ],
+    rows: ["wins", "kills", "kdr", "wlr"],
   },
   {
     id: "BLITZSG",
     level: (s) => s.blitzsg.naturalPrefix,
+    at: "overall",
     played: ({ blitzsg: { overall } }) => anyCount(overall.wins, overall.kills, overall.deaths),
-    rows: [
-      ["wins", (s) => s.blitzsg.overall.wins],
-      ["kills", (s) => s.blitzsg.overall.kills],
-      ["kdr", (s) => s.blitzsg.overall.kdr],
-      ["coins", (s) => s.blitzsg.coins],
-    ],
+    rows: ["wins", "kills", "kdr", { key: "coins", at: "" }],
   },
   {
     id: "BUILD_BATTLE",
     level: (s) => s.buildbattle.titleFormatted,
     // It stores no games played or losses, so score and correct guesses count a player who never won.
     played: ({ buildbattle }) => anyCount(buildbattle.overall.wins, buildbattle.score, buildbattle.correctGuesses),
-    rows: [
-      ["wins", (s) => s.buildbattle.overall.wins],
-      ["score", (s) => s.buildbattle.score],
-      ["correctGuesses", (s) => s.buildbattle.correctGuesses],
-      ["votes", (s) => s.buildbattle.votes],
-    ],
+    rows: [{ key: "overall.wins", label: "wins" }, "score", "correctGuesses", "votes"],
   },
   {
     id: "COPS_AND_CRIMS",
     level: (s) => s.copsandcrims.levelFormatted,
+    at: "overall",
     played: ({ copsandcrims: { overall } }) => anyCount(overall.wins, overall.kills, overall.deaths),
-    rows: [
-      ["wins", (s) => s.copsandcrims.overall.wins],
-      ["kills", (s) => s.copsandcrims.overall.kills],
-      ["kdr", (s) => s.copsandcrims.overall.kdr],
-      ["headshotKills", (s) => s.copsandcrims.overall.headshotKills],
-    ],
+    rows: ["wins", "kills", "kdr", "headshotKills"],
   },
   {
     id: "MEGAWALLS",
+    at: "overall",
     played: ({ megawalls: { overall } }) => anyCount(overall.wins, overall.losses, overall.kills, overall.deaths),
-    rows: [
-      ["wins", (s) => s.megawalls.overall.wins],
-      ["finalKills", (s) => s.megawalls.overall.finalKills],
-      ["fkdr", (s) => s.megawalls.overall.fkdr],
-      ["witherKills", (s) => s.megawalls.overall.witherKills],
-    ],
+    rows: ["wins", "finalKills", "fkdr", "witherKills"],
   },
   {
     id: "MURDER_MYSTERY",
+    at: "overall",
     played: ({ murdermystery }) => murdermystery.overall.gamesPlayed > 0,
-    rows: [
-      ["wins", (s) => s.murdermystery.overall.wins],
-      ["kills", (s) => s.murdermystery.overall.kills],
-      ["murdererWins", (s) => s.murdermystery.overall.murdererWins],
-      ["detectiveWins", (s) => s.murdermystery.overall.detectiveWins],
-    ],
+    rows: ["wins", "kills", "murdererWins", "detectiveWins"],
   },
   {
     id: "PAINTBALL",
     level: (s) => s.paintball.naturalPrefix,
     played: ({ paintball }) => anyCount(paintball.wins, paintball.kills, paintball.deaths),
-    rows: [
-      ["wins", (s) => s.paintball.wins],
-      ["kills", (s) => s.paintball.kills],
-      ["kdr", (s) => s.paintball.kdr],
-      ["shotAccuracy", (s) => s.paintball.shotAccuracy, "%"],
-    ],
+    rows: ["wins", "kills", "kdr", "shotAccuracy"],
   },
   {
     id: "PIT",
     level: (s) => s.pit.levelFormatted,
     played: ({ pit }) => anyCount(pit.kills, pit.deaths),
+    rows: ["kills", "deaths", "kdr", "gold"],
+  },
+  {
+    id: "PARKOUR",
+    // Best Time pink, as Duels Parkour's and Arcade's best times; Main Lobby under its game's name, in its first color.
+    played: (s) => courseTimes(s).length > 0,
     rows: [
-      ["kills", (s) => s.pit.kills],
-      ["deaths", (s) => s.pit.deaths],
-      ["kdr", (s) => s.pit.kdr],
-      ["gold", (s) => s.pit.gold],
+      { label: "coursesCompleted", color: "§a", compute: (s) => courseTimes(s).length },
+      { label: "bestTime", color: "§d", compute: (s) => time(courseTimes(s).toSorted((a, b) => a - b)[0]) },
+      { key: "MAIN_LOBBY", label: "mainLobby", name: FormattedGame.MAIN_LOBBY, color: "§3", value: (s) => time(s.parkour.MAIN_LOBBY) },
+      { label: "combinedTime", color: "§e", compute: (s) => time(courseTimes(s).reduce((sum, ms) => sum + ms, 0)) },
     ],
   },
   {
     id: "QUAKE",
     level: (s) => s.quake.naturalPrefix,
+    at: "overall",
     played: ({ quake: { overall } }) => anyCount(overall.wins, overall.kills, overall.deaths),
-    rows: [
-      ["wins", (s) => s.quake.overall.wins],
-      ["kills", (s) => s.quake.overall.kills],
-      ["kdr", (s) => s.quake.overall.kdr],
-      ["headshots", (s) => s.quake.overall.headshots],
-    ],
+    rows: ["wins", "kills", "kdr", "headshots"],
   },
   {
     id: "SMASH_HEROES",
     level: (s) => s.smashheroes.levelFormatted,
+    at: "overall",
     played: ({ smashheroes: { overall } }) => anyCount(overall.wins, overall.losses, overall.kills, overall.deaths),
-    rows: [
-      ["wins", (s) => s.smashheroes.overall.wins],
-      ["kills", (s) => s.smashheroes.overall.kills],
-      ["kdr", (s) => s.smashheroes.overall.kdr],
-      ["wlr", (s) => s.smashheroes.overall.wlr],
-    ],
+    rows: ["wins", "kills", "kdr", "wlr"],
   },
   {
     id: "SPEED_UHC",
     level: (s) => s.speeduhc.levelFormatted,
+    at: "overall",
     played: ({ speeduhc: { overall } }) => anyCount(overall.wins, overall.losses, overall.kills, overall.deaths),
-    rows: [
-      ["wins", (s) => s.speeduhc.overall.wins],
-      ["kills", (s) => s.speeduhc.overall.kills],
-      ["kdr", (s) => s.speeduhc.overall.kdr],
-      ["wlr", (s) => s.speeduhc.overall.wlr],
-    ],
+    rows: ["wins", "kills", "kdr", "wlr"],
   },
   {
     id: "TNT_GAMES",
@@ -236,63 +222,46 @@ const GAME_SUMMARIES: Summary[] = [
     played: ({ tntgames: { wins, tntRun, bowSpleef, pvpRun, wizards, tntTag } }) =>
       anyCount(wins, tntRun.losses, bowSpleef.losses, pvpRun.kills, pvpRun.deaths, wizards.kills, wizards.deaths, tntTag.kills, tntTag.deaths),
     rows: [
-      ["wins", (s) => s.tntgames.wins],
-      ["coins", (s) => s.tntgames.coins],
+      "wins",
+      "coins",
+      { key: "wins", at: "tntRun", label: "tntRunWins" },
+      { key: "kills", at: "wizards", label: "wizardsKills" },
     ],
   },
   {
     id: "TURBO_KART_RACERS",
     played: ({ turbokartracers }) => turbokartracers.gamesPlayed > 0,
     rows: [
-      ["goldTrophies", (s) => s.turbokartracers.gold],
-      ["silverTrophies", (s) => s.turbokartracers.silver],
-      ["bronzeTrophies", (s) => s.turbokartracers.bronze],
-      ["lapsCompleted", (s) => s.turbokartracers.lapsCompleted],
+      { key: "gold", label: "goldTrophies" },
+      { key: "silver", label: "silverTrophies" },
+      { key: "bronze", label: "bronzeTrophies" },
+      "lapsCompleted",
     ],
   },
   {
     id: "UHC",
     level: (s) => s.uhc.levelFormatted,
+    at: "overall",
     played: ({ uhc: { overall } }) => anyCount(overall.wins, overall.kills, overall.deaths),
-    rows: [
-      ["wins", (s) => s.uhc.overall.wins],
-      ["kills", (s) => s.uhc.overall.kills],
-      ["kdr", (s) => s.uhc.overall.kdr],
-      ["headsEaten", (s) => s.uhc.overall.headsEaten],
-    ],
+    rows: ["wins", "kills", "kdr", "headsEaten"],
   },
   {
     id: "VAMPIREZ",
     played: ({ vampirez: { human, vampire, zombieKills } }) =>
       anyCount(human.wins, human.kills, human.deaths, vampire.wins, vampire.kills, vampire.deaths, zombieKills),
-    rows: [
-      ["overallWins", (s) => s.vampirez.overallWins],
-      ["zombieKills", (s) => s.vampirez.zombieKills],
-      ["mostVampireKills", (s) => s.vampirez.mostVampireKills],
-      ["coins", (s) => s.vampirez.coins],
-    ],
+    rows: ["overallWins", "zombieKills", "mostVampireKills", "coins"],
   },
   {
     id: "WALLS",
     level: (s) => s.walls.naturalPrefix,
     played: ({ walls }) => anyCount(walls.wins, walls.losses, walls.kills, walls.deaths),
-    rows: [
-      ["wins", (s) => s.walls.wins],
-      ["kills", (s) => s.walls.kills],
-      ["kdr", (s) => s.walls.kdr],
-      ["wlr", (s) => s.walls.wlr],
-    ],
+    rows: ["wins", "kills", "kdr", "wlr"],
   },
   {
     id: "WARLORDS",
     level: (s) => s.warlords.titleFormatted,
     played: ({ warlords }) => warlords.gamesPlayed > 0,
-    rows: [
-      ["wins", (s) => s.warlords.wins],
-      ["kills", (s) => s.warlords.kills],
-      ["kdr", (s) => s.warlords.kdr],
-      ["wlr", (s) => s.warlords.wlr],
-    ],
+    rows: ["wins", "kills", "kdr", "wlr"],
   },
   {
     id: "WOOLGAMES",
@@ -301,24 +270,66 @@ const GAME_SUMMARIES: Summary[] = [
     played: ({ woolgames: { woolwars, sheepwars, captureTheWool } }) =>
       anyCount(woolwars.overall.gamesPlayed, sheepwars.gamesPlayed, captureTheWool.wins, captureTheWool.losses, captureTheWool.kills, captureTheWool.deaths),
     rows: [
-      ["wins", (s) => s.woolgames.wins],
+      "wins",
       // Out of 100, as the card prints it.
-      ["layers", (s) => `§a${s.woolgames.layers}§8/§a100`],
-      ["wool", (s) => s.woolgames.coins],
+      { key: "layers", value: (s) => `§a${s.woolgames.layers}§8/§a100` },
+      { key: "coins", label: "wool" },
+      { key: "playtime", value: (s) => time(s.woolgames.playtime) },
     ],
   },
 ];
+
+/** A game's entry in the catalog, which every game with a panel has. */
+function catalogGame(id: GameId): Game {
+  const game = Object.values(GAMES).find((entry) => entry.id === id);
+  if (!game) throw new Error(`The catalog has no ${id}`);
+  return game;
+}
+
+/** A panel row, or nothing for one the panel leaves out (a time never set). */
+function panelRow(stats: PlayerStats, game: Game, at: string, row: RowSpec | ComputedRow): StatRow | undefined {
+  if (isComputed(row)) {
+    const value = row.compute(stats);
+    return value === undefined ? undefined : { key: row.label, value, color: row.color, leaderboard: null };
+  }
+
+  const spec: Exclude<RowSpec, string> = typeof row === "string" ? { key: row } : row;
+  const place = spec.at ?? at;
+  const stat = statAt(game, place, spec.key);
+  const hidden = spec.hidden?.(stats) ?? false;
+  const value = spec.value ? spec.value(stats) : Number(read({ stats }, stat.path));
+  if (value === undefined) return undefined;
+
+  return {
+    key: spec.label ?? spec.key,
+    ...(spec.name && { name: spec.name }),
+    value,
+    ...(hidden && { hidden }),
+    ...(stat.suffix && !hidden && { suffix: stat.suffix }),
+    color: spec.color ?? cardColors(game, ...(place ? [place] : []))(spec.key),
+    leaderboard: stat.leaderboard && !hidden ? stat.path : null,
+  };
+}
 
 /** A game panel, or `undefined` for a game the player has never played, which the page leaves out. */
 function summarize(stats: PlayerStats, summary: Summary): GameSummary | undefined {
   if (!summary.played(stats)) return undefined;
 
-  const rows = summary.rows.flatMap(([key, read, suffix]) => {
-    const value = read(stats);
-    return value === undefined ? [] : [{ key, value, ...(suffix && { suffix }) }];
-  });
+  const game = catalogGame(summary.id);
+  const rows = summary.rows.flatMap((row) => panelRow(stats, game, summary.at ?? "", row) ?? []);
 
-  return { id: summary.id, name: FormattedGame[summary.id], level: summary.level?.(stats), rows };
+  return { id: summary.id, name: FormattedGame[summary.id], level: summary.level?.(stats), rows, page: gamePageOf(summary.id) };
+}
+
+/** The site's game pages for the nav between them, each marked when the player has never played the game. */
+export function gameNav(stats: PlayerStats): GamePage["games"] {
+  return GAME_PAGES.map((layout) => {
+    const { key, id } = layout.game;
+    if (layout.played) return { key, id, name: pageName(layout), played: layout.played(stats) };
+    const summary = GAME_SUMMARIES.find((entry) => entry.id === id);
+    if (!summary) throw new Error(`${key} has no player-page panel`);
+    return { key, id, name: pageName(layout), played: summarize(stats, summary) !== undefined };
+  });
 }
 
 /** The `player.page` view model from a deserialized player and their guild. */
@@ -388,7 +399,6 @@ export function buildPlayerPage(player: Player, guild: PlayerGuild | null): Play
       youtube: socials.youtube,
     },
     games: GAME_SUMMARIES.flatMap((summary) => summarize(player.stats, summary) ?? []),
-    updatedAt: player.expiresAt - PLAYER_COOLDOWN_MS,
-    expiresAt: player.expiresAt,
+    ...freshness(player),
   };
 }

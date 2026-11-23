@@ -13,7 +13,7 @@ import {
   ProfileData,
 } from "#commands/base.hypixel-command";
 import { CHALLENGE_MODES, ChallengeModes, GameId, GameModeWithSubModes } from "@statsify/schemas";
-import { ChallengesProfile } from "./challenges.profile.js";
+import { ChallengesProfile } from "@statsify/profiles";
 import { Command } from "@statsify/discord";
 import { Image } from "skia-canvas";
 import { getAllGameIcons } from "@statsify/assets";

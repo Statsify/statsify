@@ -30,6 +30,10 @@
   - changed-files:
     - any-glob-to-any-file: packages/assets/**/*
 
+"@statsify/catalog":
+  - changed-files:
+    - any-glob-to-any-file: packages/catalog/**/*
+
 "@statsify/contract":
   - changed-files:
     - any-glob-to-any-file: packages/contract/**/*

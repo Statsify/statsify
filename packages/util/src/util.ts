@@ -109,7 +109,7 @@ export const prettify = (s: string): string => {
 };
 
 export const removeFormatting = (s: string): string =>
-  s.replaceAll(/§#([A-Fa-f0-9]{6})|§./gm, "");
+  s.replaceAll(/§#([A-Fa-f0-9]{6})|§\^\d+(?:\.\d+)?\^|§./gm, "");
 
 /** A Minecraft UUID: 32 hex digits, with or without the four dashes, in any case. */
 export const UUID_PATTERN = /^[\da-f]{32}$|^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i;
@@ -353,6 +353,7 @@ if (import.meta.vitest) {
     it("should remove formatting", () => {
       expect(removeFormatting("§ahello§r world")).toBe("hello world");
       expect(removeFormatting("hello world")).toBe("hello world");
+      expect(removeFormatting("§#FF55aa§^3^Big§r §ltext§^1.5^!")).toBe("Big text!");
     });
   });
 

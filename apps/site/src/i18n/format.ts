@@ -29,10 +29,11 @@ function numberFormat(locale: string | undefined, maximumFractionDigits: number,
   return format;
 }
 
-export function formatNumber(value: number, locale?: string): string {
+/** `trim` prints only the decimals a number has, as the bot prints one it doesn't format (Quake's Trigger, `1.3`). */
+export function formatNumber(value: number, locale?: string, trim = false): string {
   const hasDecimals = value >= 1_000_000 || !Number.isInteger(value);
   const digits = hasDecimals ? 2 : 0;
-  const format = numberFormat(locale, digits, digits);
+  const format = numberFormat(locale, digits, trim ? 0 : digits);
 
   if (value >= 1_000_000) {
     const [number, suffix] = abbreviationNumber(value);
@@ -62,6 +63,8 @@ if (import.meta.vitest) {
       expect(formatNumber(1_234_567, "en-US")).toBe("1.23M");
       expect(formatNumber(2_500_000_000, "en-US")).toBe("2.50B");
       expect(formatNumber(1234, "de")).toBe("1.234");
+      expect(formatNumber(1.3, "en-US", true)).toBe("1.3");
+      expect(formatNumber(0.85, "en-US", true)).toBe("0.85");
     });
   });
 

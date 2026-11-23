@@ -8,7 +8,7 @@
 
 import { BUILD_BATTLE_MODES, BuildBattleModes } from "@statsify/schemas";
 import { BaseHypixelCommand, BaseProfileProps } from "#commands/base.hypixel-command";
-import { BuildBattleProfile } from "./buildbattle.profile.js";
+import { BuildBattleProfile } from "@statsify/profiles";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.buildbattle") })

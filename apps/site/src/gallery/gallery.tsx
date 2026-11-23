@@ -6,7 +6,23 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ANRIE_UUID, LEADERBOARD_PAGE, OJAKEY_UUID, PLAYER_PAGE, PROGRESSION, RESULT_CARDS, SUGGESTIONS } from "./fixtures";
+import {
+  ANRIE_UUID,
+  GAME_LEVEL,
+  GAME_NAV_ALL,
+  GAME_PAGE,
+  LEADERBOARD_PAGE,
+  LIST_SECTION,
+  MANY_MODES,
+  OJAKEY_UUID,
+  PLAYER_PAGE,
+  PROGRESSION,
+  RESULT_CARDS,
+  SELECTION_SECTION,
+  SUBMODE_PAGE,
+  SUGGESTIONS,
+  TITLE_LIST,
+} from "./fixtures";
 import { Background } from "~/components/ui/background";
 import { Board } from "~/components/icons/board";
 import { Box } from "~/components/ui/box";
@@ -21,6 +37,7 @@ import { Divider } from "~/components/ui/divider";
 import { ErrorPage } from "~/components/error-page";
 import { FindPlayer, LeaderboardTable, PageNav } from "~/features/leaderboards/leaderboard-table";
 import { GAME_ICONS, GameIcon, hasGameIcon } from "~/components/ui/game-icon";
+import { GameHeader, GameNav, LevelPanel, ModeSwitcher, StatPanel } from "~/features/game/game-page";
 import { GitHub } from "~/components/icons/github";
 import { InlineStat, StatCell } from "~/components/ui/stat";
 import { LogoError } from "~/components/icons/logo-error";
@@ -55,6 +72,7 @@ const SECTIONS = [
   ["panels", "Panels"],
   ["buttons", "Buttons"],
   ["stats", "Stat cells"],
+  ["games", "Game pages"],
   ["search", "Search"],
   ["refresh", "Update stats"],
   ["results", "Result cards"],
@@ -126,6 +144,7 @@ export function Gallery() {
         <PanelSection />
         <ButtonSection />
         <StatSection />
+        <GameSection />
         <SearchSection />
         <RefreshSection />
         <ResultSection />
@@ -403,6 +422,110 @@ function StatSection() {
           </Box>
         </Demo>
       </div>
+    </Section>
+  );
+}
+
+const [HEADLINE, RESOURCES] = GAME_PAGE.sections;
+const SEVEN_MODES = { ...GAME_PAGE, modes: GAME_PAGE.modes.slice(0, 7) };
+const [TOKENS] = GAME_PAGE.overview;
+const LEVEL = { ...GAME_LEVEL, current: "§d[3,000✫]", progression: { current: 0, percent: 1 } };
+const OVERVIEW = { title: null, rows: [GAME_PAGE.overview] };
+
+function GameSection() {
+  const { username } = GAME_PAGE;
+
+  return (
+    <Section id="games">
+      <Demo label="Nametag and title, level, and the game's own stats (slumber tickets out of the wallet's size)">
+        <div className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
+          <GameHeader page={GAME_PAGE} className="lg:row-span-2" />
+          <LevelPanel level={GAME_LEVEL} username={username} />
+          <StatPanel section={OVERVIEW} username={username} />
+        </div>
+      </Demo>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Demo label="Level with no next level: no bar, MAXED">
+          <LevelPanel level={LEVEL} username={username} />
+        </Demo>
+        <Demo label="A last level that prestiges: PRESTIGED">
+          <LevelPanel level={{ ...LEVEL, maxedWord: "prestiged" }} username={username} />
+        </Demo>
+        <Demo label="No wallet: tokens only">
+          <StatPanel section={{ title: null, rows: [[TOKENS]] }} username={username} />
+        </Demo>
+      </div>
+      <Demo label="Games: the player's game pages in the registry's order, links from md up, a Games button on phones, one never played dimmed">
+        <div className="relative">
+          <GameNav page={GAME_PAGE} />
+        </div>
+      </Demo>
+      <Demo label="The Games button open on phones: a grid of the pages, the current one marked">
+        {/* The open grid lies over what follows, so the demo keeps room for it. */}
+        <div className="max-md:min-h-56">
+          <div className="relative">
+            <GameNav page={GAME_PAGE} open />
+          </div>
+        </div>
+      </Demo>
+      <Demo label="24 pages, open: past 10, the Games button at every width">
+        <div className="min-h-[41rem] sm:min-h-[29rem] lg:min-h-[23rem] xl:min-h-[20rem]">
+          <div className="relative">
+            <GameNav page={{ ...GAME_PAGE, games: GAME_NAV_ALL }} open />
+          </div>
+        </div>
+      </Demo>
+      <Demo label="16 modes: past 10, a select at every width, Fours marked as the mode played most">
+        <ModeSwitcher page={GAME_PAGE} />
+      </Demo>
+      <Demo label="7 modes: a select on phones, links from md up, Fours marked by a gold square">
+        <ModeSwitcher page={SEVEN_MODES} />
+      </Demo>
+      <Demo label="7 modes: another mode, the first hovered" force="hover">
+        <ModeSwitcher page={{ ...SEVEN_MODES, mode: "solo" }} />
+      </Demo>
+      <Demo label="A mode with submodes: up to 4, tabs at every width (segments on phones), the player's kit marked">
+        <div className="flex flex-col gap-4">
+          <GameHeader page={SUBMODE_PAGE} />
+          <ModeSwitcher page={SUBMODE_PAGE} />
+          <ModeSwitcher page={SUBMODE_PAGE} kind="submode" />
+        </div>
+      </Demo>
+      <Demo label="45 modes: a select at every width, the player's kit marked">
+        <ModeSwitcher page={{ ...GAME_PAGE, modes: MANY_MODES }} />
+      </Demo>
+      <Demo label="Headline table: Final and Normal over the kills rows, every stat opens its leaderboard at the player (the first hovered)" force="hover">
+        <StatPanel section={HEADLINE} username={username} headline />
+      </Demo>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Demo label="A titled section, the first stat focused" force="focus-visible">
+          <StatPanel section={RESOURCES} username={username} />
+        </Demo>
+        <Demo label="A stat without a leaderboard: no link">
+          <StatPanel section={{ title: null, rows: [[{ ...TOKENS, leaderboard: null }]] }} username={username} />
+        </Demo>
+        <Demo label="Hex colors, and a selection as a Label: value line">
+          <StatPanel section={SELECTION_SECTION} username={username} />
+        </Demo>
+        <Demo label="The card's own heading, in its colors">
+          <StatPanel section={{ ...RESOURCES, name: "§6Solo" }} username={username} />
+        </Demo>
+        <Demo label="A translated heading in the card's color">
+          <StatPanel section={{ ...RESOURCES, color: "§b" }} username={username} />
+        </Demo>
+      </div>
+      <Demo label="A list: the card's names, a time never set as N/A with no link">
+        <StatPanel section={LIST_SECTION} username={username} />
+      </Demo>
+      <Demo label="A long list, folded behind its heading and count">
+        <StatPanel section={{ ...LIST_SECTION, collapsed: true }} username={username} />
+      </Demo>
+      <Demo label="A folded list the page's filter searches, opened on its matches with their count">
+        <StatPanel section={{ ...LIST_SECTION, collapsed: true, search: true }} username={username} filter="is" />
+      </Demo>
+      <Demo label="A list in the card's own formatting, bold only where the card is (titles)">
+        <StatPanel section={TITLE_LIST} username={username} />
+      </Demo>
     </Section>
   );
 }

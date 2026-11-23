@@ -36,6 +36,7 @@
   "dependencies": {
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
+    "@statsify/catalog": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
