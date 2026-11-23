@@ -11,7 +11,7 @@ import { Chevron } from "~/components/icons/chevron";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { cn } from "~/lib/util";
 import { GameNav } from "./game-nav";
-import { type GameScope, gameLink, modeSearch, pageSearch, periodSearch, submodeSearch } from "./game-data";
+import { type GameFrame, type GameScope, gameLink, modeSearch, pageSearch, periodSearch, submodeSearch } from "./game-data";
 import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { GamePage } from "@statsify/contract";
@@ -35,7 +35,7 @@ const SWITCHER_WORDS = {
  * The mode, submode or period switcher. The mode played most is marked by its words in a select's options, and on a
  * tab by a gold square that a line under the tabs explains.
  */
-export function ModeSwitcher({ page, scope, kind = "mode" }: { page: GamePage; scope: GameScope; kind?: keyof typeof SWITCHER_WORDS }) {
+export function ModeSwitcher({ page, scope, kind = "mode" }: { page: GameFrame; scope: GameScope; kind?: keyof typeof SWITCHER_WORDS }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const router = useRouter();
@@ -164,7 +164,7 @@ export function ModeSwitcher({ page, scope, kind = "mode" }: { page: GamePage; s
  * start nearer the top); the open Games grid lies over the page below it. On phones the tabs share it too; from `md`
  * links and tabs take rows of their own.
  */
-export function GameSwitchers({ page, scope }: { page: GamePage; scope: GameScope }) {
+export function GameSwitchers({ page, scope }: { page: GameFrame; scope: GameScope }) {
   return (
     <>
       <div className="relative flex flex-wrap items-start gap-x-2 gap-y-4 empty:hidden">

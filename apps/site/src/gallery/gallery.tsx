@@ -441,7 +441,7 @@ function GameSection() {
     <Section id="games">
       <Demo label="Nametag and title, level, and the game's own stats (slumber tickets out of the wallet's size)">
         <div className="grid grid-cols-1 gap-2 lg:grid-cols-[3fr_2fr]">
-          <GameHeader page={GAME_PAGE} className="lg:row-span-2" />
+          <GameHeader page={GAME_PAGE} heading={GAME_PAGE.heading} className="lg:row-span-2" />
           <LevelPanel level={GAME_LEVEL} username={username} />
           <StatPanel section={OVERVIEW} username={username} />
         </div>
@@ -488,7 +488,7 @@ function GameSection() {
       </Demo>
       <Demo label="A mode with submodes: up to 4, tabs at every width (segments on phones), the player's kit marked">
         <div className="flex flex-col gap-4">
-          <GameHeader page={SUBMODE_PAGE} />
+          <GameHeader page={SUBMODE_PAGE} heading={SUBMODE_PAGE.heading} />
           <ModeSwitcher page={SUBMODE_PAGE} scope={scope} />
           <ModeSwitcher page={SUBMODE_PAGE} scope={scope} kind="submode" />
         </div>

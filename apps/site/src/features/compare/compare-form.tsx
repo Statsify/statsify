@@ -7,18 +7,17 @@
  */
 
 import { Box } from "~/components/ui/box";
-import { gameLink, pageSearch } from "~/features/game/game-data";
+import { type GameFrame, gameLink, pageSearch } from "~/features/game/game-data";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import { localePrefix } from "~/i18n/locales";
 import { useId } from "react";
 import { useRevealOnOpen } from "~/features/player/share-panel";
 import { useTranslation } from "react-i18next";
-import type { GamePage } from "@statsify/contract";
 
 const localeRoute = getRouteApi("/{-$locale}");
 
 /** The game page's Compare panel: another player's name, then the two side by side in the game and mode shown. */
-export function ComparePanel({ id, page }: { id: string; page: GamePage }) {
+export function ComparePanel({ id, page }: { id: string; page: GameFrame }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const search = pageSearch(page);

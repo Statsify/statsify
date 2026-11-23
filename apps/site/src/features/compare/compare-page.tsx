@@ -15,7 +15,7 @@ import { GameSwitchers } from "~/features/game/mode-switcher";
 import { PageBackground, backgroundFor } from "~/components/ui/background";
 import { SectionTitle, useStatLabel, useStatValue } from "~/features/game/stat-panel";
 import { SkinHead } from "~/components/ui/skin";
-import { type GameScope, gameLink, headingText, pageSearch } from "~/features/game/game-data";
+import { type GameFrame, type GameScope, type Heading, gameLink, headingText, pageSearch } from "~/features/game/game-data";
 import { cn } from "~/lib/util";
 import { useTranslation } from "react-i18next";
 import type { GamePage, StatCell as Stat, StatSection } from "@statsify/contract";
@@ -53,40 +53,68 @@ const lead = (cell: Stat, other: Stat) =>
  * own page of the game; the game nav and mode switcher keep to the comparison.
  */
 export function CompareView({ a, b }: { a: GamePage; b: GamePage }) {
+  const sides = compareSides(a, b);
+
+  return (
+    <CompareShell a={a} b={b} heading={a.heading} levels={[a.level?.current, b.level?.current]}>
+      {comparePairs(a, b).map(({ section, pairs }, index) => (
+        <CompareSection
+          key={section?.title ?? section?.name ?? index}
+          title={section && (section.title !== null || section.name) && <SectionTitle section={section} />}
+          pairs={pairs}
+          sides={sides}
+        />
+      ))}
+    </CompareShell>
+  );
+}
+
+/** What starts each side's rows: the two players' heads and names. */
+export const compareSides = (a: GameFrame, b: GameFrame): Sides => [<PlayerRowName key="a" page={a} />, <PlayerRowName key="b" page={b} />];
+
+/**
+ * Everything a comparison has around its tables, whoever lays them out: both nametags with their levels (`levels`),
+ * the card's title and the switchers, then the tables (`children`).
+ */
+export function CompareShell({
+  a,
+  b,
+  heading,
+  levels,
+  children,
+}: {
+  a: GameFrame;
+  b: GameFrame;
+  heading: Heading;
+  levels: [string | undefined, string | undefined];
+  children: ReactNode;
+}) {
   const { t } = useTranslation();
   const scope: GameScope = { kind: "compare", a: a.username, b: b.username };
   const games = a.games.map((game) => ({ ...game, played: game.played || b.games.some(({ key, played }) => played && key === game.key) }));
   const page = { ...a, games, modes: unmarked(a.modes), submodes: unmarked(a.submodes) };
-  const sides: Sides = [<PlayerRowName key="a" page={a} />, <PlayerRowName key="b" page={b} />];
 
   return (
     <div className="relative grow">
       <PageBackground background={backgroundFor(a.game.key)} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className={cn("grid grid-cols-2", BOX_GAP)}>
-          <CompareNametag page={a} />
-          <CompareNametag page={b} end />
+          <CompareNametag page={a} level={levels[0]} />
+          <CompareNametag page={b} level={levels[1]} end />
           <Box as="h1" className={cn(HEADING_BOX, "content:text-mc-2")}>
             <span className="sr-only">{t("compare.versus", { a: a.username, b: b.username })} · </span>
-            <MinecraftText>{headingText(a, (key) => t(key))}</MinecraftText>
+            <MinecraftText>{headingText({ game: a.game, heading }, (key) => t(key))}</MinecraftText>
           </Box>
         </div>
         <GameSwitchers page={page} scope={scope} />
-        {comparePairs(a, b).map(({ section, pairs }, index) => (
-          <CompareSection
-            key={section?.title ?? section?.name ?? index}
-            title={section && (section.title !== null || section.name) && <SectionTitle section={section} />}
-            pairs={pairs}
-            sides={sides}
-          />
-        ))}
+        {children}
       </div>
     </div>
   );
 }
 
 /** A player's head, name and level in the game; the name links to their own page of it, in the mode shown. */
-function CompareNametag({ page, end = false }: { page: GamePage; end?: boolean }) {
+function CompareNametag({ page, level, end = false }: { page: GameFrame; level?: string; end?: boolean }) {
   return (
     <Box className={cn("content:flex content:items-center content:gap-3", end && "content:flex-row-reverse content:text-end")}>
       <SkinHead uuid={page.uuid} className="size-8 shrink-0 sm:size-12" />
@@ -94,13 +122,13 @@ function CompareNametag({ page, end = false }: { page: GamePage; end?: boolean }
         <Link {...gameLink({ kind: "player", name: page.username }, page.game.key)} search={pageSearch(page)} className="wrap-break-word text-mc-1.5 hover:underline">
           <MinecraftText>{page.displayName}</MinecraftText>
         </Link>
-        {page.level && <MinecraftText className="text-mc-1.5">{page.level.current}</MinecraftText>}
+        {level && <MinecraftText className="text-mc-1.5">{level}</MinecraftText>}
       </div>
     </Box>
   );
 }
 
-function PlayerRowName({ page }: { page: GamePage }) {
+function PlayerRowName({ page }: { page: GameFrame }) {
   return (
     <>
       <SkinHead uuid={page.uuid} size={24} className="shrink-0" />

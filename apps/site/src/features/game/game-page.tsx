@@ -11,7 +11,7 @@ import { BOX_GAP, Box } from "~/components/ui/box";
 import { Command } from "~/components/ui/command";
 import { ComparePanel } from "~/features/compare/compare-form";
 import { FilterBox, wordMatcher } from "~/components/filter-box";
-import { Fragment, type ReactNode, type Ref, useEffect, useId, useRef, useState } from "react";
+import { Children, Fragment, type ReactNode, type Ref, useEffect, useId, useRef, useState } from "react";
 import { Hint, PointerText, Spoken } from "~/components/ui/hint";
 import { InlineStat, LeaderboardLink, StatCell, StatNumber, useStatName } from "~/components/ui/stat";
 import { Link } from "@tanstack/react-router";
@@ -24,7 +24,7 @@ import { SessionLine } from "~/features/session/session-line";
 import { SkinBust } from "~/components/ui/skin";
 import { StatPanel, useLabelText } from "./stat-panel";
 import { cn } from "~/lib/util";
-import { type GameScope, gamePageQuery, headingText, pageSearch } from "./game-data";
+import { type GameFrame, type GameScope, type Heading, gamePageQuery, headingText, pageSearch } from "./game-data";
 import { imageSize, pageCard } from "@statsify/profiles/protocol";
 import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
@@ -35,7 +35,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { GamePage, StatCell as Stat, StatSection } from "@statsify/contract";
 
-type Level = NonNullable<GamePage["level"]>;
+export type Level = NonNullable<GamePage["level"]>;
 
 const cellsOf = (sections: StatSection[]) => sections.flatMap(({ rows }) => rows.flat());
 
@@ -53,25 +53,7 @@ const BOX_COLUMNS = ["", "", "lg:grid-cols-snap-2", "lg:grid-cols-snap-3", "lg:g
 export function GameView({ page }: { page: GamePage }) {
   const { t } = useTranslation();
   const n = useNumberFormat();
-  const queryClient = useQueryClient();
-  const nametag = useRef<HTMLDivElement>(null);
-  const shareId = useId();
-  const compareId = useId();
-  const [sharing, setSharing] = useState(false);
-  const [comparing, setComparing] = useState(false);
   const [filter, setFilter] = useState("");
-  const { session } = page;
-  const scope: GameScope = { kind: session ? "session" : "player", name: page.username };
-
-  useEffect(
-    () => addRecentPlayer({ uuid: page.uuid, name: page.username, color: nameColor(page.displayName) }),
-    [page.uuid, page.username, page.displayName]
-  );
-
-  const { mode, submode, period } = pageSearch(page);
-  // The card the page unfurls with, as its route's head picks it.
-  const card = new URLSearchParams({ game: page.game.key, ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }), v: String(page.updatedAt) });
-  const cardSize = imageSize(pageCard(page), "og");
   const boxes = page.sections.filter(({ box }) => box);
   const lists = page.sections.filter(({ box, list }) => !box && list);
   // The first other table is the headline; the rest go beside it.
@@ -84,25 +66,97 @@ export function GameView({ page }: { page: GamePage }) {
   const shown = searchedCells.filter((cell) => matches(labelText(cell))).length;
 
   const boxPanels = boxes.length > 0 && (
-    <div key="boxes" className={cn("grid grid-cols-1", BOX_GAP, BOX_COLUMNS[Math.min(boxes.length, BOX_COLUMNS.length - 1)])}>
+    <BoxPanels key="boxes">
       {boxes.map((section, index) => (
         <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
       ))}
-    </div>
+    </BoxPanels>
   );
 
   const headlinePanels = headline && (
-    <div key="headline" className={cn("grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_round(down,40%,8px)] lg:items-start", BOX_GAP)}>
-      <StatPanel section={headline} username={page.username} headline className={cn(tables.length === 0 && "lg:col-span-2")} />
-      {tables.length > 0 && (
-        <div className={cn("flex flex-col", BOX_GAP)}>
-          {tables.map((section, index) => (
-            <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
-          ))}
-        </div>
-      )}
+    <HeadlinePanels
+      key="headline"
+      headline={headline}
+      username={page.username}
+      aside={tables.length > 0 && tables.map((section, index) => (
+        <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
+      ))}
+    />
+  );
+
+  return (
+    <GameShell page={page} heading={page.heading} level={page.level} overview={page.overview}>
+      {page.sections[0]?.box ? [boxPanels, headlinePanels] : [headlinePanels, boxPanels]}
+      {lists.map((section, index) => (
+        <Fragment key={section.title ?? section.name ?? index}>
+          {section === searched[0] && (
+            <FilterBox
+              value={filter}
+              onChange={setFilter}
+              label={t("game.filter")}
+              count={t("filter.count", { shown: n(shown), total: n(searchedCells.length) })}
+            />
+          )}
+          {section === searched[0] && shown === 0 && <NoStatMatches query={filter} />}
+          <StatPanel section={section} username={page.username} filter={section.search ? filter : undefined} />
+        </Fragment>
+      ))}
+    </GameShell>
+  );
+}
+
+/** The card's side-by-side boxes, in as many equal columns from `lg` up as there are. */
+export function BoxPanels({ children }: { children: ReactNode }) {
+  const count = Children.toArray(children).length;
+  return <div className={cn("grid grid-cols-1", BOX_GAP, BOX_COLUMNS[Math.min(count, BOX_COLUMNS.length - 1)])}>{children}</div>;
+}
+
+/** The headline table, and from `lg` up the mode's other tables (`aside`) beside it. */
+export function HeadlinePanels({ headline, username, aside }: { headline: StatSection; username: string; aside?: ReactNode }) {
+  return (
+    <div className={cn("grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_round(down,40%,8px)] lg:items-start", BOX_GAP)}>
+      <StatPanel section={headline} username={username} headline className={cn(!aside && "lg:col-span-2")} />
+      {aside && <div className={cn("flex flex-col", BOX_GAP)}>{aside}</div>}
     </div>
   );
+}
+
+/**
+ * What every game page has around its stats, whoever lays them out: the nametag and title, the level and the game-wide
+ * stats, the share and compare panels, the switchers and the hints, then the page's own panels (`children`).
+ */
+export function GameShell({
+  page,
+  heading,
+  level,
+  overview,
+  children,
+}: {
+  page: GameFrame;
+  heading: Heading;
+  level: Level | null;
+  overview: Stat[];
+  children: ReactNode;
+}) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const nametag = useRef<HTMLDivElement>(null);
+  const shareId = useId();
+  const compareId = useId();
+  const [sharing, setSharing] = useState(false);
+  const [comparing, setComparing] = useState(false);
+  const { session } = page;
+  const scope: GameScope = { kind: session ? "session" : "player", name: page.username };
+
+  useEffect(
+    () => addRecentPlayer({ uuid: page.uuid, name: page.username, color: nameColor(page.displayName) }),
+    [page.uuid, page.username, page.displayName]
+  );
+
+  const { mode, submode, period } = pageSearch(page);
+  // The card the page unfurls with, as its route's head picks it.
+  const card = new URLSearchParams({ game: page.game.key, ...(mode && { mode }), ...(submode && { submode }), ...(period && { period }), v: String(page.updatedAt) });
+  const cardSize = imageSize(pageCard(page), "og");
 
   // Everything cached for this player predates the refresh: it reloads the next time it's shown.
   const refresh = async (deadline: AbortSignal, auto: boolean, token: string | undefined) => {
@@ -130,7 +184,7 @@ export function GameView({ page }: { page: GamePage }) {
   return (
     <div className="relative grow">
       <PageBackground background={backgroundFor(page.game.key)} />
-      <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} game={`${page.game.name}${page.heading.mode ? ` §r(${page.heading.mode}§r)` : ""}`} />
+      <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} game={`${page.game.name}${heading.mode ? ` §r(${heading.mode}§r)` : ""}`} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         {/* From `md` the nametag is as wide as its content (up to half the row) and the level sits beside it, the
             overview under both; from `lg` the overview goes under the level. */}
@@ -139,16 +193,17 @@ export function GameView({ page }: { page: GamePage }) {
           <GameHeader
             ref={nametag}
             page={page}
+            heading={heading}
             actions={session ? undefined : toggles}
             refresh={session ? undefined : <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto />}
-            className={cn(page.level && page.overview.length > 0 && "lg:row-span-2", !page.level && page.overview.length === 0 && "md:col-span-2 md:w-fit")}
+            className={cn(level && overview.length > 0 && "lg:row-span-2", !level && overview.length === 0 && "md:col-span-2 md:w-fit")}
           />
-          {page.level && <LevelPanel level={page.level} username={page.username} />}
-          {page.overview.length > 0 && (
+          {level && <LevelPanel level={level} username={page.username} />}
+          {overview.length > 0 && (
             <StatPanel
-              section={overviewSection(page.overview)}
+              section={overviewSection(overview)}
               username={page.username}
-              className={page.level ? "md:col-span-2 lg:col-span-1" : "md:self-center"}
+              className={level ? "md:col-span-2 lg:col-span-1" : "md:self-center"}
             />
           )}
           {session && <SessionLine start={session.start} updatedAt={page.updatedAt} className="md:col-span-2 md:mt-2" />}
@@ -193,28 +248,14 @@ export function GameView({ page }: { page: GamePage }) {
             </p>
           </>
         )}
-        {page.sections[0]?.box ? [boxPanels, headlinePanels] : [headlinePanels, boxPanels]}
-        {lists.map((section, index) => (
-          <Fragment key={section.title ?? section.name ?? index}>
-            {section === searched[0] && (
-              <FilterBox
-                value={filter}
-                onChange={setFilter}
-                label={t("game.filter")}
-                count={t("filter.count", { shown: n(shown), total: n(searchedCells.length) })}
-              />
-            )}
-            {section === searched[0] && shown === 0 && <NoStatMatches query={filter} />}
-            <StatPanel section={section} username={page.username} filter={section.search ? filter : undefined} />
-          </Fragment>
-        ))}
+        {children}
       </div>
     </div>
   );
 }
 
 /** Only Quests' pages have periods, and its command takes the period as a subcommand: `/quests daily player:anrie`. */
-function botCommand({ game, period, username }: GamePage) {
+function botCommand({ game, period, username }: GameFrame) {
   return `/${game.key}${period === undefined ? "" : ` ${period}`} player:${username}`;
 }
 
@@ -240,12 +281,14 @@ function overviewSection(cells: Stat[]): StatSection {
 /** The nametag, linking back to the player page, over the card's title. */
 export function GameHeader({
   page,
+  heading,
   actions,
   refresh,
   className,
   ref,
 }: {
-  page: GamePage;
+  page: GameFrame;
+  heading: Heading;
   /** Buttons under the title that open panels under the header. */
   actions?: ReactNode;
   /** The refresh bar, after `actions` in their row. */
@@ -266,7 +309,7 @@ export function GameHeader({
           </Link>
           {/* Read as text, the two lines would otherwise run together ("anrieBedWars Stats"). */}
           <span className="sr-only"> · </span>
-          <MinecraftText className="text-mc-1.5">{headingText(page, (key) => t(key))}</MinecraftText>
+          <MinecraftText className="text-mc-1.5">{headingText({ game: page.game, heading }, (key) => t(key))}</MinecraftText>
         </h1>
         {(actions || refresh) && (
           <div className="flex flex-wrap items-center gap-x-4">

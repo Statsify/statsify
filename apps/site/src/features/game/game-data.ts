@@ -8,9 +8,18 @@
 
 import { PAGE_STALE_MS } from "~/lib/player-route";
 import { orpc } from "~/lib/orpc";
-import type { GamePage } from "@statsify/contract";
+import type { GamePage, GameStatsPage } from "@statsify/contract";
 
-export type { GamePage };
+export type { GamePage, GameStatsPage };
+
+/** What every game page has, whether the API lays it out or the site does: the player, the game and the switchers. */
+export type GameFrame = Omit<GameStatsPage, "stats" | "ranked" | "names"> & Partial<Pick<GamePage, "periods" | "period" | "window">>;
+
+/** The card's title after the game's name. */
+export type Heading = GamePage["heading"];
+
+/** A page the site lays out itself from the player's stats (BedWars, Duels, SkyWars), not the API. */
+export const isStatsPage = (page: GamePage | GameStatsPage): page is GameStatsPage => "stats" in page;
 
 /**
  * One page of a player's game: a mode, or a mode's submode, in one of its periods. Each is left out when it is the
@@ -53,7 +62,7 @@ export const periodSearch = (page: Pick<GamePage, "periods">, period: string | u
   period === undefined || period === page.periods?.[0] ? undefined : period;
 
 /** The search of the page shown: its mode, submode and period, each left out when it is the first. */
-export const pageSearch = (page: GamePage) => ({
+export const pageSearch = (page: GameFrame) => ({
   mode: modeSearch(page, page.mode),
   submode: submodeSearch(page, page.submode),
   period: periodSearch(page, page.period),
