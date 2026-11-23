@@ -22,7 +22,7 @@ import { MinecraftText, colorOf, nameColor } from "~/components/ui/minecraft-tex
 import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
 import { LoginDate } from "./login-date";
-import { SharedRefreshBar, savedDate, useNow, useRefresh } from "./refresh-bar";
+import { RefreshButton, SharedRefreshBar, savedDate, useNow, useRefresh } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust, SkinHead } from "~/components/ui/skin";
 import { TikTok } from "~/components/icons/tiktok";
@@ -95,7 +95,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
   return (
     <div className="relative grow">
       <PageBackground background="general" />
-      <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} />
+      <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} action={<RefreshButton refresh={refreshing} />} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className={cn("grid grid-cols-1 md:grid-cols-[auto_1fr] xl:grid-cols-[fit-content(50%)_1fr]", BOX_GAP)}>
           <NametagPanel
