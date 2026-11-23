@@ -88,7 +88,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
       <PageBackground background="general" viewport mask="linear-gradient(rgb(255 255 255) 30%, rgb(0 0 0 / 0) 95%)" />
       <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
-        <div className={cn("grid grid-cols-1 md:grid-cols-[auto_1fr] xl:grid-cols-[fit-content(50%)_auto_1fr]", BOX_GAP)}>
+        <div className={cn("grid grid-cols-1 md:grid-cols-[auto_1fr] xl:grid-cols-[fit-content(50%)_1fr]", BOX_GAP)}>
           <NametagPanel
             ref={nametag}
             page={page}
@@ -116,13 +116,13 @@ export function PlayerView({ page }: { page: PlayerPage }) {
             expiresAt={page.expiresAt}
             refresh={refresh}
             auto
-            className="mb-2 md:col-span-full md:row-start-3 md:mt-2 md:mb-0 xl:row-start-3"
+            className="mb-2 md:col-span-full md:row-start-3 md:mt-2 md:mb-0 xl:row-start-4"
           />
-          {/* From `xl` the nametag shares its row with the level and overview, too narrow for the facts' values, so they
-              get a row of their own, three across, the last row filled; below that `NametagPanel` draws them. */}
-          <PlayerFacts page={page} className="hidden xl:col-span-full xl:row-start-2 xl:grid xl:grid-cols-3 xl:[&>:last-child:nth-child(3n+1)]:col-span-3 xl:[&>:last-child:nth-child(3n+2)]:col-span-2" />
-          <NetworkLevelPanel level={page.level} username={page.username} className="md:col-start-1 md:row-start-2 xl:col-start-2 xl:row-start-1" />
-          <OverviewPanel overview={page.overview} username={page.username} className="md:col-start-2 md:row-start-2 xl:col-start-3 xl:row-start-1" />
+          {/* From `xl` the nametag sits over the level, beside the overview, too narrow for the facts' values, so they get
+              a row of their own, three across, the last row filled; below that `NametagPanel` draws them. */}
+          <PlayerFacts page={page} className="hidden xl:col-span-full xl:row-start-3 xl:grid xl:grid-cols-3 xl:[&>:last-child:nth-child(3n+1)]:col-span-3 xl:[&>:last-child:nth-child(3n+2)]:col-span-2" />
+          <NetworkLevelPanel level={page.level} username={page.username} className="md:col-start-1 md:row-start-2" />
+          <OverviewPanel overview={page.overview} username={page.username} className="md:col-start-2 md:row-start-2 xl:row-span-2 xl:row-start-1" />
         </div>
         {sharing && (
           <SharePanel
@@ -354,14 +354,13 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
     );
   }
 
-  // Two wide beside the level from `xl`, unless the guild row's three cells need the four columns. Columns never get
-  // narrower than their values, so the row takes its room from the nametag rather than run values together.
+  // Columns never get narrower than their values, so the row takes its room from the nametag rather than run values
+  // together.
   return (
     <div
       className={cn(
         "grid grid-cols-snap-2 sm:grid-cols-snap-4 max-sm:[&>:last-child:nth-child(odd)]:col-span-2 sm:[&>:last-child:nth-child(4n+3)]:col-span-2",
         BOX_GAP,
-        !overview.guildMember && "xl:grid-cols-snap-2",
         className
       )}
     >
