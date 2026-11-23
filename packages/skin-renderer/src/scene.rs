@@ -279,7 +279,7 @@ pub async fn render_scene(
   // Baking, loading and rendering block the thread, so they run off napi's async workers
   let buffer = spawn_blocking(move || draw_scene(renderer, &library, scene, output))
     .await
-    .map_err(|_| Error::from(statsify_render_core::Error::RenderFailure))??;
+    .map_err(|error| Error::RenderPanicked(error.to_string()))??;
 
   Ok(buffer.into())
 }

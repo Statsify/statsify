@@ -3,6 +3,7 @@ use crate::texture::Texture;
 
 pub struct Material {
   pub(crate) bind_group: wgpu::BindGroup,
+  pub(crate) blends: bool,
 }
 
 impl Material {
@@ -13,7 +14,11 @@ impl Material {
     sampler: &wgpu::Sampler,
     image: &image::DynamicImage,
   ) -> Result<Self> {
-    let diffuse_texture = Texture::from_image(device, queue, image)?;
+    let rgba = image.to_rgba8();
+    let diffuse_texture = Texture::from_image(device, queue, &rgba)?;
+
+    // The texels blended_color keeps; without one, the blended pass would draw nothing
+    let blends = rgba.pixels().any(|pixel| pixel[3] > 25 && pixel[3] < 255);
 
     let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
       layout,
@@ -30,6 +35,6 @@ impl Material {
       label: None,
     });
 
-    Ok(Self { bind_group })
+    Ok(Self { bind_group, blends })
   }
 }
