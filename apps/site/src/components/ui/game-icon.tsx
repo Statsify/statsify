@@ -8,13 +8,22 @@
 
 import type { GameCode } from "@statsify/schemas";
 
-// One PNG per code in `public/games/`.
+type IconName = GameCode | "CHALLENGES" | "QUESTS";
+
+/** The icons of the pages that aren't one game's, by page key. */
+const PAGE_ICONS = new Map<string, IconName>([
+  ["challenges", "CHALLENGES"],
+  ["quests", "QUESTS"],
+]);
+
+// One PNG per name in `public/games/`.
 export const GAME_ICONS = new Set<string>([
   "ARCADE",
   "ARENA_BRAWL",
   "BEDWARS",
   "BLITZSG",
   "BUILD_BATTLE",
+  "CHALLENGES",
   "CLASSIC",
   "COPS_AND_CRIMS",
   "CRAZY_WALLS",
@@ -29,6 +38,7 @@ export const GAME_ICONS = new Set<string>([
   "PIT",
   "PROTOTYPE",
   "QUAKE",
+  "QUESTS",
   "REPLAY",
   "SKYBLOCK",
   "SKYCLASH",
@@ -47,10 +57,13 @@ export const GAME_ICONS = new Set<string>([
 ]);
 
 /** Whether `public/games/` has an icon for the code. */
-export const hasGameIcon = (game: string): game is GameCode => GAME_ICONS.has(game);
+export const hasGameIcon = (game: string): game is IconName => GAME_ICONS.has(game);
+
+/** A game page's or leaderboard group's icon: its game's code, or the page's own where it has no game (Quests). */
+export const pageIcon = (game: string | null, key: string): string | undefined => game ?? PAGE_ICONS.get(key);
 
 /** `alt` names the game where the icon stands alone; beside the game's printed name it stays empty. */
-export function GameIcon({ game, alt = "" }: { game: GameCode; alt?: string }) {
+export function GameIcon({ game, alt = "" }: { game: IconName; alt?: string }) {
   if (!GAME_ICONS.has(game)) throw new Error(`Unsupported GameIcon ${game}`);
 
   return <img src={`/games/${game}.png`} width={32} height={32} alt={alt} loading="lazy" decoding="async" />;
