@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AUTO_UPDATES } from "./refresh.js";
 import { type ContractRouterClient, oc } from "@orpc/contract";
+// By its export, not `./refresh.js`: `scripts/minify-contract.ts` runs this file in Node, where that path doesn't exist.
+import { AUTO_UPDATES } from "@statsify/contract/refresh";
 import { UUID_PATTERN } from "@statsify/util/util";
 import { z } from "zod";
 
