@@ -27,7 +27,7 @@ export class SkinController {
   public constructor(private readonly skinService: SkinService) {}
 
   @Get("/head")
-  @Auth({ siteUnlimited: true })
+  @Auth()
   @ApiOperation({ summary: "Get a Player Head" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getHead(@Query() { uuid, size }: HeadDto) {
@@ -36,12 +36,30 @@ export class SkinController {
     return new StreamableFile(head, { type: "image/png" });
   }
 
+  /** The site's heads, from the stored skin only: the site refreshes skins within its Hypixel budget instead. */
+  @Get("/head/stored")
+  @Auth({ role: AuthRole.SITE, siteUnlimited: true })
+  @ApiExcludeEndpoint()
+  public async getStoredHead(@Query() { uuid, size }: HeadDto) {
+    const head = await this.skinService.getStoredHead(uuid, size);
+    return new StreamableFile(head, { type: "image/png" });
+  }
+
   @Get()
-  @Auth({ siteUnlimited: true })
+  @Auth()
   @ApiOperation({ summary: "Get a Player Render" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getRender(@Query() { uuid }: UuidDto) {
     const render = await this.skinService.getRender(uuid, false);
+    return new StreamableFile(render, { type: "image/png" });
+  }
+
+  /** The site's renders, from the stored skin only, like `/head/stored`. */
+  @Get("/stored")
+  @Auth({ role: AuthRole.SITE, siteUnlimited: true })
+  @ApiExcludeEndpoint()
+  public async getStoredRender(@Query() { uuid }: UuidDto) {
+    const render = await this.skinService.getStoredRender(uuid);
     return new StreamableFile(render, { type: "image/png" });
   }
 

@@ -7,7 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
+import { CacheLevel, GuildQuery, LeaderboardQuery, PlayerNotFoundException } from "@statsify/api-client";
 import {
   FormattedGame,
   type GameId,
@@ -27,6 +27,7 @@ import {
   previewIdentity,
   skywarsPreview,
 } from "./home-previews.js";
+import { GuildService } from "#guild";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { HypixelUnavailableError } from "#hypixel";
@@ -57,18 +58,20 @@ import { buildGlossary, buildPrestigeSheet } from "./content.js";
 import { catalogGlossary, catalogLabel, leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
 import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
 import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
-import { PlayerSearchService, PlayerService } from "#player";
+import { PlayerLeaderboardService, PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
-import { config, flatten, removeFormatting } from "@statsify/util";
+import { SkinService } from "#skin";
+import { config, flatten, isUuid, normalizeUuid, removeFormatting } from "@statsify/util";
 import { isIPv6 } from "node:net";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 type GuildModel = ReturnModelType<typeof Guild>;
 
-/** How long the home previews are kept, or with a section missing, how soon they're built again. */
-const HOME_PREVIEWS_TTL_MS = 60_000;
-const HOME_PREVIEWS_RETRY_MS = 5000;
+/** How long the home previews are kept in Redis, or with a section missing, how soon they're built again. */
+const HOME_PREVIEWS_KEY = "site:home:previews";
+const HOME_PREVIEWS_TTL_SECONDS = 60;
+const HOME_PREVIEWS_RETRY_SECONDS = 5;
 
 /**
  * Usernames Minecraft's account servers or Hypixel answered have no such player, so a lookup doesn't ask again for a
@@ -89,7 +92,16 @@ const IP_LIMIT = 10;
 const IP_WINDOW_SECONDS = BUDGET_WINDOW_SECONDS;
 
 const IDENTITY_FIELDS = { uuid: true, username: true, expiresAt: true };
-const GUILD_FIELDS = { id: true, name: true, tag: true, tagFormatted: true };
+const GUILD_FIELDS = {
+  id: true,
+  name: true,
+  tag: true,
+  tagFormatted: true,
+  "members.uuid": true,
+  "members.questParticipation": true,
+  "members.daily": true,
+  "members.weekly": true,
+};
 const CARD_FIELDS = {
   uuid: true,
   username: true,
@@ -104,7 +116,6 @@ const CARD_FIELDS = {
 
 const missKey = (nameLower: string) => `site:miss:${nameLower}`;
 const ipKey = (clientIp: string) => `site:ip:${rateLimitAddress(clientIp)}`;
-const normalizeUuid = (uuid: string) => uuid.replaceAll("-", "").toLowerCase();
 // A game page's mode, submode or period in any case, as the game segment is (`?mode=SOLO`); the site redirects to the key.
 const pageKey = <K extends string>(keys: readonly K[], key: string) => keys.find((known) => known.toLowerCase() === key.toLowerCase());
 
@@ -198,6 +209,8 @@ function buildLeaderboardGroups(): LeaderboardGroup[] {
   return [...groups.values()];
 }
 
+const LEADERBOARD_LIST = buildLeaderboardGroups();
+
 /**
  * Strict cache-only reads for the site. Nothing here calls Hypixel except `refresh` and
  * `lookup`, which first pass the per-address and global budgets kept in Redis.
@@ -209,15 +222,15 @@ export class SiteService implements OnApplicationBootstrap {
     default: DEFAULT_HYPIXEL_BUDGET,
   });
 
-  private homeBuild?: Promise<HomePreviews>;
-  private homeExpiresAt = 0;
-  private leaderboardGroups?: LeaderboardGroup[];
   private glossarySheet?: Glossary;
   private prestigeSheet?: PrestigeSheet;
 
   public constructor(
     private readonly playerService: PlayerService,
+    private readonly playerLeaderboardService: PlayerLeaderboardService,
     private readonly playerSearchService: PlayerSearchService,
+    private readonly guildService: GuildService,
+    private readonly skinService: SkinService,
     @InjectModel(Player) private readonly playerModel: PlayerModel,
     @InjectModel(Guild) private readonly guildModel: GuildModel,
     @InjectRedis() private readonly redis: Redis
@@ -245,13 +258,13 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   public async page(uuid: string): Promise<PlayerPage> {
-    const player = await this.loadPlayer(normalizeUuid(uuid));
+    const player = await this.playerService.getStored(uuid);
     if (!player) throw notFound();
     return this.toPage(player);
   }
 
   public async full(uuid: string): Promise<PlayerFull> {
-    const player = await this.loadPlayer(normalizeUuid(uuid));
+    const player = await this.playerService.getStored(uuid);
     if (!player) throw notFound();
 
     const document = player.guildId ? await this.findGuild(player.guildId) : null;
@@ -262,14 +275,14 @@ export class SiteService implements OnApplicationBootstrap {
 
   public async refresh(uuid: string, clientIp: string, auto = false): Promise<PlayerPage> {
     const tag = normalizeUuid(uuid);
-    const cached = await this.loadPlayer(tag);
+    const cached = await this.playerService.getStored(tag);
     if (!cached) throw notFound();
 
     // Inside the API's own cooldown `CACHE` would not call Hypixel anyway, so it costs no budget.
     if (Date.now() < cached.expiresAt) return this.toPage(cached);
 
     await this.consumeBudget(clientIp, auto);
-    const player = await this.playerService.get(tag, CacheLevel.CACHE);
+    const [player] = await Promise.all([this.playerService.get(tag, CacheLevel.CACHE), this.refreshSkin(tag)]);
 
     // When Hypixel doesn't answer, `PlayerService` hands back the stored player, still past its cooldown: say the
     // refresh failed rather than show the old stats as new.
@@ -279,8 +292,7 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   public async lookup(name: string, clientIp: string): Promise<PlayerIdentity> {
-    // A name has at most 16 characters, so anything longer is a UUID, as `PlayerService` tells them apart.
-    const byUuid = name.length > 16;
+    const byUuid = isUuid(name);
     const tag = byUuid ? normalizeUuid(name) : name;
     const key = tag.toLowerCase();
     const known = await this.findIdentity(byUuid ? "uuid" : "usernameToLower", key);
@@ -305,7 +317,10 @@ export class SiteService implements OnApplicationBootstrap {
     let player: Player | null;
 
     try {
-      player = await this.playerService.get(uuid, CacheLevel.CACHE, undefined, { throwOnHypixelError: true });
+      [player] = await Promise.all([
+        this.playerService.get(uuid, CacheLevel.CACHE, undefined, { throwOnHypixelError: true }),
+        this.refreshSkin(uuid),
+      ]);
     } catch (error) {
       // Not an answer about the name, so nothing is remembered and the visitor can try again.
       if (error instanceof HypixelUnavailableError) throw hypixelUnavailable();
@@ -384,7 +399,7 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   public async bingo(uuid: string): Promise<BingoPlayer> {
-    const player = await this.loadPlayer(normalizeUuid(uuid));
+    const player = await this.playerService.getStored(uuid);
     if (!player) throw notFound();
 
     const { easy, hard } = player.stats.general.bingo;
@@ -421,31 +436,23 @@ export class SiteService implements OnApplicationBootstrap {
     if (input.period !== undefined && asked === undefined) throw notFound("Period not found");
     const period = asked !== undefined && periods.includes(asked) ? asked : undefined;
 
-    const player = await this.loadPlayer(normalizeUuid(input.uuid));
+    const player = await this.playerService.getStored(input.uuid);
     if (!player) throw notFound();
 
     return { ...buildGamePage(player, layout, mode, submode, period), games: gameNav(player.stats) };
   }
 
   /** The home page's previews, each loaded on its own so one missing player hides one section. */
-  public homePreviews(): Promise<HomePreviews> {
-    if (this.homeBuild && Date.now() < this.homeExpiresAt) return this.homeBuild;
+  public async homePreviews(): Promise<HomePreviews> {
+    const cached = await this.redis.get(HOME_PREVIEWS_KEY);
+    if (cached) return JSON.parse(cached) as HomePreviews;
 
-    // Callers share the build in flight; a failed one isn't kept, so the next call builds again.
-    this.homeExpiresAt = Number.POSITIVE_INFINITY;
-    this.homeBuild = this.buildHomePreviews().then(
-      (previews) => {
-        const complete = [...Object.values(previews.players), previews.guild, previews.leaderboard].every(Boolean);
-        this.homeExpiresAt = Date.now() + (complete ? HOME_PREVIEWS_TTL_MS : HOME_PREVIEWS_RETRY_MS);
-        return previews;
-      },
-      (error: unknown) => {
-        this.homeBuild = undefined;
-        throw error;
-      }
-    );
+    const previews = await this.buildHomePreviews();
+    const complete = [...Object.values(previews.players), previews.guild, previews.leaderboard].every(Boolean);
+    const ttl = complete ? HOME_PREVIEWS_TTL_SECONDS : HOME_PREVIEWS_RETRY_SECONDS;
+    await this.redis.set(HOME_PREVIEWS_KEY, JSON.stringify(previews), "EX", ttl);
 
-    return this.homeBuild;
+    return previews;
   }
 
   private async buildHomePreviews(): Promise<HomePreviews> {
@@ -463,8 +470,7 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   public leaderboardList(): LeaderboardGroup[] {
-    this.leaderboardGroups ??= buildLeaderboardGroups();
-    return this.leaderboardGroups;
+    return LEADERBOARD_LIST;
   }
 
   /** The glossary's stats; static metadata, like the leaderboard list it takes its game names from. */
@@ -487,75 +493,23 @@ export class SiteService implements OnApplicationBootstrap {
 
   public async leaderboardPage(input: LeaderboardPageInput): Promise<LeaderboardPage> {
     const metadata = this.leaderboardMetadata(input.field);
-    const key = `player.${input.field}`;
-    const { size } = input;
 
-    let { page } = input;
-    let highlight: number | undefined;
-
-    if (input.around) {
-      const uuid = normalizeUuid(input.around);
-      const rank = await (metadata.sort === "ASC" ? this.redis.zrank(key, uuid) : this.redis.zrevrank(key, uuid));
-
-      if (rank === null || rank >= metadata.limit) throw notFound("Player is not on this leaderboard");
-
-      highlight = rank;
-      page = Math.floor(rank / size);
-    }
-
-    const top = page * size;
-    const bottom = Math.min(top + size, metadata.limit) - 1;
-
-    const [total, entries] = await Promise.all([
-      this.redis.zcard(key),
-      bottom < top ?
-        [] :
-        (metadata.sort === "ASC" ?
-          this.redis.zrange(key, top, bottom, "WITHSCORES") :
-          this.redis.zrevrange(key, top, bottom, "WITHSCORES")),
-    ]);
-
-    const uuids: string[] = [];
-    const scores: number[] = [];
-
-    for (let i = 0; i < entries.length; i += 2) {
-      uuids.push(entries[i]);
-      scores.push(Number(entries[i + 1]));
-    }
-
-    const additionalFields = (metadata.additionalFields ?? []).filter((field) => field !== input.field);
-    const additionalMetadata = additionalFields.map((field) => getLeaderboardField(Player, field, false));
-    const { extraDisplay } = metadata;
-    const extraDisplayMetadata = extraDisplay ? getLeaderboardField(Player, extraDisplay, false) : undefined;
-
-    const stats = await this.additionalStats(uuids, [...additionalFields, ...(extraDisplay ? [extraDisplay] : [])]);
-
-    const rows = uuids.map((uuid, index) => {
-      const flat = stats.get(uuid) ?? {};
-      let name = String(flat.displayName ?? uuid);
-
-      if (extraDisplay) {
-        const extra = flat[extraDisplay] ?? extraDisplayMetadata?.default;
-        if (extra) name = `${String(extra)}§r ${name}`;
-      }
-
-      const values: (string | number)[] = [];
-      if (!metadata.hidden) values.push(metadata.formatter ? metadata.formatter(scores[index]) : scores[index]);
-
-      for (const [i, field] of additionalFields.entries()) {
-        const fieldMetadata = additionalMetadata[i];
-        const value = flat[field] ?? fieldMetadata.default;
-        values.push(fieldMetadata.formatter ? fieldMetadata.formatter(value) : (value as string | number));
-      }
-
-      const username = String(flat.username ?? uuid);
-      return { uuid, username, position: top + index + 1, name, highlight: top + index === highlight, values };
+    const leaderboard = await (input.around ?
+      this.playerLeaderboardService.getLeaderboard(Player, input.field, input.around, LeaderboardQuery.INPUT, input.size) :
+      this.playerLeaderboardService.getLeaderboard(Player, input.field, input.page, LeaderboardQuery.PAGE, input.size)
+    ).catch((error: unknown) => {
+      if (error instanceof PlayerNotFoundException) throw notFound("Player is not on this leaderboard");
+      throw error;
     });
 
-    const columns = [
-      ...(metadata.hidden ? [] : [leaderboardColumn(input.field, metadata.fieldName ?? "")]),
-      ...additionalFields.map((field, i) => leaderboardColumn(field, additionalMetadata[i].fieldName ?? "")),
-    ];
+    // A row whose player document is gone has no name to show or link to.
+    const rows = leaderboard.data.flatMap(({ id, username, fields, name, position, highlight }) =>
+      username === undefined ? [] : [{ uuid: id, username, position, name, highlight, values: fields }]
+    );
+
+    // `fields` holds the columns' names, the board's own first unless it's hidden.
+    const columnFields = [...(metadata.hidden ? [] : [input.field]), ...leaderboard.additionalFields];
+    const columns = columnFields.map((field, i) => leaderboardColumn(field, leaderboard.fields[i] ?? ""));
     const index = leaderboardIndex(input.field);
 
     return {
@@ -564,8 +518,8 @@ export class SiteService implements OnApplicationBootstrap {
       glossary: catalogGlossary(input.field),
       columns,
       sort: metadata.sort,
-      page,
-      pages: Math.ceil(Math.min(total, metadata.limit) / size),
+      page: leaderboard.page,
+      pages: leaderboard.pages,
       rows,
       gamePage: boardGamePage(input.field),
       index: index && { ...index, name: this.leaderboardList().find(({ key }) => key === index.key)!.name },
@@ -580,22 +534,6 @@ export class SiteService implements OnApplicationBootstrap {
     }
   }
 
-  /** One `$in` query for a whole leaderboard page, flattened for dotted field access. */
-  private async additionalStats(uuids: string[], fields: string[]): Promise<Map<string, Record<string, unknown>>> {
-    if (uuids.length === 0) return new Map();
-
-    const selector: Record<string, boolean> = { uuid: true, username: true, displayName: true };
-    for (const field of fields) selector[field] = true;
-
-    const documents: { uuid: string }[] = await this.playerModel
-      .find({ uuid: { $in: uuids } })
-      .select(selector)
-      .lean()
-      .exec();
-
-    return new Map(documents.map((document) => [document.uuid, flatten(document) as Record<string, unknown>]));
-  }
-
   private async findIdentity(field: "uuid" | "usernameToLower", value: string): Promise<PlayerIdentity | null> {
     const player: Pick<Player, "uuid" | "username" | "expiresAt"> | null = await this.playerModel
       .findOne()
@@ -608,57 +546,29 @@ export class SiteService implements OnApplicationBootstrap {
     return player && { uuid: player.uuid, username: player.username, updatedAt: freshness(player).updatedAt };
   }
 
-  /** The stored document, flattened for `deserialize` like `PlayerService` does, so defaults and ratios are filled in. */
-  private async loadPlayer(uuid: string): Promise<Player | null> {
-    const document: Player | null = await this.playerModel.findOne().where("uuid").equals(uuid).lean().exec();
-    return document ? deserialize(Player, flatten(document)) : null;
-  }
-
   private async toPage(player: Player): Promise<PlayerPage> {
     const guild = player.guildId ? await this.findGuild(player.guildId) : null;
     return buildPlayerPage(player, guild);
   }
 
-  private async findGuild(id: string): Promise<PlayerGuild | null> {
-    const document: Guild | null = await this.guildModel
-      .findOne()
-      .where("id")
-      .equals(id)
-      .select({
-        ...GUILD_FIELDS,
-        "members.uuid": true,
-        "members.questParticipation": true,
-        "members.daily": true,
-        "members.weekly": true,
-      })
-      .lean()
-      .exec();
-
-    // Flattened for `deserialize` like `GuildService` does, so stored defaults come back as values.
-    return document && deserialize(Guild, flatten(document));
+  private findGuild(id: string): Promise<PlayerGuild | null> {
+    return this.guildService.getStored(id, GuildQuery.ID, GUILD_FIELDS);
   }
 
   private preview<T>(uuid: string, build: (player: Player) => T): Promise<T | null> {
     return this.attempt(async () => {
-      const player = await this.loadPlayer(uuid);
+      const player = await this.playerService.getStored(uuid);
       if (!player) throw new Error(`Home preview player ${uuid} is not stored`);
       return build(player);
     });
   }
 
   private async guildPreview(memberUuid: string): Promise<GuildPreview | null> {
-    const member: Pick<Player, "guildId"> | null = await this.playerModel
-      .findOne()
-      .where("uuid")
-      .equals(memberUuid)
-      .select({ guildId: true })
-      .lean()
-      .exec();
-
+    const member = await this.playerService.getStored(memberUuid, { guildId: true });
     if (!member?.guildId) return null;
 
-    const document: Guild | null = await this.guildModel.findOne().where("id").equals(member.guildId).lean().exec();
-    return document && guildPreview(deserialize(Guild, flatten(document)), memberUuid);
+    const guild = await this.guildService.getStored(member.guildId, GuildQuery.ID);
+    return guild && guildPreview(guild, memberUuid);
   }
 
   /** A preview that fails to load is reported and hidden, instead of taking the whole home page down. */
@@ -673,6 +583,14 @@ export class SiteService implements OnApplicationBootstrap {
 
   private rememberMiss(nameLower: string) {
     return this.redis.set(missKey(nameLower), "absent", "EX", MISS_TTL_SECONDS);
+  }
+
+  /**
+   * The site's skins come from Minecraft's session server only here, within a refresh or lookup's budget slot; its skin
+   * routes serve the stored one. A failed fetch leaves the stored skin, or Steve's, until the next refresh.
+   */
+  private async refreshSkin(uuid: string): Promise<void> {
+    await this.skinService.getSkin(uuid).catch(() => undefined);
   }
 
   /**

@@ -6,17 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PLACEHOLDER_UUID, compactUuid } from "~/lib/uuid";
+import { isUuid, normalizeUuid } from "@statsify/util/util";
+import { PLACEHOLDER_UUID } from "~/lib/uuid";
 import { resolvePlayer } from "~/features/player/resolve";
 import { API_TIMEOUT_MS } from "./rpc.server";
 import { siteConfig } from "./config.server";
 
 /**
- * Proxies a skin image from the Statsify API with the site's key. Only the UUID is forwarded, with the route's own
- * fixed parameters.
+ * Proxies a skin image the Statsify API draws from the skin it has stored, with the site's key. Only the UUID is
+ * forwarded, with the route's own fixed parameters.
  */
 export async function proxySkin(
-  path: "/skin" | "/skin/head" | "/skin/texture",
+  path: "/skin/stored" | "/skin/head/stored" | "/skin/texture",
   search: URLSearchParams,
   fixed: Record<string, string> = {}
 ): Promise<Response> {
@@ -24,8 +25,7 @@ export async function proxySkin(
   if (!uuid || !isPageQuery(uuid, search, fixed)) {
     return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
   }
-  // The API doesn't limit the site's key on skins, so only a stored player's UUID, or the not-found pages' one fixed
-  // stand-in, may reach Minecraft's session server.
+  // Only a stored player's UUID, or the not-found pages' one fixed stand-in, gets an image drawn for it.
   if (uuid !== PLACEHOLDER_UUID && !(await resolvePlayer(uuid))) return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
 
   const { apiRoute, apiKey } = await siteConfig();
@@ -64,7 +64,8 @@ export async function proxySkin(
 function isPageQuery(uuid: string, search: URLSearchParams, fixed: Record<string, string>): boolean {
   const keys = [...search.keys()];
   return (
-    compactUuid(uuid) === uuid &&
+    isUuid(uuid) &&
+    normalizeUuid(uuid) === uuid &&
     new Set(keys).size === keys.length &&
     keys.every((key) => key === "uuid" || search.get(key) === fixed[key])
   );

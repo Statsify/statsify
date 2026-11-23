@@ -11,7 +11,7 @@ import { HOLD_SCRIPT } from "~/features/player/recent";
 import { RecentPlayers } from "~/features/player/recent-players";
 import { ResultCards } from "~/features/player/result-card";
 import { Search } from "~/components/search";
-import { UUID_PATTERN } from "~/lib/uuid";
+import { isUuid } from "@statsify/util/util";
 import { cacheHeaders } from "~/lib/cache";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { pageMeta } from "~/lib/social-meta";
@@ -29,7 +29,7 @@ import type { ResultCard } from "@statsify/contract";
 const validateSearch = (search: Record<string, unknown>): { q?: string } => {
   const q = search.q;
   const query = typeof q === "string" || typeof q === "number" ? String(q).trim() : "";
-  return { q: (UUID_PATTERN.test(query) ? query : query.slice(0, 16)) || undefined };
+  return { q: (isUuid(query) ? query : query.slice(0, 16)) || undefined };
 };
 
 export const Route = createFileRoute("/{-$locale}/player/")({
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/{-$locale}/player/")({
   loaderDeps: ({ search }) => ({ q: search.q }),
   loader: async ({ deps }): Promise<{ q: string | undefined; cards: ResultCard[] }> => {
     if (!deps.q) return { q: undefined, cards: [] };
-    if (UUID_PATTERN.test(deps.q)) throw redirect({ to: "/{-$locale}/player/$name", params: { name: deps.q } });
+    if (isUuid(deps.q)) throw redirect({ to: "/{-$locale}/player/$name", params: { name: deps.q } });
 
     const names = await rpc.search.suggest({ query: deps.q });
     const cards = names.length > 0 ? await rpc.search.cards({ names }) : [];

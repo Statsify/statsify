@@ -19,7 +19,7 @@ import { GameNav } from "./game-nav";
 import { Hint, Spoken } from "~/components/ui/hint";
 import { Hidden, InlineStat, LeaderboardLink, StatCell, StatNumber, glossaryKey, useStatName } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { MinecraftText, colorClass, colorOf, leadingColorClass, plainText } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorClass, colorOf, leadingColorClass } from "~/components/ui/minecraft-text";
 import { MiniHeader } from "~/features/player/mini-header";
 import { PanelToggle, SharePanel } from "~/features/player/share-panel";
 import { RefreshBar } from "~/features/player/refresh-bar";
@@ -32,6 +32,7 @@ import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { refreshGame } from "~/features/player/player-actions";
 import { addRecentPlayer } from "~/features/player/recent";
+import { removeFormatting } from "@statsify/util/util";
 import { useExactNumber, useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -212,7 +213,7 @@ export function GameView({ page }: { page: GamePage }) {
         {(page.periods?.length ?? 0) > 1 && <ModeSwitcher page={page} kind="period" />}
         {page.window && <PeriodDates {...page.window} />}
         {page.games.find(({ key }) => key === page.game.key)?.played === false && (
-          <NeverPlayed name={page.username} game={plainText(page.game.name)} />
+          <NeverPlayed name={page.username} game={removeFormatting(page.game.name)} />
         )}
         <p className="text-mc-1 text-mc-gray">
           {t("game.hint", { name: page.username })}{" "}
@@ -223,7 +224,7 @@ export function GameView({ page }: { page: GamePage }) {
             hash={page.mode}
             className="text-mc-yellow underline underline-offset-2"
           >
-            {t("leaderboards.gameTitle", { game: plainText(page.game.name) })}
+            {t("leaderboards.gameTitle", { game: removeFormatting(page.game.name) })}
           </Link>
         </p>
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-mc-1 text-mc-gray">
@@ -504,7 +505,7 @@ function useStatLabel(cell: Stat): { text: string; node: ReactNode; full?: strin
 /** A stat's heading as plain text, for its link and the filter: the card's own name, or the label's words. */
 function useLabelText(): (cell: Stat) => string {
   const { t } = useTranslation();
-  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainText(cell.name));
+  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : removeFormatting(cell.name));
 }
 
 /**
