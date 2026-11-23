@@ -148,7 +148,7 @@ export function GuildNotFoundView({ name, first }: { name: string; first?: strin
 /** Its own component, so the clock's tick re-renders the line and not the page. */
 function Updated({ updatedAt }: { updatedAt: number }) {
   const now = useNow();
-  return <p className="text-mc-1 text-mc-gray empty:hidden">{now !== undefined && <UpdatedAt updatedAt={updatedAt} now={now} />}</p>;
+  return <p className="min-h-lh text-mc-1 text-mc-gray">{now !== undefined && <UpdatedAt updatedAt={updatedAt} now={now} />}</p>;
 }
 
 type BarRow = { key: string; label: string; value: number; icon?: string };
