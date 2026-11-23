@@ -7,7 +7,8 @@
  */
 
 import { Box } from "~/components/ui/box";
-import { Button } from "~/components/ui/button";
+import { Button, FLAT_BUTTON } from "~/components/ui/button";
+import { cn } from "~/lib/util";
 import { dashedUuid } from "~/lib/uuid";
 import { getRouteApi, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -19,10 +20,7 @@ export const LABEL = "text-mc-1 text-mc-white";
 
 const localeRoute = getRouteApi("/{-$locale}");
 
-/**
- * A button in the nametag that opens and closes a panel under the page's header, in the Update stats button's fill and
- * height. Its tap area reaches past its 32 px box to 44 px.
- */
+/** A button in the nametag that opens and closes a panel under the page's header. */
 export function PanelToggle({
   open,
   controls,
@@ -45,7 +43,7 @@ export function PanelToggle({
       onClick={onToggle}
       onPointerEnter={onIntent}
       onFocus={onIntent}
-      className="relative flex h-8 min-w-8 shrink-0 items-center justify-center bg-blackify-800 px-3 text-mc-1 text-mc-yellow after:absolute after:-inset-1.5 hover:bg-blackify-700 focus-visible:focus-ring-inset"
+      className={cn(FLAT_BUTTON, "px-3 text-mc-yellow")}
     >
       {children}
     </button>
