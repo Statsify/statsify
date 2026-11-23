@@ -29,13 +29,14 @@ const RENAMED: Record<string, string | undefined> = {
   tank: "defence",
 };
 
-/**
- * An Arena loadout ({ offensive: "falcon_punch", active_rune: "damage" }) as the shop's items in LOADOUT's order.
- * A pick the menus don't list leaves its slot empty
- */
+/** An Arena loadout ({ offensive: "falcon_punch", active_rune: "damage" }) as the shop's items in LOADOUT's order */
 export function fromArenaLoadout(arena: Readonly<Partial<Record<ArenaSlot, string | null>>>): (ItemStack | undefined)[] {
   return LOADOUT.map((slot) => {
     const id = arena[slot];
-    return id ? MENUS[slot][kitKey(RENAMED[id] ?? id)] : undefined;
+    if (!id) return undefined;
+
+    const item = MENUS[slot][kitKey(RENAMED[id] ?? id)];
+    if (!item) throw new Error(`No Arena ${slot} ${id}`);
+    return item;
   });
 }
