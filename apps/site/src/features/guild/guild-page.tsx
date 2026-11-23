@@ -53,6 +53,7 @@ export function GuildView({ guild }: { guild: GuildPage }) {
             </PanelToggle>
             <Updated updatedAt={guild.updatedAt} />
           </Box>
+          {comparing && <GuildComparePanel id={compareId} name={guild.name} className="lg:col-span-2" />}
           <Box title={<h2 className="text-mc-1.5 text-mc-gray">{t("guild.info")}</h2>} className="content:leading-[24px]">
             {guild.master && (
               <p className="text-mc-aqua">
@@ -90,7 +91,6 @@ export function GuildView({ guild }: { guild: GuildPage }) {
             </Box>
           )}
         </div>
-        {comparing && <GuildComparePanel id={compareId} name={guild.name} />}
         {[
           { id: "guild-exp", title: t("guild.exp"), daily: guild.daily, weekly: guild.weekly, monthly: guild.monthly },
           { id: "guild-scaled-exp", title: t("default:stats.guild.scaledGexp"), daily: guild.scaledDaily, weekly: guild.scaledWeekly, monthly: guild.scaledMonthly },
@@ -148,7 +148,7 @@ export function GuildNotFoundView({ name, first }: { name: string; first?: strin
 /** Its own component, so the clock's tick re-renders the line and not the page. */
 function Updated({ updatedAt }: { updatedAt: number }) {
   const now = useNow();
-  return <p className="text-mc-1 text-mc-gray empty:hidden">{now !== undefined && <UpdatedAt updatedAt={updatedAt} now={now} />}</p>;
+  return <p className="min-h-lh text-mc-1 text-mc-gray">{now !== undefined && <UpdatedAt updatedAt={updatedAt} now={now} />}</p>;
 }
 
 type BarRow = { key: string; label: string; value: number; icon?: string };
@@ -217,7 +217,7 @@ function MemberTable({ members, total }: { members: GuildMemberRow[]; total: num
       {members.length > 0 && <p className="mb-2 text-mc-1 text-mc-gray lg:hidden">{t("guild.scrollHint")}</p>}
       {members.length > 0 && (
         // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Focus lets keyboard users scroll to columns off-screen.
-        <section aria-label={t("guild.members")} tabIndex={0} className="overflow-x-auto focus-visible:focus-ring-inset">
+        <section aria-label={t("guild.members")} tabIndex={0} className="-mx-2 overflow-x-auto focus-visible:focus-ring-inset">
           <table className="w-full text-mc-1.5">
             <caption className="sr-only">{t("guild.members")}</caption>
             <thead>

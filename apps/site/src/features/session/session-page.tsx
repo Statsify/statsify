@@ -25,20 +25,22 @@ export function SessionView({ page }: { page: SessionPage }) {
     <div className="relative grow">
       <PageBackground background="general" />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
-        <Box className="content:flex content:items-center content:gap-4">
-          <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28" />
-          <div className="flex min-w-0 grow flex-col gap-2">
-            <h1 className="flex flex-col gap-2">
-              <Link to="/{-$locale}/player/$name" params={{ name: page.username }} className="wrap-break-word text-mc-2 hover:underline">
-                <MinecraftText>{page.displayName}</MinecraftText>
-              </Link>
-              <span className="sr-only"> · </span>
-              <span className="text-mc-1.5 font-bold">{t("session.title")}</span>
-            </h1>
-            <SessionLine start={page.start} updatedAt={page.updatedAt} />
-          </div>
-        </Box>
-        <StatPanel section={page.overview} username={page.username} headline />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[fit-content(50%)_minmax(0,1fr)] xl:gap-1">
+          <Box className="content:flex content:items-center content:gap-4">
+            <SkinBust uuid={page.uuid} className="h-24 w-16 shrink-0 sm:h-40 sm:w-28" />
+            <div className="flex min-w-0 grow flex-col gap-2">
+              <h1 className="flex flex-col gap-2">
+                <Link to="/{-$locale}/player/$name" params={{ name: page.username }} className="wrap-break-word text-mc-2 hover:underline">
+                  <MinecraftText>{page.displayName}</MinecraftText>
+                </Link>
+                <span className="sr-only"> · </span>
+                <span className="text-mc-1.5 font-bold">{t("session.title")}</span>
+              </h1>
+              <SessionLine start={page.start} updatedAt={page.updatedAt} />
+            </div>
+          </Box>
+          <StatPanel section={page.overview} username={page.username} headline />
+        </div>
         <GameGrid games={page.games} username={page.username} session />
       </div>
     </div>
