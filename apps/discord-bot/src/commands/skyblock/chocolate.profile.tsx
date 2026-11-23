@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Card } from "./components/Card.js";
+import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
-import { Empty } from "./components/Empty.js";
 import { RARITY_COLORS } from "@statsify/skyblock/display";
 import { gridRows } from "./components/ItemGrid.js";
 import { prettify, romanNumeral } from "@statsify/util";
@@ -23,11 +22,7 @@ export const SkyBlockChocolateProfile = ({ profile, t, ...card }: SkyBlockProfil
   const chocolate = profile.member.chocolate;
 
   if (!chocolate) {
-    return (
-      <Card {...card} name={profile.displayName}>
-        <Empty text={t("skyblock.noChocolate")} />
-      </Card>
-    );
+    return <EmptyCard {...card} name={profile.displayName} text={t("skyblock.noChocolate")} />;
   }
 
   const sidebar: SidebarItem[] = [
