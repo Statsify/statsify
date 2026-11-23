@@ -36,9 +36,11 @@ export class PlayerLeaderboardsController {
   @ApiOkResponse({ type: PostLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
-  public getPlayerLeaderboard(
+  public async getPlayerLeaderboard(
     @Body() { field, page, player, position }: PlayerLeaderboardDto
   ) {
+    await this.playerLeaderboardService.countDemand(Player, "page", [field]);
+
     let input: number | string;
     let type: LeaderboardQuery;
 
@@ -62,6 +64,8 @@ export class PlayerLeaderboardsController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 5 })
   public async getPlayerRankings(@Body() { fields, uuid }: PlayerRankingsDto) {
+    await this.playerLeaderboardService.countDemand(Player, "rankings", fields);
+
     return this.playerLeaderboardService.getLeaderboardRankings(Player, fields, uuid);
   }
 }

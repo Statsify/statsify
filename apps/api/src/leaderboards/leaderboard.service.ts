@@ -258,6 +258,22 @@ export abstract class LeaderboardService {
     return rankings;
   }
 
+  public async countDemand<T>(
+    constructor: Constructor<T>,
+    request: "page" | "rankings",
+    fields: string[]
+  ) {
+    const month = new Date().toISOString().slice(0, 7);
+    const key = `leaderboard-demand:${request}:${month}`;
+    const name = constructor.name.toLowerCase();
+
+    const pipeline = this.redis.pipeline();
+
+    for (const field of new Set(fields)) pipeline.hincrby(key, `${name}.${field}`, 1);
+
+    pipelineValues(await pipeline.exec());
+  }
+
   protected abstract searchLeaderboardInput(
     input: string,
     field: string
