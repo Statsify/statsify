@@ -6,43 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PlayerNotFound } from "~/features/player/player-not-found";
 import { PlayerSkeleton } from "~/features/player/player-skeleton";
 import { PlayerView } from "~/features/player/player-page";
 import { cacheHeaders } from "~/lib/cache";
 import { SANS_PRELOAD } from "~/lib/fonts";
 import { possessive } from "~/lib/player-route";
-import { missingPlayerResponse } from "~/lib/response";
-import { createFileRoute, notFound, redirect, useParams } from "@tanstack/react-router";
-import { playerPageQuery, resolvePlayer } from "~/features/player/resolve";
+import { createFileRoute, useParams } from "@tanstack/react-router";
+import { playerPageQuery } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 /** Fresh for a minute, stale for ten, and served stale for a day if the API is down. */
 const EDGE_CACHE = "max-age=60, stale-while-revalidate=600, stale-if-error=86400";
 
 export const Route = createFileRoute("/{-$locale}/player/$name/")({
-  loader: async ({ params, context }) => {
-    const identity = await resolvePlayer(params.name);
-
-    if (!identity) {
-      missingPlayerResponse();
-      throw notFound();
-    }
-
-    // UUIDs, old names and other casings all land on the current name. Names change hands, so
-    // browsers and the edge keep the redirect for an hour rather than forever.
-    if (identity.username !== params.name) {
-      throw redirect({
-        to: "/{-$locale}/player/$name",
-        params: { name: identity.username },
-        statusCode: 301,
-        headers: { "Cache-Control": "public, max-age=3600", "CDN-Cache-Control": "max-age=3600" },
-      });
-    }
-
-    await context.queryClient.ensureQueryData(playerPageQuery(identity.uuid));
-
-    return identity;
+  loader: async ({ context: { player, queryClient } }) => {
+    await queryClient.ensureQueryData(playerPageQuery(player.uuid));
+    return player;
   },
   staleTime: 60_000,
   head: ({ loaderData }) =>
@@ -54,9 +33,8 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
         ],
         links: [SANS_PRELOAD, { rel: "icon", href: `/api/skin/head?uuid=${loaderData.uuid}&size=32` }],
       } :
-      { meta: [{ title: "Player Not Found | Statsify" }], links: [SANS_PRELOAD] },
+      { links: [SANS_PRELOAD] },
   headers: () => cacheHeaders(EDGE_CACHE),
-  notFoundComponent: PlayerNotFound,
   pendingComponent: PlayerPending,
   component: PlayerPage,
 });

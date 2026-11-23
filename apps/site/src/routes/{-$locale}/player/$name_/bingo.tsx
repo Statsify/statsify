@@ -24,7 +24,8 @@ import type { BingoPlayer } from "@statsify/contract";
 
 const EDGE_TTL_SECONDS = 300;
 
-export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
+// Outside the player's layout, so an unknown name gets Bingo's own not-found page.
+export const Route = createFileRoute("/{-$locale}/player/$name_/bingo")({
   validateSearch: BoardSearchSchema,
   loader: async ({ params }) => {
     const player = await loadBingoPlayer(params.name);

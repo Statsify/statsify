@@ -20,7 +20,7 @@ import type { ComponentProps } from "react";
 
 type TaskInfo = Pick<Task, "game" | "name" | "description" | "progress">;
 
-const route = getRouteApi("/{-$locale}/player/$name/bingo");
+const route = getRouteApi("/{-$locale}/player/$name_/bingo");
 
 /** The selected board, kept in the URL so links to a board can be shared. */
 function useBoardState() {
