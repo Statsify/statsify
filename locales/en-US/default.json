@@ -618,6 +618,7 @@
       "daily": "Daily",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
       "date": "Date",
+      "daysAgo": "{{days}} days ago",
       "gexp": "GEXP",
       "gexpPerGame": "GEXP Per Game",
       "guild": "Guild",
@@ -631,8 +632,12 @@
       "quests": "Guild Quests",
       "rank": "Guild Rank",
       "scaledGexp": "Scaled GEXP",
+      "thisMonth": "This Month",
+      "thisWeek": "This Week",
+      "today": "Today",
       "weekly": "Weekly",
-      "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
+      "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)",
+      "yesterday": "Yesterday"
     },
     "hat": "Hat",
     "heads": "Heads",
