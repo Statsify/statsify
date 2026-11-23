@@ -14,10 +14,10 @@ import { BingoSkeleton } from "~/features/bingo/bingo-skeleton";
 import { PlayerNotFound } from "~/features/bingo/player-not-found";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SANS_PRELOAD } from "~/lib/fonts";
-import { possessive } from "~/lib/player-route";
+import { REDIRECT_HEADERS, possessive } from "~/lib/player-route";
 import { cacheHeaders } from "~/lib/cache";
 import { missingPlayerResponse } from "~/lib/response";
-import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect, useParams } from "@tanstack/react-router";
 import { refreshBingo } from "~/features/player/player-actions";
 import { useState } from "react";
 import type { BingoPlayer } from "@statsify/contract";
@@ -33,6 +33,17 @@ export const Route = createFileRoute("/{-$locale}/player/$name_/bingo")({
     if (!player) {
       missingPlayerResponse();
       throw notFound();
+    }
+
+    // Like the player page: UUIDs, old names and other casings land on the current name, kept for an hour.
+    if (player.username !== params.name) {
+      throw redirect({
+        to: "/{-$locale}/player/$name/bingo",
+        params: { name: player.username },
+        search: true,
+        statusCode: 301,
+        headers: REDIRECT_HEADERS,
+      });
     }
 
     return player;
