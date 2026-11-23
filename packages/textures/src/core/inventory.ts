@@ -81,7 +81,6 @@ function fill(ctx: OffscreenCanvasRenderingContext2D, scale: number, x: number, 
 
 /** Draws containers the way Minecraft draws them, from a resource pack */
 export class InventoryRenderer {
-  /** Without a font, as from an atlas, it draws no title, counts or tooltips, which the page draws */
   public constructor(
     private icons: IconSource,
     private text: TextRenderer | undefined,
