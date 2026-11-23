@@ -13,7 +13,7 @@ import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
 import { flushSync } from "react-dom";
 import { isSupportedLocale } from "~/i18n/locales";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useOutsideClick } from "~/hooks/use-outside-click";
 import { useTranslation } from "react-i18next";
 
@@ -61,13 +61,20 @@ export function Header() {
     select: (match) => ({ game: match.params.game, search: match.search }),
   });
   // On phones the search is a button at the logo row's end, so the page starts higher; it opens the box in the search's
-  // row, focused, until a tap elsewhere or the next page.
+  // row, focused, until a tap elsewhere, the button again or the next page.
   const [searchedOn, setSearchedOn] = useState<string>();
   const searching = searchedOn === pathname;
-  const hide = useCallback(() => setSearchedOn(undefined), []);
+  const searchButton = useRef<HTMLButtonElement>(null);
+  const hide = useCallback((event: PointerEvent) => {
+    if (!searchButton.current?.contains(event.target as Node)) setSearchedOn(undefined);
+  }, []);
   const searchRow = useOutsideClick<HTMLDivElement>(hide);
 
-  const openSearch = () => {
+  const toggleSearch = () => {
+    if (searching) {
+      setSearchedOn(undefined);
+      return;
+    }
     // Shown and focused in the tap itself, so a phone opens its keyboard.
     flushSync(() => setSearchedOn(pathname));
     searchRow.current?.querySelector("input")?.focus();
@@ -126,17 +133,20 @@ export function Header() {
             ))}
           </ul>
         </nav>
-        {showSearch && (
-          <button
-            type="button"
-            aria-label={t("search.label")}
-            aria-expanded={searching}
-            onClick={openSearch}
-            className="flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden"
-          >
-            <SearchIcon className="size-5" />
-          </button>
-        )}
+        {/* Held, unseen, on pages with a search of their own, so the links before it don't move. */}
+        <button
+          ref={searchButton}
+          type="button"
+          aria-label={t("search.label")}
+          aria-expanded={searching}
+          onClick={toggleSearch}
+          className={cn(
+            "flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden",
+            !showSearch && "invisible"
+          )}
+        >
+          <SearchIcon className="size-5" />
+        </button>
       </div>
     </header>
   );
