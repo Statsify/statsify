@@ -25,7 +25,7 @@ import {
 import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
-import { config, formatTime, removeFormatting } from "@statsify/util";
+import { config, removeFormatting } from "@statsify/util";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
@@ -338,11 +338,10 @@ export class ApiService extends StatsifyApiService {
     if (!retryAfter) return new ErrorMessage("errors.hypixelUnavailable");
 
     const seconds = retryAfter > 60 ? Math.ceil(retryAfter / 60) * 60 : retryAfter;
-    const time = formatTime(seconds * 1000, { short: false, entries: 1 });
 
     return new ErrorMessage(
       (t) => t("errors.hypixelRateLimited.title"),
-      (t) => t("errors.hypixelRateLimited.description", { time })
+      (t) => t("errors.hypixelRateLimited.description", { time: seconds * 1000 })
     );
   }
 
@@ -357,9 +356,8 @@ export class ApiService extends StatsifyApiService {
     if (cacheTimeMs === undefined) return { content: (t) => t("hypixelBusy.noAge") };
 
     const age = Math.max(Date.now() - (expiresAt - cacheTimeMs), 1000);
-    const time = formatTime(age, { short: false, entries: 1 });
 
-    return { content: (t) => t("hypixelBusy.age", { time }) };
+    return { content: (t) => t("hypixelBusy.age", { time: age }) };
   }
 
   private isDiscordId(tag: string) {

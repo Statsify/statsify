@@ -371,7 +371,7 @@
       "title": "Higher Tier Required"
     },
     "hypixelRateLimited": {
-      "description": "Statsify has reached its Hypixel API limit. Please try again in about {{time}}!",
+      "description": "Statsify has reached its Hypixel API limit. Please try again in about {{time, duration}}!",
       "title": "$t(errors.hypixelUnavailable.title)"
     },
     "hypixelUnavailable": {
@@ -505,7 +505,7 @@
     }
   },
   "hypixelBusy": {
-    "age": "Hypixel is busy right now, so these stats are from {{time}} ago.",
+    "age": "Hypixel is busy right now, so these stats are from {{time, duration}} ago.",
     "noAge": "Hypixel is busy right now, so these stats may be out of date."
   },
   "leaderboard": {
