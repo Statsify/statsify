@@ -7,7 +7,8 @@
  */
 
 import { Box } from "~/components/ui/box";
-import { Button } from "~/components/ui/button";
+import { Button, FLAT_BUTTON } from "~/components/ui/button";
+import { cn } from "~/lib/util";
 import { dashedUuid } from "~/lib/uuid";
 import { getRouteApi, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -19,22 +20,17 @@ export const LABEL = "text-mc-1 text-mc-white";
 
 const localeRoute = getRouteApi("/{-$locale}");
 
-/**
- * A link-styled button in the nametag that opens and closes a panel under the page's header, at `size` (the player
- * page's match the socials beside them).
- */
+/** A button in the nametag that opens and closes a panel under the page's header. */
 export function PanelToggle({
   open,
   controls,
   onToggle,
-  size = "text-mc-1",
   onIntent,
   children,
 }: {
   open: boolean;
   controls: string;
   onToggle: () => void;
-  size?: string;
   /** When a pointer or the keyboard reaches it, to start loading what it opens. */
   onIntent?: () => void;
   children: ReactNode;
@@ -47,9 +43,7 @@ export function PanelToggle({
       onClick={onToggle}
       onPointerEnter={onIntent}
       onFocus={onIntent}
-      // The tap area reaches 10 px under the button: on a game page's phone header, the tap area of the Updated hint
-      // 8 px above it takes the button's top 9 px.
-      className={`relative flex min-h-11 min-w-11 items-center justify-center ${size} text-mc-yellow hover:underline after:absolute after:inset-x-0 after:top-0 after:-bottom-2.5`}
+      className={cn(FLAT_BUTTON, "px-3 text-mc-yellow")}
     >
       {children}
     </button>

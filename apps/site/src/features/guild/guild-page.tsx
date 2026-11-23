@@ -8,23 +8,28 @@
 
 import { BOX_GAP, Box, HEADING_BOX } from "~/components/ui/box";
 import { Chevron } from "~/components/icons/chevron";
+import { Error, ErrorText } from "~/components/ui/error";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
+import { GuildComparePanel } from "~/features/compare/compare-form";
 import { Hint } from "~/components/ui/hint";
+import { HypixelLookup } from "~/features/player/player-not-found";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { PageBackground } from "~/components/ui/background";
+import { PanelToggle } from "~/features/player/share-panel";
 import { SkinHead } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { UpdatedAt, useNow } from "~/features/player/refresh-bar";
 import { cn } from "~/lib/util";
 import { guildXpBar } from "~/components/ui/progression";
+import { lookupGuild } from "~/features/player/player-actions";
 import { useNumberFormat } from "~/i18n/use-number-format";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { GuildMemberRow, GuildPage } from "@statsify/contract";
 
 /** Hypixel's dates in UTC, so the server and the browser print the same day whatever the visitor's zone. */
-const dateFormat = (locale: string) => new Intl.DateTimeFormat(locale, { timeZone: "UTC", year: "numeric", month: "short", day: "numeric" });
+export const dateFormat = (locale: string) => new Intl.DateTimeFormat(locale, { timeZone: "UTC", year: "numeric", month: "short", day: "numeric" });
 
 /** The guild's header, its level and GEXP, the GEXP by day and by game, then every member in a table that sorts. */
 export function GuildView({ guild }: { guild: GuildPage }) {
@@ -33,15 +38,22 @@ export function GuildView({ guild }: { guild: GuildPage }) {
   const date = dateFormat(i18n.language);
   const color = guild.tagColor;
   const level = Math.floor(guild.level);
+  const compareId = useId();
+  const [comparing, setComparing] = useState(false);
 
   return (
     <div className="relative grow">
       <PageBackground background="guilds" />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
         <div className={cn("grid grid-cols-1 lg:grid-cols-2", BOX_GAP)}>
-          <Box as="h1" className={cn(HEADING_BOX, "content:text-mc-3 md:content:text-mc-4")}>
-            <span className="min-w-0 wrap-anywhere text-center"><MinecraftText>{guild.nameFormatted}</MinecraftText></span>
+          <Box className={cn(HEADING_BOX, "content:flex-col content:gap-1")}>
+            <h1 className="min-w-0 wrap-anywhere text-center text-mc-3 md:text-mc-4"><MinecraftText>{guild.nameFormatted}</MinecraftText></h1>
+            <PanelToggle open={comparing} controls={compareId} onToggle={() => setComparing(!comparing)}>
+              {t("compare.open")}
+            </PanelToggle>
+            <Updated updatedAt={guild.updatedAt} />
           </Box>
+          {comparing && <GuildComparePanel id={compareId} name={guild.name} className="lg:col-span-2" />}
           <Box title={<h2 className="text-mc-1.5 text-mc-gray">{t("guild.info")}</h2>} className="content:leading-[24px]">
             {guild.master && (
               <p className="text-mc-aqua">
@@ -58,7 +70,7 @@ export function GuildView({ guild }: { guild: GuildPage }) {
               {t("default:stats.guild.gexp")}: <span className="text-mc-white">{n(guild.exp)}</span>
             </p>
           </Box>
-          <Box className="content:flex content:flex-col content:items-center content:justify-center content:text-center content:leading-[24px]">
+          <Box className="content:flex content:flex-col content:justify-center content:leading-[24px]">
             <p>{t("default:stats.guild.level")}: <MinecraftText>{`${color}${n(guild.level)}`}</MinecraftText></p>
             <p>
               {t("default:stats.progression.gexp")}: <span className="text-mc-aqua">{n(guild.progression.current)}</span>/
@@ -107,16 +119,36 @@ export function GuildView({ guild }: { guild: GuildPage }) {
           )}
         </div>
         <MemberTable members={guild.members} total={guild.memberCount} />
-        <Updated updatedAt={guild.updatedAt} />
       </div>
     </div>
+  );
+}
+
+const lookupOnHypixel = (name: string, token: string | undefined, deadline: AbortSignal) => lookupGuild({ data: { name, token }, signal: deadline });
+
+/**
+ * A guild the site hasn't stored, which Hypixel can be asked for, as a player can. A lookup that finds it reloads the
+ * page under the guild's name, or under `first` on a comparison whose second guild is the one missing.
+ */
+export function GuildNotFoundView({ name, first }: { name: string; first?: string }) {
+  const { t } = useTranslation();
+
+  return (
+    <Error>
+      <div className="flex w-full max-w-160 flex-col items-center gap-4 self-center">
+        <ErrorText heading={<h1 className="text-mc-3 lg:text-mc-4 text-mc-red font-bold">{t("guild.notFound.title")}</h1>}>
+          <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray text-center">{t("guild.notFound.description", { name })}</p>
+        </ErrorText>
+        <HypixelLookup name={name} lookup={lookupOnHypixel} found={(guild) => first ?? guild.name} unknown={t("guild.notFound.unknown", { name })} />
+      </div>
+    </Error>
   );
 }
 
 /** Its own component, so the clock's tick re-renders the line and not the page. */
 function Updated({ updatedAt }: { updatedAt: number }) {
   const now = useNow();
-  return <p className="text-mc-1.5 text-mc-gray empty:hidden">{now !== undefined && <UpdatedAt updatedAt={updatedAt} now={now} />}</p>;
+  return <p className="min-h-lh text-mc-1 text-mc-gray">{now !== undefined && <UpdatedAt updatedAt={updatedAt} now={now} />}</p>;
 }
 
 type BarRow = { key: string; label: string; value: number; icon?: string };

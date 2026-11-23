@@ -95,8 +95,8 @@ function PlayerRowName({ page }: { page: GamePage }) {
   );
 }
 
-/** What starts each side's row: the player's name, in the first page's order. */
-type Sides = [ReactNode, ReactNode];
+/** What starts each side's row: the player's or guild's name, in the first page's order. */
+export type Sides = [ReactNode, ReactNode];
 
 // Two columns at `md`, as three would leave cells narrower than a phone's. A subgrid on the table's rows, so a stat
 // and the other side's keep one row however either wraps.
@@ -119,7 +119,7 @@ function sideGrid(count: number): CSSProperties {
  * A table of a comparison: its heading, when it has one, across both sides, then the sides next to each other, each its
  * name and a box per stat. Both sides share their rows and order, so a stat sits next to the same stat of the other.
  */
-function CompareSection({ title, pairs, sides }: { title?: ReactNode; pairs: Pair[]; sides: Sides }) {
+export function CompareSection({ title, pairs, sides }: { title?: ReactNode; pairs: Pair[]; sides: Sides }) {
   const grid = sideGrid(pairs.length);
 
   return (
