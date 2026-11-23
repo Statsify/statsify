@@ -16,7 +16,7 @@ import {
   type LocalizationString,
   Message,
 } from "@statsify/discord";
-import { ButtonStyle, InteractionResponseType } from "discord-api-types/v10";
+import { ButtonStyle } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
 
 const logger = new Logger("ConfirmAction");
@@ -58,15 +58,8 @@ export function confirmAction(
   }
 
   const ownerOnly = (run: () => Promise<IMessage>) => (interaction: Interaction) => {
-    // Discord rejects a follow-up sent before the click is acknowledged, so reply in the click's response
     if (interaction.getUserId() !== userId)
-      return {
-        type: InteractionResponseType.ChannelMessageWithSource,
-        data: interaction.convertToApiData({
-          ...new ErrorMessage("errors.notCommandOwner"),
-          ephemeral: true,
-        }),
-      };
+      return interaction.sendFollowup({ ...new ErrorMessage("errors.notCommandOwner"), ephemeral: true });
 
     close();
 
