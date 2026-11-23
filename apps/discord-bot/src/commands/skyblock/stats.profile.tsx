@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { PLAYER_STATS, RARITY_COLORS } from "@statsify/skyblock/display";
 import { gridRows } from "./components/ItemGrid.js";
@@ -31,17 +32,7 @@ export interface SkyBlockStatsProfileProps extends SkyBlockProfileProps {
   page: keyof typeof STAT_PAGES;
 }
 
-export const SkyBlockStatsProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  page,
-}: SkyBlockStatsProfileProps) => {
+export const SkyBlockStatsProfile = ({ profile, t, page, ...card }: SkyBlockStatsProfileProps) => {
   const { stats } = profile.member;
   const sidebar: SidebarItem[] = stats?.weapon ? [[t("skyblock.weapon"), stats.weapon, "§f"]] : [];
 
@@ -57,24 +48,13 @@ export const SkyBlockStatsProfile = ({
   });
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {groups.length > 0 ? <Table.table>{groups}</Table.table> : <Empty text={t("skyblock.noStats")} />}
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
 
-export const SkyBlockAttributesProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockAttributesProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const attributes = profile.member.attributes!;
   // A late-game member has 200+ unlocked, so the ones still leveling come first
   const shown = attributes.attributes
@@ -98,10 +78,8 @@ export const SkyBlockAttributesProfile = ({
   ));
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {cells.length > 0 ? <Table.table>{gridRows(cells, 3, true)}</Table.table> : <Empty text={t("skyblock.noAttributes")} />}
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };

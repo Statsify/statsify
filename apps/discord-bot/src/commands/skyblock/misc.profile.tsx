@@ -7,11 +7,12 @@
  */
 
 import { AUCTION_STATS, RIFT_TOTALS } from "@statsify/skyblock/display";
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { ItemGrid, gridRows } from "./components/ItemGrid.js";
 import { add } from "@statsify/math";
-import { formatTime, prettify } from "@statsify/util";
+import { formatTime } from "@statsify/util";
 import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -19,17 +20,7 @@ const TOP = 9;
 
 export const consumableIcons = ({ misc }: MemberView) => misc?.consumables.flatMap(({ texture }) => (texture ? [texture] : [])) ?? [];
 
-export const SkyBlockMiscProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-}: SkyBlockProfileProps) => {
+export const SkyBlockMiscProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
   const misc = profile.member.misc!;
   const none = t("skyblock.none");
 
@@ -40,8 +31,8 @@ export const SkyBlockMiscProfile = ({
     [t("skyblock.giftsGiven"), t(misc.gifts.given), "§d"],
   ];
 
-  const top = (list: { id: string; count: number }[], color: string) =>
-    list.slice(0, TOP).map(({ id, count }) => <Table.td title={prettify(id)} value={t(count)} color={color} size="small" />);
+  const top = (list: { name: string; count: number }[], color: string) =>
+    list.slice(0, TOP).map(({ name, count }) => <Table.td title={name} value={t(count)} color={color} size="small" />);
 
   const auctions = AUCTION_STATS.map((stat) => (
     <Table.td title={t(`skyblock.auctionStats.${stat}`)} value={t(Math.floor(misc.auctions[stat]))} color="§6" size="small" />
@@ -56,8 +47,7 @@ export const SkyBlockMiscProfile = ({
   ];
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.ts title={`§a${t("skyblock.topKills")}`}>{gridRows(top(misc.topKills, "§a"), 3, true)}</Table.ts>
         <Table.ts title={`§c${t("skyblock.topDeaths")}`}>{gridRows(top(misc.topDeaths, "§c"), 3, true)}</Table.ts>
@@ -78,27 +68,16 @@ export const SkyBlockMiscProfile = ({
           />
         ) :
         <></>}
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
 
-export const SkyBlockRiftProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockRiftProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const rift = profile.member.rift;
   const of = (found: number, total: number) => `${found >= total ? "§6" : "§e"}${t(found)}§7/${t(total)}`;
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName}>
       {rift ?
         (
           <Table.table>
@@ -115,21 +94,11 @@ export const SkyBlockRiftProfile = ({
           </Table.table>
         ) :
         <Empty text={t("skyblock.noRift")} />}
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
 
-export const SkyBlockExperimentsProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockExperimentsProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const experiments = profile.member.experiments;
   const sidebar: SidebarItem[] = experiments ? [[t("skyblock.serumsDrunk"), t(experiments.serums), "§d"]] : [];
 
@@ -149,10 +118,8 @@ export const SkyBlockExperimentsProfile = ({
   ));
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {games.length > 0 ? <Table.table>{games}</Table.table> : <Empty text={t("skyblock.noExperiments")} />}
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };

@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { INVENTORIES, RARITY_COLORS, formatProfileName } from "@statsify/skyblock/display";
 import { ItemGrid, gridRows, pricesAsOf } from "./components/ItemGrid.js";
@@ -26,17 +27,7 @@ const boardName = (name: string) => removeFormatting(name).replace(/^SkyBlock /,
 
 export const missingPetIcons = ({ values }: MemberView) => values?.missingPets.slice(0, MISSING_PETS).map(({ texture }) => texture) ?? [];
 
-export const SkyBlockValuesProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-}: SkyBlockProfileProps) => {
+export const SkyBlockValuesProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
   const values = profile.member.values!;
   const totals = values.inventories?.totals ?? {};
   const sacks = add(...Object.values(values.inventories?.sacks ?? {}));
@@ -54,8 +45,7 @@ export const SkyBlockValuesProfile = ({
   ];
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {cells.length > 0 ? <Table.table>{gridRows(cells, 4, true)}</Table.table> : <></>}
       {values.missingPets.length > 0 ?
         (
@@ -75,8 +65,7 @@ export const SkyBlockValuesProfile = ({
       <box width="100%">
         <text>{`§7${pricesAsOf(t, values.pricesAsOf)}`}</text>
       </box>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
 
@@ -93,18 +82,7 @@ export interface SkyBlockRanksProfileProps {
   title: string;
 }
 
-export const SkyBlockRanksProfile = ({
-  rankings,
-  profiles,
-  displayName,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  title,
-}: SkyBlockRanksProfileProps) => {
+export const SkyBlockRanksProfile = ({ rankings, profiles, displayName, t, ...card }: SkyBlockRanksProfileProps) => {
   const profileNames = new Map(profiles.map((profile) => [profile.id, formatProfileName(profile)]));
 
   // A row on a profile the player has since left lingers until the boards next drop it
@@ -126,10 +104,8 @@ export const SkyBlockRanksProfile = ({
     .slice(0, RANKS);
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={displayName} badge={badge} title={title} time="LIVE" />
+    <Card {...card} name={displayName}>
       {cells.length > 0 ? <Table.table>{gridRows(cells, 2)}</Table.table> : <Empty text={t("skyblock.noRanks")} />}
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };

@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { CATCHES, MEDAL_COLORS, TROPHY_TIERS } from "@statsify/skyblock/display";
 import { ItemCell, gridRows } from "./components/ItemGrid.js";
@@ -24,27 +25,14 @@ export interface SkyBlockFishingProfileProps extends SkyBlockProfileProps {
   page: keyof typeof TABLES;
 }
 
-export const SkyBlockFishingProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-  page,
-}: SkyBlockFishingProfileProps) => {
+export const SkyBlockFishingProfile = ({ profile, t, icons, page, ...card }: SkyBlockFishingProfileProps) => {
   const fishing = profile.member.fishing;
 
   if (!fishing) {
     return (
-      <Container background={background}>
-        <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
+      <Card {...card} name={profile.displayName}>
         <Empty text={t("skyblock.noFishing")} />
-        <Footer logo={logo} user={user} />
-      </Container>
+      </Card>
     );
   }
 
@@ -62,11 +50,9 @@ export const SkyBlockFishingProfile = ({
   const PageTable = TABLES[page];
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <PageTable fishing={fishing} t={t} icons={icons} />
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
 

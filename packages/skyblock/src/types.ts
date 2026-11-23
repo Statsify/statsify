@@ -827,8 +827,8 @@ export type AuctionStat = (typeof AUCTION_STATS)[number];
 export interface MiscSection {
   kills: number;
   deaths: number;
-  topKills: { id: string; count: number }[]; // the 20 most, by mob id
-  topDeaths: { id: string; count: number }[]; // by cause
+  topKills: { name: string; count: number }[]; // the 20 most: bestiary families by name, the rest by player_stats id
+  topDeaths: { name: string; count: number }[]; // the same, by cause
   highestDamage?: number;
   highestCriticalDamage?: number;
   auctions: Record<AuctionStat, number>;

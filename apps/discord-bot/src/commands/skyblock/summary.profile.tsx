@@ -6,21 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { DateTime } from "luxon";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const SkyBlockSummaryProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockSummaryProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const { skills, dungeons, slayers, accessories, networth } = profile.member;
 
   const missing = (color: string) => (profile.newProfile ? { value: t(0), color } : { value: t("skyblock.apiOff"), color: "§c" });
@@ -55,8 +47,7 @@ export const SkyBlockSummaryProfile = ({
   ].join(" §8• ");
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.tr>
           <Table.td
@@ -94,7 +85,6 @@ export const SkyBlockSummaryProfile = ({
           <Table.td title={t("skyblock.coopMembers")} value={coop} color="§e" />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };

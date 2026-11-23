@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
 import { ItemGrid, gridRows } from "./components/ItemGrid.js";
@@ -30,18 +31,7 @@ export interface SkyBlockCollectionsProfileProps extends SkyBlockProfileProps {
   category: CollectionCategory;
 }
 
-export const SkyBlockCollectionsProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-  category,
-}: SkyBlockCollectionsProfileProps) => {
+export const SkyBlockCollectionsProfile = ({ profile, t, icons, category, ...card }: SkyBlockCollectionsProfileProps) => {
   const { collections } = profile.member;
   const items = categoryItems(collections, category);
   const tiersOnly = items.some(({ amount }) => amount === undefined);
@@ -54,8 +44,7 @@ export const SkyBlockCollectionsProfile = ({
     [];
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {tiersOnly ?
         (
           <box width="100%">
@@ -78,22 +67,11 @@ export const SkyBlockCollectionsProfile = ({
           />
         ) :
         <EmptySection setting="collections" newProfile={profile.newProfile} empty={t("skyblock.noCollections")} t={t} />}
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
 
-export const SkyBlockMinionsProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-}: SkyBlockProfileProps) => {
+export const SkyBlockMinionsProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
   const minions = profile.member.minions!;
   const crafted = minions.minions.filter(({ tiers }) => tiers.length > 0);
 
@@ -106,8 +84,7 @@ export const SkyBlockMinionsProfile = ({
     sidebar.push([t("skyblock.nextSlot"), t("skyblock.craftsToGo", { count: minions.slots.next - minions.unique }), "§7"]);
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {crafted.length > 0 ?
         (
           <ItemGrid
@@ -122,21 +99,11 @@ export const SkyBlockMinionsProfile = ({
           />
         ) :
         <Empty text={t("skyblock.noMinions")} />}
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
 
-export const SkyBlockBestiaryProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockBestiaryProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const bestiary = profile.member.bestiary!;
 
   const sidebar: SidebarItem[] = [
@@ -154,10 +121,8 @@ export const SkyBlockBestiaryProfile = ({
   });
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>{gridRows(pages, 3, true)}</Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
