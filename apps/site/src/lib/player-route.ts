@@ -6,4 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+/** A redirect to a player's current name. Names change hands, so it's kept for an hour rather than forever. */
+export const REDIRECT_HEADERS = { "Cache-Control": "public, max-age=3600", "CDN-Cache-Control": "max-age=3600" };
+
 export const possessive = (username: string) => `${username}'${username.endsWith("s") ? "" : "s"}`;

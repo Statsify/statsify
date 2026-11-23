@@ -12,24 +12,21 @@ import { GameView } from "~/features/game/game-page";
 import { imageSize } from "@statsify/profiles/protocol";
 import { NotFound } from "~/components/not-found";
 import { ORPCError } from "@orpc/client";
-import { PlayerNotFound } from "~/features/player/player-not-found";
 import { SANS_PRELOAD } from "~/lib/fonts";
-import { possessive } from "~/lib/player-route";
+import { REDIRECT_HEADERS, possessive } from "~/lib/player-route";
 import { cacheHeaders } from "~/lib/cache";
-import { cacheNotFoundResponse, missingPlayerResponse } from "~/lib/response";
+import { cacheNotFoundResponse } from "~/lib/response";
 import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { createI18n } from "~/i18n/i18n";
 import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch, unfurlCard } from "~/features/game/game-data";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { removeFormatting } from "@statsify/util/util";
 import { playerTabIcon } from "~/lib/tab-icon";
-import { ensurePlayer } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 /** As the player page: fresh for a minute, stale for ten, and served stale for a day if the API is down. */
 const EDGE_CACHE = "max-age=60, stale-while-revalidate=600, stale-if-error=86400";
-const REDIRECT_HEADERS = { "Cache-Control": "public, max-age=3600", "CDN-Cache-Control": "max-age=3600" };
 
 /** A search parameter as typed (the router reads `?mode=4v4` as a string and `?mode=123` as a number); the API checks it. */
 const param = (raw: unknown) => (typeof raw === "string" || typeof raw === "number" ? String(raw).slice(0, 32) || undefined : undefined);
@@ -41,24 +38,14 @@ const validateSearch = (search: Record<string, unknown>): { mode?: string; submo
   period: param(search.period),
 });
 
-/** Which not-found page to show: the player one, with its lookup, or the plain 404 for a game or mode we don't have. */
-type Missing = { player: boolean };
-
 export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
   validateSearch,
   loaderDeps: ({ search }) => ({ mode: search.mode, submode: search.submode, period: search.period }),
-  loader: async ({ params, deps, context }) => {
-    const identity = await ensurePlayer(context.queryClient, params.name);
-
-    if (!identity) {
-      missingPlayerResponse();
-      throw notFound({ data: { player: true } satisfies Missing });
-    }
-
-    // As on the player page, UUIDs, old names and other casings land on the current name, and the game on its key.
+  loader: async ({ params, deps, context: { player: identity, queryClient } }) => {
+    // Another casing of the game lands on its key, as the layout lands the name on the current one.
     const game = params.game.toLowerCase();
 
-    if (identity.username !== params.name || game !== params.game) {
+    if (game !== params.game) {
       throw redirect({
         to: "/{-$locale}/player/$name/$game",
         params: { name: identity.username, game },
@@ -69,7 +56,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     }
 
     preloadBackground(backgroundFor(game));
-    const page = await context.queryClient.ensureQueryData(gamePageQuery(identity.uuid, game, deps.mode, deps.submode, deps.period)).catch((error) => {
+    const page = await queryClient.ensureQueryData(gamePageQuery(identity.uuid, game, deps.mode, deps.submode, deps.period)).catch((error) => {
       // A game without a page, a mode or submode it doesn't have, or a name too long to be either.
       if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) return null;
       throw error;
@@ -77,7 +64,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
 
     if (!page) {
       cacheNotFoundResponse("max-age=300");
-      throw notFound({ data: { player: false } satisfies Missing });
+      throw notFound();
     }
 
     // The first mode, submode and period live at the URL without them. A period the mode doesn't have (Monthly, kept
@@ -144,7 +131,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),
-  notFoundComponent: ({ data }) => ((data as Missing | undefined)?.player === false ? <GameNotFound /> : <PlayerNotFound />),
+  notFoundComponent: GameNotFound,
   component: GamePage,
 });
 

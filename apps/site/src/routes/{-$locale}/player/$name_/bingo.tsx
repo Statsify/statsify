@@ -13,11 +13,11 @@ import { BingoLayout } from "~/features/bingo/bingo-layout";
 import { PlayerNotFound } from "~/features/bingo/player-not-found";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SANS_PRELOAD } from "~/lib/fonts";
-import { possessive } from "~/lib/player-route";
+import { REDIRECT_HEADERS, possessive } from "~/lib/player-route";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { cacheHeaders } from "~/lib/cache";
 import { missingPlayerResponse } from "~/lib/response";
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { refreshBingo } from "~/features/player/player-actions";
 import { useState } from "react";
@@ -27,7 +27,8 @@ import type { BingoPlayer } from "@statsify/contract";
 
 const EDGE_TTL_SECONDS = 300;
 
-export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
+// Outside the player's layout, so an unknown name gets Bingo's own not-found page.
+export const Route = createFileRoute("/{-$locale}/player/$name_/bingo")({
   validateSearch: validateBoardSearch,
   loader: async ({ params, context }) => {
     const player = await loadBingoPlayer(context.queryClient, params.name);
@@ -35,6 +36,17 @@ export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
     if (!player) {
       missingPlayerResponse();
       throw notFound();
+    }
+
+    // Like the player page: UUIDs, old names and other casings land on the current name, kept for an hour.
+    if (player.username !== params.name) {
+      throw redirect({
+        to: "/{-$locale}/player/$name/bingo",
+        params: { name: player.username },
+        search: true,
+        statusCode: 301,
+        headers: REDIRECT_HEADERS,
+      });
     }
 
     return player;

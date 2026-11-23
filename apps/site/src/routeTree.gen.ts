@@ -39,10 +39,11 @@ import { Route as ApiSkinTextureRouteImport } from './routes/api/skin/texture'
 import { Route as Char123LocaleChar125LeaderboardsIndexRouteImport } from './routes/{-$locale}/leaderboards/index'
 import { Route as Char123LocaleChar125LeaderboardsFieldRouteImport } from './routes/{-$locale}/leaderboards/$field'
 import { Route as Char123LocaleChar125PlayerIndexRouteImport } from './routes/{-$locale}/player/index'
+import { Route as Char123LocaleChar125PlayerNameRouteImport } from './routes/{-$locale}/player/$name'
 import { Route as Char123LocaleChar125PrestigesBedwarsRouteImport } from './routes/{-$locale}/prestiges/bedwars'
 import { Route as Char123LocaleChar125PlayerNameIndexRouteImport } from './routes/{-$locale}/player/$name/index'
 import { Route as Char123LocaleChar125PlayerNameGameRouteImport } from './routes/{-$locale}/player/$name/$game'
-import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name/bingo'
+import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name_/bingo'
 
 const GlossaryChar123hashChar125DotjsonRoute =
   GlossaryChar123hashChar125DotjsonRouteImport.update({
@@ -179,6 +180,12 @@ const Char123LocaleChar125PlayerIndexRoute =
     path: '/player/',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
+const Char123LocaleChar125PlayerNameRoute =
+  Char123LocaleChar125PlayerNameRouteImport.update({
+    id: '/player/$name',
+    path: '/player/$name',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
 const Char123LocaleChar125PrestigesBedwarsRoute =
   Char123LocaleChar125PrestigesBedwarsRouteImport.update({
     id: '/prestiges/bedwars',
@@ -187,19 +194,19 @@ const Char123LocaleChar125PrestigesBedwarsRoute =
   } as any)
 const Char123LocaleChar125PlayerNameIndexRoute =
   Char123LocaleChar125PlayerNameIndexRouteImport.update({
-    id: '/player/$name/',
-    path: '/player/$name/',
-    getParentRoute: () => Char123LocaleChar125Route,
+    id: '/',
+    path: '/',
+    getParentRoute: () => Char123LocaleChar125PlayerNameRoute,
   } as any)
 const Char123LocaleChar125PlayerNameGameRoute =
   Char123LocaleChar125PlayerNameGameRouteImport.update({
-    id: '/player/$name/$game',
-    path: '/player/$name/$game',
-    getParentRoute: () => Char123LocaleChar125Route,
+    id: '/$game',
+    path: '/$game',
+    getParentRoute: () => Char123LocaleChar125PlayerNameRoute,
   } as any)
 const Char123LocaleChar125PlayerNameBingoRoute =
   Char123LocaleChar125PlayerNameBingoRouteImport.update({
-    id: '/player/$name/bingo',
+    id: '/player/$name_/bingo',
     path: '/player/$name/bingo',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
@@ -227,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/api/skin/render': typeof ApiSkinRenderRoute
   '/api/skin/texture': typeof ApiSkinTextureRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
+  '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameRouteWithChildren
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
   '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
@@ -287,11 +295,12 @@ export interface FileRoutesById {
   '/api/skin/render': typeof ApiSkinRenderRoute
   '/api/skin/texture': typeof ApiSkinTextureRoute
   '/{-$locale}/leaderboards/$field': typeof Char123LocaleChar125LeaderboardsFieldRoute
+  '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameRouteWithChildren
   '/{-$locale}/prestiges/bedwars': typeof Char123LocaleChar125PrestigesBedwarsRoute
   '/{-$locale}/leaderboards/': typeof Char123LocaleChar125LeaderboardsIndexRoute
   '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/$game': typeof Char123LocaleChar125PlayerNameGameRoute
-  '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
+  '/{-$locale}/player/$name_/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
   '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 export interface FileRouteTypes {
@@ -319,6 +328,7 @@ export interface FileRouteTypes {
     | '/api/skin/render'
     | '/api/skin/texture'
     | '/{-$locale}/leaderboards/$field'
+    | '/{-$locale}/player/$name'
     | '/{-$locale}/prestiges/bedwars'
     | '/{-$locale}/leaderboards/'
     | '/{-$locale}/player/'
@@ -378,11 +388,12 @@ export interface FileRouteTypes {
     | '/api/skin/render'
     | '/api/skin/texture'
     | '/{-$locale}/leaderboards/$field'
+    | '/{-$locale}/player/$name'
     | '/{-$locale}/prestiges/bedwars'
     | '/{-$locale}/leaderboards/'
     | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/$game'
-    | '/{-$locale}/player/$name/bingo'
+    | '/{-$locale}/player/$name_/bingo'
     | '/{-$locale}/player/$name/'
   fileRoutesById: FileRoutesById
 }
@@ -574,6 +585,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125PlayerIndexRouteImport
       parentRoute: typeof Char123LocaleChar125Route
     }
+    '/{-$locale}/player/$name': {
+      id: '/{-$locale}/player/$name'
+      path: '/player/$name'
+      fullPath: '/{-$locale}/player/$name'
+      preLoaderRoute: typeof Char123LocaleChar125PlayerNameRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
     '/{-$locale}/prestiges/bedwars': {
       id: '/{-$locale}/prestiges/bedwars'
       path: '/prestiges/bedwars'
@@ -583,20 +601,20 @@ declare module '@tanstack/react-router' {
     }
     '/{-$locale}/player/$name/': {
       id: '/{-$locale}/player/$name/'
-      path: '/player/$name'
+      path: '/'
       fullPath: '/{-$locale}/player/$name/'
       preLoaderRoute: typeof Char123LocaleChar125PlayerNameIndexRouteImport
-      parentRoute: typeof Char123LocaleChar125Route
+      parentRoute: typeof Char123LocaleChar125PlayerNameRoute
     }
     '/{-$locale}/player/$name/$game': {
       id: '/{-$locale}/player/$name/$game'
-      path: '/player/$name/$game'
+      path: '/$game'
       fullPath: '/{-$locale}/player/$name/$game'
       preLoaderRoute: typeof Char123LocaleChar125PlayerNameGameRouteImport
-      parentRoute: typeof Char123LocaleChar125Route
+      parentRoute: typeof Char123LocaleChar125PlayerNameRoute
     }
-    '/{-$locale}/player/$name/bingo': {
-      id: '/{-$locale}/player/$name/bingo'
+    '/{-$locale}/player/$name_/bingo': {
+      id: '/{-$locale}/player/$name_/bingo'
       path: '/player/$name/bingo'
       fullPath: '/{-$locale}/player/$name/bingo'
       preLoaderRoute: typeof Char123LocaleChar125PlayerNameBingoRouteImport
@@ -604,6 +622,24 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface Char123LocaleChar125PlayerNameRouteChildren {
+  Char123LocaleChar125PlayerNameGameRoute: typeof Char123LocaleChar125PlayerNameGameRoute
+  Char123LocaleChar125PlayerNameIndexRoute: typeof Char123LocaleChar125PlayerNameIndexRoute
+}
+
+const Char123LocaleChar125PlayerNameRouteChildren: Char123LocaleChar125PlayerNameRouteChildren =
+  {
+    Char123LocaleChar125PlayerNameGameRoute:
+      Char123LocaleChar125PlayerNameGameRoute,
+    Char123LocaleChar125PlayerNameIndexRoute:
+      Char123LocaleChar125PlayerNameIndexRoute,
+  }
+
+const Char123LocaleChar125PlayerNameRouteWithChildren =
+  Char123LocaleChar125PlayerNameRoute._addFileChildren(
+    Char123LocaleChar125PlayerNameRouteChildren,
+  )
 
 interface Char123LocaleChar125RouteChildren {
   Char123LocaleChar125AboutRoute: typeof Char123LocaleChar125AboutRoute
@@ -613,12 +649,11 @@ interface Char123LocaleChar125RouteChildren {
   Char123LocaleChar125TermsRoute: typeof Char123LocaleChar125TermsRoute
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
   Char123LocaleChar125LeaderboardsFieldRoute: typeof Char123LocaleChar125LeaderboardsFieldRoute
+  Char123LocaleChar125PlayerNameRoute: typeof Char123LocaleChar125PlayerNameRouteWithChildren
   Char123LocaleChar125PrestigesBedwarsRoute: typeof Char123LocaleChar125PrestigesBedwarsRoute
   Char123LocaleChar125LeaderboardsIndexRoute: typeof Char123LocaleChar125LeaderboardsIndexRoute
   Char123LocaleChar125PlayerIndexRoute: typeof Char123LocaleChar125PlayerIndexRoute
-  Char123LocaleChar125PlayerNameGameRoute: typeof Char123LocaleChar125PlayerNameGameRoute
   Char123LocaleChar125PlayerNameBingoRoute: typeof Char123LocaleChar125PlayerNameBingoRoute
-  Char123LocaleChar125PlayerNameIndexRoute: typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 
 const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
@@ -630,17 +665,15 @@ const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
   Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
   Char123LocaleChar125LeaderboardsFieldRoute:
     Char123LocaleChar125LeaderboardsFieldRoute,
+  Char123LocaleChar125PlayerNameRoute:
+    Char123LocaleChar125PlayerNameRouteWithChildren,
   Char123LocaleChar125PrestigesBedwarsRoute:
     Char123LocaleChar125PrestigesBedwarsRoute,
   Char123LocaleChar125LeaderboardsIndexRoute:
     Char123LocaleChar125LeaderboardsIndexRoute,
   Char123LocaleChar125PlayerIndexRoute: Char123LocaleChar125PlayerIndexRoute,
-  Char123LocaleChar125PlayerNameGameRoute:
-    Char123LocaleChar125PlayerNameGameRoute,
   Char123LocaleChar125PlayerNameBingoRoute:
     Char123LocaleChar125PlayerNameBingoRoute,
-  Char123LocaleChar125PlayerNameIndexRoute:
-    Char123LocaleChar125PlayerNameIndexRoute,
 }
 
 const Char123LocaleChar125RouteWithChildren =
