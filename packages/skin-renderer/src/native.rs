@@ -47,7 +47,7 @@ pub async fn render_skin(
   // Loading and rendering block the thread, so they run off napi's async workers
   let buffer = spawn_blocking(move || draw_skin(renderer, &skin, slim, extruded, options))
     .await
-    .map_err(|_| crate::error::Error::from(statsify_render_core::Error::RenderFailure))??;
+    .map_err(|error| crate::error::Error::RenderPanicked(error.to_string()))??;
 
   Ok(buffer.into())
 }
