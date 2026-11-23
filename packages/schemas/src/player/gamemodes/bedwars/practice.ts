@@ -32,7 +32,7 @@ export class BedWarsPracticeMode {
 }
 
 const recordOptions = {
-  leaderboard: { sort: "ASC", formatter: formatRaceTime },
+  leaderboard: { sort: "ASC", formatter: formatRaceTime, limit: 50_000 },
   historical: { enabled: false },
 } as const;
 
