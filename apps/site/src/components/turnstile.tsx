@@ -15,9 +15,11 @@ interface TurnstileApi {
       sitekey: string;
       theme?: "light" | "dark" | "auto";
       size?: "normal" | "flexible" | "compact";
+      appearance?: "always" | "execute" | "interaction-only";
       callback: (token: string) => void;
       "expired-callback"?: () => void;
       "error-callback"?: () => void;
+      "before-interactive-callback"?: () => void;
     }
   ): string;
   remove(widgetId: string): void;
@@ -62,12 +64,15 @@ export function Turnstile({
   siteKey,
   onToken,
   onLoadError,
+  invisible = false,
   className,
 }: {
   siteKey: string;
   onToken: (token: string | undefined) => void;
   /** Cloudflare's script didn't load (blocked, offline), so there's no widget to complete. */
   onLoadError?: () => void;
+  /** Never shown: where Turnstile would ask the visitor to interact, `onToken` gets `undefined` instead. */
+  invisible?: boolean;
   className?: string;
 }) {
   const container = useRef<HTMLDivElement>(null);
@@ -95,6 +100,10 @@ export function Turnstile({
           sitekey: siteKey,
           theme: "dark",
           size: "flexible",
+          ...(invisible && {
+            appearance: "interaction-only",
+            "before-interactive-callback": () => callback.current(undefined),
+          }),
           callback: (token) => callback.current(token),
           "expired-callback": () => callback.current(undefined),
           "error-callback": () => callback.current(undefined),
@@ -111,7 +120,7 @@ export function Turnstile({
       canceled = true;
       if (widgetId) window.turnstile?.remove(widgetId);
     };
-  }, [siteKey]);
+  }, [siteKey, invisible]);
 
   return <div ref={container} className={className} />;
 }
