@@ -11,13 +11,13 @@ import { Field } from "#metadata";
 import { add, deepAdd, ratio } from "@statsify/math";
 
 export class BedWarsPracticeMode {
-  @Field()
+  @Field({ leaderboard: { limit: 10_000 } })
   public successes: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 10_000 } })
   public fails: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 10_000 } })
   public successRatio: number;
 
   public constructor(data: APIData = {}) {
@@ -81,7 +81,7 @@ export class BedWarsPractice {
   @Field()
   public pearlClutching: BedWarsPracticeMode;
 
-  @Field()
+  @Field({ leaderboard: { limit: 10_000 } })
   public blocksPlaced: number;
 
   @Field()
