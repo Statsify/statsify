@@ -96,7 +96,6 @@ export type Refresh = ReturnType<typeof useRefresh>;
  * token and applies its data. The automatic update's token comes from an invisible widget, so it never asks the visitor.
  */
 export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: RefreshOptions) {
-  const { t } = useTranslation();
   const { turnstileSiteKey } = localeRoute.useLoaderData();
   const [state, setState] = useState<RefreshState>({ status: "idle" });
   const [verifying, setVerifying] = useState(false);
@@ -108,10 +107,8 @@ export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: Refr
   const searchedAt = useRouterState({ select: ({ resolvedLocation }) => resolvedLocation?.state.searchedAt });
 
   const lockedUntil = state.status === "limited" ? state.until : expiresAt;
-  const now = useNow(lockedUntil);
-  const remaining = now === undefined ? undefined : Math.max(0, Math.ceil((lockedUntil - now) / 1000));
   // A widget whose script didn't load stays broken until the page reloads, so the button does too.
-  const disabled = verifying || widgetFailed || state.status === "pending" || remaining === undefined || remaining > 0;
+  const busy = verifying || widgetFailed || state.status === "pending";
 
   async function run(update: AutoUpdate | undefined, token?: string) {
     const auto = update !== undefined;
@@ -164,31 +161,12 @@ export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: Refr
     autoUpdate();
   }, [auto, view]);
 
-  let text = t("player.refresh");
-  let label = text;
-  if (state.status === "pending") {
-    text = t("player.refreshing");
-    label = text;
-  } else if (remaining) {
-    text = formatCountdown(remaining);
-    label = t("player.refreshIn", { time: text });
-  }
-
-  let message: string | undefined;
-  if (widgetFailed) message = t("player.notFound.verifyFailed");
-  else if (state.status === "limited" && !state.auto && remaining) message = t("player.refreshLimited");
-  else if (state.status === "unavailable") message = t("player.refreshFailed");
-  else if (state.status === "error") message = t("player.refreshError");
-
   return {
     updatedAt,
     lockedUntil,
-    now,
     state,
-    disabled,
-    text,
-    label,
-    message,
+    busy,
+    widgetFailed,
     /** The Turnstile widget's props while a click waits on it. */
     verification: verifying ?
       {
@@ -214,11 +192,37 @@ export function useRefresh({ updatedAt, expiresAt, refresh, auto = false }: Refr
       } :
       undefined,
     start() {
-      if (disabled) return;
+      if (busy || Date.now() < lockedUntil) return;
       if (turnstileSiteKey) setVerifying(true);
       else void run(undefined);
     },
   };
+}
+
+/** The refresh's clock-driven text, in the components that show it, so the clock's tick re-renders them and not the page. */
+function useRefreshClock({ lockedUntil, state, busy, widgetFailed }: Refresh) {
+  const { t } = useTranslation();
+  const now = useNow(lockedUntil);
+  const remaining = now === undefined ? undefined : Math.max(0, Math.ceil((lockedUntil - now) / 1000));
+  const disabled = busy || remaining === undefined || remaining > 0;
+
+  let text = t("player.refresh");
+  let label = text;
+  if (state.status === "pending") {
+    text = t("player.refreshing");
+    label = text;
+  } else if (remaining) {
+    text = formatCountdown(remaining);
+    label = t("player.refreshIn", { time: text });
+  }
+
+  let message: string | undefined;
+  if (widgetFailed) message = t("player.notFound.verifyFailed");
+  else if (state.status === "limited" && !state.auto && remaining) message = t("player.refreshLimited");
+  else if (state.status === "unavailable") message = t("player.refreshFailed");
+  else if (state.status === "error") message = t("player.refreshError");
+
+  return { now, disabled, text, label, message };
 }
 
 /**
@@ -233,7 +237,8 @@ export function RefreshBar({ className, ...options }: RefreshOptions & { classNa
 /** `RefreshBar` for a refresh a `RefreshButton` elsewhere on the page shares. */
 export function SharedRefreshBar({ refresh, className }: { refresh: Refresh; className?: string }) {
   const { t, i18n } = useTranslation();
-  const { updatedAt, lockedUntil, now, state, message, verification, autoVerification } = refresh;
+  const { updatedAt, lockedUntil, state, verification, autoVerification } = refresh;
+  const { now, message } = useRefreshClock(refresh);
 
   return (
     <>
@@ -268,7 +273,8 @@ export function SharedRefreshBar({ refresh, className }: { refresh: Refresh; cla
  * Update stats, or the time until it can, with the full wording in a tooltip then. `aria-disabled`, not `disabled`, so
  * the button keeps focus while it refreshes and counts down. Its tap area reaches past its 32 px box to 44 px.
  */
-export function RefreshButton({ refresh: { text, label, disabled, start }, className }: { refresh: Refresh; className?: string }) {
+export function RefreshButton({ refresh, className }: { refresh: Refresh; className?: string }) {
+  const { text, label, disabled } = useRefreshClock(refresh);
   const { props: hint, tooltip } = useHint(text === label ? undefined : label);
 
   return (
@@ -280,7 +286,7 @@ export function RefreshButton({ refresh: { text, label, disabled, start }, class
         aria-disabled={disabled}
         suppressHydrationWarning
         {...hint}
-        onClick={start}
+        onClick={refresh.start}
         className={cn(
           "relative flex h-8 min-w-8 shrink-0 items-center justify-center gap-2 bg-blackify-800 px-2 text-mc-1 text-mc-green after:absolute after:-inset-1.5 hover:bg-blackify-700 focus-visible:focus-ring-inset aria-disabled:text-mc-gray aria-disabled:hover:bg-blackify-800",
           className
