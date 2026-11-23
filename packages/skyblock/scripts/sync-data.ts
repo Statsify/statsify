@@ -468,8 +468,12 @@ const sorted = (value: unknown): unknown => {
   );
 };
 
-const write = (file: string, data: unknown) =>
-  writeFile(new URL(file, out), `${JSON.stringify(sorted(data), null, 2)}\n`);
+// Held until the board checks pass, so a failed run leaves src/generated/ as it was
+const pending = new Map<string, string>();
+const write = (file: string, data: unknown) => {
+  pending.set(file, `${JSON.stringify(sorted(data), null, 2)}\n`);
+  return Promise.resolve();
+};
 
 const boards = (list: { key: string; name: string }[]) => list.map(({ key, name }) => [key, name]);
 
@@ -969,6 +973,7 @@ try {
   checkBoards("collections", oldBoards.collections, newBoards.collections);
   checkBoards("bestiary", oldBoards.bestiary, newBoards.bestiary);
   await writeFile(boardsFile, `${JSON.stringify(newBoards, null, 2)}\n`);
+  await Promise.all(Array.from(pending, ([file, text]) => writeFile(new URL(file, out), text)));
   const license = await readFile(join(dir, "LICENSE"), "utf8");
   await writeFile(
     new URL("NOTICE.md", out),
