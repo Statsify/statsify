@@ -40,7 +40,7 @@ export function useCopy<T>() {
 /** "Copied!" floating over what was copied. */
 export function Copied({ anchor, children }: { anchor: DOMRect; children: string }) {
   return (
-    <Floating anchor={anchor} className="pointer-events-none px-2 py-1 text-mc-1 whitespace-nowrap text-mc-white">
+    <Floating anchor={anchor} className="pointer-events-none px-2.5 py-1.5 text-mc-1 whitespace-nowrap text-mc-white">
       {children}
     </Floating>
   );
