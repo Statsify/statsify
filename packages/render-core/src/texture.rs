@@ -1,5 +1,3 @@
-use image::GenericImageView;
-
 use crate::error::{Error, Result};
 
 pub struct Texture {
@@ -40,16 +38,14 @@ impl Texture {
   pub fn from_image(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
-    img: &image::DynamicImage,
+    rgba: &image::RgbaImage,
   ) -> Result<Self> {
-    let dimensions = img.dimensions();
+    let dimensions = rgba.dimensions();
     let limit = device.limits().max_texture_dimension_2d;
 
     if dimensions.0 > limit || dimensions.1 > limit {
       return Err(Error::TextureTooLarge);
     }
-
-    let rgba = img.to_rgba8();
 
     let size = wgpu::Extent3d {
       width: dimensions.0,
@@ -77,7 +73,7 @@ impl Texture {
         mip_level: 0,
         origin: wgpu::Origin3d::ZERO,
       },
-      &rgba,
+      rgba,
       wgpu::TexelCopyBufferLayout {
         offset: 0,
         bytes_per_row: Some(4 * dimensions.0),
