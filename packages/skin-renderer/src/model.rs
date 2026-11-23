@@ -1,10 +1,12 @@
-use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation3, Vector3};
+use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Vector3};
 use image::DynamicImage;
 
 use crate::armor::Armor;
 use crate::error::Result;
 use crate::geometry::coordinate::Coordinate;
-use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, TextureRegion};
+use crate::geometry::{
+  axis_angle, BoxGeometry, Geometry, OuterLayerGeometry, Rotation, TextureRegion,
+};
 use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
@@ -118,7 +120,7 @@ impl Part {
     // Even a turn by nothing would round the body's vertices and shift every render
     let quaternion = match self {
       Part::Body => None,
-      _ => Some(Quaternion::from_angle_z(Deg(rest_angle))),
+      _ => Some(axis_angle(Vector3::unit_z(), Deg(rest_angle))),
     };
 
     Placement {
@@ -469,7 +471,7 @@ impl Model {
         mirror: false,
       },
       rotation: Some(Rotation {
-        quaternion: Quaternion::from_angle_y(Deg(180.0)),
+        quaternion: axis_angle(Vector3::unit_y(), Deg(180.0)),
         pivot: position,
       }),
       inflation: 0.0,
@@ -478,7 +480,7 @@ impl Model {
 
     // A standing player's cape swings 6 degrees out from the back
     geometry.rotate_around(Rotation {
-      quaternion: Quaternion::from_angle_x(Deg(6.0)),
+      quaternion: axis_angle(Vector3::unit_x(), Deg(6.0)),
       pivot: Vector3::new(0.0, top, back),
     });
 
@@ -507,7 +509,7 @@ impl Model {
 
   pub fn to_raw() -> InstanceRaw {
     let position = Vector3::new(0.0, 0.0, 0.0);
-    let rotation = Quaternion::from_axis_angle(Vector3::unit_y(), Deg(0.0));
+    let rotation = axis_angle(Vector3::unit_y(), Deg(0.0));
 
     InstanceRaw {
       model: (Matrix4::from_translation(position) * Matrix4::from(rotation)).into(),
