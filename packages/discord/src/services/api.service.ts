@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AxiosError } from "axios";
+import axios, { type AxiosError } from "axios";
 import { ButtonBuilder, LocalizeFunction } from "#messages";
 import { ButtonStyle } from "discord-api-types/v10";
 import {
@@ -312,7 +312,7 @@ export class ApiService extends StatsifyApiService {
   }
 
   public unknownError(error: unknown) {
-    const isHttpError = error instanceof AxiosError;
+    const isHttpError = axios.isAxiosError(error);
     const status = isHttpError ? error.response?.status : undefined;
     // Errors the API answered are its own to report, so only capture the ones with no response
     const setError = isHttpError && error.response ? setUncapturedRequestError : setRequestError;
