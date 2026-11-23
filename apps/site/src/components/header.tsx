@@ -32,7 +32,8 @@ const LINKS = [
   { key: "bot", href: "/invite" },
 ] as const;
 
-const NAV_LINK = "flex min-h-11 min-w-11 items-center justify-center text-mc-1.5 opacity-80 transition-opacity hover:opacity-100 hover:underline";
+// Smaller under 360 px, where the pages' row and the logo's row with the search button don't fit 288 px at full size.
+const NAV_LINK = "flex min-h-11 min-w-11 items-center justify-center text-mc-1.5 max-[22.5rem]:text-mc-1 opacity-80 transition-opacity hover:opacity-100 hover:underline";
 
 /**
  * Every page carries a compact search in the header except those with a search of their own: Players, Guilds, and Bingo
