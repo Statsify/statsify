@@ -210,6 +210,8 @@ function buildLeaderboardGroups(): LeaderboardGroup[] {
 }
 
 const LEADERBOARD_LIST = buildLeaderboardGroups();
+const GLOSSARY = buildGlossary(LEADERBOARD_LIST);
+const PRESTIGE_SHEET = buildPrestigeSheet();
 
 /**
  * Strict cache-only reads for the site. Nothing here calls Hypixel except `refresh` and
@@ -221,9 +223,6 @@ export class SiteService implements OnApplicationBootstrap {
     required: false,
     default: DEFAULT_HYPIXEL_BUDGET,
   });
-
-  private glossarySheet?: Glossary;
-  private prestigeSheet?: PrestigeSheet;
 
   public constructor(
     private readonly playerService: PlayerService,
@@ -473,16 +472,12 @@ export class SiteService implements OnApplicationBootstrap {
     return LEADERBOARD_LIST;
   }
 
-  /** The glossary's stats; static metadata, like the leaderboard list it takes its game names from. */
   public glossary(): Glossary {
-    this.glossarySheet ??= buildGlossary(this.leaderboardList());
-    return this.glossarySheet;
+    return GLOSSARY;
   }
 
-  /** The BedWars prestige sheet; code, so built once. */
   public prestiges(): PrestigeSheet {
-    this.prestigeSheet ??= buildPrestigeSheet();
-    return this.prestigeSheet;
+    return PRESTIGE_SHEET;
   }
 
   public leaderboardGame({ key }: LeaderboardGameInput): LeaderboardGame {
