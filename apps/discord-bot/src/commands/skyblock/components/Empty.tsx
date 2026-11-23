@@ -8,10 +8,11 @@
 
 export interface EmptyProps {
   text: string;
+  color?: string;
 }
 
-export const Empty = ({ text }: EmptyProps) => (
+export const Empty = ({ text, color = "§7" }: EmptyProps) => (
   <box width="100%">
-    <text>{`§7${text}`}</text>
+    <text>{`${color}${text}`}</text>
   </box>
 );

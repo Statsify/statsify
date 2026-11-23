@@ -14,7 +14,6 @@ import {
   CommandContext,
   ErrorMessage,
   type IMessage,
-  type LocalizationString,
   type LocalizeFunction,
   Message,
   type Page,
@@ -24,42 +23,28 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { Container } from "typedi";
-import { FormattedGame, type User } from "@statsify/schemas";
+import {
+  SKYBLOCK_CARDS,
+  type SkyBlockCard,
+  type SkyBlockCardName,
+  type SkyBlockProfile,
+  getSkyBlockBackground,
+  skyBlockTitle,
+} from "./cards.js";
 import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
 import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
-import { SkyBlockAccessoriesProfile, accessoryIcons } from "./accessories.profile.js";
-import { SkyBlockChocolateProfile } from "./chocolate.profile.js";
-import { SkyBlockCrimsonProfile, crimsonIcons } from "./crimson.profile.js";
-import { SkyBlockDungeonsProfile, SkyBlockEssenceProfile } from "./dungeons.profile.js";
-import { SkyBlockFishingProfile } from "./fishing.profile.js";
-import { SkyBlockGardenProfile, gardenIcons } from "./garden.profile.js";
-import { SkyBlockHotfProfile } from "./hotf.profile.js";
-import { SkyBlockHotmProfile } from "./hotm.profile.js";
-import { SkyBlockJacobProfile, jacobIcons } from "./jacob.profile.js";
 import { SkyBlockLeaderboardArgument } from "#commands/leaderboards/skyblock-leaderboard.argument";
 import { SkyBlockLeaderboardSubCommand } from "#commands/leaderboards/skyblock-leaderboard.subcommand";
-import { SkyBlockLevelProfile, levelIcons } from "./level.profile.js";
-import { SkyBlockNetworthProfile, networthIcons } from "./networth.profile.js";
-import { SkyBlockPetsProfile, petIcons } from "./pets.profile.js";
-import { SkyBlockSkillsProfile } from "./skills.profile.js";
-import { SkyBlockSlayersProfile } from "./slayers.profile.js";
-import { SkyBlockSummaryProfile } from "./summary.profile.js";
 import { config } from "@statsify/util";
-import { formatProfileName, hasMuseum } from "@statsify/skyblock/display";
-import { getBackground, getLogo } from "@statsify/assets";
+import { hasMuseum } from "@statsify/skyblock/display";
 import { getItemIcon } from "@statsify/skyblock/icons";
+import { getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
-import type {
-  ApiSettings,
-  GameMode,
-  ItemTexture,
-  MemberView,
-  SkyBlockProfileView,
-  SkyBlockSection,
-} from "@statsify/skyblock";
 import type { Image } from "skia-canvas";
+import type { GameMode, SkyBlockProfileView } from "@statsify/skyblock";
+import type { User } from "@statsify/schemas";
 
 const siteUrl = await config("skyblock.siteUrl", { required: false });
 
@@ -80,137 +65,6 @@ export interface SkyBlockProfileProps {
   user: User | null;
   t: LocalizeFunction;
   icons: ItemIcons;
-}
-
-type SkyBlockProfile = (props: SkyBlockProfileProps) => JSX.Element;
-
-export interface SkyBlockCard {
-  sections: SkyBlockSection[];
-  /** Never the museum: its response also leaves out a member who donated nothing, so networth notes it instead. */
-  settings: Exclude<keyof ApiSettings, "museum">[];
-  icons?: (member: MemberView) => ItemTexture[];
-  profile: SkyBlockProfile | SkyBlockSubPage[];
-}
-
-interface SkyBlockSubPage {
-  label: LocalizationString;
-  profile: SkyBlockProfile;
-  icons?: SkyBlockCard["icons"]; // in place of the card's
-}
-
-export const SKYBLOCK_CARDS = {
-  profile: {
-    sections: ["skills", "dungeons", "slayers", "accessories", "networth"],
-    settings: ["skills", "inventory", "personalVault", "banking"],
-    profile: SkyBlockSummaryProfile,
-  },
-  networth: {
-    sections: ["networth"],
-    settings: ["inventory", "personalVault", "banking"],
-    icons: networthIcons,
-    profile: SkyBlockNetworthProfile,
-  },
-  skills: {
-    sections: ["skills"],
-    settings: ["skills"],
-    profile: SkyBlockSkillsProfile,
-  },
-  pets: {
-    sections: ["pets"],
-    settings: [],
-    icons: petIcons,
-    profile: SkyBlockPetsProfile,
-  },
-  hotm: {
-    sections: ["hotm"],
-    settings: [],
-    profile: SkyBlockHotmProfile,
-  },
-  slayers: {
-    sections: ["slayers"],
-    settings: [],
-    profile: SkyBlockSlayersProfile,
-  },
-  dungeons: {
-    sections: ["dungeons"],
-    settings: [],
-    profile: [
-      { label: (t) => t("skyblock.catacombs"), profile: (props) => <SkyBlockDungeonsProfile {...props} mode="normal" /> },
-      { label: (t) => t("skyblock.masterMode"), profile: (props) => <SkyBlockDungeonsProfile {...props} mode="master" /> },
-      { label: (t) => t("skyblock.essence"), profile: SkyBlockEssenceProfile },
-    ],
-  },
-  accessories: {
-    sections: ["accessories"],
-    settings: ["inventory"],
-    profile: [
-      {
-        label: (t) => t("skyblock.accessories"),
-        profile: (props) => <SkyBlockAccessoriesProfile {...props} page="missing" />,
-        icons: accessoryIcons("missing"),
-      },
-      {
-        label: (t) => t("skyblock.inactive"),
-        profile: (props) => <SkyBlockAccessoriesProfile {...props} page="inactive" />,
-        icons: accessoryIcons("inactive"),
-      },
-    ],
-  },
-  level: {
-    sections: ["level"],
-    settings: ["inventory"],
-    icons: levelIcons,
-    profile: SkyBlockLevelProfile,
-  },
-  crimson: {
-    sections: ["crimson"],
-    settings: [],
-    icons: crimsonIcons,
-    profile: SkyBlockCrimsonProfile,
-  },
-  fishing: {
-    sections: ["fishing"],
-    settings: [],
-    profile: [
-      { label: (t) => t("skyblock.trophyFish"), profile: (props) => <SkyBlockFishingProfile {...props} page="trophyFish" /> },
-      { label: (t) => t("skyblock.seaCreatures"), profile: (props) => <SkyBlockFishingProfile {...props} page="seaCreatures" /> },
-    ],
-  },
-  jacob: {
-    sections: ["jacob"],
-    settings: [],
-    icons: jacobIcons,
-    profile: SkyBlockJacobProfile,
-  },
-  garden: {
-    sections: ["garden"],
-    settings: [],
-    icons: gardenIcons,
-    profile: SkyBlockGardenProfile,
-  },
-  chocolate: {
-    sections: ["chocolate"],
-    settings: [],
-    profile: SkyBlockChocolateProfile,
-  },
-  hotf: {
-    sections: ["hotf"],
-    settings: [],
-    profile: SkyBlockHotfProfile,
-  },
-} satisfies Record<string, SkyBlockCard>;
-
-type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
-
-// Not arrow functions: the command loader takes those for commands
-export function skyBlockTitle(t: LocalizeFunction, profile: SkyBlockProfileView, name: SkyBlockCardName) {
-  // The Header moves the profile onto its own line where that narrows the card
-  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)}\n§r(${formatProfileName(profile)}§r)`;
-}
-
-export function getSkyBlockBackground() {
-  // There are no SkyBlock backgrounds yet, and getBackground throws for a game without any
-  return getBackground("hypixel", "overall");
 }
 
 // By uuid, which the site sends on to the name, since a name like "item" is one of the site's own paths
