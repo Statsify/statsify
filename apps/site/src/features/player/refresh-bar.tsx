@@ -13,7 +13,18 @@ import { RefreshIcon } from "~/components/icons/refresh";
 import { Turnstile } from "~/components/turnstile";
 import { cn } from "~/lib/util";
 import { formatCountdown, fullDate, relativeTime } from "~/i18n/format";
-import { type ComponentProps, useCallback, useEffect, useEffectEvent, useId, useState, useSyncExternalStore } from "react";
+import {
+  type ComponentProps,
+  type Ref,
+  type RefObject,
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { type ActionResult, BROWSER_TIMEOUT_MS } from "./player-actions";
 import { useRevealOnOpen } from "./share-panel";
 import { getRouteApi, useRouterState } from "@tanstack/react-router";
@@ -239,6 +250,7 @@ export function SharedRefreshBar({ refresh, className }: { refresh: Refresh; cla
   const { t, i18n } = useTranslation();
   const { updatedAt, lockedUntil, state, verification, autoVerification } = refresh;
   const { now, message } = useRefreshClock(refresh);
+  const button = useRef<HTMLButtonElement>(null);
 
   return (
     <>
@@ -246,9 +258,9 @@ export function SharedRefreshBar({ refresh, className }: { refresh: Refresh; cla
         <p data-clock="updated" className={cn(META, "min-w-0")} suppressHydrationWarning>
           {now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}
         </p>
-        <RefreshButton refresh={refresh} />
+        <RefreshButton ref={button} refresh={refresh} />
       </div>
-      {verification && <Verification {...verification} />}
+      {verification && <Verification {...verification} button={button} />}
       {autoVerification && <Turnstile {...autoVerification} invisible className="absolute" />}
       <ClockScript
         args={{
@@ -273,13 +285,14 @@ export function SharedRefreshBar({ refresh, className }: { refresh: Refresh; cla
  * Update stats, or the time until it can, with the full wording in a tooltip then. `aria-disabled`, not `disabled`, so
  * the button keeps focus while it refreshes and counts down. Its tap area reaches past its 32 px box to 44 px.
  */
-export function RefreshButton({ refresh, className }: { refresh: Refresh; className?: string }) {
+export function RefreshButton({ refresh, className, ref }: { refresh: Refresh; className?: string; ref?: Ref<HTMLButtonElement> }) {
   const { text, label, disabled } = useRefreshClock(refresh);
   const { props: hint, tooltip } = useHint(text === label ? undefined : label);
 
   return (
     <>
       <button
+        ref={ref}
         type="button"
         data-clock="refresh"
         aria-label={label}
@@ -300,15 +313,20 @@ export function RefreshButton({ refresh, className }: { refresh: Refresh; classN
   );
 }
 
-/** The Turnstile widget, brought into view: a click in the pinned mini header shows it in the nametag, off screen. */
-function Verification(props: ComponentProps<typeof Turnstile>) {
+/**
+ * The Turnstile widget, brought into view: a click in the pinned mini header shows it in the nametag, off screen. Focus
+ * moves to the bar's own button, since the mini header hides once the nametag shows and would take its focus with it.
+ */
+function Verification({ button, ...props }: ComponentProps<typeof Turnstile> & { button: RefObject<HTMLButtonElement | null> }) {
   const id = useId();
+  useEffect(() => {
+    button.current?.focus({ preventScroll: true });
+  }, [button]);
   useRevealOnOpen(id);
 
-  // The bar sits in the profile card, narrower than the flexible widget's 300 px. The margin keeps it below the mini
-  // header.
+  // The bar sits in the profile card, narrower than the flexible widget's 300 px.
   return (
-    <div id={id} className="flex basis-full scroll-mt-14 justify-center">
+    <div id={id} className="flex basis-full justify-center">
       <Turnstile {...props} size="compact" />
     </div>
   );
