@@ -527,17 +527,17 @@ export class SiteService implements OnApplicationBootstrap {
     const [calls, budgetTtl] = await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS);
 
     if (calls > budget) {
-      await this.redis.decr(BUDGET_KEY);
+      await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
       throw tooManyRequests(budgetTtl);
     }
   }
 
   /**
-   * Counts a hit in a fixed window that opens on the first hit; returns the count and the seconds left. The window's
-   * key is created with its expiry in the same transaction as the count, so it can never be left without one.
+   * Counts `by` hits (a negative `by` hands them back) in a fixed window that opens on the first; returns the count and
+   * the seconds left. The key gets its expiry in the same transaction as the count, so it can never be left without one.
    */
-  private async hit(key: string, windowSeconds: number): Promise<[count: number, ttl: number]> {
-    const results = await this.redis.multi().set(key, 0, "EX", windowSeconds, "NX").incr(key).ttl(key).exec();
+  private async hit(key: string, windowSeconds: number, by = 1): Promise<[count: number, ttl: number]> {
+    const results = await this.redis.multi().set(key, 0, "EX", windowSeconds, "NX").incrby(key, by).ttl(key).exec();
     if (!results || results.some(([error]) => error)) throw new InternalServerErrorException();
     return [Number(results[1][1]), Number(results[2][1])];
   }
