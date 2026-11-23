@@ -8,7 +8,7 @@
 
 import { Box } from "~/components/ui/box";
 import { MotionValue, easeIn, easeOut, motion, useTransform } from "motion/react";
-import { MotionValueTableData } from "~/components/ui/table";
+import { MotionValueTableData } from "~/components/ui/table-motion";
 import { Nametag } from "~/components/ui/nametag";
 import { Skin, SkinHead } from "~/components/ui/skin";
 import { useHydrated } from "@tanstack/react-router";

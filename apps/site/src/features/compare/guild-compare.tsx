@@ -7,7 +7,8 @@
  */
 
 import { BOX_GAP, Box, HEADING_BOX } from "~/components/ui/box";
-import { CompareSection, type Pair, type Sides } from "~/features/compare/compare-page";
+import { CompareSection, type Sides } from "~/features/compare/compare-page";
+import type { Pair } from "~/features/compare/compare-data";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Link } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";

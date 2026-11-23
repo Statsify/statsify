@@ -16,30 +16,11 @@ import { PageBackground, backgroundFor } from "~/components/ui/background";
 import { SectionTitle, useStatLabel, useStatValue } from "~/features/game/stat-panel";
 import { SkinHead } from "~/components/ui/skin";
 import { type GameScope, gameLink, headingText, pageSearch } from "~/features/game/game-data";
+import { type Pair, comparePairs } from "./compare-data";
 import { cn } from "~/lib/util";
 import { useTranslation } from "react-i18next";
-import type { GamePage, StatCell as Stat, StatSection } from "@statsify/contract";
+import type { GamePage, StatCell as Stat } from "@statsify/contract";
 import type { ReactNode } from "react";
-
-export type Pair = { a: Stat; b: Stat };
-
-/**
- * The stats both pages show, paired by key in the first page's order: the game-wide row, then each table. Lists (maps,
- * titles) and selections (a kit) are left out, as two players' lists differ and a selection has no difference.
- */
-export function comparePairs(a: GamePage, b: GamePage): { section?: StatSection; pairs: Pair[] }[] {
-  const others = new Map([...b.overview, ...b.sections.flatMap((section) => section.rows.flat())].map((cell) => [cell.key, cell]));
-  const pair = (cells: Stat[]) =>
-    cells.flatMap((cell) => {
-      const other = others.get(cell.key);
-      return cell.inline || !other ? [] : [{ a: cell, b: other }];
-    });
-
-  return [
-    { pairs: pair(a.overview) },
-    ...a.sections.filter((section) => !section.list).map((section) => ({ section, pairs: pair(section.rows.flat()) })),
-  ].filter(({ pairs }) => pairs.length > 0);
-}
 
 /** A switcher's modes without the marks: the mode one player played most says nothing about the other. */
 const unmarked = (options: GamePage["modes"]) => options.map(({ key, name }) => ({ key, name }));

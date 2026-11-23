@@ -37,14 +37,13 @@ export function Skin({ uuid, className = "", ...props }: ComponentProps<typeof B
 
 /**
  * A player's face, `size` px square. The image is always the 8×8 face and the browser scales it up without
- * smoothing, so every size shares one cached image per player. By `name` (a search suggestion's) or with `stored`,
- * it's drawn only from the skin the API has stored, so a long list of heads never reaches Minecraft's servers.
+ * smoothing, so every size shares one cached image per player. By UUID, or by `name` for a search suggestion.
  */
 export function SkinHead({
   size = 32,
   className,
   ...player
-}: ({ uuid: string; stored?: boolean } | { name: string }) & { size?: number; className?: string }) {
+}: ({ uuid: string } | { name: string }) & { size?: number; className?: string }) {
   return (
     <img
       height={size}
@@ -56,7 +55,7 @@ export function SkinHead({
       suppressHydrationWarning
       src={
         "uuid" in player ?
-          `/api/skin/head?uuid=${player.uuid}${player.stored ? "&stored" : ""}` :
+          `/api/skin/head?uuid=${player.uuid}` :
           `/api/skin/head?name=${encodeURIComponent(player.name)}`
       }
       style={{ imageRendering: "pixelated" }}

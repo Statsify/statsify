@@ -9,7 +9,8 @@
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead } from "~/lib/player-route";
 import { GuildCompareView } from "~/features/compare/guild-compare";
-import { GuildNotFoundView, guildPageQuery } from "~/features/guild/guild-page";
+import { GuildNotFoundView } from "~/features/guild/guild-page";
+import { guildPageQuery } from "~/features/guild/guild-data";
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statsDescription, valueText } from "~/lib/social-meta";
 import { cacheHeaders } from "~/lib/cache";

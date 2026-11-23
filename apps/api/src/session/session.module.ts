@@ -25,5 +25,6 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
   ],
   controllers: [SessionController],
   providers: [SessionService],
+  exports: [SessionService],
 })
 export class SessionModule {}

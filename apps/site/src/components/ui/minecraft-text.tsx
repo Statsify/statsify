@@ -7,8 +7,10 @@
  */
 
 import { cn } from "~/lib/util";
+import { parseFormatting } from "@statsify/util/format-codes";
 import type { CSSProperties, ReactNode } from "react";
 
+// Written out, not built from `minecraftColors`: Tailwind only generates the classes it finds in the source.
 const COLOR_CLASSES: Record<string, string> = {
   0: "text-mc-black",
   1: "text-mc-dark-blue",
@@ -41,16 +43,16 @@ export const colorOf = (code: string): { className?: string; style?: CSSProperti
 };
 
 /** The class of the first color in a formatted string, for a title that takes its value's color. */
-export const leadingColorClass = (text: string): string => colorClass(/§([\da-f])/.exec(text)?.[1] ?? "");
+export const leadingColorClass = (text: string): string => {
+  for (const { code } of parseFormatting(text)) if (code?.kind === "color") return COLOR_CLASSES[code.code];
+  return "text-mc-white";
+};
 
 /** The color a display name gives the name itself, its last code: `§b[MVP§c+§b] anrie` is `§b`. */
-export const nameColor = (displayName: string): string | undefined => /.*(§[\da-f])/.exec(displayName)?.[1];
-
-/** The text without its `§` codes, for a page title or an alt text. */
-export const plainText = (text: string): string => text.replaceAll(/§#[\dA-Fa-f]{6}|§\^\d+(?:\.\d+)?\^|§./g, "");
-
-const HEX_COLOR = /^#[\dA-Fa-f]{6}/;
-const SIZE = /^\^(\d+(?:\.\d+)?)\^/;
+export const nameColor = (displayName: string): string | undefined => {
+  const color = parseFormatting(displayName).findLast(({ code }) => code?.kind === "color")?.code;
+  return color?.kind === "color" ? `§${color.code}` : undefined;
+};
 
 /** The renderer's default text size; `§^N^` is relative to it. */
 const BASE_SIZE = 2;
@@ -62,7 +64,6 @@ const BASE_SIZE = 2;
  */
 export function MinecraftText({ children, className }: { children: string | string[]; className?: string }) {
   const input = Array.isArray(children) ? children.join("") : children;
-  const [plain = "", ...coded] = input.split("§");
 
   let bold = false;
   let italic = false;
@@ -99,49 +100,48 @@ export function MinecraftText({ children, className }: { children: string | stri
     );
   };
 
-  push(plain, 0);
+  for (const [index, { code, text }] of parseFormatting(input).entries()) {
+    switch (code?.kind) {
+      case "hex":
+        hex = code.hex;
+        break;
 
-  for (const [index, part] of coded.entries()) {
-    const code = part[0]?.toLowerCase();
-    const hexMatch = HEX_COLOR.exec(part);
-    const sizeMatch = SIZE.exec(part);
-    let text: string;
+      case "size":
+        size = code.size;
+        break;
 
-    if (hexMatch) {
-      hex = hexMatch[0];
-      text = part.slice(hexMatch[0].length);
-    } else if (sizeMatch) {
-      size = Number(sizeMatch[1]);
-      text = part.slice(sizeMatch[0].length);
-    } else if (code === "l") {
-      bold = true;
-      text = part.slice(1);
-    } else if (code === "o") {
-      italic = true;
-      text = part.slice(1);
-    } else if (code === "n" || code === "u") {
-      underline = true;
-      text = part.slice(1);
-    } else if (code === "m") {
-      strike = true;
-      text = part.slice(1);
-    } else if (code === "r") {
-      bold = false;
-      italic = false;
-      underline = false;
-      strike = false;
-      hex = undefined;
-      colorClass = "text-mc-white";
-      text = part.slice(1);
-    } else if (code !== undefined && code in COLOR_CLASSES) {
-      colorClass = COLOR_CLASSES[code];
-      hex = undefined;
-      text = part.slice(1);
-    } else {
-      text = part.slice(1);
+      case "color":
+        colorClass = COLOR_CLASSES[code.code];
+        hex = undefined;
+        break;
+
+      case "bold":
+        bold = true;
+        break;
+
+      case "italic":
+        italic = true;
+        break;
+
+      case "underline":
+        underline = true;
+        break;
+
+      case "strikethrough":
+        strike = true;
+        break;
+
+      case "reset":
+        bold = false;
+        italic = false;
+        underline = false;
+        strike = false;
+        hex = undefined;
+        colorClass = "text-mc-white";
+        break;
     }
 
-    push(text, index + 1);
+    push(text, index);
   }
 
   return <span>{elements}</span>;
@@ -150,18 +150,11 @@ export function MinecraftText({ children, className }: { children: string | stri
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
 
-  describe("plainText", () => {
-    it("drops color, hex color, size and style codes", () => {
-      expect(plainText("§b[MVP§c+] j4cobi")).toBe("[MVP+] j4cobi");
-      expect(plainText("§#FF55aa§^3^Big§r §ltext")).toBe("Big text");
-      expect(plainText("§^1.5^half")).toBe("half");
-    });
-  });
-
   describe("nameColor", () => {
     it("takes the last color code, the one on the name", () => {
       expect(nameColor("§b[MVP§c+§b] anrie")).toBe("§b");
       expect(nameColor("§7AnnaBanana")).toBe("§7");
+      expect(nameColor("§B[MVP§C+§B] anrie")).toBe("§b");
       expect(nameColor("anrie")).toBeUndefined();
     });
   });
