@@ -689,7 +689,7 @@ export class SiteService implements OnApplicationBootstrap {
     const [spent, budgetTtl] = await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, calls);
 
     if (spent > limit) {
-      await this.redis.decrby(BUDGET_KEY, calls);
+      await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -calls);
       throw tooManyRequests(budgetTtl);
     }
   }
