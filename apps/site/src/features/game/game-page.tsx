@@ -137,12 +137,15 @@ export function GameView({ page }: { page: GamePage }) {
         {/* From `md` the nametag is as wide as its content (up to half the row) and the level sits beside it, the
             overview under both; from `lg` the overview goes under the level. */}
         <div className={cn("grid grid-cols-1 md:grid-cols-[fit-content(50%)_minmax(0,1fr)]", BOX_GAP)}>
-          {/* A session's page has nothing to share or compare, and Update would refresh the totals, not the session. */}
+          {/* A session's page has nothing to share or compare, and Update would refresh the totals, not the session, so
+              its row has when the session started instead. */}
           <GameHeader
             ref={nametag}
             page={page}
             actions={session ? undefined : toggles}
-            refresh={session ? undefined : <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto />}
+            refresh={session ?
+              <SessionLine start={session.start} updatedAt={page.updatedAt} /> :
+              <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto />}
             className={cn(page.level && page.overview.length > 0 && "lg:row-span-2", !page.level && page.overview.length === 0 && "md:col-span-2 md:w-fit")}
           />
           {page.level && <LevelPanel level={page.level} username={page.username} />}
@@ -153,7 +156,6 @@ export function GameView({ page }: { page: GamePage }) {
               className={page.level ? "md:col-span-2 lg:col-span-1" : "md:self-center"}
             />
           )}
-          {session && <SessionLine start={session.start} updatedAt={page.updatedAt} className="md:col-span-2 md:mt-2" />}
         </div>
         {sharing && (
           <SharePanel
@@ -250,7 +252,7 @@ export function GameHeader({
   page: GamePage;
   /** Buttons under the title that open panels under the header. */
   actions?: ReactNode;
-  /** The refresh bar, after `actions` in their row. */
+  /** The refresh bar, or a session's line, after `actions` in their row. */
   refresh?: ReactNode;
   className?: string;
   ref?: Ref<HTMLDivElement>;
@@ -271,7 +273,7 @@ export function GameHeader({
           <MinecraftText className="text-mc-1.5">{headingText(page, (key) => t(key))}</MinecraftText>
         </h1>
         {(actions || refresh) && (
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-3">
             {actions}
             {refresh}
           </div>

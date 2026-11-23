@@ -30,7 +30,7 @@ export function Footer() {
       <div className="w-container flex flex-col gap-3">
         <Divider className="opacity-10" />
         <div className="flex flex-col gap-4 md:flex-row md:justify-between items-center">
-          <Link to="/{-$locale}" aria-label="Statsify">
+          <Link to="/{-$locale}" aria-label="Statsify" className="flex min-h-11 items-center">
             <Brand />
           </Link>
           <div className="flex gap-4">
@@ -57,7 +57,7 @@ export function Footer() {
             <p suppressHydrationWarning>{t("footer.copyright", { year })} {t("footer.affiliation")}</p>
             <p>{t("footer.mojang")} {t("footer.mojangApproval")}</p>
           </div>
-          <div className="flex flex-wrap justify-center gap-x-4">
+          <div className="flex flex-wrap justify-center gap-x-4 md:justify-end">
             <Link to="/{-$locale}/about" className={LINK}>{t("footer.about")}</Link>
             <Link to="/{-$locale}/privacy" className={LINK}>{t("footer.privacy")}</Link>
             <Link to="/{-$locale}/terms" className={LINK}>{t("footer.terms")}</Link>

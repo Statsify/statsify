@@ -196,10 +196,10 @@
 }
 
 /*
- * The space `/player`'s recently viewed section takes, from `--recent` (how many players: set on the root before first
- * paint, then on the section by React): the heading row, then the result cards, one a row on phones, two from md and
- * three from xl, 128 px tall below sm and 160 from it (with their shadow's 8 px), 4 px apart. None for none. So the
- * footer stays put when the cards arrive.
+ * The space the recently viewed section takes (`/player`, a player not found), from `--recent` (how many players: set
+ * on the root before first paint, then on the section by React): the heading row, then the result cards, one a row on
+ * phones and two from md, 128 px tall below sm and 160 from it (with their shadow's 8 px), 4 px apart.
+ * None for none. So the page stays put when the cards arrive.
  */
 @utility recent-hold {
   --recent-rows: var(--recent, 0);
@@ -214,10 +214,6 @@
 
   @variant md {
     --recent-rows: round(up, var(--recent, 0) / 2, 1);
-  }
-
-  @variant xl {
-    --recent-rows: round(up, var(--recent, 0) / 3, 1);
   }
 }
 

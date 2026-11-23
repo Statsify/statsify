@@ -14,7 +14,7 @@ import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
 import { flushSync } from "react-dom";
 import { isSupportedLocale } from "~/i18n/locales";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useOutsideClick } from "~/hooks/use-outside-click";
 import { useTranslation } from "react-i18next";
 
@@ -33,7 +33,9 @@ const LINKS = [
   { key: "bot", href: "/invite" },
 ] as const;
 
-const NAV_LINK = "flex min-h-11 min-w-11 items-center justify-center text-mc-1.5 opacity-80 transition-opacity hover:opacity-100 hover:underline";
+// Smaller under 360 px, where the pages' row and the logo's row with the search button don't fit 288 px at full size.
+// The 44 px tap width is an overlay, not `min-w-11`, so a short name like "Bot" still ends on the frame line.
+const NAV_LINK = "relative flex min-h-11 items-center text-mc-1.5 max-[22.5rem]:text-mc-1 opacity-80 transition-opacity hover:opacity-100 hover:underline after:absolute after:inset-y-0 after:left-1/2 after:w-full after:min-w-11 after:-translate-x-1/2";
 
 /**
  * Every page carries a compact search in the header except those with a search of their own: Players, Guilds, and Bingo
@@ -63,13 +65,20 @@ export function Header() {
     select: (match) => ({ game: match.params.game, search: match.search }),
   });
   // On phones the search is a button at the logo row's end, so the page starts higher; it opens the box in the search's
-  // row, focused, until a tap elsewhere or the next page.
+  // row, focused, until a tap elsewhere, the button again or the next page.
   const [searchedOn, setSearchedOn] = useState<string>();
   const searching = searchedOn === pathname;
-  const hide = useCallback(() => setSearchedOn(undefined), []);
+  const searchButton = useRef<HTMLButtonElement>(null);
+  const hide = useCallback((event: PointerEvent) => {
+    if (!searchButton.current?.contains(event.target as Node)) setSearchedOn(undefined);
+  }, []);
   const searchRow = useOutsideClick<HTMLDivElement>(hide);
 
-  const openSearch = () => {
+  const toggleSearch = () => {
+    if (searching) {
+      setSearchedOn(undefined);
+      return;
+    }
     // Shown and focused in the tap itself, so a phone opens its keyboard.
     flushSync(() => setSearchedOn(pathname));
     searchRow.current?.querySelector("input")?.focus();
@@ -95,7 +104,7 @@ export function Header() {
                   className={cn(NAV_LINK, "data-[status=active]:font-bold data-[status=active]:underline data-[status=active]:opacity-100")}
                 >
                   {/* Each name holds its bold width, so the links after it don't move when it becomes the page's. */}
-                  <span className="grid justify-items-center">
+                  <span className="grid justify-items-start">
                     <span className="col-start-1 row-start-1">{t(`nav.${key}`)}</span>
                     <span aria-hidden className="invisible col-start-1 row-start-1 font-bold">{t(`nav.${key}`)}</span>
                   </span>
@@ -131,17 +140,20 @@ export function Header() {
         </nav>
         {/* A phone's logo row has the search button and no room for it, so there it sits in the opened search row. */}
         <AccountLink className={cn(NAV_LINK, showSearch && "max-md:hidden")} />
-        {showSearch && (
-          <button
-            type="button"
-            aria-label={t("search.label")}
-            aria-expanded={searching}
-            onClick={openSearch}
-            className="flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden"
-          >
-            <SearchIcon className="size-5" />
-          </button>
-        )}
+        {/* Held, unseen, on pages with a search of their own, so the links before it don't move. */}
+        <button
+          ref={searchButton}
+          type="button"
+          aria-label={t("search.label")}
+          aria-expanded={searching}
+          onClick={toggleSearch}
+          className={cn(
+            "flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden",
+            !showSearch && "invisible"
+          )}
+        >
+          <SearchIcon className="size-5" />
+        </button>
       </div>
     </header>
   );
