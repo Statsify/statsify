@@ -112,9 +112,10 @@ struct Cache {
 
 /// A resource pack's models and textures, baked and uploaded the first time a scene uses them.
 #[napi]
+#[derive(Clone)]
 pub struct ModelLibrary {
-  pack: Pack,
-  cache: Mutex<Cache>,
+  pack: Arc<Pack>,
+  cache: Arc<Mutex<Cache>>,
 }
 
 #[napi]
@@ -132,8 +133,8 @@ impl ModelLibrary {
     };
 
     Self {
-      pack,
-      cache: Mutex::default(),
+      pack: Arc::new(pack),
+      cache: Arc::default(),
     }
   }
 }
@@ -225,7 +226,22 @@ pub async fn render_scene(
   output: SceneOutput,
 ) -> Result<Buffer> {
   let renderer = renderer().await?;
+  let library = library.clone();
 
+  // Baking, loading and rendering block the thread, so they run off napi's async workers
+  let buffer = spawn_blocking(move || draw_scene(renderer, &library, scene, output))
+    .await
+    .map_err(|_| Error::from(statsify_render_core::Error::RenderFailure))??;
+
+  Ok(buffer.into())
+}
+
+fn draw_scene(
+  renderer: &Renderer<NativeBackend>,
+  library: &ModelLibrary,
+  scene: Scene,
+  output: SceneOutput,
+) -> Result<Vec<u8>> {
   let limit = renderer.device().limits().max_texture_dimension_2d;
   let (width, height) = (pixels(output.width, limit)?, pixels(output.height, limit)?);
 
@@ -392,7 +408,7 @@ pub async fn render_scene(
     .render_sized(&items, &Camera::Orbital(camera), width, height)
     .map_err(Error::from)?;
 
-  Ok(buffer.into())
+  Ok(buffer)
 }
 
 fn pixels(side: f64, limit: u32) -> crate::error::Result<u32> {
