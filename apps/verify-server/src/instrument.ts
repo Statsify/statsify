@@ -18,6 +18,6 @@ Sentry.init({
   dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
   tracePropagationTargets: [],
   normalizeDepth: 3,
-  tracesSampleRate: await config("sentry.tracesSampleRate"),
+  tracesSampleRate: await config("sentry.tracesSampleRate", { required: sentryDsn !== undefined }),
   environment: await config("environment"),
 });

@@ -22,7 +22,6 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Player, deserialize, serialize } from "@statsify/schemas";
-import { setRequestAttributes } from "@statsify/logger";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
 import {
   PlayerSearchService,
@@ -31,6 +30,11 @@ import {
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
+
+export interface PlayerLookup {
+  player: Player | null;
+  cached?: boolean;
+}
 
 @Injectable()
 export class PlayerService {
@@ -53,6 +57,15 @@ export class PlayerService {
     cacheLevel: CacheLevel,
     selector?: Record<string, boolean>
   ): Promise<Player | null> {
+    const { player } = await this.lookup(tag, cacheLevel, selector);
+    return player;
+  }
+
+  public async lookup(
+    tag: string,
+    cacheLevel: CacheLevel,
+    selector?: Record<string, boolean>
+  ): Promise<PlayerLookup> {
     // ensure we have all the necessary data to replace the player document if we don't do a cache only request
     if (selector && Object.keys(selector).length > 0) {
       selector.uuid = true;
@@ -68,8 +81,7 @@ export class PlayerService {
       mongoPlayer &&
       this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)
     ) {
-      setRequestAttributes({ "statsify.cache.hit": true });
-      return deserialize(Player, mongoPlayer);
+      return { player: deserialize(Player, mongoPlayer), cached: true };
     }
 
     const player = await this.hypixelService.getPlayer(
@@ -88,12 +100,12 @@ export class PlayerService {
 
       flatPlayer.isNew = !mongoPlayer;
 
-      return deserialize(Player, flatPlayer);
+      return { player: deserialize(Player, flatPlayer) };
     } else if (mongoPlayer) {
-      return deserialize(Player, mongoPlayer);
+      return { player: deserialize(Player, mongoPlayer) };
     }
 
-    return null;
+    return { player: null };
   }
 
   public async update(data: APIData) {

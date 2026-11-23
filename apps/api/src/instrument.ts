@@ -27,6 +27,6 @@ Sentry.init({
   tracePropagationTargets: [],
   strictTraceContinuation: true,
   normalizeDepth: 3,
-  tracesSampleRate: await config("sentry.tracesSampleRate"),
+  tracesSampleRate: await config("sentry.tracesSampleRate", { required: sentryDsn !== undefined }),
   environment: await config("environment"),
 });
