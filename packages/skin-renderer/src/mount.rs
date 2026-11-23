@@ -1,8 +1,6 @@
 use std::f32::consts::{FRAC_PI_3, FRAC_PI_6};
 
-use cgmath::{
-  EuclideanSpace, Matrix4, Point3, Quaternion, Rad, Rotation3, Transform as _, Vector3,
-};
+use cgmath::{EuclideanSpace, Matrix4, Point3, Rad, Transform as _, Vector3};
 use image::{imageops, DynamicImage, RgbaImage};
 use napi::bindgen_prelude::Uint8Array;
 use napi_derive::napi;
@@ -14,7 +12,7 @@ use statsify_render_core::texture::Texture;
 
 use crate::attachment::{FEET, MODEL_HEIGHT, PIXELS_PER_BLOCK, PLAYER_SCALE};
 use crate::error::{Error, Result};
-use crate::geometry::{BoxGeometry, Geometry, Rotation, TextureRegion};
+use crate::geometry::{axis_angle, BoxGeometry, Geometry, Rotation, TextureRegion};
 
 #[napi(string_enum = "camelCase", skip_typescript)]
 #[derive(Clone, Copy)]
@@ -86,9 +84,9 @@ impl ModelBox {
         mirror: false,
       },
       rotation: Some(Rotation {
-        quaternion: Quaternion::from_angle_z(Rad(-z))
-          * Quaternion::from_angle_y(Rad(-y))
-          * Quaternion::from_angle_x(Rad(x)),
+        quaternion: axis_angle(Vector3::unit_z(), Rad(-z))
+          * axis_angle(Vector3::unit_y(), Rad(-y))
+          * axis_angle(Vector3::unit_x(), Rad(x)),
         pivot,
       }),
       inflation: self.inflation,
