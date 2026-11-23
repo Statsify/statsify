@@ -50,7 +50,14 @@ export class InteractionServer {
     const timestamp = req.headers["x-signature-timestamp"];
 
     const chunks: Buffer[] = [];
-    for await (const chunk of req) chunks.push(chunk);
+
+    try {
+      for await (const chunk of req) chunks.push(chunk);
+    } catch {
+      res.destroy();
+      return;
+    }
+
     const body = Buffer.concat(chunks);
 
     if (
