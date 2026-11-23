@@ -1,4 +1,4 @@
-use cgmath::{Deg, Quaternion, Rotation as _, Vector3};
+use cgmath::{Deg, Matrix4, Quaternion, Rotation as _, SquareMatrix, Vector3};
 use image::DynamicImage;
 use statsify_render_core::material::Material;
 use statsify_render_core::mesh::Mesh;
@@ -585,6 +585,7 @@ impl Model {
       mesh,
       material: &self.material,
       pipeline: Pipeline::Main,
+      transform: Matrix4::identity(),
     });
 
     let attachments = self
@@ -595,6 +596,7 @@ impl Model {
         mesh: &attachment.mesh,
         material: &attachment.material,
         pipeline: Pipeline::Attachment,
+        transform: Matrix4::identity(),
       });
 
     let enchanted = self.glint.iter().flat_map(|glint| {
@@ -606,6 +608,7 @@ impl Model {
           mesh: &attachment.mesh,
           material: &attachment.material,
           pipeline: Pipeline::Enchanted(glint),
+          transform: Matrix4::identity(),
         })
     });
 

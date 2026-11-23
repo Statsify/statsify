@@ -4,7 +4,10 @@ pub mod native;
 #[cfg(target_arch = "wasm32")]
 pub mod wasm;
 
+use std::mem::size_of;
+
 use bytemuck::cast_slice;
+use cgmath::{Matrix4, Point3, SquareMatrix, Transform};
 use wgpu::util::DeviceExt;
 #[cfg(target_arch = "wasm32")]
 use winit::dpi::PhysicalSize;
@@ -12,8 +15,9 @@ use winit::dpi::PhysicalSize;
 use winit::event::{ElementState, MouseScrollDelta};
 
 pub use self::backend::Backend;
-use self::backend::OutputTexture;
 use crate::camera::{Camera, CameraUniform, OrbitalCamera};
+#[cfg(not(target_arch = "wasm32"))]
+use crate::error::Error;
 use crate::error::Result;
 use crate::geometry::vertex::{Vertex, VertexDescriptor};
 use crate::instance::InstanceRaw;
@@ -26,12 +30,30 @@ pub enum Pipeline<'a> {
   Main,
   Attachment,
   Enchanted(&'a Material),
+  // Only fully opaque texels
+  Cutout,
+  // Cutout's texels, then the partly transparent ones over everything else
+  Translucent,
+  // Translucent for a layer on an opaque body, such as a skin's outer layer or armor, with
+  // Enchanted's glint if any. It blends before Translucent, since the body lies behind it.
+  Worn(Option<&'a Material>),
 }
 
 pub struct DrawItem<'a> {
   pub mesh: &'a Mesh,
   pub material: &'a Material,
   pub pipeline: Pipeline<'a>,
+  pub transform: Matrix4<f32>,
+}
+
+struct Pipelines {
+  main: wgpu::RenderPipeline,
+  attachment: wgpu::RenderPipeline,
+  enchanted: wgpu::RenderPipeline,
+  cutout: wgpu::RenderPipeline,
+  blended: wgpu::RenderPipeline,
+  enchanted_cutout: wgpu::RenderPipeline,
+  enchanted_blended: wgpu::RenderPipeline,
 }
 
 pub struct Renderer<T: Backend> {
@@ -53,10 +75,9 @@ pub struct Renderer<T: Backend> {
   light_bind_group_layout: wgpu::BindGroupLayout,
   camera_bind_group: wgpu::BindGroup,
   light_bind_group: wgpu::BindGroup,
-  render_pipeline: wgpu::RenderPipeline,
-  attachment_pipeline: wgpu::RenderPipeline,
-  enchanted_pipeline: wgpu::RenderPipeline,
-  instance_buffer: wgpu::Buffer,
+  pipelines: Pipelines,
+  // A transform that mirrors a mesh turns its triangles around, so these cull the other side
+  mirrored_pipelines: Pipelines,
 
   depth_texture: Texture,
 }
@@ -89,12 +110,6 @@ impl<T: Backend> Renderer<T> {
         label: Some("texture_bind_group_layout"),
       });
 
-    let instance_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-      label: Some("Instance Buffer"),
-      contents: cast_slice(&[InstanceRaw::identity()]),
-      usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
-    });
-
     let sampler = device.create_sampler(&wgpu::SamplerDescriptor {
       address_mode_u: wgpu::AddressMode::ClampToEdge,
       address_mode_v: wgpu::AddressMode::ClampToEdge,
@@ -119,29 +134,51 @@ impl<T: Backend> Renderer<T> {
     let (light_uniform, light_buffer, light_bind_group_layout, light_bind_group) =
       Self::create_light(device, &camera);
 
+    let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+      label: Some("shader.wgsl"),
+      source: wgpu::ShaderSource::Wgsl(include_str!("shader.wgsl").into()),
+    });
+
     let bind_group_layouts = [
       &texture_bind_group_layout,
       &camera_bind_group_layout,
       &light_bind_group_layout,
     ];
 
-    let render_pipeline =
-      Self::create_render_pipeline(device, &bind_group_layouts, &config, "fs_main");
+    let enchanted_bind_group_layouts = [
+      &texture_bind_group_layout,
+      &camera_bind_group_layout,
+      &light_bind_group_layout,
+      &texture_bind_group_layout,
+    ];
 
-    let attachment_pipeline =
-      Self::create_render_pipeline(device, &bind_group_layouts, &config, "fs_attachment");
+    let create_pipelines = |cull_mode| {
+      let create = |layouts: &[&wgpu::BindGroupLayout], fragment_entry_point, depth_write| {
+        Self::create_render_pipeline(
+          device,
+          &shader,
+          layouts,
+          &config,
+          fragment_entry_point,
+          cull_mode,
+          depth_write,
+        )
+      };
 
-    let enchanted_pipeline = Self::create_render_pipeline(
-      device,
-      &[
-        &texture_bind_group_layout,
-        &camera_bind_group_layout,
-        &light_bind_group_layout,
-        &texture_bind_group_layout,
-      ],
-      &config,
-      "fs_enchanted",
-    );
+      Pipelines {
+        main: create(&bind_group_layouts, "fs_main", true),
+        attachment: create(&bind_group_layouts, "fs_attachment", true),
+        enchanted: create(&enchanted_bind_group_layouts, "fs_enchanted", true),
+        cutout: create(&bind_group_layouts, "fs_cutout", true),
+        // Blended texels leave the depth alone, so nothing drawn behind them later is hidden
+        blended: create(&bind_group_layouts, "fs_blended", false),
+        enchanted_cutout: create(&enchanted_bind_group_layouts, "fs_enchanted_cutout", true),
+        enchanted_blended: create(&enchanted_bind_group_layouts, "fs_enchanted_blended", false),
+      }
+    };
+
+    let pipelines = create_pipelines(wgpu::Face::Back);
+    let mirrored_pipelines = create_pipelines(wgpu::Face::Front);
 
     let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
 
@@ -164,10 +201,8 @@ impl<T: Backend> Renderer<T> {
       light_bind_group_layout,
       camera_bind_group,
       light_bind_group,
-      render_pipeline,
-      attachment_pipeline,
-      enchanted_pipeline,
-      instance_buffer,
+      pipelines,
+      mirrored_pipelines,
 
       depth_texture,
     })
@@ -268,15 +303,13 @@ impl<T: Backend> Renderer<T> {
 
   fn create_render_pipeline(
     device: &wgpu::Device,
+    shader: &wgpu::ShaderModule,
     bind_group_layouts: &[&wgpu::BindGroupLayout],
     config: &wgpu::SurfaceConfiguration,
     fragment_entry_point: &str,
+    cull_mode: wgpu::Face,
+    depth_write_enabled: bool,
   ) -> wgpu::RenderPipeline {
-    let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
-      label: Some("shader.wgsl"),
-      source: wgpu::ShaderSource::Wgsl(include_str!("shader.wgsl").into()),
-    });
-
     let layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
       label: Some("Render Pipeline Layout"),
       bind_group_layouts,
@@ -287,13 +320,13 @@ impl<T: Backend> Renderer<T> {
       label: Some("Render Pipeline"),
       layout: Some(&layout),
       vertex: wgpu::VertexState {
-        module: &shader,
+        module: shader,
         entry_point: Some("vs_main"),
         buffers: &[Vertex::descriptor(), InstanceRaw::descriptor()],
         compilation_options: wgpu::PipelineCompilationOptions::default(),
       },
       fragment: Some(wgpu::FragmentState {
-        module: &shader,
+        module: shader,
         entry_point: Some(fragment_entry_point),
         targets: &[Some(wgpu::ColorTargetState {
           format: config.format,
@@ -306,14 +339,14 @@ impl<T: Backend> Renderer<T> {
         topology: wgpu::PrimitiveTopology::TriangleList,
         strip_index_format: None,
         front_face: wgpu::FrontFace::Ccw,
-        cull_mode: Some(wgpu::Face::Back),
+        cull_mode: Some(cull_mode),
         polygon_mode: wgpu::PolygonMode::Fill,
         unclipped_depth: false,
         conservative: false,
       },
       depth_stencil: Some(wgpu::DepthStencilState {
         format: Texture::DEPTH_FORMAT,
-        depth_write_enabled: true,
+        depth_write_enabled,
         depth_compare: wgpu::CompareFunction::LessEqual,
         stencil: wgpu::StencilState::default(),
         bias: wgpu::DepthBiasState::default(),
@@ -331,22 +364,85 @@ impl<T: Backend> Renderer<T> {
   fn render_sync(
     &self,
     items: &[DrawItem<'_>],
+    camera: &Camera,
     camera_bind_group: &wgpu::BindGroup,
     light_bind_group: &wgpu::BindGroup,
-  ) -> (wgpu::CommandEncoder, OutputTexture<'_>) {
+    view: &wgpu::TextureView,
+    depth_view: &wgpu::TextureView,
+  ) -> wgpu::CommandEncoder {
     let device = self.backend.device();
-    let output_texture = self.backend.get_output_texture();
-    let view = T::create_view(&output_texture);
 
     let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
       label: Some("Render Encoder"),
     });
 
+    let instances: Vec<InstanceRaw> = items
+      .iter()
+      .map(|item| InstanceRaw::new(item.transform))
+      .collect();
+
+    let instance_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+      label: Some("Instance Buffer"),
+      contents: cast_slice(&instances),
+      usage: wgpu::BufferUsages::VERTEX,
+    });
+
+    let instance_size = size_of::<InstanceRaw>() as wgpu::BufferAddress;
+
+    let translucent: Vec<usize> = (0..items.len())
+      .filter(|&index| matches!(items[index].pipeline, Pipeline::Translucent))
+      .collect();
+
+    let centers: Vec<Point3<f32>> = translucent
+      .iter()
+      .map(|&index| {
+        items[index]
+          .transform
+          .transform_point(items[index].mesh.center)
+      })
+      .collect();
+
+    let worn = (0..items.len()).filter(|&index| matches!(items[index].pipeline, Pipeline::Worn(_)));
+
+    let blended = |index: usize| {
+      let pipelines = self.pipelines_for(&items[index]);
+
+      match items[index].pipeline {
+        Pipeline::Worn(Some(glint)) => (index, &pipelines.enchanted_blended, Some(glint)),
+        _ => (index, &pipelines.blended, None),
+      }
+    };
+
+    // Every item in order, then the partly transparent texels: worn ones, then the rest farthest
+    // first, so each blends over whatever lies behind it
+    let draws = items
+      .iter()
+      .enumerate()
+      .map(|(index, item)| {
+        let pipelines = self.pipelines_for(item);
+
+        match item.pipeline {
+          Pipeline::Main => (index, &pipelines.main, None),
+          Pipeline::Attachment => (index, &pipelines.attachment, None),
+          Pipeline::Enchanted(glint) => (index, &pipelines.enchanted, Some(glint)),
+          Pipeline::Cutout | Pipeline::Translucent | Pipeline::Worn(None) => {
+            (index, &pipelines.cutout, None)
+          }
+          Pipeline::Worn(Some(glint)) => (index, &pipelines.enchanted_cutout, Some(glint)),
+        }
+      })
+      .chain(worn.map(&blended))
+      .chain(
+        back_to_front(camera.view_projection_matrix(), &centers)
+          .into_iter()
+          .map(|order| blended(translucent[order])),
+      );
+
     {
       let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
         label: Some("Render Pass"),
         color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-          view: &view,
+          view,
           resolve_target: None,
           depth_slice: None,
           ops: wgpu::Operations {
@@ -355,7 +451,7 @@ impl<T: Backend> Renderer<T> {
           },
         })],
         depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
-          view: &self.depth_texture.view,
+          view: depth_view,
           depth_ops: Some(wgpu::Operations {
             load: wgpu::LoadOp::Clear(1.0),
             store: wgpu::StoreOp::Store,
@@ -366,17 +462,16 @@ impl<T: Backend> Renderer<T> {
         timestamp_writes: None,
       });
 
-      render_pass.set_vertex_buffer(1, self.instance_buffer.slice(..));
+      for (index, pipeline, glint) in draws {
+        let item = &items[index];
+        render_pass.set_pipeline(pipeline);
 
-      for item in items {
-        match item.pipeline {
-          Pipeline::Main => render_pass.set_pipeline(&self.render_pipeline),
-          Pipeline::Attachment => render_pass.set_pipeline(&self.attachment_pipeline),
-          Pipeline::Enchanted(glint) => {
-            render_pass.set_pipeline(&self.enchanted_pipeline);
-            render_pass.set_bind_group(3, &glint.bind_group, &[]);
-          }
+        if let Some(glint) = glint {
+          render_pass.set_bind_group(3, &glint.bind_group, &[]);
         }
+
+        let offset = index as wgpu::BufferAddress * instance_size;
+        render_pass.set_vertex_buffer(1, instance_buffer.slice(offset..offset + instance_size));
 
         render_pass.draw_mesh(
           item.mesh,
@@ -387,7 +482,15 @@ impl<T: Backend> Renderer<T> {
       }
     };
 
-    (encoder, output_texture)
+    encoder
+  }
+
+  fn pipelines_for(&self, item: &DrawItem<'_>) -> &Pipelines {
+    if item.transform.determinant() < 0.0 {
+      &self.mirrored_pipelines
+    } else {
+      &self.pipelines
+    }
   }
 
   pub fn device(&self) -> &wgpu::Device {
@@ -414,7 +517,6 @@ impl<T: Backend> Renderer<T> {
 #[cfg(target_arch = "wasm32")]
 use winit::window::Window;
 
-#[cfg(target_arch = "wasm32")]
 use crate::camera::CameraBehavior;
 
 #[cfg(target_arch = "wasm32")]
@@ -425,8 +527,16 @@ impl Renderer<wasm::WasmBackend> {
   }
 
   pub fn render(&self, items: &[DrawItem<'_>]) {
-    let (encoder, output_texture) =
-      self.render_sync(items, &self.camera_bind_group, &self.light_bind_group);
+    let output_texture = self.backend.get_output_texture();
+
+    let encoder = self.render_sync(
+      items,
+      &self.camera,
+      &self.camera_bind_group,
+      &self.light_bind_group,
+      &wasm::WasmBackend::create_view(&output_texture),
+      &self.depth_texture.view,
+    );
 
     self
       .backend
@@ -500,9 +610,56 @@ impl Renderer<native::NativeBackend> {
     )
   }
 
-  // Waits on the GPU, so async callers run it on a blocking thread. Renders run on several
-  // threads at once, so each gets its own camera and light instead of rewriting the shared ones
+  // This and render_sized wait on the GPU, so async callers run them on a blocking thread
   pub fn render(&self, items: &[DrawItem<'_>], camera: &Camera) -> Result<Vec<u8>> {
+    self.render_into(
+      items,
+      camera,
+      self.backend.get_output_texture(),
+      &self.depth_texture,
+      false,
+    )
+  }
+
+  // Renders into textures of its own, at any size the device allows. Unlike `render`, whose skin
+  // renders have always kept them premultiplied, partly transparent pixels keep their own color.
+  pub fn render_sized(
+    &self,
+    items: &[DrawItem<'_>],
+    camera: &Camera,
+    width: u32,
+    height: u32,
+  ) -> Result<Vec<u8>> {
+    let device = self.backend.device();
+    let limit = device.limits().max_texture_dimension_2d;
+
+    if !(1..=limit).contains(&width) || !(1..=limit).contains(&height) {
+      return Err(Error::OutputSize(limit));
+    }
+
+    let output_texture = native::NativeBackend::create_texture(device, width, height);
+
+    let config = wgpu::SurfaceConfiguration {
+      width,
+      height,
+      ..self.config.clone()
+    };
+
+    let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
+
+    self.render_into(items, camera, &output_texture, &depth_texture, true)
+  }
+
+  // Renders run on several threads at once, so each gets its own camera and light
+  // instead of rewriting the shared ones
+  fn render_into(
+    &self,
+    items: &[DrawItem<'_>],
+    camera: &Camera,
+    output_texture: &wgpu::Texture,
+    depth_texture: &Texture,
+    unpremultiply: bool,
+  ) -> Result<Vec<u8>> {
     let camera_bind_group = self.uniform_bind_group(
       &self.camera_bind_group_layout,
       cast_slice(&[CameraUniform::new(camera)]),
@@ -512,8 +669,18 @@ impl Renderer<native::NativeBackend> {
       cast_slice(&[LightUniform::from(camera)]),
     );
 
-    let (encoder, _) = self.render_sync(items, &camera_bind_group, &light_bind_group);
-    self.backend.handle_encoder_after_render(encoder)
+    let encoder = self.render_sync(
+      items,
+      camera,
+      &camera_bind_group,
+      &light_bind_group,
+      &native::NativeBackend::create_view(&output_texture),
+      &depth_texture.view,
+    );
+
+    self
+      .backend
+      .handle_encoder_after_render(encoder, output_texture, unpremultiply)
   }
 
   fn uniform_bind_group(&self, layout: &wgpu::BindGroupLayout, contents: &[u8]) -> wgpu::BindGroup {
@@ -533,5 +700,42 @@ impl Renderer<native::NativeBackend> {
       }],
       label: None,
     })
+  }
+}
+
+// Indices of the points from farthest to nearest along the view, which a perspective
+// projection carries as w
+fn back_to_front(view_projection: Matrix4<f32>, points: &[Point3<f32>]) -> Vec<usize> {
+  let depth = |index: usize| (view_projection * points[index].to_homogeneous()).w;
+  let mut order: Vec<usize> = (0..points.len()).collect();
+  order.sort_by(|&a, &b| depth(b).total_cmp(&depth(a)));
+  order
+}
+
+#[cfg(test)]
+mod tests {
+  use cgmath::{perspective, Deg, Vector3};
+
+  use super::*;
+
+  #[test]
+  fn orders_points_farthest_first() {
+    let view = Matrix4::look_at_rh(
+      Point3::new(10.0, 4.0, -2.0),
+      Point3::new(10.0, 4.0, -12.0),
+      Vector3::unit_y(),
+    );
+    let view_projection = perspective(Deg(40.0), 1.5, 0.1, 100.0) * view;
+
+    // The first is farther from the eye than the second but nearer along the view
+    let points = [
+      Point3::new(19.0, 4.0, -11.0),
+      Point3::new(10.0, 4.0, -12.0),
+      Point3::new(10.0, 7.0, -4.0),
+      Point3::new(9.0, 4.0, -11.5),
+    ];
+
+    assert_eq!(back_to_front(view_projection, &points), [1, 3, 0, 2]);
+    assert_eq!(back_to_front(view_projection, &[]), Vec::<usize>::new());
   }
 }
