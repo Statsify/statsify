@@ -11,6 +11,8 @@ import {
   type Circular,
   type Flatten,
   flatten,
+  isUuid,
+  normalizeUuid,
 } from "@statsify/util";
 import { CacheLevel, PlayerNotFoundException, StatusNotFoundException } from "@statsify/api-client";
 import { HttpService } from "@nestjs/axios";
@@ -223,12 +225,12 @@ export class PlayerService {
     tag: string,
     selector: Record<string, boolean> = {}
   ): Promise<Flatten<Player> | null> {
-    const type = tag.length > 16 ? "uuid" : "usernameToLower";
+    const byUuid = isUuid(tag);
 
     const mongoPlayer: Player | null = await this.playerModel
       .findOne()
-      .where(type)
-      .equals(tag.replaceAll("-", "").toLowerCase())
+      .where(byUuid ? "uuid" : "usernameToLower")
+      .equals(byUuid ? normalizeUuid(tag) : tag.toLowerCase())
       .select(selector)
       .lean()
       .exec();

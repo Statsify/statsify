@@ -13,6 +13,10 @@
     "./minecraft-colors": {
       "types": "./src/minecraft-colors.ts",
       "default": "./dist/minecraft-colors.js"
+    },
+    "./util": {
+      "types": "./src/util.ts",
+      "default": "./dist/util.js"
     }
   },
   "scripts": {

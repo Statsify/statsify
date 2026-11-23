@@ -7,12 +7,11 @@
  */
 
 import { type ContractRouterClient, oc } from "@orpc/contract";
+import { UUID_PATTERN } from "@statsify/util/util";
 import { z } from "zod";
 
 /** A Minecraft UUID, dashed or not; the API normalizes it before querying. */
-export const UuidSchema = z
-  .string()
-  .regex(/^[\da-f]{32}$|^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i, "Expected a Minecraft UUID");
+export const UuidSchema = z.string().regex(UUID_PATTERN, "Expected a Minecraft UUID");
 
 export const UsernameSchema = z.string().trim().min(1).max(16);
 

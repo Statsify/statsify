@@ -16,6 +16,7 @@ import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
+import { isUuid, normalizeUuid } from "@statsify/util";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
@@ -54,13 +55,13 @@ export class SkinService {
   }
 
   public async getSkin(tag: string): Promise<Skin> {
-    tag = tag.replaceAll("-", "").toLowerCase();
-    const isUsername = tag.length <= 16;
+    const isUsername = !isUuid(tag);
+    const key = isUsername ? tag.toLowerCase() : normalizeUuid(tag);
 
     const cachedSkin = await this.skinModel
       .findOne()
       .where(isUsername ? "usernameToLower" : "uuid")
-      .equals(tag)
+      .equals(key)
       .lean()
       .exec();
 
@@ -68,7 +69,7 @@ export class SkinService {
       return cachedSkin;
     }
 
-    const uuid = isUsername ? await this.playerService.getUuid(tag) : tag;
+    const uuid = isUsername ? await this.playerService.getUuid(key) : key;
 
     const skin = await this.requestSkin(uuid).catch((error) => {
       if (cachedSkin) return cachedSkin;

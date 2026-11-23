@@ -48,7 +48,7 @@ import { ORPCError } from "@orpc/nest";
 import { PLAYER_COOLDOWN_MS, type PlayerGuild, buildPlayerPage } from "./player-page.js";
 import { PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
-import { config, flatten, removeFormatting } from "@statsify/util";
+import { config, flatten, isUuid, normalizeUuid, removeFormatting } from "@statsify/util";
 import { isIPv6 } from "node:net";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
@@ -93,7 +93,6 @@ const CARD_FIELDS = {
 
 const missKey = (nameLower: string) => `site:miss:${nameLower}`;
 const ipKey = (clientIp: string) => `site:ip:${rateLimitAddress(clientIp)}`;
-const normalizeUuid = (uuid: string) => uuid.replaceAll("-", "").toLowerCase();
 
 /**
  * The per-visitor bucket: an IPv4 address, or the /64 of an IPv6 one, since a single connection usually gets a
@@ -254,8 +253,7 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   public async lookup(name: string, clientIp: string): Promise<PlayerIdentity> {
-    // A name has at most 16 characters, so anything longer is a UUID, as `PlayerService` tells them apart.
-    const byUuid = name.length > 16;
+    const byUuid = isUuid(name);
     const tag = byUuid ? normalizeUuid(name) : name;
     const key = tag.toLowerCase();
     const known = await this.findIdentity(byUuid ? "uuid" : "usernameToLower", key);
