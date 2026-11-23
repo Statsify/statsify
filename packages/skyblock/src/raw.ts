@@ -89,6 +89,7 @@ export interface RawMember {
   player_data?: {
     experience?: Record<string, number>;
     perks?: Record<string, number> & { fairies_refund_processed?: boolean };
+    unlocked_coll_tiers?: string[]; // <collection>_<tier>, with -1 for one found at no tier yet
     reaper_peppers_eaten?: number;
     crafted_generators?: string[]; // "WHEAT_11": each minion tier crafted
   };
