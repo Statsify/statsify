@@ -246,7 +246,7 @@ export function createQuestsInstance<
   return QuestInstance as unknown as IQuestInstance<Time, GamesWithQuests>;
 }
 
-const HYPIXEL_TIME_ZONE = tz("America/New_York");
+export const HYPIXEL_TIME_ZONE = tz("America/New_York");
 
 /** Weekly quests reset at midnight on Friday, New York time. */
 export const getWeeklyQuestReset = (now = Date.now()) => {
