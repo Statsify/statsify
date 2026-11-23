@@ -238,6 +238,16 @@ export abstract class AbstractCommandListener {
 
     if (res && !(res instanceof Promise)) return res;
 
+    res?.catch(async (err) => {
+      if (err instanceof Message) return interaction.sendFollowup({ ...err, ephemeral: true });
+
+      await Promise.allSettled([
+        interaction.sendFollowup({ ...new ErrorMessage("errors.unknown"), ephemeral: true }),
+      ]);
+
+      throw err;
+    });
+
     return { type: InteractionResponseType.DeferredMessageUpdate };
   }
 
