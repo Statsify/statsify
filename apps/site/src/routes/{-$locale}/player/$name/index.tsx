@@ -12,7 +12,7 @@ import { PlayerNotFound } from "~/features/player/player-not-found";
 import { PlayerView } from "~/features/player/player-page";
 import { cacheHeaders } from "~/lib/cache";
 import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/player-route";
-import { cacheNotFoundResponse } from "~/lib/response";
+import { missingPlayerResponse } from "~/lib/response";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
@@ -26,8 +26,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/")({
     const identity = await ensurePlayer(context.queryClient, params.name);
 
     if (!identity) {
-      // Five minutes at the edge. A lookup that finds the player navigates in the browser, so it never sees this page.
-      cacheNotFoundResponse();
+      missingPlayerResponse();
       throw notFound();
     }
 

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { NOT_FOUND_EDGE, cacheHeaders } from "./cache";
+import { NOT_FOUND_EDGE, NO_STORE_EDGE, cacheHeaders } from "./cache";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { setResponseHeaders } from "@tanstack/react-start/server";
 
@@ -14,5 +14,15 @@ import { setResponseHeaders } from "@tanstack/react-start/server";
 export const cacheNotFoundResponse = createIsomorphicFn()
   .server(() => {
     setResponseHeaders(new Headers(cacheHeaders(NOT_FOUND_EDGE)));
+  })
+  .client(() => undefined);
+
+/**
+ * During SSR, keeps the 404 page for a player who isn't stored out of every cache; a no-op in the browser. A Hypixel
+ * lookup can add the player a moment later, and a reload or a shared link must then open their page.
+ */
+export const missingPlayerResponse = createIsomorphicFn()
+  .server(() => {
+    setResponseHeaders(new Headers(NO_STORE_EDGE));
   })
   .client(() => undefined);

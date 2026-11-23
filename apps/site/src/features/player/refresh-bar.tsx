@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { AUTO_UPDATE_AGE_MS } from "@statsify/contract/refresh";
 import { Button } from "~/components/ui/button";
 import { Hint } from "~/components/ui/hint";
 import { Turnstile } from "~/components/turnstile";
 import { cn } from "~/lib/util";
 import { formatCountdown, fullDate, relativeTime } from "~/i18n/format";
-import { type ReactNode, useEffect, useEffectEvent, useRef, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useEffectEvent, useRef, useState, useSyncExternalStore } from "react";
 import { type ActionResult, BROWSER_TIMEOUT_MS } from "./player-actions";
 import { getRouteApi, useRouterState } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
@@ -19,9 +20,6 @@ import { useTranslation } from "react-i18next";
 const localeRoute = getRouteApi("/{-$locale}");
 
 const META = "text-mc-1 text-mc-gray";
-
-/** How old a save is before its page updates it by itself once it opens. */
-const AUTO_UPDATE_AGE_MS = 15 * 60_000;
 
 /** Crawlers that run scripts would spend the Hypixel budget just by loading pages, so they never update by themselves. */
 const BOT_AGENT = /bot|crawl|spider|slurp|headless|lighthouse|preview/i;
@@ -41,18 +39,41 @@ type RefreshState =
   | { status: "unavailable" }
   | { status: "error" };
 
-/** Ticks once a second after mount; `undefined` during SSR so the HTML never carries a clock value. */
-export function useNow(): number | undefined {
-  const [now, setNow] = useState<number>();
+let clockNow: number | undefined;
+let clockTimer: ReturnType<typeof setTimeout> | undefined;
+/** Each `useNow` on the page, with the end of its countdown (0 for none). */
+const clockListeners = new Map<() => void, number>();
 
-  useEffect(() => {
-    const tick = () => setNow(Date.now());
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
+function scheduleTick() {
+  clearTimeout(clockTimer);
+  const counting = [...clockListeners.values()].some((until) => until > Date.now());
+  clockTimer = setTimeout(() => {
+    clockNow = Date.now();
+    for (const listener of clockListeners.keys()) listener();
+    scheduleTick();
+  }, counting ? 1000 : 60_000);
+}
 
-  return now;
+function subscribeClock(listener: () => void, until: number) {
+  clockListeners.set(listener, until);
+  clockNow ??= Date.now();
+  scheduleTick();
+
+  return () => {
+    clockListeners.delete(listener);
+    if (clockListeners.size > 0) return;
+    clearTimeout(clockTimer);
+    clockNow = undefined;
+  };
+}
+
+/**
+ * The time from the page's one clock, which ticks each second while a caller's countdown runs to `countdownUntil` and
+ * each minute otherwise. `undefined` during SSR and hydration, so the HTML never carries a clock value.
+ */
+export function useNow(countdownUntil = 0): number | undefined {
+  const subscribe = useCallback((listener: () => void) => subscribeClock(listener, countdownUntil), [countdownUntil]);
+  return useSyncExternalStore(subscribe, () => clockNow, () => undefined);
 }
 
 /**
@@ -90,7 +111,6 @@ export function RefreshBar({
 }) {
   const { t, i18n } = useTranslation();
   const { turnstileSiteKey } = localeRoute.useLoaderData();
-  const now = useNow();
   const [state, setState] = useState<RefreshState>({ status: "idle" });
   const [verifying, setVerifying] = useState(false);
   const [autoVerifying, setAutoVerifying] = useState(false);
@@ -102,6 +122,7 @@ export function RefreshBar({
   const searchedAt = useRouterState({ select: ({ resolvedLocation }) => resolvedLocation?.state.searchedAt });
 
   const lockedUntil = state.status === "limited" ? state.until : expiresAt;
+  const now = useNow(lockedUntil);
   const remaining = now === undefined ? undefined : Math.max(0, Math.ceil((lockedUntil - now) / 1000));
   // A widget whose script didn't load stays broken until the page reloads, so the button does too.
   const disabled = verifying || widgetFailed || state.status === "pending" || remaining === undefined || remaining > 0;
