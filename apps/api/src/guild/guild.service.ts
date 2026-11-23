@@ -213,7 +213,19 @@ export class GuildService {
         .exec();
     }
 
-    return await this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec();
+    if (type === GuildQuery.NAME) {
+      // A renamed guild isn't found by its old name either, so a refresh by id stores the new name or drops a disband
+      await this.get(cachedGuild.id, GuildQuery.ID, CacheLevel.LIVE).catch((error) => {
+        if (!(error instanceof GuildNotFoundException)) throw error;
+      });
+
+      return;
+    }
+
+    return await Promise.all([
+      this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec(),
+      this.guildLeaderboardService.addLeaderboards(Guild, flatten(cachedGuild), "id", true),
+    ]);
   }
 
   private async getMemberName(member: GuildMember, cachedMember?: GuildMember) {
