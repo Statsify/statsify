@@ -14,6 +14,7 @@ import { GameIcon, hasGameIcon, pageIcon } from "~/components/ui/game-icon";
 import { type GroupSummary, type ListGroup, boardLinksHtml, filterGroups, leaderboardListQuery } from "./leaderboard-list";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { type MouseEvent, type ReactNode, type SyntheticEvent, useMemo, useRef, useState } from "react";
+import { READING_LEADING } from "~/features/content/text-page";
 import { builtLeaderboardList } from "~/server/leaderboard-list.server";
 import { cn } from "~/lib/util";
 import { createIsomorphicFn } from "@tanstack/react-start";
@@ -28,7 +29,8 @@ const localeRoute = getRouteApi("/{-$locale}");
 // One class on each list instead of one per link: there are thousands of them.
 const LIST = cn(
   "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&>li]:box-item [&_a]:flex [&_a]:min-h-11 [&_a]:items-center [&_a]:px-3 [&_a]:text-mc-1.5 [&_a:hover]:underline [&>li:hover]:after:brightness-125 [&>li:active]:after:brightness-125",
-  BOX_GAP
+  BOX_GAP,
+  READING_LEADING
 );
 
 const boardHref = (prefix: string, field: string) => `${prefix}/leaderboards/${encodeURIComponent(field)}`;
