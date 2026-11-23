@@ -140,20 +140,20 @@ export function Header() {
         </nav>
         {/* A phone's logo row has the search button and no room for it, so there it sits in the opened search row. */}
         <AccountLink className={cn(NAV_LINK, showSearch && "max-md:hidden")} />
-        {/* Held, unseen, on pages with a search of their own, so the links before it don't move. */}
-        <button
-          ref={searchButton}
-          type="button"
-          aria-label={t("search.label")}
-          aria-expanded={searching}
-          onClick={toggleSearch}
-          className={cn(
-            "flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden",
-            !showSearch && "invisible"
-          )}
-        >
-          <SearchIcon className="size-5" />
-        </button>
+        {/* Not held unseen on pages with a search of their own: the account link takes its place there, and a phone's
+            logo row has no room for both. */}
+        {showSearch && (
+          <button
+            ref={searchButton}
+            type="button"
+            aria-label={t("search.label")}
+            aria-expanded={searching}
+            onClick={toggleSearch}
+            className="flex size-11 shrink-0 items-center justify-center bg-blackify-800 text-mc-gray hover:text-white focus-visible:focus-ring-inset md:hidden"
+          >
+            <SearchIcon className="size-5" />
+          </button>
+        )}
       </div>
     </header>
   );
