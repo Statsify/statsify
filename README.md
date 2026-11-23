@@ -57,7 +57,7 @@ $ docker build --platform linux/amd64 --build-arg APP={app name} .
 * Pushing a `v*` tag builds an image for each production app and runs them on the server with `compose.prod.yml`
 * The apps read the server's `/home/config.js`, mounted read-only, so restart them after changing it
 * Run compose commands from the deploy checkout, where `.env` holds the deployed commit
-* To roll back, re-run the older tag's Deploy workflow. It checks out that commit, so the compose file, `.env` and images all match it
+* To roll back, run the Deploy workflow on the older tag (Actions → Deploy → Run workflow, then pick the tag). It checks out that commit, so the compose file, `.env` and images all match it
 
 ```bash
 # Building and starting every app
