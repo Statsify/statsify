@@ -58,7 +58,7 @@ fallback for those characters. `drawTooltip` draws 1.8's tooltip box, and
 
 `InventoryRenderer` draws a whole container: the pack's chest screen (or a plain panel for other
 sizes), the title, and each slot's icon, count and 1.8.9 durability bar. An item the pack can't
-draw leaves its slot empty and logs the error once.
+draw makes `draw` throw, rather than leave its slot empty.
 
 ```ts
 const renderer = await InventoryRenderer.load(stack);

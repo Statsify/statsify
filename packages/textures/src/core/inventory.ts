@@ -50,9 +50,6 @@ function fill(ctx: OffscreenCanvasRenderingContext2D, scale: number, x: number, 
 
 /** Draws containers the way Minecraft draws them, from a resource pack */
 export class InventoryRenderer {
-  /** Items the pack can't draw, logged once and then left out */
-  private broken = new WeakSet<ItemStack>();
-
   private constructor(
     private itemRenderer: ItemRenderer,
     private text: TextRenderer,
@@ -73,7 +70,7 @@ export class InventoryRenderer {
 
   public async draw(slots: (ItemStack | undefined)[], size: InventorySize, tick = 0) {
     const shown = slots.slice(0, size.rows * size.cols);
-    const icons = await Promise.all(shown.map((item) => item && this.icon(item, size.scale, tick)));
+    const icons = await Promise.all(shown.map((item) => item && this.itemRenderer.render(item, size.scale, tick)));
 
     const canvas = this.background(size);
     const ctx = context(canvas);
@@ -84,19 +81,6 @@ export class InventoryRenderer {
 
   public tooltip(item: ItemStack, scale: number, tick: number) {
     return drawTooltip(this.text, tooltipLines(item, this.names), scale, tick);
-  }
-
-  /** An item's icon at a game tick, or undefined when the pack can't draw it */
-  private async icon(item: ItemStack, scale: number, tick: number) {
-    if (this.broken.has(item)) return undefined;
-
-    try {
-      return await this.itemRenderer.render(item, scale, tick);
-    } catch (error) {
-      this.broken.add(item);
-      console.error(error);
-      return undefined;
-    }
   }
 
   /** A slot's icon, count and durability bar */
