@@ -11,8 +11,8 @@ import { type PageText, pageMeta } from "~/lib/social-meta";
 // Apart from the text pages' layout: their routes' `head()` uses these, and every page's first load carries what
 // `head()` imports.
 
-/** The edge cache of a page that changes only with a deploy: an hour fresh, a day stale. */
-export const TEXT_PAGE_CACHE = "max-age=3600, stale-while-revalidate=86400";
+/** The edge cache of a page that changes only with a deploy: an hour fresh, a day stale, and a day if the API is down. */
+export const TEXT_PAGE_CACHE = "max-age=3600, stale-while-revalidate=86400, stale-if-error=86400";
 
 /** A text page's `head()`: its tags, with the site's card image. */
 export const textPageHead = ({
