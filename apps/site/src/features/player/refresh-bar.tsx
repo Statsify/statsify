@@ -255,7 +255,7 @@ export function SharedRefreshBar({ refresh, className }: { refresh: Refresh; cla
 
   return (
     <>
-      <div className={cn("flex items-center gap-2", className)}>
+      <div className={cn("flex flex-wrap items-center gap-x-2 gap-y-3", className)}>
         <p data-clock="updated" className={cn(META, "min-w-0")} suppressHydrationWarning>
           {now === undefined ? " " : <UpdatedAt updatedAt={updatedAt} now={now} />}
         </p>

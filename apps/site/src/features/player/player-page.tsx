@@ -120,7 +120,7 @@ export function PlayerView({ page }: { page: PlayerPage }) {
                 </PanelToggle>
               </>
             )}
-            refresh={<SharedRefreshBar refresh={refreshing} />}
+            refresh={<SharedRefreshBar refresh={refreshing} className="justify-center" />}
             className="md:col-span-full md:row-start-1 xl:col-span-1"
           />
           {/* From `xl` the nametag sits over the level, beside the overview, too narrow for the facts' values, so they get
