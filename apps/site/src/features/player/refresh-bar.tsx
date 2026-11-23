@@ -70,9 +70,8 @@ function subscribeClock(listener: () => void, until: number) {
 }
 
 /**
- * The time from the page's one clock, which ticks each second while a caller's countdown runs to `countdownUntil` and
- * each minute otherwise. `undefined` on the server and while the page hydrates, so the first render matches the HTML,
- * whose time text `ClockScript` writes; a component mounted after that (a client navigation) starts on the clock.
+ * The page's one clock: each second while a caller's countdown to `countdownUntil` runs, else each minute. `undefined`
+ * while hydrating, to match the HTML `ClockScript` writes; a later mount (a client navigation) starts on the clock.
  */
 export function useNow(countdownUntil = 0): number | undefined {
   const subscribe = useCallback((listener: () => void) => subscribeClock(listener, countdownUntil), [countdownUntil]);
