@@ -59,7 +59,7 @@ const resources = new WeakMap<PackStack | Atlas, Resources>();
 
 /** A player head's skin from the texture server, which allows cross-origin reads */
 async function fetchSkin(url: string) {
-  const response = await fetch(url);
+  const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
   if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
   return new Uint8Array(await response.arrayBuffer());
 }
