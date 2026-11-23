@@ -7,7 +7,7 @@ pub mod wasm;
 use std::mem::size_of;
 
 use bytemuck::cast_slice;
-use cgmath::{Matrix4, Point3, SquareMatrix, Transform};
+use cgmath::{Matrix4, Point3, Transform};
 use wgpu::util::DeviceExt;
 #[cfg(target_arch = "wasm32")]
 use winit::dpi::PhysicalSize;
@@ -76,8 +76,6 @@ pub struct Renderer<T: Backend> {
   camera_bind_group: wgpu::BindGroup,
   light_bind_group: wgpu::BindGroup,
   pipelines: Pipelines,
-  // A transform that mirrors a mesh turns its triangles around, so these cull the other side
-  mirrored_pipelines: Pipelines,
 
   depth_texture: Texture,
 }
@@ -152,33 +150,27 @@ impl<T: Backend> Renderer<T> {
       &texture_bind_group_layout,
     ];
 
-    let create_pipelines = |cull_mode| {
-      let create = |layouts: &[&wgpu::BindGroupLayout], fragment_entry_point, depth_write| {
-        Self::create_render_pipeline(
-          device,
-          &shader,
-          layouts,
-          &config,
-          fragment_entry_point,
-          cull_mode,
-          depth_write,
-        )
-      };
-
-      Pipelines {
-        main: create(&bind_group_layouts, "fs_main", true),
-        attachment: create(&bind_group_layouts, "fs_attachment", true),
-        enchanted: create(&enchanted_bind_group_layouts, "fs_enchanted", true),
-        cutout: create(&bind_group_layouts, "fs_cutout", true),
-        // Blended texels leave the depth alone, so nothing drawn behind them later is hidden
-        blended: create(&bind_group_layouts, "fs_blended", false),
-        enchanted_cutout: create(&enchanted_bind_group_layouts, "fs_enchanted_cutout", true),
-        enchanted_blended: create(&enchanted_bind_group_layouts, "fs_enchanted_blended", false),
-      }
+    let create = |layouts: &[&wgpu::BindGroupLayout], fragment_entry_point, depth_write| {
+      Self::create_render_pipeline(
+        device,
+        &shader,
+        layouts,
+        &config,
+        fragment_entry_point,
+        depth_write,
+      )
     };
 
-    let pipelines = create_pipelines(wgpu::Face::Back);
-    let mirrored_pipelines = create_pipelines(wgpu::Face::Front);
+    let pipelines = Pipelines {
+      main: create(&bind_group_layouts, "fs_main", true),
+      attachment: create(&bind_group_layouts, "fs_attachment", true),
+      enchanted: create(&enchanted_bind_group_layouts, "fs_enchanted", true),
+      cutout: create(&bind_group_layouts, "fs_cutout", true),
+      // Blended texels leave the depth alone, so nothing drawn behind them later is hidden
+      blended: create(&bind_group_layouts, "fs_blended", false),
+      enchanted_cutout: create(&enchanted_bind_group_layouts, "fs_enchanted_cutout", true),
+      enchanted_blended: create(&enchanted_bind_group_layouts, "fs_enchanted_blended", false),
+    };
 
     let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
 
@@ -202,7 +194,6 @@ impl<T: Backend> Renderer<T> {
       camera_bind_group,
       light_bind_group,
       pipelines,
-      mirrored_pipelines,
 
       depth_texture,
     })
@@ -307,7 +298,6 @@ impl<T: Backend> Renderer<T> {
     bind_group_layouts: &[&wgpu::BindGroupLayout],
     config: &wgpu::SurfaceConfiguration,
     fragment_entry_point: &str,
-    cull_mode: wgpu::Face,
     depth_write_enabled: bool,
   ) -> wgpu::RenderPipeline {
     let layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -339,7 +329,7 @@ impl<T: Backend> Renderer<T> {
         topology: wgpu::PrimitiveTopology::TriangleList,
         strip_index_format: None,
         front_face: wgpu::FrontFace::Ccw,
-        cull_mode: Some(cull_mode),
+        cull_mode: Some(wgpu::Face::Back),
         polygon_mode: wgpu::PolygonMode::Fill,
         unclipped_depth: false,
         conservative: false,
@@ -404,13 +394,11 @@ impl<T: Backend> Renderer<T> {
 
     let worn = (0..items.len()).filter(|&index| matches!(items[index].pipeline, Pipeline::Worn(_)));
 
-    let blended = |index: usize| {
-      let pipelines = self.pipelines_for(&items[index]);
+    let pipelines = &self.pipelines;
 
-      match items[index].pipeline {
-        Pipeline::Worn(Some(glint)) => (index, &pipelines.enchanted_blended, Some(glint)),
-        _ => (index, &pipelines.blended, None),
-      }
+    let blended = |index: usize| match items[index].pipeline {
+      Pipeline::Worn(Some(glint)) => (index, &pipelines.enchanted_blended, Some(glint)),
+      _ => (index, &pipelines.blended, None),
     };
 
     // Every item in order, then the partly transparent texels: worn ones, then the rest farthest
@@ -418,18 +406,14 @@ impl<T: Backend> Renderer<T> {
     let draws = items
       .iter()
       .enumerate()
-      .map(|(index, item)| {
-        let pipelines = self.pipelines_for(item);
-
-        match item.pipeline {
-          Pipeline::Main => (index, &pipelines.main, None),
-          Pipeline::Attachment => (index, &pipelines.attachment, None),
-          Pipeline::Enchanted(glint) => (index, &pipelines.enchanted, Some(glint)),
-          Pipeline::Cutout | Pipeline::Translucent | Pipeline::Worn(None) => {
-            (index, &pipelines.cutout, None)
-          }
-          Pipeline::Worn(Some(glint)) => (index, &pipelines.enchanted_cutout, Some(glint)),
+      .map(|(index, item)| match item.pipeline {
+        Pipeline::Main => (index, &pipelines.main, None),
+        Pipeline::Attachment => (index, &pipelines.attachment, None),
+        Pipeline::Enchanted(glint) => (index, &pipelines.enchanted, Some(glint)),
+        Pipeline::Cutout | Pipeline::Translucent | Pipeline::Worn(None) => {
+          (index, &pipelines.cutout, None)
         }
+        Pipeline::Worn(Some(glint)) => (index, &pipelines.enchanted_cutout, Some(glint)),
       })
       .chain(worn.map(&blended))
       .chain(
@@ -483,14 +467,6 @@ impl<T: Backend> Renderer<T> {
     };
 
     encoder
-  }
-
-  fn pipelines_for(&self, item: &DrawItem<'_>) -> &Pipelines {
-    if item.transform.determinant() < 0.0 {
-      &self.mirrored_pipelines
-    } else {
-      &self.pipelines
-    }
   }
 
   pub fn device(&self) -> &wgpu::Device {
@@ -719,6 +695,10 @@ mod tests {
   use super::*;
 
   #[test]
+  #[allow(
+    clippy::disallowed_methods,
+    reason = "the expected order doesn't hang on rounding"
+  )]
   fn orders_points_farthest_first() {
     let view = Matrix4::look_at_rh(
       Point3::new(10.0, 4.0, -2.0),

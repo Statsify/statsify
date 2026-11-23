@@ -378,7 +378,7 @@ mod tests {
               "east": { "texture": "#undefined" }
             }
           }],
-          "display": { "head": { "scale": [2, 2, 2] }, "gui": { "rotation": [30, 45, 0] } }
+          "display": { "head": { "scale": [2, 2, 2] }, "thirdperson": { "rotation": [30, 45, 0] } }
         }"##,
       ),
       (
@@ -386,7 +386,7 @@ mod tests {
         r##"{
           "parent": "minecraft:block/base",
           "textures": { "side": "minecraft:items/child_side" },
-          "display": { "head": {}, "gui": { "translation": [0, 1, 0] } }
+          "display": { "head": {}, "thirdperson": { "translation": [0, 1, 0] } }
         }"##,
       ),
       ("item/flat", r#"{ "parent": "builtin/generated" }"#),
@@ -420,12 +420,12 @@ mod tests {
     assert_eq!(faces, [("blocks/base_top", 1), ("items/child_side", 2)]);
     assert_eq!(model.display.head.unwrap().scale, [2.0; 3]);
 
-    let gui = Transform {
+    let thirdperson = Transform {
       translation: [0.0, 1.0, 0.0],
       ..Transform::default()
     };
 
-    assert_eq!(model.display.gui, Some(gui));
+    assert_eq!(model.display.thirdperson, Some(thirdperson));
 
     // A parent the pack doesn't supply ends the chain
     assert!(bake_model(&pack, "item/flat").unwrap().submeshes.is_empty());
