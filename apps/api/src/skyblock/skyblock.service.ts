@@ -119,7 +119,14 @@ export class SkyBlockService {
     @InjectModel(SkyBlockMuseum) private readonly museumModel: ReturnModelType<typeof SkyBlockMuseum>,
     @InjectModel(SkyBlockGarden) private readonly gardenModel: ReturnModelType<typeof SkyBlockGarden>,
     @InjectRedis() private readonly redis: Redis
-  ) {}
+  ) {
+    playerService.onDelete((uuid) => this.deletePlayer(uuid));
+  }
+
+  /** The player's stored profiles and leaderboard rows. Museums and Gardens are the profile's, so they stay. */
+  private async deletePlayer(uuid: string) {
+    await Promise.all([this.profilesModel.deleteOne({ uuid }).exec(), this.leaderboardService.removePlayer(uuid)]);
+  }
 
   public async getProfiles(tag: string, cache: CacheLevel): Promise<SkyBlockProfilesView> {
     return this.getProfilesOf(await this.getPlayer(tag), cache);
