@@ -11,13 +11,11 @@ import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/pl
 import { GameView } from "~/features/game/game-page";
 import { Link, createFileRoute, isNotFound, notFound, redirect } from "@tanstack/react-router";
 import { NotFound } from "~/components/not-found";
-import { PlayerNotFound } from "~/features/player/player-not-found";
 import { SessionNotFound } from "~/features/session/session-not-found";
 import { backgroundFor, preloadBackground } from "~/components/ui/background";
 import { cacheHeaders } from "~/lib/cache";
-import { cacheNotFoundResponse, missingPlayerResponse } from "~/lib/response";
+import { cacheNotFoundResponse } from "~/lib/response";
 import { createI18n } from "~/i18n/i18n";
-import { ensurePlayer } from "~/features/player/resolve";
 import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
 import { headingText, pageSearch, searchParam } from "~/features/game/game-data";
 import { localeData, socialMeta } from "~/lib/social-meta";
@@ -34,23 +32,17 @@ const validateSearch = (search: Record<string, unknown>): { mode?: string; submo
   submode: searchParam(search.submode),
 });
 
-/** Which not-found page to show: the player one, the one for a player without a session, or the plain 404. */
-type Missing = { missing: "player" | "session" | "game" };
+/** Which not-found page to show: the one for a player without a session, or the plain 404. */
+type Missing = { missing: "session" | "game" };
 
 export const Route = createFileRoute("/{-$locale}/player/$name/session/$game")({
   validateSearch,
   loaderDeps: ({ search }) => ({ mode: search.mode, submode: search.submode }),
-  loader: async ({ params, deps, context }) => {
-    const identity = await ensurePlayer(context.queryClient, params.name);
-
-    if (!identity) {
-      missingPlayerResponse();
-      throw notFound({ data: { missing: "player" } satisfies Missing });
-    }
-
+  loader: async ({ params, deps, context: { player: identity, queryClient } }) => {
+    // Another casing of the game lands on its key, as the layout lands the name on the current one.
     const game = params.game.toLowerCase();
 
-    if (identity.username !== params.name || game !== params.game) {
+    if (game !== params.game) {
       throw redirect({
         to: "/{-$locale}/player/$name/session/$game",
         params: { name: identity.username, game },
@@ -68,7 +60,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/session/$game")({
 
     preloadBackground(backgroundFor(game));
     const load = (key: string) =>
-      orNull(context.queryClient.ensureQueryData(sessionGameQuery(identity.uuid, key, deps.mode, deps.submode)), ["NOT_FOUND", "BAD_REQUEST"]);
+      orNull(queryClient.ensureQueryData(sessionGameQuery(identity.uuid, key, deps.mode, deps.submode)), ["NOT_FOUND", "BAD_REQUEST"]);
     const page = await load(game);
 
     if (!page) {
@@ -89,7 +81,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/session/$game")({
       }
 
       // Both 404: tell a player without a session from a game or mode the site has no page for.
-      const session = await orNull(context.queryClient.ensureQueryData(sessionPageQuery(identity.uuid)), ["NOT_FOUND"]);
+      const session = await orNull(queryClient.ensureQueryData(sessionPageQuery(identity.uuid)), ["NOT_FOUND"]);
       cacheNotFoundResponse();
       throw notFound({ data: { missing: session ? "game" : "session" } satisfies Missing });
     }
@@ -125,7 +117,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/session/$game")({
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
     if (!loaderData) {
       const missing = isNotFound(match.error) ? (match.error.data as Missing | undefined)?.missing : undefined;
-      return notFoundHead(words.t(missing === "session" ? "meta.notFound.session" : missing === "game" ? "meta.notFound.page" : "meta.notFound.player"));
+      return notFoundHead(words.t(missing === "session" ? "meta.notFound.session" : "meta.notFound.page"));
     }
 
     const { username, game, mode, submode, heading, gameName } = loaderData;
@@ -159,11 +151,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/session/$game")({
     };
   },
   headers: () => cacheHeaders(EDGE_CACHE),
-  notFoundComponent: ({ data }) => {
-    const missing = (data as Missing | undefined)?.missing;
-    if (missing === "session") return <SessionNotFound />;
-    return missing === "game" ? <GameNotFound /> : <PlayerNotFound />;
-  },
+  notFoundComponent: ({ data }) => ((data as Missing | undefined)?.missing === "session" ? <SessionNotFound /> : <GameNotFound />),
   component: SessionGamePage,
 });
 
