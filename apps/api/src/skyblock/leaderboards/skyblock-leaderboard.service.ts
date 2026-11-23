@@ -95,6 +95,16 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     ]);
   }
 
+  /** Drops every row of a deleted player, with their scores. */
+  public async removePlayer(uuid: string) {
+    const rows = await this.statsModel.find({ uuid }).select({ id: true }).lean().exec();
+
+    await Promise.all([
+      this.statsModel.deleteMany({ uuid }).exec(),
+      ...rows.map(({ id }) => this.addLeaderboards(SkyBlockStats, { id } as Flatten<SkyBlockStats>, "id", true)),
+    ]);
+  }
+
   /** Tied rows share a rank, unlike on the player and guild boards. */
   public async getLeaderboard<T>(constructor: Constructor<T>, field: string, input: number | string, type: LeaderboardQuery) {
     const leaderboard = await super.getLeaderboard(constructor, field, input, type);

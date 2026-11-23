@@ -33,6 +33,8 @@ type PlayerModel = ReturnModelType<typeof Player>;
 
 @Injectable()
 export class PlayerService {
+  private readonly deleteHooks: ((uuid: string) => Promise<unknown>)[] = [];
+
   public constructor(
     private readonly hypixelService: HypixelService,
     @Inject(forwardRef(() => PlayerLeaderboardService))
@@ -40,6 +42,11 @@ export class PlayerService {
     private readonly playerSearchService: PlayerSearchService,
     @InjectModel(Player) private readonly playerModel: PlayerModel
   ) {}
+
+  /** For a module that stores more per player and imports this one (SkyBlock), so deleting reaches it too. */
+  public onDelete(hook: (uuid: string) => Promise<unknown>) {
+    this.deleteHooks.push(hook);
+  }
 
   /**
    *
@@ -165,6 +172,7 @@ export class PlayerService {
         "uuid",
         true
       ),
+      ...this.deleteHooks.map((hook) => hook(player.uuid)),
     ]);
 
     return true;
