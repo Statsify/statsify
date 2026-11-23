@@ -35,7 +35,7 @@ The component gallery is at `/dev/gallery` on the dev server: every shared compo
 | `database.redisUrl` | site | The API's Redis, which also holds rendered unfurl images and their render locks. |
 | `site.publicUrl` | site | The origin the site is served from, for absolute URLs in Open Graph tags, oEmbed and sitemaps. |
 | `site.indexable` | site | Default true. False for a staging deploy: every response says `X-Robots-Tag: noindex`, the sitemaps 404 and robots.txt lists no sitemap. |
-| `site.turnstile.siteKey`, `site.turnstile.secretKey` | site | Cloudflare Turnstile for the lookup button. Without a secret, lookups are refused outside `environment: "dev"`. |
+| `site.turnstile.siteKey`, `site.turnstile.secretKey` | site | Cloudflare Turnstile for every lookup and update on Hypixel, the automatic update included. Without a secret, they are all refused outside `environment: "dev"`. |
 | `site.renderWorkers` | site | Threads in the unfurl image render pool, 1 to 3. Default 2. |
 | `site.hypixelBudget` | API | Hypixel calls the site's refresh and lookup may make per 5 minutes, across all visitors. 0 switches them off. A stale profile's update once it opens uses at most two-thirds of it. |
 | `sentry.siteDsn`, `sentry.tracesSampleRate` | site | Optional error reporting. |
@@ -57,5 +57,5 @@ The docs are this README and the comments beside the code: each route file says 
 
 - Run the repo's checks from the root: `pnpm build --concurrency=3 && pnpm typecheck --affected --concurrency=3 && pnpm lint --affected --concurrency=3 && pnpm test --run --maxWorkers=2`.
 - Look at every page you change at 375 and 1440 px wide, and at the gallery for a shared component.
-- A procedure the browser calls through `/api/rpc` (a client-side navigation runs the route's loader in the browser) has to be on the allow-list in `src/server/rpc-proxy.server.ts`, or the page 404s on a client-side visit.
+- A procedure the browser calls through `/api/rpc` (a client-side navigation runs the route's loader in the browser) needs an `edgeTtl` in its contract `.meta()`, which is what `src/server/rpc-proxy.server.ts` opens, or the page 404s on a client-side visit.
 - New strings go in `locales/en-US/site.json`.

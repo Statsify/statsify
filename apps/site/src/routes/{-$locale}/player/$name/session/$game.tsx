@@ -15,7 +15,7 @@ import { PlayerNotFound } from "~/features/player/player-not-found";
 import { SessionNotFound } from "~/features/session/session-not-found";
 import { backgroundFor, preloadBackground } from "~/components/ui/background";
 import { cacheHeaders } from "~/lib/cache";
-import { cacheNotFoundResponse } from "~/lib/response";
+import { cacheNotFoundResponse, missingPlayerResponse } from "~/lib/response";
 import { createI18n } from "~/i18n/i18n";
 import { ensurePlayer } from "~/features/player/resolve";
 import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
@@ -44,7 +44,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/session/$game")({
     const identity = await ensurePlayer(context.queryClient, params.name);
 
     if (!identity) {
-      cacheNotFoundResponse();
+      missingPlayerResponse();
       throw notFound({ data: { missing: "player" } satisfies Missing });
     }
 
