@@ -33,7 +33,7 @@ export class SmashHeroesMode {
   public gamesPlayed: number;
 
   @Field()
-  public damageDealt: number;
+  public damage: number;
 
   public constructor(data: APIData, mode: string) {
     mode = mode ? `_${mode}` : mode;
@@ -43,7 +43,7 @@ export class SmashHeroesMode {
     this.kills = data[`kills${mode}`];
     this.deaths = data[`deaths${mode}`];
     this.gamesPlayed = data[`games${mode}`];
-    this.damageDealt = data[`damage_dealt${mode}`];
+    this.damage = data[`damage_dealt${mode}`];
 
     this.wlr = ratio(this.wins, this.losses);
     this.kdr = ratio(this.kills, this.deaths);
@@ -73,7 +73,7 @@ export class SmashHeroesKit {
   public gamesPlayed: number;
 
   @Field()
-  public damageDealt: number;
+  public damage: number;
 
   public constructor(kit: string, data: APIData = {}) {
     this.wins = data[kit]?.wins;
@@ -81,7 +81,7 @@ export class SmashHeroesKit {
     this.kills = data[kit]?.kills;
     this.deaths = data[kit]?.deaths;
     this.gamesPlayed = data[kit]?.games;
-    this.damageDealt = data[kit]?.damage_dealt;
+    this.damage = data[kit]?.damage_dealt;
 
     this.wlr = ratio(this.wins, this.losses);
     this.kdr = ratio(this.kills, this.deaths);

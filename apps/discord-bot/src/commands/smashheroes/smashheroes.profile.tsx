@@ -58,7 +58,7 @@ export const SmashHeroesProfile = ({
         </Table.tr>
         <Table.tr>
           <Table.td title={t("stats.gamesPlayed")} value={t(stats.gamesPlayed)} color="§e" />
-          <Table.td title={t("stats.damage")} value={t(stats.damageDealt)} color="§c" />
+          <Table.td title={t("stats.damage")} value={t(stats.damage)} color="§c" />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />
