@@ -271,9 +271,7 @@ export function Search({
   useEffect(() => () => clearTimeout(draftTimer.current), []);
 
   // A hidden sheet loses its scroll position without a scroll event.
-  useEffect(() => {
-    if (!open) setFirstRow(0);
-  }, [open]);
+  if (!open && firstRow !== 0) setFirstRow(0);
 
   const close = () => {
     setFocused(false);

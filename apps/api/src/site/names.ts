@@ -7,21 +7,38 @@
  */
 
 import { FormattedGame, type GameId } from "@statsify/schemas";
+import { removeFormatting } from "@statsify/util";
 
-/** The bot's joined names, each with the color code its second word may start with ("§cWool§9Games"). */
-const JOINED = /(?<=^|[^A-Za-z]|§[\da-fk-or])(Mega|Speed|Wool|Blitz|Sheep)(§[\da-fk-or])?(Walls|UHC|Games|SG|Wars)(?![a-z])/g;
-const SPACED = new Set(["MegaWalls", "SpeedUHC", "WoolGames", "BlitzSG", "WoolWars", "SheepWars"]);
+/** The site's spelling of the games the bot joins into one word ("MegaWalls"): spaced, like "Arena Brawl". */
+const SPACED_GAMES = new Map<GameId, string>([
+  ["BLITZSG", "§2Blitz §6SG§f"],
+  ["MEGAWALLS", "§7Mega Walls§f"],
+  ["SPEED_UHC", "§bSpeed §6UHC§f"],
+  ["WOOLGAMES", "§cWool §9Games§f"],
+]);
 
 /**
- * A game, mode or leaderboard name as the site spells it: "Mega Walls" and "Wool Games", like "Arena Brawl". The bot's
- * cards keep their joined spelling, so only the site's names go through this, never a player's.
+ * Each joined spelling the schemas build names from, with the site's: a game's colored and plain name, and the
+ * WoolGames modes its leaderboard names join (its mode registry spaces them).
+ */
+const SPACED: [joined: string, spaced: string][] = [
+  ...[...SPACED_GAMES].flatMap(([game, spaced]): [string, string][] => [
+    [FormattedGame[game], spaced],
+    [removeFormatting(FormattedGame[game]), removeFormatting(spaced)],
+  ]),
+  ["WoolWars", "Wool Wars"],
+  ["SheepWars", "Sheep Wars"],
+];
+
+/**
+ * A name built from game and mode names (a leaderboard's, a mode's, a stat's) as the site spells it. The bot's cards
+ * keep their joined spelling, so only the site's names go through this, never a player's.
  */
 export const siteName = (name: string): string =>
-  name.replaceAll(JOINED, (joined, first: string, color = "", second: string) =>
-    SPACED.has(first + second) ? `${first} ${color}${second}` : joined);
+  SPACED.reduce((spelled, [joined, spaced]) => spelled.replaceAll(joined, spaced), name);
 
 /** A game's colored name, spelled as the site spells it. */
-export const gameName = (game: GameId): string => siteName(FormattedGame[game]);
+export const gameName = (game: GameId): string => SPACED_GAMES.get(game) ?? FormattedGame[game];
 
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
