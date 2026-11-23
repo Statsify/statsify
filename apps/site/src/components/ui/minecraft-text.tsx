@@ -45,9 +45,6 @@ export const colorOf = (code: string): { className?: string; style?: CSSProperti
 /** The class of the first color in a formatted string, for a title that takes its value's color. */
 export const leadingColorClass = (text: string): string => colorClass(/§([\da-f])/.exec(text)?.[1] ?? "");
 
-/** The text without its `§` codes, for a page title or an alt text. */
-export const plainText = (text: string): string => text.replaceAll(/§#[\dA-Fa-f]{6}|§\^\d+(?:\.\d+)?\^|§./g, "");
-
 /** The renderer's default text size; `§^N^` is relative to it. */
 const BASE_SIZE = 2;
 
@@ -139,16 +136,4 @@ export function MinecraftText({ children, className }: { children: string | stri
   }
 
   return <span>{elements}</span>;
-}
-
-if (import.meta.vitest) {
-  const { describe, expect, it } = import.meta.vitest;
-
-  describe("plainText", () => {
-    it("drops color, hex color, size and style codes", () => {
-      expect(plainText("§b[MVP§c+] j4cobi")).toBe("[MVP+] j4cobi");
-      expect(plainText("§#FF55aa§^3^Big§r §ltext")).toBe("Big text");
-      expect(plainText("§^1.5^half")).toBe("half");
-    });
-  });
 }

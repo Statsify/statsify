@@ -20,7 +20,7 @@ import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { createI18n } from "~/i18n/i18n";
 import { gamePageQuery, modeSearch, periodSearch, submodeSearch, unfurlCard } from "~/features/game/game-data";
 import { localeData, socialMeta } from "~/lib/social-meta";
-import { plainText } from "~/components/ui/minecraft-text";
+import { removeFormatting } from "@statsify/util/util";
 import { resolvePlayer } from "~/features/player/resolve";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { z } from "zod";
@@ -101,8 +101,8 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
       submode,
       period,
       heading: { game: page.game, heading: titled.heading },
-      gameName: plainText(page.game.name),
-      modeName: titled.heading.mode ? plainText(titled.heading.mode) : undefined,
+      gameName: removeFormatting(page.game.name),
+      modeName: titled.heading.mode ? removeFormatting(titled.heading.mode) : undefined,
       updatedAt: page.updatedAt,
       unfurl: imageSize(unfurlCard(page), "og"),
     };
@@ -117,7 +117,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const locale = localeData(matches);
     // The card's title in plain text, its words (`game.stats`) in English like the rest, from the server's `site.json`.
     const words = createI18n(DEFAULT_LOCALE, locale?.resources ?? {});
-    const card = plainText(headingText(heading, (key) => words.t(key))).replaceAll(/\s+/g, " ").trim();
+    const card = removeFormatting(headingText(heading, (key) => words.t(key))).replaceAll(/\s+/g, " ").trim();
     // The card names no period (the switcher does), so the title does: "Daily Quests (SkyWars)".
     const when = period ? `${words.t(`game.periodNames.${period}`)} ` : "";
     const title = `${possessive(username)} ${when}${card} | Statsify`;

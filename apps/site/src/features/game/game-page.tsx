@@ -18,7 +18,7 @@ import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { Hidden, InlineStat, LeaderboardLink, StatCell } from "~/components/ui/stat";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Menu } from "~/components/icons/menu";
-import { MinecraftText, colorClass, colorOf, leadingColorClass, plainText } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorClass, colorOf, leadingColorClass } from "~/components/ui/minecraft-text";
 import { RefreshBar } from "~/features/player/refresh-bar";
 import { SkinBust } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
@@ -26,6 +26,7 @@ import { gamePageQuery, modeSearch, periodSearch, submodeSearch } from "./game-d
 import { minigameXpBar } from "~/components/ui/progression";
 import { orpc } from "~/lib/orpc";
 import { refreshGame } from "~/features/player/player-actions";
+import { removeFormatting } from "@statsify/util/util";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -415,7 +416,7 @@ function useStatLabel(cell: Stat): { text: string; node: ReactNode } {
 /** A stat's heading as plain text, for its link and the filter: the card's own name, or the label's words. */
 function useLabelText(): (cell: Stat) => string {
   const { t } = useTranslation();
-  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : plainText(cell.name));
+  return (cell) => (cell.name === undefined ? t(cell.label, { ns: LABEL_NAMESPACES, ...cell.params }) : removeFormatting(cell.name));
 }
 
 /** A stat's value as the card prints it: a number in the locale's format (with its cap or unit), or the API's text. */
