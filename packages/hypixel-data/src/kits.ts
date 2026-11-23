@@ -24,13 +24,13 @@ export const kitKey = (name: string) => name.toLowerCase().replaceAll(/[^a-z]/g,
 
 const SPAWN_EGG = 383;
 
-/**
- * The 26.3 item for a 1.8 id and Damage value as Hypixel stores them. A spawn egg 26.3 has no item for, like 1.8's
- * untyped one (Damage 0, SkyWars' Mystery Egg), is undefined; any other id the table lacks throws
- */
+/** A spawn egg 26.3 has no item for, like 1.8's untyped one (Damage 0, SkyWars' Mystery Egg) */
+export const isUntypedEgg = (id: number, damage: number) => id === SPAWN_EGG && !legacyItem(id, damage);
+
+/** The 26.3 item for a 1.8 id and Damage value as Hypixel stores them. An untyped egg is undefined; any other id the table lacks throws */
 export function hypixelItem(id: number, damage = 0) {
   const item = legacyItem(id, damage);
-  if (!item && id !== SPAWN_EGG) throw new Error(`No 26.3 item for 1.8's ${id}:${damage}`);
+  if (!item && !isUntypedEgg(id, damage)) throw new Error(`No 26.3 item for 1.8's ${id}:${damage}`);
   return item;
 }
 

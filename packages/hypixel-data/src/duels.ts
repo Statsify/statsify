@@ -82,8 +82,7 @@ function duelsKit(mode: string, kit: string): Kit | undefined {
 
 /**
  * The armor a Duels kit's picker lists, by mode and kit as its layout_<mode>_<kit> key names them
- * (blitz_duel and jockey, sw_duel and kit_mini_solo_scout). Undefined for a kit the picker lists none
- * for, which is every Mega Walls Duel class
+ * (sw_duel and kit_mini_solo_scout), undefined for a kit the picker lists none for (every Mega Walls Duel class)
  */
 export function duelsKitArmor(mode: "blitz_duel" | "mw_duel" | "sw_duel", kit: string) {
   const armor = duelsKit(mode, kit)?.armor;

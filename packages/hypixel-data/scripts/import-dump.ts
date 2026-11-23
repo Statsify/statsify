@@ -18,6 +18,7 @@ import {
   type LegacyKit,
   type SkyWarsKit,
   type TntGamesMode,
+  isUntypedEgg,
   kitKey,
   leatherColor,
   skinUrl,
@@ -177,10 +178,7 @@ const blank = (line: string) => plain(line).trim() === "";
 // The editor's chest: the main rows in 0 to 26, the hotbar in 36 to 44
 const storedSlot = (slot: number) => (slot >= 36 && slot <= 44 ? slot - 36 : slot <= 26 ? slot + 9 : undefined);
 
-const SPAWN_EGG = 383;
-
-// 1.8's untyped spawn egg (Damage 0, Zookeeper's Mystery Egg) has no 26.3 item, so editors leave it out
-const untypedEgg = ({ id, damage }: DumpItem) => id === "minecraft:spawn_egg" && !legacyItem(SPAWN_EGG, damage);
+const untypedEgg = (item: DumpItem) => item.id === "minecraft:spawn_egg" && isUntypedEgg(legacyId(item), item.damage);
 
 const editorItems = (screen: Screen) =>
   screen.slots.flatMap(({ slot, item }) => {
