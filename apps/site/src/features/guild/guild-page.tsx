@@ -53,6 +53,7 @@ export function GuildView({ guild }: { guild: GuildPage }) {
             </PanelToggle>
             <Updated updatedAt={guild.updatedAt} />
           </Box>
+          {comparing && <GuildComparePanel id={compareId} name={guild.name} className="lg:col-span-2" />}
           <Box title={<h2 className="text-mc-1.5 text-mc-gray">{t("guild.info")}</h2>} className="content:leading-[24px]">
             {guild.master && (
               <p className="text-mc-aqua">
@@ -90,7 +91,6 @@ export function GuildView({ guild }: { guild: GuildPage }) {
             </Box>
           )}
         </div>
-        {comparing && <GuildComparePanel id={compareId} name={guild.name} />}
         {[
           { id: "guild-exp", title: t("guild.exp"), daily: guild.daily, weekly: guild.weekly, monthly: guild.monthly },
           { id: "guild-scaled-exp", title: t("default:stats.guild.scaledGexp"), daily: guild.scaledDaily, weekly: guild.scaledWeekly, monthly: guild.scaledMonthly },

@@ -7,6 +7,7 @@
  */
 
 import { Box } from "~/components/ui/box";
+import { cn } from "~/lib/util";
 import { gameLink, pageSearch } from "~/features/game/game-data";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import { localePrefix } from "~/i18n/locales";
@@ -36,7 +37,7 @@ export function ComparePanel({ id, page }: { id: string; page: GamePage }) {
 }
 
 /** The guild page's Compare panel: another guild's name, then the two side by side. */
-export function GuildComparePanel({ id, name }: { id: string; name: string }) {
+export function GuildComparePanel({ id, name, className }: { id: string; name: string; className?: string }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -47,6 +48,8 @@ export function GuildComparePanel({ id, name }: { id: string; name: string }) {
       label={t("compare.guild")}
       action={`/guild/${encodeURIComponent(name)}/compare`}
       open={(b) => navigate({ to: "/{-$locale}/guild/$name/compare/$b", params: { name, b } })}
+      className={className}
+      formClassName="mx-auto max-w-160"
     />
   );
 }
@@ -62,6 +65,8 @@ function CompareForm({
   action,
   fields,
   open,
+  className,
+  formClassName,
 }: {
   id: string;
   title: string;
@@ -69,6 +74,8 @@ function CompareForm({
   action: string;
   fields?: Record<string, string | undefined>;
   open: (b: string) => Promise<void>;
+  className?: string;
+  formClassName?: string;
 }) {
   const { t } = useTranslation();
   const inputId = useId();
@@ -81,7 +88,7 @@ function CompareForm({
   }, []);
 
   return (
-    <Box id={id} title={<h2 className="text-mc-1.5">{title}</h2>}>
+    <Box id={id} title={<h2 className="text-mc-1.5">{title}</h2>} className={className}>
       <form
         method="get"
         action={`${localePrefix(locale)}${action}`}
@@ -89,7 +96,7 @@ function CompareForm({
           event.preventDefault();
           void open(String(new FormData(event.currentTarget).get("b")).trim());
         }}
-        className="flex flex-wrap items-center gap-3"
+        className={cn("flex flex-wrap items-center gap-3", formClassName)}
       >
         {Object.entries(fields ?? {}).map(([key, value]) => value !== undefined && <input key={key} type="hidden" name={key} value={value} />)}
         <label htmlFor={inputId} className="shrink-0 text-mc-1 text-mc-gray">{label}</label>
