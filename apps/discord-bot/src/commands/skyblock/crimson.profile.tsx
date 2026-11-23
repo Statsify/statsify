@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Card } from "./components/Card.js";
+import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
-import { Empty } from "./components/Empty.js";
 import { ItemSlot } from "./components/ItemSlot.js";
 import { FACTION_COLORS } from "@statsify/skyblock/display";
 import { prettify } from "@statsify/util";
@@ -21,11 +20,7 @@ export const SkyBlockCrimsonProfile = ({ profile, t, icons, ...card }: SkyBlockP
   const crimson = profile.member.crimson;
 
   if (!crimson) {
-    return (
-      <Card {...card} name={profile.displayName}>
-        <Empty text={t("skyblock.noCrimson")} />
-      </Card>
-    );
+    return <EmptyCard {...card} name={profile.displayName} text={t("skyblock.noCrimson")} />;
   }
 
   const { faction, reputation } = crimson;
