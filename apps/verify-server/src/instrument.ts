@@ -17,6 +17,6 @@ Sentry.init({
   // Sentry 11 collects all of these by default
   dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
   normalizeDepth: 3,
-  tracesSampleRate: await config("sentry.tracesSampleRate"),
+  tracesSampleRate: await config("sentry.tracesSampleRate", { required: sentryDsn !== undefined }),
   environment: await config("environment"),
 });

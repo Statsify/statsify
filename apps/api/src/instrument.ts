@@ -25,6 +25,6 @@ Sentry.init({
     httpHeaders: { request: { deny: ["ip", "forwarded"] } },
   },
   normalizeDepth: 3,
-  tracesSampleRate: await config("sentry.tracesSampleRate"),
+  tracesSampleRate: await config("sentry.tracesSampleRate", { required: sentryDsn !== undefined }),
   environment: await config("environment"),
 });
