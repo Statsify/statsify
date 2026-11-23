@@ -33,7 +33,8 @@ const LINKS = [
 ] as const;
 
 // Smaller under 360 px, where the pages' row and the logo's row with the search button don't fit 288 px at full size.
-const NAV_LINK = "flex min-h-11 min-w-11 items-center justify-center text-mc-1.5 max-[22.5rem]:text-mc-1 opacity-80 transition-opacity hover:opacity-100 hover:underline";
+// The 44 px tap width is an overlay, not `min-w-11`, so a short name like "Bot" still ends on the frame line.
+const NAV_LINK = "relative flex min-h-11 items-center text-mc-1.5 max-[22.5rem]:text-mc-1 opacity-80 transition-opacity hover:opacity-100 hover:underline after:absolute after:inset-y-0 after:left-1/2 after:w-full after:min-w-11 after:-translate-x-1/2";
 
 /**
  * Every page carries a compact search in the header except those with a search of their own: Players, Guilds, and Bingo
@@ -95,7 +96,7 @@ export function Header() {
                   className={cn(NAV_LINK, "data-[status=active]:font-bold data-[status=active]:underline data-[status=active]:opacity-100")}
                 >
                   {/* Each name holds its bold width, so the links after it don't move when it becomes the page's. */}
-                  <span className="grid justify-items-center">
+                  <span className="grid justify-items-start">
                     <span className="col-start-1 row-start-1">{t(`nav.${key}`)}</span>
                     <span aria-hidden className="invisible col-start-1 row-start-1 font-bold">{t(`nav.${key}`)}</span>
                   </span>
