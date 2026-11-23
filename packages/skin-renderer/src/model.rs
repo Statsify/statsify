@@ -574,12 +574,12 @@ impl Model {
     });
   }
 
-  // Every pipeline blends and writes depth, so this order shows in the render
+  // Partly transparent texels blend in this order, so what the player wears goes over the skin
   pub fn draw_items(&self) -> Vec<DrawItem<'_>> {
     let skin = self.meshes.iter().map(|mesh| DrawItem {
       mesh,
       material: &self.material,
-      pipeline: Pipeline::Main,
+      pipeline: Pipeline::Worn(None),
       transform: Matrix4::identity(),
     });
 
@@ -590,7 +590,7 @@ impl Model {
       .map(|attachment| DrawItem {
         mesh: &attachment.mesh,
         material: &attachment.material,
-        pipeline: Pipeline::Attachment,
+        pipeline: Pipeline::Worn(None),
         transform: Matrix4::identity(),
       });
 
@@ -602,7 +602,7 @@ impl Model {
         .map(move |attachment| DrawItem {
           mesh: &attachment.mesh,
           material: &attachment.material,
-          pipeline: Pipeline::Enchanted(glint),
+          pipeline: Pipeline::Worn(Some(glint)),
           transform: Matrix4::identity(),
         })
     });

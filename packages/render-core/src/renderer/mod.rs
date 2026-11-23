@@ -27,15 +27,12 @@ use crate::mesh::{DrawMesh, Mesh};
 use crate::texture::Texture;
 
 pub enum Pipeline<'a> {
-  Main,
-  Attachment,
-  Enchanted(&'a Material),
   // Only fully opaque texels
   Cutout,
   // Cutout's texels, then the partly transparent ones over everything else
   Translucent,
-  // Translucent for a layer on an opaque body, such as a skin's outer layer or armor, with
-  // Enchanted's glint if any. It blends before Translucent, since the body lies behind it.
+  // Translucent for a player's skin and what they wear, with an enchanted piece's glint. It blends
+  // before Translucent, since the body lies behind it.
   Worn(Option<&'a Material>),
 }
 
@@ -47,9 +44,6 @@ pub struct DrawItem<'a> {
 }
 
 struct Pipelines {
-  main: wgpu::RenderPipeline,
-  attachment: wgpu::RenderPipeline,
-  enchanted: wgpu::RenderPipeline,
   cutout: wgpu::RenderPipeline,
   blended: wgpu::RenderPipeline,
   enchanted_cutout: wgpu::RenderPipeline,
@@ -163,9 +157,6 @@ impl<T: Backend> Renderer<T> {
     };
 
     let pipelines = Pipelines {
-      main: create(&bind_group_layouts, "fs_main", true),
-      attachment: create(&bind_group_layouts, "fs_attachment", true),
-      enchanted: create(&enchanted_bind_group_layouts, "fs_enchanted", true),
       cutout: create(&bind_group_layouts, "fs_cutout", true),
       // Blended texels leave the depth alone, so nothing drawn behind them later is hidden
       blended: create(&bind_group_layouts, "fs_blended", false),
@@ -311,9 +302,6 @@ impl<T: Backend> Renderer<T> {
       .iter()
       .enumerate()
       .map(|(index, item)| match item.pipeline {
-        Pipeline::Main => (index, &pipelines.main, None),
-        Pipeline::Attachment => (index, &pipelines.attachment, None),
-        Pipeline::Enchanted(glint) => (index, &pipelines.enchanted, Some(glint)),
         Pipeline::Cutout | Pipeline::Translucent | Pipeline::Worn(None) => {
           (index, &pipelines.cutout, None)
         }
@@ -595,12 +583,10 @@ impl Renderer<native::NativeBackend> {
       camera,
       self.backend.get_output_texture(),
       &self.depth_texture,
-      false,
     )
   }
 
-  // Renders into textures of its own, at any size the device allows. Unlike `render`, whose skin
-  // renders have always kept them premultiplied, partly transparent pixels keep their own color.
+  // Renders into textures of its own, at any size the device allows
   pub fn render_sized(
     &self,
     items: &[DrawItem<'_>],
@@ -625,7 +611,7 @@ impl Renderer<native::NativeBackend> {
 
     let depth_texture = Texture::create_depth_texture(device, &config, "depth_texture");
 
-    self.render_into(items, camera, &output_texture, &depth_texture, true)
+    self.render_into(items, camera, &output_texture, &depth_texture)
   }
 
   // Renders run on several threads at once, so each gets its own camera and light
@@ -636,7 +622,6 @@ impl Renderer<native::NativeBackend> {
     camera: &Camera,
     output_texture: &wgpu::Texture,
     depth_texture: &Texture,
-    unpremultiply: bool,
   ) -> Result<Vec<u8>> {
     let camera_bind_group = self.uniform_bind_group(
       &self.camera_bind_group_layout,
@@ -658,7 +643,7 @@ impl Renderer<native::NativeBackend> {
 
     self
       .backend
-      .handle_encoder_after_render(encoder, output_texture, unpremultiply)
+      .handle_encoder_after_render(encoder, output_texture)
   }
 
   fn uniform_bind_group(&self, layout: &wgpu::BindGroupLayout, contents: &[u8]) -> wgpu::BindGroup {
