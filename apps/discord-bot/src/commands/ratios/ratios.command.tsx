@@ -15,6 +15,7 @@ import {
   BlitzSGKit,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
+  type GameMode,
   type GameModeWithSubModes,
   type GameModes,
   LEADERBOARD_RATIOS,
@@ -53,11 +54,14 @@ import {
 } from "#constants";
 import { RatiosProfile, type RatiosProfileProps, type RatioWithStats } from "./ratios.profile.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
+import { formatDuelsMode } from "#commands/duels/duels.profile";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
 const args = [PlayerArgument];
+
+const formatSubmode = (mode: GameMode<any>) => `${mode.formatted} ${mode.submode.formatted}`;
 
 @Command({ description: (t) => t("commands.ratios") })
 export class RatiosCommand {
@@ -106,7 +110,7 @@ export class RatiosCommand {
 
   @SubCommand({ description: (t) => t("commands.ratios-duels"), args })
   public duels(context: CommandContext) {
-    return this.run(context, DUELS_MODES);
+    return this.run(context, DUELS_MODES, undefined, formatDuelsMode);
   }
 
   @SubCommand({ description: (t) => t("commands.ratios-megawalls"), args })
@@ -185,7 +189,8 @@ export class RatiosCommand {
   private async run<T extends GamesWithBackgrounds>(
     context: CommandContext,
     modes: GameModes<T>,
-    filterModes?: (player: Player, modes: GameModeWithSubModes<T>[]) => GameModeWithSubModes<T>[]
+    filterModes?: (player: Player, modes: GameModeWithSubModes<T>[]) => GameModeWithSubModes<T>[],
+    formatMode: (mode: GameMode<any>) => string = formatSubmode
   ) {
     const user = context.getUser();
     const player = await this.apiService.getPlayer(context.option("player"), user);
@@ -223,7 +228,7 @@ export class RatiosCommand {
           t,
           user,
           badge,
-          mode: { ...mode, submode },
+          formattedMode: submode ? formatMode({ ...mode, submode }) : mode.formatted,
           gameName: MODES_TO_FORMATTED.get(modes)!,
           ratios,
         };
