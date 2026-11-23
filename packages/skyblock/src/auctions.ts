@@ -166,6 +166,7 @@ export type SeenIndex = Map<string, { key: string; count: number } | null>;
 interface Bins {
   lowest: number;
   second?: number;
+  third?: number;
   listings: number;
 }
 
@@ -192,15 +193,21 @@ function addListing(bins: Map<string, Bins>, key: string, price: number) {
 
   bin.listings++;
   if (price < bin.lowest) {
+    bin.third = bin.second;
     bin.second = bin.lowest;
     bin.lowest = price;
   } else if (bin.second === undefined || price < bin.second) {
+    bin.third = bin.second;
     bin.second = price;
+  } else if (bin.third === undefined || price < bin.third) {
+    bin.third = price;
   }
 }
 
-/** A lowest BIN under half the second lowest is bait or a fat finger, so the second lowest wins. */
-const binPrice = ({ lowest, second }: Bins) => (second !== undefined && lowest < second / 2 ? second : lowest);
+// A lowest BIN under half the second lowest is bait or a fat finger, so the second wins, but only when a third
+// within twice the second backs it: with two asks, either one could be the outlier.
+const binPrice = ({ lowest, second, third }: Bins) =>
+  second !== undefined && third !== undefined && lowest < second / 2 && third <= second * 2 ? second : lowest;
 
 /** Auctions in `seen` reuse their key, so only new ones are decoded. asOf is the first page's lastUpdated. */
 export async function buildPriceMap(
@@ -334,7 +341,19 @@ if (import.meta.vitest) {
         auction(9, 70_000_000, { id: "PET", attributes: { petInfo: JSON.stringify({ type: "GRIFFIN", tier: "LEGENDARY", exp: 1e6 }) } }),
       ],
     },
-    { totalPages: 2, lastUpdated: 1060, auctions: [hyperion, auction(10, 2_000_000, { id: "GOBLIN_CHESTPLATE" })] },
+    {
+      totalPages: 2,
+      lastUpdated: 1060,
+      auctions: [
+        hyperion,
+        auction(10, 2_000_000, { id: "GOBLIN_CHESTPLATE" }),
+        auction(11, 200_000, { id: "DIAMOND_PICKAXE" }),
+        auction(12, 7_000_000, { id: "DIAMOND_PICKAXE" }),
+        auction(13, 1_000_000, { id: "JUNGLE_AXE" }),
+        auction(14, 5_000_000, { id: "JUNGLE_AXE" }),
+        auction(15, 10_000_001, { id: "JUNGLE_AXE" }),
+      ],
+    },
   ];
 
   const quickStatus = { buyPrice: 2000, buyMovingWeek: 1, sellMovingWeek: 1 };
@@ -360,16 +379,18 @@ if (import.meta.vitest) {
 
     expect(map.asOf).toBe(1000);
     expect(map.entries).toEqual({
-      // 1 coin is under half of the 900M listing, so the guard skips it.
+      // 1 coin is under half of the 900M listing, and the 950M one backs 900M, so the guard skips it.
       HYPERION: { coins: 900_000_000, source: "bin", listings: 3 },
       ASPECT_OF_THE_END: { coins: 100_000, source: "bin", listings: 2 },
       KAT_BOUQUET: { coins: 100_000, source: "bin", listings: 1 },
       GOBLIN_CHESTPLATE: { coins: 2_000_000, source: "bin", listings: 1 },
+      DIAMOND_PICKAXE: { coins: 200_000, source: "bin", listings: 2 },
+      JUNGLE_AXE: { coins: 1_000_000, source: "bin", listings: 3 },
       ENCHANTED_DIAMOND: { coins: 1700, source: "bazaar", buy: 2000 },
       ARROW: { coins: 2, source: "npc" },
     });
     expect([...seen.values()].filter((listing) => listing === null)).toHaveLength(1);
-    expect(seen.size).toBe(9);
+    expect(seen.size).toBe(14);
 
     // A second pull reuses what it saw: this blob no longer decodes, so the key can only come from `seen`.
     const again = { ...pages[0], auctions: [{ ...pages[0].auctions[1], item_bytes: "not nbt" }] };
