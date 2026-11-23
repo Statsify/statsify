@@ -49,7 +49,6 @@ struct Placement {
   position: Vector3<f32>,
   dimensions: Vector3<f32>,
   rotation: Option<CenterRotation>,
-  posed: bool,
 }
 
 impl Placement {
@@ -143,7 +142,6 @@ impl Part {
         quaternion,
         pivot_delta: Vector3::unit_y() * pivot_height,
       }),
-      posed: part_pose.is_some(),
     }
   }
 
@@ -247,18 +245,11 @@ impl<'a> BodyPart<'a> {
           extrude: false,
         }
         .create();
-
-        // In Minecraft the outer layer is scaled up 12.5%. Unposed parts keep scale_around, so
-        // standing renders stay the same.
-        match rotation {
-          Some(rotation) if self.placement.posed => {
-            let turned_center =
-              rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot;
-            layer.grow_around(1.125, turned_center);
-          }
-          _ => layer.scale_around(1.125, position),
-        }
-
+        // In Minecraft the outer layer is scaled up 12.5%
+        let center = rotation.map_or(position, |rotation| {
+          rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot
+        });
+        layer.scale_around(1.125, center);
         layer
       }
     };
@@ -483,7 +474,7 @@ impl Model {
           .create();
 
           if skull {
-            box_geometry.grow_around(1.1875, neck);
+            box_geometry.scale_around(1.1875, neck);
           } else {
             box_geometry.scale_around(part.z_fighting_scale(), position);
           }
