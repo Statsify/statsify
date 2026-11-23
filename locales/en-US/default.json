@@ -358,6 +358,10 @@
       "preview": "$t(errors.premiumRequired.preview)",
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
     },
+    "expiredButtons": {
+      "description": "These buttons have expired. Run the command again.",
+      "title": "Buttons Expired"
+    },
     "footerTooLong": {
       "description": "The message you provided is too long. It should be under 50 characters excluding color codes.",
       "title": "Message Too Long"

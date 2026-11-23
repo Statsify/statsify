@@ -234,7 +234,15 @@ export abstract class AbstractCommandListener {
   protected onMessageComponent(interaction: Interaction): InteractionServer.InteractionReply {
     const hook = this.hooks.get(interaction.getCustomId());
 
-    const res = hook?.(interaction);
+    if (!hook) {
+      interaction
+        .sendFollowup({ ...new ErrorMessage("errors.expiredButtons"), ephemeral: true })
+        .catch((err) => this.logger.error(err));
+
+      return { type: InteractionResponseType.DeferredMessageUpdate };
+    }
+
+    const res = hook(interaction);
 
     if (res && !(res instanceof Promise)) return res;
 
