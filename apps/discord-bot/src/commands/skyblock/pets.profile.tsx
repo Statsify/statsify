@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem } from "#components";
+import { Card } from "./components/Card.js";
+import type { SidebarItem } from "#components";
 import { Empty } from "./components/Empty.js";
 import { ItemGrid } from "./components/ItemGrid.js";
 import { PLAYER_STATS, RARITY_COLORS } from "@statsify/skyblock/display";
@@ -26,17 +27,7 @@ const petName = ({ name, rarity, skinColor }: PetView) =>
 export const petIcons = (member: MemberView) =>
   topPets(member).flatMap(({ texture, heldItemTexture }) => (heldItemTexture ? [texture, heldItemTexture] : [texture]));
 
-export const SkyBlockPetsProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-}: SkyBlockProfileProps) => {
+export const SkyBlockPetsProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
   const { score, active, pets, totalXp, skinned, candyUsed, activeStats } = profile.member.pets!;
 
   const sidebar: SidebarItem[] = [
@@ -64,13 +55,11 @@ export const SkyBlockPetsProfile = ({
   });
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {stats.length > 0 ? <StatLines label={t("skyblock.activePet")} stats={stats} t={t} /> : <></>}
       {items.length > 0 ?
         <ItemGrid items={items} icons={icons} columns={3} stacked /> :
         <Empty text={t("skyblock.noPets")} />}
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };

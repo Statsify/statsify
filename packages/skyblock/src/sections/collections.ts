@@ -66,12 +66,13 @@ function unlockedTiers(unlocked: string[]) {
  * With the member's Collections API off, only tiers come, from `unlocked_coll_tiers`, which can trail the co-op's.
  */
 export function getCollections(profile: RawProfile, member: RawMember, items?: ItemsResource): CollectionsSection | null {
-  const unlocked = member.collection ? undefined : member.player_data?.unlocked_coll_tiers;
+  const unlocked = member.player_data?.unlocked_coll_tiers;
   if (!member.collection && !unlocked) return null;
 
   const members = coopMembers(profile);
   const counted = members.filter(([, other]) => other.collection);
-  const reached = unlocked && unlockedTiers(unlocked);
+  // A co-op member with the API off leaves the sum short of a tier the member already unlocked
+  const reached = unlockedTiers(unlocked ?? []);
 
   const categories = COLLECTIONS.map(({ id, name, items: collections }) => ({
     id,
@@ -79,11 +80,11 @@ export function getCollections(profile: RawProfile, member: RawMember, items?: I
     items: collections.map(({ id, name, tiers }): CollectionView => {
       const item = items?.items[id];
       const texture = item && resourceTexture(item);
+      // The list can name tiers the resource no longer has (Redstone at 16 of 9)
+      const unlockedTier = Math.min(reached.get(id) ?? 0, tiers.length);
 
-      if (reached) {
-        // The list can name tiers the resource no longer has (Redstone at 16 of 9)
-        const tier = Math.min(reached.get(id) ?? 0, tiers.length);
-        return { id, name, texture, tier, maxTier: tiers.length, next: tiers[tier], members: [] };
+      if (!member.collection) {
+        return { id, name, texture, tier: unlockedTier, maxTier: tiers.length, next: tiers[unlockedTier], members: [] };
       }
 
       const parts = counted
@@ -91,7 +92,7 @@ export function getCollections(profile: RawProfile, member: RawMember, items?: I
         .filter(({ amount }) => amount > 0)
         .toSorted((a, b) => b.amount - a.amount);
       const amount = add(...parts.map(({ amount }) => amount));
-      const tier = collectionTier(amount, tiers);
+      const tier = Math.max(collectionTier(amount, tiers), unlockedTier);
 
       return {
         id,
@@ -124,6 +125,21 @@ if (import.meta.vitest) {
     expect(collectionTier(99, [50, 100, 250])).toBe(1);
     expect(collectionTier(100, [50, 100, 250])).toBe(2);
     expect(collectionTier(1e9, [50, 100, 250])).toBe(3);
+  });
+
+  // A co-op of two, the other member with the Collections API off
+  const tierOf = (amount: number, unlocked: string[]) => {
+    const member: RawMember = { collection: { "INK_SACK:3": amount }, player_data: { unlocked_coll_tiers: unlocked } };
+    const profile = { profile_id: "p", cute_name: "Apple", members: { a: member, b: {} } };
+    return getCollections(profile, member)
+      ?.categories.flatMap(({ items }) => items)
+      .find(({ id }) => id === "INK_SACK:3")?.tier;
+  };
+
+  test("getCollections reads a tier no lower than the member unlocked, which a hidden co-op member can leave the sum under", () => {
+    expect(tierOf(100, ["INK_SACK:3_4"])).toBe(4);
+    expect(tierOf(10_000, ["INK_SACK:3_2"])).toBe(6);
+    expect(tierOf(100, ["INK_SACK:3_16"])).toBe(9);
   });
 
   test("unlockedTiers keeps each collection's highest tier", () => {

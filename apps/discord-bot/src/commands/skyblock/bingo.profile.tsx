@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { arrayGroup, formatTime } from "@statsify/util";
 import { gridRows } from "./components/ItemGrid.js";
 import type { BingoView, PlayerRef } from "@statsify/skyblock";
@@ -47,7 +48,7 @@ const GoalCell = ({ lines, value, color }: { lines: string[]; value: string; col
   </box>
 );
 
-export const SkyBlockBingoProfile = ({ bingo, now, skin, badge, background, logo, user, t, title }: SkyBlockBingoProfileProps) => {
+export const SkyBlockBingoProfile = ({ bingo, now, t, ...card }: SkyBlockBingoProfileProps) => {
   const { player, goals, end } = bingo;
   const personal = goals.filter(({ community }) => !community).length;
 
@@ -73,10 +74,8 @@ export const SkyBlockBingoProfile = ({ bingo, now, skin, badge, background, logo
   });
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={bingo.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={bingo.displayName} sidebar={sidebar}>
       <Table.table>{gridRows(cells, COLUMNS)}</Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };

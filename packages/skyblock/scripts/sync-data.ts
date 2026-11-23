@@ -79,6 +79,18 @@ const write = (file: string, data: unknown) => {
   return Promise.resolve();
 };
 
+// A shared key merges two boards, and a dropped one restarts its board empty with the old scores left behind
+function checkBoards(kind: string, old: string[][], next: string[][]) {
+  const keys = next.map(([key]) => key);
+  const shared = [...new Set(keys.filter((key, index) => keys.indexOf(key) !== index))];
+  if (shared.length > 0) throw new Error(`${kind} boards share keys: ${shared.join(", ")}`);
+
+  const removed = old.map(([key]) => key).filter((key) => !keys.includes(key));
+  if (removed.length > 0 && process.env.ALLOW_REMOVED_BOARDS !== "1") {
+    throw new Error(`${kind} boards removed: ${removed.join(", ")}. Rerun with ALLOW_REMOVED_BOARDS=1 to drop them anyway.`);
+  }
+}
+
 const notice = ({ minecraftData, repo, sha, skills, collections }: Source, license: string) =>
   `textures-1.8.json takes 1.8's block and item ids, names and variants from minecraft-data (${minecraftData.repo}) at ${minecraftData.sha}, which its README licenses as MIT.\n\nThe skill XP tables in leveling.json and the skill stats in stats.json come from Hypixel's SkyBlock skills resource (${skills.url}), version ${skills.version}. collections.json comes from Hypixel's SkyBlock collections resource (${collections.url}), version ${collections.version}.\n\nThe other JSON files here, and the slayer and pet score tables in stats.json, are derived from NEU-REPO (${repo}) at ${sha}. sblevels.json, the level colors in leveling.json and the base table in stats.json are derived from it at ${NEU_BEFORE_REMOVAL}, before it removed them. All of it is under NEU-REPO's MIT license:\n\n${license}`;
 
@@ -98,7 +110,9 @@ try {
   const boards = JSON.parse(await readFile(boardsFile, "utf8"));
   let boardsSet = false;
   const setBoards: SyncContext["setBoards"] = (kind, list) => {
-    boards[kind] = list.map(({ key, name }) => [key, name]);
+    const next = list.map(({ key, name }) => [key, name]);
+    checkBoards(kind, boards[kind], next);
+    boards[kind] = next;
     boardsSet = true;
   };
 
