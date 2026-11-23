@@ -51,6 +51,7 @@ export function GuildView({ guild }: { guild: GuildPage }) {
             <PanelToggle open={comparing} controls={compareId} onToggle={() => setComparing(!comparing)}>
               {t("compare.open")}
             </PanelToggle>
+            <Updated updatedAt={guild.updatedAt} />
           </Box>
           <Box title={<h2 className="text-mc-1.5 text-mc-gray">{t("guild.info")}</h2>} className="content:leading-[24px]">
             {guild.master && (
@@ -68,7 +69,7 @@ export function GuildView({ guild }: { guild: GuildPage }) {
               {t("default:stats.guild.gexp")}: <span className="text-mc-white">{n(guild.exp)}</span>
             </p>
           </Box>
-          <Box className="content:flex content:flex-col content:items-center content:justify-center content:text-center content:leading-[24px]">
+          <Box className="content:flex content:flex-col content:justify-center content:leading-[24px]">
             <p>{t("default:stats.guild.level")}: <MinecraftText>{`${color}${n(guild.level)}`}</MinecraftText></p>
             <p>
               {t("default:stats.progression.gexp")}: <span className="text-mc-aqua">{n(guild.progression.current)}</span>/
@@ -118,7 +119,6 @@ export function GuildView({ guild }: { guild: GuildPage }) {
           )}
         </div>
         <MemberTable members={guild.members} total={guild.memberCount} />
-        <Updated updatedAt={guild.updatedAt} />
       </div>
     </div>
   );
@@ -148,7 +148,7 @@ export function GuildNotFoundView({ name, first }: { name: string; first?: strin
 /** Its own component, so the clock's tick each second re-renders the line and not the page. */
 function Updated({ updatedAt }: { updatedAt: number }) {
   const now = useNow();
-  return <p className="text-mc-1.5 text-mc-gray empty:hidden">{now !== undefined && <UpdatedAt updatedAt={updatedAt} now={now} />}</p>;
+  return <p className="text-mc-1 text-mc-gray empty:hidden">{now !== undefined && <UpdatedAt updatedAt={updatedAt} now={now} />}</p>;
 }
 
 type BarRow = { key: string; label: string; value: number; icon?: string };
