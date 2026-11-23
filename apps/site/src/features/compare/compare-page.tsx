@@ -17,6 +17,7 @@ import { SectionTitle, useStatLabel, useStatValue } from "~/features/game/stat-p
 import { SkinHead } from "~/components/ui/skin";
 import { type GameFrame, type GameScope, type Heading, gameLink, headingText, pageSearch } from "~/features/game/game-data";
 import { cn } from "~/lib/util";
+import { LABEL_NAMESPACES } from "~/i18n/i18n";
 import { useTranslation } from "react-i18next";
 import type { GamePage, StatCell as Stat, StatSection } from "@statsify/contract";
 import type { ReactNode } from "react";
@@ -53,7 +54,7 @@ const lead = (cell: Stat, other: Stat) =>
  * own page of the game; the game nav and mode switcher keep to the comparison.
  */
 export function CompareView({ a, b }: { a: GamePage; b: GamePage }) {
-  const sides = compareSides(a, b);
+  const sides: Sides = [<PlayerRowName key="a" page={a} />, <PlayerRowName key="b" page={b} />];
 
   return (
     <CompareShell a={a} b={b} heading={a.heading} levels={[a.level?.current, b.level?.current]}>
@@ -68,9 +69,6 @@ export function CompareView({ a, b }: { a: GamePage; b: GamePage }) {
     </CompareShell>
   );
 }
-
-/** What starts each side's rows: the two players' heads and names. */
-export const compareSides = (a: GameFrame, b: GameFrame): Sides => [<PlayerRowName key="a" page={a} />, <PlayerRowName key="b" page={b} />];
 
 /**
  * Everything a comparison has around its tables, whoever lays them out: both nametags with their levels (`levels`),
@@ -190,5 +188,39 @@ function CompareStat({ cell, other }: { cell: Stat; other: Stat }) {
         </dd>
       </div>
     </StatBox>
+  );
+}
+
+/**
+ * A stat of both players in one cell, as a page the site lays out draws it: the label over each player's value in the
+ * order of their nametags, the higher with how far it leads, in gray.
+ */
+export function PairedStat({ pair, players }: { pair: Pair; players: [GameFrame, GameFrame] }) {
+  const { t } = useTranslation();
+  const label = useStatLabel(pair.a);
+  const { className, style } = colorOf(pair.a.color);
+
+  return (
+    <div className="flex min-w-0 grow flex-col items-center justify-end gap-1 text-center">
+      <dt className={cn("max-w-full text-mc-1.5 text-balance wrap-break-word", className)} style={style}>
+        <Hint full={label.full}>{pair.a.short ? t(pair.a.short, { ns: LABEL_NAMESPACES }) : label.node}</Hint>
+      </dt>
+      <PairedValue cell={pair.a} other={pair.b} player={players[0]} />
+      <PairedValue cell={pair.b} other={pair.a} player={players[1]} />
+    </div>
+  );
+}
+
+function PairedValue({ cell, other, player }: { cell: Stat; other: Stat; player: GameFrame }) {
+  const value = useStatValue(cell);
+  const by = lead(cell, other);
+
+  return (
+    <dd className="flex max-w-full flex-wrap items-center justify-center gap-x-2 text-mc-1.5 lg:text-mc-2">
+      <SkinHead uuid={player.uuid} size={16} className="shrink-0" />
+      <span className="sr-only">{player.username}</span>
+      <span className="mc-crisp min-w-0 wrap-break-word">{value}</span>
+      {by > 0 && <Difference value={by} suffix={cell.suffix} className="ms-0 whitespace-nowrap text-mc-gray" />}
+    </dd>
   );
 }

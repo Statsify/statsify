@@ -6,7 +6,23 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Boxes, Headline, PageLayout, StatList, type StatPath, StatRow, type StatsGame, StatTable, readStat, statFor, usePlayerStats } from "./parts";
+import {
+  Boxes,
+  HeadlineTable,
+  OverviewTable,
+  PageLayout,
+  Selections,
+  StatList,
+  type StatPath,
+  StatRow,
+  type StatsGame,
+  StatTable,
+  type StatValue,
+  readStat,
+  statFor,
+  usePlayerStats,
+  useStatsKind,
+} from "./parts";
 import { formatTime, prettify } from "@statsify/util/util";
 import type { ApiModeFromGameModes, DuelsModes, PlayerStats } from "@statsify/schemas";
 import type { ReactNode } from "react";
@@ -47,204 +63,245 @@ const TITLES = [
   "skywars", "sumo", "uhc",
 ] as const satisfies Mode[];
 
+/** The modes the card draws as Overall, Solo and Doubles boxes, each leading with its Overall box. */
+const BOXED = ["classic", "op", "skywars"] as const satisfies Mode[];
+type BoxedMode = (typeof BOXED)[number];
+const isBoxed = (mode: Mode): mode is BoxedMode => (BOXED as readonly Mode[]).includes(mode);
+
+type Place = PlaceWith<"kdr"> | "arena" | "parkour" | "spleef.bowSpleef" | "spleef.spleef";
+const placeOf = (mode: Mode, submode: string | null) => (submode ? `${mode}.${submode}` : mode) as Place;
+
+// Arena, Parkour and both Spleef modes count no kills.
+const countsKills = (place: Place): place is PlaceWith<"kdr"> => place !== "arena" && place !== "parkour" && place !== "spleef.bowSpleef" && place !== "spleef.spleef";
+
 // Hypixel leaves winstreaks out for a player who hides them, which reads back as 0. One win is a streak of one, so
 // wins with no best winstreak mean they're hidden.
 const streaksHidden = ({ overall }: Duels) => overall.wins > 0 && !overall.bestWinstreak;
 
-const streaks = (at: PlaceWith<"bestWinstreak">) => (
-  <StatRow>
-    <Stat path={`${at}.winstreak`} color="§e" hidden={streaksHidden} session={false} />
-    <Stat path={`${at}.bestWinstreak`} color="§e" hidden={streaksHidden} session={false} />
-  </StatRow>
-);
+const streaksOf = (at: PlaceWith<"bestWinstreak">): StatValue<Duels>[] => [
+  { path: `${at}.winstreak`, hidden: streaksHidden },
+  { path: `${at}.bestWinstreak`, hidden: streaksHidden },
+];
 
-const record = (at: PlaceWith<"wlr">) => (
-  <StatRow>
-    <Stat path={`${at}.wins`} color="§a" />
-    <Stat path={`${at}.losses`} color="§c" />
-    <Stat path={`${at}.wlr`} color="§6" />
-  </StatRow>
-);
+function Streaks({ at }: { at: PlaceWith<"bestWinstreak"> }) {
+  if (useStatsKind() === "session") return null;
 
-const kills = (at: PlaceWith<"kdr">) => (
-  <StatRow>
-    <Stat path={`${at}.kills`} color="§a" />
-    <Stat path={`${at}.deaths`} color="§c" />
-    <Stat path={`${at}.kdr`} color="§6" />
-  </StatRow>
-);
-
-const shotsFired = (at: PlaceWith<"shotsFired">) => <Stat path={`${at}.shotsFired`} color="§6" />;
-
-const kit = (at: PlaceWith<"kit">) => (
-  <StatRow>
-    <Stat path={`${at}.kit`} color="§e" format={(kit) => prettify(String(kit))} inline />
-  </StatRow>
-);
-
-/** The card's sidebar rows that belong to the mode (the game's go in the overview), or none. */
-function moreRows(place: string): ReactNode {
-  switch (place) {
-    case "overall":
-    case "arena":
-    case "bow":
-    case "bridge.overall":
-    case "spleef.bowSpleef":
-      return <StatRow>{shotsFired(place)}</StatRow>;
-    case "blitzsg":
-      return (
-        <>
-          <StatRow>{shotsFired("blitzsg")}</StatRow>
-          {kit("blitzsg")}
-        </>
-      );
-    case "quake":
-      return (
-        <StatRow>
-          {shotsFired("quake")}
-          <Stat path="quake.headshots" color="§3" />
-        </StatRow>
-      );
-    case "parkour":
-      return (
-        <StatRow>
-          <Stat path="parkour.bestTime" color="§d" unset="N/A" format={(ms) => formatTime(Number(ms))} session={false} />
-          <Stat path="parkour.checkpoints" color="§5" />
-        </StatRow>
-      );
-    case "bedwars.overall":
-      return <StatRow><Stat path="bedwars.overall.itemsPurchased" color="§d" /></StatRow>;
-    case "spleef.spleef":
-      return <StatRow><Stat path="spleef.spleef.blocksBroken" color="§b" /></StatRow>;
-    case "uhc.overall":
-      return (
-        <StatRow>
-          {shotsFired("uhc.overall")}
-          <Stat path="uhc.gapplesEaten" color="§a" />
-        </StatRow>
-      );
-    default:
-      // Bridge's and UHC's teams show the mode's overall Shots Fired on the card, not their own, so they show none.
-      return null;
-  }
+  return (
+    <StatRow>
+      <Stat path={`${at}.winstreak`} color="§e" hidden={streaksHidden} />
+      <Stat path={`${at}.bestWinstreak`} color="§e" hidden={streaksHidden} />
+    </StatRow>
+  );
 }
 
-function more(place: string) {
-  const rows = moreRows(place);
-  return rows && <StatTable title="game.sections.more">{rows}</StatTable>;
+function Record({ at }: { at: PlaceWith<"wlr"> }) {
+  return (
+    <StatRow>
+      <Stat path={`${at}.wins`} color="§a" />
+      <Stat path={`${at}.losses`} color="§c" />
+      <Stat path={`${at}.wlr`} color="§6" />
+    </StatRow>
+  );
+}
+
+function Kills({ at }: { at: PlaceWith<"kdr"> }) {
+  return (
+    <StatRow>
+      <Stat path={`${at}.kills`} color="§a" />
+      <Stat path={`${at}.deaths`} color="§c" />
+      <Stat path={`${at}.kdr`} color="§6" />
+    </StatRow>
+  );
+}
+
+function ShotsFired({ at }: { at: PlaceWith<"shotsFired"> }) {
+  return <Stat path={`${at}.shotsFired`} color="§6" />;
+}
+
+function Kit({ at }: { at: PlaceWith<"kit"> }) {
+  return (
+    <Selections>
+      <Stat path={`${at}.kit`} color="§e" format={(kit) => prettify(String(kit))} />
+    </Selections>
+  );
+}
+
+function More({ children }: { children: ReactNode }) {
+  return <StatTable title="game.sections.more">{children}</StatTable>;
+}
+
+function ParkourMore() {
+  const session = useStatsKind() === "session";
+
+  return (
+    <More>
+      {!session && <Stat path="parkour.bestTime" color="§d" unset="N/A" format={(ms) => formatTime(Number(ms))} />}
+      <Stat path="parkour.checkpoints" color="§5" />
+    </More>
+  );
+}
+
+/**
+ * The card's sidebar stats that belong to the mode (the game's go in the overview), by where the mode keeps them.
+ * Bridge's and UHC's teams show the mode's overall Shots Fired on the card, not their own, so they have none.
+ */
+const MORE: Partial<Record<Place, ReactNode>> = {
+  overall: <More><ShotsFired at="overall" /></More>,
+  arena: <More><ShotsFired at="arena" /></More>,
+  bow: <More><ShotsFired at="bow" /></More>,
+  "bridge.overall": <More><ShotsFired at="bridge.overall" /></More>,
+  "spleef.bowSpleef": <More><ShotsFired at="spleef.bowSpleef" /></More>,
+  blitzsg: (
+    <StatTable title="game.sections.more" columns={1}>
+      <StatRow><ShotsFired at="blitzsg" /></StatRow>
+      <Kit at="blitzsg" />
+    </StatTable>
+  ),
+  quake: (
+    <More>
+      <ShotsFired at="quake" />
+      <Stat path="quake.headshots" color="§3" />
+    </More>
+  ),
+  parkour: <ParkourMore />,
+  "bedwars.overall": <More><Stat path="bedwars.overall.itemsPurchased" color="§d" /></More>,
+  "spleef.spleef": <More><Stat path="spleef.spleef.blocksBroken" color="§b" /></More>,
+  "uhc.overall": (
+    <More>
+      <ShotsFired at="uhc.overall" />
+      <Stat path="uhc.gapplesEaten" color="§a" />
+    </More>
+  ),
+};
+
+function Overview() {
+  const session = useStatsKind() === "session";
+
+  return (
+    <OverviewTable>
+      <Stat path="tokens" color="§2" />
+      {!session && <Stat path="pingRange" color="§a" suffix="ms" />}
+      <Stat path="overall.blocksPlaced" color="§9" />
+    </OverviewTable>
+  );
 }
 
 /** The mode's first table: the card's streaks over its record and kills, laid out by what the mode stores. */
-function headline(mode: Mode, submode: string | null) {
-  // Classic, OP and SkyWars lead with their Overall box.
-  if (mode === "classic" || mode === "op" || mode === "skywars") return box(mode, "overall");
-
-  const place = (submode ? `${mode}.${submode}` : mode) as PlaceWith<"kdr"> | "arena" | "parkour" | "spleef.bowSpleef" | "spleef.spleef";
+function Headline({ mode, submode }: { mode: Exclude<Mode, BoxedMode>; submode: string | null }) {
+  const place = placeOf(mode, submode);
+  const aside = MORE[place];
 
   if (mode === "bridge") {
     const at = place as PlaceWith<"goals">;
     return (
-      <>
-        {streaks(at)}
+      <HeadlineTable columns={4} aside={aside}>
+        <Streaks at={at} />
         <StatRow>
           <Stat path={`${at}.wins`} color="§a" />
           <Stat path={`${at}.losses`} color="§c" />
           <Stat path={`${at}.wlr`} color="§6" />
           <Stat path={`${at}.goals`} color="§e" />
         </StatRow>
-        {kills(at)}
-      </>
+        <Kills at={at} />
+      </HeadlineTable>
     );
   }
 
   if (place === "bedwars.overall") {
     return (
-      <>
-        {streaks(place)}
-        {record(place)}
+      <HeadlineTable columns={3} aside={aside}>
+        <Streaks at={place} />
+        <Record at={place} />
         <StatRow>
           <Stat path="bedwars.overall.finalKills" color="§a" />
           <Stat path="bedwars.overall.finalDeaths" color="§c" />
           <Stat path="bedwars.overall.fkdr" color="§6" />
         </StatRow>
-        {kills(place)}
+        <Kills at={place} />
         <StatRow>
           <Stat path="bedwars.overall.bedsBroken" color="§a" />
           <Stat path="bedwars.overall.bedsLost" color="§c" />
           <Stat path="bedwars.overall.bblr" color="§6" />
         </StatRow>
-      </>
+      </HeadlineTable>
     );
   }
 
-  // Arena, Parkour and both Spleef modes count no kills.
-  const killless = place === "arena" || place === "parkour" || place === "spleef.bowSpleef" || place === "spleef.spleef";
-
   return (
-    <>
-      {streaks(place)}
-      {record(place)}
-      {!killless && kills(place)}
-    </>
+    <HeadlineTable columns={3} aside={aside}>
+      <Streaks at={place} />
+      <Record at={place} />
+      {countsKills(place) && <Kills at={place} />}
+    </HeadlineTable>
   );
 }
 
 /** One of the card's boxes (Overall, Solo, Doubles), each with its own Shots Fired. */
-const box = (mode: "classic" | "op" | "skywars", which: "overall" | "solo" | "doubles") => (
-  <>
-    {streaks(`${mode}.${which}`)}
-    <StatRow>
-      <Stat path={`${mode}.${which}.wins`} color="§a" />
-      <Stat path={`${mode}.${which}.kills`} color="§a" />
-    </StatRow>
-    <StatRow>
-      <Stat path={`${mode}.${which}.losses`} color="§c" />
-      <Stat path={`${mode}.${which}.deaths`} color="§c" />
-    </StatRow>
-    <StatRow>
-      <Stat path={`${mode}.${which}.wlr`} color="§6" />
-      <Stat path={`${mode}.${which}.kdr`} color="§6" />
-    </StatRow>
-    <StatRow>{shotsFired(`${mode}.${which}`)}</StatRow>
-  </>
-);
+function BoxTable({ mode, box, name }: { mode: BoxedMode; box: "overall" | "solo" | "doubles"; name: string }) {
+  const at = `${mode}.${box}` as const;
 
-/** Every mode's title and the wins it counts, the most wins first. */
+  return (
+    <StatTable name={name} columns={2}>
+      <Streaks at={at} />
+      <StatRow>
+        <Stat path={`${at}.wins`} color="§a" />
+        <Stat path={`${at}.kills`} color="§a" />
+      </StatRow>
+      <StatRow>
+        <Stat path={`${at}.losses`} color="§c" />
+        <Stat path={`${at}.deaths`} color="§c" />
+      </StatRow>
+      <StatRow>
+        <Stat path={`${at}.wlr`} color="§6" />
+        <Stat path={`${at}.kdr`} color="§6" />
+      </StatRow>
+      <StatRow>
+        <ShotsFired at={at} />
+      </StatRow>
+    </StatTable>
+  );
+}
+
+/** Every mode's title and the wins it counts, the most wins first; a session's gains say nothing of a title. */
 function Titles() {
   const duels = usePlayerStats<Duels>();
-  const wins = (mode: (typeof TITLES)[number]) => Number(duels && readStat(duels, WINS[mode])) || 0;
+  const session = useStatsKind() === "session";
+  if (!duels || session) return null;
+
+  const wins = (mode: (typeof TITLES)[number]) => Number(readStat(duels, WINS[mode])) || 0;
   const sorted = TITLES.toSorted((a, b) => wins(b) - wins(a));
 
   return (
     <StatList title="game.sections.titles" plain>
-      {sorted.map((mode) => (
-        <Stat key={mode} path={WINS[mode]} name={(stats) => stats[mode].titleFormatted} color="§f" session={false} />
-      ))}
+      {sorted.map((mode) => <Stat key={mode} path={WINS[mode]} name={(stats) => stats[mode].titleFormatted} color="§f" />)}
     </StatList>
   );
 }
 
 function Page({ mode, submode }: { mode: Mode; submode: string | null }) {
-  const overview = DUELS_PAGE.overview(mode);
+  const compare = useStatsKind() === "compare";
 
-  if (mode === "classic" || mode === "op" || mode === "skywars") {
+  if (isBoxed(mode)) {
     return (
-      <PageLayout overview={overview}>
+      <PageLayout overview={<Overview />}>
         <Boxes>
-          <StatTable name="§6Overall">{box(mode, "overall")}</StatTable>
-          <StatTable name="§6Solo">{box(mode, "solo")}</StatTable>
-          <StatTable name="§6Doubles">{box(mode, "doubles")}</StatTable>
+          <BoxTable mode={mode} box="overall" name="§6Overall" />
+          <BoxTable mode={mode} box="solo" name="§6Solo" />
+          <BoxTable mode={mode} box="doubles" name="§6Doubles" />
         </Boxes>
-        {mode === "skywars" && <Headline title="game.sections.more">{kit("skywars")}</Headline>}
+        {/* A table of only the kit, which a comparison leaves out. */}
+        {mode === "skywars" && !compare && (
+          <HeadlineTable title="game.sections.more" columns={0}>
+            <Kit at="skywars" />
+          </HeadlineTable>
+        )}
       </PageLayout>
     );
   }
 
-  const place = submode ? `${mode}.${submode}` : mode;
-
   return (
-    <PageLayout overview={overview}>
-      <Headline aside={more(place)}>{headline(mode, submode)}</Headline>
+    <PageLayout overview={<Overview />}>
+      <Headline mode={mode} submode={submode} />
       {mode === "overall" && <Titles />}
     </PageLayout>
   );
@@ -270,12 +327,17 @@ export const DUELS_PAGE: StatsGame<Duels, Mode> = {
       progress: "stats.progression.win",
     };
   },
-  overview: () => (
-    <>
-      <Stat path="tokens" color="§2" />
-      <Stat path="pingRange" color="§a" suffix="ms" session={false} />
-      <Stat path="overall.blocksPlaced" color="§9" />
-    </>
-  ),
-  headline,
+  preview: (mode, submode) => {
+    if (isBoxed(mode)) {
+      const at = `${mode}.overall` as const;
+      // A box puts wins beside kills, and losses beside deaths.
+      return [...streaksOf(at), { path: `${at}.wins` }, { path: `${at}.kills` }, { path: `${at}.losses` }, { path: `${at}.deaths` }];
+    }
+
+    const at = placeOf(mode, submode);
+    const record: StatValue<Duels>[] = [...streaksOf(at), { path: `${at}.wins` }, { path: `${at}.losses` }, { path: `${at}.wlr` }];
+    if (mode === "bridge") return [...record, { path: `${at as PlaceWith<"goals">}.goals` }];
+    if (at === "bedwars.overall") return [...record, { path: "bedwars.overall.finalKills" }];
+    return countsKills(at) ? [...record, { path: `${at}.kills` }] : record;
+  },
 };

@@ -73,19 +73,22 @@ export function GameView({ page }: { page: GamePage }) {
     </BoxPanels>
   );
 
+  const aside = tables.length > 0 && tables.map((section, index) => (
+    <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
+  ));
+
   const headlinePanels = headline && (
-    <HeadlinePanels
-      key="headline"
-      headline={headline}
-      username={page.username}
-      aside={tables.length > 0 && tables.map((section, index) => (
-        <StatPanel key={section.title ?? section.name ?? index} section={section} username={page.username} />
-      ))}
-    />
+    <HeadlinePanels key="headline" aside={aside}>
+      <StatPanel section={headline} username={page.username} headline className={headlineSpan(aside)} />
+    </HeadlinePanels>
+  );
+
+  const overview = page.overview.length > 0 && (
+    <StatPanel section={overviewSection(page.overview)} username={page.username} className={overviewPlace(page.level)} />
   );
 
   return (
-    <GameShell page={page} heading={page.heading} level={page.level} overview={page.overview}>
+    <GameShell page={page} heading={page.heading} level={page.level} overview={overview}>
       {page.sections[0]?.box ? [boxPanels, headlinePanels] : [headlinePanels, boxPanels]}
       {lists.map((section, index) => (
         <Fragment key={section.title ?? section.name ?? index}>
@@ -111,15 +114,21 @@ export function BoxPanels({ children }: { children: ReactNode }) {
   return <div className={cn("grid grid-cols-1", BOX_GAP, BOX_COLUMNS[Math.min(count, BOX_COLUMNS.length - 1)])}>{children}</div>;
 }
 
-/** The headline table, and from `lg` up the mode's other tables (`aside`) beside it. */
-export function HeadlinePanels({ headline, username, aside }: { headline: StatSection; username: string; aside?: ReactNode }) {
+/** The headline table (`children`, spanning `headlineSpan`), and from `lg` up the mode's other tables (`aside`) beside it. */
+export function HeadlinePanels({ aside, children }: { aside?: ReactNode; children: ReactNode }) {
   return (
     <div className={cn("grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_round(down,40%,8px)] lg:items-start", BOX_GAP)}>
-      <StatPanel section={headline} username={username} headline className={cn(!aside && "lg:col-span-2")} />
+      {children}
       {aside && <div className={cn("flex flex-col", BOX_GAP)}>{aside}</div>}
     </div>
   );
 }
+
+/** The headline table's columns in `HeadlinePanels`: both from `lg` up when nothing sits beside it. */
+export const headlineSpan = (aside: ReactNode) => cn(!aside && "lg:col-span-2");
+
+/** Where the game-wide stats sit in `GameShell`: under the level (across the row on `md`), or beside the nametag without one. */
+export const overviewPlace = (level: Level | null) => (level ? "md:col-span-2 lg:col-span-1" : "md:self-center");
 
 /**
  * What every game page has around its stats, whoever lays them out: the nametag and title, the level and the game-wide
@@ -135,7 +144,8 @@ export function GameShell({
   page: GameFrame;
   heading: Heading;
   level: Level | null;
-  overview: Stat[];
+  /** The game-wide stats' panel, placed by `overviewPlace`, if the page has any. */
+  overview: ReactNode;
   children: ReactNode;
 }) {
   const { t } = useTranslation();
@@ -196,16 +206,10 @@ export function GameShell({
             heading={heading}
             actions={session ? undefined : toggles}
             refresh={session ? undefined : <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto />}
-            className={cn(level && overview.length > 0 && "lg:row-span-2", !level && overview.length === 0 && "md:col-span-2 md:w-fit")}
+            className={cn(level && overview && "lg:row-span-2", !level && !overview && "md:col-span-2 md:w-fit")}
           />
           {level && <LevelPanel level={level} username={page.username} />}
-          {overview.length > 0 && (
-            <StatPanel
-              section={overviewSection(overview)}
-              username={page.username}
-              className={level ? "md:col-span-2 lg:col-span-1" : "md:self-center"}
-            />
-          )}
+          {overview}
           {session && <SessionLine start={session.start} updatedAt={page.updatedAt} className="md:col-span-2 md:mt-2" />}
         </div>
         {sharing && (

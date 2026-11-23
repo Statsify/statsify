@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BoxPanels, GameShell, HeadlinePanels, type Level } from "~/features/game/game-page";
-import { Children, Fragment, type ReactElement, type ReactNode, createContext, isValidElement, use } from "react";
-import { CompareSection, CompareShell, type Pair, compareSides } from "~/features/compare/compare-page";
-import { SectionTitle, StatPanel } from "~/features/game/stat-panel";
+import { BoxPanels, GameShell, HeadlinePanels, type Level, headlineSpan, overviewPlace } from "~/features/game/game-page";
+import { Children, type ReactNode, createContext, use } from "react";
+import { CompareShell, PairedStat } from "~/features/compare/compare-page";
+import { GameStat, ListLines, ListPanel, ListStat, PanelHeading, SelectionStat, StatGrid, StatGridRow } from "~/features/game/stat-panel";
 import type { GameContent, GameFrame, GameStatsPage, Heading } from "~/features/game/game-data";
-import type { StatCell, StatSection } from "@statsify/contract";
+import type { StatCell } from "@statsify/contract";
 
 type Leaf = number | string;
 
@@ -20,17 +20,13 @@ export type StatPath<T> = {
   [K in keyof T & string]: NonNullable<T[K]> extends Leaf ? K : NonNullable<T[K]> extends object ? `${K}.${StatPath<NonNullable<T[K]>>}` : never;
 }[keyof T & string];
 
-/** One stat as a game's page shows it. Anything read from the player's stats is a function of them, as a comparison has two. */
-export interface StatProps<G> {
+/** What a stat's label and value are on a page, read from the player's stats (each player's, on a comparison). */
+export interface StatValue<G> {
   path: StatPath<G>;
-  /** The bot's color code, or one by the value (a challenge is green once done). */
-  color: string | ((value: number) => string);
   /** A `stats.*` locale key; `stats.<the path's last key>` by default. */
   label?: string;
-  /** A shorter label under its row's heading (Kills under Final). */
-  short?: string;
   /** The card's own Minecraft-formatted name in place of the label; a stat the API names (a challenge) has it already. */
-  name?: (stats: G) => string;
+  name?(stats: G): string;
   /** The stat it is out of (`12/25`). */
   of?: StatPath<G>;
   suffix?: string;
@@ -38,33 +34,26 @@ export interface StatProps<G> {
   format?: (value: Leaf) => string;
   /** What the card prints for a 0 that means "never set"; such a 0 isn't on the leaderboard. */
   unset?: string;
-  /** A selection (a kit): a `Label: value` line rather than a cell, never a link. */
-  inline?: boolean;
   /** The player hides it from Hypixel's API, so the page says Hidden. */
-  hidden?: (stats: G) => boolean;
-  /** Left out where this is false for the player (for both, on a comparison). */
-  show?: (stats: G) => boolean;
-  /** Left off a session's page: the difference between two saves means nothing for a streak, a best or a setting. */
-  session?: false;
+  hidden?(stats: G): boolean;
+}
+
+export interface StatProps<G> extends StatValue<G> {
+  /** The bot's color code, or one by the value (a challenge is green once done). */
+  color: string | ((value: number) => string);
+  /** A shorter label under its row's heading (Kills under Final). */
+  short?: string;
 }
 
 /** What a page reads at runtime, its paths and functions no longer tied to one game's stats. */
-type AnyStat = Omit<StatProps<object>, "path" | "of" | "name" | "hidden" | "show"> & {
+type AnyValue = Omit<StatValue<object>, "path" | "of" | "name" | "hidden"> & {
   path: string;
   of?: string;
-  name?: (stats: object) => string;
-  hidden?: (stats: object) => boolean;
-  show?: (stats: object) => boolean;
+  name?(stats: object): string;
+  hidden?(stats: object): boolean;
 };
 
-/** Marks a stat for the table or list around it, which reads it; it draws nothing on its own. */
-export const Stat: <G>(props: StatProps<G>) => null = () => null;
-
-/** `Stat` for one game's stats, so its paths are checked against them. */
-export const statFor = <G,>() => Stat as (props: StatProps<G>) => null;
-
-/** A row of a table's `<Stat>`s, under a heading where it has one (Final, Normal). */
-export const StatRow: (props: { title?: string; children: ReactNode }) => null = () => null;
+type AnyStat = AnyValue & Pick<StatProps<object>, "color" | "short">;
 
 /** The level header a game's stats give, linked to the leaderboard of the stat `key` names. */
 export interface LevelText {
@@ -80,22 +69,25 @@ export interface LevelText {
 }
 
 /** A game the site lays out itself. The API checks a page's mode against the game's registry, so `M` holds. */
-export interface StatsGame<G = object, M extends string = string> {
+export interface StatsGame<G, M extends string> {
   Page(props: { mode: M; submode: string | null }): ReactNode;
   /** The card's title where it isn't "Stats (Mode Submode)". */
   heading?(page: GameFrame): Partial<Heading>;
   level(stats: G, mode: M): LevelText | null;
-  /** The game-wide stats over the mode's, as `<Stat>`s. */
-  overview(mode: M): ReactNode;
-  /** The mode's first table, as `<StatRow>`s: the page leads with it, and its link preview quotes it. */
-  headline(mode: M, submode: string | null): ReactNode;
+  /** The first stats of the mode's first table (of the game-wide row on a page without one), which its link preview quotes. */
+  preview(mode: M, submode: string | null): StatValue<G>[];
 }
+
+/** Any game the site lays out, as its registry holds them. */
+export type AnyStatsGame = Omit<StatsGame<object, string>, "preview"> & {
+  preview(mode: string, submode: string | null): AnyValue[];
+};
 
 /** A page as the parts read it: the player's stats, and what every player's page of the game shares. */
 export type StatsPage = GameStatsPage & GameContent;
 
 /** Where a page reads its stats: the player's, what they gained in a session, or two players' side by side. */
-export type StatsSource = { game: StatsGame } & (
+export type StatsSource = { game: AnyStatsGame } & (
   | { kind: "player" | "session"; page: StatsPage }
   | { kind: "compare"; a: StatsPage; b: StatsPage }
 );
@@ -106,6 +98,18 @@ function useSource(): StatsSource {
   const source = use(StatsContext);
   if (!source) throw new Error("A game's stats parts need a StatsContext");
   return source;
+}
+
+/**
+ * Whose stats the page shows. A session's page has what the player gained since it started, which means nothing for a
+ * streak, a best or a setting, so a page leaves those out of it.
+ */
+export const useStatsKind = (): StatsSource["kind"] => useSource().kind;
+
+/** Whether `test` holds for the player's stats, or for both players' on a comparison: a stat it's false for is left out. */
+export function useShown<G>(test: (stats: G) => boolean): boolean {
+  const source = useSource();
+  return source.kind === "compare" ? test(source.a.stats as G) && test(source.b.stats as G) : test(source.page.stats as G);
 }
 
 /** The player's stats on their own page or a session's, to order a list by; none on a comparison, which has no lists. */
@@ -120,28 +124,12 @@ export function useStatNames(): Record<string, string> {
   return source.kind === "compare" ? source.a.names : source.page.names;
 }
 
-function elementsOf(children: ReactNode): ReactElement[] {
-  return Children.toArray(children).flatMap((child) => {
-    if (!isValidElement(child)) return [];
-    if (child.type === Fragment) return elementsOf((child.props as { children?: ReactNode }).children);
-    return [child];
-  });
+/** The stats a list shows: on a session's page, only the ones the session moved. */
+export function useListed<P extends string>(paths: P[]): P[] {
+  const source = useSource();
+  if (source.kind !== "session") return paths;
+  return paths.filter((path) => valueOf({ path }, source.page, true).value !== 0);
 }
-
-/** The `<Stat>`s a list or a row holds. */
-export const statsIn = (children: ReactNode): AnyStat[] =>
-  elementsOf(children).map((element) => {
-    if (element.type !== Stat) throw new Error("A stat list or row holds only <Stat>s");
-    return element.props as AnyStat;
-  });
-
-/** The `<StatRow>`s a table holds. */
-export const rowsIn = (children: ReactNode): { title?: string; stats: AnyStat[] }[] =>
-  elementsOf(children).map((element) => {
-    if (element.type !== StatRow) throw new Error("A stat table holds only <StatRow>s");
-    const { title, children: stats } = element.props as { title?: string; children: ReactNode };
-    return { title, stats: statsIn(stats) };
-  });
 
 /** A value in the stats by its dotted path. */
 export const readStat = (stats: object, path: string): unknown =>
@@ -159,45 +147,76 @@ function isRanked(page: StatsPage, path: string) {
   return ranked.has(path);
 }
 
-/** One stat of a player's (or a session's) stats as the page draws it. A session's numbers rank nowhere. */
-function cellOf(stat: AnyStat, page: StatsPage, session: boolean): StatCell {
-  const { stats } = page;
+function readValue(stat: AnyValue, stats: object) {
   const stored = readStat(stats, stat.path);
-  const raw = typeof stored === "number" ? finite(stored) : stored;
+  return typeof stored === "number" ? finite(stored) : stored;
+}
+
+/**
+ * A stat's label and value on a page, for its cell and the link preview alike. A session's numbers rank nowhere, and
+ * a selection never links.
+ */
+export function valueOf(
+  stat: AnyValue,
+  page: StatsPage,
+  session: boolean,
+  selection = false
+): Pick<StatCell, "label" | "name" | "params" | "value" | "hidden" | "suffix" | "of" | "leaderboard"> {
+  const { stats } = page;
+  const raw = readValue(stat, stats);
   const unset = stat.unset !== undefined && !raw;
   const value = unset ? stat.unset! : stat.format ? stat.format(raw as Leaf) : typeof raw === "string" ? raw : Number(raw ?? 0);
-  const color = typeof stat.color === "function" ? stat.color(Number(raw)) : stat.color;
   const name = stat.name ? stat.name(stats) : stat.label ? undefined : page.names[stat.path];
   const hidden = stat.hidden?.(stats) ?? false;
   const of = stat.of === undefined || session ? undefined : finite(Number(readStat(stats, stat.of) ?? 0));
 
   return {
-    key: stat.path,
     label: stat.label ?? `stats.${stat.path.slice(stat.path.lastIndexOf(".") + 1)}`,
-    ...(stat.short && { short: stat.short }),
     ...(name !== undefined && { name }),
     value,
     ...(hidden && { hidden }),
     ...(stat.suffix && !hidden && { suffix: stat.suffix }),
     ...(of !== undefined && { of }),
-    color,
-    leaderboard: !session && isRanked(page, stat.path) && !unset && !hidden && !stat.inline ? `stats.${page.game.key}.${stat.path}` : null,
-    ...(stat.inline && { inline: true }),
+    leaderboard: !session && isRanked(page, stat.path) && !unset && !hidden && !selection ? `stats.${page.game.key}.${stat.path}` : null,
   };
 }
 
-/** The stats a page shows: a session leaves off its `session={false}`s, and in a list the ones it didn't move. */
-export const cellsOf = (stats: AnyStat[], page: StatsPage, session: boolean, list = false): StatCell[] =>
-  stats
-    .filter((stat) => !(session && stat.session === false) && (stat.show?.(page.stats) ?? true))
-    .map((stat) => cellOf(stat, page, session))
-    .filter((cell) => !session || !list || cell.value !== 0);
+function cellOf(stat: AnyStat, page: StatsPage, session: boolean, selection = false): StatCell {
+  return {
+    key: stat.path,
+    ...valueOf(stat, page, session, selection),
+    ...(stat.short && { short: stat.short }),
+    color: typeof stat.color === "function" ? stat.color(Number(readValue(stat, page.stats))) : stat.color,
+    ...(selection && { inline: true }),
+  };
+}
 
-/** Both players' values of each stat that shows for both; a selection (a kit) has no difference to show. */
-export const pairsOf = (stats: AnyStat[], a: StatsPage, b: StatsPage): Pair[] =>
-  stats
-    .filter((stat) => !stat.inline && [a, b].every((page) => stat.show?.(page.stats) ?? true))
-    .map((stat) => ({ a: cellOf(stat, a, false), b: cellOf(stat, b, false) }));
+/** How the table, list or selections around a `Stat` draw it. */
+const StatPlace = createContext<"cell" | "selection" | "line" | "plain line">("cell");
+
+/**
+ * One stat, drawn as its table's cell, its list's line or its row's selection; on a comparison the cell has both
+ * players' values. A row boxes each of its children, so a page leaves out a stat it doesn't show (`{shown && <Stat />}`).
+ */
+export function Stat<G>(props: StatProps<G>) {
+  const stat = props as unknown as AnyStat;
+  const source = useSource();
+  const place = use(StatPlace);
+
+  if (source.kind === "compare") {
+    const { a, b } = source;
+    return <PairedStat pair={{ a: cellOf(stat, a, false), b: cellOf(stat, b, false) }} players={[a, b]} />;
+  }
+
+  const { page } = source;
+  const cell = cellOf(stat, page, source.kind === "session", place === "selection");
+  if (place === "selection") return <SelectionStat cell={cell} />;
+  if (place === "cell") return <GameStat cell={cell} username={page.username} />;
+  return <ListStat cell={cell} username={page.username} plain={place === "plain line"} />;
+}
+
+/** `Stat` for one game's stats, so its paths are checked against them. */
+export const statFor = <G,>(): ((props: StatProps<G>) => ReactNode) => Stat;
 
 interface TableHeading {
   /** A `game.sections.*` key in `site.json`, or the card's `stats.*` heading. */
@@ -207,72 +226,92 @@ interface TableHeading {
   color?: string;
 }
 
-/** A table's rows as the page draws them, without the rows a session empties, or nothing when it empties them all. */
-function tableOf(rows: ReturnType<typeof rowsIn>, page: StatsPage, session: boolean, { title, name, color }: TableHeading): StatSection | null {
-  const kept = rows.map((row) => ({ title: row.title, cells: cellsOf(row.stats, page, session) })).filter(({ cells }) => cells.length > 0);
-  if (kept.length === 0) return null;
-  const titled = rows.some((row) => row.title !== undefined);
+const tableTitle = ({ title, name, color }: TableHeading) =>
+  title === undefined && name === undefined ? undefined : <PanelHeading section={{ title: title ?? null, name, color }} />;
 
-  return {
-    title: title ?? null,
-    ...(name && { name }),
-    ...(color && { color }),
-    rows: kept.map(({ cells }) => cells),
-    ...(titled && { rowTitles: kept.map((row) => row.title ?? null) }),
-  };
+/** A row of a table's `<Stat>`s, each child a cell, under a heading where it has one (Final, Normal). */
+export function StatRow({ title, children }: { title?: string; children: ReactNode }) {
+  return <StatGridRow title={title}>{children}</StatGridRow>;
 }
 
-function CompareTable({ heading, stats, a, b }: { heading: TableHeading; stats: AnyStat[]; a: StatsPage; b: StatsPage }) {
-  const pairs = pairsOf(stats, a, b);
-  if (pairs.length === 0) return null;
-  const titled = heading.title !== undefined || heading.name !== undefined;
-  const title = titled && <SectionTitle section={{ title: heading.title ?? null, name: heading.name, color: heading.color, rows: [] }} />;
-  return <CompareSection title={title} pairs={pairs} sides={compareSides(a, b)} />;
+/** A row of the card's selections (a kit) as `Label: value` lines in one box; a comparison leaves it out. */
+export function Selections({ children }: { children: ReactNode }) {
+  if (useStatsKind() === "compare") return null;
+  return (
+    <StatGridRow selections>
+      <StatPlace value="selection">{children}</StatPlace>
+    </StatGridRow>
+  );
 }
 
-/** A table of `<StatRow>`s, as the card draws it; on a comparison, a row per player. */
-export function StatTable({ children, ...heading }: TableHeading & { children: ReactNode }) {
-  const source = useSource();
-  const rows = rowsIn(children);
-
-  if (source.kind === "compare") return <CompareTable heading={heading} stats={rows.flatMap(({ stats }) => stats)} a={source.a} b={source.b} />;
-
-  const section = tableOf(rows, source.page, source.kind === "session", heading);
-  return section && <StatPanel section={section} username={source.page.username} />;
+/**
+ * A panel of stats as the card draws it. A table of one row has its `<Stat>`s as children; a taller one has
+ * `<StatRow>`s (and `<Selections>`), `columns` wide: its widest row's count.
+ */
+export function StatTable({
+  columns,
+  className,
+  children,
+  ...heading
+}: TableHeading & { columns?: number; className?: string; children: ReactNode }) {
+  return (
+    <StatGrid heading={tableTitle(heading)} columns={columns ?? Children.toArray(children).length} className={className}>
+      {columns === undefined ? <StatRow>{children}</StatRow> : children}
+    </StatGrid>
+  );
 }
 
-/** The mode's first table (`children`, its `<StatRow>`s), and from `lg` up its other tables (`aside`) beside it. */
-export function Headline({ children, aside, ...heading }: TableHeading & { children: ReactNode; aside?: ReactNode }) {
-  const source = useSource();
+/** The mode's first table, `columns` wide, and from `lg` up its other tables (`aside`) beside it. */
+export function HeadlineTable({
+  columns,
+  aside,
+  children,
+  ...heading
+}: TableHeading & { columns: number; aside?: ReactNode; children: ReactNode }) {
+  const compare = useStatsKind() === "compare";
+  const table = (
+    <StatGrid heading={tableTitle(heading)} columns={columns} headline className={compare ? undefined : headlineSpan(aside)}>
+      {children}
+    </StatGrid>
+  );
 
-  if (source.kind === "compare") {
+  if (compare) {
     return (
       <>
-        <StatTable {...heading}>{children}</StatTable>
+        {table}
         {aside}
       </>
     );
   }
 
-  const section = tableOf(rowsIn(children), source.page, source.kind === "session", heading);
-  return section && <HeadlinePanels headline={section} username={source.page.username} aside={aside} />;
+  return <HeadlinePanels aside={aside}>{table}</HeadlinePanels>;
+}
+
+/** The game-wide stats in one row: under the level, or beside the nametag on a page without one. */
+export function OverviewTable({ children }: { children: ReactNode }) {
+  const source = useSource();
+  if (source.kind === "compare") return <StatTable>{children}</StatTable>;
+
+  const level = source.kind === "session" ? null : levelOf(source.game, source.page);
+  return <StatTable className={overviewPlace(level)}>{children}</StatTable>;
 }
 
 /** The card's boxes side by side (each a `<StatTable>` with its name), in as many columns from `lg` up. */
 export function Boxes({ children }: { children: ReactNode }) {
-  return useSource().kind === "compare" ? children : <BoxPanels>{children}</BoxPanels>;
+  return useStatsKind() === "compare" ? children : <BoxPanels>{children}</BoxPanels>;
 }
 
 /** Name and value lines (titles, challenges) under a heading, left off a comparison, as two players' lists differ. */
 export function StatList({ title, plain = false, children }: { title?: string; plain?: boolean; children: ReactNode }) {
-  const source = useSource();
-  if (source.kind === "compare") return null;
+  if (useStatsKind() === "compare" || Children.toArray(children).length === 0) return null;
 
-  const cells = cellsOf(statsIn(children), source.page, source.kind === "session", true);
-  if (cells.length === 0) return null;
-
-  const section: StatSection = { title: title ?? null, rows: [cells], list: true, ...(plain && { plain }) };
-  return <StatPanel section={section} username={source.page.username} />;
+  return (
+    <ListPanel heading={title === undefined ? undefined : <PanelHeading section={{ title }} />}>
+      <StatPlace value={plain ? "plain line" : "line"}>
+        <ListLines>{children}</ListLines>
+      </StatPlace>
+    </ListPanel>
+  );
 }
 
 /**
@@ -285,7 +324,7 @@ function levelProgression({ current, max = 0, percent }: Level["progression"]): 
 }
 
 /** The level header of a player's page in a mode, linked to its leaderboard; none on a mode without one. */
-export function levelOf(game: StatsGame, page: StatsPage): Level | null {
+export function levelOf(game: AnyStatsGame, page: StatsPage): Level | null {
   const level = game.level(page.stats, page.mode);
   if (!level) return null;
   const { key, label = "stats.level", progress = "stats.progression.exp", progression, ...text } = level;
@@ -299,7 +338,7 @@ export function levelOf(game: StatsGame, page: StatsPage): Level | null {
 }
 
 /** The card's title: "Stats" (a session's "Session") and the mode, with the submode where it has them. */
-export function headingOf(game: StatsGame, page: GameFrame): Heading {
+export function headingOf(game: AnyStatsGame, page: GameFrame): Heading {
   const mode = page.modes.find(({ key }) => key === page.mode)?.name;
   const submode = page.submodes.find(({ key }) => key === page.submode)?.name;
 
@@ -313,20 +352,17 @@ export function headingOf(game: StatsGame, page: GameFrame): Heading {
 }
 
 /**
- * The root of a game's page: the nametag, the level and the game-wide stats (`overview`, as `<Stat>`s), the switchers,
- * then the page's tables and lists (`children`). On a comparison, both nametags and each table as a row per player.
+ * The root of a game's page: the nametag, the level and the game-wide stats (`overview`, an `<OverviewTable>`), the
+ * switchers, then the page's tables and lists (`children`). On a comparison, both nametags over the tables.
  */
 export function PageLayout({ overview, children }: { overview: ReactNode; children: ReactNode }) {
   const source = useSource();
-  const stats = statsIn(overview);
 
   if (source.kind === "compare") {
     const { game, a, b } = source;
-    const levels: [string | undefined, string | undefined] = [levelOf(game, a)?.current, levelOf(game, b)?.current];
-
     return (
-      <CompareShell a={a} b={b} heading={headingOf(game, a)} levels={levels}>
-        <CompareTable heading={{}} stats={stats} a={a} b={b} />
+      <CompareShell a={a} b={b} heading={headingOf(game, a)} levels={[levelOf(game, a)?.current, levelOf(game, b)?.current]}>
+        {overview}
         {children}
       </CompareShell>
     );
@@ -336,7 +372,7 @@ export function PageLayout({ overview, children }: { overview: ReactNode; childr
   const session = source.kind === "session";
 
   return (
-    <GameShell page={page} heading={headingOf(game, page)} level={session ? null : levelOf(game, page)} overview={cellsOf(stats, page, session)}>
+    <GameShell page={page} heading={headingOf(game, page)} level={session ? null : levelOf(game, page)} overview={overview}>
       {children}
     </GameShell>
   );

@@ -6,7 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Headline, PageLayout, StatList, type StatPath, StatRow, type StatsGame, StatTable, statFor, useStatNames } from "./parts";
+import {
+  HeadlineTable,
+  OverviewTable,
+  PageLayout,
+  StatList,
+  type StatPath,
+  StatRow,
+  type StatsGame,
+  StatTable,
+  statFor,
+  useListed,
+  useShown,
+  useStatNames,
+  useStatsKind,
+} from "./parts";
 import type { ApiModeFromGameModes, BedWarsModes, PlayerStats } from "@statsify/schemas";
 
 type BedWars = PlayerStats["bedwars"];
@@ -23,31 +37,31 @@ const hasWallet = ({ slumber }: BedWars) => slumber.wallet > 0;
 // Green once completed, red before, as on the bot's challenges card.
 const done = (value: number) => (value > 0 ? "§a" : "§c");
 
-function overview(mode: Mode) {
+function Overview({ mode }: { mode: Mode }) {
+  const wallet = useShown(hasWallet);
+
   if (mode === "challenges") {
     return (
-      <>
+      <OverviewTable>
         <Stat path="challenges.totalChallenges" color="§6" />
         <Stat path="challenges.uniqueChallenges" color="§e" />
-      </>
+      </OverviewTable>
     );
   }
 
   return (
-    <>
+    <OverviewTable>
       <Stat path="tokens" color="§2" />
-      <Stat path="slumber.tickets" label="stats.slumberTickets" color="§b" of="slumber.wallet" show={hasWallet} />
-      <Stat path="slumber.totalTickets" label="stats.totalSlumberTickets" color="§d" show={hasWallet} />
-    </>
+      {wallet && <Stat path="slumber.tickets" label="stats.slumberTickets" color="§b" of="slumber.wallet" />}
+      {wallet && <Stat path="slumber.totalTickets" label="stats.totalSlumberTickets" color="§d" />}
+    </OverviewTable>
   );
 }
 
 /** The card's table: rows of a count, its opposite and their ratio, the kills rows under Final and Normal. */
-function headline(mode: Mode) {
-  if (mode === "challenges") return null;
-
+function Headline({ mode }: { mode: TableMode }) {
   return (
-    <>
+    <HeadlineTable columns={3} aside={<Aside mode={mode} />}>
       <StatRow>
         <Stat path={`${mode}.wins`} color="§a" />
         <Stat path={`${mode}.losses`} color="§c" />
@@ -68,6 +82,27 @@ function headline(mode: Mode) {
         <Stat path={`${mode}.bedsLost`} color="§c" />
         <Stat path={`${mode}.bblr`} color="§6" />
       </StatRow>
+    </HeadlineTable>
+  );
+}
+
+function Aside({ mode }: { mode: TableMode }) {
+  const session = useStatsKind() === "session";
+  const streak = useShown((bedwars: BedWars) => bedwars[mode].winstreak !== 0);
+
+  return (
+    <>
+      <StatTable title="game.sections.resources">
+        <Stat path={`${mode}.itemsCollected.iron`} label="stats.iron" color="§7" />
+        <Stat path={`${mode}.itemsCollected.gold`} label="stats.gold" color="§6" />
+        <Stat path={`${mode}.itemsCollected.diamond`} label="stats.diamonds" color="§b" />
+        <Stat path={`${mode}.itemsCollected.emerald`} label="stats.emeralds" color="§2" />
+      </StatTable>
+      <StatTable title="game.sections.games">
+        <Stat path={`${mode}.gamesPlayed`} color="§e" />
+        {/* Core's winstreak is a copy of Overall's. The Dreams modes don't track one and always store 0. */}
+        {mode !== "core" && streak && !session && <Stat path={`${mode}.winstreak`} color="§a" />}
+      </StatTable>
     </>
   );
 }
@@ -75,10 +110,11 @@ function headline(mode: Mode) {
 /** The bot's challenges card: every challenge in its order, under its leaderboard name. */
 function Challenges() {
   // The challenges the schema has, in its order: the API names each one.
-  const challenges = Object.keys(useStatNames()).filter((path) => path.startsWith("challenges.") && !TOTALS.includes(path)) as StatPath<BedWars>[];
+  const names = Object.keys(useStatNames()).filter((path) => path.startsWith("challenges.") && !TOTALS.includes(path)) as StatPath<BedWars>[];
+  const challenges = useListed(names);
 
   return (
-    <PageLayout overview={overview("challenges")}>
+    <PageLayout overview={<Overview mode="challenges" />}>
       <StatList>
         {challenges.map((path) => <Stat key={path} path={path} color={done} />)}
       </StatList>
@@ -90,31 +126,9 @@ function Page({ mode }: { mode: Mode }) {
   if (mode === "challenges") return <Challenges />;
 
   return (
-    <PageLayout overview={overview(mode)}>
-      <Headline aside={<Aside mode={mode} />}>{headline(mode)}</Headline>
+    <PageLayout overview={<Overview mode={mode} />}>
+      <Headline mode={mode} />
     </PageLayout>
-  );
-}
-
-function Aside({ mode }: { mode: TableMode }) {
-  return (
-    <>
-      <StatTable title="game.sections.resources">
-        <StatRow>
-          <Stat path={`${mode}.itemsCollected.iron`} label="stats.iron" color="§7" />
-          <Stat path={`${mode}.itemsCollected.gold`} label="stats.gold" color="§6" />
-          <Stat path={`${mode}.itemsCollected.diamond`} label="stats.diamonds" color="§b" />
-          <Stat path={`${mode}.itemsCollected.emerald`} label="stats.emeralds" color="§2" />
-        </StatRow>
-      </StatTable>
-      <StatTable title="game.sections.games">
-        <StatRow>
-          <Stat path={`${mode}.gamesPlayed`} color="§e" />
-          {/* Core's winstreak is a copy of Overall's. The Dreams modes don't track one and always store 0. */}
-          {mode !== "core" && <Stat path={`${mode}.winstreak`} color="§a" show={(stats) => stats[mode].winstreak !== 0} session={false} />}
-        </StatRow>
-      </StatTable>
-    </>
   );
 }
 
@@ -131,6 +145,15 @@ export const BEDWARS_PAGE: StatsGame<BedWars, Mode> = {
         next: bedwars.nextLevelFormatted,
         progression: bedwars.progression,
       },
-  overview,
-  headline,
+  preview: (mode) =>
+    mode === "challenges" ?
+      [{ path: "challenges.totalChallenges" }, { path: "challenges.uniqueChallenges" }] :
+      [
+        { path: `${mode}.wins` },
+        { path: `${mode}.losses` },
+        { path: `${mode}.wlr` },
+        { path: `${mode}.finalKills` },
+        { path: `${mode}.finalDeaths` },
+        { path: `${mode}.fkdr` },
+      ],
 };
