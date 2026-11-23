@@ -120,7 +120,7 @@ export class SkinService {
   public async getSmashRender({ hero, master, ...options }: SmashRenderDto): Promise<Buffer> {
     const smash = resolveSmash(hero, master);
     const library = await this.getLibrary(SMASH_PACK);
-    return this.reloadIfUnavailable(SMASH_PACK, renderSmash(library, smash, options));
+    return renderSmash(library, smash, options);
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -549,7 +549,7 @@ export async function renderSmash(
     pose: "standing",
   } as const;
 
-  return renderScene(library, { player, models }, { width, height, yaw, pitch }).catch(rethrowPackError(SMASH_PACK));
+  return renderScene(library, { player, models }, { width, height, yaw, pitch });
 }
 
 interface MojangProfile {
