@@ -380,6 +380,30 @@ export const GamePageSchema = z.object({
   ...Freshness,
 });
 
+/** A game's stored stats as JSON: counts, formatted text and the groups (modes) they're under. */
+export type GameStats = { [key: string]: number | string | boolean | null | GameStats };
+
+/**
+ * A game page the site lays out itself (BedWars, Duels, SkyWars): the page's player, game and switchers, and the
+ * player's stats for the game (on a session's page, what they gained since it started).
+ */
+export const GameStatsPageSchema = GamePageSchema.omit({
+  heading: true,
+  periods: true,
+  period: true,
+  window: true,
+  level: true,
+  overview: true,
+  sections: true,
+}).extend({
+  /** The stored stats for the game, `PlayerStats[game.key]`, every mode's. */
+  stats: z.custom<GameStats>(isDocument),
+  /** The stats with a leaderboard, by path below the game (`solo.wins`): the page links them. */
+  ranked: z.array(z.string()),
+  /** The card's own names for stats it shows by name (a challenge's), by path below the game. */
+  names: z.record(z.string(), z.string()),
+});
+
 /** A player's session: the games they played since they last reset it with the bot's `/session`, as player page panels. */
 export const SessionPageSchema = z.object({
   ...PlayerName,
@@ -770,6 +794,7 @@ export type SessionGameInput = z.infer<typeof SessionGameInputSchema>;
 
 export type BingoPlayer = z.infer<typeof BingoPlayerSchema>;
 export type GamePage = z.infer<typeof GamePageSchema>;
+export type GameStatsPage = z.infer<typeof GameStatsPageSchema>;
 export type SessionPage = z.infer<typeof SessionPageSchema>;
 export type StatSection = z.infer<typeof StatSectionSchema>;
 export type StatCell = z.infer<typeof StatCellSchema>;
