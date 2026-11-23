@@ -275,7 +275,9 @@ impl<T: Backend> Renderer<T> {
     let instance_size = size_of::<InstanceRaw>() as wgpu::BufferAddress;
 
     let translucent: Vec<usize> = (0..items.len())
-      .filter(|&index| matches!(items[index].pipeline, Pipeline::Translucent))
+      .filter(|&index| {
+        matches!(items[index].pipeline, Pipeline::Translucent) && items[index].material.blends
+      })
       .collect();
 
     let centers: Vec<Point3<f32>> = translucent
@@ -287,7 +289,9 @@ impl<T: Backend> Renderer<T> {
       })
       .collect();
 
-    let worn = (0..items.len()).filter(|&index| matches!(items[index].pipeline, Pipeline::Worn(_)));
+    let worn = (0..items.len()).filter(|&index| {
+      matches!(items[index].pipeline, Pipeline::Worn(_)) && items[index].material.blends
+    });
 
     let pipelines = &self.pipelines;
 
