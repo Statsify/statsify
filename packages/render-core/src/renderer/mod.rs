@@ -42,17 +42,13 @@ pub struct Renderer<T: Backend> {
   sampler: wgpu::Sampler,
   glint_sampler: wgpu::Sampler,
 
-  camera: Camera,
-  camera_uniform: CameraUniform,
-  camera_buffer: wgpu::Buffer,
+  #[cfg(target_arch = "wasm32")]
+  viewer: Viewer,
 
-  light_uniform: LightUniform,
-  light_buffer: wgpu::Buffer,
-
+  #[cfg(not(target_arch = "wasm32"))]
   camera_bind_group_layout: wgpu::BindGroupLayout,
+  #[cfg(not(target_arch = "wasm32"))]
   light_bind_group_layout: wgpu::BindGroupLayout,
-  camera_bind_group: wgpu::BindGroup,
-  light_bind_group: wgpu::BindGroup,
   render_pipeline: wgpu::RenderPipeline,
   attachment_pipeline: wgpu::RenderPipeline,
   enchanted_pipeline: wgpu::RenderPipeline,
@@ -113,11 +109,16 @@ impl<T: Backend> Renderer<T> {
       ..Default::default()
     });
 
-    let (camera, camera_uniform, camera_buffer, camera_bind_group_layout, camera_bind_group) =
-      Self::create_camera(device, &config);
+    let camera_bind_group_layout = uniform_layout(device, Some("camera_bind_group_layout"));
+    let light_bind_group_layout = uniform_layout(device, None);
 
-    let (light_uniform, light_buffer, light_bind_group_layout, light_bind_group) =
-      Self::create_light(device, &camera);
+    #[cfg(target_arch = "wasm32")]
+    let viewer = Viewer::new(
+      device,
+      &config,
+      &camera_bind_group_layout,
+      &light_bind_group_layout,
+    );
 
     let bind_group_layouts = [
       &texture_bind_group_layout,
@@ -153,17 +154,13 @@ impl<T: Backend> Renderer<T> {
       sampler,
       glint_sampler,
 
-      camera,
-      camera_uniform,
-      camera_buffer,
+      #[cfg(target_arch = "wasm32")]
+      viewer,
 
-      light_uniform,
-      light_buffer,
-
+      #[cfg(not(target_arch = "wasm32"))]
       camera_bind_group_layout,
+      #[cfg(not(target_arch = "wasm32"))]
       light_bind_group_layout,
-      camera_bind_group,
-      light_bind_group,
       render_pipeline,
       attachment_pipeline,
       enchanted_pipeline,
@@ -171,99 +168,6 @@ impl<T: Backend> Renderer<T> {
 
       depth_texture,
     })
-  }
-
-  fn create_camera(
-    device: &wgpu::Device,
-    config: &wgpu::SurfaceConfiguration,
-  ) -> (
-    Camera,
-    CameraUniform,
-    wgpu::Buffer,
-    wgpu::BindGroupLayout,
-    wgpu::BindGroup,
-  ) {
-    let camera = Camera::Orbital(OrbitalCamera::new(
-      (0.0, 0.0, 0.0).into(),
-      config.width as f32,
-      config.height as f32,
-    ));
-
-    let camera_uniform = CameraUniform::new(&camera);
-
-    let buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-      label: Some("Camera Buffer"),
-      contents: cast_slice(&[camera_uniform]),
-      usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
-    });
-
-    let layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-      entries: &[wgpu::BindGroupLayoutEntry {
-        binding: 0,
-        visibility: wgpu::ShaderStages::VERTEX | wgpu::ShaderStages::FRAGMENT,
-        ty: wgpu::BindingType::Buffer {
-          ty: wgpu::BufferBindingType::Uniform,
-          has_dynamic_offset: false,
-          min_binding_size: None,
-        },
-        count: None,
-      }],
-      label: Some("camera_bind_group_layout"),
-    });
-
-    let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
-      layout: &layout,
-      entries: &[wgpu::BindGroupEntry {
-        binding: 0,
-        resource: buffer.as_entire_binding(),
-      }],
-      label: Some("camera_bind_group"),
-    });
-
-    (camera, camera_uniform, buffer, layout, bind_group)
-  }
-
-  fn create_light(
-    device: &wgpu::Device,
-    camera: &Camera,
-  ) -> (
-    LightUniform,
-    wgpu::Buffer,
-    wgpu::BindGroupLayout,
-    wgpu::BindGroup,
-  ) {
-    let light_uniform = LightUniform::from(camera);
-
-    let buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-      label: Some("Light VB"),
-      contents: bytemuck::cast_slice(&[light_uniform]),
-      usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
-    });
-
-    let layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-      entries: &[wgpu::BindGroupLayoutEntry {
-        binding: 0,
-        visibility: wgpu::ShaderStages::VERTEX | wgpu::ShaderStages::FRAGMENT,
-        ty: wgpu::BindingType::Buffer {
-          ty: wgpu::BufferBindingType::Uniform,
-          has_dynamic_offset: false,
-          min_binding_size: None,
-        },
-        count: None,
-      }],
-      label: None,
-    });
-
-    let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
-      layout: &layout,
-      entries: &[wgpu::BindGroupEntry {
-        binding: 0,
-        resource: buffer.as_entire_binding(),
-      }],
-      label: None,
-    });
-
-    (light_uniform, buffer, layout, bind_group)
   }
 
   fn create_render_pipeline(
@@ -411,11 +315,100 @@ impl<T: Backend> Renderer<T> {
   }
 }
 
+fn uniform_layout(device: &wgpu::Device, label: Option<&str>) -> wgpu::BindGroupLayout {
+  device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+    entries: &[wgpu::BindGroupLayoutEntry {
+      binding: 0,
+      visibility: wgpu::ShaderStages::VERTEX | wgpu::ShaderStages::FRAGMENT,
+      ty: wgpu::BindingType::Buffer {
+        ty: wgpu::BufferBindingType::Uniform,
+        has_dynamic_offset: false,
+        min_binding_size: None,
+      },
+      count: None,
+    }],
+    label,
+  })
+}
+
 #[cfg(target_arch = "wasm32")]
 use winit::window::Window;
 
 #[cfg(target_arch = "wasm32")]
 use crate::camera::CameraBehavior;
+
+#[cfg(target_arch = "wasm32")]
+struct Viewer {
+  camera: Camera,
+  camera_uniform: CameraUniform,
+  camera_buffer: wgpu::Buffer,
+  camera_bind_group: wgpu::BindGroup,
+
+  light_uniform: LightUniform,
+  light_buffer: wgpu::Buffer,
+  light_bind_group: wgpu::BindGroup,
+}
+
+#[cfg(target_arch = "wasm32")]
+impl Viewer {
+  fn new(
+    device: &wgpu::Device,
+    config: &wgpu::SurfaceConfiguration,
+    camera_layout: &wgpu::BindGroupLayout,
+    light_layout: &wgpu::BindGroupLayout,
+  ) -> Self {
+    let camera = Camera::Orbital(OrbitalCamera::new(
+      (0.0, 0.0, 0.0).into(),
+      config.width as f32,
+      config.height as f32,
+    ));
+
+    let camera_uniform = CameraUniform::new(&camera);
+
+    let camera_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+      label: Some("Camera Buffer"),
+      contents: cast_slice(&[camera_uniform]),
+      usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+    });
+
+    let camera_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+      layout: camera_layout,
+      entries: &[wgpu::BindGroupEntry {
+        binding: 0,
+        resource: camera_buffer.as_entire_binding(),
+      }],
+      label: Some("camera_bind_group"),
+    });
+
+    let light_uniform = LightUniform::from(&camera);
+
+    let light_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+      label: Some("Light VB"),
+      contents: cast_slice(&[light_uniform]),
+      usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+    });
+
+    let light_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+      layout: light_layout,
+      entries: &[wgpu::BindGroupEntry {
+        binding: 0,
+        resource: light_buffer.as_entire_binding(),
+      }],
+      label: None,
+    });
+
+    Self {
+      camera,
+      camera_uniform,
+      camera_buffer,
+      camera_bind_group,
+
+      light_uniform,
+      light_buffer,
+      light_bind_group,
+    }
+  }
+}
 
 #[cfg(target_arch = "wasm32")]
 impl Renderer<wasm::WasmBackend> {
@@ -425,8 +418,11 @@ impl Renderer<wasm::WasmBackend> {
   }
 
   pub fn render(&self, items: &[DrawItem<'_>]) {
-    let (encoder, output_texture) =
-      self.render_sync(items, &self.camera_bind_group, &self.light_bind_group);
+    let (encoder, output_texture) = self.render_sync(
+      items,
+      &self.viewer.camera_bind_group,
+      &self.viewer.light_bind_group,
+    );
 
     self
       .backend
@@ -439,12 +435,19 @@ impl Renderer<wasm::WasmBackend> {
 
   pub fn update(&mut self) {
     let queue = self.backend.queue();
+    let viewer = &mut self.viewer;
 
-    self.camera_uniform.update_view_projection(&self.camera);
-    queue.write_buffer(&self.camera_buffer, 0, cast_slice(&[self.camera_uniform]));
+    viewer.camera_uniform.update_view_projection(&viewer.camera);
+    queue.write_buffer(
+      &viewer.camera_buffer,
+      0,
+      cast_slice(&[viewer.camera_uniform]),
+    );
 
-    self.light_uniform.update_position(self.camera.eye().into());
-    queue.write_buffer(&self.light_buffer, 0, cast_slice(&[self.light_uniform]));
+    viewer
+      .light_uniform
+      .update_position(viewer.camera.eye().into());
+    queue.write_buffer(&viewer.light_buffer, 0, cast_slice(&[viewer.light_uniform]));
   }
 
   pub fn process_mouse_input(&mut self, state: &ElementState) {
@@ -456,7 +459,7 @@ impl Renderer<wasm::WasmBackend> {
       return;
     }
 
-    self.camera.process_mouse_movement(delta);
+    self.viewer.camera.process_mouse_movement(delta);
   }
 
   pub fn process_mouse_scroll(&mut self, delta: &MouseScrollDelta) {
@@ -465,8 +468,10 @@ impl Renderer<wasm::WasmBackend> {
     }
 
     match delta {
-      MouseScrollDelta::LineDelta(_, y) => self.camera.process_mouse_scroll(*y as f32),
-      MouseScrollDelta::PixelDelta(delta) => self.camera.process_mouse_scroll(delta.y as f32),
+      MouseScrollDelta::LineDelta(_, y) => self.viewer.camera.process_mouse_scroll(*y),
+      MouseScrollDelta::PixelDelta(delta) => {
+        self.viewer.camera.process_mouse_scroll(delta.y as f32)
+      }
     }
   }
 

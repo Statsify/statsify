@@ -276,6 +276,7 @@ pub struct Model {
   attachments: Vec<Attachment>,
   glint: Option<Material>,
   pose: Pose,
+  #[cfg(not(target_arch = "wasm32"))]
   wears_armor: bool,
   points: Vec<Vector3<f32>>,
 }
@@ -395,6 +396,7 @@ impl Model {
       attachments: vec![],
       glint: None,
       pose,
+      #[cfg(not(target_arch = "wasm32"))]
       wears_armor: armor.pieces().next().is_some(),
       points,
     };
@@ -405,6 +407,7 @@ impl Model {
 
   // Boots and a player head reach past the frame that fits a bare player, and every
   // armored render pulls back with them so they share one scale
+  #[cfg(not(target_arch = "wasm32"))]
   pub fn camera_radius(&self) -> f32 {
     let radius = self.pose.camera_radius();
 
@@ -415,6 +418,7 @@ impl Model {
     }
   }
 
+  #[cfg(not(target_arch = "wasm32"))]
   pub fn points(&self) -> &[Vector3<f32>] {
     &self.points
   }
