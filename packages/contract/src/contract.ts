@@ -398,6 +398,10 @@ export const GameStatsPageSchema = GamePageSchema.omit({
 }).extend({
   /** The stored stats for the game, `PlayerStats[game.key]`, every mode's. */
   stats: z.custom<GameStats>(isDocument),
+});
+
+/** What every player's page of a game the site lays out shares, from `content.game`. */
+export const GameContentSchema = z.object({
   /** The stats with a leaderboard, by path below the game (`solo.wins`): the page links them. */
   ranked: z.array(z.string()),
   /** The card's own names for stats it shows by name (a challenge's), by path below the game. */
@@ -655,6 +659,10 @@ const LeaderboardPageInputSchema = z.object({
   around: UuidSchema.optional(),
 });
 
+const GameContentInputSchema = z.object({
+  /** A `PlayerStats` key the site lays out the page of itself, e.g. `bedwars`. */
+  game: z.string().min(1).max(32),
+});
 const LeaderboardGameInputSchema = z.object({
   /** A `PlayerStats` key with leaderboards, e.g. `bedwars`. */
   key: z.string().min(1).max(32),
@@ -765,6 +773,10 @@ export const contract = {
     prestiges: oc
       .route({ method: "GET", path: "/content/prestiges", summary: "Every BedWars prestige, star and bracket" })
       .output(PrestigeSheetSchema),
+    game: errors
+      .route({ method: "GET", path: "/content/game", summary: "What every player's page of a game the site lays out shares" })
+      .input(GameContentInputSchema)
+      .output(GameContentSchema),
   },
 };
 
@@ -790,11 +802,13 @@ export type ResolveInput = z.infer<typeof ResolveInputSchema>;
 export type LeaderboardPageInput = z.infer<typeof LeaderboardPageInputSchema>;
 export type LeaderboardGameInput = z.infer<typeof LeaderboardGameInputSchema>;
 export type GameInput = z.infer<typeof GameInputSchema>;
+export type GameContentInput = z.infer<typeof GameContentInputSchema>;
 export type SessionGameInput = z.infer<typeof SessionGameInputSchema>;
 
 export type BingoPlayer = z.infer<typeof BingoPlayerSchema>;
 export type GamePage = z.infer<typeof GamePageSchema>;
 export type GameStatsPage = z.infer<typeof GameStatsPageSchema>;
+export type GameContent = z.infer<typeof GameContentSchema>;
 export type SessionPage = z.infer<typeof SessionPageSchema>;
 export type StatSection = z.infer<typeof StatSectionSchema>;
 export type StatCell = z.infer<typeof StatCellSchema>;
