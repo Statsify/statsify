@@ -22,12 +22,15 @@ import { Logger } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
+import { setTimeout } from "node:timers/promises";
 import type { CommandResolvable } from "./command.resolvable.js";
 import type {
   InteractionServer,
   RestClient,
   WebsocketShard,
 } from "tiny-discord";
+
+const MODAL_LOCALE_TIMEOUT = 1500;
 
 export type InteractionHook = (
   interaction: Interaction
@@ -105,7 +108,8 @@ export abstract class AbstractCommandListener {
   /** A modal can't follow a defer, so the click's reply waits for the owner's language */
   public showModal(interaction: Interaction, ownerId: string, modal: ModalBuilder) {
     return new PendingReply(
-      this.getUser(ownerId).then((user) => {
+      // Discord drops a click unanswered after 3 seconds, so a slow API opens it in the click's language
+      Promise.race([this.getUser(ownerId), setTimeout(MODAL_LOCALE_TIMEOUT, null)]).then((user) => {
         if (user?.locale) interaction.setLocale(user.locale);
         return { type: InteractionResponseType.Modal, data: modal.build(interaction.t()) };
       })
