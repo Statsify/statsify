@@ -16,3 +16,13 @@ export const cacheNotFoundResponse = createIsomorphicFn()
     setResponseHeaders(new Headers(cacheHeaders(edge)));
   })
   .client(() => undefined);
+
+/**
+ * During SSR, keeps the 404 page for a player who isn't stored out of every cache; a no-op in the browser. A Hypixel
+ * lookup can add the player a moment later, and a reload or a shared link must then open their page.
+ */
+export const missingPlayerResponse = createIsomorphicFn()
+  .server(() => {
+    setResponseHeaders(new Headers({ "Cache-Control": "no-store", "CDN-Cache-Control": "no-store" }));
+  })
+  .client(() => undefined);
