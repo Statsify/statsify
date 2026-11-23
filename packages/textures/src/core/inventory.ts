@@ -10,7 +10,6 @@ import { type PackStack, assetPath } from "./pack.js";
 import { context, createCanvas, decodePng } from "./canvas.js";
 import { drawTooltip, loadNames, tooltipLines } from "./tooltip.js";
 import { Atlas } from "./atlas.js";
-import type { IconCache } from "./icon-cache.js";
 import { ItemRenderer } from "./item-renderer.js";
 import type { ItemStack } from "./item-stack.js";
 import { TextRenderer } from "./text.js";
@@ -24,6 +23,13 @@ export const LAYOUTS = {
 } as const;
 
 export type InventoryLayout = keyof typeof LAYOUTS;
+
+/** Where an inventory's icons come from, like an ItemRenderer over a pack stack */
+export interface IconSource {
+  render(item: ItemStack, scale: number, tick?: number): Promise<OffscreenCanvas>;
+  /** Whether an item's icon changes from tick to tick */
+  animates(item: ItemStack): boolean;
+}
 
 export interface InventorySize {
   rows: number;
@@ -76,20 +82,16 @@ function fill(ctx: OffscreenCanvasRenderingContext2D, scale: number, x: number, 
 
 /** Draws containers the way Minecraft draws them, from a resource pack */
 export class InventoryRenderer {
-  /** Items the pack can't draw, logged once and then left out */
-  private broken = new WeakSet<ItemStack>();
-
   private constructor(
-    private itemRenderer: ItemRenderer,
+    private icons: IconSource,
     private text: TextRenderer | undefined,
     private names: Record<string, string>,
     private chestScreen?: OffscreenCanvas,
   ) {}
 
-  public static async load(pack: PackStack | Atlas, cache?: IconCache) {
-    if (pack instanceof Atlas) {
-      return new InventoryRenderer(new ItemRenderer(pack, cache), undefined, pack.names, pack.texture(CHEST_SCREEN));
-    }
+  /** The panel, font and names come from the pack stack, and the icons from `icons`, by default an ItemRenderer over it */
+  public static async load(pack: PackStack | Atlas, icons: IconSource = new ItemRenderer(pack)) {
+    if (pack instanceof Atlas) return new InventoryRenderer(icons, undefined, pack.names, pack.texture(CHEST_SCREEN));
 
     const chestScreen = pack.get(assetPath(CHEST_SCREEN, "textures", ".png"));
 
@@ -98,12 +100,12 @@ export class InventoryRenderer {
       chestScreen ? decodePng(chestScreen) : undefined,
     ]);
 
-    return new InventoryRenderer(new ItemRenderer(pack, cache), text, loadNames(pack), panel);
+    return new InventoryRenderer(icons, text, loadNames(pack), panel);
   }
 
   public async draw(slots: (ItemStack | undefined)[], size: InventorySize, tick = 0) {
     const shown = slots.slice(0, size.rows * size.cols);
-    const icons = await Promise.all(shown.map((item) => item && this.icon(item, size.scale, tick)));
+    const icons = await Promise.all(shown.map((item) => item && this.icons.render(item, size.scale, tick)));
 
     const canvas = this.background(size);
     const ctx = context(canvas);
@@ -122,30 +124,14 @@ export class InventoryRenderer {
     return tooltipLines(item, this.names);
   }
 
-  /** Whether an item's icon changes from tick to tick, or false when the pack can't draw it */
+  /** Whether an item's icon changes from tick to tick */
   public animates(item: ItemStack) {
-    if (this.broken.has(item)) return false;
-
-    try {
-      return this.itemRenderer.animates(item);
-    } catch (error) {
-      this.broken.add(item);
-      console.error(error);
-      return false;
-    }
+    return this.icons.animates(item);
   }
 
-  /** An item's icon at a game tick, or undefined when the pack can't draw it */
-  public async icon(item: ItemStack, scale: number, tick: number) {
-    if (this.broken.has(item)) return undefined;
-
-    try {
-      return await this.itemRenderer.render(item, scale, tick);
-    } catch (error) {
-      this.broken.add(item);
-      console.error(error);
-      return undefined;
-    }
+  /** An item's icon at a game tick */
+  public icon(item: ItemStack, scale: number, tick: number) {
+    return this.icons.render(item, scale, tick);
   }
 
   /** A slot's icon, count and durability bar */

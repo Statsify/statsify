@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { SLOTS, inRange, kitKey } from "./kits.js";
-import { type ItemStack, legacyMaterial } from "@statsify/textures";
+import { SLOTS, hypixelMaterial, inRange, kitKey } from "./kits.js";
+import type { ItemStack } from "@statsify/textures";
 import { armorOf } from "./armor.js";
 import dumped from "../data/skywars-kits.json" with { type: "json" };
 
@@ -60,18 +60,19 @@ function withSortedEnchantments(key: string) {
 }
 
 /**
- * A SkyWars kit_…_inventory ({ "IRON_PICKAXE:0:32,34": "0", "GOLD_HELMET:0": [39] }), or the kit's default.
- * `kit` is its id (kit_basic_solo_scout, as activeKit_SOLO holds it) or a SKYWARS_KITS key
+ * A SkyWars kit_…_inventory ({ "IRON_PICKAXE:0:32,34": "0", "GOLD_HELMET:0": [39] }), or the kit's default, which is
+ * undefined for a kit SKYWARS_KITS doesn't list. `kit` is its id (kit_basic_solo_scout, as activeKit_SOLO holds it)
+ * or a SKYWARS_KITS key
  */
 export function fromSkyWarsKit(
   stored: Readonly<Record<string, string | readonly number[]>> | null | undefined,
   kit: string,
-): (ItemStack | undefined)[] {
+): (ItemStack | undefined)[] | undefined {
   const slots: (ItemStack | undefined)[] = Array.from({ length: SLOTS });
   const dumpedKit = skyWarsKit(kit);
 
   if (!stored) {
-    if (!dumpedKit || !hasDefault(dumpedKit)) throw new Error(`No default SkyWars layout for ${kit}`);
+    if (!dumpedKit || !hasDefault(dumpedKit)) return;
     for (const { slot, item } of dumpedKit.items) if (slot !== undefined) slots[slot] = item;
     return slots;
   }
@@ -93,7 +94,7 @@ export function fromSkyWarsKit(
 
   for (const { key, value, listedItem } of entries) {
     const [material, damage, enchantments] = key.split(":");
-    const plain = legacyMaterial(material, Number(damage));
+    const plain = hypixelMaterial(material, Number(damage));
     const item = listedItem ?? (plain && { ...plain, enchanted: enchantments ? true : undefined });
     if (!item) continue;
 

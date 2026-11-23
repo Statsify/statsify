@@ -79,7 +79,7 @@ export function fromBedwarsQuickBuy(favorites: string | null | undefined): (Item
     }
 
     const item = SHOP_ITEMS[RENAMED[token] ?? token];
-    if (!item) continue;
+    if (!item) throw new Error(`No BedWars shop item ${token}`);
 
     slots[slot] = {
       id: `minecraft:${item.id ?? token}`,
@@ -103,8 +103,10 @@ export function fromBedwarsHotbar(favoriteSlots: string | null | undefined): (It
 
   return Array.from({ length: HOTBAR }, (_, slot) => {
     const category = categories[slot];
-    const id = category && HOTBAR_CATEGORIES[category];
-    if (!id) return;
+    if (category === undefined || category === "null") return;
+
+    const id = HOTBAR_CATEGORIES[category];
+    if (!id) throw new Error(`No BedWars hotbar category ${category}`);
 
     return {
       id,

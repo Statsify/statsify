@@ -35,24 +35,39 @@ function open(onClose: () => void) {
   return db;
 }
 
-/** Rendered icons as PNGs in IndexedDB, so the next page load skips drawing them. A failed read is a miss */
+/** Deletes every icon whose key doesn't start with the stack's hash */
+async function keepStack(db: IDBPDatabase<Icons>, stack: string) {
+  const store = db.transaction(STORE, "readwrite").store;
+  const keys = await store.getAllKeys();
+  await Promise.all(keys.filter((key) => !key.startsWith(`${stack}/`)).map((key) => store.delete(key)));
+}
+
+/**
+ * Rendered icons as PNGs in IndexedDB, keyed by their pack stack's hash first, so the next page load skips
+ * drawing them. The first stack to use it after a page load drops every other stack's icons, so a pack change
+ * doesn't leave the old ones behind. A failed read is a miss
+ */
 export class IconCache {
   private db?: Promise<IDBPDatabase<Icons>>;
 
-  private async database() {
-    this.db ??= open(() => (this.db = undefined));
+  private async database(stack: string) {
+    this.db ??= open(() => (this.db = undefined)).then(async (db) => {
+      await keepStack(db, stack);
+      return db;
+    });
+
     return this.db;
   }
 
-  public async get(key: string) {
-    const png = await this.database()
+  public async get(stack: string, key: string) {
+    const png = await this.database(stack)
       .then((db) => db.get(STORE, key))
       .catch(() => undefined);
     return png && decodePng(new Uint8Array(await png.arrayBuffer()));
   }
 
-  public async set(key: string, icon: OffscreenCanvas) {
+  public async set(stack: string, key: string, icon: OffscreenCanvas) {
     const png = await icon.convertToBlob();
-    await (await this.database()).put(STORE, png, key);
+    await (await this.database(stack)).put(STORE, png, key);
   }
 }

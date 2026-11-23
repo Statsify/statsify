@@ -1,8 +1,8 @@
 # @statsify/textures
 
 Draws Minecraft items, text, tooltips and inventories from a resource pack, in the browser or in
-Node. Drop in a 26.3 pack (or the 26.3 client jar) and every icon is drawn from it, then cached, or
-draw from an [atlas](#atlas) of icons drawn ahead of time.
+Node. Drop in a 26.3 pack and every icon is drawn from it, then cached, or draw from an
+[atlas](#atlas) of icons drawn ahead of time.
 
 ## Packs
 
@@ -32,8 +32,10 @@ needs at least one 26.3 pack, which has the item model definitions.
 - Flat items with tints: leather dye, potion colors, spawn eggs.
 - Block items in 3D, through the model's gui transform with the GUI's lighting. A small software
   rasterizer draws them, so they match the game pixel for pixel and need no WebGL.
-- Player heads (the default skin, or `item.skin`, a textures.minecraft.net URL, which the page
-  can fetch over https), mob heads, chests, shulker boxes.
+- Player heads (the default skin, or `item.skin`, a textures.minecraft.net URL), mob heads, chests,
+  shulker boxes. The renderer never fetches a skin: `new ItemRenderer(stack, cache, loadSkin)` takes
+  a function that gives a skin URL's PNG, so the caller picks where skins come from and how long
+  they're kept, and a skin that fails to load throws.
 - Banners and shields with their patterns: `item.patterns`, as 26.3's `banner_patterns` component
   has them (`{ pattern: "minecraft:border", color: "red" }`), and a shield's `item.baseColor`.
   A banner's base color is in its id.
@@ -45,7 +47,8 @@ ids to 26.3 names and checks them against the 26.3 pack. The same run pairs 1.8.
 with 26.3's through the two versions' models, and reads 1.8.9's English item names, which tooltips
 use for unnamed items, from StatsifyDump's `/sdump names`.
 
-Icons are cached in IndexedDB. Bump `VERSION` in `src/core/icon-cache.ts` whenever a change draws
+Icons are cached in IndexedDB, for one pack stack at a time: the first stack to use the cache after a
+page load drops the others' icons. Bump `VERSION` in `src/core/icon-cache.ts` whenever a change draws
 icons differently, so browsers drop the old ones.
 
 ## Text and tooltips
@@ -62,7 +65,9 @@ lines in their place.
 
 `InventoryRenderer` draws a whole container: the pack's chest screen (or a plain panel for other
 sizes), the title, and each slot's icon, count and 1.8.9 durability bar. An item the pack can't
-draw leaves its slot empty and logs the error once.
+draw makes `draw` throw, rather than leave its slot empty. Icons come from an `ItemRenderer` over the
+same stack, or from the `IconSource` given as `load`'s second argument, like an `ItemRenderer` with
+an `IconCache`.
 
 ```ts
 const renderer = await InventoryRenderer.load(stack);
@@ -125,7 +130,8 @@ inventory.slots = fromBedwarsQuickBuy(favorites);
 
 Attributes: `rows`, `cols`, `scale`, `label` (the title; `title` would also open the browser's
 own tooltip), `layout` (`chest`, `large-chest`, `shop`, `hotbar`) and `freeze`, which stops
-animations. Tooltips follow the cursor, flip at the window's edges and open on tap.
+animations. Tooltips follow the cursor, flip at the window's edges and open on tap. Icons are kept
+in an `IconCache`, and player heads' skins are fetched from the texture server.
 
 Every inventory on a page animates on one clock, redrawing only its moving slots, and stops
 while it's off screen or the tab is in the background.
