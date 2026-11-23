@@ -7,19 +7,30 @@
  */
 
 import { NO_STORE_EDGE } from "~/lib/cache";
+import { clientIp } from "~/server/client-ip.server";
 import { createFileRoute } from "@tanstack/react-router";
-import { discordCallbackUrl, randomToken, redirect, stateCookie } from "~/server/account.server";
+import { discordCallbackUrl, redirect, stateCookie } from "~/server/account.server";
+import { rpcServerClient } from "~/server/rpc.server";
 import { siteConfig } from "~/server/config.server";
+import { verifyTurnstile } from "~/server/turnstile.server";
 
-/** Sends the visitor to Discord to log in, with a `state` the callback checks against their cookie. */
+/**
+ * Sends a visitor who passed Turnstile to Discord to log in, with a single-use `state` the callback checks against
+ * their cookie and the API spends before asking Discord about the code.
+ */
 export const Route = createFileRoute("/auth/discord/")({
   server: {
     handlers: {
-      GET: async () => {
+      POST: async ({ request }) => {
         const { discordClientId } = await siteConfig();
         if (!discordClientId) return new Response(null, { status: 404, headers: NO_STORE_EDGE });
 
-        const state = randomToken();
+        const token = (await request.formData()).get("token");
+        if (!(await verifyTurnstile(typeof token === "string" ? token : undefined, clientIp()))) {
+          return redirect("/account?login=failed", []);
+        }
+
+        const { state } = await rpcServerClient.account.startLogin();
         const url = new URL("https://discord.com/oauth2/authorize");
 
         url.search = new URLSearchParams({

@@ -30,7 +30,7 @@ export const Route = createFileRoute("/auth/discord/callback")({
 
         try {
           const redirectUri = await discordCallbackUrl();
-          const { session } = await rpcServerClient.account.login({ code, redirectUri, clientIp: clientIp() });
+          const { session } = await rpcServerClient.account.login({ state, code, redirectUri, clientIp: clientIp() });
 
           const previous = sessionToken();
           if (previous) await rpcServerClient.account.logout({ session: previous }).catch(captureServerError);

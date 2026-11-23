@@ -475,7 +475,8 @@
       "description": "Log in to claim your profile and manage your settings.",
       "discord": "Log In With Discord",
       "failed": "Couldn't log in with Discord. Try again.",
-      "unavailable": "Logging in isn't available right now."
+      "unavailable": "Logging in isn't available right now.",
+      "verifyFailed": "The verification didn't load. If you use a blocker, allow challenges.cloudflare.com and reload."
     },
     "profiles": {
       "title": "Minecraft Profiles",

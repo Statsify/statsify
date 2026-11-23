@@ -11,16 +11,19 @@ import type { AccountPage as AccountData, AccountPageProfile } from "@statsify/c
 import { BOX_GAP, Box, CELL, HEADING_BOX } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
 import { Discord } from "~/components/icons/discord";
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link, getRouteApi, useRouter } from "@tanstack/react-router";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { PageBackground } from "~/components/ui/background";
 import { SkinBust, SkinHead } from "~/components/ui/skin";
+import { Turnstile } from "~/components/turnstile";
 import { cn } from "~/lib/util";
 import { dashedUuid } from "~/lib/uuid";
 import { rememberAccount } from "~/lib/account-hint";
 import { dateFormat } from "~/features/guild/guild-page";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+const localeRoute = getRouteApi("/{-$locale}");
 
 export function AccountPage({
   loginEnabled,
@@ -50,20 +53,48 @@ export function AccountPage({
 
 function LoggedOut({ loginEnabled, failed }: { loginEnabled: boolean; failed: boolean }) {
   const { t } = useTranslation();
+  const { turnstileSiteKey } = localeRoute.useLoaderData();
+  const form = useRef<HTMLFormElement>(null);
+  const tokenInput = useRef<HTMLInputElement>(null);
+  const [verifying, setVerifying] = useState(false);
+  const [widgetFailed, setWidgetFailed] = useState(false);
   useEffect(() => rememberAccount(null), []);
+
+  // The widget goes either way, since a token is single-use and a failed one brings the button back.
+  const onToken = (token: string | undefined) => {
+    setVerifying(false);
+    if (!token || !tokenInput.current) return;
+    tokenInput.current.value = token;
+    form.current?.requestSubmit();
+  };
 
   return (
     <Box className={cn(CELL, "content:flex-col content:gap-4 content:py-6 content:text-center")}>
       <p className="text-mc-1.5 sm:text-mc-2 text-mc-gray">{t("account.loggedOut.description")}</p>
       {failed && <p className="text-mc-1.5 text-mc-red">{t("account.loggedOut.failed")}</p>}
       {loginEnabled ?
-        // A server route that redirects to Discord, so a plain anchor rather than a router link.
-        <Button variant="primary" className="content:bg-discord-500 w-full sm:w-auto sm:min-w-64" asChild>
-          <a href="/auth/discord">
-            <Discord className="drop-shadow-mc-1" />
-            {t("account.loggedOut.discord")}
-          </a>
-        </Button> :
+        // A server route that redirects to Discord, so a plain form rather than a server function.
+        <form ref={form} method="post" action="/auth/discord" className="flex w-full flex-col items-center gap-3">
+          <input ref={tokenInput} type="hidden" name="token" />
+          {verifying && (
+            <Turnstile siteKey={turnstileSiteKey} onToken={onToken} onLoadError={() => setWidgetFailed(true)} className="w-full max-w-100" />
+          )}
+          <Button variant="primary" className="content:bg-discord-500 w-full sm:w-auto sm:min-w-64" asChild>
+            <button
+              type="submit"
+              disabled={verifying}
+              onClick={(event) => {
+                if (!turnstileSiteKey) return;
+                event.preventDefault();
+                setVerifying(true);
+              }}
+            >
+              <Discord className="drop-shadow-mc-1" />
+              {t("account.loggedOut.discord")}
+            </button>
+          </Button>
+          {widgetFailed && <p className="text-mc-1.5 text-mc-red">{t("account.loggedOut.verifyFailed")}</p>}
+        </form> :
         <p className="text-mc-1.5 text-mc-gray">{t("account.loggedOut.unavailable")}</p>}
     </Box>
   );

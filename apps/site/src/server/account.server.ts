@@ -7,18 +7,13 @@
  */
 
 import { NO_STORE_EDGE } from "~/lib/cache";
-import { SESSION_TTL_SECONDS, SessionSchema } from "@statsify/contract";
+import { LOGIN_STATE_TTL_SECONDS, SESSION_TTL_SECONDS, SessionSchema } from "@statsify/contract";
 import { getCookie } from "@tanstack/react-start/server";
-import { randomBytes } from "node:crypto";
 import { siteConfig } from "./config.server";
 
 const SESSION_COOKIE = "statsify_session";
 const STATE_COOKIE = "statsify_login_state";
 const STATE_PATH = "/auth/discord";
-const STATE_MAX_AGE_SECONDS = 10 * 60;
-
-/** Shaped like the API's session tokens, so `SessionSchema` checks the login's `state` too. */
-export const randomToken = () => randomBytes(32).toString("base64url");
 
 /** The visitor's session token, for the account procedures; the API decides whether it's still live. */
 export function sessionToken(): string | undefined {
@@ -49,7 +44,7 @@ export function redirect(location: string, cookies: string[]): Response {
 
 export const sessionCookie = (session: string) => cookie(SESSION_COOKIE, session, SESSION_TTL_SECONDS, "/");
 export const clearSessionCookie = () => cookie(SESSION_COOKIE, "", 0, "/");
-export const stateCookie = (state: string) => cookie(STATE_COOKIE, state, STATE_MAX_AGE_SECONDS, STATE_PATH);
+export const stateCookie = (state: string) => cookie(STATE_COOKIE, state, LOGIN_STATE_TTL_SECONDS, STATE_PATH);
 export const clearStateCookie = () => cookie(STATE_COOKIE, "", 0, STATE_PATH);
 
 /**
