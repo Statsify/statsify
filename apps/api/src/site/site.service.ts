@@ -262,7 +262,10 @@ export class SiteService implements OnApplicationBootstrap {
 
     // When Hypixel doesn't answer, `PlayerService` hands back the stored player, still past its cooldown: say the
     // refresh failed rather than show the old stats as new.
-    if (!player || player.expiresAt <= Date.now()) throw hypixelUnavailable();
+    if (!player || player.expiresAt <= Date.now()) {
+      await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
+      throw hypixelUnavailable();
+    }
 
     return this.toPage(player, this.fetchPlayerGuild(tag));
   }
@@ -299,12 +302,17 @@ export class SiteService implements OnApplicationBootstrap {
       ]);
     } catch (error) {
       // Not an answer about the name, so nothing is remembered and the visitor can try again.
-      if (error instanceof HypixelUnavailableError) throw hypixelUnavailable();
+      if (error instanceof HypixelUnavailableError) {
+        await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
+        throw hypixelUnavailable();
+      }
+
       throw error;
     }
 
     if (!player) {
       await this.rememberMiss(key);
+      await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
       throw notFound();
     }
 
@@ -689,7 +697,7 @@ export class SiteService implements OnApplicationBootstrap {
     const [spent, budgetTtl] = await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, calls);
 
     if (spent > limit) {
-      await this.redis.decrby(BUDGET_KEY, calls);
+      await hitWindow(this.redis, BUDGET_KEY, BUDGET_WINDOW_SECONDS, -calls);
       throw tooManyRequests(budgetTtl);
     }
   }
