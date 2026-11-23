@@ -1,3 +1,5 @@
+#![deny(clippy::disallowed_methods)]
+
 #[cfg(not(target_arch = "wasm32"))]
 mod buffer_dimensions;
 pub mod camera;
