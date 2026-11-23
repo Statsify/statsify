@@ -12,7 +12,6 @@ use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
 use crate::pose::{PartPose, Pose};
 use crate::skin_loader::{load_skull_from_memory, load_texture_from_memory};
-use crate::texture::Texture;
 
 pub enum ModelKind {
   Classic,
@@ -310,6 +309,7 @@ impl Model {
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
+    sampler: &wgpu::Sampler,
     image: DynamicImage,
     kind: ModelKind,
     outer_layer: ModelOuterLayer,
@@ -346,8 +346,7 @@ impl Model {
       .map(|geometry| mesh_with_points(device, geometry, &mut points))
       .collect();
 
-    let texture = Texture::from_image(device, queue, &image)?;
-    let material = Material::new(device, texture, layout);
+    let material = Material::new(device, queue, layout, sampler, &image)?;
 
     let mut model = Self {
       material,
@@ -359,7 +358,7 @@ impl Model {
       points,
     };
 
-    model.attach_armor(device, queue, layout, armor)?;
+    model.attach_armor(device, queue, layout, sampler, armor)?;
     Ok(model)
   }
 
@@ -384,6 +383,7 @@ impl Model {
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
+    sampler: &wgpu::Sampler,
     armor: &Armor,
   ) -> Result<()> {
     for (piece, layer, parts) in armor.pieces() {
@@ -442,7 +442,8 @@ impl Model {
         }
       }
 
-      self.attach(device, queue, layout, &texture, geometry, piece.enchanted)?;
+      let material = Material::new(device, queue, layout, sampler, &texture)?;
+      self.attach(device, material, geometry, piece.enchanted);
     }
 
     Ok(())
@@ -453,22 +454,10 @@ impl Model {
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
+    sampler: &wgpu::Sampler,
     glint: &DynamicImage,
   ) -> Result<()> {
-    let texture = Texture::from_image_with_sampler(
-      device,
-      queue,
-      glint,
-      &wgpu::SamplerDescriptor {
-        address_mode_u: wgpu::AddressMode::Repeat,
-        address_mode_v: wgpu::AddressMode::Repeat,
-        mag_filter: wgpu::FilterMode::Linear,
-        min_filter: wgpu::FilterMode::Linear,
-        ..Default::default()
-      },
-    )?;
-
-    self.glint = Some(Material::new(device, texture, layout));
+    self.glint = Some(Material::new(device, queue, layout, sampler, glint)?);
     Ok(())
   }
 
@@ -481,6 +470,7 @@ impl Model {
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
+    sampler: &wgpu::Sampler,
     cape: &DynamicImage,
     chestplate: bool,
   ) -> Result<()> {
@@ -522,29 +512,25 @@ impl Model {
     });
     geometry.translate(offset);
 
-    self.attach(device, queue, layout, cape, geometry, false)
+    let material = Material::new(device, queue, layout, sampler, cape)?;
+    self.attach(device, material, geometry, false);
+    Ok(())
   }
 
   fn attach(
     &mut self,
     device: &wgpu::Device,
-    queue: &wgpu::Queue,
-    layout: &wgpu::BindGroupLayout,
-    texture: &DynamicImage,
+    material: Material,
     mut geometry: Geometry,
     enchanted: bool,
-  ) -> Result<()> {
+  ) {
     self.pose.place(&mut geometry);
 
-    let texture = Texture::from_image(device, queue, texture)?;
-
     self.attachments.push(Attachment {
-      material: Material::new(device, texture, layout),
+      material,
       mesh: mesh_with_points(device, geometry, &mut self.points),
       enchanted,
     });
-
-    Ok(())
   }
 
   pub fn to_raw() -> InstanceRaw {
