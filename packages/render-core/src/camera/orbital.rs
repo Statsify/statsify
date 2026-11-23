@@ -166,7 +166,7 @@ impl OrbitalCamera {
     self.znear = depths.clone().fold(f32::MAX, f32::min) / 2.0;
     self.zfar = depths.fold(f32::MIN, f32::max) * 2.0;
 
-    // cgmath's projection panics on planes closer together than its epsilon
+    // The projection needs the near plane in front of the eye and the far plane clearly past it
     let apart = self.znear > 0.0 && self.zfar - self.znear > f32::EPSILON;
     (apart && self.view_projection_matrix().is_finite()).then_some(self)
   }
