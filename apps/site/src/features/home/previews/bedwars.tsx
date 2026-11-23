@@ -16,19 +16,19 @@ import { cn } from "~/lib/util";
 import { useTranslation } from "react-i18next";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { usePlayer } from "~/components/player-context";
+import type { BedWarsPreview } from "@statsify/contract";
 
 export function BedWarsPreview({ className }: { className?: string }) {
-  const player = usePlayer();
+  const bedwars = usePlayer<BedWarsPreview>();
   const n = useNumberFormat();
   const { t } = useTranslation();
-  const bedwars = player.stats.bedwars;
   const stats = bedwars.overall;
 
   return (
     <div className={cn("grid grid-cols-3 gap-2 sm:whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-1 xl:grid-cols-balanced gap-2 text-center">
-        <Skin uuid={player.uuid} className="xl:row-start-1 xl:row-end-4 hidden xl:block" />
-        <Nametag prefixName={player.prefixName} className="row-start-1 xl:col-start-2" />
+        <Skin uuid={bedwars.uuid} className="xl:row-start-1 xl:row-end-4 hidden xl:block" />
+        <Nametag prefixName={bedwars.prefixName} className="row-start-1 xl:col-start-2" />
         <Progression
           // A smaller size on phones keeps "[281✫] [■■■■■■■■■■] [282✫]" on one line, the card's three lines in proportion.
           className="row-start-2 xl:col-start-2 max-sm:content:text-mc-1.5"

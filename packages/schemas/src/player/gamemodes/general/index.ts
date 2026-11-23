@@ -103,3 +103,4 @@ export class General {
 
 export * from "./events.js";
 export * from "./bingo.js";
+export * from "./util.js";

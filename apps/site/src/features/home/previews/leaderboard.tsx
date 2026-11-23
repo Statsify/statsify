@@ -13,16 +13,17 @@ import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import type { CSSProperties } from "react";
-import type { PostLeaderboardResponse } from "@statsify/api-client";
+import type { LeaderboardPage } from "@statsify/contract";
 
 // Everything is Minecraft, as on the live site; the column headers are bold.
 const HEADER = "content:font-bold";
 
+/** The top three rows of the sample leaderboard, straight from the contract's `leaderboard.page` shape. */
 export function LeaderboardPreview({
   leaderboard,
   className,
 }: {
-  leaderboard: PostLeaderboardResponse;
+  leaderboard: LeaderboardPage;
   className?: string;
 }) {
   const n = useNumberFormat();
@@ -49,26 +50,28 @@ export function LeaderboardPreview({
           {field}
         </Box>
       ))}
-      {leaderboard.data.slice(0, 3).map((player) => (
-        <Fragment key={player.id}>
+      {leaderboard.rows.slice(0, 3).map((row) => (
+        <Fragment key={row.uuid}>
           <Box className="hidden md:block content:font-bold content:flex content:items-center content:justify-center">
-            #{player.position}
+            #{row.position}
           </Box>
           <Box className="hidden md:block content:py-3 content:px-5">
-            <SkinHead uuid={player.id} />
+            <SkinHead uuid={row.uuid} />
           </Box>
           <Box className="col-span-3 md:col-span-1 min-w-0 content:min-w-0 content:text-start justify-center content:flex content:items-center">
             {/* `MinecraftText` styles every color segment, so the truncation sits on a wrapper. */}
             <span className="block min-w-0 truncate">
-              <MinecraftText className="text-mc-1.5 lg:text-mc-2">{player.name}</MinecraftText>
+              <MinecraftText className="text-mc-1.5 lg:text-mc-2">{row.name}</MinecraftText>
             </span>
           </Box>
-          {player.fields.map((field, index) => (
+          {row.values.map((value, index) => (
             <Box
-              key={`${leaderboard.fields[index]}-${player.id}`}
+              key={`${leaderboard.fields[index]}-${row.uuid}`}
               className="content:flex content:justify-center content:items-center"
             >
-              <span className="text-mc-1.5 lg:text-mc-2">{n(field)}</span>
+              {typeof value === "number" ?
+                <span className="text-mc-1.5 lg:text-mc-2">{n(value)}</span> :
+                <MinecraftText className="text-mc-1.5 lg:text-mc-2">{value}</MinecraftText>}
             </Box>
           ))}
         </Fragment>

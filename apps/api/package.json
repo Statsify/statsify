@@ -21,9 +21,13 @@
     "@nestjs/core": "^11.1.6",
     "@nestjs/platform-fastify": "^11.1.6",
     "@nestjs/swagger": "^11.2.0",
+    "@orpc/contract": "1.15.7",
+    "@orpc/nest": "1.15.7",
+    "@orpc/server": "1.15.7",
     "@sentry/node": "^7.118.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
+    "@statsify/contract": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
@@ -99,6 +103,10 @@
     "#redis": {
       "types": "./src/redis/index.ts",
       "default": "./dist/redis/index.js"
+    },
+    "#site": {
+      "types": "./src/site/index.ts",
+      "default": "./dist/site/index.js"
     }
   }
 }

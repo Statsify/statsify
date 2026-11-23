@@ -7,32 +7,21 @@
  */
 
 import { type ReactNode, createContext, use, useMemo } from "react";
-import type { Json } from "~/lib/json";
-import type { Player } from "@statsify/schemas";
 
-const PlayerContext = createContext<{ player: Json<Player> | undefined }>({
-  player: undefined,
-});
+const PlayerContext = createContext<{ player: unknown }>({ player: undefined });
 
-export const PlayerProvider = ({
-  player,
-  children,
-}: {
-  player: Json<Player>;
-  children: ReactNode;
-}) => {
+/** Hands a preview its player view model (`@statsify/contract`'s `*Preview` types) without prop drilling. */
+export function PlayerProvider<T>({ player, children }: { player: T; children: ReactNode }) {
   const value = useMemo(() => ({ player }), [player]);
   return <PlayerContext value={value}>{children}</PlayerContext>;
-};
+}
 
-export function usePlayer() {
+export function usePlayer<T>(): T {
   const { player } = use(PlayerContext);
 
-  if (!player) {
-    throw new Error(
-      "Either usePlayer isn't being used in a PlayerContext or the player doesn't exist",
-    );
+  if (player === undefined) {
+    throw new Error("Either usePlayer isn't being used in a PlayerContext or the player doesn't exist");
   }
 
-  return player;
+  return player as T;
 }

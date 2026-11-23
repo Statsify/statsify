@@ -8,7 +8,7 @@
 
 import { Background } from "~/components/ui/background";
 import { Divider } from "~/components/ui/divider";
-import { Search } from "./search";
+import { Search } from "~/components/search";
 import type { ReactNode } from "react";
 
 export function BingoHeading({ subtitle }: { subtitle: string }) {
@@ -44,7 +44,7 @@ export function BingoLayout({ name, children }: { name: string; children: ReactN
         <div className="w-[95%] max-w-[1800px] mx-auto flex justify-center items-center flex-col gap-4 pt-8">
           <BingoHeading subtitle="13th Anniversary Bingo" />
           <div className="w-[80%] flex items-stretch flex-col gap-4">
-            <Search key={name} defaultValue={name} />
+            <Search key={name} defaultValue={name} target="bingo" />
             <Divider variant="black" className="my-2" />
           </div>
           {children}

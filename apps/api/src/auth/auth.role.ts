@@ -8,6 +8,8 @@
 
 export const AuthRole = {
   MEMBER: 0,
+  /** The website's own key: the only one the `/rpc` procedures accept below WORKER. */
+  SITE: 100,
   WORKER: 300,
   ADMIN: 999,
 } as const;

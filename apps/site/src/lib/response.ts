@@ -1,0 +1,28 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU AGPL v3 or later license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import { cacheHeaders } from "./cache";
+import { createIsomorphicFn } from "@tanstack/react-start";
+import { setResponseHeaders } from "@tanstack/react-start/server";
+
+/** During SSR, lets the edge cache a 404 page briefly; a no-op in the browser. */
+export const cacheNotFoundResponse = createIsomorphicFn()
+  .server((edge: string) => {
+    setResponseHeaders(new Headers(cacheHeaders(edge)));
+  })
+  .client(() => undefined);
+
+/**
+ * During SSR, keeps the 404 page for a player who isn't stored out of every cache; a no-op in the browser. A Hypixel
+ * lookup can add the player a moment later, and a reload or a shared link must then open their page.
+ */
+export const missingPlayerResponse = createIsomorphicFn()
+  .server(() => {
+    setResponseHeaders(new Headers({ "Cache-Control": "no-store", "CDN-Cache-Control": "no-store" }));
+  })
+  .client(() => undefined);

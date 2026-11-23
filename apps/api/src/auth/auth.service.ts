@@ -26,7 +26,7 @@ export class AuthService {
 
   public constructor(@InjectRedis() private readonly redis: Redis) {}
 
-  public async limited(apiKey: string, weight: number, role: AuthRole) {
+  public async limited(apiKey: string, weight: number, role: AuthRole, siteUnlimited: boolean) {
     const hash = this.hash(apiKey);
 
     const [name, ...keyInfo] = await this.redis.hmget(
@@ -41,6 +41,12 @@ export class AuthService {
     const [apiKeyRole, apiKeyLimit] = keyInfo.map(Number);
 
     if (apiKeyRole < role) throw new ForbiddenException();
+
+    // The site's key on its own routes: count the request, but read no window, so its traffic can't hit the limit.
+    if (siteUnlimited && apiKeyRole === AuthRole.SITE) {
+      await this.redis.hincrby(`key:${hash}`, "requests", weight);
+      return { canActivate: true, used: 0, limit: apiKeyLimit, resetTime: 0 };
+    }
 
     const pipeline = this.redis.pipeline();
 

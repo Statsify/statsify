@@ -19,9 +19,13 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as Char123LocaleChar125RouteImport } from './routes/{-$locale}'
 import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
 import { Route as Char123LocaleChar125BingoRouteImport } from './routes/{-$locale}/bingo'
+import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as ApiSkinHeadRouteImport } from './routes/api/skin/head'
 import { Route as ApiSkinRenderRouteImport } from './routes/api/skin/render'
-import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name/bingo'
+import { Route as Char123LocaleChar125PlayerIndexRouteImport } from './routes/{-$locale}/player/index'
+import { Route as Char123LocaleChar125PlayerNameRouteImport } from './routes/{-$locale}/player/$name'
+import { Route as Char123LocaleChar125PlayerNameIndexRouteImport } from './routes/{-$locale}/player/$name/index'
+import { Route as Char123LocaleChar125PlayerNameBingoRouteImport } from './routes/{-$locale}/player/$name_/bingo'
 
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
@@ -45,6 +49,11 @@ const Char123LocaleChar125BingoRoute =
     path: '/bingo',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
+const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
+  id: '/api/rpc/$',
+  path: '/api/rpc/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSkinHeadRoute = ApiSkinHeadRouteImport.update({
   id: '/api/skin/head',
   path: '/api/skin/head',
@@ -55,9 +64,27 @@ const ApiSkinRenderRoute = ApiSkinRenderRouteImport.update({
   path: '/api/skin/render',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char123LocaleChar125PlayerIndexRoute =
+  Char123LocaleChar125PlayerIndexRouteImport.update({
+    id: '/player/',
+    path: '/player/',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125PlayerNameRoute =
+  Char123LocaleChar125PlayerNameRouteImport.update({
+    id: '/player/$name',
+    path: '/player/$name',
+    getParentRoute: () => Char123LocaleChar125Route,
+  } as any)
+const Char123LocaleChar125PlayerNameIndexRoute =
+  Char123LocaleChar125PlayerNameIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => Char123LocaleChar125PlayerNameRoute,
+  } as any)
 const Char123LocaleChar125PlayerNameBingoRoute =
   Char123LocaleChar125PlayerNameBingoRouteImport.update({
-    id: '/player/$name/bingo',
+    id: '/player/$name_/bingo',
     path: '/player/$name/bingo',
     getParentRoute: () => Char123LocaleChar125Route,
   } as any)
@@ -67,17 +94,24 @@ export interface FileRoutesByFullPath {
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
+  '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameRouteWithChildren
+  '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
+  '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}': typeof Char123LocaleChar125IndexRoute
+  '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
+  '/{-$locale}/player': typeof Char123LocaleChar125PlayerIndexRoute
   '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
+  '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -85,9 +119,13 @@ export interface FileRoutesById {
   '/{-$locale}': typeof Char123LocaleChar125RouteWithChildren
   '/{-$locale}/bingo': typeof Char123LocaleChar125BingoRoute
   '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
+  '/api/rpc/$': typeof ApiRpcSplatRoute
   '/api/skin/head': typeof ApiSkinHeadRoute
   '/api/skin/render': typeof ApiSkinRenderRoute
-  '/{-$locale}/player/$name/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
+  '/{-$locale}/player/$name': typeof Char123LocaleChar125PlayerNameRouteWithChildren
+  '/{-$locale}/player/': typeof Char123LocaleChar125PlayerIndexRoute
+  '/{-$locale}/player/$name_/bingo': typeof Char123LocaleChar125PlayerNameBingoRoute
+  '/{-$locale}/player/$name/': typeof Char123LocaleChar125PlayerNameIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -96,31 +134,43 @@ export interface FileRouteTypes {
     | '/{-$locale}'
     | '/{-$locale}/bingo'
     | '/{-$locale}/'
+    | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/{-$locale}/player/$name'
+    | '/{-$locale}/player/'
     | '/{-$locale}/player/$name/bingo'
+    | '/{-$locale}/player/$name/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/robots.txt'
     | '/{-$locale}/bingo'
     | '/{-$locale}'
+    | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
+    | '/{-$locale}/player'
     | '/{-$locale}/player/$name/bingo'
+    | '/{-$locale}/player/$name'
   id:
     | '__root__'
     | '/robots.txt'
     | '/{-$locale}'
     | '/{-$locale}/bingo'
     | '/{-$locale}/'
+    | '/api/rpc/$'
     | '/api/skin/head'
     | '/api/skin/render'
-    | '/{-$locale}/player/$name/bingo'
+    | '/{-$locale}/player/$name'
+    | '/{-$locale}/player/'
+    | '/{-$locale}/player/$name_/bingo'
+    | '/{-$locale}/player/$name/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   Char123LocaleChar125Route: typeof Char123LocaleChar125RouteWithChildren
+  ApiRpcSplatRoute: typeof ApiRpcSplatRoute
   ApiSkinHeadRoute: typeof ApiSkinHeadRoute
   ApiSkinRenderRoute: typeof ApiSkinRenderRoute
 }
@@ -155,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125BingoRouteImport
       parentRoute: typeof Char123LocaleChar125Route
     }
+    '/api/rpc/$': {
+      id: '/api/rpc/$'
+      path: '/api/rpc/$'
+      fullPath: '/api/rpc/$'
+      preLoaderRoute: typeof ApiRpcSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/skin/head': {
       id: '/api/skin/head'
       path: '/api/skin/head'
@@ -169,8 +226,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSkinRenderRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/{-$locale}/player/$name/bingo': {
-      id: '/{-$locale}/player/$name/bingo'
+    '/{-$locale}/player/': {
+      id: '/{-$locale}/player/'
+      path: '/player'
+      fullPath: '/{-$locale}/player/'
+      preLoaderRoute: typeof Char123LocaleChar125PlayerIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/player/$name': {
+      id: '/{-$locale}/player/$name'
+      path: '/player/$name'
+      fullPath: '/{-$locale}/player/$name'
+      preLoaderRoute: typeof Char123LocaleChar125PlayerNameRouteImport
+      parentRoute: typeof Char123LocaleChar125Route
+    }
+    '/{-$locale}/player/$name/': {
+      id: '/{-$locale}/player/$name/'
+      path: '/'
+      fullPath: '/{-$locale}/player/$name/'
+      preLoaderRoute: typeof Char123LocaleChar125PlayerNameIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125PlayerNameRoute
+    }
+    '/{-$locale}/player/$name_/bingo': {
+      id: '/{-$locale}/player/$name_/bingo'
       path: '/player/$name/bingo'
       fullPath: '/{-$locale}/player/$name/bingo'
       preLoaderRoute: typeof Char123LocaleChar125PlayerNameBingoRouteImport
@@ -179,15 +257,35 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface Char123LocaleChar125PlayerNameRouteChildren {
+  Char123LocaleChar125PlayerNameIndexRoute: typeof Char123LocaleChar125PlayerNameIndexRoute
+}
+
+const Char123LocaleChar125PlayerNameRouteChildren: Char123LocaleChar125PlayerNameRouteChildren =
+  {
+    Char123LocaleChar125PlayerNameIndexRoute:
+      Char123LocaleChar125PlayerNameIndexRoute,
+  }
+
+const Char123LocaleChar125PlayerNameRouteWithChildren =
+  Char123LocaleChar125PlayerNameRoute._addFileChildren(
+    Char123LocaleChar125PlayerNameRouteChildren,
+  )
+
 interface Char123LocaleChar125RouteChildren {
   Char123LocaleChar125BingoRoute: typeof Char123LocaleChar125BingoRoute
   Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
+  Char123LocaleChar125PlayerNameRoute: typeof Char123LocaleChar125PlayerNameRouteWithChildren
+  Char123LocaleChar125PlayerIndexRoute: typeof Char123LocaleChar125PlayerIndexRoute
   Char123LocaleChar125PlayerNameBingoRoute: typeof Char123LocaleChar125PlayerNameBingoRoute
 }
 
 const Char123LocaleChar125RouteChildren: Char123LocaleChar125RouteChildren = {
   Char123LocaleChar125BingoRoute: Char123LocaleChar125BingoRoute,
   Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
+  Char123LocaleChar125PlayerNameRoute:
+    Char123LocaleChar125PlayerNameRouteWithChildren,
+  Char123LocaleChar125PlayerIndexRoute: Char123LocaleChar125PlayerIndexRoute,
   Char123LocaleChar125PlayerNameBingoRoute:
     Char123LocaleChar125PlayerNameBingoRoute,
 }
@@ -198,6 +296,7 @@ const Char123LocaleChar125RouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   Char123LocaleChar125Route: Char123LocaleChar125RouteWithChildren,
+  ApiRpcSplatRoute: ApiRpcSplatRoute,
   ApiSkinHeadRoute: ApiSkinHeadRoute,
   ApiSkinRenderRoute: ApiSkinRenderRoute,
 }

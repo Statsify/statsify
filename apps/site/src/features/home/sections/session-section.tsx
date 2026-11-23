@@ -10,10 +10,9 @@ import { BaseSection } from "./base-section";
 import { Command } from "~/components/ui/command";
 import { PlayerProvider } from "~/components/player-context";
 import { SessionAnimation } from "../session-animation";
-import type { Json } from "~/lib/json";
-import type { Player } from "@statsify/schemas";
+import type { PreviewIdentity } from "@statsify/contract";
 
-export function SessionSection({ player }: { player: Json<Player> }) {
+export function SessionSection({ player }: { player: PreviewIdentity }) {
   return (
     <BaseSection
       background="woolgames"

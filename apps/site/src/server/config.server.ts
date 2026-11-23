@@ -19,6 +19,10 @@ export interface SiteConfig {
   apiKey: string;
   /** `sentry.siteDsn` */
   sentryDsn?: string;
+  /** `site.turnstile.siteKey`: rendered on the player-not-found page; empty disables the widget. */
+  turnstileSiteKey: string;
+  /** `site.turnstile.secretKey`: verifies lookup tokens; empty blocks lookups outside `dev`. */
+  turnstileSecretKey: string;
   /** `sentry.tracesSampleRate`, 0.1 when unset */
   tracesSampleRate: number;
   /** `environment`; only an explicit `"dev"` relaxes anything, so a missing value counts as production. */
@@ -27,7 +31,7 @@ export interface SiteConfig {
 
 interface RawConfig {
   apiClient?: { route?: string };
-  site?: { apiKey?: string };
+  site?: { apiKey?: string; turnstile?: { siteKey?: string; secretKey?: string } };
   sentry?: { siteDsn?: string; tracesSampleRate?: number };
   environment?: string;
 }
@@ -35,6 +39,8 @@ interface RawConfig {
 const TEST_CONFIG: SiteConfig = {
   apiRoute: "http://localhost:3000",
   apiKey: "",
+  turnstileSiteKey: "",
+  turnstileSecretKey: "",
   tracesSampleRate: 1,
   environment: "dev",
 };
@@ -54,10 +60,14 @@ async function load(): Promise<SiteConfig> {
   if (process.env.VITEST) return TEST_CONFIG;
 
   const raw = await readRawConfig();
+  // Every page reads the API with this key, so without it a production site would answer every page with an error.
+  if (!raw.site?.apiKey && raw.environment !== "dev") throw new Error("[site] site.apiKey must be set outside dev");
 
   return {
     apiRoute: raw.apiClient?.route || "http://localhost:3000",
     apiKey: raw.site?.apiKey ?? "",
+    turnstileSiteKey: raw.site?.turnstile?.siteKey ?? "",
+    turnstileSecretKey: raw.site?.turnstile?.secretKey ?? "",
     sentryDsn: raw.sentry?.siteDsn || undefined,
     tracesSampleRate: raw.sentry?.tracesSampleRate ?? 0.1,
     environment: raw.environment ?? "prod",

@@ -15,6 +15,7 @@ import { Module } from "@nestjs/common";
 import { PlayerModule } from "#player";
 import { RedisModule } from "#redis";
 import { SessionModule } from "#session";
+import { SiteModule } from "#site";
 import { SkinModule } from "#skin";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 import { UserModule } from "#user";
@@ -42,6 +43,7 @@ const redisUrl = await config("database.redisUrl");
     HypixelResourcesModule,
     SkinModule,
     SessionModule,
+    SiteModule,
     AuthModule,
     UserModule,
     CommandsModule,

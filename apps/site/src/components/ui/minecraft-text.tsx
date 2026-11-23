@@ -6,72 +6,119 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-const minecraftColors = [
-  { code: "0", className: "text-mc-black" },
-  { code: "1", className: "text-mc-dark-blue" },
-  { code: "2", className: "text-mc-dark-green" },
-  { code: "3", className: "text-mc-dark-aqua" },
-  { code: "4", className: "text-mc-dark-red" },
-  { code: "5", className: "text-mc-dark-purple" },
-  { code: "6", className: "text-mc-gold" },
-  { code: "7", className: "text-mc-gray" },
-  { code: "8", className: "text-mc-dark-gray" },
-  { code: "9", className: "text-mc-blue" },
-  { code: "a", className: "text-mc-green" },
-  { code: "b", className: "text-mc-aqua" },
-  { code: "c", className: "text-mc-red" },
-  { code: "d", className: "text-mc-pink" },
-  { code: "e", className: "text-mc-yellow" },
-  { code: "f", className: "text-mc-white" },
-];
+import { cn } from "~/lib/util";
+import { parseFormatting } from "@statsify/util/format-codes";
+import type { CSSProperties, ReactNode } from "react";
 
+// Written out, not built from `minecraftColors`: Tailwind only generates the classes it finds in the source.
+const COLOR_CLASSES: Record<string, string> = {
+  0: "text-mc-black",
+  1: "text-mc-dark-blue",
+  2: "text-mc-dark-green",
+  3: "text-mc-dark-aqua",
+  4: "text-mc-dark-red",
+  5: "text-mc-dark-purple",
+  6: "text-mc-gold",
+  7: "text-mc-gray",
+  8: "text-mc-dark-gray",
+  9: "text-mc-blue",
+  a: "text-mc-green",
+  b: "text-mc-aqua",
+  c: "text-mc-red",
+  d: "text-mc-pink",
+  e: "text-mc-yellow",
+  f: "text-mc-white",
+};
+
+/** The renderer's default text size; `§^N^` is relative to it. */
+const BASE_SIZE = 2;
+
+/**
+ * Renders Minecraft-formatted text the way the bot's cards do: `§0`–`§f` and `§#rrggbb` colors, `§l` bold,
+ * `§o` italic, `§n` and `§u` underline, `§m` strikethrough, `§r` reset and the renderer's `§^N^` size codes, upper or
+ * lower case. `§k` and unknown codes are dropped and the text after them kept.
+ */
 export function MinecraftText({ children, className }: { children: string | string[]; className?: string }) {
-  const input = typeof children === "string" ? children : children.join("");
-  const parts = input.split("§");
-
-  if (input.startsWith("§")) parts.shift();
+  const input = Array.isArray(children) ? children.join("") : children;
 
   let bold = false;
   let italic = false;
-  let color = "text-mc-white";
+  let underline = false;
+  let strike = false;
+  let colorClass = "text-mc-white";
+  let hex: string | undefined;
+  let size: number | undefined;
 
-  const elements = parts.map((part, index) => {
-    const modifier = part[0];
-    let text: string;
+  const elements: ReactNode[] = [];
 
-    switch (modifier) {
-      case "l":
+  const push = (text: string, key: number) => {
+    if (text.length === 0) return;
+
+    const style: CSSProperties = {};
+    if (hex) style.color = hex;
+    if (size !== undefined) style.fontSize = `${size / BASE_SIZE}em`;
+
+    elements.push(
+      <span
+        key={key}
+        className={cn(
+          bold && "font-bold",
+          italic ? "italic" : "not-italic",
+          underline && "underline",
+          strike && "line-through",
+          hex ? undefined : colorClass,
+          className
+        )}
+        style={style}
+      >
+        {text}
+      </span>
+    );
+  };
+
+  for (const [index, { code, text }] of parseFormatting(input).entries()) {
+    switch (code?.kind) {
+      case "hex":
+        hex = code.hex;
+        break;
+
+      case "size":
+        size = code.size;
+        break;
+
+      case "color":
+        colorClass = COLOR_CLASSES[code.code];
+        hex = undefined;
+        break;
+
+      case "bold":
         bold = true;
-        text = part.slice(1);
         break;
 
-      case "o":
+      case "italic":
         italic = true;
-        text = part.slice(1);
         break;
 
-      case "r":
+      case "underline":
+        underline = true;
+        break;
+
+      case "strikethrough":
+        strike = true;
+        break;
+
+      case "reset":
         bold = false;
         italic = false;
-        color = "text-mc-white";
-        text = part.slice(1);
+        underline = false;
+        strike = false;
+        hex = undefined;
+        colorClass = "text-mc-white";
         break;
-
-      default: {
-        const colorCode = minecraftColors.find((color) => color.code === modifier);
-        if (colorCode) {
-          color = colorCode.className;
-          text = part.slice(1);
-        } else {
-          text = `§${part}`;
-        }
-      }
     }
 
-    if (text.length === 0) return undefined;
-
-    return <span key={index} className={`${bold ? "font-bold" : ""} ${italic ? "italic" : "not-italic"} ${color} ${className ?? ""}`}>{text}</span>;
-  }).filter((element) => element !== undefined);
+    push(text, index);
+  }
 
   return <span>{elements}</span>;
 }

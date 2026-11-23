@@ -9,12 +9,12 @@
 import { BaseSection } from "./base-section";
 import { Command } from "~/components/ui/command";
 import { LeaderboardPreview } from "../previews/leaderboard";
-import type { PostLeaderboardResponse } from "@statsify/api-client";
+import type { LeaderboardPage } from "@statsify/contract";
 
 export function LeaderboardSection({
   leaderboard,
 }: {
-  leaderboard: PostLeaderboardResponse;
+  leaderboard: LeaderboardPage;
 }) {
   return (
     <BaseSection

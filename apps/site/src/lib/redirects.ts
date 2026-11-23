@@ -30,6 +30,9 @@ const REDIRECTS: Readonly<Record<string, string>> = {
 /** The Next app's Bingo URLs: `/players` and `/players/:slug[/general[/bingo]]`, in any case, as Next matched them. */
 const LEGACY_PLAYERS = /^\/players(?:\/([^/]+)(?:\/general(?:\/bingo)?)?)?$/i;
 
+/** `/p/:name`, the short alias for `/player/:name`. */
+const SHORT_PLAYER = /^\/p\/([^/]+)$/;
+
 /** Where a path redirects to (absolute URL or site path), or `undefined` to route it normally. */
 export function redirectFor(pathname: string): string | undefined {
   // The lookbehind starts a match only at a run's first slash; `/\/+$/` retries at every slash of a run, which is
@@ -47,6 +50,9 @@ export function redirectFor(pathname: string): string | undefined {
 
   const players = LEGACY_PLAYERS.exec(path);
   if (players) return players[1] ? `/player/${players[1]}/bingo` : "/bingo";
+
+  const short = SHORT_PLAYER.exec(path);
+  if (short) return `/player/${short[1]}`;
 
   // Any other trailing slash too: a 301 with the other redirects' cache headers rather than the router's 307.
   return path === pathname ? undefined : sitePath(path);
@@ -72,6 +78,13 @@ if (import.meta.vitest) {
       expect(redirectFor("/players/j4cobi/general/bingo")).toBe("/player/j4cobi/bingo");
       expect(redirectFor("/Players/J4cobi")).toBe("/player/J4cobi/bingo");
       expect(redirectFor("/players/j4cobi/other")).toBeUndefined();
+    });
+
+    it("shortens /p/:name to the player page", () => {
+      expect(redirectFor("/p/j4cobi")).toBe("/player/j4cobi");
+      expect(redirectFor("/p/j4cobi/")).toBe("/player/j4cobi");
+      expect(redirectFor("/p")).toBeUndefined();
+      expect(redirectFor("/p/j4cobi/bingo")).toBeUndefined();
     });
 
     it("answers the vanity links and nothing else", () => {

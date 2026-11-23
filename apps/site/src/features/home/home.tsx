@@ -22,7 +22,8 @@ import { Link } from "@tanstack/react-router";
 import { Wordmark } from "~/components/icons/logo";
 import type { HomeData } from "./home-data";
 
-export function Home({ players, sessionPlayer, guild, leaderboard }: HomeData) {
+/** Each section shows only when its preview loaded; the API hands back `null` otherwise. */
+export function Home({ players, guild, leaderboard }: HomeData) {
   return (
     <div className="relative">
       <div className="relative">
@@ -81,9 +82,9 @@ export function Home({ players, sessionPlayer, guild, leaderboard }: HomeData) {
       </div>
       <div>
         <PlayerSection players={players} />
-        <LeaderboardSection leaderboard={leaderboard} />
-        <SessionSection player={sessionPlayer} />
-        <GuildSection guild={guild} />
+        {leaderboard && <LeaderboardSection leaderboard={leaderboard} />}
+        {players.session && <SessionSection player={players.session} />}
+        {guild && <GuildSection guild={guild} />}
       </div>
       <div className="bg-white/10 backdrop-blur-lg text-mc-white -mt-45 p-8 flex flex-col gap-6 w-container w-auto lg:w-[50%] text-balance text-center">
         <div className="flex flex-col gap-2">

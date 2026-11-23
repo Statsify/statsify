@@ -15,6 +15,7 @@ import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { usePlayer } from "~/components/player-context";
+import type { ArcadePreview } from "@statsify/contract";
 
 export function arrayGroup<T extends unknown[] | string>(
   arr: T,
@@ -26,30 +27,29 @@ export function arrayGroup<T extends unknown[] | string>(
 }
 
 export function ArcadePreview({ className }: { className?: string }) {
-  const player = usePlayer();
+  const arcade = usePlayer<ArcadePreview>();
   const n = useNumberFormat();
-  const arcade = player.stats.arcade;
 
   const games: [string, number][] = [
-    ["Blocking Dead", arcade.blockingDead.wins],
-    ["Bounty Hunters", arcade.bountyHunters.wins],
-    ["Disasters", arcade.disasters.wins],
-    ["Dragon Wars", arcade.dragonWars.wins],
-    ["Dropper", arcade.dropper.wins],
-    ["Ender Spleef", arcade.enderSpleef.wins],
-    ["Farm Hunt", arcade.farmHunt.wins],
-    ["Football", arcade.football.wins],
-    ["Galaxy Wars", arcade.galaxyWars.wins],
-    ["Hide And Seek", arcade.hideAndSeek.overall.wins],
-    ["Hole In The Wall", arcade.holeInTheWall.wins],
-    ["Hypixel Says", arcade.hypixelSays.wins],
-    ["Mini Walls", arcade.miniWalls.wins],
-    ["Party Games", arcade.partyGames.wins],
-    ["Pixel Painters", arcade.pixelPainters.wins],
-    ["Pixel Party", arcade.pixelParty.overall.wins],
-    ["Seasonal", arcade.seasonal.totalWins],
-    ["Throw Out", arcade.throwOut.wins],
-    ["Zombies", arcade.zombies.overall.wins],
+    ["Blocking Dead", arcade.gameWins.blockingDead],
+    ["Bounty Hunters", arcade.gameWins.bountyHunters],
+    ["Disasters", arcade.gameWins.disasters],
+    ["Dragon Wars", arcade.gameWins.dragonWars],
+    ["Dropper", arcade.gameWins.dropper],
+    ["Ender Spleef", arcade.gameWins.enderSpleef],
+    ["Farm Hunt", arcade.gameWins.farmHunt],
+    ["Football", arcade.gameWins.football],
+    ["Galaxy Wars", arcade.gameWins.galaxyWars],
+    ["Hide And Seek", arcade.gameWins.hideAndSeek],
+    ["Hole In The Wall", arcade.gameWins.holeInTheWall],
+    ["Hypixel Says", arcade.gameWins.hypixelSays],
+    ["Mini Walls", arcade.gameWins.miniWalls],
+    ["Party Games", arcade.gameWins.partyGames],
+    ["Pixel Painters", arcade.gameWins.pixelPainters],
+    ["Pixel Party", arcade.gameWins.pixelParty],
+    ["Seasonal", arcade.gameWins.seasonal],
+    ["Throw Out", arcade.gameWins.throwOut],
+    ["Zombies", arcade.gameWins.zombies],
   ];
 
   games.sort((a, b) => b[1] - a[1]);
@@ -67,10 +67,10 @@ export function ArcadePreview({ className }: { className?: string }) {
     <div className={cn("grid grid-cols-3 gap-2 sm:whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-1 xl:grid-cols-balanced gap-2 text-center">
         <Skin
-          uuid={player.uuid}
+          uuid={arcade.uuid}
           className="xl:row-start-1 xl:row-end-4 hidden xl:block"
         />
-        <Nametag prefixName={player.prefixName} className="row-start-1 xl:col-start-2" />
+        <Nametag prefixName={arcade.prefixName} className="row-start-1 xl:col-start-2" />
         <Box className="row-start-3 xl:row-start-2 xl:row-span-2 xl:col-start-2">
           <span className="font-bold">
             <MinecraftText>§cA§6r§ec§aa§bd§de§f</MinecraftText> Wins

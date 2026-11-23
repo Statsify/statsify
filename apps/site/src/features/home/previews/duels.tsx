@@ -16,19 +16,19 @@ import { cn } from "~/lib/util";
 import { useTranslation } from "react-i18next";
 import { useNumberFormat } from "~/i18n/use-number-format";
 import { usePlayer } from "~/components/player-context";
+import type { DuelsPreview } from "@statsify/contract";
 
 export function DuelsPreview({ className }: { className?: string }) {
-  const player = usePlayer();
+  const duels = usePlayer<DuelsPreview>();
   const n = useNumberFormat();
   const { t } = useTranslation();
-  const duels = player.stats.duels;
   const stats = duels.overall;
 
   return (
     <div className={cn("grid grid-cols-3 gap-2 sm:whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-1 xl:grid-cols-balanced gap-2 text-center">
-        <Skin uuid={player.uuid} className="xl:row-start-1 xl:row-end-4 hidden xl:block" />
-        <Nametag prefixName={player.prefixName} className="row-start-1 xl:col-start-2" />
+        <Skin uuid={duels.uuid} className="xl:row-start-1 xl:row-end-4 hidden xl:block" />
+        <Nametag prefixName={duels.prefixName} className="row-start-1 xl:col-start-2" />
         <Progression
           className="row-start-2 xl:col-start-2"
           label="Title"
