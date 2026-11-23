@@ -30,7 +30,7 @@ const LEVELS: Record<string, LevelSpec> = {
 /** The card's two lives, with no Overall: the game-wide totals are the sidebar's. */
 export const VAMPIREZ_PAGE: GameLayout = {
   game: VAMPIREZ,
-  overview: ["coins", "tokens", "overallWins", "zombieKills", "mostVampireKills"],
+  overview: ["coins", "tokens", "overallWins", "zombieKills", { key: "mostVampireKills", session: false }],
   mostPlayed: {},
   page: (mode) => ({ level: LEVELS[mode], sections: [{ rows: [["wins", "kills", "deaths", "kdr"]] }] }),
 };

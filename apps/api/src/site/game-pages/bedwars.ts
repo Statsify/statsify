@@ -16,7 +16,7 @@ const hasWallet = (_: unknown, { bedwars }: PlayerStats) => bedwars.slumber.wall
 const TOTALS = ["totalChallenges", "uniqueChallenges"];
 
 // As on the card, winstreak shows only when it isn't 0: the Dreams modes don't track it and always store 0.
-const WINSTREAK: CellSpec = { key: "winstreak", when: ({ value }) => value !== 0 };
+const WINSTREAK: CellSpec = { key: "winstreak", when: ({ value }) => value !== 0, session: false };
 
 /**
  * The bot's challenges card, its last mode: the two totals where the game's stats go, then every challenge in the
@@ -33,6 +33,7 @@ const CHALLENGES: PageSpec = {
 
 export const BEDWARS_PAGE: GameLayout = {
   game: BEDWARS,
+  modes: BEDWARS.modes.getApiModes().map((key) => (key === "challenges" ? { key, session: false } : { key })),
   level: {
     key: "exp",
     read: ({ bedwars }) => formattedLevel(bedwars),

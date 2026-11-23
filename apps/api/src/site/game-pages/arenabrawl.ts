@@ -9,10 +9,10 @@
 import { type CellSpec, type GameLayout, prefixLevel } from "./layout.js";
 import { ARENA_BRAWL } from "@statsify/catalog";
 
-/** The rune and the card's Skills, game-wide choices it repeats on every mode. */
-const SELECTIONS = ["rune", "offensive", "utility", "support", "ultimate"];
+/** The card's Skills, game-wide choices it repeats on every mode, which a session leaves out as the bot's does. */
+const SKILLS = ["offensive", "utility", "support", "ultimate"];
 
-const WINSTREAK: CellSpec = { key: "winstreak", when: ({ value }) => value !== 0 };
+const WINSTREAK: CellSpec = { key: "winstreak", when: ({ value }) => value !== 0, session: false };
 
 /** The card's sidebar, with the rune and skills as lines, over the table every mode shares. */
 export const ARENA_BRAWL_PAGE: GameLayout = {
@@ -25,7 +25,7 @@ export const ARENA_BRAWL_PAGE: GameLayout = {
     progress: "stats.progression.win",
     read: ({ arenabrawl }) => prefixLevel(arenabrawl),
   },
-  overview: ["coins", "tokens", "keys", "magicalChests", ...SELECTIONS.map((key) => ({ key, inline: true }))],
+  overview: ["coins", "tokens", "keys", "magicalChests", { key: "rune", inline: true }, ...SKILLS.map((key): CellSpec => ({ key, inline: true, session: false }))],
   mostPlayed: {},
   page: (mode) => ({
     sections: [

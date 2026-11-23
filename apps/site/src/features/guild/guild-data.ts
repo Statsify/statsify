@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { EventPeriod } from "@statsify/schemas";
+import { PAGE_STALE_MS } from "~/lib/player-route";
+import { orpc } from "~/lib/orpc";
 
-export const EVENT_COLORS: Record<EventPeriod, string> = {
-  summer: "§e",
-  halloween: "§5",
-  christmas: "§c",
-  easter: "§b",
-};
+export const guildPageQuery = (name: string) => orpc.guild.page.queryOptions({ input: { name }, staleTime: PAGE_STALE_MS });

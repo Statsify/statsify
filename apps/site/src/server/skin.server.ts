@@ -27,8 +27,11 @@ export async function proxySkin(
   if (!uuid || !isPageQuery(uuid, search, fixed)) {
     return new Response(null, { status: 404, headers: NO_STORE });
   }
-  // Only a stored player's UUID, or the not-found pages' one fixed stand-in, gets an image drawn for it.
-  if (uuid !== PLACEHOLDER_UUID && !(await resolvePlayer(uuid))) return new Response(null, { status: 404, headers: NO_STORE });
+  // A render or texture is drawn only for a stored player's UUID, or the not-found pages' one fixed stand-in. A head is
+  // a small draw, so anyone's gets one: a guild's members needn't be stored players.
+  if (path !== "/skin/head/stored" && uuid !== PLACEHOLDER_UUID && !(await resolvePlayer(uuid))) {
+    return new Response(null, { status: 404, headers: NO_STORE });
+  }
 
   return proxy(path, { uuid, ...fixed });
 }

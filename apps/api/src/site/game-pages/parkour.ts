@@ -12,6 +12,7 @@ import { PARKOUR } from "@statsify/catalog";
 /** The card's list: every lobby with its game's icon, fastest first, and the lobbies never finished last. */
 export const PARKOUR_PAGE: GameLayout = {
   game: PARKOUR,
+  modes: PARKOUR.modes.getApiModes().map((key) => ({ key, session: false })),
   overview: [],
   page: () => ({
     place: "",

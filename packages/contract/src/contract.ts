@@ -124,6 +124,8 @@ export const PlayerPageSchema = z.object({
     })
     .partial(),
   games: z.array(GameSummarySchema),
+  /** When the session the player last started with the bot's `/session` began (ms), or null when they never started one. */
+  session: z.object({ start: z.number() }).nullable(),
   ...Freshness,
 });
 
@@ -143,6 +145,9 @@ export const PlayerFullSchema = z.object({
 
 /** A suggested name, with the player's display name where the API has them, for the color their rank gives the name. */
 export const SuggestionSchema = z.object({ name: z.string(), displayName: z.string().nullable() });
+
+/** A suggested guild: its name, and the name with its tag in the tag's color, as the guild page's title shows it. */
+export const GuildSuggestionSchema = z.object({ name: z.string(), nameFormatted: z.string() });
 
 export const ResultCardSchema = z.object({
   ...PlayerName,
@@ -368,6 +373,23 @@ export const GamePageSchema = z.object({
   sections: z.array(StatSectionSchema),
   /** The site's game pages for the nav between them, in the game registry's order. */
   games: z.array(z.object({ key: z.string(), id: z.string().nullable(), name: z.string(), played: z.boolean() })),
+  /**
+   * On a session's page, when the session started (ms): the numbers are then what the player gained since, the nav's
+   * `played` says what they played in it, and no stat links to a leaderboard, which ranks the totals.
+   */
+  session: z.object({ start: z.number() }).optional(),
+  ...Freshness,
+});
+
+/** A player's session: the games they played since they last reset it with the bot's `/session`, as player page panels. */
+export const SessionPageSchema = z.object({
+  ...PlayerName,
+  /** When the session started (ms). */
+  start: z.number(),
+  /** The bot's General session card: levels, achievement points, event EXP, quests, challenges and karma gained. */
+  overview: StatSectionSchema,
+  /** The player page's panels for the games played in the session, with the session's numbers and no leaderboards. */
+  games: z.array(GameSummarySchema),
   ...Freshness,
 });
 
@@ -441,10 +463,11 @@ export const GuildPreviewMemberSchema = z.object({
   monthly: Count,
 });
 
-export const GuildPreviewSchema = z.object({
+/** What the home page's guild card and the guild page both show. */
+const GuildSummary = {
   name: z.string(),
+  /** The Minecraft-formatted name with its tag. */
   nameFormatted: z.string(),
-  tagFormatted: z.string(),
   /** The tag's Minecraft color code, e.g. `§6`, which colors the level bar. */
   tagColor: z.string(),
   description: z.string(),
@@ -457,13 +480,40 @@ export const GuildPreviewSchema = z.object({
   monthly: Count,
   /** Each game's `GameId` and name; the site shows the ones it has icons for, the name as the icon's alt text. */
   preferredGames: z.array(z.object({ id: z.string(), name: z.string() })),
-  memberCount: z.number(),
-  /** The six members with the most GEXP today, most first: the slide shows them, not the whole roster. */
-  topDaily: z.array(GuildPreviewMemberSchema),
   /** The guild master's Minecraft-formatted name, or null when no member on record has the rank or a name. */
   master: z.string().nullable(),
+  memberCount: z.number(),
+};
+
+export const GuildPreviewSchema = z.object({
+  ...GuildSummary,
+  tagFormatted: z.string(),
+  /** The six members with the most GEXP today, most first: the slide shows them, not the whole roster. */
+  topDaily: z.array(GuildPreviewMemberSchema),
   /** The member the "Guild Member" slide features, when they are still in the guild. */
   member: GuildPreviewMemberSchema.nullable(),
+});
+
+/** A row of the guild page's member table. */
+export const GuildMemberRowSchema = GuildPreviewMemberSchema.extend({
+  username: z.string(),
+  /** Where the rank sorts: the guild's own rank priority, higher first, and the guild master above every rank. */
+  rankPriority: z.number(),
+});
+
+export const GuildPageSchema = z.object({
+  ...GuildSummary,
+  scaledDaily: Count,
+  scaledWeekly: Count,
+  scaledMonthly: Count,
+  /** The guild's GEXP on each day the API has kept, up to 30, newest first, by the day Hypixel counts it on (`YYYY-MM-DD`). */
+  history: z.array(z.object({ day: z.string(), exp: Count })),
+  /** GEXP earned in each game, most first; games with none are left out. */
+  expByGame: z.array(z.object({ id: z.string(), name: z.string(), exp: Count })),
+  /** The members the API has names for: one it hasn't stored is left out until the bot's `/guild` names them. */
+  members: z.array(GuildMemberRowSchema),
+  /** When the API last fetched the guild from Hypixel (ms). */
+  updatedAt: z.number(),
 });
 
 /** Every preview is loaded on its own and is `null` when its data is missing, so the section hides. */
@@ -551,6 +601,8 @@ const GameInputSchema = z.object({
    */
   period: z.string().min(1).max(32).optional(),
 });
+/** A session's page has no periods: its numbers are gains since the session started. */
+const SessionGameInputSchema = GameInputSchema.omit({ period: true });
 const RefreshInputSchema = z.object({
   uuid: UuidSchema,
   clientIp: ClientIpSchema,
@@ -562,7 +614,11 @@ const LookupInputSchema = z.object({
   name: z.union([UsernameSchema, UuidSchema]),
   clientIp: ClientIpSchema,
 });
+/** A guild's name as typed, in any case; Hypixel's guild names are at most 32 characters. */
+const GuildInputSchema = z.object({ name: z.string().trim().min(1).max(32) });
+const GuildLookupInputSchema = GuildInputSchema.extend({ clientIp: ClientIpSchema });
 const SuggestInputSchema = z.object({ query: z.string().trim().max(16) });
+const GuildSuggestInputSchema = z.object({ query: z.string().trim().max(32) });
 const CardsInputSchema = z.object({ names: z.array(UsernameSchema).min(1).max(25) });
 
 /** Query-string numbers arrive as strings. */
@@ -586,7 +642,7 @@ const site = oc.$meta<{ edgeTtl?: number }>({});
 
 const errors = site.errors({
   NOT_FOUND: { message: "Player not found" },
-  /** `lookup` and `refresh`: Hypixel didn't answer, so nothing new is known about the player yet. */
+  /** The lookups and `refresh`: Hypixel didn't answer, so nothing new is known yet. */
   SERVICE_UNAVAILABLE: { message: "Hypixel didn't answer, try again shortly" },
   TOO_MANY_REQUESTS: {
     message: "Too many Hypixel lookups right now, try again shortly",
@@ -599,7 +655,7 @@ const errors = site.errors({
 
 /**
  * The site's API contract. GET procedures read Mongo and Redis only and are safe to cache at
- * the edge; the two POST procedures are the only ones that may call Hypixel and stay server-only.
+ * the edge; the POST procedures are the only ones that may call Hypixel and stay server-only.
  */
 export const contract = {
   player: {
@@ -635,6 +691,27 @@ export const contract = {
       .meta({ edgeTtl: 60 })
       .input(GameInputSchema)
       .output(GamePageSchema),
+    session: errors
+      .route({ method: "GET", path: "/player/session", summary: "The games a player's session covers" })
+      .meta({ edgeTtl: 60 })
+      .input(PlayerInputSchema)
+      .output(SessionPageSchema),
+    sessionGame: errors
+      .route({ method: "GET", path: "/player/session/game", summary: "One game's page for a player's session, in one mode" })
+      .meta({ edgeTtl: 60 })
+      .input(SessionGameInputSchema)
+      .output(GamePageSchema),
+  },
+  guild: {
+    page: errors
+      .route({ method: "GET", path: "/guild/page", summary: "The guild page view model" })
+      .meta({ edgeTtl: 60 })
+      .input(GuildInputSchema)
+      .output(GuildPageSchema),
+    lookup: errors
+      .route({ method: "POST", path: "/guild/lookup", summary: "Look a guild the API hasn't stored up on Hypixel by name" })
+      .input(GuildLookupInputSchema)
+      .output(z.object({ name: z.string() })),
   },
   search: {
     suggest: site
@@ -642,6 +719,11 @@ export const contract = {
       .meta({ edgeTtl: 30 })
       .input(SuggestInputSchema)
       .output(z.array(SuggestionSchema).max(25)),
+    guilds: site
+      .route({ method: "GET", path: "/search/guilds", summary: "Guild name autocomplete" })
+      .meta({ edgeTtl: 30 })
+      .input(GuildSuggestInputSchema)
+      .output(z.array(GuildSuggestionSchema).max(25)),
     cards: site
       .route({ method: "GET", path: "/search/cards", summary: "Result cards for a list of usernames" })
       .meta({ edgeTtl: 60 })
@@ -690,6 +772,7 @@ export type PlayerFull = z.infer<typeof PlayerFullSchema>;
 export type GameSummary = z.infer<typeof GameSummarySchema>;
 export type StatRow = z.infer<typeof StatRowSchema>;
 export type Suggestion = z.infer<typeof SuggestionSchema>;
+export type GuildSuggestion = z.infer<typeof GuildSuggestionSchema>;
 export type ResultCard = z.infer<typeof ResultCardSchema>;
 export type LeaderboardGroup = z.infer<typeof LeaderboardGroupSchema>;
 export type LeaderboardGame = z.infer<typeof LeaderboardGameSchema>;
@@ -702,9 +785,11 @@ export type ResolveInput = z.infer<typeof ResolveInputSchema>;
 export type LeaderboardPageInput = z.infer<typeof LeaderboardPageInputSchema>;
 export type LeaderboardGameInput = z.infer<typeof LeaderboardGameInputSchema>;
 export type GameInput = z.infer<typeof GameInputSchema>;
+export type SessionGameInput = z.infer<typeof SessionGameInputSchema>;
 
 export type BingoPlayer = z.infer<typeof BingoPlayerSchema>;
 export type GamePage = z.infer<typeof GamePageSchema>;
+export type SessionPage = z.infer<typeof SessionPageSchema>;
 export type StatSection = z.infer<typeof StatSectionSchema>;
 export type StatCell = z.infer<typeof StatCellSchema>;
 export type HomePreviews = z.infer<typeof HomePreviewsSchema>;
@@ -718,3 +803,5 @@ export type DuelsPreview = z.infer<typeof DuelsPreviewSchema>;
 export type ArcadePreview = z.infer<typeof ArcadePreviewSchema>;
 export type GuildPreview = z.infer<typeof GuildPreviewSchema>;
 export type GuildPreviewMember = z.infer<typeof GuildPreviewMemberSchema>;
+export type GuildPage = z.infer<typeof GuildPageSchema>;
+export type GuildMemberRow = z.infer<typeof GuildMemberRowSchema>;

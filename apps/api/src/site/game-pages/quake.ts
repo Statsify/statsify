@@ -20,7 +20,7 @@ export const QUAKE_PAGE: GameLayout = {
     progress: "stats.progression.kill",
     read: ({ quake }) => prefixLevel(quake),
   },
-  overview: ["coins", "tokens", "godlikes", "trigger", "highestKillstreak"],
+  overview: ["coins", "tokens", "godlikes", "trigger", { key: "highestKillstreak", session: false }],
   mostPlayed: {},
   page: () => ({
     sections: [

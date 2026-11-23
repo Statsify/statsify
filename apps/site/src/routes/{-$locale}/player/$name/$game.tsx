@@ -19,25 +19,15 @@ import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-route
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { formatNumber } from "~/i18n/format";
 import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
-import { gamePageQuery, headingText, modeSearch, periodSearch, submodeSearch } from "~/features/game/game-data";
+import { gamePageQuery, gameSearch, headingText, pageSearch } from "~/features/game/game-data";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
 import { playerTabIcon } from "~/lib/tab-icon";
 import { removeFormatting } from "@statsify/util/util";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-/** A search parameter as typed (the router reads `?mode=4v4` as a string and `?mode=123` as a number); the API checks it. */
-const param = (raw: unknown) => (typeof raw === "string" || typeof raw === "number" ? String(raw).slice(0, 32) || undefined : undefined);
-
-/** A plain function, not a zod schema: every page's first load carries the routes' search parsing. */
-const validateSearch = (search: Record<string, unknown>): { mode?: string; submode?: string; period?: string } => ({
-  mode: param(search.mode),
-  submode: param(search.submode),
-  period: param(search.period),
-});
-
 export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
-  validateSearch,
+  validateSearch: gameSearch,
   loaderDeps: ({ search }) => ({ mode: search.mode, submode: search.submode, period: search.period }),
   loader: async ({ params, deps, context: { player: identity, queryClient } }) => {
     // Another casing of the game lands on its key, as the layout lands the name on the current one.
@@ -90,9 +80,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
 
     // The first mode, submode and period live at the URL without them. A period the mode doesn't have (Monthly, kept
     // from another mode) and a key in another case (`?mode=SOLO`) land on the page's own.
-    const mode = modeSearch(page, page.mode);
-    const submode = submodeSearch(page, page.submode);
-    const period = periodSearch(page, page.period);
+    const { mode, submode, period } = pageSearch(page);
 
     if (deps.mode !== mode || deps.submode !== submode || deps.period !== period) {
       throw redirect({

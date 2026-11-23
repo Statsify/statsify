@@ -38,13 +38,13 @@ const WINSTREAK_KEYS = ["winstreak", "bestWinstreak"];
 // wins with no best winstreak mean they're hidden.
 export const winstreaksHidden = ({ duels }: PlayerStats) => duels.overall.wins > 0 && !duels.overall.bestWinstreak;
 
-const streak = (key: string, at?: string): CellSpec => ({ key, ...(at && { at }), hidden: winstreaksHidden });
+const streak = (key: string, at?: string): CellSpec => ({ key, ...(at && { at }), hidden: winstreaksHidden, session: false });
 
 /** The modes on Overall's Titles, as the card lists them (every mode but Arena), each with its title and wins. */
 const TITLES: CellSpec[] = [
   "bedwars", "blitzsg", "bow", "spleef", "boxing", "bridge", "classic", "combo", "megawalls", "nodebuff", "op", "quake", "parkour",
   "skywars", "sumo", "uhc",
-].map((mode) => ({ ...winsOf(mode), name: (stats: PlayerStats) => titled(stats, mode).titleFormatted, color: "§f" }));
+].map((mode) => ({ ...winsOf(mode), name: (stats: PlayerStats) => titled(stats, mode).titleFormatted, color: "§f", session: false }));
 
 /** The Bridge and UHC submodes whose card shows the mode's overall Shots Fired in place of their own. */
 const SHOTS_FIRED_OFF = ["bridge.solo", "bridge.doubles", "bridge.threes", "bridge.fours", "uhc.solo", "uhc.doubles", "uhc.fours", "uhc.deathmatch"];
@@ -55,7 +55,8 @@ function more(place: string): SectionSpec {
   const keys = ["shotsFired", "headshots", "bestTime", "checkpoints", "itemsPurchased", "blocksBroken"]
     .filter((key) => stored.includes(key))
     .filter((key) => key !== "shotsFired" || !SHOTS_FIRED_OFF.includes(place));
-  const rows: CellSpec[][] = [place === "uhc.overall" ? [...keys, { key: "gapplesEaten", at: "uhc" }] : keys];
+  const cells: CellSpec[] = keys.map((key) => (key === "bestTime" ? { key, session: false } : key));
+  const rows: CellSpec[][] = [place === "uhc.overall" ? [...cells, { key: "gapplesEaten", at: "uhc" }] : cells];
   if (stored.includes("kit")) rows.push([{ key: "kit", inline: true }]);
   return { title: "game.sections.more", rows };
 }
@@ -106,7 +107,7 @@ export const DUELS_PAGE: GameLayout = {
     const submodes = submodesOf(key);
     return submodes.length > 0 ? { key, submodes } : { key };
   }),
-  overview: ["tokens", "pingRange", { key: "blocksPlaced", at: "overall" }],
+  overview: ["tokens", { key: "pingRange", session: false }, { key: "blocksPlaced", at: "overall" }],
   page,
   // A mode with submodes is weighed at its Overall (Bridge at `bridge.overall`), or by its submodes added up where it has
   // none (Spleef's two).

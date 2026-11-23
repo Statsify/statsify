@@ -26,6 +26,7 @@ export const PAINTBALL_PAGE: GameLayout = {
       { rows: [["wins", "shotsFired", "shotAccuracy"], ["kills", "deaths", "kdr"]] },
       {
         name: "§6Perks",
+        session: false,
         rows: [
           ["perks.adrenaline", "perks.endurance", "perks.fortune"],
           ["perks.godfather", "perks.headstart", "perks.superluck", "perks.transfusion"],

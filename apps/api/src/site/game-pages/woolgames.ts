@@ -17,6 +17,7 @@ const GAMEPLAY = ["woolPlaced", "blocksBroken", "powerups"];
 const time = (key: "fastestWin" | "fastestWoolCapture" | "longestGame"): CellSpec => ({
   key,
   when: (_, { woolgames }: PlayerStats) => woolgames.captureTheWool[key] > 0,
+  session: false,
 });
 
 /**

@@ -12,6 +12,7 @@ import { GuildModule } from "#guild";
 import { Module } from "@nestjs/common";
 import { ORPCError, ORPCModule, onError } from "@orpc/nest";
 import { PlayerModule } from "#player";
+import { SessionModule } from "#session";
 import { SkinModule } from "#skin";
 import { SiteController } from "./site.controller.js";
 import { SiteService } from "./site.service.js";
@@ -22,6 +23,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
     GuildModule,
     PlayerModule,
     SkinModule,
+    SessionModule,
     TypegooseModule.forFeature([Player, Guild]),
     // oRPC answers errors itself, so the global `SentryInterceptor` never sees them. Contract errors
     // (404, 429) are expected; anything else is a bug and gets reported like the REST routes' errors.

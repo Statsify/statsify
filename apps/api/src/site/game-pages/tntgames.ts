@@ -20,6 +20,9 @@ const prefix = (mode: Prefixed): LevelSpec => ({
   read: ({ tntgames }) => prefixLevel(tntgames[mode]),
 });
 
+/** A mode's best time, which a session leaves out, as the bot's does. */
+const RECORD: CellSpec = { key: "record", session: false };
+
 /** The colors of a column's cells on Overall, by their place in it, whatever the stat. */
 const PLACES: ColorCode[] = ["§a", "§c", "§6"];
 
@@ -36,14 +39,14 @@ const OVERALL: PageSpec = {
   sections: COLUMNS.map(([mode, keys]) => ({
     name: `§6${modeName(TNT_GAMES, mode)}`,
     box: true,
-    rows: [keys.map((key, index): CellSpec => ({ key, at: mode, color: PLACES[index] }))],
+    rows: [keys.map((key, index): CellSpec => ({ ...(key === "record" ? RECORD : { key }), at: mode, color: PLACES[index] }))],
   })),
 };
 
 /** Each mode's table, a lone sidebar stat (TNT Tag's Power-Ups) last. */
 const TABLES: Record<Exclude<Prefixed, "wizards">, CellSpec[][]> = {
-  tntRun: [["wins", "losses", "wlr"], ["potionsSplashed", "blocksRan", "record"]],
-  pvpRun: [["kills", "deaths", "kdr"], ["wins", "record"]],
+  tntRun: [["wins", "losses", "wlr"], ["potionsSplashed", "blocksRan", RECORD]],
+  pvpRun: [["kills", "deaths", "kdr"], ["wins", RECORD]],
   bowSpleef: [["wins", "losses", "wlr", "hits"]],
   tntTag: [["kills", "deaths", "kdr"], ["wins", "tags", "powerups"]],
 };

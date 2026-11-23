@@ -13,7 +13,7 @@ import { Link, useHydrated, useNavigate, useRouterState } from "@tanstack/react-
 import { SearchIcon } from "~/components/icons/search";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
-import { colorClass, nameColor } from "~/components/ui/minecraft-text";
+import { MinecraftText, colorClass, nameColor } from "~/components/ui/minecraft-text";
 import { orpc } from "~/lib/orpc";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useRecentPlayers } from "~/features/player/recent";
@@ -54,10 +54,11 @@ export const SEARCH_SCRIPT = `{
 }`;
 
 /**
- * Where a submitted name goes: the player page, its Bingo boards, the `/player?q=` result cards, or a game page with
- * its mode, submode and period (the header's search on a game page, to compare the same page).
+ * Where a submitted name goes: the player page, its Bingo boards, the `/player?q=` result cards, a game page with its
+ * mode, submode and period (the header's search on a game page, to compare the same page), or a guild's page, for a
+ * search that suggests guilds rather than players.
  */
-export type SearchTarget = "player" | "bingo" | "results" | GameTarget;
+export type SearchTarget = "player" | "bingo" | "results" | "guild" | GameTarget;
 
 interface GameTarget {
   game: string;
@@ -92,8 +93,11 @@ const SIZES = {
   },
 } as const;
 
-/** A row of the sheet: a suggested or recent name, in the color the player's rank gives it where known. */
-type SearchedPlayer = { name: string; color?: string };
+/**
+ * A row of the sheet: a suggested or recent player's name, in the color their rank gives it where known, or a suggested
+ * guild's name with its tag (`formatted`).
+ */
+type SearchRow = { name: string; color?: string; formatted?: string };
 
 /** `skipEmpty`: an empty box asks for nothing (the API suggests nothing for it), as one that lists recent players. */
 function usePlayerSuggestions(input: string, focused: boolean, skipEmpty: boolean) {
@@ -107,6 +111,25 @@ function usePlayerSuggestions(input: string, focused: boolean, skipEmpty: boolea
       input: { query: debouncedInput },
       // A pasted UUID is longer than any name, and the API refuses it.
       enabled: focused && length <= 16 && !(skipEmpty && length === 0),
+      retry: false,
+      gcTime: SEARCH_CACHE_TIME_MS,
+      placeholderData: keepPreviousData,
+    })
+  );
+}
+
+/**
+ * Stored guilds whose name starts with the input, through the same proxy. An empty box asks for nothing, as there are
+ * no recent guilds to list.
+ */
+function useGuildSuggestions(input: string, focused: boolean) {
+  const debouncedInput = useDebounce(input, SEARCH_DEBOUNCE_MS);
+  const length = debouncedInput.trim().length;
+
+  return useQuery(
+    orpc.search.guilds.queryOptions({
+      input: { query: debouncedInput },
+      enabled: focused && length > 0 && length <= 32,
       retry: false,
       gcTime: SEARCH_CACHE_TIME_MS,
       placeholderData: keepPreviousData,
@@ -135,6 +158,8 @@ function useSearchNavigation(target: SearchTarget) {
         return navigate({ to: "/{-$locale}/player", search: { q: name }, state: searchState });
       case "player":
         return navigate({ to: "/{-$locale}/player/$name", params: { name }, state: searchState });
+      case "guild":
+        return navigate({ to: "/{-$locale}/guild/$name", params: { name } });
     }
   };
 }
@@ -164,7 +189,7 @@ export function Search({
   disabled?: boolean;
   target?: SearchTarget;
   compact?: boolean;
-  /** "/" focuses this box: the page's one player search (the header's, or the page's own where the header has none). */
+  /** "/" focuses this box: the page's one search (the header's, or the page's own where the header has none). */
   shortcut?: boolean;
   /** Until something is typed, the sheet lists the players this device viewed last (`/player` shows them as cards). */
   recent?: boolean;
@@ -192,28 +217,30 @@ export function Search({
   const [input, setInput] = useState(initial.value);
   const [query, setQuery] = useState(initial.value);
   const [focused, setFocused] = useState(initial.focused);
-  const suggestions = usePlayerSuggestions(query, focused, recent);
+  const guilds = target === "guild";
+  const playerSuggestions = usePlayerSuggestions(query, focused && !guilds, recent);
+  const guildSuggestions = useGuildSuggestions(query, focused && guilds);
+  const suggested: SearchRow[] | undefined = guilds ?
+    guildSuggestions.data?.map(({ name, nameFormatted }) => ({ name, formatted: nameFormatted })) :
+    playerSuggestions.data?.map(({ name, displayName }) => ({ name, color: displayName === null ? undefined : nameColor(displayName) }));
   const recentPlayers = useRecentPlayers();
   // `query` is the typed text; the arrows put a row's name in the box without leaving the recent players.
-  const players: SearchedPlayer[] | undefined =
-    recent && query.trim() === "" ?
-      (recentPlayers ?? undefined) :
-      suggestions.data?.map(({ name, displayName }) => ({ name, color: displayName === null ? undefined : nameColor(displayName) }));
+  const rows = recent && query.trim() === "" ? (recentPlayers ?? undefined) : suggested;
   const [selected, setSelected] = useState<number | undefined>(undefined);
   // Typing at the end on a keyboard fills in the first suggestion that starts with the text, the rest selected, so Enter
   // opens it and typing on replaces it. A deletion or a paste stops it; moving the caret takes it.
   const [completing, setCompleting] = useState(false);
   const typed = query.toLowerCase();
   const match =
-    completing && query.trim() && !suggestions.data?.some(({ name }) => name.toLowerCase() === typed) ?
-      suggestions.data?.find(({ name }) => name.toLowerCase().startsWith(typed))?.name :
+    completing && query.trim() && !suggested?.some(({ name }) => name.toLowerCase() === typed) ?
+      suggested?.find(({ name }) => name.toLowerCase().startsWith(typed))?.name :
       undefined;
   const completion = match === undefined ? undefined : query + match.slice(query.length);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigateTo = useSearchNavigation(target);
   const go = onSelect ?? navigateTo;
   const optionId = (index: number) => `${listId}-${index}`;
-  const count = players?.length ?? 0;
+  const count = rows?.length ?? 0;
   const open = focused && count > 0;
   // Heads load for the rows in view, not all 25: each one is a request, and the edge allows a visitor 60 in 10 seconds.
   const [firstRow, setFirstRow] = useState(0);
@@ -292,7 +319,7 @@ export function Search({
   function onSelectionChange(selected: number) {
     setSelected(selected);
     setCompleting(false);
-    if (players) setInput(players[selected].name);
+    if (rows) setInput(rows[selected].name);
 
     const visible = containerRef.current?.clientHeight ?? 0;
     const maxScroll = count * size.itemHeight - visible;
@@ -405,11 +432,11 @@ export function Search({
         onScroll={(event) => setFirstRow(Math.floor(event.currentTarget.scrollTop / size.itemHeight))}
         className={cn("absolute z-100 w-full overflow-auto bg-blackify-800 shadow-[4px_4px_0_rgb(0_0_0_/_0.5)]", size.sheet)}
       >
-        {players?.map((player, index) => (
-          <SearchPlayer
-            key={player.name}
+        {rows?.map((row, index) => (
+          <SearchOption
+            key={row.name}
             id={optionId(index)}
-            player={player}
+            row={row}
             head={index >= firstRow && index < firstRow + size.rows}
             selected={selected === index}
             target={target}
@@ -426,9 +453,9 @@ export function Search({
   );
 }
 
-function SearchPlayer({
+function SearchOption({
   id,
-  player,
+  row,
   head,
   selected = false,
   target,
@@ -437,8 +464,8 @@ function SearchPlayer({
   onPick,
 }: {
   id: string;
-  player: SearchedPlayer;
-  /** Whether the row is in view, so its head loads; its slot keeps the name in place either way. */
+  row: SearchRow;
+  /** Whether the row is in view, so its head loads; its slot keeps the name in place either way. Guilds have none. */
   head: boolean;
   selected?: boolean;
   target: SearchTarget;
@@ -452,12 +479,13 @@ function SearchPlayer({
     "relative flex items-center w-full hover:bg-white/10 active:bg-white/5 aria-selected:bg-white/10 aria-selected:before:content-[''] aria-selected:before:absolute aria-selected:before:bg-blueify-500 aria-selected:before:h-full aria-selected:before:w-1 aria-selected:before:left-0",
     size.item
   );
-  const content = (
-    <>
-      <span className={cn("shrink-0", size.headSlot)}>{head && <SkinHead name={player.name} size={size.head} />}</span>
-      <p className={cn(player.color ? colorClass(player.color) : "text-white", "selection:bg-white/50", size.text)}>{player.name}</p>
-    </>
-  );
+  const content =
+    row.formatted === undefined ?
+      <>
+        <span className={cn("shrink-0", size.headSlot)}>{head && <SkinHead name={row.name} size={size.head} />}</span>
+        <p className={cn(row.color ? colorClass(row.color) : "text-white", "selection:bg-white/50", size.text)}>{row.name}</p>
+      </> :
+      <p className={cn("selection:bg-white/50", size.text)}><MinecraftText>{row.formatted}</MinecraftText></p>;
 
   // Rows are reached with the arrow keys (`aria-activedescendant`), so Tab leaves the box rather than walking them.
   // With a handler the suggestion is handed over like a submitted name (the leaderboard `around` box).
@@ -470,7 +498,7 @@ function SearchPlayer({
         tabIndex={-1}
         onClick={() => {
           onPick();
-          void onSelect(player.name);
+          void onSelect(row.name);
         }}
         aria-selected={selected}
         className={className}
@@ -488,7 +516,7 @@ function SearchPlayer({
         role="option"
         tabIndex={-1}
         to="/{-$locale}/player/$name/$game"
-        params={{ name: player.name, game: target.game }}
+        params={{ name: row.name, game: target.game }}
         search={target.search}
         state={searchState}
         onClick={onPick}
@@ -507,8 +535,25 @@ function SearchPlayer({
         role="option"
         tabIndex={-1}
         to="/{-$locale}/player/$name/bingo"
-        params={{ name: player.name }}
+        params={{ name: row.name }}
         state={searchState}
+        onClick={onPick}
+        aria-selected={selected}
+        className={className}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  if (target === "guild") {
+    return (
+      <Link
+        id={id}
+        role="option"
+        tabIndex={-1}
+        to="/{-$locale}/guild/$name"
+        params={{ name: row.name }}
         onClick={onPick}
         aria-selected={selected}
         className={className}
@@ -524,7 +569,7 @@ function SearchPlayer({
       role="option"
       tabIndex={-1}
       to="/{-$locale}/player/$name"
-      params={{ name: player.name }}
+      params={{ name: row.name }}
       state={searchState}
       onClick={onPick}
       aria-selected={selected}

@@ -30,9 +30,10 @@ const OVERVIEW: OverviewSpec[] = [
     label: "stats.monthlyTotal",
     color: "§b",
     compute: ({ quests }) => Quests.getTotal(quests.monthly),
+    session: false,
   },
-  "weeklyTotal",
-  "dailyTotal",
+  { key: "weeklyTotal", session: false },
+  { key: "dailyTotal", session: false },
 ];
 
 /**

@@ -29,6 +29,11 @@ export type CellSpec =
     /** Leaves the cell out when false (a winstreak of 0). */
     when?: (cell: StatCell, stats: PlayerStats, parent: Record<string, unknown>) => boolean;
     hidden?: (stats: PlayerStats) => boolean;
+    /**
+     * Left off a session's page, as the bot's `/session` cards leave it off: the page shows the difference between two
+     * saves, which means nothing for a setting, a streak, a best or a count that resets by itself.
+     */
+    session?: false;
   };
 
 /** A value worked out from stored ones where the schema stores none (Quests' Monthly Total), with no leaderboard. */
@@ -37,6 +42,8 @@ export interface ComputedSpec {
   label: string;
   color: ColorCode;
   compute: (stats: PlayerStats) => number;
+  /** As a cell's `session`. */
+  session?: false;
 }
 
 export type OverviewSpec = CellSpec | ComputedSpec;
@@ -64,6 +71,8 @@ export interface SectionSpec {
   search?: boolean;
   /** Two lines across on a phone, for a list whose every line fits half its width at the widest values. */
   pairs?: boolean;
+  /** As a cell's `session`, for a section of them (best times). */
+  session?: false;
   ticks?: boolean;
 }
 
@@ -169,6 +178,8 @@ export interface ModeSpec {
   selected?: (stats: PlayerStats) => string | undefined;
   /** Weighs the submodes as a game's modes are, each at `<mode>.<submode>` by default. */
   mostPlayed?: MostPlayedSpec;
+  /** As a cell's `session`, for a whole mode (BedWars' Challenges, Parkour's times). */
+  session?: false;
 }
 
 export const submodeOptions = (submodes: readonly { api: string; formatted: string }[]) =>
@@ -200,8 +211,9 @@ export interface GameLayout {
 }
 
 /** The modes a game page offers, with any submodes; the first of each is its default. */
-export function pageModes(layout: GameLayout): ModeSpec[] {
-  return layout.modes ?? layout.game.modes.getApiModes().map((key) => ({ key }));
+export function pageModes(layout: GameLayout, session = false): ModeSpec[] {
+  const modes: ModeSpec[] = layout.modes ?? layout.game.modes.getApiModes().map((key) => ({ key }));
+  return session ? modes.filter((spec) => spec.session !== false) : modes;
 }
 
 /** A value in a document by its dotted path (`stats.bedwars.overall.wins` in the player). */
@@ -253,20 +265,25 @@ function cell(player: Player, stat: Stat, spec: Spec): StatCell {
 
 const numberOf = (player: Player, stat: Stat) => Number(read(player, stat.path)) || 0;
 
-function cells(player: Player, game: Game, place: string, specs: CellSpec[]) {
+/** Resolves a page's specs into cells, dropping those whose `when` refuses them, and on a session's page its `session`. */
+function cells(player: Player, game: Game, place: string, specs: CellSpec[], session: boolean) {
   return specs.flatMap((entry) => {
     const spec = specOf(entry);
+    if (session && spec.session === false) return [];
     const stat = statAt(game, spec.at ?? place, spec.key);
-    const built = cell(player, stat, spec);
+    // A session's numbers aren't on any leaderboard, so none links, and a gain isn't out of anything.
+    const built = { ...cell(player, stat, spec), ...(session && { leaderboard: null, of: undefined }) };
     return spec.when && !spec.when(built, player.stats, parentOf(player, stat.path)) ? [] : [{ stat, cell: built }];
   });
 }
 
-function section(player: Player, game: Game, place: string, spec: SectionSpec): StatSection {
+function section(player: Player, game: Game, place: string, spec: SectionSpec, session: boolean): StatSection {
   let rows: StatCell[][];
+  // On a session's page a list shows only what moved: a map or a title the session left at 0 says nothing there.
+  const moved = ({ cell }: { cell: StatCell }) => !session || !spec.list || cell.value !== 0;
 
   if (spec.cells) {
-    let resolved = cells(player, game, place, spec.cells);
+    let resolved = cells(player, game, place, spec.cells, session).filter(moved);
 
     if (spec.sort === "desc") resolved = resolved.toSorted((a, b) => numberOf(player, b.stat) - numberOf(player, a.stat));
     if (spec.sort === "asc") {
@@ -288,7 +305,7 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
       rows = rows.map((row, index) => row.map((cell) => ({ ...cell, color: colors[Math.min(index, colors.length - 1)] })));
     }
   } else {
-    rows = (spec.rows ?? []).map((row) => cells(player, game, place, row).map(({ cell }) => cell));
+    rows = (spec.rows ?? []).map((row) => cells(player, game, place, row, session).filter(moved).map(({ cell }) => cell));
   }
 
   // A row whose cells all fell to their `when`s goes, and its heading with it.
@@ -313,11 +330,12 @@ function section(player: Player, game: Game, place: string, spec: SectionSpec): 
   };
 }
 
-function overview(player: Player, game: Game, specs: OverviewSpec[]): StatCell[] {
-  return specs.flatMap((spec) =>
-    isComputed(spec) ?
-      [{ key: spec.key, label: spec.label, value: finite(spec.compute(player.stats)), color: spec.color, leaderboard: null }] :
-      cells(player, game, "", [spec]).map(({ cell }) => cell));
+function overview(player: Player, game: Game, specs: OverviewSpec[], session: boolean): StatCell[] {
+  return specs.flatMap((spec) => {
+    if (!isComputed(spec)) return cells(player, game, "", [spec], session).map(({ cell }) => cell);
+    if (session && spec.session === false) return [];
+    return [{ key: spec.key, label: spec.label, value: finite(spec.compute(player.stats)), color: spec.color, leaderboard: null }];
+  });
 }
 
 type Counted = NonNullable<GamePage["modes"][number]["mostPlayed"]>;
@@ -390,16 +408,20 @@ export function pageName(layout: GameLayout): string {
   return gameName(layout.game.id);
 }
 
-/** The `player.game` view model, without the nav to the player's other games. */
+/**
+ * The `player.game` view model, but for the nav to the player's other games: one page of one game, in one of its
+ * mode's periods where it has them (the first by default). A session's page (`session`) has no level and no periods.
+ */
 export function buildGamePage(
   player: Player,
   layout: GameLayout,
   mode: string,
   submode?: string,
-  period?: string
+  period?: string,
+  { session = false }: { session?: boolean } = {}
 ): Omit<GamePage, "games"> {
   const { game } = layout;
-  const modes = pageModes(layout);
+  const modes = pageModes(layout, session);
   const modeSpec = modes.find(({ key }) => key === mode);
   if (!modeSpec) throw new Error(`${game.key} has no ${mode} page`);
 
@@ -429,6 +451,7 @@ export function buildGamePage(
       // A game with one mode leaves it out of the title, as its card does.
       mode: modes.length > 1 ? `${name(mode)}${sub ? ` ${submodes.find(({ key }) => key === sub)?.name}` : ""}` : null,
       ...page.heading,
+      ...(session && { word: "game.session" }),
     },
     modes: modes.map(({ key }) => ({
       key,
@@ -443,12 +466,13 @@ export function buildGamePage(
       ...(submode.key === subMost?.mode && { mostPlayed: subMost.by }),
     })),
     submode: sub ?? null,
-    ...(shownPeriod !== undefined && { periods: [...periods], period: shownPeriod }),
-    ...(start !== undefined && { window: { start, end: updatedAt } }),
-    level: levelSpec ? level(player, game, levelSpec) : null,
-    overview: overview(player, game, page.overview ?? layout.overview),
+    ...(!session && shownPeriod !== undefined && { periods: [...periods], period: shownPeriod }),
+    ...(!session && start !== undefined && { window: { start, end: updatedAt } }),
+    level: levelSpec && !session ? level(player, game, levelSpec) : null,
+    overview: overview(player, game, page.overview ?? layout.overview, session),
     sections: page.sections
-      .map((spec) => section(player, game, place, spec))
+      .filter((spec) => !session || spec.session !== false)
+      .map((spec) => section(player, game, place, spec, session))
       .filter(({ rows }) => rows.length > 0),
     updatedAt,
     expiresAt: player.expiresAt,

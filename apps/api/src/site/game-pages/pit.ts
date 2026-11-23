@@ -25,7 +25,7 @@ export const PIT_PAGE: GameLayout = {
   page: () => ({
     place: "",
     sections: [
-      { rows: [["kills", "deaths", "kdr"], ["highestStreak", "playtime", "assists"]] },
+      { rows: [["kills", "deaths", "kdr"], [{ key: "highestStreak", session: false }, "playtime", "assists"]] },
       {
         title: "stats.mysticsEnchanted",
         rows: [[...TIERS.map(([key, tier]) => ({ key, params: { tier } })), "totalMysticsEnchanted"]],

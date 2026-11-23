@@ -7,11 +7,12 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { CacheLevel, GuildQuery, LeaderboardQuery, PlayerNotFoundException } from "@statsify/api-client";
+import { CacheLevel, GuildNotFoundException, GuildQuery, LeaderboardQuery, PlayerNotFoundException } from "@statsify/api-client";
 import {
   Guild,
   type LeaderboardEnabledMetadata,
   Player,
+  createHistoricalPlayer,
   deserialize,
   getLeaderboardField,
 } from "@statsify/schemas";
@@ -27,6 +28,7 @@ import {
 import { GuildService } from "#guild";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
+import { SessionService } from "#session";
 import { HypixelUnavailableError } from "#hypixel";
 import { Injectable, InternalServerErrorException, type OnApplicationBootstrap } from "@nestjs/common";
 import type {
@@ -34,7 +36,9 @@ import type {
   GameInput,
   GamePage,
   Glossary,
+  GuildPage,
   GuildPreview,
+  GuildSuggestion,
   HomePreviews,
   LeaderboardGame,
   LeaderboardGameInput,
@@ -48,15 +52,18 @@ import type {
   PrestigeSheet,
   ResolveInput,
   ResultCard,
+  SessionGameInput,
+  SessionPage,
   Suggestion,
 } from "@statsify/contract";
 import { AUTO_UPDATE_AGE_MS, type AutoUpdate } from "@statsify/contract/refresh";
 import { ORPCError } from "@orpc/nest";
+import { buildGuildPage } from "./guild-page.js";
 import { freshness } from "./cooldown.js";
 import { siteName } from "./names.js";
 import { buildGlossary, buildPrestigeSheet } from "./content.js";
 import { LEADERBOARD_GROUPS, buildLeaderboardGroups, catalogGlossary, leaderboardColumn, leaderboardGame, leaderboardIndex } from "./leaderboards.js";
-import { type PlayerGuild, buildPlayerPage, gameNav } from "./player-page.js";
+import { type PlayerGuild, buildPlayerPage, gameNav, gamePanels, sessionOverview } from "./player-page.js";
 import { boardGamePage, buildGamePage, findGamePage, pageModes, pagePeriods, pageSubmodes } from "./game-pages/index.js";
 import { PlayerLeaderboardService, PlayerSearchService, PlayerService } from "#player";
 import { Redis } from "ioredis";
@@ -85,7 +92,7 @@ const BUDGET_WINDOW_SECONDS = 5 * 60;
 const BUDGET_KEY = "site:hypixel:budget";
 
 /**
- * Site-initiated Hypixel calls per visitor address in the same 5 minutes, enough for a school or mobile network whose
+ * Refreshes and lookups per visitor address in the same 5 minutes, enough for a school or mobile network whose
  * visitors share one address.
  */
 const IP_LIMIT = 10;
@@ -141,6 +148,32 @@ export function rateLimitAddress(clientIp: string): string {
 
 const notFound = (message = "Player not found") => new ORPCError("NOT_FOUND", { message });
 
+/**
+ * The page a game input asks for, or NOT_FOUND for a game, mode, submode or period the site doesn't have, on a session
+ * (`session`) a mode its pages leave out too.
+ */
+function pageOf(input: GameInput, session = false) {
+  const layout = findGamePage(input.game);
+  if (!layout) throw notFound("Game not found");
+
+  const modes = pageModes(layout, session).map(({ key }) => key);
+  const mode = input.mode === undefined ? modes[0] : pageKey(modes, input.mode);
+  if (mode === undefined) throw notFound("Mode not found");
+
+  // A mode without submodes has no second page to ask for.
+  const submodes = pageSubmodes(layout, mode) ?? [];
+  const submode = input.submode === undefined ? undefined : pageKey(submodes, input.submode);
+  if (input.submode !== undefined && submode === undefined) throw notFound("Mode not found");
+
+  // A period the page has on another mode only (Monthly) gets this mode's first; one it never has is unknown.
+  const periods = layout.periods?.(mode) ?? [];
+  const asked = input.period === undefined ? undefined : pageKey(pagePeriods(layout), input.period);
+  if (input.period !== undefined && asked === undefined) throw notFound("Period not found");
+  const period = asked !== undefined && periods.includes(asked) ? asked : undefined;
+
+  return { layout, mode, submode, period };
+}
+
 const hypixelUnavailable = () =>
   new ORPCError("SERVICE_UNAVAILABLE", { message: "Hypixel didn't answer, try again shortly" });
 
@@ -155,8 +188,8 @@ const GLOSSARY = buildGlossary(LEADERBOARD_LIST);
 const PRESTIGE_SHEET = buildPrestigeSheet();
 
 /**
- * Strict cache-only reads for the site. Nothing here calls Hypixel except `refresh` and
- * `lookup`, which first pass the per-address and global budgets kept in Redis.
+ * Strict cache-only reads for the site. Nothing here calls Hypixel except `refresh`, `lookup`
+ * and `lookupGuild`, which first pass the per-address and global budgets kept in Redis.
  */
 @Injectable()
 export class SiteService implements OnApplicationBootstrap {
@@ -170,6 +203,7 @@ export class SiteService implements OnApplicationBootstrap {
     private readonly playerLeaderboardService: PlayerLeaderboardService,
     private readonly playerSearchService: PlayerSearchService,
     private readonly guildService: GuildService,
+    private readonly sessionService: SessionService,
     private readonly skinService: SkinService,
     @InjectModel(Player) private readonly playerModel: PlayerModel,
     @InjectModel(Guild) private readonly guildModel: GuildModel,
@@ -200,14 +234,14 @@ export class SiteService implements OnApplicationBootstrap {
   public async page(uuid: string): Promise<PlayerPage> {
     const player = await this.playerService.getStored(uuid);
     if (!player) throw notFound();
-    return this.toPage(player);
+    return this.toPage(player, this.findGuild(player.guildId));
   }
 
   public async full(uuid: string): Promise<PlayerFull> {
     const player = await this.playerService.getStored(uuid);
     if (!player) throw notFound();
 
-    const document = player.guildId ? await this.findGuild(player.guildId) : null;
+    const document = await this.findGuild(player.guildId);
     const guild: GuildDocument | null = document && { ...document };
 
     return { player: { ...player }, guild };
@@ -220,17 +254,20 @@ export class SiteService implements OnApplicationBootstrap {
 
     // Inside the API's own cooldown `CACHE` would not call Hypixel anyway, so it costs no budget. A stale page's update
     // can come from an edge copy of a page older than the stored save, so the stored save's age decides it.
-    if (Date.now() < cached.expiresAt) return this.toPage(cached);
-    if (auto === "stale" && Date.now() - freshness(cached).updatedAt < AUTO_UPDATE_AGE_MS) return this.toPage(cached);
+    const upToDate = Date.now() < cached.expiresAt || (auto === "stale" && Date.now() - freshness(cached).updatedAt < AUTO_UPDATE_AGE_MS);
+    if (upToDate) return this.toPage(cached, this.findGuild(cached.guildId));
 
-    await this.consumeBudget(clientIp, auto !== undefined);
+    await this.consumeBudget(clientIp, { auto: auto !== undefined, calls: 2 });
     const [player] = await Promise.all([this.playerService.get(tag, CacheLevel.CACHE), this.refreshSkin(tag)]);
 
     // When Hypixel doesn't answer, `PlayerService` hands back the stored player, still past its cooldown: say the
     // refresh failed rather than show the old stats as new.
-    if (!player || player.expiresAt <= Date.now()) throw hypixelUnavailable();
+    if (!player || player.expiresAt <= Date.now()) {
+      await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
+      throw hypixelUnavailable();
+    }
 
-    return this.toPage(player);
+    return this.toPage(player, this.fetchPlayerGuild(tag));
   }
 
   public async lookup(name: string, clientIp: string): Promise<PlayerIdentity> {
@@ -254,7 +291,7 @@ export class SiteService implements OnApplicationBootstrap {
       throw notFound();
     }
 
-    await this.consumeBudget(clientIp);
+    await this.consumeBudget(clientIp, { calls: 2 });
 
     let player: Player | null;
 
@@ -265,18 +302,53 @@ export class SiteService implements OnApplicationBootstrap {
       ]);
     } catch (error) {
       // Not an answer about the name, so nothing is remembered and the visitor can try again.
-      if (error instanceof HypixelUnavailableError) throw hypixelUnavailable();
+      if (error instanceof HypixelUnavailableError) {
+        await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
+        throw hypixelUnavailable();
+      }
+
       throw error;
     }
 
     if (!player) {
       await this.rememberMiss(key);
+      await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
       throw notFound();
     }
 
+    await this.fetchPlayerGuild(uuid);
     await this.redis.del(missKey(key));
 
     return { uuid: player.uuid, username: player.username, updatedAt: freshness(player).updatedAt };
+  }
+
+  /**
+   * A guild the API hasn't stored, from Hypixel by name, within the same budgets as `lookup`: one call, with members
+   * named from stored players only. Unlike `lookup` it keeps no miss.
+   */
+  public async lookupGuild(name: string, clientIp: string): Promise<{ name: string }> {
+    const known: Pick<Guild, "name"> | null = await this.guildModel
+      .findOne()
+      .where("nameToLower")
+      .equals(name.toLowerCase())
+      .select({ _id: false, name: true })
+      .lean()
+      .exec();
+
+    if (known) return known;
+
+    await this.consumeBudget(clientIp);
+
+    const lookup = this.guildService.get(name, GuildQuery.NAME, CacheLevel.CACHE, { namesFromHypixel: false, throwOnHypixelError: true });
+
+    const guild = await lookup.catch((error: unknown) => {
+      if (error instanceof GuildNotFoundException) return null;
+      if (error instanceof HypixelUnavailableError) throw hypixelUnavailable();
+      throw error;
+    });
+
+    if (!guild) throw notFound("Guild not found");
+    return { name: guild.name };
   }
 
   /** Hypixel is asked by UUID: its name lookup is deprecated, and a typo then costs no budget. */
@@ -303,6 +375,23 @@ export class SiteService implements OnApplicationBootstrap {
 
     const displayNames = new Map(players.map((player) => [player.usernameToLower, player.displayName]));
     return names.map((name) => ({ name, displayName: displayNames.get(name.toLowerCase()) ?? null }));
+  }
+
+  /**
+   * Stored guilds whose name starts with the query, alphabetically. A range on the `nameToLower` index rather than a
+   * regex, so nothing typed needs escaping and the scan stops at the 25th.
+   */
+  public async suggestGuilds(query: string): Promise<GuildSuggestion[]> {
+    if (!query) return [];
+    const prefix = query.toLowerCase();
+
+    return this.guildModel
+      .find({ nameToLower: { $gte: prefix, $lt: `${prefix}\uffff` } })
+      .sort({ nameToLower: 1 })
+      .limit(25)
+      .select({ _id: false, name: true, nameFormatted: true })
+      .lean()
+      .exec();
   }
 
   public async cards(names: string[]): Promise<ResultCard[]> {
@@ -370,28 +459,60 @@ export class SiteService implements OnApplicationBootstrap {
 
   /** One mode (or submode) of a game's page; an unknown game, mode or submode is NOT_FOUND, like an unknown player. */
   public async game(input: GameInput): Promise<GamePage> {
-    const layout = findGamePage(input.game);
-    if (!layout) throw notFound("Game not found");
-
-    const modes = pageModes(layout).map(({ key }) => key);
-    const mode = input.mode === undefined ? modes[0] : pageKey(modes, input.mode);
-    if (mode === undefined) throw notFound("Mode not found");
-
-    // A mode without submodes has no second page to ask for.
-    const submodes = pageSubmodes(layout, mode) ?? [];
-    const submode = input.submode === undefined ? undefined : pageKey(submodes, input.submode);
-    if (input.submode !== undefined && submode === undefined) throw notFound("Mode not found");
-
-    // A period the page has on another mode only (Monthly) gets this mode's first; one it never has is unknown.
-    const periods = layout.periods?.(mode) ?? [];
-    const asked = input.period === undefined ? undefined : pageKey(pagePeriods(layout), input.period);
-    if (input.period !== undefined && asked === undefined) throw notFound("Period not found");
-    const period = asked !== undefined && periods.includes(asked) ? asked : undefined;
-
+    const { layout, mode, submode, period } = pageOf(input);
     const player = await this.playerService.getStored(input.uuid);
     if (!player) throw notFound();
 
     return { ...buildGamePage(player, layout, mode, submode, period), games: gameNav(player.stats) };
+  }
+
+  /** The games a player's session covers, as the player page's panels. */
+  public async session(uuid: string): Promise<SessionPage> {
+    const { player, gains, start } = await this.loadSession(uuid);
+    return {
+      uuid: player.uuid,
+      username: player.username,
+      displayName: player.displayName,
+      start,
+      overview: sessionOverview(gains),
+      games: gamePanels(gains.stats, true),
+      ...freshness(player),
+    };
+  }
+
+  /** One mode of a game's page over a player's session: what they gained in it since the session started. */
+  public async sessionGame(input: SessionGameInput): Promise<GamePage> {
+    const { layout, mode, submode } = pageOf(input, true);
+    const { player, gains, start } = await this.loadSession(input.uuid);
+
+    return {
+      ...buildGamePage(gains, layout, mode, submode, undefined, { session: true }),
+      games: gameNav(gains.stats, true),
+      session: { start },
+      // The gains' own `expiresAt` is a difference too.
+      ...freshness(player),
+    };
+  }
+
+  /**
+   * The player's session as a player of its own: each number what they gained since they last reset it with the bot's
+   * `/session`, from the stored player, never Hypixel. NOT_FOUND "Session not found" when they never started one.
+   */
+  private async loadSession(uuid: string): Promise<{ player: Player; gains: Player; start: number }> {
+    const [player, started] = await Promise.all([this.playerService.getStored(uuid), this.sessionService.getStored(uuid)]);
+    if (!player) throw notFound();
+
+    // `sessionReset` is in seconds.
+    if (started?.sessionReset === undefined) throw notFound("Session not found");
+
+    return { player, gains: createHistoricalPlayer(started, player), start: started.sessionReset * 1000 };
+  }
+
+  /** A stored guild by its name in any case. One the API has never fetched is NOT_FOUND, for `lookupGuild` to fetch. */
+  public async guild(name: string): Promise<GuildPage> {
+    const guild = await this.guildService.getStored(name, GuildQuery.NAME);
+    if (!guild) throw notFound("Guild not found");
+    return buildGuildPage(guild);
   }
 
   /** The home page's previews, each loaded on its own so one missing player hides one section. */
@@ -494,13 +615,35 @@ export class SiteService implements OnApplicationBootstrap {
     return player && { uuid: player.uuid, username: player.username, updatedAt: freshness(player).updatedAt };
   }
 
-  private async toPage(player: Player): Promise<PlayerPage> {
-    const guild = player.guildId ? await this.findGuild(player.guildId) : null;
-    return buildPlayerPage(player, guild);
+  /** The stored guild, or after a refresh the one fetched with the player, whose own `guildId` is still the old one. */
+  private async toPage(player: Player, playerGuild: Promise<PlayerGuild | null>): Promise<PlayerPage> {
+    const [guild, session] = await Promise.all([playerGuild, this.sessionService.getStored(player.uuid, { sessionReset: true })]);
+
+    // `sessionReset` is in seconds.
+    const start = session?.sessionReset;
+    return { ...buildPlayerPage(player, guild), session: start === undefined ? null : { start: start * 1000 } };
   }
 
-  private findGuild(id: string): Promise<PlayerGuild | null> {
-    return this.guildService.getStored(id, GuildQuery.ID, GUILD_FIELDS);
+  private async findGuild(guildId: string | undefined): Promise<PlayerGuild | null> {
+    return guildId ? this.guildService.getStored(guildId, GuildQuery.ID, GUILD_FIELDS) : null;
+  }
+
+  /**
+   * The player's guild from Hypixel, after the player's fetch, which saves the old `guildId` back over any the guild sets.
+   * A guild inside its own cooldown is the stored one, so its share of the refresh or lookup's budget goes back.
+   */
+  private async fetchPlayerGuild(uuid: string): Promise<Guild | null> {
+    const lookup = this.guildService.get(uuid, GuildQuery.PLAYER, CacheLevel.CACHE, { namesFromHypixel: false, throwOnHypixelError: true });
+
+    const guild = await lookup.catch((error: unknown) => {
+      if (error instanceof GuildNotFoundException) return null;
+      if (error instanceof HypixelUnavailableError) throw hypixelUnavailable();
+      throw error;
+    });
+
+    // Through `hit`, not `decr`: a window that closed during the fetches would come back without an expiry.
+    if (guild?.cached) await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
+    return guild;
   }
 
   private preview<T>(uuid: string, build: (player: Player) => T): Promise<T | null> {
@@ -542,20 +685,19 @@ export class SiteService implements OnApplicationBootstrap {
   }
 
   /**
-   * Per-address, then global budget. A rejected call never eats into the global budget. With
-   * `site.hypixelBudget: 0` every call is rejected here, before `PlayerService` runs. An automatic update (`auto`)
-   * stops at two-thirds of the budget, so a third stays for clicks and for names the site has never stored.
+   * One slot from the visitor's address, then its Hypixel `calls` from the global budget, which a rejected slot never
+   * spends. An automatic update (`auto`) stops at two-thirds of the budget, so a third stays for clicks and new names.
    */
-  private async consumeBudget(clientIp: string, auto = false): Promise<void> {
+  private async consumeBudget(clientIp: string, { auto = false, calls = 1 } = {}): Promise<void> {
     const [attempts, ipTtl] = await this.hit(ipKey(clientIp), IP_WINDOW_SECONDS);
     if (attempts > IP_LIMIT) throw tooManyRequests(ipTtl);
 
     const budget = (await this.hypixelBudget) ?? DEFAULT_HYPIXEL_BUDGET;
     const limit = auto ? Math.floor((budget * 2) / 3) : budget;
-    const [calls, budgetTtl] = await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS);
+    const [spent, budgetTtl] = await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, calls);
 
-    if (calls > limit) {
-      await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -1);
+    if (spent > limit) {
+      await this.hit(BUDGET_KEY, BUDGET_WINDOW_SECONDS, -calls);
       throw tooManyRequests(budgetTtl);
     }
   }
